@@ -1,279 +1,235 @@
-<div align="center">
+# 🧩 Shared 3D Models (Web)
 
-# 🌄 Terrain Packs
+![Asset](https://img.shields.io/badge/asset-3D%20models-blue)
+![Format](https://img.shields.io/badge/format-glTF%20%2F%20GLB-0ea5e9)
+![Viewer](https://img.shields.io/badge/viewer-MapLibre%20%2B%20CesiumJS-8b5cf6)
+![Principle](https://img.shields.io/badge/principle-provenance--first-22c55e)
 
-**Static, provenance-aware terrain datasets for the Kansas Frontier Matrix (KFM) 3D viewer** 🗺️✨
+> **📍 Folder:** `web/assets/3d/shared/models/`  
+> **🎯 Goal:** Keep a small, reusable library of client-bundled 3D models that the KFM web app can load quickly (e.g., story landmarks, illustrative artifacts, UI demo models).  
+> The KFM web viewer stack is designed around **MapLibre GL JS (2D)** and **CesiumJS (3D)**, including support for streaming geospatial 3D content with **3D Tiles**.:contentReference[oaicite:0]{index=0}
 
-![Viewer](https://img.shields.io/badge/viewer-CesiumJS-blue)
-![Format](https://img.shields.io/badge/terrain-quantized--mesh%20%7C%203D%20Tiles-orange)
-![Governance](https://img.shields.io/badge/governance-contract--first%20%2B%20provenance--first-success)
-![Location](https://img.shields.io/badge/path-web%2Fassets%2F3d%2Fterrain%2Fpacks-informational)
-
-</div>
-
----
-
-## 🧭 What lives here?
-
-This folder contains **terrain packs**: versioned bundles of **terrain/elevation data** (DEM/DTM-derived) that the web app can load as **static assets** for **fast 3D rendering** (especially in Cesium-based views) ⚡️.
-
-Terrain packs are designed to be:
-
-- ✅ **Drop-in**: Each pack is a self-contained folder.
-- ✅ **Auditable**: Every pack ships with **metadata + provenance** (no “mystery terrain”).
-- ✅ **Performant**: Packs can be **local (dev/offline)** or **mirrored to a CDN** for production.
+> [!IMPORTANT]
+> KFM is **contract-first + provenance-first**: anything that appears in the UI must be traceable to cataloged sources and provable processing — **no “mystery layers.”** Apply the same standard to every model in this folder.:contentReference[oaicite:1]{index=1}
 
 ---
 
-## 🧩 How KFM uses terrain packs
+## 🧭 Quick Navigation
 
-Terrain packs are meant to support:
-
-- 🌍 **3D globe / terrain views** (CesiumJS)
-- 🧱 **3D Tiles streaming** (when terrain is represented as tiles or when paired with other 3D assets)
-- 📖 **Story Nodes** that “fly” the camera over a landscape (ex: *Kansas From Above* style experiences)
-
-> 🧠 Philosophy: KFM is *provenance-first* — terrain is treated like a first-class dataset with sources, licensing, and processing steps baked in.
+- [✅ What belongs here](#-what-belongs-here)
+- [📁 Recommended layout](#-recommended-layout)
+- [🧾 Model metadata contract](#-model-metadata-contract)
+- [🧭 Coordinates, CRS, and pivot/origin](#-coordinates-crs-and-pivotorigin)
+- [⚡ Performance budgets](#-performance-budgets)
+- [🧪 PR checklist](#-pr-checklist)
+- [📚 References](#-references)
 
 ---
 
-## 🗂️ Folder layout (pack convention)
+## ✅ What belongs here
+
+| ✅ Put here | 🚫 Don’t put here |
+|---|---|
+| Small-to-medium **shared** 3D models used across the web UI | Massive terrain/point cloud/building datasets |
+| glTF 2.0 models (`.glb` preferred) | Raw LiDAR / raw photogrammetry meshes / giant texture sets |
+| Models with **clear attribution + license + provenance** | Unsourced assets (“found online”) / unclear licensing |
+| Models intended for fast “storybook” moments / UI augmentation | Anything that should be streamed as **3D Tiles** |
+
+> [!NOTE]
+> For large geospatial 3D datasets, KFM’s approach is to use Cesium-friendly streaming formats (e.g., **3D Tiles**, CZML) instead of shipping huge assets in the web bundle.:contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+
+---
+
+## 📁 Recommended layout
 
 ```text
-📁 web/assets/3d/terrain/packs/
-├─ 📄 README.md
-└─ 📁 <pack-id>/                         # kebab-case ID recommended
-   ├─ 🧾 pack.json                        # UI/loader-friendly manifest
-   ├─ 🧾 contract.json                    # provenance + governance “data contract”
-   ├─ 🖼️ preview.jpg                      # optional thumbnail for catalog / chooser UI
-   ├─ 📄 LICENSE                          # optional (or point to license in contract.json)
-   ├─ 📁 terrain/                         # Cesium quantized-mesh terrain (recommended)
-   │  ├─ 🧾 layer.json
-   │  └─ 📁 0/ 1/ 2/ ...                   # tile pyramid (implementation-specific)
-   └─ 📁 tileset/                         # optional: 3D Tiles terrain/mesh
-      ├─ 🧾 tileset.json
-      └─ 🧱 tiles/ ...
+web/assets/3d/shared/models/
+  📄 README.md
+
+  📁 monument-rocks/
+    📦 model.glb
+    🧾 model.meta.json
+    🖼️ preview.webp
+    🏷️ ATTRIBUTION.md
+    📁 sources/            (optional; keep tiny, or store raw elsewhere)
+
+  📁 _template/
+    📦 model.glb
+    🧾 model.meta.json
+    🖼️ preview.webp
+    🏷️ ATTRIBUTION.md
 ```
 
----
+### 🧠 Naming conventions
 
-## ✅ Required files
-
-| File | Required | Purpose |
-|------|----------|---------|
-| `pack.json` | ✅ | Small manifest used by the **web app** to list/load packs |
-| `contract.json` | ✅ | **Data contract**: provenance, license, processing steps, spatial metadata |
-| `terrain/` or `tileset/` | ✅ | The actual terrain payload (choose at least one format) |
-| `preview.*` | ⛳ Optional | Thumbnail for a terrain picker UI |
-| `LICENSE` | ⛳ Optional | Helpful when packs are redistributed independently |
+- Folder names: `kebab-case` (stable URL paths)
+- Model file: `model.glb` (so consumers don’t need per-model filename logic)
+- Metadata: `model.meta.json` (asset contract)
+- Preview image: `preview.webp` (used in catalogs/menus)
+- Attribution: `ATTRIBUTION.md` (human-readable, paste-ready)
 
 ---
 
-## 🧾 `pack.json` (manifest) — recommended shape
+## 🧾 Model metadata contract
 
-Keep this file **tiny** and “frontend-friendly”. It should answer: *what is this pack and where is the payload?*
+KFM’s data philosophy is that **metadata, licensing, and provenance are first-class** and validated (contract-first), enabling the system to generate attributions/method traces and provide citations in UI/AI answers.:contentReference[oaicite:4]{index=4}
 
-<details>
-<summary><strong>📄 Example <code>pack.json</code></strong></summary>
+This folder follows the same idea by requiring a **per-model metadata contract**:
+
+- ✅ Who made it / where it came from
+- ✅ License and attribution text
+- ✅ Spatial reference (if georeferenced)
+- ✅ Processing steps (how the runtime model was produced)
+
+> [!TIP]
+> KFM’s dataset “data contract” example is a great template for the kinds of fields we care about (id/title/license/spatial/temporal/provenance). We mirror that shape for 3D assets here.:contentReference[oaicite:5]{index=5}
+
+### ✅ Minimal `model.meta.json` (recommended)
 
 ```json
 {
-  "id": "kansas-dem-10m",
-  "title": "Kansas DEM (10m) 🌾",
-  "description": "Statewide terrain derived from a public DEM source. Optimized for web 3D viewing.",
-  "type": "cesium-terrain",
-  "baseUrl": "./terrain/",
-  "attribution": "See contract.json",
-  "tags": ["kansas", "dem", "terrain", "statewide"],
-  "recommended": true,
+  "id": "monument_rocks_lowpoly_v1",
+  "title": "Monument Rocks — low-poly landmark model",
+  "description": "Optimized landmark model intended for fast web loading and story moments.",
+  "schema_version": "v1.0.0",
+  "license": "CC-BY-4.0",
 
-  "bounds": {
-    "west": -102.0,
-    "south": 36.9,
-    "east": -94.6,
-    "north": 40.0
-  },
-
-  "minZoom": 0,
-  "maxZoom": 12
-}
-```
-
-</details>
-
-**Notes 📝**
-- `baseUrl` should be **relative** so the pack works when served from `/assets/...`.
-- `bounds` is strongly recommended for UI filtering + sanity checks.
-
----
-
-## 🧾 `contract.json` (data contract) — provenance & governance 💡
-
-KFM treats datasets as governed artifacts: **metadata is not optional**.
-
-Your contract should make it possible to answer:
-
-- Where did this terrain come from?
-- What license governs it?
-- What processing steps produced these tiles?
-- What CRS / vertical datum / units apply?
-- How can we verify integrity (hashes/checksums)?
-
-<details>
-<summary><strong>📄 Example <code>contract.json</code> (template)</strong></summary>
-
-```json
-{
-  "kind": "kfm.data_contract",
-  "contract_version": "1.0.0",
-
-  "dataset": {
-    "id": "kansas-dem-10m",
-    "title": "Kansas DEM (10m)",
-    "description": "Terrain tiles for 3D viewing. Derived from a statewide DEM source.",
-    "theme": ["elevation", "terrain"],
-    "created_utc": "2026-01-15T00:00:00Z"
+  "provenance": {
+    "source_url": "https://example.org/source/monument-rocks",
+    "creator": "Example Org / Photographer / Artist Name",
+    "issued": "2025-06-01",
+    "processing_steps": [
+      "Mesh cleaned + decimated",
+      "PBR textures baked",
+      "Exported to glTF 2.0 (.glb) for web runtime"
+    ],
+    "notes": "If derived from scans/photogrammetry, describe capture method + validation."
   },
 
   "spatial": {
     "crs": "EPSG:4326",
-    "vertical_datum": "UNKNOWN_OR_DECLARE_ME",
+    "bbox": [-101.95, 38.85, -101.94, 38.86],
+    "anchor": { "lon": -101.9455, "lat": 38.8552, "height_m": 0.0 }
+  },
+
+  "rendering": {
+    "format": "glb",
     "units": "meters",
-    "bounds_wgs84": [-102.0, 36.9, -94.6, 40.0],
-    "resolution": {
-      "horizontal": "10m (nominal)",
-      "vertical": "source-dependent"
+    "up_axis": "Y",
+    "default_transform": {
+      "scale": [1, 1, 1],
+      "rotation_euler_deg": [0, 0, 0],
+      "translation_m": [0, 0, 0]
     }
   },
 
-  "source": {
-    "name": "DECLARE_SOURCE_NAME",
-    "publisher": "DECLARE_PUBLISHER",
-    "download_url": "DECLARE_URL",
-    "retrieved_utc": "DECLARE_UTC_TIMESTAMP",
-    "license": {
-      "name": "DECLARE_LICENSE_NAME",
-      "url": "DECLARE_LICENSE_URL",
-      "attribution": "DECLARE_ATTRIBUTION_TEXT"
-    }
-  },
-
-  "processing": {
-    "summary": "Reproject → clip to AOI → build tile pyramid → validate.",
-    "steps": [
-      {
-        "name": "reproject",
-        "tool": "gdalwarp",
-        "params": {
-          "dst_crs": "EPSG:4326"
-        }
-      },
-      {
-        "name": "build-terrain",
-        "tool": "DECLARE_TERRAIN_BUILDER",
-        "params": {
-          "format": "quantized-mesh",
-          "maxZoom": 12
-        }
-      }
-    ]
-  },
-
-  "integrity": {
-    "checksums": [
-      { "path": "pack.json", "sha256": "DECLARE_SHA256" },
-      { "path": "terrain/layer.json", "sha256": "DECLARE_SHA256" }
-    ]
-  },
-
-  "contacts": [
-    { "role": "maintainer", "name": "DECLARE_NAME", "email": "DECLARE_EMAIL" }
-  ]
+  "attribution": {
+    "text": "Monument Rocks model © Example Org (CC-BY-4.0). Processing by KFM contributors."
+  }
 }
 ```
 
-</details>
+### Optional (but encouraged) fields
 
-### 🔎 Contract “minimum bar”
-A pack PR should be considered incomplete if `contract.json` does **not** include:
-- ✅ `source` + license
-- ✅ `processing.steps` (even if high-level)
-- ✅ `spatial.crs` + `bounds_wgs84`
+- `temporal`: if the model represents a historical time slice (e.g., “Fort Leavenworth, 1860”)
+- `faircare`: if there are ethical constraints (mirroring dataset FAIR/CARE concepts)
+- `lods`: if you provide `model_lod0.glb`, `model_lod1.glb`, etc.
+- `hashes`: to support integrity checks (sha256 of `model.glb`)
 
 ---
 
-## 🧪 Loading a pack (typical patterns)
+## 🧭 Coordinates, CRS, and pivot/origin
 
-### A) Use as static assets (local/dev/offline) 🧑‍💻
-If the web app is serving `web/` statically, packs will be available under something like:
+### 🌍 Geospatial consistency (when the model is placeable on the map)
 
-```text
-/assets/3d/terrain/packs/<pack-id>/...
+KFM standardizes web-facing geospatial content to **WGS84 (EPSG:4326)** and tracks original CRS in metadata so everything lines up and remains auditable.:contentReference[oaicite:6]{index=6}
+
+**Rule of thumb for placeable models:**
+- Store `spatial.crs = "EPSG:4326"`
+- Use meters for heights (`height_m`)
+- Keep transforms predictable: bake scale/rotation into the model when possible, then keep `default_transform` simple
+
+### 🧱 Local placement (when the model is “just a model”)
+
+Each 3D model has its own **local coordinate system**, and where you place the origin affects how easily you can position it in the world (e.g., character models often use an origin at the feet).:contentReference[oaicite:7]{index=7}
+
+**Preferred pivot conventions:**
+- Landmarks/statues: origin at ground contact point (centered)
+- Buildings: origin at footprint center, z=0 at ground
+- Markers/icons: origin at “tip” or intended anchor point
+
+---
+
+## ⚡ Performance budgets
+
+KFM notes that 3D views are **computationally heavier** and likely used only when needed — so the 3D assets we ship should be aggressively optimized.:contentReference[oaicite:8]{index=8}
+
+**Recommended budgets (shared models):**
+- 📦 `model.glb` ≤ **5–10 MB** (prefer ≤ 5 MB when possible)
+- 🧊 Texture total ≤ **4K** per material set (prefer 1K–2K for most)
+- 🔺 Triangle count: keep “story” models lightweight; consider LOD if > ~150k tris
+- 🧼 Remove:
+  - hidden geometry
+  - unused materials/textures
+  - unneeded vertex colors/UV sets
+  - excessive animation clips (unless essential)
+
+> [!TIP]
+> If you need to ship something heavy, that’s usually a signal it should be published as a streamed dataset (e.g., **3D Tiles**) rather than bundled here.:contentReference[oaicite:9]{index=9}
+
+---
+
+## 🧪 PR checklist
+
+Before merging a model into `shared/models/`:
+
+- [ ] `model.glb` loads correctly in the intended viewer (no missing textures/materials)
+- [ ] `model.meta.json` exists and includes:
+  - [ ] `license`
+  - [ ] provenance (`source_url`, `creator`, `issued`, `processing_steps`)
+- [ ] `ATTRIBUTION.md` exists (human-readable attribution + license summary)
+- [ ] `preview.webp` exists (clean background, readable silhouette)
+- [ ] File sizes meet performance budgets (or justified in PR)
+- [ ] If georeferenced:
+  - [ ] `spatial.crs` is `EPSG:4326`
+  - [ ] `anchor` is correct and units documented
+- [ ] No raw, massive sources checked into the web bundle
+
+---
+
+## 🧠 Provenance flow (why we’re strict)
+
+KFM’s overall pipeline mindset is: raw sources → processing → catalog/provenance → UI/story consumption, preserving traceability end-to-end.:contentReference[oaicite:10]{index=10}
+
+```mermaid
+flowchart LR
+  A[🧾 Source / Scan / Reference] --> B[🛠️ Processing + Optimization]
+  B --> C[📦 model.glb]
+  B --> D[🧷 model.meta.json]
+  C --> E[🌐 Web Viewer]
+  D --> E
+  E --> F[📚 Story Nodes / UI Attribution]
 ```
 
-**Pseudo-code (Cesium terrain provider):**
-```ts
-// Example intent only — use the Cesium API shape your codebase standardizes on.
-const url = "/assets/3d/terrain/packs/kansas-dem-10m/terrain/";
-viewer.terrainProvider = await Cesium.CesiumTerrainProvider.fromUrl(url);
-```
-
-### B) Serve heavy packs via CDN ☁️
-If packs are huge, don’t commit them into the repo. Instead:
-- publish the pack folder as a versioned artifact (release, object storage, CDN)
-- keep a **small stub** in-repo (manifest + contract + preview) and point `baseUrl` to the CDN
+> [!NOTE]
+> The broader project uses staged data lifecycle layouts (raw → work → processed) to make audits easy; keep big/raw 3D sources out of the web bundle and only ship optimized runtime artifacts here.:contentReference[oaicite:11]{index=11}
 
 ---
 
-## 📦 Size & performance guidance (please read)
+## 📚 References
 
-Terrain data can get big fast 😅
+- **KFM – Comprehensive Technical Documentation** :contentReference[oaicite:12]{index=12}  
+  - Contract-first + provenance-first, no mystery layers:contentReference[oaicite:13]{index=13}  
+  - Web viewer stack (React + MapLibre + Cesium) + 3D Tiles streaming:contentReference[oaicite:14]{index=14}
 
-- 🚫 **Avoid committing massive statewide high-zoom packs** directly into Git.
-- ✅ Prefer **derived products** and **appropriate max zoom** for the intended experience.
-- ✅ Use **LOD** wisely: lower-res terrain when zoomed out; increase detail only when needed.
-- ✅ If/when packs are hosted externally, use **versioned URLs** (so caches don’t break story reproducibility).
+- **Kansas Frontier Matrix – Open-Source Design Doc** :contentReference[oaicite:15]{index=15}  
+  - CesiumJS for 3D expansion + CZML/3D Tiles for streaming:contentReference[oaicite:16]{index=16}
 
----
+- **Comprehensive Markdown Guide (KFM)** :contentReference[oaicite:17]{index=17}  
+  - Pipeline traceability + staging conventions:contentReference[oaicite:18]{index=18}:contentReference[oaicite:19]{index=19}
 
-## ✅ PR checklist for new packs
+- **WebGL Programming Guide** :contentReference[oaicite:20]{index=20}  
+  - Local coordinate systems + origin/pivot considerations:contentReference[oaicite:21]{index=21}
 
-- [ ] Pack folder name is stable + kebab-case: `my-pack-id`
-- [ ] `pack.json` exists and is minimal
-- [ ] `contract.json` exists and includes **source + license + processing**
-- [ ] Terrain payload is present (`terrain/` and/or `tileset/`)
-- [ ] Bounds are correct (basic sanity check in 2D map)
-- [ ] Preview image added (optional, but helpful)
-- [ ] No sensitive/private data included
-- [ ] Repo size impact considered (CDN/release artifact if needed)
-
----
-
-## 🧯 Troubleshooting
-
-**Terrain loads but looks “spiky” / wrong height**
-- Likely a **vertical datum / unit mismatch** or a bad conversion step.
-- Confirm the source DEM metadata and declare it in `contract.json`.
-
-**Terrain is invisible**
-- Check `baseUrl` paths and that `layer.json` / `tileset.json` is reachable.
-- Check browser devtools for 404s.
-
-**Terrain is shifted to the wrong place**
-- CRS mismatch. Confirm `spatial.crs` and the conversion pipeline.
-
----
-
-## 📚 Glossary (quick)
-
-- **DEM**: Digital Elevation Model
-- **DTM**: Digital Terrain Model (ground surface)
-- **Quantized-mesh**: Cesium-friendly terrain tiling format
-- **3D Tiles**: Streaming standard for 3D geospatial content (meshes, point clouds, etc.)
-- **LOD**: Level of Detail (resolution varies by zoom)
-
----
-
-## 🧠 Design principle reminder
-
-> If a user can’t inspect a pack’s *source, license, and processing steps*, it doesn’t belong here. ✅
+- *(Optional / inspiration)* **Archaeological 3D GIS** :contentReference[oaicite:22]{index=22}  
+  - Useful context for 3D web GIS and model workflows:contentReference[oaicite:23]{index=23}
