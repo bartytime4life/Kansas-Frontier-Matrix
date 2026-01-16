@@ -24,14 +24,14 @@ Domains overlap and connect (e.g., precipitation → runoff → floods → infra
 
 ```text
 web/
-  assets/
-    icons/
-      domain/
-        README.md   👈 you are here
-        domain-*.svg
-        domain-*.png            (optional fallback)
-        icons.manifest.json     (recommended)
-        sprite.domain.svg       (optional build artifact)
+└─ 📁 assets/
+   └─ 🧷 icons/
+      └─ 🧭 domain/
+         ├─ 📄 README.md   👈 you are here 📌
+         ├─ 🧷🧾 domain-*.svg
+         ├─ 🖼️🧷 domain-*.png            # (optional fallback)
+         ├─ 🧾🗂️ icons.manifest.json     # (recommended)
+         └─ 🧷🖼️ sprite.domain.svg       # (optional build artifact)
 ```
 
 > The web app’s `/assets/` directory is expected to host things like images/icons and should remain **responsive + accessible**.  [oai_citation:6‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK)
