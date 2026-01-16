@@ -24,13 +24,13 @@ This directory is the **single source of truth** for chart color palettes used a
 ## 📁 Where you are (context)
 
 ```text
-🌐 web/
-  🎛️ assets/
-    📊 charts/
-      🧩 tokens/
-        🎨 palettes/
-          README.md   👈 you are here
-          …           (palette token files live here)
+web/
+└─ 🌐🎛️ assets/
+   └─ 📊 charts/
+      └─ 🧩 tokens/
+         └─ 🎨 palettes/
+            ├─ 📄 README.md   👈 you are here 📌
+            └─ 🎨🧾 …          # (palette token files live here)
 ```
 
 > [!NOTE]
