@@ -35,16 +35,16 @@ These example specs are meant to be used as:
 ## 🗂️ Folder context
 
 ```text
-📁 web/
-  📁 assets/
-    📁 charts/
-      📁 specs/
-        📁 examples/
-          📄 README.md   👈 you are here
-          📄 *.json      (example chart specs)
-          📄 *.md        (optional: narrative notes per example)
-          📁 data/       (optional: tiny fixture datasets, if used)
-          🖼️ *.png       (optional: golden screenshots for review/CI)
+web/
+└─ 📁 assets/
+   └─ 📈 charts/
+      └─ 🧪📐 specs/
+         └─ 🧪 examples/
+            ├─ 📄 README.md             # 👈 you are here 📌
+            ├─ 🧾 *.json                # (example chart specs)
+            ├─ 📝 *.md                  # (optional: narrative notes per example)
+            ├─ 🧩 data/                 # (optional: tiny fixture datasets, if used)
+            └─ 🖼️ *.png                 # (optional: golden screenshots for review/CI)
 ```
 
 ---
