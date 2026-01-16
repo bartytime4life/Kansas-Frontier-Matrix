@@ -70,22 +70,22 @@ You can keep PNGs flat, but subfolders make long-term maintenance easier:
 
 ```text
 web/
-└── assets/
-    └── charts/
-        └── exports/
-            └── png/
-                ├── README.md
-                ├── 📁 sparkline/
-                │   ├── sparkline--7d--320x80@1x.png
-                │   ├── sparkline--7d--320x80@2x.png
-                │   └── sparkline--7d--320x80.meta.json
-                ├── 📁 timeseries/
-                │   ├── rainfall--monthly--640x360@1x.png
-                │   ├── rainfall--monthly--640x360@2x.png
-                │   └── rainfall--monthly--640x360.meta.json
-                └── 📁 og/
-                    ├── dataset-preview--1200x630@1x.png
-                    └── dataset-preview--1200x630.meta.json
+└── 📁 assets/
+    └── 📈 charts/
+        └── 📦 exports/
+            └── 🖼️ png/
+                ├── 📄 README.md
+                ├── 📈 sparkline/
+                │   ├── 🖼️ sparkline--7d--320x80@1x.png
+                │   ├── 🖼️✨ sparkline--7d--320x80@2x.png
+                │   └── 🧾 sparkline--7d--320x80.meta.json
+                ├── 📈 timeseries/
+                │   ├── 🖼️ rainfall--monthly--640x360@1x.png
+                │   ├── 🖼️✨ rainfall--monthly--640x360@2x.png
+                │   └── 🧾 rainfall--monthly--640x360.meta.json
+                └── 🧩 og/
+                    ├── 🖼️ dataset-preview--1200x630@1x.png
+                    └── 🧾 dataset-preview--1200x630.meta.json
 ```
 
 ---
