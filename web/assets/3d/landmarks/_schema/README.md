@@ -28,20 +28,20 @@ This schema enforces those rules **at build/CI time** so we don’t discover pro
 A typical landmarks layout looks like:
 
 ```text
-🌐 web/
-  🧩 assets/
-    🧊 3d/
-      🗿 landmarks/
-        📄 index.json                  # lightweight registry for UI (fast list)
-        📁 monument-rocks/
-          📄 landmark.json             # "manifest" (validated by schema)
-          🧱 model.glb                 # or: model.gltf + textures/
-          🧊 tileset.json              # optional (3D Tiles entrypoint)
-          🖼️ thumbnail.webp
-        📁 _schema/
-          📄 landmark.schema.json
-          📄 landmarks.index.schema.json
-          📄 README.md                 # ← you are here
+web/
+└─ 🌐🧩 assets/
+   └─ 🧊 3d/
+      └─ 🗿 landmarks/
+         ├─ 🧾🗂️ index.json                  # lightweight registry for UI (fast list)
+         ├─ 🪨 monument-rocks/
+         │  ├─ 🧾🧭 landmark.json             # "manifest" (validated by schema)
+         │  ├─ 🧱🧊 model.glb                 # or: model.gltf + textures/
+         │  ├─ 🧊🧱 tileset.json              # optional (3D Tiles entrypoint)
+         │  └─ 🖼️ thumbnail.webp
+         └─ 📐 _schema/
+            ├─ 📐🧾 landmark.schema.json
+            ├─ 📐🧾 landmarks.index.schema.json
+            └─ 📄 README.md                   # ← you are here 📌
 ```
 
 > [!TIP]
