@@ -16,10 +16,10 @@ Static, lightweight preview images for **terrain datasets** used by the KFM web 
 
 ```text
 web/
-└─ assets/
-   └─ 3d/
-      └─ terrain/
-         └─ previews/   👈 you are here
+└─ 📁 assets/
+   └─ 🧊 3d/
+      └─ 🏞️ terrain/
+         └─ 🖼️ previews/   👈 you are here 📌
 ```
 
 ---
