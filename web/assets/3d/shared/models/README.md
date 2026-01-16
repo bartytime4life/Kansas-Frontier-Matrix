@@ -44,20 +44,20 @@
 
 ```text
 web/assets/3d/shared/models/
-  📄 README.md
-
-  📁 monument-rocks/
-    📦 model.glb
-    🧾 model.meta.json
-    🖼️ preview.webp
-    🏷️ ATTRIBUTION.md
-    📁 sources/            (optional; keep tiny, or store raw elsewhere)
-
-  📁 _template/
-    📦 model.glb
-    🧾 model.meta.json
-    🖼️ preview.webp
-    🏷️ ATTRIBUTION.md
+├─ 📄 README.md
+│
+├─ 🪨 monument-rocks/
+│  ├─ 🧊📦 model.glb
+│  ├─ 🧾 model.meta.json
+│  ├─ 🖼️ preview.webp
+│  ├─ 🏷️ ATTRIBUTION.md
+│  └─ 🧪 sources/            # (optional; keep tiny, or store raw elsewhere)
+│
+└─ 🧩 _template/
+   ├─ 🧊📦 model.glb
+   ├─ 🧾 model.meta.json
+   ├─ 🖼️ preview.webp
+   └─ 🏷️ ATTRIBUTION.md
 ```
 
 ### 🧠 Naming conventions
