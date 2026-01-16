@@ -45,24 +45,24 @@ This folder holds **web-ready 3D terrain assets** used by the KFM front-end for 
 
 ```text
 web/assets/3d/terrain/
-├── README.md                         📘 you are here
-├── manifest.json                     🧾 index of available terrain packs
-├── previews/                         🖼️ thumbnails / quicklook PNG/JPG
-│   └── kansas-dem-10m.jpg
-├── packs/                            📦 versioned terrain “products”
-│   ├── kansas-dem-10m_v1/            🌾 statewide baseline terrain
-│   │   ├── tileset.json              🧱 (3D Tiles entrypoint) OR terrain.json
-│   │   ├── tiles/                    🧩 tile payloads (batched or per-tile)
-│   │   ├── textures/                 🎨 drape/hillshade/color-relief
-│   │   └── meta.json                 🧾 provenance + CRS + units + bounds
-│   └── flint-hills-lidar-1m_v1/      🦬 high-res focused region
-│       ├── tileset.json
-│       ├── tiles/
-│       ├── textures/
-│       └── meta.json
-└── schema/                           🧪 optional JSON schemas (if enforced)
-    ├── manifest.schema.json
-    └── meta.schema.json
+├── 📘📄 README.md                         # 📘 you are here 📌
+├── 🧾🗂️ manifest.json                     # 🧾 index of available terrain packs
+├── 🖼️ previews/                          # 🖼️ thumbnails / quicklook PNG/JPG
+│   └── 🖼️ kansas-dem-10m.jpg
+├── 📦 packs/                             # 📦 versioned terrain “products”
+│   ├── 🌾 kansas-dem-10m_v1/             # 🌾 statewide baseline terrain
+│   │   ├── 🧱🧾 tileset.json              # 🧱 (3D Tiles entrypoint) OR terrain.json
+│   │   ├── 🧩 tiles/                     # 🧩 tile payloads (batched or per-tile)
+│   │   ├── 🎨 textures/                  # 🎨 drape/hillshade/color-relief
+│   │   └── 🧾📜 meta.json                 # 🧾 provenance + CRS + units + bounds
+│   └── 🦬 flint-hills-lidar-1m_v1/       # 🦬 high-res focused region
+│       ├── 🧱🧾 tileset.json
+│       ├── 🧩 tiles/
+│       ├── 🎨 textures/
+│       └── 🧾📜 meta.json
+└── 🧪 schema/                            # 🧪 optional JSON schemas (if enforced)
+    ├── 📐🧾 manifest.schema.json
+    └── 📐🧾 meta.schema.json
 ```
 
 ---
