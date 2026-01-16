@@ -39,16 +39,16 @@ Icons here should stay **consistent**, **accessible**, **lightweight**, and **go
 
 ```text
 web/
-  assets/
-    icons/
-      README.md
-      ui/            # general interface icons
-      map/           # map controls + cartographic UI
-      data/          # data types, formats, catalogs, provenance
-      status/        # verification, warning, error, uncertainty, AI
-      domain/        # archaeology, remote sensing, simulation, graphs, etc.
-      brand/         # strictly controlled brand marks (prefer SVG, allow PNG)
-      _generated/    # build artifacts (sprite sheets, manifests) — do not hand-edit
+└─ 📁 assets/
+   └─ 🧷 icons/
+      ├─ 📄 README.md
+      ├─ 🧭 ui/            # general interface icons
+      ├─ 🗺️ map/           # map controls + cartographic UI
+      ├─ 🗂️ data/          # data types, formats, catalogs, provenance
+      ├─ 🚦 status/        # verification, warning, error, uncertainty, AI
+      ├─ 🧭 domain/        # archaeology, remote sensing, simulation, graphs, etc.
+      ├─ 🏷️ brand/         # strictly controlled brand marks (prefer SVG, allow PNG)
+      └─ 🤖 _generated/    # build artifacts (sprite sheets, manifests) — do not hand-edit
 ```
 
 ---
