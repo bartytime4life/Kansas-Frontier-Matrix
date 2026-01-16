@@ -44,13 +44,13 @@ flowchart LR
 This folder holds **manifest files only** (JSON/YAML). The actual chart files typically live alongside, e.g.:
 
 ```text
-📁 web/assets/charts/exports/
-├── 📁 manifest/
-│   └── 📄 README.md   👈 you are here
-├── 📁 png/            # optional (raster exports)
-├── 📁 svg/            # optional (vector exports)
-├── 📁 thumbs/         # optional (small previews)
-└── 📁 data/           # optional (lightweight chart payloads, if used)
+web/assets/charts/exports/
+├── 🧭 manifest/
+│   └── 📄 README.md   👈 you are here 📌
+├── 🖼️ png/            # optional (raster exports)
+├── 🖼️ svg/            # optional (vector exports)
+├── 🧩 thumbs/          # optional (small previews)
+└── 📊 data/           # optional (lightweight chart payloads, if used)
 ```
 
 ### ✅ Expected manifest(s)
