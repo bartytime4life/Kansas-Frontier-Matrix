@@ -45,17 +45,17 @@ This folder is the **shared, static** asset layer used by the web app—not the 
 
 ```text
 web/assets/3d/shared/
-├── 📁 models/
-│   ├── 📁 glb/                 # Small, UI-shipped models (binary glTF)
-│   └── 📁 tilesets/            # Tiny dev/demo tilesets only (NOT “official” data)
-├── 📁 textures/
-│   ├── 📁 png/                 # Alpha, masks, crisp UI decals
-│   ├── 📁 jpg/                 # Photographic/albedo where alpha not needed
-│   └── 📁 atlases/             # Texture atlases (optional)
-├── 📁 shaders/                 # Optional: shared shader snippets
-├── 📁 thumbnails/              # UI previews / posters
-├── 📁 meta/                    # Asset contracts / provenance sidecars
-└── 📄 assets.manifest.json     # Registry: assetId → file(s) + metadata pointers
+├── 🧊 models/
+│   ├── 🧊 glb/                 # Small, UI-shipped models (binary glTF)
+│   └── 🧱 tilesets/            # Tiny dev/demo tilesets only (NOT “official” data)
+├── 🎨 textures/
+│   ├── 🖼️ png/                 # Alpha, masks, crisp UI decals
+│   ├── 📷 jpg/                 # Photographic/albedo where alpha not needed
+│   └── 🧩 atlases/             # Texture atlases (optional)
+├── 🧬 shaders/                 # Optional: shared shader snippets
+├── 🖼️ thumbnails/              # UI previews / posters
+├── 🧾 meta/                    # Asset contracts / provenance sidecars
+└── 🧾📦 assets.manifest.json    # Registry: assetId → file(s) + metadata pointers
 ```
 
 ---
