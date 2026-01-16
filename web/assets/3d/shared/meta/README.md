@@ -38,12 +38,12 @@ This README documents `meta/` specifically, but it’s meant to work alongside a
 
 ```text
 web/assets/3d/
-  shared/
-    meta/          🧾 JSON manifests (this folder)
-    models/        🧱 small glTF/GLB assets (optional)
-    tilesets/      🧊 Cesium 3D Tiles roots (optional)
-    thumbnails/    🖼️ preview images (optional)
-    materials/     🎨 shared textures/material refs (optional)
+└─ 🧰 shared/
+   ├─ 🧾 meta/          # 🧾 JSON manifests (this folder)
+   ├─ 🧱 models/        # 🧱 small glTF/GLB assets (optional)
+   ├─ 🧊 tilesets/      # 🧊 Cesium 3D Tiles roots (optional)
+   ├─ 🖼️ thumbnails/    # 🖼️ preview images (optional)
+   └─ 🎨 materials/     # 🎨 shared textures/material refs (optional)
 ```
 
 > If the repo structure differs, keep the *principle* the same: **meta files are stable pointers + UI hints**, not the authoritative evidence store.
