@@ -49,21 +49,21 @@ KFM’s UI is *not* a black box. Chart exports must be:
 > If the repo currently differs, treat this as the **standard we converge to**.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 charts/
-      📁 exports/
-        📄 README.md
-        📄 exports.manifest.json              # global index (optional but recommended)
-        📁 manifest/                          # per-chart manifests (recommended)
-          📄 kfm.hydrology.streamflow.v1.json
-        📁 svg/                               # vector exports
-        📁 png/                               # raster exports
-        📁 webp/                              # web-optimized raster exports
-        📁 pdf/                               # print exports
-        📁 data/                              # optional: tabular extracts for transparency
-        📁 alt/                               # alt-text + longdesc markdown (a11y)
-        📁 thumbs/                            # tiny preview tiles
+web/
+└─ 📁 assets/
+   └─ 📈 charts/
+      └─ 📦 exports/
+         ├─ 📄 README.md
+         ├─ 🧾🗂️ exports.manifest.json              # global index (optional but recommended)
+         ├─ 🧭 manifest/                            # per-chart manifests (recommended)
+         │  └─ 🧾 kfm.hydrology.streamflow.v1.json
+         ├─ 🖼️ svg/                                # vector exports
+         ├─ 🖼️ png/                                # raster exports
+         ├─ 🖼️ webp/                               # web-optimized raster exports
+         ├─ 📄 pdf/                                # print exports
+         ├─ 📊 data/                               # optional: tabular extracts for transparency
+         ├─ ♿📝 alt/                               # alt-text + longdesc markdown (a11y)
+         └─ 🧩 thumbs/                             # tiny preview tiles
 ```
 
 ---
