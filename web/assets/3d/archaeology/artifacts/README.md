@@ -41,15 +41,15 @@ flowchart LR
 
 ```text
 web/assets/3d/archaeology/artifacts/
-├─ README.md
-├─ index.json                    # optional (generated registry for UI discovery)
-└─ kfm-arch-artifact-000123/
-   ├─ model.glb                  # required (web-ready)
-   ├─ model_lod1.glb             # optional (faster / fallback)
-   ├─ preview.webp               # required (tiny thumbnail)
-   ├─ meta.json                  # required (contract + links + provenance)
-   ├─ attribution.md             # recommended (human-readable credits)
-   └─ checksums.sha256           # recommended (integrity / reproducibility)
+├─ 📄 README.md
+├─ 🧾🗂️ index.json                    # optional (generated registry for UI discovery)
+└─ 🏷️ kfm-arch-artifact-000123/
+   ├─ 🧊 model.glb                    # required (web-ready)
+   ├─ 🧊⚡ model_lod1.glb              # optional (faster / fallback)
+   ├─ 🖼️ preview.webp                 # required (tiny thumbnail)
+   ├─ 🧾📜 meta.json                   # required (contract + links + provenance)
+   ├─ 📝 attribution.md               # recommended (human-readable credits)
+   └─ 🔐🧾 checksums.sha256            # recommended (integrity / reproducibility)
 ```
 
 <details>
