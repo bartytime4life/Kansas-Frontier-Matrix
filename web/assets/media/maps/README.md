@@ -85,23 +85,23 @@ flowchart LR
 
 ```text
 web/assets/media/maps/
-  README.md                      # you are here 📍
-
-  previews/                      # 🖼️ thumbnails / layer cards
-    <layer-id>.webp
-    <layer-id>.meta.json
-
-  legends/                       # 🧾 legends / symbology exports
-    <layer-id>.svg
-    <layer-id>.meta.json
-
-  overlays/                      # 🧩 ONLY small/needed UI overlays
-    <overlay-id>.png
-    <overlay-id>.overlay.json    # bounds/projection for simple overlay use
-    <overlay-id>.meta.json
-
-  manifests/                     # 🗺️ optional UI indexes
-    layers.media.index.json
+├─ 📄 README.md                      # 📍 you are here: what map-media is, naming rules, and how the UI consumes it
+│
+├─ 🖼️ previews/                      # 🖼️ Thumbnails / layer cards (small, web-optimized)
+│  ├─ 🖼️ <layer-id>.webp             # Preview image used in catalogs, pickers, and Story Nodes
+│  └─ 🧾 <layer-id>.meta.json        # Provenance + attribution + generation params for the preview
+│
+├─ 🧾 legends/                       # 🧾 Legend / symbology exports (human-facing)
+│  ├─ 🧷 <layer-id>.svg              # Legend graphic (SVG preferred for crisp scaling)
+│  └─ 🧾 <layer-id>.meta.json        # Provenance + references to styles/ramps/patterns used in the legend
+│
+├─ 🧩 overlays/                      # 🧩 ONLY small/needed UI overlays (not full datasets)
+│  ├─ 🖼️ <overlay-id>.png            # Overlay image (heatmap stamp, inset, guide overlay, etc.)
+│  ├─ 🗺️🧾 <overlay-id>.overlay.json  # Placement contract: bounds/CRS/projection + opacity defaults
+│  └─ 🧾 <overlay-id>.meta.json      # Provenance + licensing + how/why this overlay exists
+│
+└─ 🗺️ manifests/                    # 🗺️ Optional UI indexes / rollups (fast startup discovery)
+   └─ 🧾🗂️ layers.media.index.json   # Index: layerId → preview/legend/overlay pointers + tags
 ```
 
 ---
