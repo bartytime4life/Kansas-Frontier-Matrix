@@ -70,28 +70,28 @@ KFM maps are persuasive artifacts. Our default stance:
 The repo may evolve, but the intent stays constant. Recommended structure:
 
 ```text
-📁 web/
-  📁 assets/
-    📁 maps/
-      📁 styles/
-        📄 README.md  👈 you are here
-        📁 basemaps/
-          📄 kfm-light.style.json
-          📄 kfm-dark.style.json
-        📁 overlays/
-          📄 kfm-boundaries.style.json
-          📄 kfm-transport.style.json
-        📁 sprites/
-          📁 kfm/
-            🧩 sprite.png
-            🧩 sprite@2x.png
-            🧾 sprite.json
-        📁 glyphs/
-          📁 {fontstack}/
-            🔤 {range}.pbf
-        📁 patterns/
-          🧵 diagonal-hatch.png
-          🧵 dots.png
+web/
+└─ 📁 assets/
+   └─ 🗺️ maps/
+      └─ 🎨 styles/
+         ├─ 📄 README.md                 # 👈 you are here 📌 How map styles are organized, composed, and referenced
+         ├─ 🧱 basemaps/                 # 🧱 Full base styles (background, land/water, core labels)
+         │  ├─ 🌞🎨🧾 kfm-light.style.json # Light default basemap style
+         │  └─ 🌙🎨🧾 kfm-dark.style.json  # Dark default basemap style
+         ├─ 🧩 overlays/                 # 🧩 Style add-ons for thematic layers (boundaries, transport, etc.)
+         │  ├─ 🧩🎨🧾 kfm-boundaries.style.json # Boundary lines/polygons styling bundle
+         │  └─ 🧩🎨🧾 kfm-transport.style.json  # Roads/rails/transit styling bundle
+         ├─ 🧃 sprites/                  # 🧃 Sprite assets referenced by styles (icons, shields, markers)
+         │  └─ 🧷 kfm/
+         │     ├─ 🖼️🧷 sprite.png        # Sprite sheet @1x
+         │     ├─ 🖼️✨🧷 sprite@2x.png    # Sprite sheet @2x (retina)
+         │     └─ 🧾🧷 sprite.json        # Sprite index (name → x/y/w/h)
+         ├─ 🔤 glyphs/                   # 🔤 Glyph endpoint for label rendering: {fontstack}/{range}.pbf
+         │  └─ 🔤 {fontstack}/
+         │     └─ 🔤📦 {range}.pbf        # 256-codepoint glyph pack (e.g., 0-255, 256-511…)
+         └─ 🧵 patterns/                 # 🧵 Raster pattern fills (a11y/print overlays; optional)
+            ├─ 🧵🖼️ diagonal-hatch.png    # Diagonal hatch fill pattern
+            └─ 🧵🖼️ dots.png              # Dot fill pattern
 ```
 
 > [!NOTE]
