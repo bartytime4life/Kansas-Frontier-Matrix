@@ -13,19 +13,19 @@ This folder supports KFM’s “trustable map UI” goal: the interface should b
 Typical sprite set layout (names vary by style/theme):
 
 ```text
-📁 web/
-  📁 assets/
-    📁 maps/
-      📁 styles/
-        📁 sprites/
-          📄 README.md
-          🖼️ <sprite>.png
-          🧾 <sprite>.json
-          🖼️ <sprite>@2x.png
-          🧾 <sprite>@2x.json
-          📁 src/ (optional but recommended)
-            📁 svg/ (source icons)
-            📁 meta/ (licenses, notes, provenance)
+web/
+└─ 📁 assets/
+   └─ 🗺️ maps/
+      └─ 🎨 styles/
+         └─ 🧃 sprites/
+            ├─ 📄 README.md                 # 📘 Sprite naming, build workflow, and how styles reference sprites
+            ├─ 🖼️ <sprite>.png              # 🖼️ Sprite sheet @1x (packed icons)
+            ├─ 🧾 <sprite>.json             # 🧾 Index: iconName → x/y/w/h + pixelRatio
+            ├─ 🖼️✨ <sprite>@2x.png          # 🖼️ Sprite sheet @2x (retina)
+            ├─ 🧾✨ <sprite>@2x.json         # 🧾 Index for @2x sheet (same names, pixelRatio=2)
+            └─ 🎨 src/                      # 🎨 Optional but recommended: build inputs (single source of truth)
+               ├─ 🧷 svg/                   # 🧷 Source SVG icons (human-edited)
+               └─ 🧾 meta/                  # 🧾 Provenance, licenses, and notes per icon/sprite set
 ```
 
 ### ✅ Expected outputs (runtime files)
