@@ -15,27 +15,27 @@
 This directory is intentionally “boring + strict” so legends stay consistent, accessible, and provenance-safe as KFM scales.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 maps/
-      📁 legends/
-        📄 README.md
-        📄 legends.manifest.json          # ✅ global registry for legends (IDs → files → metadata)
-        📄 legends.schema.json            # ✅ JSON Schema for CI validation (optional but recommended)
-        📁 icons/                         # 🎯 point / UI icons (SVG preferred)
-          🖼️ kfm__railroads__operational.svg
-          🖼️ kfm__railroads__abandoned.svg
-          🖼️ kfm__schools.svg
-        📁 swatches/                      # 🧱 “line + fill” swatches as SVG snippets (optional)
-          🖼️ kfm__roads__primary.svg
-        📁 ramps/                         # 🌈 continuous / binned ramps for rasters & heatmaps
-          📄 precip__mm__quantiles.v1.json
-          🖼️ precip__mm__quantiles.v1.png
-        📁 patterns/                      # 🟫 hatches/textures for a11y + print + uncertainty overlays
-          🖼️ hatch__uncertainty.svg
-          🖼️ hatch__restricted.svg
-        📁 previews/                      # 🖼️ human-friendly preview images (optional but encouraged)
-          🖼️ kfm__railroads.preview.png
+web/
+└─ 📁 assets/
+   └─ 🗺️ maps/
+      └─ 🧾 legends/
+         ├─ 📄 README.md                       # 📘 How legends are organized, named, and referenced by styles/UI
+         ├─ ✅🧾 legends.manifest.json          # ✅ Global registry: legendId → file(s) + tags + usage + provenance
+         ├─ ✅📐🧾 legends.schema.json           # ✅ JSON Schema for CI validation (optional but recommended)
+         ├─ 🎯 icons/                          # 🎯 Point/UI legend icons (SVG preferred; used in keys + popups)
+         │  ├─ 🧷🎯 kfm__railroads__operational.svg
+         │  ├─ 🧷🎯 kfm__railroads__abandoned.svg
+         │  └─ 🧷🎯 kfm__schools.svg
+         ├─ 🧱 swatches/                       # 🧱 Line/fill swatches as SVG snippets (optional; fast legend render)
+         │  └─ 🧱🧷 kfm__roads__primary.svg
+         ├─ 🌈 ramps/                          # 🌈 Continuous/binned ramps for rasters & heatmaps (JSON + preview)
+         │  ├─ 🌈🧾 precip__mm__quantiles.v1.json
+         │  └─ 🌈🖼️ precip__mm__quantiles.v1.png
+         ├─ 🟫 patterns/                       # 🟫 Hatches/textures for a11y, print, uncertainty, restrictions
+         │  ├─ 🟫🧷 hatch__uncertainty.svg
+         │  └─ 🟫🧷 hatch__restricted.svg
+         └─ 🖼️ previews/                      # 🖼️ Human-friendly preview images (optional but encouraged)
+            └─ 🖼️ kfm__railroads.preview.png
 ```
 
 ---
