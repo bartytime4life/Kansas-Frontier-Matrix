@@ -28,17 +28,17 @@ Tileable textures used for **map legend swatches** (and optionally polygon fill 
 
 ```text
 web/assets/maps/legends/patterns/
-├─ README.md
-├─ hatch-diagonal-45.svg
-├─ hatch-diagonal-45.png
-├─ dots-4.svg
-├─ dots-4.png
-├─ crosshatch.svg
-├─ crosshatch.png
-└─ _meta/
-   ├─ hatch-diagonal-45.meta.json
-   ├─ dots-4.meta.json
-   └─ crosshatch.meta.json
+├─ 📄 README.md                        # 📘 What these patterns are for, naming rules, and how to reference them
+├─ 🟫🧷 hatch-diagonal-45.svg            # 🟫 Vector hatch (45°) for a11y/print-friendly overlays (preferred source)
+├─ 🟫🖼️ hatch-diagonal-45.png            # 🟫 Raster fallback for engines that can’t use SVG patterns
+├─ 🟫🧷 dots-4.svg                       # 🟫 Vector dot pattern (density “4”) for uncertainty/restricted/secondary fills
+├─ 🟫🖼️ dots-4.png                       # 🟫 Raster fallback (match SVG visually; use for fast runtime)
+├─ 🟫🧷 crosshatch.svg                    # 🟫 Vector crosshatch for “do-not-use / masked / disputed” style signals
+├─ 🟫🖼️ crosshatch.png                    # 🟫 Raster fallback (use when SVG patterns aren’t supported)
+└─ 🧾 _meta/                             # 🧾 Provenance + licensing + tags + recommended usage per pattern
+   ├─ 🧾 hatch-diagonal-45.meta.json      # 🧾 Source/tooling, license, intended meanings (e.g., uncertainty)
+   ├─ 🧾 dots-4.meta.json                 # 🧾 Same: provenance + semantic tags + constraints
+   └─ 🧾 crosshatch.meta.json             # 🧾 Same: provenance + semantic tags + constraints
 ```
 
 > [!TIP]
