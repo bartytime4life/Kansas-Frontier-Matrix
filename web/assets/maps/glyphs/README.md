@@ -27,20 +27,20 @@ Keeping glyphs in-repo makes the map viewer more **portable** (static hosting / 
 ## 📦 Folder layout
 
 ```text
-📁 web/
-  📁 assets/
-    📁 maps/
-      📁 glyphs/
-        📄 README.md   👈 you are here
-        📁 <Font Stack Name 1>/
-          📄 0-255.pbf
-          📄 256-511.pbf
-          📄 512-767.pbf
-          📄 ...
-        📁 <Font Stack Name 2>/
-          📄 0-255.pbf
-          📄 256-511.pbf
-          📄 ...
+web/
+└─ 📁 assets/                         # 🖼️ Web-shipped static assets
+   └─ 🗺️ maps/                        # 🗺️ Map rendering assets (styles, sprites, glyphs, tiles)
+      └─ 🔤 glyphs/                   # 🔤 MapLibre glyph endpoint: {fontstack}/{range}.pbf
+         ├─ 📄 README.md              # 📘 You are here: how glyphs are built/served + URL pattern + licensing
+         ├─ 🔤 <Font Stack Name 1>/   # 🔤 Folder name MUST match style “text-font” / {fontstack} value
+         │  ├─ 🔤📦 0-255.pbf          # 🔤 Glyph pack for Unicode codepoints 0–255
+         │  ├─ 🔤📦 256-511.pbf        # 🔤 Glyph pack for Unicode codepoints 256–511
+         │  ├─ 🔤📦 512-767.pbf        # 🔤 Glyph pack for Unicode codepoints 512–767
+         │  └─ ➕ …                    # 🔤 Additional 256-codepoint ranges as needed
+         └─ 🔤 <Font Stack Name 2>/   # 🔤 Alternate/fallback font stack (e.g., extra scripts, weight, brand)
+            ├─ 🔤📦 0-255.pbf          # 🔤 Glyph pack for Unicode codepoints 0–255
+            ├─ 🔤📦 256-511.pbf        # 🔤 Glyph pack for Unicode codepoints 256–511
+            └─ ➕ …                    # 🔤 Additional 256-codepoint ranges as needed
 ```
 
 > [!TIP]
