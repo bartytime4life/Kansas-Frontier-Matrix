@@ -14,13 +14,13 @@ This folder contains **JSON Schemas** for **KFM’s 3D map “configuration + as
 ## 📍 Where you are
 
 ```text
-📁 web/
-  📁 assets/
-    📁 maps/
-      📁 3d/
-        📁 _schemas/        👈 you are here
-          📄 README.md
-          📄 (schema files live here)
+web/
+└─ 📁 assets/
+   └─ 🗺️ maps/
+      └─ 🧊 3d/
+         └─ 📐 _schemas/        👈 you are here 📌
+            ├─ 📄 README.md
+            └─ 📐🧾 …           # (schema files live here)
 ```
 
 ---
