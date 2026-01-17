@@ -63,12 +63,12 @@ flowchart LR
 ## 🗂️ Folder map (local)
 
 ```text
-📁 web/
-  📁 src/
-    📁 adapters/
-      📁 telemetry/
-        📁 __tests__/   ✅ you are here
-          📄 README.md
+web/
+└─ 📁 src/
+   └─ 🧩 adapters/
+      └─ 📡 telemetry/
+         └─ 🧪 __tests__/   ✅ you are here 📌
+            └─ 📄 README.md
 ```
 
 > If you add new helper utilities for tests (recommended), keep them **co-located** in this folder (e.g., `fixtures.ts`, `testTransport.ts`) to avoid “helper drift.” 🧲
