@@ -51,12 +51,12 @@ When a symbol layer uses `text-font`, MapLibre will request glyph PBFs like:
 
 ```text
 web/assets/maps/styles/glyphs/
-├─ <fontstack>/
-│  ├─ 0-255.pbf
-│  ├─ 256-511.pbf
-│  ├─ 512-767.pbf
-│  └─ ...
-└─ README.md
+├─ 🔤 <fontstack>/                 # 🔤 Glyph stack folder (name must match {fontstack} requested by styles)
+│  ├─ 🔤📦 0-255.pbf                # Glyphs for Unicode codepoints 0–255 (256-codepoint pack)
+│  ├─ 🔤📦 256-511.pbf              # Glyphs for Unicode codepoints 256–511
+│  ├─ 🔤📦 512-767.pbf              # Glyphs for Unicode codepoints 512–767
+│  └─ ➕ …                          # Additional 256-codepoint ranges as needed (e.g., 768-1023.pbf)
+└─ 📄 README.md                     # 📘 How glyphs are generated/served + URL template + stack naming + licensing
 ```
 
 ### Naming rules that matter ✅
