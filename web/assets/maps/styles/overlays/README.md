@@ -32,12 +32,12 @@ KFM is designed so the map UI can **toggle layers**, show **legends**, support a
 
 ```mermaid
 flowchart LR
-  A[📦 Dataset in Catalog<br/>(STAC/DCAT/PROV-O)] --> B[📜 Data Contract JSON<br/>(license, source, extent)]
-  B --> C[🧩 Overlay Manifest<br/>(UI: name, time, legend, attribution)]
-  C --> D[🎨 Overlay Style<br/>(MapLibre layers + sources)]
-  D --> E[🗺️ Map Viewer<br/>(MapLibre / 2D)]
-  C --> F[🧭 Layer Catalog + Legend]
-  G[🎬 Story Node JSON] -->|activates overlays| C
+  A["📦 Dataset in Catalog - STAC / DCAT / PROV-O"] --> B["📜 Data Contract JSON - license, source, extent"];
+  B --> C["🧩 Overlay Manifest - UI name, time, legend, attribution"];
+  C --> D["🎨 Overlay Style - MapLibre layers + sources"];
+  D --> E["🗺️ Map Viewer - MapLibre 2D"];
+  C --> F["🧭 Layer Catalog + Legend"];
+  G["🎬 Story Node JSON"] --> C;
 ```
 
 > 💡 **Mental model:**  
@@ -51,23 +51,23 @@ flowchart LR
 
 ```text
 web/
-└── assets/
-    └── maps/
-        └── styles/
-            ├── basemaps/                 # (optional) basemap styles
-            └── overlays/                 # 👈 you are here
-                ├── README.md             # 📌 this file
-                ├── overlays.index.json   # 🧭 registry of available overlays (optional but recommended)
-                ├── boundaries.counties/  # 🧩 overlay “package”
-                │   ├── overlay.manifest.json
-                │   ├── overlay.style.json
-                │   ├── legend.json
-                │   └── icon.svg
-                └── landcover.1850/
-                    ├── overlay.manifest.json
-                    ├── overlay.style.json
-                    ├── legend.json
-                    └── icon.svg
+└── 📁 assets/
+    └── 🗺️ maps/
+        └── 🎨 styles/
+            ├── 🧱 basemaps/                   # (optional) basemap styles (full “base” MapLibre styles)
+            └── 🧩 overlays/                   # 👈 you are here 📌 Overlay style packages (theme add-ons)
+                ├── 📄 README.md               # 📌 This file: naming rules + composition pattern + how UI loads overlays
+                ├── 🧭🧾 overlays.index.json    # 🧭 Optional registry: overlayId → folder + label + tags + default-on
+                ├── 🧩 boundaries.counties/     # 🧩 Overlay “package” (one theme/bundle per folder)
+                │   ├── 🧾🧭 overlay.manifest.json # Metadata + attribution + sources + bounds + versioning
+                │   ├── 🎨🧾 overlay.style.json    # MapLibre style fragment (sources/layers/paint/layout rules)
+                │   ├── 🗂️🧾 legend.json           # Legend mapping (keys, labels, icons/ramps/pattern refs)
+                │   └── 🧷🎨 icon.svg              # Small UI icon for pickers/legends (SVG preferred)
+                └── 🌿 landcover.1850/          # 🧩 Another overlay package (example: historical landcover)
+                    ├── 🧾🧭 overlay.manifest.json # Same contract fields (id, title, license, provenance, etc.)
+                    ├── 🎨🧾 overlay.style.json    # The style fragment for this overlay
+                    ├── 🗂️🧾 legend.json           # Legend config for this overlay
+                    └── 🧷🎨 icon.svg              # UI icon for this overlay
 ```
 
 ---
