@@ -32,14 +32,14 @@ This folder contains **signed-distance-field (SDF) glyph ranges** (`*.pbf`) used
 Typical layout:
 
 ```text
-📁 web/assets/maps/glyphs/
-  └─ 📁 <Font Stack Name 2>/
-     ├─ 📝 README.md
-     ├─ 🔠 0-255.pbf
-     ├─ 🔠 256-511.pbf
-     ├─ 🔠 512-767.pbf
-     ├─ …
-     └─ 🔠 (more ranges as needed)
+web/assets/maps/glyphs/
+└─ 🔤 <Font Stack Name 2>/           # 🔤 MapLibre font stack (folder name == {fontstack} in styles)
+   ├─ 📝 README.md                   # 📘 Stack-specific notes (source font, weights, coverage, licensing)
+   ├─ 🔤📦 0-255.pbf                 # 🔤 Glyph pack for Unicode codepoints 0–255
+   ├─ 🔤📦 256-511.pbf               # 🔤 Glyph pack for Unicode codepoints 256–511
+   ├─ 🔤📦 512-767.pbf               # 🔤 Glyph pack for Unicode codepoints 512–767
+   ├─ ➕ …                           # 🔤 Additional 256-codepoint ranges as needed
+   └─ 🔤📦 (more ranges as needed)   # 🔤 e.g., 768-1023.pbf, 1024-1279.pbf, etc.
 ```
 
 Each `start-end.pbf` covers a **range of 256 Unicode code points** (e.g., `0-255`, `256-511`, …). MapLibre requests only the ranges needed for the labels currently visible.
