@@ -53,34 +53,34 @@ This folder should contain (or will contain) assets like:
 Recommended structure (adjust to match what actually exists — but try to keep names stable):
 
 ```text
-📁 web/
-  📁 assets/
-    📁 media/
-      📁 branding/
-        📄 README.md
-        📁 logo/
-          🖼️ kfm-logo.svg
-          🖼️ kfm-logo.png
-          🖼️ kfm-wordmark.svg
-          🖼️ kfm-wordmark.png
-          🖼️ kfm-mark.svg
-          🖼️ kfm-mark.png
-          🖼️ kfm-logo-mono.svg
-        📁 favicon/
-          🧷 favicon.ico
-          🧷 favicon-16.png
-          🧷 favicon-32.png
-          🧷 apple-touch-icon.png
-          🧷 site.webmanifest
-        📁 social/
-          🖼️ og-default.png
-          🖼️ og-story.png
-        📁 watermark/
-          🖼️ kfm-watermark.svg
-          🖼️ kfm-watermark.png
-        📁 source/
-          🎨 kfm-logo.source.svg   (optional: “authoritative” editable source)
-          📄 LICENSES.md           (optional: any asset-specific licensing notes)
+web/
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 🏷️ branding/
+         ├─ 📄 README.md                    # 📘 Brand asset rules: allowed usage, sizing, backgrounds, and file roles
+         ├─ 🏷️ logo/
+         │  ├─ 🧷 kfm-logo.svg              # Primary logo (SVG preferred for crisp scaling)
+         │  ├─ 🖼️ kfm-logo.png              # Raster fallback (use when SVG isn’t supported)
+         │  ├─ 🧷 kfm-wordmark.svg          # Wordmark (text-only mark) in SVG
+         │  ├─ 🖼️ kfm-wordmark.png          # Raster fallback for wordmark
+         │  ├─ 🧷 kfm-mark.svg              # Icon/mark-only variant (SVG)
+         │  ├─ 🖼️ kfm-mark.png              # Raster fallback for mark-only
+         │  └─ ⚪🧷 kfm-logo-mono.svg        # Monochrome variant for constrained color contexts
+         ├─ ⭐ favicon/
+         │  ├─ 🧷 favicon.ico               # Classic favicon container (multi-size, broad compatibility)
+         │  ├─ 🖼️ favicon-16.png            # 16×16 favicon (browser tab)
+         │  ├─ 🖼️ favicon-32.png            # 32×32 favicon (high-DPI tabs/shortcuts)
+         │  ├─ 🍎🖼️ apple-touch-icon.png     # iOS home-screen icon
+         │  └─ 🧾 site.webmanifest          # Web app manifest (icons + theme colors for installable PWAs)
+         ├─ 🖼️ social/
+         │  ├─ 🖼️ og-default.png            # Default OpenGraph/Twitter card image (site-wide fallback)
+         │  └─ 🖼️ og-story.png              # Story-specific social preview template (optional)
+         ├─ 🪪 watermark/
+         │  ├─ 🧷 kfm-watermark.svg         # Watermark overlay (SVG preferred)
+         │  └─ 🖼️ kfm-watermark.png         # Raster watermark fallback
+         └─ 🎨 source/
+            ├─ 🎨🧷 kfm-logo.source.svg     # (optional) Editable “authoritative” source (design-tool output)
+            └─ ⚖️📄 LICENSES.md             # (optional) Asset-specific licensing/attribution notes
 ```
 
 ---
