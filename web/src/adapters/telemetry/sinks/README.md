@@ -43,11 +43,11 @@ Typical reasons you’ll add/modify a sink:
 
 ```mermaid
 flowchart LR
-  UI[🖥️ Web UI] -->|track(event)| Telemetry[🛰️ Telemetry Adapter]
-  Telemetry -->|envelope| Fanout{🔀 Sink fan-out}
-  Fanout --> S1[📤 Sink A]
-  Fanout --> S2[📤 Sink B]
-  Fanout --> S3[📤 Sink C]
+  UI["🖥️ Web UI"] --> Telemetry["🛰️ Telemetry Adapter - track event"];
+  Telemetry --> Fanout{"🔀 Sink fan-out - envelope"};
+  Fanout --> S1["📤 Sink A"];
+  Fanout --> S2["📤 Sink B"];
+  Fanout --> S3["📤 Sink C"];
 ```
 
 **Sinks are the last hop.** They should be treated as infrastructure: replaceable, testable, and not allowed to “invent” business meaning.
