@@ -39,18 +39,18 @@ Suggested structure (keep it boring + predictable 😌):
 
 ```text
 web/assets/media/
-├── 📁 images/                 # ✅ optimized / deployable images (served)
-├── 📁 video/                  # ✅ optimized / deployable video (served)
-├── 📁 audio/                  # ✅ optimized / deployable audio (served)
-├── 📁 fonts/                  # ✅ deployable fonts (served)
-└── 📁 _sources/               # 🧾 originals + provenance (this folder)
-    ├── 📁 images/
-    ├── 📁 video/
-    ├── 📁 audio/
-    ├── 📁 fonts/
-    ├── 📁 icons/
-    ├── 📁 textures/
-    └── 📁 manifests/          # optional: rollups / indexes
+├── 🖼️ images/                 # ✅ Optimized / deployable images (served)
+├── 🎞️ video/                  # ✅ Optimized / deployable video (served)
+├── 🔊 audio/                  # ✅ Optimized / deployable audio (served)
+├── 🔤 fonts/                  # ✅ Deployable fonts (served)
+└── 🧾 _sources/               # 🧾 Originals + provenance (this folder; NOT served)
+    ├── 🖼️ images/             # Original image sources (PSD/AI/SVG masters, raw captures, etc.)
+    ├── 🎞️ video/              # Original video sources (project files, high-bitrate masters)
+    ├── 🔊 audio/              # Original audio sources (WAV sessions, stems, scripts)
+    ├── 🔤 fonts/              # Source font packages + license texts
+    ├── 🧷 icons/              # Master icon sets + upstream attribution
+    ├── 🎨 textures/           # Source textures/material scans + bake inputs
+    └── 🗂️ manifests/          # Optional rollups/indexes (provenance summaries, inventory exports)
 ```
 
 > [!NOTE]
