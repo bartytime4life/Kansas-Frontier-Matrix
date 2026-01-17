@@ -30,22 +30,22 @@ Overlays can be **raster tiles**, **vector layers**, **time series**, or **speci
 
 ```text
 web/
-└─ assets/
-   └─ maps/
-      └─ overlays/
-         ├─ README.md                         👈 you are here
-         ├─ manifest.json                     🧭 optional index of overlays
-         ├─ _shared/                          ♻️ shared legends/icons/palettes
-         └─ <overlay-id>/                     🆔 one overlay per folder
-            ├─ overlay.json                   🧾 REQUIRED data contract
-            ├─ thumbnail.webp                 🖼️ optional
-            ├─ legend.svg                     🧷 optional
-            ├─ styles/
-            │  ├─ maplibre.json               🎨 optional (MapLibre style snippet)
-            │  └─ deckgl.json                 🎛️ optional (Deck.gl layer config)
-            └─ data/
-               ├─ <anything-you-serve>        📦 tiles, pmtiles, geojson, etc.
-               └─ ...
+└─ 📁 assets/
+   └─ 🗺️ maps/
+      └─ 🧩 overlays/
+         ├─ 📄 README.md                         # 👈 you are here 📌 How overlays are named, validated, and loaded
+         ├─ 🧭🧾 manifest.json                    # 🧭 Optional index of overlays for fast UI discovery/startup
+         ├─ ♻️ _shared/                           # ♻️ Shared legend bits, icons, palettes, and common helpers
+         └─ 🆔 <overlay-id>/                      # 🆔 One overlay per folder (stable id used by UI + manifests)
+            ├─ ✅🧾 overlay.json                   # ✅ REQUIRED data contract (metadata, sources, bounds, license, prov)
+            ├─ 🖼️ thumbnail.webp                  # 🖼️ Optional: card/chooser thumbnail
+            ├─ 🧷 legend.svg                       # 🧷 Optional: simple legend graphic (fast render)
+            ├─ 🎨 styles/
+            │  ├─ 🎨🧾 maplibre.json               # 🎨 Optional: MapLibre style snippet (sources+layers)
+            │  └─ 🎛️🧾 deckgl.json                 # 🎛️ Optional: Deck.gl layer config (props, shaders, etc.)
+            └─ 📦 data/
+               ├─ 📦 <anything-you-serve>         # 📦 Served payloads (tiles, pmtiles, geojson, etc.)
+               └─ ➕ …                             # 📦 Additional data files / folders as needed
 ```
 
 > [!TIP]
