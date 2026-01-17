@@ -79,17 +79,17 @@ KFM uses a **clean/hexagonal architecture** mindset where “adapters” transla
 
 ```text
 web/src/adapters/api/
-├── client/                    # shared HTTP client wrapper (fetch/axios, retries, auth, etc.)
-├── resources/                 # ✅ this folder: endpoint-focused modules
-│   ├── README.md              # you are here
-│   ├── index.ts               # re-export resources
-│   ├── datasets.ts            # example: dataset catalog + metadata
-│   ├── tiles.ts               # example: tile endpoints / signed URLs
-│   ├── graph.ts               # example: graph queries (read-only)
-│   ├── storyNodes.ts          # example: governed narrative content
-│   └── ...                    # other domain resources
-├── types/                     # generated or shared API types (OpenAPI/GraphQL)
-└── errors/                    # shared ApiError types, guards, mappers
+├── 🌐 client/                    # shared HTTP client wrapper (fetch/axios, retries, auth, etc.)
+├── ✅ resources/                 # ✅ this folder: endpoint-focused modules
+│   ├── 📄 README.md              # you are here 📌
+│   ├── 🧩📄 index.ts               # re-export resources
+│   ├── 🗂️📄 datasets.ts            # example: dataset catalog + metadata
+│   ├── 🧱🗺️📄 tiles.ts              # example: tile endpoints / signed URLs
+│   ├── 🕸️📄 graph.ts               # example: graph queries (read-only)
+│   ├── 📚🧩📄 storyNodes.ts          # example: governed narrative content
+│   └── ➕ …                        # other domain resources
+├── 🧾 types/                     # generated or shared API types (OpenAPI/GraphQL)
+└── 🛑 errors/                    # shared ApiError types, guards, mappers
 ```
 
 ### Naming rules
