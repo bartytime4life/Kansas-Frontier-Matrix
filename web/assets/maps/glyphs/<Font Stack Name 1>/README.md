@@ -28,13 +28,13 @@
 Typical contents (ranges may vary depending on generator + coverage):
 
 ```text
-📁 web/assets/maps/glyphs/
-  └─ 📁 <Font Stack Name 1>/
-     ├─ 0-255.pbf
-     ├─ 256-511.pbf
-     ├─ 512-767.pbf
-     ├─ ...
-     └─ README.md  👈 you are here
+web/assets/maps/glyphs/
+└─ 🔤 <Font Stack Name 1>/          # 🔤 One MapLibre font stack (folder name == {fontstack} in styles)
+   ├─ 🔤📦 0-255.pbf                 # Glyphs for Unicode codepoints 0–255
+   ├─ 🔤📦 256-511.pbf               # Glyphs for Unicode codepoints 256–511
+   ├─ 🔤📦 512-767.pbf               # Glyphs for Unicode codepoints 512–767
+   ├─ ➕ …                           # Additional 256-codepoint range packs as needed
+   └─ 📄 README.md                   # 📘 You are here: stack-specific notes (source font, licensing, coverage)
 ```
 
 ### 🧠 How MapLibre uses these files
