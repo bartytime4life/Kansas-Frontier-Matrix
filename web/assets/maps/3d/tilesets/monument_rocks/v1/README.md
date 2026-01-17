@@ -1,206 +1,236 @@
----
-title: "Monument Rocks 🗿 — 3D Tiles Payloads (v1/tiles)"
-version: "v1"
-status: "active"
-doc_kind: "Asset README"
-dataset_id: "urn:kfm:tileset:monument_rocks:v1"
-last_updated: "2026-01-17"
-license: "SEE: ../metadata.json (required)"
-crs: "WGS84 (EPSG:4326)"
-formats:
-  - "3D Tiles"
-  - "b3dm / i3dm / pnts (as applicable)"
-  - "glTF/GLB payloads (embedded)"
----
+# 🪨 Monument Rocks — 3D Tileset (v1)
 
-# 🗿 Monument Rocks — 3D Tiles payloads (`v1/tiles/`)
+![KFM](https://img.shields.io/badge/KFM-3D%20Tileset-0b7285?style=flat-square)
+![Format](https://img.shields.io/badge/format-3D%20Tiles-1c7ed6?style=flat-square)
+![Viewer](https://img.shields.io/badge/viewer-CesiumJS-364fc7?style=flat-square)
+![Version](https://img.shields.io/badge/version-v1-f59f00?style=flat-square)
+![Provenance](https://img.shields.io/badge/provenance-required-2f9e44?style=flat-square)
 
-![Format](https://img.shields.io/badge/format-3D%20Tiles-blue)
-![Viewer](https://img.shields.io/badge/viewer-CesiumJS-informational)
-![KFM](https://img.shields.io/badge/KFM-provenance--first-brightgreen)
-![Status](https://img.shields.io/badge/status-active-success)
-
-This folder contains the **binary tile payloads** referenced by the parent tileset (`../tileset.json`) for the Monument Rocks 3D experience. The intent is to serve these as **static web assets** and stream them into the KFM 3D viewer (CesiumJS) using the **open 3D Tiles standard**.  [oai_citation:0‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-
-> 🧠 Context: Monument Rocks is explicitly called out as a “Kansas From Above” 3D story anchor (with a 3D model) in the project’s story/experience planning.  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+> **Goal 🎯**: Stream a high-detail **Monument Rocks** 3D asset as a **Cesium 3D Tiles** layer inside the Kansas Frontier Matrix (KFM) web app’s **3D mode**.
 
 ---
 
-## 📦 What lives in `tiles/`
+<details>
+<summary>📚 Table of Contents</summary>
 
-Typical 3D Tiles payloads you may see here:
+- [✨ Quick facts](#-quick-facts)
+- [📦 What’s in this folder](#-whats-in-this-folder)
+- [📁 Folder layout](#-folder-layout)
+- [🚀 How KFM uses this tileset](#-how-kfm-uses-this-tileset)
+  - [🔌 Minimal CesiumJS load snippet](#-minimal-cesiumjs-load-snippet)
+- [🧾 Data contract & provenance](#-data-contract--provenance)
+  - [✅ `metadata.json` template](#-metadatajson-template)
+  - [🔁 Recommended build pipeline (high level)](#-recommended-build-pipeline-high-level)
+- [🧠 Versioning rules](#-versioning-rules)
+- [🧪 QA checklist](#-qa-checklist)
+- [🛠️ Troubleshooting](#️-troubleshooting)
+- [📓 Changelog](#-changelog)
 
-- 🧱 **Batched 3D Models**: `*.b3dm` (common for buildings/meshes)
-- 🌲 **Instanced models**: `*.i3dm` (common for repeated objects)
-- ☁️ **Point clouds**: `*.pnts` (if the source is LiDAR/photogrammetry point data)
-- 🧩 **Embedded glTF/GLB**: contained inside the tile payloads (not usually stored as loose `.glb` files)
-- 🧵 **Textures**: often embedded; if external textures exist, keep them **relative** and **versioned**
-
-📌 **Do not rename/move this folder lightly.** 3D Tiles `content.uri` paths in `../tileset.json` are commonly relative (e.g., `tiles/0/0/0.b3dm`). Renames break streaming.
+</details>
 
 ---
 
-## 🗂️ Expected layout
+## ✨ Quick facts
 
-Your on-disk layout should look *roughly* like this:
+| Field | Value |
+|---|---|
+| Asset slug | `monument_rocks` |
+| Version | `v1` |
+| Entry point | `tileset.json` |
+| Intended viewer | KFM **CesiumJS** (3D mode) |
+| Packaging | Static files (CDN-friendly) |
+| Metadata contract | `metadata.json` (**required**) |
+
+---
+
+## 📦 What’s in this folder
+
+This directory contains a **versioned** Cesium **3D Tiles** tileset for Monument Rocks.
+
+**Why here?** KFM’s front-end supports both **2D** mapping and **3D** visualization; 3D content is streamed as **3D Tiles** and loaded by the web viewer when the UI switches to 3D (or when a Story Node step requests it).
+
+---
+
+## 📁 Folder layout
 
 ```text
-📁 web/assets/maps/3d/tilesets/monument_rocks/
-└─📁 v1/
-  ├─📄 tileset.json          👈 root tileset entrypoint (loaded by viewer)
-  ├─📄 metadata.json         👈 KFM data contract + provenance (required)
-  └─📁 tiles/
-    ├─📄 README.md           👈 you are here
-    ├─🧱 0/0/0.b3dm          👈 example (structure may vary)
-    ├─🧱 0/0/1.b3dm
-    └─… (more tiles / subfolders)
+📁 web/assets/maps/3d/tilesets/monument_rocks/v1/
+├── 📄 README.md
+├── 📄 tileset.json                 # 3D Tiles root manifest (required)
+├── 📄 metadata.json                # KFM data contract (required)
+├── 📁 tiles/                       # tile payloads (.b3dm/.i3dm/.pnts/.cmpt OR external glb)
+└── 📁 thumbnails/                  # optional previews used by catalog/UI
+    └── 🖼️ preview.jpg|png
 ```
 
-If your tiler outputs a different hierarchy (flat files, hashed names, etc.), that’s fine—**the only hard rule** is: `../tileset.json` must correctly reference whatever is inside this folder.
+> ⚠️ Keep paths **relative** inside `tileset.json` and tile payloads so the tileset works across dev/prod/CDN without rewrites.
 
 ---
 
-## 🚀 Quick load (CesiumJS)
+## 🚀 How KFM uses this tileset
 
-Use the **parent** tileset URL (not `tiles/` directly):
+**Expected URL (web app runtime):**
+- `/assets/maps/3d/tilesets/monument_rocks/v1/tileset.json`
+
+**Typical flow 🧭**
+1. User toggles **2D → 3D** (CesiumJS).
+2. KFM loads this tileset as a Cesium 3D Tiles layer.
+3. The viewer streams tiles progressively (LOD-based) as the camera moves.
+
+### 🔌 Minimal CesiumJS load snippet
 
 ```js
-// Example: load the tileset in CesiumJS
-const tileset = new Cesium.Cesium3DTileset({
-  url: "/assets/maps/3d/tilesets/monument_rocks/v1/tileset.json",
-});
+// Monument Rocks tileset (v1)
+const url = "/assets/maps/3d/tilesets/monument_rocks/v1/tileset.json";
+
+// CesiumJS API varies by version; support both patterns.
+const tileset =
+  Cesium.Cesium3DTileset.fromUrl
+    ? await Cesium.Cesium3DTileset.fromUrl(url)
+    : new Cesium.Cesium3DTileset({ url });
 
 viewer.scene.primitives.add(tileset);
-viewer.zoomTo(tileset);
+await viewer.zoomTo(tileset);
 ```
 
-KFM’s web stack explicitly anticipates a 3D viewer (CesiumJS) alongside the 2D map stack, and 3D Tiles is part of the planned/accepted interchange format for that viewer.  [oai_citation:3‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H) [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-
 ---
 
-## 🧭 Spatial reference expectations
+## 🧾 Data contract & provenance
 
-KFM’s internal web mapping standard is **WGS84 (EPSG:4326)** for general spatial referencing. Make sure the tileset is georeferenced consistently with the rest of the platform.  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+KFM is **contract-first** and **provenance-first**: anything that appears in the UI should be traceable to documented sources and processing.  
+That means this folder **must** ship with a complete `metadata.json` (no “mystery layers” 🚫).
 
-Practical implications:
+### ✅ `metadata.json` template
 
-- 🌍 The tileset should land in the correct longitude/latitude position without manual offsets.
-- 📏 Elevation units should be consistent (typically meters) and documented in `../metadata.json`.
+Fill this out before exposing the tileset via a catalog entry, Story Node, or UI toggle.
 
----
-
-## 🧾 Provenance & metadata requirements (KFM “hard rules”)
-
-KFM is **contract-first + provenance-first**: anything shown in the UI / Focus Mode must be traceable to cataloged sources and provable processing. The platform treats **metadata + lineage as fundamental**, and disallows “mystery layers.”  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-
-The broader project vision is explicit: **citations and metadata are first‑class data; nothing is a “black box.”**  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-
-### ✅ Required sibling file: `../metadata.json`
-
-This tileset should ship with a dataset “data contract” JSON capturing source + license + processing. KFM uses open standards like **STAC / DCAT / PROV-O** to formalize these fields.  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-
-**Recommended `metadata.json` template (minimum):**
 ```json
 {
-  "id": "monument_rocks_v1_tileset",
-  "title": "Monument Rocks (Kansas) — 3D Tileset",
+  "id": "tileset.monument_rocks.v1",
+  "title": "Monument Rocks (3D Tileset) — v1",
+  "description": "Streaming 3D Tiles representation of Monument Rocks for KFM 3D viewing.",
+  "type": "3d-tiles",
   "version": "v1",
-  "asset_kind": "3d-tiles",
-  "crs": "EPSG:4326",
+
+  "created": "YYYY-MM-DD",
+  "updated": "YYYY-MM-DD",
+
   "license": "TBD",
-  "source": [
+  "attribution": [
     {
-      "name": "TBD",
-      "type": "photogrammetry|lidar|hand-modeled|other",
-      "url_or_catalog_id": "TBD",
-      "retrieved_at": "TBD"
+      "name": "TBD (source owner / capture team / org)",
+      "url": "TBD",
+      "note": "Required: who owns the underlying data + any attribution wording."
     }
   ],
-  "processing": [
-    {
-      "step": "tiling",
-      "tool": "Cesium ion | 3d-tiles-tools | other",
-      "params": { "TBD": true },
-      "performed_at": "TBD"
-    }
-  ],
-  "spatial_extent": {
-    "bbox_wgs84": [ "minLon", "minLat", "maxLon", "maxLat" ]
+
+  "spatial": {
+    "crs": "WGS84 / Cesium 3D Tiles",
+    "bbox_wgs84": ["west", "south", "east", "north"],
+    "height_m": { "min": 0, "max": 0 }
   },
-  "notes": "Citations + lineage are required for KFM acceptance."
+
+  "rendering": {
+    "default": {
+      "show": true,
+      "maximumScreenSpaceError": 16,
+      "luminanceAtZenith": null,
+      "style": null
+    },
+    "initialView": {
+      "lon": 0,
+      "lat": 0,
+      "height": 0,
+      "heading": 0,
+      "pitch": -45,
+      "roll": 0
+    }
+  },
+
+  "provenance": {
+    "standards": ["STAC", "DCAT", "PROV-O"],
+    "sources": [
+      {
+        "citation": "TBD (paper/report/dataset citation)",
+        "type": "photogrammetry|lidar|model",
+        "acquired": "YYYY-MM-DD",
+        "license": "TBD"
+      }
+    ],
+    "processing_steps": [
+      "TBD: raw capture -> cleanup -> decimation/LOD -> textures -> 3D Tiles conversion -> validation"
+    ],
+    "tools": [
+      { "name": "TBD", "version": "TBD" }
+    ]
+  },
+
+  "quality": {
+    "triangles_total": null,
+    "texture_resolution": null,
+    "known_issues": [
+      "TBD (holes, seams, floaters, color drift, vertical datum uncertainty, etc.)"
+    ]
+  },
+
+  "links": {
+    "tileset": "./tileset.json",
+    "thumbnail": "./thumbnails/preview.jpg"
+  }
 }
 ```
 
-### 🔒 Focus Mode compatibility
+### 🔁 Recommended build pipeline (high level)
 
-Focus Mode is intended to show only provenance-linked content; there’s a “hard gate” that prevents content without sources/IDs from appearing. Treat `metadata.json` as required, not optional.  [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🔄 Versioning rules (`v1/`)
-
-Version folders exist so we can ship improvements without breaking downstream URLs.
-
-- ✅ **Patch-level fixes** (typos in metadata, repack tiles without changing URIs) can remain in `v1/`
-- ⚠️ **Breaking changes** (different scale/origin, different URI layout, large geometry edits, re-tiling that changes tile IDs) should become `v2/`
-
-Rule of thumb: if `tileset.json` or tile URIs change in a way that breaks cached links, bump the major version folder.
+```mermaid
+flowchart LR
+  A[📷 Capture / Source Data] --> B[🧹 Clean + Align + Georeference]
+  B --> C[🪓 Optimize Mesh + Textures]
+  C --> D[🧩 Convert to 3D Tiles]
+  D --> E[✅ Validate + QA]
+  E --> F[📦 Publish to web/assets/.../v1]
+  F --> G[🗺️ Register in Catalog / Story Nodes]
+```
 
 ---
 
-## 🧪 Validation checklist (before merge/release)
+## 🧠 Versioning rules
 
-### Load / integrity
-- [ ] `../tileset.json` loads in the Cesium viewer with no missing resources
-- [ ] No 404s for `content.uri` inside `tileset.json`
-- [ ] Visual sanity check: model appears in the correct location and orientation
+- ✅ **Immutable versions**: once referenced by a Story Node or catalog entry, treat `v1/` as **frozen**.
+- 🔁 Bugfixes or improvements go to **`v2/`** (or later) and require updating the references.
+- 🧷 Keep the slug stable: `monument_rocks`.
 
-### Geospatial correctness
-- [ ] CRS alignment: expected WGS84 integration with the rest of KFM web mapping conventions  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-- [ ] Heights/elevations documented in `../metadata.json`
-
-### Provenance gates
-- [ ] `../metadata.json` exists and includes **source, license, processing steps**
-- [ ] No “mystery tiles”: everything here is attributable and reproducible per KFM policy  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+> This prevents “silent” visual or positional changes from breaking narratives and research reproducibility.
 
 ---
 
-## 🌐 Hosting & caching notes (static assets)
+## 🧪 QA checklist
 
-These files are designed to be served from a static web server/CDN:
+Before publishing or wiring into the UI:
 
-- ✅ Prefer **long cache TTLs** for tile payloads (they’re versioned)
-- ✅ Ensure correct MIME handling (JSON as `application/json`; binary tiles as `application/octet-stream`)
-- ✅ Enable HTTP range requests if supported (helps some clients)
-
----
-
-## 🛠️ Regenerating tiles (suggested workflow)
-
-A typical workflow is:
-
-1. 📥 Acquire source model/scan (photogrammetry, LiDAR, curated mesh)
-2. 🧹 Normalize + clean (units, coordinate origin, decimation, textures)
-3. 🧱 Tile into 3D Tiles (Cesium ion or an open tiler)
-4. ✅ Validate + document provenance
-5. 📦 Drop outputs into `v*/tiles/` + update `tileset.json` + `metadata.json`
-
-If using Cesium ion, note that it provides a tiling workflow for web streaming of 3D content (commonly used in practice for 3D Tiles pipelines).  [oai_citation:12‡Data Spaces.pdf](file-service://file-7UnZyJ7eCK1egnsyuYJaFq)
+- [ ] `metadata.json` complete (license + source + processing steps) ✅
+- [ ] `tileset.json` loads in CesiumJS with **no** console errors
+- [ ] All tile payload references resolve (no missing `.b3dm/.pnts/.glb/.png/.jpg`)
+- [ ] Paths are **relative** (portable across local/dev/prod)
+- [ ] LOD transitions look clean (no popping that breaks story immersion)
+- [ ] Performance sanity check on mid-range laptop + mobile (if supported)
+- [ ] Visual provenance ready: attribution text is correct + reviewable
 
 ---
 
-## 🔗 Related (nearby files)
+## 🛠️ Troubleshooting
 
-- `../tileset.json` — tileset entrypoint for streaming
-- `../metadata.json` — KFM data contract + provenance record (required)
-- `../../../../..` — KFM web viewer stack (MapLibre 2D + Cesium 3D)  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+- **Black model / missing textures** 🕳️  
+  Texture files not committed, paths wrong, or unsupported formats.
+
+- **Tileset loads but appears “somewhere else”** 🧭  
+  Check `tileset.json` root transform, bounding volume, and any up-axis conversions in the pipeline.
+
+- **CORS / blocked requests** 🔒  
+  View through a dev server (HTTP). Don’t open the tileset via `file://`.
 
 ---
 
-## 📎 Project references (why this README is strict)
+## 📓 Changelog
 
-- KFM mission + provenance-first stance (“citations and metadata are first-class data; nothing is a black box”).  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-- Contract-first + provenance-first enforcement; no “mystery layers”; metadata contracts required.  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-- KFM web mapping stack notes (MapLibre 2D, CesiumJS 3D; open standards).  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-- 3D expansion plan and 3D Tiles as a supported/expected format for Cesium-based viewing.  [oai_citation:17‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
-- Monument Rocks as a planned 3D story landmark (“Kansas From Above”).  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+- **v1** — Initial publish (streaming 3D Tiles).
