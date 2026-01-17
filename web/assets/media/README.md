@@ -72,32 +72,32 @@ This folder holds **UI-ready media** used by the Kansas Frontier Matrix (KFM) we
 
 ```text
 web/assets/media/
-├─ README.md
-├─ manifest/
-│  ├─ media.manifest.json
-│  └─ media.schema.json         # optional (if you validate in CI)
-├─ branding/
-│  ├─ kfm-logo.svg
-│  ├─ kfm-wordmark.svg
-│  └─ ...
-├─ icons/
-│  ├─ ui/
-│  ├─ map/
-│  └─ story/
-├─ illustrations/
-├─ maps/
-│  ├─ thumbnails/
-│  ├─ legends/
-│  └─ ui-overlays/
-├─ charts/
-├─ screenshots/
-├─ video/
-├─ audio/
-├─ models-3d/
-│  ├─ glb/
-│  ├─ textures/
-│  └─ posters/
-└─ _sources/                   # optional: raw/source originals (never served)
+├─ 📄 README.md                       # 📘 Top-level guide: what belongs here, naming, sizing, and governance rules
+├─ 🧾 manifest/
+│  ├─ 🧾🗂️ media.manifest.json         # 🧾 Catalog of media assets (IDs → files → tags → provenance pointers)
+│  └─ 📐🧾 media.schema.json           # 📐 Optional: schema for CI validation of the manifest/contracts
+├─ 🏷️ branding/
+│  ├─ 🧷🏷️ kfm-logo.svg                # Primary logo mark (SVG preferred)
+│  ├─ 🧷🏷️ kfm-wordmark.svg            # Wordmark (SVG preferred)
+│  └─ ➕ …                             # Additional approved lockups/variants
+├─ 🧷 icons/
+│  ├─ 🧭 ui/                           # UI interface icons (buttons, nav, status badges)
+│  ├─ 🗺️ map/                          # Map-specific icons (POIs, controls, legend symbols)
+│  └─ 📚 story/                        # Story-node / narrative icons (block types, steps, callouts)
+├─ 🎨 illustrations/                   # Illustrations used in marketing/docs/storytelling (SVG/PNG/WebP)
+├─ 🗺️ maps/
+│  ├─ 🖼️ thumbnails/                   # Map preview thumbnails (cards, catalogs, quicklook images)
+│  ├─ 🧾 legends/                      # Legend graphics/icons/ramps used by map layers
+│  └─ 🧩 ui-overlays/                  # UI overlay imagery (compass, scalebar art, helper callouts)
+├─ 📈 charts/                          # Chart media (previews, exported images, story embeds)
+├─ 📸 screenshots/                     # Product/docs screenshots (keep small, labeled, dated if helpful)
+├─ 🎞️ video/                           # Short clips/loops (compressed; prefer web formats)
+├─ 🔊 audio/                           # UI sounds, narration, ambience, music (small + captioned where needed)
+├─ 🧊 models-3d/
+│  ├─ 🧊 glb/                           # Runtime 3D models (GLB preferred)
+│  ├─ 🎨 textures/                     # External textures (only if not embedded)
+│  └─ 🖼️ posters/                      # Poster/thumbnail images for 3D assets
+└─ 🧰 _sources/                        # Optional: raw/source originals (never served; keep out of build output)
 ```
 
 ---
