@@ -35,17 +35,17 @@ KFM is *contract-first* and *provenance-first*: anything that appears in the UI 
 
 ```text
 web/assets/maps/3d/tilesets/
-├── README.md                       📄 you are here
-├── _catalog.json                   🗂️ optional: UI-friendly listing/labels
-└── <tileset-id>/                   📦 e.g. ks-dem-10m-v1
-    ├── tileset.json                🧱 required: 3D Tiles entrypoint
-    ├── metadata.json               🧾 required: data contract (source, license, extent, processing…)
-    ├── provenance.json             🧬 recommended: pipeline lineage + tool versions
-    ├── attribution.md              🏷️ recommended: human-readable credits/attribution text
-    ├── preview.jpg                 🖼️ optional: thumbnail for catalogs/Story Nodes
-    └── tiles/                      🧩 typical: batched tile payloads (b3dm/glb/pnts/…)
+├── 📄 README.md                       # 📄 you are here 📌
+├── 🗂️🧾 _catalog.json                  # 🗂️ optional: UI-friendly listing/labels
+└── 📦 <tileset-id>/                    # 📦 e.g. ks-dem-10m-v1
+    ├── 🧱🧾 tileset.json                # 🧱 required: 3D Tiles entrypoint
+    ├── 🧾🏷️ metadata.json               # 🧾 required: data contract (source, license, extent, processing…)
+    ├── 🧬🧾 provenance.json             # 🧬 recommended: pipeline lineage + tool versions
+    ├── 🏷️📄 attribution.md              # 🏷️ recommended: human-readable credits/attribution text
+    ├── 🖼️ preview.jpg                   # 🖼️ optional: thumbnail for catalogs/Story Nodes
+    └── 🧩 tiles/                        # 🧩 typical: batched tile payloads (b3dm/glb/pnts/…)
         ├── 0/
-        └── ...
+        └── ➕ …
 ```
 
 > 💡 `metadata.json` is the machine-readable contract; `attribution.md` is the human-readable “what is this / who made it / who to credit” page.
