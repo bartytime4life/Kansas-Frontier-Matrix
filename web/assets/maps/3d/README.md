@@ -71,29 +71,29 @@ Suggested structure (keep it boring, predictable, and diff-friendly):
 
 ```text
 web/assets/maps/3d/
-├─ README.md
-├─ index.json                         # optional: registry of 3D layers exposed to the UI
-├─ terrain/
-│  └─ kansas_dem_usgs_10m/
-│     └─ v1/
-│        ├─ layer.json                # contract + provenance + attribution
-│        ├─ terrain/                  # terrain tiles (provider root)
-│        └─ preview.webp
-├─ tilesets/
-│  └─ monument_rocks/
-│     └─ v1/
-│        ├─ layer.json
-│        ├─ tileset.json              # Cesium 3D Tiles entry
-│        ├─ tiles/                    # tile content
-│        └─ preview.webp
-├─ models/
-│  └─ story_props/
-│     └─ v1/
-│        ├─ layer.json
-│        ├─ model.glb
-│        └─ preview.webp
-└─ _schemas/
-   └─ kfm-3d-layer.schema.json        # optional: JSON schema for validation
+├─ 📄 README.md
+├─ 🧾🗂️ index.json                         # optional: registry of 3D layers exposed to the UI
+├─ 🏞️ terrain/
+│  └─ 🌾 kansas_dem_usgs_10m/
+│     └─ 🏷️ v1/
+│        ├─ 🧾🧬 layer.json                # contract + provenance + attribution
+│        ├─ 🧱 terrain/                    # terrain tiles (provider root)
+│        └─ 🖼️ preview.webp
+├─ 🧱 tilesets/
+│  └─ 🪨 monument_rocks/
+│     └─ 🏷️ v1/
+│        ├─ 🧾🧬 layer.json
+│        ├─ 🧱🧾 tileset.json              # Cesium 3D Tiles entry
+│        ├─ 🧩 tiles/                      # tile content
+│        └─ 🖼️ preview.webp
+├─ 🧊 models/
+│  └─ 🧰 story_props/
+│     └─ 🏷️ v1/
+│        ├─ 🧾🧬 layer.json
+│        ├─ 🧊 model.glb
+│        └─ 🖼️ preview.webp
+└─ 📐 _schemas/
+   └─ 📐🧾 kfm-3d-layer.schema.json        # optional: JSON schema for validation
 ```
 
 > [!NOTE]
