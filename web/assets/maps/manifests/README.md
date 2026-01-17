@@ -31,16 +31,16 @@ Manifests in this folder should be small, human-reviewable JSON (or YAML if the 
 
 ```text
 web/assets/maps/
-  manifests/
-    README.md                👈 you are here
-    layers/
-      *.layer.json           🧩 one manifest per layer
-    styles/
-      *.style.json           🎨 MapLibre styles (or style fragments)
-    legends/
-      *.legend.json          🗂️ legend rules (optional)
-    thumbs/
-      *.webp / *.png         🖼️ thumbnails (optional)
+└─ 🧾 manifests/
+   ├─ 📄 README.md                # 👈 you are here 📌 How manifests are structured, validated, and loaded by the UI
+   ├─ 🧩 layers/
+   │  └─ 🧩🧾 *.layer.json         # 🧩 One manifest per map layer (source(s), ids, time-binds, attribution, provenance)
+   ├─ 🎨 styles/
+   │  └─ 🎨🧾 *.style.json         # 🎨 MapLibre styles (or style fragments) referenced by layers or the map shell
+   ├─ 🗂️ legends/
+   │  └─ 🗂️🧾 *.legend.json        # 🗂️ Optional legend “rules” (ids → icons/ramps/patterns + display text)
+   └─ 🖼️ thumbs/
+      └─ 🖼️ *.webp / *.png         # 🖼️ Optional thumbnails for catalogs, layer pickers, and Story Nodes
 ```
 
 > **Naming rule:** `kebab-case` ids and filenames.  
