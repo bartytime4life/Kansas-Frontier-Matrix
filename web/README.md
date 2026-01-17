@@ -105,13 +105,13 @@ This folder is the **single source of truth** for the user-facing web app (exclu
 
 ```text
 web/
-  README.md
-  components/          # ♻️ reusable UI pieces (buttons, panels, legends, charts)
-  views/               # 🧭 page-level screens (MapPage, CatalogPage, StoryPage)
-  viewers/             # 🗺️ map viewers (MapLibre 2D, Cesium 3D) + shared map state
-  assets/              # 🖼️ icons, images, fonts
-  styles/              # 🎨 global styles, tokens, accessibility helpers
-  story_nodes/         # ⚠️ legacy/local story assets (see v13 canonical home below)
+├─ 📄 README.md
+├─ ♻️ components/          # ♻️ reusable UI pieces (buttons, panels, legends, charts)
+├─ 🧭 views/               # 🧭 page-level screens (MapPage, CatalogPage, StoryPage)
+├─ 🗺️ viewers/             # 🗺️ map viewers (MapLibre 2D, Cesium 3D) + shared map state
+├─ 🖼️ assets/              # 🖼️ icons, images, fonts
+├─ 🎨 styles/              # 🎨 global styles, tokens, accessibility helpers
+└─ ⚠️ story_nodes/         # ⚠️ legacy/local story assets (see v13 canonical home below)
 ```
 
 > **v13 canonical home for Story Nodes:** `../docs/reports/story_nodes/{draft|published}/...`  
