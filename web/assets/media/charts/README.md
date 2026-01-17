@@ -19,11 +19,11 @@ This folder contains **static chart renders** (images/SVGs) shipped with the web
 
 ```text
 web/assets/media/charts/
-├── README.md
-├── export/              # ✅ optimized, production-ready assets
-├── raw/                 # 🛠️ editable sources (if small) (e.g., .ai/.svg/.csv)
-├── thumbs/              # 🖼️ small previews for lists / galleries
-└── meta/                # 🧾 sidecar provenance metadata (required for Focus Mode usage)
+├── 📄 README.md                 # 📘 What lives here, naming rules, and how charts-media differs from charts exports
+├── ✅📦 export/                  # ✅ Optimized, production-ready chart media (compressed, web-safe, cacheable)
+├── 🛠️ raw/                      # 🛠️ Editable sources (keep tiny): .svg/.csv/.ai (prefer storing large sources elsewhere)
+├── 🖼️ thumbs/                   # 🖼️ Small previews for galleries, catalog lists, and Story Node pickers
+└── 🧾 meta/                     # 🧾 Sidecar provenance/attribution contracts (required for Focus Mode usage)
 ```
 
 > Keep this directory **small + cache-friendly**. Large datasets belong in `data/` (ideally via DVC) and should be rendered dynamically or built into tiles/derivatives.
