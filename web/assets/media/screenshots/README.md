@@ -62,27 +62,27 @@ This is a **long-lived, organized** library of screenshots that we expect to kee
 Keep organization by **surface area** (where in the UI) and **workflow** (what the user is doing).
 
 ```text
-📁 web/
-  📁 assets/
-    📁 media/
-      📁 screenshots/
-        📄 README.md ✅ (you are here)
-
-        📁 ui/                    # UI surfaces (stable screenshots)
-          📁 map-viewer/          # main map + layers + timeline
-          📁 data-catalog/        # datasets, metadata, filters
-          📁 story-nodes/         # narratives + citations + media
-          📁 settings/            # preferences, account, etc.
-
-        📁 workflows/             # end-to-end user journeys
-          📁 add-a-layer/
-          📁 compare-time-ranges/
-          📁 export-map/
-
-        📁 releases/              # curated “what’s new” visuals
-          📁 2026-01/
-
-        📁 _archive/              # keep, but no longer referenced
+web/
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 📸 screenshots/
+         ├─ ✅📄 README.md              # you are here 📌 Screenshot rules (naming, sizes, redaction, reuse)
+         │
+         ├─ 🧭 ui/                      # UI surfaces (stable screenshots for docs/catalog/marketing)
+         │  ├─ 🗺️ map-viewer/           # Main map: layers, legend, timeline, inspector
+         │  ├─ 🗂️ data-catalog/         # Dataset browsing: metadata, filters, search, provenance panels
+         │  ├─ 📚 story-nodes/          # Narratives: steps, citations/evidence, embedded media
+         │  └─ ⚙️ settings/             # Preferences, account/session, accessibility toggles
+         │
+         ├─ 🔁 workflows/               # End-to-end user journeys (multi-step sequences)
+         │  ├─ ➕🧩 add-a-layer/         # Add a layer: choose → preview → enable → verify legend/provenance
+         │  ├─ 🕰️↔️ compare-time-ranges/ # Compare time: scrub timeline → swap layers → diff views
+         │  └─ 📤🗺️ export-map/         # Export: screenshot/print/share flows + attribution/citations
+         │
+         ├─ 🗞️ releases/               # Curated “what’s new” visuals per release/month
+         │  └─ 📅 2026-01/              # Release screenshots for January 2026
+         │
+         └─ 🗄️ _archive/               # Older screenshots kept for reference (not referenced by current docs/UI)
 ```
 
 > [!TIP]
