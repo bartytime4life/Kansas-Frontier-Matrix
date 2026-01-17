@@ -59,14 +59,14 @@ flowchart LR
 Keep this directory clean and discoverable:
 
 ```text
-📁 web/
-  📁 src/
-    📁 adapters/
-      📁 telemetry/
-        📁 sinks/
-          📄 README.md  👈 you are here
-          📄 <sink>.ts  (one file per sink, when possible)
-          📄 index.ts   (exports / registry, if used)
+web/
+└─ 📁 src/
+   └─ 🧩 adapters/
+      └─ 📡 telemetry/
+         └─ 🧰 sinks/
+            ├─ 📄 README.md  👈 you are here 📌
+            ├─ 🧰📄 <sink>.ts  # (one file per sink, when possible)
+            └─ 🧩📄 index.ts   # (exports / registry, if used)
 ```
 
 > 🧠 If you’re unsure what counts as a “sink”: if its primary job is **delivery/transport/output**, it belongs here.
