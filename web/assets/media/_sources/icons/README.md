@@ -32,17 +32,17 @@ This folder is intentionally “source-y”: it’s where we keep clean, human-e
 
 ```text
 web/
-└─ assets/
-   └─ media/
-      └─ _sources/
-         └─ icons/
-            ├─ ui/                # buttons, menus, controls
-            ├─ map/               # markers, layer types, legend symbols
-            ├─ story/             # narrative affordances, “focus mode” UI
-            ├─ logos/             # KFM-only logos (avoid 3rd party marks)
-            ├─ third_party/       # imported icon sets (each pack in its own folder)
-            ├─ _meta/             # shared metadata / attribution indexes
-            └─ README.md          # you are here ✅
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 🧾 _sources/
+         └─ 🧷 icons/
+            ├─ 🎛️ ui/                # Buttons/menus/controls source SVGs (human-edited masters)
+            ├─ 🗺️ map/               # Map markers, layer-type icons, legend symbols (source set)
+            ├─ 📚 story/              # Narrative affordances + Focus Mode UI icon sources
+            ├─ 🏷️ logos/             # KFM-only logo sources (avoid third-party marks; keep tightly governed)
+            ├─ 📦 third_party/        # Imported icon packs (one folder per pack; preserve license files)
+            ├─ 🧾 _meta/              # Shared metadata + attribution indexes for all icon sources
+            └─ ✅📄 README.md          # You are here 📌 Conventions, licensing, and how sources become generated sprites
 ```
 
 ---
