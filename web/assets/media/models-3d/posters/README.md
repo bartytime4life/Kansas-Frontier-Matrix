@@ -56,16 +56,16 @@ Static **poster images** (a.k.a. previews) for our **3D model library**. These a
 ## 📂 Directory Layout
 
 ```text
-📁 web/
-  📁 assets/
-    📁 media/
-      📁 models-3d/
-        📁 models/            # ✅ 3D files (.glb/.gltf)
-        📁 posters/           # 👈 you are here
-          🖼️ <slug>.webp
-          🧾 <slug>.poster.json
-          🖼️ <slug>__thumb.webp   (optional)
-          📄 README.md
+web/
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 🧊 models-3d/
+         ├─ 🧊 models/                 # ✅ 3D runtime files (.glb/.gltf) actually served by the app
+         └─ 🖼️ posters/                # 👈 you are here 📌 Poster/cover images for 3D assets (cards, loading states)
+            ├─ 🖼️ <slug>.webp          # Primary poster image (web-optimized; consistent aspect ratio)
+            ├─ 🧾 <slug>.poster.json   # Required sidecar: model refs, camera framing, license, provenance, alt text
+            ├─ 🖼️ <slug>__thumb.webp   # Optional tiny thumbnail (fast lists / low-bandwidth)
+            └─ 📄 README.md            # Rules: naming, target sizes, safe backgrounds, and required metadata fields
 ```
 
 Why this lives under `web/`:
