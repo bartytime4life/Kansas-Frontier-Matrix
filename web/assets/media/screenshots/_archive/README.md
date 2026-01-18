@@ -61,16 +61,16 @@ web/
 Organize by year (and optionally by feature) so it’s easy to browse:
 
 ```text
-📁 _archive/
-  📁 2024/
-    📁 map/
-    📁 timeline/
-  📁 2025/
-    📁 map/
-    📁 ui/
-  📁 2026/
-    📁 map/
-    📁 data-catalog/
+_archive/
+├─ 📅 2024/                 # Archived screenshots grouped by year (not referenced by current docs/UI)
+│  ├─ 🗺️ map/               # Old map viewer captures (historical UI/state)
+│  └─ ⏳ timeline/           # Old timeline/temporal UI captures
+├─ 📅 2025/                 # Archived screenshots grouped by year
+│  ├─ 🗺️ map/               # Map viewer captures for 2025-era layouts/features
+│  └─ 🎛️ ui/                # Misc UI surfaces (panels, dialogs, settings) from 2025
+└─ 📅 2026/                 # Archived screenshots grouped by year
+   ├─ 🗺️ map/               # Map viewer captures for 2026-era layouts/features
+   └─ 🗂️ data-catalog/       # Data catalog screens (search/filters/metadata) from 2026
 ```
 
 ---
