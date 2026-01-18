@@ -90,38 +90,39 @@ StoryPage must enforce and *make visible* the project’s “trust contract”:
 > Adjust names to match the current codebase — this is the **intended** shape for a clean StoryPage subsystem.
 
 ```text
-📁 web/
-  📁 views/
-    📁 StoryPage/
-      📄 README.md ✅ (you are here)
-
-      📄 StoryPage.tsx               # route-level view (layout + orchestration)
-      📁 components/
-        📄 StoryHeader.tsx
-        📄 StoryStep.tsx
-        📄 StepNav.tsx
-        📄 ProgressRail.tsx
-        📄 CitationsDrawer.tsx
-        📄 AttributionBar.tsx
-        📄 StoryErrorState.tsx
-
-      📁 hooks/
-        📄 useStoryNode.ts           # loads + validates story node
-        📄 useStoryPlayback.ts       # step index, scroll ↔ step sync
-        📄 useMapStoryActions.ts     # apply step → map actions
-
-      📁 lib/
-        📄 storySchema.ts            # zod/jsonschema wrapper
-        📄 storyActions.ts           # action interpreter (camera/layers/time/highlights)
-        📄 markdownPipeline.ts       # markdown → sanitized HTML
-        📄 citations.ts              # parse footnotes + build citation list
-
-      📁 styles/
-        📄 storyPage.module.css
-
-      📁 __tests__/
-        📄 storySchema.test.ts
-        📄 storyActions.test.ts
+web/
+└─ 📁 views/
+   └─ 📚 StoryPage/
+      ├─ ✅📄 README.md                    # you are here 📌 Overview, responsibilities, and integration points
+      │
+      ├─ 🧭📄 StoryPage.tsx                # route-level view: page layout + orchestration (data, map, playback, UI)
+      │
+      ├─ 🧩 components/                   # UI building blocks for the Story experience
+      │  ├─ 🧾 StoryHeader.tsx             # title, subtitle, badges, share/print entrypoints
+      │  ├─ 🧱 StoryStep.tsx               # renders a single step (markdown + blocks + step chrome)
+      │  ├─ 🧭 StepNav.tsx                 # step-to-step navigation (prev/next, list, keyboard)
+      │  ├─ 📍 ProgressRail.tsx            # progress indicator / scroll position visualization
+      │  ├─ 📚 CitationsDrawer.tsx         # evidence/citations UI (expandable drawer/panel)
+      │  ├─ 🏷️ AttributionBar.tsx          # required credits/licensing strip (layer + media attribution)
+      │  └─ 🚨 StoryErrorState.tsx         # graceful error UI (missing story, validation failure, offline)
+      │
+      ├─ 🪝 hooks/                        # Story state + side-effects (loading, playback, map coupling)
+      │  ├─ 📥🪝 useStoryNode.ts           # loads story content + validates against schema/contract
+      │  ├─ ▶️🪝 useStoryPlayback.ts       # step index + scroll↔step sync + playback controls
+      │  └─ 🗺️🪝 useMapStoryActions.ts     # applies step actions to the map (camera/layers/time/highlights)
+      │
+      ├─ 🧰 lib/                          # Pure-ish logic: parsing, validation, action interpretation
+      │  ├─ 📐🛡️ storySchema.ts            # schema wrapper (zod/jsonschema) + helpers
+      │  ├─ 🎬 storyActions.ts             # action interpreter (camera/layers/time/highlights)
+      │  ├─ 🧼📝 markdownPipeline.ts        # markdown → sanitized HTML pipeline
+      │  └─ 🧾📚 citations.ts              # parse footnotes + build normalized citation list
+      │
+      ├─ 🎨 styles/                       # Component-scoped styling
+      │  └─ 🎨📄 storyPage.module.css      # StoryPage layout + typography + responsive rules
+      │
+      └─ 🧪 __tests__/                    # Unit tests for contracts + action behavior
+         ├─ 🧪📐 storySchema.test.ts
+         └─ 🧪🎬 storyActions.test.ts
 ```
 
 ---
