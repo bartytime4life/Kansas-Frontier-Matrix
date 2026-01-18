@@ -54,16 +54,16 @@ This directory is for **source materials** that we want to preserve and audit:
 
 ```text
 web/assets/media/
-  _sources/
-    audio/
-      narration/          🎙️ voice-over for stories & explainers
-      oral-history/       🧓 interviews / oral-history clips
-      field/              🌾 ambient / on-location recordings
-      ui/                 🖱️ UI cues (clicks, alerts, transitions)
-      sfx/                💥 generic sound effects (licensed!)
-      music/              🎼 licensed music (if approved)
-      _templates/         🧩 metadata + transcript templates
-      README.md           📄 you are here
+└─ 🧾 _sources/
+   └─ 🔊 audio/
+      ├─ 🎙️ narration/          # 🎙️ Raw voice-over sources for stories/explainers (masters, scripts, takes)
+      ├─ 🧓 oral-history/       # 🧓 Interviews/oral-history recordings (handle consent + sensitivity carefully)
+      ├─ 🌾 field/              # 🌾 On-location ambience (wind, prairie, town soundscapes, room tone)
+      ├─ 🖱️ ui/                 # 🖱️ Raw UI cue sources (clicks, alerts, transitions) before optimization
+      ├─ 💥 sfx/                # 💥 Generic SFX sources (licensed; track attribution + usage limits)
+      ├─ 🎼 music/              # 🎼 Licensed music sources (only if approved; store license terms here)
+      ├─ 🧩 _templates/         # 🧩 Metadata + transcript templates (what every asset must include)
+      └─ 📄 README.md           # 📄 you are here 📌 Rules: naming, required metadata, transcripts, and licensing
 ```
 
 ---
