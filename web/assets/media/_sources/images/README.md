@@ -48,13 +48,13 @@ Use folders to keep intent obvious (create new ones when needed):
 
 ```text
 web/assets/media/_sources/images/
-├─ ui/               # UI illustrations, component art, onboarding visuals
-├─ icons/            # SVG icons, symbols, map UI glyphs
-├─ logos/            # KFM + partner branding assets
-├─ story/            # Story Node imagery (figures, photos, diagrams)
-├─ maps/             # Small illustrative/non-GIS maps (static)
-├─ screenshots/      # Annotated or release-specific screenshots (rare)
-└─ third-party/      # External assets (must include license + attribution)
+├─ 🎛️ ui/               # UI illustrations, component art, onboarding visuals (editable masters if possible)
+├─ 🧷 icons/             # Icon sources (SVG symbols, map UI glyphs) before any sprite/build steps
+├─ 🏷️ logos/             # KFM + partner branding source files (tightly governed; keep variants organized)
+├─ 📚 story/              # Story Node source imagery (figures, photos, diagrams) + editing originals
+├─ 🗺️ maps/               # Small illustrative/non-GIS static maps (for docs/story; not tile sources)
+├─ 📸 screenshots/        # Annotated/release screenshots (rare; keep minimal, redacted, dated)
+└─ 📦 third-party/        # External image sources (MUST include license + attribution + provenance notes)
 ```
 
 ---
