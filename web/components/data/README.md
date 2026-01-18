@@ -44,21 +44,21 @@ This folder contains **data-facing UI components** that help users **discover, u
 ## 🧱 Where this fits in the repo
 
 ```text
-🗂️ web/
-  🧩 components/
-    📁 data/                 👈 you are here
-    📁 map/                  (map UI widgets)
-    📁 ui/                   (shared buttons, dialogs, etc.)
-  🧭 views/                  (pages/screens: MapPage, DataCatalogPage, StoryPage…)
-  🛰️ viewers/                (MapLibre/Cesium integrations & layer rendering)
-  📚 story_nodes/            (story markdown + per-step map configs)
-  🎨 styles/                 (global styles)
+web/
+├─ 🧩 components/
+│  ├─ 🗂️ data/                 # 👈 you are here 📌 Data-catalog UI components (cards, metadata panels, filters)
+│  ├─ 🗺️ map/                  # Map UI widgets (layer list, legends, popups, basemap controls)
+│  └─ 🎛️ ui/                   # Shared UI primitives (buttons, dialogs, tooltips, tabs, form controls)
+├─ 🧭 views/                    # Page-level screens (MapPage, DataCatalogPage, StoryPage…) + orchestration glue
+├─ 🛰️ viewers/                  # MapLibre/Cesium integrations + render pipelines (layers, picking, camera, tiles)
+├─ 📚 story_nodes/              # Story content + step configs consumed by the Story UI (markdown + map actions)
+└─ 🎨 styles/                   # Global CSS/tokens/themes + accessibility helpers (import order matters)
 
-🗂️ data/
-  📜 sources/                (external dataset manifests)
-  📥 raw/                    (downloaded source artifacts)
-  🗄️ processed/              (cleaned outputs: GeoJSON/GeoParquet/COG/Parquet)
-  🗂️ catalog/                (STAC/DCAT metadata + provenance records)
+data/
+├─ 📜 sources/                  # External dataset manifests + intake descriptors (what to fetch, from where, licensing)
+├─ 📥 raw/                      # Downloaded source artifacts (as-received; immutable; checksums + provenance expected)
+├─ 🗄️ processed/                # Cleaned/normalized outputs (GeoJSON/GeoParquet/COG/Parquet; analysis-ready)
+└─ 🗂️ catalog/                  # Published metadata + lineage (STAC/DCAT records, provenance, derived product registry)
 ```
 
 ---
