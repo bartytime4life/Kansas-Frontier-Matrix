@@ -16,12 +16,12 @@
 ## 📌 Quick map
 
 ```text
-📁 web/
-  📁 components/
-    📁 focus/
-      📄 README.md   👈 you are here
-      📄 (Focus Mode UI components live here)
-      📄 (Types + helpers that implement “hard gates” live here)
+web/
+└─ 📁 components/
+   └─ 🧠 focus/
+      ├─ 📄 README.md   👈 you are here 📌 Focus Mode UI overview + gating rules + evidence requirements
+      ├─ 🧠🧩 …          # Focus Mode UI components live here (panels, toggles, evidence drawers, banners)
+      └─ 🛡️🧾 …          # Types + helpers implementing “hard gates” (policy checks, provenance guards, redaction)
 ```
 
 ---
