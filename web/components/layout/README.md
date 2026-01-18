@@ -114,10 +114,10 @@ Docked panels should degrade to drawers on narrow viewports.
 
 ```mermaid
 flowchart TB
-  A[Desktop] --> B[Map + Left Dock + Right Dock]
-  C[Mobile] --> D[Map + Bottom Bar]
-  D --> E[Left Drawer (on demand)]
-  D --> F[Right Drawer (on demand)]
+  A["🖥️ Desktop"] --> B["🗺️ Map + ⬅️ Left Dock + ➡️ Right Dock"];
+  C["📱 Mobile"] --> D["🗺️ Map + ⬇️ Bottom Bar"];
+  D --> E["⬅️ Left Drawer - on demand"];
+  D --> F["➡️ Right Drawer - on demand"];
 ```
 
 > [!NOTE]
