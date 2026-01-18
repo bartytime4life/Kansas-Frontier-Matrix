@@ -44,13 +44,13 @@ Avoid putting:
 ## 🧱 Folder map (expected pattern)
 
 ```text
-📁 web/
-  📁 assets/
-    📁 samples/
-      📁 _shared/
-        📁 img/          👈 you are here
-          📄 README.md
-          🖼️ (icons, logos, screenshots...)
+web/
+└─ 📁 assets/
+   └─ 🧪 samples/
+      └─ ♻️ _shared/
+         └─ 🖼️ img/                  # 👈 you are here 📌 Tiny images used only by samples/demos (NOT canonical UI assets)
+            ├─ 📄 README.md           # 📘 What belongs here, size limits, and naming/redaction rules
+            └─ 🖼️ …                  # Icons, logos, screenshots, placeholders (keep small + license-noted)
 ```
 
 ---
