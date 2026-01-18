@@ -1,233 +1,221 @@
-# 🧩 UI Illustrations
+# 🎨 UI Illustrations (Web)
 
-![Scope](https://img.shields.io/badge/scope-web%20ui-0ea5e9) ![Assets](https://img.shields.io/badge/type-illustrations-22c55e) ![Governance](https://img.shields.io/badge/guardrails-provenance%E2%80%91first-f97316) ![Formats](https://img.shields.io/badge/formats-svg%20%7C%20png%20%7C%20webp-64748b)
-
-Static **UI-only** illustrations for the KFM web client (React / Map UI). 🎛️🗺️  
-Use these for onboarding, empty states, help overlays, and “how-to-use-the-interface” visuals — **not** for evidence, datasets, or story content.
+> 📍 **Path:** `web/assets/media/illustrations/ui/`  
+> 🧭 **Purpose:** Friendly, lightweight illustrations for the **KFM** web interface (onboarding, empty-states, helper diagrams, etc.).
 
 ---
 
-## 📦 Location
+## 🧩 What this folder is for
+
+This directory contains **non-map UI illustrations** used throughout the Kansas Frontier Matrix (KFM) web app—think:
+
+- 🫧 **Empty states** (no results, no layers selected, missing filters)
+- 🧭 **Onboarding / walkthrough** visuals (layers → timeline → provenance → stories)
+- 🧠 **Feature explainers** (Focus Mode, citations, evidence panels)
+- 🧱 **Light UI diagrams** (high-level conceptual visuals — *not* data charts)
+
+> ✅ **Rule of thumb:** If it’s an illustration that supports the UI experience (without being “the UI itself”), it belongs here.
+
+---
+
+## 🚫 What does *not* belong here
+
+Please keep this folder clean and predictable:
+
+- 🧷 **Icons / pictograms** used in buttons, toolbars, map markers  
+  → put them in an **icons** folder (e.g., `web/assets/media/icons/`), not here.
+- 🗺️ **Map symbology sprites** (pins, cluster icons, layer glyphs)  
+  → keep separate from illustrations to avoid mixing concerns.
+- 🖼️ **Screenshots** of the product UI  
+  → use docs/media folders (or README assets) so they don’t ship to prod by accident.
+- 🎬 **Videos / heavy animations**  
+  → use a dedicated media folder (and keep bundle size sane).
+- 📚 **Story Node-specific images**  
+  → live with Story Nodes under `docs/reports/story_nodes/**/assets/` (so they remain tied to narrative/evidence context).
+
+---
+
+## 🗂️ Suggested organization
+
+If/when this folder grows, prefer predictable subfolders:
 
 ```text
-📁 web/
-  📁 assets/
-    📁 media/
-      📁 illustrations/
-        📁 ui/
-          📄 README.md  👈 you are here
+📁 web/assets/media/illustrations/ui/
+├── 📁 empty-states/         # no-results, no-data, not-found, etc.
+├── 📁 onboarding/           # walkthrough steps, “getting started”
+├── 📁 feature-explainers/   # provenance, Focus Mode, citations, etc.
+├── 📁 system-states/        # error, success, loading (illustrative)
+├── 📄 manifest.json         # optional: provenance/license metadata for assets
+└── 📄 README.md             # you are here ✨
 ```
 
----
-
-> [!IMPORTANT]
-> **This folder is for UI visuals only.**  
-> If an image contains **data**, **maps**, **charts**, **historical claims**, or anything that could be read as **evidence**, it does **not** belong here. That content must live with governed narrative/evidence workflows (Story Nodes + catalogs/provenance) — not as “random static UI art.”
+> 🧠 If you don’t need subfolders yet, keep it flat—but keep naming consistent.
 
 ---
 
-## 🧭 Quick links
+## 🏷️ Naming conventions
 
-- [✅ What belongs here](#-what-belongs-here)
-- [🚫 What does not belong here](#-what-does-not-belong-here)
-- [🛡️ Governance guardrails](#️-governance-guardrails)
-- [📝 Naming rules](#-naming-rules)
-- [🖼️ Formats & optimization](#️-formats--optimization)
-- [🧩 Using in React](#-using-in-react)
-- [🏷️ Metadata & licensing](#️-metadata--licensing)
-- [✅ PR checklist](#-pr-checklist)
-- [🔗 Related docs](#-related-docs)
+Keep names **kebab-case**, descriptive, and stable:
 
----
+✅ Good:
+- `empty-state.no-results.svg`
+- `onboarding.layers-timeline.svg`
+- `feature.provenance-inspector.svg`
+- `system.error-generic.svg`
 
-## ✅ What belongs here
+🚫 Avoid:
+- `final_v7_REAL.svg`
+- `Illustration 3.svg`
+- `noResults(2).png`
 
-UI illustrations that are **generic** and **non-evidentiary**, such as:
+### 🌗 Theme variants
 
-- 🧭 **Onboarding**: “how to use the map”, “how to open the layer catalog”, “how to filter”
-- 🫥 **Empty states**: “no results”, “no layers selected”, “offline”
-- 🆘 **Help** / “learn the UI” overlays
-- 🧰 **System states**: loading, error, permission denied (generic)
-- 🎨 **Decorative** UI polish that does **not** assert facts
+If an illustration must differ between themes, use suffixes:
 
----
+- `…​.light.svg`
+- `…​.dark.svg`
 
-## 🚫 What does not belong here
+Example:
+- `feature.provenance-inspector.light.svg`
+- `feature.provenance-inspector.dark.svg`
 
-| 🚫 Don’t put this here | ✅ Put it instead |
-|---|---|
-| Evidence images (scans, photos, historical maps) | `data/processed/**` + catalog records (STAC/DCAT/PROV) |
-| Map screenshots that imply real claims (“X happened here”) | Story Node assets + citations/provenance |
-| Charts/plots from real datasets | Generated artifacts treated as evidence + catalogs + API |
-| Story-specific illustrations tied to a narrative | `docs/reports/story_nodes/**/assets/` (governed) |
-| Anything that must be “true” | Anywhere governed by provenance + review gates |
-
-> [!TIP]
-> If you *feel like you should cite it*, it probably doesn’t belong in this folder. 📌
+If the artwork can theme via CSS variables (preferred for SVG), do that instead.
 
 ---
 
-## 🛡️ Governance guardrails
+## 🖼️ File formats
 
-KFM has a strict “pipeline ordering” and **the UI must not bypass the API/data provenance boundaries**.  
-This folder is intentionally **boring**: it’s for UI support visuals, not content that carries truth-claims.
-
-**Rules of thumb:**
-- ✅ UI illustrations may **explain controls** (buttons, panels, gestures).
-- ❌ UI illustrations may not **introduce new facts** about Kansas history, people, events, locations, or datasets.
-- ✅ If you need a map/image/chart in the UI, it should typically be **served from cataloged data via the API**, not shipped as a static file here.
-- ✅ If you must ship a static image that’s “content,” treat it like content: governed, cited, and versioned (Story Nodes).
+| Format | Use it for | Notes |
+|---|---|---|
+| **SVG** ✅ | Most UI illustrations | Preferred. Crisp at any size, smallest when optimized. |
+| **PNG** | Complex raster art / textures | Use only when SVG isn’t practical. Export @2x for retina if needed. |
+| **WebP** | Raster illustrations for web | Great compression; verify browser support in target stack. |
+| **Lottie (JSON)** | Small looping motion | Only if we’re already using Lottie and the file stays small. |
 
 ---
 
-## 📝 Naming rules
+## ⚡ Performance budgets (keep the UI fast)
 
-Keep names **predictable**, **grep-able**, and **stable**. 🧠
+Illustrations ship with the web app, so treat them like code:
 
-### ✅ File naming pattern
+- 🎯 **Target size:**  
+  - SVG: aim for **≤ 100–200 KB** each  
+  - PNG/WebP: aim for **≤ 300–500 KB** each (lower is better)
+- 🧹 **Optimize:** remove metadata, simplify paths, compress raster exports.
+- 🔁 **Avoid duplicates:** reuse common empty-state base art where possible.
 
-```text
-ui-<category>--<slug>--<variant>@<scale>.<ext>
-```
-
-**Where:**
-- `<category>` = `onboarding` | `empty-state` | `help` | `system`
-- `<slug>` = short kebab-case intent (`no-results`, `select-layer`, `offline`)
-- `<variant>` = `light` | `dark` | `mono` | `illustrated` | `wireframe` (use only if needed)
-- `<scale>` = omit for SVG; for raster: `@1x`, `@2x`, `@3x`
-
-### 📌 Examples
-
-- `ui-empty-state--no-results--light.svg`
-- `ui-onboarding--open-layer-catalog--dark.svg`
-- `ui-system--offline--illustrated@2x.webp`
-
-> [!NOTE]
-> If you introduce variants (dark/light, mobile/desktop), do so intentionally and keep the set small. 🌙☀️📱🖥️
+> 🧭 When in doubt, prioritize *clarity + speed* over decoration.
 
 ---
 
-## 🖼️ Formats & optimization
+## ♿ Accessibility rules
 
-### Preferred formats ✅
-- **SVG** 🧬 for most UI illustrations (scales cleanly, theme-friendly)
-- **WebP** 🪶 for raster illustrations when SVG is not appropriate
-- **PNG** 🧱 only when transparency is required and WebP isn’t viable
+Every illustration must be either:
 
-### Avoid 🚫
-- Large uncompressed PNG/JPG
-- Text-heavy images (prefer real HTML text for accessibility + i18n)
-- “Evidence-looking” visuals in a UI folder (maps, documents, charts)
+### 1) Decorative 🫧
+- Mark as decorative so it doesn’t add noise to screen readers.
+- Example: `alt=""` and `aria-hidden="true"` (implementation depends on framework)
 
-### Optimization expectations ⚡
-- Keep file size as small as reasonable:
-  - SVG: remove editor metadata, simplify paths
-  - Raster: export at intended size, compress, provide @2x only when needed
-- Strip junk: hidden layers, unused defs, embedded bitmaps in SVG unless justified
+### 2) Informative 🧠
+- Provide meaningful alt text (what it communicates, not what it looks like).
+- Example: `"No layers selected — open the layer catalog to add data."`
 
-<details>
-  <summary><strong>🧪 Suggested optimization commands (optional)</strong></summary>
-
-```bash
-# SVG (example)
-npx svgo --multipass ./web/assets/media/illustrations/ui/**/*.svg
-
-# Raster (example)
-# Use your repo’s preferred tooling (imagemin/sharp/etc.) if available
-```
-
-</details>
+> ✅ If the illustration is the *only* cue for a state, it is **informative**.
 
 ---
 
-## 🧩 Using in React
+## 🔎 Provenance & licensing (non-negotiable)
 
-### ✅ Decorative illustration (no meaning)
-```tsx
-<img
-  src={new URL("./ui-empty-state--no-results--light.svg", import.meta.url).toString()}
-  alt=""
-  aria-hidden="true"
-  loading="lazy"
-/>
-```
+KFM’s UI is **trust-centered**. Even for artwork, we must be able to answer:
 
-### ✅ Informative illustration (user needs it)
-```tsx
-<img
-  src={new URL("./ui-onboarding--open-layer-catalog--dark.svg", import.meta.url).toString()}
-  alt="Illustration showing how to open the layer catalog."
-  loading="lazy"
-/>
-```
+- Who created it?
+- What license allows us to ship it?
+- Is it derived from third-party work? (and if so, where’s the attribution?)
 
-### 🎛️ Theme switching
-If you ship both `--light` and `--dark` variants, switch via theme state (don’t auto-invert assets).
+### 📄 Recommended: `manifest.json`
 
----
+Add (or maintain) a lightweight asset manifest for this folder:
 
-## 🏷️ Metadata & licensing
-
-Even though these are “UI assets,” we still treat attribution seriously. 🧾✅
-
-### When you MUST add metadata
-Add metadata (sidecar or manifest entry) if the illustration is:
-- sourced from anywhere outside the repo 📎
-- AI-assisted/generated 🤖
-- derived from a screenshot or a third-party UI kit 🧩
-- non-trivial / likely to be reused in multiple places 🔁
-
-### Recommended metadata approaches
-Pick one project-wide and stay consistent:
-
-1) **Sidecar file** per asset  
-`ui-empty-state--no-results--light.svg.meta.json`
-
-2) **Single manifest** for this folder  
-`manifest.ui-illustrations.json` (or `.yml`)
-
-#### Example sidecar (minimal)
 ```json
-{
-  "id": "ui-empty-state--no-results--light",
-  "title": "Empty state: No results",
-  "purpose": "UI empty state illustration",
-  "source": {
-    "type": "figma",
-    "ref": "Figma file / frame reference here"
-  },
-  "license": "Internal / CC-BY-4.0 / etc",
-  "attribution": "Author or source attribution here",
-  "notes": "Anything a future maintainer will thank you for."
+[
+  {
+    "id": "empty-state.no-results",
+    "file": "empty-states/empty-state.no-results.svg",
+    "purpose": "Shown when a search returns no datasets or story nodes.",
+    "source": "In-house design",
+    "author": "KFM Design Team",
+    "license": "CC0-1.0 OR Project-License-Compatible",
+    "notes": "SVG optimized; supports dark mode via CSS vars."
+  }
+]
+```
+
+> 🛡️ Do **not** add assets with unclear licensing or unknown origin.
+
+---
+
+## 🧩 Using illustrations in the web app
+
+Common patterns (adjust to your bundler/framework):
+
+### ✅ Import as a URL (safe default)
+```ts
+import noResultsUrl from "@/assets/media/illustrations/ui/empty-states/empty-state.no-results.svg";
+
+export function EmptyState() {
+  return (
+    <img
+      src={noResultsUrl}
+      alt="No results — try adjusting your search or filters."
+      loading="lazy"
+    />
+  );
 }
 ```
 
-> [!WARNING]
-> Do **not** add assets with unclear licensing. If you can’t explain “where it came from and under what terms,” it’s not merge-ready. 🚫⚖️
+### ✅ Inline SVG as a component (when you need styling)
+```ts
+import { ReactComponent as ProvenanceExplainer } from "@/assets/media/illustrations/ui/feature-explainers/feature.provenance-inspector.svg";
+
+export function HelpPanel() {
+  return (
+    <div aria-label="How provenance works">
+      <ProvenanceExplainer />
+    </div>
+  );
+}
+```
+
+> 🌗 If you inline SVGs, prefer CSS variables and avoid hardcoded colors that break dark mode.
 
 ---
 
-## ✅ PR checklist
+## ✅ Definition of Done (DoD) checklist
 
-Before merging new UI illustrations:
-
-- [ ] 🧭 **Correct folder** (`ui/` only; not story/evidence)
-- [ ] 🏷️ **Name follows pattern** and is descriptive
-- [ ] ⚡ **Optimized** (SVGO/compressed; no editor cruft)
-- [ ] ♿ **Accessible** usage (alt text or `alt=""` + `aria-hidden`)
-- [ ] 🌙 **Theme-safe** (works in light/dark or has explicit variants)
-- [ ] 🧾 **License/attribution included** if not purely original
-- [ ] 🔍 **No factual claims embedded** (no “evidence by illustration”)
+- [ ] File named using the conventions above
+- [ ] SVG/raster is optimized (no giant exports)
+- [ ] Dark mode handled (variant files or CSS-variable theming)
+- [ ] Accessibility covered (decorative vs informative)
+- [ ] Provenance + license recorded (manifest or sidecar metadata)
+- [ ] No sensitive info (no real coordinates, no private datasets, no screenshots)
 
 ---
 
-## 🔗 Related docs
+## 🔗 Related (project) docs
 
-- 📘 `docs/MASTER_GUIDE_v13.md` — canonical pipeline + invariants  
-- 🧱 `docs/standards/` — profiles & governed standards (STAC/DCAT/PROV, etc.)
-- ⚖️ `docs/governance/` — ethics, sovereignty, review triggers
-- 📰 `docs/reports/story_nodes/` — governed story content + story assets (draft/published)
+- `docs/MASTER_GUIDE_v13.md` 📘 (canonical pipeline + invariants)
+- `docs/standards/` 🧾 (profiles, governance, metadata expectations)
+- `docs/reports/story_nodes/**/assets/` 🎬 (story-scoped visuals live with their narrative)
 
 ---
 
-🧠 **Design intent:** keep UI visuals lightweight, reusable, and clearly separated from evidence-bearing media — so KFM stays trustworthy and provenance-clean. ✅
+<details>
+<summary>💡 Illustration ideas that map well to KFM UI</summary>
+
+- 🗂️ “No layers selected” → gently point to the layer catalog  
+- 🕰️ “Set a time range” → show timeline slider concept  
+- 🧾 “View provenance” → show “source → processing → output” concept  
+- 🧠 “Focus Mode” → show story + map + evidence working together  
+- 🧭 “Search tips” → show filters, tags, bounding box
+
+</details>
