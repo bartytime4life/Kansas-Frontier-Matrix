@@ -37,21 +37,21 @@ Use a **folder per release tag** (recommended), plus optional shared assets.
 
 ```text
 web/
-└─ assets/
-   └─ media/
-      └─ screenshots/
-         └─ releases/
-            ├─ README.md
-            ├─ vX.Y.Z/
-            │  ├─ 00-hero.png
-            │  ├─ 01-map-overview.png
-            │  ├─ 02-layer-metadata.png
-            │  ├─ 03-story-mode-step-02.png
-            │  ├─ 04-focus-mode-with-citations.png
-            │  └─ manifest.yml        (optional, but 🔥 recommended)
-            └─ _shared/               (optional)
-               ├─ kfm-logo.png
-               └─ release-frame.svg
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 📸 screenshots/
+         └─ 🗞️ releases/
+            ├─ 📄 README.md                    # 📘 How to curate release screenshots + naming/order + redaction rules
+            ├─ 🏷️ vX.Y.Z/                      # One folder per release version (ordered, publish-ready)
+            │  ├─ 🌟🖼️ 00-hero.png              # Hero image for release notes/social/blog
+            │  ├─ 🗺️🖼️ 01-map-overview.png       # High-level map overview (layers/timeline visible)
+            │  ├─ 🧾🗂️🖼️ 02-layer-metadata.png    # Layer metadata/provenance panel capture
+            │  ├─ 🎬🖼️ 03-story-mode-step-02.png  # Story Mode step example (numbered for sequence)
+            │  ├─ 🔎📚🖼️ 04-focus-mode-with-citations.png # Focus Mode with citations/evidence shown
+            │  └─ 🧾📄 manifest.yml              # (optional, 🔥 recommended) captions, alt text, links, approvals
+            └─ ♻️ _shared/                      # (optional) Shared assets used across releases (frames, logos)
+               ├─ 🏷️🖼️ kfm-logo.png             # Logo used in framed/templated release images
+               └─ 🖼️🧩 release-frame.svg         # Reusable frame/border overlay for consistent styling
 ```
 
 **Why per-release folders?**  
