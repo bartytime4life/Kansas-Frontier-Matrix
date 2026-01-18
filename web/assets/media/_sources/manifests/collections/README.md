@@ -1,249 +1,277 @@
-# 🗃️ Collections — Media Source Manifests
+# 🗂️ Collections Manifests (Web Media Sources)
 
-![KFM](https://img.shields.io/badge/KFM-Frontier%20Matrix-informational)
-![Provenance](https://img.shields.io/badge/Provenance-required-brightgreen)
-![Contracts](https://img.shields.io/badge/Contracts-contract--first-blue)
-![Focus%20Mode](https://img.shields.io/badge/Focus%20Mode-provenance--gated-success)
+![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-blue)
+![Provenance](https://img.shields.io/badge/Provenance-First-brightgreen)
+![Contract](https://img.shields.io/badge/Contract-First-orange)
+![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-aligned-purple)
+![Status](https://img.shields.io/badge/status-draft-yellow)
 
-> **📍 Folder:** `web/assets/media/_sources/manifests/collections/`  
-> **🎯 Purpose:** define *what media exists*, *where it came from*, and *how it can be used* — **before** it appears in the KFM UI, Story Nodes, or Focus Mode.  
-> **🧠 Guiding principle:** no “mystery assets” (everything should be traceable + licensed).
-
----
-
-## ✅ Quickstart (add a new collection)
-
-- [ ] Create a new manifest file in this folder (JSON or YAML).
-- [ ] Give the collection a **stable** `id` (kebab-case) and human-friendly `title`.
-- [ ] Record **source + license + attribution**.
-- [ ] Include **retrieval date** + **checksums** (or other integrity signals) where feasible.
-- [ ] Ensure anything used in **Story Nodes** and **Focus Mode** is **provenance-linked** (catalog/graph/API references), not an untracked local file.
-
-> 💡 In KFM, narrative + UI should be downstream of catalog + provenance artifacts, not a shortcut around them.[^pipeline][^boundary-artifacts][^focus-mode]
+> 📍 **You are here:** `web/assets/media/_sources/manifests/collections/`  
+> 🎯 **Purpose:** Define *curated groupings* of source media (PDFs, images, maps, videos, etc.) that the web app can browse, filter, and cite as **evidence**.
 
 ---
 
-## 🧭 Where this sits in the KFM pipeline
+## ✨ What is a “Collection” in KFM?
 
-KFM’s “traceability spine” is: **Raw → Process → Catalog → Graph → API → UI → Story Nodes → Focus Mode**.[^pipeline]
+A **collection manifest** is a small, versioned “index card” that groups related sources into a logical set:
 
-```mermaid
-flowchart LR
-  subgraph Authoring["🧑‍💻 Authoring / Ingest Inputs"]
-    CM["📄 Collection Manifests\n(this folder)"]
-  end
+- 📚 A reading list (e.g., “Modeling & Simulation”)
+- 🗺️ A map pack (e.g., “Historic Kansas Plat Maps”)
+- 🧾 Evidence bundle for a Story Node (e.g., “Bleeding Kansas – Primary Sources”)
+- 🧰 A toolkit set (e.g., “WebGL + GIS Visualization References”)
 
-  subgraph Data["📦 Data & Catalog Artifacts"]
-    STAC["🧾 STAC Collections/Items"]
-    DCAT["🪪 DCAT Dataset Views"]
-    PROV["🧬 PROV Lineage Bundles"]
-  end
+Collections are meant to be:
+- ✅ **Provenance-first** (every source can be traced back to where it came from)
+- ✅ **Contract-first** (schemas are stable; breaking changes are explicit)
+- ✅ **Web-friendly** (fast to load; metadata supports UI filters/search)
 
-  subgraph Platform["🧩 Platform Layers"]
-    G["🕸️ Graph (Neo4j)"]
-    API["🔌 API Layer (contracts + redaction)"]
-    UI["🗺️ Map UI (React · MapLibre · optional Cesium)"]
-  end
+---
 
-  subgraph Narrative["📚 Narrative Layers"]
-    SN["🧷 Story Nodes (governed narratives)"]
-    FM["🔎 Focus Mode (provenance-linked bundle)"]
-  end
+## 🧱 Recommended Folder Layout
 
-  CM --> STAC
-  CM --> DCAT
-  CM --> PROV
-  STAC --> G
-  DCAT --> G
-  PROV --> G
-  G --> API
-  API --> UI
-  UI --> SN
-  SN --> FM
+```text
+🗂️ web/assets/media/
+  └─ 🗂️ _sources/
+     ├─ 🗂️ files/                       # ✅ local source media (when allowed)
+     │  ├─ 🗂️ books/
+     │  ├─ 🗂️ maps/
+     │  └─ 🗂️ imagery/
+     └─ 🗂️ manifests/
+        ├─ 🗂️ sources/                  # ✅ atomic “source manifests” (one per asset/logical doc)
+        ├─ 🗂️ collections/              # 👈 this folder (groupings of sources)
+        └─ 🗂️ schemas/                  # ✅ JSON Schema contracts + validators
+           ├─ collection.schema.json
+           └─ source.schema.json
 ```
 
-### 🧩 Important: manifests are **inputs**, not runtime truth
-The `web/` directory is the UI codebase and should not become a dumping ground for “hidden data files.” These manifests are meant as **build / ingest inputs** that feed validated catalog + provenance outputs consumed via the API.[^ui-web][^catalog-tools]
+> [!NOTE]
+> Keep **binaries out of `manifests/`**. Manifests should remain small, diff-friendly, reviewable text.
 
 ---
 
-## 📦 What is a “collection” in this folder?
+## 📄 File Naming & Conventions
 
-A **collection** is a *curated group of media items* that share a common theme, provenance boundary, or publication intent.
+### ✅ Collection manifest filename
+Use one of the following patterns:
+
+- `kebab-case.collection.json` *(recommended for runtime consumption)*
+- `kebab-case.collection.yml` *(allowed for authoring; ideally compiled → JSON during build)*
 
 Examples:
-- 🗺️ Historic map plate set (multiple scans that belong to the same atlas edition)
-- 📷 Photo archive from a single institution + accession
-- 📄 Document bundle (PDFs) for a particular treaty, event, or location
-- 🧾 “Evidence pack” used across multiple Story Nodes (maps + charts + excerpts)
+- `modeling-simulation.collection.json`
+- `geospatial-visualization.collection.yml`
 
-> 🧠 Rule of thumb:  
-> If the media is reused across narratives or has analytical value, treat it like an **evidence artifact** (catalogued + provenance-tracked).[^evidence-artifact]
+### 🆔 Stable collection IDs
+Use stable, human-readable IDs:
+- ✅ `modeling-simulation`
+- ✅ `library-modeling-simulation`
+- ✅ `kfm-library.modeling-simulation` *(namespaced, if needed)*  
+- ❌ `collection1`
+- ❌ `newstuff-final-final`
 
----
-
-## 📁 Conventions for this folder
-
-### ✅ Do
-- Keep **only manifests** here (`.json`, `.yml`, `.yaml`).
-- Make collection IDs stable and reusable across graph/API/UI references.
-- Make provenance explicit: source, license, retrieval, transformations.
-
-### ❌ Don’t
-- Don’t store raw or huge binaries in here.
-- Don’t reference media in published narratives unless it has a provenance path to catalog/graph/API.
-
-> 📌 KFM uses manifest files to describe external sources (including source URL + metadata + license) and pipelines read those manifests to fetch/ingest data.[^external-manifests]
+> [!TIP]
+> **Never reuse IDs** for different content. If the meaning changes, create a new ID and deprecate the old one.
 
 ---
 
-## 🧾 Manifest conventions (recommended “v1” shape)
+## 🧬 Collection Manifest Contract (v1)
 
-> ⚠️ This section describes **project conventions** for consistency. If a JSON Schema exists (or is added), it should live under `schemas/` (canonical home for schemas).[^schemas-home]
+Collections should be **thin** and mostly reference **source manifests** by ID.
 
-### 🏷️ Naming
-- **Filename:** `"<collection-id>.collection.json"` (or `.yaml`)
-- **Collection ID:** `kebab-case`, lowercase, no spaces  
-  Example: `kansas-territorial-atlas-1854`
+### ✅ Minimal required fields
 
-### 🔑 Recommended top-level keys
+| Field | Type | Required | Notes |
+|---|---:|:---:|---|
+| `schema_version` | string | ✅ | e.g. `"kfm.media.collection/v1"` |
+| `id` | string | ✅ | Stable identifier (matches filename) |
+| `title` | string | ✅ | Human-facing title |
+| `description` | string | ✅ | What it is + why it exists |
+| `sources` | string[] | ✅ | Array of **source IDs** (defined in `../sources/`) |
 
-| Key | Type | Why it matters |
-|---|---:|---|
-| `manifest_version` | string | lets us evolve without breaking ingestion (“contract-first”) |
-| `collection.id` | string | stable identifier for linking in graph/API/story nodes |
-| `collection.title` | string | human-readable name |
-| `collection.description` | string | what it is + intended use |
-| `license` | object | rights + attribution (required) |
-| `sources[]` | array | where it came from + how we retrieved it |
-| `items[]` | array | per-asset declarations (optional but recommended) |
-| `spatial_extent` | object | bbox/places (if applicable) |
-| `temporal_extent` | object | date range (if applicable) |
-| `processing` | object | “what did we do to it” notes / steps |
-| `catalog_refs` | object | links to STAC/DCAT/PROV outputs (when available) |
-| `sensitivity` | object | redaction + handling rules |
+### ⭐ Strongly recommended fields
 
-> 📌 KFM’s “contract-first” approach expects metadata contracts to include things like **source, license, spatial/temporal extent, and processing steps**, enforced by validators — avoiding “mystery layers.”[^contracts]
-
-### 🧷 Stable IDs are non-negotiable
-When this collection is referenced in narrative or UI layers, it should be referenced by stable identifiers (not by random filenames or ad-hoc links).[^stable-ids]
+| Field | Type | Why it matters |
+|---|---|---|
+| `tags` | string[] | Filtering + search |
+| `license_summary` | string | Quick UI-safe description (does not replace per-source license fields) |
+| `extent` | object | Spatial/temporal discovery (and optional STAC export) |
+| `ui` | object | Icons, ordering, featured state, etc. |
+| `provenance` | object | Who curated it, when, and why |
 
 ---
 
-## 🛠️ Workflow: add/update a collection (suggested)
+## 🧾 Example Collection Manifest
 
-1. **Create manifest** in this folder.
-2. **Describe the source(s)**:
-   - original URL / archive reference
-   - retrieval date
-   - publisher/institution
-   - licensing + required credit line
-3. **List items** (if you know them now) or start with a collection-only manifest.
-4. **Generate & register boundary artifacts** (as applicable):
-   - STAC collection / items
-   - DCAT dataset view
-   - PROV lineage bundle  
-   These artifacts are required interfaces to downstream stages (graph, API, UI).[^boundary-artifacts][^catalogs]
-5. **Use in Story Nodes / UI only after provenance linkage exists**:
-   - Story Nodes should cite sources
-   - Focus Mode only admits provenance-linked content[^story-citations][^focus-mode]
+> Example: `modeling-simulation.collection.yml`
 
----
+```yaml
+schema_version: "kfm.media.collection/v1"
+id: "modeling-simulation"
+title: "🛰️ Modeling & Simulation"
+description: >
+  Core references for scientific modeling, simulation design, regression workflows,
+  and experimental rigor used across the Kansas Frontier Matrix project.
 
-## 🔒 Safety, sensitivity, and redaction
+tags:
+  - modeling
+  - simulation
+  - statistics
+  - regression
+  - research-methods
 
-Collections may contain sensitive location or personal data risks. KFM explicitly guards against location leaks and requires careful handling in narrative outputs.[^no-sensitive]
+license_summary: >
+  Mixed licensing. See each source manifest for redistribution and attribution rules.
 
-Recommended manifest fields:
-- `sensitivity.level`: `public | restricted | redacted`
-- `sensitivity.location_precision`: e.g., `"county"`, `"township"`, `"exact"`
-- `sensitivity.notes`: rationale + handling constraints
-- `redaction.policy`: how the API/UI should generalize or omit details
+# Optional, but encouraged (helps search + future STAC alignment)
+extent:
+  spatial:
+    # Use bbox only if sources are truly spatially scoped; otherwise omit.
+    bbox: [-102.05, 36.99, -94.59, 40.00] # Kansas-ish envelope (example only)
+  temporal:
+    start: "1800-01-01"
+    end: "1900-12-31"
 
----
+sources:
+  # These should correspond to manifests in: ../sources/<id>.source.(json|yml)
+  - "book.scientific-modeling-simulation-nasa-grade"
+  - "book.understanding-statistics-experimental-design"
+  - "book.regression-analysis-with-python"
+  - "book.think-bayes"
+  - "paper.kfm-technical-documentation"
 
-## 🧩 Using collection media in Story Nodes
+ui:
+  icon: "🛰️"
+  order: 20
+  featured: true
+  # Optional: a visual cover for UI cards (reference an asset in a source manifest)
+  cover_source_id: "book.scientific-modeling-simulation-nasa-grade"
 
-Story Nodes are governed narrative content and must be evidence-backed.[^story-citations][^story-node-home]
-
-**If you’re referencing media from this collection in a Story Node:**
-- ✅ Cite the underlying sources (footnotes or inline citations).
-- ✅ Link by stable ID (collection + item) that can be resolved via catalog/graph/API.
-- ❌ Don’t embed “mystery images” without provenance metadata.
-
----
-
-## 🧾 Example manifest (minimal)
-
-```json
-{
-  "manifest_version": "1.0.0",
-  "collection": {
-    "id": "example-collection-slug",
-    "title": "Example Collection Title",
-    "description": "What this collection contains, why it exists, and how it may be used."
-  },
-  "license": {
-    "spdx": "CC-BY-4.0",
-    "attribution": "Required credit line goes here",
-    "source_url": "https://example.org/license-or-rights-page"
-  },
-  "sources": [
-    {
-      "name": "Example Archive / Publisher",
-      "source_url": "https://example.org/collection-root",
-      "retrieved_at": "2026-01-18",
-      "notes": "Any access constraints, citation format, etc."
-    }
-  ],
-  "items": [
-    {
-      "id": "item-0001",
-      "label": "Plate 1 (scan)",
-      "media_type": "image/tiff",
-      "source_url": "https://example.org/item-0001",
-      "checksum": {
-        "algo": "sha256",
-        "value": "REPLACE_WITH_REAL_HASH"
-      }
-    }
-  ],
-  "catalog_refs": {
-    "stac_collection": "data/stac/collections/example-collection-slug.json",
-    "dcat_dataset": "data/catalog/dcat/example-collection-slug.jsonld",
-    "prov_bundle": "data/prov/example-collection-slug/prov.json"
-  },
-  "sensitivity": {
-    "level": "public",
-    "notes": "If restricted/redacted, explain why."
-  }
-}
+provenance:
+  curated_by: "KFM Contributors"
+  created_at: "2026-01-18"
+  updated_at: "2026-01-18"
+  rationale: >
+    Establishes a shared, citable baseline for modeling + inference decisions across pipelines
+    and story-node analysis.
 ```
 
 ---
 
-## 📚 See also
+## 🔗 How `sources` Works
 
-- 📘 `docs/MASTER_GUIDE_v13.md` — overall architecture, pipeline, and governance norms
-- 🧾 `schemas/` — canonical home for JSON Schemas (STAC/DCAT/PROV/story nodes/UI/etc.)[^schemas-home]
-- 🧪 `src/pipelines/` + `tools/` — canonical home for catalog generation & validation utilities[^catalog-tools]
-- 🧷 `docs/reports/story_nodes/` — canonical home for narrative content[^story-node-home]
+Collections should point to **source manifests**, not raw files.
+
+### ✅ Source manifests live here
+`web/assets/media/_sources/manifests/sources/`
+
+Each source manifest should describe **one logical source**:
+- a single PDF 📄
+- a map scan 🗺️
+- a photo / screenshot 🖼️
+- a dataset landing page 🔗
+- a “book within a bundle PDF” 📚 *(see below)*
+
+> [!IMPORTANT]
+> Keep licensing + attribution **per source**, not only at the collection level.
 
 ---
 
-## 🧷 Footnotes (project grounding)
+## 📦 Handling “Bundle PDFs” (Multi-Book Files)
 
-[^pipeline]: KFM pipeline ordering and traceability from raw data to narrative layers. [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^boundary-artifacts]: Catalog “boundary artifacts” required before publication (STAC/DCAT/PROV as interfaces to downstream stages). [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^catalogs]: Catalog outputs include STAC, DCAT, and PROV records in canonical locations. [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^catalog-tools]: Catalog generation & validation live in `src/pipelines/` and `tools/`. [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^ui-web]: The UI lives under `web/` and should not contain hidden data or bypass the API boundary (no direct DB/data shortcuts). [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^schemas-home]: `schemas/` is the canonical home for project JSON Schemas (STAC/DCAT/PROV/story nodes/UI/etc.). [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^contracts]: Contract-first metadata expectations (source/license/spatial-temporal/processing) and avoidance of “mystery layers.” [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-[^external-manifests]: External source manifests (JSON/YAML) capture source URL + metadata + license, and pipelines consume them to ingest data. [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-[^story-citations]: Story Nodes require provenance for claims; factual statements should be backed by citations pointing to catalog entries.  [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^stable-ids]: Story Nodes should reference entities by stable identifiers to ensure cross-system linking and integrity. [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^focus-mode]: Focus Mode admits only provenance-linked content; it is a hard gate against unsourced material. [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^no-sensitive]: Focus Mode and narrative outputs must avoid sensitive location leaks; generalize/omit where required. [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^evidence-artifact]: Evidence artifacts must be registered in catalogs (STAC/DCAT) before use in UI or narratives. [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^story-node-home]: Story Nodes live under `docs/reports/story_nodes/` as governed narrative content. [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+Some project PDFs are *compiled bundles* (multiple books inside one file). Treat each embedded book as a **virtual source**:
+
+✅ Create separate source manifests like:
+- `bundle.or-programming-books:objective-c-notes`
+- `bundle.or-programming-books:implementing-programming-languages`
+
+And include **page ranges** in the source manifest so the UI can deep-link consistently.
+
+> [!TIP]
+> If the UI cannot deep-link to pages yet, still capture page ranges now—future you will thank you. 😄
+
+---
+
+## 🛡️ Safety, Rights & Governance
+
+### ©️ Copyright & Redistribution
+- ✅ Only commit files to `web/assets/media/_sources/files/` if you have rights to redistribute.
+- ✅ If not redistributable, store **metadata + a stable URL** in a source manifest.
+- ✅ Prefer public-domain / open-licensed sources when possible.
+
+> [!WARNING]
+> Do **not** “accidentally ship” copyrighted PDFs inside the web build.
+
+### 🧭 Sensitive content & location safety
+If a source reveals sensitive locations (e.g., archaeological sites):
+- 🚫 avoid precise coordinates in web-exposed manifests
+- ✅ generalize spatial extent (county-level, bounding envelope, etc.)
+- ✅ add a sensitivity marker in the **source manifest** (and optionally collection)
+
+---
+
+## 🧪 Validation & CI Expectations
+
+Collection manifests should be:
+- ✅ **Schema validated** (JSON Schema)
+- ✅ **Link validated** (no broken `source_id` references)
+- ✅ **Linted** (format + ordering if enforced)
+- ✅ **Security scanned** (if any build tooling touches external URLs)
+
+> [!NOTE]
+> If you add a new manifest or field, update the corresponding schema in `../schemas/` and keep changes versioned.
+
+---
+
+## 🧭 Relationship to Data Catalogs (Optional Alignment)
+
+If a collection is truly spatiotemporal and publishable:
+- It *may* map cleanly to a **STAC Collection** (and each source/asset to STAC Items)
+- It *may* participate in the project-wide **DCAT/PROV** exports
+
+This folder is **web-facing**, but the metadata should be compatible with the larger KFM catalog approach wherever practical.
+
+---
+
+## 🧑‍💻 Add a New Collection Checklist ✅
+
+1. 🧾 Create/confirm each `source manifest` in `../sources/`
+2. 🗂️ Add or reference the media asset (local file or external URL)
+3. 🧩 Create the new `*.collection.(yml|json)` file in this folder
+4. 🧪 Run the validator (schema + reference checks)
+5. 📚 If it’s a library/reference source, add/update `docs/library/MANIFEST.yml`
+6. 📝 Update any Story Node(s) / UI routes that should surface the collection
+
+---
+
+## 🧰 Suggested Starter Collections (Based on Current Project Sources)
+
+These are **examples** you can implement as manifests:
+
+- 🛰️ **Modeling & Simulation**
+  - Scientific Modeling and Simulation (NASA-grade)
+  - Regression Analysis (Python)
+  - Understanding Statistics & Experimental Design
+  - Think Bayes
+
+- 🗺️ **GIS, Maps & Remote Sensing**
+  - Making Maps (GIS design)
+  - Python Geospatial Analysis Cookbook
+  - Mobile Mapping
+  - Cloud-Based Remote Sensing with Google Earth Engine
+
+- 🌐 **Web + Visualization**
+  - Responsive Web Design (HTML5/CSS3)
+  - WebGL Programming Guide
+
+- 🗄️ **Data & Databases**
+  - Database Performance at Scale
+  - Scalable Data Management for Future Hardware
+  - PostgreSQL Notes for Professionals
+
+---
+
+## 🗓️ Changelog
+
+- **2026-01-18** — Initial scaffold for collection manifests README ✨
+
+---
