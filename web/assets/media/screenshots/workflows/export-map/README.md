@@ -18,21 +18,21 @@ KFM’s UI is expected to be **transparent** and **export-friendly** — users s
 
 ```text
 web/
-└── assets/
-    └── media/
-        └── screenshots/
-            └── workflows/
-                └── export-map/
-                    ├── README.md
-                    ├── manifest.json            (recommended)
-                    ├── 00__map-ready.png
-                    ├── 01__open-export-menu.png
-                    ├── 02__export-modal.png
-                    ├── 03__format-and-size.png
-                    ├── 04__include-legend.png
-                    ├── 05__include-attribution.png
-                    ├── 06__preview.png
-                    └── 07__downloaded-file.png
+└── 📁 assets/
+    └── 🎞️ media/
+        └── 📸 screenshots/
+            └── 🔁 workflows/
+                └── 📤🗺️ export-map/
+                    ├── 📄 README.md                  # 📘 What this workflow demonstrates + capture rules + redaction notes
+                    ├── 🧾🧭 manifest.json             # (recommended) Step metadata: captions, alt text, links, version, approvals
+                    ├── 🗺️✅🖼️ 00__map-ready.png        # Starting state: map configured and ready to export
+                    ├── 🧾🖼️ 01__open-export-menu.png   # Open export/share menu entrypoint
+                    ├── 🪟🖼️ 02__export-modal.png       # Export modal opened (initial options)
+                    ├── 📐🖼️ 03__format-and-size.png    # Choose format/size (PNG/PDF, dimensions, DPI)
+                    ├── 🧷🖼️ 04__include-legend.png     # Toggle/confirm legend inclusion (if supported)
+                    ├── 🏷️🖼️ 05__include-attribution.png # Toggle/confirm attribution/citations inclusion
+                    ├── 👀🖼️ 06__preview.png            # Preview output before final export
+                    └── 📥🖼️ 07__downloaded-file.png    # Result: downloaded file visible (avoid PII in filenames/paths)
 ```
 
 ---
