@@ -71,13 +71,13 @@ Put **source-quality / editable** chart materials here, such as:
 ## 🗂️ Suggested structure (per chart)
 
 ```text
-📁 web/assets/media/charts/raw/
-  📁 <chart_slug>/
-    📄 README.md               # chart-specific context + how to reproduce
-    📄 meta.json               # required sidecar metadata (see template below)
-    📁 source/                 # raw inputs for the chart (editable)
-    📁 spec/                   # chart specs (vega, config, etc.)
-    📁 exports/                # optional: exported SVG/PNG "drafts" (not optimized)
+web/assets/media/charts/raw/
+└─ 🛠️ <chart_slug>/                  # 🛠️ Editable “source workspace” for one chart (not optimized; not guaranteed served)
+   ├─ 📄 README.md                    # Chart-specific context: intent, inputs, and exact steps to reproduce exports
+   ├─ 🧾 meta.json                    # REQUIRED sidecar: title/id/version, sources, license, provenance, checksums/notes
+   ├─ 🎨 source/                      # Raw inputs (editable): data extracts, design files, notes (keep small; no secrets)
+   ├─ 🧪📐 spec/                       # Declarative chart specs/config (vega/vega-lite/echarts + params/templates)
+   └─ 📦 exports/                     # Optional draft outputs (SVG/PNG) for review (NOT production-optimized)
 ```
 
 > Keep `exports/` as *draft / intermediate* only. If something is “production-ready,” it typically belongs in the non-raw chart media path (e.g., `web/assets/media/charts/`), depending on your build pipeline.
