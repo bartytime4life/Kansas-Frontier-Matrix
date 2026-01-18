@@ -134,11 +134,14 @@ web/
 KFM v13 treats Story Nodes as **governed docs** (source-of-truth), typically:
 
 ```text
-📁 docs/
-  📁 reports/
-    📁 story_nodes/
-      📁 draft/
-      📁 published/
+```text
+docs/
+└─ 📁 reports/
+   └─ 📚 story_nodes/
+      ├─ 📝 draft/         # 📝 Work-in-progress story-node reports (not yet finalized / may change)
+      └─ ✅ published/      # ✅ Final, reviewed story-node reports (stable, referenceable outputs)
+```
+
 ```
 
 > A build/publish step may optionally copy **published** nodes into a web-consumable location, but the governed `docs/` tree remains the canonical authoring home.
@@ -148,13 +151,13 @@ KFM v13 treats Story Nodes as **governed docs** (source-of-truth), typically:
 A single story should be a self-contained folder:
 
 ```text
-📁 docs/reports/story_nodes/published/dust_bowl_1930s/
-  📄 story.md
-  📄 story.json
-  📁 assets/
-    🖼️ hero.jpg
-    🖼️ figure_01.png
-    🎥 clip_01.mp4
+docs/reports/story_nodes/published/dust_bowl_1930s/
+├─ 📝📄 story.md                 # Narrative markdown (citations, entity refs, explanatory text)
+├─ 🧭🧾 story.json               # Step config (map/layers/time/camera/actions per step)
+└─ 🖼️ assets/                    # Story-local media used by this report (kept small + licensed)
+   ├─ 🌟🖼️ hero.jpg               # Hero/cover image for the story/report
+   ├─ 🖼️ figure_01.png            # Figure image referenced by the narrative
+   └─ 🎥 clip_01.mp4              # Short supporting clip (compressed; caption if needed)
 ```
 
 ---
