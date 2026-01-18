@@ -194,9 +194,9 @@ Store third-party icons under:
 
 ```text
 web/assets/media/icons/third_party/<library_or_source>/
-├─ LICENSE
-├─ SOURCE.md        # where it came from + link + version + notes
-└─ *.svg
+├─ ⚖️📄 LICENSE              # Required: verbatim license text for this icon pack/source
+├─ 🧾📄 SOURCE.md             # Provenance: origin link, version/commit, retrieval date, and any modification notes
+└─ 🎨🧷 *.svg                 # Third-party SVG icons (prefer unmodified originals; track edits in SOURCE.md)
 ```
 
 **SOURCE.md** should include:
