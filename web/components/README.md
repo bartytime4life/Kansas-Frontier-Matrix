@@ -61,17 +61,17 @@ flowchart LR
 
 ```text
 web/
-  components/ 🧩
-    ui/            🎛️  # atoms: Button, Select, Dialog, Tooltip, Tabs
-    layout/        🧱  # panels, split views, drawers, headers
-    map/           🗺️  # layer list, legend blocks, feature popups, basemap toggle
-    time/          ⏳  # timeline slider, event markers, play/pause
-    story/         🎬  # story stepper, narrative panel UI, media blocks
-    focus/         🔎  # focus mode chat UI, citations list, confidence/limits banners
-    provenance/    🧾  # attribution badges, source cards, citation renderer
-    data/          🗂️  # catalog cards, dataset metadata, filters
-    charts/        📈  # timeseries, histograms, small multiples
-    feedback/      💬  # toasts, status banners, loading/error boundaries
+└─ 🧩 components/
+   ├─ 🎛️ ui/            # 🎛️ Atoms: Button, Select, Dialog, Tooltip, Tabs (low-level, reusable primitives)
+   ├─ 🧱 layout/         # 🧱 Layout primitives: panels, split views, drawers, headers (page scaffolding)
+   ├─ 🗺️ map/            # 🗺️ Map UI: layer list, legend blocks, feature popups, basemap toggle
+   ├─ ⏳ time/           # ⏳ Time controls: timeline slider, event markers, play/pause, scrub interactions
+   ├─ 🎬 story/          # 🎬 Story UI: stepper, narrative panel, rich media/story blocks
+   ├─ 🔎 focus/          # 🔎 Focus Mode UI: evidence-first chat, citations list, confidence/limits banners
+   ├─ 🧾 provenance/     # 🧾 Provenance UI: attribution badges, source cards, citation renderer
+   ├─ 🗂️ data/           # 🗂️ Data catalog UI: dataset cards, metadata views, filters/search facets
+   ├─ 📈 charts/         # 📈 Chart UI: timeseries, histograms, small multiples, sparklines
+   └─ 💬 feedback/       # 💬 Feedback UX: toasts, status banners, loading/error boundaries
 ```
 
 **Naming conventions**
