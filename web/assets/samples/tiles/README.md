@@ -199,10 +199,10 @@ map.addSource("sample_vector", {
 
 ```mermaid
 flowchart LR
-  UI["🗺️ Map UI (MapLibre/Leaflet)"] -->|GET /{z}/{x}/{y}| Tiles["📦 Static tiles in web/assets/samples/tiles/"]
-  UI -->|reads| Manifest["🧾 tilejson.json"]
-  Manifest -->|bounds + attribution| UI
-  UI -->|links| Prov["🧾 provenance.md"]
+  UI["🗺️ Map UI - MapLibre / Leaflet"] --> Tiles["📦 Static tiles - web/assets/samples/tiles - GET z/x/y"];
+  UI --> Manifest["🧾 tilejson.json - read by UI"];
+  Manifest --> UI["🗺️ Map UI - MapLibre / Leaflet"];
+  UI --> Prov["🧾 provenance.md - linked from UI"];
 ```
 
 ---
