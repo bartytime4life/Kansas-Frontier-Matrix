@@ -1,1 +1,65 @@
+# 🧾 Font License File (`LICENSE.txt`) — Template (KFM)
 
+**Target path:** `web/assets/media/_sources/fonts/<family-slug>/<version>/LICENSE.txt`
+
+This repo treats `web/assets/media/_sources/` as the **audit trail** for shipped assets (provenance + licensing). Fonts are “software” — if it’s not licensed + traceable, it doesn’t ship. ✅
+
+---
+
+## 🗂️ Folder context
+
+```text
+📁 web/assets/media/_sources/fonts/
+└─ 📁 <family-slug>/
+   └─ 📁 <version>/
+      ├─ 📄 LICENSE.txt   ✅ (paste the upstream license verbatim here)
+      ├─ 📄 SOURCE.yml    🧬 (provenance + checksums)
+      ├─ 📄 upstream.zip  📦 (original download)
+      ├─ 📄 SUBSET.md     ✂️ (only if you subset/transform)
+      └─ 📁 derived/      ⚙️ (optional review outputs, e.g. woff2)
+```
+
+---
+
+## ✅ Paste into `LICENSE.txt`
+
+> 🧠 **Important:** This is a **placeholder template**.  
+> Before a font is promoted/shipped, replace this entire template with the **exact upstream license text** (no edits).
+
+```text
+TEMPLATE — REPLACE BEFORE SHIPPING
+=================================
+
+This file MUST contain the full, verbatim license text for the font(s) in this folder.
+
+Family (display name): <REPLACE>
+Family slug:           <family-slug>
+Version:               <version>
+Upstream source URL:   <REPLACE>
+Upstream license name: <REPLACE>   (e.g., "SIL Open Font License 1.1", "Apache 2.0", "EULA", etc.)
+Retrieved (UTC):       <REPLACE>   (YYYY-MM-DDTHH:MM:SSZ)
+
+RULES (KFM)
+-----------
+1) Replace this entire template with the upstream license text verbatim.
+2) Do NOT modify license terms or wording.
+3) If upstream ships multiple required notices (e.g., NOTICE, AUTHORS, COPYRIGHT),
+   include them in this same version folder (keep original filenames if provided).
+4) Ensure SOURCE.yml references this file in its "license_files" list and captures checksums.
+
+--- BEGIN UPSTREAM LICENSE (PASTE VERBATIM BELOW THIS LINE) ---
+
+
+--- END UPSTREAM LICENSE ---
+```
+
+---
+
+## 🔒 Quick sanity checklist (before shipping)
+
+- [ ] `LICENSE.txt` is **not** this template anymore (it’s the verbatim upstream license).
+- [ ] `SOURCE.yml` exists and includes **upstream URL + version + checksums**.
+- [ ] `upstream.zip` exists (preferred) and matches the recorded checksums.
+- [ ] If subsetting/transforms occurred: `SUBSET.md` explains what changed + why.
+
+✅ Done = traceable + compliant + KFM-grade.
