@@ -28,14 +28,14 @@ This folder contains **JSON Schemas** used by the **web sample assets** 🧪—s
 ## 🗺️ Folder layout
 
 ```text
-📁 web/assets/samples/_shared/schemas/
-├── 📄 README.md                       ← you are here 🙂
-├── 📁 stac/                           ← asset + item/collection contracts
-├── 📁 dcat/                           ← dataset/distribution discovery contracts
-├── 📁 prov/                           ← lineage & derivation contracts
-├── 📁 storynodes/                     ← governed narrative objects (Story Node / Focus Mode inputs)
-├── 📁 ui/                             ← UI configuration contracts (layers, panels, etc.)
-└── 📁 telemetry/                      ← event/metrics contracts (if used in samples)
+web/assets/samples/_shared/schemas/
+├── 📄 README.md                       # ← you are here 🙂 📌 What schema subsets exist + how samples validate fixtures
+├── 🛰️ stac/                           # STAC contracts for sample assets/items/collections (small, representative)
+├── 🗂️ dcat/                           # DCAT dataset/distribution discovery contracts (sample catalog metadata)
+├── 🧬 prov/                           # PROV lineage/derivation contracts (how sample outputs cite sources/tools)
+├── 📚 storynodes/                     # Governed narrative object schemas (Story Node / Focus Mode sample inputs)
+├── 🎛️ ui/                             # UI configuration schemas (layers, panels, timelines) used by sample pages
+└── 📡 telemetry/                      # Telemetry/event schemas (optional: used when samples emit analytics)
 ```
 
 If any folder is missing in your branch, that’s okay—**only include what the samples actually ship**. Keep the structure consistent so `$ref` paths don’t churn.
