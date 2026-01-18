@@ -29,20 +29,20 @@ Each tutorial gets its own folder (a stable slug). Keep filenames predictable.
 
 ```text
 web/
-└─ assets/
-   └─ media/
-      └─ video/
-         └─ tutorials/
-            ├─ README.md  👈 you are here
-            ├─ tutorials.manifest.json  (optional but recommended)
-            └─ <tutorial-slug>/
-               ├─ meta.json
-               ├─ poster.webp
-               ├─ video.mp4
-               ├─ video.webm              (optional)
-               ├─ captions.en.vtt
-               ├─ transcript.md
-               └─ assets/                 (optional: callouts, stills, overlays)
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 🎞️ video/
+         └─ 🎓 tutorials/
+            ├─ 📄 README.md                    # 👈 you are here 📌 Tutorial standards (format, captions, transcripts, licensing)
+            ├─ 🧾🗂️ tutorials.manifest.json     # (optional but recommended) Index: tutorialId → folder + title + tags + duration
+            └─ 🏷️ <tutorial-slug>/             # One tutorial package (self-contained, publishable)
+               ├─ 🧾 meta.json                  # Contract: title, summary, chapters, provenance, license, checksums
+               ├─ 🖼️ poster.webp                # Poster/cover image for listings and the player
+               ├─ 🎞️ video.mp4                  # Primary web video (H.264/AAC; optimized)
+               ├─ 🎞️ video.webm                 # (optional) WebM alternative (VP9/Opus) for better compression
+               ├─ ♿📝 captions.en.vtt            # Captions (required): language-tagged WebVTT
+               ├─ 📝 transcript.md               # Transcript (recommended): searchable, copyable text
+               └─ 🧩 assets/                     # (optional) Supporting media (callouts, stills, overlays)
 ```
 
 ---
