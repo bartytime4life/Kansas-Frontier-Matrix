@@ -56,22 +56,22 @@ KFM’s UI supports analytics-heavy interactions (summaries, charts, comparisons
 > This is a **recommended** structure. Adjust to your UI components, but keep things tidy and predictable.
 
 ```text
-📁 web/assets/samples/analytics/
-├── 📄 README.md
-├── 📁 charts/                 # Small chart-ready payloads (JSON/CSV)
-│   ├── 📄 timeseries__demo.json
-│   └── 📄 histogram__demo.json
-├── 📁 summaries/              # Quick stats + computed rollups
-│   └── 📄 stats__demo.json
-├── 📁 regression/             # Model outputs (coefficients, metrics)
-│   └── 📄 linear_regression__demo.json
-├── 📁 comparisons/            # Compare/swap/diff “state” fixtures
-│   └── 📄 swipe_compare__demo.json
-├── 📁 telemetry/              # UI events + governance signals (audit-ready)
-│   ├── 📄 ui_event__layer_toggle.json
-│   └── 📄 governance__redaction_notice.json
-└── 📁 dashboards/             # Optional: layout configs for analytics panels
-    └── 📄 dashboard__demo.json
+web/assets/samples/analytics/
+├── 📄 README.md                         # 📘 What analytics samples exist, size limits, and “demo-only” governance rules
+├── 📊 charts/                           # Small chart-ready payloads (JSON/CSV) for UI components + tests
+│   ├── 📈📄 timeseries__demo.json        # Timeseries example (deterministic, tiny, safe to ship)
+│   └── 📊📄 histogram__demo.json         # Histogram example (bins/counts or raw points per contract)
+├── 🧾 summaries/                        # Quick stats + computed rollups (used by summary panels/cards)
+│   └── 📊🧾 stats__demo.json             # Example summary metrics payload (mean/median/ranges/etc.)
+├── 🧪 regression/                       # Model-style outputs (coefficients, metrics) for derived-results rendering
+│   └── 🧮📄 linear_regression__demo.json # Regression demo (coeffs, R², residual stats, metadata)
+├── 🔁 comparisons/                      # Compare/swap/diff “state” fixtures (before/after, swipe, side-by-side)
+│   └── ↔️📄 swipe_compare__demo.json     # Comparison fixture (two states + labels + UI hints)
+├── 📡 telemetry/                        # UI events + governance signals (audit-ready sample payloads)
+│   ├── 🧭📄 ui_event__layer_toggle.json  # Example UI event (layer toggled on/off with safe context)
+│   └── 🛡️📄 governance__redaction_notice.json # Example governance event (what was redacted + why)
+└── 🧩 dashboards/                       # Optional: layout configs for analytics panels/dashboards
+    └── 🧩📄 dashboard__demo.json         # Demo dashboard layout (widgets, positions, data bindings)
 ```
 
 ---
