@@ -14,11 +14,11 @@
 
 ```txt
 web/
-└─ assets/
-   └─ media/
-      └─ charts/
-         └─ export/
-            └─ README.md  👈 you’re here
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 📈 charts/
+         └─ ✅📦 export/
+            └─ 📄 README.md  👈 you’re here 📌 Production-ready chart media (web-optimized, cacheable)
 ```
 
 ---
