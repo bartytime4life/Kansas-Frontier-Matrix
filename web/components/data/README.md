@@ -97,12 +97,12 @@ These components should assume:
 
 ```mermaid
 flowchart LR
-  A[ETL / Pipelines] --> B[STAC/DCAT/PROV Catalog]
-  B --> C[Neo4j Knowledge Graph]
-  C --> D[APIs (REST/GraphQL)]
-  D --> E[React + Map UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode Q&A]
+  A["⚙️ ETL / Pipelines"] --> B["🛰️ STAC / DCAT / PROV Catalog"];
+  B --> C["🕸️ Neo4j Knowledge Graph"];
+  C --> D["🔌 APIs - REST / GraphQL"];
+  D --> E["🗺️ React + Map UI"];
+  E --> F["🎬 Story Nodes"];
+  F --> G["🧠 Focus Mode Q and A"];
 ```
 
 This folder lives in **E** (React + Map UI) and focuses on making **B (catalog)** visible + understandable.
