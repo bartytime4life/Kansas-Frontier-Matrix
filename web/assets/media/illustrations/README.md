@@ -46,12 +46,12 @@ In KFM, **anything that shows up in the UI must be traceable** to its source and
 
 ```text
 web/assets/media/illustrations/
-├─ README.md                # you are here 🙂
-├─ _src/                    # optional: editable sources (figma exports, ai, etc.)
-├─ ui/                      # onboarding, empty states, helper scenes
-├─ diagrams/                # architecture / flow diagrams used in-app
-├─ map/                     # map-adjacent visuals (non-data): legends, “how layers work”
-└─ brand/                   # mascots, logos (ONLY if licensed & approved)
+├─ 📄 README.md                # you are here 🙂 📌 What counts as an illustration + sizing/naming + licensing rules
+├─ 🎨 _src/                    # Optional editable sources (Figma exports, .ai, layered originals; keep small or store elsewhere)
+├─ 🎛️ ui/                      # Onboarding, empty states, helper scenes, UI-friendly illustrations
+├─ 📐 diagrams/                # Architecture/flow diagrams used in-app (prefer SVG + accessible labels)
+├─ 🗺️ map/                     # Map-adjacent visuals (non-data): explainer art, legend how-tos, layer concepts
+└─ 🏷️ brand/                   # Mascots/brand illustrations (ONLY if licensed & approved; keep governance tight)
 ```
 
 If you add folders, keep them **purpose-based** (not “misc”). ✂️
