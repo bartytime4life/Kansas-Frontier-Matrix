@@ -41,16 +41,20 @@ This directory holds **experimental video assets** used for:
 ## 🗂️ Expected layout
 
 ```text
-📦 web/
+web/
 └─ 📁 assets/
-   └─ 📁 media/
-      └─ 📁 video/
-         └─ 📁 sandbox/
-            ├─ 📄 README.md
+   └─ 🎞️ media/
+      └─ 🎞️ video/
+         └─ 🧪 sandbox/                                  # 🧪 Staging area for WIP clips (not guaranteed shipped)
+            ├─ 📄 README.md                               # 📘 Rules for sandbox videos: naming, size/codec, promotion path
             ├─ 🎞️ kfm_ui_scrub_demo_20260117_v01_1280x720.mp4
+            │     # Primary clip (web-optimized MP4; keep short, mute-safe if possible)
             ├─ 🖼️ kfm_ui_scrub_demo_20260117_v01_1280x720.poster.jpg
-            ├─ 📝 kfm_ui_scrub_demo_20260117_v01_1280x720.en.vtt
+            │     # Poster/thumbnail frame used in catalogs/players before playback
+            ├─ ♿📝 kfm_ui_scrub_demo_20260117_v01_1280x720.en.vtt
+            │     # Captions (preferred): language-tagged WebVTT for accessibility/search
             └─ 🧾 kfm_ui_scrub_demo_20260117_v01_1280x720.meta.json
+                  # Sidecar contract: title, description, duration, source/provenance, license, checksums, tags
 ```
 
 ### 🎞️ Asset bundle convention (recommended)
