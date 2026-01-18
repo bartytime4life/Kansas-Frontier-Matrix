@@ -213,19 +213,19 @@ If an image will be displayed at multiple sizes (desktop/tablet/mobile), export 
 ### Example: third-party image
 ```text
 third-party/
-  usgs/
-    usgs-historical-topo-sample.png
-    usgs-historical-topo-sample.meta.json
+└─ 🛰️ usgs/
+   ├─ 🖼️ usgs-historical-topo-sample.png          # Third-party sample image (USGS historical topo) used for demos/docs
+   └─ 🧾 usgs-historical-topo-sample.meta.json     # Required sidecar: source link, license/terms, attribution text, notes
 ```
 
 ### Example: story node figure set
 ```text
 story/
-  dust-bowl/
-    figure-migration-flow.png
-    figure-migration-flow.meta.json
-    figure-migration-flow@2x.png
-    figure-migration-flow@2x.meta.json
+└─ 🌪️ dust-bowl/
+   ├─ 🖼️ figure-migration-flow.png            # Story figure (standard resolution) used in Dust Bowl narrative
+   ├─ 🧾 figure-migration-flow.meta.json       # Sidecar: caption, source/citation, license, provenance, alt/longdesc refs
+   ├─ 🖼️✨ figure-migration-flow@2x.png        # Retina/high-DPI variant (optional but recommended for crisp text)
+   └─ 🧾✨ figure-migration-flow@2x.meta.json   # Sidecar for @2x variant (should match base + note dimensions)
 ```
 
 ---
