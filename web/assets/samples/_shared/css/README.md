@@ -77,13 +77,13 @@ Make it comfortable to read and use:
 
 ```text
 web/assets/samples/_shared/css/
-├─ README.md                          👈 you are here
-├─ tokens.css                         🎛️ Design tokens (colors, spacing, typography)
-├─ base.css                           🧱 Reset + base elements
-├─ layout.css                         🧩 Layout helpers (containers, grids)
-├─ components.css                     🧰 Reusable sample components (cards, badges, panels)
-├─ utilities.css                      🧪 Utilities (.u-* helpers)
-└─ samples.css                        🧵 Optional “entry point” that layers/loads the above
+├─ 📄 README.md                          # 👈 you are here 📌 How sample CSS is structured, naming, and layering order
+├─ 🎛️📄 tokens.css                       # 🎛️ Design tokens: CSS vars for colors/spacing/typography (samples-only)
+├─ 🧱🧼📄 base.css                        # 🧱 Reset + base element defaults (type, links, focus rings, forms)
+├─ 🧩📐📄 layout.css                      # 🧩 Layout helpers: containers, grids, stacks, clusters (minimal)
+├─ 🧰📄 components.css                   # 🧰 Reusable sample components: cards, badges, panels, callouts
+├─ 🧪🧰📄 utilities.css                   # 🧪 Utility helpers (.u-*): spacing, display, visually-hidden, etc.
+└─ 🧵📄 samples.css                      # 🧵 Optional entry point that imports/layers the above in order
 ```
 
 ---
