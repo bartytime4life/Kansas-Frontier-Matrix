@@ -29,13 +29,13 @@ You can keep the folder flat for small volumes, but once it grows, prefer this l
 
 ```text
 web/assets/media/screenshots/ui/
-├── README.md
-├── components/              # Panels, toolbars, dialogs, legends, citations UI
-├── views/                   # Map, timeline, focus-mode, story reader
-├── flows/                   # Multi-step journeys (search → inspect → cite)
-├── states/                  # Empty/loading/error/permission/offline
-├── breakpoints/             # desktop/tablet/mobile comparisons
-└── releases/                # Versioned screenshots used in changelogs
+├── 📄 README.md                 # 📘 Screenshot conventions: naming, sizes, redaction, and allowed UI surfaces
+├── 🧩 components/               # UI component captures (panels, toolbars, dialogs, legends, citations UI)
+├── 🧭 views/                    # Page/view captures (map, timeline, focus-mode, story reader)
+├── 🔁 flows/                    # Multi-step journeys (search → inspect → cite) captured as ordered sequences
+├── 🚦 states/                   # State captures (empty/loading/error/permission/offline) for docs and QA
+├── 📱 breakpoints/              # Desktop/tablet/mobile comparisons (same scene across sizes)
+└── 🗞️ releases/                 # Versioned, publish-ready screenshots used in changelogs/release notes
 ```
 
 ---
