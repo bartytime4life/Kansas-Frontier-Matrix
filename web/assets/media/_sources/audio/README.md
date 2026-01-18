@@ -52,7 +52,7 @@ This directory is for **source materials** that we want to preserve and audit:
 
 > Keep it tidy, but don’t overthink it. Start simple and evolve as needed.
 
-```text
+```mermaid
 flowchart LR
   A["🎙️ Record / Acquire"] --> B["📁 Put master in _sources/audio"];
   B --> C["🧬 Add .meta.json + license proof"];
