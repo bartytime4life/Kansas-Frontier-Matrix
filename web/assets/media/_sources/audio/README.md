@@ -268,12 +268,12 @@ Audio can contain personal data.
 
 ```mermaid
 flowchart LR
-  A[🎙️ Record / Acquire] --> B[📁 Put master in _sources/audio]
-  B --> C[🧬 Add .meta.json + license proof]
-  C --> D[♿ Add .vtt / transcript for speech]
-  D --> E[⚙️ Build step: transcode + normalize (web targets)]
-  E --> F[🌐 Runtime assets folder (e.g., web/assets/media/audio)]
-  F --> G[🗺️ Story / Map UI consumes audio + captions]
+  A["🎙️ Record / Acquire"] --> B["📁 Put master in _sources/audio"];
+  B --> C["🧬 Add .meta.json + license proof"];
+  C --> D["♿ Add .vtt or transcript for speech"];
+  D --> E["⚙️ Build step - transcode + normalize - web targets"];
+  E --> F["🌐 Runtime assets folder - web/assets/media/audio"];
+  F --> G["🗺️ Story / Map UI consumes audio + captions"];
 ```
 
 ### 🔧 Handy `ffmpeg` examples (web exports)
