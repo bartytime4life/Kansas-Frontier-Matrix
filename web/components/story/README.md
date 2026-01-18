@@ -80,7 +80,7 @@ This folder is the **UI/UX implementation** for story rendering and interaction 
 
 ### Suggested internal layout (recommended)
 
-```text
+```mermaid
 flowchart LR
   A["📦 API returns StoryNode + provenance + citations"] --> B["🧾 StoryMarkdown - render safely"];
   A --> C["🧭 StoryStepper - progress + navigation"];
