@@ -13,13 +13,13 @@ This folder is the **attic** for screenshots that are **no longer actively refer
 ## 📦 Where you are (folder map)
 
 ```text
-📁 web/
-  📁 assets/
-    📁 media/
-      📁 screenshots/
-        📄 README.md
-        📁 _archive/
-          📄 README.md  👈 you are here
+web/
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 📸 screenshots/
+         ├─ 📄 README.md                 # 📘 Screenshot conventions (naming, sizes, redaction, and usage rules)
+         └─ 🗄️ _archive/
+            └─ 📄 README.md              # 👈 you are here 📌 Archived/old screenshots kept for reference (not referenced)
 ```
 
 ---
