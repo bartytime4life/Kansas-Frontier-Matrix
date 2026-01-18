@@ -49,14 +49,14 @@ Recommended structure (adjust as the system grows, but keep it predictable):
 
 ```text
 web/assets/media/icons/
-├─ README.md
-├─ ui/                # buttons, menus, generic UI glyphs
-├─ map/               # map-specific controls: layers, basemap, 2D/3D, measure, etc.
-├─ markers/           # POI markers, pins (often paired with map styles)
-├─ status/            # loading/success/warning/error states
-├─ logos/             # KFM + partner marks (keep licensing tight)
-├─ third_party/       # vendor icons + license files (see licensing section)
-└─ sprite/            # optional SVG sprite(s) for bundling + caching
+├─ 📄 README.md                 # 📘 Icon rules: naming, sizes, stroke/filled variants, accessibility, licensing
+├─ 🎛️ ui/                       # Buttons/menus/generic UI glyphs (shared across app surfaces)
+├─ 🗺️ map/                      # Map controls: layers, basemap, 2D/3D, measure, locate, etc.
+├─ 📍 markers/                  # POI markers/pins (often referenced by map styles or legend blocks)
+├─ 🚦 status/                   # Status icons: loading/success/warning/error/uncertainty/AI
+├─ 🏷️ logos/                    # KFM + partner marks (tightly governed; avoid mixing with generic icons)
+├─ 📦 third_party/              # Imported vendor icon sets (each pack w/ license + attribution kept alongside)
+└─ 🧩 sprite/                   # Optional SVG sprite sheets for bundling/caching (<symbol> + <use> pattern)
 ```
 
 > 💡 Tip: If an icon is **domain-specific** (e.g., 🌾 agriculture, 🌊 water, 🌪️ hazards), consider a dedicated subfolder (e.g., `domains/water/`) *only after* the set is large enough to justify it.
