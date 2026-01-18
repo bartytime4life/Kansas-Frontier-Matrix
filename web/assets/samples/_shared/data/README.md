@@ -63,18 +63,18 @@ Even samples should respect that posture:
 > This folder may evolve, but **keep things predictable** and grouped by purpose.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 samples/
-      📁 _shared/
-        📁 data/
-          📄 README.md                       👈 you are here
-          📄 manifest.samples.json           🧭 optional index of datasets
-          📁 geojson/                        🗺️ vector fixtures
-          📁 stac/                           🛰️ small STAC examples (items/collections)
-          📁 tables/                         📊 CSV/TSV fixtures (charts, tables)
-          📁 images/                         🖼️ tiny thumbnails for demos
-          📁 _meta/                          🧾 shared metadata (licenses, citations, notes)
+web/
+└─ 📁 assets/
+   └─ 🧪 samples/
+      └─ ♻️ _shared/
+         └─ 🗂️ data/
+            ├─ 📄 README.md                       # 👈 you are here 📌 What fixtures exist, size limits, and “not authoritative” rules
+            ├─ 🧭🧾 manifest.samples.json          # 🧭 Optional index: sampleId → file pointers + tags + intended demo use
+            ├─ 🗺️ geojson/                        # 🗺️ Vector fixtures (tiny GeoJSON for layer demos/tests)
+            ├─ 🛰️ stac/                           # 🛰️ Small STAC examples (Items/Collections + minimal assets)
+            ├─ 📊 tables/                         # 📊 CSV/TSV fixtures for charts/tables (small + deterministic)
+            ├─ 🖼️ images/                         # 🖼️ Tiny thumbnails used in demos (webp/png; keep minimal)
+            └─ 🧾 _meta/                          # 🧾 Shared metadata: licenses, citations, generation notes, provenance hints
 ```
 
 ---
