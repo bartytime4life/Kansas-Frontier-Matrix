@@ -66,13 +66,14 @@ These constraints keep samples deployable as a **static site**:
 Typical sample layout (illustrative):
 
 ```text
-📁 web/assets/samples/
-├── 📁 _shared/
-│   └── 📁 js/              👈 you are here
-└── 📁 <sample-name>/
-    ├── 📄 index.html
-    ├── 📄 app.js
-    └── 📄 README.md
+web/assets/samples/
+├── ♻️ _shared/
+│   └── 🧠 js/                     # 👈 you are here 📌 Shared JS helpers used across multiple samples
+│      └── 🧠📄 …                   # map bootstrap, layer toggles, timeline binding, URL state, etc.
+└── 🧪 <sample-name>/               # One runnable sample (self-contained demo)
+    ├── 🧾📄 index.html              # Sample entry page (minimal markup + mounts demo UI)
+    ├── 🧠📄 app.js                  # Sample-specific logic (wires shared helpers + sample config)
+    └── 📄 README.md                 # How to run the sample + what it demonstrates + data/licensing notes
 ```
 
 ### ✅ Import pattern
