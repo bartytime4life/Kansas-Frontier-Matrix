@@ -56,16 +56,16 @@ Recommended structure (keep this folder self-contained):
 
 ```text
 web/
-  components/
-    feedback/
-      📄 README.md
-      🧩 FeedbackButton.tsx
-      🧩 FeedbackModal.tsx
-      🧩 FeedbackForm.tsx
-      🪝 useFeedbackContext.ts
-      🧾 feedback.types.ts
-      🔧 feedback.redaction.ts
-      ✅ feedback.test.tsx
+└─ 🧩 components/
+   └─ 💬 feedback/
+      ├─ 📄 README.md                 # 📘 What feedback captures, where it’s sent, and privacy/redaction rules
+      ├─ 🧩 FeedbackButton.tsx         # Entry CTA (toolbar/footer) that opens the feedback flow
+      ├─ 🧩 FeedbackModal.tsx          # Modal shell: steps, routing, success/error states
+      ├─ 🧩 FeedbackForm.tsx           # Form UI: fields, validation, attachments/diagnostics toggles
+      ├─ 🪝 useFeedbackContext.ts      # Hook: shared state (category, message, context snapshot, submit)
+      ├─ 🧾 feedback.types.ts          # TS types for payloads, categories, and client-side contracts
+      ├─ 🔒🧹 feedback.redaction.ts     # Redaction/safety filters (strip secrets/PII before submit/log)
+      └─ ✅🧪 feedback.test.tsx         # Component tests (render + validation + redaction behavior)
 ```
 
 > If your implementation differs, that’s fine—**but keep the public API stable** and update this README.
