@@ -75,16 +75,16 @@ Typical building blocks (names may vary; keep responsibilities consistent):
 
 ```text
 web/ 🌐
-└─ components/ 🧩
-   └─ provenance/ 🧾
-      ├─ README.md
-      ├─ ProvenanceBadge.tsx
-      ├─ ProvenancePanel.tsx
-      ├─ CitationList.tsx
-      ├─ LineageSteps.tsx
-      ├─ SafeExternalLink.tsx
-      ├─ types.ts
-      └─ utils.ts
+└─ 🧩 components/
+   └─ 🧾 provenance/
+      ├─ 📄 README.md                 # 📘 How provenance UI works, evidence policy, and “no sensitive leakage” rules
+      ├─ 🏷️🧾 ProvenanceBadge.tsx      # Compact badge/chip showing source status (verified/partial/unknown) + quick open
+      ├─ 🧾🧩 ProvenancePanel.tsx      # Full provenance drawer/panel (sources, licenses, transformations, links)
+      ├─ 📚🧾 CitationList.tsx         # Render citations/footnotes (grouped, sortable, link-safe, copy/export friendly)
+      ├─ 🧬🪜 LineageSteps.tsx         # Visual lineage timeline/stepper (ingest → process → publish) with tool versions
+      ├─ 🔗🛡️ SafeExternalLink.tsx     # Hardened link component (allowlist, rel attrs, tracking guards, warnings)
+      ├─ 🧾📄 types.ts                 # TS types for citations, sources, licenses, provenance/lineage models
+      └─ 🧰📄 utils.ts                 # Pure helpers (formatters, dedupe/grouping, safety checks, id builders)
 ```
 
 ---
