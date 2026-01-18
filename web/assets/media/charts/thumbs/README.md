@@ -15,10 +15,10 @@ Small, fast preview images for charts used across the Kansas Frontier Matrix web
 
 ```text
 web/
-  assets/
-    media/
-      charts/
-        thumbs/   ← ✅ you are here
+└─ 📁 assets/
+   └─ 🎞️ media/
+      └─ 📈 charts/
+         └─ 🖼️ thumbs/   ← ✅ you are here 📌 Small preview images for lists/catalogs/docs (web-optimized)
 ```
 
 This folder is for **tiny chart preview images** that can be displayed quickly while the **real chart** renders from governed API data.
