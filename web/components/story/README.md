@@ -82,13 +82,13 @@ This folder is the **UI/UX implementation** for story rendering and interaction 
 
 ```text
 flowchart LR
-  A["📦 API returns StoryNode<br/>+ provenance/citations"] --> B["🧾 StoryMarkdown<br/>render safely"]
-  A --> C["🧭 StoryStepper<br/>progress & navigation"]
-  C --> D["🗺️ StoryStepEffects<br/>map/timeline sync"]
-  D --> E["🧩 Map UI<br/>layers/camera/time"]
-  B --> F["🔖 CitationPanel<br/>evidence drilldown"]
-  B --> G["🧷 EntityLink<br/>graph-backed context"]
-  E --> H["🧠 Focus Mode (optional)<br/>evidence-first assistant"]
+  A["📦 API returns StoryNode + provenance + citations"] --> B["🧾 StoryMarkdown - render safely"];
+  A --> C["🧭 StoryStepper - progress + navigation"];
+  C --> D["🗺️ StoryStepEffects - map + timeline sync"];
+  D --> E["🧩 Map UI - layers + camera + time"];
+  B --> F["🔖 CitationPanel - evidence drilldown"];
+  B --> G["🧷 EntityLink - graph-backed context"];
+  E --> H["🧠 Focus Mode - optional - evidence-first assistant"];
 ```
 
 ---
