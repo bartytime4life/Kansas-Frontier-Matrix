@@ -53,17 +53,13 @@ This directory is for **source materials** that we want to preserve and audit:
 > Keep it tidy, but don’t overthink it. Start simple and evolve as needed.
 
 ```text
-web/assets/media/
-└─ 🧾 _sources/
-   └─ 🔊 audio/
-      ├─ 🎙️ narration/          # 🎙️ Raw voice-over sources for stories/explainers (masters, scripts, takes)
-      ├─ 🧓 oral-history/       # 🧓 Interviews/oral-history recordings (handle consent + sensitivity carefully)
-      ├─ 🌾 field/              # 🌾 On-location ambience (wind, prairie, town soundscapes, room tone)
-      ├─ 🖱️ ui/                 # 🖱️ Raw UI cue sources (clicks, alerts, transitions) before optimization
-      ├─ 💥 sfx/                # 💥 Generic SFX sources (licensed; track attribution + usage limits)
-      ├─ 🎼 music/              # 🎼 Licensed music sources (only if approved; store license terms here)
-      ├─ 🧩 _templates/         # 🧩 Metadata + transcript templates (what every asset must include)
-      └─ 📄 README.md           # 📄 you are here 📌 Rules: naming, required metadata, transcripts, and licensing
+flowchart LR
+  A["🎙️ Record / Acquire"] --> B["📁 Put master in _sources/audio"];
+  B --> C["🧬 Add .meta.json + license proof"];
+  C --> D["♿ Add .vtt or transcript for speech"];
+  D --> E["⚙️ Build step - transcode + normalize - web targets"];
+  E --> F["🌐 Runtime assets folder - web/assets/media/audio"];
+  F --> G["🗺️ Story / Map UI consumes audio + captions"];
 ```
 
 ---
