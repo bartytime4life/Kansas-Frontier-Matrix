@@ -59,14 +59,14 @@ It is **not** a backdoor to introduce evidence that bypasses catalogs/contracts/
 
 ```text
 web/assets/media/
-├─ icons/                      # svg/png icons (actual files)
-├─ images/                     # ui images (actual files)
-├─ video/                      # small web-optimized mp4/webm (optional)
-└─ manifest/                   # 👈 manifests + metadata (this folder)
-   ├─ README.md
-   ├─ media.manifest.json      # recommended: one canonical registry
-   ├─ icons.manifest.json      # optional: split by type if large
-   └─ app.webmanifest          # optional: PWA install manifest
+├─ 🧷 icons/                      # 🧷 Icon assets actually served (SVG/PNG/WebP) for UI + map + story
+├─ 🖼️ images/                     # 🖼️ Deployable UI images (illustrations, screenshots, story figures)
+├─ 🎞️ video/                      # 🎞️ Small web-optimized video (mp4/webm; optional; keep short + caption if needed)
+└─ 🧾 manifest/                   # 👈 Manifests + metadata (this folder) 📌
+   ├─ 📄 README.md                # 📘 How manifests are structured, IDs/naming rules, and CI validation expectations
+   ├─ 🧾🗂️ media.manifest.json     # Recommended canonical registry: assetId → file(s) + tags + provenance + license
+   ├─ 🧾🧷 icons.manifest.json     # Optional split registry for icons (useful when media.manifest grows large)
+   └─ 📱🧾 app.webmanifest         # Optional PWA install manifest (icons, theme colors, start URL)
 ```
 
 ---
