@@ -17,12 +17,12 @@
 This directory contains **shared** building blocks used by sample pages under:
 
 ```
-📁 web/
-  📁 assets/
-    📁 samples/
-      ♻️ 📁 _shared/   ← you are here
-      🧪 📁 <sample-a>/
-      🧪 📁 <sample-b>/
+web/
+└─ 📁 assets/
+   └─ 🧪 samples/
+      ├─ ♻️ _shared/         # ← you are here 📌 Shared building blocks used by many samples (CSS/JS/data/licenses/schemas)
+      ├─ 🧪 <sample-a>/      # Self-contained runnable sample A (index.html + app.js + README + local config)
+      └─ 🧪 <sample-b>/      # Self-contained runnable sample B (index.html + app.js + README + local config)
 ```
 
 Think of `_shared/` as the **sample kit**:
