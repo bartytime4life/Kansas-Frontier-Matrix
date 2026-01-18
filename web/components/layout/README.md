@@ -15,16 +15,11 @@
 KFM is intentionally **pipeline‑ordered**. The web UI sits downstream of the API, and layout components are the “bones” that keep the UI predictable as features evolve.
 
 ```mermaid
-flowchart LR
-  A[ETL / Pipelines] --> B[Catalogs: STAC + DCAT]
-  A --> C[Provenance: PROV]
-  B --> D[Knowledge Graph]
-  C --> D
-  D --> E[API Layer]
-  E --> F[Web UI]
-  F --> G[Story Nodes]
-  G --> H[Focus Mode]
-  F --> L[layout components]
+graph TB
+  A["🖥️ Desktop"] --> B["🗺️ Map + ⬅️ Left Dock + ➡️ Right Dock"];
+  C["📱 Mobile"] --> D["🗺️ Map + ⬇️ Bottom Bar"];
+  D --> E["⬅️ Left Drawer - on demand"];
+  D --> F["➡️ Right Drawer - on demand"];
 ```
 
 ---
