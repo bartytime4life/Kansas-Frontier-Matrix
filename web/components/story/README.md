@@ -80,7 +80,7 @@ This folder is the **UI/UX implementation** for story rendering and interaction 
 
 ### Suggested internal layout (recommended)
 
-```text
+---text
 flowchart LR
   A["📦 API returns StoryNode + provenance + citations"] --> B["🧾 StoryMarkdown - render safely"];
   A --> C["🧭 StoryStepper - progress + navigation"];
@@ -89,7 +89,7 @@ flowchart LR
   B --> F["🔖 CitationPanel - evidence drilldown"];
   B --> G["🧷 EntityLink - graph-backed context"];
   E --> H["🧠 Focus Mode - optional - evidence-first assistant"];
-```
+---
 
 ---
 
