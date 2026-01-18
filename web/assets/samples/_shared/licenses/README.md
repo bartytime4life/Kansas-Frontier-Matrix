@@ -61,19 +61,19 @@ Think of it as the web UI’s lightweight “data contract” for sample media &
 
 ```text
 web/assets/samples/_shared/
-└── licenses/
-    ├── README.md                          👈 you are here
-    ├── registry/
-    │   ├── _schema.md                     🧩 (optional) docs for the registry format
-    │   ├── example.asset-license.json     ✅ sample “license card”
-    │   └── <asset-id>.asset-license.json  🧾 one per third-party asset (recommended)
-    ├── texts/
-    │   ├── CC-BY-4.0.txt
-    │   ├── OFL-1.1.txt
-    │   └── ...
-    └── notices/
-        ├── THIRD_PARTY_NOTICES.md         📣 aggregated human notices (optional)
-        └── <asset-id>.NOTICE.md           🧾 per-asset notices (when required)
+└── ⚖️ licenses/
+    ├── 📄 README.md                          # 👈 you are here 📌 How sample assets are licensed + how to fill registry cards
+    ├── 🗂️ registry/
+    │   ├── 🧩📄 _schema.md                    # 🧩 (optional) docs for the registry/card format
+    │   ├── ✅🧾 example.asset-license.json     # ✅ Example “license card” (shows required fields + conventions)
+    │   └── 🧾 <asset-id>.asset-license.json   # 🧾 One per third-party asset (recommended; machine-readable)
+    ├── 📜 texts/
+    │   ├── 📜 CC-BY-4.0.txt                   # Canonical license text (verbatim)
+    │   ├── 📜 OFL-1.1.txt                     # Canonical license text (verbatim)
+    │   └── ➕ …                                # Additional license texts as needed
+    └── 📣 notices/
+        ├── 📣📄 THIRD_PARTY_NOTICES.md         # 📣 Optional aggregated notices (human-readable rollup)
+        └── 🧾📄 <asset-id>.NOTICE.md           # 🧾 Per-asset notices (only when required by license/vendor)
 ```
 
 ---
