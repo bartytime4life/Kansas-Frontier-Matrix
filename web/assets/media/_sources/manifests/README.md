@@ -42,19 +42,19 @@ Manifests help KFM stay **auditable, mappable, and trustworthy**:
 
 ```text
 web/assets/media/_sources/
-├─ manifests/ 🧾
-│  ├─ README.md
-│  ├─ collections/ 📚
-│  │  ├─ kansas-historical-maps.yml
-│  │  ├─ oral-history-audio.yml
-│  │  └─ ...
-│  ├─ schema/ 🧪
-│  │  └─ media-source-manifest.schema.json
-│  └─ _generated/ ⚙️
-│     ├─ index.json
-│     └─ checksums.json
-├─ raw/ 📥
-└─ derived/ 🧱
+├─ 🧾 manifests/                         # 🧾 Source-of-truth inventories for media “sources” (what exists + where it came from)
+│  ├─ 📄 README.md                       # 📘 How manifests are structured, required fields, and generation workflow
+│  ├─ 📚 collections/                    # 📚 Curated collection manifests (group assets by theme/project/intake)
+│  │  ├─ 🗺️ kansas-historical-maps.yml    # Collection: historical map sources (scans, providers, licensing notes)
+│  │  ├─ 🎙️ oral-history-audio.yml        # Collection: oral-history recordings (consent, transcript expectations)
+│  │  └─ ➕ …                             # Additional collection manifests
+│  ├─ 🧪 schema/                         # 🧪 Validation contracts for the manifest format
+│  │  └─ 📐🧾 media-source-manifest.schema.json # JSON Schema used by CI/validators (optional but recommended)
+│  └─ ⚙️ _generated/                     # ⚙️ Machine-generated rollups (do not hand-edit)
+│     ├─ 🧾🗂️ index.json                  # Fast lookup index (assetId → pointers/labels/tags) built from collections
+│     └─ 🔐🧾 checksums.json              # Integrity map (file → sha256/size) for reproducibility + change detection
+├─ 📥 raw/                               # 📥 As-received originals (masters/scans/recordings); keep immutable + well-labeled
+└─ 🧱 derived/                           # 🧱 Derived intermediates (normalized/transcoded) used to produce served assets
 ```
 
 ### 🧠 Rule of thumb
