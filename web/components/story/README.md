@@ -79,6 +79,7 @@ This folder is the **UI/UX implementation** for story rendering and interaction 
 > ⚠️ Note: Older design references mention a `web/story_nodes/` asset location for images/story assets in the running app; treat `docs/reports/story_nodes/` as the governed source and consider `web/story_nodes/` as a *build artifact* if/when used. :contentReference[oaicite:19]{index=19}:contentReference[oaicite:20]{index=20}
 
 ### Suggested internal layout (recommended)
+
 ```text
 flowchart LR
   A["📦 API returns StoryNode<br/>+ provenance/citations"] --> B["🧾 StoryMarkdown<br/>render safely"]
