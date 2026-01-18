@@ -72,11 +72,11 @@ This folder exists so we can quickly validate things like:
 
 ```mermaid
 flowchart LR
-  RAW[🗺️ Raw DEM / LiDAR / Model] --> PROC[🧰 Process + Optimize]
-  PROC --> ASSET[📦 Sample asset files]
-  PROC --> META[🧾 Sidecar metadata]
-  ASSET --> UI[🛰️ KFM Web UI (2D/3D)]
-  META --> UI
+  RAW["🗺️ Raw DEM / LiDAR / Model"] --> PROC["🧰 Process + Optimize"];
+  PROC --> ASSET["📦 Sample asset files"];
+  PROC --> META["🧾 Sidecar metadata"];
+  ASSET --> UI["🛰️ KFM Web UI - 2D / 3D"];
+  META --> UI;
 ```
 
 ---
@@ -87,13 +87,13 @@ flowchart LR
 
 ```text
 web/assets/samples/3d/
-├─ 📁 terrain/                 # tiny DEMs / heightmaps / terrain fixtures
-├─ 📁 models/                  # .glb (preferred), textures if needed
-├─ 📁 tilesets/                # 3D Tiles samples (tileset.json etc.)
-├─ 📁 kml/                     # KML/KMZ + regionated tiles if used
-├─ 📁 textures/                # shared textures (keep minimal)
-├─ 📁 screenshots/             # optional: tiny previews for docs/PRs
-└─ 📄 README.md                # 👈 you are here
+├─ 🏞️ terrain/                 # Tiny DEMs/heightmaps/terrain fixtures (demo-scale only; not authoritative)
+├─ 🧊 models/                  # Small 3D models (.glb preferred) + tiny textures if absolutely needed
+├─ 🧱 tilesets/                # 3D Tiles samples (tileset.json + minimal tile payloads)
+├─ 🧭 kml/                     # KML/KMZ samples (and regionated tiles if used) for compatibility demos
+├─ 🎨 textures/                # Shared sample textures (keep minimal; reference in models/tilesets as needed)
+├─ 📸 screenshots/             # Optional: tiny previews for docs/PRs (annotated/redacted if needed)
+└─ 📄 README.md                # 👈 you are here 📌 How to run/view 3D samples + size limits + licensing notes
 ```
 
 ---
