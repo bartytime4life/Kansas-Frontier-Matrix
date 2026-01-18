@@ -80,17 +80,14 @@ This folder is the **UI/UX implementation** for story rendering and interaction 
 
 ### Suggested internal layout (recommended)
 ```text
-📦 web/components/story/
-├─ 📄 README.md              👈 you are here
-├─ 🧩 StoryReader.tsx        (page-level story shell)
-├─ 🧭 StoryStepper.tsx       (next/prev/scroll progress)
-├─ 🗺️ StoryStepEffects.ts    (map/timeline side-effects per step)
-├─ 🧾 StoryMarkdown.tsx      (markdown → safe HTML renderer)
-├─ 🔖 CitationPanel.tsx      (footnotes, provenance links)
-├─ 🧷 EntityLink.tsx         (graph entity chips/links)
-├─ 🧠 FocusModeBridge.tsx    (optional: Story ↔ Focus Mode context)
-├─ 🧰 types.ts               (StoryNode/Step/Citation types)
-└─ ✅ __tests__/             (renderer + step effects + redaction tests)
+flowchart LR
+  A["📦 API returns StoryNode<br/>+ provenance/citations"] --> B["🧾 StoryMarkdown<br/>render safely"]
+  A --> C["🧭 StoryStepper<br/>progress & navigation"]
+  C --> D["🗺️ StoryStepEffects<br/>map/timeline sync"]
+  D --> E["🧩 Map UI<br/>layers/camera/time"]
+  B --> F["🔖 CitationPanel<br/>evidence drilldown"]
+  B --> G["🧷 EntityLink<br/>graph-backed context"]
+  E --> H["🧠 Focus Mode (optional)<br/>evidence-first assistant"]
 ```
 
 ---
