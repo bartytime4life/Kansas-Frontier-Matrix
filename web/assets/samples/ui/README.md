@@ -32,17 +32,17 @@ Use these samples for:
 > Add folders as needed, but keep it tidy & discoverable.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 samples/
-      📁 ui/
-        📄 README.md  👈 you are here
-        📁 components/        # isolated UI patterns (panel, chips, etc.)
-        📁 flows/             # step-by-step UI walkthroughs (annotated)
-        📁 icons/             # sample icon sets (svg/png) + attribution
-        📁 screenshots/       # annotated images for docs/PRs
-        📁 tokens/            # sample design tokens (json/css)
-        📁 fixtures/          # sample API responses used in mocks
+web/
+└─ 📁 assets/
+   └─ 🧪 samples/
+      └─ 🎛️ ui/
+         ├─ 📄 README.md            # 👈 you are here 📌 What UI samples cover, how to run/view them, and licensing notes
+         ├─ 🧩 components/          # Isolated UI patterns (panels, chips, cards, drawers) for quick review/testing
+         ├─ 🧭 flows/               # Step-by-step walkthroughs (annotated sequences) for common user journeys
+         ├─ 🧷 icons/               # Sample icon sets (svg/png) + attribution (NOT canonical production icons)
+         ├─ 📸 screenshots/         # Annotated images for docs/PRs (redacted, small, labeled)
+         ├─ 🎛️ tokens/              # Sample design tokens (json/css) used by demos (not the canonical app tokens)
+         └─ 🧪 fixtures/            # Sample API responses for mocks (deterministic, tiny, no sensitive data)
 ```
 
 ---
