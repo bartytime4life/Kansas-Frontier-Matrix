@@ -6,14 +6,18 @@
 ![Coordinated Disclosure](https://img.shields.io/badge/disclosure-coordinated-success)
 ![Private Reporting](https://img.shields.io/badge/reporting-private%20channel-important)
 ![PSA](https://img.shields.io/badge/PSA-no%20issues%2FPR%20comments-red)
+
 ![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20attestations-black)
+![SLSA](https://img.shields.io/badge/SLSA-attestations%20%2B%20provenance-0f172a)
 ![Policy as Code](https://img.shields.io/badge/policy-as%20code-OPA%20%2B%20Conftest-111827)
+
 ![Kill Switch](https://img.shields.io/badge/safety-kill--switch%20%2B%20fail--closed-red)
 ![Contract First](https://img.shields.io/badge/data-contract--first-required-0ea5e9)
-![Data Integrity](https://img.shields.io/badge/data-integrity-PROV%20%2B%20checksums-purple)
-![Catalogs](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT-334155)
+![Evidence Triplet](https://img.shields.io/badge/evidence-STAC%20%2B%20DCAT%20%2B%20PROV-334155)
+![Data Integrity](https://img.shields.io/badge/data-integrity-checksums%20%2B%20manifests-purple)
+
 ![AI Governance](https://img.shields.io/badge/AI-evidence--first%20%2B%20human--in--loop-8b5cf6)
-![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-7c3aed)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20cultural%20protocols-7c3aed)
 
 </div>
 
@@ -22,8 +26,9 @@
 > Use **private vulnerability reporting** (preferred) or the alternative contact methods below.
 
 > [!NOTE]
-> KFM is a **geospatial + knowledge + modeling** system — security issues can live in **code**, **infrastructure**, **catalog metadata (STAC/DCAT)**, **provenance (PROV)**, **data contracts**, **documents**, **3D/WebGL assets**, and **derived outputs** (models / Story Nodes / Focus Mode).  
-> Treat reports as potentially sensitive. 🧾🗺️🧠
+> KFM is a **geospatial + knowledge + modeling + narrative** system. Security issues can live in:
+> **code**, **infra**, **catalog metadata (STAC/DCAT)**, **provenance (PROV)**, **data contracts**, **Story Nodes**, **3D/WebGL assets**, **offline packs**, and **AI/Focus Mode outputs**. 🧾🗺️🧠  
+> Treat reports as potentially sensitive.
 
 ---
 
@@ -40,15 +45,17 @@ If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPEC
 
 - [🧾 Policy metadata](#-policy-metadata)
 - [🧭 Policy goals & principles](#-policy-goals--principles)
-- [🧑‍⚖️ Roles & responsibilities](#️-roles--responsibilities)
+- [🧑‍⚖️ Governance model, roles & responsibilities](#️-governance-model-roles--responsibilities)
 - [⭐ Security invariants](#-security-invariants)
 - [🎯 Scope](#-scope)
 - [🧩 Threat model (KFM-shaped)](#-threat-model-kfm-shaped)
 - [🧱 Trust boundaries](#-trust-boundaries)
 - [🔒 Data classification & sensitive location policy](#-data-classification--sensitive-location-policy)
 - [🧾 Metadata, provenance & data contract requirements](#-metadata-provenance--data-contract-requirements)
+- [🪪 Identity, access & auditability](#-identity-access--auditability)
 - [🔏 Artifact integrity, reproducibility & release discipline](#-artifact-integrity-reproducibility--release-discipline)
 - [🤖 Focus Mode AI & automation security](#-focus-mode-ai--automation-security)
+- [⚖️ Policy-as-code enforcement](#️-policy-as-code-enforcement)
 - [✅ Supported versions](#-supported-versions)
 - [🐛 Reporting a vulnerability](#-reporting-a-vulnerability)
 - [🧾 What to include](#-what-to-include)
@@ -72,14 +79,13 @@ If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPEC
 |---|---|
 | Policy file | `SECURITY.md` *(canonical location: repo root **or** `.github/` — pick one and avoid drift)* |
 | Status | Active ✅ |
-| Last updated | **2026-01-13** |
-| Review cycle | Quarterly 🔁 *(or after material security changes)* |
-| KFM-MDP baseline | **v11.2.6** |
-| Master Guide baseline | **v13 (draft)** |
-| Governance baseline | FAIR + CARE *(data + people)* |
+| Last updated | **2026-01-19** |
+| Review cycle | Quarterly 🔁 *(or after material security/governance changes)* |
+| v13 alignment | ✅ `KFM_REDESIGN_BLUEPRINT_v13` + `MASTER_GUIDE_v13` conventions |
+| Evidence profiles baseline | **KFM-STAC v11.0.0** · **KFM-DCAT v11.0.0** · **KFM-PROV v11.0.0** *(profiled standards for catalogs + lineage)* |
 | Default posture | **Fail-closed** for promotion-critical gates 🚦 |
-| Applies to | This repo + official releases + supported deployments |
-| “Metadata as code” posture | **Contracts + catalogs must validate** (CI gates) ✅ |
+| Applies to | This repo + official releases + supported deployments + offline packs |
+| “Metadata as code” posture | **Contracts + catalogs + provenance must validate** (CI gates) ✅ |
 
 > [!TIP]
 > GitHub recognizes `SECURITY.md` in the **repo root**, `.github/`, or `docs/`.  
@@ -89,30 +95,31 @@ If you suspect **active exploitation**, put **“🚨 ACTIVE EXPLOITATION SUSPEC
 
 ## 🧭 Policy goals & principles
 
-KFM’s security stance is shaped by the project’s “NASA‑grade” modeling discipline, geospatial realities, and human-centered governance.
+KFM’s security stance is shaped by geospatial realities, “evidence-first” system design, and human-centered governance.
 
-### 🎯 What this policy is optimizing for
+### 🎯 What this policy optimizes for
 
 - **Safety of people, places, and communities** 🧑‍🤝‍🧑🗺️  
   Especially for **cultural heritage and sensitive locations**, where map precision can cause real-world harm.
-- **Trustworthy knowledge** 🧾✅  
+- **Trustworthy knowledge & narratives** 🧾✅  
   If it’s in the UI, Story Nodes, or Focus Mode, it must be **traceable, attributable, and reproducible**.
-- **Supply-chain resilience** 🔗🧱  
+- **Supply-chain resilience (code + data)** 🔗🧱  
   Datasets + catalogs + provenance are treated like dependencies (SBOM/attestation mindset).
-- **Operational containment** 🧯  
-  Incidents are expected; KFM is designed to **fail closed** and **rollback cleanly**.
+- **Operational containment & rollback** 🧯♻️  
+  Incidents are expected; KFM is designed to **fail closed** and **roll back cleanly**.
 
 ### 🧠 “Security is not just AppSec” (KFM-specific)
 
 In KFM, security includes:
-- **Catalog integrity** *(STAC/DCAT link safety, schema correctness, licensing terms)*  
-- **Provenance integrity** *(PROV + run records as audit trail)*  
-- **Modeling integrity** *(verification/validation/uncertainty — V&V/UQ)*  
-- **Narrative integrity** *(Story Nodes must cite evidence and label AI assistance)*  
+- **Catalog integrity** *(STAC/DCAT link safety, schema correctness, licensing terms, domain allowlists)*
+- **Provenance integrity** *(PROV + run records as audit trail + reproducibility)*
+- **Modeling integrity** *(verification/validation/uncertainty labeling — V&V/UQ as risk reduction)*
+- **Narrative integrity** *(Story Nodes must cite evidence; AI assistance must be labeled + provenance-linked)*
+- **Cultural protocol integrity** *(CARE + community rules; prevent “open-by-default” harm)*
 
 ---
 
-## 🧑‍⚖️ Roles & responsibilities
+## 🧑‍⚖️ Governance model, roles & responsibilities
 
 > [!NOTE]
 > KFM is interdisciplinary: maintainers + data stewards + domain experts (historians, geographers, scientists) all contribute. Governance needs clear lanes. 🛤️
@@ -120,74 +127,74 @@ In KFM, security includes:
 ### 👤 Core roles (recommended)
 
 - **Security Response Lead (SRL)** 🧯  
-  Owns triage, incident coordination, advisory publishing.
-- **Data Steward / FAIR+CARE Council** 🧾🌿  
-  Owns data classification, sensitive location review, licensing/attribution compliance.
+  Owns triage, incident coordination, advisory publishing, and vulnerability comms.
+- **FAIR+CARE & Cultural Protocol Council** 🧾🌿🏷️  
+  Owns data classification, sensitive location review, licensing/attribution, and cultural protocol requirements (e.g., TK labels).
+- **Data Intake Steward** 🧰  
+  Owns intake gates, contract/cat/prov validity, and “no mystery nodes” enforcement.
 - **Release Manager** 📦  
   Owns signed releases, SBOM/attestations, and promotion lane gating.
 - **Maintainers / Reviewers** 👀  
   Own branch protection enforcement and code/data review quality.
+- **Deployment Operator (self-hosted installs)** 🧑‍💻  
+  Owns runtime hardening, secrets management, monitoring, and incident containment actions.
 
-### ✅ Required decisions to document
+### 🧾 Governance ledger (recommended)
 
-- Adding/removing maintainers (and required access levels)
-- Promotion lane rules (what can publish, where, and how)
-- Sensitive data release exceptions (with review record)
+Maintain a lightweight, append-only **governance ledger** (human approvals + hashes) for:
+- Sensitive data approvals (who/when/why)
+- Exceptions to default precision restrictions
+- Takedown/restriction events + remediations
+- Publication approvals for “high impact” releases (major datasets, new public layers, offline packs)
 
 > [!TIP]
-> Keep these decisions in `docs/architecture/adr/` (Architecture Decision Records) so governance doesn’t live only in tribal memory.
+> Keep decisions in `docs/architecture/adr/` and approvals in `docs/guides/governance/` (or a dedicated ledger path) so governance doesn’t live only in tribal memory.
 
 ---
 
 ## ⭐ Security invariants
 
-KFM’s architecture uses **non-negotiable invariants** that double as security controls (and are intended to be enforced by CI) ✅🤖:
+KFM’s architecture uses **non-negotiable invariants** that double as security controls (intended to be enforced by CI) ✅🤖
 
 1) 🧬 **Pipeline ordering is absolute**  
-**ETL → Contracts → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
+**Raw → Work → Processed → Contract → (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
 No stage consumes artifacts that haven’t passed the previous stage’s **formal outputs + checks**.
 
-2) 🧾 **Contract-first & provenance-first is mandatory**  
+2) 🧾 **Contract-first + evidence-triplet is mandatory**  
 If something shows up in the UI / Focus Mode, it must be traceable to:
 - ✅ a **data contract** (schema + governance metadata)  
-- ✅ a **catalog entry** (STAC/DCAT)  
-- ✅ a **lineage record** (PROV)  
+- ✅ the **evidence triplet**: **STAC + DCAT + PROV**  
 No “mystery layers.” No “trust me bro.” 🚫
 
-3) 🔌 **API boundary rule**  
+3) 🧊 **`data/raw` is immutable (append-only)**  
+Raw intake is a **preservation zone**. Never rewrite raw inputs.  
+Processing produces **new versions** (with new digests + PROV).
+
+4) 🧪 **Deterministic, idempotent ETL**  
+Same input + config ⇒ same output. Runs must be re-runnable safely.  
+No partial publishes. No unreproducible outputs.
+
+5) 🕸️ **Graph is derived, not hand-edited**  
+The knowledge graph is built from validated catalogs/contracts/provenance (e.g., bulk CSV import snapshots).  
+If the graph changes, the source artifacts must explain why.
+
+6) 🔌 **API boundary rule**  
 The UI must **never** talk to the graph DB or raw object storage directly.  
 All access goes through governed APIs (authZ, redaction, schema contracts). 🔐
 
-4) 🧾 **Boundary artifacts are security-critical**  
-Before any dataset/evidence is “published,” it must have:
-- 🧾 **STAC** (collections/items) for geospatial indexing
-- 🗃️ **DCAT** for discovery/distribution
-- 🧬 **PROV** for lineage (inputs → activities → outputs, with agents)
-- 🧾 **Contract JSON** (schema + license + classification + FAIR/CARE)
-- 🧪 **Integrity signals** *(recommended)*: checksums/digests, stable IDs, manifests  
-If it’s visible downstream, it must be **cataloged + governed + traceable**.
-
-5) ♻️ **Deterministic, idempotent ETL**  
-Same input + config ⇒ same output. Runs must be re-runnable safely.  
-No partial publishes. No unreproducible outputs. 🧪
-
-6) 🧭 **Sovereignty & classification propagate**  
+7) 🌿 **Sovereignty + classification propagate**  
 No output artifact may be **less restricted** than its inputs.  
-Redaction/generalization is required to publish sensitive inputs safely. ⚖️✅
+Redaction/generalization is required to publish sensitive inputs safely.
 
-7) 🚦 **Fail-closed validation gates**  
-Missing provenance, broken catalogs, unsafe links, secrets, or sensitive precision leakage → **block merge/publish**. 🧯
+8) 🚦 **Fail-closed promotion gates**  
+Missing provenance, broken catalogs, unsafe links, secrets, or sensitive precision leakage → **block merge/publish**.
 
-8) 🎬 **Evidence-first narrative**  
-No unsourced narrative content in Story Nodes or Focus Mode.  
+9) 🎬 **Evidence-first narrative (Story Nodes)**  
+No unsourced narrative content.  
 Facts must cite evidence, and AI-assisted text must be labeled + provenance-linked.
 
-9) 🤝 **Humans approve publishing**  
+10) 🤝 **Humans approve publishing**  
 Automation may open PRs, run checks, and attach evidence — but merges/promotion remain governed and reviewable. 👀✅
-
-10) 🧠 **Focus Mode constraints reduce hallucination risk**  
-Focus Mode must be constrained to **KFM’s graph + cataloged sources** and produce **citations**.  
-If a claim isn’t supported by KFM evidence → it should be framed as uncertainty or omitted. ✅📎
 
 > [!IMPORTANT]
 > In KFM, **metadata is security-critical**. A broken catalog link, missing license, unsafe remote href, or unvalidated contract can become a supply-chain issue for downstream consumers.
@@ -198,15 +205,16 @@ If a claim isn’t supported by KFM evidence → it should be framed as uncertai
 
 KFM is a **geospatial + historical mapping + modeling platform** that typically includes:
 
-- 🖥️ Web UI *(including WebGL/3D viewers)*
-- 🔌 APIs/services *(e.g., FastAPI, REST/GraphQL)*
-- 🧰 Workers/pipelines *(ETL + analytics + publishing)*
+- 🖥️ Web UI *(React; 2D MapLibre + 3D Cesium; story/narrative panels)*
+- 📱 Mobile / PWA mode *(offline caching; field workflows; potential AR integration)*
+- 🔌 APIs/services *(FastAPI + REST/GraphQL; policy-aware access control)*
+- 🧰 Workers/pipelines *(ETL + analytics + publishing; deterministic jobs)*
 - 🗄️ Spatial storage *(PostgreSQL/PostGIS)*
-- 🪣 Object storage *(rasters/COGs, tiles, docs, artifacts)*
-- 🕸️ Knowledge graph *(entities/events/citations)*
-- 🗂️ Catalog + provenance layer *(STAC/DCAT/PROV + data contracts)*
-- 📓 Notebooks / research artifacts *(if in repo)*
-- 🤖 Automation *(GitHub Actions, agents, promotion pipelines)*
+- 🕸️ Knowledge graph *(Neo4j; ontologies; citations)*
+- 🪣 Object storage *(tiles, COGs, docs, artifacts, offline packs)*
+- 🗂️ Catalog + provenance layer *(STAC/DCAT/PROV + contracts + evidence manifests)*
+- 🤖 AI layer *(Focus Mode; optional agent workflows; PR-only execution)*
+- 🧑‍🤝‍🧑 Collaboration features *(now: Git-based; future: in-app comments/annotations/moderation)*
 
 ### ✅ In-scope vulnerability examples
 
@@ -218,9 +226,17 @@ KFM is a **geospatial + historical mapping + modeling platform** that typically 
 - Geo + graph specific:
   - **Catalog poisoning** (malicious STAC/DCAT links/fields) → unsafe fetches or consumer compromise
   - **Retrieval poisoning** (malicious citations/graph nodes influencing Focus Mode answers)
-  - Integrity tampering of published assets (COGs/tiles/docs/model artifacts)
+  - Integrity tampering of published assets (COGs/tiles/docs/model artifacts/offline packs)
   - “Geospatial DoS” payloads (massive geometries, decompression bombs, pathological tilesets) that crash pipelines/UI
   - Graph query complexity DoS (deep traversals, path explosion)
+
+### ✅ Offline packs / mobile / AR are in scope
+
+If KFM supports **offline data packs**, **PWA caching**, or **AR overlays**, vulnerabilities are in scope, including:
+- Pack signature/attestation bypass
+- Pack containing misclassified/restricted data
+- Sensitive coordinate exposure via device caches
+- Permission misuse (GPS/camera) or privacy leaks
 
 ---
 
@@ -232,10 +248,10 @@ KFM’s threat surface includes more than code.
 - 🔐 Credentials (cloud keys, DB creds, service tokens, CI secrets)
 - 🧾 Contract + catalog integrity (Contracts/STAC/DCAT) + provenance integrity (PROV)
 - 🗺️ Sensitive location data (protected/cultural sites, private infrastructure)
-- 📦 Published artifacts (tiles/COGs/GeoJSON/GeoParquet, reports, model outputs)
+- 📦 Published artifacts (tiles/COGs/GeoJSON/GeoParquet, reports, model outputs, offline packs)
 - 🎬 Narrative trust (Story Nodes/Focus Mode must be evidence-backed and labeled)
 - 🤖 CI/CD supply chain (workflows/actions, artifact promotion, attestations)
-- 🧑‍💻 User privacy (analytics/logs, especially for authenticated deployments)
+- 🧑‍💻 User privacy (analytics/logs; accounts if enabled; moderation content)
 
 ### 👤 Likely threat actors
 - Opportunistic attackers (common web vulns, exposed secrets, misconfig)
@@ -246,13 +262,14 @@ KFM’s threat surface includes more than code.
 
 ### 🧨 Common KFM-specific failure modes
 - “It’s just metadata” mindset → unsafe STAC/DCAT hrefs, licensing gaps, missing provenance
-- UI directly contacting internal stores/graph → bypassing authZ/redaction
+- UI bypassing the API boundary → authZ/redaction failure
 - Pipelines fetching remote assets without allowlists → SSRF + internal exposure
-- Publishing exact sensitive coordinates in public layers/story content
-- Weak artifact integrity controls → silent tampering, untraceable outputs
+- Publishing exact sensitive coordinates (maps, story text, exports, offline caches)
+- Weak integrity controls → silent tampering, untraceable outputs
 - LLM prompt injection / retrieval poisoning → untrusted text instructing Focus Mode to ignore rules
 - Graph query/path explosion → DoS via overly deep traversals
 - High-risk parsers (PDFs/images/3D assets) → decompression bombs / memory exhaustion
+- Offline packs → restricted data “walks out the door” if misclassified or unsigned
 - Automation without kill-switch → autopublish drift during an incident
 
 > [!NOTE]
@@ -267,19 +284,26 @@ KFM’s threat surface includes more than code.
 
 ```mermaid
 flowchart LR
-  U[🌐 User / Client] -->|HTTPS| FE[🧑‍💻 Web UI<br/>(incl. WebGL/3D)]
-  FE -->|governed calls| API[🔌 API / Services]
-  API --> AUTH[(🔐 AuthN/AuthZ<br/>RBAC/ABAC)]
-  API --> DB[(🗄️ Spatial DB<br/>PostgreSQL/PostGIS)]
-  API --> GRAPH[(🕸️ Knowledge Graph<br/>entities • events • citations)]
-  API --> OBJ[(🪣 Object Storage<br/>tiles • COGs • docs • artifacts)]
-  API --> FM[🤖 Focus Mode Runtime<br/>(retrieval + citations)]
-  FM -->|retrieval| GRAPH
-  FM -->|evidence fetch| API
+  EXT[🛰️ External Providers<br/>archives • APIs • feeds • GEE] -->|untrusted| INTAKE[🧰 Intake Gate<br/>contract + checksums]
+  INTAKE --> RAW[(🧊 data/raw<br/>immutable)]
+  RAW --> WORK[(🧪 data/work<br/>scratch)]
+  WORK --> PROC[(📦 data/processed<br/>versioned outputs)]
 
-  API --> W[⚙️ Workers / Pipelines]
-  W --> OBJ
-  W --> EXT[🛰️ External Providers<br/>GIS APIs • archives • feeds • GEE]
+  PROC --> EVID[🧾 Evidence Triplet<br/>STAC + DCAT + PROV]
+  EVID --> GRAPH[(🕸️ Knowledge Graph<br/>Neo4j • CSV import)]
+  EVID --> OBJ[(🪣 Object Storage<br/>tiles • COGs • docs)]
+  GRAPH --> API[🔌 API / Services<br/>REST + GraphQL]
+  OBJ --> API
+
+  U[🌐 User / Client] -->|HTTPS| FE[🧑‍💻 Web UI<br/>(MapLibre + Cesium)]
+  FE -->|governed calls| API
+
+  API --> AUTH[(🔐 AuthN/AuthZ<br/>RBAC + ABAC)]
+  API --> PACK[📦 Offline Pack Builder<br/>(signed + attested)]
+  PACK --> U
+  API --> FM[🤖 Focus Mode Runtime<br/>(retrieval + citations)]
+  FM --> GRAPH
+  FM --> API
 ```
 
 </details>
@@ -303,6 +327,10 @@ KFM is “mostly open” — but **not everything should be public**.
 | **Confidential** 🔐 | Explicitly approved | Sensitive layers requiring controlled sharing |
 | **Restricted** 🧨 | Admin/Owners only | Credentials, security logs, protected exact coordinates |
 
+> [!IMPORTANT]
+> Some datasets require **cultural protocols / indigenous data sovereignty constraints** beyond “Public vs Private.”  
+> These must be encoded in contracts + catalogs and enforced at access time. 🌿🏷️
+
 ### 🧬 Propagation rule (non-negotiable)
 
 **No output artifact can be less restricted than its inputs.**  
@@ -318,29 +346,33 @@ If a source is sensitive, all derivatives inherit equal-or-higher restrictions u
 | **Grid / index** 🧊 | H3 / geohash cells | ✅ commonly safe if size is appropriate |
 | **Redacted** 🕳️ | “location protected” + narrative context | ✅ preferred for cultural sensitivity |
 
-> [!IMPORTANT]
-> **Archaeological & cultural heritage locations** often require stricter handling.  
-> Even “historic” sites can be vulnerable to looting or vandalism if precise coordinates are published.
+### 🛡️ Sensitive-location publishing defaults
 
-### 🛡️ Sensitive-location publishing rules (recommended defaults)
-
-- **Default deny for “Exact”** precision in Public.
-- Prefer **grid/index** publishing for public discovery.
+- **Default deny** for “Exact” precision in Public.
+- Prefer **grid/index** publication for public discovery.
 - Require **explicit review** for any public release that could enable:
   - looting/vandalism (archaeology, cultural heritage)
   - targeting private infrastructure
   - harassment or stalking
 - Add a **“location inference risk”** note when a dataset could be re-identified by joining layers.
+- Prefer **rounding / jitter / aggregation** when appropriate (document the method + impact in PROV).
+
+### 🏷️ Cultural protocol controls (recommended)
+
+When a dataset involves cultural heritage, sacred sites, or community-governed knowledge:
+
+- Encode protocol fields in the **contract** and **catalogs** (e.g., `cultural_protocols`, `tk_labels`, `authority_to_control`).
+- Apply **access control beyond RBAC** (ABAC rules based on protocol tags).
+- Provide “**why restricted**” user-facing explanations without revealing sensitive details.
+- Require **Council sign-off** for any policy exceptions.
+- Treat violations as security incidents.
 
 ### 🔐 Privacy and user logs (deployment-aware)
 
 KFM deployments may collect logs/analytics. Treat those as potentially sensitive:
 - **Data minimization**: log only what you need.
-- **Pseudonymize** user identifiers in logs where feasible.
+- **Pseudonymize** user identifiers where feasible.
 - Restrict access to logs (often **Restricted**).
-
-> [!TIP]
-> If you implement “privacy protecting logs,” consider a one-way pseudonymous identifier (hashing a stable tuple) so operational analysis is possible without storing raw PII.
 
 ---
 
@@ -352,26 +384,31 @@ KFM treats metadata and lineage as **security controls**, not “nice-to-have do
 
 Every dataset or evidence artifact that is promoted/published must have:
 
-- 🧾 **Data contract JSON** *(KFM schema; includes license + classification + FAIR/CARE)*  
-- 🧾 **STAC Collection + Item(s)** *(geospatial indexing + assets)*
-- 🗃️ **DCAT dataset entry** *(discovery + distributions)*
-- 🧬 **PROV lineage bundle** *(inputs → activities → outputs, with agents)*
-- 🔎 **Cross-layer linkage**:
-  - Contract ↔ STAC ↔ DCAT ↔ PROV (bidirectional where possible)
-  - Graph entries reference catalogs (not bulky raw data)
+- 🧾 **Data contract JSON** *(KFM schema; includes license + classification + FAIR/CARE + cultural protocol flags where needed)*  
+- 🧾 **STAC Collection + Item(s)** *(geospatial indexing + assets; include KFM profile fields like dataset ID + classification)*
+- 🗃️ **DCAT dataset entry** *(discovery + distributions + license; include sovereignty/protocol metadata where applicable)*
+- 🧬 **PROV lineage bundle** *(inputs → activities → outputs, with agents + parameters)*
+- 🔎 **Cross-layer linkage** (bidirectional where possible):
+  - Contract ↔ STAC ↔ DCAT ↔ PROV
+  - Graph references catalogs/contracts (no bulky raw data embedded)
+
+> [!IMPORTANT]
+> If the contract, catalogs, or provenance don’t validate, **it does not ship**. 🚫📦
 
 ### 🗂️ Data contracts (KFM “metadata as code”)
 
 A **data contract** is required for ingestion and promotion. It must include, at minimum:
 
-- `id` (stable, unique)
+- `id` *(stable, unique)*  
 - `title`, `description`
-- `license` + attribution fields (where applicable)
+- `license` + attribution fields
 - `schema_version`
-- spatial + temporal extent
-- provenance source(s) + processing summary
-- **classification** + sensitive location policy fields *(recommended)*
-- **FAIR+CARE** fields *(recommended for governance transparency)*
+- spatial + temporal extent *(including CRS and any reprojection notes)*
+- provenance sources + processing summary
+- **classification** + sensitive location policy fields
+- **FAIR+CARE** fields *(recommended)*
+- **cultural protocol / sovereignty** fields *(when applicable)*
+- **approvals** *(when applicable: e.g., IRB / institutional approvals / data use agreements)*
 
 <details>
 <summary><strong>🧾 Simplified contract example (shape only)</strong></summary>
@@ -381,7 +418,7 @@ A **data contract** is required for ingestion and promotion. It must include, at
   "id": "usgs_historic_topo_1894",
   "title": "USGS Historical Topographic Map (Ellsworth County, 1894)",
   "description": "Digitized 1894 USGS topographic survey of Ellsworth County, Kansas.",
-  "license": "Public Domain",
+  "license": { "spdx": "PDDL-1.0", "notes": "Public domain (US Gov data)" },
   "schema_version": "v3.0.0",
   "classification": "Public",
   "sensitive_location_precision": "County / region",
@@ -392,19 +429,38 @@ A **data contract** is required for ingestion and promotion. It must include, at
     "creator": "U.S. Geological Survey",
     "issued": "1894-03-15"
   },
-  "faircare": {
-    "collective_benefit": "Preserves environmental and cartographic heritage of Kansas.",
-    "authority_to_control": "Open",
-    "responsibility": "Data Engineering & FAIR+CARE Council",
-    "ethics": "Culturally neutral archival content"
+  "governance": {
+    "faircare": {
+      "collective_benefit": "Preserves environmental and cartographic heritage of Kansas.",
+      "authority_to_control": "Open",
+      "responsibility": "Data Engineering & FAIR+CARE Council",
+      "ethics": "Culturally neutral archival content"
+    },
+    "cultural_protocols": null,
+    "approvals": []
   }
 }
 ```
 
 </details>
 
-> [!IMPORTANT]
-> If the contract, catalogs, or provenance don’t validate, **it does not ship**.
+### 🗺️ Catalog paths (v13 guidance)
+
+Pick **one canonical** layout and enforce it with policy to prevent drift:
+
+- STAC: `data/stac/collections/` + `data/stac/items/` *(recommended canonical)*
+- PROV: `data/prov/`
+- DCAT: either `data/catalogs/` **or** `data/catalog/dcat/` *(choose one and enforce; do not allow both)*
+
+> [!TIP]
+> Directory drift is a real security risk: it can hide unvalidated artifacts and bypass gates.
+
+### 🕸️ Knowledge graph integrity rules
+
+- The graph is a **derived view** of governed artifacts.
+- Prefer reproducible bulk import snapshots (e.g., `data/graph/csv/nodes.csv` and `data/graph/csv/edges.csv`).
+- Use stable IDs, ontology alignment (e.g., CIDOC-CRM + GeoSPARQL + OWL-Time), and strict referential integrity checks.
+- The graph must carry classification/protocol metadata so the API can enforce ABAC.
 
 ### 📦 Evidence artifacts (analysis/AI outputs)
 
@@ -414,8 +470,45 @@ Any analysis output or AI-generated dataset is treated as a **first-class datase
 - traced like a dataset
 - exposed only via governed APIs (never hard-coded into the UI)
 
-> [!NOTE]
-> If an AI-generated artifact could influence decisions, it must include uncertainty/limitations and remain provenance-linked.
+---
+
+## 🪪 Identity, access & auditability
+
+KFM assumes **role-based access** plus **attribute-based access** for classification and cultural protocols.
+
+### 🧑‍💼 RBAC baseline roles (recommended)
+
+| Role | Typical capabilities |
+|---|---|
+| **Public Viewer** 🌍 | Read Public datasets; view published stories; export public views |
+| **Contributor** 🧑‍🔧 | Propose data/stories via PR; run local validators; cannot publish |
+| **Maintainer** 👀 | Review + merge; trigger promotion lanes; cannot bypass gates |
+| **Data Steward** 🧾🌿 | Approve classification/protocol changes; authorize exceptions |
+| **Admin** 🧨 | Manage users/secrets; emergency actions; incident containment |
+
+> [!IMPORTANT]
+> “Contributor can upload but not publish without review” is a deliberate safety posture. ✅
+
+### 🧷 ABAC requirements (classification-aware)
+
+- Every request that returns data must enforce:
+  - dataset `classification`
+  - `sensitive_location_precision`
+  - `cultural_protocols` / sovereignty tags
+- The same ABAC rules apply to:
+  - exports
+  - offline pack builds
+  - Story Node renders
+  - Focus Mode evidence retrieval
+
+### 🧾 Auditability expectations
+
+- Privileged actions must be logged:
+  - publish/promote
+  - redact/remove
+  - user/role changes
+  - policy overrides
+- Logs must be access-controlled and retained per deployment needs.
 
 ---
 
@@ -425,8 +518,10 @@ KFM treats both **code** and **data** as a supply chain.
 
 ### 🔐 Integrity signals (recommended baseline)
 
-- **Checksums/digests** (e.g., SHA-256) for artifacts and large assets
-- **Manifests** for dataset releases (what files, what hashes, what contract/cat/prov IDs)
+- **Checksums/digests** (SHA-256) for artifacts and large assets
+- **`checksums.sha256`** per dataset/work unit (or equivalent manifest)
+- **`source.json`** *(or similar)* to record upstream URL, license, retrieved time, ETag/Last-Modified if available
+- **Manifests** for dataset releases (files + hashes + contract/cat/prov IDs)
 - **Immutability** for published artifacts (object storage versioning or content-addressed paths)
 - **Reproducibility lane** for promotion (rebuild + compare hashes where feasible)
 - **SBOM** for software releases + dependency review for PRs
@@ -441,6 +536,7 @@ Think “SBOM, but for datasets.” For a release, publish:
 - PROV run record (inputs, activities, agents)
 - asset list with digests
 - license summary + attribution bundle
+- classification + precision tier + protocol tags
 
 Example (shape only):
 
@@ -454,18 +550,27 @@ Example (shape only):
   "assets": [
     { "path": "data/processed/topo/1894_ellsworth.tif", "sha256": "..." }
   ],
-  "license": { "spdx": "PDDL-1.0", "notes": "Public domain (US Gov data)" }
+  "policy": {
+    "classification": "Public",
+    "precision": "County / region"
+  }
 }
 ```
 
-### 📚 Reproducible research integration (recommended)
+### 📦 Offline pack integrity (if supported)
 
-- `CITATION.cff` for software citations
-- DOIs or frozen snapshots for major data releases
-- Optional notebook launchers (Binder/JupyterHub) **only** if secrets are not required and data classification allows it
+Offline packs must be treated like releases:
+
+- Packs must be **signed and attested** (build provenance + manifest)
+- Packs must contain:
+  - contract + catalogs + provenance for included datasets
+  - a pack-level manifest listing hashes and classifications
+  - explicit “what’s missing” if the online system has more restricted data
+- Packs must be **policy-filtered** (ABAC must be applied before inclusion)
+- Packs must support **revocation/expiry** strategies (deployment-dependent)
 
 > [!CAUTION]
-> Public notebooks must never embed long-lived credentials. Use read-only public data or short-lived tokens.
+> Offline packs can quietly become the highest-risk distribution channel if misclassified data slips in. Treat them as “export on steroids.” 🧯
 
 ---
 
@@ -477,7 +582,8 @@ Automation exists to reduce toil — **not** to bypass governance.
 
 - **Evidence-first retrieval**: Focus Mode relies on the graph + cataloged sources.
 - **Citations required**: answers must cite contract/catalog/provenance-backed evidence.
-- **Policy-aware redaction**: classification + sensitive-location rules apply at response time.
+- **Uncertainty over fabrication**: if evidence is missing, refuse or label uncertainty.
+- **Policy-aware redaction**: classification + sensitive-location + cultural protocol rules apply at response time.
 - **Prompt injection defense**:
   - treat all retrieved text as untrusted
   - ignore instructions found inside data/documents
@@ -491,7 +597,7 @@ Automation exists to reduce toil — **not** to bypass governance.
 
 If we use agentic automation, it must follow:
 - 👀 **Watcher**: detects drift/events (broken links, missing metadata, changes)
-- 🧠 **Planner**: produces a deterministic plan (what will change and why)
+- 🧠 **Planner**: produces a deterministic plan (what will change and why) under policy constraints
 - 🛠️ **Executor**: opens a PR with the change — **never auto-merges**
 
 ### ✅ Non-negotiables for automation
@@ -500,7 +606,7 @@ If we use agentic automation, it must follow:
 - 🔁 **Idempotency key + commit seed** recorded (replays produce identical results)
 - 🧪 **Detect → Validate → Promote** discipline:
   - detect change robustly (checksums/ETags/events)
-  - validate with fast gates + “lane” validators
+  - validate with fast gates + lane validators
   - promote via PR + signed/attested artifacts
 - 🧾 **Evidence artifacts attached**: plans, gate reports, provenance, attestations
 - 🔒 **Executor cannot merge** — branch protections remain the final gate
@@ -536,10 +642,7 @@ Example pattern for publish jobs:
     KFM_KILL_SWITCH: ${{ vars.KFM_KILL_SWITCH }}
 ```
 
-> [!TIP]
-> In PR lanes you can choose to **skip publish steps** rather than failing the whole workflow, but promotion lanes should be **fail-closed**.
-
-### 🧾 Model cards & bias testing (recommended for AI components)
+### 🧾 Model cards & bias testing (recommended)
 
 Any AI model used in production-facing features should ship with:
 - model card (purpose, training data sources, limitations)
@@ -548,14 +651,45 @@ Any AI model used in production-facing features should ship with:
 
 ---
 
+## ⚖️ Policy-as-code enforcement
+
+KFM governance rules should be enforceable by machines. 🧠✅
+
+### ✅ OPA/Rego + Conftest (recommended)
+
+Policy-as-code must cover:
+- contract required fields
+- catalog validity and link safety
+- provenance required on publish
+- classification propagation
+- sensitive location precision rules
+- workflow least privilege (CI)
+- action pinning and dependency hygiene
+
+> [!TIP]
+> KFM references a **“policy pack”** concept. Keep it in a canonical location (e.g., `api/scripts/policy/` or `tools/validation/policy/`) and avoid duplicates.
+
+### 🏷️ Example rule IDs (recommended style)
+
+Use stable IDs for policy violations so CI output is actionable:
+
+- `KFM-PROV-001`: Processed data changed without matching PROV update
+- `KFM-CAT-002`: STAC/DCAT link domain not in allowlist (SSRF prevention)
+- `KFM-CLASS-001`: Output classification lower than input classification
+- `KFM-STORY-001`: Story markdown contains unsafe HTML / injection risk
+- `KFM-PACK-001`: Offline pack includes Restricted/Confidential data
+
+---
+
 ## ✅ Supported versions
 
-We prioritize fixes for actively developed code.
+We prioritize fixes for actively developed code and active public distributions.
 
 | Target | Supported for security fixes | Notes |
 |---|---:|---|
 | `main` branch | ✅ | Always supported |
 | Latest tagged release | ✅ | Recommended for deployments |
+| Latest data catalog / pack release | ✅ | If distributed publicly |
 | Older releases | ⚠️ Best effort | Fixes may not be backported |
 
 ---
@@ -607,7 +741,7 @@ To speed up triage, include:
 - **Impact** (what can an attacker do?)
 - **Attack scenario** (realistic path)
 - **Reproduction steps** (minimal)
-- **Affected component(s)** (UI/API/DB/pipelines/catalogs/CI/Focus Mode)
+- **Affected component(s)** (UI/API/DB/pipelines/catalogs/CI/Focus Mode/offline packs)
 - **Safe proof of concept** *(non-destructive, no public exploit chains)*
 - **Suggested fix** *(optional)*
 - **Version/commit** tested
@@ -615,14 +749,16 @@ To speed up triage, include:
 
 ### 🧭 KFM-specific context that helps a lot
 - Dataset IDs (e.g., `kfm.ks.<domain>.<layer>.<time>.vN`)
-- Contract paths: `docs/data/contracts/**` or `docs/data/contracts/examples/**`
-- STAC paths: `data/stac/**` *(or `data/catalog/stac/**` if that’s canonical)*
-- DCAT paths: `data/catalog/dcat/**`
+- Contract paths: `docs/data/contracts/**`
+- STAC paths: `data/stac/**`
+- DCAT paths: `data/catalogs/**` *(or `data/catalog/dcat/**` if that’s your canonical layout)*
 - PROV paths: `data/prov/**`
+- Graph snapshot paths: `data/graph/csv/**` *(if applicable)*
 - Whether the issue leaks **exact coordinates** vs redacted/generalized outputs
 - Whether the issue could be:
   - **catalog poisoning** (unsafe `links[].href`)
   - **retrieval poisoning** (graph nodes/docs altering Focus Mode behavior)
+  - **offline pack leakage** (device storage, caches, pack manifest issues)
 
 ### 🧾 Copy/paste report template
 
@@ -650,6 +786,8 @@ KFM-specific context (if relevant):
 - Dataset ID(s):
 - Contract/STAC/DCAT paths or IDs:
 - PROV run record:
+- Graph snapshot (if applicable):
+- Offline pack involved? (Y/N)
 - Does it expose sensitive coordinates? (Y/N)
 
 Suggested fix (optional):
@@ -671,15 +809,16 @@ Sometimes the risk is **data**, not code:
 - inclusion of culturally sensitive data without approval
 - misclassified artifacts (public when they should be restricted)
 - archaeology/cultural heritage location exposure
+- offline pack accidentally includes restricted datasets
 
 **How to request a takedown / restriction change**
 - Preferred: private vulnerability report (Security tab) labeled **“DATA TAKEDOWN / SENSITIVE DATA”**
 - Include:
   - dataset ID(s)
-  - contract ID(s) + classification
-  - where it’s published (STAC/DCAT links)
+  - contract ID(s) + classification + protocol tags
+  - where it’s published (STAC/DCAT links, UI pages, offline pack name)
   - why it must be restricted/removed
-  - requested remediation (remove, redact, generalize, move to private)
+  - requested remediation (remove, redact, generalize, move to private, revoke pack)
 
 > [!IMPORTANT]
 > We treat sensitive-location mistakes as **security incidents** (containment + remediation), not “content disagreements.” 🧯
@@ -695,9 +834,6 @@ We use GitHub security tooling when available:
 How to stay informed:
 - ⭐ Watch this repo for **Releases**
 - 🔔 Subscribe to advisories when published
-
-> [!NOTE]
-> We avoid publishing exploit details before a fix is available (unless otherwise agreed).
 
 ---
 
@@ -728,9 +864,6 @@ We follow coordinated disclosure:
 | **High** | privilege escalation, SSRF into internal services, major sensitive data exposure |
 | **Medium** | stored XSS with meaningful impact, IDOR with limited scope |
 | **Low** | minor info leaks, non-exploitable misconfigurations |
-
-> [!TIP]
-> If you have a CVSS vector/score (v3.1 or v4.0), include it (optional). We’ll still apply our own assessment.
 
 ---
 
@@ -783,6 +916,7 @@ Security is a design constraint, not a patch. 🧱
 ### 🌐 Web/UI security (including WebGL & 3D)
 - Validate inputs on **server** (client validation is UX, not security)
 - Encode outputs; avoid unsafe HTML injection
+- Render Story Node Markdown with a sanitizer (deny raw HTML by default)
 - Use secure cookies, CSRF protections where relevant, and a strict CSP
 - Treat 3D assets (glTF/3D Tiles/etc.) as untrusted input
 - Keep CORS least-privilege (avoid `*` with credentials)
@@ -820,9 +954,6 @@ Security is a design constraint, not a patch. 🧱
 - Rate-limit expensive geospatial queries and exports
 - Backups encrypted; restore paths audited
 
-> [!TIP]
-> If you must use connection pooling, ensure pool configs don’t weaken security (e.g., verify TLS certs, don’t disable validation).
-
 ### ⚙️ Pipeline & worker safety (race conditions + resource safety)
 - Make pipeline runs idempotent; avoid partial publishes
 - Use staging directories + atomic “commit” step
@@ -830,25 +961,11 @@ Security is a design constraint, not a patch. 🧱
 - Treat ZIPs, PDFs, images, and large geometries as hostile until validated
 - Avoid downloading arbitrary remote URLs; use allowlists + SSRF defenses
 
-### 🛰️ External providers & live feeds (remote sensing, archives, APIs)
-- Restrict API keys/service accounts by least privilege
-- Separate “build” vs “publish” permissions
-- Validate external inputs (bounds, schema, CRS, expected ranges)
-- Treat external JSON/GeoJSON feeds as untrusted (SSRF + poisoning risks)
-- Don’t embed long-lived credentials in notebooks or exports
-
-### 🧠 Modeling, simulation & ML/analytics integrity
-- Track dataset provenance, versions, checksums (poisoning defense)
-- Separate train/eval/test; avoid leakage in artifacts
-- Report uncertainty and limitations (avoid “false certainty”)
-- Store model cards/experiment logs for any published ML output
-- Be mindful of model inversion/membership inference for exposed models
-- Prefer reproducible pipelines (seeded randomness, recorded configs)
-
-### 🗺️ Cartography & map output safety (trust-by-design)
-- Avoid misleading symbology; document scale/resolution limits
-- Clearly label projections, uncertainty, and “modeled vs observed”
-- For sensitive topics: prefer aggregation, redaction, or grid publication
+### 📦 Offline pack safety (if supported)
+- Packs must be signed + attested and include a manifest
+- Packs must be policy-filtered and never include Restricted data
+- Pack UI should show “classification + provenance” banners even offline
+- Prefer encryption at rest on device (deployment-dependent)
 
 ### ♻️ Dependency & CI supply-chain hygiene
 - Use lockfiles (`package-lock.json`, `pnpm-lock.yaml`, `poetry.lock`, etc.)
@@ -856,13 +973,6 @@ Security is a design constraint, not a patch. 🧱
 - Pin base images; rebuild regularly
 - Pin GitHub Actions by commit SHA when feasible
 - Generate SBOMs for releases (recommended)
-
-### 🐳 Container & runtime hardening
-- Run as non-root where possible
-- Minimize image size (multi-stage builds)
-- Don’t bake secrets into images
-- Use read-only filesystems where feasible
-- Treat CI runners as sensitive infrastructure
 
 ---
 
@@ -880,19 +990,25 @@ Security must be repeatable and boring. ✅
 ### 🗂️ Contract/catalog/data integrity checks (geo-specific)
 - **Contract validator gate** (JSON schema, required governance fields)
 - STAC/DCAT quick gate (required fields, license/providers/extensions)
-- Link-check critical `links[].href` (prevents “catalog poisoning”)
+- Link-check critical `links[].href` (prevents “catalog poisoning” + SSRF)
 - CRS + bounds validation (Kansas bounds where applicable)
 - Provenance presence (PROV required before publish)
 - “Classification propagation” checks (prevent public publish of restricted inputs)
 - Raster/vector safety checks (size limits, geometry validity, decompression defenses)
+- Story Node lint:
+  - markdown sanitization (deny raw HTML by default)
+  - ensure referenced layer IDs exist
+  - link safety checks
+  - citations present for claims (policy-driven)
 
-### ⚖️ Governance gates (FAIR + CARE) via policy-as-code
-Use **OPA/Rego** policies via **Conftest** to enforce “default deny” rules for governed surfaces.
+### ⚖️ Governance gates via policy-as-code
+Use **OPA/Rego** via **Conftest** (or equivalent) to enforce “default deny” rules.
 
-✅ Recommended policy tool home:
+<details>
+<summary><strong>📁 Suggested policy pack layout</strong></summary>
 
 ```text
-📁 tools/validation/policy/
+📁 api/scripts/policy/            # (canonical in v13 docs) OR mirror in tools/validation/policy/
 ├─ 📄 README.md
 ├─ 📁 rego/
 │  ├─ 📁 common/
@@ -910,6 +1026,7 @@ Use **OPA/Rego** policies via **Conftest** to enforce “default deny” rules f
 │  ├─ 📁 governance/
 │  │  ├─ 📄 classification_propagation.rego
 │  │  ├─ 📄 sensitive_locations.rego
+│  │  ├─ 📄 cultural_protocols.rego
 │  │  └─ 📄 attribution.rego
 │  ├─ 📁 supply_chain/
 │  │  ├─ 📄 workflows_least_privilege.rego
@@ -922,13 +1039,15 @@ Use **OPA/Rego** policies via **Conftest** to enforce “default deny” rules f
       └─ 📁 bad/
 ```
 
+</details>
+
 Example Conftest call (shape only — adapt to your repo layout):
 
 ```bash
 conftest test \
-  --policy tools/validation/policy/rego \
+  --policy api/scripts/policy/rego \
   --all-namespaces \
-  docs/data/contracts/ data/ .github/workflows/ .github/actions/
+  docs/data/contracts/ data/stac/ data/prov/ .github/workflows/
 ```
 
 ### 🔏 Supply-chain controls (recommended for releases; optional for PRs)
@@ -937,9 +1056,6 @@ conftest test \
 - Reproducibility lane compares rebuilt hashes
 - Signed tags/releases (where feasible)
 
-> [!TIP]
-> Treat “promotion” as the safe boundary: **validate → attest → publish atomically**, rollback-ready. 🧯
-
 ---
 
 ## 🚨 Incident response expectations
@@ -947,9 +1063,10 @@ conftest test \
 KFM treats these as security incidents:
 - secrets exposure
 - sensitive location publication
+- cultural protocol violation (unauthorized access/disclosure)
 - catalog poisoning / unsafe remote fetch behavior
 - retrieval poisoning that affects Focus Mode trust
-- integrity tampering of published artifacts
+- integrity tampering of published artifacts/offline packs
 - unauthorized access to DB/storage/graph
 - compromised CI runners or supply-chain breakage
 
@@ -959,6 +1076,7 @@ KFM treats these as security incidents:
   - flip kill-switch
   - restrict access / revoke tokens
   - disable promotions (fail-closed)
+  - pause offline pack distribution (if applicable)
 - **Preserve evidence**:
   - keep logs, artifacts, provenance records (don’t destroy audit trails)
 - **Correct the catalogs/contracts**:
@@ -973,9 +1091,6 @@ KFM treats these as security incidents:
   - short incident note (private if needed)
   - public advisory if appropriate
 
-> [!NOTE]
-> Data takedowns (sensitive coordinates, restricted archives) should follow incident handling, even if no attacker is involved.
-
 ---
 
 ## 🗂️ Recommended repo security files
@@ -985,59 +1100,61 @@ KFM treats these as security incidents:
 
 ```text
 📦 .github/
- ├─ 📄 SECURITY.md                       # (optional mirror) policy copy
  ├─ 📄 dependabot.yml
  ├─ 📄 CODEOWNERS
  ├─ 📁 workflows/
  │  ├─ 📄 ci.yml
  │  ├─ 📄 codeql.yml
- │  ├─ 📄 contract-validate.yml          # contract schema + governance checks
- │  ├─ 📄 catalog-qa.yml                 # STAC/DCAT quick gate + link safety
- │  ├─ 📄 policy-gate.yml                # Conftest/OPA gate for governed surfaces
- │  ├─ 📄 sbom.yml                       # SBOM generation (release lane)
- │  └─ 📄 attest.yml                     # provenance/build attestations (release lane)
- └─ 📁 actions/
-    ├─ 📁 check-kill-switch/             # fail-closed stop button helper
-    ├─ 📁 policy-gate/                   # conftest wrapper + bundles
-    ├─ 📁 contract-validate/             # contract validator wrapper
-    ├─ 📁 catalog-qa/                    # fast STAC/DCAT checks wrapper
-    ├─ 📁 sbom/                          # SBOM helper
-    └─ 📁 attest/                        # attestation helper
-
-📦 tools/
- └─ 📁 validation/
-    ├─ 📁 contract_validate/             # JSON schema + CLI validator
-    ├─ 📁 catalog_qa/
-    └─ 📁 policy/                        # OPA policies + tests (see tree above)
+ │  ├─ 📄 contract-validate.yml
+ │  ├─ 📄 catalog-qa.yml
+ │  ├─ 📄 policy-gate.yml
+ │  ├─ 📄 sbom.yml
+ │  └─ 📄 attest.yml
 
 📦 docs/
  ├─ 📁 architecture/
- │  └─ 📁 adr/
+ │  ├─ 📁 adr/
+ │  └─ 📄 KFM_REDESIGN_BLUEPRINT_v13.md
+ ├─ 📁 guides/
+ │  └─ 📁 governance/
+ │     ├─ 📄 faircare-oversight.md
+ │     └─ 📄 cultural-protocols.md
  ├─ 📁 security/
  │  ├─ 📄 incident-response.md
+ │  ├─ 📄 secrets-policy.md
+ │  ├─ 📄 threat-model.md
  │  └─ 📄 pgp-public-key.asc
- ├─ 📁 ethics/
- ├─ 📁 review/
- ├─ 📁 data/
- │  └─ 📁 contracts/
- │     ├─ 📁 examples/
- │     └─ 📄 schema.json
- └─ 📁 library/                          # defensive references + GIS + modeling discipline
+ └─ 📁 data/
+    └─ 📁 contracts/
+       ├─ 📁 examples/
+       └─ 📄 schema.json
+
+📦 api/
+ └─ 📁 scripts/
+    └─ 📁 policy/                   # policy pack (OPA/Rego + tests)
+
+📦 tools/
+ └─ 📁 validation/
+    ├─ 📁 contract_validate/
+    ├─ 📁 catalog_qa/
+    └─ 📁 policy/                   # optional mirror (avoid drift)
 
 📦 data/
- ├─ 📁 raw/
+ ├─ 📁 raw/                         # immutable
  ├─ 📁 work/
  ├─ 📁 processed/
- ├─ 📁 stac/                              # or 📁 data/catalog/stac/ (pick one canonical)
- ├─ 📁 catalog/
- │  └─ 📁 dcat/
- └─ 📁 prov/
-
-📦 notebooks/                             # (optional) research notebooks (no secrets)
+ ├─ 📁 stac/
+ │  ├─ 📁 collections/
+ │  └─ 📁 items/
+ ├─ 📁 prov/
+ ├─ 📁 catalogs/                    # OR 📁 catalog/dcat/ (pick one)
+ └─ 📁 graph/
+    └─ 📁 csv/
 
 📦 .kfm/
- └─ 📄 kill-switch.yml                    # optional file-based fail-closed switch
+ └─ 📄 kill-switch.yml
 ```
+
 </details>
 
 ---
@@ -1048,62 +1165,31 @@ KFM treats these as security incidents:
 > These project files inform KFM’s defensive posture (governance, integrity, reproducibility, performance, privacy, and secure engineering).  
 > They are **not** a request for offensive tooling contributions. 🚫🧨
 
-### 🧠 Modeling, simulation, and scientific rigor
-- 📄 `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` — verification/validation, uncertainty, reproducibility discipline
-- 📄 `Understanding Statistics & Experimental Design.pdf` — experimental rigor, bias reduction, valid inference
-- 📄 `graphical-data-analysis-with-r.pdf` — trustworthy exploratory analysis + visualization hygiene
-- 📄 `regression-analysis-with-python.pdf` — regression pitfalls, leakage, reproducible modeling
-- 📄 `Regression analysis using Python - slides-linear-regression.pdf` — modeling fundamentals + assumptions reminders
-- 📄 `think-bayes-bayesian-statistics-in-python.pdf` — uncertainty-aware reasoning and probabilistic reporting
+### 🧭 Core KFM system documentation
+- 📄 `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- 📄 `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`
+- 📄 `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`
+- 📄 `Kansas Frontier Matrix – Comprehensive UI System Overview.pdf`
+- 📄 `📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf`
+- 📄 `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf`
+- 📄 `Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf`
 
-### 🗺️ GIS, cartography, remote sensing, and location ethics
-- 📄 `python-geospatial-analysis-cookbook.pdf` — CRS/geometry validation patterns + geospatial tooling discipline
-- 📄 `making-maps-a-visual-guide-to-map-design-for-gis.pdf` — map design ethics, legibility, and “don’t mislead”
-- 📄 `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` — location privacy + societal impacts
-- 📄 `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` — remote sensing pipelines + provider integration considerations
-- 📄 `Archaeological 3D GIS_26_01_12_17_53_09.pdf` — cultural heritage sensitivity and precision risk
+### 📦 Reference bundles (PDF portfolios; multi-book)
+- 📚 `AI Concepts & more.pdf` *(digital humanism, accountability, AI governance framing)*
+- 📚 `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` *(data management + CI/CD + cryptography references)*
+- 📚 `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` *(GIS ethics + WebGL/3D + archaeology sensitivity)*
+- 📚 `Various programming langurages & resources 1.pdf` *(secure implementation references; defensive awareness)*
 
-### 🗄️ Data management, databases, and scale
-- 📄 `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` — roles, auth, TLS, safe DB usage patterns
-- 📄 `Database Performance at Scale.pdf` — query budgets, timeouts, performance-as-resilience
-- 📄 `Scalable Data Management for Future Hardware.pdf` — scaling patterns (caching, batching) with governance caveats
-- 📄 `Data Spaces.pdf` — access control, data classification, privacy-aware logging, federated governance patterns
+<details>
+<summary><strong>🧠 Why keep these bundles?</strong></summary>
 
-### 🌐 Web, visualization, and asset safety
-- 📄 `responsive-web-design-with-html5-and-css3.pdf` — UI engineering patterns + secure-by-default front-end habits
-- 📄 `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` — WebGL pipelines; treat shaders/assets as untrusted
-- 📄 `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` — image parsing realities; decompression/memory safety mindset
+They serve as a shared reference shelf for:
+- threat modeling + secure engineering habits
+- location privacy and cultural sensitivity
+- data integrity, provenance, and reproducibility discipline
+- secure UI and WebGL asset handling
 
-### 🔐 Security & systems engineering mindset
-- 📄 `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` — defensive network security patterns and threat awareness
-- 📄 `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` — reinforces “untrusted input” thinking for binary/assets (defensive use only)
-- 📄 `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` — concurrency hazards (deadlocks/races) relevant to pipelines/workers
-
-### 🕸️ Graphs, optimization, and algorithmic complexity
-- 📄 `Spectral Geometry of Graphs.pdf` — graph algorithm complexity; motivates query budgets and DoS defenses
-- 📄 `Generalized Topology Optimization for Structural Design.pdf` — heavy compute workflows; motivates resource guardrails and reproducibility
-
-### 🧑‍🤝‍🧑 Digital humanism, ethics, and governance
-- 📄 `Introduction to Digital Humanism.pdf` — human-centered governance, transparency, accountability
-- 📄 `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` — accountability, explainability, prediction vs “prophecy” risks
-- 📄 `Principles of Biological Autonomy - book_9780262381833.pdf` — autonomy + boundaries; caution against “control fallacies” in system design
-
-### 🧰 Programming compendiums (multi-book collections)
-> [!TIP]
-> These are “binder PDFs” containing many language/runtime references used for secure implementation details and CI scripting hygiene.
-
-- 📄 `A programming Books.pdf`
-- 📄 `B-C programming Books.pdf`
-- 📄 `D-E programming Books.pdf`
-- 📄 `F-H programming Books.pdf`
-- 📄 `I-L programming Books.pdf`
-- 📄 `M-N programming Books.pdf`
-- 📄 `O-R programming Books.pdf`
-- 📄 `S-T programming Books.pdf`
-- 📄 `U-X programming Books.pdf`
-
-### 🧾 KFM primary system documentation
-- 📄 `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` — contract-first/provenance-first architecture, Focus Mode/Story Nodes, federation roadmap
+</details>
 
 ---
 
@@ -1114,18 +1200,21 @@ KFM treats these as security incidents:
 - [ ] No secrets committed (checked)
 - [ ] Contract JSON updated/added (if data changed)
 - [ ] STAC/DCAT/PROV updated/added (if publishable artifact changed)
-- [ ] Classification and sensitive precision reviewed (if location data present)
+- [ ] Graph snapshot regenerated (if relevant) and derived from governed artifacts
+- [ ] Classification + sensitive precision reviewed (if location data present)
+- [ ] Cultural protocol tags reviewed (if applicable)
 - [ ] Link safety (no unsafe remote hrefs)
 - [ ] Tests + validation gates passing
-- [ ] Story content cites evidence (if Story Nodes changed)
-- [ ] Focus Mode prompt/rules unchanged or reviewed (if AI layer touched)
+- [ ] Story content is sanitized + cites evidence (if Story Nodes changed)
+- [ ] Focus Mode prompts/rules unchanged or reviewed (if AI layer touched)
+- [ ] Offline pack changes reviewed + signed/attested (if applicable)
 
 ### ✅ “Ready to publish” checklist (promotion lane)
 
 - [ ] All CI gates passing (contract + catalogs + provenance + policy)
 - [ ] SBOM generated (software)
 - [ ] Attestation generated (build provenance)
-- [ ] Dataset BOM manifests present (data releases)
+- [ ] Dataset DBOM manifests present (data releases)
 - [ ] Release notes include security + governance changes (if any)
 - [ ] Kill switch verified OFF (or publish lane must block)
 
