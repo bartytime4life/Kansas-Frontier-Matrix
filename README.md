@@ -1,25 +1,46 @@
 # Kansas Frontier Matrix System (KFM) 🧭🗺️  
-> A **provenance-first, evidence-backed** “living atlas” of Kansas — where **data, maps, narratives, and AI** stay traceable to sources.
+> A **provenance-first, evidence-backed** “living atlas” of Kansas — where **data, maps, narratives, and AI** stay traceable to sources.  
+> **North Star:** *Every pixel and every sentence has receipts.* 🧾✅
 
 ![Status](https://img.shields.io/badge/status-alpha-orange)
-![Scope](https://img.shields.io/badge/focus-geospatial%20%2B%20historical%20knowledge-informational)
-![Core%20Principle](https://img.shields.io/badge/non--negotiable-provenance--first-success)
-![Build](https://img.shields.io/badge/CI-quality%20gates%20%2B%20security%20scans-blue)
-![UI](https://img.shields.io/badge/UI-React%20%7C%20MapLibre%20%7C%20Cesium%20(optional)-informational)
+![Trust](https://img.shields.io/badge/trust-provenance--first-success)
+![Catalogs](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-informational)
+![Policy](https://img.shields.io/badge/policy-OPA%20%2F%20Rego%20%2B%20Conftest-blue)
 ![API](https://img.shields.io/badge/API-FastAPI%20(OpenAPI)%20%2B%20GraphQL-informational)
 ![Graph](https://img.shields.io/badge/Graph-Neo4j%20(semantic%20layer)-informational)
+![DB](https://img.shields.io/badge/Spatial-PostGIS-informational)
+![UI](https://img.shields.io/badge/UI-React%20%7C%20MapLibre%20%7C%20Cesium%20(optional)-informational)
+![Formats](https://img.shields.io/badge/formats-COG%20%7C%20GeoParquet%20%7C%20PMTiles%20%7C%203D%20Tiles-informational)
+![CI](https://img.shields.io/badge/CI-schema%20gates%20%2B%20policy%20gates%20%2B%20security%20scans-blue)
+![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)
+
+---
+
+## 🧭 Start here (fast orientation)
+- 📘 **System + repo blueprint:** `docs/MASTER_GUIDE_v13.md`  
+- 🧱 **Architecture decisions & diagrams:** `docs/architecture/`  
+- 🧩 **Schemas & contracts (STAC/DCAT/PROV/Story Nodes/UI):** `schemas/`  
+- 🗂️ **Catalog outputs:** `data/stac/` · `data/catalog/dcat/` · `data/prov/`  
+- 🧠 **AI + Focus Mode design:** see **AI System Overview** doc + `mcp/` for model cards & evaluations  
+- 🎬 **Stories:** `story_nodes/` (draft + published)
+
+> 💡 KFM is intentionally **contract-first + policy-gated**: you can’t “ship” a dataset, story, or AI answer unless it validates.
 
 ---
 
 ## 📌 Table of Contents
 - [What this is](#-what-this-is)
 - [The Trust Contract](#-the-trust-contract)
+- [Core concepts](#-core-concepts)
 - [What you can do with KFM](#-what-you-can-do-with-kfm)
 - [Architecture at a glance](#-architecture-at-a-glance)
+- [Policy + QA gates](#-policy--qa-gates)
 - [Repository layout](#-repository-layout)
 - [Quickstart](#-quickstart)
 - [Data lifecycle](#-data-lifecycle)
 - [Story Nodes + Focus Mode](#-story-nodes--focus-mode)
+- [AI system + automation](#-ai-system--automation)
+- [Simulation & modeling](#-simulation--modeling)
 - [APIs](#-apis)
 - [Governance, ethics, and safety](#-governance-ethics-and-safety)
 - [Tooling](#-tooling)
@@ -31,44 +52,74 @@
 ---
 
 ## 🌾 What this is
-**Kansas Frontier Matrix (KFM)** is an open-source **geospatial + historical knowledge system** (a “living atlas” of Kansas). It:
+**Kansas Frontier Matrix (KFM)** is an open-source **geospatial + historical knowledge system** (a “living atlas” of Kansas). It is designed to:
 
-- ingests **heterogeneous sources** (rasters, vectors, documents, time series, etc.)
-- publishes governed metadata catalogs:
-  - **STAC** for spatial assets
-  - **DCAT** for dataset discovery
-  - **PROV** for lineage (how outputs were produced)
-- builds a semantically-structured **Neo4j knowledge graph** (people ⇄ places ⇄ events ⇄ documents ⇄ datasets)
-- serves evidence through **contracted APIs** into a combined **map + narrative UI**
-- supports governed storytelling via **Story Nodes**, and evidence-backed Q&A via **Focus Mode**
+- ingest **heterogeneous sources** (rasters, vectors, documents, time series, sensor/streaming feeds)
+- publish governed **metadata catalogs**:
+  - **STAC** for spatial assets (COGs, tiles, features, 3D)
+  - **DCAT** for dataset discovery (JSON-LD)
+  - **PROV** for lineage (how outputs were produced, by whom/what, when)
+- build a semantically-structured **Neo4j knowledge graph**  
+  *(people ⇄ places ⇄ events ⇄ documents ⇄ datasets ⇄ processing runs)*
+- serve evidence through **contracted APIs** into a combined **map + narrative UI**
+- support governed storytelling via **Story Nodes**
+- enable **Focus Mode**: AI-assisted Q&A that is **citation-backed** and **policy-gated**
 
-> 🧠 KFM is designed so **every narrative claim can be traced to versioned evidence**, and **every derived data product has explicit lineage**.
+> 🧠 KFM is built so **every narrative claim can be traced to versioned evidence**, and **every derived data product has explicit lineage** — even simulation outputs.
 
 ---
 
 ## 🔒 The Trust Contract
-These are the project’s “guardrails” — if we violate them, we’re not building KFM anymore.
+These are the project’s guardrails — if we violate them, we’re not building KFM anymore.
 
 ### ✅ Non‑negotiables
 - **Pipeline ordering is absolute**  
-  **ETL → STAC/DCAT/PROV catalogs → Graph → API → UI → Story Nodes → Focus Mode**
+  **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 - **API boundary rule**  
-  The **frontend must never query Neo4j directly** — access is only through the governed API layer (contracts + redaction).
+  The **frontend must never query Neo4j directly** — only through the governed API layer (contracts + redaction).
 - **Provenance-first**  
   If it shows up in the UI (or in an AI answer), it must be traceable back to cataloged sources and provable processing — no “mystery layers.”
 - **Deterministic, idempotent ETL**  
   Pipelines are config-driven, reproducible, and safe to re-run.
 - **Evidence-first narrative**  
   No unsourced content in Story Nodes or Focus Mode. AI-generated text must be clearly labeled and accompanied by provenance/confidence metadata.
+- **Policy is enforcement, not a suggestion**  
+  A **Policy Pack** (OPA/Rego + checks) can **block** promotion of data, stories, or answers if requirements aren’t met.
 - **Governance & sovereignty are explicit**  
   FAIR/CARE principles, licensing clarity, sensitivity flags, and review gates are part of the definition of done.
+
+---
+
+## 🧩 Core concepts
+### 🧾 The Catalog Triplet (KFM’s “receipt system”)
+Every publishable dataset produces the **Triplet**:
+
+- **STAC** → *what exists as geospatial assets (items/collections)*
+- **DCAT** → *how people discover & reuse the dataset (JSON-LD record)*
+- **PROV** → *how it was made (lineage + run metadata)*
+
+> If a layer is visible, the system can always answer: **what is it, where did it come from, and how was it made?**
+
+### 🧱 “Contracts first”
+Before code ships, KFM expects:
+- schemas (JSON Schema / profiles) ✅
+- policy rules (OPA/Rego) ✅
+- testable invariants ✅
+
+### 🧰 “Runs are first-class”
+A pipeline run is treated like a build artifact:
+- run config + environment
+- checksums / manifests
+- output inventory
+- PROV bundle
+- (optional) release bundle metadata (SBOM/supply chain notes)
 
 ---
 
 ## ✨ What you can do with KFM
 ### 🗺️ Map + Timeline exploration
 - Toggle datasets like layers in a GIS (vector + raster + tiles)
-- Navigate time with a **timeline slider**
+- Navigate time with a **timeline slider** ⏳
 - Click features for details, charts, and provenance
 - 2D via **MapLibre**, optional 3D via **Cesium** (including **3D Tiles** streaming)
 
@@ -83,73 +134,105 @@ These are the project’s “guardrails” — if we violate them, we’re not b
 
 ### 🧠 Focus Mode (AI assistant with receipts)
 - Ask questions about the current map view, place, time window, or dataset
-- Answers are **graph-grounded** and **citation-backed**
-- The system can fetch dataset provenance to cite sources rather than guessing
+- Answers are **graph-grounded**, **catalog-backed**, and **citation-backed**
+- If evidence is insufficient, Focus Mode must **ask for refinement or decline** (no hallucinated certainty)
+
+### 📦 Offline “education packs” (planned / evolving)
+- Ship curated bundles (datasets + stories + tiles) for classrooms and field use  
+  *(PMTiles / COGs / lightweight catalogs + a PWA-style UI)*
 
 ---
 
 ## 🏗️ Architecture at a glance
 ```mermaid
 flowchart LR
-  subgraph Data
-    A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views"]
-    C --> E["PROV Lineage Bundles"]
+  subgraph Data["📦 Data + Processing"]
+    A["Raw Sources<br/>(data/raw)"] --> B["ETL + Normalization<br/>(pipelines/)"]
+    B --> W["Work Outputs<br/>(data/work)"]
+    W --> P["Published Outputs<br/>(data/processed)"]
+    P --> C["STAC Items + Collections<br/>(data/stac)"]
+    P --> D["DCAT Dataset Views<br/>(data/catalog/dcat)"]
+    P --> E["PROV Lineage Bundles<br/>(data/prov)"]
   end
 
-  C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
-  I --> J["Story Nodes (governed narratives)"]
-  J --> K["Focus Mode (provenance-linked context bundle)"]
+  C --> G["Neo4j Graph<br/>(refs back to catalogs)"]
+  D --> G
+  E --> G
+
+  G --> H["API Layer<br/>(contracts + redaction + policy)"]
+  H --> I["Map UI<br/>(React · MapLibre · optional Cesium)"]
+  I --> J["Story Nodes<br/>(governed narratives)"]
+  I --> K["Focus Mode<br/>(policy-gated AI Q&A)"]
 ```
 
 > 🧩 Every stage consumes the outputs of the previous stage — so you can trace a public-facing story sentence back to the exact input sources and transformations.
 
 ---
 
+## 🛡️ Policy + QA gates
+KFM treats data like code: **it must compile** (validate + pass policy) before it can ship.
+
+### ✅ Typical CI “hard gates”
+| Gate 🧱 | What it prevents 🚫 | Where it runs ⚙️ |
+|---|---|---|
+| Schema validation | broken contracts, malformed metadata | CI + local |
+| STAC validation | invalid items/collections | CI + local |
+| DCAT JSON-LD validation | broken discovery records | CI + local |
+| PROV validation | missing lineage / incomplete run trace | CI + local |
+| Geometry/CRS checks | invalid geometries, missing CRS | CI + pipelines |
+| License + attribution checks | unknown or incompatible licenses | CI + review |
+| Sensitivity policy checks | leaking restricted info | CI + API runtime |
+| Link integrity checks | dead citations, broken references | CI |
+| Security scans (deps/secrets) | supply chain & secret leaks | CI |
+| Release manifests/checksums | unverifiable releases | CI + releases |
+
+> 🔐 **Fail-closed** is the default: if a dataset/story/answer can’t prove compliance, it does not promote.
+
+---
+
 ## 🗂️ Repository layout
-This repo follows a **contract-first + evidence-first** structure (v13 blueprint). The key idea: every subsystem has **one canonical home** (no duplicate “mystery” folders).
+This repo follows a **contract-first + evidence-first** structure (v13 blueprint). One canonical home per subsystem — no duplicate “mystery” folders.
 
 ```text
 📁 .github/
-  └─ 📁 workflows/                         # CI, security scans, validation gates
+  └─ 📁 workflows/                        # CI, security scans, validation + policy gates
+
+📁 api/                                   # FastAPI backend + GraphQL (governed boundary)
+  ├─ 📁 src/
+  │  ├─ 📁 domain/                        # Canonical models (contracts reflected here)
+  │  ├─ 📁 services/                      # Use-cases (Focus Mode orchestration lives here)
+  │  ├─ 📁 adapters/                      # PostGIS / Neo4j / storage / search adapters
+  │  └─ 📁 ...                            # auth, routers, etc.
+  └─ 📁 scripts/
+     └─ 📁 policy/                        # OPA/Rego policy pack + test harness (Conftest)
+
+📁 web/                                   # Frontend app (React + MapLibre + optional Cesium)
+📁 pipelines/                             # ETL jobs, transforms, streaming watchers
 
 📁 data/
+  ├─ 📁 raw/                              # Raw source drops (read-only; checksums tracked)
+  ├─ 📁 work/                             # Intermediate outputs
+  │  └─ 📁 sims/                           # kfm-sim-run scenario work outputs (deterministic)
+  ├─ 📁 processed/                        # Published outputs (COG/GeoParquet/PMTiles/3D Tiles)
   ├─ 📁 stac/
-  │  ├─ 📁 collections/                    # STAC Collections
-  │  └─ 📁 items/                          # STAC Items
+  │  ├─ 📁 collections/                   # STAC Collections
+  │  └─ 📁 items/                         # STAC Items
   ├─ 📁 catalog/
-  │  └─ 📁 dcat/                           # DCAT outputs (JSON-LD)
-  ├─ 📁 prov/                               # PROV bundles (per run / per dataset)
-  ├─ 📁 graph/
-  │  ├─ 📁 csv/                             # Graph import CSV exports
-  │  └─ 📁 cypher/                          # Optional post-import scripts
-  ├─ 📁 <domain>/                           # hydrology/, air-quality/, historical/, etc.
-  │  ├─ 📁 raw/                             # Raw source data (read-only)
-  │  ├─ 📁 work/                            # Intermediate outputs
-  │  ├─ 📁 processed/                       # Final processed outputs
-  │  ├─ 📁 mappings/                        # Dataset→STAC/DCAT/PROV mapping notes (optional)
-  │  └─ 📄 README.md                        # Domain runbook
-  └─ 📄 README.md                           # General data catalog README
+  │  └─ 📁 dcat/                          # DCAT outputs (JSON-LD)
+  ├─ 📁 prov/                              # PROV bundles (per run / per dataset)
+  └─ 📁 graph/
+     ├─ 📁 csv/                            # Graph import CSV exports
+     └─ 📁 cypher/                         # Constraints / post-import scripts
 
-📁 docs/
-  ├─ 📄 MASTER_GUIDE_v13.md                 # Canonical pipeline & structure reference
-  ├─ 📄 glossary.md
-  ├─ 📁 architecture/                       # Blueprints, ADRs, diagrams
-  ├─ 📁 standards/                          # STAC/DCAT/PROV profiles, repo standards
-  ├─ 📁 templates/                          # Story Node + API contract templates
-  ├─ 📁 governance/                         # ethics, sovereignty, review gates
-  └─ 📁 reports/
-     └─ 📁 story_nodes/
-        ├─ 📁 draft/
-        └─ 📁 published/
-           └─ 📁 <story_slug>/
-              ├─ 📄 story.md
-              └─ 📁 assets/
+📁 story_nodes/                            # Story Nodes (governed narratives)
+  ├─ 📁 draft/
+  └─ 📁 published/
+     └─ 📁 <story_slug>/
+        ├─ 📄 story.md
+        ├─ 📄 story.json
+        └─ 📁 assets/
 
-📁 schemas/                                  # JSON Schemas for STAC/DCAT/PROV/story/ui/telemetry
+📁 schemas/                                # JSON Schemas for STAC/DCAT/PROV/story/ui/telemetry
   ├─ 📁 stac/
   ├─ 📁 dcat/
   ├─ 📁 prov/
@@ -157,20 +240,23 @@ This repo follows a **contract-first + evidence-first** structure (v13 blueprint
   ├─ 📁 ui/
   └─ 📁 telemetry/
 
-📁 src/
-  ├─ 📁 pipelines/                          # ETL jobs, transforms (domain pipelines)
-  ├─ 📁 graph/                              # Graph build code (ontology bindings, ingest, constraints)
-  └─ 📁 server/                             # API boundary + contracts + redaction
+📁 tools/
+  ├─ 📁 validation/                        # Validators, link checks, policy checks
+  └─ 📁 rs/                                # Rust tooling (fast validators/tilers/etc.)
 
-📁 web/                                      # Frontend app (React + MapLibre + optional Cesium)
-📁 tools/                                    # Validators, utilities, devops helpers
-  └─ 📁 rs/                                  # Rust tooling (fast validators/tilers/etc.)
+📁 docs/
+  ├─ 📄 MASTER_GUIDE_v13.md                # Canonical pipeline & structure reference
+  ├─ 📄 glossary.md
+  ├─ 📁 architecture/                      # Blueprints, ADRs, diagrams
+  ├─ 📁 standards/                         # STAC/DCAT/PROV profiles, repo standards
+  ├─ 📁 governance/                        # ethics, sovereignty, review gates
+  └─ 📁 guides/                            # pipeline + story node how-tos
 
-📁 mcp/                                      # Methods & Computational Experiments (runs, notebooks, model cards)
-📁 tests/                                    # Unit/integration tests
-📁 releases/                                 # Versioned release bundles, manifests, SBOMs
+📁 mcp/                                    # Methods & Computational Experiments (runs, model cards)
+📁 tests/                                  # Unit/integration tests
+📁 releases/                               # Versioned bundles, manifests, checksums, SBOMs
 
-📄 README.md                                 # You are here 🙂
+📄 README.md                                # You are here 🙂
 📄 LICENSE
 📄 CITATION.cff
 📄 CONTRIBUTING.md
@@ -183,16 +269,16 @@ This repo follows a **contract-first + evidence-first** structure (v13 blueprint
 ---
 
 ## ⚡ Quickstart
-> 🧰 KFM is intentionally modular. The fastest path is Docker for dependencies + local dev for API/UI.
+> 🧰 KFM is intentionally modular. Use Docker for dependencies + local dev for API/UI.
 
 ### 1) Prerequisites
 - **Docker + Docker Compose** (recommended)
 - **Python 3.11+** (API + pipelines)
 - **Node.js 18+** (web UI)
 - **Rust stable** (optional, for `tools/rs`)
-- Optional but common in geospatial stacks: **GDAL**, **PostgreSQL/PostGIS** tooling
+- Common in geospatial stacks: **GDAL** + **PostgreSQL/PostGIS** tooling
 
-### 2) Bring up core services (recommended)
+### 2) Bring up core services
 ```bash
 cp .env.example .env
 docker compose up -d
@@ -200,7 +286,7 @@ docker compose up -d
 
 ### 3) Run the API (example)
 ```bash
-cd src/server
+cd api
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn kfm_server.main:app --reload
@@ -217,32 +303,29 @@ npm run dev
 - API docs (OpenAPI/Swagger): `http://localhost:8000/docs` *(or your configured port)*
 - UI: `http://localhost:5173` *(or your configured port)*
 
-> 🧭 For the canonical workflows and directory rules, start with **docs/MASTER_GUIDE_v13.md**.
-
 ---
 
 ## 📦 Data lifecycle
-KFM treats data like code: **it must compile** (validate) before it can ship.
+KFM treats data like code: **it must compile** before it can ship.
 
 ### Required staging (always)
-- `data/<domain>/raw/` → **ingest only** (read-only sources)
-- `data/<domain>/work/` → intermediate transforms
-- `data/<domain>/processed/` → published outputs
+- `data/raw/` → **ingest only** (read-only source drops + checksums)
+- `data/work/` → intermediate transforms (re-runnable)
+- `data/processed/` → published outputs (what the world can depend on)
 
 ### Required boundary artifacts (before “published”)
 Every published dataset must generate:
-- **STAC** records  
-  `data/stac/collections/` and `data/stac/items/`
-- **DCAT** dataset entry (JSON-LD)  
-  `data/catalog/dcat/`
-- **PROV** lineage bundle  
-  `data/prov/`
+- **STAC** records → `data/stac/collections/` + `data/stac/items/`
+- **DCAT** dataset entry (JSON-LD) → `data/catalog/dcat/`
+- **PROV** lineage bundle → `data/prov/`
 
 ### “No mystery layers”
 If it can be toggled in the UI, it must have:
-- a data contract (source, license, spatial/temporal extent, processing steps, etc.)
-- validators passing in CI
-- provenance that the API/Focus Mode can cite
+- a dataset contract + discoverability metadata (DCAT)
+- spatial asset metadata (STAC)
+- lineage (PROV)
+- validators + policy checks passing in CI
+- provenance visible to users (not hidden behind “trust me”)
 
 ---
 
@@ -255,14 +338,62 @@ A Story Node is typically:
 
 **Story Node rules (high level):**
 - Every factual claim has a citation to cataloged sources
-- Key entities (people/places/events/documents) reference stable graph IDs
+- Key entities (people/places/events/documents) reference stable graph IDs (or stable dataset IDs)
 - Facts vs interpretation are clearly separated
 
 ### Focus Mode = AI answers with evidence
 Focus Mode:
-- relies on the graph as the contextual knowledge base
+- relies on the **graph + catalogs** as the contextual knowledge base
 - surfaces references and provenance for datasets, events, and documents
-- is guarded by “hard gate” rules to prevent unsourced claims from entering the system
+- is guarded by **hard-gate rules** to prevent unsourced claims entering the system
+
+> 🧾 Focus Mode is not “chat that guesses.” It’s **retrieval + grounding + receipts + policy**.
+
+---
+
+## 🤖 AI system + automation
+KFM’s AI design is intentionally boring in the best way: **auditable, policy-gated, and provenance-linked**.
+
+### 🧠 Focus Mode pipeline (conceptual)
+```mermaid
+flowchart TD
+  Q["User question<br/>+ map context"] --> R["Retrieve evidence<br/>(STAC/DCAT/PROV + Graph)"]
+  R --> F["Filter & redact<br/>(Policy Pack / sensitivity)"]
+  F --> B["Build evidence bundle<br/>(citations + graph paths + provenance)"]
+  B --> A["Answer generator<br/>(LLM)"]
+  A --> V["Verifier<br/>(must cite; must respect policy)"]
+  V --> U["UI output<br/>(answer + citations + confidence)"]
+```
+
+### 🛠️ Watcher → Planner → Executor (W‑P‑E) agents (optional / gated)
+The project proposes a structured automation loop:
+- **Watcher**: detects stale metadata, broken links, drift, missing provenance, schema changes
+- **Planner**: proposes a minimal, reviewable change plan
+- **Executor**: opens PRs with deterministic fixes (never silently edits production)
+
+> 🧯 **Kill-switch** is part of the design: if automation becomes risky, it can be disabled globally.
+
+### 🔐 AI safety posture (high level)
+- prompt-injection resistant retrieval (policy + allowlists)
+- citations required for factual claims
+- sensitive data redaction enforced by policy
+- telemetry & evals tracked in `mcp/` (model cards, drift monitoring, regression tests)
+
+---
+
+## 🧪 Simulation & modeling
+KFM treats simulations the same way it treats datasets: **as publishable, reproducible evidence**.
+
+### `kfm-sim-run` pattern (planned / evolving)
+- deterministic simulation runner (inputs + configuration + version pins)
+- outputs stored under `data/work/sims/` then promoted to `data/processed/`
+- simulation results get STAC/DCAT/PROV like any other dataset
+- UI can render outputs as time-aware layers + dashboards
+
+### Why this matters
+- scenario planning (hydrology, climate impacts, land use change)
+- uncertainty becomes visible (confidence bands, model assumptions)
+- “model output” becomes **auditable public knowledge**, not a black box
 
 ---
 
@@ -273,20 +404,32 @@ Focus Mode:
 
 ### GraphQL
 - Best for relationship-heavy queries (people ⇄ events ⇄ places)
-- The resolver layer should guard expensive queries (depth limits, pagination, etc.)
+- Resolver guardrails: depth limits, pagination, cost controls
 
-> 🧱 API boundary rule reminder: UI uses APIs; APIs talk to PostGIS + Neo4j + storage.
+### Tiles & assets (common patterns)
+- raster via COG (range requests) + optional caching
+- vector tiles via PostGIS (MVT) or prebuilt PMTiles
+- 3D via 3D Tiles (Cesium)
+
+> 🧱 Boundary reminder: UI uses APIs; APIs talk to PostGIS + Neo4j + storage.
 
 ---
 
 ## 🛡️ Governance, ethics, and safety
 KFM is built to be **adoptable by institutions** (schools, libraries, agencies) without compromising trust:
 
+### 🌿 Governance principles
 - **FAIR**: findable, accessible, interoperable, reusable metadata
-- **CARE / sovereignty**: explicitly consider sensitive data and community impact
+- **CARE / sovereignty**: explicitly consider sensitive data & community impact
 - **Licensing clarity**: dataset licenses are first-class metadata (no ambiguity)
-- **Review gates**: contributions are validated (schemas, provenance completeness, link integrity, security scans)
-- **Security posture**: secrets scanning, dependency scanning, responsible disclosure
+- **Review gates**: contributions validated (schemas, provenance, link integrity, policy)
+- **Public trust UX**: provenance isn’t hidden — it’s part of the UI
+
+### 🔐 Security posture
+- secrets scanning + dependency scanning
+- policy-as-code enforcement (OPA/Rego)
+- supply chain posture (manifests, checksums; SBOM concepts included in roadmap)
+- responsible disclosure (see `SECURITY.md`)
 
 ---
 
@@ -296,7 +439,7 @@ Typical responsibilities:
 - validate dataset contracts (STAC/DCAT/PROV + KFM extensions)
 - run link checks, schema checks, policy checks
 - generate graph import artifacts
-- produce release manifests + SBOMs
+- produce release manifests + checksums (+ SBOM scaffolding where used)
 
 ### `tools/rs/` (Rust tooling 🚀)
 Rust is ideal for:
@@ -304,33 +447,34 @@ Rust is ideal for:
 - tiling / packaging utilities
 - batch transforms that benefit from speed and memory safety
 
-> 🔧 See `tools/rs/README.md` for Rust-specific workflows and crates.
-
 ### `mcp/` (Methods & Computational Experiments)
 A governed space for:
 - reproducible notebooks
-- model cards
-- experiment runs and outputs that must also be cataloged + provenanced if promoted to “published” datasets
+- model cards + eval results
+- experiment runs and outputs that must be cataloged + provenanced if promoted to “published”
 
 ---
 
 ## 🧭 Roadmap
-A few directionally consistent goals (summarized from project planning):
+Directionally consistent goals (from current project docs + future proposals):
 
-### Near-term
-- ✅ **Dataset schema + validator** (treat metadata “like code”)
-- ✅ **CI catalog QA gates** (prevent broken provenance, missing licenses, invalid geometries/CRS)
-- 🛰️ **Remote sensing pipeline templates** (including Earth Engine-backed workflows)
-- 🗺️ **Map + timeline MVP hardening** (performance, layer ergonomics, accessibility)
+### Near-term ✅🧱
+- ✅ Schema + validator mindset (“metadata must compile”)
+- ✅ CI catalog QA gates (broken provenance, missing licenses, invalid geometry/CRS)
+- 🧾 Provenance UX hardening (make it impossible to ignore receipts)
+- 🛰️ Remote sensing pipeline templates (Earth Engine / COG-first patterns)
 
-### Medium-term
-- 🧱 Story Builder GUI (make Story Nodes accessible to non-devs)
-- 📦 Offline “education packs” / PWA mode
-- 🧩 Richer evidence panels (uncertainty/completeness surfaced in UI)
+### Medium-term 🧩🚀
+- 🧱 Story Builder GUI (Story Nodes for non-devs)
+- 📦 Offline “education packs” (PWA mode + curated tiles/datasets/stories)
+- 🧪 Simulation runner & dashboards (`kfm-sim-run`)
+- 🤖 W‑P‑E automation agents (policy-gated PRs only)
 
-### Long-term
-- 🌐 Federation (“Frontier Matrix” blueprint for other regions, interoperable hubs)
-- 📚 DOI-backed releases for data snapshots + research workflows (Binder/Colab integrations)
+### Long-term 🌐✨
+- 🌍 Federation (“Frontier Matrix” blueprint for other regions)
+- 🧠 GeoXAI / uncertainty-first UI (confidence + completeness as first-class)
+- 🥽 AR/VR extensions (museum/field overlays; guided tours)
+- 📚 DOI-backed releases for data snapshots + research workflows
 
 ---
 
@@ -338,79 +482,215 @@ A few directionally consistent goals (summarized from project planning):
 KFM welcomes contributions from **developers and domain experts** (historians, educators, scientists, cartographers).
 
 ### Contribution types (how to think about changes)
-- **(A) New data / domain**: add raw sources + pipeline + publish STAC/DCAT/PROV
+- **(A) New data / domain**: add raw sources → pipeline → publish STAC/DCAT/PROV
+- **(B) Story Nodes**: add or improve narratives with citations + map steps
 - **(C) Graph enrichment**: new entity types, ontology bindings, new relationships
 - **(D) API endpoint/service**: contract-first (schemas first), then implementation + tests
 - **(E) UI layer/feature**: register layers; ensure provenance is visible in UI
 
-### Definition of done (practical)
+### Definition of done ✅
 A contribution is “done” when:
 - schemas/contracts validate
 - provenance is complete (STAC/DCAT/PROV)
+- policy pack passes (sensitivity/licensing rules)
 - tests pass
-- governance requirements are addressed (FAIR/CARE, licensing, sensitivity)
+- governance requirements addressed (FAIR/CARE, licensing, sensitivity)
 - CI is green ✅
 
 ---
 
 ## 📚 Project library
-This repo is deliberately “research-backed.” The PDFs below inform architecture, modeling, geospatial pipelines, UI, governance, and security posture.
+This repo is deliberately “research-backed.” The PDFs below inform architecture, modeling, geospatial pipelines, UI, governance, security posture, and implementation.
+
+> 🗃️ **Important:** Several files are **PDF portfolios** (they contain embedded PDFs).  
+> To extract embedded files on Linux/macOS:  
+> `pdfdetach -saveall "<portfolio>.pdf"` *(Poppler)*
 
 <details>
-  <summary><b>📦 Library index (click to expand)</b></summary>
+  <summary><b>🧭 Core KFM design docs (project source-of-truth)</b></summary>
 
-### 🧪 Scientific modeling, statistics, and inference
-- *Scientific Modeling and Simulation — A Comprehensive NASA‑Grade Guide*  
-- *Regression Analysis with Python* (book)
-- *Regression analysis using Python* (slides: linear regression)
-- *Understanding Statistics & Experimental Design*
-- *Think Bayes: Bayesian Statistics in Python*
-- *Graphical Data Analysis with R*
+- 🌟 **Kansas Frontier Matrix – Latest Ideas & Future Proposals** *(future-facing backlog + QA/security ideas)*
+- 📚 **KFM Data Intake – Technical & Design Guide** *(how ingestion, validation, and promotion works)*
+- 🧠 **KFM – AI System Overview 🧭🤖** *(Focus Mode + W‑P‑E automation architecture)*
+- 🏗️ **KFM – Comprehensive Architecture, Features, and Design** *(end-to-end system blueprint)*
+- 🧾 **KFM – Comprehensive Technical Documentation** *(deep technical spec + governance posture)*
+- 🖥️ **KFM – Comprehensive UI System Overview** *(map + timeline + story + evidence UX)*
+- 💡 **Innovative Concepts to Evolve KFM** *(AR/digital twins/community verification ideas)*
 
-### 🛰️ GIS, mapping, remote sensing, and 3D geospatial
-- *Cloud‑Based Remote Sensing with Google Earth Engine — Fundamentals and Applications*
-- *Python Geospatial Analysis Cookbook*
-- *Making Maps — A Visual Guide to Map Design for GIS*
-- *Mobile Mapping: Space, Cartography and the Digital*
-- *Archaeological 3D GIS*
-- *WebGL Programming Guide — Interactive 3D Graphics with WebGL*
+</details>
 
-### 🗄️ Databases, performance, and scalable data systems
-- *PostgreSQL Notes for Professionals*
-- *Database Performance at Scale*
-- *Scalable Data Management for Future Hardware*
-- *Data Spaces* (FAIR governance + architecture framing)
+<details>
+  <summary><b>🤖 AI Concepts & more (PDF portfolio: embedded documents)</b></summary>
 
-### 🧠 Graph theory + structure discovery
-- *Spectral Geometry of Graphs* (useful for clustering/centrality thinking in knowledge graphs)
+- A Developer’s Guide to Building AI Applications - English.pdf  
+- A Gentle Introduction to Symbolic Computation.pdf  
+- AI Foundations of Computational Agents 3rd Ed.pdf  
+- Artificial Intelligence & Machine Learning in Health Care & Medical Sciences.pdf  
+- Artificial Neural Networks Models & Applications.pdf  
+- Artificial-neural-networks-an-introduction.pdf  
+- Basics of Linear Algebra for machine Learning  
+- Data Science &-  Machine Learning  
+- Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf.pdf  
+- Deep Learning with Python.pdf  
+- Foundations of Machine Learning - Foundations_of_Machine_Learning.pdf  
+- Gradient Expectations - Stucture, Origins, & Synthesis Of Predictive Neural Networks.pdf  
+- Introduction to Digital Humanism.pdf  
+- Introduction to Machine Learning with Python - Introduction to Machine Learning with Python.pdf  
+- Neural Network Architectures and Activation Functions_ A Gaussian Process Approach - 106621.pdf  
+- Neural Network Toolbox User_s Guide - nnet.pdf  
+- Neural Networks Using C# Succinctly - Neural_Networks_Using_C_Sharp_Succinctly.pdf  
+- On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf  
+- Pattern Recognition and Machine Learning.pdf  
+- Principles of Biological Autonomy - book_9780262381833.pdf  
+- Recurrent Neural Networks for Temporal Data Processing.pdf  
+- Regression analysis using Python - slides-linear-regression.pdf  
+- Volume 1 Machine Learning under Resource Constraints - Fundamentals .pdf  
+- Volume 2 Machine Learning under Resource Constraints - Discovery in Physics .pdf  
+- Volume 3 Machine Learning under Resource Constraints - Applications.pdf  
+- artificial-intelligence-a-modern-approach.pdf  
+- artificial-neural-networks-in-real-life-applications.pdf  
+- deep-learning-in-python-prerequisites.pdf  
+- haykin.neural-networks.3ed.2009.pdf  
+- java-artificial-intelligence-made-easy-w-java-programming.pdf  
+- neural networks and deep learning.pdf  
+- neural-network-design.pdf  
+- neural-network-learning-theoretical-foundations.pdf  
+- python-machine-learning-a-crash-course-for-beginners-to-understand-machine-learning-artificial-intelligence-neural-networks-and-deep-learning-with-scikit-learn-tensorflow-and-keras.pdf  
+- regression-analysis-with-python.pdf  
+- understanding-machine-learning-theory-algorithms.pdf  
 
-### 🧩 Design, systems thinking, and humanistic framing
-- *Introduction to Digital Humanism*
-- *Principles of Biological Autonomy*
+</details>
 
-### ⚖️ Law, evidence integrity, and ML governance
-- *On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age*
+<details>
+  <summary><b>🗄️ Data management, data science, Bayesian methods (PDF portfolio: embedded documents)</b></summary>
 
-### 🛡️ Security & secure engineering references
-- *Ethical Hacking and Countermeasures — Secure Network Infrastructures* (defense-oriented)
-- *Gray Hat Python* (security awareness / defensive understanding)
+- An Introduction to Statistical Learning.pdf  
+- Architecture of Advanced Numerical Analysis Systems - 978-1-4842-8853-5.pdf  
+- Bayesian Methods for Hackers Probabilistic Programming and Bayesian Inference.pdf  
+- Bayesian computational methods.pdf  
+- Bio-Inspired Computational Algorithms & Their Applications.pdf  
+- Comprehensive CI_CD Guide for Software and Data Projects.pdf  
+- Data Mining Concepts & applictions.pdf  
+- Data Science_ Theories, Models, Algorithms, and Analytics - DSA_Book.pdf  
+- Data Spaces.pdf  
+- Database Performance at Scale.pdf  
+- Foundations of Machine Learning - Foundations_of_Machine_Learning.pdf  
+- Genetic Programming New Approaches & Successfull Applications.pdf  
+- Git Notes for Professionals - GitNotesForProfessionals.pdf  
+- Gradient Expectations - Stucture, Origins, & Synthesis Of Predictive Neural Networks.pdf  
+- Haskell Notes for Professionals - HaskellNotesForProfessionals.pdf  
+- Hibernate Notes for Professionals - HibernateNotesForProfessionals.pdf  
+- Recurrent Neural Networks for Temporal Data Processing.pdf  
+- Scalable Data Management for Future Hardware.pdf  
+- Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf  
+- The Data Engineering Cookbook.pdf  
+- The Data Lakehouse Platform For Dummies.pdf  
+- The Elements of Statistical Learning.pdf  
+- Theory & Practice of Cryptography & Network Security Protocols & Technologies.pdf  
+- Understanding Statistics & Experimental Design.pdf  
+- an-introduction-to-the-finite-element-method.pdf  
+- bayes-rule-a-tutorial-introduction-to-bayesian-analysis.pdf  
+- clean-architectures-in-python.pdf  
+- haykin.neural-networks.3ed.2009.pdf  
+- implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf  
+- numerical-methods-in-engineering-with-matlab.pdf  
+- think-bayes-bayesian-statistics-in-python.pdf  
 
-### 🖼️ Media formats and compression
-- *Compressed Image File Formats (JPEG/PNG/GIF/XBM/BMP)*
+</details>
 
-### 📚 Programming mega-packs (multi-book compilations)
-- *A programming Books*
-- *B‑C programming Books*
-- *D‑E programming Books*
-- *F‑H programming Books*
-- *I‑L programming Books*
-- *M‑N programming Books*
-- *O‑R programming Books*
-- *S‑T programming Books*
-- *U‑X programming Books*
+<details>
+  <summary><b>🛰️ Maps, virtual worlds, archaeology, geospatial WebGL (PDF portfolio: embedded documents)</b></summary>
 
-### 🏗️ Specialized modeling references
-- *Generalized Topology Optimization for Structural Design*
+- Archaeological 3D GIS_26_01_12_17_53_09.pdf  
+- Computer Graphics using JAVA 2D & 3D.pdf  
+- DesigningVirtualWorlds.pdf  
+- Geographic Information System Basics - geographic-information-system-basics.pdf  
+- Google Earth Engine Applications.pdf  
+- Map Reading & Land Navigation.pdf  
+- Spectral Geometry of Graphs.pdf  
+- Understanding_Map_Projections.pdf - 710understanding_map_projections.pdf  
+- geoprocessing-with-python.pdf  
+- google-maps-javascript-api-cookbook.pdf  
+- graphical-data-analysis-with-r.pdf  
+- making-maps-a-visual-guide-to-map-design-for-gis.pdf  
+- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf  
+- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf  
+
+</details>
+
+<details>
+  <summary><b>🧑‍💻 Various programming languages & engineering references (PDF portfolio: embedded documents)</b></summary>
+
+- Algorithms Notes for Professionals - AlgorithmsNotesForProfessionals.pdf  
+- An Introduction to Spatial Data Analysis and Visualisation in R - An Introduction to Spatial Data Analysis in R.pdf  
+- Angular 2+ Notes for Professionals - Angular2NotesForProfessionals.pdf  
+- AngularJS Notes for Professionals - AngularJSNotesForProfessionals.pdf  
+- Bash Notes for Professionals - BashNotesForProfessionals.pdf  
+- C Notes for Professionals - CNotesForProfessionals.pdf  
+- C# Notes for Professionals - CSharpNotesForProfessionals.pdf  
+- C++ Notes for Professionals - CPlusPlusNotesForProfessionals.pdf  
+- CSS Notes for Professionals - CSSNotesForProfessionals.pdf  
+- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf  
+- Comprehensive CI_CD Guide for Software and Data Projects.pdf  
+- Crafting a Compiler.pdf  
+- Entity Framework Notes for Professionals - EntityFrameworkNotesForProfessionals.pdf  
+- Essentials of Compilation - An Incremental Approach  
+- Excel VBA Notes for Professionals - ExcelVBANotesForProfessionals.pdf  
+- Free Android Development Book.pdf  
+- Generalized Topology Optimization for Structural Design.pdf  
+- HTML5 Canvas Notes for Professionals - HTML5CanvasNotesForProfessionals.pdf  
+- HTML5 Notes for Professionals - HTML5NotesForProfessionals.pdf  
+- Handbook Of Applied Cryptography  
+- Introduction to Numerical Methods for Variational Problems.pdf  
+- Introduction to finite element methods.pdf  
+- Introduction-to-Docker.pdf  
+- Java Notes for Professionals - JavaNotesForProfessionals.pdf  
+- JavaScript Notes for Professionals - JavaScriptNotesForProfessionals.pdf  
+- Kotlin Notes for Professionals - KotlinNotesForProfessionals.pdf  
+- LaTeX Notes for Professionals - LaTeXNotesForProfessionals.pdf  
+- Linux Notes for Professionals - LinuxNotesForProfessionals.pdf  
+- MATLAB Notes for Professionals - MATLABNotesForProfessionals.pdf  
+- MATLAB Programming for Engineers Stephen J. Chapman.pdf  
+- Matlab-Modeling, Programming & Simulations.pdf  
+- Microsoft SQL Server Notes for Professionals - MicrosoftSQLServerNotesForProfessionals.pdf  
+- MongoDB Notes for Professionals - MongoDBNotesForProfessionals.pdf  
+- MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf  
+- NET Framework Notes for Professionals - DotNETFrameworkNotesForProfessionals.pdf  
+- Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf  
+- OCaml Practice.pdf  
+- Objective-C Notes for Professionals - ObjectiveCNotesForProfessionals.pdf  
+- Oracle Database Notes for Professionals - OracleDatabaseNotesForProfessionals.pdf  
+- PHP Notes for Professionals - PHPNotesForProfessionals.pdf  
+- Perl Notes for Professionals - PerlNotesForProfessionals.pdf  
+- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf  
+- PowerShell Notes for Professionals - PowerShellNotesForProfessionals.pdf  
+- Python Notes for Professionals - PythonNotesForProfessionals.pdf  
+- R Notes for Professionals - RNotesForProfessionals.pdf  
+- React JS Notes for Professionals - ReactJSNotesForProfessionals.pdf  
+- React Native Notes for Professionals - ReactNativeNotesForProfessionals.pdf  
+- Ruby Notes for Professionals - RubyNotesForProfessionals.pdf  
+- Ruby on Rails Notes for Professionals - RubyOnRailsNotesForProfessionals.pdf  
+- SQL Notes for Professionals - SQLNotesForProfessionals.pdf  
+- ScipyLectures-simple.pdf  
+- Solving Ordinary Differential Equations in Python.pdf  
+- Solving PDEs in Python.pdf  
+- Spring Framework Notes for Professionals - SpringFrameworkNotesForProfessionals.pdf  
+- Swift Notes for Professionals - SwiftNotesForProfessionals.pdf  
+- The-Data-Engineers-Guide-to-Apache-Spark.pdf  
+- The-web-application-hackers-handbook-finding-and-exploiting-security-flaws.pdf  
+- TypeScript Notes for Professionals - TypeScriptNotesForProfessionals.pdf  
+- VBA Notes for Professionals - VBANotesForProfessionals.pdf  
+- Visual Basic .NET Notes for Professionals - VisualBasic_NETNotesForProfessionals.pdf  
+- Xamarin.Forms Notes for Professionals - XamarinFormsNotesForProfessionals.pdf  
+- applied-data-science-with-python-and-jupyter.pdf  
+- black-hat-python-python-programming-for-hackers-and-pentesters.pdf  
+- flexible-software-design-systems-development-for-changing-requirements.pdf  
+- iOS Developer Notes for Professionals - iOSNotesForProfessionals.pdf  
+- jQuery Notes for Professionals - jQueryNotesForProfessionals.pdf  
+- python-machine-learning-a-crash-course-for-beginners-to-understand-machine-learning-artificial-intelligence-neural-networks-and-deep-learning-with-scikit-learn-tensorflow-and-keras.pdf  
+- responsive-web-design-with-html5-and-css3.pdf  
+- software-architecture-patterns.pdf  
+
 </details>
 
 ---
@@ -427,4 +707,4 @@ This repo is deliberately “research-backed.” The PDFs below inform architect
 ---
 
 ### 🧭 Final note
-KFM’s goal is bigger than “a map.” It’s a **community knowledge system**: open, evidence-driven, and built to scale across time, disciplines, and data types—without losing trust.
+KFM’s goal is bigger than “a map.” It’s a **community knowledge system**: open, evidence-driven, and built to scale across time, disciplines, and data types—without losing trust. 🌾🧠🗺️
