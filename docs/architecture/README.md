@@ -1,8 +1,8 @@
 ---
 title: "Kansas Frontier Matrix — Architecture — README"
 path: "docs/architecture/README.md"
-version: "v1.0.0"
-last_updated: "2025-12-27"
+version: "v1.1.0"
+last_updated: "2026-01-19"
 status: "draft"
 doc_kind: "README"
 license: "CC-BY-4.0"
@@ -24,10 +24,10 @@ sensitivity: "public"
 classification: "open"
 jurisdiction: "US-KS"
 
-doc_uuid: "urn:kfm:doc:architecture:readme:v1.0.0"
-semantic_document_id: "kfm-architecture-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:architecture:readme:v1.0.0"
-commit_sha: "<latest-commit-hash>"
+doc_uuid: "urn:kfm:doc:architecture:readme:v1.1.0"
+semantic_document_id: "kfm-architecture-readme-v1.1.0"
+event_source_id: "ledger:kfm:doc:architecture:readme:v1.1.0"
+commit_sha: "<filled-by-ci>"
 
 ai_transform_permissions:
   - "summarize"
@@ -38,257 +38,308 @@ ai_transform_prohibited:
   - "generate_policy"
   - "infer_sensitive_locations"
 
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
+doc_integrity_checksum: "sha256:<filled-by-ci>"
 ---
 
-# KFM — Architecture — README
+![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-2b6cb0)
+![Docs](https://img.shields.io/badge/docs-architecture-0ea5e9)
+![Status](https://img.shields.io/badge/status-draft-f59e0b)
+![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-aligned-22c55e)
+![License](https://img.shields.io/badge/license-CC--BY--4.0-6366f1)
 
-> **Purpose (required):** Provide the canonical index for `docs/architecture/` and capture the **do‑not‑break invariants** (pipeline ordering, contract boundaries, provenance rules) that govern how KFM evolves.
+# 🏗️ KFM — Architecture — README
 
-Quick links (preferred order):
-- Master guide (system + pipeline source of truth): `../MASTER_GUIDE_v12.md`
-- v13 redesign blueprint (repo structure + contracts): `./KFM_REDESIGN_BLUEPRINT_v13.md`
-- Full architecture vision (end-to-end): `./KFM_VISION_FULL_ARCHITECTURE.md`
-- Next stages blueprint (roadmap + vertical slices): `./KFM_NEXT_STAGES_BLUEPRINT.md`
-- Templates (universal / story node / API contract): `../templates/`
+> [!IMPORTANT]
+> This file is the canonical **index** for `docs/architecture/` and the home of KFM’s **do‑not‑break invariants**:
+> pipeline spine ordering, contract boundaries, provenance rules, and policy-gate expectations.
+
+## 🔗 Quick Links
+
+**Read-first (repo spine):**
+- 🧭 Master guide (system + pipeline source of truth): `../MASTER_GUIDE_v13.md` *(preferred)* / `../MASTER_GUIDE_v12.md` *(legacy if present)*
+- 🧱 System overview (big picture, module boundaries): `./system_overview.md` *(if present)*
+- 🧷 Policy Pack (OPA/Conftest, “fail closed” gates): `../../api/scripts/policy/README.md` *(if present)*
+
+**Architecture set (this folder):**
+- 🧩 v13 redesign blueprint (repo structure + minimum contracts): `./KFM_REDESIGN_BLUEPRINT_v13.md`
+- 🗺️ Full architecture vision (end-to-end): `./KFM_VISION_FULL_ARCHITECTURE.md`
+- 🛣️ Next stages blueprint (roadmap + vertical slices): `./KFM_NEXT_STAGES_BLUEPRINT.md`
+
+**Docs-as-code (templates + standards):**
+- 🧰 Templates: `../templates/`
+- 📐 Standards & profiles (expected): `../standards/` *(may be partial)*
+
+---
+
+## 🧾 Table of Contents
+
+- [📘 Overview](#-overview)
+- [🧬 The Pipeline Spine](#-the-pipeline-spine)
+- [🧷 Do-not-break Invariants](#-do-not-break-invariants)
+- [🧱 Contract Boundaries](#-contract-boundaries)
+- [⚖️ Policy Gates](#️-policy-gates)
+- [🗂️ Directory Layout](#️-directory-layout)
+- [🗺️ Diagrams](#️-diagrams)
+- [🧠 Story Nodes & Focus Mode](#-story-nodes--focus-mode)
+- [🧪 Validation & CI/CD](#-validation--cicd)
+- [🧭 Roadmap Lanes](#-roadmap-lanes)
+- [🕰️ Version History](#️-version-history)
 
 ---
 
 ## 📘 Overview
 
-### Purpose
+### Purpose ✅
 - Provide a single navigation entry point for architecture documentation.
 - Keep cross-cutting rules stable as new domains, evidence products, and narratives are added.
 - Make architecture decisions auditable by linking them to contracts (schemas, APIs, templates, tests).
 
-### Scope
+### Scope 🧩
 
-| In Scope | Out of Scope |
+| In Scope ✅ | Out of Scope 🚫 |
 |---|---|
-| Indexing architecture docs, ADRs, and diagrams | Implementing pipelines, APIs, UI, or graph code (belongs in their respective areas) |
-| Summarizing the canonical pipeline ordering + invariants | Replacing the Master Guide |
-| Guidance on where new architecture artifacts belong | Authoring governance policy text (belongs under `docs/governance/`) |
+| Indexing architecture docs, ADRs, and diagrams | Implementing pipelines, APIs, UI, or graph code |
+| Capturing canonical ordering + invariants | Replacing the Master Guide |
+| Where new architecture artifacts belong | Authoring governance policy text *(belongs under `docs/governance/`)* |
 
-### Audience
+### Audience 👥
 - **Primary:** architecture maintainers + reviewers making cross-cutting decisions.
-- **Secondary:** contributors working in ETL, catalogs, graph, API, UI, Story Nodes, Focus Mode.
+- **Secondary:** contributors working in Data Intake/ETL, Catalogs, Graph, API, UI, Story Nodes, Focus Mode, Telemetry.
 
-### Definitions (link to glossary)
-- Link: `docs/glossary.md` *(if missing, treat as **not confirmed in repo** and add/update accordingly)*.
+### Definitions 📚
+- Glossary (expected): `docs/glossary.md` *(if missing, treat as **not confirmed in repo**)*
 - **ADR:** Architecture Decision Record (small, versioned decision note).
-- **Contract artifact:** schemas, OpenAPI/GraphQL specs, Story Node templates, and other “must not break” interfaces.
+- **Contract artifact:** schemas, OpenAPI/GraphQL specs, policy rules, Story Node templates, validators.
 - **Invariant:** a rule that must remain true across versions (pipeline ordering; API boundary; provenance-only Focus Mode).
 
-### Key artifacts (what this doc points to)
+---
 
-| Artifact | Path / Identifier | Owner | Notes |
-|---|---|---|---|
-| Master Guide v12 (Draft) | `docs/MASTER_GUIDE_v12.md` | KFM Core Team | Canonical pipeline + system inventory |
-| v13 Redesign Blueprint (Draft) | `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md` | Arch Team | Proposed repo structure + minimum contracts |
-| Full Architecture Vision (Draft) | `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md` | Arch Team | Comprehensive architecture context |
-| Next Stages Blueprint (Draft) | `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md` | Arch Team | Roadmap: gaps + governance + vertical slice |
-| Universal Doc Template | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` | Docs Team | Default governed doc structure |
-| Story Node Template v3 | `docs/templates/TEMPLATE__STORY_NODE_V3.md` | Narrative Curators | Narrative artifacts for Focus Mode |
-| API Contract Extension Template | `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` | API Team | REST/GraphQL contract changes |
+## 🧬 The Pipeline Spine
 
-### Definition of done (for this document)
-- [ ] Front-matter complete + `path:` matches `docs/architecture/README.md`
-- [ ] Links resolve to canonical architecture docs *(or are marked **not confirmed in repo**)*
-- [ ] Pipeline ordering and invariants match `docs/MASTER_GUIDE_v12.md`
-- [ ] “Optional roots” are clearly labeled (skip if absent; fail if present but invalid)
-- [ ] Version history updated for edits
-- [ ] Governance links present in footer
+> [!NOTE]
+> KFM treats **metadata boundary artifacts** as first-class “interfaces” between stages.  
+> The “evidence triplet” (STAC + DCAT + PROV) is required before data is considered published.
+
+### Canonical ordering (must remain ordered) 🔒
+
+1. 🧱 **Raw** → `data/raw/<domain>/` *(immutable inputs)*
+2. 🧪 **Work** → `data/work/<domain>/` *(intermediate results)*
+3. 📦 **Processed** → `data/processed/<domain>/` *(publishable artifacts)*
+4. 🧾 **Catalog boundary artifacts** *(required)*  
+   - 🛰️ STAC → `data/stac/collections/` + `data/stac/items/`  
+   - 🧠 DCAT → `data/catalog/dcat/`  
+   - 🧬 PROV → `data/prov/`
+5. 🗄️ **Stores** *(serving + performance)* → PostGIS + tile/object storage *(implementation-specific)*
+6. 🕸️ **Knowledge graph** → Neo4j *(references catalog IDs; no “mystery nodes”)*
+7. 🧩 **API boundary** → contracts + redaction + authZ
+8. 🗺️ **UI** → React + MapLibre (optional: Cesium)
+9. 📖 **Story Nodes** → governed narrative artifacts
+10. 🧠 **Focus Mode** → provenance-linked context bundles + AI assistance (policy-gated)
+
+---
+
+## 🧷 Do-not-break Invariants
+
+> [!IMPORTANT]
+> If you change *anything* that crosses stages (Data ↔ Catalog ↔ Graph ↔ API ↔ UI ↔ Narrative ↔ AI), you are changing architecture.
+> Treat it as a contract change and document it (README + ADR + tests/policy gates).
+
+### “Hard invariants” (always true) 🧷
+
+| Invariant 🔒 | Why it exists | Typical enforcement ✅ |
+|---|---|---|
+| **Pipeline ordering** is never inverted | Prevents “orphan outputs” and hidden dependencies | Policy Pack + CI checks |
+| **Evidence triplet required** (STAC+DCAT+PROV) | “Evidence-first publishing” + traceability | Validators + Policy Pack |
+| **No mystery nodes** in graph | Graph must be reconstructable from catalogs | Graph ingest rules + policy checks |
+| **UI never talks to Neo4j/PostGIS directly** | API is the redaction + contract boundary | Policy Pack + code review |
+| **Focus Mode must cite sources or refuse** | Prevents hallucination-shaped UX | Policy gate + runtime checks |
+| **Sensitivity classification is present** | Prevents accidental disclosure | Policy Pack + API redaction |
+| **Append-only philosophy** | Auditability + time travel + reproducibility | PROV + DVC/versions + CI |
+| **Deterministic ETL (or documented nondeterminism)** | Replayable pipelines + diffable outputs | Pipeline manifests + provenance |
+
+### “Soft invariants” (strong defaults) 🧠
+- Prefer **open standards** and interoperable artifacts (STAC/DCAT/PROV; Geo formats; JSON-LD).
+- Prefer **config-driven** ETL (YAML/JSON configs + shared pipeline code).
+- Prefer **contract-first** APIs (schemas first; tests; then implementation).
+- Prefer **observability by default** (run IDs, metrics, audit logs, provenance stitching).
+
+---
+
+## 🧱 Contract Boundaries
+
+KFM is intentionally **multi-store** and **contracted**:
+
+- 🗄️ **PostGIS**: source-of-truth for heavy geospatial serving (fast spatial queries; tiling; transformations).
+- 🕸️ **Neo4j**: semantic relationships, lineage navigation, multi-hop context.
+- 🧩 **API**: the only approved gateway for UI & external clients (auth, redaction, contracts).
+- 🧠 **Focus Mode**: a controlled synthesis layer that must remain evidence-linked.
+
+> [!TIP]
+> When in doubt, ask: “What is the contract artifact for this boundary?”  
+> If you can’t point to one, you likely need to create or extend it.
+
+---
+
+## ⚖️ Policy Gates
+
+> [!IMPORTANT]
+> KFM’s philosophy is **fail closed**: if it doesn’t pass a gate, it doesn’t ship, publish, or display.
+
+### Minimum gate set (v13 direction) ✅
+- ✅ Schema validation (data + metadata)
+- ✅ STAC/DCAT/PROV completeness
+- ✅ License presence (no data without known license)
+- ✅ Sensitivity classification present + respected
+- ✅ Provenance completeness (inputs + steps declared)
+- ✅ Focus Mode outputs include citations **or refuse**
+
+### Runtime policy (OPA) 🛡️
+Policy isn’t only CI: runtime enforcement may deny actions (including withholding AI answers) when rules are violated.
 
 ---
 
 ## 🗂️ Directory Layout
 
 ### This document
-- `path`: `docs/architecture/README.md`
+- 📄 `docs/architecture/README.md`
 
-### Related repository paths
+### Related repository paths (expected) 🧭
 
 | Area | Path | What lives here |
 |---|---|---|
-| Master guide | `docs/MASTER_GUIDE_v12.md` | System + pipeline source of truth |
+| Master guide | `docs/MASTER_GUIDE_v13.md` | System + pipeline source of truth |
 | Architecture | `docs/architecture/` | Architecture docs, ADRs, diagrams |
-| Templates | `docs/templates/` | Universal docs, story nodes, API contracts |
-| Standards | `docs/standards/` | Markdown protocol + profile docs *(may be partial; missing = not confirmed)* |
-| Pipelines | `src/pipelines/` | Deterministic ETL + catalog + graph build |
-| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | STAC / DCAT / PROV outputs |
-| Graph | `src/graph/` (+ `data/graph/`) | Ontology + ingest fixtures/import artifacts |
-| API boundary | `src/server/` | Contracted access + redaction rules |
-| UI | `web/` | React/Map UI + Focus Mode |
+| Templates | `docs/templates/` | Universal docs, story nodes, API contract templates |
+| Standards | `docs/standards/` | Markdown protocol + profile docs *(may be partial)* |
+| Pipelines | `src/pipelines/` *(or `pipelines/`)* | Deterministic ETL + catalog emitters |
+| Catalog outputs | `data/stac/` + `data/catalog/dcat/` + `data/prov/` | Evidence triplet boundary artifacts |
+| Graph | `src/graph/` + `data/graph/` | Ontology + ingest fixtures/import artifacts |
+| API boundary | `api/` *(or `src/server/`)* | Contracted access + redaction rules |
+| UI | `web/` | React/Map UI + Focus Mode surfaces |
+| Policy Pack | `api/scripts/policy/` | OPA/Conftest rules (CI + governance) |
 
-### Expected file tree for this sub-area
+### Expected file tree for `docs/architecture/` 🌲
 ~~~text
 📁 docs/
 └── 📁 architecture/
-    ├── 📄 README.md                          # (this file)
-    ├── 📄 KFM_REDESIGN_BLUEPRINT_v13.md       # repo restructuring + contract minimums
-    ├── 📄 KFM_VISION_FULL_ARCHITECTURE.md     # end-to-end architecture guidance
-    ├── 📄 KFM_NEXT_STAGES_BLUEPRINT.md        # roadmap / next-stage plan
-    ├── 📁 diagrams/                          # optional; not confirmed in repo
-    └── 📁 adr/                               # optional; not confirmed in repo
+    ├── 📄 README.md                          # (this file) index + invariants
+    ├── 📄 system_overview.md                 # optional; recommended
+    ├── 📄 KFM_REDESIGN_BLUEPRINT_v13.md      # repo restructuring + contract minimums
+    ├── 📄 KFM_VISION_FULL_ARCHITECTURE.md    # end-to-end architecture guidance
+    ├── 📄 KFM_NEXT_STAGES_BLUEPRINT.md       # roadmap / next-stage plan
+    ├── 📁 adr/                               # optional; recommended
+    ├── 📁 diagrams/                          # optional; recommended (Mermaid sources)
+    └── 📁 contracts/                         # optional; recommended (contract inventory pages)
 ~~~
 
----
-
-## 🧭 Context
-
-### Background
-KFM is a governed, provenance-first knowledge system that turns data into map + narrative experiences.
-
-The canonical pipeline ordering is:
-
-**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode**
-
-Architecture documents in this directory keep that ordering stable while the system expands into new domains, new evidence products, and richer narrative UX.
-
-### Assumptions
-- `docs/MASTER_GUIDE_v12.md` is the source of truth for pipeline ordering and system inventory.
-- The v13 blueprint is an intended “contract hardening + repo structure cleanup” direction; adoption is repo-dependent.
-- Optional directories referenced here should be treated as **optional**: if absent, that is not necessarily an error.
-
-### Constraints / invariants
-- **Pipeline ordering must not be inverted** (ETL before catalogs; catalogs before graph; graph behind APIs; UI consumes APIs).
-- **API boundary is mandatory:** UI does not query Neo4j directly; it consumes contracted API responses.
-- **Provenance is first-class:** Focus Mode content must be provenance-linked; AI-generated elements must be clearly labeled.
-- **Determinism:** pipelines + validators are config-driven, replayable, and diffable; outputs are versioned.
-- **Optional-root CI rule of thumb:** skip checks when optional roots are missing; fail deterministically when they exist but are invalid.
-
-### Open questions
-| Question | Owner | Target date |
-|---|---|---|
-| Where should ADRs live and what template should they use? | TBD | TBD |
-| What is the minimum diagram set for major architecture changes? | TBD | TBD |
-| What are the exact review roles for architecture changes? | TBD | TBD |
-
-### Future extensions
-- Add an ADR template under `docs/templates/` and establish `docs/architecture/adr/` conventions.
-- Add `docs/architecture/diagrams/` with versioned diagram sources (Mermaid and/or exported images).
-- Add “contract inventory” pages that link architecture invariants directly to the schemas/tests that enforce them.
+### Optional-root rule of thumb 🧪
+- ✅ **If optional roots are missing** → skip checks (no failure).
+- ❌ **If optional roots exist but are invalid** → fail deterministically.
 
 ---
 
 ## 🗺️ Diagrams
 
-### Canonical pipeline (high level)
+### Canonical pipeline (high level) 🧬
 ~~~mermaid
 flowchart LR
-  A[ETL runs] --> B[STAC / DCAT / PROV catalogs]
-  B --> C[Neo4j Graph]
-  C --> D[API Layer]
-  D --> E[React/Map UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
+  subgraph Data[Data lifecycle]
+    A[📥 data/raw] --> B[🧪 data/work]
+    B --> C[📦 data/processed]
+    C --> D[🛰️ STAC + 🧠 DCAT + 🧬 PROV]
+  end
+
+  D --> E[🗄️ Stores: PostGIS + tile/object storage]
+  D --> F[🕸️ Neo4j Graph<br/>(references catalogs)]
+  E --> G[🧩 API Layer<br/>(contracts + redaction)]
+  F --> G
+  G --> H[🗺️ UI: React + MapLibre<br/>(optional: Cesium)]
+  H --> I[📖 Story Nodes]
+  I --> J[🧠 Focus Mode<br/>(provenance-linked context bundle)]
 ~~~
 
-### Optional: request flow (UI → API → Graph)
+### Optional: request flow (UI → API → Stores/Graph) 🔁
 ~~~mermaid
 sequenceDiagram
   participant UI as UI (React/Map)
-  participant API as API
+  participant API as API (contracts + redaction)
+  participant GIS as PostGIS/Tile Store
   participant Graph as Neo4j
-  UI->>API: Request context (entity_id)
+  UI->>API: Request context (entity_id, bbox, time)
   API->>Graph: Query subgraph + provenance refs
-  Graph-->>API: Result set
+  API->>GIS: Fetch geometry/tiles/observations
+  Graph-->>API: Semantic + lineage results
+  GIS-->>API: Spatial results
   API-->>UI: Contracted payload + provenance pointers
+~~~
+
+### Optional: Watcher–Planner–Executor loop 🤖🧯
+~~~mermaid
+flowchart TD
+  W[👀 Watcher<br/>detect change] --> P[🧠 Planner<br/>propose plan + diffs]
+  P --> E[🛠️ Executor<br/>open PR + artifacts]
+  E --> G[🧷 Gates<br/>policy + tests + review]
+  G -->|pass| M[✅ Merge]
+  G -->|fail| R[🧯 Reject + report]
 ~~~
 
 ---
 
-## 📦 Data & Metadata
+## 🧠 Story Nodes & Focus Mode
 
-This directory does not store datasets, but architecture decisions **must** stay aligned to the canonical data lifecycle and outputs:
+### Story Nodes 📖
+- Governed narrative artifacts intended for UI surfacing.
+- Must include structured metadata and explicit provenance pointers.
+- Should reference stable IDs (dataset IDs, entity IDs) rather than brittle URLs.
 
-- `data/raw/` → `data/work/` → `data/processed/` → `data/stac/` (+ `data/catalog/dcat/`, `data/prov/`)
-- Published artifacts must be traceable to raw inputs via PROV activities and stable IDs.
-
----
-
-## 🌐 STAC, DCAT & PROV Alignment
-
-Architecture decisions that introduce new data products or “evidence artifacts” should describe:
-- Which STAC collections/items are produced or extended.
-- How DCAT dataset identifiers and distributions are emitted (minimum: title/description/license/keywords).
-- Which PROV activities/agents capture lineage (run IDs, tools, timestamps), and how IDs link across layers.
-
-If a decision changes profile expectations (KFM-STAC/KFM-DCAT/KFM-PROV), it is a versioned, governed change.
-
----
-
-## 🧱 Architecture
-
-### Documents in this directory
-
-| Document | What it’s for | Status |
-|---|---|---|
-| `README.md` | Index + invariants for `docs/architecture/` | draft |
-| `KFM_REDESIGN_BLUEPRINT_v13.md` | Proposed repo structure + contract hardening | draft |
-| `KFM_VISION_FULL_ARCHITECTURE.md` | Long-form end-to-end architecture vision | draft |
-| `KFM_NEXT_STAGES_BLUEPRINT.md` | Roadmap: gaps + governance + vertical slice plan | draft |
-
-### When to use which governed template
-- Use **Universal Doc** for architecture areas, module notes, and standards-aligned guidance.
-- Use **API Contract Extension** for new/changed API endpoints or schema contracts (REST/GraphQL).
-- Use **Story Node** for narrative artifacts intended for Focus Mode surfacing.
-
-### Architecture change checklist (practical)
-- Does the change affect more than one pipeline stage (Data/Catalog/Graph/API/UI/Story/Telemetry)?
-- If yes: document the invariant/contract impact here and/or in an ADR.
-- Ensure any contract change has a version bump + tests (schemas/contracts) and links in the relevant doc.
-- Describe sensitivity and redaction behavior when outputs could expose restricted locations or PII.
-
----
-
-## 🧠 Story Node & Focus Mode Integration
-
-Architecture work is “done” only when it remains consumable by narrative and UI layers:
-- **Story Nodes** are curated narrative artifacts with structured metadata and explicit provenance.
-- **Focus Mode** must only surface provenance-linked content (no orphan facts), and any AI-generated elements must be clearly indicated.
-- Predictive/uncertain outputs (if introduced) should carry confidence/uncertainty fields and be opt-in at the UI layer.
+### Focus Mode 🧠
+Focus Mode is “done” only when it is:
+- ✅ **Evidence-linked**: every surfaced claim can be traced to a source.
+- ✅ **Policy-gated**: citations required; sensitive outputs denied/redacted.
+- ✅ **Context-aware**: map viewport/time filters affect retrieval prioritization.
+- ✅ **Transparent**: UI should expose “why am I seeing this?” via provenance panels.
 
 ---
 
 ## 🧪 Validation & CI/CD
 
-### Validation steps (recommended for architecture docs)
-- [ ] Markdown protocol check: front-matter present; required sections present; fence profile respected (outer backticks, inner tildes).
-- [ ] Link checks for `docs/architecture/*` references.
-- [ ] Secrets scan: no tokens/keys embedded.
-- [ ] If this doc claims a contract change: the related schema/test/doc is updated and linked.
+> [!NOTE]
+> Exact commands are repo-specific. The point is the **gates**, not the tooling brand.
 
-### Example placeholders — replace with repo-specific commands
+### Recommended doc + architecture checks ✅
+- [ ] Markdown protocol check (front-matter present; required sections present)
+- [ ] Link checks for `docs/architecture/*`
+- [ ] Mermaid lint/render (if diagrams exist)
+- [ ] Secrets scan (no tokens/keys embedded)
+- [ ] If contract changed: schema + tests + docs updated + referenced here
+- [ ] Policy Pack checks (pipeline ordering; evidence triplet; API boundary; provenance-first publishing)
+
+### Example placeholders (replace with repo commands) 🧰
 ~~~bash
-# Markdown protocol validation (not confirmed in repo)
-# python tools/validate_markdown_protocol.py docs/architecture/README.md
+# Policy Pack (Conftest) — example only
+# conftest test -p api/scripts/policy .
 
-# Link check (not confirmed in repo)
+# Link check — example only
 # python tools/check_links.py docs/architecture
 
-# Mermaid lint / render check (not confirmed in repo)
-# python tools/validate_mermaid.py docs/architecture
+# Markdown protocol validation — example only
+# python tools/validate_markdown_protocol.py docs/architecture/README.md
 ~~~
 
 ---
 
-## ⚖ FAIR+CARE & Governance
+## 🧭 Roadmap Lanes
 
-### Review triggers (architecture-level)
-Governance review is required when an architecture change would:
-- introduce a new sensitive or restricted dataset/layer,
-- add new AI narrative behaviors (especially anything that could be mistaken for fact),
-- add new external data sources,
-- add or change public-facing endpoints.
+These are “architecture lanes” (safe expansion directions) — not promises:
 
-### CARE / sovereignty considerations
-- Assume culturally sensitive knowledge and restricted locations require extra care.
-- If an architecture decision could expose precise locations through joins, interaction, or zoom: specify the generalization/redaction strategy and where it is enforced (data processing, API boundary, UI).
-
-### AI usage constraints (for this document)
-- Allowed transforms: summarization, structure extraction, translation, keyword indexing.
-- Prohibited: generating new governance policy; inferring sensitive locations.
+- 🧠 **Evidence artifacts as first-class datasets**  
+  Simulations, OCR corpora, AI-predicted layers → treated like any other dataset: processed output + evidence triplet + graph refs.
+- 🕹️ **Immersive & educational UX**  
+  3D/AR modes, classroom narratives, “guided tours” built from Story Nodes.
+- 🌐 **Federation-ready catalogs**  
+  DCAT-friendly publishing for cross-repo discovery and “global index” interoperability.
+- 🤝 **Community contribution with governance**  
+  Reputation + moderation workflows; provenance required for contributed stories and data.
 
 ---
 
@@ -296,18 +347,20 @@ Governance review is required when an architecture change would:
 
 | Version | Date | Summary | Author |
 |---|---|---|---|
+| v1.1.0 | 2026-01-19 | Upgraded to v13-direction spine: evidence triplet, policy gates, contract boundaries, W-P-E loop, richer navigation | AI-assisted draft |
 | v1.0.0 | 2025-12-27 | Initial `docs/architecture/` README scaffolding + doc index | AI-assisted draft |
 
 ---
 
-Footer refs (do not remove):
-- Master guide: `docs/MASTER_GUIDE_v12.md`
+## 🧾 Footer Refs (do not remove)
+
+- Master guide: `docs/MASTER_GUIDE_v13.md` *(preferred)* / `docs/MASTER_GUIDE_v12.md` *(legacy)*
 - v13 blueprint (draft): `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
 - Full architecture vision (draft): `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md`
 - Next stages blueprint (draft): `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md`
 - Universal template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
 - Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
 - API contract template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- Governance root: `docs/governance/ROOT_GOVERNANCE.md`
 - Sovereignty: `docs/governance/SOVEREIGNTY.md`
 - Ethics: `docs/governance/ETHICS.md`
