@@ -1,10 +1,12 @@
 <!--
 📌 tools/ is the repo’s *governed toolchain surface* for building + validating KFM artifacts.
-🗓️ Last updated: 2026-01-13
+🗓️ Last updated: 2026-01-19
 🔁 Review cycle: 90 days (or anytime pipeline order / catalogs / policy changes)
 🧭 Alignment: Master Guide v13 (contract-first + evidence-first + one canonical home per subsystem)
 🧪 Scientific posture: Verification + Validation + Uncertainty Quantification (V&V&UQ) for anything “model-y”
 -->
+
+> According to a document set updated through **2026-01-19**, `tools/` is the **governed command surface** for building + validating KFM artifacts — and it must preserve the v13 pipeline order, provenance-first publishing, and citation-required Focus Mode. 🧾✅[^kfm_v13]
 
 <div align="center">
 
@@ -20,25 +22,28 @@
 
 ![Contract-first](https://img.shields.io/badge/contract--first-schemas%20%2B%20API-blue)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-catalogs%20%2B%20PROV-blueviolet)
+![Provenance-first](https://img.shields.io/badge/provenance--first-no%20publish%20without%20PROV-red)
 ![Catalog-first](https://img.shields.io/badge/catalog--first-STAC%20%7C%20DCAT%20%7C%20PROV-blue)
-![Reproducible](https://img.shields.io/badge/reproducible-audit--ready-success)
-![Fail Closed](https://img.shields.io/badge/quality%20gates-fail%20closed-red)
-![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043)
+![Policy-as-code](https://img.shields.io/badge/policy--as--code-OPA%20%2F%20Conftest-ff7a00)
+![SLSA](https://img.shields.io/badge/SLSA-attestations-8b5cf6)
+![SBOM](https://img.shields.io/badge/SBOM-SPDX%20%7C%20CycloneDX-2ea043)
 
 ![STAC](https://img.shields.io/badge/STAC-catalogs-1f6feb)
 ![DCAT](https://img.shields.io/badge/DCAT-discovery-8250df)
 ![PROV](https://img.shields.io/badge/PROV-lineage-8250df)
-![SBOM](https://img.shields.io/badge/SBOM-SPDX%20%7C%20CycloneDX-2ea043)
-![Sigstore](https://img.shields.io/badge/attestations-sigstore%20%2F%20cosign-8b5cf6)
+![Neo4j](https://img.shields.io/badge/Neo4j-graph-00ba7c)
+![PostGIS](https://img.shields.io/badge/PostGIS-spatial%20DB-2d6cdf)
+![MapLibre](https://img.shields.io/badge/MapLibre-2D%20maps-1f6feb)
+![Cesium](https://img.shields.io/badge/Cesium-optional%203D-6f42c1)
 
 </div>
 
-> **TL;DR:** `tools/` is the **governed command surface** for building, validating, and packaging KFM artifacts **without bypassing governance**.  
-> Tools are **CI-safe** by design: deterministic defaults, clear contracts, fast QA gates, and provenance emission.
+> **TL;DR:** `tools/` is the **governed toolchain** that builds, validates, and packages KFM artifacts **without bypassing governance**.  
+> Tools are **CI-safe** by design: deterministic defaults, clear contracts, fast QA gates, provenance emission, and policy checks.
 
 > [!IMPORTANT]
 > **MCP** = **Methods, Controls & Processes** *(a.k.a. “Master Coder Protocol” — lab notebook + receipts)* 🧪🧾  
-> `tools/` must support MCP workflows by producing **re-run-able** outputs and **linkable** provenance—without turning into “business logic.”
+> `tools/` must support MCP workflows by producing **re-run-able** outputs and **linkable** provenance — without becoming “business logic.”[^mcp_receipts]
 
 ---
 
@@ -50,15 +55,18 @@
 - [🧱 The non-negotiable ordering](#non-negotiable-ordering)
 - [🎯 What belongs in tools](#what-belongs-in-tools)
 - [🧭 Boundaries: tools vs scripts vs src vs mcp](#boundaries)
+- [🤖 Agent toolchain: Watcher–Planner–Executor](#agent-toolchain)
 - [🧾 Contracts & schemas](#contracts-and-schemas)
 - [📦 Data staging + catalog locations](#data-staging)
 - [🧱 Tool contract](#tool-contract)
 - [🎲 Determinism & reproducibility levels](#determinism)
 - [🧪 Artifact QA matrix](#qa-matrix)
+- [📡 Telemetry & observability](#telemetry)
 - [📁 Expected folder layout](#expected-layout)
 - [🔁 Common workflows](#common-workflows)
 - [✅ Validation & QA gates](#validation-gates)
 - [🔏 Provenance, SBOM, attestations, releases](#provenance-sbom-attestations)
+- [📦 Offline packs & field ops](#offline-packs)
 - [🗺️ Geo & mapping utilities](#geo-mapping)
 - [🛰️ Remote sensing utilities](#remote-sensing)
 - [🧊 Imaging & compression utilities](#imaging-compression)
@@ -82,15 +90,17 @@
 ## 🧠 Quick links
 
 - 📘 Canonical repo guide (v13) → `docs/MASTER_GUIDE_v13.md`
+- 🧾 KFM STAC/DCAT/PROV profiles (v11) → `docs/standards/KFM_STAC_PROFILE.md`, `docs/standards/KFM_DCAT_PROFILE.md`, `docs/standards/KFM_PROV_PROFILE.md`[^stac_dcat_prov]
 - 📖 Glossary (shared language) → `docs/glossary.md`
 - 📏 Schemas & contracts (source of truth) → `schemas/`
 - 🧪 Research workflow + run receipts → `mcp/README.md`
 - 🧪 Canonical pipelines (ETL code) → `src/pipelines/`
 - 🕸️ Graph build & ontology bindings → `src/graph/`
-- 🛡️ API boundary (contracts + redaction) → `src/server/`
+- 🛡️ API boundary (contracts + redaction) → `src/server/` (UI does **not** query graph directly)[^kfm_v13]
 - 🌐 UI (React · MapLibre · optional Cesium) → `web/`
-- 🗂️ Data lifecycle + catalogs → `data/README.md`
+- 🗂️ Data lifecycle + catalogs → `data/README.md` (and the staging layout below)[^data_layout]
 - 🧷 Governance gates → `docs/governance/REVIEW_GATES.md`
+- 🛡️ Policy pack (OPA / Conftest) → `tools/validation/policy/*.rego`[^policy_pack]
 - 🔏 Releases (bundles, SBOMs, attestations) → `releases/`
 - 🧾 Citation metadata (software + snapshots) → `CITATION.cff`
 - ✅ Tests → `tests/README.md`
@@ -118,15 +128,22 @@ Schemas and API contracts are **first-class artifacts**:
 - changes require versioning and compatibility checks
 - tools should validate against contracts by default
 
-### ✅ Evidence-first 🧾
+### ✅ Evidence-first + provenance-first 🧾🧬
 No “published-looking” output without boundary artifacts:
 - **STAC + DCAT + PROV** are required before:
   - graph ingest
   - API exposure
-  - UI or Story Node usage
+  - UI or Story Node usage[^stac_dcat_prov]
+- **Raw data is immutable**; “work” is ephemeral; “processed” is governed evidence.[^immutability]
 
 ### ✅ Deterministic by default 🎲🚫
-Given the same inputs + config + seed, tools must produce the same outputs (ordering included).
+Given the same inputs + config + seed, tools must produce the same outputs (ordering included).[^kfm_v13]
+
+### ✅ The ordering is a governance boundary 🧱🔒
+Pipeline order is **absolute** (tools must not provide shortcuts).[^kfm_v13]
+
+### ✅ Focus Mode is citation-required (and advisory) 🧠🧾
+Focus Mode must cite sources and can refuse if citations can’t be produced.[^focus_mode]
 
 ### ✅ Human-centered + sovereignty-aware 🌾🧑‍🤝‍🧑
 Tools are not just “code runners” — they shape **decision artifacts**:
@@ -140,18 +157,20 @@ Tools are not just “code runners” — they shape **decision artifacts**:
 ## 🧱 The non-negotiable ordering
 
 > [!IMPORTANT]
-> This ordering is not “architecture style.” It’s a **governance boundary**.
+> This ordering is not “architecture style.” It’s a **governance boundary**.[^kfm_v13]
 
-**ETL → Catalogs (STAC/DCAT/PROV) → Graph → APIs → UI → Story Nodes → Focus Mode**
+**Raw → Work/ETL → Processed → Catalogs (STAC/DCAT/PROV + QA) → Graph → APIs → UI → Story Nodes → Focus Mode**
 
 ```mermaid
 flowchart LR
-  A["🧪 ETL (deterministic)"] --> B["🗂️ Catalog boundary artifacts<br/>STAC + DCAT + PROV + QA"]
-  B --> C["🕸️ Graph ingest<br/>(Neo4j; references catalogs)"]
-  C --> D["🛡️ APIs<br/>(contracts + redaction)"]
-  D --> E["🌐 UI<br/>(React · MapLibre · optional Cesium)"]
-  E --> F["📚 Story Nodes<br/>(governed narratives)"]
-  F --> G["🎯 Focus Mode<br/>(evidence-linked context)"]
+  A["📥 Raw (immutable)<br/>data/raw/<domain>/"] --> B["🧪 Work / ETL (scratch)<br/>data/work/<domain>/"]
+  B --> C["📦 Processed (publishable artifacts)<br/>data/processed/<domain>/"]
+  C --> D["🗂️ Catalog boundary artifacts<br/>data/stac + data/catalog/dcat + data/prov<br/>+ QA gates"]
+  D --> E["🕸️ Graph ingest<br/>(Neo4j; references catalogs)"]
+  E --> F["🛡️ APIs<br/>(contracts + redaction)"]
+  F --> G["🌐 UI<br/>(React · MapLibre · optional Cesium)"]
+  G --> H["📚 Story Nodes<br/>(governed narratives)"]
+  H --> I["🎯 Focus Mode<br/>(evidence-linked context)"]
 ```
 
 **Practical implication:** `tools/` must never create **published-looking outputs** that skip **catalog + provenance**.
@@ -167,11 +186,12 @@ flowchart LR
 - **Catalog QA gates** (STAC/DCAT/PROV schema + link + required-field checks)
 - **Deterministic ID/hashing utilities** (stable IDs, checksums, manifests)
 - **Format and integrity tooling** (COG validation, GeoParquet schema checks, geometry validity)
-- **Policy enforcement tooling** (licensing gates, sensitivity/classification checks, “no downgrade” rules)
+- **Policy enforcement tooling** (OPA/Conftest policy pack; no-downgrade rules; “no publish without provenance”)[^policy_pack]
 - **Graph/DB loaders** that **ingest from catalogs** (not ad-hoc inserts)
 - **Release packaging** (SBOM generation, signatures, attestations)
 - **CI entrypoints** (non-interactive, stable exit codes)
 - **Scientific integrity harnesses** (V&V, UQ smoke checks, regression tests)
+- **Agent wrappers** that only operate via reviewable artifacts (Watcher/Planner/Executor that opens PRs, emits receipts, and never “hot-patches” main)[^wpe]
 
 🚫 Not a good fit:
 - Long-lived services (APIs, daemons) → runtime/app folders
@@ -195,11 +215,49 @@ flowchart LR
 - Preferred pattern: **scripts call tools**, tools call src.
 
 ### `mcp/` = receipts & scientific record (the lab notebook) 🧪🧾
-- Run receipts, experiment logs, model cards, governance checklists.
+- Run receipts, experiment logs, model cards, governance checklists.[^mcp_receipts]
 
 > [!TIP]
 > If you’re implementing core behavior inside `tools/`, that’s a smell.  
 > Put the logic in `src/` and keep `tools/` as a predictable CLI + validator layer.
+
+---
+
+<a id="agent-toolchain"></a>
+## 🤖 Agent toolchain: Watcher–Planner–Executor
+
+KFM supports **agent-assisted workflows** — but only when they behave like **governed tools** (deterministic, reviewable, provenance-emitting). The recommended structure is **Watcher–Planner–Executor**.[^wpe]
+
+### 🛰️ Watcher (detect change → propose)
+- Scans a defined surface (e.g., new files in a drop folder, updated feeds, new imagery, changed catalog entries).
+- Emits an **immutable event** / proposal artifact:
+  - `event.json` (what changed, where, why it matters)
+  - proposed `plan.json` inputs (but does **not** run destructive changes)
+- Default: **no network** unless `--allow-network` is set.
+
+### 🧭 Planner (propose plan → deterministic, diffable)
+- Takes Watcher events and produces a **deterministic plan**:
+  - exact tool invocations
+  - expected inputs/outputs
+  - policy gates to run
+  - rollback / failure behavior
+- Writes a plan artifact that is:
+  - stable-sorted
+  - hashed
+  - human-readable & machine-readable
+
+### 🧾 Executor (apply plan → PR-based + attested)
+- Executes the plan in a controlled environment.
+- Produces:
+  - updated artifacts (data + catalogs + prov)
+  - structured reports
+  - MCP run receipt
+- **Opens a pull request** (or produces a patch) rather than mutating protected branches.
+- Attaches **SBOMs + SLSA-ish attestations** for the automated output (especially if generated/packaged by the agent).[^wpe]
+
+> [!IMPORTANT]
+> “Automation” in KFM is not a bypass — it’s a **more disciplined contributor**.  
+> If a human would need to pass gates, an agent does too.
 
 ---
 
@@ -213,12 +271,18 @@ flowchart LR
 ### ✅ What counts as a “contract artifact”
 - JSON Schema (STAC/DCAT/PROV, Story Nodes, UI configs, telemetry)
 - API boundary contracts (OpenAPI, GraphQL SDL, typed request/response)
-- Tool manifests (if adopted) describing inputs/outputs, gates, and network posture
+- Tool manifests (optional) describing inputs/outputs, gates, and network posture
 - **Data contract metadata** describing dataset schema, units, provenance hooks, and sensitivity
+
+### ✅ KFM catalog profiles (v11) 📚
+Profiles define KFM-required fields/behaviors for:
+- STAC → `docs/standards/KFM_STAC_PROFILE.md`
+- DCAT → `docs/standards/KFM_DCAT_PROFILE.md`
+- PROV → `docs/standards/KFM_PROV_PROFILE.md`[^stac_dcat_prov]
 
 ### ✅ Where tools should look
 - `schemas/` → JSON schemas (STAC/DCAT/PROV/storynodes/ui/telemetry)
-- `docs/standards/` → KFM profiles and governance rules (STAC/DCAT/PROV profiles, markdown protocol, repo structure standard)
+- `docs/standards/` → KFM profiles and governance rules (STAC/DCAT/PROV profiles, repo structure standard)[^stac_dcat_prov]
 
 ### 🧾 Data contract metadata (dataset-level) 📦
 For any dataset that will become evidence, require a dataset metadata file that includes:
@@ -229,51 +293,51 @@ For any dataset that will become evidence, require a dataset metadata file that 
 - expected spatial/temporal bounds (where applicable)
 - pointers to where STAC/DCAT/PROV will be emitted
 
-> [!TIP]
-> Treat the metadata file like a **build contract**: producers must satisfy it; tools validate it; consumers trust it.
-
-### 🚫 Avoid schema drift
-If you need a new field:
-1) update the contract in `schemas/` / profiles in `docs/standards/`  
-2) update tools/validators  
-3) update producers (pipelines) and consumers (graph/API/UI)  
-4) only then promote/publish
-
 ---
 
 <a id="data-staging"></a>
 ## 📦 Data staging + catalog locations
 
-KFM data work is staged and traceable, with **one canonical home per dataset**.
+KFM data work is staged and traceable, with **one canonical home per dataset**.[^data_layout]
 
 ### ✅ Canonical staging pattern (v13)
+
 ```text
 data/
+├── sources/                     # retrieval manifests + checksums + licenses (recommended)
+├── raw/
+│   └── <domain>/                # immutable as-received data
+├── work/
+│   └── <domain>/                # intermediates / scratch (rebuildable)
+├── processed/
+│   └── <domain>/                # publishable evidence artifacts
 ├── stac/
 │   ├── collections/
 │   └── items/
 ├── catalog/
-│   └── dcat/
-├── prov/
-├── <domain>/
-│   ├── raw/        # as-received
-│   ├── work/       # intermediates / scratch
-│   └── processed/  # publishable evidence artifacts
-└── sources/        # optional but recommended: retrieval manifests, checksums, licenses
+│   └── dcat/                    # DCAT JSON-LD datasets/distributions
+└── prov/                        # PROV bundles (JSON-LD recommended)
 ```
 
-> [!NOTE]
-> If your repo still uses `data/raw/<domain>/...` style paths, treat that as **legacy** and document the mapping in `data/README.md`.
-
-### Boundary artifacts (required before “publish-looking” outputs)
-- 🗂️ `data/stac/collections/` — STAC Collections  
-- 🗂️ `data/stac/items/` — STAC Items  
-- 🏷️ `data/catalog/dcat/` — DCAT datasets/distributions (JSON-LD)  
-- 🧬 `data/prov/` — provenance bundles (PROV JSON-LD recommended)  
-
 > [!IMPORTANT]
-> **Atomic publish** is the standard: stage → validate → then promote.  
-> If validation fails, nothing “half-publishes.”
+> **Immutability & trust boundaries**:  
+> `raw/` is never edited; `work/` is ephemeral; `processed/` is governed evidence.[^immutability]
+
+### 📌 Source manifests (recommended for every ingest)
+Place a source manifest alongside incoming data to make ingestion repeatable:
+- URL/source identifier
+- retrieval timestamp
+- method (API export, manual upload, scan, etc.)
+- checksums
+- license/attribution notes (or links)
+
+The technical docs explicitly call out a `data/sources/...` pattern with per-source metadata + checksums.[^sources_manifest]
+
+### Streaming / near-real-time inputs ⏱️
+For streaming datasets:
+- treat each batch as **append-only**
+- use windowing (daily/weekly/monthly)
+- don’t rewrite history silently — publish a new version + provenance trail[^streaming]
 
 ---
 
@@ -294,6 +358,16 @@ Every tool must behave predictably under automation.
 - `--contracts <path>` optional override (defaults to `schemas/`)
 - `--log-json` (emit JSONL logs, one record per line)
 - `--report <path>` (write a machine-readable summary artifact, even on failure)
+
+### 🧾 RunContext (recommended)
+For anything that produces evidence artifacts, tools should emit a `run_context.json` capturing:
+- `run_id`, timestamps
+- tool name + version + git SHA
+- config hash
+- inputs/outputs (paths + checksums)
+- environment snapshot (minimal)
+
+This is the glue between **PROV**, **catalogs**, and **MCP receipts**.
 
 ### ✅ Exit codes (recommended standard)
 - `0` success
@@ -323,7 +397,7 @@ If a tool uses AI to suggest metadata / mappings:
 - require `--apply` to write anything
 - log model/version/config where permissible
 - treat outputs as **draft** until validated + reviewed
-- preserve user agency (human-in-the-loop by design)
+- preserve user agency (human-in-the-loop by design)[^hilt]
 
 ---
 
@@ -356,30 +430,54 @@ Use this matrix to decide which validators must run **before promotion** ✅
 | 🧭 Vector (GeoParquet / FlatGeobuf / GeoJSON) | schema + CRS + geometry validity | topology rules + simplification policy + attribution propagation |
 | 🛰️ Raster (COG / GeoTIFF / NetCDF) | COG layout + CRS + bounds + nodata | overview completeness + histogram sanity + tiling alignment |
 | 🗄️ Tabular (Parquet/CSV) | schema + types + missingness report | drift checks + range checks + sampling provenance |
+| 📦 Offline packs | manifest schema + checksums + policy gates | signature verification + size budgets + “no orphan assets” scan |
+| 🧾 Story Nodes (Markdown + config) | schema + links + citations present | spellcheck + accessibility lint + “no unsourced claims” checks |
+| 🎨 Map styles (MapLibre JSON) | JSON lint + sources valid + sprite/glyph refs | contrast/legibility budgets + scale tests |
 | 🧠 ML artifacts (metrics/models) | metrics schema + dataset refs + seeds | calibration checks + fairness slices + uncertainty |
 | 🧮 Simulation outputs | config+seed captured + deterministic rerun | V&V smoke tests + UQ summary + sensitivity |
 | 🧊 3D assets (3D Tiles / glTF) | manifest + attribution + bounding volume | LOD validation + GPU budget checks + compression checks |
 
 ---
 
+<a id="telemetry"></a>
+## 📡 Telemetry & observability
+
+Telemetry is a **contracted surface** (schema-first) — used to measure UX safety signals, governance friction, and system health.
+
+### ✅ Expectations
+- event schemas live under `schemas/telemetry/`
+- tools should validate telemetry payloads against schemas in CI
+- logs should be JSONL (tool-friendly), with a minimal human-readable console summary
+
+Example event contract patterns include events like `focus_mode_redaction_notice_shown` (capturing when policy-driven UI notices appear).[^telemetry]
+
+> [!TIP]
+> Treat telemetry as evidence about the system itself: version it, validate it, and keep it privacy-aware.
+
+---
+
 <a id="expected-layout"></a>
 ## 📁 Expected folder layout
 
-> If your repo differs, treat this as the target structure and document deltas in this README.
+> If your repo differs, treat this as the target structure and document deltas in `tools/README.md`.
 
 ```text
 🛠️ tools/
 ├── 📘 README.md
 ├── 🧰 _lib/                      # shared helpers (logging, env validation, guardrails)
 ├── 🧾 manifests/                 # optional tool.yaml manifests (one per tool)
+├── 🛰️ agents/                    # Watcher–Planner–Executor entrypoints (PR-based automation)
 ├── 🧲 ingest/                    # controlled ingest entrypoints (thin wrappers)
+│   ├── docs/                     # document/PDF ingestion → text + metadata + graph links (gated)
+│   └── feeds/                    # scheduled fetchers (deny-by-default network)
 ├── 🏷️ catalogs/                  # STAC/DCAT emitters + catalog build helpers
 ├── ✅ validation/                # fast QA gates (schema/link/prov/policy)
 │   ├── ⚡ catalog_qa/             # catalog QA gate (PR-friendly)
-│   ├── 🛡️ policy/                # license/classification/no-downgrade rules (OPA/Conftest optional)
+│   ├── 🛡️ policy/                # OPA/Conftest policies (license/classification/no-downgrade)
 │   ├── 🧭 geo/                   # CRS/geom/raster validators
-│   ├── 📊 stats/                 # statistical QA (drift, residuals, effect sizes)
-│   └── 🔐 security/              # hostile-input checks (zip bombs, traversal, SSRF guards)
+│   ├── 📊 stats/                 # drift/residuals/effect-size reports
+│   ├── 🔐 security/              # hostile-input checks (zip bombs, traversal, SSRF guards)
+│   └── 📡 telemetry/             # validate event schemas + payloads
 ├── 🆔 id/                        # deterministic IDs, hashing, manifest tooling
 ├── 🧬 prov/                      # provenance helpers (PROV JSON-LD emitters)
 ├── 🧩 dsl/                       # optional: schema/profile/policy DSL compilers (contract-first)
@@ -388,7 +486,7 @@ Use this matrix to decide which validators must run **before promotion** ✅
 ├── 🗺️ geo/                       # GDAL wrappers, tiling, reprojection, COG utilities
 ├── 🛰️ rs/                        # remote sensing helpers (GEE export, masking, compositing)
 ├── 🧊 3d/                        # 3D Tiles / glTF tooling, mesh + point cloud validation
-├── 🌐 web/                       # Map build helpers (styles, tiles packaging, assets)
+├── 🌐 web/                       # map build helpers (styles, tiles packaging, offline packs)
 ├── 🤖 ml/                        # train/eval orchestration (must emit datasets + metrics refs)
 ├── 🧮 simulation/                # scenario runners (must record configs + seeds)
 ├── 🔏 attest/                    # SBOM + signing helpers (cosign/sigstore patterns)
@@ -413,19 +511,21 @@ Use this matrix to decide which validators must run **before promotion** ✅
 | 🚚 Promote/publish | `tools/catalogs/promote...` | atomic move + updated catalogs |
 | 🕸️ Load graph/DB | `tools/graph/...` / `tools/db/...` | ingest report |
 | 🌐 Build UI assets | `tools/web/...` | tiles/styles/manifests |
-| 🧊 Build 3D bundles | `tools/3d/...` | 3D tiles + manifest |
+| 📦 Build offline pack | `tools/web/build_offline_pack.py` | signed pack + manifest |
+| 🧊 Build 3D bundles | `tools/3d/package_3dtiles.py` | 3D tiles + manifest |
 | 📊 Statistical QA | `tools/validation/stats/...` | drift/residuals/effect-size reports |
 | 🔏 Release bundle | `tools/attest/...` | SBOM + attestation in `releases/` |
+| 🤖 Run automation safely | `tools/agents/watcher.py → planner.py → executor.py` | PR + receipts |
 
 ---
 
 ### A) Build a dataset (stage → validate → catalog → promote) ✅
 
-1) Ingest → `data/<domain>/raw/...`  
-2) Transform → `data/<domain>/work/...`  
+1) Ingest → `data/raw/<domain>/...`  
+2) Transform → `data/work/<domain>/...`  
 3) Validate (schema/CRS/geometry/license/bounds)  
 4) Emit STAC/DCAT/PROV  
-5) Promote to `data/<domain>/processed/...`  
+5) Promote to `data/processed/<domain>/...`  
 6) (Optional) Ingest into graph/DB from catalogs  
 7) Write MCP run receipt if it affects decisions or production  
 
@@ -466,7 +566,7 @@ python tools/validation/catalog_qa/run_catalog_qa.py --root data/stac
 ### C) Evidence artifacts (analysis / AI / simulation outputs) 🧾🤖
 
 KFM treats analysis outputs as first-class datasets:
-- store under `data/<domain>/processed/...`
+- store under `data/processed/<domain>/...`
 - create STAC/DCAT entries
 - emit PROV capturing inputs + parameters + seeds + uncertainty/metrics
 - do not expose directly in UI; go through API boundary
@@ -479,6 +579,8 @@ python tools/prov/emit_prov.py --help
 python tools/validation/catalog_qa/run_catalog_qa.py --root data/stac
 ```
 
+Simulation outputs should follow reproducible, deterministic patterns (config + seed + V&V + UQ summaries).[^kfm_sim]
+
 ---
 
 ### D) Policy enforcement (OPA / Conftest) 🛡️
@@ -488,6 +590,7 @@ Use policy tests for hard rules:
 - classification must not downgrade
 - prohibited fields/paths
 - “no publish without provenance”
+- “Focus Mode must cite evidence sources”[^focus_mode]
 
 ```bash
 conftest test -p tools/validation/policy data/stac data/catalog/dcat data/prov --all-namespaces
@@ -545,23 +648,24 @@ Think in rings (each ring blocks promotion if it fails):
 - CRS correctness + axis order
 - geometry validity (and any allowed repair policy)
 - raster sanity (nodata, resolution, alignment)
-- time/bounds sanity (e.g., Kansas bounds, plausible ranges)
+- time/bounds sanity (Kansas bounds, plausible ranges)
 
 ### Ring 3: Statistical & scientific sanity 🧪📊
 - drift checks (schema + distributions)
 - regression diagnostics (residuals, heteroscedasticity, multicollinearity flags)
 - uncertainty summaries (where applicable)
-- “smell tests” for simulation outputs (conservation checks / stability checks)
+- “smell tests” for simulation outputs (stability checks / invariants)[^kfm_sim]
 
 ### Ring 4: Governance & safety 🔐
 - license required before publish
 - classification propagation (no downgrade)
-- sensitive fields redaction rules
-- policy tests (OPA/Conftest) where used
+- sensitive fields redaction rules[^sensitivity]
+- policy tests (OPA/Conftest) where used[^policy_pack]
 - secrets scans + dependency hygiene checks
 
-> [!NOTE]
-> CI should cover unit + integration tests, and (when feasible) E2E UI journeys for critical paths.
+### Ring 5: AI integrity 🧠🧾
+- Focus Mode outputs must carry citations; otherwise refuse or return an explicit “insufficient evidence” response.[^focus_mode]
+- prompt-injection defenses and redaction validation (Prompt Gate)[^prompt_gate]
 
 ---
 
@@ -582,11 +686,11 @@ Minimal PROV JSON-LD example shape:
 {
   "@context": ["https://www.w3.org/ns/prov.jsonld"],
   "type": "prov:Activity",
-  "prov:startedAtTime": "2026-01-13T00:00:00Z",
-  "prov:endedAtTime": "2026-01-13T00:05:00Z",
+  "prov:startedAtTime": "2026-01-19T00:00:00Z",
+  "prov:endedAtTime": "2026-01-19T00:05:00Z",
   "prov:used": ["<input_id_or_href>"],
   "prov:generated": ["<output_id_or_href>"],
-  "kfm:run_id": "RUN-2026-01-13-example",
+  "kfm:run_id": "RUN-2026-01-19-example",
   "kfm:checksums": { "<output_id_or_href>": "sha256:..." },
   "kfm:code": { "git_sha": "<abcdef1>" },
   "kfm:tool": { "name": "tools/catalogs/promote.py", "version": "<git_sha_or_semver>" }
@@ -596,14 +700,16 @@ Minimal PROV JSON-LD example shape:
 ### SBOM + signing (recommended for releases)
 For release bundles or promoted artifacts:
 - generate SBOMs (tool deps and/or artifact deps)
-- sign images/artifacts where feasible
+- sign artifacts where feasible
 - attach attestations (build provenance, policy checks, QA outcomes)
+
+The v13 roadmap emphasizes supply-chain integrity (SBOM + SLSA-ish attestations) especially for automated/agent-produced changes.[^wpe]
 
 ### 📦 Release bundles live in `releases/`
 Recommended structure:
 ```text
 releases/
-└── 2026-01-13_v0.4.0/
+└── 2026-01-19_v0.5.0/
     ├── sbom.spdx.json
     ├── attestations/
     ├── manifests/
@@ -615,6 +721,29 @@ releases/
 
 ---
 
+<a id="offline-packs"></a>
+## 📦 Offline packs & field ops
+
+KFM’s UI roadmap includes **PWA support** and **offline data packs** so field researchers, educators, and rural communities can use KFM without connectivity.[^pwa_offline]
+
+### ✅ What an offline pack should contain
+- pre-rendered tiles (vector/raster) for a defined AOI
+- slimmed catalogs (STAC/DCAT/PROV) scoped to the pack
+- a signed manifest (checksums + versions + policy tags)
+- “credits bundle” (attribution + licensing text for export/sharing)
+- optional: a small on-device model for limited offline Focus Mode (if policy allows)[^offline_packs]
+
+### 🧾 Governance requirement
+Offline packs are still “publish-like” artifacts:
+- must pass validation gates
+- must include provenance + catalogs
+- must carry policy labels (classification, sensitivity)
+
+### 🧭 UX alignment
+The UI is designed to surface provenance (“the map behind the map”), and even exports/shared views should carry credits.[^ui_provenance_exports]
+
+---
+
 <a id="geo-mapping"></a>
 ## 🗺️ Geo & mapping utilities
 
@@ -623,6 +752,8 @@ Tools that touch geometry must:
 - refuse unknown CRS by default
 - log CRS for inputs and outputs
 - document any reprojection and record it in provenance
+
+KFM’s internal standard is **WGS84 (EPSG:4326)** for web consistency; incoming data is reprojected on ingest and tracked in provenance. Vector tiling tools (e.g., Tippecanoe) are explicitly called out for scalable web delivery.[^crs_wgs84]
 
 ### Web-serving friendliness 🌐
 When emitting UI-facing assets:
@@ -682,6 +813,8 @@ Tools in `tools/3d/` should support:
 - embedding attribution + license + provenance pointers in manifests
 - sanity-checking GPU budgets (triangle count, texture size, draw calls) for target devices
 
+KFM’s mapping/UI design explicitly considers MapLibre for 2D and Cesium for 3D (3D Tiles / CZML), with time-slider storytelling and optional 3D expansion.[^maplibre_cesium]
+
 > [!NOTE]
 > Archaeology and historical reconstruction workflows often require **explicit uncertainty labeling** in 3D (e.g., “measured” vs “inferred”). Treat uncertainty as metadata, not a footnote.
 
@@ -697,10 +830,6 @@ Graph ingest should be downstream of catalogs:
   - “every dataset node links to provenance”
   - “no orphan entities”
   - “stable pagination order for query surfaces”
-
-Optional (but powerful) graph tooling:
-- spectral summaries (e.g., connectivity checks, component counts)
-- stable graph IDs derived from catalog IDs (never from DB internal IDs)
 
 ### PostGIS / PostgreSQL 🗄️
 - prefer database-side spatial ops when safe (joins, buffers, within, intersects)
@@ -729,7 +858,7 @@ Recommended outputs:
 - declared priors (for Bayesian tools) + sensitivity summaries
 
 > [!TIP]
-> If a statistical result is used to justify a decision or an operational rule, it belongs in `mcp/` as a run receipt (with links to catalogs + provenance).
+> If a statistical result is used to justify a decision or an operational rule, it belongs in `mcp/` as a run receipt (with links to catalogs + provenance).[^mcp_receipts]
 
 ---
 
@@ -746,7 +875,7 @@ Modeling tools must behave like scientific instruments 🧪🔬:
 Simulation-specific expectations (V&V & UQ mindset):
 - verification: “did we solve the equations right?”
 - validation: “are we solving the right equations for this phenomenon?”
-- uncertainty: quantify sensitivity to inputs, parameters, and model form
+- uncertainty: quantify sensitivity to inputs, parameters, and model form[^kfm_sim]
 
 > [!CAUTION]
 > If a tool uses AI-assisted generation, label it and record the model/version/config where permissible.
@@ -763,6 +892,9 @@ Treat `tools/` as part of the threat model:
 - defend against SSRF for network fetchers
 - sanitize paths and refuse traversal
 - never print secrets; never require secrets in CLI args
+
+### 🧠 Prompt security (“Prompt Gate”)
+KFM explicitly calls out a **Prompt Gate** approach: guardrails against prompt injection, policy bypass, and unsafe tool execution — especially for AI-assisted workflows.[^prompt_gate]
 
 Recommended CI hooks:
 - secrets scan (repo-wide)
@@ -800,7 +932,7 @@ Database performance reminders:
 KFM is designed to be “federation-ready” 🌾➡️🌎:
 - schemas and APIs should be standardizable across regions
 - export/import should operate at the catalog boundary (STAC/DCAT/PROV)
-- avoid Kansas-specific assumptions in reusable tool logic (keep those in domain configs)
+- avoid Kansas-specific assumptions in reusable tool logic (keep those in domain configs)[^ui_provenance_exports]
 
 Ideas that fit naturally in `tools/`:
 - `tools/catalogs/export_bundle.py` → export STAC/DCAT/PROV + checksums
@@ -865,67 +997,44 @@ gates:
 These files inform how tools are designed (determinism, validation, governance, scaling, and UX constraints).  
 Keep this list updated when the library changes.
 
-### 📘 Canonical KFM guides (repo structure, contracts, governance)
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
-- `MARKDOWN_GUIDE_v13.md.gdoc` *(Master Guide v13 draft)*
-- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
-- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` *(docs style patterns)*
+### 🧭 Canonical KFM system docs (architecture, AI, UI, intake)
+-  [oai_citation:0‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg) `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+-  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`
+-  [oai_citation:2‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg) `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`
+-  [oai_citation:3‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) `Kansas Frontier Matrix – Comprehensive UI System Overview.pdf`
+-  [oai_citation:4‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj) `📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf`
+-  [oai_citation:5‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj) `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf`
+-  [oai_citation:6‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC) `Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf`
 
-### 🧪 Modeling, simulation, verification & uncertainty
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `Understanding Statistics & Experimental Design.pdf`
-- `think-bayes-bayesian-statistics-in-python.pdf`
-- `graphical-data-analysis-with-r.pdf`
-- `regression-analysis-with-python.pdf`
-- `Regression analysis using Python - slides-linear-regression.pdf`
-- `Generalized Topology Optimization for Structural Design.pdf`
+### 🧾 Standards + writing conventions
+- `MARKDOWN_GUIDE_v13.md.gdoc` (repo + data layout + governance invariants)[^kfm_v13]
+- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` (style patterns)
 
-### 🗺️ Geospatial, cartography, mobile mapping, 3D GIS
-- `python-geospatial-analysis-cookbook.pdf`
-- `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
-- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`
+### 🧪 Scientific method & MCP receipts
+- `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` (hypotheses, methods, receipts, reproducibility)[^mcp_receipts]
 
-### 🛰️ Remote sensing & imagery engineering
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+### 🗺️ Geospatial + mapping hub design
+- `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` (MapLibre/Cesium, time slider, formats)[^maplibre_cesium]
 
-### 🕸️ Graph + interoperability + scale
-- `Spectral Geometry of Graphs.pdf`
-- `Data Spaces.pdf`
-- `Scalable Data Management for Future Hardware.pdf`
-- `Database Performance at Scale.pdf`
+### 📦 Reference portfolios (PDF Portfolios)
+Some “bookshelves” are packaged as **PDF Portfolios** (Acrobat-style bundles). Tools should support extracting them to a normal folder for indexing/search.[^pdf_portfolios]
 
-### 🌐 UI / Web / 3D
-- `responsive-web-design-with-html5-and-css3.pdf`
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+-  [oai_citation:7‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2) `AI Concepts & more.pdf` *(PDF Portfolio)*
+-  [oai_citation:8‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe) `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` *(PDF Portfolio)*
+-  [oai_citation:9‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi) `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` *(PDF Portfolio)*
+-  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC) `Various programming langurages & resources 1.pdf` *(PDF Portfolio wrapper / bundle container)*
 
-### 🧩 Languages, tooling, and polyglot ops
-- `Implementing Programming Languages_ An Introduction to Compilers and Interpreters.pdf`
-- `MATLAB Notes for Professionals.pdf`
-- `Objective-C Notes for Professionals.pdf`
-- `Bash Notes for Professionals.pdf`
+> [!TIP]
+> Consider adding a governed extractor like `tools/library/extract_pdf_portfolio.py` that emits:
+> - extracted PDFs
+> - `manifest.json` (filename, sha256, source portfolio, extracted_at)
+> - optional: a search index for docs (for local dev)
 
-### 🔐 Security, governance, society (defensive posture)
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` *(defensive posture only)*
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` *(defensive awareness only)*
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-- `Introduction to Digital Humanism.pdf`
-- `Principles of Biological Autonomy - book_9780262381833.pdf`
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
-
-### 📚 Programming reference shelves (breadth)
-- `A programming Books.pdf`
-- `B-C programming Books.pdf`
-- `D-E programming Books.pdf`
-- `F-H programming Books.pdf`
-- `I-L programming Books.pdf`
-- `M-N programming Books.pdf`
-- `O-R programming Books.pdf`
-- `S-T programming Books.pdf`
-- `U-X programming Books.pdf`
+### 🧠 Roadmap / “future” ideas to keep in mind (toolchain implications)
+- cultural protocol labels (e.g., TK labels) + sovereignty-aware metadata flags[^cultural_protocols]
+- peer review / validation for story content to reduce “narrative drift”[^story_review]
+- bulk document ingestion (OCR + NLP) linked into the graph (gated + provenance)[^bulk_doc_ingest]
+- AR mode filtering + clutter avoidance; reuse same data endpoints with a different client[^ar_mode]
 
 ---
 
@@ -935,11 +1044,11 @@ Keep this list updated when the library changes.
 ```yaml
 title: "tools/ — Kansas Frontier Matrix Toolchain"
 path: "tools/README.md"
-version: "v0.4.0"
-last_updated: "2026-01-13"
+version: "v0.5.0"
+last_updated: "2026-01-19"
 review_cycle: "90 days"
 governance: "FAIR + CARE aligned; sovereignty-aware"
-pipeline_order: "ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI → Story Nodes → Focus Mode"
+pipeline_order: "Raw → Work/ETL → Processed → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI → Story Nodes → Focus Mode"
 ```
 
 ---
@@ -949,7 +1058,38 @@ pipeline_order: "ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → UI
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
-| v0.4.0 | 2026-01-13 | Expanded `tools/` README using project reference library: added determinism levels, artifact QA matrix, stats evidence tooling, 3D/WebGL guidance, remote sensing + compression notes, federation framing (data spaces), and a clearer promotion ladder; updated reference library and canonical `data/<domain>/{raw,work,processed}` staging. | KFM Engineering |
+| v0.5.0 | 2026-01-19 | Updated `tools/` README to v13 staging (`data/raw|work|processed`), added Watcher–Planner–Executor agent toolchain guidance, strengthened provenance-first + citation-required Focus Mode rules, added telemetry/observability contract notes, and expanded offline pack/field ops expectations; refreshed reference library to include the current KFM system PDFs and portfolio bundles. | KFM Engineering |
+| v0.4.0 | 2026-01-13 | Expanded `tools/` README using project reference library: added determinism levels, artifact QA matrix, stats evidence tooling, 3D/WebGL guidance, remote sensing + compression notes, federation framing (data spaces), and a clearer promotion ladder; updated reference library and canonical data staging. | KFM Engineering |
 | v0.3.0 | 2026-01-11 | Aligned `tools/` README with Master Guide v13: contract-first + evidence-first; clarified canonical paths (`schemas/`, `src/*`, `web/`, `releases/`); added contracts section + federation readiness notes. | KFM Engineering |
 | v0.2.0 | 2026-01-09 | Aligned `tools/` with repo-wide boundaries (src/scripts/mcp), added tool contract + data staging rules + QA rings + security posture + richer folder map. | KFM Engineering |
 | v0.1.0 | 2026-01-08 | Initial toolbox README draft. | KFM Engineering |
+
+---
+
+## 📎 Evidence notes (footnotes)
+
+[^kfm_v13]: v13 invariants: pipeline ordering is absolute, UI stays behind the API boundary, provenance-first publishing, deterministic outputs, and evidence-first narratives. [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^data_layout]: v13 data lifecycle layout and canonical folder paths for raw/work/processed plus catalogs/prov outputs. [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^stac_dcat_prov]: STAC/DCAT/PROV alignment is required, and KFM defines profiles for each under `docs/standards/*` (v11). [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^focus_mode]: Focus Mode requires citations and can refuse when citations can’t be produced (citation-first rule). [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)
+[^immutability]: Raw/work/processed trust boundary: raw never edited; work ephemeral; processed governed evidence. [oai_citation:16‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)
+[^streaming]: Streaming guidance: append-only windows; don’t rewrite history silently; add provenance trail; use ETags/manifest caching where applicable. [oai_citation:17‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj) [oai_citation:18‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)
+[^sources_manifest]: `data/sources` pattern with per-source metadata + checksums + retrieval context supports reproducible ingest. [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+[^policy_pack]: Policy Pack / Rule 3 (provenance-first publishing) + OPA/Conftest pattern and `tools/validation/policy/*.rego` location guidance. [oai_citation:20‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg) [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)
+[^wpe]: Watcher–Planner–Executor architecture and supply-chain integrity expectations (SBOM + attestations on automated PRs). [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC) [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)
+[^prompt_gate]: Prompt Gate policies are described as a safeguard against prompt injection / tool misuse / unsafe execution in AI workflows. [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)
+[^ui_provenance_exports]: UI is decoupled via APIs, surfaces provenance, and exports/shared views are intended to carry credits. [oai_citation:25‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)
+[^pwa_offline]: PWA approach and mobile/offline emphasis in the UI overview (offline-caching assets; installable app behavior). [oai_citation:26‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)
+[^offline_packs]: Offline packs include pre-rendered tiles and local data store; Focus Mode may be limited offline unless an on-device model is packaged (policy permitting). [oai_citation:27‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)
+[^crs_wgs84]: Geospatial tooling notes: vector tiles (Tippecanoe), and WGS84 (EPSG:4326) as internal standard with reprojection tracked in provenance. [oai_citation:28‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+[^maplibre_cesium]: MapLibre GL JS for 2D maps + optional Cesium for 3D (3D Tiles/CZML), with time-slider storytelling patterns described in the mapping hub design docs. [oai_citation:29‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+[^ar_mode]: AR guidance: AR mode should filter layers, avoid clutter, reuse existing data endpoints, and focus on efficient subsets around user location. [oai_citation:30‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)
+[^bulk_doc_ingest]: Bulk document ingestion roadmap: OCR + entity extraction + linking documents into the knowledge graph for Focus Mode/search, with AI assisting metadata creation. [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)
+[^telemetry]: Example telemetry contract patterns include named UI events (e.g., redaction notice shown) in v13 docs. [oai_citation:32‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+[^mcp_receipts]: MCP guidance includes structured experiment planning/checklists and emphasizes reproducibility as a first-class workflow artifact. [oai_citation:33‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+[^hilt]: Human-in-the-loop expectation for AI-assisted metadata/story generation: AI suggests, humans approve/sign off for important data and narratives. [oai_citation:34‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)
+[^cultural_protocols]: Cultural protocol labels (e.g., TK labels) and CARE-aligned governance are proposed as a sovereignty-aware metadata practice area. [oai_citation:35‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)
+[^sensitivity]: Sensitivity flags + redaction controls are part of governance patterns for controlled datasets and culturally sensitive materials. [oai_citation:36‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)
+[^story_review]: Story validation / peer review concepts to reduce narrative drift and improve trust signals are proposed in KFM’s innovation roadmap. [oai_citation:37‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)
+[^kfm_sim]: Simulation reproducibility pattern: deterministic runs with config+seed, plus verification/validation/uncertainty artifacts and reports (e.g., `kfm-sim-run`). [oai_citation:38‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)
+[^pdf_portfolios]: Several library bundles are packaged as PDF Portfolios (requiring extraction for normal indexing/search). [oai_citation:39‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr) [oai_citation:40‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi) [oai_citation:41‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)
