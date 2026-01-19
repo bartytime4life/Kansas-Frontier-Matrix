@@ -1,6 +1,6 @@
 <!--
 📌 This README defines the repo-wide automation surface for KFM / Kansas‑Matrix‑System.
-🗓️ Last updated: 2026-01-13
+🗓️ Last updated: 2026-01-19
 🔁 Review cycle: 90 days (or anytime pipeline order / catalogs / policy pack / CI gates change)
 
 Prime directive:
@@ -20,13 +20,15 @@ Reminder:
 Safe‑by‑default ✅ • Idempotent ♻️ • Contract‑first 📜 • Provenance‑first 🧾 • Hostile‑input aware 🛡️ • “Metadata compiles” 🧬
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
-![README](https://img.shields.io/badge/README-v1.4.0-8957e5)
+![README](https://img.shields.io/badge/README-v1.5.0-8957e5)
 ![Shell](https://img.shields.io/badge/Shell-bash%20%7C%20pwsh-informational)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-informational)
 ![Node](https://img.shields.io/badge/Node-18%2B-informational)
 ![Dry run](https://img.shields.io/badge/default-dry--run-success)
 ![Contract-first](https://img.shields.io/badge/contract--first-required-0aa3a3)
 ![Provenance](https://img.shields.io/badge/provenance-STAC%20%2B%20DCAT%20%2B%20PROV-informational)
+![Policy Pack](https://img.shields.io/badge/policy%20pack-OPA%20%7C%20Conftest-111827)
+![Sigstore](https://img.shields.io/badge/signing-Sigstore%20(optional)-1f6feb)
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043)
 ![Security](https://img.shields.io/badge/security-deny--by--default%20%2B%20hostile--inputs-critical)
 
@@ -46,11 +48,13 @@ Safe‑by‑default ✅ • Idempotent ♻️ • Contract‑first 📜 • Prov
 
 ## 🔗 Quick links
 - 🧭 Repo overview: **[`../README.md`](../README.md)**
+- 🧩 Executable code boundary: **[`../src/README.md`](../src/README.md)** *(if present)*
 - 🛠️ Governed toolchain surface: **[`../tools/README.md`](../tools/README.md)** *(if present)*
 - 🧪 Repo-wide tests + QA gates: **[`../tests/README.md`](../tests/README.md)** *(if present)*
-- 🧩 Executable code boundary: **[`../src/README.md`](../src/README.md)** *(if present)*
 - 📦 Data + metadata boundary: **[`../data/README.md`](../data/README.md)** *(recommended)*
+- 🧾 Governance (policy pack, redaction rules, SOPs): **[`../docs/governance/`](../docs/governance/)** *(recommended)*
 - 📓 MCP (runs/receipts, experiments): **[`../mcp/README.md`](../mcp/README.md)** *(if present)*
+- 📚 Story Nodes (draft/published): **[`../docs/reports/story_nodes/`](../docs/reports/story_nodes/)** *(recommended)*
 - 🌐 Web UI boundary: **[`../web/README.md`](../web/README.md)** *(if present)*
 
 ---
@@ -61,6 +65,7 @@ Safe‑by‑default ✅ • Idempotent ♻️ • Contract‑first 📜 • Prov
 - [🧾 Doc metadata](#-doc-metadata)
 - [🧭 Where scripts live in the stack](#-where-scripts-live-in-the-stack)
 - [🛂 Governance review triggers](#-governance-review-triggers)
+- [🛡️ Continuous compliance: Policy Pack](#️-continuous-compliance-policy-pack)
 - [🧨 Script risk levels](#-script-risk-levels)
 - [🎯 What belongs here (and what doesn’t)](#-what-belongs-here-and-what-doesnt)
 - [🧱 The governed boundary scripts must respect](#-the-governed-boundary-scripts-must-respect)
@@ -69,12 +74,16 @@ Safe‑by‑default ✅ • Idempotent ♻️ • Contract‑first 📜 • Prov
 - [🧱 Standard script contract](#-standard-script-contract)
 - [📐 Script templates (copy/paste)](#-script-templates-copypaste)
 - [🧭 Data lifecycle + evidence artifacts](#-data-lifecycle--evidence-artifacts)
+- [📥 Raw intake manifest standard](#-raw-intake-manifest-standard)
+- [🔁 GitOps lanes: Detect → Validate → Promote](#-gitops-lanes-detect--validate--promote)
 - [🧾 Observability & provenance](#-observability--provenance)
+- [🧯 Rollbacks & incident playbooks](#-rollbacks--incident-playbooks)
 - [🧨 Safety guardrails](#-safety-guardrails)
 - [⚡ Performance, scaling, and concurrency](#-performance-scaling-and-concurrency)
 - [🗺️ GIS + PostGIS scripting tips](#️-gis--postgis-scripting-tips)
 - [🛰️ Remote sensing scripting tips](#️-remote-sensing-scripting-tips)
 - [🧊 3D / point cloud / photogrammetry scripting tips](#-3d--point-cloud--photogrammetry-scripting-tips)
+- [📚 Story Nodes & Focus Mode automation](#-story-nodes--focus-mode-automation)
 - [🧪 QA scripts (contracts & acceptance gates)](#-qa-scripts-contracts--acceptance-gates)
 - [🤖 Automation roadmaps (optional, proposed)](#-automation-roadmaps-optional-proposed)
 - [🧩 Adding a new script (checklist)](#-adding-a-new-script-checklist)
@@ -94,9 +103,11 @@ Safe‑by‑default ✅ • Idempotent ♻️ • Contract‑first 📜 • Prov
 |---|---|
 | Doc | `scripts/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-13** |
+| Last updated | **2026-01-19** |
+| Review cycle | 90 days 🔁 |
 | Audience | Contributors shipping automation, data ops, validators, safe wrappers around `tools/` + `src/` |
 | Prime directive | **No script may bypass catalogs (STAC/DCAT/PROV) or weaken governance.** |
+| Canon | Scripts are “buttons”; **policy pack + catalogs + provenance** are the trust surface 🧾🛡️ |
 
 ---
 
@@ -134,8 +145,29 @@ Some changes are “just automation,” but others are **policy changes wearing 
 > - 🧹 **Destructive/irreversible operations** (delete/drop/purge/revoke) or anything touching prod
 > - 🌐 **Network fetchers** that can reach arbitrary URLs (SSRF risk) or ingest untrusted archives
 > - 🧩 **Graph sync rules** (ontology/mapping logic, entity resolution, authority ID strategies)
+> - 🛡️ **Policy pack rule changes** (OPA/Rego policies, waivers behavior, enforcement levels)
 
 **Rule of thumb:** If the script changes what users can see, copy, or believe → it’s governance. 🧭🛡️
+
+---
+
+## 🛡️ Continuous compliance: Policy Pack
+
+KFM treats automation as **policy‑gated**. Scripts are expected to run (or be run under) a **Policy Pack** that enforces repo invariants.
+
+### ✅ What the policy pack is
+- A set of rules (OPA/Rego‑style) evaluated in CI/locally that every pipeline/script must satisfy before publish.  
+- Typical rules: “no publish without STAC/DCAT/PROV”, “no classification downgrade”, “deny network unless allowlisted”, “API-only UI access”, etc. 🧾🧬
+
+### 🧪 How scripts should integrate it
+Recommended pattern:
+- `scripts/policy/run_policy_pack.*` → runs OPA/Conftest rules locally
+- `scripts/ci/policy_gate.*` → CI entrypoint that blocks merge/publish on violations
+- L2+ scripts should run policy evaluation **before** `--apply` (or as the final “commit gate”)
+
+> [!IMPORTANT]
+> A script is not “safe” because it has `--dry-run`.  
+> It’s safe when **policy + provenance + catalogs** say it’s safe. ✅🛡️
 
 ---
 
@@ -146,10 +178,10 @@ Every non-trivial script should declare a risk level (in docs and its `*.script.
 | Level | Name | Typical actions | Hard requirements |
 |---:|---|---|---|
 | L0 | Read-only | validate, lint, diff, report | deterministic output; no writes unless `--outdir` |
-| L1 | Work-stage writes | write `data/<domain>/work/**`, temp outputs | `--dry-run` default; atomic writes; cleanup |
-| L2 | Publish-stage | write `data/<domain>/processed/**` **and** emit catalogs/prov | must generate STAC/DCAT/PROV + pass gates |
-| L3 | System-impacting | DB migrations, graph sync, object store writes, CI promotion | explicit env + explicit approvals; audit logs |
-| L4 | Destructive | deletes/drops/purges/overwrites | multi-confirmation; backups; “prove you meant it” flags |
+| L1 | Work-stage writes | write `data/work/**`, temp outputs | `--dry-run` default; atomic writes; cleanup |
+| L2 | Publish-stage | write `data/processed/**` **and** emit catalogs/prov | must generate STAC/DCAT/PROV + pass gates + policy pack |
+| L3 | System-impacting | DB migrations, graph sync, object store writes, CI promotion | explicit env + explicit approvals; audit logs; policy pack; receipts |
+| L4 | Destructive | deletes/drops/purges/overwrites | multi-confirmation; backups; “prove you meant it” flags; incident log |
 
 > [!NOTE]
 > Risk levels are about **impact**, not intent. A “simple export” can be L2/L3 if it becomes public or feeds prod.
@@ -161,12 +193,15 @@ Every non-trivial script should declare a risk level (in docs and its `*.script.
 ### ✅ Good fits for `scripts/`
 - 🧱 **Environment bootstrap**: install deps, initialize DB schema, load seed/reference data
 - 🧰 **Dev helpers**: run local stack, health checks, smoke tests, “make my laptop match CI”
+- 🏷️ **Policy pack runners**: local/CI enforcement wrappers (OPA/Conftest, rule reports, waiver checks)
+- 🗂️ **Catalog/provenance wrappers**: STAC/DCAT/PROV build + validate (usually calling `tools/`)
 - 🗺️ **GIS wrappers**: convert formats, validate CRS, generate tiles, build COGs, reprojection helpers
 - 🛰️ **Remote sensing orchestrators**: Earth Engine export triggers, download trackers, derived-product packagers
 - 🧮 **Model/simulation orchestration**: run jobs with recorded configs, seeds, and output receipts
 - 🧪 **Acceptance gates**: schema validation, link checks, provenance completeness, contract checks
 - 🕒 **Scheduled jobs**: backups, cache cleanup, log rotation (cron/Kubernetes CronJob)
 - 🧾 **MCP helpers**: generate experiment folders (`EXP-###`), receipts, and reproducibility manifests
+- 📚 **Story tooling**: scaffold Story Nodes, validate citations, build offline “story packs” for UI
 
 ### ❌ Not a good fit for `scripts/`
 - 🚫 **Core ETL logic** (belongs in `src/pipelines/` or equivalent)
@@ -198,7 +233,7 @@ flowchart LR
 
 ### ✅ What this means for automation
 - Scripts can **run ETL**, but must ensure:
-  - outputs land in `data/<domain>/raw → work → processed`
+  - outputs land in `data/raw → data/work → data/processed` *(stage appropriately)*
   - boundary artifacts exist **before** downstream stages run:
     - STAC → `data/stac/**`
     - DCAT → `data/catalog/dcat/**`
@@ -208,6 +243,7 @@ flowchart LR
   - provenance is missing/incomplete
   - links/assets don’t resolve
   - governance rules fail (license, classification propagation, redaction expectations)
+  - policy pack fails (unless a reviewed waiver exists)
 
 ### 🪪 Dataset ID hygiene (recommended)
 Use **two IDs** (don’t overload one field):
@@ -248,6 +284,7 @@ Preferred contract:
 - `--env {dev|staging|prod}` → required when environment matters
 - `--run-id <id>` → strongly recommended for correlation + provenance
 - `--no-network` default *(or explicit `--allow-network` for fetchers)*
+- `--policy-pack` *(recommended)* → run policy evaluation before mutating state
 
 ---
 
@@ -257,25 +294,32 @@ Preferred contract:
 
 ```text
 📁 scripts/
-├─ 🧰 _lib/                # shared helpers (logging, env validation, guardrails)
-├─ 🧰 dev/                 # local stack helpers, smoke tests, DX scripts
-├─ 🧱 bootstrap/           # first-run setup (deps, DB init, seed/reference loads)
-├─ 🗄️ db/                  # migrations, backups, restores, snapshots, sanity checks
-├─ 🕸️ graph/               # graph sync/load helpers (must reference catalog IDs)
-├─ 🏷️ catalogs/             # STAC/DCAT/PROV build + validate wrappers (usually call tools/)
-├─ 🧪 pipelines/            # pipeline runners (thin wrappers around src/pipelines)
-├─ 🧩 contracts/            # dataset contract generation/validation helpers (JSON schema, templates)
-├─ 🗺️ gis/                 # vector/raster helpers (tiling, CRS checks, COG/PMTiles build)
-├─ 🛰️ remote_sensing/      # GEE wrappers, export tracking, indexing helpers
-├─ 🧊 3d/                  # point clouds / meshes / photogrammetry (LOD, glTF, tiles)
-├─ 🧮 simulation/          # scenario runners (must record seeds/configs + provenance)
-├─ 🤖 ml/                  # train/eval runners (must record datasets + metrics + provenance)
-├─ 📈 stats/               # analysis helpers (EDA, regression diagnostics, uncertainty summaries)
-├─ 🧪 qa/                  # validators, contract checks, dataset acceptance gates
-├─ 🔐 security/            # secrets scans, sensitive-data scans, hostile-input checks
-├─ 🧹 housekeeping/        # rotate logs, purge caches, cleanup artifacts
-├─ 🧪 ci/                  # stable entrypoints used by CI (deterministic, non-interactive)
-└─ 🧾 release/             # snapshot/release helpers (hash manifests, attestations, packaging)
+├─ 🧰 _lib/                  # shared helpers (logging, env validation, guardrails)
+├─ 🧰 dev/                   # local stack helpers, smoke tests, DX scripts
+├─ 🧱 bootstrap/             # first-run setup (deps, DB init, seed/reference loads)
+├─ 🛡️ policy/                # policy pack runners (OPA/Conftest), waivers, reports
+├─ 🧾 lineage/               # PR→PROV, OpenLineage emitters, run receipt helpers
+├─ 🗄️ db/                    # migrations, backups, restores, snapshots, sanity checks
+├─ 🕸️ graph/                 # graph export/sync helpers (must reference catalog IDs)
+├─ 🏷️ catalogs/               # STAC/DCAT/PROV build + validate wrappers (usually call tools/)
+├─ 🧪 pipelines/              # pipeline runners (thin wrappers around src/pipelines)
+├─ 🧩 contracts/              # dataset contract generation/validation helpers (JSON schema, templates)
+├─ 📥 ingest/                # raw intake helpers (downloaders, checksums, raw manifests)
+├─ 🗺️ gis/                   # vector/raster helpers (tiling, CRS checks, COG/PMTiles build)
+├─ 🛰️ remote_sensing/        # GEE wrappers, export tracking, indexing helpers
+├─ 🧊 3d/                    # point clouds / meshes / photogrammetry (LOD, glTF, tiles)
+├─ 🧰 workers/               # background job runners (tiles, indexing, nightly QA) 🧵
+├─ 📚 story_nodes/           # scaffold/validate/publish story nodes + citations
+├─ 🎯 focus_mode/            # focus bundles, RAG index rebuilds, evidence-bundle checks
+├─ 📦 offline_packs/         # build “offline bundles” (tiles + story + catalogs) for field/edu
+├─ 🧮 simulation/            # scenario runners (must record seeds/configs + provenance)
+├─ 🤖 ml/                    # train/eval runners (must record datasets + metrics + provenance)
+├─ 📈 stats/                 # analysis helpers (EDA, regression diagnostics, uncertainty summaries)
+├─ 🧪 qa/                    # validators, contract checks, dataset acceptance gates
+├─ 🔐 security/              # secrets scans, sensitive-data scans, hostile-input checks
+├─ 🧹 housekeeping/          # rotate logs, purge caches, cleanup artifacts
+├─ 🧪 ci/                    # stable entrypoints used by CI (deterministic, non-interactive)
+└─ 🧾 release/               # snapshot/release helpers (hash manifests, attestations, packaging)
 ```
 
 > [!NOTE]
@@ -315,6 +359,9 @@ All scripts must support:
   - `--classification <label>` **or** `--classification-file <path>` (recommended for L2/L3)
   - `--license <SPDX|text>` (required when creating new distributions)
   - scripts must **fail closed** if classification/license cannot be determined
+  - `--policy-pack` (recommended) runs policy evaluation prior to publish
+  - policy waivers must be explicit:
+    - `--waiver-id <ID>` (recommended) → must exist in `docs/governance/waivers.yml` *(or repo equivalent)*
 
 - Provenance ergonomics (recommended):
   - `--run-id <id>` (or env `KFM_RUN_ID`) to correlate logs + PROV
@@ -348,6 +395,7 @@ At the top of each script, include:
 - Owner/team (or “unowned”)
 - Safety defaults (dry-run default, confirmation behavior)
 - Provenance expectations (what IDs/receipts are written)
+- Policy pack integration (which rule set applies; waiver mechanism)
 
 ### 🧾 Script manifest (recommended for discoverability)
 Keep a tiny machine-readable manifest next to scripts that matter:
@@ -359,13 +407,17 @@ risk_level: "L2"
 entrypoint: "scripts/gis/export_county_tiles.py"
 owner: "@kfm-team"
 inputs:
-  - "data/<domain>/processed/**"
+  - "data/processed/<domain>/**"
 outputs:
-  - "data/<domain>/processed/tiles/**"
+  - "data/processed/<domain>/tiles/**"
   - "data/stac/**"
   - "data/catalog/dcat/**"
   - "data/prov/**"
 default_mode: "dry_run"
+policy_pack:
+  enabled: true
+  ruleset: "kfm-default"
+  waiver_required_for_bypass: true
 network:
   default: "deny"
   allowlist: []
@@ -377,6 +429,7 @@ determinism:
   stable_sorting: true
   seeded: true
 gates:
+  - "policy_pack_pass"
   - "stac_schema"
   - "dcat_schema"
   - "prov_schema"
@@ -417,10 +470,7 @@ ENVIRONMENT="dev"
 RUN_ID="${KFM_RUN_ID:-}"
 LOG_JSON=0
 
-cleanup() {
-  # put temp cleanup here if needed
-  :
-}
+cleanup() { :; }
 trap cleanup EXIT INT TERM
 
 usage() {
@@ -430,7 +480,7 @@ Usage:
 
 Examples:
   ./scripts/example.sh --dry-run
-  ./scripts/example.sh --apply --env staging --run-id RUN-20260113-demo --yes
+  ./scripts/example.sh --apply --env staging --run-id RUN-20260119-demo --yes
 EOF
 }
 
@@ -449,7 +499,6 @@ log() {
 die_usage() { log "ERROR" "$*"; exit 2; }
 die_runtime() { log "ERROR" "$*"; exit 10; }
 
-# Parse args
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --help) usage; exit 0 ;;
@@ -467,17 +516,14 @@ done
 RUN_ID="${RUN_ID:-RUN-$(date -u +%Y%m%dT%H%M%S)}"
 
 if [[ "$ENVIRONMENT" == "prod" && "$APPLY" -eq 1 && "$YES" -ne 1 ]]; then
-  die_usage "Refusing prod apply without --yes (and ideally a stronger prod ack flag)."
+  die_usage "Refusing prod apply without --yes (and ideally --i-acknowledge-production)."
 fi
 
 log "INFO" "Starting (env=$ENVIRONMENT, dry_run=$DRY_RUN)"
-
-# ...work...
 log "INFO" "Would do X"
 if [[ "$APPLY" -eq 1 ]]; then
   log "INFO" "Doing X now"
 fi
-
 log "INFO" "Done"
 exit 0
 ```
@@ -548,7 +594,6 @@ def main(argv: list[str]) -> int:
         print("v0.0.0+local")
         return EXIT_OK
 
-    # Decide mode (dry-run is the default unless --apply is explicitly set)
     dry_run = not args.apply
     if args.dry_run:
         dry_run = True
@@ -556,7 +601,7 @@ def main(argv: list[str]) -> int:
     run_id = args.run_id or f"RUN-{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')}"
 
     if args.env == "prod" and not dry_run and not args.yes:
-        log("ERROR", "Refusing prod apply without --yes (and ideally a stronger prod ack flag).",
+        log("ERROR", "Refusing prod apply without --yes (and ideally --i-acknowledge-production).",
             run_id=run_id, jsonl=args.log_json)
         return EXIT_USAGE
 
@@ -567,12 +612,10 @@ def main(argv: list[str]) -> int:
     log("INFO", f"Starting (env={args.env}, dry_run={dry_run}, outdir={outdir}, budgets={budgets})",
         run_id=run_id, jsonl=args.log_json)
 
-    # Network safety (example posture)
     if args.allow_network and args.no_network:
         log("ERROR", "Cannot set both --allow-network and --no-network.", run_id=run_id, jsonl=args.log_json)
         return EXIT_USAGE
 
-    # Example action
     log("INFO", "Would generate artifact manifest", run_id=run_id, jsonl=args.log_json)
     if not dry_run:
         outdir.mkdir(parents=True, exist_ok=True)
@@ -620,20 +663,15 @@ Usage:
 
 Examples:
   node scripts/example.mjs --dry-run
-  node scripts/example.mjs --apply --env staging --run-id RUN-20260113-demo --log-json --yes
+  node scripts/example.mjs --apply --env staging --run-id RUN-20260119-demo --log-json --yes
 `);
 }
 
-function nowIso() {
-  return new Date().toISOString();
-}
+function nowIso() { return new Date().toISOString(); }
 
 function log(level, msg, { runId, jsonl }) {
-  if (jsonl) {
-    console.log(JSON.stringify({ ts: nowIso(), level, run_id: runId, msg }));
-  } else {
-    console.log(`[${level}] ${nowIso()} (run_id=${runId}) ${msg}`);
-  }
+  if (jsonl) console.log(JSON.stringify({ ts: nowIso(), level, run_id: runId, msg }));
+  else console.log(`[${level}] ${nowIso()} (run_id=${runId}) ${msg}`);
 }
 
 const argv = process.argv.slice(2);
@@ -659,12 +697,11 @@ for (let i = 0; i < argv.length; i++) {
 runId = runId || `RUN-${nowIso().replace(/[-:.TZ]/g, "")}`;
 
 if (env === "prod" && !dryRun && !yes) {
-  log("ERROR", "Refusing prod apply without --yes (and ideally a stronger prod ack flag).", { runId, jsonl });
+  log("ERROR", "Refusing prod apply without --yes (and ideally --i-acknowledge-production).", { runId, jsonl });
   process.exit(2);
 }
 
 log("INFO", `Starting (env=${env}, dry_run=${dryRun})`, { runId, jsonl });
-// ...
 log("INFO", "Done", { runId, jsonl });
 process.exit(0);
 ```
@@ -677,21 +714,18 @@ process.exit(0);
 
 KFM’s data work is staged and traceable. Scripts that ingest or transform data must follow staging and produce boundary artifacts.
 
-**Canonical (v13) staging shape:**
-1) 📥 Write raw inputs → `data/<domain>/raw/**`  
-2) 🧱 Write intermediates → `data/<domain>/work/**`  
-3) ✅ Write publishable outputs → `data/<domain>/processed/**`  
+**Canonical staging shape (governed):**
+1) 📥 Write raw inputs → `data/raw/<domain>/**`  
+2) 🧱 Write intermediates → `data/work/<domain>/**`  
+3) ✅ Write publishable outputs → `data/processed/<domain>/**`  
 4) 🗃️ Emit boundary artifacts **before** anything is used downstream:
    - STAC → `data/stac/**`
    - DCAT → `data/catalog/dcat/**`
    - PROV → `data/prov/**`
 
-> [!NOTE]
-> If legacy layouts exist (e.g., `data/raw/<domain>/...`), keep them working — but new work should default to the canonical `data/<domain>/{raw,work,processed}` shape.
-
 > [!IMPORTANT]
 > KFM treats analysis outputs / AI-generated layers / simulation outputs as **first‑class datasets** (“evidence artifacts”):  
-> store them in `data/<domain>/processed/…`, catalog them in STAC/DCAT, trace them in PROV, and expose them only through governed APIs.
+> store them in `data/processed/…`, catalog them in STAC/DCAT, trace them in PROV, and expose them only through governed APIs.
 
 ### 🪪 Classification + sovereignty propagation (hard rule)
 - Outputs cannot be less restricted than their inputs unless a reviewed redaction step exists.
@@ -706,6 +740,61 @@ If you’re tempted to put real transformation logic in a script:
   - calls the canonical module/tool
   - writes run receipts/logs
   - triggers catalog/provenance generation and validation
+
+---
+
+## 📥 Raw intake manifest standard
+
+Raw intake is the **first trust boundary**. Treat `data/raw/**` as “immutable evidence input.”
+
+Recommended raw drop structure (per dataset drop/version):
+
+```text
+data/raw/<domain>/<dataset_or_source>/<snapshot_or_date>/
+├── source.json         # who/what/when/where/how + license + classification
+├── checksums.sha256    # manifest for every file in this snapshot
+├── raw_index.csv       # optional: file listing + types + sizes (nice for review)
+├── telemetry.ndjson    # optional: machine logs (download events, retries, timings)
+└── <payload files...>  # archives / CSVs / PDFs / imagery, etc.
+```
+
+> [!TIP]
+> A good raw intake script (`scripts/ingest/*`) does two things well:
+> 1) **makes it hard to lie** (checksums + source manifest), and  
+> 2) **makes it easy to review** (indexes + deterministic file layout). 🧾✅
+
+---
+
+## 🔁 GitOps lanes: Detect → Validate → Promote
+
+KFM is designed to support **GitOps-friendly ingestion**:
+- data is added/updated via PR  
+- CI runs validation + policy pack  
+- merge triggers the publish lane (or a controlled “promote” action)  
+- catalogs/prov become the interface for graph/API/UI
+
+### 🧭 Recommended lane structure (conceptual)
+
+```mermaid
+flowchart LR
+  D["🔍 Detect change\n(PR / schedule / watcher)"] --> V["✅ Validate\n(schema+policy+gates)"]
+  V -->|pass| P["🟢 Promote\n(publish + catalogs + prov)"]
+  V -->|fail| F["🛑 Fail closed\n(report + receipts)"]
+```
+
+### 🧠 Automation agents (proposed, PR-only) 🤖
+If you adopt a Watcher → Planner → Executor loop:
+- **Watcher** detects drift or missing data
+- **Planner** drafts a patch (or run config)
+- **Executor** opens a PR (never auto-merges), attaching receipts, SBOM, and attestations
+
+> [!WARNING]
+> Any “agent” automation must be:
+> - kill-switchable ✅
+> - idempotent ✅
+> - PR-only ✅
+> - policy-gated ✅
+> - provenance-emitting ✅
 
 ---
 
@@ -732,6 +821,40 @@ Receipt SHOULD include:
 - outputs + checksums
 - produced catalog IDs (collection/item/dataset IDs)
 - warnings (redactions applied, schema deviations, missing optional evidence)
+
+### 🔗 DevOps provenance (recommended)
+If a script runs in CI or promotes data:
+- record PR/commit metadata into PROV (PR → PROV)
+- optionally emit OpenLineage events for pipeline tracking (if adopted)
+
+---
+
+## 🧯 Rollbacks & incident playbooks
+
+KFM automation should assume mistakes happen and make rollbacks **boring**.
+
+### ✅ Rollback principles
+- Prefer **append-only** + “new version” over in-place mutation
+- Treat publishes as **atomic swaps** (run-scoped directory → validate → promote pointer)
+- Keep **run receipts** so rollback is explainable (not just reversible)
+
+### 🧯 Suggested playbooks (scriptable)
+- **Dataset rollback**
+  - revert the commit/PR that introduced the publish
+  - mark distribution as deprecated in DCAT (don’t pretend it never existed)
+  - preserve PROV (audit trail stays)
+
+- **Graph rollback**
+  - graphs ingest from catalogs/exports → rollback is re-import of prior export snapshot
+  - keep graph exports versioned (e.g., `data/graph/csv/<RUN-ID>/...`)
+
+- **Sensitive data incident**
+  - immediately restrict classification tags + remove public distributions
+  - purge caches / invalidate tiles / rotate any leaked keys (if any)
+  - write incident record (who/what/when/impact/remediation)
+
+> [!IMPORTANT]
+> If a rollback can’t be done with receipts + a documented sequence of steps, it’s not a rollback plan — it’s hope. 🧾🧯
 
 ---
 
@@ -764,6 +887,13 @@ Assume inputs are hostile (files from the world, archives, rasters, JSON, PDFs, 
 - ✅ path traversal protections (never trust archive paths)
 - ✅ treat URL fetching as high-risk (SSRF; private IP blocks; allowlists)
 - ✅ isolate complex parsing when possible (containers / subprocess limits / timeouts)
+
+### 🔎 “Derived outputs can leak” reminder
+Even *model outputs* and *analytics exports* can leak sensitive information through inference.  
+Scripts that expose aggregates, embeddings, or model responses should consider:
+- query auditing / inference control
+- rate limits + sampling
+- suppressing small counts / sensitive attribute disclosure
 
 > [!CAUTION]
 > If a script can delete, drop, truncate, overwrite, revoke, or publish:  
@@ -880,10 +1010,29 @@ Treat 3D assets like any other evidence: stage → catalog → provenance → QA
 
 ---
 
+## 📚 Story Nodes & Focus Mode automation
+
+KFM’s UI is **API-only** and Focus Mode is **evidence‑bound**:
+- Story Nodes should cite cataloged evidence
+- AI-assisted narrative must preserve provenance and citations
+- Scripts can scaffold and validate story content, but may not bypass governance
+
+### ✅ Recommended script jobs
+- `scripts/story_nodes/new_*` → scaffold a Story Node (Markdown + JSON config)
+- `scripts/story_nodes/validate_*` → enforce citation rules + required evidence anchors
+- `scripts/focus_mode/build_bundle_*` → build a “focus bundle” of catalogs + excerpts
+- `scripts/offline_packs/build_*` → bundle tiles + story + catalogs for offline/field use (if adopted)
+
+> [!TIP]
+> Treat story assets like data: validate, version, and ship with receipts. 📚🧾
+
+---
+
 ## 🧪 QA scripts (contracts & acceptance gates)
 
 `scripts/qa/` is for “trust checks” — scripts that keep the system honest:
 
+- ✅ policy pack evaluation (OPA/Conftest or equivalent)
 - ✅ schema validation for STAC/DCAT/PROV
 - ✅ dataset contract validation (JSON schema + required fields)
 - ✅ catalog link checks (assets exist; hrefs resolve)
@@ -903,6 +1052,9 @@ python scripts/qa/validate_stac_links.py data/stac/items
 # Provenance completeness
 python scripts/qa/validate_prov_bundle.py data/prov
 
+# Policy pack (conceptual)
+./scripts/policy/run_policy_pack.sh --ruleset kfm-default
+
 # Secrets scan (repo-wide)
 python scripts/security/scan_secrets.py .
 ```
@@ -917,13 +1069,14 @@ python scripts/security/scan_secrets.py .
 These are forward-looking patterns captured in KFM planning docs. Optional until implemented — but they shape folder naming and interfaces.
 
 ### 🔁 Detect → Validate → Promote (promotion pipeline)
-A pipeline watches for changes, runs validation lanes, and promotes via PR (not direct merges), with supply‑chain attestation and lineage events (Sigstore/OpenLineage) proposed.
+A pipeline watches for changes, runs validation lanes, and promotes via PR (not direct merges), with supply‑chain attestation and lineage events proposed.
 
 **Suggested homes (if/when implemented):**
 - `scripts/ci/detect_changes.*`
 - `scripts/ci/validate_lanes.*`
 - `scripts/ci/promote_via_pr.*`
 - `scripts/ci/emit_lineage.*`
+- `scripts/release/sign_*` *(Sigstore/attestations, if adopted)*
 
 ### 🧠 Watcher → Planner → Executor (W–P–E) agent loop
 Proposed agent model:
@@ -954,7 +1107,7 @@ If you introduce a DSL/config language:
 
 ## 🧩 Adding a new script (checklist)
 
-1) 📁 Put it in the right subfolder (`db/ gis/ remote_sensing/ qa/ …`)
+1) 📁 Put it in the right subfolder (`db/ gis/ ingest/ policy/ qa/ …`)
 2) 🏷️ Name it as a verb: `import_*`, `export_*`, `generate_*`, `validate_*`, `backup_*`
 3) 🧪 Add `--help` + 2 examples
 4) 🛡️ Add `--dry-run` default and explicit confirmations for writes
@@ -962,8 +1115,9 @@ If you introduce a DSL/config language:
 6) 🪵 Log clearly (what, where, record counts, elapsed time)
 7) ♻️ Make it idempotent (re-runs should not duplicate or corrupt)
 8) 🧪 Make it CI-friendly (non-interactive; stable exit codes)
-9) 🧾 Add a `*.script.yaml` manifest (recommended) including risk level + budgets
-10) 📝 Update this README and the script registry below
+9) 🧾 Add a `*.script.yaml` manifest (recommended) including risk level + budgets + policy pack
+10) 🛡️ Ensure policy pack passes (or document waiver with `waiver_id`)
+11) 📝 Update this README and the script registry below
 
 ---
 
@@ -975,16 +1129,25 @@ If you introduce a DSL/config language:
 |---|---|---|---|
 | 🧰 dev | `dev/up.*` | Start local stack (compose) | read-only-ish |
 | 🧰 dev | `dev/smoke.*` | Quick sanity checks | L0 |
+| 🛡️ policy | `policy/run_*` | Run policy pack locally/CI | L0 |
+| 🧾 lineage | `lineage/pr_to_prov.*` | PR → PROV receipts | L1/L2 |
 | 🗄️ db | `db/migrate.*` | Apply DB migrations | L3 |
 | 🗄️ db | `db/backup_*` | Create encrypted DB backups | L2/L3 |
 | 🗄️ db | `db/restore_*` | Restore backups | L4 |
+| 📥 ingest | `ingest/fetch_*` | Fetch raw inputs + checksums + source.json | L1 |
 | 🗺️ gis | `gis/import_*` | Load vectors/rasters into staging | L1/L2 |
-| 🗺️ gis | `gis/export_*` | Export layers to tiles/COGs | L2 |
+| 🗺️ gis | `gis/export_*` | Export layers to tiles/COGs/PMTiles | L2 |
 | 🧊 3d | `3d/build_*` | Build LOD/tiles for 3D assets | L2 |
 | 🏷️ catalogs | `catalogs/build_*` | Build STAC/DCAT/PROV artifacts | L2 |
 | 🏷️ catalogs | `catalogs/validate_*` | Validate schemas + links | L0 |
+| 🕸️ graph | `graph/export_*` | Export graph ingest files (CSV/Cypher/JSON) | L2 |
 | 🕸️ graph | `graph/sync_*` | Sync catalog refs into graph | L3 |
 | 🛰️ remote_sensing | `remote_sensing/export_*` | Trigger/track derived EO exports | L2 |
+| 🧰 workers | `workers/run_*` | Run background tasks (tiles, indexing) | L2/L3 |
+| 📚 story_nodes | `story_nodes/new_*` | Scaffold story nodes | L1 |
+| 📚 story_nodes | `story_nodes/validate_*` | Validate citations/evidence anchors | L0/L1 |
+| 🎯 focus_mode | `focus_mode/build_*` | Build focus bundles + evidence checks | L1/L2 |
+| 📦 offline_packs | `offline_packs/build_*` | Build offline bundles (if adopted) | L2 |
 | 🧮 simulation | `simulation/run_*` | Run scenarios/jobs | L2 |
 | 🤖 ml | `ml/train_*` / `ml/eval_*` | Train/evaluate models | L2 |
 | 📈 stats | `stats/eda_*` | Quick EDA + diagnostics | L0/L1 |
@@ -1002,71 +1165,34 @@ If you introduce a DSL/config language:
 <details>
 <summary><b>📦 Expand: project files → how they shape scripts</b></summary>
 
-### 🧭 Governance, evidence, and repo discipline
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) — contract‑first + provenance‑first; catalogs as interfaces; “no mystery layers”
-- `MARKDOWN_GUIDE_v13.md.gdoc` — repo doctrine: deterministic pipeline ordering; governance review triggers; redaction posture
-- `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` — protocols, experiment IDs (EXP‑###), reproducibility receipts
-- `Foundational Templates and Glossary for Scientific Method _ Research _ Master Coder Protocol.pdf` — consistent manifests/receipts/templates
-- `Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — optional roadmaps: detect→validate→promote, PR-only automation, lineage
-- `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` — forces real SOPs + real CI gates + real “definition of done”
+### 🧭 Core KFM specs (what scripts must serve)
+- **KFM comprehensive technical blueprint** → architecture boundaries, governance posture, evidence-first ethos  
+   [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
+- **KFM architecture/features/design** → clean boundaries + domain-first thinking + integration surface  
+   [oai_citation:1‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)
+- **KFM AI system overview** → policy pack gating, PR-based automation constraints, evidence-bound AI behavior  
+   [oai_citation:2‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)
+- **KFM UI system overview** → API-only boundary, story/focus workflows, evidence-linked narratives  
+   [oai_citation:3‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)
+- **KFM data intake guide** → raw trust boundary, manifest/checksum expectations, streaming watcher patterns  
+   [oai_citation:4‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)
+- **Latest ideas & future proposals** → agent loops, supply chain attestations, PR-only automation direction  
+   [oai_citation:5‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)
+- **Innovative concepts (evolution roadmap)** → advanced workflows (4D, AR storytelling, crowdsourced validation)  
+   [oai_citation:6‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)
 
-### 🗂️ Data spaces, catalogs, and metadata interfaces
-- `Data Spaces.pdf` — metadata-as-interface, federated discovery, access control, provenance, auditability
-- `Scalable Data Management for Future Hardware.pdf` — chunking, locality, pipeline breakers, throughput-oriented thinking
-- `Database Performance at Scale.pdf`  [oai_citation:1‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen) — latency/throughput tradeoffs, query planning discipline, tail-latency awareness
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` — PostGIS indexing/import patterns, operational hygiene
+### 📚 Reference libraries (PDF portfolios 🗂️)
+These are curated “bookshelf” portfolios that influence **how** we write scripts (safety, performance, GIS, WebGL, ML discipline).  
+They may require a PDF portfolio-capable viewer (or local extraction via `pdfdetach`).
 
-### 🗺️ GIS, cartography, and disclosure boundaries
-- `python-geospatial-analysis-cookbook.pdf` — CRS hygiene, vector/raster IO discipline, safe transforms
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf` — map honesty; aggregation/symbology changes meaning → document choices
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` — offline + payload budgets; location sensitivity awareness
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` — quicklook optimization (QA without repo bloat)
-
-### 🛰️ Remote sensing
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` — export discipline, time-series outputs, derived indices governance
-
-### 🧮 Modeling, simulation, optimization
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` — V&V posture, sensitivity analysis, run receipts
-- `Generalized Topology Optimization for Structural Design.pdf` — optimization outputs: objective/constraints + parameter sweeps captured in PROV
-
-### 📈 Statistics, uncertainty, and “look-first” QA
-- `Understanding Statistics & Experimental Design.pdf` — experimental rigor, assumptions explicit, avoid misleading claims
-- `graphical-data-analysis-with-r.pdf` — diagnostics/EDA; QA artifacts as first-class evidence
-- `regression-analysis-with-python.pdf` + `Regression analysis using Python - slides-linear-regression.pdf` — baseline + residual checks discipline
-- `think-bayes-bayesian-statistics-in-python.pdf` — uncertainty-forward reporting; provenance of priors/posteriors
-
-### 🤖 ML, AI governance, and labeling
-- `Understanding Machine Learning: From Theory to Algorithms.pdf`  [oai_citation:2‡U-X programming Books.pdf](file-service://file-3hYtSGHtHmb6wyTtavym6M) — splits/leakage/claims discipline
-- `Deep Learning for Coders with fastai and PyTorch - ...pdf` *(library reference; not tool-indexed here)* — model cards, reproducibility, training/serving separation
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` — label AI-derived artifacts; avoid automation theater
-
-### 🕸️ Graph analytics
-- `Spectral Geometry of Graphs.pdf` — graph metrics are signals; keep explainability + provenance
-
-### 🧊 3D GIS & archaeology
-- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`  [oai_citation:3‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2) — 3D evidence handling; 3D assets as governed spatial data
-
-### 🌐 Web & 3D rendering constraints
-- `responsive-web-design-with-html5-and-css3.pdf` — latency/payload constraints; progressive loading
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` — GPU/LOD constraints; coordinate conventions; graceful degradation
-
-### 🛡️ Security posture (defensive awareness)
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` — threat model the ingest surface; deny-by-default
-- `Gray Hat Python - ... (2009).pdf` — hostile input awareness for parsers/extractors; sandboxing; no unsafe deserialization
-- `S-T programming Books.pdf` — secure web posture (XSS/unsafe inputs) for any scripts touching UI content
-
-### 🧵 Concurrency & distributed execution
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` — bounded work, timeouts, backpressure, deterministic outputs
-
-### 🧩 Language tooling & scripting references
-- `Implementing Programming Languages. An Introduction to Compilers and Interpreters.pdf`  [oai_citation:4‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a) — safe parsing/grammar discipline if DSLs emerge
-- `Bash Notes for Professionals.pdf`  [oai_citation:5‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ) — shell safety patterns (strict mode, quoting, traps)
-- `MATLAB Notes for Professionals.pdf`  [oai_citation:6‡M-N programming Books.pdf](file-service://file-EYCp5md89QY2cy5PCYS18e) — reproducible numerical workflows (if MATLAB/Octave enters the stack)
-- Programming bundles (`A ...`, `B-C ...`, `D-E ...`, `F-H ...`, `I-L ...`, `M-N ...`, `O-R ...`, `S-T ...`, `U-X ...`) — broad engineering reference stack
-
-### ❤️ Human systems & ethics
-- `Introduction to Digital Humanism.pdf` — human-centered governance: transparency, accountability, dignity
-- `Principles of Biological Autonomy - ...pdf` — systems thinking; feedback loops; stability; avoid self-justifying pipelines
+- **AI/ML concepts library** (evaluation discipline, resource constraints, ML ops instincts)  
+   [oai_citation:7‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)
+- **Data management + Bayesian methods library** (data architectures, performance, reproducibility, uncertainty)  
+   [oai_citation:8‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)
+- **Maps + WebGL + virtual worlds library** (cartography, 3D GIS, rendering constraints, Cesium/WebGL patterns)  
+   [oai_citation:9‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)
+- **Programming languages & resources library** (polyglot references: bash/python/js/java/etc; scripting ergonomics)  
+   [oai_citation:10‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi)
 
 </details>
 
@@ -1080,8 +1206,9 @@ A script is considered complete when:
 - ✅ Repeatable/idempotent (re-run doesn’t duplicate or corrupt)
 - ✅ Documented (`--help` + 2 examples + `--version`)
 - ✅ Logs what it did (counts, paths, elapsed time) + optional JSONL (`--log-json`)
-- ✅ Outputs land in the correct stage (`raw/ → work/ → processed/`)
+- ✅ Outputs land in the correct stage (`data/raw/ → data/work/ → data/processed/`)
 - ✅ (When applicable) emits/updates boundary artifacts (STAC/DCAT/PROV)
+- ✅ Policy pack pass (or documented waiver) 🛡️
 - ✅ Registered in the script registry + has a `*.script.yaml` manifest (recommended)
 - ✅ CI-friendly (non-interactive; stable exit codes)
 - ⭐ Resource budgets supported for hostile inputs (timeouts, size caps, max workers)
@@ -1093,7 +1220,8 @@ A script is considered complete when:
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
-| v1.4.0 | 2026-01-13 | Aligned staging paths to v13 **domain-first** (`data/<domain>/{raw,work,processed}`); added governance review triggers + risk levels (L0–L4); expanded contracts/budgets expectations; added 3D/point-cloud category and guidance; removed placeholder citation markers and replaced with project-file evidence anchors. | KFM Engineering |
+| v1.5.0 | 2026-01-19 | 🛡️ Added **Policy Pack** integration expectations; aligned canonical staging to `data/raw → data/work → data/processed` and catalog roots (`data/stac`, `data/catalog/dcat`, `data/prov`); added raw intake manifest standard; added GitOps lane language (Detect→Validate→Promote) + PR-only automation posture; added rollback/incident playbooks; expanded folder map + registry for policy/lineage/story/focus/offline/workers; refreshed influence map to include **all project files** (incl. PDF portfolios). | KFM Engineering |
+| v1.4.0 | 2026-01-13 | Introduced governance review triggers + risk levels (L0–L4); expanded contracts/budgets expectations; added 3D/point-cloud category and guidance; cleaned up evidence anchors. | KFM Engineering |
 | v1.3.0 | 2026-01-11 | Aligned `scripts/` with Master Guide v13 principles (contract-first + deterministic pipeline + evidence artifacts); added templates; clarified boundary artifacts + dataset versioning hygiene; captured roadmaps (Detect→Validate→Promote, W–P–E). | KFM Engineering |
 | v1.2.0 | 2026-01-09 | Aligned scripts with contract-first + evidence-first rules; added sovereignty/no‑downgrade guardrails, performance/concurrency notes, tightened acceptance gates. | KFM Engineering |
 | v1.1.0 | 2026-01-07 | Established repo-wide automation surface, safety defaults, folder map, standard script contract, and registry. | KFM Engineering |
@@ -1102,14 +1230,29 @@ A script is considered complete when:
 
 ## 📎 Evidence anchors
 
-> These are the “load-bearing” references used to keep `scripts/` aligned with the repo’s doctrine.
-> (If you move/rename these, update the influence map.)
+> These are the “load-bearing” references used to keep `scripts/` aligned with the repo doctrine.  
+> If you move/rename these, update the influence map.
 
-- `Implementing Programming Languages...pdf`  [oai_citation:7‡I-L programming Books.pdf](file-service://file-T9sYu87k1GPNNKMLddx41a)
-- `MATLAB Notes for Professionals.pdf`  [oai_citation:8‡M-N programming Books.pdf](file-service://file-EYCp5md89QY2cy5PCYS18e)
-- `Bash Notes for Professionals.pdf`  [oai_citation:9‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ)
-- `Understanding Machine Learning: From Theory to Algorithms.pdf`  [oai_citation:10‡U-X programming Books.pdf](file-service://file-3hYtSGHtHmb6wyTtavym6M)
-- `Flexible Software Design...pdf`  [oai_citation:11‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)
-- `Database Performance at Scale.pdf`  [oai_citation:12‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen)
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`  [oai_citation:14‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2)
+### 🧭 KFM system documents
+- KFM Comprehensive Technical Documentation  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+- KFM Comprehensive Architecture, Features, and Design  [oai_citation:12‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)  
+- KFM AI System Overview 🧭🤖  [oai_citation:13‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- KFM Comprehensive UI System Overview  [oai_citation:14‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+- KFM Data Intake — Technical & Design Guide  [oai_citation:15‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- KFM Latest Ideas & Future Proposals 🌟  [oai_citation:16‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- Innovative Concepts to Evolve KFM  [oai_citation:17‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
+
+### 📚 Reference library portfolios (bookshelf bundles)
+- AI Concepts & more (PDF portfolio)  [oai_citation:18‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)  
+- Data Management + Bayesian Methods bundle (PDF portfolio)  [oai_citation:19‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)  
+- Maps / GoogleMaps / VirtualWorlds / WebGL bundle (PDF portfolio)  [oai_citation:20‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)  
+- Various programming languages & resources 1 (PDF portfolio)  [oai_citation:21‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi)  
+
+---
+
+<div align="center">
+
+**© 2026 Kansas Frontier Matrix** · CC‑BY 4.0 (project docs)  
+🧬 FAIR+CARE · 🪶 Sovereignty-aware · 🛡️ Policy-gated builds · 🧾 Evidence-first
+
+</div>
