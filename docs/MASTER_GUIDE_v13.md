@@ -1,8 +1,8 @@
 ---
 title: "📘 KFM Master Guide v13 — Kansas Frontier Matrix (Canonical System Guide)"
 path: "docs/MASTER_GUIDE_v13.md"
-version: "v13.0.0"
-last_updated: "2026-01-12"
+version: "v13.0.1"
+last_updated: "2026-01-19"
 status: "active"
 doc_kind: "Master Guide"
 license: "CC-BY-4.0"
@@ -22,6 +22,11 @@ security_ref: "docs/governance/SECURITY.md"
 contributing_ref: "CONTRIBUTING.md"
 code_of_conduct_ref: "CODE_OF_CONDUCT.md"
 
+# helpful cross-refs (recommended)
+blueprint_ref: "docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md"
+markdown_work_protocol_ref: "docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md"
+library_manifest_ref: "docs/library/MANIFEST.yml"
+
 fair_category: "FAIR+CARE"
 care_label: "Public"
 sensitivity: "public"
@@ -31,346 +36,420 @@ classification: "open"
 <a id="top"></a>
 
 # 📘 KFM Master Guide v13 🧭🌾🗺️  
-**Kansas Frontier Matrix (KFM)** is a provenance-first, catalog-driven, knowledge-graph-backed **living atlas of Kansas**: historical mapping + modern remote sensing + GIS + modeling + AI-assisted research — delivered via APIs + a map-first web UI.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+**Kansas Frontier Matrix (KFM)** is a provenance-first “living atlas of Kansas” — turning **maps, datasets, documents, and models** into an **auditable, queryable, mappable knowledge system** where citations and metadata are first-class (no black boxes).  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
 
 ![KFM](https://img.shields.io/badge/KFM-v13%20Master%20Guide-1f6feb)
-![Protocol](https://img.shields.io/badge/KFM--MDP-v11.2.6-8957e5)
-![Evidence](https://img.shields.io/badge/evidence--first-STAC%20%2B%20DCAT%20%2B%20PROV-0aa3a3)
+![MDP](https://img.shields.io/badge/KFM--MDP-v11.2.6-8957e5)
+![ONTO](https://img.shields.io/badge/KFM--ONTO-v4.1.0-6f42c1)
+![Catalog](https://img.shields.io/badge/evidence%20spine-STAC%20%2B%20DCAT%20%2B%20PROV-0aa3a3)
 ![Governance](https://img.shields.io/badge/FAIR%2BCARE-governed-2ea043)
 ![Graph](https://img.shields.io/badge/knowledge--graph-Neo4j-00b894)
-![API](https://img.shields.io/badge/API-FastAPI%20%7C%20GraphQL-8250df)
+![Spatial](https://img.shields.io/badge/spatial-PostGIS-336791)
+![API](https://img.shields.io/badge/APIs-REST%20%7C%20GraphQL-8250df)
 ![UI](https://img.shields.io/badge/UI-React%20%7C%20MapLibre%20%7C%20Cesium-f97316)
+![Policy](https://img.shields.io/badge/policy--as--code-OPA%20%2B%20Conftest-black)
+![SupplyChain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20SLSA%20%2B%20Sigstore-111827)
 
 > [!IMPORTANT]
-> This file is the **canonical “Start Here”** for KFM: architecture, workflows, standards, and the “golden paths” for building, shipping, and governing data + code.  
-> If anything contradicts this guide, **open an issue** and treat it as a governance event.
+> This file is the canonical **“Start Here”** for KFM’s architecture, workflows, standards, and golden paths.  
+> If anything contradicts this guide, treat it as a governance event.
 
 ---
 
 ## 🧭 Quick Jump
 - 🚀 [Start Here](#-start-here)
+- 🔒 [Non‑Negotiables (KFM Rules)](#-nonnegotiables-kfm-rules)
 - 🧱 [System Architecture](#-system-architecture)
-- 🗂️ [Repository Map](#️-repository-map)
-- 🛰️ [Data → Catalog → Graph → API → UI Pipeline](#️-data--catalog--graph--api--ui-pipeline)
-- 📚 [Modeling & Analytics](#-modeling--analytics)
+- 🗂️ [Repository Map (v13)](#️-repository-map-v13)
+- 🛰️ [The Evidence Spine (Pipeline)](#️-the-evidence-spine-pipeline)
+- 📥 [Data Intake (Raw → Governed)](#-data-intake-raw--governed)
+- 🧠 [Graph, Ontology, Semantics](#-graph-ontology-semantics)
+- 🔌 [APIs & Contracts](#-apis--contracts)
+- 🗺️ [UI & Story Nodes](#️-ui--story-nodes)
+- 🤖 [Focus Mode (AI System)](#-focus-mode-ai-system)
 - 🧑‍⚖️ [Governance, Ethics, Sovereignty](#️-governance-ethics-sovereignty)
-- 🔐 [Security & Compliance](#-security--compliance)
-- ✅ [Validation & CI](#-validation--ci)
-- 🤝 [Contributing](#-contributing)
+- 🔐 [Security, Policy, Supply Chain](#-security-policy-supply-chain)
+- ✅ [Validation & CI/CD](#-validation--cicd)
 - 🧪 [Roadmap & Future Proposals](#-roadmap--future-proposals)
-- 📦 [Reference Shelf](#-reference-shelf)
+- 📚 [Reference Shelf (Project Library)](#-reference-shelf-project-library)
+- 🧾 [Appendices (Checklists)](#-appendices-checklists)
 
 ---
 
 ## 🚀 Start Here
 
 ### ✅ What KFM is (in one breath)
-KFM turns **maps + datasets + documents + models** into an **auditable, queryable, mappable knowledge system** for Kansas — where every output is traceable to sources and processing steps (PROV), discoverable (DCAT), and geographically addressable (STAC).  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+KFM is an open-source geospatial + historical knowledge hub that publishes governed catalogs (**STAC/DCAT/PROV**), builds a **Neo4j knowledge graph**, and serves evidence via **contracted APIs** into a **map‑first UI** with narrative Story Nodes and an evidence‑bound AI assistant.  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### 🧰 “Golden Path” (new contributors)
-1. **Read governance** → `docs/governance/ROOT_GOVERNANCE.md` 🧑‍⚖️  
-2. **Pick a domain** (e.g., hydrology, air quality, archaeology, landcover) 🌊🌫️🏺🌾  
-3. **Ingest one small dataset** (single county / single time slice) 📦  
-4. **Emit catalogs** (STAC Item + DCAT Dataset + PROV run) 🛰️🗂️🧬  
-5. **Validate** (schemas + links + checksums) ✅  
-6. **Publish** (catalog registry + graph edges) 🕸️  
-7. **Ship a Story Node** (human narrative) 🎬  
-8. **Optional**: wire to Focus Mode (evidence-backed assistant) 🧠
+### 🧬 The canonical ordering (non‑negotiable)
+**ETL → STAC/DCAT/PROV → Neo4j Graph → APIs → UI → Story Nodes → Focus Mode** (no leapfrogging).  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-> KFM’s design is intentionally modular (clean architecture) and documented as such.  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)  [oai_citation:3‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3)
+### 🧰 Golden Paths (pick your role)
+<details>
+<summary><b>🧑‍🔬 Data Contributor (first dataset → live layer)</b></summary>
+
+1) 📚 Read governance + sensitivity policy (`docs/governance/*`)  
+2) 📦 Add a small, bounded dataset (one county / one period)  
+3) 🧾 Write a **data contract** (source, license, spatial/temporal extent, processing steps) — enforced by validators  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+4) 🛰️ Emit catalogs: **STAC Item/Collection + DCAT Dataset + PROV run** (linked together)  [oai_citation:4‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+5) ✅ Run validations (schemas, links, hashes, policy pack)  
+6) 🕸️ Register graph nodes/edges (datasets/assets/activities)  [oai_citation:5‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+7) 🗺️ Publish a layer (tiles / GeoJSON / PMTiles, depending on use)  
+</details>
+
+<details>
+<summary><b>🎬 Story Author (story node → map narrative)</b></summary>
+
+1) 🧾 Pick an evidence bundle (datasets + docs)  
+2) 🧭 Define the “claim/question” + uncertainty statement  
+3) 🗺️ Author Story Node linking map views + timeline + citations  
+4) ✅ Validate story schema + governance checks  
+5) 🚢 Publish (Story Nodes are governed content, not blog posts)  
+</details>
+
+<details>
+<summary><b>🧑‍💻 UI/Frontend (feature → provenance-visible UX)</b></summary>
+
+1) 🗺️ Build on MapLibre (2D) + Cesium (3D), timeline, and narrative UI  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+2) ⛓️ Always surface provenance (“Layer Info” + proposed “Layer Provenance” panel)  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+3) 📱 Keep mobile/offline in mind (PWA + offline packs)  [oai_citation:8‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+</details>
+
+<details>
+<summary><b>🤖 AI/Focus Mode (RAG → cited answers)</b></summary>
+
+1) 🔎 Parse intent/entities → retrieve from Neo4j + search index → generate answer with citations → governance check  [oai_citation:9‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+2) 🧾 If it can’t be grounded in KFM evidence, it refuses or marks uncertainty  [oai_citation:10‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+3) 🛡️ Enforce policy at runtime (OPA allow/deny)  [oai_citation:11‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+</details>
+
+---
+
+## 🔒 Non‑Negotiables (KFM Rules)
+
+> [!NOTE]
+> These are engineering constraints (not “best practices”). They protect trust, provenance, and sovereignty.
+
+1. ⛓ **No mystery layers** — unsourced/ad‑hoc data doesn’t enter the official catalog.  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+2. 🧾 **Contract‑first** — every dataset has a metadata contract (source/license/spatiotemporal/steps) enforced by validators.  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+3. 🛰️ **Catalog triplet required** — STAC + DCAT + PROV are the minimum publishable spine outputs.  [oai_citation:14‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+4. 🧬 **Provenance never breaks** — exports, stories, and AI answers carry lineage forward.  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+5. 🧑‍⚖️ **FAIR+CARE + sovereignty** — sensitive/cultural data is classified and handled with authority-to-control patterns.  [oai_citation:16‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)  
+6. 🛡️ **Policy‑as‑code** — governance is machine‑enforced (OPA + Conftest), not vibes.  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+7. 🔐 **Supply‑chain integrity** — SBOM + SLSA attestations + transparency logs for automated outputs.  [oai_citation:18‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)  
+8. 🌱 **Sustainability is governed** — energy/carbon accountability can gate costly compute.  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
 
 ---
 
 ## 🧱 System Architecture
 
-KFM follows **clean architecture** layers so domain logic stays stable while storage/UI can evolve.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+KFM is designed in modular layers to integrate heterogeneous historical + geospatial data into a cohesive research tool.  [oai_citation:20‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
 
 ### 🧩 Layers (conceptual)
-- 🧠 **Domain**: core entities (Places, Events, Datasets, Observations, Tiles, Story Nodes)
-- 🧪 **Services**: use cases (ingest, fuse, model, publish, narrate)
-- 🔌 **Adapters**: translate between contracts ↔ domain
-- 🏗️ **Infrastructure**: PostGIS, Neo4j, object storage, tile servers, Earth Engine, CI tooling
+- 🧠 **Domain**: Places, Events, Datasets, Observations, Story Nodes
+- 🧪 **Services**: ingest → validate → catalog → graph → publish → narrate
+- 🔌 **Adapters**: contracts ↔ domain, PostGIS, Neo4j, search index
+- 🏗️ **Infra**: object storage, tile serving, CI/CD, policy engine
 
-### 🕸️ Why two stores?
-- 🗺️ **PostGIS** → spatial querying, tiling, analytics-friendly geometry
-- 🧠 **Neo4j** → semantics + relationships (people↔places↔events↔datasets), narrative traversal
-
-Graph-aware analysis can also surface “bridge entities” / clusters (useful for Story Nodes + discovery), aligning with graph spectral intuition.  [oai_citation:5‡Spectral Geometry of Graphs.pdf](file-service://file-DWxRbQDZGktGtiWtzAQxs8)
+### 🗺️ Why two “truth stores”?
+- 🗺️ **PostGIS** for spatial query + tiles + heavy geometry ops  [oai_citation:21‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- 🕸️ **Neo4j** for semantic relationships, narrative traversal, and multi-hop context for retrieval  [oai_citation:22‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
 
 ---
 
-## 🗂️ Repository Map
+## 🗂️ Repository Map (v13)
 
-> This is the **canonical mental model** of the monorepo. Actual trees evolve; the contracts and governance do not.  [oai_citation:6‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3)
+> v13 standardizes where subsystems live (one canonical home each) and reorganizes Story Nodes under governed paths.  [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ```text
 🏠 Kansas-Frontier-Matrix/
-├─ 📁 api/                         # FastAPI + GraphQL + contracts + scripts
-│  ├─ 📁 contracts/                 # OpenAPI/GraphQL + JSON Schemas (contract-first)
-│  ├─ 📁 src/                       # application code (clean architecture)
-│  └─ 📁 scripts/                   # ingestion, catalogs, telemetry, policy, CI helpers
+├─ 📁 data/                         # raw/work/processed + catalogs (STAC/DCAT/PROV)
+│  ├─ 📁 raw/                       # immutable drops (append-only)
+│  ├─ 📁 work/                      # scratch + sims + staging (governed by policy)
+│  ├─ 📁 processed/                 # normalized outputs (GeoParquet/COG/etc.)
+│  ├─ 📁 catalog/                   # materialized STAC/DCAT/PROV outputs
+│  └─ 📁 graph/                     # CSV imports / snapshots for Neo4j
 │
-├─ 📁 web/                         # React UI (MapLibre + Cesium), Story Nodes, Focus Mode UI
+├─ 📁 docs/                         # governed docs (this file lives here)
+│  ├─ 📁 architecture/              # blueprints, ADRs
+│  ├─ 📁 governance/                # FAIR+CARE, ethics, sovereignty, security
+│  ├─ 📁 reports/story_nodes/        # narrative content (draft vs published)
+│  └─ 📁 library/                   # reference manifest(s) for project shelf
 │
-├─ 📁 data/                        # curated datasets (raw/processed/catalog/prov)
-│  ├─ 📁 sources/                  # source manifests + download rules
-│  ├─ 📁 raw/                      # immutable raw drops (append-only)
-│  ├─ 📁 processed/                # normalized outputs + partitioning
-│  └─ 📁 catalogs/                 # STAC/DCAT/PROV materialized outputs
+├─ 📁 schemas/                      # JSON Schemas for catalogs, story nodes, UI config, telemetry
+├─ 📁 src/
+│  ├─ 📁 server/                    # API service implementation + contracts boundary
+│  ├─ 📁 pipelines/                 # ETL/model runs (idempotent)
+│  └─ 📁 graph/                     # ontology bindings + ingest tooling
 │
-├─ 📁 pipelines/                   # ETL + modeling pipelines (idempotent, provenance-first)
-├─ 📁 mcp/                         # experiments, model cards, evaluation logs
-├─ 📁 tools/                       # validators, schema-lints, helpers
-├─ 📁 docs/                        # governed documentation (this file lives here)
-└─ 📁 .github/                     # workflows, actions, security gates
+├─ 📁 web/                          # React UI (MapLibre + Cesium), Focus Mode UI
+├─ 📁 tools/                        # validators, policy pack, schema lints
+├─ 📁 mcp/                          # experiments, eval logs, model cards
+├─ 📁 tests/                        # unit/integration/e2e
+└─ 📁 .github/                      # workflows, security gates
 ```
 
 ---
 
-## 🛰️ Data → Catalog → Graph → API → UI Pipeline
+## 🛰️ The Evidence Spine (Pipeline)
 
-### 🧬 The canonical flow (KFM “spine”)
+### 🧬 “Spine” diagram
 ```mermaid
 flowchart LR
-  A[📥 Ingest / ETL] --> B[🛰️ STAC Items & Collections]
+  A[📥 ETL / Ingest] --> B[🛰️ STAC Items & Collections]
   A --> C[🗂️ DCAT Datasets]
   A --> D[🧬 PROV Runs]
   B --> E[🕸️ Neo4j Graph Build]
   C --> E
   D --> E
-  E --> F[🔌 API Layer: REST/OpenAPI + GraphQL]
-  F --> G[🗺️ Web UI: Map Explorer + Story Nodes]
-  G --> H[🧠 Focus Mode: evidence-backed answers]
+  E --> F[🔌 APIs (REST/OpenAPI + GraphQL)]
+  F --> G[🗺️ UI (Map Explorer + Timeline + Stories)]
+  G --> H[🤖 Focus Mode (Cited RAG Answers)]
 ```
 
-### 📦 Catalog outputs (minimum)
-Every publishable pipeline run should produce:
-- 🛰️ **STAC Item / Collection** for geospatial assets & footprints
-- 🗂️ **DCAT Dataset** for discovery + licensing + access URLs
-- 🧬 **PROV** for lineage (inputs → transforms → outputs)
+### 📦 The catalog triplet (minimum publishable output)
+KFM links STAC/DCAT/PROV so discovery metadata, technical asset metadata, and lineage travel together.  [oai_citation:24‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
 
-This “catalog triplet” is the operational definition of “evidence-first” in KFM.  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
-
-### 🧾 Why this works
-- **STAC** answers: *what is it, where is it, what time is it, what files exist?*  
-- **DCAT** answers: *who publishes it, what’s the license, how do I cite/access it?*  
-- **PROV** answers: *how was it produced, by which code/config, from which inputs?*  
+- 🛰️ **STAC** answers “what/where/when/files?”  [oai_citation:25‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- 🗂️ **DCAT** answers “publisher/license/access/citation?”  [oai_citation:26‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- 🧬 **PROV** answers “how produced, from what inputs, by whom/what agent?”  [oai_citation:27‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
 
 ---
 
-## 🧱 Modeling & Simulation in KFM
+## 📥 Data Intake (Raw → Governed)
 
-KFM treats modeling as a first-class citizen: models are versioned, reproducible, and provenance-emitting.  
-For modeling/simulation discipline, see the NASA-grade modeling & simulation guide principles (verification/validation/credibility).  [oai_citation:8‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)
+### 🧠 Intake philosophy
+Data intake is “provenance-first”: every piece of data enters with where it came from, how it was obtained, and how it can be reproduced.  [oai_citation:28‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
 
-### 🧪 Modeling “contract”
-A model run should:
-- 📌 record **inputs** (dataset IDs + checksums)
-- 🎛️ record **parameters** (config snapshot)
-- 🧾 emit **metrics** (fit, errors, uncertainty)
-- 🧬 emit **PROV**
-- 🛰️ optionally emit a **STAC Item** (model artifact as dataset)
-- 🗂️ optionally publish as **DCAT Dataset**
+### 🧾 Data contracts (contract-first)
+Every dataset has an associated metadata JSON (“data contract”) with required fields (source/license/spatiotemporal/processing steps) enforced by validators.  [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
 
-### 📈 Stats + regression (common KFM patterns)
-- Regression is a workhorse for environmental and socio-economic modeling; document assumptions and diagnostics.  [oai_citation:9‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM)  [oai_citation:10‡Regression analysis using Python - slides-linear-regression.pdf](file-service://file-Ekbky5FwpaPHfZC2ttv6xR)  
-- Experimental design and “how not to lie” with stats are required reading for high-stakes interpretations.  [oai_citation:11‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3)  
-- Bayesian workflows are encouraged for uncertainty, calibration, and decision support.  [oai_citation:12‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)  
-- Visual/graphical data analysis is expected in every analysis artifact (outliers, drift, distribution shifts).  [oai_citation:13‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L)
+**Example contract shape (illustrative):**
+- `id`, `title`, `description`
+- `license`
+- `spatial` (bbox, CRS)
+- `temporal` (start/end)
+- `provenance` (source URL, creator/issued, processing steps)
+- `faircare` (collective benefit, authority-to-control, responsibility, ethics)  [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
 
----
+### 🔁 Streaming/real-time fits the same spine
+KFM treats streaming as many small datasets over time, still requiring provenance and classification enforcement.  [oai_citation:31‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
 
-## 🛰️ Remote Sensing & Earth Engine
+Concrete example: river gauge data is queried from PostGIS, displayed in UI with source attribution from DCAT, and Focus Mode logs the specific reading used in PROV.  [oai_citation:32‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
 
-Earth Engine is a strategic accelerator for KFM, especially for landcover, drought, vegetation, and long time-series.  
-Use cloud-native patterns and export results as cataloged assets.  [oai_citation:14‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-JVv3nbvtonX1HcpeERi9kV)
-
-### ✅ Earth Engine → KFM handoff (recommended)
-1. Run GEE workflow (script/notebook) ☁️  
-2. Export to analysis-ready format (e.g., GeoTIFF / Zarr / GeoParquet) 📦  
-3. Generate STAC Item + DCAT Dataset + PROV Run 🛰️🗂️🧬  
-4. Register into graph + serve tiles / API endpoints 🕸️
+### ♻️ Rollback & incident response
+Because data changes flow through Git and catalog outputs, reversions can undo ingestion; sensitive-data incidents require rapid classification flip + removal + post-mortem + new policy rules.  [oai_citation:33‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
 
 ---
 
-## 🗺️ Mapping & UI Principles
+## 🧠 Graph, Ontology, Semantics
 
-KFM’s map is not “just a map” — it is a **claim with evidence**. Map design must respect audience, context, and ethics.  [oai_citation:15‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
-KFM also treats mobile and digital cartography as evolving socio-technical practice, not static output.  [oai_citation:16‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)
+### 🕸️ Why Neo4j matters
+The graph stores relationships across people↔places↔events↔datasets, enabling semantic traversal and multi-hop retrieval.  [oai_citation:34‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
 
-### 🖥️ Web UI foundations
-- Responsive layout rules apply everywhere (desktop + mobile + kiosk).  [oai_citation:17‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK)  
-- 3D/advanced visualization guidance (when needed) aligns with WebGL fundamentals.  [oai_citation:18‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7quELMw4FrspPczB9Y3BTp)  
+### 🧭 Ontology alignment (directional)
+Focus Mode and graph modeling reference established ontologies (e.g., CIDOC‑CRM for history, OWL‑Time for temporal data) for consistent semantics.  [oai_citation:35‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
 
-### 🧭 Story Nodes (narrative layer)
-Story Nodes are curated narratives that:
-- cite datasets + artifacts
-- express uncertainty
-- avoid “black box” conclusions
-- link map views + timelines + sources
+### 🧹 Graph QA + anti-hallucination boundary
+If something isn’t in the graph/docs, Focus Mode can be constrained to refuse rather than fabricate, reducing hallucination risk.  [oai_citation:36‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
 
-Future Story Node upgrades and templates are tracked in the proposals doc.  [oai_citation:19‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)
+---
+
+## 🔌 APIs & Contracts
+
+### 🔒 Contracted boundary
+KFM separates UI/back-end via well-defined REST + GraphQL endpoints, letting the UI evolve without altering core data logic.  [oai_citation:37‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+
+### 🧱 PostGIS outbound patterns
+PostGIS powers interactive maps (filters, bounding boxes, tiles, aggregates); vector tiles can be served using SQL templates (e.g., `ST_AsMVT`) behind API endpoints.  [oai_citation:38‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+
+---
+
+## 🗺️ UI & Story Nodes
+
+### 🖥️ UI pillars
+KFM’s UI combines 2D/3D maps, timeline navigation, story narratives, and AI assistance in one cohesive platform.  [oai_citation:39‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+
+**Core UI modules (high level):**
+- 🗺️ 2D Map Viewer + 🧊 3D Globe/Terrain (MapLibre + Cesium)
+- ⏳ Timeline & temporal navigation
+- 🎬 Story Nodes (interactive narratives)
+- 🔎 Search & discovery, layer management, popups
+- 🤖 Focus Mode with citations + explainability
+- 🤝 Collaboration features, mobile + offline, AR extensions  [oai_citation:40‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+
+### ⛓️ “Map behind the map” (provenance UX)
+Users can inspect layer provenance via Layer Info (source/license/how prepared), with a proposed Layer Provenance panel listing active layers and citations.  [oai_citation:41‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+
+### 📱 Offline + PWA direction
+A PWA approach enables installable behavior and offline caching; offline “packs” bundle tiles + stories for field/museum/classroom use.  [oai_citation:42‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  [oai_citation:43‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+
+### 🧠 Community & collaboration (UI and beyond)
+KFM plans in-UI annotations/comments, contribution pathways, and community quality signals (upvotes/flags) to support a living atlas.  [oai_citation:44‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+
+---
+
+## 🤖 Focus Mode (AI System)
+
+### 🧠 How Focus Mode works (traceable RAG)
+Focus Mode follows a strict pipeline: parse → retrieve → generate (with embedded citations) → governance check → deliver with sources.  [oai_citation:45‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+
+### 🧾 Must-cite + must-refuse
+Every AI answer includes citations to specific datasets/docs/entities; if it can’t be derived, it refuses or signals uncertainty.  [oai_citation:46‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+
+### 🔎 Retrieval mechanisms
+Hybrid retrieval draws from:
+- full-text/semantic search index for documents  [oai_citation:47‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- Neo4j graph queries for linked context  [oai_citation:48‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- PostGIS for spatial/time-based queries (fast indices)  [oai_citation:49‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+
+### 🧭 Explainability & audit surfaces
+Focus Mode includes explainability hooks (audit panel/attributions) and highlights governance flags (e.g., sensitive data notices).  [oai_citation:50‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+
+### 📓 Immutable governance ledger (AI)
+KFM tracks AI outputs and compliance metadata in an append-only ledger for post-hoc auditing.  [oai_citation:51‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
 
 ---
 
 ## 🧑‍⚖️ Governance, Ethics, Sovereignty
 
-KFM is governed under **FAIR+CARE** and explicit sovereignty policy.  
-This is not optional: it’s an engineering constraint.  [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx](file-service://file-PaBDqECcJe7NbC8hvXNGDS)
+### 🧭 FAIR+CARE is enforced, not optional
+KFM enforces FAIR via mandatory metadata/provenance and respects CARE by designating sensitive data and requiring appropriate authority and review.  [oai_citation:52‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
 
-### 🧠 Digital humanism stance
-KFM is **human-centered**: the system augments decision-making and preserves accountability.  
-Digital humanism framing is a core rationale for the platform’s constraints (traceability, transparency, agency).  [oai_citation:21‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
+### 🪶 Cultural protocols & differential access (directional)
+Models like Mukurtu (TK labels/cultural protocols) inspire fine-grained access controls and context tagging for community-contributed or culturally sensitive materials.  [oai_citation:53‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
 
-### 🧬 Data sovereignty
-Where data is sensitive (cultural sites, communities, protected knowledge), KFM must:
-- apply classification rules
-- enforce access controls
-- avoid overexposure in UI
-- prefer summary/aggregation when appropriate
+### 🗺️ Sensitivity-aware mapping (geo-obfuscation)
+For vulnerable sites/species/cultural locations, KFM can generalize coordinates and gate access while preserving provenance.  [oai_citation:54‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
 
 ---
 
-## 🔐 Security & Compliance
+## 🔐 Security, Policy, Supply Chain
 
-KFM’s security posture is “defense-in-depth”:
-- 🔏 least privilege
-- 🧾 auditable pipelines
-- ✅ fail-closed policy checks
-- 🧬 provenance for runs (including CI)
+### 🧾 Policy Pack (OPA + Conftest)
+Governance rules are encoded as versioned Rego policies and evaluated in CI; policies cover metadata requirements, sensitivity rules, citation coverage, and more.  [oai_citation:55‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
 
-Data space thinking helps frame trusted sharing + governance across stakeholders.  [oai_citation:22‡Data Spaces.pdf](file-service://file-7UnZyJ7eCK1egnsyuYJaFq)
+### 🛡️ Runtime policy enforcement
+OPA can intercept runtime actions (e.g., allow/deny an AI answer or sensitive dataset access), and policies can be updated without redeploying the whole system.  [oai_citation:56‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
 
-> [!NOTE]
-> The repository audit highlights architecture completeness but flags operational gaps that should be closed systematically (tooling, execution paths, and integration depth).  [oai_citation:23‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3)
+### 🧰 Supply-chain provenance
+The Watcher → Planner → Executor pipeline ties into supply-chain integrity: SBOMs, SLSA attestations, and Sigstore transparency logging for automated PR outputs.  [oai_citation:57‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)  
+
+### 🌱 Sustainability + compute governance
+KFM tracks energy/carbon footprint and can require approval for expensive computations (governed compute).  [oai_citation:58‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
 
 ---
 
-## ✅ Validation & CI
-
-Validation is a pipeline stage, not an afterthought.
-
-### ✅ What must be validated
-- 📦 schemas (JSONSchema / OpenAPI / GraphQL SDL)
-- 🛰️ STAC correctness (links, assets, geometry, temporal)
-- 🗂️ DCAT fields (license, access URLs, identifiers)
-- 🧬 PROV integrity (agents, activities, entities, hashes)
-- 🔗 cross-links between catalogs (STAC ↔ DCAT ↔ PROV ↔ Graph refs)
+## ✅ Validation & CI/CD
 
 ### 🧪 CI ethos
-KFM enforces:
-- deterministic runs (seeded configs)
-- reproducible artifacts
-- contract-first changes
-- provenance emission for major jobs
+CI blocks merges when checks fail; quality gates include tests, schema validation, policy checks, and security scanning.  [oai_citation:59‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
 
----
+### 🧠 Watcher → Planner → Executor (W‑P‑E)
+Agents refuse to prepare or promote changes that violate FAIR/CARE or security policies; the Executor won’t promote a PR without proof of redaction/approval when sensitive content is involved.  [oai_citation:60‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)  
 
-## 🤝 Contributing
-
-### 🧱 Contribution types
-- 🧾 Contracts (schemas/OpenAPI/GraphQL)  
-- 🛰️ Catalog work (STAC/DCAT/PROV generation + validation)  
-- 🕸️ Graph enhancements (ontology mappings, new relations, entity resolution)  
-- 🗺️ UI features (layers, timeline, Story Nodes, accessibility)  
-- 🧪 Models (calibration, forecasts, optimization, simulations)
-
-### 🧷 Contribution rule of thumb
-If your change produces something a user can see, it must:
-- have a contract
-- be cataloged (or explicitly non-cataloged by policy)
-- be attributable (PROV)
-- be testable (CI)
+### ✅ What must be validated (minimum)
+- 🧾 Contracts (dataset/story/ui schemas)
+- 🛰️ STAC correctness + links
+- 🗂️ DCAT fields (license, access URLs, identifiers)
+- 🧬 PROV integrity (agents, activities, entities, hashes)
+- 🔗 Cross-links across STAC ↔ DCAT ↔ PROV ↔ Graph
+- 🛡️ Policy Pack (OPA/Conftest)
 
 ---
 
 ## 🧪 Roadmap & Future Proposals
 
-KFM v13 focuses on *operationalizing the spine* and shipping “thin vertical slices” end-to-end.  
-Key proposals include:
-- 🚌 real-time transit feeds (GTFS-RT watcher → STAC Items)  [oai_citation:24‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)  
-- 📚 bulk doc ingestion (OCR → graph entities → cited retrieval)  [oai_citation:25‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)  
-- 📊 dashboards/widgets paired with map selections  [oai_citation:26‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)  
-- ⏳ timeline/4D mapping upgrades  [oai_citation:27‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)  
-- 📦 PMTiles + GeoParquet dual packaging for performance  [oai_citation:28‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx](file-service://file-QrXwct2pX9kFpqgjtBiijR)  
+> KFM v13 prioritizes **thin vertical slices** end-to-end (one dataset → catalogs → graph → API → UI → story → cited answers).  [oai_citation:61‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
+
+### 🧭 Near-term (practical)
+- 📄 Bulk document ingestion (OCR → entity extraction → graph linking)  [oai_citation:62‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+- 📱 PWA + offline data packs for field/classroom use  [oai_citation:63‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+- 🧾 Layer provenance surfaces everywhere (layer info → provenance panel)  [oai_citation:64‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+
+### 🌌 Medium/Long-term (frontier)
+- 🧊 4D / temporal simulation + “digital twin” style exploration (time as a first-class dimension)  [oai_citation:65‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
+- 📱 AR overlays for place-based Kansas history and environmental context  [oai_citation:66‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+- 🤝 Crowdsourced verification systems (OSM-style QA + peer review)  [oai_citation:67‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
+- 🧩 Citizen-science microtask consensus (Zooniverse-style multi-rater aggregation)  [oai_citation:68‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
+- 🧠 “Query co-pilot” for natural language GIS questions (human-in-the-loop, evidence-based)  [oai_citation:69‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
 
 ---
 
-## 📦 Reference Shelf
+## 📚 Reference Shelf (Project Library)
 
-> These sources are used as **internal implementation references** and inform KFM’s standards, patterns, and engineering culture.
+> This shelf lists the **project’s internal reference documents** (design, architecture, guides, compendiums).  
+> Some items are PDF portfolios and must be opened in a compatible PDF viewer to access their embedded documents.  [oai_citation:70‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)
 
-### 🛰️ Modeling, simulation, and scientific rigor
-- 🧪 *Scientific Modeling and Simulation: A Comprehensive NASA-Grade Guide*  [oai_citation:29‡Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf](file-service://file-LuWF23hffNAZJaZm2Gzvcd)  
-- 📉 *Regression Analysis with Python*  [oai_citation:30‡regression-analysis-with-python.pdf](file-service://file-NCS6ThhvajwNUm4crVVcGM)  
-- 🧠 *Understanding Statistics & Experimental Design: How to Not Lie with Statistics*  [oai_citation:31‡Understanding Statistics & Experimental Design.pdf](file-service://file-SdX6LMgi1uDRk5kd4H4Bg3)  
-- 📊 *Graphical Data Analysis with R*  [oai_citation:32‡graphical-data-analysis-with-r.pdf](file-service://file-K7oxq5mFmdE9HrPPev6c7L)  
-- 🎲 *Think Bayes*  [oai_citation:33‡think-bayes-bayesian-statistics-in-python.pdf](file-service://file-LXwJApPMVhRZgyqLb9eg7c)  
+### 🧭 Core KFM system docs
+- 📘 **Comprehensive Technical Documentation** — mission, principles, “no black box” ethos  [oai_citation:71‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+- 🧱 **Comprehensive Architecture, Features, and Design** — UI transparency, offline packs, governance summary  [oai_citation:72‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  [oai_citation:73‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+- 📥 **Data Intake – Technical & Design Guide** — STAC/DCAT/PROV integration + streaming examples  [oai_citation:74‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  [oai_citation:75‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- 🗺️ **Comprehensive UI System Overview** — UI modules, offline/AR/collaboration roadmap  [oai_citation:76‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+- 🤖 **AI System Overview** — RAG flow, governance checks, citations, OPA runtime hooks  [oai_citation:77‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  [oai_citation:78‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- 🌟 **Latest Ideas & Future Proposals** — W‑P‑E governance + supply chain attestation direction  [oai_citation:79‡🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf](file-service://file-SQ3f7ve8SGiusT6ThZEuCe)  
 
-### 🌍 Geospatial, mapping, and remote sensing
-- ☁️ *Cloud-Based Remote Sensing with Google Earth Engine*  [oai_citation:34‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](file-service://file-JVv3nbvtonX1HcpeERi9kV)  
-- 🧭 *Making Maps: A Visual Guide to Map Design for GIS*  [oai_citation:35‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](file-service://file-51FgWTn7uFXenxztXw29bP)  
-- 📱 *Mobile Mapping: Space, Cartography and the Digital*  [oai_citation:36‡Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf](file-service://file-AkVmsLhdFzwie5Gco3zgYj)  
-- 🐍 *Python Geospatial Analysis Cookbook*  [oai_citation:37‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)  
+### 🧾 Docs & Markdown standards
+- 🧾 **MARKDOWN_GUIDE_v13** — canonical pipeline ordering + v13 directory layout + doc DoD  [oai_citation:80‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
+- ✍️ **Comprehensive Markdown Guide (docx)** — Mermaid + Math + collapsible sections patterns  [oai_citation:81‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)  
 
-### 🧱 Data systems, governance, and architectures
-- 🧺 *Data Spaces: Design, Deployment and Future Directions*  [oai_citation:38‡Data Spaces.pdf](file-service://file-7UnZyJ7eCK1egnsyuYJaFq)  
-- 🗄️ *PostgreSQL Notes for Professionals*  [oai_citation:39‡PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf](file-service://file-742sw3gADJniEdmC19JeAC)  
-- ⚙️ *Scalable Data Management for Future Hardware*  [oai_citation:40‡Scalable Data Management for Future Hardware.pdf](file-service://file-GZ8gMsQ8hxu7GWEVd3csNE)  
-- 🧩 *Flexible Software Design: Systems Development for Changing Requirements*  [oai_citation:41‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)  
+### 🧠 Innovation & community patterns
+- 💡 **Innovative Concepts to Evolve KFM** — 4D twins, AR storytelling, crowdsourced QA, cultural protocols  [oai_citation:82‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  [oai_citation:83‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  [oai_citation:84‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
 
-### 🕸️ Graphs, networks, and advanced structures
-- 🎼 *Spectral Geometry of Graphs*  [oai_citation:42‡Spectral Geometry of Graphs.pdf](file-service://file-DWxRbQDZGktGtiWtzAQxs8)  
+### 🧰 Compendium portfolios (embedded libraries)
+- 🧠 **AI Concepts & more** (PDF portfolio)  [oai_citation:85‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)  
+- 🗺️ **Maps / GoogleMaps / Virtual Worlds / Archaeology / WebGL** (PDF portfolio)  [oai_citation:86‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)  
+- 🧑‍💻 **Various Programming Languages & Resources** (PDF portfolio)  [oai_citation:87‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi)  
+- 🗄️ **Data Management / Architectures / Bayesian Methods / Ideas** (PDF portfolio)  [oai_citation:88‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)  
 
-### 🖥️ Web delivery & visualization
-- 📐 *Responsive Web Design with HTML5 and CSS3*  [oai_citation:43‡responsive-web-design-with-html5-and-css3.pdf](file-service://file-Heg28TVM2nReDYTQ7nPhAK)  
-- 🧊 *WebGL Programming Guide*  [oai_citation:44‡webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf](file-service://file-7quELMw4FrspPczB9Y3BTp)  
-- 🖼️ *Compressed Image File Formats (JPEG/PNG/GIF…)*  [oai_citation:45‡compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf](file-service://file-Y6V94sFtV6sy3w63LDy9fi)  
-
-### 🧑‍⚖️ Human-centered / socio-technical
-- 🧠 *Introduction to Digital Humanism*  [oai_citation:46‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)  
-- ⚖️ *On the Path to AI: Law’s Prophecies…* (useful for AI governance thinking)  [oai_citation:47‡On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf](file-service://file-NtashtRjti9J1THyYXkhAv)  
-- 🧬 *Principles of Biological Autonomy* (systems + circularity lens)  [oai_citation:48‡Principles of Biological Autonomy - book_9780262381833.pdf](file-service://file-PwPXcX5554FpuRsF3iXTCf)  
+### 📚 Extra supporting references already in-repo
+- 🧭 **Open-Source Geospatial Historical Mapping Hub Design** (architecture concept)  [oai_citation:89‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)  
+- 🧼 **Data Mining Concepts & Applications** (data quality + cleansing framing)  [oai_citation:90‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)  
+- 🐍 **Python Geospatial Analysis Cookbook** (practical GIS recipes + PostGIS patterns)  [oai_citation:91‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)  
 
 ---
 
-## 🧾 Appendix A — Dataset Promotion Checklist ✅
+## 🧾 Appendices (Checklists)
 
-> Use this when turning **raw data → governed artifact**.
-
+### 🧾 Appendix A — Dataset Promotion Checklist ✅
 - [ ] 📥 Source captured (manifest + license + access notes)
 - [ ] 🔒 Sensitivity classified (public/internal/restricted)
-- [ ] 🧹 Normalized to standard format (GeoParquet/COG/Zarr/etc.)
-- [ ] 🛰️ STAC Item created (bbox, geometry, datetime, assets)
-- [ ] 🗂️ DCAT Dataset created (publisher, license, access URLs)
-- [ ] 🧬 PROV run created (inputs, code version, params, outputs)
-- [ ] ✅ Validation passes (schemas + link checks + hashes)
-- [ ] 🕸️ Graph registered (entities + relationships)
+- [ ] 🧾 Data contract completed + validated  [oai_citation:92‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  
+- [ ] 🧹 Normalized to standard format (GeoParquet/COG/etc.)
+- [ ] 🛰️ STAC Item/Collection created + linked
+- [ ] 🗂️ DCAT Dataset created (publisher/license/access URLs)
+- [ ] 🧬 PROV run created (inputs/code version/params/outputs)
+- [ ] ✅ Validation passes (schemas + link checks + hashes + policy pack)
+- [ ] 🕸️ Graph registered (nodes + relationships)
 - [ ] 🗺️ UI layer published (tiles + styling)
-- [ ] 🎬 Story Node optional (curated narrative + citations)
+- [ ] 🎬 Story Node optional (curated narrative + uncertainty + citations)
 
----
-
-## 🧾 Appendix B — Story Node Checklist 🎬
-
+### 🎬 Appendix B — Story Node Checklist
 - [ ] 🎯 Clear claim/question
 - [ ] 🧾 Evidence list (datasets + documents)
 - [ ] 🗺️ Map views defined (camera, layers, filters, timeline)
 - [ ] 🧬 Provenance links included
 - [ ] ⚠️ Uncertainty stated
 - [ ] 🧑‍⚖️ Governance checks (sensitivity + sovereignty)
-- [ ] ✅ Lint/validate story schema
+- [ ] ✅ Validate story schema + links
 
----
+### 🤖 Appendix C — Focus Mode Answer Checklist
+- [ ] 🔎 Retrieval logged (what sources were used)
+- [ ] 🧾 All factual claims have citations  [oai_citation:93‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- [ ] 🛡️ Governance/policy check passed (OPA allow/deny)  [oai_citation:94‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- [ ] 🧬 PROV/ledger record written (answer + source set)  [oai_citation:95‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- [ ] ⚠️ Uncertainty is explicit where evidence is weak
 
-## 🧾 Appendix C — What the Audit Said (Actionable Summary) 🧪
-
-The repository audit reports strong conceptual architecture and modularity, but identifies areas to harden operationally (execution mechanisms, completeness of implemented paths, and integration depth). Treat audit follow-ups as tracked governance work.  [oai_citation:49‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3)
+### 🧾 Appendix D — Doc “Definition of Done” (for governed docs)
+- [ ] Front-matter complete + valid
+- [ ] Claims link to datasets/schemas/source references where applicable
+- [ ] Validation steps listed and repeatable
+- [ ] Governance/FAIR+CARE/sovereignty considerations stated  [oai_citation:96‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
 
 ---
 
 ## 🔗 Footer Navigation
 - ⬆️ Back to Top: [↑](#top)
-- 📚 Docs Index: `docs/README.md` (if present)
 - 🧑‍⚖️ Governance Root: `docs/governance/ROOT_GOVERNANCE.md`
 - 🤝 Contributing: `CONTRIBUTING.md`
+- 🧾 Markdown Work Protocol: `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md`
