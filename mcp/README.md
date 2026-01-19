@@ -1,8 +1,3 @@
-<!--
-📌 MCP is KFM’s canonical “methods + receipts” boundary (not a data store, not runtime code).
-🗓️ Last updated: 2026-01-19
--->
-
 ---
 title: "🧪 MCP — Master Coder Protocol (Methods, Controls & Processes) 🧾⚙️"
 path: "mcp/README.md"
