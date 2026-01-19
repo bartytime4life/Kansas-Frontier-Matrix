@@ -8,12 +8,16 @@
 ![Geospatial](https://img.shields.io/badge/geospatial-STAC-FF7A00)
 ![Lineage](https://img.shields.io/badge/lineage-PROV--O-6F42C1)
 ![Contracts](https://img.shields.io/badge/contracts-JSON%20Schema-3B82F6)
-![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-6f42c1)
 ![Policy](https://img.shields.io/badge/policy-OPA%20%2F%20Conftest-111827)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-6f42c1)
+![Observability](https://img.shields.io/badge/observability-telemetry%20%2B%20audit-0ea5e9)
 ![Security](https://img.shields.io/badge/security-sensitive%20data%20aware-red)
 
 **Discoverability metadata** for KFM datasets — **not the data itself**.  
 DCAT is how KFM becomes *searchable + harvestable + federatable* **without** bypassing provenance, access controls, or sovereignty. 🧭🧾
+
+> ✅ **KFM “Evidence Triplet” (publish boundary):** **STAC + DCAT + PROV**  
+> If any leg is missing, the dataset is **not** considered “published” in KFM.
 
 </div>
 
@@ -29,14 +33,18 @@ DCAT is how KFM becomes *searchable + harvestable + federatable* **without** byp
 - 🗺️ **Back to data root** → [`../README.md`](../README.md)
 - 📐 **Schemas (contracts)** → [`../../schemas/`](../../schemas/) *(if present)*
 - 🧪 **Catalog QA gate** → [`../../tools/validation/catalog_qa/`](../../tools/validation/catalog_qa/) *(recommended path)*
-- 🧷 **Policy Pack (OPA/Conftest)** → `tools/validation/policy/` *(recommended path; see governance notes)*
+- 🧷 **Policy Pack (OPA/Conftest)** → [`../../tools/validation/policy/`](../../tools/validation/policy/) *(recommended path; see governance notes)*
+- 📚 **Metadata profiles & conventions** → `docs/standards/` *(if present; v13 canon)*
+- 🧩 **Templates** → `docs/templates/` *(if present; cookiecutter-style stubs)*
+- 📖 **Story Nodes (narrative content)** → `docs/reports/story_nodes/` *(or `web/story_nodes/`, depending on repo layout)*
 - 🔐 **Security policy** → [`../../SECURITY.md`](../../SECURITY.md) *(or `.github/SECURITY.md` depending on repo convention)*
 - ✍️ **Contribution rules** → [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) *(if present)*
 
 > [!TIP]
-> **DCAT is the “dataset landing metadata.”** Titles, licensing, access method, distributions, coarse coverage.  
+> **DCAT is the “dataset landing metadata.”** Title, license, access method, coarse coverage, publisher, keywords.  
 > **STAC is the “asset index.”** Footprints, time ranges, per-asset URLs (COG/PMTiles/Parquet/etc.).  
-> **PROV is “why you should trust it.”** Inputs → activities → outputs → agents, plus policy/audit hooks.
+> **PROV is “why you should trust it.”** Inputs → activities → outputs → agents, plus policy/audit hooks.  
+> **Policy Pack** is “what prevents foot-guns.” ✅ Fail-closed rules for licensing, access, lineage, and sensitive handling.
 
 ---
 
@@ -48,9 +56,11 @@ DCAT is how KFM becomes *searchable + harvestable + federatable* **without** byp
 - [🗺️ Folder map (v13 orientation)](#️-folder-map-v13-orientation)
 - [🧷 KFM invariants for catalogs](#-kfm-invariants-for-catalogs)
 - [🧾 DCAT rules in KFM](#-dcat-rules-in-kfm)
+- [📜 KFM metadata profiles & extensions](#-kfm-metadata-profiles--extensions)
 - [🧬 Versioning & revisions](#-versioning--revisions)
-- [🔗 Cross-linking rules: Sources ↔ STAC ↔ DCAT ↔ PROV ↔ Graph](#-cross-linking-rules-sources--stac--dcat--prov--graph)
+- [🔗 Cross-linking rules: Sources ↔ STAC ↔ DCAT ↔ PROV ↔ Graph ↔ Story Nodes](#-cross-linking-rules-sources--stac--dcat--prov--graph--story-nodes)
 - [🔒 Sensitive data, sovereignty & access control](#-sensitive-data-sovereignty--access-control)
+- [📡 Streaming, rapid updates & simulations](#-streaming-rapid-updates--simulations)
 - [✅ “Add or update a dataset” checklist](#-add-or-update-a-dataset-checklist)
 - [🧪 Validation & CI gates](#-validation--ci-gates)
 - [🧩 DCAT JSON-LD template (starter)](#-dcat-json-ld-template-starter)
@@ -69,8 +79,9 @@ DCAT is how KFM becomes *searchable + harvestable + federatable* **without** byp
 
 ### ✅ This folder **IS**
 - 🗂️ **DCAT/JSON-LD dataset discovery metadata** (inventory, portals, harvesting, federation).
-- 🧾 A **required boundary artifact**: “published” in KFM means **STAC + DCAT + PROV** align (even for many non-spatial datasets, we keep a consistent catalog pattern).
+- 🧾 A **required boundary artifact**: “published” in KFM means the **Evidence Triplet** exists **and** passes policy gates.
 - 🛡️ A **governance surface**: datasets can be discoverable without exposing restricted data.
+- 🧠 A **citation backbone**: UI “Source:” labels, Story Nodes references, and Focus Mode citations should resolve to stable dataset IDs (DCAT/STAC), not random URLs.
 
 ### ❌ This folder is **NOT**
 - 🗃️ A place to store rasters/vectors/models/reports.
@@ -89,17 +100,18 @@ KFM is intentionally ordered (**no skipping stages**):
 ```mermaid
 flowchart LR
   RAW["📥 Stage<br/>raw inputs"] --> SOURCES["🧾 Source manifests<br/>(license + retrieval + attribution)"]
-  SOURCES --> ETL["🧰 ETL / Normalize<br/>(deterministic)"]
+  SOURCES --> ETL["🧰 ETL / Normalize<br/>(deterministic + logged)"]
   ETL --> OUT["📦 Processed outputs<br/>(publishable artifacts)"]
 
   OUT --> STAC["🛰️ STAC<br/>(collections/items/assets)"]
   OUT --> DCAT["🗂️ DCAT<br/>(dataset discovery)"]
   OUT --> PROV["🧬 PROV<br/>(lineage bundle)"]
 
-  STAC --> GRAPH["🕸️ Graph<br/>(entities/events/citations)"]
-  DCAT --> GRAPH
-  PROV --> GRAPH
+  STAC --> POLICY["🧷 Policy Gate<br/>(OPA/Conftest • fail-closed)"]
+  DCAT --> POLICY
+  PROV --> POLICY
 
+  POLICY --> GRAPH["🕸️ Graph<br/>(entities/events/citations)"]
   GRAPH --> API["🔌 Governed API"]
   API --> UI["🗺️ UI<br/>(map/timeline/downloads)"]
   UI --> STORY["🎬 Story Nodes"]
@@ -110,6 +122,7 @@ flowchart LR
 - 🛰️ **STAC** is how map engines + geospatial catalogs “see” assets (footprints, time, media).
 - 🗂️ **DCAT** is how portals + harvesters “see” datasets (including non-spatial) and how federation indexes inventory.
 - 🧬 **PROV** is how humans (and future you) verify trust: what changed, why, and from what.
+- 🧷 **Policy Gate** is how KFM stays safe-by-default: licensing, access classification, provenance completeness, and sensitive handling must pass before publishing.
 
 > [!CAUTION]
 > **API boundary is sacred.** UI should not hardcode storage URLs that bypass governance.  
@@ -141,9 +154,9 @@ v13 standardizes staging and eliminates “mystery duplicate” directories by e
 └─ 📄 README.md
 ```
 
-> [!TIP]
-> Keeping **DCAT** (discovery) separate from **STAC** (asset index) and **PROV** (lineage)
-> makes validation, governance, and federation dramatically easier. ✅
+> [!NOTE]
+> **Naming drift alert (keep it sane):** Some documents or legacy branches may use `data/catalogs/` (plural) for DCAT and/or `data/provenance/` for PROV.  
+> The goal is **one canonical path in your repo** — update this README + tooling to match your actual tree and keep aliases temporary.
 
 ---
 
@@ -158,6 +171,8 @@ These are “system laws” (treat violations as breaking changes):
 - 🔐 **Classification propagation**: outputs cannot be **less restricted** than inputs (no downstream “downgrade”).
 - 🧯 **Redaction/generalization is allowed** (and often required), but must be declared and enforced consistently.
 - 🔌 **Governed access**: DCAT can be public while distributions are gated; access enforcement is runtime policy, not vibes.
+- 🎬 **Narrative integrity**: Story Nodes must reference stable dataset IDs; “story without evidence” is a policy violation.
+- 🤖 **Safe automation only**: assistants/agents may open PRs and suggest metadata, but **must not auto-merge** changes and must remain human-reviewed (kill switch friendly).
 
 > [!IMPORTANT]
 > If a dataset is missing `dct:license` or `dct:accessRights`, treat it as **fail closed** (assume Restricted) until fixed.
@@ -178,7 +193,8 @@ That includes:
 - 🧾 reports/documents,
 - 📈 model outputs & evaluation artifacts,
 - 🧪 derived/processed data products,
-- 🧠 ML/analytics datasets (with provenance + checksums).
+- 🧠 ML/analytics datasets (with provenance + checksums),
+- 📡 “live” layers (streaming, near-real-time, simulation runs) — still cataloged, still governed.
 
 ### 🏷️ File naming convention (recommended)
 Prefer stable, grep-friendly names:
@@ -216,10 +232,39 @@ DCAT can carry coarse spatial/temporal coverage even if STAC holds canonical geo
 
 ---
 
+## 📜 KFM metadata profiles & extensions
+
+KFM uses open standards (STAC/DCAT/PROV) **plus** a KFM “profile layer” that standardizes:
+- dataset IDs and naming rules,
+- sensitivity/classification tags,
+- coverage fields and domain keywords,
+- link integrity conventions,
+- CI policy IDs and waivers,
+- optional KFM extensions (e.g., “story relevance”, “offline pack”, “quality status”).
+
+### ✅ Rule of thumb
+- **Standards fields first** (DCAT/STAC/PROV).
+- **KFM extensions only when needed**, documented in `docs/standards/` and validated by schema/policy.
+
+### 🧩 Recommended KFM extensions (examples)
+If you need KFM-specific fields, keep them namespaced and validated:
+
+- `kfm:classification` *(mirrors `dct:accessRights`, used by policy/UI)*
+- `kfm:region` *(e.g., `ks`)*
+- `kfm:domain` *(geology/hydrology/transport/etc.)*
+- `kfm:qaStatus` *(draft/validated/deprecated)*
+- `kfm:offlinePack` *(true/false + pack ID, if shipped as a field kit)*
+
+> [!TIP]
+> Prefer **controlled vocabularies** for things like `dcat:theme` and `kfm:domain`.  
+> It makes search, federation, and UI filters dramatically better. ✅
+
+---
+
 ## 🧬 Versioning & revisions
 
 ### ✅ Dataset IDs should be stable
-A dataset ID is a **join key** across STAC/DCAT/PROV/Graph and should be predictable.
+A dataset ID is a **join key** across STAC/DCAT/PROV/Graph/Story Nodes and should be predictable.
 
 Recommended pattern:
 ```text
@@ -234,19 +279,26 @@ When updating an existing dataset (new processing, better QA, bug fixes):
 - update `dct:modified`
 - add revision semantics (recommended):
   - `prov:wasRevisionOf` → previous dataset entity ID
-  - and/or `dct:isVersionOf` / `dcat:version` (if using DCAT versioning conventions)
+  - and/or `dct:isVersionOf` / `dcat:version`
 - ensure PROV shows:
   - inputs used,
   - processing activity/run ID,
   - agents (human + CI bot),
   - outputs produced.
 
+### 🧾 DevOps is provenance (recommended)
+Treat “how the change landed” as part of the audit trail:
+
+- tie dataset revisions to a **PR/commit** in PROV (activity + agent attribution),
+- include CI run IDs / policy gate results in provenance or release notes,
+- keep an append-only ingestion/processing ledger for traceability.
+
 > [!TIP]
 > For **snapshot releases**, consider stable citation IDs (e.g., DOI) and keep DCAT distributions pointing to the release artifact (or landing page) rather than volatile paths.
 
 ---
 
-## 🔗 Cross-linking rules: Sources ↔ STAC ↔ DCAT ↔ PROV ↔ Graph
+## 🔗 Cross-linking rules: Sources ↔ STAC ↔ DCAT ↔ PROV ↔ Graph ↔ Story Nodes
 
 KFM lives or dies on link integrity. These artifacts must reference each other cleanly:
 
@@ -257,6 +309,8 @@ KFM lives or dies on link integrity. These artifacts must reference each other c
 | 🗂️ DCAT Dataset | `data/catalog/dcat/**` | STAC collection/item **and/or** governed API/landing page | discovery + federation harvesting |
 | 🧬 PROV bundle | `data/prov/**` | inputs → activity → outputs → agents | reproducibility + auditability |
 | 🕸️ Graph | DB or `data/graph/**` | stable IDs referencing catalogs | narrative + reasoning integrity |
+| 🎬 Story Nodes | `docs/reports/story_nodes/**` *(or `web/story_nodes/**`)* | DCAT/STAC dataset IDs + citations | interactive narrative tied to evidence |
+| 🧷 Policy Pack | `tools/validation/policy/**` | catalog IDs + rules + waivers | enforced governance |
 
 > [!CAUTION]
 > **Graph nodes should reference catalog IDs** (DCAT/STAC identifiers) rather than duplicating data.  
@@ -280,14 +334,12 @@ KFM is “mostly open,” but metadata can still leak sensitive detail.
 If a parent entity is classified at some level, **children cannot be less restrictive**.  
 In practice: if inputs are Internal, you cannot publish outputs as Public unless an explicit governance decision exists **and** the output is redacted/generalized appropriately.
 
-### ✅ Safe patterns for restricted datasets
-- Use **coarse spatial coverage** (county-level, grid, Kansas-only statement).
-- Use `dcat:accessURL` pointing to an **access request** or **governed API endpoint** (auth required).
-- Provide `dct:description` notes describing what was generalized/redacted (without revealing the secret).
-- Avoid:
-  - direct `downloadURL` to raw storage
-  - embedded sensitive coordinates
-  - overly specific “where to find it” instructions
+### 🪪 Sovereignty & cultural protocols (design target)
+Some content requires **community-defined access**, not just generic RBAC:
+
+- support **tiered access** beyond “Public/Private” (e.g., community-only),
+- record cultural constraints as metadata (and enforce via policy gate + API),
+- treat “consent” as a first-class governance input (and audit it).
 
 > [!IMPORTANT]
 > If a dataset involves culturally sensitive locations, protected resources, private land, personal data, or consent/sovereignty constraints:
@@ -295,12 +347,42 @@ In practice: if inputs are Internal, you cannot publish outputs as Public unless
 > - use generalized coverage,
 > - ensure policy gates and human review are satisfied before merge.
 
+### ✅ Safe patterns for restricted datasets
+- Use **coarse spatial coverage** (county-level, grid, Kansas-only statement).
+- Use `dcat:accessURL` pointing to an **access request** or **governed API endpoint** (auth required).
+- Provide `dct:description` notes describing what was generalized/redacted (without revealing the secret).
+- Consider **geo-obfuscation** (e.g., rounded coordinates or generalized markers) when appropriate.
+
+Avoid:
+- direct `downloadURL` to raw storage
+- embedded sensitive coordinates
+- overly specific “where to find it” instructions
+
+---
+
+## 📡 Streaming, rapid updates & simulations
+
+KFM treats “live” data as **the same governance problem**, just faster:
+
+### ✅ Rules (still apply)
+- 📌 **No bypassing catalogs**: UI + Focus Mode should still cite DCAT dataset metadata for “Source: …” labels.
+- 🧬 **Provenance still required**: log dynamic queries / readings in PROV (at least as a running accumulation).
+- 🔐 **Classification still enforced**: sensitive stations/entities may be omitted or downgraded for unauthorized users.
+
+### Patterns that work well
+- **Streaming sensors** (e.g., river gauges): DCAT entry represents the dataset; API serves latest values; PROV logs “reading used”.
+- **Near-real-time satellite updates**: treat each update as an ingest cycle; mint STAC items; update DCAT `dct:modified`.
+- **Simulation runs**: each run output is a dataset entity; PROV links run → model version → inputs; DCAT can describe the “run series” and/or stable landing page.
+
+> [!TIP]
+> If the UI shows a “Real-time” layer, the legend source label should come from DCAT, not hardcoded strings. ✅
+
 ---
 
 ## ✅ “Add or update a dataset” checklist
 
 ### 0) Pick a stable dataset ID 🏷️
-This ID becomes the join key across STAC/DCAT/PROV/Graph.
+This ID becomes the join key across STAC/DCCAT/PROV/Graph/Story Nodes.
 
 ### 1) Stage data properly 📥
 - `data/raw/` = immutable source snapshot / pointer manifests
@@ -323,6 +405,7 @@ At publish time, create/update:
 - 🗂️ `data/catalog/dcat/<id>.jsonld`
 - 🧬 `data/prov/<run_id>/prov.jsonld` *(or equivalent bundle)*
 - (optional) 🕸️ graph sync payloads referencing IDs (no raw data duplication)
+- (optional) 🎬 Story Node updates if the dataset is used in narrative content
 
 ### 4) Sanity check discoverability 🧠
 Ask:
@@ -331,6 +414,7 @@ Ask:
 - Is the access method explicit (download vs governed API)?
 - Is provenance traceable (PROV links exist)?
 - Does `dct:accessRights` match sensitivity and propagate correctly?
+- Are Story Nodes and UI references pointing to dataset IDs (not random URLs)?
 
 ### 5) Run QA locally ✅
 See [Validation & CI gates](#-validation--ci-gates).
@@ -357,13 +441,17 @@ python3 tools/validation/catalog_qa/run_catalog_qa.py \
   --fail-on-warn
 ```
 
-### 🔐 Policy gate (recommended)
-Automate governance constraints (FAIR/CARE, sensitive info handling, retention, coding standards) with OPA/Conftest:
+### 🧷 Policy gate (recommended)
+Automate governance constraints with OPA/Conftest:
 
-- suggested path: `tools/validation/policy/`
+- path: `tools/validation/policy/`
 - run in CI as a required check (“Policy Gate”)
+- support:
+  - rule IDs (stable policy names),
+  - waivers with **expiration + justification**,
+  - fail-closed defaults for missing metadata.
 
-### 🧪 Recommended catalog checks to enforce
+### 🧾 Recommended checks to enforce
 - `dct:license` present (and parseable)
 - `dct:accessRights` present (**fail closed**)
 - at least one `dcat:distribution`
@@ -372,7 +460,13 @@ Automate governance constraints (FAIR/CARE, sensitive info handling, retention, 
   - Confidential → gated access preferred
 - link integrity (STAC/DCAT/PROV references resolve)
 - lint for sensitive coordinate leakage (especially for Restricted datasets)
-- schema validation against KFM-specific profiles (see `schemas/`)
+- schema validation against KFM-specific profiles (`docs/standards/` + `schemas/`)
+
+### 📊 Telemetry & audit hooks (recommended)
+- ingestion ledger (append-only NDJSON / event log)
+- QA metrics dashboards (missing metadata %, broken links, policy denials)
+- Focus Mode citation coverage tracking (drift/safety indicators)
+- run IDs that correlate ETL → catalogs → graph → API deployment
 
 > [!TIP]
 > Keep PR gates fast (fixtures + metadata). Run deeper quality checks nightly (geometry validity, CRS checks, range checks).
@@ -390,7 +484,8 @@ Automate governance constraints (FAIR/CARE, sensitive info handling, retention, 
     "dcat": "http://www.w3.org/ns/dcat#",
     "dct": "http://purl.org/dc/terms/",
     "prov": "http://www.w3.org/ns/prov#",
-    "xsd": "http://www.w3.org/2001/XMLSchema#"
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "kfm": "kfm:"
   },
   "@id": "kfm:dataset/<dataset_id>",
   "@type": "dcat:Dataset",
@@ -404,8 +499,8 @@ Automate governance constraints (FAIR/CARE, sensitive info handling, retention, 
 
   "dcat:keyword": ["kansas", "<domain>", "<theme>"],
 
-  "dct:issued": {"@value": "2026-01-11", "@type": "xsd:date"},
-  "dct:modified": {"@value": "2026-01-11", "@type": "xsd:date"},
+  "dct:issued": {"@value": "2026-01-19", "@type": "xsd:date"},
+  "dct:modified": {"@value": "2026-01-19", "@type": "xsd:date"},
 
   "dcat:distribution": [
     {
@@ -414,10 +509,28 @@ Automate governance constraints (FAIR/CARE, sensitive info handling, retention, 
       "dcat:accessURL": "../stac/collections/<id>/collection.json",
       "dct:format": "application/json",
       "dcat:mediaType": "application/json"
+    },
+    {
+      "@type": "dcat:Distribution",
+      "dct:title": "GeoParquet (Analytics)",
+      "dcat:downloadURL": "<governed-url-or-release-asset>",
+      "dct:format": "application/parquet",
+      "dcat:mediaType": "application/parquet"
+    },
+    {
+      "@type": "dcat:Distribution",
+      "dct:title": "PMTiles (Map)",
+      "dcat:downloadURL": "<governed-url-or-release-asset>",
+      "dct:format": "application/vnd.pmtiles",
+      "dcat:mediaType": "application/vnd.pmtiles"
     }
   ],
 
-  "prov:wasGeneratedBy": "kfm:prov/<run_id>"
+  "prov:wasGeneratedBy": "kfm:prov/<run_id>",
+
+  "kfm:classification": "Public",
+  "kfm:domain": "<domain>",
+  "kfm:region": "ks"
 }
 ```
 
@@ -425,7 +538,7 @@ Automate governance constraints (FAIR/CARE, sensitive info handling, retention, 
 
 > [!NOTE]
 > This is a **starter shape**, not the final contract.  
-> A near-term priority is a **KFM dataset schema + validator** that enforces required fields and local conventions (e.g., county tags, sensitivity classification, naming rules).
+> The near-term priority is a **KFM dataset schema + validator** that enforces required fields and local conventions (naming, sensitivity, link integrity, policy IDs/waivers).
 
 ---
 
@@ -445,7 +558,7 @@ DCAT should point to how people actually **use** the dataset.
 A recommended KFM pattern for large layers:
 - **GeoParquet** for analysis
 - **PMTiles** (or similar) for fast map rendering
-- Both registered via a **STAC Collection + DCAT Dataset**, with hashes/checksums in provenance.
+- both registered via a **STAC Collection + DCAT Dataset**, with hashes/checksums in provenance.
 
 ### Pattern D — Governed API (auth / rate limits / redaction)
 - `dcat:accessURL` → API endpoint requiring auth
@@ -454,6 +567,12 @@ A recommended KFM pattern for large layers:
 ### Pattern E — “Landing page only” (restricted metadata)
 - `dcat:landingPage` → access request + justification page
 - no direct file links
+
+### Pattern F — Offline data packs (field kits) 🧳📦
+If you ship offline packs (rural/fieldwork/classroom):
+- bundle **PMTiles + GeoParquet + thumbnails**,
+- include **STAC + DCAT + PROV inside the pack**,
+- keep stable IDs so the same pack can later sync upstream.
 
 > [!TIP]
 > If you’re making map previews (thumbnails, quicklooks), include them as STAC assets and/or as a DCAT distribution with clear media types (PNG/JPEG) and size hints.
@@ -467,22 +586,24 @@ If an AI/ML or analytical pipeline produces:
 - 📈 model metrics/plots → **DCAT + PROV**
 - 🧾 reports → **DCAT + PROV**
 - 🕸️ derived entities/relationships → **graph ingestion must reference provenance-backed IDs**
-- 🧪 notebooks / “Methods & Computational Experiments” (MCP) outputs → treat as governed artifacts if cited by Story Nodes
+- 🧪 notebooks / “Methods & Computational Experiments” outputs → treat as governed artifacts if cited by Story Nodes
 
 > [!IMPORTANT]
-> “AI did it” is not provenance. Every derived artifact needs lineage and an access classification.
+> “AI did it” is not provenance. Every derived artifact needs lineage and an access classification.  
+> If the assistant cannot cite sources, it should **refuse** rather than hallucinate.
 
 ---
 
 ## 🌐 Federation & multi-region harvesting
 
-KFM’s long-term direction is a network of interoperable regional hubs (e.g., Kansas + neighboring states).  
+KFM’s long-term direction is a network of interoperable regional hubs (Kansas + neighbors).  
 DCAT is the **lowest-friction interoperability layer** for multi-hub indexing:
 
 - stable dataset IDs
 - explicit licensing
 - consistent `dct:accessRights`
 - distributions that point to governed APIs or landing pages
+- optional compatibility endpoints (OGC API Features / WMS/WFS) as needed
 
 > [!NOTE]
 > Designing DCAT entries with federation in mind today reduces rework when multiple hubs or “Frontier Matrix” instances interoperate tomorrow.
@@ -528,107 +649,25 @@ No. Prefer:
 > KFM code may be MIT-licensed, but datasets and reference materials can carry third‑party terms—**track licenses in STAC/DCAT**.
 
 <details>
-<summary><strong>🧠 Canonical KFM design & governance docs</strong></summary>
+<summary><strong>🧠 Canonical KFM architecture, data intake, UI, AI</strong></summary>
 
-- `MARKDOWN_GUIDE_v13.md.gdoc`
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
-
-</details>
-
-<details>
-<summary><strong>🗺️ GIS, spatial ops, cartography</strong></summary>
-
-- `python-geospatial-analysis-cookbook.pdf`
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`
+- `📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf`
+- `Kansas Frontier Matrix – Comprehensive UI System Overview.pdf`
+- `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`
+- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf`
+- `Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf`
 
 </details>
 
 <details>
-<summary><strong>🛰️ Remote sensing</strong></summary>
+<summary><strong>📦 Bundled “PDF portfolios” (open locally for full index)</strong></summary>
 
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-
-</details>
-
-<details>
-<summary><strong>🌐 Web UI + 3D/graphics</strong></summary>
-
-- `responsive-web-design-with-html5-and-css3.pdf`
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-
-</details>
-
-<details>
-<summary><strong>📈 Statistics, modeling, analytics discipline</strong></summary>
-
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `Understanding Statistics & Experimental Design.pdf`
-- `regression-analysis-with-python.pdf`
-- `Regression analysis using Python - slides-linear-regression.pdf`
-- `graphical-data-analysis-with-r.pdf`
-- `think-bayes-bayesian-statistics-in-python.pdf`
-
-</details>
-
-<details>
-<summary><strong>⚙️ Systems, scalability, interoperability</strong></summary>
-
-- `Data Spaces.pdf`
-- `Scalable Data Management for Future Hardware.pdf`
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-
-</details>
-
-<details>
-<summary><strong>❤️ Ethics, autonomy, legal frames</strong></summary>
-
-- `Introduction to Digital Humanism.pdf`
-- `Principles of Biological Autonomy - book_9780262381833.pdf`
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
-
-</details>
-
-<details>
-<summary><strong>🧮 Graphs, optimization, deeper math (optional)</strong></summary>
-
-- `Spectral Geometry of Graphs.pdf`
-- `Generalized Topology Optimization for Structural Design.pdf`
-
-</details>
-
-<details>
-<summary><strong>🖼️ Media formats (thumbnails, previews)</strong></summary>
-
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
-
-</details>
-
-<details>
-<summary><strong>🛡️ Security (defensive reference only)</strong></summary>
-
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
-
-> These are used to inform **defensive controls** (threat modeling, secure coding, incident response).  
-> They are **not** a request for offensive tooling contributions.
-
-</details>
-
-<details>
-<summary><strong>🧰 General programming shelf (bundles)</strong></summary>
-
-- `A programming Books.pdf`
-- `B-C programming Books.pdf`
-- `D-E programming Books.pdf`
-- `F-H programming Books.pdf`
-- `I-L programming Books.pdf`
-- `M-N programming Books.pdf`
-- `O-R programming Books.pdf`
-- `S-T programming Books.pdf`
-- `U-X programming Books.pdf`
+- `AI Concepts & more.pdf`
+- `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`
+- `Various programming langurages & resources 1.pdf`
+- `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`
 
 </details>
 
@@ -638,6 +677,7 @@ No. Prefer:
 
 | Version | Date | Summary |
 |---|---:|---|
+| v1.2.0 | 2026-01-19 | Add policy-gate framing (fail-closed), metadata profile + extension rules, Story Nodes cross-links, streaming/simulation guidance, offline pack pattern, DevOps-as-PROV notes, and refresh reference library ✅ |
 | v1.1.0 | 2026-01-11 | Align README with v13 canonical pipeline + directories; add classification propagation + policy gate concepts; add sources manifest + dual-format packaging guidance; refresh reference library list ✅ |
 | v1.0.0 | 2026-01-08 | Initial DCAT README: pipeline alignment, cross-link rules, sensitive-data handling, CI/QA guidance ✅ |
 
