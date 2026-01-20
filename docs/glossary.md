@@ -1,8 +1,11 @@
----
+**📖 KFM Glossary**  
+_Last updated: 2026-01-19 (v1.3.0) – expanded AI, simulation, modeling, real-time, and governance terminology._
+
+```yaml
 title: "📖 KFM Glossary"
 path: "docs/glossary.md"
-version: "v1.2.2"
-last_updated: "2026-01-12"
+version: "v1.3.0"
+last_updated: "2026-01-19"
 status: "draft"
 doc_kind: "Glossary"
 license: "CC-BY-4.0"
@@ -29,9 +32,9 @@ review_cycle: "Quarterly · Docs + Governance owners"
 scope: "docs/** (terminology used across data → catalogs → graph → API → UI → Story Nodes → Focus Mode)"
 risk_category: "low"
 
-doc_uuid: "urn:kfm:doc:glossary:v1.2.2"
-semantic_document_id: "kfm-glossary-v1.2.2"
-event_source_id: "ledger:kfm:doc:glossary:v1.2.2"
+doc_uuid: "urn:kfm:doc:glossary:v1.3.0"
+semantic_document_id: "kfm-glossary-v1.3.0"
+event_source_id: "ledger:kfm:doc:glossary:v1.3.0"
 commit_sha: "<latest-commit-hash>"
 
 ai_training_inclusion: true
@@ -51,7 +54,7 @@ telemetry_ref: "N/A (doc-only)"
 telemetry_schema: "N/A (doc-only)"
 
 doc_integrity_checksum: "sha256:<calculate-and-fill>"
----
+```
 
 <a id="top"></a>
 
@@ -161,9 +164,9 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 | MCP runs | `mcp/` | Run logs, experiments, reproducibility artifacts |
 | Tools | `tools/` | Validators, utilities, QA scripts |
 | Tests | `tests/` | Unit/integration/contract tests |
+| Web | `web/` | Frontend UI code (React, Cesium, etc.) |
 
-### Repo top-levels (expected)
-~~~text
+```plaintext
 📁 .github/
 ├── 📁 workflows/
 └── 📄 SECURITY.md                         # if present
@@ -196,7 +199,7 @@ doc_integrity_checksum: "sha256:<calculate-and-fill>"
 📁 tools/
 📁 tests/
 📁 web/
-~~~
+```
 
 ## 🧭 Context
 
@@ -234,11 +237,13 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 | Protocol label aliases | `KFM-ONTO` vs `KFM-OP`; `KFM-PPC` vs `KFM-PDC` | Tooling and schema checks rely on consistent keys | Treat older labels as legacy aliases (TBD canonical mapping) |
 | Domain naming | `air-quality` vs `air_quality` | Dataset IDs + UI layer IDs | Prefer kebab-case in docs paths; treat data dirs as domain-defined (TBD) |
 | Story Node placement | `docs/reports/story_nodes/` vs other story folders | Ingestion + UI linking | Prefer `docs/reports/story_nodes/` |
+| AI assistant naming | **“CrewAI”** vs *Focus Mode AI assistant* | Internal code name vs user-facing terminology | Accept “CrewAI” as internal alias for AI content workers; use “AI-assisted” in docs for clarity (TBD) |
+| Story schema fields | *No drift noted yet* | (If v2 vs v3 naming differences arise) | Document field aliases if discovered (TBD) |
 
 ## 📚 Glossary (A–Z)
 
-> Formatting conventions:
-> - **TERM (Acronym)** — definition. *(Notes / related terms)*
+> Formatting conventions:  
+> - **TERM (Acronym)** — definition. *(Notes / related terms)*  
 > - **`front_matter_key`** — a YAML key used in governed documents. *(Notes / related keys)*
 
 ### 0–9 / Symbols
@@ -252,6 +257,7 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 - **AI training inclusion (`ai_training_inclusion`)** — front-matter boolean indicating whether the artifact may be included in AI training corpora.
 - **AI transform permissions (`ai_transform_permissions`)** — allowed AI operations on a document (e.g., `summarize`, `structure_extract`). Not a license to invent facts. *(See: Provenance.)*
 - **AI transform prohibited (`ai_transform_prohibited`)** — AI operations explicitly disallowed (e.g., `infer_sensitive_locations`, `generate_policy`). *(See: Prompt Gate.)*
+- **AI-assisted drafting** — using AI to assist in content creation (e.g. Focus Mode’s CrewAI for Story Nodes). All AI-generated narrative must remain evidence-led and governed (no unsourced speculation). *(Related: Focus Mode, Story Node.)*
 - **API (Application Programming Interface)** — the contract boundary between clients (UI/tools) and KFM backend services. UI consumes KFM data via APIs or pre-built artifacts, not direct graph access.
 - **Asset (STAC Asset)** — a file/resource referenced from a STAC Item (e.g., COG, GeoJSON, PDF, thumbnail). *(See: STAC Item.)*
 - **Attestation (`attestation_ref`)** — a signed statement about how an artifact was built (often SLSA/in-toto) used to verify supply-chain integrity. *(See: SLSA, in-toto.)*
@@ -259,6 +265,7 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 ### B
 - **BBox (Bounding box)** — rectangular spatial extent, typically `[west, south, east, north]`, used for spatial indexing and discovery.
 - **Badge profiles (`badge_profiles`)** — front-matter list describing approved badge layouts for a doc. Presentation-only; no governance meaning.
+- **Bias correction** — adjusting a model’s data output to remove systematic bias by aligning it with trusted observations (often over a calibration interval). *(Methods: Quantile Mapping, Delta Method.)*
 - **Branch protection** — repository controls that require CI checks (and often reviews) before merging.
 
 ### C
@@ -270,22 +277,25 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 - **CI/CD** — automation that validates, tests, and (optionally) deploys changes (schemas, docs, code).
 - **Classification (`classification`)** — coarse access label for artifacts (e.g., `open`). *(Do not confuse with `sensitivity`.)*
 - **COG (Cloud Optimized GeoTIFF)** — GeoTIFF formatted for HTTP range requests and efficient tiled access.
+- **Community verification** — crowdsourced or microtask-driven validation of data and narratives by community members (e.g. upvote/downvote or “verified” flags on crowdsourced data). *(See: Governance, QA gate.)*
 - **Contract artifact** — machine-validated specification that defines boundary expectations (API payloads, Story Node schema, catalog profiles). Contracts are authoritative.
 - **Contract-first** — discipline where schemas/contracts are defined (and tested) before broad implementation; breaking changes require versioning and compatibility tests.
 - **Contract test** — automated test that ensures payloads and schema expectations remain stable across changes.
 
 ### D
 - **Dataset** — a versioned, describable collection of data assets (files) plus metadata (license, extents, lineage). In KFM, “dataset” should be publishable via STAC/DCAT and traceable via PROV.
-- **Dataset registry** — human/machine indexes of available datasets (e.g., `datasets_index.md`, `datasets_registry.csv`) used for discoverability and CI link checks.
+- **Dataset registry** — human/machine indexes of available datasets used for discoverability and CI link checks.
 - **DCAT** — W3C vocabulary for describing datasets in catalogs; used in KFM for interoperable dataset discovery.
 - **`dcat_profile`** — front-matter profile/version label for DCAT rules expected for artifacts in this scope.
 - **Deterministic ETL** — idempotent, config-driven transforms with logged inputs/outputs and stable IDs.
+- **Deterministic simulation run (`kfm-sim-run`)** — a governed simulation execution pattern for **scenario replay** with fixed seeds, frozen time, and containerized tools. Produces diff artifacts + updated STAC + PROV lineage; may open a draft PR for review. *(See: Reproducibility, Provenance.)*
 - **Doc integrity checksum (`doc_integrity_checksum`)** — cryptographic hash (e.g., sha256) of the document content used to detect tampering and support reproducibility.
 - **Drift detection** — automated checks that schemas/data distributions/upstreams have changed unexpectedly.
 
 ### E
 - **ETL** — Extract, Transform, Load: ingest raw sources, normalize formats, and produce processed outputs plus lineage logs.
 - **Evidence-first** — discipline where every UI claim, API value, or narrative assertion traces to a source artifact ID and provenance chain.
+- **Explainable AI (XAI)** — techniques and practices that make an AI’s reasoning transparent and understandable to humans. *(See: Focus Mode audit panel.)*
 - **Extension Matrix** — planning pattern: adding a domain/capability implies changes across data, catalogs, graph, APIs, UI, narrative, and governance gates.
 
 ### F
@@ -293,18 +303,20 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 - **`fair_category`** — front-matter label describing FAIR alignment. Treat as descriptive unless a rubric is linked.
 - **Fail-closed** — posture where validation failures block merges/deployments rather than being skipped.
 - **Fencing profile (`fencing_profile`)** — convention stating how code fences should be written (e.g., prefer `~~~` inside docs to avoid nesting conflicts).
-- **Focus Mode** — an experience that consumes only provenance-linked context bundles (**no unsourced narrative**). AI insights are opt-in and must show uncertainty.
+- **Focus Mode** — an experience that consumes only provenance-linked context bundles (**no unsourced narrative**). AI insights are opt-in and must show uncertainty. *(See: Story Node, Provenance.)*
 
 ### G
 - **GDAL / OGR** — geospatial processing libraries used for format conversion, reprojection, raster/vector operations.
 - **GeoJSON** — JSON format for representing vector geometries + properties.
 - **Graph (Knowledge graph)** — semantic core linking entities (Place/Event/Dataset/etc.) and relationships, including provenance links.
+- **Graph-Augmented Intelligence (GAI)** — fusing the Neo4j knowledge graph with AI retrieval so Focus Mode answers are grounded in graph + catalogs. *(See: RAG, Focus Mode.)*
 - **GraphQL** — typed API style that can expose access to KFM graph-backed data through resolvers.
 - **Governance** — rules, review gates, and policies controlling ingest, publication, redaction/generalization, and narrative surfacing.
+- **GTFS-RT (General Transit Feed Spec – Real-Time)** — standard for live transit data (vehicle positions, alerts). KFM watcher ingests GTFS-RT and emits STAC Items + DCAT entries for live feeds. *(See: Real-time data.)*
 
 ### H
 - **Hallucination (KFM context)** — presenting narrative or claims without provenance-linked sources. Focus Mode forbids hallucinated/unsourced content.
-- **Heading registry (`heading_registry`)** — optional front-matter block listing allowed/expected section headings (e.g., `approved_h2`). Consistency aid; not policy.
+- **Heading registry (`heading_registry`)** — optional front-matter block listing allowed/expected section headings. Consistency aid; not policy.
 - **Hermetic build** — build/run executed in a controlled environment with pinned dependencies and inputs, supporting reproducibility and supply-chain verification.
 
 ### I
@@ -320,10 +332,11 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 - **KFM** — Kansas Frontier Matrix: geospatial-historical knowledge system with a governed end-to-end pipeline producing maps and provenance-led narratives.
 - **KFM-MDP** — KFM Markdown protocol profile/version that governs doc structure and front-matter conventions.
 - **KFM-STAC / KFM-DCAT / KFM-PROV** — KFM validation profiles for catalog + provenance artifacts.
+- **Kalman Filter / EnKF** — sequential estimation filters; EnKF uses ensembles to capture uncertainty. Used for smoothing sensor time series and model assimilation. *(See: PurpleAir.)*
 
 ### L
-- **Layer (map layer)** — a visualizable dataset or derived rendering (vector/raster/tiles) exposed to the UI. Layers should have source metadata and access rules.
-- **Layer registry** — UI-side registry listing available layers, their sources, and access rules; prevents unauthorized or sensitive data exposure.
+- **Layer (map layer)** — a visualizable dataset or derived rendering exposed to the UI; must have source metadata and access rules.
+- **Layer registry** — UI-side registry listing available layers, sources, and access rules; prevents unauthorized or sensitive exposure.
 - **License (`license`)** — front-matter license identifier (e.g., `CC-BY-4.0`).
 - **Lineage** — traceability describing how an artifact was produced from inputs and processes. *(See: PROV-O.)*
 
@@ -336,64 +349,72 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 - **Neo4j** — graph database used for KFM’s semantic core and relationship queries.
 
 ### O
-- **OGC API** — modern OGC web API family (successors/alternatives to some older OGC service patterns). *(If adopted, treat as an interoperability surface.)*
+- **OGC API** — modern OGC web API family. *(If adopted, treat as an interoperability surface.)*
 - **OpenAPI** — specification for describing REST APIs; used to document and validate REST contracts.
 
 ### P
 - **Pipeline contract (`pipeline_contract_version`)** — front-matter key naming the active pipeline contract profile/version for this artifact.
 - **PMTiles** — single-file archive for efficient tile delivery; often paired with MapLibre for fast client rendering.
-- **PROV-O** — W3C Provenance Ontology (entities, activities, agents, relationships like “used” / “generatedBy”).
+- **PROV-O** — W3C Provenance Ontology.
+- **PROV bundle** — provenance package capturing entities, activities, agents for a run or dataset.
 - **`prov_profile`** — front-matter profile/version label for PROV artifacts expected for this scope.
+- **Promotion (data artifact)** — governed elevation from work/sandbox outputs into processed/published artifacts; requires STAC/DCAT/PROV, validation, and review.
+- **Prompt Gate** — Focus Mode prompt security mechanism: filters/sanitizes inputs, blocks prompt injection, enforces tool allowlists/OPA checks where configured.
 - **Provenance** — trace of origin, inputs, process, and responsible parties; required for Focus Mode and Story Nodes.
+- **Provenance guard** — CI/validation gate rejecting artifacts missing required provenance/metadata.
+- **PurpleAir** — low-cost PM sensor network; KFM ingests and calibrates against reference stations; produces cataloged, provenance-linked corrected outputs. *(See: Bias correction, QM, EnKF.)*
 
 ### Q
-- **QA gate / Quality gate** — a validation checkpoint (CI or review) that must pass for promotion/publish steps (schemas, lint, policy checks, linkcheck, etc.). *(See: Validation gate.)*
+- **QA gate / Quality gate** — validation checkpoint that must pass before promotion/publish.
+- **Quantile Mapping (QM)** — bias correction technique mapping quantiles of modeled/sensor data to reference distributions.
 
 ### R
-- **Redaction** — removing or hiding sensitive information entirely (e.g., omitting coordinates). *(Related: Generalization.)*
-- **Release stage (`release_stage`)** — maturity label (e.g., “Stable”, “Draft”). Distinct from doc `status`.
+- **Redaction** — removing or hiding sensitive information entirely. *(Related: Generalization.)*
+- **Release stage (`release_stage`)** — maturity label distinct from doc `status`.
 - **Reproducibility** — ability to regenerate outputs from inputs with pinned versions/configs and recorded provenance.
 
 ### S
 - **SBOM (`sbom_ref`)** — Software Bill of Materials reference (often SPDX) for a release.
-- **Schema validation** — checks that artifacts conform to required schemas/profiles (STAC/DCAT/PROV, JSON Schema, SHACL, OpenAPI).
-- **Semantic document ID (`semantic_document_id`)** — stable, human-readable identifier used across systems/tools (distinct from `doc_uuid`).
+- **Schema validation** — checks that artifacts conform to required schemas/profiles.
+- **Semantic document ID (`semantic_document_id`)** — stable, human-readable identifier distinct from `doc_uuid`.
 - **Sensitivity (`sensitivity`)** — label indicating potential harm if details are disclosed; may require generalization/redaction.
-- **SHACL (`shape_schema_ref`)** — Shapes Constraint Language for expressing constraints over RDF graphs.
-- **Sigstore** — ecosystem for signing and transparency logging (Fulcio + Rekor).
-- **SLSA** — supply-chain integrity framework; referenced for provenance verification.
-- **Story Node** — governed narrative artifact that is machine-ingestible and provenance-linked; must cite every factual claim.
-- **STAC** — SpatioTemporal Asset Catalog: open specification for describing geospatial assets and collections using JSON.
-- **STAC Collection** — STAC object grouping items and defining shared metadata/extents.
-- **STAC Item** — STAC object representing a single spatiotemporal unit with assets.
+- **SHACL (`shape_schema_ref`)** — Shapes Constraint Language for RDF constraint validation.
+- **Signature gate** — requirement that artifacts are signed/attested (Sigstore/Cosign/SLSA) before promotion or release.
+- **Sigstore** — ecosystem for signing and transparency logging.
+- **SLSA** — supply-chain integrity framework.
+- **Sovereignty (data sovereignty)** — community control expectations for sensitive cultural/Indigenous data; requires additional review and constraints.
+- **Story Node** — governed narrative artifact: machine-ingestible, provenance-linked, every factual claim cited; used by Focus Mode and UI storytelling.
+- **STAC** — SpatioTemporal Asset Catalog.
+- **STAC Collection** — groups STAC Items and defines shared metadata/extents.
+- **STAC Item** — spatiotemporal unit describing assets and metadata.
 - **`stac_profile`** — front-matter profile/version label for STAC rules expected for artifacts in this scope.
 
 ### T
-- **Telemetry (`telemetry_ref`, `telemetry_schema`)** — metrics/logs/traces for observability and governance auditing (when applicable).
-- **Transform registry (`transform_registry`)** — optional front-matter block enumerating allowed vs prohibited AI transforms (often mirrors `ai_transform_*` fields).
-- **`title`** — human-readable document title used in indexes and navigation.
+- **Telemetry (`telemetry_ref`, `telemetry_schema`)** — observability metrics/logs/traces; supports governance auditing.
+- **Transform registry (`transform_registry`)** — optional front-matter block enumerating allowed vs prohibited AI transforms.
+- **`title`** — human-readable doc title.
 
 ### U
-- **Uncertainty** — quantitative/qualitative indicator for confidence in model outputs or inferred claims. AI-derived insights must be labeled and opt-in.
+- **Uncertainty** — confidence indicators for model outputs or inferred claims; AI insights must be labeled and opt-in.
 
 ### V
-- **Validation gate** — mandatory check in CI/CD (schemas, lint, policy checks) that must pass before changes are accepted.
-- **V&V (Verification & Validation)** — modeling discipline: verification checks implementation; validation checks reality fit; accreditation is acceptance for a use case.
-- **Version-pinned** — immutability posture: published artifacts are tied to a version and not changed in place.
+- **Validation gate** — mandatory CI/CD check that must pass before changes accepted.
+- **V&V (Verification & Validation)** — modeling discipline: correctness vs reality fit.
+- **Version-pinned** — immutability posture: published artifacts tied to version, not changed in place.
 
 ### W
-- **WDE (World Discovery Engine)** — referenced extension concept; implies new data products, graph entities, API extensions, and validation.
-- **WebGL** — browser graphics API used for high-performance rendering (often behind 3D mapping).
-- **Workflow** — defined set of pipeline steps executed reproducibly and recorded in provenance.
+- **WDE (World Discovery Engine)** — extension concept implying new data products + graph/API/UI changes and validation.
+- **WebGL** — GPU-accelerated browser rendering API.
+- **Workflow** — defined pipeline steps executed reproducibly and recorded in provenance.
 
 ### Y
-- **YAML front-matter** — metadata block at the top of governed Markdown docs containing versioning, provenance refs, governance refs, and AI permissions.
+- **YAML front-matter** — metadata block for governed docs (versioning, provenance refs, governance refs, AI permissions).
 
 ### Z
-- **Zoom level** — map scale index controlling what data is shown; affects tiling, LOD, and rendering decisions.
+- **Zoom level** — map scale index controlling level-of-detail and rendering decisions.
 
 ## 🗺️ Diagrams
-- Not required for this glossary. *(If future work adds term-dependency diagrams, place them here and list `diagram_profiles` if used.)*
+- Not required for this glossary.
 
 ## 📦 Data & Metadata
 
@@ -410,34 +431,18 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 | KFM Glossary | Markdown | `docs/glossary.md` | KFM-MDP (front-matter + section structure) |
 
 ### Sensitivity & redaction
-- This doc is **definitions-only** and should not include:
-  - protected site coordinates,
-  - operationally sensitive locations,
-  - examples that enable re-identification.
-- If a term needs an example, prefer placeholders and defer specifics to governed datasets.
-
-### Quality signals
-- Alphabetical term organization (A–Z) with consistent formatting conventions.
-- Front-matter key coverage includes core keys used in templates (or explicitly marked TBD).
-- Drift/alias notes are clearly labeled as drift (not policy).
+- Definitions-only; avoid protected coordinates or operationally sensitive examples.
 
 ## 🌐 STAC, DCAT & PROV Alignment
 
 ### STAC
 - This glossary does not emit STAC payloads.
-- It standardizes terminology for STAC objects (Collection/Item/Asset) and common adjacent concepts (BBox, COG, PMTiles).
 
 ### DCAT
 - This glossary does not emit DCAT payloads.
-- It standardizes terminology for dataset catalog semantics and interoperability language.
 
 ### PROV-O
 - This glossary does not emit PROV bundles.
-- It standardizes provenance language used across docs and Story Nodes.
-
-### Versioning expectations
-- Treat versions as **immutable identifiers**: updates create a new version, update IDs, and append a version-history row.
-- Prefer stable, machine-friendly IDs (`doc_uuid`, `semantic_document_id`, `event_source_id`) for cross-layer linking.
 
 ## 🧱 Architecture (Context Map)
 
@@ -445,7 +450,7 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 |---|---|---|---|
 | ETL | Pipelines | `api/scripts/` + `data/work/` | Deterministic runs + reproducible outputs |
 | Catalog | STAC/DCAT/PROV | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Discovery + interoperability + lineage |
-| Graph | Knowledge Graph | `api/src/` + `schemas/` | Ontology bindings + loaders *(DB in infra)* |
+| Graph | Knowledge Graph | `api/src/` + `schemas/` | Ontology bindings + loaders |
 | API | Contract boundary | `api/src/` + `api/contracts/` | Redaction/generalization and API contracts |
 | UI | Map + Focus Mode | `web/` | Must not read Neo4j directly |
 | Story | Story Nodes | `docs/reports/story_nodes/` | Provenance-linked narratives |
@@ -454,48 +459,16 @@ KFM spans multiple technical layers (data → catalogs → graph → APIs → UI
 ## 🧠 Story Node & Focus Mode Integration
 
 ### How this work surfaces in Focus Mode
-- Story Nodes and Focus Mode UI should link to this glossary for shared terminology (especially provenance and governance language).
-- Definitions here help keep narrative claims consistent with contract terminology (catalog/graph/API layers).
+- Story Nodes and Focus Mode UI should link to this glossary for shared terminology.
 
-### Provenance-linked narrative rule
-- Every narrative claim must map to a cited dataset/document ID and its provenance chain.
+### Co-authoring and AI Assistance
+- Multi-author editing and AI-assisted drafting are emerging features; definitions here keep vocabulary consistent.
 
-## 🧪 Validation & CI/CD
-
-### Validation steps (typical)
-- [ ] Markdown protocol checks (front-matter + required sections)
-- [ ] Link check to referenced docs (as implemented in CI)
-- [ ] Contract checks (when glossary changes imply contract terminology shifts)
-- [ ] Security checks (secret/PII scanning) for docs *(as configured)*
-
-### Reproduction
-~~~bash
-# (Repo-specific commands may differ.)
-# markdownlint docs/glossary.md
-# linkcheck docs/glossary.md
-~~~
-
-## ⚖️ FAIR+CARE & Governance
-
-### Review gates
-- If a term impacts governance (e.g., sensitivity categories, redaction rules), route to governance owners referenced in front-matter.
-
-### CARE / sovereignty considerations
-- Ensure terms related to Indigenous data governance remain aligned to the sovereignty policy.
-- Do not include sensitive site examples or protected coordinates.
-
-### AI usage constraints
-- This glossary can be summarized or indexed, but must not be used to invent policy or infer sensitive locations.
-
-## 🕰️ Version History
-
-| Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.0.0 | 2025-12-18 | Initial glossary: core pipeline, cataloging, graph, API/UI, governance terms. | Bartytime |
-| v1.1.0 | 2025-12-24 | Expanded glossary: front-matter keys, supply-chain/telemetry terms, lifecycle registry, drift notes. | Bartytime |
-| v1.2.0 | 2025-12-27 | Aligned to universal doc conventions; added registry keys and domain terminology; clarified drift. | Bartytime |
-| v1.2.1 | 2025-12-29 | Alignment pass: synced key artifact paths/wording; tightened CI/governance sections. | Bartytime |
-| v1.2.2 | 2026-01-12 | Updated canonical paths to reflect `api/` structure; added Front-Matter Key Index; expanded core terms (QA gate, dataset, ADR); aligned key artifacts to Master Guide v13. | Bartytime |
+## 📜 Version History
+| Version | Date       | Description                                                                                      | By        |
+|---------|------------|--------------------------------------------------------------------------------------------------|-----------|
+| v1.3.0  | 2026-01-19 | Expanded glossary with AI system components (Focus Mode, XAI, Prompt Gate), simulation/modeling terms (kfm-sim-run, bias correction, EnKF), real-time ingest (GTFS-RT, PurpleAir), governance concepts (sovereignty, telemetry). | Bartytime |
+| v1.2.2  | 2026-01-12 | Updated canonical paths to reflect `api/` structure; added Front-Matter Key Index; expanded core terms; aligned key artifacts to Master Guide v13. | Bartytime |
 
 ## 🔗 Footer
 
