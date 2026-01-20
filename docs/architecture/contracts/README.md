@@ -41,15 +41,15 @@ A KFM contract is any artifact that makes subsystem interactions **predictable, 
 
 ```mermaid
 flowchart LR
-  A[📥 Raw inputs] --> B[🧪 ETL / Pipelines]
-  B --> C[📦 Processed artifacts]
-  C --> D[🗂️ Catalogs: STAC/DCAT/PROV]
-  D --> E[🕸️ Knowledge Graph (Neo4j)]
-  E --> F[🔌 APIs (REST/GraphQL)]
-  F --> G[🗺️ UI (2D/3D, timeline)]
-  F --> H[🤖 Focus Mode (AI)]
-  G --> I[📚 Story Nodes]
-  H --> I
+  A["📥 Raw inputs"] --> B["🧪 ETL / Pipelines"];
+  B --> C["📦 Processed artifacts"];
+  C --> D["🗂️ Catalogs - STAC / DCAT / PROV"];
+  D --> E["🕸️ Knowledge Graph - Neo4j"];
+  E --> F["🔌 APIs - REST / GraphQL"];
+  F --> G["🗺️ UI - 2D / 3D + timeline"];
+  F --> H["🤖 Focus Mode - AI"];
+  G --> I["📚 Story Nodes"];
+  H --> I;
 ```
 
 - APIs are explicitly documented via **OpenAPI/Swagger** (REST) and a **GraphQL schema** for external + internal integration.:contentReference[oaicite:5]{index=5}
