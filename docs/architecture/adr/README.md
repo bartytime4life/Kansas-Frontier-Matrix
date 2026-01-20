@@ -73,12 +73,12 @@ This folder contains **Architecture Decision Records (ADRs)** for the Kansas Fro
 
 ```text
 docs/architecture/adr/ 🧭📜
-├─ README.md                          ✅ (this file)
-├─ TEMPLATE.md                         🧩 canonical ADR template
-├─ ADR-0001-example-decision.md        🧪 example (remove once real ADRs exist)
-├─ ADR-0002-....md                     ➕ new decisions live here
-├─ INDEX.md                            🗺️ optional (auto-generated ADR register)
-└─ _assets/                            🧷 diagrams/images used by ADRs (optional)
+├─ ✅📄 README.md                          # ✅ (this file) 📌 ADR purpose, lifecycle, and naming/numbering rules
+├─ 🧩📄 TEMPLATE.md                         # 🧩 Canonical ADR template (copy for new decisions)
+├─ 🧪📄 ADR-0001-example-decision.md        # 🧪 Example ADR (remove once real ADRs exist)
+├─ ➕📄 ADR-0002-....md                     # ➕ New decisions live here (increment numbers; keep titles kebab-case)
+├─ 🗺️📄 INDEX.md                            # 🗺️ Optional ADR register (auto-generated list + status summary)
+└─ 🧷 _assets/                              # 🧷 Optional diagrams/images referenced by ADRs (keep small + cited)
 ```
 
 > [!TIP]
