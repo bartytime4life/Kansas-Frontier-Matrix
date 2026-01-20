@@ -1,1 +1,281 @@
+<!--
+Path: mcp/notebooks/01_exploration/README.md
+Purpose: Early-stage “lab bench” notebooks for Kansas Frontier Matrix (KFM) exploration work.
+-->
 
+# 🧪 01 — Exploration Notebooks (MCP)
+
+![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-111827)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebooks-orange?logo=jupyter)
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?logo=python)
+![PostGIS](https://img.shields.io/badge/PostGIS-Spatial%20SQL-2f5d9b?logo=postgresql)
+![Neo4j](https://img.shields.io/badge/Neo4j-Knowledge%20Graph-008cc1?logo=neo4j)
+![Provenance](https://img.shields.io/badge/Provenance%E2%80%91first-Auditable-success)
+
+> 🧭 **North Star:** This folder is the *lab bench* for turning KFM questions into **reproducible evidence** → **decisions** → **tickets / ADRs** → **pipelines / Story Nodes**.
+
+---
+
+## 🧠 What this folder is for
+
+Use `01_exploration` notebooks when you need to:
+
+- 🔍 Validate an assumption (data, UI flow, AI behavior, performance, governance rule)
+- 🧪 Prototype a pipeline step (ingest → validate → transform → publish)
+- 🗺️ Stress-test spatial queries, tiles, time filtering, or 3D scene constraints
+- 🧵 Explore narrative concepts (Story Nodes, Pulse Threads, Conceptual Attention Nodes)
+- 🤖 Experiment with **Focus Mode** retrieval + citation rules (without “mystery outputs”)
+- 🧾 Produce “evidence artifacts” that can graduate into the repo (tests, configs, docs)
+
+Notebooks here are **allowed to be messy**, but they must be **traceable**.
+
+---
+
+## 📁 Folder layout
+
+```text
+mcp/notebooks/01_exploration/
+├─ README.md                         👈 you are here
+├─ 00_templates/                     🧩 reusable notebook + report skeletons
+├─ 01_notebooks/                     📓 the actual .ipynb files
+├─ _artifacts/                       📦 exports created by notebooks (checked in if useful)
+│  ├─ figures/                       📈 plots, screenshots, diagrams
+│  ├─ reports/                       📝 experiment reports (markdown or pdf)
+│  ├─ exports/                       📤 JSON/GeoJSON/CSV/STAC/PROV outputs
+│  └─ manifests/                     🧾 run context + checksums
+├─ _scratch/                         🧯 throwaway scratchpads (do not commit by default)
+└─ _refs/                            📚 local reference extracts (optional)
+   └─ books/                         📖 extracted PDFs from “portfolio” packs
+```
+
+✅ **Commit-friendly:** notebooks, small artifacts, run manifests, short reports  
+🚫 **Avoid committing:** secrets, API keys, large raw datasets, unreviewed sensitive data
+
+---
+
+## ✅ Notebook contract (lightweight but strict)
+
+Every exploration notebook should include the following **top cells** (copy/paste these headings):
+
+1. **🎯 Question**
+   - What are we trying to learn / prove / decide?
+
+2. **📦 Inputs**
+   - Dataset IDs (or paths), schema/contracts used, API endpoints, graph queries, etc.
+
+3. **🔁 Repro Steps**
+   - “Run order” + required environment variables (redacted), seeds, versions.
+
+4. **📤 Outputs**
+   - What files you wrote to `_artifacts/` (and why they matter)
+
+5. **🧾 Evidence & Decision**
+   - What did we observe? What do we decide next? (link to issue/ADR if available)
+
+### 🧾 Run Manifest (recommended)
+
+At minimum, write a small JSON next to your outputs:
+
+- `run_id`
+- `timestamp`
+- `inputs` (dataset IDs, commit hash if relevant)
+- `env` (python version, major libs)
+- `random_seeds`
+- `checksums` for exported artifacts
+
+---
+
+## 🚀 Quick start
+
+> If your environment is already set up, jump straight to **Notebook Backlog** below.
+
+1) Create/activate environment  
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+```
+
+2) Install project requirements  
+```bash
+# prefer the repo’s standard install path (requirements/uv/poetry/etc.)
+pip install -r requirements.txt
+```
+
+3) Launch Jupyter  
+```bash
+jupyter lab
+```
+
+4) Start with:
+- `01_notebooks/00_env_smoke_test.ipynb` ✅
+- then pick an exploration track below 🎯
+
+---
+
+## 🧭 KFM exploration tracks
+
+| Track | What you explore | Typical outputs |
+|------:|------------------|-----------------|
+| 1️⃣ | **Data intake & provenance** (contracts, STAC/DCAT/PROV, deterministic ETL) | manifests, sample catalogs, validation reports |
+| 2️⃣ | **PostGIS spatial reality** (queries, indexing, tiling, temporal filters) | SQL notebooks, EXPLAIN plans, tile benchmarks |
+| 3️⃣ | **Knowledge graph semantics** (Neo4j ontology, provenance graph, relationship patterns) | Cypher queries, graph shape checks, node/edge audits |
+| 4️⃣ | **UI + Story Nodes** (map states, timeline integration, narrative playback) | Story Node folders, JSON configs, authoring experiments |
+| 5️⃣ | **Focus Mode AI** (retrieval, citations, “no black box answers”) | RAG traces, citation coverage metrics, prompt hardening notes |
+| 6️⃣ | **Real-time + streaming** (watchers, polling patterns, dashboards) | ingestion simulations, SLA checks, anomaly prototypes |
+| 7️⃣ | **Governance & ethics** (FAIR+CARE, sensitivity tagging, fail-closed checks) | policy test cases, redaction demos, review workflows |
+| 8️⃣ | **Modeling & analytics** (Bayesian, forecasting, simulation ingestion) | model cards, parameter logs, reproducible runs |
+
+---
+
+## 📌 Suggested notebook backlog (starter set)
+
+> Use these names so the folder stays sortable and searchable 🔎
+
+### 🧩 Setup & plumbing
+- [ ] `00_env_smoke_test.ipynb` — confirm Python deps + DB connectivity (dev only)
+- [ ] `01_contracts_and_catalog_walkthrough.ipynb` — contract-first + minimal catalog item
+- [ ] `02_prov_run_manifest_playground.ipynb` — generate PROV-style run logs + checksums
+
+### 🗺️ Spatial + time
+- [ ] `10_postgis_spatial_queries.ipynb` — bounding boxes, buffers, joins, index sanity
+- [ ] `11_temporal_filters_and_timeline.ipynb` — time slicing patterns for layers/tiles
+
+### 🧬 Graph semantics
+- [ ] `20_neo4j_graph_shape_audits.ipynb` — detect orphan nodes, broken provenance chains
+- [ ] `21_conceptual_attention_nodes.ipynb` — prototype concept hubs + linking rules
+
+### 🧵 Narratives
+- [ ] `30_story_node_authoring.ipynb` — generate Story Node folder + JSON map state
+- [ ] `31_pulse_threads_microstories.ipynb` — prototype “micro-story + evidence” objects
+
+### 🤖 Focus Mode AI
+- [ ] `40_focus_mode_rag_playground.ipynb` — retrieval sources + citation coverage scoring
+- [ ] `41_prompt_security_and_guardrails.ipynb` — injection tests + safe tool calling
+
+### ⚖️ Governance & safety
+- [ ] `50_sensitivity_redaction_patterns.ipynb` — location fuzzing / role-based access demos
+- [ ] `51_policy_pack_test_cases.ipynb` — policy-as-code experiments (fail closed)
+
+### 📈 Analytics / simulation
+- [ ] `60_bayesian_modeling_sandbox.ipynb` — Bayesian primer + small KFM-relevant example
+- [ ] `61_simulation_ingestion_stub.ipynb` — “kfm-sim-run” style deterministic outputs
+
+---
+
+## 🧱 When an exploration “graduates” 🏁
+
+A notebook should be promoted when it becomes:
+
+- ✅ repeatable (no hidden steps)
+- ✅ parameterized (inputs/config are explicit)
+- ✅ testable (unit tests or at least validation checks exist)
+- ✅ governance-friendly (provenance + sensitivity handled)
+- ✅ useful to others (docs or template extracted)
+
+### Promotion targets
+- 🧰 **Pipeline template** (cookiecutter-style skeleton)
+- 🧪 **Test suite** (validators, policy checks, regression tests)
+- 🧾 **Docs** (guide / ADR / how-to)
+- 🗺️ **Story Node(s)** (narrative + map states)
+- 🤖 **Focus Mode skill** (retrieval tool + citation enforcement)
+
+---
+
+## 🧰 Practical guardrails (so we don’t create “mystery systems”)
+
+### 🔒 Data handling
+- Keep **raw evidence immutable** (treat `data/raw/` as read-only)
+- Never “hand-edit” processed outputs without capturing the change in code/config
+- Store **sensitivity level + license + provenance** alongside every dataset/layer
+
+### 🧪 Determinism
+- Record seeds (randomness is allowed, *untracked randomness is not*)
+- If you can’t reproduce a result: mark it as **non-actionable**
+
+### 🤖 AI experiments
+- Focus Mode prototypes must:
+  - cite sources (and refuse when sources are missing)
+  - log retrieval inputs/outputs
+  - avoid leaking secrets via prompts/tools
+
+---
+
+## 🗺️ Geospatial + WebGL reference usage
+
+Some project “reference packs” are **PDF portfolios** (they look like 1-page PDFs in GitHub).
+To use them locally, either open them in Adobe Reader **or extract embedded docs**:
+
+```bash
+# List embedded attachments
+pdfdetach -list "Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf"
+
+# Extract all attachments into a folder
+mkdir -p _refs/books/geospatial
+pdfdetach -saveall -o _refs/books/geospatial "Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf"
+```
+
+Repeat the same pattern for:
+- AI concepts pack 🤖
+- data management + Bayesian pack 🧠📈
+- programming languages pack 🛠️
+
+---
+
+## 📚 Project docs this folder is built from
+
+Keep these in mind while exploring (they define the “rails”):
+
+- **Architecture & features:** Story Nodes, timeline, UI/API boundaries, storage split (PostGIS + graph)
+- **Data intake guide:** provenance-first ingestion, deterministic ETL, contracts, governance checks
+- **UI system overview:** 2D/3D maps, narrative playback, layer management, Focus Mode UX, offline/AR
+- **AI system overview:** Focus Mode architecture, retrieval/citation enforcement, W-P-E agents, security layers
+- **Latest ideas & proposals:** roadmap-level features (policy pack, PROV+devops integration, reproducible research)
+- **Innovative concepts:** AR storytelling, 4D digital twins, cultural protocols, sensitivity-aware sharing
+- **Additional ideas:** Pulse Threads, Conceptual Attention Nodes, monitoring/audits, artifact signing patterns
+- **Reference libraries:** AI foundations, geospatial/WebGL, data science/Bayesian, multi-language engineering
+
+---
+
+## 🧾 Glossary (shared vocabulary)
+
+- **Story Node** 🧭: A narrative step that pairs text with an explicit map state (layers + camera).
+- **Focus Mode** 🤖: AI assistant mode that answers with evidence + citations, grounded in KFM data.
+- **Pulse Thread** 🧵: A “micro-story” tied to real-time or evolving evidence, reviewable and exportable.
+- **Conceptual Attention Node** 🧠: A graph “concept hub” that anchors queries, narratives, and AI focus.
+- **W-P-E** 🕵️‍♂️🗺️⚙️: Watcher → Planner → Executor agent workflow for automation (with governance gates).
+- **FAIR+CARE** ⚖️: Governance principles for data reuse *and* ethical control/benefit.
+
+---
+
+## 🧷 Definition of Done (for a “good” exploration)
+
+A notebook is “done” when it ships **one or more** of:
+
+- 📦 an artifact in `_artifacts/` that supports a decision
+- 🧾 a run manifest (inputs/outputs/checksums) proving reproducibility
+- 🔧 a refactor plan into a pipeline step + tests
+- 🧵 a narrative object (Story Node / Pulse Thread) ready for review
+- 🧠 a clear next action (issue/ADR/ticket) with evidence attached
+
+---
+
+<details>
+<summary>🗒️ Optional: Experiment report template (copy/paste)</summary>
+
+```markdown
+# Experiment: <short name>
+
+## 🎯 Question
+## 🔬 Method
+## 📦 Inputs
+## ✅ Checks (validation / policy / QA)
+## 📊 Results
+## 🧾 Evidence links (artifacts)
+## 🧠 Interpretation
+## ✅ Decision
+## 🧯 Risks / Open Questions
+## ➡️ Next steps
+```
+
+</details>
