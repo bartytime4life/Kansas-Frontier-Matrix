@@ -351,31 +351,31 @@ This README is intentionally implementable. Suggested structure:
 
 ```text
 mcp/
-  traceability/
-    README.md 🧾
-    schemas/ 🧬
-      trace_event.schema.json
-      receipt.schema.json
-      prov_bundle.profile.json
-    policies/ ⚖️
-      traceability.rego
-      citations_required.rego
-      sensitivity_rules.rego
-    templates/ 🧩
-      TEMPLATE__TRACEABILITY_RECEIPT.md
-      TEMPLATE__DATASET_LINEAGE.md
-      TEMPLATE__MODEL_RUN_RECEIPT.md
-    examples/ 🧪
-      dataset_ingest_receipt.json
-      focus_mode_answer_receipt.json
-      pr_prov_record.jsonld
-    scripts/ 🛠️
-      emit_trace.py
-      verify_trace.py
-      build_prov_bundle.py
-      link_pr_to_prov.py
-    dashboards/ 📊
-      traceability_health.md
+└─ 🧬 traceability/
+   ├─ 🧾📄 README.md                          # 🧾 Overview: trace model, required fields, how to validate/enforce in CI
+   ├─ 🧬 schemas/                             # 🧬 Machine contracts for trace + receipt objects (CI validation targets)
+   │  ├─ 📐🧾 trace_event.schema.json          # Event schema: who/what/when/where + pointers to artifacts/evidence
+   │  ├─ 📐🧾 receipt.schema.json              # Receipt schema: immutable run/change receipt w/ checksums + provenance refs
+   │  └─ 📐🧾 prov_bundle.profile.json         # PROV bundle profile: allowed structure/fields for packaged lineage
+   ├─ ⚖️ policies/                            # ⚖️ Policy-as-code gates (OPA/Rego) enforcing traceability requirements
+   │  ├─ ⚖️📄 traceability.rego                # Core rules: required receipts/events, linkage constraints, fail-closed checks
+   │  ├─ 📚⚖️📄 citations_required.rego         # Evidence rules: citations present, resolvable, and properly attributed
+   │  └─ 🔒⚖️📄 sensitivity_rules.rego          # Sensitivity rules: redaction, no-secrets, propagation of labels
+   ├─ 🧩 templates/                            # 🧩 Authoring templates for human-readable trace artifacts
+   │  ├─ 🧾🧩 TEMPLATE__TRACEABILITY_RECEIPT.md # Standard receipt format for changes/runs (copy/paste friendly)
+   │  ├─ 🧬🧩 TEMPLATE__DATASET_LINEAGE.md      # Dataset lineage narrative (inputs → transforms → outputs + citations)
+   │  └─ 🧪🧩 TEMPLATE__MODEL_RUN_RECEIPT.md     # Model run receipt (params, env, seeds, metrics, outputs, checksums)
+   ├─ 🧪 examples/                             # 🧪 Known-good fixtures used by docs/tests (show correct linking)
+   │  ├─ ✅🧾 dataset_ingest_receipt.json        # Example: dataset ingestion receipt (source → raw → processed → catalog)
+   │  ├─ ✅🧾 focus_mode_answer_receipt.json     # Example: Focus Mode answer receipt (citations + redaction outcomes)
+   │  └─ ✅🧬 pr_prov_record.jsonld              # Example: PR-level PROV record (entities/activities/agents)
+   ├─ 🛠️ scripts/                              # 🛠️ Helper tooling (emit/verify/bundle/link) for traceability workflows
+   │  ├─ 🛠️📄 emit_trace.py                     # Emit trace events/receipts from pipelines/tools
+   │  ├─ 🛡️📄 verify_trace.py                   # Validate trace artifacts against schemas + policy rules
+   │  ├─ 📦🧬📄 build_prov_bundle.py             # Package PROV bundles (graphs + manifests + checksums)
+   │  └─ 🔗🛠️📄 link_pr_to_prov.py               # Link PR metadata to PROV/receipt IDs (auditable cross-refs)
+   └─ 📊 dashboards/                            # 📊 Human-readable health views (coverage, drift, missing links)
+      └─ 📊📄 traceability_health.md             # Summary dashboard: pass/fail counts, gaps, and trends
 ```
 
 ---
