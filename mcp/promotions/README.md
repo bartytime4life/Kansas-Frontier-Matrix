@@ -73,42 +73,42 @@ Recommended structure (add as you grow):
 
 ```text
 mcp/
-  promotions/
-    README.md
-    campaigns/
-      2026-01-feature-name/
-        brief.md
-        claims.yml
-        assets/
-          screenshots/
-          gifs/
-          charts/
-        outputs/
-          social-twitter.md
-          social-linkedin.md
-          blog-outline.md
-          press-release.md
-        review/
-          checklist.md
-          approvals.md
-    brand/
-      voice.md
-      messaging.md
-      boilerplate.md
-      do-dont.md
-    templates/
-      campaign-brief.md
-      claim-ledger.yml
-      press-release.md
-      social/
-        twitter-thread.md
-        linkedin-post.md
-        bluesky-post.md
-        mastodon-post.md
-      community/
-        newsletter.md
-        discord-announcement.md
-        event-abstract.md
+└─ 📣 promotions/
+   ├─ 📄 README.md                      # 📘 How promotions work: campaign structure, review flow, and publishing gates
+   ├─ 🚀 campaigns/
+   │  └─ 📅 2026-01-feature-name/
+   │     ├─ 📝 brief.md                 # Campaign brief: goals, audience, channels, success metrics
+   │     ├─ 🧾 claims.yml               # Claim ledger: every claim must be evidence-linked + reviewable
+   │     ├─ 🎞️ assets/                 # Campaign media inputs (keep small; point to canonical asset stores when possible)
+   │     │  ├─ 📸 screenshots/          # Screenshots used in posts/press/blog
+   │     │  ├─ 🎞️ gifs/                 # Short GIFs/loops (optimized)
+   │     │  └─ 📈 charts/               # Chart images/exports used in marketing materials
+   │     ├─ 📦 outputs/                 # Ready-to-publish text artifacts (rendered from templates)
+   │     │  ├─ 🐦 social-twitter.md      # Twitter/X copy (thread or single post)
+   │     │  ├─ 💼 social-linkedin.md     # LinkedIn post copy
+   │     │  ├─ 📝 blog-outline.md        # Blog outline / draft skeleton
+   │     │  └─ 📰 press-release.md       # Press release draft
+   │     └─ ✅ review/                  # Review evidence for this campaign (policy, approvals, checklists)
+   │        ├─ ✅ checklist.md           # Release/promo checklist (claims verified, links checked, redactions done)
+   │        └─ ✍️ approvals.md           # Who approved what, when (sign-off log)
+   ├─ 🧭 brand/
+   │  ├─ 🗣️ voice.md                    # Brand voice/tone guidance (consistent phrasing, reading level targets)
+   │  ├─ 🧲 messaging.md                # Key messages, value props, audience mapping
+   │  ├─ 🧾 boilerplate.md              # Approved boilerplate blurbs (about KFM, mission, contact)
+   │  └─ 🚫 do-dont.md                  # Guardrails: prohibited claims, sensitive topics, required disclaimers
+   └─ 🧩 templates/
+      ├─ 📝 campaign-brief.md           # Template: campaign brief
+      ├─ 🧾 claim-ledger.yml            # Template: claim ledger (evidence-first)
+      ├─ 📰 press-release.md            # Template: press release
+      ├─ 📣 social/
+      │  ├─ 🐦 twitter-thread.md        # Template: Twitter/X thread
+      │  ├─ 💼 linkedin-post.md         # Template: LinkedIn post
+      │  ├─ 🦋 bluesky-post.md          # Template: Bluesky post
+      │  └─ 🐘 mastodon-post.md         # Template: Mastodon post
+      └─ 🤝 community/
+         ├─ 🗞️ newsletter.md           # Template: newsletter segment
+         ├─ 💬 discord-announcement.md  # Template: Discord announcement
+         └─ 🎤 event-abstract.md        # Template: talk/event abstract
 ```
 
 ---
