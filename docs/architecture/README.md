@@ -243,19 +243,19 @@ Policy isn’t only CI: runtime enforcement may deny actions (including withhold
 ### Canonical pipeline (high level) 🧬
 ~~~mermaid
 flowchart LR
-  subgraph Data[Data lifecycle]
-    A[📥 data/raw] --> B[🧪 data/work]
-    B --> C[📦 data/processed]
-    C --> D[🛰️ STAC + 🧠 DCAT + 🧬 PROV]
-  end
+  subgraph Data["🧬 Data lifecycle"]
+    A["📥 data/raw"] --> B["🧪 data/work"];
+    B --> C["📦 data/processed"];
+    C --> D["🛰️ STAC + 🧠 DCAT + 🧬 PROV"];
+  end;
 
-  D --> E[🗄️ Stores: PostGIS + tile/object storage]
-  D --> F[🕸️ Neo4j Graph<br/>(references catalogs)]
-  E --> G[🧩 API Layer<br/>(contracts + redaction)]
-  F --> G
-  G --> H[🗺️ UI: React + MapLibre<br/>(optional: Cesium)]
-  H --> I[📖 Story Nodes]
-  I --> J[🧠 Focus Mode<br/>(provenance-linked context bundle)]
+  D --> E["🗄️ Stores - PostGIS + tile/object storage"];
+  D --> F["🕸️ Neo4j Graph - references catalogs"];
+  E --> G["🧩 API Layer - contracts + redaction"];
+  F --> G;
+  G --> H["🗺️ UI - React + MapLibre - optional Cesium"];
+  H --> I["📖 Story Nodes"];
+  I --> J["🧠 Focus Mode - provenance-linked context bundle"];
 ~~~
 
 ### Optional: request flow (UI → API → Stores/Graph) 🔁
