@@ -68,65 +68,77 @@ This matches KFM’s “contract-first & provenance-first” rule set and ensure
 
 ```mermaid
 flowchart LR
-  %% === Inputs ===
-  subgraph S[🌎 Sources]
-    S1[APIs / Feeds]
-    S2[Files (CSV/GeoJSON/GeoTIFF/PDF)]
-    S3[Sensors / Real-time streams]
+  subgraph S["🌎 Sources"]
+    S1["🔌 APIs / Feeds"];
+    S2["📄 Files - CSV / GeoJSON / GeoTIFF / PDF"];
+    S3["📡 Sensors / Real-time streams"];
   end
 
-  %% === Data lifecycle ===
-  subgraph R[📥 data/raw]
-    R1[(Raw payloads)]
-    R2[source.json<br/>license • sensitivity • provenance hints]
+  subgraph R["📥 data/raw"]
+    R1["🧱 Raw payloads"];
+    R2["🧾 source.json - license - sensitivity - provenance hints"];
   end
 
-  subgraph W[🧪 data/work]
-    W1[(Staging + experiments)]
-    W2[(Sim runs / drafts)]
+  subgraph W["🧪 data/work"]
+    W1["🧰 Staging + experiments"];
+    W2["🧬 Sim runs / drafts"];
   end
 
-  subgraph P[✅ data/processed]
-    P1[(Canonical dataset outputs)]
-    P2[(Derived assets: tiles, COGs, etc.)]
+  subgraph P["✅ data/processed"]
+    P1["📦 Canonical dataset outputs"];
+    P2["🧱 Derived assets - tiles - COGs - etc"];
   end
 
-  subgraph C[📚 data/catalog]
-    C1[STAC (collections/items)]
-    C2[DCAT (dataset records)]
-    C3[PROV (prov.jsonld bundles)]
+  subgraph C["📚 data/catalog"]
+    C1["🛰️ STAC - collections / items"];
+    C2["🗂️ DCAT - dataset records"];
+    C3["🧬 PROV - prov.jsonld bundles"];
   end
 
-  %% === Runtime ===
-  subgraph D[🗄 Runtime Stores]
-    D1[(PostGIS)]
-    D2[(Neo4j)]
-    D3[(Search index)]
-    D4[(Object store / artifacts)]
+  subgraph D["🗄️ Runtime Stores"]
+    D1["🗃️ PostGIS"];
+    D2["🕸️ Neo4j"];
+    D3["🔎 Search index"];
+    D4["🪣 Object store / artifacts"];
   end
 
-  %% === Serving ===
-  subgraph A[🧩 API Layer]
-    A1[FastAPI + OpenAPI]
-    A2[GraphQL (optional)]
-    A3[Policy Pack (OPA/Conftest)]
+  subgraph APIX["🧩 API Layer"]
+    A1["🔌 FastAPI + OpenAPI"];
+    A2["🧬 GraphQL - optional"];
+    A3["🛡️ Policy Pack - OPA / Conftest"];
   end
 
-  subgraph U[🗺 UI Layer]
-    U1[React UI<br/>MapLibre/Cesium • Timeline • Story Nodes]
-    U2[🤖 Focus Mode<br/>Answer w/ citations or refuse]
+  subgraph U["🗺️ UI Layer"]
+    U1["🌐 React UI - MapLibre / Cesium - Timeline - Story Nodes"];
+    U2["🤖 Focus Mode - answer with citations or refuse"];
   end
 
-  %% === Flows ===
-  S --> R --> W --> P --> C
-  C --> D --> A --> U1
-  D --> U2
-  A --> U2 --> U1
+  S1 --> R1;
+  S2 --> R1;
+  S3 --> R1;
 
-  %% === Gates ===
-  A3 -. policy gates .- R
-  A3 -. policy gates .- P
-  A3 -. policy gates .- U2
+  R1 --> W1;
+  W1 --> P1;
+  P1 --> C1;
+
+  C1 --> D1;
+  C1 --> D2;
+  C1 --> D3;
+  C1 --> D4;
+
+  D1 --> A1;
+  D2 --> A1;
+  D3 --> A1;
+  D4 --> A1;
+
+  A1 --> U1;
+  D2 --> U2;
+  A1 --> U2;
+  U2 --> U1;
+
+  A3 -.-> R1;
+  A3 -.-> P1;
+  A3 -.-> U2;
 ```
 
 **Why this spine matters:** it’s the architecture guarantee that anything user-facing is backed by catalog + provenance, and anything that can’t be sourced is refused at the AI layer.:contentReference[oaicite:17]{index=17}
