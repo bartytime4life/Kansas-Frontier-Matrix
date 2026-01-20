@@ -144,52 +144,52 @@ FAIR+CARE, sensitivity/classification, indigenous rights signals, and jurisdicti
 
 ```mermaid
 flowchart LR
-  %% ===== DATA PLANE =====
-  subgraph DP[🗄️ Data Plane]
-    RAW[(data/raw)]
-    WORK[(data/work)]
-    PROC[(data/processed)]
-    OBJ[(Object Store\nS3/MinIO)]
-    PG[(PostGIS)]
-    N4J[(Neo4j)]
-    SRCH[(Search Index)]
-    VEC[(Vector Store)]
+  subgraph DP["🗄️ Data Plane"]
+    RAW["📥 data/raw"]
+    WORK["🧪 data/work"]
+    PROC["📦 data/processed"]
+    OBJ["🪣 Object Store - S3 / MinIO"]
+    PG["🗃️ PostGIS"]
+    N4J["🕸️ Neo4j"]
+    SRCH["🔎 Search Index"]
+    VEC["🧠 Vector Store"]
   end
 
-  %% ===== GOVERNANCE =====
-  subgraph GOV[🛡️ Governance Plane]
-    POLICY[OPA Policy Pack\n+ CI Gates]
-    AUDIT[(Audit Log)]
-    KEY[(Signing/Attestation)]
+  subgraph GOV["🛡️ Governance Plane"]
+    POLICY["🧰 OPA Policy Pack + ✅ CI Gates"]
+    AUDIT["🧾 Audit Log"]
+    KEY["🔏 Signing / Attestation"]
   end
 
-  %% ===== CATALOG + PROV =====
-  subgraph META[📚 Catalog + Provenance]
-    STAC[(STAC)]
-    DCAT[(DCAT)]
-    PROV[(PROV-O)]
+  subgraph META["📚 Catalog + Provenance"]
+    STAC["🛰️ STAC"]
+    DCAT["🗂️ DCAT"]
+    PROV["🧬 PROV-O"]
   end
 
-  %% ===== SERVICES =====
-  subgraph SVC[⚙️ Service Plane]
-    PIPE[Pipeline Runner\n(W→P→E)]
-    API[FastAPI + GraphQL]
-    FOCUS[Focus Mode Service]
-    TILES[Tile/Geo Services]
+  subgraph SVC["⚙️ Service Plane"]
+    PIPE["🏗️ Pipeline Runner - W->P->E"]
+    API["🔌 API - FastAPI + GraphQL"]
+    FOCUS["🧠 Focus Mode Service"]
+    TILES["🧱 Tile / Geo Services"]
   end
 
-  %% ===== UI =====
-  subgraph UI[🖥️ Experience Plane]
-    WEB[React UI]
-    MAP2D[MapLibre]
-    MAP3D[Cesium]
-    STORY[Story Nodes Engine]
+  subgraph EXP["🖥️ Experience Plane"]
+    WEB["🌐 React UI"]
+    MAP2D["🗺️ MapLibre"]
+    MAP3D["🌍 Cesium"]
+    STORY["📖 Story Nodes Engine"]
   end
 
-  RAW --> PIPE --> WORK --> PIPE --> PROC
+  RAW --> PIPE
+  PIPE --> WORK
+  WORK --> PIPE
+  PIPE --> PROC
+
   PROC --> OBJ
   PROC --> PG
-  PROC --> STAC --> DCAT
+  PROC --> STAC
+  STAC --> DCAT
   PIPE --> PROV
 
   PG <--> API
@@ -197,19 +197,21 @@ flowchart LR
   SRCH <--> API
   TILES <--> API
   VEC <--> FOCUS
-  API --> WEB --> MAP2D
+
+  API --> WEB
+  WEB --> MAP2D
   WEB --> MAP3D
   WEB --> STORY
   FOCUS --> WEB
 
-  POLICY -.gates.-> PIPE
-  POLICY -.gates.-> API
-  POLICY -.gates.-> FOCUS
+  POLICY -.-> PIPE
+  POLICY -.-> API
+  POLICY -.-> FOCUS
   API --> AUDIT
   PIPE --> AUDIT
-  KEY -.sign.-> STAC
-  KEY -.sign.-> DCAT
-  KEY -.sign.-> PROV
+  KEY -.-> STAC
+  KEY -.-> DCAT
+  KEY -.-> PROV
 ```
 
 ---
