@@ -106,31 +106,31 @@ flowchart LR
 This matches KFM’s “docs + data + code” separation patterns while giving ops a dedicated home.
 
 ```text
-📁 docs/
-  📁 runbooks/
-    📄 README.md                         👈 you are here
-    📄 rbk-010-local-dev.md
-    📄 rbk-020-health-checks.md
-    📄 rbk-030-data-domain-onboarding.md
-    📄 rbk-032-catalog-validate.md
-    📄 rbk-033-graph-rebuild.md
-    📄 rbk-060-focus-mode-ops.md
-    📄 rbk-070-policy-gates.md
-    📄 rbk-080-wpe-agents.md
-    📄 rbk-090-release-attestation.md
-    📄 rbk-100-incident-response.md
-    📄 rbk-110-streaming-feeds.md
-    📄 rbk-120-offline-packs.md
-    📄 rbk-130-simulation-runs.md
+docs/
+└─ 📚 runbooks/
+   ├─ 📄 README.md                         # 👈 you are here 📌 Index + how to use runbooks (roles, severity, prerequisites)
+   ├─ 🧰 rbk-010-local-dev.md              # Local dev setup: env, deps, containers, smoke checks
+   ├─ 🩺 rbk-020-health-checks.md          # Health checks: services, endpoints, dashboards, expected signals
+   ├─ 🧭 rbk-030-data-domain-onboarding.md # Onboard a new data domain: naming, contracts, governance checkpoints
+   ├─ ✅🧾 rbk-032-catalog-validate.md      # Validate STAC/DCAT catalogs: schema, links, completeness, CI gates
+   ├─ 🕸️🔁 rbk-033-graph-rebuild.md         # Rebuild graph: exports/imports, constraints, integrity verification
+   ├─ 🔎🛠️ rbk-060-focus-mode-ops.md        # Focus Mode ops: evidence rules, failure modes, safe fallback behavior
+   ├─ 🚦⚖️ rbk-070-policy-gates.md          # Policy gates: OPA/Conftest, required checks, troubleshooting
+   ├─ 🤖🧠 rbk-080-wpe-agents.md            # WPE agents: watcher/planner/executor workflows, guardrails, logs
+   ├─ 🔐📦 rbk-090-release-attestation.md   # Release attestations: SBOM, provenance, signatures, promotion lanes
+   ├─ 🚨 rbk-100-incident-response.md      # Incident response: triage, containment, comms, postmortems
+   ├─ 📡 rbk-110-streaming-feeds.md        # Streaming feeds: ingestion, backpressure, recovery, monitoring
+   ├─ 🧳 rbk-120-offline-packs.md          # Offline packs: bundling, checksums, validation, distribution
+   └─ 🧪 rbk-130-simulation-runs.md        # Simulation runs: reproducibility, seeds, manifests, metrics, outputs
 
-📁 data/
-  📁 raw/        📥 source drops (immutable, checksummed)
-  📁 work/       🧪 staging + transformations
-  📁 processed/  ✅ publishable artifacts (versioned)
-  📁 catalogs/   🧾 STAC/DCAT catalogs (versioned)
-  📁 prov/       🧬 PROV records (versioned)
-  📁 graph/
-    📁 csv/      🧾 governed graph import/export CSV
+data/
+├─ 📥 raw/                                 # Source drops (immutable); store checksums + provenance at ingest
+├─ 🧪 work/                                # Staging + transformations; scratch/experiments before promotion
+├─ ✅ processed/                            # Publishable artifacts (versioned, deterministic, cacheable)
+├─ 🧾 catalogs/                             # STAC/DCAT catalogs (versioned) + discovery metadata
+├─ 🧬 prov/                                 # PROV records (versioned) capturing lineage of derived products
+└─ 🕸️ graph/
+   └─ 🧾 csv/                               # Governed graph import/export CSV (schemas + mapping expectations apply)
 ```
 
 > 🔎 If your repo already has an established layout (e.g., `docs/guides/pipelines/` and `docs/architecture/`), keep it — just ensure runbooks **link into those guides** rather than duplicating them.
