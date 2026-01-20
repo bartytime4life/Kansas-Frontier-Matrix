@@ -155,32 +155,36 @@ Federation (e.g., “Nebraska Frontier Matrix”) is a first-class vision: separ
 ```mermaid
 flowchart TB
   %% Actors
-  user[👤 Public user<br/>Explore maps & stories]
-  researcher[🧑‍🔬 Researcher/Analyst<br/>Query & export]
-  contributor[🧑‍💻 Contributor<br/>Adds datasets/stories]
-  maintainer[🛡 Maintainer/Curator<br/>Reviews PRs & policy]
+  user["👤 Public user - explore maps + stories"];
+  researcher["🧑‍🔬 Researcher / Analyst - query + export"];
+  contributor["🧑‍💻 Contributor - add datasets + stories"];
+  maintainer["🛡️ Maintainer / Curator - review PRs + policy"];
 
   %% External systems
-  sources[🌎 External data providers<br/>Agencies • Archives • Sensors • APIs]
-  sister[🧭 Sister Matrices<br/>Nebraska / other regions]
-  tools[🧰 External tools<br/>QGIS • notebooks • downstream apps]
+  sources["🌎 External data providers - agencies + archives + sensors + APIs"];
+  sister["🧭 Sister Matrices - Nebraska + other regions"];
+  tools["🧰 External tools - QGIS + notebooks + downstream apps"];
 
   %% System
-  subgraph kfm[🗺 Kansas Frontier Matrix (KFM)]
-    ui[Web UI + Story Viewer + Focus Mode]
-    api[API (FastAPI/GraphQL)]
-    catalogs[(Catalogs: STAC/DCAT/PROV)]
+  subgraph kfm["🗺️ Kansas Frontier Matrix - KFM"]
+    ui["🖥️ Web UI + Story Viewer + Focus Mode"];
+    api["🔌 API - FastAPI + GraphQL"];
+    catalogs["📚 Catalogs - STAC + DCAT + PROV"];
   end
 
-  user --> ui
-  researcher --> ui
-  contributor --> api
-  maintainer --> api
+  user --> ui;
+  researcher --> ui;
+  contributor --> api;
+  maintainer --> api;
 
-  sources --> api
-  api --> catalogs
-  tools <---> api
-  sister <---> api
+  sources --> api;
+  api --> catalogs;
+
+  tools --> api;
+  api --> tools;
+
+  sister --> api;
+  api --> sister;
 ```
 
 </details>
