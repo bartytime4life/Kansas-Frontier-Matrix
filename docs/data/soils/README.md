@@ -285,10 +285,10 @@ flowchart LR
 ### 🧠 Conceptual join spine (analysis + graph alignment)
 ```mermaid
 flowchart TB
-  MU[MapUnit (mukey)] --> CO[Component (cokey)]
-  CO --> HZ[Horizon (chkey)]
-  MU --> OUT[Derived mapunit summaries]
-  HZ --> OUT
+  MU["🧱 MapUnit - mukey"] --> CO["🧩 Component - cokey"];
+  CO --> HZ["🪨 Horizon - chkey"];
+  MU --> OUT["📊 Derived mapunit summaries"];
+  HZ --> OUT;
 ```
 
 > 🧩 Mermaid note: keep node labels simple and avoid emoji inside node text to prevent parser issues in CI.
