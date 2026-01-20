@@ -437,24 +437,24 @@ Federation is supported by: reusable architecture/config, DCAT-based catalog agg
 
 ```mermaid
 flowchart LR
-  subgraph KS[🗺 Kansas KFM]
-    KS_CAT[DCAT + STAC + PROV]
-    KS_API[API]
+  subgraph KS["🗺️ Kansas KFM"]
+    KS_CAT["📚 DCAT + STAC + PROV"];
+    KS_API["🔌 API"];
   end
 
-  subgraph NE[🧭 Nebraska KFM (example)]
-    NE_CAT[DCAT + STAC + PROV]
-    NE_API[API]
+  subgraph NE["🧭 Nebraska KFM - example"]
+    NE_CAT["📚 DCAT + STAC + PROV"];
+    NE_API["🔌 API"];
   end
 
-  HUB[🧷 Frontier Matrix Hub<br/>harvest/merge DCAT catalogs] --> SEARCH[🔍 Federated Search]
+  HUB["🧷 Frontier Matrix Hub - harvest + merge DCAT catalogs"] --> SEARCH["🔍 Federated Search"];
 
-  KS_CAT --> HUB
-  NE_CAT --> HUB
+  KS_CAT --> HUB;
+  NE_CAT --> HUB;
 
-  UI[🖥 UI] --> SEARCH
-  UI --> KS_API
-  UI --> NE_API
+  UI["🖥️ UI"] --> SEARCH;
+  UI --> KS_API;
+  UI --> NE_API;
 ```
 
 </details>
