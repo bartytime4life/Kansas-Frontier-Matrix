@@ -276,24 +276,25 @@ KFM’s intake leans on: pre-parsers (incl. OCR), extraction/normalization, stri
 
 ```mermaid
 flowchart TD
-  IN[📥 Incoming payloads<br/>APIs • PDFs • feeds • attachments] --> PRE[🔎 Pre-parse<br/>MIME sniff • extract attachments • OCR]
-  PRE --> EX[🧠 LLM-assisted extraction<br/>fields + confidence]
-  EX --> NORM[🧼 Normalize<br/>canonical schema + controlled vocab]
-  NORM --> TYPE[🧾 Strict typing<br/>Pydantic models]
-  TYPE --> GATE[🚦 Policy gates (OPA/Rego)<br/>AOI checks • mandatory fields • embargo/classification]
-  GATE -->|pass| DEDUPE[🧬 Dedupe<br/>stable_id + semantic near-duplicate]
-  GATE -->|fail| HQ[👀 Human QA queue<br/>diffs + evidence + confidence]
+  IN["📥 Incoming payloads - APIs - PDFs - feeds - attachments"] --> PRE["🔎 Pre-parse - MIME sniff - extract attachments - OCR"];
+  PRE --> EX["🧠 LLM-assisted extraction - fields + confidence"];
+  EX --> NORM["🧼 Normalize - canonical schema + controlled vocab"];
+  NORM --> TYPE["🧾 Strict typing - Pydantic models"];
+  TYPE --> GATE["🚦 Policy gates - OPA/Rego - AOI checks - mandatory fields - embargo + classification"];
 
-  DEDUPE --> OUT[📦 Output artifacts]
-  OUT --> STAC[STAC Items/Collections]
-  OUT --> GPQ[GeoParquet (analytics)]
-  OUT --> PMT[PMTiles (low-latency UI)]
-  OUT --> PROV[prov.jsonld (lineage)]
-  OUT --> DIFF[CSV diffs (auditable deltas)]
+  GATE --> DEDUPE["🧬 Dedupe - pass path - stable_id + semantic near-duplicate"];
+  GATE --> HQ["👀 Human QA queue - fail path - diffs + evidence + confidence"];
 
-  STAC --> SNAP[📦 Snapshot + PR promotion]
-  PROV --> SNAP
-  DIFF --> SNAP
+  DEDUPE --> OUT["📦 Output artifacts"];
+  OUT --> STAC["🛰️ STAC Items / Collections"];
+  OUT --> GPQ["🧱 GeoParquet - analytics"];
+  OUT --> PMT["🗺️ PMTiles - low-latency UI"];
+  OUT --> PROV["🧬 prov.jsonld - lineage"];
+  OUT --> DIFF["🧾 CSV diffs - auditable deltas"];
+
+  STAC --> SNAP["📦 Snapshot + PR promotion"];
+  PROV --> SNAP;
+  DIFF --> SNAP;
 ```
 
 **Promotion model:** changes become official through PRs + CI policy tests, preserving auditability. Conftest policy tests can validate STAC + PROV artifacts directly. :contentReference[oaicite:21]{index=21}
