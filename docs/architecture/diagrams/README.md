@@ -198,70 +198,71 @@ KFM is explicitly modular: front-end, back-end, and pipelines are decoupled and 
 
 ```mermaid
 flowchart LR
-  %% UI
-  subgraph WEB[🖥 Web]
-    FE[React + TypeScript<br/>MapLibre/Cesium • Timeline • Story Nodes]
+  subgraph WEB["🖥️ Web"]
+    FE["⚛️ React + TypeScript - MapLibre / Cesium - Timeline - Story Nodes"];
   end
 
-  %% API & governance
-  subgraph API[🧩 API]
-    BE[FastAPI (stateless) + OpenAPI]
-    GQL[GraphQL (optional)]
-    POL[Policy Pack<br/>OPA/Rego + Conftest]
+  subgraph APIS["🧩 API"]
+    BE["🔌 FastAPI - stateless - OpenAPI"];
+    GQL["🧬 GraphQL - optional"];
+    POL["🛡️ Policy Pack - OPA/Rego + Conftest"];
   end
 
-  %% Pipelines
-  subgraph PIPE[⚙️ Pipelines & Workers]
-    ETL[Deterministic ETL jobs]
-    WATCH[Watchers (feeds/schedules)]
-    QA[Catalog QA + Metrics]
+  subgraph PIPEX["⚙️ Pipelines + Workers"]
+    ETL["🏗️ Deterministic ETL jobs"];
+    WATCH["👀 Watchers - feeds / schedules"];
+    QA["✅ Catalog QA + Metrics"];
   end
 
-  %% Data
-  subgraph DATA[🗄 Stores]
-    PG[(PostGIS)]
-    N4J[(Neo4j)]
-    OBJ[(Artifacts store)]
-    IDX[(Search/Embeddings index)]
+  subgraph DATA["🗄️ Stores"]
+    PG["🗃️ PostGIS"];
+    N4J["🕸️ Neo4j"];
+    OBJ["🪣 Artifacts store"];
+    IDX["🔎 Search / Embeddings index"];
   end
 
-  %% Catalogs
-  subgraph CAT[📚 Catalog Layer]
-    STAC[STAC]
-    DCAT[DCAT]
-    PROV[PROV-O (prov.jsonld)]
+  subgraph CAT["📚 Catalog Layer"]
+    STAC["🛰️ STAC"];
+    DCAT["🗂️ DCAT"];
+    PROV["🧬 PROV-O - prov.jsonld"];
   end
 
-  %% Observability
-  subgraph OBS[📈 Observability]
-    LOGS[Logs]
-    METRICS[Metrics/Telemetry]
-    TRACE[Tracing]
+  subgraph OBS["📈 Observability"]
+    LOGS["📜 Logs"];
+    METRICS["📊 Metrics / Telemetry"];
+    TRACE["🧵 Tracing"];
   end
 
-  FE --> BE
-  FE --> GQL
-  BE --> PG
-  BE --> N4J
-  BE --> IDX
-  BE --> STAC
-  BE --> DCAT
-  BE --> PROV
+  FE --> BE;
+  FE --> GQL;
 
-  ETL --> OBJ
-  ETL --> PG
-  ETL --> N4J
-  ETL --> STAC
-  ETL --> DCAT
-  ETL --> PROV
+  BE --> PG;
+  BE --> N4J;
+  BE --> IDX;
+  BE --> STAC;
+  BE --> DCAT;
+  BE --> PROV;
 
-  WATCH --> ETL
-  QA --> POL
-  POL -. gates .- BE
-  POL -. gates .- ETL
+  ETL --> OBJ;
+  ETL --> PG;
+  ETL --> N4J;
+  ETL --> STAC;
+  ETL --> DCAT;
+  ETL --> PROV;
 
-  BE --> OBS
-  ETL --> OBS
+  WATCH --> ETL;
+  QA --> POL;
+
+  POL -.-> BE;
+  POL -.-> ETL;
+
+  BE --> LOGS;
+  BE --> METRICS;
+  BE --> TRACE;
+
+  ETL --> LOGS;
+  ETL --> METRICS;
+  ETL --> TRACE;
 ```
 
 </details>
