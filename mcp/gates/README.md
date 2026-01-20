@@ -40,13 +40,13 @@ In KFM v13 documentation, `mcp/` is described as the canonical home for **Method
 > The repo may already host the canonical policy pack(s) elsewhere (e.g., `api/scripts/policy/` and `tools/validation/policy/`). This folder is the **MCP-facing contract & runbook** for how “gates” behave, how they report, and how contributors extend them.
 
 ```text
-📁 mcp/
-  📁 gates/
-    📄 README.md                👈 you are here
-    📁 contracts/               # gate input/output schemas (JSON Schema)
-    📁 runners/                 # CLI wrappers (conftest/opa/schema/link checks)
-    📁 examples/                # sample gate inputs + expected outputs
-    📁 docs/                    # ADRs / rationale / threat models
+mcp/
+└─ 🚦 gates/
+   ├─ 📄 README.md                # 👈 you are here 📌 What gates exist, when they run, and what “fail-closed” means
+   ├─ 📐 contracts/               # Gate I/O schemas (JSON Schema) for deterministic validation and tooling interop
+   ├─ 🛠️ runners/                 # CLI wrappers (conftest/OPA/schema/link checks) + standardized exit codes
+   ├─ 🧪 examples/                # Known-good and known-bad gate fixtures (inputs + expected outputs)
+   └─ 📚 docs/                    # Gate documentation: ADRs, rationale, threat models, and edge-case decisions
 ```
 
 ---
