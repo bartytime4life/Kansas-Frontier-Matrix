@@ -134,26 +134,26 @@ Typical stabilizers:
 
 ~~~text
 mcp/incidents/
-├── README.md                          # you are here 📍
-├── templates/                         # 🧩 copy/paste starter docs
-│   ├── incident.md
-│   ├── status-update.md
-│   └── postmortem.md
-├── runbooks/                          # 🧯 scenario guides
-│   ├── ci-policy-gate.md
-│   ├── ingestion-pipeline.md
-│   ├── focus-mode.md
-│   ├── sensitive-data.md
-│   ├── graph-neo4j.md
-│   └── ui-map-rendering.md
-└── incidents/
-    └── 2026/
-        └── INC-2026-01-20-001_example/
-            ├── incident.md            # declaration + impact + owners
-            ├── timeline.md            # timestamped actions + decisions
-            ├── postmortem.md          # analysis + follow-ups
-            └── artifacts/             # logs, exports, screenshots, hashes
-                └── checksums.txt
+├── 📄 README.md                          # you are here 📍📌 Incident policy, severity, and how to file/respond
+├── 🧩 templates/                         # 🧩 Copy/paste starter docs for consistent incident handling
+│   ├── 🧩📄 incident.md                  # Incident declaration template (impact, scope, owners, comms)
+│   ├── 🧩📄 status-update.md             # Status update template (what changed, what’s next, ETA-free)
+│   └── 🧩📄 postmortem.md                # Postmortem template (root cause, contributing factors, actions)
+├── 🧯 runbooks/                          # 🧯 Scenario guides for common incident classes
+│   ├── 🚦⚖️📄 ci-policy-gate.md           # CI/policy gate failures (OPA/Conftest), rollback + triage steps
+│   ├── 📥🛠️📄 ingestion-pipeline.md       # Ingestion breakages, backfills, checksum mismatches, source drift
+│   ├── 🔎🛡️📄 focus-mode.md               # Focus Mode failures (missing citations, unsafe output, guardrail trips)
+│   ├── 🔒🧹📄 sensitive-data.md           # Sensitive data exposure risk (containment, purge, notification steps)
+│   ├── 🕸️📄 graph-neo4j.md                # Graph outages/corruption (rebuild, constraints, integrity checks)
+│   └── 🗺️🎛️📄 ui-map-rendering.md         # Map rendering failures (tiles/styles/sprites/glyphs, cache/CDN issues)
+└── 🚨 incidents/
+    └── 📅 2026/
+        └── 🚨 INC-2026-01-20-001_example/  # One incident folder (date + sequence + short slug)
+            ├── 🚨📄 incident.md            # Declaration + impact + owners + comms channel links
+            ├── 🕰️📄 timeline.md            # Timestamped actions/observations/decisions (append-only)
+            ├── 🧾📄 postmortem.md          # Analysis + contributing factors + follow-ups (with owners/dates)
+            └── 📦 artifacts/              # Supporting evidence (logs/exports/screenshots/hashes; keep access-safe)
+                └── 🔐📄 checksums.txt      # Integrity list for attached artifacts (sha256 + filenames)
 ~~~
 
 ---
