@@ -406,24 +406,24 @@ Story Nodes are narrative modules (Markdown + JSON) that drive map layers + time
 
 ```mermaid
 flowchart TB
-  subgraph UI[🖥 React UI]
-    MAP[🗺 Map View<br/>MapLibre (2D) / Cesium (3D)]
-    TIME[⏳ Timeline]
-    STORY[📖 Story Viewer<br/>Story Nodes]
-    FOCUS[🤖 Focus Mode Panel]
-    META[🔎 Metadata/Provenance Drawer<br/>STAC/DCAT/PROV]
-    LAYERS[🧩 Layer Manager]
-    SEARCH[🔍 Search / Browse]
+  subgraph UI["🖥️ React UI"]
+    MAP["🗺️ Map View - MapLibre 2D / Cesium 3D"];
+    TIME["⏳ Timeline"];
+    STORY["📖 Story Viewer - Story Nodes"];
+    FOCUS["🤖 Focus Mode Panel"];
+    META["🔎 Metadata / Provenance Drawer - STAC / DCAT / PROV"];
+    LAYERS["🧩 Layer Manager"];
+    SEARCH["🔍 Search / Browse"];
   end
 
-  STORY --> MAP
-  STORY --> TIME
-  LAYERS --> MAP
-  SEARCH --> MAP
-  MAP --> META
-  TIME --> META
-  FOCUS --> META
-  FOCUS --> MAP
+  STORY --> MAP;
+  STORY --> TIME;
+  LAYERS --> MAP;
+  SEARCH --> MAP;
+  MAP --> META;
+  TIME --> META;
+  FOCUS --> META;
+  FOCUS --> MAP;
 ```
 
 </details>
