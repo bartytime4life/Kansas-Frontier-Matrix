@@ -82,16 +82,7 @@ mcp/ 🧠
 KFM’s automation patterns often follow a “Watcher → Planner → Executor → PR” flow so changes become reviewable pull requests rather than direct writes. :contentReference[oaicite:11]{index=11}
 
 ```mermaid
-flowchart TD
-  A[Change proposed] --> B{Classify change type + risk}
-  B --> C[Run automated gates<br/>tests + validators + Policy Pack]
-  C --> D[Complete checklist(s)]
-  D --> E[Write MCP review note]
-  E --> F{Required sign-offs?}
-  F -->|Yes| G[Approve + merge]
-  F -->|No| H[Revise + re-run gates]
-  G --> I[Promote / publish]
-  I --> J[Monitor + post-merge audit]
+flowchart TD; A["📝 Change proposed"] --> B{"🧭 Classify change type + risk"}; B --> C["🛡️ Run automated gates - 🧪 tests + ✅ validators + 📦 Policy Pack"]; C --> D["☑️ Complete checklist(s)"]; D --> E["🧾 Write MCP review note"]; E --> F{"👥 Required sign-offs"}; F --> G["✅ Approve + merge - 👍 yes"]; F --> H["🔁 Revise + re-run gates - 👎 no"]; G --> I["🚀 Promote / publish"]; I --> J["📈 Monitor + 🔎 post-merge audit"];
 ```
 
 ---
