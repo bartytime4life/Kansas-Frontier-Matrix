@@ -62,15 +62,15 @@ This repo’s architecture recommends a documentation-heavy **mcp/** directory (
 Inside that, `mcp/reviews/` is the home for review artifacts:
 
 ```text
-mcp/ 🧠
-  reviews/ 🔍
-    README.md 🧾
-    review-notes/ 🗒️          # REV-YYYYMMDD-<slug>.md
-    decisions/ 🧭             # ADR-YYYYMMDD-<slug>.md (decision records)
-    checklists/ ✅            # Optional: split by change type
-    red-team/ 🧨              # Prompt-injection / privacy / abuse-case reviews
-    evidence/ 📎              # Links / manifests for validation artifacts
-    metrics/ 📈               # Review metrics (e.g., Focus Mode citation coverage)
+mcp/
+└─ 🧠 reviews/                         # 🔍 MCP review hub: governed review notes, decisions, checklists, and evidence
+   ├─ 🧾📄 README.md                    # 🧾 Entry guide: scope, workflow, naming rules, required fields, and links to templates
+   ├─ 🗒️ review-notes/                 # 🗒️ Review writeups per change (REV-YYYYMMDD-<slug>.md)
+   ├─ 🧭 decisions/                    # 🧭 Decision records (ADR-YYYYMMDD-<slug>.md) capturing rationale + tradeoffs
+   ├─ ✅ checklists/                   # ✅ Optional: checklists split by change type (data / API / UI / security / ops)
+   ├─ 🧨 red-team/                     # 🧨 Adversarial reviews (prompt injection, privacy leaks, abuse cases, bypass attempts)
+   ├─ 📎 evidence/                     # 📎 Proof artifacts (links/manifests/reports) that demonstrate gates/validation passed
+   └─ 📈 metrics/                      # 📈 Review metrics (coverage, citation rates, defect classes, time-to-merge, etc.)
 ```
 
 > If your repo already has a different structure, keep this README’s **intent** and map the paths accordingly.
