@@ -86,16 +86,16 @@ A methods notebook should write outputs in a **predictable** layout that support
 Recommended convention:
 
 ```text
-📁 data/
-  📁 work/
-    📁 notebooks/
-      📁 <method_id>/
-        📁 <run_id>/
-          ├─ run_manifest.json
-          ├─ params.json
-          ├─ logs.txt
-          ├─ previews/ (png, html)
-          └─ outputs/  (candidate artifacts)
+data/
+└─ 🧪 work/
+   └─ 📓 notebooks/
+      └─ 🧪 <method_id>/                 # Method/workflow identifier (e.g., ndvi_composite.v1, geocode_spike.v0)
+         └─ 🏷️ <run_id>/                  # One execution run (time-stamped or UUID; immutable once finalized)
+            ├─ 🧾 run_manifest.json        # Run ledger: who/what/when + inputs/outputs + tool versions + checksums
+            ├─ 🎛️ params.json              # Parameters used for this run (AOI, dates, thresholds, seeds, options)
+            ├─ 🪵 logs.txt                 # Captured logs (stdout/stderr); sanitize before committing/sharing
+            ├─ 🖼️ previews/                # Quicklook outputs (PNG/HTML) for fast review without rerunning
+            └─ 📦 outputs/                 # Candidate artifacts produced by the run (promote to processed/ when accepted)
 ```
 
 > If your notebook is producing something “publishable”, treat it like a first-class dataset:
