@@ -55,15 +55,15 @@ KFM agent automation follows a **W-P-E** pattern:
 
 ```mermaid
 flowchart LR
-    W[Watcher 🔭\n(event -> trigger)] --> E1[event.json 📩]
-    E1 --> P[Planner 🧠\n(plan only)]
-    P --> P1[plan.json 🧾]
-    P1 --> X[Executor 🛠️\n(deterministic work)]
-    X --> A1[Artifacts 📦\n(STAC/DCAT/PROV + outputs)]
-    X --> PR[Pull Request 🔀]
-    PR --> CI[CI + Policy Pack 🛡️\n(fail closed)]
-    CI --> HR[Human Review 👀]
-    HR --> M[(Merge ✅)]
+  W[🔭 Watcher - event to trigger] --> E1[📩 event.json]
+  E1 --> P[🧠 Planner - plan only]
+  P --> P1[🧾 plan.json]
+  P1 --> X[🛠️ Executor - deterministic work]
+  X --> A1[📦 Artifacts - STAC DCAT PROV + outputs]
+  X --> PR[🔀 Pull Request]
+  PR --> CI[🛡️ CI + Policy Pack - fail closed]
+  CI --> HR[👀 Human Review]
+  HR --> M[✅ Merge]
 ```
 
 ### 🧯 Safety rails (always on)
