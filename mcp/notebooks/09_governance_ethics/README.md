@@ -36,14 +36,14 @@ These invariants are the “hard rails” that keep the project ethically safe a
 ## 🗂️ Directory layout (suggested)
 ```text
 mcp/notebooks/09_governance_ethics/
-├─ README.md                         🧭 this guide
-├─ 01_policy_pack_basics.ipynb       🛡️ OPA/Conftest patterns (author + test)
-├─ 02_sensitivity_taxonomy.ipynb     🔒 classification / sovereignty / CARE labels
-├─ 03_focus_mode_guardrails.ipynb    🧠 evidence gates + refusal logic + audit hooks
-├─ 04_governance_ledger.ipynb        🧾 immutable event log + review metadata
-├─ 05_ci_governance_gates.ipynb      🚦 secret scan / PII scan / sensitive-geo checks
-├─ 06_release_attestations.ipynb     📦 SBOM + provenance attestations (SLSA-style)
-└─ artifacts/                        📎 exported checklists, templates, example records
+├─ 🧭📄 README.md                         # 🧭 This guide: what “governance & ethics” covers + how to use the notebooks
+├─ 🛡️📓 01_policy_pack_basics.ipynb       # 🛡️ OPA/Conftest patterns: author, test, and integrate into CI gates
+├─ 🔒📓 02_sensitivity_taxonomy.ipynb     # 🔒 Sensitivity taxonomy: classification/sovereignty/CARE labels + propagation rules
+├─ 🧠📓 03_focus_mode_guardrails.ipynb    # 🧠 Focus Mode guardrails: evidence gates, refusal logic, audit hooks, safe fallbacks
+├─ 🧾📓 04_governance_ledger.ipynb        # 🧾 Governance ledger: immutable event log + review metadata + linkage to receipts
+├─ 🚦📓 05_ci_governance_gates.ipynb      # 🚦 CI governance: secret scan, PII scan, sensitive-geo checks, fail-closed policies
+├─ 📦📓 06_release_attestations.ipynb     # 📦 Release attestations: SBOM + provenance attestations (SLSA-style) + verification
+└─ 📎 artifacts/                          # 📎 Exported checklists/templates/example records (small, shareable outputs)
 ```
 
 > If some notebooks don’t exist yet, keep the filenames as a **roadmap** and add them iteratively.
