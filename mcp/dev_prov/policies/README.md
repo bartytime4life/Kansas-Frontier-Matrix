@@ -244,15 +244,15 @@ This directly addresses gaps identified in design audits (e.g., missing model ca
 
 ```mermaid
 flowchart LR
-  A[PR / Commit] --> B[CI: Schema + Policy Gates]
-  B -->|deny[] fires| X[❌ Block Merge]
-  B -->|all green| C[Merge to Main]
-  C --> D[Build / Pipelines]
-  D --> E[run_manifest.json + PROV JSON-LD]
-  E --> F[Catalog Evidence Triplet: STAC + DCAT + PROV]
-  F --> G[Graph Ingest (Neo4j) + PostGIS]
-  G --> H[API (Policy enforcement + AuthZ)]
-  H --> I[UI + Focus Mode (Citations + Governance flags)]
+  A[🔀 PR / Commit] --> B[🛡️ CI - schema + policy gates]
+  B --> X[❌ Block merge - deny]
+  B --> C[✅ Merge to main - all green]
+  C --> D[🏗️ Build / pipelines]
+  D --> E[🧾 run_manifest.json + 🧬 PROV JSON-LD]
+  E --> F[📚 Evidence triplet - 🛰️ STAC + 🗂️ DCAT + 🧬 PROV]
+  F --> G[🕸️ Graph ingest Neo4j + 🗃️ PostGIS]
+  G --> H[🔐 API - policy enforcement + AuthZ]
+  H --> I[🗺️ UI + 🤖 Focus Mode - citations + governance flags]
 ```
 
 ---
