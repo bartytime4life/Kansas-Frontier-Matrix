@@ -52,26 +52,26 @@ These policies are designed to run:
 > Use this layout as the “golden path.” If your repo differs, keep the **intent** and adapt paths.
 
 ```text
-📁 mcp/
-  📁 dev_prov/
-    📁 policies/
-      📄 README.md   👈 you are here
-      📁 rego/
-        📁 dev_prov/         # PR → PROV invariants, commit linkage, attestations
-        📁 data_gov/         # provenance-first, evidence triplet, licensing, sensitivity
-        📁 security/         # secrets, prompt-gate, supply chain, SBOM/SLSA requirements
-        📁 ai/               # citation + uncertainty + labeling requirements
-        📁 geo/              # CRS/geometry validity + spatial QA
-      📁 schemas/
-        📁 prov/             # JSON-LD constraints / structural checks
-        📁 manifests/        # run_manifest, evidence manifests, story manifests
-      📁 fixtures/
-        📁 pass/
-        📁 fail/
-      📁 waivers/
-        📄 waivers.yml       # time-bound, reviewed exceptions
-      📁 docs/
-        📄 POLICY_INDEX.md   # human-readable catalog of policies and rationale
+mcp/
+└─ 🧬 dev_prov/
+   └─ ⚖️ policies/
+      ├─ ✅📄 README.md                 # 👈 you are here 📌 Policy pack overview: scope, how to run, and enforcement points
+      ├─ ⚖️ rego/                      # OPA/Rego rules grouped by concern (policy-as-code)
+      │  ├─ 🔗 dev_prov/               # PR → PROV invariants: commit linkage, receipts, attestations, trace IDs
+      │  ├─ 🧾 data_gov/               # Provenance-first: evidence triplets, licensing, sensitivity labels, required metadata
+      │  ├─ 🔒 security/               # Secrets/prompt-gates/supply-chain: SBOM + SLSA-style requirements, deny unsafe outputs
+      │  ├─ 🤖 ai/                     # AI output rules: citations, uncertainty labeling, refusal reasons, audit hooks
+      │  └─ 🗺️ geo/                    # Geo QA: CRS validity, geometry sanity, bbox checks, spatial constraints
+      ├─ 📐 schemas/                   # Schemas used by policies/tests (contracts validated in CI)
+      │  ├─ 🧬 prov/                   # PROV JSON-LD structural constraints / shape checks
+      │  └─ 🧾 manifests/              # Run manifests, evidence manifests, story manifests (inputs/outputs)
+      ├─ 🧪 fixtures/                  # Golden fixtures for testing policies (known-pass/known-fail)
+      │  ├─ ✅ pass/                   # Inputs that must pass (baseline compliant examples)
+      │  └─ ❌ fail/                   # Inputs that must fail (proves deny rules work)
+      ├─ ⚠️ waivers/                   # Time-bound exceptions (must be justified + reviewed + expiring)
+      │  └─ ⚠️🧾 waivers.yml            # Waiver ledger: id, scope, owner, expiry, rationale, approval
+      └─ 📚 docs/                      # Human-readable policy documentation (rationale, mapping, examples)
+         └─ 🗂️📄 POLICY_INDEX.md       # Index of policies + rationale + links to Rego files + test coverage notes
 ```
 
 ---
