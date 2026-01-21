@@ -83,6 +83,8 @@ flowchart TB
 
 ## 🗂️ Folder layout
 
+```text
+
 mcp/dev_prov/examples/01_dataset_evidence_triplet/
 ├─ 📄 README.md                          # 📘 How this example demonstrates the “dataset evidence triplet”
 └─ 📎 evidence/
