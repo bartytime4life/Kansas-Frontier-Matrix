@@ -75,19 +75,19 @@ This folder is the **single source of truth** for the “shapes” gates enforce
 
 ```text
 mcp/
-  gates/
-    contracts/
-      _shared/                 # 🔁 common primitives (IDs, timestamps, citations)
-      data/                    # 🗄️ dataset + metadata contracts (STAC/DCAT/PROV wrappers)
-      provenance/              # 🧬 lineage + citation contracts
-      ai/                      # 🤖 prompt + response + safety/output contracts
-      graph/                   # 🕸️ graph mutation + health-check report contracts
-      artifacts/               # 📦 OCI/ORAS publishing + signature/attestation contracts
-      ui/                      # 🗺️ layer/story/offline-pack contracts
-      domain/                  # 🧪 “Design Pack” & domain plugin contracts (SampleUnitSpec, ConstraintSpec…)
-      gate_report/             # 🧾 standard gate decision envelope + finding format
-      examples/                # ✅ golden payloads
-      tests/                   # 🧪 schema tests + conftest fixtures (if co-located)
+└─ 🚦 gates/
+   └─ 📐 contracts/
+      ├─ 🔁 _shared/                 # 🔁 Common primitives reused across contracts (IDs, timestamps, citations, enums)
+      ├─ 🗄️ data/                    # 🗄️ Dataset + metadata contracts (STAC/DCAT/PROV wrappers, catalog pointers)
+      ├─ 🧬 provenance/              # 🧬 Lineage + citation contracts (evidence triplets, provenance bundles, link rules)
+      ├─ 🤖 ai/                      # 🤖 Prompt/response/safety contracts (redaction notices, refusal reasons, output schemas)
+      ├─ 🕸️ graph/                   # 🕸️ Graph contracts (mutation receipts, query shapes, health-check report envelopes)
+      ├─ 📦 artifacts/               # 📦 Publishing contracts (OCI/ORAS manifests, digests, signatures/attestations)
+      ├─ 🗺️ ui/                      # 🗺️ UI contracts (layers, story nodes, offline packs, registry indexes)
+      ├─ 🧪 domain/                  # 🧪 Domain “Design Pack” contracts (SampleUnitSpec, ConstraintSpec, plugin interfaces)
+      ├─ 🧾 gate_report/             # 🧾 Standard gate decision envelope + finding format (pass/fail, severity, pointers)
+      ├─ ✅ examples/                # ✅ Golden payloads (known-pass/known-fail) used in docs/tests/CI
+      └─ 🧪 tests/                   # 🧪 Schema tests + conftest fixtures (if co-located with contracts)
 ```
 
 > 💡 Why so strict? KFM’s “contract-first & provenance-first” rule requires that components can rely on consistent metadata/provenance, and that unsourced or ad-hoc data is not allowed into the official catalog. [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
