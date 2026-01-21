@@ -49,10 +49,10 @@ KFM’s AI/automation flow is explicitly described as a “detect, validate, pro
 
 ```mermaid
 flowchart LR
-  W[👀 Watcher / Detector\nFinds deltas] --> V[🧪 Validator Gates\n(schema + policy)]
-  V -->|PASS ✅| P[🚀 Promote\n(PR merge + publish)]
-  V -->|FAIL ⛔| B[🧾 Block + Findings\n(evidence + remediation)]
-  P --> L[📚 Ledger\n(run manifest + provenance refs)]
+  W[👀 Watcher / Detector - finds deltas] --> V[🧪 Validator Gates - schema + policy]
+  V --> P[✅ PASS - 🚀 Promote - PR merge + publish]
+  V --> B[⛔ FAIL - 🧾 Block + Findings - evidence + remediation]
+  P --> L[📚 Ledger - run manifest + provenance refs]
 ```
 
 ### 🤖 Runtime gates for Focus Mode (Prompt Gate → Output Gate)
