@@ -71,22 +71,21 @@ flowchart LR
 
 2) **Attach artifacts** in a predictable folder layout (recommended):
 ```text
-📁 mcp/dev_prov/examples/10_experiment_report_template/
-├─ 📄 README.md
-└─ 📁 (your real reports typically live elsewhere, e.g. /experiments/)
-   ├─ 📄 EXP-2026-01-21_focusmode-citation-gate.md
-   ├─ 📁 artifacts/
-   │  ├─ 📊 figures/
-   │  ├─ 📋 tables/
-   │  └─ 🧾 logs/
-   ├─ 📁 prov/
-   │  ├─ prov.run.jsonld
-   │  └─ receipts/
-   ├─ 📁 stac/
-   │  ├─ collection.json
-   │  └─ items/
-   └─ 📁 dcat/
-      └─ dataset.jsonld
+mcp/dev_prov/examples/10_experiment_report_template/
+├─ 📄 README.md                                    # 📘 How to structure an experiment report + required evidence/prov links
+└─ 🧪 (example_report_tree)/                       # 🧪 Example layout (real reports usually live in /experiments/)
+   ├─ 📝📄 EXP-2026-01-21_focusmode-citation-gate.md # Main experiment report (hypothesis, method, results, limitations)
+   ├─ 📦 artifacts/                                # Supporting artifacts produced during the experiment
+   │  ├─ 📊 figures/                               # Figures/plots/screenshots used in the report
+   │  ├─ 📋 tables/                                # Tables/CSVs extracted from results (small, reviewable)
+   │  └─ 🧾 logs/                                  # Logs/traces (sanitize secrets/PII; include checksums if possible)
+   ├─ 🧬 prov/                                     # Lineage proof for the experiment run
+   │  ├─ 🧬🧾 prov.run.jsonld                       # PROV bundle linking inputs → runs → outputs → report
+   │  └─ 🧾 receipts/                              # Receipts/attestations for key actions (runs, publishes, checks)
+   ├─ 🛰️ stac/                                     # STAC outputs (optional if experiment produces cataloged assets)
+   │  ├─ 🧾 collection.json                        # STAC Collection describing the experiment dataset/products
+   │  └─ 📁 items/                                 # STAC Items for individual run snapshots/outputs
+   └─ 🗂️ dcat/                                     # DCAT outputs (optional discovery metadata for distributions)
 ```
 
 3) **Record reproducibility** (the “minimum viable proof”):
