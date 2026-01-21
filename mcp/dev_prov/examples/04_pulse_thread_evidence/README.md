@@ -79,18 +79,18 @@ Think of a Pulse Thread publication as a **Thread Evidence Bundle**:
 
 ```text
 mcp/dev_prov/examples/04_pulse_thread_evidence/
-├─ README.md
-├─ 🧵 pulse_thread.md
-├─ 🏷️ pulse_thread.meta.json
-├─ 🧾 evidence_manifest.json
-├─ 🧬 prov.jsonld
-├─ 🔒 bundle.lock.json
-├─ 📎 schemas/
-│  ├─ evidence_manifest.schema.json
-│  └─ pulse_thread.schema.json
-└─ 🧪 sample/
-   ├─ input_snapshot.json
-   └─ rendered_preview.md
+├─ 📄 README.md                       # 📘 What a Pulse Thread is + how this example meets evidence/traceability rules
+├─ 🧵📝 pulse_thread.md                # Pulse narrative (short-form update) with inline citations/refs
+├─ 🏷️🧾 pulse_thread.meta.json         # Metadata/contract: id, title, authors, time range, tags, linkage to evidence/prov
+├─ 🧾📎 evidence_manifest.json          # Evidence index: claims → citations → artifacts (with paths/URLs/checksums)
+├─ 🧬🧾 prov.jsonld                    # PROV bundle linking inputs → transformations → the published pulse output
+├─ 🔒🧾 bundle.lock.json               # Lockfile: frozen pointers + digests for reproducibility (tamper detection)
+├─ 📐 schemas/                        # Local schemas for validating this example (portable, CI-friendly)
+│  ├─ 📐🧾 evidence_manifest.schema.json # Contract for evidence_manifest.json (required fields + link rules)
+│  └─ 📐🧾 pulse_thread.schema.json     # Contract for pulse_thread.meta.json (required metadata + constraints)
+└─ 🧪 sample/                          # Tiny fixtures used to illustrate the workflow end-to-end
+   ├─ 📥🧾 input_snapshot.json          # Minimal “input” snapshot used by the pulse (safe, tiny, deterministic)
+   └─ 👀📝 rendered_preview.md          # Rendered preview (what a reader sees) for docs/tests/snapshots
 ```
 
 ### Minimum artifact responsibilities ✅
