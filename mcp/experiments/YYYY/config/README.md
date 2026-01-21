@@ -58,26 +58,26 @@ These are the invariants we design configs around:
 > Your repo may vary — this is a “golden path” layout that plays nicely with MCP templates and KFM’s auditability goals.
 
 ```text
-📁 mcp/
-  📁 experiments/
-    📁 YYYY/
-      📁 config/                      👈 you are here
-        📄 README.md
-        📁 experiments/               # “declared” experiment configs (PR-reviewed)
-          📄 YYYY-001-example.yaml
-          📄 YYYY-002-focus-mode-rag.yaml
-        📁 templates/                 # copy/paste starters
-          📄 minimal.yaml
-          📄 full.yaml
-        📁 schemas/                   # validation contracts
-          📄 experiment.schema.json
-          📄 evidence-manifest.schema.json
-      📁 runs/                        # outputs (append-only)
-        📁 YYYY-001-example__RUNID/
-          📄 run_manifest.json
-          📄 report.md
-          📁 artifacts/
-          └─ 📁 catalogs/             # STAC / DCAT / PROV generated for the run
+mcp/
+└─ 🧪 experiments/
+   └─ 📅 YYYY/
+      ├─ ⚙️ config/                           # 👈 you are here 📌 Declared configs + templates + schemas (PR-reviewed)
+      │  ├─ 📄 README.md                      # 📘 How experiment configs work, review rules, and how runs are produced
+      │  ├─ 🧪 experiments/                   # “Declared” experiment configs (committed + PR-reviewed; stable IDs)
+      │  │  ├─ 🧾 YYYY-001-example.yaml        # Example declared experiment (id, hypothesis, inputs, params, expected proofs)
+      │  │  └─ 🧾 YYYY-002-focus-mode-rag.yaml # Declared experiment for Focus Mode/RAG evaluation (gates + metrics)
+      │  ├─ 🧩 templates/                     # Copy/paste starters for new experiment declarations
+      │  │  ├─ 🧩🧾 minimal.yaml               # Minimal config (enough to run + produce receipts)
+      │  │  └─ 🧩🧾 full.yaml                  # Full config (datasets, metrics, evidence, publish steps)
+      │  └─ 📐 schemas/                       # Validation contracts enforced by CI/gates
+      │     ├─ 📐🧾 experiment.schema.json     # Schema for declared experiment configs (YAML validated against this)
+      │     └─ 📐🧾 evidence-manifest.schema.json # Schema for evidence manifests produced by runs
+      └─ 🏃 runs/                             # Outputs (append-only): each run is immutable once recorded
+         └─ 🏷️ YYYY-001-example__RUNID/        # One run folder per execution (id + run identifier)
+            ├─ 🧾 run_manifest.json            # Run ledger: who/what/when + commands + env + inputs/outputs + hashes
+            ├─ 📝 report.md                    # Human report: results, metrics, limitations, and evidence links
+            ├─ 📦 artifacts/                  # Produced artifacts (figures, tables, exports, logs; keep access-safe)
+            └─ 🗂️ catalogs/                   # Generated STAC/DCAT/PROV for this run (or pointers to canonical catalogs)
 ```
 
 ---
