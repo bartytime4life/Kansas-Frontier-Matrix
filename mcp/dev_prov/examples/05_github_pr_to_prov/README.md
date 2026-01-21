@@ -58,14 +58,14 @@ mcp/dev_prov/examples/05_github_pr_to_prov/
 
 ```mermaid
 flowchart LR
-  A[GitHub Pull Request] --> B[Fetch PR metadata<br/>commits, reviews, files, checks]
-  B --> C[Normalize + Canonicalize<br/>stable ordering, IDs, timestamps]
-  C --> D[Emit run_manifest.json<br/>inputs, env, hashes]
-  C --> E[Emit PROV JSON-LD<br/>Agents/Activities/Entities]
-  E --> F[(Optional) Ingest to Neo4j<br/>dev history becomes queryable lineage]
-  D --> G[CI Policy Gates<br/>OPA/Conftest style checks]
+  A[🔀 GitHub Pull Request] --> B[📥 Fetch PR metadata - 🧾 commits 🗂️ files ✅ checks 👀 reviews]
+  B --> C[🧼 Normalize + Canonicalize - 🔢 stable ordering 🆔 IDs 🕒 timestamps]
+  C --> D[🧾 Emit run_manifest.json - 📥 inputs 🌱 env 🔐 hashes]
+  C --> E[🧬 Emit PROV JSON-LD - 👥 agents ⚙️ activities 📦 entities]
+  E --> F[🕸️ Optional - ingest to Neo4j - 🧭 queryable lineage]
+  D --> G[🛡️ CI Policy Gates - OPA + Conftest ✅]
   E --> G
-  G --> H[Human Review + Merge ✅]
+  G --> H[👀 Human Review + ✅ Merge]
 ```
 
 ---
