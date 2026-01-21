@@ -34,16 +34,16 @@ This notebook set is where we prototype & validate:
 ## 🗂️ Suggested folder layout
 
 ```text
-📁 mcp/
-  📁 notebooks/
-    📁 03_geospatial/
-      📄 README.md  👈 you are here
-      📁 notebooks/             # .ipynb experiments (numbered)
-      📁 data/                  # small sample inputs only (NO big rasters/tiles)
-      📁 artifacts/             # generated outputs (tiles, COGs, GeoParquet, reports)
-      📁 catalogs/              # STAC/DCAT/PROV outputs (or links/receipts)
-      📁 policies/              # notebook-level policy checks (schemas, gates)
-      📁 scratch/               # temporary work (gitignored)
+mcp/
+└─ 📓 notebooks/
+   └─ 🗺️ 03_geospatial/
+      ├─ 📄 README.md                 # 👈 you are here 📌 Scope, conventions, and where outputs get promoted
+      ├─ 📓 notebooks/                # Numbered .ipynb experiments (small, focused, reproducible)
+      ├─ 🧪 data/                     # Small sample inputs ONLY (no big rasters/tiles; use pointers/receipts)
+      ├─ 📦 artifacts/                # Generated outputs (tiles/COGs/GeoParquet/reports) if small + useful
+      ├─ 🧾 catalogs/                 # STAC/DCAT/PROV outputs (or links/receipts to canonical catalog locations)
+      ├─ 🚦 policies/                 # Notebook-level checks (schemas, gates, “no secrets”, provenance required)
+      └─ 🧯 scratch/                  # Temporary work (gitignored by default; not governed)
 ```
 
 > 🔒 **Rule of thumb:** large artifacts don’t live in Git. Store **receipts** (digests, URIs, manifests) + catalogs so results stay reproducible.
