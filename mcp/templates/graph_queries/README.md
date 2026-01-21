@@ -57,13 +57,13 @@ These templates are part of the “**living knowledge base**” approach: not on
 
 ```mermaid
 flowchart LR
-  UI[🗺️ UI: Map + Timeline + Story Nodes + Focus Mode] -->|REST / GraphQL| API[🧠 API Layer<br/>(policy + redaction + caching)]
-  API -->|Cypher Templates| KG[(🕸️ Neo4j Knowledge Graph)]
-  API -->|SQL / Tiles| PG[(🗺️ PostGIS + Tile/COG stack)]
-  API -->|Full-text / embeddings| IDX[(🔎 Search Index)]
-  MCP[🧪 MCP Experiments<br/>reports + SOPs] -->|run templates| API
-  MCP -->|offline audits| KG
-  API -->|Evidence-linked responses| UI
+  UI["🗺️ UI - Map + Timeline + Story Nodes + Focus Mode"] --> API["🧠 API Layer - REST / GraphQL - policy + redaction + caching"];
+  API --> KG["🕸️ Neo4j Knowledge Graph - Cypher templates"];
+  API --> PG["🗺️ PostGIS + Tile / COG stack - SQL + tiles"];
+  API --> IDX["🔎 Search Index - full-text + embeddings"];
+  MCP["🧪 MCP Experiments - reports + SOPs"] --> API;
+  MCP --> KG;
+  API --> UI;
 ```
 
 ### Why a dedicated template library?
@@ -82,24 +82,24 @@ Because KFM’s architecture relies on **stable contracts** and **auditability**
 
 ```text
 mcp/
-  templates/
-    graph_queries/
-      README.md
-      index.yaml                # template registry (IDs → files)
-      manifests/                # per-template specs (YAML)
-        kfm.graph.place_context.v1.yaml
-        kfm.graph.dataset_lineage.v1.yaml
-      cypher/                   # Cypher templates (Neo4j)
-        kfm.graph.place_context.v1.cypher
-        kfm.graph.dataset_lineage.v1.cypher
-        qa.top_degree_nodes.v1.cypher
-      graphql/                  # GraphQL operation templates (API schema)
-        kfm.place_context.v1.graphql
-      tests/                    # fixtures + expected shapes
-        fixtures/
-        snapshots/
-      docs/                     # optional: narrative docs per query pack
-        packs.md
+└─ 🧩 templates/
+   └─ 🕸️ graph_queries/
+      ├─ 📄 README.md                      # 📘 How to use/query templates, naming/versioning rules, and safety guidance
+      ├─ 🗂️🧾 index.yaml                    # Template registry: templateId → files + params + expected result shape
+      ├─ 🧾 manifests/                      # Per-template specs (YAML): inputs, outputs, guards, provenance notes
+      │  ├─ 🧾 kfm.graph.place_context.v1.yaml
+      │  └─ 🧾 kfm.graph.dataset_lineage.v1.yaml
+      ├─ 🕸️ cypher/                         # Neo4j Cypher query templates (parameterized, read-only by default)
+      │  ├─ 🕸️ kfm.graph.place_context.v1.cypher
+      │  ├─ 🕸️ kfm.graph.dataset_lineage.v1.cypher
+      │  └─ 🧪🕸️ qa.top_degree_nodes.v1.cypher  # QA-only diagnostic query (use in tests/health checks)
+      ├─ 🧬 graphql/                         # GraphQL operation templates (API schema-facing)
+      │  └─ 🧬 kfm.place_context.v1.graphql
+      ├─ 🧪 tests/                           # Fixtures + expected result shapes for regression testing templates
+      │  ├─ 🧩 fixtures/                     # Minimal inputs/graph stubs used by tests
+      │  └─ 🖼️ snapshots/                    # Expected outputs (stable snapshots, only if justified)
+      └─ 📚 docs/                            # Optional narrative docs (query packs, examples, rationale)
+         └─ 📄 packs.md
 ```
 
 ---
