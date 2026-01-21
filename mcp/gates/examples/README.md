@@ -44,21 +44,20 @@ KFM’s docs repeatedly reinforce these non‑negotiables (and this folder turns
 
 ```mermaid
 flowchart LR
-  S[🗃️ data/sources\n(original drops)] -->|Ingest| R[🧊 data/raw\nimmutable]
-  R -->|Deterministic ETL| P[🧹 data/processed]
-  P -->|Describe| C[📚 data/catalog\nSTAC/DCAT/PROV]
-  C --> G[🧠 Knowledge Graph\n(Neo4j + ontologies)]
+  S[🗃️ data/sources - original drops] --> R[🧊 data/raw - immutable]
+  R --> P[🧹 data/processed]
+  P --> C[📚 data/catalog - STAC DCAT PROV]
+  C --> G[🧠 Knowledge Graph - Neo4j + ontologies]
   G --> A[🌐 API]
-  A --> U[🗺️ UI\nMap+Timeline+Story]
-  A --> F[🤖 Focus Mode\nQ&A + Reasoned Views]
+  A --> U[🗺️ UI - Map + Timeline + Story]
+  A --> F[🤖 Focus Mode - Q and A + reasoned views]
 
-  %% gates
-  S -.->|① Intake Gate| R
-  R -.->|② Provenance Gate| P
-  P -.->|③ Catalog Gate| C
-  C -.->|④ Policy Gate| G
-  A -.->|⑤ API Gate| U
-  A -.->|⑥ AI Output Gate| F
+  S -.-> R
+  R -.-> P
+  P -.-> C
+  C -.-> G
+  A -.-> U
+  A -.-> F
 ```
 
 ---
@@ -70,30 +69,30 @@ This `examples/` directory is meant to hold **small, runnable gatepacks** with *
 Suggested layout (create as needed):
 
 ```text
-📁 mcp/
-  📁 gates/
-    📄 README.md
-    📁 examples/   👈 you are here
-      📄 README.md
-      📁 01-data-intake/
-        📄 gatepack.yaml
-        📁 policies/
-          📄 dataset.rego
-        📁 fixtures/
-          📄 dataset.manifest.json
-      📁 02-focus-mode/
-        📄 gatepack.yaml
-        📁 policies/
-          📄 focus_mode.rego
-        📁 fixtures/
-          📄 focus_request.json
-          📄 focus_answer.json
-      📁 03-story-nodes/
-      📁 04-offline-packs/
-      📁 05-supply-chain/
-      📁 06-privacy/
-      📁 07-simulations/
-      📁 08-ui-layer-registry/
+mcp/
+└─ 🚦 gates/
+   ├─ 📄 README.md                     # 📘 Gate system overview: what runs, when, and “fail-closed” behavior
+   └─ 🧪 examples/                     # 👈 you are here 📌 Example gate packs: policies + fixtures + expected outcomes
+      ├─ 📄 README.md                  # 📘 How to use examples (local runs, CI wiring, adding new packs)
+      ├─ 🗄️ 01-data-intake/            # Data intake gate pack (dataset manifests, catalog rules, provenance basics)
+      │  ├─ 🧾 gatepack.yaml            # Gate pack descriptor: which policies run + inputs + expected report shape
+      │  ├─ ⚖️ policies/               # Rego policies specific to this pack
+      │  │  └─ ⚖️📄 dataset.rego        # Dataset intake checks (required fields, license, checksums, link validity)
+      │  └─ 🧩 fixtures/               # Minimal inputs used to exercise the pack
+      │     └─ 🧾 dataset.manifest.json # Example dataset manifest (known-good or known-bad depending on test)
+      ├─ 🔎 02-focus-mode/             # Focus Mode gate pack (citation coverage, redaction, safety envelopes)
+      │  ├─ 🧾 gatepack.yaml            # Pack descriptor for Focus Mode checks
+      │  ├─ ⚖️ policies/
+      │  │  └─ ⚖️📄 focus_mode.rego     # Focus Mode rules (citations required, safe links, no sensitive leakage)
+      │  └─ 🧩 fixtures/
+      │     ├─ 🧾 focus_request.json    # Example request payload (inputs/context)
+      │     └─ 🧾 focus_answer.json     # Example answer payload (citations, redactions, receipt pointers)
+      ├─ 🎬 03-story-nodes/             # Story Node gate examples (schemas, step rules, evidence manifests)
+      ├─ 🧳 04-offline-packs/           # Offline pack gate examples (bundle integrity, manifests, checksums)
+      ├─ 📦 05-supply-chain/            # Supply-chain gate examples (SBOM, attestations, OCI digests)
+      ├─ 🔒 06-privacy/                 # Privacy gate examples (PII detection, redaction policy, access labels)
+      ├─ 🧪 07-simulations/             # Simulation gate examples (seeds, run manifests, reproducibility proofs)
+      └─ 🗺️ 08-ui-layer-registry/       # UI registry gate examples (layer/style/legend index validity)
 ```
 
 > [!NOTE]
