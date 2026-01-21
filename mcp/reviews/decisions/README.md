@@ -68,14 +68,14 @@ Pick one scheme and be consistent inside the repo:
 
 ### 🧩 Suggested internal structure
 ```text
-📁 mcp/
-  📁 reviews/
-    📁 decisions/
-      📄 README.md   👈 you are here
-      📄 0001-focus-mode-citations.md
-      📄 0002-policy-pack-v13-enforcement.md
-      📄 0003-oci-artifact-distribution.md
-      📁 _archive/   🧊 superseded/deprecated decisions (optional)
+mcp/
+└─ 🧠 reviews/
+   └─ 🧭 decisions/
+      ├─ 📄 README.md                         # 👈 you are here 📌 Decision record conventions + status lifecycle + numbering rules
+      ├─ 🧭📄 0001-focus-mode-citations.md     # Decision: citations required for Focus Mode outputs (evidence-first gate)
+      ├─ ⚖️📄 0002-policy-pack-v13-enforcement.md # Decision: enforce Policy Pack v13 in CI (fail-closed thresholds)
+      ├─ 📦📄 0003-oci-artifact-distribution.md   # Decision: publish artifacts via OCI/ORAS (digests, signing, pull flow)
+      └─ 🧊 _archive/                         # 🧊 Superseded/deprecated decisions (keep for history; link to replacement)
 ```
 
 > [!NOTE]
@@ -88,12 +88,14 @@ Pick one scheme and be consistent inside the repo:
 ```mermaid
 flowchart LR
   A[💡 Idea / Problem] --> B[📝 Draft DR in PR]
-  B --> C{🧪 Policy Gates + Reviews}
-  C -->|changes requested| B
-  C -->|approved| D[✅ Accepted DR]
-  D --> E[🛠️ Implementation PR(s)]
-  E --> F[📈 Monitoring & Post-Review]
-  F -->|unexpected outcome| G[🆕 Superseding DR]
+  B --> C[🧪 Policy Gates + Reviews]
+  C --> BR[🔁 Changes requested]
+  C --> OK[✅ Approved]
+  BR --> B
+  OK --> D[✅ Accepted DR]
+  D --> E[🛠️ Implementation PRs]
+  E --> F[📈 Monitoring + Post-Review]
+  F --> G[🆕 Superseding DR - unexpected outcome]
 ```
 
 ---
