@@ -58,15 +58,15 @@ These policies cover (at minimum):
 ## 📁 Directory Layout
 
 ```text
-📁 mcp/
-  📁 traceability/
-    📁 policies/
-      📄 README.md
-      📁 rego/              # ✅ OPA/Rego policy rules (policy-as-code)
-      📁 tests/             # ✅ Conftest tests + fixtures
-      📁 schemas/           # ✅ JSON schemas (contracts, manifests, evidence)
-      📁 waivers/           # ⚠️ Time-boxed exceptions (reviewed + expiring)
-      📁 docs/              # 📚 Extra policy notes (optional)
+mcp/
+└─ 🧬 traceability/
+   └─ ⚖️ policies/
+      ├─ 📄 README.md               # 📘 Policy pack overview: scope, enforcement points, and how to run conftest
+      ├─ ⚖️ rego/                   # ✅ OPA/Rego policy rules (policy-as-code)
+      ├─ 🧪 tests/                  # ✅ Conftest tests + fixtures (known-good/known-bad cases)
+      ├─ 📐 schemas/                # ✅ JSON schemas for contracts/manifests/evidence validated by policies
+      ├─ ⚠️ waivers/                # ⚠️ Time-boxed exceptions (must be justified, reviewed, and auto-expiring)
+      └─ 📚 docs/                   # 📚 Optional deeper notes (rationale, edge cases, decision links)
 ```
 
 > 💡 If the repo already has `tools/validation/policy/`, treat **one as the source of truth** and keep them synchronized (symlink, vendoring, or CI copy step).
