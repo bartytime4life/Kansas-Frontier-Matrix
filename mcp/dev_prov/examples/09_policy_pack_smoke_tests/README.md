@@ -71,22 +71,22 @@ Use this as a **reference layout** to keep smoke tests clean and discoverable:
 
 ```text
 mcp/dev_prov/examples/09_policy_pack_smoke_tests/
-├─ README.md 📘
-├─ fixtures/ 🧪
-│  ├─ pass/ ✅
-│  │  ├─ dcat.valid.json
-│  │  ├─ stac.valid.json
-│  │  ├─ story_node.valid.md
-│  │  └─ run_manifest.valid.json
-│  └─ fail/ ❌
-│     ├─ dcat.missing_license.json
-│     ├─ prov.missing_for_processed_change.json
-│     ├─ ai_answer.no_citations.json
-│     └─ secrets.detected.yaml
-├─ inputs/ 📥
-│  └─ pr_changed_files.sample.json
-└─ scripts/ ⚙️
-   └─ smoke.sh
+├─ 📘📄 README.md                      # 📘 What this pack tests + how to run locally/CI + expected pass/fail signals
+├─ 🧪 fixtures/                        # 🧪 Policy test fixtures (known-pass/known-fail) used by conftest/OPA
+│  ├─ ✅ pass/                          # ✅ Fixtures that MUST pass (baseline “good” examples)
+│  │  ├─ ✅🧾 dcat.valid.json            # Valid DCAT record (license, distributions, links present)
+│  │  ├─ ✅🧾 stac.valid.json            # Valid STAC object (profile-compliant; links resolvable)
+│  │  ├─ ✅📝 story_node.valid.md        # Valid Story Node markdown (front-matter + citations policy satisfied)
+│  │  └─ ✅🧾 run_manifest.valid.json    # Valid run manifest (ids, timestamps, inputs/outputs, hashes present)
+│  └─ ❌ fail/                          # ❌ Fixtures that MUST fail (proves policies catch regressions)
+│     ├─ ❌🧾 dcat.missing_license.json   # Missing/invalid license → should be denied
+│     ├─ ❌🧬🧾 prov.missing_for_processed_change.json # Processed change without PROV linkage → should be denied
+│     ├─ ❌🤖🧾 ai_answer.no_citations.json # AI output with no citations → should be denied (evidence-first)
+│     └─ ❌🔒🧾 secrets.detected.yaml     # Secret-like content fixture → should be denied by secret/PII policies
+├─ 📥 inputs/                          # Inputs describing “what changed” (used to scope which policies run)
+│  └─ 📥🧾 pr_changed_files.sample.json  # Sample PR file-change list used by gate runner routing logic
+└─ ⚙️ scripts/                         # Helper scripts to execute the smoke suite consistently
+   └─ ⚙️🧪📄 smoke.sh                    # Runs conftest/OPA against fixtures and exits non-zero on unexpected results
 ```
 
 > [!NOTE]
