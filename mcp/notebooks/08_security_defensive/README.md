@@ -55,6 +55,7 @@ KFM’s north star is **trust-by-construction**: _no mystery layers_, _no uncite
 
 ## 🗂️ Directory Layout
 
+```text
 mcp/
 └─ 📓 notebooks/
    └─ 🛡️ 08_security_defensive/
