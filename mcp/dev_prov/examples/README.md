@@ -56,21 +56,21 @@ flowchart LR
 
 ```text
 mcp/dev_prov/examples/
-├─ 📄 README.md                         👈 you are here
-├─ 📁 00_quickstart_minimal_triplet/
-├─ 📁 01_dataset_evidence_triplet/
-├─ 📁 02_run_manifest_and_hashing/
-├─ 📁 03_story_node_evidence_manifest/
-├─ 📁 04_pulse_thread_evidence/
-├─ 📁 05_github_pr_to_prov/
-├─ 📁 06_focus_mode_answer_log/
-├─ 📁 07_streaming_ingest_stub_prov/
-├─ 📁 08_oci_artifact_distribution/
-├─ 📁 09_policy_pack_smoke_tests/
-├─ 📁 10_experiment_report_template/
-└─ 📁 _shared/
-   ├─ 📁 schemas/
-   └─ 📁 snippets/
+├─ 📄 README.md                         # 👈 you are here 📌 How to use the examples + recommended learning order
+├─ 🚀 00_quickstart_minimal_triplet/     # Smallest end-to-end “evidence triplet” example (claim + citation + artifact)
+├─ 🛰️ 01_dataset_evidence_triplet/       # Dataset-focused triplet: source → processed artifact → catalog/prov links
+├─ 🔐 02_run_manifest_and_hashing/       # Run manifest + checksum patterns (inputs/outputs, sha256, reproducibility)
+├─ 🎬 03_story_node_evidence_manifest/   # Story Node evidence manifest: citations, media, layer refs, policy gates
+├─ 🧵 04_pulse_thread_evidence/          # Pulse thread example: short updates + evidence bundle + lineage pointers
+├─ 🔗 05_github_pr_to_prov/              # Link a GitHub PR to PROV/receipts (ids, commits, approvals, traceability)
+├─ 🔎 06_focus_mode_answer_log/          # Focus Mode answer logging: citations required + redaction notices + receipts
+├─ 📡 07_streaming_ingest_stub_prov/     # Streaming ingest stub: event traces + backpressure notes + partial lineage
+├─ 📦 08_oci_artifact_distribution/      # OCI distribution example: artifact manifest + digests + publication record
+├─ 🚦 09_policy_pack_smoke_tests/        # Policy pack smoke tests: known-pass/known-fail fixtures for gates
+├─ 🧪 10_experiment_report_template/     # Experiment report example: meta, evidence, metrics, and PROV bundle
+└─ ♻️ _shared/
+   ├─ 📐 schemas/                        # Shared schema snippets used by multiple examples (avoid duplication)
+   └─ 🧩 snippets/                       # Reusable fragments (YAML/JSON/MD) for copy/paste into new examples
 ```
 
 > If your repo currently uses slightly different paths, keep the **artifact intent** identical and update the paths consistently (see “Gotchas” below).
