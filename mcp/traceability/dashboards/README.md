@@ -38,11 +38,11 @@ This aligns with KFM’s provenance-first / evidence-first posture: data, narrat
 ```mermaid
 flowchart LR
   S[🌐 Sources] --> IG[🚪 Ingestion Gate]
-  IG --> CAT[🗂️ Catalogs<br/>(STAC / DCAT)]
+  IG --> CAT[🗂️ Catalogs - STAC / DCAT]
   CAT --> PROV[🧬 PROV bundles]
-  CAT --> G[🕸️ Knowledge Graph<br/>(Neo4j)]
+  CAT --> G[🕸️ Knowledge Graph - Neo4j]
   G --> API[🧰 API Layer]
-  API --> UI[🗺️ UI • Timeline • Layers]
+  API --> UI[🗺️ UI - Timeline - Layers]
   API --> FM[🤖 Focus Mode]
 
   IG --> TEL[📨 Telemetry / Logs]
@@ -52,7 +52,7 @@ flowchart LR
   FM --> TEL
 
   TEL --> DSH[📊 Dashboards]
-  DSH --> ALRT[🚨 Alerts / Issues / Reviews]
+  DSH --> ALRT[🚨 Alerts - Issues - Reviews]
 ```
 
 > 🔒 **Golden rule:** dashboards must respect KFM’s governance model (classification, audit logging, provenance). Dashboards should not become a “backdoor UI” that bypasses the API boundary or policy checks.
