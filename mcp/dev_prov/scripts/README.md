@@ -46,16 +46,16 @@ They support (at minimum):
 ```mermaid
 flowchart LR
   A[data/raw 🧱] --> B[data/processed 🧼]
-  B --> C[STAC/DCAT/PROV 🗂️🧬]
+  B --> C[STAC DCAT PROV 🗂️🧬]
   C --> D[Neo4j CSV import 🧠]
   D --> E[UI layers + Story Nodes 🗺️📖]
-  E --> F[Focus Mode answers 🧠💬 (with citations)]
+  E --> F[Focus Mode answers 🧠💬 with citations]
 
-  subgraph dev_prov_scripts[dev_prov scripts 🧾]
+  subgraph DEVPROV[dev prov scripts 🧾]
     S1[run_manifest 🧾] --> C
     S2[evidence_manifest 🧷] --> E
     S3[validate + policy ✅] --> C
-    S4[publish_oci + sign 🔏] --> G[(OCI Registry 📦)]
+    S4[publish oci + sign 🔏] --> G[OCI Registry 📦]
   end
 ```
 
