@@ -66,24 +66,24 @@ You will generate:
 
 ```text
 mcp/dev_prov/examples/00_quickstart_minimal_triplet/
-├─ README.md  👈 you are here
-├─ input/
-│  ├─ raw/                🧊 immutable snapshot (bytes)
-│  └─ contract/           📜 minimal dataset contract (metadata you promise is true)
-│     └─ dataset.yml      (or .json — your repo’s convention)
-└─ out/
-   ├─ stac/
-   │  ├─ collection.json
-   │  └─ items/
-   │     └─ <item_id>.json
-   ├─ dcat/
-   │  └─ dataset.jsonld
-   ├─ prov/
-   │  └─ run.jsonld
-   ├─ manifest/
-   │  └─ run-manifest.json
-   └─ checksums/
-      └─ SHA256SUMS
+├─ ✅📄 README.md                         # 👈 you are here 📌 Fastest “evidence triplet” walkthrough (inputs → outputs)
+├─ 📥 input/
+│  ├─ 🧊 raw/                             # 🧊 Immutable snapshot (as-received bytes; treat as read-only)
+│  └─ 📜 contract/                        # 📜 Minimal dataset contract (the metadata you promise is true)
+│     └─ 📜🧾 dataset.yml                 # Contract file (or .json per repo convention): id, license, source, extent, notes
+└─ 📦 out/
+   ├─ 🛰️ stac/                            # STAC outputs: dataset collection + one or more items (time/version snapshots)
+   │  ├─ 🧾 collection.json               # STAC Collection (dataset-level metadata + links)
+   │  └─ 📁 items/
+   │     └─ 🧾 <item_id>.json             # STAC Item (one snapshot pointing to assets/artifacts)
+   ├─ 🗂️ dcat/                            # DCAT outputs: discovery/registry metadata (dataset + distributions)
+   │  └─ 🧾 dataset.jsonld                # DCAT Dataset record (license, publisher, access, distribution links)
+   ├─ 🧬 prov/                            # PROV outputs: lineage linking raw → contract → generated catalogs
+   │  └─ 🧾 run.jsonld                    # PROV run bundle (entities/activities/agents + derivations)
+   ├─ 🧾 manifest/                        # Run manifests: reproducibility ledger for this example run
+   │  └─ 🧾 run-manifest.json             # Commands/inputs/outputs/tool versions + pointers + checksums references
+   └─ 🔐 checksums/                       # Integrity proofs: hashes for everything in input/ and out/
+      └─ 🔐📄 SHA256SUMS                  # sha256 digest list (tamper detection + reproducibility)
 ```
 
 > [!IMPORTANT]
