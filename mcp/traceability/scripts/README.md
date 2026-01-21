@@ -157,13 +157,15 @@ export OCI_REPO="trace-bundles"
 ```mermaid
 flowchart LR
   A[📥 Source Data] --> B[🧪 Ingest/Transform]
-  B --> C[🧾 Run Manifest<br/>RFC 8785 + SHA-256]
-  C --> D[🧬 Emit STAC/DCAT/PROV]
-  D --> E[🚦 Validate + Policy Gates<br/>(fail-closed)]
-  E -->|pass| F[🔏 Sign (Cosign)]
-  F --> G[📦 Publish (ORAS → OCI)]
-  G --> H[🕸️ Register in Graph]
-  E -->|fail| X[🛑 Block Merge/Publish]
+  B --> C[🧾 Run Manifest - RFC 8785 + SHA-256]
+  C --> D[🧬 Emit STAC DCAT PROV]
+  D --> E[🚦 Validate + Policy Gates - fail-closed]
+  E --> F[✅ Pass]
+  E --> X[🛑 Fail]
+  F --> S[🔏 Sign - Cosign]
+  S --> P[📦 Publish - ORAS to OCI]
+  P --> H[🕸️ Register in Graph]
+  X --> BLK[⛔ Block Merge or Publish]
 ```
 
 **Typical command sequence (example):**
