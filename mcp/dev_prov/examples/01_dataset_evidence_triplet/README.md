@@ -62,14 +62,14 @@ A dataset (or “evidence artifact” like an AI‑generated layer) is considere
 
 ```mermaid
 flowchart TB
-  RAW[data/raw 🧊 (sources)] --> ETL[ETL / pipelines ⚙️]
-  ETL --> PROCESSED[data/processed ✅ (outputs)]
+  RAW[data/raw 🧊 - sources] --> ETL[ETL / pipelines ⚙️]
+  ETL --> PROCESSED[data/processed ✅ - outputs]
   PROCESSED --> STAC[STAC Collection + Items 🛰️]
   PROCESSED --> DCAT[DCAT Dataset JSON-LD 🗂️]
   ETL --> PROV[PROV JSON-LD 🧬]
-  DCAT -->|distributions| STAC
-  DCAT -->|distributions| PROV
-  STAC -->|links / props| PROV
+  DCAT --> STAC
+  DCAT --> PROV
+  STAC --> PROV
   STAC --> GRAPH[Neo4j graph 🕸️]
   DCAT --> GRAPH
   PROV --> GRAPH
@@ -83,22 +83,20 @@ flowchart TB
 
 ## 🗂️ Folder layout
 
-📁 `mcp/dev_prov/examples/01_dataset_evidence_triplet/`  
-```text
-📁 mcp/dev_prov/examples/01_dataset_evidence_triplet/
-├─ README.md
-└─ 📁 evidence/
-   ├─ 📁 stac/
-   │  ├─ collection.json
+mcp/dev_prov/examples/01_dataset_evidence_triplet/
+├─ 📄 README.md                          # 📘 How this example demonstrates the “dataset evidence triplet”
+└─ 📎 evidence/
+   ├─ 🛰️ stac/                           # STAC evidence: collection + items that point to the dataset assets
+   │  ├─ 🧾 collection.json               # STAC Collection (dataset-level metadata + links + license/extent)
    │  └─ 📁 items/
-   │     ├─ 2000.json
-   │     └─ 2020.json
-   ├─ 📁 dcat/
-   │  └─ dataset.jsonld
-   ├─ 📁 prov/
-   │  └─ provenance.jsonld
-   └─ 📁 manifest/
-      └─ sha256sums.txt
+   │     ├─ 🧾 2000.json                  # STAC Item snapshot (time-stamped asset pointers for year 2000)
+   │     └─ 🧾 2020.json                  # STAC Item snapshot (time-stamped asset pointers for year 2020)
+   ├─ 🗂️ dcat/                           # DCAT evidence: discovery/registry record for the dataset
+   │  └─ 🧾 dataset.jsonld                # DCAT Dataset/Distribution metadata (license, publisher, access, links)
+   ├─ 🧬 prov/                           # PROV evidence: lineage linking sources → transforms → published artifacts
+   │  └─ 🧾 provenance.jsonld             # PROV bundle (entities/activities/agents + derivation relations)
+   └─ 🔐 manifest/                       # Integrity evidence: checksums for referenced files/artifacts
+      └─ 🔐🧾 sha256sums.txt              # sha256 sums for the evidence payloads (reproducibility + tamper detection)
 ```
 
 > **Mapping to canonical KFM repo layout (conceptual):**
