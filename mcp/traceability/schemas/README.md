@@ -28,12 +28,12 @@ This schema registry is the **MCP contract layer** that makes that possible, esp
 ```mermaid
 flowchart LR
   A[📥 Ingest / Pipelines] --> B[🧾 Run Manifest + Receipts]
-  A --> C[🗂 STAC / DCAT]
-  A --> D[⛓ PROV (Entity/Activity/Agent)]
-  C --> E[🕸 Knowledge Graph]
+  A --> C[🗂️ STAC / DCAT]
+  A --> D[⛓️ PROV - Entity / Activity / Agent]
+  C --> E[🕸️ Knowledge Graph]
   D --> E
-  E --> F[🧩 API (OpenAPI / GraphQL)]
-  F --> G[🗺️ UI “map behind the map”】【Provenance panels, citations】]
+  E --> F[🧩 API - OpenAPI / GraphQL]
+  F --> G[🗺️ UI - map behind the map - provenance panels + citations]
 ```
 
 - Catalogs are the “evidence triplet” required before publishing (DCAT + STAC + PROV). :contentReference[oaicite:10]{index=10}  
@@ -85,29 +85,29 @@ For large artifacts (PMTiles, GeoParquet, COGs), KFM explores OCI registries wit
 
 ```text
 mcp/traceability/schemas/
-├── README.md ✅ (this file)
-├── 🧾 registry.yml                # index of schemas + versions + owners
-├── core/                          # shared primitives used everywhere
-│   ├── ids.schema.json            # dataset_id, run_id, graph ids
-│   ├── time.schema.json           # timestamps, intervals, time ranges
-│   ├── geojson.schema.json        # geometry, bbox (GeoJSON-aligned)
-│   ├── license.schema.json        # license string policy (e.g., CC-BY)
-│   └── classification.schema.json # public/internal/restricted, etc.
-├── catalogs/
-│   ├── stac/                      # STAC + KFM-STAC profile overlays
-│   ├── dcat/                      # DCAT + KFM-DCAT profile overlays
-│   └── prov/                      # PROV-O + KFM-PROV profile overlays
-├── runs/
-│   ├── run-manifest.schema.json   # “who/what/when” pipeline ledger
-│   ├── watcher-event.schema.json  # immutable alert/event record
-│   ├── planner-plan.schema.json   # structured plan output (reviewable)
-│   └── executor-receipt.schema.json # execution receipt + proofs
-├── narratives/
-│   ├── story-node.schema.json     # story config JSON contract
-│   └── pulse-thread.schema.json   # short-form “pulse” narrative + evidence
-└── artifacts/
-    ├── oci-distribution.schema.json   # distribution.oci payload
-    └── attestation.schema.json        # signatures / provenance attestations
+├── ✅📄 README.md                     # ✅ (this file) 📌 How schemas are versioned, referenced, and validated in CI
+├── 🧾🗂️ registry.yml                  # Schema registry: id → version → file path → owner → status (active/deprecated)
+├── 🧱 core/                           # Shared primitives used everywhere (compose into higher-level contracts)
+│   ├── 🆔📐🧾 ids.schema.json          # ID conventions: dataset_id, run_id, graph ids, slug rules, UUID patterns
+│   ├── ⏱️📐🧾 time.schema.json         # Time primitives: timestamps, intervals, ranges, precision + timezone policy
+│   ├── 🗺️📐🧾 geojson.schema.json      # Geo primitives: GeoJSON geometry/feature patterns + bbox constraints
+│   ├── ⚖️📐🧾 license.schema.json      # License policy: allowed strings/identifiers + validation rules
+│   └── 🔒📐🧾 classification.schema.json # Classification labels (public/internal/restricted) + propagation rules
+├── 🗂️ catalogs/                       # Discovery + lineage schemas for published metadata layers
+│   ├── 🛰️ stac/                        # STAC + KFM-STAC profile overlays (Collections/Items/Assets constraints)
+│   ├── 🗂️ dcat/                        # DCAT + KFM-DCAT profile overlays (datasets/distributions + contact/license)
+│   └── 🧬 prov/                        # PROV-O + KFM-PROV profile overlays (entities/activities/agents + links)
+├── 🧪 runs/                            # Operational schemas for pipeline execution + agent workflow traceability
+│   ├── 🧾📐 run-manifest.schema.json    # Pipeline ledger: who/what/when + inputs/outputs + params + checksums
+│   ├── 🚨📐 watcher-event.schema.json   # Immutable watcher event/alert record (trigger, context, severity, pointers)
+│   ├── 🧭📐 planner-plan.schema.json    # Structured planning output (reviewable steps, constraints, expected proofs)
+│   └── 🧾📐 executor-receipt.schema.json # Execution receipt: what ran + artifacts produced + proofs/links/hashes
+├── 📚 narratives/                      # Governed narrative objects that must carry evidence + provenance
+│   ├── 🎬📐 story-node.schema.json      # Story Node config contract (steps, actions, layers, citations pointers)
+│   └── 🧵📐 pulse-thread.schema.json    # Short-form “pulse” narrative + evidence bundle (updates, findings, deltas)
+└── 📦 artifacts/                       # Distribution/attestation schemas for supply-chain + publication proofs
+    ├── 📦📐 oci-distribution.schema.json # OCI distribution payload contract (what was shipped + where)
+    └── 🔏📐 attestation.schema.json     # Signatures/provenance attestations (SLSA-ish claims, digests, signers)
 ```
 
 ---
