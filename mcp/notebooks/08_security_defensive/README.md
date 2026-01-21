@@ -55,22 +55,23 @@ KFM’s north star is **trust-by-construction**: _no mystery layers_, _no uncite
 
 ## 🗂️ Directory Layout
 
-```text
-📁 mcp/
-  📁 notebooks/
-    📁 08_security_defensive/
-      📄 README.md  👈 you are here
-      📓 01_threat_model.ipynb
-      📓 02_policy_pack_opa_conftest.ipynb
-      📓 03_api_defenses_rate_limit_input_validation.ipynb
-      📓 04_prompt_security_focus_mode.ipynb
-      📓 05_supply_chain_sbom_slsa_cosign.ipynb
-      📓 06_sensitive_data_privacy_inference_control.ipynb
-      📓 07_incident_response_rollback.ipynb
-      📁 assets/
-        📁 policies/
-        📁 sample_data/
-        📁 reports/
+mcp/
+└─ 📓 notebooks/
+   └─ 🛡️ 08_security_defensive/
+      ├─ ✅📄 README.md                               # 👈 you are here 📌 Scope, safety rules, and how outputs become policy/runbooks
+      ├─ 🧯📓 01_threat_model.ipynb                    # Threat modeling: assets, trust boundaries, abuse cases, mitigations
+      ├─ ⚖️📓 02_policy_pack_opa_conftest.ipynb        # Policy-as-code: writing/testing OPA/Rego + Conftest gates
+      ├─ 🛡️🌐📓 03_api_defenses_rate_limit_input_validation.ipynb
+      │     # API defenses: rate limiting, input validation, request shaping, safe error handling
+      ├─ 🧠🔒📓 04_prompt_security_focus_mode.ipynb     # Prompt security: injection patterns, containment, evidence-first rules
+      ├─ 🔐📦📓 05_supply_chain_sbom_slsa_cosign.ipynb  # Supply chain: SBOM, SLSA provenance, signing (cosign), verification
+      ├─ 🔒🧹📓 06_sensitive_data_privacy_inference_control.ipynb
+      │     # Privacy: PII redaction, sensitivity labels, inference risk controls, safe logging
+      ├─ 🚨🔁📓 07_incident_response_rollback.ipynb     # Incident response: rollback playbooks, comms, postmortem patterns
+      └─ 📦 assets/
+         ├─ ⚖️ policies/                               # Policy snippets + example Rego/Conftest configs used by notebooks
+         ├─ 🧪 sample_data/                            # Tiny safe fixtures for demos/tests (no real secrets/PII)
+         └─ 📝 reports/                                # Exported writeups/figures (threat models, checklists, summaries)
 ```
 
 > [!NOTE]
