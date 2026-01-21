@@ -21,12 +21,12 @@ This folder contains **copy/paste scaffolds** for the traceability artifacts KFM
 
 
 ```flowchart LR
-  A["🔧 ETL Pipelines"] --> B["📚 Catalogs - STAC DCAT PROV"];
-  B --> C["🕸️ Graph - Neo4j"];
-  C --> D["🔌 API Boundary - governed access"];
-  D --> E["🗺️ UI - map timeline layers"];
-  E --> F["📖 Story Nodes - evidence manifest"];
-  F --> G["🧠 Focus Mode - AI - citations ledger"];
+  A[🔧 ETL Pipelines] --> B[📦 Catalogs: STAC + DCAT + PROV]
+  B --> C[🕸️ Graph: Neo4j]
+  C --> D[🔌 API Boundary: governed access]
+  D --> E[🗺️ UI: map + timeline + layers]
+  E --> F[📖 Story Nodes: evidence manifest]
+  F --> G[🧠 Focus Mode: citations ledger]
 ```
 
 ### ✅ Templates are for:
