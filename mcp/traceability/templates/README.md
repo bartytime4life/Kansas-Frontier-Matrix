@@ -27,7 +27,6 @@ This folder contains **copy/paste scaffolds** for the traceability artifacts KFM
   D --> E["🗺️ UI - map timeline layers"];
   E --> F["📖 Story Nodes - evidence manifest"];
   F --> G["🧠 Focus Mode - AI - citations ledger"];
-
 ```
 
 ### ✅ Templates are for:
