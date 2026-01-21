@@ -178,16 +178,16 @@ Minimum fields (strongly recommended):
 
 ```mermaid
 flowchart LR
-  A[Source 📄/📊/🗺️] --> B[Raw ingest 🧊 (immutable)]
-  B --> C[Deterministic pipeline ⚙️]
-  C --> D[STAC/DCAT/PROV catalogs 🧾]
-  D --> E[Neo4j + PostGIS 🕸️]
-  E --> F[UI “map behind map” 🧭]
-  E --> G[Focus Mode 🔎🤖 (citations)]
-  C --> H[Run Manifest (RM) 🧾]
-  F --> I[Story Node / Pulse Thread ✍️]
-  I --> J[Evidence Manifest (EM) 🧾]
-  J --> K[Review ✅]
+  A[📄📊🗺️ Source] --> B[🧊 Raw ingest - immutable]
+  B --> C[⚙️ Deterministic pipeline]
+  C --> D[🧾 STAC DCAT PROV catalogs]
+  D --> E[🕸️ Neo4j + PostGIS]
+  E --> F[🧭 UI map behind map]
+  E --> G[🔎🤖 Focus Mode - citations]
+  C --> H[🧾 Run Manifest RM]
+  F --> I[✍️ Story Node / Pulse Thread]
+  I --> J[🧾 Evidence Manifest EM]
+  J --> K[✅ Review]
 ```
 
 ---
