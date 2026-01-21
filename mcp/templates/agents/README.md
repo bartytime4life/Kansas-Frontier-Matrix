@@ -104,31 +104,31 @@ A “good” agent template is **documentation-first**, and includes contracts +
 
 ```text
 mcp/templates/agents/
-  README.md 📘 (you are here)
-
-  <agent_template_name>/ 🤖
-    agent.manifest.yaml 🧾      # Contract: identity, role, IO, safety, policy pack
-    agent.card.md 🪪            # Human-readable: what/why/how + limitations
-    runbook.md 🧰               # How to run locally/CI + troubleshooting
-    prompts/ 🧠                 # LLM prompts (if used), versioned + scoped
-      system.md
-      developer.md
-      tools.md
-    schemas/ 📐                 # Input/output schemas (JSON Schema / Pydantic exports)
-      event.schema.json
-      plan.schema.json
-      run_manifest.schema.json
-    policies/ 🛡️               # Rego policies + conftest configs (agent-specific)
-      README.md
-      rules.rego
-    examples/ 🧪                # Golden fixtures: examples used in tests/evals
-      event.example.json
-      plan.example.json
-      run_manifest.example.json
-    tests/ ✅                   # Unit/integration tests for deterministic components
-      test_policy_pack.py
-      test_schema_validation.py
-      test_idempotency.py
+├─ 📘📄 README.md                       # 📘 (you are here) 📌 How agent templates are structured + required contracts
+│
+└─ 🤖 <agent_template_name>/            # 🤖 One agent template (copy/extend; keep versioned + policy-bound)
+   ├─ 🧾 agent.manifest.yaml            # Contract: identity, role, inputs/outputs, safety constraints, policy pack refs
+   ├─ 🪪 agent.card.md                  # Human-readable overview: purpose, behavior, limitations, failure modes
+   ├─ 🧰 runbook.md                     # How to run (local/CI), env know-how, troubleshooting, and logs/artifacts
+   ├─ 🧠 prompts/                       # LLM prompt materials (versioned, minimal scope, no secrets)
+   │  ├─ 🧠📄 system.md                 # System-level intent/constraints (high-level, stable)
+   │  ├─ 🧠📄 developer.md              # Developer instructions (workflow, tools, formatting, guardrails)
+   │  └─ 🧠🧰📄 tools.md                # Tool usage rules + allowed calls + expected IO patterns
+   ├─ 📐 schemas/                       # Input/output schemas (JSON Schema / Pydantic exports) for validation + tooling
+   │  ├─ 📐🧾 event.schema.json         # Event input contract (what the agent receives)
+   │  ├─ 📐🧾 plan.schema.json          # Plan output contract (structured intent/steps)
+   │  └─ 📐🧾 run_manifest.schema.json  # Run manifest contract (commands, artifacts, checksums, provenance pointers)
+   ├─ 🛡️ policies/                      # Agent-specific policy pack (OPA/Rego + conftest config)
+   │  ├─ 📄 README.md                   # Policy scope, enforcement points, and how to run conftest
+   │  └─ ⚖️📄 rules.rego                # Rego rules: safety, citation requirements, sensitivity/PII redaction, etc.
+   ├─ 🧪 examples/                      # Golden fixtures (known-good) used in tests/evals/docs
+   │  ├─ 🧪🧾 event.example.json        # Example event input
+   │  ├─ 🧪🧾 plan.example.json         # Expected plan output
+   │  └─ 🧪🧾 run_manifest.example.json # Example run manifest output
+   └─ ✅ tests/                          # Deterministic tests for schemas/policies/idempotency
+      ├─ ✅🧪 test_policy_pack.py        # Ensures policies compile + expected allow/deny behavior
+      ├─ ✅🧪 test_schema_validation.py  # Valid/invalid fixtures against schemas
+      └─ ✅🧪 test_idempotency.py        # Re-runs produce identical outputs (where required)
 ```
 
 > [!TIP]
