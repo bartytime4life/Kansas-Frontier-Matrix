@@ -87,13 +87,13 @@ find "$DATASET_DIR" -type f -print0 | sort -z | xargs -0 sha256sum > "$DATASET_D
 
 ```mermaid
 flowchart LR
-  A[📥 Inputs\nsource URLs + raw files] --> B[🔐 Hash files\nsha256 streaming]
-  B --> C[🧾 Build run_manifest.json\n(inputs, outputs, env, stats)]
-  C --> D[🧬 Canonicalize JSON\nRFC 8785 / JCS]
-  D --> E[🔏 Compute digest\nSHA-256]
-  E --> F[🪪 Set canonical_digest\n(+ idempotency_key)]
-  F --> G[🛡️ Policy gate\nlicense/sensitivity/provenance]
-  G --> H[📚 Publish / index\nSTAC + DCAT + PROV]
+  A[📥 Inputs - source URLs + raw files] --> B[🔐 Hash files - sha256 streaming]
+  B --> C[🧾 Build run_manifest.json - inputs outputs env stats]
+  C --> D[🧬 Canonicalize JSON - RFC 8785 JCS]
+  D --> E[🔏 Compute digest - SHA-256]
+  E --> F[🪪 Set canonical_digest - idempotency_key]
+  F --> G[🛡️ Policy gate - license sensitivity provenance]
+  G --> H[📚 Publish or index - STAC DCAT PROV]
 ```
 
 ---
