@@ -41,13 +41,13 @@ A GitHub PR is already an auditable unit of change. This example makes it **quer
 
 Typical outputs you want from this example:
 
-```
+```text
 mcp/dev_prov/examples/05_github_pr_to_prov/
-├── README.md                       👈 you are here
-└── out/
-    ├── prov.pr_<N>.jsonld          🧬 W3C PROV‑O (JSON‑LD)
-    ├── run_manifest.json           🧾 deterministic run metadata + hashes
-    └── summary.md                  📝 reviewer-friendly PR➜PROV synopsis (optional)
+├── ✅📄 README.md                       # 👈 you are here 📌 How to generate/validate PR→PROV links + required fields
+└── 📦 out/
+    ├── 🧬🧾 prov.pr_<N>.jsonld           # PR-level W3C PROV-O (JSON-LD): PR/commits/reviews → produced artifacts
+    ├── 🧾🔐 run_manifest.json            # Deterministic run metadata + hashes (inputs/outputs/tool versions/checksums)
+    └── 📝📄 summary.md                   # (optional) Reviewer-friendly synopsis: what changed + evidence pointers + risks
 ```
 
 > 💡 In a full KFM workflow, the `prov*.jsonld` file is committed under `data/provenance/` (or referenced as an artifact referrer) and becomes part of the “evidence graph.”
