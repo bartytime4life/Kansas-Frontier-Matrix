@@ -86,16 +86,16 @@ These are “rules you can automate” ✅
 
 ```mermaid
 flowchart LR
-  A[📥 Raw Inputs<br/>data/raw] -->|deterministic ETL| B[🧪 Work Staging<br/>data/work]
-  B --> C[✅ Processed Outputs<br/>data/processed]
-  C --> D[🗃️ Catalog<br/>STAC + DCAT<br/>data/catalog]
-  C --> E[⛓️ Provenance<br/>PROV records<br/>data/provenance]
-  D --> F[🧠 Knowledge Graph<br/>Neo4j]
+  A[📥 Raw Inputs - data/raw] --> B[🧪 Work Staging - data/work]
+  B --> C[✅ Processed Outputs - data/processed]
+  C --> D[🗃️ Catalog - STAC + DCAT - data/catalog]
+  C --> E[⛓️ Provenance - PROV records - data/provenance]
+  D --> F[🧠 Knowledge Graph - Neo4j]
   E --> F
-  F --> G[🌐 API<br/>REST/GraphQL]
-  G --> H[🗺️ UI<br/>MapLibre/Cesium]
+  F --> G[🌐 API - REST/GraphQL]
+  G --> H[🗺️ UI - MapLibre/Cesium]
   F --> I[🤖 Focus Mode]
-  I --> J[📜 Governance Ledger<br/>(append-only)]
+  I --> J[📜 Governance Ledger - append-only]
   H --> J
 ```
 
@@ -113,25 +113,25 @@ flowchart LR
 
 #### 📁 Suggested layout (example)
 ```text
-📦 data/
-  📁 raw/
-    📁 usgs_nwis_river_gauges/
-      📄 fetch_2026-01-21T00-00Z.json
-  📁 work/
-    📁 usgs_nwis_river_gauges/
-      📄 normalize.parquet
-  📁 processed/
-    📁 usgs_nwis_river_gauges/
-      🗺️ gauges.geojson
-      🧱 gauges.pmtiles
-  📁 catalog/
-    📁 dcat/
-      📄 usgs_nwis_river_gauges.dataset.json
-    📁 stac/
-      📁 usgs_nwis_river_gauges/
-        📄 item_2026-01-21T00-00Z.json
-  📁 provenance/
-    📄 prov_run_2026-01-21T00-00Z.jsonld
+data/
+├─ 📥 raw/
+│  └─ 🛰️ usgs_nwis_river_gauges/
+│     └─ 📄 fetch_2026-01-21T00-00Z.json         # As-received NWIS response snapshot (immutable; keep checksum)
+├─ 🧪 work/
+│  └─ 🛰️ usgs_nwis_river_gauges/
+│     └─ 🧾 normalize.parquet                    # Staging table after normalization/cleanup (not yet “published”)
+├─ ✅ processed/
+│  └─ 🛰️ usgs_nwis_river_gauges/
+│     ├─ 🗺️ gauges.geojson                       # Publishable vector output (features + properties, ready for UI)
+│     └─ 🧱 gauges.pmtiles                        # Vector tiles package built from gauges.geojson (fast map rendering)
+├─ 🗂️ catalog/
+│  ├─ 🗂️ dcat/
+│  │  └─ 🧾 usgs_nwis_river_gauges.dataset.json   # DCAT dataset record (discovery, license, distributions, contacts)
+│  └─ 🛰️ stac/
+│     └─ 🛰️ usgs_nwis_river_gauges/
+│        └─ 🧾 item_2026-01-21T00-00Z.json        # STAC Item for the run snapshot (time-stamped asset pointers)
+└─ 🧬 provenance/
+   └─ 🧬📄 prov_run_2026-01-21T00-00Z.jsonld      # PROV run bundle linking raw→work→processed→catalog + tools/params/hashes
 ```
 
 #### 🧾 DCAT dataset (minimal-ish template)
