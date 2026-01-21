@@ -60,10 +60,10 @@ flowchart LR
   C --> G[🕸️ Neo4j Knowledge Graph]
   D --> G
   E --> G
-  G --> H[🔌 API Layer<br/>(contracts + redaction)]
-  H --> I[🗺️ Map UI<br/>(React · MapLibre · optional Cesium)]
-  H --> K[🤖 Focus Mode<br/>(RAG + citations + XAI)]
-  I --> J[📖 Story Nodes<br/>(governed narratives)]
+  G --> H[🔌 API Layer - contracts + redaction]
+  H --> I[🗺️ Map UI - React · MapLibre · optional Cesium]
+  H --> K[🤖 Focus Mode - RAG + citations + XAI]
+  I --> J[📖 Story Nodes - governed narratives]
   J --> K
 ```
 
