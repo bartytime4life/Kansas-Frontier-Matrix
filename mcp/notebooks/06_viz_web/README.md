@@ -73,30 +73,30 @@ Focus Mode is described as a context-aware research agent that **always cites so
 > Adjust to your repo conventions — but keep the *idea*: **notebook → reproducible artifacts → web demo**.
 
 ```text
-📁 mcp/
-  📁 notebooks/
-    📁 06_viz_web/
-      📄 README.md
-      📄 06_viz_web.ipynb
-      📁 output/
-        📄 layers.registry.json
-        📄 timeline.config.json
-        📄 style.base.json
-        📁 story_nodes/
-          📁 node_0001/
-            📄 node.md
-            📄 node.json
-        📁 catalog_refs/
-          📄 stac_refs.json
-          📄 dcat_refs.json
-          📄 prov_refs.json
-        📁 screenshots/
-          📄 map_2d.png
-          📄 map_3d.png
-      📁 web_demo/
-        📄 index.html
-        📄 app.ts
-        📄 styles.css
+mcp/
+└─ 📓 notebooks/
+   └─ 🖥️ 06_viz_web/
+      ├─ 📄 README.md                      # 📘 Notebook goals, how to run, and how outputs map to web registries
+      ├─ 📓📄 06_viz_web.ipynb              # Primary notebook (builds demo registries + story stubs + screenshots)
+      ├─ 📦 output/                        # Generated, shareable outputs from the notebook (small + reproducible)
+      │  ├─ 🗂️🧾 layers.registry.json       # Layer registry produced for the demo (UI-friendly index)
+      │  ├─ ⏳🧾 timeline.config.json       # Timeline configuration (dates/steps/constraints for demo playback)
+      │  ├─ 🎨🧾 style.base.json            # Base map/style config used by the demo viewer
+      │  ├─ 📚 story_nodes/                # Story Node stubs produced by the notebook
+      │  │  └─ 🧩 node_0001/
+      │  │     ├─ 📝📄 node.md              # Narrative markdown for the demo node
+      │  │     └─ 🧭🧾 node.json             # Step/config JSON for the demo node
+      │  ├─ 🧾 catalog_refs/               # References/pointers to catalogs used (not full catalogs)
+      │  │  ├─ 🛰️🧾 stac_refs.json          # STAC references (collections/items/assets pointers)
+      │  │  ├─ 🗂️🧾 dcat_refs.json          # DCAT references (datasets/distributions pointers)
+      │  │  └─ 🧬🧾 prov_refs.json          # PROV references (run/activity/entity pointers)
+      │  └─ 📸 screenshots/                # Demo screenshots produced for docs/PRs (redact if needed)
+      │     ├─ 🗺️🖼️ map_2d.png              # 2D map capture
+      │     └─ 🧊🖼️ map_3d.png              # 3D map capture
+      └─ 🧪 web_demo/                      # Tiny runnable web demo (static build inputs)
+         ├─ 🧾📄 index.html                 # Demo page scaffold (loads the registries/output)
+         ├─ 🧠📄 app.ts                     # Demo app logic (wires layers/timeline/story nodes)
+         └─ 🎨📄 styles.css                 # Demo styling (minimal; uses tokens where possible)
 ```
 
 ---
