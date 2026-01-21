@@ -53,14 +53,14 @@ mcp/notebooks/09_governance_ethics/
 ## 🧩 How governance “threads through” KFM
 ```mermaid
 flowchart LR
-  A[📥 Raw Sources] --> B[🔧 ETL + Normalization]
-  B --> C[🗂️ Catalogs: STAC/DCAT/PROV]
-  C --> D[🧠 Graph]
-  D --> E[🧱 API (contracts + redaction)]
-  E --> F[🗺️ UI (provenance surfaced)]
-  F --> G[📚 Story Nodes (governed narrative)]
-  G --> H[🤖 Focus Mode (hard evidence gate)]
-  H --> I[🧾 Governance Ledger (append-only audit)]
+  A[📥 Raw Sources] --> B[🔧 ETL + Normalization];
+  B --> C[🗂️ Catalogs: STAC DCAT PROV];
+  C --> D[🧠 Graph];
+  D --> E[🧱 API: contracts + redaction];
+  E --> F[🗺️ UI: provenance surfaced];
+  F --> G[📚 Story Nodes: governed narrative];
+  G --> H[🤖 Focus Mode: hard evidence gate];
+  H --> I[🧾 Governance Ledger: append-only audit];
 ```
 
 **Key idea:** governance is not a “document” — it is a **system behavior**.
