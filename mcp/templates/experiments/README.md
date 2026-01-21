@@ -56,30 +56,30 @@ These templates are aligned with:
 ## 🗂️ Expected folder layout (templates vs actual runs)
 
 ```text
-📁 mcp/
-  📁 templates/
-    📁 experiments/
-      📄 README.md                      👈 you are here
-      📄 TEMPLATE__EXPERIMENT_REPORT.md
-      📄 TEMPLATE__EXPERIMENT_META.yaml
-      📄 TEMPLATE__EVIDENCE_MANIFEST.yaml
-      📄 TEMPLATE__METRICS.json
-      📄 TEMPLATE__PROV.prov.jsonld
-      📄 TEMPLATE__RUN_MANIFEST.json
-      📄 TEMPLATE__MODEL_CARD.md
-      📄 TEMPLATE__DATASET_DATASHEET.md
-      📄 TEMPLATE__UI_TEST_PLAN.md
-      📄 TEMPLATE__SIM_RUN.md
-      📄 TEMPLATE__DECISION_RECORD.md
-
-  📁 experiments/
-    📁 EXP-20260121--example/
-      📄 README.md                      (filled experiment report)
-      📄 experiment.yaml
-      📁 evidence/
-      📁 results/
-      📁 artifacts/
-      📁 logs/
+mcp/
+├─ 🧩 templates/
+│  └─ 🧪 experiments/
+│     ├─ 📄 README.md                           # 👈 you are here 📌 How to run experiments “evidence-first” + required files
+│     ├─ 🧩📄 TEMPLATE__EXPERIMENT_REPORT.md     # Primary writeup: hypothesis, method, results, limitations, next steps
+│     ├─ 🧩🧾 TEMPLATE__EXPERIMENT_META.yaml     # Metadata: ids, owners, datasets, params, environments, links
+│     ├─ 🧩🧾 TEMPLATE__EVIDENCE_MANIFEST.yaml   # Evidence index: artifacts/figures/logs/checksums + citations
+│     ├─ 🧩📊 TEMPLATE__METRICS.json             # Metrics payload: scalar + series metrics (machine-readable)
+│     ├─ 🧩🧬 TEMPLATE__PROV.prov.jsonld         # PROV bundle: entities/activities/agents for lineage + reproducibility
+│     ├─ 🧩🧾 TEMPLATE__RUN_MANIFEST.json        # Run manifest: commands, seeds, containers, inputs/outputs, hashes
+│     ├─ 🧩📄 TEMPLATE__MODEL_CARD.md            # Model card: intended use, risks, evals, dataset notes
+│     ├─ 🧩📄 TEMPLATE__DATASET_DATASHEET.md     # Datasheet: dataset composition, collection, bias, licensing, access
+│     ├─ 🧩📄 TEMPLATE__UI_TEST_PLAN.md          # UI test plan: scenarios, a11y, perf budgets, acceptance criteria
+│     ├─ 🧩📄 TEMPLATE__SIM_RUN.md               # Simulation run doc: configuration, calibration, seeds, outputs
+│     └─ 🧩📄 TEMPLATE__DECISION_RECORD.md       # Experiment ADR: what changed + why + tradeoffs + follow-ups
+│
+└─ 🧪 experiments/
+   └─ 🧪📁 EXP-20260121--example/
+      ├─ 📄 README.md                           # Filled experiment report (human narrative + links to evidence/results)
+      ├─ 🧾 experiment.yaml                      # Experiment meta (filled): ids, inputs, params, environment, owners
+      ├─ 📎 evidence/                            # Evidence bundle: citations, receipts, checksums, validation outputs
+      ├─ 📊 results/                             # Primary results: metrics, tables, figures (publishable/derived)
+      ├─ 📦 artifacts/                           # Supporting artifacts: intermediate files, exports, deliverables
+      └─ 🪵 logs/                                 # Logs/traces: stdout/stderr, profiling, debug captures (sanitize if needed)
 ```
 
 And remember: **data belongs in KFM’s standard data areas** (not ad-hoc folders):
