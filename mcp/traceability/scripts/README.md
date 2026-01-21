@@ -191,10 +191,10 @@ Story outputs must remain **evidence-first**: citations and an evidence manifest
 
 ```mermaid
 flowchart LR
-  S[📝 Narrative Content<br/>(Markdown/JSON)] --> M[📎 evidence_manifest.yaml]
-  M --> V[✅ Validate citations<br/>exist + resolvable]
-  V --> P[🔗 PROV snippet<br/>prov:Entity derivedFrom]
-  P --> G[🕸️ Graph links<br/>Story/Pulse → Datasets/Places]
+  S[📝 Narrative Content - Markdown / JSON] --> M[📎 evidence_manifest.yaml]
+  M --> V[✅ Validate citations - exist + resolvable]
+  V --> P[🔗 PROV snippet - prov Entity derivedFrom]
+  P --> G[🕸️ Graph links - Story to Datasets and Places]
   G --> UI[🧭 UI playback + provenance panel]
 ```
 
