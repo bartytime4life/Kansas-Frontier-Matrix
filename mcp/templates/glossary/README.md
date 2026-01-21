@@ -60,13 +60,13 @@ KFM is built on a few non-negotiables that make glossary quality matter:
 - 🔐 **Policy Packs** (OPA/Rego + Conftest) → terminology that governance rules depend on
 
 ```mermaid
-flowchart LR
-  A[📥 Data Intake] --> B[🧾 Evidence Triplet\nDCAT + STAC + PROV]
-  B --> C[🗃️ Catalog + Graph\n(PostGIS + Neo4j)]
-  C --> D[🗺️ UI\n(MapLibre + Cesium)\n+ Story Nodes]
-  C --> E[🧠 Focus Mode\nRAG + Citations]
-  C --> F[⚙️ W-P-E Agents\nDetect → Validate → Promote]
-  F --> G[🔐 Policy Packs\nOPA/Rego + Conftest]
+ flowchart LR
+  A["📥 Data Intake"] --> B["🧾 Evidence Triplet - DCAT + STAC + PROV"];
+  B --> C["🗃️ Catalog + Graph - PostGIS + Neo4j"];
+  C --> D["🗺️ UI - MapLibre + Cesium + Story Nodes"];
+  C --> E["🧠 Focus Mode - RAG + Citations"];
+  C --> F["⚙️ W-P-E Agents - Detect -> Validate -> Promote"];
+  F --> G["🔐 Policy Packs - OPA/Rego + Conftest"];
 ```
 
 ---
@@ -77,16 +77,16 @@ This repo can organize glossary content like this:
 
 ```text
 mcp/
-  glossary/
-    INDEX.md                  # 📖 Human entrypoint (A→Z list)
-    terms/                    # 📚 One file per term
-      evidence-triplet.md
-      focus-mode.md
-      story-node.md
-      policy-pack.md
-  templates/
-    glossary/
-      README.md               # 🧩 (this file) How to write glossary entries
+└─ 📖 glossary/
+   ├─ 📖📄 INDEX.md                  # 📖 Human entrypoint (A→Z list + quick links to term files)
+   ├─ 📚 terms/                      # 📚 One file per term (stable slugs; cross-link friendly)
+   │  ├─ 🧾 evidence-triplet.md       # Evidence Triplet definition (claim → citation → artifact linkage)
+   │  ├─ 🔎 focus-mode.md             # Focus Mode definition (evidence-first assistant + hard gates)
+   │  ├─ 🎬 story-node.md             # Story Node definition (governed narrative object + step config)
+   │  └─ ⚖️ policy-pack.md            # Policy Pack definition (OPA/Conftest rules + enforcement scope)
+   └─ 🧩 templates/
+      └─ 📖 glossary/
+         └─ 🧩📄 README.md            # 🧩 (this file) How to write glossary entries (format, required sections, citations)
 ```
 
 > [!TIP]
