@@ -19,15 +19,15 @@
 
 This folder contains **copy/paste scaffolds** for the traceability artifacts KFM expects across the full pipeline:
 
-
----flowchart LR
+```mermaid
+flowchart LR
   A[🔧 ETL Pipelines] --> B[📦 Catalogs: STAC + DCAT + PROV]
   B --> C[🕸️ Graph: Neo4j]
   C --> D[🔌 API Boundary: governed access]
   D --> E[🗺️ UI: map + timeline + layers]
   E --> F[📖 Story Nodes: evidence manifest]
   F --> G[🧠 Focus Mode: citations ledger]
----
+```
 
 ### ✅ Templates are for:
 - 📦 **Datasets & derived artifacts** (including AI outputs and simulations)
