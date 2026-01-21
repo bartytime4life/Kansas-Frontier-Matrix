@@ -42,14 +42,14 @@ This directory is intentionally **review-focused** (specs + templates + conventi
 
 ```text
 mcp/
-  reviews/
-    metrics/
-      📄 README.md                ← you are here
-      📁 specs/                   ← MetricSpec YAML/JSON (versioned definitions)
-      📁 suites/                  ← suite manifests (graph_health, policy_gates, focus_qa, ui_perf, etc.)
-      📁 queries/                 ← reusable queries (Cypher/SQL) used by suites
-      📁 templates/               ← reviewer checklists + PR/issue templates
-      📁 docs/                    ← (optional) deeper rationale per suite
+└─ 🧠 reviews/
+   └─ 📈 metrics/
+      ├─ 📄 README.md                # ← you are here 📌 What metrics mean, how they’re collected, and pass/fail thresholds
+      ├─ 📐 specs/                   # MetricSpec definitions (YAML/JSON; versioned, contract-first)
+      ├─ 🧾 suites/                  # Suite manifests (graph_health, policy_gates, focus_qa, ui_perf, etc.)
+      ├─ 🔎 queries/                 # Reusable queries (Cypher/SQL) used by suites (keep deterministic + read-only)
+      ├─ 🧩 templates/               # Reviewer checklists + PR/issue templates for consistent reporting
+      └─ 📚 docs/                    # (optional) Deeper rationale per suite (interpretation, pitfalls, edge cases)
 ```
 
 > 🔍 **MCP context:** `mcp/` is where KFM codifies “Methods / Controls / Policies” (best practices, governance, review templates, etc.).  
