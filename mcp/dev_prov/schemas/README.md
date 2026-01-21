@@ -45,34 +45,34 @@ Dev provenance is broader than “git history”:
 
 ```text
 mcp/dev_prov/schemas/
-├── README.md                         🧾 this file
-├── index.json                        🗂️ optional: machine-readable list of schemas
-├── _defs/                            🧰 shared $defs (IDs, digests, agents, citations, etc.)
-│   ├── kfm.id.v1.schema.json
-│   ├── kfm.digest.v1.schema.json
-│   ├── kfm.agent.v1.schema.json
-│   └── kfm.citation.v1.schema.json
-├── core/                             🧬 “always-on” provenance artifacts
-│   ├── kfm.run-manifest.v1.schema.json
-│   ├── kfm.evidence-manifest.v1.schema.json
-│   ├── kfm.source-bundle.v1.schema.json
-│   └── kfm.governance-ledger-entry.v1.schema.json
-├── devops/                           🧯 CI/PR/provenance for code operations
-│   ├── kfm.github-pr-event.v1.schema.json
-│   ├── kfm.ci-check-report.v1.schema.json
-│   └── kfm.policy-gate-result.v1.schema.json
-├── ai/                               🧭🤖 AI + automation accountability
-│   ├── kfm.agent-action.v1.schema.json
-│   ├── kfm.focus-answer-record.v1.schema.json
-│   └── kfm.model-card.v1.schema.json
-├── geo_profiles/                     🗺️ KFM constraints on STAC/DCAT/PROV
-│   ├── kfm.stac.profile.v13.schema.json
-│   ├── kfm.dcat.profile.v13.schema.json
-│   └── kfm.prov.profile.v13.schema.json
-└── security/                         🔐 distribution + signatures + attestations
-    ├── kfm.oci-distribution.v1.schema.json
-    ├── kfm.cosign-ref.v1.schema.json
-    └── kfm.slsa-attestation-ref.v1.schema.json
+├── 🧾📄 README.md                         # 🧾 This file: how schemas are versioned, referenced, and validated (CI/gates)
+├── 🗂️🧾 index.json                        # 🗂️ Optional machine-readable schema index (id → path → version → owner)
+├── 🧰 _defs/                              # 🧰 Shared $defs building blocks (reused across all schemas)
+│   ├── 🆔📐🧾 kfm.id.v1.schema.json        # ID patterns: dataset_id/run_id/receipt_id/slugs/UUIDs (canonical formats)
+│   ├── 🔐📐🧾 kfm.digest.v1.schema.json    # Digests/checksums: sha256 entries, file metadata, digest sets
+│   ├── 🧑‍💻📐🧾 kfm.agent.v1.schema.json   # Agent identity: humans/services/LLMs, roles, contact, accountability fields
+│   └── 📚📐🧾 kfm.citation.v1.schema.json  # Citation model: claim→source→locator, access dates, license/attribution
+├── 🧬 core/                               # 🧬 “Always-on” provenance artifacts (required for governed workflows)
+│   ├── 🧾📐🧾 kfm.run-manifest.v1.schema.json        # Run ledger: who/what/when + inputs/outputs + params + hashes
+│   ├── 📎📐🧾 kfm.evidence-manifest.v1.schema.json   # Evidence index: claims/citations/artifacts + checksums + links
+│   ├── 📦📐🧾 kfm.source-bundle.v1.schema.json       # Source bundle: upstream sources, retrieval, licensing, integrity
+│   └── 🧾📐🧾 kfm.governance-ledger-entry.v1.schema.json # Governance event: reviews/approvals/waivers/audit metadata
+├── 🧯 devops/                             # 🧯 CI/PR provenance for code operations (traceability of changes)
+│   ├── 🔗📐🧾 kfm.github-pr-event.v1.schema.json     # PR event record: ids, commits, reviewers, linked artifacts/receipts
+│   ├── ✅📐🧾 kfm.ci-check-report.v1.schema.json     # CI check report: job/run metadata, results, logs, artifacts
+│   └── 🚦📐🧾 kfm.policy-gate-result.v1.schema.json  # Gate decision envelope: pass/fail, findings, pointers, severities
+├── 🧭🤖 ai/                               # 🧭🤖 AI/automation accountability artifacts (evidence-first outputs)
+│   ├── 🤖📐🧾 kfm.agent-action.v1.schema.json        # Agent action record: intent, tools used, inputs/outputs, safety notes
+│   ├── 🔎📐🧾 kfm.focus-answer-record.v1.schema.json # Focus Mode answer record: citations, uncertainty, redactions, receipts
+│   └── 🪪📐🧾 kfm.model-card.v1.schema.json          # Model card contract: intended use, risks, evals, dataset notes
+├── 🗺️ geo_profiles/                       # 🗺️ KFM constraints layered onto STAC/DCAT/PROV (profile overlays)
+│   ├── 🛰️📐🧾 kfm.stac.profile.v13.schema.json       # KFM-STAC profile overlay (required fields, link rules, extensions)
+│   ├── 🗂️📐🧾 kfm.dcat.profile.v13.schema.json       # KFM-DCAT profile overlay (license/contact/distribution rules)
+│   └── 🧬📐🧾 kfm.prov.profile.v13.schema.json       # KFM-PROV profile overlay (activity/entity shape + derivation rules)
+└── 🔐 security/                           # 🔐 Distribution + signing/attestations (supply-chain verifiability)
+    ├── 📦📐🧾 kfm.oci-distribution.v1.schema.json     # OCI/ORAS distribution record: digests, refs, artifact metadata
+    ├── 🔏📐🧾 kfm.cosign-ref.v1.schema.json           # Cosign signature/attestation reference: registry/digest/signers
+    └── 🧾📐🧾 kfm.slsa-attestation-ref.v1.schema.json # SLSA-style attestation ref: predicate, subject digests, builder
 ```
 
 ---
