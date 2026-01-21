@@ -19,7 +19,7 @@
 
 This folder contains **copy/paste scaffolds** for the traceability artifacts KFM expects across the full pipeline:
 
-```mermaid
+```flowchart LR
  A["⚙️ ETL / Pipelines"] --> B["📚 Catalogs - STAC • DCAT • PROV"];
   B --> C["🕸️ Graph - Neo4j"];
   C --> D["🔌 API Boundary - governed access"];
