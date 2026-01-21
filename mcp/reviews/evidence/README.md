@@ -86,31 +86,31 @@ Recommended structure (adjust as needed, but keep it review-friendly):
 
 ```text
 mcp/
-  reviews/
-    evidence/
-      README.md
-      templates/
-        evidence_manifest.template.yaml
-        run_manifest.template.json
-
-      MCP-0001-example/
-        summary.md
-        evidence_manifest.yaml
-        run_manifest.json
-
-        catalogs/
-          stac/        # optional copies/snippets (or references)
-          dcat/        # optional copies/snippets (or references)
-          prov/        # optional PROV bundles/snippets
-
-        artifacts/
-          logs/
-          reports/
-          screenshots/
-          notebooks/
-
-        signatures/
-          cosign/      # signatures/attestations pointers (or exported refs)
+└─ 🧠 reviews/
+   └─ 📎 evidence/
+      ├─ 📄 README.md                         # 📘 How to store review evidence + required artifacts + linking conventions
+      ├─ 🧩 templates/
+      │  ├─ 🧩🧾 evidence_manifest.template.yaml # Template: evidence index (citations, artifacts, checksums, reviewers)
+      │  └─ 🧩🧾 run_manifest.template.json      # Template: run ledger (commands, env, inputs/outputs, hashes)
+      │
+      └─ ✅ MCP-0001-example/                 # Example evidence bundle (one folder per review/change)
+         ├─ 📝📄 summary.md                    # Human summary: what was tested, what passed/failed, and key findings
+         ├─ 🧾 evidence_manifest.yaml          # Evidence index: artifacts + citations + checksums + pointers to catalogs
+         ├─ 🧾 run_manifest.json               # Run manifest: exact steps to reproduce + versions + digests
+         │
+         ├─ 🗂️ catalogs/                      # Optional: copied snippets or references (avoid duplicating huge catalogs)
+         │  ├─ 🛰️ stac/                       # STAC items/collections or pointers used as evidence
+         │  ├─ 🗂️ dcat/                       # DCAT dataset/distribution snippets or pointers
+         │  └─ 🧬 prov/                       # PROV bundles/snippets or pointers (lineage proof)
+         │
+         ├─ 📦 artifacts/                     # Supporting artifacts produced/collected during validation
+         │  ├─ 🪵 logs/                       # Logs/traces (sanitize secrets/PII)
+         │  ├─ 📝 reports/                    # Reports (markdown/pdf) summarizing results
+         │  ├─ 📸 screenshots/                # Screenshots used to verify UI/behavior (redacted)
+         │  └─ 📓 notebooks/                  # Notebook exports or links (prefer minimal, reproducible artifacts)
+         │
+         └─ 🔏 signatures/
+            └─ 🔐 cosign/                     # Signature/attestation pointers (or exported refs) for supply-chain proofs
 ```
 
 ---
