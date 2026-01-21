@@ -39,15 +39,15 @@ KFM treats AI output like **data**, not vibes:
 
 ```mermaid
 flowchart LR
-  A[ETL + Normalization] --> B[STAC/DCAT/PROV Catalogs]
-  B --> C[Knowledge Graph + Index]
-  C --> D[Governed API Layer]
-  D --> E[UI: Map + Timeline]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode Q&A]
-  G --> H[🧾 Answer Log (this example)]
-  H --> I[⛓️ Governance Ledger / Audit Store]
-  H --> J[🧬 PROV Bundle (Answer Lineage)]
+  A[⚙️ ETL + Normalization] --> B[📚 STAC DCAT PROV Catalogs]
+  B --> C[🕸️ Knowledge Graph + 🔎 Index]
+  C --> D[🔌 Governed API Layer]
+  D --> E[🗺️ UI - Map + Timeline]
+  E --> F[📖 Story Nodes]
+  F --> G[🤖 Focus Mode Q and A]
+  G --> H[🧾 Answer Log - this example]
+  H --> I[⛓️ Governance Ledger - audit store]
+  H --> J[🧬 PROV Bundle - answer lineage]
 ```
 
 ---
