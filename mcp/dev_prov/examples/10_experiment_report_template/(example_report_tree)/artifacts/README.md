@@ -31,50 +31,50 @@ Use what you need; keep it tidy and predictable.
 
 ```text
 artifacts/
-├─ README.md                        # 👈 you are here
-├─ manifest/                         # 📦 "what is here + why" (index + run manifest)
-│  ├─ artifact_index.yaml
-│  ├─ run_manifest.json
-│  └─ environment/                   # 🧱 reproducible env
-│     ├─ requirements.txt            # or poetry.lock / uv.lock
-│     ├─ conda-lock.yml              # optional
-│     └─ docker_image.txt            # image digest / tag (if used)
-├─ catalogs/                         # 🧭 evidence triplet (when applicable)
-│  ├─ stac/                           # STAC Collection/Item(s)
-│  ├─ dcat/                           # DCAT dataset record(s)
-│  └─ prov/                           # PROV JSON(-LD) activity/agent/entity lineage
-├─ data/                             # 📊 inputs/outputs (small-to-medium)
-│  ├─ inputs/
-│  ├─ intermediates/
-│  └─ outputs/
-├─ geospatial/                        # 🗺️ map-heavy assets (optional)
-│  ├─ geojson/
-│  ├─ cog/                            # Cloud-Optimized GeoTIFFs
-│  ├─ pmtiles/                         # PMTiles archives
-│  └─ tiles_preview/                   # small preview tiles or snapshots
-├─ figures/                           # 📈 charts, screenshots, diagrams
-│  ├─ png/
-│  ├─ svg/
-│  └─ pdf/
-├─ notebooks/                         # 📓 optional (keep them runnable!)
-│  ├─ analysis.ipynb
-│  └─ README.md
-├─ logs/                              # 🧾 runtime logs, telemetry, timings
-│  ├─ pipeline.log
-│  ├─ metrics.json
-│  └─ stdout_stderr.txt
-├─ governance/                        # 🛡️ policy checks, redactions, approvals
-│  ├─ policy_report.json
-│  ├─ redaction_notes.md
-│  └─ approvals.md
-├─ integrity/                         # 🔒 checksums + signatures
-│  ├─ checksums.sha256
-│  ├─ sbom.spdx.json                  # optional
-│  └─ signatures/                     # cosign / attestations (optional)
-└─ narrative/                         # 📚 Story/Pulse style artifacts (optional)
-   ├─ story_node.md
-   ├─ story_node.json
-   └─ evidence_manifest.yaml
+├─ 📄 README.md                         # 👈 you are here 📌 What this bundle is, how to navigate it, and how to verify it
+├─ 📦 manifest/                         # 📦 “What is here + why” (bundle index + reproducibility ledger)
+│  ├─ 🧾 artifact_index.yaml             # Inventory: paths → roles → descriptions → primary/secondary designation
+│  ├─ 🧾🔐 run_manifest.json             # Deterministic run ledger: commands, params, tool versions, IO pointers, hashes
+│  └─ 🧱 environment/                   # 🧱 Reproducible environment capture (pin deps / record build context)
+│     ├─ 📦 requirements.txt             # Python deps (or use poetry.lock / uv.lock / etc.)
+│     ├─ 🧊 conda-lock.yml               # Optional: locked conda env for reproducibility
+│     └─ 🐳 docker_image.txt             # Container image tag/digest used (if applicable)
+├─ 🧭 catalogs/                          # 🧭 Evidence triplet metadata (publish/discovery + lineage), when applicable
+│  ├─ 🛰️ stac/                           # STAC Collection/Item(s) referencing produced assets
+│  ├─ 🗂️ dcat/                           # DCAT Dataset/Distribution records (license, access, links)
+│  └─ 🧬 prov/                           # PROV lineage (entities/activities/agents) tying inputs → outputs
+├─ 📊 data/                              # 📊 Inputs/outputs (small-to-medium payloads; avoid huge binaries if possible)
+│  ├─ 📥 inputs/                         # Raw inputs used by the run (or pointers/receipts if large)
+│  ├─ 🧪 intermediates/                  # Intermediate artifacts (kept only if they aid debugging/repro)
+│  └─ ✅ outputs/                         # Final outputs intended for review/promotion/publish
+├─ 🗺️ geospatial/                        # 🗺️ Map-heavy assets (optional; only if the run produces geo deliverables)
+│  ├─ 🗺️ geojson/                        # GeoJSON outputs or samples (keep small)
+│  ├─ 🧱 cog/                             # Cloud-Optimized GeoTIFFs (COGs) (or small samples/pointers)
+│  ├─ 🧱 pmtiles/                         # PMTiles archives for fast vector tile serving (or sample tiles)
+│  └─ 👀 tiles_preview/                   # Small preview tiles/snapshots (quicklook for review)
+├─ 📈 figures/                           # 📈 Figures used in reports (charts, screenshots, diagrams)
+│  ├─ 🖼️ png/                             # Raster figures
+│  ├─ 🧷 svg/                             # Vector figures (preferred for diagrams)
+│  └─ 🧾 pdf/                             # Print-ready figures (when needed)
+├─ 📓 notebooks/                          # 📓 Optional notebooks (keep runnable + reference locked env)
+│  ├─ 📓 analysis.ipynb                   # Notebook capturing exploration/analysis (deterministic where possible)
+│  └─ 📄 README.md                        # How to run notebooks + required env/data pointers
+├─ 🧾 logs/                               # 🧾 Runtime logs/telemetry/timings (sanitize secrets/PII)
+│  ├─ 🪵 pipeline.log                     # Main pipeline log (high-level)
+│  ├─ 📊 metrics.json                     # Machine-readable metrics (timings, counts, quality scores)
+│  └─ 🪵 stdout_stderr.txt                # Captured console output (useful for debugging)
+├─ 🛡️ governance/                         # 🛡️ Policy checks, redaction notes, approvals (audit trail)
+│  ├─ 🚦🧾 policy_report.json              # Gate results: pass/fail, findings, severities, pointers
+│  ├─ 🔒📝 redaction_notes.md              # What was redacted/withheld and why (sensitivity policy)
+│  └─ ✅📝 approvals.md                    # Review sign-offs (who/when/what) for this bundle
+├─ 🔒 integrity/                          # 🔒 Integrity + supply-chain proofs (checksums, SBOM, signatures)
+│  ├─ 🔐📄 checksums.sha256                # sha256 digest list for bundle files (tamper detection)
+│  ├─ 🧾🔐 sbom.spdx.json                  # Optional SBOM for build/toolchain/artifacts
+│  └─ 🔏 signatures/                      # Optional cosign signatures/attestations references/exports
+└─ 📚 narrative/                           # 📚 Narrative artifacts (optional): Story/Pulse outputs + evidence
+   ├─ 📝 story_node.md                     # Story markdown narrative (citations inline)
+   ├─ 🧭🧾 story_node.json                  # Story step/config JSON (map/time/layers/actions)
+   └─ 📎🧾 evidence_manifest.yaml           # Evidence manifest tying claims → citations → artifacts (plus checksums)
 ```
 
 ---
