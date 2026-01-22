@@ -1,1 +1,48 @@
+# ✅ Generated Artifact: `stdout_stderr.txt` 🧪📜
 
+> Output log created for the **MCP / dev_prov** experiment template tree using **all available project PDFs** as inputs.
+
+---
+
+## 📍 Target Path (created)
+```text
+mcp/dev_prov/examples/10_experiment_report_template/example_report_tree/artifacts/logs/stdout_stderr.txt
+```
+
+## 🗂️ Tree Snapshot 🌲
+```text
+mcp/
+  dev_prov/
+    examples/
+      10_experiment_report_template/
+        example_report_tree/
+          artifacts/
+            logs/
+              stdout_stderr.txt
+```
+
+## 🧾 What’s inside the log?
+- Discovers **all 12** project PDFs in `/mnt/data`
+- Captures per-file **size**, **page count**, and **sha256 prefix**
+- Notes **PDF portfolio/container** cases (1-page wrapper PDFs) and falls back to metadata-only indexing
+- Emits a compact, template-friendly pipeline trace (discover → parse → synthesize → render → validate)
+
+## 🔎 Quick Peek (first lines) 👀
+```text
+2026-01-22T18:15:37.445Z [STDOUT] dev_prov:run example=10_experiment_report_template report_tree=example_report_tree run_id=...
+2026-01-22T18:15:38.165Z [STDOUT] stage=1 discover_inputs: found 12 input document(s)
+2026-01-22T18:15:38.345Z [STDOUT]  - input: AI Concepts & more.pdf | size=271.4MiB | pages=1 | sha256=...
+...
+2026-01-22T18:15:38.945Z [STDOUT] stage=2 parse: extracting text + headings (pdf->text) and building doc index
+2026-01-22T18:15:39.125Z [STDERR] warn parse/pdf: 'AI Concepts & more.pdf' appears to be a PDF portfolio/container; extracted text is minimal...
+```
+
+---
+
+## 📚 Source Docs Referenced (project design truth) 🧠
+- Architecture + platform overview  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC)  
+- AI system overview (Focus Mode, governance, security)  [oai_citation:1‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)  
+- UI system overview (MapLibre/Cesium, timeline, Story Nodes)  [oai_citation:2‡Kansas Frontier Matrix – Comprehensive UI System Overview.pdf](file-service://file-KcBQruYcoFVDEixzzRHTwt)  
+- Data intake + provenance pipeline (STAC/DCAT/PROV, governance)  [oai_citation:3‡📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf](file-service://file-EbUCdsJMbu5KwpoKMrLrgj)  
+- Innovation concepts (AR, 4D twins, co-pilots, crowdsourcing)  [oai_citation:4‡Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf](file-service://file-G71zNoWKxsoSW44iwZaaCC)  
+- Pulse Threads + graph health checks + artifact registry ideas  [oai_citation:5‡Additional Project Ideas.pdf](file-service://file-Pc2GNivcrHBeKjBQksLC3T)  
