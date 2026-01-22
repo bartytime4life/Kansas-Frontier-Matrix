@@ -60,62 +60,62 @@ Below is a suggested structure. Customize if your domain needs it, but keep the 
 
 ```text
 prov/receipts/
-├─ README.md
-├─ receipts.index.json                 # 🔎 machine index of all receipt artifacts
+├─ 📄 README.md                        # 📘 How receipts are organized, retention rules, and how to verify bundles
+├─ 🔎🧾 receipts.index.json             # 🔎 Machine index of all receipt artifacts (paths, types, timestamps, digests)
 │
-├─ integrity/                          # 🔐 tamper evidence
-│  ├─ checksums.sha256
-│  └─ checksums.multihash.json         # optional
+├─ 🔐 integrity/                       # 🔐 Tamper evidence for the receipts directory itself
+│  ├─ 🔐📄 checksums.sha256             # sha256 sums for files in receipts/ (or referenced subset)
+│  └─ 🔐🧾 checksums.multihash.json      # Optional multihash map (algorithm agility / cross-tool compatibility)
 │
-├─ fetch/                              # 🌐 network + acquisition receipts
-│  ├─ <source_id>/
-│  │  ├─ request.headers.txt
-│  │  ├─ response.headers.txt
-│  │  ├─ response.status.json
-│  │  ├─ etag.txt                      # if present
-│  │  └─ fetch.meta.json               # timestamps, byte counts, etc.
-│  └─ ...
+├─ 🌐 fetch/                           # 🌐 Network/acquisition receipts (what was requested + what was returned)
+│  ├─ 🆔 <source_id>/                   # One folder per upstream source endpoint/file
+│  │  ├─ 📄 request.headers.txt         # Captured request headers (sanitize auth tokens; no secrets)
+│  │  ├─ 📄 response.headers.txt        # Captured response headers (cache hints, content-type, etc.)
+│  │  ├─ 🧾 response.status.json        # Status + timing + error info (if any)
+│  │  ├─ 🏷️ etag.txt                    # Entity tag (if present) used for caching/change detection
+│  │  └─ 🧾 fetch.meta.json             # Timestamps, byte counts, retry counts, and fetch tool/version
+│  └─ ➕ …                              # Additional sources
 │
-├─ env/                                # 🧰 reproducible runtime evidence
-│  ├─ git_commit.txt
-│  ├─ git_status.patch                 # optional (dirty diff)
-│  ├─ python_version.txt
-│  ├─ pip_freeze.txt
-│  ├─ node_version.txt
-│  ├─ package_lock.json                # optional copy
-│  ├─ rustc_version.txt                # optional
-│  └─ docker_image_digests.json         # optional
+├─ 🧰 env/                              # 🧰 Repro runtime evidence (what code + deps ran)
+│  ├─ 🧾 git_commit.txt                 # Exact commit SHA used for the run
+│  ├─ 🧾 git_status.patch               # Optional “dirty diff” patch (only if uncommitted changes existed)
+│  ├─ 🐍🧾 python_version.txt           # Python version used
+│  ├─ 🐍🧾 pip_freeze.txt               # Frozen Python deps (pip freeze)
+│  ├─ 🟩🧾 node_version.txt             # Node.js version used
+│  ├─ 🧾 package_lock.json              # Optional lockfile copy (npm/yarn/pnpm) for reproducibility
+│  ├─ 🦀🧾 rustc_version.txt            # Optional Rust compiler version (if used)
+│  └─ 🐳🧾 docker_image_digests.json     # Optional container digests (images used, pinned by sha256)
 │
-├─ run/                                # 🏃 run-level evidence
-│  ├─ run_manifest.json
-│  ├─ telemetry.ndjson
-│  └─ timings.json
+├─ 🏃 run/                              # 🏃 Run-level evidence (what happened during execution)
+│  ├─ 🧾🔐 run_manifest.json             # Run receipt: commands, params, inputs/outputs, tools, digests, pointers
+│  ├─ 📡🧾 telemetry.ndjson              # Event stream (newline-delimited JSON) for tracing/debugging (redacted)
+│  └─ ⏱️🧾 timings.json                  # Timing breakdowns (step durations, IO time, CPU/GPU utilization if captured)
 │
-├─ policy/                             # 🧭 governance + validation
-│  ├─ conftest.results.json
-│  ├─ schema_validation.json
-│  └─ gates.summary.md                 # small human-readable summary
+├─ 🧭 policy/                           # 🧭 Governance + validation proofs (what gates ran, what they concluded)
+│  ├─ 🧪🧾 conftest.results.json         # OPA/Conftest evaluation output (pass/fail + findings + policy ids)
+│  ├─ 📐🧾 schema_validation.json        # Schema validation results (which schemas, which files, errors/warnings)
+│  └─ 📝🧾 gates.summary.md              # Small human summary (top findings, waivers used, links to full reports)
 │
-├─ supply-chain/                       # 🧷 signatures + attestations
-│  ├─ artifact_digests.json
-│  ├─ signatures/                      # e.g., cosign outputs
-│  ├─ attestations/                    # e.g., in-toto provenance
-│  └─ sbom/                            # SPDX/CycloneDX, etc.
+├─ 🧷 supply-chain/                     # 🧷 Supply-chain proofs for produced artifacts
+│  ├─ 🔐🧾 artifact_digests.json         # Digest list for released artifacts (subject → sha256/size/mediaType)
+│  ├─ 🔏 signatures/                    # Signatures (e.g., cosign bundles/refs) for verification
+│  ├─ 🧾 attestations/                  # Attestations (e.g., in-toto/SLSA provenance) tied to artifact digests
+│  └─ 📦 sbom/                          # SBOM outputs (SPDX/CycloneDX) for toolchain/runtime or shipped artifacts
 │
-├─ geospatial/                         # 🗺️ geo processing evidence
-│  ├─ reprojection.log
-│  ├─ crs.normalization.json
-│  ├─ tile_build_config.json
-│  └─ tile_build.log
+├─ 🗺️ geospatial/                       # 🗺️ Geo processing receipts (CRS, tiling, transformation decisions)
+│  ├─ 🪵 reprojection.log               # Reprojection operations log (inputs, outputs, warnings)
+│  ├─ 🧾 crs.normalization.json         # CRS normalization decisions (source CRS → normalized CRS; authority refs)
+│  ├─ 🎛️🧾 tile_build_config.json        # Tile build configuration (zoom range, buffer, simplification, compression)
+│  └─ 🪵 tile_build.log                 # Tile build log (commands, warnings, counts, performance)
 │
-└─ ai/                                 # 🤖 AI-related receipts (redacted!)
-   ├─ model_id.txt
-   ├─ prompt.hashes.json               # store hashes, not raw prompts (default)
-   ├─ inference_config.json
-   ├─ evaluation/
-   │  ├─ metricspec_id.txt
-   │  └─ metrics.json
-   └─ ...
+└─ 🤖 ai/                               # 🤖 AI-related receipts (redacted by default; hashes over raw prompts)
+   ├─ 🤖🧾 model_id.txt                  # Model identifier used (and provider/version if applicable)
+   ├─ 🔐🧾 prompt.hashes.json            # Hashes of prompts/instructions (default) to avoid storing sensitive text
+   ├─ 🎛️🧾 inference_config.json         # Inference params (temperature, max tokens, tools enabled, policy pack version)
+   ├─ 📏 evaluation/                     # Evaluation artifacts (metrics + metric spec linkage)
+   │  ├─ 🧾 metricspec_id.txt            # Metrics spec identifier used (ties to review metrics catalog)
+   │  └─ 📊🧾 metrics.json               # Computed evaluation metrics (citation coverage, refusal rate, etc.)
+   └─ ➕ …                                # Additional AI receipts as needed (always redact/sanitize)
 ```
 
 ---
