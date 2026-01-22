@@ -36,17 +36,17 @@ Every poll/fetch window yields **STAC + DCAT + PROV**, even if the PROV is a min
 
 ```mermaid
 flowchart LR
-  W[🕵️ Watcher<br/>poll + state] --> F[🌐 Fetch<br/>conditional GET]
+  W[🕵️ Watcher - poll + state] --> F[🌐 Fetch - conditional GET]
   F --> D[🔧 Decode + Normalize]
   D --> V[✅ Validate + QA]
-  V --> S[(🗄️ PostGIS / store)]
-  V --> C1[🛰️ STAC Item/Collection]
+  V --> S[🗄️ PostGIS store]
+  V --> C1[🛰️ STAC Item or Collection]
   V --> C2[🧾 DCAT Dataset]
   V --> P[⛓️ PROV Stub JSON-LD]
-  V --> T[📈 Telemetry (NDJSON)]
+  V --> T[📈 Telemetry NDJSON]
   S --> API[🔌 API / GraphQL]
-  API --> UI[🗺️ UI (MapLibre/Cesium)]
-  API --> AI[🧠 Focus Mode (citations)]
+  API --> UI[🗺️ UI - MapLibre / Cesium]
+  API --> AI[🧠 Focus Mode - citations]
 ```
 
 ---
