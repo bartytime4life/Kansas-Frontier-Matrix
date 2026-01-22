@@ -72,28 +72,28 @@ Each invariant is represented by at least one minimal fixture.
 
 ```text
 inputs/
-├── 📄 README.md
-├── 📁 cases/
-│   ├── ✅ 00_happy_path/
-│   │   ├── input.json
-│   │   └── expected.yml
-│   ├── ❌ 01_missing_license/
-│   │   ├── input.json
-│   │   └── expected.yml
-│   ├── ❌ 02_missing_provenance/
-│   │   ├── input.json
-│   │   └── expected.yml
-│   ├── ❌ 03_sensitive_no_review/
-│   │   ├── input.json
-│   │   └── expected.yml
-│   ├── ❌ 04_ai_answer_no_citations/
-│   │   ├── input.json
-│   │   └── expected.yml
-│   └── ❌ 05_ui_bypasses_api/
-│       ├── input.json
-│       └── expected.yml
-└── 📁 schemas/
-    └── input.schema.json   (optional)
+├── 📄 README.md                        # 📘 What these cases test, how to run them, and how expected.yml is interpreted
+├── 🧪 cases/                           # 🧪 Test case library (each folder = one scenario)
+│   ├── ✅ 00_happy_path/               # ✅ Baseline compliant input (should PASS all relevant gates)
+│   │   ├── 🧾 input.json               # Gate input payload for the scenario
+│   │   └── ✅🧾 expected.yml            # Expected outcome (pass) + expected findings/IDs/messages (if asserted)
+│   ├── ❌ 01_missing_license/          # ❌ License missing/invalid (should FAIL with license-related finding)
+│   │   ├── 🧾 input.json               # Input crafted to omit/violate license policy
+│   │   └── ❌🧾 expected.yml            # Expected deny + specific finding(s) and error codes
+│   ├── ❌ 02_missing_provenance/       # ❌ Provenance missing for a change (should FAIL provenance/receipt rules)
+│   │   ├── 🧾 input.json
+│   │   └── ❌🧾 expected.yml
+│   ├── ❌ 03_sensitive_no_review/      # ❌ Sensitive classification without review/waiver (should FAIL governance rules)
+│   │   ├── 🧾 input.json
+│   │   └── ❌🧾 expected.yml
+│   ├── ❌ 04_ai_answer_no_citations/   # ❌ AI answer without citations (should FAIL evidence-first requirements)
+│   │   ├── 🧾 input.json
+│   │   └── ❌🧾 expected.yml
+│   └── ❌ 05_ui_bypasses_api/          # ❌ UI tries to bypass API boundary (should FAIL architecture/security policy)
+│       ├── 🧾 input.json
+│       └── ❌🧾 expected.yml
+└── 📐 schemas/
+    └── 📐🧾 input.schema.json          # (optional) Input contract for validation before policy evaluation
 ```
 
 > If the runner uses different filenames (e.g., `context.json`, `request.json`, `golden.json`), keep the same *shape* and update this README to match.
