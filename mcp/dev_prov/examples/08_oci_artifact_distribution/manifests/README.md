@@ -29,13 +29,13 @@ These manifests are the “**contract**” for distributing *data products* and 
 
 ```text
 manifests/
-├─ README.md                          # you are here ✅
-├─ oci.distribution.v1.yaml           # “what to push + where + media types”
-├─ prov.bundle.jsonld                 # PROV-O lineage (inputs → activities → outputs)
-├─ sbom.spdx.json                     # SBOM for the build/toolchain (or pipeline container)
-├─ stac.item.json                     # STAC Item referencing the distributed artifact(s)
-├─ dcat.dataset.jsonld                # DCAT Dataset entry w/ distribution links
-└─ policy.inputs.json                 # optional: inputs for conftest/OPA validation
+├─ ✅📄 README.md                      # you are here 📌 How these manifests relate + required fields + validation steps
+├─ 📦🧾 oci.distribution.v1.yaml       # OCI distribution plan: what to push, where, media types, digests/tags, annotations
+├─ 🧬🧾 prov.bundle.jsonld             # PROV-O lineage bundle: inputs → activities → outputs (agents/tools/params captured)
+├─ 🧾🔐 sbom.spdx.json                 # SBOM (SPDX): components/deps for build/toolchain or pipeline container image
+├─ 🛰️🧾 stac.item.json                 # STAC Item: references the distributed artifact(s) as Assets (with roles + links)
+├─ 🗂️🧾 dcat.dataset.jsonld            # DCAT Dataset: discovery metadata + distribution links to OCI artifacts
+└─ ⚖️🧾 policy.inputs.json             # Optional: precomputed inputs used by conftest/OPA to validate this release bundle
 ```
 
 ---
@@ -52,15 +52,15 @@ OCI distribution is the **transport/storage layer** for the actual bytes, while 
 
 ```mermaid
 flowchart LR
-  A[Raw Sources] --> B[ETL + Normalization]
-  B --> C[data/processed outputs]
-  C --> D[Publish to OCI Registry (ORAS)]
-  D --> E[Sign + Attest (Cosign/Sigstore)]
-  E --> F[Catalog Boundary Artifacts<br/>STAC + DCAT + PROV]
-  F --> G[Neo4j Graph]
-  G --> H[API Layer<br/>(contracts + redaction)]
-  H --> I[UI + Story Nodes]
-  I --> J[Focus Mode<br/>(citations required)]
+  A[📥 Raw Sources] --> B[🧪 ETL + Normalization]
+  B --> C[📦 data/processed outputs]
+  C --> D[📦 Publish to OCI Registry - ORAS]
+  D --> E[🔏 Sign + Attest - Cosign Sigstore]
+  E --> F[📚 Catalog boundary artifacts - STAC DCAT PROV]
+  F --> G[🕸️ Neo4j Graph]
+  G --> H[🔌 API Layer - contracts + redaction]
+  H --> I[🗺️ UI + 📖 Story Nodes]
+  I --> J[🤖 Focus Mode - citations required]
 ```
 
 ---
