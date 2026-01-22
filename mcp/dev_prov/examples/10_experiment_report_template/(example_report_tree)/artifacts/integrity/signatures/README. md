@@ -1,1 +1,207 @@
+# 🔐 Integrity Signatures (Supply-Chain Trust)
 
+![Signed](https://img.shields.io/badge/integrity-signed-success)
+![Provenance-First](https://img.shields.io/badge/provenance-first-blue)
+![Fail-Closed](https://img.shields.io/badge/policy-fail--closed-critical)
+
+This folder stores **cryptographic signatures** (and optional signature bundles) for experiment/report artifacts so that anyone can verify:
+
+- ✅ **Integrity**: bytes haven’t changed since the run
+- ✅ **Authenticity**: artifacts came from an approved build/runner/maintainer identity
+- ✅ **Reproducibility hooks**: signatures line up with manifests, hashes, and provenance records
+
+> [!IMPORTANT]
+> This folder is part of the “evidence boundary.” If an artifact is publishable, it should be verifiable. 🧾➡️🔏➡️✅
+
+---
+
+## 📦 What lives here?
+
+Typical contents (examples — adapt to your template tree):
+
+```text
+📁 artifacts/
+  📁 integrity/
+    📁 signatures/
+      📄 README.md
+      🔏 artifacts.manifest.json.sig
+      📦 artifacts.manifest.json.bundle
+      🔏 run_manifest.json.sig
+      📦 run_manifest.json.bundle
+      🔏 report.pdf.sig
+      📦 report.pdf.bundle
+```
+
+### File types 🧩
+
+- `*.sig`  
+  A detached signature for a file (blob signing).
+- `*.bundle`  
+  A **keyless** verification bundle (certificate + transparency log proof), so verifiers don’t need access to your CI key material.
+- *(Optional)* `*.attestation.json` / `*.intoto.jsonl`  
+  Provenance attestations (SLSA/in-toto style) for “how it was built.”
+
+---
+
+## ✅ Signing Contract (what MUST be signed)
+
+Minimum recommended set:
+
+1. **`artifacts.manifest.json`** (or equivalent)  
+   A deterministic index of artifacts produced (paths + digests + media types).
+2. **`run_manifest.json`** (or equivalent run ledger record)  
+   Captures who/what/when/inputs/outputs/tool versions.
+3. **Human-facing report** (e.g., `report.pdf`, `report.md`)  
+   The thing people actually read.
+
+> [!TIP]
+> Prefer signing **manifests** and **reports** over signing hundreds of individual files. If the manifest includes digests for each file, the manifest signature covers the set. 🧠✨
+
+---
+
+## 🧱 Naming conventions (stable + boring = good)
+
+Use one of these consistent patterns:
+
+### Option A — mirror the artifact name
+- `report.pdf` → `report.pdf.sig` / `report.pdf.bundle`
+
+### Option B — digest-addressed (great for caches/registries)
+- `report.pdf` (sha256: `abc…`) → `sha256-abc….sig`
+
+### Option C — “one signature to rule them all”
+- `artifacts.manifest.json.sig` signs the full artifact set (recommended)
+
+---
+
+## 🛠️ How to sign (Cosign / Sigstore) 🔑
+
+> [!NOTE]
+> These commands are examples. Your CI may wrap them (or use a policy gate) — keep the *outputs* consistent.
+
+### 1) Keyless signing (CI-friendly ✅)
+
+```bash
+# Sign a blob (detached signature) and save a bundle for offline verification
+cosign sign-blob \
+  --yes \
+  --bundle artifacts.manifest.json.bundle \
+  --output-signature artifacts.manifest.json.sig \
+  artifacts.manifest.json
+```
+
+Repeat for `run_manifest.json`, `report.pdf`, etc.
+
+### 2) (Optional) Key-pair signing (local/dev 🧪)
+
+```bash
+# WARNING: do not commit private keys.
+cosign generate-key-pair
+
+cosign sign-blob \
+  --key cosign.key \
+  --output-signature report.pdf.sig \
+  report.pdf
+```
+
+---
+
+## 🔍 How to verify ✅
+
+### Verify a blob signature (keyless bundle)
+
+```bash
+cosign verify-blob \
+  --bundle artifacts.manifest.json.bundle \
+  --signature artifacts.manifest.json.sig \
+  artifacts.manifest.json
+```
+
+### Verify with identity constraints (recommended in CI/policy gates)
+
+Use your organization’s issuer + identity rules (OIDC issuer, workflow identity, etc.):
+
+```bash
+cosign verify-blob \
+  --bundle report.pdf.bundle \
+  --signature report.pdf.sig \
+  --certificate-oidc-issuer "https://<your-oidc-issuer>" \
+  --certificate-identity "<your-approved-identity>" \
+  report.pdf
+```
+
+> [!IMPORTANT]
+> Verification should be **fail-closed**: if signature or identity checks fail, treat the artifact as untrusted. 🚫
+
+---
+
+## 🐳 OCI Registry mode (ORAS + Cosign) — for large artifacts
+
+If your artifacts are pushed to an OCI registry (recommended for big binaries like tilesets/models):
+
+1) Push with ORAS  
+2) Pin by **digest** (immutable)  
+3) Sign the digest with Cosign  
+4) Store provenance as referrers (signature/SBOM/provenance)
+
+**Example flow (conceptual):**
+
+```bash
+# Push arbitrary files as OCI artifacts
+oras push ghcr.io/<org>/<repo>:<tag> \
+  ./artifact.pmtiles:application/vnd.pmtiles \
+  ./artifact.parquet:application/vnd.geo+parquet
+
+# Then sign the pushed ref (prefer @sha256:digest)
+cosign sign ghcr.io/<org>/<repo>@sha256:<digest>
+```
+
+Verification:
+
+```bash
+cosign verify ghcr.io/<org>/<repo>@sha256:<digest>
+oras pull ghcr.io/<org>/<repo>@sha256:<digest>
+```
+
+---
+
+## 🧾 Policy gates & automation (what CI should enforce)
+
+Suggested CI checks 🧰:
+
+- [ ] `artifacts.manifest.json` exists and lists **all** artifacts + digests
+- [ ] `run_manifest.json` exists (and is canonicalized/hashed consistently)
+- [ ] Signatures exist for required targets (manifest + report + run ledger)
+- [ ] Cosign verification passes with identity constraints
+- [ ] Provenance/attestations present for “publishable” runs
+- [ ] No secrets committed (scan + fail closed)
+
+> [!TIP]
+> If you’re using agent automation (Watcher/Planner/Executor), treat agent commits and generated artifacts like any other supply-chain output: **signed, reviewable, auditable**. 🤖🔏👀
+
+---
+
+## 🧠 Troubleshooting / FAQ
+
+### “Why both checksums AND signatures?”
+- Checksums detect corruption.
+- Signatures prove *who produced it* and prevent undetected tampering.
+
+### “What if a report changes formatting but not meaning?”
+It’s still a byte change — treat it as a new version. Recompute digests, regenerate manifest, and re-sign.
+
+### “Where should provenance metadata live?”
+Keep provenance alongside artifacts (e.g., `prov/`, `attestations/`, or registry referrers). Sign the index/manifest that links everything.
+
+---
+
+## ✅ Maintainer checklist (quick)
+
+- [ ] Artifact set is complete (manifest updated)
+- [ ] Required outputs signed (manifest + run ledger + report)
+- [ ] Verification passes locally and in CI
+- [ ] Signatures/bundles committed (or registry referrers present)
+- [ ] Policy gates are fail-closed 🚪🔒
+
+—
+Built for provenance-first experimentation ✨🧭
