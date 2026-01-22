@@ -69,26 +69,26 @@ In KFM terms, this folder is the **chain-of-custody bundle** that keeps the UI, 
 
 ```text
 prov/ 📎
-├─ README.md                🧭 You are here
-├─ prov.jsonld              ⛓️ W3C PROV graph (JSON-LD)
-├─ run_manifest.json        🧾 One-run “receipt” (inputs/outputs/versions/counts)
-├─ inputs.manifest.json     📥 Structured list of inputs (IDs, URIs, checksums)
-├─ outputs.manifest.json    📤 Structured list of outputs (paths/digests/metadata)
-├─ checksums.sha256         🔐 Hashes for files referenced in this report
-├─ policy/                  🛡️ Policy evidence (CI/runtime)
-│  ├─ conftest.results.json 🧪 Policy evaluation output
-│  └─ waivers.yml           🧯 Time-bound exceptions (stable IDs + rationale)
-├─ env/                     🧰 Repro environment locks (optional but recommended)
-│  ├─ container.ref.txt     📦 image@sha256:…
-│  ├─ pip.freeze.txt        🐍 pinned deps
-│  └─ system.txt            🖥️ OS/CPU/GPU notes
-├─ ai/                      🤖 LLM/AI-specific provenance (optional)
-│  ├─ prompt.md             🗣️ prompts / instructions used
-│  ├─ retrieval.json        🔎 what context/sources were retrieved
-│  └─ evaluation.json       📏 accuracy/citation coverage/QA metrics
-└─ signatures/              ✍️ Supply-chain attachments (optional)
-   ├─ sbom.spdx.json        📦 SBOM
-   └─ cosign.bundle.json    🔏 signature bundle / attestations
+├─ 🧭📄 README.md                 # 🧭 You are here 📌 What this provenance bundle proves + how to verify it end-to-end
+├─ ⛓️🧬🧾 prov.jsonld              # W3C PROV-O graph (JSON-LD): entities/activities/agents + derivations + timestamps
+├─ 🧾🔐 run_manifest.json          # One-run receipt: commands, params, tool versions, inputs/outputs, counts, hashes pointers
+├─ 📥🧾 inputs.manifest.json       # Structured input list: ids, URIs/paths, sizes, checksums, licenses/classification refs
+├─ 📤🧾 outputs.manifest.json      # Structured output list: paths/URIs, digests, media types, roles, metadata pointers
+├─ 🔐📄 checksums.sha256           # sha256 hashes for files referenced by this report (tamper detection)
+├─ 🛡️ policy/                     # Policy evidence (CI/runtime): what rules ran and what they concluded
+│  ├─ 🧪🧾 conftest.results.json    # Conftest/OPA evaluation output (pass/fail + findings + policy ids)
+│  └─ 🧯🧾 waivers.yml              # Time-bound exceptions (stable ids, scope, expiry, rationale, approvals)
+├─ 🧰 env/                         # Repro environment locks (optional but recommended for reproducibility)
+│  ├─ 📦🧾 container.ref.txt        # Container reference (image@sha256:… or digest-pinned tag)
+│  ├─ 🐍🧾 pip.freeze.txt           # Pinned Python dependencies (pip freeze output)
+│  └─ 🖥️🧾 system.txt               # System notes: OS/CPU/GPU, kernel, drivers (as needed)
+├─ 🤖 ai/                          # Optional AI-specific provenance (only when an LLM/agent is involved)
+│  ├─ 🗣️📝 prompt.md                # Prompts/instructions actually used (sanitized; no secrets)
+│  ├─ 🔎🧾 retrieval.json           # Retrieved context/source list + ids/URIs + selection rationale (no sensitive leakage)
+│  └─ 📏🧾 evaluation.json          # QA metrics: citation coverage, factuality checks, regression scores, failure notes
+└─ ✍️ signatures/                  # Optional supply-chain attachments (verification artifacts)
+   ├─ 📦🧾 sbom.spdx.json           # SBOM for build/toolchain or produced artifact bundle
+   └─ 🔏🧾 cosign.bundle.json       # Cosign signature/attestation bundle (subjects + digests + signers)
 ```
 
 ---
