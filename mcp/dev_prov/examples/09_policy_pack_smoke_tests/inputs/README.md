@@ -215,12 +215,12 @@ KFM is intentionally **layered + contract-first**:
 
 ```mermaid
 flowchart LR
-  PR[PR / Agent action] --> Ctx[Fixture input.json]
-  Ctx --> Conftest[Conftest runner 🧪]
-  Conftest --> OPA[OPA / Rego policy pack ⚖️]
-  OPA -->|deny| Block[❌ Block merge / deny runtime action]
-  OPA -->|allow| Promote[✅ Promote (catalog/graph/UI)]
-  Promote --> UI[UI shows provenance + context 🧭]
+  PR[🔀 PR or Agent action] --> Ctx[🧩 Fixture input.json]
+  Ctx --> Conftest[🧪 Conftest runner]
+  Conftest --> OPA[⚖️ OPA Rego policy pack]
+  OPA --> Block[❌ Deny - block merge or runtime action]
+  OPA --> Promote[✅ Allow - promote catalog graph UI]
+  Promote --> UI[🧭 UI shows provenance + context]
 ```
 
 ---
