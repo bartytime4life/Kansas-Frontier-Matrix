@@ -203,13 +203,13 @@ evidence:
 
 ```mermaid
 flowchart LR
-  A[👩‍💻 Dev / Contributor] --> B[🧩 Template Instance<br/>run_manifest / evidence_manifest]
-  B --> C[🧪 Validators<br/>schema + checksums]
-  C --> D[🔐 Policy Gates<br/>OPA + Conftest]
-  D -->|allow| E[📦 Publish<br/>STAC/DCAT/PROV + Graph ingest]
-  D -->|deny| X[⛔ Block merge / release]
-  E --> F[🗺️ UI<br/>Map + Story Nodes + "map behind map"]
-  E --> G[🤖 Focus Mode<br/>RAG + citations + audit panel]
+  A[👩‍💻 Dev or Contributor] --> B[🧩 Template instance - run_manifest and evidence_manifest]
+  B --> C[🧪 Validators - schema + checksums]
+  C --> D[🔐 Policy gates - OPA + Conftest]
+  D --> E[📦 Allow - publish - STAC DCAT PROV + graph ingest]
+  D --> X[⛔ Deny - block merge or release]
+  E --> F[🗺️ UI - Map + Story Nodes + map behind map]
+  E --> G[🤖 Focus Mode - RAG + citations + audit panel]
 ```
 
 ### Why this matters for UI ✨
