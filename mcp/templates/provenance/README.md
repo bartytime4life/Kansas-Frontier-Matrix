@@ -81,21 +81,21 @@ Optional but strongly recommended for large binaries & distribution:
 This README is the contract; the templates are the implementation. A typical pack looks like:
 
 ```text
-📁 mcp/templates/provenance/
-├─ README.md
-├─ 🧬 prov/
-│  ├─ dataset.prov.jsonld.jinja
-│  ├─ pipeline_run.prov.jsonld.jinja
-│  ├─ focus_answer.prov.jsonld.jinja
-│  └─ github_pr.prov.jsonld.jinja
-├─ 🧾 manifests/
-│  ├─ run_manifest.json.jinja
-│  └─ story_evidence.yml.jinja
-├─ 🧠 contexts/
-│  └─ kfm.context.jsonld
-└─ ✅ policy/
-   ├─ provenance.rego
-   └─ conftest.toml
+mcp/templates/provenance/
+├─ 📄 README.md                           # 📘 How to use provenance templates + required inputs/outputs + validation steps
+├─ 🧬 prov/                               # 🧬 PROV template files (Jinja) for generating JSON-LD provenance bundles
+│  ├─ 🧬🧾 dataset.prov.jsonld.jinja       # Dataset lineage template (sources → transforms → published artifacts)
+│  ├─ 🧬🧾 pipeline_run.prov.jsonld.jinja  # Pipeline run template (activities/agents/entities + params + timestamps)
+│  ├─ 🧬🧾 focus_answer.prov.jsonld.jinja  # Focus Mode answer provenance (retrieval → reasoning steps → cited outputs)
+│  └─ 🧬🧾 github_pr.prov.jsonld.jinja     # PR→PROV template (commits/reviews → artifacts/receipts/approvals)
+├─ 🧾 manifests/                          # 🧾 Non-PROV manifest templates (receipts + evidence indices)
+│  ├─ 🧾🔐 run_manifest.json.jinja         # Run manifest template (commands, env, inputs/outputs, digests, tool versions)
+│  └─ 📎🧾 story_evidence.yml.jinja        # Story evidence manifest template (claims→citations→artifacts + checksums)
+├─ 🧠 contexts/                           # 🧠 JSON-LD contexts used by the generated PROV bundles
+│  └─ 🧠🧬 kfm.context.jsonld              # KFM @context (namespaces, term mappings, prefixes; used by templates)
+└─ ✅ policy/                             # ✅ Policy pack enforcing template outputs (schema/profile invariants)
+   ├─ ⚖️📄 provenance.rego                 # OPA/Rego rules for provenance artifacts (required links, ids, ordering, etc.)
+   └─ ⚙️📄 conftest.toml                   # Conftest configuration for running provenance.rego against generated outputs
 ```
 
 > [!NOTE]
