@@ -89,18 +89,17 @@ Goal: **Fuse co‑located sensors** (OpenAQ brokered feeds, PurpleAir devices, E
 ## 🗂️ Directory Layout
 
 ~~~text
-📁 mcp/experiments/air/on-sensor-fusion/
-├── 📁 configs/                           — Experiment config (sources, H3 resolution, QA thresholds)
-│   └── 🧾 experiment.yml                 — Sources, H3 resolution, co‑location rules, QA thresholds
-├── 📁 src/                               — Fusion pipeline (config-driven)
-│   ├── 📄 fuse_quantmap_kalman.py         — Fusion + quantile mapping + Kalman/EnKF smoother
-│   ├── 📄 anomaly_flags.py                — Spikes, stuck sensors, drift vs. reference
-│   └── 📄 stac_delta.py                   — Emit minimal STAC Items + Collection updates (delta manifest)
-├── 📁 data/
-│   ├── 📁 cache/                          — Raw pulls (OpenAQ/PurpleAir/AQS)
-│   └── 📁 outputs/                        — Corrected timeseries, QA tables, stac-delta/
-└── 📁 tests/                             — Deterministic unit tests + seeds
-~~~
+mcp/experiments/air/on-sensor-fusion/
+├── ⚙️ configs/                              # Experiment configuration (sources, H3 resolution, QA thresholds)
+│   └── 🧾 experiment.yml                    # Declared config: sources, H3 resolution, co-location rules, QA thresholds
+├── 🛠️ src/                                  # Fusion pipeline implementation (config-driven; reproducible entrypoints)
+│   ├── 🧪📄 fuse_quantmap_kalman.py          # Fusion + quantile mapping + Kalman/EnKF smoothing for corrected series
+│   ├── 🚨📄 anomaly_flags.py                 # QA flags: spikes, stuck sensors, drift vs reference, missingness checks
+│   └── 🛰️📄 stac_delta.py                    # Emit minimal STAC deltas (Items + Collection updates) for this run’s outputs
+├── 📦 data/                                 # Local data for the experiment (keep cache bounded; outputs are reviewable)
+│   ├── 🧊 cache/                            # Cached raw pulls (OpenAQ / PurpleAir / AQS); treat as immutable per pull
+│   └── ✅ outputs/                          # Produced artifacts: corrected timeseries, QA tables, and stac-delta/ bundle
+└── 🧪 tests/                                # Deterministic tests (fixed seeds, golden fixtures, minimal dependencies)
 
 ## 🗺️ Diagrams
 
@@ -108,12 +107,12 @@ Goal: **Fuse co‑located sensors** (OpenAQ brokered feeds, PurpleAir devices, E
 
 ~~~mermaid
 flowchart LR
-  A[Raw Feeds\nOpenAQ / PurpleAir / AQS] --> B[Co-location\nH3 r=8 + radius + time window]
-  B --> C[Bias-Aware Correction\nQuantile Mapping (ibicus/python-cmethods style)]
-  C --> D[Temporal Smoother\nKalman / EnKF (low-order)]
-  D --> E[QA & Anomaly Flags\nspike, stuck, drift, dropout]
-  E --> F[Minimal STAC Delta\nItems + assets + QA fields]
-  F --> G[Publish + Rollback\natomic delta apply/revert]
+  A[Raw feeds - OpenAQ PurpleAir AQS] --> B[Co location - H3 r8 + radius + time window]
+  B --> C[Bias aware correction - quantile mapping - ibicus python cmethods style]
+  C --> D[Temporal smoother - Kalman or EnKF low order]
+  D --> E[QA and anomaly flags - spike stuck drift dropout]
+  E --> F[Minimal STAC delta - items + assets + QA fields]
+  F --> G[Publish + rollback - atomic delta apply revert]
 ~~~
 
 ## 🧱 Architecture
