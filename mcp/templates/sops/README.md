@@ -73,24 +73,25 @@ sensitivity: "public"
 ### Suggested folder layout 🗂️
 
 ```text
-📦 mcp/
- ┣━ 🧬 templates/
- │   ┗━ 🧾 sops/
- │       ┣━ 📘 README.md                      👈 (this file)
- │       ┣━ 🧾 TEMPLATE__SOP.md
- │       ┣━ 🧾 TEMPLATE__SOP_DATA_INTAKE.md
- │       ┣━ 🧾 TEMPLATE__SOP_DOMAIN_EXPANSION.md
- │       ┣━ 🧾 TEMPLATE__SOP_STORY_NODE.md
- │       ┣━ 🧾 TEMPLATE__SOP_PULSE_THREAD.md
- │       ┣━ 🧾 TEMPLATE__SOP_UI_CHANGE.md
- │       ┣━ 🧾 TEMPLATE__SOP_AI_CHANGE.md
- │       ┣━ 🧾 TEMPLATE__SOP_SIMULATION.md
- │       ┣━ 🧾 TEMPLATE__SOP_OCI_ARTIFACT.md
- │       ┗━ 🧾 TEMPLATE__SOP_INCIDENT.md
- ┗━ 🧾 sops/
-     ┣━ ✅ SOP-DATA-001-ingest-dataset.md
-     ┣━ ✅ SOP-STORY-010-author-story-node.md
-     ┗━ ✅ SOP-OPS-020-rollback-bad-data.md
+mcp/
+├─ 🧬 templates/
+│  └─ 🧾 sops/
+│     ├─ 📘📄 README.md                         # 👈 (this file) 📌 How SOP templates are used + naming + required sections
+│     ├─ 🧾📄 TEMPLATE__SOP.md                  # Base SOP template (universal structure + required governance sections)
+│     ├─ 📥🧾📄 TEMPLATE__SOP_DATA_INTAKE.md     # SOP template for data intake (raw→work→processed→catalog + provenance)
+│     ├─ 🧭🧾📄 TEMPLATE__SOP_DOMAIN_EXPANSION.md # SOP template for adding a new domain (schemas, policies, owners)
+│     ├─ 🎬🧾📄 TEMPLATE__SOP_STORY_NODE.md      # SOP template for authoring/publishing Story Nodes (citations + evidence manifest)
+│     ├─ 🧵🧾📄 TEMPLATE__SOP_PULSE_THREAD.md    # SOP template for Pulse Threads (updates + evidence + review cadence)
+│     ├─ 🖥️🧾📄 TEMPLATE__SOP_UI_CHANGE.md       # SOP template for UI changes (a11y, perf, API boundary, telemetry)
+│     ├─ 🤖🧾📄 TEMPLATE__SOP_AI_CHANGE.md       # SOP template for AI changes (citations, uncertainty, redaction, evals)
+│     ├─ 🧪🧾📄 TEMPLATE__SOP_SIMULATION.md      # SOP template for simulation runs (seeds, manifests, metrics, sensitivity)
+│     ├─ 📦🧾📄 TEMPLATE__SOP_OCI_ARTIFACT.md    # SOP template for OCI artifacts (digests, SBOM, signing, promotion)
+│     └─ 🚨🧾📄 TEMPLATE__SOP_INCIDENT.md        # SOP template for incidents (triage, comms, rollback, postmortem)
+│
+└─ 🧾 sops/
+   ├─ ✅📄 SOP-DATA-001-ingest-dataset.md        # Approved SOP: ingest a dataset (intake workflow + required receipts)
+   ├─ ✅📄 SOP-STORY-010-author-story-node.md    # Approved SOP: author/publish a Story Node (evidence-first + citations)
+   └─ ✅📄 SOP-OPS-020-rollback-bad-data.md      # Approved SOP: rollback bad data (containment + audit trail + recovery)
 ```
 
 > If some templates don’t exist yet, add them incrementally — the README defines the contract they should follow.
