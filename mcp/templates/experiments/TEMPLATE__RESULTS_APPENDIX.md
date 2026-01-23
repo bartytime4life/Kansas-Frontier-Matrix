@@ -13,10 +13,10 @@
 ## 📦 Repo location
 
 ```text
-📦 mcp/
-  └─ 🧩 templates/
-     └─ 🧪 experiments/
-        └─ 📎 TEMPLATE__RESULTS_APPENDIX.md
+mcp/
+└─ 🧩 templates/
+   └─ 🧪 experiments/
+      └─ 📎 TEMPLATE__RESULTS_APPENDIX.md   # 📎 Appendix template for experiment results (raw tables, extra figures, full logs links)
 ```
 
 ---
