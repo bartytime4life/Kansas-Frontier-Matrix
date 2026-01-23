@@ -102,25 +102,25 @@ flowchart LR
 > This repo may evolve, but the structure below keeps contracts **discoverable**, **versioned**, and **codegen-friendly**.
 
 ```text
-📦 mcp/
-  🚦 gates/
-    📜 contracts/
-      🧠 domain/
-        README.md   👈 you are here
-        v1/
-          📄 dataset_manifest.schema.json
-          📄 evidence_manifest.schema.json
-          📄 story_node.schema.json
-          📄 pulse_thread.schema.json
-          📄 simulation_run.schema.json
-          📄 gate_result.schema.json
-          📄 artifact_ref.schema.json
-          📄 rbac_actor.schema.json
-          📄 classification.schema.json
-        v2/  (future major)
-        _generated/  (optional, if you commit generated types)
-          🟦 typescript/
-          🐍 python/
+mcp/
+└─ 🚦 gates/
+   └─ 📜 contracts/
+      └─ 🧠 domain/
+         ├─ 📄 README.md                         # 👈 you are here 📌 Domain “design pack” contracts + versioning rules
+         ├─ 🧬 v1/                               # v1 schema set (stable; additive changes only)
+         │  ├─ 🗄️📐🧾 dataset_manifest.schema.json     # Dataset manifest contract (source, license, outputs, checksums, labels)
+         │  ├─ 📎📐🧾 evidence_manifest.schema.json     # Evidence manifest (claims→citations→artifacts + digests)
+         │  ├─ 🎬📐🧾 story_node.schema.json            # Story Node contract (steps, actions, media refs, citations pointers)
+         │  ├─ 🧵📐🧾 pulse_thread.schema.json          # Pulse thread contract (short narrative + evidence + deltas)
+         │  ├─ 🧪📐🧾 simulation_run.schema.json        # Simulation run contract (params, seeds, metrics, outputs, receipts)
+         │  ├─ 🚦📐🧾 gate_result.schema.json           # Gate result envelope (pass/fail, findings, severities, pointers)
+         │  ├─ 📦📐🧾 artifact_ref.schema.json          # Artifact reference (URI/path, mediaType, digest, role, metadata)
+         │  ├─ 🧑‍💼📐🧾 rbac_actor.schema.json          # RBAC actor identity/roles (human/service/agent) + accountability fields
+         │  └─ 🔒📐🧾 classification.schema.json        # Classification labels + handling rules (public/internal/restricted…)
+         ├─ 🧬 v2/                               # (future major) breaking changes / new required fields live here
+         └─ ⚙️ _generated/                       # Optional generated types (commit only if you pin generator + versions)
+            ├─ 🟦 typescript/                    # TypeScript types derived from schemas
+            └─ 🐍 python/                        # Python models (e.g., Pydantic) derived from schemas
 ```
 
 ---
