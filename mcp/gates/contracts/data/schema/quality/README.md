@@ -63,31 +63,31 @@ It exists to make “**data treated like code**” real in practice:
 > This README is the “front door.” The rest of the folder is where the gate machinery lives.
 
 ```text
-📦 mcp/
-  └── 🚦 gates/
-      └── 📜 contracts/
-          └── 🧱 data/
-              └── 🧬 schema/
-                  └── ✅ quality/
-                      ├── README.md
-                      ├── schemas/                 # JSON Schema / SHACL / profile defs
-                      │   ├── dataset.metadata.schema.json
-                      │   ├── provenance.schema.jsonld
-                      │   ├── run_manifest.schema.json
-                      │   └── qc_report.schema.json
-                      ├── policies/                # OPA/Rego (or equivalent) policy pack
-                      │   ├── KFM-CAT-*.rego
-                      │   ├── KFM-PROV-*.rego
-                      │   └── KFM-SENS-*.rego
-                      ├── fixtures/                # ✅ valid + ❌ invalid examples
-                      │   ├── valid/
-                      │   └── invalid/
-                      ├── waivers/                 # governed exceptions (expiry required)
-                      │   └── waivers.yml
-                      ├── reports/                 # generated outputs (CI artifacts)
-                      │   └── (CI writes here)
-                      └── docs/                    # deeper notes & rationale
-                          └── decisions/
+mcp/
+└── 🚦 gates/
+    └── 📜 contracts/
+        └── 🗄️ data/
+            └── 🧬 schema/
+                └── ✅ quality/
+                    ├── 📄 README.md                    # 📘 Quality pack overview: what “quality” means + how to run/interpret
+                    ├── 📐 schemas/                      # Contract defs (JSON Schema / SHACL / profile overlays)
+                    │   ├── 🗂️📐🧾 dataset.metadata.schema.json  # Dataset metadata quality contract (required fields, enums, links)
+                    │   ├── 🧬📐🧾 provenance.schema.jsonld       # Provenance quality contract (required lineage edges, agents, timestamps)
+                    │   ├── 🧾📐🧾 run_manifest.schema.json        # Run manifest quality contract (inputs/outputs/hashes/tool versions)
+                    │   └── ✅📐🧾 qc_report.schema.json           # QCReport contract (checks run, metrics, failures, summaries)
+                    ├── ⚖️ policies/                      # Policy pack enforcing invariants beyond schema (OPA/Rego)
+                    │   ├── ⚖️📄 KFM-CAT-*.rego            # Catalog/metadata rules (license required, link integrity, completeness)
+                    │   ├── ⚖️📄 KFM-PROV-*.rego           # Provenance rules (prov required for processed/derived, receipt linkage)
+                    │   └── ⚖️📄 KFM-SENS-*.rego           # Sensitivity rules (label propagation, redaction, review/waiver requirements)
+                    ├── 🧪 fixtures/                       # Golden examples for regression testing (pass/fail)
+                    │   ├── ✅ valid/                      # Inputs that MUST pass (baseline compliant quality)
+                    │   └── ❌ invalid/                    # Inputs that MUST fail (proves deny rules work)
+                    ├── 🧯 waivers/                        # Governed exceptions (expiry + rationale + approval required)
+                    │   └── 🧯🧾 waivers.yml                # Waiver ledger: id, scope, owner, expiry, rationale, approver
+                    ├── 📊 reports/                        # Generated outputs (CI artifacts; do not hand-edit)
+                    │   └── 🏗️ (CI writes here)            # CI writes reports/results into this folder (often gitignored)
+                    └── 📚 docs/                           # Deeper notes & rationale (optional)
+                        └── 🧭 decisions/                  # Decision notes/ADRs about quality rules, thresholds, and exceptions
 ```
 
 ---
