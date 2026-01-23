@@ -101,6 +101,8 @@ mcp/experiments/air/on-sensor-fusion/
 │   └── ✅ outputs/                          # Produced artifacts: corrected timeseries, QA tables, and stac-delta/ bundle
 └── 🧪 tests/                                # Deterministic tests (fixed seeds, golden fixtures, minimal dependencies)
 
+~~~
+
 ## 🗺️ Diagrams
 
 ### Architecture (high‑level)
