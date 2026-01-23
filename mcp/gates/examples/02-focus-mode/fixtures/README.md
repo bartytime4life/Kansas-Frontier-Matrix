@@ -72,30 +72,30 @@ flowchart TD
 Fixtures are grouped into scenario packs. Keep them **small** and **deterministic**.
 
 ```text
-📁 fixtures/
-├─ 📄 README.md                       # 👈 you are here
-└─ 📁 scenarios/
-   ├─ 📁 baseline-citations/
-   │  ├─ 📄 manifest.json
-   │  ├─ 📁 input/
-   │  │  ├─ 📄 question.md
-   │  │  ├─ 📄 ui_state.json
-   │  │  └─ 📁 context/
-   │  │     ├─ 📁 catalogs/           # 📚 STAC / DCAT / PROV triplet
-   │  │     │  ├─ 📄 stac.json
-   │  │     │  ├─ 📄 dcat.json
-   │  │     │  └─ 📄 prov.jsonld
-   │  │     ├─ 📁 graph/              # 🕸️ Neo4j-ish snapshot (CSV/JSON)
-   │  │     │  ├─ 📄 nodes.csv
-   │  │     │  └─ 📄 edges.csv
-   │  │     └─ 📁 db/                 # 🗺️ PostGIS-ish summaries (optional)
-   │  │        └─ 📄 query_result.json
-   │  ├─ 📁 expected/
-   │  │  ├─ 📄 answer.md              # human-readable final answer
-   │  │  ├─ 📄 answer.json            # machine-readable answer payload
-   │  │  └─ 📄 gate_report.json       # decision + reasons + redactions
-   │  └─ 📄 checksums.sha256
-   └─ 📁 ...
+fixtures/
+├─ 📄 README.md                          # 👈 you are here 📌 What scenarios cover + how to run them + how to add new ones
+└─ 🧪 scenarios/
+   ├─ 📚 baseline-citations/             # Scenario: baseline Focus Mode answer with citations + full evidence context
+   │  ├─ 🧾 manifest.json                 # Scenario descriptor: id, intent, required inputs, policies to run, expected outputs
+   │  ├─ 📥 input/                        # Inputs to the scenario (what the system “received”)
+   │  │  ├─ ❓📄 question.md              # User question/prompt (sanitized; no secrets/PII)
+   │  │  ├─ 🧭📄 ui_state.json            # UI context snapshot (route/map/layers/time; redacted-safe)
+   │  │  └─ 📦 context/                  # Context bundle available to the answerer (kept tiny + governed)
+   │  │     ├─ 📚 catalogs/              # 📚 Evidence triplet snippets: STAC/DCAT/PROV
+   │  │     │  ├─ 🛰️🧾 stac.json         # STAC snippet (collections/items/assets pointers relevant to the question)
+   │  │     │  ├─ 🗂️🧾 dcat.json         # DCAT snippet (dataset/distribution/license/access pointers)
+   │  │     │  └─ 🧬🧾 prov.jsonld       # PROV snippet (lineage proving how artifacts were produced)
+   │  │     ├─ 🕸️ graph/                # 🕸️ Tiny graph snapshot (only what tests need)
+   │  │     │  ├─ 🧾 nodes.csv           # Node table (ids, labels, types, minimal properties)
+   │  │     │  └─ 🧾 edges.csv           # Edge table (src, dst, relation, minimal metadata)
+   │  │     └─ 🗺️ db/                   # 🗺️ Optional DB-style summaries (never raw DB dumps)
+   │  │        └─ 🧾 query_result.json   # Precomputed query results used by the scenario
+   │  ├─ ✅ expected/                    # Golden outputs (what “correct” looks like)
+   │  │  ├─ 📝📄 answer.md               # Human-readable final answer (with citations in the expected format)
+   │  │  ├─ 🧾 answer.json              # Machine-readable answer payload (citations array, confidence/limits, redactions)
+   │  │  └─ 🚦🧾 gate_report.json         # Gate decision: pass/fail + findings + reasons + any redaction notices
+   │  └─ 🔐📄 checksums.sha256           # Integrity list for scenario files (inputs + expected outputs)
+   └─ ➕ …                               # Additional scenarios (same structure; add only tiny, deterministic fixtures)
 ```
 
 > [!TIP]
