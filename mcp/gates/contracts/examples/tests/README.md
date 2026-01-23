@@ -75,24 +75,24 @@ flowchart LR
 
 ```text
 mcp/gates/contracts/
-├── 🧾 schemas/                 # versioned contracts (JSON Schema, profiles, etc.)
-│   ├── kfm.storynode.v1.schema.json
-│   ├── kfm.prov_bundle.v1.schema.json
-│   └── ...
-├── 🧪 examples/
-│   ├── ✅ pass/
-│   │   ├── storynode.minimal.pass.json
-│   │   └── run_manifest.pass.json
-│   ├── ❌ fail/
-│   │   ├── storynode.missing_citations.fail.json
-│   │   └── dataset.missing_license.fail.json
-│   └── 🧪 tests/               # 👈 you are here
-│       ├── README.md
-│       ├── conftest.yaml       # optional: local conftest config
-│       ├── test_examples.py    # optional: custom validators
-│       └── fixtures.md         # optional: human notes for fixtures
-└── 🛡️ policy/                  # optional mirror of rules under tools/validation/policy/
-    └── *.rego
+├── 📐 schemas/                       # 📐 Versioned contracts (JSON Schema, profiles, shared $defs)
+│   ├── 🎬📐🧾 kfm.storynode.v1.schema.json      # Story Node contract (steps/actions/citations/media refs)
+│   ├── 🧬📐🧾 kfm.prov_bundle.v1.schema.json    # PROV bundle contract (entities/activities/agents + linkage rules)
+│   └── ➕ …                                     # Additional schemas (run manifests, catalogs, artifacts, etc.)
+├── 🧪 examples/                      # 🧪 Golden fixtures used for validation + docs + regression tests
+│   ├── ✅ pass/                       # ✅ Fixtures that MUST pass (baseline compliant payloads)
+│   │   ├── ✅🧾 storynode.minimal.pass.json     # Minimal valid Story Node (required fields + citations present)
+│   │   └── ✅🧾 run_manifest.pass.json          # Valid run manifest (ids, timestamps, IO, hashes)
+│   ├── ❌ fail/                       # ❌ Fixtures that MUST fail (ensures gates catch regressions)
+│   │   ├── ❌🧾 storynode.missing_citations.fail.json # Missing citations → must be denied
+│   │   └── ❌🧾 dataset.missing_license.fail.json     # Missing license → must be denied
+│   └── 🧪 tests/                      # 👈 you are here 📌 Harness for running the fixture suite locally/CI
+│       ├── 📄 README.md               # 📘 How to run tests (conftest + schema validation) and interpret failures
+│       ├── ⚙️🧾 conftest.yaml          # (optional) Local conftest config (policy paths, output format, flags)
+│       ├── 🧪🐍 test_examples.py       # (optional) Custom validators (link checks, semantic rules beyond JSON Schema)
+│       └── 📝📄 fixtures.md            # (optional) Human notes: what each fixture is proving and why it exists
+└── 🛡️ policy/                         # 🛡️ Optional mirror of gate rules (if not centralized under tools/validation/policy/)
+    └── ⚖️📄 *.rego                     # Rego policies that evaluate these schemas/examples (deny-by-default)
 ```
 
 ---
