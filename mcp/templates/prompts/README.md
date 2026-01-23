@@ -22,27 +22,27 @@ This directory is where we keep those rules **explicit** and **versionable**.
 
 ```text
 mcp/
-└─ templates/
-   └─ prompts/
-      ├─ README.md                         👈 you are here
-      ├─ shared/
-      │  ├─ citation_rules.prompt.md       🔎 evidence + footnotes
-      │  ├─ refusal_style.prompt.md        🧯 safe refusals + helpful redirects
-      │  └─ output_contracts.prompt.md     📜 schemas + required sections
-      ├─ focus_mode/
-      │  ├─ qa.prompt.md                   🤖 Q&A with citations (RAG)
-      │  └─ explainability.prompt.md       🧾 “audit panel” style reasoning trace
-      ├─ story_nodes/
-      │  ├─ authoring.prompt.md            📖 Markdown + JSON steps generator
-      │  └─ evidence_manifest.prompt.md    🧾 evidence manifest stub + checks
-      ├─ pulses/
-      │  └─ pulse_thread.prompt.md         📍 geotagged “micro-story” updates
-      ├─ intake/
-      │  ├─ entity_linking.prompt.md       🧷 link people/places/events to graph
-      │  └─ transform_planner.prompt.md    🧪 propose config; code executes safely
-      └─ governance/
-         ├─ policy_checks.prompt.md        🛡️ OPA/Rego assumptions + deny reasons
-         └─ sensitivity.prompt.md          🧿 redaction/obfuscation rules
+└─ 🧩 templates/
+   └─ 🧠 prompts/
+      ├─ 📄 README.md                          # 👈 you are here 📌 How prompts are organized, versioned, and composed
+      ├─ ♻️ shared/                            # Shared building blocks imported by multiple prompt packs
+      │  ├─ 🔎📄 citation_rules.prompt.md       # Evidence rules: citation format, footnotes, claim→source linkage expectations
+      │  ├─ 🧯📄 refusal_style.prompt.md        # Safe refusals: how to decline + redirect while staying helpful and non-leaky
+      │  └─ 📜📄 output_contracts.prompt.md     # Output contracts: required sections + schema alignment + formatting rules
+      ├─ 🔎 focus_mode/                        # Focus Mode prompt pack (evidence-first Q&A + auditability)
+      │  ├─ 🤖📄 qa.prompt.md                   # Q&A with citations (RAG): answer structure, citation coverage, uncertainty labels
+      │  └─ 🧾📄 explainability.prompt.md       # “Audit panel” trace: what was used/why (no hidden chain-of-thought)
+      ├─ 🎬 story_nodes/                       # Story Node authoring pack (narratives + step configs + evidence)
+      │  ├─ 📖📄 authoring.prompt.md            # Generate Story markdown + JSON steps (bounded, policy-aware)
+      │  └─ 🧾📄 evidence_manifest.prompt.md    # Evidence manifest stub + consistency checks (citations ↔ artifacts)
+      ├─ 🧵 pulses/                            # Pulse threads (short, geotagged micro-updates with evidence)
+      │  └─ 📍📄 pulse_thread.prompt.md         # Pulse narrative: format, geo tags, citations, and update discipline
+      ├─ 📥 intake/                            # Intake helpers (linking + planning; code runs elsewhere)
+      │  ├─ 🧷📄 entity_linking.prompt.md       # Link entities (people/places/events) to graph IDs with citations
+      │  └─ 🧪📄 transform_planner.prompt.md    # Propose transform config/plan; keep execution safe and reproducible
+      └─ 🛡️ governance/                        # Governance prompt pack (policy checks + sensitivity handling)
+         ├─ 🛡️📄 policy_checks.prompt.md        # Policy assumptions + deny reasons (OPA/Rego-aligned, audit-friendly)
+         └─ 🧿📄 sensitivity.prompt.md          # Redaction/obfuscation rules + classification handling (no sensitive leakage)
 ```
 
 > Note: the broader repo “expected structure” explicitly carves out `mcp/` for methods/experiments and emphasizes governed templates + schemas.  [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
