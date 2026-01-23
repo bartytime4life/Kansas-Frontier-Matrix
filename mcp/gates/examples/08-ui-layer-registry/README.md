@@ -54,12 +54,12 @@ This gate + example layout shows how to:
 
 ```mermaid
 flowchart LR
-  A[📄 Layer manifests<br/>layers/*.layer.yaml] --> B[🛡️ Gate: ui-layer-registry]
-  B -->|schema + policy checks| C[📦 Compiled registry artifact<br/>dist/ui-layer-registry.json]
-  C --> D[🧾 Lockfile<br/>dist/ui-layer-registry.lock.json]
-  C --> E[🗺️ UI Layer Panel<br/>React + MapLibre + (optional) Cesium]
-  E --> F[🔎 Layer Provenance panel<br/>source + license + processing summary]
-  E --> G[🧠 Focus Mode context bundle<br/>active layers + citations]
+  A[📄 Layer manifests - layers/*.layer.yaml] --> B[🛡️ Gate - ui layer registry]
+  B --> C[📦 Compiled registry artifact - dist/ui-layer-registry.json]
+  C --> D[🧾 Lockfile - dist/ui-layer-registry.lock.json]
+  C --> E[🗺️ UI Layer Panel - React + MapLibre + optional Cesium]
+  E --> F[🔎 Layer Provenance panel - source + license + processing summary]
+  E --> G[🧠 Focus Mode context bundle - active layers + citations]
 ```
 
 ---
@@ -67,38 +67,38 @@ flowchart LR
 ## 📁 Suggested example layout
 
 ```text
-📁 mcp/
-  📁 gates/
-    📁 examples/
-      📁 08-ui-layer-registry/
-        📄 README.md
-
-        📁 layer-registry/
-          📄 registry.yaml                       # (optional) grouping + defaults
-          📁 layers/                              # source-of-truth manifests (1 file = 1 layer)
-            📄 hydrology.river_gauges.layer.yaml
-            📄 geology.surficial_units.layer.yaml
-            📄 history.treaty_boundaries.layer.yaml
-            📄 story.prairie_fire.layer.yaml
-            📄 pulse.frontier_updates.layer.yaml
-
-          📁 schemas/
-            📄 ui-layer.schema.json               # schema for a single layer manifest
-            📄 ui-layer-registry.schema.json      # schema for compiled registry artifact
-
-          📁 policies/
-            📄 ui_layer.rego                      # policy-as-code checks (OPA/Rego)
-            📄 governance.rego                    # FAIR+CARE, sensitivity, licensing
-
-          📁 scripts/
-            📄 validate_registry.(py|ts)          # schema + policy runner
-            📄 compile_registry.(py|ts)           # compile manifests → runtime JSON
-
-        📁 dist/
-          📄 ui-layer-registry.json               # build artifact UI loads
-          📄 ui-layer-registry.lock.json          # digests + build metadata for rollbacks
-          📁 reports/
-            📄 ui-layer-registry.report.md        # human readable gate report
+mcp/
+└─ 🚦 gates/
+   └─ 🧪 examples/
+      └─ 🗺️ 08-ui-layer-registry/
+         ├─ 📄 README.md                          # 📘 Example overview: what this gate pack validates + how to run it
+         │
+         ├─ 🗂️ layer-registry/                    # 🗂️ Source + rules for the UI Layer Registry (the “truth” before compilation)
+         │  ├─ 🧾 registry.yaml                    # (optional) Grouping/defaults (categories, ordering, default-visible flags)
+         │  ├─ 🗺️ layers/                          # 🗺️ Source-of-truth layer manifests (1 file = 1 layer)
+         │  │  ├─ 🧾 hydrology.river_gauges.layer.yaml       # Layer manifest: hydrology gauges (sources, styling, attribution, bounds)
+         │  │  ├─ 🧾 geology.surficial_units.layer.yaml      # Layer manifest: geology units (symbology, legend refs, provenance)
+         │  │  ├─ 🧾 history.treaty_boundaries.layer.yaml    # Layer manifest: treaty boundaries (time-binding + citations)
+         │  │  ├─ 🧾 story.prairie_fire.layer.yaml           # Layer manifest: story-specific supporting layer (governed usage)
+         │  │  └─ 🧾 pulse.frontier_updates.layer.yaml       # Layer manifest: pulse/update layer (freshness + evidence pointers)
+         │  │
+         │  ├─ 📐 schemas/                          # 📐 JSON Schemas that define what “valid” looks like
+         │  │  ├─ 📐🧾 ui-layer.schema.json                   # Schema for a single layer manifest (fields, types, required refs)
+         │  │  └─ 📐🧾 ui-layer-registry.schema.json          # Schema for compiled registry artifact (runtime JSON shape)
+         │  │
+         │  ├─ ⚖️ policies/                         # ⚖️ Policy-as-code invariants beyond schema (fail-closed checks)
+         │  │  ├─ ⚖️📄 ui_layer.rego                          # Structural + architectural rules (IDs, refs, URL safety, API boundary)
+         │  │  └─ 🛡️⚖️📄 governance.rego                     # Governance rules (FAIR+CARE, sensitivity, licensing, required attribution)
+         │  │
+         │  └─ 🛠️ scripts/                          # 🛠️ Tooling to validate + compile the registry
+         │     ├─ ✅🛠️ validate_registry.(py|ts)      # Runner: schema validation + policy evaluation (produces reports/exit codes)
+         │     └─ 🧱🛠️ compile_registry.(py|ts)       # Compiler: manifests → runtime JSON (stable ordering + digestable output)
+         │
+         └─ 📦 dist/                                # 📦 Build artifacts the UI loads (outputs of compile/validate)
+            ├─ 🧾🗂️ ui-layer-registry.json           # Runtime registry (fast startup list used by the app)
+            ├─ 🔐🧾 ui-layer-registry.lock.json      # Lockfile: digests + build metadata (rollback + tamper detection)
+            └─ 📝 reports/
+               └─ 📝🚦 ui-layer-registry.report.md    # Human-readable gate report (findings, severities, fixes, waivers)
 ```
 
 > [!NOTE]
