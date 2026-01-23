@@ -71,28 +71,28 @@ Contracts are **NOT** DB schemas and **NOT** UI props.
 
 ```mermaid
 flowchart LR
-  A[📥 Raw Intake] -->|normalize| B[🧾 Evidence Triplet<br/>STAC/DCAT/PROV]
-  B --> C[🕸️ Knowledge Graph<br/>(Neo4j)]
-  C --> D[🧩 API Layer<br/>REST/GraphQL]
-  D --> E[🗺️ UI<br/>Map + Timeline + Stories]
-  D --> F[🤖 Focus Mode AI<br/>Cited answers + XAI]
-  B --> G[📦 Artifacts<br/>Tiles/COGs/Models (OCI)]
-  
-  subgraph Gates[🚦 Gates (this folder supplies the contracts)]
-    G1[Schema Gate]
-    G2[Policy Gate (OPA/Conftest)]
-    G3[Provenance Gate]
-    G4[Security/Supply-Chain Gate]
-    G5[Semantic/Ontology Gate]
+  A[📥 Raw Intake] --> B[🧾 Evidence Triplet - STAC DCAT PROV]
+  B --> C[🕸️ Knowledge Graph - Neo4j]
+  C --> D[🧩 API Layer - REST GraphQL]
+  D --> E[🗺️ UI - Map Timeline Stories]
+  D --> F[🤖 Focus Mode AI - cited answers + XAI]
+  B --> G[📦 Artifacts - tiles COGs models OCI]
+
+  subgraph GATES[🚦 Gates - folder supplies contracts]
+    G1[📐 Schema Gate]
+    G2[⚖️ Policy Gate - OPA Conftest]
+    G3[⛓️ Provenance Gate]
+    G4[🔐 Security Supply Chain Gate]
+    G5[🧠 Semantic Ontology Gate]
   end
 
-  Gates -. validate .-> A
-  Gates -. validate .-> B
-  Gates -. validate .-> C
-  Gates -. validate .-> D
-  Gates -. validate .-> E
-  Gates -. validate .-> F
-  Gates -. validate .-> G
+  GATES -.-> A
+  GATES -.-> B
+  GATES -.-> C
+  GATES -.-> D
+  GATES -.-> E
+  GATES -.-> F
+  GATES -.-> G
 ```
 
 ---
