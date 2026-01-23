@@ -59,30 +59,30 @@ Each fixture is a **self-contained directory** (a “fixture pack”) with:
 
 ```text
 fixtures/ 🧪
-  <fixture-id>/ 🧩
-    README.md 📄
-    input/ 📥
-      sources/ 🧾
-        source.json
-      raw/ 📦
-        <small-sample-files...>
-    expected/ ✅
-      processed/ 🧼
-        <expected-processed-outputs...>
-      stac/ 🛰️
-        item.json
-        collection.json
-      dcat/ 📚
-        dataset.jsonld
-      prov/ 🔗
-        lineage.jsonld
-      policies/ 🛡️
-        results.json
-      graph/ 🕸️
-        import.cypher
-    run/ 🏃
-      run_manifest.json 🧾
-      checksums.sha256 🔐
+└─ 🧩 <fixture-id>/                     # 🧩 One end-to-end fixture bundle (inputs → expected outputs + receipts)
+   ├─ 📄 README.md                      # 📘 What this fixture proves, how to run it, and what “success” means
+   ├─ 📥 input/                         # 📥 Inputs for the fixture (keep tiny, deterministic, license-cleared)
+   │  ├─ 🧾 sources/                    # 🧾 Source descriptors (where data came from, license, retrieval notes)
+   │  │  └─ 🧾 source.json              # Source contract (id, URL/URI, license, timestamps, checksums/pointers)
+   │  └─ 📦 raw/                        # 📦 Small raw sample files (immutable snapshot boundary)
+   │     └─ 📦 <small-sample-files…>    # Tiny artifacts only (no large rasters/tiles; use pointers/receipts instead)
+   ├─ ✅ expected/                      # ✅ Expected outputs (golden results used for regression testing)
+   │  ├─ 🧼 processed/                  # 🧼 Expected processed artifacts (normalized/cleaned outputs)
+   │  │  └─ ✅ <expected-processed-outputs…>
+   │  ├─ 🛰️ stac/                       # 🛰️ Expected STAC metadata (collection + item snapshots)
+   │  │  ├─ 🧾 item.json                # STAC Item referencing produced assets + roles/links
+   │  │  └─ 🧾 collection.json          # STAC Collection describing the dataset/product
+   │  ├─ 📚 dcat/                       # 📚 Expected DCAT discovery metadata (dataset + distributions)
+   │  │  └─ 🧾 dataset.jsonld           # DCAT Dataset/Distribution record (license/access/links)
+   │  ├─ 🔗 prov/                       # 🔗 Expected provenance/lineage bundle (PROV-O JSON-LD)
+   │  │  └─ 🧬🧾 lineage.jsonld          # PROV entities/activities/agents connecting inputs → outputs
+   │  ├─ 🛡️ policies/                   # 🛡️ Expected policy evaluation outputs (OPA/Conftest results)
+   │  │  └─ 🧪🧾 results.json            # Pass/fail + findings (codes/severities) for this fixture
+   │  └─ 🕸️ graph/                      # 🕸️ Expected graph import artifacts (optional)
+   │     └─ 🕸️📄 import.cypher          # Cypher import script or expected mutation statements
+   └─ 🏃 run/                           # 🏃 Run receipts for reproducing/verifying this fixture
+      ├─ 🧾🔐 run_manifest.json          # Run manifest: commands, params, tool versions, IO, digests, timestamps
+      └─ 🔐📄 checksums.sha256           # sha256 sums for input/expected artifacts (tamper detection)
 ```
 
 ### ✅ Minimal required files
