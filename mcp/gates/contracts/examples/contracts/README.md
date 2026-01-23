@@ -49,25 +49,25 @@ KFM is built around a few non-negotiables:
 
 ```text
 mcp/
-  gates/
-    contracts/
-      examples/
-        contracts/
-          README.md  👈 you are here
-          # (suggested example fixtures below 👇)
-          run_manifest.example.json
-          governance_card.example.json
-          evidence_manifest.example.yaml
-          story_node_frontmatter.example.yaml
-          stac_item.example.json
-          dcat_dataset.example.jsonld
-          prov_bundle.example.jsonld
-          prov_pr_activity.example.jsonld
-          gate_input.example.json
-          gate_result.example.json
-          oci_artifact_ref.example.json
-          offline_pack_manifest.example.json
-          ai_answer_envelope.example.json
+└─ 🚦 gates/
+   └─ 📐 contracts/
+      └─ 🧪 examples/
+         └─ 📐 contracts/
+            ├─ 📄 README.md                          # 👈 you are here 📌 What these “contract examples” are for + naming/versioning
+            │                                        #   Use these as canonical sample payloads for docs, tests, and generators.
+            ├─ 🧾🔐 run_manifest.example.json         # Example run receipt: commands, inputs/outputs, tool versions, checksums
+            ├─ 🛡️🧾 governance_card.example.json      # Example governance “card”: review/approval/waiver metadata + owners
+            ├─ 📎🧾 evidence_manifest.example.yaml     # Example evidence manifest: claims→citations→artifacts (+ digests/paths)
+            ├─ 🎬🧾 story_node_frontmatter.example.yaml # Example Story Node frontmatter: ids, steps pointer, citations refs
+            ├─ 🛰️🧾 stac_item.example.json             # Example STAC Item: assets, links, license/extent/time snapshot
+            ├─ 🗂️🧾 dcat_dataset.example.jsonld        # Example DCAT Dataset/Distribution: discovery metadata + access links
+            ├─ 🧬🧾 prov_bundle.example.jsonld          # Example PROV bundle: entities/activities/agents + derivations
+            ├─ 🔗🧬🧾 prov_pr_activity.example.jsonld   # Example PR→PROV activity: commits/reviews → produced artifacts/receipts
+            ├─ 🚦📥🧾 gate_input.example.json           # Example gate input envelope: what’s being validated + context pointers
+            ├─ 🚦📤🧾 gate_result.example.json          # Example gate decision: pass/fail, findings, severities, pointers, waivers
+            ├─ 📦🧾 oci_artifact_ref.example.json       # Example OCI artifact ref: registry/repo/digest, mediaType, annotations
+            ├─ 🧳🧾 offline_pack_manifest.example.json  # Example offline pack manifest: included assets, checksums, versions
+            └─ 🤖🧾 ai_answer_envelope.example.json     # Example AI answer envelope: citations, uncertainty, redactions, receipts
 ```
 
 > [!NOTE]
