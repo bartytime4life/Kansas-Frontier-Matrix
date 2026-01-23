@@ -111,15 +111,15 @@ These fixtures mirror the intended system flow:
 
 ```mermaid
 flowchart LR
-  A[📥 Raw Inputs] --> B[🧪 Work / Transform]
-  B --> C[✅ Processed Outputs]
-  C --> D[🛰️ STAC + 📚 DCAT]
-  C --> E[🔗 PROV Lineage]
-  D --> F[(🕸️ Knowledge Graph)]
-  E --> F
-  F --> G[🌐 API]
-  G --> H[🗺️ UI (Map + Timeline + Stories)]
-  H --> I[🤖 Focus Mode (Cited Answers)]
+  A[📥 Raw Inputs] --> B[🧪 Work / Transform];
+  B --> C[✅ Processed Outputs];
+  C --> D[🛰️ STAC + 📚 DCAT];
+  C --> E[🔗 PROV Lineage];
+  D --> F[🕸️ Knowledge Graph];
+  E --> F;
+  F --> G[🌐 API];
+  G --> H[🗺️ UI - Map + Timeline + Stories];
+  H --> I[🤖 Focus Mode - cited answers];
 ```
 
 Key idea: **nothing “publishes” without the boundary artifacts** (catalog + provenance).
