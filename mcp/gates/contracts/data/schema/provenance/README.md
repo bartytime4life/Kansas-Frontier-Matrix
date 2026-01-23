@@ -82,19 +82,19 @@ KFM publishes data using an evidence triplet:
 
 ```mermaid
 flowchart LR
-  A[📥 Raw Sources<br/>data/raw/] --> B[🧪 ETL + Normalization<br/>data/work/]
-  B --> C[🗄️ Curated Outputs<br/>data/processed/]
+  A[📥 Raw Sources - data/raw] --> B[🧪 ETL + Normalization - data/work]
+  B --> C[🗄️ Curated Outputs - data/processed]
 
-  C --> D[🛰️ STAC<br/>data/stac/]
-  C --> E[📇 DCAT<br/>data/catalog/dcat/]
-  C --> F[⛓️ PROV<br/>data/prov/]
+  C --> D[🛰️ STAC - data/stac]
+  C --> E[📇 DCAT - data/catalog/dcat]
+  C --> F[⛓️ PROV - data/prov]
 
   D --> G[🧠 Neo4j Knowledge Graph]
   E --> G
   F --> G
 
-  G --> H[🔌 API Layer<br/>(contracts + redaction)]
-  H --> I[🗺️ UI + 🤖 Focus Mode<br/>(citations + attribution)]
+  G --> H[🔌 API Layer - contracts + redaction]
+  H --> I[🗺️ UI + 🤖 Focus Mode - citations + attribution]
 ```
 
 > [!NOTE]
@@ -120,21 +120,21 @@ This README is the **spec**; schema/policy files live alongside it.
 
 ```text
 mcp/gates/contracts/data/schema/provenance/
-├─ 📘 README.md                      # you are here
-├─ 🧾 kfm-prov.schema.json            # JSON Schema for KFM-PROV bundles (JSON-LD)
-├─ 🧠 kfm-prov.context.jsonld         # JSON-LD context extensions (kfm namespace)
-├─ 🧾 run-manifest.schema.json        # schema for per-run manifest (audit trail)
-├─ 🧾 evidence-manifest.schema.json   # schema for Story Node evidence manifests
-├─ 🧾 agent-action.schema.json        # schema for agent actions (Watcher/Planner/Executor)
-├─ 🧪 examples/
-│  ├─ minimal.bundle.jsonld
-│  ├─ dataset-etl.bundle.jsonld
-│  ├─ streaming-query.bundle.jsonld
-│  ├─ story-node.bundle.jsonld
-│  └─ pr-activity.bundle.jsonld
-└─ ✅ tests/
-   ├─ fixtures/
-   └─ expected-failures/
+├─ 📘📄 README.md                       # you are here 📌 Scope of provenance contracts + how to validate bundles end-to-end
+├─ 🧬📐🧾 kfm-prov.schema.json           # KFM-PROV bundle schema (JSON-LD shape constraints over PROV-O patterns)
+├─ 🧠🧬🧾 kfm-prov.context.jsonld        # JSON-LD @context extensions (kfm namespace, prefixes, term mappings)
+├─ 🧾📐🧾 run-manifest.schema.json       # Per-run manifest schema (audit trail: commands, env, inputs/outputs, hashes)
+├─ 📎📐🧾 evidence-manifest.schema.json  # Evidence manifest schema (Story Node/pulse: claims→citations→artifacts)
+├─ 🤖📐🧾 agent-action.schema.json       # Agent action schema (Watcher/Planner/Executor actions + tools + receipts)
+├─ 🧪 examples/                         # Known-good example bundles (should validate cleanly)
+│  ├─ ✅🧬 minimal.bundle.jsonld         # Smallest valid PROV bundle (agents/entities/activities + derivation)
+│  ├─ 🛰️🧬 dataset-etl.bundle.jsonld     # Dataset ETL lineage (raw→work→processed→catalog + tool versions)
+│  ├─ 📡🧬 streaming-query.bundle.jsonld # Streaming query lineage (events, windows, outputs, checkpoints)
+│  ├─ 🎬🧬 story-node.bundle.jsonld      # Story Node lineage (content + citations + referenced assets/layers)
+│  └─ 🔗🧬 pr-activity.bundle.jsonld     # PR→PROV activity (commits/reviews → published artifacts/receipts)
+└─ ✅ tests/                            # Contract tests for provenance (schema + policy invariants)
+   ├─ 🧩 fixtures/                      # Test inputs (pass/fail variants) organized by scenario
+   └─ ❌ expected-failures/             # Inputs that must fail (guards against under-enforcement/regressions)
 ```
 
 > [!TIP]
