@@ -51,19 +51,19 @@ KFM’s system design treats **metadata + provenance** as the backbone:
 
 ```mermaid
 flowchart LR
-  RAW[🧱 data/raw<br/>Immutable] --> WORK[🧰 data/work<br/>Scratch/ETL]
-  WORK --> PROC[🧪 data/processed<br/>Versioned outputs]
-  PROC --> META[📚 Catalogs<br/>STAC + DCAT]
-  META --> PROV[⛓ PROV bundles<br/>Lineage + receipts]
-  PROV --> GRAPH[🕸️ Neo4j Graph<br/>Context + links]
-  GRAPH --> API[🚪 API (FastAPI/GraphQL)<br/>Gatekeeper + Redaction]
-  API --> UI[🗺️ UI (MapLibre/Cesium)<br/>Stories + Exploration]
-  API --> AI[🤖 Focus Mode AI<br/>RAG + Contextual Q&A]
-  AI --> POLICY[🛡️ AI Policy Gate<br/>OPA/Conftest]
-  POLICY -->|pass| OUT[📦 Answer + Evidence + Run Manifest]
-  POLICY -->|deny| SAFE[⛔ Safe Refusal<br/>+ Next best action]
+  RAW[🧱 data/raw - immutable] --> WORK[🧰 data/work - scratch ETL]
+  WORK --> PROC[🧪 data/processed - versioned outputs]
+  PROC --> META[📚 Catalogs - STAC + DCAT]
+  META --> PROV[⛓️ PROV bundles - lineage + receipts]
+  PROV --> GRAPH[🕸️ Neo4j Graph - context + links]
+  GRAPH --> API[🚪 API - FastAPI / GraphQL - gatekeeper + redaction]
+  API --> UI[🗺️ UI - MapLibre / Cesium - stories + exploration]
+  API --> AI[🤖 Focus Mode AI - RAG + contextual Q and A]
+  AI --> POLICY[🛡️ AI Policy Gate - OPA / Conftest]
+  POLICY --> OUT[📦 Pass - answer + evidence + run manifest]
+  POLICY --> SAFE[⛔ Deny - safe refusal + next best action]
   OUT --> UI
-  OUT --> LEDGER[📜 Governance Ledger<br/>Append-only]
+  OUT --> LEDGER[📜 Governance Ledger - append-only]
 ```
 
 > ✳️ **Key boundary rule:** UI/clients must not bypass the API for graph/DB access — the API is the “gatekeeper” for permissions, redaction, and safety controls.
