@@ -112,14 +112,7 @@ KFM uses automated policy gates at **data ingestion**, **AI inference**, and **p
 ### “Fail closed” gate chain (illustrative)
 
 ```mermaid
-flowchart TB
-  P[📦 Payload] --> S[✅ Schema Gate]
-  S --> M[🧾 Metadata Gate]
-  M --> L[📜 License Gate]
-  L --> C[🏷️ Classification Gate]
-  C --> V[🧬 Provenance Gate]
-  V --> A[🤖 AI Citation Gate (if AI output)]
-  A --> X[🚀 Allowed to publish/use]
+flowchart TB; P[📦 Payload] --> S[✅ Schema Gate]; S --> M[🧾 Metadata Gate]; M --> L[📜 License Gate]; L --> C[🏷️ Classification Gate]; C --> V[🧬 Provenance Gate]; V --> A[🤖 AI Citation Gate - if AI output]; A --> X[🚀 Allowed to publish or use];
 ```
 
 > [!WARNING]
