@@ -38,16 +38,16 @@ Contracts that define **what “real, shippable domain data” means** in Kansas
 **Expected layout** (this README documents the contract surface; your repo may add more helpers over time):
 
 ```text
-📦 mcp/
-  🚦 gates/
-    📜 contracts/
-      🧩 domain/
-        🧬 v2/
-          📂 schemas/        # JSON Schema (source of truth)
-          📂 examples/       # Example instances (CI + docs)
-          📂 vocab/          # Controlled vocabularies (licenses, sensitivity, themes…)
-          📂 docs/           # Optional deeper notes / diagrams
-          📄 README.md       # 👈 you are here
+mcp/
+└─ 🚦 gates/
+   └─ 📜 contracts/
+      └─ 🧩 domain/
+         └─ 🧬 v2/
+            ├─ 📂 schemas/        # 📐 JSON Schema source of truth (v2 contracts; breaking changes allowed vs v1)
+            ├─ 📂 examples/       # 🧪 Example instances (known-pass/known-fail) used by CI + docs + generators
+            ├─ 📂 vocab/          # 🧾 Controlled vocabularies (licenses, sensitivity labels, themes, enums)
+            ├─ 📂 docs/           # 📚 Optional deeper notes/diagrams (rationale, migration notes, edge cases)
+            └─ 📄 README.md       # 👈 you are here 📌 v2 overview: goals, differences from v1, and adoption plan
 ```
 
 ---
