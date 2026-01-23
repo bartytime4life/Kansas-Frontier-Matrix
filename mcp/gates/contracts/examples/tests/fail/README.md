@@ -44,17 +44,17 @@ So this folder includes failure cases across:
 ## 📁 Folder layout
 
 ```text
-📦 mcp/
-  └── 🚪 gates/
-      └── 📜 contracts/
-          └── 🧪 examples/
-              └── 🧫 tests/
-                  ├── ✅ pass/
-                  │   └── README.md
-                  └── ❌ fail/
-                      ├── README.md   👈 you are here
-                      ├── fixtures/   (optional: organize by domain)
-                      └── cases.*     (optional: manifest/index, depending on runner)
+mcp/
+└── 🚪 gates/
+    └── 📜 contracts/
+        └── 🧪 examples/
+            └── 🧫 tests/
+                ├── ✅ pass/                     # ✅ Fixtures that MUST pass (baseline compliant examples)
+                │   └── 📄 README.md             # 📘 What “pass” covers + how to add new passing cases safely
+                └── ❌ fail/                     # ❌ Fixtures that MUST fail (proves deny rules work)
+                    ├── 📄 README.md             # 👈 you are here 📌 How fail fixtures are structured + expected findings/codes
+                    ├── 🧩 fixtures/             # (optional) Organize failing inputs by domain (data/prov/ai/ui/security)
+                    └── 🧾 cases.*               # (optional) Case manifest/index (runner-specific: yml/json/toml)
 ```
 
 ---
