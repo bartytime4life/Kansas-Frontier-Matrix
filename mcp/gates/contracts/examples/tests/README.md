@@ -58,12 +58,12 @@ Common gate categories include:
 
 ```mermaid
 flowchart LR
-  A[Contract schema\n(JSON Schema / profiles)] --> B[Examples\n✅ pass / ❌ fail]
-  B --> C[Gate evaluation\nOPA/Rego via Conftest]
-  B --> D[Custom validators\n(geo, checksums, link integrity)]
-  C --> E[CI decision\nPASS ✅ / FAIL ❌]
+  A[📐 Contract schema - JSON Schema profiles] --> B[🧪 Examples - pass ✅ fail ❌]
+  B --> C[⚖️ Gate evaluation - OPA Rego via Conftest]
+  B --> D[🛠️ Custom validators - geo checksums link integrity]
+  C --> E[✅ CI decision - PASS or FAIL ❌]
   D --> E
-  E --> F[Promotion\nCatalog + Graph + UI]
+  E --> F[🚀 Promotion - Catalog + Graph + UI]
 ```
 
 ---
