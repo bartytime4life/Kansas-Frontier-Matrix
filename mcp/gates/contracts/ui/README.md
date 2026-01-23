@@ -79,16 +79,16 @@ OPA + Conftest policies encode governance rules (license required, citations req
 > This repo is contract-first; treat schemas as “boundary artifacts” and generate types/tests from them. [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
 
 ```text
-📦 mcp/
-  🚦 gates/
-    📜 contracts/
-      🖥️ ui/
-        📄 README.md            👈 you are here
-        🧾 schemas/             # JSON Schema (source of truth)
-        🧬 types/               # generated TS types (optional)
-        🧪 tests/               # contract tests (examples validate against schemas)
-        🧷 examples/            # canonical payload examples (goldens)
-        🧭 policies/            # UI-surface policies (if split from global policy pack)
+mcp/
+└─ 🚦 gates/
+   └─ 📜 contracts/
+      └─ 🖥️ ui/
+         ├─ 📄 README.md            # 👈 you are here 📌 UI contract scope + how validation runs in CI (schema + policy)
+         ├─ 📐 schemas/             # JSON Schema source of truth (layer/story/timeline/offline-pack/UI-config contracts)
+         ├─ 🧬 types/               # Optional generated TS types (commit only if generator + versions are pinned)
+         ├─ ✅ tests/               # Contract tests: examples validate against schemas + policy invariants
+         ├─ 🧷 examples/            # Canonical payload examples (goldens: known-pass + known-fail where useful)
+         └─ 🧭 policies/            # UI-surface policies (optional split from global policy pack; architecture/a11y/safety rules)
 ```
 
 ---
