@@ -102,30 +102,31 @@ In a full KFM repo, these structures typically map to top-level `data/*` directo
 
 ```text
 mcp/gates/examples/01-data-intake/
-├─ README.md 📘
-├─ datasets/
-│  └─ example.dataset.yml 🧾
-├─ fixtures/
-│  └─ sample_input.csv 🧪
-└─ out/  (generated) 🏗️
-   ├─ data/
-   │  ├─ raw/<domain>/<dataset_id>/<run_id>/        📥
-   │  │  ├─ source.json
-   │  │  ├─ checksums.sha256
-   │  │  └─ <original files...>
-   │  ├─ work/<domain>/<dataset_id>/<run_id>/       🧪
-   │  └─ processed/<domain>/<dataset_id>/<version>/ 📦
-   ├─ stac/
-   │  ├─ collections/<collection_id>.json 🛰️
-   │  └─ items/<item_id>.json            🛰️
-   ├─ catalogs/
-   │  └─ dcat/<dataset_id>.jsonld        🧭
-   ├─ prov/
-   │  └─ <run_id>.prov.jsonld            🧾
-   ├─ audits/
-   │  └─ <run_id>/run_manifest.json      🧾
-   └─ telemetry/
-      └─ intake.ndjson                   📈
+├─ 📘📄 README.md                          # 📘 What this example demonstrates + how to run intake + expected outputs
+├─ 🗂️ datasets/
+│  └─ 🧾 example.dataset.yml               # Dataset declaration (id/domain/source/license/schema expectations)
+├─ 🧪 fixtures/
+│  └─ 🧪📄 sample_input.csv                # Tiny sample input used for the intake demo (non-sensitive; deterministic)
+└─ 🏗️ out/                                # 🏗️ Generated outputs (build artifacts; typically gitignored)
+   ├─ 📦 data/
+   │  ├─ 📥 raw/<domain>/<dataset_id>/<run_id>/        # 📥 As-received snapshot boundary (immutable + checksummed)
+   │  │  ├─ 🧾 source.json                             # Source record (where it came from, license, retrieval metadata)
+   │  │  ├─ 🔐📄 checksums.sha256                      # Hashes for the raw snapshot files (tamper detection)
+   │  │  └─ 📦 <original files…>                       # Original downloaded/copied files
+   │  ├─ 🧪 work/<domain>/<dataset_id>/<run_id>/       # 🧪 Controlled transforms/staging outputs for this run
+   │  └─ ✅ processed/<domain>/<dataset_id>/<version>/  # ✅ Publishable artifacts (versioned outputs promoted from work/)
+   ├─ 🛰️ stac/
+   │  ├─ 🗂️🛰️ collections/<collection_id>.json         # STAC Collection (dataset-level metadata + extent/license/providers)
+   │  └─ 🧷🛰️ items/<item_id>.json                      # STAC Item (run/time snapshot referencing produced assets)
+   ├─ 🧭 catalogs/
+   │  └─ 🗂️🧾 dcat/<dataset_id>.jsonld                  # DCAT dataset record (discovery metadata + distribution links)
+   ├─ 🧬 prov/
+   │  └─ 🧬🧾 <run_id>.prov.jsonld                       # PROV run bundle linking raw→work→processed + tools/params/hashes
+   ├─ 🧾 audits/
+   │  └─ 🏷️ <run_id>/
+   │     └─ 🧾 run_manifest.json                         # Run receipt (commands, env, IO, hashes, gate pointers)
+   └─ 📈 telemetry/
+      └─ 📡🧾 intake.ndjson                              # Append-only telemetry stream for the intake run (audit-safe)
 ```
 
 ---
