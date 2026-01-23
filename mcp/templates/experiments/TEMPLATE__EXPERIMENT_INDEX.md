@@ -89,24 +89,25 @@ Examples:
 ## 🗂️ Recommended folder layout
 
 ```text
-📦 mcp/
+mcp/
 └─ 🧪 experiments/
-   ├─ 📄 EXPERIMENT_INDEX.md   👈 (generated from this template)
-   ├─ 🧪 EXP-AI-2026-001__focus-mode-citations/
-   │  ├─ README.md
-   │  ├─ protocol.md
-   │  ├─ results.md
-   │  ├─ ✅ decision.md              (ship / don’t ship + rationale)
-   │  ├─ 🧬 manifests/
-   │  │  ├─ run_manifest.json        (hash + environment + inputs/outputs)
-   │  │  ├─ prov.jsonld              (PROV bundle for the run)
-   │  │  └─ evidence_manifest.yaml   (if narrative-facing outputs exist)
-   │  ├─ 📦 artifacts/
-   │  │  └─ (signed OCI artifacts or exported datasets)
-   │  └─ 📓 notebooks/
-   │     └─ exploration.ipynb
-   └─ 🧪 EXP-INGEST-2026-002__gtfs-rt-watcher/
-      └─ ...
+   ├─ 🧾📄 EXPERIMENT_INDEX.md                 # 👈 (generated) Registry of experiments (ids, status, links, key outcomes)
+   ├─ 🧪 EXP-AI-2026-001__focus-mode-citations/ # One experiment folder (area + year + sequence + short slug)
+   │  ├─ 📄 README.md                          # Overview: purpose, scope, owners, timeline, and quick links
+   │  ├─ 🧪📄 protocol.md                      # Protocol: hypothesis, method, datasets, metrics, acceptance criteria
+   │  ├─ 📊📄 results.md                       # Results: metrics, findings, artifacts links, limitations, follow-ups
+   │  ├─ ✅📄 decision.md                      # ✅ Ship / don’t ship decision + rationale + required follow-ups
+   │  ├─ 🧬 manifests/                         # Provenance/evidence receipts (machine-verifiable)
+   │  │  ├─ 🧾🔐 run_manifest.json              # Run manifest: env, commands, inputs/outputs, tool versions, hashes
+   │  │  ├─ 🧬🧾 prov.jsonld                    # PROV bundle: lineage graph linking inputs → run → outputs
+   │  │  └─ 📎🧾 evidence_manifest.yaml         # Evidence manifest (only when narrative-facing outputs exist)
+   │  ├─ 📦 artifacts/                         # Produced artifacts (signed OCI artifacts / exports / figures; keep access-safe)
+   │  │  └─ 🔏📦 …                             # e.g., digests, signatures, exported datasets, charts
+   │  └─ 📓 notebooks/                         # Optional notebooks used during the experiment (keep runnable)
+   │     └─ 📓 exploration.ipynb               # Exploration notebook (should reference manifests + pinned env)
+   └─ 🧪 EXP-INGEST-2026-002__gtfs-rt-watcher/  # Another experiment (example placeholder)
+      └─ ➕ …                                    # Same structure: protocol/results/decision/manifests/artifacts/notebooks
+
 ```
 
 > [!TIP]
