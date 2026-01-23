@@ -131,38 +131,38 @@ To support idempotency and auditing, simulation runs can include a canonical dig
 
 ```text
 mcp/
-└─ gates/
-   └─ examples/
-      └─ 07-simulations/
-         ├─ README.md
-         ├─ scenarios/
-         │  ├─ 01_patch_single_run/
-         │  │  ├─ scenario.yaml
-         │  │  ├─ run_manifest.json
-         │  │  ├─ model_card.md
-         │  │  ├─ expected/
-         │  │  │  ├─ diff.patch
-         │  │  │  ├─ metadata/
-         │  │  │  │  ├─ stac/
-         │  │  │  │  ├─ dcat.json
-         │  │  │  │  └─ prov.json
-         │  │  │  └─ gate_report.json
-         │  ├─ 02_ensemble_uq/
-         │  │  ├─ scenario.yaml
-         │  │  ├─ run_manifest.json
-         │  │  ├─ uq_summary.json
-         │  │  └─ expected/...
-         │  └─ 03_sensitive_obfuscation/
-         │     ├─ scenario.yaml
-         │     ├─ run_manifest.json
-         │     ├─ governance.json
-         │     └─ expected/...
-         ├─ policy/
-         │  ├─ simulations_gate.rego
-         │  └─ simulations_gate_test.rego
-         └─ schemas/
-            ├─ run_manifest.schema.json
-            └─ scenario.schema.json
+└─ 🚦 gates/
+   └─ 🧪 examples/
+      └─ 🧪 07-simulations/
+         ├─ 📄 README.md                          # 📘 How simulation gates work + how to run these scenarios locally/CI
+         ├─ 🧪 scenarios/                         # Scenario fixtures (each folder = one simulation gating story)
+         │  ├─ 🩹 01_patch_single_run/             # Single-run scenario producing a deterministic patch + catalogs + gate report
+         │  │  ├─ 🧾 scenario.yaml                 # Scenario declaration (inputs, params, expected outputs, gate expectations)
+         │  │  ├─ 🧾🔐 run_manifest.json            # Run receipt (commands/params/seeds/env + inputs/outputs + hashes)
+         │  │  ├─ 🪪📄 model_card.md                # Model card (intended use, risks, evals, dataset notes)
+         │  │  └─ ✅ expected/                      # Expected outputs used for regression checking
+         │  │     ├─ 🩹 diff.patch                  # Expected patch/diff produced by the simulation pipeline
+         │  │     ├─ 🗂️ metadata/                   # Expected catalog/provenance outputs (evidence triplet)
+         │  │     │  ├─ 🛰️ stac/                    # Expected STAC outputs (collection/items, or snapshots)
+         │  │     │  ├─ 🗂️ dcat.json                # Expected DCAT dataset/distribution record
+         │  │     │  └─ 🧬 prov.json                # Expected PROV lineage bundle (inputs→activities→outputs)
+         │  │     └─ 🚦🧾 gate_report.json           # Expected gate decision (pass/fail + findings + pointers)
+         │  ├─ 🎛️ 02_ensemble_uq/                   # Ensemble run + uncertainty quantification (UQ) outputs + gates
+         │  │  ├─ 🧾 scenario.yaml                  # Scenario config (ensemble size, seeds, metrics thresholds)
+         │  │  ├─ 🧾🔐 run_manifest.json             # Run receipt (includes seeds + aggregation parameters)
+         │  │  ├─ 📊🧾 uq_summary.json               # UQ summary payload (quantiles, spread, calibration metrics)
+         │  │  └─ ✅ expected/…                      # Expected outputs (reports/catalogs/gate results)
+         │  └─ 🔒 03_sensitive_obfuscation/          # Sensitive-data scenario (obfuscation/redaction required to pass)
+         │     ├─ 🧾 scenario.yaml                  # Scenario config (sensitivity labels + allowed outputs)
+         │     ├─ 🧾🔐 run_manifest.json             # Run receipt (records redaction/obfuscation steps)
+         │     ├─ 🛡️🧾 governance.json              # Governance inputs (classification, review/waiver pointers)
+         │     └─ ✅ expected/…                      # Expected outputs (including redaction notices + gate results)
+         ├─ ⚖️ policy/                              # Policy-as-code rules for simulation gating (OPA/Rego)
+         │  ├─ ⚖️📄 simulations_gate.rego            # Main simulation gate rules (reproducibility, evidence, catalogs, sensitivity)
+         │  └─ 🧪⚖️📄 simulations_gate_test.rego      # Policy tests for the rules (unit-like cases)
+         └─ 📐 schemas/                              # Schemas used by simulation scenarios (contract-first)
+            ├─ 📐🧾 run_manifest.schema.json          # Run manifest schema (required fields: seeds, env, IO, digests)
+            └─ 📐🧾 scenario.schema.json              # Scenario schema (inputs, expected artifacts, thresholds, gating rules)
 ```
 
 > 🧩 The exact filenames can vary by implementation — the *contract* is what matters.
