@@ -39,15 +39,15 @@ Default behavior: **observe → propose → PR (no auto-merge)**, with **CI + po
 
 ```mermaid
 flowchart LR
-  W[Watcher 🔭\n(Observe & Record)] --> ER[Immutable Event Record 🧾\n(signed, timestamped)]
-  ER --> P[Planner 🧠\n(Formulate deterministic plan)]
-  P --> PL[Plan Artifact 📦\n(plan.json + risk + tests)]
-  PL --> E[Executor 🛠️\n(Run deterministic pipeline + open PR)]
-  E --> PR[Pull Request 🔀\n(context + provenance + artifacts)]
-  PR --> CI[CI + Policy Pack ✅\n(fail closed)]
-  CI --> HR[Human Review 👀]
-  HR --> M[Merge ✅]
-  M --> PUB[Publish/Promote 🌐\nCatalog + Graph + UI]
+  W[🔭 Watcher - observe and record] --> ER[🧾 Immutable event record - signed + timestamped]
+  ER --> P[🧠 Planner - formulate deterministic plan]
+  P --> PL[📦 Plan artifact - plan.json + risk + tests]
+  PL --> E[🛠️ Executor - run deterministic pipeline + open PR]
+  E --> PR[🔀 Pull request - context + provenance + artifacts]
+  PR --> CI[✅ CI + policy pack - fail closed]
+  CI --> HR[👀 Human review]
+  HR --> M[✅ Merge]
+  M --> PUB[🌐 Publish promote - catalog + graph + UI]
 ```
 
 Key idea: **automation with accountability** — every action ties back to a trigger event and is reviewable.  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-4Umt1yHoGKicdmLWzFJ9sC) [oai_citation:11‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-Pv8eev6RWvCKrGCXyzY7zg)
