@@ -50,33 +50,33 @@ If a layer/story/answer is missing **any** part of the triplet, it should be blo
 
 ```text
 mcp/gates/contracts/examples/
-├─ 📜 README.md                          # 👈 you are here
-├─ 📁 contracts/                         # “what valid looks like”
-│  ├─ run_manifest.schema.json
-│  ├─ evidence_manifest.schema.json
-│  ├─ focus_answer_artifact.schema.json
-│  ├─ pulse_thread.schema.json
-│  ├─ concept_node.schema.json
-│  └─ ui_context.schema.json
-├─ 📁 payloads/                          # “example instances”
-│  ├─ ✅ run_manifest.example.json
-│  ├─ ✅ evidence_manifest.example.yml
-│  ├─ ✅ focus_answer.example.json
-│  ├─ ✅ pulse_thread.example.json
-│  ├─ ✅ concept_node.example.json
-│  └─ ✅ ui_context.example.json
-├─ 📁 gates/                             # “how we enforce”
-│  ├─ 📁 rego/
-│  │  ├─ KFM-CAT-001-license-required.rego
-│  │  ├─ KFM-PROV-001-prov-required.rego
-│  │  ├─ KFM-EVID-001-citations-match-evidence.rego
-│  │  ├─ KFM-AI-001-citations-required.rego
-│  │  ├─ KFM-SEC-001-sensitive-redaction.rego
-│  │  └─ KFM-PIPE-001-pipeline-ordering.rego
-│  └─ 📄 waivers.example.yml
-└─ 📁 tests/
-   ├─ ✅ pass/
-   └─ ❌ fail/
+├─ 📜📄 README.md                          # 👈 you are here 📌 How to use these examples (validate schemas, run gates, add cases)
+├─ 📐 contracts/                           # 📐 “What valid looks like”: example schema files used by docs/tests
+│  ├─ 🧾📐 run_manifest.schema.json         # Run manifest contract (who/what/when + inputs/outputs + digests)
+│  ├─ 📎📐 evidence_manifest.schema.json    # Evidence manifest contract (claims→citations→artifacts)
+│  ├─ 🤖📐 focus_answer_artifact.schema.json # Focus Mode answer artifact contract (citations, redactions, receipts)
+│  ├─ 🧵📐 pulse_thread.schema.json         # Pulse thread contract (short narrative + evidence bundle)
+│  ├─ 🧠📐 concept_node.schema.json         # Concept node contract (graph-ish knowledge unit + refs)
+│  └─ 🧭📐 ui_context.schema.json           # UI context contract (safe client context snapshot; no sensitive leakage)
+├─ 🧪 payloads/                            # 🧪 “Example instances”: valid sample payloads that conform to the schemas
+│  ├─ ✅🧾 run_manifest.example.json        # Example run receipt (deterministic fields + hashes)
+│  ├─ ✅📎 evidence_manifest.example.yml    # Example evidence manifest (YAML form; mirrors JSON structure)
+│  ├─ ✅🤖 focus_answer.example.json        # Example Focus Mode output (citations required + uncertainty/limits)
+│  ├─ ✅🧵 pulse_thread.example.json        # Example pulse thread instance (meta + narrative + evidence refs)
+│  ├─ ✅🧠 concept_node.example.json        # Example concept node (ids, labels, citations, relationships)
+│  └─ ✅🧭 ui_context.example.json          # Example safe UI context (route/map/session metadata, redacted)
+├─ 🚦 gates/                               # 🚦 “How we enforce”: policy rules + example waivers
+│  ├─ ⚖️ rego/                             # ⚖️ OPA/Rego gate rules (deny-by-default patterns)
+│  │  ├─ ⚖️📄 KFM-CAT-001-license-required.rego           # Requires explicit license fields in catalogs/manifests
+│  │  ├─ ⚖️📄 KFM-PROV-001-prov-required.rego             # Requires PROV linkage for processed/derived artifacts
+│  │  ├─ ⚖️📄 KFM-EVID-001-citations-match-evidence.rego  # Ensures citations resolve to evidence manifest entries
+│  │  ├─ ⚖️📄 KFM-AI-001-citations-required.rego          # Requires citations for AI outputs (evidence-first)
+│  │  ├─ ⚖️📄 KFM-SEC-001-sensitive-redaction.rego        # Enforces redaction/sensitivity rules (no secrets/PII)
+│  │  └─ ⚖️📄 KFM-PIPE-001-pipeline-ordering.rego         # Enforces canonical pipeline ordering / linkage expectations
+│  └─ 🧯🧾 waivers.example.yml                 # Example waiver file (time-boxed exceptions with ids/rationale/expiry)
+└─ 🧪 tests/                                # 🧪 Regression suite: known-pass and known-fail cases for CI
+   ├─ ✅ pass/                               # Inputs that MUST pass (guard against over-blocking)
+   └─ ❌ fail/                               # Inputs that MUST fail (guard against under-blocking)
 ```
 
 ---
