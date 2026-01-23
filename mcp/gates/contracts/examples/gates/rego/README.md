@@ -515,10 +515,10 @@ KFM explicitly describes CI as **Detect → Validate → Promote**, where policy
 
 ```mermaid
 flowchart LR
-  D[🔎 Detect change] --> V[✅ Validate (schema/tests)]
-  V --> G[🚦 Policy Gates (Rego/Conftest)]
-  G -->|allow| P[🚀 Promote (merge/deploy)]
-  G -->|deny| B[🧱 Block + explain]
+  D[🔎 Detect change] --> V[✅ Validate - schema tests]
+  V --> G[🚦 Policy Gates - Rego Conftest]
+  G --> P[🚀 Allow - promote - merge deploy]
+  G --> B[🧱 Deny - block + explain]
 ```
 
 ---
