@@ -80,13 +80,7 @@ mcp/
 ### ✅ Gate pipeline (high level)
 
 ```mermaid
-flowchart LR
-  A[PR / Commit] --> B[Schema validation]
-  B --> C[Policy checks (OPA/Conftest)]
-  C --> D[Supply-chain checks (OCI/Cosign)]
-  D --> E[Catalog build (STAC/DCAT)]
-  E --> F[Provenance emit (PROV + Run Manifest)]
-  F --> G[Publish to UI + Focus Mode]
+flowchart LR; A[🔀 PR / Commit] --> B[📐 Schema validation]; B --> C[⚖️ Policy checks - OPA Conftest]; C --> D[🔐 Supply chain checks - OCI Cosign]; D --> E[📚 Catalog build - STAC DCAT]; E --> F[🧬 Provenance emit - PROV + run manifest]; F --> G[🗺️ Publish to UI + 🤖 Focus Mode];
 ```
 
 ### 🧩 What a “Gate” is
