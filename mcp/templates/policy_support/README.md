@@ -91,30 +91,30 @@ flowchart LR
 
 ```text
 mcp/
-└── templates/
-    └── policy_support/
-        ├── 📄 README.md                      # you are here ✅
-        ├── 📄 policy_pack.yaml               # pack metadata (version, owners, scopes)
-        ├── 📁 rego/
-        │   ├── 📄 catalogs.rego              # STAC/DCAT rules
-        │   ├── 📄 prov.rego                  # PROV + run-manifest rules
-        │   ├── 📄 sovereignty.rego           # CARE + classification propagation
-        │   ├── 📄 api_boundary.rego          # “no direct DB access” + contract checks
-        │   ├── 📄 story_nodes.rego           # evidence manifests, citations, AI labeling
-        │   ├── 📄 security.rego              # secret scanning + unsafe patterns
-        │   └── 📄 supply_chain.rego          # cosign / digest pinning / OCI rules
-        ├── 📁 schemas/
-        │   ├── 📄 governance_card.schema.json
-        │   ├── 📄 run_manifest.schema.json
-        │   └── 📄 waiver.schema.json
-        ├── 📁 examples/
-        │   ├── 📄 governance_card.example.json
-        │   ├── 📄 run_manifest.example.json
-        │   └── 📄 waiver.example.yml
-        └── 📁 tests/
-            ├── 📄 catalogs_test.rego
-            ├── 📄 sovereignty_test.rego
-            └── 📄 story_nodes_test.rego
+└── 🧩 templates/
+    └── 🛡️ policy_support/
+        ├── ✅📄 README.md                       # you are here 📌 How to use this policy pack template + conventions/tests
+        ├── 🧾📄 policy_pack.yaml                # Pack metadata: version, owners, scopes, entrypoints, required schemas
+        ├── ⚖️ rego/                             # OPA/Rego rules (policy-as-code) grouped by concern
+        │   ├── 🗂️⚖️📄 catalogs.rego              # STAC/DCAT rules (license required, link integrity, distribution constraints)
+        │   ├── 🧬⚖️📄 prov.rego                  # PROV + run-manifest rules (lineage required, receipts/hashes, ordering)
+        │   ├── 🏷️⚖️📄 sovereignty.rego           # CARE + classification propagation + approval/waiver requirements
+        │   ├── 🚧⚖️📄 api_boundary.rego          # API boundary rules (“no direct DB access”) + contract checks
+        │   ├── 🎬⚖️📄 story_nodes.rego           # Story Nodes rules (evidence manifests, citations, AI labeling/limits)
+        │   ├── 🔒⚖️📄 security.rego              # Secret scanning + unsafe patterns + redaction requirements
+        │   └── 📦⚖️📄 supply_chain.rego          # Supply-chain rules (cosign, digest pinning, OCI distribution, SBOM)
+        ├── 📐 schemas/                           # Schemas used by the pack (inputs and governed artifacts)
+        │   ├── 🛡️📐🧾 governance_card.schema.json # Governance card contract (reviews/approvals/waivers/audit metadata)
+        │   ├── 🧾📐🧾 run_manifest.schema.json    # Run manifest contract (who/what/when + IO + tool versions + digests)
+        │   └── 🧯📐🧾 waiver.schema.json           # Waiver contract (time-boxed exceptions: scope, expiry, rationale, approver)
+        ├── 🧪 examples/                          # Known-good examples (portable fixtures) for docs/tests
+        │   ├── ✅🛡️🧾 governance_card.example.json # Example governance card (valid, minimal)
+        │   ├── ✅🧾🔐 run_manifest.example.json    # Example run manifest (valid, minimal)
+        │   └── ✅🧯🧾 waiver.example.yml           # Example waiver (valid, time-boxed)
+        └── 🧪 tests/                             # Policy tests (Rego unit-style) proving allow/deny behavior
+            ├── 🧪⚖️📄 catalogs_test.rego          # Tests for catalog rules (pass/fail cases)
+            ├── 🧪⚖️📄 sovereignty_test.rego       # Tests for sovereignty/classification rules
+            └── 🧪⚖️📄 story_nodes_test.rego       # Tests for story/evidence/AI labeling rules
 ```
 
 ---
