@@ -319,12 +319,12 @@ distribution.oci:
 
 ```mermaid
 flowchart LR
-  A[🧾 Source manifests\n(data/sources/)] --> B[📥 Raw ingest\n(data/raw/)]
-  B --> C[⚙️ Transform + validate\n(pipeline)]
-  C --> D[🗄 Processed outputs\n(data/processed/)]
-  D --> E[🗂 Catalog publish\n(STAC/DCAT)]
-  E --> F[🧬 PROV publish\n(lineage)]
-  D --> G[🕸️ Load runtime stores\n(PostGIS / Neo4j)]
+  A[🧾 Source manifests - data/sources] --> B[📥 Raw ingest - data/raw]
+  B --> C[⚙️ Transform + validate - pipeline]
+  C --> D[🗄 Processed outputs - data/processed]
+  D --> E[🗂 Catalog publish - STAC DCAT]
+  E --> F[🧬 PROV publish - lineage]
+  D --> G[🕸️ Load runtime stores - PostGIS Neo4j]
   G --> H[🗺 UI layers + 🔎 Search + 🤖 Focus Mode]
 ```
 
