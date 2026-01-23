@@ -39,34 +39,34 @@ The contract is **triplet-based**:
 
 ```text
 mcp/🧠
-└─ gates/🚦
-   └─ contracts/📜
-      └─ data/🗃️
-         └─ schema/🧩
-            └─ catalog/🗂️
-               ├─ README.md  👈 you are here
-               ├─ stac/🛰️
-               │  ├─ kfm-stac-item.schema.json
-               │  ├─ kfm-stac-collection.schema.json
-               │  └─ extensions/🧷
-               ├─ dcat/🏷️
-               │  ├─ kfm-dcat-dataset.schema.jsonld
-               │  └─ kfm-dcat-distribution.schema.jsonld
-               ├─ prov/🧬
-               │  ├─ kfm-prov-bundle.schema.jsonld
-               │  └─ kfm-prov-activity.schema.jsonld
-               ├─ vocab/📚
-               │  ├─ licenses.spdx.json
-               │  ├─ sensitivity.levels.json
-               │  ├─ themes.taxonomy.json
-               │  └─ places.authority.json
-               ├─ examples/🧪
-               │  ├─ stac.item.example.json
-               │  ├─ dcat.dataset.example.json
-               │  └─ prov.bundle.example.jsonld
-               └─ tests/🧯
-                  ├─ conftest/🧾
-                  └─ fixtures/🧷
+└─ 🚦 gates/
+   └─ 📜 contracts/
+      └─ 🗃️ data/
+         └─ 🧩 schema/
+            └─ 🗂️ catalog/
+               ├─ 📄 README.md                         # 👈 you are here 📌 Catalog contract overview + how STAC/DCAT/PROV fit together
+               ├─ 🛰️ stac/                             # 🛰️ STAC schemas (KFM profile overlays) for Items/Collections
+               │  ├─ 🛰️📐🧾 kfm-stac-item.schema.json       # STAC Item schema + KFM constraints (links/assets/time/extent)
+               │  ├─ 🛰️📐🧾 kfm-stac-collection.schema.json  # STAC Collection schema + KFM constraints (license, providers, extent)
+               │  └─ 🧷 extensions/                     # 🧷 Optional STAC extensions or KFM extension definitions
+               ├─ 🏷️ dcat/                             # 🏷️ DCAT schemas/contexts for dataset discovery + distributions
+               │  ├─ 🗂️🧬🧾 kfm-dcat-dataset.schema.jsonld     # DCAT Dataset shape/constraints (JSON-LD profile overlay)
+               │  └─ 📦🧬🧾 kfm-dcat-distribution.schema.jsonld # DCAT Distribution shape/constraints (downloads/OCI refs)
+               ├─ 🧬 prov/                             # 🧬 PROV-O schemas/contexts for lineage (activities/entities/agents)
+               │  ├─ ⛓️🧬🧾 kfm-prov-bundle.schema.jsonld       # PROV bundle shape (entities/activities/agents + derivations)
+               │  └─ 🎬🧬🧾 kfm-prov-activity.schema.jsonld     # Activity shape (run steps, tools, params, timestamps)
+               ├─ 📚 vocab/                            # 📚 Controlled vocabularies used by all catalog contracts
+               │  ├─ ⚖️🧾 licenses.spdx.json            # Allowed license identifiers (SPDX list or curated subset)
+               │  ├─ 🔒🧾 sensitivity.levels.json       # Classification/sensitivity levels + handling hints
+               │  ├─ 🏷️🧾 themes.taxonomy.json          # Themes/tags taxonomy (domain grouping for discovery)
+               │  └─ 🗺️🧾 places.authority.json         # Place authority refs (ids, names, hierarchy, optional)
+               ├─ 🧪 examples/                         # 🧪 Known-good examples (should validate cleanly)
+               │  ├─ ✅🧾 stac.item.example.json         # Example STAC Item (KFM profile compliant)
+               │  ├─ ✅🧾 dcat.dataset.example.json      # Example DCAT dataset/distributions (KFM profile compliant)
+               │  └─ ✅🧬🧾 prov.bundle.example.jsonld    # Example PROV bundle (lineage for a run/artifact)
+               └─ 🧯 tests/                             # 🧯 Validation harness + fixtures for regression testing
+                  ├─ ⚖️ conftest/                       # OPA/Conftest rules asserting invariants beyond schema
+                  └─ 🧩 fixtures/                       # Pass/fail fixtures (edge cases, link checks, vocabulary enforcement)
 ```
 
 > ⚠️ **Note:** Actual data files typically live in repo-level `data/` (raw/processed/catalog/prov/stac/etc.).  
