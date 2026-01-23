@@ -40,20 +40,20 @@ flowchart TD; PR["🔀 Pull Request - code + data"] --> Lint["🧹 Lint format s
 
 ```text
 mcp/
-  gates/
-    contracts/
-      data/
-        schemas/          🧾 JSON Schema + profile constraints
-        policy/           🛡️ OPA/Rego rules (Conftest runner)
-        fixtures/         🧪 golden samples (contracts + metadata + tiny data)
-        tests/            ✅ you are here
-          README.md
-          test_contract_schema.py
-          test_stac_profile.py
-          test_dcat_profile.py
-          test_prov_profile.py
-          test_geo_validity.py
-          test_sensitivity_redaction.py
+└─ 🚦 gates/
+   └─ 📜 contracts/
+      └─ 🗄️ data/
+         ├─ 🧾📐 schemas/                     # 🧾 JSON Schema + profile constraints (source of truth for validation)
+         ├─ 🛡️⚖️ policy/                      # 🛡️ OPA/Rego rules (Conftest runner) enforcing invariants beyond schema
+         ├─ 🧪 fixtures/                      # 🧪 Golden samples: contracts + metadata + tiny data (pass/fail coverage)
+         └─ ✅ tests/                         # ✅ you are here 📌 Automated contract/profile/geo/privacy verification
+            ├─ 📄 README.md                   # 📘 How to run tests locally/CI, expected tooling, and failure interpretation
+            ├─ 🧪🐍 test_contract_schema.py     # Validates all schemas compile + example payloads validate (baseline sanity)
+            ├─ 🛰️🧪 test_stac_profile.py        # Enforces KFM-STAC profile rules (links/assets/extent/time/license invariants)
+            ├─ 🗂️🧪 test_dcat_profile.py        # Enforces KFM-DCAT profile rules (dataset/distribution/license/access constraints)
+            ├─ 🧬🧪 test_prov_profile.py        # Enforces KFM-PROV profile rules (entity/activity/agent shape + derivation links)
+            ├─ 🗺️🧪 test_geo_validity.py        # Geo QA checks (bbox/CRS/geometry sanity; rejects invalid spatial payloads)
+            └─ 🔒🧪 test_sensitivity_redaction.py # Sensitivity + redaction rules (no secrets/PII; label propagation; waivers)
 ```
 
 ---
