@@ -64,33 +64,33 @@ Automated enforcement points:
 > If your repo already has a root-level `/schemas/` folder, treat this as the **MCP-facing view** (keep them in sync).
 
 ```text
-📁 mcp/gates/contracts/data/schema/
-├── README.md                        👈 you are here
-├── profiles/                        📐 authoritative JSON Schemas
-│   ├── kfm.dataset.schema.json
-│   ├── kfm.stac.item.schema.json
-│   ├── kfm.dcat.dataset.schema.json
-│   ├── kfm.prov.bundle.schema.json
-│   ├── kfm.story-node.config.schema.json
-│   ├── kfm.evidence-manifest.schema.json
-│   ├── kfm.ui.layer.schema.json
-│   ├── kfm.ai.answer.schema.json
-│   └── kfm.oci.artifact-ref.schema.json
-├── examples/                        🧪 minimal + golden examples
-│   ├── dataset.contract.example.json
-│   ├── stac.item.example.json
-│   ├── dcat.dataset.example.jsonld
-│   ├── prov.bundle.example.jsonld
-│   ├── story-node/
-│   │   ├── node.md
-│   │   └── node.config.json
-│   ├── evidence-manifest.example.yaml
-│   └── ai.answer.example.json
-├── tests/                           ✅ contract tests
-│   ├── ajv/                         (JSON Schema validation harness)
-│   ├── conftest/                    (OPA/Rego policies for invariants)
-│   └── fixtures/
-└── migrations/                      🔁 version bumps + migration notes
+mcp/gates/contracts/data/schema/
+├── ✅📄 README.md                          # 👈 you are here 📌 What lives here, how validation works, and how to add/update schemas
+├── 📐 profiles/                            # 📐 Authoritative JSON Schemas (source of truth for contract validation)
+│   ├── 🗄️📐🧾 kfm.dataset.schema.json       # Dataset contract (identity, license, distributions, classification, links)
+│   ├── 🛰️📐🧾 kfm.stac.item.schema.json     # STAC Item + KFM profile overlay (assets/links/time/extent rules)
+│   ├── 🗂️📐🧾 kfm.dcat.dataset.schema.json  # DCAT Dataset/Distribution + KFM extensions (discovery + access policy)
+│   ├── 🧬📐🧾 kfm.prov.bundle.schema.json    # PROV bundle (entities/activities/agents + derivation/linkage constraints)
+│   ├── 🎬📐🧾 kfm.story-node.config.schema.json # Story Node config (steps/actions/layers/time/citations pointers)
+│   ├── 📎📐🧾 kfm.evidence-manifest.schema.json # Evidence manifest (claim→citation→artifact + digests/paths)
+│   ├── 🗺️📐🧾 kfm.ui.layer.schema.json      # UI layer contract (sources, style refs, bounds, time-binding, legend refs)
+│   ├── 🤖📐🧾 kfm.ai.answer.schema.json      # AI answer envelope (citations required, uncertainty, redactions, receipts)
+│   └── 📦📐🧾 kfm.oci.artifact-ref.schema.json # OCI artifact reference (registry/repo/digest/mediaType/annotations)
+├── 🧪 examples/                             # 🧪 Minimal + golden examples (docs/tests; should validate cleanly)
+│   ├── ✅🧾 dataset.contract.example.json    # Example dataset contract instance (known-good baseline)
+│   ├── ✅🧾 stac.item.example.json           # Example STAC Item instance (known-good)
+│   ├── ✅🧾 dcat.dataset.example.jsonld      # Example DCAT dataset/distributions (known-good)
+│   ├── ✅🧾 prov.bundle.example.jsonld       # Example PROV bundle (known-good lineage)
+│   ├── 🎬 story-node/                       # Story Node example bundle (content + config kept together)
+│   │   ├── 📝📄 node.md                      # Narrative markdown (citations/refs; small fixture)
+│   │   └── 🧭🧾 node.config.json             # Story config (steps/actions; references layers/time/citations)
+│   ├── ✅📎 evidence-manifest.example.yaml   # Example evidence manifest (YAML form; mirrors JSON structure)
+│   └── ✅🤖🧾 ai.answer.example.json         # Example AI answer (citations + redactions + uncertainty fields)
+├── ✅ tests/                                # ✅ Contract tests (automated validation + invariants)
+│   ├── 🧪 ajv/                              # JSON Schema validation harness (AJV configs + runner glue)
+│   ├── ⚖️ conftest/                         # OPA/Rego invariants beyond schema (link rules, policy checks, “fail-closed”)
+│   └── 🧩 fixtures/                         # Additional edge-case fixtures (pass/fail variants for regression coverage)
+└── 🔁 migrations/                           # 🔁 Version bumps + migration notes (what changed, why, and how to update payloads)
 ```
 
 ---
