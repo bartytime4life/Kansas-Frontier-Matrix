@@ -30,13 +30,7 @@ DCAT in KFM is used to:
 KFM follows **evidence-first publishing**: data is not “in the platform” until the metadata exists and passes gates.
 
 ```mermaid
-flowchart LR
-  A[📥 data/raw (immutable evidence)] --> B[🧪 data/work (transforms)]
-  B --> C[📦 data/processed (derivatives)]
-  C --> D[🧷 Catalog Triplet<br/>STAC + DCAT + PROV]
-  D --> E[🕸 Knowledge Graph (Neo4j)]
-  E --> F[🧰 API Layer (FastAPI/GraphQL)]
-  F --> G[🗺 UI + 🧠 Focus Mode]
+flowchart LR; A[📥 data/raw - immutable evidence] --> B[🧪 data/work - transforms]; B --> C[📦 data/processed - derivatives]; C --> D[🧷 Catalog Triplet - STAC DCAT PROV]; D --> E[🕸 Knowledge Graph - Neo4j]; E --> F[🧰 API Layer - FastAPI GraphQL]; F --> G[🗺 UI + 🧠 Focus Mode];
 ```
 
 **This README is for (D):** the **DCAT** part of the triplet.
@@ -68,19 +62,19 @@ flowchart LR
 > The repo may evolve, but this is the intended “shape” 👇
 
 ```text
-📦 mcp/
- └─ 🚪 gates/
-    └─ 📜 contracts/
-       └─ 📂 data/
-          └─ 🧬 schema/
-             └─ 🧾 dcat/
-                ├─ README.md              👈 you are here
-                ├─ dcat.dataset.schema.json   (expected)
-                ├─ context.jsonld             (expected)
-                └─ examples/
-                   ├─ minimal.dataset.jsonld
-                   ├─ full.dataset.jsonld
-                   └─ oci.distribution.jsonld
+mcp/
+└─ 🚪 gates/
+   └─ 📜 contracts/
+      └─ 🗄️ data/
+         └─ 🧬 schema/
+            └─ 🗂️ dcat/
+               ├─ 📄 README.md                    # 👈 you are here 📌 DCAT contract scope, KFM extensions, and validation workflow
+               ├─ 📐🧾 dcat.dataset.schema.json     # Expected: DCAT Dataset/Distribution JSON Schema (KFM profile overlay)
+               ├─ 🧬🧾 context.jsonld               # Expected: JSON-LD @context for consistent terms/IRIs + prefixes
+               └─ 🧪 examples/
+                  ├─ 🧪🧾 minimal.dataset.jsonld     # Minimal valid DCAT dataset (smallest passing fixture)
+                  ├─ ✅🧾 full.dataset.jsonld        # Full-featured valid DCAT dataset (distributions, contacts, license, links)
+                  └─ 📦🧾 oci.distribution.jsonld    # Example distribution entry for OCI/ORAS artifacts (digest + mediaType + refs)
 ```
 
 ---
