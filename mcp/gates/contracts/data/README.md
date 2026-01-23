@@ -46,27 +46,27 @@ Contracts must support **sensitivity filters** and governance safeguards (e.g., 
 > If your repo already has a different structure, keep the *conceptual* grouping — the contract families are what matter.
 
 ```text
-📁 mcp/
- └─📁 gates/
-    └─📁 contracts/
-       └─📁 data/
-          ├─📄 README.md ✅ (you are here)
-          ├─📁 schema/
-          │  ├─📁 catalog/
-          │  │  ├─📁 stac/        🛰️ STAC Collection/Item + KFM profile extensions
-          │  │  └─📁 dcat/        🗃️ DCAT Dataset/Distribution + KFM extensions
-          │  ├─📁 provenance/     🧬 PROV run/activity/entity + agent roles
-          │  ├─📁 runs/           🧪 run_context / run_manifest / checksums
-          │  ├─📁 quality/        ✅ QCReport / validation outputs / metrics specs
-          │  └─📁 gate/           🚦 GateReport / PolicyDecision payloads
-          ├─📁 examples/
-          │  ├─📄 stac.item.example.json
-          │  ├─📄 dcat.dataset.example.jsonld
-          │  ├─📄 prov.run.example.jsonld
-          │  └─📄 gate.report.example.json
-          └─📁 tests/
-             ├─📄 contract_smoke_tests.yml
-             └─📄 fixtures/...
+mcp/
+└─ 📁 gates/
+   └─ 📐 contracts/
+      └─ 🗄️ data/
+         ├─ ✅📄 README.md                         # ✅ you are here 📌 Scope of “data” contracts + how CI validates them
+         ├─ 📐 schema/                             # JSON Schema contracts grouped by concern (import/reuse via $ref)
+         │  ├─ 🗂️ catalog/                         # Discovery/catalog contracts (published metadata)
+         │  │  ├─ 🛰️ stac/                          # STAC Collection/Item + KFM profile overlays/extensions
+         │  │  └─ 🗃️ dcat/                          # DCAT Dataset/Distribution + KFM extensions/constraints
+         │  ├─ 🧬 provenance/                       # PROV run/activity/entity schemas + agent role conventions
+         │  ├─ 🧪 runs/                             # Run context schemas: run_manifest, inputs/outputs, checksums/digests
+         │  ├─ ✅ quality/                          # QCReport/validation outputs + metric spec schemas (data quality gates)
+         │  └─ 🚦 gate/                             # GateReport/PolicyDecision payload schemas (standard decision envelope)
+         ├─ 🧪 examples/                            # Known-good example payloads for docs/tests (portable fixtures)
+         │  ├─ 🛰️🧾 stac.item.example.json           # Example STAC Item payload (profile-compliant)
+         │  ├─ 🗃️🧾 dcat.dataset.example.jsonld      # Example DCAT Dataset/Distribution payload (with links)
+         │  ├─ 🧬🧾 prov.run.example.jsonld          # Example PROV run bundle (entities/activities/agents)
+         │  └─ 🚦🧾 gate.report.example.json         # Example gate decision report (pass/fail + findings + pointers)
+         └─ 🧪 tests/                               # Contract tests (schema validation + conftest fixtures)
+            ├─ ✅🧪 contract_smoke_tests.yml         # Smoke suite: validate examples + key required schemas compile
+            └─ 🧩 fixtures/…                         # Additional valid/invalid fixtures (edge cases, regressions)
 ```
 
 ---
