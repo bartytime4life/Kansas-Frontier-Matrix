@@ -76,18 +76,18 @@ This gate returns one of three outcomes:
 
 ```mermaid
 flowchart LR
-  A[🧪 Data Intake] --> B[🧱 Process/Normalize]
-  B --> C[📦 Publish / Serve]
+  A[🧪 Data Intake] --> B[🧱 Process Normalize]
+  B --> C[📦 Publish Serve]
   C --> D[🖥️ UI Layer]
   C --> E[🤖 Focus Mode]
   D --> F[👤 User]
   E --> F
 
-  subgraph Gates ✅
+  subgraph GATES[✅ Gates]
     G1[🔍 Ingestion Gate]
-    G2[📜 Policy Gates (CI)]
-    G3[🔒 Privacy Gate (Runtime)]
-    G4[🧾 Citation Gate (AI)]
+    G2[📜 Policy Gates - CI]
+    G3[🔒 Privacy Gate - runtime]
+    G4[🧾 Citation Gate - AI]
   end
 
   A --> G1 --> B
@@ -104,21 +104,21 @@ flowchart LR
 > This README is the “contract + walkthrough.” The example expects a standard gate folder shape like:
 
 ```text
-📦 mcp/gates/examples/06-privacy/
-├─ 📄 README.md
-├─ 🧠 policy/                       # OPA/Rego policies
-│  ├─ 🔒 privacy.rego
-│  ├─ 🧭 geo_precision.rego
-│  ├─ 🏷️  sovereignty.rego
-│  └─ 🧽 pii_findings.rego
-├─ 🧪 inputs/                       # test inputs (JSON)
-│  ├─ ✅ public_request.json
-│  ├─ ⚠️ sensitive_request_generalized.json
-│  ├─ ❌ sensitive_request_exact_location.json
-│  └─ ❌ sovereign_request_no_approval.json
-└─ 📤 expected/                     # expected decisions (optional)
-   ├─ public_request.decision.json
-   └─ ...
+mcp/gates/examples/06-privacy/
+├─ 📄 README.md                          # 📘 What this privacy gate enforces + how to run + how to add cases
+├─ 🧠⚖️ policy/                          # OPA/Rego policies for privacy + sensitivity controls (deny-by-default)
+│  ├─ 🔒⚖️📄 privacy.rego                 # Core privacy rules (PII handling, logging limits, redaction requirements)
+│  ├─ 🧭⚖️📄 geo_precision.rego           # Geo precision rules (exact coords → require generalization or deny)
+│  ├─ 🏷️⚖️📄 sovereignty.rego            # Sovereignty/CARE rules (approval requirements, jurisdictional constraints)
+│  └─ 🧽⚖️📄 pii_findings.rego            # PII findings/risk signals (what triggers findings + severities)
+├─ 🧪 inputs/                            # Test inputs (JSON) representing requests/records to evaluate
+│  ├─ ✅🧾 public_request.json            # Public request (should pass without redaction)
+│  ├─ ⚠️🧾 sensitive_request_generalized.json # Sensitive request but generalized (should pass with constraints/findings)
+│  ├─ ❌🧾 sensitive_request_exact_location.json # Exact location without allowed handling (should fail)
+│  └─ ❌🧾 sovereign_request_no_approval.json # Sovereign/CARE-scoped request lacking approval (should fail)
+└─ 📤 expected/                          # Expected decisions (optional; used for regression assertions)
+   ├─ 🚦🧾 public_request.decision.json   # Expected gate decision for public_request (pass + any findings)
+   └─ ➕ …                                # Additional expected decision outputs (one per input, when asserted)
 ```
 
 ---
