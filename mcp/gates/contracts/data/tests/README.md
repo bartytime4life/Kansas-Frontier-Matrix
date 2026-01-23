@@ -27,14 +27,7 @@ This directory contains **test implementations** for **data contracts** and rela
 ## 🧭 Where this fits in the KFM pipeline
 
 ```mermaid
-flowchart TD
-  PR[Pull Request: code + data] --> Lint[Lint / format / static checks]
-  Lint --> Policy[Policy Pack Gate (OPA/Conftest)]
-  Policy --> ContractTests[Contract Tests (pytest)]
-  ContractTests --> Integration[Integration Tests (PostGIS / Neo4j)]
-  Integration --> E2E[E2E Smoke (optional: Cypress critical flows)]
-  E2E --> Review[Human review + approvals]
-  Review --> Merge[Merge → publish / deploy]
+flowchart TD; PR["🔀 Pull Request - code + data"] --> Lint["🧹 Lint format static checks"]; Lint --> Policy["🛡️ Policy Pack Gate - OPA Conftest"]; Policy --> ContractTests["🧪 Contract Tests - pytest"]; ContractTests --> Integration["🔗 Integration Tests - PostGIS Neo4j"]; Integration --> E2E["🧭 E2E Smoke - optional Cypress critical flows"]; E2E --> Review["👀 Human review + approvals"]; Review --> Merge["✅ Merge - publish deploy"];
 ```
 
 > 🧠 **Key idea:** the same checks that run in CI can also run as **runtime “gates”** during ingestion pipelines.
