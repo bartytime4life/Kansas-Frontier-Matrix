@@ -181,17 +181,17 @@ This makes *“exactly-once”* behaviors much easier to implement across schedu
 A consistent location makes investigations fast. Recommended pattern:
 
 ```text
-📁 data/
-  📁 audits/
-    📁 <run_id>/
-      📄 run_manifest.json        🧾 (required)
-      📄 gate_report.json         🚦 (if gates ran)
-      📄 telemetry.ndjson         📈 (append-only, optional but preferred)
-      📄 checksums.sha256         🔑 (recommended for file-based artifacts)
-      📄 prov.jsonld              🧬 (recommended)
-      📄 stac.item.json           🛰️ (when applicable)
-      📄 dcat.dataset.jsonld      🗂️ (when applicable)
-      📁 artifacts/               📦 (optional: local staging)
+data/
+└─ 🧾 audits/
+   └─ 🏷️ <run_id>/                      # One audit bundle per run (immutable once finalized; append-only for telemetry)
+      ├─ ✅🧾 run_manifest.json           # REQUIRED: run receipt (who/what/when, inputs/outputs, tool versions, hashes/pointers)
+      ├─ 🚦🧾 gate_report.json            # (if gates ran) Gate decision envelope: pass/fail, findings, severities, waivers used
+      ├─ 📈🧾 telemetry.ndjson            # Append-only event stream (optional but preferred): timings, counters, audit-safe events
+      ├─ 🔐📄 checksums.sha256            # Recommended: sha256 sums for local files referenced by this bundle (tamper detection)
+      ├─ 🧬🧾 prov.jsonld                 # Recommended: PROV-O lineage linking raw→work→processed→catalog + agents/tools/params
+      ├─ 🛰️🧾 stac.item.json              # When applicable: STAC Item snapshot pointing to produced assets/artifacts
+      ├─ 🗂️🧾 dcat.dataset.jsonld         # When applicable: DCAT dataset/distribution record (license, access, distribution links)
+      └─ 📦 artifacts/                    # Optional: local staging copies (logs/figures/exports); keep small + checksum anything included
 ```
 
 ---
@@ -210,14 +210,14 @@ Gates should treat the run artifacts as **the sole source of truth** for decisio
 ### 🔁 Typical gate flow (mermaid)
 ```mermaid
 flowchart TD
-  A[Run starts 🏁] --> B[Write run_manifest.json (draft) 🧾]
-  B --> C[Ingestion Gate 📥<br/>checksums + schema sanity + FAIR/CARE]
-  C --> D[Transform / Load 🧱]
-  D --> E[Generate STAC/DCAT/PROV 🧬]
-  E --> F[Policy Gates 🚦 (OPA/Conftest)]
-  F -->|PASS ✅| G[Publish + Attach attestations 🔏]
-  F -->|FAIL ❌| H[Fail closed + emit gate_report.json 🧾]
-  G --> I[UI Audit Panel + Focus Mode citations 🧭]
+  A[🏁 Run starts] --> B[🧾 Write run_manifest.json draft]
+  B --> C[📥 Ingestion Gate - checksums schema sanity FAIR CARE]
+  C --> D[🧱 Transform / Load]
+  D --> E[🧬 Generate STAC DCAT PROV]
+  E --> F[🚦 Policy Gates - OPA Conftest]
+  F --> G[✅ PASS - publish + attach attestations 🔏]
+  F --> H[❌ FAIL - fail closed + emit gate_report.json 🧾]
+  G --> I[🧭 UI audit panel + Focus Mode citations]
 ```
 
 ---
