@@ -39,11 +39,11 @@ This example focuses on the **AI inference/output gate** for Focus Mode.
 
 ```mermaid
 flowchart LR
-  U[👤 User] -->|prompt| PG[🛡️ Prompt Gate<br/>sanitize + classify]
-  PG --> FM[🧭 Focus Mode<br/>retrieve + reason + draft]
-  FM --> OG[🚦 Output Gate<br/>OPA/Rego evaluation]
-  OG --> UI[🖥️ Focus Panel<br/>AI Assistant (Beta)]
-  OG --> L[(🧾 Governance Ledger / PROV)]
+  U[👤 User] --> PG[🛡️ Prompt Gate - sanitize + classify]
+  PG --> FM[🧭 Focus Mode - retrieve + reason + draft]
+  FM --> OG[🚦 Output Gate - OPA Rego evaluation]
+  OG --> UI[🖥️ Focus Panel - AI Assistant Beta]
+  OG --> L[🧾 Governance Ledger - PROV]
 ```
 
 - Policies run **in CI** (Conftest) and can also run **at runtime** (OPA check before returning an answer).[^policy-pack-opa][^policy-pack-runtime]
