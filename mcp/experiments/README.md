@@ -187,28 +187,30 @@ In KFM, an “experiment” is any bounded, reproducible activity that produces 
 
 ### Expected file tree for this sub-area
 ~~~text
-📁 mcp/
-├── 📁 experiments/
-│   ├── 📄 README.md                               — Canonical index + rules (this file)
-│   ├── 📄 YYYY-MM-DD_<DOMAIN>-EXP-###.md           — Experiment record (single-file mode)
-│   └── 📁 YYYY/
-│       └── 📁 YYYY-MM-DD_<DOMAIN>-EXP-###/
-│           ├── 📄 README.md                        — Experiment record (folder mode)
-│           ├── 📁 config/                          — Frozen configs (copies)
-│           ├── 📁 results/                         — Figures/tables/maps (small, reviewable)
-│           ├── 📁 notes/                           — Optional notes (no governance bypass)
-│           └── 📁 refs/                            — Links to catalogs / run IDs / PRs
-├── 📁 runs/
-│   └── 📁 <run-id>/
-│       ├── 📄 run_manifest.json                    — Machine manifest (required; see schema below)
-│       ├── 📄 config.snapshot.json                 — Frozen config used (or pointer)
-│       ├── 📄 env.lock                             — Environment capture (container digest, deps)
-│       ├── 📄 stdout.log                           — Execution logs (redacted if needed)
-│       ├── 📄 metrics.json                         — Key metrics (machine-readable)
-│       ├── 📄 prov_activity.jsonld                 — PROV activity bundle pointer or inline
-│       └── 📁 artifacts/                           — Small reviewable artifacts (hash-logged)
-└── 📁 model_cards/
-    └── 📄 README.md                               — Model cards index
+mcp/
+├── 🧪 experiments/
+│   ├── 📄 README.md                                # Canonical index + rules (how experiments are named, reviewed, promoted)
+│   ├── 📝 YYYY-MM-DD_<DOMAIN>-EXP-###.md            # Experiment record (single-file mode: narrative + links in one file)
+│   └── 📅 YYYY/
+│       └── 🧪 YYYY-MM-DD_<DOMAIN>-EXP-###/
+│           ├── 📄 README.md                         # Experiment record (folder mode: overview + pointers)
+│           ├── ⚙️ config/                           # Frozen configs (copies/snapshots used by the run; treat as immutable)
+│           ├── 📊 results/                          # Small reviewable outputs (figures/tables/maps; keep “golden” artifacts)
+│           ├── 📝 notes/                            # Optional working notes (no governance bypass; no sensitive leakage)
+│           └── 🔗 refs/                             # References: catalog links, run IDs, PRs, issues, dashboards
+│
+├── 🏃 runs/
+│   └── 🏷️ <run-id>/
+│       ├── 🧾🔐 run_manifest.json                   # REQUIRED run receipt (inputs/outputs, versions, hashes, timestamps)
+│       ├── ⚙️🧾 config.snapshot.json                # Frozen config actually used (or a pointer/expanded snapshot)
+│       ├── 🧰🔒 env.lock                            # Environment capture (container digest, deps/lockfiles, tool versions)
+│       ├── 🪵 stdout.log                            # Execution logs (redact secrets/PII; keep concise)
+│       ├── 📊 metrics.json                          # Machine-readable metrics (key scalars/series for evaluation)
+│       ├── 🧬 prov_activity.jsonld                  # PROV activity bundle (inline or pointer linking run → artifacts → sources)
+│       └── 📦 artifacts/                            # Small reviewable artifacts (hash-logged; outputs/figures/snippets)
+│
+└── 🪪 model_cards/
+    └── 📄 README.md                                 # Model cards index (where to find model cards + required sections/policy)
 ~~~
 
 ---
