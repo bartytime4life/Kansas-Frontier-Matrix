@@ -100,33 +100,33 @@ This gate makes the pipeline **treat data like code**: versioned, signed, review
 > This example assumes a typical “policy pack + fixtures + scripts” structure.
 
 ```text
-📦 mcp/
+mcp/
 └─ 🚪 gates/
    └─ 🧪 examples/
-      └─ 05-supply-chain/
-         ├─ 📘 README.md
-         ├─ ⚙️ gate.config.yaml
-         ├─ 🧠 policies/
-         │  ├─ supply_chain.rego
-         │  ├─ oci_distribution.rego
-         │  ├─ sbom_required.rego
-         │  ├─ signatures_cosign.rego
-         │  └─ deps_pinning.rego
-         ├─ 🧪 fixtures/
-         │  ├─ good/
-         │  │  ├─ run_manifest.json
-         │  │  ├─ artifacts.json
-         │  │  ├─ catalog.dcat.json
-         │  │  ├─ catalog.stac.json
-         │  │  ├─ sbom.spdx.json
-         │  │  └─ provenance.intoto.jsonl
-         │  └─ bad/
-         │     ├─ run_manifest.json
-         │     └─ catalog.dcat.json
-         └─ 🛠 scripts/
-            ├─ generate_sbom.sh
-            ├─ sign_artifacts.sh
-            └─ verify_gate.sh
+      └─ 🔐📦 05-supply-chain/
+         ├─ 📘📄 README.md                   # 📘 What this gate enforces (SBOM/signing/pinning) + how to run the example
+         ├─ ⚙️🧾 gate.config.yaml            # Gate config: which policies run, inputs expected, output/report settings
+         ├─ 🧠⚖️ policies/                   # OPA/Rego policy pack for supply-chain verification (deny-by-default)
+         │  ├─ ⚖️📄 supply_chain.rego         # Umbrella rules: required artifacts, linkage, and fail-closed thresholds
+         │  ├─ ⚖️📄 oci_distribution.rego     # OCI/ORAS distribution rules (digests, media types, registry refs)
+         │  ├─ ⚖️📄 sbom_required.rego        # SBOM rules (presence, format, minimum fields, subject linkage)
+         │  ├─ ⚖️📄 signatures_cosign.rego    # Cosign rules (signature/attestation required, signer/subject constraints)
+         │  └─ ⚖️📄 deps_pinning.rego         # Dependency pinning rules (lockfiles, digest pinning, no floating tags)
+         ├─ 🧪 fixtures/                      # Golden fixtures used to prove policies work (good must pass; bad must fail)
+         │  ├─ ✅ good/                       # Known-good bundle (complete chain: run → artifacts → catalogs → SBOM → provenance)
+         │  │  ├─ ✅🧾 run_manifest.json        # Run receipt (tool versions, inputs/outputs, digests)
+         │  │  ├─ ✅📦🧾 artifacts.json         # Artifact list (subjects, media types, digests, pointers)
+         │  │  ├─ ✅🗂️🧾 catalog.dcat.json      # DCAT discovery record linking to distributed artifacts
+         │  │  ├─ ✅🛰️🧾 catalog.stac.json      # STAC metadata referencing the artifacts as assets
+         │  │  ├─ ✅📦🧾 sbom.spdx.json         # SBOM (SPDX) for build/toolchain/artifacts (as required)
+         │  │  └─ ✅🔏🧾 provenance.intoto.jsonl # in-toto provenance/attestations (SLSA-style) for verification
+         │  └─ ❌ bad/                        # Known-bad bundle (missing/invalid pieces should be denied)
+         │     ├─ ❌🧾 run_manifest.json        # Incomplete/invalid run receipt (e.g., missing digests/versions)
+         │     └─ ❌🗂️🧾 catalog.dcat.json      # Invalid DCAT record (e.g., missing license/distribution integrity)
+         └─ 🛠 scripts/                       # Helper scripts to generate/verify the supply-chain proof chain
+            ├─ 🛠️📄 generate_sbom.sh          # Generate SBOM (SPDX/CycloneDX) for the build/toolchain
+            ├─ 🔏🛠️📄 sign_artifacts.sh        # Sign artifacts / create attestations (cosign)
+            └─ ✅🛠️📄 verify_gate.sh           # Run the gate locally (conftest + schema checks) and print a summary
 ```
 
 ---
