@@ -31,22 +31,22 @@ KFM’s intake philosophy treats raw data as immutable evidence and pushes all t
 A typical repo layout (simplified) looks like:
 
 ```text
-🧠 mcp/
-  🚧 gates/
-    📜 contracts/
-      🗂️ data/
-        🧩 schema/
-          🛰️ stac/        <-- you are here
+mcp/
+└─ 🚧 gates/
+   └─ 📜 contracts/
+      └─ 🗂️ data/
+         └─ 🧩 schema/
+            └─ 🛰️ stac/                 # 👈 you are here 📌 STAC/KFM profile schemas used by gates to validate STAC outputs
 
-🗃️ data/
-  🧱 raw/                 (immutable evidence boundary)
-  🧪 work/                (controlled transforms)
-  ✅ processed/            (derived artifacts)
-  🛰️ stac/
-    🗂️ collections/
-    🧷 items/
-  📇 catalog/              (source-of-truth catalog layer)
-  🧬 prov/                 (lineage bundles)
+data/
+├─ 🧱 raw/                               # (immutable evidence boundary) As-received source drops; keep checksums + provenance
+├─ 🧪 work/                              # (controlled transforms) Staging/intermediate outputs; reproducible steps live here
+├─ ✅ processed/                          # (derived artifacts) Publishable outputs (versioned) promoted from work/
+├─ 🛰️ stac/                              # STAC layer: time/versioned metadata describing assets/artifacts
+│  ├─ 🗂️ collections/                    # STAC Collections (dataset-level metadata: extent, license, providers, links)
+│  └─ 🧷 items/                          # STAC Items (snapshot-level metadata: assets for specific dates/runs/tiles)
+├─ 📇 catalog/                            # (source-of-truth catalog layer) Canonical discovery records (STAC/DCAT indexes)
+└─ 🧬 prov/                               # (lineage bundles) PROV records linking raw→work→processed→catalog + tools/params/hashes
 ```
 
 KFM uses STAC as a core descriptor of **what/where/when + where the files are**, and the catalog + API treat validated metadata as the source-of-truth for discovery and trust. :contentReference[oaicite:5]{index=5}:contentReference[oaicite:6]{index=6}
