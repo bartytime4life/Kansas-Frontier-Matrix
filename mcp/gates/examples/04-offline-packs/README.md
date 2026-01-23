@@ -70,31 +70,31 @@ Offline packs inherit KFM’s non-negotiables:
 
 ```text
 mcp/
-  gates/
-    examples/
-      04-offline-packs/
-        README.md                # 👈 you are here
-        pack.spec.yaml           # 🧾 what to include (region/layers/stories/limits)
-        policies/
-          offline-pack.rego      # 🚦 OPA/Rego checks (fail-closed)
-        scripts/
-          build-pack.ts          # 🛠️ example builder (or python equivalent)
-          verify-pack.ts         # 🔍 verify signature + policy + manifests
-        dist/
-          <pack-id>/
-            pack.manifest.json   # 📌 pack identity + contents index
-            run.manifest.json    # ♻ reproducibility ledger record
-            catalog/
-              stac.collection.json
-              dcat.dataset.json
-              prov.jsonld
-            assets/
-              tiles/
-              data/
-              media/
-            ui/
-              index.html
-              assets/...
+└─ 🚦 gates/
+   └─ 🧪 examples/
+      └─ 🧳 04-offline-packs/
+         ├─ 📄 README.md                      # 👈 you are here 📌 What an offline pack is + how this example is built/verified
+         ├─ 🧾 pack.spec.yaml                 # 🧾 Pack spec: region, layers, stories, size limits, freshness, and inclusion rules
+         ├─ ⚖️ policies/
+         │  └─ 🚦⚖️📄 offline-pack.rego        # 🚦 OPA/Rego checks (fail-closed): required manifests, digests, licenses, sensitivity
+         ├─ 🛠️ scripts/
+         │  ├─ 🛠️📄 build-pack.ts             # Example builder: compiles assets + catalogs + manifest into dist/<pack-id>/
+         │  └─ 🔍🛠️📄 verify-pack.ts           # Verifier: checks signatures/digests + policy validation + schema checks
+         └─ 📦 dist/
+            └─ 🆔 <pack-id>/                  # One built pack (immutable once published)
+               ├─ 📌🧾 pack.manifest.json      # Pack identity + full contents index (paths, sizes, digests, roles)
+               ├─ ♻️🧾 run.manifest.json        # Reproducibility ledger: who/what/when + tools/versions + build inputs/outputs
+               ├─ 🗂️ catalog/                 # Evidence triplet/catalog layer shipped with the pack
+               │  ├─ 🛰️🧾 stac.collection.json  # STAC Collection describing the offline pack contents
+               │  ├─ 🗂️🧾 dcat.dataset.json     # DCAT Dataset/Distributions for pack + included assets
+               │  └─ 🧬🧾 prov.jsonld            # PROV bundle linking sources → build → packaged outputs
+               ├─ 📦 assets/                   # Pack payloads (only what spec allows; all digest-locked)
+               │  ├─ 🧱 tiles/                 # Tile payloads (pmtiles/mbtiles/vector/raster tiles as allowed)
+               │  ├─ 📊 data/                  # Data payloads (GeoJSON/Parquet/CSV/etc. as allowed)
+               │  └─ 🎞️ media/                 # Media payloads (images/audio/video used by stories/UI)
+               └─ 🧭 ui/                       # Minimal viewer shell for offline browsing (optional)
+                  ├─ 🧾📄 index.html            # Entry page for offline viewing
+                  └─ 📦 assets/…               # Bundled UI assets (css/js/icons/fonts) referenced by index.html
 ```
 
 > [!IMPORTANT]
