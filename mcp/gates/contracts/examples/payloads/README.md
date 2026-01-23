@@ -46,14 +46,14 @@ These ideas are consistent across the KFM architecture + AI overview + data inta
 
 ```text
 mcp/gates/contracts/examples/payloads/
-├─ ingest/                 🧱 pipeline/run + intake fixtures
-├─ catalogs/               🧾 STAC / DCAT / PROV fixtures (evidence triplet)
-├─ graph/                  🕸️ knowledge-graph ingest fixtures
-├─ ai/                     🤖 Focus Mode request/response fixtures
-├─ ui/                     🧭 layer registry / story node / timeline fixtures
-├─ privacy/                🕵️ query auditing / inference-control fixtures
-├─ security/               🔒 SBOM / provenance attestation / OCI artifact refs
-└─ agents/                 🛰️ WPE task request/decision fixtures (Watcher–Planner–Executor)
+├─ 🧱 ingest/                 # 🧱 Pipeline/run + intake fixtures (manifests, run_context, checksums, fetch receipts)
+├─ 🧾 catalogs/               # 🧾 Evidence triplet fixtures: STAC/DCAT/PROV examples that must validate together
+├─ 🕸️ graph/                  # 🕸️ Knowledge-graph fixtures (ingest payloads, node/edge batches, mutation receipts)
+├─ 🤖 ai/                     # 🤖 Focus Mode fixtures (request/answer envelopes, citations, redaction notices)
+├─ 🧭 ui/                     # 🧭 UI fixtures (layer registry, story node configs, timeline configs, offline packs)
+├─ 🕵️ privacy/                # 🕵️ Privacy fixtures (query auditing, inference-control signals, sensitivity labels)
+├─ 🔒 security/               # 🔒 Security fixtures (SBOMs, attestations, OCI refs, signature pointers)
+└─ 🛰️ agents/                 # 🛰️ WPE fixtures (Watcher/Planner/Executor requests, plans, receipts, decisions)
 ```
 
 ---
