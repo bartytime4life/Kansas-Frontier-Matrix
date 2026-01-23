@@ -334,31 +334,41 @@ Each run produces a run manifest JSON capturing who/what/when, sources, tool ver
 
 ### Suggested output tree (adapt to your repo conventions)
 ```text
-📂 data/
-  📂 audits/
-    📂 {{run_id}}/
-      🧾 run_manifest.json
-      🧾 checksums.sha256
-      🧾 policy_report.json
-  📂 events/
-    🔔 {{event_id}}.json
-  📂 prov/
-    🧬 {{prov_id}}.jsonld
-  📂 raw/
-    📂 {{domain}}/{{dataset}}/{{version}}/
-  📂 work/
-    🧪 sims/            # sandbox simulation outputs (NOT publishable)
-  📂 processed/
-    📦 {{domain}}/{{dataset}}/{{version}}/
-  📂 catalog/
-    📂 stac/
-    📂 dcat/
-📂 data/graph/csv/
-  🧱 nodes_*.csv
-  🔗 rels_*.csv
-📂 ui/
-  🗺️ layers/
-  🧵 stories/
+data/
+├─ 🧾 audits/                                 # 🧾 Audit bundles per run (receipts + hashes + policy outputs)
+│  └─ 🏷️ {{run_id}}/
+│     ├─ 🧾 run_manifest.json                  # Run receipt: who/what/when + inputs/outputs + tool versions + digests
+│     ├─ 🔐 checksums.sha256                   # Hashes for audit files (tamper detection / reproducibility)
+│     └─ 🚦🧾 policy_report.json               # Policy/gate results (pass/fail, findings, waivers used)
+│
+├─ 🔔 events/                                 # 🔔 Event stream storage (watcher alerts, gate triggers, audit-safe events)
+│  └─ 🔔 {{event_id}}.json                     # One event record (immutable; references run_id/prov_id when applicable)
+│
+├─ 🧬 prov/                                   # 🧬 Provenance bundles (W3C PROV-O JSON-LD)
+│  └─ 🧬 {{prov_id}}.jsonld                    # Lineage graph linking raw→work→processed→catalog + agents/tools/params
+│
+├─ 📥 raw/                                     # 📥 Immutable “as-received” source drops (evidence boundary)
+│  └─ 🗂️ {{domain}}/{{dataset}}/{{version}}/   # Raw snapshots; keep checksums + source metadata alongside
+│
+├─ 🧪 work/                                    # 🧪 Controlled transforms + staging (NOT publishable by default)
+│  └─ 🧪 sims/                                 # Sandbox simulation outputs (explicitly non-publishable)
+│
+├─ ✅ processed/                                # ✅ Publishable derived artifacts (versioned; promoted from work/)
+│  └─ 📦 {{domain}}/{{dataset}}/{{version}}/   # Final outputs (GeoJSON/Parquet/COG/PMTiles/etc.) + sidecars
+│
+├─ 🗂️ catalog/                                 # 🗂️ Discovery metadata layer (source-of-truth indices/records)
+│  ├─ 🛰️ stac/                                  # STAC Collections/Items (time/versioned asset pointers)
+│  └─ 🗂️ dcat/                                  # DCAT datasets/distributions (license/access/discovery links)
+│
+└─ 🕸️ graph/
+   └─ 🧱 csv/                                  # 🧱 Governed graph import/export CSVs (Neo4j-ish ingestion artifacts)
+      ├─ 🧱 nodes_*.csv                         # Node tables (entities) for graph loads/exports
+      └─ 🔗 rels_*.csv                          # Relationship tables (edges) for graph loads/exports
+
+
+ui/
+├─ 🗺️ layers/                                  # 🗺️ UI layer manifests/registries (what the UI can render)
+└─ 🧵 stories/                                 # 🧵 Story content/configs (story nodes, step configs, media pointers)
 ```
 
 > [!IMPORTANT]
