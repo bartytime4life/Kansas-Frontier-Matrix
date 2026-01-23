@@ -107,12 +107,12 @@ mcp/experiments/air/on-sensor-fusion/
 
 ~~~mermaid
 flowchart LR
-  A[Raw feeds - OpenAQ PurpleAir AQS] --> B[Co location - H3 r8 + radius + time window]
-  B --> C[Bias aware correction - quantile mapping - ibicus python cmethods style]
-  C --> D[Temporal smoother - Kalman or EnKF low order]
-  D --> E[QA and anomaly flags - spike stuck drift dropout]
-  E --> F[Minimal STAC delta - items + assets + QA fields]
-  F --> G[Publish + rollback - atomic delta apply revert]
+  A[🌬️ Raw feeds - 🛰️ OpenAQ 🟣 PurpleAir 🏛️ AQS] --> B[📍 Co location - 🧭 H3 r8 + 📏 radius + ⏱️ time window]
+  B --> C[🧠 Bias aware correction - 📊 quantile mapping - 🧪 ibicus python cmethods style]
+  C --> D[⏳ Temporal smoother - 🧮 Kalman or 🛰️ EnKF low order]
+  D --> E[🚨 QA + anomaly flags - 📈 spike 🧷 stuck 📉 drift 🔌 dropout]
+  E --> F[🛰️ Minimal STAC delta - 📦 items + 🗃️ assets + ✅ QA fields]
+  F --> G[🚀 Publish + ↩️ rollback - 🔒 atomic apply revert]
 ~~~
 
 ## 🧱 Architecture
