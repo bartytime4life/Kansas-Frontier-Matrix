@@ -92,15 +92,15 @@ policy:
 ## 🗂️ Suggested Experiment Folder Layout
 
 ```text
-📁 mcp/experiments/EXP-000--<slug>/
-├─ 📄 README.md                         👈 this log
-├─ 📁 notebooks/                        (optional; exploratory)
-├─ 📁 src/                              (scripts used for runs)
-├─ 📁 config/                           (configs, prompts, detector settings)
-├─ 📁 data_samples/                     (small fixtures only; no restricted data)
-├─ 📁 outputs/                          (plots, tables, exported geojson, screenshots)
-├─ 📁 policy/                           (conftest reports, waivers.yml)
-└─ 📁 notes/                            (meeting notes, reviewer comments)
+mcp/experiments/EXP-000--<slug>/
+├─ 📄 README.md                 # 👈 this log 📌 Experiment overview + timeline + links to key artifacts/results
+├─ 📓 notebooks/                # (optional) Exploratory notebooks (keep runnable; reference pinned env/manifests)
+├─ 🛠️ src/                      # Scripts used for runs (deterministic entrypoints; prefer CLI-friendly)
+├─ ⚙️ config/                   # Configs/prompts/detector settings (versioned; no secrets)
+├─ 🧪 data_samples/             # Small fixtures only (no restricted/PII; include license notes)
+├─ 📦 outputs/                  # Outputs for review (plots, tables, exports, screenshots; promote “final” elsewhere if needed)
+├─ 🛡️ policy/                   # Policy evidence (conftest reports, waivers, gate summaries)
+└─ 📝 notes/                    # Meeting notes, reviewer comments, decisions-in-progress (human collaboration)
 ```
 
 ---
