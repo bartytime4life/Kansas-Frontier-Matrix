@@ -83,20 +83,21 @@ These are KFM invariants that this module must enforce (or assume upstream enfor
 
 ```mermaid
 flowchart TD
-  U[👤 User] --> UI[🗺️ web/ UI]
-  UI --> API[🧩 src/server/ (API boundary)]
-  API --> AI[🤖 src/server/ai (this module)]
+  U[👤 User] --> UI[🗺️ web UI]
+  UI --> API[🧩 src server - API boundary]
+  API --> AI[🤖 src server ai - this module]
 
-  AI -->|RAG / hybrid retrieval| G[🧠 Neo4j graph]
-  AI -->|spatial + time queries| P[🗄️ PostGIS]
-  AI -->|text search / embeddings| S[🔎 Search index]
+  AI --> G[🧠 Neo4j graph - RAG hybrid retrieval]
+  AI --> P[🗄️ PostGIS - spatial + time queries]
+  AI --> S[🔎 Search index - text + embeddings]
 
-  AI --> POL[⚖️ Policy Gate (OPA + rules)]
-  POL -->|allow| AI
-  POL -->|deny / redact| AI
+  AI --> POL[⚖️ Policy gate - OPA + rules]
+  POL --> AI
 
-  AI --> LED[📜 Governance ledger / telemetry]
-  AI --> API --> UI --> U
+  AI --> LED[📜 Governance ledger + telemetry]
+  LED --> API
+  API --> UI
+  UI --> U
 ```
 
 **Key idea:** the AI layer is an **orchestrator**. It’s allowed to be “smart,” but only inside **hard guardrails** (contracts + provenance + policy).
@@ -228,34 +229,34 @@ For any AI/analysis output that becomes a **first-class evidence artifact**:
 > This is a **suggested** layout. Keep it modular and aligned with contract-first + policy-first principles.
 
 ```text
-📁 src/server/ai/
-├── 📄 README.md
-├── 📁 focus/                # Focus Mode orchestrator + handlers
-│   ├── 📄 focus.controller.(ts|py)
-│   ├── 📄 focus.service.(ts|py)
-│   └── 📄 focus.schemas.(ts|py)        # runtime validators (not the contract source-of-truth)
-├── 📁 retrieval/            # RAG orchestration (graph + postgis + search)
-│   ├── 📄 plan.(ts|py)
-│   ├── 📄 neo4j.adapter.(ts|py)
-│   ├── 📄 postgis.adapter.(ts|py)
-│   └── 📄 search.adapter.(ts|py)
-├── 📁 citations/            # citation manager + provenance linking
-│   ├── 📄 buildCitations.(ts|py)
-│   └── 📄 evidenceBundle.(ts|py)
-├── 📁 policy/               # policy client + enforcement helpers
-│   ├── 📄 opa.client.(ts|py)
-│   └── 📄 redaction.(ts|py)
-├── 📁 xai/                  # audit traces, explainability payloads
-│   └── 📄 auditPayload.(ts|py)
-├── 📁 agents/               # W–P–E agents (guarded + optional)
-│   ├── 📄 watcher.(ts|py)
-│   ├── 📄 planner.(ts|py)
-│   ├── 📄 executor.(ts|py)
-│   └── 📄 killSwitch.(ts|py)
-└── 📁 tests/
-    ├── 📄 focus.golden.test.(ts|py)
-    ├── 📄 policy.enforcement.test.(ts|py)
-    └── 📄 citations.required.test.(ts|py)
+src/server/ai/
+├── 📄 README.md                          # 📘 AI subsystem overview: Focus Mode flow, safety gates, and ops toggles
+├── 🔎 focus/                             # Focus Mode orchestrator + handlers (API-facing entrypoints)
+│   ├── 🎛️📄 focus.controller.(ts|py)      # Controller/route handler: request parsing, auth, wiring to service
+│   ├── 🧠📄 focus.service.(ts|py)          # Orchestrates retrieval → answer → citations → policy checks → receipts
+│   └── 📐🛡️📄 focus.schemas.(ts|py)        # Runtime validators (NOT contract source-of-truth; guards unsafe inputs/outputs)
+├── 🧲 retrieval/                         # RAG orchestration (graph + postgis + search) with bounded query planning
+│   ├── 🧭📄 plan.(ts|py)                  # Retrieval plan builder (what to query, limits, ordering, caching hints)
+│   ├── 🕸️🔌📄 neo4j.adapter.(ts|py)        # Neo4j retrieval adapter (read-only queries, batching, timeouts)
+│   ├── 🗺️🔌📄 postgis.adapter.(ts|py)      # PostGIS retrieval adapter (spatial filters, bbox queries, aggregates)
+│   └── 🔎🔌📄 search.adapter.(ts|py)       # Search adapter (full-text/semantic search; safe query shaping)
+├── 📚 citations/                         # Citation manager + provenance linking (evidence-first output)
+│   ├── 📚🧾📄 buildCitations.(ts|py)       # Builds citation list/footnotes from retrieved sources (dedupe, format, ordering)
+│   └── 📎🧬📄 evidenceBundle.(ts|py)       # Creates/links evidence bundle (artifacts, manifests, PROV/DCAT/STAC refs)
+├── 🛡️ policy/                            # Policy client + enforcement helpers (fail-closed where required)
+│   ├── ⚖️🔌📄 opa.client.(ts|py)           # OPA client wrapper (bundle/version pinning, decision caching, timeouts)
+│   └── 🔒🧹📄 redaction.(ts|py)            # Redaction helpers (apply obligations; strip secrets/PII; safe logging)
+├── 🧾 xai/                                # Audit traces / explainability payloads (bounded; no hidden chain-of-thought)
+│   └── 🧾📄 auditPayload.(ts|py)           # Builds explainability/audit payload (inputs used, citations, policy outcomes)
+├── 🤖 agents/                             # Watcher–Planner–Executor agents (guarded + optional; kill-switchable)
+│   ├── 👀📄 watcher.(ts|py)                # Watcher: monitors signals/events and emits tasks/alerts (policy-gated)
+│   ├── 🧭📄 planner.(ts|py)                # Planner: produces structured plans (reviewable; schema-bound)
+│   ├── 🏃📄 executor.(ts|py)               # Executor: runs bounded actions (idempotent where possible; produces receipts)
+│   └── 🧯📄 killSwitch.(ts|py)             # Kill switch + feature flags (disable agents quickly; safety override)
+└── 🧪 tests/                              # Tests for safety, citations, and deterministic behavior
+    ├── ✅🧪📄 focus.golden.test.(ts|py)     # Golden tests for Focus Mode outputs (format + citations + redaction)
+    ├── 🛡️🧪📄 policy.enforcement.test.(ts|py) # Ensures policy decisions/obligations are applied correctly
+    └── 📚🧪📄 citations.required.test.(ts|py) # Ensures citations are required and resolve to evidence bundles
 ```
 
 ---
