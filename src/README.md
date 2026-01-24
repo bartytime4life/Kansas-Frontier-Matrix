@@ -84,38 +84,38 @@ If a gate fails (license missing, provenance incomplete, schema invalid, citatio
 
 ```text
 src/
-├── 🧪 pipelines/
-│   ├── <domain_or_product>/
-│   │   ├── ingest.py
-│   │   ├── transform.py
-│   │   ├── validate.py
-│   │   ├── publish.py          # writes STAC/DCAT/PROV + run_manifest
-│   │   └── configs/
-│   └── _shared/
-│       ├── io/
-│       ├── hashing/
-│       └── validators/
+├── 🧪 pipelines/                      # Data pipelines (ingest→validate→transform→publish; emits receipts + catalogs)
+│   ├── 🗂️ <domain_or_product>/         # One pipeline per domain/product (config-driven, reproducible)
+│   │   ├── 📥 ingest.py                # Acquire inputs (fetch receipts, caching/ETag, raw snapshot boundary)
+│   │   ├── 🧪 transform.py             # Normalize/derive artifacts (raw→work→processed; deterministic params/seeds)
+│   │   ├── ✅ validate.py              # Schema + policy validation (inputs/outputs; fail-closed checks)
+│   │   ├── 📦 publish.py               # Publish outputs + write STAC/DCAT/PROV + run_manifest (audit trail)
+│   │   └── ⚙️ configs/                 # Pipeline configs (no secrets): sources, transforms, validators, publish profiles
+│   └── ♻️ _shared/                     # Shared pipeline utilities (single source of truth for IO + hashing + validators)
+│       ├── 🧰 io/                      # Canonical paths + atomic writes + catalog/manifest writers + telemetry appenders
+│       ├── 🔐 hashing/                 # Digest helpers + canonical JSON/YAML hashing (stable across runs)
+│       └── ✅ validators/              # Reusable validators (schema checks, link integrity, geo sanity, policy hooks)
 │
-├── 🕸️ graph/
-│   ├── ontology/               # ontology definitions, mapping docs, versions
-│   ├── migrations/             # explicit graph migrations (no silent breaking changes)
-│   ├── integrity/              # constraints + health checks (no orphan nodes)
-│   ├── loaders/                # CSV/JSON import helpers
-│   └── exports/                # graph → artifacts
+├── 🕸️ graph/                          # Graph subsystem (ontology, migrations, loaders, exports, integrity checks)
+│   ├── 🧠 ontology/                    # Ontology definitions + mappings + versioned vocab (source of truth for graph shape)
+│   ├── 🔁 migrations/                  # Explicit graph migrations (no silent breaking changes; forward-only preferred)
+│   ├── 🛡️ integrity/                   # Constraints + health checks (no orphan nodes; drift detection; QA reports)
+│   ├── 📥 loaders/                     # Import helpers (CSV/JSON/STAC/DCAT/PROV → graph) + normalization/mapping
+│   └── 📤 exports/                     # Graph → artifacts (JSON-LD/OCI/UI-share/3D pointers; digestable outputs)
 │
-└── 🌐 server/
-    ├── api/                    # FastAPI controllers (REST)
-    ├── graphql/                # schema + resolvers (optional)
-    ├── services/               # use-cases / app layer
-    ├── domain/                 # entities + core logic (no DB, no HTTP)
-    ├── adapters/
-    │   ├── outbound/
-    │   │   ├── postgis/
-    │   │   └── neo4j/
-    │   └── inbound/
-    ├── ai/                     # Focus Mode orchestration (RAG + citations)
-    ├── auth/                   # roles/tokens, access checks
-    └── middleware/             # logging, rate limits, tracing, request IDs
+└── 🌐 server/                         # API service (FastAPI) + GraphQL (optional) + policy/prov enforcement
+    ├── 🌐 api/                         # REST controllers/routers (thin; delegate to services; boundary validation)
+    ├── 🧬 graphql/                     # GraphQL schema + resolvers (optional; enforce depth/cost limits)
+    ├── 🧩 services/                    # Use-cases/app layer (search, tiles, story, focus) + orchestration
+    ├── 🧠 domain/                      # Core entities + business rules (no DB, no HTTP; pure logic)
+    ├── 🧷 adapters/                    # IO boundaries (ports/adapters; isolate infra deps)
+    │   ├── 📤 outbound/                # Outbound clients (PostGIS/Neo4j/OPA/OCI/etc.)
+    │   │   ├── 🗄️ postgis/             # PostGIS adapter (queries, tiles helpers, transactions)
+    │   │   └── 🕸️ neo4j/               # Neo4j adapter (query library, sessions, retries)
+    │   └── 📥 inbound/                 # Inbound integrations (webhooks, queues, stream consumers) if used
+    ├── 🤖 ai/                          # Focus Mode orchestration (RAG, citations, redaction, answer receipts)
+    ├── 🔐 auth/                        # Roles/tokens, access checks, policy scopes (RBAC/ABAC hooks)
+    └── 🧱 middleware/                  # Logging, rate limits, tracing, request IDs, error mapping, CORS
 ```
 
 This aligns with KFM’s layered architecture approach (domain + service logic + adapter/infrastructure perimeter). [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
