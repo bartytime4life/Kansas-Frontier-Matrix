@@ -99,29 +99,29 @@ flowchart TD
 Your concrete files may differ, but the *capabilities* should map cleanly.
 
 ```text
-📁 src/
-  📁 server/
-    📁 middleware/
-      📄 README.md
-      📄 index.ts                # re-export + shared stack builder
-      🧷 requestId.ts            # correlation id / traceparent support
-      🧠 context.ts              # req.kfm + typed context population
-      🪵 logger.ts               # structured request logging (PII-safe)
-      🛡️ securityHeaders.ts      # CSP, HSTS, X-Content-Type-Options, etc.
-      🌐 cors.ts                 # CORS policy
-      📦 bodyLimits.ts           # JSON/file size limits, upload controls
-      🔐 authn.ts                # JWT/session/api-key verification
-      🧑‍⚖️ authz.ts              # roles/scopes (RBAC/ABAC glue)
-      ⚖️ opaPolicy.ts            # policy-as-code runtime checks
-      🧯 rateLimit.ts            # per-user/per-route throttling
-      ✅ validate.ts             # request schema validation (zod/pydantic boundary)
-      🗺️ geoGuards.ts            # bbox/zoom/maxFeatures/geospatial safety
-      🧾 provenance.ts           # provenance envelope + emit hooks
-      🧬 evidenceTriplet.ts      # STAC/DCAT/PROV presence checks where needed
-      🫥 sensitiveData.ts        # coordinate fuzzing/redaction rules
-      🧾 audit.ts                # append-only audit events
-      🚨 errors.ts               # Problem Details / standardized errors
-      📈 metrics.ts              # request metrics
+src/
+└─ 🌐 server/
+   └─ 🧱 middleware/
+      ├─ 📄 README.md                 # 📘 Middleware stack overview: ordering, responsibilities, and local/CI testing notes
+      ├─ 🧩📄 index.ts                 # Barrel exports + shared stack builder (defines canonical middleware order)
+      ├─ 🧷🆔 requestId.ts             # Correlation IDs + traceparent support (propagate to logs/telemetry/downstream calls)
+      ├─ 🧠📄 context.ts               # req.kfm typed context population (principal, request id, policy refs, feature flags)
+      ├─ 🪵📄 logger.ts                # Structured request logging (PII-safe; redaction-aware; sampling where needed)
+      ├─ 🛡️📄 securityHeaders.ts       # Security headers (CSP, HSTS, X-Content-Type-Options, etc.) with safe defaults
+      ├─ 🌐📄 cors.ts                  # CORS policy (origins/methods/headers; environment-aware)
+      ├─ 📦📄 bodyLimits.ts            # Body size limits + upload controls (JSON/file caps; fail-fast)
+      ├─ 🔐📄 authn.ts                 # Authentication (JWT/session/api-key verification; sets Principal in context)
+      ├─ 🧑‍⚖️📄 authz.ts               # Authorization glue (RBAC/ABAC checks; role/scope evaluation helpers)
+      ├─ ⚖️📄 opaPolicy.ts             # Runtime policy-as-code checks (OPA decisions + obligations application)
+      ├─ 🧯📄 rateLimit.ts             # Rate limiting (per-user/per-route throttling; burst/sustained controls)
+      ├─ ✅📄 validate.ts              # Request schema validation at the boundary (zod/pydantic; rejects invalid shapes)
+      ├─ 🗺️📄 geoGuards.ts             # Geo safety guards (bbox/zoom/maxFeatures limits; prevent heavy queries)
+      ├─ 🧾📄 provenance.ts            # Provenance envelope helpers + emit hooks (attach run_id/prov refs where required)
+      ├─ 🧬📄 evidenceTriplet.ts       # Evidence triplet checks (STAC/DCAT/PROV presence for governed endpoints)
+      ├─ 🫥📄 sensitiveData.ts         # Sensitive data controls (coordinate fuzzing, redaction/obfuscation, label propagation)
+      ├─ 🧾📄 audit.ts                 # Append-only audit events (authz denials, sensitive access, admin actions)
+      ├─ 🚨📄 errors.ts                # Standardized error mapping (Problem Details envelopes; safe messages; no leaks)
+      └─ 📈📄 metrics.ts               # Request metrics (latency, status codes, route tags; audit-safe aggregation)
 ```
 
 ---
