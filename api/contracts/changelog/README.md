@@ -41,14 +41,14 @@ This folder is the **API contract change ledger** for Kansas Frontier Matrix (KF
 
 ```text
 api/
-  contracts/
-    openapi/               # REST contracts (OpenAPI)
-    graphql/               # GraphQL schema(s)
-    jsonschema/            # Shared request/response schemas (if used)
-    changelog/
-      README.md            # (this file)
-      entries/             # One file per meaningful contract change
-        YYYY-MM-DD__api-vX.Y.Z__short-title.md
+└─ 📜 contracts/
+   ├─ 📘 openapi/                     # REST contracts (OpenAPI specs; canonical for HTTP endpoints)
+   ├─ 🧬 graphql/                     # GraphQL schema(s) + optional operation examples (if schema-first)
+   ├─ 📐 jsonschema/                  # Shared request/response object schemas (language-agnostic; used across surfaces)
+   └─ 🗞️ changelog/
+      ├─ 📄 README.md                 # (this file) 📌 How contract changes are recorded + SemVer guidance + release workflow
+      └─ 🗞️ entries/                 # One file per meaningful contract change (human-readable, reviewable)
+         └─ 🗞️📄 YYYY-MM-DD__api-vX.Y.Z__short-title.md  # Entry: what changed, why, migration notes, examples/tests
 ```
 
 ---
