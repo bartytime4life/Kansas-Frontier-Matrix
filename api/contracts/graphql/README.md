@@ -63,19 +63,19 @@ For APIs specifically:
 > This is the **recommended contract layout** for GraphQL. If some files don’t exist yet, treat this README as the blueprint.
 
 ```text
-📁 api/
-  📁 contracts/
-    📁 graphql/
-      📄 README.md                 👈 you are here
-      📄 schema.graphql            (generated or hand-authored SDL)
-      📄 scalars.graphql           (custom scalars)
-      📄 directives.graphql        (policy + deprecation helpers)
-      📁 types/                    (split-by-domain SDL, optional)
-      📁 operations/               (query/mutation examples used by tests)
-      📁 fixtures/                 (golden JSON fixtures for contract tests)
-      📁 persisted/                (optional persisted-query manifests)
-      📁 tests/                    (schema/operation contract tests)
-      📄 CHANGELOG.md              (contract version notes)
+api/
+└─ 📜 contracts/
+   └─ 🧬 graphql/
+      ├─ ✅📄 README.md                 # 👈 you are here 📌 GraphQL contract overview: versioning, composition, and validation
+      ├─ 🧬📄 schema.graphql            # Schema SDL (generated or hand-authored; source of truth for GraphQL surface)
+      ├─ 🧪📄 scalars.graphql           # Custom scalars (DateTime, JSON, GeoJSON, BBox, etc.) + serialization notes
+      ├─ 🧩📄 directives.graphql        # Directives (auth/policy/sensitive/deprecated) used for enforcement + evolution
+      ├─ 🧾 types/                     # Optional split-by-domain SDL (keeps schema modular and reviewable)
+      ├─ 🧾 operations/                # Query/mutation examples (used by docs/tests; helps prevent breaking changes)
+      ├─ 🧩 fixtures/                  # Golden JSON fixtures for contract tests (expected responses, errors, edge cases)
+      ├─ 📌 persisted/                 # Optional persisted-query manifests (ids/hashes → operations)
+      ├─ 🧪 tests/                     # Schema/operation contract tests (lint, composition, breaking-change checks)
+      └─ 🗞️📄 CHANGELOG.md             # Contract version notes (what changed, why, migration guidance)
 ```
 
 📌 Repo context: KFM is organized into modular folders (e.g., `api/`, `web/`, `data/`, `pipelines/`, `tools/`, `notebooks/`) so each layer stays isolated and testable.  [oai_citation:8‡Audit of the Kansas Frontier Matrix (KFM) Repository.pdf](file-service://file-1RwSrWXaDb5fnJ5gZX5kS3)
