@@ -297,11 +297,11 @@ Then promote “published scenarios” to `data/processed/<domain>/` with the sa
 
 ```mermaid
 flowchart LR
-  RAW[data/raw/<domain>\n(immutable)] -->|ingest| WORK[data/work/<domain>\n(intermediate)]
-  WORK -->|promote| PROC[data/processed/<domain>\n(authoritative)]
-  PROC -->|catalog| META[data/catalog + data/provenance\n(STAC/DCAT/PROV)]
-  META -->|serve| API[API + Tiles + Graph]
-  API --> UI[UI\n(2D/3D, Timeline, Focus Mode)]
+  RAW[📥 data/raw domain - immutable] --> WORK[🧰 data/work domain - intermediate]
+  WORK --> PROC[📦 data/processed domain - authoritative]
+  PROC --> META[🧾 data/catalog + 🧬 data/provenance - STAC DCAT PROV]
+  META --> API[🔌 API + 🧱 tiles + 🕸️ graph]
+  API --> UI[🗺️ UI - 2D 3D timeline 🤖 focus mode]
 ```
 
 ---
