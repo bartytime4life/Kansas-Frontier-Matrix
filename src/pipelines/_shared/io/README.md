@@ -112,27 +112,27 @@ repo/
 > Names are flexible, but responsibilities aren’t. Keep `_shared/io` boring and predictable. ✅
 
 ```text
-🧰 src/pipelines/_shared/io/
-  ├─ paths.py            # Canonical path builders (raw/work/processed/stac/dcat/prov/audits)
-  ├─ atomic.py           # Atomic file writes + temp file helpers
-  ├─ hashing.py          # sha256/multihash + canonical JSON helpers
-  ├─ fetch/
-  │   ├─ http.py         # fetch_http(...) with retries + ETag/cache headers
-  │   ├─ s3.py           # fetch_s3(...) (optional)
-  │   └─ __init__.py
-  ├─ manifests/
-  │   ├─ source.py       # write_source_json(...)
-  │   ├─ run.py          # write_run_manifest(...) + canonical_digest
-  │   ├─ oci.py          # write_distribution_oci(...) (optional)
-  │   └─ __init__.py
-  ├─ catalogs/
-  │   ├─ stac.py         # write_stac_collection/items(...)
-  │   ├─ dcat.py         # write_dcat_dataset(...)
-  │   ├─ prov.py         # write_prov_bundle(...)
-  │   └─ __init__.py
-  ├─ telemetry.py        # append_ndjson_event(...)
-  ├─ classification.py   # sensitivity tags + redaction helpers
-  └─ __init__.py
+src/pipelines/_shared/io/
+├─ 🧭 paths.py                # Canonical path builders for raw/work/processed/stac/dcat/prov/audits (single source of truth)
+├─ 🧱 atomic.py               # Atomic file writes: temp files, fsync/rename patterns, partial-write avoidance
+├─ 🔐 hashing.py              # sha256/multihash utilities + canonical JSON helpers (stable ordering/encoding)
+├─ 🌐 fetch/                  # Fetch adapters (acquisition layer) with retries + caching semantics
+│  ├─ 🌐 http.py              # fetch_http(...): retries, backoff, ETag/If-None-Match, cache headers, safe logging
+│  ├─ ☁️ s3.py                # fetch_s3(...): optional S3 fetcher (signed URLs/creds handled outside logs)
+│  └─ 🧩 __init__.py          # Package exports for fetch helpers
+├─ 🧾 manifests/              # Receipt/manifest writers (run/source/OCI) with digest helpers
+│  ├─ 🧾 source.py            # write_source_json(...): source record (origin, license, retrieval metadata, checksums)
+│  ├─ 🧾🔁 run.py              # write_run_manifest(...), canonical_digest(...): run ledger + deterministic hashing
+│  ├─ 📦 oci.py               # write_distribution_oci(...): optional OCI/ORAS distribution manifest writer
+│  └─ 🧩 __init__.py          # Package exports for manifest writers
+├─ 🗂️ catalogs/               # Catalog writers (STAC/DCAT/PROV) for the evidence triplet
+│  ├─ 🛰️ stac.py              # write_stac_collection/items(...): collections + items + asset roles/hrefs
+│  ├─ 🗂️ dcat.py              # write_dcat_dataset(...): dataset + distributions + license/access metadata
+│  ├─ 🧬 prov.py              # write_prov_bundle(...): PROV entities/activities/agents linking inputs→outputs
+│  └─ 🧩 __init__.py          # Package exports for catalog writers
+├─ 📈 telemetry.py            # append_ndjson_event(...): append-only NDJSON telemetry (audit-safe; redaction-aware)
+├─ 🔒 classification.py       # Sensitivity tags + redaction helpers (label propagation, safe logging guards)
+└─ 🧩 __init__.py             # Public exports for shared IO (keep stable; avoid circular deps)
 ```
 
 ---
