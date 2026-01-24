@@ -66,30 +66,30 @@ That makes this module critical: **all access control happens here**, before any
 
 ```text
 src/server/auth/
-├─ README.md                       # this doc 📘
-├─ config/                         # env parsing, defaults, validation 🧪
-│  ├─ auth.config.(ts|py)
-│  └─ opa.config.(ts|py)
-├─ providers/                      # identity providers (OIDC, dev-local) 🔑
-│  ├─ oidc.(ts|py)
-│  └─ dev_local.(ts|py)
-├─ tokens/                         # jwt verify/sign, refresh flows 🪪
-│  ├─ jwt.(ts|py)
-│  └─ jwks_cache.(ts|py)
-├─ policy/                         # authorization & OPA bridge ⚖️
-│  ├─ authorize.(ts|py)
-│  ├─ opa_client.(ts|py)
-│  └─ obligations.(ts|py)          # redaction/obfuscation helpers 🕵️
-├─ middleware/                     # request context injection 🧱
-│  ├─ authn_middleware.(ts|py)
-│  └─ authz_middleware.(ts|py)
-├─ audit/                          # security events + provenance hooks 🧾
-│  ├─ audit_log.(ts|py)
-│  └─ event_types.(ts|py)
-└─ types/                          # Principal, Claims, Decision models 🧬
-   ├─ principal.(ts|py)
-   ├─ roles.(ts|py)
-   └─ resources.(ts|py)
+├─ 📘 README.md                       # 📘 This doc: auth architecture, flows, threat model notes, and how to test locally
+├─ ⚙️ config/                         # Env parsing + defaults + validation (keep secrets out of git; fail-closed)
+│  ├─ ⚙️📄 auth.config.(ts|py)         # Auth settings: issuer/audience, cookie/session options, dev toggles
+│  └─ ⚖️📄 opa.config.(ts|py)          # OPA settings: bundle/version pinning, endpoints, timeouts, caching
+├─ 🔑 providers/                      # Identity providers (OIDC, dev-local)
+│  ├─ 🔑📄 oidc.(ts|py)                # OIDC provider integration (discovery, login redirect, claims mapping)
+│  └─ 🧪🔑📄 dev_local.(ts|py)          # Dev-only provider (local users/roles; never enabled in prod)
+├─ 🪪 tokens/                          # JWT verify/sign + refresh flows (token hygiene + key rotation support)
+│  ├─ 🪪📄 jwt.(ts|py)                 # JWT helpers: verify, sign (if needed), decode claims, clock skew handling
+│  └─ 🗝️🧊📄 jwks_cache.(ts|py)        # JWKS cache: fetch/refresh keys, pin issuer, retry/backoff, cache TTL
+├─ ⚖️ policy/                          # Authorization rules + OPA bridge (central enforcement point)
+│  ├─ ✅⚖️📄 authorize.(ts|py)          # authorize(...): policy decision entrypoint used by middleware/handlers
+│  ├─ ⚖️🔌📄 opa_client.(ts|py)         # OPA client wrapper: decision calls, bundles, caching, error handling
+│  └─ 🕵️🧹📄 obligations.(ts|py)        # Obligations: redaction/obfuscation actions required by policy decisions
+├─ 🧱 middleware/                      # Request context injection (AuthN/AuthZ in the request pipeline)
+│  ├─ 🧱🔐📄 authn_middleware.(ts|py)    # Authentication middleware: parse token/session → Principal + request context
+│  └─ 🧱⚖️📄 authz_middleware.(ts|py)    # Authorization middleware: enforce decisions, apply obligations, map denials
+├─ 🧾 audit/                           # Security events + provenance hooks (audit-safe; correlation IDs)
+│  ├─ 🧾📄 audit_log.(ts|py)           # Audit logging: append-only events (login, denial, token errors, policy outcomes)
+│  └─ 🔔📄 event_types.(ts|py)         # Event taxonomy: standardized audit event names + required fields
+└─ 🧬 types/                           # Strong types for the auth boundary
+   ├─ 🧑‍💼📄 principal.(ts|py)          # Principal model (subject id, display name, auth method, org/tenant)
+   ├─ 🧑‍⚖️📄 roles.(ts|py)              # Roles/scopes mapping (RBAC/ABAC helpers)
+   └─ 🎯📄 resources.(ts|py)           # Resource identifiers (dataset/layer/story ids) used in policy evaluation
 ```
 
 This matches the platform’s emphasis on modular layers and explicit boundaries (UI ↔ API ↔ data stores).:contentReference[oaicite:9]{index=9}
