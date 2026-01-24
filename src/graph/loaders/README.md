@@ -296,16 +296,16 @@ Store:
 ### Suggested folder layout 🗂️
 ```text
 src/graph/loaders/
-  README.md
-  🧠 registry/                # loader discovery + versioning
-  🧱 base/                    # shared interfaces + helpers
-  📚 stac/                    # STAC -> graph
-  🗃️ dcat/                    # DCAT -> graph
-  🧾 prov/                    # PROV(-O) JSON-LD -> graph
-  📖 story/                   # Story Nodes -> graph
-  📡 realtime/                # live feeds (GTFS-RT, sensors, etc.)
-  🧰 utils/                   # normalization + hashing + mappers
-  🧪 __tests__/               # fixtures + golden assertions
+├─ 📄 README.md                 # 📘 Loader system overview: supported sources, ordering, id rules, and error handling
+├─ 🧠 registry/                 # Loader discovery + versioning (what loaders exist, how they’re selected and composed)
+├─ 🧱 base/                     # Shared interfaces + helpers (Loader contract, context, common receipts, retry policy)
+├─ 🛰️ stac/                     # STAC → graph loader (Collections/Items/Assets → nodes/edges)
+├─ 🗂️ dcat/                     # DCAT → graph loader (Dataset/Distribution → nodes/edges + discovery metadata)
+├─ 🧬 prov/                     # PROV(-O) JSON-LD → graph loader (entities/activities/agents + derivation edges)
+├─ 📖 story/                    # Story Nodes → graph loader (entities referenced in narratives + citation links)
+├─ 📡 realtime/                 # Live feed loaders (GTFS-RT, sensors, streaming events) with checkpointing
+├─ 🧰 utils/                    # Shared utilities: normalization, hashing, ID mapping, safe parsing, mappers
+└─ 🧪 __tests__/                # Fixtures + golden assertions (deterministic loader outputs; pass/fail coverage)
 ```
 
 > [!TIP]
