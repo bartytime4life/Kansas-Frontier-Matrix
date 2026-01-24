@@ -84,16 +84,16 @@ This directory holds the **authoritative, reproducible outputs** of the `{{DATAS
 > Keep this folder **boringly consistent** across domains. Predictability is a feature 🧱
 
 ```text
-📁 data/
-  📁 processed/
-    📁 {{DOMAIN}}/
-      📁 {{DATASET}}/
-        📄 README.md                      # 👈 you are here
-        📁 artifacts/                     # final data products
-        📁 manifests/                     # checksums, inventories, registry refs
-        📁 logs/                          # pipeline run logs (sanitized)
-        📁 exports/                       # optional: DB-load exports / simplified views
-        📁 quicklooks/                    # optional: thumbnails, previews, sample tiles
+data/
+└─ ✅ processed/
+   └─ 🗂️ {{DOMAIN}}/
+      └─ 📦 {{DATASET}}/
+         ├─ 📄 README.md                      # 👈 you are here 📌 Dataset product overview + how to consume + provenance pointers
+         ├─ 📦 artifacts/                     # Final data products (publishable outputs: GeoParquet/COG/PMTiles/GeoJSON/etc.)
+         ├─ 🧾 manifests/                     # Checksums + inventories + registry refs (what’s here, digests, versions)
+         ├─ 🪵 logs/                          # Pipeline run logs (sanitized; link to audits/ for full receipts)
+         ├─ 📤 exports/                       # Optional export shapes (DB-load exports, simplified views, denormalized tables)
+         └─ 👀 quicklooks/                    # Optional previews (thumbnails, sample tiles, small extracts for fast review)
 ```
 
 ### ✅ Recommended subfolders (choose what fits)
