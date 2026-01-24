@@ -105,16 +105,16 @@ This directory must **not** contain:
 ### Expected tree (examples)
 
 ~~~text
-📁 data/
-└── 📁 graph/
-    ├── 📁 csv/
-    │   ├── 📄 README.md
-    │   ├── 📄 <nodes-table>.csv
-    │   ├── 📄 <relationships-table>.csv
-    │   └── 📄 ...
-    └── 📁 cypher/
-        ├── 📄 README.md
-        └── 📄 <post-import>.cypher
+data/
+└── 🕸️ graph/
+    ├── 🧱 csv/
+    │   ├── 📄 README.md                 # 📘 CSV conventions: required columns, ID formats, and import command examples
+    │   ├── 🧱📄 <nodes-table>.csv        # Node table (one label/set): node ids + properties (stable headers)
+    │   ├── 🔗📄 <relationships-table>.csv # Relationship table: start/end ids + type + relationship properties
+    │   └── ➕ …                          # Additional node/rel tables (date-stamped snapshots recommended)
+    └── 🧠 cypher/
+        ├── 📄 README.md                 # 📘 Cypher conventions: when to use, safe/idempotent patterns, and verification queries
+        └── ✅🧠📄 <post-import>.cypher    # Post-import script (constraints checks, derived fields, sanity queries)
 ~~~
 
 Notes:
