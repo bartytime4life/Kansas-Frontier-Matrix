@@ -57,23 +57,23 @@ flowchart LR
 
 ```text
 data/
-└── sources/                         # 📦 upstream sources + receipts + pointers
-    ├── README.md                    # 👈 you are here
-    ├── _templates/                  # 🧩 copy/paste templates
-    │   ├── source.template.json
-    │   └── assets.manifest.template.json
-    ├── _local/                      # 🔒 local-only material (gitignored)
-    ├── datasets/                    # 🌎 external datasets (APIs, files, portals)
-    │   └── usgs-nwis/
-    │       └── v2026-01-18/
-    │           ├── source.json
-    │           ├── assets.manifest.json
-    │           ├── checksums.sha256
-    │           └── receipts/
-    ├── documents/                   # 📜 PDFs, scans, transcripts, reports (if allowed)
-    │   └── ks-historical-society/
-    ├── apis/                        # 🔌 source definitions for live feeds
-    └── library/                     # 📚 reference PDFs / books used for design & R&D
+└── 📦 sources/                         # 📦 Upstream sources + receipts + pointers (what we fetched + why + under what terms)
+    ├── 📄 README.md                    # 👈 you are here 📌 How sources are recorded, versioned, and linked to raw/work/processed
+    ├── 🧩 _templates/                  # 🧩 Copy/paste templates for consistent source documentation
+    │   ├── 🧾 source.template.json      # Template: source record (origin, license, contacts, update cadence, notes)
+    │   └── 🧾 assets.manifest.template.json # Template: asset manifest (files/URIs, mediaTypes, roles, checksums)
+    ├── 🔒 _local/                      # 🔒 Local-only material (gitignored): secrets, scratch downloads, private notes
+    ├── 🌎 datasets/                    # 🌎 External datasets (APIs, files, portals) tracked by source + version
+    │   └── 🛰️ usgs-nwis/
+    │       └── 🏷️ v2026-01-18/          # Versioned source snapshot (date or semver; immutable once recorded)
+    │           ├── 🧾 source.json        # Source contract: where it came from, license/terms, contacts, retrieval method
+    │           ├── 🧾 assets.manifest.json # Asset list: URIs/paths, roles, mediaTypes, sizes, expected outputs
+    │           ├── 🔐📄 checksums.sha256  # Integrity hashes for the source metadata and any stored artifacts
+    │           └── 🧾 receipts/          # Acquisition receipts (headers, etags, status, timing, tool versions)
+    ├── 📜 documents/                   # 📜 PDFs/scans/transcripts/reports (only if repo policy allows + licensed)
+    │   └── 🏛️ ks-historical-society/    # Source docs grouped by provider/collection (keep provenance + licenses)
+    ├── 🔌 apis/                        # 🔌 Live feed source definitions (endpoints, throttles, auth strategy, schemas)
+    └── 📚 library/                     # 📚 Reference PDFs/books used for design & R&D (track licensing/attribution)
 ```
 
 ### 🔒 Suggested `.gitignore` for this folder
