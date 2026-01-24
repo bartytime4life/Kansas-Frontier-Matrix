@@ -65,29 +65,29 @@ This domain folder exists so we can:
 
 ```text
 data/work/<domain>/
-├─ README.md                          # 👋 you are here
-├─ _tmp/                              # 🧹 throwaway scratch (safe to delete)
-├─ cache/                             # ⚡ deterministic caches (rebuildable)
-├─ runs/                              # 🧪 every pipeline execution is a run/
-│  └─ <run_id>/                       # e.g. 2026-01-24T031500Z_a1b2c3d
-│     ├─ manifest/                    # 🧾 what happened (inputs/config/tooling)
-│     │  ├─ run_manifest.json
-│     │  ├─ inputs.lock.json          # frozen pointers to raw inputs (and checksums)
-│     │  ├─ tool_versions.txt
-│     │  └─ policy_decisions.json     # optional: OPA / governance gate outputs
-│     ├─ staging/                     # 🔧 intermediate transforms (not final)
-│     ├─ qa/                          # ✅ validators, anomaly scans, reports
-│     │  ├─ qa_report.md
-│     │  └─ qa_metrics.json
-│     ├─ outputs/                     # 📦 candidate artifacts (promote from here)
-│     ├─ logs/                        # 📜 structured logs
-│     │  ├─ telemetry.ndjson          # append-only, line-delimited JSON
-│     │  └─ run.log
-│     └─ receipts/                    # 🔐 integrity + traceability receipts
-│        ├─ checksums.sha256
-│        └─ file_inventory.json
-├─ notebooks/                         # 📓 exploration (keep small + reproducible)
-└─ reports/                           # 🗞️ human-readable summaries across runs
+├─ 👋📄 README.md                          # 👋 you are here 📌 What belongs in work/, retention rules, and promotion to processed/
+├─ 🧹 _tmp/                               # 🧹 Throwaway scratch (safe to delete; never relied on by pipelines)
+├─ ⚡ cache/                              # ⚡ Deterministic caches (rebuildable; keyed by inputs+params+versions)
+├─ 🧪 runs/                               # 🧪 Every pipeline execution produces one run folder (append-only)
+│  └─ 🏷️ <run_id>/                        # e.g. 2026-01-24T031500Z_a1b2c3d (UTC timestamp + short suffix)
+│     ├─ 🧾 manifest/                     # 🧾 “What happened” receipts (inputs/config/tooling/policy)
+│     │  ├─ 🧾🔐 run_manifest.json          # Run ledger: who/what/when + params + inputs/outputs + hashes/pointers
+│     │  ├─ 🔒🧾 inputs.lock.json           # Frozen pointers to raw inputs (paths/URIs + checksums) for reproducibility
+│     │  ├─ 🧰🧾 tool_versions.txt          # Toolchain versions (python/node/gdal/tippecanoe/etc.) used by the run
+│     │  └─ 🚦🧾 policy_decisions.json      # Optional: OPA/governance decisions (pass/fail, findings, waivers)
+│     ├─ 🔧 staging/                      # 🔧 Intermediate transforms (not final; may be pruned)
+│     ├─ ✅ qa/                           # ✅ Validation outputs (anomaly scans, link checks, geo sanity, metrics)
+│     │  ├─ 📝📄 qa_report.md              # Human QA summary (what was checked + key findings)
+│     │  └─ 📊🧾 qa_metrics.json           # Machine QA metrics (counts, thresholds, anomaly rates)
+│     ├─ 📦 outputs/                      # 📦 Candidate artifacts (promote to processed/ when accepted)
+│     ├─ 📜 logs/                         # 📜 Run logs (structured; sanitize secrets/PII)
+│     │  ├─ 📈🧾 telemetry.ndjson          # Append-only NDJSON events (timings, counters, audit-safe signals)
+│     │  └─ 🪵📄 run.log                   # Human-readable log (high-level; useful for quick debugging)
+│     └─ 🔐 receipts/                     # 🔐 Integrity + traceability receipts (tamper evidence)
+│        ├─ 🔐📄 checksums.sha256          # sha256 sums for key files/artifacts in this run bundle
+│        └─ 🧾 file_inventory.json         # Inventory of produced files (paths, sizes, roles, digests, pointers)
+├─ 📓 notebooks/                          # 📓 Exploration notebooks (keep small; link to runs/ and manifests)
+└─ 🗞️ reports/                            # 🗞️ Human-readable summaries across runs (rollups, trends, release notes)
 ```
 
 > [!NOTE]
