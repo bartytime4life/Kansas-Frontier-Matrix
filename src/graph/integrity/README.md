@@ -44,14 +44,14 @@ KFM’s pipeline ordering is **non‑negotiable** (no leapfrogging contracts). G
 ```mermaid
 flowchart LR
   A[📥 Raw Sources] --> B[🛠️ ETL + Normalization]
-  B --> C[🧾 Catalogs: STAC + DCAT + PROV]
-  C --> D[🕸️ Neo4j Graph (refs back to catalogs)]
-  D --> E[🧩 API Layer (contracts + redaction)]
-  E --> F[🗺️ UI: Map + Story Nodes + Focus Mode]
+  B --> C[🧾 Catalogs - STAC + DCAT + PROV]
+  C --> D[🕸️ Neo4j Graph - refs back to catalogs]
+  D --> E[🧩 API Layer - contracts + redaction]
+  E --> F[🗺️ UI - Map + Story Nodes + Focus Mode]
 
-  GI[🧬 Graph Integrity] -. validates .-> D
-  GI -. cross-checks .-> C
-  GI -. produces .-> R[📊 docs/reports/qa/graph_health/*]
+  GI[🧬 Graph Integrity] -.-> D
+  GI -.-> C
+  GI -.-> R[📊 docs reports qa graph_health]
 ```
 
 ---
