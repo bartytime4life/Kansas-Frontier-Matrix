@@ -127,18 +127,18 @@ All check outputs are written to a **timestamped report directory**, designed to
 Example:
 ```text
 docs/reports/qa/graph_health/
-  2026-01-23T02-15-00Z/
-    summary.md
-    index.csv
-    artifacts/
-      counts.csv
-      constraints.csv
-      indexes.csv
-      orphans.csv
-      lag.csv
-      hubs.csv
-      schema_drift.json
-      backup.log
+└─ 📅 2026-01-23T02-15-00Z/            # One timestamped QA run (UTC) for graph health reporting
+   ├─ 📄 summary.md                    # Human summary: overall status, key findings, deltas, and next actions
+   ├─ 📊 index.csv                     # Report index: pointers to artifacts + quick status flags per check
+   └─ 📦 artifacts/                    # Detailed outputs backing the summary (machine-readable, reviewable)
+      ├─ 🔢📊 counts.csv                # Node/edge counts by label/type (baseline for drift detection)
+      ├─ 🔒📊 constraints.csv           # Constraint status (present/missing/violations) + affected labels/properties
+      ├─ 📇📊 indexes.csv               # Index status + usage hints (coverage and “missing index” flags)
+      ├─ 🧍‍♂️📊 orphans.csv              # Orphaned nodes/edges (unlinked entities, dangling relationships)
+      ├─ ⏱️📊 lag.csv                   # Ingest/refresh lag metrics (staleness by pipeline/domain)
+      ├─ 🧠📊 hubs.csv                  # High-degree nodes (potential data issues or true hubs; used for QA review)
+      ├─ 🧬🧾 schema_drift.json          # Detected schema drift vs ontology/expected shapes (adds/removes/changed props)
+      └─ 🪵📄 backup.log                # Backup/maintenance log excerpt for the run (sanitized; for troubleshooting)
 ```
 
 A `summary.md` should include: status for each check (✅ / ⚠️ / ❌), brief rationale, and links to artifacts.[^healthchecks]
