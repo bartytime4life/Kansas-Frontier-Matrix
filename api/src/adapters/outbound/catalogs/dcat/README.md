@@ -96,19 +96,21 @@ This adapter is **not** responsible for:
 ## 📦 Output conventions
 ### Canonical outputs (recommended)
 ```text
-🗂️ data/
-  ├── 📁 stac/
-  │   ├── 📁 collections/
-  │   └── 📁 items/
-  ├── 📁 catalog/
-  │   └── 📁 dcat/
-  │       ├── 📄 catalog.jsonld            👈 aggregated feed (optional but recommended)
-  │       └── 📁 datasets/
-  │           ├── 📄 <dataset_id>.jsonld   👈 one-per dataset/version (preferred)
-  │           └── 📄 ...
-  └── 📁 prov/
-      ├── 📄 <dataset_id>.prov.jsonld
-      └── 📄 ...
+data/
+├── 🛰️ stac/                           # STAC metadata layer (Collections + Items that point to assets/artifacts)
+│   ├── 🗂️ collections/                # Dataset-level STAC Collections (extent/license/providers/links)
+│   └── 🧷 items/                      # Snapshot STAC Items (time/run slices; assets + roles + hrefs)
+│
+├── 🗂️ catalog/                        # Discovery layer (DCAT + optional rollups for fast lookup)
+│   └── 🗂️ dcat/
+│       ├── 🧾📚 catalog.jsonld         # (optional, recommended) Aggregated DCAT feed/index across datasets
+│       └── 📚 datasets/               # Per-dataset (or per-version) DCAT records (preferred canonical units)
+│           ├── 🧾 <dataset_id>.jsonld  # One-per dataset/version: license, access, distributions, provenance pointers
+│           └── ➕ …                    # Additional dataset records
+│
+└── 🧬 prov/                           # Lineage bundles (PROV-O JSON-LD) linking raw→work→processed→catalog
+    ├── 🧬🧾 <dataset_id>.prov.jsonld   # Dataset-level provenance (or run-bundled lineage) for reproducibility/audit
+    └── ➕ …                            # Additional PROV bundles (per-run, per-release, per-activity as needed)
 ```
 
 > [!TIP]
