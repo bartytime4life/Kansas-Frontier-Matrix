@@ -31,15 +31,15 @@
 
 ```text
 api/src/contracts/events/
-  _shared/ 🧩
-    README.md  📍 you are here
-    envelope.*                 # core event wrapper (schema + typed model)
-    identifiers.*              # EventId, RunId, DatasetId, StoryId, etc.
-    classification.*           # public/internal/restricted + handling hints
-    provenance.*               # PROV/DCAT/STAC refs + evidence manifests
-    governance.*               # policy decisions, approvals, ledger pointers
-    links.*                    # typed link objects (uri + rel + mediaType)
-    errors.*                   # standard error/violation shapes
+└─ 🧩 _shared/
+   ├─ 📍📄 README.md                 # 📍 You are here 📌 Shared event primitives used by all event domains/versions
+   ├─ 📦🧾 envelope.*                # Core event wrapper: headers + payload + timestamps + schema/version routing
+   ├─ 🆔🧾 identifiers.*             # Strongly-typed IDs (EventId, RunId, DatasetId, StoryId, etc.) + validation helpers
+   ├─ 🔒🧾 classification.*          # Classification labels (public/internal/restricted) + handling hints/propagation fields
+   ├─ 🧬🧾 provenance.*              # Provenance pointers: PROV/DCAT/STAC refs + evidence manifest refs
+   ├─ 🛡️🧾 governance.*              # Governance fields: policy decisions, approvals, waivers, ledger pointers
+   ├─ 🔗🧾 links.*                   # Typed link objects (uri + rel + mediaType + integrity/digest when available)
+   └─ 🚫🧾 errors.*                  # Standard error/violation shapes (codes, severities, pointers, remediation hints)
 ```
 
 ---
