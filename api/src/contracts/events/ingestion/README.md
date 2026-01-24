@@ -14,14 +14,15 @@
 ## 📌 Location in repo
 
 ```text
-📁 api/
-  📁 src/
-    📁 contracts/
-      📁 events/
-        📁 ingestion/
-          ✅ README.md   ← you are here
-          📁 v1/         ← (recommended) versioned event schemas
-          📁 examples/   ← (recommended) sample payloads / fixtures
+api/
+└─ 📁 src/
+   └─ 📜 contracts/
+      └─ 🔔 events/
+         └─ 📥 ingestion/
+            ├─ ✅📄 README.md          # ← you are here 📌 Ingestion event contract overview + routing/versioning rules
+            ├─ 🧬 v1/                  # 🧬 Versioned event schemas (stable; additive changes only in v1)
+            ├─ 🧪 examples/            # 🧪 Sample payloads/fixtures (known-pass/known-fail for tests/docs)
+            └─ ➕ …                    # (optional) future versions (v2/, etc.) when breaking changes are needed
 ```
 
 ---
