@@ -88,14 +88,14 @@ Canonical pipeline ordering is preserved:
 
 ### Expected tree
 
-    📁 data/
-    └── 📁 graph/
-        └── 📁 cypher/
-            ├── 📄 README.md
-            ├── 📄 00-constraints.cypher
-            ├── 📄 01-indexes.cypher
-            ├── 📄 10-normalize.cypher
-            └── 📄 manifest.json                   # optional (repo policy)
+    data/
+└── 🕸️ graph/
+    └── 🧠 cypher/
+        ├── 📄 README.md                       # 📘 What these scripts do, run order, idempotency rules, and safety notes
+        ├── 🔒📄 00-constraints.cypher          # Constraint definitions (uniqueness/required props); run first
+        ├── 📇📄 01-indexes.cypher              # Index definitions for performance; run after constraints
+        ├── 🧼📄 10-normalize.cypher            # Normalization/cleanup queries (standardize props, fix minor drift)
+        └── 🧾🗂️ manifest.json                  # (optional) Script registry: order, purpose, expected effects, checksums
 
 Notes:
 - Filenames are ordered to encourage repeatable application.
