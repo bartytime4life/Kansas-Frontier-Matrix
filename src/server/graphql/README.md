@@ -73,34 +73,34 @@ These rules are *contract-level invariants* for this folder:
 
 ```text
 src/server/graphql/
-├─ 📄 README.md
-├─ 🧬 schema/
-│  ├─ *.graphql              # SDL (if schema-first)
-│  ├─ index.*                # schema composition
-│  └─ scalars/               # DateTime, JSON, GeoJSON, BBox...
-├─ 🧠 resolvers/
-│  ├─ Query.*
-│  ├─ Mutation.*
-│  ├─ Subscription.*         # if enabled
-│  └─ types/                 # Person, Place, Event, Dataset, StoryNode...
-├─ 🧰 loaders/
-│  ├─ neo4j.*                # batching / dataloader patterns
-│  └─ postgis.*
-├─ 🧩 directives/
-│  ├─ @auth.*                # role/claim based
-│  ├─ @policy.*              # OPA hooks
-│  └─ @sensitive.*           # care_label gating / redaction rules
-├─ 🧾 context/
-│  ├─ buildContext.*         # auth, request id, policy client, datastores
-│  └─ datastores.*           # Neo4j/PostGIS/Catalog/Artifacts
-├─ 🧪 __tests__/
-│  ├─ schema.test.*
-│  ├─ resolvers.test.*
-│  └─ policy.test.*          # OPA rule + field gates
-└─ 🧱 utils/
-   ├─ complexity.*
-   ├─ depthLimit.*
-   └─ pagination.*
+├─ 📄 README.md                     # 📘 GraphQL layer overview: schema strategy, auth/policy model, and ops limits
+├─ 🧬 schema/                       # GraphQL schema source (SDL) + composition utilities
+│  ├─ 📜 *.graphql                  # SDL files (schema-first) grouped by domain/type
+│  ├─ 🧩 index.*                    # Schema composition (stitch/merge/order) + export helpers
+│  └─ 🧪 scalars/                   # Custom scalars (DateTime, JSON, GeoJSON, BBox, etc.)
+├─ 🧠 resolvers/                    # Resolver implementations (thin; delegate to services/ports; policy-aware)
+│  ├─ 🔎 Query.*                    # Query resolvers (read-only; enforce pagination/cost limits)
+│  ├─ ✍️ Mutation.*                 # Mutation resolvers (if enabled; audited; policy-gated)
+│  ├─ 📡 Subscription.*             # Subscriptions (if enabled; streaming/auth considerations)
+│  └─ 🧾 types/                     # Type resolvers (Person, Place, Event, Dataset, StoryNode… field composition)
+├─ 🧰 loaders/                      # DataLoader/batching layer (prevents N+1; centralizes query shapes)
+│  ├─ 🕸️ neo4j.*                    # Neo4j batching loaders (parameterized, read-only by default)
+│  └─ 🗺️ postgis.*                  # PostGIS batching loaders (spatial/time filters; safe query wrappers)
+├─ 🧩 directives/                   # Schema directives enforcing cross-cutting rules at field level
+│  ├─ 🔐 @auth.*                    # Role/claim based gating (RBAC/ABAC entrypoints)
+│  ├─ ⚖️ @policy.*                  # OPA hooks (policy decisions + obligations)
+│  └─ 🧿 @sensitive.*               # Sensitivity gating (CARE labels, redaction/obfuscation requirements)
+├─ 🧾 context/                      # Request context construction (shared across all resolvers)
+│  ├─ 🧾 buildContext.*             # Builds context: principal, request id, policy client, loaders, stores
+│  └─ 🗄️ datastores.*               # Store wrappers: Neo4j/PostGIS/Catalog/Artifacts (ports/adapters)
+├─ 🧪 __tests__/                    # GraphQL tests (schema, resolvers, policy gating)
+│  ├─ 🧪 schema.test.*              # Schema compilation + snapshot of SDL (optional)
+│  ├─ 🧪 resolvers.test.*           # Resolver behavior tests (mocked stores; deterministic fixtures)
+│  └─ 🧪⚖️ policy.test.*            # Policy/directive tests (OPA rules + field-level gates + redaction obligations)
+└─ 🧱 utils/                        # Utility guards for safe GraphQL operation
+   ├─ 📈 complexity.*               # Query cost estimation + enforcement hooks
+   ├─ 🧱 depthLimit.*               # Depth limiting middleware (abuse prevention)
+   └─ 📑 pagination.*               # Pagination helpers (cursor encoding/decoding, page bounds, defaults)
 ```
 
 ---
