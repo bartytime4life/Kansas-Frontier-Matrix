@@ -78,21 +78,21 @@ flowchart LR
 
 ```text
 api/contracts/openapi/
-├─ README.md                          👈 you are here
-├─ openapi.yaml                       📄 canonical contract (preferred)
-├─ components/                        🧩 reuse everywhere
-│  ├─ schemas/                        🧱 JSON Schemas (domain models)
-│  ├─ parameters/                     🎛️ pagination, bbox, time, etc.
-│  ├─ responses/                      📦 standard errors, envelopes
-│  └─ securitySchemes/                🔐 auth definitions
-├─ examples/                          🧪 examples used by docs/tests
-│  ├─ requests/
-│  └─ responses/
-├─ overlays/                          🧬 optional (public vs internal)
-│  ├─ public.yaml
-│  └─ internal.yaml
-└─ changelog/                         🗓️ contract change notes
-   └─ v1.md
+├─ ✅📄 README.md                          # 👈 you are here 📌 How the OpenAPI contract is structured + build/validation workflow
+├─ 📄 openapi.yaml                         # Canonical OpenAPI contract (preferred single entrypoint)
+├─ 🧩 components/                          # Reusable building blocks referenced across the spec
+│  ├─ 🧱 schemas/                          # JSON Schemas for domain models (request/response bodies)
+│  ├─ 🎛️ parameters/                       # Shared parameters (pagination, bbox, time ranges, filters, ids)
+│  ├─ 📦 responses/                        # Standard responses (error envelopes, common success wrappers)
+│  └─ 🔐 securitySchemes/                  # Auth definitions (bearer, apiKey, oauth flows, etc.)
+├─ 🧪 examples/                            # Examples used by docs/tests (must validate against schemas)
+│  ├─ 📥 requests/                         # Example request payloads and parameter sets
+│  └─ 📤 responses/                        # Example response payloads (success + error shapes)
+├─ 🧬 overlays/                            # Optional overlays (e.g., public vs internal variants; patch/merge inputs)
+│  ├─ 🌐 public.yaml                       # Public-facing overlay (hide internal endpoints/fields)
+│  └─ 🔒 internal.yaml                     # Internal overlay (admin endpoints, extra debug fields)
+└─ 🗓️ changelog/                           # Contract change notes (SemVer narrative per version)
+   └─ 🗓️📄 v1.md                            # v1 change log (breaking/additive/fixes + migration notes)
 ```
 
 > [!NOTE]
