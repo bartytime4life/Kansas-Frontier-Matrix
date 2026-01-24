@@ -119,17 +119,17 @@ In KFM, Items are part of the **published boundary**: **STAC + DCAT + PROV** mus
 KFM keeps Items grouped by Collection:
 
 ```text
-📁 data/stac/
-├─ 📄 README.md
-├─ 📁 collections/
-│  ├─ 📄 README.md
-│  └─ 📄 <collection-id>.json
-└─ 📁 items/
-   ├─ 📄 README.md                      👈 you are here
-   └─ 📁 <collection-id>/
-      ├─ 📄 <item-id>.json
-      ├─ 📄 <item-id>.json
-      └─ 📄 ...
+data/stac/
+├─ 📄 README.md                         # 📘 STAC layout overview + root link conventions + validation pointers
+├─ 🗂️ collections/
+│  ├─ 📄 README.md                      # 📘 Collection conventions (ids, extent/license/providers, link expectations)
+│  └─ 🧾 <collection-id>.json           # One STAC Collection per dataset/product (dataset-level metadata)
+└─ 🧷 items/
+   ├─ 📄 README.md                      # 👈 you are here 📌 Item naming, required fields, and how items link to assets
+   └─ 🗂️ <collection-id>/              # Items grouped under their parent collection id
+      ├─ 🧾 <item-id>.json              # STAC Item snapshot (assets/hrefs/mediaTypes/roles + datetime or start/end)
+      ├─ 🧾 <item-id>.json              # Another snapshot (different time/run/version; keep ids unique)
+      └─ ➕ …                            # Additional items (append-only; never edit past snapshots without a new run)
 ```
 
 > [!NOTE]
