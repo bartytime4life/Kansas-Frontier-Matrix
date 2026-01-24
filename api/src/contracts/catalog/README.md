@@ -88,22 +88,22 @@ The Data Intake guide calls out versioned KFM profiles, e.g.:
 > Your folder may already contain a different structure — this is the **target convention** for clarity, reuse, and codegen friendliness.
 
 ```text
-📁 api/
-  📁 src/
-    📁 contracts/
-      📁 catalog/
-        📄 README.md
-        📄 index.(ts|py)                # barrel exports / module entrypoint (optional)
-        📁 schemas/
-          📁 stac/                      # STAC + KFM-STAC profile schemas
-          📁 dcat/                      # DCAT + KFM-DCAT profile schemas
-          📁 prov/                      # PROV + KFM-PROV profile schemas
-          📄 catalog.search.request.schema.json
-          📄 catalog.search.response.schema.json
-          📄 catalog.dataset.summary.schema.json
-        📁 examples/
-          📄 catalog.search.request.example.json
-          📄 catalog.dataset.summary.example.json
+api/
+└─ 📁 src/
+   └─ 📜 contracts/
+      └─ 🗂️ catalog/
+         ├─ 📄 README.md                         # 📘 Catalog contract overview: search shapes + profile overlays + versioning
+         ├─ 🧩📄 index.(ts|py)                    # (optional) Barrel exports / module entrypoint for generated types/validators
+         ├─ 📐 schemas/
+         │  ├─ 🛰️ stac/                           # STAC + KFM-STAC profile schemas (Collections/Items/Assets constraints)
+         │  ├─ 🗂️ dcat/                           # DCAT + KFM-DCAT profile schemas (dataset/distribution discovery)
+         │  ├─ 🧬 prov/                           # PROV + KFM-PROV profile schemas (lineage bundles + activity shapes)
+         │  ├─ 🔎📐🧾 catalog.search.request.schema.json   # Search request contract (filters, paging, sort, facets)
+         │  ├─ 📦📐🧾 catalog.search.response.schema.json  # Search response contract (results, cursors, summaries, links)
+         │  └─ 🧾📐🧾 catalog.dataset.summary.schema.json  # Dataset summary contract (UI-friendly card metadata + links)
+         └─ 🧪 examples/
+            ├─ ✅🧾 catalog.search.request.example.json     # Example search request (known-good filters)
+            └─ ✅🧾 catalog.dataset.summary.example.json    # Example dataset summary (id/title/license/extents/distributions)
 ```
 
 ### File naming rules ✅
