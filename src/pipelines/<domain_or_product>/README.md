@@ -45,14 +45,7 @@ KFM enforces a canonical ordering:
 ✅ Everything published must be traceable back to sources (auditability over convenience).
 
 ```mermaid
-flowchart LR
-  A[📥 Raw Sources] --> B[🛠️ Work (ETL)]
-  B --> C[📦 Processed Data]
-  C --> D[🧾 Catalogs<br/>STAC / DCAT / PROV]
-  D --> E[🧠 Knowledge Graph<br/>Neo4j]
-  E --> F[🧩 API<br/>FastAPI / GraphQL]
-  F --> G[🗺️ UI<br/>MapLibre / Cesium]
-  G --> H[📖 Story Nodes & 🤖 Focus Mode]
+flowchart LR; A[📥 Raw Sources] --> B[🛠️ Work - ETL]; B --> C[📦 Processed Data]; C --> D[🧾 Catalogs - STAC DCAT PROV]; D --> E[🧠 Knowledge Graph - Neo4j]; E --> F[🧩 API - FastAPI GraphQL]; F --> G[🗺️ UI - MapLibre Cesium]; G --> H[📖 Story Nodes + 🤖 Focus Mode];
 ```
 
 ---
