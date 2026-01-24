@@ -46,38 +46,38 @@ Configs define:
 > Your domain may be smaller — this layout is a **recommended** structure for scale.
 
 ```text
-📁 configs/
-├─ 📁 datasets/                 # dataset-level configs (most common)
-│  ├─ kfm.ks.<domain>.<name>.v1.yaml
-│  └─ ...
-├─ 📁 sources/                  # source manifests / fetch definitions
-│  ├─ <source_name>.yaml
-│  └─ ...
-├─ 📁 transforms/               # reusable transform chains / steps
-│  ├─ <transform_id>.yaml
-│  └─ ...
-├─ 📁 validators/               # reusable validation bundles
-│  ├─ <validator_id>.yaml
-│  └─ ...
-├─ 📁 publish/                  # DB + tile + artifact publishing profiles
-│  ├─ postgis.yaml
-│  ├─ graph.yaml
-│  └─ oci.yaml
-├─ 📁 ui/                       # UI-facing config (layers, offline packs)
-│  ├─ layers.yaml
-│  ├─ offline_packs.yaml
-│  └─ story_refs.yaml
-├─ 📁 ai/                       # AI hooks (Focus Mode, concept nodes, etc.)
-│  ├─ focus_mode.yaml
-│  ├─ concept_nodes.yaml
-│  └─ pulse_threads.yaml
-├─ 📁 governance/               # policy wiring + optional waivers
-│  ├─ policy_pack.yaml
-│  └─ waivers.yml
-├─ 📁 env/                      # non-secret env overlays (dev/prod toggles)
-│  ├─ dev.yaml
-│  └─ prod.yaml
-└─ README.md                    # 👈 you are here
+configs/
+├─ 🗂️ datasets/                    # Dataset-level configs (most common): declare “what we produce” per dataset
+│  ├─ 🧾 kfm.ks.<domain>.<name>.v1.yaml # Canonical dataset config (ids, inputs, schedule, outputs, policy tags)
+│  └─ ➕ …                           # Additional datasets
+├─ 🌐 sources/                      # Source manifests / fetch definitions (where data comes from + how to retrieve)
+│  ├─ 🧾 <source_name>.yaml          # Source config (endpoints, auth strategy, caching/ETag, license, throttles)
+│  └─ ➕ …                           # Additional sources
+├─ 🧪 transforms/                   # Reusable transform chains/steps (raw→work→processed) as composable configs
+│  ├─ 🧾 <transform_id>.yaml         # Transform chain (steps, params, version pins, expected outputs)
+│  └─ ➕ …                           # Additional transforms
+├─ ✅ validators/                   # Reusable validation bundles (schema checks, link checks, QA thresholds)
+│  ├─ 🧾 <validator_id>.yaml         # Validator bundle (schemas, rules, severity mapping, fail-closed flags)
+│  └─ ➕ …                           # Additional validators
+├─ 📦 publish/                      # Publishing profiles (where outputs go + how they’re packaged)
+│  ├─ 🗄️🧾 postgis.yaml              # PostGIS publishing profile (tables, SRIDs, indexes, upsert rules)
+│  ├─ 🕸️🧾 graph.yaml                # Graph publishing profile (Neo4j CSV export/load, mapping pack, constraints)
+│  └─ 📦🧾 oci.yaml                  # OCI publishing profile (registry targets, media types, signing requirements)
+├─ 🖥️ ui/                           # UI-facing config (what the UI can load/render)
+│  ├─ 🗺️🧾 layers.yaml               # Layer registry/grouping (ids, labels, sources, style/legend refs)
+│  ├─ 🧳🧾 offline_packs.yaml         # Offline pack definitions (regions, layer sets, size limits, freshness)
+│  └─ 📚🧾 story_refs.yaml            # Story references (published stories + pointers to manifests/assets)
+├─ 🤖 ai/                           # AI hooks (Focus Mode, concept nodes, pulse threads) + contract pointers
+│  ├─ 🔎🧾 focus_mode.yaml           # Focus Mode config (retrieval sources, citation policy, refusal thresholds)
+│  ├─ 🧠🧾 concept_nodes.yaml        # Concept node generation config (types, sources, linking rules)
+│  └─ 🧵🧾 pulse_threads.yaml        # Pulse thread config (topics, cadence, evidence requirements)
+├─ 🛡️ governance/                   # Policy wiring + waivers (what gates run and under what exceptions)
+│  ├─ ⚖️🧾 policy_pack.yaml          # Policy pack selection/config (versions, entrypoints, severity thresholds)
+│  └─ 🧯🧾 waivers.yml                # Time-bound waivers (scope, owner, expiry, rationale, approver)
+├─ 🧰 env/                          # Non-secret environment overlays (feature toggles, endpoints; no credentials)
+│  ├─ 🧪 dev.yaml                    # Dev/staging overlay
+│  └─ 🏭 prod.yaml                   # Prod overlay (strict defaults, resource limits, schedules)
+└─ ✅📄 README.md                    # 👈 you are here 📌 How configs are composed, validated, and promoted through lanes
 ```
 
 ---
