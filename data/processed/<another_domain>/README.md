@@ -122,13 +122,13 @@ Use **dataset_id + version** in filenames to keep artifacts self-describing:
 
 ```mermaid
 flowchart LR
-  A[📥 data/raw/<another_domain>/<dataset_id>/] --> B[🧪 Ingestion Gate<br/>checksum + sanity]
-  B --> C[🧰 data/work/<another_domain>/<dataset_id>/]
-  C --> D[⚙️ Deterministic ETL Pipeline<br/>(config-driven)]
-  D --> E[📦 data/processed/<another_domain>/<dataset_id>/vX/]
-  E --> F[🗺️ STAC + 🧾 DCAT + 🧬 PROV updates]
-  F --> G[🔗 Graph import / index refresh]
-  G --> H[🌍 API + UI + 🤖 Focus Mode consume]
+  A[📥 data/raw another_domain dataset_id] --> B[🧪 Ingestion Gate - checksum + sanity]
+  B --> C[🧰 data/work another_domain dataset_id]
+  C --> D[⚙️ Deterministic ETL pipeline - config driven]
+  D --> E[📦 data/processed another_domain dataset_id vX]
+  E --> F[🛰️ STAC + 🧾 DCAT + 🧬 PROV updates]
+  F --> G[🔗 Graph import + 🔎 index refresh]
+  G --> H[🌍 API + 🗺️ UI + 🤖 Focus Mode consume]
 ```
 
 ### Automation (optional but encouraged) 🤖🤝⚙️
