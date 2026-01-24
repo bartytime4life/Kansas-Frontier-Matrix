@@ -49,18 +49,18 @@ KFM runs on a few “never break these” rules:
 
 ```mermaid
 flowchart LR
-  subgraph Intake["📥 Intake (non-negotiable ordering)"]
-    R[📥 Raw<br/>immutable snapshot + source.json] --> W[🧰 Work<br/>intermediate ETL]
-    W --> P[📦 Processed<br/>standardized outputs]
+  subgraph Intake[📥 Intake - non negotiable ordering]
+    R[📥 Raw - immutable snapshot + source.json] --> W[🧰 Work - intermediate ETL]
+    W --> P[📦 Processed - standardized outputs]
   end
 
-  P --> E[🧾 Evidence Triplet<br/>STAC + DCAT + PROV]
-  E --> G[🕸️ Graph<br/>Neo4j (refs back to catalogs)]
-  G --> A[🔌 API<br/>policy + redaction]
-  A --> U[🗺️ UI<br/>layers cite sources]
-  U --> S[📖 Story Nodes / Focus Mode<br/>no narrative without evidence]
+  P --> E[🧾 Evidence Triplet - STAC DCAT PROV]
+  E --> G[🕸️ Graph - Neo4j refs back to catalogs]
+  G --> A[🔌 API - policy + redaction]
+  A --> U[🗺️ UI - layers cite sources]
+  U --> S[📖 Story Nodes + 🤖 Focus Mode - no narrative without evidence]
 
-  M[🗂️ Manifests (this folder)<br/>human-authored contracts] -.-> W
+  M[🗂️ Manifests - this folder - human authored contracts] -.-> W
   M -.-> E
 ```
 
