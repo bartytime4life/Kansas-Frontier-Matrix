@@ -83,18 +83,18 @@ flowchart LR
 > You can start minimal and grow this tree as needed. The key is: **schema + mapping + QA live together** so drift is obvious. ✅
 
 ```text
-📁 data/
-  📁 graph/
-    📁 csv/                   # 🧾 generated nodes/edges import tables
-      📄 README.md            # 📦 how CSV import artifacts are produced
-    📁 docs/                  # 📚 YOU ARE HERE (contracts + explainers)
-      📄 README.md
-      📁 schema/              # 🧱 label + rel type contracts (human + machine readable)
-      📁 mapping/             # 🔁 STAC/DCAT/PROV ➜ graph mapping specs
-      📁 qa/                  # 🧪 health checks + expected outputs + “known good”
-      📁 queries/             # 🔎 curated Cypher snippets (API + Focus Mode + maintainer)
-      📁 governance/          # 🔐 classification + redaction + policy notes
-      📁 adr/                 # 🧾 graph ADRs (design decisions + rationale)
+data/
+└─ 🕸️ graph/
+   ├─ 🧱 csv/                        # 🧾 Generated nodes/edges import tables (Neo4j bulk-import snapshots)
+   │  └─ 📄 README.md                # 📦 How CSV import artifacts are produced (pipelines, naming, required columns)
+   └─ 📚 docs/                       # 📚 YOU ARE HERE 📌 Graph documentation hub (contracts + explainers + governance)
+      ├─ 📄 README.md                # 📘 Index: where to find schema/mapping/QA/queries + how to contribute
+      ├─ 🧱 schema/                  # 🧱 Label + relationship type contracts (human + machine readable definitions)
+      ├─ 🔁 mapping/                 # 🔁 Mapping specs: STAC/DCAT/PROV ➜ graph nodes/edges (rules, examples, edge cases)
+      ├─ 🧪 qa/                      # 🧪 Health checks + expected outputs + “known good” baselines for drift detection
+      ├─ 🔎 queries/                 # 🔎 Curated Cypher snippets (API usage, Focus Mode, maintainer diagnostics)
+      ├─ 🔐 governance/              # 🔐 Classification/redaction/policy notes (what may be stored/served, how labels propagate)
+      └─ 🧾 adr/                     # 🧾 Graph ADRs (design decisions, tradeoffs, and rationale)
 ```
 
 ---
