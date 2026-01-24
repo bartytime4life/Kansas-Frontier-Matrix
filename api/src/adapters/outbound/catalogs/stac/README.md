@@ -81,20 +81,20 @@ flowchart LR
 Typical layout:
 
 ```
-📂 data/
-  📂 stac/
-    📂 collections/
-      🧾 <collection_id>.collection.json
-    📂 items/
-      📂 <collection_id>/
-        🧾 <item_id>.item.json
-
-  📂 catalog/
-    📂 dcat/
-      🧾 <dataset_id>.dcat.json
-
-  📂 prov/
-    🧾 <run_id>.prov.jsonld
+data/
+├─ 🛰️ stac/
+│  ├─ 🗂️ collections/
+│  │  └─ 🧾 <collection_id>.collection.json   # STAC Collection: dataset-level metadata (extent, license, providers, links)
+│  └─ 🧷 items/
+│     └─ 🗂️ <collection_id>/                  # Group Items under their parent collection id
+│        └─ 🧾 <item_id>.item.json             # STAC Item: time/run snapshot pointing to assets (roles, hrefs, media types)
+│
+├─ 🗂️ catalog/
+│  └─ 🗂️ dcat/
+│     └─ 🧾 <dataset_id>.dcat.json             # DCAT Dataset/Distribution record for discovery (license/access/links)
+│
+└─ 🧬 prov/
+   └─ 🧾 <run_id>.prov.jsonld                  # PROV bundle: lineage linking raw→work→processed→catalog + agents/tools/params
 ```
 
 ⚠️ If your repo uses a different path (e.g., `data/catalog/stac/`), wire it via config (see **⚙️ Configuration**).
