@@ -90,8 +90,8 @@ KFM defines governed “profiles” that extend base standards.
 
 ```mermaid
 flowchart TB
-  S1[Upstream Standard\n(STAC/DCAT/PROV)] --> S2[KFM Profile Overlay\n(required fields + linking rules)]
-  S2 --> S3[Domain/Module Extension\n(optional, domain-scoped)]
+  S1[🛰️ Upstream Standard - STAC DCAT PROV] --> S2[🧩 KFM Profile Overlay - required fields + linking rules]
+  S2 --> S3[🧱 Domain module extension - optional domain scoped]
 ```
 
 **Rules of thumb:**
