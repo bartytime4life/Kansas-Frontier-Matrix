@@ -203,41 +203,40 @@ KFM uses explicit **stages** and **contracts** so we don’t ship mystery layers
 
 ```text
 data/
-  raw/                                 # ✅ Required: raw source snapshots (read-only mindset)
-    <domain>/
-      <source>/                        # e.g., usgs/, kgs/, kshs_scans/, noaa/, nasa/
-
-  work/                                # recommended: intermediate transforms (regeneratable)
-    <domain>/
-      <dataset>/
-
-  processed/                            # ✅ Required: publishable evidence artifacts
-    <domain>/
-      <dataset>/
-
-  sources/                              # recommended: source manifests + fetch receipts (small files)
-    <domain>/
-      <source>/                         # source.json, fetch configs, license notes, contacts
-
-  stac/                                 # ✅ Required: STAC catalogs
-    catalog.json                         # recommended STAC root
-    collections/
-    items/
-
-  catalog/
-    dcat/                               # ✅ Required: DCAT JSON-LD dataset entries
-    # (optional) vocabulary/, keywords/, orgs/
-
-  prov/                                 # ✅ Required: PROV lineage bundles (JSON-LD)
-
-  manifests/                            # recommended: dataset manifests/contracts + dictionaries
-  qa/                                   # recommended: QA receipts (quicklooks, bbox checks, validation reports)
-  live/                                 # optional: streaming buffers + snapshots (still cataloged!)
-  graph/                                # optional: graph import/export artifacts (index only)
-    csv/
-    cypher/
-
-  README.md                              # you are here 🙂
+├─ 📥 raw/                                 # ✅ Required: raw source snapshots (read-only mindset; immutable evidence boundary)
+│  └─ 🗂️ <domain>/
+│     └─ 🌐 <source>/                      # e.g., usgs/, kgs/, kshs_scans/, noaa/, nasa/ (as-downloaded bytes + checksums)
+│
+├─ 🧪 work/                                # Recommended: intermediate transforms (regeneratable; OK to wipe/rebuild)
+│  └─ 🗂️ <domain>/
+│     └─ 🗃️ <dataset>/                     # Staging outputs, normalized tables, intermediate exports
+│
+├─ ✅ processed/                            # ✅ Required: publishable evidence artifacts (what UI/API/graph should serve)
+│  └─ 🗂️ <domain>/
+│     └─ 📦 <dataset>/                     # Final products (GeoParquet/COG/PMTiles/GeoJSON/etc.) + sidecars + digests
+│
+├─ 🧾 sources/                              # Recommended: source manifests + fetch receipts (small, auditable files)
+│  └─ 🗂️ <domain>/
+│     └─ 🛰️ <source>/                      # source.json, fetch configs, license notes, contacts, ETag/Last-Modified receipts
+│
+├─ 🛰️ stac/                                 # ✅ Required: STAC catalogs (asset index + time/run snapshots)
+│  ├─ 🧾 catalog.json                       # Recommended STAC root (links to collections; optional but helpful)
+│  ├─ 🗂️ collections/                       # STAC Collections (dataset-level metadata: extent/license/providers/links)
+│  └─ 🧷 items/                              # STAC Items (time/run/version snapshots referencing assets)
+│
+├─ 🗂️ catalog/                              # Discovery layer (human/machine “what exists” index)
+│  └─ 🗂️ dcat/                               # ✅ Required: DCAT JSON-LD dataset entries (license/access/distributions)
+│     └─ ➕ (optional) vocabulary/, keywords/, orgs/  # Optional controlled vocab + org metadata for richer discovery
+│
+├─ 🧬 prov/                                 # ✅ Required: PROV lineage bundles (JSON-LD) linking raw→work→processed→catalog
+│
+├─ 🧾 manifests/                            # Recommended: dataset manifests/contracts + dictionaries (declared expectations)
+├─ 🧪 qa/                                   # Recommended: QA receipts (quicklooks, bbox checks, validation reports, drift notes)
+├─ 📡 live/                                 # Optional: streaming buffers + snapshots (still cataloged + provenance-linked)
+├─ 🕸️ graph/                                # Optional: graph import/export artifacts (prefer indexes/pointers over duplication)
+│  ├─ 🧱 csv/                                # Neo4j import CSV snapshots (node/rel tables)
+│  └─ 🧠 cypher/                             # Cypher import scripts or verification queries
+└─ 🙂📄 README.md                             # you are here: rules, naming conventions, promotion lanes, and validation gates
 ```
 
 > [!NOTE]
