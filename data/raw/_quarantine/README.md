@@ -55,15 +55,15 @@ Treat quarantined inputs as:
 
 ```text
 data/raw/_quarantine/
-  README.md  👈 you are here
-  <dataset_slug>/
-    <ingest_YYYYMMDDThhmmssZ>/
-      payload/                 # the actual files (zips, pdfs, shapefiles, etc.)
-      source.json              # required: where it came from + license + notes
-      checksums.sha256         # required: tamper-evidence
-      triage.md                # required: what we think this is + what’s missing
-      promote_plan.md          # optional: how we will move it into the pipeline
-      attachments/             # optional: screenshots, emails, permission letters
+├─ ✅📄 README.md                     # 👈 you are here 📌 Quarantine rules: why items land here, triage workflow, promotion gates
+└─ 🧪 <dataset_slug>/                 # One quarantined dataset (unknown quality/terms until triaged)
+   └─ 🏷️ <ingest_YYYYMMDDThhmmssZ>/   # One intake drop (UTC timestamp; immutable once recorded)
+      ├─ 📦 payload/                  # The actual received files (zips, pdfs, shapefiles, etc.) — do not edit in place
+      ├─ 🧾 source.json               # REQUIRED: origin, retrieval method, license/terms, contacts, sensitivity hints
+      ├─ 🔐📄 checksums.sha256         # REQUIRED: sha256 hashes for payload + metadata (tamper evidence)
+      ├─ 🩺📄 triage.md                # REQUIRED: what it is, risks, missing info, and initial classification/next actions
+      ├─ 🧭📄 promote_plan.md          # Optional: plan to promote into a governed pipeline (steps, owners, target paths)
+      └─ 📎 attachments/              # Optional: supporting proof (screenshots, emails, permission letters; keep access-safe)
 ```
 
 ### ✅ Dataset slug conventions
