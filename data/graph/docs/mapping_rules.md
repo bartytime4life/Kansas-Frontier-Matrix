@@ -34,20 +34,20 @@
 📦 **Repo context**
 ```text
 data/
-  raw/                      🧱 immutable source drops
-  work/                     🛠️ scratch + intermediate products
-  processed/                ✅ publish-ready datasets + tiles + COGs
-  catalog/
-    stac/                   🛰️ STAC Collections + Items
-    dcat/                   🗂️ DCAT dataset records
-  provenance/
-    prov/                   🧬 W3C PROV bundles (JSON-LD)
-  graph/
-    csv/
-      nodes/                🧩 node tables (generated, not hand-edited)
-      edges/                🧷 edge tables (generated, not hand-edited)
-    docs/
-      mapping_rules.md      👈 you are here
+├─ 📥 raw/                          # 🧱 Immutable source drops (as-received; checksum + source records expected)
+├─ 🛠️ work/                         # Scratch + intermediate products (rebuildable; not publishable by default)
+├─ ✅ processed/                     # Publish-ready datasets + tiles + COGs (versioned; what UI/API should serve)
+├─ 🗂️ catalog/
+│  ├─ 🛰️ stac/                       # STAC Collections + Items (asset index + time/run snapshots)
+│  └─ 🗂️ dcat/                       # DCAT dataset records (discovery + distributions + license/access metadata)
+├─ 🧬 provenance/
+│  └─ 🧬 prov/                       # W3C PROV bundles (JSON-LD) linking raw→work→processed→catalog + agents/tools/params
+└─ 🕸️ graph/
+   ├─ 🧱 csv/
+   │  ├─ 🧩 nodes/                    # Node tables (generated; not hand-edited; stable headers + governed IDs)
+   │  └─ 🧷 edges/                    # Edge tables (generated; not hand-edited; src/dst ids + rel props)
+   └─ 📚 docs/
+      └─ 📄 mapping_rules.md          # 👈 you are here 📌 Mapping rules from STAC/DCAT/PROV → graph nodes/edges (with examples)
 ```
 
 🔗 **Related docs (recommended)**
