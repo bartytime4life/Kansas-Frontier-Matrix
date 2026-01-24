@@ -66,12 +66,12 @@ KFM is designed so that everything is governed through a **data + metadata + pro
 ```mermaid
 flowchart LR
   RAW[📥 Raw Sources] --> ETL[🧪 Ingestion / ETL]
-  ETL --> EVID[🧾 Evidence Triplet<br/>STAC + DCAT + PROV]
+  ETL --> EVID[🧾 Evidence Triplet - STAC + DCAT + PROV]
   EVID --> KG[🕸️ Knowledge Graph]
-  KG --> API[🔌 APIs (REST + GraphQL)]
-  API --> UI[🗺️ UI (MapLibre + Cesium + Timeline)]
+  KG --> API[🔌 APIs - REST + GraphQL]
+  API --> UI[🗺️ UI - MapLibre + Cesium + Timeline]
   UI --> STORY[📚 Story Nodes]
-  STORY --> AI[🧠 Focus Mode AI (Citations)]
+  STORY --> AI[🧠 Focus Mode AI - citations]
 ```
 
 **Key idea:** if an artifact can’t be traced (source → transformations → published form), it’s not allowed to appear in the UI or in AI answers.
