@@ -156,20 +156,21 @@ flowchart LR
 ## 🗂️ Directory layout
 
 ```text
-📦 data/
+data/
 └─ 🕸️ graph/
-   ├─ 📄 README.md
-   ├─ 📁 csv/
-   │  ├─ 📄 nodes__<Label>__<domain>__<yyyymmdd>.csv
-   │  ├─ 📄 rels__<TYPE>__<domain>__<yyyymmdd>.csv
-   │  └─ 📄 fixtures__tiny__<purpose>.csv
-   ├─ 📁 cypher/
-   │  ├─ 📄 constraints__<yyyymmdd>.cypher
-   │  ├─ 📄 post_import__<domain>__<purpose>__<yyyymmdd>.cypher
-   │  └─ 📄 migrations__<semver>.cypher
-   └─ 📁 docs/
-      ├─ 📄 ontology.md
-      └─ 📄 mapping_rules.md
+   ├─ 📄 README.md                           # 📘 What lives here, naming rules, and how CSV/Cypher are produced/consumed
+   ├─ 🧱 csv/                                 # Neo4j bulk-import compatible snapshots (append-only, date-stamped)
+   │  ├─ 🧱📄 nodes__<Label>__<domain>__<yyyymmdd>.csv   # Node table for a label (stable columns; governed IDs)
+   │  ├─ 🔗📄 rels__<TYPE>__<domain>__<yyyymmdd>.csv    # Relationship table for a rel type (src/dst ids + props)
+   │  └─ 🧪📄 fixtures__tiny__<purpose>.csv              # Tiny fixture CSVs for tests/examples (not authoritative)
+   ├─ 🧠 cypher/                              # Cypher scripts used to enforce/verify schema and post-import rules
+   │  ├─ 🔒📄 constraints__<yyyymmdd>.cypher   # Constraints/indexes snapshot applied to the graph (date-stamped)
+   │  ├─ ✅📄 post_import__<domain>__<purpose>__<yyyymmdd>.cypher
+   │  │     # Post-import checks/fixes (e.g., validate lineage edges, compute derived props, sanity queries)
+   │  └─ 🔁📄 migrations__<semver>.cypher      # Optional migration scripts (prefer src/graph/migrations for canonical)
+   └─ 📚 docs/                                # Human docs explaining ontology + mapping decisions
+      ├─ 🧠📄 ontology.md                      # Overview of graph vocabulary (labels/edges/properties, version notes)
+      └─ 🗺️📄 mapping_rules.md                 # Mapping rules from STAC/DCAT/PROV → graph nodes/edges (with examples)
 ```
 
 > [!TIP]
