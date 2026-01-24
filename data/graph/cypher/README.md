@@ -88,7 +88,7 @@ Canonical pipeline ordering is preserved:
 
 ### Expected tree
 
-    data/
+data/
 └── 🕸️ graph/
     └── 🧠 cypher/
         ├── 📄 README.md                       # 📘 What these scripts do, run order, idempotency rules, and safety notes
