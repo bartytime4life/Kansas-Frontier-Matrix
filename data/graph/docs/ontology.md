@@ -207,16 +207,7 @@ This is a foundational intake rule. :contentReference[oaicite:41]{index=41} :con
 
 ### Mermaid: “Evidence Spine” 🧵
 ```mermaid
-flowchart LR
-  RAW[🧱 Asset Raw] --> R1[🔗 WAS_DERIVED_FROM] --> PROC[📦 Asset Processed]
-  RUN[⚙️ PipelineRun - 🧬 ProvActivity] --> R2[🔗 USED] --> RAW
-  RUN --> R3[🔗 GENERATED] --> PROC
-  DATASET[🗂️ Dataset - 🏷️ dcat Dataset] --> R4[🔗 HAS_DISTRIBUTION] --> DIST[📦 Distribution - 🏷️ dcat Distribution]
-  DATASET --> R5[🔗 HAS_STAC_COLLECTION] --> SC[🛰️ STAC Collection]
-  SC --> R6[🔗 HAS_STAC_ITEM] --> SI[🛰️ STAC Item]
-  SI --> R7[🔗 HAS_ASSET] --> PROC
-  DATASET --> R8[🔗 CITED_BY] --> STORY[📖 StoryNode]
-  DATASET --> R9[🔗 CITED_BY] --> ANSWER[🤖 FocusAnswer]
+flowchart LR RAW[(Asset:Raw)] -->|WAS_DERIVED_FROM| PROC[(Asset:Processed)] RUN([PipelineRun / ProvActivity]) -->|USED| RAW RUN -->|GENERATED| PROC DATASET[(Dataset / dcat:Dataset)] -->|HAS_DISTRIBUTION| DIST[(Distribution / dcat:Distribution)] DATASET -->|HAS_STAC_COLLECTION| SC[(STACCollection)] SC -->|HAS_STAC_ITEM| SI[(STACItem)] SI -->|HAS_ASSET| PROC DATASET -->|CITED_BY| STORY[StoryNode]:::narr DATASET -->|CITED_BY| ANSWER[FocusAnswer]:::narr
 
   classDef narr fill:#fff7e6,stroke:#f2b037,stroke-width:1px;
 ```
