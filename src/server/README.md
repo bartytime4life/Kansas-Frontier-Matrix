@@ -103,13 +103,13 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-  R[🌐 Routers / Resolvers] --> U[🧠 Use-Cases / Services]
-  U --> P[🔌 Ports (Interfaces)]
-  P --> A1[🗄️ Adapter: PostGIS]
-  P --> A2[🕸️ Adapter: Neo4j]
-  P --> A3[🔎 Adapter: Search/Index]
-  P --> A4[🔐 Adapter: OPA Policy]
-  P --> A5[📦 Adapter: OCI Artifacts]
+  R[🌐 Routers Resolvers] --> U[🧠 Use cases Services]
+  U --> P[🔌 Ports Interfaces]
+  P --> A1[🗄️ Adapter PostGIS]
+  P --> A2[🕸️ Adapter Neo4j]
+  P --> A3[🔎 Adapter Search Index]
+  P --> A4[🔐 Adapter OPA Policy]
+  P --> A5[📦 Adapter OCI Artifacts]
 ```
 
 **Key idea:** business logic lives in services/use-cases and talks to *ports*; adapters handle databases, graph, policy engines, artifact registries, etc.
@@ -123,58 +123,58 @@ flowchart TB
 
 ```text
 src/server/
-  📄 README.md                      # you are here 🙂
-  🚀 main.py                        # app entry (FastAPI)
-  ⚙️  settings.py                   # env + configuration
-  📁 api/
-    📁 routers/                     # REST routes grouped by domain
-      📄 health.py
-      📄 datasets.py
-      📄 query.py
-      📄 tiles.py
-      📄 story.py
-      📄 pulse.py
-      📄 focus.py
-      📄 ingest.py                  # admin-only
-    📁 middleware/
-      📄 cors.py
-      📄 auth.py
-      📄 rate_limit.py
-      📄 request_id.py
-  🧬 graphql/
-    📄 schema.graphql               # contract (or generated)
-    📄 resolvers.py
-    📄 limits.py                    # depth / cost / pagination enforcement
-  🧠 domain/
-    📄 models.py                    # Dataset, StoryNode, PulseThread, etc.
-    📄 types.py
-  🧩 application/
-    📄 services.py                  # use-cases: search, focus, story, tiles
-  🔌 ports/
-    📄 postgis.py                   # interfaces (ports)
-    📄 neo4j.py
-    📄 opa.py
-    📄 artifacts.py
-  🧷 adapters/
-    📁 outbound/
-      📁 postgis/
-      📄 client.py
-      📄 tiles.py                   # ST_AsMVT helpers, bbox queries, etc.
-      📁 neo4j/
-      📄 client.py
-      📄 queries.py
-      📁 opa/
-      📄 client.py
-      📁 oci/
-      📄 oras_client.py             # verify + pull content-addressed artifacts
-  📜 contracts/
-    📄 openapi.yaml                 # optional: snapshot/hand-curated spec
-    📄 schema.graphql               # optional: snapshot
-  🛡️ policies/
-    📄 README.md                    # how runtime checks map to rego
-  🧪 tests/
-    📁 unit/
-    📁 integration/
+├─ ✅📄 README.md                      # you are here 🙂 📌 Service overview, local dev, auth model, and operational notes
+├─ 🚀 main.py                          # FastAPI app entrypoint (wires routers, middleware, startup/shutdown hooks)
+├─ ⚙️ settings.py                      # Configuration loader (env vars, defaults, validation, feature flags; no secrets in code)
+├─ 🌐 api/
+│  ├─ 🧭 routers/                      # REST routes grouped by domain (thin; delegates to application layer)
+│  │  ├─ ❤️ health.py                  # Health/readiness endpoints (liveness checks, dependency pings)
+│  │  ├─ 🗂️ datasets.py                # Dataset catalog endpoints (discovery, metadata, distributions)
+│  │  ├─ 🔎 query.py                   # Query endpoints (search/filter/analytics entrypoints)
+│  │  ├─ 🧱 tiles.py                   # Tile endpoints (MVT/raster/signed URLs, bbox helpers)
+│  │  ├─ 🎬 story.py                   # Story endpoints (story nodes, steps, media pointers)
+│  │  ├─ 🧵 pulse.py                   # Pulse endpoints (updates/threads, evidence links)
+│  │  ├─ 🔎 focus.py                   # Focus Mode endpoints (evidence-first Q&A, citation-required responses)
+│  │  └─ 🔐 ingest.py                  # Admin-only ingest endpoints (restricted; audited; policy-gated)
+│  └─ 🧱 middleware/                   # Cross-cutting request protections + observability
+│     ├─ 🌐 cors.py                    # CORS policy configuration (origins, headers, methods)
+│     ├─ 🔐 auth.py                    # AuthN/AuthZ middleware (tokens, roles, scopes)
+│     ├─ 🎯 rate_limit.py              # Rate limiting (per route/user/IP; burst + sustained)
+│     └─ 🆔 request_id.py              # Correlation/request-id injection + propagation to logs/telemetry
+├─ 🧬 graphql/
+│  ├─ 📜 schema.graphql                # GraphQL contract (or generated snapshot)
+│  ├─ 🧠 resolvers.py                  # Resolver implementations (delegate to application/services)
+│  └─ 🧱 limits.py                     # Depth/cost/pagination enforcement (abuse prevention + predictable load)
+├─ 🧠 domain/
+│  ├─ 🧠 models.py                     # Domain models (Dataset, StoryNode, PulseThread, etc.)
+│  └─ 🧾 types.py                      # Shared domain types/enums (IDs, classification, references)
+├─ 🧩 application/
+│  └─ 🧩 services.py                   # Use-cases orchestration (search, focus, story, tiles) with policy/prov hooks
+├─ 🔌 ports/
+│  ├─ 🗄️ postgis.py                    # Port interface for PostGIS (queries, transactions, boundaries)
+│  ├─ 🕸️ neo4j.py                      # Port interface for Neo4j (read queries, optional mutation receipts)
+│  ├─ ⚖️ opa.py                        # Port interface for OPA/Conftest decisions (policy checks)
+│  └─ 📦 artifacts.py                  # Port interface for artifact store/registry (OCI/ORAS, object store)
+├─ 🧷 adapters/
+│  └─ 📤 outbound/                     # Outbound implementations of ports (real clients)
+│     ├─ 🗄️ postgis/
+│     │  ├─ 🔌 client.py               # PostGIS client (pooling, retries, safe query wrappers)
+│     │  └─ 🧱 tiles.py                # Tile helpers (ST_AsMVT, bbox queries, simplification rules)
+│     ├─ 🕸️ neo4j/
+│     │  ├─ 🔌 client.py               # Neo4j driver wrapper (sessions, retries, timeouts)
+│     │  └─ 🔎 queries.py              # Query library (read-only shapes, parameterized, policy-aware)
+│     ├─ ⚖️ opa/
+│     │  └─ 🔌 client.py               # OPA client wrapper (bundle/version pinning, decision caching)
+│     └─ 📦 oci/
+│        └─ 📦🔌 oras_client.py         # ORAS client (pull/verify content-addressed artifacts; digest-pinned)
+├─ 📜 contracts/
+│  ├─ 📜 openapi.yaml                  # Optional OpenAPI snapshot/hand-curated spec (API boundary contract)
+│  └─ 🧬 schema.graphql                # Optional GraphQL schema snapshot (if generated elsewhere)
+├─ 🛡️ policies/
+│  └─ 📄 README.md                     # Maps runtime checks to Rego rules (what is enforced where + failure handling)
+└─ 🧪 tests/
+   ├─ 🧪 unit/                         # Unit tests (pure logic, small fixtures, no network)
+   └─ 🔗 integration/                  # Integration tests (service + DB/OPA stubs; deterministic harness)
 ```
 
 ---
