@@ -69,25 +69,25 @@ flowchart LR
 All pipelines must respect the same lifecycle to keep the repo navigable, auditable, and automation-friendly:
 
 ```text
-📁 data/
-  📁 raw/              # immutable, as-downloaded (never “clean” raw)
-    📁 <domain>/
-  📁 work/             # intermediate artifacts (OK to wipe/rebuild)
-    📁 <domain>/
-  📁 processed/        # final products (what the UI/API/graph should serve)
-    📁 <domain>/
-  📁 stac/             # STAC boundary artifacts
-    📁 collections/
-    📁 items/
-  📁 catalog/          # discovery/catalog layer
-    📁 dcat/
-  📁 prov/             # provenance boundary artifacts
-  📁 audits/           # run-level evidence, logs, policy decisions
-    📁 <run_id>/
-      🧾 run_manifest.json
-      🧪 telemetry.ndjson
-      🔐 checksums.sha256
-      ⚖ policy_decisions.json
+data/
+├─ 📥 raw/                         # Immutable, as-downloaded snapshots (never “clean” raw; evidence boundary)
+│  └─ 🗂️ <domain>/                 # Domain buckets (e.g., usgs, census, rail, archaeology)
+├─ 🧪 work/                        # Intermediate artifacts (OK to wipe/rebuild; controlled transforms)
+│  └─ 🗂️ <domain>/                 # Staging outputs, scratch transforms, temporary exports
+├─ ✅ processed/                    # Final products (what the UI/API/graph should serve; versioned)
+│  └─ 🗂️ <domain>/                 # Publishable artifacts (GeoParquet/COG/PMTiles/JSON, etc.)
+├─ 🛰️ stac/                        # STAC boundary artifacts (Collections + Items describing assets)
+│  ├─ 🗂️ collections/              # STAC Collections (dataset-level metadata)
+│  └─ 🧷 items/                    # STAC Items (time/run snapshots referencing assets)
+├─ 🗂️ catalog/                     # Discovery/catalog layer (DCAT records for dataset/distributions)
+│  └─ 🗂️ dcat/                     # DCAT dataset + distribution metadata (license/access/links)
+├─ 🧬 prov/                        # Provenance boundary artifacts (PROV-O JSON-LD bundles linking raw→work→processed)
+├─ 🧾 audits/                      # Run-level evidence bundles (receipts, logs, policy decisions)
+│  └─ 🏷️ <run_id>/                 # One audit bundle per run (immutable once finalized; telemetry append-only)
+│     ├─ 🧾 run_manifest.json        # Run receipt: who/what/when + inputs/outputs + tool versions + digests
+│     ├─ 📈🧾 telemetry.ndjson       # Telemetry/event stream (append-only; redacted-safe)
+│     ├─ 🔐📄 checksums.sha256       # sha256 sums for audit files/artifacts (tamper detection)
+│     └─ ⚖️🧾 policy_decisions.json  # Policy/gate decisions (pass/fail + findings + waivers + rationale)
 ```
 
 > [!TIP]
