@@ -44,21 +44,21 @@ This directory is the **contract** for everything that touches the graph:
 > If some of these files don’t exist yet, that’s fine—this is the “target shape” that keeps KFM-ONTO maintainable.
 
 ```text
-📦 src/graph/ontology/
-├─ README.md                          # you are here
-├─ core/                              # stable, cross-domain vocabulary
-│  ├─ kfm-onto.core.yaml              # labels/edges + required props (machine readable)
-│  ├─ kfm-onto.core.ttl               # optional semantic export (CIDOC/GeoSPARQL/PROV)
-│  └─ context.jsonld                  # JSON-LD context for exports
-├─ packs/                             # domain extensions (Design Packs)
-│  └─ <domain>/
-│     ├─ ontology.yaml|ttl
-│     ├─ mappings/                    # STAC/DCAT/PROV → graph
-│     └─ README.md                    # pack-level vocab + examples
-└─ generated/                         # derived outputs for runtime
-   ├─ neo4j/constraints.cypher
-   ├─ neo4j/indexes.cypher
-   └─ api/schema.graphql|openapi.json
+src/graph/ontology/
+├─ 📄 README.md                          # you are here 📌 How ontology is structured, versioned, and enforced in CI
+├─ 🧱 core/                              # Stable cross-domain vocabulary (shared concepts used everywhere)
+│  ├─ 🧾📄 kfm-onto.core.yaml             # Machine-readable core ontology (labels/edges + required properties)
+│  ├─ 🧬📄 kfm-onto.core.ttl              # Optional semantic export (e.g., CIDOC/GeoSPARQL/PROV alignments)
+│  └─ 🧠🧬 context.jsonld                 # JSON-LD context for graph exports (prefixes/terms for consistent IRIs)
+├─ 🧩 packs/                             # Domain extension “Design Packs” (adds domain-specific nodes/relations)
+│  └─ 🏷️ <domain>/
+│     ├─ 🧾📄 ontology.yaml|ttl           # Domain ontology additions (YAML and/or Turtle)
+│     ├─ 🗺️ mappings/                    # Mappings from STAC/DCAT/PROV → graph entities/edges (ingest rules)
+│     └─ 📄 README.md                    # Pack docs: vocabulary, examples, constraints, and coverage notes
+└─ ⚙️ generated/                         # Derived runtime outputs (do not hand-edit; generated from core+packs)
+   ├─ 🧠🔗 neo4j/constraints.cypher        # Neo4j constraints for labels/keys (uniqueness/required props)
+   ├─ 🧠📇 neo4j/indexes.cypher            # Neo4j index definitions for query performance
+   └─ 🔌 api/schema.graphql|openapi.json   # API schema exports derived from ontology (GraphQL/OpenAPI)
 ```
 
 ---
