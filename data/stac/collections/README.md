@@ -146,15 +146,15 @@ flowchart LR
 
 ```text
 data/stac/
-├─ 📄 README.md
-├─ 📁 collections/
-│  ├─ 📄 README.md               👈 you are here
-│  ├─ 📄 <collection-id>.json    ✅ one file per collection
-│  └─ 📄 ...
-└─ 📁 items/
-   └─ 📁 <collection-id>/
-      ├─ 📄 <item-id>.json
-      └─ 📄 ...
+├─ 📄 README.md                     # 📘 STAC overview: root layout, link rules, and how the UI/API discover assets
+├─ 🗂️ collections/
+│  ├─ 📄 README.md                  # 👈 you are here 📌 Collection naming, required fields, and cross-links to items/assets
+│  ├─ ✅🧾 <collection-id>.json       # ✅ One file per STAC Collection (dataset-level metadata: extent/license/providers/links)
+│  └─ ➕ …                           # Additional collections
+└─ 🧷 items/
+   └─ 🗂️ <collection-id>/           # Items grouped under their parent collection id
+      ├─ 🧾 <item-id>.json           # STAC Item (time/run snapshot referencing assets with hrefs + roles + mediaTypes)
+      └─ ➕ …                         # Additional items for the collection (new timestamps/versions)
 ```
 
 ### What belongs here
