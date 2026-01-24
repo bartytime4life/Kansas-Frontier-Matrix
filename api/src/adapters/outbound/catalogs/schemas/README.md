@@ -27,9 +27,13 @@ These schemas protect the platform’s core promises:
 ## 🔥 Where schemas sit in the KFM pipeline
 
 ```mermaid
-flowchart TB
-  S1[🛰️ Upstream Standard - STAC DCAT PROV] --> S2[🧩 KFM Profile Overlay - required fields + linking rules]
-  S2 --> S3[🧱 Domain module extension - optional domain scoped]
+flowchart LR
+  A[🧪 ETL Pipelines] --> B[🗂️ Catalogs\nSTAC + DCAT + PROV]
+  B --> C[🕸️ Graph\nNeo4j]
+  C --> D[🧩 API]
+  D --> E[🗺️ UI]
+  E --> F[📖 Story Nodes]
+  F --> G[🤖 Focus Mode]
 ```
 
 ### ✅ Non-negotiable invariants (do not regress)
