@@ -69,36 +69,30 @@ A **contract artifact** is anything machine-validated that defines an interface.
 
 ```text
 api/contracts/
-  README.md
-
-  openapi/                 # 📘 REST contracts (canonical OpenAPI docs)
-    kfm.openapi.v1.yaml
-    overlays/              # optional: reusable patches/extensions
-
-  graphql/                 # 🧬 GraphQL contracts
-    schema.v1.graphql
-    operations/            # optional: persisted queries or examples
-
-  jsonschema/              # 🧱 Shared object schemas (language-agnostic)
-    common/
-    entities/
-    errors/
-    pagination/
-    provenance/
-    telemetry/
-    security/
-
-  examples/                # 🧾 Example payloads (docs + tests)
-    rest/
-    graphql/
-    events/
-
-  tests/                   # 🧪 Contract tests + schema validation harness
-    contract/
-    fixtures/
-
-  CHANGELOG.md             # 🗞️ Contract-level changes (not just code changes)
-  VERSION                  # 🔖 Current contract pack version (SemVer)
+├─ 📄 README.md                      # 📘 How contracts are organized, versioned, and validated (single source of truth)
+├─ 📘 openapi/                       # 📘 REST contracts (canonical OpenAPI documents)
+│  ├─ 📘🧾 kfm.openapi.v1.yaml        # OpenAPI v1 spec (endpoints, auth, schemas, errors, examples refs)
+│  ┗─ 🧩 overlays/                   # Optional reusable patches/extensions (shared parameters, vendor extensions)
+├─ 🧬 graphql/                       # 🧬 GraphQL contracts (schema + optional operation examples)
+│  ├─ 🧬📄 schema.v1.graphql          # GraphQL schema v1 (SDL; types, queries, mutations, directives)
+│  └─ 🧾 operations/                 # Optional persisted queries / example operations (docs/tests)
+├─ 🧱 jsonschema/                    # 🧱 Shared object schemas (language-agnostic; used by REST/Events/GraphQL tooling)
+│  ├─ 🧰 common/                     # Shared primitives ($defs, ids, time, geo, links)
+│  ├─ 🧠 entities/                   # Domain entities (datasets, layers, story nodes, graph refs)
+│  ├─ 🚨 errors/                     # Standard error envelopes (ProblemDetails, validation errors, policy denials)
+│  ├─ 📑 pagination/                 # Paging/cursors/sorts (request + response shapes)
+│  ├─ 🧬 provenance/                 # STAC/DCAT/PROV refs + evidence manifest refs + lineage shapes
+│  ├─ 📈 telemetry/                  # Event/metrics schemas (audit-safe signals, SLO summaries)
+│  └─ 🔐 security/                   # AuthN/AuthZ-related schemas (principals, roles, policy decisions, redaction notices)
+├─ 🧾 examples/                      # 🧾 Example payloads (docs + tests; should validate against schemas)
+│  ├─ 🌐 rest/                       # REST request/response examples (by endpoint)
+│  ├─ 🧬 graphql/                    # GraphQL operation examples + response shapes
+│  └─ 🔔 events/                     # Event payload examples (ingest, telemetry, audit, etc.)
+├─ 🧪 tests/                         # 🧪 Contract tests + schema validation harness (CI gates)
+│  ├─ 🧪 contract/                   # Validators (openapi lint, graphql schema checks, jsonschema compilation)
+│  └─ 🧩 fixtures/                   # Golden fixtures (pass/fail cases; edge-case coverage)
+├─ 🗞️ CHANGELOG.md                   # 🗞️ Contract-level changes (SemVer notes; breaking vs additive vs fixes)
+└─ 🔖 VERSION                        # 🔖 Current contract pack version (SemVer; used by tooling and policy gates)
 ```
 
 > If you are on the v13+ layout, this folder is conceptually equivalent to `src/server/contracts/`.  
