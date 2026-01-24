@@ -72,24 +72,24 @@ This repo supports both “flat” (small/simple) and “dataset-scoped” (pref
 ### ✅ Preferred: dataset-scoped (scales best)
 ```text
 data/processed/<domain>/
-  README.md
-  <dataset_slug>/
-    vYYYYMMDD/                 # or vX.Y.Z — pick one convention & stick to it
-      data/                    # the actual artifacts
-        <dataset_slug>.geoparquet
-        <dataset_slug>.pmtiles
-        <dataset_slug>.tif      # (COG) optional for raster
-      checksums.sha256
-      manifest.json             # optional but recommended
+├─ 📄 README.md                         # 📘 Domain overview: datasets available, naming/versioning rules, and promotion flow
+└─ 📦 <dataset_slug>/
+   └─ 🏷️ vYYYYMMDD/                      # Version folder (or vX.Y.Z — choose one convention and stick to it)
+      ├─ 📦 data/                        # The actual publishable artifacts for this version
+      │  ├─ 🗺️📦 <dataset_slug>.geoparquet # Vector/table product (analysis-ready; preferred for joins/queries)
+      │  ├─ 🧱🗺️ <dataset_slug>.pmtiles    # Vector tiles package (fast rendering in map UI)
+      │  └─ 🛰️🗺️ <dataset_slug>.tif        # (optional) Raster COG (Cloud-Optimized GeoTIFF) for raster products
+      ├─ 🔐📄 checksums.sha256            # Integrity hashes for all files in this version (tamper detection)
+      └─ 🧾🗂️ manifest.json               # (optional, recommended) Inventory + metadata pointers (STAC/DCAT/PROV refs)
 ```
 
 ### ✅ Acceptable: flat (small/simple)
 ```text
 data/processed/<domain>/
-  README.md
-  counties.geojson
-  counties.pmtiles
-  checksums.sha256
+├─ 📄 README.md                 # 📘 Domain processed outputs: what’s here, versioning policy, and catalog/prov pointers
+├─ 🗺️ counties.geojson          # Publishable vector boundary dataset (GeoJSON; easy inspection + interchange)
+├─ 🧱🗺️ counties.pmtiles         # Vector tiles package built from counties.geojson (fast map rendering)
+└─ 🔐📄 checksums.sha256         # sha256 hashes for the artifacts above (integrity + reproducibility)
 ```
 
 ---
