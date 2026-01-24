@@ -90,19 +90,19 @@ Also: do **not** use migrations to “hotfix” user-visible narrative behavior.
 Recommended structure (keep it boring, predictable, GitOps-friendly):
 
 ```text
-📁 src/
-  📁 graph/
-    📁 migrations/
-      📄 README.md                👈 you are here
-      📁 up/                      ⬆️ forward migrations only (preferred)
-        📄 V20260123_1200__init_constraints.cypher
-        📄 V20260201_0900__add_dataset_indexes.cypher
-      📁 down/                    ⬇️ optional (use sparingly)
-        📄 U20260201_0900__add_dataset_indexes.cypher
-      📁 _templates/
-        📄 migration_template.cypher
-      📁 _docs/
-        📄 ADR_graph_schema_changes.md
+src/
+└─ 🕸️ graph/
+   └─ 🔁 migrations/
+      ├─ 📄 README.md                          # 👈 you are here 📌 How graph migrations are authored, ordered, applied, and audited
+      ├─ ⬆️ up/                                # ⬆️ Forward migrations only (preferred; append-only, deterministic ordering)
+      │  ├─ 🧠🔗 V20260123_1200__init_constraints.cypher     # Initial constraints/uniqueness rules for core labels
+      │  └─ 🧠📇 V20260201_0900__add_dataset_indexes.cypher  # Adds indexes to improve dataset query performance
+      ├─ ⬇️ down/                              # ⬇️ Optional rollback migrations (use sparingly; must be safe/idempotent)
+      │  └─ 🔁 U20260201_0900__add_dataset_indexes.cypher    # Undo for the corresponding up migration (only if reversible)
+      ├─ 🧩 _templates/                         # 🧩 Copy/paste starters for consistent migration authoring
+      │  └─ 🧩📄 migration_template.cypher       # Template: header, preconditions, statements, verification queries
+      └─ 📚 _docs/                              # 📚 Supporting rationale and decisions for schema evolution
+         └─ 🧭📄 ADR_graph_schema_changes.md     # ADR: rules for schema changes, compatibility, and validation expectations
 ```
 
 > [!IMPORTANT]
@@ -222,16 +222,16 @@ Health checks should emit timestamped reports and a summary (“violations found
 Recommended output shape:
 
 ```text
-📁 docs/
-  📁 reports/
-    📁 qa/
-      📁 graph_health/
-        📁 2026-01-23T12-00-00Z/
-          📄 summary.md
-          📄 constraints.json
-          📄 indexes.json
-          📄 counts.json
-          📄 orphan_report.csv
+docs/
+└─ 📚 reports/
+   └─ 🧪 qa/
+      └─ 🕸️ graph_health/
+         └─ 📅 2026-01-23T12-00-00Z/         # One timestamped QA run (UTC) for graph health reporting
+            ├─ 📄 summary.md                  # Human summary: overall status, key deltas, and next actions
+            ├─ 🔒🧾 constraints.json          # Constraint status/violations snapshot (missing/present + counts)
+            ├─ 📇🧾 indexes.json              # Index status snapshot (present/missing + coverage hints)
+            ├─ 🔢🧾 counts.json               # Node/edge counts by label/type (baseline for drift detection)
+            └─ 🧍‍♂️📊 orphan_report.csv         # Orphan report (unlinked nodes/edges) for cleanup/ingest QA
 ```
 
 ---
