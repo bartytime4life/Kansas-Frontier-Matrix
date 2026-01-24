@@ -55,22 +55,27 @@ Typical use cases 🧩
 
 ```mermaid
 flowchart LR
-  EXT[External feeds<br/>(APIs • sensors • sims)] --> W[Watcher<br/>(observe + record)]
-  W --> G[Ingestion Gate<br/>(basic validation + policy)]
-  G -->|pass| LIVE[data/live<br/>(hot window + checkpoints)]
-  G -->|fail| Q[Quarantine + Alert]
+  EXT[🌐 External feeds - APIs sensors sims] --> W[🔭 Watcher - observe + record];
+  W --> G[🚦 Ingestion Gate - basic validation + policy];
 
-  LIVE --> X[Deterministic Transform<br/>(config-driven)]
-  X --> DB[(PostGIS / time-series store)]
-  X --> KG[(Knowledge Graph / Neo4j)]
-  DB --> CAT[Catalog Updates<br/>(STAC/DCAT + PROV)]
-  KG --> CAT
+  G --> PASS[✅ Pass];
+  G --> FAIL[⛔ Fail];
+  PASS --> LIVE[🔥 data/live - hot window + checkpoints];
+  FAIL --> Q[🧪 Quarantine + alert];
 
-  CAT --> UI[UI live layers<br/>+ dashboards]
-  CAT --> FM[Focus Mode<br/>(RAG + citations)]
+  LIVE --> X[⚙️ Deterministic transform - config driven];
+  X --> DB[🗃️ PostGIS or time-series store];
+  X --> KG[🕸️ Knowledge graph - Neo4j];
+  DB --> CAT[🛰️ Catalog updates - STAC DCAT + PROV];
+  KG --> CAT;
 
-  LIVE -->|scheduled snapshots| RAW[data/raw<br/>(immutable evidence)]
-  X -->|stable derivatives| PROC[data/processed<br/>(standardized)]
+  CAT --> UI[🗺️ UI live layers + dashboards];
+  CAT --> FM[🤖 Focus Mode - RAG + citations];
+
+  LIVE --> SNAP[📸 Scheduled snapshots];
+  SNAP --> RAW[🧊 data/raw - immutable evidence];
+  X --> DER[📦 Stable derivatives];
+  DER --> PROC[📦 data/processed - standardized];
 ```
 
 **Mental model:** streaming data is “many small datasets over time.”  
@@ -85,20 +90,20 @@ We keep it windowed + fast in `data/live/`, and we publish durable, curated slic
 
 ```text
 data/live/
-  README.md
-  .gitignore                 # 👈 recommended: keep payloads out of git
-  _schemas/                  # JSON Schema / Avro / Proto / validators
-  _telemetry/                # append-only ingest logs (NDJSON)
-  sources/
-    <source_id>/
-      README.md              # source-specific notes & SLA
-      source.json            # contract: license + sensitivity + cadence + upstream
-      checkpoints/           # cursors, offsets, watermarks (idempotency helpers)
-      raw/                   # hot-window payloads (windowed, not forever)
-      derived/               # quick-turn derivatives (UI-friendly, small)
-      manifests/             # checksums + fetch manifests + evidence lists
-      prov/                  # optional: run-level PROV bundles
-      stac/                  # optional: rolling STAC Items/Collection stubs
+├─ 📄 README.md                    # 📘 What “live” is for, retention rules, and how data graduates to raw/work/processed
+├─ 🙈 .gitignore                   # 👈 recommended 📌 Keep live payloads out of git (track only schemas/manifests/notes)
+├─ 📐 _schemas/                    # Contracts for live payloads (JSON Schema / Avro / Proto) + validators
+├─ 📈 _telemetry/                  # Append-only ingest logs (NDJSON): counters, errors, lag, watermark updates
+└─ 📡 sources/
+   └─ 🆔 <source_id>/              # One live source/feed (GTFS-RT, sensors, alerts, etc.)
+      ├─ 📄 README.md              # Source notes: SLA, expected volumes, failure modes, and ops runbook links
+      ├─ 🧾 source.json            # Source contract: license, sensitivity, cadence, upstream links, contact/owner
+      ├─ 🧭 checkpoints/           # Cursors/offsets/watermarks for idempotency + replay (append-only history if needed)
+      ├─ 📥 raw/                   # Hot-window payloads (windowed retention; not “forever storage”)
+      ├─ ⚡ derived/               # Quick-turn derived products (small UI-friendly rollups; not canonical processed)
+      ├─ 🔐 manifests/             # Integrity + receipts: checksums, fetch manifests, evidence lists per window/run
+      ├─ 🧬 prov/                  # (optional) Run-level PROV bundles for live ingest windows (lineage + tool versions)
+      └─ 🛰️ stac/                  # (optional) Rolling STAC Items/Collection stubs pointing at retained windows/derivatives
 ```
 
 ---
