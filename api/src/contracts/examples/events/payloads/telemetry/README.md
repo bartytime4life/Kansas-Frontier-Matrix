@@ -56,23 +56,23 @@ Telemetry is **not** meant to be:
 
 ```mermaid
 flowchart LR
-  subgraph Pipelines["📥 Pipelines (ETL / streaming / QA)"]
-    A[Fetch / Ingest] --> B[Validate / Gate]
-    B --> C[Transform]
-    C --> D[Publish (STAC/DCAT/PROV)]
+  subgraph PIPES["📥 Pipelines - ETL streaming QA"]
+    A[🌐 Fetch ingest] --> B[✅ Validate gate]
+    B --> C[🧪 Transform]
+    C --> D[📦 Publish - STAC DCAT PROV]
   end
 
-  subgraph AI["🧠 AI / Focus Mode"]
-    F[Retrieve evidence] --> G[Generate answer]
-    G --> H[Governance checks]
+  subgraph AI["🧠 AI Focus Mode"]
+    F[🔎 Retrieve evidence] --> G[✍️ Generate answer]
+    G --> H[🛡️ Governance checks]
   end
 
-  subgraph UI["🗺️ UI"]
-    U[Layer toggles] --> V[Provenance panel]
-    V --> W[Exports / Story Nodes]
+  subgraph UIX["🗺️ UI"]
+    U[🎛️ Layer toggles] --> V[🧾 Provenance panel]
+    V --> W[📤 Exports story nodes]
   end
 
-  A --> T[(📡 Telemetry Stream)]
+  A --> T[📡 Telemetry stream]
   B --> T
   C --> T
   D --> T
@@ -81,9 +81,9 @@ flowchart LR
   H --> T
   U --> T
 
-  T --> X[📊 Dashboards / Alerts]
-  T --> Y[🧾 NDJSON Ledgers]
-  T --> Z[🔐 Governance Audit Trail]
+  T --> X[📊 Dashboards alerts]
+  T --> Y[🧾 NDJSON ledgers]
+  T --> Z[🔐 Governance audit trail]
 ```
 
 ---
