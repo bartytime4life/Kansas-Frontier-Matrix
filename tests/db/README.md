@@ -67,34 +67,34 @@ pytest -q -m db
 ## 🗂️ Suggested folder layout (adjust to repo reality)
 
 ```text
-tests/ 🧪
-  db/ 🗄️
-    README.md 📘 (you are here)
-
-    docker-compose.yml 🐳
-    .env.example 🔧
-
-    postgis/ 🗺️
-      migrations/ 🧱
-      schema.sql 📜
-      seed.sql 🌱
-      tests/ ✅
-        test_schema.sql
-        test_spatial.sql
-        test_time_filtering.sql
-
-    neo4j/ 🧠
-      constraints.cypher 🔗
-      seed.cypher 🌱
-      tests/ ✅
-        test_constraints.cypher
-        test_lineage.cypher
-
-    fixtures/ 📦
-      stac/ 🛰️
-      dcat/ 🗂️
-      prov/ 🧾
-      sample_data/ 🧪
+tests/
+└─ 🧪 db/
+   ├─ 📘📄 README.md                     # 📘 (you are here) 📌 How to run DB tests locally/CI + prerequisites + cleanup
+   │
+   ├─ 🐳 docker-compose.yml              # Spins up test DB services (PostGIS + Neo4j) with deterministic ports/volumes
+   ├─ 🔧 .env.example                    # Example env vars (credentials/ports); copy to .env for local runs
+   │
+   ├─ 🗺️ postgis/                        # PostGIS test harness (schema + migrations + SQL assertions)
+   │  ├─ 🧱 migrations/                  # Incremental migrations for the test schema (apply in order)
+   │  ├─ 📜 schema.sql                   # Base schema (tables, indexes, extensions) for the test database
+   │  ├─ 🌱 seed.sql                     # Seed data (tiny, deterministic; no sensitive data)
+   │  └─ ✅ tests/
+   │     ├─ ✅📄 test_schema.sql          # Verifies schema invariants (tables/indexes/extensions exist)
+   │     ├─ 🗺️✅📄 test_spatial.sql        # Verifies spatial behavior (SRIDs, geometry validity, spatial joins)
+   │     └─ ⏳✅📄 test_time_filtering.sql  # Verifies time-range filtering logic (intervals, inclusive/exclusive edges)
+   │
+   ├─ 🧠 neo4j/                           # Neo4j test harness (constraints + seed + Cypher assertions)
+   │  ├─ 🔗 constraints.cypher            # Schema constraints (uniqueness, required props, indexes)
+   │  ├─ 🌱 seed.cypher                   # Seed graph (tiny, representative; deterministic IDs)
+   │  └─ ✅ tests/
+   │     ├─ 🔒✅📄 test_constraints.cypher  # Ensures constraints are present and enforce expected rules
+   │     └─ 🧬✅📄 test_lineage.cypher       # Tests lineage queries/relationships (derivation, provenance edges)
+   │
+   └─ 📦 fixtures/                        # Shared fixture data used by DB tests (keep small + governed)
+      ├─ 🛰️ stac/                         # STAC snippets used by tests (collections/items/assets pointers)
+      ├─ 🗂️ dcat/                         # DCAT dataset/distribution snippets used by tests
+      ├─ 🧾 prov/                         # PROV bundles/snippets used by tests (lineage expectations)
+      └─ 🧪 sample_data/                  # Tiny tabular/geo samples feeding seeds/migrations (safe, deterministic)
 ```
 
 ---
