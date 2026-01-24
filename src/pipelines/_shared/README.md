@@ -138,12 +138,12 @@ Before a dataset is promoted/served, it must pass this checklist:
 ### 1) Minimal pipeline skeleton (pseudo-structure)
 
 ```text
-📁 src/pipelines/
-  📁 _shared/                 # <— you are here
-  📁 landcover/
-    🐍 pipeline.py            # domain pipeline entry
-    🧾 dataset.yaml           # per-dataset config (inputs, schedule, policy tags)
-    📁 transforms/            # domain-specific transforms
+src/pipelines/
+├─ ♻️ _shared/                 # ← you are here 📌 Shared pipeline building blocks (IO, manifests, hashing, policy hooks)
+└─ 🌿 landcover/
+   ├─ 🐍 pipeline.py            # Domain pipeline entrypoint (orchestrates transforms; emits receipts/catalog/prov)
+   ├─ 🧾 dataset.yaml            # Per-dataset config (inputs, schedule, policy tags, output products)
+   └─ 🧪 transforms/             # Domain-specific transform modules (pure-ish steps; deterministic when possible)
 ```
 
 ### 2) Minimal run flow (pseudo-code)
