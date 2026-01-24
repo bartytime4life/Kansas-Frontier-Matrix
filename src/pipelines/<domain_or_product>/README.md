@@ -85,33 +85,33 @@ python -m src.pipelines.<domain_or_product>.cli run-dataset --dataset kfm.ks.<do
 ## 🗂️ Directory layout
 
 ```text
-📦 src/pipelines/<domain_or_product>/
-├─ 📄 README.md                👈 you are here
-├─ 🐍 __init__.py
-├─ 🧩 cli.py                   # Typer/Click entrypoint (recommended)
-├─ 🧠 pipeline.py              # Orchestrates stages, emits run manifest
-├─ ⚙️ config/
-│  ├─ local.yaml
-│  ├─ dev.yaml
-│  └─ prod.yaml
-├─ 🧱 steps/
-│  ├─ 01_watch.py              # optional (stream/schedule triggers)
-│  ├─ 02_fetch.py
-│  ├─ 03_validate.py
-│  ├─ 04_transform.py
-│  ├─ 05_publish.py
-│  ├─ 06_catalog.py            # STAC/DCAT/PROV writers
-│  └─ 07_graph.py              # Neo4j CSV export / load helpers
-├─ 🧰 adapters/
-│  ├─ inbound/                 # API clients, scrapers, sensors, file drops
-│  └─ outbound/                # PostGIS, STAC, DCAT, PROV, OCI registry
-├─ 🧪 tests/
-│  ├─ test_contracts.py
-│  ├─ test_schema_validation.py
-│  └─ fixtures/
-└─ 📚 schemas/
-   ├─ input.schema.json
-   └─ output.schema.json
+src/pipelines/<domain_or_product>/
+├─ ✅📄 README.md                 # 👈 you are here 📌 Pipeline purpose, inputs/outputs, run order, and how to execute locally/CI
+├─ 🐍 __init__.py                 # Python package marker (exports/version info for this pipeline module)
+├─ 🧩 cli.py                      # Typer/Click entrypoint (recommended): flags, subcommands, and safe defaults
+├─ 🧠 pipeline.py                  # Orchestrates stages; wires steps; emits run manifest + telemetry + receipts
+├─ ⚙️ config/                      # Environment configs (never store secrets; override via env vars)
+│  ├─ 🧪 local.yaml                # Local defaults (paths, small sample mode, verbose logging)
+│  ├─ 🧰 dev.yaml                  # Dev/staging settings (test endpoints, reduced cadence, feature flags)
+│  └─ 🏭 prod.yaml                 # Production settings (schedules, strict policies, resource limits)
+├─ 🧱 steps/                       # Ordered pipeline stages (keep deterministic; each step records receipts)
+│  ├─ 👀 01_watch.py               # (optional) Watch/trigger step (stream/schedule triggers, change detection)
+│  ├─ 🌐 02_fetch.py               # Acquire inputs (fetch receipts: headers, etags, byte counts, checksums)
+│  ├─ ✅ 03_validate.py            # Validate inputs (schema checks, link checks, policy preflight)
+│  ├─ 🧪 04_transform.py           # Transform/normalize (raw→work→processed; records params + hashes)
+│  ├─ 📦 05_publish.py             # Publish artifacts (write outputs; optional OCI/ORAS push; produce digests)
+│  ├─ 🛰️ 06_catalog.py             # Catalog writers (STAC/DCAT/PROV) + evidence triplet linking
+│  └─ 🕸️ 07_graph.py               # Graph exports/loads (Neo4j CSV export, mapping, optional health checks)
+├─ 🔌 adapters/                    # Integrations (IO boundaries; isolate external deps here)
+│  ├─ 📥 inbound/                  # Inbound connectors (API clients, scrapers, sensors, file drops)
+│  └─ 📤 outbound/                 # Outbound connectors (PostGIS, STAC, DCAT, PROV, OCI registry)
+├─ 🧪 tests/                       # Pipeline tests (deterministic; fixtures tiny; no network by default)
+│  ├─ 🧪 test_contracts.py          # Contract-level tests (input/output shapes, invariants, gate expectations)
+│  ├─ 📐🧪 test_schema_validation.py # Schema validation tests (examples/fixtures validate cleanly)
+│  └─ 🧩 fixtures/                 # Tiny fixtures used by tests (raw snippets + expected outputs)
+└─ 📚 schemas/                      # Pipeline-specific schemas (beyond shared contracts)
+   ├─ 📥📐🧾 input.schema.json       # Input contract for this pipeline (what it expects from sources/inbound)
+   └─ 📤📐🧾 output.schema.json      # Output contract (what it produces for processed/catalog/graph layers)
 ```
 
 > [!NOTE]
