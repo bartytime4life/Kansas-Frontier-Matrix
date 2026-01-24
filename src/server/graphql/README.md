@@ -44,11 +44,11 @@ GraphQL exists here to:
 ```mermaid
 flowchart LR
   Raw[📥 Raw Inputs] --> Triplet[🧾 STAC + DCAT + PROV]
-  Triplet --> Stores[(🧠 Neo4j + 🌍 PostGIS)]
+  Triplet --> Stores[🕸️ Neo4j + 🌍 PostGIS]
   Stores --> GQL[🧬 GraphQL API]
   Stores --> REST[🔌 REST API]
-  GQL --> UI[🖥️ Web UI (MapLibre/Cesium)]
-  GQL --> AI[🤖 Focus Mode (AI)]
+  GQL --> UI[🖥️ Web UI - MapLibre Cesium]
+  GQL --> AI[🤖 Focus Mode - AI]
   REST --> UI
 ```
 
