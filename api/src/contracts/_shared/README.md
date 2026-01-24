@@ -341,14 +341,14 @@ Suggested fields:
 
 ```mermaid
 flowchart LR
-  Client[🧑‍💻 Client / UI / External Integrators] -->|REST / GraphQL| API[🧱 API Boundary]
-  API -->|validate| Contracts[🧩 Contracts (_shared + domains)]
-  API -->|policy| Policy[🛡️ OPA / Conftest]
-  API -->|read| Catalogs[📚 Evidence Triplet]
+  Client[🧑‍💻 Client UI external integrators] --> API[🧱 API Boundary]
+  API --> Contracts[🧩 Contracts - shared + domains]
+  API --> Policy[🛡️ OPA + Conftest]
+  API --> Catalogs[📚 Evidence Triplet]
   Catalogs --> STAC[🛰️ STAC]
   Catalogs --> DCAT[🏷️ DCAT]
   Catalogs --> PROV[🧾 PROV]
-  API -->|serve| Response[📦 Stable Envelopes + Evidence Links]
+  API --> Response[📦 Stable envelopes + evidence links]
 ```
 
 ---
