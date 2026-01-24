@@ -54,16 +54,16 @@ This repo may evolve, but this is the **intended shape** for maintainability:
 
 ```text
 api/contracts/openapi/
-├─ openapi.yaml (or openapi.yml)   👈 root spec
-└─ components/
-   ├─ README.md                    👈 you are here
-   ├─ schemas/                     🧱 reusable data models
-   ├─ parameters/                  🧷 reusable params (path/query/header)
-   ├─ requestBodies/               📦 reusable request bodies
-   ├─ responses/                   📤 reusable responses
-   ├─ examples/                    🧪 example payloads (small + focused)
-   ├─ headers/                     🪪 shared headers (e.g., X-Request-Id)
-   └─ securitySchemes/             🔐 auth schemes
+├─ 📄 openapi.yaml (or openapi.yml)    # 👈 Root spec entrypoint (paths + refs into components/)
+└─ 🧩 components/
+   ├─ 📄 README.md                     # 👈 you are here 📌 How components are named, referenced, and kept DRY
+   ├─ 🧱 schemas/                      # Reusable data models (request/response bodies; domain entities; enums)
+   ├─ 🧷 parameters/                   # Reusable params (path/query/header): pagination, bbox, time, filters, ids
+   ├─ 📦 requestBodies/                # Reusable request body definitions (content-types + schema refs)
+   ├─ 📤 responses/                    # Reusable responses (success envelopes + standard errors)
+   ├─ 🧪 examples/                     # Example payloads (small + focused; validated in contract tests)
+   ├─ 🪪 headers/                      # Shared headers (e.g., X-Request-Id, traceparent) + documentation
+   └─ 🔐 securitySchemes/              # Auth schemes (bearer, apiKey, OAuth2 flows) referenced by operations
 ```
 
 ---
