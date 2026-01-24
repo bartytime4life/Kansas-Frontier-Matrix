@@ -88,6 +88,7 @@ Canonical pipeline ordering is preserved:
 
 ### Expected tree
 
+```text
 data/
 └── 🕸️ graph/
     └── 🧠 cypher/
@@ -96,7 +97,7 @@ data/
         ├── 📇📄 01-indexes.cypher              # Index definitions for performance; run after constraints
         ├── 🧼📄 10-normalize.cypher            # Normalization/cleanup queries (standardize props, fix minor drift)
         └── 🧾🗂️ manifest.json                  # (optional) Script registry: order, purpose, expected effects, checksums
-
+```
 Notes:
 - Filenames are ordered to encourage repeatable application.
 - If the repo uses a different ordering scheme, document it here and enforce via CI.
