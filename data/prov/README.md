@@ -84,16 +84,16 @@ This repo may evolve, but the canonical publishing locations follow the KFM v13 
 
 ```text
 data/
-  raw/                 # immutable evidence inputs 📦
-  work/                # intermediate / sandbox outputs 🧪
-  processed/           # vetted data products ✅
-  stac/                # STAC collections & items 📍
-    collections/
-    items/
-  catalog/
-    dcat/              # DCAT dataset records 🗂️
-  prov/                # ✅ YOU ARE HERE: PROV lineage bundles 🧾
-    README.md
+├─ 📥 raw/                     # 📦 Immutable evidence inputs (as-received snapshots; never “clean raw”)
+├─ 🧪 work/                    # 🧪 Intermediate / sandbox outputs (regeneratable; OK to wipe/rebuild)
+├─ ✅ processed/                # ✅ Vetted data products (versioned; what UI/API/graph should serve)
+├─ 🛰️ stac/                     # 📍 STAC collections & items (asset index + time/run snapshots)
+│  ├─ 🗂️ collections/           # Dataset-level metadata (extent/license/providers/links)
+│  └─ 🧷 items/                 # Snapshot metadata (assets, roles, hrefs, timestamps)
+├─ 🗂️ catalog/
+│  └─ 🗂️ dcat/                  # 🗂️ DCAT dataset records (discovery + distributions + access metadata)
+└─ 🧬 prov/                     # ✅ YOU ARE HERE: PROV lineage bundles (JSON-LD) linking raw→work→processed→catalog
+   └─ 📄 README.md               # 📘 How PROV is structured, naming rules, and how to validate/trace lineage
 ```
 
 ### Suggested internal organization (recommended, not required)
@@ -102,13 +102,13 @@ If `data/prov/` becomes large, use subfolders to keep it clean:
 
 ```text
 data/prov/
-  datasets/            # dataset-level lineage bundles
-  runs/                # pipeline run provenance (batch/streaming)
-  ai/                  # AI/analysis “evidence artifact” provenance
-  sims/                # simulation run provenance + promotions
-  devops/              # PR/build provenance (optional)
-  _schemas/            # optional: local copies of profile/schema references
-  README.md
+├─ 🧬 datasets/            # Dataset-level lineage bundles (high-level “what produced this dataset over time”)
+├─ 🏃 runs/                # Pipeline run provenance (batch/streaming): per-run PROV activities + inputs/outputs
+├─ 🤖 ai/                  # AI/analysis provenance (Focus Mode answers, analytics jobs, evidence artifacts; redacted-safe)
+├─ 🧪 sims/                # Simulation provenance + promotion records (seeds, metrics, artifacts, approvals)
+├─ 🔧 devops/              # (optional) PR/build provenance (commits, CI runs, releases, attestations)
+├─ 📐 _schemas/            # (optional) Local copies/pointers to schema/profile refs used for validation
+└─ 📄 README.md            # 📘 How PROV bundles are named, stored, validated, and linked to STAC/DCAT/audits
 ```
 
 ---
