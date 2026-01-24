@@ -96,16 +96,16 @@ KFM-ONTO is easiest to understand as **two graphs layered together**:
 
 ```mermaid
 flowchart LR
-  A[Raw Sources] --> B[ETL Pipelines]
-  B --> C[STAC Items/Collections]
-  B --> D[DCAT Dataset/Distribution]
-  B --> E[PROV Activities/Agents]
-  C --> F[Neo4j Evidence Nodes]
+  A[📥 Raw Sources] --> B[🧪 ETL Pipelines]
+  B --> C[🛰️ STAC Items Collections]
+  B --> D[🗂️ DCAT Dataset Distribution]
+  B --> E[🧬 PROV Activities Agents]
+  C --> F[🕸️ Neo4j evidence nodes]
   D --> F
   E --> F
-  F --> G[Domain Nodes: Place/Event/Person/Concept]
-  G --> H[Story Nodes + Pulse Threads]
-  H --> I[UI + Focus Mode Answers (with citations)]
+  F --> G[🏷️ Domain nodes - place event person concept]
+  G --> H[📚 Story nodes + pulse threads]
+  H --> I[🗺️ UI + 🤖 Focus Mode answers - citations]
 ```
 
 <!-- Evidence-first publishing / no mystery layers:  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi) -->
