@@ -44,13 +44,13 @@ src/pipelines/_shared/hashing/
 
 ```mermaid
 flowchart LR
-  A[data/raw 🧱 (immutable evidence)] -->|hash + checksums.sha256| B[Ingestion gate 🚧]
-  B --> C[data/work 🧰 (ETL scratch)]
-  C -->|hash receipts| D[data/processed ✅]
-  D -->|checksums + metadata| E[STAC/DCAT/PROV 📚]
-  E --> F[Graph 🕸️]
-  F --> G[API 🔌]
-  G --> H[UI / Story / Focus 🧭🤖]
+  A[data/raw 🧱 - immutable evidence] --> B[🚧 Ingestion gate - hash + checksums sha256]
+  B --> C[data/work 🧰 - ETL scratch]
+  C --> D[data/processed ✅ - hash receipts]
+  D --> E[📚 STAC DCAT PROV - checksums + metadata]
+  E --> F[🕸️ Graph]
+  F --> G[🔌 API]
+  G --> H[🧭🤖 UI Story Focus]
 ```
 
 ---
