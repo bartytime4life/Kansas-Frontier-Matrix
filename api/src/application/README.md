@@ -75,17 +75,17 @@ Publishing requires STAC + DCAT + PROV (“evidence-first publishing”), stored
 
 ```text
 api/src/application/
-  📄 README.md                       # you are here 🙂
-  📁 commands/                       # write-side use cases (CQRS)
-  📁 queries/                        # read-side use cases (CQRS)
-  📁 services/                       # orchestration that doesn't fit pure CQRS handlers
-  📁 dto/                            # boundary-safe request/response models (Pydantic-friendly)
-  📁 ports/                          # outbound interfaces (repos, graph, search, tiles, policy, ledger)
-  📁 policies/                       # policy client + helpers (OPA, rule packs, enforcement wrappers)
-  📁 provenance/                     # PROV + evidence manifest builders
-  📁 telemetry/                      # correlation IDs, structured logs, metrics events
-  📁 errors/                         # application exceptions + error mapping
-  📁 mappers/                        # domain <-> dto, catalog <-> domain, graph <-> domain
+├─ ✅📄 README.md                       # you are here 🙂 📌 Application layer guide: CQRS boundaries, flow, and invariants
+├─ 🧾 commands/                         # Write-side use cases (CQRS): mutate state, emit events, write receipts/PROV
+├─ 🔎 queries/                          # Read-side use cases (CQRS): fetch/shape data for API responses (no side effects)
+├─ 🧩 services/                         # Orchestration that doesn’t fit pure CQRS handlers (workflows, fan-out, pipelines)
+├─ 🧱 dto/                              # Boundary-safe request/response models (Pydantic-friendly; validated at edges)
+├─ 🔌 ports/                            # Outbound interfaces (repos, graph, search, tiles, policy, ledger) — dependency inversion
+├─ 🛡️ policies/                         # Policy client + helpers (OPA/rule packs; enforcement wrappers + decision caching)
+├─ 🧬 provenance/                       # Provenance builders (PROV bundles, evidence manifests, receipts) for auditability
+├─ 📡 telemetry/                        # Correlation IDs, structured logs, metrics events (audit-safe; redaction-aware)
+├─ 🚫 errors/                           # Application exceptions + error mapping (domain → HTTP-safe error envelopes)
+└─ 🔁 mappers/                          # Mapping layer: domain ↔ dto, catalog ↔ domain, graph ↔ domain (no business logic)
 ```
 
 ---
