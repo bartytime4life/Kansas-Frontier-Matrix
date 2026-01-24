@@ -80,21 +80,21 @@ These examples are the **shared “truth snapshots”** that keep implementation
 Recommended structure inside `api/contracts/examples/`:
 
 ```text
-📦 api/
-└── 📂 contracts/
-    ├── 📂 openapi/                # OpenAPI specs (source of truth)
-    ├── 📂 graphql/                # GraphQL schema (source of truth)
-    ├── 📂 schemas/                # JSON Schemas (STAC/DCAT/PROV + KFM-specific)
-    └── 📂 examples/               # ✅ You are here
-        ├── 📂 stac/
-        ├── 📂 dcat/
-        ├── 📂 prov/
-        ├── 📂 geojson/
-        ├── 📂 focus/
-        ├── 📂 jobs/
-        ├── 📂 errors/
-        ├── 📂 pagination/
-        └── 📂 graphql/
+api/
+└── 📜 contracts/
+    ├── 📘 openapi/                 # OpenAPI specs (source of truth for REST endpoints)
+    ├── 🧬 graphql/                 # GraphQL schema (source of truth for GraphQL surface)
+    ├── 📐 schemas/                 # JSON Schemas (STAC/DCAT/PROV + KFM-specific object contracts)
+    └── 🧪 examples/                # ✅ You are here 📌 Canonical example payloads (docs + tests; must validate)
+        ├── 🛰️ stac/                # STAC examples (Collections/Items/Assets; profile-compliant)
+        ├── 🗂️ dcat/                # DCAT examples (Dataset/Distribution JSON-LD; license/access correct)
+        ├── 🧬 prov/                # PROV examples (PROV-O JSON-LD bundles; linkage to runs/artifacts)
+        ├── 🗺️ geojson/             # GeoJSON examples (features, bbox, CRS assumptions; small fixtures)
+        ├── 🔎 focus/               # Focus Mode examples (request/answer envelopes; citations + redaction notices)
+        ├── 🧵 jobs/                # Async job examples (job refs, status/progress, result pointers)
+        ├── 🚨 errors/              # Error examples (Problem Details, validation errors, policy denials)
+        ├── 📑 pagination/          # Pagination examples (cursor requests/responses, sorting, limits)
+        └── 🧬 graphql/             # GraphQL examples (operations + expected response shapes)
 ```
 
 **Naming convention (recommended):**
