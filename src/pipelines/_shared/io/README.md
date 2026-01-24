@@ -76,17 +76,17 @@ flowchart LR
 Typical outputs this module must support:
 
 ```text
-📦 repo/
-  ├─ 📁 data/
-  │  ├─ 📁 raw/                # Immutable evidence (as received)
-  │  ├─ 📁 work/               # Staging + intermediate transforms
-  │  ├─ 📁 processed/          # Standardized + publishable assets
-  │  ├─ 📁 stac/               # STAC collections/items (asset index)
-  │  ├─ 📁 catalogs/           # DCAT datasets (discovery layer)
-  │  ├─ 📁 prov/               # PROV bundles (lineage + agents + params)
-  │  ├─ 📁 audits/             # Run manifests, digests, policy artifacts
-  │  └─ 📁 telemetry/          # Append-only NDJSON logs
-  └─ 📁 src/pipelines/_shared/io/
+repo/
+├─ 🗂️ data/                           # 🗂️ Data plane: governed artifacts + catalogs + run evidence
+│  ├─ 📥 raw/                          # 📥 Immutable evidence boundary (as-received source drops; never “clean raw”)
+│  ├─ 🧪 work/                         # 🧪 Staging + intermediate transforms (OK to wipe/rebuild; reproducible steps)
+│  ├─ ✅ processed/                     # ✅ Publishable standardized assets (what UI/API/graph should serve; versioned)
+│  ├─ 🛰️ stac/                          # 🛰️ STAC collections/items (asset index; time/run snapshots)
+│  ├─ 🗂️ catalogs/                      # 🗂️ DCAT datasets (discovery layer; license/access/distributions)
+│  ├─ 🧬 prov/                          # 🧬 PROV bundles (lineage + agents + params; links raw→work→processed→catalog)
+│  ├─ 🧾 audits/                        # 🧾 Run evidence bundles (run_manifest, digests, policy decisions, receipts)
+│  └─ 📈 telemetry/                     # 📈 Append-only NDJSON logs (audit-safe; redacted; correlation-friendly)
+└─ 🧰 src/pipelines/_shared/io/         # 🧰 Shared pipeline IO utilities (canonical paths, safe reads/writes, manifests)
 ```
 
 ---
