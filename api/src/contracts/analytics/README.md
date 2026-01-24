@@ -29,18 +29,18 @@
 
 ```text
 api/src/contracts/
-  analytics/
-    README.md                 👈 you are here
-    base.py                   🧱 shared primitives (TimeRange, SpatialFilter, Envelope)
-    metrics.py                📐 MetricSpec, DimensionSpec, Units, Uncertainty
-    queries.py                🔎 AnalyticsQuery (and specialized queries)
-    responses.py              📦 AnalyticsResponse + result unions
-    provenance.py             🧾 ProvenanceRef, EvidenceManifestRef
-    policy.py                 🛡️ PolicyDecision, Redaction, Sensitivity
-    telemetry.py              📈 TelemetrySummary, FocusTelemetry, SLOs
-    jobs.py                   🧵 AsyncJobRef, JobStatus, Progress
-    narrative.py              📝 PulseThreadResult, NarrativeSignals
-    graph.py                  🕸️ GraphAnalyticsResult, HealthChecks
+└─ 📈 analytics/
+   ├─ ✅📄 README.md                 # 👈 you are here 📌 Analytics contract index: how queries/responses/prov/policy fit together
+   ├─ 🧱📄 base.py                   # Shared primitives: TimeRange, SpatialFilter, Envelope, paging, IDs
+   ├─ 📐📄 metrics.py                # MetricSpec/DimensionSpec, units, uncertainty model, aggregation semantics
+   ├─ 🔎📄 queries.py                # AnalyticsQuery base + specialized query shapes (timeseries, histogram, compare, etc.)
+   ├─ 📦📄 responses.py              # AnalyticsResponse + result unions (typed result payloads + error shapes)
+   ├─ 🧾📄 provenance.py             # ProvenanceRef + EvidenceManifestRef (pointers to STAC/DCAT/PROV + evidence bundles)
+   ├─ 🛡️📄 policy.py                 # PolicyDecision, redaction notices, sensitivity labels, denial reasons
+   ├─ 📈📄 telemetry.py              # TelemetrySummary, FocusTelemetry, SLO/SLA signals (audit-safe aggregates)
+   ├─ 🧵📄 jobs.py                   # AsyncJobRef, JobStatus, Progress (queued/running/completed/failed)
+   ├─ 📝📄 narrative.py              # PulseThreadResult + narrative signals (what changed, why it matters, evidence pointers)
+   └─ 🕸️📄 graph.py                  # Graph analytics results + health checks (counts, anomalies, connectivity summaries)
 ```
 
 ---
