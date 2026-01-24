@@ -33,9 +33,9 @@ Hashing here is **not**:
 
 ```text
 src/pipelines/_shared/hashing/
-├── README.md               👈 you are here
-├── (implementation files)  🧩 e.g., sha256 helpers, checksum IO, canonical JSON helpers
-└── (tests)                 🧪 golden vectors + determinism checks
+├── 📄 README.md                   # 👈 you are here 📌 Hashing rules: canonicalization, file coverage, and digest formats
+├── 🧩 …                           # Implementation files (sha256 helpers, checksum IO, canonical JSON/YAML helpers)
+└── 🧪 …                           # Tests (golden vectors + determinism checks; guards against hash drift)
 ```
 
 ---
