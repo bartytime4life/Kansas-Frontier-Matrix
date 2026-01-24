@@ -56,11 +56,11 @@ KFM docs are explicit: **domain logic never directly executes SQL or HTTP**; it 
 
 ```mermaid
 flowchart LR
-  UI[🖥️ UI / Clients] --> API[🌐 API Layer]
-  API --> SVC[🧠 Service Layer / Use Cases]
-  SVC --> DOM[🧩 Domain Layer]
-  SVC --> PORTS[🔌 Integration Ports]
-  PORTS --> INFRA[🧰 Infrastructure Adapters<br/>(PostGIS · Neo4j · File Store · External APIs)]
+  UI[🖥️ UI clients] --> API[🌐 API layer]
+  API --> SVC[🧠 Service layer use cases]
+  SVC --> DOM[🧩 Domain layer]
+  SVC --> PORTS[🔌 Integration ports]
+  PORTS --> INFRA[🧰 Infrastructure adapters - PostGIS Neo4j file store external APIs]
 ```
 
 - **Domain Layer** = “what exists + what must be true”  
