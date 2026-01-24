@@ -180,20 +180,21 @@ Exporter
 
 ### Recommended directory layout 🗂️
 ```text
-📦 repo-root/
-  🗂️ data/
-    📄 graph/
-      📄 csv/                 # Neo4j import snapshots (target: neo4j-csv)
-      📦 exports/             # Optional: other export targets
-        🧾 jsonld/
-        📦 oci/
-        🔗 ui-share/
-        🧊 ar-3d/
-  🧠 src/
-    🕸️ graph/
-      📦 exports/             # <-- you are here
-        README.md
-        (exporters live here)
+repo-root/
+├─ 🗂️ data/                               # 🗂️ Data plane: governed artifacts, catalogs, and export outputs
+│  └─ 🕸️ graph/                           # 🕸️ Graph data products (snapshots + publish/export targets)
+│     ├─ 🧱 csv/                           # 🧱 Neo4j bulk-import snapshots (target: neo4j-admin import CSV layout)
+│     └─ 📦 exports/                       # 📦 Published/exported graph products (optional targets)
+│        ├─ 🧬 jsonld/                     # 🧬 Graph exports as JSON-LD (PROV-aware, linkable, web-friendly)
+│        ├─ 📦 oci/                        # 📦 OCI/ORAS exports (content-addressed bundles + digests/signing)
+│        ├─ 🔗 ui-share/                   # 🔗 UI-ready share bundles (small slices for demos, embeds, offline sharing)
+│        └─ 🧊 ar-3d/                      # 🧊 AR/3D-ready exports (scene/tileset/model pointers; demo-scale)
+│
+└─ 🧠 src/                                # 🧠 Code plane: pipelines, exporters, validators
+   └─ 🕸️ graph/                           # 🕸️ Graph tooling (ingest, mapping, exports, QA)
+      └─ 📦 exports/                      # 👈 you are here 📌 Exporter implementations + shared export utilities
+         ├─ 📄 README.md                   # 📘 How exporters work: inputs, output targets, CLI/API entrypoints, contracts
+         └─ 🛠️ …                           # Exporter modules live here (e.g., jsonld/, oci/, ui_share/, ar_3d/, common/)
 ```
 
 ### `run_manifest.json` (recommended fields)
