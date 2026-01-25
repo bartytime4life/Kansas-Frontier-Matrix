@@ -46,14 +46,19 @@ This README documents:
 > If you don’t see one of these, it’s either stored elsewhere (raw capture data), or it hasn’t been added yet. Keep this folder focused on **Blender-authoring** files.
 
 ```text
-web/assets/3d/shared/models/monument-rocks/
-└─ sources/
-   └─ blender/
-      ├─ README.md                👈 you are here
-      ├─ monument-rocks.blend     🎛️ authoritative scene (recommended)
-      ├─ textures/                🧵 PBR textures (albedo/normal/rough/ao…)
-      ├─ reference/               📷 reference images (if license allows)
-      └─ scripts/                 🐍 optional Blender export helpers
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🤝 shared/
+            └── 🧩 models/
+                └── 🪨 monument-rocks/
+                    └── 🧪 sources/
+                        └── 🎛️ blender/
+                            ├── 📄 README.md                 👈 📍 you are here
+                            ├── 🎛️ monument-rocks.blend      (authoritative scene; recommended)
+                            ├── 🧵 textures/                 (PBR textures: albedo/normal/rough/AO…)
+                            ├── 📷 reference/                (reference images if license allows)
+                            └── 🐍 scripts/                  (optional Blender export helpers)
 ```
 
 ### 🚫 Keep out of Git (recommended)
