@@ -42,20 +42,20 @@ and is intended to be referenced by:
 > Keep this folder **web-friendly**: deterministic paths, cacheable assets, and a small “meta spine” for provenance + integrity.
 
 ```text
-📁 <tileset_slug>/
-├─ 🧩 tileset.json                # 3D Tiles entrypoint (required)
-├─ 📁 tiles/                      # tile payloads (b3dm/i3dm/pnts/glb…)
-│  └─ ……
-├─ 📁 textures/                   # optional (if not embedded)
-│  └─ ……
-├─ 📁 _meta/                      # KFM metadata & receipts (required in KFM)
-│  ├─ kfm.asset.json              # KFM asset manifest (see contract below)
-│  ├─ checksums.sha256            # integrity receipts (sha256 list)
-│  ├─ attribution.md              # attribution + credits
-│  ├─ license.txt                 # license text or pointer
-│  ├─ preview.png                 # thumbnail used by UI/catalog
-│  └─ CHANGELOG.md                # optional: human-readable changes
-└─ README.md                      # you are here 🙂
+🧱 <tileset_slug>/
+├── 🧩 tileset.json                         (required: 3D Tiles entrypoint)
+├── 📦 tiles/                               (tile payloads: b3dm / i3dm / pnts / glb…)
+│   └── ……
+├── 🧵 textures/                            (optional: only if textures not embedded)
+│   └── ……
+├── 🧾 _meta/                               (required in KFM: metadata + receipts)
+│   ├── 🧾 kfm.asset.json                   (KFM asset manifest — see contract below)
+│   ├── 🔐 checksums.sha256                 (integrity receipts: sha256 list)
+│   ├── 🏷️ attribution.md                   (attribution + credits; UI-safe text)
+│   ├── 📜 license.txt                      (license text or pointer)
+│   ├── 🖼️ preview.png                      (thumbnail used by UI/catalog)
+│   └── 🧷 CHANGELOG.md                     (optional: human-readable changes)
+└── 📄 README.md                            👈 📍 you are here 🙂
 ```
 
 ### 🔑 Coordinate & Projection Expectations
