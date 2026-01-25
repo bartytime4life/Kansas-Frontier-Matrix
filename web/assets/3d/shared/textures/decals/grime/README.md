@@ -86,22 +86,22 @@ This structure scales well as the library grows and keeps provenance attached to
 
 ```text
 web/assets/3d/shared/textures/decals/grime/
-├─ README.md
-├─ manifest.json                # (optional) index of decals for tooling/runtime
-├─ grime_splatter_a/            # one decal “unit”
-│  ├─ grime_splatter_a_basecolor_1024.ktx2
-│  ├─ grime_splatter_a_normal_1024.ktx2
-│  ├─ grime_splatter_a_orm_1024.ktx2
-│  ├─ preview.webp
-│  ├─ source.json
-│  └─ checksums.sha256
-└─ grime_streaks_vertical_b/
-   ├─ grime_streaks_vertical_b_basecolor_1024.ktx2
-   ├─ grime_streaks_vertical_b_normal_1024.ktx2
-   ├─ grime_streaks_vertical_b_orm_1024.ktx2
-   ├─ preview.webp
-   ├─ source.json
-   └─ checksums.sha256
+├─ 📄 README.md                          # 📘 Decal rules: structure, metadata, usage (e.g., dirt, leaks, soot, wear)
+├─ 🧾 manifest.json                     # Optional index for tooling and runtime (maps decals to metadata)
+├─ 💧 grime_splatter_a/                   # Decal unit: grime splatter (splat, residue)
+│  ├─ 💨 grime_splatter_a_basecolor_1024.ktx2   # Basecolor texture (PBR)
+│  ├─ 🌪 grime_splatter_a_normal_1024.ktx2      # Normal map (surface detail)
+│  ├─ 🛠 grime_splatter_a_orm_1024.ktx2         # ORM map (occlusion, roughness, metallic)
+│  ├─ 🌄 preview.webp                    # Small thumbnail for quick asset preview (optional)
+│  ├─ 🧾 source.json                    # Metadata: asset origin, licensing, author, etc.
+│  └─ 🔑 checksums.sha256                # Integrity checksum for file verification
+└─ 💧 grime_streaks_vertical_b/            # Decal unit: grime streaks (vertical drips, streaking dirt)
+   ├─ 💨 grime_streaks_vertical_b_basecolor_1024.ktx2   # Basecolor texture (PBR)
+   ├─ 🌪 grime_streaks_vertical_b_normal_1024.ktx2      # Normal map (surface detail)
+   ├─ 🛠 grime_streaks_vertical_b_orm_1024.ktx2         # ORM map (occlusion, roughness, metallic)
+   ├─ 🌄 preview.webp                    # Small thumbnail for quick asset preview (optional)
+   ├─ 🧾 source.json                    # Metadata: asset origin, licensing, author, etc.
+   └─ 🔑 checksums.sha256                # Integrity checksum for file verification
 ```
 
 > [!NOTE]
