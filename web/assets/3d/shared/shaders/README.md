@@ -16,12 +16,12 @@ This README lives here:
 
 ```txt
 web/
-└─ assets/
-   └─ 3d/
-      └─ shared/
-         └─ shaders/
-            ├─ README.md  👈 you are here
-            └─ (shader files)
+└─ 📁 assets/
+   └─ 🧊 3d/
+      └─ 🧰 shared/
+         └─ 🧬 shaders/
+            ├─ 📄 README.md          # 👈 you are here 📌 Shared shader snippets: usage rules, compatibility, and safety notes
+            └─ 🧬 …                  # Shader files (GLSL/WGSL snippets, includes, presets; keep small + documented)
 ```
 
 ---
@@ -53,12 +53,12 @@ If you’re new to this: WebGL rendering is driven by JavaScript/TypeScript **pl
 
 ```txt
 shaders/
-├─ chunks/            🧩 small reusable GLSL helpers (math, color, noise)
-├─ materials/         🧱 surface shading (lighting models, PBR-ish helpers)
-├─ post/              ✨ post-processing (tone map, outlines, FX)
-├─ debug/             🧪 debug views (normals, depth, IDs)
-├─ picking/           🖱️ GPU picking / ID encoding
-└─ README.md
+├─ 🧩 chunks/            # 🧩 Small reusable shader helpers (math, color, noise, coordinate transforms)
+├─ 🧱 materials/         # 🧱 Surface shading helpers (lighting models, PBR-ish utilities, BRDF snippets)
+├─ ✨ post/              # ✨ Post-processing effects (tone mapping, outlines, fog, FX passes)
+├─ 🧪 debug/             # 🧪 Debug views (normals, depth, wireframe/IDs) for development and QA
+├─ 🖱️ picking/           # 🖱️ GPU picking helpers (ID encoding/decoding, hit testing buffers)
+└─ 📄 README.md          # 📘 How shaders are organized, included, versioned, and tested across renderers
 ```
 
 ---
