@@ -77,16 +77,18 @@ Requests should include policy signals that make enforcement straightforward:
 
 ```text
 api/contracts/examples/requests/analysis/
-├── README.md                                  👈 you are here
-├── analysis__ndvi_timeseries__county.get.http
-├── analysis__ndvi_timeseries__county.post.json
-├── analysis__aggregate__landcover_histogram.post.json
-├── analysis__spatial__buffer_intersect_area.post.json
-├── analysis__tiles__landcover_mvt.get.http
-├── analysis__simrun__drought_2040.post.json
-├── analysis__focus__ask_with_context.post.json
-├── analysis__pulse__thread_create.post.json
-└── analysis__realtime__water_level.post.json
+├── ✅📄 README.md                                  # 👈 you are here 📌 How analysis request examples are named, validated, and used in tests
+├── 📥🔎 analysis__ndvi_timeseries__county.get.http  # Example GET request (raw HTTP): NDVI timeseries by county (params/headers)
+├── 📤📈 analysis__ndvi_timeseries__county.post.json # Example POST body: NDVI timeseries query (time range + county selector)
+├── 📤📊 analysis__aggregate__landcover_histogram.post.json
+│   # Example POST body: landcover histogram aggregation (bins/categories + region/time filters)
+├── 📤🗺️ analysis__spatial__buffer_intersect_area.post.json
+│   # Example POST body: spatial op (buffer geometry → intersect → area totals; includes units + CRS assumptions)
+├── 📥🧱 analysis__tiles__landcover_mvt.get.http     # Example GET request (raw HTTP): landcover MVT tiles (z/x/y + style hints)
+├── 📤🧪 analysis__simrun__drought_2040.post.json    # Example POST body: simulation run request (scenario params + seeds + outputs)
+├── 📤🔎📚 analysis__focus__ask_with_context.post.json # Example POST body: Focus ask routed via analysis surface (context + citations)
+├── 📤🧵 analysis__pulse__thread_create.post.json    # Example POST body: create a pulse thread (summary + evidence refs)
+└── 📤📡 analysis__realtime__water_level.post.json   # Example POST body: realtime query (station id + window + freshness constraints)
 ```
 
 > [!TIP]
