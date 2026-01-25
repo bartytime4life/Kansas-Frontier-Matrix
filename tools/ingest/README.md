@@ -79,18 +79,18 @@ flowchart LR
 KFM standardizes where “raw”, “work”, and “processed” live so it’s always obvious what stage a file is in.:contentReference[oaicite:7]{index=7}
 
 ```text
-📁 data/
-  ├── 📁 stac/
-  │   ├── 📁 collections/
-  │   └── 📁 items/
-  ├── 📁 catalog/
-  │   └── 📁 dcat/
-  ├── 📁 prov/
-  ├── 📁 <domain>/
-  │   ├── 📁 raw/        # read-only originals (or DVC pointers)
-  │   ├── 📁 work/       # intermediate artifacts (scratch, checkpoints)
-  │   └── 📁 processed/  # publishable outputs
-  └── 📄 README.md
+data/
+├── 🛰️ stac/                     # STAC metadata layer (Collections + Items pointing to assets/artifacts)
+│   ├── 🗂️ collections/          # STAC Collections (dataset-level metadata: extent/license/providers/links)
+│   └── 🧷 items/                # STAC Items (time/run snapshots: assets, roles, hrefs, timestamps)
+├── 🗂️ catalog/
+│   └── 🗂️ dcat/                 # DCAT discovery records (dataset + distributions + access/license metadata)
+├── 🧬 prov/                     # PROV lineage bundles (JSON-LD) linking raw→work→processed + agents/tools/params
+├── 🗂️ <domain>/                 # Domain bucket (keeps related raw/work/processed together for a domain)
+│   ├── 📥 raw/                  # Read-only originals (or DVC pointers); immutable evidence boundary
+│   ├── 🧪 work/                 # Intermediate artifacts (scratch, checkpoints); rebuildable staging
+│   └── ✅ processed/             # Publishable outputs (versioned artifacts promoted for UI/API/graph use)
+└── ✅📄 README.md                # 👈 you are here 📌 Naming/versioning rules + promotion lanes + validation expectations
 ```
 
 Catalog outputs locations (required):
