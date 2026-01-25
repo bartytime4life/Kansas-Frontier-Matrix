@@ -183,11 +183,11 @@ KFM’s pipeline is designed so that **artifacts are promoted** through a reprod
 flowchart LR
   RAW[📥 Raw] --> WORK[🛠️ Work]
   WORK --> PROC[⚙️ Processed]
-  PROC --> CATS[📚 Catalogs (STAC/DCAT/PROV)]
+  PROC --> CATS[📚 Catalogs - STAC DCAT PROV]
   CATS --> GRAPH[🧠 Graph]
   GRAPH --> API[🔌 API]
   API --> UI[🖥️ UI]
-  UI --> STORY[📖 Story / Focus]
+  UI --> STORY[📖 Story + 🤖 Focus]
 ```
 
 This ordering is explicitly called out in KFM documentation.:contentReference[oaicite:24]{index=24}
