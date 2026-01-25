@@ -239,12 +239,12 @@ The anchor point is the **single reference coordinate** that connects:
 
 ```mermaid
 flowchart LR
-  A[Raw 3D model\n(glTF/OBJ + textures)] --> B[Normalize units & axes\n(meters, up-axis)]
-  B --> C[Anchor selection\n(lat/lon/height)]
-  C --> D[Compute transform\n(rotation + translation + scale)]
-  D --> E[Package for web\n(3D Tiles / glTF)]
-  E --> F[QA in KFM UI\n(2D + 3D)]
-  F --> G[Publish gate\n(policy + provenance)]
+  A[📦 Raw 3D model - glTF OBJ + textures] --> B[📐 Normalize units and axes - meters up axis]
+  B --> C[📍 Anchor selection - lat lon height]
+  C --> D[🧭 Compute transform - rotation translation scale]
+  D --> E[🌐 Package for web - 3D Tiles glTF]
+  E --> F[✅ QA in KFM UI - 2D + 3D]
+  F --> G[🛡️ Publish gate - policy + provenance]
 ```
 
 ### Machine-readable companion files (expected)
