@@ -25,11 +25,11 @@ Pagination protects:
 
 ```text
 api/
-  contracts/
-    examples/
-      pagination/
-        graphql/
-          README.md  👈 you are here
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📑 pagination/
+         └─ 🧬 graphql/
+            └─ 📄 README.md   # 👈 you are here 📌 GraphQL pagination examples (Relay pageInfo, cursors, edges/nodes, limits)
 ```
 
 > Tip: Keep this file “example-contract-quality” even if the runtime schema changes. The intent is **to standardize patterns** across types.
