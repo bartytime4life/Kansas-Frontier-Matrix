@@ -35,26 +35,30 @@
 ## 🗂️ Landmark folder conventions (recommended)
 
 ```text
-web/assets/3d/landmarks/<landmark_slug>/
-  📦 model/
-    🧊 <landmark_slug>.glb
-    🧱 tileset/                 # 3D Tiles (if used)
-      tileset.json
-      content/...
-    🎨 textures/
-  🧾 metadata/
-    stac_item.json
-    dcat_dataset.json
-    prov.jsonld
-    checksums.txt
-  📚 citations/
-    sources/                    # raw evidence references (photos, lidar, maps, etc.)
-    notes/
-      modeling_decisions.md     # <-- this file
-      qa_notes.md
-    screenshots/
-  🧪 qa/
-    validation_report.md
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🏛️ landmarks/
+            └── 🏷️ <landmark_slug>/
+                ├── 📦 model/
+                │   ├── 🧊 <landmark_slug>.glb
+                │   ├── 🧱 tileset/                     (optional: 3D Tiles streaming)
+                │   │   ├── 🧩 tileset.json
+                │   │   └── 📦 content/…
+                │   └── 🎨 textures/                    (optional: if GLB not fully embedded)
+                ├── 🧾 metadata/
+                │   ├── 🛰️ stac_item.json
+                │   ├── 🏷️ dcat_dataset.json
+                │   ├── 🧬 prov.jsonld
+                │   └── 🔐 checksums.txt
+                ├── 📚 citations/
+                │   ├── 📥 sources/                     (raw evidence refs: photos, lidar, maps, etc.)
+                │   ├── 📝 notes/
+                │   │   ├── 🧠 modeling_decisions.md     👈 📍 this file
+                │   │   └── 🧪 qa_notes.md
+                │   └── 🖼️ screenshots/
+                └── 🧪 qa/
+                    └── ✅ validation_report.md
 ```
 
 ---
