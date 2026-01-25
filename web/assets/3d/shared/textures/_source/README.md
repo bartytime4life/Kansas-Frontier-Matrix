@@ -94,23 +94,23 @@ flowchart LR
 > Keep sources organized by **collection** and **asset-id** (no giant “dump folder”).
 
 ```text
-📁 web/assets/3d/shared/textures/_source/
-  📁 <collection>/
-    📁 <asset-id>/
-      📄 asset.meta.yaml            # required: provenance + licensing + intent
-      📄 export.recipe.md           # required when outputs exist (what/how)
-      📁 source/                    # layered + working files
-        🧩 <asset-id>.psd
-        🧪 <asset-id>.kra
-        🧱 <asset-id>.spp
-        🧊 <asset-id>.blend
-      📁 refs/                      # reference photos/scans (licensed!)
-        📷 <asset-id>__ref_01.jpg
-      📁 notes/                     # decisions, pitfalls, TODOs
-        📝 README.md
-      📁 licenses/                  # third-party license texts if needed
-        ⚖️ LICENSE.txt
-        🧾 ATTRIBUTION.md
+web/assets/3d/shared/textures/_source/
+└─ 🎨 <collection>/                      # Source collection (e.g., “stone”, “soil”, “ui-decals”) — NOT served
+   └─ 🆔 <asset-id>/                      # One source texture asset workspace (editable masters + receipts)
+      ├─ 🧾🏷️ asset.meta.yaml             # REQUIRED: provenance/licensing/intent (who, where, terms, usage constraints)
+      ├─ 🧾🧪 export.recipe.md            # REQUIRED when outputs exist: exact export steps (formats, sizes, packing, color space)
+      ├─ 🎛️ source/                      # Editable masters (layered/working files; keep out of runtime)
+      │  ├─ 🧩 <asset-id>.psd             # Photoshop master (if used)
+      │  ├─ 🧪 <asset-id>.kra             # Krita master (if used)
+      │  ├─ 🧱 <asset-id>.spp             # Substance Painter project (if used)
+      │  └─ 🧊 <asset-id>.blend           # Blender source (if used)
+      ├─ 📷 refs/                         # Licensed reference photos/scans (keep minimal; record terms in meta)
+      │  └─ 📷 <asset-id>__ref_01.jpg     # Reference image (example)
+      ├─ 📝 notes/                        # Decisions, pitfalls, TODOs (human collaboration)
+      │  └─ 📝📄 README.md                # Notes index for this asset
+      └─ ⚖️ licenses/                     # Third-party license texts/notices (only when required)
+         ├─ ⚖️📄 LICENSE.txt              # Verbatim license text
+         └─ 🧾📄 ATTRIBUTION.md            # Human-readable attribution/credits + modification notes
 ```
 
 ---
