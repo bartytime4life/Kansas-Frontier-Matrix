@@ -18,21 +18,21 @@
 ## 📁 Package layout
 
 ```text
-web/
-└─ assets/
-   └─ 3d/
-      └─ shared/
-         └─ models/
-            └─ tilesets/
-               └─ <tileset_slug>/
-                  ├─ tileset.json            (or root entrypoint)
-                  ├─ *.b3dm / *.i3dm / *.pnts / *.glb / textures/*  (as applicable)
-                  └─ meta/
-                     ├─ LICENSES.md          👈 you are here
-                     ├─ checksums.sha256     (recommended)
-                     ├─ run_manifest.json    (recommended)
-                     ├─ provenance.jsonld    (recommended)
-                     └─ sbom.*               (optional; if code is bundled)
+🌐 web/
+└─ 🧰 assets/
+   └─ 🧊 3d/
+      └─ 🤝 shared/
+         └─ 🏗️ models/
+            └─ 🧩 tilesets/
+               └─ 🏷️ <tileset_slug>/
+                  ├─ 🗺️ tileset.json            (or 🧷 root entrypoint)
+                  ├─ 📦 *.b3dm / 🧷 *.i3dm / ☁️ *.pnts / 🧊 *.glb / 🧵 textures/*  (as applicable)
+                  └─ 🧾 meta/
+                     ├─ 📜 LICENSES.md          👈 📍 you are here
+                     ├─ 🔐 checksums.sha256     (recommended)
+                     ├─ 🧪 run_manifest.json    (recommended)
+                     ├─ 🧬 provenance.jsonld    (recommended)
+                     └─ 🧷 sbom.*               (optional; if code is bundled)
 ```
 
 ---
