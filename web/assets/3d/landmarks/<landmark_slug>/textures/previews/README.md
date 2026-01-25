@@ -225,12 +225,12 @@ If you add a manifest, keep it **tiny** and helpful:
 
 ```mermaid
 flowchart LR
-  A[Raw scans / sources] --> B[Production textures]
-  B --> C[Preview generation]
-  C --> D[previews/ (this folder)]
-  D --> E[UI browsing]
-  D --> F[Story Nodes / docs]
-  B --> G[3D model / tiles streaming]
+  A[📥 Raw scans sources] --> B[🧵 Production textures]
+  B --> C[🖼️ Preview generation]
+  C --> D[📁 previews - this folder]
+  D --> E[🧭 UI browsing]
+  D --> F[📖 Story Nodes docs]
+  B --> G[🧱 3D model tiles streaming]
 ```
 
 ---
