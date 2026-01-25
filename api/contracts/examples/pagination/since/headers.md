@@ -26,13 +26,13 @@ It’s designed for KFM-style real-time layers where the UI (or other clients) r
 ## 📁 Where this lives
 
 ```text
-📦 repo-root/
+repo-root/
 └─ 📁 api/
-   └─ 📁 contracts/
-      └─ 📁 examples/
-         └─ 📁 pagination/
-            └─ 📁 since/
-               └─ 📄 headers.md   ✅ (this file)
+   └─ 📜 contracts/
+      └─ 🧪 examples/
+         └─ 📑 pagination/
+            └─ ⏱️ since/
+               └─ ✅📄 headers.md   # ✅ (this file) 📌 Examples + rules for “since” pagination headers (cursor/time-based paging)
 ```
 
 ---
