@@ -41,13 +41,13 @@ These photos are the **inputs** to the photogrammetry pipeline (Structure-from-M
 
 ```text
 🪨 monument-rocks/
-└─ 📁 sources/
-   └─ 📁 photos_selected/        👈 you are here
-      ├─ README.md
-      ├─ (recommended) manifest.photos.json
-      ├─ (recommended) manifest.sha256
-      ├─ (recommended) exif.json
-      └─ (recommended) LICENSES/ (or refs in DCAT/manifest)
+└── 🧪 sources/
+    └── 📷 photos_selected/                     👈 📍 you are here
+        ├── 📄 README.md
+        ├── 🧾 manifest.photos.json             (recommended: curated photo index + metadata)
+        ├── 🔐 manifest.sha256                  (recommended: hashes for selected set + key sidecars)
+        ├── 🧷 exif.json                         (recommended: extracted EXIF/XMP summary)
+        └── 📚 LICENSES/                         (recommended: license texts OR refs via DCAT/manifest)
 ```
 
 > [!NOTE]
@@ -59,12 +59,12 @@ These photos are the **inputs** to the photogrammetry pipeline (Structure-from-M
 
 ```mermaid
 flowchart TD
-  A[📸 Capture / Sources] --> B[🧹 Selection + QC]
-  B --> C[🧾 Evidence manifests<br/>sha256 + EXIF + license + classification]
-  C --> D[🧠 Photogrammetry (SfM/MVS)]
+  A[📸 Capture and sources] --> B[🧹 Selection + QC]
+  B --> C[🧾 Evidence manifests - sha256 EXIF license classification]
+  C --> D[🧠 Photogrammetry - SfM MVS]
   D --> E[🧱 Mesh + UV + textures]
-  E --> F[🚀 Web packaging<br/>glTF/GLB + 3D Tiles + optimized textures]
-  F --> G[🗺️ KFM UI<br/>MapLibre 2D ⇄ Cesium 3D]
+  E --> F[🚀 Web packaging - glTF GLB 3D Tiles optimized textures]
+  F --> G[🗺️ KFM UI - MapLibre 2D to Cesium 3D]
 ```
 
 KFM’s front-end architecture explicitly supports a **MapLibre 2D viewer** and a **CesiumJS 3D viewer**, using **3D Tiles** for streaming 3D content (and optionally 3D landmark models).:contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
