@@ -86,13 +86,7 @@
 ## 🔄 Lifecycle (how this material gets “made”)
 
 ```mermaid
-flowchart LR
-  A[🧵 Source textures / scans] --> B[🧼 Clean + tile + color correct]
-  B --> C[🧰 Pack channels (ORM) + author contract]
-  C --> D[🗜️ Compress (KTX2) + generate previews]
-  D --> E[🧾 Provenance + license + checksums]
-  E --> F[🛡️ Policy gate checks]
-  F --> G[🚀 Ship (web runtime / offline packs)]
+flowchart LR; A[🧵 Source textures scans] --> B[🧼 Clean tile color correct]; B --> C[🧰 Pack channels - ORM + author contract]; C --> D[🗜️ Compress - KTX2 + generate previews]; D --> E[🧾 Provenance license checksums]; E --> F[🛡️ Policy gate checks]; F --> G[🚀 Ship - web runtime offline packs];
 ```
 
 ---
