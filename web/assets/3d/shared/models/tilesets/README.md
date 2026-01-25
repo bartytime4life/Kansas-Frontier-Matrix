@@ -144,10 +144,10 @@ Example (CesiumJS conceptually):
 
 ```mermaid
 flowchart LR
-  A[Source asset(s)] --> B[Optimize + Tile]
-  B --> C[Validate + QA]
-  C --> D[Publish tileset + meta sidecars]
-  D --> E[Viewer loads tileset.json]
+  A[📦 Source assets] --> B[🧰 Optimize + tile]
+  B --> C[✅ Validate + QA]
+  C --> D[📤 Publish tileset + metadata sidecars]
+  D --> E[🗺️ Viewer loads tileset.json]
 ```
 
 ### Common tiling steps (typical)
