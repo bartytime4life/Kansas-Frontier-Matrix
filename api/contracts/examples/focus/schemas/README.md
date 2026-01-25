@@ -13,19 +13,19 @@ Focus Mode is the **conversational + explainable AI layer** in KFM, designed to 
 ## 📁 Where you are
 
 ```text
-📦 api/
- └─ 📦 contracts/
-    └─ 📦 examples/
-       └─ 📦 focus/
-          └─ 📦 schemas/
-             ├─ 📄 README.md  ✅ (this file)
-             ├─ 📄 focus.request.schema.json          (recommended)
-             ├─ 📄 focus.response.schema.json         (recommended)
-             ├─ 📄 focus.citation.schema.json         (recommended)
-             ├─ 📄 focus.evidence-manifest.schema.json (recommended)
-             ├─ 📄 focus.provenance.schema.json       (recommended)
-             ├─ 📄 focus.governance.schema.json       (recommended)
-             └─ 📄 focus.error.schema.json            (recommended)
+api/
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 🔎 focus/
+         └─ 📐 schemas/
+            ├─ ✅📄 README.md                          # ✅ (this file) 📌 Schema purpose, naming, and how examples validate in CI
+            ├─ 🔎📐🧾 focus.request.schema.json        # (recommended) Focus request envelope (question + context + filters)
+            ├─ 📤📐🧾 focus.response.schema.json       # (recommended) Focus response envelope (answer + citations + redactions + receipts)
+            ├─ 📚📐🧾 focus.citation.schema.json       # (recommended) Citation object (source locator + attribution + quote rules)
+            ├─ 📎📐🧾 focus.evidence-manifest.schema.json # (recommended) Evidence manifest (citations ↔ artifacts ↔ checksums)
+            ├─ 🧬📐🧾 focus.provenance.schema.json     # (recommended) Provenance refs (STAC/DCAT/PROV pointers + run ids)
+            ├─ 🛡️📐🧾 focus.governance.schema.json     # (recommended) Governance fields (classification, policy decisions, waivers)
+            └─ 🚨📐🧾 focus.error.schema.json          # (recommended) Error/refusal envelope (safe reasons + remediation hints))
 ```
 
 > 💡 If your repo already uses different filenames, keep this README and **map your existing schema filenames** to the “Schema Catalog” below.
