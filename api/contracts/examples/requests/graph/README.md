@@ -72,19 +72,19 @@ If you’re expanding this directory, keep examples organized and testable:
 
 ```text
 api/contracts/examples/requests/graph/
-├── README.md
-├── graphql/
-│   ├── 001_person_by_name.graphql
-│   ├── 001_person_by_name.variables.json
-│   ├── 002_dataset_card.graphql
-│   ├── 002_dataset_card.variables.json
-│   ├── 020_provenance_trail.graphql
-│   └── ...
-└── rest/
-    ├── 010_place_datasets.http
-    ├── 011_dataset_metadata.http
-    ├── 030_focus_mode.http
-    └── ...
+├── 📄 README.md                       # 📘 Graph request examples: how to run, auth headers, and expected response shapes
+├── 🧬 graphql/                        # GraphQL operations (queries + variables) used by docs/tests/persisted queries
+│   ├── 🧬📄 001_person_by_name.graphql         # Query: resolve a Person by name (search/lookup pattern)
+│   ├── 🧾 001_person_by_name.variables.json   # Variables for 001 (input parameters)
+│   ├── 🧬📄 002_dataset_card.graphql           # Query: dataset “card” summary (UI-friendly fields)
+│   ├── 🧾 002_dataset_card.variables.json     # Variables for 002 (dataset_id, options)
+│   ├── 🧬📄 020_provenance_trail.graphql       # Query: provenance trail for an entity/dataset/run (lineage view)
+│   └── ➕ …                                    # Additional operations (numbered; keep stable for regression tests)
+└── 🌐 rest/                           # REST request examples for graph-backed endpoints (raw HTTP)
+    ├── 🗺️📥 010_place_datasets.http    # REST: datasets relevant to a place (graph-backed context)
+    ├── 🗂️📥 011_dataset_metadata.http  # REST: dataset metadata (graph-enriched fields)
+    ├── 🔎📥 030_focus_mode.http        # REST: Focus Mode via graph context (retrieval + citations required)
+    └── ➕ …                            # Additional REST examples (numbered; include auth + paging headers)
 ```
 
 **Why this split?**
