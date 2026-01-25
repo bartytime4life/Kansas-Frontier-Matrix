@@ -32,10 +32,10 @@
 
 ```mermaid
 flowchart LR
-  A[📥 sources/raw<br/>(immutable inputs)] --> B[🧼 sources/cleanup<br/>(this folder)]
-  B --> C[📦 dist / runtime exports<br/>(GLB / 3D Tiles)]
-  C --> D[🗺️ KFM UI<br/>(2D/3D toggle • stories • AR-ready)]
-  B --> E[🧾 Provenance Pack<br/>(evidence • PROV • catalog metadata)]
+  A[📥 sources raw - immutable inputs] --> B[🧼 sources cleanup - this folder]
+  B --> C[📦 dist runtime exports - GLB or 3D Tiles]
+  C --> D[🗺️ KFM UI - 2D 3D toggle stories AR ready]
+  B --> E[🧾 Provenance pack - evidence PROV catalog metadata]
   E --> D
 ```
 
