@@ -96,34 +96,35 @@ flowchart TD
 This folder can serve as a shared “test harness” (fixtures + utilities), while feature tests may still live closer to the code they cover.
 
 ```text
-web/
-  __tests__/
-    📄 README.md                        # you are here ✅
-    🧰 setupTests.(ts|js)               # jest/vitest global setup
-    🧪 unit/
-      *.test.(ts|tsx)
-    🧩 integration/
-      *.test.(ts|tsx)
-    🌐 e2e/
-      *.spec.(ts|js)                   # cypress/playwright specs (if stored here)
-    🧪 fixtures/
-      📦 dcat/                          # dataset discovery metadata
-      🛰 stac/                          # spatial assets + items
-      🧬 prov/                          # lineage bundles
-      📚 story_nodes/                   # story node samples w/ citations
-      🧵 pulse_threads/                 # “pulse” feed items (if used)
-      🧠 focus_mode/                    # AI responses w/ citations + flags
-    🧱 mocks/
-      🗺 maplibre.ts                     # map stub
-      🌎 cesium.ts                       # 3D stub (optional)
-      🌐 msw/
-        handlers.ts
-        server.ts
-    🧷 utils/
-      renderWithProviders.tsx           # wraps app providers (router/store/theme)
-      testIds.ts                        # centralized testid conventions
-      freezeTime.ts                     # deterministic clocks
-      buildFixture.ts                   # typed builders for fixtures
+🌐 web/
+└── 🧪 __tests__/
+    ├── 📄 README.md                         👈 📍 you are here ✅
+    ├── 🧰 setupTests.(ts|js)                (jest/vitest global setup)
+    ├── 🧪 unit/
+    │   └── 🧪 *.test.(ts|tsx)               (fast: pure logic + components in isolation)
+    ├── 🧩 integration/
+    │   └── 🧪 *.test.(ts|tsx)               (app slices + data flow; MSW-backed)
+    ├── 🌐 e2e/
+    │   └── 🎭 *.spec.(ts|js)                (cypress/playwright specs, if stored here)
+    ├── 🧪 fixtures/
+    │   ├── 📦 dcat/                         (dataset discovery metadata fixtures)
+    │   ├── 🛰️ stac/                         (spatial assets + STAC items/collections)
+    │   ├── 🧬 prov/                         (lineage bundles)
+    │   ├── 📚 story_nodes/                  (story node samples w/ citations)
+    │   ├── 🧵 pulse_threads/                (“pulse” feed items, if used)
+    │   ├── 🧠 focus_mode/                   (AI responses w/ citations + flags)
+    │   └── 🧱 ...                           (add new fixture domains here)
+    ├── 🧱 mocks/
+    │   ├── 🗺️ maplibre.ts                   (map stub)
+    │   ├── 🌎 cesium.ts                     (optional: 3D stub)
+    │   └── 🌐 msw/
+    │       ├── 🧩 handlers.ts               (request handlers)
+    │       └── 🧪 server.ts                 (MSW server lifecycle)
+    └── 🧷 utils/
+        ├── 🧩 renderWithProviders.tsx        (wraps app providers: router/store/theme)
+        ├── 🏷️ testIds.ts                    (centralized data-testid conventions)
+        ├── ⏱️ freezeTime.ts                 (deterministic clocks)
+        └── 🧰 buildFixture.ts               (typed builders for fixtures)
 ```
 
 > If the repo already has a different structure, **don’t fight it** — adapt these ideas into the existing layout.
