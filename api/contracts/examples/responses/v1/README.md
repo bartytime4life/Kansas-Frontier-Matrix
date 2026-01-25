@@ -125,32 +125,32 @@ KFM responses should be able to answer **“Where did this come from?”**:
 
 ```text
 api/contracts/examples/responses/v1/
-├─ common/
-│  ├─ ok.json
-│  ├─ error.validation.json
-│  ├─ error.not_found.json
-│  ├─ error.policy_denied.json
-│  └─ error.rate_limit.json
-├─ datasets/
-│  └─ get.dataset.json
-├─ stac/
-│  ├─ get.collection.json
-│  └─ post.search.itemcollection.json
-├─ layers/
-│  └─ get.layer.json
-├─ tiles/
-│  └─ get.tile.http.txt
-├─ focus/
-│  └─ post.focus.answer.json
-├─ story_nodes/
-│  └─ get.story_node.json
-├─ pulse/
-│  └─ get.threads.json
-├─ graph/
-│  ├─ get.place.datasets.json
-│  └─ graphql.query.response.json
-└─ offline/
-   └─ get.pack.manifest.json
+├─ ♻️ common/                             # Shared response examples used across many endpoints
+│  ├─ ✅🧾 ok.json                         # Standard success envelope (minimal “ok” response shape)
+│  ├─ 🚨🧾 error.validation.json           # Validation failure (bad request) with field-level errors
+│  ├─ 🔎🚨🧾 error.not_found.json           # Not-found error (missing resource) using standard Problem Details
+│  ├─ 🚫⚖️🧾 error.policy_denied.json      # Policy denial (authz/obligations) with codes + safe reasons
+│  └─ 🧯🚨🧾 error.rate_limit.json          # Rate limit response (429) with retry hints and request correlation id
+├─ 🗂️ datasets/                           # Dataset endpoint examples (catalog discovery)
+│  └─ 🗂️🧾 get.dataset.json                # GET dataset response (metadata + distributions + provenance pointers)
+├─ 🛰️ stac/                               # STAC API examples (collections/items/search)
+│  ├─ 🛰️🧾 get.collection.json             # GET STAC Collection response example
+│  └─ 🛰️🧾 post.search.itemcollection.json # POST /stac/search ItemCollection response (paging/context)
+├─ 🗺️ layers/                             # UI layer registry examples (what the map can render)
+│  └─ 🗺️🧾 get.layer.json                  # GET layer manifest response (sources, style/legend refs, bounds, time-binding)
+├─ 🧱 tiles/                               # Tile endpoint examples (binary responses and headers)
+│  └─ 🧱📄 get.tile.http.txt               # Raw HTTP example (headers + content-type + caching for tiles)
+├─ 🔎 focus/                               # Focus Mode examples (evidence-first Q&A)
+│  └─ 🔎📚🧾 post.focus.answer.json         # POST focus answer response (citations, redactions, uncertainty, receipts)
+├─ 🎬 story_nodes/                         # Story Node examples (governed narratives)
+│  └─ 🎬🧾 get.story_node.json             # GET story node response (markdown/config refs + evidence pointers)
+├─ 🧵 pulse/                               # Pulse thread examples (short updates with evidence)
+│  └─ 🧵🧾 get.threads.json                # GET pulse threads list (summaries + paging + evidence pointers)
+├─ 🕸️ graph/                               # Graph query examples (place context, GraphQL responses)
+│  ├─ 🗺️🕸️🧾 get.place.datasets.json        # GET place→datasets response (graph-backed context + provenance refs)
+│  └─ 🧬🕸️🧾 graphql.query.response.json     # GraphQL query response example (data + errors shape)
+└─ 🧳 offline/                              # Offline pack examples (bundle manifests)
+   └─ 🧳🧾 get.pack.manifest.json           # GET offline pack manifest (contents index + digests + catalog/prov refs)
 ```
 
 ---
