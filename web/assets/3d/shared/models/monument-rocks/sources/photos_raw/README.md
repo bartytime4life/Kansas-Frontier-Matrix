@@ -216,13 +216,13 @@ KFM’s philosophy is **traceability from raw ➜ output ➜ UI/story**.
 
 ```mermaid
 flowchart LR
-  A[📸 photos_raw (immutable)] --> B[🧰 work/ (alignment, masks, cleanup)]
-  B --> C[🧱 mesh + textures (processed)]
-  C --> D[📦 glTF/GLB export]
+  A[📸 photos_raw - immutable] --> B[🧰 work - alignment masks cleanup]
+  B --> C[🧱 mesh + textures - processed]
+  C --> D[📦 glTF GLB export]
   D --> E[🧊 Cesium 3D Tiles tileset]
-  E --> F[🗺️ KFM Web UI (Cesium 3D mode)]
-  F --> G[📖 Story Node: "Kansas From Above" demo]
-  C --> H[🧾 STAC/DCAT/PROV (evidence triplet)]
+  E --> F[🗺️ KFM Web UI - Cesium 3D mode]
+  F --> G[📖 Story Node - Kansas From Above demo]
+  C --> H[🧾 STAC DCAT PROV - evidence triplet]
   H --> F
 ```
 
