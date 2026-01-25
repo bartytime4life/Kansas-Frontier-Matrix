@@ -34,11 +34,11 @@ In KFM terms, this is a small, site-scoped “contract-first” package that mak
 
 ```mermaid
 flowchart LR
-  A[🧾 Raw sources\n(scans, photos, LiDAR, field notes)] -->|controlled ETL| B[🧭 Georef + QA]
-  B --> C[📦 Web-ready artifacts\n(GeoJSON/COG/3D Tiles)]
-  B --> D[🧾 Evidence triplet\nSTAC + DCAT + PROV]
-  C --> E[🗺️ UI\nMapLibre 2D + Cesium 3D]
-  D --> F[🕸️ Graph + Focus Mode\n(always-cited answers)]
+  A[🧾 Raw sources - scans photos LiDAR field notes] --> B[🧭 Georef + QA - controlled ETL]
+  B --> C[📦 Web ready artifacts - GeoJSON COG 3D Tiles]
+  B --> D[🧾 Evidence triplet - STAC DCAT PROV]
+  C --> E[🗺️ UI - MapLibre 2D + Cesium 3D]
+  D --> F[🕸️ Graph + 🤖 Focus Mode - always cited answers]
   D --> E
 ```
 
@@ -49,26 +49,21 @@ flowchart LR
 > You can start minimal and grow. Keep it boring, explicit, and reproducible ✨
 
 ```text
-georef/
-  README.md
-
-  georef.json                 # ✅ REQUIRED: the georef “contract” (public-safe)
-
-  public/
-    footprint_generalized.geojson  # ✅ REQUIRED if sensitive: generalized geometry
-    extent.json                    # ✅ Recommended: bbox/extent (public-safe)
-
-  gcp/                        # Optional (if GCP-based workflows were used)
-    gcps.csv
-    gcps.geojson
-
-  transforms/                 # Optional but recommended
-    raster_georef.json        # e.g., affine/projective transform + residuals
-    model_transform.json      # e.g., 4x4 matrix + orientation + scale
-
-  qa/                         # Optional but recommended
-    residuals.csv
-    report.md                 # short, human-readable QA notes
+🌍 georef/
+├── 📄 README.md
+├── 🧾 georef.json                           ✅ REQUIRED (public-safe “georef contract”)
+├── 🌐 public/
+│   ├── 🧭 footprint_generalized.geojson     ✅ REQUIRED if sensitive (generalized geometry)
+│   └── 📦 extent.json                       ⭐ recommended (public-safe bbox/extent)
+├── 📍 gcp/                                  (optional: if GCP workflows were used)
+│   ├── 📄 gcps.csv
+│   └── 🗺️ gcps.geojson
+├── 🔁 transforms/                           (optional but recommended)
+│   ├── 🗺️ raster_georef.json                (affine/projective transform + residuals)
+│   └── 🧊 model_transform.json               (4×4 matrix + orientation + scale)
+└── 🧪 qa/                                   (optional but recommended)
+    ├── 📊 residuals.csv
+    └── 📝 report.md                          (short human-readable QA notes)
 ```
 
 ---
