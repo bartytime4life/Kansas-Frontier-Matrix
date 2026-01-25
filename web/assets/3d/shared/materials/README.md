@@ -71,20 +71,20 @@ Provide a **single canonical home** for reusable 3D material definitions used by
 
 ```text
 web/assets/3d/shared/materials/
-├─ README.md                           📘 You are here
-├─ manifest.materials.json             🧾 Registry (optional but recommended)
-├─ schema/                             🧩 Validation contracts
-│  ├─ kfm.material.schema.json         ✅ JSON Schema for material defs
-│  └─ examples/                        🧪 Minimal working examples
-├─ library/                            🧱 Canonical reusable materials
-│  └─ <material_slug>/                 📦 One folder per material
-│     ├─ material.kfm.json             🧾 Material definition (KFM)
-│     ├─ preview.webp                  🖼️ Small render preview (optional)
-│     ├─ notes.md                      📝 Gotchas + intended usage
-│     ├─ licenses/                     ⚖ License + attribution (if non-trivial)
-│     └─ sources/                      🧾 Source refs / receipts (if needed)
-└─ _source/                            🎨 Optional DCC sources (opt-in)
-   └─ <material_slug>/                 🧰 Blender/Substance/etc. (only when required)
+├─ 📘📄 README.md                           # 📘 You are here 📌 What “shared materials” are + how to reference them from models
+├─ 🧾🗂️ manifest.materials.json             # Optional but recommended registry: materialId → path + tags + preview + license refs
+├─ 🧩 schema/                               # Validation contracts for material definitions
+│  ├─ ✅📐🧾 kfm.material.schema.json        # JSON Schema for KFM material defs (fields, texture roles, constraints)
+│  └─ 🧪 examples/                          # Minimal working examples (known-pass fixtures for CI/docs)
+├─ 🧱 library/                              # Canonical reusable material library (runtime-safe, small, versionable)
+│  └─ 📦 <material_slug>/                   # One folder per material (stable slug used by manifests/models)
+│     ├─ 🧾 material.kfm.json               # KFM material definition (PBR params + texture refs + defaults)
+│     ├─ 🖼️ preview.webp                    # Optional small render preview (UI cards / quick review)
+│     ├─ 📝 notes.md                        # Gotchas + intended usage (scale, tiling, channel packing, color space)
+│     ├─ ⚖️ licenses/                       # License + attribution (required if upstream attribution is non-trivial)
+│     └─ 🧾 sources/                        # Source refs/receipts (where textures came from, tooling, digests) if needed
+└─ 🎨 _source/                              # Optional DCC source assets (opt-in; not served; keep lightweight or externalize)
+   └─ 🧰 <material_slug>/                   # Blender/Substance/etc. source files (only when required for reproducibility)
 ```
 
 ### Naming rules ✅
