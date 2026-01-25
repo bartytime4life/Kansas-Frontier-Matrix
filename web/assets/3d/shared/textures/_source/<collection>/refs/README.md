@@ -68,19 +68,19 @@ This folder is a **mini “data contract”** for visual sources.
 ### Suggested layout 🗂️
 ```text
 web/assets/3d/shared/textures/_source/<collection>/
-└── refs/
-    ├── README.md
-    ├── refs.manifest.yml
-    ├── checksums.sha256              (recommended)
-    ├── thumbs/                       (optional)
-    │   └── ref__...__thumb.jpg
-    ├── notes/                        (optional)
-    │   ├── capture-log.md
-    │   └── material-notes.md
-    └── ai/                           (optional)
-        ├── prompts.md
-        └── runs/
-            └── 2026-01-25__model__seed__notes.json
+└─ 📷 refs/
+   ├─ 📄 README.md                      # 📘 What refs are stored here, licensing rules, and how to cite refs in asset.meta.yaml
+   ├─ 🧾 refs.manifest.yml               # Inventory of reference files (ids, origin URLs, capture dates, license, usage notes)
+   ├─ 🔐📄 checksums.sha256              # (recommended) Integrity hashes for refs + manifest (tamper detection)
+   ├─ 🖼️ thumbs/                        # (optional) Tiny thumbnails for browsing refs quickly
+   │  └─ 🖼️ ref__...__thumb.jpg          # Thumbnail for a reference (keep small; derived from the ref)
+   ├─ 📝 notes/                         # (optional) Human notes about capture/conditions/material interpretation
+   │  ├─ 📝📄 capture-log.md             # Capture log: camera/lighting/location (as allowed), constraints, anomalies
+   │  └─ 🧱📝 material-notes.md          # Material notes: what to preserve, texture goals, pitfalls, intended usage
+   └─ 🤖 ai/                            # (optional) AI assist artifacts (store hashes/notes; avoid raw prompts by default)
+      ├─ 🧠📝 prompts.md                 # Prompts/instructions used (sanitize; prefer storing hashes in stricter setups)
+      └─ 🏃 runs/
+         └─ 🧾 2026-01-25__model__seed__notes.json  # Run notes: model id, seed, params, outputs refs (no sensitive content)
 ```
 
 ---
