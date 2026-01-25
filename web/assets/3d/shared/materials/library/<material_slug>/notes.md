@@ -120,24 +120,30 @@ It should also **link back** to the upstream/raw sources and the pipeline run th
 > Keep this layout consistent; consumers should be able to load any material pack by slug.
 
 ```text
-📁 web/assets/3d/shared/materials/library/<material_slug>/
-├─ 📄 notes.md                          # ← you are here
-├─ 📄 material.json                     # material contract (required)
-├─ 🖼️ preview.png                       # swatch / preview (required)
-├─ 🎞️ preview_turntable.mp4             # optional
-├─ 📁 maps/                             # texture payloads (required)
-│  ├─ basecolor.ktx2                    # sRGB
-│  ├─ normal.ktx2                       # linear
-│  ├─ orm.ktx2                          # linear (Occlusion/Roughness/Metallic packed)
-│  ├─ emissive.ktx2                     # optional (sRGB)
-│  └─ height.exr                        # optional (linear, for displacement workflows)
-└─ 📁 sources/                          # governance + provenance (required)
-   ├─ license.txt
-   ├─ attribution.txt
-   ├─ source_receipt.yaml
-   ├─ checksums.txt
-   ├─ prov.jsonld                       # recommended
-   └─ evidence_manifest.yaml            # recommended
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🤝 shared/
+            └── 🧱 materials/
+                └── 📚 library/
+                    └── 🏷️ <material_slug>/
+                        ├── 📝 notes.md                          👈 📍 you are here
+                        ├── 🧾 material.json                     ✅ required (material contract)
+                        ├── 🖼️ preview.png                       ✅ required (swatch / preview)
+                        ├── 🎞️ preview_turntable.mp4             ⭐ optional
+                        ├── 🗺️ maps/                             ✅ required (texture payloads)
+                        │   ├── 🎨 basecolor.ktx2                 (sRGB)
+                        │   ├── 🧊 normal.ktx2                    (linear)
+                        │   ├── 🧩 orm.ktx2                       (linear; packed O/R/M)
+                        │   ├── ✨ emissive.ktx2                  (optional; sRGB)
+                        │   └── 🏔️ height.exr                    (optional; linear; displacement workflows)
+                        └── 🧾 sources/                           ✅ required (governance + provenance)
+                            ├── 📜 license.txt
+                            ├── 🏷️ attribution.txt
+                            ├── 🧾 source_receipt.yaml
+                            ├── 🔐 checksums.txt
+                            ├── 🧬 prov.jsonld                    ⭐ recommended
+                            └── 🧾 evidence_manifest.yaml          ⭐ recommended
 ```
 
 ---
