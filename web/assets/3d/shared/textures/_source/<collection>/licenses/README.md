@@ -77,21 +77,23 @@ licenses/
 
 ## 🗂️ Standard folder layout (suggested)
 ```
-textures/_source/<collection>/
-  textures/
-    ...png|jpg|ktx2|webp
-  licenses/
-    README.md  👈 you are here
-    ATTRIBUTION.yml
-    SOURCES.json
-    LICENSE_TEXTS/
-      CC-BY-4.0.txt
-      ...
-    RECEIPTS/               (optional)
-      invoice.pdf
-      screenshot_terms.png
-    MODIFICATIONS.md        (optional)
-    THIRD_PARTY_NOTICES.md  (optional / generated)
+🧵 textures/
+└── 🧪 _source/
+    └── 🗂️ <collection>/
+        ├── 🖼️ textures/
+        │   └── ... .png | .jpg | .ktx2 | .webp
+        └── 📜 licenses/
+            ├── 📄 README.md               👈 📍 you are here
+            ├── 🏷️ ATTRIBUTION.yml         (canonical credits + UI-safe attribution strings)
+            ├── 🔗 SOURCES.json            (machine-readable upstream source registry: URLs, authors, hashes)
+            ├── 📚 LICENSE_TEXTS/
+            │   ├── 📄 CC-BY-4.0.txt
+            │   └── 📄 ... (other license texts)
+            ├── 🧾 RECEIPTS/               (optional evidence)
+            │   ├── 🧾 invoice.pdf
+            │   └── 🖼️ screenshot_terms.png
+            ├── ✍️ MODIFICATIONS.md        (optional: what changed vs upstream, tools/steps, dates)
+            └── 🧩 THIRD_PARTY_NOTICES.md  (optional / generated: compiled notices for distribution)
 ```
 
 ---
