@@ -97,25 +97,25 @@ Provide a **single, predictable home** for all **web-ready 3D archaeological ass
 
 ```text
 web/assets/3d/archaeology/sites/<site-slug>/
-├─ README.md
-├─ meta/
-│  ├─ site.meta.json              # minimal site metadata (public-safe)
-│  ├─ manifest.site.json          # asset inventory + checksums + transforms
-│  ├─ stac.item.json              # pointer/bridge to canonical data item(s)
-│  ├─ prov.json                   # provenance summary for these derivatives
-│  └─ citations.md                # evidence-first references (short + actionable)
-├─ previews/
-│  ├─ hero.webp                   # wide banner (optional)
-│  ├─ thumb.webp                  # UI thumbnail (required)
-│  └─ preview.glb.png             # render snapshot (optional)
-└─ models/
-   ├─ glb/
-   │  ├─ <site-slug>__site.glb     # primary model (preferred)
-   │  ├─ <site-slug>__context.glb  # terrain/context shell (optional)
-   │  └─ <site-slug>__finds.glb    # if allowed + non-sensitive (optional)
-   └─ tileset/
-      ├─ tileset.json             # Cesium 3D Tiles root (optional)
-      └─ ...                      # tiles/ (b3dm/pnts/metadata)
+├─ 📄 README.md                          # 📘 Site package overview: contents, sensitivity rules, and how the viewer loads it
+├─ 🧾 meta/                              # 🧾 Metadata + provenance sidecars (public-safe; evidence-first pointers)
+│  ├─ 🏷️🧾 site.meta.json                # Minimal site metadata (public-safe fields only: title, period, region, bbox policy)
+│  ├─ 📦🔐🧾 manifest.site.json           # Asset inventory: files, roles, sizes, checksums, transforms, and version ids
+│  ├─ 🛰️🧾 stac.item.json                # Bridge/pointer to canonical STAC Item(s) that describe the underlying data products
+│  ├─ 🧬🧾 prov.json                      # Provenance summary for derivatives (tools/params/lineage pointers; non-sensitive)
+│  └─ 📚📝 citations.md                   # Evidence-first references (short, actionable citations + where to verify)
+├─ 🖼️ previews/                          # 🖼️ UI-friendly visuals (small, cacheable)
+│  ├─ 🌟🖼️ hero.webp                      # Optional wide banner used on landing/story cards
+│  ├─ 🖼️✅ thumb.webp                     # Required thumbnail for catalogs/pickers (consistent aspect ratio)
+│  └─ 🖼️🧊 preview.glb.png                # Optional render snapshot of the model (quicklook for review/CI)
+└─ 🧊 models/                            # 🧊 Runtime 3D assets (GLB preferred; keep sensitive content gated)
+   ├─ 🧊 glb/
+   │  ├─ 🧊 <site-slug>__site.glb          # Primary model (preferred) for the site reconstruction
+   │  ├─ 🧊 <site-slug>__context.glb       # Optional terrain/context shell (lightweight; improves spatial grounding)
+   │  └─ 🧊 <site-slug>__finds.glb         # Optional finds layer (ONLY if allowed + non-sensitive; may require gating)
+   └─ 🧱 tileset/
+      ├─ 🧱🧾 tileset.json                 # Optional Cesium 3D Tiles entrypoint (for large/streamed models)
+      └─ 🧩 …                               # Tile payloads (b3dm/pnts/metadata) under this folder as generated
 ```
 
 ---
