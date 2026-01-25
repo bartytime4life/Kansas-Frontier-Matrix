@@ -187,21 +187,23 @@ If the front-end needs fast rendering:
 ### 📁 Suggested folder layout (site-scoped)
 
 ```text
-🗂️ web/assets/3d/archaeology/sites/<site-slug>/
-└── 🧪 analysis/
-    └── 👁️ visibility/
-        ├── 📝 visibility_notes.md
-        ├── ⚙️ visibility_config.yml
-        ├── 📦 outputs/
-        │   └── <run-id>/
-        │       ├── 🗺️ viewshed_binary.cog.tif
-        │       ├── 🧮 viewshed_count.cog.tif
-        │       ├── 🎲 viewshed_probability.cog.tif
-        │       ├── 🧩 viewshed_polygons.geojson
-        │       ├── 🧱 viewshed_3dtiles/tileset.json
-        │       └── 🧾 run_manifest.json
-        └── 🖼️ thumbs/
-            └── viewshed_preview.png
+🌐 web/assets/3d/archaeology/sites/
+└── 🏷️ <site-slug>/
+    └── 🧪 analysis/
+        └── 👁️ visibility/
+            ├── 📝 visibility_notes.md                 (scope, assumptions, decisions, caveats)
+            ├── ⚙️ visibility_config.yml               (inputs + parameters + toolchain knobs)
+            ├── 📦 outputs/
+            │   └── 🆔 <run-id>/
+            │       ├── 🗺️ viewshed_binary.cog.tif      (binary visible/not-visible)
+            │       ├── 🧮 viewshed_count.cog.tif       (cumulative visibility count; multi-observer runs)
+            │       ├── 🎲 viewshed_probability.cog.tif (probabilistic/uncertainty-weighted visibility)
+            │       ├── 🧩 viewshed_polygons.geojson    (simplified vector footprint/contours)
+            │       ├── 🧱 viewshed_3dtiles/
+            │       │   └── 🧩 tileset.json             (optional: 3D Tiles entrypoint)
+            │       └── 🧾 run_manifest.json            (what ran, when, with what inputs + hashes)
+            └── 🖼️ thumbs/
+                └── 🖼️ viewshed_preview.png            (small, fast UI preview)
 ```
 
 ---
