@@ -548,10 +548,10 @@ Examples of future extensions:
 
 ```mermaid
 flowchart LR
-  UI[🖥️ UI Story Mode] -->|GET /api/v1/stories/{id}| API[🔌 KFM API]
-  API --> FS[📁 story_nodes/ (Markdown + JSON)]
+  UI[🖥️ UI Story Mode] --> API[🔌 KFM API - GET /api/v1/stories id]
+  API --> FS[📁 story_nodes - Markdown + JSON]
   API --> KG[🕸️ Knowledge Graph]
-  API --> EV[🔎 Evidence Manifest + PROV]
+  API --> EV[🔎 Evidence manifest + 🧬 PROV]
   API --> UI
 ```
 
