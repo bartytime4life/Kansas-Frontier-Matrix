@@ -100,13 +100,13 @@ api/contracts/examples/requests/analysis/
 
 ```mermaid
 flowchart LR
-  ui[🧑‍💻 UI / Client] --> api[⚙️ API Gateway (FastAPI)]
-  api --> v[✅ Schema + Policy Validation]
-  v -->|sync| pg[(🗺️ PostGIS)]
-  v -->|graph| neo[(🕸️ Neo4j)]
-  v -->|async| job[🧵 Job Runner / Pipeline]
+  ui[🧑‍💻 UI / Client] --> api[⚙️ API Gateway - FastAPI]
+  api --> v[✅ Schema + policy validation]
+  v --> pg[🗺️ PostGIS]
+  v --> neo[🕸️ Neo4j]
+  v --> job[🧵 Job runner / pipeline]
   job --> cat[📚 STAC + DCAT + PROV]
-  job --> art[📦 Artifacts (tiles, parquet, geotiff)]
+  job --> art[📦 Artifacts - tiles parquet geotiff]
   cat --> api
   art --> api
   api --> ui
