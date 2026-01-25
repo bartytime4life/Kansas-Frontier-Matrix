@@ -265,14 +265,14 @@ Before marking this artifact “ready” ✅:
 
 ```mermaid
 flowchart LR
-  A[📸 Capture / Scan] --> B[🧩 Photogrammetry / Reconstruction]
-  B --> C[🧼 Cleanup + Retopo + PBR]
+  A[📸 Capture scan] --> B[🧩 Photogrammetry reconstruction]
+  B --> C[🧼 Cleanup retopo PBR]
   C --> D[📦 Export GLB]
-  D --> E[🗜️ Optimize / Compress]
-  E --> F[🧾 Generate manifest + STAC/DCAT/PROV]
+  D --> E[🗜️ Optimize compress]
+  E --> F[🧾 Generate manifest + STAC DCAT PROV]
   F --> G[🛡️ Policy gates + QA]
-  G --> H[🚀 Publish (web assets or OCI)]
-  H --> I[🧭 UI / Story / AR reuse]
+  G --> H[🚀 Publish - web assets or OCI]
+  H --> I[🧭 UI story AR reuse]
 ```
 
 ---
