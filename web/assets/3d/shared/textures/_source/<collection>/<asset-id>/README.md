@@ -56,18 +56,18 @@ This texture set **must not be referenced by shipped scenes/UI** until it meets 
 Suggested layout (adapt as needed, but keep the spirit):
 
 ```text
-📁 web/assets/3d/shared/textures/
-  📁 _source/
-    📁 <collection>/
-      📁 <asset-id>/
-        📄 README.md                 # this file (human instructions)
-        📄 source.json               # provenance + license + sensitivity (required)
-        📄 checksums.sha256          # sha256 for every binary in this folder (required)
-        📁 originals/                # original maps as obtained/exported (required)
-        📁 authoring/                # optional: .spp/.psd/.kra/.blend/.sbsar (original authoring files)
-        📁 receipts/                 # screenshots, invoices, emails, download receipts (recommended)
-        📁 previews/                 # swatches / quick renders / thumbnails (recommended)
-        📁 notes/                    # field notes / capture notes / TODOs (optional)
+web/assets/3d/shared/textures/
+└─ 📁 _source/
+   └─ 📁 <collection>/
+      └─ 📁 <asset-id>/
+         ├─ 📄 README.md                 # This file (human instructions)
+         ├─ 📄 source.json               # Provenance + license + sensitivity (required)
+         ├─ 📄 checksums.sha256          # sha256 for every binary in this folder (required)
+         ├─ 📁 originals/                # Original maps as obtained/exported (required)
+         ├─ 📁 authoring/                # Optional: .spp/.psd/.kra/.blend/.sbsar (original authoring files)
+         ├─ 📁 receipts/                 # Screenshots, invoices, emails, download receipts (recommended)
+         ├─ 📁 previews/                 # Swatches / quick renders / thumbnails (recommended)
+         └─ 📁 notes/                    # Field notes / capture notes / TODOs (optional)
 ```
 
 > 💡 Keep `_source/` **self-contained**: anyone should be able to audit origin, rights, and integrity from this folder alone.
