@@ -44,18 +44,18 @@
 This folder mirrors KFM’s “raw → work → processed” staging pattern, but for **texture assets**.
 
 ```text
-web/assets/3d/shared/textures/
-└── _source/
-    └── <collection>/
-        ├── 📁 raw/                 # original downloads / scans (read-only mindset)
+🧵 web/assets/3d/shared/textures/
+└── 🧪 _source/
+    └── 🗂️ <collection>/
+        ├── 🧱 raw/                 # original downloads / scans (read-only mindset)
         ├── 🛠️ work/                # intermediate edits (cropping, de-lighting, baking)
         ├── 📦 exports/             # runtime-ready outputs (compressed + validated)
         └── 📝 notes/
-            ├── README.md           # you are here ✅
-            ├── sources.yml         # upstream sources, licensing, retrieval receipts
-            ├── texturepack.yml     # normalized “pack manifest” (outputs + rules)
-            ├── ATTRIBUTION.md      # human-readable credits (UI-safe text)
-            └── CHANGELOG.md        # semver-ish history for this collection
+            ├── ✅ README.md         # 📍 you are here
+            ├── 🔗 sources.yml       # upstream sources, licensing, retrieval receipts
+            ├── 🧾 texturepack.yml   # normalized “pack manifest” (outputs + rules)
+            ├── 🏷️ ATTRIBUTION.md    # human-readable credits (UI-safe text)
+            └── 🧷 CHANGELOG.md      # semver-ish history for this collection
 ```
 
 > 💡 **Rule of thumb:**  
