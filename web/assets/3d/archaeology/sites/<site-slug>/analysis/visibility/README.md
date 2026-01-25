@@ -59,25 +59,32 @@ If your inputs are marked internal/restricted, your visibility outputs must **re
 > This is the **target layout** this README documents. Keep it boring and consistent ✅
 
 ```text
-web/assets/3d/archaeology/sites/<site-slug>/analysis/visibility/
-├─ README.md
-├─ manifest.json                 # REQUIRED: what, how, with what governance
-├─ thumbs/                       # optional UI previews
-│  ├─ viewshed.png
-│  └─ los_preview.png
-├─ rasters/                      # viewsheds as web-friendly rasters
-│  ├─ viewshed_obs-main_r10m.cog.tif
-│  └─ viewshed_cumulative_r30m.cog.tif
-├─ vectors/                      # simplified GeoJSON / topojson-ish outputs
-│  ├─ viewshed_obs-main_r10m.geojson
-│  ├─ viewshed_cumulative_r30m.geojson
-│  └─ los/
-│     ├─ los_obs-main_to_feature-001.geojson
-│     └─ los_obs-main_to_feature-002.geojson
-└─ meshes/                       # optional 3D overlays
-   ├─ viewshed_surface.glb
-   └─ tileset/
-      └─ tileset.json            # 3D Tiles entrypoint (if used)
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🏺 archaeology/
+            └── 🏞️ sites/
+                └── 🏷️ <site-slug>/
+                    └── 📊 analysis/
+                        └── 👁️ visibility/
+                            ├── 📄 README.md
+                            ├── 🧾 manifest.json                     ✅ REQUIRED (what, how, governance)
+                            ├── 🖼️ thumbs/                           (optional UI previews)
+                            │   ├── 🖼️ viewshed.png
+                            │   └── 🖼️ los_preview.png
+                            ├── 🛰️ rasters/                          (viewsheds as web-friendly rasters)
+                            │   ├── 🗺️ viewshed_obs-main_r10m.cog.tif
+                            │   └── 🗺️ viewshed_cumulative_r30m.cog.tif
+                            ├── 🧭 vectors/                          (simplified GeoJSON / topojson-ish outputs)
+                            │   ├── 📍 viewshed_obs-main_r10m.geojson
+                            │   ├── 📍 viewshed_cumulative_r30m.geojson
+                            │   └── 🧵 los/
+                            │       ├── 📍 los_obs-main_to_feature-001.geojson
+                            │       └── 📍 los_obs-main_to_feature-002.geojson
+                            └── 🧊 meshes/                           (optional 3D overlays)
+                                ├── 🧊 viewshed_surface.glb
+                                └── 🧱 tileset/
+                                    └── 🧩 tileset.json              (optional: 3D Tiles entrypoint)
 ```
 
 ---
