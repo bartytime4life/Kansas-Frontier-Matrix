@@ -33,18 +33,22 @@ This folder is the **“living contract”** for archaeology 3D metadata in KFM:
 ## 📁 Suggested layout (relative)
 
 ```text
-web/assets/3d/archaeology/schemas/
-├─ archaeology-3d-asset.schema.json
-├─ archaeology-3d-tileset.schema.json
-├─ kfm-provenance-ref.schema.json
-├─ kfm-classification.schema.json
-└─ examples/
-   ├─ README.md  👈 you are here
-   ├─ artifact3d.min.public.json
-   ├─ artifact3d.full.public.json
-   ├─ siteScan.3dtiles.full.public.json
-   ├─ siteScan.3dtiles.redacted.restricted.json
-   └─ storyStep.with3dAsset.example.json  (optional but recommended)
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🏺 archaeology/
+            └── 🧾 schemas/
+                ├── 🧩 archaeology-3d-asset.schema.json
+                ├── 🧱 archaeology-3d-tileset.schema.json
+                ├── 🧬 kfm-provenance-ref.schema.json
+                ├── 🛡️ kfm-classification.schema.json
+                └── 🧪 examples/
+                    ├── 📄 README.md                          👈 📍 you are here
+                    ├── 📦 artifact3d.min.public.json
+                    ├── 📦 artifact3d.full.public.json
+                    ├── 🧱 siteScan.3dtiles.full.public.json
+                    ├── 🔒 siteScan.3dtiles.redacted.restricted.json
+                    └── 🧭 storyStep.with3dAsset.example.json (optional but recommended)
 ```
 
 If your repo’s schema filenames differ, keep the **intent** consistent and update this README accordingly ✍️
