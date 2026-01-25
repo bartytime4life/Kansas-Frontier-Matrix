@@ -48,20 +48,20 @@ These are *pipeline invariants* — they’re validated as **hard gates**:
 
 ```mermaid
 flowchart LR
-  A[ETL 🏗️\n(data/raw → data/work → data/processed)] --> B[Catalogs 🛰️\nSTAC + DCAT + PROV]
-  B --> C[Graph 🕸️\nNeo4j references catalogs]
-  C --> D[API 🧩\nContract + redaction rules]
-  D --> E[UI 🖥️\nMaps + timeline + WebGL]
-  E --> F[Story Nodes 📚\nCitations + graph IDs]
-  F --> G[Focus Mode 🧠\nEvidence-backed Q&A]
+  A[🏗️ ETL - data/raw to data/work to data/processed] --> B[🛰️ Catalogs - STAC + DCAT + PROV]
+  B --> C[🕸️ Graph - Neo4j references catalogs]
+  C --> D[🧩 API - contract + redaction rules]
+  D --> E[🖥️ UI - maps + timeline + WebGL]
+  E --> F[📚 Story Nodes - citations + graph IDs]
+  F --> G[🧠 Focus Mode - evidence backed Q and A]
 
-  V((✅ tools/validation)) -. gates .-> A
-  V -. gates .-> B
-  V -. gates .-> C
-  V -. gates .-> D
-  V -. gates .-> E
-  V -. gates .-> F
-  V -. gates .-> G
+  V[✅ tools/validation] -.-> A
+  V -.-> B
+  V -.-> C
+  V -.-> D
+  V -.-> E
+  V -.-> F
+  V -.-> G
 ```
 
 ---
