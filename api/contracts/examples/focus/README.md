@@ -30,25 +30,24 @@ This directory is the **contract example pack** for Focus Mode.
 
 ```text
 api/contracts/examples/focus/
-├─ README.md ✅ (this file)
-├─ openapi.focus.yaml              # optional: OpenAPI slice just for Focus Mode
-├─ schemas/
-│  ├─ FocusQueryRequest.schema.json
-│  ├─ FocusQueryResponse.schema.json
-│  ├─ FocusContextBundle.schema.json
-│  ├─ Citation.schema.json
-│  ├─ UiAction.schema.json
-│  └─ FocusError.schema.json
-└─ examples/
-   ├─ 01_explain_layer.request.json
-   ├─ 01_explain_layer.response.json
-   ├─ 02_realtime_station.request.json
-   ├─ 02_realtime_station.response.json
-   ├─ 03_sensitive_location.request.json
-   ├─ 03_sensitive_location.refused.response.json
-   ├─ 04_suggest_entity.request.json
-   └─ 04_suggest_entity.response.json
-```
+├─ ✅📄 README.md                          # ✅ (this file) 📌 How Focus Mode contracts/examples are used + citation rules
+├─ 📘🧾 openapi.focus.yaml                 # (optional) OpenAPI slice for Focus Mode (handy for docs/tests or subservices)
+├─ 📐 schemas/                             # JSON Schemas defining Focus Mode request/response + supporting objects
+│  ├─ 🔎📐🧾 FocusQueryRequest.schema.json  # Request contract (question, context refs, filters, desired output mode)
+│  ├─ 📤📐🧾 FocusQueryResponse.schema.json # Response contract (answer, citations, redactions, uncertainty, actions, receipts)
+│  ├─ 📦📐🧾 FocusContextBundle.schema.json # Context bundle contract (UI state, selected layers, retrieved sources, safe metadata)
+│  ├─ 📚📐🧾 Citation.schema.json           # Citation contract (source id, locator, quote/snippet rules, license/attribution)
+│  ├─ 🧭📐🧾 UiAction.schema.json           # UI action contract (map/layer/time/panel actions suggested by Focus)
+│  └─ 🚨📐🧾 FocusError.schema.json         # Error contract (refusals, policy denials, validation errors; safe messages)
+└─ 🧪 examples/                            # Example instances (golden fixtures) used by docs + contract tests
+   ├─ 🧪🧾 01_explain_layer.request.json                # Ask to explain a layer (requires citations + provenance pointers)
+   ├─ ✅🧾 01_explain_layer.response.json               # Answer with citations + suggested UI actions (open legend/metadata)
+   ├─ 🧪🧾 02_realtime_station.request.json             # Realtime query (station id + window + freshness constraints)
+   ├─ ✅🧾 02_realtime_station.response.json            # Answer includes data summary + citations + uncertainty
+   ├─ 🧪🧾 03_sensitive_location.request.json           # Sensitive location request (tests redaction/denial rules)
+   ├─ 🚫🧾 03_sensitive_location.refused.response.json  # Refusal response (policy denial + safe redirect + no sensitive leakage)
+   ├─ 🧪🧾 04_suggest_entity.request.json               # Entity suggestion request (graph-backed linking)
+   └─ ✅🧾 04_suggest_entity.response.json              # Entity suggestions with confidence + provenance refs
 
 > [!NOTE]
 > The `schemas/` and `examples/` files are **recommended siblings** to this README.  
