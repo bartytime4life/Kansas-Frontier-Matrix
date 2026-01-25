@@ -52,7 +52,7 @@ api/contracts/examples/focus/
 > [!NOTE]
 > The `schemas/` and `examples/` files are **recommended siblings** to this README.  
 > This document provides the contract shape so those artifacts can be added consistently.
-
+```
 ---
 
 ## ✅ Contract invariants (non‑negotiable)
