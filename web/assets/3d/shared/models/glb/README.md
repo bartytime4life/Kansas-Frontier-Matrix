@@ -71,15 +71,15 @@ Provide a single canonical home for **shared** (reusable) GLB assets—optimized
 
 ```text
 web/
-└─ assets/
-   └─ 3d/
-      └─ shared/
-         └─ models/
-            └─ glb/                👈 you are here
-               ├─ <model-slug>.glb
-               ├─ <model-slug>.glb.br          (optional)
-               ├─ <model-slug>.glb.gz          (optional)
-               └─ <model-slug>.meta.json       (recommended)
+└─ 📁 assets/
+   └─ 🧊 3d/
+      └─ 🧰 shared/
+         └─ 🧊 models/
+            └─ 🧊 glb/                       # 👈 you are here 📌 GLB runtime binaries (optionally pre-compressed for CDN)
+               ├─ 🧊 <model-slug>.glb         # Primary model (GLB; web-ready; prefer embedded textures when possible)
+               ├─ 🧊🗜️ <model-slug>.glb.br     # (optional) Brotli-compressed GLB for static hosting/CDN
+               ├─ 🧊🗜️ <model-slug>.glb.gz     # (optional) Gzip-compressed GLB for static hosting/CDN
+               └─ 🧾 <model-slug>.meta.json    # (recommended) Sidecar: license/attribution, units/bounds, provenance, checksums
 ```
 
 ---
