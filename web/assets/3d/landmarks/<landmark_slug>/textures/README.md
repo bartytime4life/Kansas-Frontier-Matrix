@@ -67,16 +67,16 @@ Expected contents (examples):
 
 ```text
 web/assets/3d/landmarks/<landmark_slug>/textures/
-├─ README.md
-├─ textures.manifest.json            # required (recommended contract)
-├─ <landmark_slug>_basecolor.ktx2    # recommended runtime format
-├─ <landmark_slug>_normal.ktx2
-├─ <landmark_slug>_orm.ktx2          # occlusion/roughness/metallic packed
-├─ <landmark_slug>_emissive.ktx2     # optional
-├─ <landmark_slug>_opacity.webp      # optional (if not in basecolor alpha)
-└─ previews/                         # optional (UI thumbnails, swatches)
-   ├─ material-swatch.webp
-   └─ contact-sheet.webp
+├─ 📄 README.md                          # 📘 Texture package notes: format expectations, color space, and sizing rules
+├─ ✅🧾 textures.manifest.json            # Required (recommended): inventory + roles + resolution + colorSpace + checksums
+├─ 🎨🧵 <landmark_slug>_basecolor.ktx2    # Base color/albedo (KTX2 preferred for web; typically sRGB)
+├─ 🧭🧵 <landmark_slug>_normal.ktx2       # Normal map (KTX2; typically linear)
+├─ 🧲🧵 <landmark_slug>_orm.ktx2          # Packed ORM (occlusion/roughness/metallic; linear; channel map documented)
+├─ ✨🧵 <landmark_slug>_emissive.ktx2     # Optional emissive/glow map (sRGB if color; document intent in manifest)
+├─ 🫥🖼️ <landmark_slug>_opacity.webp      # Optional opacity mask (if not embedded as alpha in basecolor)
+└─ 🖼️ previews/                          # Optional UI previews/swatches (small, web-optimized)
+   ├─ 🎨🖼️ material-swatch.webp           # Quick swatch preview (single material look)
+   └─ 🧾🖼️ contact-sheet.webp             # Contact sheet preview (all texture channels at a glance)
 ```
 
 > [!NOTE]
