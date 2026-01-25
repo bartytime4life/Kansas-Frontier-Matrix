@@ -47,24 +47,29 @@ Before this tileset can appear in **KFM UI**, **Story Nodes**, or **Focus Mode**
 > Keep **heavy binaries** out of `meta/`. Meta is for *contracts + evidence*, not payload.
 
 ```text
-📁 web/assets/3d/shared/models/tilesets/
-  📁 <tileset_slug>/
-    📄 tileset.json              ← 3D Tiles root (entrypoint)
-    📁 content/                  ← tile payloads (b3dm/i3dm/glb/...) OR externalized
-    📁 meta/
-      📄 README.md               ← you are here ✅
-      📄 tileset.meta.json       ← KFM Tileset Meta v1 (required)
-      📄 stac.item.json          ← STAC Item (required)
-      📄 dcat.dataset.json       ← DCAT Dataset (required)
-      📄 prov.bundle.jsonld      ← PROV bundle (required)
-      📄 sensitivity.json        ← classification + CARE flags (required)
-      🖼️ thumbnail.png           ← preview image (required)
-      📄 distribution.json       ← OCI / remote distribution pointer (optional)
-      📄 evidence-manifest.yaml  ← reproducibility ledger (optional)
-      📄 ui.layer.json           ← UI defaults (optional)
-      📄 style.cesium.json       ← styling rules (optional)
-      📄 checksums.txt           ← sha256 list (optional, recommended)
-      📄 LICENSE.txt             ← only if different from repo license (optional)
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🤝 shared/
+            └── 🧩 models/
+                └── 🧱 tilesets/
+                    └── 🏷️ <tileset_slug>/
+                        ├── 🗺️ tileset.json                 ← 3D Tiles root (entrypoint)
+                        ├── 📦 content/                     ← tile payloads (b3dm/i3dm/glb/...) OR externalized
+                        └── 🧾 meta/
+                            ├── 📄 README.md                ← 👈 📍 you are here ✅
+                            ├── 🧾 tileset.meta.json         ← KFM Tileset Meta v1 (required)
+                            ├── 🛰️ stac.item.json            ← STAC Item (required)
+                            ├── 🏷️ dcat.dataset.json         ← DCAT Dataset (required)
+                            ├── 🧬 prov.bundle.jsonld        ← PROV bundle (required)
+                            ├── 🛡️ sensitivity.json          ← classification + CARE flags (required)
+                            ├── 🖼️ thumbnail.png             ← preview image (required)
+                            ├── 🌍 distribution.json          ← OCI / remote distribution pointer (optional)
+                            ├── 🧾 evidence-manifest.yaml     ← reproducibility ledger (optional)
+                            ├── 🧩 ui.layer.json              ← UI defaults (optional)
+                            ├── 🎨 style.cesium.json          ← styling rules (optional)
+                            ├── 🔐 checksums.txt              ← sha256 list (optional, recommended)
+                            └── 📜 LICENSE.txt                ← only if different from repo license (optional)
 ```
 
 ---
