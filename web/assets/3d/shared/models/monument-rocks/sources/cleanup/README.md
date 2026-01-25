@@ -60,25 +60,21 @@ flowchart LR
 <summary>📁 Suggested structure (copy/adapt)</summary>
 
 ```text
-cleanup/
-  README.md
-
-  runs/
-    YYYY-MM-DD__short-desc/
-      monument-rocks.cleanup.blend        # main working scene (non-destructive preferred)
-      textures_work/                      # high-quality bake sources (PNG/TIF)
-      exports_tmp/                        # optional quick exports for review (NOT final)
-      notes.md                            # decisions, known issues, links, screenshots
-      metrics.json                        # counts/sizes before vs after
-
-  evidence/
-    evidence-manifest.yml                 # sources + license + checksums (required for shipping)
-
-  provenance/
-    prov.jsonld                           # raw -> cleanup -> exports chain (required for shipping)
-
-  georef/
-    georef.wgs84.json                     # anchor + orientation (required for shipping)
+🧼 cleanup/
+├── 📄 README.md
+├── 🏃 runs/
+│   └── 📅 YYYY-MM-DD__short-desc/
+│       ├── 🧊 monument-rocks.cleanup.blend   (main working scene; prefer non-destructive edits)
+│       ├── 🧵 textures_work/                  (hi-quality bake sources: PNG/TIF, EXR if needed)
+│       ├── 📦 exports_tmp/                    (optional quick exports for review — NOT final)
+│       ├── 📝 notes.md                        (decisions, known issues, links, screenshots)
+│       └── 📊 metrics.json                    (counts/sizes before vs after; poly/tex/mats/files)
+├── 🧾 evidence/
+│   └── ✅ evidence-manifest.yml               (sources + license + checksums — required for shipping)
+├── 🧬 provenance/
+│   └── ✅ prov.jsonld                         (raw → cleanup → exports chain — required for shipping)
+└── 🌍 georef/
+    └── ✅ georef.wgs84.json                   (anchor + orientation — required for shipping)
 ```
 </details>
 
