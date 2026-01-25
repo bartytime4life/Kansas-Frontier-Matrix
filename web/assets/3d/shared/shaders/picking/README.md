@@ -77,11 +77,16 @@ This folder is intentionally **small and boring** 😄 — picking shaders shoul
 Typical contents you’ll see/maintain here:
 
 ```text
-web/assets/3d/shared/shaders/picking/
-├─ README.md                  👈 you are here
-├─ picking.vert.glsl          🧱 minimal vertex transform
-├─ picking.frag.glsl          🎨 writes encoded pick color
-└─ picking_common.glsl        🔧 helpers/macros (optional)
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🤝 shared/
+            └── 🎨 shaders/
+                └── 🫳 picking/
+                    ├── 📄 README.md             👈 📍 you are here (how GPU picking works + ID encoding rules)
+                    ├── 🧱 picking.vert.glsl      (minimal vertex transform: object → clip space)
+                    ├── 🎨 picking.frag.glsl      (writes encoded pick color / ID into framebuffer)
+                    └── 🔧 picking_common.glsl    (helpers/macros: encode/decode, flags, precision guards)
 ```
 
 > If your feature needs fancy logic, keep the **main render shader** fancy — keep the **picking shader** minimal.
