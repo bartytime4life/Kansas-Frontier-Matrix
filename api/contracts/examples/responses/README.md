@@ -25,23 +25,23 @@ Keep examples grouped by **API version** and then by **domain** (datasets, stac,
 
 ```text
 api/
-  contracts/
-    examples/
-      responses/
-        README.md  👈 you are here
-        v1/
-          health/
-          datasets/
-          stac/
-          geojson/
-          tiles/
-          graph/
-          stories/
-          focus/
-        _shared/
-          problem+json/
-          pagination/
-          provenance/
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📤 responses/
+         ├─ 📄 README.md                 # 👈 you are here 📌 How response examples are organized + validation rules/tests
+         ├─ 🧬 v1/                        # Versioned response examples (match API contract version)
+         │  ├─ ❤️ health/                 # Health/readiness response examples (ok/degraded/down)
+         │  ├─ 🗂️ datasets/               # Dataset responses (cards, detail, distributions, provenance refs)
+         │  ├─ 🛰️ stac/                   # STAC API responses (collections/items/search)
+         │  ├─ 🗺️ geojson/                # GeoJSON responses (Feature/FeatureCollection examples)
+         │  ├─ 🧱 tiles/                  # Tile responses (HTTP header examples + caching semantics)
+         │  ├─ 🕸️ graph/                  # Graph responses (place context, lineage, query shapes)
+         │  ├─ 📚 stories/                # Story/Story Node responses (content + step bundles + evidence refs)
+         │  └─ 🔎 focus/                  # Focus Mode responses (answers with citations/redactions/uncertainty)
+         └─ ♻️ _shared/                   # Shared examples reused across versions/endpoints
+            ├─ 🚨 problem+json/           # Standard Problem Details error examples (validation/policy/upstream/etc.)
+            ├─ 📑 pagination/             # Pagination examples (cursor/offset/since + Link headers/body links)
+            └─ 🧬 provenance/             # Provenance examples (STAC/DCAT/PROV refs + evidence manifest refs)
 ```
 
 ### ✅ Why this structure?
