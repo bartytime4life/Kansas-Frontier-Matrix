@@ -19,13 +19,18 @@ Thumbnails are *derived artifacts* that make the UI fast, consistent, and scanna
 ## 🗂️ Folder map
 
 ```text
-web/assets/3d/shared/models/monument-rocks/
-└─ 🖼️ thumbnails/  ✅ (you are here)
-   ├─ thumbnail.webp          # required (primary UI card)
-   ├─ thumbnail@2x.webp       # optional (retina)
-   ├─ banner.webp             # optional (wide hero / story cover)
-   ├─ banner@2x.webp          # optional (retina)
-   └─ README.md               # this file
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🤝 shared/
+            └── 🧩 models/
+                └── 🪨 monument-rocks/
+                    └── 🖼️ thumbnails/                     ✅ 👈 📍 you are here
+                        ├── 🖼️ thumbnail.webp              (required: primary UI card)
+                        ├── 🖼️ thumbnail@2x.webp           (optional: retina)
+                        ├── 🏞️ banner.webp                 (optional: wide hero / story cover)
+                        ├── 🏞️ banner@2x.webp              (optional: retina)
+                        └── 📄 README.md                    (this file)
 ```
 
 > [!NOTE]
