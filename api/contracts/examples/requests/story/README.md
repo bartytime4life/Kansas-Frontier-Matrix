@@ -44,15 +44,15 @@ Even if you submit stories via API, the canonical format should match the **fold
 
 ```text
 docs/
-  reports/
-    story_nodes/
-      draft/
-        prairie_fire_story/
-          prairie_fire_story.md
-          prairie_fire_story.json
-          images/
-            fire_01.jpg
-      published/
+└─ 📚 reports/
+   └─ 🎬 story_nodes/
+      ├─ 📝 draft/                         # 📝 Work-in-progress story reports (not yet finalized; may change)
+      │  └─ 🔥 prairie_fire_story/
+      │     ├─ 📝📄 prairie_fire_story.md   # Draft narrative markdown (citations + entity refs; subject to review)
+      │     ├─ 🧭🧾 prairie_fire_story.json  # Draft step config (map/time/layers/actions per step; subject to review)
+      │     └─ 🖼️ images/                   # Story-local images for the draft (keep small + track licensing)
+      │        └─ 🔥🖼️ fire_01.jpg           # Example draft image used in the story
+      └─ ✅ published/                      # ✅ Final, reviewed story reports (stable, referenceable outputs)
         ...
 ```
 
