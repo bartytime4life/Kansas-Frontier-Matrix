@@ -60,26 +60,26 @@ Example from `api/contracts/examples/pagination/README.md` (or any other file at
 ## 🧱 Folder layout
 
 ```text
-📁 api/
-  📁 contracts/
-    📁 examples/
-      📁 pagination/
-        📄 README.md
-        📁 _badges/     ← you are here ✅
-          📄 README.md
-          🖼️ cursor.svg
-          🖼️ offset.svg
-          🖼️ relay.svg
-          🖼️ stable-order.svg
-          🖼️ snapshot.svg
-          🖼️ live.svg
-          🖼️ total-count.svg
-          🖼️ no-total-count.svg
-          🖼️ links-body.svg
-          🖼️ link-header.svg
-          🖼️ bounded-limit.svg
-          🖼️ policy-gated.svg
-          🖼️ rate-limited.svg
+api/
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📑 pagination/
+         ├─ 📄 README.md                     # 📘 Pagination examples index (cursor/offset/since) + contract/testing notes
+         └─ 🏷️ _badges/                      # ← you are here ✅ 📌 Small SVG badges used in docs to label pagination behavior
+            ├─ ✅📄 README.md                 # 📘 Badge usage: where to embed, naming rules, and when to use each badge
+            ├─ 🏷️🖼️ cursor.svg               # Cursor-based pagination badge (opaque cursor token; stable ordering required)
+            ├─ 🏷️🖼️ offset.svg               # Offset/limit pagination badge (simple; can drift on inserts)
+            ├─ 🏷️🖼️ relay.svg                # Relay-style cursor badge (edges/nodes/pageInfo conventions)
+            ├─ 🏷️🖼️ stable-order.svg          # Stable ordering badge (sort keys guarantee deterministic page boundaries)
+            ├─ 🏷️🖼️ snapshot.svg              # Snapshot paging badge (query runs against a fixed snapshot/version)
+            ├─ 🏷️🖼️ live.svg                  # Live paging badge (dataset can change while paging; expect drift)
+            ├─ 🏷️🖼️ total-count.svg           # Total count available badge (returns total or estimate)
+            ├─ 🏷️🖼️ no-total-count.svg        # No total count badge (omit totals for perf/safety reasons)
+            ├─ 🏷️🖼️ links-body.svg            # Pagination links in response body badge (next/prev URLs in JSON)
+            ├─ 🏷️🖼️ link-header.svg           # Pagination links in HTTP Link header badge
+            ├─ 🏷️🖼️ bounded-limit.svg          # Max page size enforced badge (server clamps limit)
+            ├─ 🏷️🖼️ policy-gated.svg           # Policy-gated paging badge (results/page size constrained by auth/policy)
+            └─ 🏷️🖼️ rate-limited.svg           # Rate-limited paging badge (429 possible; Retry-After guidance)
 ```
 
 ---
