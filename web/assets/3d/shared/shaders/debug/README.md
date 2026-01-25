@@ -28,15 +28,15 @@ The intent is to make the “**map behind the map**” visible at the GPU layer:
 ## 🧭 Where this fits in the repo
 
 ```text
-📁 web/
-  📁 assets/
-    📁 3d/
-      📁 shared/
-        📁 shaders/
-          📁 common/              🧩 shared math, color ramps, helpers
-          📁 debug/               🐞 this folder (diagnostic materials)
-            📄 README.md          ← you are here
-            🧾 *.glsl / *.vert / *.frag
+web/
+└─ 📁 assets/
+   └─ 🧊 3d/
+      └─ 🧰 shared/
+         └─ 🧬 shaders/
+            ├─ 🧩 common/                 # 🧩 Shared shader utilities (math, color ramps, noise, coordinate helpers)
+            └─ 🐞 debug/                  # 🐞 Diagnostic materials (normals/depth/IDs) for QA and dev-only tooling
+               ├─ 📄 README.md            # ← you are here 📌 What debug shaders exist, how to enable them, and safety notes
+               └─ 🧾 *.glsl / *.vert / *.frag # Debug shader files (keep small, documented, and consistent uniforms)
 ```
 
 > [!TIP]
