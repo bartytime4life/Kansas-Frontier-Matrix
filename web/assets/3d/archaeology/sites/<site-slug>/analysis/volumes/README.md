@@ -40,29 +40,26 @@ If metadata is missing, licensing is unclear, sensitivity is unlabeled, or prove
 This folder should be **publishable** and **web-consumable**, not the place for raw instrument exports.
 
 ```text
-📁 analysis/
-  📁 volumes/
-    📄 README.md
-    📄 _index.json                 # optional: local index for UI/loader
-    📁 <volume-slug>/
-      📄 volume.kfm.json           # contract + UI-friendly metadata (recommended)
-      📄 stac-item.json            # STAC Item (required for cataloging)
-      📄 dcat.json                 # DCAT Dataset/Distribution (required for cataloging)
-      📄 prov.jsonld               # PROV-O lineage (required for auditability)
-
-      📦 volume/                   # one of: zarr/ | nrrd/ | etc (see “Formats”)
-      🧾 checksums.txt             # sha256/sha512 for important assets (recommended)
-
-      📁 previews/
-        🖼️ thumb.png               # thumbnail for UI
-        🖼️ slice_xy_z000.png       # representative slices (small + fast)
-        🖼️ slice_xz_y050.png
-        🖼️ slice_yz_x050.png
-
-      📁 derivatives/
-        🧊 isosurface.glb          # optional: extracted isosurface mesh (web-friendly)
-        🧭 footprint.geojson       # optional: AOI footprint or coverage hull
-        📊 histogram.json          # optional: intensity distribution for UI legend
+📊 analysis/
+└── 🧊 volumes/
+    ├── 📄 README.md
+    ├── 🧾 _index.json                         (optional: local index for UI/loader)
+    └── 🏷️ <volume-slug>/
+        ├── 🧾 volume.kfm.json                 (recommended: contract + UI-friendly metadata)
+        ├── 🛰️ stac-item.json                  ✅ required (STAC Item for cataloging)
+        ├── 🏷️ dcat.json                       ✅ required (DCAT Dataset/Distribution for cataloging)
+        ├── 🧬 prov.jsonld                      ✅ required (PROV-O lineage for auditability)
+        ├── 📦 volume/                          (one of: zarr/ | nrrd/ | etc — see “Formats”)
+        ├── 🔐 checksums.txt                    (recommended: sha256/sha512 for important assets)
+        ├── 🖼️ previews/
+        │   ├── 🖼️ thumb.png                    (UI thumbnail)
+        │   ├── 🧫 slice_xy_z000.png            (representative slices; small + fast)
+        │   ├── 🧫 slice_xz_y050.png
+        │   └── 🧫 slice_yz_x050.png
+        └── 🧪 derivatives/
+            ├── 🧊 isosurface.glb               (optional: extracted isosurface mesh; web-friendly)
+            ├── 🧭 footprint.geojson            (optional: AOI footprint / coverage hull)
+            └── 📊 histogram.json               (optional: intensity distribution for UI legend)
 ```
 
 > ✅ The UI is designed to surface “the map behind the map” and connect visuals to source/metadata. Keep previews and contracts lightweight so the UI can explain what the user is seeing without loading the full cube first.[^ui-trace]
