@@ -342,13 +342,13 @@ Focus Mode is designed to:
 ### 🔁 Evidence-first build flow (recommended)
 ```mermaid
 flowchart LR
-  A[🧪 Raw sources (immutable)] --> B[🧼 Normalize & de-light]
+  A[🧪 Raw sources - immutable] --> B[🧼 Normalize and de light]
   B --> C[🎛️ Generate PBR maps]
   C --> D[🧊 Compress to KTX2 + mipmaps]
-  D --> E[🧾 Produce receipts + checksums + (optional) PROV + evidence manifest]
-  E --> F[🛡️ Policy gates (fail-closed)]
-  F --> G[📦 Publish to web/assets/3d/shared/materials/library/<slug>/]
-  G --> H[🔎 Index for discovery (optional)]
+  D --> E[🧾 Receipts + checksums + PROV evidence manifest optional]
+  E --> F[🛡️ Policy gates - fail closed]
+  F --> G[📦 Publish to web assets 3d shared materials library slug]
+  G --> H[🔎 Index for discovery optional]
 ```
 
 > [!NOTE]
