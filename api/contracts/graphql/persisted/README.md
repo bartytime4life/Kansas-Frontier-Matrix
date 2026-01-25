@@ -62,24 +62,24 @@ Persisted queries are one of the strongest “fail-closed” controls:
 > The exact subfolders may vary by repo evolution. This layout is the **recommended contract structure** for KFM.
 
 ```text
-📁 api/
-  📁 contracts/
-    📁 graphql/
-      📁 persisted/
-        📄 README.md                        👈 you are here
-        📁 operations/                      👈 human-authored .graphql docs (source of truth)
-          📁 catalog/
-          📁 graph/
-          📁 map/
-          📁 story/
-          📁 ai/
-          📁 realtime/
-        📁 generated/                       👈 machine-generated outputs (committed)
-          📄 persisted-manifest.json
-          📄 persisted-manifest.sha256
-          📄 types.ts                       (optional) typed client bindings
-        📁 tests/                           👈 validation + policy checks
-          📄 persisted-ops.test.*
+api/
+└─ 📜 contracts/
+   └─ 🧬 graphql/
+      └─ 📌 persisted/
+         ├─ 📄 README.md                         # 👈 you are here 📌 How persisted queries are authored, built, validated, and versioned
+         ├─ 🧾 operations/                       # 🧾 Human-authored .graphql operations (source of truth)
+         │  ├─ 🗂️ catalog/                       # Catalog persisted ops (dataset discovery, search, summaries)
+         │  ├─ 🕸️ graph/                         # Graph persisted ops (entity lookup, lineage trails, place context)
+         │  ├─ 🗺️ map/                           # Map persisted ops (layer registry, legends, style pointers)
+         │  ├─ 🎬 story/                          # Story persisted ops (story node fetch, step bundles, citations)
+         │  ├─ 🔎 ai/                             # AI/Focus persisted ops (context retrieval shapes, evidence refs)
+         │  └─ 📡 realtime/                       # Realtime persisted ops (station windows, freshness, alerts)
+         ├─ ⚙️ generated/                         # ⚙️ Machine-generated outputs (committed; do not hand-edit)
+         │  ├─ 📦🧾 persisted-manifest.json        # Persisted query registry (operationId → hash → text + metadata)
+         │  ├─ 🔐📄 persisted-manifest.sha256      # Integrity hashes for generated artifacts (tamper detection)
+         │  └─ 🟦📄 types.ts                       # (optional) Typed client bindings generated from schema + persisted ops
+         └─ 🧪 tests/                              # Validation + policy checks for persisted operations
+            └─ ✅🧪📄 persisted-ops.test.*          # Ensures ops compile, respect directives/policy, and stay within cost limits
 ```
 
 ---
