@@ -24,22 +24,24 @@ This folder is the **single source of truth** for how GraphQL errors should look
 ## 🗂️ Expected layout
 
 ```text
-📁 api/
-  📁 contracts/
-    📁 examples/
-      📁 errors/
-        📁 graphql/
-          ✅ README.md
-          📄 KFM-AUTH-001_unauthenticated.json
-          📄 KFM-POLICY-101_opa_deny_provenance_required.json
-          📄 KFM-QUERY-251_query_too_deep.json
-          📄 KFM-VALID-201_invalid_bbox.json
-          📄 KFM-GEO-401_invalid_geometry.json
-          📄 KFM-SENS-401_sensitive_field_requires_clearance.json
-          📄 KFM-PRIV-501_privacy_query_denied.json
-          📄 KFM-RATE-601_rate_limited.json
-          📄 KFM-UP-701_upstream_timeout.json
-          📄 KFM-INT-901_internal_error.json
+api/
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 🚨 errors/
+         └─ 🧬 graphql/
+            ├─ ✅📄 README.md                                  # ✅ you are here 📌 GraphQL error examples: envelope shape + codes + safe messaging
+            ├─ 🔐🚫🧾 KFM-AUTH-001_unauthenticated.json         # Unauthenticated (no/invalid token); safe guidance to authenticate
+            ├─ ⚖️🚫🧾 KFM-POLICY-101_opa_deny_provenance_required.json
+            │     # Policy denial: provenance required for requested data/action (missing PROV/evidence pointers)
+            ├─ 🧱🚫🧾 KFM-QUERY-251_query_too_deep.json         # Query rejected for depth/cost (protects service from abuse)
+            ├─ 📐🚫🧾 KFM-VALID-201_invalid_bbox.json           # Validation error: bbox malformed/out-of-range
+            ├─ 🗺️🚫🧾 KFM-GEO-401_invalid_geometry.json         # Geo validation error: invalid geometry (self-intersect, bad ring, etc.)
+            ├─ 🧿🚫🧾 KFM-SENS-401_sensitive_field_requires_clearance.json
+            │     # Sensitive field access denied (needs clearance/role/approval; may include obligations)
+            ├─ 🕵️🚫🧾 KFM-PRIV-501_privacy_query_denied.json    # Privacy denial (inference risk / restricted location)
+            ├─ 🧯🚫🧾 KFM-RATE-601_rate_limited.json             # Rate limited (429 semantics; retry guidance; correlation id)
+            ├─ 🌐⏱️🚫🧾 KFM-UP-701_upstream_timeout.json         # Upstream timeout (dependency exceeded SLA; safe retry/backoff info)
+            └─ 💥🚫🧾 KFM-INT-901_internal_error.json            # Internal error (no sensitive details; includes request id)
 ```
 
 > [!NOTE]
