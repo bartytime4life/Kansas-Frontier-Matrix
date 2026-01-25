@@ -46,20 +46,20 @@ Keep this folder focused. Don’t put:
 We keep the **final, runtime-ready** textures here. If you maintain source files (SVG/PSD/etc.), store them in a sibling `_source/` folder (or repo-wide design folder) and treat them as “raw evidence” for art.
 
 ```text
-📁 web/
-  📁 assets/
-    📁 3d/
-      📁 shared/
-        📁 textures/
-          📁 decals/
-            📁 labels/
-              📄 README.md                👈 you are here
-              📁 place/                   🗺️ landmarks, towns, rivers, regions
-              📁 story/                   🎬 story-specific callouts / chapter plates
-              📁 ui/                      🧭 generic in-world UI plates ("Tap to learn more")
-              📁 governance/              🛡️ sensitivity / TK / consent / disclaimers
-              📁 dataset/                 📦 dataset-driven overlays (if truly needed)
-              📁 _meta/                   🧾 indices + manifests + attributions
+web/
+ └── assets/
+    └── 3d/
+       └── shared/
+          └── textures/
+             └── decals/
+                └── labels/
+                   ├─ 📄 README.md                 # 📘 You are here: overview, usage guidelines for label decals
+                   ├─ 📁 place/                    # 🗺️ Landmarks, towns, rivers, regions
+                   ├─ 📁 story/                    # 🎬 Story-specific callouts / chapter plates
+                   ├─ 📁 ui/                       # 🧭 Generic in-world UI plates (e.g., "Tap to learn more")
+                   ├─ 📁 governance/               # 🛡️ Sensitivity, TK, consent, disclaimers
+                   ├─ 📁 dataset/                  # 📦 Dataset-driven overlays (only if truly needed)
+                   └─ 📁 _meta/                    # 🧾 Indices, manifests, attributions
 ```
 
 > [!TIP]
