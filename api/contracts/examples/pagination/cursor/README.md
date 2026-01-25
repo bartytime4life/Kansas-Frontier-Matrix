@@ -33,13 +33,13 @@
 ## 📍 Location (repo map)
 
 ```text
-📦 api/
+api/
 └─ 📜 contracts/
    └─ 🧪 examples/
-      └─ 📄 pagination/
+      └─ 📑 pagination/
          ├─ 🧭 cursor/
-         │  └─ README.md   👈 you are here
-         └─ 🔢 offset/     (optional companion example)
+         │  └─ 📄 README.md   # 👈 you are here 📌 Cursor pagination examples (stable order, opaque cursors, Link headers/body)
+         └─ 🔢 offset/        # (optional) Companion examples for offset/limit pagination (drift caveats, totals, max limits)
 ```
 
 ---
