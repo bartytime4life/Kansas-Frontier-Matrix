@@ -29,14 +29,14 @@ So `_shared` keeps request examples:
 Typical contents (names may vary, but the *roles* are consistent):
 
 ```text
-📁 api/contracts/examples/requests/_shared/
-  📁 headers/                 # common header sets (json, tiles, graphql)
-  📁 auth/                    # bearer/dev auth stubs (NEVER real tokens)
-  📁 context/                 # UI context payloads: map, timeline, selection, layers
-  📁 filters/                 # spatial + temporal filter fragments (bbox, datetime)
-  📁 bodies/                  # reusable request bodies (focus-mode, story, ingest)
-  📁 graphql/                 # graphql operation shells (query + variables)
-  📄 README.md                # 👈 you are here
+api/contracts/examples/requests/_shared/
+├─ 🧾 headers/                 # Common header sets (json, tiles, graphql) for copy/paste into .http examples
+├─ 🔐 auth/                    # Auth stubs (bearer/dev) — NEVER real tokens; safe placeholders only
+├─ 🧭 context/                 # UI context payloads (map/timeline/selection/layers) used by Focus/Story/Analytics
+├─ 🗺️⏱️ filters/               # Spatial + temporal filter fragments (bbox/datetime/ranges) reused across requests
+├─ 📦 bodies/                  # Reusable request bodies (focus-mode/story/ingest) to keep examples consistent
+├─ 🧬 graphql/                 # GraphQL operation shells (query + variables) reused across request examples
+└─ 📄 README.md                # 👈 you are here 📌 How shared fragments are used + naming conventions + safety rules
 ```
 
 > 🔒 **Rule:** No secrets ever. Only placeholders like `{{KFM_TOKEN}}`.
