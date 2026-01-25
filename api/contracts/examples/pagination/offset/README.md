@@ -42,12 +42,12 @@ tags:
 
 ## Where this lives 📦
 
-📁 `api/`  
-└── 📁 `contracts/`  
-&emsp;└── 📁 `examples/`  
-&emsp;&emsp;└── 📁 `pagination/`  
-&emsp;&emsp;&emsp;└── 📁 `offset/`  
-&emsp;&emsp;&emsp;&emsp;└── 📄 `README.md` ✅ *(you are here)*
+api/
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📑 pagination/
+         └─ 🔢 offset/
+            └─ ✅📄 README.md   # ✅ you are here 📌 Offset/limit pagination examples + caveats (drift, totals, max limits)
 
 ---
 
