@@ -51,17 +51,17 @@ kfm_standards:
 ### 🧾 Suggested structure
 ```text
 web/assets/3d/shared/textures/materials/<material_id>/
-  📄 README.md
-  🧾 material.json
-  🖼️ <material_id>__baseColor.ktx2
-  🖼️ <material_id>__normal.ktx2
-  🖼️ <material_id>__orm.ktx2
-  🖼️ <material_id>__emissive.ktx2            (optional)
-  🖼️ <material_id>__alpha.ktx2               (optional)
-  🧾 provenance/
-     🧾 sources.json                          (recommended)
-     🧾 checksums.sha256                      (recommended)
-     🧾 LICENSES/                             (recommended; if needed)
+ ├─ 📄 README.md                               # Documentation about the material (usage, details)
+ ├─ 🧾 material.json                           # Canonical material definition (KFM)
+ ├─ 🖼️ <material_id>__baseColor.ktx2          # Base color texture (required)
+ ├─ 🖼️ <material_id>__normal.ktx2             # Normal map (required)
+ ├─ 🖼️ <material_id>__orm.ktx2                # ORM map (Occlusion/Roughness/Metallic) (required)
+ ├─ 🖼️ <material_id>__emissive.ktx2           # Emissive map (optional)
+ ├─ 🖼️ <material_id>__alpha.ktx2              # Alpha map (optional)
+ ├─ 🧾 provenance/                            # Provenance and integrity
+    ├─ 🧾 sources.json                        # Optional: references to original sources
+    ├─ 🧾 checksums.sha256                    # Optional: checksum for integrity verification
+    ├─ 🧾 LICENSES/                           # Optional: third-party licenses if needed
 ```
 
 ---
