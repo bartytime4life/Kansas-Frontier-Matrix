@@ -48,11 +48,11 @@ Rules of the road ✅
 
 ```text
 web/assets/3d/shared/models/{{asset_slug}}/
-├─ ATTRIBUTION.md            👈 you are here
-├─ model.glb / model.gltf     🧱 (or /lods/*)
-├─ textures/                  🎨 (if applicable)
-├─ thumbnails/                🖼️ (optional)
-└─ metadata.json              🧬 (optional; machine-readable contract)
+├─ 👈🏷️📄 ATTRIBUTION.md           # You are here 📌 Human-readable credits: author/source, license, modifications, required notices
+├─ 🧱🧊 model.glb / model.gltf      # Primary runtime model (GLB preferred; or GLTF + external textures if needed)
+├─ 🎨 textures/                    # Texture files (only if not embedded; document color space + packing in metadata)
+├─ 🖼️ thumbnails/                  # (optional) Preview images for UI/cards (webp/png; keep small)
+└─ 🧬🧾 metadata.json               # (optional) Machine-readable contract: id/title, units, bounds, license, provenance, checksums
 ```
 
 ---
