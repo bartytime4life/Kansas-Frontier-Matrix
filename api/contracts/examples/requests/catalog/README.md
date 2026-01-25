@@ -43,12 +43,12 @@ KFM cross-references these records and uses them to drive Neo4j graph import + U
 
 ```mermaid
 flowchart LR
-  DCAT[🗂️ DCAT Dataset] -->|links to| STAC[🛰️ STAC Collection/Items]
-  DCAT -->|links to| PROV[🧾 PROV Bundle]
-  STAC --> ASSET[📦 Assets (COG/GeoParquet/PMTiles/etc)]
-  PROV --> ACT[⚙️ prov:Activity]
-  ACT --> IN[⬅️ prov:used (inputs)]
-  ACT --> OUT[➡️ prov:generated (outputs)]
+  DCAT[🗂️ DCAT Dataset] --> STAC[🛰️ STAC Collection Items]
+  DCAT --> PROV[🧾 PROV Bundle]
+  STAC --> ASSET[📦 Assets - COG GeoParquet PMTiles]
+  PROV --> ACT[⚙️ prov Activity]
+  ACT --> IN[⬅️ prov used - inputs]
+  ACT --> OUT[➡️ prov generated - outputs]
 ```
 
 ---
