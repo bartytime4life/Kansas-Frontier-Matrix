@@ -53,11 +53,11 @@ GPU picking is a great fit for KFM custom WebGL layers because:
 
 ```mermaid
 flowchart LR
-  A[Pointer event 🖱️] --> B[Render pick pass → offscreen FBO 🎨]
-  B --> C[gl.readPixels(1×1) 📥]
-  C --> D[Decode RGBA → pickId 🔢]
-  D --> E[Resolve pickId → FeatureRef / EntityRef 🧬]
-  E --> F[UI: popup / selection / Focus Mode context 🧭🤖]
+  A[🖱️ Pointer event] --> B[🎨 Render pick pass - offscreen FBO]
+  B --> C[📥 gl readPixels 1x1]
+  C --> D[🔢 Decode RGBA to pickId]
+  D --> E[🧬 Resolve pickId to FeatureRef or EntityRef]
+  E --> F[🧭🤖 UI popup selection Focus Mode context]
 ```
 
 **Key idea:** the picking fragment shader outputs **flat color = encoded ID**, not lighting/texture.
