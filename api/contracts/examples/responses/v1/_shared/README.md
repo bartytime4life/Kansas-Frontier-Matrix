@@ -14,13 +14,16 @@
 
 ```text
 api/
-  contracts/
-    examples/
-      responses/
-        v1/
-          _shared/
-            README.md   👈 you are here
-            # (recommended) envelope.*.json, error.*.json, pagination.*.json, provenance.*.json
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📤 responses/
+         └─ 🧬 v1/
+            └─ ♻️ _shared/
+               ├─ 📄 README.md                 # 👈 you are here 📌 Shared response example conventions + how tests consume them
+               ├─ 📦🧾 envelope.*.json          # (recommended) Standard response envelopes (data/meta/links/request_id)
+               ├─ 🚨🧾 error.*.json             # (recommended) Error examples (ProblemDetails, validation errors, policy denials)
+               ├─ 📑🧾 pagination.*.json        # (recommended) Pagination examples (cursor/limit/next/prev shapes)
+               └─ 🧬🧾 provenance.*.json        # (recommended) Provenance examples (STAC/DCAT/PROV refs + evidence manifest refs)
 ```
 
 ---
