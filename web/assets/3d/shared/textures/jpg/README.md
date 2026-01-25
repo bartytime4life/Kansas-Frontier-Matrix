@@ -167,12 +167,12 @@ Every non-trivial texture must be auditable:
 
 ```mermaid
 flowchart LR
-  A[JPG source texture] --> B[Validation]
-  B --> C[Resize + color check]
-  C --> D[Optional atlas packing]
-  C --> E[Optional GPU compression (e.g., KTX2)]
-  D --> F[Web runtime consumption]
-  E --> F[Web runtime consumption]
+  A[🖼️ JPG source texture] --> B[✅ Validation]
+  B --> C[📐 Resize + color check]
+  C --> D[🧩 Optional atlas packing]
+  C --> E[🗜️ Optional GPU compression - KTX2]
+  D --> F[🌐 Web runtime consumption]
+  E --> F
 ```
 
 ---
