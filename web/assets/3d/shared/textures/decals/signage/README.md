@@ -63,18 +63,18 @@ Use subfolders to keep preloading and discoverability sane (especially for 3D sc
 
 ```text
 web/assets/3d/shared/textures/decals/signage/
-├─ README.md
-├─ signage.index.json                # optional global registry (generated or curated)
-├─ _templates/
-│  └─ signage.meta.template.json
-├─ _src/                             # optional authoring sources (SVG, layered exports)
-│  └─ (avoid huge binaries if possible)
-├─ historic-marker/
-├─ wayfinding/
-├─ warnings/
-├─ regulatory/
-├─ museum/
-└─ pulse/                            # if signage art is used as Pulse Thread markers
+├─ 📄 README.md                          # 📘 Signage decal rules: naming, licensing, SVG→raster workflow, and usage constraints
+├─ 🧾🗂️ signage.index.json                # Optional registry (generated/curated): decalId → folder + tags + preview + license refs
+├─ 🧩 _templates/                         # Copy/paste templates for consistent metadata sidecars
+│  └─ 🧩🧾 signage.meta.template.json      # Template: provenance, license, authoring source, intended use, restrictions
+├─ 🎨 _src/                               # Optional authoring sources (SVGs, layered masters; avoid huge binaries)
+│  └─ 🎨 …                                # Source files live here (not served; keep light or externalize)
+├─ 🏛️ historic-marker/                    # Historic marker style decals (placards, interpretive signage; evidence-linked)
+├─ 🧭 wayfinding/                         # Wayfinding signage (arrows, labels, navigation cues; keep generic/reusable)
+├─ ⚠️ warnings/                           # Warning decals (hazards, cautions; avoid trademarked real-world marks)
+├─ 🚫 regulatory/                         # Regulatory signage (only if legally/ethically safe + licensed/approved)
+├─ 🏛️ museum/                             # Museum/exhibit signage decals (label cards, exhibit markers; curated)
+└─ 🧵 pulse/                               # Pulse Thread markers (if signage art is used as pulse/map markers)
 ```
 
 > Tip 💡: If a decal is used only by a single experience, consider placing it closer to that feature — but **shared signage** should live here.
