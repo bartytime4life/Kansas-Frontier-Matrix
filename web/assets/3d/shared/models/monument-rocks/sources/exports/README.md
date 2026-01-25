@@ -68,12 +68,12 @@ This `sources/exports/` directory exists to:
 
 ```mermaid
 flowchart LR
-  A[📸 Capture / References] --> B[🧰 Source Project<br/>(Blender / Photogrammetry)]
-  B --> C[📤 Source Exports<br/>(this folder)]
-  C --> D[⚙️ Optimize + LOD + Compression]
-  D --> E[🌍 Runtime Asset<br/>(GLB / 3D Tiles)]
-  E --> F[🗺️ KFM UI<br/>(2D↔3D • Story Nodes • AR)]
-  E --> G[🧾 Provenance Panel<br/>+ AI citations]
+  A[📸 Capture and references] --> B[🧰 Source project - Blender photogrammetry]
+  B --> C[📤 Source exports - this folder]
+  C --> D[⚙️ Optimize + LOD + compression]
+  D --> E[🌍 Runtime asset - GLB or 3D Tiles]
+  E --> F[🗺️ KFM UI - 2D 3D Story Nodes AR]
+  E --> G[🧾 Provenance panel + AI citations]
 ```
 
 ---
@@ -84,18 +84,18 @@ flowchart LR
 > File names vary by pipeline, but the **roles** below are the contract.
 
 ```text
-📁 monument-rocks/
-  📁 sources/
-    📁 exports/  ← you are here
-      📦 *.glb / *.gltf         # export(s) for Cesium/WebGL preview and/or runtime
-      📦 *.obj / *.fbx          # optional: interchange exports (hi-poly, baking, etc.)
-      🧱 tileset.json / tiles/  # optional: 3D Tiles packaging for streaming
-      🖼️ textures/             # if glTF is non-embedded
-      🧾 asset.manifest.json    # machine-readable: files + hashes + toolchain
-      🧾 prov.jsonld            # provenance record (or pointer to central PROV)
-      🔐 checksums.sha256       # integrity + cache keys
-      🧪 preview.png            # optional: thumbnail for UI / asset browser
-      📄 README.md              # this file 🙂
+🪨 monument-rocks/
+└── 🧪 sources/
+    └── 📦 exports/                              👈 📍 you are here
+        ├── 🧊 *.glb / *.gltf                    (Cesium/WebGL preview + runtime-friendly exports)
+        ├── 📦 *.obj / *.fbx                     (optional: interchange exports for hi-poly, baking, DCC hops)
+        ├── 🧱 tileset.json / 🧩 tiles/           (optional: 3D Tiles packaging for streaming)
+        ├── 🧵 textures/                         (only if glTF is non-embedded / external textures)
+        ├── 🧾 asset.manifest.json                (machine-readable inventory: files + hashes + toolchain)
+        ├── 🧬 prov.jsonld                        (provenance record, or pointer to central PROV bundle)
+        ├── 🔐 checksums.sha256                   (integrity + cache keys)
+        ├── 🖼️ preview.png                        (optional: thumbnail for UI / asset browser)
+        └── 📄 README.md                          (this file 🙂)
 ```
 
 ### ✅ “Dual-format” mindset (archive vs runtime)
