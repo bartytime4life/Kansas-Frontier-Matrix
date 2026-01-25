@@ -13,12 +13,12 @@
 ## 🗂️ File location
 
 ```text
-📁 api/
-  📁 contracts/
-    📁 examples/
-      📁 pagination/
-        📁 since/
-          📄 README.md   👈 you are here
+api/
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📑 pagination/
+         └─ ⏱️ since/
+            └─ 📄 README.md   # 👈 you are here 📌 “Since” pagination examples (time-based paging, watermarks, replay safety)
 ```
 
 ---
