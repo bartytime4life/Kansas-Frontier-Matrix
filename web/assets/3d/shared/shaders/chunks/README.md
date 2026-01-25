@@ -60,14 +60,22 @@ That means our rendering needs **repeatable, auditable visual logic**: the same 
 You are here 👇
 
 ```txt
-📁 web/
-  📁 assets/
-    📁 3d/
-      📁 shared/
-        📁 shaders/
-          📁 chunks/
-            📄 README.md      👈 this doc
-            🧩 *.glsl         (chunk files live here)
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🤝 shared/
+            └── 🎨 shaders/
+                └── 🧱 chunks/
+                    ├── 📄 README.md  👈 📍 this doc (how chunk shaders are organized + used)
+                    ├── 🧩 *.glsl     (reusable GLSL snippets: functions, structs, constants, macros)
+                    ├── 🧱 math_*.glsl (common math: remap, saturate, hash, noise, rotations, easing)
+                    ├── 🌈 color_*.glsl (color utils: srgb↔linear, tonemap helpers, HSV/HSL helpers)
+                    ├── 💡 lighting_*.glsl (BRDF bits, lambert/ggx helpers, normal transforms)
+                    ├── 🧵 uv_*.glsl   (UV transforms, triplanar helpers, texture sampling wrappers)
+                    ├── 🌫️ fog_*.glsl  (fog/atmosphere helpers used by multiple materials)
+                    ├── 🧷 pack_*.glsl (packing/unpacking: normals, depth, octahedral encoding)
+                    ├── 🧼 debug_*.glsl (visualizers: normals, UVs, depth, IDs; dev-only helpers)
+                    └── 🧱 include_*.glsl (conventions: shared headers, #defines, feature toggles)
 ```
 
 > Tip 💡: Keep chunks **small** and **single-purpose**. If it feels like a whole shader… it probably is.
