@@ -45,17 +45,17 @@ Decals are **localized overlay textures** (usually with alpha) applied on top of
 
 ```text
 web/assets/3d/shared/textures/
-├─ 🧩 decals/                      # ← you are here
-│  ├─ 🏷️ labels/                   # (optional) small text/marker decals
-│  ├─ 🛣️ road/                     # (optional) lane lines, arrows, stencils
-│  ├─ 🧱 grime/                    # (optional) dirt, leaks, wear, soot
-│  ├─ ⚠️ signage/                  # (optional) warnings, placards
-│  ├─ 🧪 archeology/               # (optional) context tags, trench markers
-│  └─ README.md
-├─ 🗺️ atlases/
-├─ 🖼️ jpg/
-├─ 🧊 png/
-└─ 🧱 materials/
+├─ 🧩 decals/                      # ← you are here 📌 Small overlay textures (stamps/marks) used across 3D scenes
+│  ├─ 🏷️ labels/                   # (optional) Text/marker decals (numbers, callouts, UI tags) kept generic + reusable
+│  ├─ 🛣️ road/                     # (optional) Road markings (lane lines, arrows, stencils) for scene dressing
+│  ├─ 🧱 grime/                    # (optional) Wear/dirt overlays (leaks, soot, scratches) for realism and storytelling
+│  ├─ ⚠️ signage/                  # (optional) Warning placards/signs (ensure licensing + avoid real-world trademark issues)
+│  ├─ 🧪 archeology/               # (optional) Archaeology context decals (trench markers, grid tags; mind sensitivity)
+│  └─ 📄 README.md                 # 📘 Decal rules: alpha handling, color space, naming, and how to reference in materials
+├─ 🗺️ atlases/                     # Packed texture atlases (ktx2 + atlas.json) for efficient runtime sampling
+├─ 📷 jpg/                         # Photographic/albedo textures (no alpha; typically sRGB)
+├─ 🖼️ png/                         # Alpha/masks/crisp decals (lossless; use sparingly; prefer ktx2 for runtime)
+└─ 🧱 materials/                   # Shared PBR material packs (tileable textures + KFM material definitions)
 ```
 
 > ✅ Subfolders are optional. If you keep this flat, **prefix filenames** with the category.
