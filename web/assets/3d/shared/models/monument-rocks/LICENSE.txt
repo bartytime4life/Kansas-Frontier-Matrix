@@ -1,1 +1,108 @@
+# 🪨 Monument Rocks — 3D Model (Kansas Frontier Matrix) | LICENSE.txt
+
+📁 **Folder:** `web/assets/3d/shared/models/monument-rocks/`  
+🧾 **This file:** `LICENSE.txt`  
+🔖 **SPDX-License-Identifier:** `CC-BY-4.0`  
+🧭 **Project:** Kansas Frontier Matrix (KFM)
+
+---
+
+## ✅ What this covers
+
+This license notice applies to **all files** in this folder **and its subfolders** (meshes, textures, materials, thumbnails, metadata, etc.) **unless** a specific file (or subfolder) includes its own license notice that explicitly overrides it.
+
+📌 **Project-wide note:** The **KFM software/code** is licensed separately at the repository root. This notice is **only** for the Monument Rocks 3D model asset package.
+
+---
+
+## 📜 Primary license (default)
+
+Unless otherwise stated by a file-level notice or a third-party notice, this asset package is released under:
+
+**Creative Commons Attribution 4.0 International (CC BY 4.0)**
+
+You are free to:
+- **Share** — copy and redistribute the material in any medium or format  
+- **Adapt** — remix, transform, and build upon the material  
+- **Use commercially** — allowed  
+
+Under these conditions:
+- **Attribution** — You must give appropriate credit (see below)  
+- **Indicate changes** — If you modified the asset, note that you did  
+- **Link to the license** — include a link (or URL) to CC BY 4.0  
+- **No additional restrictions** — you may not apply legal/technical restrictions that prevent others from doing what the license permits
+
+Full license references:
+- https://creativecommons.org/licenses/by/4.0/
+- https://creativecommons.org/licenses/by/4.0/legalcode
+
+---
+
+## 🧾 Required attribution (copy/paste)
+
+**Preferred attribution (short):**  
+> Monument Rocks 3D Model (Kansas), Kansas Frontier Matrix (KFM). Licensed CC BY 4.0.
+
+**Preferred attribution (detailed):**  
+> “Monument Rocks 3D Model (Kansas)” — Kansas Frontier Matrix (KFM). CC BY 4.0. Changes (if any): <describe>.
+
+💡 If you only used part of the package (mesh only, textures only, etc.), keep the same attribution and optionally specify what you used.
+
+---
+
+## 🧬 Provenance & third‑party notices
+
+KFM is **provenance-first / evidence-first**. Any third‑party source inputs used to produce this model (photos, scans, DEM/LiDAR, reference imagery, texture libraries, HDRIs, etc.) **must** be recorded in the project’s provenance metadata and/or a third‑party notice file.
+
+### ✅ “If present, these override defaults”
+If any of the following exist for this asset, they are the **authoritative** record for sources and licensing:
+- **STAC Item / Collection** (asset record): `TBD`
+- **DCAT Dataset entry** (catalog record): `TBD`
+- **PROV bundle** (lineage record): `TBD`
+- **Run manifest / checksums** (integrity record): `TBD`
+
+### 🧾 Third‑party component ledger (fill in as needed)
+- **Geometry source(s):** `TBD`
+- **Texture source(s):** `TBD`
+- **Reference imagery:** `TBD`
+- **Tools/pipeline(s):** `TBD`
+- **Additional notices:** `TBD`
+
+If a third‑party component is under a different license, that component’s license terms apply to that component, and you must comply with them.
+
+---
+
+## 🧩 Mixing / derived works (license stacking rule)
+
+If you combine this model with other datasets/assets (e.g., overlayed textures, bundled environment maps, or mixed story exports), treat the **resulting combined work** as governed by the **most restrictive applicable license** among the components.
+
+✅ Always preserve attribution and license notices for *every* component used.
+
+---
+
+## 🔐 Integrity & distribution (optional but recommended)
+
+If this asset is shipped in offline packs or artifact registries:
+- Include **checksums** (e.g., `sha256`) for all distributable files  
+- If applicable, include **artifact signing/verification** metadata (supply-chain trust)
+
+---
+
+## 🚫 No endorsement
+
+“Kansas Frontier Matrix (KFM)” and “Monument Rocks” are used for identification only. No endorsement by any organization, agency, land manager, or third-party data provider is implied.
+
+---
+
+## ⚠️ Disclaimer
+
+This asset is provided **“AS IS”**, without warranty of any kind. Use at your own risk.
+
+---
+
+## 📨 Contact
+
+For project-level licensing, contribution, or provenance questions, refer to:
+- Repository root `LICENSE` / `README`
+- Contribution and governance documentation (as applicable)
 
