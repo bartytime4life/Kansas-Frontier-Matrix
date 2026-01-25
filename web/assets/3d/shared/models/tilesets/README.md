@@ -61,18 +61,18 @@ This directory contains **web-ready, streamable 3D Tiles tilesets** (entrypoint:
 
 ```text
 web/assets/3d/shared/models/tilesets/
-  🧩 <tileset_slug>/
-    🧾 tileset.json
-    📦 content/                       # tile payloads (layout depends on generator)
-      ├─ *.b3dm / *.i3dm / *.pnts / *.cmpt
-      └─ *.glb (if referenced by tiles)
-    🧾 meta/
-      ├─ tileset.manifest.json        # KFM UI + catalog-friendly metadata ✅
-      ├─ provenance.json              # pipeline lineage + source refs ✅
-      ├─ LICENSES.md                  # consolidated licensing ✅
-      ├─ attribution.md               # human-readable attribution ✅
-      ├─ checksums.sha256             # integrity / reproducibility (recommended)
-      └─ preview.webp                 # thumbnail/preview (optional)
+└─ 🧩 <tileset_slug>/                     # One tiny dev/demo tileset package (slug used by UI/registry)
+   ├─ 🧱🧾 tileset.json                    # Cesium 3D Tiles entrypoint (root JSON the viewer loads)
+   ├─ 📦 content/                         # Tile payloads (layout depends on generator; keep paths stable)
+   │  ├─ 🧱📦 *.b3dm / *.i3dm / *.pnts / *.cmpt  # Tile payload binaries (batched models/points/composites)
+   │  └─ 🧊📦 *.glb                        # GLB payloads (if tiles reference external GLBs)
+   └─ 🧾 meta/                            # Sidecars: UI-friendly metadata + provenance + licensing (audit-safe)
+      ├─ ✅🧾 tileset.manifest.json        # KFM manifest: id/title/tags, bounds/CRS, entrypoints, version, pointers
+      ├─ ✅🧬🧾 provenance.json             # Lineage summary: source refs, tools/params, derivations, run ids
+      ├─ ✅⚖️📄 LICENSES.md                # Consolidated license texts/notices for included sources/assets
+      ├─ ✅🏷️📄 attribution.md             # Human-readable attribution/credits (copy/paste ready for UI)
+      ├─ 🔐📄 checksums.sha256             # (recommended) sha256 hashes for key files (tamper detection)
+      └─ 🖼️ preview.webp                  # (optional) Thumbnail/preview image for catalogs/cards
 ```
 
 **Slug rules (`<tileset_slug>`):**
