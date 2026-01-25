@@ -64,8 +64,8 @@ Typical JPG texture types (shared):
 
 ```text
 web/assets/3d/shared/textures/
-├── atlases/                 # packed texture sheets (see README)
-└── jpg/                     # ✅ THIS FOLDER: shared JPEG textures
+├── 🗺️ atlases/                 # Packed texture sheets (KTX2 + atlas.json); efficient runtime sampling
+└── 📷 jpg/                     # ✅ THIS FOLDER 📌 Shared JPEG textures (photographic/albedo; no alpha)
 ```
 
 ---
