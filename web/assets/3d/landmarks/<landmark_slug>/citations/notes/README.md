@@ -55,14 +55,14 @@ For a 3D landmark, that means the *visual* asset may live in `web/assets/...`, b
 
 ```mermaid
 flowchart LR
-  A[📥 Raw Sources\n(data/raw...)] --> B[🧪 Processing\n(data/work...)]
-  B --> C[📦 Processed Outputs\n(data/processed...)]
-  C --> D[🗂️ Catalogs\nSTAC/DCAT/PROV]
-  D --> E[🧠 Graph + API\nNeo4j + PostGIS]
-  E --> F[🗺️ UI + 3D View\n(web/...)]
-  F --> G[🧾 This folder\ncitations/notes]
-  G -. "feeds" .-> F
-  G -. "feeds" .-> E
+  A[📥 Raw Sources - data raw] --> B[🧪 Processing - data work]
+  B --> C[📦 Processed Outputs - data processed]
+  C --> D[🗂️ Catalogs - STAC DCAT PROV]
+  D --> E[🧠 Graph + API - Neo4j + PostGIS]
+  E --> F[🗺️ UI + 3D view - web]
+  F --> G[🧾 This folder - citations notes]
+  G -.-> F
+  G -.-> E
 ```
 
 > [!NOTE]
@@ -75,25 +75,25 @@ flowchart LR
 Here’s the recommended structure around this README (adjust if your landmark uses different subfolders):
 
 ```text
-web/
-└─ assets/
-   └─ 3d/
-      └─ landmarks/
-         └─ <landmark_slug>/
-            ├─ 📦 model/                 # 3D Tiles / glTF / textures (implementation-defined)
-            ├─ 🖼️ preview/               # thumbnails, posters, turntable renders
-            └─ 🧾 citations/
-               ├─ sources/               # optional: small source PDFs/images used for citations
-               └─ notes/
-                  ├─ README.md           # ✅ you are here
-                  ├─ CITATIONS.md        # ✅ compact human citation block (3–7 lines)
-                  ├─ NOTES.md            # ✅ longform research notes + decisions
-                  ├─ evidence/
-                  │  └─ EM-<id>.yaml     # ✅ machine-readable evidence manifest
-                  ├─ prov/
-                  │  └─ prov.jsonld      # ✅ provenance bundle tying model + facts to evidence
-                  ├─ LICENSES.md         # ✅ license + attribution notes (if not embedded elsewhere)
-                  └─ CHANGELOG.md        # optional: notes-only changelog (not model versioning)
+🌐 web/
+└── 🧰 assets/
+    └── 🧊 3d/
+        └── 🏛️ landmarks/
+            └── 🏷️ <landmark_slug>/
+                ├── 📦 model/                         (3D Tiles / glTF / textures; implementation-defined)
+                ├── 🖼️ preview/                       (thumbnails, posters, turntable renders)
+                └── 🧾 citations/
+                    ├── 📚 sources/                    (optional: small source PDFs/images used for citations)
+                    └── 📝 notes/
+                        ├── 📄 README.md               👈 📍 ✅ you are here
+                        ├── 📌 CITATIONS.md            ✅ compact human citation block (3–7 lines)
+                        ├── 🧠 NOTES.md                ✅ longform research notes + decisions
+                        ├── 🧾 evidence/
+                        │   └── 🧾 EM-<id>.yaml         ✅ machine-readable evidence manifest
+                        ├── 🧬 prov/
+                        │   └── 🧬 prov.jsonld          ✅ provenance bundle tying model + facts to evidence
+                        ├── 📜 LICENSES.md             ✅ license + attribution notes (if not embedded elsewhere)
+                        └── 🧷 CHANGELOG.md             (optional: notes-only changelog; not model versioning)
 ```
 
 ---
