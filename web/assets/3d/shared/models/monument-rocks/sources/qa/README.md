@@ -34,21 +34,22 @@ This folder should store **evidence artifacts**, not raw working files. Keep it 
 
 ### ✅ Recommended layout (create as needed)
 ```text
-📁 sources/qa/
-  📄 README.md                 👈 you are here
-  📄 qa-manifest.yml           (what was tested, when, by whom, tool versions)
-  📄 checksums.sha256          (hashes for key inputs/outputs)
-  📁 license/                  (license text, attribution screenshots, source proof)
-  📁 validation/
-    📄 gltf-validator.json
-    📄 tileset-validator.json  (if applicable)
-  📁 renders/
-    📁 baseline/               (golden screenshots)
-    📁 current/                (new screenshots for comparison)
-  📁 perf/
-    📄 perf-report.md          (triangles, textures, load time notes)
-  📁 review/
-    📄 reviewer-notes.md       (human QA notes + acceptance sign-off)
+🧱 sources/
+└── ✅ qa/
+    ├── 📄 README.md                 👈 📍 you are here
+    ├── 🧾 qa-manifest.yml           (what was tested, when, by whom, tool versions)
+    ├── 🔐 checksums.sha256          (hashes for key inputs/outputs)
+    ├── 📜 license/                  (license text, attribution screenshots, source proof)
+    ├── 🧪 validation/
+    │   ├── 🧊 gltf-validator.json
+    │   └── 🗺️ tileset-validator.json  (if applicable)
+    ├── 🖼️ renders/
+    │   ├── 🏁 baseline/             (golden screenshots)
+    │   └── 🆕 current/              (new screenshots for comparison)
+    ├── 🚀 perf/
+    │   └── 📈 perf-report.md         (triangles, textures, load time notes)
+    └── 👀 review/
+        └── 📝 reviewer-notes.md      (human QA notes + acceptance sign-off)
 ```
 
 > 💡 **Rule of thumb:** if it justifies trust, it belongs here. If it’s just intermediate work, it belongs elsewhere.
