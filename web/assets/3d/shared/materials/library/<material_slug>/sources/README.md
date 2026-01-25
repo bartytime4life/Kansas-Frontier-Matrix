@@ -59,20 +59,20 @@ This directory exists so we can:
 At minimum, every material source bundle should follow this:
 
 ```text
-sources/
-  README.md                    # you are here
-  source.json                  # REQUIRED: source + license + attribution + acquisition info
-  checksums.sha256             # REQUIRED: SHA-256 for *every* file in sources/
-  LICENSE.txt                  # REQUIRED: license text or a “license stub” with URL + terms
-  prov.material.jsonld         # RECOMMENDED: W3C PROV JSON-LD lineage (source → transforms → outputs)
-  upstream/                    # raw downloads, unmodified
-    <provider_or_origin>/      
-      <version_or_date>/
-        ...
-  notes/                       # optional: manual notes, screenshots, correspondence
-    screenshots/
-    emails/
-    decisions.md
+🧪 sources/
+├── 📄 README.md                    👈 📍 you are here
+├── 🧾 source.json                  ✅ REQUIRED (source + license + attribution + acquisition info)
+├── 🔐 checksums.sha256             ✅ REQUIRED (SHA-256 for *every* file in sources/)
+├── 📜 LICENSE.txt                  ✅ REQUIRED (full license text OR a license stub w/ URL + key terms)
+├── 🧬 prov.material.jsonld         ⭐ RECOMMENDED (W3C PROV JSON-LD lineage: source → transforms → outputs)
+├── 📥 upstream/                    (raw downloads; unmodified, evidence-first)
+│   └── 🏷️ <provider_or_origin>/
+│       └── 📅 <version_or_date>/
+│           └── ……
+└── 📝 notes/                       (optional: manual notes, screenshots, correspondence)
+    ├── 🖼️ screenshots/
+    ├── ✉️ emails/
+    └── 🧠 decisions.md
 ```
 
 > [!TIP]
