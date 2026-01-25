@@ -14,11 +14,11 @@
 
 ```text
 api/
-  contracts/
-    examples/
-      requests/
-        catalog/
-          README.md   👈 (this file)
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📥 requests/
+         └─ 🗂️ catalog/
+            └─ 📄 README.md   # 👈 you are here 📌 Catalog request examples (STAC/DCAT search & discovery; filters, paging, auth)
 ```
 
 This folder is for **copy/pasteable request examples** used in:
