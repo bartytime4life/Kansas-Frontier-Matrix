@@ -175,14 +175,14 @@ flowchart LR
   A[data/raw 🧱] --> B[data/work 🧪]
   B --> C[data/processed ✅]
   C --> D[data/stac 📦]
-  C --> E[data/catalog/dcat 🗂️]
+  C --> E[data/catalog dcat 🗂️]
   C --> F[data/prov 🧾]
-  D --> G[(PostGIS 🌍)]
+  D --> G[🌍 PostGIS]
   E --> G
   F --> G
-  G --> H[API 🔌]
-  H --> I[UI (MapLibre/Cesium) 🗺️]
-  H --> J[web/assets mirror 🎒]
+  G --> H[🔌 API]
+  H --> I[🗺️ UI - MapLibre Cesium]
+  H --> J[🎒 web assets mirror]
 ```
 
 ### Key implementation notes
