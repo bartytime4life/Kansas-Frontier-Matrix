@@ -16,17 +16,17 @@
 
 ```text
 api/
-  contracts/
-    examples/
-      requests/
-        datasets/
-          README.md   👈 you are here
-          # (recommended) 00_list_datasets.http
-          # (recommended) 01_get_dataset_metadata.http
-          # (recommended) 02_get_dataset_data_subset.http
-          # (recommended) 03_list_place_datasets.http
-          # (recommended) 04_get_vector_tile.http
-          # (recommended) 05_graphql_dataset_query.http
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📥 requests/
+         └─ 🗂️ datasets/
+            ├─ 📄 README.md                     # 👈 you are here 📌 Dataset request examples: naming, auth headers, and expected shapes
+            ├─ 📥🧾 00_list_datasets.http        # (recommended) List datasets (filters + paging + sort)
+            ├─ 🔎📥🧾 01_get_dataset_metadata.http # (recommended) Fetch dataset metadata/details by id
+            ├─ 📦📥🧾 02_get_dataset_data_subset.http # (recommended) Request a small data subset (bbox/time/fields/limit)
+            ├─ 🗺️📥🧾 03_list_place_datasets.http  # (recommended) List datasets relevant to a place (graph-backed context)
+            ├─ 🧱📥🧾 04_get_vector_tile.http      # (recommended) Fetch a vector tile (z/x/y; headers + caching shown)
+            └─ 🧬📥🧾 05_graphql_dataset_query.http # (recommended) Example GraphQL dataset query (operation + variables)
 ```
 
 ---
