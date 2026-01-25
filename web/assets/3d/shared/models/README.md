@@ -44,20 +44,20 @@
 
 ```text
 web/assets/3d/shared/models/
-  📄 README.md
-
-  📁 monument-rocks/
-    📦 model.glb
-    🧾 model.meta.json
-    🖼️ preview.webp
-    🏷️ ATTRIBUTION.md
-    📁 sources/            (optional; keep tiny, or store raw elsewhere)
-
-  📁 _template/
-    📦 model.glb
-    🧾 model.meta.json
-    🖼️ preview.webp
-    🏷️ ATTRIBUTION.md
+├─ 📄 README.md                         # 📘 Shared 3D model library rules: naming, size limits, licensing, and metadata contract
+│
+├─ 🪨 monument-rocks/                   # One shared model package (stable slug; UI/demo safe)
+│  ├─ 🧊📦 model.glb                     # Primary runtime model (GLB preferred; web-optimized)
+│  ├─ 🧾 model.meta.json                # Metadata contract: id/title, units, bounds, license, provenance, checksums, refs
+│  ├─ 🖼️ preview.webp                   # Small preview image for catalogs/cards (consistent aspect ratio)
+│  ├─ 🏷️📄 ATTRIBUTION.md               # Human-readable attribution/credits (required if any upstream attribution applies)
+│  └─ 📎 sources/                       # (optional) Tiny source refs/receipts (keep small; store large originals elsewhere)
+│
+└─ 🧩 _template/                        # Copy/paste starter for new model packages (keep fields complete)
+   ├─ 🧊📦 model.glb                     # Placeholder/starting model (replace with real asset)
+   ├─ 🧾 model.meta.json                # Template metadata contract (fill all required fields)
+   ├─ 🖼️ preview.webp                   # Template preview image (replace)
+   └─ 🏷️📄 ATTRIBUTION.md               # Template attribution notes (fill or remove if truly N/A)
 ```
 
 ### 🧠 Naming conventions
