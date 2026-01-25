@@ -55,31 +55,27 @@ This `_source/<collection>/` directory exists so we can:
 ## 📦 Folder layout
 
 ```text
-web/assets/3d/shared/textures/
-├─ _source/
-│  └─ <collection>/
-│     ├─ README.md                    👈 you are here
-│     ├─ manifest.texture.json        🧾 provenance + license + intent
-│     ├─ checksums.sha256             🔐 content-addressed integrity
-│     ├─ LICENSES/                    ⚖️ license texts, grants, credits
-│     │  └─ <texture_id>.LICENSE.txt
-│     ├─ src/                         🧱 original texture files (immutable)
-│     │  └─ <texture_id>/
-│     │     ├─ albedo.<ext>
-│     │     ├─ normal.<ext>
-│     │     ├─ roughness.<ext>
-│     │     └─ ...
-│     ├─ previews/                    🖼️ tiny thumbnails for quick review
-│     │  └─ <texture_id>.png
-│     └─ notes/                       📝 acquisition logs, emails, receipts
-│        └─ <texture_id>.md
-└─ <collection>/                      🚀 GENERATED runtime textures (do not hand-edit)
-   ├─ index.json
-   ├─ <texture_id>/
-   │  ├─ albedo.ktx2
-   │  ├─ normal.ktx2
-   │  └─ ...
-   └─ ...
+web/
+└─ assets/
+   └─ 3d/
+      └─ shared/
+         └─ textures/
+            └─ _source/                      # 🧱 The source directory for original texture files and metadata
+               ├─ 📄 README.md               # ✅ REQUIRED: Documentation for the collection, purpose, and usage
+               ├─ 🧾 manifest.texture.json   # ✅ REQUIRED: Provenance, license, and intent details (metadata)
+               ├─ 🔐 checksums.sha256        # ✅ REQUIRED: Integrity checksums for all files (for reproducibility)
+               ├─ ⚖️ LICENSES/               # ✅ REQUIRED: License texts and attribution information
+               │  └─ <texture_id>.LICENSE.txt # ⬇️ REQUIRED license for the specific texture
+               ├─ 🧱 src/                    # ✅ REQUIRED: Original texture source files (immutable)
+               │  └─ <texture_id>/            # One folder per texture
+               │     ├─ albedo.<ext>         # e.g., .png, .jpg (diffuse texture)
+               │     ├─ normal.<ext>         # e.g., .png, .jpg (normal map)
+               │     ├─ roughness.<ext>      # e.g., .png, .jpg (roughness map)
+               │     └─ ...                  # Additional maps if applicable
+               ├─ 🖼️ previews/               # ✅ RECOMMENDED: Tiny previews (useful for quick review)
+               │  └─ <texture_id>.png        # Thumbnails or preview images
+               └─ 📝 notes/                  # ⬇️ RECOMMENDED: Logs, emails, and receipts regarding the texture's acquisition
+                  └─ <texture_id>.md         # Documentation or receipts for the texture file
 ```
 
 > [!NOTE]
