@@ -80,16 +80,16 @@ Provide a **stable, reusable** set of material definitions (PBR parameters + tex
 
 ```text
 web/assets/3d/shared/textures/
-├── atlases/                       # Packed texture sheets
-├── jpg/                           # Raw JPG textures (pixels)
-├── png/                           # Raw PNG textures (pixels)
-└── materials/                     # This folder: material meaning + bindings
-    ├── README.md
-    ├── <material_id>/
-    │   ├── material.json          # ✅ recommended canonical manifest filename
-    │   ├── preview.webp           # optional (small)
-    │   └── ATTRIBUTION.md         # optional (or link in material.json)
-    └── _index.json                # optional registry (fast lookup)
+├── 🗺️ atlases/                         # Packed texture sheets (KTX2 + atlas.json) for efficient runtime sampling
+├── 📷 jpg/                             # Raw JPG textures (pixels): photographic/albedo (no alpha), usually sRGB
+├── 🖼️ png/                             # Raw PNG textures (pixels): alpha/masks/decals (lossless; use sparingly)
+└── 🧱 materials/                       # 👈 Material meaning + bindings (PBR params + texture references + governance)
+    ├── 📄 README.md                    # How materials are defined, naming rules, channel packing, color-space conventions
+    ├── 📦 <material_id>/               # One reusable material package (stable id referenced by models/manifests)
+    │   ├── ✅🧾 material.json           # Recommended manifest: PBR params + texture refs + tiling + units + license/provenance
+    │   ├── 🖼️ preview.webp             # Optional small render preview (UI cards / quick review)
+    │   └── 🏷️📄 ATTRIBUTION.md          # Optional human credits (or link/embed attribution in material.json)
+    └── 🧾🗂️ _index.json                # Optional registry for fast lookup (materialId → path/tags/preview/license refs)
 ```
 
 > 🧭 Rule of thumb: **one folder per shared material** (`materials/<material_id>/…`) to keep previews + attribution close.
