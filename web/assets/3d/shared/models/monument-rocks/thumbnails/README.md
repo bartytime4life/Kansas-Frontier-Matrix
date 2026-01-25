@@ -114,10 +114,10 @@ KFM prioritizes **trust, safety, and respect**:
 
 ```mermaid
 flowchart LR
-  A[🧱 3D Model<br/>(glTF / 3D Tiles / mesh)] --> B[🎥 Render snapshot<br/>(consistent camera + lighting)]
-  B --> C[🗜️ Optimize<br/>(WebP compression + size targets)]
-  C --> D[🖼️ Drop into thumbnails/]
-  D --> E[🧭 KFM UI<br/>(cards • stories • 2D↔3D)]
+  A[🧱 3D model - glTF 3D Tiles mesh] --> B[🎥 Render snapshot - consistent camera + lighting]
+  B --> C[🗜️ Optimize - WebP compression + size targets]
+  C --> D[🖼️ Drop into thumbnails]
+  D --> E[🧭 KFM UI - cards stories 2D 3D]
 ```
 
 <details>
