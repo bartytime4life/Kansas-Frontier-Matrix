@@ -47,19 +47,19 @@ Texture **atlases** are *packed* textures (multiple source textures → fewer GP
 
 ```text
 web/assets/3d/shared/textures/atlases/
-├─ README.md
-└─ <atlas_id>/
-   ├─ <atlas_id>__basecolor.ktx2
-   ├─ <atlas_id>__normal.ktx2
-   ├─ <atlas_id>__orm.ktx2
-   ├─ <atlas_id>__emissive.ktx2
-   ├─ <atlas_id>.atlas.json
-   ├─ LICENSES/
-   │  ├─ README.md
-   │  └─ <license-files-if-needed>
-   └─ PREVIEW/
-      ├─ <atlas_id>__preview.webp
-      └─ <atlas_id>__uv_debug.webp
+├─ 📄 README.md                          # 📘 Atlas conventions: naming, packing rules, color spaces, and how to reference atlases
+└─ 🧩 <atlas_id>/                        # One texture atlas package (stable id used by materials/models)
+   ├─ 🎨🧵 <atlas_id>__basecolor.ktx2     # Basecolor/albedo atlas (KTX2; typically sRGB)
+   ├─ 🧭🧵 <atlas_id>__normal.ktx2        # Normal atlas (KTX2; linear)
+   ├─ 🧲🧵 <atlas_id>__orm.ktx2           # Packed ORM atlas (occlusion/roughness/metallic; linear; channel map documented)
+   ├─ ✨🧵 <atlas_id>__emissive.ktx2      # Optional emissive atlas (sRGB if colored; document in atlas json)
+   ├─ 🧾 <atlas_id>.atlas.json           # Atlas map: UV rects, sprite/material keys, channel packing, texel density, versions
+   ├─ ⚖️ LICENSES/                        # License/attribution for any upstream sources included in this atlas
+   │  ├─ 📄 README.md                    # What licenses apply + which atlas regions/assets they cover
+   │  └─ ⚖️📄 <license-files-if-needed>  # Verbatim license texts / notices (only if required)
+   └─ 🖼️ PREVIEW/                        # Optional preview renders for QA/docs (small, web-optimized)
+      ├─ 🖼️ <atlas_id>__preview.webp     # Visual preview of the atlas content (what’s inside)
+      └─ 🧪🖼️ <atlas_id>__uv_debug.webp   # UV debug preview (grid/labels) for mapping verification
 ```
 
 ### 🧠 Key ideas
