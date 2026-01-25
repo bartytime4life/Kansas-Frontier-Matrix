@@ -38,8 +38,8 @@ flowchart LR
   B --> C[📚 DCAT Dataset Views]
   B --> D[🧬 PROV Lineage Bundles]
   B --> E[🧠 Graph Index]
-  E --> F[🛡️ API Layer (contracts + redaction)]
-  F --> G[🗺️ UI (MapLibre / Cesium)]
+  E --> F[🛡️ API Layer - contracts + redaction]
+  F --> G[🗺️ UI - MapLibre Cesium]
   G --> H[📖 Story Nodes]
   H --> I[🤖 Focus Mode]
 ```
