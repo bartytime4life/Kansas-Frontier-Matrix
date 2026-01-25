@@ -48,21 +48,22 @@
 ## 🧱 Recommended folder layout
 
 ```text
-web/assets/3d/archaeology/sites/<site-slug>/
-├─ previews/ 🖼️
-│  ├─ README.md
-│  ├─ previews.manifest.json   # required ✅
-│  ├─ thumb.webp               # required ✅
-│  ├─ poster.webp              # recommended ⭐
-│  ├─ orbit.mp4                # optional 🎞️
-│  ├─ context.webp             # optional 🗺️ (must respect sensitivity)
-│  ├─ wireframe.webp           # optional 🧵 (QA: mesh/tiles quality)
-│  └─ time/                    # optional ⏳ (multi-era posters)
-│     ├─ 1850_poster.webp
-│     └─ 1930_poster.webp
-└─ (elsewhere)
-   ├─ models/ / tilesets/ / scans/  # authoritative 3D assets live elsewhere
-   └─ sources/ / catalogs/          # evidence + provenance live elsewhere
+🌐 web/assets/3d/archaeology/sites/
+└── 🏷️ <site-slug>/
+    ├── 🖼️ previews/
+    │   ├── 📄 README.md
+    │   ├── 🧾 previews.manifest.json      ✅ required
+    │   ├── 🖼️ thumb.webp                  ✅ required
+    │   ├── 🏞️ poster.webp                 ⭐ recommended
+    │   ├── 🎞️ orbit.mp4                   (optional)
+    │   ├── 🗺️ context.webp                (optional; must respect sensitivity)
+    │   ├── 🧵 wireframe.webp               (optional; QA: mesh/tiles quality)
+    │   └── ⏳ time/                        (optional; multi-era posters)
+    │       ├── 🗓️ 1850_poster.webp
+    │       └── 🗓️ 1930_poster.webp
+    └── (elsewhere)
+        ├── 🧊 models/ / 🧱 tilesets/ / 🛰️ scans/   (authoritative 3D assets live elsewhere)
+        └── 🧾 sources/ / 🗺️ catalogs/             (evidence + provenance live elsewhere)
 ```
 
 ---
