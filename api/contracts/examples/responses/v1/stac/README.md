@@ -52,20 +52,20 @@ flowchart LR
 
 ```text
 api/
-└─ contracts/
-   └─ examples/
-      └─ responses/
-         └─ v1/
-            └─ stac/
-               ├─ README.md                 👈 you are here
-               ├─ root.get.json             (optional)
-               ├─ conformance.get.json      (optional)
-               ├─ collections.get.json      (optional)
-               ├─ collection.get.json       (optional)
-               ├─ items.get.json            (optional)
-               ├─ item.get.json             (optional)
-               ├─ search.post.json          (optional)
-               └─ errors.problem+json       (optional)
+└─ 📜 contracts/
+   └─ 🧪 examples/
+      └─ 📤 responses/
+         └─ 🧬 v1/
+            └─ 🛰️ stac/
+               ├─ 📄 README.md                 # 👈 you are here 📌 STAC response examples (v1) + validation/link rules
+               ├─ 🧾 root.get.json             # (optional) GET /stac root (landing) response example
+               ├─ 🧾 conformance.get.json      # (optional) GET /stac/conformance response example (conformance classes)
+               ├─ 🧾 collections.get.json      # (optional) GET /stac/collections response example (collections list)
+               ├─ 🧾 collection.get.json       # (optional) GET /stac/collections/{id} response example (single collection)
+               ├─ 🧾 items.get.json            # (optional) GET /stac/collections/{id}/items response example (items list)
+               ├─ 🧾 item.get.json             # (optional) GET /stac/collections/{id}/items/{itemId} response example (single item)
+               ├─ 🧾 search.post.json          # (optional) POST /stac/search response example (items + context/paging)
+               └─ 🚨🧾 errors.problem+json      # (optional) STAC error example using Problem Details (policy/validation failures)
 ```
 
 ✅ If you keep fixtures as separate files, prefer **stable naming** and **stable IDs** so snapshot tests don’t churn.
