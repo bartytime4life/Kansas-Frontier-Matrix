@@ -119,10 +119,10 @@ Even though this README is the contract “front door”, the folder is designed
 
 ```text
 api/contracts/examples/responses/v1/health/
-├── README.md
-├── 200.ok.json
-├── 200.degraded.json
-└── 503.down.json
+├── 📄 README.md                 # 📘 Health response examples: how to interpret status + fields + SLO hints
+├── ✅🧾 200.ok.json              # Healthy (200): all dependencies OK, ready=true, no active incidents
+├── ⚠️🧾 200.degraded.json        # Degraded (200): service up but one/more deps slow/unavailable; reduced functionality
+└── 🚨🧾 503.down.json            # Down (503): not ready/unhealthy; includes safe failure reasons + correlation id
 ```
 
 ---
