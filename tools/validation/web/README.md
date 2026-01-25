@@ -267,21 +267,21 @@ The reviewer UI should be **responsive-first** and optimized for:
 
 ```text
 tools/validation/web/
-├─ README.md
-├─ src/
-│  ├─ domain/                # Entities: Source, Snapshot, EvidenceBundle
-│  ├─ application/           # Use cases: fetch, extract, validate, cite
-│  ├─ adapters/              # HTML/PDF parsers, browser capture, normalizers
-│  └─ infrastructure/        # DB, blob store, queues, caching
-├─ ui/                       # Review UI (responsive)
-├─ cli/                      # Batch ingest & maintenance commands
-├─ tests/
-│  ├─ unit/
-│  ├─ integration/
-│  └─ fixtures/              # Frozen sample pages + expected outputs
-└─ docs/
-   ├─ decisions/             # ADRs (architecture decision records)
-   └─ schemas/               # JSON schema for EvidenceBundle + Citation
+├─ 📄 README.md                     # 📘 What this tool does, supported sources (HTML/PDF), and how to run locally/CI
+├─ 🧠 src/
+│  ├─ 🧠 domain/                    # Domain entities (Source, Snapshot, EvidenceBundle) + invariants
+│  ├─ 🧩 application/               # Use cases (fetch, extract, validate, cite) + orchestration workflows
+│  ├─ 🧷 adapters/                  # Parsers/capture/normalizers (HTML/PDF parsers, browser capture, content cleanup)
+│  └─ 🏗️ infrastructure/            # Infrastructure glue (DB, blob store, queues, caching)
+├─ 🖥️ ui/                           # Review UI (responsive): inspect captures, citations, and validation findings
+├─ 🧰 cli/                          # Batch ingest + maintenance commands (headless capture, re-validate, export)
+├─ 🧪 tests/
+│  ├─ 🧪 unit/                      # Unit tests (pure logic, parsers, normalization rules)
+│  ├─ 🔗 integration/               # Integration tests (pipeline end-to-end with local deps)
+│  └─ 🧊 fixtures/                  # Frozen sample pages + expected outputs (goldens for regression)
+└─ 📚 docs/
+   ├─ 🧭 decisions/                 # ADRs for this tool (tradeoffs, threat models, data handling)
+   └─ 📐 schemas/                   # JSON Schemas for EvidenceBundle + Citation contracts (used by validators/tests)
 ```
 
 ---
