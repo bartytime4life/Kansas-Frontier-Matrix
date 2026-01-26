@@ -1,11 +1,13 @@
 ---
 title: "📚 `docs/` — Kansas Frontier Matrix (KFM) Governed Documentation 📜🧭"
 path: "docs/README.md"
-version: "v1.4.0"
-last_updated: "2026-01-19"
+version: "v1.5.0"
+last_updated: "2026-01-26"
 status: "active"
 doc_kind: "Directory README"
 license: "CC-BY-4.0"
+doc_uuid: "42076fe3-931a-49c7-967c-c5bb79c16fa5"
+jurisdiction: "US"
 
 # Protocols (repo defaults)
 markdown_protocol_version: "KFM-MDP v11.2.6"
@@ -45,24 +47,28 @@ canonical_roadmap: "docs/roadmap/README.md"
 
 ![KFM](https://img.shields.io/badge/KFM-docs%2F%20canonical-1f6feb)
 ![KFM-MDP](https://img.shields.io/badge/KFM--MDP-v11.2.6-8957e5)
-![Version](https://img.shields.io/badge/version-v1.4.0-8957e5)
-![Updated](https://img.shields.io/badge/updated-2026--01--19-2ea043)
+![Version](https://img.shields.io/badge/version-v1.5.0-8957e5)
+![Updated](https://img.shields.io/badge/updated-2026--01--26-2ea043)
 ![Evidence](https://img.shields.io/badge/evidence--first-STAC%20%2B%20DCAT%20%2B%20PROV-0aa3a3)
+![Dual format](https://img.shields.io/badge/data%20products-GeoParquet%20%2B%20PMTiles-0aa3a3)
 ![Contract-first](https://img.shields.io/badge/contract--first-schemas%20%2B%20API%20contracts-0aa3a3)
+![Stack](https://img.shields.io/badge/stack-PostGIS%20%2B%20Neo4j%20%2B%20FastAPI%20%2B%20React-8250df)
 ![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043)
-![Accessibility](https://img.shields.io/badge/docs-accessible%20%2B%20scannable%20%2B%20citable-8250df)
+![Supply-chain](https://img.shields.io/badge/supply--chain-SLSA%20%2B%20attestations-2ea043)
+![Docs](https://img.shields.io/badge/docs-accessible%20%2B%20scannable%20%2B%20citable-8250df)
 ![License](https://img.shields.io/badge/license-CC--BY--4.0-blue)
 ![Security](https://img.shields.io/badge/security-no%20secrets%20%2B%20no%20side--channels-red)
 
 > Canonical home for KFM’s **governed documentation**:  
-> **architecture + standards + templates + runbooks + governance + story nodes** — written so decisions are **auditable**, claims are **citable**, and change is **reviewable**.  
+> **architecture + standards + templates + runbooks + governance + Story Nodes** — written so decisions are **auditable**, claims are **citable**, and change is **reviewable**.  
 > This is where KFM stays explainable as it scales. 🧠🗺️
->
-> 📌 Start with:  
-> - **System map** → `docs/MASTER_GUIDE_v13.md` *(canonical architecture + repo shape)*  
-> - **Governance posture** → `docs/governance/ROOT_GOVERNANCE.md` *(review triggers + authority)*  
-> - **Library index** → `docs/library/README.md` *(license-aware reference map; pointers > payload)*  
-> - **Reality checks / audits** → keep under `docs/reports/` *(or `docs/architecture/ADR/` if it becomes a decision)*
+
+> 📌 Start with (in order):
+> 1) **System map** → `docs/MASTER_GUIDE_v13.md` *(canonical architecture + repo shape)*
+> 2) **Governance posture** → `docs/governance/ROOT_GOVERNANCE.md` *(review triggers + authority)*
+> 3) **Data intake discipline** → `docs/guides/data-intake/README.md` *(Raw → Work → Processed → catalogs)*
+> 4) **Library index** → `docs/library/README.md` *(license-aware reference map; pointers > payload)*
+> 5) **Reality checks / audits** → `docs/reports/` *(or `docs/architecture/ADR/` if it becomes a decision)*
 
 > [!IMPORTANT]
 > **KFM’s non-negotiable order (docs must reinforce it):**  
@@ -77,6 +83,8 @@ canonical_roadmap: "docs/roadmap/README.md"
 - 📖 Canonical glossary: **[`./glossary.md`](./glossary.md)** *(if present)*
 - 🏛️ Governance charter: **[`./governance/ROOT_GOVERNANCE.md`](./governance/ROOT_GOVERNANCE.md)**
 - 📚 Library index (license-aware): **[`./library/README.md`](./library/README.md)** *(if present)*
+- 📏 Standards hub: **[`./standards/README.md`](./standards/README.md)** *(if present)*
+- 🔐 Security hub: **[`./security/README.md`](./security/README.md)** *(if present)*
 - 🧱 Architecture boundary: **[`./architecture/README.md`](./architecture/README.md)** *(if present)*
 - 📥 Data intake guide: **[`./guides/data-intake/README.md`](./guides/data-intake/README.md)** *(if present)*
 - 🌐 UI docs: **[`./ui/README.md`](./ui/README.md)** *(if present)*
@@ -97,6 +105,7 @@ canonical_roadmap: "docs/roadmap/README.md"
 - [📘 Overview](#-overview)
 - [🧾 Doc metadata](#-doc-metadata)
 - [🧠 Core invariants](#-core-invariants)
+- [🏷️ Doc reliability levels](#️-doc-reliability-levels)
 - [🧫 Data lifecycle and artifact locations](#-data-lifecycle-and-artifact-locations)
 - [📖 Glossary](#-glossary-kfm-terms-used-in-docs)
 - [🗂️ What goes in `docs/`](#️-what-goes-in-docs)
@@ -124,8 +133,8 @@ canonical_roadmap: "docs/roadmap/README.md"
 |---|---|
 | Doc | `docs/README.md` |
 | Status | Active ✅ |
-| Version | **v1.4.0** |
-| Last updated | **2026-01-19** |
+| Version | **v1.5.0** |
+| Last updated | **2026-01-26** |
 | Audience | Contributors writing standards, runbooks, Story Nodes, ADRs, and governance policies |
 | Prime directive | If it changes what people *believe* about the map/story/data, it must be **reviewable + citable + reversible** |
 | Repo posture | **Evidence-first** + **Contract-first** + **Sovereignty-aware** + **License-aware** |
@@ -151,7 +160,7 @@ canonical_roadmap: "docs/roadmap/README.md"
 
 ### 🚫 What `docs/` is not
 - not a dumping ground for generated outputs *(those belong under `data/**` and catalogs)*
-- not a substitute for contracts *(schemas and API contracts live under `schemas/**` and `api/**`)*
+- not a substitute for contracts *(schemas and API contracts live under `schemas/**` and `api/**` / `src/server/contracts/**`)*
 - not a place for secrets, tokens, credentials, internal hostnames, or private URLs 🚫
 - not a “shadow API” (docs explain; contracts enforce)
 
@@ -161,16 +170,16 @@ canonical_roadmap: "docs/roadmap/README.md"
 
 > [!IMPORTANT]
 > **Docs are part of the system boundary.**  
-> When a subsystem changes, docs should change **in the same PR** whenever feasible. Docs are “shipped,” not “updated later.”
+> When a subsystem changes, docs should change **in the same PR** whenever feasible. Docs are “shipped,” not “updated later.” 📦
 
 ```mermaid
 flowchart LR
   A[📥 Raw Intake] --> B[🧪 ETL / Work]
-  B --> C[✅ Processed]
-  C --> D[🗂 Catalog Triplet + Data Contract<br/>STAC + DCAT + PROV]
-  D --> E[🕸 Graph]
-  E --> F[🛡 APIs]
-  F --> G[🖥 UI]
+  B --> C[✅ Processed Data Products]
+  C --> D[🗂 Catalog Triplet + Dataset Contract<br/>STAC + DCAT + PROV + Contract JSON]
+  D --> E[🕸 Graph (references catalogs)]
+  E --> F[🛡 API Layer (contracts + redaction)]
+  F --> G[🖥 UI (Map + Timeline)]
   G --> H[📚 Story Nodes]
   H --> I[🎯 Focus Mode]
 ```
@@ -178,17 +187,20 @@ flowchart LR
 ### ✅ Docs must reinforce these rules
 
 - ✅ **Pipeline ordering is absolute:** no leapfrogging stages.
-- ✅ **Catalog triplet is mandatory:** publishable datasets must ship with **STAC + DCAT + PROV**, and a **dataset data contract** (metadata JSON) that records license/sensitivity/lineage expectations.
+- ✅ **Evidence triplet is mandatory:** publishable datasets must ship with **STAC + DCAT + PROV**, plus a **dataset-level contract** (metadata JSON) that records license/sensitivity/scope-of-use expectations.
+- ✅ **Dual-format data products are normal:** prefer shipping an analysis-grade format (e.g., **GeoParquet**) and a UI-grade format (e.g., **PMTiles**) under the same identifiers and metadata (never “performance hacks” without provenance). ⚡🧾
+- ✅ **Hybrid storage is intentional:** PostGIS (spatial), Neo4j (relationships), search index (documents/text). The API is the single governed access point.
 - ✅ **Evidence-first narrative:** no unsourced claims in Story Nodes or Focus Mode.
 - ✅ **Contract-first changes:** schemas and API contracts are first-class; docs must link to them and respect versioning.
 - ✅ **One canonical home per thing:** avoid duplicate “shadow docs”; archive deprecated docs instead of copy/pasting.
-- ✅ **API boundary is real:** UI **must not** talk directly to the graph/DB; it goes through governed APIs only. 🛡️
+- ✅ **API boundary is real:** UI **must not** talk directly to graph/DB; it goes through governed APIs only. 🛡️
 - ✅ **Monotonic governance:** derived outputs **cannot** be *less* restricted than inputs (classification, consent, license, or sensitivity).
 - ✅ **Stable identifiers:** avoid “meaningful IDs” that break when naming shifts; use stable IDs and versioned mapping layers.
 - ✅ **Sovereignty-aware behavior:** docs must not leak sensitive locations (including via screenshots, tiles, or “helpful examples”).
 - ✅ **Deny-by-default mindset:** treat user-provided files and internet metadata as hostile inputs; recommend validation, not trust-by-assumption. 🧯
 - ✅ **Policy Pack is enforceable reality:** if a rule matters, it must be representable as a policy (OPA/Conftest) and documented as such.
 - ✅ **Automation is PR-native:** Watcher→Planner→Executor agents create PRs with receipts; they do **not** silently mutate canonical stores.
+- ✅ **Ledger mindset:** anything that changes meaning (data updates, AI answers, redactions) must be auditable (PROV + governance ledger posture). 🧾🔍
 
 ### ✅ Minimum validation intent (KFM-MDP v11.2.6 baseline)
 
@@ -196,15 +208,31 @@ KFM’s documentation posture assumes (or aspires to) automated validation gates
 
 - **Markdown protocol checks** (YAML front-matter + required sections)
 - **Link/reference validation** (no broken internal links or unresolved anchors)
-- **Schema validation** for structured artifacts referenced by docs (STAC/DCAT/PROV, Story Node metadata, data contracts)
+- **Schema validation** for structured artifacts referenced by docs (STAC/DCAT/PROV, Story Node metadata, dataset contracts)
 - **Policy Pack checks** (OPA + Conftest) for governance/sensitivity/license rules
 - **Security/governance scans** (secrets, PII, sensitive location leakage, classification downgrades)
 - **License/attribution checks** where docs reference external works or derived artifacts
 - **Mermaid render checks** for diagrams that define behavior
-- **PR→PROV receipts** for automated changes that influence meaning (optional at first, but the target)
+- **PR→PROV receipts** for automated changes that influence meaning (target posture)
 
 > [!NOTE]
 > If CI isn’t fully wired yet, treat these as *required local checks* for doc changes that influence decisions or public meaning.
+
+---
+
+## 🏷️ Doc reliability levels
+
+> [!TIP]
+> Add a “reliability label” to docs **by folder placement + status** so reviewers know what is normative.
+
+| Level | Where it lives | Meaning | Allowed to “define behavior”? |
+|---|---|---|---|
+| ✅ **Normative** | `docs/standards/`, `docs/governance/`, `schemas/`, `api/contracts/` | testable rules and required behaviors | **Yes** ✅ |
+| 📘 **Design** | `docs/architecture/` | explains structure + decisions; may reference ADRs | **Yes (via ADRs)** ✅ |
+| 🧭 **Operational** | `docs/runbooks/` | how to operate/debug; must match reality | **Yes (ops)** ✅ |
+| 🧩 **Guide** | `docs/guides/`, `docs/ui/` | recommended patterns; should not contradict standards | **No** 🚫 |
+| 📰 **Narrative** | `docs/reports/story_nodes/` | evidence-linked story products | **No** 🚫 |
+| 🗃️ **Archive** | `docs/99_archive/` | retained for traceability | **No** 🚫 |
 
 ---
 
@@ -218,18 +246,24 @@ KFM’s docs are “pointer-first”: we document **where artifacts live** and *
 📁 data/
 ├── 📁 raw/                         # raw inputs (immutable; checksummed; access controlled)
 ├── 📁 work/                        # scratch/temporary intermediates (rebuildable)
-├── 📁 processed/                   # validated outputs used by the system
+├── 📁 processed/                   # validated outputs used by the system (data products)
 │
 ├── 📁 catalog/                     # canonical catalogs (preferred)
 │   ├── 📁 stac/                    # STAC catalogs (items/collections)
 │   └── 📁 dcat/                    # DCAT datasets/distributions
 │
-└── 📁 provenance/                  # PROV bundles (lineage, derivations, agents, activities)
+└── 📁 provenance/                  # PROV bundles + governance receipts (lineage, derivations, agents)
 ```
 
-> [!NOTE]
-> You may encounter legacy or transitional paths like `data/catalogs/`, `data/stac/`, or `data/prov/`.  
-> **Target posture:** consolidate under `data/catalog/` + `data/provenance/` (and document any migration in an ADR).
+### 🧭 Legacy/variant folder names (do not multiply)
+Some design docs and older repos may use:
+- `data/catalogs/` *(plural)*
+- `data/stac/` and `data/prov/`
+- `data/catalog/` + `data/provenance/`
+
+> [!IMPORTANT]
+> Pick **one** canonical shape (see `docs/MASTER_GUIDE_v13.md`) and write an ADR for migrations.  
+> Avoid inventing new catalog paths. 🧱
 
 ### ✅ Doc rule
 If a doc references an artifact that could influence decisions (model output, derived raster, OCR corpus, metric, map tile, extracted entities):
@@ -245,9 +279,16 @@ In addition to schemas (machine contracts) and catalogs (discoverability), KFM e
 - source-of-truth pointers + refresh rules (if applicable)
 - expected outputs and validation rules
 - cross-links to STAC/DCAT/PROV identifiers
+- data product formats (e.g., GeoParquet + PMTiles) and checksums
 
 > [!TIP]
 > Treat the **data contract** as the human+machine bridge: it’s what reviewers can read, and CI can enforce.
+
+### 🧰 Big artifacts: keep git lean (DVC / registries)
+For large binaries (tiles, rasters, big parquet, model weights):
+- Keep git as **pointers + metadata**
+- Use a large-file strategy (e.g., DVC / OCI artifact registry / object storage)
+- Preserve reproducibility with **hashes + version tags** (no mutable “latest.zip” links) 🧾🔒
 
 ---
 
@@ -257,7 +298,7 @@ In addition to schemas (machine contracts) and catalogs (discoverability), KFM e
 Machine-readable metadata + lineage that makes datasets *discoverable, traceable, and governable*.
 
 **Contract artifacts**  
-Schemas and API contracts that define what the system accepts/serves (e.g., JSON Schemas in `schemas/`, OpenAPI/GraphQL in `api/contracts/**`).
+Schemas and API contracts that define what the system accepts/serves (e.g., JSON Schemas in `schemas/`, OpenAPI/GraphQL contracts under `api/contracts/**` or `src/server/contracts/**`).
 
 **Evidence artifacts**  
 Any derived output that can influence decisions (models, simulations, OCR corpora, derived rasters). Evidence artifacts must live in `data/processed/**` and be cataloged + provenance-linked.
@@ -283,7 +324,7 @@ KFM expects `docs/` to be organized by **governed intent** (not by author prefer
 - 🔐 **Security**: threat models, incident response, secure ingestion guidance (`docs/security/`)
 - 🧭 **Governance**: FAIR/CARE/sovereignty policy, review gates, ethics, redaction rules (`docs/governance/`)
 - 🧩 **Guides**: subsystem how-to + lifecycle docs (intake, pipelines, UI, AI) (`docs/guides/`)
-- 🧰 **Templates**: universal doc, ADR, Story Node, API contract extension (`docs/templates/`)
+- 🧰 **Templates**: universal doc, ADR, Story Node, API contract extension, model cards (`docs/templates/`)
 - 🧑‍🔧 **Runbooks**: “how to operate / debug / recover” (`docs/runbooks/`)
 - 📰 **Reports & Story Nodes**: curated narrative content, with draft vs published separation (`docs/reports/story_nodes/`)
 - 🗺️ **Domain modules**: per-domain documentation (sources, caveats, risks, ETL expectations) (`docs/data/<domain>/`)
@@ -318,6 +359,8 @@ KFM expects `docs/` to be organized by **governed intent** (not by author prefer
 │   ├── 📁 ADR/                           # 🧾 Architecture Decision Records
 │   ├── 🗺️ diagrams/                      # mermaid / svg / drawio exports (no secrets)
 │   └── 🤖 ai/                             # AI subsystem architecture + guardrails
+│       ├── 📄 AI_SYSTEM_OVERVIEW.md       # (canonical, if present)
+│       └── 📁 model-cards/                # model cards (if used)
 │
 ├── 📏 standards/
 │   ├── 📄 README.md
@@ -325,6 +368,7 @@ KFM expects `docs/` to be organized by **governed intent** (not by author prefer
 │   ├── 📄 KFM_DCAT_PROFILE.md
 │   ├── 📄 KFM_PROV_PROFILE.md
 │   ├── 📄 KFM_MARKDOWN_WORK_PROTOCOL.md   # KFM-MDP authoring rules
+│   ├── 📄 KFM_DATA_CONTRACT_PROFILE.md     # dataset contract schema rules (if present)
 │   └── 🕸️ ontology/                      # graph/ontology conventions + mapping rules
 │
 ├── 🧭 governance/
@@ -349,7 +393,8 @@ KFM expects `docs/` to be organized by **governed intent** (not by author prefer
 │   ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
 │   ├── 📄 TEMPLATE__ADR.md
 │   ├── 📄 TEMPLATE__STORY_NODE_V3.md
-│   └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+│   ├── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+│   └── 📄 TEMPLATE__MODEL_CARD.md         # (recommended if ML/AI used)
 │
 ├── 🧑‍🔧 runbooks/
 │   ├── 📄 README.md
@@ -414,6 +459,7 @@ Use an ADR when you decide something that affects:
 - ontology/graph model changes
 - API boundary behavior (authZ, redaction, classification propagation)
 - public-facing meaning (maps, metrics, interpretations)
+- data product format strategy (e.g., tiles vs parquet; offline packs)
 
 ADR should include: **context → decision → alternatives → consequences → rollback plan**.
 
@@ -439,7 +485,15 @@ If you add or change an endpoint:
 - document authZ/redaction/classification behavior
 - update tests and release notes where applicable
 
-### 6) Add a new reference (license-aware) ✅
+### 6) Add an AI/ML artifact (model, extraction run, ranking profile) ✅
+If AI/ML is introduced or changed:
+- create/update a **model card** (template) 🪪🤖
+- store outputs as **evidence artifacts** (`data/processed/**`)
+- create STAC/DCAT/PROV + dataset contract (mark as AI-derived)
+- document refusal rules + uncertainty + known failure modes
+- ensure Policy Pack enforcement is documented and testable
+
+### 7) Add a new reference (license-aware) ✅
 When a book/paper/audit meaningfully influences KFM decisions:
 - add an index entry under `docs/library/`
 - record **license posture** (✅ commit-safe / ⚠️ verify / 🚫 do not commit)
@@ -463,7 +517,7 @@ When a book/paper/audit meaningfully influences KFM decisions:
 - [ ] explicit assumptions (especially modeling, projections, CRS, units)
 - [ ] “safety review” note if content touches sensitive locations, identities, or sovereignty
 - [ ] license/attribution notes where the doc relies on external works or derived artifacts
-- [ ] no secrets, tokens, internal URLs, or exposed system internals
+- [ ] no secrets, tokens, internal URLs, private drive links, or exposed system internals
 - [ ] links work (relative links preferred)
 - [ ] updated `last_updated` + version history entry when meaning changes
 - [ ] if the doc changes policy expectations → policy pack location + rule references are updated (or an issue is filed)
@@ -496,7 +550,7 @@ KFM uses “governance-as-code” to keep the system honest: rules are documente
 ### 🧾 Policy Pack (OPA + Conftest)
 - **OPA policies** express governance rules (FAIR/CARE, license constraints, sensitivity, required provenance fields).
 - **Conftest** runs those policies in CI to validate PRs (and can also run locally).
-- **Fail-closed** posture: if a policy cannot be evaluated or evidence is missing, default is deny.
+- **Fail-closed posture:** if a policy cannot be evaluated or evidence is missing, default is deny.
 
 > [!NOTE]
 > If you see a rule in docs that matters (e.g., “AI must cite at least one source”), it should exist as a policy rule too.
@@ -521,6 +575,15 @@ Treat PRs as provenance:
 - authors/reviewers/bots = PROV Agents
 
 This makes repository history queryable in the graph as lineage (“how did this dataset/story/policy change, and who approved it?”).
+
+### 🔒 Artifact integrity (target posture)
+For promoted releases (datasets, tiles, model builds):
+- signed artifacts / attestations
+- SBOM where applicable
+- repeatable builds
+
+> [!TIP]
+> If it affects public meaning, it deserves provenance *and* integrity receipts. 🧾🔒
 
 ---
 
@@ -561,6 +624,7 @@ Story Nodes turn narrative into a governed data product: machine-ingestible, evi
 - **Fact vs interpretation** separation (especially for AI-assisted narrative)
 - **Draft vs published** separation (don’t mix)
 - **Deterministic playback** (story config defines map/time/layers per step)
+- **Shareable state** (URLs or exports that preserve what the reader saw, reproducibly) 🔗🧭
 
 ### 🧩 Canonical Story Node structure (recommended)
 ```text
@@ -594,7 +658,8 @@ Docs are a security surface. Treat them as if they could become public.
 - 🧾 do not paste raw sensitive data into docs — reference catalog IDs instead
 - 🧊 use screenshots carefully: they can leak coordinates, filenames, user accounts, or private tiles
 - 🧬 **no governance downgrades:** derived outputs cannot reduce restrictions
-- 🏷️ cultural protocols supported: document any **Traditional Knowledge labels** or community access constraints as part of the dataset contract + policy pack
+- 🧠 **inference control:** if a query/output would re-identify sensitive locations/people, aggregate/redact/deny (document the rule + enforce in policy) 🛡️
+- 🏷️ cultural protocols supported: document any community access constraints as part of the dataset contract + policy pack
 
 > [!NOTE]
 > Keep security references in a **defensive posture**: threat modeling, hardening, secure ingestion, and safe ops — not exploitation.
@@ -613,9 +678,9 @@ KFM treats models as decision-support, not truth generators. Documentation must:
 - describe interpretability boundaries (“what this model cannot tell you”)
 
 ### 🎮 Deterministic simulation runs (special case)
-For deterministic simulation runners (e.g., “kfm-sim-run”-style workflows):
+For deterministic simulation runners:
 - treat each run as an evidence artifact
-- output to **sandbox** (`data/work/**`) first
+- output to **work** (`data/work/**`) first
 - promote to **processed** (`data/processed/**`) only after review gates
 - produce STAC/DCAT/PROV + run metadata (container versions, seeds, parameters)
 - keep replayability as a hard requirement (same inputs → same outputs)
@@ -637,7 +702,7 @@ If ML/AI is used anywhere in KFM (classification, extraction, summarization, ran
 
 ### 🧠 Focus Mode assistant expectations (RAG + citations + XAI)
 When documenting Focus Mode AI behavior:
-- describe the retrieval chain (graph + document index + embedding/hybrid search)
+- describe the retrieval chain (graph + document index + hybrid/semantic search)
 - specify what counts as a “citation” (catalog IDs, documents, graph entities)
 - define refusal rules (no evidence, policy deny, uncertainty too high)
 - document explainability UI surfaces (e.g., “audit panel” showing why an answer was produced)
@@ -664,6 +729,7 @@ When documenting performance/scaling behavior:
 - ETL idempotency + retry strategy (including ETag/Last-Modified patterns for watchers)
 - graph rebuild strategy (incremental vs full rebuild)
 - API caching strategy and invalidation policy
+- background job posture (worker queues / schedulers)
 - telemetry/audit events (especially for redaction + Focus Mode)
 
 ---
@@ -677,7 +743,7 @@ The graph is KFM’s “meaning layer,” but it is **not the source of truth** 
 - stable ID strategy (no “meaningful IDs” baked into node keys)
 - mapping rules: catalog IDs → graph nodes/edges (deterministic, testable)
 - graph metrics are *interpretive tools*, not facts (document what is signal vs story)
-- record standard ontology alignments when used (e.g., PROV-O, cultural-heritage ontologies)
+- record standard ontology alignments when used (e.g., PROV-O; domain ontologies)
 
 ### 🧭 Ontology governance
 Ontology changes should trigger:
@@ -697,7 +763,7 @@ Maps and UI are meaning-making machines. Docs should capture:
 - 3D Tiles conventions and GPU constraints 🧊
 - timeline semantics (“4D mapping”): instant vs interval, timezone, slicing rules 🕰️
 - offline packs posture (what is cached, how provenance is preserved, what is disabled offline) 📦
-- mobile/field realities and “mapping beyond the map” concerns 📱
+- mobile/field realities (including optional AR/storyscape experiences) 📱
 - UI→API boundary rules (no direct graph/DB access)
 
 ### 🧊 3D + time-enabled content (extra cautions)
@@ -722,48 +788,34 @@ These are the project’s **internal architecture/design memos**. Prefer convert
 
 | Project file | Primary lens | How it upgrades `docs/` decisions |
 |---|---|---|
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | 🧭 End-to-end blueprint | Tightens contract-first posture, dataset contracts, evidence + provenance expectations, and system boundaries. |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` | 🧱 Architecture + governance | Reinforces pipeline ordering, policy gates, and boundary separation across graph/API/UI/story. |
-| `📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf` | 📥 Intake discipline | Makes “catalog triplet” mandatory, documents watchers/idempotency, and clarifies PostGIS+Neo4j integration patterns. |
-| `Kansas Frontier Matrix – Comprehensive UI System Overview.pdf` | 🎛️ UI meaning-making | Documents MapLibre+Cesium posture, timeline semantics, Story Nodes as Markdown+JSON, and Focus Mode UX guardrails. |
-| `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` | 🤖 RAG + policy | Forces citation-first AI answers, policy checks (OPA), XAI/audit panel expectations, and drift/bias monitoring. |
-| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf` | 🚀 Roadmap | Clarifies planned features (offline packs, GTFS-RT watcher, PR→PROV, policy pack lanes) and keeps “planned vs real” explicit. |
-| `Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf` | 🌱 Innovation radar | Adds GeoXAI, crowdsourced consensus validation, AR/4D storytelling, and sovereignty-aware access patterns (e.g., TK labels). |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | 🧭 End-to-end blueprint | Hybrid storage (PostGIS/Neo4j/search), dual-format data products (GeoParquet+PMTiles), governance ledger posture, provenance-first storytelling, AR/field extensions (guarded). |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` | 🧱 Architecture + APIs | Contract-first API layer (REST+GraphQL), stateless scaling posture, background jobs, strict API boundary, pluggable policy/tool modules. |
+| `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf` | 📥 Intake discipline + clean architecture | Raw→Work→Processed staging, evidence triplet, deterministic/idempotent pipelines, layered architecture boundaries, provenance-first ethos. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf` | 🎛️ UI meaning-making | React+MapLibre+Cesium+D3, shareable URLs/state, provenance injection in UI, Story Node authoring posture, accessibility + modular UI boundaries. |
+| `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` | 🤖 RAG + catalog/graph integration | Evidence-first AI outputs, ingestion of STAC/DCAT/PROV into graph, refusal rules, provenance surfaces, CI metadata validation posture. |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf` | 🚀 Roadmap + integrity | DVC/registry strategy for large artifacts, SLSA posture, Watcher triggers + conditional fetch receipts, federated future plans (GraphQL federation). |
+| `MARKDOWN_GUIDE_v13.md.gdoc` | 🧾 Doc protocol + catalog alignment | Required STAC/DCAT/PROV alignment, cross-layer linkage expectations, doc artifact inventory, evidence-artifact governance rules. |
+
+### 🔍 Audits & meta-docs (commit-safe, “improves the docs system”)
+These documents help harden the documentation system itself.
+
+| Project file | Why it matters | Where it should land in `docs/` |
+|---|---|---|
+| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | Highlights gaps (plugin boundaries, SOPs, model cards, experiment tracking). Use as a checklist driver. | `docs/reports/audits/` or `docs/architecture/ADR/` (if decisions result) |
+| `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` | Reinforces structured YAML front-matter + template discipline (KFM-inspired). | `docs/library/` index entry (influence notes) |
 
 ### 📚 Multi-document reference packs (PDF portfolios) (index-only by default)
 These are **portfolio PDFs containing embedded books/papers** with mixed licensing. Treat them as **local reference shelves** unless licensing is verified.
 
 | Reference pack | What it contains (high-level) | What it supports in KFM docs |
 |---|---|---|
-| `AI Concepts & more.pdf` | AI/ML textbooks + humanism + AI law | AI governance language, uncertainty norms, and model documentation rigor |
-| `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` | data engineering + stats + Bayes + scaling + CI/CD | scaling runbooks, modeling V&V posture, provenance discipline |
-| `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` | cartography + map projections + GIS + WebGL + 3D | visualization honesty, CRS/projection hygiene, 2D/3D engine constraints |
-| `Various programming langurages & resources 1.pdf` | large engineering shelf (Postgres, Docker, CI/CD, cryptography, languages) | implementation craft, ops runbooks, defensive security mindset |
-
-<details>
-<summary><strong>🔎 Selected embedded references (non-exhaustive)</strong></summary>
-
-- From **`Various programming langurages & resources 1.pdf`**
-  - *SciPy lecture notes* (explicit CC BY 4.0 statement inside the doc) ✅
-  - GoalKicker “Notes for Professionals” series (often CC BY-SA for text; confirm per “About” page) ⚠️
-  - CI/CD + Docker references (useful for pipeline + policy pack runbooks)
-  - Defensive security mindset references (document defensively; do not write “exploit guides”)
-
-- From **`Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`**
-  - *Archaeological 3D GIS* (OA version states CC BY-NC-ND 4.0) ⚠️
-  - Map projections + map design + WebGL references (useful for 2D/3D/timeline docs)
-
-- From **`Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`**
-  - Bayes + experimental design references (uncertainty framing + V&V)
-  - Data systems + scaling references (indexing, performance, reproducibility)
-  - Many items are copyrighted books (default: 🚫 do not commit)
-
-- From **`AI Concepts & more.pdf`**
-  - AI/ML theory + practice references
-  - Human impact / AI law concept pieces to sharpen governance language
-  - Many items are copyrighted books (default: 🚫 do not commit)
-
-</details>
+| `AI Concepts & more.pdf` | AI/ML + governance + human impact shelf | AI governance language, uncertainty norms, model documentation rigor |
+| `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` | data engineering + stats + Bayes + scaling | scaling runbooks, modeling V&V posture, provenance discipline |
+| `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` | cartography + GIS + WebGL + 3D | visualization honesty, CRS/projection hygiene, 2D/3D engine constraints |
+| `Various programming langurages & resources 1.pdf` | broad engineering shelf | implementation craft, CI/CD, defensive security mindset |
+| `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf` | full-stack + ops shelf | API/UI boundaries, containerization, security runbooks |
+| `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf` | GIS+compute shelf | analytics patterns, reproducible compute posture |
+| `Data Mining Concepts & applications.pdf` | privacy + inference control shelf | aggregation/redaction norms, governance language for “inference risk” |
 
 </details>
 
@@ -784,12 +836,7 @@ These are **portfolio PDFs containing embedded books/papers** with mixed licensi
 |---|---|---|
 | ✅ Commit-safe | clearly redistributable (e.g., CC BY / CC0) | OK to store under `docs/library/` if desired |
 | ⚠️ Verify | limited license, share-alike, non-commercial, or unclear | index only until confirmed + compatible |
-| 🚫 Do not commit | “all rights reserved” / personal use / restricted redistribution | index only; do not add PDF to git |
-
-### ✅ Examples (from the current project pack shelves)
-- ✅ Commit-safe (example): **SciPy lecture notes** states “All code and material is licensed under CC BY 4.0” inside the document.
-- ⚠️ Verify (example): **Archaeological 3D GIS** OA version states **CC BY-NC-ND 4.0** (often incompatible with commercial-friendly repos).
-- 🚫 Do not commit (example): **Database Performance at Scale** is a copyrighted book (“All rights reserved”).
+| 🚫 Do not commit | “all rights reserved” / personal use / restricted redistribution / suspicious mirror | index only; do not add PDF to git |
 
 ### 🧰 Handling PDF portfolio reference packs (practical)
 Some project PDFs are **portfolios** that embed many files. Treat them as local-only shelves unless licenses are verified.
@@ -813,6 +860,7 @@ pdfdetach -list path/to/portfolio.pdf
 
 | Version | Date       | Summary of changes | Author |
 | ------: | ---------- | ------------------ | ------ |
+|  v1.5.0 | 2026-01-26 | Upgraded docs posture to match the current design pack: clarified **hybrid stack** (PostGIS+Neo4j+search) and **FastAPI REST+GraphQL** API boundary; added **dual-format data product** guidance (GeoParquet+PMTiles) and big-artifact strategies (DVC/registry); introduced **doc reliability levels**; expanded governance posture (ledger + integrity + supply-chain receipts); refreshed influence map and normalized “catalog triplet / evidence triplet” language. | KFM Engineering |
 |  v1.4.0 | 2026-01-19 | Integrated current **project pack** into the reference influence map (KFM subsystem memos + PDF portfolio shelves); clarified **Raw → ETL → Processed → Catalog triplet + data contracts** ordering; added **Policy Pack + Watcher→Planner→Executor** section (OPA/Conftest + PR-native automation + PR→PROV posture); updated docs target layout to include `docs/guides/`, `docs/ui/`, and `docs/roadmap/`; corrected and hardened **license posture examples** (commit-safe vs verify vs do-not-commit). | KFM Engineering |
 |  v1.3.0 | 2026-01-13 | Aligned `docs/README.md` with v13 repo/layout guidance (data lifecycle staging + API boundary invariant); expanded governance invariants (monotonic restrictions, license-aware posture); added ML/AI + graph/ontology documentation sections; rebuilt influence map; added license posture tags and improved library intake policy. | KFM Engineering |
 |  v1.2.0 | 2026-01-12 | Aligned with **KFM-MDP v11.2.6** front-matter; fixed mermaid fence; clarified library intake policy (license-aware); tightened DoD language; added explicit citations to project reference pack. | KFM Engineering |
