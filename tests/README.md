@@ -1,7 +1,7 @@
 ---
 title: "🧪 Tests — Kansas Frontier Matrix (KFM) / Kansas‑Matrix‑System"
 path: "tests/README.md"
-version: "v1.5.0"
+version: "v1.6.0"
 last_updated: "2026-01-26"
 review_cycle: "90 days"
 status: "active"
@@ -25,7 +25,7 @@ classification: "open"
 jurisdiction: "US-KS"
 
 # Integrity & traceability (filled by tooling in governed lanes)
-doc_uuid: "urn:kfm:doc:tests:readme:v1.5.0"
+doc_uuid: "urn:kfm:doc:tests:readme:v1.6.0"
 commit_sha: "<commit-sha>"
 doc_integrity_checksum: "sha256:<to-be-filled>"
 
@@ -39,6 +39,7 @@ tags:
   - determinism
   - contract-first
   - catalog-first
+  - evidence-triplet
   - stac
   - dcat
   - prov
@@ -63,15 +64,18 @@ tags:
   - cesium
   - story-nodes
   - focus-mode
-  - agents
-  - wpe
-  - streaming
+  - ollama
+  - rag
+  - prompt-gate
+  - embeddings
+  - vector
   - drift
   - scenario
   - offline
   - ar
   - supply-chain
   - oras
+  - oci
   - cosign
   - sbom
   - dvc
@@ -84,6 +88,7 @@ tags:
 🗓️ Last updated: 2026-01-26
 🔁 Review cycle: 90 days (or anytime pipeline order / catalogs / policy pack / CI lanes change)
 ✅ Principle: evidence-first, fail-closed gates
+🧾 According to KFM v13 docs (2026-era design set): “catalog triplet” metadata, clean layering, and provenance-linked AI outputs are non-negotiable.
 -->
 
 <div align="center">
@@ -105,7 +110,8 @@ Determinism • Contracts • Governance • Evidence receipts • “Fail close
 ![Contracts](https://img.shields.io/badge/Contracts-OpenAPI%20%7C%20GraphQL-ff6b6b)
 ![Catalogs](https://img.shields.io/badge/Catalogs-STAC%20%7C%20DCAT%20%7C%20PROV-6f42c1)
 ![Policy%20as%20Code](https://img.shields.io/badge/Policy-OPA%20%2B%20Conftest-1f6feb)
-![Supply%20Chain](https://img.shields.io/badge/Supply%20Chain-Cosign%20%2B%20SBOM-8a2be2)
+![AI](https://img.shields.io/badge/Focus%20Mode-Ollama%20RAG-8a2be2)
+![Supply%20Chain](https://img.shields.io/badge/Supply%20Chain-OCI%20%2B%20Cosign%20%2B%20SBOM-8a2be2)
 ![Fail%20Closed](https://img.shields.io/badge/Quality%20Gates-Fail%20Closed-red)
 
 </div>
@@ -131,10 +137,11 @@ This README defines **how KFM proves trust** through automated checks: contracts
 ### Scope
 | ✅ In scope | 🚫 Out of scope |
 |---|---|
-| Unit/integration/E2E tests across **ETL → catalogs → graph → API → UI → story → Focus Mode** | Offensive security guidance or penetration steps |
-| Contract validation (schemas, OpenAPI/GraphQL, Story Node scripts) | “Manual-only” governance decisions (but we *do* automate triggers + blockers) |
-| Determinism, receipts, and evidence artifacts | Live network calls inside unit tests |
-| Governance & “no downgrade” classification enforcement | Shipping unverified release artifacts |
+| Unit/integration/E2E tests across **Raw → ETL → catalogs → graph → API → UI → story → Focus Mode** | Offensive security guidance or penetration steps |
+| Contract validation (schemas, OpenAPI/GraphQL, Story Node scripts, Focus Mode output schema) | “Manual-only” governance decisions (but we *do* automate triggers + blockers) |
+| Determinism, receipts, evidence artifacts, and **evidence triplets** (STAC+DCAT+PROV) | Live network calls inside unit tests |
+| Governance & “no downgrade” classification enforcement (including AI output policy checks) | Shipping unverified release artifacts |
+| Optional AI regression tests (Ollama + smaller CI model / CPU mode) | “Freeform AI” without citations |
 
 ### Audience
 - 👩‍💻 Engineers (pipelines, backend, UI)
@@ -145,15 +152,19 @@ This README defines **how KFM proves trust** through automated checks: contracts
 ### Definitions (fast)
 - **Contract-first** 🧾: schemas + API contracts are first-class artifacts; changes are versioned and tested.
 - **Catalog-first** 🗂️: nothing is “real” until it’s represented in STAC/DCAT and traced via PROV.
+- **Evidence triplet** 🧬🗂️: **STAC + DCAT + PROV** emitted for every publish-grade dataset (boundary artifacts).
 - **Receipt** 🧾📎: run manifest + hashes + linkage (what produced this, from what, with what config).
 - **Fail-closed** 🔒: if policy/validation can’t run, the governed lane **halts**.
 - **No mystery nodes** 🕸️: graph entities must trace back to catalog entries (no undocumented facts).
+- **Prompt Gate** 🧼🧯: input filtering/sanitization layer that runs before Focus Mode calls an LLM.
 
 ### Definition of done (for this README)
 - [x] Front-matter complete + aligned to v13 protocols
 - [x] Pipeline ordering stated and testable
+- [x] Evidence triplet + staging rules stated and testable
 - [x] CI gates listed and repeatable
 - [x] Governance + FAIR/CARE + sovereignty posture is explicit
+- [x] Focus Mode (Ollama) tests/policies described (citations + safety)
 - [x] Test lanes documented with runnable commands
 
 ---
@@ -166,16 +177,19 @@ This README defines **how KFM proves trust** through automated checks: contracts
 - [🚀 Quickstart](#-quickstart)
 - [🧩 KFM test matrix](#-kfm-test-matrix-subsystems--what-to-assert)
 - [🧠 Core invariant: governed ordering](#-core-invariant-governed-ordering)
+- [🗂️ Evidence triplet & staging invariants](#️-evidence-triplet--staging-invariants-raw--work--processed)
 - [🧱 Architecture boundary tests](#-architecture-boundary-tests-clean-architecture)
 - [🤖 Agentic QA workflows](#-agentic-qa-workflows-watcherplannerexecutor)
 - [🔺 Test pyramid](#-test-pyramid-how-we-keep-velocity--confidence)
 - [🏷️ Test categories & markers](#️-test-categories--markers-suggested)
 - [🧰 Tool & CLI contract tests](#-tool--cli-contract-tests)
 - [📄 Docs, Story Nodes, & Focus Mode validation](#-docs-story-nodes--focus-mode-validation)
+- [🧠 Focus Mode (Ollama) regression suite](#-focus-mode-ollama-regression-suite-rag--policy-gates)
 - [📄 PDF & doc-portfolio hygiene](#-pdf--doc-portfolio-hygiene)
 - [🧾 Contract & metadata tests](#-contract--metadata-tests)
 - [🧾 Evidence manifests & run receipts](#-evidence-manifests--run-receipts-run_manifestjson)
 - [🧷 Stable IDs & versioning tests](#-stable-ids--versioning-tests-dont-break-links)
+- [📦 Packaging parity tests](#-packaging-parity-tests-geoparquet--pmtiles--cog)
 - [📜 License, citation, & redistribution tests](#-license-citation--redistribution-tests)
 - [✅ Data validation gates](#-data-validation-gates-fail-fast)
 - [📡 Streaming & schema-drift tests](#-streaming--schema-drift-tests-watchers-planner)
@@ -190,7 +204,7 @@ This README defines **how KFM proves trust** through automated checks: contracts
 - [🛡️ API tests](#️-api-tests-fastapi--graphql)
 - [🌐 Web / frontend tests](#-web--frontend-test-guidance)
 - [📦 Offline packs & AR tests](#-offline-packs--ar-tests)
-- [📦 Supply chain & artifact integrity](#-supply-chain--artifact-integrity-oras-cosign-sbom)
+- [📦 Supply chain & artifact integrity](#-supply-chain--artifact-integrity-oci-oras-cosign-sbom)
 - [📈 Performance & capacity tests](#-performance--capacity-tests-latency-throughput-cost)
 - [🔐 Security, governance, & ethics tests](#-security-governance--ethics-tests-defensive)
 - [🧾 Test artifacts & receipts](#-test-artifacts--receipts)
@@ -211,16 +225,19 @@ This README defines **how KFM proves trust** through automated checks: contracts
 
 - 🧭 Repo overview: `../README.md`
 - 📘 Master Guide (v13, canonical): `../docs/MASTER_GUIDE_v13.md`
+- 🧾 Markdown protocol + staging rules (v13): `../docs/MARKDOWN_GUIDE_v13.md`
 - 🧱 Architecture blueprints: `../docs/architecture/`
 - ⚖️ Governance + ethics + sovereignty:
   - `../docs/governance/ROOT_GOVERNANCE.md`
   - `../docs/governance/ETHICS.md`
   - `../docs/governance/SOVEREIGNTY.md`
-- 📦 Data lifecycle + catalogs:
-  - `../data/README.md`
-  - `../data/stac/` (STAC collections/items)
-  - `../data/catalog/dcat/` (DCAT outputs)
-  - `../data/prov/` (PROV bundles)
+- 📦 Data lifecycle + catalogs (canonical locations per v13):
+  - `../data/raw/` (immutable sources)
+  - `../data/work/` (intermediate outputs)
+  - `../data/processed/` (publishable outputs)
+  - `../data/stac/{collections,items}/` (STAC boundary artifacts)
+  - `../data/catalog/dcat/` (DCAT boundary artifacts)
+  - `../data/prov/` (PROV lineage bundles)
 - 🧬 Schemas registry: `../schemas/` *(STAC/DCAT/PROV/Story/UI/Telemetry contracts)*
 - 🧰 Tools/validators (governed command surface): `../tools/` *(if present)*
 - 📜 Policy pack (OPA/Conftest): `../tools/validation/policy/` *(if present)*
@@ -228,9 +245,10 @@ This README defines **how KFM proves trust** through automated checks: contracts
 - 🧠 Pipelines: `../src/pipelines/` *(ETL + transforms — canonical home)*
 - 🕸️ Graph: `../src/graph/` *(Neo4j ingest, constraints, ontology bindings)*
 - 🛡️ API boundary: `../src/server/` *(FastAPI + GraphQL; contracts live nearby)*
+- 🤖 AI module (Focus Mode): `../src/ai/` *(retrieval, prompt templates, policy checks — if present)*
 - 🌐 Web UI: `../web/` *(React/TS; MapLibre; Cesium — if enabled)*
 - 📚 Story Nodes: `../docs/reports/story_nodes/{draft|published}/`
-- 🧪 Methods & computational experiments (MCP): `../mcp/`
+- 🧪 Methods & experiments (MCP): `../mcp/`
 
 ---
 
@@ -244,36 +262,45 @@ These are KFM’s “must not regress” invariants. If any becomes false, **CI 
 2) **Catalog‑first:** nothing is “real” unless it’s cataloged (STAC/DCAT) and traceable (PROV) 🗂️🧬  
    - Catalogs are **boundary artifacts** consumed by graph/API/UI.
 
-3) **Canonical ordering is enforced in tests** 🧱  
-   **ETL → STAC/DCAT/PROV → Neo4j graph → APIs → UI → Story Nodes → Focus Mode**
+3) **Evidence triplet required (publish-grade):** **STAC + DCAT + PROV** must exist **before** downstream use 🧾🗂️  
+   - If any piece is missing, the lane **fails closed**.
 
-4) **API boundary rule:** UI must never query PostGIS/Neo4j/Elastic directly 🔐  
+4) **Canonical ordering is enforced in tests** 🧱  
+   **Raw → ETL → STAC/DCAT/PROV → Neo4j graph → APIs → UI → Story Nodes → Focus Mode**
+
+5) **Raw data is immutable** 🧊  
+   - Never overwrite `data/raw/**`. New versions are new files + new receipts.
+
+6) **API boundary rule:** UI must never query PostGIS/Neo4j/Elastic directly 🔐  
    - Everything user-facing flows through the API boundary for redaction + policy enforcement.
 
-5) **Determinism by default:** reruns should match unless inputs/configs change 🔁  
+7) **Determinism by default:** reruns should match unless inputs/configs change 🔁  
    - Stochastic code must be seeded and tested by **properties** (not exact values).
 
-6) **Sovereignty + classification propagation:** outputs can’t be *less restricted* than inputs 🏷️🛡️  
+8) **Sovereignty + classification propagation:** outputs can’t be *less restricted* than inputs 🏷️🛡️  
    - “No downgrade” is a **gate**.
 
-7) **Policy-as-code is a gate:** governance rules execute automatically (OPA/Conftest or equivalent) 📜🧱  
+9) **Policy-as-code is a gate:** governance rules execute automatically (OPA/Conftest or equivalent) 📜🧱  
    - If policy evaluation is unavailable, the pipeline **fails closed**.
 
-8) **No mystery nodes:** every graph node/edge traces back to catalog evidence IDs 🕸️🧾  
+10) **No mystery nodes:** every graph node/edge traces back to catalog evidence IDs 🕸️🧾  
    - No undocumented facts in Neo4j.
 
-9) **Run receipts exist for publish‑grade outputs:** publishable artifacts require receipts (manifests + hashes + PROV link) 🧾📎  
+11) **Focus Mode is advisory-only and evidence-backed** 🧠🧾  
+   - Answers must include citations; prompt injection defenses must work; “no tools” is enforced by default.
+
+12) **Run receipts exist for publish‑grade outputs:** publishable artifacts require receipts (manifests + hashes + PROV link) 🧾📎  
    - If you can’t answer “what produced this?”, you can’t publish it.
 
-10) **No network in unit tests** 🚫🌐  
+13) **No network in unit tests** 🚫🌐  
    - Record/replay, mock adapters, or cached fixtures only.
 
-11) **Evidence over vibes:** failures must produce inspectable artifacts (logs, diffs, screenshots, receipts) 📎
+14) **Evidence over vibes:** failures must produce inspectable artifacts (logs, diffs, screenshots, receipts) 📎
 
-12) **Docs are linkable + searchable:** governed docs must pass front‑matter + link checks 📄🔍  
+15) **Docs are linkable + searchable:** governed docs must pass front‑matter + link checks 📄🔍  
    - PDF portfolios require extraction manifests (see below).
 
-13) **Supply chain verifiable (release lane):** signatures + SBOMs must verify 🔏📦  
+16) **Supply chain verifiable (release lane):** signatures + SBOMs must verify 🔏📦  
    - If verification can’t run, **do not ship**.
 
 ---
@@ -286,6 +313,7 @@ These are KFM’s “must not regress” invariants. If any becomes false, **CI 
 - 🐳 Docker installed *(recommended for integration parity)*
 - 📜 Policy tooling *(optional but recommended)*: `conftest` / `opa`
 - 🔏 Release tooling *(release lane)*: `cosign` + SBOM tools *(if enabled)*
+- 🤖 Optional (AI lane): `ollama` runtime available *(or CI runs a smaller containerized model)*
 
 ### 1) Fast checks (developer loop ⚡)
 ```bash
@@ -317,6 +345,9 @@ docker compose down -v
 # Contracts only (API + schemas + catalogs)
 pytest -q -m contracts
 
+# Evidence triplet (STAC/DCAT/PROV) + staging rules
+pytest -q -m catalogs
+
 # Docs/story lint + story-node schema checks
 pytest -q -m docs
 
@@ -329,8 +360,8 @@ pytest -q -m receipts
 # Geo sanity (CRS/geometry/raster)
 pytest -q -m geo
 
-# Earth-observation sanity
-pytest -q -m eo
+# WebGL/3D sanity
+pytest -q -m webgl
 
 # Scientific + scenario validation (tolerance-based; deterministic)
 pytest -q -m validation
@@ -362,6 +393,11 @@ pytest -q -m perf
 # Defensive security + governance checks
 pytest -q -m security
 pytest -q -m governance
+
+# Focus Mode / AI contract tests
+pytest -q -m focus
+pytest -q -m ollama
+pytest -q -m promptgate
 ```
 </details>
 
@@ -375,9 +411,10 @@ KFM is layered (clean boundaries). Tests should **pin the seams** 🔩:
 |---|---|---|---|
 | 🧰 Tools/CLIs | governed command surface: `--help`, safe defaults, stable exit codes, structured logs | unit ✅ + smoke ✅ | pytest, subprocess, snapshot tests |
 | 🧪 ETL / pipelines | deterministic outputs, idempotent reruns, schema+CRS correctness | unit ✅ + integration 🔌 + QA gates ✅ | pytest, GeoPandas, GDAL, validators |
+| 🧊 Raw intake | raw immutable + source manifest present | contracts 🧾 + integration 🔌 | hashing, manifest validators |
 | 🗂️ Catalogs (STAC/DCAT/PROV) | boundary artifacts exist *before* graph/UI uses data; links resolve; provenance complete | contracts 🧾 + integration 🔌 | jsonschema, jq, custom validators |
 | 🧾 Receipts (run manifests) | publish-grade outputs have manifest + hashes + PROV link | contracts 🧾 + integration 🔌 | pydantic, canonicalization, hashing |
-| 📜 Policy pack | governance rules are executable + fail closed | unit ✅ + integration 🔌 | OPA, Conftest, Rego tests |
+| 📜 Policy pack | governance rules executable + fail closed (including AI answer checks) | unit ✅ + integration 🔌 | OPA, Conftest, Rego tests |
 | 🗃️ Data stores | PostGIS/Neo4j/Elastic integration is gated + reproducible | integration 🔌 | Docker, migrations, fixtures |
 | 🕸️ Graph (Neo4j) | derived truth from catalogs; constraints + “no mystery nodes” | integration 🔌 + property tests 🧪 | Neo4j container, Cypher assertions |
 | 🔎 Search index | results always cite sources; stable doc IDs + offsets | contracts 🧾 + integration 🔌 | Elastic test container, fixtures |
@@ -398,23 +435,32 @@ KFM is layered (clean boundaries). Tests should **pin the seams** 🔩:
 > [!IMPORTANT]
 > KFM enforces a **non‑negotiable** pipeline order with a “Detect → Validate → Promote” mentality:
 >
-> **ETL → STAC/DCAT/PROV → Neo4j graph → APIs → UI → Story Nodes → Focus Mode**
+> **Raw Sources → ETL → STAC/DCAT/PROV → Neo4j graph → APIs → UI → Story Nodes → Focus Mode**
 
 ```mermaid
 flowchart LR
-  A[🧪 ETL] --> B[🗂️ STAC/DCAT/PROV]
-  B --> C[🕸️ Neo4j Graph]
-  C --> D[🛡️ API (FastAPI/GraphQL)]
-  D --> E[🌐 UI (React/MapLibre/Cesium)]
-  E --> F[📚 Story Nodes]
-  F --> G[🎯 Focus Mode]
-  B --> R[🧾 Run Receipts]
-  R --> C
+  subgraph Data
+    A[🧊 Raw Sources] --> B[🧪 ETL + Normalization]
+    B --> C[🗂️ STAC Items + Collections]
+    C --> D[🏷️ DCAT Dataset Views]
+    C --> E[🧬 PROV Lineage Bundles]
+  end
+
+  C --> G[🕸️ Neo4j Graph (references back to catalogs)]
+  G --> H[🛡️ API Layer (contracts + redaction)]
+  H --> I[🌐 Map UI — React · MapLibre · (optional) Cesium]
+  I --> J[📚 Story Nodes (governed narratives)]
+  J --> K[🎯 Focus Mode (provenance-linked context bundle)]
+
+  C --> R[🧾 Run Receipts]
+  R --> G
 ```
 
 ### ✅ What tests should enforce (practically)
+- 🧊 Raw immutability + source manifests present
 - 🧪 ETL determinism (stable IDs/hashes; idempotent reruns; explicit versions)
 - 🗂️ Catalog records exist **before** graph/UI uses them
+- 🧾 Evidence triplet exists for publish-grade datasets (STAC/DCAT/PROV)
 - 🧾 Run receipts exist for publish-grade outputs (run manifests + hashes + PROV link)
 - 🕸️ Graph loads only from catalogs (no ad‑hoc inserts in prod paths)
 - 🕸️ Graph has **no mystery nodes** (every node/edge has a catalog reference)
@@ -422,7 +468,41 @@ flowchart LR
 - 📜 Policy pack enforces governance (licenses, classification, access controls)
 - 🔐 Classification/sensitivity never downgrades silently (requires audited redaction)
 - 📚 Story Nodes are governed (no uncited “facts”)
-- 🎯 Focus Mode is advisory, evidence-backed, and refusal-capable
+- 🎯 Focus Mode is advisory, evidence-backed, refusal-capable, policy-checked
+
+---
+
+## 🗂️ Evidence triplet & staging invariants (raw → work → processed)
+
+Per v13, KFM’s data lifecycle must be explicit and testable:
+
+- `data/raw/<domain>/...` 🧊 immutable source intake  
+- `data/work/<domain>/...` 🧪 intermediate reproducible steps  
+- `data/processed/<domain>/...` ✅ publish-grade outputs  
+- Catalog “boundary artifacts” must land in canonical paths:
+  - `data/stac/{collections,items}/` 🗂️
+  - `data/catalog/dcat/` 🏷️
+  - `data/prov/` 🧬
+
+> [!IMPORTANT]
+> A dataset is not considered “published” in KFM until the **evidence triplet** exists:
+> **STAC + DCAT + PROV** (and it passes policy + schema checks).  [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+
+### ✅ Test assertions (recommended)
+- `test_raw_never_overwritten()` 🧊
+- `test_raw_has_source_manifest()` *(e.g., `source.json` / source inventory)* 🧾
+- `test_processed_has_evidence_triplet()` *(STAC/DCAT/PROV present + linked)* 🧬
+- `test_triplet_links_resolve()` *(STAC assets exist, DCAT distributions real, PROV references inputs)* 🔗
+- `test_no_publish_without_triplet()` *(fail-closed gate)* 🔒
+
+### 🧪 Example (high-value fixture)
+Use a tiny “toy domain” fixture (safe + synthetic) that produces:
+- 1 GeoParquet vector output
+- 1 PMTiles vector tiles output
+- 1 STAC Item + DCAT record + PROV bundle
+- 1 run receipt with hashes
+
+This lets you test the entire boundary without big data costs.
 
 ---
 
@@ -433,7 +513,7 @@ KFM stays maintainable only if boundaries are enforced 🧱✨
 ### ✅ What to test
 - **Dependency direction rules** (domain → service → adapters; never reverse)
 - **No cross-layer shortcuts** (UI never imports DB clients; pipelines don’t import UI)
-- **API boundary is the redaction/policy choke‑point**
+- **API boundary is the redaction/policy choke‑point** (UI never bypasses it)  [oai_citation:2‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 - **“Independently testable components” stays true** (isolated unit tests remain possible)
 
 ### 🔧 Suggested patterns
@@ -480,7 +560,7 @@ Treat agents as **high-risk boundaries** that must be fenced by tests.
 
 ```text
           🔺 E2E (few)          → critical user journeys (UI + API + DB)
-        🔺🔺 Integration (some)  → services together (DB, API, pipelines)
+        🔺🔺 Integration (some)  → services together (DB, API, pipelines, AI policy checks)
       🔺🔺🔺 Unit (many)          → pure logic, transforms, validators
 ```
 
@@ -502,6 +582,7 @@ markers =
   perf: benchmarks/capacity (usually scheduled)
 
   contracts: schemas + catalogs + API contract validation
+  catalogs: evidence triplet (STAC/DCAT/PROV) + staging rules
   docs: markdown/front-matter/story-node validation
   pdf: PDF hygiene (searchable text layer / portfolios)
 
@@ -514,7 +595,8 @@ markers =
   webgl: WebGL context + render sanity checks
   ar: AR overlay checks (if enabled)
   offline: offline pack packaging + integrity
-  supplychain: artifact signature/SBOM verification (release lane)
+  supplychain: artifact signature/SBOM/OCI verification (release lane)
+  oci: ORAS/OCI artifact registry checks
 
   graph: Neo4j integrity + constraints + rebuild invariants
   ontology: semantic/ontology coherence checks (if used)
@@ -527,6 +609,9 @@ markers =
   api: API behavior checks (beyond schema)
   security: defensive security checks (no offensive testing)
   focus: Focus Mode contract tests (provenance + safety + uncertainty)
+  ollama: Focus Mode regression tests using Ollama backend (optional in CI)
+  promptgate: input filtering/prompt-injection defenses
+  rag: retrieval pipeline correctness (graph+search+vectors)
   a11y: accessibility checks (docs + UI where applicable)
 ```
 
@@ -549,6 +634,7 @@ KFM’s **governed toolchain** (`tools/`) is part of the contract surface. Tools
 - stable exit codes (usage vs validation failure vs runtime failure)
 - structured logs available (human + JSONL mode)
 - **idempotency for ingest/watchers:** reruns do not duplicate outputs
+- if tool emits artifacts: **receipt + hashes** are written
 
 ### 🔧 Suggested tests (patterns)
 - `test_tools_help_smoke()`
@@ -575,25 +661,89 @@ KFM treats docs + narrative as governed artifacts (not “freeform notes”).
 - citations/refs resolve (story exports + layer attributions)
 
 ### ✅ Story Nodes validation should cover
+Story Nodes are a **paired artifact**:
+- a Markdown narrative (text/media/citations)
+- a JSON “script” describing map/timeline state per slide/section  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+
+**Checks we enforce:**
 - lives under `docs/reports/story_nodes/{draft|published}/...`
-- uses the Story Node template v3 fields *(or repo’s current schema)*
-- **machine-ingestible** structure remains valid (Story Markdown + JSON storyboard/script)
+- Markdown front-matter + Story Node schema fields validate
+- JSON script validates (schema + required keys)
+- **timeline correctness:** JSON slide times align with dataset temporal extents
 - citations resolve to cataloged sources (STAC/DCAT/PROV IDs)
 - narrative claims do **not** introduce uncited “facts”
-- **timeline correctness:** story steps align with dataset temporal extents
-- published stories have stricter gates than drafts
+- published stories have stricter gates than drafts (policy + link + citation)
 
 ### ✅ Focus Mode contract tests should cover
-- UI sends question + map context; server returns **structured answers with citations**
+- UI sends question + map context; server returns **structured answers with citations**  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
 - retrieval uses governed sources (Neo4j + search index + catalogs)
 - refusal behavior works when evidence is missing
-- uncertainty is surfaced (intervals, confidence notes, or “unknown”)
+- uncertainty is surfaced (“unknown”, intervals, or confidence notes)
 - no sensitive leakage (classification enforcement end-to-end)
 - explainability hooks: “audit” panel shows evidence set used (where implemented)
 
 > [!CAUTION]
 > If a Story Node (or Focus Mode output) could expose sensitive locations or culturally sensitive information:  
 > CI should flag it for governance review and block publish until review completes 🔒
+
+---
+
+## 🧠 Focus Mode (Ollama) regression suite (RAG + policy gates)
+
+Focus Mode’s backend pipeline is explicitly staged:
+
+**Parse Intent → Retrieve Knowledge (Neo4j/PostGIS/Search/Vectors) → LLM Generate (Ollama) → Governance Check (OPA) → Answer (with citations)**  [oai_citation:5‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+
+### ✅ What to test (must-pass for governed lanes)
+#### 1) Prompt Gate (input sanitization) 🧼🧯
+- strips/escapes prompt-injection patterns
+- blocks disallowed requests (e.g., private data requests)
+- normalizes inputs safely (no control chars / unsafe markdown)
+
+Suggested tests:
+- `test_prompt_gate_strips_ignore_instructions()`
+- `test_prompt_gate_blocks_sensitive_requests()`
+- `test_prompt_gate_is_deterministic()`
+
+#### 2) “No tools by default” sandbox 🔒
+- model has **no direct internet/filesystem/tool access** unless explicitly enabled
+- allow/deny lists enforced (default deny)  [oai_citation:6‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+
+Suggested tests:
+- `test_focus_mode_default_toollist_empty()`
+- `test_focus_mode_rejects_tool_call_syntax()`
+
+#### 3) Evidence + citation enforcement 🧾
+- answers include citation markers (e.g., `[1] [2]`) mapped to a reference list
+- policy check fails/rewrites/blocks if citations missing
+- every referenced source resolves to catalog/graph/document IDs  [oai_citation:7‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+
+Suggested tests:
+- `test_ai_answer_has_citations()`
+- `test_ai_answer_citations_resolve()`
+- `test_ai_answer_blocked_when_no_citations()`
+
+#### 4) Role-aware governance 🔐
+- restricted sources never appear in public answers
+- redaction/generalization rules apply consistently
+- caching does **not** leak restricted context between sessions/users  [oai_citation:8‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+
+Suggested tests:
+- `test_focus_mode_public_role_filters_sensitive_sources()`
+- `test_focus_mode_cache_partitioned_by_role()`
+
+#### 5) Retrieval correctness (RAG) 🧠🔎
+- graph grounding works (multi-hop chains are **from retrieved facts**, not hallucinated)
+- search results include traceable pointers (doc IDs + offsets)
+- vector embeddings index reproducible (idempotent ingestion)
+
+Suggested tests:
+- `test_retrieval_returns_expected_evidence_bundle()`
+- `test_retrieval_multi_hop_is_traceable()`
+- `test_vector_index_idempotent()`
+
+> [!TIP]
+> For CI: run **small** models or CPU-only Ollama mode for regression checks (smoke + policy), and keep “full model evals” as nightly.  [oai_citation:9‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
 
 ---
 
@@ -609,11 +759,12 @@ Some KFM PDFs are **PDF portfolios** (container PDFs with embedded files). Portf
 
 ### 🧪 Suggested tests
 - `test_pdf_has_text_layer()` *(sample pages contain extractable text)*
-- `test_no_pdf_portfolios_in_governed_paths()` *(or require extraction manifest)*
+- `test_pdf_portfolio_requires_extraction_manifest()` *(portfolio PDFs must ship with `*.extract.json`)*  
 - `test_doc_assets_exist_and_are_linked()` *(no broken embeds)*
 
-> [!TIP]
-> If you store portfolios as “library shelves”, add `LIBRARY_INDEX.md` listing embedded docs + purpose. 📚🗂️
+> [!NOTE]
+> Several “library shelf” PDFs are portfolios (Adobe Reader hint inside). Treat them as **libraries** and keep them out of governed lanes unless extracted & indexed.  
+> (See reference section for the current shelf list.) 📚🗂️
 
 ---
 
@@ -621,7 +772,7 @@ Some KFM PDFs are **PDF portfolios** (container PDFs with embedded files). Portf
 
 KFM is contract-first and catalog-first. Tests must protect:
 
-- 🛡️ OpenAPI / GraphQL contracts (breaking changes explicit + versioned)
+- 🛡️ OpenAPI / GraphQL contracts (breaking changes explicit + versioned)  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 - 🗂️ STAC validity (collections/items required fields)
 - 🏷️ DCAT validity (distributions point to real assets/endpoints)
 - 🧬 PROV completeness (inputs → activities → outputs with run IDs/configs)
@@ -681,6 +832,29 @@ Stable IDs keep KFM citable, reversible, and auditable 🧷🧾
 
 ---
 
+## 📦 Packaging parity tests (GeoParquet + PMTiles + COG)
+
+Many KFM layers are expected to ship in **multiple publish formats** (example pattern: GeoParquet for analysis + PMTiles for UI performance) plus catalogs + receipts.  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+
+### ✅ What to test
+- **Schema parity:** GeoParquet columns == PMTiles feature properties (allowed deltas must be documented)
+- **Extent parity:** bbox/time range match across outputs (within tolerance)
+- **ID parity:** stable dataset IDs shared across formats and referenced by STAC/DCAT/PROV
+- **Tile sanity (PMTiles):** expected min/max zoom, tile bounds, metadata present
+- **Raster sanity (COG):** overviews present, internal tiling, nodata metadata, predictable compression
+- **Round-trips:** load GeoParquet → derive tiles → compare sample features ↔ tiles
+
+Suggested tests:
+- `test_geoparquet_schema_stable()`
+- `test_pmtiles_metadata_present()`
+- `test_geoparquet_pmtiles_parity_sampled()`
+- `test_cog_has_overviews_and_is_cloud_optimized()`
+
+> [!TIP]
+> Keep parity tests sampled + deterministic (e.g., fixed feature IDs) so CI stays fast ✅
+
+---
+
 ## 📜 License, citation, & redistribution tests
 
 Licensing is a publish gate 📜✅
@@ -705,12 +879,12 @@ Licensing is a publish gate 📜✅
 
 ## ✅ Data validation gates (fail fast)
 
-These gates are your “no‑bad‑data firewall” 🧱🔥 — especially for GeoParquet + PMTiles/COG publish flows.
+These gates are your “no‑bad‑data firewall” 🧱🔥 — especially for **GeoParquet + PMTiles/COG publish flows**.
 
 ### Ring model (recommended)
 
 **Ring 0: Structure**
-- parses (JSON/GeoJSON/Parquet/TIFF)
+- parses (JSON/GeoJSON/Parquet/TIFF/PMTiles)
 - schema validation (STAC/DCAT/PROV + local schemas)
 - required files exist
 
@@ -763,7 +937,7 @@ Geospatial pipelines fail in predictable ways—test them explicitly:
 - 🧩 overlay correctness: clip/intersect/union behaviors
 - 🧭 buffer correctness: distance units + projection correctness
 - 🧊 raster alignment: resolution, nodata handling, resampling method
-- 📦 format IO: GeoJSON/GeoPackage/GeoParquet/COG round-trips
+- 📦 format IO: GeoJSON/GeoPackage/GeoParquet/COG/PMTiles round-trips
 - 🧭 coordinate range checks: latitude/longitude valid ranges
 - 🫥 sensitive geometry policy: generalization (point→hex/area) correct & enforced
 
@@ -799,7 +973,8 @@ Remote sensing workflows fail quietly unless assumptions are tested:
 
 ## 🧠 Scientific / simulation validation (scenario runs)
 
-Treat simulation code like a scientific instrument 🔬
+Treat simulation code like a scientific instrument 🔬  
+(KFM also adopts MCP-style experiment discipline: documented protocols, no raw overwrite, reproducible environments.)  [oai_citation:12‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 ### ✅ Patterns
 - analytical solution comparisons (tiny known cases)
@@ -848,7 +1023,7 @@ If you implement a `kfm-sim-run` / scenario runner:
 
 ## 🕸️ Graph tests (Neo4j + integrity)
 
-KFM treats the graph as **derived truth** (built from catalogs + provenance), not a write-anywhere scratchpad.
+KFM treats the graph as **derived truth** (built from catalogs + provenance), not a write-anywhere scratchpad.  [oai_citation:13‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### ✅ Test categories
 - graph rebuild from catalogs is reproducible
@@ -887,13 +1062,14 @@ If KFM uses full-text indexing (Elastic or equivalent), treat search as a govern
 
 What to test:
 - OpenAPI schema validation (breaking changes explicit)
-- GraphQL schema validation
+- GraphQL schema validation + query safety (depth/complexity limits)
 - AuthN/AuthZ: role-based access, classification enforcement
 - pagination determinism: stable ordering, cursor correctness
 - Geo correctness: GeoJSON validity; bbox correctness; CRS behavior
 - CORS headers correct
 - fail-closed for missing provenance/license (no ungoverned outputs)
 - sensitive outputs: coordinate generalization/redaction enforced
+- provenance surfaced: endpoints return source links (datasets/docs) where applicable  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 
 ---
 
@@ -913,11 +1089,11 @@ Because the UI represents state in URLs:
 Focus on “money paths” 💸:
 - auth/login
 - load a layer **from catalog**
-- timeline navigation updates map + panels
+- timeline navigation updates map + panels (4D: space + time)  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
 - select feature → details panel updates
 - provenance panel shows sources/licenses (if implemented)
-- story playback drives map transitions correctly
-- Focus Mode response renders with citations
+- story playback drives map transitions correctly (Markdown + JSON script)  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+- Focus Mode response renders with citations (footnotes clickable)  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
 
 ### 🖼️ Visual regression (maps + WebGL)
 Maps can regress visually while logic tests pass. Use screenshot diffs for:
@@ -945,9 +1121,9 @@ Maps can regress visually while logic tests pass. Use screenshot diffs for:
 
 ---
 
-## 📦 Supply chain & artifact integrity (ORAS, Cosign, SBOM)
+## 📦 Supply chain & artifact integrity (OCI, ORAS, Cosign, SBOM)
 
-When KFM ships artifacts (containers, offline packs, published datasets), releases must be verifiable.
+When KFM ships artifacts (containers, offline packs, published datasets, *and even models*), releases must be verifiable.  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 ### ✅ What to test (release lane)
 - signed artifacts verify (cosign or equivalent)
@@ -956,6 +1132,13 @@ When KFM ships artifacts (containers, offline packs, published datasets), releas
 - artifact storage is content-addressable and reproducible:
   - ORAS/OCI registry pulls reproduce exact bytes
   - DVC pointers resolve to expected hashes
+  - container images are versioned so old runs are reproducible
+
+Suggested tests:
+- `test_cosign_verify_image_digest()` 🔏
+- `test_sbom_present_for_release_artifacts()` 📜
+- `test_oras_manifest_includes_data_and_metadata()` 📦
+- `test_dvc_pointers_resolve_to_expected_hashes()` 🧾
 
 > [!IMPORTANT]
 > Supply chain checks are not optional once you publish. If verification can’t run, **do not ship**. 🔒
@@ -970,6 +1153,7 @@ When KFM ships artifacts (containers, offline packs, published datasets), releas
 - error rates under load
 - resource cost (CPU/RAM/IO) per request / per pipeline run
 - DB query stability (EXPLAIN plan snapshots)
+- (Optional) AI latency budgets (Focus Mode: retrieval + generation breakdown)  [oai_citation:19‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
 
 ### 🕛 Where these run
 - PRs: tiny perf smoke
@@ -991,6 +1175,7 @@ KFM’s security stance is defensive: prevent leaks, enforce policy, keep audit 
 - auditability (publish actions produce receipts)
 - sensitive location checks (no leakage via aggregations)
 - safe subprocess usage (avoid `shell=True` with untrusted input)
+- AI governance checks (citations required; disallowed content blocked)  [oai_citation:20‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
 
 > [!IMPORTANT]
 > Do **not** add offensive security instructions here.  
@@ -1010,6 +1195,7 @@ When tests fail, make failures inspectable:
 - performance traces (if relevant)
 - run receipts (`run_manifest.json`, checksums, “what changed” summary)
 - policy evaluation output (conftest/OPA logs)
+- Focus Mode debug bundle *(retrieved context hash + prompt hash + policy decision — no sensitive text in public lanes)*
 
 ---
 
@@ -1022,14 +1208,16 @@ Adapt as needed, but keep intent obvious:
 ├─ 🧪 tests/
 │  ├─ 📄 README.md
 │  ├─ 🧷 fixtures/
+│  │  ├─ 🧊 raw_intake/
 │  │  ├─ 🗺️ geo/
 │  │  ├─ 🛰️ eo/
 │  │  ├─ 📡 streaming/
 │  │  ├─ 🧊 3d/
 │  │  ├─ 🔎 search/
 │  │  ├─ 🧬 ml/
-│  │  ├─ 🧾 catalogs/
+│  │  ├─ 🧾 catalogs/         # STAC/DCAT/PROV fixture triplets
 │  │  ├─ 🧾 receipts/
+│  │  ├─ 🤖 focus_mode/       # golden prompts + expected citation structure
 │  │  └─ 📘 FIXTURES.md
 │  ├─ 📄 docs/
 │  ├─ 📄 pdf/
@@ -1045,6 +1233,7 @@ Adapt as needed, but keep intent obvious:
 │  │  ├─ ✅ validation/
 │  │  ├─ ⏱️ perf/
 │  │  ├─ 🔐 security/
+│  │  ├─ 🤖 focus_mode/
 │  │  └─ 🧱 conftest.py
 │  ├─ 🕸️ graph/
 │  │  ├─ 🔌 integration/
@@ -1059,6 +1248,9 @@ Adapt as needed, but keep intent obvious:
 │  ├─ 📦 offline/
 │  ├─ 🧊 ar/
 │  ├─ 🔏 supply_chain/
+│  │  ├─ 📦 oci/
+│  │  ├─ 🔏 cosign/
+│  │  └─ 📜 sbom/
 │  └─ 📘 TEST_POLICY.md
 └─ 📁 .github/
 ```
@@ -1073,18 +1265,20 @@ Adapt as needed, but keep intent obvious:
 1) 🧹 format + lint (Python + JS/TS)
 2) 🧱 build (frontend + backend; container build if applicable)
 3) 🧪 unit tests
-4) 📄 Markdown protocol checks (front‑matter + required sections)
+4) 📄 Markdown protocol checks (front‑matter + required sections)  [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 5) 🔗 link/reference validation (docs + story nodes)
 6) 🧾 schema validation (STAC/DCAT/PROV + story schemas + telemetry/UI schemas)
-7) 🧾 receipts validation (run manifests for publish outputs)
-8) 📜 policy pack checks (OPA/Conftest) *(if enabled)*
-9) ✅ data validation gates (CRS + geometry + raster sanity + license required)
-10) 🔌 integration tests (ephemeral DB/services via Compose)
-11) 🕸️ graph integrity tests (constraints + rebuild invariants + ontology checks)
-12) 🛡️ API contract tests (OpenAPI/GraphQL + deterministic pagination)
-13) 🔎 search index integrity (if enabled)
-14) 🔐 security & governance scans (secrets + PII + sensitive location + “no downgrade”)
-15) 🧑‍⚖️ CodeQL/static analysis lane (recommended)
+7) 🧾 evidence triplet gate (STAC+DCAT+PROV present + linked) 🧬
+8) 🧾 receipts validation (run manifests for publish outputs)
+9) 📜 policy pack checks (OPA/Conftest) *(if enabled)*
+10) ✅ data validation gates (CRS + geometry + raster sanity + license required)
+11) 🔌 integration tests (ephemeral DB/services via Compose)
+12) 🕸️ graph integrity tests (constraints + rebuild invariants + ontology checks)
+13) 🛡️ API contract tests (OpenAPI/GraphQL + deterministic pagination)
+14) 🔎 search index integrity (if enabled)
+15) 🔐 security & governance scans (secrets + PII + sensitive location + “no downgrade”)
+16) 🤖 Focus Mode policy checks *(citations required; prompt gate; no tools by default)*  
+17) 🧑‍⚖️ CodeQL/static analysis lane (recommended)
 
 ### 🕛 Nightly / scheduled checks (recommended)
 - perf benchmarks + trends
@@ -1092,6 +1286,7 @@ Adapt as needed, but keep intent obvious:
 - streaming replay checks (24h timeline replay on fixtures)
 - deeper security scanning
 - supply-chain verification lane (release candidates)
+- full-model Focus Mode evals (bigger models, broader golden set)
 
 ---
 
@@ -1100,17 +1295,21 @@ Adapt as needed, but keep intent obvious:
 - [ ] Unit tests added/updated
 - [ ] Integration tests added (if behavior crosses boundaries)
 - [ ] Boundary tests updated (if you touched architecture seams)
+- [ ] Raw intake rules respected (no overwrite; source manifest updated) 🧊🧾
+- [ ] Evidence triplet produced/validated (STAC+DCAT+PROV) 🧬
 - [ ] Determinism confirmed (seeds + stable outputs) if ML/sim/scenario
 - [ ] Tools/CLI contract checks updated (if adding/modifying tools/)
 - [ ] Docs/story checks updated (front‑matter, links, templates) if docs changed
 - [ ] Contracts updated + verified (OpenAPI/GraphQL) if API changed
 - [ ] Catalog/metadata tests updated (STAC/DCAT/PROV) if outputs changed
+- [ ] Packaging parity checked (GeoParquet ↔ PMTiles ↔ COG where relevant) 📦
 - [ ] Run receipts updated/validated (run_manifest + hashes) if publish outputs changed
 - [ ] Policy pack checks pass (OPA/Conftest) if enabled
 - [ ] Stable IDs preserved (or migration + ADR added) if identifiers changed
 - [ ] Data validation gates updated (schema/CRS/geometry) if ETL changed
 - [ ] License + governance checks pass (block publish if missing license)
 - [ ] Sensitive location / “no downgrade” checks pass (or governance review requested)
+- [ ] Focus Mode tests updated (prompt gate + citations + policy checks) 🤖🧾
 - [ ] UI changes include component tests + (if visual) snapshot updates
 - [ ] Bookmarkable URL/state round-trip tests updated (if map/story routing changed)
 - [ ] Search/index tests updated (if indexing changed)
@@ -1138,37 +1337,60 @@ docker compose config
 docker compose up -d --build
 ```
 
+### 🤖 Ollama lane failures?
+- run policy-only Focus Mode tests first (`-m "focus and not ollama"`)
+- use smaller model for CI smoke
+- validate Prompt Gate and citation enforcement before model debugging  [oai_citation:22‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+
 ---
 
 ## 📚 Reference pointers (project + library index)
 
 These project docs define what tests must protect (contracts, governance, UI trust surfaces, AI guardrails, and reproducible pipelines). Keep this list aligned with `docs/MASTER_GUIDE_v13.md`.
 
-<details>
-<summary>🧭 Core KFM docs (define contracts + invariants)</summary>
+### 🧭 Authoritative KFM design docs (trust surface)
+- 📚 Expanded Technical & Design Guide (architecture + onboarding)  [oai_citation:23‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
+- 🧱 Architecture, Features, and Design (layering + evidence triplet)  [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+- 🧰 Comprehensive Technical Documentation (Story Nodes, 4D time slider, UI behaviors)  [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+- 🖥️ UI System Overview (Focus Mode UI workflow + map context injection)  [oai_citation:26‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
+- 🧭 AI System Overview (governed graph + API boundary + policy enforcement)  [oai_citation:27‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+- 🤖 Ollama Integration Overview (Focus Mode pipeline + Prompt Gate + citation enforcement)  [oai_citation:28‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+- 🧭 Platform Overview & Roadmap (OCI artifacts, reproducible pipeline images)  [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+- 🧾 Markdown Guide v13 (canonical staging + boundary artifact locations)  [oai_citation:30‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-- `docs/MASTER_GUIDE_v13.md` *(canonical ordering + invariants + CI gates)*
-- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` *(governed doc structure)*
-- `docs/templates/TEMPLATE__STORY_NODE_V3.md` *(story node contract)*
-- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` *(API contract change workflow)*
-- `docs/standards/` *(KFM STAC/DCAT/PROV profiles, markdown protocol if present)*
-- `docs/governance/` *(governance, ethics, sovereignty; review triggers)*
+### 🧪 Research & reproducibility protocols (MCP-friendly)
+- 🧪 Scientific Method / Research / Master Coder Protocol (experiment protocols, “never overwrite raw”, reproducibility checklists)  [oai_citation:31‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- 🗺️ Kansas-Frontier-Matrix Open-Source Design (georeferencing → COGs, OCR → knowledge base, MapLibre time slider)  [oai_citation:32‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
-</details>
+### 📚 Library shelf portfolios (extract before governance)
+> These are useful “shelves” 📚 but many are **PDF portfolios** (embedded docs).  
+> For governed usage: extract embedded PDFs and commit an extraction manifest.
 
-<details>
-<summary>📚 External “library shelf” portfolios (must be extracted to be governable)</summary>
+- 🧠 AI Concepts & more (portfolio)  [oai_citation:33‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)
+- 🗺️ Maps / Virtual Worlds / Archaeological / WebGL (portfolio)  [oai_citation:34‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)
+- 🧰 Mapping + Modeling + Python + Git + Docker + GraphQL + Security (portfolio)  [oai_citation:35‡Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf](file-service://file-2QvRgQbts8ENJQSRC6oGme)
+- 🧭 GIS + Security + R + SciPy + MATLAB + ArcGIS + Spark + TypeScript (portfolio)  [oai_citation:36‡Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf](file-service://file-TH7HttQXn8Bh1hVhcj858V)
+- 🧠 Data Management + Data Science + Bayesian Methods (portfolio)  [oai_citation:37‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)
+- 🧩 Various programming languages & resources (portfolio)  [oai_citation:38‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi)
 
-> Some PDFs are portfolios (embedded docs). If relied on for governance, extract and index them in-repo.
+### 🧭 Doc-to-test crosswalk (what each doc changes in CI) ✅
+| Doc / file | What it implies we must test | Where it lands |
+|---|---|---|
+| Expanded Technical & Design Guide | evidence-first + layering + “advisory-only AI” | `contracts/`, `governance/`, `focus/` |
+| Architecture, Features, and Design | evidence triplet (STAC+DCAT+PROV) is required | `catalogs/`, `receipts/` |
+| Comprehensive Technical Documentation | Story Nodes = Markdown + JSON; timeline/3D/AR behaviors | `docs/`, `web/e2e/`, `webgl/` |
+| UI System Overview | Focus Mode UI sends map context; UI renders citations as footnotes | `web/e2e/`, `api/`, `focus/` |
+| AI System Overview | API boundary + “no mystery nodes” + role-based redaction | `graph/`, `api/`, `policy/` |
+| Ollama Integration Overview | Prompt Gate, citation enforcement, OPA governance check | `promptgate/`, `ollama/`, `policy/` |
+| Platform Roadmap | OCI artifacts + reproducible pipeline images | `supply_chain/oci/`, `supplychain/` |
+| Markdown Guide v13 | canonical staging paths + boundary artifact locations | `catalogs/`, `docs/` |
+| MCP / Research Protocol | experiment protocols, repeatability, no raw overwrite | `scenario/`, `ml/`, `receipts/` |
+| Library portfolios | must be extractable + searchable to be governable | `pdf/`, `docs/` |
 
-- `AI Concepts & more.pdf`
-- `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`
-- `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`
-- `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf`
-- `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf`
-- `Various programming langurages & resources 1.pdf`
-
-</details>
+<!--
+Required tool citations (do not remove):
+ [oai_citation:39‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)  [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)  [oai_citation:41‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+-->
 
 ---
 
@@ -1176,6 +1398,7 @@ These project docs define what tests must protect (contracts, governance, UI tru
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.6.0 | 2026-01-26 | Integrated v13 staging rules (raw/work/processed) + “evidence triplet” (STAC+DCAT+PROV) gates; added Focus Mode (Ollama) regression lane (Prompt Gate, citation enforcement, OPA governance checks); added packaging parity guidance (GeoParquet ↔ PMTiles ↔ COG); expanded OCI/ORAS supply-chain tests; added doc-to-test crosswalk referencing core KFM design docs + MCP protocol + library portfolio hygiene. | KFM Engineering + KFM QA |
 | v1.5.0 | 2026-01-26 | Aligned to v13 Markdown Protocol front‑matter; added PostGIS/Neo4j/Elasticsearch lanes; introduced search/index + drift + scenario markers; strengthened “no mystery nodes” graph invariant; expanded bookmarkable URL reproducibility tests; clarified CI gates (docs protocol + link validation + schema validation + governance scans); tightened defensive security notes (safe subprocess). | KFM Engineering + KFM QA |
 | v1.4.0 | 2026-01-20 | Added agentic QA guardrails (Watcher–Planner–Executor), policy-pack lane (OPA/Conftest), run receipts (`run_manifest.json`) + canonical determinism guidance, streaming/watchers test lane, ontology/semantic layer checks, offline pack + AR test guidance, supply-chain verification lane (Cosign/SBOM), and PDF portfolio hygiene gates. | KFM Engineering |
 | v1.3.0 | 2026-01-13 | Added architecture boundary tests, stable ID/versioning lane, explicit license/citation gates, 3D/WebGL/3D‑GIS testing guidance, and performance/capacity test lane. | KFM Engineering |
