@@ -1,6 +1,6 @@
 <!--
 📌 `data/` is KFM’s canonical evidence + metadata boundary.
-🗓️ Last updated: 2026-01-19
+🗓️ Last updated: 2026-01-26
 🔐 Reminder: “Published” in KFM means cataloged + provenance-linked + validated (not just “a file exists”).
 -->
 
@@ -18,7 +18,9 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
   <img alt="GeoParquet" src="https://img.shields.io/badge/GeoParquet-columnar%20vectors-845ef7" />
   <img alt="PMTiles" src="https://img.shields.io/badge/PMTiles-offline%20%2B%20fast%20maps-845ef7" />
   <img alt="COG" src="https://img.shields.io/badge/COG-cloud%20optimized%20GeoTIFF-845ef7" />
-  <img alt="3D" src="https://img.shields.io/badge/3D-3D%20Tiles%20%7C%20glTF-informational" />
+  <img alt="OCI" src="https://img.shields.io/badge/OCI-artifact%20registry%20optional-6e40c9" />
+  <img alt="Sigstore" src="https://img.shields.io/badge/Sigstore-Cosign%20attestations%20optional-6e40c9" />
+  <img alt="SLSA" src="https://img.shields.io/badge/SLSA%20%2B%20SBOM-supply%20chain%20rigor-6e40c9" />
   <img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-2ea043" />
   <img alt="Policy" src="https://img.shields.io/badge/policy-OPA%20%7C%20Conftest-0b7285" />
   <img alt="Security" src="https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-critical" />
@@ -28,11 +30,13 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
 > ✅ **Prime directive:** `data/` is the **evidence boundary**.  
 > If something can be used in the UI, Story Nodes, or Focus Mode, it must be:
 > **(1) cataloged (STAC/DCAT)** + **(2) lineage-linked (PROV)** + **(3) policy-checked** + **(4) reproducible**.  
-> **No catalog → no graph → no API → no UI.**
+> **No catalog → no graph → no API → no UI.**  
+> _(KFM calls this the “evidence triplet / evidence-first publishing” posture.)_ [oai_citation:0‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo) [oai_citation:1‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 > [!NOTE]
 > 🌐 **Data Spaces mindset:** In KFM, **metadata + IDs + provenance** are the interface.  
-> Big binaries may live in object storage *only if* pointers are stable, licensed, hashed, and auditable.
+> Big binaries may live in stable storage / registries *only if* pointers are stable, licensed, hashed, and auditable.  
+> _(We prefer content-addressed references + strong receipts over “mystery paths.”)_ [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 ---
 
@@ -52,6 +56,7 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
 <summary><strong>🧭 Table of contents</strong></summary>
 
 - [🧾 Doc metadata](#-doc-metadata)
+- [⚡ 60‑second rules](#-60second-rules)
 - [🏁 5‑minute publish checklist](#-5minute-publish-checklist)
 - [🧠 KFM pipeline snapshot](#-kfm-pipeline-snapshot)
 - [🚦 Non‑negotiables](#-nonnegotiables)
@@ -61,10 +66,11 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
 - [🔁 Data lifecycle](#-data-lifecycle)
 - [🏷️ Metadata boundary artifacts](#-metadata-boundary-artifacts)
 - [🧾 Manifests, contracts, QA receipts](#-manifests-contracts-qa-receipts)
-- [🧬 Telemetry & run receipts](#-telemetry--run-receipts)
+- [🧬 Telemetry, policy decisions & run receipts](#-telemetry-policy-decisions--run-receipts)
 - [🧷 IDs, versioning, naming, hashing](#-ids-versioning-naming-hashing)
 - [📐 Formats & packaging rules](#-formats--packaging-rules)
 - [📦 “Dual-format package” pattern (GeoParquet + PMTiles)](#-dual-format-package-pattern-geoparquet--pmtiles)
+- [📚 Document knowledge base (PDFs, scans, excerpts)](#-document-knowledge-base-pdfs-scans-excerpts)
 - [🛰️ Streaming/live feeds](#-streaminglive-feeds)
 - [🧪 Validation & CI gates](#-validation--ci-gates)
 - [🔐 Security, privacy, and sensitive-location safety](#-security-privacy-and-sensitive-location-safety)
@@ -84,11 +90,28 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
 |---|---|
 | Doc | `data/README.md` |
 | Status | Active ✅ |
-| Last updated | **2026-01-19** |
+| Last updated | **2026-01-26** |
 | Audience | pipeline authors · catalog writers · validators · reviewers · API/UI integrators |
 | Prime directive | **Catalogs are interfaces** (offer IDs + truthy pointers, not mystery paths). |
 | Canonical ordering | **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story → Focus** |
-| Default posture | fail‑closed for publish gates 🚦 · hostile‑input aware 🧯 · audit‑ready 🧾 |
+| Default posture | fail‑closed publish gates 🚦 · hostile‑input aware 🧯 · audit‑ready 🧾 |
+
+---
+
+## ⚡ 60‑second rules
+
+If you remember nothing else, remember these 👇
+
+1. 🧾 **No triplet, no ship:** every promoted dataset emits **STAC + DCAT + PROV**. [oai_citation:3‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
+2. 🧊 **Raw is immutable:** never modify `data/raw` in place; treat it as a permanent record. [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+3. 🔁 **Determinism wins:** same inputs + config ⇒ same outputs; re-runs are idempotent. [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+4. 🧷 **IDs are contracts:** if meaning/schema changes → bump **major** version.
+5. 🔐 **Security is upstream:** hostile inputs are normal; validate and bound everything.
+6. ⚖️ **CARE/sovereignty propagates:** outputs cannot be less restricted than inputs without an audited redaction step. [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+7. 🛡️ **Policy is enforced, not vibes:** OPA/Conftest gates block violations in CI and runtime. [oai_citation:7‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+8. 🧬 **Receipts-first:** runs emit telemetry + hashes + PROV + QA receipts.
+9. 🧭 **UI touches only the governed API:** provenance + permissions are enforced at the boundary. [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
+10. 📦 **Prefer dual-format packages:** GeoParquet (analysis) + PMTiles (UX) under one dataset ID. [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
 
 ---
 
@@ -109,10 +132,10 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
 - [ ] Create (or update) a dataset **manifest/contract** *(machine-checkable)*  
   - [ ] `data/manifests/kfm.ks.<domain>.<dataset>.v<major>.yml` *(recommended)*  
   - [ ] or `dataset.contract.json` *(supported if you prefer JSON; keep schema’d)*  
-- [ ] Emit boundary artifacts:
+- [ ] Emit boundary artifacts (**the “evidence triplet”**) [oai_citation:10‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
   - [ ] **STAC Collection** → `data/stac/collections/kfm.ks.<domain>.<dataset>.v<major>.json`
   - [ ] **STAC Item(s)** → `data/stac/items/kfm.ks.<domain>.<dataset>.<yyyymmdd>.<variant>.v<major>.json`
-  - [ ] **DCAT Dataset (JSON‑LD)** → `data/catalog/dcat/kfm.ks.<domain>.<dataset>.v<major>.jsonld` *(or `data/dcat/` if your repo uses that layout)*
+  - [ ] **DCAT Dataset (JSON‑LD)** → `data/catalog/dcat/kfm.ks.<domain>.<dataset>.v<major>.jsonld`
   - [ ] **PROV run bundle (JSON‑LD)** → `data/prov/<run-id>.jsonld`
 - [ ] Add QA receipts: `data/qa/<domain>/<dataset>/<run-id>/...` *(bbox sanity, quicklook, validation report)*
 - [ ] Run validators (local or CI) ✅ confirm schemas + links + governance checks pass
@@ -124,6 +147,11 @@ _The governed home of KFM’s **sources**, **evidence artifacts**, and the **bou
 | 🥈 Silver | Processed output + STAC | publishable artifacts + STAC + QA note |
 | 🥇 Gold | Fully governed + discoverable | STAC + DCAT + PROV + strong QA + hashes + policy pass |
 
+### 🛡️ Optional “Gold+” (supply-chain / federation ready)
+- [ ] **SLSA/SBOM** attached to the run artifacts (or referenced) [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+- [ ] **Sigstore Cosign attestation** for releases (if mirrored to an artifact registry) [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+- [ ] **OCI artifact packaging** (ORAS pattern) for distribution/federation (optional) [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+
 ---
 
 ## 🧠 KFM pipeline snapshot
@@ -132,12 +160,22 @@ KFM enforces strict ordering so downstream always has traceable evidence.
 
 ```mermaid
 flowchart LR
-  subgraph Data["📦 Data & Metadata Boundary"]
-    A["Raw sources"] --> B["ETL + normalization"]
-    B --> C["🗂️ STAC items + collections"]
+  subgraph Data["📦 Data & Metadata Boundary (repo + storage)"]
+    A["📥 Raw sources (immutable)"] --> B["⚙️ ETL + normalization (deterministic)"]
+    B --> W["🧪 QA receipts + validation"]
+    B --> C["🛰️ STAC items + collections"]
     C --> D["🏷️ DCAT discovery (JSON-LD)"]
     C --> E["🧬 PROV lineage bundles"]
+    B --> R["📦 (Optional) OCI artifact registry mirror\nORAS + tags/digests + Cosign"]
   end
+
+  subgraph Agents["🕵️‍♂️🤖 Automation (optional)"]
+    X["Watcher"] --> Y["Planner"] --> Z["Executor"]
+  end
+
+  X -. detects .-> A
+  Y -. policy checks .-> W
+  Z -. runs ETL .-> B
 
   C --> G["🕸️ Knowledge graph (refs → catalogs)"]
   G --> H["🚪 API boundary (authZ + redaction + contracts)"]
@@ -146,18 +184,21 @@ flowchart LR
   J --> K["🧠 Focus Mode (provenance-linked answers)"]
 ```
 
+> [!NOTE]
+> Watchers often use **ETag / Last-Modified** to avoid redundant downloads and to keep ingestion efficient. [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+
 ---
 
 ## 🚦 Non‑negotiables
 
 - ⛓️ **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story → Focus`.
 - 🧾 **Catalogs are required interfaces:** downstream layers reference **catalog IDs**, not ad‑hoc file paths.
-- 🔁 **Deterministic + idempotent ETL:** same inputs + config ⇒ same outputs (replay-safe).
-- 🧷 **Stable IDs forever:** IDs are contracts (dataset IDs, collection IDs, run IDs, story IDs).
-- 🔒 **Integrity is mandatory:** hashes + manifests for publishable artifacts (at minimum processed outputs).
-- 🔐 **Sovereignty/classification propagate:** outputs cannot be *less restricted* than any input unless a reviewed redaction/generalization step exists.
+- 🔁 **Deterministic + idempotent ETL:** same inputs + config ⇒ same outputs (replay-safe). [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+- 🧷 **Stable IDs forever:** dataset IDs, collection IDs, run IDs, story IDs are long-lived contracts.
+- 🔒 **Integrity is mandatory:** SHA256 hashes + manifests for publishable artifacts (at minimum processed outputs).
+- 🔐 **Sovereignty/classification propagate:** outputs cannot be *less restricted* than any input without an audited redaction/generalization step. [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
 - 🧯 **Hostile inputs:** GeoJSON/CSV/PDF/images/rasters from the internet are attack surfaces → validate + bound + sanitize.
-- 🧊 **Git stays healthy:** commit metadata + QA receipts; keep heavy binaries in stable storage with hashed pointers.
+- 🧊 **Git stays healthy:** commit metadata + QA receipts; keep heavy binaries in stable storage with hashed pointers (or DVC).
 
 > [!TIP]
 > **FAIR** makes data findable/accessible/interoperable/reusable.  
@@ -182,12 +223,14 @@ KFM uses explicit **stages** and **contracts** so we don’t ship mystery layers
   - STAC/DCAT/PROV boundary artifacts, **and**
   - passing validations/CI gates, **and**
   - correct license/classification handling, **and**
-  - stable IDs (dataset + run).
+  - stable IDs (dataset + run). [oai_citation:17‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### 🧾 Boundary artifacts (metadata state)
-- **STAC** = asset-level + spatiotemporal indexing
-- **DCAT** = dataset/distribution discovery entry
-- **PROV** = lineage graph (inputs → activities → outputs)
+### 🧭 Dataset “lifecycle status” (metadata state)
+We recommend tracking lifecycle explicitly (in manifests + catalogs):
+- `draft` → present, not promoted, may change
+- `published` → meets the publish bar
+- `deprecated` → still available, but replaced; keep pointers to successor
+- `tombstoned` → removed from distribution (policy/legal), but provenance remains
 
 > [!WARNING]
 > If you ship a file without a STAC/DCAT/PROV trail, you ship an **orphan**.  
@@ -198,50 +241,53 @@ KFM uses explicit **stages** and **contracts** so we don’t ship mystery layers
 ## 🗂️ Canonical directory layout
 
 > [!IMPORTANT]
-> v13 posture is **stage-first**: `data/{raw,work,processed}/<domain>/...`  
-> Catalogs live alongside and reference **processed** artifacts (or stable object-store pointers).
+> v13+ posture is **stage-first**: `data/{raw,work,processed}/<domain>/...`  
+> Catalogs reference **processed** artifacts (or stable object-store/registry pointers). [oai_citation:18‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ```text
 data/
-├─ 📥 raw/                                 # ✅ Required: raw source snapshots (read-only mindset; immutable evidence boundary)
+├─ 📥 raw/                                  # ✅ Required: raw source snapshots (read-only mindset; immutable evidence boundary)
 │  └─ 🗂️ <domain>/
-│     └─ 🌐 <source>/                      # e.g., usgs/, kgs/, kshs_scans/, noaa/, nasa/ (as-downloaded bytes + checksums)
+│     └─ 🌐 <source>/                       # as-downloaded bytes + checksums + intake telemetry
 │
-├─ 🧪 work/                                # Recommended: intermediate transforms (regeneratable; OK to wipe/rebuild)
+├─ 🧪 work/                                 # Recommended: intermediate transforms (regeneratable; OK to wipe/rebuild)
 │  └─ 🗂️ <domain>/
-│     └─ 🗃️ <dataset>/                     # Staging outputs, normalized tables, intermediate exports
+│     └─ 🗃️ <dataset>/                      # normalized tables, intermediate exports, scratch
 │
-├─ ✅ processed/                            # ✅ Required: publishable evidence artifacts (what UI/API/graph should serve)
+├─ ✅ processed/                             # ✅ Required: publishable evidence artifacts (what API/UI/graph should serve)
 │  └─ 🗂️ <domain>/
-│     └─ 📦 <dataset>/                     # Final products (GeoParquet/COG/PMTiles/GeoJSON/etc.) + sidecars + digests
+│     └─ 📦 <dataset>/                      # GeoParquet/COG/PMTiles/etc. + sidecars + digests
 │
-├─ 🧾 sources/                              # Recommended: source manifests + fetch receipts (small, auditable files)
+├─ 🧾 sources/                               # Recommended: source manifests + fetch receipts (small, auditable files)
 │  └─ 🗂️ <domain>/
-│     └─ 🛰️ <source>/                      # source.json, fetch configs, license notes, contacts, ETag/Last-Modified receipts
+│     └─ 🛰️ <source>/                       # source.json, fetch config, license notes, contacts, ETag/Last-Modified receipts
 │
-├─ 🛰️ stac/                                 # ✅ Required: STAC catalogs (asset index + time/run snapshots)
-│  ├─ 🧾 catalog.json                       # Recommended STAC root (links to collections; optional but helpful)
-│  ├─ 🗂️ collections/                       # STAC Collections (dataset-level metadata: extent/license/providers/links)
-│  └─ 🧷 items/                              # STAC Items (time/run/version snapshots referencing assets)
+├─ 🛰️ stac/                                  # ✅ Required: STAC catalogs (asset index + time/run snapshots)
+│  ├─ 🧾 catalog.json                        # Optional but helpful STAC root (links to collections)
+│  ├─ 🗂️ collections/                        # STAC Collections (dataset-level metadata)
+│  └─ 🧷 items/                               # STAC Items (run/time/version snapshots referencing assets)
 │
-├─ 🗂️ catalog/                              # Discovery layer (human/machine “what exists” index)
-│  └─ 🗂️ dcat/                               # ✅ Required: DCAT JSON-LD dataset entries (license/access/distributions)
-│     └─ ➕ (optional) vocabulary/, keywords/, orgs/  # Optional controlled vocab + org metadata for richer discovery
+├─ 🗂️ catalog/                               # Discovery layer (human/machine “what exists” index)
+│  └─ 🗂️ dcat/                                # ✅ Required: DCAT JSON-LD dataset entries (license/access/distributions)
+│     └─ ➕ (optional) vocabulary/, keywords/, orgs/  # controlled vocab + org metadata
 │
-├─ 🧬 prov/                                 # ✅ Required: PROV lineage bundles (JSON-LD) linking raw→work→processed→catalog
+├─ 🧬 prov/                                  # ✅ Required: PROV lineage bundles (JSON-LD) linking raw→work→processed→catalog
 │
-├─ 🧾 manifests/                            # Recommended: dataset manifests/contracts + dictionaries (declared expectations)
-├─ 🧪 qa/                                   # Recommended: QA receipts (quicklooks, bbox checks, validation reports, drift notes)
-├─ 📡 live/                                 # Optional: streaming buffers + snapshots (still cataloged + provenance-linked)
-├─ 🕸️ graph/                                # Optional: graph import/export artifacts (prefer indexes/pointers over duplication)
-│  ├─ 🧱 csv/                                # Neo4j import CSV snapshots (node/rel tables)
-│  └─ 🧠 cypher/                             # Cypher import scripts or verification queries
-└─ 🙂📄 README.md                             # you are here: rules, naming conventions, promotion lanes, and validation gates
+├─ 🧾 manifests/                             # Recommended: dataset manifests/contracts + dictionaries
+├─ 🧪 qa/                                    # Recommended: QA receipts (quicklooks, bbox checks, validation reports)
+├─ 📡 live/                                  # Optional: streaming buffers + snapshots (still cataloged + provenance-linked)
+├─ 📦 packs/                                 # Optional: offline “education packs” (PMTiles + mini web app + subset of stories)
+├─ 🛡️ attestations/                          # Optional: signed build/publish receipts (SLSA/Cosign refs) or verification notes
+├─ 🔎 indexes/                               # Optional: full-text / search index snapshots (redaction-aware; never raw secrets)
+├─ 🕸️ graph/                                 # Optional: graph import/export artifacts (prefer pointers over duplication)
+│  ├─ 🧱 csv/                                 # Neo4j import CSV snapshots (node/rel tables)
+│  └─ 🧠 cypher/                              # Cypher import scripts or verification queries
+└─ 🙂📄 README.md                              # you are here
 ```
 
 > [!NOTE]
-> Some earlier specs use `data/dcat/` at root. That’s fine.  
-> Pick **one canonical path** and keep it stable (symlinks/config are OK, “drift” is not).
+> Some specs use `data/catalogs/*` or `data/provenance/*`. That’s fine **only if** you keep a single canonical path and alias the rest consistently.  
+> Prefer stability over aesthetics.
 
 ---
 
@@ -263,6 +309,21 @@ Before *anything* is allowed to move from “downloaded” → “raw”, run th
 > If `source.json` is missing, reviewers cannot evaluate provenance.  
 > If hashes are missing, we can’t detect silent corruption or tampering.
 
+### ✅ Recommended “Gate 0+” receipts (small but powerful)
+- `source.lock.json` capturing:
+  - retrieval timestamp
+  - URL/URI
+  - HTTP headers (ETag, Last-Modified) when available
+  - size, MIME type
+  - auth mode used (never store secrets)
+- `scan.json` capturing:
+  - extraction boundaries used
+  - antivirus/tool versions
+  - findings (even “none”)
+
+> [!TIP]
+> Watchers can use ETag/Last-Modified to skip re-downloading unchanged artifacts, but the decision should still be logged as telemetry. 🧾 [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+
 ### 📄 `source.json` (minimal example)
 ```json
 {
@@ -270,14 +331,14 @@ Before *anything* is allowed to move from “downloaded” → “raw”, run th
   "name": "Human-readable source name",
   "owner": "Provider / archive / agency",
   "uri": "https://example.org/source",
-  "retrieved_at": "2026-01-19",
+  "retrieved_at": "2026-01-26",
   "license": {
     "spdx": "UNKNOWN",
     "terms_uri": "https://example.org/terms",
     "attribution": "If required, paste exact attribution text here"
   },
   "classification": "public",
-  "notes": "Any handling notes (rate limits, access policy, redaction constraints)."
+  "notes": "Handling notes (rate limits, access policy, redaction constraints)."
 }
 ```
 
@@ -289,22 +350,25 @@ Before *anything* is allowed to move from “downloaded” → “raw”, run th
 
 ### 🧾 `telemetry.ndjson` (first lines example)
 ```json
-{"ts":"2026-01-19T14:02:11Z","event":"intake.start","source_id":"kfm.source...","actor":"human","host":"devbox-01"}
-{"ts":"2026-01-19T14:02:58Z","event":"intake.hash","path":"raw/.../archive.zip","sha256":"..."}
-{"ts":"2026-01-19T14:03:21Z","event":"intake.scan.ok","tool":"clamav","notes":"no threats found"}
+{"ts":"2026-01-26T14:02:11Z","event":"intake.start","source_id":"kfm.source...","actor":"human","host":"devbox-01"}
+{"ts":"2026-01-26T14:02:58Z","event":"intake.hash","path":"raw/.../archive.zip","sha256":"..."}
+{"ts":"2026-01-26T14:03:21Z","event":"intake.scan.ok","tool":"clamav","notes":"no threats found"}
 ```
 
 ---
 
 ## 🔁 Data lifecycle
 
-KFM supports batch and event-driven pipelines. Both must remain provenance-led.
+KFM supports batch and event-driven pipelines. Both remain provenance-led.
 
 ### 1) Ingestion 📥
 - Scheduled pulls (known sources)
 - Manual expert uploads (controlled staging + explicit terms)
 - Crowd/citizen contributions (separate review lane; never auto-promoted)
 - Preserve raw inputs as a reprocessing anchor.
+
+> [!IMPORTANT]
+> **Raw is a permanent record.** Pipelines should never alter files in `data/raw/`; they write new artifacts to `data/processed/` (and optionally `data/work/`). [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 ### 2) Processing 🧰
 Cleaning, joins, georeferencing, derived layers, modeling, simulation outputs.
@@ -317,7 +381,7 @@ Rules of thumb:
   - parameters + seeds,
   - validation/verification status (QA),
   - uncertainty notes (QA + manifest),
-  - clear “not for decision-making” flags when appropriate.
+  - clear “not for decision-making” flags when appropriate. [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 
 ### 3) Indexing & discovery 🗂️
 - STAC Items/Collections describe assets and coverage.
@@ -326,8 +390,15 @@ Rules of thumb:
 
 ### 4) Publication & serving 🌐
 - Downstream layers ingest from catalogs (or catalog-driven exports).
-- UI consumes governed API outputs (authZ + redaction + classification rules).
+- UI consumes governed API outputs (authZ + redaction + classification rules). [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
 - New catalogs can trigger graph refresh + UI indexing.
+
+### 5) Deprecation 🪦
+- Never “silently replace” a published dataset.
+- Deprecate by:
+  - publishing a successor dataset version,
+  - marking old one `deprecated`,
+  - preserving old artifacts + hashes for audit/replay.
 
 ---
 
@@ -335,18 +406,18 @@ Rules of thumb:
 
 > [!IMPORTANT]
 > Boundary artifacts are the **interfaces** downstream layers consume.  
-> Graph/API/UI/Story/Focus should reference **catalog IDs**, not ad-hoc local paths.
+> Graph/API/UI/Story/Focus should reference **catalog IDs**, not ad-hoc local paths. [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### ✅ Required boundary outputs
-- **STAC (Collections + Items)** for geospatial assets (vectors, rasters, tiles, documents, thumbnails, QA receipts).
+### ✅ Required boundary outputs (the “evidence triplet”) [oai_citation:24‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
+- **STAC (Collections + Items)** for spatiotemporal assets (vectors, rasters, tiles, documents, thumbnails, QA receipts).
 - **DCAT dataset entry (JSON‑LD)** for discovery (title/description/license/keywords/distributions).
 - **PROV lineage bundle (JSON‑LD)** capturing inputs → activities → outputs.
 
 ### 🔗 Cross-layer linkage expectations (do not break)
-- STAC Items link to stable assets (usually `data/processed/...` or stable object-store URLs).
+- STAC Items link to stable assets (usually `data/processed/...` or stable object-store/registry URLs).
 - DCAT links to distributions (STAC, API endpoints, and/or direct downloads where allowed).
 - PROV links raw → work → processed and records run/config identifiers.
-- Graph stores references to catalog IDs (avoid stuffing heavy payloads into the graph).
+- Graph stores references to catalog IDs (avoid stuffing heavy payloads into the graph). [oai_citation:25‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### 🧩 KFM extensions (recommended fields)
 To support policy gates + Focus Mode “receipts”, add KFM-scoped fields (namespaced) in STAC/DCAT/PROV where appropriate:
@@ -358,6 +429,9 @@ To support policy gates + Focus Mode “receipts”, add KFM-scoped fields (name
 - `kfm:sovereignty_notes` *(when needed)*
 - `kfm:ai_assisted` *(if any ML/LLM used to derive an artifact)*
 - `kfm:quality` *(QA pointers + known limitations)*
+
+### 🧭 FAIR+CARE metadata (recommended)
+KFM design includes ethical metadata fields (e.g., “faircare” notes capturing collective benefit, authority to control, responsibility, ethics). [oai_citation:26‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
 
 > [!NOTE]
 > Focus Mode is only as strong as the metadata it can cite. If an artifact lacks license/classification/provenance pointers, Focus Mode must treat it as **not eligible**.
@@ -373,6 +447,7 @@ KFM treats datasets like shippable products: they need a machine-checkable contr
 - `data/qa/<domain>/<dataset>/<run-id>/qa.md`  
 - `data/qa/<domain>/<dataset>/<run-id>/quicklook.png` *(small)*
 - `data/qa/<domain>/<dataset>/<run-id>/validation.json` *(machine-readable)*
+- `data/manifests/<...>/data_dictionary.md` *(or `schema.json` — strongly recommended for analytics outputs)*
 
 ### 📄 Dataset manifest (YAML example)
 ```yaml
@@ -390,6 +465,12 @@ license:
   spdx: "CC-BY-4.0"
   terms_uri: "https://example.org/terms"
   attribution: "Required attribution text"
+
+faircare:                        # optional but encouraged (human-governed)
+  collective_benefit: "Who benefits?"
+  authority_to_control: "Who controls use?"
+  responsibility: "Responsibilities/constraints?"
+  ethics: "Key ethical notes"
 
 spatial:
   crs: "EPSG:4326"
@@ -412,8 +493,8 @@ artifacts:
   checksums: "data/processed/<domain>/<dataset>/checksums.sha256"
 
 qa:
-  latest_run_id: "etl_20260119_140211_ab12cd3"
-  receipts_path: "data/qa/<domain>/<dataset>/etl_20260119_140211_ab12cd3/"
+  latest_run_id: "etl_20260126_140211_ab12cd3"
+  receipts_path: "data/qa/<domain>/<dataset>/etl_20260126_140211_ab12cd3/"
   known_limits:
     - "Explain key limitations here (coverage gaps, accuracy bounds, etc.)"
 ```
@@ -421,9 +502,9 @@ qa:
 ### 🧾 QA receipt template (Markdown + YAML front matter)
 ```yaml
 ---
-doc_uuid: "qa.kfm.ks.<domain>.<dataset>.etl_20260119_140211_ab12cd3"
+doc_uuid: "qa.kfm.ks.<domain>.<dataset>.etl_20260126_140211_ab12cd3"
 dataset_id: "kfm.ks.<domain>.<dataset>.v1"
-run_id: "etl_20260119_140211_ab12cd3"
+run_id: "etl_20260126_140211_ab12cd3"
 classification: "public"
 bbox: [-102.05, 36.99, -94.58, 40.00]
 crs: "EPSG:4326"
@@ -449,9 +530,9 @@ validators:
 
 ---
 
-## 🧬 Telemetry & run receipts
+## 🧬 Telemetry, policy decisions & run receipts
 
-KFM’s reproducibility posture is “receipt-first.” Every meaningful run should leave a trail.
+KFM’s reproducibility posture is “receipt-first.” Every meaningful run leaves a trail.
 
 ### ✅ What should exist for a promoted run
 - `run_id` (stable, audit-friendly)
@@ -461,6 +542,7 @@ KFM’s reproducibility posture is “receipt-first.” Every meaningful run sho
 - output hashes (required for processed)
 - PROV bundle (inputs → activities → outputs)
 - telemetry log (NDJSON) for “what happened”
+- policy decision refs (policy hash / version) when a gate is involved [oai_citation:27‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### 🧾 Recommended telemetry event vocabulary
 Keep it boring and consistent:
@@ -468,7 +550,15 @@ Keep it boring and consistent:
 - `etl.*` → transform steps, CRS transforms, georef, resampling, simplification
 - `validate.*` → schema checks, link checks, geometry checks
 - `publish.*` → writing STAC/DCAT/PROV, promotion decisions, kill-switch status
+- `policy.*` → OPA/Conftest decisions + rule IDs
 - `redact.*` → generalization/masking steps (and approvals)
+- `schema_drift.*` → planner proposals + executed migrations (if enabled) [oai_citation:28‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+
+### 🛡️ Provenance-first operations (supply chain posture)
+KFM extends provenance beyond datasets into the build/release process:
+- SLSA-style attestations and SBOMs can accompany releases (software + data). [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+- Data artifacts can be mirrored into OCI registries and cryptographically signed (Sigstore Cosign). [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+- Automation agents may sign artifacts/PRs to prove they came from approved automation paths. [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 > [!IMPORTANT]
 > If the **kill-switch** is enabled, telemetry must show it, and promotion steps must stop (or enter audit-only mode). 🧯
@@ -485,7 +575,7 @@ Stable IDs make KFM queryable, debuggable, and safe to automate.
 - **STAC Item ID:** `kfm.ks.<domain>.<dataset>.<yyyymmdd>.<variant>.v<major>`  
   Example: `kfm.ks.geology.surficial.20260101.statewide.v1`
 - **Run ID:** `etl_<yyyymmdd>_<hhmmss>_<shortgitsha>`  
-  Example: `etl_20260119_140211_ab12cd3`
+  Example: `etl_20260126_140211_ab12cd3`
 
 ### 🧠 ID design rule (don’t regret later)
 - IDs are **names**, not facts.
@@ -508,6 +598,11 @@ Where hashes should appear:
 - PROV entity records
 - dataset manifests (`data/manifests/**`)
 - `checksums.sha256` alongside artifacts for quick audit
+
+### 📦 Optional: content-addressed distribution
+When distributing via registries:
+- prefer digest references (`...@sha256:<digest>`) over mutable tags
+- if you must use `latest`, treat it as a convenience pointer only [oai_citation:32‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 ---
 
@@ -562,12 +657,14 @@ KFM is map-first and time-aware. Formats must support streaming, indexing, and h
 
 ## 📦 “Dual-format package” pattern (GeoParquet + PMTiles)
 
-This pattern is becoming a KFM favorite because it serves **both** analysis and UX.
+This pattern is a KFM favorite because it serves **both** analysis and UX.
 
 ### ✅ What it is
 Publish **one dataset ID** with **two distributions**:
 - **GeoParquet** → analysis, joins, statistics
 - **PMTiles** → UI layers, offline packs, fast pan/zoom
+
+A concrete example described in KFM docs is a **Surficial Geology** package shipped as GeoParquet + PMTiles under shared metadata and hashes. [oai_citation:33‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
 
 ### 📁 Suggested structure
 ```text
@@ -597,12 +694,39 @@ data/catalog/dcat/
 
 ---
 
+## 📚 Document knowledge base (PDFs, scans, excerpts)
+
+KFM supports a “document knowledge base” pattern where excerpts, citations, and evidence are discoverable and map-linked.
+
+A design pattern described in KFM materials is to keep:
+- source PDFs in storage,
+- extracted excerpts as structured records,
+- links from excerpts to **places** (coordinates / bounding boxes), **topics**, and **timeline** anchors, enabling map + search + narrative use. [oai_citation:34‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
+
+### ✅ Recommended layout (documents)
+```text
+data/raw/archives/<source>/pdf/
+data/work/archives/<dataset>/text_extraction/
+data/processed/archives/<dataset>/
+  excerpts.parquet            # extracted snippets + references (no secrets; redaction-aware)
+  ocr_text.ndjson             # optional raw OCR output (classification-dependent)
+  thumbnails/                 # small UI previews
+  checksums.sha256
+```
+
+### 🧯 Security note (documents)
+- PDFs/images are hostile-input surfaces; extract in sandboxed workers.
+- Record OCR tool/version and quality metrics in QA receipts.
+- If documents contain PII/sensitive locations, publish only redacted/generalized derivatives.
+
+---
+
 ## 🛰️ Streaming/live feeds
 
 KFM supports streaming inputs **only if they remain governable**.
 
 ### ✅ Rules for live/streamed datasets
-- Live data still becomes “real” only when it is:
+- Live data becomes “real” only when it is:
   - written to stable storage (snapshots or append logs),
   - cataloged as STAC Items (micro-batch measurements are fine),
   - lineage-linked (PROV run/activity),
@@ -634,7 +758,12 @@ KFM expects automated validation to prevent regressions and sensitive leaks.
 - Classification consistency (no downgrades without audited redaction)
 - Secret scanning + sensitive data scanning
 - Geometry validity + CRS sanity
-- Temporal indexing sanity (timeline slider depends on it)
+- Temporal indexing sanity (timeline slider depends on it) [oai_citation:35‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
+- Policy pack evaluation (OPA/Conftest) for:
+  - required license fields,
+  - CRS requirements,
+  - sensitivity restrictions,
+  - AI citation requirements, etc. [oai_citation:36‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### 🚦 Fail-fast publish gates (common policy)
 - missing PROV bundle → ❌
@@ -667,7 +796,7 @@ python tools/validation/scan_sensitive.py data
 ### ✅ Always
 - Never commit secrets.
 - Treat ingestion as hostile (zip bombs, malformed files, SSRF, parser exploits).
-- Keep “publish” behind policy gates (OPA/Conftest), and keep a kill-switch.
+- Keep “publish” behind policy gates (OPA/Conftest), and keep a kill-switch. [oai_citation:37‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### 🧭 Sensitive location rule (hard)
 If a dataset includes sensitive locations (culturally sensitive sites, protected resources, critical infrastructure, etc.):
@@ -675,17 +804,19 @@ If a dataset includes sensitive locations (culturally sensitive sites, protected
 - restrict access where required
 - do not publish exact coordinates unless explicitly permitted and reviewed
 
+KFM examples explicitly call out generalizing sensitive site coordinates and requiring elevated permissions when needed. [oai_citation:38‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+
 ### 🕵️ Privacy-preserving data mining mindset (why this matters)
 Even “non-sensitive” releases can leak information via:
 - linkage attacks (joining public datasets)
 - inference attacks (predicting private attributes)
 - temporal differencing (comparing snapshots to reveal hidden changes)
 
-**Mitigations KFM can standardize:**
-- k-anonymity / l-diversity / t-closeness where appropriate
+Mitigations KFM can standardize:
 - aggregation thresholds (don’t publish tiny groups)
+- query auditing + inference control on sensitive slices (API layer) [oai_citation:39‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)
+- k-anonymity / l-diversity / t-closeness where appropriate (explicitly documented) [oai_citation:40‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)
 - differential privacy for high-risk aggregates (optional, clearly labeled)
-- query auditing + rate-limits on sensitive slices (API layer)
 - publish snapshots (not uncontrolled “diff drips”) for sensitive domains
 
 > [!IMPORTANT]
@@ -702,6 +833,7 @@ Target posture:
 - expose trust signals (license, provenance, classification, QA pointers, uncertainty notes)
 - enable cross-hub discovery via catalogs + shared ontology mappings
 - keep sovereignty enforceable across federation boundaries
+- optionally distribute artifacts via registries to support cross-instance reuse [oai_citation:41‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 > [!NOTE]
 > Federation ≠ free-for-all. Governance stays always-on.
@@ -716,7 +848,7 @@ Target posture:
   - [ ] `data/work/<new-domain>/<dataset>/`
   - [ ] `data/processed/<new-domain>/<dataset>/`
 - [ ] Run **Intake Gate 0** (source.json + hashes + telemetry + scan)
-- [ ] Build idempotent pipeline (config + logging + hashes)
+- [ ] Build deterministic pipeline (config + logging + hashes) [oai_citation:42‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
 - [ ] Emit boundary artifacts:
   - [ ] STAC Collection + Item(s)
   - [ ] DCAT JSON‑LD entry
@@ -725,7 +857,7 @@ Target posture:
 - [ ] Validate schemas + links + governance in CI
 - [ ] (Optional) Graph sync after catalogs exist
 - [ ] Expose via governed API (classification + redaction)
-- [ ] Add domain runbook under `docs/` *(recommended)*
+- [ ] Add domain runbook under `docs/` *(recommended)* [oai_citation:43‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 <details>
 <summary><strong>🧱 Dataset skeleton (copy/paste)</strong></summary>
@@ -768,8 +900,14 @@ When evidence artifacts graduate into distribution:
   - which catalogs/prov define it?
 - 🛡️ Where supported, publish integrity signals:
   - checksums
-  - signed release artifacts
-  - attestations/provenance for build lanes (software) and publish lanes (data)
+  - signed release artifacts / attestations (Sigstore Cosign) [oai_citation:44‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+  - supply chain receipts (SLSA + SBOM) [oai_citation:45‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+
+### 📦 Optional: “Data packaged as OCI” distribution lane
+KFM roadmaps describe treating data like software packages:
+- push a dataset bundle (GeoParquet + PMTiles + metadata) as an OCI artifact (ORAS)
+- sign/attest with Cosign
+- reference the digest from DCAT distributions [oai_citation:46‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 > [!TIP]
 > Treat “data releases” like software releases: version, changelog, hashes, provenance. Same discipline, same trust.
@@ -787,28 +925,28 @@ When evidence artifacts graduate into distribution:
 ### 🧭 Core KFM specs (project-defining)
 | Project file | How it shapes `data/` |
 |---|---|
-| `📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf` | Intake Gate 0 (source.json + checksums.sha256 + telemetry.ndjson), hostile-input posture, deterministic pipelines, PostGIS tiling patterns, “simulation sandbox” vs promotion, and policy kill-switch expectations. |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | Canonical boundary artifacts (STAC/DCAT/PROV), standard-first interop posture, source manifests under `data/sources/`, and catalog-driven downstream rules. |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` | End-to-end layering, policy enforcement posture (OPA/Conftest), and “catalogs as the interface” discipline that `data/` must uphold. |
-| `Kansas Frontier Matrix – Comprehensive UI System Overview.pdf` | 4D timeline requirements (temporal indexing in metadata), offline pack assumptions (PMTiles), and UX-driven packaging needs (quicklooks, bounds, time slices). |
-| `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` | Evidence-only AI posture: citations, audit panels, governance flags, and “if it can’t be cited, it can’t be surfaced” constraints that drive metadata completeness. |
-| `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf` | Dual-format dataset packaging (GeoParquet + PMTiles), offline education packs, 4D timeline “stacked layers”, and reproducible “deterministic run” mindset for derived outputs. |
-| `Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf` | Expansion into simulations/forecasting with strong provenance, explicit separation between exploratory outputs and published evidence, and governance-first adoption patterns. |
+| `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf`  [oai_citation:47‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo) | Defines the **stage-first lifecycle** (`raw→work→processed`) and the **evidence triplet** requirement (STAC + DCAT + PROV). Also introduces FAIR+CARE metadata fields and deterministic ETL expectations. [oai_citation:48‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo) |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:49‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG) | Solidifies governance posture (FAIR/CARE + sensitive-site handling), dual-format packaging example (GeoParquet + PMTiles), and provenance-first operations with SLSA/SBOM considerations. [oai_citation:50‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG) [oai_citation:51‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG) |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` | Provides the ingestion component model (watchers/fetchers/transformers/validators/loaders/metadata emitters) and emphasizes determinism + idempotence and ETag/Last-Modified efficiency patterns. [oai_citation:52‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf` | Adds the “data-as-artifacts” distribution lane (OCI registry + ORAS) and cryptographic integrity (Cosign attestations), plus offline packs/AR direction for packaging choices. [oai_citation:53‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN) [oai_citation:54‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN) |
+| `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf` | Drives temporal indexing requirements (timeline slider), provenance injection into UI (via governed API), and motivates quicklooks + time slices for smooth UX. [oai_citation:55‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38) [oai_citation:56‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38) |
+| `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` | Requires evidence-first publishing for Focus Mode; policy-as-code enforcement via OPA/Conftest; policy versioning and audit logs; and sandbox posture for AI + secrets protection. [oai_citation:57‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8) |
+
+### 🧰 Supporting project docs (templates + design blueprints)
+| Project file | What it contributes |
+|---|---|
+| `MARKDOWN_GUIDE_v13.md.gdoc` | Reinforces canonical pipeline flow and directory conventions; suggests doc templates/runbooks and consistent “boundary artifacts” requirements. [oai_citation:58‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) |
+| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | Contributes the “document knowledge base” model (map-linked excerpts), and reinforces raw immutability + processed outputs for serving. [oai_citation:59‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) [oai_citation:60‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN) |
 
 ### 📚 Reference portfolios (embedded libraries)
 | Portfolio file | What it contributes to `data/` conventions |
 |---|---|
-| `AI Concepts & more.pdf` | Embedded AI governance + ML references supporting: model cards, uncertainty-first outputs, human-centered constraints, and “assist, don’t assert” posture. |
-| `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` | Embedded data engineering + data spaces + performance references supporting: metadata-as-interface, scaling/partitioning, CI/CD discipline for data, and Bayesian uncertainty reporting. |
-| `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` | Embedded GIS/WebGL/cartography references supporting: CRS/projection hygiene, 3D evidence handling, remote sensing workflows, and map-output honesty (QA + documented design choices). |
-| `Various programming langurages & resources 1.pdf` | Embedded cross-stack references supporting: reproducible tooling, Postgres/PostGIS operations, secure engineering posture, and maintainability. |
-
-### 📎 Notable embedded references (used as “why” sources)
-- Data spaces & federation: `Data Spaces.pdf`
-- Scaling/perf: `Database Performance at Scale.pdf`, `Scalable Data Management for Future Hardware.pdf`, `The Data Engineering Cookbook.pdf`
-- Privacy-preserving mindset: `Data Mining Concepts & applictions.pdf`
-- Geo correctness & projection hygiene: `Understanding_Map_Projections.pdf`, `python-geospatial-analysis-cookbook...pdf`
-- Modeling + uncertainty: `think-bayes-bayesian-statistics-in-python.pdf`, `Understanding Statistics & Experimental Design.pdf`
+| `AI Concepts & more.pdf` | Governance & uncertainty-first AI posture; human-in-the-loop; model output labeling and audit expectations. |
+| `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` | Metadata-as-interface mindset; data spaces/federation concepts; performance/partitioning ideas. |
+| `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` | Projection/CRS hygiene, 3D evidence patterns, WebGL/UX constraints informing packaging + QA. |
+| `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf` | Secure engineering + reproducible toolchains; compression and transport considerations; container posture. |
+| `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf` | GIS tooling cross-compatibility; analytics stack considerations; reproducible computational workflows. |
+| `Various programming langurages & resources 1.pdf` | Cross-language references; Git hygiene; practical engineering notes supporting maintainability. |
 
 </details>
 
@@ -818,7 +956,8 @@ When evidence artifacts graduate into distribution:
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
-| v1.4.0 | 2026-01-19 | Added **Intake Gate 0** (source.json + checksums.sha256 + telemetry.ndjson), introduced `data/sources/` + `data/live/` optional lanes, formalized **telemetry/run receipts**, added **dual-format package pattern** (GeoParquet + PMTiles), strengthened privacy/inference safety notes, and refreshed influence map to reflect embedded portfolio references. | KFM Engineering |
+| v1.5.0 | 2026-01-26 | Added **offline packs** + **attestations** optional lanes, strengthened **evidence triplet** language, clarified **policy decision logging** and **schema drift** events, aligned UI expectations (timeline/provenance injection), expanded **data-as-OCI** and **Cosign/SLSA/SBOM** posture, and added document knowledge base pattern. | KFM Engineering |
+| v1.4.0 | 2026-01-19 | Added **Intake Gate 0** (source.json + checksums.sha256 + telemetry.ndjson), introduced `data/sources/` + `data/live/` optional lanes, formalized **telemetry/run receipts**, added **dual-format package pattern** (GeoParquet + PMTiles), strengthened privacy/inference safety notes, and refreshed influence map. | KFM Engineering |
 | v1.3.1 | 2026-01-13 | Corrected canonical `data/` layout to v13 **stage-first** staging; expanded formats guidance (GeoParquet + 3D evidence); strengthened CI “fail-fast” publish gates; refreshed influence map. | KFM Engineering |
 | v1.3.0 | 2026-01-11 | Prior iteration: lifecycle stages, STAC/DCAT/PROV boundary artifacts, dataset ID conventions, validation gates, influence map. | KFM Engineering |
 
@@ -826,17 +965,20 @@ When evidence artifacts graduate into distribution:
 
 <!--
 Evidence anchors used to update this README (project files referenced):
-- 📚 Kansas Frontier Matrix (KFM) Data Intake – Technical & Design Guide.pdf
-- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf
+- 📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf   [oai_citation:61‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf  [oai_citation:62‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
 - Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf
-- Kansas Frontier Matrix – Comprehensive UI System Overview.pdf
+- Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf
+- Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf
 - Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf
-- 🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx.pdf
-- Innovative Concepts to Evolve the Kansas Frontier Matrix (KFM).pdf
-- AI Concepts & more.pdf (portfolio: AI/ML/governance references)
-- Data Managment-Theories-...pdf (portfolio: Data Spaces, performance, CI/CD, stats, Bayes, etc.)
-- Maps-GoogleMaps-...webgl.pdf (portfolio: projections, 3D GIS, WebGL, GEE, cartography, etc.)
-- Various programming langurages & resources 1.pdf (portfolio: Postgres, Docker, language notes, etc.)
+- MARKDOWN_GUIDE_v13.md.gdoc
+- Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf
+- AI Concepts & more.pdf
+- Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf
+- Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf
+- Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf
+- Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf
+- Various programming langurages & resources 1.pdf
 -->
 
 <p align="right"><a href="#top">⬆️ Back to top</a></p>
