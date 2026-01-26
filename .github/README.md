@@ -1,651 +1,1038 @@
-# Kansas Frontier Matrix (KFM) 🧭🗺️  
-> A **provenance-first, evidence-backed** “living atlas” of Kansas — where **data, maps, narratives, and AI** stay traceable to sources.  
-> **North Star:** *Every pixel and every sentence has receipts.* 🧾✅
+<a id="top"></a>
 
-![Status](https://img.shields.io/badge/status-alpha-orange)
-![Trust](https://img.shields.io/badge/trust-provenance--first-success)
-![Receipts](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-informational)
-![Policy](https://img.shields.io/badge/policy-OPA%20%2F%20Rego%20%2B%20Conftest-blue)
-![API](https://img.shields.io/badge/API-FastAPI%20(OpenAPI)%20%2B%20GraphQL-informational)
-![Graph](https://img.shields.io/badge/Graph-Neo4j%20(semantic%20layer)-informational)
-![Spatial](https://img.shields.io/badge/Spatial-PostGIS-informational)
-![Search](https://img.shields.io/badge/Search-Elasticsearch%20%7C%20Whoosh%20%2B%20Embeddings-informational)
-![UI](https://img.shields.io/badge/UI-React%20%7C%20MapLibre%20%7C%20Cesium%20(optional)-informational)
-![Formats](https://img.shields.io/badge/formats-COG%20%7C%20GeoParquet%20%7C%20PMTiles%20%7C%203D%20Tiles-informational)
-![CI](https://img.shields.io/badge/CI-schema%20gates%20%2B%20policy%20gates%20%2B%20security%20scans-blue)
-![License](https://img.shields.io/badge/license-see%20LICENSE-lightgrey)
+# 🤝 `.github/` — Collaboration & Automation Hub (Kansas Frontier Matrix) 🧭🗺️🤖
 
----
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](#-how-to-contribute)
+[![GitHub Issues](https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg)](#-pull-requests)
+[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+[![Policy Gate](https://img.shields.io/badge/policy-OPA%20%2B%20Conftest-0f172a)](#-policy-as-code-gate-opaconftest)
+[![Evidence Triplet](https://img.shields.io/badge/evidence-STAC%20%7C%20DCAT%20%7C%20PROV-0ea5e9)](#-evidence-triplet--promotion-bar-stacdcatprov)
+[![PR→PROV](https://img.shields.io/badge/devops-provenance%20(PR%E2%86%92PROV)-8b5cf6)](#-devops-provenance-pr--prov--graph)
+[![WPE Agents](https://img.shields.io/badge/agents-Watcher%E2%86%92Planner%E2%86%92Executor-f97316)](#-agents--autonomy-boundaries-wpe)
+[![Supply Chain](https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20Attestations-10b981)](#-automation--required-checks)
+[![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE%20%2B%20Sovereignty-7c3aed)](#-security--privacy)
+[![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix)](../LICENSE)
 
-## 🧭 Start here (fast orientation)
-- 📘 **System + repo blueprint:** `docs/MASTER_GUIDE_v13.md`  
-- 🏗️ **Platform overview + roadmap:** `docs/` *(see Architecture / UI / AI system docs)*  
-- 🧱 **Architecture decisions & diagrams:** `docs/architecture/`  
-- 🧩 **Schemas & contracts (STAC/DCAT/PROV/Story/UI/Telemetry):** `schemas/`  
-- 🗂️ **Catalog outputs:** `data/stac/` · `data/catalog/dcat/` · `data/prov/`  
-- 🧠 **AI + Focus Mode + evals/model cards:** `mcp/`  
-- 📖 **Stories (governed narratives):** `story_nodes/`  
-- 🧪 **Notebooks/tutorials (repro capsules):** `notebooks/` *(optional)*  
+> [!NOTE]
+> This README documents **how we collaborate + automate on GitHub**: issues, PRs, reviews, CODEOWNERS, labels, branch protection, and CI/CD gates.  
+> ✅ Start with the project overview: **[`../README.md`](../README.md)**
 
-> [!IMPORTANT]  
-> KFM is **contract-first + policy-gated**: you can’t “ship” a dataset, story, or AI answer unless it validates ✅
+> [!IMPORTANT]
+> `.github/` is KFM’s **operations layer**. Keep it clean, predictable, auditable, and boring (in the best way). ✅🧾  
+> The fun innovation lives in **data + catalogs + pipelines + graph + UI + Story Nodes + Focus Mode** — but it only scales if this layer is disciplined. 🧭
 
 ---
 
-## 📌 Table of Contents
-- [What this is](#-what-this-is)
-- [The Trust Contract](#-the-trust-contract)
-- [Receipts model](#-receipts-model)
-- [Architecture at a glance](#-architecture-at-a-glance)
-- [What you can do with KFM](#-what-you-can-do-with-kfm)
-- [Policy, QA, and security gates](#-policy-qa-and-security-gates)
-- [Repository layout](#-repository-layout)
-- [Quickstart](#-quickstart)
-- [Golden paths](#-golden-paths)
-- [Data lifecycle](#-data-lifecycle)
-- [Story Nodes and Focus Mode](#-story-nodes-and-focus-mode)
-- [AI system and automation](#-ai-system-and-automation)
-- [Simulation and modeling](#-simulation-and-modeling)
-- [APIs](#-apis)
-- [Governance, ethics, and safety](#-governance-ethics-and-safety)
-- [Tooling](#-tooling)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [Project library](#-project-library)
-- [Citation and reuse](#-citation-and-reuse)
+## 🧾 Policy metadata
+
+| Field | Value |
+|---|---|
+| 📄 File | `.github/README.md` |
+| ✅ Status | Active |
+| 🗓️ Last updated | **2026-01-26** |
+| 🧬 Baseline | **KFM Redesign Blueprint v13 (draft)** *(contract-first · evidence-first · governed CI gates)* |
+| 🧾 Minimum promotion bar | **Evidence Triplet: STAC + DCAT + PROV** |
+| 📚 Standards & templates | `docs/standards/*` + `docs/templates/*` *(if missing, treat as spec work)* |
+| 🧑‍⚖️ Policy engine | **OPA/Conftest (CI)** + **OPA runtime hooks (API/AI)** |
+| 🚦 Default posture | **Fail‑closed** on promotion‑critical gates |
+| 🧾 DevOps provenance | Optional **PR→PROV** JSON‑LD generation + ingest |
+| 📦 Supply chain | SBOM + attestations for tags/releases (optionally `main`) |
+| 🧯 Safety switch | Kill‑switch supported for publish/sign lanes |
+| 🏛️ Core governance | FAIR + CARE + sovereignty guardrails |
 
 ---
 
-## 🌾 What this is
-**Kansas Frontier Matrix (KFM)** is an open-source **geospatial + historical knowledge system** (a “living atlas” of Kansas) designed to:
+## ⚡ Quick links
 
-- ingest **heterogeneous sources** (rasters, vectors, documents, time series, streaming feeds)
-- publish governed **metadata catalogs**:
-  - **STAC** for spatial assets (COGs, tiles, features, 3D)
-  - **DCAT** for dataset discovery (JSON-LD)
-  - **PROV** for lineage (how outputs were produced, by whom/what, when)
-- maintain a semantically-structured **knowledge graph (Neo4j)**  
-  *(people ⇄ places ⇄ events ⇄ documents ⇄ datasets ⇄ processing runs)*
-- power a hybrid query fabric:
-  - **PostGIS** for geospatial + tabular truth
-  - **Neo4j** for relationship-first discovery
-  - **Search index** (e.g., Elasticsearch/Whoosh + embeddings) for document retrieval
-- serve everything through a governed **API boundary** (FastAPI + GraphQL)
-- deliver a combined **map + narrative UI** (MapLibre; optional Cesium for 3D)
-- enable **Focus Mode**: AI-assisted Q&A that is **citation-backed** and **policy-gated**
+| Action | Link |
+|---|---|
+| 🐛 Report a bug | [Open bug report](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=bug_report.yml) |
+| ✨ Request a feature | [Open feature request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=feature_request.yml) |
+| 🗺️ Request a data layer/source | [Request a layer/source](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=data_layer_request.yml) |
+| 🧰 Request a pipeline / automation | [Open pipeline request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=pipeline_request.yml) *(spec — add if missing)* |
+| 🎬 Request a Story Node | [Open Story Node request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=story_node_request.yml) *(spec — add if missing)* |
+| 🤖 Request an AI/model change | [Open AI/model request](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=ai_model_request.yml) *(spec — add if missing)* |
+| 🧾 Ask a question | [Ask a question](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new?template=question.yml) |
+| 🧪 See CI runs | [GitHub Actions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions) |
+| 🛡️ Security policy | [`./SECURITY.md`](./SECURITY.md) *(recommended location)* |
+| 🤖 Workflows docs | [`./workflows/README.md`](./workflows/README.md) |
+| 🧩 Actions catalog | [`./actions/README.md`](./actions/README.md) |
+| 🧑‍⚖️ Policy rules | [`../tools/validation/policy/README.md`](../tools/validation/policy/README.md) |
+| 🧾 Standards (profiles, protocols) | `../docs/standards/` *(recommended)* |
+| 🧾 Templates (universal doc, story, runbooks) | `../docs/templates/` *(recommended)* |
+| 🧯 Kill-switch config | [`../.kfm/kill-switch.yml`](../.kfm/kill-switch.yml) *(spec — add if missing)* |
+| 🧪 Deterministic replay runner | [`../tools/kfm-sim-run/`](../tools/kfm-sim-run/) *(spec — add if missing)* |
 
-> [!NOTE]  
-> KFM’s promise is simple: **if it appears on the map or in text, the system can show the receipts.** 🧾
-
----
-
-## 🔒 The Trust Contract
-These are the guardrails — if we violate them, we’re not building KFM anymore.
-
-### ✅ Non‑negotiables
-- **Pipeline ordering is absolute**  
-  **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-- **API boundary rule**  
-  The **frontend must never query Neo4j/PostGIS directly** — only through the governed API layer (contracts + redaction).
-- **Provenance-first**  
-  If it shows up in the UI (or in an AI answer), it must be traceable back to cataloged sources and provable processing — no “mystery layers.”
-- **Deterministic, idempotent ETL**  
-  Pipelines are config-driven, reproducible, safe to re-run (random seeds pinned; environments recorded).
-- **Evidence-first narrative**  
-  No unsourced content in Story Nodes or Focus Mode. AI-generated text must be labeled and accompanied by provenance/confidence metadata.
-- **Policy is enforcement, not a suggestion**  
-  A **Policy Pack** (OPA/Rego + checks) can **block** promotion of data, stories, or answers if requirements aren’t met.
-- **Governance & sovereignty are explicit**  
-  FAIR/CARE principles, licensing clarity, sensitivity flags, and review gates are part of “done.”
+> [!TIP]
+> If an issue template link 404s, use the chooser: <https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/new/choose>
 
 ---
 
-## 🧾 Receipts model
-KFM’s “receipt system” is a **catalog triplet** plus a **bundle**.
+<details>
+<summary><strong>🧭 Table of contents</strong></summary>
 
-### 🧾 The Catalog Triplet (the minimum receipts)
-Every publishable dataset produces:
+- [🧭 What we’re building](#-what-were-building)
+- [🧬 Non-negotiables (v13 invariants)](#-non-negotiables-v13-invariants)
+- [🗂️ Repo topology (canonical homes)](#️-repo-topology-canonical-homes)
+- [🧩 What lives in <code>.github/</code>](#-what-lives-in-github)
+- [🔁 Workflow: Issue → PR → Merge → Promote → Ship](#-workflow-issue--pr--merge--promote--ship)
+- [🧾 Evidence Triplet + promotion bar (STAC/DCAT/PROV)](#-evidence-triplet--promotion-bar-stacdcatprov)
+- [🧾 Evidence artifacts (AI outputs are datasets)](#-evidence-artifacts-ai-outputs-are-datasets)
+- [🧾 DevOps provenance (PR → PROV → Graph)](#-devops-provenance-pr--prov--graph)
+- [🛡️ Branch protection & merge strategy](#-branch-protection--merge-strategy)
+- [🤖 Automation & required checks](#-automation--required-checks)
+- [🧑‍⚖️ Policy-as-Code gate (OPA/Conftest)](#-policy-as-code-gate-opaconftest)
+- [🧑‍⚖️ Runtime policy hooks (API/AI)](#️-runtime-policy-hooks-apiai)
+- [🧪 Deterministic replay lane: <code>kfm-sim-run</code>](#-deterministic-replay-lane-kfm-sim-run)
+- [🛰️ Performance packaging lanes (GeoParquet · PMTiles · 3D)](#-performance-packaging-lanes-geoparquet--pmtiles--3d)
+- [⏱️ Streaming & real-time lanes (watchers + telemetry)](#-streaming--real-time-lanes-watchers--telemetry)
+- [🧾 Issues](#-issues)
+- [✅ Pull Requests](#-pull-requests)
+- [👀 Reviews & ownership](#-reviews--ownership)
+- [🏷️ Label taxonomy](#-label-taxonomy)
+- [🎬 Story Nodes + narrative layer](#-story-nodes--narrative-layer)
+- [🧠 Focus Mode (advisory AI)](#-focus-mode-advisory-ai)
+- [🤖 Agents & autonomy boundaries (WPE)](#-agents--autonomy-boundaries-wpe)
+- [🧯 Kill-switch (fail‑closed) rules](#-kill-switch-fail-closed-rules)
+- [🔐 Security & privacy](#-security--privacy)
+- [🏛️ Cultural protocols & sensitive data](#-cultural-protocols--sensitive-data)
+- [📚 Project reference library](#-project-reference-library-the-why-behind-our-standards)
+- [🧾 Next “missing but expected” files](#-next-missing-but-expected-files)
+- [🙌 How to contribute](#-how-to-contribute)
 
-- **STAC** → what exists as geospatial assets (items/collections)
-- **DCAT** → how people discover & reuse the dataset (JSON-LD record)
-- **PROV** → how it was made (lineage + run metadata)
-
-### 📦 Evidence Bundle (what powers UI + AI)
-When KFM answers a question or renders a layer, it assembles an **Evidence Bundle** that typically includes:
-
-- dataset IDs (STAC/DCAT) + asset URIs  
-- PROV run ID(s) + environment/config pins  
-- checksums / manifests (content-addressable where possible)  
-- license + attribution requirements  
-- sensitivity classification + redaction rules applied  
-- policy decision metadata (policy version/hash + allow/deny outcome)  
-- citations back to documents/datasets
-
-> [!TIP]  
-> The Evidence Bundle is what makes **“inspect source”** possible in the UI — and what makes Focus Mode *refuse* when evidence is insufficient.
+</details>
 
 ---
 
-## 🏗️ Architecture at a glance
+## 🧭 What we’re building
+
+Kansas Frontier Matrix (KFM) is a **living atlas of Kansas** 🏛️🗺️ that connects:
+
+- 🧾 historical archives & scanned maps  
+- 🛰️ modern geospatial + remote sensing layers  
+- 🗄️ spatial databases (**PostGIS**) + a knowledge graph (**Neo4j**)  
+- 🔌 a **contract-first API boundary** (REST + GraphQL)  
+- 🌐 a modern map UI (**MapLibre/WebGL**) + optional **3D** via **Cesium**  
+- 🎬 **Story Nodes** (machine‑ingestible storytelling: Markdown + JSON state)  
+- 🧠 **Focus Mode** (advisory AI, evidence‑backed, citation‑first)
+
+KFM is intentionally **pipeline-driven** and **governance-driven**:
+
+- data moves through a strict order (**ETL → catalogs → graph → API → UI → narratives → Focus Mode**)  
+- validation gates aren’t optional 🚦  
+- promoted artifacts must be **discoverable + trustworthy** via the **Evidence Triplet**: **STAC + DCAT + PROV** 🧾
+
+### 🗺️ System order (CI mirrors this)
+
 ```mermaid
 flowchart LR
-  subgraph Data["📦 Data + Processing"]
-    A["Raw Sources<br/>(data/raw/)"] --> B["ETL + Normalization<br/>(pipelines/ · scripts/)"]
-    B --> W["Work Outputs<br/>(data/work/)"]
-    W --> P["Published Outputs<br/>(data/processed/)"]
-    P --> C["STAC Items + Collections<br/>(data/stac/)"]
-    P --> D["DCAT Dataset Views<br/>(data/catalog/dcat/)"]
-    P --> E["PROV Lineage Bundles<br/>(data/prov/)"]
-  end
-
-  C --> G["Knowledge Graph<br/>(Neo4j)"]
-  D --> G
-  E --> G
-
-  P --> S["Search Index<br/>(Elastic/Whoosh + embeddings)"]
-
-  G --> H["API Layer<br/>(FastAPI + GraphQL)<br/>(contracts + redaction + policy)"]
-  S --> H
-  H --> I["Map UI<br/>(React · MapLibre · optional Cesium)"]
-  I --> J["Story Nodes<br/>(governed narratives)"]
-  I --> K["Focus Mode<br/>(policy-gated AI Q&A)"]
+  A["📦 Sources<br/>maps • GIS • docs • sensors"] --> B["🧰 ETL / Pipelines<br/>deterministic • idempotent"]
+  B --> C["🗃️ Catalogs<br/>STAC + DCAT"]
+  B --> D["🧾 Provenance<br/>PROV"]
+  C --> E["🕸️ Knowledge Graph<br/>Neo4j (+ ontology bindings)"]
+  D --> E
+  E --> F["🔌 API Layer<br/>FastAPI / GraphQL / OpenAPI contracts"]
+  F --> G["🌐 Web UI<br/>MapLibre/WebGL (+ timeline)"]
+  G --> H["🎬 Story Nodes<br/>Markdown + JSON steps + citations"]
+  H --> I["🧠 Focus Mode<br/>advisory insights (grounded)"]
 ```
 
-### 🧠 Why hybrid?
-- **PostGIS** is the system of record for geospatial features + analytics
-- **Neo4j** encodes relationships (entity discovery, provenance traversal, narrative context)
-- **Search** powers document retrieval (keyword + semantic similarity)
-
-> 🧩 Everything is stitched via catalogs and IDs — no hidden facts.
+> [!TIP]
+> Touch anything upstream (ETL/catalog/graph) and you’re touching everything downstream.  
+> That’s why `.github/` gates are strict. 🚦✅
 
 ---
 
-## ✨ What you can do with KFM
-### 🗺️ Map + timeline exploration
-- Toggle datasets like layers in a GIS (vector + raster + tiles)
-- Navigate time with a **timeline slider** ⏳
-- Click features for details, charts, and provenance
-- 2D via **MapLibre**, optional 3D via **Cesium** (including **3D Tiles** streaming; CZML for time-dynamic scenes)
+## 🧬 Non-negotiables (v13 invariants)
 
-### 🔎 Evidence discovery (not just keyword search)
-- Discover related datasets, events, people, places, and documents via the graph
-- Search text archives by **keywords + semantic similarity** (embeddings), then jump to map context
+These rules keep the Matrix coherent as it grows:
 
-### 📖 Story Nodes (governed storytelling as data)
-- Narratives authored in **Markdown**, synchronized to map state via **JSON step configs**
-- Stories can deep-link entities (people/places/events) into graph-backed panels
-- Suitable for educators, historians, researchers, and public storytelling
+1) **Pipeline ordering is absolute**: ETL → Catalogs → Graph → API → UI → Story Nodes → Focus Mode  
+2) **One canonical home per subsystem**: don’t invent new folder “kingdoms” without a design decision record 🗺️  
+3) **API boundary rule**: UI must **never** query Neo4j/PostGIS directly — UI talks to **API only** 🔌  
+4) **Evidence Triplet is mandatory for promotion**: **STAC + DCAT + PROV** required for promoted artifacts 🧾  
+5) **Provenance first**: if it shows up publicly (UI/export/AI), it’s traceable to sources + processing ✅  
+6) **No mystery layers**: unsourced or ad-hoc data is not accepted into the official catalog 🚫🕳️  
+7) **Deterministic ETL**: same inputs + config = same outputs (idempotent reruns) 🧪  
+8) **Stable IDs forever**: catalog IDs, graph IDs, story IDs are contracts 🏷️  
+9) **Sovereignty & sensitivity propagate**: outputs cannot be “less restricted” than inputs 🧭🔒  
+10) **AI must cite or refuse**: Focus Mode answers are citation-backed; no fabrication 🤖🧾  
+11) **Fail‑closed on promotion‑critical gates**: missing metadata/prov/flags blocks merge or blocks publish 🚦  
+12) **Supply chain hygiene**: workflows/actions are pinned, least‑privilege, and auditable 🔐  
+13) **No side-channels**: Focus Mode cannot bypass redaction or leak restricted precision 🧯  
+14) **Policy is enforceable**: governance rules live as code (CI + runtime), versioned, tested, auditable 🧑‍⚖️
 
-### 🧠 Focus Mode (AI assistant with receipts)
-- Ask questions about the current map view, place, time window, or dataset
-- Answers are **graph-grounded**, **catalog-backed**, and **citation-backed**
-- If evidence is insufficient, Focus Mode must **ask for refinement or decline**
-
-### 📦 Offline “education packs” (evolving)
-- Curated bundles (datasets + stories + tiles) for classrooms and field use  
-  *(PMTiles / COGs / lightweight catalogs + a PWA-style UI)*
-
-### 🧪 Reproducible “what-if” work
-- Deterministic sandbox runs (simulation + scenario testing) with the same receipts discipline as “real” data
+> [!IMPORTANT]
+> These invariants are meant to be **enforceable by CI**, not “nice ideas.” 🤖✅
 
 ---
 
-## 🛡️ Policy, QA, and security gates
-KFM treats data like code: **it must compile** (validate + pass policy) before it can ship.
+## 🗂️ Repo topology (canonical homes)
 
-### ✅ Typical hard gates (CI + local)
-| Gate 🧱 | What it prevents 🚫 |
-|---|---|
-| Schema validation (contracts) | broken metadata / malformed content |
-| STAC validation | invalid items/collections |
-| DCAT JSON-LD validation | broken discovery records |
-| PROV validation | missing lineage / incomplete run trace |
-| Geometry/CRS checks | invalid geometries, missing CRS |
-| License + attribution checks | unknown / incompatible licensing |
-| Sensitivity policy checks | leaking restricted info (redaction failures) |
-| Link integrity checks | dead citations, broken references |
-| AI answer policies | uncited assertions, hallucinated entities |
-| Security scans (deps/secrets) | supply chain risks and secret leaks |
-| Release manifests + checksums | unverifiable releases |
+> [!NOTE]
+> Paths below reflect the **v13 canonical layout**. If your repo differs today, treat this as the alignment target. ✅🧭
 
-> [!IMPORTANT]  
-> **Fail-closed is the default**: if a dataset/story/answer can’t prove compliance, it does not promote.
+```text
+🏠 repo-root/
+├─ 📁 .github/                    # 🤝 collaboration + CI/CD (this doc)
+├─ 📁 src/
+│  ├─ 📁 pipelines/               # 🧰 ETL jobs + deterministic transforms
+│  ├─ 📁 graph/                   # 🕸️ graph build + ontology bindings
+│  └─ 📁 server/                  # 🔌 API (REST/GraphQL), contracts, auth, policy hooks
+│     └─ 📁 contracts/            # 📜 OpenAPI/GraphQL schema + examples (contract-first)
+├─ 📁 web/                        # 🌐 MapLibre UI, Story playback UI, Focus Mode UI
+├─ 📁 data/
+│  ├─ 📁 raw/<domain>/            # 📦 ingest snapshots (read-only)
+│  ├─ 📁 work/<domain>/           # 🧪 intermediate transforms
+│  ├─ 📁 processed/<domain>/      # ✅ publish-ready artifacts
+│  ├─ 📁 stac/                    # 🧾 STAC collections/items
+│  ├─ 📁 catalog/dcat/            # 🗃️ DCAT JSON-LD outputs
+│  ├─ 📁 prov/                    # 🧬 PROV bundles (per run)
+│  └─ 📁 graph/                   # 🧩 static graph import files (optional)
+├─ 📁 docs/
+│  ├─ 📁 standards/               # 🧾 profiles + protocols (STAC/DCAT/PROV + Markdown rules)
+│  ├─ 📁 templates/               # 🧱 universal doc template + checklists
+│  └─ 📁 reports/story_nodes/     # 🎬 stories (draft/published) + JSON scripts
+├─ 📁 schemas/                    # 🧩 JSON Schemas (story, manifests, contracts)
+├─ 📁 tools/                      # 🧰 validators, QA, policy runner, sim-run, etc.
+├─ 📁 mcp/                        # 🧠 models/experiments/model-cards (if used)
+└─ 📁 tests/                      # ✅ unit/integration/contract tests
+```
 
 ---
 
-## 🗂️ Repository layout
-One canonical home per subsystem — no duplicate “mystery” folders. 🧹✨
+## 🧩 What lives in `.github/`
+
+This folder defines the **how-we-ship** layer: templates, workflows, routing, and governance. 🤖🧾
 
 ```text
 📁 .github/
-  └─ 📁 workflows/                      # CI, security scans, validation + policy gates
+├─ 🤖 workflows/                                  # 🤖 CI/CD + automation lanes
+│  ├─ ✅ ci.yml                                   # ✅ lint + unit tests + typecheck + build
+│  ├─ 🔐 codeql.yml                               # 🔐 SAST scanning (CodeQL)
+│  ├─ 🔎 catalog-qa.yml                           # 🔎 fast STAC/DCAT sanity + link checks
+│  ├─ 🧾 metadata-validate.yml                    # 🧾 schema validation (STAC/DCAT/PROV + Story metadata)
+│  ├─ 🧑‍⚖️ policy-gate.yml                        # 🧑‍⚖️ Conftest/OPA policy-as-code PR gate
+│  ├─ 🎬 story-lint.yml                           # 🎬 Story Node lint + citations + sensitivity checks
+│  ├─ 🧬 graph-qa.yml                             # 🧬 ontology/constraints checks (spec — add if missing)
+│  ├─ 🧾 pr-provenance.yml                        # 🧾 PR→PROV JSON-LD (spec — add if missing)
+│  ├─ 🧩 dependency-review.yml                    # 🧩 dependency diff review (recommended)
+│  ├─ 🔍 secret-scan.yml                          # 🔍 secret scanning lane (spec — add if missing)
+│  ├─ 🧼 pii-scan.yml                              # 🧼 PII scan lane (spec — add if missing)
+│  ├─ 🧯 scorecard.yml                            # 🧯 supply-chain posture (optional)
+│  ├─ 🐳 docker-build.yml                         # 🐳 build/push images (GHCR)
+│  ├─ 📦 sbom.yml                                 # 📦 SBOM generation (Syft/SPDX/CycloneDX)
+│  ├─ 🖊️ attest.yml                               # 🖊️ build/provenance attestations (OIDC/DSSE-ish)
+│  ├─ 🌐 pages.yml                                # 🌐 build/deploy docs/UI (optional)
+│  ├─ 🏷️ release.yml                              # 🏷️ release packaging + provenance bundle (optional)
+│  └─ ♻️ reusables/                               # ♻️ reusable workflows (workflow_call)
+│     ├─ ♻️ kfm-reusable-ci.yml
+│     ├─ ♻️ kfm-reusable-policy.yml
+│     └─ ♻️ kfm-reusable-catalog.yml              # (spec — add if missing)
+├─ 🧩 actions/                                    # 🧩 repo-local composite actions (building blocks)
+│  ├─ 🧰 setup-kfm/                               # setup Python/Node (+ caches, optional GIS deps)
+│  ├─ 🧑‍⚖️ setup-conftest/                        # install/cache OPA + Conftest
+│  ├─ 🔎 catalog-qa/                              # run tools/validation/catalog_qa
+│  ├─ 🧾 metadata-validate/                       # STAC/DCAT/PROV schema validation helper
+│  ├─ 🧬 provenance-guard/                        # PROV required + classification propagation checks
+│  ├─ 🧑‍⚖️ policy-gate/                           # run tools/validation/policy (rego bundles)
+│  ├─ 🧯 check-kill-switch/                       # fail-closed stop button (gate)
+│  ├─ 📦 sbom/                                    # SBOM generation wrapper
+│  ├─ 🖊️ attest/                                  # attestations wrapper (OIDC/DSSE-ish)
+│  ├─ 🎬 story-lint/                              # Story Node lint helper
+│  └─ 🧾 pr-provenance/                           # PR→PROV builder (spec — add if missing)
+├─ 🧾 ISSUE_TEMPLATE/                             # 🧾 guided issue creation (issue forms)
+│  ├─ 🐛 bug_report.yml
+│  ├─ ✨ feature_request.yml
+│  ├─ 🗺️ data_layer_request.yml
+│  ├─ 🧰 pipeline_request.yml                     # 🧰 spec — add if missing
+│  ├─ 🎬 story_node_request.yml                   # 🎬 spec — add if missing
+│  ├─ 🤖 ai_model_request.yml                     # 🤖 spec — add if missing
+│  └─ ❓ question.yml
+├─ 📄 PULL_REQUEST_TEMPLATE.md                    # ✅ PR checklist & review prompts
+├─ 📄 CODEOWNERS                                  # 👀 review routing by area
+├─ 📄 dependabot.yml                              # ♻️ dependency updates (recommended)
+├─ 📄 labels.yml                                  # 🏷️ canonical label taxonomy (recommended)
+├─ 📄 release-drafter.yml                         # 📝 auto-draft release notes (optional)
+├─ 📄 SECURITY.md                                 # 🔐 vuln reporting (recommended)
+└─ 📄 README.md                                   # 📍 you are here 👋
+```
 
-📁 api/                                 # Governed boundary (FastAPI + GraphQL)
-  ├─ 📁 src/
-  │  ├─ 📁 domain/                      # Canonical models (contracts reflected here)
-  │  ├─ 📁 services/                    # Use-cases (Focus Mode orchestration lives here)
-  │  ├─ 📁 adapters/                    # PostGIS / Neo4j / storage / search adapters
-  │  └─ 📁 routers/                     # REST + GraphQL routers
-  └─ 📁 scripts/
-     └─ 📁 policy/                      # OPA/Rego policy pack + Conftest harness
+> [!NOTE]
+> If any “spec” file above doesn’t exist yet, this README is the **spec**.  
+> ✅ As you implement each file, remove “spec” tags so this stays honest. 🧾
 
-📁 web/                                 # Frontend (React + MapLibre + optional Cesium)
-  ├─ 📁 src/
-  └─ 📁 public/
+---
 
-📁 pipelines/                           # ETL jobs, transforms, streaming watchers
-📁 scripts/                             # Small CLI utilities (fetch/georef/pack/validate helpers)
+## 🔁 Workflow: Issue → PR → Merge → Promote → Ship
 
+```mermaid
+flowchart LR
+  I["🧾 Issue"] --> T["🏷️ Triage + Labels"]
+  T --> B["🌿 Branch"]
+  B --> P["✅ Pull Request"]
+  P --> C["🤖 Checks<br/>CI + security + metadata + policy gates"]
+  C --> R["👀 Review<br/>CODEOWNERS + governance (when needed)"]
+  R --> M["🔀 Merge"]
+  M --> G["🚦 Promotion Gate<br/>Validate → Policy → Provenance → Catalog"]
+  G --> D["📦 Publish / Deploy"]
+```
+
+### 🚦 Promotion saga (v13-aligned)
+
+```mermaid
+flowchart LR
+  A["🧰 Build artifacts"] --> B["🧑‍⚖️ Policy gate<br/>OPA/Conftest bundles"]
+  B --> C["🧾 Validate<br/>STAC/DCAT/PROV + schemas + link safety"]
+  C --> D["🧬 Provenance guard<br/>PROV + checksums + classification propagation"]
+  D --> E["🧪 Deterministic replay<br/>kfm-sim-run (optional lane)"]
+  E --> F["📦 SBOM<br/>generate + attach"]
+  F --> G["🖊️ Sign/Attest<br/>OIDC + DSSE/Sigstore-ish"]
+  G --> H["📤 Publish<br/>atomic + immutable"]
+  H --> I["🗃️ Catalog update<br/>federation-ready"]
+  I --> J["🧯 Rollback ready<br/>kill-switch / tags"]
+```
+
+> [!TIP]
+> “Promotion” is where we get safety: **fail‑closed**, log what happened, and never break downstream consumers. ✅🧯
+
+---
+
+## 🧾 Evidence Triplet + promotion bar (STAC/DCAT/PROV)
+
+KFM treats data like code: it must **compile (validate)** before it can ship. ✅🧾
+
+### ✅ The Evidence Triplet (minimum bar)
+
+Promoted artifacts must have:
+
+- **STAC** (Items + Collections) for spatial assets 🧾  
+- **DCAT** (dataset/distribution discovery) 🗃️  
+- **PROV** (lineage bundles linking inputs → activities → outputs) 🧬  
+
+> [!IMPORTANT]
+> If it can be toggled in the UI (or cited by Focus Mode), it must be **cataloged + provable**. 🗃️🧾
+
+### 📁 Canonical paths (v13)
+
+```text
 📁 data/
-  ├─ 📁 sources/                        # Source registries (JSON): URLs, extents, licenses, notes
-  ├─ 📁 raw/                            # Raw source drops (read-only; checksums tracked)
-  ├─ 📁 work/                           # Intermediate outputs (re-runnable)
-  │  └─ 📁 sims/                        # kfm-sim-run scenario outputs (deterministic)
-  ├─ 📁 processed/                      # Published outputs (COG/GeoParquet/PMTiles/3D Tiles)
-  ├─ 📁 stac/                           # STAC collections/items (static JSON)
-  ├─ 📁 catalog/
-  │  └─ 📁 dcat/                        # DCAT outputs (JSON-LD)
-  ├─ 📁 prov/                           # PROV bundles (per run / per dataset)
-  └─ 📁 graph/
-     ├─ 📁 csv/                         # Graph import CSV exports
-     └─ 📁 cypher/                      # Constraints / post-import scripts
-
-📁 story_nodes/                         # Governed narratives
-  ├─ 📁 draft/
-  └─ 📁 published/
-     └─ 📁 <story_slug>/
-        ├─ 📄 story.md                  # narrative + citations
-        ├─ 📄 story.json                # step-by-step map/timeline instructions
-        └─ 📁 assets/
-
-📁 schemas/                             # JSON Schemas (STAC/DCAT/PROV/story/ui/telemetry)
-  ├─ 📁 stac/
-  ├─ 📁 dcat/
-  ├─ 📁 prov/
-  ├─ 📁 storynodes/
-  ├─ 📁 ui/
-  └─ 📁 telemetry/
-
-📁 tools/
-  ├─ 📁 validation/                     # Validators, link checks, policy checks
-  └─ 📁 rs/                             # Rust tooling (fast validators/tilers/etc.)
-
-📁 mcp/                                 # Methods & Computational Experiments (MCP)
-  ├─ 📁 model_cards/                    # Model cards + evaluation summaries
-  ├─ 📁 evals/                          # Regression tests for Focus Mode
-  ├─ 📁 experiments/                    # Reproducible experiments (notebooks, reports)
-  └─ 📁 sops/                           # Standard operating procedures
-
-📁 notebooks/                           # Tutorials / reproducible research capsules (optional)
-📁 releases/                            # Versioned bundles, manifests, checksums, attestations
-
-📄 README.md                            # You are here 🙂
-📄 LICENSE
-📄 CITATION.cff
-📄 CONTRIBUTING.md
-📄 SECURITY.md
-📄 CHANGELOG.md
-📄 docker-compose.yml
-📄 .env.example
+├─ 📁 raw/<domain>/               # ingest only (read-only snapshots)
+├─ 📁 work/<domain>/              # intermediate transforms
+├─ 📁 processed/<domain>/         # publish-ready artifacts
+├─ 📁 stac/
+│  ├─ 📁 collections/             # STAC Collections
+│  └─ 📁 items/                   # STAC Items
+├─ 📁 catalog/
+│  └─ 📁 dcat/                    # DCAT outputs (JSON-LD)
+└─ 📁 prov/                       # PROV bundles (JSON-LD / per run)
 ```
+
+### ✅ Promotion checklist (data + derived outputs)
+
+Any new/updated dataset must include:
+
+- Source name + link (or archive reference)  
+- License/terms (or “unknown” with rationale + governance label)  
+- Spatial reference (EPSG) + units  
+- Time coverage (single year, range, or “undated”)  
+- Processing steps (georef points count, resampling, simplification, etc.)  
+- Checksums + version stamp *(recommended)*  
+- Sensitivity / classification (and precision policy if relevant) 🔒🧭  
+- Contract notes *(if exposed via API)*: response schema + examples in `src/server/contracts/` 📜  
 
 ---
 
-## ⚡ Quickstart
-> 🧰 KFM is intentionally modular. Use Docker for dependencies + local dev for API/UI.
+## 🧾 Evidence artifacts (AI outputs are datasets)
 
-### 1) Prerequisites
-- **Docker + Docker Compose** (recommended)
-- **Python 3.11+** (API + pipelines)
-- **Node.js 18+** (web UI)
-- **GDAL** tooling (highly recommended for geospatial ETL)
-- Optional but helpful:
-  - **Rust stable** (for `tools/rs`)
-  - **DVC** (for large artifacts)
-  - **QGIS / Google Earth** (optional validation/inspection tools)
+KFM’s “evidence-first” design treats **derived outputs** as first-class citizens — including:
 
-### 2) Bring up core services
+- AI answers (publishable) 🤖  
+- computed summaries / dashboards 📈  
+- reconciliation reports / diff packets 🧾  
+- model cards / evaluation snapshots 🧠  
+
+### ✅ Rule: If it can be cited, it must be stored + cataloged + traced
+
+A publishable AI output should be:
+
+- stored under `data/processed/<domain>/...` ✅  
+- described by STAC/DCAT metadata ✅  
+- linked via PROV to (a) sources and (b) the exact pipeline / code change ✅  
+- served only through the governed API (never a side-channel) 🔌🧭  
+
+> [!IMPORTANT]
+> Focus Mode is advisory — but if we publish its output, we treat it like a dataset. That’s how we stay credible at scale. 🧾✅
+
+---
+
+## 🧾 DevOps provenance (PR → PROV → Graph)
+
+KFM’s roadmap includes treating **GitHub activity itself as provenance data**: PRs, commits, approvals, and merges can be emitted as **PROV‑O JSON‑LD** and (optionally) ingested into the graph. 🧾🕸️
+
+### 🎯 Why this exists
+
+- Link **datasets and catalogs** back to the **exact code change** that produced them  
+- Answer governance questions like:
+  - “Which PR introduced this layer?”
+  - “Who reviewed the change that altered this dataset’s license?”
+  - “Which pipeline run produced the published tiles?”
+
+### 🧩 Concept model (high level)
+
+```mermaid
+flowchart LR
+  PR["Pull Request<br/>prov:Activity"] --> COMMIT["Commit(s)<br/>prov:Entity"]
+  PR --> BUILD["CI Run<br/>prov:Activity"]
+  BUILD --> ART["Artifacts<br/>STAC/DCAT/PROV/SBOM<br/>prov:Entity"]
+  USER["Author/Reviewer<br/>prov:Agent"] --> PR
+  POLICY["OPA Gate Result<br/>prov:Entity"] --> BUILD
+```
+
+### ✅ Recommended workflow behavior (`.github/workflows/pr-provenance.yml`) *(spec)*
+
+On PR open + PR merge:
+
+- generate `prov/devops/pr_<id>.jsonld`  
+- attach to workflow artifacts (and optionally commit to repo on merge)  
+- optionally ingest into Neo4j via a secured, least‑privilege endpoint *(never from PR forks)*  
+- include policy gate summaries + checksums as referenced entities
+
+> [!IMPORTANT]
+> Treat **DevOps provenance** like any other evidence artifact:
+> - deterministic generation
+> - schema validation
+> - immutable references (commit SHAs, artifact checksums)
+
+---
+
+## 🛡️ Branch protection & merge strategy
+
+Configured in **Repo Settings** (not files). Recommended guardrails:
+
+- ✅ Require PRs (no direct pushes to `main`)  
+- ✅ Require status checks (CI + security + relevant gates)  
+- ✅ Require **1–2 approvals** (CODEOWNERS when applicable)  
+- ✅ Require “Resolve conversations” before merge  
+- ✅ Block force-pushes to protected branches  
+- ✅ Prefer **Squash merge** for clarity (or **Rebase merge** for linear history)
+
+### 🧾 Release discipline (recommended)
+
+- Tag releases with **SemVer**: `vMAJOR.MINOR.PATCH` 🏷️  
+- Treat releases as immutable promotion points:
+  - attach SBOMs  
+  - attach attestations  
+  - attach provenance packet (STAC/DCAT/PROV summary + policy results) 🧾  
+
+---
+
+## 🤖 Automation & required checks
+
+### ✅ What CI should do (minimum bar)
+
+- Lint + formatting checks  
+- Unit tests (fast)  
+- Type checking (where applicable)  
+- Build (web + CLI tooling)  
+- Security scans (CodeQL + dependency review + secret scanning)  
+- **Change-aware gates** (run only when touched)  
+- Upload artifacts on failure (logs are gold 🥇)
+
+### 🧪 Gate matrix (path-aware triggers)
+
+| Change type | Examples | Required gates |
+|---|---|---|
+| 🧠 Core code | API logic, parsers, pipelines | `ci`, `codeql`, `dependency-review` |
+| 🔌 API contracts | OpenAPI/GraphQL schema examples | `ci`, `contract-tests` *(if present)*, `policy-gate` |
+| 🧰 Pipelines | `src/pipelines/**` | `ci`, `policy-gate`, `metadata-validate` *(if artifacts change)* |
+| 🗺️ Data/catalog | `data/**`, STAC/DCAT/PROV | `catalog-qa`, `metadata-validate`, `policy-gate` |
+| 🕸️ Graph assets | `src/graph/**`, `data/graph/**` | `ci`, `policy-gate`, `graph-qa` *(if present)* |
+| 🎬 Story Nodes | `docs/reports/story_nodes/**` | `story-lint`, `policy-gate` |
+| 📚 Docs/specs | `docs/**`, `schemas/**` | `docs-linkcheck` *(if present)*, `policy-gate` |
+| 🌐 Web UI | `web/**` | `ci` (build/test), `codeql` (as applicable) |
+| 🤖 Workflows | `.github/**` | `policy-gate` *(least privilege + pinning rules)* |
+| 🧾 DevOps provenance | `prov/devops/**` | `metadata-validate` *(schema)*, `policy-gate` |
+
+> [!NOTE]
+> Keep required checks **change-aware**. If a PR doesn’t touch governed surfaces, don’t block merges on unrelated gates.
+
+### 📦 Supply chain lanes
+
+| Lane | What it produces | When it runs |
+|---|---|---|
+| 📦 SBOM | SPDX/CycloneDX for builds/images | tags/releases (optionally `main`) |
+| 🖊️ Attest | build/provenance attestations | tags/releases |
+| 🐳 Image promotion | immutable digests, labels, metadata | `main` and tags |
+| 🧾 Trace bundle | build-info + checksums + gate results | all promotion lanes |
+
+> [!CAUTION]
+> Workflows and actions are security-sensitive. Treat them like production code. 🔐
+
+---
+
+## 🧑‍⚖️ Policy-as-Code gate (OPA/Conftest)
+
+KFM uses policy-as-code to keep governance **enforceable**, not “tribal knowledge.” 🧑‍⚖️🧾
+
+### ✅ What policy gate is for
+
+- enforcing minimum metadata and provenance rules  
+- preventing link safety regressions (SSRF-ish hazards, untrusted fetch targets)  
+- enforcing classification propagation and sensitive‑location precision rules  
+- enforcing CI supply‑chain hygiene (least privilege, action pinning)  
+- enforcing “AI must cite or refuse” compliance on publishable AI artifacts 🤖🧾  
+- enforcing “no mystery nodes” contracts between graph ↔ catalog ↔ provenance 🕸️🧾  
+
+### 🗂️ Policy source of truth
+
+Policies live under `🧰 tools/validation/policy/` and are executed via **Conftest** (OPA/Rego).
+
+```text
+🧰 tools/
+└─ ✅ validation/
+   └─ 🧑‍⚖️ policy/
+      ├─ 📄 README.md
+      ├─ 📁 rego/
+      │  ├─ 📁 common/
+      │  │  ├─ 📄 helpers.rego
+      │  │  ├─ 📄 license_allowlist.rego
+      │  │  └─ 📄 url_allowlist.rego
+      │  ├─ 📁 catalogs/
+      │  │  ├─ 📄 stac_required.rego
+      │  │  ├─ 📄 dcat_required.rego
+      │  │  ├─ 📄 prov_required.rego
+      │  │  └─ 📄 link_safety.rego
+      │  ├─ 📁 governance/
+      │  │  ├─ 📄 classification_propagation.rego
+      │  │  ├─ 📄 sensitive_locations.rego
+      │  │  ├─ 📄 ai_citation_required.rego
+      │  │  ├─ 📄 ai_hallucination_guard.rego        # (recommended)
+      │  │  └─ 📄 attribution.rego
+      │  ├─ 📁 supply_chain/
+      │  │  ├─ 📄 workflows_least_privilege.rego
+      │  │  └─ 📄 actions_pinning.rego
+      │  └─ 📄 bundles.rego
+      └─ 📁 tests/
+         ├─ 📄 *_test.rego
+         └─ 📁 samples/
+            ├─ 📁 good/
+            └─ 📁 bad/
+```
+
+### 🧪 Run locally (developer loop)
+
 ```bash
-cp .env.example .env
-docker compose up -d
+# run the policy suite
+conftest test tools/validation/policy/tests -p tools/validation/policy/rego
+
+# path-aware (preferred): run policy only on changed files
+git diff --name-only origin/main...HEAD | \
+  xargs -I{} conftest test {} -p tools/validation/policy/rego
 ```
 
-### 3) Run the API (example)
+> [!IMPORTANT]
+> Every policy should ship with:
+> - tests (`*_test.rego`)
+> - good/bad samples (minimal fixtures)
+> - README updates if the rule changes contributor behavior
+
+---
+
+## 🧑‍⚖️ Runtime policy hooks (API/AI)
+
+CI gates catch a lot — but KFM also enforces policy **at query time**:
+
+- API enforces role-based access and sensitivity filters 🔐  
+- Focus Mode enforces citation rules + sensitive precision constraints 🤖🧭  
+- Policy updates can be applied without changing application code (agile governance) 🧑‍⚖️  
+
+### ✅ Runtime expectations (recommended)
+
+- Policies are **versioned in Git** and deployed as bundles  
+- Each policy decision logs the **policy version hash** + outcome (auditability) 🧾  
+- API responses include provenance references when appropriate (last-mile governance) 🔌🧾  
+- For sensitive layers, runtime policy can:
+  - deny access  
+  - generalize precision  
+  - redact attributes  
+  - rate-limit and throttle suspicious query patterns 🧯  
+
+> [!NOTE]
+> Runtime policy doesn’t replace CI policy — it completes it. CI enforces “what can ship”; runtime enforces “what can be seen.” ✅
+
+---
+
+## 🧪 Deterministic replay lane: `kfm-sim-run`
+
+Deterministic replay is the reproducibility backbone: a CLI + CI lane that can re-run pipeline steps with pinned environments, freeze time, and emit structured artifacts. 🧪🧾
+
+### 🎯 What it’s for
+
+- Replay an ETL/catalog/graph run deterministically  
+- Produce diffs against prior outputs  
+- Emit a “promotion packet” (STAC/DCAT/PROV + reports + gate results)  
+- Optionally open a draft PR from the outputs *(spec)*  
+- Enable safe “what if” simulation without mutating production state ✅  
+
+### 🧰 Suggested CLI shape *(spec)*
+
 ```bash
-cd api
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn kfm_server.main:app --reload
+python -m tools.kfm_sim_run \
+  --domain "catalog" \
+  --change "data/**" \
+  --seed 12345 \
+  --time "2026-01-09T00:00:00Z" \
+  --out ".kfm/out/simrun/"
 ```
 
-### 4) Run the web app (example)
-```bash
-cd web
-npm install
-npm run dev
+### 📦 Expected outputs under `--out/` *(spec)*
+
+```text
+📁 .kfm/out/simrun/
+├─ 📁 stac/                     # generated STAC
+├─ 📁 dcat/                     # generated DCAT rollups
+├─ 📁 prov/                     # generated PROV
+├─ 📁 diffs/                    # structured diffs (before/after)
+├─ 📁 reports/
+│  ├─ 📄 summary.md            # human-readable summary
+│  └─ 📄 gates.json            # machine-readable gate results
+└─ 📁 attestations/             # optional signing inputs/outputs
 ```
 
-### 5) Verify
-- API docs (OpenAPI/Swagger): `http://localhost:8000/docs`
-- UI: `http://localhost:5173`
-
-> [!TIP]  
-> If your repo includes a `Makefile`, aim for “one command” dev flows like `make dev`, `make validate`, `make publish` ✅
+> [!IMPORTANT]
+> Determinism is a feature: if a run can’t be replayed, it can’t be trusted (or maintained). ✅
 
 ---
 
-## 🧭 Golden paths
-These are the “happy paths” that keep KFM consistent and auditable.
+## 🛰️ Performance packaging lanes (GeoParquet · PMTiles · 3D)
 
-### (A) Add a new dataset (end-to-end)
-1) **Register the source**  
-   Add a JSON entry under `data/sources/` describing:
-   - source URL(s)
-   - license + attribution requirements
-   - spatial/temporal extent
-   - sensitivity flags (if any)
-2) **Ingest + normalize**  
-   Run a pipeline in `pipelines/` (or a `scripts/` helper) that:
-   - fetches raw → writes to `data/raw/` (checksums recorded)
-   - normalizes → writes intermediates to `data/work/`
-   - publishes → writes outputs to `data/processed/` (versioned filenames; no silent overwrites)
-3) **Generate receipts (Triplet)**  
-   Produce:
-   - STAC item/collection → `data/stac/`
-   - DCAT JSON-LD → `data/catalog/dcat/`
-   - PROV bundle → `data/prov/`
-4) **Index + graph link**
-   - ensure graph nodes/edges reference catalog IDs (no “mystery nodes”)
-   - update search indices for documents/text (if applicable)
-5) **Expose via API + UI**
-   - add governed endpoints (REST/GraphQL)
-   - register UI layer configuration (style + legend + provenance panel integration)
+KFM’s roadmap explicitly calls for **high-performance publishing formats** while keeping provenance intact. 🚀🧾
 
-### (B) Add a Story Node
-1) Create `story_nodes/draft/<story_slug>/`
-2) Add:
-   - `story.md` (narrative + citations)
-   - `story.json` (map/timeline steps)
-   - `assets/` (figures/media)
-3) Run story validation (schema + link integrity)
-4) Promote to `published/` once policy gates pass
+### ✅ Dual-format publishing (recommended pattern)
 
-> [!NOTE]  
-> Story Nodes should clearly separate **facts** (with citations) from **interpretation** (explicitly labeled).
+For many map layers, publish:
 
-### (C) Add/modify Focus Mode behavior safely
-- Add regression tests to `mcp/evals/`
-- Update model cards / behavior notes in `mcp/model_cards/`
-- Ensure policy checks still pass (citations required; sensitive content guarded)
+- **GeoParquet** for analytics + scalable query workflows  
+- **PMTiles** for fast web map delivery  
+- Both referenced by **STAC Items/Collections** + surfaced via **DCAT**  
+- Both tied to hashes/checksums in PROV (lineage + integrity) 🧬
 
-### (D) Run a what‑if scenario (`kfm-sim-run`)
-- Define a scenario patch/config (inputs, assumptions, constraints)
-- Run deterministic sandbox pipeline → outputs to `data/work/sims/`
-- Promote only if the scenario is meant to be publishable evidence (Triplet + policy applies)
+### 🧪 CI gates to add *(spec)*
+
+| Artifact | Example gate |
+|---|---|
+| GeoParquet | schema + geometry validity + CRS metadata check |
+| PMTiles | `pmtiles validate` + tilejson metadata sanity |
+| 3D Tiles | tileset JSON validation + bounding volume sanity |
+| Story 2D→3D | story step config validation (MapLibre/Cesium state transitions) |
+
+> [!TIP]
+> Performance upgrades are welcome — but only if they keep the **Evidence Triplet** intact. 🧾✅
 
 ---
 
-## 📦 Data lifecycle
-KFM treats data like code: **it must compile** before it can ship.
+## ⏱️ Streaming & real-time lanes (watchers + telemetry)
 
-### Required staging (always)
-- `data/raw/` → ingest only (read-only source drops + checksums tracked)
-- `data/work/` → intermediate transforms (re-runnable)
-- `data/processed/` → published outputs (what the world can depend on)
+KFM’s roadmap includes **tiny, idempotent watchers** (e.g., GTFS‑RT, gauges, sensors) that emit STAC Items per observation and DCAT entries per feed. ⏱️🛰️🧾
 
-### Dual-format outputs (recommended)
-Many datasets should publish:
-- **analysis-friendly** format (e.g., **GeoParquet**)
-- **UI-friendly** format (e.g., **PMTiles** for vector tiles; **COG** for rasters)
+### ✅ Repo collaboration rule for “live” systems
 
-> [!TIP]  
-> This keeps the UI fast **without sacrificing provenance**: both artifacts share the same STAC/DCAT/PROV receipts.
+- Put watcher code under `src/pipelines/` or `tools/` (pick one; don’t duplicate)  
+- Treat watcher outputs like any other dataset:
+  - **STAC Item** per snapshot/observation  
+  - **DCAT dataset** per feed  
+  - **PROV** includes retrieval metadata (ETag/Last-Modified, poll time, source URL allowlist)  
+- Provide a **mock feed fixture** so CI can validate deterministically ✅  
+- Avoid running high-frequency polling on GitHub-hosted runners (prototype only) ⚠️
 
-### “No mystery layers”
-If it can be toggled in the UI, it must have:
-- discoverability metadata (DCAT)
-- spatial asset metadata (STAC)
-- lineage (PROV)
-- passing validators + policy checks
-- provenance visible to users (not hidden behind “trust me”)
+### 📈 Telemetry expectations *(recommended)*
+
+- structured logs (NDJSON) per run  
+- per‑run “receipt” summary (inputs, outputs, checksums, gate results)  
+- optional: energy/carbon accounting for heavy tasks (GreenOps) 🌱 *(future lane)*
 
 ---
 
-## 📖 Story Nodes and Focus Mode
-### Story Nodes = governed narrative as data
-A Story Node is typically:
-- `story.md` (Markdown narrative, citations, annotations)
-- `story.json` (step-by-step map/timeline instructions)
-- `/assets/` (images, figures, supporting media)
+## 🧾 Issues
 
-#### Optional doc metadata (recommended)
-For docs and stories, consider adding **YAML front matter** for:
-- license, sensitivity, version, governance references, integrity checksum, etc.
+Use issues for everything: bugs, layers, pipelines, UI changes, docs, research notes, governance questions.
+
+### ✅ Before filing
+
+- Search existing issues/PRs  
+- Add screenshots (UI), logs (pipelines), or minimal repro (code)  
+- Geo requests: include time range + spatial extent (bbox, county, township/range, etc.)  
+- Catalog/pipeline requests: include dataset id, expected STAC/DCAT shape, and provenance needs
+
+### 🏷️ Recommended issue labels
+
+- `type:bug` 🐛 — something broken  
+- `type:feature` ✨ — new capability  
+- `type:data` 🗺️ — new layer/source, ingestion, catalog updates  
+- `type:pipeline` 🧰 — ETL/automation/schedulers/validators  
+- `type:docs` 📚 — documentation improvements  
+- `type:story` 🎬 — Story Nodes / narrative layer  
+- `type:ai` 🤖 — Focus Mode / model outputs / AI tooling  
+- `type:chore` 🧹 — refactor, tooling, dependencies  
+- `type:security` 🔐 — security-related changes *(avoid public details; see SECURITY.md)*  
+
+---
+
+## ✅ Pull Requests
+
+PRs should be small, reviewable, and testable.
+
+### 🌿 Branch naming
+
+- `feat/<short-scope>` — new features  
+- `fix/<short-scope>` — bug fixes  
+- `data/<source-or-layer>` — data/catalog changes  
+- `pipe/<pipeline-or-validator>` — pipeline/CI/automation work  
+- `docs/<topic>` — documentation  
+- `story/<slug>` — Story Nodes  
+- `ai/<model-or-guardrail>` — AI changes  
+- `sim/<domain>/<YYYYMMDD>-<shortsha>` — deterministic replay output branches *(spec)*
+
+### 🧪 PR must include
+
+- Clear summary (“what + why”)  
+- Testing notes (unit/integration/manual)  
+- Docs updates if behavior changes  
+- Data provenance notes if layers change  
+- Sensitivity notes if locations or communities could be impacted  
+
+### 📏 PR size guideline
+
+Prefer < 400 lines changed unless there’s a strong reason.
+
+### 🧾 PR description essentials (geo/data-specific)
+
+Include:
+
+- CRS/EPSG (and whether you used STAC `proj:*` fields)  
+- bbox (or named region)  
+- time coverage (year / range / “undated”)  
+- format (COG/GeoJSON/GeoParquet/PMTiles/3D Tiles/etc.)  
+- preview proof (screenshot + zoom level)  
+- catalog impact (which STAC/DCAT files changed)  
+- provenance impact (which PROV record(s) were added/updated)  
+- license/attribution (how downstream users should cite/attribute)  
+- runtime policy impact (if access rules or precision changed) 🧑‍⚖️  
+
+> [!IMPORTANT]
+> Link issues in the PR body using `Closes #123` ✅  
+> This auto-closes issues on merge and keeps history tidy.
+
+---
+
+## 👀 Reviews & ownership
+
+### ✅ CODEOWNERS = routing
+
+- CODEOWNERS live in **[`./CODEOWNERS`](./CODEOWNERS)** 👀  
+- If you’re unsure who owns an area, open an issue with `status:needs-triage` and we’ll route it.
+
+### 🤝 Review etiquette
+
+- Review the change, not the person.  
+- Ask for evidence: screenshots, logs, benchmarks, repro steps.  
+- Prefer “suggestion” comments over blockers when possible.  
+- If you request changes, be explicit: what and why.
+
+---
+
+## 🏷️ Label taxonomy
+
+Use prefixes so filters, search, and boards stay sane:
+
+- `type:*` → intent (bug/feature/data/pipeline/story/docs/ai/chore/security)  
+- `area:*` → subsystem  
+  - `area:pipeline` 🧰  
+  - `area:catalog` 🗃️  
+  - `area:stac` 🧾  
+  - `area:dcat` 🧾  
+  - `area:prov` 🧾  
+  - `area:graph` 🕸️  
+  - `area:api` 🔌  
+  - `area:web` 🌐  
+  - `area:ui` 🖥️  
+  - `area:ai` 🤖  
+  - `area:db` 🗄️  
+  - `area:story` 🎬  
+  - `area:docs` 📚  
+  - `area:devops` 🧾  
+- `priority:*` → urgency (`p0`, `p1`, `p2`)  
+- `status:*` → workflow state (`blocked`, `needs-info`, `ready`, `in-progress`)  
+- `good-first-issue` 🌱 → newcomer-friendly  
+- `governance:*` → extra review triggers  
+  - `governance:sovereignty` 🧭  
+  - `governance:sensitive-locations` 🗺️  
+  - `governance:license` 🧾  
+  - `governance:privacy` 🔒  
+  - `governance:ai-output` 🤖🧾  
+
+> [!TIP]
+> Cute labels are fun… until boards become unusable. 😅 Keep it predictable.
+
+---
+
+## 🎬 Story Nodes + narrative layer
+
+Story Nodes are machine‑ingestible storytelling: **Markdown + JSON step configs** that bind narrative to map/timeline state.
+
+### ✅ Story Node rules
+
+- Facts require citations/evidence links  
+- Interpretations are allowed, but must be labeled as such  
+- “AI assist” is opt‑in and must be labeled  
+- Sensitive locations must be generalized (precision policy)  
+- If a Story Node changes layers/camera/timeline, it must be reproducible (no mystery state)
+
+### 📁 Canonical location (v13)
+
+```text
+docs/reports/story_nodes/
+├─ draft/
+└─ published/
+```
+
+> [!NOTE]
+> Some older docs refer to a `stories/` directory. In v13, prefer `docs/reports/story_nodes/` so stories live alongside reports and governance review. ✅
+
+### 🧾 Story Node front‑matter (template)
 
 ```yaml
 ---
-title: "Dust Bowl in Kansas"
-status: "draft"
-license: "CC-BY-4.0"
-sensitivity: "public"
-governance_ref: "docs/governance/GOVERNANCE_POLICY.md"
+id: story.kansas.<slug>
+title: "Human-readable title"
+time_range: [YYYY, YYYY]
+places:
+  - kfm.place.<place_id>
+entities:
+  - kfm.entity.<entity_id>
+claims:
+  - text: "Factual claim that must be evidence-linked."
+    evidence:
+      - stac:item: kfm.stac.<item_id>
+      - dcat: kfm.dcat.<dataset_id>
+      - prov: kfm.prov.<bundle_id>
+interpretations:
+  - text: "Interpretation / narrative framing (non-factual)."
+ai_assist:
+  used: false
+sensitivity:
+  level: public
+  location_precision: county  # or township, bbox, h3_6, etc.
 ---
 ```
 
-### Focus Mode = AI answers with evidence
-Focus Mode:
-- retrieves evidence from **catalogs + graph + search**  
-- filters/redacts through **policy**
-- generates answers that **must cite sources**
-- refuses if evidence is missing or policy is violated
-
-> 🧾 Focus Mode is not “chat that guesses.” It’s **retrieval + grounding + receipts + policy**.
+> [!NOTE]
+> Story Nodes should reference durable identifiers (catalog IDs + graph IDs), not fragile URLs.
 
 ---
 
-## 🤖 AI system and automation
-KFM’s AI design is intentionally boring (in the best way): **auditable, policy-gated, provenance-linked**.
+## 🧠 Focus Mode (advisory AI)
 
-### 🧠 Focus Mode pipeline (conceptual)
-```mermaid
-flowchart TD
-  Q["User question<br/>+ map context"] --> R["Retrieve evidence<br/>(STAC/DCAT/PROV + Graph + Search)"]
-  R --> F["Filter & redact<br/>(Policy Pack / sensitivity)"]
-  F --> B["Build evidence bundle<br/>(citations + graph paths + provenance)"]
-  B --> A["Answer generator<br/>(LLM)"]
-  A --> V["Verifier<br/>(must cite; must respect policy)"]
-  V --> U["UI output<br/>(answer + citations + confidence)"]
-```
+Focus Mode is a human-first advisory layer:
 
-### 🛡️ Policy mechanics (why OPA matters)
-- **Runtime policies** can be updated without changing application code (agile governance)
-- **Policy versioning** enables auditability (“what rule was in effect then?”)
-- **Decision logs** can record policy hash + allow/deny outcomes for sensitive cases
+- it summarizes and connects evidence  
+- it is context-aware (map view, timeline, active layers)  
+- it is never autonomous; users remain in control  
+- it consults governance policy at runtime (deny/redact/generalize) 🧑‍⚖️🧭  
 
-### 🔐 AI safety posture (high level)
-- prompt-injection resistant retrieval (allowlists + redaction)
-- citations required for factual claims (“no uncited assertions”)
-- sensitive data handling (classification + aggregation/anonymization as needed)
-- sandbox + least-privilege execution for AI components
-- telemetry + evals tracked in `mcp/` (drift, bias checks, regressions)
+### ✅ Focus Mode rules
 
-### 🤖 Watcher → Planner → Executor (W‑P‑E) agents (optional / gated)
-- **Watcher**: detects stale metadata, broken links, drift, missing provenance, schema changes
-- **Planner**: proposes minimal, reviewable change plans
-- **Executor**: opens PRs with deterministic fixes (never silently edits production)
-
-> 🧯 **Kill-switch** is part of the design: if automation becomes risky, it can be disabled globally.
+- Outputs must be provenance-linked (citations/dataset references)  
+- Never leak sensitive location precision (respect `sensitivity.location_precision`)  
+- Distinguish fact vs interpretation  
+- AI-generated text is opt-in, clearly labeled, and includes uncertainty hints  
+- Publishable AI outputs become artifacts (store + catalog + trace) 🧾  
 
 ---
 
-## 🧪 Simulation and modeling
-KFM treats simulations the same way it treats datasets: **publishable, reproducible evidence**.
+## 🤖 Agents & autonomy boundaries (WPE)
 
-### `kfm-sim-run` pattern (evolving)
-- deterministic simulation runner (inputs + configuration + version pins)
-- outputs stored under `data/work/sims/` then promoted to `data/processed/`
-- simulation results get STAC/DCAT/PROV like any other dataset
-- UI can render outputs as time-aware layers + dashboards
+KFM may use assistants/agents for supporting work (triage, doc linting, summarization, metadata suggestions) — but **not for ungoverned publishing**.
 
-### Why this matters
-- scenario planning (hydrology, climate impacts, land use change)
-- uncertainty becomes visible (confidence bands, model assumptions)
-- “model output” becomes **auditable public knowledge**, not a black box
+### 🧭 The WPE pattern (Watcher → Planner → Executor)
 
----
+- 👀 Watcher: observes changes (PR diff, file paths, labels)  
+- 🧠 Planner: proposes a plan (what gates apply, what to run)  
+- 🛠️ Executor: runs approved tools only (CI jobs, validators, report generators)  
 
-## 🔌 APIs
-### REST (FastAPI)
-- Contracted endpoints with OpenAPI schemas
-- Used by UI and external integrations
+### ✅ Guardrails
 
-### GraphQL
-- Great for relationship-heavy queries (people ⇄ events ⇄ places)
-- Guardrails: pagination, depth limits, cost controls
+- Default deny on publish/sign/promotion unless gates pass  
+- Kill-switch respected 🧯  
+- AI-suggested changes must be reviewable and evidence-linked  
+- No autonomous merging into protected branches  
 
-### Tiles & assets
-- **COG** rasters (range requests; optional caching)
-- vector tiles via **PMTiles** or PostGIS MVT
-- 3D streaming via **3D Tiles** (Cesium)
-- lightweight 3D via **KML/KMZ** (Google Earth) where appropriate
-
-### Standards-forward (optional)
-- OGC API patterns (Features/Tiles) where they improve interoperability
+> [!IMPORTANT]
+> The assistant can help you ship faster — but humans own accountability. ✅
 
 ---
 
-## 🛡️ Governance, ethics, and safety
-KFM is built to be adoptable by institutions (schools, libraries, agencies) **without compromising trust**.
+## 🧯 Kill-switch (fail‑closed) rules
 
-### 🌿 Governance principles
-- **FAIR**: findable, accessible, interoperable, reusable metadata
-- **CARE / sovereignty**: consider sensitive data + community impact
-- **Licensing clarity**: dataset licenses are first-class metadata (no ambiguity)
-- **Review gates**: contributions validated (schemas, provenance, link integrity, policy)
-- **Public trust UX**: provenance isn’t hidden — it’s part of the UI
+We maintain a “stop button” for automation so we can fail‑closed during incidents, compromised runners, or governance pauses. 🧯
 
-### 🔐 Security posture
-- secrets scanning + dependency scanning
-- policy-as-code enforcement (OPA/Rego)
-- supply chain posture (manifests, checksums; SBOM concepts; signed attestations)
-- responsible disclosure (see `SECURITY.md`)
+### ✅ Rules of the kill-switch
 
----
+- Kill-switch ON → **promotion-critical jobs stop** (or run in audit-only mode)  
+- Kill-switch state must be visible (logs + summary output)  
+- Prefer a repo variable (e.g., `KFM_KILL_SWITCH=true`) plus an optional file flag (e.g., `../.kfm/kill-switch.yml`)  
 
-## 🧰 Tooling
-### `tools/` (validators + helpers)
-Typical responsibilities:
-- validate dataset contracts (STAC/DCAT/PROV + KFM extensions)
-- run link checks, schema checks, policy checks
-- generate graph import artifacts
-- produce release manifests + checksums (+ SBOM scaffolding)
+### 🧯 Recommended workflow pattern *(spec)*
 
-### `tools/rs/` (Rust tooling 🚀)
-Rust is ideal for:
-- fast validation on large catalogs
-- tiling / packaging utilities
-- batch transforms that benefit from speed and memory safety
+- First steps call `.github/actions/check-kill-switch`  
+- If enabled: exit clearly **before** publish/sign steps  
+- CI remains “green” only for non-promotion lanes (lint/docs), unless you explicitly want a global stop
 
-### Data artifact versioning (recommended)
-- **DVC** for large rasters/models without bloating Git
-- content-addressable outputs (file hashes) for integrity and reproducibility
-
-### Release integrity (recommended)
-- signed attestations (e.g., Sigstore/Cosign) for published artifacts
-- reproducible builds + environment pinning
+> [!TIP]
+> A kill-switch is not pessimism — it’s operational maturity. ✅🧯
 
 ---
 
-## 🧭 Roadmap
-Directionally consistent goals (current docs + future proposals):
+## 🔐 Security & privacy
 
-### Near-term ✅🧱
-- ✅ Schema + validator mindset (“metadata must compile”)
-- ✅ CI catalog QA gates (broken provenance, missing licenses, invalid geometry/CRS)
-- 🧾 Provenance UX hardening (make it impossible to ignore receipts)
-- 🛰️ Remote sensing pipeline templates (COG-first patterns)
+### ✅ Always
+- Never commit secrets (tokens, keys, credentials)  
+- Use GitHub Secrets + environment variables  
+- For vulnerabilities: use private reporting (see `SECURITY.md`)  
 
-### Medium-term 🧩🚀
-- 🧱 Story Builder GUI (Story Nodes for non-devs)
-- 📦 Offline “education packs” (PWA mode + curated tiles/datasets/stories)
-- 🧪 Simulation runner & dashboards (`kfm-sim-run`)
-- 🤖 W‑P‑E automation agents (policy-gated PRs only)
-- 🔏 Artifact signing + attestations for releases
+### 🔐 GitHub Actions hardening (required posture)
 
-### Long-term 🌐✨
-- 🌍 Federation (“Frontier Matrix” blueprint for other regions)
-- 🧠 GeoXAI / uncertainty-first UI (confidence + completeness as first-class)
-- 🥽 AR/VR extensions (museum/field overlays; guided tours)
-- 📚 DOI-backed releases for data snapshots + research workflows
+- ✅ Pin third‑party actions to commit SHAs *(or trusted tags + policy allowlist)*  
+- ✅ Use least‑privilege workflow permissions (`permissions:` block)  
+- ✅ Prefer OIDC for cloud auth (no long-lived keys)  
+- ✅ Avoid running publish/sign jobs on PRs from forks  
+- ✅ Treat `.github/**` changes as security-sensitive (require review)  
+- ✅ Avoid unsafe shell invocation in workflows; sanitize inputs (no surprise `shell: bash` glue) 🧯  
 
----
+### 🧭 Data sensitivity rule (hard)
 
-## 🤝 Contributing
-KFM welcomes contributions from developers **and** domain experts (historians, educators, scientists, cartographers). 🌾
+If a dataset includes sensitive locations (culturally sensitive sites, protected resources, critical infrastructure, etc.):
 
-### Contribution types
-- **(A) New data/domain**: raw sources → pipeline → publish STAC/DCAT/PROV
-- **(B) Story Nodes**: narratives with citations + map steps
-- **(C) Graph enrichment**: entity types, ontology bindings, relationships
-- **(D) API endpoints/services**: contract-first, then implementation + tests
-- **(E) UI features**: layer registration; provenance always visible
+- generalize location precision (mask/jitter/grid indexing like H3 when appropriate)  
+- restrict access where required  
+- do not publish exact coordinates unless explicitly permitted by governance  
 
-### Definition of done ✅
-A contribution is “done” when:
-- [ ] schemas/contracts validate
-- [ ] provenance is complete (STAC/DCAT/PROV)
-- [ ] policy pack passes (sensitivity/licensing rules)
-- [ ] tests pass
-- [ ] governance requirements addressed (FAIR/CARE, licensing, sensitivity)
-- [ ] CI is green ✅
+### 🧼 Privacy-by-design (recommended)
 
-> [!TIP]  
-> For AI or research changes: add/update `mcp/evals/`, `mcp/model_cards/`, and (if needed) `mcp/experiments/` so behavior stays measurable and reviewable.
+- store only what we need (minimize personal data)  
+- log access decisions (not raw sensitive payloads)  
+- consider query auditing / throttling for inference-style attacks  
+- prefer aggregated outputs for public analytics (and only publish what can be justified)  
+
+### 🗂️ Practical classification levels (recommended)
+
+| Level | Meaning | Typical examples |
+|---|---|---|
+| 🌍 Public | safe to publish openly | general layers, aggregated analytics, public docs |
+| 🏢 Internal | maintainer/collaborator access | draft catalogs, staging runbooks |
+| 🔐 Confidential | explicit approval required | restricted layers, limited sharing |
+| 🧨 Restricted | owners/admin only | credentials, incident logs, exact protected coordinates |
+
+> [!CAUTION]
+> Don’t paste sensitive endpoints, server IPs, access patterns, or raw credentials into public issues/PRs.
 
 ---
 
-## 📚 Project library
-This repo is deliberately research-backed. The PDFs in the project library inform architecture, modeling, geospatial pipelines, UI, governance, security posture, and implementation.
+## 🏛️ Cultural protocols & sensitive data
 
-> [!NOTE]  
-> Several files are **PDF portfolios** (they contain embedded PDFs).  
-> To extract embedded files on Linux/macOS:  
-> `pdfdetach -saveall "<portfolio>.pdf"` *(Poppler)*
+KFM’s roadmap includes community and cultural stewardship features (not just technical controls). 🧭🤝
+
+**When content intersects with communities, cultural sites, or sensitive narratives:**
+
+- prefer **generalized precision** by default (county/H3/bbox over exact points)  
+- attach **explicit context** (who created the data, intended use, restrictions)  
+- document cultural protocols in metadata and Story Node notes  
+- use governance labels to trigger reviewer routing (`governance:sovereignty`, `governance:sensitive-locations`)  
+
+> [!IMPORTANT]
+> “Open data” is not the same as “permissionless precision.” KFM defaults to trust + care. ✅🧭
+
+---
+
+## 📚 Project reference library (the “why” behind our standards)
+
+> [!WARNING]
+> Reference PDFs may have different licenses than this repo. Keep them in `📁 docs/library/` (or outside the repo) and respect upstream terms.
 
 <details>
-  <summary><b>🧭 Core KFM design docs (source of truth)</b></summary>
+<summary><strong>📌 Docs of record (KFM-defining)</strong></summary>
 
-- 🏗️ **KFM – Comprehensive Architecture, Features, and Design**
-- 🧾 **KFM – Comprehensive Technical Documentation**
-- 🖥️ **KFM – Comprehensive UI System Overview**
-- 🧠 **KFM – AI System Overview 🧭🤖**
-- 🗺️ **KFM – Platform Overview and Roadmap**
-- 📚 **KFM – Expanded Technical & Design Guide**
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` 🧭  
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf` 🗺️  
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` 🧱  
+- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf` 🖥️  
+- `docs/specs/Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` 🤖  
+- `docs/specs/📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf` 📦  
+- `docs/specs/Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` 🌾  
+- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` 🧾 *(profiles · protocols · repo layout)*  
+- `docs/specs/Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx` ✍️  
+- `docs/specs/Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` 🧪  
 
 </details>
 
 <details>
-  <summary><b>📦 Supporting portfolios (AI · data management · mapping · programming)</b></summary>
+<summary><strong>🧠 R&amp;D shelf (supporting references)</strong></summary>
 
-- 🤖 AI Concepts & more *(embedded books/papers)*
-- 🗄️ Data management, data science, Bayesian methods *(embedded books/papers)*
-- 🛰️ Maps, virtual worlds, archaeology, geospatial WebGL *(embedded books/papers)*
-- 🧑‍💻 Various programming languages & engineering references *(embedded books/papers)*
+- `docs/library/AI Concepts & more.pdf` 🧠  
+- `docs/library/Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` 🌐  
+- `docs/library/Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` 🗄️  
+- `docs/library/Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf` 🧰  
+- `docs/library/Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf` 🧭  
+- `docs/library/Various programming langurages & resources 1.pdf` 🧷  
+- `docs/library/Data Mining Concepts & applictions.pdf` 📊  
+- `docs/library/KFM- python-geospatial-analysis-cookbook_ch2.pdf` 🐍🗺️  
 
 </details>
 
 ---
 
-## 🧾 Citation and reuse
-- For software citation, use **CITATION.cff** (consider DOI-backed releases for snapshots).
-- For data reuse, always consult:
-  - dataset **license** fields in metadata
-  - **PROV** lineage bundles for processing steps
-  - source attribution requirements
+## 🧾 Next “missing but expected” files
 
-> 📌 If you’re building research outputs on top of KFM, prefer citing a **versioned data release** so results remain reproducible.
+If they don’t exist yet, consider adding (or tracking as “spec” work):
+
+### 🤖 GitHub ops (this folder)
+- `📄 .github/CONTRIBUTING.md` 🤝 (setup + conventions + style)  
+- `📄 .github/labels.yml` 🏷️ (label source of truth)  
+- `📄 .github/workflows/policy-gate.yml` 🧑‍⚖️ (Conftest/OPA PR gate)  
+- `📄 .github/workflows/catalog-qa.yml` 🔎 (fast STAC/DCAT gate)  
+- `📄 .github/workflows/metadata-validate.yml` 🧾 (schemas: STAC/DCAT/PROV/story metadata)  
+- `📄 .github/workflows/pr-provenance.yml` 🧾 (PR→PROV JSON‑LD)  
+- `📄 .github/workflows/sbom.yml` 📦 (Syft/SPDX/CycloneDX)  
+- `📄 .github/workflows/attest.yml` 🖊️ (OIDC attestations)  
+- `📄 .github/workflows/story-lint.yml` 🎬 (Story Nodes lint)  
+- `📄 .github/workflows/graph-qa.yml` 🧬 (ontology + constraints)  
+- `📄 .github/workflows/secret-scan.yml` 🔍 (secret scanning)  
+- `📄 .github/workflows/pii-scan.yml` 🧼 (PII scan)  
+
+### 🧑‍⚖️ Repo-wide governance + reliability
+- `📁 tools/validation/policy/` 🧑‍⚖️ (OPA policies: promotion, privacy, license, sensitivity, supply chain)  
+- `📄 .kfm/kill-switch.yml` 🧯 (fail-closed safety switch)  
+- `📁 schemas/` 🧩 (Story Node + manifest + contract JSON Schemas)  
+- `📁 tools/validation/` ✅ (schema + link + catalog validators)  
+- `📁 tools/kfm-sim-run/` 🧪 (deterministic replay runner)  
+- `📄 CITATION.cff` 📌 (research citation metadata)  
+- `📄 CODE_OF_CONDUCT.md` ❤️ (community standards)  
+- `📄 .pre-commit-config.yaml` 🧹 (local guardrails)  
 
 ---
 
-### 🧭 Final note
-KFM’s goal is bigger than “a map.” It’s a **community knowledge system**: open, evidence-driven, and built to scale across time, disciplines, and data types—without losing trust. 🌾🧠🗺️
+## 🙌 How to contribute
+
+1) Pick an issue (or open one) 🧾  
+2) Claim it (comment) ✍️  
+3) Create a branch 🌿  
+4) Open a PR ✅  
+5) Iterate with review feedback 👀  
+6) Merge when checks are green 🤖🟢  
+
+---
+
+<p align="right"><a href="#top">⬆️ Back to top</a></p>
