@@ -1,8 +1,9 @@
 <!--
 📌 This README defines the governed backend boundary for KFM (Kansas Frontier Matrix).
 🗓️ Last updated: 2026-01-26
-🧾 Contract posture: OpenAPI-first (contract-first)
+🧾 Contract posture: OpenAPI-first (contract-first) + GraphQL-optional
 🔒 Default stance: fail-closed (deny / redact unless proven)
+🧠 AI posture: evidence-bounded, opt-in, policy-scanned (Prompt Gate)
 -->
 
 <a id="top"></a>
@@ -14,8 +15,8 @@ _Backend + integration trust boundary for the Kansas Frontier Matrix (KFM) platf
   <img alt="Status" src="https://img.shields.io/badge/status-WIP-orange" />
   <img alt="API" src="https://img.shields.io/badge/API-v1-blue" />
   <img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-contract--first-brightgreen" />
-  <img alt="GraphQL" src="https://img.shields.io/badge/GraphQL-optional-6f42c1" />
-  <img alt="STAC/DCAT/PROV" src="https://img.shields.io/badge/evidence-STAC%20%7C%20DCAT%20%7C%20PROV-845ef7" />
+  <img alt="GraphQL" src="https://img.shields.io/badge/GraphQL-optional%20(%2Fgraphql)-6f42c1" />
+  <img alt="Evidence" src="https://img.shields.io/badge/evidence-STAC%20%7C%20DCAT%20%7C%20PROV-845ef7" />
   <img alt="Integrity" src="https://img.shields.io/badge/integrity-digest--addressed-111827" />
   <img alt="OCI" src="https://img.shields.io/badge/artifacts-OCI%20(ORAS)-2ea043" />
   <img alt="Cosign" src="https://img.shields.io/badge/signing-Cosign-0b7285" />
@@ -23,12 +24,14 @@ _Backend + integration trust boundary for the Kansas Frontier Matrix (KFM) platf
   <img alt="FAIR+CARE" src="https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-7c3aed" />
   <img alt="Telemetry" src="https://img.shields.io/badge/telemetry-append--only%20ledger-111827" />
   <img alt="Repro" src="https://img.shields.io/badge/repro-deterministic%20runs-2ea043" />
+  <img alt="LLM" src="https://img.shields.io/badge/LLM-Ollama%20(optional)-111827" />
+  <img alt="VectorDB" src="https://img.shields.io/badge/vector%20db-Chroma%20%7C%20Qdrant-111827" />
   <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-3776AB" />
   <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-ready-009688" />
   <img alt="Postgres" src="https://img.shields.io/badge/Postgres-PostGIS-informational" />
   <img alt="Graph" src="https://img.shields.io/badge/graph-Neo4j%20optional-0b7285" />
   <img alt="Search" src="https://img.shields.io/badge/search-OpenSearch%20%7C%20Elastic-111827" />
-  <img alt="Tiles" src="https://img.shields.io/badge/tiles-PMTiles%20%7C%20MVT-111827" />
+  <img alt="Tiles" src="https://img.shields.io/badge/tiles-PMTiles%20%7C%20MVT%20%7C%20COG-111827" />
   <img alt="OTel" src="https://img.shields.io/badge/observability-OpenTelemetry-7c3aed" />
   <img alt="Supply Chain" src="https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20SLSA%20%7C%20Cosign-111827" />
 </p>
@@ -40,7 +43,7 @@ _Backend + integration trust boundary for the Kansas Frontier Matrix (KFM) platf
 
 > [!IMPORTANT]
 > **Single entry point (non‑negotiable):**  
-> The API is the only supported route from **UI/clients → data/graph/search**. No direct UI-to-DB, UI-to-graph, or UI-to-index connections inside governed deployments. 🔒🧱
+> The API is the only supported route from **UI/clients → data/graph/search/LLM**. No direct UI-to-DB, UI-to-graph, UI-to-index, or UI-to-LLM calls inside governed deployments. 🔒🧱
 
 > [!IMPORTANT]
 > **Integrity invariant (non‑negotiable):**  
@@ -62,6 +65,8 @@ _Backend + integration trust boundary for the Kansas Frontier Matrix (KFM) platf
 - 🧪 Swagger (OpenAPI UI): `/docs`
 - 📕 ReDoc: `/redoc`
 - 🧾 OpenAPI JSON: `/openapi.json`
+- 🧬 GraphQL endpoint (optional): `POST /graphql`
+- 🧪 GraphQL Playground (dev-only, optional): `GET /graphql`
 - ❤️ Health: `/api/v1/health`
 - 🧭 Version/meta: `/api/v1/meta/version`
 - 🪪 Citation guidance (software + data releases): `/api/v1/meta/citation` *(target)*
@@ -74,12 +79,24 @@ _Backend + integration trust boundary for the Kansas Frontier Matrix (KFM) platf
 - 🧬 PROV run lineage: `/api/v1/prov/runs/{run_id}`
 - 🧾 Evidence bundle (Story/Focus): `/api/v1/evidence/bundles/{bundle_id}`
 
+**Maps + tiles (experience-critical)**
+- 🧱 Layer registry: `/api/v1/layers` *(target)*
+- 🗺️ Vector tiles (MVT): `/api/v1/layers/{layer_id}/tile/{z}/{x}/{y}.pbf` *(target)*
+- 🧳 PMTiles (offline-first): `/api/v1/layers/{layer_id}.pmtiles` *(target; Range-supported)*
+- 🧾 TileJSON: `/api/v1/layers/{layer_id}/tilejson.json` *(target)*
+- 🎨 Style JSON: `/api/v1/styles/{style_id}.json` *(target)*
+
+**Search + discovery**
+- 🔎 Unified search: `/api/v1/search?q=...` *(target)*
+- 🧭 Gazetteer / place lookup: `/api/v1/gazetteer/search?q=...` *(target)*
+
 **Integrity + governance (targets)**
 - 🧪 Dataset contract validation: `/api/v1/contracts/datasets/validate` *(policy-gated)*
 - 🧪 Run manifest validation: `/api/v1/contracts/manifests/validate` *(policy-gated)*
 - 🔏 Artifact verification: `/api/v1/artifacts/verify` *(policy-gated)*
 - 🕸️ Graph integrity check: `/api/v1/integrity/graph/check` *(privileged)*
 - 🧠 Narrative pattern scan: `/api/v1/integrity/narratives/scan` *(privileged)*
+- 🧠 Focus/LLM prompt gate check: `/api/v1/integrity/prompt_gate/check` *(privileged; target)*
 
 **Experience surfaces**
 - 🧠 Focus Mode context bundle: `/api/v1/focus/context` *(policy-gated)*
@@ -89,12 +106,13 @@ _Backend + integration trust boundary for the Kansas Frontier Matrix (KFM) platf
 
 Repo navigation (typical):
 - 🧭 Project overview: `../README.md`
-- 🧠 Master guide (repo authority): `../docs/MASTER_GUIDE_v13.md` *(or later)*
+- 🧠 Master guide (repo authority): `../docs/MARKDOWN_GUIDE_v13.md.gdoc` *(or later)*
 - 🚪 Backend code (recommended): `../api/` *(current)* or `../src/server/` *(target consolidation)*
 - 📦 Data + metadata boundary: `../data/README.md`
 - 🧰 Tooling boundary: `../tools/README.md`
 - 🧪 Tests: `../tests/README.md`
 - 🧾 Stories: `../docs/stories/` *(or `../docs/reports/story_nodes/` target)*
+- 🔌 Agent/tool adapters (optional): `../mcp/` *(governed, allowlisted)*
 
 ---
 
@@ -107,12 +125,14 @@ Repo navigation (typical):
 | Doc | `api/README.md` |
 | Status | WIP 🚧 (contract-first) |
 | Last updated | **2026-01-26** |
-| Version | **v1.5.0** |
+| Version | **v1.6.0** |
 | Prime directive | **Serve only governed evidence** (IDs + catalogs + provenance) |
 | Default stance | deny-by-default 🔒, hostile-input aware 🧯, audit-ready 🧾 |
 | Canonical order | **ETL → STAC/DCAT/PROV → Graph → API → UI → Story → Focus** |
 | “Public” definition | **licensed + classified + provenance-linked + policy-approved** (not “available somewhere”) |
 | Integrity baseline | digest-addressed artifacts + run manifests + (optional) signatures/attestations |
+| GraphQL posture | optional, governed, cost-limited; never bypasses REST gates 🧬🛡️ |
+| AI posture | internal-only runtime; Prompt Gate + citation enforcement; opt-in + labeled 🧠✅ |
 | Automation safety | global kill-switch + receipts + human review required 🧊 |
 | UI contract drivers | timeline slider, layer provenance panel, Story Nodes (MD+JSON), Focus Mode (citations) |
 
@@ -130,16 +150,20 @@ Repo navigation (typical):
 - [🗂️ Evidence model](#evidence-model)
 - [📦 Data lifecycle](#data-lifecycle)
 - [🔎 Search and retrieval](#search-and-retrieval)
+- [🧬 GraphQL boundary and cost controls](#graphql-boundary-and-cost-controls)
 - [📦 Artifact registry and signatures](#artifact-registry-and-signatures)
 - [🧵 Pulse Threads and attention graph](#pulse-threads-and-attention-graph)
 - [🔎 Integrity and drift](#integrity-and-drift)
 - [📊 Telemetry and governance ledger](#telemetry-and-governance-ledger)
 - [🧠 Story Nodes and Focus Mode](#story-nodes-and-focus-mode)
+- [🧠 Focus Mode AI pipeline](#focus-mode-ai-pipeline)
+- [🤖 Automation control plane](#automation-control-plane)
 - [🧵 Async jobs and deterministic replay](#async-jobs-and-deterministic-replay)
 - [📡 Real-time and streaming data](#real-time-and-streaming-data)
 - [📜 Contracts and schemas](#contracts-and-schemas)
 - [🧾 Data contracts](#data-contracts)
 - [🔐 Authentication and authorization](#authentication-and-authorization)
+- [🧯 Threat model](#threat-model)
 - [🛡️ Security and privacy](#security-and-privacy)
 - [🗺️ Geospatial conventions](#geospatial-conventions)
 - [🌐 Federation and data spaces](#federation-and-data-spaces)
@@ -151,6 +175,8 @@ Repo navigation (typical):
 - [🗺️ Roadmap](#roadmap)
 - [🤝 Contributing](#contributing)
 - [📚 Reference library influence map](#reference-library-influence-map)
+- [📎 Sources](#sources)
+- [📦 Embedded portfolio index](#embedded-portfolio-index)
 - [🕰️ Version history](#version-history)
 
 ---
@@ -159,17 +185,18 @@ Repo navigation (typical):
 
 ## 🧠 Master guide alignment
 
-This README is **not** the top-level authority. It inherits from the repo’s **Master Guide** (v13 or later), which defines:
+This README is **not** the top-level authority. It inherits from the repo’s **Master Guide** (v13 or later) which defines the canonical ordering and what “counts” as a real artifact in KFM.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
-- 🧭 the **canonical ordering** across subsystems (data → catalogs → graph → API → UI → narrative)
-- 🧩 **contract artifacts** as first-class outputs (OpenAPI, JSON Schema, graph schemas, UI configs)
-- 🧾 **evidence artifacts** as first-class datasets (registered in STAC/DCAT with PROV lineage)
-- 🏷️ sovereignty + governance rules (FAIR/CARE, classification propagation, no sensitive leaks)
+Master Guide alignment highlights:
+- 🧭 canonical subsystem ordering: **data → catalogs → graph → API → UI → narrative → Focus**
+- 🧩 contract artifacts as first-class outputs: OpenAPI, GraphQL schema, JSON Schemas, UI configs
+- 🧾 evidence artifacts as first-class datasets: registered in **STAC/DCAT** with **PROV lineage**
+- 🏷️ sovereignty + governance rules (FAIR/CARE), classification propagation, no sensitive leaks
 - 🧪 CI gates (schema validation, contract diffs, redaction tests, policy checks)
-- 🔏 integrity posture (run manifests, hash/digest discipline, optional signing + attestations)
+- 🔏 integrity posture (run manifests, hash discipline, optional signing + attestations)
 
 > [!TIP]
-> If you’re unsure “where a change belongs,” consult the Master Guide first. This file governs the **backend boundary** only.
+> If you’re unsure “where a change belongs,” consult the Master Guide first. This file governs the **backend trust boundary** only.
 
 ---
 
@@ -179,11 +206,14 @@ This README is **not** the top-level authority. It inherits from the repo’s **
 
 ✅ **In scope (this document)**
 - 🚪 API contract + versioning (OpenAPI-first)
+- 🧬 Optional GraphQL contract (governed + cost-limited; never a bypass)
 - 🧾 Evidence gating (STAC/DCAT/PROV + stable IDs)
 - 🔒 AuthN/AuthZ + policy enforcement (OPA/Conftest pack)
 - 🔏 Artifact integrity rules (digests, manifests, signing where configured)
+- 🧱 Tiles + map delivery contracts (PMTiles/MVT/COG, Range + caching rules)
 - 🧵 Jobs + replay posture (idempotency, receipts, deterministic runs)
-- 🧠 Story/Focus serving contract (citations required, AI opt-in)
+- 🤖 Automation boundary (Watcher → Planner → Executor) + kill-switch + receipts
+- 🧠 Story/Focus serving contract (citations required, AI opt-in, Prompt Gate)
 - 📊 Telemetry + governance ledger emission (audit-ready defaults)
 
 🚫 **Out of scope (elsewhere)**
@@ -213,6 +243,12 @@ This README is **not** the top-level authority. It inherits from the repo’s **
 | `canonical_digest` | Deterministic hash over canonical JSON manifest (idempotency anchor) |
 | `decision_id` | Governance decision record (approvals, redactions, waivers) |
 | `waiver_id` | Explicit policy waiver (time-bounded; never silent) |
+| `policy_hash` | Hash/version of policy bundle used for an authz/redaction decision |
+| `request_id` | Traceable request correlation ID across logs/traces/ledger |
+| `etag` | HTTP cache validator used for conditional requests + safe revalidation |
+| `watermark` | Streaming ingest marker for “up to here we’re consistent” |
+| `model_id` | AI model identifier (e.g., Ollama model tag) for Focus Mode outputs |
+| `prompt_id` | Versioned prompt/template identifier (Prompt Gate) |
 | “published” | **cataloged + provenance-linked + policy-approved** (not “file exists”) |
 | “fail-closed” | If governance cannot be proven: deny or redact (never “best effort”) |
 | “windowing” | Streaming data stored as append-only observations partitioned by time |
@@ -226,14 +262,16 @@ This README is **not** the top-level authority. It inherits from the repo’s **
 KFM’s backend exists to support **truthful, reproducible, human‑centered** decision support — not vibes, not persuasion. 🧠🧾
 
 - 🧾 **Provenance-first:** every dataset/derivative/model output is evidence-linked (STAC/DCAT/PROV + stable IDs).
-- 🧩 **Contract-first:** OpenAPI is the shipping interface; breaking changes require versioning.
+- 🧩 **Contract-first:** OpenAPI ships the interface; breaking changes require versioning and diff gates.
+- 🧬 **GraphQL is optional, not special:** if enabled, it is governed like REST and cost-limited.
 - 🏷️ **Catalog-gated:** if it isn’t cataloged and lineage-linked, it isn’t “real” in KFM.
 - 🔒 **Governance always-on:** classification, licensing, redaction, and “no privacy downgrade” rules are enforced.
 - 🔏 **Integrity-by-default:** promoted artifacts are digest-addressed; runs produce manifests; signatures/attestations enforced where configured.
-- 🧠 **Focus Mode hard gate:** no unsourced content can appear in Focus Mode (AI is opt-in, labeled, bounded).
+- 🧠 **Focus Mode hard gate:** no unsourced content appears in Focus Mode (AI is opt-in, labeled, bounded).
 - 🎲 **Reproducible by default:** jobs store params + versions + run receipts; results are never “magic.”
 - ❤️ **Human autonomy:** explanation hooks, audit trails, and safe defaults prevent automation complacency.
 - 🌾 **FAIR+CARE-aware:** “open” ≠ “safe”; cultural protocols and sensitive locations are protected.
+- 🧳 **Offline-first compatible:** PMTiles/COG/GeoParquet served with integrity + policy envelopes (never “just a file”).
 
 ---
 
@@ -246,8 +284,9 @@ KFM treats governance as correctness. This API participates in enforcement and m
 ### ✅ Minimum automated gates (baseline)
 These gates run **before publish**, and again at **serve-time** (deny/redact):
 
-- 🧾 Contract validation (OpenAPI + JSON Schemas)
+- 🧾 Contract validation (OpenAPI + JSON Schemas + (optional) GraphQL schema)
 - 🗂️ STAC/DCAT/PROV completeness (required fields present)
+- 🧼 Data quality checks (schema sanity, missingness thresholds, geometry validity) ✅
 - 🏷️ License presence (block unknown license when configured)
 - 🔐 Classification presence + propagation (outputs cannot downgrade inputs)
 - 🧬 Provenance completeness (inputs/activities/outputs declared)
@@ -255,7 +294,9 @@ These gates run **before publish**, and again at **serve-time** (deny/redact):
 - 🔏 Artifact integrity checks (digest present; signatures/attestations required if policy says so)
 - 🕸️ Graph integrity checks (no broken evidence links; bounded traversals)
 - 🧠 Story/Focus integrity checks (citations present; AI blocks labeled; pattern scan when enabled)
+- 🧬 GraphQL cost controls (depth/complexity/timeouts; persisted queries where required)
 - 🧯 Hostile input checks (uploads/parsers/archives treated as unsafe by default)
+- 🧊 Automation safety checks (kill-switch honored; receipts written; human review required)
 
 ### 🧾 Policy waivers (allowed, but governed)
 Waivers happen (legacy sources, emergency fixes). When used:
@@ -282,8 +323,32 @@ KFM favors clean boundaries: frameworks are adapters, not the core. 🧼🏛️
 ### Layers (recommended)
 - 💠 **Domain** — entities + invariants (pure Python; no framework imports)
 - 🧠 **Application** — use cases (policy decisions, orchestration, authz, receipts)
-- 🔌 **Adapters** — FastAPI routes, repositories, external clients
-- 🧱 **Infrastructure** — PostGIS, graph store, search index, queues, object storage / OCI registry
+- 🔌 **Adapters** — FastAPI routes, GraphQL resolvers, repositories, external clients
+- 🧱 **Infrastructure** — PostGIS, graph store, search index, vector DB, queues, object storage / OCI registry
+
+### 🧩 Recommended backend repo layout (target) 🗂️
+```text
+📦 src/server/
+├─ 💠 domain/                 # entities + invariants
+├─ 🧠 app/                    # use-cases (authz, publish, focus, jobs)
+├─ 🔌 adapters/
+│  ├─ 🌐 http/                # FastAPI routes + middleware
+│  ├─ 🧬 graphql/             # resolvers + schema adapters
+│  └─ 🗄️ repos/               # DB/graph/search repos
+├─ 🧱 infra/
+│  ├─ 🗄️ postgis/             # migrations, SQL, tuning notes
+│  ├─ 🕸️ graph/               # Neo4j optional
+│  ├─ 🔎 search/              # OpenSearch/Elastic
+│  ├─ 🧠 vectordb/            # Chroma/Qdrant
+│  ├─ 📦 storage/             # object store + presigned URLs + OCI (ORAS)
+│  └─ 🧵 queue/               # broker, workers
+├─ 📜 contracts/
+│  ├─ openapi.yaml
+│  ├─ graphql.schema.graphql  # optional
+│  └─ jsonschema/             # evidence bundle, manifests, datasets, events…
+├─ 🛡️ policies/               # OPA/Conftest pack + fixtures
+└─ 🧪 tests/                  # contract + policy + integration tests
+```
 
 ### 🔁 Runtime shape (typical)
 ```mermaid
@@ -294,13 +359,14 @@ flowchart LR
     PARTNER["🤝 Partner apps"]
   end
 
-  UI -->|"HTTPS"| API["🚪 KFM API\nFastAPI /api/v1"]
+  UI -->|"HTTPS"| API["🚪 KFM API\nFastAPI /api/v1 + (optional) /graphql"]
   CLI -->|"HTTPS"| API
   PARTNER -->|"HTTPS"| API
 
   API -->|"SQL"| DB["🗄️ Postgres + PostGIS"]
   API -->|"bounded graph queries"| GRAPH["🕸️ Graph store\nNeo4j optional"]
-  API -->|"search"| SEARCH["🔎 Search index\n(OpenSearch/Elastic + embeddings)"]
+  API -->|"search"| SEARCH["🔎 Search index\n(OpenSearch/Elastic)"]
+  API -->|"embeddings"| VDB["🧠 Vector DB\n(Chroma/Qdrant)"]
 
   API -->|"enqueue"| Q["🧵 Queue / broker"]
   Q --> W["👷 Workers"]
@@ -308,6 +374,15 @@ flowchart LR
   W -->|"read/write"| OBJ["📦 Object store\nCOGs · GeoParquet · PMTiles · reports"]
   W -->|"push/pull (optional)"| OCI["📦 OCI registry\n(ORAS artifacts)"]
   OCI -->|"verify (optional)"| SIG["🔏 Signatures/attestations\n(Cosign referrers)"]
+
+  subgraph Focus["🧠 Focus Mode (optional AI)"]
+    PG["🚧 Prompt Gate\n(policy + safety + citation rules)"]
+    LLM["🤖 LLM runtime\n(Ollama - internal only)"]
+  end
+
+  API --> PG
+  PG --> LLM
+  LLM --> API
 
   W -->|"emit"| CATALOG["🏷️ Catalog artifacts\nSTAC · DCAT · PROV"]
   CATALOG -->|"serve IDs + links"| API
@@ -321,6 +396,7 @@ flowchart LR
 
   API --> OPA
   W --> OPA
+  PG --> OPA
   OPA --> LEDGER
   SIG --> LEDGER
 ```
@@ -366,6 +442,16 @@ Every route returning user-visible data should include a compact pointer block (
     ],
     "classification": "public",
     "license": "CC-BY-4.0"
+  },
+  "policy": {
+    "decision": "allow|redact|deny",
+    "policy_hash": "sha256:<policy-bundle-digest>",
+    "decision_id": "kfm.decision.<id>",
+    "waiver_id": null
+  },
+  "trace": {
+    "request_id": "req_<uuid>",
+    "ts": "2026-01-26T00:00:00Z"
   }
 }
 ```
@@ -377,6 +463,7 @@ Story Nodes + Focus Mode consume **evidence bundles** that contain:
 - graph entity references (`graph_id`s) and concept references (`concept_id`s)
 - redaction hints (sensitive sites, location generalization level, protocol constraints)
 - optional integrity pointers (artifact digests, signature refs, SBOM refs)
+- optional AI envelope (only if used): `model_id`, `prompt_id`, `retrieval_trace`, refusal flags
 
 ---
 
@@ -386,28 +473,32 @@ Story Nodes + Focus Mode consume **evidence bundles** that contain:
 
 KFM treats staging + metadata emission as part of correctness. ✅
 
-### Recommended repo staging
+### Recommended repo staging (Master Guide aligned) 🗂️
 ```text
 📦 data/
-├─ 🧱 raw/<domain>/                 # raw sources (immutable)
-├─ 🧪 work/<domain>/                # intermediate artifacts (not published)
-├─ ✅ processed/<domain>/           # publish candidates (stable + reviewed)
-├─ 🗂️ catalog/                      # STAC/DCAT records (machine-readable)
-├─ 🧬 provenance/                   # PROV lineage bundles
-└─ 🧾 contracts/                    # dataset.contract.json (optional colocation)
+├─ 🧱 raw/<domain>/                       # raw sources (immutable)
+├─ 🧪 work/<domain>/                      # intermediate artifacts (not published)
+├─ ✅ processed/<domain>/                 # publish candidates (stable + reviewed)
+├─ 🗂️ stac/
+│  ├─ 🧾 collections/                     # STAC Collections (JSON)
+│  └─ 🧾 items/                           # STAC Items (JSON)
+├─ 🏷️ catalog/
+│  └─ 🧾 dcat/                            # DCAT datasets + distributions (JSON/TTL)
+├─ 🧬 prov/                               # PROV lineage bundles (JSON-LD)
+└─ 🧾 contracts/                          # dataset.contract.json (optional colocation)
 
 📦 docs/
-└─ 📚 stories/                      # Story Nodes (Markdown + JSON scripts)
+└─ 📚 stories/                            # Story Nodes (Markdown + JSON scripts)
 
-📦 artifacts/                        # optional, recommended
-├─ 🧾 manifests/                     # run.manifest.json (canonical digests)
-├─ 🔏 signatures/                    # verification reports (if enabled)
-├─ 🧪 sbom/                          # SBOM artifacts (if enabled)
-└─ 🌱 sustainability/                # energy/compute reports (if enabled)
+📦 artifacts/                              # optional, recommended
+├─ 🧾 manifests/                           # run.manifest.json (canonical digests)
+├─ 🔏 signatures/                          # verification reports (if enabled)
+├─ 🧪 sbom/                                # SBOM artifacts (if enabled)
+└─ 🌱 sustainability/                      # energy/compute reports (if enabled)
 ```
 
 > [!TIP]
-> For large datasets, consider **DVC (Data Version Control)** and/or Git LFS for reproducible dataset versioning — but still enforce STAC/DCAT/PROV + policy gates before “published.” 🧾📦
+> For large datasets, consider **DVC (Data Version Control)** and/or object storage + manifests for reproducible dataset versioning — but still enforce STAC/DCAT/PROV + policy gates before “published.” 🧾📦
 
 ### The “publish” rule 🏷️🚫
 A dataset (or analysis/simulation output) is **not published** until:
@@ -420,8 +511,9 @@ A dataset (or analysis/simulation output) is **not published** until:
 ### Streaming data (append-only, windowed) ⏱️
 - treat each observation as **append-only**
 - partition (window) by day/week/year
-- do not rewrite history silently — publish new versions/windows
-- use idempotency keys + watermarks to avoid duplicates
+- do not rewrite history silently — publish new windows/versions
+- use **idempotency keys + watermarks** to avoid duplicates
+- prefer conditional fetch (ETag / If-None-Match) when polling sources
 
 ---
 
@@ -434,14 +526,45 @@ Search powers:
 - document exploration (reports, archival texts, story content)
 - Focus Mode retrieval (evidence-first RAG) 🧠🧾
 
-### Recommended posture
+### Recommended posture (hybrid, governed)
 - 🔎 **Full-text index** (OpenSearch/Elastic) over documents + story content
-- 🧠 **Vector similarity (embeddings)** for semantic passage retrieval
+- 🧠 **Vector similarity (embeddings)** for semantic passage retrieval (Chroma/Qdrant)
 - 🕸️ **Graph retrieval** for entity linking + disambiguation (bounded)
 - 🗄️ **PostGIS queries** for numeric/statistical/spatial facts
+- 🧭 **Gazetteer** for place-name → geometry resolution (policy-gated)
 
 > [!IMPORTANT]
 > Retrieval must be **policy-gated**: classification + redaction must apply **before** content becomes eligible to be retrieved or shown.
+
+---
+
+<a id="graphql-boundary-and-cost-controls"></a>
+
+## 🧬 GraphQL boundary and cost controls
+
+GraphQL is a great fit for **UI graph exploration** (entity relationships, story graph traversal), but it must remain governed and bounded.
+
+### When to use GraphQL ✅
+- UI asks “what is connected to this entity?” (People ↔ Events ↔ Places ↔ Documents)
+- Need shaped responses for panels/cards without many REST round trips
+- Disambiguation workflows (gazetteer + graph hints)
+
+### When NOT to use GraphQL 🚫
+- bulk exports (use jobs + artifacts)
+- tiles/rasters (use REST with Range/caching)
+- unbounded traversals (GraphQL must refuse by policy)
+
+### Required GraphQL governance controls 🛡️
+- query depth limit (max hops)
+- complexity scoring / cost budgeting (deny expensive)
+- timeouts and resolver budgets (fail-fast)
+- pagination required on lists
+- persisted queries for public clients (optional, recommended)
+- policy checks inside resolvers (same as REST)
+- telemetry includes `request_id` + `policy_hash` + (optional) `graph_query_hash`
+
+> [!NOTE]
+> GraphQL is never a bypass: the same **evidence + policy envelope** rules apply as REST. 🧾🔒
 
 ---
 
@@ -457,12 +580,10 @@ KFM can store promoted artifacts in object storage **and/or** as **OCI artifacts
 - signatures/attestations are natural (Cosign referrers)
 - offline packs can reference stable bundles by digest
 
-### Recommended posture
-Every promoted output has:
-- `run.manifest.json` (canonicalized and hashed → `canonical_digest`)
-- artifact digests recorded in catalogs (DCAT distributions / STAC assets)
-- optional signature verification (Cosign) depending on policy
-- optional SBOM + provenance attestations (SLSA posture, if enabled)
+### Map artifacts & Range support (performance + offline) 🗺️⚡
+- **COGs** (Cloud-Optimized GeoTIFF) are served with HTTP Range support for efficient partial reads.
+- **PMTiles** are served with HTTP Range support for offline-first and cheap distribution.
+- **GeoParquet** supports vector + time-window analytics; served as artifacts (download/job output) and queryable via PostGIS or lakehouse patterns.
 
 > [!TIP]
 > Treat “publish” as a **content-addressed release** — not a folder copy. ✅
@@ -482,6 +603,7 @@ A Pulse Thread is a time-ordered feed of **verified observations** + **run summa
 - append-only events
 - each event includes `evidence` pointers (`run_id` / `bundle_id` + catalog IDs)
 - classification/redaction apply at the event level (no downgrade)
+- time-windowed storage supports “time geography” exploration 🕰️🗺️
 
 ### 2) Conceptual Attention Nodes 🧠🧩
 A Concept node (`concept_id`) is a governed “meaning layer” between evidence and story:
@@ -515,6 +637,7 @@ Outputs become evidence:
 - detect suspicious templated text bursts (spam/brigading)
 - enforce AI labeling + reviewer sign-off
 - drift in repeated story claims (“what changed? why?”)
+- misinformation resistance patterns (moderation assist) 🧯📰
 
 ### 📉 Data + model drift
 For streaming feeds and deployed models:
@@ -533,6 +656,7 @@ KFM’s trust posture depends on **auditability**.
 ### Telemetry (required posture)
 - structured events with `request_id`, `run_id`, `job_id`, actor (user/agent), and policy result
 - append-only logging (ledger/NDJSON) for ingestion gates + Focus Mode interactions
+- include policy version/hash (`policy_hash`) so decisions can be replayed
 - metrics: metadata completeness, citation coverage, schema failures, policy violations
 - optional sustainability metrics for heavy pipelines (policy-gated)
 
@@ -564,7 +688,7 @@ A valid Story Node:
 - 🔏 includes integrity hooks where applicable (artifact digests + manifests)
 
 **Authoring posture**
-- narrative: Markdown
+- narrative: Markdown (single H1; consistent headings; callouts ok) 📄✨
 - interaction logic: JSON “story script”
 - version-controlled + reviewed like code
 - future-friendly: visual story builder can generate the same MD+JSON
@@ -579,6 +703,103 @@ Focus Mode must:
 
 > [!IMPORTANT]
 > Focus Mode is not “a chatbot endpoint.” It’s a **policy-gated evidence synthesizer** that refuses if evidence is insufficient.
+
+---
+
+<a id="focus-mode-ai-pipeline"></a>
+
+## 🧠 Focus Mode AI pipeline
+
+If AI is enabled, it must sit **behind** a Prompt Gate and produce **auditable, evidence-bounded** outputs only.  [oai_citation:1‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)
+
+### Focus Mode “Prompt Gate” (concept)
+Prompt Gate is the enforcement layer that:
+- assembles retrieval context (policy-gated)
+- blocks prompt injection patterns
+- enforces citation requirements (no citations → refuse or return evidence-only)
+- records `model_id`, `prompt_id`, and `policy_hash` for audit
+- optionally scans output for unsafe patterns and sensitive location leakage
+
+### Sequence (typical)
+```mermaid
+sequenceDiagram
+  participant UI as 🌐 UI
+  participant API as 🚪 API
+  participant OPA as 🛡️ OPA Policy
+  participant S as 🔎 Search/VectorDB
+  participant G as 🕸️ Graph
+  participant C as 🗂️ Catalogs (STAC/DCAT/PROV)
+  participant PG as 🚧 Prompt Gate
+  participant LLM as 🤖 LLM (Ollama, internal)
+
+  UI->>API: GET /api/v1/focus/context?bbox=...&time=...
+  API->>OPA: authorize + redaction plan
+  OPA-->>API: allow/redact/deny + policy_hash
+  API->>C: resolve evidence pointers (IDs → catalogs)
+  API->>G: bounded graph context (optional)
+  API->>S: retrieve passages (policy-gated)
+  API->>PG: build prompt w/ citations-required rules
+  PG->>LLM: generate (opt-in)
+  LLM-->>PG: draft answer
+  PG->>OPA: post-check (citations present? sensitive leak?)
+  OPA-->>PG: allow/redact/deny
+  PG-->>API: response + citations + model_id + prompt_id
+  API-->>UI: governed Focus response + evidence pointers
+```
+
+### Focus response (recommended shape)
+```json
+{
+  "mode": "focus",
+  "answer": {
+    "text": "…",
+    "ai_used": true,
+    "model_id": "ollama:<model>",
+    "prompt_id": "kfm.prompt.focus.v3",
+    "confidence": "low|medium|high",
+    "limitations": ["…"]
+  },
+  "citations": [
+    {
+      "bundle_id": "kfm.bundle.<id>",
+      "dataset_id": "kfm.<domain>.<dataset>.v1",
+      "stac_item_id": "kfm.stac.item.<id>",
+      "prov_run_id": "kfm.prov.run.<id>"
+    }
+  ],
+  "evidence": { "…": "…" },
+  "policy": {
+    "decision": "allow|redact|deny",
+    "policy_hash": "sha256:<...>",
+    "decision_id": "kfm.decision.<id>"
+  },
+  "trace": { "request_id": "req_<uuid>" }
+}
+```
+
+> [!CAUTION]
+> If the model cannot cite evidence, the system must **refuse** or return a strictly **evidence-only** payload (no narrative). Fail-closed applies to AI too. 🚫🧾
+
+---
+
+<a id="automation-control-plane"></a>
+
+## 🤖 Automation control plane
+
+KFM automation is governed and **never silent**:  
+**Watcher → Planner → Executor** (WPE) is the reference pattern. 🧿🧠🛠️
+
+### Roles
+- 🧿 **Watcher**: monitors feeds/sources; detects changes; produces candidate work items (no publish).
+- 🧠 **Planner**: proposes a plan/diff with evidence pointers (no publish).
+- 🛠️ **Executor**: performs approved actions (ingest, reprocess, publish) and emits receipts.
+
+### Non-negotiable automation rules ✅
+- global kill-switch must halt Watcher/Planner/Executor immediately 🧊
+- no auto-merge; human review required for publish/promote 👤✅
+- every action emits receipts to ledger (`decision_id`, `policy_hash`, `run_id`) 🧾
+- classification cannot be downgraded by automation 🔒
+- “floating latest” is forbidden; artifact digests required 🔏
 
 ---
 
@@ -622,6 +843,7 @@ KFM supports near-real-time feeds — but **never without gates**.
 - access control + rate limiting (prevent leaks + protect backend)
 - windowing (append-only; no silent edits)
 - idempotency + watermarking (avoid double-ingest; support replay)
+- conditional fetch with ETags/Last-Modified (safe polling)
 
 ### Real-time UI integration (targets)
 - `GET /api/v1/pulse_threads/{id}/events` (paged)
@@ -638,6 +860,7 @@ KFM supports near-real-time feeds — but **never without gates**.
 
 Recommended posture:
 - `contracts/openapi.yaml` is the API truth (or `api/contracts/openapi.yaml`)
+- Optional GraphQL schema: `contracts/graphql.schema.graphql`
 - JSON Schemas for:
   - STAC Collections + Items
   - DCAT datasets + distributions
@@ -648,20 +871,24 @@ Recommended posture:
   - Pulse Threads + Pulse Events
   - Concepts / Attention Nodes
   - Integrity findings (graph checks, narrative scans, drift reports)
+  - TileJSON + Style JSON (UI contract)
 
 ### SDK generation (strongly recommended) 🧰
 To support polyglot clients:
 - generate **TypeScript** SDK for `web/`
 - generate **Python** SDK for pipelines/notebooks
+- optionally generate lightweight **R** helpers for analysis notebooks
 - optionally publish these as versioned artifacts, tied to OpenAPI tags and semver
 
 ### ✅ Contract QA gates (recommended)
 - OpenAPI diff checks (breaking changes → version bump)
+- GraphQL schema checks (breaking fields → versioning + deprecation policy)
 - example payload validation (fixtures → schema)
 - negative tests (unauthorized, restricted, invalid geometry)
 - policy tests (OPA/Conftest) for “who can see what”
 - idempotency tests for job endpoints
 - integrity tests (manifest digest reproducibility; signature required where configured)
+- tile tests (Range support, caching headers, bounding rules)
 
 ---
 
@@ -742,11 +969,33 @@ A dataset’s metadata contract is a **machine-checkable entry ticket** to catal
   - protocol constraints (CARE-sensitive approvals)
   - “no sensitive location leaks” rules for Story/Focus rendering
   - artifact integrity requirements (who can promote / verify)
+  - GraphQL cost budgets per role (e.g., moderators can run heavier audits)
 
 **Rules**
 - AuthZ decisions live in application/use-case layer (not route handlers).
 - Audit “write” actions: uploads, publish/promote, redactions, deletes, waivers.
 - Treat ingestion as hostile: validate file types, size, content; avoid SSRF; scan uploads.
+
+---
+
+<a id="threat-model"></a>
+
+## 🧯 Threat model
+
+KFM is a map + narrative system with powerful retrieval—assume adversarial inputs. 🧨🛡️
+
+### Primary threat classes (STRIDE-lite)
+- 🕵️ **Spoofing**: stolen tokens, replayed sessions → use JWT best practices + rotation + audit
+- 🧪 **Tampering**: artifact swaps, “latest” drift → digest addressing + signatures + immutable manifests
+- 🧾 **Repudiation**: “who did this?” → append-only ledger with `request_id` + `decision_id`
+- 🧠 **Info disclosure**: sensitive locations, inference by querying → redaction + query auditing + aggregation controls
+- 🐘 **DoS**: expensive geo/graph/GraphQL queries → cost budgets + timeouts + paging
+- 🧷 **Elevation of privilege**: policy bypasses, resolver gaps → centralize OPA checks, deny-by-default
+
+### AI-specific threats
+- 🧠 prompt injection via retrieved text → Prompt Gate + allowlist + citation enforcement
+- 🔓 tool leakage via function calls → tools disabled by default; allowlist only
+- 🗺️ sensitive coordinate leakage → generalize/blur/omit enforced post-check
 
 ---
 
@@ -763,10 +1012,11 @@ A dataset’s metadata contract is a **machine-checkable entry ticket** to catal
 - 🔐 Secrets via env/secret managers (never commit tokens)
 - 🔏 Supply chain: SBOM generation + signed images + provenance attestations (if enabled)
 - 🧷 Minimize info leakage: avoid debug banners and verbose error messages in prod
+- 🧱 Browser defenses: strong security headers (CSP, HSTS, etc.) for UI/API where applicable
 
 ### Privacy posture (recommended)
-- 🔎 query auditing for sensitive datasets
-- 🧠 inference control safeguards (prevent “learn by querying” leakage)
+- 🔎 query auditing for sensitive datasets (defend against “learn by querying”)
+- 🧠 inference control safeguards (k-anonymity/l-diversity/t-closeness/differential privacy where appropriate)
 - 🧊 redaction/generalization pipelines for sensitive locations
 - 🧾 explainable refusals when policy denies
 
@@ -788,6 +1038,7 @@ A dataset’s metadata contract is a **machine-checkable entry ticket** to catal
 - **Tiles (recommended):**
   - Web Mercator (`EPSG:3857`) for tile math
   - MVT/PMTiles for efficient offline/online delivery (policy-gated)
+- **Projection correctness:** CRS ambiguity is a correctness bug (especially when mixing historical sources and modern basemaps)
 
 ### Parameter conventions
 - `bbox=minLon,minLat,maxLon,maxLat` (EPSG:4326)
@@ -798,7 +1049,8 @@ A dataset’s metadata contract is a **machine-checkable entry ticket** to catal
 ### Correctness rules ✅
 - store geometries with explicit SRIDs
 - transform at boundaries (DB storage may differ; output must be explicit)
-- CRS ambiguity is a correctness bug
+- validate geometry (self-intersections, invalid rings) before publish
+- tile endpoints must enforce bounded feature counts + simplification for performance
 
 ---
 
@@ -813,6 +1065,7 @@ Target posture:
 - expose trust signals (license, provenance, classification, uncertainty, integrity)
 - enable cross-hub queries via catalogs + shared ontology mappings
 - keep sovereignty rules enforceable across federation boundaries
+- support “data spaces” style federation: shared discovery, local control, policy-aware exchange
 
 > [!NOTE]
 > Federation does **not** mean “free-for-all.” Governance + policy is always-on. 🔒
@@ -827,7 +1080,7 @@ KFM’s roadmap includes offline-first and 3D/AR experiences. The API must suppo
 
 ### Offline packs (target) 🧳
 An offline pack is a governed bundle that can include:
-- PMTiles / tile layers (policy-gated)
+- PMTiles / tile layers (policy-gated; Range-compatible)
 - evidence bundles for stories
 - bounded graph context + concepts
 - licenses + classifications + provenance pointers
@@ -842,6 +1095,7 @@ An offline pack is a governed bundle that can include:
   - simplified geometry + capped feature counts
   - strict redaction rules (sensitive sites)
 - exports remain policy-gated and license-aware
+- performance budgets matter (LOD, spatial indexing, streaming tiles)
 
 ---
 
@@ -857,6 +1111,13 @@ KFM is a “living atlas” with community participation — governance remains 
 - clear moderation workflow (review queues, provenance checks, FAIR/CARE review triggers)
 - optional reputation tiers + transparent moderation logs
 - expose “request correction” paths (API + UI)
+
+### Moderation posture (narrative + social engineering aware) 🧯
+- treat story submissions and metadata edits as adversarial surfaces
+- scan for templated spam/brigading and unsupported claims
+- require citations for factual claims (Story/Focus hard gate)
+- keep a public moderation log where policy permits
+- provide “challenge/appeal” workflows (decision records)
 
 ---
 
@@ -875,6 +1136,12 @@ KFM is a “living atlas” with community participation — governance remains 
 | POST | `/api/v1/auth/login` | ❌ | Issue JWT |
 | GET | `/api/v1/auth/me` | ✅ | Current user + roles |
 
+### 🧬 GraphQL (optional)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| POST | `/graphql` | ✅/❌ | Governed GraphQL queries (cost-limited) |
+| GET | `/graphql` | ✅ | Playground (dev-only; optional) |
+
 ### 📜 Contracts & validation
 | Method | Path | Auth | What it does |
 |---:|---|:---:|---|
@@ -892,6 +1159,22 @@ KFM is a “living atlas” with community participation — governance remains 
 | GET | `/api/v1/catalog/dcat/{id}` | ✅/❌ | DCAT dataset |
 | GET | `/api/v1/prov/runs/{run_id}` | ✅ | PROV lineage bundle |
 
+### 🗺️ Layers + tiles (targets)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| GET | `/api/v1/layers` | ✅/❌ | List layers (policy-gated) |
+| GET | `/api/v1/layers/{layer_id}` | ✅/❌ | Layer metadata + evidence |
+| GET | `/api/v1/layers/{layer_id}/tile/{z}/{x}/{y}.pbf` | ✅/❌ | Vector tile (MVT) |
+| GET | `/api/v1/layers/{layer_id}.pmtiles` | ✅/❌ | PMTiles bundle (Range-supported) |
+| GET | `/api/v1/layers/{layer_id}/tilejson.json` | ✅/❌ | TileJSON for a layer |
+| GET | `/api/v1/styles/{style_id}.json` | ✅/❌ | Map style JSON (policy-gated) |
+
+### 🔎 Search (targets)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| GET | `/api/v1/search?q=...` | ✅/❌ | Unified search (datasets/docs/entities) |
+| GET | `/api/v1/gazetteer/search?q=...` | ✅/❌ | Place-name search (policy-gated) |
+
 ### 📦 Artifacts & integrity
 | Method | Path | Auth | What it does |
 |---:|---|:---:|---|
@@ -900,6 +1183,7 @@ KFM is a “living atlas” with community participation — governance remains 
 | POST | `/api/v1/artifacts/verify` | ✅ | Verify digest/signature policy (privileged) |
 | POST | `/api/v1/integrity/graph/check` | ✅ | Run graph checks → returns job/run |
 | POST | `/api/v1/integrity/narratives/scan` | ✅ | Scan narratives for citation/pattern issues |
+| POST | `/api/v1/integrity/prompt_gate/check` | ✅ | Focus prompt gate audit (privileged; target) |
 
 ### 🧵 Pulse Threads
 | Method | Path | Auth | What it does |
@@ -922,14 +1206,16 @@ KFM is a “living atlas” with community participation — governance remains 
 |---:|---|:---:|---|
 | GET | `/api/v1/fields?bbox=...` | ✅ | List features with filters |
 | GET | `/api/v1/fields/{field_id}` | ✅ | Feature metadata + geometry |
+| GET | `/api/v1/fields/{field_id}/timeseries` | ✅ | Time-series by variable/window *(target)* |
 | POST | `/api/v1/geo/intersects` | ✅ | Spatial query by geometry |
 | POST | `/api/v1/geo/buffer` | ✅ | Buffer geometry (derived output) |
 
-### 📊 Analysis (job-oriented)
+### 📊 Analysis + simulation (job-oriented)
 | Method | Path | Auth | What it does |
 |---:|---|:---:|---|
 | POST | `/api/v1/analysis/bayes/run` | ✅ | Bayesian job (priors + posteriors) |
 | POST | `/api/v1/analysis/regression/run` | ✅ | Regression job (diagnostics) |
+| POST | `/api/v1/simulation/run` | ✅ | Deterministic simulation job *(target)* |
 | GET | `/api/v1/analysis/runs/{run_id}` | ✅ | Run metadata + artifacts + evidence |
 
 ### 🧠 Story + Focus
@@ -946,6 +1232,13 @@ KFM is a “living atlas” with community participation — governance remains 
 | GET | `/api/v1/jobs/{job_id}` | ✅ | Job status/progress |
 | GET | `/api/v1/jobs/{job_id}/result` | ✅ | Result links/payload |
 | POST | `/api/v1/jobs/{job_id}/cancel` | ✅ | Cancel job (best-effort) |
+
+### 🧳 Exports (optional, policy-gated)
+| Method | Path | Auth | What it does |
+|---:|---|:---:|---|
+| POST | `/api/v1/exports/kml` | ✅ | KML export (bounded + cited) |
+| POST | `/api/v1/exports/kmz` | ✅ | KMZ export (bounded + cited) |
+| POST | `/api/v1/exports/geojson` | ✅ | GeoJSON export (bounded + cited) |
 
 ---
 
@@ -984,16 +1277,29 @@ curl -X POST \
   "http://localhost:8000/api/v1/simulation/run"
 ```
 
-### 4) Focus Mode context bundle 🧠🗂️
+### 4) Fetch a vector tile 🗺️🧱
+```bash
+curl -H "Authorization: Bearer $TOKEN" \
+  "http://localhost:8000/api/v1/layers/kfm.layer.counties.ks/tile/7/27/48.pbf" \
+  --output tile.pbf
+```
+
+### 5) GraphQL entity neighborhood 🧬🕸️
+```bash
+curl -X POST \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "query ($id: ID!) { entity(id: $id) { id label type neighbors(limit: 25) { id label type evidence { dataset_id run_id } } } }",
+    "variables": { "id": "kfm.graph.person.john_brown" }
+  }' \
+  "http://localhost:8000/graphql"
+```
+
+### 6) Focus Mode context bundle 🧠🗂️
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
   "http://localhost:8000/api/v1/focus/context?bbox=-100.0,37.0,-99.0,38.0&time=1935"
-```
-
-### 5) Stream a Pulse Thread 🧵📡
-```bash
-curl -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8000/api/v1/pulse_threads/kfm.pulse.air_quality.ks/events?page=1&page_size=50"
 ```
 
 Expected posture:
@@ -1009,14 +1315,15 @@ Expected posture:
 
 A feature is “done” when:
 - ✅ Contract updated first (OpenAPI + schemas) and diff checks pass
+- ✅ (If GraphQL) schema + resolver cost limits tested
 - ✅ Data-contract validation rules updated (if dataset/metadata impacted)
 - ✅ AuthZ + classification enforced (no downgrade; no sensitive leaks)
 - ✅ Evidence pointers included (STAC/DCAT/PROV + stable IDs)
 - ✅ Integrity hooks included where applicable (manifests + digests; signatures if required)
 - ✅ Story/Focus requirements met (citations + graph IDs + fact vs interpretation)
-- ✅ Telemetry emitted (request IDs + run/job IDs + policy outcome)
+- ✅ Telemetry emitted (request IDs + run/job IDs + policy outcome + policy_hash)
 - ✅ Tests added (unit + integration as needed)
-- ✅ Performance bounded (pagination, limits, timeouts; no unbounded graph traversals)
+- ✅ Performance bounded (pagination, limits, timeouts; Range/caching for tiles)
 - ✅ Security posture maintained (input validation, no secrets, SSRF safe)
 - ✅ Docs updated (this README + relevant runbooks)
 
@@ -1032,8 +1339,10 @@ A feature is “done” when:
 - [ ] Data-contract validation endpoint + publish-time enforcement
 - [ ] Run manifest + canonical digest spec + validation gates
 - [ ] Focus Mode context bundle endpoint (policy-gated, provenance-only)
+- [ ] Prompt Gate spec + refusal rules (no citations → deny/evidence-only)
 - [ ] JWT auth middleware + tenant/role/classification guards
 - [ ] PostGIS-backed geo endpoints (bbox, intersects, search)
+- [ ] Tile endpoints (MVT/PMTiles) with Range + cache validators (ETag)
 
 **Next (scale and accountability)**
 - [ ] OCI artifact distribution (ORAS) + Cosign verify gates (policy configurable)
@@ -1043,12 +1352,13 @@ A feature is “done” when:
 - [ ] Telemetry ledger endpoint + dashboards (citation coverage, policy violations, drift)
 - [ ] Deterministic simulation runner + promotion workflow
 - [ ] Search index pipelines (docs + story + dataset metadata)
+- [ ] Optional GraphQL endpoint with cost limits + persisted queries
 
 **Later (experience expansion, still governed)**
 - [ ] Offline packs (policy-gated) + PMTiles packaging + signature verify
 - [ ] Narrative pattern detection + moderation assist tooling
 - [ ] Real-time feed ingestion modules (append-only windowed data)
-- [ ] Federation-ready catalog snapshots + cross-hub discovery
+- [ ] Federation-ready catalog snapshots + cross-hub discovery (data spaces posture)
 - [ ] 3D / AR “views over evidence” experiences (no uncited claims)
 - [ ] DOI snapshots + notebook/Binder launchers for citable research packs
 
@@ -1060,6 +1370,7 @@ A feature is “done” when:
 
 - 🧠 Keep business rules in domain/application, not in FastAPI routes
 - 🧩 New endpoint? Update OpenAPI first; add contract tests + redaction rules
+- 🧬 Adding GraphQL? Add cost limits + resolver policy checks + fixtures
 - 🧪 Add tests for every use-case (happy path + auth + edge cases)
 - 🧾 Document governance-relevant decisions as ADRs in `docs/adr/` *(if present)*
 - 🏷️ If you touch data outputs: ensure STAC/DCAT/PROV emitted + validated
@@ -1067,6 +1378,7 @@ A feature is “done” when:
 - 🧠 If you touch Story/Focus: ensure citations + graph IDs + sensitivity rules are enforced
 - 🧊 Automation must never auto-merge: human review is always required
 - 🧑‍🔬 Prefer reproducibility habits: record seeds, pin deps, make reruns boring ✅
+- 📝 Docs should follow repo markdown conventions (single H1, clear TOC, stable anchors)  [oai_citation:2‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
 ---
 
@@ -1077,20 +1389,313 @@ A feature is “done” when:
 These project files shape KFM’s API posture: **governance**, **scalability**, **security**, **geospatial correctness**, **credible modeling**, **human-centered constraints**, **real-time feeds**, **offline/3D expansion**, and **artifact + narrative integrity**.
 
 <details>
-<summary><strong>📦 Expand: project files → how they influence this API boundary</strong></summary>
+<summary><strong>🧭 Expand: project files → how they influence this API boundary</strong></summary>
 
 | Project file | API impact (why it matters here) |
 |---|---|
-| KFM Comprehensive Technical Documentation | API as single entry point; integrated stack (PostGIS + graph + search); governance & audit posture. |
-| KFM Expanded Technical & Design Guide | ETL→STAC/DCAT/PROV discipline; RAG with citations; GraphQL optional; ontology mapping guidance. |
-| KFM Architecture, Features, and Design | Clean architecture; deterministic pipelines; plugin modules; Story Nodes + Focus integration principles. |
-| KFM Platform Overview and Roadmap | Watcher→Planner→Executor automation; offline packs; AR/VR extensions; roadmap sequencing. |
-| KFM UI System Overview | UI contract drivers (timeline, layer provenance panel, Story Nodes MD+JSON, Focus Mode citations + context). |
-| KFM AI System Overview 🧭🤖 | Evidence-only AI behavior; prompt security; OPA policy scan; drift/bias monitoring posture. |
-| Kansas-Frontier-Matrix Open-Source Mapping Hub Design | MapLibre/Cesium client assumptions; timeline + story-map patterns; static-first compatibility ideas. |
-| Data Mining / AI Concepts references | Privacy-by-design, inference control, query auditing, evaluation discipline. |
-| Mapping / WebGL / Geospatial portfolios | 3D/AR delivery constraints; performance envelopes; WebGL/Cesium patterns. |
-| Programming / Security / Docker / GraphQL portfolios | Dev ergonomics, supply-chain posture, HTTP correctness, multi-language SDK expectations. |
+| KFM – Comprehensive Technical Documentation  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG) | API as unified gateway; PostGIS + graph + search integration; Story/Focus + time slider + evidence panels; offline-first constraints. |
+| 📚 KFM – Expanded Technical & Design Guide  [oai_citation:4‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo) | GraphQL vs REST guidance; ontology alignment; evidence-first RAG; contract-first discipline; bounded queries. |
+| KFM – Comprehensive Architecture, Features, and Design  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) | Clean architecture, modular pipeline design, deterministic + idempotent ETL, governance + security posture. |
+| KFM – Comprehensive Platform Overview and Roadmap  [oai_citation:6‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH) | Watcher→Planner→Executor automation; kill switch; OCI/Cosign; DVC posture; federation sequencing. |
+| KFM – Comprehensive UI System Overview  [oai_citation:7‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) | UI contract drivers (timeline, provenance panel, story builder); MapLibre/Cesium assumptions; GraphQL used for graph exploration. |
+| KFM – AI System Overview 🧭🤖  [oai_citation:8‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2) | Evidence-only AI; prompt security; policy scanning; telemetry + bias/drift monitoring posture. |
+| KFM AI Infrastructure – Ollama Integration Overview  [oai_citation:9‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv) | Local inference, Prompt Gate, vector DB options, citation enforcement patterns, internal-only LLM boundary. |
+| Open-Source Mapping Hub Design (KFM)  [oai_citation:10‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) | KML/KMZ export posture, doc→map linking, map-story patterns, repo structure hints, model card discipline. |
+| Scientific Method / Research / Master Coder Protocol  [oai_citation:11‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) | Reproducibility protocols, evaluation discipline, model/data documentation, “show evidence” posture. |
+| AI Concepts & more (portfolio)  [oai_citation:12‡Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf](file-service://file-TH7HttQXn8Bh1hVhcj858V) | Human-centered AI, statistical learning foundations, ethics/digital humanism influencing Focus Mode and governance posture. |
+| Data Management + Bayesian Methods (portfolio)  [oai_citation:13‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH) | Data engineering, lakehouse patterns, data spaces/federation, Bayesian workflows, CI/CD for data projects. |
+| Mapping/Modeling + HTTP/Docker/GraphQL (portfolio)  [oai_citation:14‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo) | HTTP correctness (Range/caching), container posture, GraphQL governance, compression + performance framing. |
+| Geographic Info + Security + Spark + TypeScript (portfolio)  [oai_citation:15‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6) | Web app security, misinformation/social engineering awareness, time-oriented visualization, multi-language ecosystem. |
+| Maps/GoogleMaps/VirtualWorlds/WebGL (portfolio)  [oai_citation:16‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2) | WebGL/3D performance budgets, map design and projections, AR/3D GIS constraints, GEE integration posture. |
+| Various programming languages & resources (portfolio)  [oai_citation:17‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo) | Polyglot SDK expectations, dev ergonomics, security references, client diversity (TS/Python/R/etc.). |
+
+</details>
+
+---
+
+<a id="sources"></a>
+
+## 📎 Sources
+
+### 🔥 Core KFM docs
+- 📘 KFM – Comprehensive Technical Documentation  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)  
+- 📚 KFM – Expanded Technical & Design Guide  [oai_citation:19‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)  
+- 🏛️ KFM – Comprehensive Architecture, Features, and Design  [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)  
+- 🧭 KFM – Comprehensive Platform Overview and Roadmap  [oai_citation:21‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)  
+- 🖥️ KFM – Comprehensive UI System Overview  [oai_citation:22‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
+- 🧭🤖 KFM – AI System Overview  [oai_citation:23‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)  
+- 🧠 KFM AI Infrastructure – Ollama Integration Overview  [oai_citation:24‡KFM AI Infrastructure – Ollama Integration Overview.pdf](file-service://file-HCn72HddNvaaXqpJL4svTv)  
+- 🗺️ Open-Source Geospatial Historical Mapping Hub Design (KFM)  [oai_citation:25‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)  
+
+### 🧾 Repo authority + doc conventions
+- 🧠 Master Guide v13 (MARKDOWN_GUIDE_v13)  [oai_citation:26‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)  
+- 📝 Comprehensive Markdown Guide (doc style reference)  [oai_citation:27‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)  
+- 🧪 Scientific Method / Research / Master Coder Protocol  [oai_citation:28‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)  
+
+### 📦 Reference library portfolios (embedded docs)
+- 🧠 AI Concepts & more  [oai_citation:29‡Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf](file-service://file-TH7HttQXn8Bh1hVhcj858V)  
+- 🗃️ Data Management + Bayesian Methods  [oai_citation:30‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)  
+- 🧰 Mapping/Modeling + HTTP/Docker/GraphQL/Security  [oai_citation:31‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)  
+- 🧭 Geographic Info + Security + Spark + TypeScript  [oai_citation:32‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)  
+- 🌐 Maps/GoogleMaps/VirtualWorlds/WebGL  [oai_citation:33‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)  
+- 🧩 Various programming languages & resources  [oai_citation:34‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)  
+
+---
+
+<a id="embedded-portfolio-index"></a>
+
+## 📦 Embedded portfolio index
+
+> [!NOTE]
+> These are the embedded reference documents inside the portfolio PDFs. They inform design/architecture decisions, but do **not** override governance rules. 📚🧾
+
+<details>
+<summary><strong>🧠 AI Concepts & more (36 embedded docs)</strong></summary>
+
+- A Developer’s Guide to Building AI Applications - English.pdf  
+- A Gentle Introduction to Symbolic Computation.pdf  
+- AI Foundations of Computational Agents 3rd Ed.pdf  
+- Artificial Intelligence & Machine Learning in Health Care & Medical Sciences.pdf  
+- Artificial Neural Networks Models & Applications.pdf  
+- Artificial-neural-networks-an-introduction.pdf  
+- Basics of Linear Algebra for machine Learning (Discover The Mathematical LLanguage of Data in Python) - Jason Brownlee.pdf  
+- Data Science &-  Machine Learning (Mathematical & Statistical Methods).pdf  
+- Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf.pdf  
+- Deep Learning with Python.pdf  
+- Foundations of Machine Learning - Foundations_of_Machine_Learning.pdf  
+- Gradient Expectations - Stucture, Origins, & Synthesis Of Predictive Neural Networks.pdf  
+- Introduction to Digital Humanism.pdf  
+- Introduction to Machine Learning with Python - Introduction to Machine Learning with Python.pdf  
+- Neural Network Architectures and Activation Functions_ A Gaussian Process Approach - 106621.pdf  
+- Neural Network Toolbox User_s Guide - nnet.pdf  
+- Neural Networks Using C# Succinctly - Neural_Networks_Using_C_Sharp_Succinctly.pdf  
+- On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf  
+- Pattern Recognition and Machine Learning.pdf  
+- Principles of Biological Autonomy - book_9780262381833.pdf  
+- Recurrent Neural Networks for Temporal Data Processing.pdf  
+- Regression analysis using Python - slides-linear-regression.pdf  
+- Volume 1 Machine Learning under Resource Constraints - Fundamentals .pdf  
+- Volume 2 Machine Learning under Resource Constraints - Discovery in Physics .pdf  
+- Volume 3 Machine Learning under Resource Constraints - Applications.pdf  
+- artificial-intelligence-a-modern-approach.pdf  
+- artificial-neural-networks-in-real-life-applications.pdf  
+- deep-learning-in-python-prerequisites.pdf  
+- haykin.neural-networks.3ed.2009.pdf  
+- java-artificial-intelligence-made-easy-w-java-programming.pdf  
+- neural networks and deep learning.pdf  
+- neural-network-design.pdf  
+- neural-network-learning-theoretical-foundations.pdf  
+- python-machine-learning-a-crash-course-for-beginners-to-understand-machine-learning-artificial-intelligence-neural-networks-and-deep-learning-with-scikit-learn-tensorflow-and-keras.pdf  
+- regression-analysis-with-python.pdf  
+- understanding-machine-learning-theory-algorithms.pdf  
+
+</details>
+
+<details>
+<summary><strong>🗃️ Data Management + Bayesian Methods (31 embedded docs)</strong></summary>
+
+- An Introduction to Statistical Learning.pdf  
+- Architecture of Advanced Numerical Analysis Systems - 978-1-4842-8853-5.pdf  
+- Bayesian Methods for Hackers Probabilistic Programming and Bayesian Inference.pdf  
+- Bayesian computational methods.pdf  
+- Bio-Inspired Computational Algorithms & Their Applications.pdf  
+- Comprehensive CI_CD Guide for Software and Data Projects.pdf  
+- Data Mining Concepts & applictions.pdf  
+- Data Science_ Theories, Models, Algorithms, and Analytics - DSA_Book.pdf  
+- Data Spaces.pdf  
+- Database Performance at Scale.pdf  
+- Foundations of Machine Learning - Foundations_of_Machine_Learning.pdf  
+- Genetic Programming New Approaches & Successfull Applications.pdf  
+- Git Notes for Professionals - GitNotesForProfessionals.pdf  
+- Gradient Expectations - Stucture, Origins, & Synthesis Of Predictive Neural Networks.pdf  
+- Haskell Notes for Professionals - HaskellNotesForProfessionals.pdf  
+- Hibernate Notes for Professionals - HibernateNotesForProfessionals.pdf  
+- Recurrent Neural Networks for Temporal Data Processing.pdf  
+- Scalable Data Management for Future Hardware.pdf  
+- Statistics Done Wrong - Alex_Reinhart-Statistics_Done_Wrong-EN.pdf  
+- The Data Engineering Cookbook.pdf  
+- The Data Lakehouse Platform For Dummies.pdf  
+- The Elements of Statistical Learning.pdf  
+- Theory & Practice of Cryptography & Network Security Protocols & Technologies.pdf  
+- Understanding Statistics & Experimental Design.pdf  
+- an-introduction-to-the-finite-element-method.pdf  
+- bayes-rule-a-tutorial-introduction-to-bayesian-analysis.pdf  
+- clean-architectures-in-python.pdf  
+- haykin.neural-networks.3ed.2009.pdf  
+- implementing-programming-languages-an-introduction-to-compilers-and-interpreters.pdf  
+- numerical-methods-in-engineering-with-matlab.pdf  
+- think-bayes-bayesian-statistics-in-python.pdf  
+
+</details>
+
+<details>
+<summary><strong>🧰 Mapping/Modeling + HTTP/Docker/GraphQL/Security (41 embedded docs)</strong></summary>
+
+- A Practical Guide to Geostatistical Mapping, 2nd Edition.pdf  
+- An Introduction to R_ Software for Statistical Modelling & Computing.pdf  
+- Android-UI-Design.pdf  
+- Artificial Intelligence, Third Edition, Python Code - aipython.pdf  
+- Beej's Guide to Git.pdf  
+- CICD_with_Docker_Kubernetes_Semaphore.pdf  
+- CSS3 Succinctly - CSS3_Succinctly.pdf  
+- Cartography-A tool for Spatial Analysis.pdf  
+- Cloud Security Practical Guide to Security in the AWS Cloud.pdf  
+- Computational Geometry_ Methods & Applications.pdf  
+- Cover - HowToCodeInHTML5AndCSS3.pdf  
+- Cuda By Example.pdf  
+- Data Acquisitioin.pdf  
+- Digital-Cartography.pdf  
+- Distant Viewing - Computational exploration of digital images.pdf  
+- Docker Cookbook - Docker-Cookbook.pdf  
+- Docker Succinctly - docker_succinctly.pdf  
+- Earth, Space, and Environmental Science Explorations with ArcGIS Pro ed2.pdf  
+- Feedback Systems An Introduction for Scientists & Engineers 2nd Edition.pdf  
+- Fullstack_GraphQL Applications_with GRANDstack.pdf  
+- GraphQL at Enterprise Scale.pdf  
+- Introduction to Data Compression, Third Edition.pdf  
+- Introduction to Functional Programming & the Structure of Programming Languages using OCaml.pdf  
+- Introduction to Python for Geographic Data Analysis.pdf  
+- IntroductoryTimeSeriesWithR.pdf  
+- Kieran-Healy-Data-Visualization_-A-Practical-Introduction.pdf  
+- Leaflet.js Succinctly - Leafletjs_Succinctly.pdf  
+- Learning Apache Spark with Python - pyspark.pdf  
+- Machine Learning with Python - machine_learning_with_python_tutorial.pdf  
+- Map Projections Used by the U.S. Geological Survey.pdf  
+- Matplotlib for Python Developers (2009).pdf  
+- Mobile Mapping - project_muse.pdf  
+- applied-data-science-with-python-and-jupyter.pdf  
+- compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf  
+- docker-easy-the-complete-guide-on-docker-world-for-beginners.pdf  
+- geocomputation-with-r.pdf  
+- google_maps_api_succinctly.pdf  
+- graphical-data-analysis-with-r.pdf  
+- learning-ipython-for-interactive-computing-and-data-visualization.pdf  
+- linux-basic-for-hacking.pdf  
+- matplotlib-plotting-cookbook-learn-how-to-create-professional-scientific-plots-using-matplotlib-with-more-than-60-recipes-that-cover-common-use-cases.pdf  
+
+</details>
+
+<details>
+<summary><strong>🧭 Geographic Info + Security + Spark + TypeScript (23 embedded docs)</strong></summary>
+
+- Nature-of-Geographic-Information.pdf  
+- No Tech Hacking - A Guide to Social Engeneering.pdf  
+- R Graphics Cookbook - RGraphicsCookbook.pdf  
+- R Markdown_ The Definitive Guide.pdf  
+- SciPy Programming Succinctly - SciPy_Programming_Succinctly.pdf  
+- Scientific Computing with MATLAB.pdf  
+- Shifts in Mapping - Maps as a Tool of Knowledge pdf.pdf  
+- Simulating Humans_ Computer Graphics, Animation, and Control - fulltext.pdf  
+- Sine Cosine Algorithm for Optimization.pdf  
+- Text Mining with R_ A Tidy Approach ( PDFDrive ).pdf  
+- The ArcGIS Imagery Book_ New View. New Vision.pdf  
+- The Path to GitOps - Path-to-GitOps-Red-Hat-Developer-e-book.pdf  
+- The Psychology of Fake News.pdf  
+- The-Data-Engineers-Guide-to-Apache-Spark.pdf  
+- The-Modern-DevOps-Lifecycle-ebook-2024.pdf  
+- Thinking Time Geography.pdf  
+- Visualization of Time-Oriented Data.pdf  
+- progit.pdf  
+- python_scripting_for_spatial_data_processing.pdf  
+- typescript-modern-javascript-development.pdf  
+- using-r-with-multivariate-statistics.pdf  
+- vuejs-up-and-running-building-accessible-and-performant-web-apps.pdf  
+- web-application-security-a-beginners-guide.pdf  
+
+</details>
+
+<details>
+<summary><strong>🌐 Maps/GoogleMaps/VirtualWorlds/WebGL (14 embedded docs)</strong></summary>
+
+- Archaeological 3D GIS_26_01_12_17_53_09.pdf  
+- Computer Graphics using JAVA 2D & 3D.pdf  
+- DesigningVirtualWorlds.pdf  
+- Geographic Information System Basics - geographic-information-system-basics.pdf  
+- Google Earth Engine Applications.pdf  
+- Map Reading & Land Navigation.pdf  
+- Spectral Geometry of Graphs.pdf  
+- Understanding_Map_Projections.pdf - 710understanding_map_projections.pdf  
+- geoprocessing-with-python.pdf  
+- google-maps-javascript-api-cookbook.pdf  
+- graphical-data-analysis-with-r.pdf  
+- making-maps-a-visual-guide-to-map-design-for-gis.pdf  
+- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf  
+- webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf  
+
+</details>
+
+<details>
+<summary><strong>🧩 Various programming languages & resources (69 embedded docs)</strong></summary>
+
+- Algorithms Notes for Professionals - AlgorithmsNotesForProfessionals.pdf  
+- An Introduction to Spatial Data Analysis and Visualisation in R - An Introduction to Spatial Data Analysis in R.pdf  
+- Angular 2+ Notes for Professionals - Angular2NotesForProfessionals.pdf  
+- AngularJS Notes for Professionals - AngularJSNotesForProfessionals.pdf  
+- Bash Notes for Professionals - BashNotesForProfessionals.pdf  
+- C Notes for Professionals - CNotesForProfessionals.pdf  
+- C# Notes for Professionals - CSharpNotesForProfessionals.pdf  
+- C++ Notes for Professionals - CPlusPlusNotesForProfessionals.pdf  
+- CSS Notes for Professionals - CSSNotesForProfessionals.pdf  
+- Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf  
+- Comprehensive CI_CD Guide for Software and Data Projects.pdf  
+- Crafting a Compiler.pdf  
+- Entity Framework Notes for Professionals - EntityFrameworkNotesForProfessionals.pdf  
+- Essentials of Compilation - An Incremental Approach (python).pdf  
+- Excel VBA Notes for Professionals - ExcelVBANotesForProfessionals.pdf  
+- Free Android Development Book.pdf  
+- Generalized Topology Optimization for Structural Design.pdf  
+- HTML5 Canvas Notes for Professionals - HTML5CanvasNotesForProfessionals.pdf  
+- HTML5 Notes for Professionals - HTML5NotesForProfessionals.pdf  
+- Handbook Of Applied Cryptography (old).pdf  
+- Introduction to Numerical Methods for Variational Problems.pdf  
+- Introduction to finite element methods.pdf  
+- Introduction-to-Docker.pdf  
+- Java Notes for Professionals - JavaNotesForProfessionals.pdf  
+- JavaScript Notes for Professionals - JavaScriptNotesForProfessionals.pdf  
+- Kotlin Notes for Professionals - KotlinNotesForProfessionals.pdf  
+- LaTeX Notes for Professionals - LaTeXNotesForProfessionals.pdf  
+- Linux Notes for Professionals - LinuxNotesForProfessionals.pdf  
+- MATLAB Notes for Professionals - MATLABNotesForProfessionals.pdf  
+- MATLAB Programming for Engineers Stephen J. Chapman.pdf  
+- Matlab-Modeling, Programming & Simulations.pdf  
+- Microsoft SQL Server Notes for Professionals - MicrosoftSQLServerNotesForProfessionals.pdf  
+- MongoDB Notes for Professionals - MongoDBNotesForProfessionals.pdf  
+- MySQL Notes for Professionals - MySQLNotesForProfessionals.pdf  
+- NET Framework Notes for Professionals - DotNETFrameworkNotesForProfessionals.pdf  
+- Node.js Notes for Professionals - NodeJSNotesForProfessionals.pdf  
+- OCaml Practice.pdf  
+- Objective-C Notes for Professionals - ObjectiveCNotesForProfessionals.pdf  
+- Oracle Database Notes for Professionals - OracleDatabaseNotesForProfessionals.pdf  
+- PHP Notes for Professionals - PHPNotesForProfessionals.pdf  
+- Perl Notes for Professionals - PerlNotesForProfessionals.pdf  
+- PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf  
+- PowerShell Notes for Professionals - PowerShellNotesForProfessionals.pdf  
+- Python Notes for Professionals - PythonNotesForProfessionals.pdf  
+- R Notes for Professionals - RNotesForProfessionals.pdf  
+- React JS Notes for Professionals - ReactJSNotesForProfessionals.pdf  
+- React Native Notes for Professionals - ReactNativeNotesForProfessionals.pdf  
+- Ruby Notes for Professionals - RubyNotesForProfessionals.pdf  
+- Ruby on Rails Notes for Professionals - RubyOnRailsNotesForProfessionals.pdf  
+- SQL Notes for Professionals - SQLNotesForProfessionals.pdf  
+- ScipyLectures-simple.pdf  
+- Solving Ordinary Differential Equations in Python.pdf  
+- Solving PDEs in Python.pdf  
+- Spring Framework Notes for Professionals - SpringFrameworkNotesForProfessionals.pdf  
+- Swift Notes for Professionals - SwiftNotesForProfessionals.pdf  
+- The-Data-Engineers-Guide-to-Apache-Spark.pdf  
+- The-web-application-hackers-handbook-finding-and-exploiting-security-flaws.pdf  
+- TypeScript Notes for Professionals - TypeScriptNotesForProfessionals.pdf  
+- VBA Notes for Professionals - VBANotesForProfessionals.pdf  
+- Visual Basic .NET Notes for Professionals - VisualBasic_NETNotesForProfessionals.pdf  
+- Xamarin.Forms Notes for Professionals - XamarinFormsNotesForProfessionals.pdf  
+- applied-data-science-with-python-and-jupyter.pdf  
+- black-hat-python-python-programming-for-hackers-and-pentesters.pdf  
+- flexible-software-design-systems-development-for-changing-requirements.pdf  
+- iOS Developer Notes for Professionals - iOSNotesForProfessionals.pdf  
+- jQuery Notes for Professionals - jQueryNotesForProfessionals.pdf  
+- python-machine-learning-a-crash-course-for-beginners-to-understand-machine-learning-artificial-intelligence-neural-networks-and-deep-learning-with-scikit-learn-tensorflow-and-keras.pdf  
+- responsive-web-design-with-html5-and-css3.pdf  
+- software-architecture-patterns.pdf  
 
 </details>
 
@@ -1102,6 +1707,7 @@ These project files shape KFM’s API posture: **governance**, **scalability**, 
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.6.0 | 2026-01-26 | Added governed **GraphQL boundary** (cost controls), expanded **tiles/Range/caching** posture, formalized **Prompt Gate** + Ollama internal AI boundary, added **Automation control plane (Watcher→Planner→Executor)** section, aligned repo staging to Master Guide v13, expanded threat model + moderation posture, and added embedded portfolio index for the reference library. | KFM Engineering |
 | v1.5.0 | 2026-01-26 | Refined **single-entry-point** boundary, added **search/retrieval** posture, aligned Story/Focus contract language, clarified repo layout (current vs target consolidation), strengthened privacy/inference controls, and refreshed endpoint map + DoD. | KFM Engineering |
 | v1.4.0 | 2026-01-20 | Added artifact integrity posture (run manifests + digests + optional OCI/Cosign), introduced Pulse Threads + Concepts, added integrity checks (graph + narrative + drift), expanded offline/AR notes, strengthened FAIR+CARE language. | KFM Engineering |
 | v1.3.0 | 2026-01-19 | Strengthened fail-closed policy pack, added telemetry/ledger + deterministic replay posture, expanded streaming/offline/contribution targets, refreshed influence map. | KFM Engineering |
