@@ -1,7 +1,7 @@
 ---
 title: "🧪 MCP — Master Coder Protocol (Methods, Controls & Processes) 🧾⚙️"
 path: "mcp/README.md"
-version: "v1.6.0"
+version: "v1.7.0"
 last_updated: "2026-01-26"
 status: "active"
 doc_kind: "Directory README"
@@ -17,6 +17,8 @@ doctrine:
   focus_mode_advisory_only: true
   atomic_promotion: true
   api_boundary_enforced: true
+  content_addressed_artifacts: true
+  signatures_preferred: true
 
 # Governance posture (FAIR+CARE + sovereignty-aware)
 governance:
@@ -36,23 +38,26 @@ owners:
 # 🧪 MCP — Master Coder Protocol  
 ### *Methods, Controls & Processes* 🧾⚙️
 
-![README](https://img.shields.io/badge/README-v1.6.0-8957e5)
+![README](https://img.shields.io/badge/README-v1.7.0-8957e5)
 ![Blueprint](https://img.shields.io/badge/KFM%20Blueprint-v13%2B-orange)
 ![Docs-first](https://img.shields.io/badge/docs-documentation--first-blue)
 ![Contract-first](https://img.shields.io/badge/contracts-schema--first-1f6feb)
 ![Provenance-first](https://img.shields.io/badge/provenance-first-7b42f6)
 ![Evidence](https://img.shields.io/badge/evidence-STAC%2BDCAT%2BPROV-informational)
 ![PROV](https://img.shields.io/badge/lineage-W3C%20PROV-7b42f6)
+![SHACL](https://img.shields.io/badge/graph%20validation-SHACL-2ea043)
 ![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE%20%2B%20Sovereignty-2ea043)
 ![Policy](https://img.shields.io/badge/policy-OPA%20%2B%20Conftest-important)
 ![Security](https://img.shields.io/badge/security-hostile--inputs%20%2B%20deny--by--default-red)
 ![Supply%20Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20SLSA%20%2B%20attestations-success)
+![OCI](https://img.shields.io/badge/artifacts-OCI%20digests%20%2B%20cosign-informational)
+![Ollama](https://img.shields.io/badge/LLM-Ollama%20%2B%20RAG-informational)
 ![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-orange)
 
 > **TL;DR:** `mcp/` is KFM’s **methods + receipts** layer 📓🧠  
 > It holds **protocols**, **run receipts**, **SOPs**, **model cards**, **gate reports**, and **review artifacts**—so every result can be **re-run, reviewed, and trusted** ✅  
 >
-> **v13+ alignment:** KFM is **evidence‑first**, **catalog‑driven**, **API‑centric**, and **policy‑gated**.  
+> **v13+ alignment:** KFM is **evidence‑first**, **catalog‑driven**, **API‑centric**, **policy‑gated**, and **signature‑friendly**.  
 > MCP is the paper trail that keeps those promises honest. 🧾🛡️
 
 > [!IMPORTANT]
@@ -65,23 +70,29 @@ owners:
 ## 🔗 Quick links
 - 🧭 Repo overview: **[`../README.md`](../README.md)**
 - 📚 Docs boundary: **[`../docs/README.md`](../docs/README.md)** *(if present)*
-- 🧾 Standards & profiles (STAC/DCAT/PROV, ontology, schemas): **[`../docs/standards/`](../docs/standards/)** *(if present)*
-- 🧩 Templates (governed formats for docs, Story Nodes, API changes): **[`../docs/templates/`](../docs/templates/)** *(if present)*
-- 🏛 Governance (FAIR/CARE/Sovereignty, review gates): **[`../docs/governance/`](../docs/governance/)** *(if present)*
-- 🧬 Pipelines boundary (contract portal): **[`../pipelines/`](../pipelines/)** *(if present)*
-- 🧰 Scripts boundary (automation): **[`../scripts/`](../scripts/)** *(if present)*
-- 🧩 Executable source boundary: **[`../src/`](../src/)** *(if present)*
+- 🧾 KFM standards/profiles: **`docs/standards/`**  
+  - `docs/standards/KFM_STAC_PROFILE.md` 🗂️  
+  - `docs/standards/KFM_DCAT_PROFILE.md` 🗃️  
+  - `docs/standards/KFM_PROV_PROFILE.md` 🧬  
+- 🧩 Templates (governed formats for docs, Story Nodes, API changes): **`docs/templates/`** *(if present)*
+- 🏛 Governance (FAIR/CARE/Sovereignty, review gates): **`docs/governance/`** *(if present)*
+- 📚 Story Nodes library (canonical): **`docs/reports/story_nodes/`** 📚 *(preferred v13+ home)*
+- 🧬 Pipelines boundary (contract portal): **`../pipelines/`** *(if present)*
+- 🧰 Scripts boundary (automation): **`../scripts/`** *(if present)*
+- 🧩 Executable source boundary: **`../src/`** *(if present)*
+  - 🔌 API contracts: `src/server/contracts/` *(OpenAPI + GraphQL schema)*
 - 📦 Data + metadata boundary: **[`../data/README.md`](../data/README.md)** *(if present)*
-- 🧪 Notebooks boundary (lab bench): **[`../notebooks/`](../notebooks/)** *(if present)*
-- 🧰 Validators & tooling: **[`../tools/`](../tools/)** *(if present)*
-- ✅ Tests & CI gates: **[`../tests/`](../tests/)** *(if present)*
-- 🤝 CI/CD & policies: **[`../.github/`](../.github/)** *(workflows, security policy, automation)*
+- 🧪 Notebooks boundary (lab bench): **`../notebooks/`** *(if present)*
+- 🧰 Validators & tooling: **`../tools/`** *(if present)*
+- ✅ Tests & CI gates: **`../tests/`** *(if present)*
+- 🤝 CI/CD & policies: **`../.github/`** *(workflows, security policy, automation)*
 
 ---
 
 ## ⚡ Quick Nav
 - [🧾 Doc metadata](#-doc-metadata)
 - [🧭 What MCP is](#-what-mcp-is)
+- [🗃️ Canonical KFM layout (v13+)](#️-canonical-kfm-layout-v13)
 - [🧷 Repo invariants](#-repo-invariants)
 - [🧱 MCP artifacts](#-mcp-artifacts-types-ids-and-immutability)
 - [🚦 Non‑negotiables](#-non-negotiables)
@@ -90,6 +101,7 @@ owners:
 - [🔁 The MCP workflow loop](#-the-mcp-workflow-loop)
 - [🚥 Detect → Validate → Promote](#-detect--validate--promote)
 - [🔐 Policy packs & gate reports](#-policy-packs--gate-reports)
+- [🌐 Federation & distribution](#-federation--distribution)
 - [🤖 Watcher → Planner → Executor receipts](#-watcher--planner--executor-receipts)
 - [🧬 DevOps provenance & supply chain](#-devops-provenance--supply-chain)
 - [🧾 Front matter + schemas](#-front-matter--schemas-machine-readable-mcp)
@@ -125,7 +137,7 @@ owners:
 | Audience | Contributors authoring experiments, running jobs, shipping evidence, publishing Story Nodes, training/using models |
 | Prime directive | If it changes “spatial truth,” it must be **traceable + reproducible + reviewable** |
 | KFM canon (v13+) | **ETL/Streaming → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode** |
-| Special doctrine | **Policy packs gate publishing** + **atomic promotion** + **AI is advisory-only and must cite** |
+| Special doctrine | **Policy packs gate publishing** + **atomic promotion** + **content-addressed artifacts** + **AI is advisory-only and must cite** |
 | API boundary rule | UI never queries Neo4j (or other stores) directly—**only through governed APIs** |
 
 ---
@@ -146,7 +158,7 @@ A **governed method layer** that turns “we tried something” into **auditable
 ### 🚫 MCP is not…
 - ❌ A data lake (that’s `data/`)
 - ❌ A code dump (that’s `src/`, `pipelines/`, `web/`)
-- ❌ A place for large binaries (store in `data/processed/**` + catalogs)
+- ❌ A place for large binaries (store in `data/raw/**` or `data/processed/**` + catalogs)
 - ❌ A place for “unsourced narrative” (Story Nodes must cite evidence artifacts)
 - ❌ A runtime governance ledger (that lives in system telemetry / governance ledger), but MCP **references** ledger IDs when relevant
 
@@ -155,10 +167,34 @@ A **governed method layer** that turns “we tried something” into **auditable
 
 ---
 
+## 🗃️ Canonical KFM layout (v13+)
+
+KFM works best when “where things live” is predictable. MCP assumes the following **canonical** homes:
+
+### 📦 Canonical data lifecycle lanes
+- `data/raw/**` 🧲 — immutable sources (vendor drops, scans, exports, harvest bundles)  
+- `data/work/**` 🧪 — scratch/intermediate (safe to delete; not evidence)  
+- `data/processed/**` 📦 — final evidence artifacts (versioned; cataloged; lineage-linked)
+
+### 🗂️ Canonical metadata + lineage lanes
+- `data/stac/collections/**` 🗂️
+- `data/stac/items/**` 🗂️
+- `data/catalog/dcat/**` 🗃️
+- `data/prov/**` 🧬  
+  - `data/prov/dev/**` 🧬 *(DevOps provenance bundles)*
+
+### 📚 Canonical narrative lane
+- `docs/reports/story_nodes/**` 📚 *(Story Nodes: Markdown + JSON script)*
+
+> [!NOTE]
+> Repo implementations vary, but these canonical lanes are the “happy path” for tooling, gates, and audits. ✅
+
+---
+
 ## 🧷 Repo invariants
 
 These are the “you can build anything, but not *like that*” constraints.  
-They align MCP with KFM’s v13+ blueprint: **catalog-driven**, **API-centric**, **policy-enforced**, and **transparent**.
+They align MCP with KFM’s v13+ blueprint: **catalog-driven**, **API-centric**, **policy-enforced**, **transparent**, and **signature-friendly**.
 
 ### 🧱 Invariant 1 — Pipeline ordering is absolute
 **ETL/Streaming → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
@@ -186,9 +222,10 @@ Given the same inputs + config:
 - safe to rerun without double-writing or corrupting state
 - automation uses **idempotency keys** + has a **kill switch** 🧯
 
-### 📦 Invariant 6 — Work vs processed areas are distinct
-- `data/work/**` = scratch/intermediate (safe to delete, not “evidence”) 🧪
-- `data/processed/**` = final evidence artifacts (versioned, cataloged, lineage-linked) 📦🗂️🧬
+### 📦 Invariant 6 — Raw vs work vs processed are distinct
+- `data/raw/**` = **immutable sources** (versioned by checksum/digest; includes source manifests) 🧲
+- `data/work/**` = **scratch/intermediate** (safe to delete; never referenced as evidence) 🧪
+- `data/processed/**` = **final evidence artifacts** (versioned, cataloged, lineage-linked) 📦🗂️🧬
 
 ### 🚀 Invariant 7 — Promotion is atomic
 **Promote =** `data/processed` outputs + **STAC/DCAT** + **PROV** + *(optional)* graph ingest bundle  
@@ -203,6 +240,7 @@ Publishing must pass automated policy checks (OPA/Conftest style), including:
 - license/attribution propagation
 - Story/Focus citation coverage checks (when narrative/AI exists)
 - supply-chain + secrets scanning (when relevant)
+- signature/digest verification (when distributing artifacts) 🔏
 
 ### 🧊 Invariant 9 — Dual-format evidence stays one truth
 When a domain needs both **analysis format** and **UI format**:
@@ -210,19 +248,26 @@ When a domain needs both **analysis format** and **UI format**:
 - catalog both under the same dataset identity/metadata
 - keep provenance common and explicit (same inputs, same pipeline run)
 
-### 🤖 Invariant 10 — Focus Mode is advisory-only and evidence-bound
+### 🧠 Invariant 10 — Ontology + graph rules are contracts
+If you encode semantics (CIDOC-CRM, GeoSPARQL, OWL-Time, custom vocabularies):
+- version them like APIs 🏷️
+- validate graph constraints (e.g., **SHACL**) ✅
+- keep “derived relations” explainable with pointers to evidence 🧾
+
+### 🤖 Invariant 11 — Focus Mode is advisory-only and evidence-bound
 Focus Mode can **suggest** and **summarize**. It cannot “declare truth” unless it:
 - cites evidence artifacts (catalog IDs / graph entities)  
 - passes governance checks (content + sensitivity rules)  
 - shows uncertainty/refuses when evidence is insufficient
 
-### 🧾 Invariant 11 — Everything decision-worthy gets a receipt
+### 🧾 Invariant 12 — Everything decision-worthy gets a receipt
 Every decision-worthy run captures:
 - input/output hashes (or stable IDs) 🔢
 - config + environment snapshot 🧱
 - commit hash + entrypoint 🧩
 - gate report(s) 🔐
 - catalog IDs + PROV pointers 🗂️🧬
+- distribution digests/signatures when applicable (OCI, cosign, etc.) 🔏
 - governance ledger references when available 🏛
 
 ---
@@ -236,7 +281,9 @@ MCP stays reliable because artifacts are **typed**, **named**, and **handled cor
 | 🧪 Experiment protocol | `EXP-YYYY-MM-DD-<slug>.md` | `mcp/experiments/` | ⚠️ Mutable while `draft` | Pre-register intent, assumptions, validation plan |
 | 🏃 Run receipt | `RUN-YYYY-MM-DD-<slug>/` | `mcp/runs/` | ✅ Yes | What executed + how to reproduce |
 | 🔐 Gate report | `GATE-YYYY-MM-DD-<slug>.md` *(or `.json`)* | `mcp/gates/` *(recommended)* | ✅ Yes | Proof of policy/contract checks (OPA/Conftest + schema + link integrity) |
+| 🧲 Source / intake manifest *(recommended)* | `SRC-YYYY-MM-DD-<slug>.md` *(or `.yml`)* | `mcp/intake/` *(optional)* | ✅ Yes | Where raw inputs came from + checksums/licenses + quarantine notes |
 | 🚀 Promotion receipt | `PROMOTE-YYYY-MM-DD-<slug>/` *(optional)* | `mcp/promotions/` *(optional)* | ✅ Yes | Atomic publish record: what changed in evidence + catalogs |
+| 🌐 Harvest receipt *(federation)* | `HARVEST-YYYY-MM-DD-<slug>/` *(optional)* | `mcp/harvests/` *(optional)* | ✅ Yes | Cross-instance catalog/data harvest + verification trail |
 | 🧬 DevOps provenance bundle | `DEVPROV-YYYY-MM-DD-<slug>.jsonld` *(optional)* | `mcp/dev_prov/` *(or `data/prov/dev/`)* | ✅ Yes | PR/build provenance (who/what built this, linked to datasets/runs) |
 | 🧰 SOP | `SOP-<topic>-v<semver>.md` | `mcp/sops/` | ✅ Versioned | Repeatable procedures (risky/frequent tasks) |
 | 🧠 Model card | `MODEL-<name>-v<semver>.md` | `mcp/model_cards/` | ✅ Versioned | Intended use, limits, datasets, governance for ML/AI |
@@ -248,7 +295,7 @@ MCP stays reliable because artifacts are **typed**, **named**, and **handled cor
 
 > [!IMPORTANT]
 > **Run receipts and gate reports are immutable.**  
-> If anything changes (inputs, params, code, env, policy pack) → create a **new** artifact and link it. ✅
+> If anything changes (inputs, params, code, env, policy pack, model digest) → create a **new** artifact and link it. ✅
 
 ---
 
@@ -290,6 +337,9 @@ These rules keep KFM **scientific**, **auditable**, and **governed**:
 11) **Stable IDs are correctness features.** 🏷️  
    IDs should be stable across reruns when inputs haven’t changed—treat IDs like API contracts.
 
+12) **If it’s distributed, it’s verifiable.** 🔏  
+   Prefer content-addressed references (digests) and signed artifacts (SBOM + attestations).
+
 > [!TIP]
 > Motto: **“If I can’t reproduce it in 30 minutes, it’s not complete.”** ⏱️✅
 
@@ -299,25 +349,37 @@ These rules keep KFM **scientific**, **auditable**, and **governed**:
 
 ### 🌿 Path A — “I’m adding a dataset / layer”
 1. 🧲 Intake source → record checksum(s) + license + care label  
-2. ⚙️ Run deterministic ETL → write intermediates to `data/work/`  
-3. 📦 Write final artifacts to `data/processed/` *(versioned)*  
-4. 🗂️ Publish **STAC + DCAT** metadata  
-5. 🧬 Publish **PROV** (inputs + activity + outputs)  
-6. 🔐 Run gates (contracts + catalogs + policy packs) → write `GATE-...`  
-7. 🏃 Record `RUN-...` receipt + update `TRACEABILITY.md`  
-8. 🚀 Promote atomically (optional `PROMOTE-...`) → then ingest to Graph/API
+2. 🧊 Store immutable inputs in `data/raw/**` + create `SRC-...` manifest *(recommended)*  
+3. ⚙️ Run deterministic ETL → write intermediates to `data/work/`  
+4. 📦 Write final artifacts to `data/processed/` *(versioned)*  
+5. 🗂️ Publish **STAC + DCAT** metadata  
+6. 🧬 Publish **PROV** (inputs + activity + outputs)  
+7. 🔐 Run gates (contracts + catalogs + policy packs) → write `GATE-...`  
+8. 🏃 Record `RUN-...` receipt + update `TRACEABILITY.md`  
+9. 🚀 Promote atomically (optional `PROMOTE-...`) → then ingest to Graph/API  
+10. 🔏 *(Optional)* Package and sign distributable bundles (OCI artifact + cosign + SBOM)
 
 ### 📚 Path B — “I’m shipping a Story Node”
 1. ✍️ Author story Markdown + storyboard JSON (declarative map/timeline state)  
-2. 🔗 Ensure every claim cites cataloged evidence (no orphan links)  
-3. 🔐 Run Story gates (link integrity + citation coverage + sensitivity propagation)  
-4. 🏃 Record receipt + review note if story is public-facing
+2. 📍 Store in `docs/reports/story_nodes/<story-id>/` *(preferred)*  
+3. 🔗 Ensure every claim cites cataloged evidence (no orphan links)  
+4. 🔐 Run Story gates (link integrity + citation coverage + sensitivity propagation)  
+5. 🏃 Record receipt + review note if story is public-facing
 
 ### 🤖 Path C — “I’m updating Focus Mode / AI behavior”
-1. 🧠 Update model/prompt/retrieval rules + record exact version hashes  
-2. 🔐 Ensure policies enforce: citations required + refusal under uncertainty  
-3. 🧪 Run evaluation harness (citation coverage, refusal tests, bias checks)  
-4. 🧾 Publish model card update + gate report + traceability entry
+1. 🧠 Update model/prompt/retrieval rules + record exact version hashes/digests  
+2. 🧼 Ensure **Prompt Gate** sanitizes hostile inputs (prompt injection, unsafe asks)  
+3. 🔐 Ensure policies enforce: citations required + refusal under uncertainty  
+4. 🧪 Run evaluation harness (citation coverage, refusal tests, bias checks)  
+5. 🧾 Publish model card update + gate report + traceability entry
+
+### 🌐 Path D — “I’m harvesting from another KFM instance (federation)”
+1. 🛰️ Harvest catalogs (DCAT/STAC) from a trusted instance  
+2. 🔏 Verify digests/signatures for any imported bundles  
+3. 🧲 Store bundles in `data/raw/federation/<instance>/...`  
+4. 🧬 Record PROV for harvest activity + imported dataset references  
+5. 🔐 Gate it (policy pack: trust roots, license propagation, sensitivity, integrity)  
+6. 🧾 Write `HARVEST-...` + `GATE-...` + traceability updates
 
 ---
 
@@ -330,6 +392,8 @@ These rules keep KFM **scientific**, **auditable**, and **governed**:
 ├── 📁 runs/                     # immutable run receipts 🏃🧾
 ├── 📁 gates/                    # immutable gate reports 🔐✅ (recommended)
 ├── 📁 promotions/               # atomic publish receipts 🚀 (optional)
+├── 📁 intake/                   # source manifests 🧲 (optional but valuable)
+├── 📁 harvests/                 # federation harvest receipts 🌐 (optional)
 ├── 📁 dev_prov/                 # PR/build provenance bundles 🧬 (optional)
 ├── 📁 sops/                     # Standard Operating Procedures 🧰
 ├── 📁 model_cards/              # model cards for ML/AI used or trained 🧠
@@ -375,11 +439,13 @@ KFM risk comes from “half-published” artifacts. MCP enforces a controlled rh
 2) **Validate** ✅  
    Run fast gates:
    - contract/schema checks (domain + metadata)
-   - STAC/DCAT validation
+   - STAC/DCAT validation (KFM profiles)
    - PROV presence + link integrity
+   - graph semantic checks (e.g., SHACL)
    - governance propagation (no downgrade)
    - security scans (secrets, unsafe deps, unsafe parsing)
    - **policy packs** (OPA/Conftest) 🔐
+   - signature/digest checks (OCI artifacts) 🔏
 
 3) **Promote** 🚀  
    Only after validation:
@@ -387,6 +453,7 @@ KFM risk comes from “half-published” artifacts. MCP enforces a controlled rh
    - write STAC/DCAT/PROV (provenance-first)
    - optionally export graph ingest bundles
    - record `RUN` + `GATE` + traceability update
+   - optionally package & sign distributable artifacts
 
 > [!TIP]
 > Treat “promotion” like a release: **atomic publish or nothing.** 🧾✅
@@ -407,19 +474,22 @@ We expect:
 | 🧾 Contract validation | Schema compatibility and drift control | JSON Schema / Pydantic / Great Expectations |
 | 🗂️ Catalog validity | STAC/DCAT structure + required fields | stac-validator, JSON Schema, custom checks |
 | 🧬 PROV integrity | Lineage completeness + link integrity | JSON-LD validation, link checkers |
+| 🧠 Semantic/ontology gates | Graph meaning & constraint integrity | SHACL, ontology version checks |
 | 🛡️ API boundary | Prevent bypass of governance | integration tests, lint rules |
 | 🔐 Governance propagation | No sensitivity downgrade, license propagation | OPA/Conftest policies |
-| 🤖 AI behavior | Citation coverage + refusal + hedging rules | evaluation harness + OPA |
+| 🤖 AI behavior | Citation coverage + refusal + prompt-injection resilience | eval harness + OPA |
 | 🧷 Supply chain | SBOM + signed attestations + pinned deps | SLSA, Sigstore, SBOM tooling |
+| 🔏 Distribution integrity | Artifact digests/signatures are valid | OCI digests, cosign verify |
 | 🧨 Security | Secrets, unsafe deps, hostile inputs | secret scanners, SAST, sandbox rules |
 
 ### ✅ What belongs in a gate report
 - policy pack version (and commit hash)
-- checks executed (schemas, link integrity, downgrade prevention, license propagation)
+- checks executed (schemas, profiles, SHACL, link integrity, downgrade prevention, license propagation)
 - inputs evaluated (catalog IDs / files)
 - results (pass/fail + reasons)
 - runner (human, CI, W‑P‑E Executor)
 - pointers to logs (redacted if needed)
+- distribution verification (digests/signatures) when applicable 🔏
 
 ### 📄 Minimal `GATE-...` template (copy/paste)
 
@@ -443,15 +513,21 @@ inputs:
 results:
   status: pass | fail
   checks:
-    - name: "stac_validate"
+    - name: "stac_validate_profile"
+      status: pass
+    - name: "dcat_validate_profile"
       status: pass
     - name: "prov_present"
+      status: pass
+    - name: "shacl_graph_shapes"
       status: pass
     - name: "no_sensitivity_downgrade"
       status: pass
     - name: "license_propagation"
       status: pass
     - name: "ai_citation_coverage"
+      status: pass
+    - name: "oci_digest_verify"   # optional
       status: pass
 notes: ""
 ---
@@ -471,6 +547,30 @@ notes: ""
 
 ---
 
+## 🌐 Federation & distribution
+
+KFM’s architecture supports **multi-instance** deployments and future **federation** (a network of “Frontier Matrix” instances sharing catalogs). MCP supports this by documenting:
+
+- 🛰️ **Harvests** (DCAT/STAC) and the trust policy used  
+- 🔏 **Integrity verification** (digests/signatures; supply-chain posture)  
+- 🧬 **Cross-instance provenance** (PROV activities referencing imported datasets)  
+- ⚖️ **License + care label propagation** across boundaries  
+- 🧾 **Receipts** for “what did we import and why?”
+
+### ✅ Recommended federation evidence
+- Keep imported bundles in `data/raw/federation/<instance>/...`
+- Record:
+  - source instance identity (URL + trust root)
+  - harvested dataset IDs and versions
+  - verification result (digest match, cosign verify, SBOM presence)
+  - local mapping decisions (ID translation, redaction rules)
+  - links to local STAC/DCAT + PROV outputs
+
+> [!TIP]
+> Federation is powerful—and risky. Treat external catalogs like hostile input until verified. 🧨🔏✅
+
+---
+
 ## 🤖 Watcher → Planner → Executor receipts
 
 KFM’s roadmap uses a **Watcher–Planner–Executor (W‑P‑E)** pattern for safe automation 🤝🤖
@@ -481,6 +581,7 @@ KFM’s roadmap uses a **Watcher–Planner–Executor (W‑P‑E)** pattern for 
 - **Kill switch** must exist to halt all agent actions immediately 🧯
 - **Idempotency keys** prevent duplicate PRs/loops 🔁🚫
 - Agents are policy-constrained (OPA rules apply to bots, too) 🔐
+- Agents are **advisory**: they can propose; humans approve high-impact changes 🧑‍⚖️
 
 ### ✅ How MCP records W‑P‑E activity
 W‑P‑E is “just another run,” so it gets receipts:
@@ -501,6 +602,7 @@ So you can answer:
 - Which code version produced this dataset?
 - Who reviewed and approved the change?
 - Which policy pack version gated publishing?
+- Which artifact digest was deployed?
 
 ### ✅ Where to store DevOps PROV
 Preferred:
@@ -510,10 +612,12 @@ Acceptable:
 - `mcp/dev_prov/DEVPROV-...jsonld`
 
 ### 🔐 Supply-chain expectations (recommended)
-- SBOM attached to PRs/releases
-- checksums for generated outputs
-- signed build attestations
+- SBOM attached to builds/releases (or referenced by digest)
+- checksums for generated outputs (hashes + stable IDs)
+- signed attestations (Sigstore/cosign style) 🔏
 - pinned dependencies + vulnerability checks
+- reproducible builds where feasible
+- registry-style distribution for bundles (OCI artifacts) 📦
 
 > [!NOTE]
 > This is compatible with high-assurance supply chain ideas (SLSA levels, Sigstore attestations) without forcing any single tool choice.
@@ -534,6 +638,7 @@ All MCP artifacts should start with YAML front matter including:
 - contracts + lineage pointers (STAC/DCAT/PROV)
 - policy pack version + gate report IDs
 - dev provenance pointers (optional)
+- distribution digests (optional but recommended) 🔏
 
 ### ⭐ “Governed doc” extras (recommended)
 - `doc_uuid` (stable UUID)
@@ -541,6 +646,7 @@ All MCP artifacts should start with YAML front matter including:
 - `doc_integrity_checksum` (optional)
 - `policy_pack_version`
 - `governance_ledger_ref` *(pointer only)*
+- `artifact_digests` *(OCI or file hashes)*
 
 ### 🔎 Minimal example
 ```yaml
@@ -566,6 +672,11 @@ catalog_pointers:
   dcat: ["data/catalog/dcat/dataset.jsonld"]
   prov: ["data/prov/PROV-2026-01-26-example.jsonld"]
 dev_prov: ["data/prov/dev/DEVPROV-2026-01-26-pr-123.jsonld"]
+
+distribution:
+  oci_artifacts:
+    - ref: "ghcr.io/org/kfm-data:dataset-x@sha256:..."
+      cosign_verified: true
 ---
 ```
 
@@ -584,6 +695,7 @@ For any EXP/RUN affecting production pipelines, APIs, UI layers, Story Nodes, da
 - [ ] Governance + FAIR/CARE + sovereignty considerations stated (when applicable)
 - [ ] Another contributor can reproduce without tribal knowledge
 - [ ] If AI was involved, human sign-off recorded
+- [ ] If artifacts were distributed, digests/signatures recorded 🔏
 
 ### 🧱 Reproducibility levels (recommended)
 - **L0** 🟡: exploratory note (not decision-worthy)
@@ -601,6 +713,7 @@ If an experiment influences decisions, pipelines, published results, Story Nodes
 - 🧪 Experiment report → `mcp/experiments/...`
 - 🏃 Run receipt → `mcp/runs/...` (with `MANIFEST.md`)
 - 🔐 Gate report → `mcp/gates/...` *(or in run folder)*
+- 🧲 Source manifest → `data/raw/**` + *(recommended)* `mcp/intake/SRC-...`
 - 🔗 Code pointer → commit hash + entrypoint
 - 🧱 Environment snapshot → Docker digest **or** lockfile/requirements
 - 🎲 Seeds/determinism flags (when applicable)
@@ -610,6 +723,7 @@ If an experiment influences decisions, pipelines, published results, Story Nodes
 - 🧬 Lineage → PROV pointers
 - 👀 Review notes → for L2/L3 (recommended)
 - 🧭 Traceability entry → decision/feature ↔ EXP/RUN/GATE ↔ evidence
+- 🔏 *(If distributed)* OCI refs + signature verification results
 
 ---
 
@@ -664,6 +778,7 @@ contracts:
 - Dataset IDs + STAC/DCAT pointers
 - Sampling rules, time range, bbox
 - Licensing + sensitivity notes
+- Source manifest pointers (data/raw + SRC-...)
 
 # Method / Protocol 🧾
 - Step-by-step procedure
@@ -675,6 +790,7 @@ contracts:
 - What warns?
 - What sanity checks must pass?
 - What policy checks must pass?
+- How uncertainty is quantified (CI/credible intervals/error bounds)
 
 # Run Receipt 🏃
 - Code commit: `abcdef1`
@@ -739,7 +855,7 @@ Runs are the receipt for an experiment: what ran, how, where outputs went, and w
 ```md
 ---
 run_id: RUN-YYYY-MM-DD-<slug>
-run_type: standard | benchmark | streaming | backfill | hotfix
+run_type: standard | benchmark | streaming | backfill | hotfix | harvest
 related_experiment: EXP-YYYY-MM-DD-<slug>
 date: YYYY-MM-DD
 owner: "@github-handle"
@@ -764,6 +880,14 @@ environment:
   cpu: "..."
   gpu: "..."  # optional
 
+llm:                               # optional (Focus Mode / RAG / eval runs)
+  provider: ollama | none
+  model: "llama3.1:8b-instruct"
+  model_digest: "sha256:..."        # capture when possible
+  num_ctx: 8192
+  temperature: 0.2
+  prompt_template_version: "vX.Y.Z"
+
 randomness:
   seeds: [123, 456]
   deterministic_flags: ["..."]
@@ -773,6 +897,8 @@ contracts:
   - "schemas/mcp/run.schema.json"
 
 inputs:
+  - path: "data/raw/<source>/..."
+    sha256: "..."
   - catalog_ref: "stac://<collection_or_item_id>"
     sha256: "..."
   - dcat: "data/catalog/dcat/<dataset>.jsonld"
@@ -785,6 +911,17 @@ outputs:
     dcat: "data/catalog/dcat/..."
     prov: "data/prov/<run-id>.jsonld"
 
+distribution:                       # optional (when publishing bundles)
+  oci_artifacts:
+    - ref: "ghcr.io/org/kfm-data:dataset-x@sha256:..."
+      cosign_verified: true
+      sbom_ref: "sbom://..."
+
+federation:                         # optional (when harvesting)
+  source_instance: "https://<instance>"
+  harvested_catalogs: ["dcat://...", "stac://..."]
+  verification: ["digest_match", "cosign_verified"]
+
 governance:
   ledger_ref: ""   # pointer only (optional)
 
@@ -794,6 +931,7 @@ validation:
   - "link checks: pass/fail"
   - "classification propagation: pass/fail"
   - "spot checks: ..."
+  - "prompt injection tests: pass/fail"   # if AI run
 
 notes: ""
 ---
@@ -812,7 +950,7 @@ notes: ""
 ```
 
 > [!TIP]
-> New params, new inputs, new env, or new policy pack version → new run folder ✅
+> New params, new inputs, new env, new policy pack version, or new model digest → new run folder ✅
 
 ---
 
@@ -826,6 +964,7 @@ Performance claims can influence architecture decisions, so they still need rece
 - Graph ingest optimizations / analytics jobs 🕸️
 - Focus Mode latency or citation coverage regressions 🤖
 - Offline pack generation (bundle size, time-to-build, cache correctness) 📦
+- WebGL/3D performance budgets (Cesium/MapLibre) 🌐
 
 ### 🧾 Benchmark add-ons (recommended in `MANIFEST.md`)
 ```yaml
@@ -857,7 +996,7 @@ performance:
 ## 🧰 SOPs
 
 SOPs turn “tribal knowledge” into repeatable procedures.  
-Write an SOP whenever a task is repeated or risky: data intake, catalog publishing, redaction, OCR, tile generation, policy packs, W‑P‑E operations, offline packs, AR alignment, etc.
+Write an SOP whenever a task is repeated or risky: data intake, catalog publishing, redaction, OCR, tile generation, policy packs, W‑P‑E operations, federation harvests, offline packs, AR alignment, etc.
 
 ### SOP template (copy/paste)
 
@@ -902,6 +1041,10 @@ Example PRs / runs / experiments that used this SOP.
 - `sops/data_intake_connectors.md` 🧲 (source manifests, checksums, quarantine, streaming snapshots)
 - `sops/publish_stac_dcat_prov.md` 🗂️🧬 (profiles, validation, link checks)
 - `sops/policy_packs_and_gate_reports.md` 🔐 (OPA/Conftest usage, failure triage)
+- `sops/shacl_graph_validation.md` 🧠 (semantic constraints, shapes, integrity audits)
+- `sops/federated_catalog_harvest.md` 🌐 (trust roots, verification, imported provenance)
+- `sops/oci_artifact_publishing.md` 🔏 (OCI digests, cosign verify/sign, SBOM attachment)
+- `sops/prompt_gate_and_prompt_security.md` 🧼 (prompt injection patterns, sanitization rules, regression tests)
 - `sops/wpe_agents.md` 🤖 (idempotency keys, kill switch, human approvals)
 - `sops/offline_data_packs.md` 📦 (bundle creation, size budgets, validation)
 - `sops/ar_overlay_alignment.md` 🕶️ (coordinate alignment, uncertainty, safety constraints)
@@ -920,6 +1063,7 @@ Any ML/AI model used in KFM needs a model card:
 - governance labels + sensitivity constraints
 - **citation coverage expectations** (Focus Mode must cite)
 - drift/bias monitoring plan
+- model digest + runtime (especially for local runtimes like Ollama) 🧾
 
 ### Model card template (copy/paste)
 
@@ -933,6 +1077,12 @@ source:
   type: trained | third_party
   license: "..."
   reference: "paper/link/registry id"
+runtime:
+  provider: ollama | other
+  model: "llama3.1:8b-instruct"
+  model_digest: "sha256:..."          # capture if available
+  quantization: "q4_k_m"              # if applicable
+  num_ctx: 8192
 datasets:
   - "stac://<collection_or_item_id>"
   - "dcat://<dataset_id>"
@@ -943,6 +1093,7 @@ governance:
 evaluation:
   citation_coverage_required: true
   refusal_policy: "refuse-if-no-evidence"
+  prompt_injection_tests: true
 monitoring:
   drift_checks: "monthly"
   bias_checks: "release-gated"
@@ -963,7 +1114,7 @@ monitoring:
 
 # Evaluation 📈
 - Metrics, test sets, qualitative examples.
-- Citation coverage checks + refusal tests.
+- Citation coverage checks + refusal tests + injection tests.
 
 # Limitations & biases ⚠️
 - Known failure modes, bias risks, uncertainty notes.
@@ -1007,6 +1158,7 @@ Traceability connects “work” to “why it matters”:
 - API endpoints (if applicable)
 - Story Node(s) / Focus Mode behavior (if applicable)
 - DevOps PROV (optional)
+- distribution digests/signatures when applicable 🔏
 
 ### ✅ Recommended traceability table (copy/paste)
 
@@ -1055,6 +1207,7 @@ So for MCP work:
 - ✅ Receipts: `mcp/runs/...`
 - ✅ Gate proofs: `mcp/gates/...`
 - ✅ Evidence artifacts: `data/processed/...` (plus catalogs + PROV)
+- ✅ Narrative artifacts: `docs/reports/story_nodes/...` (plus citations + gates)
 
 ```mermaid
 flowchart LR
@@ -1095,8 +1248,9 @@ Use the checklist that matches your work:
 - [ ] Geoparsing uncertainty documented (ambiguous place names, gazetteer limits)
 - [ ] AI outputs include citations to source docs/entities (or refuse)
 
-### 🕸️ Graph analytics
-- [ ] Graph schema/ontology version noted
+### 🕸️ Graph analytics & ontologies
+- [ ] Graph schema/ontology version noted (CIDOC-CRM / GeoSPARQL / OWL-Time / custom)
+- [ ] SHACL (or equivalent) validation passes ✅
 - [ ] Metrics treated as signals, not facts (avoid over-interpretation)
 - [ ] Provenance links from derived relations to source evidence
 - [ ] No orphan IDs; referential integrity checks pass ✅
@@ -1119,6 +1273,7 @@ Use the checklist that matches your work:
 ### 🤖 Focus Mode / AI assistance
 - [ ] Answers are evidence-bound (citations required)
 - [ ] Refusal/uncertainty behavior tested
+- [ ] Prompt injection resilience tested (Prompt Gate) 🧼
 - [ ] Governance checks applied (sensitivity + policy rules)
 - [ ] Drift/bias monitoring plan exists for deployed models
 - [ ] Ledger references recorded when relevant (pointer only)
@@ -1163,6 +1318,7 @@ Treat every input as potentially malicious—even if it “looks like a map.” 
 - 🧾 Log redaction (no secrets, no tokens)
 - ✅ Dependency hygiene (SBOMs, pinned versions, scanning)
 - 🤖 Prompt injection awareness (prompts are hostile input)
+- 🧼 Prompt Gate sanitization before LLM calls (strip/escape malicious instructions)
 - 🧱 AI isolation: treat AI services as untrusted code (least privilege, protected creds, rate limits)
 
 ---
@@ -1173,12 +1329,14 @@ Treat every input as potentially malicious—even if it “looks like a map.” 
 - 🧹 lint + formatting (docs + code)
 - ✅ unit tests (where applicable)
 - 🧾 contract validation (schemas/profiles)
-- 🗂️ STAC/DCAT/PROV validation
+- 🗂️ STAC/DCAT/PROV validation (KFM profiles)
+- 🧠 SHACL/semantic validation (where graph constraints exist)
 - 🔗 link checks (assets exist; IDs resolve)
 - 🔐 policy pack eval (OPA/Conftest)
 - 🧷 governance checks (classification propagation; redaction regressions)
-- 🤖 AI checks (citation coverage + refusal policy) when AI outputs exist
+- 🤖 AI checks (citation coverage + refusal policy + injection regression) when AI outputs exist
 - 🧬 supply chain checks (SBOM, attestations) where required
+- 🔏 digest/signature verification when importing/publishing bundles
 
 ### Weekly / regular audits (recommended)
 - 🕸️ Graph audit: dangling refs, required props, uniqueness constraints
@@ -1202,6 +1360,7 @@ When your PR includes experiments, runs, stories, or evidence:
 - [ ] RUN receipt folder added with `MANIFEST.md`
 - [ ] Gate report recorded (or raw gate outputs in run folder)
 - [ ] Evidence outputs stored under `data/processed/...` (or linked object storage)
+- [ ] Raw inputs stored under `data/raw/...` + checksums recorded
 - [ ] STAC/DCAT/PROV pointers included
 - [ ] Policy packs pass
 - [ ] AI involvement labeled (if applicable)
@@ -1209,6 +1368,7 @@ When your PR includes experiments, runs, stories, or evidence:
 - [ ] No secrets / no sensitive leaks in logs or outputs
 - [ ] Reviewer can reproduce (required for L2/L3)
 - [ ] Story Nodes cite evidence artifacts and pass moderation checks
+- [ ] OCI digests/signatures recorded (if distributing bundles) 🔏
 
 > [!TIP]
 > A great review comment is: **“I reproduced this and got the same outputs.”** ✅
@@ -1217,29 +1377,32 @@ When your PR includes experiments, runs, stories, or evidence:
 
 ## 📚 Project reference library influence map
 
-> These project files inform how we design and review MCP artifacts: reproducibility, governance, policy enforcement, AI transparency, UI/story discipline, streaming receipts, and roadmap alignment.
+> These project files inform how we design and review MCP artifacts: reproducibility, governance, policy enforcement, AI transparency, UI/story discipline, streaming receipts, federation, and roadmap alignment.
 
 <details>
 <summary><strong>📦 Expand: Reference library → what it influences in <code>mcp/</code></strong></summary>
 
 | Project file | Primary lens | How it upgrades MCP |
 |---|---|---|
-| `MARKDOWN_GUIDE_v13.md.gdoc` | 🧭 v13 invariants | Canon pipeline ordering, API boundary rule, provenance-first, deterministic ETL, evidence-first narrative |
+| `MARKDOWN_GUIDE_v13.md.gdoc` | 🧭 v13 invariants + canonical homes | Canon pipeline ordering, canonical folder structure (`data/raw/work/processed`, `data/stac`, `data/catalog/dcat`, `data/prov`), API contract-first workflow |
 | `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf` | 🧱 System onboarding | Provenance-first philosophy, evidence-first triplet (STAC+DCAT+PROV), clean layered architecture, Focus Mode advisory-only |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | ⚙️ Implementation detail | Hybrid DB strategy (PostGIS + graph + search), dual-format outputs (GeoParquet + PMTiles), supply-chain provenance patterns |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` | 🧭 Architecture & governance | Governance ledger concept, immutable audit logs, privacy classification patterns, model/simulation governance |
-| `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` | 🤖 Evidence-bound AI | Retrieval-first QA, citations enforced, governance check layer via policy engine, W‑P‑E safeguards (idempotency + kill switch + policy constraints) |
-| `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf` | 🗺️ UI + Story Nodes | Story Node format (Markdown + JSON), declarative storyboard playback, moderation via PR workflow, citation UX patterns |
-| `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf` | 🗺️ Roadmap & audits | Weekly integrity audits, SHACL/JSON Schema checks, policy pack expansion, telemetry review practices |
-| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | 🧯 Design gaps | Highlights modularity/API boundaries, extension patterns, and where MCP receipts/gates close gaps |
-| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | 🧾 Repo practices | Model cards + datasheets, glossary discipline, issue/PR templates, versioning and traceability culture |
-| `AI Concepts & more.pdf` | 🧠 AI shelf | Reliability & safety practices for AI/LLMs; supports stronger evaluation + prompt security posture |
-| `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` | ⚙️ Systems/methods shelf | Data architecture patterns, statistical rigor, uncertainty reporting; supports deterministic ETL + auditability |
-| `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` | 🌐 3D/WebGL shelf | WebGL/virtual worlds concepts; supports AR/3D checklists + performance receipts |
-| `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf` | 🧰 Engineering shelf | Reproducible builds, Docker hygiene, API discipline, compression/performance notes |
-| `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf` | 🧰 Applied stack shelf | GIS + security + scientific tooling references; informs SOPs and run receipts across toolchains |
-| `Various programming langurages & resources 1.pdf` | 🧰 Polyglot shelf | Practical references (Git, shell, languages) supporting reproducible run discipline |
-| `Data Mining Concepts & applictions.pdf` | 🔐 Privacy methods | Reinforces privacy gates: aggregation, query auditing, inference control, differential privacy where needed |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf` | ⚙️ Implementation detail | Hybrid DB strategy (PostGIS + graph + search), dual-format outputs (GeoParquet + PMTiles), story nodes + Focus Mode integration |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf` | 🧭 Architecture & governance | Governance ledger concept, ontology/semantic modeling guidance (CIDOC-CRM/GeoSPARQL/OWL-Time), sensitivity + CARE propagation |
+| `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf` | 🤖 Evidence-bound AI | Retrieval-first QA, citations enforced, governance check layer via policy engine, refusal under uncertainty |
+| `KFM AI Infrastructure – Ollama Integration Overview.pdf` | 🧠 Local LLM + security | Ollama as LLM runtime, Prompt Gate sanitization, AI sandbox/least privilege, citation scanning, caching notes |
+| `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf` | 🗺️ UI + Story Nodes | Story Node format (Markdown + JSON storyboard), provenance UI expectations (footnotes, source popups), strict API-only data access |
+| `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf` | 🛰️ Roadmap, federation, distribution | Federation vision, OCI artifact distribution + signatures, governance-first deployment, recurring audits |
+| `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` | 🧪 Research discipline | Reinforces hypothesis/controls/validation and “receipt culture” for experiments and pipelines |
+| `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf` | 🧯 Gap closure | Highlights missing components/gaps; MCP receipts + gates prevent “hand-wavy” releases |
+| `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` | 🌍 Open geospatial stack | Reinforces map stack patterns (MapLibre/Leaflet/Cesium) and audit-friendly narrative workflows |
+| `AI Concepts & more.pdf` *(PDF portfolio)* | 🧠 AI shelf | Reliability & safety practices for AI/LLMs; supports stronger evaluation + prompt-security posture |
+| `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` *(PDF portfolio)* | ⚙️ Systems/methods shelf | Data architecture patterns + uncertainty reporting; supports deterministic ETL + auditability |
+| `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf` *(PDF portfolio)* | 🧰 Engineering shelf | Docker hygiene, API discipline, compression/performance notes, security basics |
+| `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf` *(PDF portfolio)* | 🧰 Applied stack shelf | GIS + security + scientific tooling references; informs SOPs and run receipts across toolchains |
+| `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` *(PDF portfolio)* | 🌐 3D/WebGL shelf | WebGL/virtual worlds concepts; supports AR/3D checklists + performance receipts |
+| `Various programming langurages & resources 1.pdf` *(PDF portfolio)* | 🧰 Polyglot shelf | Reinforces polyglot reproducibility (capture toolchains, lockfiles, build steps) |
+| `Data Mining Concepts & applictions.pdf` | 🔐 Privacy methods | Reinforces privacy gates: aggregation, query auditing, inference control, DP where needed |
+| `KFM- python-geospatial-analysis-cookbook-over-60-recipes...pdf` | 🗺️ Geospatial recipes | Encourages reproducible geospatial analysis patterns and testable transformations |
 
 </details>
 
@@ -1259,21 +1422,29 @@ Use it as scaffolding—**not** as a substitute for evidence artifacts. 📚🧾
 - `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
 - `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`
 - `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`
+- `KFM AI Infrastructure – Ollama Integration Overview.pdf`
 - `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf`
 - `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf`
+
+### 🧪 Method / discipline docs
+- `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`
+- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`
 
 ### 🧯 Audits & historical design docs
 - `Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf`
 - `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`
 
-### 📦 Reference shelves (background, not canon)
-- `AI Concepts & more.pdf`
-- `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`
-- `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`
-- `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf`
-- `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf`
-- `Various programming langurages & resources 1.pdf`
+### 📦 Reference shelves (PDF portfolios — background, not canon)
+- `AI Concepts & more.pdf` *(PDF portfolio; many embedded AI references)*
+- `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf` *(PDF portfolio; data architecture + CI/CD + uncertainty refs)*
+- `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf` *(PDF portfolio; engineering + security + compression refs)*
+- `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf` *(PDF portfolio; applied GIS + security + web refs)*
+- `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf` *(PDF portfolio; WebGL + virtual worlds refs)*
+- `Various programming langurages & resources 1.pdf` *(PDF portfolio; polyglot programming refs)*
+
+### 📘 Standalone references
 - `Data Mining Concepts & applictions.pdf`
+- `KFM- python-geospatial-analysis-cookbook-over-60-recipes...pdf`
 
 </details>
 
@@ -1283,6 +1454,7 @@ Use it as scaffolding—**not** as a substitute for evidence artifacts. 📚🧾
 
 | Version | Date | Summary | Author |
 |---:|---|---|---|
+| v1.7.0 | 2026-01-26 | Added **canonical v13+ layout** (including `data/raw`), expanded invariants for **content-addressed + signed artifacts**, added **SHACL/semantic gates**, formalized **federation/harvest receipts**, upgraded **Ollama + Prompt Gate** guidance, and refreshed reference library mappings. | KFM Engineering |
 | v1.6.0 | 2026-01-26 | Upgraded alignment to v13+ invariants: clarified **API boundary rule**, added **work vs processed** guidance, formalized **dual-format evidence** (analytics + UI tiles), expanded **W‑P‑E safeguards** (idempotency + kill switch + policy constraints), added **supply-chain provenance** expectations (SBOM/attestations), refreshed reference index to match current project files. | KFM Engineering |
 | v1.5.0 | 2026-01-19 | Aligned MCP with KFM v13+ architecture: added **policy packs + gate reports**, clarified **atomic promotion** and **streaming provenance**, added **Watcher–Planner–Executor receipts** and optional **DevOps→PROV** bundles, expanded Story/Focus/Offline/AR guidance, and updated reference influence map. | KFM Engineering |
 | v1.4.0 | 2026-01-13 | Brought MCP in line with contract-first + provenance-first doctrine: added repo invariants, strengthened front matter (doc UUID + care_label), expanded run receipts to include hashes + contract validation, added benchmark/performance receipt guidance, and added threat-model/hostile-input section. | KFM Engineering |
