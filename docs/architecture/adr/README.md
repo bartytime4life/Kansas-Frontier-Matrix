@@ -1,11 +1,18 @@
 ---
 title: "Architecture Decision Records (ADR)"
 path: "docs/architecture/adr/README.md"
-version: "v13.0.1"
-last_updated: "2026-01-20"
+version: "v13.1.0"
+last_updated: "2026-01-26"
 status: "active"
 doc_kind: "README"
 license: "CC-BY-4.0"
+
+# FAIR+CARE + KFM doc metadata (recommended)
+fair_category: "FAIR+CARE"
+care_label: "Public"
+sensitivity: "public"
+classification: "open"
+doc_uuid: "urn:kfm:doc:architecture:adr:readme:v13.1.0"
 
 markdown_protocol_version: "KFM-MDP v11.2.6"
 mcp_version: "MCP-DL v6.3"
@@ -19,37 +26,67 @@ sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
 
 <a id="top"></a>
 
-# 🧭📜 `docs/architecture/adr/` — KFM Architecture Decision Records
+# 🧭📜 `docs/architecture/adr/` — Kansas Frontier Matrix Architecture Decision Records
 
 ![ADR](https://img.shields.io/badge/ADR-decision%20log-8250df)
-![Architecture](https://img.shields.io/badge/architecture-governed-1f6feb)
-![Evidence-first](https://img.shields.io/badge/evidence--first-required-2ea043)
-![Fail-Closed](https://img.shields.io/badge/policy-fail--closed-d1242f)
-![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-required-2ea043)
-![Sovereignty](https://img.shields.io/badge/sovereignty-enforced-0aa3a3)
+![Status](https://img.shields.io/badge/status-active-2ea043)
+![Policy](https://img.shields.io/badge/policy-OPA%20%2B%20Conftest-0aa3a3)
+![Provenance](https://img.shields.io/badge/provenance-STAC%20%7C%20DCAT%20%7C%20PROV-2ea043)
+![Fail-Closed](https://img.shields.io/badge/default-fail--closed-d1242f)
+![AI](https://img.shields.io/badge/AI-advisory%20only-f85149)
 ![KFM-MDP](https://img.shields.io/badge/KFM--MDP-v11.2.6-informational)
 
 > **ADRs are the “why” behind KFM.**  
-> If it changes *architecture, contracts, provenance, governance, sovereignty posture, security posture,* or *operational guarantees*, it should land here.
+> If it changes **architecture**, **contracts**, **provenance**, **governance**, **sovereignty posture**, **security posture**, **AI guardrails**, or **operational guarantees**, it belongs here. ✅
 
 ---
 
-## 🧭 What Makes KFM ADRs Different
+<details>
+<summary>📌 Quick Navigation</summary>
 
-KFM isn’t “just” a GIS app. It’s a **governed evidence platform** with **policy-gated publishing**, **provenance-first outputs**, and **human-in-the-loop AI**.
+- 🧠 [Purpose](#purpose)
+- 🧷 [KFM Non‑Negotiables](#kfm-non-negotiables)
+- 🗂️ [Directory Layout](#directory-layout)
+- 🧱 [When an ADR Is Required](#when-an-adr-is-required)
+- 🧭 [How to Create an ADR](#how-to-create-an-adr)
+- 🧾 [Minimum Evidence Bundle](#minimum-evidence-bundle-for-a-kfm-adr)
+- 🚦 [Workflow](#workflow)
+- 🏷️ [Naming & Status Rules](#naming--status-rules)
+- 🧩 [Template](#templatemd-canonical)
+- 📚 [Project Evidence Pointers](#project-evidence-pointers)
+- 🔗 [Navigation](#navigation)
+- 🧾 [Version History](#version-history)
+
+</details>
+
+---
+
+## 🧠 What Makes KFM ADRs Different
+
+KFM is not “just” a mapping app. It is a **governed evidence platform** built to support:
+
+- 🗺️ **4D exploration** (space + time + narrative + uncertainty)
+- 🧬 **provenance-first artifacts** (STAC/DCAT/PROV are contracts, not afterthoughts)
+- 🛡️ **policy-gated publishing** (OPA/Rego + Conftest + CI = enforceable governance)
+- 🤖 **human-in-the-loop AI** (Focus Mode is advisory + auditable, never “magic”)
 
 > [!IMPORTANT]
 > **KFM defaults to “fail-closed.”**  
-> If provenance/evidence/governance checks can’t be performed, the correct behavior is to **block** promotion/publishing—not “best effort” ship-it.
+> If evidence, provenance, or policy checks cannot be performed, the correct behavior is to **block** promotion/publishing/answers — not “best effort.”
 
-Key architectural principles that ADRs must protect:
+---
 
-- 🧾 **Evidence-first narrative**: any narrative output (Story Nodes, Focus Mode, summaries) must be labeled and *cited*; no citations → no answer.
-- 🔐 **Policy Pack enforcement** (OPA/Rego + Conftest): governance rules apply equally to humans and automation; violations block merges/promotions.
-- 🧬 **Provenance is a first-class contract**: STAC/DCAT/PROV are not “metadata later,” they’re part of the artifact.
-- 🧑‍⚖️ **FAIR+CARE + sovereignty** are engineering constraints (not a checklist at the end).
-- 🤖 **AI is advisory**: AI may propose plans/configs; deterministic code executes; PR review remains mandatory.
-- 🗺️ **Map UI must show trust signals**: provenance, sensitivity markings, and (when necessary) obfuscation/generalization are UX primitives.
+## 🧷 KFM Non‑Negotiables
+
+These principles are “architectural invariants” ADRs must protect:
+
+- 🔒 **Governed access boundary (no bypass):** clients and tools access data via the **API layer**, not direct DB connections. The API is the enforcement point for policy + provenance.
+- 🧾 **Evidence-first narrative (“no citation, no answer”):** narrative output (Story Nodes, summaries, Focus Mode answers) must be source‑backed and citation‑rendered.
+- 🧬 **Provenance is a first-class contract:** production artifacts ship with provenance (and ideally signatures/attestations) and remain traceable through derivation chains.
+- 🛡️ **Policy as code:** OPA/Rego policies apply to humans *and* automation (agents). Violations block merges/promotions.
+- 🤖 **AI is advisory & sandboxed:** AI proposes text/plans; deterministic code executes; PR review remains mandatory. Focus Mode is isolated (no filesystem/internet by default; explicit allowlists only).
+- 🧱 **Deterministic, reproducible pipelines:** transforms should be repeatable with pinned inputs, pinned environments, and stable hashing/IDs.
+- 🧭 **UI must surface trust signals:** provenance, sensitivity markings, and (when required) generalization/obfuscation are UX primitives, not optional “advanced” features.
 
 ---
 
@@ -57,15 +94,43 @@ Key architectural principles that ADRs must protect:
 
 This folder contains **Architecture Decision Records (ADRs)** for the Kansas Frontier Matrix (KFM). ADRs:
 
-- ✅ capture *context → decision → consequences* (including “what we didn’t choose”)
-- ✅ provide a durable audit trail for **governance-impacting** and **trust-impacting** choices
-- ✅ prevent “tribal knowledge” across the KFM stack:
-  - 🧱 **data pipelines** (STAC/DCAT/PROV, promotion workflow, deterministic transforms)
-  - 🕸️ **knowledge graph** (Neo4j + ontology alignment, entity linking, provenance edges)
-  - 🧩 **API contracts** (REST/OpenAPI, GraphQL, JSON Schema)
-  - 🗺️ **web UI** (MapLibre 2D, Cesium 3D, Story Nodes, timeline, Focus Mode)
-  - 🔐 **governance & security** (policy gates, secrets posture, supply-chain attestations)
-  - 🧪 **simulation & modeling** (reproducibility rules, V&V, uncertainty quantification)
+- ✅ capture **context → constraints → decision → consequences**
+- ✅ preserve a durable audit trail for **trust-impacting** choices
+- ✅ prevent “tribal knowledge” across the full KFM stack:
+  - 🧱 **pipelines** (ingest/transform/promotion, deterministic transforms, catalog emission)
+  - 🧬 **catalog + provenance** (STAC/DCAT/PROV, signing/attestation, artifact packaging)
+  - 🧠 **knowledge graph** (Neo4j ontology alignment, entity linking, provenance edges)
+  - 🧩 **API contracts** (REST/OpenAPI, GraphQL directives, JSON Schema)
+  - 🗺️ **web UI** (MapLibre 2D, Cesium 3D, timeline, Story Nodes, Focus Mode)
+  - 🔐 **governance/security** (OPA gates, secrets posture, SBOMs, supply chain)
+  - 🧪 **simulation/modeling** (reproducibility, V&V, uncertainty quantification)
+
+---
+
+## 🧭 KFM Architecture Snapshot (Context Anchor)
+
+Use this as shared vocabulary when writing ADRs (keep ADRs readable without requiring a “tribal” mental model).
+
+```mermaid
+flowchart TB
+  UI[🗺️ Web UI<br/>React + TS<br/>MapLibre 2D / Cesium 3D] --> API[🧩 API Layer<br/>REST + GraphQL<br/>Policy enforcement point]
+
+  API --> PG[(🗄️ PostGIS)]
+  API --> G[(🧠 Neo4j KG)]
+  API --> SI[(🔎 Search Index)]
+  API --> OBJ[(📦 Artifact Storage<br/>COG/PMTiles/GeoParquet/etc)]
+
+  UI --> FM[🤖 Focus Mode Panel]
+  FM --> API
+
+  API --> AI[🤖 AI Service (sandboxed)<br/>RAG: retrieve → generate → govern]
+  AI --> LLM[(🧠 LLM Backend<br/>e.g., Ollama)]
+  AI --> OPA[(🛡️ OPA Policy Engine)]
+```
+
+> [!NOTE]
+> **The API layer is the “policy choke point.”**  
+> It merges PostGIS/Neo4j/search results, injects provenance, and applies policy decisions consistently.
 
 ---
 
@@ -73,12 +138,12 @@ This folder contains **Architecture Decision Records (ADRs)** for the Kansas Fro
 
 ```text
 docs/architecture/adr/ 🧭📜
-├─ ✅📄 README.md                          # ✅ (this file) 📌 ADR purpose, lifecycle, and naming/numbering rules
-├─ 🧩📄 TEMPLATE.md                         # 🧩 Canonical ADR template (copy for new decisions)
-├─ 🧪📄 ADR-0001-example-decision.md        # 🧪 Example ADR (remove once real ADRs exist)
-├─ ➕📄 ADR-0002-....md                     # ➕ New decisions live here (increment numbers; keep titles kebab-case)
-├─ 🗺️📄 INDEX.md                            # 🗺️ Optional ADR register (auto-generated list + status summary)
-└─ 🧷 _assets/                              # 🧷 Optional diagrams/images referenced by ADRs (keep small + cited)
+├─ ✅📄 README.md                           # ✅ (this file) ADR purpose, lifecycle, rules
+├─ 🧩📄 TEMPLATE.md                          # 🧩 Canonical ADR template (copy for new decisions)
+├─ 🗺️📄 INDEX.md                             # 🗺️ Optional ADR register (auto-generated list + status summary)
+├─ 🧪📄 ADR-0001-example-decision.md         # 🧪 Example ADR (delete once real ADRs exist)
+├─ ➕📄 ADR-0002-....md                      # ➕ New decisions live here (increment numbers; kebab-case)
+└─ 🧷 _assets/                               # 🧷 Small diagrams/images referenced by ADRs (cited + accessible)
 ```
 
 > [!TIP]
@@ -90,93 +155,132 @@ docs/architecture/adr/ 🧭📜
 
 ## 🧱 When an ADR Is Required
 
-Create an ADR when a change impacts **one or more** categories below.
+Create an ADR when a change impacts **one or more** categories below. (If you can imagine asking “why is it this way?” in 6 months… write it down 🧠)
 
 ### 🧬 Evidence / provenance / catalog contracts
 - STAC/DCAT/PROV profile changes (required fields, extensions, folder conventions)
-- lineage guarantees: determinism rules, hashing strategy, signing/attestation
-- promotion saga changes (e.g., *sign → attest → publish → catalog*) behavior changes
-- provenance modeling changes (e.g., PROV Agents/Activities/Entities semantics)
+- lineage guarantees: determinism rules, hashing strategy, signing/attestation posture
+- promotion workflow changes (e.g., **sign → attest → publish → catalog**) or governance gates
+- how provenance is modeled (Agents/Activities/Entities semantics, provenance-to-graph mapping)
+
+### 📦 Artifact packaging, storage, and verification
+- adopting/changing artifact registry strategy (e.g., OCI/ORAS packaging)
+- signature/attestation tooling changes (Cosign/Sigstore/SBOM/SLSA posture)
+- data versioning changes (DVC strategies, content-addressing, immutable IDs)
+- cache invalidation & retention policies for time-sliced artifacts/tiles
 
 ### 🧾 Public-facing contracts
 - breaking changes to REST/OpenAPI payloads
 - GraphQL schema/directive changes
-- JSON Schemas that shape API, catalog, or UI payloads
-- time-filtered query contracts (time is first-class in KFM; changes are **contract changes**)
+- JSON Schemas that shape API, catalog, UI payloads, or Story Node schemas
+- time-filtered query semantics (time is first-class in KFM; changes are contract changes)
 
 ### 🏗️ Architecture & infrastructure shape
-- DB topology (PostGIS/Neo4j), indexing/partitioning/replication strategy
-- storage canonicalization (COG/PMTiles/GeoParquet/vector tiles, etc.)
-- orchestration posture (queue/broker adoption, job runners, workflow engines)
-- “sandbox vs promotion” boundaries and enforcement (workbench outputs ≠ official outputs)
+- DB topology (PostGIS/Neo4j/search), indexing/partitioning/replication strategy
+- ingestion topology (batch vs streaming), queue/broker/workflow engine adoption
+- “sandbox vs promotion” boundaries and enforcement (Workbench outputs ≠ official outputs)
+- API enforcement boundary (any attempt to bypass policy/provenance enforcement)
 
 ### 🤖 AI, automation, and “assistants”
-- Focus Mode constraints (citation enforcement, refusal behavior, logging)
-- agent architecture (Watcher/Planner/Executor), kill-switch semantics, bot identity/signing
-- “AI proposes, deterministic code executes” boundary changes
-- any change to how AI outputs are stored/audited (governance ledger, PROV for AI answers)
+- Focus Mode pipeline changes (retrieval sources, citation rules, refusal behavior, logging)
+- prompt security (“Prompt Gate”), allow/deny lists, sandbox rules
+- agent architecture changes (Watcher/Planner/Executor), kill-switch semantics, bot identity/signing
+- changes to AI provenance storage (e.g., “AI Answer” nodes linked to sources + model tag/version)
 
 ### 🗺️ UI, narrative, and trust UX
-- Story Node format/schema (Markdown/JSON), playback engine behavior, citation rendering
-- map timeline changes (slider behavior, caching strategy for time-sliced tiles)
+- Story Node format/schema (Markdown narrative + JSON storyboard), playback engine behavior
+- citation rendering UX (footnotes vs links, click-through behavior, source viewers)
 - sensitivity enforcement in UI (lock icons, hidden layers, generalized geometry rules)
-- 2D/3D transition behavior (MapLibre ↔ Cesium continuity guarantees)
+- 2D/3D continuity (MapLibre ↔ Cesium), timeline behavior & caching strategy
 
 ### 🔐 Security, privacy, sovereignty, and policy gates
 - authn/authz changes, secrets posture, token lifetimes
-- OPA/Conftest policy semantics or required checks
-- data access tiering, obfuscation strategies (e.g., hex/generalization for sensitive sites)
-- PII handling (EXIF stripping, face blur, deterministic filenames for field capture)
-- CARE/Indigenous sovereignty constraints that affect data access/publishing
+- OPA/Conftest policy semantics or required checks (including “policy hash logging” expectations)
+- data access tiering, obfuscation strategies (hex/generalization for sensitive sites)
+- PII handling and inference controls (e.g., query auditing / redaction approaches)
+- CARE / Indigenous sovereignty constraints that affect data access/publishing
 
 ### 🧪 Simulation & modeling credibility (M&S)
-- verification/validation requirements
-- reproducibility requirements (pinned inputs, pinned environments, seeds)
+- verification/validation requirements and gates
+- reproducibility requirements (pinned inputs/envs/seeds, deterministic timestamps)
 - calibration/validation separation; uncertainty quantification (UQ) deliverables
-- drift detection gates, CI credibility checks, “model output promotion” rules
-
-> **Rule of thumb:** if someone could reasonably ask “why is it this way?” in 6 months, that’s an ADR. 🧠
+- drift detection gates and “model output promotion” rules (simulation results become artifacts too)
 
 ---
 
-## 🧷 ADR Taxonomy (Recommended)
+## 🧭 How to Create an ADR
+
+1. 🧩 Copy the template: `docs/architecture/adr/TEMPLATE.md` → `ADR-####-your-title.md`
+2. 🧾 Fill out **frontmatter** completely (status/date/owners/scope/impacts)
+3. 🔗 Link evidence: contract diffs, benchmarks, policy changes, migration plans
+4. 🛡️ Open a PR and tag reviewers:
+   - `architecture` always
+   - `governance` / `security` / `ai` / `ui` as relevant
+5. ✅ Merge when:
+   - CI passes (lint + schema + policy packs)
+   - reviewers approve
+   - status flips to `accepted`
+
+> [!TIP]
+> In implementation PRs, include:
+> - PR body: `Implements ADR-00XX`
+> - Commit trailer (recommended): `Refs: ADR-00XX`
+
+---
+
+## 🧾 Minimum Evidence Bundle for a KFM ADR
+
+KFM ADRs should be **auditable**, not just readable.
+
+Include (or link to) the relevant artifacts:
+
+- 🧷 **Affected contracts**: OpenAPI/GraphQL/schema diffs, STAC/DCAT/PROV diffs
+- 🧬 **Provenance plan**:
+  - what new Entities/Activities/Agents exist?
+  - what gets logged (and where)?
+  - how is the model/version recorded (for AI outputs)?
+- 🛡️ **Policy pack plan**:
+  - which Rego packages change?
+  - how Conftest/OPA is enforced in CI and at runtime
+  - expected denial modes (fail-closed behaviors)
+- 🔐 **Security posture**:
+  - SBOM / dependency scan impacts
+  - signing/attestation impacts (if artifacts change)
+  - secrets implications
+- 🗺️ **UI trust impact**:
+  - how provenance + citations + sensitivity are surfaced
+  - any changes to generalization/obfuscation behavior
+- 🧪 **Validation plan**:
+  - test strategy (unit/integration/e2e), plus policy tests
+  - regression plan for time-sliced tiles/perf
+  - AI regression tests (if Focus Mode affected)
+- 🚀 **Rollout & backout**:
+  - forward migration steps
+  - rollback plan
+  - success criteria + telemetry
+
+> [!NOTE]
+> KFM’s default expectation is **PR + CI + policy gates** for anything that becomes “official.”  
+> ADRs must describe how the decision remains enforceable (not just documented).
+
+---
+
+## 🗃️ ADR Taxonomy (Recommended)
 
 Use tags/scopes so ADRs remain searchable:
 
 | Tag 🏷️ | Meaning | Examples |
 |---|---|---|
-| `contracts` | API/schema compatibility | OpenAPI shape, GraphQL directives |
+| `contracts` | API/schema compatibility | OpenAPI payload shape, GraphQL directives |
 | `provenance` | lineage + evidence rules | PROV JSON-LD, citation enforcement |
 | `governance` | FAIR+CARE + sovereignty posture | sensitivity tiers, access controls |
-| `security` | supply chain + auth | signing, SBOM, secrets scanning |
-| `pipelines` | ingest/transform/publish | promotion saga, deterministic transforms |
+| `security` | supply chain + auth | signing, SBOM, secrets posture |
+| `artifacts` | storage + packaging | OCI artifacts, PMTiles/COG conventions |
+| `pipelines` | ingest/transform/publish | promotion workflow, deterministic transforms |
 | `ui` | map/narrative UX | timeline behavior, Story Nodes playback |
-| `ai` | assistants/agents | Focus Mode refusal rules, bot kill-switch |
+| `ai` | assistants/agents | Prompt Gate rules, OPA output checks, kill-switch |
 | `simulation` | modeling credibility | V&V gates, UQ expectations |
 | `performance` | scaling + caching | tile caching, time-sliced performance |
-
----
-
-## 🧾 Minimum “Evidence Bundle” for a KFM ADR
-
-KFM ADRs should be *auditable*, not just readable.
-
-Include (or link to) the relevant artifacts:
-
-- 🧷 **Affected contracts**: OpenAPI/GraphQL/schema diffs, STAC/DCAT/PROV diffs
-- 🧬 **Provenance plan**: what entities/activities/agents change? what gets logged?
-- 🔐 **Governance notes**:
-  - FAIR+CARE impacts
-  - sensitivity/access tier changes
-  - sovereignty constraints and approvals
-- 🧪 **Rollout plan**: forward migration + backout + how to validate success
-- 📈 **Ops + telemetry**: new metrics/log schema, SLO impact, failure modes
-- 🧠 **AI impact statement** (if relevant): citation/refusal behavior, logging/audit
-- 🗺️ **UI trust impact** (if relevant): how provenance + sensitivity are surfaced
-
-> [!NOTE]
-> KFM’s default expectation is **PR + CI + policy gates** for anything that becomes “official.”  
-> ADRs should describe how the change remains enforceable (not just documented).
 
 ---
 
@@ -186,25 +290,14 @@ Include (or link to) the relevant artifacts:
 flowchart LR
   A[💡 Need / Problem] --> B[🧩 ADR Draft]
   B --> C[🔍 PR Review]
-  C --> D[🛡️ CI + Policy Gates]
+  C --> D[🛡️ CI + Policy Packs]
   D -->|pass| E[✅ Merge: ADR Accepted]
   D -->|fail-closed| F[🧯 Fix Evidence/Policy]
   E --> G[🏗️ Implementation PRs]
-  G --> H[📦 Promotion/Publish]
-  H --> I[🧾 Catalog + PROV]
+  G --> H[📦 Promote / Publish Artifacts]
+  H --> I[🧾 Catalog + PROV + Sign/Attest]
+  I --> J[🧠 KG Updates + UI Trust Signals]
 ```
-
-1. 🧩 **Draft** ADR from template
-2. 🔍 **Review** via PR (tag: `architecture`, `governance`, `security` when relevant)
-3. 🛡️ **Run gates** (markdown lint + schema lint + policy pack checks)
-4. ✅ **Accept** by merging + setting status to `accepted`
-5. 🧱 **Implement** with references:
-   - PR description links the ADR
-   - commit trailer (recommended): `Refs: ADR-00XX`
-6. 🧪 **Enforce** with CI:
-   - policy pack checks (OPA/Conftest)
-   - provenance/citation checks where relevant
-   - secrets scanning / supply-chain rules (as applicable)
 
 ---
 
@@ -230,40 +323,44 @@ If you supersede a decision:
 
 ---
 
-## 🧠 Decision Quality Checklist
+## ✅ Decision Quality Checklist
 
 Before merging an ADR, confirm:
 
-- [ ] The *problem* is stated in a way a new contributor can understand
+- [ ] The *problem* is stated so a new contributor can understand it
 - [ ] The decision is **specific & testable** (not “we should improve X”)
+- [ ] Constraints are explicit (governance, sovereignty, security, latency, cost)
 - [ ] Alternatives are real options (not strawmen)
 - [ ] Consequences include tradeoffs (latency, cost, complexity, risk)
-- [ ] Governance notes exist when touching FAIR+CARE / sovereignty
 - [ ] Rollout **and** backout path exist for high-impact changes
-- [ ] The decision is enforceable via CI/policy gates (or explicitly scoped as non-enforceable)
+- [ ] Enforcement plan exists (CI/policy gates) or is explicitly scoped as non-enforceable
 
 ---
 
-## 🧪 Recommended CI Guardrails
+## 🛡️ Recommended CI Guardrails
 
-Keep ADRs useful and enforceable:
+Keep ADRs enforceable and useful:
 
-- ✅ **One ADR per major architectural shift**
-- ✅ ADR frontmatter must include: `status`, `date`, `owners`, `scope`, `impacts`
-- ✅ Superseded ADR must declare successor
-- ✅ Contract-breaking PRs must reference an ADR
-- ✅ Automation changes (agents/Focus Mode) must reference an ADR
-- ✅ Optional but powerful: **frontmatter guard** via Conftest + OPA
+- ✅ **Frontmatter schema validation** (required keys + allowed values)
+- ✅ **Markdown lint + link check** (docs quality is a first-class build)
+- ✅ **Policy pack checks** (Conftest/OPA) for governance + security rules
+- ✅ **Contract checks** (OpenAPI/GraphQL/JSON Schema + STAC/DCAT/PROV validators)
+- ✅ **Supply chain checks** (SBOM, signature verification) when artifacts/tooling change
+- ✅ **AI regression checks** when Focus Mode changes:
+  - citations present
+  - disallowed content refused
+  - policy outcomes logged
+  - model tag/version recorded in provenance
 
 > [!TIP]
 > Consider auto-generating `INDEX.md` from ADR frontmatter in CI to keep the register current 📌
 
 ---
 
-## 🧩 `TEMPLATE.md` (canonical)
+## 🧩 `TEMPLATE.md` Canonical
 
 > Keep the actual template in `docs/architecture/adr/TEMPLATE.md`.  
-> This excerpt shows the **KFM-ready** structure (contracts + provenance + governance).
+> This excerpt shows the **KFM-ready** structure (contracts + provenance + governance + enforceability).
 
 ```markdown
 ---
@@ -280,10 +377,18 @@ impacts:
 supersedes: []
 superseded_by: []
 
-# Optional (recommended for KFM governance/search)
-tags: ["governance", "provenance"]
+# KFM doc governance metadata (recommended)
+fair_category: "FAIR+CARE"
+care_label: "Public|Restricted|Indigenous|..."
+sensitivity: "public|internal|sensitive"
+classification: "open|controlled|confidential"
+doc_uuid: "urn:kfm:doc:adr:0000:<slug>:v1"
+
+# KFM enforcement hooks (recommended)
 risk_level: "low|medium|high"
 policy_pack_touched: true
+contracts_touched: ["openapi", "graphql", "stac", "dcat", "prov"]
+artifact_changes: ["oci", "cog", "pmtiles", "geoparquet"]
 ---
 
 # ADR-0000: <Decision Title>
@@ -293,6 +398,7 @@ What is happening? Why now? What constraints exist?
 - Evidence links:
 - Known invariants (must not break):
 - Governance constraints (FAIR+CARE + sovereignty):
+- Threat model notes (if security/privacy impacted):
 
 ## Decision
 What are we doing? Be crisp and testable.
@@ -333,33 +439,39 @@ What are we doing? Be crisp and testable.
 
 ## 📚 Project Evidence Pointers
 
-Use these as “system context anchors” when drafting ADRs:
+Use these as “system context anchors” when drafting ADRs. (These are **normative** for KFM unless explicitly labeled as background/reference.)
 
 ### 🧱 Core KFM architecture & implementation
-- 📘 **Comprehensive Architecture, Features, and Design** (v13 architecture posture)
-- 📙 **Comprehensive Technical Documentation** (implementation + constraints)
-- 🗺️ **Comprehensive UI System Overview** (MapLibre/Cesium, timeline, story UX, sensitivity UI)
+- 📘 `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`
+- 📙 `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
+- 🗺️ `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf`
+- 🧭 `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf`
+- 📚 `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf`
 
 ### 🤖 AI + automation posture
-- 🧭🤖 **AI System Overview** (Focus Mode, citations, XAI/audit expectations)
-- 📥 **Data Intake – Technical & Design Guide** (policy gates, agents, sandbox→promotion, provenance)
-- 🌟 **Latest Ideas & Future Proposals** (roadmap drivers; real-time feeds, bulk ingest, story evolution)
+- 🧭🤖 `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`
+- 🧠🧰 `KFM AI Infrastructure – Ollama Integration Overview.pdf`
 
-### 🧪 Ops / CI / governance hardening
-- 💡 **Pulse Ideas** (governance metadata patterns, CI gate patterns, provenance bundles)
+### 🧰 Docs + standards + method
+- 🧾 `MARKDOWN_GUIDE_v13.md.gdoc` (repo structure + contract-first docs posture)
+- 🧪 `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf` (MCP patterns for experiments & rigor)
+- 🧯 `Kansas-Frontier-Matrix Design Audit – Gaps, Missing Components, and Recommendations.pdf` (quality gaps worth ADRs)
+- 🗺️ `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf` (background architecture & tooling ideas)
 
-### 🚀 Innovation & future-facing design inputs
-- ✨ **Innovative Concepts to Evolve KFM** (AR, 4D digital twins, AI co-pilots, sensitivity-aware UX)
+### 📚 Research library portfolios (background references — not normative on their own)
+These are multi-document portfolios used for deeper grounding and engineering “muscle memory”:
 
-### 📚 Research library portfolios (background references)
-These are “multi-doc” PDF portfolios used for deeper technical grounding (NOT normative on their own):
-- 🤖 **AI Concepts & more** (ML/AI textbooks, evaluation, theory)
-- 🧠 **Data Management / Bayesian / Data Engineering** (DB scaling, CI/CD, privacy, inference, cryptography)
-- 🗺️ **Maps / WebGL / Virtual Worlds / Archaeology** (map design, projections, WebGL, GEE, 3D GIS)
-- 🧰 **Programming Languages & Resources** (React/TS/Node/Postgres/Docker/security references)
+- 🤖 `AI Concepts & more.pdf`
+- 🧠 `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`
+- 🗺️ `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`
+- 🧰 `Various programming langurages & resources 1.pdf`
+- 🧱 `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf`
+- 🛰️ `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf`
+- 🧪 `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`
+- 🔐 `Data Mining Concepts & applictions.pdf` (privacy, auditing, inference control — useful for sensitivity design)
 
 <details>
-<summary>🗂️ Suggested repo location for the research portfolios</summary>
+<summary>🗂️ Suggested repo location for research portfolios</summary>
 
 ```text
 docs/_library/ 📚
@@ -367,7 +479,11 @@ docs/_library/ 📚
 │  ├─ AI Concepts & more.pdf
 │  ├─ Data Managment-Theories-...pdf
 │  ├─ Maps-GoogleMaps-...webgl.pdf
-│  └─ Various programming langurages & resources 1.pdf
+│  ├─ Various programming langurages & resources 1.pdf
+│  ├─ Mapping-Modeling-Python-Git-...pdf
+│  ├─ Geographic Information-Security-...pdf
+│  ├─ KFM- python-geospatial-analysis-cookbook-...pdf
+│  └─ Data Mining Concepts & applictions.pdf
 └─ README.md 🧭
 ```
 
@@ -387,7 +503,8 @@ docs/_library/ 📚
 
 ## 🧾 Version History
 
-- **v13.0.1** (2026-01-20) — Expanded KFM-specific ADR triggers (AI/agents, UI trust, simulation credibility), added evidence bundle + research library guidance, and strengthened CI/policy-gate alignment.
+- **v13.1.0** (2026-01-26) — Upgraded ADR README to align with KFM’s governed-API boundary, Focus Mode policy pipeline (Prompt Gate → RAG → OPA output checks), artifact packaging/signing posture, and enhanced doc metadata + CI guardrails. Added expanded evidence pointers across AI/Ollama, UI trust, platform roadmap, MCP rigor, and research portfolios.
+- **v13.0.1** (2026-01-20) — Expanded KFM-specific ADR triggers (AI/agents, UI trust, simulation credibility), added evidence bundle + research library guidance, strengthened CI/policy-gate alignment.
 - **v13.0.0** (2026-01-12) — Initial ADR README for KFM v13 architecture cycle.
 
 <a id="bottom"></a>
