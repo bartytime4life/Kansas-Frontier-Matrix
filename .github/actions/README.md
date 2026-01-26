@@ -1,3 +1,27 @@
+---
+title: "🧩 KFM GitHub Actions — Local Composite Actions & Reusable Workflows"
+file: ".github/actions/README.md"
+status: "Active ✅"
+version: "v13"
+last_updated: "2026-01-26"
+classification: "public"
+care_label: "none"
+sensitivity: "low"
+tags:
+  - github-actions
+  - composite-actions
+  - reusable-workflows
+  - provenance-first
+  - stac
+  - dcat
+  - prov
+  - sbom
+  - sigstore
+  - policy-as-code
+  - opa
+  - conftest
+---
+
 <a id="top"></a>
 
 # 🧩 `.github/actions/` — Reusable GitHub Actions for Kansas Frontier Matrix (KFM)
@@ -18,18 +42,17 @@
 ![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20attestations-black)
 ![Fail Closed](https://img.shields.io/badge/gates-default--deny%20%2B%20fail--closed-critical)
 
-> 🧰 This folder contains **repo-local GitHub Actions** (primarily **composite actions**) used by KFM workflows to keep CI/CD **boring, consistent, governed, and auditable**.
->
-> 🧭 **KFM canonical order (do not break):**  
-> **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode** ✅🧾
+> 🧭 **What this folder is:** repo-local GitHub Actions (mostly **composite actions**) that standardize KFM’s CI/CD step-bundles so lanes stay consistent, auditable, and boring.  
+> 🧾 **KFM north star:** trust first (**provenance + integrity**), then speed (**caching + parallel lanes**).  
+> 🧬 **KFM evidence rule:** every dataset is a first-class citizen with a **catalog triplet** (**STAC + DCAT + PROV**) and intake is blocked when provenance/metadata is missing.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 
 > [!IMPORTANT]
 > **Composite actions are infrastructure.** Treat them like production code:
-> - least privilege 🔐 (permissions minimized)
-> - deterministic & idempotent outputs ♻️
-> - contract-first validation 🧾 (schemas + profiles)
+> - least privilege 🔐
+> - deterministic & idempotent outputs ♻️ (same inputs/config → same outputs; reruns are no-ops)  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+> - contract-first validation 🧾 (schemas + profiles + API contracts)
 > - provenance-first artifacts 🔎 (PROV + checksums + lineage)
-> - evidence-first narrative 📚 (citations required)
+> - evidence-first narrative 📚 (citations required; fact vs interpretation)
 > - sovereignty + classification propagation 🛂 (no downgrades without review)
 > - default-deny promotion 🚦 (fail-closed gates)
 > - PR-mediated automation only 🧯 (no “agent writes to main”)
@@ -42,13 +65,14 @@
 |---|---|
 | File | `.github/actions/README.md` |
 | Status | Active ✅ *(spec + operating guide)* |
-| Last updated | **2026-01-13** |
+| Last updated | **2026-01-26** |
 | Canonical workflow docs | `.github/workflows/README.md` |
-| Canonical security policy | `SECURITY.md` (repo root) or `.github/SECURITY.md` (mirror) |
-| Canonical repository structure | `docs/MASTER_GUIDE_v13.md` *(v13 contract)* |
-| Canonical docs protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(markdown protocol + DoD)* |
-| Library index | `docs/library/MANIFEST.yml` *(recommended; prevents “lost PDFs” drift)* |
-| KFM “north star” | trust first (provenance + integrity), then speed (caching + parallel lanes) |
+| Canonical security policy | `SECURITY.md` *(repo root)* or `.github/SECURITY.md` *(mirror)* |
+| Canonical repository contract | `docs/MASTER_GUIDE_v13.md` *(expected path; v13 contract)* |
+| Canonical docs protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(front-matter + DoD)*  [oai_citation:3‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz) |
+| Policy engine | `tools/validation/policy/` *(OPA/Conftest; default-deny)*  [oai_citation:4‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8) |
+| Evidence metadata | `data/catalog/**` + `data/prov/**` *(STAC/DCAT/PROV)*  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) |
+| Automation posture | W‑P‑E (Watcher → Planner → Executor) under PR gates + kill-switch |  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) [oai_citation:7‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8) |
 
 ---
 
@@ -62,13 +86,13 @@
 | 🛡️ Security policy | [`../../SECURITY.md`](../../SECURITY.md) *(or* [`../SECURITY.md`](../SECURITY.md)*)* |
 | 🧱 Master guide (repo contract) | `../../docs/MASTER_GUIDE_v13.md` *(expected path)* |
 | 🧾 Standards & profiles | `../../docs/standards/` *(STAC/DCAT/PROV + markdown protocol)* |
-| 🗃️ Library manifest | `../../docs/library/MANIFEST.yml` *(recommended)* |
+| 🗃️ Library manifest | `../../docs/library/MANIFEST.yml` *(recommended; prevents “lost PDFs” drift)* |
 | 🧑‍⚖️ Policy gates (OPA/Conftest) | `../../tools/validation/policy/` *(expected)* |
-| 🧬 SBOM action | [`./sbom/README.md`](./sbom/README.md) |
+| 🧬 SBOM action | [`./sbom/README.md`](./sbom/README.md) *(expected)* |
 | 🖊️ Attest action | [`./attest/README.md`](./attest/README.md) *(expected)* |
 
 > [!TIP]
-> If a link 404s, this README is still the **spec** for what we intend to implement.  
+> If a link 404s, this README still defines the **contract/spec** for what we expect to implement.  
 > Please open an issue tagged `type:pipeline` + `area:ci` (+ `area:security` if relevant).
 
 ---
@@ -77,19 +101,21 @@
 <summary><strong>📌 Table of contents</strong></summary>
 
 - [🧭 Why <code>.github/actions/</code> exists](#why)
-- [🧱 Where actions fit (actions vs workflows vs tools)](#where)
-- [🧬 Detect → Validate → Promote (the lane pattern)](#lane-pattern)
+- [🧱 Where actions fit](#where)
+- [🧬 Detect → Validate → Promote (lane pattern)](#lane-pattern)
+- [🧠 W‑P‑E automation contract (Watcher → Planner → Executor)](#wpe)
 - [🧭 KFM invariants (actions must not break)](#invariants)
-- [🏗️ Layer boundaries & isolation (closed layers ≈ safer change)](#layers)
+- [🏗️ Layer boundaries & isolation](#layers)
 - [🗺️ Repo structure alignment (v13 map)](#repo-map)
-- [🧪 Scientific rigor (VVUQ + experiment protocols)](#vvuq)
+- [🔢 Versioning & compatibility contract](#versioning)
+- [🧪 Scientific rigor (V&V + UQ + reproducibility)](#vvuq)
 - [🔐 Threat model & trust boundaries (actions edition)](#threat-model)
-- [🛂 Data classification & access control (Data Spaces mindset)](#classification)
+- [🛂 Data classification & access control](#classification)
 - [🧪 Minimum CI gates (v13 “hard rails”)](#ci-gates)
 - [🗂️ Action catalog (recommended set)](#action-catalog)
 - [✅ Action contract (inputs, outputs, artifacts)](#action-contract)
 - [🎛️ Kill switch & safe defaults](#kill-switch)
-- [🧾 Provenance, checksums, lineage, and signing](#provenance)
+- [🧾 Provenance, checksums, lineage, signing](#provenance)
 - [🧪 Testing local actions](#testing)
 - [🧷 Templates (copy/paste)](#templates)
 - [🧑‍⚖️ Review checklist](#review-checklist)
@@ -103,30 +129,31 @@
 
 ## 🧭 Why `.github/actions/` exists
 
-KFM workflows cover **code + data + metadata + graph semantics + narrative artifacts**. The same sequences repeat everywhere:
+KFM workflows cover **code + data + metadata + graph semantics + narrative artifacts**. The same steps repeat everywhere:
 
-- setup Python + Node (sometimes GIS deps like GDAL/PROJ)
+- setup Python + Node (often with GIS deps like GDAL/PROJ)
 - run lint/tests and emit artifacts
-- validate governed **Markdown protocol** (front-matter + DoD)
-- validate **STAC/DCAT/PROV** (metadata is a contract)
+- validate governed **Markdown protocol** (front-matter + DoD)  [oai_citation:8‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+- validate **STAC/DCAT/PROV** (metadata is the contract)  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+- enforce “no mystery data”: pipeline reads `data/raw/**`, writes `data/processed/**`, records `data/prov/**` (no ad‑hoc edits)  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 - enforce governed publishing (stage → validate → promote)
 - capture run provenance (inputs → transforms → outputs)
 - produce supply-chain evidence (SBOM + attestations)
 - enforce classification propagation (no “public outputs” from restricted inputs)
 
-**Composite actions standardize those sequences once** and reuse them across many workflows without YAML drift.
+**Composite actions standardize those sequences once** and reuse them across workflows without YAML drift.
 
 > [!NOTE]
 > Design rule:
 > - ✅ **Composite action** = repeatable *step bundle* (“setup + run tool + upload report”)
 > - ✅ **Reusable workflow** = repeatable *lane/pipeline* (“PR lane”, “nightly integration”, “release lane”)
-> - ✅ **Tool/CLI (in `tools/` or `src/`)** = repeatable *domain logic* (ETL transforms, catalog QA, provenance emission)
+> - ✅ **Tool/CLI (in `tools/` or `src/`)** = repeatable *domain logic* (ETL, catalog QA, provenance emission)
 
 ---
 
 <a id="where"></a>
 
-## 🧱 Where actions fit (actions vs workflows vs tools)
+## 🧱 Where actions fit
 
 ```mermaid
 flowchart LR
@@ -137,16 +164,16 @@ flowchart LR
   WF --> ENV[🔐 environments & publish controls]
 ```
 
-**Text version:** PR triggers workflow → workflow calls local actions → actions call repo tools/scripts → tools produce artifacts → workflow publishes artifacts (only in protected lanes).
+**Text version:** PR triggers workflow → workflow calls local actions → actions call repo tools/scripts → tools produce artifacts → workflow publishes artifacts *(only in protected lanes)*.
 
 > [!IMPORTANT]
-> Actions are “glue.” Keep KFM domain logic in `tools/` / `src/` where it can be unit-tested and reused outside GitHub Actions.
+> Actions are “glue.” Keep KFM domain logic in `tools/` / `src/` so it can be unit-tested and reused outside GitHub Actions.
 
 ---
 
 <a id="lane-pattern"></a>
 
-## 🧬 Detect → Validate → Promote (the lane pattern)
+## 🧬 Detect → Validate → Promote (lane pattern)
 
 KFM treats pipelines like scientific instrumentation: **observe → record → verify → publish** 🔬🧾
 
@@ -164,18 +191,34 @@ sequenceDiagram
 ```
 
 ### What this means for actions ✅
-- Actions should be safe to run in PR lanes (no secrets, least privilege).
+- Actions must be safe in PR lanes (**no secrets**, least privilege).
 - Validation actions must be **fail-closed** when used as promotion gates.
-- Promotion lanes should require:
+- Promotion lanes should require evidence artifacts (minimum set):
   - SBOM present 🧬
   - provenance present 🧾
   - checksums present 🔒
+  - policy gate pass ✅ (OPA/Conftest)  [oai_citation:11‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
   - classification checks pass 🛂
-  - policy gate pass ✅
 
 > [!CAUTION]
-> Any “automation” (human or agent) must flow through PRs and validation gates.  
+> Any automation (human or agent) must flow through PRs and validation gates.  
 > **No direct writes to `main`** for governed outputs.
+
+---
+
+<a id="wpe"></a>
+
+## 🧠 W‑P‑E automation contract (Watcher → Planner → Executor)
+
+KFM uses a **Watcher–Planner–Executor** mindset for safe automation:
+- **Watcher** detects new data/changes (prefer ETag/Last-Modified; avoid redundant downloads).  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+- **Planner** decides *what to run*, and checks it won’t violate policy.
+- **Executor** runs in an isolated environment, produces artifacts + evidence, and reports status.  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+
+### Guardrails that actions must support 🧯
+- A global **kill switch** (fail closed for publish lanes).  [oai_citation:14‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+- Policy packs are **versioned + auditable** (no “silent rule changes”).  [oai_citation:15‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+- Outputs always include: report.json + summary.md + checksums + provenance hooks.
 
 ---
 
@@ -185,34 +228,23 @@ sequenceDiagram
 
 These are enforceable guardrails. If an action violates one, CI should fail loudly.
 
-1) 🧬 **Pipeline order is absolute**  
-**ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
-No stage may leapfrog prior stage contracts or outputs.
+1) 🧬 **Evidence-first ingestion is mandatory**  
+Each dataset run emits a **catalog triplet** (**STAC + DCAT + PROV**) and missing provenance blocks intake.  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 
-2) 🧾 **Contract-first**  
-Schemas, catalogs, API contracts, and graph shapes are first-class artifacts.  
-If a contract drifts, CI fails **before** merge.
+2) ♻️ **Deterministic & idempotent**  
+Pipelines are designed to be deterministic and idempotent; actions must preserve this property (no hidden mutable state).  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 
-3) 📚 **Evidence-first narrative (Story Nodes + Focus Mode)**  
-- Story Nodes must cite evidence for every claim (cataloged sources or cataloged externals).  
-- Story Nodes must link key entities to stable graph IDs.  
-- Story Nodes must distinguish **fact vs interpretation** (especially if AI-assisted).  
-- Focus Mode is a **hard gate**: only provenance-linked content is allowed; AI is opt-in + labeled.
+3) 🔌 **API boundary rule**  
+UI consumes APIs only; last-mile governance happens in the API (permissions, redaction, provenance injection).  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38) [oai_citation:20‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
-4) 🧠 **Human agency + safe AI**  
-Focus Mode is **advisory-only** (no autonomous actions; no auto-publish; no secret side effects). 🧯
+4) 🧠 **AI is advisory-only + evidence-backed**  
+Focus Mode is an advisory layer and must not publish or mutate state autonomously; AI outputs must remain provenance-linked.  [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:22‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
-5) ♻️ **Deterministic & idempotent**  
-Same inputs + pinned toolchain + seed → same outputs. Actions must not introduce mystery state.
+5) 🛂 **Sovereignty + classification propagation**  
+Sensitive locations/data must be handled with governance annotations and redaction/generalization at the API boundary.  [oai_citation:23‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 6) 🚦 **Default-deny promotion**  
-Promotion lanes must fail closed for missing SBOM/provenance/checksums, broken links, or policy violations.
-
-7) 🔌 **API boundary rule**  
-UI consumes APIs only. No UI bypass of governed access control (e.g., no direct graph DB queries).
-
-8) 🛂 **Sovereignty + classification propagation**  
-No output artifact can be less restricted than its inputs unless an approved redaction/de-identification step is recorded and reviewed.
+Promotion lanes fail closed for missing SBOM/provenance/checksums or policy violations.  [oai_citation:24‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ---
 
@@ -220,28 +252,17 @@ No output artifact can be less restricted than its inputs unless an approved red
 
 ## 🏗️ Layer boundaries & isolation (closed layers ≈ safer change)
 
-KFM v13 is intentionally “layered” to isolate change and prevent trust boundary bypass:
-
-- **UI** should never bypass the **API** layer.
-- **Domain logic** should never hardcode storage or network calls.
-- **Metadata and provenance** are not “nice to have”; they are contractual gates.
+KFM is intentionally layered: UI is at the end of the pipeline and consumes a governed API that filters sensitive data and injects provenance details.  [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
 
 ### Closed layers rule of thumb 🔒
 Treat core subsystems as *closed layers* unless explicitly documented otherwise:
 
-- UI → API → storage/graph  
-- Story/Focus → (reads) API/catalogs/graph only  
+- UI → API → storage/graph
+- Story/Focus → (reads) API/catalogs/graph only
 - ETL → catalogs/prov → (then) graph ingest
 
 > [!NOTE]
-> Closed layers aren’t about speed—they’re about **governance + testability + auditability**.  
-> Where you do need “open layers” (e.g., shared services), document *why* and lock them behind contracts.
-
-### Anti-pattern to watch: “architecture sinkhole” 🕳️
-If your workflow becomes “just pass things through” layers with no value, you’re adding friction without governance. Prefer:
-- fewer, well-defined actions
-- explicit artifacts at each stage (reports + manifests)
-- fail-fast checks early in PR lanes
+> Closed layers aren’t about speed—they’re about **governance + testability + auditability**.
 
 ---
 
@@ -249,17 +270,18 @@ If your workflow becomes “just pass things through” layers with no value, yo
 
 ## 🗺️ Repo structure alignment (v13 map)
 
-This is the **expected** KFM “v13” shape that actions/workflows should assume. If your repo differs, either:
-- update the repo to match, or
-- update actions to accept `root`/`paths` inputs explicitly.
+This is the **expected** KFM “v13” shape that actions/workflows should assume.
 
 ```text
+📁 .github/
+├── 📁 actions/                 # ✅ you are here (composite actions)
+└── 📁 workflows/               # reusable lanes + job templates
+
 📁 data/
 └── 📁 <domain>/
-    ├── 📁 raw/                 # read-only inputs
-    ├── 📁 work/                # intermediate
-    ├── 📁 processed/           # final outputs (derived artifacts live here too)
-    ├── 📁 mappings/            # dataset ↔ STAC/DCAT/PROV mapping notes (optional)
+    ├── 📁 raw/                 # 🔒 immutable inputs
+    ├── 📁 work/                # ♻️ intermediate
+    ├── 📁 processed/           # ✅ final outputs
     └── 📄 README.md            # domain runbook
 
 📁 data/catalog/
@@ -271,66 +293,58 @@ This is the **expected** KFM “v13” shape that actions/workflows should assum
 📁 docs/
 ├── 📄 MASTER_GUIDE_v13.md
 ├── 📁 standards/               # markdown protocol + profiles
-│   ├── 📄 KFM_MARKDOWN_WORK_PROTOCOL.md
-│   ├── 📄 KFM_STAC_PROFILE.md
-│   ├── 📄 KFM_DCAT_PROFILE.md
-│   └── 📄 KFM_PROV_PROFILE.md
-├── 📁 templates/               # universal docs + story nodes + API contract extensions
-├── 📁 architecture/            # blueprints, ADRs, vision docs
-├── 📁 governance/              # ethics, sovereignty, review triggers
-├── 📁 library/                 # reference PDFs (or pointers)
-│   └── 📄 MANIFEST.yml         # index: title/license/source/location
-└── 📁 reports/                 # published validation & story outputs (optional)
+├── 📁 templates/
+├── 📁 architecture/
+├── 📁 governance/
+└── 📁 library/
+    └── 📄 MANIFEST.yml         # ✅ index: title/license/source/location
 
 📁 schemas/                     # machine-readable schemas used by validation actions
-├── 📁 stac/
-├── 📁 dcat/
-├── 📁 prov/
-└── 📁 storynodes/
-
-📁 src/
-├── 📁 pipelines/               # ETL + transforms
-├── 📁 graph/                   # graph build + ontology bindings + migrations + constraints
-└── 📁 server/                  # API + contracts
-    └── 📁 contracts/           # OpenAPI/GraphQL contracts + schemas
-
-📁 web/                         # UI (React/MapLibre/Cesium/WebGL)
+📁 src/                         # pipelines + graph + server
 📁 tools/                       # validation, policy, QA, release tooling
-📁 releases/                    # packaged releases (output of protected lanes)
-📁 mcp/                         # Methods & Computational Experiments (runs, notebooks, model cards)
+📁 web/                         # UI (React/MapLibre/Cesium/WebGL)
+📁 mcp/                         # methods & computational experiments (runs, notebooks, model cards)
 
 📄 CITATION.cff  📄 SECURITY.md  📄 CHANGELOG.md  📄 CONTRIBUTING.md
 ```
 
-> [!TIP]
-> Add `docs/library/MANIFEST.yml` early. If references aren’t indexed, they drift—or worse, get silently removed.
+---
+
+<a id="versioning"></a>
+
+## 🔢 Versioning & compatibility contract
+
+KFM treats versioning as part of the contract (especially for graph + APIs + releases).  [oai_citation:26‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### Required checks in CI lanes ✅
+- **Graph/Ontology**: ontology/schema version bumps require migrations + validation fixtures.  [oai_citation:27‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **API contracts**: OpenAPI/GraphQL diffs must be reviewed + tested; breaking changes require explicit versioning.  [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Release artifacts**: releases bundle checksums + SBOM + provenance and are traceable to code + inputs.  [oai_citation:29‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
 <a id="vvuq"></a>
 
-## 🧪 Scientific rigor (VVUQ + experiment protocols)
+## 🧪 Scientific rigor (V&V + UQ + reproducibility)
 
-KFM doesn’t just “ship software.” It ships **evidence** and **derived analysis artifacts**. That means we adopt a scientific V&V mindset:
-
-### Required mindset 🔬
-- **Verification**: “Did we build the pipeline right?” (correctness, tests, schema validation)
-- **Validation**: “Did we build the right pipeline?” (domain sanity checks, known baselines)
-- **Uncertainty Quantification**: “How sure are we?” (confidence/intervals, sensitivity analysis)
-- **Reproducibility**: pinned toolchains, deterministic runs, stable seeds, recorded parameters
+KFM ships evidence and derived analysis artifacts, so CI must support scientific workflow expectations:
+- write the research question / objective
+- document methods + parameters
+- collect data with traceability
+- present results with reproducible linkage to code + inputs
+- capture uncertainty / limitations
+- iterate with a recorded trail (electronic lab notebook style).  [oai_citation:30‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 ### What actions should enforce ✅
-- Every model/analysis run emits:
+- Every modeling/analysis run emits:
   - `run_uuid` + `build-info.json`
   - inputs manifest (paths + hashes)
   - outputs manifest (paths + hashes)
-  - parameter + seed record (so we can replay)
-  - uncertainty/confidence metadata where applicable
+  - parameters + seeds record
   - PROV activity bundle linking inputs → activities → outputs
 
 > [!IMPORTANT]
-> If an analysis artifact appears in the UI, it must move through the **same pipeline** as “regular data”:  
-> stored in `data/processed/**`, cataloged in STAC/DCAT, traced in PROV, and exposed via governed APIs.
+> If an analysis artifact appears in the UI, it must move through the same governed pipeline and remain provenance-linked.  [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
 
 ---
 
@@ -338,26 +352,20 @@ KFM doesn’t just “ship software.” It ships **evidence** and **derived anal
 
 ## 🔐 Threat model & trust boundaries (actions edition)
 
-Composite actions run on runners and can touch secrets, artifacts, and publish lanes.
-
 ### 🧨 Common risks we design around
 - **Supply chain:** unpinned third-party actions; unsafe `curl | bash`
-- **Secrets exposure:** printing env vars; leaking tokens in logs/artifacts
-- **Catalog poisoning:** malformed STAC/DCAT fields or links triggering unsafe fetches
-- **Artifact tampering:** publishing without checksums/provenance or without atomic staging
-- **Untrusted PR execution:** forks running code that tries to exfiltrate secrets
-- **Classification leakage:** “public” workflows accidentally processing restricted artifacts
-- **AI side-channel leaks:** Focus Mode exposing sensitive locations or implying unsourced claims
-
-> [!CAUTION]
-> Default stance: treat **everything from a PR** as untrusted input until validated (JSON/GeoJSON, STAC catalogs, tilesets, PDFs, 3D assets, etc.).
+- **Secrets exposure:** leaking tokens in logs/artifacts
+- **Catalog poisoning:** malformed STAC/DCAT fields or links
+- **Artifact tampering:** publishing without checksums + attestations
+- **Untrusted PR execution:** forks attempting exfiltration
+- **Classification leakage:** “public” workflows processing restricted artifacts
+- **Policy drift:** rules changed without review (must be versioned/audited)  [oai_citation:32‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### 🔐 Boundary rules (non-negotiable)
 - No secrets in PR lanes (especially forks).
 - No “download arbitrary URL from PR input.”
 - Promotion lanes require explicit environment protection.
-- Prefer **digest-pinned** images and **commit-SHA pinned** actions.
-- AI output must be **opt-in + labeled + provenance-backed**.
+- Prefer digest-pinned images and commit-SHA pinned actions.
 
 ---
 
@@ -365,11 +373,9 @@ Composite actions run on runners and can touch secrets, artifacts, and publish l
 
 ## 🛂 Data classification & access control (Data Spaces mindset)
 
-KFM assumes data governance is not optional. Even “open” datasets can contain:
-- sensitive locations (endangered species, sacred sites)
-- personal data (names, addresses)
-- restricted Indigenous knowledge (CARE-aligned governance)
-- licensing constraints
+KFM assumes governance is not optional:
+- provenance-first + FAIR/CARE-aligned stewardship are core platform principles  [oai_citation:33‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+- sensitive entities can be flagged and filtered/generalized at the API boundary  [oai_citation:34‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### Classification propagation rule 🧷
 **Outputs inherit the strictest classification of their inputs** unless:
@@ -377,14 +383,8 @@ KFM assumes data governance is not optional. Even “open” datasets can contai
 - the step is recorded in PROV **and**
 - policy gates approve promotion.
 
-### What actions should do 🛡️
-- Refuse to promote artifacts missing classification tags.
-- Block “downgrades” unless an approved transform is detected.
-- Ensure UI-facing artifacts are redacted/generalized where required.
-- Ensure Story Nodes cite evidence and do not become a bypass channel.
-
-> [!TIP]
-> Treat classification as a *first-class field* in reports, provenance, and catalogs—not as a human convention.
+### Markdown/doc metadata hook 🏷️
+KFM doc templates support explicit fields (e.g., `classification`, `care_label`, `sensitivity`) so governance signals travel with artifacts.  [oai_citation:35‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
 ---
 
@@ -395,39 +395,17 @@ KFM assumes data governance is not optional. Even “open” datasets can contai
 These gates are the “trust backbone” of KFM. Most are implemented as local composite actions calling repo tools.
 
 ### ✅ Gate set (recommended baseline)
-1) 🧾 **Markdown protocol & front-matter validation**  
-   - YAML front-matter present + valid  
-   - required sections present (template compliance)  
-   - Definition-of-Done items satisfied
-
-2) 🔗 **Link/reference validation**  
-   - internal links resolve  
-   - citations/reference tags resolve  
-   - no broken doc/story links
-
-3) 📦 **JSON Schema validation**  
-   - STAC/DCAT/PROV validate against KFM profiles  
-   - Story Node metadata validates against story schema (where applicable)
-
-4) 🧠 **Graph integrity tests**  
-   - constraints hold (unique IDs, required properties)  
-   - ontology changes require migrations + version notes  
-   - fixture graph loads and passes checks
-
-5) 🔌 **API contract tests**  
-   - OpenAPI + GraphQL schema linted  
-   - contract tests run with known inputs/outputs  
-   - redaction rules tested for sensitive outputs
-
-6) 🛡️ **Security + governance scans**  
-   - secret scanning  
-   - PII/sensitive data scan  
-   - sensitive location checks (sovereignty tags)  
-   - classification consistency checks (no downgrades)
+1) 🧾 **Markdown protocol + DoD validation** (front-matter, required sections, checklists)  [oai_citation:36‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+2) 🔗 **Link/reference validation** (internal links + citations resolve)
+3) 📦 **Schema validation** (STAC/DCAT/PROV + story metadata)  [oai_citation:37‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+4) 🧠 **Graph integrity checks** (no mystery nodes; governance properties)  [oai_citation:38‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+5) 🔌 **API contract tests** (OpenAPI + GraphQL)
+6) 🛡️ **Policy-as-code** (OPA/Conftest; default deny)  [oai_citation:39‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+7) 🧬 **Supply chain evidence** (SBOM + signed attestations)  [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 > [!IMPORTANT]
 > “If it’s not validated in CI, it’s not real.”  
-> Any lane that *publishes* must run the full gate set **fail-closed**.
+> Any lane that publishes must run the full gate set **fail-closed**.
 
 ---
 
@@ -442,30 +420,32 @@ These gates are the “trust backbone” of KFM. Most are implemented as local c
 | Action | Purpose | Typical workflows |
 |---|---|---|
 | `setup-kfm` | Python + Node toolchain + caches (+ optional GIS deps) | `ci.yml`, `ui.yml`, `integration.yml` |
-| `toolchain-pin` | Verify pinned tool versions / lockfiles / digests | all lanes |
-| `kill-switch` | global “stop button” for risky publish paths | publish/release |
+| `toolchain-pin` | verify pinned tool versions / lockfiles / digests | all lanes |
 | `build-info` | emit `build-info.json` + tool versions + checksums | integration/release |
+| `kill-switch` | global stop button for publish/promotion lanes | publish/release |
 | `link-check` | fail on broken internal links & missing references | docs/story lanes |
 
 ### ✅ Validation & governance actions
 | Action | Purpose | Typical workflows |
 |---|---|---|
-| `markdown-protocol` | validate governed Markdown front-matter + DoD checklist | docs/story lanes |
-| `catalog-qa` | fast STAC/DCAT gate + link checks (PR lane) | `catalog-qa.yml` |
+| `markdown-protocol` | validate governed Markdown (front-matter + DoD) | docs/story lanes |
+| `catalog-qa` | fast STAC/DCAT checks + link checks (PR lane) | `catalog-qa.yml` |
 | `metadata-validate` | schema/profile validation: STAC/DCAT/PROV | nightly/full lanes |
-| `graph-integrity` | validate graph schema + invariants (shape checks) | graph lanes |
-| `api-contract-test` | validate OpenAPI/GraphQL contracts + schema diffs | server lanes |
-| `governance-scan` | secrets/PII/sensitive-location checks (configurable) | PR lanes + nightly |
-| `classification-gate` | block classification downgrades + enforce tags | promotion lanes |
-| `policy-gate` | OPA/Conftest (default deny) | promotion lanes |
-| `provenance-guard` | require PROV completeness + classification propagation | promotion lanes |
+| `graph-integrity` | graph schema + invariant checks | graph lanes |
+| `api-contract-test` | OpenAPI + GraphQL schema lint + diffs | server lanes |
+| `governance-scan` | secrets/PII/sensitive-location scan (configurable) | PR + nightly |
+| `classification-gate` | block classification downgrades | promotion lanes |
+| `policy-gate` | OPA/Conftest evaluation (default deny) | promotion lanes |
+| `provenance-guard` | require PROV completeness + checksums | promotion lanes |
 
-### 🧪 Scientific & analysis actions (VVUQ-ready)
+### 🧪 Scientific & modeling actions (VVUQ-ready)
 | Action | Purpose | Typical workflows |
 |---|---|---|
 | `experiment-protocol` | emit run protocol (params + seeds + assumptions) | modeling lanes |
-| `vv uq-report` | verification/validation + uncertainty summaries | modeling lanes |
-| `stats-sanity` | regression/EDA baselines, drift checks, charts bundle | analysis lanes |
+| `vvuq-report` | verification/validation + uncertainty summaries | modeling lanes |
+| `stats-sanity` | regression/EDA baselines + drift checks | analysis lanes |
+
+> 🧠 **Roadmap hook:** KFM’s roadmap includes a deterministic scenario simulator (`kfm-sim-run`) that extends provenance-first philosophy to “what-if” changes and keeps production clean.  [oai_citation:41‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 ### 🧬 Supply-chain & publishing actions
 | Action | Purpose | Typical workflows |
@@ -473,21 +453,17 @@ These gates are the “trust backbone” of KFM. Most are implemented as local c
 | `docker-build` | buildx + caching + labels + digests | `docker.yml` |
 | `sbom` | generate SBOM (SPDX/CycloneDX) | `release.yml` |
 | `attest` | create/attach attestations (OIDC-based where possible) | `release.yml` |
-| `release-bundle` | assemble `releases/<tag>/` payload + checksums | tags/releases |
+| `sign-artifact` | Sigstore Cosign signing for promoted artifacts | release/publish lanes  [oai_citation:42‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN) |
+| `release-bundle` | assemble `releases/<tag>/` + checksums | tags/releases |
+| `oci-publish` | publish datasets/models/notebooks as OCI artifacts (ORAS) | federation/release lanes  [oai_citation:43‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN) [oai_citation:44‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN) |
 
-### 🧠 Automation support (W-P-E friendly)
+### 🧠 Lineage & automation support
 | Action | Purpose | Typical workflows |
 |---|---|---|
-| `openlineage-emit` | emit OpenLineage event for run UUID | integration/release |
-| `prov-emit` | emit PROV JSON-LD: inputs → activities → outputs | integration/release |
-| `detect-changes` | compute stable fingerprints (ETag/Last-Modified/hash) | scheduled lanes |
+| `openlineage-emit` | emit OpenLineage event (run_uuid correlation) | integration/release |
+| `prov-emit` | emit PROV JSON-LD bundle (inputs → activity → outputs) | integration/release |
+| `detect-changes` | compute stable fingerprints (ETag/Last-Modified/hash) | scheduled lanes  [oai_citation:45‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL) |
 | `pr-compose` | assemble PR-ready artifact bundle + summaries | automation lanes |
-
-> [!TIP]
-> The **W-P-E model** (Watcher → Planner → Executor) is enforced by workflow policy:
-> - automation proposes changes in PRs
-> - validation lanes run
-> - promotion lanes are human-governed and default-deny
 
 ---
 
@@ -496,7 +472,7 @@ These gates are the “trust backbone” of KFM. Most are implemented as local c
 ## ✅ Action contract (inputs, outputs, artifacts)
 
 ### ✅ Inputs (strings only)
-GitHub Actions inputs are strings. For booleans, accept and validate:
+GitHub Actions inputs are strings. For booleans, accept:
 - `"true" | "false"`
 
 Recommended common inputs across KFM actions:
@@ -504,38 +480,38 @@ Recommended common inputs across KFM actions:
 - `out_dir` → default `.artifacts/out/<action>`
 - `summary_to_step` → `"true"` (append to `$GITHUB_STEP_SUMMARY`)
 - `run_uuid` → optional override (otherwise generated)
-- `classification` → optional override (`public|internal|restricted|...`) **only if validated**
+- `classification` → optional override **only if validated** (never downgrade silently)
 
 ### ✅ Outputs (standard keys)
-Recommended output keys across actions:
+Recommended outputs across actions:
 - `ok` → `"true" | "false"`
-- `report_path` → path to JSON report
-- `summary_path` → path to Markdown summary
+- `report_path` → JSON report path
+- `summary_path` → Markdown summary path
 - `artifact_dir` → directory containing outputs
-- `run_uuid` → stable UUID for run correlation
-- `inputs_manifest` / `outputs_manifest` → (optional) JSON lists of paths + sha256
-- `classification` → resolved classification after checks (never “downgrade” silently)
+- `run_uuid` → stable run UUID for correlation
+- `classification` → resolved classification (post-policy)
+
+> [!IMPORTANT]
+> Do **not** pass secrets via action outputs. Outputs can leak into logs and downstream steps.
 
 ### 📦 Artifact layout (default expectation)
-We keep **ephemeral** outputs under `.artifacts/` (gitignored), and publish only from protected lanes:
-
 ```text
 📁 .artifacts/
 ├─ 📁 out/
 │  └─ 📁 <action-name>/
 │     ├─ 📄 report.json
 │     ├─ 📄 summary.md
+│     ├─ 📄 inputs.manifest.json
+│     ├─ 📄 outputs.manifest.json
 │     └─ 📁 logs/
 ├─ 📁 attestations/
 │  ├─ 📄 materials.sbom.spdx.json
 │  ├─ 📄 provenance.dsse.json
 │  └─ 📄 checksums.sha256
 └─ 📁 lineage/
-   └─ 📄 openlineage.json
+   ├─ 📄 openlineage.json
+   └─ 📄 prov.jsonld
 ```
-
-> [!IMPORTANT]
-> **Do not** pass secrets via action outputs. Outputs can leak into logs and downstream steps.
 
 ---
 
@@ -543,42 +519,33 @@ We keep **ephemeral** outputs under `.artifacts/` (gitignored), and publish only
 
 ## 🎛️ Kill switch & safe defaults
 
-KFM automation is designed to be powerful **without being autonomous**.
+KFM automation is powerful **without being autonomous**. A global kill-switch is a required safety valve, especially for publish lanes.  [oai_citation:46‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
 
 ### 🧯 Kill switch behavior
-- If `KFM_KILL_SWITCH=true` → **fail closed** for publish/promotion jobs.
-- For non-publish jobs, “skip heavy lanes” is acceptable only if basic safety checks still run.
+- If `KFM_KILL_SWITCH=true` → fail closed for publish/promotion jobs
+- For non-publish jobs, “skip heavy lanes” is acceptable only if baseline safety checks still run
 
 Recommended signal sources:
 - env var: `KFM_KILL_SWITCH`
-- config file: `.kfm/kill-switch.yml` *(or `ops/feature_flags/agents.yml` for automation gating)*
-
-> [!NOTE]
-> The W-P-E model is designed with a **single, global kill switch** to stop automation quickly.
+- config file: `.kfm/kill-switch.yml` *(or `ops/feature_flags/agents.yml`)*
 
 ---
 
 <a id="provenance"></a>
 
-## 🧾 Provenance, checksums, lineage, and signing
+## 🧾 Provenance, checksums, lineage, signing
 
-KFM treats provenance as a **security control** and a **scientific integrity control**.
+KFM treats provenance as both a **scientific integrity control** and a **security control**:
+- datasets carry the STAC/DCAT/PROV triplet  [oai_citation:47‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+- AI outputs can be captured as PROV activities and logged in an append-only ledger  [oai_citation:48‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+- promoted artifacts can be signed (Sigstore Cosign) for authenticity checks  [oai_citation:49‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 ### ✅ Minimum expectation for any promoted artifact
 - `build-info.json` (who/what/when/where ran)
-- `checksums.sha256` for promoted artifacts
-- PROV JSON-LD record(s) linking inputs → activities → outputs
-- SBOM snapshot for the build/run toolchain (SPDX JSON recommended)
-- Optional signing/attestations for releases
-
-### 🔎 Lineage correlation (OpenLineage + PROV)
-We use:
-- OpenLineage events for operational lineage + run UUID correlation
-- PROV JSON-LD for semantic provenance graphs
-
-> [!TIP]
-> “If it can’t be reproduced, it can’t be trusted.”  
-> Build-info + checksums + PROV + SBOM make debugging and rollback possible.
+- `checksums.sha256`
+- PROV JSON-LD record(s): inputs → activities → outputs
+- SBOM snapshot (SPDX JSON recommended)
+- optional signing/attestations (OIDC + Sigstore)
 
 ---
 
@@ -590,19 +557,18 @@ We use:
 Every local action should include:
 - `README.md` describing purpose, inputs, outputs, examples
 - smoke workflow: `.github/workflows/actions-smoke.yml`
-- fixture inputs (tiny STAC, tiny DCAT, tiny PROV, tiny policy pack)
-- fixture geospatial assets if relevant (tiny raster/vector, tiny tile set)
-- artifact upload on failure (logs + reports)
+- fixture inputs (tiny STAC/DCAT/PROV, tiny policy pack)
+- artifact upload on failure (`.artifacts/**`)
 
 ### 🧪 Suggested smoke workflow coverage
 - run `setup-kfm`
 - run `markdown-protocol` on templates
-- run `link-check` on docs + story fixtures
+- run `link-check` on docs/story fixtures
 - run `catalog-qa` on fixture catalogs
-- run `graph-integrity` on fixture graph dataset
+- run `graph-integrity` on fixture graph
 - run `api-contract-test` on mock/fixture API
-- run `policy-gate` on known allow/deny cases
-- run `classification-gate` on known downgrade scenarios
+- run `policy-gate` on allow/deny cases
+- run `classification-gate` on downgrade scenarios
 - run `build-info` and upload `.artifacts/**`
 
 ---
@@ -631,6 +597,10 @@ inputs:
     description: "Append summary.md to GitHub step summary"
     required: false
     default: "true"
+  run_uuid:
+    description: "Optional run UUID (otherwise derived from run_id + sha)"
+    required: false
+    default: ""
 
 outputs:
   ok:
@@ -639,6 +609,12 @@ outputs:
   report_path:
     description: "Path to the generated report artifact"
     value: ${{ steps.meta.outputs.report_path }}
+  summary_path:
+    description: "Path to the generated markdown summary"
+    value: ${{ steps.meta.outputs.summary_path }}
+  artifact_dir:
+    description: "Directory containing outputs"
+    value: ${{ steps.meta.outputs.artifact_dir }}
   run_uuid:
     description: "Run UUID used to correlate artifacts"
     value: ${{ steps.meta.outputs.run_uuid }}
@@ -649,6 +625,7 @@ runs:
     - name: 🧾 Context (safe)
       shell: bash
       run: |
+        set -euo pipefail
         echo "action=kfm/<name>"
         echo "repo=$GITHUB_REPOSITORY"
         echo "sha=$GITHUB_SHA"
@@ -659,11 +636,38 @@ runs:
       run: |
         set -euo pipefail
         OUT="${{ inputs.out_dir }}"
-        mkdir -p "$OUT"
-        echo '{"ok": true, "warnings": []}' > "$OUT/report.json"
-        echo "✅ <name> ok" > "$OUT/summary.md"
+        mkdir -p "$OUT/logs"
+
+        RUN_UUID="${{ inputs.run_uuid }}"
+        if [ -z "$RUN_UUID" ]; then
+          RUN_UUID="${GITHUB_RUN_ID}-${GITHUB_SHA::8}"
+        fi
+
+        # TODO: call repo tool(s) here
+        # Example report schema: { ok, warnings[], errors[], run_uuid, artifact_dir }
+        cat > "$OUT/report.json" <<JSON
+        {
+          "ok": true,
+          "warnings": [],
+          "errors": [],
+          "run_uuid": "${RUN_UUID}",
+          "artifact_dir": "${OUT}"
+        }
+JSON
+
+        echo "✅ kfm/<name> ok" > "$OUT/summary.md"
+        echo "" >> "$OUT/summary.md"
+        echo "- run_uuid: \`${RUN_UUID}\`" >> "$OUT/summary.md"
+        echo "- artifact_dir: \`${OUT}\`" >> "$OUT/summary.md"
+
         if [ "${{ inputs.summary_to_step }}" = "true" ]; then
           cat "$OUT/summary.md" >> "$GITHUB_STEP_SUMMARY"
+        fi
+
+        # Optional: fail on warnings in promotion lanes
+        if [ "${{ inputs.fail_on_warn }}" = "true" ]; then
+          # replace with real jq checks once report has warnings
+          true
         fi
 
     - name: 📦 Set outputs
@@ -672,16 +676,22 @@ runs:
       run: |
         set -euo pipefail
         OUT="${{ inputs.out_dir }}"
-        RUN_UUID="${GITHUB_RUN_ID}-${GITHUB_SHA::8}"
+        RUN_UUID="${{ inputs.run_uuid }}"
+        if [ -z "$RUN_UUID" ]; then
+          RUN_UUID="${GITHUB_RUN_ID}-${GITHUB_SHA::8}"
+        fi
+
         echo "ok=true" >> "$GITHUB_OUTPUT"
         echo "report_path=$OUT/report.json" >> "$GITHUB_OUTPUT"
+        echo "summary_path=$OUT/summary.md" >> "$GITHUB_OUTPUT"
+        echo "artifact_dir=$OUT" >> "$GITHUB_OUTPUT"
         echo "run_uuid=$RUN_UUID" >> "$GITHUB_OUTPUT"
 ```
 
 </details>
 
 <details>
-<summary><strong>🧯 Kill switch action — fail closed in publish lanes (spec)</strong></summary>
+<summary><strong>🧯 Kill switch action — fail closed in publish lanes</strong></summary>
 
 ```yaml
 name: "kfm/kill-switch"
@@ -706,6 +716,7 @@ runs:
         set -euo pipefail
         FLAG_NAME="${{ inputs.flag_env }}"
         FLAG_VALUE="${!FLAG_NAME:-false}"
+
         echo "kill_switch=${FLAG_VALUE}" >> "$GITHUB_STEP_SUMMARY"
 
         if [ "$FLAG_VALUE" = "true" ]; then
@@ -744,77 +755,24 @@ jobs:
 
 </details>
 
-<details>
-<summary><strong>📦 Build-info pattern — reproducibility artifact (spec)</strong></summary>
-
-```json
-{
-  "repo": "bartytime4life/Kansas-Frontier-Matrix",
-  "sha": "<GITHUB_SHA>",
-  "run_id": "<GITHUB_RUN_ID>",
-  "workflow": "<GITHUB_WORKFLOW>",
-  "actor": "<GITHUB_ACTOR>",
-  "timestamp_utc": "<ISO8601 | KFM_VCLOCK_UTC>",
-  "toolchain": {
-    "python": "3.12.1",
-    "node": "20.11.0"
-  },
-  "inputs": [
-    {"path": "data/raw/foo.tif", "sha256": "<...>", "classification": "public"}
-  ],
-  "outputs": [
-    {"path": "data/processed/foo.cog.tif", "sha256": "<...>", "classification": "public"},
-    {"path": "data/catalog/stac/foo/collection.json", "sha256": "<...>", "classification": "public"}
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary><strong>📚 <code>docs/library/MANIFEST.yml</code> — library index (spec)</strong></summary>
-
-```yaml
-# docs/library/MANIFEST.yml
-# Purpose: prevent drift and keep provenance/licensing discoverable for all reference materials.
-
-version: 1
-entries:
-  - id: nasa-modeling-simulation-guide
-    title: "Scientific Modeling and Simulation: A Comprehensive NASA-Grade Guide"
-    file: "docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf"
-    license: "Check upstream terms"
-    notes: "Used for V&V/UQ mindset and reproducibility expectations."
-  - id: making-maps
-    title: "Making Maps: A Visual Guide to Map Design for GIS"
-    file: "docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf"
-    license: "Check upstream terms"
-    notes: "Cartography QA + UI map conventions."
-```
-
-</details>
-
 ---
 
 <a id="review-checklist"></a>
 
 ## 🧑‍⚖️ Review checklist
 
-Use this checklist for **new actions** and major changes:
+Use this checklist for new actions and major changes:
 
-- [ ] Deterministic & idempotent (no hidden mutable state)
+- [ ] Deterministic & idempotent (no hidden mutable state)  [oai_citation:50‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
 - [ ] Inputs validated (string booleans handled explicitly)
-- [ ] Outputs standardized (`ok`, `report_path`, `run_uuid`, `classification`, etc.)
+- [ ] Outputs standardized (`ok`, `report_path`, `summary_path`, `run_uuid`, etc.)
 - [ ] No secrets printed or passed via outputs
-- [ ] Minimal permissions documented; workflows must set least privilege
-- [ ] Produces a JSON report + Step Summary (human readable)
-- [ ] Link checks included if the action touches docs/story content
-- [ ] Schema validation included if the action touches STAC/DCAT/PROV/story metadata
-- [ ] Graph integrity tests included if the action touches ontology/graph ingest
-- [ ] API contract tests included if the action touches OpenAPI/GraphQL contracts
-- [ ] Classification propagation enforced if the action touches `data/**`
-- [ ] If producing published artifacts: emits checksums + provenance + SBOM expectations
-- [ ] If publishing: runs only in protected lanes (main/tags/dispatch + environments)
+- [ ] Minimal permissions documented; workflows enforce least privilege
+- [ ] Produces a JSON report + Step Summary
+- [ ] Schema validation included if touching STAC/DCAT/PROV/story metadata
+- [ ] Policy gate (OPA/Conftest) included if used for promotion lanes  [oai_citation:51‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+- [ ] Classification propagation enforced if touching `data/**`
+- [ ] If publishing: checksums + provenance + SBOM + signing expectations present  [oai_citation:52‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 - [ ] Smoke workflow exists; logs/artifacts uploaded on failure
 - [ ] Local README exists next to the action
 
@@ -825,156 +783,54 @@ Use this checklist for **new actions** and major changes:
 ## 📚 Project reference library
 
 > ⚠️ Reference materials may have licenses different from repo code.  
-> Keep them under `docs/library/` (or outside the repo) and respect upstream terms.
+> Index them in `docs/library/MANIFEST.yml` and respect upstream terms.
 
 <details>
 <summary><strong>🧱 Canonical KFM specs (must-read)</strong></summary>
 
-- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
-- `docs/MASTER_GUIDE_v13.md` *(expected; repo structure + pipeline contract)*
-- `docs/standards/*` *(STAC/DCAT/PROV profiles + markdown protocol)*
-- `MARKDOWN_GUIDE_v13.md.gdoc` *(v13 guide scaffold + invariants + CI gates; source of truth for authoring + contracts)*
+- `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf`  [oai_citation:53‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
+- `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`  [oai_citation:54‡Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf](file-service://file-Qj23Z329hf1Q1WD86hXYfL)
+- `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf`  [oai_citation:55‡Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf](file-service://file-MbEYbsLWBmpXVYXVF79c38)
+- `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`  [oai_citation:56‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
+- `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf`  [oai_citation:57‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:58‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
 
 </details>
 
 <details>
-<summary><strong>🧠 Story Nodes + Focus Mode governance</strong></summary>
+<summary><strong>🧾 Documentation standards (protocol + DoD)</strong></summary>
 
-- `docs/templates/TEMPLATE__STORY_NODE_V3.md` *(expected; citations + entity IDs + fact vs interpretation)*
-- `docs/reports/story_nodes/` *(expected; draft vs published story nodes)*
-- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(expected; DoD + front-matter rules)*
-
-</details>
-
-<details>
-<summary><strong>🛂 Governance, sovereignty, and human-centered constraints</strong></summary>
-
-- `SECURITY.md` (this repo)
-- `docs/library/Data Spaces.pdf` *(policy enforcement & classification concepts)*
-- `docs/library/Introduction to Digital Humanism.pdf` *(sovereignty + human values framing)*
-- `docs/library/Principles of Biological Autonomy - book_9780262381833.pdf`
-- `docs/library/On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
+- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(expected path)*
+- `MARKDOWN_GUIDE_v13.md.gdoc`  [oai_citation:59‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`  [oai_citation:60‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
 </details>
 
 <details>
-<summary><strong>🗺️ GIS, cartography, remote sensing (data QA reality)</strong></summary>
+<summary><strong>🔬 Scientific method + reproducibility protocols</strong></summary>
 
-- `docs/library/python-geospatial-analysis-cookbook.pdf`
-- `docs/library/PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `docs/library/Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
-- `docs/library/Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- `docs/library/Archaeological 3D GIS_26_01_12_17_53_09.pdf`
-- `docs/library/compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
+- `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`  [oai_citation:61‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 </details>
 
 <details>
-<summary><strong>📈 Modeling, statistics, simulation (reproducibility + V&amp;V mindset)</strong></summary>
+<summary><strong>🗺️ Foundational architecture origins</strong></summary>
 
-- `docs/library/Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `docs/library/Understanding Statistics & Experimental Design.pdf`
-- `docs/library/regression-analysis-with-python.pdf`
-- `docs/library/Regression analysis using Python - slides-linear-regression.pdf`
-- `docs/library/graphical-data-analysis-with-r.pdf`
-- `docs/library/think-bayes-bayesian-statistics-in-python.pdf`
-- `docs/library/Generalized Topology Optimization for Structural Design.pdf`
-- `docs/library/Spectral Geometry of Graphs.pdf`
+- `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`  [oai_citation:62‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
 </details>
 
 <details>
-<summary><strong>🌐 UI, web, and 3D visualization (why UI lanes exist)</strong></summary>
+<summary><strong>📦 Library bundles & “PDF portfolio” inputs (extract + index)</strong></summary>
 
-- `docs/library/responsive-web-design-with-html5-and-css3.pdf`
-- `docs/library/webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
+> Some uploaded references are **PDF portfolios** (Acrobat containers). Extract them into individual PDFs so search/indexing works, then add entries to `docs/library/MANIFEST.yml`.
 
-</details>
-
-<details>
-<summary><strong>⚙️ Systems, scaling, performance (why lanes + caches matter)</strong></summary>
-
-- `docs/library/Database Performance at Scale.pdf`
-- `docs/library/Scalable Data Management for Future Hardware.pdf`
-- `docs/library/concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-
-</details>
-
-<details>
-<summary><strong>🛡️ Security references (defensive-only)</strong></summary>
-
-> These are **defensive references**. Do **not** treat them as requests for offensive techniques.
-
-- `docs/library/ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
-- `docs/library/Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
-
-</details>
-
-<details>
-<summary><strong>📚 Programming shelf bundles (cross-language fundamentals)</strong></summary>
-
-- `docs/library/A programming Books.pdf`
-- `docs/library/B-C programming Books.pdf`
-- `docs/library/D-E programming Books.pdf`
-- `docs/library/F-H programming Books.pdf`
-- `docs/library/I-L programming Books.pdf`
-- `docs/library/M-N programming Books.pdf`
-- `docs/library/O-R programming Books.pdf`
-- `docs/library/S-T programming Books.pdf`
-- `docs/library/U-X programming Books.pdf`
-
-</details>
-
-<details>
-<summary><strong>🤖 ML / AI (optional)</strong></summary>
-
-- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(library reference; may not be indexed in all tooling)*
-
-</details>
-
-<details>
-<summary><strong>📦 Full project file index (current library payload)</strong></summary>
-
-> Put these in `docs/library/` (or store externally and reference them via the manifest).
-
-- `Archaeological 3D GIS_26_01_12_17_53_09.pdf`
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-- `Data Spaces.pdf`
-- `Database Performance at Scale.pdf`
-- `Generalized Topology Optimization for Structural Design.pdf`
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
-- `Introduction to Digital Humanism.pdf`
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `Principles of Biological Autonomy - book_9780262381833.pdf`
-- `Regression analysis using Python - slides-linear-regression.pdf`
-- `Scalable Data Management for Future Hardware.pdf`
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `Spectral Geometry of Graphs.pdf`
-- `Understanding Statistics & Experimental Design.pdf`
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
-- `graphical-data-analysis-with-r.pdf`
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `python-geospatial-analysis-cookbook.pdf`
-- `regression-analysis-with-python.pdf`
-- `responsive-web-design-with-html5-and-css3.pdf`
-- `think-bayes-bayesian-statistics-in-python.pdf`
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-- `A programming Books.pdf`
-- `B-C programming Books.pdf`
-- `D-E programming Books.pdf`
-- `F-H programming Books.pdf`
-- `I-L programming Books.pdf`
-- `M-N programming Books.pdf`
-- `O-R programming Books.pdf`
-- `S-T programming Books.pdf`
-- `U-X programming Books.pdf`
-- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf`
+- `AI Concepts & more.pdf`  [oai_citation:63‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)
+- `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`  [oai_citation:64‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)
+- `Various programming langurages & resources 1.pdf`  [oai_citation:65‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)  [oai_citation:66‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi)
+- `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`  [oai_citation:67‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)  [oai_citation:68‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+- `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf`  [oai_citation:69‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+- `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf`  [oai_citation:70‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
 
 </details>
 
