@@ -1,53 +1,70 @@
-<!-- .github/actions/pr-provenance/README.md -->
+# PR Provenance Gate 🧾🔒  
+<sub>📁 Local GitHub Action: <code>./.github/actions/pr-provenance</code></sub>
 
-# PR Provenance Action 🔏🌾
-> **Provenance-first CI gate** for the Kansas Frontier Matrix (KFM): **Detect → Validate → Promote** with receipts. ✅🧾
+<p align="left">
+  <img alt="GitHub Action" src="https://img.shields.io/badge/GitHub%20Action-local%20composite-2ea44f">
+  <img alt="Policy" src="https://img.shields.io/badge/policy-provenance--first-blue">
+  <img alt="CI Gate" src="https://img.shields.io/badge/CI-gatekeeper-orange">
+  <img alt="Scope" src="https://img.shields.io/badge/scope-PR%20validation-informational">
+</p>
 
-![Local GitHub Action](https://img.shields.io/badge/GitHub%20Action-local-blue)
-![Provenance-first](https://img.shields.io/badge/provenance-first-22c55e)
-![Policy-as-Code](https://img.shields.io/badge/policy-as--code-OPA%20%2B%20Conftest-7c3aed)
-![Evidence-first](https://img.shields.io/badge/evidence-first-Story%20Manifests-f97316)
-
----
-
-## What this action does 🧭
-`pr-provenance` is a **local GitHub Action** used in KFM workflows to:
-
-- 🧾 **Generate provenance artifacts** for each PR (W3C PROV JSON-LD + summary report)
-- 🚦 **Enforce Policy Gates** (OPA/Conftest style) so changes **fail closed** when governance rules aren’t met
-- 🧩 **Map DevOps → PROV** so PR activity becomes queryable lineage (PR = Activity, commits/artifacts = Entities, humans/bots = Agents)
-- 🔐 (Optional) **Attach supply-chain evidence** (SBOM / SLSA-style attestations, signatures) for trusted automation
-
-KFM’s non-negotiable principle: **nothing is a black box**—not data, not pipelines, not AI answers, and not PR history. 🌾✨
+> [!IMPORTANT]  
+> **KFM is provenance-first.** If a PR adds/updates *publishable artifacts*, it must also add/update the corresponding provenance (and often metadata) so we can always answer: **“How was this produced?”** 🧬
 
 ---
 
-## Why this exists 🌱
-KFM’s platform spans:
-- geospatial datasets (PMTiles, GeoParquet, COGs),
-- catalogs (STAC/DCAT),
-- provenance (PROV),
-- stories (evidence manifests),
-- AI features (Focus Mode citations + governance),
-- and a growing automation stack (Watcher → Planner → Executor).
+## ✨ What this action does
 
-All of that only works if every PR preserves:
-- ✅ **traceability**
-- ✅ **licensing**
-- ✅ **sensitivity classification**
-- ✅ **reproducibility**
-- ✅ **auditable lineage**
+This action validates **Pull Requests** to ensure that changes which impact published or user-facing artifacts are accompanied by the **required provenance + catalog metadata updates**.
 
-So this action exists to **block merges that would break chain-of-custody** and to **emit machine-readable receipts** for everything that gets promoted.
+Typical use cases:
+- ✅ A PR modifies `data/processed/**` → must include matching updates in `data/provenance/**` (and often `data/catalog/**` / `data/stac/**`)
+- ✅ A PR adds a new dataset output → must include *new* provenance and registration metadata
+- ✅ A PR updates a pipeline output → provenance must reflect the new run + inputs + parameters
 
 ---
 
-## Quick start 🚀
+## 🧠 Quick mental model
 
-Add to a PR workflow (recommended on `pull_request`):
+```mermaid
+flowchart TD
+  A[PR changes 🧑‍💻] --> B{Touches publishable artifacts?}
+  B -- No --> OK[✅ Pass]
+  B -- Yes --> C{Has required provenance + metadata?}
+  C -- Yes --> OK
+  C -- No --> FAIL[❌ Fail + actionable guidance]
+```
+
+---
+
+## 📦 Repository contract (what this gate protects)
+
+KFM’s pipeline expects artifacts to move through a strict lifecycle. This action helps enforce the **“no orphan outputs”** rule.
+
+### 🗂️ Key folders
+
+```text
+📦 repo-root/
+├─ 📁 data/
+│  ├─ 📁 raw/                 # raw inputs (often external references / checksums)
+│  ├─ 📁 work/                # intermediate outputs
+│  ├─ 📁 processed/           # publishable outputs (GeoJSON/Parquet/etc.)
+│  ├─ 📁 provenance/          # PROV lineage docs (sidecars/logs)
+│  ├─ 📁 catalog/             # DCAT & other catalog entries
+│  └─ 📁 stac/                # STAC collections/items (if used)
+└─ 📁 .github/
+   └─ 📁 actions/
+      └─ 📁 pr-provenance/    # ✅ this action
+```
+
+---
+
+## 🚀 Usage
+
+Add it to a PR workflow (example: `.github/workflows/pr.yml`).
 
 ```yaml
-name: PR Provenance
+name: PR Checks
 
 on:
   pull_request:
@@ -55,285 +72,138 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
-  actions: read
-  id-token: write # only needed if you enable signing/attestations
+  pull-requests: read
 
 jobs:
   provenance:
+    name: Provenance Gate 🧾
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout 🧰
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Run PR Provenance
+      - name: PR Provenance Gate 🧾🔒
         uses: ./.github/actions/pr-provenance
         with:
-          mode: enforce                # enforce | report-only
-          policy_dir: tools/validation/policy
-          emit_prov: true
-          emit_summary: true
-          comment_on_pr: true
-          sign_artifacts: false        # set true if you wire cosign/OIDC
+          # See "Inputs" below (exact names depend on action.yml)
+          mode: strict
+          artifact_glob: data/processed/**
+          provenance_dir: data/provenance
+          catalog_dir: data/catalog
+          stac_dir: data/stac
 ```
 
-> 💡 **Tip:** Start with `mode: report-only` to see what it would enforce, then flip to `enforce` once the repo is compliant.
+> [!TIP]  
+> If your workflow also posts comments to PRs, set `pull-requests: write` and pass a token input (if supported).
 
 ---
 
-## Inputs 🧩
-> **Source of truth is `action.yml`.** This README documents the intended interface and common knobs.
+## 🧩 Inputs
+
+> [!NOTE]  
+> **This README documents the intended interface.** The canonical source of truth is `action.yml`.  
+> If your input names differ, update this README to match your implementation.
 
 | Input | Type | Default | What it controls |
 |------|------|---------|------------------|
-| `mode` | string | `enforce` | `enforce` fails the job on violations; `report-only` never fails, only reports |
-| `policy_dir` | path | `tools/validation/policy` | Where Rego/Conftest policies live (Policy Pack) |
-| `emit_prov` | bool | `true` | Emit PROV JSON-LD mapping PR → lineage |
-| `emit_summary` | bool | `true` | Emit a human-readable summary markdown |
-| `comment_on_pr` | bool | `false` | Post a PR comment with the provenance summary |
-| `fail_on_warnings` | bool | `false` | Treat warnings as failures (hard mode) |
-| `sign_artifacts` | bool | `false` | Enable cosign/OIDC signing for generated attestations (if configured) |
-| `artifact_dir` | path | `artifacts/pr-provenance` | Output folder for reports/JSON |
-| `changed_paths` | string | *(auto)* | Override changed file discovery (advanced / debugging) |
+| `mode` | string | `strict` | `strict` fails the job; `warn` emits annotations but does not fail |
+| `artifact_glob` | string | `data/processed/**` | Which files are treated as “publishable artifacts” |
+| `provenance_dir` | string | `data/provenance` | Where provenance (PROV) sidecars/logs live |
+| `catalog_dir` | string | `data/catalog` | Where catalog metadata (e.g., DCAT) lives |
+| `stac_dir` | string | `data/stac` | Where STAC collections/items live |
+| `require_provenance` | boolean | `true` | Whether provenance is required when artifacts change |
+| `require_catalog` | boolean | `true` | Whether catalog registration is required when artifacts change |
+| `require_stac` | boolean | `false` | Whether STAC updates are required when artifacts change |
+| `ignore_glob` | string | *(empty)* | Exclude files (e.g., `**/*.md`, temp outputs) |
+| `github_token` | string | *(empty)* | Optional: token for PR annotations/comments (if supported) |
 
 ---
 
-## Outputs 📦
+## 📤 Outputs
 
-### Files produced (typical)
-```text
-🧾 artifacts/pr-provenance/
-├─ summary.md                  # what happened + what failed
-├─ pr.prov.jsonld              # PR mapped to W3C PROV
-├─ run_manifest.json           # structured receipt (hashable)
-├─ policy_report.json          # machine-readable policy results
-└─ attestations/               # optional
-   ├─ sbom.spdx.json
-   └─ slsa.intoto.jsonl
-```
-
-### Job annotations
-- ✅ Pass: provenance artifacts uploaded / summary posted (if enabled)
-- ❌ Fail: policy gates violated (missing license, missing provenance, sensitivity violation, etc.)
+| Output | Type | Meaning |
+|--------|------|---------|
+| `ok` | boolean | `true` if all checks passed |
+| `missing` | string (JSON) | A machine-readable list of missing companion files/requirements |
+| `summary` | string (markdown) | A markdown summary suitable for `GITHUB_STEP_SUMMARY` |
 
 ---
 
-## How it works ⚙️
+## 🧾 Provenance expectations (what “good” looks like)
 
-```mermaid
-flowchart LR
-  PR[🔀 Pull Request] --> D[🛰️ Detect changes]
-  D --> C[🧠 Classify change types]
-  C --> P[🚦 Policy Gates<br/>OPA + Conftest]
-  C --> M[🧾 Run Manifest<br/>(canonical JSON + SHA-256)]
-  M --> V[🔗 PROV JSON-LD<br/>(PR → Activity)]
-  P -->|pass| R[📦 Upload artifacts]
-  P -->|fail| F[❌ Fail closed (block merge)]
-  V --> R
-  R --> S[💬 Optional PR comment]
-  R --> O[🔐 Optional signing / attestations]
-```
+A provenance record should make it easy to reconstruct and audit a build/run:
 
-### Step-by-step (conceptual)
-1. **Detect** changed files in the PR (catalogs, data, pipelines, stories, UI, AI configs).
-2. **Classify** risk and required artifacts:
-   - Data/catalog changes ⇒ require STAC/DCAT/PROV completeness.
-   - New/updated dataset artifacts ⇒ require checksums/digests and licensing.
-   - Story changes ⇒ require evidence manifests for citations.
-   - AI changes ⇒ require governance/citation guardrails (no ungrounded outputs).
-3. **Validate** via Policy Pack (fail closed by default).
-4. **Emit** a **Run Manifest** (structured receipt) and **PROV JSON-LD** record.
-5. **Publish** artifacts to workflow outputs (and optionally sign/attest).
+- 🧩 **Entities:** inputs + outputs (file refs, checksums, source URLs where relevant)
+- ⚙️ **Activity:** the pipeline run (what script, when, parameters, environment hints)
+- 🧑‍🤝‍🧑 **Agents:** the actor(s) — automated pipeline + human trigger when applicable
+
+### ✅ Suggested filename conventions
+
+Pick one consistent rule and stick to it:
+
+- **Sidecar style:**  
+  `data/processed/foo/bar.geojson` → `data/provenance/foo/bar.geojson.prov.json`
+- **Basename style:**  
+  `data/processed/foo/bar.geojson` → `data/provenance/foo/bar.prov.json`
+
+> [!WARNING]  
+> Inconsistent naming is the #1 reason provenance gates become noisy. Standardize early. 🧯
 
 ---
 
-## What gets enforced ✅🚫
-KFM’s governance is implemented as **Policy Gates**. This action is the “PR-shaped entry point” for those rules.
-
-### Minimum policy gates (baseline)
-- 🧬 **Schema validation** (metadata and structured files)
-- 🗂️ **STAC/DCAT/PROV completeness** (required fields must exist)
-- 📜 **License presence** (no dataset without an approved license string)
-- 🧯 **Sensitivity classification** (sensitive data must be flagged + handled correctly)
-- 🔗 **Provenance completeness** (inputs + processing steps declared)
-- 🧷 **No secrets in diffs** (block API keys, tokens, credentials patterns)
-- 🧑‍⚖️ **FAIR + CARE safety rails** (authority/ethics checks for sensitive locations)
-
-> ⚠️ **Fail-closed default:** If required provenance/metadata isn’t present, the job fails and the PR can’t merge.
-
----
-
-## Provenance model 🧾➡️🕸️
-KFM treats **DevOps history** like first-class data.
-
-### Mapping concept
-- `prov:Activity` = PR event (open/sync/merge) or “promotion” action
-- `prov:Entity` = commits, catalogs, artifacts (files, digests), manifests
-- `prov:Agent` = author, reviewers, bots (Watcher/Planner/Executor)
-
-```mermaid
-graph TD
-  A((prov:Activity<br/>PR #123)) -->|prov:used| E1[prov:Entity<br/>commit SHA]
-  A -->|prov:used| E2[prov:Entity<br/>run_manifest.json]
-  E3[prov:Entity<br/>dataset digest] -->|prov:wasGeneratedBy| A
-  G[prov:Agent<br/>human/bot] -->|prov:wasAssociatedWith| A
-```
-
-This lets KFM answer things like:
-- “Which PR produced this dataset artifact?” 🔎
-- “Who reviewed the pipeline that generated this layer?” 👥
-- “Which stories relied on this dataset revision?” 📚
-
----
-
-## Evidence-first stories 🧠📚
-KFM stories (Story Nodes) are not “just markdown blobs” — they’re **traceable objects**.
-
-If a PR touches story content, this action can require:
-- ✅ an **evidence manifest** (YAML/JSON) mapping claims/citations → sources
-- ✅ resolvable references (no broken links / missing files)
-- ✅ provenance links so “story uses dataset” becomes queryable lineage
-
-> Think: “research paper discipline,” but enforced in CI. 🧾✨
-
----
-
-## Geospatial artifacts: hashes, packages, and registries 🗺️📦
-KFM data products commonly include:
-- PMTiles (fast web maps)
-- GeoParquet (analytics-friendly)
-- Cloud-Optimized GeoTIFFs (COGs)
-- (future) 3D Tiles / AR-ready datasets
-
-This action supports (or is designed to support) integration where:
-- artifacts are **content-addressed** (digests/checksums)
-- catalogs reference immutable digests
-- (optional) artifacts are pushed to an **OCI registry** and **signed** (cosign/OIDC)
-
-This matters because KFM’s UI can surface:
-- “Source: …”
-- “License: …”
-- “Prepared by KFM on …”
-- “Digest: …”
-…directly in layer info/provenance panels. 🧩🔍
-
----
-
-## Repo layout expectations 🧱📁
-Your actual repo may vary, but KFM’s conventions generally look like:
-
-```text
-📦 repo-root/
-├─ data/
-│  ├─ catalog/           # DCAT / STAC metadata source of truth
-│  ├─ processed/         # versioned outputs (GeoParquet, etc.)
-│  └─ prov/              # PROV records (JSON-LD)
-├─ stories/
-│  ├─ nodes/             # story markdown
-│  └─ evidence/          # evidence manifests (YAML/JSON)
-├─ tools/
-│  └─ validation/
-│     └─ policy/         # OPA / Conftest policies (.rego)
-└─ .github/
-   └─ actions/
-      └─ pr-provenance/
-         ├─ action.yml
-         ├─ README.md     👈 you are here
-         └─ scripts/      # helpers (optional)
-```
-
----
-
-## Security model 🔐
-### Recommended permissions
-| Permission | Why |
-|---|---|
-| `contents: read` | checkout + diff |
-| `pull-requests: write` | optional PR comment |
-| `id-token: write` | only if signing/attesting via OIDC |
-| `actions: read` | upload/download artifacts |
-
-### Safety notes
-- ✅ Avoid running privileged workflows on untrusted forks unless sandboxed.
-- ✅ Treat provenance files as **audit artifacts**—don’t embed secrets.
-- ✅ Keep policies versioned alongside code so you can answer: “Which rules were in effect?” 📜
-
----
-
-## Troubleshooting 🧰
+## 🧪 Example: adding a dataset (happy path)
 
 <details>
-<summary><b>❌ “Missing license field”</b></summary>
+<summary><strong>✅ PR changes</strong> (click to expand)</summary>
 
-**Meaning:** Your catalog metadata is missing a license string (or it’s not approved).
-
-**Fix:** Add a license in STAC/DCAT metadata using an allowed identifier (often SPDX-style), then re-run CI.
-
-</details>
-
-<details>
-<summary><b>❌ “Provenance required” / “PROV missing”</b></summary>
-
-**Meaning:** A PR added/updated a dataset but didn’t add a PROV record linking it to sources + processing.
-
-**Fix:** Add `data/prov/<something>.prov.jsonld` (or your repo’s equivalent) and ensure it references:
-- input source entities (URLs/files)
-- the activity (pipeline step)
-- the resulting dataset entity
-- the agent (human or bot)
-
-</details>
-
-<details>
-<summary><b>❌ “Sensitive data policy violation”</b></summary>
-
-**Meaning:** A dataset appears to include sensitive locations/attributes without required protections.
-
-**Fix:** Classify appropriately (restricted/private), aggregate/redact, and add required review flags.
-
-</details>
-
-<details>
-<summary><b>❌ “Secrets detected”</b></summary>
-
-**Meaning:** Something in the diff matches credential patterns.
-
-**Fix:** Remove immediately. Rotate the secret if it was real. Add safer configuration via GitHub Secrets or vault tooling.
+- `data/processed/climate/rainfall_1850_2020.geojson` *(new)*
+- `data/provenance/climate/rainfall_1850_2020.geojson.prov.json` *(new)*
+- `data/catalog/dcat/rainfall_1850_2020.dataset.jsonld` *(new/updated)*
+- `data/stac/items/rainfall_1850_2020.json` *(optional; if used)*
 
 </details>
 
 ---
 
-## Extending the action 🧪
-Want a new rule?
+## 🧯 Troubleshooting (common failures)
 
-1. Add/modify Rego policies in: `tools/validation/policy/`
-2. Add fixtures and tests for the policy (recommended)
-3. Update this README “What gets enforced” section
-4. Ship via PR (policies are versioned + reviewable)
+### ❌ “Processed artifact changed but no provenance updated”
+**Fix:** add/update the matching `data/provenance/**` file (include new inputs/params/checksums).
 
-> Governance changes should be intentional and auditable—**rules are part of the product**. ⚖️
+### ❌ “Catalog entry missing for new processed output”
+**Fix:** register the dataset in `data/catalog/**` (and/or STAC if required).
 
----
-
-## Design lineage 📚✨
-This action is aligned with KFM’s broader architecture across data intake, mapping/UI, AI governance, and DevOps transparency. Key design sources used to shape this README:
-
-- 📘 **Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation**
-- 🧱 **Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design**
-- 🧭🤖 **Kansas Frontier Matrix (KFM) – AI System Overview**
-- 🎛️ **Kansas Frontier Matrix – Comprehensive UI System Overview**
-- 📥 **KFM Data Intake – Technical & Design Guide**
-- 🌟 **KFM – Latest Ideas & Future Proposals**
-- 💡 **Innovative Concepts to Evolve the KFM**
-- 🧠 **AI Concepts & more** (portfolio reference library)
-- 🗺️ **Maps / Google Maps / Virtual Worlds / Archaeology / WebGL** (portfolio reference library)
-- 🧬 **Data Management / Data Science / Bayesian Methods** (portfolio reference library)
-- 🧰 **Various programming languages & resources** (portfolio reference library)
-- 🧩 **Additional Project Ideas** (evidence manifests, run manifests, OCI artifacts, signing)
+### ❌ “False positive: this artifact shouldn’t require provenance”
+**Fix options:**
+- add an `ignore_glob` rule for that path, or
+- move the file to a non-published folder (`data/work/**`), or
+- mark the file as non-publishable in your workflow configuration
 
 ---
 
-## License 📝
-This action is part of the KFM repository and inherits the repo’s licensing and governance policies.
+## 🔐 Security notes
 
-> 🌾 If it can’t be traced, it can’t be trusted.
+- This action should run with **minimal permissions** (`contents: read`, `pull-requests: read`).
+- If it posts PR comments/annotations, use the smallest scope token possible and avoid exposing secrets in logs.
+- Provenance files should **not** contain secrets (keys, tokens, private URLs). 🚫🔑
+
+---
+
+## 🤝 Contributing
+
+- Keep checks **deterministic** and **fast** ⏱️  
+- Prefer **actionable errors** (tell contributors *exactly* what file is missing and where it should go)
+- Update this README whenever `action.yml` changes ✅
+
+---
+
+## 🧭 Related
+
+- 📘 Project architecture & governance docs (see repo `docs/` and policy rules)
+- 🗃️ Data contracts: `data/catalog/`, `data/stac/`, `data/provenance/`
+- 🧰 CI workflows: `.github/workflows/`
+
+---
+<sub>Made with traceability in mind 🧬✨</sub>
