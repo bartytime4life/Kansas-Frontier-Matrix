@@ -1,218 +1,111 @@
-<a id="top"></a>
+# 🐳 `docker-build` (Composite GitHub Action)
 
-# 🐳 `docker-build` — Build & Publish OCI Images (Composite Action)  
-**Kansas Frontier Matrix (KFM)** • `.github/actions/docker-build/README.md`
+[![Type](https://img.shields.io/badge/type-composite%20action-2ea44f?logo=githubactions&logoColor=white)](#)
+[![Purpose](https://img.shields.io/badge/purpose-docker%20build%20%2B%20(optional)%20push-0b5fff?logo=docker&logoColor=white)](#)
 
-[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+A reusable **composite GitHub Action** that standardizes how this repo **builds** (and optionally **pushes**) Docker images with **BuildKit/Buildx**, **cache**, and consistent **tags/labels**.
 
-![OCI](https://img.shields.io/badge/OCI-images-informational)
-![BuildKit](https://img.shields.io/badge/Docker-BuildKit-blue)
-![GHCR](https://img.shields.io/badge/Registry-GHCR-black)
-![Provenance](https://img.shields.io/badge/provenance-digest%20%2B%20labels%20%2B%20receipt-6f42c1)
-![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20attestations-black)
-![Least Privilege](https://img.shields.io/badge/security-least--privilege-111827)
-![Fail Closed](https://img.shields.io/badge/gates-fail--closed-red)
-
-> 🧰 Repo‑local GitHub Action to build **Docker/OCI images** for KFM (API, UI, pipelines/toolchain) in a **boring, repeatable, provenance‑friendly** way.  
-> 🧭 Designed to fit KFM’s non‑negotiable order: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.  
->
-> KFM’s CI philosophy applies to containers too: **deterministic inputs**, **declared outputs**, **provenance emission**, and **atomic promotion** (no half‑published artifacts). ✅
+> ✅ Use this to keep workflows DRY: all Docker builds (API, web, pipelines, etc.) follow the same playbook.
 
 ---
 
-## 🧾 Policy metadata
+## 📁 Location
 
-| Field | Value |
-|---|---|
-| Action folder | `📁 .github/actions/docker-build/` |
-| Action file | `📄 .github/actions/docker-build/action.yml` *(expected)* |
-| Docs file | `📄 .github/actions/docker-build/README.md` *(you are here)* |
-| Status | ✅ Spec (implementation should match this doc) |
-| Last updated | **2026-01-11** |
-| KFM-MDP baseline | `v11.2.6` |
-| Master Guide | `v13 (draft)` |
-| Primary goals | Deterministic builds • minimal permissions • auditable outputs • promotion-ready digests |
-
-> [!IMPORTANT]
-> A “promoted” KFM image must be:
-> - **Addressable** ✅ by digest (`image@sha256:…`)
-> - **Traceable** ✅ via build receipt (`build-info.json`) + labels
-> - **Attestable** ✅ via SBOM + provenance/signing in the release lane
-
----
-
-## ⚡ Quick links
-
-| Need | Go |
-|---|---|
-| 🧩 All local actions | [`../README.md`](../README.md) |
-| 🤖 Workflows hub | [`../../workflows/README.md`](../../workflows/README.md) |
-| 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) *(or `../../SECURITY.md` if mirrored in `.github/`)* |
-| 🧯 Kill switch guard | [`../check-kill-switch/README.md`](../check-kill-switch/README.md) |
-| 🧾 Build receipt + checksums | [`../build-info/README.md`](../build-info/README.md) |
-| 🧬 SBOM generator | [`../sbom/README.md`](../sbom/README.md) |
-| 🖊️ Attestations/signing | [`../attest/README.md`](../attest/README.md) |
-| 🧑‍⚖️ Policy gate | `📁 tools/validation/policy/` *(expected)* |
-
----
-
-<details>
-<summary><strong>📌 Table of contents</strong></summary>
-
-- [🎯 What this action does](#-what-this-action-does)
-- [🚫 What this action does NOT do](#-what-this-action-does-not-do)
-- [🧭 KFM invariants this action supports](#-kfm-invariants-this-action-supports)
-- [🔐 Permissions & threat model](#-permissions--threat-model)
-- [🧩 Inputs](#-inputs)
-- [📤 Outputs](#-outputs)
-- [📦 Output files (KFM-friendly)](#-output-files-kfm-friendly)
-- [✅ Usage patterns](#-usage-patterns)
-- [🚦 Promotion-ready pipeline](#-promotion-ready-pipeline)
-- [🛡️ Security hardening checklist](#-security-hardening-checklist)
-- [🧯 Troubleshooting](#-troubleshooting)
-- [🧪 Local debugging](#-local-debugging)
-- [🧱 Implementation notes (maintainers)](#-implementation-notes-maintainers)
-
-</details>
-
----
-
-## 🎯 What this action does
-
-This action standardizes container builds for KFM so **build behavior, metadata, tags, and outputs are consistent** across workflows.
-
-### ✅ Capabilities (expected)
-- 🐳 Build images using **BuildKit + buildx**
-- 🧠 Optional multi‑arch (`linux/amd64,linux/arm64`)
-- 🏷️ Deterministic tagging patterns (SHA tags; optional semver)
-- 🏷️ OCI label set via `docker/metadata-action` *(source, revision, repo, etc.)*
-- ♻️ Cache support (`type=gha`) to keep CI fast
-- 📤 Optional push to GHCR (gated: main/tags/dispatch + protected env approvals)
-- 🧾 Emits machine‑readable build outputs (digest, tags, metadata JSON)
-- 🧯 Upload-friendly logs/outputs (especially on failure)
-
-### 🧭 KFM-shaped intent
-Containers are not “random build artifacts.” In KFM they are part of the **governed supply chain**:
-- the **API** image defines what the UI can query (contracts + redaction rules)
-- the **ETL/toolchain** image defines what transforms ran against your data (reproducibility)
-- the **UI** image defines what is shown to users (and must not bypass API controls)
-
-> [!TIP]
-> Treat images as “boundary artifacts” for operational trust:
-> - build them consistently  
-> - publish them atomically  
-> - record their digest and attach provenance/SBOM in promotion lanes
-
----
-
-## 🚫 What this action does NOT do
-
-To keep it single-purpose, `docker-build` should **not**:
-- ❌ Run full CI (lint/tests/typecheck) — do that in `ci.yml`
-- ❌ Validate STAC/DCAT/PROV — do that in `catalog-qa` + schema lanes
-- ❌ Enforce governance/classification — do that in policy gates & approval environments
-- ❌ Merge PRs or publish catalogs — promotion remains **PR-first + fail-closed**
-- ❌ Generate SBOMs or sign artifacts — do that in `sbom/` + `attest/`
-- ❌ Bake datasets into images — ship data via catalogs/object storage, not container layers
-
-> [!NOTE]
-> KFM’s “bring computation to the data” principle also implies:
-> **don’t smuggle the data into the compute artifact** (the container). 📦🚫
-
----
-
-## 🧭 KFM invariants this action supports
-
-KFM’s system invariants apply to containers too:
-
-1) 🚦 **Fail closed**  
-If build/push fails, nothing should “half publish.” No silent continues.
-
-2) 🔐 **Least privilege**  
-Defaults to `contents: read`. Only add `packages: write` for pushes; only add `id-token: write` for keyless attest.
-
-3) 🧾 **Declared inputs/outputs (receipt-friendly)**  
-Workflows should be able to point to:
-- the exact Dockerfile/context used  
-- the resolved tags  
-- the digest file  
-- the metadata JSON  
-…and then checksum those in `build-info`.
-
-4) ♻️ **Determinism (practical)**  
-- Promotion relies on **digests**, not floating tags.  
-- Inputs are pinned wherever possible (base image digests, lockfiles).  
-- No time-based “publish tags” (avoid `nightly-<date>` for production).
-
-5) 🧯 **Kill-switch compatible**  
-This action is designed to run **after** `check-kill-switch` in mutation lanes (push/release).
-
----
-
-## 🔐 Permissions & threat model
-
-Build/push is **supply-chain-sensitive**. Treat runners + actions as part of your trusted computing base.
-
-### ✅ Recommended workflow permissions
-
-**PR build-only (no push):**
-```yaml
-permissions:
-  contents: read
+```text
+.github/
+└─ actions/
+   └─ docker-build/
+      ├─ action.yml
+      └─ README.md   👈 you are here
 ```
 
-**Push to GHCR (protected lanes only):**
+Use it in a workflow like:
+
+```yaml
+uses: ./.github/actions/docker-build
+```
+
+---
+
+## ✨ What this action does
+
+Typical flow (inside the composite action):
+
+1. 🧰 Sets up Docker Buildx (BuildKit)
+2. 🔐 (Optional) Logs into a registry (GHCR/Docker Hub/other) when `push: true`
+3. 🏷️ Generates tags/labels (or accepts your custom tags)
+4. 🏗️ Builds (and optionally pushes) an image
+5. 📤 Exposes helpful outputs (image ref / digest / resolved tags)
+
+---
+
+## ✅ Recommended usage
+
+### 🟦 Minimal: build-only (PRs, local validation)
+
+```yaml
+- name: Build (no push)
+  uses: ./.github/actions/docker-build
+  with:
+    image: ghcr.io/${{ github.repository }}/api
+    context: ./api
+    file: ./api/Dockerfile
+    push: false
+```
+
+### 🟩 Build + push to GHCR (main / tags)
+
 ```yaml
 permissions:
   contents: read
   packages: write
-```
 
-**Keyless signing/attest (cosign via OIDC):**
-```yaml
-permissions:
-  contents: read
-  packages: write
-  id-token: write
-```
+steps:
+  - uses: actions/checkout@v4
 
-> [!CAUTION]
-> Never do `push: true` on untrusted fork PRs.  
-> Avoid `pull_request_target` for builds/pushes unless you *fully* isolate untrusted code and secrets.
+  - name: Build & push
+    uses: ./.github/actions/docker-build
+    with:
+      image: ghcr.io/${{ github.repository }}/api
+      context: ./api
+      file: ./api/Dockerfile
+      push: true
+      registry: ghcr.io
+      username: ${{ github.actor }}
+      password: ${{ secrets.GITHUB_TOKEN }}
+      tags: |
+        type=ref,event=branch
+        type=ref,event=tag
+        type=sha
+```
 
 ---
 
-## 🧩 Inputs
+## 🔧 Inputs
 
-> Composite action inputs are strings (even for booleans). Keep them explicit and validate them.
+> ℹ️ Inputs below describe the **expected contract** for `action.yml`. If you change `action.yml`, update this table too.
 
-| Input | Required | Default | Example | Notes |
-|---|---:|---|---|---|
-| `context` | ❌ | `.` | `.` | Docker build context |
-| `dockerfile` | ❌ | `Dockerfile` | `src/server/Dockerfile` | Path relative to repo root |
-| `target` | ❌ | *(none)* | `runtime` | Multi-stage target |
-| `push` | ❌ | `false` | `true` | Only `true` on protected lanes |
-| `registry` | ❌ | `ghcr.io` | `ghcr.io` | Registry host |
-| `image` | ✅ | *(none)* | `ghcr.io/${{ github.repository }}/kfm-api` | Full image name (no tag) |
-| `tags` | ❌ | *(auto)* | `sha-${{ github.sha }}` | Newline-separated tags |
-| `platforms` | ❌ | `linux/amd64` | `linux/amd64,linux/arm64` | Multi-arch builds |
-| `build_args` | ❌ | *(none)* | `API_BASE=/api` | Newline-separated `KEY=VALUE` |
-| `labels` | ❌ | *(auto)* | `org.opencontainers.image.title=KFM API` | Extra OCI labels |
-| `cache_from` | ❌ | `type=gha` | `type=gha` | Cache source |
-| `cache_to` | ❌ | `type=gha,mode=max` | `type=gha,mode=max` | Cache destination |
-| `provenance` | ❌ | `false` | `true` | BuildKit provenance emission *(when supported)* |
-| `sbom` | ❌ | `false` | `true` | BuildKit SBOM emission *(when supported; KFM still prefers `sbom/` action for gates)* |
-| `output_dir` | ❌ | `.artifacts/docker` | `.artifacts/docker` | Where to write metadata/digest/logs |
-| `metadata_json_path` | ❌ | *(derived)* | `.artifacts/docker/docker-metadata.json` | Override path if needed |
-| `digest_path` | ❌ | *(derived)* | `.artifacts/docker/image-digest.txt` | Override path if needed |
-| `build_log_path` | ❌ | *(derived)* | `.artifacts/docker/build-log.txt` | Optional build log file |
-| `idempotency_key` | ❌ | *(empty)* | `${{ github.run_id }}.${{ github.run_attempt }}` | Record-only: helps “replay produces same intent” |
-| `commit_seed` | ❌ | *(empty)* | `${{ github.sha }}` | Record-only: aligns with KFM “seeded, repeatable runs” |
-| `fail_on_warning` | ❌ | `true` | `true` | Treat “warning-y” states as failures *(implementation-defined)* |
+| Input | Required | Default | Description |
+|---|---:|---|---|
+| `image` | ✅ | — | Image name/repo (ex: `ghcr.io/org/repo/api`) |
+| `context` | ⛔ | `.` | Build context directory |
+| `file` | ⛔ | `Dockerfile` | Path to Dockerfile |
+| `push` | ⛔ | `false` | If `true`, pushes built image to registry |
+| `platforms` | ⛔ | `linux/amd64` | Build platforms (ex: `linux/amd64,linux/arm64`) |
+| `tags` | ⛔ | *(auto)* | Tag rules or explicit tags (see “Tagging”) |
+| `labels` | ⛔ | *(auto)* | OCI labels or additional labels |
+| `build-args` | ⛔ | — | Newline-separated `KEY=VALUE` build args |
+| `target` | ⛔ | — | Multi-stage target (if your Dockerfile uses `target`) |
+| `cache` | ⛔ | `true` | Enables BuildKit cache via GitHub Actions cache (`type=gha`) |
+| `cache-from` | ⛔ | `type=gha` | Advanced override for cache source |
+| `cache-to` | ⛔ | `type=gha,mode=max` | Advanced override for cache destination |
+| `registry` | ⛔ | `ghcr.io` | Registry host (ex: `ghcr.io`, `docker.io`) |
+| `username` | ⚠️ | — | Registry username (required when `push: true`) |
+| `password` | ⚠️ | — | Registry password/token (required when `push: true`) |
+| `provenance` | ⛔ | `false` | Enable BuildKit provenance attestation (if wired in `action.yml`) |
+| `sbom` | ⛔ | `false` | Enable SBOM generation (if wired in `action.yml`) |
 
-> [!TIP]
-> If your repo produces multiple images (API/UI/pipelines), prefer matrix builds in the workflow and call this action per image.
+> ⚠️ `username/password` are only needed when pushing. For GHCR, `secrets.GITHUB_TOKEN` usually works with `packages: write`.
 
 ---
 
@@ -220,366 +113,157 @@ permissions:
 
 | Output | Description |
 |---|---|
-| `image` | Image name (no tag) |
-| `tags` | Resolved tags (newline-separated) |
-| `digest` | Image digest (manifest digest for multi-arch pushes when available) |
-| `image_ref` | Fully qualified reference recommended for downstream: `image@sha256:…` |
-| `metadata_json` | Path to metadata JSON file |
-| `digest_file` | Path to digest file |
-| `output_dir` | Resolved output directory |
-
-> [!IMPORTANT]
-> Downstream lanes (SBOM, policy gate, attest, deploy) should prefer `image_ref` (digest pinned) over tags.
+| `image` | Fully-qualified image name that was built |
+| `tags` | Resolved tags that were applied |
+| `digest` | Image digest (when pushing, or when supported by build driver) |
 
 ---
 
-## 📦 Output files (KFM-friendly)
+## 🏷️ Tagging
 
-This action should write predictable outputs for later gates (build-info, SBOM, attestations, deployments):
+This action is designed to support either:
 
-```text
-.artifacts/docker/
-├─ docker-metadata.json      # 🏷️ tags/labels resolved by metadata action
-├─ image-digest.txt          # 🧾 sha256:<...> digest
-├─ image-ref.txt             # 🔗 ghcr.io/org/repo/name@sha256:<...>
-└─ build-log.txt             # 🧪 optional: build output (helpful on failures)
-```
-
-### ✅ Recommended “build-info” integration
-Pair with `build-info` to emit one traceable bundle:
-
-```text
-.artifacts/
-├─ docker/
-│  ├─ docker-metadata.json
-│  ├─ image-digest.txt
-│  └─ image-ref.txt
-├─ build-info/
-│  ├─ build-info.json
-│  └─ checksums.sha256
-└─ attestations/             # produced later by sbom/attest lanes
-   ├─ materials.sbom.spdx.json
-   └─ provenance.dsse.json
-```
-
----
-
-## ✅ Usage patterns
-
-### 1) PR lane — build only (no push) 🧪
-Use this to prove Dockerfiles build cleanly for every PR (no registry writes).
+### Option A) **Rules-based tags** (recommended)
+Using Docker metadata-style rules:
 
 ```yaml
-jobs:
-  docker-build-pr:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 🧯 Kill switch (fail closed)
-        uses: ./.github/actions/check-kill-switch
-        with:
-          mode: fail
-          scope: docker
-
-      - name: 🐳 Build (no push)
-        uses: ./.github/actions/docker-build
-        with:
-          image: ghcr.io/${{ github.repository }}/kfm-api
-          dockerfile: src/server/Dockerfile
-          push: "false"
-          platforms: linux/amd64
+with:
+  tags: |
+    type=ref,event=branch
+    type=ref,event=tag
+    type=sha
 ```
 
----
-
-### 2) Main lane — push to GHCR 🚀
-Only on `push` to `main` (or protected dispatch). No forks.
+### Option B) **Explicit tags**
+You can pass explicit tags instead (example: two tags):
 
 ```yaml
-jobs:
-  docker-build-main:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 🧯 Kill switch
-        uses: ./.github/actions/check-kill-switch
-        with:
-          mode: fail
-          scope: docker
-
-      - name: 🔐 Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 🐳 Build & push
-        uses: ./.github/actions/docker-build
-        with:
-          image: ghcr.io/${{ github.repository }}/kfm-api
-          dockerfile: src/server/Dockerfile
-          push: "true"
-          tags: |
-            sha-${{ github.sha }}
-            latest
-          platforms: linux/amd64,linux/arm64
+with:
+  tags: |
+    ghcr.io/${{ github.repository }}/api:latest
+    ghcr.io/${{ github.repository }}/api:${{ github.sha }}
 ```
 
-> [!TIP]
-> Prefer `sha-<sha>` for deployments. Keep `latest` as convenience only.
+> ✅ Pick one approach and keep it consistent across services.
 
 ---
 
-### 3) Release lane — build → SBOM → policy gate → attest/sign 🏷️🧬🖊️
-Recommended order aligns with KFM’s “validate → promote” posture.
+## 🧩 Common patterns
 
-```yaml
-jobs:
-  release-image:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-      id-token: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 🧯 Kill switch
-        uses: ./.github/actions/check-kill-switch
-        with:
-          mode: fail
-          scope: docker
-
-      - name: 🔐 Login to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 🐳 Build & push
-        id: img
-        uses: ./.github/actions/docker-build
-        with:
-          image: ghcr.io/${{ github.repository }}/kfm-api
-          dockerfile: src/server/Dockerfile
-          push: "true"
-          tags: |
-            ${{ github.ref_name }}      # e.g., v1.2.3
-            sha-${{ github.sha }}
-          platforms: linux/amd64,linux/arm64
-          output_dir: .artifacts/docker
-
-      - name: 🧬 SBOM (image)
-        uses: ./.github/actions/sbom
-        with:
-          mode: image
-          image_ref: ${{ steps.img.outputs.image_ref }}
-          formats: spdx-json,cyclonedx-json
-          output_dir: .artifacts/sbom
-          attestations_dir: .artifacts/attestations
-
-      - name: 🧾 Build info (receipt)
-        uses: ./.github/actions/build-info
-        with:
-          out_dir: .artifacts/build-info
-          artifact_globs: |
-            .artifacts/docker/**
-            .artifacts/sbom/**
-            .artifacts/attestations/**
-
-      - name: 🖊️ Attest/sign (recommended)
-        uses: ./.github/actions/attest
-        with:
-          subject: ${{ steps.img.outputs.image_ref }}
-          artifacts: |
-            .artifacts/docker/**
-            .artifacts/build-info/**
-            .artifacts/attestations/**
-          mode: bundle
-```
-
----
-
-### 4) Multi-image matrix — API + UI + pipelines 🧩
-If KFM has multiple deliverables, use a matrix build:
+### 1) 🧱 Build multiple images with a matrix
+Great for monorepos (API + Web + Workers):
 
 ```yaml
 strategy:
   matrix:
     include:
       - name: api
-        image: ghcr.io/${{ github.repository }}/kfm-api
-        dockerfile: src/server/Dockerfile
+        context: ./api
+        dockerfile: ./api/Dockerfile
       - name: web
-        image: ghcr.io/${{ github.repository }}/kfm-web
-        dockerfile: web/Dockerfile
-      - name: etl
-        image: ghcr.io/${{ github.repository }}/kfm-etl
-        dockerfile: pipelines/Dockerfile
+        context: ./web
+        dockerfile: ./web/Dockerfile
 
 steps:
   - uses: actions/checkout@v4
 
-  - uses: ./.github/actions/check-kill-switch
+  - name: Build & push ${{ matrix.name }}
+    uses: ./.github/actions/docker-build
     with:
-      mode: fail
-      scope: docker
-
-  - uses: docker/login-action@v3
-    with:
+      image: ghcr.io/${{ github.repository }}/${{ matrix.name }}
+      context: ${{ matrix.context }}
+      file: ${{ matrix.dockerfile }}
+      push: ${{ github.event_name != 'pull_request' }}
       registry: ghcr.io
       username: ${{ github.actor }}
       password: ${{ secrets.GITHUB_TOKEN }}
-
-  - uses: ./.github/actions/docker-build
-    with:
-      image: ${{ matrix.image }}
-      dockerfile: ${{ matrix.dockerfile }}
-      push: "true"
       tags: |
-        sha-${{ github.sha }}
-      platforms: linux/amd64,linux/arm64
-      output_dir: .artifacts/docker/${{ matrix.name }}
+        type=ref,event=branch
+        type=sha
 ```
+
+### 2) 🧬 Multi-arch builds (amd64 + arm64)
+```yaml
+with:
+  platforms: linux/amd64,linux/arm64
+```
+
+> 📝 Multi-arch builds usually require QEMU setup in `action.yml` (or in your workflow). If you see `exec format error`, that’s a hint QEMU isn’t enabled.
 
 ---
 
-## 🚦 Promotion-ready pipeline
+## 🔐 Permissions, secrets, and registry notes
 
-KFM “shipping” is more than pushing an image. The recommended promotion story:
+### ✅ GHCR (recommended for GitHub-hosted projects)
+Add this to your workflow:
 
-```mermaid
-flowchart LR
-  A["✅ CI gates<br/>lint • tests • CodeQL"] --> B["🔎 Governance gates<br/>policy • approvals • kill-switch"]
-  B --> C["🐳 Build image<br/>docker-build"]
-  C --> D["🧬 SBOM<br/>image@digest"]
-  D --> E["🧾 Build receipt<br/>build-info + checksums"]
-  E --> F["🖊️ Attest/sign<br/>OIDC keyless (recommended)"]
-  F --> G["📦 Release/Promote<br/>pin digests • publish notes"]
+```yaml
+permissions:
+  contents: read
+  packages: write
 ```
 
-> [!IMPORTANT]
-> For KFM, deployments and catalogs should reference **digests**, not floating tags:
-> `ghcr.io/<org>/<repo>/<image>@sha256:<digest>`
+Then use:
+
+- `registry: ghcr.io`
+- `username: ${{ github.actor }}`
+- `password: ${{ secrets.GITHUB_TOKEN }}`
+
+### 🐳 Docker Hub
+Use Docker Hub username + access token:
+
+- `registry: docker.io`
+- `username: ${{ secrets.DOCKERHUB_USERNAME }}`
+- `password: ${{ secrets.DOCKERHUB_TOKEN }}`
 
 ---
 
-## 🛡️ Security hardening checklist
+## 🛡️ Security tips (supply chain & sanity) 🔒
 
-Use this before enabling `push: true`:
-
-- [ ] ✅ Build/push runs only on `push main`, tags, or `workflow_dispatch`
-- [ ] ✅ Protected environments required for prod publish (`environment: prod`)
-- [ ] ✅ `permissions:` are minimal (only add `packages: write` when pushing)
-- [ ] ✅ Kill switch step is first in mutation jobs
-- [ ] ✅ No secrets in build args (avoid embedding tokens into layers)
-- [ ] ✅ Dockerfile uses:
-  - multi-stage builds
-  - non-root user where feasible
-  - pinned base images (prefer `FROM …@sha256:<digest>` for high assurance)
-  - lockfiles for language deps (pip/poetry/npm/pnpm)
-- [ ] ✅ Image scanning exists in release lanes (Trivy/Grype/etc.) + stored results
-- [ ] ✅ SBOM generated and stored (SPDX/CycloneDX) for releases
-- [ ] ✅ Attestation/provenance exists for promoted artifacts (Sigstore/in-toto style)
-- [ ] ✅ Do not ship sensitive datasets inside images (ship data separately with STAC/DCAT/PROV + policy gates)
+- ✅ **Use `.dockerignore`** aggressively to reduce context size and accidental secret leakage.
+- ✅ Prefer **build secrets** over build args for tokens (if supported by your `action.yml`).
+- ✅ Pin external actions in `action.yml` (e.g., `docker/build-push-action@<major>` at minimum).
+- ✅ Consider enabling **provenance/SBOM** for release builds (`provenance: true`, `sbom: true`) if you’ve wired that up.
+- 🧼 Keep images small: multi-stage builds, slim bases, clean caches.
 
 ---
 
 ## 🧯 Troubleshooting
 
-### “denied: permission to write packages”
-- Ensure workflow has:
-  ```yaml
-  permissions:
-    packages: write
-  ```
-- Ensure login uses `secrets.GITHUB_TOKEN` (or a PAT with `write:packages`).
+### “denied: permission_denied: write_package”
+- You’re pushing to GHCR without `packages: write`, or your token isn’t allowed.
+- Fix: add workflow permissions and ensure `password` uses a token with packages scope.
 
-### Multi-arch builds are slow / fail
-- Ensure QEMU and buildx are set up in the workflow (or inside this action if you include those steps):
-  - `docker/setup-qemu-action@v3`
-  - `docker/setup-buildx-action@v3`
+### “failed to solve: rpc error: … no space left on device”
+- Docker build cache bloated on hosted runner.
+- Fix: reduce context, prune layers, or tune cache settings.
 
-### “no space left on device”
-- Reduce build context, add `.dockerignore`, prune unnecessary layers.
-- Avoid copying large `data/**` into images (ship data through catalogs/object storage instead).
-
-### Cache isn’t helping
-- Ensure `cache-from` and `cache-to` are set, and BuildKit is used.
-- Keep Dockerfile layers stable (install deps before copying frequently-changed code).
-
-### Builds differ between runs (unexpected digest changes)
-Common causes:
-- base image drift (unpinned tag)
-- unpinned OS packages (`apt-get install` without versions)
-- non-locked Python/Node deps
-- timestamps embedded during build
-
-Fix:
-- pin base image digests
-- use lockfiles
-- record tool versions and inputs in `build-info`
-- treat unexpected digest drift as a **reproducibility incident** 🚨
+### Builds are slow / cache misses
+- Ensure `cache: true` and avoid changing build context files unnecessarily.
+- Confirm your Dockerfile ordering: put less-changing layers first (dependencies before app code).
 
 ---
 
-## 🧪 Local debugging
+## 🧪 Local equivalent (for debugging)
 
-Run the same build command locally before blaming CI:
+From repo root:
 
 ```bash
-docker buildx build \
-  -f src/server/Dockerfile \
-  --platform linux/amd64 \
-  -t kfm-api:dev \
-  .
+docker build -f ./api/Dockerfile ./api -t local/api:dev
 ```
 
-If CI uses multi-arch, validate `linux/amd64` first locally.
+Or multi-stage target:
+
+```bash
+docker build -f ./api/Dockerfile ./api --target runtime -t local/api:runtime
+```
 
 ---
 
-## 🧱 Implementation notes (maintainers)
+## 🧑‍🔧 Maintainer notes
 
-> Guidance for whoever writes/maintains `action.yml` 🔧
-
-### ✅ Recommended internal building blocks
-Inside a composite action, call trusted actions to keep implementation small:
-
-- `docker/setup-qemu-action@v3`
-- `docker/setup-buildx-action@v3`
-- `docker/metadata-action@v5`
-- `docker/build-push-action@v6`
-
-### ✅ Output discipline (KFM-friendly)
-- Write digest to a file (`image-digest.txt`) **and** `GITHUB_OUTPUT`
-- Write a digest-pinned `image_ref` (`image-ref.txt`) **and** output it
-- Write resolved metadata JSON (`docker-metadata.json`)
-- Optionally capture a build log file (on failure) for debugging
-- Preserve stable paths under `output_dir` so policy gates can find them
-
-### ✅ Pinning strategy
-- PR lanes: pin third-party actions to major versions (acceptable)
-- Release/publish lanes: pin third-party actions by commit SHA for higher assurance
-
-### ✅ Don’t do these things (ever)
-- ❌ Don’t echo secret env vars or tokens
-- ❌ Don’t run `push: true` on `pull_request` from forks
-- ❌ Don’t silently continue after build/push failures
-- ❌ Don’t include raw datasets in image layers
+- Keep `README.md` and `action.yml` **in sync** ✅
+- If you add a new input to `action.yml`, document it here (and add an example).
+- If you change tag strategy, update all workflows that reference this action to avoid drift.
 
 ---
-
-<p align="right"><a href="#top">⬆️ Back to top</a></p>
