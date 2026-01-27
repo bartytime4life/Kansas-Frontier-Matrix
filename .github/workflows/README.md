@@ -1,1588 +1,247 @@
-<a id="top"></a>
+<div align="center">
 
-# 🧰 `.github/workflows/` — CI/CD for Kansas Frontier Matrix (KFM)
+# ⚙️ GitHub Workflows (CI/CD)
 
-<div align="left">
+**KFM’s automated “trust pipeline” — policy-governed, provenance-first, and merge-safe.**  
+`./.github/workflows/*`
 
-<!-- ✅ Existing workflow badges (should match real workflow filenames in this repo) -->
-<a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg" /></a>
-<a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml"><img alt="CodeQL" src="https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg" /></a>
-<a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pages.yml"><img alt="Pages" src="https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/pages.yml/badge.svg" /></a>
-
-<!-- 🧭 KFM “shape” badges (conceptual, but aligned to v13 specs) -->
-<img alt="KFM-v13" src="https://img.shields.io/badge/KFM-v13%20blueprint-5865F2" />
-<img alt="Contract First" src="https://img.shields.io/badge/contract--first-enforced-2563eb" />
-<img alt="Evidence First" src="https://img.shields.io/badge/evidence--first-required-10b981" />
-<img alt="Catalog Triplet" src="https://img.shields.io/badge/catalog%20triplet-STAC%20%2B%20DCAT%20%2B%20PROV-6f42c1" />
-<img alt="Provenance" src="https://img.shields.io/badge/provenance-STAC%20%7C%20DCAT%20%7C%20PROV-6f42c1" />
-<img alt="Governance" src="https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-0ea5e9" />
-<img alt="DevSecOps" src="https://img.shields.io/badge/DevSecOps-enabled-black" />
-<img alt="Supply Chain" src="https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20attestations-111827" />
-<img alt="Artifacts" src="https://img.shields.io/badge/artifacts-OCI%20%2B%20digests-0ea5e9" />
-<img alt="Search" src="https://img.shields.io/badge/search-Elasticsearch%20%2B%20Embeddings-111827" />
-<img alt="AI Runtime" src="https://img.shields.io/badge/AI-Ollama%20(local)%20%2B%20guardrails-10b981" />
-<img alt="Data Formats" src="https://img.shields.io/badge/data-COG%20%7C%20GeoParquet%20%7C%20PMTiles-0ea5e9" />
-<img alt="Stack" src="https://img.shields.io/badge/stack-PostGIS%20%2B%20Neo4j%20%2B%20FastAPI-111827" />
-<img alt="UI" src="https://img.shields.io/badge/UI-React%20%2B%20MapLibre%20(%2B%20Cesium%20optional)-22c55e" />
-<img alt="CI" src="https://img.shields.io/badge/CI-boring%20by%20design-success" />
+<p>
+  <a href="../../README.md"><img alt="Repo README" src="https://img.shields.io/badge/README-Repo-0b7285?style=for-the-badge"></a>
+  <a href="../README.md"><img alt=".github README" src="https://img.shields.io/badge/.github-Docs-7950f2?style=for-the-badge"></a>
+  <a href="../actions/README.md"><img alt="Actions README" src="https://img.shields.io/badge/Actions-Composite%20Blocks-0ca678?style=for-the-badge"></a>
+  <a href="../ISSUE_TEMPLATE/README.md"><img alt="Issue templates README" src="https://img.shields.io/badge/Issue%20Templates-Intake%20Forms-f08c00?style=for-the-badge"></a>
+</p>
 
 </div>
 
-> 🧭 This folder contains GitHub Actions workflows that keep KFM **buildable**, **testable**, **secure**, and **shippable** — across **pipelines → catalogs → graph → API → UI → story nodes → focus mode**.  
-> ✅ **North Star:** CI/CD protects **trust** (contracts + catalog triplet + provenance + governance + supply chain) first, then **speed** (caching + change-aware gates).  
-> 🚦 **KFM canonical order (non‑negotiable):** **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**.
+---
+
+## 🎯 Purpose
+
+This folder defines **GitHub Actions workflows** that keep Kansas Frontier Matrix (KFM) contributions:
+
+- ✅ **reproducible** (consistent builds & deterministic checks),
+- 🧾 **traceable** (metadata + provenance expectations),
+- 🛡️ **governed** (policy as code + safety rails),
+- 🚦 **merge-safe** (fail-closed gates).
 
 > [!IMPORTANT]
-> CI is intentionally **boring** (predictable, repeatable, least‑privilege, auditable).  
-> The data, stories, and models are the interesting part. 🗺️✨
+> KFM is designed to **fail closed**: when policy/permission/provenance is uncertain, the system blocks the change rather than letting it slip through. This is enforced by CI gates.  
+> See: “fail closed” + CI enforcement concepts in the KFM blueprint and governance docs.[^fail_closed][^policy_as_code][^validation_gates]
 
 ---
 
-## 🧾 Workflow policy metadata
+## 🧭 Folder map
 
-| Field | Value |
-| --- | --- |
-| Folder | `.github/workflows/` |
-| Status | Active ✅ |
-| Last updated | **2026-01-26** |
-| v13 source of truth | `docs/MASTER_GUIDE_v13.md` + `docs/standards/MARKDOWN_GUIDE_v13.md` 🧭 |
-| Canonical pipeline invariant | **ETL → STAC/DCAT/PROV → Graph → API → UI → Story → Focus** |
-| Catalog invariant (KFM) | **STAC + DCAT + PROV move together** (“catalog triplet”) 🧾 |
-| Governance | FAIR + CARE (data + people) 🧭 |
-| CI philosophy | PR‑fast lane + scheduled heavy lanes + env‑gated promotion 🚦 |
-| Runner baseline | `ubuntu-latest` *(pin for hermetic lanes: `ubuntu-24.04`)* 🐧 |
-| Least‑privilege default | `permissions: { contents: read }` 🔐 |
-| PR‑first promotion | Promotion happens via **signed PRs**, not direct pushes 🧾 |
-| Fail‑closed posture | Promotion-critical workflows stop on policy/schema/provenance violations 🧯 |
-| Canonical publish boundary (v13) | `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` 🧾 |
-| Story Nodes canonical (v13) | `docs/reports/story_nodes/**` 🎬 |
-| Story Node format | **Markdown + storyboard JSON** (governed) 🎞️ |
-| Search posture (optional) | Elasticsearch/OpenSearch + embeddings are **derived**, never source-of-truth 🔎 |
-| AI runtime (local/dev) | Ollama (model changes must not bypass citations/policy) 🤖 |
-| Policy Pack (current target) | `api/scripts/policy/**` *(OPA/Rego + Conftest + waivers + CI wrapper)* ⚖️ |
-| “Data as artifacts” posture | OCI + digests + signatures (recommended) 📦🔏 |
+```text
+.github/workflows/
+├─ ♻️ reusables/            # reusable workflow_call building blocks
+├─ 🚦 *.yml                 # entrypoint workflows (PR, release, schedule, manual)
+└─ 📘 README.md             # you are here
+```
 
-> [!NOTE]
-> Some legacy docs and older repo structures may mention `data/catalog/` and `data/provenance/`.  
-> v13 standardizes to `data/stac/**`, `data/catalog/dcat/**`, and `data/prov/**` as the canonical **publish boundary**.  
-> During migration, CI should accept both layouts but treat v13 paths as authoritative. 🧭
+### ♻️ What counts as a “reusable workflow”?
+Reusable workflows live under `reusables/` and are called from entry workflows via `workflow_call`.  
+They act like **macro building blocks**: “PR validation”, “policy gate”, “docker build”, etc.
 
 ---
 
-## ⚡ Quick links
+## 🧠 CI design principles (KFM-specific)
 
-| Action | Link |
-| --- | --- |
-| ✅ All Action runs | [GitHub Actions](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions) |
-| 📦 Releases | [Releases](https://github.com/bartytime4life/Kansas-Frontier-Matrix/releases) |
-| 🐛 Issues | [Issues](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues) |
-| 🤝 `.github/` collaboration hub | [`../README.md`](../README.md) |
-| 🧭 Repo root overview | [`../../README.md`](../../README.md) |
-| 🔐 Security policy | [`../../SECURITY.md`](../../SECURITY.md) |
+KFM workflows are not just “lint + tests”. They exist to protect KFM’s core invariants:
+
+### 1) 🧾 Provenance-first
+Anything that is “published” or “user-facing” should carry traceability:
+- metadata (STAC/DCAT where relevant),
+- provenance logs (PROV-style lineage),
+- and clear citations for narratives/stories.[^pipeline_order][^validation_gates]
+
+### 2) 🧱 Policy as Code (OPA/Rego)
+Governance rules should be **versioned** and **machine-enforced** — not tribal knowledge.
+CI should execute policy checks (often via tools like `conftest`) and fail PRs on violations.[^policy_as_code]
+
+### 3) 🚫 No bypass routes
+Workflows should protect the system boundaries (example: UI shouldn’t “touch the DB” directly).  
+In practice: enforce contract checks, schema validation, and controlled interfaces.[^pipeline_order]
+
+### 4) ✅ “Green main” discipline
+CI should keep the main branch in a continuously shippable state:
+- tests pass,
+- security checks pass,
+- governance checks pass,
+- documentation requirements are met.[^ci_testing]
+
+---
+
+## 🧩 How workflows relate to composite actions
+
+Most jobs should be assembled from **composite actions** in:
+
+- `../actions/` → see **`.github/actions/README.md`** for details.
+
+Common action blocks (by intent) include:
+
+- 🧪 `setup-conftest/` → policy testing setup
+- 🛡️ `policy-gate/` → policy enforcement “allow/deny”
+- 🧾 `provenance-guard/` + `pr-provenance/` → provenance completeness checks
+- 🧾 `metadata-validate/` → metadata schema checks (dataset cards, STAC/DCAT, etc.)
+- 🗺️ `story-lint/` → story node format + citation hygiene
+- 🧰 `setup-kfm/` → repo toolchain bootstrap
+- 🧱 `docker-build/` → build container images
+- 🧾 `sbom/` + ✅ `attest/` → supply-chain artifacts (SBOM/attestation)
 
 > [!TIP]
-> If an Actions badge 404s, the workflow file probably doesn’t exist yet.  
-> This README is a **spec + target shape** — keep it in lockstep with implemented workflows to prevent drift. 🧾✅
+> Prefer reusing an existing composite action over duplicating shell steps across multiple workflows.
+> It keeps CI consistent and makes governance easier to reason about.
 
 ---
 
-<details>
-<summary><b>🧭 Table of contents</b></summary>
-
-* [📺 Mermaid Workflow TV](#mermaid-workflow-tv)
-* [🧠 CI/CD principles](#cicd-principles)
-* [🧪 Minimum CI gates for v13 contributions](#minimum-ci-gates-for-v13-contributions)
-* [🧬 KFM invariants CI must enforce](#kfm-invariants-ci-must-enforce)
-* [🗂️ Repo layout & path triggers](#repo-layout--path-triggers)
-* [📁 What lives here](#what-lives-here)
-* [🗂️ Workflow catalog](#workflow-catalog)
-* [🚦 Change-aware gate matrix](#change-aware-gate-matrix)
-* [🧱 Promotion gates](#promotion-gates)
-* [🧑‍⚖️ Policy as code gates](#policy-as-code-gates)
-* [🧬 Privacy & redaction gates](#privacy--redaction-gates)
-* [🧾 Policy Pack — rule IDs + waivers](#policy-pack--rule-ids--waivers)
-* [🧬 Repo provenance lane](#repo-provenance-lane)
-* [🤖 Agent automation lane](#agent-automation-lane)
-* [🗺️ Data + catalog gates](#data--catalog-gates)
-* [🕸️ Graph + semantics gates](#graph--semantics-gates)
-* [🔎 Search index + embeddings gates](#search-index--embeddings-gates)
-* [🧭 Federation + multi-region contract gates](#federation--multi-region-contract-gates)
-* [🎬 Story Nodes + Focus Mode gates](#story-nodes--focus-mode-gates)
-* [📓 Notebooks + research reproducibility gates](#notebooks--research-reproducibility-gates)
-* [🧪 Integration tests](#integration-tests)
-* [🌐 Web UI gates](#web-ui-gates)
-* [📦 Offline packs + AR gates](#offline-packs--ar-gates)
-* [📈 Modeling + simulation gates](#modeling--simulation-gates)
-* [⚡ Performance gates](#performance-gates)
-* [🔐 Security scanning](#security-scanning)
-* [🔭 Observability & telemetry](#observability--telemetry)
-* [📦 Artifacts & traceability](#artifacts--traceability)
-* [🧷 Secrets & environments](#secrets--environments)
-* [🧩 Reusable workflows & composite actions](#reusable-workflows--composite-actions)
-* [🛠️ Starter templates](#starter-templates)
-* [🧰 Debug locally](#debug-locally)
-* [🧾 Adding a new workflow checklist](#adding-a-new-workflow-checklist)
-* [📚 Reference library & influence map](#reference-library--influence-map)
-
-</details>
-
----
-
-<a id="mermaid-workflow-tv"></a>
-
-## 📺 Mermaid Workflow TV
-
-A “TV guide” of how work moves through KFM CI/CD (PR fast lane → scheduled heavy lanes → env‑gated publish). 📺🧪
+## 🧬 Typical CI “truth path” (PR → merge)
 
 ```mermaid
-flowchart TB
-  subgraph PR["🧪 PR Lane (fast • required)"]
-    PR1["ci.yml<br/>lint • unit • typecheck"]
-    PR2["ui.yml<br/>web lint • test • build"]
-    PR3["markdown-protocol.yml<br/>front-matter + required sections"]
-    PR4["docs-linkcheck.yml<br/>links + citations resolve"]
-    PR5["schema-validate.yml<br/>STAC/DCAT/PROV + story schemas"]
-    PR6["catalog-qa.yml<br/>catalog sanity + link safety"]
-    PR7["graph-integrity.yml<br/>Neo4j fixture + constraints"]
-    PR8["kfm-policy-gate.yml<br/>OPA/Conftest + waivers + sensitivity/PII rules"]
-    PR9["dependency-review.yml<br/>dep diffs + license signal"]
-    PR10["actionlint.yml<br/>workflow lint"]
-    PR11["federation-contract.yml<br/>GraphQL/OpenAPI contract diffs (paths aware)"]
-    PR12["privacy-guard.yml<br/>precision + small-count + re-identification heuristics"]
-  end
-
-  subgraph SCHEDULE["🌙 Scheduled Lane (slow • trusted)"]
-    N1["integration.yml<br/>PostGIS + Neo4j + API contract tests"]
-    N2["stac-validate.yml<br/>full STAC lane"]
-    N3["dcat-validate.yml<br/>DCAT lane"]
-    N4["prov-validate.yml<br/>PROV lane"]
-    N5["perf.yml<br/>bundle + query budgets"]
-    N6["model-regression.yml<br/>metrics + reproducibility"]
-    N7["sim-regression.yml<br/>kfm-sim-run scenarios (deterministic)"]
-    N8["repo-provenance.yml<br/>DevOps→PROV ledger"]
-    N9["search-index-qa.yml<br/>index determinism + citation pointers"]
-    N10["notebook-exec.yml<br/>papermill smoke + deterministic outputs"]
-    N11["ai-regression.yml<br/>Focus Mode: citations + policy + model swap safety"]
-  end
-
-  subgraph PROMOTE["🚦 Promotion Lane (env-gated)"]
-    P1["publish-catalog.yml<br/>atomic publish + catalogs + PROV"]
-    P2["docker.yml<br/>build/push images (GHCR)"]
-    P3["artifact-sign.yml<br/>SBOM + attest + (optional) Cosign"]
-    P4["pages.yml<br/>docs/viewer deploy (optional)"]
-  end
-
-  subgraph RELEASE["🏷️ Release Lane (tags)"]
-    R1["release.yml<br/>release assets + notes"]
-    R2["sbom.yml<br/>SBOM generation"]
-    R3["attest.yml<br/>build provenance attestations"]
-    R4["scorecard.yml<br/>OpenSSF scorecard (optional)"]
-  end
-
-  subgraph AGENTS["🤖 Agent Lane (optional, PR-only)"]
-    A1["agents-watcher.yml<br/>read-only signals"]
-    A2["agents-planner.yml<br/>deterministic plans"]
-    A3["agents-executor.yml<br/>PR-only executor (no merge)"]
-    A4["detect-validate-promote.yml<br/>changes → lanes → signed PR"]
-  end
-
-  PR1 --> SCHEDULE
-  PR5 --> SCHEDULE
-  PR6 --> P1
-  PR8 --> P1
-  SCHEDULE --> P1
-  P1 --> RELEASE
-  P2 --> RELEASE
-  AGENTS --> PR
+flowchart TD
+  PR[🔀 Pull Request] --> CI[🚦 Entrypoint Workflow(s)]
+  CI --> LINT[🧹 Lint/Format]
+  CI --> TEST[🧪 Unit/Integration Tests]
+  CI --> META[🗂️ Metadata Validate]
+  CI --> PROV[🧾 Provenance Guard]
+  CI --> POL[🛡️ Policy Gate (OPA/Rego)]
+  CI --> SBOM[📦 SBOM / Attestation (as needed)]
+  LINT --> PASS[✅ Required checks green]
+  TEST --> PASS
+  META --> PASS
+  PROV --> PASS
+  POL --> PASS
+  SBOM --> PASS
+  PASS --> MERGE[🎉 Merge Allowed]
 ```
 
-**Plain-English summary:**
-
-* PR lane stays fast and blocks obvious breakage.
-* Scheduled lanes do real integration, heavy validation, and budget checks.
-* Promotion is **env‑gated**, **atomic**, and **audit‑friendly**.
-* Optional agents are allowed only if they respect **kill‑switch + determinism + PR‑only**. 🤖🧯
-
-> [!TIP]
-> Mermaid on GitHub can be picky. To avoid parse errors:
->
-> * keep **one edge per line**
-> * use simple IDs (`PR1`, `N1`, …)
-> * put punctuation/emoji inside quotes if needed 😄
+This mirrors the KFM philosophy: data & narratives should follow a governed pipeline, and CI is the automated enforcement layer.[^pipeline_order][^validation_gates]
 
 ---
 
-<a id="cicd-principles"></a>
-
-## 🧠 CI/CD principles
-
-### ✅ 1) Contracts over vibes
-
-KFM treats key interfaces as contracts (CI enforces drift detection):
-
-* 📜 **API** contracts (OpenAPI + GraphQL schema) — contract-first is the v13 posture.
-* 🗂️ **Catalog** contracts (STAC / DCAT)
-* 🧾 **Lineage** contracts (W3C PROV JSON‑LD)
-* 🧠 **AI contracts** (Focus Mode response schema + citations + policy outcomes)
-* 🕸️ **Graph** contracts (stable IDs + relationship shapes + migrations)
-* 📈 **Evidence artifacts** (analysis/model/simulation outputs: manifests + seeds + metrics)
-
-> [!IMPORTANT]
-> If a contract changes, CI must prove: **compatibility** (or a controlled version bump) + **migration notes** + **updated schemas**.
-
-### ✅ 2) The “catalog triplet” is sacred 🧾
-
-For any publishable dataset/layer, KFM expects a consistent triplet:
-
-* 🗺️ **STAC** (assets + spatial/temporal metadata)
-* 🧾 **DCAT** (dataset discovery + licensing + distribution)
-* 🧬 **PROV** (lineage: inputs → activities → outputs)
-
-CI must prevent “STAC updated but PROV missing” drift.
-
-### ✅ 3) Layered gates beat mega workflows
-
-CI mirrors KFM’s architecture with layered checks:
-
-1. **Code gate** → lint, unit tests, type checks
-2. **Doc gate** → Markdown protocol + links + citations resolve
-3. **Schema gate** → STAC/DCAT/PROV/Story schema validation
-4. **Policy gate** → FAIR+CARE, sovereignty, sensitivity, licensing, privacy heuristics
-5. **Integration gate** → real DBs/services via containers (PostGIS + Neo4j + optional search)
-6. **Security gate** → SAST, dependency review, secret scanning, container scan
-7. **Promotion gate** → env‑gated publish with SBOM + attestations (+ signatures)
-
-### ✅ 4) Deterministic, idempotent, auditable 🧾
-
-* Same inputs + config + seed ⇒ same outputs (or diffs are logged and explained)
-* Artifacts and logs are uploaded on failure
-* Promotion is atomic (no half‑published catalogs)
-* Every publishable run emits: run id + inputs + outputs + digests + provenance
-
-### ✅ 5) Least privilege by default 🔐
-
-* Minimal `permissions:` per workflow/job
-* No secrets on untrusted PRs (especially forks)
-* Avoid `pull_request_target` unless you can justify and review it like production code
-
----
-
-<a id="minimum-ci-gates-for-v13-contributions"></a>
-
-## 🧪 Minimum CI gates for v13 contributions
-
-v13 defines a “definition of done” for the repo itself: every contribution should pass a minimum set of CI validations. ✅
-
-### ✅ Gate 1 — Markdown protocol & front‑matter check
-
-* Governed docs + Story Nodes must pass front‑matter + required section checks.
-* Broken front‑matter or missing required sections fails the build.
-
-**Workflow:** `markdown-protocol.yml`  
-**Typical trigger paths:** `docs/**`, `docs/reports/story_nodes/**`, `docs/templates/**`
-
-### ✅ Gate 2 — Link/reference validation (docs + Story Nodes)
-
-* CI verifies internal links, citations, and references resolve (no dangling references).
-* Prevents “story cites a thing that doesn’t exist” drift.
-
-**Workflow:** `docs-linkcheck.yml`
-
-### ✅ Gate 3 — JSON schema validation (STAC/DCAT/PROV + Story schema)
-
-* Validate structured outputs: STAC Items/Collections, DCAT datasets, PROV JSON‑LD, Story Node metadata (+ storyboard JSON).
-
-**Workflow:** `schema-validate.yml`
-
-### ✅ Gate 4 — Graph integrity tests (Neo4j fixture lane)
-
-* Load a small fixture graph and assert constraints: stable IDs, required properties, relationship validity.
-* Catches ontology/data‑model regressions early.
-
-**Workflow:** `graph-integrity.yml`
-
-### ✅ Gate 5 — Policy Pack (governance + safety)
-
-* Run OPA/Conftest rules (FAIR/CARE + sovereignty + licensing + link safety + sensitivity/PII).
-* Enforce waiver rules (time‑bounded, fail closed when expired).
-
-**Workflow:** `kfm-policy-gate.yml`
+## 🗃️ Workflow categories (recommended)
 
 > [!NOTE]
-> **Security scanning** (CodeQL/dependency review/secret scanning) should be present early too — but keep PR checks fast by pushing heavy scans to schedule where needed.
+> Workflow filenames may change as the repo evolves. The categories below are the **pattern** to maintain.
+
+### 🔀 PR validation workflows
+Run on `pull_request`:
+- lint / formatting
+- tests
+- metadata validation
+- provenance checks
+- policy gate (fail closed)
+
+### 🧷 Release workflows
+Run on tag / release / main merges:
+- build/publish docker images
+- generate SBOM
+- create attestations
+- release notes automation (e.g., Release Drafter integration if configured)
+
+### 🕰️ Scheduled governance + QA workflows
+Run on `schedule`:
+- catalog QA
+- governance scan
+- periodic policy regression checks
+- dependency hygiene checks
+
+### 🧑‍✈️ Manual workflows (`workflow_dispatch`)
+Run on demand:
+- rebuild catalog/index
+- run a special validation suite
+- re-run a heavier pipeline in CI context
 
 ---
 
-<a id="kfm-invariants-ci-must-enforce"></a>
+## ♻️ Reusable workflows: conventions
 
-## 🧬 KFM invariants CI must enforce
+### ✅ Naming
+Use intent-first names:
+- `pr-validate.yml`
+- `policy-gate.yml`
+- `metadata-validate.yml`
+- `docker-build.yml`
 
-These are architecture rules that double as security + integrity controls. 🔒🧭
+### ✅ Inputs/outputs
+Reusable workflows should:
+- declare typed inputs,
+- default to safe behavior,
+- and expose outputs for downstream jobs (e.g., “image tag”, “artifact path”).
 
-1. 🚦 **Pipeline ordering is absolute**  
-   **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
-
-2. 🧾 **Catalog triplet moves together**  
-   Any change to publish-boundary assets must include consistent STAC/DCAT/PROV updates (or CI fails). 🧾✅
-
-3. 🔌 **API boundary rule**  
-   Frontends (web, mobile, AR, offline tooling) must not query Neo4j or PostGIS directly in production. They go through the governed API boundary so access control + redaction + schemas remain enforceable.
-
-4. 🧯 **Fail-closed ingestion**  
-   If required metadata is missing (license/provider/sensitivity/etc.), ingestion does not proceed to “authoritative” stores.
-
-5. ♻️ **Deterministic ETL + evidence artifacts**  
-   ETL and analysis/simulation runs must be replayable (seeded, config‑driven, logged, idempotent).
-
-6. 🧊 **No ad-hoc manual data manipulation**  
-   Processed outputs are produced by pipelines; “hand-edited derived outputs” must be treated as suspect and blocked unless justified by policy + PROV.
-
-7. 🧭 **Sovereignty & classification propagate**  
-   Outputs cannot be less restricted than inputs; public releases require redaction/generalization where needed.
-
-8. 🧠 **Focus Mode is provenance-first**  
-   If content renders as “authoritative”, it must be provenance-linked and cite its sources.
-
-9. 🧊 **Derived indices are not sources of truth**  
-   Search indices, tiles, caches, embeddings are **derived artifacts**. CI should regenerate them deterministically or prove their digests match trusted inputs.
+### ✅ Minimal permissions
+Workflows should request only what they need:
+- `contents: read` by default
+- elevate selectively per job
+- avoid broad `write-all`
 
 ---
 
-<a id="repo-layout--path-triggers"></a>
+## 🧪 Local debugging tips (fast iteration)
 
-## 🗂️ Repo layout & path triggers
+### Option A) Re-run jobs in GitHub UI
+- Use “Re-run jobs” for failed runs.
+- Add debug logs using `ACTIONS_STEP_DEBUG` (repo/org setting) when needed.
 
-v13 calls out “one canonical home per subsystem” and standardizes where publish-boundary artifacts live (STAC/DCAT/PROV). 🧱
+### Option B) Use `act` locally (best-effort parity)
+You can dry-run many workflows locally with [`act`](https://github.com/nektos/act).  
+It’s not perfect parity, but great for speeding up iteration on bash steps and composite actions.
 
-### ✅ v13 baseline (preferred)
-
-```text
-📦 Kansas-Frontier-Matrix/
-├─ 📁 .github/
-│  └─ 📁 workflows/                 # ✅ CI/CD lives here
-├─ 📁 docs/
-│  ├─ 📄 MASTER_GUIDE_v13.md        # 🧭 canonical system guide
-│  ├─ 📁 standards/                 # 📐 KFM profiles (STAC/DCAT/PROV/Markdown)
-│  │  └─ 📄 MARKDOWN_GUIDE_v13.md   # 🧾 governed markdown spec (Story Nodes, etc.)
-│  ├─ 📁 templates/                 # 🧾 governed doc templates
-│  ├─ 📁 data/                      # 🗂️ per-domain documentation (recommended)
-│  │  └─ 📁 <domain>/
-│  │     └─ 📄 README.md            # 📚 domain data dictionary + licensing + sensitivity notes
-│  └─ 📁 reports/
-│     └─ 📁 story_nodes/            # 🎬 Story Nodes (governed)
-├─ 📁 pipelines/                    # ♻️ deterministic ETL + simulation tools
-├─ 📁 api/                          # 🔌 API boundary (FastAPI + contracts)
-├─ 📁 web/                          # 🌐 React UI (MapLibre; optional Cesium)
-├─ 📁 data/
-│  ├─ 📁 raw/                       # 📥 staged raw inputs (domain-scoped)
-│  ├─ 📁 work/                      # 🧪 intermediates (domain-scoped)
-│  ├─ 📁 processed/                 # ✅ standardized outputs (domain-scoped)
-│  ├─ 📁 stac/
-│  │  ├─ 📁 collections/            # 🗂️ STAC collections (publish boundary)
-│  │  └─ 📁 items/                  # 🧾 STAC items (publish boundary)
-│  ├─ 📁 catalog/
-│  │  └─ 📁 dcat/                   # 🧾 DCAT JSON-LD (publish boundary)
-│  └─ 📁 prov/                      # 🧬 PROV JSON-LD (publish boundary)
-└─ 📁 tests/                        # 🧪 unit + integration tests
-```
-
-### 🧭 “Consolidation target” (optional, for later)
-
-Some branches may consolidate `api/` + pipeline code into `src/**` (e.g., `src/server`, `src/pipelines`, `src/graph`). If you do: **keep path filters dual-compatible during migration** (CI shouldn’t break mid‑move).
-
-### 🧩 Legacy → v13 mapping (practical CI hint)
-
-> CI can support both during migration, but v13 paths should be treated as canonical.
-
-```text
-🧩 Legacy paths sometimes referenced
-- data/catalog/            -> data/stac/ (STAC) + data/catalog/dcat/ (DCAT)
-- data/provenance/         -> data/prov/
-- docs/stories/            -> docs/reports/story_nodes/
-- api/                     -> api/ (today) or src/server/ (optional future)
-- pipelines/               -> pipelines/ (today) or src/pipelines/ (optional future)
-```
-
----
-
-<a id="what-lives-here"></a>
-
-## 📁 What lives here
-
-> Target shape — add as needed, keep intent stable.  
-> Use ✅ for “likely exists now” and 🧾 for “spec / planned”.
-
-```text
-📁 .github/workflows/
-├─ ✅ ci.yml                        # fast PR lane: lint + unit tests + type checks
-├─ 🧾 ui.yml                        # web lint/test/build (path-aware)
-├─ 🧾 markdown-protocol.yml         # docs: YAML front-matter + required sections (v13 minimum)
-├─ 🧾 docs-linkcheck.yml            # doc link checker (v13 minimum)
-├─ 🧾 schema-validate.yml           # schema lane: STAC/DCAT/PROV + story schema (v13 minimum)
-├─ 🧾 graph-integrity.yml           # Neo4j fixture + constraint checks (v13 minimum)
-├─ 🧾 api-contract.yml              # OpenAPI/GraphQL diff + contract tests (contract-first)
-├─ 🧾 federation-contract.yml       # GraphQL federation compatibility checks (optional)
-├─ 🧾 dependency-review.yml         # dependency review for PRs
-├─ 🧾 catalog-qa.yml                # fast STAC/DCAT sanity + link safety gate
-├─ 🧾 privacy-guard.yml             # precision + small-count + re-identification heuristics (optional)
-├─ 🧾 kfm-policy-gate.yml           # Policy Pack: OPA/Conftest + waivers + sensitivity/PII rules
-├─ 🧾 repo-provenance.yml           # DevOps→PROV ledger emitter (scheduled/merge/tag)
-├─ ✅ codeql.yml                    # SAST (scheduled + optional PR)
-├─ ✅ pages.yml                     # docs/viewer deploy (optional)
-├─ 🧾 integration.yml               # PostGIS (+ Neo4j) + API contract integration tests
-├─ 🧾 search-index-qa.yml           # search index determinism + citation pointers (scheduled)
-├─ 🧾 notebook-exec.yml             # notebook execution smoke + deterministic outputs (scheduled)
-├─ 🧾 perf.yml                      # bundle size + query timing budgets (scheduled)
-├─ 🧾 ai-regression.yml             # Focus Mode regression: citations + policy + model swap safety
-├─ 🧾 model-regression.yml          # metrics drift + reproducibility checks (scheduled)
-├─ 🧾 sim-regression.yml            # deterministic scenario simulator lane (scheduled/manual)
-├─ 🧾 docker.yml                    # build/push images (GHCR)
-├─ 🧾 publish-catalog.yml           # env-gated catalog promotion (atomic publish)
-├─ 🧾 artifact-sign.yml             # SBOM + attest + (optional) Cosign signing
-├─ 🧾 release.yml                   # release packaging + changelog + provenance
-├─ 🧾 sbom.yml                      # SBOM generation (SPDX/CycloneDX)
-├─ 🧾 attest.yml                    # build provenance attestations (SLSA-ish)
-├─ 🧾 scorecard.yml                 # OpenSSF Scorecard (optional)
-├─ 🧾 actionlint.yml                # workflow lint (recommended)
-├─ 🧾 agents-watcher.yml            # optional: read-only agent watcher
-├─ 🧾 agents-planner.yml            # optional: deterministic planner
-├─ 🧾 agents-executor.yml           # optional: PR-only executor (no merge)
-├─ 🧾 detect-validate-promote.yml   # optional: change detection → lanes → signed PR
-└─ 📄 README.md                     # you are here 👋
-```
-
----
-
-<a id="workflow-catalog"></a>
-
-## 🗂️ Workflow catalog
-
-> If a workflow file isn’t present yet, treat this table as the **spec** for creating it.
-
-| Workflow 📄 | Lane | Protects ✅ | Triggers ⏱️ | Budget 🎯 | Key outputs 📦 |
-| --- | --- | --- | --- | ---: | --- |
-| `ci.yml` | PR | code integrity | `pull_request`, `push main` | ≤ 10–12 min | junit, coverage, logs |
-| `ui.yml` | PR | UI build integrity | PR paths `web/**` | ≤ 12–15 min | build logs, bundle report |
-| `markdown-protocol.yml` | PR | docs governance | `docs/**`, `docs/reports/story_nodes/**`, templates | ≤ 7–10 min | front-matter report |
-| `docs-linkcheck.yml` | PR | docs reliability | `**/*.md` | ≤ 10 min | link report |
-| `schema-validate.yml` | PR | schema conformance | `schemas/**`, `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**`, story nodes | ≤ 12–15 min | schema report |
-| `graph-integrity.yml` | PR | graph/ontology shape | `graph/**` / graph tooling paths | ≤ 12–15 min | fixture ingest logs |
-| `api-contract.yml` | PR | contract-first API boundary | `api/**` *(+ optional `src/server/**`)* | ≤ 10–12 min | openapi/graphql diff |
-| `federation-contract.yml` | PR | multi-region compatibility | schema changes | ≤ 8–10 min | federation diff report |
-| `dependency-review.yml` | PR | dependency risk signal | `pull_request` (code changes) | ≤ 5 min | dependency report |
-| `catalog-qa.yml` | PR | metadata “foot‑guns” | `data/**`, `schemas/**` | ≤ 7–10 min | QA report |
-| `privacy-guard.yml` | PR | re-identification risk signal | `data/**`, story nodes | ≤ 7–10 min | privacy report |
-| `kfm-policy-gate.yml` | PR | governance + sensitivity + supply chain | `data/**`, `docs/**`, `schemas/**`, `.github/**`, `api/scripts/policy/**` | ≤ 7–10 min | policy + waiver decisions |
-| `repo-provenance.yml` | schedule/main | “repo as dataset” ledger | schedule + `push main` + tags | ≤ 10–15 min | `devops-prov.jsonld` |
-| `codeql.yml` | schedule | SAST | schedule (+ optional PR) | n/a | SARIF |
-| `integration.yml` | schedule | real DB/API parity | schedule + dispatch | 10–45 min | logs, junit |
-| `search-index-qa.yml` | schedule | derived index determinism | schedule + dispatch | 10–30 min | index report + digests |
-| `notebook-exec.yml` | schedule | notebook reproducibility | schedule + dispatch | 10–30 min | notebook exec report |
-| `ai-regression.yml` | schedule | Focus Mode trust | schedule + dispatch | 10–45 min | AI regression report |
-| `stac-validate.yml` | schedule | STAC conformance | schedule + dispatch | 10–30 min | schema report |
-| `dcat-validate.yml` | schedule | DCAT conformance | schedule + dispatch | 10–30 min | schema report |
-| `prov-validate.yml` | schedule | PROV integrity | schedule + dispatch | 10–30 min | schema report |
-| `perf.yml` | schedule | perf budgets | schedule + dispatch | 10–30 min | perf report |
-| `model-regression.yml` | schedule | reproducibility | schedule + dispatch | 10–45 min | metrics + artifacts |
-| `sim-regression.yml` | schedule/manual | scenario rigor | schedule + dispatch | 10–60 min | sim outputs + diffs |
-| `publish-catalog.yml` | env-gated | atomic publish | `workflow_dispatch` | n/a | catalogs + PROV + digests |
-| `docker.yml` | main/tag | images | `push main`, tags | ≤ 30 min | OCI images + digests |
-| `artifact-sign.yml` | main/tag | integrity | `push main`, tags | ≤ 20 min | SBOM + attest + sigs |
-| `release.yml` | tag | releases | tags | n/a | release assets |
-
----
-
-<a id="change-aware-gate-matrix"></a>
-
-## 🚦 Change-aware gate matrix
-
-Make gates **path-aware** so PR checks stay fast and relevant (and align to v13 subsystem homes). 🧭
-
-| Change type | Examples | Required gates |
-| --- | --- | --- |
-| 🧠 Core code | `api/**`, `pipelines/**`, shared libs | `ci.yml` (+ CodeQL as configured) |
-| ♻️ Pipelines | pipeline code + configs | `ci.yml` + `catalog-qa.yml` + `schema-validate.yml` |
-| 🗺️ Data/catalog | `data/**`, `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**`, `schemas/**` | `catalog-qa.yml` + `schema-validate.yml` + `kfm-policy-gate.yml` |
-| 🧬 Privacy-sensitive data | geocoded people/events, small groups | policy + `privacy-guard.yml` |
-| 🕸️ Graph/ontology | graph tooling, ID registries, ontology docs | `graph-integrity.yml` (+ integration optional) |
-| 🔌 API boundary | `api/**` (or `src/server/**`) | `ci.yml` + `api-contract.yml` |
-| 🧭 Federation | GraphQL federation schema | `federation-contract.yml` + `api-contract.yml` |
-| 🔎 Search/index | `search/**`, `indexes/**`, embedding jobs | `search-index-qa.yml` (+ `ai-regression.yml` when relevant) |
-| 🌐 Web UI | `web/**` | `ui.yml` + `ci.yml` |
-| 🎬 Story nodes | `docs/reports/story_nodes/**` | `markdown-protocol.yml` + `docs-linkcheck.yml` + `schema-validate.yml` + policy |
-| 📓 Notebooks/analysis | `notebooks/**`, `analysis/**` | lint + `notebook-exec.yml` (scheduled) + policy when governed |
-| 🔐 Workflows | `.github/workflows/**`, `.github/actions/**` | `actionlint.yml` + policy + human review |
-| 📚 Docs-only | `docs/**` | `markdown-protocol.yml` + `docs-linkcheck.yml` (+ policy when governance applies) |
-
-> [!CAUTION]
-> Workflows are security-sensitive. Treat them like production code. 🔐
-
----
-
-<a id="promotion-gates"></a>
-
-## 🧱 Promotion gates
-
-KFM uses an intentionally gate‑enforced lifecycle: **stage → validate → (optionally attest/sign) → promote via PR → publish**. 🚦
-
-```mermaid
-flowchart LR
-  RAW["📥 Stage<br/>raw inputs / edits"] --> VAL["🔎 Validate<br/>schema + links + bounds + policy"]
-  VAL -->|pass ✅| PR["🧾 PR-first promotion<br/>signed PR + review"]
-  VAL -->|fail ❌| STOP["🧯 Stop (fail-closed)<br/>no broken catalogs"]
-  PR --> MERGE["🔀 Merge to protected branch<br/>required checks green"]
-  MERGE --> PUB["📦 Publish (atomic)<br/>catalogs + provenance + digests"]
-  PUB --> FED["🌐 Federation-ready<br/>STAC + DCAT + PROV"]
-```
-
-### ✅ What “promotion” means (KFM-shaped)
-
-Promotion is not “copying files somewhere.” It means:
-
-* 🗂️ catalogs are complete (STAC/DCAT)
-* 🧾 lineage exists (PROV: inputs → activities → outputs)
-* ✅ QA passed (schema, links, bounds, CRS, sensitivity)
-* 🔐 access rules are respected (public vs restricted)
-* ♻️ publish is atomic (no partial catalogs)
-* 🔏 optional: artifacts are signed/attested (SBOM + provenance)
-
-### 🔏 Attestation, SBOM, signatures (recommended)
-
-For anything published:
-
-* attach an **SBOM** (SPDX/CycloneDX)
-* emit a **build provenance** record (SLSA‑ish)
-* (optional but strongly recommended) **sign artifacts** (Cosign/Sigstore)
-* store PROV JSON‑LD alongside catalogs for audit + rollback
-
----
-
-<a id="policy-as-code-gates"></a>
-
-## 🧑‍⚖️ Policy as code gates (OPA/Rego + Conftest)
-
-Policy gates are how FAIR+CARE becomes enforceable, not aspirational. ⚖️✅
-
-KFM’s Policy Pack is expected to validate:
-
-* catalog completeness (STAC/DCAT)
-* provenance completeness (PROV)
-* sovereignty/classification propagation
-* licensing/attribution requirements
-* link safety / allowlists (no SSRF foot‑guns)
-* sensitive-location & PII rules (generalize/omit/restrict)
-* workflow hardening (least privilege, safe triggers, pinning posture)
-* AI trust rules (citations required, policy results surfaced, model swap safety)
-
-### 🎯 What policy gates should enforce
-
-**Governance / data integrity**
-
-* license & attribution required for promoted datasets
-* sensitive-location rules (generalize/omit/limit precision)
-* provenance required (no “mystery layers”)
-* catalog conventions (stable IDs, required fields, extension allow/deny lists)
-* “classification propagation” (outputs inherit restrictions)
-
-**Catalog safety**
-
-* safe link rules (`links[].href` allow/deny lists; no unsafe schemes)
-* metadata profile expectations for STAC/DCAT/PROV
-* policy outcomes must be human-readable (“what failed” + “how to fix”)
-
-**Supply chain safety**
-
-* workflow permissions least‑privilege
-* workflow trigger safety (avoid risky `pull_request_target`)
-* action pinning policy (major versions now; migrate toward SHA pinning)
-* promotion jobs are kill‑switch protected
-
-### ✅ Conftest workflow pattern (PR gate)
-
-**When to run**
-
-* PR touches `data/**`, `docs/**`, `schemas/**`, `.github/**`, `api/scripts/policy/**`
-
-**How to run**
-
-* no secrets
-* `permissions: contents: read`
-* short timeout
-* upload report artifact on failure
-* run Rego tests in CI (Conftest `test` + unit tests)
-* emit machine-readable outputs (`policy-report.json`, `waiver-decisions.json`)
-
-Example command shapes:
+Example:
 
 ```bash
-# policy checks against repo content
-conftest test \
-  -p api/scripts/policy/rego \
-  --all-namespaces \
-  .
+# list workflows / jobs
+act -l
 
-# policy unit tests (Rego tests)
-conftest verify \
-  -p api/scripts/policy/rego \
-  api/scripts/policy/tests
-```
+# run a pull_request workflow (example)
+act pull_request
 
-> [!TIP]
-> Keep policy rules “deny by default” and explain failures clearly (“what failed” + “how to fix”). 🧯
-
----
-
-<a id="privacy--redaction-gates"></a>
-
-## 🧬 Privacy & redaction gates
-
-KFM handles historically rich, place-based data — which can carry sensitive attributes even when names are removed. 🧬🧯
-
-### ✅ CI posture (practical)
-
-* **Precision checks:** enforce coordinate rounding / spatial generalization when required
-* **Small-count checks:** block tables/exports that reveal very small groups (re-identification risk)
-* **Story Node checks:** ensure narrative doesn’t disclose restricted details (even if the layer is redacted)
-* **Inference foot-guns:** flag patterns that allow reconstruction via joins or repeated queries (heuristics)
-
-### 🧾 Suggested workflow
-
-**Workflow:** `privacy-guard.yml` *(optional but recommended)*  
-**Runs on:** PRs touching `data/**` and governed story nodes
-
-**Outputs:**
-
-* `privacy-report.json` (findings + severities + suggested mitigations)
-* `privacy-waiver-decisions.json` (if waivers exist; still time-bounded)
-
-> [!IMPORTANT]
-> Privacy gates should be **fail-closed** for “hard” rules (e.g., disallowed precision, disallowed attributes).  
-> For “soft” heuristics, fail with actionable guidance or require explicit waiver + reviewer signoff. ✅
-
----
-
-<a id="policy-pack--rule-ids--waivers"></a>
-
-## 🧾 Policy Pack — rule IDs + waivers
-
-KFM’s Policy Pack should be **auditable** and **operationally practical**:
-
-* every rule has an ID
-* exceptions are time‑bounded
-* waiver usage is visible in CI artifacts
-
-### 🏷️ Rule ID convention (examples)
-
-* `KFM-CAT-*` → catalog requirements (STAC/DCAT)
-* `KFM-PROV-*` → provenance requirements (PROV JSON‑LD)
-* `KFM-SOV-*` → sovereignty/classification propagation
-* `KFM-LINK-*` → link safety / allowlists
-* `KFM-PRIV-*` → privacy + re-identification heuristics
-* `KFM-AI-*` → Focus Mode evidence/citation requirements
-* `KFM-SC-*` → supply chain hardening rules (workflow perms, pinning)
-
-### 🧾 Waivers
-
-A `waivers.yml` mechanism (recommended) for **time-bound exceptions** must include:
-
-* the rule ID(s)
-* a reason
-* an owner
-* an expiry date/time
-* the mitigation plan
-
-**CI behavior (target posture):**
-* expired waiver → **fail closed**
-* waiver present → allowed **with loud artifacts** (`waiver-decisions.json`)
-* waivers never bypass “hard safety” rules (e.g., sensitive location leaks)
-
----
-
-<a id="repo-provenance-lane"></a>
-
-## 🧬 Repo provenance lane
-
-KFM treats its own evolution as traceable evidence: you should be able to ask “which PR produced this dataset?” and answer it with provenance records. 🧾
-
-### ✅ What this lane should do
-
-A `repo-provenance.yml` workflow (scheduled + on merge/tag) should emit:
-
-* a **PROV JSON‑LD** record describing the CI run as an Activity
-* the merged PR (and reviewers) as Agents/Activities
-* digests of publish boundary artifacts (STAC/DCAT/PROV files)
-* links to artifacts: SBOM, attestations, build-info.json
-* policy version hash + waiver decisions (for audit)
-
-This makes KFM’s DevOps pipeline “first-class evidence.”
-
----
-
-<a id="agent-automation-lane"></a>
-
-## 🤖 Agent automation lane (optional) — Watcher · Planner · Executor
-
-Agent automation is allowed only if it stays **governed**, **deterministic**, and **PR‑first**. 🤖🧯
-
-### ✅ Allowed agent behaviors
-
-* 👀 **Watcher**: read‑only signals (facts/alerts), no side effects
-* 🧠 **Planner**: deterministic planning (seeded, repeatable), no network by default
-* 🧰 **Executor**: runs gates and opens/updates PRs **without merge permissions**
-
-### 🧯 Kill-switch (non-negotiable)
-
-Agents and promotion workflows must honor a central kill switch.
-
-Recommended pattern:
-
-* every workflow that can publish/sign calls a shared step/action first
-* if kill-switch is enabled: stop **before** any publish/sign step
-
-✅ Prefer a composite action like `/.github/actions/check-kill-switch` so logic stays consistent.
-
-**Common kill-switch options:**
-* repo file flag: `.agent-freeze` (or `.kfm-freeze`)
-* environment boolean: `KFM_FREEZE=1` (in GitHub Environments)
-* branch protection + manual approvals for `prod`
-
-### 🔐 Token scopes (non-negotiable)
-
-* Watcher/Planner: **read-only** tokens (or none)
-* Executor: short‑lived token that can **open PRs**, but **cannot merge**
-* Branch protections remain the human safety rail ✅
-
-### 🧾 Artifact expectations
-
-Agent runs should emit:
-
-* a plan (`plan.yml`) + deterministic diff (`diff.patch`)
-* gate results (`reports/gates.json`)
-* provenance (`prov.jsonld`)
-* a PR body that links to evidence artifacts (no vibes)
-
-> [!IMPORTANT]
-> If any gate fails, Executor **does not** open/update a PR. It emits evidence and stops. 🚦
-
----
-
-<a id="data--catalog-gates"></a>
-
-## 🗺️ Data + catalog gates (KFM-specific)
-
-KFM pipelines are expected to be deterministic and to emit standardized outputs under `data/processed/` with catalog + provenance updates (STAC/DCAT/PROV). 🧾
-
-### ✅ “Catalog QA” (fast PR filter)
-
-Runs on PRs that touch `data/**` (and validator code). Prevents broken catalogs from merging.
-
-**Fast checks:**
-
-* required fields present (license, providers, ids, titles) ✅
-* `links[].href` safety (allowlists; no unsafe schemes) ✅
-* schema sanity on a fixture subset ✅
-* CRS + bounds sanity ✅
-* sensitivity/PII flags validated ✅
-* expected geospatial formats validated (e.g., COGs for rasters, GeoParquet/GeoJSON for vectors) ✅
-
-### 🧭 CRS + bounds sanity
-
-Geospatial bugs often come from silent CRS drift:
-
-* EPSG present where expected
-* bbox/footprint valid
-* Kansas bounds sanity (when claiming Kansas scope)
-* geometry validity checks (self-intersections, empties)
-
-> [!CAUTION]
-> PR gates should be fast (fixtures + metadata). Deep checks belong in scheduled lanes. 🌙
-
----
-
-<a id="graph--semantics-gates"></a>
-
-## 🕸️ Graph + semantics gates
-
-KFM’s graph is the semantic backbone for Story Nodes and Focus Mode (and for governed AI context). 🕸️🧠
-
-### ✅ Graph integrity gates should enforce
-
-* stable entity IDs (no renaming without migration notes)
-* relationship shape validation (allowed edge types)
-* reference integrity (Story Node entity IDs exist)
-* fixture build + constraint tests (unique IDs, required properties)
-
-### 🧠 Ontology-aware regression safety (practical)
-
-CI should protect:
-
-* constraint migrations (`graph/migrations/**` or equivalent)
-* ontology docs (`docs/standards/**`)
-* mapping scripts (STAC/DCAT → graph import)
-
----
-
-<a id="search-index--embeddings-gates"></a>
-
-## 🔎 Search index + embeddings gates
-
-If KFM includes a search index (full-text and/or vector search), it is a **derived view** — not a source-of-truth. 🔎🧊
-
-### ✅ What CI should enforce
-
-* **Determinism:** same inputs/config → same index digests (within expected tolerance)
-* **Provenance pointers:** every indexed document/chunk must carry a stable pointer back to:
-  * a source file/dataset ID
-  * a STAC/DCAT/PROV reference (or a denial reason)
-  * license/attribution requirements
-* **No “orphan chunks”:** embeddings/search documents that can’t be traced back must fail the build
-* **Redaction-aware indexing:** restricted content must not be embedded/indexed in public indices
-
-### 🧾 Suggested workflow
-
-**Workflow:** `search-index-qa.yml` *(scheduled/manual)*  
-**Outputs:**
-
-* `search-index-report.json`
-* `search-index-digests.json`
-* `embeddings-manifest.json` *(model id + version + config hash + input digests)*
-
-> [!TIP]
-> Keep search/embedding generation behind scheduled lanes unless the PR is small and strictly path-scoped.
-
----
-
-<a id="federation--multi-region-contract-gates"></a>
-
-## 🧭 Federation + multi-region contract gates
-
-KFM’s roadmap supports a network of regional instances — which implies **contract compatibility** and **schema discipline**. 🧭🌐
-
-### ✅ What CI should enforce
-
-* **GraphQL federation schema stability:** breaking changes require explicit versioning + migration notes
-* **OpenAPI compatibility:** endpoints used by UI/clients must remain contract-stable (or bump versions)
-* **Cross-instance semantics:** shared identifiers and controlled vocabularies must not drift silently
-
-### 🧾 Suggested workflow
-
-**Workflow:** `federation-contract.yml` *(PR lane, path-aware)*  
-**Outputs:**
-
-* `federation-contract-report.json`
-* `graphql-schema-diff.md`
-* `openapi-diff.md`
-
----
-
-<a id="story-nodes--focus-mode-gates"></a>
-
-## 🎬 Story Nodes + Focus Mode gates
-
-Story Nodes and Focus Mode are trust-sensitive because they look authoritative. 🎬🔎
-
-### ✅ Story Node lint should enforce (evidence-first)
-
-Story Nodes must:
-
-* include provenance/citations for key claims
-* reference graph entities via stable identifiers
-* ship with a storyboard/config JSON when required by UI
-* distinguish fact vs interpretation (especially with AI assistance)
-* honor sensitivity rules (precision, sovereignty)
-* only reference assets that exist and are licensed
-
-### ✅ Focus Mode rules (hard gate)
-
-Focus Mode has strict trust rules; CI should treat these as non‑negotiable invariants:
-
-* **only provenance‑linked content** is allowed to render
-* **AI contributions must be opt‑in** and clearly labeled with uncertainty/confidence
-* **no sensitive location leaks** — maps must generalize/omit sensitive points
-* **model swap safety** — changing the model must not bypass citations/policy gates
-
-### 🧾 Audit trail expectation (telemetry)
-
-Consider a small UI integration test that asserts:  
-“sensitive layer rendered → redaction notice shown → telemetry event emitted”. ✅
-
----
-
-<a id="notebooks--research-reproducibility-gates"></a>
-
-## 📓 Notebooks + research reproducibility gates
-
-Notebooks are powerful for exploration, but dangerous if they become “uncited screenshots.” KFM treats them as governed evidence when promoted. 📓🧾
-
-### ✅ CI expectations
-
-* notebooks must run top-to-bottom in CI (at least smoke notebooks)
-* outputs should be reproducible (seeded, inputs pinned)
-* commit should include environment lockfiles (requirements/conda/poetry/etc.)
-* artifacts (plots, metrics, tables) should be versioned or generated in CI and stored as run artifacts
-* any notebook used for Story Nodes should link to STAC/DCAT/PROV (or be explicitly non-authoritative)
-
-### 🧾 Suggested workflow
-
-**Workflow:** `notebook-exec.yml` *(scheduled/manual)*  
-**Common tools:** `papermill`, `nbqa`, `jupytext` (optional)
-
-**Outputs:**
-
-* `notebook-exec-report.json`
-* `notebooks-artifacts.zip`
-* `prov.jsonld` *(if notebook outputs are publish-boundary artifacts)*
-
----
-
-<a id="integration-tests"></a>
-
-## 🧪 Integration tests
-
-Spatial correctness needs real PostGIS (and optionally Neo4j + search). Prefer containerized integration tests.
-
-KFM’s query-time division of labor:
-
-* Neo4j provides semantic context and dataset/entity linking
-* PostGIS does heavy spatial/aggregation work
-* the API coordinates them (especially for Focus Mode flows)
-* optional search powers document/knowledge retrieval (full-text + embeddings)
-
-### Option A: GitHub Actions service containers (fast + simple)
-
-**PostGIS service**
-
-```yaml
-services:
-  db:
-    image: postgis/postgis:15-3.4
-    env:
-      POSTGRES_DB: kfm_test
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - 5432:5432
-    options: >-
-      --health-cmd="pg_isready -U postgres -d kfm_test"
-      --health-interval=10s
-      --health-timeout=5s
-      --health-retries=10
-```
-
-**Neo4j (optional)**
-
-```yaml
-services:
-  neo4j:
-    image: neo4j:5
-    env:
-      NEO4J_AUTH: neo4j/testpass
-    ports:
-      - 7474:7474
-      - 7687:7687
-```
-
-**Elasticsearch/OpenSearch (optional)**
-
-```yaml
-services:
-  search:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    env:
-      discovery.type: single-node
-      xpack.security.enabled: "false"
-    ports:
-      - 9200:9200
+# run a specific job
+act -j <job_id>
 ```
 
 > [!CAUTION]
-> The #1 cause of CI flake is “tests started before DB was ready.”  
-> Always add health checks + explicit waits. ✅
-
-### Option B: Docker Compose (multi-service parity)
-
-Best when you need API + workers + DB + cache for realistic end‑to‑end tests.
+> Some features (OIDC tokens, marketplace integrations, protected secrets) won’t behave the same locally.
+> Treat `act` as a developer convenience, not a source of truth.
 
 ---
 
-<a id="web-ui-gates"></a>
+## 🛡️ Security + supply chain defaults (recommended)
 
-## 🌐 Web UI gates (responsive + WebGL + 3D)
+- 🔒 Pin third-party actions by SHA (not floating tags) for stronger supply-chain safety.
+- 🧾 Generate SBOM for releases (and optionally for PR builds).
+- ✅ Use attestations for release artifacts if you publish containers/binaries.
+- 🧯 Keep a “kill-switch” job path available to disable publication if governance flags trigger.
+- 🧼 Never print secrets; use masked outputs and redact logs.
 
-KFM’s UI is React/TypeScript, map-first (MapLibre), optional 3D/globe (Cesium), with strong emphasis on provenance surfaced in UI. 🗺️🧾
-
-Recommended CI checks:
-
-* ✅ `npm ci` (lockfile respected)
-* ✅ lint (`eslint`) + format (`prettier`)
-* ✅ typecheck (`tsc --noEmit`)
-* ✅ tests (unit/component)
-* ✅ build (`npm run build`)
-* 🧪 optional E2E smoke (Playwright/Cypress): map boot + layer toggles + citations visible
-* 🧭 optional “storyboard” schema validation for Story Node UI configs
-
-### 🧊 3D Web GIS realism check
-
-To keep CI practical:
-
-* treat 3D assets (tilesets/models) as **untrusted inputs**
-* validate/limit asset sizes (prevent “one model = one outage”)
-* keep bundle size predictable (budgets catch bloat early)
-* move heavy rendering/perf benchmarks to scheduled lanes 🌙
+These align with KFM’s principle of auditable, governed operations.[^fail_closed][^policy_as_code]
 
 ---
 
-<a id="offline-packs--ar-gates"></a>
+## 🧯 When CI fails (how to fix fast)
 
-## 📦 Offline packs + AR gates
+### Common failure causes
+- Missing dataset metadata / license field
+- Missing provenance artifacts for new processed outputs
+- Story nodes missing citations or template fields
+- Governance policy violation (OPA/Rego / Conftest)
+- Broken links or schema drift
 
-Roadmap includes:
-
-* Offline packs for field/low-connectivity use
-* AR integration (likely via mobile modules using ARCore/ARKit)
-* optional export formats for external viewers (e.g., KML/KMZ)
-
-### ✅ CI should protect offline packs
-
-Suggested future gates:
-
-* offline pack manifest schema validation (contents, versions, digests)
-* licensing/attribution preserved offline
-* redaction rules still apply offline (no sensitive leaks)
-* file size budgets (especially for mobile)
-
-### ✅ CI should protect AR content
-
-Suggested future gates:
-
-* AR scene configs validate (geo anchors, time ranges, story references)
-* asset budgets enforced (size, polygons, textures)
-* AR client uses governed APIs (no bypass)
-
-> [!TIP]
-> Start these as scheduled/manual lanes, then promote to PR-required once stable.
+### How to respond
+1. Read the failing job summary.
+2. Fix the underlying data/doc issue (not just the symptom).
+3. Re-run only the necessary jobs.
+4. If CI policy seems wrong, open a governance issue using the appropriate template:
+   - `governance_form.yml`
+   - `governance_question.yml`
 
 ---
 
-<a id="modeling--simulation-gates"></a>
-
-## 📈 Modeling + simulation gates (analysis discipline)
-
-KFM treats model outputs as governed artifacts (not screenshots). That includes reproducibility, deterministic runs, and documentation.
-
-### ✅ Model regression / reproducibility gates (scheduled)
-
-Recommended:
-
-* deterministic seeds + pinned inputs
-* train/test split & leakage checks (where relevant)
-* uncertainty reporting / sensitivity notes
-* artifacts stored (plots, metrics, model cards)
-* provenance linking inputs → transforms → outputs
-
-### 🧪 Scenario simulator lane (deterministic)
-
-If you implement a scenario tool (e.g., `kfm-sim-run`):
-
-* run it in containerized, time-frozen environments
-* record inputs, config hashes, and digests
-* keep simulated outputs isolated until reviewed
-* optionally auto-open a **draft PR** containing outputs + catalogs + PROV (never merge)
-
----
-
-<a id="performance-gates"></a>
-
-## ⚡ Performance gates (budgeted, scheduled)
-
-Performance regressions are easier to prevent than to debug.
-
-Recommended budgets:
-
-* web bundle size ceilings
-* API p95 latency budgets on a fixture dataset
-* expensive query guardrails (rate limits / timeouts / explain thresholds)
-* pipeline runtime budgets on representative fixtures
-* graph query budgets (nightly fixture Cypher set)
-
-✅ Run perf checks on schedule and/or manual dispatch to avoid slowing PRs.
-
----
-
-<a id="security-scanning"></a>
-
-## 🔐 Security scanning (SAST, deps, secrets, containers)
-
-Baseline expectations:
-
-* ✅ Dependency Review on PRs
-* ✅ CodeQL scanning (Python + JS/TS + Actions as applicable)
-* ✅ Secret scanning + push protection (GitHub features)
-* ✅ Container scan on `main` + tags (recommended)
-
-Supply chain hardening (recommended):
-
-* SBOM generation (SPDX/CycloneDX)
-* build attestations (SLSA‑ish / GitHub attestations)
-* action pinning (major versions now; migrate toward SHA pinning)
-
-> [!NOTE]
-> For forks: publishing workflows must not run with secrets on untrusted PRs.  
-> Keep publish steps on `push main`, tags, or `workflow_dispatch`.
-
----
-
-<a id="observability--telemetry"></a>
-
-## 🔭 Observability & telemetry
-
-KFM is designed to be instrumented:
-
-* pipeline runs emit telemetry (timing, success/failure, volumes)
-* runs have unique IDs + configuration hashes for replay and audit
-* Focus Mode behavior emits “trust telemetry” (latency, usage, provenance coverage)
-* policy runs emit “policy telemetry” (policy version hash, waivers used)
-
-CI should support this by standardizing:
-
-* `run_id`, `config_hash`, `inputs_digest`, `outputs_digest` in artifacts
-* machine-readable `reports/gates.json` everywhere
-* telemetry schema validation (if/when introduced)
-
----
-
-<a id="artifacts--traceability"></a>
-
-## 📦 Artifacts & traceability (standardize outputs)
-
-Standardize artifact names across workflows for debuggability + audit:
-
-* `unit-test-results.xml` / `pytest.xml`
-* `coverage.xml`
-* `frontmatter-report.json`
-* `linkcheck-report.json`
-* `schema-report.json`
-* `catalog-qa-report.json`
-* `privacy-report.json`
-* `policy-report.json`
-* `policy-report.txt`
-* `waiver-decisions.json`
-* `graph-integrity-report.json`
-* `api-contract-report.json`
-* `federation-contract-report.json`
-* `search-index-report.json`
-* `embeddings-manifest.json`
-* `notebook-exec-report.json`
-* `reports/gates.json`
-* `prov.jsonld`
-* `devops-prov.jsonld`
-* `build-info.json`
-* `sbom.spdx.json` *(or CycloneDX equivalent)*
-* `build_provenance.json` *(SLSA-ish)*
-* (optional) `cosign.sig` / `cosign.bundle` *(or registry-based signatures)*
-* zipped logs on failure (`logs.zip`)
-
-💡 Naming tip: include workflow + sha → `catalog-qa-${{ github.sha }}`
-
----
-
-<a id="secrets--environments"></a>
-
-## 🧷 Secrets & environments (least privilege by default)
-
-Common secrets:
-
-* `GITHUB_TOKEN` (often enough for GHCR with `packages: write`)
-* deploy credentials (only in protected environments)
-* third-party tokens (scoped + rotated)
-
-✅ Use GitHub **Environments** (`dev`, `stage`, `prod`) to:
-
-* scope secrets safely
-* require approvals for `prod`
-* attach deploy history to commits
-
-Recommended permissions default:
-
-```yaml
-permissions:
-  contents: read
-```
-
-Escalate only when needed:
-
-* `packages: write` for GHCR push
-* `security-events: write` for SARIF upload
-* `id-token: write` for OIDC + attestations/signing
-
-> [!TIP]
-> For “governed” folders (publish boundary, workflows, policy pack), use `CODEOWNERS` + environment approvals to force the right humans into the loop. ✅
-
----
-
-<a id="reusable-workflows--composite-actions"></a>
-
-## 🧩 Reusable workflows & composite actions
-
-When workflows multiply, duplication becomes entropy. Prefer:
-
-* ✅ **Reusable workflows** (`workflow_call`) for common CI building blocks
-* ✅ **Composite actions** for tiny shared step sets (setup + caching + standardized reporting)
-
-### 🧩 Suggested composite actions layout (KFM-aligned)
-
-```text
-📁 .github/actions/
-├─ 📁 setup-kfm/                  # 🧰 shared env setup (python/node/tools)
-├─ 📁 setup-gis/                  # 🗺️ install GDAL/PROJ + caches (optional)
-├─ 📁 setup-conftest/             # ⚖️ conftest/OPA install + cache
-├─ 📁 check-kill-switch/          # 🧯 centralized kill-switch gate (read-only)
-├─ 📁 markdown-protocol/          # 🧾 front-matter + required sections
-├─ 📁 docs-linkcheck/             # 🔗 link + citation validation
-├─ 📁 schema-validate/            # 🧷 STAC/DCAT/PROV/story validation wrapper
-├─ 📁 catalog-qa/                 # 🗃️ fast catalog QA + link safety
-├─ 📁 privacy-guard/              # 🧬 privacy heuristics + precision checks
-├─ 📁 policy-gate/                # ⚖️ policy pack wrapper + waiver logic
-├─ 📁 graph-integrity/            # 🕸️ fixture ingest + constraint checks
-├─ 📁 api-contract/               # 📜 OpenAPI diff + GraphQL schema check
-├─ 📁 federation-contract/        # 🧭 federation compatibility checker
-├─ 📁 search-index-qa/            # 🔎 index determinism + citation pointers
-├─ 📁 notebook-exec/              # 📓 papermill runner + reports
-├─ 📁 ai-regression/              # 🤖 Focus Mode regression harness (Ollama-aware)
-├─ 📁 repo-provenance/            # 🧬 DevOps→PROV ledger emitter
-├─ 📁 sbom/                       # 📦 generate SBOM
-├─ 📁 attest/                     # 🖊️ attest build provenance (OIDC)
-└─ 📁 docker-build/               # 🐳 docker build/push with labels + digests
-```
-
-### ♻️ Suggested reusable workflows layout
-
-```text
-📁 .github/workflows/
-└─ 📁 reusables/
-   ├─ 📄 kfm-reusable-ci.yml
-   ├─ 📄 kfm-reusable-policy.yml
-   ├─ 📄 kfm-reusable-catalog-qa.yml
-   ├─ 📄 kfm-reusable-ui.yml
-   ├─ 📄 kfm-reusable-schema-validate.yml
-   └─ 📄 kfm-reusable-integration.yml
-```
-
----
-
-<a id="starter-templates"></a>
-
-## 🛠️ Starter templates (copy / paste)
-
-> Keep PR checks fast, make heavy lanes scheduled, and always upload logs on failure. 🥇  
-> These examples show *shape*, not your repo’s final truth — adjust paths for your actual layout.
-
-<details>
-<summary><strong>🧪 <code>ci.yml</code> — Python lint + unit tests (fast PR lane)</strong></summary>
-
-```yaml
-name: CI
-
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  python:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-
-      - name: Install deps
-        run: |
-          python -m pip install -U pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
-          if [ -f api/requirements.txt ]; then pip install -r api/requirements.txt; fi
-
-      - name: Lint
-        run: |
-          ruff check .
-          ruff format --check .
-
-      - name: Unit tests
-        run: |
-          pytest -q --junitxml=unit-test-results.xml --cov=. --cov-report=xml
-
-      - name: Upload test artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ci-python-${{ github.sha }}
-          path: |
-            unit-test-results.xml
-            coverage.xml
-```
-
-</details>
-
-<details>
-<summary><strong>🌐 <code>ui.yml</code> — Web UI lint + test + build</strong></summary>
-
-```yaml
-name: UI
-
-on:
-  pull_request:
-    paths:
-      - "web/**"
-      - ".github/workflows/ui.yml"
-  push:
-    branches: [main]
-    paths:
-      - "web/**"
-
-permissions:
-  contents: read
-
-concurrency:
-  group: ui-${{ github.ref }}
-  cancel-in-progress: true
-
-jobs:
-  web:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: web
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "npm"
-          cache-dependency-path: web/package-lock.json
-
-      - name: Install
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint --if-present
-
-      - name: Typecheck
-        run: npm run typecheck --if-present
-
-      - name: Test
-        run: npm test --if-present
-
-      - name: Build
-        run: npm run build
-
-      - name: Upload build artifacts (optional)
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ui-${{ github.sha }}
-          path: |
-            web/dist/**
-```
-
-</details>
-
-<details>
-<summary><strong>⚖️ <code>kfm-policy-gate.yml</code> — Policy Pack (Conftest/Rego + waivers)</strong></summary>
-
-```yaml
-name: KFM Policy Gate (Policy Pack)
-
-on:
-  pull_request:
-    paths:
-      - "data/**"
-      - "docs/**"
-      - "schemas/**"
-      - ".github/**"
-      - "api/scripts/policy/**"
-      - ".github/workflows/kfm-policy-gate.yml"
-
-permissions:
-  contents: read
-
-jobs:
-  policy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup conftest (composite)
-        uses: ./.github/actions/setup-conftest
-
-      - name: Run policy checks
-        run: |
-          set -euo pipefail
-          conftest test \
-            -p api/scripts/policy/rego \
-            --all-namespaces \
-            .
-
-      - name: Evaluate waivers (shape)
-        run: |
-          python api/scripts/policy/evaluate_waivers.py \
-            --waivers api/scripts/policy/waivers.yml \
-            --out waiver-decisions.json
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: policy-gate-${{ github.sha }}
-          path: |
-            waiver-decisions.json
-```
-
-</details>
-
-<details>
-<summary><strong>🤖 <code>ai-regression.yml</code> — Focus Mode trust regression (Ollama-aware, scheduled)</strong></summary>
-
-```yaml
-name: AI Regression (Focus Mode)
-
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * 1" # weekly Monday 06:00 UTC
-
-permissions:
-  contents: read
-
-jobs:
-  ai:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Optional: start Ollama in CI if your tests require a local model.
-      # Keep this lane scheduled/manual so PR lane remains fast.
-      - name: Start Ollama (optional)
-        if: ${{ hashFiles('api/ai/**') != '' }}
-        run: |
-          echo "Ollama bootstrapping goes here (container or binary)."
-          echo "Prefer pinned versions + small smoke model."
-          echo "Fail closed if citations/policy checks are missing."
-
-      - name: Run Focus Mode trust tests
-        run: |
-          python -m pytest -q \
-            tests/ai/test_focus_mode_trust.py \
-            --junitxml=ai-junit.xml
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ai-regression-${{ github.sha }}
-          path: |
-            ai-junit.xml
-            reports/**
-```
-
-</details>
-
----
-
-<a id="debug-locally"></a>
-
-## 🧰 Debug locally
-
-Preferred order:
-
-1. ✅ run the same commands CI runs (best parity)
-2. 🐳 use Compose profiles to mimic integration dependencies
-3. 🧪 use `act` to simulate Actions locally *(helpful, not perfect)*
-
----
-
-<a id="adding-a-new-workflow-checklist"></a>
-
-## 🧾 Adding a new workflow checklist
-
-* [ ] Name jobs after outcomes (`lint`, `unit-tests`, `catalog-qa`, `schema-validate`, `graph-integrity`, `build-image`)
-* [ ] Keep PR checks fast (aim ≤ ~10–12 minutes)
-* [ ] Put heavy jobs behind schedules or manual dispatch
-* [ ] Cache dependencies (pip/npm) and Docker layers
-* [ ] Upload artifacts on failure (logs are gold 🥇)
-* [ ] Avoid secrets on `pull_request` from forks
-* [ ] Use minimal `permissions:` and elevate only when needed
-* [ ] Add `concurrency:` cancellation to reduce queue noise
-* [ ] Keep the KFM order intact: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
-* [ ] If data/model outputs ship: require **catalog triplet + PROV + digests + policy gates**
-* [ ] Ensure v13 minimum gates are covered: **Markdown protocol, links, schemas, graph integrity, policy**
-* [ ] For automation/agents: honor **kill-switch + determinism + PR‑only** 🧯🤖
-
----
-
-<a id="reference-library--influence-map"></a>
-
-## 📚 Reference library & influence map
-
-> ⚠️ Reference materials may have different licenses than repo code.  
-> Prefer storing large PDFs under `docs/library/` (or outside the repo) and respecting upstream terms (or use Git LFS). 🧾
-
-### 🧭 Source map (project docs → CI responsibilities)
-
-| Source 📚 | What it shapes 🧩 | Where it shows up in CI 🧪 |
-| --- | --- | --- |
-| KFM Platform Overview + Roadmap | system layers, governance, multi-region direction | lane design + contract gates + promotion flow |
-| KFM Architecture, Features, Design | catalog triplet + provenance posture + storage patterns | `schema-validate.yml`, `catalog-qa.yml`, `prov-validate.yml` |
-| KFM UI System Overview | Story Node format, UI testing posture, provenance UI | `ui.yml`, Story Node gates, E2E smoke |
-| KFM AI System Overview | Focus Mode trust rules, provenance-first AI | `ai-regression.yml`, policy gate AI rules |
-| KFM Expanded Technical & Design Guide | cross-cutting CI/CD + architecture glue | everything (shared invariants) |
-| KFM Comprehensive Technical Documentation | DevSecOps hardening, SBOM/attestation, search/index | `artifact-sign.yml`, `sbom.yml`, `attest.yml`, `search-index-qa.yml` |
-| KFM AI Infra — Ollama Integration | local model ops + “model swap safety” | `ai-regression.yml`, composite `setup-ai/` |
-| Maps/GoogleMaps/VirtualWorlds/WebGL pack | 2D/3D mapping constraints + WebGL concerns | `perf.yml`, UI budgets, offline/3D asset checks |
-| AI Concepts pack | evaluation, regression, model hygiene ideas | `model-regression.yml`, `ai-regression.yml` |
-| Data Management/Bayesian pack | metadata rigor + reproducibility mindset | `prov-validate.yml`, notebook gates |
-| Polyglot programming resources pack | multi-language lane planning | optional `r-ci.yml`, `spark-ci.yml`, `matlab-ci.yml` |
-| GIS/Spark/TypeScript pack | GIS + big compute + TS practices | UI + pipeline + optional Spark lanes |
-| Geospatial hub design notes | format conventions (COG/GeoJSON/KML) + containerization | data format QA + export gates |
-
-<details>
-<summary><strong>📚 Suggested repo homes for the PDFs (keep tidy 🧹)</strong></summary>
-
-```text
-📁 docs/library/
-├─ 📄 KFM_Platform_Overview_Roadmap.pdf
-├─ 📄 KFM_Architecture_Features_Design.pdf
-├─ 📄 KFM_UI_System_Overview_Technical_Architecture.pdf
-├─ 📄 KFM_AI_System_Overview.pdf
-├─ 📄 KFM_Expanded_Technical_Design_Guide.pdf
-├─ 📄 KFM_Comprehensive_Technical_Documentation.pdf
-├─ 📄 KFM_AI_Infrastructure_Ollama_Integration.pdf
-├─ 📄 Reference_Maps_WebGL_VirtualWorlds.pdf
-├─ 📄 Reference_AI_Concepts.pdf
-├─ 📄 Reference_Data_Management_Bayesian.pdf
-├─ 📄 Reference_Polyglot_Programming_Resources.pdf
-└─ 📄 Reference_GIS_Spark_TypeScript_WebApps.pdf
-```
-
-</details>
-
-<p align="right"><a href="#top">⬆️ Back to top</a></p>
+## 🧾 Sources
+
+[^fail_closed]: KFM governance principle: “fail closed” — CI blocks merges when checks fail; policy/permission uncertainty should deny by default. See the KFM blueprint (governance + CI enforcement sections).  
+[^policy_as_code]: KFM describes governance as policy-as-code (OPA/Rego) with CI enforcement (e.g., Conftest running policies on PRs).  
+[^pipeline_order]: KFM’s canonical pipeline order and separation of concerns are treated as non-negotiable invariants (ETL → catalog/provenance → DB/graph → API → UI/stories/AI).  
+[^validation_gates]: KFM explicitly treats CI as a validation gate for provenance completeness, schema validation, security scanning, and governance compliance.  
+[^ci_testing]: Reproducibility/QA guidance: CI should run tests and checks on PRs and require a green pipeline before merge.
