@@ -1,486 +1,249 @@
-<a id="top"></a>
+# 🛡️ Policy Gate (CI) — Governance as Code for KFM
 
-# 🧑‍⚖️✅ `.github/actions/policy-gate/` — Policy‑as‑Code Gate (OPA/Rego via Conftest)
-
-![OPA/Rego](https://img.shields.io/badge/OPA%2FRego-policy--as--code-5a67d8)
-![Conftest](https://img.shields.io/badge/Conftest-enabled-0ea5e9)
-![Fail Closed](https://img.shields.io/badge/gate-fail--closed-red)
-![Least Privilege](https://img.shields.io/badge/security-least--privilege-black)
-![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-7c3aed)
-![Deterministic](https://img.shields.io/badge/CI-deterministic-success)
-
-> KFM’s “policy gate” is the **semantic + governance** layer of CI/CD: it evaluates repo artifacts against a **Policy Pack** written in **OPA/Rego** and executed via **Conftest**, and it **blocks merges/promotions** when KFM invariants are violated. :contentReference[oaicite:0]{index=0}
->
-> 🧭 **KFM order is absolute:** **ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  
-> This action helps keep that order enforceable and boring. ✅
-
----
-
-## 🧾 Action metadata
-
-| Field | Value |
-|---|---|
-| Action name | `kfm/policy-gate` |
-| Action type | Composite Action |
-| Action file | `.github/actions/policy-gate/action.yml` |
-| Documentation | `.github/actions/policy-gate/README.md` |
-| Status | ✅ Active *(spec + operating guide; keep `action.yml` aligned)* |
-| Last updated | **2026-01-11** |
-| KFM‑MDP baseline | **v11.2.6** *(project baseline)* |
-| Master Guide | **v13 (draft)** *(project baseline)* |
-| Default engine | **Conftest** (OPA under the hood) |
-| Default posture | **Fail‑closed** (`deny[]` blocks) |
-| Primary purpose | Governance + safety + “promotion discipline” gates |
+![Policy Gate](https://img.shields.io/badge/CI-Policy%20Gate-2ea44f?style=for-the-badge)
+![OPA](https://img.shields.io/badge/OPA-Open%20Policy%20Agent-1f6feb?style=for-the-badge)
+![Rego](https://img.shields.io/badge/Policy-Rego-0b7285?style=for-the-badge)
+![Fail Closed](https://img.shields.io/badge/Mode-Fail%20Closed-dc2626?style=for-the-badge)
 
 > [!IMPORTANT]
-> KFM’s roadmap explicitly calls for a **Policy Pack** (OPA/Rego + Conftest) that encodes governance rules (FAIR+CARE, retention, coding standards) and is run as a **CI Policy Gate**. :contentReference[oaicite:1]{index=1}
+> This action is a **guardrail**, not a suggestion. If policy fails, the workflow fails. ✅🧱
 
 ---
 
-## ⚡ Quick links
+## ✨ What is this?
 
-| Need | Go |
-|---|---|
-| 🧪 Workflows overview | [`../../workflows/README.md`](../../workflows/README.md) |
-| 🧾 Full schema validation | [`../metadata-validate/README.md`](../metadata-validate/README.md) |
-| ✅ Fast STAC/DCAT QA | [`../catalog-qa/README.md`](../catalog-qa/README.md) |
-| 🔎 Governance scan | [`../governance-scan/README.md`](../governance-scan/README.md) *(if present)* |
-| 🧯 Kill switch checks | [`../check-kill-switch/README.md`](../check-kill-switch/README.md) + [`../kill-switch/README.md`](../kill-switch/README.md) |
-| 🧾 Build traceability | [`../build-info/README.md`](../build-info/README.md) |
-| 🖊️ Attestations | [`../attest/README.md`](../attest/README.md) |
-| 🧑‍⚖️ Policy pack folder | [`../../../tools/validation/policy/`](../../../tools/validation/policy/) *(recommended)*:contentReference[oaicite:2]{index=2} |
-| 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) *(or `../../SECURITY.md` if mirrored in `.github/`)* |
+`policy-gate` is a **local GitHub Composite Action** that enforces **repository governance rules** during CI for the Kansas Frontier Matrix (KFM).  
+It’s the “✅ allowed / ⛔ denied” checkpoint that keeps the repo **provenance-first**, **license-safe**, **metadata-complete**, and **policy-compliant**.
+
+📍 **Action path:** `.github/actions/policy-gate`  
+📍 **Policies live in:** `policy/` (OPA/Rego “policy as code”)  
 
 ---
 
-<details>
-<summary><strong>📌 Table of contents</strong></summary>
+## 🧠 Why do we need it?
 
-- [✅ What this action does](#-what-this-action-does)
-- [🧭 Where it fits in KFM CI](#-where-it-fits-in-kfm-ci)
-- [🧑‍⚖️ What “policy” means in KFM](#-what-policy-means-in-kfm)
-- [🧾 Inputs](#-inputs)
-- [📤 Outputs](#-outputs)
-- [📦 Output files](#-output-files)
-- [🧪 Usage in workflows](#-usage-in-workflows)
-- [🧱 Recommended policy pack layout](#-recommended-policy-pack-layout)
-- [🧠 Writing policies that don’t rot](#-writing-policies-that-dont-rot)
-- [🧩 Common policy domains for KFM](#-common-policy-domains-for-kfm)
-- [🧰 Local debugging](#-local-debugging)
-- [🧯 Troubleshooting](#-troubleshooting)
-- [🔐 Security notes](#-security-notes)
-- [📚 Reference library](#-reference-library)
+KFM is designed around a “truth path”:
 
-</details>
+✅ **Raw → Processed → Catalog/Metadata → Provenance → DB → API → UI**
+
+The Policy Gate ensures contributions don’t accidentally break that contract.  
+It prevents merges that would create **uncited data**, **unlicensed content**, **missing provenance**, or **unsafe AI artifacts**.
 
 ---
 
-## ✅ What this action does
+## 🗂️ Expected folder layout
 
-This action:
-
-- 🧑‍⚖️ Runs **OPA/Rego** policy checks (via **Conftest**) against one or more **targets** (files/dirs).
-- 🚫 Fails the job when **`deny[]`** rules trigger (**fail‑closed**).
-- ⚠️ Optionally fails on **`warn[]`** rules (recommended for promotion lanes).
-- 🧾 Produces **machine‑readable** + **human‑readable** reports to upload as workflow artifacts.
-- 🧪 Optionally runs `conftest verify` to validate the policy pack’s own tests.
-
-### Why KFM needs this (beyond schema validation)
-Schema validation ensures JSON/YAML is shaped correctly.
-
-Policy gates enforce **meaning**:
-- 🏷️ licensing rules (SPDX allowlists, “no unknown license” in publish lanes)
-- 🔗 link safety / SSRF defenses for catalogs
-- 🧭 sensitivity + sovereignty propagation (public outputs cannot be *less* restricted than inputs)
-- 🧬 cross‑layer consistency (STAC/DCAT/PROV alignment)
-- 🚦 “validate then promote” discipline (no publish unless gates pass):contentReference[oaicite:3]{index=3}
+```text
+📦 .github/
+└── actions/
+    └── policy-gate/
+        ├── action.yml         # ✅ Composite action definition (authoritative inputs)
+        ├── README.md          # 👈 you are here
+        └── scripts/           # (optional) helper scripts used by the action
+```
 
 ---
 
-## 🧭 Where it fits in KFM CI
+## ✅ What the gate checks (high level)
 
-Policy Gate is typically **after** schema validation and **before** publish/promotion.
+Your repository policies can evolve, but the gate typically enforces things like:
+
+### 🧾 Data & licensing
+- ✅ Datasets include a **license** + **citation metadata**
+- ✅ Restricted or sensitive data is **not exposed in open paths**
+- ✅ File formats meet “interoperable / reusable” expectations (where applicable)
+
+### 🧬 Provenance & traceability
+- ✅ New/updated processed artifacts have a **matching provenance log**
+- ✅ Canonical pipeline order isn’t bypassed (no “UI-only” data drops)
+
+### 🤖 AI governance (if applicable in this repo)
+- ✅ AI prompts/templates/content follow **policy rules**
+- ✅ Disallowed content patterns are blocked
+- ✅ Required citation fields exist when rules demand them
+
+### 🔐 Repo hygiene & security
+- ✅ “No secrets in repo” guardrails (if your policy bundle includes this)
+- ✅ Enforces repository “zones” (where certain types of files are allowed)
+
+> [!NOTE]
+> The **source of truth** is always the Rego policies in `policy/`.  
+> The README describes intent + usage; the policies define reality.
+
+---
+
+## ⚙️ How it works (conceptually)
 
 ```mermaid
 flowchart LR
-  KS["🧯 Kill switch"] --> GV["🔎 Governance scan (optional)"]
-  GV --> SV["🧾 Metadata validate (schema + cross-links)"]
-  SV --> PG["🧑‍⚖️ Policy gate (OPA/Rego via Conftest)"]
-  PG --> BI["📦 Build-info + checksums"]
-  BI --> AT["🖊️ Attest/SBOM (release/promotion lanes)"]
-  AT --> PUB["🚀 Publish / Promote"]
+  PR[📥 Pull Request] --> CI[🤖 GitHub Actions]
+  CI --> PG[🛡️ policy-gate action]
+  PG --> CT[🔎 Conftest / Policy Runner]
+  CT --> REGO[(📜 Rego policies in /policy)]
+  REGO --> DEC{✅ Pass?}
+  DEC -- yes --> MERGE[🎉 Merge allowed]
+  DEC -- no --> BLOCK[⛔ Merge blocked]
 ```
 
-> [!TIP]
-> PR lane can be **fast + targeted** (changed paths only).  
-> Promotion lane should be **strict + complete** (fail‑closed, warn=fail, full target coverage).
-
 ---
 
-## 🧑‍⚖️ What “policy” means in KFM
+## 🚀 Usage
 
-KFM’s “Policy Pack” is meant to encode governance rules as **machine‑readable safeguards** (FAIR+CARE, retention, coding standards), run in CI, and treated like code (versioned, tested).:contentReference[oaicite:4]{index=4}
-
-This aligns with a proven pattern from data governance literature: an **access/policy decision** is effectively “constraints satisfied → allow; otherwise → deny,” and policies can exist at both “global” and “local/classification” layers.
-
-### KFM translation of “global vs local policy”
-- 🌍 **Global policies**: always-on repo invariants (least privilege workflows, no unsafe URL schemes, no “unknown license” in promoted artifacts).
-- 🗺️ **Local/domain policies**: rules scoped by folder/classification (e.g., extra sensitivity rules for `data/processed/public/**`, stricter story-node rules for `docs/**`, etc.).
-
----
-
-## 🧾 Inputs
-
-> All inputs are strings (GitHub Actions limitation). Use `"true"` / `"false"` for booleans.
-
-| Input | Required | Default | Meaning |
-|---|---:|---|---|
-| `policy_dir` | ❌ | `tools/validation/policy` | Directory containing the policy pack (`.rego` + optional `data.json` + tests):contentReference[oaicite:7]{index=7} |
-| `targets` | ❌ | `.` | Space/newline-separated list of files/dirs to evaluate |
-| `conftest_version` | ❌ | `0.56.0` | Conftest release version to install (**pin for determinism**) |
-| `fail_on_warn` | ❌ | `"true"` | If `"true"`, warnings are treated as failures *(recommended for promotion lanes)* |
-| `run_verify` | ❌ | `"true"` | If `"true"`, run `conftest verify` on the policy pack tests |
-| `output_format` | ❌ | `json` | Conftest output format (`json`, `table`, etc.) |
-| `report_dir` | ❌ | `artifacts/policy-gate` | Where to write reports |
-| `namespace` | ❌ | *(empty)* | Optional: restrict evaluation to a namespace/bundle (if used) |
-| `extra_args` | ❌ | *(empty)* | Extra args passed to `conftest test` (e.g., `--all-namespaces`) |
-| `emit_sarif` | ❌ | `"false"` | If `"true"`, write SARIF for code scanning UI (implementation-defined) |
-
-> [!IMPORTANT]
-> KFM’s own documentation stresses **supply chain hygiene**: pin dependencies/base images, generate SBOMs, and verify downloads with checksums/hashes.:contentReference[oaicite:8]{index=8}  
-> If your implementation downloads the Conftest binary at runtime, strongly consider verifying its checksum (pinned per version) before executing it.
-
----
-
-## 📤 Outputs
-
-| Output | Description |
-|---|---|
-| `ok` | `"true"` if no denies (and warns allowed), else `"false"` |
-| `deny_count` | Integer-like string |
-| `warn_count` | Integer-like string |
-| `report_json` | Path to the machine-readable report (`.json`) |
-| `report_md` | Path to a human summary (`.md`) |
-| `sarif_path` | Path to SARIF (if enabled) |
-| `conftest_version` | The Conftest version used |
-
-> Reports are meant to be uploaded via `actions/upload-artifact@v4` by the calling workflow.
-
----
-
-## 📦 Output files
-
-Recommended stable output shape:
-
-```text
-artifacts/policy-gate/
-├─ policy-gate.json          # ✅ machine report (derived from conftest json)
-├─ policy-gate.md            # 🧾 human summary (PR-friendly)
-├─ policy-gate.sarif         # 🧷 optional (code scanning UI)
-└─ raw/
-   └─ conftest.json          # optional: direct conftest output
-```
-
-✅ Output design rules:
-- stable ordering (diffable)
-- deny/warn messages are actionable, short, and do not leak secrets
-- no raw tokens, credentials, or PII in reports (ever)
-
----
-
-## 🧪 Usage in workflows
-
-### 1) Minimal PR lane example (safe on forks)
+### ✅ Minimal example (whole-repo scan)
 
 ```yaml
-jobs:
-  policy_gate:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
+name: policy-gate
 
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 🧑‍⚖️ Policy Gate (OPA/Rego)
-        uses: ./.github/actions/policy-gate
-        with:
-          policy_dir: tools/validation/policy
-          targets: |
-            data/
-            docs/
-          fail_on_warn: "true"
-
-      - name: 📦 Upload policy reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: policy-gate-${{ github.sha }}
-          path: artifacts/policy-gate/**
-```
-
-### 2) Data-only trigger (recommended)
-
-```yaml
 on:
   pull_request:
-    paths:
-      - "data/**"
-      - "docs/**"
-      - "tools/validation/policy/**"
-      - ".github/actions/policy-gate/**"
+  push:
+    branches: [main]
+
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🧾
+        uses: actions/checkout@v4
+
+      - name: Policy Gate 🛡️
+        uses: ./.github/actions/policy-gate
+        with:
+          policy_dir: policy
+          targets: .
 ```
 
-### 3) Promotion lane (strict + complete, environment-gated)
+---
+
+### 🎯 Faster PR example (only check changed files)
+
+This pattern reduces runtime on big repos:
 
 ```yaml
 jobs:
-  promote:
+  policy:
     runs-on: ubuntu-latest
-    environment: prod
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: 🧯 Kill switch (publish scope)
-        uses: ./.github/actions/kill-switch
-        with:
-          scope: publish
-          behavior: fail
+      - name: Get changed files 📌
+        id: changes
+        uses: tj-actions/changed-files@v45
 
-      - name: 🧾 Metadata validate (full contract)
-        uses: ./.github/actions/metadata-validate
-        with:
-          mode: promotion
-          fail_on_warn: "true"
-
-      - name: 🧑‍⚖️ Policy gate (full repo)
+      - name: Policy Gate 🛡️ (changed-only)
         uses: ./.github/actions/policy-gate
         with:
-          policy_dir: tools/validation/policy
-          targets: .
-          fail_on_warn: "true"
-          run_verify: "true"
-
-      # next: build-info, attest, publish...
-```
-
-### 4) Advanced: “bundle” style (optional)
-If your policy pack defines bundles/namespaces, you can pass `namespace` / `extra_args`:
-
-```yaml
-- name: Policy gate (promotion bundle)
-  uses: ./.github/actions/policy-gate
-  with:
-    policy_dir: tools/validation/policy
-    targets: .
-    namespace: bundles
-    extra_args: "--all-namespaces"
-```
-
-> [!NOTE]
-> Bundle selection is optional. The simplest approach is: **write good `deny[]` rules**, run them everywhere.
-
----
-
-## 🧱 Recommended policy pack layout
-
-The action runs policies. The policies live elsewhere. This is a KFM-friendly “Policy Pack” shape:
-
-```text
-📁 tools/
-└─ ✅📁 validation/
-   └─ 🧑‍⚖️📁 policy/
-      ├─ 📄 README.md
-      ├─ ⚙️ conftest.toml              # optional conftest config
-      ├─ 📄 data.json                  # optional OPA data (allowlists, bounds, etc.)
-      ├─ 🧠📁 rego/
-      │  ├─ 🧰📁 common/
-      │  │  ├─ 🧩 helpers.rego
-      │  │  ├─ 🏷️ license_allowlist.rego
-      │  │  └─ 🔗 url_safety.rego
-      │  ├─ 🗂️📁 catalogs/
-      │  │  ├─ 🛰️ stac_required.rego
-      │  │  ├─ 🗃️ dcat_required.rego
-      │  │  ├─ 🧬 prov_required.rego
-      │  │  └─ 🔗 link_safety.rego
-      │  ├─ 🧭📁 governance/
-      │  │  ├─ 🧬 classification_propagation.rego
-      │  │  ├─ 🗺️ sensitive_locations.rego
-      │  │  └─ 🏷️ attribution.rego
-      │  ├─ 🔐📁 supply_chain/
-      │  │  ├─ 🧷 workflows_least_privilege.rego
-      │  │  ├─ 📌 actions_pinning.rego
-      │  │  └─ 🧾 sbom_required.rego
-      │  └─ 📦 bundles.rego             # optional
-      └─ 🧪📁 tests/
-         ├─ 🧪 *_test.rego
-         └─ 🧫📁 samples/
-            ├─ ✅📁 good/
-            └─ ❌📁 bad/
+          policy_dir: policy
+          targets: ${{ steps.changes.outputs.all_changed_files }}
 ```
 
 > [!TIP]
-> The KFM roadmap suggests packaging policies under a dedicated folder (e.g. `tools/validation/policy/` with `.rego` files + Conftest config) and treating them as code (versioned, tested).:contentReference[oaicite:9]{index=9}
+> If your action expects a newline-delimited list, use:
+> `targets: |` and pass `${{ steps.changes.outputs.all_changed_files }}` on its own line.
 
 ---
 
-## 🧠 Writing policies that don’t rot
+## 🧩 Inputs
 
-### ✅ Make policies deterministic
-Avoid rules that depend on:
-- current wall-clock time
-- random seeds
-- network access (unless you intentionally provide allowlists + caching)
+> [!IMPORTANT]
+> **`action.yml` is authoritative.** This table documents the *intended* interface.
+> If this README and `action.yml` disagree, trust `action.yml`.
 
-### ✅ Prefer “fail‑closed” for promotion lanes
-- PR lane can warn on some items (depending on maturity)
-- Promotion lane should be strict (deny anything not explicitly permitted)
-
-### ✅ Treat metadata as security‑critical
-KFM’s own technical documentation frames **validation** and **supply-chain security** as first-class disciplines:
-- pin dependencies/base images
-- generate SBOMs
-- sign tags/images
-- verify external data with checksums/hashes
-- validate metadata with schemas
-- sanitize paths to prevent directory traversal:contentReference[oaicite:10]{index=10}
-
-### ✅ Keep deny messages short + actionable
-Recommended message prefixes:
-- `STAC:` …
-- `DCAT:` …
-- `PROV:` …
-- `GOV:` …
-- `SC:` (supply chain) …
+| Input | Required | Default | What it does |
+|------|----------|---------|--------------|
+| `policy_dir` | ✅ | `policy` | Path to the policy bundle (Rego files, optional data files) |
+| `targets` | ✅ | `.` | Files/dirs to evaluate (entire repo or a changed-files list) |
+| `fail_on_warn` | ❌ | `true` | Treat policy warnings as failures (fail-closed posture) |
+| `namespace` | ❌ | *(empty)* | Optional policy namespace selection (if your rules are namespaced) |
+| `report_format` | ❌ | `stdout` | Optional: `stdout`, `json`, etc. (if the action supports reporting) |
+| `report_path` | ❌ | *(empty)* | Optional path to write a machine-readable report for artifacts |
 
 ---
 
-## 🧩 Common policy domains for KFM
+## 🧪 Run locally (recommended before pushing) 💻✅
 
-### 🗂️ Catalog governance (STAC/DCAT/PROV)
-- license required (prefer SPDX)
-- providers/publisher required
-- “unknown license” forbidden in publish lanes
-- cross-link consistency (STAC ↔ DCAT ↔ PROV)
+If CI blocks your PR, the fastest fix is running the same checks locally.
 
-### 🔗 Link safety (SSRF + unsafe schemes)
-- allow only `http://` / `https://`
-- deny `file://`, `ssh://`, `ftp://`, etc.
-- deny loopback / link-local / private ranges
-- cap redirects (if you do any network validation elsewhere)
+### 1) Install the runner (Conftest is commonly used)
+- macOS (Homebrew): `brew install conftest`
+- Linux: download from upstream releases, or use your package manager
 
-> [!NOTE]
-> Prefer **offline-first** policy evaluation. Let dedicated link-checking tools do network calls with strict allowlists.
-
-### 🧭 Sensitive locations & precision (CARE-aligned)
-KFM’s documentation explicitly calls out that sensitive cultural/ecological locations may require **offset/coarsened/omitted** coordinates in public outputs.:contentReference[oaicite:11]{index=11}
-
-Policy examples:
-- forbid exact `Point` geometries in public story artifacts
-- enforce minimum precision for public-facing layers (county/grid/H3)
-- require an explicit redaction note when precision is reduced
-
-### 🧬 Classification propagation
-- outputs cannot be less restricted than inputs unless explicitly approved/redacted
-- “public” catalog entries must not reference restricted raw paths
-- require sensitivity tags on promoted datasets
-
-### 🔐 CI/CD supply chain hygiene
-KFM’s technical guidance includes SBOM + signing + verification practices.:contentReference[oaicite:12]{index=12}
-
-Policy examples:
-- enforce least-privilege workflow permissions
-- forbid `pull_request_target` unless explicitly justified
-- enforce action pinning policy (major ok in PR lanes; SHA pinning in hardened lanes)
-- require SBOM artifacts in release workflows
-- require digest pinning (`image@sha256:...`) in deployment manifests
-
-### ✍️ Narrative artifacts (Story Nodes) (optional)
-KFM’s Markdown protocol calls out minimum CI gates such as front‑matter checks, link validation, and schema validation for metadata + story specs.:contentReference[oaicite:13]{index=13}
-
-Policy examples:
-- enforce required front-matter keys on story docs
-- enforce “evidence links” section exists for factual claims
-- forbid high‑precision coordinates in public story markdown
-
----
-
-## 🧰 Local debugging
-
-### Install Conftest (example)
+### 2) Run policies on the whole repo
 ```bash
-# macOS (Homebrew)
-brew install conftest
+conftest test . -p policy
 ```
 
-### Run policy tests (unit-style)
+### 3) Run policies on a subfolder or single file
 ```bash
-conftest verify -p tools/validation/policy
-```
-
-### Run policies against targets
-```bash
-# Human output
-conftest test -p tools/validation/policy data/ docs/ --output table
-
-# Machine output
-conftest test -p tools/validation/policy data/ --output json > /tmp/policy-report.json
+conftest test data/ -p policy
+conftest test data/processed/my_dataset.geojson -p policy
 ```
 
 > [!TIP]
-> If local passes but CI fails, compare:
-> - Conftest version
-> - policy pack path
-> - which targets were evaluated
-> - line endings / JSON formatting
+> If you’re iterating on a rule, use `--trace` (if enabled in your workflow) to understand why it fired.
 
 ---
 
-## 🧯 Troubleshooting
+## 🧯 Common failures & quick fixes
 
-### “No policies found”
-- confirm `policy_dir` points at the directory containing `.rego` files
-- ensure your workflow checked out the repo
-- ensure the action installs Conftest (and uses the pinned version)
+### ❌ “Dataset missing license / citation”
+✅ Add or update required metadata fields in the dataset’s catalog/metadata file.
 
-### “Policies ran but didn’t evaluate my files”
-- check `targets` (paths are relative to repo root)
-- verify your workflow trigger includes the relevant paths
-- consider running against `.` while debugging
+### ❌ “Processed artifact has no provenance”
+✅ Add a matching provenance log (often in something like `data/provenance/`), referencing:
+- inputs (raw source)
+- process (pipeline/script)
+- outputs (processed file)
+- timestamps + responsible agent (human and/or pipeline)
 
-### “Too noisy”
-- consolidate fast checks into **Catalog QA** and keep policy gate focused on “meaning layer” rules
-- add bundle selection once policies scale
-- introduce warning-only rules in PR lanes and enforce deny-only in promotion lanes
+### ❌ “File committed to forbidden zone”
+✅ Move the file to the correct location (raw vs processed vs docs vs policy), or update the pipeline output target.
 
----
-
-## 🔐 Security notes
-
-- ✅ Run with `permissions: contents: read` in PR lanes (safe on forks).
-- ✅ Do not require secrets for policy evaluation.
-- 🚫 Do not pass secrets via action outputs.
-- 🚫 Do not download arbitrary policy packs from the internet at runtime.
-- ✅ Treat policy-gate changes like production changes (CODEOWNERS + review).
-- ✅ Prefer fail‑closed for promotion: “validate then promote.”:contentReference[oaicite:14]{index=14}
-
-> [!CAUTION]
-> CI runners are part of your supply chain. Treat policy gate + policy pack edits as security-sensitive.
+### ❌ “Restricted content in open path”
+✅ Move to protected location, redact, aggregate, or mark access restrictions in metadata (depending on governance rules).
 
 ---
 
-## 📚 Reference library
+## 🧱 Adding / updating policies (maintainers)
 
-These project docs influence policy domains (governance, provenance, reproducibility, safety):
+### 🧾 Add a new rule
+1. Create or update a `.rego` file in `policy/`
+2. Add fixtures/examples (recommended)
+3. Verify locally:
+   ```bash
+   conftest test . -p policy
+   ```
 
-- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — supply chain security + validation + sensitivity rules:contentReference[oaicite:15]{index=15}:contentReference[oaicite:16]{index=16}
-- `docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — Policy Pack (OPA/Rego + Conftest) + CI “policy gate” rationale:contentReference[oaicite:17]{index=17}
-- `docs/specs/MARKDOWN_GUIDE_v13.md.gdoc` — contribution protocol + minimum CI gates (story + metadata discipline):contentReference[oaicite:18]{index=18}
-- `docs/library/Data Spaces.pdf` — policy/constraint framing (allow/deny + global/local policy layering)
+### ✅ Make failures human-friendly
+Policies should emit actionable messages:
+- “what failed”
+- “where it failed”
+- “how to fix it”
 
 ---
 
-<p align="right"><a href="#top">⬆️ Back to top</a></p>
+## 🔐 Security posture
+
+- **Fail closed by default**: policy uncertainty should block merges, not allow them.
+- Policies must be **reviewed like code** (PR + review).
+- If an exception is needed, prefer:
+  - a scoped policy allowance with justification, or
+  - a documented “waiver” mechanism (if implemented), rather than disabling checks.
+
+---
+
+## 🔗 Related docs
+
+- 📁 `policy/` — Policy bundle (Rego rules)
+- 📁 `data/catalog/` — Dataset metadata (if present in this repo)
+- 📁 `data/provenance/` — Provenance logs (if present in this repo)
+- 📁 `.github/workflows/` — Workflows that call this action
+
+---
+
+## 🧭 Philosophy (tl;dr)
+
+**If it can’t be traced, it doesn’t ship.** 🧬  
+**If it’s missing metadata, it’s not usable.** 🧾  
+**If it’s sensitive, it’s governed.** 🔐  
+**If policy fails, the merge fails.** 🛡️
