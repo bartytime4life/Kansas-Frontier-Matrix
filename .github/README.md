@@ -176,15 +176,15 @@ KFM treats story contributions as reviewable, first-class artifacts; stories sho
 
 ```mermaid
 flowchart LR
-  A[📥 Raw evidence\n(data/raw)] --> B[🧼 Pipelines\n(pipelines/*)]
-  B --> C[📦 Processed artifacts\n(data/processed)]
-  C --> D[🗂️ Metadata & catalogs\nSTAC / DCAT\n(data/stac, data/catalog)]
-  C --> E[🧾 Provenance logs\nPROV\n(data/prov)]
-  D --> F[(🗄️ Datastores\nPostGIS / Neo4j)]
-  F --> G[🔌 API\nFastAPI]
-  G --> H[🗺️ UI\nReact + MapLibre\n(+ Cesium optional)]
-  G --> I[🤖 Focus Mode\n(governed AI)]
-  H --> J[📖 Story Nodes\n(docs/stories/*)]
+  A["📥 Raw evidence<br/>(data/raw)"] --> B["🧼 Pipelines<br/>(src/pipelines/)"]
+  B --> C["📦 Processed artifacts<br/>(data/processed)"]
+  C --> D["🗂️ Metadata & catalogs<br/>STAC · DCAT<br/>(data/stac, data/catalog)"]
+  C --> E["🧾 Provenance logs<br/>PROV<br/>(data/prov)"]
+  D --> F["🗄️ Datastores<br/>PostGIS · Neo4j"]
+  F --> G["🔌 API<br/>FastAPI"]
+  G --> H["🗺️ UI<br/>React + MapLibre<br/>(Cesium optional)"]
+  G --> I["🤖 Focus Mode<br/>(governed AI)"]
+  H --> J["📖 Story Nodes<br/>(docs/stories/)"]
 ```
 
 The “pipeline → catalog → database → API → UI” model is explicit, and provenance-first is treated as a core invariant.[^kfm_system][^provenance_first]
