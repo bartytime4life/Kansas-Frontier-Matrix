@@ -1,21 +1,14 @@
-<div align="center">
-
 # 🧩 KFM Composite Actions
 
 **Reusable GitHub Actions building-blocks for a provenance-first, fail-closed CI/CD pipeline.**  
 These actions power the “truth path” from contributions ➜ validation ➜ governed builds ➜ release artifacts.
 
-<p>
-  <img alt="Composite Actions" src="https://img.shields.io/badge/GitHub-Composite%20Actions-181717?style=for-the-badge&logo=github">
-  <img alt="Governance" src="https://img.shields.io/badge/Governance-Fail--Closed-critical?style=for-the-badge">
-  <img alt="Provenance" src="https://img.shields.io/badge/Provenance-Required-blue?style=for-the-badge">
-  <img alt="Supply Chain" src="https://img.shields.io/badge/Supply%20Chain-SBOM%20%2B%20Attestation-0A7?style=for-the-badge">
-</p>
+| ![GitHub Composite Actions](https://img.shields.io/badge/GitHub-Composite%20Actions-181717?style=for-the-badge&logo=github) | ![Governance: Fail-Closed](https://img.shields.io/badge/Governance-Fail--Closed-critical?style=for-the-badge) |
+| --- | --- |
+| ![Provenance: Required](https://img.shields.io/badge/Provenance-Required-blue?style=for-the-badge) | ![Supply Chain: SBOM + Attestation](https://img.shields.io/badge/Supply%20Chain-SBOM%20%2B%20Attestation-0A7?style=for-the-badge) |
 
 **Quick links:**  
-[📁 Folder map](#-folder-map) · [🚀 Using an action](#-using-an-action) · [🧱 Action catalog](#-action-catalog) · [🧬 Recommended wiring](#-recommended-wiring) · [🔐 Security rules](#-security-rules) · [🛠️ Developing actions](#️-developing-actions) · [🧯 Troubleshooting](#-troubleshooting)
-
-</div>
+[📁 Folder map](#-folder-map) · [🚀 Using an action](#-using-an-action) · [🧱 Action catalog](#-action-catalog) · [🧬 Recommended wiring](#-recommended-wiring) · [🔐 Security rules](#-security-rules) · [🛠️ Developing actions](#-developing-actions) · [🧯 Troubleshooting](#-troubleshooting)
 
 ---
 
@@ -32,6 +25,9 @@ Why composite actions? Because they keep CI logic **consistent**, **reviewable**
 
 > [!IMPORTANT]
 > If something is ambiguous, these actions should **fail closed** — the safe default is “deny / stop” until the contribution is compliant.
+
+> [!INFO]
+> **Provenance-first CI:** KFM’s pipeline is designed for transparency and trust. Every output (data, model, or map) must be traceable back to its sources — nothing enters or leaves without a record of how it got there. These composite actions ensure that *“the map behind the map”* is always captured via metadata and lineage, forming a verifiable truth path for all changes.
 
 ---
 
@@ -56,7 +52,7 @@ Why composite actions? Because they keep CI logic **consistent**, **reviewable**
 └─ 🧹 story-lint/            # Lint Story Nodes (Markdown + choreography scripts + citations)
 ```
 
-> Tip 🧭: Each action directory should be self-contained and include its own `action.yml` and an action-specific `README.md`.
+Tip 🧭: Each action directory should be **self-contained** and include its own `action.yml` and an action-specific `README.md`.
 
 ---
 
@@ -70,7 +66,7 @@ In a workflow step:
 - name: 🛡️ Policy gate
   uses: ./.github/actions/policy-gate
   with:
-    # Inputs vary by action — see each action/action.yml
+    # Inputs vary by action — see each action/action.yml (source of truth)
     policy_dir: policy
 ```
 
@@ -101,8 +97,11 @@ Use repo-relative paths and quote variables:
 
 ## 🧱 Action catalog
 
-Below is the intent and typical usage of each action.  
-**Exact inputs/outputs live in each action’s `action.yml`** and are the source of truth.
+Below is the **intent** and typical usage of each action.  
+Exact inputs/outputs live in each action’s `action.yml` and are the **source of truth**.
+
+> [!TIP]
+> When you add a new action: update the [📁 folder map](#-folder-map) and add an entry here so the catalog stays complete. ✅
 
 ### 🧰 Setup actions
 
@@ -140,9 +139,11 @@ Below is the intent and typical usage of each action.
 ```
 </details>
 
----
-
 ### 🛡️ Governance actions
+
+> [!INFO]
+> **Governance gates** implement KFM’s strict policy enforcement. If a rule/check fails, the pipeline blocks the change (“fail closed”).  
+> They cover license requirements, forbidden content scans, and sensitive data markings (upholding CARE principles — **Collective Benefit, Authority to Control, Responsibility, Ethics**). In short: non-compliant contributions are stopped cold before they merge.
 
 <details>
 <summary><b>🚦 policy-gate</b> — the main governance gate</summary>
@@ -170,7 +171,7 @@ Below is the intent and typical usage of each action.
 
 **Purpose**
 - Pattern scans (secrets, credentials, restricted keywords, unsafe file types).
-- Optional license scans or allowlist checks depending on implementation.
+- Optional license scans or allowlist checks (implementation-dependent).
 
 **Example**
 ```yaml
@@ -208,9 +209,11 @@ Below is the intent and typical usage of each action.
 ```
 </details>
 
----
-
 ### 🗂️ Data contract actions
+
+> [!INFO]
+> **No data without metadata:** every dataset/story added to KFM must come with proper documentation and lineage.  
+> These actions enforce that rule by validating schemas, checking completeness (e.g., spatial/temporal extents in STAC catalogs), and requiring provenance files for new data. This keeps content FAIR (findable, accessible, interoperable, reusable) and traceable over time.
 
 <details>
 <summary><b>🧷 metadata-validate</b> — schema + required fields validation</summary>
@@ -295,9 +298,11 @@ Below is the intent and typical usage of each action.
 ```
 </details>
 
----
-
 ### 📦 Supply chain actions
+
+> [!INFO]
+> **Supply chain trust signals:** these actions generate verifiable evidence of how artifacts were built.  
+> Capturing versions, dependencies, and environment details enables stronger provenance guarantees; outputs like SLSA provenance files and SPDX SBOMs become “trust receipts” for audits and releases.
 
 <details>
 <summary><b>🐳 docker-build</b> — build container images</summary>
@@ -321,7 +326,7 @@ Below is the intent and typical usage of each action.
 
 **Purpose**
 - Produces SBOM for built images/packages.
-- Stores SBOM as workflow artifact and/or attaches to releases.
+- Stores SBOM as workflow artifact and/or attaches it to releases.
 
 **Example**
 ```yaml
@@ -351,7 +356,7 @@ Below is the intent and typical usage of each action.
 <summary><b>🧾 attest</b> — provenance attestation</summary>
 
 **Purpose**
-- Creates attestations for build artifacts using GitHub OIDC where possible.
+- Creates attestations for build artifacts using GitHub OIDC when possible.
 - Ties artifacts to source, workflow, and identity for auditing.
 
 **Example**
@@ -391,17 +396,21 @@ flowchart TD
 
 ### ✅ Required practices
 
-- 🔒 **Least privilege**: set `permissions:` explicitly (don’t rely on defaults).
+- 🔒 **Least privilege:** set `permissions:` explicitly (don’t rely on defaults).
 - 🧷 **Pin third-party actions** by commit SHA (or prefer local actions).
-- 🧼 **No secrets in logs**: never `echo` secrets or print env dumps.
-- 🧾 **Auditable outputs**: prefer writing results to `$GITHUB_STEP_SUMMARY` and explicit artifacts.
-- 🧨 **Kill-switch aware**: release and deploy workflows must honor kill-switch state.
+- 🧼 **No secrets in logs:** never echo secrets or print env dumps.
+- 🧾 **Auditable outputs:** prefer writing results to `$GITHUB_STEP_SUMMARY` and explicit artifacts.
+- 🧨 **Kill-switch aware:** release and deploy workflows must honor kill-switch state.
 
 ### 🚫 Avoid
 
 - Unpinned marketplace actions
 - Downloading arbitrary scripts at runtime without checksums
 - Writing credentials to disk outside of standard GitHub mechanisms
+
+> [!TIP]
+> **Observability:** Capture important results in the build summary and artifacts, not just console logs.  
+> Writing to `$GITHUB_STEP_SUMMARY` gives reviewers and auditors a clean “report card” per run — without leaking sensitive info.
 
 ---
 
@@ -416,6 +425,22 @@ Each action directory should contain:
 ├─ action.yml
 ├─ README.md
 └─ scripts/            # optional
+```
+
+### 🧾 Outputs & summaries
+
+Prefer explicit, machine-readable outputs + a human-readable run summary:
+
+```bash
+# ✅ Outputs
+echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+# 🧾 Summary
+{
+  echo "## 📦 Build Info"
+  echo "- Version: $VERSION"
+  echo "- SHA: $GITHUB_SHA"
+} >> "$GITHUB_STEP_SUMMARY"
 ```
 
 ### 🧪 Testing guidance
@@ -438,16 +463,23 @@ Each action directory should contain:
 
 ## 🧯 Troubleshooting
 
-### “Action not found” or “Missing action.yml”
-- Ensure the step uses:  
-  `uses: ./.github/actions/<name>`  
+### “Action not found” / “Missing action.yml”
+
+- Ensure the step uses:
+
+```yaml
+uses: ./.github/actions/<name>
+```
+
 - Confirm `action.yml` exists at that exact path.
 
 ### “Permission denied” in attest or publish steps
+
 - Check workflow `permissions:` include the required scopes.
 - Attestations often need `id-token: write`.
 
 ### “Policy gate failed” with little context
+
 - Look for `conftest` output in logs.
 - Add a summary block to `$GITHUB_STEP_SUMMARY` inside the action.
 - Ensure policy rules print a helpful denial reason.
@@ -456,8 +488,12 @@ Each action directory should contain:
 
 ## 🔗 Related docs
 
-- 📘 `.github/README.md`  
-- 🧪 `.github/workflows/README.md`  
-- 🧾 `.github/ISSUE_TEMPLATE/README.md`  
-- 🏗️ `docs/architecture/`  
-- 🛡️ `policy/`  
+- 📘 [`.github/README.md`](../README.md)
+- 🧪 [`.github/workflows/README.md`](../workflows/README.md)
+- 🧾 [`.github/ISSUE_TEMPLATE/README.md`](../ISSUE_TEMPLATE/README.md)
+- 🏗️ [`docs/architecture/`](../../docs/architecture/)
+- 🛡️ [`policy/`](../../policy/)
+
+---
+
+<sub>⬆️ <a href="#-kfm-composite-actions">Back to top</a></sub>
