@@ -26,16 +26,16 @@ The backend is also where KFM enforces **validation + governance**: the UI and A
 
 ```mermaid
 flowchart LR
-  raw[📥 Raw Inputs\n(data/raw/)] --> etl[🧪 Deterministic Pipelines\n(pipelines/)]
-  etl --> processed[🧹 Processed Data\n(data/processed/)]
-  processed --> meta[🗃️ Metadata\n(data/catalog/)]
-  processed --> prov[🧾 Provenance\n(data/provenance/)]
-  processed --> stores[🧠 Runtime Stores\nPostGIS • Neo4j • Search Index]
-  stores --> api[🧩 Backend API\n(api/)]
-  api --> ui[🖥️ Frontend UI\n(web/)]
-  api --> ai[🤖 Focus Mode AI\n(via API)]
-  policy[🛡️ OPA Policies\n(policy/)] -.enforces.-> api
-  policy -.enforces.-> ai
+  raw["📥 Raw Inputs<br/>(data/raw/)"] --> etl["🧪 Deterministic Pipelines<br/>(pipelines/)"]
+  etl --> processed["🧹 Processed Data<br/>(data/processed/)"]
+  processed --> meta["🗃️ Metadata<br/>(data/catalog/)"]
+  processed --> prov["🧾 Provenance<br/>(data/provenance/)"]
+  processed --> stores["🧠 Runtime Stores<br/>PostGIS • Neo4j • Search Index"]
+  stores --> api["🧩 Backend API<br/>(api/)"]
+  api --> ui["🖥️ Frontend UI<br/>(web/)"]
+  api --> ai["🤖 Focus Mode AI<br/>(via API)"]
+  policy["🛡️ OPA Policies<br/>(policy/)"] -. "enforces" .-> api
+  policy -. "enforces" .-> ai
 ```
 
 **Key idea:** the API is the choke-point where policy + provenance are enforced consistently. ✅
