@@ -1,230 +1,96 @@
-<a id="top"></a>
+<div align="center">
 
-# 🧬 `sbom` — Software Bill of Materials (SBOM) Action for KFM
+# 🧾 SBOM Composite Action
 
-[![CI](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml/badge.svg)](https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/workflows/codeql.yml)
+Generate a **Software Bill of Materials (SBOM)** for KFM builds & releases — with **repeatable filenames**, CI-friendly outputs, and “fail-closed” defaults ✅
 
-![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20required-black)
-![Formats](https://img.shields.io/badge/formats-SPDX%20%7C%20CycloneDX-6f42c1)
-![Provenance](https://img.shields.io/badge/provenance-attestable-0b7285)
-![Sigstore](https://img.shields.io/badge/attestation-Sigstore-1f6feb)
-![OPA](https://img.shields.io/badge/policy-OPA%20%2F%20Conftest-111827)
-![Fail Closed](https://img.shields.io/badge/gates-fail--closed-red)
-![Least Privilege](https://img.shields.io/badge/security-least--privilege-success)
+![GitHub Action](https://img.shields.io/badge/GitHub%20Action-composite-2ea44f?logo=githubactions&logoColor=white)
+![SBOM](https://img.shields.io/badge/SBOM-enabled-success)
+![SPDX](https://img.shields.io/badge/SPDX-JSON-informational)
+![CycloneDX](https://img.shields.io/badge/CycloneDX-JSON-informational)
+![Supply Chain](https://img.shields.io/badge/Supply%20Chain-hardened-blue)
 
-> Repo‑local composite action that generates **SBOM artifacts** for KFM (repo and/or OCI images).  
-> In KFM, reproducibility and traceability are *security features*—an SBOM is a first‑class **materials record** for what we ship. ✅🧾  
->
-> **KFM ordering remains non‑negotiable:** 🧰 ETL → 🗂️ Catalogs (STAC/DCAT/PROV) → 🕸️ Graph → 🔌 API → 🌐 UI → 🎬 Story Nodes → 🧠 Focus Mode  
-> SBOMs support supply‑chain trust across these lanes without changing pipeline order.
+</div>
+
+> 🧠 **Context (KFM):** SBOMs are part of KFM’s “provenance over vibes” posture — releases should ship with **manifest + provenance + SBOM** so downstream users can verify what they’re running.
 
 ---
 
-## 🧾 Action metadata
+## 🔗 Quick links
 
-| Field | Value |
-|---|---|
-| Action ID (suggested) | `kfm/sbom` |
-| Folder | `.github/actions/sbom/` |
-| Action file | `.github/actions/sbom/action.yml` |
-| Docs file | `.github/actions/sbom/README.md` |
-| Type | Composite Action |
-| Status | ✅ Active (contract + operating guide) |
-| Last updated | **2026-01-12** |
-| Default posture | **Fail‑closed** for promotion lanes (missing SBOM blocks promotion) |
-| Primary use | PR review artifacts • release/promotion materials • agent/automation hardening |
-
-> [!NOTE]
-> `action.yml` is always the source of truth for implementation.  
-> This README describes the **contract** workflows and policy gates should rely on.
+- ⬅️ Back to **`.github/` overview**: `../../README.md`
+- ⚙️ Action definition: `./action.yml`
+- 🛡️ Security policy: `../../SECURITY.md`
 
 ---
 
-## ⚡ Quick links
+## ✨ What this action does
 
-| Need | Go |
-|---|---|
-| 🧩 Actions hub | [`../README.md`](../README.md) |
-| 🧪 Workflows hub | [`../../workflows/README.md`](../../workflows/README.md) |
-| 🧭 Master Guide (v13) | [`../../../docs/MASTER_GUIDE_v13.md`](../../../docs/MASTER_GUIDE_v13.md) *(draft)* |
-| 🛡️ Security policy | [`../../../SECURITY.md`](../../../SECURITY.md) *(or `../../SECURITY.md` if mirrored in `.github/`)* |
-| 🧑‍⚖️ Policy pack (OPA/Conftest) | [`../../../tools/validation/policy/`](../../../tools/validation/policy/) |
-| 🧾 Build traceability | [`../build-info/`](../build-info/) |
-| 🖊️ Attestation/signing | [`../attest/`](../attest/) |
-| 🐳 Container builds | [`../docker-build/`](../docker-build/) |
-| 🧬 Provenance enforcement | [`../provenance-guard/`](../provenance-guard/) |
+This composite action is a reusable wrapper you can call from workflows to:
+
+- 📦 Generate an SBOM for:
+  - a **source directory** (monorepo / subproject), **or**
+  - a **container image** (post-build)
+- 🧾 Output SBOM(s) in a predictable location (so CI + releases can depend on them)
+- ⬆️ Optionally upload SBOM files as workflow artifacts
+- 🚫 **Fail closed** by default: if SBOM generation fails, the job fails (unless you explicitly opt out)
 
 ---
 
-<details>
-  <summary><b>🧭 Table of contents</b> (click to expand)</summary>
+## 🗂️ Folder layout
 
-- [🧾 Action metadata](#-action-metadata)
-- [⚡ Quick links](#-quick-links)
-- [🧭 Where SBOM fits in KFM](#-where-sbom-fits-in-kfm)
-- [🧠 Why KFM has an SBOM action](#-why-kfm-has-an-sbom-action)
-- [✅ What this action produces](#-what-this-action-produces)
-- [📦 Expected artifact layout](#-expected-artifact-layout)
-- [🎛️ Inputs](#-inputs)
-- [📤 Outputs](#-outputs)
-- [🧪 Example usage](#-example-usage)
-- [🧑‍⚖️ Policy-gate integration](#-policy-gate-integration)
-- [🔐 Security posture](#-security-posture)
-- [🧯 Failure modes](#-failure-modes)
-- [🧰 Maintainer notes](#-maintainer-notes)
-- [📚 Reference library](#-reference-library)
-
-</details>
-
----
-
-## 🧭 Where SBOM fits in KFM
-
-KFM’s “trust boundary artifacts” are not only STAC/DCAT/PROV for data—they also include **materials evidence** for the software supply chain.
-
-Typical placement in CI/CD:
-
-```mermaid
-flowchart LR
-  KS["🧯 kill-switch<br/>stop mutation lanes"] --> BUILD["🐳 docker-build<br/>build image(s)"]
-  BUILD --> SBOM["🧬 sbom<br/>generate materials"]
-  SBOM --> BI["🧾 build-info<br/>checksums + bundle"]
-  BI --> POL["🧑‍⚖️ policy-gate<br/>default deny promotion"]
-  POL --> AT["🖊️ attest<br/>OIDC keyless (recommended)"]
-  AT --> REL["🏷️ release / deploy<br/>digest-pinned"]
-```
-
-### SBOM ≠ provenance (but they should connect)
-- **PROV** explains *how* an artifact was generated (inputs → transforms → outputs).
-- **SBOM** explains *what* it contains (dependencies and components).
-
-Best practice: in promotion lanes, reference SBOM paths/digests in:
-- `build-info.json`
-- provenance records (when you model build operations as activities)
-
----
-
-## 🧠 Why KFM has an SBOM action
-
-KFM spans a **multi‑stack** dependency surface, not just “app code”:
-
-- 🐍 Python dependencies (ETL, validators, geo tooling)
-- 🟩 Node dependencies (`web/` UI)
-- 🐳 Container base images + OS packages
-- 🧰 Native GIS libs (GDAL/PROJ stack), DB tooling (PostGIS clients)
-- 🕸️ Graph toolchain (`src/graph/` import/build utilities)
-- 🧪 Computational experiments (`mcp/` outputs treated as first‑class evidence)
-
-An SBOM makes this auditable, policy‑testable, and (when paired with signing/attestation) verifiable.
-
-> [!TIP]
-> If your repo produces “evidence artifacts” (model outputs, derived datasets), SBOMs help prove which toolchain produced them—especially when containers or pinned envs are involved.
-
----
-
-## ✅ What this action produces
-
-This action generates SBOM artifacts in one or more formats and writes them to predictable paths.
-
-### Supported targets
-- `mode=repo` → SBOM for the checked‑out workspace (best‑effort dependency discovery)
-- `mode=image` → SBOM for an OCI image (prefer digest‑pinned refs)
-- `mode=both` → generate both in one run (promotion lanes)
-
-### Supported formats
-- **SPDX JSON** (recommended baseline)
-- **CycloneDX JSON** (optional but useful for tooling compatibility)
-
-### Recommended outputs (stable naming)
-- `repo.sbom.spdx.json` / `repo.sbom.cdx.json`
-- `image.sbom.spdx.json` / `image.sbom.cdx.json`
-- `sbom.summary.md` (PR-friendly “what changed” summary)
-- `sbom.meta.json` (tool/version/target/run metadata)
-
-### Policy-friendly canonical copy (recommended)
-In addition to storing outputs under `output_dir`, this action should write/copy a stable file for policy checks:
-
-- `artifacts/attestations/materials.sbom.spdx.json`
-
-That stable name lets OPA/Conftest rules stay simple and deterministic.
-
----
-
-## 📦 Expected artifact layout
-
-KFM documentation expects a `releases/` directory carrying packaged artifacts (including SBOM). In CI we keep a parallel stable layout for uploaded artifacts.
-
-### 🧪 CI run artifacts (recommended)
 ```text
-artifacts/
-├─ sbom/
-│  ├─ repo.sbom.spdx.json
-│  ├─ repo.sbom.cdx.json
-│  ├─ image.sbom.spdx.json
-│  ├─ image.sbom.cdx.json
-│  ├─ sbom.meta.json
-│  └─ sbom.summary.md
-└─ attestations/
-   ├─ materials.sbom.spdx.json        # stable canonical name for policy checks
-   └─ provenance.dsse.json            # usually produced by ../attest (not by sbom)
+.github/actions/sbom/
+├─ action.yml          # Action contract (inputs/outputs)
+└─ README.md           # You are here 🧾
 ```
-
-### 🏷️ Release artifacts (repo-level contract)
-```text
-releases/
-└─ <version-or-run-id>/
-   ├─ manifest.json
-   ├─ sbom.spdx.json
-   └─ provenance.dsse.json
-```
-
-> [!NOTE]
-> You can keep “release folder” names semantic (e.g., `v1.2.3/`) or immutable run IDs.  
-> The critical requirement is: **manifest + sbom + provenance are present and stable.**
 
 ---
 
-## 🎛️ Inputs
+## ✅ Recommended conventions (KFM-style)
 
-> GitHub Actions inputs are strings — use `"true"` / `"false"` for booleans.
+KFM typically treats SBOMs as **release-grade artifacts**:
 
-| Input | Required | Default | Purpose |
+- 📁 Recommended output folder: `releases/<version>/`
+- 🧾 Recommended filenames:
+  - `sbom.spdx.json`
+  - `sbom.cdx.json` (CycloneDX)
+
+> 💡 Tip: If you’re already producing a `manifest.json`, include a pointer to SBOM paths there for “one-glance” verification.
+
+---
+
+## 🧩 Inputs
+
+> ⚠️ **Note:** Keep this table aligned with `action.yml`. If you rename inputs there, update this README too.
+
+| Input | Type | Default | Description |
 |---|---:|---|---|
-| `mode` | ❌ | `repo` | `repo` \| `image` \| `both` |
-| `formats` | ❌ | `spdx-json` | `spdx-json`, `cyclonedx-json`, or `spdx-json,cyclonedx-json` |
-| `output_dir` | ❌ | `artifacts/sbom` | Where SBOM outputs are written |
-| `attestations_dir` | ❌ | `artifacts/attestations` | Where canonical policy-checked SBOM copy lives |
-| `image_ref` | ⚠️ | *(none)* | Required when `mode=image` or `mode=both` *(prefer `@sha256:` digest ref)* |
-| `tool` | ❌ | `syft` | SBOM generator backend (`syft` recommended) |
-| `upload_artifact` | ❌ | `true` | If `"true"`, upload the generated files as a workflow artifact bundle |
-| `artifact_name` | ❌ | `sbom-${{ github.sha }}` | Artifact bundle name (used only if uploading) |
-| `fail_on_warn` | ❌ | `true` | Promotion lanes should be fail‑closed on warnings |
-| `fail_on_error` | ❌ | `true` | Always fail if SBOM cannot be generated |
-
-> [!TIP]
-> For determinism: prefer digest‑pinned image refs → `ghcr.io/<org>/<image>@sha256:<digest>`  
-> Avoid floating tags (like `latest`) in promotion lanes.
+| `mode` | string | `dir` | What to generate an SBOM for: `dir` or `image` |
+| `path` | string | `.` | Directory to scan when `mode=dir` |
+| `image` | string | _(empty)_ | Image reference (e.g., `ghcr.io/org/app:sha`) when `mode=image` |
+| `formats` | string | `spdx-json` | Comma-separated formats (e.g., `spdx-json,cyclonedx-json`) |
+| `output-dir` | string | `.` | Where SBOM files should be written |
+| `basename` | string | `sbom` | Base filename (without extension/format), e.g. `sbom` |
+| `upload-artifact` | boolean | `true` | Upload SBOM file(s) as workflow artifact(s) |
+| `artifact-name` | string | `sbom` | Artifact name for uploaded SBOM(s) |
+| `retention-days` | number | `14` | Artifact retention (days) |
+| `fail-on-error` | boolean | `true` | If `true`, fail workflow when SBOM generation fails |
 
 ---
 
 ## 📤 Outputs
 
-| Output | Meaning |
-|---|---|
-| `sbom_spdx_path` | Path to SPDX JSON SBOM (if produced) |
-| `sbom_cdx_path` | Path to CycloneDX JSON SBOM (if produced) |
-| `sbom_summary_path` | Path to human summary markdown |
-| `sbom_meta_path` | Path to metadata sidecar (recommended) |
-| `sbom_target` | `repo` / `image` / `both` |
-| `image_digest` | Digest extracted/confirmed from `image_ref` (if applicable) |
-| `materials_path` | Canonical policy-checked SBOM path (recommended) |
+| Output | Example | Description |
+|---|---|---|
+| `sbom_paths` | `./releases/v1.2.3/sbom.spdx.json,./releases/v1.2.3/sbom.cdx.json` | Comma-separated list of generated SBOM file paths |
+| `primary_sbom` | `./releases/v1.2.3/sbom.spdx.json` | The “main” SBOM path (first format) |
 
 ---
 
-## 🧪 Example usage
+## 🚀 Usage examples
 
-### 1) ✅ PR lane: generate a repo SBOM (no secrets required)
+### 1) Generate an SBOM for the repo (directory scan) 📁
 
 ```yaml
 jobs:
@@ -232,179 +98,133 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: 🧬 Generate SBOM (repo)
+      - name: Generate SBOM (dir)
         uses: ./.github/actions/sbom
         with:
-          mode: repo
+          mode: dir
+          path: .
           formats: spdx-json,cyclonedx-json
-          output_dir: artifacts/sbom
-          upload_artifact: "true"
+          output-dir: releases/${{ github.ref_name }}
+          basename: sbom
+          upload-artifact: true
+          artifact-name: sbom-${{ github.ref_name }}
 ```
 
 ---
 
-### 2) 🐳 Build lane: generate an image SBOM after pushing (digest-pinned)
+### 2) Generate an SBOM for a container image 🐳
 
 ```yaml
 jobs:
-  docker:
+  build-and-sbom:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: 🐳 Build & push image
-        id: build
-        uses: ./.github/actions/docker-build
-        with:
-          image: ghcr.io/${{ github.repository }}/kfm-api
-          push: "true"
-          tags: |
-            sha-${{ github.sha }}
+      - name: Build image
+        run: |
+          docker build -t kfm:${{ github.sha }} .
 
-      - name: 🧬 Generate SBOM (image)
+      - name: Generate SBOM (image)
         uses: ./.github/actions/sbom
         with:
           mode: image
-          image_ref: ${{ steps.build.outputs.image }}@${{ steps.build.outputs.digest }}
+          image: kfm:${{ github.sha }}
           formats: spdx-json
-          output_dir: artifacts/sbom
-          attestations_dir: artifacts/attestations
+          output-dir: releases/${{ github.sha }}
+          basename: sbom
 ```
 
-> [!NOTE]
-> If your SBOM tool needs to pull an image from a private registry, login first.  
-> If the image was built locally in the same job, registry access may not be required.
+> 💡 If you publish images to GHCR, consider using the immutable digest (e.g., `@sha256:...`) for tighter traceability.
 
 ---
 
-### 3) 🚀 Promotion lane: SBOM → policy gate → attest → publish (fail‑closed)
+### 3) Use outputs in downstream steps 🔁
 
-```mermaid
-sequenceDiagram
-  participant KS as 🧯 kill-switch
-  participant D as 🐳 docker-build
-  participant S as 🧬 sbom
-  participant P as 🧑‍⚖️ policy-gate
-  participant A as 🖊️ attest
-  participant R as 🏷️ release/deploy
+```yaml
+- name: Generate SBOM
+  id: sbom
+  uses: ./.github/actions/sbom
+  with:
+    mode: dir
+    path: api
+    formats: spdx-json
+    output-dir: releases/${{ github.ref_name }}
+    basename: api-sbom
 
-  KS->>D: allow mutation lanes?
-  D->>S: build image + digest
-  S->>P: SBOM present at stable path
-  P->>A: gates pass (default deny)
-  A->>R: sign/attest then publish
+- name: Print SBOM path(s)
+  run: |
+    echo "Primary SBOM: ${{ steps.sbom.outputs.primary_sbom }}"
+    echo "All SBOMs:     ${{ steps.sbom.outputs.sbom_paths }}"
 ```
 
 ---
 
-### 4) 🤖 Automation/agent lanes: attach SBOMs to change PRs (recommended posture)
+## 🔐 Permissions
 
-If a workflow can open PRs or publish artifacts, generate SBOMs as part of the PR evidence bundle:
-
-- repo SBOM (what changed)
-- image SBOM (what would be deployed)
-- policy-gate reports
-- provenance/attestation (promotion lanes)
-
-This keeps “automated change” reviewable and auditable.
-
----
-
-## 🧑‍⚖️ Policy-gate integration
-
-Policy gates should enforce:
-- SBOM file existence + non-empty content
-- digest pinning rules (no floating tags for promotion)
-- license allowlists / forbidden dependency rules (optional)
-
-### ✅ What `sbom` should guarantee
-- deterministic output paths
-- a stable “materials” filename for policy checks (recommended)
-- no secrets required for repo mode
-
-### ✅ What policy should still enforce
-- “promotion requires SBOM”
-- “promotion requires digest-pinned image refs”
-- “workflows must be least privilege”
-- “third-party actions pinned appropriately in hardened lanes”
-
----
-
-## 🔐 Security posture
-
-### Least privilege defaults ✅
-Repo SBOM generation should run with:
+### Minimal recommended permissions ✅
+Most SBOM generation only needs repo read access:
 
 ```yaml
 permissions:
   contents: read
 ```
 
-Image SBOM generation **after a build** usually needs no extra permissions.  
-If scanning a private image in a registry, you may need to authenticate.
+### If you add attestations later 🧾🔏
+If you extend workflows to sign/attest SBOMs using OIDC, you’ll typically need:
 
-### Threat model notes 🧯
-- Avoid “download arbitrary URL from PR input” patterns.
-- Don’t run `push/deploy` on untrusted fork PRs.
-- Keep SBOM generation deterministic and offline‑first where possible.
+```yaml
+permissions:
+  contents: read
+  id-token: write
+```
 
----
-
-## 🧯 Failure modes
-
-| Failure mode | Symptom | Fix |
-|---|---|---|
-| Floating container tags | SBOM differs across runs | Use `@sha256:` digests for image refs |
-| Missing lockfiles | SBOM incomplete/noisy | Commit lockfiles (poetry/npm/pnpm/etc.) |
-| Mixed package managers | Duplicate components | Standardize per subproject; document exceptions |
-| Warn-only promotion | Drift slips through | `fail_on_warn=true` in promotion lanes |
-| Policy gate can’t find SBOM | Gate fails despite generation | Keep stable output paths + `materials.*` copy |
-| Over-permissioned workflows | Larger blast radius | Enforce least privilege; add OPA rules |
-| Unpinned actions/tooling | Supply chain risk | Pin action/tool versions for hardened lanes |
+> 🧯 Principle: keep permissions **as small as possible**. Start minimal and add only what’s required.
 
 ---
 
-## 🧰 Maintainer notes
+## 🧯 Troubleshooting
 
-### ✅ Keep these stable (policy relies on them)
-- output filenames used by policy checks
-- directory layout under `artifacts/` and `releases/`
-- summary format (so PR reviewers can scan quickly)
+### “No SBOM files produced”
+- ✅ Confirm `mode` matches what you intended (`dir` vs `image`)
+- ✅ Confirm `output-dir` exists or is creatable by the runner
+- ✅ Confirm the underlying SBOM tool is available in the runner environment (or installed by the action)
 
-### 🧪 Suggested smoke test workflow (recommended)
-Run:
-- `sbom` in repo mode
-- `docker-build` → `sbom` in image mode
-- upload `artifacts/**` always (including on failure)
+### “Permission denied” writing outputs
+- Use a workspace-relative `output-dir`
+- Avoid writing into protected directories on hosted runners
 
-### 🌍 Geo-stack reminder
-KFM’s geo stack often pulls native/OS dependencies into images (GDAL/PROJ/PostGIS clients, etc.).  
-Image SBOMs are the best place to capture those—don’t ignore them.
+### Large SBOMs / slow runs
+- Consider scanning **subprojects** (e.g., `api/`, `web/`) separately
+- Prefer image SBOMs **after** dependency install/build so results match the shipped artifact
 
 ---
 
-## 📚 Reference library
+## 🧭 Definition of Done (SBOM quality gates)
 
-KFM’s SBOM posture is influenced by:
-- contract-first + evidence-first design (schemas, boundary artifacts)
-- deterministic CI and provenance-first promotion
-- supply-chain security and least-privilege discipline
-- “automated change must be reviewable” (agents/automation)
+When SBOMs matter for a release, aim for:
 
-Recommended repo documents:
-- `docs/MASTER_GUIDE_v13.md` *(draft)* — canonical ordering + repo layout
-- `docs/specs/Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` — supply chain security posture (SBOM/SPDX/CycloneDX, pinning, least privilege)
-- `docs/specs/🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx` — Detect→Validate→Promote, Sigstore, PR evidence bundles, policy pack direction
-- `SECURITY.md` — repo security posture and reporting guidance
+- ✅ SBOM generated for **the actual shipped artifact** (directory vs image chosen intentionally)
+- ✅ Stored under `releases/<version>/`
+- ✅ Included as build artifact (and/or release asset)
+- ✅ Referenced from the release manifest / provenance record (when applicable)
 
 ---
 
-<p align="right"><a href="#top">⬆️ Back to top</a></p>
+## 🧑‍🔧 Maintaining this action
+
+- 🔁 Keep the contract in **`action.yml`** and this README in sync
+- 📌 Pin third-party actions/tools (when used) to a tag or (ideally) a commit SHA
+- 🧪 Add a small workflow that validates SBOM generation on PRs (fast + cheap)
+
+---
+
+<p align="center">
+  🧾 <strong>SBOMs aren’t a checkbox — they’re a map 🗺️</strong><br/>
+  Make it easy to verify what we ship, every time ✅
+</p>
