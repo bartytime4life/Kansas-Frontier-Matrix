@@ -39,13 +39,13 @@ KFM treats this directory as an **active data refinery**: raw evidence comes in,
 
 ```mermaid
 flowchart LR
-  A[data/raw/ 🧾] -->|ETL / Sim / Analysis| B[data/processed/ 🧼]
-  B --> C[data/catalog/ 🗂️ (STAC/DCAT)]
-  B --> D[data/provenance/ 🧬 (PROV)]
-  C --> E[(Database 🗄️)]
+  A["data/raw/ 🧾"] -->|"ETL / Sim / Analysis"| B["data/processed/ 🧼"]
+  B --> C["data/catalog/ 🗂️ (STAC/DCAT)"]
+  B --> D["data/provenance/ 🧬 (PROV)"]
+  C --> E["Database 🗄️"]
   D --> E
-  E --> F[API 🔌]
-  F --> G[UI 🖥️]
+  E --> F["API 🔌"]
+  F --> G["UI 🖥️"]
 ```
 
 - Raw inputs are preserved as evidence and **not edited by pipelines**.  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
