@@ -1,203 +1,243 @@
-<div align="center">
+# 🧩 Issue Templates
 
-# 🧩 Issue Templates for Kansas Frontier Matrix (KFM)
+![Contract-first](https://img.shields.io/badge/contract--first-required-blue)
+![Evidence-first](https://img.shields.io/badge/evidence--first-required-blue)
+![Provenance](https://img.shields.io/badge/provenance-linked-blue)
+![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-governed-blue)
 
-**Pick the right form ➜ capture the right evidence ➜ ship clean, governed changes.** 🧭🗺️
+Welcome! This folder holds the **GitHub Issue Forms / templates** that keep the Kansas-Matrix-System (KFM) workflow clear, reproducible, and governance-aligned. 🧭
 
-</div>
+> [!NOTE]
+> **Why we’re strict:** this project is built around *contract-first* + *evidence-first* boundaries. Issues should point to **artifacts** (schemas, datasets, provenance, endpoints) instead of “vibes” so we can fix things fast ✅
 
----
+## 🔗 Quick links
 
-## 🎯 What this folder is for
-
-This directory contains **GitHub Issue Forms** (YAML templates) that standardize how we collect:
-
-- 🐞 Bugs & CI failures  
-- ✨ Feature requests  
-- 🗃️ Data additions + data layers (raw ➜ processed ➜ catalog ➜ UI)  
-- 🧵 Story nodes (narrative + citations + choreography)  
-- 🕸️ Graph/ontology changes (Neo4j + relationships)  
-- 🧠 Governance questions & approvals  
-- 🤖 Agent/automation ops (Focus Mode / AI workflows)
-
-> [!IMPORTANT]
-> KFM is **provenance-first** and **governed-by-default**.  
-> If a request can’t be traced (source, license, metadata, sensitivity), it will likely be blocked later in CI/review. Use the templates to get it right up front.
+- 📌 Repo onboarding: `../../README.md`
+- 🤝 Contribution rules: `../../CONTRIBUTING.md`
+- 🧠 System source of truth: `../../docs/MASTER_GUIDE_v13.md`
+- 🧾 Standards & profiles: `../../docs/standards/`
+- 🛡️ Security policy: `../SECURITY.md` (or `../../SECURITY.md` if yours lives at repo root)
 
 ---
 
-## 🗂️ What should exist in `.github/ISSUE_TEMPLATE/`
+## 🚦 Before you open an issue
 
-At minimum, keep:
+- 🔎 **Search** existing issues (and Discussions, if enabled) for duplicates.
+- 🧭 **Pick the subsystem** (helps triage + labeling):
+  - 🧪 ETL / Pipelines → 📦 Catalogs (STAC/DCAT/PROV) → 🧠 Graph → 🔌 API → 🗺️ UI → 📚 Story Nodes → 🎯 Focus Mode
+- 🧾 **Gather evidence** (IDs, file paths, screenshots, logs, and/or provenance references).
+- 🔐 **Sanity check**: do **not** post secrets, PII, or sensitive locations (see Security section below).
 
-- ✅ **`config.yml`** (template chooser + contact links)
-- ✅ **Issue form templates** (`*.yml`)
-- ✅ **`README.md`** (this file) to explain how to choose and fill templates
+---
 
-Recommended folder contents (matches current KFM setup):
+## 🧭 Which template should I use?
+
+| Template | Use it when… | You should include… |
+|---|---|---|
+| 🐛 **Bug Report** | Something is broken or behaving unexpectedly | repro steps, expected vs actual, logs/screens, version/commit |
+| ✨ **Feature Request** | You want new functionality | goal, user story, constraints, acceptance criteria |
+| ➕ **Dataset Addition Request** | Suggesting a new dataset/domain | source + license, spatial/temporal coverage, why it matters |
+| 🧼 **Data Quality / Metadata / Provenance** | Wrong values, missing/invalid STAC/DCAT/PROV, lineage mismatch | dataset identifiers, file paths, what’s wrong, proposed fix |
+| 🧭 **Map / Projection / Visualization** | CRS/projection, symbology, time slider, layer rendering | bbox, CRS/EPSG, screenshots, steps, browser/device |
+| 📚 **Story Node / Narrative** | Citation gaps, factual corrections, wording/structure problems | story id/path, section anchor, sources, suggested edits |
+| 🧠 **Focus Mode / AI** | Unsourced claim, redaction leak, evidence mismatch, UX issues | what you saw, evidence refs, steps, minimal context needed |
+| 📖 **Docs / Governance** | Docs wrong/outdated OR policy needs change | exact doc path + section, proposed change + rationale |
+
+> [!TIP]
+> If you’re unsure, pick **🐛 Bug Report** and clearly state what subsystem you *think* it is — maintainers will retag it.
+
+---
+
+## 🧾 Baseline checklist for every issue
+
+- [ ] I searched existing issues (and Discussions if available)
+- [ ] I selected the closest template (or explained why none fit)
+- [ ] I identified the subsystem (ETL / Catalogs / Graph / API / UI / Story / Focus)
+- [ ] I provided **evidence** (logs/screens/IDs) — not just description
+- [ ] I did **not** include secrets, PII, or sensitive coordinates/locations
+
+---
+
+## 🗂️ Where things live
+
+Use these paths to “point at the thing” in your issue 👇
 
 ```text
-.github/ISSUE_TEMPLATE/
-├─ README.md
-├─ config.yml
-├─ agent_ops_issue.yml
-├─ api_contract_change.yml
-├─ bug_report.yml
-├─ ci_failure.yml
-├─ data_addition_request.yml
-├─ data_layer_request.yml
-├─ feature_request.yml
-├─ governance_form.yml
-├─ governance_question.yml
-├─ graph_model_change.yml
-├─ question.yml
-├─ story_node_request.yml
-└─ ui_layer_issue.yml
+📁 .github/
+   └── 📁 ISSUE_TEMPLATE/
+       ├── 📄 README.md                 👈 you are here
+       ├── 📄 config.yml                (template chooser + contact links)
+       ├── 📄 bug_report.yml            (issue form)
+       ├── 📄 feature_request.yml
+       └── 📄 ...
+📁 data/
+   ├── 📁 raw/                          (inputs; do not mutate)
+   ├── 📁 work/                         (intermediate)
+   ├── 📁 processed/                    (publishable outputs)
+   ├── 📁 stac/                         (STAC collections/items)
+   ├── 📁 catalog/dcat/                 (DCAT JSON-LD)
+   └── 📁 prov/                         (PROV lineage bundles)
+📁 schemas/                              (JSON Schemas: STAC/DCAT/PROV/story/ui/telemetry)
+📁 src/
+   ├── 📁 pipelines/                    (ETL & generators)
+   ├── 📁 graph/                        (ontology + migrations + graph sync)
+   └── 📁 server/                       (API implementation + contracts)
+📁 web/                                  (UI: React/MapLibre/etc.)
+📁 docs/
+   ├── 📁 architecture/                 (design + ADRs)
+   ├── 📁 governance/                   (ethics/sovereignty/policy)
+   └── 📁 reports/story_nodes/          (governed narratives: draft/ + published/)
+📁 tests/                                (unit/integration)
+📁 tools/                                (validators + utilities)
 ```
 
 ---
 
-## 🧭 Which template should I pick?
+## 🧩 Subsystem map
 
-Use this quick chooser:
+<details>
+<summary>Click to expand the pipeline/architecture flow 🗺️</summary>
 
-- 🐛 **Bug in code or UI** → `bug_report.yml`
-- 🚨 **CI pipeline broke** → `ci_failure.yml`
-- ✨ **New capability** → `feature_request.yml`
-- 🗃️ **New source/dataset entering the system** → `data_addition_request.yml`
-- 🧩 **New/updated map layer in UI (style + rendering + metadata)** → `data_layer_request.yml` or `ui_layer_issue.yml`
-- 🧵 **New story node / narrative module** → `story_node_request.yml`
-- 🕸️ **Graph model / ontology / relationships update** → `graph_model_change.yml`
-- 🔌 **Breaking or evolving API contract** → `api_contract_change.yml`
-- 🧠 **Policy, permissions, or sensitivity uncertainty** → `governance_form.yml` or `governance_question.yml`
-- 🤖 **Agent / automation / Focus Mode workflow** → `agent_ops_issue.yml`
-- ❓ **Not sure / general** → `question.yml`
+```mermaid
+flowchart LR
+  ETL["🧪 ETL / Pipelines"] --> CAT["📦 Catalogs (STAC/DCAT/PROV)"]
+  CAT --> GRAPH["🧠 Graph (Neo4j)"]
+  GRAPH --> API["🔌 API (contracts + redaction)"]
+  API --> UI["🗺️ UI (React · MapLibre · optional 3D)"]
+  UI --> STORY["📚 Story Nodes (governed narratives)"]
+  STORY --> FOCUS["🎯 Focus Mode (provenance-linked context)"]
+```
+
+</details>
+
+---
+
+## 📎 What “great issues” look like
+
+### 🐛 Bug reports
+
+Include:
+- ✅ **Repro steps** (commands, URL, query, clicks)
+- ✅ **Expected vs actual**
+- ✅ **Artifacts**:
+  - logs (redacted) + stack trace
+  - screenshots/video if UI
+  - API request/response (redacted)
+- ✅ **Version context**:
+  - commit SHA / tag
+  - OS + browser/device
+  - Docker/Compose version (if relevant)
+
+Nice-to-have:
+- 🔬 minimal reproduction repo or fixture dataset
+- 📌 suspected subsystem + file(s)
+
+---
+
+### ➕ Dataset addition requests
+
+Include:
+- 🌐 Source link(s) (official preferred) + citation info
+- ⚖️ License terms (and any restrictions)
+- 🗺️ Spatial coverage (region/bbox) + resolution
+- 🕰️ Temporal coverage (start/end; update cadence)
+- 🎯 Why it matters (what questions it enables in KFM)
+- 🧾 Any known metadata format (STAC-ready? CSV? GeoTIFF? WMS?)
 
 > [!TIP]
-> If you’re unsure whether something is **governance-sensitive**, start with **`governance_question.yml`** (fastest path to “allowed / denied / needs redaction”).
+> If you can, propose a *pipeline plan*:
+> `raw input → processing steps → processed outputs → STAC/DCAT/PROV artifacts → API exposure → UI layer`.
 
 ---
 
-## 🧾 Template glossary (what each one is for)
+### 🧼 Data quality / metadata / provenance issues
 
-### 🐛 `bug_report.yml`
-Use for: regressions, incorrect behavior, crashes, incorrect outputs.  
-Include: steps to reproduce, expected vs actual, logs/screenshots, environment (OS, browser, commit SHA if known).
-
-### 🚨 `ci_failure.yml`
-Use for: failing GitHub Actions, lint/test failures, broken release workflows.  
-Include: workflow run link, error snippet, suspected commit/PR, how to reproduce locally (if possible).
-
-### ✨ `feature_request.yml`
-Use for: new functionality or major improvement.  
-Include: user story, scope boundaries, success criteria, risks, alternatives, and any UI/API implications.
-
-### 🗃️ `data_addition_request.yml`
-Use for: introducing a new source dataset (raw data enters KFM).  
-Include (required mindset): **source + license + provenance + intended outputs**.
-
-You should be ready to provide:
-- Source link (or archive reference)
-- License / terms
-- Sensitivity / CARE considerations (if any)
-- Expected pipeline outputs (processed artifact + catalog metadata + provenance log)
-- Spatial reference details (CRS/EPSG, datum, projection) when applicable
-
-### 🧩 `data_layer_request.yml`
-Use for: adding or updating a **renderable layer** (vector/raster/tiles), plus how it should look and behave in the UI.  
-Include: symbology rules, zoom thresholds, styling notes, attribution text, and any filtering rules (time, category).
-
-### 🖥️ `ui_layer_issue.yml`
-Use for: UI presentation issues or enhancements related to layers (legend wrong, styling off, performance, interaction).  
-Include: screenshots, expected behavior, and steps to reproduce.
-
-### 🧵 `story_node_request.yml`
-Use for: a new story node / narrative sequence.  
-Include: narrative outline, citations plan, data layers needed, and choreography requirements (camera/layers/timeline).
-
-### 🕸️ `graph_model_change.yml`
-Use for: schema/ontology changes in Neo4j (new node types, relationships, properties, constraints).  
-Include: example queries, migration notes, backward compatibility, and impact on API/UI.
-
-### 🔌 `api_contract_change.yml`
-Use for: changes that affect request/response models, OpenAPI schema, endpoints, or breaking changes.  
-Include: current behavior, proposed behavior, versioning notes, migration guidance, example payloads.
-
-### 🧠 `governance_form.yml`
-Use for: requests needing an explicit governance decision (restricted data, redaction, permission boundaries).  
-Include: who benefits, who might be harmed, sensitivity labels, proposed mitigations (aggregation, fuzzing, access tiering).
-
-### 🧠❓ `governance_question.yml`
-Use for: “Is this allowed?” or “How should we handle this?” policy questions.
-
-### 🤖 `agent_ops_issue.yml`
-Use for: Focus Mode / AI tooling changes, context bundles, retrieval rules, citations pipeline, sandboxing rules.
-
-### ❓ `question.yml`
-Use for: general questions, onboarding help, “where does this live?”, “what’s the right place for…?”
+Include:
+- 🆔 Dataset identifiers (STAC Item/Collection id, DCAT dataset name, PROV bundle filename)
+- 📄 File paths involved (raw/work/processed + catalog + prov)
+- ❌ What’s wrong (schema invalid, missing fields, wrong bbox/time, license mismatch, etc.)
+- ✅ What “correct” should be (with source references)
 
 ---
 
-## 🧠 Filing standards (what “good” looks like)
+### 🧭 Map / projection / visualization issues
 
-### ✅ One issue = one scope
-If you find yourself writing “also, while we’re here…”, split into separate issues and link them.
-
-### 🧾 Evidence-first
-Whenever possible, attach:
-- logs, screenshots, minimal repro
-- dataset IDs / filenames
-- links to relevant docs
-- a small sample (or checksum + location for larger artifacts)
-
-### 🌍 Geospatial essentials (don’t skip)
-When the issue touches data or rendering:
-- **CRS / EPSG** (and any reprojection expectations)
-- **Datum / projection** (if known)
-- **Units** (meters vs degrees)
-- **Spatial extent** (bounding box or counties/regions)
-- **Time coverage** (start/end dates, granularity)
-
-> [!CAUTION]
-> If you don’t know the CRS/projection yet, say so explicitly and mark it as a blocker. “Unknown CRS” becomes tech debt fast.
-
-### 🛡️ Sensitive locations & restricted data
-If locations could be sensitive (cultural sites, endangered resources, private addresses, etc.):
-- Prefer aggregation/redaction
-- Use governance templates
-- Don’t post exact coordinates publicly unless cleared
+Include:
+- 🗺️ BBox/extent (rough is fine)
+- 🧭 CRS/EPSG (what you expected vs what’s displayed)
+- 🕰️ Time range / timestamp (if it’s time-aware)
+- 🖥️ Browser + device/GPU info (render bugs are often platform-specific)
+- 📸 Screenshot(s) with annotation
 
 ---
 
-## 🛠️ Maintainers: adding/updating templates
+### 📚 Story Nodes & narrative issues
 
-1) Add a new `*.yml` Issue Form in this folder  
-2) Update `config.yml` so it appears in the “New issue” chooser  
-3) Keep names **snake_case** and stable (renames break links/bookmarks)  
-4) Default labels should be meaningful (e.g., `needs-triage`, `data`, `governance`)  
-5) Prefer **required fields** for provenance-sensitive workflows (data/story/governance)
+Include:
+- 🧾 Story Node path/id (and whether it’s `draft/` or `published/`)
+- 🔗 Section heading/anchor (what line/section is wrong)
+- 📚 Sources that support the correction (links, citations)
+- ✍️ Suggested replacement text (optional but helpful)
 
----
-
-## 🔒 Security issues
-
-If you found a security vulnerability, **do not** open a public issue.  
-Follow the repo’s security policy: **see `../SECURITY.md`**.
+> [!NOTE]
+> Narrative changes must stay **provenance-linked** — no new claims without sources.
 
 ---
 
-## 🔗 Useful links (in-repo)
+### 🧠 Focus Mode & AI issues
 
-- 🧭 Project overview: `../../README.md`
-- 🤝 Contributing: `../../CONTRIBUTING.md`
-- 🛡️ Security: `../SECURITY.md`
-- 🧱 Architecture docs: `../../docs/architecture/` *(if present in your branch)*
-- 🧾 Governance/policy docs: `../../policy/` *(if present in your branch)*
+Include:
+- 🧠 What feature you used (summary, “possible connection”, explanation, etc.)
+- 🧾 Which Story Node / evidence artifact(s) were in context
+- ❌ The issue category:
+  - unsourced claim
+  - wrong linkage to evidence
+  - redaction/sensitivity leak
+  - misleading confidence/uncertainty display
+- ✅ What should have happened (including what sources should have been used)
+
+> [!TIP]
+> If it looks like a **leak** (sensitive locations / restricted info), jump straight to the security path below 🔐
 
 ---
 
-<div align="center">
+## 🔐 Security & sensitive reports
 
-**Thanks for helping keep KFM clean, traceable, and buildable.** 🧼🧾🗺️
+🚫 **Do not** open a public issue for:
+- secrets / tokens / credentials
+- PII (names, addresses, personal identifiers)
+- culturally sensitive or protected locations (precise coordinates)
+- anything that could bypass redaction/governance
 
-</div>
+✅ Instead:
+- Follow `../SECURITY.md` (or `../../SECURITY.md`) for responsible disclosure  
+- Use GitHub Security Advisories if enabled
+
+---
+
+## 🛠️ Maintaining templates
+
+Templates should:
+- ✅ ask for **contract artifacts** (schemas/specs/IDs) and **evidence**
+- ✅ keep the user’s burden low (only what we truly need)
+- ✅ include governance nudges (license, provenance, sensitivity)
+
+Template file types:
+- `*.yml` → **Issue Forms** (recommended)
+- `*.md` → legacy templates (ok if you must)
+- `config.yml` → disables blank issues + adds “contact links” + orders templates
+
+Suggested label prefixes (if your repo uses them):
+- `type:` bug / feature / docs / data / story / governance
+- `area:` pipelines / catalogs / graph / api / ui / focus
+- `priority:` p0 / p1 / p2
+- `status:` triage / blocked / ready
+
+---
+
+## ✅ Want to add a new issue template?
+
+1. Create a new Issue Form: `./<template_name>.yml`
+2. Keep fields aligned to KFM’s contracts (evidence + provenance + governance)
+3. Update `./config.yml` so it appears in the chooser
+4. Open a PR with a short screenshot or copy/paste of the rendered form ✨
