@@ -118,20 +118,20 @@ Think of them as **macro building blocks**:
 
 ```mermaid
 flowchart TD
-  PR[🔀 Pull Request] --> CI[🚦 Entrypoint Workflow(s)]
-  CI --> LINT[🧹 Lint/Format]
-  CI --> TEST[🧪 Unit/Integration Tests]
-  CI --> META[🗂️ Metadata Validate]
-  CI --> PROV[🧾 Provenance Guard]
-  CI --> POL[🛡️ Policy Gate (OPA/Rego)]
-  CI --> SBOM[📦 SBOM / Attestation (as needed)]
-  LINT --> PASS[✅ Required checks green]
+  PR["🔀 Pull Request"] --> CI["🚦 Entrypoint Workflow(s)"]
+  CI --> LINT["🧹 Lint/Format"]
+  CI --> TEST["🧪 Unit/Integration Tests"]
+  CI --> META["🗂️ Metadata Validate"]
+  CI --> PROV["🧾 Provenance Guard"]
+  CI --> POL["🛡️ Policy Gate (OPA/Rego)"]
+  CI --> SBOM["📦 SBOM / Attestation (as needed)"]
+  LINT --> PASS["✅ Required checks green"]
   TEST --> PASS
   META --> PASS
   PROV --> PASS
   POL --> PASS
   SBOM --> PASS
-  PASS --> MERGE[🎉 Merge Allowed]
+  PASS --> MERGE["🎉 Merge Allowed"]
 ```
 
 This mirrors KFM’s pipeline philosophy: **data + stories must follow a governed pipeline**, and CI is the automated enforcement layer.[^pipeline_order][^validation_gates]
