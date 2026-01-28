@@ -1,10 +1,3 @@
----
-title: "api/routes — Backend HTTP Contracts (FastAPI Routers)"
-path: "api/routes/README.md"
-status: "active"
-last_updated: "2026-01-28"
----
-
 # 🧭 `api/routes/` — FastAPI Router Modules
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-router%20layer-009688)](#)
