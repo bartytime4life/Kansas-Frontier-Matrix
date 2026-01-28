@@ -5,23 +5,36 @@
 ![Docker](https://img.shields.io/badge/docker-compose-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-informational)
 ![Node](https://img.shields.io/badge/node-18%2B-informational)
-![GIS](https://img.shields.io/badge/gis-PostGIS%20%7C%20Neo4j-success)
+![PostGIS](https://img.shields.io/badge/GIS-PostGIS-success)
+![Neo4j](https://img.shields.io/badge/Graph-Neo4j-success)
 ![AI](https://img.shields.io/badge/AI-Ollama%20(Local%20LLM)-brightgreen)
 
-**KFM is a geospatial knowledge + modeling platform** that fuses **maps**, **datasets**, **historical narratives**, and **AI-assisted analysis** into a single governed system — where every output has a traceable “**map behind the map**.” ✅
+**KFM is a geospatial knowledge + modeling platform** that fuses **maps**, **datasets**, **historical narratives**, and **AI‑assisted analysis** into a single governed system — where every output has a traceable **“map behind the map.”** ✅
 
 > [!IMPORTANT]
-> **KFM is not a black-box GIS.** Nothing “magically appears” in the UI without passing through deterministic pipelines, catalogs, governance checks, and contracted APIs.
+> **KFM is not a black‑box GIS.** Nothing “magically appears” in the UI. All user-facing content flows through deterministic pipelines, metadata catalogs, database boundaries, and contracted APIs.
+
+---
+
+## 🧭 Quick navigation
+- ⚡ [Quick Start](#-quick-start-docker-compose)
+- 🧩 [Architecture](#-architecture-at-a-glance)
+- 🧱 [Non‑negotiables](#-non-negotiable-invariants-dont-fight-these)
+- 🗂️ [Repo layout](#️-repo-layout--canonical-homes)
+- 🧪 [Common tasks](#-common-developer-tasks)
+- 🧠 [Focus Mode AI](#-focus-mode-ai-local-llm)
+- 🛡️ [Governance](#️-governance--provenance-boundary-artifacts)
+- 🤝 [Contributing](#-contributing)
+- 🆘 [Troubleshooting](#-troubleshooting-fast-fixes)
 
 ---
 
 ## ✨ What you get
-
-- 🧱 **Pipeline → Catalog → Graph → API → UI → Story Nodes → Focus Mode** (strict ordering)
+- 🧱 **Pipeline → Catalog → Database → API → UI → Story Nodes → Focus Mode** (strict ordering)
 - 🧾 **Evidence metadata**: STAC / DCAT / PROV boundary artifacts
-- 🧭 **Interactive web atlas**: Map + timeline + narrative reading
-- 🧠 **Focus Mode AI** (local LLM via Ollama) with **citations** + policy enforcement
-- 🛡️ **Policy-as-code** (OPA/Rego) for access control, redaction, publication gates, and AI rules
+- 🧭 **Interactive atlas UI**: map + time + narrative reading (Focus Mode)
+- 🧠 **Local AI (Ollama)** with **citations + policy gates**
+- 🧰 **Reproducible workflows**: deterministic pipelines, versioned outputs, CI + pre-commit hooks
 
 ---
 
@@ -31,9 +44,9 @@
 > This is the recommended path for a consistent dev environment (DBs, API, UI, and optional AI services).
 
 ### 1) Prereqs ✅
-- Docker Desktop (or Docker Engine) + Docker Compose plugin  
-- Git  
-- (Optional) Ollama installed locally if you want **local** Focus Mode AI
+- Docker Desktop (or Docker Engine) + Docker Compose plugin
+- Git
+- (Optional) **Ollama** installed locally for Focus Mode AI
 
 ### 2) Boot the stack 🚀
 ```bash
@@ -44,6 +57,8 @@ docker compose up --build
 ```
 
 ### 3) Open the services 🌐
+> Ports can be configured via `.env` / `docker-compose.yml`.
+
 - 🧪 API docs (Swagger): `http://localhost:8000/docs`
 - 🗺️ Web UI: `http://localhost:3000`
 - 🕸️ Neo4j Browser: `http://localhost:7474`
@@ -60,22 +75,22 @@ docker compose up --build
 ```mermaid
 flowchart LR
   subgraph Data["📦 Data lifecycle"]
-    A["🧱 Raw Sources"] --> B["🧪 ETL + Normalization"]
+    A["🧱 Raw sources"] --> B["🧪 ETL + normalization"]
     B --> C["🗂️ STAC Items + Collections"]
-    C --> D["📜 DCAT Dataset Views"]
-    C --> E["🔗 PROV Lineage Bundles"]
+    C --> D["🧾 DCAT dataset entries"]
+    C --> E["🔗 PROV lineage bundles"]
   end
 
-  C --> G["🕸️ Neo4j Graph (links back to catalogs)"]
-  G --> H["🌐 API Layer (contracts + redaction)"]
-  H --> I["🗺️ Map UI — React · MapLibre · (optional) Cesium"]
+  C --> G["🕸️ Neo4j graph (links back to catalogs)"]
+  G --> H["🌐 API boundary (contracts + redaction)"]
+  H --> I["🗺️ Web UI — React · MapLibre"]
   I --> J["📝 Story Nodes (governed narratives)"]
   J --> K["🧠 Focus Mode (provenance-linked context bundle)"]
 ```
 
 ---
 
-## 🧭 Non‑negotiable invariants (don’t fight these)
+## 🧱 Non‑negotiable invariants (don’t fight these)
 
 > [!CAUTION]
 > These are **hard rules**. If you break them, KFM becomes un-auditable.
@@ -84,88 +99,108 @@ flowchart LR
    **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 2. **API boundary rule**  
    The UI **must never** query PostGIS/Neo4j directly — only through the governed API.
-3. **Provenance First**  
+3. **Provenance‑first**  
    No dataset, narrative claim, or AI answer is “valid” without traceable sources.
 
 ---
 
-## 🗂️ Repo layout (v13+ canonical homes)
-
-```text
-📁 .
-├── 📦 data/
-│   ├── 🧪 raw/<domain>/                 # immutable-ish source snapshots
-│   ├── 🧰 work/<domain>/                # intermediate pipeline outputs
-│   ├── ✅ processed/<domain>/           # final published outputs (evidence artifacts)
-│   ├── 🗂️ stac/
-│   │   ├── collections/                 # STAC collections
-│   │   └── items/                       # STAC items
-│   ├── 🧾 catalog/
-│   │   └── dcat/                        # DCAT JSON-LD catalog entries
-│   └── 🔗 prov/                         # PROV lineage bundles
-├── 🧠 src/
-│   ├── 🧪 pipelines/                    # deterministic ETL jobs (domain pipelines)
-│   ├── 🕸️ graph/                        # graph build/migrations/sync tooling
-│   └── 🌐 server/
-│       ├── contracts/                   # OpenAPI / GraphQL SDL / schema contracts
-│       └── ...                          # API implementation (REST/GraphQL)
-├── 🗺️ web/                              # React UI (MapLibre configs, layers, components)
-├── 🛡️ policy/                           # OPA/Rego policy-as-code (data + AI + access)
-├── 🧬 schemas/                          # JSON Schemas (STAC/DCAT/PROV/story nodes/etc.)
-├── 📚 docs/
-│   ├── 🏛️ architecture/                 # system design docs, ADRs, blueprints
-│   ├── 🧷 standards/                    # governed standards + profiles
-│   ├── 🧩 templates/                    # doc/story/api templates
-│   ├── 📒 data/<domain>/                # domain runbooks + notes
-│   └── 📝 reports/story_nodes/
-│       ├── 🧪 draft/                    # WIP narratives
-│       └── ✅ published/                 # released narratives (folder-per-story)
-├── 🧪 tests/                             # unit + integration tests
-├── 🧰 tools/                             # validation + helper utilities (if present)
-└── 🧫 mcp/                               # methods & computational experiments (optional)
-```
+## 🗂️ Repo layout & canonical homes
 
 > [!NOTE]
-> If you see legacy folders (e.g., `api/`, `pipelines/`, `src/api/`), treat them as **migration targets** into the canonical homes above.
+> This repo is evolving toward a **v13 “canonical home”** model: *one true directory per subsystem* (no duplicate “API” folders, no scattered story content, etc.).  
+> If you see overlap (e.g., both `api/` and `src/server/`), treat `src/` as the **migration target**, while keeping existing code working.
+
+### 🧭 Root layout (what should exist)
+```text
+📦 .
+├── 🧩 .github/                    # CI workflows, issue templates, automation
+├── 🌐 api/                        # Backend API (active / legacy-friendly)
+├── 📦 data/                       # Datasets + catalogs (versioned evidence)
+├── 📚 docs/                       # Architecture, standards, runbooks, story nodes
+├── 🧫 mcp/                        # Methods & computational experiments (optional)
+├── 🧪 pipelines/                  # Deterministic ETL & ingestion scripts (active / legacy-friendly)
+├── 🧠 src/                        # v13 canonical homes (server/graph/pipelines), shared libs
+├── 🧪 tests/                      # Unit + integration tests
+├── 🧰 tools/                      # Validators, linters, helpers (repo tooling)
+├── 🗺️ web/                        # React UI (MapLibre layers, components, Focus Mode)
+├── ⚙️ .editorconfig
+├── 🧾 .env.example
+├── ✅ .pre-commit-config.yaml
+├── 📝 CHANGELOG.md
+├── 📌 CITATION.cff
+├── 🤝 CONTRIBUTING.md
+├── 📄 LICENSE
+├── 🐳 docker-compose.yml
+└── 📘 README.md
+```
+
+### 📦 `data/` structure (required staging)
+KFM treats **data as evidence**. Every dataset must have:
+- **raw** inputs (unchanged)
+- **processed** outputs (cleaned/standardized)
+- **catalog** records (STAC/DCAT)
+- **provenance** records (PROV lineage)
+
+Recommended `data/` layout:
+```text
+📁 data/
+├── raw/<domain>/                  # write-once source snapshots
+├── work/<domain>/                 # intermediate pipeline outputs (scratch)
+├── processed/<domain>/            # publish-ready outputs consumed by downstream stages
+├── stac/
+│   ├── collections/               # STAC collections
+│   └── items/                     # STAC items
+├── catalog/
+│   └── dcat/                      # DCAT dataset entries (JSON-LD)
+└── prov/                          # PROV lineage bundles
+```
+
+> [!TIP]
+> If any of these folders are missing, add them with a `.gitkeep` so the structure stays enforceable in Git.
+
+### 📚 `docs/` structure (where the “rules” live)
+```text
+📁 docs/
+├── architecture/                  # blueprints, diagrams, ADRs
+├── standards/                     # KFM profiles (STAC/DCAT/PROV) + doc protocols
+├── templates/                     # governed templates (Story Nodes, API contract changes, etc.)
+├── data/<domain>/                 # domain runbooks (how to ingest + cite + validate)
+└── reports/story_nodes/
+    ├── draft/                     # WIP narratives
+    └── published/                 # released narratives (folder-per-story)
+```
 
 ---
 
-## 🧱 Core subsystems (how the pieces fit)
+## 🧱 Subsystems (what goes where)
 
-### 📦 Data & Pipelines (`src/pipelines/`)
-- Deterministic ETL transforms **raw** → **processed** outputs
-- Pipelines must be **idempotent** (re-running shouldn’t create duplicate “truth”)
-- Outputs must generate boundary artifacts before “publication”:
-  - 🗂️ STAC records
-  - 🧾 DCAT dataset entries
-  - 🔗 PROV lineage bundles
+### 🌐 API boundary (`api/` → `src/server/`)
+- The API is the **only** approved access path for UI + AI to query data.
+- Contract-first workflow is preferred:
+  1) define/extend contracts (OpenAPI / GraphQL schema)
+  2) implement handlers
+  3) add tests + governance checks
 
-### 🕸️ Knowledge Graph (`src/graph/`)
-- Neo4j stores **relationships** across people, places, events, documents, datasets
-- Graph nodes should always reference back to catalog + provenance IDs
+### 🧪 Pipelines (`pipelines/` → `src/pipelines/`)
+- Deterministic ETL: **raw → work → processed**
+- Must be **idempotent** (re-runs do not create duplicate “truth”)
+- Must produce boundary artifacts before publication:
+  - 🗂️ STAC
+  - 🧾 DCAT
+  - 🔗 PROV
 
-### 🌐 API Boundary (`src/server/`)
-- FastAPI-style service boundary (REST and/or GraphQL)
-- **Contract-first** development:
-  - define/extend schemas & contracts first (`src/server/contracts/`)
-  - implement resolvers/controllers second
-  - add tests + (if needed) redaction rules
+### 🕸️ Graph (Neo4j) (`src/graph/`)
+- Stores relationships across people/places/events/documents/datasets
+- Graph nodes should link back to stable catalog/provenance IDs
 
 ### 🗺️ Web UI (`web/`)
-- React UI is a **pure client**
-- It renders what the API returns, and surfaces provenance in legends/popovers/tooltips
-- Map layers must cite their underlying evidence sources
+- Pure client: renders governed outputs from the API
+- Every layer should surface provenance (tooltips/legends/source panels)
+- Focus Mode: narrative + map + citations as first-class UX
 
-### 📝 Story Nodes (`docs/reports/story_nodes/`)
-Story Nodes are “**machine-ingestible storytelling**”:
-- Every claim must be backed by citations/provenance
-- Entities should link to stable graph IDs
-- Facts vs interpretation must be distinguishable (especially with AI assistance)
-
-### 🧠 Focus Mode (AI)
-- AI must operate **through approved tools/APIs** (never direct DB access)
-- AI must return **answers with citations**
-- AI outputs are subject to governance policy checks (redaction, disallowed content, sensitive topics)
+### 🧫 MCP (`mcp/`)
+- Experiments, notebooks, model cards, methods
+- Anything “experimental” belongs here until promoted into pipelines + catalogs
 
 ---
 
@@ -178,82 +213,105 @@ docker compose exec api pytest
 
 ### Run a pipeline (example) 🧪
 ```bash
-docker compose exec api python src/pipelines/<domain>/run.py
+docker compose exec api python pipelines/<domain_or_job>/run.py
+# or: docker compose exec api python pipelines/my_pipeline.py
 ```
 
-### Seed sample data (if included) 🌱
+### Jump into the API container 🐚
 ```bash
-docker compose exec api python scripts/init_sample_data.py
+docker compose exec api bash
 ```
-
-### Explore APIs 🔎
-- Swagger: `http://localhost:8000/docs`
-- If enabled, GraphQL: `http://localhost:8000/graphql`
 
 ---
 
-## 🛡️ Governance & policy (OPA/Rego)
+## 🧠 Focus Mode AI (local LLM)
 
-KFM encodes governance rules as **versioned policy-as-code** in `policy/`:
-- ✅ publication gates (metadata required, licenses required, provenance required)
-- 🔐 access control + redaction (e.g., sensitive datasets)
-- 🧠 AI behavior constraints (citations required, refusal paths, sensitive info blocking)
+KFM’s AI is designed to be **knowledge-grounded and auditable**:
+- AI must operate **through approved tools/APIs**
+- AI must return **answers with citations**
+- AI outputs should be **policy-checked** (redaction, sensitive topics, refusal paths)
 
-> [!TIP]
-> Treat governance like code: propose changes by PR, review them, test them, version them.
+### Enable Ollama locally (typical)
+1) Install Ollama and confirm it works:
+```bash
+ollama run llama2:7b "Hello"
+```
+
+2) Point the stack at Ollama (example pattern)
+- Run Ollama on the host (default port `11434`)
+- In `.env`, set something like:
+  - `AI_BACKEND_URL=http://host.docker.internal:11434`
+  - `OLLAMA_MODEL=...`
+
+> [!NOTE]
+> If the API runs in Docker, reaching host services often uses `host.docker.internal` (platform dependent).  
+> You can also run Ollama in Docker if you prefer fully containerized dev.
+
+---
+
+## 🛡️ Governance & provenance boundary artifacts
+
+KFM “fails closed” by design:
+- no license → no merge
+- no provenance → no publication
+- policy check fails → blocked
+
+### ✅ Evidence requirements for any dataset
+- **Raw**: immutable snapshot in `data/raw/<domain>/`
+- **Processed**: publishable output in `data/processed/<domain>/`
+- **STAC**: `data/stac/collections/` + `data/stac/items/`
+- **DCAT**: `data/catalog/dcat/`
+- **PROV**: `data/prov/`
 
 ---
 
 ## 🤝 Contributing
 
+Read: **`CONTRIBUTING.md`** 🤝  
 We welcome contributions — **as long as they preserve provenance**. 🙌
 
 ### ✅ Contribution checklist
 - [ ] Deterministic pipeline (or doc-only change) with repeatable steps
 - [ ] STAC/DCAT/PROV artifacts produced/updated where applicable
-- [ ] Graph + API + UI changes follow the canonical ordering
-- [ ] Policies updated if you introduce new sensitivity or access rules
+- [ ] UI reads only from the API (no direct DB calls)
 - [ ] Tests added/updated (unit + integration where relevant)
-- [ ] Documentation updated (domain runbooks, templates, or architecture notes)
-
-> [!IMPORTANT]
-> If you’re adding a new dataset/domain: start at `data/raw/<domain>/` and add a runbook at `docs/data/<domain>/README.md`.
+- [ ] Documentation updated (runbooks, templates, or architecture notes)
+- [ ] `pre-commit` passes locally (see `.pre-commit-config.yaml`)
 
 ---
 
-## 📚 Key docs (start here)
-
-- 📘 `docs/MASTER_GUIDE_v13.md` — canonical structure + rules of the road  
-- 🏛️ `docs/architecture/` — blueprints, diagrams, ADRs  
-- 🧷 `docs/standards/` — STAC/DCAT/PROV profiles + governance standards  
-- 🧩 `docs/templates/` — governed templates (Story Nodes, API changes, etc.)
+## 📌 Citation
+If you publish work derived from KFM, use **`CITATION.cff`** as the canonical citation record.
 
 ---
 
-## 🗺️ Roadmap (high level)
-
-<details>
-  <summary>Click to expand 🔮</summary>
-
-- 🧠 More robust Focus Mode tool-use + provenance bundles
-- 🧭 Stronger redaction + sensitivity tiers (policy-driven)
-- 🛰️ More domains (remote sensing, surveys, archival corpora, simulation outputs)
-- 🧱 Better contract validation + schema versioning automation
-- 🌐 Public “evidence explorer” experience (downloadable + citable artifacts)
-
-</details>
+## 🧾 Changelog
+See **`CHANGELOG.md`** for release notes and version history.
 
 ---
 
 ## 📄 License
-
-📌 **TBD** — add a `LICENSE` file and update this section once selected.
+See **`LICENSE`**.
 
 ---
 
 ## 🆘 Troubleshooting (fast fixes)
 
-- 🧱 **DB not ready** → re-run `docker compose up` and check logs  
-- 🔁 **Hot reload not working** → verify volume mounts for `web/src` and server code  
-- 🚫 **Ports busy** → stop the conflicting service or remap ports in `.env` / compose  
-- 🧠 **Ollama not reachable** → ensure `ollama serve` is running and the API can reach `11434`  
+- 🧱 **DB not ready** → re-run `docker compose up` and check logs
+- 🔁 **Hot reload not working** → verify volume mounts for `web/src` and backend code
+- 🚫 **Ports busy** → stop the conflicting service or remap ports in `.env` / compose
+- 🧠 **Ollama not reachable** → ensure `ollama serve` is running and API can reach `11434`
+- 🧰 **Permission issues** (mounted volumes) → ensure `data/` is writable by containers
+
+---
+
+<details>
+  <summary>🔮 Roadmap (high level)</summary>
+
+- 🧠 Stronger Focus Mode tool-use + provenance “context bundles”
+- 🧭 Policy-as-code expansion (redaction tiers, sensitivity gates)
+- 🛰️ More domains: remote sensing, archival corpora, simulation outputs
+- 🧱 Automated schema validation + contract compatibility checks
+- 🌐 Public “evidence explorer” UX (downloadable + citable artifacts)
+
+</details>
