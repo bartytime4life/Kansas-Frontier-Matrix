@@ -1,374 +1,96 @@
-# 🤖 Dependabot Config v2 (GitHub Actions) 🔄
+# 🤖 Dependabot config
 
-<p align="left">
-  <a href="#-recommended-githubdependabotyml"><img alt="Dependabot" src="https://img.shields.io/badge/dependabot-enabled-238636" /></a>
-  <a href="#-behavior-summary"><img alt="Cadence" src="https://img.shields.io/badge/cadence-weekly-1f6feb" /></a>
-  <a href="#-grouping-strategy--pr-noise-control"><img alt="Grouping" src="https://img.shields.io/badge/prs-grouped-7c3aed" /></a>
-  <a href="#-kfm-supply-chain--governance-overlays"><img alt="Supply Chain" src="https://img.shields.io/badge/supply--chain-guarded-critical" /></a>
-  <a href="#-kfm-review-policy-for-dependabot-prs"><img alt="Review" src="https://img.shields.io/badge/review-risk--tiered-111827" /></a>
-</p>
-
-> ✅ **Goal:** keep GitHub Actions dependencies fresh **weekly**, while keeping PR noise low with **grouping** + a short **major-version cooldown**.  
-> 🌾 **KFM twist:** workflow dependencies are part of the *toolchain* → toolchain changes must remain **auditable**, **deterministic**, and **supply-chain-aware**.
-
-> [!IMPORTANT]
-> 🧱 **KFM pipeline rule (still applies):** dependency updates are “build system changes.”  
-> If a workflow update can change catalog artifacts, simulation outputs, or evidence bundles → treat it like a governed change (tests + provenance).
-
----
-
-## 📌 Quick links
-
-- [🧾 Doc metadata](#-doc-metadata)
-- [📁 Where this lives](#-where-this-lives)
-- [✅ Recommended `.github/dependabot.yml`](#-recommended-githubdependabotyml)
-- [🧠 Behavior summary](#-behavior-summary)
-- [🧩 Grouping strategy](#-grouping-strategy--pr-noise-control)
-- [🛡️ KFM supply-chain & governance overlays](#-kfm-supply-chain--governance-overlays)
-- [🧑‍⚖️ KFM review policy for Dependabot PRs](#-kfm-review-policy-for-dependabot-prs)
-- [🧯 Troubleshooting](#-troubleshooting)
-- [🧰 Optional upgrades](#-optional-upgrades)
-- [📚 Project reference library → dependency policy map](#-project-reference-library--dependency-policy-map-uses-all-project-files)
-
----
-
-## 🧾 Doc metadata
-
-| Field | Value |
-|---|---|
-| Doc | `docs/dependabot/README.md` *(or keep next to config, e.g. `.github/DEPENDABOT.md`)* |
-| Config file | `.github/dependabot.yml` |
-| Status | Active ✅ |
-| Last updated | **2026-01-09** |
-| Scope | **GitHub Actions** dependency updates (workflows + composite actions) |
-| Design stance | 🛡️ Supply-chain-aware + 🧪 deterministic CI first |
-
----
-
-## 📁 Where this lives
-
-- Folder: `📂 .github/`
-- File: `📄 dependabot.yml`
-
-Suggested tree:
-
-```text
-📁 .github/
-├── 📄 dependabot.yml
-└── 📁 workflows/
-    ├── 📄 ci.yml
-    ├── 📄 security.yml
-    └── 📄 release.yml
-```
-
----
-
-## ✅ Recommended `.github/dependabot.yml`
-
-> [!NOTE]
-> 🧷 **Tip:** quote the branch separator (`"-"`) so YAML never interprets it like a list marker.  
-> 🗓️ **Timezone:** keep `UTC` for predictability, or switch to `America/Chicago` if you want Kansas-local Mondays.
+📁 `.github/`  
+└── 🤖 `dependabot.yml`
 
 ```yaml
 version: 2
 
 updates:
-  # 🤖 GitHub Actions dependencies referenced in:
-  # - .github/workflows/**.yml
-  # - action.yml/action.yaml at repo root (if you publish actions)
+  # ✅ Keep GitHub Actions pinned versions fresh (/.github/workflows)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "05:00"
-      timezone: "UTC"
-
-    # Keep PR volume bounded (security updates have their own behavior).
-    open-pull-requests-limit: 5
-
-    # Keep titles stable and searchable (avoid `deps(deps): ...`).
+      time: "06:00"
+      timezone: "America/Chicago"
+    rebase-strategy: "auto"
     commit-message:
-      prefix: "deps"
+      prefix: "chore"
+      include: "scope"
 
-    # Avoid "/" separators in branch names for maximum tooling compatibility.
-    pull-request-branch-name:
-      separator: "-"
-
-    # Add labels to help triage & routing (create these labels in the repo).
-    labels:
-      - "dependencies"
-      - "deps:github-actions"
-      - "kfm:ci"
-
-    # 🧩 Group minor+patch updates into fewer PRs; majors remain individual PRs for explicit review.
-    # Split first-party Actions (GitHub orgs) from third-party Actions to reduce review blast-radius.
-    #
-    # ⚠️ Group order matters: first match wins.
-    groups:
-      gha-first-party-minor-patch:
-        patterns:
-          - "actions/*"
-          - "github/*"
-        update-types:
-          - "minor"
-          - "patch"
-
-      gha-third-party-minor-patch:
-        patterns:
-          - "*"
-        exclude-patterns:
-          - "actions/*"
-          - "github/*"
-        update-types:
-          - "minor"
-          - "patch"
-
-      # If Dependabot Security Updates are enabled, group Actions security fixes too.
-      gha-first-party-security:
-        applies-to: "security-updates"
-        patterns:
-          - "actions/*"
-          - "github/*"
-
-      gha-third-party-security:
-        applies-to: "security-updates"
-        patterns:
-          - "*"
-        exclude-patterns:
-          - "actions/*"
-          - "github/*"
-
-    # ⏳ Short major-release cooldown to avoid churn from just-published majors.
-    # Note: cooldown applies only to version updates (not security updates).
-    cooldown:
-      semver-major-days: 7
-
-      # Optional (uncomment if you want to avoid "just shipped" minors/patches too):
-      # semver-minor-days: 2
-      # semver-patch-days: 1
-```
-
----
-
-## 🧠 Behavior summary
-
-- ✅ **Weekly cadence** (Mondays @ 05:00 UTC)
-- ✅ **Minor + patch** updates are grouped into **2 PR streams**:
-  - 🧩 first-party Actions (`actions/*`, `github/*`)
-  - 🌍 third-party Actions (everything else)
-- ✅ **Major** updates stay **individual PRs** (easier review + safer)
-- ✅ **Major cooldown** waits **7 days** before proposing brand-new major releases
-- ✅ **Security update grouping** mirrors the same split *(if security updates are enabled in repo settings)*
-
----
-
-## 🧩 Grouping strategy & PR noise control
-
-### Why two streams? 🎛️
-- **First-party** actions are usually lower risk & well-supported (still review!)
-- **Third-party** actions are a bigger supply-chain surface area → isolate for easier scanning
-
-### Extra “KFM-safe” optional groups 🧯 *(only if you need them)*
-If you see noisy churn from certain ecosystems/actions, add specialized groups *above* the broad third-party group:
-
-```yaml
-groups:
-  gha-supply-chain-sensitive-minor-patch:
-    patterns:
-      - "sigstore/*"
-      - "slsa-framework/*"
-      - "anchore/*"
-    update-types: ["minor", "patch"]
-
-  gha-first-party-minor-patch:
-    ...
-  gha-third-party-minor-patch:
-    ...
-```
-
-> [!TIP]
-> Keep group count low. Two groups is usually plenty. Add more only when there’s clear pain.
-
----
-
-## 🛡️ KFM supply-chain & governance overlays
-
-KFM treats workflows as **critical infrastructure** (they touch secrets, build artifacts, and sometimes publish data).
-
-### ✅ Baseline hardening rules
-- 🔒 Prefer pinning third-party actions to **full commit SHAs** (immutability)
-- 🧾 Treat action version bumps as toolchain changes → require CI + deterministic checks
-- 🧪 Don’t let dependency update PRs silently change:
-  - catalog generation (STAC/DCAT/PROV)
-  - simulation/analysis job outputs
-  - evidence bundle formats
-- 🧷 Keep provenance: if a workflow participates in publishing, capture run metadata
-
-### 🧰 Suggested CI gates for Dependabot PRs (repo-level)
-- ✅ unit/integration tests
-- ✅ “policy as code” checks (governance guardrails)
-- ✅ artifact checks (SBOM / checksums / manifests) where relevant
-- ✅ dependency review / diff awareness (especially for third-party actions)
-
-> [!IMPORTANT]
-> **Don’t auto-merge everything.**  
-> Auto-merge is reasonable only for low-risk updates *after* you have strong CI gates.
-
----
-
-## 🧑‍⚖️ KFM review policy for Dependabot PRs
-
-Use a lightweight risk rubric so reviews stay fast **and** safe:
-
-| PR type | Example | Risk | Merge guidance |
-|---|---|---:|---|
-| ✅ First-party patch | `actions/*` patch | Low | Merge after CI ✅ |
-| ✅ First-party minor | `actions/*` minor | Low–Med | Merge after CI + skim changelog |
-| ⚠️ Third-party patch/minor | `*/**` patch/minor | Med | Review action repo reputation + CI + policy gates |
-| 🛑 Any major | major bump | High | Manual review + changelog + consider staged rollout |
-| 🚨 Security update | advisory-driven | High urgency | Prioritize review; merge ASAP once validated |
-
-> [!TIP]
-> If the PR touches build/publish workflows: run the “evidence pipeline smoke path” before merge (catalog validation + provenance presence).
-
----
-
-## 🧯 Troubleshooting
-
-### Dependabot isn’t opening PRs
-- ✅ Confirm `.github/dependabot.yml` is on the default branch
-- ✅ Confirm workflows exist under `.github/workflows/`
-- ✅ Check repo **Security** settings: dependency graph / alerts / security updates
-
-### Grouping isn’t behaving as expected
-- Group order matters: **first match wins**  
-- A dependency that matches multiple groups goes to the **first** group definition
-
-### Actions in a monorepo aren’t updated correctly
-- Prefer standard action version tag formats
-- Avoid confusing tag naming patterns that block Dependabot’s update detection
-
----
-
-## 🧰 Optional upgrades
-
-<details>
-<summary><strong>🧩 Optional: Multi-ecosystem “one PR per week” (Actions + Docker + Pip + NPM)</strong></summary>
-
-> 🎯 Use this if KFM becomes a true monorepo (API + UI + infra) and you want fewer “dependency PRs”.
-
-**Key idea:** define a `multi-ecosystem-groups` schedule, then assign ecosystems to it using `multi-ecosystem-group` + `patterns`.
-
-```yaml
-version: 2
-
-multi-ecosystem-groups:
-  kfm-weekly:
+  # ✅ Frontend deps (web/)
+  - package-ecosystem: "npm"
+    directory: "/web"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "05:00"
-      timezone: "UTC"
-    labels:
-      - "dependencies"
-      - "kfm:weekly-batch"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      web-prod:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      web-dev:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
 
-updates:
-  - package-ecosystem: "github-actions"
+  # ✅ Backend deps (api/)
+  - package-ecosystem: "pip"
+    directory: "/api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 10
+    rebase-strategy: "auto"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      api-python:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # ✅ Dockerfile base image updates (api/, web/)
+  - package-ecosystem: "docker"
+    directories:
+      - "/api"
+      - "/web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    rebase-strategy: "auto"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+  # ✅ docker-compose.yml image tag updates (repo root)
+  - package-ecosystem: "docker-compose"
     directory: "/"
-    patterns: ["*"]
-    multi-ecosystem-group: "kfm-weekly"
-
-  # Enable ONLY if these directories exist:
-  # - package-ecosystem: "pip"
-  #   directory: "/api"
-  #   patterns: ["*"]
-  #   multi-ecosystem-group: "kfm-weekly"
-  #
-  # - package-ecosystem: "npm"
-  #   directory: "/web"
-  #   patterns: ["*"]
-  #   multi-ecosystem-group: "kfm-weekly"
-  #
-  # - package-ecosystem: "docker"
-  #   directory: "/"
-  #   patterns: ["*"]
-  #   multi-ecosystem-group: "kfm-weekly"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    rebase-strategy: "auto"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
 ```
-
-</details>
-
-<details>
-<summary><strong>🧯 Optional: “Freeze majors” for specific actions</strong></summary>
-
-If a specific action has repeated breaking majors, you can ignore major updates:
-
-```yaml
-ignore:
-  - dependency-name: "some-org/some-action"
-    update-types: ["version-update:semver-major"]
-```
-
-</details>
-
----
-
-## 📚 Project reference library → dependency policy map (uses all project files)
-
-> Requirement: this section maps **every project file** to a concrete dependency-management convention, review posture, or CI expectation.
-
-<details>
-<summary><strong>🧠 Expand: Influence map (all project files)</strong></summary>
-
-| Project file | What it changes in dependency update policy (practical impact) |
-|---|---|
-| `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx` | Treat workflows as governed infrastructure; dependency updates require deterministic CI and must not bypass catalog/provenance gates |
-| `Latest Ideas-1.docx` | Pushes “policy-as-code” + supply-chain posture (SBOM, signing, provenance) → Dependabot PRs must pass security gates and avoid surprise toolchain changes |
-| `Data Spaces.pdf` | Reinforces “pointer-over-payload” + access control: dependency updates must not weaken provenance pointers or data governance behaviors |
-| `Introduction to Digital Humanism.pdf` | Human-centered accountability: dependency PRs should be reviewable, explainable, and not silently change user-facing semantics |
-| `Principles of Biological Autonomy - book_9780262381833.pdf` | Systems thinking: avoid brittle coupling; prefer incremental, observable updates with feedback loops (CI metrics + rollback readiness) |
-| `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf` | Audit readiness: workflow changes that affect ML outputs must preserve traceability (versioned tooling + logged configs) |
-| `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` | Remote-sensing pipelines must stay reproducible: workflow dependency changes require rerun of at least one reference export/QA path |
-| `python-geospatial-analysis-cookbook.pdf` | Geospatial correctness: dependency bumps that touch CRS/geometry stacks require regression tests for transforms, SRID handling, and GeoJSON validity |
-| `making-maps-a-visual-guide-to-map-design-for-gis.pdf` | Cartographic integrity: updates affecting rendering/tiles/quicklooks must be reviewed for “misleading map defaults” regressions |
-| `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf` | Offline/low-bandwidth sensitivity: dependency updates should not bloat artifacts or break caching/tiling strategies |
-| `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf` | DB-related workflow updates must preserve migration/backup safety and avoid accidental query-cost explosions |
-| `Scalable Data Management for Future Hardware.pdf` | Scale discipline: keep update cadence bounded; avoid PR storms; ensure CI is incremental + resource-aware |
-| `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf` | Concurrency hygiene: workflow/job runners must remain bounded; dependency updates should not introduce runaway parallelism |
-| `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf` | Threat model posture: assume CI runners and actions are attack targets → prefer least privilege + verified sources + careful review of third-party updates |
-| `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf` | Defensive mindset: treat all external tooling as potential adversary; avoid risky parsing/tool execution in CI without sandboxing |
-| `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf` | Media pipeline safety: dependency bumps affecting image generation must preserve format correctness, size limits, and performance budgets |
-| `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf` | 3D pipeline posture: keep optional; dependency updates must not force heavy client requirements or unsafe loaders |
-| `Spectral Geometry of Graphs.pdf` | Graph analytics updates must remain explainable & bounded; workflow updates should not silently change graph metrics semantics |
-| `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf` | Simulation rigor: workflow/tooling changes require reproducibility checks (seed/version capture) and V&V-friendly logging |
-| `Generalized Topology Optimization for Structural Design.pdf` | Optimization jobs require explicit objective/constraints provenance; toolchain updates must not alter results without traceability |
-| `Understanding Statistics & Experimental Design.pdf` | Statistical validity: dependency changes affecting inference must not silently change assumptions; require diagnostics/regression checks |
-| `graphical-data-analysis-with-r.pdf` | EDA outputs should remain stable/deterministic; dependency bumps that affect plotting/stats require “golden output” checks where feasible |
-| `regression-analysis-with-python.pdf` | Regression workflows: dependency updates must preserve diagnostics and avoid metric drift without explanation |
-| `Regression analysis using Python - slides-linear-regression.pdf` | Standardize regression reporting outputs; dependency updates must not break coefficient/metrics payload shapes |
-| `think-bayes-bayesian-statistics-in-python.pdf` | Bayesian outputs must disclose priors and intervals; dependency updates must not change sampling defaults silently |
-| `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` | ML supply chain posture: avoid training inside CI/API runtime; dependency updates require model-card-friendly artifact versioning |
-| `responsive-web-design-with-html5-and-css3.pdf` | UI build tooling updates should preserve responsive budgets and avoid bundle-size explosions (especially if UI is part of this repo) |
-| `A programming Books.pdf` | Contributor shelf: general engineering references; encourages language-agnostic, sustainable dependency practices |
-| `B-C programming Books.pdf` | Contributor shelf |
-| `D-E programming Books.pdf` | Contributor shelf |
-| `F-H programming Books.pdf` | Contributor shelf |
-| `I-L programming Books.pdf` | Contributor shelf |
-| `M-N programming Books.pdf` | Contributor shelf |
-| `O-R programming Books.pdf` | Contributor shelf |
-| `S-T programming Books.pdf` | Contributor shelf |
-| `U-X programming Books.pdf` | Contributor shelf |
-
-</details>
-
----
-
-<!--
-Maintainers’ TODOs ✅ (keep or remove):
-- Confirm repo labels exist: dependencies, deps:github-actions, kfm:ci
-- Add CODEOWNERS for `.github/dependabot.yml` and `.github/workflows/**`
-- Add CI: dependency/policy gates for Dependabot PRs (especially third-party Actions)
-- Consider pinning third-party actions to full commit SHAs across workflows
-- Optionally adopt multi-ecosystem groups if/when KFM becomes a true monorepo
--->
