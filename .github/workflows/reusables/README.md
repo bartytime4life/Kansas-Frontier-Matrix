@@ -1,333 +1,285 @@
 # ♻️ Reusable GitHub Actions Workflows (KFM)
 
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-reusable%20workflows-2088FF?logo=githubactions&logoColor=white)
-![Policy Pack](https://img.shields.io/badge/OPA%20%2B%20Conftest-Policy%20Pack-7B42BC)
-![Provenance](https://img.shields.io/badge/W3C%20PROV--O-lineage%20everywhere-00A98F)
-![FAIR%20%2B%20CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-governance%20gates-FFB000)
-![Supply Chain](https://img.shields.io/badge/SBOM%20%2B%20Signing-supply%20chain%20security-111111?logo=sigstore&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-workflow_call-2088FF?logo=githubactions&logoColor=white)
+![KFM](https://img.shields.io/badge/KFM-governed%20CI-6f42c1?logo=github&logoColor=white)
+![Fail Closed](https://img.shields.io/badge/policy-fail--closed-111827)
 
-> [!IMPORTANT]
-> This directory is KFM’s **CI/CD “pattern library”** 🧩 — small, reusable workflow building blocks that standardize:
-> - 🔒 **Governance & policy-as-code** (fail-closed gates)
-> - 🧬 **Provenance-first operations** (code + data lineage)
-> - 🧪 **Test & validation discipline** (software + data pipelines)
-> - 📦 **Supply-chain security** (SBOM / attestations / signing)
-> - 🗺️ **Geospatial + knowledge graph integrity** (STAC/DCAT/PROV → PostGIS/Neo4j)
-> - 🧠 **AI/Focus Mode reliability** (RAG regression + citation rules)
+📍 **Path:** `.github/workflows/reusables/README.md` *(you are here)*
 
 ---
 
-## 📦 What lives here
+## 🧭 Critical GitHub constraint (read this first)
 
-This folder contains **reusable workflows** triggered via `workflow_call` (not “top-level” CI pipelines).
+> ⚠️ **GitHub Actions requires workflow YAML files to live directly in** `.github/workflows/`  
+> ✅ **Subdirectories are not supported for workflow files** — including reusable workflows.  
+>
+> **So this folder (`.github/workflows/reusables/`) is for:**
+> - 📚 documentation & runbooks
+> - 🧩 workflow “contracts” (inputs/secrets/outputs) and conventions
+> - 🧪 templates / design notes
+>
+> **Actual reusable workflows must be placed at:**
+> - ✅ `.github/workflows/<name>.yml` with `on: workflow_call`
+>
+> **If you want reusable logic in subfolders, use composite actions instead:**
+> - ✅ `.github/actions/<action-name>/action.yml` *(step-level reuse)*
 
-📁 **Folder map**
+Reference: GitHub Docs → “Reuse workflows” (subdirectories not supported):  
+`https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows`
+
+---
+
+## 📦 What “reusables” means in KFM
+
+KFM uses CI/CD as a **governance enforcement layer**:
+- ✅ **Fail closed** by default (if a check fails, merge is blocked)
+- ✅ **Evidence/provenance-first** (metadata + lineage before interpretation)
+- ✅ **Pipeline invariant enforcement** (ETL → catalogs → graph → API → UI → narratives)
+
+Reusable workflows are how we keep those rules **consistent** across:
+- Pull Requests (PR gates)
+- Scheduled validation runs
+- Releases (signed artifacts / attestations)
+- Domain-module onboarding (new datasets, new schemas)
+
+---
+
+## 🗂️ Expected layout (recommended)
+
+Even though we can’t nest workflow YAML files, we *can* keep them organized with naming + this index.
+
 ```text
-📦 .github/
-  ⚙️ workflows/
-    🧭 (caller workflows live here)
-    ♻️ reusables/
-      📝 README.md   👈 you are here
-      🔒 reusable-policy-pack.yml
-      🧬 reusable-provenance-pr.yml
-      🧪 reusable-python-ci.yml
-      🧪 reusable-node-ci.yml
-      🗺️ reusable-stac-dcat-prov-validate.yml
-      🧠 reusable-ai-eval.yml
-      📦 reusable-build-sign-publish.yml
-      🧱 reusable-graph-import-dryrun.yml
-      🛰️ reusable-offline-pack.yml
-      🧹 reusable-maintenance.yml
+📁 .github/
+└── 📁 workflows/
+    ├── 📄 ci.yml                          # PR entrypoint (calls reusable workflows)
+    ├── 📄 release.yml                     # release entrypoint (calls reusable workflows)
+    ├── 📄 kfm__docs__validate.yml          # ♻️ reusable (workflow_call)
+    ├── 📄 kfm__metadata__validate.yml      # ♻️ reusable (workflow_call)
+    ├── 📄 kfm__api__contract_tests.yml     # ♻️ reusable (workflow_call)
+    ├── 📄 kfm__security__governance.yml    # ♻️ reusable (workflow_call)
+    └── 📁 reusables/
+        └── 📄 README.md                   # 📍 this doc (index + rules)
 ```
 
-> [!TIP]
-> Keep **caller workflows** in `.github/workflows/*.yml` **thin** (routing + job selection), and put the real work in these reusables.
-
 ---
 
-## 🚀 Quickstart: calling a reusable workflow
+## 🔁 How to call a reusable workflow (local)
 
-A caller workflow can “import” a reusable like this:
+Reusable workflows are called **at the job level** via `uses:`.
 
 ```yaml
-name: CI
-
-on:
-  pull_request:
-  push:
-    branches: [main]
-
 jobs:
-  ui:
-    uses: ./.github/workflows/reusables/reusable-node-ci.yml
+  docs-gate:
+    name: 🧾 Docs Gate
+    uses: ./.github/workflows/kfm__docs__validate.yml
     with:
-      working-directory: ui
-      node-version: "20"
-    secrets: inherit
-
-  api:
-    uses: ./.github/workflows/reusables/reusable-python-ci.yml
-    with:
-      working-directory: api
-      python-version: "3.12"
-    secrets: inherit
-
-  governance:
-    uses: ./.github/workflows/reusables/reusable-policy-pack.yml
-    with:
-      policy_dir: api/scripts/policy
-      targets: |
-        data/**/*.json
-        data/**/*.yaml
-        docs/**/*.md
+      changed_only: true
     secrets: inherit
 ```
 
----
+### 🌍 Cross-repo calls (shared org patterns)
 
-## 🧠 KFM workflow philosophy (why these gates exist)
-
-KFM is built around **“the map behind the map”** 🗺️ — every layer, story, and AI answer should remain traceable to its sources and transforms.
-
-These reusables reflect a few core rules:
-
-### 1) 🧬 Provenance-first (everything is an auditable event)
-- Data + metadata updates are treated as first-class changes.
-- We track and attach **run manifests**, checksums, and PROV records.
-- Pull Requests can be represented as **PROV Activities**, commits as **Entities**, and authors/reviewers as **Agents** (so devops becomes queryable lineage).
-
-### 2) 🔒 Fail-closed policy gates (policy is “just another test”)
-- Governance rules are enforced automatically.
-- If a license is missing, a sensitivity tag is absent, or a schema is invalid → CI fails (no “silent drift”).
-
-### 3) 🗺️ Data ≠ code (but it’s still versioned like code)
-- KFM’s pipeline expects standard metadata triplets:
-  - **STAC** (spatiotemporal indexing)
-  - **DCAT** (discoverability + distribution)
-  - **PROV** (lineage + reproducibility)
-
-### 4) 🧠 AI is not exempt
-- Focus Mode uses **hybrid retrieval / RAG** (graph + GIS + doc search).
-- Answers must remain **citation-backed** and governed (prompt-security gates, sensitivity rules, etc.).
-
----
-
-## 🔁 Pipeline at a glance
-
-```mermaid
-flowchart LR
-  PR[🔀 Pull Request] --> CALL[📞 Caller workflow]
-  CALL --> RW[♻️ Reusable workflows]
-
-  RW --> POL[🔒 Policy Pack (OPA/Conftest)]
-  RW --> TEST[🧪 Unit/Integration/E2E]
-  RW --> META[🗂 STAC/DCAT/PROV Validate]
-  RW --> PROV[🧬 PROV + Run Manifest]
-  RW --> BUILD[📦 Build + SBOM + Sign]
-
-  META --> PG[(🗺️ PostGIS)]
-  META --> N4J[(🧠 Neo4j)]
-  BUILD --> OCI[(📦 OCI Registry)]
+```yaml
+jobs:
+  security-gate:
+    uses: my-org/kansas-frontier-matrix/.github/workflows/kfm__security__governance.yml@v13.0.0
+    with:
+      severity_threshold: high
+    secrets: inherit
 ```
 
----
-
-## 🧩 Reusable workflow catalog (recommended set)
-
-> [!NOTE]
-> File names can evolve — what matters is **consistent responsibility boundaries**. If you add/rename a reusable, update this table ✅
-
-| Category | Reusable (suggested) | What it enforces | Typical triggers |
-|---|---|---|---|
-| 🔒 Governance | `reusable-policy-pack.yml` | OPA/Conftest rules, FAIR+CARE, secrets scanning, license checks, required metadata fields | PR / Push |
-| 🧬 Provenance | `reusable-provenance-pr.yml` | PR → PROV JSON-LD, run manifests, canonical hashes, attach artifacts | PR / Push |
-| 🧪 API CI | `reusable-python-ci.yml` | lint + tests + typecheck + coverage (FastAPI / data tooling) | PR / Push |
-| 🧪 UI CI | `reusable-node-ci.yml` | lint + typecheck + tests + build (React/TS, MapLibre/Cesium UI) | PR / Push |
-| 🗂 Metadata | `reusable-stac-dcat-prov-validate.yml` | schema + link validation, catalog integrity, evidence linkage | PR / Push |
-| 🧱 Graph | `reusable-graph-import-dryrun.yml` | Neo4j CSV import sanity checks, stable ID validation, optional Cypher smoke tests | PR |
-| 🗺️ Geodata | `reusable-geo-build.yml` | build/validate PMTiles/MBTiles/COG/GeoParquet artifacts | PR / Push |
-| 🧠 AI | `reusable-ai-eval.yml` | RAG regression suite, citation rules, prompt-gate checks, drift/safety checks | PR / Nightly |
-| 📦 Release | `reusable-build-sign-publish.yml` | Docker build, SBOM, signing, publish to GHCR/OCI, attach attestations | Push / Tag |
-| 🛰️ Offline | `reusable-offline-pack.yml` | creates offline bundles (tiles + story nodes + minimal UI) and publishes as artifact | Release |
-| 🧹 Maintenance | `reusable-maintenance.yml` | dependency updates, scheduled health checks, graph QA, doc link checks | Scheduled |
+> 💡 **Tip:** Use tags/releases for “stable contracts” (`@v13.0.0`).  
+> For maximum security, pin to a commit SHA.
 
 ---
 
-## 🧷 Inputs, outputs, and conventions
+## 🧾 Workflow contract conventions (KFM standard)
 
-### ✅ Naming
-- Prefer: `reusable-<domain>-<action>.yml`
-  - e.g., `reusable-python-ci.yml`, `reusable-policy-pack.yml`
+Reusable workflows are “mini APIs”. Treat them like **contract artifacts**.
 
-### 🧾 Standard inputs
-Keep inputs:
-- **explicit**
-- **typed**
-- **documented**
-- stable across repos (future “Frontier Matrix” forks)
+### ✅ File naming
 
-Suggested baseline inputs:
-- `working-directory` (string)
-- `python-version` / `node-version` (string)
-- `run-tests` / `run-typecheck` / `run-lint` (bool)
-- `artifact-retention-days` (number)
-- `fail-on-warnings` (bool)
+Pick one pattern and stick to it:
 
-### 📦 Standard outputs & artifacts
-Every reusable should aim to produce at least one of:
-- 🧬 `run_manifest.json` (tool versions, counts, sources, inputs/outputs)
-- 🧾 SBOM (SPDX/CycloneDX)
-- 🔏 signing metadata (cosign attestations, if enabled)
-- 🗂 validation reports (STAC/DCAT/PROV, policy failures, link checks)
-- 🧱 graph import diagnostics (CSV summary, constraint checks)
+- `kfm__<subsystem>__<verb>.yml` (recommended)
+  - Example: `kfm__metadata__validate.yml`
+- OR `kfm-<subsystem>-<verb>.yml`
 
----
+### 🧩 Inputs
 
-## 🔐 Secrets, permissions, and “kill switch” patterns
-
-### 👮 Least-privilege permissions
-Default job permissions should be minimal:
-- `contents: read`
-- `pull-requests: write` **only** if commenting on PRs
-- `id-token: write` **only** for OIDC signing / artifact attestation
-
-### 🧯 Automation kill switch (recommended)
-KFM’s automation patterns benefit from a **single, obvious kill switch** 🛑 (for agents and scheduled jobs).
+- All inputs must be:
+  - documented here (or in a sibling doc)
+  - typed (string/boolean/number)
+  - have safe defaults where possible
 
 Example pattern:
+
 ```yaml
-if: ${{ vars.KFM_AUTOMATION_ENABLED == 'true' }}
+on:
+  workflow_call:
+    inputs:
+      changed_only:
+        description: "Validate only files changed in the calling workflow context"
+        required: false
+        type: boolean
+        default: true
 ```
 
-Recommended variable:
-- `KFM_AUTOMATION_ENABLED` → `"true"` / `"false"`
+### 🔐 Secrets
 
-Use it for:
-- scheduled workflows
-- auto-PR dependency bumpers
-- background indexing or graph imports
+- Prefer `secrets: inherit` for internal calls
+- Never echo secrets to logs
+- Keep secret names stable (breaking secret names is a breaking change)
 
----
+```yaml
+on:
+  workflow_call:
+    secrets:
+      KFM_DEPLOY_TOKEN:
+        required: false
+```
 
-## 🔒 Policy Pack guidance (OPA + Conftest)
+### 📤 Outputs
 
-The Policy Pack is where KFM encodes governance:
-- ✅ metadata required fields (STAC/DCAT/PROV)
-- ✅ license allowlist (SPDX)
-- ✅ CARE sensitivity flags where needed
-- ✅ “no secrets in git” pattern checks (tokens/keys)
-- ✅ citation + evidence manifest rules for Story Nodes
-- ✅ AI output metadata rules (citations, redaction flags)
+Outputs should be:
+- stable
+- documented
+- intentionally minimal
 
-> [!IMPORTANT]
-> Policy checks should be **fail-closed** by default.
-> If exceptions are needed, add them via PR so the rules remain transparent and auditable.
+Example:
 
----
-
-## 🧬 Provenance guidance (PR lineage + run manifests)
-
-KFM treats devops artifacts as provenance:
-- PR lifecycle events can emit **PROV JSON-LD**
-- pipeline runs can produce:
-  - a canonicalized `run_manifest.json` (stable hash)
-  - artifacts that include provenance attachments
-  - optional ingestion of provenance into Neo4j
-
-This enables questions like:
-- “Which code version produced this dataset?”
-- “Which PR modified the water-quality pipeline and who reviewed it?”
-- “Which stories used this dataset?” (via evidence manifests)
+```yaml
+on:
+  workflow_call:
+    outputs:
+      report_artifact_name:
+        description: "Artifact name containing validation output"
+        value: ${{ jobs.validate.outputs.report_artifact_name }}
+```
 
 ---
 
-## 🗺️ Geospatial & graph workflows (KFM-specific expectations)
+## 🔐 Security defaults (non-negotiable vibes 🔒)
 
-KFM’s runtime is hybrid:
-- **PostGIS** for spatial performance
-- **Neo4j** for semantic relationships + lineage
+- ✅ Prefer **least-privilege** `permissions:` in every workflow
+- ✅ Avoid `pull_request_target` unless you *really* know why (secrets exposure risk)
+- ✅ Pin third-party actions (at least to a major version; ideally commit SHA)
+- ✅ Use `timeout-minutes:` for long-running jobs
+- ✅ Use `concurrency:` for expensive pipelines (avoid stampedes)
 
-Reusable workflows should support:
-- 🗂 STAC/DCAT/PROV validation before any import
-- 🧱 “dry-run” graph import checks (CSV shape + stable IDs)
-- 🛰 offline pack building (PMTiles/MBTiles + minimal metadata + story nodes)
-- 🔁 rollback friendliness (Git revert + re-sync)
+Example baseline:
 
----
+```yaml
+permissions:
+  contents: read
 
-## 🧠 AI & Focus Mode workflows (RAG, citations, safety)
-
-Focus Mode uses:
-- hybrid retrieval (graph + GIS + text)
-- caching / embeddings
-- strict traceability to sources
-
-So AI workflows should include:
-- ✅ retrieval regression tests (same question → same cited sources set, within tolerance)
-- ✅ citation policy checks
-- ✅ “prompt gate” / prompt injection hardening checks
-- ✅ drift / sanity checks for embeddings/index rebuilds (nightly)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+```
 
 ---
 
-## 🛠️ Authoring new reusables (house rules)
+## ✅ KFM CI Gates (recommended reusable workflow set)
 
-When adding a reusable workflow:
+These mirror KFM’s “minimum gates” philosophy and keep PRs **governed**.
 
-1) 📝 **Document-first**
-   - Add a header comment block (purpose, inputs, outputs, secrets, examples)
-   - Update this `README.md`
+| Gate 🧱 | What it enforces | Typical artifacts 📦 |
+|---|---|---|
+| 🧾 Docs validation | Markdown front-matter + required sections + link checks | linkcheck report |
+| 🧬 Metadata validation | STAC/DCAT/PROV schema checks | schema validation report |
+| 🕸️ Graph integrity | Neo4j fixture constraints + ontology rules | test logs |
+| 🔌 API contract tests | OpenAPI/GraphQL lint + contract fixtures | junit / coverage |
+| 🛡️ Security & governance | secrets scan + PII/sensitive content + classification propagation | scan reports |
+| 🏷️ Release hardening | SBOM + provenance attestations + signing | release bundles |
 
-2) 🧪 **Test it like code**
-   - Include at least one caller workflow in `.github/workflows/` that uses it
-   - Prove it works on PRs
-
-3) 🔒 **Pin what matters**
-   - Prefer pinned action versions
-   - Capture tool versions in `run_manifest.json`
-
-4) 📏 **Be stable across repos**
-   - If KFM is forked to another region, the reusable should still be usable with minimal edits
+> 🧠 KFM principle: **“If it’s not validated, it’s not real.”**  
+> Gates aren’t bureaucracy — they’re how we keep the knowledge base trustworthy.
 
 ---
 
-## 🧭 Related KFM docs (recommended reading)
+## 🧪 Add a new reusable workflow (checklist ✅)
 
-These workflows are designed to match KFM’s architecture and governance concepts:
+### 1) Create the workflow at top-level
+✅ `.github/workflows/kfm__<area>__<name>.yml`  
+*(Do not place workflow YAML in this folder.)*
 
-- 🗺️ UI System (React + MapLibre/Cesium, provenance in UI, offline packs)
-- 🧬 Data Intake (STAC/DCAT/PROV backbone, PostGIS + Neo4j integration, rollback)
-- 🧠 AI System (Focus Mode RAG, citations, prompt security)
-- 🔒 Governance & Security (Policy Packs, SBOM/signing, fail-closed posture)
-- 🚀 Proposals (PR → PROV graph integration, expanded automation)
-- 🧩 Idea vaults (geospatial/WebGL references, CI/CD references, language resources)
+### 2) Use the reusable trigger
+```yaml
+on:
+  workflow_call:
+```
 
-> [!TIP]
-> If you’re implementing a new reusable, look for the relevant guide in `docs/` and mirror its constraints here.
+### 3) Declare a strict contract
+- inputs
+- secrets
+- outputs (optional)
 
----
+### 4) Keep it deterministic
+- stable tooling versions
+- consistent caching strategy
+- idempotent operations where possible
 
-## ✅ Checklist (PR reviewers)
-
-Use this checklist when reviewing workflow changes:
-
-- [ ] Does it enforce or preserve provenance (artifacts + logs + stable IDs)?
-- [ ] Does it respect fail-closed governance (no silent bypass)?
-- [ ] Are permissions minimal (no broad write unless required)?
-- [ ] Are secrets handled via GitHub secrets/vars (never in repo)?
-- [ ] Are outputs reproducible (tool versions captured)?
-- [ ] Is the reusable documented + this README updated?
+### 5) Document it here 📝
+Add an entry to the index below.
 
 ---
 
-## 🧯 Troubleshooting (common gotchas)
+## 🗃️ Reusable workflow index (fill this in as you add them)
 
-- **Policy Pack failing unexpectedly** → run Conftest locally against the changed files; check required fields + allowlists.
-- **Graph import dry-run failing** → validate stable IDs & CSV headers; check relationship cardinalities.
-- **Offline pack too large** → scope inputs; build per-county/per-theme bundles; publish as OCI artifacts.
-- **AI eval “drift”** → ensure embeddings/index rebuild uses pinned model/tool versions; compare against last successful baseline.
+> ✅ Keep this list current so maintainers can quickly see what CI building blocks exist.
+
+| Workflow file (in `.github/workflows/`) | Purpose | Key inputs | Secrets |
+|---|---|---|---|
+| `kfm__docs__validate.yml` | Docs front-matter + link checks | `changed_only` | *(none)* |
+| `kfm__metadata__validate.yml` | STAC/DCAT/PROV schema validation | `domain`, `changed_only` | *(none)* |
+| `kfm__api__contract_tests.yml` | Contract lint + tests | `api_version` | *(optional)* |
+| `kfm__security__governance.yml` | Secrets/PII/classification checks | `severity_threshold` | *(optional)* |
+| `kfm__release__bundle.yml` | SBOM + attestations + packaging | `tag` | `KFM_SIGNING_KEY` |
+
+*(Replace/expand as your repo matures.)*
 
 ---
 
-### 🏁 Done
-If you’re new here: start by finding the caller workflow that matches your change, then trace into the reusable. ♻️
+## 🧰 Troubleshooting (fast fixes)
+
+<details>
+<summary><strong>❌ “workflows must be defined at the top level of the .github/workflows directory”</strong></summary>
+
+You’re trying to `uses:` a workflow stored in a subfolder (like `.github/workflows/reusables/...`).  
+✅ Move the workflow file to `.github/workflows/` and call it from there.
+
+</details>
+
+<details>
+<summary><strong>❌ Secrets missing in reusable workflow</strong></summary>
+
+- Ensure the caller passes `secrets: inherit` (or specific secrets)
+- Ensure `workflow_call.secrets` declares the secret (if you want to be explicit)
+
+</details>
+
+<details>
+<summary><strong>❌ Reusable workflow can’t see PR changed files</strong></summary>
+
+Use `actions/checkout` in the called workflow (reusable workflows don’t magically have code checked out).
+
+</details>
+
+---
+
+## 🔗 Related KFM docs (repo-internal)
+
+These are the “why” behind the gates:
+
+- 📘 `docs/MASTER_GUIDE_v13.md` — canonical pipeline & invariants
+- ⚖️ `docs/governance/ROOT_GOVERNANCE.md` — review gates + policies
+- 🧬 `docs/standards/` — STAC/DCAT/PROV profiles and schemas
+- 🧾 `docs/templates/` — governed templates (docs, Story Nodes, API extensions)
+
+---
+
+## 🧭 Maintainer note
+
+Keep CI reusable workflows boring, predictable, and well-documented 😄  
+KFM’s trust comes from repeatable validation — not clever YAML tricks.
