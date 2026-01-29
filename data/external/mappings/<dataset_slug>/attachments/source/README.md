@@ -45,11 +45,11 @@ No stage should bypass the prior stage’s artifacts ✅
 
 ```mermaid
 flowchart LR
-  A[📥 Source Attachments\nattachments/source/] --> B[🧰 ETL / Normalization\nsrc/pipelines/...]
-  B --> C[📦 Processed Outputs\ndata/processed/...]
-  C --> D[🗺️ STAC + 🧾 DCAT + 🧬 PROV\ndata/stac | data/catalog/dcat | data/prov]
-  D --> E[🕸️ Graph + API\nNeo4j + src/server]
-  E --> F[🗺️ Map UI + Story Nodes\nweb/ + docs/reports/story_nodes]
+  A["📥 Source Attachments — attachments/source/"] --> B["🧰 ETL / Normalization — src/pipelines/..."]
+  B --> C["📦 Processed Outputs — data/processed/..."]
+  C --> D["🗺️ STAC + 🧾 DCAT + 🧬 PROV — data/stac · data/catalog/dcat · data/prov"]
+  D --> E["🕸️ Graph + 🔌 API — Neo4j + src/server"]
+  E --> F["🗺️ Map UI + 📖 Story Nodes — web/ + docs/reports/story_nodes"]
 ```
 
 ---
@@ -73,14 +73,19 @@ flowchart LR
 ## 📁 Recommended file layout
 
 ```text
-data/external/mappings/<dataset_slug>/attachments/source/
-├── README.md
-├── source_manifest.yml            # provenance + file inventory (required)
-├── checksums.sha256               # integrity hashes (required)
-├── LICENSE.txt                    # license text or a link stub (required)
-├── TERMS.txt                      # terms of use / access notes (recommended)
-├── CITATION.bib                   # upstream citation (if provided)
-└── snapshots/                     # optional: HTML/PDF snapshots of landing pages
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📁 <dataset_slug>/                               🧩 dataset mapping + evidence bundle
+         └─ 📁 attachments/
+            └─ 📁 source/                                 🧾 upstream evidence (license, terms, provenance, snapshots)
+               ├─ 📄 README.md                             📘 how to use/cite these attachments
+               ├─ 🧾 source_manifest.yml                   ✅ required: provenance + file inventory (what/when/where)
+               ├─ 🔐 checksums.sha256                      ✅ required: integrity hashes for every file here
+               ├─ 📄 LICENSE.txt                           ✅ required: license text (or a link stub if text unavailable)
+               ├─ 📄 TERMS.txt                             ◻️ optional (recommended): terms of use / access notes
+               ├─ 📄 CITATION.bib                          ◻️ optional: upstream citation (if provided)
+               └─ 📁 snapshots/                            ◻️ optional: HTML/PDF snapshots of landing pages
 ```
 
 ---
