@@ -85,20 +85,24 @@ Keep this directory focused on **small, stable, text-first reference artifacts**
 You can keep keys flat, or group them (recommended). Here’s a **suggested** layout:
 
 ```text
-data/external/mappings/census/keys/
-├── README.md
-├── manifest.yml                  # optional: index of keys in this folder
-├── geography/                     # FIPS / GEOID / summary levels
-│   ├── fips_state__YYYY.csv
-│   ├── fips_county__YYYY.csv
-│   ├── geoid_formats__canonical.yml
-│   └── summary_levels__canonical.csv
-├── variables/                     # table/variable dictionaries
-│   ├── acs_tables__YYYY.csv
-│   └── acs_variables__YYYY.csv
-└── crosswalks/                    # vintage-to-vintage mappings
-    ├── tract__YYYY_to_YYYY.csv
-    └── block_group__YYYY_to_YYYY.csv
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 census/                                       🧮 Census/TIGER mapping packs + key registries
+         └─ 🔑 keys/                                      🗝️ canonical IDs, variable dictionaries, and crosswalks
+            ├─ 📄 README.md                                📘 how to use keys + update cadence + citations
+            ├─ 🧾 manifest.yml                             ◻️ optional: index of keys in this folder (what/when/source)
+            ├─ 📁 geography/                               🧭 FIPS / GEOID / summary levels (canonical formats)
+            │  ├─ 📄 fips_state__YYYY.csv                   🏷️ state FIPS codes (vintage-specific)
+            │  ├─ 📄 fips_county__YYYY.csv                  🏷️ county FIPS codes (vintage-specific)
+            │  ├─ 🧩 geoid_formats__canonical.yml           ✅ GEOID format rules (padding, components, validation)
+            │  └─ 📄 summary_levels__canonical.csv          🧱 summary-level codes (e.g., state/county/tract/bg/block)
+            ├─ 📁 variables/                               🧾 ACS table + variable dictionaries (metadata)
+            │  ├─ 📄 acs_tables__YYYY.csv                   📚 ACS table catalog (ids, titles, universes)
+            │  └─ 📄 acs_variables__YYYY.csv                🧮 ACS variable catalog (names, labels, types, notes)
+            └─ 📁 crosswalks/                              🔁 vintage-to-vintage mappings (boundary/ID changes)
+               ├─ 📄 tract__YYYY_to_YYYY.csv                🧭 tract crosswalk (old → new GEOIDs + weights if available)
+               └─ 📄 block_group__YYYY_to_YYYY.csv          🧭 block group crosswalk (old → new GEOIDs + weights)
 ```
 
 If you prefer a flat folder, keep the **same naming + metadata rules** below.
