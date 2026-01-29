@@ -56,29 +56,32 @@ Raw can be grouped **by topic** or **by source**. Keep it predictable and greppa
 
 **Option A — by domain then dataset (preferred for scaling):**
 ```
-data/raw/
-  weather/ 🌦️
-    rainfall_1850_2020/
-      rainfall_1850_2020.csv
-      checksums.sha256
-      SOURCE.md
+📁 data/
+└─ 📁 raw/
+   └─ 🌦️ weather/                         🌧️ weather + climate source snapshots (read-only)
+      └─ 📁 rainfall_1850_2020/            🧾 dataset snapshot (immutable)
+         ├─ 📄 rainfall_1850_2020.csv      📦 raw tabular artifact (unaltered)
+         ├─ 📄 checksums.sha256            🔐 sha256 for every file in this snapshot
+         └─ 📄 SOURCE.md                   ✅ acquisition notes + upstream reference + license pointer
 ```
 
 **Option B — by source system (often best for agencies/vendors):**
 ```
-data/raw/
-  usgs_water/ 💧
-    ...
-  noaa_climate/ 🌪️
-    ...
+📁 data/
+└─ 📁 raw/
+   ├─ 💧 usgs_water/                       🛰️ USGS water datasets (read-only snapshots)
+   │  └─ 📦 ...                             ➕ dataset snapshots (immutable folders; never overwrite)
+   └─ 🌪️ noaa_climate/                     🌎 NOAA climate datasets (read-only snapshots)
+      └─ 📦 ...                             ➕ dataset snapshots (immutable folders; never overwrite)
 ```
 
 **Option C — by artifact type (good for scanned map libraries):**
 ```
-data/raw/
-  historical_maps/ 🗺️
-    1930_county_map.pdf
-    1885_rr_atlas.tif
+📁 data/
+└─ 📁 raw/
+   └─ 🗺️ historical_maps/                  📜 historical map scans (read-only / unaltered)
+      ├─ 📄 1930_county_map.pdf             🧾 raw scanned map (PDF)
+      └─ 🖼️ 1885_rr_atlas.tif               🗺️ raw raster scan (TIFF)
 ```
 
 ---
