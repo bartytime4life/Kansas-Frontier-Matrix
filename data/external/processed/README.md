@@ -92,14 +92,16 @@ If you want it to become **evidence** that can power **graph/API/UI**, it needs 
 Keep the structure predictable so future you (and CI) can reason about it:
 
 ```text
-📁 data/external/processed/
-  📁 <domain>/                     # e.g., historical, environmental, transportation
-    📁 <dataset_slug>/              # short + stable identifier (snake_case)
-      📁 vYYYYMMDD/                 # date-based version OR vX.Y.Z
-        📄 <dataset_slug>.<ext>     # primary artifact
-        📄 checksums.sha256         # sha256 for every artifact (incl. pointers)
-        📄 dataset.meta.yaml        # required sidecar (see template below)
-        📄 README.md                # optional dataset-level runbook
+📁 data/
+└─ 📁 external/
+   └─ 📁 processed/                                   ✅ promoted external outputs (ready for DB/API/UI)
+      └─ 📁 <domain>/                                 🧭 thematic bucket (e.g., historical/, environmental/, transportation/)
+         └─ 📁 <dataset_slug>/                         🏷️ short + stable identifier (snake_case)
+            └─ 📁 vYYYYMMDD/                            🧊 date-based version (or 📁 vX.Y.Z for semver)
+               ├─ 📄 <dataset_slug>.<ext>               📦 primary artifact (GeoParquet/COG/PMTiles/CSV/etc.)
+               ├─ 📄 checksums.sha256                   ✅ required: sha256 for every artifact (incl. pointers)
+               ├─ 📄 dataset.meta.yaml                  ✅ required: sidecar metadata (schema, lineage, governance)
+               └─ 📄 README.md                          ◻️ optional: dataset-level runbook + caveats + usage notes
 ```
 
 **Versioning tips 🏷️**
