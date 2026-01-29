@@ -243,9 +243,9 @@ KFM CI is expected to validate:
 
 ```
 📁 data/
-  📁 catalog/
-    📁 stac/
-      📁 collections/   👈 (this README)
-      📁 items/
+└─ 📁 catalog/
+   └─ 📁 stac/                             🛰️ STAC catalog (geospatial discovery)
+      ├─ 📁 collections/                    👈 you are here (this README)
+      └─ 📁 items/                          📦 STAC Items (per asset/scene/tile)
 ```
 
