@@ -56,29 +56,29 @@ USGS has **retired** the legacy-maintenance workflow for NHD (it remains availab
 This dataset follows the KFM staging pattern, namespaced under `data/external/`:
 
 ```text
-data/
-└─ external/
-   ├─ raw/
-   │  └─ usgs/
-   │     └─ datasets/
-   │        └─ nhd_legacy/                 📦 downloaded zips live here (do not commit)
-   ├─ work/
-   │  └─ usgs/
-   │     └─ datasets/
-   │        └─ nhd_legacy/                 🧪 scratch / intermediate outputs
-   ├─ processed/
-   │  └─ usgs/
-   │     └─ datasets/
-   │        └─ nhd_legacy/                 ✅ normalized outputs used by KFM
-   └─ mappings/
-      └─ usgs/
-         └─ datasets/
-            └─ nhd_legacy/
-               ├─ README.md                👈 you are here
-               ├─ (future) layer_map.yml
-               ├─ (future) field_map.yml
-               ├─ (future) etl_config.yml
-               └─ (future) validation/     🔎 SQL / geopandas checks, etc.
+📁 data/
+└─ 📁 external/
+   ├─ 📁 raw/
+   │  └─ 📦 usgs/                                   🛰️ USGS source drops (read-only snapshots)
+   │     └─ 📁 datasets/
+   │        └─ 📁 nhd_legacy/                        📦 downloaded zips live here (do not commit)
+   ├─ 📁 work/
+   │  └─ 📦 usgs/                                   🧪 USGS staging workspace (scratch + rebuildable)
+   │     └─ 📁 datasets/
+   │        └─ 📁 nhd_legacy/                        🧪 scratch / intermediate outputs
+   ├─ 📁 processed/
+   │  └─ 📦 usgs/                                   ✅ USGS promoted outputs (downstream-ready)
+   │     └─ 📁 datasets/
+   │        └─ 📁 nhd_legacy/                        ✅ normalized outputs used by KFM
+   └─ 📁 mappings/
+      └─ 📦 usgs/                                   🧩 mapping packs + ETL/QA plans (USGS)
+         └─ 📁 datasets/
+            └─ 📁 nhd_legacy/                        🧭 dataset mapping bundle (NHD legacy)
+               ├─ 📄 README.md                        👈 you are here
+               ├─ 🧩 layer_map.yml                    🧱 (future) layer/feature-class map → KFM layers
+               ├─ 🧩 field_map.yml                    🧬 (future) field mapping → KFM canonical schema
+               ├─ 🧩 etl_config.yml                   ⚙️ (future) ETL parameters (CRS, filters, outputs)
+               └─ 📁 validation/                      🔎 (future) SQL/GeoPandas checks + expectations
 ```
 
 And the **required KFM “boundary artifacts”** must be written to canonical locations:
