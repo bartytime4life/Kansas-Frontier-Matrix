@@ -39,14 +39,14 @@ Use this folder as the **scratch + cache layer** for OpenTopography pulls, *then
 
 ```mermaid
 flowchart LR
-  OT[🌐 OpenTopography] -->|Fetch bbox / tiles| CACHE[📦 Local Cache<br/>data/external/.../opentopography]
-  CACHE -->|Promote| RAW[📥 data/raw]
-  RAW -->|ETL / standardize| PROC[✅ data/processed]
-  PROC --> META[🧾 data/catalog<br/>(STAC/DCAT)]
-  PROC --> PROV[🔗 data/provenance<br/>(PROV)]
-  PROC --> DB[(🗄 PostGIS / Graph / Search)]
-  DB --> API[🧩 API Layer]
-  API --> UI[🗺 UI]
+  OT["🌐 OpenTopography"] -->|"Fetch bbox / tiles"| CACHE["📦 Local Cache — data/external/.../opentopography"]
+  CACHE -->|"Promote"| RAW["📥 data/raw"]
+  RAW -->|"ETL / standardize"| PROC["✅ data/processed"]
+  PROC --> META["🧾 data/catalog (STAC/DCAT)"]
+  PROC --> PROV["🔗 data/provenance (PROV)"]
+  PROC --> DB["🗄️ PostGIS / Graph / Search"]
+  DB --> API["🧩 API Layer"]
+  API --> UI["🗺️ UI"]
 ```
 
 ---
@@ -54,16 +54,20 @@ flowchart LR
 ## 🗂️ Recommended folder layout
 
 ```text
-📦 data/external/mappings/local/opentopography/
-├─ 📄 README.md
-├─ 📂 cache/                 # primary cache (GeoTIFF, LAZ, COPC, etc.)
-│  ├─ 📂 dem/
-│  ├─ 📂 derived/             # hillshade/slope/contours made locally
-│  └─ 📂 pointcloud/
-├─ 📂 manifests/             # small, git-friendly manifests (optional)
-│  ├─ 📄 requests.jsonl       # one line per request (bbox, dataset, output, hash)
-│  └─ 📄 checksums.sha256
-└─ 📂 tmp/                   # safe to delete any time
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 local/
+         └─ 📁 opentopography/                         🗻 OpenTopography workflows + local caching
+            ├─ 📄 README.md                             📘 overview, conventions, and how to run fetch/derive steps
+            ├─ 📁 cache/                                🧊 primary cache (GeoTIFF, LAZ, COPC, etc.)
+            │  ├─ 📁 dem/                               🏔️ DEM tiles / rasters pulled from OpenTopography
+            │  ├─ 📁 derived/                           🧱 locally-derived products (hillshade/slope/contours)
+            │  └─ 📁 pointcloud/                        ☁️ point cloud downloads (LAZ/COPC)
+            ├─ 📁 manifests/                            ◻️ optional: git-friendly request + integrity manifests
+            │  ├─ 📄 requests.jsonl                      🧾 one line per request (bbox, dataset, output, hash)
+            │  └─ 📄 checksums.sha256                    🔐 hashes for cached artifacts referenced by manifests
+            └─ 📁 tmp/                                  🗑️ safe to delete any time (scratch / staging)
 ```
 
 > [!TIP]
