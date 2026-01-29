@@ -1,5 +1,3 @@
-> According to a document retrieved on **2026-01-29**, KFM’s design requires a reproducible, provenance-first pipeline and a strict ordering from raw → processed → catalog/provenance → database → API → UI:contentReference[oaicite:0]{index=0}. This spec adds a **pre-raw staging workspace** that stays aligned with those constraints.
-
 # 🧰 `data/external/work/` Workdir Convention (KFM)
 
 ![Status](https://img.shields.io/badge/status-draft-informational)
