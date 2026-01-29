@@ -33,11 +33,11 @@ flowchart LR
 ## 📁 Directory context
 
 ```text
-data/
-└── external/
-    └── mappings/
-        └── climate/
-            └── dcat/          👈 you are here
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🌦️ climate/                      🌎 climate mapping packs + publishing plans
+         └─ 📁 dcat/                       👈 you are here (DCAT templates/plans for climate datasets)
 ```
 
 ### ✅ Expected contents (in this folder)
