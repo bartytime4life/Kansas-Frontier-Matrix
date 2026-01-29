@@ -40,18 +40,18 @@ A dataset isn’t considered “published” until it has:
 
 ```text
 data/
-├── raw/                      # source snapshots (read-only)
-├── work/                     # optional intermediate artifacts
-├── processed/                # final outputs consumed by DB/API/UI
-├── stac/                     # STAC Collections + Items (geospatial catalog)
-│   ├── collections/
-│   └── items/
-├── prov/                     # provenance bundles (W3C PROV-style)
-└── catalog/                  # discovery catalog (DCAT)
-    ├── dcat/
+├── raw/                      # 🧾 Source snapshots (immutable / read-only)
+├── work/                     # 🧪 Optional scratch + intermediate artifacts (ephemeral)
+├── processed/                # ✅ Final outputs consumed by DB/API/UI
+├── stac/                     # 🛰️ STAC Collections + Items (geospatial catalog)
+│   ├── collections/          # 🧩 Collection JSON (grouping + semantics)
+│   └── items/                # 📦 Item JSON (per asset/scene/tile/chunk)
+├── prov/                     # 🧬 Provenance bundles (W3C PROV-style receipts)
+└── catalog/                  # 🗂️ Discovery catalog (DCAT)
+    ├── dcat/                 # 🧾 DCAT JSON-LD datasets (discovery + governance fields)
     │   ├── <dataset-id>.jsonld
     │   └── ...
-    └── README.md
+    └── README.md             # 📘 Catalog rules & publishing conventions
 ```
 
 ---
