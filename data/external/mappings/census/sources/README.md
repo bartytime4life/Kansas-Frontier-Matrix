@@ -272,20 +272,21 @@ A source is “registered” when it has:
 ## 🧩 Suggested folder naming pattern (optional, but recommended)
 
 ```text
+```text
 📁 sources/
-├── 📁 uscb/
-│   ├── 📁 tigerline/
-│   │   ├── 📁 2025/
-│   │   │   ├── 📄 source.uscb_tigerline_2025_county.yaml
-│   │   │   ├── 📄 download.md
-│   │   │   └── 📄 schema_notes.md
-│   └── 📁 acs_api/
-│       ├── 📄 source.uscb_acs_api.yaml
-│       ├── 📄 queries.md
-│       └── 📄 variables_snapshot.md
-└── 📁 nhgis/
-    ├── 📄 source.nhgis_extract_<id>.yaml
-    └── 📄 license_notes.md
+├─ 📁 uscb/                                              🏛️ U.S. Census Bureau sources (USCB)
+│  ├─ 📁 tigerline/                                       🗺️ TIGER/Line boundary products + notes
+│  │  └─ 📁 2025/                                         🗓️ vintage/year bucket (update as new vintages arrive)
+│  │     ├─ 📄 source.uscb_tigerline_2025_county.yaml      ✅ source record (what/where/how acquired + citations)
+│  │     ├─ 📄 download.md                                📥 retrieval steps (URLs, commands, mirrors; no secrets)
+│  │     └─ 📄 schema_notes.md                             🧾 field/geometry quirks + normalization notes
+│  └─ 📁 acs_api/                                         📊 ACS API source + query playbooks
+│     ├─ 📄 source.uscb_acs_api.yaml                       ✅ source record (endpoints, params, rate limits, citations)
+│     ├─ 📄 queries.md                                     🧪 saved query recipes + examples (sanitized)
+│     └─ 📄 variables_snapshot.md                          📚 variable notes/snapshots (what changed + why it matters)
+└─ 📁 nhgis/                                              🧭 NHGIS extracts + licensing notes
+   ├─ 📄 source.nhgis_extract_<id>.yaml                    ✅ extract record (ID, geography, vintage, retrieval notes)
+   └─ 📄 license_notes.md                                  📜 license interpretation + citations/links
 ```
 
 > [!NOTE]
