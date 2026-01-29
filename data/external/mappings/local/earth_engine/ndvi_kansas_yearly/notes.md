@@ -1,18 +1,3 @@
-<!--
-📄 File: data/external/mappings/local/earth_engine/ndvi_kansas_yearly/notes.md
-🎯 Purpose: Runbook + dataset contract notes for generating **yearly NDVI composites for Kansas** via Google Earth Engine (GEE),
-            and aligning outputs with KFM-style provenance + catalog expectations.
--->
-
----
-title: "🌿 NDVI Kansas — Yearly Composites (Google Earth Engine)"
-dataset_id: "ndvi_kansas_yearly"
-repo_path: "data/external/mappings/local/earth_engine/ndvi_kansas_yearly/"
-status: "draft"
-cadence: "yearly"
-data_type: "raster time-series"
----
-
 # 🌿 NDVI Kansas — Yearly Composites (Google Earth Engine)
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
