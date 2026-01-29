@@ -37,6 +37,7 @@ This folder is the **first landing zone** for *new* external agriculture-related
 
 Create **one folder per source drop**:
 
+```text
 📁 data/
 └─ 📁 external/
    └─ 📁 mappings/
@@ -53,6 +54,7 @@ Create **one folder per source drop**:
 
 > [!TIP]
 > Prefer `provider__dataset__YYYY-MM-DD` (or `provider__dataset__vX.Y__YYYY-MM-DD`) so diffs and audits stay clean.
+```
 
 ---
 
