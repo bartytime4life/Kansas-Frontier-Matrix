@@ -1,28 +1,3 @@
----
-title: "📸 Screenshots Index — External Mapping: <dataset_slug>"
-path: "data/external/mappings/<dataset_slug>/attachments/screenshots/index.md"
-version: "v0.1.0"
-last_updated: "2026-01-29"
-status: "draft" # draft | active | deprecated
-doc_kind: "EvidenceIndex"
-license: "CC-BY-4.0" # applies to this index.md text; screenshots may have different rights—see manifest
-dataset_slug: "<dataset_slug>"
-source_kind: "external"
-timezone: "America/Chicago"
-
-# Governance & policy refs (repo-local)
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_ref: "docs/governance/SOVEREIGNTY.md"
-
-# Content classification (defaults — adjust per dataset)
-sensitivity: "TBD"     # public | internal | restricted
-classification: "TBD"  # open | controlled | confidential
-
-doc_uuid: "urn:kfm:doc:evidence:screenshots:<dataset_slug>:v0.1.0"
-doc_integrity_checksum: "sha256:<to-be-filled>"
----
-
 # 📸 Screenshots — `<dataset_slug>`
 
 ![Evidence](https://img.shields.io/badge/evidence-screenshots-6f42c1)
