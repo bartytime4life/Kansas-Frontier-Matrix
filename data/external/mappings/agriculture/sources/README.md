@@ -49,14 +49,14 @@ Think of this as the **single source-of-truth for upstream origin metadata** bef
 
 ```mermaid
 flowchart LR
-  A[External provider 🌐] --> B[This folder: source registry 🧾]
-  B --> C[data/raw/agriculture/... 🧊]
-  C --> D[data/work/agriculture/... 🛠️]
-  D --> E[data/processed/agriculture/... ✅]
-  E --> F[Boundary artifacts 🗂️\nSTAC + DCAT + PROV]
-  F --> G[(Databases: PostGIS / Neo4j)]
-  G --> H[API]
-  H --> I[UI (MapLibre/Cesium)]
+  A["🌐 External provider"] --> B["🧾 This folder: source registry"]
+  B --> C["🧊 data/raw/agriculture/..."]
+  C --> D["🛠️ data/work/agriculture/..."]
+  D --> E["✅ data/processed/agriculture/..."]
+  E --> F["🗂️ Boundary artifacts (STAC + DCAT + PROV)"]
+  F --> G["🗄️ Databases: PostGIS / 🕸️ Neo4j"]
+  G --> H["🔌 API"]
+  H --> I["🗺️ UI (MapLibre/Cesium)"]
 ```
 
 > [!NOTE]
@@ -67,19 +67,19 @@ flowchart LR
 ## 📁 Recommended layout
 
 ```text
-data/external/mappings/agriculture/sources/
-├─ README.md                          👈 you are here
-├─ _templates/                        🧩 optional: boilerplate + examples
-│  ├─ source.template.json
-│  └─ source.template.yml
-├─ _generated/                        🤖 optional: generated indexes (do not hand-edit)
-│  └─ registry.index.json
-├─ usda_nass_cdl/                     🌽 example (folder-per-source)
-│  ├─ source.json                     🧾 required
-│  ├─ fetch.md                        ⬇️ optional
-│  ├─ checksums.sha256                🔐 recommended
-│  └─ LICENSE_OR_TERMS.md             📜 optional
-└─ ...more sources...                 ➕
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🌾 agriculture/
+         └─ 📁 sources/
+            └─ 📁 _incoming/                                      📥 staging for newly received source bundles
+               └─ 📁 <provider>__<dataset>__<version-or-date>/     🧷 one intake drop (provider + dataset + snapshot)
+                  ├─ 📁 source/                                   🧾 original files (untouched / as-received)
+                  ├─ 📁 docs/                                     📚 PDFs, codebooks, screenshots, emails-as-PDF
+                  ├─ 🧾 manifest.yml                              ✅ intake index (what’s included + where it came from)
+                  ├─ 📄 LICENSE.md                                ✅ license/terms text (or 📄 LICENSE.txt)
+                  ├─ 🔐 checksums.sha256                          ✅ sha256 for every file in this drop
+                  └─ 📄 notes.md                                  ◻️ optional (recommended): context, caveats, next steps
 ```
 
 > [!TIP]
