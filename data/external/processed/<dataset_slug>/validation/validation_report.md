@@ -1,19 +1,3 @@
----
-title: "Validation Report — <dataset_slug>"
-doc_kind: "dataset_validation_report"
-dataset_slug: "<dataset_slug>"
-dataset_title: "<Human-friendly dataset name>"
-dataset_version: "<YYYY-MM-DD | semver | git tag>"
-stage: "data/external/processed"
-validation_status: "UNKNOWN" # PASS | WARN | FAIL
-generated_at: "<YYYY-MM-DDTHH:MM:SSZ>"
-generated_by: "<tool/script name + version>"
-pipeline_ref: "<path/to/pipeline_or_notebook_or_make_target>"
-git_commit: "<sha>"
-license: "<SPDX | file ref>"
-sensitivity: "<public|internal|confidential|restricted>"
----
-
 # ✅ Validation Report — `<dataset_slug>` 🧪
 
 ![stage](https://img.shields.io/badge/stage-processed-blue)
