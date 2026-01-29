@@ -66,15 +66,19 @@ flowchart LR
 Group attachments by **dataset id/slug** to avoid collisions and keep things crawlable:
 
 ```text
-data/catalog/dcat/_attachments/
-├── README.md
-├── <dataset_id>/
-│   ├── <dataset_id>__card__v1.md
-│   ├── <dataset_id>__quicklook__v1.png
-│   ├── <dataset_id>__methodology__v1.pdf
-│   └── <dataset_id>__checksums__v1.sha256
-└── <dataset_id_v2>/
-    └── ...
+```text
+📁 data/
+└─ 📁 catalog/
+   └─ 📁 dcat/
+      └─ 📁 _attachments/                                  📎 dataset collateral for DCAT (cards, quicklooks, PDFs)
+         ├─ 📄 README.md                                    📘 what belongs here + naming/version rules
+         ├─ 📁 <dataset_id>/                                🏷️ attachments scoped to one dataset
+         │  ├─ 📄 <dataset_id>__card__v1.md                  🪪 dataset card (human-friendly summary)
+         │  ├─ 🖼️ <dataset_id>__quicklook__v1.png            👀 quicklook preview (map/plot thumbnail)
+         │  ├─ 📄 <dataset_id>__methodology__v1.pdf          📚 methodology appendix (long-form)
+         │  └─ 🔐 <dataset_id>__checksums__v1.sha256         ✅ integrity hashes for dataset attachments
+         └─ 📁 <dataset_id_v2>/                              🏷️ another dataset (or newer ID/version namespace)
+            └─ 📦 ...                                       ➕ additional collateral (same naming pattern)
 ```
 
 ### 🏷️ Naming conventions (recommended)
