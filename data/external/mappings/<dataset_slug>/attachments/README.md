@@ -54,14 +54,14 @@ flowchart LR
 You *can* keep everything flat, but this structure scales better:
 
 ```text
-attachments/
-  README.md                       # you are here ✅
-  manifest.yml                    # index of attachments (recommended)
-  checksums.sha256                # sha256 per file (recommended)
-  source/                         # original downloads / scans
-  license/                        # license text, ToS snapshots, permissions
-  screenshots/                    # webpage captures, UI captures, etc.
-  notes/                          # brief interpretation notes tied to evidence
+📁 attachments/
+├─ 📄 README.md                         ✅ you are here (what belongs here + how to cite it)
+├─ 🧾 manifest.yml                      ◻️ optional (recommended): index of attachments + provenance pointers
+├─ 🔐 checksums.sha256                  ◻️ optional (recommended): sha256 per file (integrity)
+├─ 📁 source/                           🧾 original downloads / scans (unaltered evidence)
+├─ 📁 license/                          📜 license text, ToS snapshots, permissions receipts
+├─ 📁 screenshots/                      📸 webpage captures, UI captures, map views, etc.
+└─ 📁 notes/                            📝 interpretation notes tied to evidence (keep brief + cite artifacts)
 ```
 
 > 💡 If you add subfolders, **keep them boring and predictable**. Future-you will thank you.
