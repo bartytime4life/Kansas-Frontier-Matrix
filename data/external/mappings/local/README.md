@@ -70,24 +70,27 @@ Keep this folder clean and safe:
 You can structure these mappings in a provider-first way:
 
 ```text
-📁 data/external/mappings/local/
-├── 📄 README.md
-├── 📁 opentopography/
-│   ├── 📁 dem_county_fetch/
-│   │   ├── 🧾 mapping.yaml
-│   │   ├── 🧪 example_request.json
-│   │   ├── 🧪 example_response.json
-│   │   └── 📄 notes.md
-├── 📁 earth_engine/
-│   ├── 📁 ndvi_kansas_yearly/
-│   │   ├── 🧾 mapping.yaml
-│   │   ├── 🧪 example_request.json
-│   │   └── 📄 notes.md
-└── 📁 usda_soils/
-    └── 📁 sda_component_query/
-        ├── 🧾 mapping.yaml
-        ├── 🧪 example_request.json
-        └── 📄 notes.md
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 local/                                   🏛️ local/partner/API-driven mappings + examples
+         ├─ 📄 README.md                              📘 overview + conventions for local mapping packs
+         ├─ 📁 opentopography/                        🗻 OpenTopography workflows + request/response examples
+         │  └─ 📁 dem_county_fetch/                   🧭 county DEM pull + normalization contract
+         │     ├─ 🧾 mapping.yaml                     ✅ mapping pack (fields, params, outputs, validation)
+         │     ├─ 🧪 example_request.json             🧪 example request payload (redact tokens/keys)
+         │     ├─ 🧪 example_response.json            🧪 example response payload (trimmed/sanitized)
+         │     └─ 📄 notes.md                         📝 caveats, rate limits, edge cases, troubleshooting
+         ├─ 📁 earth_engine/                          🛰️ Google Earth Engine workflows (scripts/queries as mappings)
+         │  └─ 📁 ndvi_kansas_yearly/                 🌿 NDVI yearly aggregation for Kansas
+         │     ├─ 🧾 mapping.yaml                     ✅ mapping pack (collections, bands, reducers, exports)
+         │     ├─ 🧪 example_request.json             🧪 example request/config (no credentials)
+         │     └─ 📄 notes.md                         📝 assumptions, QA checks, export formats
+         └─ 📁 usda_soils/                            🌾 USDA soils (SDA) query mappings + crosswalk notes
+            └─ 📁 sda_component_query/                🧱 soils component query → KFM soils schema
+               ├─ 🧾 mapping.yaml                     ✅ mapping pack (query, fields, types, domains)
+               ├─ 🧪 example_request.json             🧪 example query/request body (sanitized)
+               └─ 📄 notes.md                         📝 interpretation notes + known issues + validation tips
 ```
 
 ### 🏷️ Naming conventions
