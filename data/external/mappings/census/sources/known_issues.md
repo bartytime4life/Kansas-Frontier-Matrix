@@ -25,12 +25,12 @@
 ## 📁 Where this file lives
 
 ```text
-🗂️ data/
-  🌐 external/
-    🗺️ mappings/
-      🧮 census/
-        📦 sources/
-          📄 known_issues.md   👈 you are here
+📁 data/
+└─ 🌐 external/
+   └─ 🗺️ mappings/
+      └─ 🧮 census/                           🧾 Census sources + mapping guidance
+         └─ 📦 sources/                       📚 source documentation + caveats
+            └─ 📄 known_issues.md              👈 you are here (quirks, gotchas, and mitigation notes)
 ```
 
 This document tracks **known issues** found when acquiring, importing, normalizing, and joining Census-related sources (geometry + attributes) in the KFM pipeline.
