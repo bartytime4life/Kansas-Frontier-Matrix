@@ -26,14 +26,14 @@ Field maps keep those differences **explicit, reviewable, and reproducible** so 
 
 ```mermaid
 flowchart LR
-  A[📥 data/raw/<source>/] --> B[🧪 pipelines/* import + clean]
-  B --> C[📦 data/processed/census/]
-  C --> D[🧾 data/catalog/ (STAC-ish metadata)]
-  C --> E[🧬 data/provenance/ (lineage logs)]
-  D --> F[(🗄️ Database)]
+  A["📥 data/raw/{source}/"] --> B["🧪 pipelines/ — import + clean"]
+  B --> C["📦 data/processed/census/"]
+  C --> D["🧾 data/catalog/ (STAC-ish metadata)"]
+  C --> E["🧬 data/provenance/ (lineage logs)"]
+  D --> F["🗄️ Database"]
   E --> F
-  F --> G[🔌 API]
-  G --> H[🗺️ UI]
+  F --> G["🔌 API"]
+  G --> H["🗺️ UI"]
 ```
 
 **Field maps are consumed in step B** (“import + clean”) to rename fields, cast types, normalize units, and document meaning **without hiding changes inside code-only logic**. Deterministic pipelines and the canonical order above are required for KFM-style workflows. :contentReference[oaicite:1]{index=1}
@@ -45,18 +45,18 @@ flowchart LR
 > (Your exact contents may evolve, but keep the *intent* consistent: small, diffable mapping artifacts.)
 
 ```text
-📦 data/
-└─ 📂 external/
-   └─ 📂 mappings/
-      └─ 📂 census/
-         └─ 📂 field_maps/
-            ├─ 📄 README.md  👈 you are here
-            ├─ 📄 <dataset>__<vintage>__<geo>__<table>.yml
-            ├─ 📄 <dataset>__<vintage>__<geo>__<table>.json
-            ├─ 📂 examples/
-            │  └─ 📄 demo__1900__county__population.yml
-            └─ 📂 schemas/
-               └─ 📄 field_map.schema.json
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 census/                                         🧮 Census/TIGER mapping packs + registries
+         └─ 📁 field_maps/                                   🧩 field-level mappings (source → KFM canonical)
+            ├─ 📄 README.md                                  👈 you are here
+            ├─ 🧩 <dataset>__<vintage>__<geo>__<table>.yml    ✅ canonical field map (human-editable)
+            ├─ 📄 <dataset>__<vintage>__<geo>__<table>.json   ◻️ optional: generated/compiled map (machine-friendly)
+            ├─ 📁 examples/                                  🧪 worked examples (copy/paste starters)
+            │  └─ 🧩 demo__1900__county__population.yml       🧠 example field map (demo dataset)
+            └─ 📁 schemas/                                   🧾 validation contracts for field maps
+               └─ 📄 field_map.schema.json                   ✅ JSON Schema for *.yml field maps
 ```
 
 ---
