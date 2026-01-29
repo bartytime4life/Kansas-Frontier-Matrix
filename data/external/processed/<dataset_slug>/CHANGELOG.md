@@ -38,15 +38,18 @@ This dataset lives in:
 Recommended staging mirrors the standard pipeline layout (raw → work → processed):
 
 ```text
-data/
-  external/
-    raw/<dataset_slug>/            # immutable source drops (never overwrite)
-    work/<dataset_slug>/           # intermediate transforms / scratch
-    processed/<dataset_slug>/      # publish-ready outputs ✅
-      CHANGELOG.md
-      README.md                    # dataset runbook + field dictionary
-      outputs/                     # final data artifacts (files)
-      manifests/                   # optional: checksums, row counts, schema snapshots
+📁 data/
+└─ 📁 external/
+   ├─ 📁 raw/
+   │  └─ 📁 <dataset_slug>/                    🧾 immutable source drops (never overwrite)
+   ├─ 📁 work/
+   │  └─ 📁 <dataset_slug>/                    🧪 intermediate transforms + scratch (ephemeral)
+   └─ 📁 processed/
+      └─ 📁 <dataset_slug>/                    ✅ publish-ready outputs (what downstream consumes)
+         ├─ 📄 CHANGELOG.md                     🗓️ version notes + diffs (recommended)
+         ├─ 📄 README.md                         📘 dataset runbook + field dictionary (recommended)
+         ├─ 📁 outputs/                          📦 final data artifacts (canonical distributions)
+         └─ 📁 manifests/                        ◻️ optional: checksums, row counts, schema snapshots
 ```
 
 ### 🧭 “Truth path” (how this dataset flows downstream)
