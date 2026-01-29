@@ -1,12 +1,3 @@
----
-title: "DCAT Mapping — <dataset_slug>"
-path: "data/external/mappings/<dataset_slug>/dcat_mapping.md"
-version: "v0.1.0"
-last_updated: "2026-01-29"
-status: "draft"
-doc_kind: "Mapping (DCAT)"
-license: "CC-BY-4.0"
-
 # Protocol / profiles (repo-governed)
 markdown_protocol_version: "1.0"
 dcat_profile_version: "KFM v11"
