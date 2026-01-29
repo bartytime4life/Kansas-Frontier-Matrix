@@ -43,16 +43,16 @@ sensitivity: "<public|internal|confidential|restricted>"
 
 ```text
 📁 data/
-  📁 external/
-    📁 processed/
-      📁 <dataset_slug>/
-        📄 README.md                     📝 dataset runbook (recommended)
-        📄 <dataset_slug>.<ext>          📦 primary output (csv/parquet/geojson/geopackage/tif/etc)
-        📁 validation/
-          📄 validation_report.md        ✅ you are here
-          📄 validation_summary.json     🤖 machine-readable results (recommended)
-          📄 validation_log.txt          🪵 raw validator output (recommended)
-          📄 checksums.sha256            🔐 hashes for key outputs (recommended)
+└─ 📁 external/
+   └─ 📁 processed/
+      └─ 📁 <dataset_slug>/                            ✅ promoted dataset outputs (ready for DB/API/UI)
+         ├─ 📄 README.md                                📝 dataset runbook (recommended)
+         ├─ 📄 <dataset_slug>.<ext>                     📦 primary output (csv/parquet/geojson/gpkg/tif/etc.)
+         └─ 📁 validation/                              🧪 pipeline QA artifacts + validator receipts
+            ├─ 📄 validation_report.md                   ✅ you are here (human-readable report)
+            ├─ 📄 validation_summary.json                🤖 machine-readable results (recommended)
+            ├─ 📄 validation_log.txt                     🪵 raw validator output (recommended)
+            └─ 📄 checksums.sha256                       🔐 hashes for key outputs (recommended)
 ```
 
 ---
