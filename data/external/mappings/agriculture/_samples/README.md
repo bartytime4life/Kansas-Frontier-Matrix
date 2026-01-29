@@ -1,11 +1,3 @@
----
-title: "🌾 Agriculture Mapping Samples"
-path: "data/external/mappings/agriculture/_samples/README.md"
-status: "draft"
-owner: "KFM Data Stewardship"
-last_updated: "2026-01-29"
----
-
 # 🌾 Agriculture Mapping Samples
 
 ![KFM](https://img.shields.io/badge/KFM-v13-2b6cb0)
