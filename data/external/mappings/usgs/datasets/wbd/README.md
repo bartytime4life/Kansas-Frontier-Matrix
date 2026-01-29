@@ -122,35 +122,39 @@ This README lives here:
 Recommended companion structure (add folders/files as needed):
 
 ```text
-data/
-  external/
-    mappings/
-      usgs/
-        datasets/
-          wbd/
-            README.md              👈 you are here
-            manifest.json          🧾 (optional) what we fetched, when, how
-            checksums.sha256       🔒 (optional) hashes for raw artifacts
-            notes/                 🗒️ stewardship notes, quirks, issue links
-  raw/
-    mappings/
-      usgs/
-        wbd/
-          YYYY-MM-DD/             📦 immutable download snapshot (zips/unpacked)
-  work/
-    mappings/
-      usgs/
-        wbd/
-          ...                     🧪 scratch/intermediate (not for UI/API)
-  processed/
-    mappings/
-      usgs/
-        wbd/
-          ...                     ✅ curated outputs for DB/API/UI
-  catalog/
-    ...                           🗺️ STAC/DCAT records (required for “published”)
-  provenance/
-    ...                           🧬 PROV lineage (required for “published”)
+📁 data/
+├─ 📁 external/
+│  └─ 📁 mappings/
+│     └─ 📦 usgs/
+│        └─ 📁 datasets/
+│           └─ 📁 wbd/                                   🗺️ WBD mapping + runbook bundle
+│              ├─ 📄 README.md                            👈 you are here
+│              ├─ 🧾 manifest.json                        ◻️ optional: what we fetched, when, how (index)
+│              ├─ 🔐 checksums.sha256                     ◻️ optional: hashes for key raw artifacts
+│              └─ 📁 notes/                               🗒️ stewardship notes, quirks, issue links
+│
+├─ 📁 raw/
+│  └─ 📁 mappings/
+│     └─ 📦 usgs/
+│        └─ 📁 wbd/
+│           └─ 📁 YYYY-MM-DD/                             🧾 immutable download snapshot (zips/unpacked)
+│
+├─ 📁 work/
+│  └─ 📁 mappings/
+│     └─ 📦 usgs/
+│        └─ 📁 wbd/                                       🧪 scratch/intermediate (not for UI/API)
+│           └─ 📦 ...
+│
+├─ 📁 processed/
+│  └─ 📁 mappings/
+│     └─ 📦 usgs/
+│        └─ 📁 wbd/                                       ✅ curated outputs for DB/API/UI
+│           └─ 📦 ...
+│
+├─ 📁 catalog/                                            🗺️ STAC/DCAT records (required for “published”)
+│  └─ 📦 ...
+└─ 📁 provenance/                                         🧬 PROV lineage (required for “published”)
+   └─ 📦 ...
 ```
 
 ---
