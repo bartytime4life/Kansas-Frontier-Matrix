@@ -69,23 +69,23 @@ Publishing requires promoting outputs to `data/raw/` → `data/work/` → `data/
 If you’re building this out, this is the suggested structure:
 
 ```text
-🗂️ ndvi_kansas_yearly/
-├── 📄 README.md
-├── 🧩 config/
-│   └── ndvi_kansas_yearly.yml
-├── 🧪 scripts/
-│   ├── ndvi_kansas_yearly.js          # Earth Engine Code Editor
-│   └── ndvi_kansas_yearly.py          # Python (earthengine-api / geemap)
-├── ⬇️ exports/
-│   ├── gee_drive/                      # downloaded from Drive exports
-│   └── gee_gcs/                        # pulled from GCS exports
-├── 🧱 derived/
-│   ├── cog/                            # Cloud Optimized GeoTIFFs
-│   ├── previews/                       # quick PNGs / hillshade-like previews
-│   └── stats/                          # histograms, min/max, percentiles
-└── 🧾 logs/
-    ├── runs/                           # run logs (timestamps)
-    └── checksums/                      # SHA256SUMS, manifest.json, etc.
+📁 ndvi_kansas_yearly/
+├─ 📄 README.md                              📘 runbook (scope, AOI, bands, outputs, validation)
+├─ 🧩 config/                                ⚙️ deterministic knobs (no secrets)
+│  └─ 🧩 ndvi_kansas_yearly.yml              🧠 config (collections, masks, reducers, export targets)
+├─ 🧪 scripts/                               🧰 runnable implementations (GEE + Python)
+│  ├─ 📄 ndvi_kansas_yearly.js               🛰️ Earth Engine Code Editor script
+│  └─ 🐍 ndvi_kansas_yearly.py               🐍 Python runner (earthengine-api / geemap)
+├─ ⬇️ exports/                               📤 raw exports pulled from Google (as-received)
+│  ├─ 📁 gee_drive/                          📥 downloaded from Drive exports
+│  └─ 📁 gee_gcs/                            📥 pulled from GCS exports
+├─ 🧱 derived/                               ✅ post-processing products (canonical-ready)
+│  ├─ 📁 cog/                                🧊 Cloud Optimized GeoTIFFs + overviews
+│  ├─ 📁 previews/                           👀 quick PNG previews (sanity-check visuals)
+│  └─ 📁 stats/                              📊 histograms, min/max, percentiles, summaries
+└─ 🧾 logs/                                  🧾 receipts + integrity + run traces
+   ├─ 📁 runs/                               🪵 run logs (timestamps, params, warnings)
+   └─ 📁 checksums/                          🔐 SHA256SUMS, manifest.json, inventories
 ```
 
 ---
