@@ -1,445 +1,211 @@
----
-title: "docs/data — Data Documentation & Catalog Mapping Index"
-path: "docs/data/README.md"
-version: "v1.1.0"
-last_updated: "2026-01-19"
-status: "active"
-doc_kind: "README"
-license: "CC-BY-4.0"
+# 🧰 Data Documentation Hub (`docs/data/`)
 
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
+![KFM](https://img.shields.io/badge/KFM-living%20atlas-blue)
+![Metadata](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-brightgreen)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-orange)
+![Pipeline](https://img.shields.io/badge/pipeline-no%20skips-red)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
+Welcome to the **data documentation home** for **Kansas Frontier Matrix (KFM)** — where each data domain has a runbook, each dataset has traceable metadata, and every derived artifact has provenance. KFM is explicitly designed so **evidence flows through catalogs and contracts before it reaches the graph, API, UI, or narrative layer.** [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
-
-doc_uuid: "urn:kfm:doc:docs:data:readme:v1.1.0"
-semantic_document_id: "kfm-docs-data-readme-v1.1.0"
-event_source_id: "ledger:kfm:doc:docs:data:readme:v1.1.0"
-commit_sha: "<ci:git-sha>"
-supersedes:
-  - "urn:kfm:doc:docs:data:readme:v1.0.0"
-
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
-
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
----
-
-[![Doc](https://img.shields.io/badge/docs-data%2FREADME.md-blue)](#docsdata--data-documentation--catalog-mapping-index)
-[![Status](https://img.shields.io/badge/status-active-success)](#)
-[![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-enforced-brightgreen)](#-faircare--governance)
-[![Catalog](https://img.shields.io/badge/catalog-STAC%2FDCAT%2FPROV%20v11.0.0-6f42c1)](#-stac-dcat--prov-alignment)
-[![License](https://img.shields.io/badge/license-CC--BY--4.0-lightgrey)](#)
-
-# docs/data — Data Documentation & Catalog Mapping Index
-
-> 🧭 **This folder is the governed “contract surface” for KFM data.**  
-> It documents **how** domain packs map into **STAC/DCAT/PROV**, how they bind into the **Graph**, how they’re exposed via **contract-first APIs**, and how they stay citeable in **UI → Story Nodes → Focus Mode**.
+> ✅ **This folder (`docs/data/`) is documentation** (runbooks, sources, ETL notes, governance notes).  
+> 📦 **Actual datasets live in `data/`** (raw/work/processed + catalogs/provenance). [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🚀 TL;DR
+## 🔗 Quick Links (high-signal)
 
-- ✅ `docs/data/**` explains **what a dataset is**, **how it’s governed**, and **how it maps** into KFM catalogs & runtime.
-- ❌ `docs/data/**` must **not** contain raw/intermediate/processed outputs or authoritative catalog JSON.
-- 📦 **Authoritative outputs live in `data/**`**: raw/work/processed + STAC/DCAT/PROV + graph fixtures.
-- 🧠 **AI outputs are treated as data artifacts**: they need **citations**, **provenance**, and **policy compliance**.
-- 🔒 Governance is enforced as **policy-as-code** (CI + runtime checks), and defaults to **fail-closed**.
-
----
-
-## 🔗 Quick Navigation
-
-### “Start here” docs
-- 🧭 Master guide (preferred): `docs/MASTER_GUIDE_v13.md`
-- 🧭 Master guide (legacy): `docs/MASTER_GUIDE_v12.md`
-- 📘 Glossary: `docs/glossary.md`
-- 🧩 Repo redesign blueprint: `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
-
-### Templates
-- 🧾 Universal governed doc: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- 🧠 Story Node template: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- 🧷 API contract extension template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` *(if present)*
-- 🧾 Changelog entry template: `docs/templates/TEMPLATE__CHANGELOG_ENTRY.md` *(if present)*
-
-### Canonical data + catalog outputs
-- 🗃️ Data lifecycle overview: `data/README.md`
-- 🧱 Raw / work / processed: `data/raw/` • `data/work/` • `data/processed/`
-- 🛰️ STAC: `data/stac/collections/` + `data/stac/items/`
-- 🏷️ DCAT: `data/catalog/dcat/`
-- 🧬 PROV: `data/prov/`
-
-### Governance & policy
-- ⚖ Governance root: `docs/governance/ROOT_GOVERNANCE.md`
-- 🧭 Sovereignty: `docs/governance/SOVEREIGNTY.md`
-- 🧠 Ethics: `docs/governance/ETHICS.md`
-- 🧯 Policy Pack (OPA/Rego): `api/scripts/policy/README.md` *(if present)*
+- 📘 **Master Guide v13 (canonical)** → `../MASTER_GUIDE_v13.md` [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🧾 **Metadata profiles**
+  - STAC → `../standards/KFM_STAC_PROFILE.md` [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+  - DCAT → `../standards/KFM_DCAT_PROFILE.md` [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+  - PROV → `../standards/KFM_PROV_PROFILE.md` [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- ⚖️ **Governance**
+  - Root governance → `../governance/ROOT_GOVERNANCE.md` [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+  - Ethics → `../governance/ETHICS.md` [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+  - Sovereignty → `../governance/SOVEREIGNTY.md` [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🧩 Templates
+  - Universal doc → `../templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧱 Non‑Negotiables (KFM invariants)
+## 🗺️ Canonical Pipeline (non‑negotiable)
 
-> 🛑 If any of these are violated, treat it as a **bug**, not a “style preference”.
+KFM’s **canonical pipeline ordering** is:
 
-1. **Pipeline ordering is canonical**  
-   **Raw sources → ETL/normalize → STAC → DCAT → PROV → Graph → API → UI → Story Nodes → Focus Mode**
-2. **No UI → Neo4j direct reads**  
-   UI consumes **contracted APIs only** (REST/GraphQL boundaries), so governance rules can be enforced centrally.
-3. **No “mystery layers”**  
-   Every visible UI layer must trace to **STAC/DCAT/PROV** + stable IDs (aka “the map behind the map”).
-4. **Provenance-first publishing**  
-   Nothing is promoted for Graph/API/UI without at least **stub PROV + catalog presence**.
-5. **Fail-closed governance**  
-   Missing provenance, broken links, missing license metadata, or potential secret/sensitive leakage **must block** promotion/merge.
+**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → Map UI → Story Nodes → Focus Mode** [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
----
+Any proposal or implementation that “shortcuts” this ordering is considered flawed unless explicitly justified and governed. [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-## 📌 Scope
-
-| In Scope ✅ | Out of Scope ❌ |
-|---|---|
-| Governed domain documentation & “rules of the road” | Implementing ETL jobs or API endpoints (belongs in runtime code) |
-| Mapping docs / crosswalks for STAC/DCAT/PROV | Authoritative STAC/DCAT/PROV JSON outputs (belong in `data/`) |
-| Provenance expectations & review gates | Replacing global governance policy (belongs in `docs/governance/`) |
-| Making narrative citeability resolvable via IDs | Writing Story Nodes themselves (belongs in `docs/reports/story_nodes/`) |
-
-### Audience 👥
-- **Primary:** Data contributors, catalog maintainers, governance reviewers
-- **Secondary:** Graph/API/UI contributors who need stable identifiers + provenance guarantees
-- **Tertiary:** Story Node authors + Focus Mode curators who need resolvable citations
-
----
-
-## 🗂️ What goes where
-
-### ✅ What belongs in `docs/data/`
-- Domain “identity” docs: what it is, why it exists, license posture, governance posture
-- Mapping docs: how domain assets become STAC/DCAT/PROV and how IDs are assigned
-- Provenance expectations: what must be captured; what redactions/generalizations occur
-- Downstream requirements: how API/UI/Story Nodes/Focus Mode should cite the domain
-
-### ❌ What must NOT be in `docs/data/`
-- Raw inputs, workbench artifacts, processed outputs → **`data/**`**
-- Authoritative STAC/DCAT/PROV JSON → **`data/stac/**`, `data/catalog/dcat/**`, `data/prov/**`**
-- Executable pipeline code → **`api/**`, `pipelines/**`, or repo-defined code roots**
-- Secrets, credentials, access tokens, PII → **never commit**
-
----
-
-## 🧭 Repo layout note (v13 vs legacy)
-
-KFM documentation describes a **v13 layout** where backend runtime lives under `api/**`. Older docs may reference `src/**`.
-
-Use this rule:
-- ✅ If both exist, treat **v13 paths as authoritative**
-- ✅ If only one exists, follow the repo reality — but keep links stable in docs
-
-| Concern | v13+ (preferred) | Legacy (if present) |
-|---|---|---|
-| Backend APIs + contracts | `api/` + `api/contracts/` | `src/server/` + `src/server/contracts/` |
-| Pipelines | `pipelines/` or `api/src/.../pipelines/` | `src/pipelines/` |
-| Graph ingest code | `api/src/.../graph/` | `src/graph/` |
-| UI | `web/` | `web/` |
-
----
-
-## 🧰 Expected directory pattern (docs + data)
-
-> 🧩 Keep **one canonical location per domain** for mapping docs. Link to it; don’t duplicate.
-
-~~~text
-📁 docs/
-├── 📁 data/
-│   ├── 📄 README.md   👈 (this file)
-│   ├── 📁 historical/
-│   │   └── 📁 land-treaties/
-│   │       └── 📄 README.md
-│   ├── 📁 air-quality/
-│   │   └── 📄 README.md
-│   └── 📁 soils/
-│       └── 📁 sda/
-│           └── 📄 README.md
-│
-📁 data/
-├── 📁 raw/          👈 immutable-ish source captures + checksums
-├── 📁 work/         👈 scratch + sims sandbox (NOT official)
-├── 📁 processed/    👈 publishable outputs (official)
-├── 📁 stac/
-│   ├── 📁 collections/
-│   └── 📁 items/
-├── 📁 catalog/
-│   └── 📁 dcat/
-├── 📁 prov/
-└── 📁 graph/
-    ├── 📁 csv/
-    ├── 📁 cypher/
-    └── 📄 README.md
-~~~
-
----
-
-## 🗺️ Canonical pipeline ordering (reference)
-
-> **Non-negotiable pipeline ordering:**  
-> **Raw Sources → ETL/Normalize → STAC → DCAT → PROV → Graph → API → UI → Story Nodes → Focus Mode**
-
-~~~mermaid
+```mermaid
 flowchart LR
-  RS["Upstream / Raw Sources"] --> ETL["ETL + normalization<br/>pipelines"]
-  ETL --> RAW["data/raw/"]
-  ETL --> WORK["data/work/"]
-  ETL --> PROC["data/processed/"]
+  A[📥 ETL / Normalization] --> B[🧾 STAC/DCAT/PROV Catalogs]
+  B --> C[🕸️ Neo4j Graph<br/>(references catalogs)]
+  C --> D[🧩 API Layer<br/>(contracts + redaction)]
+  D --> E[🗺️ Map UI]
+  E --> F[📝 Story Nodes]
+  F --> G[🎯 Focus Mode]
+```
 
-  PROC --> STAC["data/stac/<br/>collections + items"]
-  PROC --> DCAT["data/catalog/dcat/"]
-  ETL --> PROV["data/prov/"]
-
-  DOCS["docs/data/<br/>domain docs + mapping specs"] -. "documents + constrains" .-> STAC
-  DOCS -. "documents + constrains" .-> DCAT
-  DOCS -. "documents + constrains" .-> PROV
-
-  STAC --> GRAPH["data/graph/ + graph ingest"]
-  PROV --> GRAPH
-  GRAPH --> API["API layer<br/>(contract-first)"]
-  API --> UI["web UI<br/>(MapLibre/3D/etc)"]
-  UI --> SN["Story Nodes<br/>(docs/reports/story_nodes/)"]
-  SN --> FM["Focus Mode<br/>(evidence-linked context)"]
-~~~
+(High-level flow matches KFM’s “boundary artifact” approach: each stage consumes the previous stage’s outputs to preserve traceability.) [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🌐 STAC, DCAT & PROV Alignment
+## 📦 Data vs Docs: What lives where?
 
-### ✅ KFM “alignment policy”
-For anything intended to be discoverable, citeable, or UI-visible, KFM expects:
+### ✅ The *data* lifecycle (required staging)
 
-- **STAC**: “what assets exist, where/when they apply, how to fetch them”
-- **DCAT**: “what dataset is this at a catalog level, what are the distributions, access rights”
-- **PROV**: “how it was produced, from what, by whom/what, under what parameters”
+All data must move through these staged directories:
 
-### 🔗 Cross-layer linkage expectations
-A healthy KFM data product should allow you to walk this chain:
+- `data/raw/<domain>/` → raw source snapshots (**read-only**)
+- `data/work/<domain>/` → intermediate/transient processing outputs
+- `data/processed/<domain>/` → final, standardized outputs ready for serving/publishing [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-**UI layer → API response → graph entity → STAC item/collection → DCAT dataset → PROV bundle → raw sources**
+Raw data is treated as **write-once, read-only “evidence”** and should not be modified by pipelines. [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-> 🧠 Design intent: **graph nodes reference catalogs**, rather than duplicating heavy payloads.
+### ✅ The “boundary artifacts” (required to be considered *published*)
 
----
+At publication time, every dataset generates catalog/provenance records:
 
-## 📦 Domain pack requirements (minimum)
+- **STAC**  
+  - `data/stac/collections/` (collection-level)  
+  - `data/stac/items/` (item-level) [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **DCAT**  
+  - `data/catalog/dcat/` (dataset discovery JSON-LD catalog entries) [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **PROV**  
+  - `data/prov/` (lineage bundle: inputs, activities, agents) [oai_citation:17‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-Every domain should publish (or explicitly justify why it cannot publish) the following artifacts:
-
-### 1) Domain README (governed narrative)
-Location:
-- Preferred: `docs/data/<domain>/README.md`  
-- If a domain chooses co-location under `data/<domain>/`, then `docs/data/` must link to it and treat it as canonical.
-
-Minimum sections:
-- 🎯 **What it is** (domain definition + intended uses)
-- 🧾 **Sources & licenses** (or link to `data/<domain>/governance/SOURCES_AND_LICENSES.md`)
-- 🧬 **Provenance model** (what activities/entities are captured; what redactions happen)
-- 🛰️ **STAC model** (what is a collection vs item; assets; geometry/time semantics)
-- 🏷️ **DCAT model** (dataset identity, distributions, access rights)
-- 🧩 **Graph bindings** (what nodes/edges are created and how IDs are referenced)
-- 🧱 **API contract expectations** (endpoints/queries needed by UI & Focus Mode)
-- 🗺️ **UI layer requirements** (time slider support, legends, popups, zoom rules)
-- 🔒 **Sensitivity & sovereignty handling** (CARE label; generalized/public vs restricted)
-
-### 2) Catalog outputs (authoritative)
-- STAC collection(s) and item(s): `data/stac/**`
-- DCAT dataset record(s): `data/catalog/dcat/**`
-- PROV bundle(s): `data/prov/**`
-
-### 3) Schema + contract references
-- Schemas in: `schemas/**`
-- Data contract examples (if present): `docs/data/contracts/examples/README.md`
+> 🧠 **Legacy note (v12→v13 migrations):** older docs may refer to `data/catalog/` and `data/provenance/`. v13 standardizes the canonical homes to `data/stac/`, `data/catalog/dcat/`, and `data/prov/`. [oai_citation:18‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧾 Data contracts & schemas (contract-first 🔒)
+## 🧩 Domain Modules in `docs/data/`
 
-KFM is contract-first by design:
-- **Schemas** define what “valid data” means.
-- **Contracts** define what “valid product behavior” means (metadata fields, IDs, access rules, etc.).
-- **Policies** enforce both (CI + runtime).
+Each domain should have a concise README under `docs/data/<domain>/` describing:
 
-> ✅ Domain docs in `docs/data/**` must describe **which schemas apply** and **where validations occur**.
+- source(s) & licensing
+- ETL steps & pipeline entry points
+- quality checks & caveats
+- governance, FAIR/CARE, sovereignty considerations
+- mapping to STAC/DCAT/PROV “boundary artifacts” (optional `mappings/`) [oai_citation:20‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-Recommended doc links (if present):
-- `schemas/README.md`
-- `docs/standards/` *(profiles + protocols)*
-- `api/contracts/` *(API boundary contracts)*
+### 🌱 Existing / Example modules
 
----
+- 🏛️ `historical/land-treaties/README.md` [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🌫️ `air-quality/README.md` [oai_citation:22‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🌾 `soils/sda/README.md` [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-## 🧠 AI outputs & narratives are first-class data objects
-
-KFM treats AI-derived artifacts (summaries, extracted entities, narrative drafts, Q&A answers) as **data objects**, meaning:
-
-- They must be **labeled** as AI-generated when applicable
-- They must include **citations** (no source → no answer)
-- They should be representable in **PROV** (prov:Activity + prov:Agent + prov:Entity)
-- They should be governed by the same **policy pack** checks as human-authored outputs
-
-> 🧯 Rule of thumb: if it can influence a decision or appear in UI, it must be **traceable**.
+> 🔁 If you add a new domain module, it should be linkable from the Master Guide for visibility and stewardship clarity. [oai_citation:24‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## ⏱ Real-time (streaming) data: “many small datasets” model
+## 🧱 Recommended doc structure for a Domain README
 
-Real-time layers (sensor feeds, GTFS-RT transit, gauges, alerts) are supported without breaking provenance rules:
+Use this as a consistent “runbook skeleton” for `docs/data/<domain>/README.md`:
 
-- Streaming observations can be modeled as **STAC Items** emitted repeatedly over time
-- A corresponding **DCAT Dataset** describes the feed as a whole
-- **PROV** must exist at least as a stub or rolling bundle so the UI isn’t displaying unaudited data
-- APIs enforce classification & omissions (e.g., sensitive stations hidden from public)
-
-✅ docs/data responsibilities for streaming domains:
-- Define **update cadence**, **time semantics**, **retention**, and **how citations resolve**
-- Define **how “latest reading” queries work** (API endpoints / query patterns)
-- Define what is considered **official** vs **provisional**
-
----
-
-## 🧪 Simulations & modeling workflows (sandbox → promote)
-
-Simulations are powerful — and dangerous without guardrails.
-
-Recommended KFM posture:
-- Run sims in **workbench**: `data/work/sims/` ✅
-- Promote vetted outputs into **official data**: `data/processed/` ✅
-- Never point UI/Graph directly at `data/work/sims/` outputs ❌
-
-Minimum promotion checklist (for docs/data to require & link):
-- ✅ Stable IDs assigned
-- ✅ STAC/DCAT/PROV created
-- ✅ Inputs pinned (hashes / versions)
-- ✅ Parameters pinned (manifest)
-- ✅ Environment pinned (container/lockfile)
-- ✅ Seeds recorded (if stochastic)
-- ✅ Verification & validation notes documented
-- ✅ Uncertainty / sensitivity deliverables (if applicable)
-- ✅ Governance review completed (sensitivity/sovereignty)
+1. **Scope & datasets** (what’s in/out)
+2. **Sources** (URLs, citations, download notes)
+3. **License & usage constraints** (including redistribution)
+4. **Governance & sovereignty** (classification, redaction, sensitivity, CARE notes)
+5. **ETL / pipeline runbook**
+   - input(s): `data/raw/<domain>/...`
+   - process: scripts/notebooks + configs
+   - outputs: `data/processed/<domain>/...`
+6. **Metadata & lineage**
+   - STAC collection/items links
+   - DCAT entry links
+   - PROV bundle links
+7. **QA / validation checks**
+8. **Known limitations & uncertainty**
 
 ---
 
-## 🔒 Sensitivity, privacy & redaction
+## ✅ Dataset Publication Checklist (Definition of Done)
 
-KFM governance is not optional; it’s an engineering constraint.
+Use this checklist before opening a PR for a new dataset or update:
 
-### Classification reminders
-- **classification**: open vs restricted vs internal
-- **sensitivity**: public vs sensitive (and sublabels such as cultural/sacred, security, privacy)
-- **care_label**: use when domains intersect with sovereignty-controlled knowledge
+### 📥 Ingest
+- [ ] Raw source snapshot is stored under `data/raw/<domain>/` and treated as **read-only evidence** [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- [ ] Pipeline processes raw → processed via deterministic steps (no interactive/manual prompts) [oai_citation:26‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- [ ] **No ad-hoc edits**: processed outputs are never manually “tweaked”; fix pipeline or raw input and re-run [oai_citation:27‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### Common redaction patterns (document in domain modules)
-- 📍 **Coordinate fuzzing / aggregation** (especially for culturally sensitive sites)
-- 🧮 **k-anonymity / l-diversity / t-closeness** patterns (for tabular sensitive attributes)
-- 🔎 **Query auditing / inference control** (deny queries that enable re-identification)
-- 🗺️ **Zoom-gated geometry generalization** (public layers at coarse zoom only)
+### 📦 Output
+- [ ] Final outputs stored under `data/processed/<domain>/...` in appropriate formats (e.g., GeoJSON/Parquet/GeoTIFF as needed) [oai_citation:28‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-> 🧠 docs/data should describe *what was generalized* and ensure PROV records capture the redaction activity.
+### 🧾 Metadata (required)
+- [ ] STAC collection + item(s) exist (canonical `data/stac/...`) [oai_citation:29‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] DCAT dataset entry exists (`data/catalog/dcat/`) and includes title, description, license, keywords, distribution links [oai_citation:30‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] PROV bundle exists (`data/prov/`) and links raw → work → processed outputs [oai_citation:31‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
----
+PROV should be rich enough to answer “how was this produced?”, including:
+- **Entities** (inputs/outputs, checksums/refs)  
+- **Activities** (pipeline run info, timestamps)  
+- **Agents** (human/software) [oai_citation:32‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-## ⚖ FAIR+CARE & Governance
+### 📚 Docs
+- [ ] Domain README updated (`docs/data/<domain>/README.md`) with ETL notes, sources, governance considerations [oai_citation:33‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] If AI/analysis produced the dataset, it is treated as a first-class **evidence artifact**: stored in processed, cataloged in STAC/DCAT, traced in PROV [oai_citation:34‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### Review gates (examples)
-Governance review is typically required when:
-- Introducing a new dataset source
-- Changing classification/sensitivity
-- Publishing derived datasets from sensitive/restricted inputs
-- Adding a new UI layer that could reveal sensitive locations by interaction/zoom
-- Promoting simulations from `work/` to `processed/`
-
-### Policy-as-code enforcement (high level)
-If the repo includes the Policy Pack:
-- Policies are versioned (OPA/Rego + Conftest)
-- CI must fail on missing provenance, broken links, missing license metadata, or secret/sensitive leakage
-- Policies may be grouped with stable IDs (e.g., Catalogs/Provenance/Sovereignty/Security)
-- Time-bound waivers (if allowed) must be explicit and documented
+### 🧪 CI / Review expectations
+- [ ] PR includes processed file **and** corresponding metadata/provenance records (CI validates presence/consistency) [oai_citation:35‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- [ ] PR includes explicit license info; missing license should fail closed [oai_citation:36‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧪 Validation & CI/CD (recommended)
+## 🌐 STAC/DCAT/PROV “Alignment Rules” (required)
 
-> 🧯 Tooling commands vary by repo — treat this as **requirements**, not hard-coded CLI.
+KFM requires every dataset (including evidence artifacts) to have:
 
-Minimum checks to expect:
-- ✅ Markdown protocol validation (front-matter + required sections)
-- ✅ Link/reference checks (avoid orphan pointers)
-- ✅ Schema validation (domain schemas + catalog schemas)
-- ✅ STAC/DCAT/PROV validation (in canonical locations)
-- ✅ Secret scanning + sensitive pattern checks
-- ✅ Policy Pack (OPA/Rego) compliance checks (CI + optionally runtime)
-- ✅ Determinism checks for pipelines (idempotent runs)
-- ✅ Provenance completeness checks (PROV bundle existence + linkage)
+- STAC collection/item(s)
+- DCAT dataset entry
+- PROV activity bundle [oai_citation:37‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
----
+And KFM expects cross-layer linkage:
 
-## 🧭 Domain index (curated entry points)
+- STAC → points to data asset (processed file or stable API endpoint)
+- DCAT → links to STAC and/or distributions
+- PROV → links raw inputs → intermediates → processed outputs, and identifies the pipeline run/config (e.g., commit hash) [oai_citation:38‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-> 🧩 Add domains here when they meet baseline “publishable” requirements.
-
-### Historical
-- 🏛️ Land Treaties: `docs/data/historical/land-treaties/README.md`
-
-### Environment
-- 🌫️ Air Quality: `docs/data/air-quality/README.md`
-- 🌱 Soils (SDA): `docs/data/soils/sda/README.md`
-
-### Real-time (examples / planned)
-- 🚍 Transit (GTFS-RT): `docs/data/transit/README.md` *(planned)*
-- 🌊 River Gauges: `docs/data/hydrology/river-gauges/README.md` *(planned)*
+Also:
+- Graph stores **references to catalogs**, not bulky payloads (graph models relationships; catalogs store metadata + links). [oai_citation:39‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## ✅ Definition of Done (this README)
+## ⚖️ Governance & Safety (FAIR + CARE)
 
-- [x] Front-matter complete + protocol-aligned
-- [x] Clearly distinguishes **docs** vs **data outputs** vs **runtime code**
-- [x] Includes v13 catalog structure (`data/stac/collections` + `data/stac/items`)
-- [x] Includes streaming + simulation governance expectations
-- [x] Explicit governance/CARE/sovereignty constraints
-- [x] Footer refs present (do not remove)
+KFM is designed to “fail closed” when governance requirements aren’t met (e.g., missing license, broken checks). [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
----
+FAIR and CARE are built into the architecture via:
+- required metadata (findable/interoperable)
+- open formats + version control (accessible/reusable)
+- access control + sovereignty-aware handling for sensitive data (CARE) [oai_citation:41‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-## 🕰️ Version History
-
-| Version | Date | Summary | Author |
-|---|---:|---|---|
-| v1.1.0 | 2026-01-19 | Upgraded to align with v13 repo layout, policy-as-code governance, streaming/simulation workflows, and “AI outputs as data objects” expectations | (you + ChatGPT) |
-| v1.0.0 | 2025-12-27 | Initial `docs/data/` README establishing purpose, placement rules, and mapping responsibilities | (you) |
+> 📌 For domain-specific governance rules (classification, redaction constraints, community ownership), see:  
+> `../governance/ROOT_GOVERNANCE.md`, `../governance/ETHICS.md`, `../governance/SOVEREIGNTY.md` [oai_citation:42‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## Footer refs (do not remove)
+## 🗂️ Handy “Where do I put this?” map
 
-- Master guide: `docs/MASTER_GUIDE_v12.md`
-- Master guide (preferred): `docs/MASTER_GUIDE_v13.md`
-- Template: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- Governance: `docs/governance/ROOT_GOVERNANCE.md`
-- Sovereignty: `docs/governance/SOVEREIGNTY.md`
-- Ethics: `docs/governance/ETHICS.md`
+From the v13 repository map (expected structure): [oai_citation:43‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+- 📁 `data/` → raw/work/processed + catalog outputs (STAC/DCAT/PROV)
+- 📁 `docs/` → canonical governed docs (guides, designs, domain notes)
+- 📁 `docs/data/` → **domain runbooks (this folder)**
+- 📁 `schemas/` → JSON Schemas for STAC/DCAT/PROV/storynodes/etc.
+- 📁 `src/pipelines/` → ETL jobs
+- 📁 `src/graph/` → graph build
+- 📁 `src/server/` → API boundary
+- 📁 `web/` → UI
+
 ---
+
+## 🕰️ Versioning note (v13 migration)
+
+v13 introduced canonical subsystem homes and filled missing expected top-level dirs like `data/catalog/dcat/` and `data/prov/` (superseding v12 guidance). [oai_citation:44‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:45‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 📚 Sources used to author this README
+
+- Master Guide v13 excerpts (pipeline order, data lifecycle, domain docs expectations, and repo map). [oai_citation:46‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:47‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:48‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- KFM technical blueprint excerpts (raw/processed rules, no ad-hoc edits, provenance expectations, CI requirements, FAIR/CARE fail-closed principles). [oai_citation:49‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:50‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:51‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:52‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
