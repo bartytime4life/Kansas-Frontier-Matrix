@@ -60,17 +60,17 @@ flowchart LR
 
 ```text
 📁 data/
-├── 📁 stac/
-│   ├── 📁 collections/
-│   └── 📁 items/
-├── 📁 catalog/
-│   └── 📁 dcat/
-├── 📁 prov/
-└── 📁 external/
-    ├── 📁 raw/
-    ├── 📁 work/
-    ├── 📁 processed/
-    └── 📁 mappings/
+├─ 📁 stac/                          🛰️ geospatial catalog (STAC: Collections + Items)
+│  ├─ 📁 collections/                🧩 collection JSON (grouping + semantics)
+│  └─ 📁 items/                      📦 item JSON (per asset/scene/tile/chunk)
+├─ 📁 catalog/                       🗂️ discovery layer (DCAT)
+│  └─ 📁 dcat/                        🧾 DCAT JSON-LD dataset records
+├─ 📁 prov/                          🧬 provenance receipts (W3C PROV-style bundles)
+└─ 📁 external/                      🌐 external sources lane (snapshots → staging → promoted)
+   ├─ 📁 raw/                         🧾 immutable source snapshots (never overwrite)
+   ├─ 📁 work/                        🧪 ingestion staging + experiments (safe to prune)
+   ├─ 📁 processed/                   ✅ promoted external outputs (ready for DB/API/UI)
+   └─ 📁 mappings/                    🧩 source→KFM mapping packs + crosswalks
 ```
 
 > [!TIP]
