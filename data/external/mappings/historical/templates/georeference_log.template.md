@@ -1,134 +1,3 @@
----
-# 🗂️ Path: data/external/mappings/historical/templates/georeference_log.template.md
-id: "georef__{{map_slug}}__{{YYYYMMDD}}"
-title: "🧭 Georeference Log — {{map_title}} ({{map_year}})"
-doc_type: "georeference_log"
-template: true
-template_version: "1.0.0"
-
-status: "template" # template | draft | review | approved | superseded
-created_utc: "{{YYYY-MM-DDTHH:MM:SSZ}}"
-updated_utc: "{{YYYY-MM-DDTHH:MM:SSZ}}"
-
-owners:
-  - "{{name_or_handle}}"
-reviewers: []
-
-domain: "external"
-collection: "historical"
-
-tags:
-  - georeference
-  - historical-map
-  - raster
-  - COG
-  - STAC
-  - PROV
-
-sensitivity: "public" # public | internal | confidential | restricted
-
-rights:
-  license: "{{SPDX_ID_OR_TEXT}}"          # e.g., CC-BY-4.0 | Public Domain | "All rights reserved"
-  attribution_required: true
-  attribution_text: "{{preferred_citation_or_attribution}}"
-  usage_constraints: "{{constraints_if_any}}"
-  notes: "{{copyright_or_rights_notes}}"
-
-source:
-  title: "{{map_title}}"
-  creator: "{{cartographer_or_agency}}"
-  publisher: "{{publisher}}"
-  date_published: "{{YYYY or YYYY-MM-DD}}"
-  scale: "{{e.g., 1:24000}}"
-  sheet_or_plate: "{{if_applicable}}"
-  archive_or_collection: "{{archive_name}}"
-  catalog_id: "{{archive_catalog_id}}"
-  source_url: "{{url_to_source_record_or_download}}"
-  access_date: "{{YYYY-MM-DD}}"
-
-inputs:
-  scan:
-    path: "data/external/raw/historical/{{map_slug}}/{{filename}}.tif"
-    checksum_sha256: "{{sha256}}"
-    dpi: "{{dpi}}"
-    bit_depth: "{{8|16}}"
-    color_space: "{{RGB|grayscale}}"
-    page_rotation_deg: "{{0|90|180|270}}"
-    pre_processing:
-      - "{{cropped_margins}}"
-      - "{{deskewed}}"
-      - "{{color_balanced}}"
-      - "{{de-speckled}}"
-    notes: "{{scan_notes}}"
-
-reference_data:
-  # Reference layers used to pick control points & validate alignment (record versions!)
-  layers:
-    - name: "{{reference_layer_name}}"
-      source: "{{path_or_url}}"
-      version_or_date: "{{YYYY-MM-DD or tag}}"
-      crs: "{{EPSG:####}}"
-      notes: "{{why_this_reference}}"
-
-georeference:
-  intent: "{{visual_overlay|digitization|analysis|other}}"
-  target_crs: "{{EPSG:####}}"
-  target_grid_or_datum: "{{if_applicable}}"
-  transform:
-    type: "{{Affine|Polynomial1|Polynomial2|Polynomial3|TPS|Projective}}"
-    resampling: "{{Nearest|Bilinear|Cubic|Lanczos}}"
-    target_resolution: "{{e.g., 2.0 m|1.0 arc-second|leave_blank_if_native}}"
-    nodata: "{{e.g., 0|255|none}}"
-    alpha: true
-  gcp:
-    count: "{{N}}"
-    gcp_file_path: "data/external/work/historical/{{map_slug}}/{{map_slug}}.points"
-    rmse_px: "{{value}}"
-    rmse_map_units: "{{value}}"
-    max_residual_px: "{{value}}"
-    max_residual_map_units: "{{value}}"
-  tooling:
-    - name: "{{QGIS Georeferencer|gdal_translate|gdalwarp|custom_script}}"
-      version: "{{x.y.z}}"
-      notes: "{{tool_notes}}"
-
-outputs:
-  geotiff:
-    path: "data/external/processed/historical/{{map_slug}}/{{map_slug}}__georef.tif"
-    checksum_sha256: "{{sha256}}"
-  cog:
-    path: "data/external/processed/historical/{{map_slug}}/{{map_slug}}__georef.cog.tif"
-    checksum_sha256: "{{sha256}}"
-  previews:
-    - "data/external/work/historical/{{map_slug}}/preview_overlay.png"
-    - "data/external/work/historical/{{map_slug}}/preview_tile_{z}_{x}_{y}.png"
-  metadata:
-    stac_item_path: "data/external/catalog/stac/items/historical/{{map_slug}}.json"
-    prov_bundle_path: "data/external/catalog/prov/historical/{{map_slug}}.json"
-    mapping_doc_path: "data/external/mappings/historical/{{map_slug}}__mapping.md"
-
-reproducibility:
-  run_id: "{{uuid_or_timestamp}}"
-  git_commit: "{{commit_sha}}"
-  pipeline_config_path: "{{path_to_yaml_or_json_config}}"
-  make_target_or_cli: "{{e.g., make georef MAP={{map_slug}}}}"
-  environment:
-    container_image: "{{if_applicable}}"
-    os: "{{optional}}"
-    notes: "{{optional}}"
-
-governance:
-  fair_considerations: "{{notes}}"
-  care_considerations: "{{notes}}"
-  sovereignty_considerations: "{{notes}}"
-  review_gate: "{{who_approves_and_why}}"
----
-
-![type](https://img.shields.io/badge/type-template-blue)
-![domain](https://img.shields.io/badge/domain-historical%20mapping-purple)
-![artifact](https://img.shields.io/badge/artifact-georeference%20log-orange)
-![pipeline](https://img.shields.io/badge/pipeline-deterministic%20%26%20logged-success)
-
 # 🧭 Georeference Log (Template)
 
 > [!IMPORTANT]
@@ -144,32 +13,35 @@ governance:
 
 ```text
 📁 data/
-└── 📁 external/
-    ├── 📁 raw/
-    │   └── 📁 historical/
-    │       └── 📁 {{map_slug}}/
-    │           └── 📄 {{filename}}.tif
-    ├── 📁 work/
-    │   └── 📁 historical/
-    │       └── 📁 {{map_slug}}/
-    │           ├── 📄 {{map_slug}}.points
-    │           ├── 🖼️ preview_overlay.png
-    │           └── 📄 qgis_georef_project.qgz
-    ├── 📁 processed/
-    │   └── 📁 historical/
-    │       └── 📁 {{map_slug}}/
-    │           ├── 🗺️ {{map_slug}}__georef.tif
-    │           └── 🧊 {{map_slug}}__georef.cog.tif
-    ├── 📁 catalog/
-    │   ├── 📁 stac/items/historical/
-    │   │   └── 📄 {{map_slug}}.json
-    │   └── 📁 prov/historical/
-    │       └── 📄 {{map_slug}}.json
-    └── 📁 mappings/
-        └── 📁 historical/
-            ├── 📁 templates/
-            │   └── 📄 georeference_log.template.md
-            └── 📄 {{map_slug}}__mapping.md
+└─ 📁 external/
+   ├─ 📁 raw/
+   │  └─ 🏛️ historical/
+   │     └─ 📁 {{map_slug}}/                          🧾 raw map snapshot (unaltered)
+   │        └─ 🖼️ {{filename}}.tif                     📦 original scan (TIFF)
+   ├─ 📁 work/
+   │  └─ 🏛️ historical/
+   │     └─ 📁 {{map_slug}}/                          🧪 georeferencing workspace (scratch + rebuildable)
+   │        ├─ 📄 {{map_slug}}.points                 📍 GCPs/control points (QGIS/PROJ format)
+   │        ├─ 🖼️ preview_overlay.png                 👀 quick visual check (overlay preview)
+   │        └─ 📄 qgis_georef_project.qgz             🧰 QGIS georeferencer project file
+   ├─ 📁 processed/
+   │  └─ 🏛️ historical/
+   │     └─ 📁 {{map_slug}}/                          ✅ authoritative georeferenced outputs (downstream-ready)
+   │        ├─ 🗺️ {{map_slug}}__georef.tif             🧭 georeferenced GeoTIFF (working deliverable)
+   │        └─ 🧊 {{map_slug}}__georef.cog.tif          🚀 cloud-optimized GeoTIFF (COG) + overviews
+   ├─ 📁 catalog/
+   │  ├─ 📁 stac/
+   │  │  └─ 📁 items/
+   │  │     └─ 🏛️ historical/
+   │  │        └─ 📄 {{map_slug}}.json                🛰️ STAC Item (assets + bbox + datetime + links)
+   │  └─ 📁 prov/
+   │     └─ 🏛️ historical/
+   │        └─ 📄 {{map_slug}}.json                   🧬 PROV bundle (inputs → activities → outputs)
+   └─ 📁 mappings/
+      └─ 🏛️ historical/
+         ├─ 📁 templates/                              🧱 reusable templates for georef workflows
+         │  └─ 📄 georeference_log.template.md          📝 log template (GCPs, CRS, residuals, decisions)
+         └─ 📄 {{map_slug}}__mapping.md                🧩 per-map mapping notes (CRS, method, caveats, citations)
 ```
 
 ---
