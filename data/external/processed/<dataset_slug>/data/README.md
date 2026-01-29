@@ -34,11 +34,11 @@
 
 ```mermaid
 flowchart LR
-  raw["📥 Raw evidence<br/>data/external/raw/<dataset_slug>/"] --> work["🧪 Work / staging<br/>data/external/work/<dataset_slug>/"]
-  work --> proc["✅ Processed outputs<br/>data/external/processed/<dataset_slug>/data/"]
-  proc --> stac["🛰️ STAC<br/>data/stac/..."]
-  proc --> dcat["📚 DCAT<br/>data/catalog/dcat/..."]
-  proc --> prov["🧾 PROV<br/>data/prov/..."]
+  raw["📥 Raw evidence — data/external/raw/{dataset_slug}/"] --> work["🧪 Work / staging — data/external/work/{dataset_slug}/"]
+  work --> proc["✅ Processed outputs — data/external/processed/{dataset_slug}/data/"]
+  proc --> stac["🛰️ STAC — data/stac/..."]
+  proc --> dcat["📚 DCAT — data/catalog/dcat/..."]
+  proc --> prov["🧾 PROV — data/prov/..."]
   stac --> graph["🕸️ Graph (Neo4j refs)"]
   dcat --> graph
   prov --> graph
@@ -53,18 +53,21 @@ flowchart LR
 > You are here: `data/external/processed/<dataset_slug>/data/README.md`
 
 ```text
-data/external/processed/<dataset_slug>/
-├─ data/                              # ✅ analysis-ready outputs (this folder)
-│  ├─ README.md                       # ⬅ you are here
-│  ├─ <dataset_slug>.<ext>            # primary artifact (TBD)
-│  ├─ <dataset_slug>_assets/          # optional: tiles, sidecars, thumbnails
-│  └─ checksums.sha256                # optional but recommended
-├─ metadata/                          # optional local helpers (schema + QA)
-│  ├─ schema.json                     # optional JSON Schema / Parquet schema export
-│  ├─ data_dictionary.md              # optional human-readable dictionary
-│  └─ validation_report.md            # optional QA notes/results
-└─ logs/                              # optional pipeline logs (run summaries)
-   └─ <run_id>.log
+📁 data/
+└─ 📁 external/
+   └─ 📁 processed/
+      └─ 📁 <dataset_slug>/                          ✅ promoted dataset root (downstream-ready)
+         ├─ 📁 data/                                 ✅ analysis-ready outputs (this folder)
+         │  ├─ 📄 README.md                           👈 you are here
+         │  ├─ 📄 <dataset_slug>.<ext>                📦 primary artifact (TBD: parquet/geojson/csv/tif/etc.)
+         │  ├─ 📁 <dataset_slug>_assets/              ◻️ optional: tiles, sidecars, thumbnails, attachments
+         │  └─ 📄 checksums.sha256                    ◻️ optional (recommended): sha256 for key outputs
+         ├─ 📁 metadata/                              ◻️ optional: local helpers (schema + QA sidecars)
+         │  ├─ 📄 schema.json                         ◻️ optional: JSON Schema / Parquet schema export
+         │  ├─ 📄 data_dictionary.md                  ◻️ optional: human-readable field dictionary
+         │  └─ 📄 validation_report.md                ◻️ optional: QA notes + results summary
+         └─ 📁 logs/                                  ◻️ optional: pipeline logs (run summaries)
+            └─ 📄 <run_id>.log                        🪵 run log (timestamps, warnings, checks)
 ```
 
 ---
