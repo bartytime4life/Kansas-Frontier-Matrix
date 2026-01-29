@@ -1,19 +1,3 @@
----
-title: "🧾 Provenance Plan — {{dataset_slug}}"
-kfm:
-  kind: "prov_plan"
-  domain: "external"
-  dataset_slug: "{{dataset_slug}}"
-  status: "draft" # draft | in_progress | in_review | approved | published
-  created: "2026-01-29"
-  updated: "2026-01-29"
-owners:
-  data_steward: "{{name_or_handle}}"
-  etl_engineer: "{{name_or_handle}}"
-  domain_reviewer: "{{name_or_handle}}"
-  governance_reviewer: "{{name_or_handle}}"
----
-
 # 🧾 Provenance Plan — `{{dataset_slug}}`
 
 ![Status](https://img.shields.io/badge/status-draft-yellow) ![Provenance](https://img.shields.io/badge/provenance-W3C%20PROV-blue) ![Metadata](https://img.shields.io/badge/metadata-STAC%20%2B%20DCAT-4c1) ![Domain](https://img.shields.io/badge/domain-external-9cf)
