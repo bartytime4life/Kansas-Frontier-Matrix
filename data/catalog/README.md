@@ -39,19 +39,20 @@ A dataset isn’t considered “published” until it has:
 ## 🗂️ Folder layout
 
 ```text
-data/
-├── raw/                      # 🧾 Source snapshots (immutable / read-only)
-├── work/                     # 🧪 Optional scratch + intermediate artifacts (ephemeral)
-├── processed/                # ✅ Final outputs consumed by DB/API/UI
-├── stac/                     # 🛰️ STAC Collections + Items (geospatial catalog)
-│   ├── collections/          # 🧩 Collection JSON (grouping + semantics)
-│   └── items/                # 📦 Item JSON (per asset/scene/tile/chunk)
-├── prov/                     # 🧬 Provenance bundles (W3C PROV-style receipts)
-└── catalog/                  # 🗂️ Discovery catalog (DCAT)
-    ├── dcat/                 # 🧾 DCAT JSON-LD datasets (discovery + governance fields)
-    │   ├── <dataset-id>.jsonld
-    │   └── ...
-    └── README.md             # 📘 Catalog rules & publishing conventions
+📁 data/
+├─ 📁 raw/                      🧾 source snapshots (immutable / read-only)
+├─ 📁 work/                     🧪 scratch + intermediate artifacts (ephemeral)
+├─ 📁 processed/                ✅ final outputs consumed by DB/API/UI
+├─ 📁 stac/                     🛰️ STAC Collections + Items (geospatial catalog)
+│  ├─ 📁 collections/           🧩 collection JSON (grouping + semantics)
+│  └─ 📁 items/                 📦 item JSON (per asset/scene/tile/chunk)
+├─ 📁 prov/                     🧬 provenance bundles (W3C PROV-style receipts)
+└─ 📁 catalog/                  🗂️ discovery catalog (DCAT)
+   └─ 📁 dcat/
+      ├─ 📄 README.md                      👈 you are here
+      ├─ 📄 <dataset_id>.jsonld            ✅ canonical dataset record (JSON-LD)
+      ├─ 📄 <dataset_id>.ttl               ◻️ optional (only if adopted + validated)
+      └─ 📄 catalog.jsonld                 ◻️ optional aggregate dcat:Catalog export
 ```
 
 ---
