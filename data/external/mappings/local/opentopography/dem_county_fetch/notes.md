@@ -42,16 +42,16 @@ We treat a **county boundary** (polygon) as the Area of Interest (AOI) and:
 
 ```mermaid
 flowchart TD
-  A[🏁 Input: county boundary<br/>GeoJSON/Shapefile/DB geometry] --> B[🧮 Compute bbox<br/>south/north/west/east]
-  B --> C{📦 Cache hit?}
-  C -- ✅ yes --> D[📤 Return cached DEM + derivatives]
-  C -- ❌ no --> E[🌐 Request DEM via OpenTopography API]
-  E --> F[💾 Save raw GeoTIFF]
-  F --> G[✂️ Clip to county polygon (optional)]
-  G --> H[🧭 Reproject to metric CRS for analysis (recommended)]
-  H --> I[🌗 Derivatives: hillshade / slope / aspect / contours]
-  I --> J[📁 Write to data/processed/elevation]
-  J --> K[🧾 Update STAC + provenance logs]
+  A["🏁 Input: county boundary (GeoJSON/Shapefile/DB geometry)"] --> B["🧮 Compute bbox (south/north/west/east)"]
+  B --> C{"Cache hit?"}
+  C -- "✅ yes" --> D["📤 Return cached DEM + derivatives"]
+  C -- "❌ no" --> E["🌐 Request DEM via OpenTopography API"]
+  E --> F["💾 Save raw GeoTIFF"]
+  F --> G["✂️ Clip to county polygon (optional)"]
+  G --> H["🧭 Reproject to metric CRS for analysis (recommended)"]
+  H --> I["🌗 Derivatives: hillshade / slope / aspect / contours"]
+  I --> J["📁 Write to data/processed/elevation"]
+  J --> K["🧾 Update STAC + provenance logs"]
   K --> D
 ```
 
