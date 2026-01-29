@@ -238,11 +238,12 @@ OpenTopography LiDAR datasets are typically tiled (`*.laz`). A robust workflow i
 
 ### Suggested local layout
 ```text
-cache/pointcloud/
-├─ tile_index/        # shapefile(s) for tile discovery
-├─ laz/               # downloaded tiles
-├─ copc/              # merged COPC outputs
-└─ dtm/               # generated terrain models from ground-class points
+📁 cache/
+└─ 📁 pointcloud/                        ☁️ point cloud cache + derivatives
+   ├─ 📁 tile_index/                     🗺️ tile discovery indexes (shapefile/geojson/gpkg)
+   ├─ 📁 laz/                            📦 downloaded tiles (LAZ)
+   ├─ 📁 copc/                           🧊 merged/converted COPC outputs (cloud-optimized point clouds)
+   └─ 📁 dtm/                            🏔️ derived terrain models (DTM) from ground-class points
 ```
 
 ---
