@@ -69,18 +69,18 @@ A dataset is allowed to land in `data/external/processed/<domain>/` only when AL
 
 ## 🗂️ Directory layout (recommended)
 ```text
-data/
-└── external/
-    ├── raw/
-    │   └── <domain>/            📥 write-once source artifacts (read-only)
-    ├── work/
-    │   └── <domain>/            🧪 intermediate outputs (rebuildable)
-    └── processed/
-        └── <domain>/            ✅ final curated outputs (this folder)
-            ├── README.md        📘 this runbook
-            ├── manifests/       🧾 checksums, inventories, size reports (optional)
-            ├── qa/              🧪 validation outputs (optional)
-            └── <dataset files…> 🗃️ authoritative assets
+📁 data/
+└─ 📁 external/
+   ├─ 📁 raw/                                   🧾 immutable external snapshots (write-once / read-only)
+   │  └─ 📁 <domain>/                            📥 source artifacts by domain (never overwrite)
+   ├─ 📁 work/                                  🧪 rebuildable workspace (intermediate outputs)
+   │  └─ 📁 <domain>/                            🧰 staging per domain (pipelines, drafts, scratch)
+   └─ 📁 processed/                              ✅ final curated external outputs (this folder)
+      └─ 📁 <domain>/                            🗂️ domain bucket for published datasets
+         ├─ 📄 README.md                          📘 domain runbook (you are here)
+         ├─ 📁 manifests/                         ◻️ optional: checksums, inventories, size reports
+         ├─ 📁 qa/                                ◻️ optional: validation outputs + expectations + summaries
+         └─ 📦 <dataset files…>                   🗃️ authoritative assets (what downstream loads/serves)
 ```
 
 ---
