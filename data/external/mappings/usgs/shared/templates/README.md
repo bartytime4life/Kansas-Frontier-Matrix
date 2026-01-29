@@ -71,16 +71,21 @@ flowchart LR
 ## 🗂️ Suggested layout (recommended)
 
 ```text
-data/external/mappings/usgs/shared/templates/
-├─ README.md                         👈 you are here
-├─ metadata/                          📦 STAC / DCAT / PROV templates
-│  ├─ stac/
-│  ├─ dcat/
-│  └─ prov/
-├─ attribution/                       🧾 attribution + license blocks
-├─ crs/                               🧭 CRS/datum conventions + notes
-├─ styles/                            🗺️ MapLibre/QGIS/legend defaults
-└─ validation/                        🧪 checklists + helper snippets
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 usgs/
+         └─ 📁 shared/
+            └─ 📁 templates/                               🧰 reusable building blocks (USGS)
+               ├─ 📄 README.md                              👈 you are here
+               ├─ 📁 metadata/                              📦 metadata templates (STAC / DCAT / PROV)
+               │  ├─ 📁 stac/                               🛰️ STAC Collection/Item skeletons + defaults
+               │  ├─ 📁 dcat/                               🗂️ DCAT dataset/distribution skeletons (JSON-LD)
+               │  └─ 📁 prov/                               🧬 PROV bundle/activity/agent skeletons
+               ├─ 📁 attribution/                           🧾 attribution + license boilerplate blocks
+               ├─ 📁 crs/                                   🧭 CRS/datum conventions + transform notes
+               ├─ 📁 styles/                                🗺️ styling defaults (MapLibre/QGIS/legends)
+               └─ 📁 validation/                             🧪 checklists + helper snippets (QA gates)
 ```
 
 > [!NOTE]
