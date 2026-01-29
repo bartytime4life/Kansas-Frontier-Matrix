@@ -1,25 +1,3 @@
----
-title: "STAC Plan — <dataset_slug>"
-dataset_slug: "<dataset_slug>"
-domain: "external"
-status: "draft"
-owners:
-  - "@<owner_handle>"
-created: "2026-01-29"
-last_updated: "2026-01-29"
-kfm:
-  doc_kind: "mapping-plan"
-  pipeline_stage: "catalogs"
-  standards:
-    stac_profile: "docs/standards/KFM_STAC_PROFILE.md"
-    dcat_profile: "docs/standards/KFM_DCAT_PROFILE.md"
-    prov_profile: "docs/standards/KFM_PROV_PROFILE.md"
-  required_boundary_artifacts:
-    - "STAC Collection + Item(s)"
-    - "DCAT dataset entry"
-    - "PROV activity bundle"
----
-
 # 🛰️ STAC Plan — `<dataset_slug>`
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
@@ -82,18 +60,22 @@ This plan covers the **catalogs** stage and defines what the **processed** outpu
 ### 📂 Domain layout (this dataset lives under `external/`)
 
 ```text
-data/
-├── stac/
-│   ├── collections/                      # STAC Collections (JSON)
-│   └── items/                            # STAC Items (JSON)
-├── catalog/
-│   └── dcat/                             # DCAT Dataset entries (JSON-LD)
-├── prov/                                 # PROV bundles (per run / per dataset)
-└── external/
-    ├── raw/<dataset_slug>/               # raw source drops (read-only)
-    ├── work/<dataset_slug>/              # intermediate outputs
-    ├── processed/<dataset_slug>/         # final outputs (what STAC points to)
-    └── mappings/<dataset_slug>/          # mapping docs (this plan lives here)
+📁 data/
+├─ 📁 stac/                                   🛰️ STAC geospatial catalog (JSON)
+│  ├─ 📁 collections/                          🧩 STAC Collections (JSON)
+│  └─ 📁 items/                                📦 STAC Items (JSON)
+├─ 📁 catalog/                                 🗂️ DCAT discovery layer
+│  └─ 📁 dcat/                                  🧾 DCAT Dataset entries (JSON-LD)
+├─ 📁 prov/                                    🧬 provenance bundles (per run / per dataset)
+└─ 📁 external/                                🌐 external sources lane (snapshots → staging → promoted)
+   ├─ 📁 raw/
+   │  └─ 📁 <dataset_slug>/                    🧾 raw source drops (read-only / never overwrite)
+   ├─ 📁 work/
+   │  └─ 📁 <dataset_slug>/                    🧪 intermediate outputs + experiments (ephemeral)
+   ├─ 📁 processed/
+   │  └─ 📁 <dataset_slug>/                    ✅ final outputs (what STAC Items point to)
+   └─ 📁 mappings/
+      └─ 📁 <dataset_slug>/                    🧩 mapping docs + crosswalks (this plan lives here)
 ```
 
 ### 📌 Outputs this plan expects to produce
