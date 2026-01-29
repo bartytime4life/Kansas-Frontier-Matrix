@@ -6,7 +6,6 @@
 ## 📁 Location
 
 ```text
-```text
 📁 data/
 └─ 📁 external/
    └─ 📁 processed/
