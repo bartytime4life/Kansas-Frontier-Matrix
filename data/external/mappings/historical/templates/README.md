@@ -69,22 +69,22 @@ These templates help you produce:
 > Copy templates from **this** folder into a new dataset folder.
 
 ```text
-data/
-└── external/
-    └── mappings/
-        └── historical/
-            ├── templates/                     👈 you are here
-            └── <dataset_slug>/
-                ├── README.md                  📘 dataset mapping doc (human)
-                ├── stac.collection.json       🛰️ (or item.json if single layer)
-                ├── stac.items/                🧩 (optional, if multi-part)
-                ├── dcat.dataset.jsonld        🏛️ catalog record
-                ├── prov.json                  🧾 lineage record
-                ├── qa.checklist.md            ✅ validation notes
-                └── georef/                    🧷 (optional)
-                    ├── gcps.csv               📍 control points
-                    ├── georef.notes.md        📝 transformation notes
-                    └── residuals.png          📉 screenshots / evidence
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🏛️ historical/                              📜 historical mapping packs + publishing plans
+         ├─ 📁 templates/                             👈 you are here (reusable stubs + checklists)
+         └─ 📁 <dataset_slug>/                        🏷️ one dataset mapping bundle
+            ├─ 📄 README.md                            📘 dataset mapping doc (human-readable runbook)
+            ├─ 📄 stac.collection.json                 🛰️ STAC Collection (or 📄 stac.item.json for single layer)
+            ├─ 📁 stac.items/                          ◻️ optional: STAC Items directory (multi-part datasets)
+            ├─ 📄 dcat.dataset.jsonld                  🗂️ DCAT catalog record (JSON-LD discovery)
+            ├─ 📄 prov.json                            🧬 PROV lineage record (inputs → activities → outputs)
+            ├─ 📄 qa.checklist.md                      ✅ validation notes + acceptance bar
+            └─ 📁 georef/                              ◻️ optional: georeferencing evidence bundle
+               ├─ 📄 gcps.csv                          📍 control points (GCPs)
+               ├─ 📝 georef.notes.md                    📝 transformation notes + CRS + residual summary
+               └─ 🖼️ residuals.png                     📉 screenshots/evidence (residuals + overlay checks)
 ```
 
 > ⚠️ The **actual data files** usually live under the appropriate `data/<domain>/{raw,work,processed}` convention (see repo guide). `mappings/` is the “paper trail” that connects the dataset to its final canonical outputs. :contentReference[oaicite:16]{index=16}
