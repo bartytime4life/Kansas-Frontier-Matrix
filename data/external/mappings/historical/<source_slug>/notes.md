@@ -53,22 +53,22 @@ Even though this file lives under `data/external/mappings/...`, the *data artifa
 
 ```text
 📁 data/
-  📁 external/
-    📁 mappings/
-      📁 historical/
-        📁 <source_slug>/
-          📝 notes.md   👈 (this file)
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🏛️ historical/                          📜 historical sources mapping lane
+         └─ 📁 <source_slug>/                     🏷️ one upstream source namespace
+            └─ 📝 notes.md                         👈 you are here (source quirks, citations, decisions)
 
 📁 data/
-  📁 historical/
-    📁 raw/
-      📁 <source_slug>/
-    📁 work/
-      📁 <source_slug>/
-    📁 processed/
-      📁 <source_slug>/
-    📁 mappings/
-      📁 <source_slug>/   (optional: machine mappings, schemas, crosswalks)
+└─ 🏛️ historical/                                 📚 historical domain lane (raw → work → processed)
+   ├─ 📁 raw/
+   │  └─ 📁 <source_slug>/                         🧾 immutable source drops (read-only / never overwrite)
+   ├─ 📁 work/
+   │  └─ 📁 <source_slug>/                         🧪 staging + intermediates (rebuildable)
+   ├─ 📁 processed/
+   │  └─ 📁 <source_slug>/                         ✅ curated outputs (downstream-ready)
+   └─ 📁 mappings/
+      └─ 📁 <source_slug>/                         ◻️ optional: machine mappings, schemas, crosswalks
 ```
 
 ---
