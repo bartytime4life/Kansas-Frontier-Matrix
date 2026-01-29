@@ -33,15 +33,18 @@
 ## 🗂️ Package Layout
 
 ```text
-data/external/processed/<dataset_slug>/
-├─ data/                         # ✅ canonical deliverables (what downstream loads/serves)
-│  ├─ <dataset_slug>.<ext>        # e.g., .geojson / .parquet / .csv / .tif
-│  └─ (optional) assets/          # rasters, attachments, thumbnails, etc.
-├─ schema/
-│  ├─ data_dictionary.md          # 📘 (this file)
-│  ├─ schema.json                 # (optional) JSON Schema / GeoParquet schema
-│  └─ (optional) code_lists/      # enumerations (CSV/JSON)
-└─ README.md                      # (recommended) dataset overview + runbook
+📁 data/
+└─ 📁 external/
+   └─ 📁 processed/
+      └─ 📁 <dataset_slug>/                         ✅ promoted dataset root (downstream-ready)
+         ├─ 📁 data/                                ✅ canonical deliverables (what downstream loads/serves)
+         │  ├─ 📄 <dataset_slug>.<ext>               📦 primary artifact (e.g., .geojson / .parquet / .csv / .tif)
+         │  └─ 📁 assets/                            ◻️ optional: rasters, attachments, thumbnails, sidecars
+         ├─ 📁 schema/                               🧾 schema + dictionaries + controlled vocabularies
+         │  ├─ 📄 data_dictionary.md                 📘 you are here (field meanings, units, codes)
+         │  ├─ 📄 schema.json                        ◻️ optional: JSON Schema / GeoParquet schema
+         │  └─ 📁 code_lists/                        ◻️ optional: enumerations (CSV/JSON)
+         └─ 📄 README.md                             ◻️ optional (recommended): dataset overview + runbook
 ```
 
 > ✅ **Rule of thumb:** `processed/` is authoritative “ready-to-use” output and should be clean, standardized, and documented.
