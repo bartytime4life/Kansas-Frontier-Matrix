@@ -1,19 +1,3 @@
----
-title: "Validation Expectations — <dataset_slug>"
-version: "v1.0.0"
-status: "draft"
-doc_kind: "Data Contract / Validation Spec"
-last_updated: "2026-01-29"
-license: "CC-BY-4.0"
-fair_category: "FAIR+CARE"
-care_label: "<TBD>"
-sensitivity: "<public|internal|restricted>"
-classification: "<open|controlled|confidential>"
-dataset_slug: "<dataset_slug>"
-kfm_stage: "data/external/processed"
-doc_uuid: "urn:kfm:dataset:<dataset_slug>:validation:expectations:v1.0.0"
----
-
 # 🧪 Validation Expectations — `<dataset_slug>`
 
 > [!IMPORTANT]
@@ -22,13 +6,14 @@ doc_uuid: "urn:kfm:dataset:<dataset_slug>:validation:expectations:v1.0.0"
 ## 📁 Location
 
 ```text
-data/
-└─ external/
-   └─ processed/
-      └─ <dataset_slug>/
-         ├─ ...dataset outputs...
-         └─ validation/
-            └─ expectations.md   👈 you are here
+```text
+📁 data/
+└─ 📁 external/
+   └─ 📁 processed/
+      └─ 📁 <dataset_slug>/                      ✅ promoted dataset outputs (ready for DB/API/UI)
+         ├─ 📦 ...dataset outputs...              📦 primary + derivative artifacts (parquet/pmtiles/cog/etc.)
+         └─ 📁 validation/                        🧪 pipeline QA artifacts + expectations
+            └─ 📄 expectations.md                 👈 you are here (validation rules + thresholds)
 ```
 
 ## 🗺️ Pipeline context
