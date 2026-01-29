@@ -61,19 +61,16 @@ These are the **minimum keys we standardize everywhere** in KFM.
 
 ```mermaid
 flowchart TD
-  A[STATEFP (2)] --> B[COUNTYFP (3)]
-  B --> C[TRACTCE (6)]
-  C --> D[BLKGRPCE (1)]
-  C --> E[BLOCKCE20 (4)]
+  A["🏛️ STATEFP (2)"] --> B["🏞️ COUNTYFP (3)"]
+  B --> C["🗺️ TRACTCE (6)"]
+  C --> D["🧩 BLKGRPCE (1)"]
+  C --> E["🏠 BLOCKCE20 (4)"]
 
-  A:::k --> B:::k --> C:::k --> D:::k
-  C:::k --> E:::k
-
-  D --> BG[GEOID (Block Group) = 2+3+6+1 = 12]
-  C --> TR[GEOID (Tract) = 2+3+6 = 11]
-  B --> CO[GEOID (County) = 2+3 = 5]
-  A --> ST[GEOID (State) = 2]
-  E --> BLK[GEOID20 (Block) = 2+3+6+4 = 15]
+  D --> BG["🧩 GEOID (Block Group) = 2+3+6+1 = 12"]
+  C --> TR["🗺️ GEOID (Tract) = 2+3+6 = 11"]
+  B --> CO["🏞️ GEOID (County) = 2+3 = 5"]
+  A --> ST["🏛️ GEOID (State) = 2"]
+  E --> BLK["🏠 GEOID20 (Block) = 2+3+6+4 = 15"]
 
   classDef k fill:#f6f8fa,stroke:#8c959f,color:#24292f;
 ```
@@ -274,10 +271,10 @@ export const geoidTract = (statefp: unknown, countyfp: unknown, tractce: unknown
 
 ```text
 📁 data/
-  📁 external/
-    📁 mappings/
-      📁 census/
-        📁 keys/
-          📝 fips_padding_rules.md   👈 you are here
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 census/                                  🧮 Census/TIGER mapping packs + key registries
+         └─ 🔑 keys/                                 🗝️ canonical IDs, dictionaries, and crosswalks
+            └─ 📝 fips_padding_rules.md               👈 you are here (FIPS/GEOID padding + formatting rules)
 ```
 
