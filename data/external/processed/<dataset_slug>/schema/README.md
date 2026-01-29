@@ -14,13 +14,13 @@
 
 ```mermaid
 flowchart LR
-  A[Raw Sources] --> B[ETL / Normalization]
-  B --> C[Processed Dataset]
-  C --> S[Schema Contract 👈 this folder]
-  C --> M[Catalog + Provenance<br/>STAC / DCAT / PROV]
-  M --> D[Database (PostGIS / Graph)]
-  D --> API[API Layer (contracts + redaction)]
-  API --> UI[UI + Story / Focus Mode]
+  A["&#x1F4E5; Raw Sources"] --> B["&#x1F9F9; ETL / Normalization"]
+  B --> C["&#x1F4E6; Processed Dataset"]
+  C --> S["&#x1F448; Schema Contract (this folder)"]
+  C --> M["&#x1F5C2; Catalog + Provenance (STAC / DCAT / PROV) &#x1F9FE;"]
+  M --> D["&#x1F5C4; Database (PostGIS / Graph)"]
+  D --> API["&#x1F50C; API Layer (contracts + redaction)"]
+  API --> UI["&#x1F5A5; UI + Story / Focus Mode"]
 ```
 
 > [!IMPORTANT]
