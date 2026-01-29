@@ -1,10 +1,3 @@
----
-title: 🔢 FIPS & GEOID Padding Rules (US Census / TIGER/Line)
-scope: data/external/mappings/census/keys
-status: draft
-last_reviewed: 2026-01-29
----
-
 # 🔢 FIPS & GEOID Padding Rules (Census Keys)
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
