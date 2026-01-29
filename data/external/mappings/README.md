@@ -58,28 +58,32 @@ Use either **source-first** or **domain-first**. Pick one and stay consistent.
 ### Option A — Source-first (recommended when many domains share one provider)
 
 ```
-data/external/mappings/
-├─ 📦 usgs/
-│  ├─ 🧩 nhd_flowlines__v1.0.0.yml
-│  └─ 📄 README.md (optional)
-├─ 📦 census/
-│  ├─ 🧩 tiger_counties__v1.0.0.yml
-│  └─ 🧩 tiger_tracts__v1.0.0.yml
-└─ 📦 local/
-   ├─ 🧩 county_parcels__v0.3.0.yml
-   └─ 🧾 crosswalk_parcel_use_codes.csv
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/                              🧩 mapping packs + crosswalks for external sources
+      ├─ 📦 usgs/                               🛰️ USGS-derived mappings (hydro, elevation, imagery, etc.)
+      │  ├─ 🧩 nhd_flowlines__v1.0.0.yml         🧠 NHD flowlines → KFM canonical hydro schema mapping
+      │  └─ 📄 README.md                        ◻️ optional source notes + quirks + validation guidance
+      ├─ 📦 census/                             🧮 U.S. Census / TIGER-derived boundary & tabular mappings
+      │  ├─ 🧩 tiger_counties__v1.0.0.yml         🗺️ TIGER counties → KFM admin-boundary schema mapping
+      │  └─ 🧩 tiger_tracts__v1.0.0.yml           🧭 TIGER tracts → KFM census-tract schema mapping
+      └─ 📦 local/                              🏛️ County/city/local partner mappings + bespoke crosswalks
+         ├─ 🧩 county_parcels__v0.3.0.yml         🧾 Local parcels → KFM parcel schema mapping (iterating)
+         └─ 🧾 crosswalk_parcel_use_codes.csv     🔁 Parcel use codes → KFM land-use domain crosswalk
 ```
 
 ### Option B — Domain-first (recommended when domains are “owned” by stewards)
 
 ```
-data/external/mappings/
-├─ 🏛️ historical/
-│  └─ 🧩 land_treaties_sourceX__v1.0.0.yml
-├─ 🌾 agriculture/
-│  └─ 🧩 sda_soils__v2.1.0.yml
-└─ 🌦️ climate/
-   └─ 🧩 prism_precip__v1.2.0.yml
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/                                   🧩 mapping packs for external thematic sources
+      ├─ 🏛️ historical/                               📜 historical documents → KFM canonical schemas
+      │  └─ 🧩 land_treaties_sourceX__v1.0.0.yml        🧭 Land treaties (Source X) → KFM treaty/land-cession mapping
+      ├─ 🌾 agriculture/                               🚜 agriculture datasets → KFM soils/crops/land-use schemas
+      │  └─ 🧩 sda_soils__v2.1.0.yml                    🧱 Soil survey (SDA) → KFM soils + attributes mapping
+      └─ 🌦️ climate/                                   🌎 climate grids/time-series → KFM climate schema mapping
+         └─ 🧩 prism_precip__v1.2.0.yml                 💧 PRISM precipitation → KFM climate-precip mapping
 ```
 
 ---
