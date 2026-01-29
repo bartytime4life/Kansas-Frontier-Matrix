@@ -1,31 +1,3 @@
-# Protocol / profiles (repo-governed)
-markdown_protocol_version: "1.0"
-dcat_profile_version: "KFM v11"
-
-# Dataset identity
-domain: "external"
-dataset_slug: "<dataset_slug>"
-
-# Governance / ethics
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"          # public | internal | restricted | sensitive
-classification: "open"         # open | controlled | confidential
-jurisdiction: "US"
-
-# Traceability (fill at release)
-doc_uuid: "urn:kfm:doc:mapping:dcat:<dataset_slug>:v0.1.0"
-commit_sha: "<commit-hash>"
-doc_integrity_checksum: "sha256:<to-be-filled>"
----
-
-![DCAT](https://img.shields.io/badge/DCAT-2.x-blue)
-![KFM Profile](https://img.shields.io/badge/KFM%20DCAT%20Profile-v11-purple)
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Domain](https://img.shields.io/badge/domain-external-555)
-
 # 🗺️ DCAT Mapping — `<dataset_slug>`
 
 > 🧠 **What this is:** A governed mapping contract that explains *exactly* how we populate the DCAT record for this dataset (and how it cross-links to STAC + PROV).  
