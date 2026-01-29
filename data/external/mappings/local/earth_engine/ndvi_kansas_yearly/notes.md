@@ -127,15 +127,15 @@ NDVI = \frac{NIR - Red}{NIR + Red}
 
 ```mermaid
 flowchart LR
-  A[🛰️ Source imagery] --> B[☁️ Mask clouds/shadows + saturation]
-  B --> C[📏 Apply scale factors (SR)]
-  C --> D[🌿 Compute NDVI]
-  D --> E[📅 Group by year (and optional season window)]
-  E --> F[🧮 Composite reducer (median / max / p90)]
-  F --> G[✂️ Clip to Kansas ROI]
-  G --> H[📤 Export GeoTIFF]
-  H --> I[🧰 Optional: convert to COG + build overviews]
-  I --> J[🧾 STAC/DCAT/PROV + checksums]
+  A["🛰️ Source imagery"] --> B["☁️ Mask clouds/shadows + saturation"]
+  B --> C["📏 Apply scale factors (SR)"]
+  C --> D["🌿 Compute NDVI"]
+  D --> E["📅 Group by year (optional season window)"]
+  E --> F["🧮 Composite reducer (median / max / p90)"]
+  F --> G["✂️ Clip to Kansas ROI"]
+  G --> H["📤 Export GeoTIFF"]
+  H --> I["🧰 Optional: convert to COG + build overviews"]
+  I --> J["🧾 STAC/DCAT/PROV + checksums"]
 ```
 
 ### 🔑 Key decisions (defaults suggested)
