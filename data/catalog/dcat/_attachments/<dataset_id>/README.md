@@ -64,14 +64,18 @@ These attachments **do not replace** canonical data + metadata; they **support**
 ## 🧩 Folder layout (recommended)
 
 ```text
-data/catalog/dcat/_attachments/<dataset_id>/
-├─ README.md                     👈 you are here
-├─ manifest.csv / manifest.json   🧾 optional but helpful
-├─ checksums.sha256               🔐 integrity (recommended)
-├─ license/                       🧾 license + terms snapshots
-├─ docs/                          📄 dictionaries, methods, caveats
-├─ preview/                        🖼️ small previews (png/jpg/svg)
-└─ dist/                           📦 optional downloadable bundles
+📁 data/
+└─ 📁 catalog/
+   └─ 📁 dcat/
+      └─ 📁 _attachments/
+         └─ 📁 <dataset_id>/                         📎 dataset collateral (cards, previews, appendices)
+            ├─ 📄 README.md                           👈 you are here
+            ├─ 🧾 manifest.csv                         ◻️ optional: attachment index (CSV) (or 🧾 manifest.json)
+            ├─ 🔐 checksums.sha256                     ◻️ optional (recommended): sha256 for all files
+            ├─ 📁 license/                             🧾 license + terms snapshots + permissions receipts
+            ├─ 📁 docs/                                📄 dictionaries, methodology, caveats, citations
+            ├─ 📁 preview/                             🖼️ small previews (png/jpg/svg) for quicklooks
+            └─ 📁 dist/                                ◻️ optional: downloadable bundles (zip/tar) for distribution
 ```
 
 ---
