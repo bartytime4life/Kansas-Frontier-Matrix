@@ -37,14 +37,19 @@ This folder is the **first landing zone** for *new* external agriculture-related
 
 Create **one folder per source drop**:
 
-📁 `data/external/mappings/agriculture/sources/_incoming/`  
-&nbsp;&nbsp;└── 📁 `<provider>__<dataset>__<version-or-date>/`  
-&nbsp;&nbsp;&nbsp;&nbsp;├── 📁 `source/`  *(original files, untouched)*  
-&nbsp;&nbsp;&nbsp;&nbsp;├── 📁 `docs/`    *(PDFs, codebooks, screenshots, emails-as-pdf)*  
-&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 `manifest.yml`  
-&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 `LICENSE.md` *(or `LICENSE.txt`)*  
-&nbsp;&nbsp;&nbsp;&nbsp;├── 📄 `checksums.sha256`  
-&nbsp;&nbsp;&nbsp;&nbsp;└── 📄 `notes.md` *(optional but recommended)*
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🌾 agriculture/
+         └─ 📁 sources/
+            └─ 📁 _incoming/                                      📥 staging for newly received source bundles
+               └─ 📁 <provider>__<dataset>__<version-or-date>/     🧷 one intake drop (provider + dataset + snapshot)
+                  ├─ 📁 source/                                   🧾 original files (untouched / as-received)
+                  ├─ 📁 docs/                                     📚 PDFs, codebooks, screenshots, emails-as-PDF
+                  ├─ 🧾 manifest.yml                              ✅ intake index (what’s included + where it came from)
+                  ├─ 📄 LICENSE.md                                ✅ license/terms text (or 📄 LICENSE.txt)
+                  ├─ 🔐 checksums.sha256                          ✅ sha256 for every file in this drop
+                  └─ 📄 notes.md                                  ◻️ optional (recommended): context, caveats, next steps
 
 > [!TIP]
 > Prefer `provider__dataset__YYYY-MM-DD` (or `provider__dataset__vX.Y__YYYY-MM-DD`) so diffs and audits stay clean.
