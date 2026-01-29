@@ -13,12 +13,12 @@
 ## 📦 Folder context
 
 ```text
-data/
-└─ external/
-   └─ mappings/
-      └─ census/
-         └─ sources/
-            └─ census_license_and_attribution.md   👈 you are here
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 census/                                    🧮 Census/TIGER mapping packs + plans
+         └─ 📁 sources/                                 📚 source notes, licensing, attribution guidance
+            └─ 📄 census_license_and_attribution.md      👈 you are here (license terms + attribution boilerplate)
 ```
 
 ---
