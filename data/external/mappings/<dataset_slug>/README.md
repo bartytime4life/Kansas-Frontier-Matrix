@@ -1,30 +1,3 @@
----
-kfm:
-  kind: dataset-mapping
-  domain: external
-  dataset_slug: "<dataset_slug>"         # ✅ folder name (kebab-case recommended)
-  status: "draft"                        # draft | active | deprecated
-  owners:
-    - "<name_or_team>"
-  created: "2026-01-29"
-  last_updated: "2026-01-29"
-  classification: "<public|internal|restricted>"
-  care_label: "<none|tbd>"               # CARE / sovereignty label (if applicable)
-  license: "<SPDX-ID-or-TBD>"
-  source:
-    name: "<provider_name>"
-    homepage: "<https://…>"
-    access: "<download|api|scrape|manual>"
-    terms_url: "<https://…>"
-    retrieved_at: "<YYYY-MM-DD>"
-    snapshot_id: "<etag|release|version|doi|tbd>"
-  canonical_ids:
-    dataset_id: "<uuid-or-urn>"
-    stac_collection_id: "<stac_collection_id>"
-    dcat_identifier: "<dcat_uri_or_identifier>"
-    prov_bundle_id: "<prov_bundle_id_or_run_namespace>"
----
-
 # 🗺️ External Dataset Mapping — `<dataset_slug>`
 
 ![Status](https://img.shields.io/badge/status-draft-lightgrey)
