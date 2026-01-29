@@ -1,20 +1,3 @@
----
-id: kfm-data-external-usgs-nhd-legacy
-title: "USGS NHD Legacy (National Hydrography Dataset) — Mapping & Ingestion"
-path: "data/external/mappings/usgs/datasets/nhd_legacy"
-source: "USGS / The National Map"
-status: "frozen"
-kfm_stage: "external/mappings"
-last_reviewed: "2026-01-29"
-tags:
-  - usgs
-  - hydrography
-  - nhd
-  - legacy
-  - vector
-  - mapping
----
-
 # 🛰️ USGS NHD Legacy — Dataset Mapping (KFM)
 
 ![Dataset](https://img.shields.io/badge/dataset-USGS%20NHD%20Legacy-2ea44f)
