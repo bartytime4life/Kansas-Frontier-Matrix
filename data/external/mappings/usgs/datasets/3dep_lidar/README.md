@@ -42,21 +42,26 @@ This directory is a **dataset integration surface** (manifests + mapping), not t
 Recommended layout 👇
 
 ```text
-data/external/mappings/usgs/datasets/3dep_lidar/
-├── README.md                       # you are here 📌
-├── manifests/                      # AOI or project manifests (URLs, IDs, checksums)
-│   ├── aoi/                         # AOI queries & exports (GeoJSON, bbox, etc.)
-│   ├── downloads/                   # resolved download lists (CSV/JSON)
-│   └── checksums/                   # SHA256/MD5 outputs (per-file + rollups)
-├── configs/                        # deterministic ETL configs (no secrets)
-│   ├── pdal/                         # pipelines (copc, ground, thinning, etc.)
-│   ├── gdal/                         # rasterization + COG creation recipes
-│   └── tiling/                       # tile schema decisions (z/x/y, quadtree, etc.)
-├── mappings/                       # metadata mapping rules (source → KFM)
-│   ├── stac/                         # how we form STAC collections/items/assets
-│   ├── dcat/                         # DCAT dataset record mapping
-│   └── prov/                         # provenance bundle templates / run-ids
-└── docs/                           # any extra notes, diagrams, or decision logs 📝
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 usgs/
+         └─ 📁 datasets/
+            └─ 📁 3dep_lidar/                               🛰️ 3DEP LiDAR mapping + ETL/metadata bundle
+               ├─ 📄 README.md                               📌 you are here (runbook + conventions)
+               ├─ 📁 manifests/                              🧾 AOI/project manifests (URLs, IDs, checksums)
+               │  ├─ 📁 aoi/                                 🗺️ AOI queries & exports (GeoJSON, bbox, WKT, etc.)
+               │  ├─ 📁 downloads/                            📥 resolved download lists (CSV/JSON)
+               │  └─ 📁 checksums/                            🔐 SHA256/MD5 outputs (per-file + rollups)
+               ├─ 📁 configs/                                ⚙️ deterministic ETL configs (NO secrets)
+               │  ├─ 📁 pdal/                                 ☁️ PDAL pipelines (COPC, ground, thinning, classification)
+               │  ├─ 📁 gdal/                                 🧱 rasterization + COG creation recipes
+               │  └─ 📁 tiling/                               🧩 tile schema decisions (z/x/y, quadtree, grid, naming)
+               ├─ 📁 mappings/                               🧩 metadata mapping rules (source → KFM)
+               │  ├─ 📁 stac/                                 🛰️ STAC collections/items/assets formation rules
+               │  ├─ 📁 dcat/                                 🗂️ DCAT dataset/distribution mapping
+               │  └─ 📁 prov/                                 🧬 provenance templates + run-id conventions
+               └─ 📁 docs/                                   📝 extra notes, diagrams, ADRs, decision logs
 ```
 
 > 🧊 **Big data rule:** LAZ/EPT/COPC files can be *massive*. Prefer **external object storage** + **manifests** in git.
