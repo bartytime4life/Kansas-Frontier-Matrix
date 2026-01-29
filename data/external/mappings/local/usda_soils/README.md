@@ -42,18 +42,18 @@ flowchart LR
 This repo uses a “data-domain” pattern. For this dataset, the domain is `external`.
 
 ```text
-📦 data/
+📁 data/
 └─ 🌐 external/
-   ├─ 🗂️ raw/
-   │  └─ 🧱 usda_soils/              # downloads (zip/fgdb/gpkg) — do not hand-edit
-   ├─ 🧪 work/
-   │  └─ 🧱 usda_soils/              # scratch/intermediates
-   ├─ ✅ processed/
-   │  └─ 🧱 usda_soils/              # cleaned/standardized outputs (GeoPackage/Parquet/etc.)
-   └─ 🧭 mappings/
-      └─ 🏠 local/
-         └─ 🧱 usda_soils/
-            └─ README.md             # 👈 you are here
+   ├─ 🗂️ raw/                                 🧾 immutable source drops (read-only / never overwrite)
+   │  └─ 🧱 usda_soils/                         📦 downloads (zip/fgdb/gpkg) — do not hand-edit
+   ├─ 🧪 work/                                🧰 staging workspace (scratch + rebuildable)
+   │  └─ 🧱 usda_soils/                         🧪 scratch/intermediates
+   ├─ ✅ processed/                            ✅ curated outputs (downstream-ready)
+   │  └─ 🧱 usda_soils/                         🧼 cleaned/standardized outputs (GeoPackage/Parquet/etc.)
+   └─ 🧭 mappings/                             🧩 mapping packs + ETL/QA plans
+      └─ 🏠 local/                             🏛️ local/partner/API-driven mappings
+         └─ 🧱 usda_soils/                      🌾 USDA soils mapping bundle
+            └─ 📄 README.md                     👈 you are here
 ```
 
 > [!TIP]
