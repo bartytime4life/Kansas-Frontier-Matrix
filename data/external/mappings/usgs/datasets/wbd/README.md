@@ -163,15 +163,15 @@ Recommended companion structure (add folders/files as needed):
 
 ```mermaid
 flowchart LR
-  A[🌐 USGS WBD Source] --> B[📥 data/raw/.../wbd/<snapshot>/]
-  B --> C[🧪 pipeline: import/transform]
-  C --> D[✅ data/processed/.../wbd/]
-  D --> E[🗺️ data/catalog (STAC/DCAT)]
-  D --> F[🧬 data/provenance (PROV)]
-  E --> G[(🗃️ PostGIS / Graph)]
+  A["🌐 USGS WBD Source"] --> B["📥 data/raw/.../wbd/{snapshot}/"]
+  B --> C["🧪 pipeline: import/transform"]
+  C --> D["✅ data/processed/.../wbd/"]
+  D --> E["🗺️ data/catalog (STAC/DCAT)"]
+  D --> F["🧬 data/provenance (PROV)"]
+  E --> G["🗃️ PostGIS / Graph"]
   F --> G
-  G --> H[⚙️ API]
-  H --> I[🖥️ UI]
+  G --> H["⚙️ API"]
+  H --> I["🖥️ UI"]
 ```
 
 > [!IMPORTANT]
