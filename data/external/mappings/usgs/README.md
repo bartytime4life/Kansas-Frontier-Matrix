@@ -28,24 +28,27 @@ This directory is a **runbook + spec pack** for mapping **USGS products** (The N
 > Adjust to match your pipeline tooling — the point is consistency and discoverability. 💡
 
 ```
-data/external/mappings/usgs/
-├── README.md
-├── datasets/
-│   ├── 3dep_dem/
-│   │   ├── dataset.yaml
-│   │   ├── field_map.yml
-│   │   ├── stac.collection.template.json
-│   │   ├── dcat.dataset.template.jsonld
-│   │   └── prov.template.json
-│   ├── 3dep_lidar/
-│   ├── 3dhp_hydrography/
-│   ├── nhd_legacy/
-│   ├── wbd/
-│   └── us_topo_historical/
-└── shared/
-    ├── crs/
-    ├── templates/
-    └── qa_checks.md
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 usgs/                                           🛰️ USGS mapping packs + dataset blueprints
+         ├─ 📄 README.md                                     📘 overview, conventions, and how to add a new USGS dataset
+         ├─ 📁 datasets/                                     🧩 per-dataset mapping bundles (one folder per source program)
+         │  ├─ 📁 3dep_dem/                                  🏔️ 3DEP DEM: elevation rasters → KFM elevation schema
+         │  │  ├─ 📄 dataset.yaml                             ✅ dataset descriptor (scope, inputs, versions, outputs)
+         │  │  ├─ 🧩 field_map.yml                             ✅ source fields/bands → KFM canonical fields mapping
+         │  │  ├─ 📄 stac.collection.template.json             🛰️ STAC Collection template (program-level semantics)
+         │  │  ├─ 📄 dcat.dataset.template.jsonld              🗂️ DCAT dataset template (discovery + governance)
+         │  │  └─ 📄 prov.template.json                        🧬 PROV template (inputs → transforms → outputs)
+         │  ├─ 📁 3dep_lidar/                                 🛰️ 3DEP LiDAR: point clouds/derivatives → KFM lidar schema
+         │  ├─ 📁 3dhp_hydrography/                            🌊 3DHP: modern hydrography products → KFM hydro schema
+         │  ├─ 📁 nhd_legacy/                                 🧾 Legacy NHD: historical hydro layers → compatibility mappings
+         │  ├─ 📁 wbd/                                        🗺️ Watershed Boundary Dataset → KFM watershed schema
+         │  └─ 📁 us_topo_historical/                         🗻 US Topo (historical) → KFM topo/map-sheet schema
+         └─ 📁 shared/                                       🧰 shared building blocks used across USGS datasets
+            ├─ 📁 crs/                                       🧭 CRS definitions + transforms + EPSG notes
+            ├─ 📁 templates/                                  🧱 reusable templates (STAC/DCAT/PROV/mapping skeletons)
+            └─ 📄 qa_checks.md                                🧪 common QA checks (geometry, CRS, ranges, completeness)
 ```
 
 ---
