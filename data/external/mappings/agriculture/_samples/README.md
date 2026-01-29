@@ -37,16 +37,20 @@ This folder is specifically:
 Each sample pack should be **self-contained** and readable in isolation:
 
 ```text
-data/external/mappings/agriculture/_samples/
-├── 📄 README.md
-├── 📁 <sample_id>/
-│   ├── 📄 mapping.yml
-│   ├── 📄 stac.collection.sample.json
-│   ├── 📄 stac.item.sample.json
-│   ├── 📄 dcat.dataset.sample.jsonld
-│   ├── 📄 prov.bundle.sample.jsonld
-│   ├── 📄 notes.md
-│   └── 📁 fixtures/                 # optional tiny example files / schemas / screenshots
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🌾 agriculture/
+         └─ 📁 _samples/                               🧪 worked examples (templates + fixtures)
+            ├─ 📄 README.md                             📘 how to use samples + how to add new ones
+            └─ 📁 <sample_id>/                          🏷️ one sample bundle (self-contained)
+               ├─ 🧩 mapping.yml                         ✅ sample mapping pack (fields/params/outputs)
+               ├─ 🛰️ stac.collection.sample.json         🧩 sample STAC Collection (reference structure)
+               ├─ 🛰️ stac.item.sample.json               📦 sample STAC Item (reference structure)
+               ├─ 🗂️ dcat.dataset.sample.jsonld          🧾 sample DCAT Dataset (JSON-LD discovery record)
+               ├─ 🧬 prov.bundle.sample.jsonld           🧾 sample PROV bundle (lineage + receipts)
+               ├─ 📄 notes.md                            📝 sample-specific guidance + assumptions
+               └─ 📁 fixtures/                           ◻️ optional: tiny example files/schemas/screenshots
 ```
 
 **Rule of thumb:** samples should stay **small**, and focus on demonstrating *structure + correctness*, not “shipping the full dataset.”
