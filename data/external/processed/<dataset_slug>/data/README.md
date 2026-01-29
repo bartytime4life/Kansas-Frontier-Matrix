@@ -39,10 +39,10 @@ flowchart LR
   proc --> stac["🛰️ STAC — data/stac/..."]
   proc --> dcat["📚 DCAT — data/catalog/dcat/..."]
   proc --> prov["🧾 PROV — data/prov/..."]
-  stac --> graph["🕸️ Graph (Neo4j refs)"]
-  dcat --> graph
-  prov --> graph
-  graph --> api["⚙️ API"]
+  stac --> kg["🕸️ Graph (Neo4j refs)"]
+  dcat --> kg
+  prov --> kg
+  kg --> api["⚙️ API"]
   api --> ui["🧭 UI / Story Nodes"]
 ```
 
