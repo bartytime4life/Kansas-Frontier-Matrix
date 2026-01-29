@@ -12,12 +12,12 @@
 ## 📌 Where this file lives
 
 ```text
-📦 data/
-└─ 📂 external/
-   └─ 📂 mappings/
-      └─ 📂 census/
-         └─ 📂 keys/
-            └─ 🗝️ geoid_rules.md   ← you are here
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 📦 census/                                  🧮 Census/TIGER mapping packs + key registries
+         └─ 🔑 keys/                                 🗝️ canonical IDs, dictionaries, and crosswalks
+            └─ 🗝️ geoid_rules.md                      👈 you are here (GEOID composition, padding, validation)
 ```
 
 ---
