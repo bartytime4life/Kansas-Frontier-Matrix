@@ -76,28 +76,28 @@ flowchart LR
 This README lives in **mappings** (docs + field mapping specs). The actual data lifecycle is:
 
 ```text
-data/
-  external/
-    raw/
-      usgs/
-        3dhp_hydrography/
-          2024/                       # (example) annual snapshot(s)
-            source/                   # zips, xml metadata, checksum files
-    work/
-      usgs/
-        3dhp_hydrography/             # scratch/intermediate artifacts (not authoritative)
-    processed/
-      usgs/
-        3dhp_hydrography/             # authoritative KFM-ready outputs (GeoPackage/GeoJSON/Parquet/etc.)
-    mappings/
-      usgs/
-        datasets/
-          3dhp_hydrography/
-            README.md                 # 👈 you are here
-            mapping_flowline.yml      # TODO (field mapping spec)
-            mapping_waterbody.yml     # TODO
-            mapping_catchment.yml     # TODO
-            mapping_hydrolocation.yml # TODO
+📁 data/
+└─ 📁 external/
+   ├─ 📁 raw/
+   │  └─ 📦 usgs/                                      🛰️ USGS source snapshots (read-only / never overwrite)
+   │     └─ 📁 3dhp_hydrography/                        🌊 3DHP Hydrography source drops
+   │        └─ 📁 2024/                                 🧾 example annual snapshot (add new year folders)
+   │           └─ 📁 source/                            📦 raw artifacts (zips, XML metadata, vendor checksums)
+   ├─ 📁 work/
+   │  └─ 📦 usgs/                                      🧪 USGS staging workspace (scratch + rebuildable)
+   │     └─ 📁 3dhp_hydrography/                        🧪 intermediate artifacts (not authoritative)
+   ├─ 📁 processed/
+   │  └─ 📦 usgs/                                      ✅ USGS promoted outputs (downstream-ready)
+   │     └─ 📁 3dhp_hydrography/                        ✅ authoritative KFM-ready outputs (GPKG/GeoJSON/Parquet/etc.)
+   └─ 📁 mappings/
+      └─ 📦 usgs/                                      🧩 mapping packs + ETL/QA plans (USGS)
+         └─ 📁 datasets/
+            └─ 📁 3dhp_hydrography/                     🌊 dataset mapping bundle (3DHP Hydrography)
+               ├─ 📄 README.md                          👈 you are here
+               ├─ 🧩 mapping_flowline.yml               🧱 TODO: flowline field mapping spec (source → KFM)
+               ├─ 🧩 mapping_waterbody.yml              🧱 TODO: waterbody field mapping spec
+               ├─ 🧩 mapping_catchment.yml              🧱 TODO: catchment field mapping spec
+               └─ 🧩 mapping_hydrolocation.yml          🧱 TODO: hydrolocation field mapping spec
 ```
 
 > [!TIP]
