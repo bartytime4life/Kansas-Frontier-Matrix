@@ -1,417 +1,241 @@
-# 🗂️ KFM DCAT Catalog Output Directory
+# 🗂️ DCAT Dataset Catalog (`data/catalog/dcat/`)
 
-**Canonical directory for DCAT dataset discovery records (JSON-LD)**  
-Path: `data/catalog/dcat/`
+[![Metadata](https://img.shields.io/badge/metadata-DCAT-0B7285?logo=w3c&logoColor=white)](https://www.w3.org/TR/vocab-dcat-2/)
+[![Serialization](https://img.shields.io/badge/serialization-JSON--LD-4C1D95?logo=json&logoColor=white)](https://json-ld.org/)
+[![Principle](https://img.shields.io/badge/principle-contract--first-111827)](#-validation--contract-expectations)
+[![Gate](https://img.shields.io/badge/CI-gated%20metadata%20required-DC2626)](#-validation--contract-expectations)
 
-![KFM](https://img.shields.io/badge/KFM-Kansas%20Frontier%20Matrix-222222)
-![DCAT](https://img.shields.io/badge/metadata-DCAT%20(JSON--LD)-0B7285)
-![STAC](https://img.shields.io/badge/geospatial-STAC-FF7A00)
-![PROV](https://img.shields.io/badge/lineage-PROV-6F42C1)
-![Governance](https://img.shields.io/badge/governance-provenance--first-6F42C1)
-![CI](https://img.shields.io/badge/CI-catalog%20QA%20gate-2DA44E)
-![Security](https://img.shields.io/badge/security-sensitive%20data%20aware-red)
-
-**Discoverability metadata** for KFM datasets — **not the data itself**.  
-DCAT is how KFM becomes *searchable + harvestable + shareable* **without** bypassing governance. 🧭🧾
-
-</div>
+> 🎯 **Purpose:** This folder holds **DCAT dataset records** that make KFM datasets *discoverable* and *harvestable* (e.g., by external catalog tooling), while pointing users (and machines) to the authoritative **STAC** + **PROV** artifacts.
 
 ---
 
-## 🚀 Quick links
+## 🧠 DCAT vs STAC vs PROV (quick mental model)
 
-- 👈 Back to catalog overview → [`../README.md`](../README.md)
-- 📦 DCAT dataset records → [`./`](./)
-- 🛰️ STAC outputs → [`../../stac/`](../../stac/)
-- 🧬 PROV outputs → [`../../prov/`](../../prov/)
-- 🕸️ Graph exports (if present) → [`../../graph/`](../../graph/)
-- 🧪 Catalog QA tool (recommended) → `tools/validation/catalog_qa/`
-- 🧾 Schemas (expected) → `schemas/dcat/` *(and/or SHACL shapes if adopted)*
-- 🔐 Security policy → [`../../../SECURITY.md`](../../../SECURITY.md) *(or `.github/SECURITY.md` depending on repo convention)*
-- ⚖️ Governance (expected) → `docs/governance/`
+| Spec | KFM role ✅ | Best at | Typical payload |
+|---|---|---|---|
+| **DCAT** | **Discovery layer** | “What is this dataset?” + “How do I access it?” | `dcat:Dataset` + `dcat:Distribution[]` |
+| **STAC** | **Geospatial asset index** | Spatial/temporal search + asset metadata | `Collection` + `Item(s)` |
+| **PROV** | **Lineage & reproducibility** | How it was produced (inputs → steps → outputs) | `prov:Activity`, `prov:Entity`, `prov:Agent` |
 
-> [!IMPORTANT]
-> In KFM, **metadata is code** ✅  
-> Missing license/provider/access constraints is treated as a **ship-stopper** for federation + trust.
+🧩 **Rule of thumb:**  
+- **DCAT** should stay *high-level* (discovery + access).  
+- **STAC** carries *geospatial detail*.  
+- **PROV** proves *how/why it exists*.
 
 ---
 
-<details>
-<summary><strong>📌 Table of contents</strong></summary>
-
-- [🧱 Canonical pipeline position (non-negotiable)](#-canonical-pipeline-position-non-negotiable)
-- [🎯 What this directory is (and is not)](#-what-this-directory-is-and-is-not)
-- [🗺️ Directory contract & layout](#️-directory-contract--layout)
-- [🏷️ Dataset identity & versioning](#️-dataset-identity--versioning)
-- [🔗 DCAT ↔ STAC ↔ PROV ↔ Graph alignment](#-dcat--stac--prov--graph-alignment)
-- [📦 Record expectations (folder-level)](#-record-expectations-folder-level)
-- [🧪 Validation & CI gates](#-validation--ci-gates)
-- [🔒 Governance: FAIR+CARE, sovereignty, sensitive locations](#-governance-faircare-sovereignty-sensitive-locations)
-- [🤖 Automation & AI-derived datasets](#-automation--ai-derived-datasets)
-- [✅ Add or update a DCAT record checklist](#-add-or-update-a-dcat-record-checklist)
-- [📚 References](#-references)
-- [🕰️ Version history](#️-version-history)
-
-</details>
-
----
-
-## 🧱 Canonical pipeline position (non-negotiable)
-
-KFM canonical ordering:
-
-**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+## 🗺️ Where DCAT sits in the “truth path”
 
 ```mermaid
 flowchart LR
-  RAW["📥 Raw sources<br/>data/raw/<domain>/"] --> WORK["🧰 Work / intermediate<br/>data/work/<domain>/"]
-  WORK --> PROC["🗄️ Processed outputs<br/>data/processed/<domain>/"]
-  PROC --> STAC["🛰️ STAC<br/>data/stac/…"]
-  STAC --> DCAT["🗂️ DCAT<br/>data/catalog/dcat/…"]
-  STAC --> PROV["🧬 PROV<br/>data/prov/…"]
-  DCAT --> GRAPH["🕸️ Graph<br/>(references back to catalogs)"]
-  GRAPH --> API["🔌 Governed API<br/>(contracts + redaction)"]
-  API --> UI["🗺️ UI<br/>(map/timeline/downloads)"]
-  UI --> STORY["🎬 Story Nodes"]
-  STORY --> FOCUS["🧠 Focus Mode<br/>(provenance-linked bundle)"]
+  A["📥 Raw Sources<br/>data/raw/<domain>/"] --> B["🧪 ETL + Normalization<br/>data/work/<domain>/ → data/processed/<domain>/"]
+  B --> C["🛰️ STAC Items + Collections<br/>data/stac/…"]
+  C --> D["🗂️ DCAT Dataset Views<br/>data/catalog/dcat/…"]
+  C --> E["🧾 PROV Lineage Bundles<br/>data/prov/…"]
+
+  C --> G["🧠 Neo4j Graph<br/>(references catalogs)"]
+  G --> H["🔌 API Layer<br/>(contracts + redaction)"]
+  H --> I["🗺️ UI<br/>React · MapLibre · (optional) Cesium"]
+  I --> J["📚 Story Nodes<br/>(governed narratives)"]
+  J --> K["🎯 Focus Mode<br/>(provenance-linked bundle)"]
 ```
 
-> [!NOTE]
-> These **catalog artifacts** (STAC + DCAT + PROV) are “boundary artifacts.”  
-> They are required before a dataset is considered **publish-ready**.
-
 ---
 
-## 🎯 What this directory is (and is not)
+## 📁 What lives in this folder
 
-### ✅ This directory **IS**
-- 🗂️ **DCAT `dcat:Dataset` records** in **JSON-LD** (canonical serialization) for KFM datasets.
-- 🧾 A **discoverability surface** for internal search and external federation/harvesting.
-- 🛡️ A **governance surface**: datasets can be discoverable without leaking restricted access paths.
-
-### ❌ This directory is **NOT**
-- 🗃️ The data itself (no rasters/vectors/models/reports here).
-- 🛰️ A replacement for **STAC** (assets/footprints/time belong in STAC).
-- 🧬 A replacement for **PROV** (lineage belongs in PROV bundles).
-- 🧨 A place for hand-invented, non-validatable metadata (“schemas > vibes”).
-
-> [!CAUTION]
-> **Do not add direct storage URLs** here that bypass the governed API or approved distribution policy.  
-> If a dataset is gated, DCAT must reflect gating (landing page / accessURL) rather than leaking raw paths.
-
----
-
-## 🗺️ Directory contract & layout
-
-### 📌 Contract summary (MUST / SHOULD / MUST NOT)
-
-**MUST**
-- Keep **one DCAT dataset record per dataset ID** (no duplicates, no forks).
-- Keep records **diff-stable** (deterministic generation: stable ordering, stable IDs).
-- Include **access constraints** (`dct:accessRights` and/or profile-equivalent) for every dataset.
-
-**SHOULD**
-- Generate DCAT records via pipelines (or a single catalog-builder tool), not ad-hoc editing.
-- Provide at least one distribution that points to **STAC** or a governed API/landing page.
-- Link provenance (`prov:wasGeneratedBy`) to the producing PROV bundle/run.
-
-**MUST NOT**
-- Store raw/processed data artifacts here.
-- Embed sensitive coordinates or restricted “how to get it” instructions in DCAT text.
-
-### 📁 Expected file tree
+**Recommended layout:**
 
 ```text
-📁 data/
-├─ 📁 catalog/
-│  └─ 📁 dcat/
-│     ├─ 📄 README.md                      👈 you are here
-│     ├─ 📄 <dataset_id>.jsonld            ✅ canonical dataset record (JSON-LD)
-│     ├─ 📄 <dataset_id>.ttl               ◻️ optional (only if adopted + validated)
-│     └─ 📄 catalog.jsonld                 ◻️ optional aggregate dcat:Catalog export
-└─ …
+data/catalog/dcat/
+├── 📄 README.md
+├── 📄 catalog.jsonld                # (optional) top-level aggregator for harvesters
+├── 📄 <dataset_id>__v1.jsonld        # dataset v1 (immutable after publish)
+├── 📄 <dataset_id>__v2.jsonld        # dataset v2 (links back to v1)
+└── 📁 _attachments/                 # (optional) human docs, citations, PDFs, etc.
 ```
 
-### 🏷️ File naming
+### ✅ Naming guidance (practical, not sacred)
+Use stable, predictable IDs so cross-links don’t rot:
+- `historical__land-treaties__v1.jsonld`
+- `hydrology__river-flow__v2.jsonld`
+- `climate__prism-normals__v1.jsonld`
 
-Preferred (grep-friendly, stable):
+---
 
-```text
-data/catalog/dcat/<dataset_id>.jsonld
-# example:
-data/catalog/dcat/kfm.ks.landcover.2000_2020.v1.jsonld
+## ✅ Minimum record checklist
+
+Each dataset record **MUST** be a `dcat:Dataset` and **SHOULD** expose at least:
+
+- [ ] `dcterms:title`
+- [ ] `dcterms:description`
+- [ ] `dcterms:license` (or `dcat:license` depending on your profile)
+- [ ] `dcat:keyword` (searchability)
+- [ ] `dcat:distribution` (one or more)
+- [ ] `dcterms:publisher` / `dcterms:creator` (accountability)
+- [ ] `dcterms:issued` + `dcterms:modified` (timeline hygiene)
+- [ ] `dcterms:spatial` and/or `dcterms:temporal` (when applicable)
+
+> 🧷 KFM treats metadata as a **boundary artifact**: if the dataset is “published,” DCAT must exist, along with STAC + PROV.
+
+---
+
+## 🔗 Cross-linking rules (don’t break these)
+
+### 1) DCAT → STAC / Data
+Every `dcat:Distribution` should point to either:
+- a **STAC** record (best for geospatial assets), and/or  
+- the **underlying data** (direct download / stable storage URL / API endpoint)
+
+**Practical pattern:**
+- `dcat:accessURL` → “browse/search here” (STAC Item/Collection or API endpoint)
+- `dcat:downloadURL` → “download this exact file” (processed artifact)
+
+### 2) DCAT → PROV (lineage)
+DCAT should reference lineage **without duplicating it**. Keep PROV as the source of truth.
+
+Common approaches (pick the one your profile standardizes):
+- `dcterms:provenance` → PROV bundle URI
+- `prov:wasGeneratedBy` → PROV Activity URI
+- `prov:wasDerivedFrom` → upstream dataset entity
+
+### 3) Graph references catalogs (not payloads)
+If/when a dataset is loaded into Neo4j, nodes should store **IDs/links** to:
+- STAC Item/Collection IDs
+- DCAT Dataset IDs
+- PROV run/activity IDs
+
+Not the bulky data itself. 🧠📦
+
+---
+
+## 🧬 Versioning & identifiers
+
+### Dataset versioning (required behavior)
+When a dataset is updated/reprocessed:
+- **Create a new DCAT file** (don’t edit the published one).
+- Link the new dataset to the previous version using:
+  - `prov:wasRevisionOf` → previous dataset version
+
+### Persistent IDs (recommended for “publish-grade” datasets)
+If the dataset is meant to be cited externally:
+- include a persistent identifier (`DOI`, `ARK`, etc.) at the dataset level
+- keep the identifier stable per version
+
+---
+
+## 🧩 JSON-LD template (copy/paste starter)
+
+> 🛠️ This is a **starter**. Your final fields should match `docs/standards/KFM_DCAT_PROFILE.md` and any JSON Schema under `schemas/dcat/`.
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/dcat2.jsonld",
+    {
+      "dcat": "http://www.w3.org/ns/dcat#",
+      "dcterms": "http://purl.org/dc/terms/",
+      "prov": "http://www.w3.org/ns/prov#",
+      "schema": "https://schema.org/"
+    }
+  ],
+  "@id": "urn:kfm:dataset:<domain>:<dataset>:v1",
+  "@type": "dcat:Dataset",
+
+  "dcterms:identifier": "<dataset_id>",
+  "dcterms:title": "<Human-friendly title>",
+  "dcterms:description": "<What it is, why it exists, what’s inside>",
+  "dcterms:license": "<SPDX id or URL>",
+  "dcat:keyword": ["<keyword1>", "<keyword2>", "<keyword3>"],
+
+  "dcterms:publisher": {
+    "@type": "schema:Organization",
+    "schema:name": "Kansas Frontier Matrix (KFM)"
+  },
+
+  "dcterms:issued": "2026-01-29",
+  "dcterms:modified": "2026-01-29",
+
+  "dcat:distribution": [
+    {
+      "@type": "dcat:Distribution",
+      "dcterms:title": "Primary data artifact",
+      "dcat:downloadURL": "data/processed/<domain>/<artifact>.<ext>",
+      "dcat:mediaType": "<mime-type>",
+      "dcterms:format": "<format label>"
+    },
+    {
+      "@type": "dcat:Distribution",
+      "dcterms:title": "STAC record",
+      "dcat:accessURL": "data/stac/items/<stac_item_id>.json",
+      "dcterms:format": "STAC Item"
+    }
+  ],
+
+  "dcterms:provenance": "data/prov/<dataset_id>__v1.prov.json"
+}
 ```
 
-> [!TIP]
-> Keep names **lowercase** and **stable**. If you rename a dataset ID, treat it as a breaking change and create an explicit replacement trail.
+### 🧷 Version bump example (v2 → v1)
 
----
-
-## 🏷️ Dataset identity & versioning
-
-### ✅ Dataset IDs (recommended KFM pattern)
-
-Dataset IDs are the join key across **STAC + DCAT + PROV + Graph + API**.
-
-Recommended pattern:
-
-```text
-kfm.<state|region>.<theme>.<product_or_layer>.<time_or_range>.v<major>
-# example:
-kfm.ks.landcover.classification.2000_2020.v1
+```json
+{
+  "@id": "urn:kfm:dataset:<domain>:<dataset>:v2",
+  "@type": "dcat:Dataset",
+  "prov:wasRevisionOf": "urn:kfm:dataset:<domain>:<dataset>:v1"
+}
 ```
 
-### 🔁 Versioning expectations
+---
 
-KFM is versioned at two levels:
+## 🧪 Validation & contract expectations
 
-1) **Dataset-level** (this directory)  
-- Prefer stable **persistent** dataset identifiers.
-- When content meaningfully changes, publish a new dataset version (e.g., `.v2`).
-- Link revisions (recommended): `prov:wasRevisionOf` or `dct:isVersionOf` (profile-dependent).
+KFM is **contract-first**. That means:
 
-2) **System-level** (profiles/contracts/ontology)  
-- Profiles (STAC/DCAT/PROV) and schemas evolve independently.  
-- If a profile update changes required fields, CI must enforce the new contract.
+- 📐 **Schemas live as artifacts** (see `schemas/dcat/`)
+- 📏 **Profiles define allowed/required fields** (see `docs/standards/KFM_DCAT_PROFILE.md`)
+- 🚦 **CI gates metadata** — missing or invalid DCAT should fail fast
 
-> [!IMPORTANT]
-> Avoid “silent mutation.” A dataset that changes meaning should change version, and provenance must record how/why.
+**Validation should cover:**
+- JSON-LD parsing + RDF sanity (no broken contexts, no invalid JSON)
+- conformance to KFM profile
+- cross-link existence checks:
+  - STAC targets exist
+  - PROV target exists
+  - referenced data artifacts exist (or resolve via stable storage)
 
 ---
 
-## 🔗 DCAT ↔ STAC ↔ PROV ↔ Graph alignment
+## 🚀 Adding a new dataset (TL;DR)
 
-KFM “dies on link integrity” 🧷
-
-### 🔗 Minimum linkage expectations
-
-Each DCAT dataset record in this folder should:
-- Reference **how to access** the dataset (via distribution):
-  - STAC collection/item **or** governed API endpoint **or** landing page.
-- Reference **lineage** (required for publish-ready evidence):
-  - `prov:wasGeneratedBy` → a PROV run/bundle ID (or equivalent in KFM profile).
-- Use identifiers that downstream stages can reference:
-  - Graph nodes and Story Nodes should reference dataset IDs (not raw file paths).
-
-### 🧩 Recommended mapping table (convention)
-
-| Concept | Example | Where it should appear |
-|---|---|---|
-| `dataset_id` | `kfm.ks.landcover.2000_2020.v1` | filename + `dct:identifier` |
-| `stac_collection_id` | `kfm.ks.landcover.2000_2020.v1` | `data/stac/collections/<id>/collection.json` |
-| `prov_run_id` | `prov:run:2026-01-11T...Z` | `data/prov/<run_id>/prov.jsonld` |
-| `api_access_url` | `/api/v1/datasets/<dataset_id>` | `dcat:distribution` (accessURL) |
-
-> [!NOTE]
-> KFM commonly treats a set of STAC Items as a Collection and **rolls that up** into a DCAT dataset view for external discovery.
+1. 📥 Put sources in `data/raw/<domain>/`
+2. 🧪 Transform into `data/processed/<domain>/`
+3. 🛰️ Generate STAC:
+   - `data/stac/collections/…`
+   - `data/stac/items/…`
+4. 🗂️ Generate this DCAT record:
+   - `data/catalog/dcat/<dataset_id>__vX.jsonld`
+5. 🧾 Generate PROV:
+   - `data/prov/<dataset_id>__vX.prov.json`
+6. ✅ Ensure cross-links resolve & CI passes
 
 ---
 
-## 📦 Record expectations (folder-level)
+## 🧯 Common gotchas
 
-This README does **not** replace a full DCAT profile spec (that belongs in `docs/standards/` and `schemas/`).
-
-### ✅ Minimum expected metadata (baseline)
-
-At minimum, each dataset record should provide:
-- Stable ID (`@id` and/or `dct:identifier`)
-- Human meaning (`dct:title`, `dct:description`)
-- Ownership/authority (`dct:publisher`)
-- License (`dct:license`)
-- Access constraints (`dct:accessRights` and/or profile-equivalent)
-- At least one distribution (`dcat:distribution`)
-- Freshness (`dct:issued` and/or `dct:modified`)
-
-### 🧩 KFM-specific strengthening (profile-level; recommended)
-
-KFM intends to enforce stricter validation beyond base standards, such as:
-- Kansas-aware coverage tags (e.g., county tag where applicable)
-- Explicit data sensitivity classification
-- Standardized naming and ID scheme enforcement
-- Optional uncertainty/quality indicators (when relevant)
-
-> [!TIP]
-> If you need custom fields, extend the **KFM DCAT profile** instead of inventing ad-hoc keys.
-
-### 🧾 Atomic publish expectation
-
-Catalog publication should behave like a transaction:
-- stage outputs first,
-- validate everything,
-- publish “all-or-nothing” (no partial catalog updates).
-
-This prevents broken or half-updated metadata from appearing downstream.
+- ❌ **Don’t duplicate STAC inside DCAT.** Link to it.
+- ❌ **Don’t hand-invent fields.** Extend the KFM profiles instead.
+- ✅ **Prefer stable identifiers.** File paths change; IDs should not.
+- ✅ **Treat AI/analysis outputs as first-class datasets.** They still need DCAT + PROV.
 
 ---
 
-## 🧪 Validation & CI gates
+## 🔗 See also
 
-### ✅ Minimum checks (recommended “must pass” gates)
-
-- **Schema validation**
-  - JSON-LD parses cleanly
-  - Validates against KFM schema (JSON Schema and/or SHACL if adopted)
-- **Catalog QA**
-  - required fields exist (license/provider/access constraints)
-  - no broken links / missing referenced artifacts
-- **Link integrity / orphan checks**
-  - STAC/PROV references resolve (when required)
-  - Graph/API/Story references resolve to a DCAT record
-- **Governance lint**
-  - restricted datasets do not expose precise coordinates
-  - classification tags are present and consistent
-- **Determinism**
-  - re-running the catalog build with unchanged inputs produces diff-stable output
-
-### 🧰 Local quick checks
-
-```bash
-# JSON parse sanity
-python -m json.tool data/catalog/dcat/<dataset_id>.jsonld > /dev/null
-
-# optional: stable format (example)
-jq -S . data/catalog/dcat/<dataset_id>.jsonld > /dev/null
-```
-
-### 🧪 Catalog QA gate (expected location)
-
-```bash
-python3 tools/validation/catalog_qa/run_catalog_qa.py \
-  --root data/ \
-  --fail-on-warn
-```
-
-### 🧾 Policy Pack gate (roadmap)
-
-A policy layer is recommended to fail PRs that violate governance rules (examples):
-- missing license / missing publisher
-- invalid classification propagation
-- restricted datasets exposing location precision
-- disallowed external distribution domains
-
-> [!NOTE]
-> A common implementation pattern is to express these as OPA/Conftest rules (repo “Policy Pack”).
-
-### 🔐 Supply-chain hardening (release-time)
-
-For official releases, KFM can attach:
-- SBOM
-- provenance attestations (SLSA-style)
-- signed artifacts (Sigstore)
-
-These belong under `releases/` and complement DCAT (they do not replace it).
+- 📁 `data/stac/` — STAC Collections + Items  
+- 📁 `data/prov/` — PROV lineage bundles  
+- 📘 `docs/standards/KFM_DCAT_PROFILE.md` — KFM-required DCAT fields  
+- 📘 `docs/MASTER_GUIDE_v13.md` — canonical pipeline & repo structure  
+- 🌐 W3C DCAT — vocabulary specification (external)
 
 ---
-
-## 🔒 Governance: FAIR+CARE, sovereignty, sensitive locations
-
-### 🧭 Classification levels (recommended)
-
-| Level | Who can access | DCAT behavior |
-|---|---|---|
-| **Public** 🌍 | everyone | standard distributions allowed |
-| **Internal** 🏢 | collaborators | distributions may require auth |
-| **Confidential** 🔐 | approved users | prefer governed API access; avoid direct downloads |
-| **Restricted** 🧨 | owners/admins | minimal disclosure; landing page / request flow only |
-
-### 🧯 Sensitive locations & redaction rules
-
-If a dataset involves sensitive locations or culturally protected knowledge:
-- **do not publish precise coordinates** in DCAT
-- use generalized spatial coverage (county/grid/Kansas-level statements)
-- expose access via a governed endpoint or access-request landing page
-- ensure restrictions **propagate** downstream (Graph/API/UI must not loosen)
-
-> [!IMPORTANT]
-> “Downstream stages cannot become *less restricted* than upstream inputs.”  
-> If any input is restricted, outputs stay restricted unless explicitly reviewed and reclassified.
-
-### 🧾 Governance review triggers (minimum)
-
-Require human governance review when a change introduces:
-- a new external data source (license + sovereignty implications)
-- new public distributions or public metadata exposure
-- classification changes (public ↔ restricted)
-- new AI narrative generation or evidence presentation behavior
-- changes to schemas/profiles that alter what metadata becomes visible
-
----
-
-## 🤖 Automation & AI-derived datasets
-
-### 🧠 AI/analysis outputs are first-class datasets
-
-If a pipeline produces:
-- 🛰️ derived geospatial layers → **STAC + DCAT + PROV**
-- 📈 evaluation artifacts → **DCAT + PROV**
-- 🧾 reports → **DCAT + PROV**
-- 🕸️ graph extractions → graph nodes **must reference provenance-backed IDs**
-
-> [!CAUTION]
-> “AI did it” is not provenance. Every derived artifact needs lineage.
-
-### 🤝 Automation agents (Watcher / Planner / Executor)
-
-KFM automation should follow a safe posture:
-- Watchers detect changes and propose updates
-- Planners produce an auditable plan (what changes, why, how validated)
-- Executors open PRs but **do not auto-merge** governed artifacts without review
-
-This keeps catalog outputs trustworthy and reviewable.
-
----
-
-## ✅ Add or update a DCAT record checklist
-
-### 0) Choose the dataset ID 🏷️
-- Stable and descriptive
-- Join key across STAC/DCAT/PROV/Graph/API
-
-### 1) Ensure data lifecycle is correct 📥🧰🗄️
-- `data/sources/` has source manifests (if applicable)
-- `data/raw/<domain>/` contains source snapshots/pointers
-- `data/work/<domain>/` contains intermediates
-- `data/processed/<domain>/` contains publish-ready outputs
-
-### 2) Publish boundary artifacts 📦
-- 🛰️ STAC updated under `data/stac/…`
-- 🧬 PROV run written under `data/prov/…`
-- 🗂️ DCAT record written here under `data/catalog/dcat/<dataset_id>.jsonld`
-
-### 3) Run validation gates ✅
-- JSON parse + schema checks
-- Catalog QA
-- Link/orphan checks
-- Governance lint
-
-### 4) Open PR with governance context 🧾
-- describe what changed and why
-- include access classification (and redaction behavior, if any)
-- update `CHANGELOG.md` under **[Unreleased]** if contracts/profiles changed
-
----
-
-## 📚 References
-
-### Governing / project docs (expected paths)
-- Master Guide: `docs/MASTER_GUIDE_v13.md`
-- Markdown protocol + templates: `docs/standards/` · `docs/templates/`
-- Governance: `docs/governance/` (ROOT_GOVERNANCE, ETHICS, SOVEREIGNTY)
-- STAC outputs: `data/stac/README.md`
-- PROV outputs: `data/prov/README.md`
-
-### Reference library (non-normative)
-See `../README.md` → **Project reference library** 📚
-
----
-
-## 🕰️ Version history
-
-| Version | Date | Summary | Author |
-|---|---|---|---|
-| v1.1.0 | 2026-01-11 | Align directory contract with v13 pipeline ordering; clarified data lifecycle paths, deterministic generation, Catalog QA/policy gates, and governance propagation rules | TBD |
-| v1.0.0 | 2025-12-24 | Initial README for `data/catalog/dcat/` | TBD |
-
----
-
-<p align="right"><a href="#-kfm-dcat-catalog-output-directory">⬆️ Back to top</a></p>
