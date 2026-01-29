@@ -15,12 +15,12 @@ Raw data is **evidence**. This folder stores **exact, unmodified** source artifa
 
 ```mermaid
 flowchart LR
-  A[📥 data/raw<br/>immutable inputs] --> B[🧪 pipelines/<br/>ETL + normalization]
-  B --> C[✅ data/processed<br/>ready-to-serve outputs]
-  C --> D[🧾 data/catalog + data/provenance<br/>(or data/stac + data/prov)]
-  D --> E[(🗄️ Spatial/Graph DBs)]
-  E --> F[🌐 API]
-  F --> G[🗺️ UI / Stories / Focus Mode]
+  A["📥 data/raw — immutable inputs"] --> B["🧪 pipelines/ — ETL + normalization"]
+  B --> C["✅ data/processed — ready-to-serve outputs"]
+  C --> D["🧾 data/catalog + data/provenance (or data/stac + data/prov)"]
+  D --> E["🗄️ Spatial/Graph DBs"]
+  E --> F["🌐 API"]
+  F --> G["🗺️ UI / Stories / Focus Mode"]
 ```
 
 ---
