@@ -49,23 +49,27 @@ flowchart LR
 This folder is intentionally **documentation-first**. Keep it small, readable, and review-friendly.
 
 ```text
-data/external/mappings/climate/stac/
-├── README.md
-├── 📁 templates/                      # JSON skeletons / “golden examples”
-│   ├── collection.template.json
-│   ├── item.raster.template.json
-│   ├── item.timeseries.template.json
-│   └── assets.media-types.md
-├── 📁 sources/                        # one folder per upstream provider/source
-│   ├── <source_slug>/
-│   │   ├── mapping.md                 # field mapping notes (source → STAC)
-│   │   ├── keywords.yml               # controlled tags (optional)
-│   │   ├── licenses.md                # license + attribution notes
-│   │   └── examples/                  # example generated STAC JSONs (optional)
-│   └── ...
-└── 📁 qa/
-    ├── validation-checklist.md
-    └── known-issues.md
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🌦️ climate/
+         └─ 📁 stac/                                  🛰️ STAC plans + templates for climate datasets
+            ├─ 📄 README.md                             📘 overview + how to generate/validate STAC
+            ├─ 📁 templates/                            🧱 JSON skeletons / “golden examples”
+            │  ├─ 📄 collection.template.json            🧩 STAC Collection template (climate defaults)
+            │  ├─ 📄 item.raster.template.json           🖼️ STAC Item template for rasters (COG/GeoTIFF)
+            │  ├─ 📄 item.timeseries.template.json       📈 STAC Item template for time-series (tables/arrays)
+            │  └─ 📄 assets.media-types.md               🏷️ asset media-type reference + conventions
+            ├─ 📁 sources/                               🌐 upstream providers (one folder per source)
+            │  ├─ 📁 <source_slug>/                      🏷️ provider namespace (e.g., prism/, noaa/, era5/)
+            │  │  ├─ 📝 mapping.md                        🧭 mapping notes (source fields → STAC properties/assets)
+            │  │  ├─ 🧩 keywords.yml                      ◻️ optional: controlled tags/keywords for search
+            │  │  ├─ 📄 licenses.md                       📜 license + attribution notes (with citations)
+            │  │  └─ 📁 examples/                         ◻️ optional: example generated STAC JSONs
+            │  └─ 📦 ...                                   ➕ additional providers
+            └─ 📁 qa/                                     🧪 STAC quality gates + known issues
+               ├─ 📄 validation-checklist.md              ✅ validation checklist (what must pass)
+               └─ 📄 known-issues.md                      🧯 known quirks + mitigations
 ```
 
 > [!TIP]
