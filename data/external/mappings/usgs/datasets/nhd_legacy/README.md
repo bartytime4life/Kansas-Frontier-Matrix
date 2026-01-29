@@ -84,13 +84,13 @@ This dataset follows the KFM staging pattern, namespaced under `data/external/`:
 And the **required KFM “boundary artifacts”** must be written to canonical locations:
 
 ```text
-data/
-├─ stac/
-│  ├─ collections/                         🛰️ collection metadata
-│  └─ items/                               📍 per-asset/per-tile/per-subset items
-├─ catalog/
-│  └─ dcat/                                🧾 dataset discovery records (JSON-LD)
-└─ prov/                                   🧬 lineage bundles (inputs → activities → outputs)
+📁 data/
+├─ 📁 stac/                                 🛰️ geospatial catalog (STAC)
+│  ├─ 📁 collections/                        🧩 collection metadata (scope, semantics, licensing)
+│  └─ 📁 items/                              📍 per-asset/per-tile/per-subset STAC Items
+├─ 📁 catalog/                               🗂️ discovery catalog (DCAT)
+│  └─ 📁 dcat/                               🧾 dataset discovery records (JSON-LD)
+└─ 📁 prov/                                  🧬 lineage bundles (inputs → activities → outputs)
 ```
 
 ---
