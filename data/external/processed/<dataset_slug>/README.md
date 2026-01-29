@@ -76,21 +76,24 @@ This folder contains the **authoritative processed outputs** for the dataset **`
 Recommended structure inside `data/external/processed/<dataset_slug>/`:
 
 ```text
-📁 data/external/processed/<dataset_slug>/
-├─ 📄 README.md                👈 you are here
-├─ 📄 CHANGELOG.md             (optional but recommended)
-├─ 📄 checksums.sha256         (recommended for large/binary assets)
-├─ 📁 data/                    (processed outputs)
-│  ├─ <dataset_slug>.parquet
-│  ├─ <dataset_slug>.geojson
-│  └─ ...
-├─ 📁 schema/                  (data dictionary + schema artifacts)
-│  ├─ schema.json
-│  └─ data_dictionary.md
-└─ 📁 validation/              (pipeline-produced reports)
-   ├─ row_counts.json
-   ├─ expectations.md
-   └─ validation_report.md
+📁 data/
+└─ 📁 external/
+   └─ 📁 processed/
+      └─ 📁 <dataset_slug>/                          ✅ dataset root (promoted outputs + runbooks)
+         ├─ 📄 README.md                              👈 you are here
+         ├─ 📄 CHANGELOG.md                           ◻️ optional (recommended): version notes + diffs
+         ├─ 📄 checksums.sha256                       ◻️ optional (recommended): sha256 for all artifacts (esp. binaries)
+         ├─ 📁 data/                                  📦 processed outputs (canonical distributions)
+         │  ├─ 📄 <dataset_slug>.parquet               🧱 tabular/geo distribution (preferred when applicable)
+         │  ├─ 📄 <dataset_slug>.geojson               🗺️ interchange export (use sparingly for large geometry)
+         │  └─ 📦 ...                                  ➕ additional formats (COG/PMTiles/CSV/etc.)
+         ├─ 📁 schema/                                🧾 schema + data dictionary artifacts
+         │  ├─ 📄 schema.json                          🧩 machine-readable schema (types, required fields, domains)
+         │  └─ 📄 data_dictionary.md                   📚 human-readable field guide (meaning, units, codes)
+         └─ 📁 validation/                             🧪 pipeline-produced QA + expectations + reports
+            ├─ 📄 row_counts.json                      🔢 record counts + group breakdowns
+            ├─ 📄 expectations.md                      ✅ validation assertions (rules/thresholds)
+            └─ 📄 validation_report.md                 🧾 results summary (passes/failures + links to evidence)
 ```
 
 > [!TIP]
