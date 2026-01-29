@@ -1,13 +1,3 @@
----
-title: "📎 Attachments — <dataset_slug>"
-path: "data/external/mappings/<dataset_slug>/attachments/README.md"
-doc_kind: "Data Evidence (External Mapping Attachments)"
-status: "template"
-last_updated: "YYYY-MM-DD"
-dataset_slug: "<dataset_slug>"
-license: "Varies per attachment (see per-file notes + license docs)"
----
-
 # 📎 Attachments — `<dataset_slug>`
 
 ![scope](https://img.shields.io/badge/scope-data%2Fexternal%2Fmappings-blue?style=flat-square)
