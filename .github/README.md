@@ -246,34 +246,34 @@ From your current `.github/` structure (per screenshot), these are solid foundat
 ### ⭐ Recommended `.github/` tree (KFM-friendly)
 
 ```text
-.github/
-├─ 📌 README.md                        # What this folder does + how to use it
-├─ 👥 CODEOWNERS                       # Required reviewers for sensitive areas
-├─ 🔐 SECURITY.md                      # Security policy + reporting
-├─ 🔁 dependabot.yml                   # Dependency update automation
-├─ 🧾 release-drafter.yml              # Release notes automation
-├─ 💬 PULL_REQUEST_TEMPLATE.md         # PR checklist + required artifacts
+📁 .github/
+├─ 📄 README.md                                📌 what this folder does + how to use it
+├─ 📄 CODEOWNERS                               👥 required reviewers for sensitive areas
+├─ 📄 SECURITY.md                              🔐 security policy + reporting
+├─ 📄 dependabot.yml                           🔁 dependency update automation
+├─ 📄 release-drafter.yml                      🧾 release notes automation
+├─ 📄 PULL_REQUEST_TEMPLATE.md                 💬 PR checklist + required artifacts
 │
-├─ 🧰 actions/                         # Reusable composite actions
-│  ├─ setup-python/                    # e.g., cache deps, install, lint
-│  ├─ validate-metadata/               # STAC/DCAT/PROV schema checks
-│  └─ ...                              # keep small + reusable
+├─ 📁 actions/                                 🧰 reusable composite actions (small, composable)
+│  ├─ 📁 setup-python/                         🐍 cache deps, install, lint, test helpers
+│  ├─ 📁 validate-metadata/                    🛰️ STAC/DCAT/PROV schema + structure checks
+│  └─ 📦 ...                                    ➕ keep actions small + reusable
 │
-├─ 🧵 workflows/                       # CI/CD (the “fail-closed” gate) 🛡️
-│  ├─ ci.yml                           # tests/lint for api + web
-│  ├─ data-contract.yml                # validate STAC/DCAT/PROV + provenance
-│  ├─ docs.yml                         # markdown lint, link check, spell (optional)
-│  ├─ security.yml                     # CodeQL / dependency scanning (optional)
-│  ├─ docker.yml                       # build images, smoke tests (optional)
-│  └─ release.yml                      # tag/release automation (optional)
+├─ 📁 workflows/                               🧵 CI/CD “fail-closed” gate 🛡️
+│  ├─ 📄 ci.yml                                 ✅ tests/lint for api + web
+│  ├─ 📄 data-contract.yml                      🧾 validate STAC/DCAT/PROV + provenance receipts
+│  ├─ 📄 docs.yml                               ◻️ optional: markdown lint, link check, spell
+│  ├─ 📄 security.yml                           ◻️ optional: CodeQL / dependency scanning
+│  ├─ 📄 docker.yml                             ◻️ optional: build images + smoke tests
+│  └─ 📄 release.yml                            ◻️ optional: tag/release automation
 │
-└─ 🧷 ISSUE_TEMPLATE/
-   ├─ bug_report.yml                   # bugs
-   ├─ feature_request.yml              # features
-   ├─ dataset_request.yml              # data additions (raw ➜ processed ➜ metadata)
-   ├─ story_node.yml                   # narrative/story contributions
-   ├─ governance_question.yml          # policy + sensitivity questions
-   └─ config.yml                       # template chooser config
+└─ 📁 ISSUE_TEMPLATE/                          🧷 issue intake forms (structured contributor workflows)
+   ├─ 📄 bug_report.yml                         🐛 bug reports
+   ├─ 📄 feature_request.yml                    ✨ feature requests
+   ├─ 📄 dataset_request.yml                    📦 data additions (raw ➜ processed ➜ metadata)
+   ├─ 📄 story_node.yml                         📚 narrative/story contributions
+   ├─ 📄 governance_question.yml                🛡️ policy + sensitivity questions
+   └─ 📄 config.yml                             ⚙️ template chooser config
 ```
 
 ### 🧠 Why KFM cares so much about `.github/workflows`
