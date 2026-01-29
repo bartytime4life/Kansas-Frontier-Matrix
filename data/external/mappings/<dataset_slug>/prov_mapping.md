@@ -1,24 +1,3 @@
----
-title: "🧬 PROV Mapping — <dataset_slug>"
-dataset_slug: "<dataset_slug>"
-domain: "external"
-doc_type: "mapping"
-mapping_type: "prov"
-status: "draft"
-version: "0.1.0"
-created: "2026-01-29"
-updated: "2026-01-29"
-owners:
-  - "<owner_or_team>"
-reviewers:
-  - "<reviewer>"
-links:
-  stac_mapping: "./stac_mapping.md"
-  dcat_mapping: "./dcat_mapping.md"
-  prov_bundle: "../../../prov/<dataset_slug>.prov.json"
-  processed_outputs: "../../processed/<dataset_slug>/"
----
-
 # 🧬 PROV Mapping — `<dataset_slug>`
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
