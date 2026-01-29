@@ -29,15 +29,15 @@
 
 ```mermaid
 flowchart LR
-  A[📥 Raw climate inputs<br/>data/external/raw/...] --> B[🧹 ETL + standardization<br/>src/pipelines/...]
-  B --> C[📦 Processed outputs<br/>data/external/processed/...]
-  B --> D[🗺️ Catalog metadata<br/>(STAC/DCAT)<br/>data/catalog/...]
-  B --> E[🧾 Provenance logs<br/>(PROV)<br/>data/provenance/...]
-  C --> F[(🛰️ PostGIS / 🕸️ Neo4j)]
+  A["📥 Raw climate inputs — data/external/raw/..."] --> B["🧹 ETL + standardization — src/pipelines/..."]
+  B --> C["📦 Processed outputs — data/external/processed/..."]
+  B --> D["🗺️ Catalog metadata (STAC/DCAT) — data/catalog/..."]
+  B --> E["🧾 Provenance logs (PROV) — data/provenance/..."]
+  C --> F["🛰️ PostGIS / 🕸️ Neo4j"]
   D --> F
   E --> F
-  F --> G[🔌 API]
-  G --> H[🖥️ UI]
+  F --> G["🔌 API"]
+  G --> H["🖥️ UI"]
 ```
 
 > **Rule:** No skipping steps. The UI should never “touch” raw climate files directly.
