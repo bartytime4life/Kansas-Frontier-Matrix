@@ -1,21 +1,3 @@
-# 👇 Canonical standards (do not fork these—extend via standards process)
-kfm_profiles:
-  dcat: "docs/standards/KFM_DCAT_PROFILE.md"
-  stac: "docs/standards/KFM_STAC_PROFILE.md"
-  prov: "docs/standards/KFM_PROV_PROFILE.md"
-
-# 👇 Expected boundary artifacts (outputs)
-boundary_artifacts:
-  dcat_dataset_jsonld: "data/catalog/dcat/<dataset_slug>.jsonld"
-  stac_collection: "data/stac/collections/<dataset_slug>.json"
-  stac_items_glob: "data/stac/items/<dataset_slug>/**/*.json"
-  prov_bundle: "data/prov/<dataset_slug>.prov.json"
-
-# 👇 Primary data artifacts (outputs)
-data_products:
-  processed_glob: "data/external/processed/<dataset_slug>/**/*"
----
-
 # 🧾 DCAT Mapping Plan — `<dataset_slug>`
 
 ![Status](https://img.shields.io/badge/status-draft-yellow?style=flat-square)
