@@ -169,9 +169,9 @@ Screenshots may include copyrighted UI or map content. Treat them as **documenta
 
 ```mermaid
 flowchart LR
-  A[Mapping decisions] --> B[Layout screenshots (this folder)]
-  B --> C[STAC / DCAT / PROV artifacts]
-  C --> D[Graph / API / UI consumption]
+  A["🧭 Mapping decisions"] --> B["🖼️ Layout screenshots (this folder)"]
+  B --> C["🧾 STAC / 📚 DCAT / 🧬 PROV artifacts"]
+  C --> D["🕸️ Graph / 🔌 API / 🗺️ UI consumption"]
 ```
 
 Keeping “what we saw” close to “what we mapped” makes the project easier to review, maintain, and defend later. ✅
