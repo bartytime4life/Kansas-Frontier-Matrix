@@ -1,16 +1,3 @@
----
-title: "DCAT Mapping Plan — <dataset_slug>"
-doc_kind: "dcat.plan"
-dataset_slug: "<dataset_slug>"
-domain: "external"
-status: "draft" # draft | ready-for-review | approved | implemented
-owners:
-  - "<github_handle_or_name>"
-reviewers:
-  - "<github_handle_or_name>"
-created: "2026-01-29"
-updated: "2026-01-29"
-
 # 👇 Canonical standards (do not fork these—extend via standards process)
 kfm_profiles:
   dcat: "docs/standards/KFM_DCAT_PROFILE.md"
@@ -54,17 +41,17 @@ This document is the **source-of-truth plan** for how the external dataset **`<d
 
 **Expected domain layout (reference):**
 ```text
-data/
-└── 📁 external/
-    ├── 📁 raw/
-    ├── 📁 work/
-    ├── 📁 processed/
-    ├── 📁 mappings/
-    │   └── 📁 <dataset_slug>/
-    │       ├── 📄 dcat.plan.md   👈 you are here
-    │       ├── 📄 stac.plan.md   (recommended)
-    │       └── 📄 prov.plan.md   (recommended)
-    └── 📄 README.md
+📁 data/
+└─ 📁 external/
+   ├─ 📁 raw/                                🧾 immutable source snapshots (read-only / never overwrite)
+   ├─ 📁 work/                               🧪 ingestion staging + intermediate artifacts (safe to prune)
+   ├─ 📁 processed/                          ✅ promoted external outputs (ready for DB/API/UI)
+   ├─ 📁 mappings/                           🧩 mapping packs + dataset publishing plans
+   │  └─ 📁 <dataset_slug>/                  🏷️ dataset-specific mapping + plan bundle
+   │     ├─ 📄 dcat.plan.md                  👈 you are here (DCAT discovery plan)
+   │     ├─ 📄 stac.plan.md                  ◻️ optional (recommended): STAC collections/items plan
+   │     └─ 📄 prov.plan.md                  ◻️ optional (recommended): provenance/receipt plan
+   └─ 📄 README.md                           📘 external lane overview + rules of the road
 ```
 
 ---
