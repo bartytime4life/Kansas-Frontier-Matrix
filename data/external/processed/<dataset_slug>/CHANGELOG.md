@@ -1,24 +1,3 @@
----
-title: "CHANGELOG — <dataset_slug>"
-path: "data/external/processed/<dataset_slug>/CHANGELOG.md"
-doc_kind: "Changelog"
-status: "active"
-last_updated: "2026-01-29"
-dataset_slug: "<dataset_slug>"
-dataset_name: "<dataset_name>"
-domain: "<domain>"
-data_stage: "processed"
-dataset_versioning: "SemVer"
-schema_version: "TBD"
-license: "TBD"
-sensitivity: "public"
-classification: "open"
-care_label: "TBD"
-doc_uuid: "urn:kfm:doc:data:<dataset_slug>:changelog:v0.0.1"
-commit_sha: "<git-commit-sha>"
-doc_integrity_checksum: "sha256:<to-be-filled>"
----
-
 # 📒 CHANGELOG — `<dataset_slug>`
 
 ![dataset](https://img.shields.io/badge/dataset-%3Cdataset_slug%3E-blue)
