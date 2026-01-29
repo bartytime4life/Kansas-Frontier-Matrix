@@ -1,98 +1,247 @@
-# 🧭 External Dataset Field Map (`field_map.csv`)
-
-> 🧩 **Purpose:** This CSV is the **contract** for mapping an external dataset’s raw fields into KFM’s normalized, processed schema during the **ETL + normalization** stage (Raw → ETL → catalogs/provenance → graph → API → UI).:contentReference[oaicite:0]{index=0}
-
+---
+title: "Validation Expectations — <dataset_slug>"
+version: "v1.0.0"
+status: "draft"
+doc_kind: "Data Contract / Validation Spec"
+last_updated: "2026-01-29"
+license: "CC-BY-4.0"
+fair_category: "FAIR+CARE"
+care_label: "<TBD>"
+sensitivity: "<public|internal|restricted>"
+classification: "<open|controlled|confidential>"
+dataset_slug: "<dataset_slug>"
+kfm_stage: "data/external/processed"
+doc_uuid: "urn:kfm:dataset:<dataset_slug>:validation:expectations:v1.0.0"
 ---
 
-## 📁 File placement
+# 🧪 Validation Expectations — `<dataset_slug>`
 
-Create this file at:
+> [!IMPORTANT]
+> In KFM, **processed datasets are curated outputs** meant to be served (directly or via databases) by the API/UI. This means they must be validated and provenance-backed before downstream use. :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
 
-```
-data/external/mappings/<dataset_slug>/field_map.csv
-```
+## 📁 Location
 
-This follows the repo expectation that each domain has a dedicated folder with `raw/`, `work/`, `processed/`, and `mappings/` sections.:contentReference[oaicite:1]{index=1}
-
----
-
-## 🧾 Design rules (KFM-aligned)
-
-- ✅ **Deterministic + reproducible:** The mapping is config-driven and should yield the same outputs given the same inputs.:contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
-- 🔒 **Governance-aware:** New external sources can trigger governance review (e.g., copyright/license), so we include license/provenance hooks in the mapping template.:contentReference[oaicite:4]{index=4}
-
----
-
-## 🧩 CSV contract (v1)
-
-| Column | Required | Meaning |
-|---|---:|---|
-| `source_field` | ✅ | Exact column name from the raw dataset. Use `__derived__` for computed fields. |
-| `target_field` | ✅ | Canonical normalized field name (output column). |
-| `target_type` | ✅ | One of: `string`, `int`, `float`, `bool`, `date`, `datetime`, `geometry`, `json`. |
-| `transform` | ➖ | Deterministic transform chain (see cheat sheet below). |
-| `required` | ✅ | `true`/`false` — used for validation. |
-| `default` | ➖ | Default value if missing (leave blank for none). |
-| `sensitivity` | ✅ | `public` / `restricted` / `confidential` (policy hook). |
-| `description` | ➖ | Human-readable meaning of the field. |
-
----
-
-<details>
-<summary>🔁 Transform DSL cheat sheet (suggested)</summary>
-
-Use a simple **pipe** chain (left → right):
-
-- `trim` → strip whitespace  
-- `lower` / `upper` → normalize casing  
-- `null_if_empty` → empty string → null  
-- `parse_int` / `parse_float` → numeric parsing  
-- `parse_date(%Y-%m-%d)` → parse date strings  
-- `normalize_url` → canonicalize URLs  
-- `make_point(lon,lat,epsg=4326)` → derive point geometry from numeric lon/lat  
-
-✅ Keep transforms **pure** (no network calls, no randomness, no “now()”).
-
-</details>
-
----
-
-## 📄 `field_map.csv` template (copy/paste)
-
-> ✍️ Replace `source_field` values to match your dataset’s raw headers exactly.
-
-```csv
-source_field,target_field,target_type,transform,required,default,sensitivity,description
-id,source_record_id,string,trim,true,,public,Unique record identifier in the source dataset
-name,name,string,trim,true,,public,Primary display label
-description,description,string,trim|null_if_empty,false,,public,Human readable description or notes
-type,feature_type,string,trim|lower,false,,public,Type or category label
-start_date,valid_from,date,parse_date(%Y-%m-%d),false,,public,Start date if known
-end_date,valid_to,date,parse_date(%Y-%m-%d),false,,public,End date if known
-date,event_date,date,parse_date(%Y-%m-%d),false,,public,Single event date if known
-lat,lat,float,parse_float,false,,public,Latitude in WGS84
-lon,lon,float,parse_float,false,,public,Longitude in WGS84
-__derived__,geometry,geometry,make_point(lon,lat,epsg=4326),false,,public,Derived point geometry from lon and lat
-source_url,source_url,string,trim|normalize_url,false,,public,Canonical source URL
-license,source_license,string,trim,false,,public,License identifier or text
-citation,source_citation,string,trim,false,,public,Citation or provenance note
+```text
+data/
+└─ external/
+   └─ processed/
+      └─ <dataset_slug>/
+         ├─ ...dataset outputs...
+         └─ validation/
+            └─ expectations.md   👈 you are here
 ```
 
+## 🗺️ Pipeline context
+
+```mermaid
+flowchart LR
+  A["Raw Sources"] --> B["ETL + Normalization"]
+  B --> C["Processed Output<br/>data/external/processed/<dataset_slug>"]
+  C --> D["Catalogs (STAC/DCAT/PROV) + Lineage"]
+  D --> E["Database Loads / Indexing"]
+  E --> F["API (contracts + redaction)"]
+  F --> G["UI + Story/Focus"]
+```
+
+This dataset must remain compatible with KFM’s canonical order and “no shortcut” rule. :contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+
 ---
 
-## ✅ Dataset checklist
+## 🎯 Purpose
 
-- [ ] Folder exists: `data/external/mappings/<dataset_slug>/`
-- [ ] `field_map.csv` exists in that folder
-- [ ] All `source_field` values match raw headers (case-sensitive)
-- [ ] Any `required=true` fields are actually present in raw inputs
-- [ ] License + provenance fields are mapped or provided (governance hook).:contentReference[oaicite:5]{index=5}
-- [ ] ETL remains deterministic/replayable end-to-end.:contentReference[oaicite:6]{index=6}
+This document is the **validation contract** for everything published under:
+
+- `data/external/processed/<dataset_slug>/…`
+
+It exists to:
+
+1. Define merge-blocking checks (CI) vs. recommended checks (manual/QA).
+2. Ensure the dataset can be safely cataloged, loaded, and exposed through KFM’s governed layers.
+3. Provide repeatable validation steps and evidence for review.
+
+KFM enforces validation gates in CI/CD and expects missing or invalid metadata/provenance to block merges. :contentReference[oaicite:4]{index=4}
 
 ---
 
-## 🔗 Project references
+## 🧭 KFM contract anchors
 
-- 📘 Master Guide (structure + pipeline invariants): :contentReference[oaicite:7]{index=7}  
-- 🧱 KFM Technical Blueprint (system overview context): :contentReference[oaicite:8]{index=8}  
+KFM-wide rules that directly shape the expectations below:
 
+- **Contract-first:** schemas/contracts are first-class; changes require strict versioning/compat checks. :contentReference[oaicite:5]{index=5}
+- **Deterministic, idempotent ETL:** same inputs ⇒ same outputs, logged and replayable. :contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
+- **Provenance first + boundary artifacts:** STAC/DCAT/PROV must exist before data is “published.” :contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9}
+- **Sovereignty / classification propagation:** derivatives cannot be less restricted than inputs. :contentReference[oaicite:10]{index=10}
+- **No data enters without documentation:** missing STAC/DCAT/PROV should fail CI. :contentReference[oaicite:11]{index=11}
+
+---
+
+## 📦 Dataset inventory
+
+Fill this in for the dataset (keep it tight and concrete).
+
+| Asset | Kind | Format | Primary key / identity | CRS | Notes |
+|---|---|---|---|---|---|
+| `<file_1>` | `<vector|raster|table>` | `<geojson|geoparquet|geotiff|csv|parquet>` | `<id_field or asset_id>` | `<EPSG:4326?>` | `<what is this?>` |
+| `<file_2>` |  |  |  |  |  |
+
+> [!NOTE]
+> KFM processed spatial data is commonly standardized to a shared CRS (often WGS84 / lon-lat) unless there’s a documented reason to keep a projection. :contentReference[oaicite:12]{index=12}
+
+---
+
+## ✅ Validation gates
+
+Legend: 🔒 = merge-blocking (CI), 🧩 = strongly recommended, 📝 = manual review.
+
+### Gate 0 — Required boundary artifacts 🔒
+
+These artifacts are required before data is considered fully published and before downstream stages consume it. :contentReference[oaicite:13]{index=13}
+
+- [ ] **STAC** collection/item(s) exist and link to the actual asset(s). :contentReference[oaicite:14]{index=14}
+  - [ ] `data/stac/collections/<dataset_slug>.json`
+  - [ ] `data/stac/items/<dataset_slug>__*.json`
+- [ ] **DCAT** dataset entry exists and points to distributions and/or STAC. :contentReference[oaicite:15]{index=15}
+  - [ ] `data/catalog/dcat/<dataset_slug>.jsonld`
+- [ ] **PROV** lineage exists and captures inputs → activities → outputs (+ agents, timestamps, parameters). :contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}
+  - [ ] `data/prov/<dataset_slug>.prov.json`
+
+> [!IMPORTANT]
+> If STAC/DCAT/PROV are missing, CI is expected to reject the contribution (“no data enters without documentation”). :contentReference[oaicite:18]{index=18}
+
+---
+
+### Gate 1 — File integrity & readability 🔒
+
+For every asset listed in the inventory table:
+
+- [ ] File exists and is non-empty.
+- [ ] File opens with standard tooling for its format.
+- [ ] GeoJSON-only: valid JSON; coordinates are plausible (CI may do basic checks here). :contentReference[oaicite:19]{index=19}
+
+---
+
+### Gate 2 — Schema contract 🔒
+
+Data validation should ensure the dataset is fit, consistent, and rule-conformant (e.g., completeness/uniqueness/range consistency where required). :contentReference[oaicite:20]{index=20}
+
+#### 2A) Column expectations (tables + vector attributes)
+
+Fill one table per tabular/vector asset:
+
+| Column | Type | Nullable? | Allowed values / range | Description |
+|---|---|---:|---|---|
+| `<id>` | `<string|int>` | ❌ | unique | stable feature identifier |
+| `<name>` | `<string>` | ✅ |  | display label |
+| `<date>` | `<date|datetime>` | ✅ | `<min..max>` | temporal reference |
+| `<value>` | `<float>` | ✅ | `<min..max>` | unit: `<unit>` |
+
+Minimum rules (merge-blocking):
+
+- [ ] Primary key field(s) are **unique** and **non-null**.
+- [ ] Required fields are **non-null**.
+- [ ] Enums/ranges are enforced where defined, including units and codebook links.
+- [ ] No cryptic codes without explanation; standardize units where possible. :contentReference[oaicite:21]{index=21}
+
+#### 2B) Geometry expectations (vector only) 🔒
+
+If this dataset includes vector geometries:
+
+- [ ] Geometry present for each feature unless explicitly allowed.
+- [ ] Geometry valid (no NaN coords; no self-intersections where relevant).
+- [ ] Geometry type matches dataset contract (`Point|LineString|Polygon|…`).
+- [ ] CRS is explicitly declared in metadata and consistent with the contract. :contentReference[oaicite:22]{index=22}
+
+---
+
+### Gate 3 — Spatial plausibility 🧩
+
+These checks are dataset-specific; fill in values for this dataset.
+
+- [ ] Bounding box constraint:
+  - expected bbox: `<minLon, minLat, maxLon, maxLat>`
+  - allowed overflow: `<tolerance>`
+- [ ] No geometry wildly outside expected region (flag & inspect).
+- [ ] If polygons: overlaps/gaps rules enforced **only** if semantics require it.
+
+---
+
+### Gate 4 — Temporal plausibility 🧩
+
+If the dataset contains time:
+
+- [ ] All date/datetime fields parse.
+- [ ] If both start/end exist: `start <= end`.
+- [ ] Expected temporal coverage: `<YYYY..YYYY>` (flag outliers).
+
+---
+
+### Gate 5 — Sovereignty, sensitivity, and redaction 🔒📝
+
+- [ ] Classification fields in metadata are set (`open|controlled|confidential`, etc.).
+- [ ] Output classification is **not less restrictive** than any input sources. :contentReference[oaicite:23]{index=23}
+- [ ] If sensitive geography exists (e.g., locations requiring generalization), the processed output applies the approved redaction/generalization strategy and documents it here.
+
+---
+
+### Gate 6 — Determinism & reproducibility 🔒
+
+- [ ] The pipeline that produced this dataset is deterministic/idempotent and replayable. :contentReference[oaicite:24]{index=24}:contentReference[oaicite:25]{index=25}
+- [ ] A run log exists (or is referenced) containing:
+  - input identifiers + checksums
+  - processing configuration parameters
+  - output identifiers + checksums
+- [ ] A validation report exists for this dataset pipeline run (human-readable is fine). :contentReference[oaicite:26]{index=26}
+
+> [!NOTE]
+> Provenance should answer “how was this produced?” and missing provenance is considered a red flag. :contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28}
+
+---
+
+### Gate 7 — Validation outputs (what to commit) 🔒🧩
+
+At minimum, commit one of:
+
+- [ ] `validation/report.md`
+- [ ] `validation/report.json`
+
+The report should summarize:
+
+- record/feature count
+- missingness by required field
+- min/max (or distribution summary) for key numeric fields
+- spatial extent (bbox)
+- CRS and geometry validity counts
+- pass/fail per gate (with notes)
+
+Pipelines may produce summary stats in logs or a separate report to help maintainers verify imports. :contentReference[oaicite:29]{index=29}
+
+---
+
+## 🧪 Suggested validation implementation map (optional helper)
+
+This repo doesn’t mandate a specific validator, but the gates above map cleanly to:
+
+- **Schema checks:** JSON Schema / Arrow schema / GeoParquet schema
+- **Row/column expectations:** Great Expectations / pandera / custom assertions
+- **Geometry checks:** shapely / pygeos / geopandas
+- **Metadata checks:** STAC/DCAT/PROV profile validators in CI (expected in KFM). :contentReference[oaicite:30]{index=30}
+
+---
+
+## 🔄 Change management
+
+Treat changes to this expectations contract like an interface change:
+
+- bump `version`
+- update dependent schemas/metadata as needed
+- document migrations if meaningfully breaking
+
+This aligns with KFM’s contract-first philosophy and strict versioning expectations. :contentReference[oaicite:31]{index=31}
+
+---
+
+## 📚 Sources (project anchors)
+
+- KFM Master Guide v13 (contract-first, deterministic pipeline, pipeline invariants, metadata requirements). :contentReference[oaicite:32]{index=32}
+- KFM Comprehensive Technical Blueprint (repo structure, processed data role, CI/validation practices, provenance expectations). :contentReference[oaicite:33]{index=33}
+- Data validation fundamentals (completeness/uniqueness/range consistency). :contentReference[oaicite:34]{index=34}
