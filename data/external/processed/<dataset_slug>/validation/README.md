@@ -57,22 +57,22 @@ Validation and catalog tooling should live in:
 Recommended structure inside `validation/` (adjust as needed, but keep it deterministic 🔁):
 
 ```text
-validation/
-├── README.md                         # this file 📌
-├── contract/                         # the “what must be true” definitions 📜
-│   ├── dataset_contract.yml          # schema pointers, keys, CRS, constraints, etc.
-│   └── checks.yml                    # enabled checks + thresholds
-├── schemas/                          # dataset-specific schemas (if not in global `schemas/`) 🧩
-│   └── <dataset_slug>.schema.json
-├── baselines/                        # expected metrics for regression checks 📈
-│   └── baseline_metrics.json
-├── reports/                          # generated outputs (commit small + stable) 🧾
-│   ├── latest.md
-│   ├── latest.json
-│   └── latest.summary.csv
-├── samples/                          # small repro snippets / failing rows / invalid geoms 🧪
-│   └── invalid_records.<ext>
-└── logs/                             # optional; generally avoid committing large logs 🧯
+📁 validation/
+├─ 📄 README.md                                📌 you are here (how validation works + how to run it)
+├─ 📁 contract/                                 📜 “what must be true” definitions (policy + requirements)
+│  ├─ 🧩 dataset_contract.yml                    ✅ schema pointers, keys, CRS, constraints, domains
+│  └─ 🧪 checks.yml                              ✅ enabled checks + thresholds (fail-closed config)
+├─ 📁 schemas/                                   🧾 dataset-specific schemas (if not in global `schemas/`)
+│  └─ 📄 <dataset_slug>.schema.json              🧩 schema artifact (JSON Schema / GeoParquet schema)
+├─ 📁 baselines/                                 📈 expected metrics for regression checks
+│  └─ 📄 baseline_metrics.json                   🔢 reference metrics (row counts, ranges, histograms, etc.)
+├─ 📁 reports/                                   🧾 generated outputs (commit small + stable)
+│  ├─ 📄 latest.md                               📝 human-readable report (latest run)
+│  ├─ 📄 latest.json                             🤖 machine-readable results (latest run)
+│  └─ 📄 latest.summary.csv                      📊 compact summary (CI-friendly diff target)
+├─ 📁 samples/                                   🧪 repro snippets (failing rows / invalid geoms / edge cases)
+│  └─ 📄 invalid_records.<ext>                   🧱 minimized failing sample (csv/geojson/wkt/etc.)
+└─ 📁 logs/                                      ◻️ optional: runtime logs (avoid committing large logs) 🧯
 ```
 
 ---
