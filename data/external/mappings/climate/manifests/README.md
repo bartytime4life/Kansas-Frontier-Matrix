@@ -13,12 +13,12 @@
 ## 📍 You are here
 
 ```text
-data/
-└── external/
-    └── mappings/
-        └── climate/
-            └── manifests/
-                └── README.md   👈 you are here
+📁 data/
+└─ 📁 external/
+   └─ 📁 mappings/
+      └─ 🌦️ climate/                                🌎 climate mapping packs + publishing plans
+         └─ 📁 manifests/                            🧾 manifest registry for climate datasets
+            └─ 📄 README.md                           👈 you are here (manifest format + indexing rules)
 ```
 
 ✅ **This directory is config + mapping metadata** (manifests).  
