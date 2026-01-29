@@ -89,16 +89,18 @@ flowchart LR
 > Keep structure **domain-first** so ownership and governance are obvious.
 
 ```text
-data/external/raw/
-  <domain>/                       # e.g. historical/, hydrology/, air-quality/, soils/
-    <dataset_slug>/               # short, stable identifier
-      <version_or_YYYY-MM-DD>/    # versioned snapshots; never overwrite
-        SOURCE.yaml               # required (metadata + acquisition)
-        LICENSE.txt               # required (or TERMS.txt)
-        MANIFEST.sha256           # required (checksums for every file)
-        ACCESS.md                 # required if restricted (NO credentials inside)
-        DATA_DICTIONARY.md        # recommended for tabular data
-        original_files...         # the raw artifacts (unaltered)
+📁 data/
+└─ 📁 external/
+   └─ 📁 raw/                                        🧾 external source snapshots (immutable / never overwrite)
+      └─ 📁 <domain>/                                🧭 thematic bucket (e.g., historical/, hydrology/, air-quality/, soils/)
+         └─ 📁 <dataset_slug>/                       🏷️ short, stable dataset identifier (slug)
+            └─ 📁 <version_or_YYYY-MM-DD>/           🧊 versioned snapshot (new folder per pull; no edits-in-place)
+               ├─ 📄 SOURCE.yaml                     ✅ required: acquisition + upstream refs + notes (who/what/when/how)
+               ├─ 📄 LICENSE.txt                     ✅ required: license/terms (or 📄 TERMS.txt)
+               ├─ 📄 MANIFEST.sha256                 ✅ required: checksums for every file in this snapshot
+               ├─ 📄 ACCESS.md                       ✅ required if restricted: access rules + contact (NO credentials)
+               ├─ 📄 DATA_DICTIONARY.md              ◻️ recommended: tabular schema, columns, units, code meanings
+               └─ 📦 original_files...               🧱 raw artifacts (unaltered: zips, geotiffs, csvs, shp, pdfs, etc.)
 ```
 
 **Naming tips** ✍️  
