@@ -1,320 +1,272 @@
-# 🧪 MCP Experiments
+# 🧪 MCP Experiments Lab
 
-![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-5b5bff)
-![Docs-First](https://img.shields.io/badge/Documentation-First-brightgreen)
-![Reproducible](https://img.shields.io/badge/Reproducible-By%20Design-orange)
-![Traceable](https://img.shields.io/badge/Provenance-Traceable-informational)
+![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-2ea44f)
+![Docs-First](https://img.shields.io/badge/Docs--First-Always-blue)
+![Reproducible](https://img.shields.io/badge/Reproducible-Required-brightgreen)
+![Status](https://img.shields.io/badge/Status-Experimental-yellow)
+![Traceability](https://img.shields.io/badge/Traceability-Git%20Backed-orange)
 
-> **What this is:** a documentation-first, reproducibility-first lab notebook for **Kansas Frontier Matrix (KFM)** experiments—where every run becomes a reusable, reviewable knowledge artifact. [^kfm-provenance] [^docs-first] [^mcp-dir]
-
----
-
-## ⚡ TL;DR Workflow
-
-1) **Create** a new experiment folder (`EXP-###_<slug>/`)  
-2) **Write the protocol first** (`protocol.md`)  
-3) **Run the experiment** (code/notebook + captured config)  
-4) **Record results** (`README.md`) + store artifacts (`results/`)  
-5) **Update the logbook** (`EXPERIMENT_LOG.md`) and/or traceability row
-
-This mirrors MCP’s scientific-method emphasis and makes comparisons repeatable across time, contributors, and toolchains. [^mcp-scientific-method] [^mcp-logbook]
+> **What is this?**  
+> This folder is the **version-controlled lab notebook** for KFM experiments: every significant analysis / AI trial / pipeline tweak gets documented, reproducible, and reviewable.  
+> It exists to keep **data + code + documentation + results** tightly integrated (and traceable via Git history). [oai_citation:0‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
 ---
 
-## 🎯 What belongs in `mcp/experiments/`
+## 🧠 MCP, in this repo
 
-This directory is for **experiment logs & results**—including the *purpose, configuration, and outcomes* of tests across the KFM stack (data → processing → models → UI), plus any R&D spikes that need a durable record. [^mcp-dir] [^kfm-pipeline]
+**MCP = Master Coder Protocol** — a documentation-first, scientific, reproducible, modular workflow spanning AI, data science, and full-stack practices. [oai_citation:1‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) [oai_citation:2‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
-Typical examples:
-- 🗺️ Geospatial processing benchmarks (e.g., georeferencing RMSE thresholds, tiling strategies)
-- 🤖 NLP/LLM comparisons (e.g., spaCy vs regex extraction; prompt/model variants)
-- 🧱 Pipeline experiments (e.g., new catalog schema, provenance tracking, OCR variants)
-- 📈 Performance tests (e.g., DB query plans, caching strategies, ingest throughput)
+In KFM’s design, the `mcp/` directory anchors protocol docs + templates, and **experiments** are meant to be logged and comparable over time (optionally with metrics/artifacts tracked by tools like DVC). [oai_citation:3‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
 
 ---
 
-## 🗂️ Recommended folder layout
+## 🎯 What belongs here
 
-Here’s the **expected** structure for experiments (add or remove subfolders as needed, but keep the core artifacts consistent):
+Put an experiment here if it answers **a question** like:
+
+- “Does OCR pipeline A produce fewer date-parsing errors than pipeline B?”
+- “Does NER model X extract more correct place names than regex or baseline?”
+- “Does georeferencing workflow change RMS error or layer alignment?”
+- “Do we get better performance/cost by changing caching strategy or query batching?”
+- “Does a visualization change improve comprehension of time-sliced layers?”
+
+KFM’s system is explicitly built around **ingesting & processing** historical maps + GIS datasets, OCR/parsing documents, and an AI engine that cross-references spatial + textual knowledge for the UI. [oai_citation:4‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)  
+So experiments commonly touch: **ingestion**, **georeferencing**, **OCR**, **NLP**, **geospatial analysis**, **temporal indexing**, **UI/visualization**.
+
+---
+
+## 🧱 Folder layout (standard)
+
+Use one folder per experiment. The MCP documentation recommends encapsulating each experiment’s artifacts with a consistent structure like README + protocol + data + code + results. [oai_citation:5‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+**Recommended structure:**
 
 ```text
-📁 mcp/
-└─ 📁 experiments/                             🧪 experiment lane (reproducible, logged, reviewable)
-   ├─ 📄 README.md                              👈 you are here
-   ├─ 📄 EXPERIMENT_LOG.md                      🧾 rolling lab notebook / index (append-only)
-   ├─ 📁 _templates/                            ◻️ optional: shared templates for experiments
-   └─ 📁 EXP-001_example_slug/                  🏷️ one experiment (numbered + named)
-      ├─ 📄 README.md                            🧾 experiment report (Goals → Data → Method → Results → Interpretation)
-      ├─ 📄 protocol.md                          🧪 protocol (Objective → Materials → Procedure → Variables → Expected)
-      ├─ 📁 data/                                🧱 inputs (or pointers/manifests if too large)
-      ├─ 📁 src/                                 🧠 scripts used for the run (versioned)
-      ├─ 📁 notebooks/                           ◻️ optional notebooks (if used; keep minimal)
-      ├─ 📁 configs/                             ⚙️ params, env manifests, seeds (deterministic)
-      ├─ 📁 results/                             📈 outputs (plots, tables, metrics, artifacts)
-      └─ 📁 archive/                             ◻️ optional: frozen snapshots (for long-term reproducibility)
+📁 mcp/experiments/
+  📁 EXP-0001_place-name-ner/
+    📄 README.md          # experiment report (filled template)
+    📄 protocol.md        # planned method (before running)
+    📁 data/              # raw + derived inputs (or pointers if huge)
+    📁 src/               # scripts/notebooks used
+    📁 results/           # figures/tables/metrics + short narrative
+    📁 configs/           # parameter files tied to this EXP ID
+    📁 logs/              # execution logs (if applicable)
 ```
 
-This structure is aligned with MCP’s reproducibility/logging patterns and the KFM “templates + experiment reports” approach. [^mcp-exp-structure] [^kfm-exp-template]
+> Tip: Don’t overwrite raw data. Version it (or store immutable references) and log what changed. [oai_citation:6‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 ---
 
-## 🚀 Create a new experiment (copy/paste friendly)
+## 🏷️ Naming conventions
 
-> **Naming convention:** `EXP-###_<short-kebab-slug>`  
-> Examples: `EXP-014_georef-rmse-threshold`, `EXP-021_spacy-vs-regex-entities`  
-> Numbering/labels are recommended for long-running research threads. [^mcp-protocol-template]
+Keep it boring and sortable:
 
-1. **Create folder**
-   ```bash
-   mkdir -p mcp/experiments/EXP-###_my-experiment/{data,src,configs,results}
-   ```
+- **Experiment ID:** `EXP-####` (sequential) **or** `EXP-YYYYMMDD-##` (dated)
+- **Slug:** short kebab-case summary (`place-name-ner`, `cog-tiling-benchmark`, `georef-rms-tuning`)
+- **Folder:** `EXP-####_<slug>/`
 
-2. **Add protocol**
-   - Create `protocol.md` using the template below  
-   - Fill in objective/materials/procedure/variables *before running* [^mcp-protocol-template]
-
-3. **Run the experiment**
-   - Put scripts in `src/` (or notebooks in `notebooks/`)
-   - Capture params and environment in `configs/` (see “Reproducibility”)
-
-4. **Write the report**
-   - Create `README.md` (inside the experiment folder) with **Goals / Data Used / Method / Results / Interpretation** [^kfm-exp-template]
-
-5. **Log it**
-   - Add an entry to `EXPERIMENT_LOG.md` (rolling index) [^mcp-logbook]
+Numbering/dating enables tracing “how we got here” over time (and comparing approach changes). [oai_citation:7‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
 ---
 
-## 🧬 MCP scientific method checklist
+## ✅ The experiment lifecycle (scientific method, MCP style)
 
-MCP experiments follow a scientific-method loop (question → hypothesis → design → run → analyze → conclude → iterate). [^mcp-scientific-method]
+Every experiment should explicitly follow (and **write down**) the scientific method steps:
 
-Recommended steps:
-- **Ask a clear question**
-- **Background research** (collect references + constraints)
-- **Form a testable hypothesis**
-- **Design a method** (controls, variables, metrics)
-- **Conduct the experiment**
-- **Collect + analyze data**
-- **Document results**
-- **Draw conclusions**
-- **Iterate / refine** [^mcp-scientific-method]
-
----
-
-## 📦 Required artifacts (minimum viable experiment record)
-
-| Artifact | Required | Why |
-|---|---:|---|
-| `protocol.md` | ✅ | Prevents “wandering experiments” & makes assumptions explicit. [^mcp-protocol-template] |
-| `README.md` (report) | ✅ | Human-readable summary for future you + reviewers. [^kfm-exp-template] |
-| `configs/` | ✅ | Ensures you can reproduce the run (params, seeds, env). [^mcp-env] |
-| `src/` or `notebooks/` | ✅ | The “how” (what actually executed). |
-| `results/` | ✅ | Artifacts: figures, tables, metrics, outputs. |
-| `data/` or `data_manifest.*` | ✅* | Inputs or pointers; never overwrite raw. [^mcp-data] |
-| `EXPERIMENT_LOG.md` entry | ✅ | Makes it discoverable + searchable. [^mcp-logbook] |
-
-\*If data is large/private, store a **manifest** (paths, hashes, IDs, access notes) rather than raw data.
+1. **Ask a question / define the problem**
+2. **Background research** (what’s already known, cite it)
+3. **Hypothesis / expected outcome**
+4. **Experiment design (methods)** — written *before* running
+5. **Conduct experiment** (note deviations in real time)
+6. **Data collection** (how/where data is stored + labeled)
+7. **Analysis** (tests, metrics, visualizations)
+8. **Results** (traceable outputs)
+9. **Conclusion** (supports/refutes hypothesis; limitations)
+10. **Iterate / next steps** [oai_citation:8‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 ---
 
-## 🔗 Traceability matrix (strongly recommended)
+## 🧾 Required documents (minimum)
 
-For experiments that impact the platform, keep a **traceability matrix** row tying:
-- Experiment ID ↔ hypothesis/decision ↔ code version ↔ data/model version ↔ result artifact link. [^mcp-traceability]
-
-Suggested file (optional):
-- `mcp/experiments/TRACEABILITY.csv`
-
----
-
-## ✅ Reproducibility & quality gates
-
-### Repro checklist (per experiment)
-- [ ] **All parameters** recorded (and defaults noted)
-- [ ] **Code committed** (or commit SHA referenced)
-- [ ] **Random seeds** recorded (where applicable)
-- [ ] **Dependencies** captured (requirements / env / container)
-- [ ] **Results summarized** with metrics + artifacts
-- [ ] **Independent verification** attempted (even a partial rerun) [^mcp-repro] [^mcp-validation]
-
-### Statistics hygiene (avoid misleading “too good to be true”)
-- 📌 **Log failures and null results**, not just successes (selective reporting inflates effects). [^stats-bias]
-- 📌 Avoid **optional stopping** (increasing sample size until significance) without explicitly labeling it. [^stats-bias]
-- 📌 When possible, **pre-register** the plan (even “lightweight prereg” inside `protocol.md` helps). [^stats-prereg]
+| Artifact 📄 | Location | Why it matters |
+|---|---|---|
+| Experiment report | `mcp/experiments/EXP-xxxx_*/README.md` | Version-controlled experiment history & decisions [oai_citation:9‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) |
+| Protocol | `protocol.md` | Standardized experiment protocol; improves reproducibility [oai_citation:10‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) |
+| Code | `src/` | Links results to exact scripts/notebooks used [oai_citation:11‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) |
+| Results | `results/` | Figures/tables/metrics + short interpretation |
+| Configs | `configs/` | Retrieve exact parameters later (treat configs as code) [oai_citation:12‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) |
 
 ---
 
-## 🧰 Tooling hooks (optional but powerful)
+## 🧩 Experiment report template (copy/paste)
 
-- **DVC experiments** can snapshot parameterized runs and track metrics/artifacts for comparisons. [^kfm-dvc]
-- For ML-heavy work, consider experiment managers:
-  - **MLflow**, **Weights & Biases**, **Neptune**, **TensorBoard**, **Sacred** (pick one per track). [^mcp-tools]
+KFM’s design calls for an **experiment report template** with sections like Goals, Data Used, Method, Results, Interpretation. [oai_citation:13‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
-> Rule of thumb: if the experiment influences a product decision, capture it in a way that a third party can reproduce without tribal knowledge.
-
----
-
-## 🧾 Templates
-
-### 🧪 Protocol template (`protocol.md`)
-<details>
-<summary><strong>Click to expand</strong></summary>
+Create `mcp/experiments/EXP-xxxx_slug/README.md` using this skeleton:
 
 ```markdown
-# Protocol — EXP-###: <Short Title>
+# EXP-0000 — <short title>
 
-## Objective
-- What question are we answering?
-- What decision will this experiment support?
+## 🔎 Goal
+- Question:
+- Why it matters to KFM:
+- Success criteria (metrics + thresholds):
 
-## Background / References
-- Links to related experiments
-- Papers/datasets/docs
+## 📚 Background
+- Prior art / related experiments:
+- Assumptions:
 
-## Materials
-- Data inputs (or manifests)
-- Tools (libs, versions)
-- Hardware assumptions
+## 🧪 Hypothesis
+- Expected outcome:
+- What would falsify it:
 
-## Procedure
-1. Step-by-step instructions to reproduce
-2. Include commands and expected intermediate outputs
-3. Define stopping rules (time/iterations/sample size)
+## 🧰 Data Used
+- Datasets (with versions/IDs):
+- Data provenance links (where/how generated):
+- Train/val/test split (if applicable):
 
-## Expected Outcome
-- What do we expect to see if the hypothesis is supported?
-- What would falsify the hypothesis?
+## 🧠 Method
+- Approach summary:
+- Key parameters:
+- Tools + versions:
+- Runtime environment:
+- Random seeds:
 
-## Variables
-- Independent variables:
-- Dependent variables (metrics):
-- Controls:
-- Confounders to watch:
+## ▶️ How to Reproduce
+1. Setup steps
+2. Commands to run
+3. Expected artifacts
 
-## Notes
-- Risks, ethics, sensitive handling, access constraints
+## 📈 Results
+- Tables / plots:
+- Primary metrics:
+- Secondary observations:
+
+## 🧾 Interpretation
+- What the results mean:
+- Limitations / threats to validity:
+
+## ✅ Conclusion
+- Support/refute hypothesis:
+- Decision / recommendation:
+
+## 🧭 Next Steps
+- Follow-up experiments:
+- TODOs:
 ```
-
-</details>
-
-This structure mirrors MCP’s protocol guidance (Objective / Materials / Procedure / Expected Outcome / Variables). [^mcp-protocol-template]
 
 ---
 
-### 🧾 Experiment report template (`README.md` inside experiment folder)
-<details>
-<summary><strong>Click to expand</strong></summary>
+## 📓 Experiment logbook (project-wide index)
+
+MCP recommends a project-wide experiment log where **every** experiment creates an entry with:
+**Date, Experiment ID, Author, Purpose, Method summary, references to protocol/code, results summary, and conclusion/next steps**. [oai_citation:14‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+**Suggested file:** `mcp/experiments/EXPERIMENT_LOG.md`
+
+Example entry:
 
 ```markdown
----
-title: "EXP-### — <Short Title>"
-status: "draft|active|final"
-last_updated: "YYYY-MM-DD"
-doc_kind: "ExperimentReport"
-commit_sha: "<git sha>"
-fair_category: "FAIR+CARE"
-care_label: "Public|Restricted|Tribal Sensitive|TBD"
----
-
-# EXP-### — <Short Title>
-
-## Goals
-- What did we set out to learn?
-
-## Data Used
-- Source(s), IDs, hashes, access notes
-- Any filtering/selection criteria
-
-## Method
-- Approach + rationale
-- Parameters (table or bullet list)
-- Evaluation metrics
-
-## Results
-- Key plots/tables
-- Metrics summary
-- Links to `results/` artifacts
-
-## Interpretation
-- What do results mean?
-- Caveats / limitations
-
-## Next Steps
-- Follow-up experiments
-- Recommended implementation changes (if any)
+- 2026-01-30 — EXP-0007 — @your-handle
+  - Purpose: Compare spaCy NER vs baseline regex for place extraction
+  - Method: <1–3 lines> (links: protocol + src)
+  - Results: <1–3 lines> (link: results/)
+  - Conclusion/Next: <1–2 lines>
 ```
 
-</details>
+---
 
-The section layout (Goals, Data Used, Method, Results, Interpretation) is consistent with the KFM experiment-report template concept. [^kfm-exp-template]  
-The YAML front-matter pattern and “care_label / FAIR+CARE” style align with KFM-inspired metadata practices. [^md-frontmatter] [^md-sensitive]
+## 🔁 Reproducibility rules (non-negotiable)
+
+### Determinism & repeatability
+- Prefer deterministic outputs; record and set **random seeds** where applicable. [oai_citation:15‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- Add logging for long-running experiments and document where logs live + how to read them. [oai_citation:16‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- Capture failures: error handling should be informative; experiment docs should note failure modes. [oai_citation:17‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+### Version everything that matters
+- Record how to access prior versions and what changed (data changelog mindset). [oai_citation:18‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- Tag trained models with IDs and keep a simple model registry (data + code + params + metrics). [oai_citation:19‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- Treat config files as code; store configs by experiment ID. [oai_citation:20‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+### Snapshots (for “future-proof” replication)
+When an experiment completes, capture a “snapshot” of:
+- code reference (commit)
+- data version/reference
+- environment details  
+…and store it in an archive location if needed. [oai_citation:21‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+### Reproducibility checklist ✅
+Before merging/closing an experiment, ensure:
+- Parameters/configurations documented
+- Code committed (and commit hash noted)
+- Seeds recorded (if used)
+- Dependency versions noted
+- Results independently verified
+- Documentation checked by another team member [oai_citation:22‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
 
 ---
 
-### 🧾 Logbook entry template (`EXPERIMENT_LOG.md`)
-<details>
-<summary><strong>Click to expand</strong></summary>
+## 🧪 Stats & rigor guardrails (avoid self-inflicted lies)
 
-```markdown
-## YYYY-MM-DD — EXP-###_<slug>
-- **Owner(s):** @handle
-- **Purpose:** one sentence
-- **Status:** planned | running | final
-- **Links:** ./EXP-###_<slug>/README.md
-- **Key results:** (fill in after run)
-- **Next steps:** (what to do next)
-```
+Even good-faith experimentation can go wrong through:
+- **Optional stopping** (changes error rates if stopping rules depend on results) [oai_citation:23‡Understanding Statistics & Experimental Design.pdf](sediment://file_0000000038e0722f8ee76e6a371bf703)
+- **HARKing / post-hoc storytelling** (theory shaped to noise) [oai_citation:24‡Understanding Statistics & Experimental Design.pdf](sediment://file_0000000038e0722f8ee76e6a371bf703)
+- **Flexible analyses / p-hacking** (trying many transforms/outlier rules until “significant”) [oai_citation:25‡Understanding Statistics & Experimental Design.pdf](sediment://file_0000000038e0722f8ee76e6a371bf703)
 
-</details>
-
-This matches MCP’s recommendation for a consistent, date/ID-based experiment logbook. [^mcp-logbook]
+If an experiment is high-stakes or likely to be contentious, consider **preregistration**:
+write the plan first, run second, and document deviations (with justification). [oai_citation:26‡Understanding Statistics & Experimental Design.pdf](sediment://file_0000000038e0722f8ee76e6a371bf703)
 
 ---
 
-## 🛡️ Sensitive data & ethics
+## 🧭 SOPs (how we do things the same way)
 
-If an experiment touches potentially sensitive locations, communities, or personal data:
-- Consider redaction/aggregation and mark sensitivity clearly (e.g., `care_label`). [^md-sensitive]
-- Keep provenance and access constraints explicit (who can reproduce, what is restricted). [^kfm-provenance]
+KFM’s design calls for **SOP documents** as step-by-step guides (purpose, prerequisites, procedure, expected outcome, troubleshooting). They may live under `docs/sops/` or `mcp/sops/` and cover workflows like adding a map layer, updating gazetteer/training data, QC, or deployment. [oai_citation:27‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
 
----
-
-## ✅ Definition of Done (for each experiment)
-
-- [ ] `protocol.md` complete *before* running  
-- [ ] Report written in `README.md` (Goals→Data→Method→Results→Interpretation)  
-- [ ] Parameters + environment captured (`configs/`)  
-- [ ] Artifacts saved (`results/`) and linked from report  
-- [ ] Logbook entry added (`EXPERIMENT_LOG.md`)  
-- [ ] All claims backed by references/citations (or marked as assumptions) [^md-dod] [^md-evidence-first]
+If your experiment adds a new repeatable workflow, consider writing or updating an SOP.
 
 ---
 
-## 📚 Project grounding references
+## 🔌 How this plugs into KFM
 
-[^kfm-provenance]: KFM frames itself as **provenance-first**, traceable to original sources, and emphasizes **reproducibility/auditability** with **FAIR and CARE** principles. :contentReference[oaicite:0]{index=0}  
-[^kfm-pipeline]: KFM specifies a canonical pipeline order (Raw → Processed → Catalog/PROV → Database → API → UI), which experiments should respect/describe when they touch pipeline steps. :contentReference[oaicite:1]{index=1}  
-[^mcp-dir]: The KFM hub design doc defines `mcp/` as **Master Coder Protocol** resources and explicitly calls out `mcp/experiments/` as a place for experiment logs/results (purpose/config/outcome) and mentions DVC experiments as an option. :contentReference[oaicite:2]{index=2}  
-[^docs-first]: Documentation-first workflow is described as writing down goals/structure and updating docs as knowledge evolves. :contentReference[oaicite:3]{index=3}  
-[^kfm-exp-template]: The hub design doc proposes an experiment report template with sections like Goals, Data Used, Method, Results, Interpretation, and emphasizes recording code versions/params and linking outputs. :contentReference[oaicite:4]{index=4}  
-[^kfm-dvc]: The hub design doc references using tools like **DVC** for tracking experiments/metrics and versioning artifacts/catalogs. :contentReference[oaicite:5]{index=5}  
+KFM is designed as a modular pipeline:
+- ingest raw sources (maps, GIS, documents)
+- process into structured spatial + textual repositories
+- run AI cross-referencing / pattern recognition
+- publish results into an interactive map + timeline UI [oai_citation:28‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
 
-[^mcp-scientific-method]: MCP documentation outlines scientific-method steps (question → research → hypothesis → method → run → analyze → conclude → iterate). :contentReference[oaicite:6]{index=6}  
-[^mcp-protocol-template]: MCP protocol template fields: Objective, Materials, Procedure, Expected Outcome, Variables; plus recommendation to number/label protocols (EXP-001, etc.). :contentReference[oaicite:7]{index=7}  
-[^mcp-exp-structure]: MCP provides an example experiment folder structure (README, protocol, data, src, results, configs, archive). :contentReference[oaicite:8]{index=8}  
-[^mcp-logbook]: MCP describes maintaining an experiment logbook with date, experiment ID, notes, and references; suggests domain-specific logs (AI/Physics/Bio/etc.). :contentReference[oaicite:9]{index=9}  
-[^mcp-data]: MCP data management guidance includes storing raw data safely, avoiding overwrite, and keeping a data dictionary / provenance. :contentReference[oaicite:10]{index=10}  
-[^mcp-repro]: MCP reproducibility checklist includes parameters recorded, code committed, seeds, dependencies, independent verification, documentation/peer review. :contentReference[oaicite:11]{index=11}  
-[^mcp-env]: MCP environment setup suggests capturing hardware + dependencies (requirements.txt / environment.yml / Docker) and noting version impacts. :contentReference[oaicite:12]{index=12}  
-[^mcp-validation]: MCP highlights validation and peer review (replication/verification; peer review of design/analysis). :contentReference[oaicite:13]{index=13}  
-[^mcp-tools]: MCP lists experiment management tools (e.g., MLflow, W&B, Neptune, TensorBoard, ELN/LIMS). :contentReference[oaicite:14]{index=14}  
-[^mcp-traceability]: MCP recommends a traceability matrix linking experiment IDs, features/hypotheses, code version, data version, and results reference. :contentReference[oaicite:15]{index=15}  
+Experiments in this folder are how we **validate improvements** to any of those layers without losing the reasoning trail.
 
-[^md-frontmatter]: YAML front-matter example and metadata fields (title/path/version/last_updated/status/doc_kind/governance/ethics/FAIR+CARE/doc_uuid/commit_sha/checksum). :contentReference[oaicite:16]{index=16}  
-[^md-dod]: “Definition of Done” checklist concept for docs, including “front-matter complete,” “claims cited,” and peer review. :contentReference[oaicite:17]{index=17}  
-[^md-evidence-first]: The Markdown guide describes an “evidence-first” style where factual claims include citations/refs (e.g., via footnotes). :contentReference[oaicite:18]{index=18}  
-[^md-sensitive]: The Markdown guide discusses redacting/aggregating sensitive info and using metadata fields like `care_label` for restricted handling. :contentReference[oaicite:19]{index=19}  
+---
 
-[^stats-bias]: Stats/design guidance notes that only reporting successful outcomes is problematic and illustrates issues with publication bias and optional stopping. :contentReference[oaicite:20]{index=20}:contentReference[oaicite:21]{index=21}  
-[^stats-prereg]: Preregistration: write down the experimental plan and note deviations after running. :contentReference[oaicite:22]{index=22}
+## 🛠️ Suggested tools (optional, but helpful)
+
+MCP explicitly suggests tracking experiments with tools like:
+- MLflow / Neptune / Weights & Biases (params/metrics/artifacts)
+- ELN/LIMS for lab-style work
+- A structured folder system if no specialized tool is used [oai_citation:29‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+KFM’s design also notes DVC can be used to track metrics/artifacts for comparing runs over time. [oai_citation:30‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+
+---
+
+## 🧷 Quick Start (new experiment in ~5 minutes)
+
+1. 📁 Create folder: `mcp/experiments/EXP-####_<slug>/`
+2. 📄 Add `protocol.md` (write the method first)
+3. 📄 Copy the report template into `README.md`
+4. 🧰 Add `src/` and `configs/` (commit everything needed to rerun)
+5. ▶️ Run experiment, save outputs to `results/` (plus `logs/` if needed)
+6. 🧾 Fill in Results + Interpretation + Conclusion + Next Steps
+7. 📓 Append a new line to `EXPERIMENT_LOG.md` (if present)
+8. ✅ Run the reproducibility checklist, then commit
+
+---
+
+## 🤝 Contribution style (tiny rules that save us later)
+
+- Prefer “small, complete” experiments over giant sprawling ones.
+- If it isn’t documented, it didn’t happen. 🧾
+- If it can’t be reproduced, it’s not done. 🔁
+- If it can’t be traced to code + data versions, it’s not trustworthy. 🧭
+
+KFM’s goal is a system that stays **evidence-backed, transparent, and collaborative** as it grows. [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
