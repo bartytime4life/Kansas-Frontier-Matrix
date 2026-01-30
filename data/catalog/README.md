@@ -1,237 +1,200 @@
-# 📚 `data/catalog/` — Dataset Discovery Catalog (DCAT) 🧭
+# 📚 Data Catalog (`data/catalog/`)
 
 ![Metadata](https://img.shields.io/badge/metadata-DCAT%20%7C%20STAC%20%7C%20PROV-blue)
-![Pipeline](https://img.shields.io/badge/pipeline-Raw%E2%86%92Processed%E2%86%92Catalog%E2%86%92DB%E2%86%92API%E2%86%92UI-5b8cff)
-![Reproducible](https://img.shields.io/badge/ETL-deterministic%20%26%20reproducible-brightgreen)
+![Governance](https://img.shields.io/badge/governance-fail--closed-important)
+![Principles](https://img.shields.io/badge/principles-FAIR%20%2B%20CARE-success)
+![Status](https://img.shields.io/badge/role-discovery%20%26%20trust-informational)
 
-> **This folder is the “discovery layer” for KFM datasets.**  
-> ✅ Put **catalog metadata** here (DCAT).  
-> 🚫 Do **NOT** put raw or processed data files here.
+> 🗺️ **“The map behind the map.”**  
+> This folder is the **discovery layer** for KFM datasets: it makes data *findable*, *auditable*, and *reusable* across pipelines, databases, APIs, and the UI.
 
 ---
 
 ## 🎯 What this folder is for
 
-`data/catalog/` contains **dataset discovery records** that answer:
+`data/catalog/` holds **catalog-grade metadata** used to:
+- **List & search datasets** (humans + API + UI)
+- Provide **high-level dataset summaries** (title, description, licensing, distributions)
+- Power exports/harvesters (optional) for external catalogs
+- Enforce **governance + reproducibility** by making metadata mandatory
 
-- **What** is this dataset? (title, description, keywords)
-- **Who** made it? (publisher/maintainer)
-- **Where/when** does it apply? (spatial/temporal coverage)
-- **How** do I access it? (distributions: downloads, STAC links, API endpoints)
-
-In practice, this is where we keep our **DCAT dataset entries** so the platform (and humans) can *discover* what exists and how to use it.
-
----
-
-## 🧱 “Published” data requires boundary artifacts
-
-A dataset isn’t considered “published” until it has:
-
-- 🗺️ **STAC Collection + Item(s)** (spatial/temporal indexing of geospatial assets)
-- 🧾 **DCAT Dataset entry** (this folder → discovery catalog record)
-- 🧬 **PROV lineage bundle** (full provenance: inputs → activities → outputs)
-
-> Think of these as the **contract** between the data pipeline and the downstream layers (graph, API, UI).  
-> If any one is missing, the dataset is *not complete*.
+In KFM, metadata is not optional—**catalog + provenance are part of the “publish” step**, not a nice-to-have.
 
 ---
 
-## 🗂️ Folder layout
+## 🧬 Canonical lifecycle (where `data/catalog/` sits)
 
-```text
-📁 data/
-├─ 📁 raw/                      🧾 source snapshots (immutable / read-only)
-├─ 📁 work/                     🧪 scratch + intermediate artifacts (ephemeral)
-├─ 📁 processed/                ✅ final outputs consumed by DB/API/UI
-├─ 📁 stac/                     🛰️ STAC Collections + Items (geospatial catalog)
-│  ├─ 📁 collections/           🧩 collection JSON (grouping + semantics)
-│  └─ 📁 items/                 📦 item JSON (per asset/scene/tile/chunk)
-├─ 📁 prov/                     🧬 provenance bundles (W3C PROV-style receipts)
-└─ 📁 catalog/                  🗂️ discovery catalog (DCAT)
-   └─ 📁 dcat/
-      ├─ 📄 README.md                      👈 you are here
-      ├─ 📄 <dataset_id>.jsonld            ✅ canonical dataset record (JSON-LD)
-      ├─ 📄 <dataset_id>.ttl               ◻️ optional (only if adopted + validated)
-      └─ 📄 catalog.jsonld                 ◻️ optional aggregate dcat:Catalog export
+```mermaid
+flowchart LR
+  A[📥 data/raw/<domain>/] --> B[🧹 data/work/<domain>/]
+  B --> C[✅ data/processed/<domain>/]
+  C --> D[🧾 data/catalog/ + 🧾 data/provenance/]
+  D --> E[🗄️ Database layers]
+  E --> F[🧩 API layer]
+  F --> G[🗺️ UI + Story Nodes + Focus Mode]
 ```
 
----
-
-## 🧩 DCAT entries (what goes in `data/catalog/dcat/`)
-
-Each dataset should have **one** DCAT record (JSON-LD) that includes, at minimum:
-
-- `dct:title` (human title)
-- `dct:description` (what it is / why it exists)
-- `dct:license` (SPDX-style if possible)
-- `dcat:keyword` (searchability)
-- `dct:spatial` / `dct:temporal` (coverage)
-- `dcat:distribution` (download(s), STAC link(s), API link(s))
-
-### ✅ Practical rule of thumb
-If someone asks: “What is this dataset and how do I get it?”  
-…the DCAT record should answer that without needing tribal knowledge.
+✅ **Rule of thumb:** if it shows up in the UI, it must be backed by **processed data + catalog metadata + provenance**.
 
 ---
 
-## 🔗 Cross-linking rules (DCAT ⇄ STAC ⇄ PROV)
+## 🧱 Expected folder layout
 
-To keep the system coherent, we rely on **stable IDs** and **explicit links**:
+This repo may evolve over time, but the intent stays consistent:
 
-### DCAT → STAC
-- Add a `dcat:distribution` entry that points to:
-  - the **STAC Collection** (for the dataset)
-  - and/or the relevant **STAC Item(s)** (for individual assets)
+```text
+data/
+├── catalog/
+│   ├── dcat/                 # ✅ DCAT dataset entries (JSON-LD recommended)
+│   ├── exports/              # (optional) generated indexes/aggregations (do not hand-edit)
+│   └── README.md             # you are here
+├── stac/
+│   ├── collections/          # ✅ STAC Collections (geospatial discovery metadata)
+│   └── items/                # ✅ STAC Items (asset-level metadata)
+└── provenance/               # ✅ PROV activity bundles (lineage)
+```
 
-### DCAT → Processed outputs
-- Add at least one `dcat:distribution` that points to the processed artifact(s), e.g.:
-  - `data/processed/<domain>/<dataset>.parquet`
-  - `data/processed/<domain>/<dataset>.geojson`
-
-### DCAT → PROV
-- Include a distribution or relation that points to the provenance file in `data/prov/`
-- The PROV record should name:
-  - input raw entities
-  - processing activity (pipeline run)
-  - output entity (processed file)
+> 💡 If your repo currently stores STAC under `data/catalog/` instead of `data/stac/`, that’s okay—**the contract is “STAC exists + is linked,”** not the exact directory name.
 
 ---
 
-## ✅ New dataset checklist (PR-ready)
+## 📦 What belongs in `data/catalog/`
 
-Use this checklist before opening a PR:
+### ✅ DCAT dataset entries (required)
+Store one record per dataset (or per dataset “release unit”) under:
 
-- [ ] 📥 Raw inputs placed under `data/raw/<domain>/...`
-- [ ] 🧪 Pipeline script/notebook exists under `pipelines/` and runs end-to-end without prompts
-- [ ] 📦 Outputs written to `data/processed/<domain>/...`
-- [ ] 🗺️ STAC written/updated under `data/stac/collections/` and `data/stac/items/`
-- [ ] 🧾 DCAT JSON-LD added to `data/catalog/dcat/<dataset-id>.jsonld`
-- [ ] 🧬 PROV bundle added to `data/prov/<dataset-id>.prov.json` (or project naming convention)
-- [ ] 🔁 All links resolve: DCAT ↔ STAC ↔ PROV ↔ processed outputs
-- [ ] 🧹 Naming is stable and slug-safe (avoid renames unless absolutely necessary)
+- `data/catalog/dcat/<dataset_id>.jsonld`
 
----
+DCAT records should be:
+- human-readable enough for browsing
+- machine-readable for indexing
+- link-rich (point to STAC, processed assets, docs, and provenance)
 
-## 🧪 Validation & CI expectations
+### 🧩 Optional: generated indexes
+If you build an aggregate catalog view:
+- `data/catalog/exports/datasets.index.json`
+- `data/catalog/exports/keywords.index.json`
 
-CI is expected to verify that:
-
-- new/changed `data/processed/**` artifacts have matching:
-  - DCAT entry
-  - STAC entry
-  - PROV record
-- basic format validity checks pass (GeoJSON/JSON/Parquet integrity, etc.)
-
-If CI fails with “missing catalog/prov,” it usually means:
-- the pipeline generated outputs but didn’t publish the metadata artifacts, **or**
-- IDs don’t match across layers (common when a dataset slug changed).
+✅ Treat these as **build artifacts**.
 
 ---
 
-## 🧾 DCAT template (starter)
+## 🔗 Cross-linking rules (non-negotiable)
 
-<details>
-<summary><strong>📄 Minimal DCAT JSON-LD skeleton (copy/paste)</strong></summary>
+KFM expects **STAC + DCAT + PROV to agree** and cross-reference:
+
+- **STAC Items → assets** (usually files in `data/processed/**` or stable external storage)
+- **DCAT → distributions** (link to STAC and/or the underlying downloadable asset)
+- **PROV → full lineage** (raw → work → processed, plus pipeline run/config/commit)
+- Downstream graph/database nodes should **reference catalog IDs**, not duplicate metadata
+
+---
+
+## ✅ Definition of Done (DoD) for adding a dataset
+
+When you add or update a dataset, you’re done only when all of these are true:
+
+### 1) ✅ Processed data exists
+- Output(s) live in `data/processed/<domain>/...`
+- Data is clean, normalized, and ready for API/UI consumption
+
+### 2) ✅ STAC exists (Collection + Item(s))
+- Collection describes the dataset group (theme, extent, time range)
+- Item(s) describe each asset (file/API endpoint), including bbox/time/license attribution
+
+### 3) ✅ DCAT exists (this folder)
+- `data/catalog/dcat/<dataset_id>.jsonld`
+- Contains: **title**, **description**, **license**, **keywords**, **distributions**
+- Distributions point to STAC and/or direct downloads
+
+### 4) ✅ PROV exists
+- `data/provenance/<dataset_id>.prov.json` (or similar convention)
+- Captures inputs, processing activity, agents, timestamps, parameters/config
+
+### 5) ✅ Validation passes (CI is the gatekeeper 🚦)
+- Schema checks, provenance completeness, and security checks must pass
+- Missing metadata/provenance should be treated as a **blocker**
+
+---
+
+## 🧾 Minimal DCAT starter (JSON-LD)
+
+> ⚠️ This is a **starter skeleton**, not the full project profile.
 
 ```json
 {
   "@context": {
     "dcat": "http://www.w3.org/ns/dcat#",
-    "dct": "http://purl.org/dc/terms/",
-    "foaf": "http://xmlns.com/foaf/0.1/",
-    "xsd": "http://www.w3.org/2001/XMLSchema#"
+    "dct": "http://purl.org/dc/terms/"
   },
+  "@id": "kfm:dataset/<dataset_id>",
   "@type": "dcat:Dataset",
-  "@id": "kfm:dataset/<dataset-id>",
-  "dct:title": "<Human Title>",
-  "dct:description": "<What it is, why it exists, key caveats>",
-  "dcat:keyword": ["kansas", "frontier", "railroad"],
-  "dct:license": "<License URL or SPDX-like string>",
+  "dct:title": "Human-readable dataset title",
+  "dct:description": "What this dataset is, what it contains, and how it can be used.",
+  "dct:license": "SPDX identifier or license URL",
+  "dcat:keyword": ["kansas", "frontier", "railroad", "1860s"],
   "dcat:distribution": [
     {
       "@type": "dcat:Distribution",
-      "dct:title": "Processed data (Parquet)",
-      "dcat:downloadURL": "data/processed/<domain>/<file>.parquet",
-      "dcat:mediaType": "application/parquet"
-    },
-    {
-      "@type": "dcat:Distribution",
-      "dct:title": "STAC Collection",
-      "dcat:accessURL": "data/stac/collections/<collection-id>.json",
-      "dcat:mediaType": "application/json"
-    },
-    {
-      "@type": "dcat:Distribution",
-      "dct:title": "Provenance (PROV)",
-      "dcat:accessURL": "data/prov/<dataset-id>.prov.json",
-      "dcat:mediaType": "application/json"
+      "dct:title": "STAC entry",
+      "dcat:accessURL": "relative/or/absolute/link/to/stac/item-or-collection"
     }
-  ],
-  "dct:publisher": {
-    "@type": "foaf:Organization",
-    "foaf:name": "Kansas Frontier Matrix"
-  }
+  ]
 }
 ```
 
-</details>
+---
+
+## 🧠 Naming & stability conventions
+
+Keep identifiers stable and boring 😄:
+- Prefer `snake_case` or `kebab-case` slugs
+- Reuse the same `dataset_id` across:
+  - DCAT filename
+  - STAC `id`
+  - PROV `entity/activity` IDs
+  - pipeline outputs (where possible)
+
+✅ If you version data, version **distributions**, not the dataset identity:
+- dataset stays stable
+- distributions point to versioned STAC items / processed files
 
 ---
 
-## 🧬 Provenance mindset (quick reminder)
+## 🚫 Anti-patterns (please don’t)
 
-PROV records should make it easy to answer:
-
-> “How was this produced?”  
-> “From which sources?”  
-> “Using which pipeline + parameters?”  
-> “At what time, and by whom/what agent?”
-
-If the provenance can’t reconstruct the story of the dataset, it’s not done yet.
+- ❌ Dropping “final” data into `data/processed/` **without** DCAT/STAC/PROV
+- ❌ Writing DCAT records that don’t link to distributions
+- ❌ “Mystery data” (no license, no source attribution, no provenance)
+- ❌ Copy/pasting external metadata without adapting it to KFM profiles
+- ❌ Treating the catalog as “documentation only” (it’s executable discovery metadata)
 
 ---
 
-## 🧠 Architecture snapshot (why the linking matters)
+## 🧰 Helpful pointers
 
-```mermaid
-flowchart LR
-  subgraph Data_Lifecycle["📦 Data Lifecycle"]
-    A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views (this folder)"]
-    C --> E["PROV Lineage Bundles"]
-  end
-
-  C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
-  I --> J["Story Nodes (governed narratives)"]
-```
+- 📌 **Profiles live in** `docs/standards/` (project-specific STAC/DCAT/PROV extensions)
+- 🧪 **Validation is enforced by CI** — assume missing metadata will fail builds
+- 🧭 When in doubt: **link more** (processed asset, STAC, provenance, upstream sources, docs)
 
 ---
 
-## 🏷️ IDs, naming, and versioning
+## 🤝 Contributing checklist (quick copy/paste)
 
-- Prefer **stable dataset IDs** (`<domain>.<topic>.<time-range>` style is a good pattern)
-- Changing a dataset ID is expensive:
-  - it breaks links across DCAT/STAC/PROV/graph/UI
-- Use Git history/tags/releases for “what version did you use?” tracking
-
----
-
-## 🧰 Tips & gotchas
-
-- ✅ Keep distributions explicit: “downloadURL” for files, “accessURL” for services/catalogs.
-- ✅ If a dataset is huge (rasters, tilesets), store a **reference + checksum** in metadata and keep the *catalog-of-record* here.
-- 🚫 Avoid “mystery fields.” If you need extra metadata, extend the project profiles instead of inventing one-off keys.
+- [ ] Processed output written to `data/processed/<domain>/...`
+- [ ] STAC Collection created/updated
+- [ ] STAC Item(s) created/updated
+- [ ] DCAT JSON-LD created/updated in `data/catalog/dcat/`
+- [ ] PROV bundle created/updated in `data/provenance/`
+- [ ] Links verified (STAC ↔ DCAT ↔ PROV)
+- [ ] CI checks pass ✅
 
 ---
 
-## 📎 Related reading
+## 🧾 Why all this ceremony?
 
-- `data/stac/` — STAC Collections + Items (geospatial indexing)
-- `data/prov/` — PROV lineage bundles (traceability)
-- `pipelines/` — ETL that must publish *both* data + metadata artifacts
-- `docs/` — narrative + architecture + standards
-
----
+Because KFM is built to be:
+- **reproducible** (same inputs → same outputs)
+- **auditable** (every dataset has a lineage story)
+- **publishable** (metadata supports internal + external discovery)
+- **trustworthy** (governance-by-default, fail-closed)
