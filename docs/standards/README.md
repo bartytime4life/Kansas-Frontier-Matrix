@@ -1,171 +1,245 @@
-# 📏 KFM Standards Hub (docs/standards)
+# 🧱 Standards Hub (docs/standards)
 
-![Governance](https://img.shields.io/badge/governance-policy--as--code-6f42c1)
-![Pipeline](https://img.shields.io/badge/pipeline-evidence--first-0aa)
-![Docs](https://img.shields.io/badge/docs-contract--first-orange)
+This folder is the **single source of truth** for KFM’s “how we do things” rules that must remain:
+- ✅ **Machine-checkable** (schemas, profiles, contracts, policies)
+- ✅ **Human-readable** (protocols, conventions, definition-of-done checklists)
+- ✅ **Governed** (changes reviewed, versioned, and enforced through CI)
 
-Welcome to **KFM’s governed standards** folder — the “rules of the road” for how data, metadata, docs, and interfaces are structured so the whole system stays **evidence-backed, traceable, and reviewable**. Standards here exist to keep the KFM pipeline consistent and enforceable across **ETL → catalogs → graph → API → UI → narratives**. 📚🧭  
-(Standards are expected to be validated by CI and treated as **source-of-truth contracts**.):contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
-
----
-
-## 🧭 Quick links
-
-### 📌 Core standards (this folder)
-- 📝 **Markdown authoring & workflow** → `./KFM_MARKDOWN_WORK_PROTOCOL.md`:contentReference[oaicite:2]{index=2}
-- 🧱 **Repository structure** → `./KFM_REPO_STRUCTURE_STANDARD.md`:contentReference[oaicite:3]{index=3}
-- 🗂️ **STAC profile** → `./KFM_STAC_PROFILE.md`:contentReference[oaicite:4]{index=4}
-- 🧾 **DCAT profile** → `./KFM_DCAT_PROFILE.md`:contentReference[oaicite:5]{index=5}
-- 🧬 **PROV profile** → `./KFM_PROV_PROFILE.md`:contentReference[oaicite:6]{index=6}
-
-### 🧩 Related “governed” folders (where these standards get applied)
-- 📚 Templates → `docs/templates/` (universal docs, Story Nodes, API contract changes):contentReference[oaicite:7]{index=7}
-- ⚖️ Governance → `docs/governance/` (ethics, sovereignty, review gates):contentReference[oaicite:8]{index=8}
-- 🗞️ Story Nodes → `docs/reports/story_nodes/` (draft vs published narratives):contentReference[oaicite:9]{index=9}
+KFM treats key specs as **contract artifacts** (schemas/specs) and treats derived outputs as **evidence artifacts** that must be cataloged and provenance-linked before they can be used downstream.  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## ✅ What counts as a “standard” in KFM?
+## 🧭 Table of contents
 
-A **standard** is a document that defines **non-negotiable contracts** or **validation rules** for:
-- 📦 **Data lifecycle & staging** (raw/work/processed)
-- 🗂️ **Metadata correctness** (STAC/DCAT/PROV profiles + schemas)
-- 🧠 **Evidence integrity** (no narrative without provenance-linked evidence)
-- 🔒 **Sovereignty & classification propagation**
-- 🧱 **Canonical subsystem homes** (one place per subsystem; avoid repo drift)
-
-> [!IMPORTANT]
-> Standards in this folder are meant to be **enforced by CI/CD** and treated like API contracts: breaking changes require deliberate versioning + review.:contentReference[oaicite:10]{index=10}:contentReference[oaicite:11]{index=11}
-
----
-
-## 🧷 The non‑negotiables (print these in your brain 🧠)
-
-### 1) Pipeline ordering is absolute 🧬➡️🗺️➡️🧠➡️🧰➡️🖥️➡️📖
-KFM treats the pipeline sequence as **inviolable** — no stage may leapfrog earlier stages or bypass required boundary artifacts.:contentReference[oaicite:12]{index=12}  
-A canonical ordering is explicitly emphasized in KFM design docs.:contentReference[oaicite:13]{index=13}
-
-### 2) Provenance first (metadata before interpretation) 🧾✅
-Before anything is loaded into the graph or referenced by UI/narratives, it must be:
-- cataloged (STAC/DCAT),
-- lineage-traced (PROV),
-- schema/profile-valid.:contentReference[oaicite:14]{index=14}:contentReference[oaicite:15]{index=15}
-
-### 3) API boundary rule 🧱
-The UI must not query the graph directly; access flows through the governed API layer so redaction + policy can be enforced consistently.:contentReference[oaicite:16]{index=16}
-
-### 4) Governance is “policy as code” ⚖️💻
-KFM expects governance rules to be encoded (e.g., OPA/Rego) and enforced via CI checks and/or runtime decisions.:contentReference[oaicite:17]{index=17}
-
-### 5) Fail closed by default 🔒
-If checks fail (missing license, missing PROV, etc.), the system blocks the action rather than allowing incomplete or non-compliant content through.:contentReference[oaicite:18]{index=18}
+- [📌 What belongs in this folder](#-what-belongs-in-this-folder)
+- [🚦 Non-negotiables](#-non-negotiables)
+- [🗺️ Canonical pipeline and “boundary artifacts”](#️-canonical-pipeline-and-boundary-artifacts)
+- [🌐 STAC + DCAT + PROV alignment](#-stac--dcat--prov-alignment)
+- [🧬 Versioning rules](#-versioning-rules)
+- [🧪 Validation and enforcement](#-validation-and-enforcement)
+- [📝 Markdown protocol and document metadata](#-markdown-protocol-and-document-metadata)
+- [🛠️ Adding or changing a standard](#️-adding-or-changing-a-standard)
+- [✅ Definition of done](#-definition-of-done)
+- [📚 Source docs](#-source-docs)
 
 ---
 
-## 📦 Data + metadata standards (the “boundary artifacts”)
+## 📌 What belongs in this folder
 
-KFM’s publishing model requires that datasets move through **staging areas** and generate required catalogs/lineage outputs at publication time.:contentReference[oaicite:19]{index=19}
+Standards live here when they meet at least one of these criteria:
 
-### 🗃️ Required staging layout
-- `data/raw/<domain>/` — immutable raw sources  
-- `data/work/<domain>/` — intermediate outputs  
-- `data/processed/<domain>/` — final outputs ready for downstream consumption:contentReference[oaicite:20]{index=20}
+- 📦 **Metadata profiles** (e.g., STAC/DCAT/PROV fields + constraints)
+- 🧬 **Ontology / graph conventions** (labels, IDs, migration rules, constraints)
+- 🔌 **API contracts** (OpenAPI / GraphQL schema rules and versioning)
+- 🧾 **Documentation protocols** (front-matter requirements, required sections, citation rules)
+- 🛡️ **Governance-adjacent rules** that are validated by CI (naming, classification tags, link requirements)
 
-### 🧾 Required “boundary artifacts” at publication
-Every dataset (and every “evidence artifact”) must be accompanied by:
-- **STAC** records (collections + items)
-- **DCAT** dataset entry (discovery layer)
-- **PROV** activity bundle (lineage / how it was produced):contentReference[oaicite:21]{index=21}
-
-### 🔗 Cross-layer linkage expectations (keep catalogs, graph, and stories in sync)
-- STAC → points to processed assets + includes license/source attribution:contentReference[oaicite:22]{index=22}
-- DCAT → links to STAC/distributions for discovery:contentReference[oaicite:23]{index=23}
-- PROV → links raw → work → processed + identifies run/config/commit where applicable:contentReference[oaicite:24]{index=24}
-- Graph → references catalog IDs (don’t duplicate bulky data):contentReference[oaicite:25]{index=25}
+> If it can break downstream systems or governance when inconsistent, it belongs here as a **standard** (not tribal knowledge).  [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧠 Story Nodes standards (governed narrative artifacts)
+## 🚦 Non-negotiables
 
-Story Nodes are expected to be **machine-ingestible narratives** whose claims are tied to evidence, typically written in Markdown and paired with structured choreography (e.g., JSON/YAML) that drives map/timeline behavior.:contentReference[oaicite:26]{index=26}:contentReference[oaicite:27]{index=27}
+These invariants are **hard rules**. If you need to violate one, you don’t “work around it”—you propose a governed change with versioning + migration + approvals.
 
-> [!NOTE]
-> “Evidence-first narrative” means **no unsourced claims** are allowed in Story Nodes or Focus Mode; AI-generated content must be clearly identified and evidence-constrained.:contentReference[oaicite:28]{index=28}
+### 🔒 KFM invariants (must not regress)
 
----
+- **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode` (no stage can consume outputs that skipped prior checks).  [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **API boundary rule:** the UI must **never** query Neo4j directly; all access must go through the governed API layer.  [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Provenance first:** all published data must be registered with provenance before graph/UI use (STAC/DCAT + PROV is a prerequisite).  [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Deterministic, idempotent ETL:** config-driven, repeatable outputs, fully logged, re-runnable without side effects.  [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Evidence-first narrative:** no unsourced narrative; every claim cites evidence; AI text must be identified + provenance/confidence-linked.  [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Sovereignty + classification propagation:** no output artifact can be less restricted than its inputs; sensitive locations may require UI safeguards (e.g., blurring/generalization).  [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Validation gates:** CI enforces these invariants; missing provenance, broken links, or sensitive leaks fail the build.  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-## 🧱 Standards catalog (what lives here)
-
-| Standard 📄 | Purpose 🎯 | Applies to 🧩 |
-|---|---|---|
-| `KFM_REPO_STRUCTURE_STANDARD.md` | One canonical home per subsystem (prevents repo drift) | Everyone touching repo layout |
-| `KFM_MARKDOWN_WORK_PROTOCOL.md` | Doc authoring conventions + repeatable doc workflow | Docs, Story, Standards |
-| `KFM_STAC_PROFILE.md` | KFM extensions/requirements for STAC metadata | ETL + catalog generation |
-| `KFM_DCAT_PROFILE.md` | KFM DCAT requirements for dataset discovery | Catalog + portal export |
-| `KFM_PROV_PROFILE.md` | KFM provenance requirements (lineage) | ETL + derived artifacts |
-
-(These documents are referenced explicitly as standards artifacts in the Master Guide.):contentReference[oaicite:29]{index=29}
+KFM’s blueprint also states a canonical flow like `Raw → Processed → Catalog/Prov → Database → API → UI`, and treats shortcuts as flawed unless proven otherwise.  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧪 Enforcement: how standards become “real” (CI + policy)
+## 🗺️ Canonical pipeline and “boundary artifacts”
 
-KFM design expects:
-- **Automated CI enforcement** of governance rules (e.g., missing metadata/license/provenance fails PR checks).:contentReference[oaicite:30]{index=30}
-- **Runtime policy enforcement** for access control and response sanitization where needed (e.g., sensitive datasets, restricted outputs).:contentReference[oaicite:31]{index=31}
+**Boundary artifacts** are the “handoff contracts” between stages. Data is not considered “published” until these exist.  [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-These are aligned with the broader “testing + CI must be green before merge” mindset described in the Master Coder Protocol documentation.:contentReference[oaicite:32]{index=32}
+### 🧩 High-level flow (reference)
 
----
+```mermaid
+flowchart LR
+  subgraph Data
+    A["Raw Sources"] --> B["ETL + Normalization"]
+    B --> C["STAC Items + Collections"]
+    C --> D["DCAT Dataset Views"]
+    C --> E["PROV Lineage Bundles"]
+  end
 
-## 🧾 Versioning rules (standards are contracts)
+  C --> G["Neo4j Graph (references back to catalogs)"]
+  G --> H["API Layer (contracts + redaction)"]
+  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
+  I --> J["Story Nodes (governed narratives)"]
+  J --> K["Focus Mode (provenance-linked context bundle)"]
+```
 
-### 🏷️ Repo / release versioning
-The Master Guide describes semantic-style versioning expectations at the repository level (major for structural shifts, minor for compatible additions).:contentReference[oaicite:33]{index=33}
+(Every stage consumes the outputs of the previous stage to maintain traceability.)  [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-### 🧬 Dataset versioning + citation
-KFM design docs emphasize that versioned snapshots matter for reuse and citation (e.g., via tags/releases and `CITATION.cff`).:contentReference[oaicite:34]{index=34}
+### 🗂️ Required staging layout
 
----
+All raw data goes into `data/raw/<domain>/`, intermediates into `data/work/<domain>/`, and final outputs into `data/processed/<domain>/`.  [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-## 🔁 How to change a standard (safe change control)
+### 🤖 Evidence artifacts are “first-class datasets”
 
-> [!IMPORTANT]
-> Changing standards may cause **cascading breakage** (pipelines, validators, UI contracts). Treat changes like API contract changes.
-
-### ✅ Change checklist
-- [ ] **Write the intent**: what problem is this solving? (include examples + non-goals)
-- [ ] **Backwards compatibility**: does this break existing metadata/docs? If yes, define migration path.
-- [ ] **Validation impact**: update schemas/validators/CI rules that enforce the standard.
-- [ ] **Docs alignment**: update templates + any “how-to” that depends on the changed standard.
-- [ ] **Version signal**: note whether this is patch/minor/major impact.
-
-This reflects the broader “document-first + peer review + CI gates” posture in the Master Coder Protocol documentation.:contentReference[oaicite:35]{index=35}:contentReference[oaicite:36]{index=36}
+AI/analysis outputs must be stored in `data/processed/...`, cataloged (STAC/DCAT), and traced in PROV, and must only be exposed through governed APIs (no UI hardcoding).  [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧰 Quick “Definition of Done” for any governed doc ✅
+## 🌐 STAC + DCAT + PROV alignment
 
-A governed artifact should be considered “done” only when:
-- ✅ Front-matter is complete and valid (template/profile compliant)  
-- ✅ Claims link to datasets/schemas/sources as applicable  
-- ✅ Validation steps are repeatable  
-- ✅ Governance + FAIR/CARE + sovereignty implications are stated:contentReference[oaicite:37]{index=37}
+### ✅ Required records (per dataset / evidence artifact)
+
+Every new dataset or evidence artifact must have:
+- **STAC Collection + Items** (asset description + spatial/temporal metadata)
+- **DCAT Dataset entry** (catalog discovery: title, description, license, keywords, distributions)
+- **PROV activity bundle** (lineage: sources, steps, agents, timestamps, configs/parameters)
+
+These extend base standards via project-specific profile docs (including provenance refs + uncertainty indicators), and CI validates conformance.  [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 🔗 Cross-layer linkage expectations
+
+To keep catalogs/graph/narratives in sync, these cross-references must exist:
+- **STAC Items → Data assets**: Items point to actual assets in stable storage and include attribution/license.  [oai_citation:17‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **DCAT → STAC/distributions**: DCAT distributions link to STAC entries and/or direct downloads.  [oai_citation:18‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **PROV end-to-end**: raw → work → processed with run/config identifiers (run ID or commit hash).  [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Graph references catalogs**: graph stores references (STAC IDs/DOIs), not bulky payloads.  [oai_citation:20‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 📎 Appendix: Key source docs used to derive this README
+## 🧬 Versioning rules
 
-- KFM Master Guide v13 (Draft) — `MARKDOWN_GUIDE_v13.md.gdoc` :contentReference[oaicite:38]{index=38}  
-- Kansas Frontier Matrix — Comprehensive Technical Blueprint (PDF) :contentReference[oaicite:39]{index=39}  
-- Scientific Method / Research / Master Coder Protocol Documentation (PDF) :contentReference[oaicite:40]{index=40}  
+KFM versions both datasets and the overall system to ensure controlled evolution:
+
+- 📦 **Dataset versioning:** new versions link to predecessors via DCAT/PROV (e.g., `prov:wasRevisionOf`), ideally with persistent identifiers (DOI/ARK).  [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🧠 **Graph/ontology versioning:** keep backward compatibility unless a migration is explicitly performed and documented.  [oai_citation:22‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🔌 **API versioning:** breaking changes require a new versioned endpoint or negotiation strategy; the OpenAPI/GraphQL contract is the contract.  [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🏷️ **Release versioning:** repository releases follow semantic versioning; major versions indicate structural changes; the Master Guide is updated with a changelog entry.  [oai_citation:24‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 📝 Footnotes (traceability)
+## 🧪 Validation and enforcement
 
-[^pipeline-order]: Pipeline ordering is explicitly described as inviolable in the Master Guide v13 draft.:contentReference[oaicite:41]{index=41}
+KFM’s definition of “governed” is implemented as **CI gates** and **policy-as-code**.
 
-[^kfm-canonical-order]: KFM design docs also emphasize a canonical “raw → processed → catalog/prov → database → API → UI” sequencing conceptually, reinforcing the same spirit of ordered boundary artifacts.:contentReference[oaicite:42]{index=42}
+### ✅ Minimum CI gates (examples)
 
-[^policy-as-code]: “Policy as code” + automated CI enforcement is described as a core governance approach (e.g., OPA/Rego + Conftest-like checks).:contentReference[oaicite:43]{index=43}
+CI checks include:
+- 🧾 **Markdown protocol + front-matter validation** (missing front-matter/required sections fails build)  [oai_citation:25‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🔗 **Link/reference validation** (no broken internal links / unresolved citations)  [oai_citation:26‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 📐 **Schema validation** for STAC/DCAT/PROV + Story Node structures  [oai_citation:27‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🕸️ **Graph integrity tests** (constraints, ontology regressions)  [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🧪 **API contract tests** + schema linting; breaking changes are blocked without proper versioning/tests  [oai_citation:29‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🛡️ **Security/governance scans**: secret scanning, PII/sensitive data scan, sensitive location checks, classification consistency checks  [oai_citation:30‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 🛡️ Policy-as-code (OPA/Rego) + CI enforcement
+
+The KFM blueprint describes governance rules stored in `policy/` as versioned “policy as code” (OPA/Rego), with CI running Conftest against changes to block non-compliant contributions (e.g., missing metadata/license/PROV).  [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+It also describes Conftest usage as a PR gate that can fail CI when policies are violated.  [oai_citation:32‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:33‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+> 🧠 Design intent: the UI is not allowed to bypass governance; access is mediated by the backend API, and runtime policy enforcement can deny or sanitize sensitive outputs.  [oai_citation:34‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:35‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 📝 Markdown protocol and document metadata
+
+### 🧾 Front-matter is not optional
+
+KFM validates docs for correct YAML front-matter and required sections; broken front-matter or missing required sections fails the build.  [oai_citation:36‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+A KFM-inspired pattern includes structured metadata (status, governance refs, FAIR/CARE tags, etc.).  [oai_citation:37‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+### 🪶 CARE labels & sensitive handling
+
+When content requires special handling, front-matter can include fields like `care_label` to trigger extra review (e.g., “Restricted · Tribal Sensitive”), and CI can enforce approvals based on that label.  [oai_citation:38‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+---
+
+## 🛠️ Adding or changing a standard
+
+### 🧩 Standard types (common patterns)
+
+- 📘 **Protocol** (human + machine governance): naming rules, required sections, review triggers
+- 📦 **Profile** (data contracts): required fields + JSON Schema for validation
+- 🔌 **Contract** (API/graph): OpenAPI/GraphQL/ontology constraints + migration rules
+- 🛡️ **Policy** (enforcement): OPA/Rego rules + Conftest tests + runtime enforcement hooks
+
+### 🧑‍💻 Contribution expectations (code + docs)
+
+Master protocol guidance for quality includes:
+- consistent coding style + linting/formatting in CI (e.g., black/flake8 for Python; eslint/prettier for JS)  [oai_citation:39‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- PR-based peer review + checklists (style compliance, tests, clarity, reproducibility)  [oai_citation:41‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- automated tests + CI must be green before merge  [oai_citation:42‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- “living documentation” updated alongside code changes  [oai_citation:43‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+### 🧭 Recommended workflow
+
+1. 📝 Draft the standard as a Markdown doc (with front-matter + required sections).
+2. 📐 If it’s machine-validated:
+   - add/update JSON Schema(s)
+   - add examples/fixtures
+3. 🧪 Update CI gates (lint/schema/link checks) as needed.
+4. 🛡️ Update policies (`policy/`) if a rule should be enforced.
+5. ✅ Add tests (schema tests, graph fixtures, API contract tests, etc.).
+6. 📣 Document breaking changes + migration steps and apply versioning rules.  [oai_citation:44‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## ✅ Definition of done
+
+A standards document (or change to a standard) is “done” when:
+
+- ✅ Front-matter complete + valid
+- ✅ All claims link to datasets, schemas, or source references (as applicable)
+- ✅ Validation steps listed and repeatable
+- ✅ Governance, FAIR/CARE, and sovereignty considerations explicitly stated  [oai_citation:45‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+<details>
+  <summary><strong>📋 Quick checklist (copy/paste into PR)</strong></summary>
+
+- [ ] Standard doc created/updated (with YAML front-matter)
+- [ ] Schema/profiles updated (if applicable)
+- [ ] Examples/fixtures added or refreshed
+- [ ] CI gates updated (lint/link/schema checks)
+- [ ] Policy updates added (OPA/Rego + Conftest tests) if enforceable
+- [ ] Version bump + changelog notes (dataset / graph / API / release as appropriate)
+- [ ] Migration notes included for breaking changes
+- [ ] Governance + sovereignty review triggers considered
+
+</details>
+
+---
+
+## 🗂️ Suggested folder layout
+
+> This README is the index. Standards should stay discoverable and consistent.
+
+```text
+📁 docs/
+  📁 standards/
+    📄 README.md                      👈 you are here
+    📄 KFM_STAC_PROFILE.md             (profile)
+    📄 KFM_DCAT_PROFILE.md             (profile)
+    📄 KFM_PROV_PROFILE.md             (profile)
+    📄 KFM_MARKDOWN_WORK_PROTOCOL.md   (protocol)
+    📁 schemas/                        (JSON Schema / SDL / etc.)
+    📁 examples/                       (valid + invalid examples)
+```
+
+(Referenced profile filenames are part of KFM’s published standards list.)  [oai_citation:46‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:47‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 📚 Source docs
+
+Primary project sources used to build this standards index:
+
+- 📘 **KFM Master Guide v13 (Draft)** — `MARKDOWN_GUIDE_v13.md.gdoc`  [oai_citation:48‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  [oai_citation:49‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🧭 **KFM Technical Blueprint** — `Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf`  [oai_citation:50‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  [oai_citation:51‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🧪 **Scientific Method / Research / Master Coder Protocol** — `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`  [oai_citation:52‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  [oai_citation:53‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+- 📝 **Markdown practices + KFM-inspired front-matter** — `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`  [oai_citation:54‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)  [oai_citation:55‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
