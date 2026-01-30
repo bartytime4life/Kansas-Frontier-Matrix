@@ -1,255 +1,221 @@
-# 🧩 `api/adapters/` — Ports & Adapters (Integration Layer)
+# 🔌 `api/adapters/` — Integration Layer (Interfaces & Adapters)
 
-![Layer](https://img.shields.io/badge/layer-adapters-informational)
-![Architecture](https://img.shields.io/badge/architecture-clean%20%2B%20hexagonal-blue)
-![KFM](https://img.shields.io/badge/project-Kansas%20Frontier%20Matrix-7c3aed)
+![Python](https://img.shields.io/badge/Python-Adapters-informational)
+![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20Hexagonal-blue)
+![API](https://img.shields.io/badge/API-FastAPI-009688)
+![Policy](https://img.shields.io/badge/Design-Provenance--first-important)
 
-This folder is the **integration boundary** between KFM’s *pure* application logic (domain + services/use-cases) and the outside world (databases, external APIs, file I/O, AI backends, etc.).
-
-> ✅ **Goal:** make external systems feel boring and predictable to the core.  
-> 🧠 **Rule:** the service layer depends on *interfaces/ports*; adapters provide the *implementations*.
+> 🧠 **Why this folder exists:** KFM uses a Clean Architecture style where the **integration (adapter) layer** bridges **pure service/use-case logic** to external systems like databases and third-party APIs. In this repo, those bridges live under modules like `api/db/` and `api/adapters/`. [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 Quick navigation
+## 🧭 What belongs in `api/adapters/`?
 
-- **You are here:** `api/adapters/` (infra implementations)
-- **Usually nearby:** `api/db/` (db clients/sessions), `api/services/` (use-cases), `api/routes/` (FastAPI endpoints), `policy/` (governance rules)
+This folder contains **implementations** that talk to “the outside world”:
 
----
+- 🗄️ Database access (repositories/adapters for PostGIS, Neo4j, etc.)
+- 🌐 External services (geocoding, weather, enrichment APIs)
+- 🔎 Search services (e.g., Elastic-like full-text search)
+- 📦 File/stream connectors (if the API needs to read/write external filesystems, object stores, etc.)
 
-## 🚦 TL;DR (What belongs here)
+KFM’s blueprint explicitly calls out this layer as the bridge between service logic and external systems, and even name-drops typical examples like `PostGISRepository`, `Neo4jAdapter`, `ElasticSearchAdapter`, and external API adapters such as an `OpenWeatherMapAdapter` or a geocoding service. [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-✅ Put this in `api/adapters/`:
-
-- Database adapters / repositories (PostGIS, Neo4j, search index, etc.)
-- External API clients (weather, geocoding, remote services)
-- AI backends (Ollama/local LLM, hosted LLM provider wrapper)
-- File-system / object-store access (reading/writing governed artifacts)
-- “Glue” that maps **domain models ⇄ persistence/API payloads**
-
-🚫 Keep this OUT of `api/adapters/`:
-
-- Business rules, scoring logic, “what should we do?” decisions
-- Authorization decisions (those belong to the policy/governance layer)
-- FastAPI request/response parsing (that belongs in routers/controllers)
-- “Data pipeline” steps that create canonical datasets (those live in pipelines)
+✅ **Golden rule:** adapters are *infrastructure glue* — they **do not** contain business decisions.
 
 ---
 
-## 🧠 Mental model: Hexagonal / Clean Architecture
+## 🚫 What does *not* belong here?
 
-```mermaid
-flowchart LR
-  subgraph Core["🧠 Core (Framework-Agnostic)"]
-    D["📦 Domain Models"]
-    U["🧩 Services / Use-Cases"]
-    P["🔌 Ports (Interfaces)"]
-    D --> U --> P
-  end
+Avoid putting these in `api/adapters/`:
 
-  subgraph Adapters["🧩 Adapters (This Folder)"]
-    A1["🗄️ DB Adapters\n(PostGIS / Neo4j / Search)"]
-    A2["🌐 External API Adapters\n(Geocoding / Weather / etc.)"]
-    A3["🤖 AI Adapters\n(Ollama / Hosted LLM)"]
-  end
+- 🧠 **Business logic / rules** (belongs in service/use-case layer)
+- 🧾 Domain entities / schemas (belongs in domain models)
+- 🛣️ FastAPI route handlers (belongs in the API “inbound” layer, typically `api/routes/` or similar)
+- 🧩 Orchestration across multiple adapters (belongs in services/use-cases)
 
-  subgraph Outside["🌍 External Systems"]
-    X1["PostGIS / Postgres"]
-    X2["Neo4j / Graph Store"]
-    X3["HTTP APIs"]
-    X4["LLM Runtime"]
-  end
-
-  P --> A1 --> X1
-  P --> A1 --> X2
-  P --> A2 --> X3
-  P --> A3 --> X4
-```
-
-**Inbound adapters** (HTTP routes, message consumers) *call into* the core.  
-**Outbound adapters** (DB/API clients) are *called by* the core.
+KFM is designed so the UI never talks directly to databases; access is mediated via the backend API and its governance/validation flow. [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 📦 Suggested folder layout
+## 🧱 “Ports & Adapters” mental model (quick)
 
-Your exact tree may differ, but try to keep adapters **discoverable** and **self-contained**:
+KFM follows a **Clean / Hexagonal** architecture style: business logic is central; adapters are on the outside. The “port” is the **interface** your service layer expects; the “adapter” is the concrete implementation.
+
+A supporting reference describes hexagonal architecture as placing business logic at the center, with **inbound adapters** handling requests and **outbound controllers/adapters** invoked by business logic to call external systems. [oai_citation:4‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
+
+### In KFM terms
+
+- **Inbound adapters** ✅: FastAPI controllers/routers (request in → call service)
+- **Outbound adapters** ✅: DB clients, API clients, repositories (service → fetch/store externally)
+
+---
+
+## 📁 Suggested structure (recommended)
+
+Your exact layout may vary, but aim for **small, composable adapters** with clean boundaries:
 
 ```text
-api/
-  adapters/
-    README.md
-
-    postgis/                # 🗄️ Spatial DB adapter(s)
-      adapter.py
-      mappers.py            # domain ⇄ db record mapping
-      queries.sql           # (optional) raw SQL / Cypher kept close-by
-      __init__.py
-
-    neo4j/                  # 🕸️ Graph adapter(s)
-      adapter.py
-      cypher/
-      __init__.py
-
-    search/                 # 🔎 Full-text / vector / hybrid search
-      adapter.py
-      __init__.py
-
-    geocoding/              # 📍 External geocoder
-      adapter.py
-      __init__.py
-
-    weather/                # 🌦️ External weather provider
-      adapter.py
-      __init__.py
-
-    ai/                     # 🤖 Focus Mode backends
-      ollama_adapter.py
-      openai_adapter.py
-      prompt_templates/
-      __init__.py
+📦 api/
+ ├─ 🧩 adapters/
+ │   ├─ __init__.py
+ │   ├─ 🗄️ neo4j/
+ │   │   ├─ adapter.py          # Neo4jAdapter
+ │   │   ├─ queries.py          # Cypher strings, query builders
+ │   │   └─ mapping.py          # DB ↔️ Domain mapping
+ │   ├─ 🔎 search/
+ │   │   ├─ elastic.py          # ElasticSearchAdapter (if used)
+ │   │   └─ mapping.py
+ │   ├─ 🌐 external/
+ │   │   ├─ geocoding.py        # GeocodingService adapter
+ │   │   ├─ weather.py          # OpenWeatherMapAdapter (optional)
+ │   │   └─ http_client.py      # shared resilient client
+ │   └─ 🧰 shared/
+ │       ├─ errors.py           # AdapterError, retryable vs non-retryable
+ │       └─ telemetry.py        # logging/provenance hooks
+ └─ 🗄️ db/
+     ├─ postgis.py              # PostGISRepository (often fits here too)
+     └─ session.py              # engine/session wiring (infra)
 ```
+
+The blueprint explicitly lists integration/adapters as being under `api/` and mentions subdirectories like `db/`, `repositories/`, or `adapters/` for external system interaction. [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🔌 Ports first, adapters second
+## ✨ Adapter conventions (KFM-style)
 
-**Preferred workflow for adding integrations:**
+### 1) Interfaces live in the service layer ✅
+Define **ports** (interfaces / protocols / ABCs) in the service layer. Then implement them here.
 
-1. **Define a port** (interface) in the service/use-case layer  
-2. **Write the adapter** here to implement the port  
-3. **Wire it up** via dependency injection (FastAPI dependencies / app startup)
-4. **Add tests** (mock the port for unit tests; integration test the adapter)
+Why: This keeps business logic testable and independent of infrastructure. It also lets KFM swap implementations without changing upper layers (e.g., swap PostGIS or change an external API call). [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### Example: Port + Adapter (skeleton)
+### 2) Adapters implement those interfaces ✅
+The blueprint notes that adapters often implement interfaces defined in the service layer and should keep credentials/queries separate from logic. [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-```python
-# api/services/ports/geocoding.py
-from typing import Protocol
+### 3) Configuration is handled at the edge ✅
+Adapters manage configuration like DB URLs and API keys, typically from environment variables or config files. [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-class GeocodingPort(Protocol):
-    def forward(self, query: str) -> tuple[float, float]:
-        """Return (lon, lat) for a human query."""
-```
+### 4) Keep “mapping” explicit ✅
+Adapters should translate:
+- External shapes (rows, JSON, Cypher results)
+- → domain/service-level models (Pydantic/domain entities)
 
-```python
-# api/adapters/geocoding/adapter.py
-import httpx
-
-class NominatimGeocodingAdapter:
-    def __init__(self, base_url: str, timeout_s: float = 10.0):
-        self._client = httpx.Client(base_url=base_url, timeout=timeout_s)
-
-    def forward(self, query: str) -> tuple[float, float]:
-        # translate: domain-ish input -> provider payload
-        r = self._client.get("/search", params={"q": query, "format": "json", "limit": 1})
-        r.raise_for_status()
-        data = r.json()
-        # translate: provider payload -> domain-ish output
-        return (float(data[0]["lon"]), float(data[0]["lat"]))
-```
-
-> 🎯 The adapter can be ugly. The core should stay clean.
+This is where subtle data-quality issues get handled *without contaminating business logic*.
 
 ---
 
-## 🧷 Conventions we enforce in adapters
+## 🔐 Configuration & secrets
 
-### 1) 🎛️ Configuration via environment (or config objects)
-- Treat credentials as **runtime config**, not code.
-- Provide safe defaults for dev, strict validation for prod.
+**Do:**
+- ✅ Read connection URLs / keys from env or config
+- ✅ Separate credentials from logic
+- ✅ Keep queries (SQL/Cypher) in their own module when they get big
+- ✅ Fail “loud” with actionable error messages for misconfig
 
-### 2) 🧊 Keep mapping code explicit
-- Prefer `mappers.py` / `transforms.py` for clarity
-- Avoid leaking DB schemas into domain models
+**Don’t:**
+- ❌ Commit secrets
+- ❌ Hardcode endpoints
+- ❌ Scatter query strings across the codebase
 
-### 3) ⏱️ Timeouts, retries, and backpressure are not optional
-- External systems fail. Adapters should fail **predictably**.
-- Use:
-  - request timeouts
-  - limited retries (with jitter/backoff)
-  - circuit breaker patterns (where needed)
-
-### 4) 🧾 Provenance-friendly logging
-- Log:
-  - which adapter was called
-  - query identifiers (not raw secrets)
-  - timings
-  - “source handles” (dataset IDs, story IDs, catalog IDs)
-
----
-
-## 🤖 AI adapters (Focus Mode) live here
-
-If KFM is configured for “Focus Mode” or other AI workflows, adapters in `api/adapters/ai/` should:
-
-- Accept a **tool-safe** request (no direct DB access from the model)
-- Retrieve context via approved services/tools (search, graph queries, catalogs)
-- Send prompts to the AI backend (local or hosted)
-- Return responses in a **citation-ready** structure (so the UI can link sources)
-- Pass output through policy checks / redaction logic (core/policy owns the rules)
-
-**Practical tip:** keep “prompt templates” versioned in-repo (small, reviewable files).
+(These practices align with the blueprint’s guidance on adapters managing config and keeping credentials/queries separate.) [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
 ## 🧪 Testing strategy
 
-### Unit tests (fast)
-- Mock ports and test service logic without touching adapters
+### ✅ Unit tests (fast)
+- Mock the external client
+- Assert mapping + error handling
+- Assert “port contract” behavior
 
-### Contract tests (recommended)
-- Confirm an adapter respects the port contract
-- Example: “geocoder returns (lon,lat) and raises X on no-results”
+### ✅ Contract tests (recommended)
+- Use a lightweight test container (PostGIS/Neo4j/etc.)
+- Verify schema expectations, query correctness, and mapping
 
-### Integration tests (slower)
-- Use docker-compose services (PostGIS/Neo4j) or provider sandboxes
-- Gate these in CI if they’re expensive
-
----
-
-## 🛠️ Add a new adapter: checklist ✅
-
-- [ ] Create/extend a **port interface** (service layer)
-- [ ] Implement adapter in `api/adapters/<thing>/`
-- [ ] Centralize config keys (document them)
-- [ ] Add unit + contract tests
-- [ ] Wire DI (FastAPI dependency/provider)
-- [ ] Add minimal docs here (what it does, how to run locally)
-- [ ] Confirm policy/governance expectations (no bypass paths)
+### ✅ Service layer tests (most important)
+Because service logic depends on **interfaces**, you can test services with in-memory fakes—no DB required.
 
 ---
 
-## 📎 “Commands vs Queries” note (API shape)
+## ➕ Add a new adapter (checklist)
 
-When designing adapters and ports, it helps to keep a crisp line between:
-- **Commands** → change state
-- **Queries** → read state
-
-That distinction keeps services testable and adapters simpler.
-
----
-
-## 📚 Related docs (recommended)
-
-- `docs/architecture/` — system overview & boundaries
-- `policy/` — governance rules & AI constraints
-- `api/routes/` — inbound adapters (HTTP interface)
-- `api/db/` — db sessions/clients (if split out from adapters)
+1. 🧾 **Define the port** in the service layer (interface/protocol)
+2. 🧩 **Implement the adapter** in `api/adapters/<name>/...`
+3. 🧠 **Keep business logic out** (adapter = IO + mapping + resilience)
+4. 🔐 **Add config** (env/config file; never hardcode secrets) [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+5. 🪝 **Wire it into DI** (FastAPI dependency injection or your wiring module)
+6. 🧪 **Add tests** (unit + contract if relevant)
+7. 📝 **Document usage** (update this README or add a README in the adapter subfolder)
 
 ---
 
-## 🧯 Troubleshooting quick hits
+## 🧰 Minimal skeleton (Python)
 
-- **DB connection weirdness?** Confirm DSNs + container networking.
-- **Neo4j queries slow?** Move heavy graph expansions into precomputed views or constrain traversals.
-- **AI adapter can’t reach Ollama?** Confirm the runtime URL is reachable from the API container (host networking vs containerized Ollama).
-- **Tests flaky?** Ensure adapters enforce timeouts and deterministic retry limits.
+```python
+# api/adapters/external/geocoding.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol
+
+
+class GeocodingPort(Protocol):
+    def geocode(self, query: str) -> "GeocodeResult": ...
+
+
+@dataclass(frozen=True)
+class GeocodeResult:
+    lat: float
+    lon: float
+    label: str
+
+
+class GeocodingAdapter(GeocodingPort):
+    def __init__(self, base_url: str, api_key: str, http_client):
+        self._base_url = base_url
+        self._api_key = api_key
+        self._http = http_client
+
+    def geocode(self, query: str) -> GeocodeResult:
+        # IO + mapping only ✅
+        resp = self._http.get(
+            f"{self._base_url}/geocode",
+            params={"q": query, "key": self._api_key},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        # Explicit mapping ✅
+        top = data["results"][0]
+        return GeocodeResult(
+            lat=float(top["lat"]),
+            lon=float(top["lon"]),
+            label=str(top.get("label", query)),
+        )
+```
 
 ---
 
-### ✨ Philosophy
+## 📚 Sources & project grounding
 
-Adapters are where complexity goes to be *contained*.  
-If you keep this folder disciplined, the rest of the system stays calm. 🧘
+- **KFM architecture blueprint (Clean Architecture + adapter layer, examples, and config practices)**  
+   [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+  Key excerpts: adapters live in integration layer and commonly appear under `api/db/` or `api/adapters/` [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d); examples include PostGIS/Neo4j/search/external adapters and guidance on interfaces + configuration separation [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d); abstraction enables swapping implementations with minimal upper-layer changes [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d).
+
+- **Hexagonal (“ports & adapters”) reference framing**  
+   [oai_citation:16‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)  
+  Key excerpt: business logic at the center with inbound adapters and outbound controllers/adapters [oai_citation:17‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76).
+
+- **Repo-level context (monorepo + `api/` is backend)**  
+   [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+  The blueprint describes KFM’s monorepo layout including `api/` as the FastAPI backend. [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## ✅ Quick PR self-check (before you merge)
+
+- [ ] Adapter implements a service-layer interface (port)
+- [ ] No business rules in adapter (only IO + mapping + resilience)
+- [ ] Config comes from env/config (no secrets committed)
+- [ ] Errors are wrapped into meaningful adapter exceptions
+- [ ] Unit tests added (and contract tests if it hits a real service)
