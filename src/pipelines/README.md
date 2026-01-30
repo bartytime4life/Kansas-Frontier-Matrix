@@ -1,249 +1,282 @@
-# 🧪 `src/pipelines/` — ETL + Simulations (Provenance-First)
+<div align="center">
 
-![Pipelines](https://img.shields.io/badge/KFM-pipelines-2b6cb0)
-![Deterministic](https://img.shields.io/badge/runs-deterministic-success)
-![Idempotent](https://img.shields.io/badge/runs-idempotent-success)
-![Provenance](https://img.shields.io/badge/provenance-PROV%20%2B%20STAC%20%2B%20DCAT-important)
+# 🔁 `src/pipelines/` — KFM Data Pipelines
 
-> [!NOTE]
-> This folder is the **data refinery** for Kansas Frontier Matrix (KFM): it turns **raw evidence** into **curated datasets** + **metadata catalogs** + **lineage logs**, so downstream layers (DB → API → UI → Story Nodes → Focus Mode) can trust what they’re showing.
+**From raw sources ➜ to trustworthy, explorable knowledge** 🧭🧪
 
----
+<!-- Badges (feel free to swap repo-specific ones later) -->
+![stage](https://img.shields.io/badge/stage-data%20refinery-0aa)
+![policy](https://img.shields.io/badge/governance-fail--closed-critical)
+![provenance](https://img.shields.io/badge/provenance-W3C%20PROV-required)
+![catalog](https://img.shields.io/badge/catalog-STAC%20%2B%20DCAT-required)
+![repro](https://img.shields.io/badge/pipelines-deterministic%20%26%20reproducible-success)
 
-## 🧭 What lives here?
-
-`src/pipelines/` contains offline / batch-oriented code that:
-- 🧲 **Ingests** source material (CSVs, shapefiles, rasters, PDFs, scans, etc.)
-- 🧼 **Normalizes & transforms** into stable, reviewable outputs
-- 🧾 Emits the **boundary artifacts** that “publish” a dataset into KFM:
-  - 🗺️ **STAC** (items + collections)
-  - 📚 **DCAT** (dataset-level catalog record)
-  - 🧬 **PROV** (lineage bundle)
-- 🧱 Optionally **loads/indexes** into databases (PostGIS / Neo4j) *after* the artifacts exist
-- 🚫 **Never** relies on manual edits of processed outputs
+</div>
 
 ---
 
-## 🔒 Core invariants (non‑negotiable)
+## 🧠 What lives here
 
-### 1) 🧱 Pipeline ordering is absolute
-KFM data moves in this order, always:
+This folder is the **canonical home for pipeline code** (ETL + publishing) that turns **immutable raw artifacts** into:
 
-```
-Raw → Processed → Catalogs/PROV → Database → API → UI → Story Nodes → Focus Mode
-```
+- ✅ curated **processed datasets**
+- ✅ **catalog metadata** (STAC + DCAT)
+- ✅ **provenance bundles** (PROV lineage)
+- ✅ downstream-ready inputs for **database sync** and the **API/UI**
 
-If you’re tempted to “skip” a stage (e.g., push directly into UI), you’re probably breaking the system contract.
-
-### 2) 🔁 Deterministic + idempotent
-A pipeline must:
-- produce the **same outputs** given the same inputs + config
-- be **safe to re-run** without duplicating/creating new copies of the same dataset
-
-### 3) 🧬 Provenance first
-Nothing is “published” into KFM without:
-- descriptive metadata (STAC/DCAT)
-- lineage (PROV)
-
-### 4) 🚫 No ad‑hoc edits
-If something is wrong in `data/processed/…`, the fix is:
-✅ update pipeline and re-run  
-❌ do *not* hand-edit the output file
+> 🧩 In the broader architecture, this is the “data refinery” step that makes everything else trustworthy.
 
 ---
 
-## 🗺️ System flow (high-level)
+## 🗺️ Where pipelines fit in the system
+
+### Canonical flow (no shortcuts 🚫)
 
 ```mermaid
 flowchart LR
-  A["📥 Raw Sources"] --> B["🧪 ETL + Normalization (pipelines)"]
-  B --> C["🗺️ STAC Items + Collections"]
-  C --> D["📚 DCAT Dataset Views"]
-  C --> E["🧬 PROV Lineage Bundles"]
-  C --> G["🧠 Neo4j Graph (references catalogs)"]
-  G --> H["🧱 API Layer (contracts + redaction)"]
-  H --> I["🗺️ Map UI (React · MapLibre · optional Cesium)"]
-  I --> J["📝 Story Nodes (governed narratives)"]
-  J --> K["🎯 Focus Mode (provenance-linked context bundle)"]
+  A["📥 Raw Sources<br/>data/raw/"] --> B["🧼 ETL + Normalization<br/>src/pipelines/"]
+  B --> C["📦 Processed Outputs<br/>data/processed/"]
+  C --> D["🧾 STAC Items + Collections<br/>data/stac/"]
+  C --> E["🧷 DCAT Dataset Views<br/>data/catalog/dcat/"]
+  C --> F["🧬 PROV Lineage Bundles<br/>data/prov/"]
+  D --> G["🕸️ Graph Build (refs catalogs)<br/>src/graph/"]
+  G --> H["🧰 API Layer (contracts + redaction)<br/>src/server/"]
+  H --> I["🗺️ Map UI<br/>web/"]
+  I --> J["📚 Story Nodes<br/>docs/reports/story_nodes/"]
+  J --> K["🔎 Focus Mode (provenance-linked context)"]
 ```
 
 ---
 
-## 📦 Data staging contract (where pipelines read/write)
+## 🧱 Non‑negotiable pipeline rules
 
-> [!TIP]
-> The **folder is the API**. Keep stages clean, predictable, and reviewable.
+### ✅ Determinism & reproducibility
+- Pipelines **must be deterministic**: same inputs + same config → **byte-identical** outputs.
+- If randomness is needed (simulations), it **must be seed-controlled** 🎲🔒.
+- Pipelines must run **start-to-finish automatically** (no interactive prompts).
 
-### Required staging layout
+### ✅ Idempotence (“run twice, nothing weird happens”)
+- Re-running a pipeline without changes should **not** create duplicate outputs.
+- Prefer checksums / version checks / “no-op if unchanged” behavior.
 
-| Stage | Folder | Rules |
-|------:|--------|-------|
-| 📥 Raw (immutable) | `data/raw/<domain>/…` | *Write once, then read-only.* Pipelines **must not** modify raw files. |
-| 🧰 Work (scratch) | `data/work/<domain>/…` | Intermediate artifacts okay. Safe to delete/regenerate. |
-| ✅ Processed (final) | `data/processed/<domain>/…` | Only pipeline outputs. No manual edits. Reviewable diffs. |
+### ✅ “Raw is sacred” 🗿
+- **Never modify** anything under `data/raw/`.
+- Treat raw artifacts as evidence: write-once + read-only.
 
-### Required publication artifacts (boundary artifacts)
+### ✅ No ad-hoc edits to processed outputs
+- **Never manually edit** `data/processed/…`.
+- Fix the pipeline (or raw source), then re-run. This preserves trust and auditability.
 
-| Artifact | Folder | Why it exists |
-|---------|--------|---------------|
-| 🗺️ STAC Collections | `data/stac/collections/…` | Collection-level metadata |
-| 🗺️ STAC Items | `data/stac/items/…` | Item-level spatial/temporal metadata + asset links |
-| 📚 DCAT | `data/catalog/dcat/…` | Dataset discovery layer |
-| 🧬 PROV | `data/prov/…` *(or `data/provenance/…` in some layouts)* | Full lineage + agents + parameters |
+### ✅ Publish boundary artifacts (required)
+A dataset is not “published” until **all** of these exist and validate:
 
-> [!IMPORTANT]
-> A dataset isn’t “published” until **processed data + STAC + DCAT + PROV** exist.
-
----
-
-## 🧩 Plugin mindset (how pipelines should scale)
-
-KFM’s pipeline system is designed to grow via **drop-in modules**:
-- Create a new pipeline file/module
-- Follow conventions
-- Register it (manifest/registry)
-- Runner discovers + executes it
-
-This keeps contributions isolated and reviewable.
+- `data/processed/...` (data product)
+- `data/stac/...` (STAC items/collections)
+- `data/catalog/dcat/...` (DCAT record)
+- `data/prov/...` (PROV lineage bundle)
 
 ---
 
-## 🗂️ Suggested folder layout (recommended)
+## 📦 Data lifecycle expectations
 
-> [!NOTE]
-> This is a **recommended** structure to keep things consistent as the repo scales. Adjust to match the actual implementation, but keep the ideas.
+> Paths below are **repo-root relative**.
 
+### Staging layout (recommended)
 ```text
-📁 src/
-└─ 📁 pipelines/                                🏗️ ETL + publishing pipelines (raw → processed → STAC/DCAT/PROV)
-   ├─ 📄 README.md                               📘 overview, conventions, and how to run pipelines
-   ├─ 🧭 runner.py                               🚀 orchestrates one/all pipelines (CLI entry)
-   ├─ 🧾 manifest.yaml                           ✅ pipeline registry (plugin discovery + enable/disable)
-   │
-   ├─ 📁 lib/                                    🧰 shared pipeline library (reusable primitives)
-   │  ├─ 🧩 io.py                                 📥📤 common readers/writers (files, cloud, db adapters)
-   │  ├─ 🔐 hashing.py                            🧬 checksums + content addressing + manifests
-   │  ├─ 🪵 logging.py                            🧾 run logs + structured logging helpers
-   │  ├─ 🛰️ stac.py                               🛰️ STAC emit helpers (collections/items/assets)
-   │  ├─ 🗂️ dcat.py                               🧾 DCAT emit helpers (JSON-LD dataset/distributions)
-   │  ├─ 🧬 prov.py                               🧬 PROV emit helpers (activities/agents/entities)
-   │  └─ ✅ validate.py                            🛡️ validation gates (schemas/profiles/policy hooks)
-   │
-   ├─ 📁 domains/                                🧩 domain pipelines (one responsibility each)
-   │  └─ 📁 <domain_name>/                        🧭 e.g., hydrology/, historical/, climate/, transportation/
-   │     ├─ 🧩 pipeline.py                        🏗️ pipeline entry (one dataset or dataset family)
-   │     ├─ 🧾 config.example.yaml                ⚙️ example config (safe defaults; no secrets)
-   │     └─ 📁 tests/                             🧪 domain-specific tests (unit/integration as needed)
-   │
-   └─ 📁 simulations/                            🧪 deterministic sims (fixed seeds, reproducible runs)
-      └─ 🧪 climate_scenario.py                   🌦️ scenario generator (deterministic; versionable outputs)
-    ...
+📂 data/
+├─ 📥 raw/<domain>/          # immutable inputs (evidence)
+├─ 🧪 work/<domain>/         # intermediate scratch (ok to wipe)
+└─ ✅ processed/<domain>/    # final outputs (ready for API/DB)
 ```
+
+### Catalog + provenance outputs (required)
+```text
+📂 data/
+├─ 🧾 stac/
+│  ├─ collections/           # STAC collections
+│  └─ items/                 # STAC items
+├─ 🧷 catalog/
+│  └─ dcat/                  # DCAT JSON-LD (dataset discovery)
+└─ 🧬 prov/                  # PROV bundles (lineage)
+```
+
+> ⚠️ If you see legacy naming in older docs (e.g., `data/catalog/` and `data/provenance/`), treat those as the same intent: **catalog + lineage**. The goal is unchanged: *boundary artifacts before downstream sync*.
 
 ---
 
-## 🏃 Running pipelines (local/dev)
+## ▶️ Running pipelines
 
-Because pipelines must be **non-interactive**, the usual execution pattern is:
+Because pipeline entrypoints can evolve, follow this priority order:
 
-1) ✅ Ensure raw inputs exist under `data/raw/<domain>/…`  
-2) 🧪 Run pipeline(s)  
-3) 🧾 Verify boundary artifacts exist (STAC/DCAT/PROV)  
-4) 🧱 (Optional) Load/index to DB  
-5) 🧱 Validate API/UI can consume it
+### 1) Run a pipeline module directly (simple + explicit)
+```bash
+# from repo root
+python -m src.pipelines.<pipeline_module> --help
+python -m src.pipelines.<pipeline_module> --config configs/pipelines/<name>.yml
+```
 
-### Example CLI patterns (adapt to the repo’s runner)
+### 2) Use a registry/runner (if present)
+Some setups use:
+- a `pipelines/manifest.yaml` (or similar registry), and/or
+- a `run_all_pipelines.py` style runner that discovers and runs pipelines.
 
 ```bash
-# Run one pipeline by id/name
-python -m src.pipelines.runner --pipeline census_1900 --config configs/dev.yaml
-
-# Run all registered pipelines
-python -m src.pipelines.runner --all --config configs/dev.yaml
-
-# Dry-run (compute what would change)
-python -m src.pipelines.runner --pipeline landsat --dry-run
+python -m src.pipelines.runner --list
+python -m src.pipelines.runner --run import_census --config configs/pipelines/import_census.yml
 ```
 
-> [!TIP]
-> Pipelines should detect “no changes” (e.g., via checksums/version checks) and exit cleanly without duplicating outputs.
+### 3) Docker-first dev workflow (recommended for consistency 🐳)
+Keep the compose stack running while developing, and run pipelines in a second terminal:
+
+```bash
+docker compose up
+# then (another terminal)
+python -m src.pipelines.<pipeline_module> --config ...
+```
 
 ---
 
-## ✍️ Adding a new pipeline (checklist)
+## 🧩 Writing a new pipeline
 
-### ✅ Minimum steps
-- [ ] Create a raw staging folder: `data/raw/<new-domain>/`
-- [ ] Implement pipeline module/script under `src/pipelines/domains/<new-domain>/`
-- [ ] Ensure it writes:
-  - [ ] intermediates to `data/work/<new-domain>/`
-  - [ ] finals to `data/processed/<new-domain>/`
-- [ ] Emit boundary artifacts:
-  - [ ] STAC Collection + Item(s)
-  - [ ] DCAT dataset entry
-  - [ ] PROV lineage bundle
-- [ ] Register the pipeline (manifest/registry)
-- [ ] Add a small domain runbook: `docs/data/<new-domain>/README.md`
-- [ ] Add tests (even small “smoke tests”)
-- [ ] Confirm re-runs are deterministic + idempotent
+### 🧭 Naming & ownership
+- One pipeline should correspond to **one dataset** or **one source family**.
+- Use clear names, e.g.:
+  - `import_<source>.py` (ingest + normalize)
+  - `build_<product>.py` (derive an evidence artifact)
+  - `publish_<domain>.py` (catalog/prov publishing step if separated)
 
----
-
-## 🧬 Evidence artifacts (AI / analysis outputs)
-
-If a pipeline produces “derived” outputs (OCR text, model predictions, simulations, inferred layers), treat them as **first-class datasets**:
-
-- ✅ store in `data/processed/…`
-- ✅ catalog in STAC/DCAT
-- ✅ trace in PROV (include method + parameters + confidence)
-- ✅ integrate with graph carefully (explicit provenance pointers)
-- ✅ expose only through governed APIs (never hard-code into UI)
+### ✅ Definition of Done (DoD) checklist
+- [ ] Inputs live in `data/raw/<domain>/...` and are never mutated
+- [ ] Any intermediates live in `data/work/<domain>/...`
+- [ ] Final outputs written to `data/processed/<domain>/...`
+- [ ] STAC item/collection generated in `data/stac/...`
+- [ ] DCAT dataset record generated in `data/catalog/dcat/...`
+- [ ] PROV bundle generated in `data/prov/...`
+- [ ] Pipeline is deterministic + idempotent
+- [ ] Validation passes locally + in CI (fail closed)
+- [ ] Runbook added: `docs/data/<domain>/README.md` 📓
 
 ---
 
-## 🧾 Metadata rules of thumb
+## 🧬 Provenance contract (PROV)
 
-### STAC
-- Must link to the actual processed asset(s)
-- Must include attribution + license info
-- Must be spatial/temporal honest (bbox/date range)
+A PROV file should make it easy to answer:
 
-### DCAT
-- Must make dataset discoverable (title/desc/keywords/license)
-- Should link to STAC or direct distributions
+> “How was this dataset produced?” 🔍
 
-### PROV
-- Must capture:
-  - input entities (raw files + checksums/URLs)
-  - activities (pipeline run + timestamps + params)
-  - agents (script version + runner identity)
-- Should support auditability (“what produced this?”)
+At minimum, capture:
+- **Entities**: input raw files + output product (ideally with checksums / source pointers)
+- **Activity**: the pipeline run (script name, timestamp, parameters, environment)
+- **Agents**: the software agent (pipeline + version) and optionally the human trigger
 
----
-
-## 🧯 Troubleshooting quick hits
-
-- 🧱 **Docker volumes & permissions**: if containers can’t write to `data/`, fix mount permissions or container user mapping.
-- 🔌 **Port conflicts**: if Postgres/Neo4j ports are already in use, change compose mappings.
-- 🐘 **Big datasets**: prefer LFS / external blobs + checksums where needed, but keep identities tracked in Git.
-
----
-
-## 🧠 PR review rubric (for pipelines)
-
-> [!IMPORTANT]
-> If a PR adds/changes processed data, reviewers should demand:
-- [ ] deterministic reruns
-- [ ] no raw edits
-- [ ] STAC/DCAT/PROV present + consistent
-- [ ] versioning/identity strategy (hashes/ids)
-- [ ] docs/runbook updated
-- [ ] validation gates pass (schemas/profiles)
+### Minimal PROV shape (example)
+```json
+{
+  "entities": [
+    {"id": "raw:census_1900.csv", "checksum": "sha256:..."},
+    {"id": "processed:1900_population.geojson", "checksum": "sha256:..."}
+  ],
+  "activity": {
+    "id": "pipeline:import_census",
+    "startedAt": "2026-01-30T00:00:00Z",
+    "params": {"projection": "EPSG:4326", "seed": 12345},
+    "code": {"path": "src/pipelines/import_census.py", "git_commit": "abc123"}
+  },
+  "agents": [
+    {"id": "software:src/pipelines/import_census.py"},
+    {"id": "person:contributor_handle"}
+  ]
+}
+```
 
 ---
 
-## 🔗 Helpful pointers
-- `data/` is the single place to understand **what stage a file is in**
-- `docs/standards/` should define profiles (STAC/DCAT/PROV)
-- `docs/templates/` should contain templates for new datasets + Story Nodes
-- Keep pipelines boring, repeatable, and auditable ✅
+## 🧾 Catalog contract (STAC + DCAT)
+
+### STAC (spatiotemporal + assets)
+STAC should describe:
+- extent (spatial + temporal)
+- license + attribution
+- lineage pointers (tie into PROV)
+- assets (files, previews, derived layers)
+
+### DCAT (discovery + dataset identity)
+DCAT should describe:
+- dataset-level identity and versioning
+- access URLs / distributions
+- keywords/themes for search + interoperability
+
+> 🧠 Rule of thumb: **STAC = “map-friendly metadata”**, **DCAT = “catalog/discovery metadata”**.
+
+---
+
+## 🌎 Geospatial conventions (common pitfalls avoided)
+
+- Standardize CRS early. Many KFM pipelines will target **EPSG:4326** (or a documented Kansas-specific CRS).
+- Keep geometry valid (fix invalid polygons, ensure consistent winding where needed).
+- Normalize time fields (`YYYY-MM-DD` or ISO-8601), and document assumptions.
+- Prefer stable, reviewable formats:
+  - vectors: GeoJSON / GeoParquet
+  - rasters: GeoTIFF / COG
+  - tables: CSV / Parquet
+
+---
+
+## 🧪 Validation & CI (fail-closed by default)
+
+Pipelines should fail loudly and early when:
+- license/attribution is missing
+- schema is invalid (STAC/DCAT/PROV)
+- outputs drift (non-determinism)
+- a required artifact is missing
+
+> 🛑 “Fail closed” means: if a check can’t prove correctness/compliance, it blocks the change.
+
+---
+
+## 🧰 Troubleshooting (quick hits)
+
+<details>
+<summary><strong>🐳 Docker / local dev issues</strong></summary>
+
+- **Port conflicts**: check common ports (e.g., Postgres 5432, graph DB ports, API 8000, UI 3000).
+- **Permissions**: if containers can’t write `data/…`, fix volume permissions or container user mapping.
+- **Resource limits**: large datasets may require more Docker memory.
+- **Hot reload not updating**: verify volume mounts are correct; rebuild after dependency changes.
+
+</details>
+
+---
+
+## 📚 Related “where to put things” map
+
+```text
+🧩 Canonical homes (keep it clean 🧼)
+├─ 🧪 src/pipelines/    # ETL + catalog/prov publishing (THIS FOLDER)
+├─ 🕸️ src/graph/        # graph initialization + sync (imports/migrations)
+├─ 🧰 src/server/       # API contracts + business rules + redaction
+├─ 🗺️ web/              # UI (React/TS mapping app)
+└─ 📓 docs/             # runbooks, standards, story nodes, narratives
+```
+
+---
+
+## 🤝 Contribution tips
+
+- Keep **executable code** in `src/…`
+- Keep **documentation** in `docs/…` (runbooks, standards, domain READMEs)
+- Treat data like code:
+  - version changes are reviewable
+  - provenance is mandatory
+  - outputs should be explainable
+
+---
+
+## ✅ TL;DR checklist
+
+- **Raw → Processed → Catalog/PROV → Database → API → UI** (no bypasses)
+- No prompts, no manual edits, deterministic outputs
+- Always publish STAC + DCAT + PROV alongside the data product
+- If it’s not provable, it’s not shippable 🚦
+
+---
