@@ -1,247 +1,234 @@
-# 🧠 `api/domain` — Domain Layer (KFM Core Models)
+# 🧠 Domain Layer — `api/domain/`  
+![Layer](https://img.shields.io/badge/layer-domain-informational) ![Architecture](https://img.shields.io/badge/architecture-clean%20%2F%20hexagonal-blue) ![Backend](https://img.shields.io/badge/backend-FastAPI-success) ![Focus](https://img.shields.io/badge/principle-provenance--first-purple)
 
-![Layer](https://img.shields.io/badge/layer-domain-0ea5e9?style=for-the-badge)
-![Principle](https://img.shields.io/badge/principle-contract--first-22c55e?style=for-the-badge)
-![Principle](https://img.shields.io/badge/principle-governance--first-f97316?style=for-the-badge)
-
-> [!IMPORTANT]
-> This folder is the **source of truth for KFM’s core entities** (e.g., `LandParcel`, `HistoricalEvent`, `StoryNode`) and must remain **framework-agnostic** and **database-agnostic**. Domain models are plain Python classes or Pydantic models with *attributes + invariants*, not infrastructure code. [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> **Purpose:** This package holds KFM’s **core domain models + invariants** (the “meaning” of the system), designed to be **framework-agnostic** and reusable across services, tests, and adapters.  
+> In KFM, *all access flows through the backend API* (UI doesn’t touch databases directly), and the domain is how we keep that “truth path” consistent.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🎯 Purpose
+## 🔭 Why this folder exists
 
-KFM’s backend is designed around Clean Architecture: **domain → services/use-cases → adapters → delivery (FastAPI routers)**. The **Domain Layer** defines the fundamental data models and business entities **independent of external frameworks**, so they can be reused across services, tests, and adapters without pulling in infrastructure dependencies. [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+KFM is designed as a **Raw → Processed → Catalog/Prov → Database → API → UI** pipeline, and features that bypass this order are considered flawed unless proven otherwise. [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-This matters because KFM’s UI is not allowed to “reach around” the backend: **the UI never directly touches the databases; all access is mediated by the backend API implementing validation + governance rules**. [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+The domain layer is where we encode the *meaning* of KFM objects (datasets, events, story nodes, places, provenance, etc.) independent of:
+- web frameworks (FastAPI),
+- storage engines (PostGIS / Neo4j / search),
+- external APIs (GEE, weather, geocoding),
+- UI concerns.
+
+This aligns with KFM’s clean architecture approach: **domain at the center**, surrounded by use-cases/services, then adapters/integration, then delivery (routes). [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 Where `api/domain` sits in the stack
+## 🧱 Clean / Hexagonal positioning
+
+The domain layer is the **center**. Inbound adapters (HTTP/REST endpoints) *invoke* domain-facing services; outbound adapters (DB/external) are *invoked by* use-cases. This is the same “business logic at the center” idea commonly described as **hexagonal architecture**. [oai_citation:3‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
 
 ```mermaid
-flowchart TB
-  subgraph UI["🗺️ Web UI (React · MapLibre/Cesium)"]
-    client["UI components"]
-  end
-
-  subgraph API["🧩 FastAPI Backend"]
-    routers["🚦 Routers / Controllers"]
-    services["🛠️ Services / Use-cases"]
-    domain["🧠 Domain (this folder)"]
-    adapters["🔌 Adapters / Repositories"]
-  end
-
-  subgraph Stores["🗄️ Runtime Stores"]
-    postgis["PostGIS"]
-    neo4j["Neo4j"]
-    search["Search / Index"]
-    files["Files / Catalog Artifacts"]
-  end
-
-  client --> routers
-  routers --> services
-  services --> domain
-  adapters --> domain
-  services --> adapters
-  adapters --> postgis
-  adapters --> neo4j
-  adapters --> search
-  adapters --> files
+flowchart LR
+  UI[🖥️ Web UI] -->|REST/GraphQL| R[🚪 FastAPI Routers]
+  AI[🤖 Focus Mode AI] -->|same API| R
+  R --> S[🧰 Use-cases / Services]
+  S --> D[🧠 Domain Models + Invariants]
+  S --> P[🛡️ Policy checks (OPA + rules)]
+  S --> A[🔌 Adapters / Repos]
+  A --> PG[(🗺️ PostGIS)]
+  A --> N4J[(🕸️ Neo4j)]
+  A --> IDX[(🔎 Search/Embeddings)]
 ```
 
-- **Dependency rule (recommended):** everything may depend on `api/domain`, but `api/domain` depends on nothing “below it.”
-- **API boundary invariant:** UI must never query graph/db directly; access goes through the governed API layer. [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+KFM explicitly centralizes governance checks and provenance logging at the API boundary (routes/services), so domain models must stay **compatible with audit + policy needs**. [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## ✅ What belongs in `api/domain`
+## ✅ What belongs in `api/domain/`
 
-### 🧩 Core Entities (nouns)
-Examples: `LandParcel`, `HistoricalEvent`, `SurveyRecord`, `StoryNode`… modeled as **plain Python** or **Pydantic** for validation convenience. [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+KFM’s blueprint describes a domain module such as `api/domain/` where core entities live, often as **Pydantic models for validation**, and with small helper methods (e.g., GeoJSON representation) *but no DB/framework coupling*. [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-**Allowed:**
-- Fields and invariants (validation, required metadata)
-- Small “shape” helpers (e.g., `to_geojson()`), as long as they don’t reach out to DB/network/frameworks [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### 🧩 Typical contents
 
-### 🧱 Value Objects (immutable-ish building blocks)
-Examples:
-- `BBox`, `TimeRange`, `CRSRef`
-- `ProvenanceRef` (link to PROV bundle / catalog IDs)
-- `Classification` / `Sensitivity` (governance labels)
-
-### 🧾 Domain Enums + Types
-- `DataClassification` (public/internal/confidential/restricted)
-- `GeometryType`, `DatasetKind`, etc.
-
-> [!NOTE]
-> A common baseline classification ladder is `Public`, `Internal`, `Confidential`, `Restricted` (seen in access-control literature). Use this as a starting point **only if it matches KFM governance rules** and keep the mapping centralized in one place. [oai_citation:8‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
-
-### 🧠 Domain Policies (interfaces, not implementations)
-- `AccessPolicy` interface / protocol (decision requests)
-- `RedactionPolicy` interface (masking decisions)
-
-KFM’s design calls for server-side governance checks (e.g., a route can call `policy.check_access(user, dataset_id)`), and for AI endpoints to validate/allow and log requests for provenance workflows. [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 📣 Domain Events (optional)
-If you model “something happened” events (e.g., `DatasetPublished`, `RedactionApplied`), keep them here.
-
-### 🧨 Domain Errors
-- `DomainInvariantError`
-- `InvalidProvenanceRef`
-- `ClassificationViolation`
+- **Entities (core concepts)**
+  - `Dataset`, `Layer`, `StoryNode`, `HistoricalEvent`, `Place`, `Source`, `Citation`, `ProvenanceRecord`
+- **Value Objects**
+  - `TimeRange`, `BBox`, `GeoJSONGeometry`, `CRS`, `LicenseRef`, `SensitivityLabel`
+- **Domain Errors**
+  - `DomainValidationError`, `InvariantViolation`, `PolicyRequired`
+- **Domain Events**
+  - `DatasetPublished`, `StoryNodeRendered`, `PolicyDenied`, `ProvenanceAttached`
+- **Repository Interfaces (Protocols)**
+  - “ports” that services depend on; adapters implement these (PostGIS/Neo4j/etc.)
+- **Minimal helpers**
+  - serialization utilities, normalizers, ID parsing, etc.
 
 ---
 
-## 🚫 What does **NOT** belong in `api/domain`
+## 🚫 What does *not* belong here
 
-| ❌ Not here | ✅ Put it here instead |
-|---|---|
-| FastAPI routers, request handlers | `api/routes/*` (delivery layer) |
-| SQL, Cypher, HTTP clients, filesystem I/O | `api/adapters/*`, `api/repositories/*`, `api/db/*` (integration layer) |
-| OPA calls / Rego evaluation | `policy/*` + adapter glue (policy enforcement layer) |
-| “Just fetch it from Neo4j” helpers | adapters/repositories (domain must stay pure) |
-| UI or map rendering concerns | `web/*` |
+Keep domain “pure” and testable. [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-The domain layer should avoid direct dependencies on databases or web frameworks; it is meant to be reused across layers and stay “pure.” [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+✅ **Avoid placing these in `api/domain/`:**
+- FastAPI routers, dependencies, request handlers
+- SQLAlchemy models/sessions, Cypher query strings, ORM mappings
+- HTTP clients, external service SDK calls
+- Background workers, queues, cron job logic
+- Anything that reads env vars directly
 
----
-
-## ⚖️ Governance-first modeling rules
-
-KFM’s architecture is explicitly governance-first:
-
-- **Fail closed:** if a policy/check fails or required governance metadata is missing, the system blocks the action rather than guessing. [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Classification propagation:** no output artifact can be less restricted than its inputs (derivatives inherit ≥ sensitivity). [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- **All user access is mediated by the backend API** so it can enforce validation, redaction, and policy checks consistently. [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 🔐 Practical implication for domain objects
-Most “public-facing” domain entities should have **at least**:
-
-- `id` (stable identifier)
-- `provenance` (links to catalog + lineage)
-- `classification` (visibility/sensitivity)
-- `license` / `rights` metadata where applicable (so CI/runtime checks can “fail closed” when missing)
+👉 Those belong in:
+- `api/routes/` (delivery layer)
+- `api/services/` or `api/use_cases/` (business workflows)
+- `api/db/`, `api/adapters/`, `api/repositories/` (integration layer) [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 📜 Contract-first expectations
+## 📁 Suggested folder layout
 
-KFM treats **schemas and API contracts as first-class artifacts**: you start from the contract, and changes trigger versioning + compatibility checks. [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-**In practice for `api/domain`:**
-- Domain models are the “lingua franca” between services and adapters [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Public API representations should have a clear mapping to domain entities (ideally 1:1 or explicitly documented transforms)
-- Any breaking change should be coordinated with the API contract update process (see templates referenced by the Master Guide). [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🗂️ Suggested folder layout
-
-> Adjust to fit the repo, but keep the **conceptual boundaries** intact.
+> This is the recommended **shape** (adapt as needed, but keep the boundaries clean).
 
 ```text
-📁 api/
-  📁 domain/
-    📄 README.md
-    📁 entities/
-      📄 land_parcel.py
-      📄 historical_event.py
-      📄 story_node.py
-    📁 value_objects/
-      📄 bbox.py
-      📄 time_range.py
-      📄 provenance_ref.py
-    📁 enums/
-      📄 classification.py
-    📁 policies/
-      📄 access_policy.py      # interface/protocol only
-      📄 redaction_policy.py   # interface/protocol only
-    📁 events/
-      📄 dataset_published.py
-    📄 errors.py
-    📄 types.py
+📦 api/
+  ├─ 📁 domain/
+  │  ├─ README.md ✅ (you are here)
+  │  ├─ 📁 entities/
+  │  │  ├─ dataset.py
+  │  │  ├─ story_node.py
+  │  │  ├─ historical_event.py
+  │  │  └─ place.py
+  │  ├─ 📁 value_objects/
+  │  │  ├─ ids.py
+  │  │  ├─ geo.py
+  │  │  ├─ time.py
+  │  │  └─ provenance.py
+  │  ├─ 📁 ports/               # repo interfaces (Protocols)
+  │  │  ├─ dataset_repo.py
+  │  │  ├─ story_repo.py
+  │  │  └─ graph_repo.py
+  │  ├─ 📁 events/
+  │  │  └─ domain_events.py
+  │  ├─ 📁 errors/
+  │  │  └─ exceptions.py
+  │  └─ __init__.py
 ```
 
 ---
 
-## 🧩 Example patterns
+## 🧷 Domain invariants (KFM-flavored)
 
-### 1) Entity as a Pydantic model (domain-safe)
+KFM is **provenance-first**: “every layer, dataset, story, and even AI-generated answer is traceable back to original sources.” [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+So, in practice, domain entities should be able to support invariants like:
+
+### 🔎 Provenance required (by design)
+- A `Dataset` should be able to reference:
+  - a catalog record (e.g., STAC/DCAT pointer),
+  - provenance record (e.g., W3C PROV pointer),
+  - license + attribution.
+
+### 🛡️ Fail-closed governance posture
+If checks fail, KFM blocks the action (“fail closed”). [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+**Implication for domain modeling:**  
+Prefer explicit fields + validations that make it *hard* to create “source-less” objects.
+
+---
+
+## 🧪 Code patterns (recommended)
+
+### 1) Repository port (interface) lives in the domain ✅
 ```python
-# api/domain/entities/land_parcel.py
+# api/domain/ports/story_repo.py
+from __future__ import annotations
+from typing import Protocol, Sequence
+from api.domain.value_objects.ids import StoryNodeId
+from api.domain.entities.story_node import StoryNode
+
+class StoryNodeRepository(Protocol):
+    def get(self, id: StoryNodeId) -> StoryNode | None: ...
+    def search(self, *, query: str, limit: int = 50) -> Sequence[StoryNode]: ...
+```
+
+### 2) Adapter implements the port ❇️ (outside domain)
+```python
+# api/adapters/story_repo_postgis.py  (example location)
+from api.domain.ports.story_repo import StoryNodeRepository
+
+class PostGISStoryNodeRepository(StoryNodeRepository):
+    ...
+```
+
+### 3) Domain entity stays serialization-friendly 🧊
+The blueprint suggests domain models may include helper methods like “to GeoJSON” but should avoid DB/framework dependencies. [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+```python
+# api/domain/entities/place.py
 from pydantic import BaseModel, Field
-from api.domain.enums.classification import DataClassification
-from api.domain.value_objects.provenance_ref import ProvenanceRef
+from api.domain.value_objects.geo import GeoJSONGeometry
 
-class LandParcel(BaseModel):
-    id: str = Field(..., description="Stable parcel identifier")
-    name: str | None = None
+class Place(BaseModel):
+    id: str
+    name: str
+    geometry: GeoJSONGeometry = Field(..., description="GeoJSON geometry object")
 
-    classification: DataClassification = DataClassification.PUBLIC
-    provenance: ProvenanceRef
-
-    # ✅ allowed: small pure helper
-    def to_geojson_properties(self) -> dict:
-        return {"id": self.id, "name": self.name}
+    def as_geojson_feature(self) -> dict:
+        return {
+            "type": "Feature",
+            "properties": {"id": self.id, "name": self.name},
+            "geometry": self.geometry.model_dump(),
+        }
 ```
 
-### 2) Policy interface (domain owns the “question,” not the enforcement)
-```python
-# api/domain/policies/access_policy.py
-from typing import Protocol
-from api.domain.enums.classification import DataClassification
+---
 
-class AccessDecision(Protocol):
-    allowed: bool
-    reason: str | None
-    sanitize: bool
+## 🛠️ Adding a new domain concept
 
-class AccessPolicy(Protocol):
-    def can_read_dataset(self, *, user_id: str, dataset_id: str) -> AccessDecision: ...
+### ✅ Checklist
+1. **Define IDs & value objects first** (`value_objects/`)
+2. Create entity model in `entities/`
+3. Add **invariants** via validation (required provenance fields, time bounds, etc.)
+4. Define a **port** (Protocol) in `ports/` if it needs persistence/query access
+5. Write **unit tests** for invariants (domain tests should not need DB)
+6. Only then:
+   - implement adapters (PostGIS/Neo4j/etc.)
+   - wire it into service/use-case layer
+   - expose via routes
+
+---
+
+## 🧾 Documentation protocol (recommended)
+
+To keep docs trustworthy and reviewable, KFM-style docs may include consistent metadata + references to governance policies and ethics notes (when relevant). [oai_citation:11‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+Consider adding (optional) metadata **in an HTML comment** to avoid cluttering README rendering:
+
+```md
+<!--
+doc_kind: README
+path: api/domain/README.md
+owner: api-team
+governance_ref: policy/
+fair_care: FAIR+CARE
+-->
 ```
 
-Why: at runtime, KFM can consult an OPA engine (sidecar or embedded) to allow/deny/sanitize. The policies are the source of truth, and the API applies the decision (e.g., return `403` or mask coordinates). [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+---
+
+## 🔗 Where to look next
+
+- `api/services/` — use-cases that orchestrate domain objects and ports  
+- `api/routes/` — FastAPI routers (delivery layer)  
+- `api/db/` / `api/adapters/` — PostGIS, Neo4j, search adapters; keep SQL/Cypher here [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧪 Testing guidance
+## 📚 Sources & further reading
 
-- ✅ Unit test domain invariants without DB/network
-- ✅ Test serialization stability (domain objects → dict/json)
-- ✅ Property tests for value objects (`BBox`, `TimeRange`) if helpful
-- ✅ Explicitly test classification propagation helpers (fail closed)
+### Core architecture / domain placement
+- Kansas Frontier Matrix (KFM) Blueprint (clean architecture, domain purity, api/domain mention) [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
----
+### Data-spaces / hexagonal framing
+- Data Spaces (hexagonal architecture framing + cross-cutting concerns) [oai_citation:16‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76) [oai_citation:17‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)  [oai_citation:18‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
 
-## ➕ Adding a new domain entity (happy path)
+### Time-series & temporal UX foundations (for future domain models)
+- Visualization of Time-Oriented Data  [oai_citation:19‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)
 
-1. **Create the entity** in `api/domain/entities/` (or the appropriate bounded context)
-2. Add/extend any needed **value objects** (`ProvenanceRef`, geometry wrappers)
-3. Ensure the entity carries **governance metadata** (classification + provenance)
-4. Implement storage mapping in adapters/repositories (outside domain)
-5. Expose via service + router with governance checks (e.g., `policy.check_access(...)`) [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
----
-
-## 🧠 v13 note: canonical API home
-
-The v13 Master Guide indicates `src/server/` as the sole canonical home for API code (and mentions legacy `src/api/` being merged there). If/when the repo is aligned to that layout, **mirror this domain package under the canonical server path** (e.g., `src/server/domain/`). [oai_citation:20‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
----
-
-## 🔗 Related docs (repo-relative)
-
-- 📘 `docs/MASTER_GUIDE_v13.md` — contract-first + pipeline invariants (if present) [oai_citation:21‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- 🧭 `docs/architecture/*` — system overview + clean architecture layering [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- 🛡️ `policy/` — OPA Rego policies + governance rules (runtime enforcement) [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
----
-
-## 📚 Source grounding (why this README says what it says)
-
-- Clean Architecture domain layer + “pure models” guidance [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- `api/domain` as a suggested backend location for core entities; Pydantic OK; avoid DB/framework deps [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Backend mediates all access; governance + validation live server-side [oai_citation:26‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Contract-first requirement in the repo philosophy [oai_citation:27‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- Fail-closed + OPA-driven policy enforcement patterns [oai_citation:28‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### Remote sensing integration (for future domain models)
+- Cloud-Based Remote Sensing with Google Earth Engine  [oai_citation:20‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](sediment://file_00000000a58071f586f00793dee712d6)
