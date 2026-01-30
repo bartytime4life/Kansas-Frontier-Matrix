@@ -50,23 +50,26 @@ KFM is **contract-first + evidence-first**: docs (and stories) should not “flo
 
 ### 📁 This folder
 ```text
-docs/templates/
-├── 📄 README.md
-├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
-├── 📄 TEMPLATE__STORY_NODE_V3.md
-└── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+```text
+📁 docs/
+└─ 📁 templates/                               🧩 documentation scaffolds (copy-me starters)
+   ├─ 📄 README.md                              📘 how to use templates + naming conventions
+   ├─ 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md          📄 universal doc template (KFM-MDP frontmatter + sections)
+   ├─ 📄 TEMPLATE__STORY_NODE_V3.md              📚 Story Node template (narrative + citations + map hooks)
+   └─ 📄 TEMPLATE__API_CONTRACT_EXTENSION.md     🔌 API contract extension template (types, endpoints, examples)
 ```
 
 ### 🧠 Where templates “land” (typical)
 ```text
-docs/
-├── 📁 architecture/              # designs / blueprints / ADRs
-├── 📁 governance/                # ethics / sovereignty / review gates
-├── 📁 standards/                 # markdown protocol, repo structure, profiles
-└── 📁 reports/
-    └── 📁 story_nodes/
-        ├── 📁 draft/             # in-progress story nodes
-        └── 📁 published/         # released story nodes (versioned)
+```text
+📁 docs/
+├─ 📁 architecture/                       🧱 designs, blueprints, ADRs, system diagrams
+├─ 📁 governance/                         🛡️ ethics, sovereignty, access/review gates (fail-closed)
+├─ 📁 standards/                          📏 repo standards (KFM-MDP, profiles, conventions)
+└─ 📁 reports/                            📊 authored outputs (reviewed + versioned)
+   └─ 📁 story_nodes/                     📚 Story Node reports (narratives + citations)
+      ├─ 📁 draft/                        📝 in-progress Story Nodes (working)
+      └─ 📁 published/                    ✅ released Story Nodes (versioned)
 ```
 
 ---
