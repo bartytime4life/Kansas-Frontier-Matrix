@@ -79,19 +79,22 @@ Even though this folder lives under `src/`, pipelines are expected to write into
 📦 Kansas-Frontier-Matrix/
 ├─ 🧠 src/
 │  └─ 🧪 pipelines/
-│     ├─ _shared/                # ← you are here
-│     └─ <pipeline_modules>/
-├─ 🗃️ data/
-│  ├─ raw/<domain>/              # immutable evidence
-│  ├─ work/<domain>/             # intermediate scratch products
-│  ├─ processed/<domain>/         # publishable data outputs
-│  ├─ stac/
-│  │  ├─ collections/
-│  │  └─ items/
-│  ├─ catalog/
-│  │  └─ dcat/
-│  └─ prov/
-└─ 📚 docs/                      # runbooks, stories, domain READMEs
+│     ├─ 📁 _shared/                             👈 you are here (shared pipeline building blocks)
+│     └─ 📁 <pipeline_modules>/                  🧩 domain pipelines (one responsibility each)
+├─ 🗃️ data/                                      🛰️ governed data lake (evidence → publish → catalogs)
+│  ├─ 📁 raw/                                    🧾 immutable evidence (write-once snapshots)
+│  │  └─ 📁 <domain>/                             🧭 thematic buckets (historical/, hydrology/, climate/, …)
+│  ├─ 📁 work/                                   🧪 intermediate scratch products (rebuildable)
+│  │  └─ 📁 <domain>/                             🧰 per-domain staging + runs
+│  ├─ 📁 processed/                               ✅ publishable data outputs (downstream-ready)
+│  │  └─ 📁 <domain>/                             📦 curated outputs by domain
+│  ├─ 📁 stac/                                   🛰️ geospatial catalog (STAC)
+│  │  ├─ 📁 collections/                          🧩 collection metadata (JSON)
+│  │  └─ 📁 items/                                📦 item metadata (per asset/tile/subset)
+│  ├─ 📁 catalog/                                 🗂️ discovery catalog (DCAT)
+│  │  └─ 📁 dcat/                                  🧾 dataset discovery records (JSON-LD)
+│  └─ 📁 prov/                                    🧬 provenance receipts (inputs → activities → outputs)
+└─ 📚 docs/                                       📘 runbooks, stories, domain READMEs
 ```
 
 > [!NOTE]
