@@ -1,193 +1,257 @@
-# 📚 MCP Knowledge Base (KFM)  
-![MCP](https://img.shields.io/badge/MCP-knowledge_base-blue) ![Docs](https://img.shields.io/badge/documentation-first-informational) ![Evidence](https://img.shields.io/badge/evidence--backed-required-success) ![Repro](https://img.shields.io/badge/reproducible-workflows-brightgreen) ![Ethics](https://img.shields.io/badge/FAIR%2FCARE-ethically_grounded-purple)
+# 🧠📚 MCP Knowledge Base
 
-Welcome to the **MCP Knowledge Base** for **Kansas Frontier Matrix (KFM)** 🧭🗺️  
-This folder is the project’s **living, evidence-backed memory**: the place where we store *what we know*, *how we know it*, and *how to reproduce it* — in a form usable by both **humans** and **AI tooling** 🤖📌
+![MCP](https://img.shields.io/badge/MCP-Documentation--First-4c1?style=for-the-badge)
+![Provenance](https://img.shields.io/badge/Provenance-First-0aa?style=for-the-badge)
+![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-By%20Design-6a5acd?style=for-the-badge)
+![Focus Mode](https://img.shields.io/badge/Focus%20Mode-Citations%20Ready-222?style=for-the-badge)
 
----
-
-## 🎯 What this is for
-
-The Knowledge Base exists to:
-
-- **Capture background research** (papers, books, archival notes, GIS/cartography standards) 📚
-- **Define shared vocabulary** via a living **Glossary** 📖
-- **Document repeatable workflows** via **SOPs** (Standard Operating Procedures) ✅
-- **Standardize evidence + provenance** rules (citations, dataset notes, chain-of-custody) 🔍
-- **Support MCP workflows** (experiments, model cards, traceability) 🧪🧾
-- **Feed retrieval / RAG** safely (small, well-scoped pages with citations) 🧠
-
-> 💡 Rule of thumb: if someone might ask “**why**?” or “**how did you do that**?”, the answer belongs in the Knowledge Base.
+> **Goal:** keep Kansas-Matrix-System / KFM knowledge *discoverable, evidence-backed, and reusable* — so humans **and** the AI assistant can “show the work.” 🗺️🔎✨  
+> This folder is the **curated research shelf** + **living context** that supports experiments, SOPs, architecture decisions, and dataset provenance.
 
 ---
 
-## 🧭 How to use this folder
+## 📌 What lives here
 
-### For humans 👩‍🔬👨‍💻
-- Start with the **Glossary** if a term is unclear.
-- Use **SOPs** to run repeatable tasks (ingest, georeference, QC, deploy).
-- Link relevant KB pages inside:
-  - experiment reports (`/experiments/`)
-  - model cards (`/mcp/model_cards/`)
-  - docs (`/docs/`)
+This knowledge base is for **human-readable** materials that make the project easier to build, audit, and extend:
 
-### For AI / MCP agents 🤖
-- Treat each KB page as a **citation-capable fact unit**.
-- Prefer **small pages** over mega-docs.
-- Keep pages **self-contained**, with:
-  - clear claims
-  - linked evidence
-  - “known limits / uncertainty”
-  - reproducible steps (when applicable)
+- 📚 **Literature notes & summaries** (GIS, cartography, remote sensing, statistics, databases, AI/LLMs)
+- 🧩 **Concept primers** (STAC/DCAT/PROV, coordinate systems, map projections, time-aware layers, etc.)
+- 🧭 **Interpretation guides** (how we apply principles in this repo: provenance-first, governance-by-default)
+- 🧪 **Experiment context** (background research that links to `../experiments/`)
+- 🧰 **SOP support** (background + rationale that links to `../sops/`)
+- 📘 **Glossary expansion** (term definitions & canonical wording that links to `../glossary.md`)
 
 ---
 
-## 🗂️ Recommended structure
+## 🚫 What does *not* live here
 
-> ✅ You can create these folders gradually. The Knowledge Base is meant to grow iteratively.
+To keep the repo clean and enforce provenance:
 
-```text
-📁 mcp/
-└─ 📁 knowledge_base/                          🧠 project knowledge base (how we think + how we work)
-   ├─ 📄 README.md                              👈 you are here
-   ├─ 📄 index.md                               🧭 “start here” map of KB topics (recommended)
-   ├─ 📁 glossary/                              📖 shared vocabulary & acronyms
-   │  ├─ 📄 README.md                            📘 how the glossary is organized
-   │  └─ 📁 terms/                               🗂️ individual term entries (one file per term)
-   ├─ 📁 primers/                               🧠 short domain introductions (GIS, history, geology, etc.)
-   ├─ 📁 sops/                                  ✅ Standard Operating Procedures (step-by-step workflows)
-   ├─ 📁 templates/                             🧩 reusable docs (KB entry template, SOP template, etc.)
-   ├─ 📁 provenance/                            🔍 citation rules, source registry, licensing notes
-   ├─ 📁 ontologies/                            🧬 controlled vocabularies, schemas, mappings, IDs
-   ├─ 📁 gazetteer/                             📍 place-name standards + NER support notes
-   ├─ 📁 timelines/                             ⏳ time-model notes (periodization, uncertainty, date rules)
-   └─ 📁 decisions/                             🏛️ ADR-style architecture decisions + governance notes
+- ❌ **Raw datasets** → use `data/raw/`
+- ❌ **Processed datasets** → use `data/processed/`
+- ❌ **Catalog & provenance artifacts** → use `data/catalog/` + `data/provenance/`
+- ❌ **Production code** → use `api/`, `pipelines/`, `web/`
+- ❌ **Unlicensed / unclear-rights content** → do not add (capture a citation + metadata first)
+
+---
+
+## 🧱 Principles (non‑negotiables)
+
+These rules keep the project trustworthy and MCP-aligned:
+
+### 1) Provenance-first ✅
+Every note must point back to **source material** (PDF, dataset, paper, website, archive record).  
+If you can’t cite it, label it clearly as a hypothesis or TODO.
+
+### 2) Documentation-first 📝
+Treat docs as a first-class deliverable:
+- decisions are written down
+- experiments are reproducible
+- future contributors can follow a trail
+
+### 3) “Fail closed” governance 🔒
+If metadata/provenance is missing, the contribution should be considered incomplete until fixed.
+
+### 4) Canonical flow awareness 🧬
+Nothing in this folder should encourage bypassing the pipeline flow (raw → processed → catalog/prov → db → api → ui).
+
+---
+
+## 🗺️ How this connects to KFM “Focus Mode”
+
+The AI assistant becomes *safer and more useful* when the knowledge base is structured:
+
+- 🧠 **Retrieval-ready** notes (clear titles, tags, summaries)
+- 🔗 **Cross-links** to datasets, pipelines, and experiments
+- 🧾 **Citation bundles** so answers can be surfaced with references
+- 🧪 **Experiment history** so we know what worked and what didn’t
+
+```mermaid
+flowchart LR
+  A[📄 Sources & Project PDFs] --> B[🧠 Knowledge Cards]
+  B --> C[🧪 Experiments]
+  B --> D[🧰 SOPs]
+  B --> E[📘 Glossary]
+  C --> F[⚙️ Pipelines]
+  F --> G[🔏 Catalog + Provenance]
+  G --> H[🤖 Focus Mode]
+  H --> I[🗺️ UI w/ citations]
 ```
 
 ---
 
-## 🔗 How this connects to the rest of the repo
+## 🧬 Suggested folder map
 
-- **Experiments** (`../../experiments/`) 🧪  
-  Every meaningful test or analysis should reference:
-  - KB background pages (literature + assumptions)
-  - SOPs used
-  - datasets + provenance notes
+> This is a **recommended** structure. Adjust as the repo evolves.
 
-- **Model Cards** (`../model_cards/`) 🧾  
-  Any ML / LLM behavior we rely on must be documented with:
-  - scope & intended use
-  - limitations
-  - evaluation notes
-  - known failure modes
-
-- **Data catalogs & provenance** (`../../data/…`) 🧱  
-  The KB describes the *rules*, while data catalogs store the *instances* (sources, processed outputs, metadata).
-
----
-
-## 🧪 Canonical pipeline rule
-
-KFM features should follow the canonical flow:
-
-> **Raw → Processed → Catalog/Provenance → Database → API → UI** 🔁
-
-This Knowledge Base supports that rule by storing:
-- the **SOPs** for each stage
-- the **evidence requirements**
-- the **definitions + standards** used by catalogs and schemas
+```text
+mcp/
+└── knowledge_base/
+    ├── README.md                          👈 you are here
+    ├── 00_index/                          🧭 jump tables & inventories
+    │   ├── bibliography.md                📚 master list of sources
+    │   ├── tags.md                        🏷️ tag taxonomy (controlled vocab)
+    │   └── change_log.md                  🕒 “what changed” for docs
+    ├── 10_kfm_architecture/               🏗️ blueprint notes & decisions
+    ├── 20_data_provenance/                🔏 STAC/DCAT/PROV patterns & examples
+    ├── 30_geospatial_gis/                 🗺️ projections, CRS, geoprocessing
+    ├── 40_cartography_design/             🎨 visual design + map literacy
+    ├── 50_remote_sensing/                 🛰️ imagery, GEE, raster workflows
+    ├── 60_statistics_experiment_design/   📈 stats, inference, eval methods
+    ├── 70_data_management_scaling/        🗄️ performance, storage, DB patterns
+    ├── 80_ai_llms_local/                  🤖 Ollama, model cards, prompt policy
+    └── 90_templates/                      🧩 reusable doc templates
+        ├── knowledge_card.template.md
+        ├── literature_note.template.md
+        └── glossary_entry.template.md
+```
 
 ---
 
-## ✅ Quality bar (required)
+## ➕ How to add a Knowledge Card (standard workflow)
 
-Before adding or merging a KB change, confirm:
+1. **Create a new note** in the best-matching folder.
+2. Use the **Knowledge Card Template** (below).
+3. Add a **real citation** to the source (PDF/page, DOI, archive ID, URL, etc.).
+4. Add **tags** using the taxonomy (`00_index/tags.md`).
+5. Link to relevant:
+   - dataset(s) in `data/`
+   - experiment(s) in `../experiments/`
+   - SOP(s) in `../sops/`
+   - terms in `../glossary.md`
+6. Keep it **short and skimmable** (deep detail goes into sub-notes).
 
-- [ ] **Evidence-backed**: claims are supported by citations, links, or reproducible outputs  
-- [ ] **Reproducible**: steps include commands, parameters, and expected outputs (where applicable)  
-- [ ] **Scoped**: page answers one question or one workflow (avoid “everything pages”)  
-- [ ] **Traceable**: points to data artifacts, experiment IDs, commits, or source registers  
-- [ ] **Readable**: clear headings, short paragraphs, minimal jargon  
-- [ ] **Ethically grounded**: respects community control, sensitive data handling, FAIR/CARE intent  
-
----
-
-## 🧩 Templates
-
-Put reusable docs in `templates/` ✍️
-
-Suggested templates to create:
-
-- `templates/kb_entry.md` 🧠
-- `templates/sop.md` ✅
-- `templates/glossary_term.md` 📖
-- `templates/adr.md` 🏛️
-- `templates/source_record.md` 🔍
+✅ **Naming convention (recommended)**  
+`YYYY-MM-DD__topic__source.md`  
+Example: `2026-01-30__stac-vs-dcat__kfm_blueprint.md`
 
 ---
 
-## 🧾 Citation & evidence style
+## 🧾 Knowledge Card Template (copy/paste)
 
-We prefer **primary sources** and **verifiable artifacts**:
+<details>
+<summary><strong>📄 Click to expand template</strong></summary>
 
-- 📚 Primary: academic books/papers, archival scans, authoritative datasets  
-- 🧱 Artifacts: shapefiles, GeoTIFFs, logs, notebooks, experiment outputs  
-- 🧾 Documentation: SOPs, model cards, ADRs, provenance registers
+```markdown
+---
+title: ""
+date: "YYYY-MM-DD"
+domain: ["gis" | "cartography" | "remote_sensing" | "stats" | "data_mgmt" | "ai_llms" | "architecture" | "other"]
+tags: ["#component/...", "#domain/...", "#method/...", "#risk/..."]
+source:
+  type: ["pdf" | "paper" | "dataset" | "archive" | "web"]
+  id: ""           # filename, DOI, archive ID, URL, etc.
+  locator: ""      # page(s), chapter, timestamp, figure, etc.
+license: ""        # if known; otherwise "unknown"
+confidence: ["high" | "medium" | "low"]
+related:
+  datasets: []
+  pipelines: []
+  experiments: []
+  sops: []
+  glossary_terms: []
+---
 
-**Do:**
-- Cite *what you actually used*
-- State uncertainty explicitly
-- Record parameters and versions
+# 🧠 {Title}
 
-**Avoid:**
-- Unsourced historical claims
-- “Trust me” georeferencing steps
-- Unlogged manual edits
+## TL;DR (3–6 bullets)
+- ...
+- ...
+
+## Why this matters to KFM
+Explain the impact on **pipeline**, **catalog/provenance**, **API**, **UI**, or **Focus Mode**.
+
+## Key points (with evidence)
+- Claim → citation/locator
+- Claim → citation/locator
+
+## Implementation notes (optional)
+- Practical implications, gotchas, suggested defaults.
+
+## Open questions / TODO
+- [ ] ...
+- [ ] ...
+```
+</details>
 
 ---
 
-## 🧠 Writing a new Knowledge Base entry
+## 🏷️ Tagging rules (keep retrieval clean)
 
-Create a new page (example: `primers/georeferencing.md` or `timelines/date_uncertainty.md`) and include:
+Use tags to help both humans and retrieval systems:
 
-1. **Purpose** (what question this answers)
-2. **Key claims / rules**
-3. **Sources / citations**
-4. **How to verify**
-5. **Known limitations**
-6. **Links out** (SOPs, experiments, datasets)
+- `#domain/gis`, `#domain/stats`, `#domain/ai_llms`
+- `#component/pipelines`, `#component/api`, `#component/web`, `#component/catalog`
+- `#method/ocr`, `#method/georeferencing`, `#method/ner`, `#method/stac`
+- `#risk/licensing`, `#risk/privacy`, `#risk/provenance_gap`
 
----
-
-## 🔐 Sensitive data & community ethics
-
-KFM is community-facing and historically grounded 🫱🏽‍🫲🏻  
-When documenting sources or datasets:
-
-- Respect **access constraints** and cultural sensitivity
-- Avoid publishing private or restricted information
-- Prefer **tiered access notes** (public vs restricted vs internal)
-- Document why something is restricted, and how to request access
+> Tip 🧠: prefer **fewer, consistent** tags over many one-offs.
 
 ---
 
-## 🗓️ Changelog
+## ✅ Quality checklist (Definition of Done)
 
-Track major KB changes here (or in a repo-level changelog).  
-Example format:
-
-- `YYYY-MM-DD` — Added SOP for georeferencing scans ✅
-- `YYYY-MM-DD` — Added glossary expansion for cartographic terms 📖
+| Requirement | Why it matters | Quick check |
+|---|---|---|
+| Source is cited | prevents “wiki drift” | has `source.id` + `locator` |
+| License noted | avoids legal/ethical surprises | `license` not empty |
+| TL;DR present | supports skimming + AI retrieval | 3–6 bullets exist |
+| Linked to repo artifacts | creates traceability | related datasets/experiments/sops filled |
+| Tagged consistently | improves search | tags use taxonomy |
 
 ---
 
-## 🙌 Contribution mindset
+## 📚 Seed Library (project files you can mine into notes)
 
-This knowledge base is never “done.” It grows with every:
-- experiment 🧪
-- new source 📚
-- mapping layer 🗺️
-- methodological improvement 🔧
+These are **starter references** already in the project context (create knowledge cards from them):
 
-If you’re unsure where something belongs, add it here first — then refactor later ✨
+### 🤖 AI / LLMs / Local Models
+- `Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf`
+- `Various AI Concepts & Information.pdf`
 
+### 🗺️ GIS / Mapping / Geocomputation
+- `GIS-Mapping-Geocomputation-Python.pdf`
+- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
+- `Mobile Mapping - project_muse.pdf`
+
+### 🎨 Cartography / Map Design / Navigation
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `Map Projections Used by the U.S. Geological Survey.pdf`
+- `Map Reading & Land Navigation.pdf`
+
+### 🧱 3D / Archaeological & Spatial Computing
+- `Archaeological 3D GIS.pdf`
+
+### 📈 Statistics / Experimental Design / Visualization
+- `Understanding Statistics & Experimental Design.pdf`
+- `graphical-data-analysis-with-r.pdf`
+- `Visualization of Time-Oriented Data.pdf`
+
+### 🗄️ Data management / performance / scale
+- `Database Performance at Scale.pdf`
+- `Scalable Data Management for Future Hardware.pdf`
+- `Data Spaces.pdf`
+
+---
+
+## 🔗 Related MCP areas (neighbor folders)
+
+- 🧪 Experiments: `../experiments/`
+- 🧰 SOPs / runbooks: `../sops/`
+- 📘 Glossary: `../glossary.md`
+- 🧾 Model cards (if present): `../model_cards/`
+
+---
+
+## 🧭 Roadmap (suggested next commits)
+
+- [ ] Add `00_index/tags.md` (controlled vocabulary)
+- [ ] Add `00_index/bibliography.md` (source inventory)
+- [ ] Add `90_templates/*` templates
+- [ ] Convert the KFM blueprint + MCP protocol PDFs into **10–20 knowledge cards**
+- [ ] Stand up a lightweight search index (optional) for local retrieval experiments
+
+---
+
+### 🌾 Reminder
+This knowledge base is only valuable if it stays **alive**: keep it updated, cite sources, and link it to real repo artifacts. 💚
