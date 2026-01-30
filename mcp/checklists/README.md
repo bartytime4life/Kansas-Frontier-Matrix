@@ -43,17 +43,17 @@ flowchart LR
 ## 🗂️ What Lives Here
 
 ```text
-mcp/
-└── checklists/
-    ├── README.md                👈 you are here ✅
-    ├── templates/               🧩 “copy-me” checklist shells
-    ├── pr/                      🔍 review + documentation checklists
-    ├── data/                    🧾 sources, licensing, provenance, QA
-    ├── pipelines/               ⚙️ reproducible processing + validation
-    ├── ai/                      🤖 model cards, evals, safety checks
-    ├── web/                     🗺️ UI + map/timeline + accessibility
-    ├── security/                🔐 secrets, auth, privacy, abuse cases
-    └── release/                 🚀 shipping + rollback readiness
+📁 mcp/
+└─ 📁 checklists/                           ✅ standardized checklists (repeatable “done means done”)
+   ├─ 📄 README.md                            👈 you are here ✅
+   ├─ 📁 templates/                           🧩 “copy-me” checklist shells (starter blanks)
+   ├─ 📁 pr/                                  🔍 PR review + documentation checklists
+   ├─ 📁 data/                                🧾 sources, licensing, provenance, QA gates
+   ├─ 📁 pipelines/                           ⚙️ reproducible processing + validation gates
+   ├─ 📁 ai/                                  🤖 model cards, evals, safety checks
+   ├─ 📁 web/                                 🗺️ UI + map/timeline + accessibility checks
+   ├─ 📁 security/                            🔐 secrets, auth, privacy, abuse-case checks
+   └─ 📁 release/                             🚀 shipping readiness + rollback checklist
 ```
 
 > 🧠 **Tip:** Keep checklists short, atomic, and evidence-driven. If a checklist grows past ~25 items, split it.
