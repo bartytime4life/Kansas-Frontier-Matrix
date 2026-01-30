@@ -89,17 +89,17 @@ KFM’s CI includes governance/security scans to prevent “oops we shipped it�
 
 ```text
 📁 tests/
-  📁 policy/
-    📄 README.md
-    📁 fixtures/
-      📁 data/          # sample datasets / metadata objects
-      📁 users/         # user contexts (roles, groups, orgs)
-      📁 ai/            # prompt + answer contexts
-    📁 cases/
-      📁 fair/          # metadata/provenance/license gates
-      📁 care/          # access control & takedown rules
-      📁 ai/            # AI policy enforcement cases
-      📁 scans/         # PII/secret/sensitive-location cases (if applicable)
+└─ 📁 policy/                               🛡️ policy-as-code tests (fail-closed governance gates)
+   ├─ 📄 README.md                            📘 how policy tests run + what they enforce
+   ├─ 📁 fixtures/                            🧰 governed fixtures (small + synthetic)
+   │  ├─ 📁 data/                              📦 sample datasets / metadata objects (STAC/DCAT/PROV snippets)
+   │  ├─ 📁 users/                             👤 user contexts (roles, groups, orgs)
+   │  └─ 📁 ai/                                🤖 prompt + answer contexts (citations, attachments, controls)
+   └─ 📁 cases/                                🧪 executable policy scenarios (organized by lane)
+      ├─ 📁 fair/                              ✅ metadata/provenance/license gates (FAIR)
+      ├─ 📁 care/                              🧑‍🤝‍🧑 access control & takedown rules (CARE)
+      ├─ 📁 ai/                                🤖 AI policy enforcement cases (Focus Mode guardrails)
+      └─ 📁 scans/                             🔎 PII/secret/sensitive-location cases (if applicable)
 ```
 
 ---
