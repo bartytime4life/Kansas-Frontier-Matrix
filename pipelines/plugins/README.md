@@ -24,18 +24,18 @@ A **plugin** is one dataset integration packaged as a folder:
 ## 🗂️ Folder layout (expected)
 
 ```text
-pipelines/
-  plugins/
-    README.md   👈 you are here
-    <plugin_id>/
-      pipeline.yml
-      plugin.py
-      tests/
-        test_plugin.py
-      fixtures/               # optional: tiny input samples for tests
-      docs/                   # optional: plugin runbook / assumptions
-      requirements.txt        # optional: extra deps (if supported)
-      Dockerfile              # optional: heavy deps (if supported)
+📁 pipelines/
+└─ 📁 plugins/                               🧩 pipeline plugin registry (extensible ETL modules)
+   ├─ 📄 README.md                             👈 you are here
+   └─ 📁 <plugin_id>/                          🏷️ one plugin (self-contained)
+      ├─ 🧾 pipeline.yml                       ✅ plugin manifest (id, version, inputs/outputs, contracts)
+      ├─ 🐍 plugin.py                          🧠 plugin implementation (entrypoint)
+      ├─ 📁 tests/                             🧪 plugin tests (fast + deterministic)
+      │  └─ 🧪 test_plugin.py                   ✅ unit test suite
+      ├─ 📁 fixtures/                          ◻️ optional: tiny input samples for tests
+      ├─ 📁 docs/                              ◻️ optional: plugin runbook + assumptions + caveats
+      ├─ 📄 requirements.txt                    ◻️ optional: extra deps (if supported)
+      └─ 🐳 Dockerfile                          ◻️ optional: heavy deps (if supported)
 ```
 
 > [!TIP]
