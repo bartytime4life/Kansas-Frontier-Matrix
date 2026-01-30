@@ -1,330 +1,324 @@
-<!--
-path: tests/e2e/README.md
-note: According to a document from 2026-01-29, KFM’s architecture is “pipeline-first” + “policy-as-code”.
--->
-
-# 🧪 End-to-End Tests (E2E) — KFM
+# 🧪 End-to-End (E2E) Tests — Kansas Frontier Matrix (KFM)
 
 ![E2E](https://img.shields.io/badge/tests-e2e-blue)
-![Docker](https://img.shields.io/badge/runtime-docker%20compose-2496ED?logo=docker&logoColor=white)
-![UI](https://img.shields.io/badge/web-react%20%2B%20map-61DAFB?logo=react&logoColor=black)
-![API](https://img.shields.io/badge/api-fastapi-009688?logo=fastapi&logoColor=white)
-![Policy](https://img.shields.io/badge/governance-OPA%20%2F%20Rego-7B3FE4)
-
-E2E tests validate **KFM’s core promise**: users experience a trusted, governed, provenance-linked system—**from UI → API → policy → data**—without bypassing the canonical pipeline. 🧭
-
----
-
-## 🔎 What E2E Covers (and why)
-
-KFM is designed around a **non-negotiable pipeline** that ensures traceability and governance. E2E tests exist to catch regressions that unit/integration tests cannot—things like:
-
-- 🗺️ The web UI correctly loads map + layers and renders data-driven interactions.
-- 🔐 The API enforces **policy decisions** (deny / redact / sanitize).
-- 🧾 Provenance and metadata are surfaced (licenses, citations, dataset records).
-- 📚 Story Nodes render with the right evidence links and map/timeline coupling.
-- 🤖 Focus Mode AI returns answers with citations and is blocked/redacted when policy says so.
+![Docker](https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white)
+![FastAPI](https://img.shields.io/badge/backend-FastAPI-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/frontend-React-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/lang-TypeScript-3178C6?logo=typescript&logoColor=white)
+![PostGIS](https://img.shields.io/badge/db-PostGIS-4169E1?logo=postgresql&logoColor=white)
+![Neo4j](https://img.shields.io/badge/graph-Neo4j-008CC1?logo=neo4j&logoColor=white)
 
 > [!IMPORTANT]
-> E2E tests must **never** “cheat” by reaching into databases directly from the UI layer, hard-coding hidden data, or bypassing policy gates. If a user can’t do it legitimately through KFM’s contracts, your test shouldn’t either.
+> E2E tests are the “prove it works” layer: they validate the **full pipeline → DB → API → UI** behavior (not just isolated functions).
+> KFM’s architecture is **provenance-first** and **policy-governed** — this suite should protect those guarantees.
 
 ---
 
-## 🧱 System Under Test (high-level)
+## 📍 What lives here?
 
-```mermaid
-flowchart LR
-  UI["🌐 web/ (React + Map UI)"] -->|HTTP| API["🧠 src/server/ (API boundary)"]
-  API -->|read| PG["🗄️ Postgres/PostGIS"]
-  API -->|read| N4J["🕸️ Neo4j Graph"]
-  API -->|decision| OPA["⚖️ OPA / Rego Policies"]
-  API -->|LLM tools + citations| LLM["🤖 Ollama (local model)"]
-
-  Docs["📚 docs/reports/story_nodes/"] --> UI
-  Catalogs["📦 STAC/DCAT/PROV catalogs"] --> API
-```
-
----
-
-## 📁 Directory Layout
-
-Suggested (and recommended) structure:
+This folder contains browser-driven “real user flow” tests against a running local stack (Docker Compose).
 
 ```text
-📁 tests/
-└─ 📁 e2e/                                   🧪 end-to-end tests (UI + API + services)
-   ├─ 📄 README.md                              👈 you are here
-   ├─ 📁 specs/                                 ✅ test specs (grouped by feature)
-   │  ├─ 🧪 smoke.spec.ts                        🚦 critical smoke path (boot + basic nav)
-   │  ├─ 🧪 map.spec.ts                          🗺️ map interactions (pan/zoom/layers/hover)
-   │  ├─ 🧪 catalog.spec.ts                      🗂️ catalog browsing + STAC/DCAT surfaces
-   │  ├─ 🧪 storynodes.spec.ts                   📚 story node read + citation rendering
-   │  ├─ 🧪 policy.spec.ts                       🛡️ policy gates + fail-closed behavior
-   │  └─ 🧪 focus-mode-ai.spec.ts                🤖 Focus Mode chat + citations + attachments
-   ├─ 📁 fixtures/                              🧰 small, governed test fixtures only
-   │  ├─ 📁 users/                               👤 test users/roles (non-sensitive)
-   │  ├─ 📁 datasets/                            📦 tiny datasets + pointers (no large binaries)
-   │  └─ 📁 story_nodes/                         📝 sample story nodes + attachments (small)
-   ├─ 📁 helpers/                               🛠️ shared helpers (API clients, waits, assertions)
-   ├─ 📁 pages/                                 ◻️ optional: page objects (selectors + actions)
-   ├─ 📁 artifacts/                             📎 screenshots/videos/reports (gitignored)
-   └─ 📄 e2e.env.example                        🔐 env vars for local runs (NO secrets committed)
-```
-
-> [!TIP]
-> Keep fixtures tiny. If you need “real” scale, add a **separate perf load test**. E2E should stay deterministic and fast.
-
----
-
-## ✅ Prerequisites
-
-- 🐳 **Docker + Docker Compose v2**
-- 🟩 **Node.js** (LTS recommended)
-- 🐍 **Python tooling** only if your workflow seeds fixtures via pipeline scripts
-- 🤖 **Ollama** (only if running Focus Mode AI tests locally)
-
----
-
-## 🚀 Quick Start (Local)
-
-### 1) Bring up the dev stack 🐳
-
-From the repo root:
-
-```bash
-# Option A (modern)
-docker compose up -d --build
-
-# Option B (legacy)
-docker-compose up -d --build
-```
-
-Sanity checks (expected defaults):
-
-- API: `http://localhost:8000/docs` (Swagger UI)
-- Web: `http://localhost:3000`
-- Neo4j: `http://localhost:7474` (if enabled)
-- Postgres: `localhost:5432` (if exposed)
-
-### 2) Configure E2E env 🔐
-
-Copy the example and tweak if needed:
-
-```bash
-cp tests/e2e/e2e.env.example tests/e2e/.env
-```
-
-Example `tests/e2e/e2e.env.example`:
-
-```dotenv
-# 🌐 targets
-E2E_BASE_URL=http://localhost:3000
-E2E_API_URL=http://localhost:8000
-
-# 🧪 toggles
-E2E_HEADLESS=1
-E2E_TRACE=0
-E2E_VIDEO=0
-
-# 🤖 AI (optional)
-E2E_AI=0
-E2E_AI_MODEL=llama2
-```
-
-### 3) Install and run the E2E runner 🧪
-
-This repo may use **Playwright** (recommended) or another runner.
-Below is the Playwright flow (adjust if your repo standardizes on something else):
-
-```bash
-cd tests/e2e
-npm ci
-
-# first time only
-npx playwright install --with-deps
-
-# run everything
-npx playwright test
-
-# run smoke only
-npx playwright test --grep "@smoke"
-
-# view report
-npx playwright show-report
+📦 Kansas-Frontier-Matrix/
+└─ 📁 tests/
+   └─ 📁 e2e/
+      ├─ 📄 README.md                👈 you are here
+      ├─ 📁 specs/                   ✅ user journeys (smoke, map, story, search)
+      ├─ 📁 fixtures/                🧬 deterministic seed data (small & safe)
+      ├─ 📁 helpers/                 🧰 selectors, waits, auth helpers, API helpers
+      ├─ 📁 artifacts/               📸 screenshots, traces, videos (gitignored)
+      ├─ 📄 playwright.config.ts     (recommended) 🕹️
+      └─ 📄 package.json             (if E2E suite is a mini workspace)
 ```
 
 > [!NOTE]
-> If your monorepo keeps test deps at the root, run the equivalent root scripts (e.g. `npm run e2e` / `pnpm e2e`).
+> If your repo uses Cypress (or another runner), keep the **same conventions** below and just map commands/config accordingly.
 
 ---
 
-## 🧬 Test Data & Determinism
+## 🎯 Goals & scope
 
-KFM’s data philosophy is **deterministic + reproducible**: given the same inputs/config, pipelines should produce the same outputs—no manual steps. ✅
+### ✅ This suite should catch…
+- **UI ↔ API integration breaks** (UI calls fail, schema changes, auth errors)
+- **Critical map flows** (Map loads, layers toggle, features selectable)
+- **Timeline/story sync issues** (changing time updates map + story panel state)
+- **Search + navigation regressions** (search results, story routing, deep links)
+- **Governance-facing UX** (licenses/provenance visible where expected; “fail closed” behavior is enforced)
 
-For E2E, that means:
-
-- Use a **small fixture dataset** that already conforms to the pipeline (catalog + provenance included).
-- Prefer “seed once then reuse” patterns in local dev.
-- Keep E2E fixtures:
-  - ✅ safe to publish
-  - ✅ properly licensed
-  - ✅ metadata-complete
-  - ✅ governance-compliant
-
-### Recommended E2E fixture strategy (pick one)
-
-**A) Pre-seeded volumes (fastest)**
-- Docker volumes include a minimal “known-good” dataset.
-
-**B) Seed script inside API container (most explicit)**
-- A script loads a minimal dataset + graph fixture + users.
-- Example pattern:
-  ```bash
-  docker compose exec api python -m tools.seed_e2e
-  ```
-
-**C) Pipeline-driven seed (most faithful, slowest)**
-- Run a minimal ETL pipeline to generate processed output + catalogs before boot.
-- Great for nightly CI, not ideal for “every PR”.
+### 🚫 This suite should NOT try to…
+- Replace unit tests (keep E2E lean)
+- Pixel-perfect validate cartography (canvas maps are hard to assert; use stable signals)
+- Load massive datasets (use small fixtures and deterministic seeds)
 
 ---
 
-## 🧭 What We Assert: KFM Invariants as E2E Checks
+## 🧩 System Under Test (SUT)
 
-### 🧱 Pipeline invariants
-- UI consumes data **only** via API contracts.
-- API reads from governed stores (DB/graph/catalogs), not ad-hoc files.
-- Story Nodes are rendered as governed artifacts (no “mystery content”).
-- Focus Mode uses policy + citations, not unchecked model output.
+KFM is a **monorepo** with a backend API and a React+TypeScript frontend.
 
-### ⚖ Governance invariants
-- Restricted/sensitive datasets are **denied or sanitized** (not leaked).
-- Classification doesn’t “downgrade” accidentally across outputs.
-- Provenance artifacts exist (and are visible where appropriate).
+Typical local endpoints (from Docker Compose defaults):
+- 🌐 **Web UI**: `http://localhost:3000`
+- 🧠 **API (FastAPI)**: `http://localhost:8000` (Swagger docs at `/docs`)
+- 🗺️ **PostGIS (Postgres)**: `localhost:5432`
+- 🕸️ **Neo4j Browser**: `http://localhost:7474`
 
-### 🤖 AI invariants (Focus Mode)
-- AI answers include citations and/or references.
-- AI output is checked against policy; disallowed content is blocked/redacted.
-- AI uses **approved tools/APIs** (no direct DB fetches from UI).
+> [!TIP]
+> E2E tests should treat the UI as the user’s entry point.
+> The UI must never “talk to the DB directly” — all access must flow through the API.
 
 ---
 
-## 🧪 Test Suites (Suggested)
+## ⚡ Quickstart (local)
 
-Tagging convention (example):
+### 1) Start the full stack
+From repo root:
 
-- `@smoke` — minimal “is it alive?” suite
-- `@map` — map rendering + layers + popups
-- `@catalog` — dataset discovery + metadata visibility
-- `@policy` — access control + redaction + denial behavior
-- `@story` — Story Node rendering + deep links + map coupling
-- `@ai` — Focus Mode AI + citation checks (optional in PRs)
+```bash
+# Newer Docker:
+docker compose up -d --build
 
-Example mapping:
+# Older Docker:
+docker-compose up -d --build
+```
 
-- ✅ **Smoke**: homepage loads, API health ok, basic dataset list returns.
-- ✅ **Policy**: restricted dataset request yields 403 (or redacted response).
-- ✅ **Provenance**: dataset detail page shows license/citation fields.
-- ✅ **Story Nodes**: citations resolve; links aren’t broken.
-- ✅ **Focus Mode**: `/ai/query` returns citations and refuses disallowed prompts.
+### 2) Confirm services are up
+```bash
+# API ready?
+curl -fsS http://localhost:8000/docs >/dev/null && echo "✅ API up"
+
+# UI ready? (basic check)
+curl -fsS http://localhost:3000 >/dev/null && echo "✅ UI up"
+```
+
+### 3) Run E2E tests
+Pick one of the following patterns (depends on how the repo is wired):
+
+#### Option A — E2E suite has its own package.json (recommended)
+```bash
+cd tests/e2e
+npm ci
+# If using Playwright:
+npx playwright install --with-deps
+npx playwright test
+```
+
+#### Option B — Repo root scripts
+```bash
+# Examples (use whatever exists in package.json)
+npm run test:e2e
+# or
+pnpm test:e2e
+# or
+yarn test:e2e
+```
+
+> [!WARNING]
+> If ports `3000/8000/5432/7474` are already in use, Docker Compose will conflict.
+> Stop the conflicting service or change the host port mapping.
 
 ---
 
-## 🧩 Authoring Guidelines (to avoid flaky tests)
+## 🧠 Recommended runner: Playwright 🕹️
 
-### ✅ Prefer stable selectors
-- Use `data-testid="..."` for UI targeting.
-- Avoid brittle CSS selectors, DOM order assumptions, and pixel-perfect assertions.
+Playwright is a strong fit for KFM because the UI is React + TypeScript, and KFM’s “map + timeline + story” UX benefits from:
+- reliable waits
+- traces & videos
+- multi-browser projects
 
-### ✅ Prefer contract-level expectations
-- Assert “what user sees” + “what API promises”, not internal implementation.
+**Suggested base URL env vars**
+```bash
+# For local runs
+export KFM_WEB_BASE_URL="http://localhost:3000"
+export KFM_API_BASE_URL="http://localhost:8000"
+```
 
-### ✅ Make waits explicit
-- Wait for network idle, known UI markers, or deterministic API responses.
-- Avoid arbitrary `sleep()` unless you’re documenting a real async dependency.
+**Headed mode + debug**
+```bash
+cd tests/e2e
+npx playwright test --headed
+npx playwright test --debug
+```
 
-### ✅ Keep tests readable
-- Use helpers for:
-  - auth/login
-  - dataset creation/seed checks
-  - policy expectation assertions (deny vs sanitize)
-  - screenshot capture on failures
+**Show HTML report**
+```bash
+npx playwright show-report
+```
+
+---
+
+## 🧪 Test design rules (KFM-flavored)
+
+### 1) Prefer “smoke + critical flows” ✅
+Keep E2E lean and meaningful. A good minimum suite:
+- **Smoke**: app boots, map mounts, no console errors
+- **Layer toggle**: enable “Historic Trails” layer, verify UI state + network call succeeds
+- **Timeline**: change year, verify the store-driven UI updates (map + story panel)
+- **Feature click**: click a visible feature, verify popup/details panel renders
+- **Search**: search for a known term, navigate to a result, verify route loads
+- **Provenance**: open a dataset/story detail and verify license/provenance block exists
+
+### 2) Stable selectors only 🧷
+Use `data-testid` for all E2E selectors—never fragile CSS chains.
+
+**Suggested test IDs based on KFM UI components**
+| UI area | `data-testid` |
+|---|---|
+| App shell | `app-shell` |
+| Map container | `map-viewer` |
+| Layer control | `layer-control` |
+| Timeline slider | `timeline-slider` |
+| Story panel | `story-panel` |
+| Search input | `search-input` |
+| Search results | `search-results` |
+| Dataset panel | `dataset-panel` |
+| Provenance block | `provenance-block` |
+
+> [!TIP]
+> If MapLibre/Cesium rendering is hard to assert, expose a small readiness hook:
+> - `window.__KFM_READY__ = true` after map init
+> - or add a hidden `data-testid="map-ready"` element when layers finish loading
+
+### 3) Deterministic test data 🧬
+KFM emphasizes reproducibility. E2E tests must be:
+- deterministic
+- idempotent
+- safe to run on CI
+
+**Rules**
+- Use small “fixture datasets” checked into `tests/e2e/fixtures/`
+- Prefer a dedicated test dataset namespace (e.g., `kfm_e2e_*`)
+- Never rely on external APIs unless explicitly mocked/stubbed
+- If randomness exists (IDs, timestamps), seed it or normalize it
+
+---
+
+## 🧰 Data seeding strategies
+
+Pick one pattern and stick to it:
+
+### 🟢 Pattern A — Seed via API (preferred)
+- Add a `/dev/seed` endpoint guarded by environment (dev/test only)
+- E2E calls seed endpoint at test start
+- Keeps DB schema + domain rules centralized in backend
+
+### 🟡 Pattern B — Seed via pipeline scripts
+- Run a minimal pipeline using files in `data/raw → data/processed`
+- Load into PostGIS/Neo4j
+- Best when you want to test *the ingestion contract* too
+
+### 🟠 Pattern C — SQL/Cypher direct seed (only for ultra-minimal fixtures)
+- Fast but risks bypassing backend validation rules
+- If used, keep it tiny and document assumptions
+
+> [!CAUTION]
+> Don’t “teach” contributors that bypassing provenance/metadata is okay.
+> Even test data should model the pipeline: **Raw → Processed → Catalog/Prov → DB → API → UI**.
+
+---
+
+## 🧯 Flake prevention (maps + async UIs)
+
+Mapping UIs are inherently async. To keep tests stable:
+
+- Wait for **explicit readiness signals** (preferred)
+- Assert against **UI state** (layer control toggled, legend item visible)
+- Assert against **API responses** (network request returned 200)
+- Avoid “sleep(5000)” whenever possible
+
+**Examples of stable waits**
+- `waitForResponse()` on key API endpoints (e.g., `/tiles/*`, `/search`, `/datasets`)
+- `expect(locator).toBeVisible()` for story panel sections after navigation
+- A `map-ready` sentinel in DOM
+
+---
+
+## 📦 Artifacts & debugging
+
+Store artifacts locally for fast debugging:
+- screenshots on failure
+- traces for flaky tests
+- videos for CI
+
+Suggested `.gitignore` entries:
+```gitignore
+tests/e2e/artifacts/
+tests/e2e/playwright-report/
+tests/e2e/test-results/
+```
+
+---
+
+## 🧬 CI expectations
+
+KFM’s CI philosophy is “**fail closed**”:
+- if checks fail, merges are blocked
+- tests should be runnable locally in the same way CI runs them
+
+**Recommended pipeline shape**
+1. Lint/format (backend + frontend)
+2. Unit tests (pytest, frontend tests)
+3. Policy checks (e.g., conftest)
+4. E2E (headless, artifacts on fail)
+
+> [!NOTE]
+> If E2E is too slow for every PR, consider:
+> - PR: run “smoke” E2E only
+> - Nightly: run full matrix (multi-browser, heavier flows)
+
+---
+
+## 🔗 Related test suites (nearby)
+
+From repo root (common patterns):
+```bash
+# Backend tests (FastAPI / pytest)
+docker-compose exec api pytest
+
+# Frontend tests (React)
+cd web && npm test
+
+# Policy checks (Conftest / OPA-style)
+conftest test .
+```
 
 ---
 
 ## 🧯 Troubleshooting
 
-<details>
-<summary><strong>🚪 Port conflicts (5432 / 7474 / 8000 / 3000)</strong></summary>
+### 🔌 Port conflicts
+If you see errors binding:
+- `5432` (Postgres/PostGIS)
+- `7474` (Neo4j)
+- `8000` (API)
+- `3000` (web)
 
-If you already have Postgres/Neo4j running locally, Docker may fail to bind.
+Stop the conflicting process or remap ports in `docker-compose.yml`.
 
-- Stop local services, **or**
-- Change port mappings in `docker-compose.yml`.
+### 🐳 Docker is slow / containers get killed
+- increase Docker memory/CPU
+- large datasets can overwhelm default limits (E2E should use small fixtures)
 
-</details>
-
-<details>
-<summary><strong>🧠 Docker memory / performance issues</strong></summary>
-
-If containers are slow or killed, raise Docker Desktop memory limits.
-This matters more when loading geospatial fixtures or running graph checks.
-
-</details>
-
-<details>
-<summary><strong>🪟 Windows/Mac volume quirks</strong></summary>
-
-If mounted code doesn’t update or containers can’t write to `data/`, verify:
-- volumes are configured correctly
-- paths resolve properly
-- permissions allow writes where needed
-
-</details>
+### 🧱 UI doesn’t hot reload / files not updating
+If developing alongside E2E runs, ensure the `web/src` volume mount works.
+This can be OS-dependent (especially on Windows path mounts).
 
 ---
 
-## 🧷 CI Notes (Recommended defaults)
+## 🗺️ Roadmap ideas (good “next tests”)
 
-For CI stability:
-
-- Run `@smoke` on every PR ✅
-- Run `@policy` + `@story` on PRs touching governance/docs ✅
-- Run full suite nightly 🌙
-- Run `@ai` only when Ollama is available + stable 🤖
-
-Artifacts to upload on failure:
-- screenshots
-- videos (optional)
-- traces (optional)
-- HTML report
-
----
-
-## 🧭 Definition of Done for a New E2E Test
-
-A new E2E spec is considered “done” when it:
-
-- ✅ Validates a user-visible behavior tied to a real KFM invariant
-- ✅ Uses stable selectors (or adds them)
-- ✅ Uses governed fixtures (no untracked mystery data)
-- ✅ Includes a clear reason *why this matters* (comment at top of test)
-- ✅ Is deterministic locally and in CI
+- 🧭 **Deep-link routes**: open `/stories/:id` directly, ensure map sync
+- 🧷 **State persistence**: refresh page, verify selected layer/time persists (if intended)
+- 🛡️ **Access control**: sensitive layers are hidden unless authorized (CARE compliance)
+- 🧾 **Provenance UI**: dataset panel shows license + source citations consistently
+- 🧠 **AI assistant “Focus Mode”**: answers include references and refuse forbidden requests
 
 ---
 
 ## 🤝 Contributing
 
-- Keep tests small and focused ✂️
-- Prefer adding one great E2E test that protects a core invariant over many shallow ones 🎯
-- If your change touches:
-  - 🔐 policy
-  - 📚 Story Nodes
-  - 📦 STAC/DCAT/PROV metadata
-  - 🧠 Focus Mode AI
-  - 🗺️ map layers
-…add/adjust E2E coverage accordingly.
+- Add E2E tests when you introduce a new user-facing flow or a risky integration point.
+- Keep tests **readable** and **deterministic**.
+- Prefer building small helper utilities over copy/pasting selector logic.
 
-Happy breaking regressions before they break trust 🧡
-
+> [!TIP]
+> If you’re not sure where a new E2E test belongs, start in `specs/smoke.spec.ts` and refactor into feature files once it grows.
