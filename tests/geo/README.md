@@ -48,25 +48,26 @@ docker compose exec api pytest -q tests/geo
 Suggested structure (adapt to the repo as it evolves):
 
 ```text
-tests/geo/
-├─ README.md                 👈 you are here
-├─ conftest.py               🧰 geo fixtures (CRS helpers, sample AOIs)
-├─ unit/                     🧪 pure Python tests (no DB)
-│  ├─ test_crs_rules.py
-│  ├─ test_geojson_bounds.py
-│  ├─ test_topology_rules.py
-│  └─ test_raster_sanity.py
-├─ integration/              🔌 needs services (PostGIS, tile server, etc.)
-│  ├─ test_postgis_predicates.py
-│  ├─ test_ingest_pipeline_spatial.py
-│  └─ test_catalog_metadata_geo.py
-├─ fixtures/                 📦 tiny inputs (GeoJSON / GeoTIFF / WKT)
-│  ├─ ks_aoi.geojson
-│  ├─ counties_min.geojson
-│  └─ dem_tiny.tif
-└─ golden/                   🏆 expected outputs (stable, reviewed)
-   ├─ catalog_item_expected.json
-   └─ provenance_expected.json
+📁 tests/
+└─ 📁 geo/                                   🌍 geospatial correctness lane (CRS/topology/raster sanity)
+   ├─ 📄 README.md                              👈 you are here
+   ├─ 🧩 conftest.py                            🧰 geo fixtures (CRS helpers, sample AOIs)
+   ├─ 📁 unit/                                  🧪 pure Python tests (no DB/services)
+   │  ├─ 🧪 test_crs_rules.py                    🧭 CRS rules + reprojection invariants
+   │  ├─ 🧪 test_geojson_bounds.py               📍 bounds/extent sanity checks
+   │  ├─ 🧪 test_topology_rules.py               🔗 topology invariants (validity, overlaps, gaps)
+   │  └─ 🧪 test_raster_sanity.py                🖼️ raster sanity (nodata, stats, resolution)
+   ├─ 📁 integration/                            🔌 requires services (PostGIS, tile server, etc.)
+   │  ├─ 🧪 test_postgis_predicates.py           🐘 PostGIS predicate correctness (ST_Intersects, etc.)
+   │  ├─ 🧪 test_ingest_pipeline_spatial.py      🏗️ spatial ingest pipeline behaviors (clip/union/snap)
+   │  └─ 🧪 test_catalog_metadata_geo.py         🛰️ STAC/DCAT geo fields validation (bbox, geometry, CRS)
+   ├─ 📁 fixtures/                              📦 tiny inputs (GeoJSON / GeoTIFF / WKT)
+   │  ├─ 📄 ks_aoi.geojson                      🗺️ Kansas AOI fixture
+   │  ├─ 📄 counties_min.geojson                🧩 minimal counties fixture
+   │  └─ 🖼️ dem_tiny.tif                        🏔️ tiny DEM raster fixture
+   └─ 📁 golden/                                🏆 expected outputs (stable, reviewed “truth files”)
+      ├─ 📄 catalog_item_expected.json          🛰️ expected STAC item output
+      └─ 📄 provenance_expected.json            🧬 expected PROV bundle output
 ```
 
 ---
