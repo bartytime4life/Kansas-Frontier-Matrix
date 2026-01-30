@@ -1,16 +1,20 @@
-# 🕸️ KFM Graph Subsystem (`src/graph/`)
+# 🕸️ `src/graph` — Knowledge Graph Subsystem
 
-![Neo4j](https://img.shields.io/badge/graph-Neo4j-1f6feb?logo=neo4j&logoColor=white)
-![Contract](https://img.shields.io/badge/contract-canonical%20pipeline%20enforced-0a0a0a)
-![Policy](https://img.shields.io/badge/governance-fail--closed%20by%20default-8b0000)
+<p align="center">
+  <img alt="pipeline stage: graph" src="https://img.shields.io/badge/pipeline-stage%3A%20graph-1f6feb?style=for-the-badge" />
+  <img alt="contract-first" src="https://img.shields.io/badge/contracts-first-2ea043?style=for-the-badge" />
+  <img alt="provenance-first" src="https://img.shields.io/badge/provenance-first-8b5cf6?style=for-the-badge" />
+  <img alt="schema stable" src="https://img.shields.io/badge/schema-stable%20%2B%20migrations-required-f97316?style=for-the-badge" />
+</p>
 
-> **Purpose:** build and maintain KFM’s **semantically structured Neo4j graph** as a *derived* (reproducible) index that powers context-linking and evidence retrieval for APIs/UI. :contentReference[oaicite:0]{index=0}
+> ✅ **Canonical home** for graph initialization + sync code: **ontology application**, **Cypher migrations**, and **CSV generation** for import/export workflows.  
+> 📦 If you need static graph import artifacts (e.g., node/edge CSVs), they belong in **`data/graph/`** (not here).
 
 ---
 
-## 🧭 Where `src/graph/` fits in the KFM pipeline
+## 🧭 Where this fits in the KFM pipeline
 
-KFM is **contract-first**: every stage consumes outputs from the previous stage (no leapfrogging). :contentReference[oaicite:1]{index=1}
+KFM’s ordering is **non-negotiable**: graph work happens **after** datasets are processed + cataloged, and **before** APIs and UI consume anything.
 
 ```mermaid
 flowchart LR
@@ -21,159 +25,198 @@ flowchart LR
     C --> E["PROV Lineage Bundles"]
   end
 
-  C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
-  I --> J["Story Nodes (governed narratives)"]
-  J --> K["Focus Mode (provenance-linked context bundle)"]
+  C --> G["Neo4j Graph<br/>(references back to catalogs)"]
+  G --> H["API Layer<br/>(contracts + redaction)"]
+  H --> I["Map UI<br/>React · MapLibre · (optional) Cesium"]
+  I --> J["Story Nodes<br/>(governed narratives)"]
+  J --> K["Focus Mode<br/>(provenance-linked context bundle)"]
 ```
 
-The **Neo4j graph must reference back to catalogs** so users (and downstream services) can trace every claim to governed metadata and lineage. :contentReference[oaicite:2]{index=2}
+---
+
+## 🎯 Responsibilities
+
+This subsystem exists to keep the Knowledge Graph **governed, reproducible, and queryable**.
+
+### ✅ This module **does**
+- 🧬 **Apply ontology bindings** (labels, relationship types, required properties, modeling rules).
+- 🧱 **Manage schema evolution** via **migrations** (Cypher) — *no breaking changes without a deliberate migration*.
+- 🔒 **Enforce integrity constraints** (so data in the graph matches the ontology).
+- 🧾 **Generate import/export artifacts** (commonly CSVs for bulk import; optional post-import Cypher).
+- 🔁 **Sync graph content** from **catalog-referenced** evidence (STAC/DCAT/PROV) and processed datasets.
+- 🧪 **Validate invariants** (e.g., detect “orphan” node types, constraint failures, missing references).
+
+### 🚫 This module **does not**
+- ❌ Store raw/processed payloads in the graph as “the source of truth”.  
+  The graph should primarily store **relationships** and **references** back to catalog entries.
+- ❌ Allow the UI to access the graph directly.  
+  The UI must go through the governed **API boundary** (`src/server/`).
+- ❌ “Ad-hoc” graph definitions scattered across the repo.  
+  Graph definitions belong **only** in `src/graph/` (code) and `data/graph/` (static import artifacts).
 
 ---
 
-## ✅ Scope (what belongs here)
+## 🗂️ Folder layout (canonical)
 
-`src/graph/` is the **canonical home** for graph build code: **ontology bindings, ingest scripts, constraints**, and graph initialization/sync utilities. :contentReference[oaicite:3]{index=3}
-
-More concretely, `src/graph/` should contain:
-- 🧠 **Ontology application** (labels/types, controlled vocab, mapping rules)
-- 🧱 **Cypher migrations** (schema evolution, constraints, indexes)
-- 📦 **CSV generation / export** for import workflows
-- 🔁 **Sync/update** routines (incremental rebuilds, idempotent upserts)
-  
-> “Graph build” lives here; **static import files** (like generated CSVs) belong under `data/graph/` for consistency. :contentReference[oaicite:4]{index=4}
-
----
-
-## 🚫 Anti-scope (what does *not* belong here)
-
-To protect provenance + governance contracts, avoid:
-- ❌ UI data fetch logic (that belongs in `src/server/` + `web/`):contentReference[oaicite:5]{index=5}
-- ❌ “Mystery” graph definitions elsewhere (single canonical home):contentReference[oaicite:6]{index=6}
-- ❌ Manual edits in Neo4j as “source of truth” (graph is a **derived index**, not evidence storage)
-
----
-
-## 🧩 Inputs & Outputs (contracts)
-
-### Inputs (must exist before graph build)
-Graph build consumes **published boundary artifacts**:
-- `data/stac/` ✅ STAC Items/Collections
-- `data/catalog/dcat/` ✅ DCAT dataset entries
-- `data/prov/` ✅ PROV lineage bundles
-
-These “boundary artifacts” are required before data is considered published and are the interface to downstream stages (including graph). :contentReference[oaicite:7]{index=7}
-
-### Outputs (graph build artifacts)
-Graph import/sync outputs should land in:
-- `data/graph/csv/` 📄 (import-ready node/edge tables)
-- `data/graph/cypher/` 🧾 (optional post-import scripts / migrations)
-
-This layout is part of the expected repository structure. :contentReference[oaicite:8]{index=8}
-
----
-
-## 🗂️ Suggested folder layout (inside `src/graph/`)
-
-> This is a **recommended** structure that matches the v13 intent (ontology + migrations + CSV generation). :contentReference[oaicite:9]{index=9}
+> This README documents the **intended** canonical structure. Some folders may appear later as the subsystem matures.
 
 ```text
 📁 src/graph/
-├── 📄 README.md
-├── 🧠 ontology/                 # types, vocab, mapping rules (contract-first)
-├── 🧱 migrations/               # Cypher migrations (constraints/indexes/schema changes)
-├── 🔌 loaders/                  # loaders that read STAC/DCAT/PROV + processed data
-├── 📦 exporters/                # CSV generation to data/graph/csv/
-├── ✅ validation/               # “fail-closed” checks (schemas present, ids stable, etc.)
-├── 🧰 utils/                    # shared helpers (ids, hashing, normalization)
-└── 🚪 cli.py                    # optional: CLI entrypoint (build/sync/validate)
+  ├── 📄 README.md                 # you are here 🙂
+  ├── 📁 ontology/                 # ontology definitions/bindings (if present)
+  ├── 📁 migrations/               # Cypher migrations (if present)
+  ├── 📁 constraints/              # integrity constraints (if present)
+  ├── 📁 sync/                     # sync/ingest orchestration (if present)
+  ├── 📁 export/                   # CSV generation / export helpers (if present)
+  └── 📁 tests/                    # graph-specific tests (if present)
+
+📁 data/graph/
+  ├── 📁 csv/                      # graph import CSV exports (optional, canonical home)
+  └── 📁 cypher/                   # optional post-import scripts (optional, canonical home)
 ```
 
 ---
 
-## 🧬 Provenance & traceability rules
+## 🚀 Quickstart (dev workflow)
 
-KFM treats lineage as first-class: provenance records describe **entities, activities, agents**, and how outputs were derived. :contentReference[oaicite:10]{index=10}
+> [!IMPORTANT]
+> The exact command names vary by repo iteration. If you don’t see CLI entrypoints yet, treat the steps below as the **sequence to implement**.
 
-### Graph-level expectations
-At minimum, each “knowledge” node/edge created here should be able to answer:
-- 🔎 **What evidence (dataset/artifact) supports this?**
-- 🧾 **Which PROV activity produced it?**
-- 🧭 **Which STAC/DCAT records describe it?**
+### 1) Bring up the stack 🐳
+Typical dev setup runs:
+- `db` → spatial database (PostGIS)
+- `graph` → graph database (Neo4j)
+- `api` → backend (FastAPI)
+- `web` → frontend (React dev server)
 
-### AI/analysis evidence artifacts
-If an AI/analysis pipeline generates new entities/relationships, they must be loaded **with explicit provenance** pointing back to the artifact and sources—e.g., an OCR pipeline producing text nodes linked to the scanned document via a PROV activity node. :contentReference[oaicite:11]{index=11}
+```bash
+docker-compose up --build
+```
 
----
+**Common ports** (defaults):
+- PostGIS: `5432`
+- Neo4j: `7474` (web UI), `7687` (bolt)
+- API: `8000`
+- Web: `3000`
 
-## 🧱 Neo4j model notes (practical conventions)
+### 2) Produce catalogs first 🧾
+Before graph ingestion, ensure your pipeline has produced:
+- STAC items/collections
+- DCAT entries
+- PROV lineage bundles
 
-Neo4j uses the **property graph model** (nodes/edges/properties) and is queried via **Cypher**. :contentReference[oaicite:12]{index=12}
+> If catalogs/provenance are missing, the graph stage is considered **invalid**.
 
-Recommended conventions for KFM graph builds:
-- 🆔 **Stable IDs:** every node/relationship should have a deterministic `id` (or composite key) so rebuilds are idempotent.
-- 🏷️ **Labels reflect ontology:** prefer fewer, consistent labels (e.g., `Place`, `Event`, `Dataset`, `Person`, `Org`, `EvidenceArtifact`, `ProvActivity`).
-- 🔗 **Relationships are typed verbs:** keep them readable and consistent (e.g., `:LOCATED_IN`, `:MENTIONS`, `:DERIVED_FROM`, `:SUPPORTED_BY`, `:HAS_PROV_ACTIVITY`).
-- 🧾 **Always link back to evidence:** do not create “floating” narrative facts without dataset/PROV anchors.
+### 3) Build or sync the graph 🔁
+A typical “graph build” includes:
+- ✅ apply constraints
+- ✅ run migrations
+- ✅ load or upsert nodes/edges from catalog-referenced evidence
+- ✅ verify integrity gates
 
-### Optional: modeling time (for historical / “time travel”)
-For long-range Kansas history, consider adding **time intervals** as properties on nodes and relationships (valid-time and/or transaction-time patterns), enabling temporal queries over evolving graph states. :contentReference[oaicite:13]{index=13}
+If you’re adding CLI tooling, a good shape is:
 
----
-
-## 🔁 Build & Sync Workflow (recommended)
-
-> The graph is downstream of catalogs, so the **first step is always**: ETL → STAC/DCAT/PROV publication. :contentReference[oaicite:14]{index=14}
-
-### 1) Validate inputs (fail-closed)
-- Confirm all required catalog + PROV records exist for the target domain(s). :contentReference[oaicite:15]{index=15}
-- Confirm IDs are stable and mappings are declared (no ad-hoc fields).
-
-### 2) Generate import artifacts (deterministic)
-- Export nodes/edges to `data/graph/csv/` and any post-load scripts to `data/graph/cypher/`. :contentReference[oaicite:16]{index=16}
-
-### 3) Apply migrations / constraints
-- Run Cypher migrations to enforce constraints and indexes (schema evolution lives here). :contentReference[oaicite:17]{index=17}
-
-### 4) Load / sync Neo4j
-- Bulk import for fresh loads, then incremental sync for updates (implementation-defined).
-
----
-
-## 🔌 How the API should talk to the graph
-
-The server layer should access Neo4j through a dedicated adapter (e.g., `Neo4jAdapter`) and run Cypher queries like “get related events for a place.” :contentReference[oaicite:18]{index=18}
-
-> 🔐 Important: governance checks should happen at the API boundary (contracts + redaction), not in the UI. :contentReference[oaicite:19]{index=19}
+```text
+graph init        # apply constraints + baseline schema
+graph migrate     # run pending Cypher migrations
+graph export      # generate data/graph/csv from processed/cataloged sources
+graph load        # bulk load CSVs (or streaming upserts)
+graph verify      # integrity checks + orphan detection
+graph sync        # end-to-end: export + migrate + load + verify
+```
 
 ---
 
-## 🧪 Local development quick check
+## 🧱 Contracts & invariants (do-not-break rules)
 
-If you run the full stack locally, Neo4j is commonly exposed at `http://localhost:7474` via Docker Compose (Neo4j Browser UI). :contentReference[oaicite:20]{index=20}
+> [!WARNING]
+> Breaking these rules should trigger a governance review and/or a version bump.
 
-### Common dev pitfalls
-- 🔌 **Port conflicts**: `7474` (Neo4j), `5432` (PostGIS), `8000/3000` (API/UI) may already be in use. :contentReference[oaicite:21]{index=21}
-- 🧠 **Memory limits**: large imports can OOM containers—allocate more Docker memory when needed. :contentReference[oaicite:22]{index=22}
-
----
-
-## 🧩 Contribution checklist (graph changes)
-
-When adding or changing graph behavior, aim for small, reviewable diffs:
-- [ ] 🧠 Update ontology bindings / mapping rules (and keep them documented)
-- [ ] 🧱 Add a Cypher migration (don’t “hot edit” DB state)
-- [ ] 📦 Ensure CSV exports remain deterministic (stable IDs)
-- [ ] 🧾 Ensure new entities/relations link to STAC/DCAT + PROV
-- [ ] ✅ Add validations + tests for regressions (missing provenance should fail)
-- [ ] 🧷 Update docs where the new entity types are introduced (domain README)
+- 🧬 **Graph schema stability:** labels + relationship types must remain stable; changes require migrations.
+- 🧾 **Ontology + migration coupling:** ontology changes (e.g., renames) must be accompanied by migration scripts and version history.
+- 🔒 **Integrity constraints always-on:** graph data must meet ontology constraints (e.g., no orphan node types).
+- 🛡️ **API boundary rule:** the frontend must never query the graph directly; all access goes through `src/server/`.
+- 🧪 **Determinism expectation:** graph builds/syncs should be replayable and idempotent for the same inputs.
+- 🧷 **Reference-first storage:** graph nodes should store *references* (IDs/links) back to STAC/DCAT/PROV rather than duplicating bulky assets.
 
 ---
 
-## 📚 Sources used for this module README
+## 🧬 Modeling conventions (recommended)
 
-- `MARKDOWN_GUIDE_v13.md.gdoc` (pipeline + canonical homes + graph build scope) :contentReference[oaicite:23]{index=23}:contentReference[oaicite:24]{index=24} :contentReference[oaicite:25]{index=25}  
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf` (PROV expectations, API↔Neo4j adapter patterns, local dev notes) :contentReference[oaicite:26]{index=26}:contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28} :contentReference[oaicite:29]{index=29}  
-- `Data Spaces.pdf` (Neo4j property graph + Cypher context) :contentReference[oaicite:30]{index=30} :contentReference[oaicite:31]{index=31}  
-- `Scalable Data Management for Future Hardware.pdf` (optional temporal graph modeling reference) :contentReference[oaicite:32]{index=32} :contentReference[oaicite:33]{index=33}  
+Keep the graph useful, stable, and governed:
+
+- 🆔 **Stable IDs:** every node should have a stable identifier (domain-specific, catalog-derived, or deterministic hash).
+- 🔗 **Reference to catalogs:** prefer properties like:
+  - `stac_item_id`
+  - `dcat_dataset_id`
+  - `prov_bundle_id`
+  - `source_uri` / `license` / `attribution` (as references, not payload dumps)
+- 🧭 **Typed relationships:** use explicit relationship types; avoid “catch-all” edges.
+- 🕰️ **Time-aware design (when needed):** represent uncertainty and temporal validity explicitly (event intervals, confidence, provenance).
+
+---
+
+## 🧪 Integrity checks (starter kit)
+
+If you need a quick “is the graph sane?” pass, run queries like these in your graph console:
+
+```cypher
+// Label counts
+MATCH (n) RETURN labels(n) AS labels, count(*) AS n
+ORDER BY n DESC;
+
+// Relationship counts
+MATCH ()-[r]->() RETURN type(r) AS rel, count(*) AS n
+ORDER BY n DESC;
+
+// Potential orphans (nodes without any relationship)
+MATCH (n)
+WHERE NOT (n)--()
+RETURN labels(n) AS labels, count(*) AS n
+ORDER BY n DESC;
+```
+
+> [!TIP]
+> Treat integrity checks as **CI gates** for graph changes (migrations, ontology edits, ingest logic).
+
+---
+
+## 🧩 Adding new node/relationship types (contributor checklist)
+
+When you extend the graph model:
+
+1. 🧬 Update the **ontology** (new label/relationship type + required properties).
+2. 🧱 Add a **migration** (create constraints, backfill properties, rename labels/types safely).
+3. 🔁 Update **sync/ingest mappings** so data is catalog-referenced and reproducible.
+4. 🧪 Add/extend **tests**:
+   - migration idempotency
+   - constraint enforcement
+   - orphan prevention
+5. 🧾 Ensure **STAC/DCAT/PROV references** exist for anything introduced.
+6. 🧠 Coordinate with the **API contract** if new queries/fields are needed.
+
+---
+
+## 🧯 Troubleshooting
+
+### Ports already in use
+If you have local services on `5432`, `7474`, `8000`, or `3000`, either stop them or adjust `docker-compose` port mappings.
+
+### Containers start order / retry
+If a service fails because dependencies aren’t ready, rerun:
+
+```bash
+docker-compose up
+```
+
+### Slow loads / OOM
+Large datasets require more Docker memory. Increase Docker resource limits (especially on macOS/Windows).
+
+---
+
+## 📚 Related docs (inside the repo)
+- 📘 `docs/MASTER_GUIDE_v13.md` — canonical pipeline order, contracts, and invariants
+- 🧱 `schemas/` — machine-validated contracts (STAC/DCAT/PROV, etc.)
+- 🧰 `tools/` — validators and utilities (if present)
+- 🧩 `src/server/` — governed API boundary (no UI → graph direct access)
+- 🗺️ `web/` — UI layer (React/Map)
