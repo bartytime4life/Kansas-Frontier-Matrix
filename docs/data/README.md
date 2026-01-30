@@ -1,211 +1,235 @@
-# 🧰 Data Documentation Hub (`docs/data/`)
+# 📚 `docs/data/` — Data Documentation Hub (Runbooks + Contracts)
 
-![KFM](https://img.shields.io/badge/KFM-living%20atlas-blue)
-![Metadata](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-brightgreen)
-![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-orange)
-![Pipeline](https://img.shields.io/badge/pipeline-no%20skips-red)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Provenance](https://img.shields.io/badge/provenance-first-blue)
+![FAIR+CARE](https://img.shields.io/badge/ethics-FAIR%20%2B%20CARE-purple)
+![Metadata](https://img.shields.io/badge/metadata-STAC%20%2B%20DCAT-orange)
+![Lineage](https://img.shields.io/badge/lineage-W3C%20PROV-lightgrey)
 
-Welcome to the **data documentation home** for **Kansas Frontier Matrix (KFM)** — where each data domain has a runbook, each dataset has traceable metadata, and every derived artifact has provenance. KFM is explicitly designed so **evidence flows through catalogs and contracts before it reaches the graph, API, UI, or narrative layer.**:contentReference[oaicite:0]{index=0}
+Welcome to **KFM’s data documentation layer** 🧭  
+This folder is the “runbook shelf” that explains **what’s in `data/`, where it came from, how it was processed, and how it’s safe to use**.
 
-> ✅ **This folder (`docs/data/`) is documentation** (runbooks, sources, ETL notes, governance notes).  
-> 📦 **Actual datasets live in `data/`** (raw/work/processed + catalogs/provenance).:contentReference[oaicite:1]{index=1}
-
----
-
-## 🔗 Quick Links (high-signal)
-
-- 📘 **Master Guide v13 (canonical)** → `../MASTER_GUIDE_v13.md`:contentReference[oaicite:2]{index=2}
-- 🧾 **Metadata profiles**
-  - STAC → `../standards/KFM_STAC_PROFILE.md`:contentReference[oaicite:3]{index=3}
-  - DCAT → `../standards/KFM_DCAT_PROFILE.md`:contentReference[oaicite:4]{index=4}
-  - PROV → `../standards/KFM_PROV_PROFILE.md`:contentReference[oaicite:5]{index=5}
-- ⚖️ **Governance**
-  - Root governance → `../governance/ROOT_GOVERNANCE.md`:contentReference[oaicite:6]{index=6}
-  - Ethics → `../governance/ETHICS.md`:contentReference[oaicite:7]{index=7}
-  - Sovereignty → `../governance/SOVEREIGNTY.md`:contentReference[oaicite:8]{index=8}
-- 🧩 Templates
-  - Universal doc → `../templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`:contentReference[oaicite:9]{index=9}
+> [!IMPORTANT]
+> In KFM, *data is not “upload-and-forget”*. Every dataset must be traceable and reviewed before it reaches databases, APIs, or UI.
 
 ---
 
-## 🗺️ Canonical Pipeline (non‑negotiable)
+## ✨ What belongs in `docs/data/`
 
-KFM’s **canonical pipeline ordering** is:
+This directory contains **human-readable** documentation for every data domain and dataset family:
 
-**ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → Map UI → Story Nodes → Focus Mode**:contentReference[oaicite:10]{index=10}
+- 📦 **Domain runbooks**: `docs/data/<domain>/README.md`
+- 🧾 **Source notes**: where raw files came from, licenses, citations, download steps
+- 🧪 **ETL notes**: how pipelines transform raw → processed (including assumptions)
+- 🧱 **Schema + contracts**: required fields, geometry rules, time semantics, CRS expectations
+- ✅ **QA expectations**: validations, sanity checks, known issues, and edge cases
+- 🧰 **Operational playbooks**: how to refresh data, backfill years, or rebuild derived layers
 
-Any proposal or implementation that “shortcuts” this ordering is considered flawed unless explicitly justified and governed.:contentReference[oaicite:11]{index=11}
+> [!TIP]
+> If you add a new domain under `data/raw/<domain>/...`, you should add a matching runbook folder under `docs/data/<domain>/`.
+
+---
+
+## 🧬 The “Truth Path” (how data becomes usable)
+
+KFM treats data like a **pipeline–catalog–database–API–UI** system.  
+This means raw files become trustworthy, explorable knowledge only after they pass through standardized stages.
 
 ```mermaid
 flowchart LR
-  A["📥 ETL / Normalization"] --> B["🧾 STAC/DCAT/PROV Catalogs"]
-  B --> C["🕸️ Neo4j Graph (references catalogs)"]
-  C --> D["🧩 API Layer (contracts + redaction)"]
-  D --> E["🗺️ Map UI"]
-  E --> F["📝 Story Nodes"]
-  F --> G["🎯 Focus Mode"]
+  A["📥 Raw sources<br/>data/raw/..."] --> B["🧪 ETL + normalization<br/>pipelines/..."]
+  B --> C["✅ Processed outputs<br/>data/processed/..."]
+  C --> D["🧾 Catalog metadata<br/>STAC/DCAT"]
+  C --> E["🔗 Provenance logs<br/>W3C PROV"]
+  D --> F["🗄️ Databases<br/>PostGIS / Neo4j"]
+  E --> F
+  F --> G["🧩 API layer<br/>FastAPI / GraphQL"]
+  G --> H["🗺️ UI<br/>React + MapLibre (+ Cesium optional)"]
 ```
 
-(High-level flow matches KFM’s “boundary artifact” approach: each stage consumes the previous stage’s outputs to preserve traceability.):contentReference[oaicite:12]{index=12}
+> [!WARNING]
+> **No skipping steps.** Anything that bypasses metadata or provenance is treated as a broken contribution.
 
 ---
 
-## 📦 Data vs Docs: What lives where?
+## 🗂️ Where this fits in the repo
 
-### ✅ The *data* lifecycle (required staging)
+### 🔎 Data lives in `data/` (repo root)
+You’ll usually work across these folders:
 
-All data must move through these staged directories:
+```text
+📦 Kansas-Frontier-Matrix/
+├─ 📁 data/
+│  ├─ 📁 raw/           # immutable source snapshots (exact downloads/scans)
+│  ├─ 📁 work/          # optional intermediate artifacts (scratch / staging)
+│  ├─ 📁 processed/     # cleaned + standardized outputs (ready for KFM)
+│  ├─ 📁 catalog/       # dataset discovery metadata (STAC / DCAT)
+│  └─ 📁 provenance/    # lineage logs (W3C PROV-style)
+└─ 📁 docs/
+   └─ 📁 data/          # ✅ YOU ARE HERE: runbooks + contracts for each domain
+```
 
-- `data/raw/<domain>/` → raw source snapshots (**read-only**)
-- `data/work/<domain>/` → intermediate/transient processing outputs
-- `data/processed/<domain>/` → final, standardized outputs ready for serving/publishing:contentReference[oaicite:13]{index=13}
-
-Raw data is treated as **write-once, read-only “evidence”** and should not be modified by pipelines.:contentReference[oaicite:14]{index=14}
-
-### ✅ The “boundary artifacts” (required to be considered *published*)
-
-At publication time, every dataset generates catalog/provenance records:
-
-- **STAC**  
-  - `data/stac/collections/` (collection-level)  
-  - `data/stac/items/` (item-level):contentReference[oaicite:15]{index=15}
-- **DCAT**  
-  - `data/catalog/dcat/` (dataset discovery JSON-LD catalog entries):contentReference[oaicite:16]{index=16}
-- **PROV**  
-  - `data/prov/` (lineage bundle: inputs, activities, agents):contentReference[oaicite:17]{index=17}
-
-> 🧠 **Legacy note (v12→v13 migrations):** older docs may refer to `data/catalog/` and `data/provenance/`. v13 standardizes the canonical homes to `data/stac/`, `data/catalog/dcat/`, and `data/prov/`.:contentReference[oaicite:18]{index=18}:contentReference[oaicite:19]{index=19}
+> [!NOTE]
+> Some modules may split catalog storage into dedicated subfolders (e.g., `data/stac/...`, `data/catalog/dcat/...`).  
+> The key idea is the same: **catalog + provenance are mandatory “boundary artifacts.”**
 
 ---
 
-## 🧩 Domain Modules in `docs/data/`
+## 🧩 Data types KFM expects (and recommended formats)
 
-Each domain should have a concise README under `docs/data/<domain>/` describing:
+KFM commonly ingests **geospatial + historical** sources. Expect a mix of:
 
-- source(s) & licensing
-- ETL steps & pipeline entry points
-- quality checks & caveats
-- governance, FAIR/CARE, sovereignty considerations
-- mapping to STAC/DCAT/PROV “boundary artifacts” (optional `mappings/`):contentReference[oaicite:20]{index=20}
+### 🗺️ Vector data (points / lines / polygons)
+- Preferred: **GeoJSON** for lightweight sharing & review diffs
+- Better for bigger datasets: **GeoPackage (`.gpkg`)** or **FlatGeobuf (`.fgb`)**
+- Always include: geometry type, CRS, and core identifiers
 
-### 🌱 Existing / Example modules
+### 🛰️ Raster data (grids / imagery)
+- Preferred: **Cloud-Optimized GeoTIFF (COG)** for scalable map rendering
+- Alternative: GeoTIFF + sidecar metadata when needed
 
-- 🏛️ `historical/land-treaties/README.md`:contentReference[oaicite:21]{index=21}
-- 🌫️ `air-quality/README.md`:contentReference[oaicite:22]{index=22}
-- 🌾 `soils/sda/README.md`:contentReference[oaicite:23]{index=23}
+### ⏱️ Time series + tabular
+- Preferred: **Parquet** for analytical workflows
+- Acceptable: CSV for smaller sources (especially if it’s “as-downloaded” raw)
 
-> 🔁 If you add a new domain module, it should be linkable from the Master Guide for visibility and stewardship clarity.:contentReference[oaicite:24]{index=24}
-
----
-
-## 🧱 Recommended doc structure for a Domain README
-
-Use this as a consistent “runbook skeleton” for `docs/data/<domain>/README.md`:
-
-1. **Scope & datasets** (what’s in/out)
-2. **Sources** (URLs, citations, download notes)
-3. **License & usage constraints** (including redistribution)
-4. **Governance & sovereignty** (classification, redaction, sensitivity, CARE notes)
-5. **ETL / pipeline runbook**
-   - input(s): `data/raw/<domain>/...`
-   - process: scripts/notebooks + configs
-   - outputs: `data/processed/<domain>/...`
-6. **Metadata & lineage**
-   - STAC collection/items links
-   - DCAT entry links
-   - PROV bundle links
-7. **QA / validation checks**
-8. **Known limitations & uncertainty**
+### 🧠 Derived “evidence artifacts”
+Outputs from OCR, models, simulations, or AI-assisted extraction are treated as **first-class datasets**:
+- They must live in `data/processed/...`
+- They must have catalog + provenance like everything else
 
 ---
 
-## ✅ Dataset Publication Checklist (Definition of Done)
+## 🧾 Metadata requirements (catalog = discoverability)
 
-Use this checklist before opening a PR for a new dataset or update:
+Before a dataset is considered “published,” it needs **catalog records** describing:
 
-### 📥 Ingest
-- [ ] Raw source snapshot is stored under `data/raw/<domain>/` and treated as **read-only evidence**:contentReference[oaicite:25]{index=25}
-- [ ] Pipeline processes raw → processed via deterministic steps (no interactive/manual prompts):contentReference[oaicite:26]{index=26}
-- [ ] **No ad-hoc edits**: processed outputs are never manually “tweaked”; fix pipeline or raw input and re-run:contentReference[oaicite:27]{index=27}
+- Title, summary, owner/maintainer
+- Spatial extent (bbox/geometry)
+- Temporal extent (date range + semantics)
+- License + attribution (always)
+- Links to raw sources and processing scripts
+- Update cadence (if applicable)
+- Sensitivity classification (if applicable)
 
-### 📦 Output
-- [ ] Final outputs stored under `data/processed/<domain>/...` in appropriate formats (e.g., GeoJSON/Parquet/GeoTIFF as needed):contentReference[oaicite:28]{index=28}
+Typical catalog patterns:
+- **STAC** for geospatial discovery (items/collections)
+- **DCAT** for dataset-level catalog publishing / portal alignment
 
-### 🧾 Metadata (required)
-- [ ] STAC collection + item(s) exist (canonical `data/stac/...`):contentReference[oaicite:29]{index=29}
-- [ ] DCAT dataset entry exists (`data/catalog/dcat/`) and includes title, description, license, keywords, distribution links:contentReference[oaicite:30]{index=30}
-- [ ] PROV bundle exists (`data/prov/`) and links raw → work → processed outputs:contentReference[oaicite:31]{index=31}
-
-PROV should be rich enough to answer “how was this produced?”, including:
-- **Entities** (inputs/outputs, checksums/refs)  
-- **Activities** (pipeline run info, timestamps)  
-- **Agents** (human/software):contentReference[oaicite:32]{index=32}
-
-### 📚 Docs
-- [ ] Domain README updated (`docs/data/<domain>/README.md`) with ETL notes, sources, governance considerations:contentReference[oaicite:33]{index=33}
-- [ ] If AI/analysis produced the dataset, it is treated as a first-class **evidence artifact**: stored in processed, cataloged in STAC/DCAT, traced in PROV:contentReference[oaicite:34]{index=34}
-
-### 🧪 CI / Review expectations
-- [ ] PR includes processed file **and** corresponding metadata/provenance records (CI validates presence/consistency):contentReference[oaicite:35]{index=35}
-- [ ] PR includes explicit license info; missing license should fail closed:contentReference[oaicite:36]{index=36}
+> [!IMPORTANT]
+> If a dataset can’t be discovered via catalog metadata, it effectively “doesn’t exist” in KFM.
 
 ---
 
-## 🌐 STAC/DCAT/PROV “Alignment Rules” (required)
+## 🔗 Provenance requirements (lineage = trust)
 
-KFM requires every dataset (including evidence artifacts) to have:
+Every processed dataset should have an accompanying provenance document that answers:
 
-- STAC collection/item(s)
-- DCAT dataset entry
-- PROV activity bundle:contentReference[oaicite:37]{index=37}
+- **What** raw sources were used? (filenames, checksums, URLs if public)
+- **How** was it produced? (pipeline script + parameters + timestamps)
+- **Who/what** produced it? (agents: pipeline + operator)
+- **Which outputs** were generated? (paths in `data/processed/...`)
+- **What changed** vs prior versions? (if an update)
 
-And KFM expects cross-layer linkage:
+### Minimal PROV mental model
+- **Entities** = inputs/outputs (raw file(s), processed file(s))
+- **Activity** = pipeline execution (run + timestamp)
+- **Agent** = script + person (or CI job) that produced it
 
-- STAC → points to data asset (processed file or stable API endpoint)
-- DCAT → links to STAC and/or distributions
-- PROV → links raw inputs → intermediates → processed outputs, and identifies the pipeline run/config (e.g., commit hash):contentReference[oaicite:38]{index=38}
-
-Also:
-- Graph stores **references to catalogs**, not bulky payloads (graph models relationships; catalogs store metadata + links).:contentReference[oaicite:39]{index=39}
-
----
-
-## ⚖️ Governance & Safety (FAIR + CARE)
-
-KFM is designed to “fail closed” when governance requirements aren’t met (e.g., missing license, broken checks).:contentReference[oaicite:40]{index=40}
-
-FAIR and CARE are built into the architecture via:
-- required metadata (findable/interoperable)
-- open formats + version control (accessible/reusable)
-- access control + sovereignty-aware handling for sensitive data (CARE):contentReference[oaicite:41]{index=41}
-
-> 📌 For domain-specific governance rules (classification, redaction constraints, community ownership), see:  
-> `../governance/ROOT_GOVERNANCE.md`, `../governance/ETHICS.md`, `../governance/SOVEREIGNTY.md`:contentReference[oaicite:42]{index=42}
+> [!WARNING]
+> No provenance file = **red flag**. It means the dataset cannot be audited.
 
 ---
 
-## 🗂️ Handy “Where do I put this?” map
+## 🧰 Contribution workflow (adding or updating data)
 
-From the v13 repository map (expected structure):​:contentReference[oaicite:43]{index=43}
+Here’s the standard sequence when adding a new dataset or updating an existing one:
 
-- 📁 `data/` → raw/work/processed + catalog outputs (STAC/DCAT/PROV)
-- 📁 `docs/` → canonical governed docs (guides, designs, domain notes)
-- 📁 `docs/data/` → **domain runbooks (this folder)**
-- 📁 `schemas/` → JSON Schemas for STAC/DCAT/PROV/storynodes/etc.
-- 📁 `src/pipelines/` → ETL jobs
-- 📁 `src/graph/` → graph build
-- 📁 `src/server/` → API boundary
-- 📁 `web/` → UI
+1. 📥 **Add raw source snapshot** under `data/raw/<domain>/...`
+2. 🧪 **Run or write a pipeline** under `pipelines/<domain>/...`
+3. ✅ **Write processed outputs** to `data/processed/<domain>/...`
+4. 🧾 **Generate/update catalog metadata** (STAC/DCAT)
+5. 🔗 **Generate/update provenance logs** (PROV)
+6. 🧹 **Validate + sanity check** (geometry validity, ranges, date parsing, etc.)
+7. ✅ **Commit + PR** (CI should fail if metadata/provenance is missing)
 
----
-
-## 🕰️ Versioning note (v13 migration)
-
-v13 introduced canonical subsystem homes and filled missing expected top-level dirs like `data/catalog/dcat/` and `data/prov/` (superseding v12 guidance).:contentReference[oaicite:44]{index=44}:contentReference[oaicite:45]{index=45}
+> [!TIP]
+> Use small PRs. Data PRs review best when diffs are readable and the runbook is complete.
 
 ---
 
-## 📚 Sources used to author this README
+## 🧱 Domain runbook template (`docs/data/<domain>/README.md`)
 
-- Master Guide v13 excerpts (pipeline order, data lifecycle, domain docs expectations, and repo map).:contentReference[oaicite:46]{index=46}:contentReference[oaicite:47]{index=47}:contentReference[oaicite:48]{index=48}
-- KFM technical blueprint excerpts (raw/processed rules, no ad-hoc edits, provenance expectations, CI requirements, FAIR/CARE fail-closed principles).:contentReference[oaicite:49]{index=49}:contentReference[oaicite:50]{index=50}:contentReference[oaicite:51]{index=51}:contentReference[oaicite:52]{index=52}
+Create a runbook per domain using a consistent outline:
+
+```markdown
+# 🧭 <Domain Name>
+
+## Overview
+- What this domain represents
+- Why it exists in KFM
+
+## Source Inventory
+| Source | Type | License | Where stored (raw) | Notes |
+|---|---:|---|---|---|
+
+## Processing Pipeline
+- Entry script(s)
+- Key transformations (units, joins, CRS handling)
+- Output dataset IDs
+
+## Outputs (Processed)
+| Dataset ID | Path | Format | Geometry | Time range |
+|---|---|---:|---:|---:|
+
+## Metadata & Provenance
+- STAC/DCAT locations
+- PROV location + required fields
+
+## QA / Validation
+- Checks performed
+- Known failure modes
+
+## Update Strategy
+- How updates happen (append, backfill, rebuild)
+- Versioning expectations
+
+## Maintainers
+- Who to contact
+```
+
+---
+
+## ❓ FAQ (common “gotchas”)
+
+**Q: Can I load raw data directly into PostGIS/Neo4j?**  
+A: No. Raw is immutable evidence. Only processed + documented datasets are eligible.
+
+**Q: Where should intermediate files go?**  
+A: Use `data/work/<domain>/...` for scratch artifacts you don’t want treated as final datasets.
+
+**Q: Do I really need both catalog and provenance?**  
+A: Yes. Catalog = discovery; provenance = trust.
+
+---
+
+## 🔗 Suggested “next docs” to link from here
+
+- `docs/architecture/system_overview.md` (end-to-end design)
+- `docs/governance/` (licenses, sensitivity tiers, review rules)
+- `pipelines/README.md` (how to run ETL)
+- `data/README.md` (if present: canonical data layout at repo root)
+
+---
+
+## 📌 House rules (short version)
+
+- 🧾 **No license → no merge**
+- 🔗 **No provenance → no trust**
+- 🧭 **No catalog → no discovery**
+- ✅ **No validation → no confidence**
+- 🧱 **No runbook → no maintainability**
+
+---
+
+🧠 If you’re unsure where something belongs:  
+**Put evidence in `data/raw/`, publish in `data/processed/`, document it in `docs/data/`, and let CI enforce the rest.**
