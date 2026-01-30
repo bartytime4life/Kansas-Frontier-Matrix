@@ -1,341 +1,352 @@
-# 🏎️ Performance & Load Testing (`tests/perf`)
+# 🚀 Performance & Load Testing (`tests/perf/`)
 
-![Scope](https://img.shields.io/badge/scope-API%20%7C%20DB%20%7C%20Pipelines%20%7C%20UI-informational)
-![Discipline](https://img.shields.io/badge/discipline-repeatable%20benchmarks-blueviolet)
-![Goal](https://img.shields.io/badge/goal-catch%20regressions%20early-brightgreen)
-![Ethos](https://img.shields.io/badge/ethos-provenance--first%20%F0%9F%A7%AD-blue)
+![Status](https://img.shields.io/badge/status-active%20development-orange)
+![Type](https://img.shields.io/badge/tests-performance%20%26%20load-blue)
+![Principle](https://img.shields.io/badge/principle-provenance--first-6f42c1)
+![Target](https://img.shields.io/badge/targets-API%20%7C%20DB%20%7C%20ETL%20%7C%20AI-success)
+
+This folder is the **repeatable performance test harness** for **Kansas-Matrix-System** (aligned to the KFM architecture): a **pipeline → catalog → databases → API → UI** platform where *all user access goes through the backend API + governance policies*. ✅
 
 > [!IMPORTANT]
-> KFM is built as a **pipeline → catalog/provenance → database → API → UI** system.  
-> Performance tests should respect the same “truth path” as production (no sneaky shortcuts unless the test is explicitly a *database microbenchmark*). 🧭
+> These tests are meant to be **reproducible** and **comparable over time** (same scenario, same dataset size, same config → comparable outputs).  
+> Think “CI-friendly perf guardrails” + “deep-dive profiling runbook”.
 
 ---
 
-## 📌 Why this folder exists
+## 🧭 Table of Contents
 
-Performance is a feature. This directory is where we **measure**, **compare**, and **prevent regressions** across the KFM stack:
-
-- 🧱 **Data pipelines**: ingest → process → catalog/prov generation → database load
-- 🗺️ **Geospatial runtime**: PostGIS/PostgreSQL query latency & throughput
-- 🕸️ **Knowledge graph**: Neo4j traversals and relationship queries
-- ⚙️ **Backend API**: FastAPI REST/GraphQL endpoints, tile endpoints, search endpoints
-- 🧠 **Focus Mode AI**: retrieval + tool calls + LLM response time (and error rates)
-- 🧑‍💻 **UI experience** (optional but recommended): map load, layer toggles, timeline scrubbing, 2D/3D switches
-
----
-
-## TL;DR 🚀
-
-1. 🐳 Start the stack (Compose)
-2. 🌱 Seed a **representative** dataset
-3. 🧪 Run the perf suite(s)
-4. 📦 Save a report with **full run metadata** (git SHA, config, dataset, environment)
+- [🎯 Goals](#-goals)
+- [📏 What We Measure](#-what-we-measure)
+- [🧪 Test Types](#-test-types)
+- [🗂️ Folder Layout](#️-folder-layout)
+- [⚡ Quickstart](#-quickstart)
+- [🏃 Running Scenarios](#-running-scenarios)
+- [📈 Results, Baselines, Regression Rules](#-results-baselines-regression-rules)
+- [🧰 Profiling & Debugging Runbook](#-profiling--debugging-runbook)
+- [🧩 Adding a New Perf Test](#-adding-a-new-perf-test)
+- [🤖 CI / Automation](#-ci--automation)
+- [🧱 Safety & Guardrails](#-safety--guardrails)
 
 ---
 
-## 🧠 Benchmarking principles (KFM-flavored)
+## 🎯 Goals
 
-### ✅ Do
-- **Decide what you’re optimizing for**: latency targets vs max throughput.
-- **Start small, then scale** (phased approach): validate your harness before big runs.
-- **Warm caches intentionally** and measure **steady state** (don’t benchmark cold starts by accident).
-- **Instrument first**: you can’t optimize what you can’t see (DB stats, API metrics, system metrics).
-- **Document everything**: environment, dataset, workload parameters, warmup strategy, versions.
+### ✅ What “good” looks like
+- **Interactive** UX: map + search + story navigation feel fast.
+- **Scalable** backend: query latency stays stable under concurrency.
+- **Governed** access: policy enforcement doesn’t silently become the bottleneck.
+- **Provenance-aligned** runs: every perf run records *what* was tested, *against which dataset*, *with what settings*, and *from which git commit*.
 
-### ❌ Don’t
-- Don’t “win” a benchmark by bypassing the pipeline/catalog/prov layer (unless the suite is explicitly `db_micro/`).
-- Don’t trust results that can’t be reproduced.
-- Don’t hide tail latencies (watch P95/P99/P99.9).
-- Don’t ignore coordinated omission risks in latency measurement (tooling + methodology matters).
-
----
-
-## 🧱 What we measure
-
-### Core metrics 📏
-- **Latency**: P50 / P95 / P99 / P99.9 (plus max)  
-- **Throughput**: req/s, tiles/s, queries/s, rows/s, features/s  
-- **Correctness signals**: error rate, timeouts, partial failures, response validation  
-- **Resource usage**: CPU, RAM, disk I/O, network, container limits  
-- **System-specific**:
-  - PostGIS: query plans (EXPLAIN), index usage, cache hit ratios
-  - Neo4j: traversal depth costs, hotspot node patterns
-  - Pipelines: wall time per stage, rows/features processed, I/O amplification
-  - AI: retrieval latency, tool-call counts, response time distribution
+### 🧨 What we want to catch early
+- Latency regressions (p95/p99 spikes)
+- Throughput collapses under load
+- Memory leaks / container OOMs
+- Slow database queries introduced by schema/index changes
+- External adapter calls that block the system (timeouts / slow retries)
+- AI “Focus Mode” latency explosions (retrieval + generation)
 
 ---
 
-## 🐳 Quick start (local dev)
+## 📏 What We Measure
 
 > [!NOTE]
-> The blueprint expects a Docker Compose dev workflow with PostGIS + Neo4j + API + web UI.  
-> Typical ports include **5432** (Postgres), **7474** (Neo4j), **8000** (API), **3000** (web). 🧷
+> We aim to measure **end-to-end** (client → API → DB/policy/AI → response) *and* **component-level** (PostGIS vs Neo4j vs Search vs OPA vs Ollama) so regressions are diagnosable.
 
-### 1) Start the stack
-```bash
-docker-compose up -d
-```
-
-### 2) Verify services are reachable
-- API docs: `http://localhost:8000/docs`
-- Web UI: `http://localhost:3000`
-- Neo4j Browser: `http://localhost:7474`
-
-### 3) Seed a dataset (sample/representative)
-Examples (depending on what exists in your repo):
-```bash
-# Option A: a convenience script (if present)
-docker-compose exec api python scripts/init_sample_data.py
-
-# Option B: run a pipeline directly (example)
-docker-compose exec api python pipelines/import_rainfall.py
-```
-
-### 4) Run perf suites
-This repo may wire perf tests via any of these patterns—pick the one your project uses:
-
-```bash
-# Option A: pytest marker pattern (recommended)
-docker-compose exec api pytest -m perf tests/perf
-
-# Option B: a custom runner module (if present)
-docker-compose exec api python -m tests.perf.run --suite api_smoke
-
-# Option C: load tool (k6/locust/vegeta) driven from host
-# (see suites below)
-```
+| Layer 🔩 | What we measure 📐 | Examples |
+|---|---|---|
+| 🌐 API (FastAPI) | p50/p95/p99 latency, RPS, error rate | `/datasets`, `/search?q=...`, `/features/{id}`, `/graphql` queries |
+| 🧭 Policy (OPA) | decision latency, cache hit ratio | auth checks, content rules, “fail closed” behavior |
+| 🗺️ PostGIS | query latency, planning time, rows scanned | point-in-polygon, distance, clustering, bounding box queries |
+| 🧠 Neo4j | traversal latency, query plan regressions | story graph navigation, entity linking queries |
+| 🔎 Search index | query latency, recall/latency tradeoffs | keyword search, embeddings similarity search |
+| 🧱 Pipelines/ETL | ingest time, CPU/mem, IO throughput | raw → processed, metadata/provenance generation |
+| 🤖 AI (Ollama) | time-to-first-token, tokens/sec, end-to-end answer time | retrieval + prompt build + generate |
 
 ---
 
-## 🧪 Perf suites
+## 🧪 Test Types
 
-<details>
-<summary><strong>🧱 Pipelines</strong> — ingest → processed → catalog/prov → DB</summary>
+### 1) 🟢 Smoke (CI-friendly)
+Fast checks that run on PRs:
+- small dataset
+- low concurrency
+- short duration (30–90s)
+- detects *obvious* regressions
 
-**Goal:** measure *end-to-end* pipeline throughput + stage timing.
+### 2) 🟡 Local “Quick”
+Developer loop:
+- run before/after a change
+- compare to a local baseline
 
-Typical checks:
-- time per stage (raw parse, transform, enrich, metadata, PROV generation, DB insert)
-- rows/features processed per second
-- disk + network I/O (especially when mounting volumes)
+### 3) 🔵 Nightly / Full Suite
+Bigger dataset + more scenarios:
+- heavier concurrency
+- captures “real-ish” performance curves
 
-Recommended outputs:
-- `reports/<run>/pipeline_timeline.json`
-- `reports/<run>/prov_run_manifest.json` (see template below)
+### 4) 🟣 Soak
+Long-running stability:
+- leaks, GC pressure, connection pool issues
+- cache drift or unbounded growth
 
-</details>
-
-<details>
-<summary><strong>🗺️ PostGIS / PostgreSQL</strong> — spatial query performance</summary>
-
-**Goal:** ensure spatial queries remain fast as datasets grow.
-
-Representative query classes:
-- bbox queries (viewport)
-- point-in-polygon
-- distance/radius queries
-- clustering/aggregation
-- tile-backed feature extraction (if applicable)
-
-Deliverables:
-- query set (SQL files)
-- dataset manifest (size + checksums)
-- EXPLAIN plans saved with results
-
-</details>
-
-<details>
-<summary><strong>🕸️ Neo4j</strong> — knowledge graph traversal & joins</summary>
-
-**Goal:** prevent graph traversals from becoming “accidentally exponential”.
-
-Representative query classes:
-- story node neighborhood expansion
-- entity-to-source provenance hops
-- multi-filter traversals (time + place + topic)
-
-Deliverables:
-- cypher query set
-- traversal depth limits + expected cardinalities
-
-</details>
-
-<details>
-<summary><strong>⚙️ API (FastAPI)</strong> — REST/GraphQL endpoints</summary>
-
-**Goal:** measure user-facing latency and throughput under realistic load.
-
-Suggested endpoint mix (adjust to your API):
-- `GET /datasets`
-- `GET /features/{id}`
-- `GET /search?q=...`
-- `POST /ai/query`
-- GraphQL queries (if enabled at `/graphql`)
-- tile endpoints (vector/raster) if present
-
-Load modes:
-- **Latency-focused:** fixed throughput, measure tail percentiles
-- **Throughput-focused:** saturate until a resource maxes out
-
-</details>
-
-<details>
-<summary><strong>🧠 Focus Mode AI</strong> — retrieval + tools + LLM response</summary>
-
-**Goal:** keep AI assistance responsive while remaining **governed** and **source-grounded**.
-
-Measure:
-- end-to-end response time
-- retrieval time (semantic search / DB reads)
-- tool-call count & latency
-- timeout rate and fallback behaviors
-
-Also track:
-- response size (tokens/chars)
-- error classes (tool failures vs model failures)
-
-</details>
-
-<details>
-<summary><strong>🧑‍💻 UI (optional)</strong> — perceived performance</summary>
-
-**Goal:** measure *what users feel*.
-
-Candidate scenarios:
-- first map render
-- layer toggle (tile requests & render time)
-- timeline scrubbing (state sync)
-- 2D↔3D switch (MapLibre ↔ Cesium)
-
-Tooling idea:
-- Playwright trace runs (recommended)
-- Lighthouse runs for baseline front-end metrics
-
-</details>
+### 5) 🪶 Edge Profile (low-resource)
+Targets offline/community deployments:
+- constrained CPU/RAM
+- validates “still usable” budgets
 
 ---
 
-## 🗂️ Suggested directory layout
-
-```text
-📁 tests/
-└─ 📁 perf/                                   ⚡ performance + benchmarking lane
-   ├─ 📄 README.md                              👈 you are here 📍
-   ├─ 📁 suites/                                🧪 benchmark entrypoints (python/js)
-   │  ├─ 📁 api/                                🌐 API latency/throughput suites
-   │  ├─ 📁 db_postgis/                         🐘 PostGIS query/mutation suites
-   │  ├─ 📁 db_neo4j/                            🕸️ Neo4j traversal/index suites
-   │  ├─ 📁 pipelines/                          🏗️ ETL/pipeline runtime suites
-   │  ├─ 📁 ai/                                 🤖 RAG/LLM evaluation + latency suites
-   │  └─ 📁 ui/                                 🖥️ UI performance (render, interaction, trace replay)
-   ├─ 📁 workloads/                             🎛️ workload definitions (YAML/JSON)
-   ├─ 📁 queries/                               🧾 SQL/Cypher bundles (versioned!)
-   ├─ 📁 datasets/                              📦 dataset manifests (size, checksums, provenance pointers)
-   ├─ 📁 reports/                               📊 generated outputs (gitignored except summaries)
-   └─ 📁 tools/                                 🧰 helper scripts (parsers, formatters, charting)
-```
+## 🗂️ Folder Layout
 
 > [!TIP]
-> Keep perf artifacts **separate from correctness tests**. Perf tests can be slower, more environment-sensitive, and often run on a schedule (nightly) rather than on every PR.
+> Keep perf assets **scenario-driven** and **data-versioned**. Results are artifacts: store locally or in CI artifacts, not in git.
 
----
-
-## 📊 Reporting & reproducibility checklist ✅
-
-Every run should record:
-
-- 🔖 **Git SHA** + dirty state
-- 🐳 **container images** / tags / digests (API, DBs, web)
-- 🧾 **workload definition** (exact parameters)
-- 🗃️ **dataset manifest** (source pointers + checksums)
-- 🧊 **warmup strategy** (what was warmed and how long)
-- 🧰 **runner versions** (pytest/k6/locust/etc)
-- 💻 **hardware + OS** (CPU, RAM, disk type, Docker resource limits)
-- 🕒 **time window** (and whether other workloads were running)
-
-### Output format suggestion 📦
-Store per-run artifacts under:
 ```text
-tests/perf/reports/YYYY-MM-DD__<gitsha>__<suite>/
-  run.json
-  summary.md
-  raw_results/...
-  charts/...
+tests/perf/
+├── README.md                # 👈 you are here
+├── scenarios/               # 🧪 scenario definitions (yaml/json)
+│   ├── smoke.yaml
+│   ├── api_read_heavy.yaml
+│   ├── spatial_queries.yaml
+│   ├── graph_traversal.yaml
+│   └── ai_focus_mode.yaml
+├── workloads/               # 🏋️ load generators (choose one “default”)
+│   ├── locust/              # ✅ recommended (Python ecosystem)
+│   │   ├── locustfile.py
+│   │   └── user_flows.py
+│   └── k6/                  # optional (JS load testing)
+│       └── api.js
+├── datasets/                # 📦 dataset manifests + seeds (NO giant blobs)
+│   ├── manifests/
+│   │   ├── small.json
+│   │   ├── medium.json
+│   │   └── large.json
+│   └── seeds/
+│       ├── postgis.sql
+│       ├── neo4j.cypher
+│       └── search_index.jsonl
+├── scripts/                 # 🛠️ orchestrators + helpers
+│   ├── up.sh
+│   ├── seed.sh
+│   ├── run.sh
+│   ├── report.py
+│   └── diff.py
+├── docker/                  # 🐳 perf overlay compose (optional)
+│   └── docker-compose.perf.yml
+└── results/                 # 📈 output artifacts (gitignored)
+    └── .gitkeep
 ```
 
 ---
 
-## 🎯 “Perf budgets” (starter targets)
+## ⚡ Quickstart
+
+### ✅ Prereqs
+- Docker + Docker Compose
+- The project dev stack (API + DBs) runs via compose
+- (Optional for AI scenarios) **Ollama** installed and running locally, or containerized in the perf stack
 
 > [!WARNING]
-> These are *starting points*—calibrate with real production traces and your expected dataset sizes.
-
-- ⚙️ **API read endpoints**: P95 < 300ms, P99 < 800ms (steady state, representative load)
-- 🗺️ **Tile endpoints**: P95 < 250ms per tile (cached), P95 < 800ms (uncached)
-- 🗃️ **Pipeline batch imports**: define *rows/sec* targets per dataset class
-- 🧠 **AI query endpoint**: P95 < 3s for “typical” queries, track >10s tail carefully
+> Performance numbers are only meaningful when the machine is not overloaded. Close “heavy stuff” (VMs, builds, video calls), and avoid running other benchmarks concurrently.
 
 ---
 
-## 🧯 Troubleshooting (common dev-stack perf traps)
+### 1) 🐳 Start the stack
 
-- 🔌 **Port conflicts**: if 5432/7474/8000/3000 are already in use, stop the conflicting service or remap ports in `docker-compose.yml`.
-- 🧠 **Docker resources**: big datasets can silently thrash if Docker RAM/CPU limits are too low.
-- 🗃️ **Volume permissions**: mounted `data/` directories can block pipeline writes on some hosts.
-- 🔁 **Hot reload overhead**: disable `--reload` for serious benchmarks (reload is great for dev, bad for perf truth).
+**Option A — Use the main dev compose**
+```bash
+docker-compose up --build
+```
+
+**Option B — Use a perf overlay compose**
+```bash
+docker-compose -f docker-compose.yml -f tests/perf/docker/docker-compose.perf.yml up --build
+```
+
+> [!NOTE]
+> Common local ports (defaults) you may need free:
+> - Postgres/PostGIS: `5432`
+> - Neo4j HTTP: `7474`  | Bolt: `7687`
+> - FastAPI: `8000`
+> - React dev server: `3000`
 
 ---
 
-## 🧾 Appendix: Run manifest template (copy/paste)
+### 2) 🌱 Seed the perf dataset
 
-```json
-{
-  "project": "kfm",
-  "suite": "api",
-  "git": { "sha": "abcdef123", "dirty": false },
-  "timestamp_utc": "2026-01-29T00:00:00Z",
-  "environment": {
-    "docker": { "compose": true },
-    "host": { "os": "linux", "cpu": "unknown", "ram_gb": 0 }
-  },
-  "services": {
-    "api": { "image": "kfm-api:dev", "port": 8000 },
-    "web": { "image": "kfm-web:dev", "port": 3000 },
-    "postgis": { "image": "postgis:...", "port": 5432 },
-    "neo4j": { "image": "neo4j:...", "port": 7474 }
-  },
-  "dataset": {
-    "name": "sample",
-    "manifest": "tests/perf/datasets/sample.json",
-    "checksums": []
-  },
-  "workload": {
-    "definition": "tests/perf/workloads/api_smoke.yaml",
-    "warmup_seconds": 30,
-    "duration_seconds": 180,
-    "concurrency": 20
-  },
-  "results": {
-    "latency_ms": { "p50": 0, "p95": 0, "p99": 0, "max": 0 },
-    "throughput_rps": 0,
-    "error_rate": 0
-  }
-}
+```bash
+bash tests/perf/scripts/seed.sh --dataset small
+```
+
+Expected behavior:
+- Initializes PostGIS + Neo4j (and search index if enabled)
+- Loads a **known dataset manifest**
+- Leaves the system in a “ready to benchmark” state
+
+---
+
+### 3) 🟢 Run smoke
+
+```bash
+bash tests/perf/scripts/run.sh smoke
 ```
 
 ---
 
-## 🔗 Quick links (repo-local)
+## 🏃 Running Scenarios
 
-- 📁 `data/raw/` → raw inputs  
-- 📁 `data/processed/` → processed outputs  
-- 📁 `data/provenance/` → PROV logs (lineage + parameters)  
-- ⚙️ `api/` → backend services  
-- 🌐 `web/` → frontend
+### Scenario philosophy
+A **scenario** is a named workload with:
+- a dataset manifest (small/medium/large)
+- request mix (read-heavy vs write-heavy vs mixed)
+- concurrency + duration
+- pass/fail budgets (optional but recommended)
+
+Example command patterns:
+
+```bash
+# Run a named scenario
+bash tests/perf/scripts/run.sh api_read_heavy --dataset small --duration 60s --users 20
+
+# Run the full suite locally (takes longer)
+bash tests/perf/scripts/run.sh suite --dataset medium
+```
+
+### Minimal environment variables (suggested)
+```bash
+export PERF_BASE_URL="http://localhost:8000"
+export PERF_RESULTS_DIR="tests/perf/results"
+export PERF_DATASET="small"
+export PERF_DURATION="60s"
+export PERF_USERS="20"
+```
 
 ---
 
-### 🧭 North Star
+## 📈 Results, Baselines, Regression Rules
 
-If a perf result can’t be explained, reproduced, and tied back to a known dataset + workload + environment… it’s not a result. It’s a rumor. 🕯️
+### Where results go
+Each run should create a unique run folder:
+```text
+tests/perf/results/
+└── 2026-01-30T203500Z__api_read_heavy__small__git-abc123/
+    ├── run.json              # 🧾 provenance: commit, host, dataset, config
+    ├── summary.json          # 📌 p50/p95/p99, rps, errors
+    ├── timeseries.csv        # 📉 optional timeline (latency over time)
+    ├── locust_stats.csv      # 🏋️ raw generator output
+    └── report.html           # 🧠 human-friendly output
+```
 
+### Baselines (recommended)
+Store baselines outside git, or in CI artifacts:
+- `baseline/main` (nightly)
+- `baseline/release/*` (tagged releases)
+
+### Regression rules (starter template)
+> [!TIP]
+> Pick budgets that match your reality. Start loose, then tighten.
+
+- ❌ **Fail** if error rate > `0.5%`
+- ❌ **Fail** if p95 latency worsens by > `25%` vs baseline
+- ❌ **Fail** if p99 latency worsens by > `35%` vs baseline
+- ⚠️ **Warn** if RPS drops by > `15%` vs baseline
+
+---
+
+## 🧰 Profiling & Debugging Runbook
+
+### Step 0: Verify you’re not benchmarking your laptop’s chaos 😅
+- Docker has enough memory allocated
+- No port conflicts
+- No container restarts (OOM / crash loops)
+- Your dataset seed finished successfully
+
+### Step 1: Identify *which* layer regressed
+Use the scenario mix to isolate:
+- API only (no AI)
+- DB-heavy (spatial + graph)
+- Policy-heavy (OPA checks)
+- AI-heavy (Focus Mode)
+
+### Step 2: Collect the “standard bundle”
+**Always attach these when reporting perf regressions:**
+- `run.json`, `summary.json`
+- docker compose logs
+- DB query plans for the top slow queries
+- container stats (CPU/mem)
+
+Example:
+```bash
+docker-compose logs --no-color > tests/perf/results/latest/docker-logs.txt
+docker stats --no-stream > tests/perf/results/latest/docker-stats.txt
+```
+
+### Step 3: Database triage
+- PostGIS: use `EXPLAIN (ANALYZE, BUFFERS)` on slow queries
+- Neo4j: inspect query plan + indexes
+- Search: check slow query logs and shard/refresh settings
+
+### Step 4: Policy triage (OPA)
+- Measure decision time (cold vs warm)
+- Ensure policy evaluations are cached where safe
+- Confirm “fail closed” behavior didn’t introduce retry storms
+
+### Step 5: AI triage (Ollama)
+- Confirm model choice is intentional (`OLLAMA_MODEL`)
+- Record:
+  - time-to-first-token
+  - tokens/sec
+  - context size (prompt length)
+- Beware: larger models can require **significantly more RAM/VRAM**.
+
+---
+
+## 🧩 Adding a New Perf Test
+
+1) Add a scenario file:
+```text
+tests/perf/scenarios/my_new_scenario.yaml
+```
+
+2) Implement the workload flow:
+- add a Locust task set under `tests/perf/workloads/locust/`
+
+3) Add/extend dataset seed artifacts if needed:
+- `tests/perf/datasets/seeds/*`
+
+4) Make sure the run produces:
+- `run.json` (provenance metadata)
+- `summary.json` (KPIs)
+
+5) Add it to:
+- smoke suite (if fast)
+- nightly suite (if heavier)
+
+---
+
+## 🤖 CI / Automation
+
+> [!NOTE]
+> Typical setup:
+> - PRs: run `smoke`
+> - Nightly: run `full suite` + upload artifacts
+> - Release: run `large dataset` + publish baseline
+
+Suggested workflow files (not in this folder):
+```text
+.github/workflows/perf-smoke.yml
+.github/workflows/perf-nightly.yml
+```
+
+---
+
+## 🧱 Safety & Guardrails
+
+- ✅ Prefer running against **local compose** or a dedicated staging environment
+- ❌ Don’t point load tests at production without explicit approval
+- ✅ External adapters should default to **mocks** in perf runs (avoid quotas/ToS issues)
+- ✅ Keep results **out of git** (store as CI artifacts)
+
+---
+
+### 🏁 Done
+If you can run `smoke` locally and it produces `run.json` + `summary.json`, you’ve got a working perf harness foundation ✅
