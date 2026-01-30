@@ -1,189 +1,166 @@
-# 🧪 `tests/data/` — Fixture Datasets & Golden Files
+# 🧪 `tests/data/` — Test Fixtures & Sample Datasets
 
-![tests](https://img.shields.io/badge/tests-unit%20%7C%20integration-informational)
-![fixtures](https://img.shields.io/badge/fixtures-small%20%26%20deterministic-brightgreen)
-![metadata](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-8a2be2)
-![governance](https://img.shields.io/badge/safety-no%20PII%20%7C%20no%20sensitive%20locations-red)
+![Fixtures](https://img.shields.io/badge/tests-fixtures-2ea44f) ![Deterministic](https://img.shields.io/badge/deterministic-yes-blue) ![Provenance](https://img.shields.io/badge/provenance-PROV%20ready-purple)
 
-This folder holds **tiny, deterministic, version-controlled datasets** used by automated tests to validate the KFM “truth path” end‑to‑end: **ETL → catalogs (STAC/DCAT/PROV) → graph → API contracts** (and, optionally, UI expectations).:contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
-
-> 🧭 Why this exists: KFM treats data like code—**nothing enters without metadata + provenance**—so our tests need fixture data that mirrors the same contracts, just at micro scale.:contentReference[oaicite:2]{index=2}:contentReference[oaicite:3]{index=3}
+This folder contains **small, deterministic, documented** datasets used by automated tests (unit ✅, integration 🔁, regression 🧷). It exists so tests don’t depend on the network, production databases, or “whatever data happens to be on a dev machine”.
 
 ---
 
-## 🧬 Core Rules (non‑negotiable)
+## 🎯 Goals (what belongs here)
 
-### ✅ 1) Mirror the canonical staging layout
-Even for tests, keep data in the same lifecycle “lanes”:
-- `raw/` → `work/` → `processed/`:contentReference[oaicite:4]{index=4}
-- Then publish **boundary artifacts** (metadata + provenance) before anything is treated as “ready”:  
-  `stac/` + `catalog/dcat/` + `prov/`:contentReference[oaicite:5]{index=5}
+- **Minimal**: smallest data that still reproduces the behavior/bug.
+- **Deterministic**: stable ordering, stable randomness (seeded), stable floating-point expectations.
+- **Documented**: every fixture has a short “what/why/how” + provenance + license.
+- **Portable**: tests should pass on CI without special accounts or external services.
+- **Aligned with KFM’s canonical pipeline**: _Raw → Processed → Catalog/Prov → Database → API → UI_ (tests mirror this, even in miniature).  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### ✅ 2) Determinism over cleverness
-Fixture generation must behave like real pipelines: **idempotent, reproducible, and stable given the same inputs** (fixed seeds, no prompts, no manual steps).:contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
+### 🚫 Non-goals (what should NOT go here)
 
-### ✅ 3) No sensitive/PII content — ever
-Fixtures must be **sanitized**:
-- No real people’s names, emails, phone numbers.
-- No precise coordinates for protected/sensitive sites.
-- No “confidential → public” classification downgrade without explicit, approved de‑identification steps (tests should help catch this).:contentReference[oaicite:8]{index=8}
-
-### ✅ 4) Keep fixtures tiny (CI‑friendly)
-- Prefer **micro‑slices** (10–200 rows, 1–5 features, small rasters).
-- If a file grows large, move it to **LFS or external fetch** (keep identity tracked). The blueprint even calls out size thresholds as a practical approach.:contentReference[oaicite:9]{index=9}
+- Large rasters / huge exports / multi-GB dumps (use DVC or download-on-demand harnesses).  [oai_citation:1‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)  
+- Private, sensitive, or licensed-restricted data (no “just for testing” exceptions).
+- Fixtures that require “optional stopping” (tweaking data until tests pass) — instead, fix the code or re-generate fixtures with a repeatable script.  [oai_citation:2‡Understanding Statistics & Experimental Design.pdf](sediment://file_0000000038e0722f8ee76e6a371bf703)
 
 ---
 
-## 🗂️ Recommended Layout
+## 🗂️ Recommended layout (keep it boring & predictable)
 
-> This layout is designed to match KFM’s required staging + catalog boundaries while keeping fixture sets self‑contained.:contentReference[oaicite:10]{index=10}
+> If your fixture set grows beyond “a couple files”, make it a **named package folder** with sidecars.
 
 ```text
-📁 tests/
-└─ 📁 data/                                        🧪 data-oriented test lane (fixtures + goldens)
-   ├─ 📁 fixtures/                                   🧰 self-contained fixture sets (end-to-end data truth files)
-   │  ├─ 📁 kfm_minimal/                              ✅ one minimal fixture set (golden “known good”)
-   │  │  ├─ 📁 raw/                                   🧾 immutable source inputs
-   │  │  │  └─ 📁 <domain>/                            🧭 e.g., historical/, hydrology/, air-quality/
-   │  │  ├─ 📁 work/                                  🧪 intermediate artifacts (optional but supported)
-   │  │  │  └─ 📁 <domain>/
-   │  │  ├─ 📁 processed/                              ✅ golden processed outputs (expected pipeline results)
-   │  │  │  └─ 📁 <domain>/
-   │  │  ├─ 📁 stac/                                  🛰️ STAC geospatial catalog fixtures
-   │  │  │  ├─ 📁 collections/                         🧩 STAC Collections
-   │  │  │  └─ 📁 items/                               📦 STAC Items
-   │  │  ├─ 📁 catalog/                                🗂️ DCAT discovery fixtures
-   │  │  │  └─ 📁 dcat/                                 🧾 DCAT dataset entries (JSON-LD)
-   │  │  ├─ 📁 prov/                                   🧬 PROV lineage bundles (JSON/JSON-LD)
-   │  │  ├─ 📁 db/                                     ◻️ optional: PostGIS/Neo4j seeds (integration helpers)
-   │  │  └─ 📄 README.md                                📘 fixture runbook (“what this set proves”)
-   │  └─ 📁 <another_fixture_set>/                      ➕ additional fixture sets (same structure)
-   │
-   ├─ 📁 snapshots/                                   📸 golden responses (contract-level truth files)
-   │  ├─ 📁 api/                                       🌐 golden HTTP responses (REST contract tests)
-   │  └─ 📁 graphql/                                   🕸️ golden GraphQL responses (if used)
-   │
-   └─ 📁 generated/                                   ◻️ optional: test outputs (should be gitignored)
+tests/data/
+├── README.md                 # you are here 🙂
+├── manifest.yaml             # optional: quick index of fixture packages
+├── licenses/                 # optional: bundled license texts for 3rd-party data
+│   └── <source>-LICENSE.txt
+├── fixtures/
+│   ├── <fixture_name>/
+│   │   ├── raw/              # “as acquired” tiny input(s)
+│   │   ├── processed/        # expected transform outputs
+│   │   ├── catalog/          # STAC/DCAT-like metadata (small + local)
+│   │   ├── provenance/       # W3C PROV lineage docs (JSON recommended)
+│   │   ├── goldens/          # expected outputs for regression tests
+│   │   └── NOTES.md          # ultra-short human notes (optional)
+│   └── ...
+└── tmp/                      # (gitignored) scratch outputs during tests
 ```
 
-### 🧩 Domain naming
-Use domain folder names that mirror your real data domains (e.g., `historical/`, `hydrology/`, `air-quality/`). The v13 guidance emphasizes keeping each domain isolated and documented.:contentReference[oaicite:11]{index=11}
+This mirrors the project’s “**no data enters without documentation**” stance.  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🗺️ The “Truth Path” for Fixtures
+## 📦 Fixture “package” contract (required sidecars)
 
-```mermaid
-flowchart LR
-  R["📥 raw/ (immutable)"] --> P["🧪 pipeline under test"]
-  P --> W["🧰 work/ (optional intermediates)"]
-  W --> O["✅ processed/ (golden outputs)"]
+For each fixture package folder (`tests/data/fixtures/<fixture_name>/`):
 
-  O --> S["🗺️ stac/ (items + collections)"]
-  O --> D["📇 catalog/dcat/"]
-  O --> V["🧾 prov/ (lineage)"]
+| File/Folder | Required? | Purpose |
+|---|---:|---|
+| `raw/` | ✅ | Minimal inputs (CSV/GeoJSON/TIF/etc.) |
+| `processed/` | ✅ | Outputs produced by the pipeline/code under test |
+| `catalog/` | ✅ | Metadata records (STAC Item/Collection, DCAT record, or project JSON schema)  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) |
+| `provenance/` | ✅ | W3C PROV (or equivalent) describing lineage (inputs, script, commit, date)  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) |
+| `goldens/` | ➕ | Snapshot outputs for regression tests (API responses, tiles, normalized JSON) |
+| `licenses/` or `LICENSE.txt` | ✅ if 3rd-party | License text or link + attribution |
 
-  S --> G["🧠 graph fixture (Neo4j)"]
-  D --> G
-  V --> G
-
-  G --> A["🌐 API contract tests"]
-```
-
-This mirrors the required KFM ordering (no bypassing catalogs/provenance) and keeps fixture data honest.:contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13}
+**CI expectation:** project-wide checks often validate that datasets have matching catalog + provenance entries and that GeoJSON is sane (valid JSON, coordinates plausible). Treat test fixtures the same way.  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 📦 What Goes in Each Folder
+## 🧭 Data conventions (so tests stay stable)
 
-### 📥 `raw/`
-Small, readable inputs that represent a real ingest scenario:
-- CSV/TSV
-- GeoJSON (few features)
-- Tiny rasters (if needed), or metadata-only stubs
+### 1) Tabular (`.csv`, `.tsv`, `.parquet`)
+- UTF-8 ✅, header row ✅
+- Deterministic row ordering (sort by stable key in generation scripts)
+- ISO-8601 timestamps (`YYYY-MM-DD` or `YYYY-MM-DDTHH:MM:SSZ`)
+- Avoid locale traps (decimal `.` not `,`)
 
-Pipelines should **read raw** and **never mutate it** (raw = snapshot).:contentReference[oaicite:14]{index=14}
+### 2) Vector geospatial (`.geojson`, `.gpkg`)
+- Default CRS: **WGS84 / EPSG:4326** unless the test explicitly targets projection logic.
+- Coordinate order: **[lon, lat]** (GeoJSON standard).
+- Keep geometries tiny (e.g., 3–20 features) unless testing performance/corner cases.
 
-### 🧰 `work/`
-Intermediate artifacts (optional):
-- Reprojected geometries
-- Normalized tables
-- Temporary joins/derivations
+### 3) Raster / remote sensing (`.tif`, “COG-ish” if needed)
+- Prefer **very small** rasters (e.g., 32×32, 128×128) for unit tests.
+- Include a `catalog/` STAC record when raster semantics matter (bands, nodata, bounds).
+- If you’re testing time-series processing patterns, keep a *short* series but keep metadata honest (dates, QA flags).  [oai_citation:7‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](sediment://file_00000000a58071f586f00793dee712d6)
 
-Use this when you want tests to assert intermediate correctness (helpful for tricky transforms).:contentReference[oaicite:15]{index=15}
+### 4) Time-oriented fixtures (timelines, events, intervals)
+- Store event times as ISO-8601.
+- Normalize timezone assumptions (UTC recommended).
+- For charts/derived analytics, store **inputs** + **expected summaries** (don’t snapshot charts unless you must).
 
-### ✅ `processed/`
-Golden outputs:
-- Stable schemas
-- Normalized units
-- Consistent CRS expectations (if a fixture is spatial)
-
-Processed outputs are the “authoritative” artifacts your downstream components should consume.:contentReference[oaicite:16]{index=16}
-
-### 🗺️ `stac/` + 📇 `catalog/dcat/` + 🧾 `prov/`
-These are **required boundary artifacts**:
-- **STAC**: item/collection metadata (spatiotemporal index):contentReference[oaicite:17]{index=17}
-- **DCAT**: dataset discovery entry (JSON-LD):contentReference[oaicite:18]{index=18}
-- **PROV**: lineage bundle (inputs → activities → agents → outputs):contentReference[oaicite:19]{index=19}:contentReference[oaicite:20]{index=20}
-
-KFM’s CI philosophy expects “processed data” to be paired with catalog + provenance, even in review workflows.:contentReference[oaicite:21]{index=21}
+### 5) Graph/network fixtures (edges, nodes)
+- Use small adjacency lists or edge tables.
+- Ensure stable node IDs and deterministic traversal order (especially for snapshot tests).
 
 ---
 
-## 🧾 Naming & Versioning Conventions
+## 🧾 Provenance (W3C PROV “mini”)
 
-### Suggested filenames
-- Processed: `<dataset_slug>.<ext>`  
-  Example: `census_1900_population.geojson`
-- PROV: `<dataset_slug>.prov.json` (or `.prov.jsonld`)  
-  The blueprint explicitly uses this naming pattern (example: `census_1900.prov.json`).:contentReference[oaicite:22]{index=22}
+KFM treats provenance as a first-class artifact (lineage docs live alongside data).  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+For each fixture package, include `provenance/<fixture>.prov.json` containing:
 
-### Dataset IDs (recommended)
-Use **stable IDs** in fixture datasets so snapshots don’t churn:
-- Prefer deterministic IDs (hash of stable fields, or fixed UUIDs checked into fixtures)
-- Avoid timestamp-based IDs unless that’s exactly what you’re testing
+- **Inputs**: file paths under `raw/`
+- **Process**: script/module name + version (include git commit hash if possible)
+- **Run context**: date/time, parameters, seed
+- **Outputs**: file paths under `processed/` + `goldens/` when applicable
 
----
-
-## 🧪 How Tests Should Use These Fixtures
-
-### 1) Pipeline tests (ETL correctness)
-Typical assertions:
-- Running the pipeline on `raw/` produces byte-stable outputs in `processed/`:contentReference[oaicite:23]{index=23}
-- `stac/`, `catalog/dcat/`, and `prov/` are generated/updated accordingly:contentReference[oaicite:24]{index=24}
-- Metadata + provenance validates against schemas/profiles (when schemas exist in-repo):contentReference[oaicite:25]{index=25}
-
-### 2) Graph tests (ontology/integrity)
-- Load a small fixture graph (or build it from `processed/ + catalogs`)
-- Run constraint checks to prevent ontology regressions:contentReference[oaicite:26]{index=26}
-
-### 3) API contract tests (behavior)
-- Boot API with mocked repositories or ephemeral DB seeded from `fixtures/*/db/`
-- Compare endpoint responses to golden JSON in `snapshots/api/`:contentReference[oaicite:27]{index=27}
+Example fields to capture are described directly in the blueprint (script + commit + run date + produced outputs).  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## ✅ “Add a Fixture Set” Checklist
+## 🪙 Golden files (regression snapshots)
 
-When introducing a new fixture set under `tests/data/fixtures/<name>/`:
+Use `goldens/` when you want to lock behavior:
 
-- [ ] `raw/` inputs are tiny and immutable  
-- [ ] `processed/` outputs are committed (golden)  
-- [ ] STAC + DCAT + PROV artifacts exist and cross-link correctly:contentReference[oaicite:28]{index=28}  
-- [ ] No PII or sensitive coordinates (run any repo scanners locally if available):contentReference[oaicite:29]{index=29}  
-- [ ] A fixture-level `README.md` explains:  
-  - What scenario is represented  
-  - What invariants the tests enforce  
-  - Any edge cases being targeted  
-- [ ] If a fixture file is large, move to LFS/external fetch pattern:contentReference[oaicite:30]{index=30}
+- API JSON responses (normalized)
+- Derived GeoJSON (normalized)
+- Search results (stable ranking rules)
+- SQL query outputs (ordered)
+
+**Golden rules**
+- Normalize before snapshotting (sort keys, stable ordering, rounded floats).
+- Store **one canonical** expected file per assertion when possible.
+- If a golden changes, the PR should explain **why** (bug fix vs. intentional behavior change).
 
 ---
 
-## 🔗 References (design sources)
+## ➕ Adding a new fixture (checklist)
 
-- KFM canonical staging + boundary artifacts: raw → work → processed; STAC/DCAT/PROV as required publication artifacts.:contentReference[oaicite:31]{index=31}
-- Canonical pipeline ordering (no stage-skipping).:contentReference[oaicite:32]{index=32}:contentReference[oaicite:33]{index=33}
-- CI expectation: processed data must have corresponding catalog + provenance entries.:contentReference[oaicite:34]{index=34}
-- PROV contents (entities, activities, agents) and purpose (traceability).:contentReference[oaicite:35]{index=35}
-- Contract tests + governance scans (PII/sensitive checks) as part of CI gates philosophy.:contentReference[oaicite:36]{index=36}:contentReference[oaicite:37]{index=37}
+1. Create folder: `tests/data/fixtures/<fixture_name>/`
+2. Add minimal input(s) in `raw/`
+3. Generate expected outputs into `processed/` using a script or a documented command
+4. Add `catalog/` metadata (STAC/DCAT/project schema)  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+5. Add `provenance/` lineage doc (include seed + commit where possible)  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+6. Add `LICENSE`/attribution if anything is derived from a 3rd-party source
+7. Wire the fixture into tests
+8. Ensure fixtures validate cleanly (GeoJSON validity, plausible coords), mirroring CI expectations  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
+---
+
+## 🧯 Common gotchas
+
+- **“It worked locally”**: avoid reading from `data/` or user home directories; always reference `tests/data/`.
+- **Floating point drift**: use tolerances; snapshot rounded values only.
+- **GeoJSON precision**: if comparisons fail, normalize coordinates (rounding) in the test harness.
+- **File permissions in containers**: if tests write outputs, write to `tests/data/tmp/` (gitignored).  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 📚 Project-aligned references (why we do it this way)
+
+- KFM repo structure + data/provenance as lineage docs  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- Canonical pipeline order (Raw → Processed → Catalog/Prov → …)  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- “No data without documentation” + metadata/provenance strictness  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- DVC for large artifacts + CI validating catalogs/sample outputs  [oai_citation:17‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)  
+
+### 📎 Library pointers loaded in this workspace
+(Handy when you’re aligning fixture design with broader research notes.)
+
+- Mobile Mapping  [oai_citation:18‡Mobile Mapping - project_muse.pdf](sediment://file_000000000d04722fac99f6dd4ff63d3e)  
+- Scalable Data Management for Future Hardware  [oai_citation:19‡Scalable Data Management for Future Hardware.pdf](sediment://file_000000007d74722fa87beabc663630f7)  
+- Data Spaces  [oai_citation:20‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)  
+- Generalized Topology Optimization for Structural Design  [oai_citation:21‡Generalized Topology Optimization for Structural Design.pdf](sediment://file_00000000f9a8722f9319f46a88852e01)  
+- Spectral Geometry of Graphs  [oai_citation:22‡Spectral Geometry of Graphs.pdf](sediment://file_00000000cedc71f5a7af8031244dcd32)  
+- Introduction to Digital Humanism  [oai_citation:23‡Introduction to Digital Humanism.pdf](sediment://file_0000000090a071f5afd5c78c4383e488)  
+- Visualization of Time-Oriented Data  [oai_citation:24‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)  
+- Cloud-Based Remote Sensing with Google Earth Engine  [oai_citation:25‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](sediment://file_00000000a58071f586f00793dee712d6)  
