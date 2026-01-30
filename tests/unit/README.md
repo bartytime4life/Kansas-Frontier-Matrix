@@ -40,19 +40,19 @@
 > This repo is organized as a monorepo; unit tests should mirror the subsystem structure.
 
 ```text
-tests/
-└── unit/
-    ├── README.md                 👈 you are here
-    ├── python/                   🐍 pytest-style unit tests (pipelines/graph/server)
-    │   ├── test_*.py
-    │   └── conftest.py           (optional shared fixtures)
-    ├── web/                      🌐 (optional) unit tests for UI utilities (Vitest/Jest)
-    │   └── *.test.ts(x)
-    ├── fixtures/                 🧩 tiny synthetic “golden” inputs/outputs
-    │   ├── json/
-    │   ├── geojson/
-    │   └── csv/
-    └── helpers/                  🧰 shared test helpers (builders, factories, fakes)
+📁 tests/
+└─ 📁 unit/                                   🧪 fast, deterministic unit tests
+   ├─ 📄 README.md                              👈 you are here
+   ├─ 📁 python/                                🐍 pytest-style unit tests (pipelines/graph/server)
+   │  ├─ 🧪 test_*.py                            ✅ unit tests (module-level)
+   │  └─ 🧩 conftest.py                          ◻️ optional: shared fixtures + hooks
+   ├─ 📁 web/                                   ◻️ optional: UI/unit tests (Vitest/Jest)
+   │  └─ 🧪 *.test.ts(x)                         🧪 unit tests for TS/TSX utilities/components
+   ├─ 📁 fixtures/                              🧩 tiny synthetic “golden” inputs/outputs
+   │  ├─ 📁 json/                               🧾 JSON fixtures
+   │  ├─ 📁 geojson/                            🌍 GeoJSON fixtures
+   │  └─ 📁 csv/                                📊 CSV fixtures
+   └─ 📁 helpers/                               🧰 shared test helpers (builders, factories, fakes)
 ```
 
 > 💡 If your backend code currently lives in `api/` (older layout) vs `src/server/` (v13+), keep tests aligned with the **actual** code location — but keep them in **one** canonical unit test home: `tests/unit/`.
