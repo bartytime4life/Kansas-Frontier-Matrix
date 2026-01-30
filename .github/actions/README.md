@@ -1,11 +1,3 @@
----
-title: ".github/actions"
-description: "Repo-local reusable GitHub Actions for Kansas Frontier Matrix"
-status: "active"
-owner: "Maintainers"
-last_updated: "2026-01-30"
----
-
 # 🧩 `.github/actions` — Local Reusable GitHub Actions
 
 ![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
