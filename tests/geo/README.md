@@ -1,226 +1,329 @@
-# 🌎 Geo Test Suite (`tests/geo/`)
+# 🌍 Geo Test Suite (`tests/geo`)
 
-![tests](https://img.shields.io/badge/tests-geo%20suite-brightgreen)
-![pytest](https://img.shields.io/badge/runner-pytest-blue)
-![spatial](https://img.shields.io/badge/focus-CRS%20%7C%20topology%20%7C%20PostGIS-orange)
+![pytest](https://img.shields.io/badge/tests-pytest-2b6cb0)
+![geo](https://img.shields.io/badge/domain-geo%2Fgis-22863a)
+![postgis](https://img.shields.io/badge/db-PostGIS-1f6feb)
+![crs](https://img.shields.io/badge/CRS-EPSG%3A4326%20%E2%86%94%20projected-f59e0b)
 
-> 🧭 **Intent:** Keep Kansas Frontier Matrix geospatial pipelines *correct, consistent, and explainable* — from CRS transforms to topology rules to metadata/provenance.
-
----
-
-## 📌 What lives here
-
-This folder is dedicated to **geospatial correctness tests** that protect:
-
-- 🗺️ **CRS & projection invariants** (EPSG rules, axis order, bounding sanity)
-- 🧩 **Geometry validity + topology rules** (no self-intersections, no overlaps where forbidden)
-- 🧪 **Spatial predicate correctness** (contains/within/intersects/distance semantics)
-- 🛰️ **Raster sanity checks** (CRS, nodata, alignment, resolution assumptions)
-- 🧾 **Metadata + provenance lints** (STAC-ish catalog completeness and consistency)
+> 🧭 **Purpose:** keep KFM’s geospatial output *correct, reproducible, and provenance-safe* — from raw ingest ➜ processing ➜ database ➜ API payloads ➜ UI-ready GeoJSON/tiles.
 
 ---
 
-## 🚀 Quickstart
+## 🧭 Quick Nav
 
-### Run all geo tests (local)
+- [🚀 Running the tests](#-running-the-tests)
+- [🗂️ Folder layout](#️-folder-layout)
+- [✅ What we test](#-what-we-test)
+- [🏷️ Markers](#️-markers)
+- [🧩 Fixtures & test data](#-fixtures--test-data)
+- [📐 CRS & projection guardrails](#-crs--projection-guardrails)
+- [🧱 Geometry invariants](#-geometry-invariants)
+- [🛰️ Raster & remote-sensing checks](#️-raster--remote-sensing-checks)
+- [🗄️ PostGIS integration checks](#️-postgis-integration-checks)
+- [🧾 Provenance & metadata checks](#-provenance--metadata-checks)
+- [➕ Adding a new geo test](#-adding-a-new-geo-test)
+- [🧰 Troubleshooting](#-troubleshooting)
+- [📚 Reference shelf](#-reference-shelf)
+
+---
+
+## 🚀 Running the tests
+
+### 🐳 Docker (recommended)
+
+```bash
+# from repo root
+docker-compose exec api pytest -q tests/geo
+```
+
+Common patterns:
+
+```bash
+# only fast/unit-ish checks
+docker-compose exec api pytest -q tests/geo -m "not integration and not slow"
+
+# just PostGIS integration
+docker-compose exec api pytest -q tests/geo -m postgis
+
+# run a single file
+docker-compose exec api pytest -q tests/geo/test_crs_transform.py
+```
+
+### 🧪 Local (if you have native deps)
+
 ```bash
 pytest -q tests/geo
 ```
 
-### Run a focused subset
-```bash
-pytest -q tests/geo -k crs
-pytest -q tests/geo -k topology
-pytest -q tests/geo -k postgis
-```
+> ⚠️ Local runs may require native libs (GDAL/PROJ/GEOS) and a reachable PostGIS if you run integration tests.
 
-### Run inside containers (if your stack uses Compose)
-```bash
-docker compose exec api pytest -q tests/geo
-```
+### 🛡️ Policy tests (repo-wide)
 
-> ✅ Tip: Keep `tests/geo` fast. Put heavy workloads behind explicit markers like `@pytest.mark.slow`.
+If your change touches **data**, **metadata**, or **provenance** rules, run the local policy gate:
+
+```bash
+conftest test .
+```
 
 ---
 
-## 🧱 Test layout
+## 🗂️ Folder layout
 
-Suggested structure (adapt to the repo as it evolves):
+> This is the *intended* structure. If the repo differs, update this README to match reality ✅
 
 ```text
-📁 tests/
-└─ 📁 geo/                                   🌍 geospatial correctness lane (CRS/topology/raster sanity)
-   ├─ 📄 README.md                              👈 you are here
-   ├─ 🧩 conftest.py                            🧰 geo fixtures (CRS helpers, sample AOIs)
-   ├─ 📁 unit/                                  🧪 pure Python tests (no DB/services)
-   │  ├─ 🧪 test_crs_rules.py                    🧭 CRS rules + reprojection invariants
-   │  ├─ 🧪 test_geojson_bounds.py               📍 bounds/extent sanity checks
-   │  ├─ 🧪 test_topology_rules.py               🔗 topology invariants (validity, overlaps, gaps)
-   │  └─ 🧪 test_raster_sanity.py                🖼️ raster sanity (nodata, stats, resolution)
-   ├─ 📁 integration/                            🔌 requires services (PostGIS, tile server, etc.)
-   │  ├─ 🧪 test_postgis_predicates.py           🐘 PostGIS predicate correctness (ST_Intersects, etc.)
-   │  ├─ 🧪 test_ingest_pipeline_spatial.py      🏗️ spatial ingest pipeline behaviors (clip/union/snap)
-   │  └─ 🧪 test_catalog_metadata_geo.py         🛰️ STAC/DCAT geo fields validation (bbox, geometry, CRS)
-   ├─ 📁 fixtures/                              📦 tiny inputs (GeoJSON / GeoTIFF / WKT)
-   │  ├─ 📄 ks_aoi.geojson                      🗺️ Kansas AOI fixture
-   │  ├─ 📄 counties_min.geojson                🧩 minimal counties fixture
-   │  └─ 🖼️ dem_tiny.tif                        🏔️ tiny DEM raster fixture
-   └─ 📁 golden/                                🏆 expected outputs (stable, reviewed “truth files”)
-      ├─ 📄 catalog_item_expected.json          🛰️ expected STAC item output
-      └─ 📄 provenance_expected.json            🧬 expected PROV bundle output
+tests/geo/
+├── 🧪 unit/                # pure-python geometry/CRS/time tests (fast)
+├── 🔌 integration/         # hits services (PostGIS, tile server, pipeline outputs)
+├── 🧰 fixtures/            # small, committed test datasets (GeoJSON, CSV, small rasters)
+├── 🧾 schemas/             # JSONSchema / checks for GeoJSON + metadata (optional)
+├── 📸 snapshots/           # golden outputs (GeoJSON/JSON) for regression tests
+├── 🧠 helpers/             # shared helpers (tolerances, validators, builders)
+├── 🧷 conftest.py           # pytest fixtures + shared config
+└── 📘 README.md            # you are here 🙂
 ```
 
 ---
 
-## ✅ Geo invariants we enforce
+## ✅ What we test
 
-### 1) 🧭 CRS & projection rules
+### ✅ In scope
 
-**Core idea:** spatial data must declare (or reliably imply) its CRS, and tests should catch “looks right but is wrong.”
+- 🧭 **CRS transforms** (e.g., EPSG:4326 ↔ projected CRS), axis order, round-trips
+- 🧱 **Geometry validity** (self-intersections, empties, rings, multiparts)
+- 🧲 **Spatial predicates** (within/contains/intersects) + edge cases (touching boundaries)
+- 📦 **GeoJSON outputs** (valid JSON, correct coordinate order, stable properties)
+- 🗄️ **PostGIS spatial SQL** (SRID correctness, `ST_Transform`, export to GeoJSON, spatial indexes)
+- 🛰️ **Raster checks** (pixel scale, projection consistency, nodata handling) *if raster is part of the pipeline*
+- ⏳ **Spatiotemporal sanity** (time ranges, granularity, “interval vs instant” semantics) where geo features include time
 
-Checklist:
-- ✅ Default lon/lat datasets behave like **WGS84 / EPSG:4326**
-- ✅ Lon/lat coordinates remain within valid world bounds
-- ✅ Reprojection steps are explicit and repeatable (no silent CRS guessing)
-- ✅ If using web-map tiles, data aligns with **EPSG:3857** expectations
-- ✅ If using local/state projections (SPCS / Kansas-specific), distance/area calculations must be performed in an appropriate projected CRS
+### 🚫 Out of scope (usually)
 
-Recommended assertions:
-- `feature_collection_has_crs_or_assumed_default()`
-- `all_lonlat_within_bounds()`
-- `reproject_roundtrip_is_stable()` (within tolerance)
-- `axis_order_is_correct()` (especially when swapping between libraries)
-
----
-
-### 2) 🧩 Geometry validity & topology
-
-**Core idea:** invalid geometry poisons everything downstream (joins, overlays, stats, rendering).
-
-We typically enforce:
-- ✅ geometries are valid (or a consistent “make valid” strategy is applied)
-- ✅ polygons don’t self-intersect
-- ✅ polygon overlap rules (dataset-dependent):
-  - administrative boundaries: overlaps usually **not allowed**
-  - time-sliced layers: overlaps might be allowed **within a time window**, but must be explicit
-- ✅ networks (roads/rails/rivers): node/edge connectivity assumptions remain true after transforms
-
-Suggested test names:
-- `test_geom_is_valid()`
-- `test_no_polygon_overlaps()` (or `test_overlaps_only_when_allowed()`)
-- `test_network_snapping_tolerance()`
+- 🧑‍🎨 Cartographic styling correctness (that belongs in UI/design review unless you snapshot-render maps)
+- 🧪 E2E UI map interaction (prefer `tests/ui` / Playwright / Cypress if present)
+- 🌐 Third-party service uptime (mock unless we explicitly do smoke tests)
 
 ---
 
-### 3) 📐 Spatial predicates behave as expected
+## 🏷️ Markers
 
-When the system relies on spatial predicates (Python or PostGIS), we lock in semantics:
+Use markers to keep CI fast and deterministic:
 
-Common expectations:
-- `within(A, B)` implies `intersects(A, B)`
-- `distance(A, B) == 0` for overlapping/intersecting geometries (depending on geometry types)
-- `dwithin(A, B, r)` matches the chosen distance units + CRS
+| Marker | Meaning | Typical deps |
+|---|---|---|
+| `geo` | “this is a geo test” umbrella marker | none |
+| `crs` | CRS/projection behavior | pyproj/PROJ |
+| `geometry` | Shapely/GEOS vector operations | shapely/GEOS |
+| `postgis` | Requires PostGIS + seeded data | PostgreSQL/PostGIS |
+| `raster` | Raster validation | GDAL/rasterio |
+| `slow` | Expensive tests (big fixtures, many geometries) | varies |
+| `integration` | Hits real services/containers | docker stack |
 
-Suggested tests:
-- `test_within_intersects_consistency()`
-- `test_dwithin_matches_expected_units()`
-- `test_intersects_is_symmetric()`
+Example:
 
----
+```python
+import pytest
 
-### 4) 🛰️ Raster sanity checks
-
-For small, test-friendly rasters:
-- ✅ CRS is present and matches expectations
-- ✅ transform + resolution are stable
-- ✅ nodata is defined (or an explicit default is used)
-- ✅ (optional) alignment checks when clipping/masking (pixel edges vs. vector boundaries)
-
-Suggested tests:
-- `test_raster_has_crs_and_transform()`
-- `test_raster_clip_is_deterministic()`
-
----
-
-### 5) 🧾 Metadata & provenance lints
-
-Geospatial outputs are only useful if we can **find, interpret, and trust** them later.
-
-We lint for:
-- ✅ catalog entry exists for each processed dataset
-- ✅ metadata includes spatial/temporal extent
-- ✅ projection/CRS is captured
-- ✅ provenance log exists and references inputs + transforms
-- ✅ license/source attribution isn’t missing for new data
-
-Suggested tests:
-- `test_catalog_item_exists_for_processed_dataset()`
-- `test_catalog_extent_matches_data_bounds()`
-- `test_provenance_references_inputs_and_steps()`
-
----
-
-## 🧪 Writing a new geo test
-
-### 🧰 Choose the right level
-
-| Level | Folder | Fast? | Needs DB? | Use when… |
-|---|---|---:|---:|---|
-| Unit | `unit/` | ✅ | ❌ | CRS rules, geometry validity, file parsing |
-| Integration | `integration/` | ⚠️ | ✅/❌ | PostGIS predicates, ingest pipelines, catalog/provenance |
-| Slow / E2E | `integration/` + marker | ❌ | ✅ | tile rendering, big joins, performance guardrails |
-
-### 🧷 Keep fixtures tiny
-
-Rules of thumb:
-- Prefer 5–200 features (not 50k)
-- Prefer rasters under ~1–5 MB
-- Use “Kansas AOI” cutouts for anything spatially heavy
-- Golden outputs must be stable and reviewed in PR
-
----
-
-## 🧠 Debug toolbox
-
-Helpful one-liners:
-
-```bash
-# show full assertion diffs
-pytest -q tests/geo -vv
-
-# stop on first failure
-pytest -q tests/geo -x
-
-# run only marked tests
-pytest -q tests/geo -m postgis
-pytest -q tests/geo -m slow
+pytestmark = [pytest.mark.geo, pytest.mark.crs]
 ```
 
-Common failure causes:
-- CRS mismatch between fixtures and code defaults
-- silent reprojection (or missing reprojection)
-- floating precision + topology edge cases
-- using geographic CRS for distance/area math
+---
+
+## 🧩 Fixtures & test data
+
+### 🎒 Rules for fixtures
+
+- 📦 Keep fixtures **small** and **committed** (tiny GeoJSON, minimal rasters)
+- 🧭 Prefer **EPSG:4326** for interchange fixtures unless the test is explicitly projection-focused
+- 🧱 Include **nasty geometries**:
+  - self-intersecting polygon
+  - hole touching shell
+  - multipolygon with tiny slivers
+  - “touching-but-not-overlapping” boundaries
+- 🧾 Every fixture should be **explained**:
+  - add a short `README.md` inside `fixtures/` *or*
+  - comment in the test explaining what the fixture is proving
+
+### 📦 Suggested fixture set (starter kit)
+
+- `fixtures/kansas_bbox.geojson` (simple polygon / bbox baseline)
+- `fixtures/sample_points_lonlat.geojson` (known lon/lat points)
+- `fixtures/invalid_self_intersection.geojson` (expected invalid)
+- `fixtures/timed_features.geojson` (features with `start`, `end`, or `year`)
 
 ---
 
-## 🔒 CI expectations
+## 📐 CRS & projection guardrails
 
-- ✅ Geo tests should be deterministic
-- ✅ Failures should be explainable (clear assertion messages)
-- ✅ Missing metadata/provenance should fail fast
-- ✅ If a PR adds/changes spatial outputs, it should also update relevant golden files
+### 🧭 Coordinate order (critical)
+
+- In **EPSG:4326**, coordinates are **(lon, lat)** for GeoJSON.
+- When using `pyproj`, explicitly force axis order:
+
+```python
+from pyproj import CRS, Transformer
+
+src = CRS.from_epsg(4326)
+dst = CRS.from_epsg(3857)
+tf = Transformer.from_crs(src, dst, always_xy=True)  # ✅ always_xy avoids axis surprises
+
+x, y = tf.transform(-95.689, 39.055)  # lon, lat (example point)
+```
+
+### 🎯 Tolerances (floating point reality)
+
+Geospatial math is float-heavy. Prefer tolerant comparisons:
+
+- Degrees: `1e-8` (roughly sub-millimeter at equator, but varies)
+- Meters: `1e-3` to `1e-2` depending on pipeline precision
+- Raster pixels: allow ±1 pixel where resampling occurs
+
+> ✅ Tip: define tolerances once in `helpers/tolerance.py` and import everywhere.
 
 ---
 
-## 📚 Project reading list (handy references)
+## 🧱 Geometry invariants
 
-- 🧱 *Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint*
-- 🗺️ *Making Maps: A Visual Guide to Map Design for GIS*
-- 🧭 *Map Reading & Land Navigation*
-- 🧩 *Archaeological 3D GIS* (topology + spatial relationships)
-- 🛰️ *Cloud-Based Remote Sensing with Google Earth Engine* (raster workflows + scale pitfalls)
-- 🧰 *Python Geospatial Analysis Cookbook* (EPSG + PostGIS examples)
+These are the “must never break” rules we like to enforce:
+
+- ✅ no empty geometries in published outputs
+- ✅ polygons have closed rings
+- ✅ no invalid geometries unless explicitly marked as “expected invalid”
+- ✅ consistent SRIDs through the pipeline
+- ✅ stable feature IDs (or stable hashing strategy)
+- ✅ bounding boxes behave (minx ≤ maxx, miny ≤ maxy)
+- ✅ `within/contains` semantics are correct for boundary-touching cases
+
+Example invariant test idea:
+
+```python
+def test_output_geojson_is_valid(feature_collection):
+    assert feature_collection["type"] == "FeatureCollection"
+    assert all(f["type"] == "Feature" for f in feature_collection["features"])
+    assert all("geometry" in f for f in feature_collection["features"])
+```
 
 ---
 
+## 🛰️ Raster & remote-sensing checks
+
+If KFM produces/consumes rasters (COGs, hillshades, NDVI, DEMs), raster tests should verify:
+
+- 🧭 projection is what we claim (CRS metadata present)
+- 📏 pixel scale/resolution is stable (or within expected bounds)
+- 🧩 nodata is preserved
+- 🔁 reprojection/resampling choices are consistent
+- 🧮 band math outputs are within expected numeric ranges
+
+> 🎛️ If the pipeline uses multiple CRSs, raster tests should assert **explicit** transforms, not “whatever GDAL defaults to”.
+
+---
+
+## 🗄️ PostGIS integration checks
+
+When PostGIS is involved, integration tests should cover:
+
+- 🧭 SRIDs are set and correct (`ST_SRID(geom)`)
+- 🔁 transforms are explicit (`ST_Transform`)
+- 🧱 spatial predicates match expected truth tables
+- 🧾 GeoJSON exports are correct (`ST_AsGeoJSON`)
+- ⚡ indexes exist for hot paths (`GIST` on geometry columns)
+
+Example “export contract” query (illustrative):
+
+```sql
+SELECT
+  id,
+  ST_AsGeoJSON(ST_Transform(geom, 4326))::json AS geometry
+FROM features
+WHERE ST_Within(geom, ST_Transform(ST_GeomFromText('POLYGON(...)', 4326), ST_SRID(geom)))
+LIMIT 10;
+```
+
+---
+
+## 🧾 Provenance & metadata checks
+
+KFM’s geo stack is **provenance-first** 🧬 — tests should enforce “no mystery layers”:
+
+✅ Examples of checks that belong here:
+
+- `data/processed/*` assets have:
+  - 📇 an entry in `data/catalog/…`
+  - 🧾 a provenance record in `data/provenance/…`
+- GeoJSON in `data/processed/` is valid JSON and has expected schema/property keys
+- Published layers include:
+  - source citation / attribution
+  - license terms
+  - CRS information (or explicit statement that output is EPSG:4326)
+
+> 🧠 Rule of thumb: if a layer can show up in the UI, it must be explainable end-to-end.
+
+---
+
+## ➕ Adding a new geo test
+
+1. 🧭 Decide the category:
+   - **unit** if it’s pure geometry/CRS logic  
+   - **integration** if it needs PostGIS, pipeline outputs, or container services
+2. 🧩 Add or reuse a fixture:
+   - keep it tiny
+   - document why it exists
+3. 🧪 Write the test:
+   - use markers (`@pytest.mark.geo`, `@pytest.mark.crs`, etc.)
+   - use shared tolerances
+4. 📸 If regression-prone, add a snapshot:
+   - store in `snapshots/`
+   - keep stable ordering of features/properties
+5. 🛡️ If it touches data policy, run:
+   - `conftest test .`
+
+---
+
+## 🧰 Troubleshooting
+
+<details>
+<summary>🧭 “My CRS transform is flipped (lat/lon swapped)”</summary>
+
+- Ensure `always_xy=True` in `pyproj.Transformer`
+- Ensure GeoJSON uses `(lon, lat)` order
+- Confirm tests aren’t mixing EPSG axis-order conventions with GeoJSON conventions
+
+</details>
+
+<details>
+<summary>🧱 “Geometry validity differs on CI vs local”</summary>
+
+- Shapely/GEOS versions can change robustness
+- Normalize geometries if needed (e.g., snap to grid, buffer(0) cautiously)
+- Prefer tolerance + invariant checks over exact coordinate equality
+
+</details>
+
+<details>
+<summary>🗄️ “PostGIS tests failing: connection / SRID / permission”</summary>
+
+- Confirm docker stack is up and PostGIS is ready
+- Confirm the test DB is seeded/migrated
+- Print SRIDs in failing assertions (`ST_SRID`) to detect silent mismatches
+
+</details>
+
+---
+
+## 📚 Reference shelf
+
+These project docs/books strongly influence how geo tests are written 🧠📖:
+
+| 📄 Doc | Why it matters for `tests/geo` |
+|---|---|
+| **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint** | provenance-first architecture, pipeline order, CI expectations |
+| **Making Maps: A Visual Guide to Map Design for GIS** | metadata expectations, projection basics, map/scale discipline |
+| **Cloud-Based Remote Sensing with Google Earth Engine (Fundamentals & Applications)** | raster projection/pixel-scale reasoning for remote-sensing pipelines |
+| **Python Geospatial Analysis Cookbook** | practical CRS transforms, GeoJSON generation, PostGIS patterns |
+| **Visualization of Time-Oriented Data** | spatiotemporal semantics (instants vs intervals), data quality pitfalls |
+| **Kansas-Frontier-Matrix: Open-Source Geospatial Historical Mapping Hub Design** | stack assumptions (GDAL/Rasterio/GeoPandas/PyProj) + pipeline mindset |
+
+---
+
+🧭 **Mantra:** *No broken geometries, no silent CRS drift, no orphaned layers.* ✅
