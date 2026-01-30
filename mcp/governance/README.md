@@ -24,16 +24,16 @@ KFM is explicitly designed as a **pipeline → catalogs → graph → APIs → U
 
 ```mermaid
 flowchart LR
-  A[ETL / Pipelines] --> B[STAC / DCAT / PROV Catalogs]
-  B --> C[Neo4j Graph]
-  C --> D[Governed APIs]
-  D --> E[UI (Map + Narrative)]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode (AI)]
+  A["ETL / Pipelines"] --> B["STAC / DCAT / PROV Catalogs"]
+  B --> C["Neo4j Graph"]
+  C --> D["Governed APIs"]
+  D --> E["UI (Map + Narrative)"]
+  E --> F["Story Nodes"]
+  F --> G["Focus Mode (AI)"]
 
-  subgraph MCP["🧩 MCP (Methods & Experiments)"]
-    R[Runs] --> EA[Evidence Artifacts]
-    X[Experiments] --> EA
+  subgraph "🧩 MCP (Methods & Experiments)"
+    R["Runs"] --> EA["Evidence Artifacts"]
+    X["Experiments"] --> EA
     EA --> B
   end
 ```
