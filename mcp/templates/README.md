@@ -1,252 +1,216 @@
-# 🧪 MCP Templates
+---
+title: "MCP Templates 🧰"
+path: "mcp/templates/README.md"
+version: "v1.0.0"
+last_updated: "2026-01-30"
+status: "active"
+doc_kind: "README"
+license: "SEE_REPO_LICENSE"
+markdown_protocol_version: "v13"
+pipeline_contract_version: "v13"
+fair_category: "FAIR+CARE"
+care_label: "Public"
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US"
+doc_uuid: "urn:kfm:doc:mcp:templates:readme:v1.0.0"
+---
 
-![MCP](https://img.shields.io/badge/MCP-Methods%20%26%20Computational%20Experiments-blue)
-![Reproducible](https://img.shields.io/badge/Reproducible-Yes-success)
-![Provenance--First](https://img.shields.io/badge/Provenance--First-Yes-success)
-![FAIR%20%2B%20CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-By%20Design-informational)
+# MCP Templates 🧰
 
-> **Purpose:** This folder contains the standardized, copy‑paste templates used by the project’s **MCP layer** (`mcp/`) to keep experiments **transparent**, **repeatable**, and **auditable**.  
-> Think: *lab notebook meets engineering runbook* 🧾⚙️
+![KFM](https://img.shields.io/badge/KFM-v13-blue) ![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-purple) ![Provenance](https://img.shields.io/badge/provenance-first-informational) ![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-required-orange) ![Docs](https://img.shields.io/badge/Docs-YAML%20front--matter-brightgreen)
+
+**Goal:** make experiments, runs, and reusable workflows *copy/paste reproducible* ✅  
+**How:** use templates that force provenance, evidence, governance, and deterministic steps into every artifact.
+
+<!-- KFM provenance-first + traceability premise:  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) -->
 
 ---
 
-## 🧭 Jump To
+## 🔎 Quick links
 
-- [What belongs in `mcp/templates/`?](#-what-belongs-in-mcptemplates)
-- [Quickstart](#-quickstart)
-- [Template Catalog](#-template-catalog)
-- [Conventions](#-conventions)
-- [Evidence & Provenance Hooks](#-evidence--provenance-hooks)
-- [Quality Gates](#-quality-gates)
-- [Add / Update a Template](#-add--update-a-template)
-- [FAQ](#-faq)
-
----
-
-## 📦 What belongs in `mcp/templates/`?
-
-`mcp/templates/` is where we keep **reusable scaffolds** for MCP artifacts, including:
-
-- 🧪 **Experiment reports** (design → execution → results → interpretation)
-- 🏃 **Run logs** (a single execution record: params, inputs, outputs, environment)
-- 🧠 **Model cards** (capabilities, limits, intended use, risks)
-- 📄 **SOPs / runbooks** (repeatable operational procedures)
-- ✅ **Checklists** (reproducibility, review, governance, release readiness)
-
-If it’s something you **copy**, fill out, and commit to preserve **how** and **why** work was done — it’s a template ✅
+- [What belongs here](#-what-belongs-here)
+- [How this fits the KFM pipeline](#-how-this-fits-the-kfm-pipeline)
+- [Template index](#-template-index)
+- [Quick start](#-quick-start)
+- [Naming conventions](#-naming-conventions)
+- [Minimum quality gates](#-minimum-quality-gates)
+- [Provenance linking rules](#-provenance-linking-rules)
+- [Maintaining templates](#-maintaining-templates)
+- [References](#-references)
 
 ---
 
-## 🚀 Quickstart
+## 📦 What belongs here
 
-1. **Pick the right template** from this folder.
-2. **Copy** it into its destination folder (examples below).
-3. **Rename** it using the naming rules in [Conventions](#-conventions).
-4. **Fill in every required field** (look for ✅ Required markers).
-5. **Link everything**: data inputs, code commit, config files, artifacts, and any provenance/metadata entries.
-6. **Commit** with a message that explains the “why”, not just the “what”.
+This folder holds **governed templates** for the *MCP* (Master Coder Protocol) artifacts that live under `mcp/` (and that are expected to be reviewed like code).
 
-> Tip: If you’re doing this more than twice, you probably need a better template or a checklist update 🛠️
+Typical MCP artifacts include:
 
----
+- 🧪 **Experiment reports** (hypothesis → method → results → interpretation)
+- 🧾 **Run logs** (inputs/params/env → outputs → validation)
+- 📋 **SOPs** (repeatable, reviewable procedures)
+- 🧠 **Model cards** and 📄 **dataset datasheets** (when/if enabled in your repo layout)
 
-## 🗂️ Template Catalog
+<!-- Repo structure includes mcp/ + runs/ + experiments/:  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) -->
+<!-- MCP-compatible artifacts called out (experiment reports + SOPs + model cards/datasheets):  -->
 
-> File names below are the **recommended standard** for this repo.  
-> If a template doesn’t exist yet, create it here with the same naming pattern.
-
-| Template | Use it when… | Typical destination after copy |
-|---|---|---|
-| `TEMPLATE__EXPERIMENT_REPORT.md` 🧪 | You’re testing a method, model, extraction approach, or evaluation | `mcp/experiments/EXP-*/` |
-| `TEMPLATE__RUN_LOG.md` 🏃 | You ran a pipeline/script/notebook and need an execution record | `mcp/runs/` (or under an experiment folder) |
-| `TEMPLATE__MODEL_CARD.md` 🧠 | A model is trained/selected and might be reused, shipped, or cited | `mcp/model_cards/` |
-| `TEMPLATE__DATASET_DATASHEET.md` 🗃️ | You created/ingested a dataset (or derived artifact) worth reusing | `data/**/` + `docs/` reference |
-| `TEMPLATE__SOP.md` 📄 | There’s an operational procedure others must repeat exactly | `docs/runbooks/` or `mcp/sops/` |
-| `TEMPLATE__REVIEW_CHECKLIST.md` ✅ | You want a consistent review gate before merge/release | `docs/checklists/` |
+> ⚠️ **Fail-closed mindset:** if a required check/policy is missing, KFM blocks the merge rather than “letting it slide.”  
+> Treat templates as **contracts**, not suggestions.  
+<!-- Fail-closed governance:  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) -->
 
 ---
 
-## 🧱 Conventions
+## 🧭 How this fits the KFM pipeline
 
-### 🏷️ Naming & IDs
+KFM’s canonical flow is **Raw → Processed → Catalog/Prov → Database → API → UI**. MCP artifacts exist to make every transformation and claim *auditable and repeatable*.
 
-Use consistent IDs so we can trace history quickly:
-
-- **Experiments:** `EXP-YYYYMMDD-<short-slug>/`
-  - Example: `EXP-20260129-ner-place-extraction/`
-- **Experiment report file:** `REPORT__EXP-YYYYMMDD-<slug>.md`
-- **Run logs:** `RUN-YYYYMMDD-HHMM__<short-slug>.md`
-- **Model cards:** `MODEL_CARD__<model-name>__vX.Y.md`
-- **SOPs:** `SOP__<domain>__<task>__vX.Y.md`
-
-> The goal is *human scanning + machine parsing* 👀🤖
-
----
-
-### 🧾 Recommended Front Matter (YAML)
-
-Templates should start with YAML front matter to enable indexing and automation:
-
-```yaml
----
-id: EXP-YYYYMMDD-<slug>              # ✅ Required (or RUN-/MODEL_CARD-/SOP-)
-title: "<human title>"               # ✅ Required
-status: draft | in_review | approved
-owners:
-  - "<name-or-handle>"
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-
-tags: ["mcp", "experiment", "etl", "ocr", "nlp"]
-
-inputs:
-  datasets:
-    - id: "<dataset-id>"
-      path: "data/raw/<...>"
-      version: "<git-tag-or-hash>"
-      checksum: "<optional>"
-  code:
-    repo_path: "<relative path>"
-    commit: "<git sha>"
-  config:
-    - "configs/<...>.yml"
-
-outputs:
-  artifacts:
-    - "data/processed/<...>"
-    - "mcp/runs/<...>"
-  metadata:
-    - "data/catalog/<...>.json"
-    - "data/provenance/<...>.json"
-
-governance:
-  access: public | restricted
-  sensitivity: none | pii | cultural_sensitive | embargoed
----
-```
-
----
-
-## 🧬 Evidence & Provenance Hooks
-
-### 🔁 “Pipeline Order” (don’t bypass)
-
-KFM work is intentionally structured so data and results are **vetted** before they become user-facing.  
-When your experiment creates a new artifact (dataset, layer, metric, narrative, model), don’t “ship” it straight to the UI.
+<!-- Canonical pipeline order:  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) -->
+<!-- Deterministic, idempotent, fully-logged ETL + evidence-first + contract-first:  -->
 
 ```mermaid
 flowchart LR
-  A[Raw] --> B[Processed]
-  B --> C[Catalog / Provenance]
-  C --> D[Database]
-  D --> E[API]
-  E --> F[UI]
-  subgraph MCP["MCP: Methods & Computational Experiments"]
-    G[Runs / Experiments / Model Cards]
-  end
-  B --> G
-  G --> C
-```
-
-### 🧾 What to link in every MCP artifact
-
-At minimum, your filled template should link to:
-
-- 🧷 **Inputs:** dataset IDs/paths, source references, and versions
-- 🧷 **Code:** commit hash + entrypoint command (or notebook path)
-- 🧷 **Config:** parameter files, seeds, feature flags
-- 🧷 **Outputs:** artifacts + where they live in the repo
-- 🧷 **Provenance:** which provenance/metadata records were created/updated
-- 🧷 **Interpretation:** what changed, what you learned, what to do next
-
-> If someone can’t rerun it from your template + repo state, it’s not “done” yet ✅
-
----
-
-## ✅ Quality Gates
-
-Before merging MCP outputs, use these gates:
-
-### 🔬 Reproducibility Gate
-- [ ] Environment is specified (e.g., container, `requirements.txt`, versions)
-- [ ] Inputs are versioned and traceable (hash/ID)
-- [ ] Randomness is controlled (seeds documented if relevant)
-- [ ] Command(s) to reproduce are written and tested
-
-### 👥 Review Gate
-- [ ] Another contributor can follow your report without asking you questions
-- [ ] Claims are backed by linked artifacts (tables, charts, logs, metrics)
-- [ ] Deviations from plan are documented (what changed and why)
-
-### 🛡️ Governance Gate
-- [ ] License/rights for inputs are documented
-- [ ] Sensitive content is flagged and access level is set
-- [ ] Any restricted data is not exposed in public artifacts
-
----
-
-## 🧩 Add / Update a Template
-
-When you notice repetition, paper cuts, or missing fields:
-
-1. Add or revise the template in `mcp/templates/`
-2. Include a short changelog section at the bottom of the template:
-   - What changed
-   - Why it changed
-   - What old docs may need to update
-3. If automation relies on parsing, keep YAML keys stable
-
-> Templates are *interfaces*. Breaking changes should be treated like API changes 🧯
-
----
-
-## ❓ FAQ
-
-### “Should this be in `docs/templates/` instead?”
-- Use **`mcp/templates/`** for experiment/run/model/process documentation.
-- Use **`docs/templates/`** for narrative docs, architecture specs, story node patterns, or governance documentation.
-
-### “Do I need both an Experiment Report and a Run Log?”
-Usually:
-- ✅ **Experiment Report** = *the narrative + interpretation*
-- ✅ **Run Log** = *the execution record(s)*  
-Large experiments often have **1 report** and **many run logs**.
-
-### “What if the experiment fails?”
-Perfect — document it. Failure logs prevent repeated mistakes and preserve negative results 🧠
-
----
-
-## 🧰 Related Paths (mental map)
-
-```text
-📦 repo/
-├─ 📁 mcp/                                   🧠 Master Coder Protocol (templates + runs + experiments)
-│  ├─ 📁 templates/                           👈 you are here (reusable MCP scaffolds)
-│  ├─ 📁 experiments/                         🧪 experiment reports + protocols + artifacts
-│  ├─ 📁 runs/                                🏃 run logs + receipts (pipelines, evals, releases)
-│  ├─ 📁 model_cards/                         🧾 model cards (safety, evals, constraints, provenance)
-│  └─ 📁 notebooks/                           📓 exploratory notebooks (keep minimal + reproducible)
-├─ 📁 data/                                  🗃️ governed datasets + catalogs
-│  ├─ 📁 raw/                                 🧾 immutable inputs (evidence)
-│  ├─ 📁 processed/                            ✅ curated outputs (downstream-ready)
-│  ├─ 📁 catalog/                              🗂️ discovery metadata (STAC/DCAT)
-│  └─ 📁 provenance/                           🧬 lineage receipts (PROV)
-└─ 📁 docs/                                  📚 human documentation (guides + governance)
-   ├─ 📁 templates/                            🧩 doc scaffolds (dataset cards, runbooks, ADRs)
-   ├─ 📁 runbooks/                             📘 step-by-step operational docs
-   └─ 📁 checklists/                           ✅ “done means done” checklists (PR, data, security, release)
+  A[📁 data/raw<br/>immutable sources] --> B[🧰 pipelines/ ETL<br/>deterministic + logged]
+  B --> C[📁 data/processed<br/>standardized outputs]
+  C --> D[🗂️ data/catalog<br/>STAC / DCAT]
+  C --> E[🧾 data/provenance<br/>W3C PROV]
+  D --> F[(🗄️ Databases)]
+  E --> F
+  F --> G[🔌 API layer]
+  G --> H[🖥️ UI / Clients]
+  H --> I[📚 Story Nodes + 🤖 Focus Mode]
 ```
 
 ---
 
-## 🏁 Final note
+## 🗂️ Template index
 
-MCP templates are here to ensure the project stays:
+> This README documents the **intended template set** for `mcp/templates/`.  
+> If your repo currently uses different filenames, keep the concepts and update the table to match actual files.
 
-- **Evidence-backed** 📌
-- **Transparent & auditable** 🔍
-- **Collaborative & teachable** 🤝
-- **Ethically grounded** 🛡️
+| Template type 🧩 | Use when ✅ | Copy to 📌 | Must include 🔒 |
+|---|---|---|---|
+| 🧪 Experiment Report | You’re testing a hypothesis, evaluating a model, validating a dataset transform | `mcp/experiments/EXP-####__slug.md` | Objective, method, variables, results, interpretation, reproducibility steps, provenance links |
+| 🧾 Run Log | You executed a pipeline/run and need a forensic record | `mcp/runs/RUN-YYYYMMDD-####__slug.md` | Inputs (IDs + hashes), params, env, outputs, validation checks, links to STAC/DCAT/PROV |
+| 📋 SOP | A workflow repeats (ingestion, QC, metadata authoring, release checks) | `mcp/sops/SOP-####__slug.md` *(if enabled)* | Purpose, prerequisites, procedure, expected outcome, troubleshooting, governance gates |
+| 🧠 Model Card | Any model used in KFM needs transparent intent + limits | `mcp/model_cards/MODEL-####__slug.md` *(if enabled)* | Training data references, evaluation, limitations, risks, intended use |
+| 📄 Dataset Datasheet | A dataset needs “nutrition labels” beyond STAC/DCAT | `mcp/datasheets/DATASET-####__slug.md` *(if enabled)* | License + source, collection context, transformations, known issues, intended use |
 
-If a template makes your work *slower* in the long run, improve the template — don’t skip the rigor.
+<!-- Experiment report template sections (Goals/Data Used/Method/Results/Interpretation) + model cards in docs:  [oai_citation:4‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) -->
+<!-- SOP template sections Purpose/Prereqs/Procedure/Expected Outcome/Troubleshooting:  -->
+
+---
+
+## 🚀 Quick start
+
+### 1) Pick the right template
+- If it’s **a claim**, use an **Experiment Report**
+- If it’s **an execution**, use a **Run Log**
+- If it’s **repeatable operations**, use an **SOP**
+
+### 2) Copy → rename → fill placeholders
+Example (adjust filenames to your actual template names):
+```bash
+cp mcp/templates/TEMPLATE__MCP_EXPERIMENT_REPORT.md \
+   mcp/experiments/EXP-0007__place_extraction_eval.md
+```
+
+### 3) Link evidence (don’t just describe it)
+Every MCP artifact must point to:
+- 📦 `data/raw` inputs (source snapshot)
+- 🧪 `data/processed` outputs (derived artifacts)
+- 🗂️ `data/catalog` (STAC/DCAT)
+- 🧾 `data/provenance` (PROV lineage)
+- 🔁 the exact `commit_sha` / run ID / environment
+
+---
+
+## 🏷️ Naming conventions
+
+Use **stable IDs** so you can reference work across issues, PRs, docs, and the UI:
+
+- `EXP-####__short_slug.md` → experiment reports
+- `RUN-YYYYMMDD-####__short_slug.md` → run logs
+- `SOP-####__short_slug.md` → standard operating procedures *(if enabled)*
+- `MODEL-####__short_slug.md` → model cards *(if enabled)*
+- `DATASET-####__short_slug.md` → datasheets *(if enabled)*
+
+**Slug rules:** lowercase, hyphen/underscore ok, no spaces, keep it short.
+
+---
+
+## ✅ Minimum quality gates
+
+KFM treats documentation quality as a build artifact (like code). Your MCP doc should clear these gates:
+
+### 📌 Required (author checklist)
+- [ ] YAML front-matter present and filled (no deleted required fields; use `TBD`/`n/a` instead)
+- [ ] Clear scope (what this does *and does not* claim)
+- [ ] Repro steps include **commands + parameters + environment**
+- [ ] Inputs and outputs are referenced by **IDs and/or hashes**
+- [ ] All factual claims are cited to data/provenance (or clearly marked as hypothesis)
+- [ ] Links are valid (internal + external)
+- [ ] Any sensitive content is correctly classified/labeled
+
+<!-- CI/DoD: front-matter valid, schema validation, link/reference validation, governance fields:  -->
+<!-- YAML front-matter + DoD checklist pattern:  [oai_citation:5‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz) -->
+
+### 🧪 Strongly recommended (reviewer-friendly)
+- [ ] Add a **“What changed vs last run”** section (even if “first run”)
+- [ ] Add a **“Failure modes & uncertainty”** section
+- [ ] Add **acceptance criteria** (what would falsify the hypothesis?)
+
+---
+
+## 🔗 Provenance linking rules
+
+If an artifact influences the graph, API, UI, or narrative layers, it must be traceable:
+
+### ✅ Minimum set of pointers
+- **Source snapshot**: where did raw data come from (and when)?
+- **Transform**: what code/steps produced the derived output?
+- **Catalog IDs**: STAC Item/Collection IDs and/or DCAT dataset IDs
+- **Lineage**: PROV activity/entity references
+- **Runtime identity**: `run_id`, `commit_sha`, and environment fingerprint (container digest or lockfile hash)
+
+> 🧭 **No shortcuts:** features that bypass metadata/provenance or skip pipeline stages are considered flawed unless proven otherwise.  
+<!-- Canonical “no shortcuts” rule:  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) -->
+
+---
+
+## 🤖 AI usage disclosure
+
+KFM can use AI to assist—but **humans remain accountable** for what gets merged.
+
+If AI contributed materially to a doc/template artifact, add a short disclosure block:
+
+- Tool/model used
+- What it generated (e.g., draft summary, metadata draft)
+- What a human verified/changed
+
+<!-- AI-in-the-loop with human review emphasis:  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) -->
+
+---
+
+## 🧩 Maintaining templates
+
+Templates are governed. When editing or adding a template:
+
+1. 🧷 Keep the **section order stable** (it’s part of the protocol)
+2. 🔢 Bump template version (in front-matter and/or header)
+3. 🧪 Ensure it still matches CI expectations (front-matter + headings + schema)
+4. 📝 Update this README’s **Template index** table
+5. 👀 Prefer PR review by someone who uses the template in practice
+
+---
+
+## 📚 References
+
+Project inputs used to define these MCP template expectations:
+
+- Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint (provenance-first, fail-closed, canonical pipeline order)  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- MASTER_GUIDE_v13.md.gdoc (v13 invariants: evidence-first, contract-first, deterministic ETL, CI gates)  [oai_citation:9‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)  
+- MARKDOWN_GUIDE_v13.md.gdoc (repo layout map including `mcp/`)  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
+- Kansas Frontier Matrix — Open-Source Geospatial Historical Mapping Hub Design and Technical Feature Set (MCP-compatible experiment/SOP/model-card patterns)  [oai_citation:11‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)  
+- Scientific Method / Research / Master Coder Protocol Documentation (protocol & experiment/SOP structuring)  [oai_citation:12‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
+- Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices (YAML front-matter + Definition of Done patterns)  [oai_citation:13‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)  
