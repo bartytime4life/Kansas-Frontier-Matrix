@@ -1,418 +1,132 @@
----
-title: "Kansas Frontier Matrix (KFM) — CHANGELOG"
-doc_type: "changelog"
-status: "living"
-version: "v1.0.0-draft+2"
-last_updated: "2026-01-26"
-governance:
-  fair_care: true
-  care: true
-  sovereignty: "TBD"
-notes:
-  - "Human-readable release notes; not a replacement for Git history."
-  - "Seeded from the KFM documentation bundle + reference library available in this workspace."
----
+# 📜 CHANGELOG
 
-# 🧾 CHANGELOG
+![Keep a Changelog](https://img.shields.io/badge/Keep%20a%20Changelog-1.1.0-informational)
+![SemVer](https://img.shields.io/badge/SemVer-2.0.0-blue)
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Repo](https://img.shields.io/badge/repo-Kansas%20Frontier%20Matrix%20(KFM)-black)
 
-[![Changelog](https://img.shields.io/badge/CHANGELOG-KFM-2ea44f?style=flat-square)](#-changelog)
-[![Keep a Changelog](https://img.shields.io/badge/keepachangelog-1.1-blue?style=flat-square)](https://keepachangelog.com/en/1.1.0/)
-[![SemVer](https://img.shields.io/badge/semver-2.0-orange?style=flat-square)](https://semver.org/)
-[![Docs as Code](https://img.shields.io/badge/docs-as%20code-6f42c1?style=flat-square)](#-updating-this-file)
-[![Governed Docs](https://img.shields.io/badge/governed-docs-111111?style=flat-square)](#-project-file-bundle-snapshot)
-
-> [!IMPORTANT]
-> **Scope note:** This changelog is seeded from the **project documentation bundle** (KFM platform + architecture + UI + AI docs, Master Guide v13 markdown standards, and the provided reference library).  
-> It is **not** a replacement for Git history. Treat Git commits/tags as the source of truth for code-level diffs.
+All notable changes to this repository will be documented in this file.  
+This format is based on **Keep a Changelog**, and the repository follows **Semantic Versioning** with major versions reflecting structural shifts (e.g., `v13`) and minor versions adding backwards-compatible enhancements. :contentReference[oaicite:0]{index=0}
 
 ---
 
-## 🧭 Quick links
+## ✨ Legend
 
-- [🕰️ Changelog](#️-changelog)
-- [🧩 Conventions](#-changelog-conventions)
-- [🗂️ Repo layout](#️-repo-layout)
-- [📚 Project file bundle snapshot](#-project-file-bundle-snapshot)
-- [✅ Updating this file](#-updating-this-file)
-- [🔗 References](#-references)
-
----
-
-## 🧩 Changelog conventions
-
-Use these headings inside each release entry:
-
-- **Added** ➕ (new capability, new doc/standard, new directory)
-- **Changed** 🔁 (behavior/contract updates, moved paths, updated invariants)
-- **Deprecated** 🧓 (still works, but planned removal)
-- **Removed** 🗑️ (deleted or no longer supported)
-- **Fixed** 🩹 (bugfixes)
-- **Security / Governance** 🛡️ (FAIR+CARE, sovereignty, access boundary changes)
-
-> [!TIP]
-> If a change affects **contracts, schemas, directory structure, governance rules, or release behavior**, it belongs here.
+- **➕ Added** — new features, modules, docs, schemas, datasets, or workflows  
+- **✏️ Changed** — modifications to behavior, structure, contracts, governance, or pipelines  
+- **⚠️ Deprecated** — still available, but planned for removal  
+- **🗑️ Removed** — removed features, files, or APIs  
+- **🛠️ Fixed** — bug fixes, broken links, broken build steps, etc.  
+- **🔒 Security** — security hardening, scanning, sensitive data protections  
 
 ---
 
-## 🕰️ Changelog
+## 🧭 Project invariants (do not regress)
 
-### [Unreleased] 🚧
+KFM enforces a strict pipeline order and boundary contracts. Releases should **never** introduce changes that violate these invariants without an explicit breaking-change note and migration path. :contentReference[oaicite:1]{index=1}
 
-#### Added ➕
-- _TBD_
-
-#### Changed 🔁
-- _TBD_
-
-#### Fixed 🩹
-- _TBD_
+- **Pipeline ordering is absolute:**  
+  `ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode` :contentReference[oaicite:2]{index=2}
+- **API boundary rule:** the UI must not query Neo4j directly; access is through governed APIs. :contentReference[oaicite:3]{index=3}
+- **Provenance-first publishing:** published data must be registered with provenance before graph/UI use. :contentReference[oaicite:4]{index=4}
+- **Evidence-first narrative:** Story Nodes / Focus Mode content must be provenance-linked; no unsourced narrative; AI output must be disclosed and evidence-bound. :contentReference[oaicite:5]{index=5}
 
 ---
 
-### 2026-01-26 — Documentation bundle refresh · v1.0.0-draft+2 📦🧭
-
-#### Added ➕
-- Ingested the consolidated **core KFM platform documentation set** (platform roadmap, architecture, UI system architecture, AI system architecture, expanded technical/design guide, and comprehensive technical documentation).  
-- Captured key named subsystems and modules now consistently referenced across docs:
-  - `kfm-sim-run` 🧪 deterministic simulation runner (PR-friendly, reproducible outputs)
-  - `kfm-air-correct` 🌫️ air-quality bias correction and NowCast-style reporting
-- Expanded governed-doc foundations by linking in v13 standards and reproducibility protocols:
-  - Master Guide v13 markdown standard and directory expectations
-  - Scientific Method + Master Coder Protocol (reproducible environments, peer review, code quality)
-
-#### Changed 🔁
-- Updated the **Repo layout skeleton** to match v13 expectations:
-  - canonical catalog paths: `data/stac/`, `data/catalog/dcat/`, `data/prov/`
-  - canonical pipeline ordering: ETL → Catalogs → Graph → API → UI → Story Nodes → Focus Mode
-- Refreshed the **Project file bundle snapshot** to list the **currently available workspace bundle** (and flagged PDF portfolios that need extraction/flattening for full indexing).
-- Updated “References” to point to the current authoritative doc set in this workspace.
-
-#### Fixed 🩹
-- Removed stale bundle assumptions from earlier drafts (mega-bundle PDFs, missing extension edge cases) and replaced them with the actually present artifacts.
-- Normalized headings to avoid parentheses in section headers for cleaner anchors and consistency.
-
-#### Security / Governance 🛡️
-- Reinforced the **governed boundary** posture documented across KFM:
-  - policy-driven governance (OPA-style policy packs, versioned rules + audit trace expectations)
-  - “evidence-first” narrative posture for Story Nodes and Focus Mode
-  - “API boundary rule” so UI does not bypass the governed API layer
-
----
-
-### 2026-01-11 — Changelog structure polish · v1.0.0-draft+1 🧾✨
-
-#### Added ➕
-- Added YAML front-matter metadata to align with governed-doc expectations.
-- Added quick navigation + GitHub alert blocks to improve readability.
-
-#### Changed 🔁
-- Refreshed the bundle snapshot section framing to distinguish:
-  - “ingested workspace bundle” vs “repo truth”
-  - doc-seeded history vs Git tags/commits
-
-#### Fixed 🩹
-- Tightened wording around “seeded from docs” vs “Git is source of truth” to reduce ambiguity.
-
----
-
-### 2025-12-31 — CHANGELOG seed · v1.0.0-draft 🌱
-
-#### Added ➕
-- Created `CHANGELOG.md` as the repo-level changelog file.
-- Added a “Project file bundle snapshot” section to support audits and reproducibility.
-
-#### Notes 📝
-- Dates and version labels in older entries below reflect **documented version history** in Master Guide / Markdown standards docs, and may not correspond to Git tags unless explicitly tagged.
-
----
-
-### 2025-12-30 — Documentation standard milestone: KFM Markdown Formatting Guide v1.0.0 draft 🧷
-
-#### Added ➕
-- Drafted/updated Markdown governance rules:
-  - YAML front-matter requirements (including FAIR+CARE labels)
-  - Section/heading standards (emoji-anchored registry)
-  - Citation requirements and AI attribution notes
-  - Validation expectations for governed docs
-
----
-
-### 2025-12-28 — Master Guide milestone: v13.0.0-draft · v13 redesign 🧱
-
-#### Added ➕
-- v13 “one canonical home per subsystem” structure (contract-first + evidence-first framing).
-- Expected repository roots called out explicitly in v13:
-  - `schemas/` (contracts: JSON Schemas for catalogs/story/ui/telemetry)
-  - `releases/` (release artifacts + auditables, e.g., SBOM/attestations)
-  - canonical metadata paths: `data/stac/`, `data/catalog/dcat/`, `data/prov/`
-
-#### Changed 🔁
-- Story content expected under governed path:
-  - `docs/reports/story_nodes/` with `draft/` vs `published/` workflow.
-- CI/validation “gates” enumerated as required expectations.
-
-#### Notes 📝
-- This milestone supersedes v12 guide structure.
-
----
-
-### 2025-12-27 — Master Guide milestone: v12.0.1-draft 🧰
-
-#### Changed 🔁
-- Refined doc structure to align with the universal doc template conventions.
-- Clarified canonical paths, invariants, and the contract-first / evidence-first boundary language.
-
----
-
-### 2025-12-17 — Master Guide milestone: v12.0.0-draft 🏗️
-
-#### Added ➕
-- Initial scaffolding for Master Guide v12:
-  - established pipeline ordering conceptually
-  - introduced governance baseline
-
----
-
-## 🗂️ Repo layout
-
-> [!NOTE]
-> **Repo layout is defined by the Master Guide v13 family.** The skeleton below is illustrative and aligns with the v13 pipeline expectations.
+## 🧰 Repo structure snapshot (v13 expectation)
 
 <details>
-  <summary><strong>📁 Typical v13-style skeleton</strong></summary>
+<summary>🗂️ Canonical top-level layout (click to expand)</summary>
 
-- 📁 `data/`
-  - 📁 `raw/`
-    - 📁 `<domain>/`
-  - 📁 `work/`
-    - 📁 `<domain>/`
-  - 📁 `processed/`
-    - 📁 `<domain>/`
-  - 📁 `stac/`
-    - 📁 `collections/`
-    - 📁 `items/`
-  - 📁 `catalog/`
-    - 📁 `dcat/`
-  - 📁 `prov/`
-  - 📄 `README.md`
-- 📁 `docs/`
-  - 📁 `architecture/`
-  - 📁 `standards/`
-  - 📁 `templates/`
-  - 📁 `governance/`
-  - 📁 `data/`
-    - 📁 `<domain>/`
-      - 📄 `README.md`
-  - 📁 `reports/`
-    - 📁 `story_nodes/`
-      - 📁 `templates/`
-      - 📁 `draft/`
-      - 📁 `published/`
-- 📁 `schemas/`
-- 📁 `src/`
-  - 📁 `pipelines/`
-  - 📁 `graph/`
-  - 📁 `server/`
-  - 📁 `web/`
-- 📁 `mcp/` 🧪
-  - 📁 `experiments/`
-  - 📁 `notebooks/`
-  - 📁 `protocols/`
-- 📁 `releases/`
-- 📁 `tests/`
-- 📁 `tools/`
-- 📄 `README.md`
-- 📄 `LICENSE`
-- 📄 `CITATION.cff`
-- 📄 `CHANGELOG.md`
-- 📄 `CONTRIBUTING.md`
-- 📄 `SECURITY.md`
-- 📄 `.editorconfig`
-- 📄 `.pre-commit-config.yaml`
-- 📄 `docker-compose.yml`
-- 📄 `.env.example`
+```text
+📁 data/
+📁 docs/
+📁 mcp/
+📁 schemas/
+📁 src/
+📁 tests/
+📁 tools/
+📁 web/
+📁 releases/
 
-</details>
-
-<details>
-  <summary><strong>🧭 Canonical pipeline flow</strong></summary>
-
-```mermaid
-flowchart LR
-  A["Raw Sources<br/>data/raw"] --> B["ETL + Normalization<br/>data/work → data/processed"]
-  B --> C["Catalog Boundary Artifacts<br/>STAC + DCAT + PROV"]
-  C --> D["Graph<br/>Neo4j references back to catalogs"]
-  D --> E["API Layer<br/>contracts + redaction + policy"]
-  E --> F["UI<br/>React + MapLibre (+ optional Cesium)"]
-  F --> G["Story Nodes<br/>governed narratives"]
-  G --> H["Focus Mode<br/>evidence-linked context bundle"]
+📄 README.md
+📄 LICENSE
+📄 CITATION.cff
+📄 CHANGELOG.md
+📄 CONTRIBUTING.md
+📄 SECURITY.md
+📄 docker-compose.yml
+📄 .env.example
 ```
 
+(Shown in the v13 Master Guide’s repo layout.) :contentReference[oaicite:6]{index=6}
 </details>
 
 ---
 
-## 📚 Project file bundle snapshot
+## [Unreleased] 🚧
 
-This section records the **currently available project files** used to seed this changelog (useful for audit/repro).
+### ➕ Added (planned / in-progress)
+- 🧠 **Focus Mode AI assistant** (governed, evidence-bound): natural-language queries routed through approved tools/APIs, requiring citations for factual outputs. :contentReference[oaicite:7]{index=7}
+- 🦙 **Local LLM runtime via Ollama** for privacy/offline capability in sensitive + field deployments (no external AI API calls). :contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9}
+- 🧲 **Local embeddings + retrieval** to support semantic search / RAG style workflows (local vectorization + optional tool-calling models). :contentReference[oaicite:10]{index=10}
+- 🧭 **Navigation & map-reading capability modules** (research + UI concepts), including distance/direction workflow patterns for field use. :contentReference[oaicite:11]{index=11}
+- 🧱 **3D GIS / immersive research track** for future visualization and analysis modes (incl. machine learning classification trends in 3D GIS platforms). :contentReference[oaicite:12]{index=12}
 
-> [!IMPORTANT]
-> This is a snapshot of the **workspace bundle** (uploaded/available docs) and may differ from what exists in the actual repo.
+### ✏️ Changed (planned / in-progress)
+- 📦 Tighten “contract-first” change workflow: schema/API changes require explicit changelog notes + version bump + compatibility notes. :contentReference[oaicite:13]{index=13}
+- 🧾 Stronger provenance guarantees for “evidence artifacts” (AI/analysis outputs) so they behave like first-class datasets (catalog + lineage + governed API exposure). :contentReference[oaicite:14]{index=14}
 
-### 📦 Snapshot summary
-
-| Category | Count | Notes |
-|---|---:|---|
-| 🧠 Core KFM docs | 6 | Governing / architectural set |
-| 🧭 KFM concept and proposals | 1 | Early vision / hub concept |
-| 📜 Standards and governance | 3 | Markdown protocol + reproducibility + coding protocol |
-| 📚 Reference bundles | 8 | Includes **6 PDF portfolios** requiring extraction for full indexing |
-| **Total files in workspace bundle** | **18** | Updated 2026-01-26 |
-
-> [!WARNING]
-> Several “mega bundle” PDFs are **PDF portfolios** (they only index the portfolio landing page).  
-> ✅ Recommended: **extract embedded PDFs** (or flatten to standard PDFs) into `docs/reference/` so search, citations, and RAG can fully ingest them.
+### 🔒 Security (planned / in-progress)
+- 🔍 Expand automated scanning for secrets + PII + sensitive layers, with governance triggers on high-risk additions. :contentReference[oaicite:15]{index=15}
 
 ---
 
-### 🧠 Core KFM docs
+## [v13.0.0-draft] 🧱 - 2025-12-28
 
-- `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf`  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
-- `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`  [oai_citation:1‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)
-- `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf`  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)
-- `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`  [oai_citation:3‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)
-- `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf`  [oai_citation:4‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)
+### ➕ Added
+- 📁 Introduced/standardized canonical roots used across the pipeline, including:  
+  `schemas/`, `releases/`, `data/prov/`, `data/catalog/dcat/`. :contentReference[oaicite:16]{index=16}
+- 🗂️ Moved Story content into governed structure under `docs/reports/story_nodes/` with `draft/` vs `published/` workflow. :contentReference[oaicite:17]{index=17}
 
----
+### ✏️ Changed
+- 🧭 Enforced **one canonical directory per subsystem** (reducing duplicate/mystery folders) and clarified canonical homes (e.g., `src/server/` for APIs and `web/` for UI). :contentReference[oaicite:18]{index=18}
+- ✅ Strengthened “contract-first” and “evidence-first” workflows repo-wide (catalog-before-narrative; schemas/contracts first-class). :contentReference[oaicite:19]{index=19}
+- 🧪 Updated profiles references (STAC/DCAT/PROV v11) and expanded CI/validation expectations. :contentReference[oaicite:20]{index=20}
 
-### 🧭 KFM concept and proposals
-
-- `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`  [oai_citation:6‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
-
----
-
-### 📜 Standards and governance
-
-- `MARKDOWN_GUIDE_v13.md.gdoc`  [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`  [oai_citation:8‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
-- `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`  [oai_citation:9‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+### ⚠️ Breaking / migration notes
+- Any integrations relying on pre-v13 folder locations may require path updates (canonical home enforcement). :contentReference[oaicite:21]{index=21}
 
 ---
 
-### 📚 Reference bundles
+## [v12.0.1-draft] ✍️ - 2025-12-27
 
-#### 📦 PDF portfolios
-
-- `AI Concepts & more.pdf`  [oai_citation:10‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)
-- `Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf`  [oai_citation:11‡Maps-GoogleMaps-VirtualWorlds-Archaeological-Computer Graphics-Geospatial-webgl.pdf](file-service://file-RshcX5sNY2wpiNjRfoP6z6)
-- `Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf`  [oai_citation:12‡Data Managment-Theories-Architures-Data Science-Baysian Methods-Some Programming Ideas.pdf](file-service://file-RrXMFY7cP925exsQYermf2)
-- `Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf`  [oai_citation:13‡Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf](file-service://file-TH7HttQXn8Bh1hVhcj858V)
-- `Geographic Information-Security-Git-R coding-SciPy-MATLAB-ArcGIS-Apache Spark-Type Script-Web Applications.pdf`  [oai_citation:14‡Mapping-Modeling-Python-Git-HTTP-CSS-Docker-GraphQL-Data Compression-Linux-Security.pdf](file-service://file-2QvRgQbts8ENJQSRC6oGme)
-- `Various programming langurages & resources 1.pdf`  [oai_citation:15‡Various programming langurages & resources 1.pdf](file-service://file-4wp3wSSZs7gk5qHWaJVudi)
-
-#### 📘 Single reference volumes
-
-- `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf`  [oai_citation:16‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
-- `Data Mining Concepts & applictions.pdf`  [oai_citation:17‡Data Mining Concepts & applictions.pdf](file-service://file-2uwEbQAFVKpXaTtWgUirAH)
+### ✏️ Changed
+- 📐 Refined documentation structure to align with the Universal Doc template.
+- 🧭 Clarified canonical paths, invariants, and contract-first / evidence-first boundaries. :contentReference[oaicite:22]{index=22}
 
 ---
 
-### ⚠️ Filename hygiene
+## [v12.0.0-draft] 🏁 - 2025-12-17
 
-Recommended normalization for tooling consistency 🔧:
-
-- `langurages` → `languages`
-- `Managment` → `Management`
-- `Architures` → `Architectures`
-- `Baysian` → `Bayesian`
-- `Type Script` → `TypeScript`
-- Prefer: `KFM__<Area>__<Title>__vX.Y.Z.<ext>` for governed docs (easy sorting + consistent parsing)
+### ➕ Added
+- 🧩 Initial scaffolding of Master Guide v12.
+- 🧭 Established pipeline ordering and governance structure foundation. :contentReference[oaicite:23]{index=23}
 
 ---
 
-### 🔍 Referenced in standards docs but not present in this workspace bundle
+## 📚 Provenance notes (why this changelog looks like this)
 
-These are commonly referenced by the v13 guide and should be verified in the repo:
+This changelog is aligned to the **KFM Master Guide v13** concept of:
+- strict pipeline ordering,
+- contract-first interfaces,
+- evidence-first narrative governance,
+- and repo-level semantic versioning expectations. :contentReference[oaicite:24]{index=24}:contentReference[oaicite:25]{index=25}:contentReference[oaicite:26]{index=26}
 
-- 📁 `docs/templates/`
-  - `TEMPLATE__KFM_UNIVERSAL_DOC.md`
-  - `TEMPLATE__STORY_NODE_V3.md`
-  - `TEMPLATE__API_CONTRACT_EXTENSION.md`
-- 📁 `docs/architecture/`
-  - `KFM_REDESIGN_BLUEPRINT_v13.md`
-  - `KFM_NEXT_STAGES_BLUEPRINT.md`
-  - `KFM_VISION_FULL_ARCHITECTURE.md`
-- 📁 `docs/governance/`
-  - `ROOT_GOVERNANCE.md`
-  - `ETHICS.md`
-  - `SOVEREIGNTY.md`
-- 📁 `docs/standards/`
-  - `KFM_MARKDOWN_WORK_PROTOCOL.md`
-  - `KFM_STAC_PROFILE.md`
-  - `KFM_DCAT_PROFILE.md`
-  - `KFM_PROV_PROFILE.md`
-- 📁 `docs/data/<domain>/README.md` runbooks (example domains referenced in standards)
-
-> [!NOTE]
-> If these are missing from the repo, treat it as a governance gap and create them using the universal template + CI validation hooks.
+The **AI / Focus Mode** roadmap items are sourced from the **Comprehensive Technical Blueprint**, which describes local LLM operation via Ollama and evidence-bound, governed AI behavior. :contentReference[oaicite:27]{index=27}
 
 ---
 
-## ✅ Updating this file
+## 🔗 Link references (optional)
 
-When you make a PR that changes **contracts, schemas, directory structure, governance rules, or release behavior**, update `CHANGELOG.md` under **[Unreleased]** (or add a dated entry if cutting a release).
-
-If the change is breaking:
-- include **Changed** + **Security / Governance** notes as applicable 🛡️
-- link to the governing doc or ADR that justifies the break 🔗
-- ensure corresponding schema or contract versions are bumped 📌
-
-<details>
-  <summary><strong>🧪 Release entry template</strong></summary>
-
-```markdown
-### YYYY-MM-DD — <Release title> · vX.Y.Z
-#### Added ➕
-- ...
-
-#### Changed 🔁
-- ...
-
-#### Deprecated 🧓
-- ...
-
-#### Removed 🗑️
-- ...
-
-#### Fixed 🩹
-- ...
-
-#### Security / Governance 🛡️
-- ...
-```
-
-</details>
-
----
-
-## 🔗 References
-
-### 🧠 Core docs
-
-- Platform roadmap: `Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf`  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)  
-- Architecture: `Kansas Frontier Matrix (KFM) – Comprehensive Architecture, Features, and Design.pdf`  [oai_citation:19‡AI Concepts & more.pdf](file-service://file-K6BctJjeUwvyCahLf9qdwr)  
-- UI architecture: `Kansas Frontier Matrix (KFM) – Comprehensive UI System Overview (Technical Architecture Guide).pdf`  [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Platform Overview and Roadmap.pdf](file-service://file-J9i6fUc35zPWB2U62zUnEN)  
-- AI system: `Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf`  [oai_citation:21‡Kansas Frontier Matrix (KFM) – AI System Overview 🧭🤖.pdf](file-service://file-P4zHoJicw1HG6bXmqFygG8)  
-- Data intake and story mechanics: `📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf`  [oai_citation:22‡📚 Kansas Frontier Matrix (KFM) – Expanded Technical & Design Guide.pdf](file-service://file-Tjmzn5F3sT5VNvVFhqj1Vo)  
-- End-to-end technical spec: `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf`  [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-VgLA7nv34M5muqZ5MQxBLG)  
-
-### 📜 Standards and governance
-
-- Master Guide v13 standard: `MARKDOWN_GUIDE_v13.md.gdoc`  [oai_citation:24‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
-- Markdown best practices: `Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx`  [oai_citation:25‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)  
-- Reproducibility and code rigor: `Scientific Method _ Research _ Master Coder Protocol Documentation.pdf`  [oai_citation:26‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)  
-
-### 🧭 Concept doc
-
-- Early hub design: `Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf`  [oai_citation:27‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
+> TODO: Add GitHub compare links once tags are created (e.g., `v12.0.1-draft...v13.0.0-draft`) ✅
