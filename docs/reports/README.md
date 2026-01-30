@@ -1,245 +1,348 @@
-<!--
-📌 File: docs/reports/README.md
-🧭 Purpose: Explain what belongs in docs/reports/ (especially Story Nodes) and how it stays governed + evidence-first.
--->
+# 📑 `docs/reports/` — Reports, Audits & Story Nodes
 
-# 🧾 `docs/reports/` — Governed Reports & Story Nodes
+![Docs](https://img.shields.io/badge/docs-governed-2ea44f)
+![Pipeline](https://img.shields.io/badge/pipeline-v13-blue)
+![Narratives](https://img.shields.io/badge/story_nodes-evidence--first-purple)
+![Format](https://img.shields.io/badge/markdown-GFM%20%2B%20YAML%20front--matter-orange)
 
-![status](https://img.shields.io/badge/status-governed-blue)
-![pipeline](https://img.shields.io/badge/pipeline-evidence--first-success)
-![content](https://img.shields.io/badge/content-story%20nodes%20%26%20reports-purple)
-![review](https://img.shields.io/badge/review-required-orange)
-
-> **This folder is for governed, reviewable narrative + reporting artifacts.**  
-> In KFM, narrative is not “freeform docs” — it is **pipeline-attached** and **provenance-linked**.
+> **Purpose:** A single, governed home for **evidence-backed reports** and **machine-ingestible narrative content** (“Story Nodes”) used by KFM’s UI + Focus Mode.  
+> **Non‑negotiable:** No unsourced narrative. No bypassing the pipeline ordering.  [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧭 Table of contents
+## 🔎 What belongs here
 
-- [📌 What lives here](#-what-lives-here)
-- [🔒 Non-negotiables](#-non-negotiables)
-- [🗂️ Folder layout](#️-folder-layout)
-- [🧠 Story Nodes](#-story-nodes)
-  - [✨ Create a new Story Node](#-create-a-new-story-node)
-  - [📚 Citations & evidence linking](#-citations--evidence-linking)
-  - [🖼️ Assets](#️-assets)
-  - [🚦 Draft → Published promotion](#-draft--published-promotion)
-- [🧪 “Reports” vs “Evidence Artifacts”](#-reports-vs-evidence-artifacts)
-- [✅ Definition of Done](#-definition-of-done)
-- [🔗 Related docs](#-related-docs)
+### ✅ Yes
+- **🧠 Story Nodes** (draft + published) — curated narrative content with citations and provenance, intended for UI parsing/Focus Mode.  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **🧪 Research / analysis reports** — methods, results, maps, stats, and conclusions *with evidence links*.
+- **🧩 Design audits / gap analyses** — product + architecture evaluations and recommendations.
+- **🧯 Postmortems** — incidents, regressions, data issues, or governance breaches (with corrective actions).
+- **📦 Release notes (report-style)** — when you need more than a changelog.
 
----
-
-## 📌 What lives here
-
-### ✅ Primary (canonical)
-- **Story Nodes** → governed narrative content that is **machine-ingestible** and **provenance-linked** (used by the UI and Focus Mode).
-
-### ✅ Allowed (when needed)
-- **Human-readable reports** that summarize or interpret *already-published evidence artifacts* (datasets, derived layers, model outputs), as long as:
-  - they **link** to the cataloged artifacts (STAC/DCAT/PROV), and
-  - they **do not bypass** the pipeline (no “new facts” without sources).
-
-> 💡 Think of `docs/reports/` as the “story + explanation layer” — **never the place where raw/processed data is born.**
+### ❌ No
+- API schemas/contracts (those live with the API contracts/templates, not in reports) [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- ETL code, validators, or pipelines (live in `src/` / `tools/`) [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🔒 Non-negotiables
+## 🧭 Canonical pipeline rule (non‑negotiable)
 
-These are “hard rules” for anything placed under `docs/reports/`:
+KFM’s pipeline ordering is **inviolable**:
 
-1. **Pipeline ordering is absolute**  
-   `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode`
+> **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**  [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-2. **Evidence-first narrative**  
-   No unsourced narrative content. Every meaningful claim must cite evidence (dataset IDs, catalog entries, primary sources).
+Also:
+- **UI must never query Neo4j directly** — all data access goes through governed APIs.  [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Provenance-first** — data must be registered (STAC/DCAT/PROV) before graph/UI/story usage.  [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-3. **Provenance-first**  
-   If you reference a derived dataset (analysis output / AI output), it must have provenance (PROV) and catalog records (DCAT + STAC when applicable).
-
-4. **Governance applies**  
-   If content involves sensitive topics, sovereignty concerns, private locations, or culturally sensitive data:
-   - label it appropriately in the doc front-matter (per templates),
-   - route it through the correct reviewers.
+### 🗺️ Pipeline sketch (for orientation)
+```mermaid
+flowchart LR
+  A["Raw Sources"] --> B["ETL + Normalization"]
+  B --> C["Catalogs: STAC / DCAT / PROV"]
+  C --> D["Neo4j Graph (references catalogs)"]
+  D --> E["API Layer (contracts + redaction)"]
+  E --> F["UI (Map + Focus)"]
+  F --> G["Story Nodes (governed narratives)"]
+  G --> H["Focus Mode (provenance-linked context bundle)"]
+```
+(Adapted from the v13 guide’s high-level flow.)  [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🗂️ Folder layout
+## 🗂️ Directory layout
 
-Current canonical layout (v13-style):
+Story Nodes have a **canonical home** and structure:
+
+- `docs/reports/story_nodes/` is the **exclusive** narrative content directory.  
+- `draft/` = work-in-progress, `published/` = officially released.  
+- Each published story lives in its **own folder** with markdown + assets.  [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+Recommended “minimum viable” structure:
 
 ```text
-📁 docs/
-└─ 📁 reports/                              📊 authored outputs (reviewed + versioned)
-   ├─ 📄 README.md                            📘 reports index + publishing rules
-   └─ 📁 story_nodes/                         📚 Story Node reports (narrative + citations + map hooks)
-      ├─ 📁 templates/                        🧩 Story Node templates + scaffolds
-      ├─ 📁 draft/                            📝 in-progress Story Nodes (working)
-      │  └─ 📁 <story_slug>/                  🏷️ one Story Node (draft)
-      │     ├─ 📄 story.md                    📚 narrative + citations + map/timeline hooks
-      │     └─ 📁 assets/                     📎 local assets (images, clips, small tables)
-      └─ 📁 published/                        ✅ released Story Nodes (versioned)
-         └─ 📁 <story_slug>/                  🏷️ one Story Node (published)
-            ├─ 📄 story.md                    📚 final narrative + citations + map/timeline hooks
-            └─ 📁 assets/                     📎 released assets (stable + checksummed if needed)
+docs/
+  reports/
+    README.md
+    story_nodes/
+      draft/
+        <story_slug>/
+          STORY.md
+          assets/
+      published/
+        <story_slug>/
+          STORY.md
+          assets/
 ```
 
-### 🧩 Conventions
-- `<story_slug>` = **kebab-case** and stable (e.g., `dust-bowl-1930s`, `chisholm-trail`).
-- Keep **one story per folder**.
-- Avoid renaming slugs after publication unless you also update all references and UI bindings.
+> 🧩 Tip: keep **all story-specific images** in that story’s folder so the UI/story exporter can bundle cleanly.
 
 ---
 
-## 🧠 Story Nodes
+## 🧱 Governance: YAML front‑matter + templates
 
-Story Nodes are governed narratives intended to be **rendered and navigated** (not just read).  
-They should be written to support:
-- human reading ✅
-- machine parsing ✅ (front-matter + structured sections)
-- traceability ✅ (citations linked to cataloged evidence)
+### Why YAML front‑matter?
+Even though GitHub ignores YAML front‑matter in plain Markdown rendering, it’s crucial for **governance metadata**, doc lifecycle, and tooling.  [oai_citation:9‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
-### ✨ Create a new Story Node
+KFM’s docs practice expects:
+- clear doc identity (UUID), status, versioning
+- governance & ethics references
+- FAIR/CARE labeling & classification fields  [oai_citation:10‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
-1. Pick a slug:
-   - `my-topic-title` ✅
-   - `My Topic Title` ❌
-
-2. Create the draft folder:
-   - `docs/reports/story_nodes/draft/<story_slug>/`
-
-3. Copy the Story Node template into:
-   - `docs/reports/story_nodes/draft/<story_slug>/story.md`
-
-4. Add assets (if needed):
-   - `docs/reports/story_nodes/draft/<story_slug>/assets/`
-
-5. Link to evidence:
-   - Use citations/footnotes and reference stable IDs (dataset IDs, STAC item/collection IDs, DCAT entries, PROV bundles, archival sources).
-
-> 🧷 Tip: Treat the template as a contract. Don’t invent new fields — extend templates through the governed process.
+### Canonical templates
+The v13 guide points to these governed templates:
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md`  [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-### 📚 Citations & evidence linking
+## 🧾 Front‑matter example (copy/paste)
 
-A Story Node is only as strong as its evidence.
+> ⚠️ Don’t delete fields you “don’t need yet.” Use `TBD` / `n/a` to keep schema checks happy.  [oai_citation:12‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
-Use **at least one** of the following for each factual claim:
-- Footnotes (`[^1]`) that point to:
-  - dataset identifiers
-  - catalog entries (DCAT)
-  - STAC Items/Collections
-  - PROV run bundles / lineage docs
-  - authoritative primary sources (archival scans, official docs, etc.)
+```yaml
+---
+title: "REPORT — <short, specific title>"
+path: "docs/reports/<your_subfolder>/<yyyy-mm-dd>__<slug>.md"
+version: "v0.1.0"
+last_updated: "2026-01-30"
+status: "draft"                # draft | active | deprecated
+doc_kind: "Report"             # Report | Audit | StoryNode | Postmortem | ...
+license: "CC-BY-4.0"
 
-Recommended citation patterns:
-- **Dataset-backed claim** → cite the dataset’s DCAT entry + link to the artifact
-- **Map/layer-backed claim** → cite STAC Item/Collection
-- **Derived/AI claim** → cite the derived dataset + the PROV activity that produced it
+markdown_protocol_version: "1.0"
+pipeline_contract_version: "v13"
 
-> ⚠️ If you can’t cite it, don’t claim it.
+governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
+ethics_ref: "docs/governance/ETHICS.md"
+fair_category: "FAIR+CARE"
+care_label: "Public"           # Public | Restricted · Tribal Sensitive | ...
+sensitivity: "public"
+classification: "open"
+jurisdiction: "US"
+
+doc_uuid: "urn:kfm:doc:reports:<slug>:v0.1.0"
+commit_sha: "<commit-hash>"
+doc_integrity_checksum: "sha256:<to-be-filled>"
+---
+```
+
+(Fields/structure inspired by KFM-style governance front-matter patterns.)  [oai_citation:13‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
 
 ---
 
-### 🖼️ Assets
+## ✅ Evidence-first rules (how reports stay “ship‑worthy”)
 
-Store Story Node assets **next to the story**:
+### 1) Every claim must point to evidence
+KFM requires **evidence-first narrative** — no unsourced story/report content.  [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-- `.../<story_slug>/assets/`
+**Acceptable evidence targets include:**
+- STAC Item/Collection IDs
+- DCAT dataset entries
+- PROV lineage bundles
+- schemas/contracts
+- commit SHAs / PRs / tickets
+- peer-reviewed sources (when appropriate)
 
-Examples:
-- images (`.png`, `.jpg`, `.svg`)
-- small diagrams
-- thumbnails
-- figure exports that are referenced by `story.md`
-
-Guidelines:
-- Prefer **small + optimized** media.
-- Use relative links in Markdown:
-  - `![Alt text](assets/figure-01.png)`
-
----
-
-### 🚦 Draft → Published promotion
-
-**Draft** is for iterative writing and reviewer feedback.  
-**Published** means “ready for the product.”
-
-Promotion process (recommended):
-1. Ensure the Story Node meets the [Definition of Done](#-definition-of-done).
-2. Ensure required reviewers have approved (story + governance as needed).
-3. Move the folder:
-   - from: `docs/reports/story_nodes/draft/<story_slug>/`
-   - to:   `docs/reports/story_nodes/published/<story_slug>/`
-4. Update any indexes/manifests if the project maintains them (and any UI bindings if required).
-
-> 🔁 Keep history in Git — never “rewrite” published narrative without a PR.
-
----
-
-## 🧪 “Reports” vs “Evidence Artifacts”
-
-It’s easy to confuse these:
-
-### ✅ Reports (live here)
-- human-readable explanation, interpretation, or narrative
-- must **reference** evidence artifacts
-- must remain **governed + citable**
-
-### ✅ Evidence Artifacts (do **not** live here)
-If you produce outputs like:
-- derived datasets
-- model runs
-- simulations
-- OCR text corpora
-- AI-generated layers
-
-They must be treated like **datasets**:
+### 2) AI outputs are “evidence artifacts”
+If a report includes AI-generated analysis outputs, treat them as first-class artifacts:
 - stored under `data/processed/...`
 - cataloged (STAC/DCAT)
 - traced (PROV)
-- only then referenced from Story Nodes or reports
+- exposed only via governed APIs  [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-> 🧠 Rule of thumb:  
-> **Data goes to `data/…`** ✅  
-> **Narrative about the data goes to `docs/reports/…`** ✅
+### 3) Classification + sovereignty propagate
+Outputs cannot be **less restricted** than their inputs; sensitive location info may require redaction/generalization.  [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
+## 🧪 Definition of Done (DoD) for any report in this folder
+
+Use this as your PR-ready checklist:
+
+- [ ] Front-matter complete + valid (template/profile compliant)  [oai_citation:17‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] All claims link to datasets/schemas/sources (as applicable)  [oai_citation:18‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] Validation steps listed and repeatable (commands + expected outputs)  [oai_citation:19‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] Governance + FAIR/CARE + sovereignty considerations explicitly stated  [oai_citation:20‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- [ ] No broken internal links; assets load in GitHub UI
+- [ ] (If Story Node) UI rendering tested; citations/patterns parse correctly  [oai_citation:21‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+> 📌 KFM’s broader guidance explicitly recommends embedding DoD checklists in docs to improve review transparency.  [oai_citation:22‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+---
+
+## ✍️ Create a new report (workflow)
+
+1) **Pick the right template**
+   - Report/Audit/Postmortem → Universal Doc Template  [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+   - Narrative UI content → Story Node Template  [oai_citation:24‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+2) **Place it in the correct canonical home**
+   - Story Nodes only: `docs/reports/story_nodes/draft/` (then move to `published/` on release)  [oai_citation:25‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+3) **Fill YAML front-matter** (keep it boring + strict)  [oai_citation:26‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+4) **Attach evidence**
+   - Prefer stable IDs (STAC/DCAT/PROV, commit SHAs, schema versions)  [oai_citation:27‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+5) **Add visuals**
+   - Put images next to the doc (or in `assets/`) and use relative links
+
+6) **Write repeatable validation**
+   - “How to re-run analysis,” “how to regenerate figures,” “what should match”
+
+7) **PR + review gates**
+   - CI should reject missing provenance, broken links, missing citations, etc.  [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 🗺️ Maps & spatial references in reports
+
+### Map design: projection + metadata matters
+- Map projections are purpose-driven: there’s no one “best” projection; choose based on region + goal.  [oai_citation:29‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
+- Metadata enables discoverability/interoperability; also consider copyright and proper attribution.  [oai_citation:30‡Scalable Data Management for Future Hardware.pdf](sediment://file_000000007d74722fa87beabc663630f7)
+
+**Minimum map metadata (put in the figure caption or a “Map Specs” block):**
+- CRS/EPSG (or “WGS84 lat/long”)
+- projection (if applicable)
+- data sources + dates
+- processing steps (high level)
+- license + attribution
+- uncertainty caveats / resolution
+
+### Coordinates: be explicit (Lat/Lon vs UTM vs MGRS)
+KFM’s UI supports multiple coordinate entry formats (Lat/Lon, UTM, MGRS).  [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+If you cite coordinates in a report:
+- Always state the coordinate system (e.g., “MGRS 14S…”).
+- When using MGRS, remember it’s zone + grid square + easting/northing; “read right and up.”  [oai_citation:32‡Map Reading & Land Navigation.pdf](sediment://file_00000000b14c7230b1b262ddd9df4e5d)
+- Include declination/“north” assumptions when relevant (field navigation contexts).  [oai_citation:33‡Map Reading & Land Navigation.pdf](sediment://file_00000000b14c7230b1b262ddd9df4e5d)
+
+> 🧠 UI note: the KFM map UI can overlay an MGRS grid and display a coordinate readout, and it emphasizes the “read right and up” convention.  [oai_citation:34‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## ⏱️ Time-oriented charts & queries (for reports + UI reasoning)
+
+Time-oriented analysis benefits from interactive filtering patterns:
+- Use range sliders for time/numeric filtering, and combine filters to reduce clutter.  [oai_citation:35‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)
+- “Timeboxes” let users draw rectangles (time interval + value range) to filter multivariate time series.  [oai_citation:36‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)
+
+**In reports:** when presenting time series results, describe:
+- sampling interval + missing data handling
+- smoothing/aggregation choices
+- why the visualization choice supports the decision being made
+
+---
+
+## ⚙️ Performance / scale reporting (when the report is about “it’s slow”)
+
+If you’re writing a performance report, capture workload patterns (not just a single benchmark):
+- “Regular reporting” workloads often differ only by parameters; reuse strategies (accelerators/caches/materializations) matter.  [oai_citation:37‡Scalable Data Management for Future Hardware.pdf](sediment://file_000000007d74722fa87beabc663630f7)
+- Query logs + history help identify repeated sequences and guide optimization decisions.  [oai_citation:38‡Scalable Data Management for Future Hardware.pdf](sediment://file_000000007d74722fa87beabc663630f7)
+
+---
+
+## 🤖 Local AI assistance (Ollama) — allowed, but governed
+
+Ollama can run models locally (privacy: prompts/responses stay on-device once models are downloaded).  [oai_citation:39‡Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf](file-service://file-WLPhJVNoBxYKcy3utQSwBi)
+
+**Basic usage:**
+- `ollama pull <model_name>` or `ollama run <model_name>` (auto-pulls if missing).  [oai_citation:40‡Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf](file-service://file-WLPhJVNoBxYKcy3utQSwBi)
+
+**Why this matters for reports:**  
+If you use AI to draft text or generate an “evidence artifact,” you must:
+- label AI-generated content
+- attach provenance (model + version, prompt, inputs)
+- treat derived outputs as governed artifacts (catalog + PROV)  [oai_citation:41‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+> ✅ In other words: AI can help you write, but it can’t replace evidence.  [oai_citation:42‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 📚 Key project references (start here)
+
+**Core governance + architecture**
+- 🧭 **KFM Master Guide v13 (draft)** — contracts, invariants, canonical homes, templates  
+   [oai_citation:43‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 🏗️ **KFM Technical Blueprint** — system components, UI/API behavior, dev endpoints  
+   [oai_citation:44‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🧾 **Comprehensive Markdown Guide (KFM-style governance patterns)** — YAML front‑matter, DoD, provenance conventions  
+   [oai_citation:45‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+
+**Reports that model the standard**
+- 🧩 **KFM Design Audit — Gaps & Enhancement Opportunities** (example audit format)  
+   [oai_citation:46‡Kansas-Frontier-Matrix Design Audit – Gaps and Enhancement Opportunities.pdf](file-service://file-TkRzAfTnxCYDUHauCf1NcH)
+- 🌐 **KFM Open-Source Hub Design** (ecosystem + OS structure thinking)  
+   [oai_citation:47‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)
+
+**Mapping + visualization**
+- 🗺️ **Making Maps — Visual Guide to Map Design for GIS**  
+   [oai_citation:48‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
+- 🧭 **Map Reading & Land Navigation** (MGRS/UTM conventions, “read right and up”)  
+   [oai_citation:49‡Map Reading & Land Navigation.pdf](sediment://file_00000000b14c7230b1b262ddd9df4e5d)
+- ⏱️ **Visualization of Time-Oriented Data**  
+   [oai_citation:50‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)
+- 🧱 **KFM Python Geospatial Analysis Cookbook**  
+   [oai_citation:51‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
+
+**AI tooling (local)**
+- 🤖 **Comprehensive Guide to Ollama & Supported Open-Source LLMs**  
+   [oai_citation:52‡Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf](file-service://file-WLPhJVNoBxYKcy3utQSwBi)
+
+**Optional deep dives (use as needed)**
+- 🏺 **Archaeological 3D GIS** (3D documentation + workflows)  
+   [oai_citation:53‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 📱 **Mobile Mapping** (field/mobile considerations)  
+   [oai_citation:54‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
+- 📈 **Graphical Data Analysis with R** (EDA patterns for report work)  
+   [oai_citation:55‡Archaeological 3D GIS.pdf](sediment://file_0000000033b871f5a9f07d3c95f6ad4a)
+- ⚙️ **Scalable Data Management for Future Hardware** (workload-aware performance thinking)  
+   [oai_citation:56‡Scalable Data Management for Future Hardware.pdf](sediment://file_000000007d74722fa87beabc663630f7)
+
+---
+
+## 🧰 Appendix: compact report skeleton (optional)
+
+<details>
+  <summary>📄 Click to expand a “minimum report” outline</summary>
+
+```markdown
+---
+title: "REPORT — <title>"
+version: "v0.1.0"
+status: "draft"
+doc_kind: "Report"
+last_updated: "YYYY-MM-DD"
+license: "CC-BY-4.0"
+fair_category: "FAIR+CARE"
+care_label: "Public"
+classification: "open"
+doc_uuid: "urn:kfm:doc:reports:<slug>:v0.1.0"
+---
+
+## 📘 Overview
+- **Purpose**
+- **Scope (in/out)**
+- **Audience**
+- **Definitions**
+
+## 🧩 Problem / Question
+## 🧪 Method
+## 📦 Data & Evidence
+- Datasets (STAC/DCAT IDs)
+- Provenance (PROV bundle IDs)
+- Assumptions
+
+## 📈 Results
+- Figures + captions (include CRS/projection for maps)
+
+## ✅ Conclusions / Decisions
+## ⚠️ Risks / Governance Notes
+## 🔁 How to Reproduce
 ## ✅ Definition of Done
-
-Before merging or promoting to `published/`, confirm:
-
-- [ ] **Front-matter is complete + valid** (use the template)
-- [ ] **All claims link to evidence** (datasets, schemas, or authoritative sources)
-- [ ] **Any described process is repeatable** (validation steps or reproduction notes included)
-- [ ] **Governance concerns are explicitly addressed** (FAIR/CARE, sovereignty, sensitivity)
-- [ ] **Assets render correctly** and paths are valid
-- [ ] **No pipeline bypass** (no “new evidence” introduced only inside narrative)
-
----
-
-## 🔗 Related docs
-
-Use these as your “source of truth” references:
-
-- 📘 `docs/MASTER_GUIDE_v13.md` (canonical structure + pipeline)
-- 🧩 `docs/templates/`  
-  - `TEMPLATE__KFM_UNIVERSAL_DOC.md`  
-  - `TEMPLATE__STORY_NODE_V3.md`
-- ⚖️ `docs/governance/` (ethics, sovereignty, review gates)
-- 🏗️ `docs/architecture/` (blueprints, ADRs, system vision)
-- 🧬 `schemas/` (STAC/DCAT/PROV + Story Node schemas)
-
----
-
-### 🧯 If you’re unsure…
-
-Open a PR early with a Draft Story Node and ask for:
-- **Story review** (clarity + narrative structure)
-- **Evidence review** (citations + provenance)
-- **Governance review** (sensitivity + sovereignty)
-
-💬 “Drafts are cheap. Provenance retrofits are expensive.”
+- [ ] Front-matter complete
+- [ ] All claims cited
+- [ ] Repro steps verified
+```
+</details>
