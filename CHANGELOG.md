@@ -39,24 +39,24 @@ KFM enforces a strict pipeline order and boundary contracts. Releases should **n
 <summary>🗂️ Canonical top-level layout (click to expand)</summary>
 
 ```text
-📁 data/
-📁 docs/
-📁 mcp/
-📁 schemas/
-📁 src/
-📁 tests/
-📁 tools/
-📁 web/
-📁 releases/
+📁 data/                                   🛰️ datasets + catalogs (STAC/DCAT/PROV) + external lanes
+📁 docs/                                   📚 documentation (governance, architecture, guides, reports)
+📁 mcp/                                    🧠 Master Coder Protocol (runbooks, templates, model cards)
+📁 schemas/                                🧾 shared schemas/contracts (JSON Schema, YAML, validation)
+📁 src/                                    🏗️ backend + pipelines + graph/ETL core (APIs, workers, jobs)
+📁 tests/                                  🧪 unit/integration/e2e/perf/policy tests
+📁 tools/                                  🧰 developer tooling (generators, fixtures, CI helpers)
+📁 web/                                    🗺️ frontend UI (React + MapLibre/Cesium + Story + Focus Mode)
+📁 releases/                               🏷️ versioned release artifacts + notes (optional, curated)
 
-📄 README.md
-📄 LICENSE
-📄 CITATION.cff
-📄 CHANGELOG.md
-📄 CONTRIBUTING.md
-📄 SECURITY.md
-📄 docker-compose.yml
-📄 .env.example
+📄 README.md                                📌 project overview + quickstart + repo map
+📄 LICENSE                                  📜 repository license
+📄 CITATION.cff                             📎 citation metadata for academic use
+📄 CHANGELOG.md                             🗓️ release history (human-readable)
+📄 CONTRIBUTING.md                          🤝 contribution guide + workflow expectations
+📄 SECURITY.md                              🔐 security policy + reporting process
+📄 docker-compose.yml                       🐳 local dev stack (services + networking)
+📄 .env.example                             🧪 environment template (copy to .env; no secrets committed)
 ```
 
 (Shown in the v13 Master Guide’s repo layout.) :contentReference[oaicite:6]{index=6}
