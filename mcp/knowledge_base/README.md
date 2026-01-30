@@ -47,21 +47,21 @@ The Knowledge Base exists to:
 > ✅ You can create these folders gradually. The Knowledge Base is meant to grow iteratively.
 
 ```text
-mcp/
-└─ knowledge_base/
-   ├─ README.md                👈 you are here
-   ├─ index.md                 🧭 “start here” map of KB topics (optional but recommended)
-   ├─ glossary/                📖 shared vocabulary & acronyms
-   │  ├─ README.md
-   │  └─ terms/
-   ├─ primers/                 🧠 short domain introductions (GIS, history, geology, etc.)
-   ├─ sops/                    ✅ Standard Operating Procedures (step-by-step workflows)
-   ├─ templates/               🧩 reusable docs (KB entry template, SOP template, etc.)
-   ├─ provenance/              🔍 citation rules, source registry, licensing notes
-   ├─ ontologies/              🧬 controlled vocabularies, schemas, mappings, IDs
-   ├─ gazetteer/               📍 place-name standards + NER support notes
-   ├─ timelines/               ⏳ time-model notes (periodization, uncertainty, date rules)
-   └─ decisions/               🏛️ Architecture decisions (ADR-style) & governance notes
+📁 mcp/
+└─ 📁 knowledge_base/                          🧠 project knowledge base (how we think + how we work)
+   ├─ 📄 README.md                              👈 you are here
+   ├─ 📄 index.md                               🧭 “start here” map of KB topics (recommended)
+   ├─ 📁 glossary/                              📖 shared vocabulary & acronyms
+   │  ├─ 📄 README.md                            📘 how the glossary is organized
+   │  └─ 📁 terms/                               🗂️ individual term entries (one file per term)
+   ├─ 📁 primers/                               🧠 short domain introductions (GIS, history, geology, etc.)
+   ├─ 📁 sops/                                  ✅ Standard Operating Procedures (step-by-step workflows)
+   ├─ 📁 templates/                             🧩 reusable docs (KB entry template, SOP template, etc.)
+   ├─ 📁 provenance/                            🔍 citation rules, source registry, licensing notes
+   ├─ 📁 ontologies/                            🧬 controlled vocabularies, schemas, mappings, IDs
+   ├─ 📁 gazetteer/                             📍 place-name standards + NER support notes
+   ├─ 📁 timelines/                             ⏳ time-model notes (periodization, uncertainty, date rules)
+   └─ 📁 decisions/                             🏛️ ADR-style architecture decisions + governance notes
 ```
 
 ---
