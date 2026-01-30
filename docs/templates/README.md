@@ -1,243 +1,177 @@
-# 🧩 Documentation Templates (`docs/templates/`)
+# 🧩 docs/templates
 
-Welcome to the **governed** template hub for Kansas Frontier Matrix (KFM).  
-These templates help keep documentation **consistent**, **machine-validated**, and **evidence-backed** 🔍📎
+![Docs](https://img.shields.io/badge/docs-governed-blue)
+![Templates](https://img.shields.io/badge/templates-canonical-informational)
+![KFM](https://img.shields.io/badge/KFM-provenance--first-success)
 
-> ⚠️ **Templates are contracts.** If you change a template, assume it can impact validation rules, schemas, Story Node parsing, and review gates.
+This folder contains **governed Markdown templates** used across the Kansas Frontier Matrix (KFM) documentation system.
 
----
+KFM treats documentation as **first-class, machine-validated artifacts**. These templates exist to keep the repo consistent with KFM’s core invariants:
+- **Contract-first**: schemas + API contracts are first-class and versioned.
+- **Evidence-first**: provenance + catalog entries come *before* narrative interpretation.
+- **Deterministic pipeline**: transformations are reproducible, logged, and stable for the same inputs.
 
-## 🧭 Jump to
-
-- [📘 Overview](#-overview)
-- [🗂️ Directory Layout](#️-directory-layout)
-- [🧰 Template Catalog](#-template-catalog)
-- [🚀 Quickstart](#-quickstart)
-- [✅ Definition of Done](#-definition-of-done)
-- [🧪 Validation Expectations](#-validation-expectations)
-- [🛠️ Adding or Updating Templates](#️-adding-or-updating-templates)
-- [🔗 Related Docs](#-related-docs)
+> [!IMPORTANT]
+> **Do not “freestyle” new doc formats.** Start from a template, keep required front-matter, and link claims to evidence artifacts (datasets/schemas/catalog entries) wherever applicable.
 
 ---
 
-## 📘 Overview
+## 🗂️ What’s in here
 
-### 🎯 Purpose
-Provide **copy-ready, governed starting points** for:
-- canonical docs (guides, designs, runbooks) 📚  
-- Story Nodes (narrative + evidence) 📝  
-- API contract extensions (contract-first change capture) 🔌  
-
-### 📦 Scope
-
-| In Scope ✅ | Out of Scope 🚫 |
-|---|---|
-| Template inventory & when to use each | Defining STAC/DCAT/PROV schema details |
-| How to copy/fill templates | Implementing ETL / graph / API code |
-| Doc governance + “definition of done” | UI rendering rules beyond what templates encode |
-
-### 👥 Audience
-- Contributors writing or editing governed docs 👩‍💻👨‍💻  
-- Reviewers verifying provenance/governance 🔍  
-- Maintainers evolving templates + validation tooling 🧰  
-
-### 🧠 Key idea
-KFM is **contract-first + evidence-first**: docs (and stories) should not “float free” of the pipeline—**they must connect back to sources, datasets, schemas, and lineage**.
-
----
-
-## 🗂️ Directory Layout
-
-### 📁 This folder
-```text
 ```text
 📁 docs/
-└─ 📁 templates/                               🧩 documentation scaffolds (copy-me starters)
-   ├─ 📄 README.md                              📘 how to use templates + naming conventions
-   ├─ 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md          📄 universal doc template (KFM-MDP frontmatter + sections)
-   ├─ 📄 TEMPLATE__STORY_NODE_V3.md              📚 Story Node template (narrative + citations + map hooks)
-   └─ 📄 TEMPLATE__API_CONTRACT_EXTENSION.md     🔌 API contract extension template (types, endpoints, examples)
-```
-
-### 🧠 Where templates “land” (typical)
-```text
-```text
-📁 docs/
-├─ 📁 architecture/                       🧱 designs, blueprints, ADRs, system diagrams
-├─ 📁 governance/                         🛡️ ethics, sovereignty, access/review gates (fail-closed)
-├─ 📁 standards/                          📏 repo standards (KFM-MDP, profiles, conventions)
-└─ 📁 reports/                            📊 authored outputs (reviewed + versioned)
-   └─ 📁 story_nodes/                     📚 Story Node reports (narratives + citations)
-      ├─ 📁 draft/                        📝 in-progress Story Nodes (working)
-      └─ 📁 published/                    ✅ released Story Nodes (versioned)
+  └── 📁 templates/
+      ├── 📄 README.md  👈 you are here
+      ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
+      ├── 📄 TEMPLATE__STORY_NODE_V3.md
+      └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
 ```
 
 ---
 
-## 🧰 Template Catalog
+## 🧭 Template index
 
-> Tip 💡: If you’re unsure, start with the **Universal Doc** template and let the content tell you if it needs a stricter shape.
-
-| Template | File | Use When | Typical Destination |
+| Template | What it’s for | When to use it | Typical destination |
 |---|---|---|---|
-| 🧱 Universal Doc | `TEMPLATE__KFM_UNIVERSAL_DOC.md` | Most governed docs: guides, designs, runbooks, domain READMEs | `docs/**` |
-| 🧠 Story Node (v3) | `TEMPLATE__STORY_NODE_V3.md` | Narrative content intended for Story Node / Focus Mode flows | `docs/reports/story_nodes/draft/<slug>/story.md` |
-| 🔌 API Contract Extension | `TEMPLATE__API_CONTRACT_EXTENSION.md` | Proposing/adding/changing API endpoints (contract-first) | `docs/` (proposal) + API contract home (implementation repo path) |
+| [`TEMPLATE__KFM_UNIVERSAL_DOC.md`](./TEMPLATE__KFM_UNIVERSAL_DOC.md) | 📘 Canonical doc structure (overview/scope/audience/etc.) | Architecture docs, governance docs, domain READMEs, standards | `docs/**/…/*.md` |
+| [`TEMPLATE__STORY_NODE_V3.md`](./TEMPLATE__STORY_NODE_V3.md) | 🧠 Story Nodes + Focus Mode structure | Historical narrative, interpretive reports that must be provenance-linked | `docs/reports/story_nodes/**` |
+| [`TEMPLATE__API_CONTRACT_EXTENSION.md`](./TEMPLATE__API_CONTRACT_EXTENSION.md) | 🌐 API contract changes (endpoints, schema changes, compatibility) | Adding/changing endpoints, payload shape, versioning notes | near API contracts / API docs |
 
-<details>
-<summary><strong>🧱 TEMPLATE__KFM_UNIVERSAL_DOC.md</strong> — “Default template” for governed docs</summary>
-
-### Use this when…
-- You’re writing a doc that should be **reviewed like code**
-- You need **stable headings** and **front-matter metadata**
-- You want a built-in **Definition of Done** checklist ✅
-
-### Common pitfalls 🧯
-- Removing required headings (breaks validators)
-- Leaving “TBD” in key governance fields without a plan
-- Making claims without linking to evidence artifacts / datasets / schemas
-</details>
-
-<details>
-<summary><strong>🧠 TEMPLATE__STORY_NODE_V3.md</strong> — Evidence-backed narrative content</summary>
-
-### Use this when…
-- You’re writing a narrative that will be read in the UI as a “Story Node”
-- You need structured evidence panels / citations / dataset links
-
-### Common pitfalls 🧯
-- Treating Story Nodes like blog posts (they are **governed narrative artifacts**)
-- Missing links back to datasets + provenance
-- Publishing before upstream artifacts exist (pipeline order matters)
-</details>
-
-<details>
-<summary><strong>🔌 TEMPLATE__API_CONTRACT_EXTENSION.md</strong> — Contract-first API changes</summary>
-
-### Use this when…
-- You’re proposing a new endpoint or modifying an existing one
-- You need to capture: breaking changes, versioning, compatibility notes
-
-### Common pitfalls 🧯
-- Implementing code first and “documenting later”
-- Skipping backward compatibility analysis
-- Not linking the change to schemas / tests / fixtures
-</details>
+> [!NOTE]
+> If you aren’t sure which template to use:  
+> - **Docs about system behavior/contracts** → Universal Doc  
+> - **Narrative that the UI/Focus Mode should render** → Story Node  
+> - **API surface changes** → API Contract Extension
 
 ---
 
-## 🚀 Quickstart
+## 🚀 Quick start
 
-### 1) Pick the right template ✅
-Use the [Template Catalog](#-template-catalog) to choose.
+### 1) Copy a template ✂️
+Pick the closest template and copy it to the target location:
 
-### 2) Copy it into the correct home 📌
-Example (Universal Doc):
 ```bash
-cp docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md docs/<area>/<your_doc_name>.md
+# Example: create a new architecture doc
+cp docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md docs/architecture/my_new_doc.md
 ```
 
-Example (Story Node):
+### 2) Fill in front-matter 🧾
+Every governed doc starts with YAML front-matter.
+
+**Rules:**
+- ✅ Update `title`, `path`, `version`, `last_updated`, `status`
+- ✅ Keep governance fields (use `"TBD"` or `"n/a"` — do **not** delete fields)
+- ✅ Assign `doc_uuid` (stable identifier)
+- ✅ Fill `commit_sha` + `doc_integrity_checksum` when your workflow supports it
+
+<details>
+<summary><strong>Checksum helpers (examples)</strong></summary>
+
 ```bash
-mkdir -p docs/reports/story_nodes/draft/<story_slug>/assets
-cp docs/templates/TEMPLATE__STORY_NODE_V3.md docs/reports/story_nodes/draft/<story_slug>/story.md
+# Linux
+sha256sum docs/architecture/my_new_doc.md
+
+# macOS
+shasum -a 256 docs/architecture/my_new_doc.md
 ```
 
-### 3) Fill YAML front-matter 🧾
-- Prefer **“TBD”** / **“n/a”** over deleting fields (helps tooling stay stable)
-- Ensure `path:` matches the file location
-- Tag sensitivity/governance fields clearly (especially for restricted data)
-
-### 4) Write evidence-first ✍️🔍
-- Every factual claim should link to **datasets, schemas, or sources**
-- Prefer repo-local references over external links when possible
-
-### 5) Run validations 🧪
-- Follow the repo’s documentation validation workflow (CI + doc checks)
-- If CI fails: fix the doc/template rather than bypassing checks
-
----
-
-## 🧠 Canonical pipeline reminder (why Story Nodes come last)
-
-```mermaid
-flowchart LR
-  A[ETL 🧰] --> B[Catalogs 📦<br/>STAC / DCAT / PROV]
-  B --> C[Graph 🕸️<br/>Neo4j]
-  C --> D[APIs 🔌]
-  D --> E[UI 🗺️<br/>React / Map]
-  E --> F[Story Nodes 📝]
-  F --> G[Focus Mode 🎯]
+```powershell
+# Windows PowerShell
+Get-FileHash docs\architecture\my_new_doc.md -Algorithm SHA256
 ```
-
-> ✅ The punchline: **No stage leapfrogs upstream contracts.**  
-> Story Nodes are “downstream” of evidence, catalogs, and lineage.
+</details>
 
 ---
 
-## ✅ Definition of Done
+## 🧱 “Governed” means… (non-negotiables)
 
-Use this checklist when authoring any governed doc (including Story Nodes):
+### ✅ Evidence linkage
+Docs and Story Nodes should be written so both humans **and machines** can trace claims.
 
-- [ ] **Front-matter complete + valid** (matches governed template + profiles)
-- [ ] **All claims are linked** to datasets, schemas, or source references
-- [ ] **Validation steps are listed** and repeatable (if describing a process)
-- [ ] **Governance / FAIR+CARE / sovereignty** considerations are explicitly stated
-- [ ] No broken internal links 🔗
-- [ ] No secrets / PII / sensitive coordinates accidentally included 🛡️
+**Minimum expectation:**
+- Every material claim links to **datasets, schemas, catalog records, or sources**.
+- Processes described include **repeatable validation steps**.
+- Governance / FAIR+CARE / sovereignty considerations are **explicit**.
 
----
-
-## 🧪 Validation Expectations
-
-Documentation is expected to be validated in CI (fail-closed). Common checks include:
-
-- 🧾 YAML front-matter + required sections validation
-- 🔗 Link/reference validation (no broken internal links / missing refs)
-- 🧩 JSON schema validation for structured artifacts (STAC/DCAT/PROV, Story Node metadata, etc.)
-- 🕸️ Graph integrity checks (constraints + ontology assumptions)
-- 🔌 API contract tests (OpenAPI / GraphQL lint + endpoint expectations)
-- 🛡️ Security & governance scans (secrets, PII, sensitive location leakage, classification downgrades)
-
-> If your change “only touches docs” but fails these checks, that’s not noise—**it’s governance doing its job** ✅
+> [!TIP]
+> If a sentence would be controversial without evidence, treat it as a **claim that must be cited**.
 
 ---
 
-## 🛠️ Adding or Updating Templates
+## 🧠 Story Node specifics (Focus Mode ready)
 
-### When should you create a new template? 🤔
-Create a new template when a doc type:
-- repeats often,
-- needs consistent headings for machine parsing, and/or
-- has governance and review gates that must be explicit.
+Story Nodes are “machine-ingestible storytelling.” A valid Story Node should:
+- include **provenance for every claim**
+- reference **graph entities** via stable identifiers
+- clearly separate **fact vs interpretation** (especially if AI assisted)
 
-### Template design rules 📐
-- Keep required headings stable (validators often rely on them)
-- Prefer explicit placeholders (`TBD`, `n/a`) over missing fields
-- Include an embedded **Definition of Done** checklist
-- Provide at least one **worked example** (even a small one)
-
-### Template change checklist ✅
-- [ ] Bump template version (if versioned in front-matter)
-- [ ] Confirm affected docs can still validate (or plan a migration)
-- [ ] Update any docs that reference the template (e.g., Master Guide)
-- [ ] Update validators/schemas if fields/structure changed
-- [ ] Add/adjust CI tests for the new/updated contract
+> [!CAUTION]
+> Focus Mode is a **trust-preserving gate**. Content that’s not provenance-linked may be blocked, hidden, or flagged for governance review.
 
 ---
 
-## 🔗 Related Docs
+## 🌐 API contract extension specifics
 
-- 📘 `docs/MASTER_GUIDE_v13.md` (canonical pipeline + structure)
-- 🧾 `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` (authoring + validation conventions)
-- 🏛️ `docs/governance/ROOT_GOVERNANCE.md`
-- ⚖️ `docs/governance/ETHICS.md`
-- 🧭 `docs/governance/SOVEREIGNTY.md`
+When changing the API surface area:
+- update the **contract first**
+- document **backwards compatibility**
+- include **test/validation expectations**
+- note any **redaction/governance rules** if data is sensitive
+
+> [!IMPORTANT]
+> Contract changes are treated like schema changes: version consciously, avoid breaking consumers, and document migration paths.
 
 ---
 
-### ✨ Tiny quality-of-life tips
+## 🧪 Validation & CI expectations
 
-- Use `@mentions`, `#issue` links, and task lists in PRs to keep doc work reviewable ✅  
-- Use `<details>` blocks for long examples so pages stay readable 📚  
-- Use Mermaid diagrams sparingly, but consistently, when they clarify contracts 🗺️
+KFM’s CI commonly enforces the following (high-level):
+- YAML front-matter presence + correctness
+- required section structure for governed docs
+- link/reference validation (no broken internal refs)
+- schema validation for structured artifacts
+- contract tests for API endpoints
+- security/governance scans (secrets, PII/sensitive location checks, classification consistency)
+
+> [!NOTE]
+> If your doc fails CI, it’s usually one of: missing front-matter, deleted required fields, broken links, or missing “Definition of Done” elements.
+
+---
+
+## 🧰 Creating / evolving templates
+
+Templates are **governed**. Treat changes like changing a public interface.
+
+### Rules of thumb
+- ✅ Prefer **adding** fields/sections over removing them
+- ✅ If change is breaking, create a **new versioned template** (e.g., `V4`) rather than mutating the older one
+- ✅ Update this README’s **Template index** when adding a template
+- ✅ Align with contract-first + evidence-first expectations
+
+> [!WARNING]
+> Avoid silent template churn. If a template’s meaning changes, reviewers lose trust and older docs become inconsistent.
+
+---
+
+## 🧾 PR checklist (docs/templates)
+
+- [ ] Template choice matches the artifact type (doc vs story vs API contract)
+- [ ] YAML front-matter complete (no missing required keys)
+- [ ] No required fields deleted (use `TBD` / `n/a`)
+- [ ] Claims link to evidence (datasets/schemas/catalog entries/sources)
+- [ ] Governance + FAIR/CARE + sovereignty implications stated (if applicable)
+- [ ] Validation steps included & repeatable (where processes are described)
+
+---
+
+## 🔗 Related (conceptual) anchors
+
+While templates live here, they’re designed to align with:
+- canonical pipeline ordering (**data → catalogs/prov → database → API → UI → narrative**)
+- provenance-first publication patterns
+- the Story Node + Focus Mode trust model
+
+> [!TIP]
+> If you’re writing something that *feels* like “policy,” “contract,” “schema,” or “evidence rules,” it probably belongs in a governed doc using the Universal Doc Template.
+
+---
