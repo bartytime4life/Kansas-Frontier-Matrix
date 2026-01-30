@@ -221,21 +221,21 @@ Perfect — document it. Failure logs prevent repeated mistakes and preserve neg
 
 ```text
 📦 repo/
-├─ 🧪 mcp/
-│  ├─ 🧩 templates/        👈 you are here
-│  ├─ 🧪 experiments/
-│  ├─ 🏃 runs/
-│  ├─ 🧠 model_cards/
-│  └─ 📓 notebooks/
-├─ 🗃️ data/
-│  ├─ raw/
-│  ├─ processed/
-│  ├─ catalog/
-│  └─ provenance/
-└─ 📚 docs/
-   ├─ templates/
-   ├─ runbooks/
-   └─ checklists/
+├─ 📁 mcp/                                   🧠 Master Coder Protocol (templates + runs + experiments)
+│  ├─ 📁 templates/                           👈 you are here (reusable MCP scaffolds)
+│  ├─ 📁 experiments/                         🧪 experiment reports + protocols + artifacts
+│  ├─ 📁 runs/                                🏃 run logs + receipts (pipelines, evals, releases)
+│  ├─ 📁 model_cards/                         🧾 model cards (safety, evals, constraints, provenance)
+│  └─ 📁 notebooks/                           📓 exploratory notebooks (keep minimal + reproducible)
+├─ 📁 data/                                  🗃️ governed datasets + catalogs
+│  ├─ 📁 raw/                                 🧾 immutable inputs (evidence)
+│  ├─ 📁 processed/                            ✅ curated outputs (downstream-ready)
+│  ├─ 📁 catalog/                              🗂️ discovery metadata (STAC/DCAT)
+│  └─ 📁 provenance/                           🧬 lineage receipts (PROV)
+└─ 📁 docs/                                  📚 human documentation (guides + governance)
+   ├─ 📁 templates/                            🧩 doc scaffolds (dataset cards, runbooks, ADRs)
+   ├─ 📁 runbooks/                             📘 step-by-step operational docs
+   └─ 📁 checklists/                           ✅ “done means done” checklists (PR, data, security, release)
 ```
 
 ---
