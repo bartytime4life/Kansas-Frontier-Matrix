@@ -1,172 +1,234 @@
-# 🏛️ Architecture (docs/architecture)
+# 🏛️ KFM Architecture (docs/architecture)
 
-![Status](https://img.shields.io/badge/status-living%20doc-brightgreen)
-![Architecture](https://img.shields.io/badge/architecture-provenance--first-blue)
-![Philosophy](https://img.shields.io/badge/philosophy-contract--first-purple)
-![Governance](https://img.shields.io/badge/guardrails-FAIR%2BCARE-orange)
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Docs](https://img.shields.io/badge/docs-architecture-blue)
+![Principle](https://img.shields.io/badge/principle-provenance--first-brightgreen)
+![Governance](https://img.shields.io/badge/governance-policy--as--code-purple)
+![Boundary](https://img.shields.io/badge/boundary-API--only-orange)
 
-> [!NOTE]
-> This folder is the **canonical home** for system design docs, blueprints, and ADRs (Architecture Decision Records).  
-> If you’re looking for where to add code/data, jump to **🧩 Subsystem map**.
-
----
-
-## 🚀 Start here (recommended reading order)
-
-1. 📘 `../MASTER_GUIDE_v13.md` — repo-wide invariants, canonical pipeline ordering, canonical subsystem “homes”
-2. 🧱 `./KFM_REDESIGN_BLUEPRINT_v13.md` — v13 restructure plan (contract-first + evidence-first)
-3. 🧭 `./KFM_VISION_FULL_ARCHITECTURE.md` — long-term end-to-end vision (north star)
-4. 🛣️ `./KFM_NEXT_STAGES_BLUEPRINT.md` — roadmap beyond v13
-5. 🧾 `./adr/` — decision records (tradeoffs, constraints, and “why we chose this”)
-
-> [!TIP]
-> New here? Read **Master Guide → Redesign Blueprint → ADRs**. That order prevents “architecture drift” 🧲
+> **According to a document from 2025-12-28 (Master Guide v13 draft)**, KFM’s architecture is defined by non‑negotiable pipeline ordering, strict API boundaries, and evidence/provenance requirements that must not regress.  [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧠 The mental model
+## 🧭 What this folder is for
 
-KFM is a **pipeline → catalogs → graph/databases → API → UI → narrative** system.
+This folder is the **canonical “architecture map”** for Kansas Frontier Matrix (KFM): what the platform is, what the boundaries are, how data flows, and where governance is enforced.
 
-- **Pipelines** transform raw sources into processed datasets.
-- **Catalogs + lineage** (STAC / DCAT / PROV) make every dataset discoverable and auditable.
-- **Storage** (PostGIS + graph store like Neo4j) supports fast spatial queries + rich relationships.
-- **Server boundary** (FastAPI + optional GraphQL) is the only “door” into the knowledge base.
-- **UI** (React + MapLibre + optional Cesium) visualizes maps, timelines, and story-driven experiences.
-- **Story Nodes + Focus Mode** deliver governed narrative + policy-gated AI synthesis.
+KFM is explicitly designed as a **pipeline → catalogs → databases/graph → API → UI** system (with Focus Mode + narrative layered on top), where *everything* is traceable to sources and governed through policy + metadata gates.  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 “Truth path” (canonical flow)
+## 🧩 TL;DR Architecture in one picture
 
 ```mermaid
 flowchart LR
-  A["📥 Raw Sources<br/>data/**/raw/"] --> B["🧪 ETL Pipelines<br/>src/pipelines/"]
-  B --> C["🧼 Processed Outputs<br/>data/**/processed/"]
+  %% --- data staging ---
+  subgraph STAGING["📦 Data Staging (Git-tracked)"]
+    RAW["data/raw/ 🧊\n(immutable snapshots)"]
+    PROC["data/processed/ 🧪\n(clean + standardized outputs)"]
+    CAT["data/catalog/ 🗂️\n(STAC + DCAT)"]
+    PROV["data/provenance/ 🧾\n(W3C PROV lineage)"]
+  end
 
-  C --> D["🗂️ STAC<br/>data/stac/"]
-  C --> E["🧾 DCAT<br/>data/catalog/dcat/"]
-  C --> F["🧬 PROV<br/>data/prov/"]
+  %% --- knowledge stores ---
+  subgraph STORES["🗄️ Knowledge Stores"]
+    PG["PostGIS 🗺️\n(spatial + tabular)"]
+    N4J["Neo4j 🕸️\n(relationships/graph)"]
+  end
 
-  D --> G["🕸️ Graph Build<br/>src/graph/ → Neo4j"]
-  C --> H["🗺️ Spatial Store<br/>PostGIS"]
+  %% --- governed access layer ---
+  subgraph API["🧠 Governed Access Layer"]
+    FAST["FastAPI 🔌\n(REST + optional GraphQL)"]
+    POL["Policy-as-Code ⚖️\n(OPA/Rego checks + CI gates)"]
+  end
 
-  G --> I["🚪 API Boundary<br/>src/server/"]
-  H --> I
+  %% --- user-facing ---
+  subgraph UI["🖥️ User Experience"]
+    WEB["React + TypeScript 🌐"]
+    FOCUS["Focus Mode 🎯\n(evidence-gated AI + story)"]
+  end
 
-  I --> J["🗺️ Web UI<br/>web/"]
-  J --> K["📚 Story Nodes<br/>docs/reports/story_nodes/"]
-  K --> L["🎯 Focus Mode<br/>policy-gated synthesis"]
+  RAW --> PROC --> CAT
+  PROC --> PROV
+  CAT --> PG
+  CAT --> N4J
+  PG --> FAST
+  N4J --> FAST
+  POL --> FAST
+  FAST --> WEB
+  FAST --> FOCUS
 ```
 
-> [!IMPORTANT]
-> **No shortcuts.** If something is shown in the UI, it must have **processed data + catalogs + provenance** and must be reachable **through the API boundary** ✅
+**Key boundary rule:** the UI must never query the graph/databases directly — all access goes through the governed API.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🧱 Non‑negotiable architecture invariants
+## ✅ Non‑negotiables (architecture invariants)
 
-- ✅ **Canonical pipeline order**: Raw → Processed → Catalog/Prov → (DB/Graph) → API → UI  
-- ✅ **UI never talks to databases directly** (no direct PostGIS/Neo4j connections from `web/`)
-- ✅ **Contract-first**: schemas + API contracts are first-class artifacts; changes require compatibility checks
-- ✅ **Deterministic pipelines**: idempotent, config-driven, fully logged (re-run = same results)
-- ✅ **Fail-closed governance**: if checks fail (license/policy/validation), the default is **block**
-- ✅ **Separation of concerns**: each subsystem owns one job; integration happens at defined boundaries
-- ✅ **FAIR + CARE by design**: discoverability, reuse, sovereignty, and ethics are enforced by architecture
+These are “hard gates” — breaking them breaks the platform’s trust model:
 
----
-
-## 🧩 Subsystem map (where things live)
-
-| Subsystem | Canonical home 📁 | Owns ✅ | Never does 🚫 |
-|---|---|---|---|
-| Data staging | `data/**/{raw,work,processed}/` | Immutable sources, intermediates, final outputs | Hide data inside UI/server folders |
-| Metadata catalogs | `data/stac/`, `data/catalog/dcat/` | Discovery + structure | “Publish” without catalog entries |
-| Lineage | `data/prov/` | Inputs → activities → outputs audit trail | Allow “mystery data” in UI |
-| Pipelines | `src/pipelines/` | ETL jobs + dataset build logic | Manual click-ops; non-repeatable transforms |
-| Graph | `src/graph/` (+ `data/graph/` exports) | Ontology bindings, ingest, migrations | Duplicate graph logic elsewhere |
-| Server boundary | `src/server/` | REST/GraphQL, contracts, redaction, policy checks | Leak DB details to clients |
-| UI frontend | `web/` | Maps, timelines, UX | Ship raw data bundles; bypass API |
-| Policy | `policy/` | OPA rules, Focus Mode gating, classification | “Trust the prompt” as enforcement |
-| Docs & narrative | `docs/` + `docs/reports/story_nodes/` | Governed docs + Story Nodes | Treat narrative as untracked blobs |
-| Tools | `tools/` | Validators, utilities, devops helpers | Become a second “pipelines” folder |
-| Tests | `tests/` | Unit + integration tests | Be optional for boundary changes |
-
-> [!TIP]
-> If you’re unsure where something belongs, ask: **Is it data, a contract, code, policy, or narrative?**  
-> Put it in the subsystem that **owns** that category—*not* where it’s convenient 🧭
+- **Pipeline ordering is absolute:** `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode`  [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **API boundary rule:** frontend must never talk to Neo4j directly; *governed API only*.  [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Provenance first:** anything “published” must have catalogs + lineage before graph/UI/narrative use.  [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Deterministic ETL:** idempotent, config-driven transforms with reproducible outputs and logged runs.  [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Evidence-first narrative:** no unsourced story content; AI output must be constrained + clearly labeled and tied to evidence.  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Fail closed:** if metadata/policy checks fail, the system blocks merges/actions by default.  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧼 Clean Architecture (keep core logic portable)
+## 🗺️ Repository layout (architecture view)
 
-KFM favors a layered “Clean Architecture” so domain logic stays testable and framework-agnostic.
+KFM uses a **monorepo** so code + data + docs evolve together (and lineage stays inspectable).  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+```text
+📦 Kansas-Frontier-Matrix/
+├─ api/                🧠 FastAPI backend (Clean Architecture)
+├─ web/                🖥️ React + TypeScript frontend
+├─ pipelines/          🧪 ETL + enrichment jobs (deterministic/idempotent)
+├─ data/
+│  ├─ raw/             🧊 immutable source snapshots
+│  ├─ processed/       🧼 standardized outputs
+│  ├─ catalog/         🗂️ STAC items + DCAT records
+│  └─ provenance/      🧾 W3C PROV lineage logs
+├─ policy/             ⚖️ policy-as-code (OPA/Rego) + compliance rules
+└─ docs/
+   ├─ architecture/    🏛️ (this folder)
+   ├─ standards/       📏 STAC/DCAT/PROV profiles + doc protocols
+   └─ governance/      🧑‍⚖️ ethics, sovereignty, review gates
+```
+
+(Top-level structure summarized from KFM blueprint.)  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🧱 Backend architecture (Clean Architecture inside `api/`)
+
+KFM’s backend is designed with a layered **Clean Architecture** so domain logic stays testable and independent of infrastructure choices.  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ```mermaid
-graph TD
-  D["🧠 Domain<br/>(entities + types)"] --> U["🧩 Use-cases / Services<br/>(business rules)"]
-  U --> A["🔌 Adapters<br/>(repos, DB clients, external APIs)"]
-  A --> F["🏗️ Frameworks<br/>(FastAPI, drivers, queues, OPA)"]
+flowchart TB
+  DOMAIN["🧩 Domain Layer\n(core entities: LandParcel, HistoricalEvent, …)"]
+  USECASE["🧠 Service / Use-Case Layer\n(workflows + rules; no DB/framework deps)"]
+  ADAPTERS["🔌 Integration Layer\n(repos/adapters: PostGISRepository, Neo4jAdapter, …)"]
+  FRAMEWORKS["🌐 Delivery Layer\n(FastAPI routers, Pydantic models, DI, CORS, etc.)"]
+
+  DOMAIN --> USECASE --> ADAPTERS --> FRAMEWORKS
 ```
 
-### Practical rules of thumb 🧷
-- Domain models: **no DB, no HTTP, no file I/O** — just the “what”
-- Services: orchestrate domain objects + enforce rules — the “how/why”
-- Adapters: translate to/from PostGIS/Neo4j/files — the “plumbing”
-- Frameworks: routes, wiring, middleware, background jobs — the “runtime”
+Implementation notes in the blueprint emphasize:
+- FastAPI routers validate inputs, call services, and centralize enforcement (including governance checks).  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Optional GraphQL can be mounted, with resolvers reusing the same service layer (avoid duplicated logic).  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧾 Architecture Decision Records (ADRs)
+## 🧾 Data lifecycle + “boundary artifacts” (why catalogs exist)
 
-**Write an ADR when you change:**
-- Data stores (e.g., adding search index / new DB)
-- A boundary contract (schemas, OpenAPI, GraphQL SDL)
-- Governance/policy rules that block/permit classes of actions
-- Anything “expensive to reverse” later 💸
+KFM treats **metadata + provenance** as first-class outputs — not an afterthought.
 
-**Where**
-- `docs/architecture/adr/NNNN-short-title.md`
+### Required boundary artifacts per dataset / evidence product
 
-**Minimum ADR contents**
-- Context → Decision → Alternatives → Consequences → Rollout/compat notes
+Per Master Guide v13 and KFM standards guidance, every dataset or derived “evidence artifact” must produce:
+- **STAC** (assets + spatiotemporal indexing),
+- **DCAT** (dataset discovery + distributions),
+- **PROV** (lineage: inputs → activities → outputs → agents).  [oai_citation:17‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
----
+### Provenance logs (W3C PROV)
 
-## 🔁 Common change flows
+Provenance files record:
+- **Entities** (inputs/outputs, checksums/refs),
+- **Activities** (pipeline run + timestamp + params),
+- **Agents** (software + human triggers).  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### Add a new dataset / domain 🗺️
-1. Add raw sources under `data/<domain>/raw/`
-2. Implement/extend pipeline under `src/pipelines/`
-3. Output final assets to `data/<domain>/processed/`
-4. Generate boundary artifacts: **STAC + DCAT + PROV**
-5. (Optional) load/sync into PostGIS + Neo4j
-6. Expose via API contracts in `src/server/`
-7. Render in UI (`web/`) and/or Story Nodes (`docs/reports/story_nodes/`)
-
-### Add an AI/analysis “evidence artifact” 🤖
-Treat it like a real dataset:
-- stored as processed output
-- cataloged (STAC/DCAT)
-- traced (PROV)
-- exposed via API with policy-aware labeling/redaction
-- only then referenced by narratives or Focus Mode
+If something doesn’t have provenance, it’s treated as a red flag.  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 Related docs (cross-cutting)
+## ⚖️ Governance & policy enforcement (how trust is maintained)
 
-- ⚖️ Governance: `../governance/ROOT_GOVERNANCE.md`
-- 🧠 Ethics: `../governance/ETHICS.md`
-- 🪶 Sovereignty: `../governance/SOVEREIGNTY.md`
-- 📚 Glossary: `../glossary.md`
+KFM operationalizes governance using **policy-as-code** stored in-repo (transparent, versioned, reviewable).  [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### Policy-as-code (OPA/Rego)
+
+Typical policy areas include:
+- dataset metadata & licensing checks,
+- AI behavior constraints,
+- access control/security,
+- compliance & protected/sensitive data handling.  [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### CI enforcement (Conftest gate)
+
+Policy checks are intended to run in CI so non-compliant contributions can’t merge (fail-closed).  [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### Audit trails (example)
+
+Master Guide v13 explicitly calls out audit trail events for sensitive handling (e.g., a redaction notice event emitted when Focus Mode withholds/generalizes data).  [oai_citation:24‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## ✅ Definition of done for architecture updates
+## 🧰 Local dev stack (Docker Compose baseline)
 
-- [ ] Diagram(s) updated (or added) to match reality 🗺️  
-- [ ] Any new boundary contract documented + validated 🧾  
-- [ ] Governance/policy implications explicitly stated ⚖️  
-- [ ] ADR added for non-trivial design decisions 🧠  
-- [ ] “No shortcuts” rule preserved (provenance + API boundary) 🚪  
+The blueprint describes a Compose stack with core services like:
+- `db` → PostGIS on **5432**
+- `graph` → Neo4j on **7474** (HTTP UI) and **7687** (Bolt)
+- `api` → FastAPI on **8000**
+- `web` → React dev server on **3000**
+- optional `opa` → policy sidecar (example port **8181**)  [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:26‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+**Swagger UI (dev):**
+```text
+http://localhost:8000/docs
+```
+(Referenced as the common way to explore REST endpoints.)  [oai_citation:27‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🔌 Extension points (where new capability should plug in)
+
+### 1) Add a new data domain 📚🗺️
+Follow the domain expansion pattern:
+- put sources in `data/raw/<domain>/`
+- produce outputs in `data/processed/<domain>/`
+- publish catalogs + provenance (STAC/DCAT/PROV) before graph/UI use
+- add a domain README under `docs/data/<domain>/` describing ETL + sources + governance notes  [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 2) Add a new “evidence artifact” (model output / AI-derived layer) 🧪🤖
+Treat it like a dataset:
+- store it under `data/processed/...`
+- catalog it in STAC/DCAT
+- trace it in PROV (inputs, method/model, params, confidence metadata)
+- only expose it through governed APIs (never hard-code into UI)  [oai_citation:29‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 3) Add/modify API endpoints 🔧
+Follow “contract-first” expectations: schemas/contracts are first-class artifacts that should version cleanly and trigger compatibility checks when changed.  [oai_citation:30‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 📚 “What should I read next?”
+
+If you’re orienting yourself in KFM architecture, start here:
+
+1. **KFM Blueprint (system design + repo structure + governance)**  
+   - KFM is pipeline–catalog–database–API–UI with provenance-first design.  [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+2. **Master Guide v13 (contracts + invariants + canonical paths)**  
+   - Non-negotiables & pipeline ordering.  [oai_citation:32‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+3. **STAC/DCAT/PROV alignment policy & profiles (docs/standards)**  
+   - Required metadata records + linkage expectations.  [oai_citation:33‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+> Tip 🧠: If any of the referenced “canonical docs” are missing in your working tree, treat that as a repo hygiene issue — v13 guidance expects one canonical home per subsystem and strict, discoverable docs.  [oai_citation:34‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 🗂️ Expected architecture documents (v13 map)
+
+The Master Guide v13 draft references (or expects) architecture artifacts like:  
+- `docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`  
+- `docs/architecture/KFM_NEXT_STAGES_BLUEPRINT.md`  
+- `docs/architecture/KFM_VISION_FULL_ARCHITECTURE.md`  [oai_citation:35‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:36‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 🔖 Sources (design lineage)
+
+- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint** (core architecture, clean layers, monorepo, Compose, governance)  [oai_citation:37‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:38‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:39‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- **Kansas Frontier Matrix — Master Guide v13 (Draft)** (invariants, pipeline ordering, evidence-first narrative, audit trails, canonical docs map; dated 2025-12-28)  [oai_citation:41‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:42‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **STAC/DCAT/PROV Alignment Policy** (required boundary artifacts + linkage rules)  [oai_citation:43‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
