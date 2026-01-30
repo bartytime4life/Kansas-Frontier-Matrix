@@ -1,292 +1,279 @@
-# 🧰 MCP Runbooks (Operational Playbooks)
+# 🧰 MCP Runbooks
 
-![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-1f6feb?style=for-the-badge)
-![Runbooks](https://img.shields.io/badge/Docs-Runbooks-2ea043?style=for-the-badge)
-![Governance](https://img.shields.io/badge/Policy-OPA%20%2B%20Conftest-8250df?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Living%20Docs-f9c513?style=for-the-badge)
+Welcome to `mcp/runbooks/` — the **operational brain** of the Kansas Matrix System.  
+This folder holds **repeatable, step-by-step runbooks** for running pipelines, validating outputs, troubleshooting dev/prod workflows, and capturing “what we did + why it worked” in a way others can reproduce.
 
-> 🎯 **Goal:** Make operational work repeatable, auditable, and boring (in the best way).  
-> These runbooks are the “do-this-next” guides for **pipelines, policy gates, infra, AI/Focus Mode, and incident response**.
+> **Why here?** The repo is intentionally built as a living, evidence-backed knowledge base where docs, methods, and outcomes are first-class citizens (not an afterthought). [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 Quick Navigation
+## 🧭 Quick navigation
 
-- [What “Runbooks” Mean Here](#-what-runbooks-mean-here)
-- [Golden Rules](#-golden-rules)
-- [Folder Structure](#-folder-structure)
-- [Runbook Quality Bar](#-runbook-quality-bar)
-- [Runbook Template](#-runbook-template)
-- [Runbook Index](#-runbook-index)
-- [How to Add / Improve a Runbook](#-how-to-add--improve-a-runbook)
-- [Related Docs](#-related-docs)
+- 📂 **MCP core**
+  - `../runs/` → reproducible “run artifacts” (inputs, outputs, manifests, logs)
+  - `../experiments/` → experiment reports & results
+  - _(optional)_ `../model_cards/` → model cards & AI component documentation (if/when present) [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:3‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
 
----
+- 🏛️ **Canonical docs**
+  - `../../docs/` → governed documentation, standards, templates, architecture notes [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-## 📌 What “Runbooks” Mean Here
-
-Runbooks are **step-by-step operational playbooks** for:
-
-- 🧯 **Incidents** (API down, DB degraded, policy blocks, pipeline broken)
-- 🧪 **Operational tasks** (rebuild indexes, rerun pipelines, rotate secrets, restore backups)
-- 🧭 **Governed workflows** that must follow MCP + KFM rules (metadata/provenance, policy enforcement, reproducibility)
-
-### ✅ Runbook vs SOP vs Experiment (tiny guide)
-
-| Doc Type | Best For | Lives In | Must Include |
-|---|---|---|---|
-| 🧰 **Runbook** | Ops + incidents + “fix/restore” | `mcp/runbooks/` | Triage → Steps → Verification → Rollback |
-| 🧾 **SOP** | Recurring “happy path” workflows | `mcp/sops/` (or `docs/sops/`) | Purpose → Prereqs → Procedure → Outcome |
-| 🧪 **Experiment Log** | Research/ML/analysis runs | `mcp/experiments/` | Hypothesis → Data → Method → Results → Interpretation |
-| 🏗️ **ADR** | Architecture decisions | `docs/architecture/adr/` | Context → Decision → Consequences |
+- 🧱 **Data pipeline anchor**
+  - `../../data/` → raw → processed → catalog/prov → database → API → UI (canonical order) [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🥇 Golden Rules
+## 🧠 What counts as a “runbook”?
 
-> 🔒 **Do not shortcut the pipeline. Do not bypass governance.**  
-> If a runbook step violates these, the runbook is wrong.
+A **runbook** is a **procedural guide** that answers:
 
-### 1) 🧱 Canonical pipeline order (always)
-**Raw → Processed → Catalog/PROV → Database → API → UI**
+- ✅ **When** should we run this?
+- ✅ **What** are the prerequisites + risks?
+- ✅ **Exactly how** do we do it (commands + checkpoints)?
+- ✅ **How do we verify** it worked?
+- ✅ **How do we roll back** safely?
+- ✅ **What artifacts** (logs/manifests/provenance) must be committed?
 
-```mermaid
-flowchart LR
-  Raw["📦 Raw"] --> Processed["🧹 Processed"] --> Catalog["🧾 Catalog + PROV"] --> DB["🗄️ Database"] --> API["🧩 API"] --> UI["🖥️ UI"]
+This aligns with the project’s documentation-first + reproducibility goals and the MCP emphasis on explicit methods and traceable outcomes. [oai_citation:7‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) [oai_citation:8‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+---
+
+## 🧱 Non‑negotiable rules
+
+### 1) 🛤️ Follow the canonical pipeline order
+All data + derived assets must flow through the canonical sequence:
+
+`Raw → Processed → Catalog/Prov → Database → API → UI`
+
+Any proposed shortcut is assumed flawed unless justified and reviewed. [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 2) 🧾 Git is the catalog of record
+Runbooks must assume the repo is the system-of-record for code, data snapshots, and provenance. Tagging/releases + `CITATION.cff` usage supports reproducible references to specific repository states. [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 3) 🔍 Evidence-backed, transparent, collaborative
+If a runbook changes behavior, it should state **why**, link evidence, and make verification unambiguous. This supports community oversight and “show your work” rigor. [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 4) 🧭 Ethics and stewardship are part of operations
+Operational steps must respect project ethics (e.g., sensitive locations, community control expectations) and embed FAIR/CARE thinking where applicable. [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🗂️ Folder conventions
+
+Suggested layout inside `mcp/runbooks/`:
+
+```text
+📁 mcp/
+  📁 runbooks/
+    📄 README.md                       👈 you are here
+    📄 TEMPLATE__RUNBOOK.md            (recommended)
+    📄 RB-010__local-dev-stack.md      (recommended)
+    📄 RB-020__api-smoke-tests.md      (recommended)
+    📄 RB-030__ingest-new-dataset.md   (recommended)
+    📄 RB-040__generate-stac-dcat-prov.md
+    📄 RB-050__model-eval-and-report.md
+    📄 RB-060__release-tag-and-cite.md
 ```
 
-### 2) 🧩 UI never talks to databases (ever)
-The UI must only interact via the **API layer**, so validation + policy enforcement remain centralized.
-
-```mermaid
-flowchart TB
-  UI["🖥️ UI"] --> API["🧩 API"]
-  API --> DB["🗄️ Databases"]
-  API --> OPA["🛡️ Policy Engine (OPA)"]
-  UI -. "🚫 no direct access" .-> DB
-```
-
-### 3) 🛡️ Policy gates are not optional
-- CI policy checks (Conftest/OPA) are treated as **hard gates**
-- Runtime policy checks (OPA) can **deny, sanitize, or redact** responses/data
-- Runbooks must include “how to verify policy compliance” when relevant
-
-### 4) 🧾 Evidence-first
-A runbook should make it possible for a reviewer to answer:
-- What changed?
-- What did you run?
-- What did you observe?
-- What did you verify?
-- How do we undo it?
+> Note: The repo’s broader structure expects a dedicated `mcp/` area for methods/experiments and a governed `docs/` system for standards/templates. [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 ---
 
-## 🗂️ Folder Structure
+## 🏷️ Naming + lifecycle
 
-This folder should stay tidy and “grep-friendly” 🧠
+### File naming
+Use one of these patterns:
 
-```
-📁 tests/
-└─ 📁 data/                                        🧪 data-oriented test lane (fixtures + goldens)
-   ├─ 📁 fixtures/                                   🧰 self-contained fixture sets (end-to-end data truth files)
-   │  ├─ 📁 kfm_minimal/                              ✅ one minimal fixture set (golden “known good”)
-   │  │  ├─ 📁 raw/                                   🧾 immutable source inputs
-   │  │  │  └─ 📁 <domain>/                            🧭 e.g., historical/, hydrology/, air-quality/
-   │  │  ├─ 📁 work/                                  🧪 intermediate artifacts (optional but supported)
-   │  │  │  └─ 📁 <domain>/
-   │  │  ├─ 📁 processed/                              ✅ golden processed outputs (expected pipeline results)
-   │  │  │  └─ 📁 <domain>/
-   │  │  ├─ 📁 stac/                                  🛰️ STAC geospatial catalog fixtures
-   │  │  │  ├─ 📁 collections/                         🧩 STAC Collections
-   │  │  │  └─ 📁 items/                               📦 STAC Items
-   │  │  ├─ 📁 catalog/                                🗂️ DCAT discovery fixtures
-   │  │  │  └─ 📁 dcat/                                 🧾 DCAT dataset entries (JSON-LD)
-   │  │  ├─ 📁 prov/                                   🧬 PROV lineage bundles (JSON/JSON-LD)
-   │  │  ├─ 📁 db/                                     ◻️ optional: PostGIS/Neo4j seeds (integration helpers)
-   │  │  └─ 📄 README.md                                📘 fixture runbook (“what this set proves”)
-   │  └─ 📁 <another_fixture_set>/                      ➕ additional fixture sets (same structure)
-   │
-   ├─ 📁 snapshots/                                   📸 golden responses (contract-level truth files)
-   │  ├─ 📁 api/                                       🌐 golden HTTP responses (REST contract tests)
-   │  └─ 📁 graphql/                                   🕸️ golden GraphQL responses (if used)
-   │
-   └─ 📁 generated/                                   ◻️ optional: test outputs (should be gitignored)
-```
+- `RB-###__short-slug.md` (simple, sortable)
+- `RB-<area>-###__short-slug.md` (if you want categories)
 
-### 🏷️ Naming convention (suggested)
+Examples:
+- `RB-010__local-dev-stack.md`
+- `RB-data-030__ingest-new-dataset.md`
 
-Use one of these (pick one style and stay consistent):
-- `RBK__<area>__<topic>.md` → e.g. `RBK__ci__conftest_policy_failure.md`
-- `RBK-<area>-<topic>.md` → e.g. `RBK-ci-conftest-policy-failure.md`
+### Status tags
+Put a status badge near the top of each runbook:
+
+- 🟢 **Stable** — regularly used, verified recently
+- 🟡 **Draft** — under development / needs validation
+- 🔴 **Deprecated** — kept for history, do not use
 
 ---
 
-## 🎛️ Runbook Quality Bar
+## 🧪 Runbooks vs Experiments
 
-Every runbook should include (minimum):
+Runbooks and experiments complement each other:
 
-- ✅ **Purpose** (why it exists)
-- 🧠 **When to use** (symptoms / triggers)
-- 🧰 **Prerequisites** (access, tools, env vars)
-- 🧪 **Procedure** (step-by-step)
-- 🔎 **Verification** (how we know it worked)
-- ↩️ **Rollback** (how to revert safely)
-- 🧯 **Troubleshooting / Notes** (common failure modes)
-- 🧾 **Audit trail** (what to record: links, SHAs, timestamps, screenshots)
+- 🧰 **Runbook** = “How to do a process reliably”
+- 🧪 **Experiment report** = “What we tested + results + interpretation”
 
-> 💡 If it’s an incident runbook, add: **impact**, **severity**, **owner/on-call**, and **postmortem notes**.
+The project explicitly expects experiment reports with goals/data/method/results/interpretation to preserve a traceable research history. [oai_citation:14‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+
+When a runbook produces a novel outcome (new extraction method, new model, changed pipeline), **link to an experiment report** in `../experiments/` and store artifacts under `../runs/`.
 
 ---
 
-## 🧾 Runbook Template
+## ✅ Runbook quality bar
+
+Every runbook **must** include:
+
+- 🎯 **Objective** (what success looks like)
+- 🧩 **Scope** (what it does *not* cover)
+- ⛓️ **Prerequisites** (tools, credentials, containers, datasets)
+- ⚠️ **Risk & safety notes**
+- 🧪 **Procedure** (commands + checkpoints)
+- 🔎 **Verification** (how to confirm correctness)
+- ⏪ **Rollback** (how to undo safely)
+- 🧾 **Provenance** (what to commit, where, and naming rules)
+- 📎 **References** (docs/specs/issues/PRs that justify steps)
+
+This matches MCP’s emphasis on standardized protocols and complete, replicable methods documentation. [oai_citation:15‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) [oai_citation:16‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+
+---
+
+## 🧩 Runbook template
 
 <details>
-<summary><b>📄 Click to expand: TEMPLATE__RUNBOOK.md</b></summary>
+<summary><b>📄 Click to expand TEMPLATE__RUNBOOK.md (copy/paste)</b></summary>
+
+```markdown
+# 🧰 RB-XXX — <Runbook Title>
+
+**Status:** 🟡 Draft / 🟢 Stable / 🔴 Deprecated  
+**Owner(s):** @<name-or-team>  
+**Last reviewed:** YYYY-MM-DD  
+**Applies to:** <local / CI / prod / research>  
+**Related:** ../runs/<run_id>/ • ../experiments/<exp_id>.md • ../../docs/<ref>.md
 
 ---
 
-# 🧰 RBK: <AREA> — <SHORT TITLE>
+## 🎯 Objective
+- What does “done” mean?
 
-## 🎯 Purpose
-- What does this runbook accomplish?
+## 🧭 Scope
+- In scope:
+- Out of scope:
 
-## 🚦 When to Use
-- Symptoms:
-  - [ ] …
-- Signals / alerts:
-  - [ ] …
-- Common root causes:
-  - [ ] …
+## ⛓️ Prerequisites
+- [ ] Tooling installed (list versions if relevant)
+- [ ] Env vars / secrets present
+- [ ] Input dataset available at: `data/...`
 
-## 🔐 Prerequisites
-- Access:
-  - [ ] …
-- Local tools:
-  - [ ] …
-- Secrets / env:
-  - [ ] …
-- Safety checks:
-  - [ ] Confirm production vs staging target
+## ⚠️ Safety / Ethics / Data Stewardship
+- Sensitive data? Access tier? Redactions?
+- Any special handling requirements?
 
-## 🧠 Triage (fast path)
-- [ ] Confirm scope/impact (what’s broken, who’s affected)
-- [ ] Check recent changes (PRs/commits/releases)
-- [ ] Capture logs/screenshots now (before restarting anything)
+## 📥 Inputs
+- Paths:
+- Parameters:
 
-## 🛠️ Procedure (step-by-step)
-1. …
-2. …
-3. …
+## 📤 Outputs
+- Paths:
+- Expected artifacts:
+  - `mcp/runs/<run_id>/manifest.json`
+  - `data/catalog/...`
+  - `data/prov/...`
 
-## ✅ Verification
-- What “good” looks like:
-  - [ ] …
-- Smoke tests:
-  - [ ] …
-- Data validation checks:
-  - [ ] …
-- Policy checks:
-  - [ ] …
+## 🧪 Procedure (step-by-step)
+1) Step one
+   - Command:
+     ```bash
+     <command>
+     ```
+   - Checkpoint (expected output):
+     - ✅ …
 
-## ↩️ Rollback
-- [ ] Revert change / redeploy previous version
-- [ ] Confirm system returns to last known-good state
-- [ ] Document rollback reason
+2) Step two
+   - …
 
-## 🧯 Troubleshooting / Notes
-- If X happens, do Y
-- Known gotchas
+## 🔎 Verification
+- [ ] Validate schema
+- [ ] Compare counts/checksums
+- [ ] Spot-check map layers / samples
 
-## 🧾 Audit Trail (paste links + notes)
-- Timestamp:
-- Environment:
-- Commit(s):
-- Commands run:
-- Logs:
-- Outcome:
+## ⏪ Rollback
+- If step X fails:
+  - How to revert data outputs
+  - How to revert metadata/provenance
+  - How to revert database changes (if any)
 
----
+## 🧾 Provenance & Commit Rules
+- What must be committed (and where):
+  - `data/processed/...`
+  - `data/catalog/...`
+  - `data/prov/...`
+  - `mcp/runs/<run_id>/...`
+- Required commit message format:
+  - `runbook(RB-XXX): <summary>`
 
+## 📎 References
+- Links to internal docs/specs/issues/PRs
+```
 </details>
 
 ---
 
-## 📚 Runbook Index
+## 🧪 Starter runbooks we should keep in this folder
 
-> 🧩 This index is a **starter set**. Add runbooks as the system grows.  
-> ✅ Keep titles action-oriented and searchable.
+Below are the first “high ROI” runbooks for this repo. Create these files as you implement them:
 
-### ✅ CI / Policy Gates
-- 🔲 `ci/RBK__ci__conftest_policy_failure.md` — CI fails on policy (missing license/PROV/metadata)
-- 🔲 `ci/RBK__ci__lint_test_failure.md` — Formatting / tests red
-- 🔲 `policy/RBK__policy__opa_rego_change_rollout.md` — Safely roll out new policy rules
+| Runbook | What it covers | Status |
+|---|---|---|
+| `RB-010__local-dev-stack.md` | Bring up containers, common port/resource fixes | 🔲 |
+| `RB-020__api-smoke-tests.md` | Swagger/GraphQL quick checks + sanity queries | 🔲 |
+| `RB-030__ingest-new-dataset.md` | Add a new source following Raw→Processed→Catalog/Prov→DB→API→UI | 🔲 |
+| `RB-040__generate-stac-dcat-prov.md` | Regenerate catalogs + provenance bundles | 🔲 |
+| `RB-050__model-eval-and-report.md` | Run eval + produce experiment report + save artifacts | 🔲 |
+| `RB-060__release-tag-and-cite.md` | Tag release + ensure citation/versioning hygiene | 🔲 |
 
-### 🏭 Pipelines / Data Ops
-- 🔲 `pipelines/RBK__pipelines__ingest_new_dataset.md` — Ingest new dataset (Raw→Processed→Catalog→DB)
-- 🔲 `pipelines/RBK__pipelines__rebuild_catalog_prov.md` — Rebuild STAC/DCAT/PROV mappings
-- 🔲 `pipelines/RBK__pipelines__reindex_search_graph.md` — Reindex search / graph embeddings / entity links
-
-### 🗄️ Databases
-- 🔲 `db/RBK__db__postgis_backup_restore.md` — Backup/restore PostGIS
-- 🔲 `db/RBK__db__neo4j_backup_restore.md` — Backup/restore graph DB
-- 🔲 `db/RBK__db__migration_rollback.md` — Migrations + rollback pattern
-
-### 🧩 API / Services
-- 🔲 `api/RBK__api__healthcheck_and_degraded_mode.md` — Health, degradation, partial service
-- 🔲 `api/RBK__api__slow_queries_hotspots.md` — Latency triage + query hotspots
-
-### 🖥️ Web / UI
-- 🔲 `web/RBK__web__build_deploy_failure.md` — Build/deploy failures
-- 🔲 `web/RBK__web__layer_not_rendering.md` — Map layer fails to render (source/projection/tiles)
-
-### 🧠 AI / Focus Mode (Ollama + Tool Use)
-- 🔲 `ai/RBK__ai__answer_blocked_by_policy.md` — OPA blocks answer (sensitive refs / disallowed content)
-- 🔲 `ai/RBK__ai__missing_citations.md` — AI responses missing citations / provenance links
-- 🔲 `ai/RBK__ai__ollama_model_load_failure.md` — Model not loading / runtime errors
+Why these? Because the project explicitly expects:  
+- reproducible dev workflows (compose stack, troubleshooting) [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- API exploration and testing habits (Swagger UI / GraphQL checks) [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- strict pipeline ordering and repository-as-record discipline [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧑‍🔧 How to Add / Improve a Runbook
+## 🛠️ Operational snippets we already know we’ll need
 
-- [ ] Copy the template (above) or a similar runbook
-- [ ] Write it like you’re helping **future-you at 2am** 😅
-- [ ] Prefer **checklists** and **copy/paste commands**
-- [ ] Add “Verification” and “Rollback” even if it feels repetitive
-- [ ] Update the [Runbook Index](#-runbook-index)
+### 🐳 Local dev stack gotchas (compose)
+Common issues to document in `RB-010__local-dev-stack.md`:
 
-### ✅ Quality checklist (PR-ready)
-- [ ] Steps are deterministic (no “just fix it”)
-- [ ] Contains verification (observable success)
-- [ ] Contains rollback (safe undo)
-- [ ] Notes policy/gov implications (if any)
-- [ ] Links to related docs / scripts / dashboards
+- container dependency timing → re-run `docker-compose up`
+- port conflicts (e.g., `5432`, `7474`, `8000`, `3000`) → change mappings or stop local services
+- Docker memory limits when loading big datasets
+- volume permission issues on Windows/Mac
+- rebuild after package changes → `docker-compose up --build` or `docker-compose build` [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
----
+### 🔌 API smoke checks
+Document quick checks like:
 
-## 🔗 Related Docs
+- Swagger UI (local):
+  - `http://localhost:8000/docs`
+- Example REST checks:
+  - `GET /datasets`
+  - `GET /features/{id}`
+- GraphQL (local):
+  - `http://localhost:8000/graphql`
+  - Example query:
+    ```graphql
+    query {
+      storyNodes {
+        id
+        title
+        yearRange
+      }
+    }
+    ``` [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-From here (`mcp/runbooks/README.md`), useful nearby references:
-
-- 🏠 Root overview: `../../README.md`
-- 🧠 MCP artifacts:
-  - `../experiments/` (experiment logs)
-  - `../runs/` (run outputs / run history)
-  - `../sops/` (standard operating procedures)
-- 🧱 Architecture & standards:
-  - `../../docs/architecture/`
-  - `../../docs/standards/`
-  - `../../docs/templates/`
-- 🧾 Governance:
-  - `../../docs/governance/`
-  - `../../SECURITY.md`
-
----
-
-## 🧊 Philosophy (keep it simple)
-
-> **If it’s not documented, it didn’t happen.**  
-> **If it’s not reproducible, it’s not done.**  
-> **If it bypasses policy, it’s a bug.** 🛡️
+> Tip: keep URLs in code blocks/inline code so they remain copyable and clearly “operational constants”.
 
 ---
 
+## 🧾 Sources & alignment notes
+
+This folder exists to implement MCP’s “documentation-first, reproducible, modular” operating style and to keep day-to-day procedures aligned with the KFM architecture and canonical pipeline ordering. [oai_citation:25‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) [oai_citation:26‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+**Key reference docs used:**
+-  [oai_citation:27‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf
+-  [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) MARKDOWN_GUIDE_v13.md.gdoc
+-  [oai_citation:29‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32) Scientific Method _ Research _ Master Coder Protocol Documentation.pdf
+-  [oai_citation:30‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H) Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf
