@@ -1,295 +1,193 @@
-# 🧪 Test Fixtures (KFM)
+<!--
+📄 File: tests/fixtures/README.md
+🎯 Purpose: Canonical documentation for deterministic test fixtures used across the KFM stack.
+-->
 
-> 📍 **Location:** `tests/fixtures/`  
-> 🎯 **Purpose:** small, deterministic, provenance-aware inputs for automated tests across the Kansas Frontier Matrix (KFM) pipeline (📥 raw → 🧹 processed → 🗂️ catalog+prov → 🗄️ DB → 🔌 API → 🗺️ UI).
+# 🧪 Test Fixtures
 
----
+![KFM](https://img.shields.io/badge/KFM-tests%2Ffixtures-0b7285)
+![Deterministic](https://img.shields.io/badge/fixtures-deterministic-1f6feb)
+![Metadata](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-2ea44f)
+![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
 
-## 🧭 Why fixtures exist
-
-KFM is designed to be **evidence-backed** and **provenance-first**—meaning we should be able to trace *any* derived output (including test outputs) back to clear inputs and metadata. Fixtures are the “known-good” mini-worlds we use to verify:
-
-- ✅ data contracts (schemas, validations)
-- ✅ deterministic pipeline behavior
-- ✅ API responses (FastAPI tests)
-- ✅ governance checks (license + provenance requirements)
-- ✅ UI rendering assumptions (GeoJSON shape, IDs, etc.)
-- ✅ “Focus Mode” / AI safety + citation formatting (when applicable)
-
-If a test can’t be reproduced from fixtures, it’s not trustworthy. 🧾
+> [!NOTE]
+> Fixtures are **tiny, deterministic, and committed** on purpose — they let us test the full KFM “raw → processed → catalog/provenance → API” chain locally and in CI.
 
 ---
 
-## 🆚 Fixtures vs “sample data”
+## 🎯 What this folder is for
 
-Use the right home so the repo stays clean and scalable:
-
-- **`tests/fixtures/`** → *tiny* datasets and mock artifacts **only for tests**  
-  - Think: “enough to test the logic, not enough to be a real dataset”.
-- **`data/raw/sample/`** (or your project’s equivalent) → dev/demo seed datasets used to boot the system locally (may be bigger than fixtures).  
-- **Never** use fixtures as a backdoor to bypass canonical pipeline flow. 🚫
-
----
-
-## 🗂️ Recommended fixture layout
-
-> This is a suggested structure that aligns fixtures to KFM’s pipeline + subsystems.  
-> Add folders only when a real test needs them.
-
-```text
-📁 tests/
-└─ 📁 fixtures/                                   🧰 governed, tiny test fixtures (goldens + seeds)
-   ├─ 📄 README.md                                  👈 you are here ✨
-   ├─ 📁 manifest/                                  🧾 fixture inventory + integrity
-   │  ├─ 🧾 fixtures.yaml                            ✅ fixture registry + checksums + owners
-   │  └─ 📄 fixtures.schema.json                     ◻️ optional: schema for validating fixtures.yaml
-   ├─ 📁 data/                                      📦 data fixtures (tiny + representative)
-   │  ├─ 📁 raw/                                     📥 raw snapshots (tiny!)
-   │  ├─ 📁 processed/                               🧹 expected processed outputs (goldens)
-   │  ├─ 📁 catalog/                                 🗂️ STAC/DCAT-style test metadata
-   │  │  ├─ 📁 stac/                                 🛰️ STAC fixture objects (collections/items)
-   │  │  └─ 📁 dcat/                                 🧾 DCAT fixture objects (JSON-LD)
-   │  └─ 📁 provenance/                              🧬 PROV-like lineage artifacts (receipts)
-   ├─ 📁 db/                                        🗄️ database seeds + snapshots
-   │  ├─ 📁 postgis/                                 🐘 SQL seed scripts + expected tables/views
-   │  └─ 📁 neo4j/                                   🕸️ Cypher seeds / JSON graph snapshots
-   ├─ 📁 api/                                       🌐 API I/O fixtures (contract goldens)
-   │  ├─ 📁 requests/                                📤 request payloads (JSON)
-   │  ├─ 📁 responses/                               ✅ golden responses (JSON)
-   │  └─ 📁 errors/                                  🧯 expected error bodies (JSON)
-   ├─ 📁 policy/                                    🛡️ policy-as-code fixtures (OPA-style)
-   │  ├─ 📁 inputs/                                  🧾 policy input JSON
-   │  └─ 📁 expected/                                ✅ expected allow/deny decisions
-   ├─ 📁 ai/                                        🤖 Focus Mode fixtures (prompts + expected citations)
-   │  ├─ 📁 prompts/                                 💬 prompts / tool traces / contexts
-   │  └─ 📁 expected/                                ✅ expected responses + citations
-   └─ 📁 web/                                       🖥️ UI fixtures (Story Nodes + map snippets)
-      ├─ 📁 story_nodes/                             📚 minimal Story Node markdown fixtures
-      └─ 📁 map/                                     🗺️ style snippets / layer configs for UI tests
-```
+- ✅ Reproducible inputs for unit + integration tests (API, pipelines, policy).
+- ✅ Minimal “golden” datasets + their metadata sidecars.
+- ✅ Negative fixtures (intentionally invalid) to prove we **fail closed**.
+- ❌ Not production data.
+- ❌ Not a dumping ground for large rasters or real-world exports.
 
 ---
 
-## 🔁 Fixture “pipeline alignment” (the golden rule)
+## 🧠 Fixture philosophy (KFM-style)
 
-Fixtures should be organized so tests can validate the canonical flow:
+KFM is **provenance-first**: even in tests, we treat data like it must pass the same gates as “real” layers.
+
+- **Pipeline order matters**: raw → processed → catalog/prov → DB → API → UI
+- **Metadata required**: every dataset fixture should have catalog + provenance docs
+- **Small & diffable**: prefer compact JSON/GeoJSON/CSV (or tiny rasters)
+- **Governance baked in**: licenses + sensitivity flags are part of the “contract”
 
 ```mermaid
 flowchart LR
-  A[📥 Raw] --> B[🧹 Processed]
-  B --> C[🗂️ Catalog + 🧾 Provenance]
-  C --> D[🗄️ Databases]
-  D --> E[🔌 API]
-  E --> F[🗺️ UI]
+  A[🧱 raw] --> B[🧼 processed]
+  B --> C[🗺️ catalog]
+  B --> D[🧾 provenance]
+  C --> E[(🗄️ DB)]
+  D --> E
+  E --> F[🔌 API]
+  F --> G[🖥️ UI]
 ```
 
-This makes it easy to write tests like:
-
-- “given `raw/`, pipeline produces **exactly** `processed/`”
-- “given `processed/`, catalog/prov generator produces **exactly** `catalog/` + `provenance/`”
-- “given `catalog/`, DB seed inserts expected rows/nodes”
-- “given seeded DB, API returns **golden** JSON response”
-
 ---
 
-## 📜 Fixture contract
+## 🗂️ Recommended layout
 
-Every fixture added here should be:
+> [!TIP]
+> If your tests expect a different layout, update this README (or add per-pack READMEs). The goal is clarity + consistency.
 
-- **Small** 🧊 (prefer KBs, not MBs)
-- **Deterministic** 🎯 (stable ordering, stable IDs, no randomness)
-- **Explained** 🧠 (a human can understand why it exists)
-- **Governable** 🛡️ (license + provenance expectations satisfied, even in miniature)
-
-### ✅ Required metadata (via manifest)
-
-Add each fixture to `tests/fixtures/manifest/fixtures.yaml`.
-
-Suggested fields:
-
-| Field | Why it matters |
-|------|-----------------|
-| `id` | stable reference across tests |
-| `path` | where the file lives |
-| `stage` | raw / processed / catalog / provenance / db / api / ui |
-| `format` | csv / geojson / json / md / sql / cypher |
-| `description` | what behavior this fixture validates |
-| `license` | required for governance-style checks |
-| `source` | where it came from (or “synthetic”) |
-| `sha256` | prevents silent changes / golden drift |
-
-Example:
-
-```yaml
-# tests/fixtures/manifest/fixtures.yaml
-fixtures:
-  - id: geo__tiny_parcels__v1
-    path: tests/fixtures/data/raw/geo/tiny_parcels_v1.geojson
-    stage: raw
-    format: geojson
-    description: Minimal parcel polygons for bbox, CRS, and ID-stability tests
-    source: synthetic
-    license: CC0-1.0
-    sha256: "REPLACE_WITH_REAL_HASH"
+```text
+tests/fixtures/
+├── 📦 datasets/
+│   ├── 🧩 <dataset_slug>/
+│   │   ├── 🧱 raw/
+│   │   ├── 🧼 processed/
+│   │   ├── 🗺️ catalog/
+│   │   ├── 🧾 provenance/
+│   │   └── 📄 README.md
+├── 🔌 api/
+│   ├── 🧪 requests/
+│   └── ✅ responses/
+├── 🛡️ policy/
+│   ├── ✅ allow/
+│   └── ⛔ deny/
+└── 📄 README.md  👈 you are here
 ```
 
-> Tip 🧩: if your project already standardizes metadata (STAC/DCAT/PROV), keep this manifest **thin** and point to the canonical metadata fixture.
+---
+
+## 🧩 Dataset fixture pack spec
+
+Each dataset fixture lives in `datasets/<dataset_slug>/` and should contain:
+
+### ✅ Required
+- **Raw inputs** (`raw/`)
+  - Minimal, representative sample (think: 10–200 rows or a handful of geometries).
+- **Processed outputs** (`processed/`)
+  - The “post-pipeline” artifact used by the API/DB layer in tests.
+  - Examples: `*.geojson`, `*.jsonl`, `*.csv`, `*.parquet`, tiny `*.tif`.
+- **Catalog metadata** (`catalog/`)
+  - STAC Item / Collection JSON (and/or a DCAT record if your pipeline expects it).
+- **Provenance log** (`provenance/`)
+  - W3C PROV (or KFM-style) JSON describing lineage.
+
+### ⭐ Nice-to-have
+- `README.md` inside the pack explaining:
+  - What the dataset represents
+  - Spatial/temporal extent
+  - How it is used by tests
+  - Any known edge cases / “gotchas”
+
+### 🧷 Naming conventions
+- Use **snake_case** for slugs: `census_1900`, `railroads_1870s`, `drought_1934`
+- Prefer deterministic filenames:
+  - `processed/<slug>.geojson`
+  - `catalog/<slug>.stac-item.json`
+  - `provenance/<slug>.prov.json`
 
 ---
 
-## 🧱 Naming conventions
+## ⛔ Negative fixtures (expected failures)
 
-Keep filenames predictable so tests are readable:
+Some tests should verify that we fail safely (“fail closed”).
 
-- Use **snake_case** for filenames  
-- Prefer:  
-  - `domain__topic__v1.ext` (simple)  
-  - or `domain__topic__v1__expected.ext` (golden output)  
+Common negative fixture ideas:
+- Missing `provenance/*.prov.json`
+- Missing / empty license in metadata
+- Invalid GeoJSON geometry (self-intersections, bad coordinate order, etc.)
+- Catalog JSON that violates schema (missing required fields)
+- “Restricted” dataset requested by an unauthorized role (policy tests)
 
-Examples:
-
-- `trails__tiny_network__v1.geojson`
-- `stac__tiny_item__v1.json`
-- `prov__tiny_ingest__v1.json`
-- `api__datasets_list__v1__response.json`
+Place these either:
+- inside `datasets/<slug>/` with a loud `README.md`, or
+- in `datasets/_invalid/<slug>/` (if you prefer strict separation)
 
 ---
 
-## 🧪 How tests should use fixtures
+## 🧪 Using fixtures in tests
 
-### 🐍 Python / `pytest` (typical)
+### 🐍 Python (API / pipelines)
 
-Use `pathlib` so paths are OS-safe:
+Most API tests load fixture files directly from disk and (depending on test type):
+- seed a temporary DB, **or**
+- use in-memory repositories/mocks, **or**
+- validate outputs of pipeline steps.
 
 ```python
 from pathlib import Path
 import json
 
-FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
+FIXTURES = Path(__file__).resolve().parents[2] / "fixtures"
 
 def load_json(rel_path: str) -> dict:
-    p = FIXTURES_DIR / rel_path
-    return json.loads(p.read_text(encoding="utf-8"))
+    return json.loads((FIXTURES / rel_path).read_text(encoding="utf-8"))
 ```
 
-### 🔌 API tests (FastAPI style)
+Example patterns:
+- Load a processed GeoJSON fixture → insert into PostGIS (or use a stub repo)
+- Call an endpoint via FastAPI TestClient → compare response to `api/responses/*.json`
 
-Golden response testing pattern:
+### 🐳 Running tests in the Docker dev stack
 
-```python
-from fastapi.testclient import TestClient
+If you’re using the compose-based dev environment, it’s common to run:
 
-# example import path — adjust to your app structure
-from api.main import app
-
-client = TestClient(app)
-
-def test_list_datasets_matches_golden():
-    expected = load_json("api/responses/datasets__list__v1.json")
-    resp = client.get("/datasets")
-    assert resp.status_code == 200
-    assert resp.json() == expected
+```bash
+docker-compose exec api pytest
 ```
 
-### 🧺 Fixture-driven pipeline tests
-
-Test the transformation chain:
-
-```python
-def test_pipeline_raw_to_processed(tmp_path):
-    raw = FIXTURES_DIR / "data/raw/geo/tiny_parcels_v1.geojson"
-    expected = FIXTURES_DIR / "data/processed/tiny_parcels_v1__expected.geojson"
-
-    out = tmp_path / "out.geojson"
-    run_pipeline(input_path=raw, output_path=out)  # your pipeline entrypoint
-
-    assert out.read_text(encoding="utf-8") == expected.read_text(encoding="utf-8")
-```
-
-> 🔁 **Rule of thumb:** if you can’t compare it deterministically, you probably need to normalize the output (sorted keys, stable rounding, stable ID assignment).
-
-### 🧠 AI / Focus Mode fixtures (when testing)
-
-AI-related tests should **not** require a live model. Prefer:
-
-- prompt fixtures (`ai/prompts/`)
-- expected response fixtures (`ai/expected/`)
-- tool-trace fixtures (if your system records them)
-
-Use these to verify:
-- citation formatting
-- policy enforcement behavior (allow/deny)
-- deterministic summarization behavior (if mocked)
+> [!TIP]
+> CI-style policy checks may also be runnable locally (e.g., via Conftest) — use them to catch missing metadata early.
 
 ---
 
-## 🛡️ Guardrails (non-negotiable)
+## 🛡️ Policy fixtures
 
-### 🚫 Never store
-- secrets, API keys, tokens
-- personal or sensitive info
-- copyrighted datasets without permission
-- “real” production dumps
+If the repo includes OPA/Rego policies (recommended for KFM governance), keep tiny JSON inputs + expected decisions here.
 
-### ✅ Prefer
-- **synthetic** mini datasets
-- or **downsampled** open data with clear licensing
+Suggested approach:
+- `policy/allow/*.json` → should evaluate to **allow**
+- `policy/deny/*.json` → should evaluate to **deny**
 
-### 📦 Keep it tiny
-If a fixture becomes “big data”, it belongs elsewhere (or behind Git LFS / external pointers). Fixtures should stay fast so CI stays fast. 🏎️
+Scenario ideas to cover:
+- `accessLevel: "Restricted"` + mismatched `ownerGroup`
+- dataset marked `status: "withdrawn"`
+- “sanitized response” decisions (masking coordinates instead of returning 403)
 
 ---
 
-## ➕ Adding a new fixture (checklist)
+## 🧼 Fixture hygiene rules
 
-1. 🧩 Pick the right stage folder (`data/raw`, `data/processed`, `api/responses`, etc.)
-2. 📝 Add/verify minimal **license + source** info
-3. 🧾 Add provenance-style metadata if the test touches governance
-4. 🧷 Update `manifest/fixtures.yaml` (include checksum)
-5. ✅ Add at least **one** test that uses the fixture
-6. 🔁 Run tests locally (and ensure they pass in a clean environment)
+> [!IMPORTANT]
+> Keep fixtures **small**, **boring**, and **stable** — the point is deterministic tests, not realism at scale.
 
----
-
-## 🔍 Troubleshooting
-
-<details>
-  <summary><strong>🧭 CRS / coordinate confusion in GeoJSON</strong></summary>
-
-- Ensure your GeoJSON coordinates match expected CRS conventions.
-- If your pipeline normalizes to a standard CRS, fixtures should reflect that.
-- If output diffs are just float noise, consider rounding rules + stable serialization.
-
-</details>
-
-<details>
-  <summary><strong>🧨 “Golden” snapshots keep changing</strong></summary>
-
-Common causes:
-- nondeterministic ordering (dict ordering in serialization, DB query ordering)
-- timestamps embedded in outputs
-- random IDs / UUIDs
-
-Fix:
-- normalize (sort keys, sort features, freeze time, seed RNG)
-- strip volatile fields before comparison
-
-</details>
+- ✅ Commit only tiny artifacts
+- ✅ Prefer open formats (GeoJSON/CSV/JSON)
+- ✅ Avoid anything that could be PII or sensitive
+- ✅ If you must reference “large data”, store a **pointer + hash** (don’t commit the blob)
+  - (Optional) Use DVC or a remote artifact store if the project supports it
 
 ---
 
-## 🔗 Related project docs (start here)
+## 🔗 Handy links (repo-relative)
 
-- 📚 `docs/` (governed documentation) → `../../docs/`
-- 🧱 Architecture / structure → `../../docs/architecture/`
-- 🗃️ Data + metadata layout → `../../data/`
-- 🏗️ Pipelines → `../../pipelines/`
-- 🔌 API service → `../../api/`
-- 🗺️ Web UI → `../../web/`
-
----
-
-## 🧷 TL;DR
-
-Fixtures are **tiny, deterministic, provenance-aware** artifacts that make tests reliable and governance verifiable.  
-When in doubt: keep it small, document it, checksum it, and test it. ✅
+- `../../docs/` — architecture + narrative docs
+- `../../pipelines/` — ETL scripts that generate `processed/` + metadata
+- `../../policy/` — governance rules (OPA/Rego, AI guardrails, etc.)
+- `../../api/` — FastAPI backend + tests
+- `../../web/` — React + TypeScript frontend
