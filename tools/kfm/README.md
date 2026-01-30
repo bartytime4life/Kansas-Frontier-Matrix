@@ -86,13 +86,14 @@ docker-compose exec api pytest
 This repo may evolve, but this folder should generally look like:
 
 ```text
-🧰 tools/kfm/
-├── README.md                 # 👈 you are here
-├── kfm                        # (optional) 🚀 single-entry CLI (shell/python/node)
-├── commands/                  # 🧱 subcommands grouped by domain (stack/pipeline/catalog/…)
-├── templates/                 # 🧾 STAC/DCAT/PROV templates or scaffolds
-├── checks/                    # ✅ validation rules (schema checks, lint rules, policies)
-└── examples/                  # 🧪 example invocations + sample configs
+📁 tools/
+└─ 📁 kfm/                                  🧰 KFM tooling + CLI surface
+   ├─ 📄 README.md                            👈 you are here (install + usage + command map)
+   ├─ 🚀 kfm                                  ◻️ optional: single-entry CLI (shell/python/node)
+   ├─ 📁 commands/                            🧱 subcommands grouped by domain (stack/pipeline/catalog/…)
+   ├─ 📁 templates/                           🧾 STAC/DCAT/PROV templates + scaffolds
+   ├─ 📁 checks/                              ✅ validation rules (schema checks, lint rules, policies)
+   └─ 📁 examples/                            🧪 example invocations + sample configs
 ```
 
 > ✍️ If you add a script/command here, also update this README so the “contract” stays accurate.
