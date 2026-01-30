@@ -1,280 +1,243 @@
-# 🧪 `tools/fixtures/` — Fixture Packs for KFM
+# 🧰 Fixtures (`tools/fixtures/`)
 
-![fixtures](https://img.shields.io/badge/fixtures-deterministic%20%26%20portable-2ea44f)
-![pipeline](https://img.shields.io/badge/pipeline-raw%E2%86%92processed%E2%86%92catalog%E2%86%92db%E2%86%92api%E2%86%92ui-blue)
-![governance](https://img.shields.io/badge/governance-provenance--first%20%E2%9A%96%EF%B8%8F-orange)
+![Scope](https://img.shields.io/badge/scope-tools%2Ffixtures-2b7cff)
+![Purpose](https://img.shields.io/badge/purpose-tests%20%7C%20demos%20%7C%20CI-7a3df0)
+![Data](https://img.shields.io/badge/data-provenance--first-00b894)
+![Formats](https://img.shields.io/badge/formats-GeoJSON%20%7C%20JSON%20%7C%20CSV%20%7C%20Parquet-lightgrey)
 
-Portable, **small**, and **deterministic** datasets used for:
-- ✅ local development (bootstrapping a non-empty UI)
-- ✅ API + pipeline testing (unit + integration)
-- ✅ CI sanity checks
-- ✅ demos / screenshots / reproducible bug reports
-
-KFM’s **non-negotiable “truth path”** is: **Raw → ETL → Processed → Catalog/Provenance → DB/Graph → API → UI** (no skipping stages).:contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}  
-This folder exists to make that path *repeatable on demand* with tiny, curated data packs.
+> **Deterministic sample assets** used across the Kansas Matrix System / **KFM** stack for testing, demos, docs, and CI validation.  
+> Goal: make it *easy* to reproduce bugs, validate pipelines, and exercise API/UI paths without pulling huge datasets. ✅
 
 ---
 
-## 📌 Quick Start
+## 🧭 What fixtures are for (and why we’re picky)
 
-> These steps assume you’re running the dev stack via Docker Compose and want a minimal dataset to explore.
+KFM is built around a **provenance-first pipeline** (raw ➜ processed ➜ catalog/prov ➜ database ➜ API ➜ UI). Fixtures help us test each stage quickly and consistently, without requiring full-scale data downloads.
 
-1) **Start the stack** (DBs + API + web):
-```bash
-docker-compose up
-```
-
-2) **Load a fixture pack** (pick one strategy):
-- **Preferred**: copy/symlink fixture pack contents into the canonical `data/` staging locations (Raw/Work/Processed/Catalog/PROV) and run pipelines.
-- **Testing-only**: load directly into PostGIS/Neo4j with seed scripts for quick endpoint tests.
-
-3) **Verify via API docs (Swagger UI)**:
-```text
-http://localhost:8000/docs
-```
-…and hit an endpoint like `GET /datasets` (if present) to confirm the fixture data is visible.:contentReference[oaicite:2]{index=2}
-
-4) **Optional: verify Neo4j**:
-```text
-http://localhost:7474
-```
-(to confirm graph nodes/edges were loaded).:contentReference[oaicite:3]{index=3}
-
-> ⚠️ Keep fixtures **small**. Large datasets can exceed Docker memory and slow dev/CI.:contentReference[oaicite:4]{index=4}
+Fixtures are intentionally:
+- **Small** (fast for CI 🏎️)
+- **Stable** (IDs don’t “randomly” change)
+- **Explainable** (every pack has a manifest + source/license notes)
+- **Safe** (no sensitive data; governance-friendly 🔒)
 
 ---
 
-## 🧭 What “Fixtures” Mean in KFM
+## ✅ What belongs here
 
-Fixtures in KFM are *not* “random sample files.” They are **miniature, governed datasets** that follow the same lifecycle rules as real data:
+Typical fixture “packs” include:
 
-- **Staging layout is explicit**: raw inputs go under `data/raw/<domain>/`, intermediate outputs in `data/work/<domain>/`, and final outputs in `data/processed/<domain>/`.:contentReference[oaicite:5]{index=5}
-- **Boundary artifacts are required before publication/use**:
-  - STAC records (collections/items)
-  - DCAT dataset entries
-  - PROV lineage bundles  
-  These become the interface to downstream stages (graph/API/UI).:contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
-
-So a “fixture pack” should ideally include **both data and its metadata/provenance**, even if tiny.
+- 🧪 **API test fixtures** (request payloads, expected responses, error cases)
+- 🗺️ **Mini geospatial layers** (GeoJSON, tiny rasters-as-metadata, sample geometries)
+- 🧾 **Metadata exemplars** (STAC / DCAT / PROV examples for validation)
+- 🧱 **DB seed snippets** (PostGIS SQL seeds, Neo4j CSV/JSON seed inputs)
+- 🛡️ **Policy test cases** (OPA/Rego inputs & expected allow/deny outcomes)
+- 🧠 **AI/RAG mocks** (stubbed retrieval results / citations / deterministic “answers”)
 
 ---
 
-## 🗺️ Canonical Ordering (Fixture Packs Must Respect This)
+## 🚫 What does **NOT** belong here
 
-KFM treats pipeline ordering as absolute:  
-**ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.:contentReference[oaicite:8]{index=8}
+Please keep these out of `tools/fixtures/`:
 
-And similarly, the technical blueprint reiterates:  
-**Raw → Processed → Catalog/Prov → Database → API → UI** (shortcutting is flawed unless proven otherwise).:contentReference[oaicite:9]{index=9}
-
-```mermaid
-flowchart LR
-  A["Raw (immutable)"] --> B["ETL + Normalization"]
-  B --> C["Work (intermediate)"]
-  C --> D["Processed (final)"]
-  D --> E["Catalogs: STAC/DCAT"]
-  D --> F["PROV Lineage"]
-  E --> G["Graph (Neo4j)"]
-  E --> H["DB (PostGIS)"]
-  G --> I["API (governed boundary)"]
-  H --> I
-  I --> J["UI (React/Map)"]
-```
+- 🗃️ **Large binaries** (big rasters, COGs, model weights)  
+  → use `data/` + DVC/LFS/remote pointers (or documented external references)
+- ⚖️ **Unlicensed / unclear-license** data
+- 🧑‍🤝‍🧑 **PII / sensitive community data** (CARE-first: treat as restricted)
+- 🎲 “Random” data without a **manifest**, **source**, and **reason to exist**
+- 🧨 Fixtures that silently change over time (breaks reproducibility)
 
 ---
 
-## 🗂️ Recommended Directory Layout (for this folder)
+## 🗂️ Suggested folder layout
 
-> This is the **intended** organization for fixture packs. If the repo differs today, align future additions to this structure.
+This directory is organized as **fixture packs**: each pack is a self-contained mini-world.
 
 ```text
-📁 tools/fixtures/
-├─ 📄 README.md
-├─ 📄 fixtures.manifest.yml          # index of packs + checksums (recommended)
-├─ 📁 packs/
-│  ├─ 📁 pack__<slug>/
-│  │  ├─ 📄 README.md                # what it is + what it covers + how to load
-│  │  ├─ 📄 pack.yml                 # pack metadata (id, license, domains, etc.)
-│  │  ├─ 📁 data/                    # mirrors canonical lifecycle
-│  │  │  ├─ 📁 raw/
-│  │  │  ├─ 📁 work/
-│  │  │  ├─ 📁 processed/
-│  │  │  ├─ 📁 stac/                 # collections + items
-│  │  │  ├─ 📁 catalog/              # dcat
-│  │  │  └─ 📁 prov/                 # provenance bundles
-│  │  └─ 📁 seeds/
-│  │     ├─ 📁 postgis/              # SQL / CSV imports
-│  │     └─ 📁 neo4j/                # Cypher / CSV imports
-└─ 📁 scripts/
-   ├─ 📄 validate_fixtures.py         # schema + checksum + link checks
-   ├─ 📄 load_pack_postgis.sh         # optional convenience loader
-   └─ 📄 load_pack_neo4j.sh           # optional convenience loader
+📁 tools/
+  📁 fixtures/
+    📄 README.md
+    📁 _template/                 # copy this to start a new pack
+      📄 README.md
+      📄 manifest.json
+      📄 checksums.sha256
+      📁 data/
+      📁 metadata/
+      📁 expected/
+    📁 kfm-minimal-parcels/       # example pack name
+      📄 README.md
+      📄 manifest.json
+      📄 checksums.sha256
+      📁 data/
+      📁 metadata/
+      📁 expected/
 ```
 
-Why mirror the canonical lifecycle? Because KFM is explicit that the system “adds value while preserving lineage,” with raw inputs landing in `data/raw/`, outputs in `data/processed/`, and metadata/provenance in catalog folders before DB/API/UI use.:contentReference[oaicite:10]{index=10}
+> 💡 **Rule of thumb:** if a pack can’t be understood by reading its `README.md` + `manifest.json`, it’s not ready.
 
 ---
 
-## 🧱 What a Fixture Pack Should Contain
+## 🧾 Fixture Pack Contract (required)
 
-### 1) Data (Raster / Vector / Tables)
-KFM commonly uses:
-- **Raster layers** stored as **COGs** (Cloud-Optimized GeoTIFF)
-- **Vector layers** stored as **GeoJSON** (or shapefiles where appropriate)
-- optional derived products like tiles or KML/KMZ for interactive use:contentReference[oaicite:11]{index=11}:contentReference[oaicite:12]{index=12}
+Each fixture pack **must** include:
 
-If you’re building a spatial fixture, keep it *tiny but meaningful*:
-- a few points (e.g., “sites”)
-- a few lines (e.g., “routes”)
-- a few polygons (e.g., “boundaries”)
+### 1) `README.md` 📄
+Keep it short but complete:
+- What it tests (service/pipeline/policy/UI)
+- What’s inside (files + meanings)
+- Source / provenance (even if synthetic)
+- License / attribution
+- Any “gotchas” (CRS assumptions, ordering constraints, etc.)
 
-Vector data is naturally expressed as **points/lines/polygons**, and many tools treat these as Features/FeatureCollections (handy mental model even outside Earth Engine).:contentReference[oaicite:13]{index=13}
+### 2) `manifest.json` 🧩
+A machine-readable description of the pack.
 
-### 2) Metadata (STAC/DCAT) + Provenance (PROV)
-Fixture packs should include the “boundary artifacts” that allow downstream stages (graph/API/UI) to consume data safely:
-- STAC items/collections written to canonical STAC locations
-- DCAT discovery records
-- PROV lineage bundles capturing inputs, activities, agents:contentReference[oaicite:14]{index=14}
+**Recommended schema (feel free to extend):**
+```json
+{
+  "id": "kfm-minimal-parcels",
+  "version": "1.0.0",
+  "description": "Tiny land-parcel + event link dataset for API + graph tests.",
+  "intended_use": ["api-tests", "pipeline-smoke", "policy-tests"],
+  "data_contract": {
+    "crs": "EPSG:4326",
+    "time_zone": "UTC",
+    "id_stability": "stable"
+  },
+  "artifacts": [
+    {
+      "path": "data/parcels.geojson",
+      "type": "geojson",
+      "roles": ["processed"],
+      "primary_keys": ["parcel_id"]
+    },
+    {
+      "path": "metadata/stac-item.json",
+      "type": "stac-item",
+      "roles": ["catalog"]
+    },
+    {
+      "path": "metadata/prov.json",
+      "type": "prov",
+      "roles": ["provenance"]
+    }
+  ],
+  "license": {
+    "spdx": "CC-BY-4.0",
+    "notes": "Synthetic geometries; structure mirrors real pipeline output."
+  },
+  "maintainers": ["@your-handle"],
+  "created": "2026-01-30"
+}
+```
 
-### 3) Seeds (Optional)
-Sometimes you want “instant DB state” for endpoint tests. The blueprint describes PostGIS + Neo4j adapters and usage, so fixture packs can optionally include:
-- `postgis/` seeds (SQL, CSV, `COPY`)
-- `neo4j/` seeds (Cypher, CSV imports):contentReference[oaicite:15]{index=15}
+### 3) `checksums.sha256` 🔐
+A checksum list for pack stability (helps detect accidental changes).
 
-> ✅ Prefer pipeline-driven loading for realism; use direct seeds for speed in tests.
-
----
-
-## 🧪 Fixtures in Tests (Why This Folder Exists)
-
-KFM’s blueprint explicitly calls out tests that use **fixtures to simulate data**, then hit endpoints using **FastAPI’s test client** to verify responses.:contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}
-
-### Example (pattern)
-```python
-# pseudo-example (adjust imports to your repo layout)
-from fastapi.testclient import TestClient
-from api.main import app
-
-client = TestClient(app)
-
-def test_datasets_list_has_expected_fixture_items():
-    r = client.get("/datasets")
-    assert r.status_code == 200
-    assert isinstance(r.json(), list)
+Example:
+```text
+e3b0c44298fc1c149afbf4c8996fb924...  data/parcels.geojson
+a54d88e06612d820bc3be72877c74f25...  metadata/stac-item.json
 ```
 
 ---
 
-## 🧰 Loading Strategies (Choose the Right One)
+## 🌍 Geospatial conventions (KFM-friendly)
 
-### ✅ Strategy A — Canonical “truth path” loading (recommended)
-1) Copy fixture raw inputs into `data/raw/<domain>/`
-2) Run ETL to generate `data/work/<domain>/` and `data/processed/<domain>/`
-3) Generate STAC/DCAT/PROV (or verify they exist)
-4) Load DB/Graph from processed outputs
-5) Verify via API/UI
+To keep fixtures interoperable across the stack:
 
-This matches the end-to-end flow described in the blueprint (raw → processed → metadata/prov → DB/graph → API → UI).:contentReference[oaicite:18]{index=18}
-
-### ⚡ Strategy B — “Seed-only” loading (fast endpoint tests)
-Use `seeds/postgis/` + `seeds/neo4j/` loaders for quick API tests, but **do not treat this as “published data.”**  
-In v13 terms, anything used downstream should still be traceable and governed through catalogs/provenance.:contentReference[oaicite:19]{index=19}
+- 🧭 **Default CRS:** `EPSG:4326` for GeoJSON unless a pack *explicitly* documents otherwise.
+- 📏 If a projected CRS is required (analysis fixtures), document:
+  - CRS string (EPSG code)
+  - Units
+  - Why it’s necessary
+- 🧱 Keep geometries **tiny and valid**
+  - Avoid self-intersections
+  - Close rings
+  - Ensure `FeatureCollection` is valid JSON
 
 ---
 
-## 🌱 Sample Data Bootstrapping (Existing Pattern in the Blueprint)
+## 🧬 Metadata conventions (STAC / DCAT / PROV)
 
-The blueprint notes first-run DBs may be empty, and repos may include:
-- scripts like `scripts/init_sample_data.py` to create minimal records for a non-blank UI
-- or a small sample under `data/raw/sample/` that can be run through pipelines to populate downstream stages:contentReference[oaicite:20]{index=20}:contentReference[oaicite:21]{index=21}
+If a fixture represents a “dataset-like” artifact, include minimal-but-valid:
+- 🗂️ **STAC** records describing the asset(s)
+- 🧾 **DCAT** dataset entry (when relevant)
+- 🧿 **PROV** lineage bundle (raw ➜ transform ➜ output)
 
-Example commands mentioned (if they exist in your repo):
-```bash
-docker-compose exec api python scripts/init_sample_data.py
-docker-compose exec api python pipelines/import_rainfall.py
+> 🧠 The fixture goal is not to be “complete STAC,” but to be **valid enough** that our validators, loaders, and UI can exercise real paths.
+
+---
+
+## 🧰 Using fixtures
+
+### 🧪 In tests
+Fixtures should be usable by unit and integration tests without network access.
+
+Common usage patterns:
+- Load files by **relative path from repo root**
+- Avoid hidden dependencies (no “download this first” steps)
+- Keep test data deterministic (fixed timestamps if needed)
+
+### 🧱 In pipelines
+Fixture packs are ideal for:
+- smoke testing pipeline stages (parse ➜ normalize ➜ write outputs)
+- validating metadata generation and provenance stitching
+
+### 🖥️ In UI demos
+UI fixtures should be:
+- visually meaningful (a few features, clear bounding box)
+- fast to load (small JSON)
+- consistent across runs (stable IDs)
+
+---
+
+## 🧷 Naming + versioning rules
+
+- 📛 Pack names: `kebab-case` (e.g., `kfm-minimal-parcels`)
+- 🔢 Pack versioning: SemVer in `manifest.json` (`1.0.0`, `1.1.0`, etc.)
+- 🧊 Prefer **append-only** evolution:
+  - breaking changes ⇒ new major version or new pack
+- 🧾 If you change fixture meaning, update:
+  - `manifest.json` version
+  - `checksums.sha256`
+  - pack `README.md` change notes
+
+---
+
+## ✅ PR checklist (fixtures)
+
+Before submitting:
+- [ ] Pack has `README.md`, `manifest.json`, and `checksums.sha256`
+- [ ] All data is open-licensed or synthetic-with-notes
+- [ ] No secrets / tokens / PII
+- [ ] JSON/GeoJSON parses cleanly
+- [ ] IDs are stable + documented
+- [ ] Any STAC/DCAT/PROV examples are valid enough to pass validators (or clearly marked “intentionally invalid” for negative tests)
+
+---
+
+## 🔗 Related docs (jump points)
+
+- 📚 Repo overview: `../../README.md`
+- 🧪 API tests: `../../api/`
+- 🗺️ Pipelines: `../../pipelines/`
+- 🧾 Data catalog + provenance: `../../data/`
+- 🛡️ Governance / policies: `../../policy/`
+- 📖 Architecture + standards: `../../docs/`
+
+---
+
+## 🧱 Template pack starter
+
+Need a quick start? Copy:
+
+```text
+tools/fixtures/_template/  ➜  tools/fixtures/<your-pack>/
 ```
-:contentReference[oaicite:22]{index=22}
 
----
+Then edit:
+- `README.md`
+- `manifest.json`
+- `checksums.sha256`
 
-## ✅ Fixture Pack Checklist (PR Gate Mental Model)
-
-When adding a fixture pack, aim to satisfy:
-
-- [ ] **Small** (fast in CI; won’t blow Docker resources):contentReference[oaicite:23]{index=23}
-- [ ] **Deterministic** (same inputs → same outputs):contentReference[oaicite:24]{index=24}
-- [ ] **Cataloged** (STAC/DCAT present and valid):contentReference[oaicite:25]{index=25}
-- [ ] **Provenance recorded** (PROV bundle links inputs + processing + agents):contentReference[oaicite:26]{index=26}
-- [ ] **DB/Graph optional seeds** (only if needed)
-- [ ] **README explains** what it covers + how to load
-- [ ] **License + attribution** included (no mystery datasets)
-- [ ] **No sensitive content** (PII, restricted cultural sites, etc.)
-- [ ] **No stage skipping** (UI never loads raw data directly; API is the boundary):contentReference[oaicite:27]{index=27}:contentReference[oaicite:28]{index=28}
-
----
-
-## 🧾 Fixture Metadata: `pack.yml` (Suggested Schema)
-
-```yaml
-id: pack__dustbowl_min
-title: "Dust Bowl Minimal Demo Pack"
-domains:
-  - climate
-  - narratives
-stages_included:
-  - raw
-  - processed
-  - stac
-  - dcat
-  - prov
-db_seeds:
-  postgis: true
-  neo4j: true
-formats:
-  raster: ["cog"]
-  vector: ["geojson"]
-license: "CC-BY-4.0"
-sources:
-  - name: "USGS / NOAA (example)"
-    notes: "replace with actual sources"
-provenance:
-  prov_bundle: "data/prov/pack__dustbowl_min.prov.json"
-notes:
-  - "Designed for API smoke tests + UI demo."
-```
-
-> Tip: keep stable IDs and checksums to enforce determinism.
-
----
-
-## 🔧 Validation Utilities (Where They Belong)
-
-The v13 guide explicitly calls out that catalog generation/validation utilities often live under `tools/` as standalone helpers, while pipeline code lives in the pipeline subsystem.:contentReference[oaicite:29]{index=29}  
-So this folder is a natural home for:
-- checksum verification
-- STAC/DCAT schema validation
-- link integrity checks
-- fixture “pack” linting
-
-(If you add scripts here, document them in each pack’s README.)
-
----
-
-## ✍️ Documentation Style Notes (for pack READMEs)
-
-- Keep **one H1** per README and use clean heading hierarchy for GitHub rendering.:contentReference[oaicite:30]{index=30}
-- Use short paragraphs, lists, and code blocks for load steps.
-- Avoid bare URLs; prefer code formatting or reference links.
-
----
-
-## 📚 References & Source Docs
-
-These project files informed the fixture conventions in this README:
-
-- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint**:contentReference[oaicite:31]{index=31}:contentReference[oaicite:32]{index=32} :contentReference[oaicite:33]{index=33}  
-- **KFM Master Guide v13 (Draft)** (pipeline invariants, staging, boundary artifacts):contentReference[oaicite:34]{index=34}:contentReference[oaicite:35]{index=35} :contentReference[oaicite:36]{index=36}  
-- **Kansas-Frontier-Matrix: Open-Source Geospatial Historical Mapping Hub Design** (COG/GeoJSON/STAC-like catalog conventions):contentReference[oaicite:37]{index=37}:contentReference[oaicite:38]{index=38} :contentReference[oaicite:39]{index=39}  
-- **Cloud-Based Remote Sensing with Google Earth Engine** (vector mental model: points/lines/polygons; Feature/FeatureCollection):contentReference[oaicite:40]{index=40} :contentReference[oaicite:41]{index=41}  
-- **Comprehensive Markdown Guide (Best Practices)**:contentReference[oaicite:42]{index=42} :contentReference[oaicite:43]{index=43}  
-
+Happy testing 🧪✨
