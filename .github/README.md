@@ -2,7 +2,7 @@
 
 # 🧭 Kansas Frontier Matrix (KFM)
 
-**Open-source geospatial + historical mapping hub for Kansas — from raw sources ➜ governed datasets ➜ interactive 2D/3D maps ➜ evidence-backed answers.**[^kfm_system]
+**Open-source geospatial + historical mapping hub for Kansas — raw evidence ➜ governed datasets ➜ interactive 2D/3D maps ➜ evidence-backed answers.**[^kfm_system]
 
 <p>
   <a href="https://github.com/bartytime4life/Kansas-Frontier-Matrix"><img alt="Repo" src="https://img.shields.io/badge/GitHub-Kansas--Frontier--Matrix-181717?style=for-the-badge&logo=github"></a>
@@ -12,49 +12,51 @@
   <img alt="License" src="https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
 </p>
 
+<p>
+  <img alt="Governance: Fail-Closed" src="https://img.shields.io/badge/Governance-Fail--Closed-0B6E4F?style=for-the-badge">
+  <img alt="Evidence: STAC/DCAT/PROV" src="https://img.shields.io/badge/Evidence-STAC%20%7C%20DCAT%20%7C%20PROV-2B4C7E?style=for-the-badge">
+  <img alt="Local AI: Ollama" src="https://img.shields.io/badge/Local%20AI-Ollama-6A1B9A?style=for-the-badge">
+</p>
+
+**Repo Home:** [`../README.md`](../README.md) 🏠 · **Architecture:** [`../docs/architecture/`](../docs/architecture/) 🏗️ · **Standards:** [`../docs/standards/`](../docs/standards/) 🧾 · **Templates:** [`../docs/templates/`](../docs/templates/) 🧩
+
 **Quick links:**  
-[🚀 Quickstart](#-quickstart) · [🍳 Usage recipes](#-usage-recipes) · [🏗️ Architecture](#️-architecture-at-a-glance) · [📦 Repo layout](#-repo-layout) · [🧩 the-github-folder](#-the-github-folder-what-should-live-in-github) · [🤖 Focus Mode AI](#-focus-mode-ai-local-first-but-governed) · [🤝 Contributing](#-contributing) · [📚 Project library](#-project-library) · [🧾 Sources](#-sources-footnotes)
+[🚀 Quickstart](#-quickstart) · [🧱 Non-negotiables](#-non-negotiables-v13-invariants) · [🍳 Contribution flows](#-contribution-flows) · [🏗️ Architecture](#️-architecture-at-a-glance) · [📦 Repo layout](#-repo-layout-v13-friendly) · [🧩 the-github-folder](#-the-github-folder-what-lives-here) · [🧪 CI gates](#-fail-closed-ci-gates-what-blocks-a-merge) · [🤖 Focus Mode AI](#-focus-mode-ai-local-first-but-governed) · [📚 Project library](#-project-library) · [🧾 Sources](#-sources-footnotes)
 
 </div>
 
 > [!NOTE]
 > This file lives in `.github/README.md` so it shows up when browsing the `.github/` folder.  
-> If you also maintain a root README, keep it shorter and link here for the GitHub ops details. 🧩
+> If you maintain a root README, keep it shorter and link here for GitHub ops, CI gates, templates, and repo hygiene. 🧩
 
 ---
 
 ## 🔎 What is KFM?
 
-KFM is a **pipeline → catalog → database → API → UI** system that transforms raw historical + geospatial sources into **traceable** layers, stories, and answers.[^kfm_system]  
-The UI doesn’t query databases directly; everything is mediated via the backend so governance rules are enforceable end-to-end.[^kfm_system]
+KFM is a **pipeline → catalogs → graph/DB → API → UI → narratives → Focus Mode** system that turns raw historical + geospatial sources into **traceable** layers, stories, and answers.[^kfm_system][^v13_pipeline]
+
+**Key boundary rule:** the UI does **not** query Neo4j/PostGIS directly — all access is mediated through the backend API so governance (redaction, licensing, sensitivity) is enforceable end-to-end.[^api_boundary]
 
 > [!IMPORTANT]
-> KFM is designed to **fail closed**: if policy/permission is uncertain, access is denied by default.[^fail_closed]
+> **Fail-closed by default:** if a policy/check is uncertain or fails, access/merges are blocked until fixed.[^fail_closed]
 
 ---
 
-## 🗺️ Features
+## 🧱 Non-negotiables (v13 invariants)
 
-### ✅ What you can do (today + near-term)
+These are the “do not regress” rules we design CI/CD and reviews around:
 
-- **Ingest & normalize** raw sources (rasters, vectors, tables) into cleaned “processed” artifacts.[^kfm_pipeline_order]
-- **Publish a catalog** using standards-friendly outputs (**STAC / DCAT / PROV**) so people can trust what they’re seeing.[^stac_dcat_prov]
-- **Explore Kansas in 2D & 3D** with modern web mapping (MapLibre) + optional 3D globe/terrain (Cesium).[^tech_stack]
-- **Use “story nodes”**: narrative Markdown + a choreography script that drives map state (camera, layers, timeline).[^story_nodes]
-- **Ask questions** in *Focus Mode* and get responses constrained by governance (even with a local model).[^focus_mode]
-- **Export & interop** (COGs, GeoJSON, Shapefiles, tiles, KML/KMZ) for sharing and downstream analysis.[^exports_formats]
-
-### 🧬 Project principles
-
-- **Metadata is not optional.** Every dataset/evidence artifact must ship with **STAC + DCAT + PROV** records; CI validates conformance.[^stac_dcat_prov]
-- **Cartography is communication.** Map outputs should clearly communicate scale, projection/CRS, and sources/credits.[^map_design]
-- **Provenance over vibes.** Nothing enters KFM without provenance logs + descriptive metadata; AI answers and narratives attach citations.[^provenance_first]
+- **Pipeline ordering is absolute:** ETL → (STAC/DCAT/PROV catalogs) → Graph → API → UI → Story Nodes → Focus Mode.[^v13_pipeline]  
+- **Provenance-first:** every dataset and derived artifact (including AI/analysis outputs) requires **STAC + DCAT + PROV** before it can be used downstream.[^provenance_first][^stac_dcat_prov]  
+- **Deterministic ETL:** pipelines are **idempotent**, config-driven, and logged (re-runnable without side effects).[^deterministic_etl]  
+- **Evidence-first narrative:** Story Nodes and Focus Mode cannot introduce unsourced claims; all assertions must cite cataloged evidence.[^evidence_first]  
+- **Sovereignty + classification propagation:** outputs cannot be **less restricted** than their inputs (sensitive in → sensitive out unless reviewed/redacted).[^sovereignty]
 
 ---
 
 ## 🚀 Quickstart
 
-### ✅ Recommended: Docker Compose
+### ✅ Recommended: Docker Compose 🐳
 
 ```bash
 # from the repo root
@@ -62,89 +64,239 @@ docker compose up --build
 # (older Docker setups: docker-compose up --build)
 ```
 
-Default local endpoints:
+Default local endpoints (adjust if your compose file differs):
 
 - 🖥️ **Web UI**: `http://localhost:3000`
 - 🧠 **API**: `http://localhost:8000`
 - 📘 **Swagger / OpenAPI docs**: `http://localhost:8000/docs`
 - 🕸️ **Neo4j Browser**: `http://localhost:7474`
 
-If ports conflict, change mappings in `docker-compose.yml` and restart.[^docker_quickstart]
-
----
-
-### 🧰 Local dev (manual) — for contributors
-
 > [!TIP]
-> These commands are “typical FastAPI/React” defaults; adapt to your repo’s actual `requirements` / package manager.
-
-<details>
-<summary><b>Backend (FastAPI)</b></summary>
-
-KFM’s backend pattern emphasizes: **routers** validate inputs, call **service** logic, and enforce governance checks in a consistent place.[^tech_stack]
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r api/requirements.txt
-
-uvicorn api.main:app --reload --port 8000
-```
-
-</details>
-
-<details>
-<summary><b>Frontend (React + MapLibre + optional Cesium)</b></summary>
-
-```bash
-cd web
-npm install
-npm run dev
-```
-
-MapLibre is used for 2D interactive maps, with Cesium as an optional 3D view.[^tech_stack]
-
-</details>
-
-<details>
-<summary><b>Datastores (PostGIS + Neo4j)</b></summary>
-
-- PostGIS stores spatial primitives + queryable layers (boundaries, overlays).
-- Neo4j stores relationships (events ↔ people ↔ places) for “relatedness” and story graph traversal.[^tech_stack]
-
-</details>
+> If ports conflict, update mappings in `docker-compose.yml` and restart. CI expects deterministic startup defaults for smoke tests.[^docker_quickstart]
 
 ---
 
-## 🍳 Usage recipes
+## 🍳 Contribution flows
 
-### 1) Explore the API surface
+KFM contributions are intentionally “contracted” (schemas/templates first) and “evidence-first” (data + provenance before interpretation).[^contract_first][^stac_dcat_prov]
 
-- Open `http://localhost:8000/docs` (Swagger UI) to try endpoints and inspect request/response models.[^docker_quickstart]
+### 1) Add a dataset (Raw ➜ Work ➜ Processed ➜ Catalogs ➜ Graph)
 
-### 2) Add a new dataset the “KFM way” (Raw ➜ Processed ➜ Catalog/PROV)
+**Canonical data lifecycle staging:**
 
-KFM’s canonical order is:
+- `data/raw/<domain>/...` (immutable source snapshots)  
+- `data/work/<domain>/...` (intermediate scratch/artifacts)  
+- `data/processed/<domain>/...` (final, serveable outputs)  
+- `data/stac/…` + `data/catalog/dcat/…` + `data/prov/…` (boundary artifacts)  
+- then (and only then) load into Neo4j/PostGIS via governed loaders.[^domain_pattern][^stac_dcat_prov]
 
-**Raw → Processed → Catalog/PROV → Database → API → UI**.[^kfm_pipeline_order]
+**Dataset PR must include:**
 
-A “complete” dataset contribution includes:
-
-- ✅ **Processed output(s)** saved under `data/processed/**` (or the canonical equivalent).[^kfm_pipeline_order]
-- ✅ **STAC** Collection + Item(s)
-- ✅ **DCAT** dataset entry
-- ✅ **PROV** activity bundle that links raw inputs → intermediate work → processed outputs (including who/what/when/how).[^stac_dcat_prov]
+- ✅ processed artifact(s) under `data/processed/...`
+- ✅ STAC Collection/Item(s) under `data/stac/...`
+- ✅ DCAT dataset record under `data/catalog/dcat/...`
+- ✅ PROV lineage under `data/prov/...`
+- ✅ domain runbook under `docs/data/<domain>/README.md` (sources, ETL steps, caveats)[^domain_pattern]
 
 > [!CAUTION]
-> Any feature proposal that shortcuts the pipeline (for example, “inject data directly into the UI”) is considered flawed unless rigorously justified.[^kfm_pipeline_order]
+> Any proposal that “skips stages” (e.g., “inject data directly into UI”) is considered flawed unless rigorously justified.[^v13_pipeline]
 
-### 3) Run Focus Mode AI with a local model (Ollama)
+---
+
+### 2) Add an evidence artifact (analysis/AI output) 🧪🤖
+
+KFM treats analysis outputs (OCR corpora, predicted layers, simulations) as **first-class datasets** with the same metadata/provenance requirements.[^evidence_artifacts]
+
+**Rule of thumb:** if it will be shown, queried, or cited — it must be processed + cataloged + prov-traced like anything else.
+
+---
+
+### 3) Add a Story Node (governed narrative + choreography) 📚🗺️
+
+A Story Node is typically:
+
+- a **Markdown narrative** (citations required), plus  
+- a **machine-ingestible choreography** that drives map state (layers, camera, timeline).[^story_nodes][^v13_story_focus]
+
+Recommended home (v13): `docs/reports/story_nodes/…` (draft/published), validated by template + schema checks.[^v13_story_home]
+
+---
+
+### 4) Change an API contract (OpenAPI/GraphQL) 🔌📜
+
+API changes are contract-first and versioned. Breaking changes require intentional versioning and updated tests.[^api_versioning]
+
+Use the API contract extension template (recommended):  
+`docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`[^templates]
+
+---
+
+## 🏗️ Architecture at a glance
+
+### High-level pipeline flow (v13 mental model)
+
+```mermaid
+flowchart LR
+  subgraph Data["📦 Data + Metadata"]
+    A["📥 Raw Sources<br/>data/raw"] --> B["🧼 ETL + Normalization<br/>pipelines/"]
+    B --> C["📦 Processed Outputs<br/>data/processed"]
+    C --> S["🛰️ STAC<br/>data/stac"]
+    S --> D["🧾 DCAT<br/>data/catalog/dcat"]
+    S --> P["🧾 PROV<br/>data/prov"]
+  end
+
+  S --> G["🕸️ Graph/DB<br/>Neo4j · PostGIS"]
+  G --> H["🔌 Governed API<br/>OpenAPI · (optional) GraphQL"]
+  H --> I["🗺️ UI<br/>React · MapLibre · (Cesium optional)"]
+  I --> J["📖 Story Nodes<br/>governed narratives"]
+  J --> K["🤖 Focus Mode<br/>evidence-linked context bundle"]
+```
+
+**Why this matters:** every stage consumes only the formally validated outputs of the previous stage (traceability, reproducibility, governance).[^v13_pipeline][^stac_dcat_prov]
+
+---
+
+## 📦 Repo layout (v13-friendly)
+
+KFM is a monorepo: **code + data + docs** versioned together so governance and evidence can be reviewed like code.[^repo_versioning]
+
+### Canonical targets (with migration notes)
+
+```text
+📦 Kansas-Frontier-Matrix/
+├─ 🧩 .github/                     # GitHub automation + templates + workflows (this folder) 🛠️
+├─ 🧠 api/                          # FastAPI backend (current home) 🔌
+├─ 🗺️ web/                          # React + TypeScript UI (current home) 🧭
+├─ 🧰 pipelines/                     # ETL + validators + exporters 🧪
+├─ 🗃️ data/
+│  ├─ 📥 raw/                       # Immutable inputs (as obtained) 🔒
+│  ├─ 🧪 work/                      # Intermediate/scratch artifacts 🧫
+│  ├─ 🧼 processed/                  # Cleaned/normalized outputs (serveable) ✅
+│  ├─ 🛰️ stac/
+│  │  ├─ collections/               # STAC Collections
+│  │  └─ items/                     # STAC Items
+│  ├─ 🧾 catalog/
+│  │  └─ dcat/                      # DCAT dataset records
+│  └─ 🧾 prov/                      # PROV lineage bundles
+├─ 📚 docs/
+│  ├─ 🏗️ architecture/              # system overview, redesign blueprints, diagrams
+│  ├─ 🧾 standards/                  # STAC/DCAT/PROV profiles, markdown protocol, ontology rules
+│  ├─ 🧩 templates/                  # governed doc + story + API-change templates
+│  ├─ 🧭 governance/                 # ethics/sovereignty/policy docs
+│  └─ 📖 reports/story_nodes/        # Story Nodes (draft/published)
+└─ 📌 CITATION.cff                   # cite a specific repo/version snapshot
+```
+
+> [!NOTE]
+> Some docs reference a future consolidation to `src/server/` + `src/web/`. If/when you migrate, treat it as a **versioned change** (update links + CI + contracts together).[^release_versioning]
+
+---
+
+## 🧩 The `.github/` folder: what lives here?
+
+GitHub treats `.github/` as a special “repo hygiene + automation” directory. In KFM, it is where **fail-closed governance becomes operational** through workflows, templates, and CODEOWNERS.[^kfm_system][^v13_ci]
+
+### ✅ Baseline (common KFM-friendly contents)
+
+- `ISSUE_TEMPLATE/` (issue forms)  
+- `workflows/` (CI/CD gates)  
+- `actions/` (small reusable composite actions)  
+- `CODEOWNERS` (forced review boundaries)  
+- `PULL_REQUEST_TEMPLATE.md` (Definition of Done checklists)  
+- `SECURITY.md` (responsible disclosure & security expectations)  
+- `dependabot.yml` + `release-drafter.yml` (automation)
+
+### ⭐ Recommended `.github/` tree (opinionated, “fail-closed”)
+
+```text
+📁 .github/
+├─ 📄 README.md                                📌 what this folder does + how to use it
+├─ 📄 CODEOWNERS                               👥 required reviewers for sensitive areas
+├─ 📄 SECURITY.md                              🔐 security policy + reporting
+├─ 📄 dependabot.yml                           🔁 dependency update automation
+├─ 📄 release-drafter.yml                      🧾 release notes automation
+├─ 📄 PULL_REQUEST_TEMPLATE.md                 ✅ PR checklist (data + metadata + prov)
+│
+├─ 📁 actions/                                 🧰 reusable composite actions
+│  ├─ 📁 setup-python/                         🐍 cache deps + lint/test helpers
+│  ├─ 📁 validate-metadata/                    🛰️ STAC/DCAT/PROV schema checks
+│  └─ 📁 scan-sensitive/                       🛡️ secrets + PII scanning helpers
+│
+├─ 📁 workflows/                               🧵 CI/CD gates (block merges) 🧱
+│  ├─ 📄 ci.yml                                 ✅ backend/frontend lint + tests
+│  ├─ 📄 data-contract.yml                      🧾 validate STAC/DCAT/PROV + linkage
+│  ├─ 📄 docs.yml                               📝 markdown protocol + link checks
+│  ├─ 📄 graph-integrity.yml                    🕸️ ontology + fixture graph constraints
+│  ├─ 📄 api-contract.yml                       📜 OpenAPI/GraphQL contract tests
+│  ├─ 📄 security.yml                           🔐 secret scanning + dependency scanning
+│  └─ 📄 release.yml                            🏷️ tag/release automation (optional)
+│
+└─ 📁 ISSUE_TEMPLATE/
+   ├─ 📄 bug_report.yml                         🐛
+   ├─ 📄 feature_request.yml                    ✨
+   ├─ 📄 dataset_request.yml                    📦 raw ➜ processed ➜ metadata ➜ prov
+   ├─ 📄 story_node.yml                         📚 governed narrative intake
+   ├─ 📄 governance_question.yml                🛡️ ethics/sovereignty/policy
+   └─ 📄 config.yml                             ⚙️
+```
+
+---
+
+## 🧪 Fail-closed CI gates (what blocks a merge)
+
+KFM’s CI is designed to prevent “repo drift” and enforce contracts at every boundary.[^v13_ci][^fail_closed]
+
+### Minimum gates to expect on PRs ✅
+
+- **Markdown protocol & front-matter validation** (docs must follow governed structure)  
+- **Link/reference validation** (no broken citations, no dead internal paths)  
+- **Schema validation** for **STAC/DCAT/PROV** against KFM profiles  
+- **Graph integrity tests** (fixture ontology constraints)  
+- **API contract tests** (OpenAPI/GraphQL)  
+- **Security scans** (secrets, sensitive/PII checks, dependency scanning)[^v13_ci]
+
+> [!IMPORTANT]
+> If CI fails, KFM expects you to fix the underlying contract violation — not bypass CI. That’s the whole point of governance-as-code. 🛡️
+
+---
+
+## 🧾 Standards, templates, and “contract-first” authoring
+
+If you’re adding/altering anything user-facing, start here:
+
+### 🧩 Templates (governed structure)
+
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` (house doc template)[^templates]  
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md` (Story Node template)[^templates]  
+- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` (API change template)[^templates]
+
+### 🛰️ Standards (profiles + protocols)
+
+- `docs/standards/KFM_STAC_PROFILE.md` (STAC profile; project-specific fields)[^stac_profiles]  
+- `docs/standards/KFM_DCAT_PROFILE.md` (DCAT profile; discoverability)[^stac_profiles]  
+- `docs/standards/KFM_PROV_PROFILE.md` (PROV profile; lineage rules)[^stac_profiles]  
+- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` (authoring rules + checks)[^v13_ci]
+
+---
+
+## 🤖 Focus Mode AI: local-first, but governed
+
+Focus Mode is designed as a governed workflow:
+
+- local LLM inference (via Ollama)  
+- retrieval through approved APIs/tools only  
+- citations required  
+- policy engine gate (block disallowed content)  
+- provenance logging for auditability[^focus_mode][^ollama]
+
+> [!TIP]
+> Treat Focus Mode outputs like “assisted analysis,” not oracle truth: if it can’t cite evidence, it shouldn’t ship. ✅
 
 <details>
-<summary><b>Install + run Ollama (example)</b></summary>
+<summary><b>Example: run Ollama locally (commands)</b></summary>
 
 ```bash
-# Linux install (per project guide)
+# Linux install (example)
 curl -fsSL https://ollama.com/install.sh | sh
 
 # pull + run a model
@@ -157,138 +309,13 @@ ollama serve
 
 </details>
 
-Focus Mode’s governance layer still applies when running local inference: responses are expected to be sourced, policy-checked, and logged.[^focus_mode][^ollama_install]
-
-### 4) Build a “story node” (narrative + choreography)
-
-A Story Node is typically:
-
-- a **Markdown narrative** (with citations), plus  
-- a **JSON “choreography” script** describing map state changes (center, zoom, layers, time filters, etc.).[^story_nodes]
-
-KFM treats story contributions as reviewable, first-class artifacts; stories should be vetted for accuracy, citations, and sensitivity concerns.[^story_nodes]
-
----
-
-## 🏗️ Architecture at a glance
-
-### Data + map lifecycle (mental model)
-
-```mermaid
-flowchart LR
-  A["📥 Raw evidence<br/>(data/raw)"] --> B["🧼 Pipelines<br/>(src/pipelines/)"]
-  B --> C["📦 Processed artifacts<br/>(data/processed)"]
-  C --> D["🗂️ Metadata & catalogs<br/>STAC · DCAT<br/>(data/stac, data/catalog)"]
-  C --> E["🧾 Provenance logs<br/>PROV<br/>(data/prov)"]
-  D --> F["🗄️ Datastores<br/>PostGIS · Neo4j"]
-  F --> G["🔌 API<br/>FastAPI"]
-  G --> H["🗺️ UI<br/>React + MapLibre<br/>(Cesium optional)"]
-  G --> I["🤖 Focus Mode<br/>(governed AI)"]
-  H --> J["📖 Story Nodes<br/>(docs/stories/)"]
-```
-
-The “pipeline → catalog → database → API → UI” model is explicit, and provenance-first is treated as a core invariant.[^kfm_system][^provenance_first]
-
----
-
-## 📦 Repo layout
-
-KFM uses a monorepo approach where **code + data** live together so that dataset changes can be reviewed and versioned like code.[^repo_versioning]
-
-### Recommended layout (canonical targets)
-
-```text
-📦 Kansas-Frontier-Matrix/
-├─ 🧩 .github/                 # Templates, workflows, automation (this folder) 🛠️
-├─ 🧠 src/
-│  ├─ server/                  # Backend API (FastAPI)  ← legacy: api/[^repo_layout]
-│  └─ web/                     # Frontend UI (React)   ← legacy: web/[^repo_layout]
-├─ 🧰 pipelines/                # ETL + validation + exporters
-├─ 🗃️ data/
-│  ├─ 📥 raw/                  # Immutable inputs (as obtained)
-│  ├─ 🧪 work/                 # Scratch/intermediate artifacts
-│  ├─ 🧼 processed/             # Cleaned/normalized outputs (serveable)
-│  ├─ 🗂️ stac/
-│  │  ├─ collections/          # STAC Collections
-│  │  └─ items/                # STAC Items
-│  ├─ 🧾 catalog/
-│  │  └─ dcat/                 # DCAT dataset records
-│  └─ 🧾 prov/                 # PROV lineage bundles
-├─ 📚 docs/                    # Architecture, governance, stories, guides
-├─ 🛡️ policy/                  # Governance rules (e.g., OPA/Rego policies)
-├─ ⚙️ ops/                      # Deployment/ops scripts (optional)
-└─ 📌 CITATION.cff             # How to cite the repo/version (recommended)[^repo_versioning]
-```
-
-> [!NOTE]
-> You may still see legacy folder names (`api/`, `web/`) while converging toward `src/server/` + `src/web/`.[^repo_layout]
-
----
-
-## 🧩 The `.github/` folder: what should live in `.github/`?
-
-GitHub treats `.github/` as a special “repo hygiene + automation” directory. In KFM’s blueprint, `.github/` is explicitly part of the repo structure used for CI/CD workflows and community health files.[^github_dir]
-
-### ✅ Baseline (what you already have)
-
-From your current `.github/` structure (per screenshot), these are solid foundations:
-
-- `ISSUE_TEMPLATE/` (issue templates)
-- `actions/` (custom actions)
-- `workflows/` (CI/CD workflows)
-- `CODEOWNERS`
-- `PULL_REQUEST_TEMPLATE.md`
-- `README.md` (this file)
-- `SECURITY.md`
-- `dependabot.yml`
-- `release-drafter.yml`
-
-### ⭐ Recommended `.github/` tree (KFM-friendly)
-
-```text
-📁 .github/
-├─ 📄 README.md                                📌 what this folder does + how to use it
-├─ 📄 CODEOWNERS                               👥 required reviewers for sensitive areas
-├─ 📄 SECURITY.md                              🔐 security policy + reporting
-├─ 📄 dependabot.yml                           🔁 dependency update automation
-├─ 📄 release-drafter.yml                      🧾 release notes automation
-├─ 📄 PULL_REQUEST_TEMPLATE.md                 💬 PR checklist + required artifacts
-│
-├─ 📁 actions/                                 🧰 reusable composite actions (small, composable)
-│  ├─ 📁 setup-python/                         🐍 cache deps, install, lint, test helpers
-│  ├─ 📁 validate-metadata/                    🛰️ STAC/DCAT/PROV schema + structure checks
-│  └─ 📦 ...                                    ➕ keep actions small + reusable
-│
-├─ 📁 workflows/                               🧵 CI/CD “fail-closed” gate 🛡️
-│  ├─ 📄 ci.yml                                 ✅ tests/lint for api + web
-│  ├─ 📄 data-contract.yml                      🧾 validate STAC/DCAT/PROV + provenance receipts
-│  ├─ 📄 docs.yml                               ◻️ optional: markdown lint, link check, spell
-│  ├─ 📄 security.yml                           ◻️ optional: CodeQL / dependency scanning
-│  ├─ 📄 docker.yml                             ◻️ optional: build images + smoke tests
-│  └─ 📄 release.yml                            ◻️ optional: tag/release automation
-│
-└─ 📁 ISSUE_TEMPLATE/                          🧷 issue intake forms (structured contributor workflows)
-   ├─ 📄 bug_report.yml                         🐛 bug reports
-   ├─ 📄 feature_request.yml                    ✨ feature requests
-   ├─ 📄 dataset_request.yml                    📦 data additions (raw ➜ processed ➜ metadata)
-   ├─ 📄 story_node.yml                         📚 narrative/story contributions
-   ├─ 📄 governance_question.yml                🛡️ policy + sensitivity questions
-   └─ 📄 config.yml                             ⚙️ template chooser config
-```
-
-### 🧠 Why KFM cares so much about `.github/workflows`
-
-KFM’s governance model is designed to **block non-compliant merges** (ex: missing license/metadata) — this is how “fail closed” becomes real in day-to-day collaboration.[^fail_closed]
-
-Docs and dataset contributions benefit from “Definition of Done” gates and CI checks that keep templates + requirements consistent across the repo.[^doc_dod]
-
 ---
 
 ## 🧭 Cartography, coordinates, and “don’t lie with maps”
 
 ### Minimum map essentials (UI + exports)
 
-When presenting a map (especially in stories), include:
+When presenting a map (especially in Story Nodes), include:
 
 - Title / explanatory text  
 - Legend  
@@ -297,114 +324,59 @@ When presenting a map (especially in stories), include:
 - Projection / coordinate system (CRS)  
 - Sources & credits (data attribution + cartographic authorship)[^map_design]
 
-### Metadata standards & interoperability
+### Grid reading convention (field sanity) 🧭
 
-Dependable GIS datasets carry explicit metadata (identification, quality, spatial reference, distribution/use policy, temporal info, and citation guidance). Standards improve interoperability, and copyright typically protects the *representation* of facts—not the underlying data/facts.[^metadata]
-
-### Grid reading conventions (field + GIS sanity)
-
-When reading grid coordinates (e.g., MGRS/UTM grids): **read to the RIGHT (easting) and then UP (northing)**.[^grid_reading]
-
-> [!CAUTION]
-> Many spatial operations (distance/area) require projected coordinates in meters; working in lat/long degrees can break assumptions.[^projection_meters]
-
----
-
-## 🧊 3D / 4D GIS and time
-
-KFM’s design supports time-aware and 3D-aware narratives. A multi-temporal approach is central when monitoring/representing change across time, and multi-resolution perspectives matter as data fidelity varies across sources.[^arch3d_time][^arch3d_resolution]
-
----
-
-## 📊 Analytics and QA
-
-Exploratory analysis relies heavily on graphics to discover structure, pattern, and relationships in data.[^r_eda]
-
----
-
-## 🤖 Focus Mode AI: local-first, but governed
-
-Focus Mode is designed as a governed workflow: it is expected to provide **citations**, apply a **policy engine**, and use only approved tools/paths for retrieving information.[^focus_mode]
-
----
-
-## 🧼 Data quality, validation, and “messy data reality”
-
-Incorrect/inconsistent data can distort analysis—cleaning and preparation are first-class work in KFM pipelines and review culture.[^data_quality]
-
----
-
-## 🤝 Contributing
-
-### How to contribute effectively
-
-- **Document-first:** treat metadata + provenance as part of the deliverable, not a “nice-to-have.”[^stac_dcat_prov]
-- **Reproducible methods:** treat pipelines like experiments (inputs, method, outputs, traceability).[^master_coder]
-- **Keep docs synced:** update docs/templates in the same PR when behavior or requirements change.[^doc_dod]
-
-### PR checklist (suggested)
-
-- [ ] Data placed under `data/raw/<domain>/...` with source notes (license + provenance)
-- [ ] Pipeline produces `data/processed/...` outputs[^kfm_pipeline_order]
-- [ ] STAC/DCAT/PROV artifacts generated and linked[^stac_dcat_prov]
-- [ ] Story/map content includes citations + credits + CRS[^map_design]
-- [ ] Tests / validations updated (or added) where applicable
-
-### Sensitive / culturally restricted data 🪶
-
-If a dataset/story involves sensitive locations or culturally restricted knowledge, consider redaction/aggregation and label sensitivity explicitly; KFM’s governance approach includes CARE-oriented handling.[^kfm_system][^doc_dod]
+For grid coordinates (MGRS/UTM): **read RIGHT (easting) then UP (northing)**.[^grid_reading]
 
 ---
 
 ## 📚 Project library
 
-These files actively inform KFM’s architecture, implementation patterns, and writing standards:
+These project files actively inform KFM’s architecture and standards. Consider storing them under `docs/library/` **only if licensing permits**. 📚✨
 
-- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint** (architecture + governance + pipelines + UI + AI)[^kfm_system]
-- **MARKDOWN_GUIDE_v13** (canonical data/metadata layout + STAC/DCAT/PROV alignment policy)[^stac_dcat_prov][^repo_layout]
-- **Kansas-Frontier-Matrix: Open-Source Geospatial Historical Mapping Hub Design** (exports, tiles, KML/KMZ, time-aware UI)[^exports_formats]
-- **Comprehensive Guide to Ollama** (local LLM workflow + install/run/serve commands)[^ollama_install]
-- **Making Maps: A Visual Guide to Map Design for GIS** (cartographic essentials, metadata/copyright)[^map_design][^metadata]
-- **Map Reading & Land Navigation** (grid reading conventions)[^grid_reading]
-- **Archaeological 3D GIS** (multi-temporal + multi-resolution thinking in 3D/4D GIS)[^arch3d_time][^arch3d_resolution]
-- **Graphical Data Analysis with R** (EDA mindset)[^r_eda]
+- **KFM Comprehensive Technical Blueprint** (system model, governance, invariants)[^kfm_system]  
+- **Master Guide v13 (Draft / MARKDOWN_GUIDE_v13)** (pipeline ordering, contracts, CI gates)[^v13_pipeline]  
+- **Map design reference** (cartographic essentials & metadata discipline)[^map_design]  
+- **Land navigation reference** (grid reading conventions)[^grid_reading]  
+- **Ollama guide** (local model workflows)[^ollama]  
 
-> [!TIP]
-> Put these under something like `docs/library/` in-repo so dataset cards can link to exact “house style” references. 📚✨
+> [!CAUTION]
+> Before committing PDFs to the repo, verify redistribution rights. Even when facts are reusable, a book/PDF itself may not be.[^licensing]
 
 ---
 
 ## 📜 Notice & licensing
 
-- Respect source licensing and attribution.
-- The *data/facts* can be reusable even when a *map’s representation* is copyrighted—document both carefully.[^metadata]
-- See `LICENSE` for code licensing (and dataset cards for data licensing).
+- Respect source licensing and attribution.  
+- **No output artifact can be less restricted than its inputs** (classification propagation).[^sovereignty]  
+- See `LICENSE` for code licensing and dataset cards/metadata for data licensing.
 
 ---
 
 ## 🧾 Sources (footnotes)
 
-[^kfm_system]: KFM is defined as a provenance-first geospatial knowledge platform and explicitly described as a “pipeline–catalog–database–API–UI system,” with governance mediation between UI and databases (and FAIR/CARE emphasis). [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^kfm_pipeline_order]: KFM’s pipeline order is treated as canonical (“Raw → Processed → Catalog/Prov → Database → API → UI”), and shortcuts are considered flawed unless justified. [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^fail_closed]: “Fail closed” governance: policy/check failures block actions (including CI failures preventing merges for missing license/metadata). [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^provenance_first]: “Provenance First” is stated as an invariant: every dataset must have provenance + descriptive metadata; AI answers and stories attach citations (no black-box outputs). [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^stac_dcat_prov]: STAC/DCAT/PROV alignment policy: every dataset/evidence artifact must include STAC Collection/Items, a DCAT entry, and a PROV bundle; CI validates against profiles and expects cross-linking across layers. [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^repo_versioning]: KFM treats the Git repo as a source of truth for code + data; commit history versions processed/catalog/provenance, and `CITATION.cff` supports citing a specific repo version/snapshot. [oai_citation:5‡Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf](file-service://file-WLPhJVNoBxYKcy3utQSwBi)
-[^repo_layout]: Canonical layout targets include `data/catalog/dcat/`, `data/prov/`, and consolidating legacy `api/` + `web/` into `src/server/` + `src/web/` for long-term structure consistency. [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-[^tech_stack]: KFM stack references include FastAPI + GraphQL, PostGIS, Neo4j, MapLibre (2D), Cesium (3D), and governance via a policy engine (OPA/Rego). [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^docker_quickstart]: Docker Compose setup and default dev endpoints/ports (UI `:3000`, API `:8000` with `/docs`, Neo4j Browser `:7474`), plus port conflict guidance. [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:9‡Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf](file-service://file-WLPhJVNoBxYKcy3utQSwBi)
-[^story_nodes]: Story Nodes are described as Markdown narratives paired with JSON choreography driving map state; story contributions should be reviewed for accuracy, citations, and sensitive content handling. [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^focus_mode]: Focus Mode AI is designed to be policy-governed, to cite sources, and to use approved tools (with a policy engine gate). [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-[^ollama_install]: Ollama guide includes Linux install via `curl ... install.sh | sh`, plus `ollama serve` guidance. [oai_citation:13‡Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf](file-service://file-WLPhJVNoBxYKcy3utQSwBi)
-[^exports_formats]: KFM hub design calls for rasters saved as COGs, vectors as GeoJSON/Shapefiles, and generating tiles or KML/KMZ for interactive use (including Google Earth integration). [oai_citation:14‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw) [oai_citation:15‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-64djFYQUCmxN1h6L6X7KUw)
-[^map_design]: Map design guidance includes showing direction (compass rose), scale (scale bar), supplying projection/coordinate system, and citing sources/credits (e.g., date and author). [oai_citation:16‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-[^metadata]: GIS metadata categories (identification, quality, spatial reference, distribution/use policy, citation guidance, temporal info), FGDC mention, interoperability definition, and copyright note that protection applies to representation—not underlying facts/data. [oai_citation:17‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-[^grid_reading]: Grid reading convention: “read to the RIGHT and then UP” (easting then northing). [oai_citation:18‡Map Reading & Land Navigation.pdf](sediment://file_00000000b14c7230b1b262ddd9df4e5d)
-[^projection_meters]: Spatial operations require correct CRS/units; a projected CRS in meters is often needed, while geographic CRS uses degrees (and degrees-based calculations can be invalid). [oai_citation:19‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp) [oai_citation:20‡KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf](file-service://file-2gpiGDZS8iw6EdxGswEdHp)
-[^arch3d_time]: Archaeological 3D GIS highlights “multitemporal approach” for monitoring/capturing changes over time in archaeological contexts (4D). [oai_citation:21‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](sediment://file_00000000ebac71f7ba1281d629a3ff9b)
-[^arch3d_resolution]: Archaeological 3D GIS emphasizes multi-resolution perspectives and data fusion as source fidelity changes across space/time and technologies. [oai_citation:22‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-[^r_eda]: EDA framing: exploratory analysis “employs largely graphical methods … to discover the structure, pattern, relationship, and anomalies in the data.” [oai_citation:23‡graphical-data-analysis-with-r.pdf](sediment://file_00000000f0f471f7aa621700c1f24d08)
-[^data_quality]: Data quality issues (incorrect/inconsistent data) can distort analysis and outcomes; quality must be managed explicitly. [oai_citation:24‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-[^master_coder]: Reproducibility mindset: treat workflows like experiments, control sources of variation, and keep results traceable/reproducible across runs and environments. [oai_citation:25‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-[^doc_dod]: Documentation governance: Definition of Done checklists, consistent templates, and CI/automation for Markdown quality and links are encouraged for repo health and contributor alignment. [oai_citation:26‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
-[^github_dir]: The blueprint’s repository structure includes `.github/` for CI/CD workflows and other repo-level community/automation files. [oai_citation:27‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+[^kfm_system]: KFM is defined as a provenance-first “pipeline–catalog–database–API–UI” system with governed mediation and a fail-closed posture. See: `../docs/architecture/system_overview.md` and long-form architecture docs under `../docs/architecture/` (including v13 redesign/vision docs).  
+[^v13_pipeline]: v13 pipeline ordering is treated as inviolable: ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode. See the Master Guide v13 / MARKDOWN_GUIDE_v13 (recommended home: `docs/MASTER_GUIDE_v13.md`) and related architecture docs under `../docs/architecture/`.  
+[^api_boundary]: API boundary rule: UI must not query Neo4j directly; all access goes through the governed API layer (often referenced as `src/server/` in v13 materials). See Master Guide v13 / MARKDOWN_GUIDE_v13 invariants.  
+[^fail_closed]: Fail-closed governance: if license/metadata/policy checks fail, merges/actions are blocked until corrected. See the KFM blueprint + Master Guide v13 invariants.  
+[^provenance_first]: Provenance-first publishing: all published data (and AI outputs) must be traceable back to sources with catalogs + PROV before graph/UI use. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^contract_first]: Contract-first principle: schemas/specs are first-class artifacts and changes trigger compatibility checks. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^deterministic_etl]: Deterministic pipeline principle: idempotent, config-driven ETL with logged runs for reproducibility. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^evidence_first]: Evidence-first narrative: Story Nodes and Focus Mode cannot include unsourced claims; AI content must be clearly identified and provenance-linked. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^sovereignty]: Sovereignty/classification propagation: outputs cannot be less restricted than inputs; sensitive locations require safeguards/redaction. See Master Guide v13 / MARKDOWN_GUIDE_v13 governance invariants and `../docs/governance/`.  
+[^domain_pattern]: Domain expansion pattern: `data/raw/<domain>` → `data/work/<domain>` → `data/processed/<domain>`, with catalogs in `data/stac`, `data/catalog/dcat`, and `data/prov`, plus a domain runbook in `docs/data/<domain>/README.md`. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^evidence_artifacts]: Evidence artifact pattern: AI/analysis outputs must be stored, cataloged, prov-traced, and governed like any dataset. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^story_nodes]: Story Nodes are governed narrative artifacts (markdown + machine-ingestible structure) with citations and map choreography. See Master Guide v13 / MARKDOWN_GUIDE_v13 and `../docs/templates/TEMPLATE__STORY_NODE_V3.md`.  
+[^v13_story_focus]: Story/Focus contract: Focus Mode presents provenance-linked Story Node context; no unsourced material. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^v13_story_home]: Story Node content home is commonly referenced as `docs/reports/story_nodes/` in v13 materials; align repo structure accordingly.  
+[^docker_quickstart]: Docker Compose endpoints are established as typical defaults (UI `:3000`, API `:8000` with `/docs`, Neo4j `:7474`) in KFM design docs; update if your compose differs.  
+[^api_versioning]: API versioning rule: OpenAPI/GraphQL are contracts; breaking changes require a version bump or versioned endpoints. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^release_versioning]: Release versioning expectation: semantic versioning and explicit changelogs for breaking structural changes (e.g., “v13”). See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^v13_ci]: Minimum CI gates include markdown protocol, link checks, schema validation (STAC/DCAT/PROV), graph integrity tests, API contract tests, and security scans. See Master Guide v13 / MARKDOWN_GUIDE_v13.  
+[^templates]: Templates referenced in v13: `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`, `docs/templates/TEMPLATE__STORY_NODE_V3.md`, `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`.  
+[^stac_profiles]: Standards referenced in v13: `docs/standards/KFM_STAC_PROFILE.md`, `docs/standards/KFM_DCAT_PROFILE.md`, `docs/standards/KFM_PROV_PROFILE.md`.  
+[^focus_mode]: Focus Mode is designed as policy-governed AI that retrieves via approved tools/APIs, cites evidence, and logs provenance. See KFM blueprint + Master Guide v13 invariants.  
+[^ollama]: Ollama is used as the local model runtime for Focus Mode in KFM design docs; use it to keep inference local and auditable.  
+[^map_design]: Map outputs should communicate scale, CRS/projection, and attribution/credits. See `docs/library/making-maps-a-visual-guide-to-map-design-for-gis.pdf` (if stored) or your project library reference list.  
+[^grid_reading]: Grid reading convention: read RIGHT then UP (easting then northing). See `docs/library/Map Reading & Land Navigation.pdf` (if stored) or your project library reference list.  
+[^licensing]: Licensing reminder: ensure rights before redistributing third-party PDFs; prefer storing citations/metadata and linking to official sources when redistribution is unclear.
