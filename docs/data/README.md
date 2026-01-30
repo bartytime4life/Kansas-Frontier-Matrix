@@ -38,12 +38,12 @@ Any proposal or implementation that “shortcuts” this ordering is considered 
 
 ```mermaid
 flowchart LR
-  A[📥 ETL / Normalization] --> B[🧾 STAC/DCAT/PROV Catalogs]
-  B --> C[🕸️ Neo4j Graph<br/>(references catalogs)]
-  C --> D[🧩 API Layer<br/>(contracts + redaction)]
-  D --> E[🗺️ Map UI]
-  E --> F[📝 Story Nodes]
-  F --> G[🎯 Focus Mode]
+  A["📥 ETL / Normalization"] --> B["🧾 STAC/DCAT/PROV Catalogs"]
+  B --> C["🕸️ Neo4j Graph (references catalogs)"]
+  C --> D["🧩 API Layer (contracts + redaction)"]
+  D --> E["🗺️ Map UI"]
+  E --> F["📝 Story Nodes"]
+  F --> G["🎯 Focus Mode"]
 ```
 
 (High-level flow matches KFM’s “boundary artifact” approach: each stage consumes the previous stage’s outputs to preserve traceability.):contentReference[oaicite:12]{index=12}
