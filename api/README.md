@@ -1,12 +1,3 @@
----
-title: "🧩 Kansas Frontier Matrix API (FastAPI)"
-path: "api/README.md"
-version: "1.1.0"
-last_updated: "2026-01-30"
-status: "draft"
-doc_kind: "subsystem_readme"
----
-
 # 🧩 Kansas Frontier Matrix API (FastAPI)
 
 ![Python](https://img.shields.io/badge/Python-3.x-informational)
