@@ -1,208 +1,221 @@
-# 🧪 Unit Tests — `tests/unit/`
+# 🧪 Unit Tests (KFM) ✅
 
-![Unit Tests](https://img.shields.io/badge/tests-unit-blue)
-![Fast Feedback](https://img.shields.io/badge/goal-fast%20feedback-brightgreen)
-![Deterministic](https://img.shields.io/badge/rule-deterministic-important)
+![scope](https://img.shields.io/badge/scope-unit_tests-blue)
+![speed](https://img.shields.io/badge/goal-fast_%26_deterministic-brightgreen)
+![governance](https://img.shields.io/badge/governance-fail--closed-important)
+![stack](https://img.shields.io/badge/stack-Python_%7C_TypeScript_%7C_Rego-informational)
 
-> 🎯 **Purpose:** Unit tests provide **fast, deterministic** verification of **pure logic** across KFM subsystems (ETL/pipelines, graph logic, API/service logic, and shared utilities) — without requiring live databases, networks, or full-stack orchestration.
-
----
-
-## 🧭 What belongs here (Unit vs. Integration)
-
-### ✅ Put these in `tests/unit/`
-- Pure functions / small classes (no I/O)
-- Data normalization / parsing / validation logic (CSV/JSON transforms, geometry utils, etc.)
-- Schema & contract validation helpers (JSON Schema utilities, contract shims, mappers)
-- Policy *helpers* (pure functions that interpret/transform policy inputs/outputs)
-- “Business logic” services when dependencies are **mocked** (no DB, no HTTP)
-
-### 🚫 Don’t put these in `tests/unit/`
-- Database reads/writes (Postgres/PostGIS, Neo4j) ✅→ move to `tests/integration/`
-- API endpoint round-trips (FastAPI/HTTP client calls) ✅→ `tests/integration/`
-- Anything requiring Docker Compose to be “up” ✅→ `tests/integration/` or `tests/e2e/`
-- Large/real datasets, or anything sensitive/restricted ✅→ use **small synthetic fixtures**
+> **Purpose:** fast, deterministic tests for the **Kansas Frontier Matrix (KFM)** monorepo — focused on correctness, contracts, and governance invariants.  
+> **Non-goal:** validating real DBs/services (that’s for integration/e2e).  
 
 ---
 
-## 🧱 KFM testing principles (non-negotiable vibes)
+## 🎯 What counts as a “unit test” here?
 
-- 🧾 **Contract-first:** tests should pin expected contracts/outputs so refactors don’t silently break downstream stages.
-- 🧬 **Provenance-first:** if a function produces an “artifact,” unit tests should verify the **required metadata hooks** (IDs, lineage pointers, etc.) are present (even if fully validated later).
-- 🧊 **Deterministic:** no flaky tests. Avoid time dependence; seed randomness; isolate environment state.
-- 🧪 **Small + fast:** aim for milliseconds per test. Prefer many small tests over one mega-test.
-- 🔒 **Safety & governance aware:** don’t embed secrets; don’t commit real restricted data; avoid leaking sensitive locations/details in fixtures.
+A test is **unit** if it is:
+
+- ⚡ **Fast** (ideally milliseconds; the whole suite should feel “cheap”)
+- 🧼 **Hermetic** (no network, no real Neo4j/PostGIS, no external API calls)
+- 🎲 **Deterministic** (same inputs → same outputs, no clock randomness without freezing)
+- 🧩 **Scoped** (tests a single function/module boundary, or a tight “contract”)
+
+> [!IMPORTANT]
+> KFM is **fail-closed** by design: if a policy/check is missing or uncertain, the system blocks merges/answers rather than guessing.  
+> Unit tests should reinforce this posture (missing license/metadata/policy input should **fail**, not “warn and continue”).
 
 ---
 
-## 🗂️ Recommended layout inside `tests/unit/`
+## 🗺️ KFM invariants that unit tests should protect
 
-> This repo is organized as a monorepo; unit tests should mirror the subsystem structure.
+These are the “do not regress” rules that unit tests should keep sharp:
+
+- 🧱 **Pipeline order is sacred:** Raw → Processed → Catalog/PROV → Database → API → UI  
+- 🧾 **Provenance-first:** derived artifacts must be traceable; metadata isn’t optional  
+- 🔁 **Deterministic ETL:** idempotent runs; stable outputs; predictable logs/lineage  
+- 🛡️ **UI never talks directly to DBs:** governance enforcement happens via the API boundary  
+- 🔐 **Classification propagation:** outputs must not be less restricted than inputs  
+
+---
+
+## 🗂️ Folder layout (recommended)
+
+This folder is organized by *subsystem* so it maps cleanly to the monorepo:
 
 ```text
-📁 tests/
-└─ 📁 unit/                                   🧪 fast, deterministic unit tests
-   ├─ 📄 README.md                              👈 you are here
-   ├─ 📁 python/                                🐍 pytest-style unit tests (pipelines/graph/server)
-   │  ├─ 🧪 test_*.py                            ✅ unit tests (module-level)
-   │  └─ 🧩 conftest.py                          ◻️ optional: shared fixtures + hooks
-   ├─ 📁 web/                                   ◻️ optional: UI/unit tests (Vitest/Jest)
-   │  └─ 🧪 *.test.ts(x)                         🧪 unit tests for TS/TSX utilities/components
-   ├─ 📁 fixtures/                              🧩 tiny synthetic “golden” inputs/outputs
-   │  ├─ 📁 json/                               🧾 JSON fixtures
-   │  ├─ 📁 geojson/                            🌍 GeoJSON fixtures
-   │  └─ 📁 csv/                                📊 CSV fixtures
-   └─ 📁 helpers/                               🧰 shared test helpers (builders, factories, fakes)
+tests/
+└── unit/
+    ├── api/          🐍 Backend unit tests (FastAPI domain/services)
+    ├── pipelines/    🐍 ETL + transforms (pure functions, schemas, IO adapters mocked)
+    ├── web/          🌐 Frontend unit tests (React/TS components + utilities)
+    ├── policy/       🛡️ Governance unit tests (OPA/Rego via Conftest, if used)
+    ├── fixtures/     🧰 Shared fixtures + tiny sample inputs (golden files allowed)
+    └── README.md     📌 You are here
 ```
 
-> 💡 If your backend code currently lives in `api/` (older layout) vs `src/server/` (v13+), keep tests aligned with the **actual** code location — but keep them in **one** canonical unit test home: `tests/unit/`.
+> [!TIP]
+> Keep **fixtures small** and **representative**. If a dataset is needed, create a minimal “toy” version rather than copying large `data/processed` artifacts.
 
 ---
 
-## ▶️ Running unit tests (local)
+## ▶️ Running unit tests
 
-### 🐍 Python unit tests (recommended for pipelines/graph/server logic)
+### 🐍 Python (API + pipelines)
 
-<details>
-<summary><strong>Option A — Run via Docker Compose (most consistent)</strong> 🐳</summary>
-
-```bash
-# from repo root
-docker-compose exec api pytest -q tests/unit/python
-```
-
-✅ Best when dependencies (GDAL, DB clients, geo libs) are container-managed.
-
-</details>
-
-<details>
-<summary><strong>Option B — Run in local virtualenv</strong> 🧪</summary>
+From repo root:
 
 ```bash
-# from repo root
-python -m pytest -q tests/unit/python
+python -m pytest -q tests/unit
 ```
 
-✅ Best for quick iteration if your venv matches container deps.
+Useful options:
 
-</details>
+```bash
+# show slowest tests (helps keep unit tests fast)
+python -m pytest tests/unit --durations=10
 
----
+# run a single file
+python -m pytest tests/unit/api/test_something.py -q
 
-### 🌐 Web unit tests (optional; UI utilities/components)
+# run tests matching a substring
+python -m pytest tests/unit -k "provenance" -q
+```
+
+### 🌐 Web (React + TypeScript)
+
+From repo root, run the test script configured in `web/`:
 
 ```bash
 cd web
 npm test
 ```
 
-> If your frontend uses a different script (e.g., `npm run test` / `vitest`), prefer the repo’s canonical `package.json` commands.
+If your project uses a different package manager:
 
----
-
-## ✍️ Writing unit tests (conventions)
-
-### 🧷 Naming
-- **Python (pytest):** `test_<topic>.py`, functions `test_<behavior>_<scenario>()`
-- **TS/JS:** `<thing>.test.ts(x)` or `<thing>.spec.ts(x)` (match the frontend standard)
-
-### 🧠 Test structure
-- Prefer **Arrange → Act → Assert** (AAA)
-- One behavior per test
-- Keep assertions specific (avoid “assert something truthy”)
-
-### 🎭 Mocking rules
-- Mock external boundaries:
-  - DB clients, filesystem, HTTP, environment variables
-- Keep mocks local to the test unless a fixture is clearly reusable
-- Avoid mocking the function under test (mock its dependencies instead)
-
----
-
-## 🧩 Fixtures (tiny + synthetic)
-
-### ✅ Good fixtures
-- Small, representative inputs (1–20 rows, 1–5 features)
-- “Golden” outputs that are stable and easy to diff
-- Fake IDs/coordinates when geography is needed
-
-### 🚫 Bad fixtures
-- Real datasets (too big, likely governed, hard to review)
-- Anything that could be sensitive (e.g., precise archeological locations)
-- Anything that changes frequently (live API responses)
-
----
-
-## ✅ Definition of Done (DoD) for unit-testable changes
-
-When you add/modify logic that can be unit-tested:
-
-- [ ] Unit tests added/updated in `tests/unit/`
-- [ ] Tests are deterministic (no flake)
-- [ ] Tests run locally (Python and/or Web, as applicable)
-- [ ] No secrets / sensitive data / large fixtures committed
-- [ ] CI should stay green ✅
-
----
-
-## 🧰 Minimal templates
-
-<details>
-<summary><strong>🐍 Pytest template</strong></summary>
-
-```python
-def test_behavior__scenario__expected_result():
-    # Arrange
-    input_value = "TODO"
-    # Act
-    result = some_function(input_value)
-    # Assert
-    assert result == "EXPECTED"
+```bash
+cd web
+pnpm test   # or: yarn test
 ```
 
-</details>
+> [!NOTE]
+> Unit tests should not require Docker. If a test needs services, it belongs in `tests/integration/` or `tests/e2e/`.
 
-<details>
-<summary><strong>🌐 TS/JS test template</strong></summary>
+### 🛡️ Policy checks (OPA/Rego via Conftest) — if enabled
+
+If KFM policy tests are implemented with Conftest:
+
+```bash
+conftest test tests/unit/policy -p policy
+```
+
+Typical unit-level policy assertions include:
+- ❌ block merges when license metadata is missing
+- ❌ block missing STAC/DCAT/PROV for new processed data
+- ✅ allow only sanctioned file locations / naming conventions
+- ✅ deny restricted dataset access for unauthorized roles
+
+---
+
+## ✍️ Writing tests (style guide)
+
+### ✅ Prefer “AAA”
+**Arrange → Act → Assert**, with minimal setup.
+
+### ✅ Keep IO at the boundary
+- Test pure transforms as pure functions.
+- Wrap file/DB/network behavior behind adapters and **mock** them in unit tests.
+
+### ✅ Make failure messages helpful
+- Assert with intent and clarity.
+- If you add a policy check, include “what to do next” in the failure output.
+
+### ✅ Freeze time & randomness
+If the logic depends on time/UUID/randomness:
+- inject a clock/seed
+- or use a freeze/mocking tool appropriate for the language
+
+---
+
+## 🧰 Fixtures & golden files
+
+### 🧪 Fixtures
+- Put shared fixtures in `tests/unit/fixtures/`
+- Prefer JSON/GeoJSON/CSV “toy” fixtures over big binary blobs
+- Name fixtures by **what they represent**, not their origin (`parcel_minimal.geojson` > `ksdata2.geojson`)
+
+### 🧊 Golden files (snapshot testing)
+Allowed for:
+- schema outputs
+- normalized transforms
+- provenance rendering
+- policy decision payloads
+
+Rules:
+- Keep snapshots **reviewable** (small, stable, pretty-printed)
+- If a snapshot changes, the PR must explain **why**
+
+---
+
+## 🚫 Anti-patterns (please don’t)
+
+- 🌍 Hitting live services (Neo4j/PostGIS/External APIs)
+- 🧨 Requiring secrets to run unit tests
+- 🐌 “Unit tests” that take seconds each
+- 🧩 Testing multiple layers at once (pipeline + API + UI) in one test file
+- 🧹 Mutating real repo data directories (write to temp dirs instead)
+
+---
+
+## 🧩 Tiny templates
+
+### 🐍 Python (pytest)
+
+```python
+def test_normalizes_titlecase():
+    # Arrange
+    raw = "  dUsT bOwL  "
+
+    # Act
+    out = normalize_title(raw)
+
+    # Assert
+    assert out == "Dust Bowl"
+```
+
+### 🌐 TypeScript
 
 ```ts
-import { describe, it, expect } from "vitest"; // or jest
+import { normalizeTitle } from "../src/normalizeTitle";
 
-describe("someUtility", () => {
-  it("does X when Y", () => {
-    // Arrange
-    const input = "TODO";
-    // Act
-    const result = someUtility(input);
-    // Assert
-    expect(result).toBe("EXPECTED");
-  });
+test("normalizes titlecase", () => {
+  expect(normalizeTitle("  dUsT bOwL  ")).toBe("Dust Bowl");
 });
 ```
 
-</details>
+### 🛡️ Policy (conceptual)
+
+```rego
+# tests/unit/policy/deny_missing_license_test.rego
+# Assert: datasets without license metadata are denied (fail-closed)
+```
 
 ---
 
-## 🔗 Related docs (recommended reading) 📚
+## 🔗 Related docs (quick jumps)
 
-- 📘 `docs/MASTER_GUIDE_v13.md` (repo structure + invariants)
-- 🧱 `docs/architecture/` (contracts, boundaries, long-term vision)
-- ⚖️ `docs/governance/` (ethics, sovereignty, review gates)
-- 🤝 `CONTRIBUTING.md` (how to contribute + review expectations)
-
----
-
-## 🆘 Troubleshooting (quick hits)
-
-- 🐳 Compose tests fail because services aren’t up?  
-  → Unit tests **should not require** live services. Mock those boundaries or move the test to `tests/integration/`.
-
-- 🧊 Flaky tests?  
-  → Remove time dependency, seed randomness, avoid ordering assumptions, avoid shared global state.
-
-- 🧱 Contract mismatch after refactor?  
-  → Update tests **only if** the contract change is intentional and documented (prefer contract-first updates).
+- 🏛️ Architecture: `../../docs/architecture/`
+- 📐 Standards (STAC/DCAT/PROV, schemas): `../../docs/standards/`
+- 🧭 Governance policy: `../../policy/`
+- 🧰 Tooling scripts: `../../tools/`
 
 ---
 
+## ✅ PR checklist for unit tests
+
+- [ ] Tests are deterministic (no flakiness)
+- [ ] No network / no real DB calls
+- [ ] New logic has coverage at the right layer
+- [ ] Failure messages are actionable
+- [ ] Any governance-related change includes policy/unit coverage
+- [ ] Runtime remains “fast by default” ⚡
+
+---
