@@ -31,17 +31,17 @@ This directory is the **developer/operator toolbelt** for Kansas Frontier Matrix
 
 ```mermaid
 flowchart LR
-  A[📥 data/raw<br/>immutable snapshots] --> B[🧹 data/processed<br/>clean + standardized outputs]
-  B --> C[🗂️ data/catalog<br/>(STAC/DCAT)]
-  B --> D[🧬 data/provenance<br/>(W3C PROV lineage)]
-  C --> E[(🗺️ PostGIS)]
+  A["📥 data/raw — immutable snapshots"] --> B["🧹 data/processed — clean + standardized outputs"]
+  B --> C["🗂️ data/catalog (STAC/DCAT)"]
+  B --> D["🧬 data/provenance (W3C PROV lineage)"]
+  C --> E["🗺️ PostGIS"]
   D --> E
-  C --> F[(🕸️ Neo4j)]
+  C --> F["🕸️ Neo4j"]
   D --> F
-  E --> G[⚙️ api/<br/>FastAPI]
+  E --> G["⚙️ api/ — FastAPI"]
   F --> G
-  G --> H[🌐 web/<br/>React UI]
-  G --> I[🧠 Focus Mode<br/>AI tooling]
+  G --> H["🌐 web/ — React UI"]
+  G --> I["🧠 Focus Mode — AI tooling"]
 ```
 
 ---
