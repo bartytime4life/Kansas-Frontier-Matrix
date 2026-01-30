@@ -1,238 +1,292 @@
-# 🧩 `api/services/` — Service / Use‑Case Layer
+# 🧩 `api/services/` — Service (Use‑Case) Layer
 
-![Layer](https://img.shields.io/badge/layer-service%2Fuse--case-blue)
-![Style](https://img.shields.io/badge/architecture-clean--architecture-informational)
-![Goal](https://img.shields.io/badge/goal-testable%20%26%20decoupled-success)
-![API](https://img.shields.io/badge/edge-fastapi%20routers-lightgrey)
+![Python](https://img.shields.io/badge/Python-3.11%2B-informational?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
+![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%26%20Layered-blueviolet)
+![Governance](https://img.shields.io/badge/Governance-Policy%20Enforced-critical)
+![Provenance](https://img.shields.io/badge/Provenance-First-success)
+![LLM](https://img.shields.io/badge/LLM-Ollama%20(Local)-orange)
 
-Welcome to **KFM’s “business logic brain”** 🧠  
-This folder is where **use-cases** live: the orchestration, rules, and computations that power the API.
-
----
-
-## 🎯 What belongs in `api/services/`
-
-Services should:
-
-- 🧠 Implement **application workflows** (use-cases), not HTTP endpoints  
-- 🧱 Orchestrate **domain models** (entities/DTOs) into meaningful results  
-- 🧩 Combine data from **repositories/adapters** (SQL, graph, search, files)  
-- 🧪 Stay **easy to unit test** (mock repositories, deterministic inputs)  
-- 🧾 Optionally attach/return **traceable evidence** (citations/provenance pointers) when appropriate
-
-> Think: **“What is the user trying to do?”** (use-case)  
-> Not: **“How do we serve HTTP?”** (router) or **“How do we query PostGIS?”** (repository)
+> 🧠 **What this folder is:** the **business logic + orchestration layer** for the KFM backend.  
+> 🔒 **What it is *not*:** FastAPI route handlers, database code, or framework glue.
 
 ---
 
-## 🚫 What does *not* belong here
+## 📌 Why `services/` exists
 
-Keep these OUT of `api/services/`:
+KFM follows a layered approach where the **UI never talks to databases directly**—everything is mediated by the backend API, which performs validation + governance checks. The service layer is where we implement **use-cases**: workflows, analysis routines, and “do the thing” logic.
 
-- 🌐 FastAPI route logic (`APIRouter`, `Request`, `Response`, `Depends`)  
-- 🗄️ Direct DB drivers/sessions (SQLAlchemy sessions, psycopg2 connections, Neo4j sessions)  
-- 🔐 Authentication/authorization policy enforcement *as a boundary concern*  
-  - (Services may accept an `actor/context` and *request* a decision, but don’t become the policy engine.)
-- 🧱 ETL / ingestion / long-running pipelines (belongs in `pipelines/`)
+✅ Services should:
+- Orchestrate **domain entities/models**
+- Call **repository/adapters** via interfaces (not direct DB calls)
+- Apply **decision rules**, algorithms, and governance rules
+- Be **easy to test** (mock repositories)
+- Return **domain objects / DTOs**, not web-framework responses
 
 ---
 
-## 🧭 How this folder fits the “truth path”
+## 🧭 Mental Model (Request Flow)
 
 ```mermaid
 flowchart LR
-  UI["🗺 UI / Focus Mode AI"] -->|HTTP| ROUTES["api/routes/*\n(thin controllers)"]
-  ROUTES --> SERVICES["api/services/*\n(use-cases)"]
-  SERVICES --> REPOS["api/repositories/* or api/adapters/*\n(data access)"]
-  REPOS --> STORES["🗄️ PostGIS / Neo4j / Search / Files"]
-  SERVICES --> TRACE["🧾 Provenance / Citations (optional)"]
+  UI[🖥️ Web UI] --> R[🧰 FastAPI Routes / GraphQL Resolvers]
+  R --> S[🧩 Services (Use‑Cases)]
+  S -->|interfaces| A[🔌 Adapters / Repositories]
+  A --> P[(🗺️ PostGIS)]
+  A --> N[(🕸️ Neo4j)]
+  A --> E[(🔎 Search Index)]
+  A --> X[(🌐 External APIs)]
+  S --> G[🛡️ Policy / Governance Checks]
+  S --> V[🧾 Provenance + Audit Logs]
 ```
-
-✅ **Routes** are thin: validate inputs, call a service, translate errors to HTTP  
-✅ **Services** hold the real logic and remain storage-agnostic  
-✅ **Repositories/Adapters** handle external systems (SQL/graph/search/etc.)
 
 ---
 
-## 🗂️ Suggested layout & naming
+## 🗂️ Suggested Layout
 
-You’ll typically end up with services grouped by domain/use-case:
+> Your exact files may vary — this is the **recommended convention**.
 
 ```text
-api/
-  services/ 🧩
-    README.md
-    __init__.py
-    story_service.py          # story workflows, story graph expansions, etc.
-    analysis_service.py       # analytic queries, reports, scoring, etc.
-    search_service.py         # cross-index search orchestration (if used)
-    export_service.py         # packaging outputs (GeoJSON, CSV, tiles links, etc.)
-    ai_tools_service.py       # tool wrappers for AI endpoints (if used)
+📁 api/
+  📁 routes/                # Thin controllers (HTTP)
+  📁 graphql/               # Optional resolvers/schema
+  📁 models/ or domain/     # Pydantic/domain entities (lingua franca)
+  📁 repositories/          # Interfaces + implementations (or adapters/)
+  📁 db/                    # Database clients (PostGIS, Neo4j, etc.)
+  📁 services/              # ✅ You are here
+    📄 analysis_service.py
+    📄 story_service.py
+    📄 search_service.py
+    📁 ai/
+      📄 ai_query_service.py
+    📄 __init__.py
 ```
 
-### Naming conventions 🧼
+---
 
-- Prefer `snake_case` filenames: `story_service.py`
-- Prefer explicit service names in code:
-  - `StoryService`, `DroughtAnalysisService`, `SearchService`
-- Keep the public surface small:
-  - Use `__init__.py` to export stable entrypoints if helpful
+## ✅ Service Design Rules (The “Commandments”)
+
+### 1) Keep services framework‑agnostic 🧼
+- ✅ OK: pure Python + domain models
+- ❌ Avoid: importing `fastapi.Request`, `Depends`, router objects, response classes
+
+### 2) No direct DB calls from services 🚫🗄️
+Services should never know whether data came from:
+- PostGIS
+- Neo4j
+- CSV / file pipeline output
+- External API
+
+Instead, they call **interfaces** (repositories/adapters) and operate on **domain objects**.
+
+### 3) Prefer dependency injection (constructor or explicit params) 🧩
+Pass repositories/adapters into services:
+- Constructor injection for long‑lived services
+- Function arguments for simpler use-cases
+
+### 4) Split “Queries” vs “Commands” ⚖️
+- **Query**: read/aggregate/search → returns data
+- **Command**: create/update/delete → returns result + writes provenance/audit trails
+
+### 5) Provenance isn’t optional 🧾
+If a service produces:
+- an analysis output,
+- an AI answer,
+- a generated artifact,
+
+…it should also produce/trigger whatever logging is required for provenance & auditability.
+
+### 6) Fail closed by default 🛑
+When policy checks fail:
+- return a safe refusal / sanitized result
+- don’t “best effort” leak restricted content
 
 ---
 
-## 🧱 Service design rules (the “KFM Service Laws”) ⚖️
+## 🧪 Testing Expectations
 
-- ✅ **Accept dependencies via injection** (constructor args / function params)  
-  - Repos should be passed in, not created inside the service.
-- ✅ **Return domain objects** (or DTOs), not HTTP responses  
-- ✅ **Prefer deterministic functions** (same inputs → same outputs)
-- ✅ **Batch work** to avoid N+1 query patterns
-- ✅ **Document the use-case contract** (inputs, outputs, errors)
+Services are intended to be highly testable.
 
-**Avoid:**
-- ❌ `from fastapi import APIRouter, Depends`
-- ❌ `session = SessionLocal()` inside service code
-- ❌ “magic globals” pulled from env vars mid-function
-- ❌ hidden side-effects (writing files, mutating DB) without an explicit use-case name
+### Unit tests (fast + pure) ✅
+- Mock repository interfaces
+- Provide synthetic domain objects
+- Validate:
+  - correct calculations
+  - decision rules
+  - policy outcomes (allow/deny/mask)
+
+### Integration tests (endpoints) 🔗
+- Use FastAPI test client at the route layer
+- Optionally spin up ephemeral DB(s) for realistic queries
 
 ---
 
-## 🔌 Dependency injection pattern (recommended)
+## 🧰 Common Service Patterns
 
-Services should be framework-agnostic, but the API boundary can wire them up.
-
-<details>
-<summary><strong>🧷 Example: service + repo interface + router wiring</strong></summary>
-
+### Pattern A — Thin service function (simple use-case)
 ```python
-# api/services/story_service.py
-from dataclasses import dataclass
-from typing import Protocol, Sequence
+def get_story_node(story_repo, story_id: str):
+    node = story_repo.get_story_node(story_id)
+    if not node:
+        raise ValueError("Story node not found")
+    return node
+```
 
-class StoryRepository(Protocol):
-    def get_story(self, story_id: str): ...
-    def list_stories(self, limit: int = 50) -> Sequence: ...
-
-@dataclass(frozen=True)
+### Pattern B — Service class (stateful dependencies + workflows)
+```python
 class StoryService:
-    repo: StoryRepository
+    def __init__(self, story_repo, graph_repo, policy):
+        self.story_repo = story_repo
+        self.graph_repo = graph_repo
+        self.policy = policy
 
-    def get_story_detail(self, story_id: str):
-        story = self.repo.get_story(story_id)
-        if story is None:
-            raise StoryNotFound(story_id)
-        return story
-
-class StoryNotFound(Exception):
-    def __init__(self, story_id: str):
-        super().__init__(f"Story not found: {story_id}")
-        self.story_id = story_id
+    def get_story_with_related(self, user, story_id: str):
+        self.policy.check_access(user=user, resource_id=story_id)
+        story = self.story_repo.get_story_node(story_id)
+        related = self.graph_repo.get_related_events(story_id)
+        return {"story": story, "related": related}
 ```
-
-```python
-# api/routes/stories.py (edge layer)
-from fastapi import APIRouter, Depends, HTTPException
-from api.services.story_service import StoryService, StoryNotFound
-
-router = APIRouter()
-
-def get_story_service() -> StoryService:
-    # Build adapters/repos here via DI (DB session, clients, etc.)
-    # return StoryService(repo=RealStoryRepository(...))
-    raise NotImplementedError
-
-@router.get("/stories/{story_id}")
-def get_story(story_id: str, svc: StoryService = Depends(get_story_service)):
-    try:
-        return svc.get_story_detail(story_id)
-    except StoryNotFound as e:
-        raise HTTPException(status_code=404, detail=str(e))
-```
-</details>
 
 ---
 
-## 🧪 Testing services (fast, isolated, boring = perfect)
+## 🌾 Example Use‑Case: `DroughtAnalysisService`
 
-Write unit tests that mock repositories and validate behavior.
+This is the archetype for analytic services:
+- Pull domain records via repositories (rainfall, yield, etc.)
+- Compute a result (drought impact summary)
+- Return a clean model/summary
+
+```python
+class DroughtAnalysisService:
+    def __init__(self, rainfall_repo, yield_repo):
+        self.rainfall_repo = rainfall_repo
+        self.yield_repo = yield_repo
+
+    def drought_report(self, year_range: tuple[int, int]):
+        rainfall = self.rainfall_repo.get_records(year_range)
+        yields = self.yield_repo.get_records(year_range)
+
+        # 🔬 Domain logic here (compute drought index, correlate yield drop, etc.)
+        report = compute_drought_impact(rainfall, yields)
+
+        return report
+```
+
+---
+
+## 🤖 AI Services: Focus Mode + Local LLM (Ollama)
+
+KFM’s **Focus Mode** is designed to run a **local LLM via Ollama**, with governance:
+- AI only uses **approved tools/APIs**
+- AI must provide **citations** for factual claims
+- Output is run through a **policy engine** before returning
+- Typical backend endpoint shape: `POST /ai/query`
+
+### Recommended service split
+- `AiQueryService`: orchestration + policy + provenance
+- `RetrievalService`: semantic search / “search database” tooling
+- `CitationService`: normalizes and attaches citations
+- `PolicyService`: allow/deny/sanitize decisions
+
+```python
+class AiQueryService:
+    def __init__(self, llm_client, retrieval, policy, provenance, citation):
+        self.llm = llm_client
+        self.retrieval = retrieval
+        self.policy = policy
+        self.provenance = provenance
+        self.citation = citation
+
+    def answer(self, user, question: str):
+        # 1) Pre-check question (fail closed)
+        self.policy.precheck_ai_question(user=user, question=question)
+
+        # 2) Retrieve grounded context (safe tools only)
+        snippets = self.retrieval.fetch_context(question)
+
+        # 3) Ask local LLM (Ollama) for answer + citations
+        raw = self.llm.generate(question=question, context=snippets)
+
+        # 4) Attach/normalize citations + enforce policy on final answer
+        answered = self.citation.attach(raw, snippets)
+        self.policy.postcheck_ai_answer(user=user, answer=answered)
+
+        # 5) Record provenance / audit trail
+        self.provenance.record_ai_interaction(user=user, question=question, answer=answered)
+
+        return answered
+```
+
+> ✨ Design goal: AI isn’t an oracle — it “shows its work” by retrieving data and citing it.
+
+---
+
+## 🧩 How Routes Should Use Services
+
+Routes/controllers should be *thin*:
+- parse & validate inputs
+- call service
+- serialize outputs
+
+### REST
+- Swagger UI typically lives at: `/docs`
+
+### GraphQL (optional)
+Resolvers should call the **same services** as REST to avoid duplicating business logic.
+
+---
+
+## 🧱 Adding a New Service (Checklist)
+
+1. **Name it by use-case**: `parcel_service.py`, `analysis_service.py`, `ai_query_service.py` 🏷️  
+2. Define/confirm the **domain model** you’ll return (`api/models` or `api/domain`) 🧬  
+3. Add or reuse **repository interfaces** (no direct DB calls) 🔌  
+4. Implement service logic (pure, deterministic where possible) 🧠  
+5. Add policy hooks (pre/post checks) 🛡️  
+6. Add provenance hooks if outputs must be traceable 🧾  
+7. Write unit tests with mocked repos ✅  
+8. Wire it into routes/resolvers with DI 🧰  
+
+---
+
+## 🧨 Common Pitfalls (Avoid These)
+
+- ❌ Service imports FastAPI objects (`Request`, `Depends`, `HTTPException`)
+- ❌ SQL/Cypher query strings embedded in service methods
+- ❌ Returning raw DB rows or ORM models instead of domain models
+- ❌ Skipping policy checks because “it’s just internal”
+- ❌ Generating AI answers without citations / provenance
+
+---
+
+## 🔗 Handy Navigation
+
+- 📁 `api/routes/` — HTTP endpoints (thin controllers)
+- 📁 `api/repositories/` / `api/adapters/` — external integration surface
+- 📁 `api/db/` — PostGIS/Neo4j clients and sessions
+- 📁 `policy/` — policy-as-code (OPA/Rego), governance rules
+
+---
+
+## 🧭 Service Quality Bar (Quick Scorecard)
+
+| Requirement | Must? | Notes |
+|---|:---:|---|
+| Pure business logic (no framework) | ✅ | Keep route handlers thin |
+| Uses repository interfaces | ✅ | No direct DB access |
+| Easy to unit test | ✅ | Mock repos |
+| Policy enforcement | ✅ | Fail closed |
+| Provenance hooks where needed | ✅ | Especially for AI + derived artifacts |
+| Returns domain models / DTOs | ✅ | Stable contracts |
+
+---
 
 <details>
-<summary><strong>🧫 Example pytest-style unit test</strong></summary>
+  <summary>📦 “What belongs in services vs repositories vs routes?”</summary>
 
-```python
-# api/services/tests/test_story_service.py
-from api.services.story_service import StoryService, StoryNotFound
+- **Routes**: request/response boundary (HTTP), validation, status codes  
+- **Services**: orchestration + business rules + workflows  
+- **Repositories/Adapters**: “how to fetch/store data” (PostGIS/Neo4j/external APIs)  
+- **Domain Models**: shared language across all layers  
 
-class FakeRepo:
-    def __init__(self, stories):
-        self._stories = stories
-
-    def get_story(self, story_id: str):
-        return self._stories.get(story_id)
-
-    def list_stories(self, limit: int = 50):
-        return list(self._stories.values())[:limit]
-
-def test_get_story_detail_success():
-    svc = StoryService(repo=FakeRepo({"s1": {"id": "s1", "title": "Hello"}}))
-    assert svc.get_story_detail("s1")["title"] == "Hello"
-
-def test_get_story_detail_missing():
-    svc = StoryService(repo=FakeRepo({}))
-    try:
-        svc.get_story_detail("nope")
-        assert False, "expected StoryNotFound"
-    except StoryNotFound:
-        assert True
-```
 </details>
-
----
-
-## 🧾 Provenance & evidence (optional, but very “KFM”)
-
-If a service produces an analytic result or a narrative claim:
-
-- Return (or attach) **evidence pointers**:
-  - dataset IDs, feature IDs, source documents, provenance record IDs
-- Keep the service output “audit-friendly”:
-  - avoid “trust me” strings; prefer traceable references
-
-> A good rule: if the UI can display it as a “fact,” the API should be able to tell you **where it came from** 🧭
-
----
-
-## ✅ Checklist for adding a new service
-
-- [ ] Create `api/services/<new_service>.py`
-- [ ] Define small repo interfaces (`Protocol`) needed by the service
-- [ ] Implement the use-case (pure logic, injected deps)
-- [ ] Add unit tests with fake repos
-- [ ] Wire into `api/routes/*` via a provider function (DI)
-- [ ] Ensure outputs are traceable (IDs, citations, provenance pointers) when needed
-- [ ] Keep routes thin (no “business logic creep”) 🧹
-
----
-
-## 🔗 Related places in the repo
-
-```text
-api/routes/         🌐 HTTP boundary (FastAPI routers)
-api/models/         🧬 Domain models / DTOs
-api/domain/         🧠 Core entities (if separated)
-api/repositories/   🗄️ Storage-facing contracts + implementations
-api/adapters/       🔌 External system adapters (search, geocoding, etc.)
-pipelines/          🏗️ ETL + batch processing (offline)
-data/provenance/    🧾 Lineage / PROV records
-policy/             🛡️ Governance rules (OPA / Rego)
-```
-
----
-
-## 🧠 Final mental model
-
-**Routes** ask: *“How do we expose this over HTTP?”* 🌐  
-**Services** ask: *“What does the system do?”* 🧩  
-**Repositories** ask: *“Where does the data come from?”* 🗄️  
-
-Keep that separation clean and KFM stays scalable, testable, and trustworthy ✅
