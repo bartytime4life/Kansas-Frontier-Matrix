@@ -1,220 +1,195 @@
-# 🧪 `api/tests` — API Test Suite
+# 🧪 API Test Suite (`api/tests/`)
 
-![pytest](https://img.shields.io/badge/tests-pytest-blue)
-![FastAPI](https://img.shields.io/badge/api-FastAPI-009688)
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-black)
-![Style](https://img.shields.io/badge/style-black%2Fflake8-friendly)
+![pytest](https://img.shields.io/badge/pytest-ready-blue) ![fastapi](https://img.shields.io/badge/FastAPI-tested-009688) ![governance](https://img.shields.io/badge/fail--closed-governance-critical-red)
 
-> [!NOTE]
-> This folder is the home for the backend test suite: **unit tests for service/use-case logic** and **integration tests for API endpoints**.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Welcome to the **KFM API test suite** ✅  
+This folder is the home for **unit**, **integration**, and **contract-style** tests that keep the FastAPI backend reliable, reproducible, and safe-by-default.
 
 ---
 
-## 🎯 What lives here?
+## 🎯 What these tests protect
 
-KFM’s backend typically includes an `api/tests/` directory with:
-- ✅ **Unit tests** for service functions (fast, isolated)
-- ✅ **Integration tests** for API endpoints (FastAPI test client + fixtures) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### ✅ Reliability & regressions
+- Endpoints keep returning the expected **status codes** and **response shapes**
+- Service-layer logic stays correct as models evolve
+- Query filters/pagination don’t silently break
 
-Why this matters: the API is the **central control plane** (routing, dependency injection, governance checks), so tests protect both correctness and policy enforcement.  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### 🔐 Governance & “fail-closed” behavior
+- If a policy/validation check fails, the API must **block** the action (not “best effort”)
+- Sensitive/special cases must return the **expected error** (403/422/400/etc.)
+- Changes that would weaken guardrails should be caught early
+
+### 🧾 Provenance-first mindset
+- Prefer deterministic tests and fixture-driven expectations
+- Keep test data small, explicit, and easy to audit
 
 ---
 
-## ⚡ Quick start
+## ⚡ Quickstart
 
-### Option A — Run tests in Docker Compose ✅ (recommended)
+> Most common workflow: run tests **inside the API container**.
 
-KFM’s workflow expects a live Compose dev stack so you can run tests from a second terminal.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### 🐳 Docker Compose (recommended)
+From the repo root:
 
 ```bash
-# from repo root
+# if the stack isn't already running
 docker-compose up -d
+
+# run all backend tests
 docker-compose exec api pytest
 ```
 
-`pytest` is the standard backend test runner, and CI also runs it on PRs.  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-> [!TIP]
-> If your project uses Docker v2 syntax, replace `docker-compose` with `docker compose`.
-
-### Option B — Run tests locally (no Docker)
-
-If you’re running the API natively (venv/uv/pip), install the backend + dev deps, then:
-
+### 🧰 Helpful pytest commands
 ```bash
-# from repo root or ./api depending on how dependencies are wired
-pytest
+# run a single test file
+docker-compose exec api pytest api/tests/test_health.py
+
+# run tests matching a substring
+docker-compose exec api pytest -k "datasets"
+
+# show prints/logs (useful when debugging)
+docker-compose exec api pytest -s
+
+# fail fast on first error
+docker-compose exec api pytest -x
 ```
+
+> If your tests require databases (PostGIS/Neo4j), make sure the compose stack is up.
 
 ---
 
-## 🧱 Suggested test layout
+## 🗂️ Recommended directory layout
 
-> [!IMPORTANT]
-> Keep tests aligned to the architecture: **domain/service tests should not require DB/network**, while endpoint tests can validate full request/response behavior.
-
-<details>
-<summary><strong>📁 Example folder tree (recommended)</strong></summary>
+> Your repo may vary — this is a **suggested** structure that scales well.
 
 ```text
-📁 api/
-  📁 tests/
-    📄 README.md
-    📄 conftest.py
-    📁 unit/
-      📄 test_services_*.py
-      📄 test_domain_*.py
-    📁 integration/
-      📄 test_routes_*.py
-      📄 test_graphql_*.py
-    📁 contract/
-      📄 test_openapi_*.py
-    📁 fixtures/
-      📄 *.json
-      📄 *.geojson
+api/tests/
+├── README.md                # 👈 you are here
+├── conftest.py              # 🧩 shared pytest fixtures
+├── unit/                    # ✅ fast, pure-python tests
+│   ├── test_services_*.py
+│   └── test_models_*.py
+├── integration/             # 🔌 API + DB/Adapters (TestClient + test DB)
+│   ├── test_routes_*.py
+│   └── test_authz_*.py
+├── contract/                # 📜 schema & contract checks (OpenAPI/GraphQL)
+│   ├── test_openapi_*.py
+│   └── test_graphql_*.py
+└── fixtures/                # 🧪 small JSON/GeoJSON/CSV fixtures
+    ├── datasets/
+    ├── stories/
+    └── graph/
 ```
-</details>
 
 ---
 
-## 🧠 Test philosophy (matches KFM’s architecture)
+## 🧩 Fixtures & test data rules
 
-### ✅ Unit tests = *Service/use-case correctness*
-KFM’s clean architecture separates core logic from adapters so you can test service logic in isolation using mock data.  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### ✅ DO
+- Keep fixtures **minimal** (small JSON/GeoJSON snippets)
+- Use factories/helpers to build valid Pydantic models quickly
+- Prefer **explicit** test setup over “magic” data generation
+- Use temp dirs (`tmp_path`) for any filesystem writes
 
-**Unit tests should:**
-- Avoid DB / HTTP / filesystem unless explicitly testing adapters
-- Exercise domain + service rules (pure Python/Pydantic)
-- Be fast enough to run constantly during development
-
-### 🔌 Integration tests = *Endpoint behavior + governance*
-Integration tests commonly:
-- Build/seed **fixtures** (small, deterministic)
-- Call endpoints using **FastAPI’s test client**
-- Assert status codes + response bodies + errors + auth/policy gates [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### ❌ DON’T
+- Don’t commit large datasets here (tests should stay fast ⚡)
+- Don’t include secrets, tokens, or any real sensitive data
+- Don’t mutate “raw” pipeline inputs (treat them as read-only evidence)
 
 ---
 
-## ✍️ Writing new tests
+## 🧪 Writing tests (practical patterns)
 
-### 1) Adding a **service/use-case** test (unit)
+### 1) Unit tests (fast, isolated)
+Use these for:
+- service-layer logic
+- parsing/validation helpers
+- domain rules
+- small transformers that don’t require a DB
 
-**Where:** `api/tests/unit/`
-
-**Pattern:**
-- Arrange: build domain objects + inputs
-- Act: call service function
-- Assert: validate returned domain model / computation / decision rules
-
-```python
-def test_example_service_rule():
-    # Arrange
-    # domain_obj = ...
-    # Act
-    # result = some_service(domain_obj)
-    # Assert
-    # assert result == expected
-    pass
-```
-
-### 2) Adding a **route/endpoint** test (integration)
-
-**Where:** `api/tests/integration/`
-
-**Pattern:**
-- Use fixtures to build data (or point to a test DB)
-- Use FastAPI test client to call the route
-- Assert response + headers + any governance/policy behavior [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-```python
-def test_example_endpoint(client):
-    resp = client.get("/datasets")  # example endpoint (if present)
-    assert resp.status_code in (200, 404)
-```
-
-> [!TIP]
-> Prefer asserting **behavior** (status, schema, meaning) over brittle exact payloads unless the payload is stable and intentional.
+✅ Preferred traits:
+- no network
+- no DB (or mocked repository interfaces)
+- deterministic
 
 ---
 
-## 🧩 Fixtures & determinism
+### 2) Integration tests (end-to-end-ish)
+Use these for:
+- router behavior (inputs/outputs)
+- dependency injection wiring
+- authorization + governance checks
+- DB adapters (PostGIS/Neo4j) using test fixtures
 
-KFM emphasizes **deterministic, reproducible** pipelines; tests should follow the same rule: no hidden randomness, no “works on my machine” data.  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-**Rules of thumb:**
-- ✅ Keep fixtures tiny and explicit
-- ✅ Use stable seeds if randomness is unavoidable
-- ✅ Avoid external network calls (mock adapters instead)
-- ✅ Never depend on large `data/raw/` artifacts in unit tests
-
----
-
-## 🤖 CI expectations (don’t fight the pipeline)
-
-On PRs, CI typically runs:
-- ✅ backend tests via `pytest`
-- ✅ linters/formatters
-- ✅ policy checks (Conftest/Rego) [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-Local policy checks can be simulated with:
-
-```bash
-conftest test .
-```
-
-…and CI will tell you which policy rule failed (e.g., missing dataset metadata).  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Typical approach:
+- Load fixtures (or seed a test DB)
+- Call endpoints through **FastAPI TestClient**
+- Assert on the JSON + status code
 
 ---
 
-## 🛠️ Useful pytest commands
+### 3) Contract tests (schemas must stay honest)
+Use these for:
+- OpenAPI schema invariants
+- GraphQL schema invariants (if enabled)
+- “Known input → known output contract” checks for critical endpoints
 
-<details>
-<summary><strong>⚙️ Common invocations</strong></summary>
+---
 
-```bash
-# run everything
-pytest
+## 🧭 Manual API exploration (great for debugging)
+Even with tests, it’s helpful to quickly poke the API:
 
-# quiet output
-pytest -q
+- Swagger UI: `http://localhost:8000/docs` 🧭  
+- GraphQL (if enabled): `http://localhost:8000/graphql` 🧬
 
-# only matching tests
-pytest -k "datasets and not slow"
+---
 
-# stop on first failure
-pytest -x
+## 🧱 CI expectations (what will block your PR)
 
-# show stdout/stderr
-pytest -s
-```
-</details>
+Most repos run these checks automatically in CI:
+
+- ✅ **Backend tests** (`pytest`)
+- 🧹 Lint/format checks (e.g., `black --check`, `flake8`, etc.)
+- 📜 API contract tests (OpenAPI/GraphQL expectations)
+- 🔍 Policy & governance scans (secret/PII/sensitive checks)
+- 🧾 Documentation/link/schema validation (where configured)
+
+**Rule of thumb:**  
+If you change behavior, **add or update tests** in the same PR. ✅
 
 ---
 
 ## 🧯 Troubleshooting
 
-### API can’t connect to DB / services
-- Check logs: `docker-compose logs api`
-- Compose sometimes needs a restart if dependencies weren’t ready.  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### Port conflicts
-If something is already using Postgres/Neo4j/API ports, either stop it or adjust mappings.  [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### Dependency changes not picked up
-If you changed requirements, rebuild:
+### Ports / container readiness
+If DB containers are still starting, tests may fail with connection errors.  
+Try re-running after the stack is fully healthy:
 
 ```bash
-docker-compose up --build -d
-# or
-docker-compose build
+docker-compose ps
+docker-compose logs -f api
 ```
 
- [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### “It works in Swagger but fails in tests”
+- Make sure your test fixtures match the seeded data (or the mocked adapters)
+- Confirm the route prefix/version (`/api/v1/...`) used by the app
 
 ---
 
-## 📚 References (project grounding)
+## ✅ Test-writing checklist (copy/paste)
 
-- Kansas Frontier Matrix (KFM) — Comprehensive Technical Blueprint (architecture, CI, tests)  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- [ ] I wrote/updated a unit test for the service logic (when applicable)
+- [ ] I wrote/updated an integration test for the endpoint behavior (when applicable)
+- [ ] I asserted **status code + response shape**
+- [ ] I added at least one **negative** test (bad input / forbidden action)
+- [ ] Tests run locally via `docker-compose exec api pytest`
+- [ ] No secrets / sensitive data added anywhere 🛑
 
 ---
+
+### 🧠 Tip
+If you’re unsure where a behavior belongs:
+- **Unit test** the “rule”
+- **Integration test** the “wiring” (router + DI + adapter calls)
+- **Contract test** the “promise” (schema + stable responses)
