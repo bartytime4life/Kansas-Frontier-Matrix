@@ -86,17 +86,31 @@ A runbook should make it possible for a reviewer to answer:
 This folder should stay tidy and “grep-friendly” 🧠
 
 ```
-mcp/
-└── runbooks/
-    ├── README.md
-    ├── incidents/        # 🧯 Triage + restoration playbooks
-    ├── ci/               # ✅ CI failures, policy check failures, build breaks
-    ├── policy/           # 🛡️ OPA decisions, redaction rules, sensitive data handling
-    ├── pipelines/        # 🏭 Ingest/reprocess/index/rebuild workflows
-    ├── db/               # 🗄️ PostGIS/Neo4j ops, migrations, backups/restores
-    ├── api/              # 🧩 API deploy, health checks, rollback, perf
-    ├── web/              # 🖥️ UI deploy/build failures, layer registry issues
-    └── ai/               # 🧠 Focus Mode + Ollama + tool-call policy incidents
+📁 tests/
+└─ 📁 data/                                        🧪 data-oriented test lane (fixtures + goldens)
+   ├─ 📁 fixtures/                                   🧰 self-contained fixture sets (end-to-end data truth files)
+   │  ├─ 📁 kfm_minimal/                              ✅ one minimal fixture set (golden “known good”)
+   │  │  ├─ 📁 raw/                                   🧾 immutable source inputs
+   │  │  │  └─ 📁 <domain>/                            🧭 e.g., historical/, hydrology/, air-quality/
+   │  │  ├─ 📁 work/                                  🧪 intermediate artifacts (optional but supported)
+   │  │  │  └─ 📁 <domain>/
+   │  │  ├─ 📁 processed/                              ✅ golden processed outputs (expected pipeline results)
+   │  │  │  └─ 📁 <domain>/
+   │  │  ├─ 📁 stac/                                  🛰️ STAC geospatial catalog fixtures
+   │  │  │  ├─ 📁 collections/                         🧩 STAC Collections
+   │  │  │  └─ 📁 items/                               📦 STAC Items
+   │  │  ├─ 📁 catalog/                                🗂️ DCAT discovery fixtures
+   │  │  │  └─ 📁 dcat/                                 🧾 DCAT dataset entries (JSON-LD)
+   │  │  ├─ 📁 prov/                                   🧬 PROV lineage bundles (JSON/JSON-LD)
+   │  │  ├─ 📁 db/                                     ◻️ optional: PostGIS/Neo4j seeds (integration helpers)
+   │  │  └─ 📄 README.md                                📘 fixture runbook (“what this set proves”)
+   │  └─ 📁 <another_fixture_set>/                      ➕ additional fixture sets (same structure)
+   │
+   ├─ 📁 snapshots/                                   📸 golden responses (contract-level truth files)
+   │  ├─ 📁 api/                                       🌐 golden HTTP responses (REST contract tests)
+   │  └─ 📁 graphql/                                   🕸️ golden GraphQL responses (if used)
+   │
+   └─ 📁 generated/                                   ◻️ optional: test outputs (should be gitignored)
 ```
 
 ### 🏷️ Naming convention (suggested)
