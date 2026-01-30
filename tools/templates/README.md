@@ -183,12 +183,12 @@ Use double-braced tokens in template files:
 Every template folder should follow this mini-contract:
 
 ```
-📁 <template-name>/
-├── template.meta.yaml        # 🔎 machine-readable template metadata
-├── README.md                 # 🧾 human instructions + “when to use”
-├── scaffold/                 # 🧱 files to be copied/instantiated
-│   ├── ...                   # (project-ready structure)
-└── tests/                    # ✅ optional: lint/contract tests for the template output
+📁 <template-name>/                              🧱 reusable template package (scaffold + metadata)
+├─ 🧾 template.meta.yaml                          🔎 machine-readable template metadata (id, version, inputs)
+├─ 📄 README.md                                   📘 human instructions + “when to use” + examples
+├─ 📁 scaffold/                                   🏗️ files to be copied/instantiated into a target
+│  └─ 📦 ...                                       ➕ project-ready structure (folders + files)
+└─ 📁 tests/                                      ◻️ optional: lint/contract tests for generated output
 ```
 
 ### `template.meta.yaml` (suggested fields)
