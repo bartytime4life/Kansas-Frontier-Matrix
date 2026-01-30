@@ -1,21 +1,3 @@
----
-title: "MCP Templates 🧰"
-path: "mcp/templates/README.md"
-version: "v1.0.0"
-last_updated: "2026-01-30"
-status: "active"
-doc_kind: "README"
-license: "SEE_REPO_LICENSE"
-markdown_protocol_version: "v13"
-pipeline_contract_version: "v13"
-fair_category: "FAIR+CARE"
-care_label: "Public"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US"
-doc_uuid: "urn:kfm:doc:mcp:templates:readme:v1.0.0"
----
-
 # MCP Templates 🧰
 
 ![KFM](https://img.shields.io/badge/KFM-v13-blue) ![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-purple) ![Provenance](https://img.shields.io/badge/provenance-first-informational) ![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-required-orange) ![Docs](https://img.shields.io/badge/Docs-YAML%20front--matter-brightgreen)
