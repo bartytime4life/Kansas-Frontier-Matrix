@@ -38,21 +38,22 @@ A **model card** is a short, standardized, version-controlled document that expl
 You can keep it flat or grouped. Grouped is preferred as the library grows:
 
 ```text
-mcp/model_cards/
-├─ README.md
-├─ templates/
-│  ├─ MODEL_CARD_TEMPLATE.md
-│  └─ EVAL_REPORT_TEMPLATE.md
-├─ llm/
-│  ├─ focus_mode__<model_id>.md
-│  └─ agents__<model_id>.md
-├─ embeddings/
-│  └─ <model_id>.md
-├─ nlp/
-│  ├─ ner__<model_id>.md
-│  └─ ocr_post__<model_id>.md
-└─ vision/
-   └─ <model_id>.md
+📁 mcp/
+└─ 📁 model_cards/                           🧾 model documentation (capabilities, evals, safety, provenance)
+   ├─ 📄 README.md                            📘 how model cards are organized + required fields
+   ├─ 📁 templates/                           🧩 “copy-me” templates for consistency
+   │  ├─ 📄 MODEL_CARD_TEMPLATE.md             🪪 standard model card template
+   │  └─ 📄 EVAL_REPORT_TEMPLATE.md            📊 evaluation report template
+   ├─ 📁 llm/                                 🤖 large language models (chat, agents, Focus Mode)
+   │  ├─ 📄 focus_mode__<model_id>.md          🧠 Focus Mode deployment card (policy + citations + tools)
+   │  └─ 📄 agents__<model_id>.md              🧩 agent runtime card (roles, permissions, guardrails)
+   ├─ 📁 embeddings/                          🧲 embedding models (vectorization + retrieval)
+   │  └─ 📄 <model_id>.md                      📘 embedding model card (dims, distance, evals)
+   ├─ 📁 nlp/                                 🧠 classic NLP models (task-specific)
+   │  ├─ 📄 ner__<model_id>.md                 📍 NER model card (labels, coverage, evals)
+   │  └─ 📄 ocr_post__<model_id>.md            🧾 OCR post-processing card (rules, evals, failure modes)
+   └─ 📁 vision/                              👁️ vision models (detection, segmentation, VQA)
+      └─ 📄 <model_id>.md                      📘 vision model card (inputs, limits, evals, safety)
 ```
 
 **Naming convention (recommended):**
