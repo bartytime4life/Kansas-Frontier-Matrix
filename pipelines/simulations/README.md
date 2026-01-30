@@ -53,24 +53,31 @@ Simulation outputs may be **staged for review** rather than auto-published. A re
 > This is a **recommended** structure to keep simulations composable, testable, and orchestratable.
 
 ```text
-📁 pipelines/
-  📁 simulations/
-    📄 README.md
-
-    📁 _template_sim/                 # ✅ Copy this to create a new sim
-      📄 sim.yml                      # scenario inputs + parameters
-      📄 run.py                       # CLI entrypoint (no prompts)
-      📄 model.py                     # pure model code
-      📁 tests/
-        📄 test_determinism.py
-        📄 test_schema.py
-
-    📁 crop_yield_2050/
-      📄 sim.yml
-      📄 run.py
-      📄 model.py
-      📁 docs/
-        📄 methodology.md
+📁 tests/
+└─ 📁 data/                                        🧪 data-oriented test lane (fixtures + goldens)
+   ├─ 📁 fixtures/                                   🧰 self-contained fixture sets (end-to-end data truth files)
+   │  ├─ 📁 kfm_minimal/                              ✅ one minimal fixture set (golden “known good”)
+   │  │  ├─ 📁 raw/                                   🧾 immutable source inputs
+   │  │  │  └─ 📁 <domain>/                            🧭 e.g., historical/, hydrology/, air-quality/
+   │  │  ├─ 📁 work/                                  🧪 intermediate artifacts (optional but supported)
+   │  │  │  └─ 📁 <domain>/
+   │  │  ├─ 📁 processed/                              ✅ golden processed outputs (expected pipeline results)
+   │  │  │  └─ 📁 <domain>/
+   │  │  ├─ 📁 stac/                                  🛰️ STAC geospatial catalog fixtures
+   │  │  │  ├─ 📁 collections/                         🧩 STAC Collections
+   │  │  │  └─ 📁 items/                               📦 STAC Items
+   │  │  ├─ 📁 catalog/                                🗂️ DCAT discovery fixtures
+   │  │  │  └─ 📁 dcat/                                 🧾 DCAT dataset entries (JSON-LD)
+   │  │  ├─ 📁 prov/                                   🧬 PROV lineage bundles (JSON/JSON-LD)
+   │  │  ├─ 📁 db/                                     ◻️ optional: PostGIS/Neo4j seeds (integration helpers)
+   │  │  └─ 📄 README.md                                📘 fixture runbook (“what this set proves”)
+   │  └─ 📁 <another_fixture_set>/                      ➕ additional fixture sets (same structure)
+   │
+   ├─ 📁 snapshots/                                   📸 golden responses (contract-level truth files)
+   │  ├─ 📁 api/                                       🌐 golden HTTP responses (REST contract tests)
+   │  └─ 📁 graphql/                                   🕸️ golden GraphQL responses (if used)
+   │
+   └─ 📁 generated/                                   ◻️ optional: test outputs (should be gitignored)
 ```
 
 ---
@@ -79,13 +86,13 @@ Simulation outputs may be **staged for review** rather than auto-published. A re
 
 ```mermaid
 flowchart LR
-  A[data/raw/ + baseline processed inputs] --> B[simulate (seeded, deterministic)]
-  B --> C[data/processed/simulations/... outputs]
-  C --> D[data/catalog/... STAC/DCAT records]
-  C --> E[data/provenance/... PROV lineage logs]
-  D --> F[review / CI checks]
+  A["📥 data/raw/ + baseline processed inputs"] --> B["🧪 simulate (seeded, deterministic)"]
+  B --> C["📦 data/processed/simulations/... outputs"]
+  C --> D["🗂️ data/catalog/... STAC/DCAT records"]
+  C --> E["🧬 data/provenance/... PROV lineage logs"]
+  D --> F["✅ review / CI checks"]
   E --> F
-  F --> G[merge → publish via API/UI]
+  F --> G["🚀 merge then publish via API/UI"]
 ```
 
 Reproducibility is a cornerstone: the repository should be able to regenerate outputs from scratch (given identical inputs/config). :contentReference[oaicite:8]{index=8}
