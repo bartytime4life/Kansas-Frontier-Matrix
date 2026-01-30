@@ -4,229 +4,308 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-typed-555?logo=typescript)
 ![MapLibre](https://img.shields.io/badge/MapLibre-2D%20maps-555)
 ![Cesium](https://img.shields.io/badge/Cesium-3D%20globe-555)
+![API%20Only](https://img.shields.io/badge/API--only-no%20DB%20access-555)
 ![Provenance](https://img.shields.io/badge/Provenance-first-555)
+![Contracts](https://img.shields.io/badge/Contract--first-555)
 
 > [!IMPORTANT]
-> `web/` is **KFM’s user-facing interface**: a **React + TypeScript** client for map-based exploration that **only talks to the backend API** (REST/GraphQL) and **never touches databases directly**.  
-> This boundary is a core trust rule in KFM’s pipeline → catalog → database → API → UI design.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> `web/` is **KFM’s user-facing interface**: a **React + TypeScript** app for map-based exploration that **only talks to the governed backend API** (REST/GraphQL) and **never touches databases or raw data directly**.  
+> This is a *hard system boundary* — breaking it breaks trust.
+
+---
+
+## 🧭 Quick links (repo map)
+
+- 📘 **Master Guide (v13)**: `docs/MASTER_GUIDE_v13.md`
+- 🧱 **Architecture**: `docs/architecture/`
+- 🧾 **Governance / Ethics / Sovereignty**: `docs/governance/`
+- 🧩 **UI schemas**: `schemas/ui/`
+- 🧠 **API implementation (the only gateway)**: `src/server/`
+- 🗺️ **Story Nodes** (governed narratives): `docs/reports/story_nodes/`
+- 🧰 **Story Node template**: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- 🔌 **API contract extension template**: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
 
 ---
 
 ## ✨ What this UI is (and is not)
 
 ### ✅ It *is*
-- A map-centric UI for exploring Kansas-focused historical + geospatial knowledge (layers, timelines, stories, comparisons). [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- A client that **renders** what the backend returns (datasets, tiles, GeoJSON, story content, citations). [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- The canonical home of the UI code (JS/TS, React components, map configuration, etc.). [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- A **map-first “living atlas” UI** for exploring Kansas-focused historical + geospatial knowledge: layers, timelines, stories, comparisons.
+- A **renderer**: it visualizes what the backend returns (tiles/GeoJSON, metadata, citations, story content).
+- The canonical home for web client code: **React components**, map state, layer configs, UI utilities, styling, accessibility.
 
 ### ❌ It is *not*
-- A place to stash “secret data files” or do “just this one DB query from the client.”  
-  **No hidden data files. No direct database access.** Everything goes through the API.  [oai_citation:6‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- A bypass around governance/policy rules (including redaction and restricted access). [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- A place to stash data files, “just this one query,” or bypass governance.
+- A data pipeline, a catalog writer, or a provenance generator.
+- A backdoor around restricted access or redaction rules.
 
 ---
 
-## 🧱 Architecture at a glance (UI sits on top of the API)
+## 🧱 KFM invariants this UI must never violate
+
+> [!WARNING]
+> These are non-negotiable “do not regress” rules. If a feature proposal breaks one, the feature proposal is flawed.
+
+- **Pipeline ordering is absolute**:  
+  `ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode`
+- **API boundary rule**: the UI **never** queries Neo4j / PostGIS / search indexes directly.
+- **Provenance-first**: nothing is displayed without a traceable origin (dataset/story/claim/citation).
+- **Evidence-first narrative**: Story Nodes & Focus Mode must not introduce unsourced claims.
+- **Sovereignty & classification propagation**: the UI must not “leak” sensitive data via zooming, caching, tooltips, or reconstruction.
+
+---
+
+## 🧩 Architecture at a glance (where `web/` sits)
 
 ```mermaid
 flowchart LR
-  subgraph Data["📦 Data & Provenance"]
-    raw["Raw Inputs"] --> processed["Processed Data"]
-    processed --> catalog["Metadata Catalog (STAC/DCAT)"]
-    processed --> prov["PROV Logs"]
+  subgraph Data["📦 Data & Metadata"]
+    A["Raw Sources"] --> B["ETL + Normalization"]
+    B --> C["STAC Items + Collections"]
+    C --> D["DCAT Dataset Views"]
+    C --> E["PROV Lineage Bundles"]
   end
 
-  subgraph Stores["🗄 Storage"]
-    postgis[(PostGIS)]
-    neo4j[(Neo4j)]
-    search[(Search Index)]
-  end
-
-  subgraph Backend["🧠 Backend Services"]
-    api["FastAPI API (REST & GraphQL)"]
-    policy["OPA Policy Engine"]
-  end
-
-  subgraph Frontend["🗺 Front-End UI"]
-    ui["React + MapLibre/Cesium (Web App)"]
-    ai["Focus Mode AI Assistant"]
-  end
-
-  processed --> postgis
-  processed --> neo4j
-  catalog --> search
-
-  postgis --> api
-  neo4j --> api
-  search --> api
-
-  api --> ui
-  ui --> ai
-  ai --> api
-
-  policy -.enforces.-> api
+  C --> G["Neo4j Graph (references back to catalogs)"]
+  G --> H["API Layer (contracts + redaction/policy)"]
+  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
+  I --> J["Story Nodes (governed narratives)"]
+  J --> K["Focus Mode (provenance-linked context bundle)"]
 ```
 
- [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+---
+
+## 🧰 Tech stack & core UI concepts
+
+### Core stack 🧱
+- **React SPA** + **TypeScript** for type safety
+- **MapLibre GL JS** for interactive **2D** maps
+- **CesiumJS** for **3D** globe/terrain (typically as a 2D ↔ 3D toggle)
+- **Global state store** (Redux Toolkit or React Context) to keep map, timeline, layers, and story panels synchronized
+
+### First-class UI concepts 🗺️
+- 🧭 **Map Viewer**: pan/zoom, feature inspection, legend, layer toggles
+- 🕰️ **Time controls**: timeline slider, animations, time filtering, range selection
+- 🧩 **Layer registry**: a single source of truth for what layers exist and how they render
+- 📖 **Story Nodes**: narrative content linked to map states (evolving toward scrollytelling)
+- 🧠 **Focus Mode**: policy-governed AI assistant that returns *cited* answers (UI only renders what the API returns)
 
 ---
 
-## 🧰 Tech stack & key capabilities
-
-### Core stack
-- **React single-page application (SPA)** + **TypeScript**. [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **MapLibre GL JS** for interactive **2D** mapping. [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **CesiumJS** for **3D** globe/terrain visualizations (often as a toggle between 2D ↔ 3D). [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Global state store** (Redux or Context) so map, timeline, story panel, and UI tools stay synchronized. [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### First-class UI concepts
-- **Timeline sliders + animations** for time-oriented exploration. [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Story Nodes**: narrative content linked to map states (and evolving toward scrollytelling). [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Layer toggles + registry** (turning data layers on/off; legends; symbology). [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Focus Mode (AI assistant)**: asks the backend for grounded answers and displays citations.  [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
----
-
-## 🚀 Quickstart (recommended): run the full stack via Docker Compose
+## 🚀 Quickstart (recommended): run via Docker Compose
 
 > [!NOTE]
-> The blueprint’s dev workflow assumes a compose stack with `api` + databases + `web` for hot reload.  [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> KFM’s development workflow expects a compose stack with `api` + stores + `web` for hot reload and realistic end-to-end testing.
 
 ### 1) Start everything (from repo root)
 ```bash
 docker-compose up --build
+# (If your system uses the newer Docker plugin:)
+# docker compose up --build
 ```
-This builds images (API + web) and starts services including:
-- `api` (FastAPI on **8000**)
-- `web` (React dev server on **3000**)
-- PostGIS + Neo4j (and optionally policy/search tooling) [oai_citation:26‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+Expected services (typical):
+- `api` → `http://localhost:8000`
+- `web` → `http://localhost:3000`
+- PostGIS (5432), Neo4j (7474/7687), plus optional policy/search tooling
 
 ### 2) Open the UI + API docs
-- Web UI: `http://localhost:3000` [oai_citation:27‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- API docs (Swagger): `http://localhost:8000/docs` [oai_citation:28‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🌐 Web UI: `http://localhost:3000`
+- 📚 API docs (Swagger): `http://localhost:8000/docs`
+- 🧠 GraphQL (if enabled): `http://localhost:8000/graphql`
 
-### 3) Hot reload expectations
-- Editing `web/src/*` should trigger React hot reload. [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- If you change environment variables, restart containers (common: `down` then `up`). [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### 3) Hot reload expectations 🔥
+- Editing `web/src/*` should trigger React hot reload
+- If you change env vars: restart containers (common: `down` then `up`)
 
 ---
 
 ## 🔧 Configuration (environment variables)
 
-KFM’s `.env` commonly includes:
-- Ports (`FASTAPI_PORT=8000`, `WEB_PORT=3000`)
-- Web → API target (example: `REACT_APP_API_URL=...`)
-- AI settings (example: `OLLAMA_MODEL=...` or `OPENAI_API_KEY=...`) [oai_citation:32‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
 > [!TIP]
-> In Docker, the UI may talk to the API by service name (example: `http://api:8000`) while local dev may use `http://localhost:8000`. The project’s `.env` / compose wiring is the source of truth.  [oai_citation:33‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> `.env.example` and `docker-compose.yml` are the source of truth for wiring.
+
+Typical variables you may see:
+- `FASTAPI_PORT=8000`
+- `WEB_PORT=3000`
+- `REACT_APP_API_URL=http://localhost:8000` (CRA-style prefix)
+
+> [!NOTE]
+> AI model configuration (Ollama/OpenAI/etc.) is typically **backend-owned**.  
+> The UI calls the API and renders policy-filtered results.
 
 ---
 
-## 🗂️ Folder guide (typical)
-
-> [!NOTE]
-> The blueprint describes a conventional `web/src/` organization (components, state, services/utilities, styles/assets, mapping).  [oai_citation:34‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:35‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+## 🗂️ Folder guide (typical layout)
 
 ```text
 web/
-├─ public/                  🧷 Static assets (icons, manifest, etc.)
+├─ public/                       🧷 Static assets (icons, manifest, robots.txt)
 └─ src/
-   ├─ components/           🧩 Reusable UI blocks (MapViewer, TimelineSlider, StoryPanel…)
-   ├─ state/                🧠 Global store (Redux/Context) for map/timeline/layers/session
-   ├─ services/             🔌 API client wrappers (REST/GraphQL), helpers, caching
-   ├─ styles/               🎨 CSS/Sass/theme tokens
-   ├─ pages/ (optional)     🧭 Route-level screens (if React Router is used)
-   └─ App.tsx               🏁 App shell / routing (if present)
+   ├─ components/                🧩 UI blocks (MapViewer, TimelineSlider, StoryPanel…)
+   ├─ features/                  🧱 Feature modules (layers, stories, focus-mode, search…)
+   ├─ state/                     🧠 Global store (map/timeline/layers/session)
+   ├─ services/                  🔌 API clients (REST/GraphQL), caching, request utils
+   ├─ layers/                    🗺️ Layer registry + legend helpers + style adapters
+   ├─ hooks/                     🪝 Reusable hooks (debounce, map events, hotkeys)
+   ├─ styles/                    🎨 Theme tokens + global styles
+   ├─ types/                     🧾 Shared TS types (API DTOs, layer models, citations)
+   ├─ pages/ (optional)          🧭 Route-level screens (if using React Router)
+   └─ App.tsx                    🏁 App shell / routing
 ```
-
-Examples of components called out in the blueprint:
-- `MapViewer` (MapLibre + 2D/3D switching)
-- `TimelineSlider`
-- `StoryPanel` (story + scroll linking)
-- `SearchBar`
-- `LayerControl` [oai_citation:36‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🗺️ Working with maps (2D/3D)
+## 🗺️ Working with maps
 
-### 2D: MapLibre GL JS
-MapLibre typically:
-- Initializes a map with a basemap style
-- Adds layers as **vector tiles / raster tiles** for large datasets, or **GeoJSON overlays** for smaller ones
-- Styles layers and drives legends/layer toggles [oai_citation:37‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### 2D (MapLibre GL JS) 🧭
+**Rule of thumb:** serve big data as tiles, small data as GeoJSON.
+
+- **Vector/raster tiles** (best for large datasets)
+- **GeoJSON overlays** (best for small, interactive overlays)
+- The UI styles layers and drives:
+  - legend entries
+  - layer toggles
+  - feature click/hover inspection
+
+**Example: vector tiles endpoint (illustrative)**  
+`/api/tiles/historic_trails/{z}/{x}/{y}.pbf`
 
 > [!IMPORTANT]
-> Don’t ship data inside the frontend. Request it from the backend (tiles, GeoJSON, metadata), and render what you receive.  
-> Example in the blueprint: toggling “Historic Trails” could request a vector tile endpoint.  [oai_citation:38‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> Don’t ship datasets in the frontend bundle.  
+> The UI should request tiles/GeoJSON/metadata from the API and render what it receives.
 
-### 3D: CesiumJS
+### 3D (CesiumJS) 🌎
 Cesium is used for:
-- 3D globe/terrain viewing
-- 3D stories / flyovers / tours (when enabled) [oai_citation:39‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 3D globe + terrain viewing
+- Flyovers / tours / camera bookmarks (often story-driven)
+- Future-facing: 3D Tiles (meshes, point clouds, photogrammetry) as governed layers
+
+---
+
+## 🧩 Layer registry (the UI contract that prevents “map drift”)
+
+> [!NOTE]
+> The KFM guide treats the layer registry as a **contract artifact** for the UI subsystem.
+
+A good registry makes layers:
+- discoverable (name/description/source)
+- renderable (style defaults + legend)
+- governable (classification, redaction hints, access requirements)
+- testable (stable IDs + predictable behaviors)
+
+**Suggested shape (TypeScript example)**
+```ts
+export type LayerSource =
+  | { kind: "vector-tiles"; urlTemplate: string }
+  | { kind: "raster-tiles"; urlTemplate: string }
+  | { kind: "geojson"; url: string };
+
+export type LayerLegendItem = {
+  label: string;
+  // keep legend semantic; UI can map to style tokens
+  symbol: "line" | "fill" | "circle" | "icon";
+};
+
+export type KfmLayer = {
+  id: string;                     // stable ID (contract)
+  title: string;
+  description?: string;
+  source: LayerSource;
+  legend?: LayerLegendItem[];
+  minZoom?: number;
+  maxZoom?: number;
+  supportsTime?: boolean;
+  classification?: "public" | "restricted" | "sensitive";
+};
+```
+
+---
+
+## 🕰️ Timeline, time filtering, and “time as a first-class dimension”
+
+KFM is explicitly designed for time-oriented exploration:
+- Timeline slider updates what’s drawn
+- Animations can play through years/periods
+- Stories can “snap” time and map state together
+
+**Design patterns worth using**:
+- **Dynamic queries**: map updates live as the user scrubs time (debounce for performance).
+- **Brushing & linking**: selecting a time range highlights matching map features and charts.
+- **Focus + context**: show overview + zoomed window for long time spans (e.g., 1800–2020).
 
 ---
 
 ## 📖 Story Nodes & scrollytelling
 
-KFM links narrative content with map states:
-- The Story Node viewer is a custom component that ties text progression to map updates (“scrollytelling”). [oai_citation:41‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Story Nodes link narrative content with map states:
+- “Next”/“Previous” steps can update layers, camera, and time
+- Future evolution: **scroll-linked scrollytelling** (text scroll drives map/timeline)
 
-Future-facing implementation detail (already planned in the blueprint):
-- Use the **Intersection Observer API** to trigger map/timeline changes as narrative sections enter the viewport. [oai_citation:42‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+**Implementation note (planned pattern):**
+- Use the **Intersection Observer API** to trigger map/timeline changes as narrative sections enter the viewport.
 
 ---
 
 ## 🧠 Focus Mode (AI assistant) — UI responsibilities
 
-Focus Mode is designed to be:
-- Knowledge-grounded, policy-governed, and citation-forward
-- Driven by the backend (the UI sends the question; the backend assembles context, calls the model, attaches citations, and enforces policy) [oai_citation:43‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Focus Mode is:
+- policy-governed
+- evidence-linked
+- citation-forward
 
-### UI checklist for Focus Mode
-- Provide an input surface for user questions
-- POST questions to the backend (example endpoint in blueprint: `POST /ai/query`) [oai_citation:44‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Render responses **with citations** and clickable source affordances (the backend returns the reference structure). [oai_citation:45‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-Optional/advanced (planned):
-- Support image/map snapshot inputs for multimodal Q&A workflows. [oai_citation:46‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### UI checklist ✅
+- Provide an input surface (question + optional context)
+- POST the question to the API (example: `POST /ai/query`)
+- Render the response **with citations** and clickable source affordances
+- Treat responses as **policy-filtered** output; never attempt to reconstruct redacted content
 
 ---
 
 ## 🛡️ Security, governance, and “no leak” rules
 
 > [!WARNING]
-> UI work can accidentally undermine policy if it exposes restricted data “by accident” (deep zoom, unredacted tooltips, caching, etc.).  
-> The UI must **cause no data leakage**, respect redaction rules, and maintain accessibility/audit expectations.  [oai_citation:47‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+> UI work can accidentally undermine governance via caching, tooltips, map zoom behavior, or dev shortcuts.
 
 Non-negotiables:
-- ✅ **All data access goes through the API**
-- ✅ **No direct DB or filesystem reads from the client**
-- ✅ **No “hidden” packaged datasets in the UI bundle** [oai_citation:48‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:49‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- ✅ Treat all backend results as policy-filtered outputs; don’t attempt to “reconstruct” redacted fields client-side. [oai_citation:50‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- ✅ All data access routes through the API
+- ✅ No direct DB access (Neo4j/PostGIS/search)
+- ✅ No “hidden” packaged datasets inside the web bundle
+- ✅ Don’t cache sensitive data in LocalStorage/IndexedDB unless explicitly approved
+- ✅ Tooltips, downloads, and deep-zoom behavior must respect redaction/classification constraints
+- ✅ Prefer “fail closed” UI behavior if access is unclear (don’t guess)
 
 ---
 
-## ♿ Accessibility & cartographic design
+## ♿ Accessibility & cartographic design 🎨
 
-The blueprint explicitly calls for:
-- Responsive design (works in workshops + field devices)
-- Strong cartographic principles: visual hierarchy, accessible color choices, and clear legends/scales. [oai_citation:51‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+KFM’s UI must be usable in workshops and field devices:
+- responsive layouts
+- keyboard navigation
+- accessible contrast and clear focus states
+- legends and symbology that explain themselves
 
-> [!TIP]
-> When adding a new layer, ship a legend entry + clear symbology defaults (the UI should make interpretation easy, not “guessy”). [oai_citation:52‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### Cartography rules of thumb 🗺️
+- Use **figure–ground**: keep the basemap subtle; make the “theme layer” pop.
+- Always ship a **legend** with meaningful labels.
+- Provide **scale** (and north/heading indicator if applicable).
+- Prefer clear, minimal encodings; avoid “rainbow confusion” unless justified.
+- If a layer is qualitative vs quantitative, style appropriately (categories vs gradients).
 
 ---
 
-## 🧪 Testing (project convention)
+## 🧪 Testing expectations
 
-Testing details can vary by implementation (CRA, Vite, etc.), but the expectation is:
-- UI changes are testable
-- Contract changes coordinate with backend/API expectations (don’t silently break clients)
+Testing varies by tooling, but the contract expectations don’t:
+- Component tests for critical UI building blocks
+- Integration tests for map + timeline + layer toggles
+- Contract awareness: don’t silently break API response expectations
 
-> [!NOTE]
-> KFM treats contracts seriously: API contracts and UI integrity expectations are part of governance (“breaking any of them triggers review/versioning”).  [oai_citation:53‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:54‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+**Good targets:**
+- `LayerControl` toggles render the right sources
+- timeline changes request the right filters
+- Focus Mode renders citations correctly
+- restricted content is not displayed or cached
 
 ---
 
@@ -235,48 +314,53 @@ Testing details can vary by implementation (CRA, Vite, etc.), but the expectatio
 <details>
 <summary><strong>Port conflicts</strong> (Postgres 5432, Neo4j 7474/7687, API 8000, Web 3000)</summary>
 
-If something is already running on those ports, stop it or adjust the compose port mappings / `.env`. [oai_citation:55‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:56‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
+Stop the conflicting local services or adjust compose port mappings / `.env`.
 </details>
 
 <details>
 <summary><strong>Web container not hot reloading</strong></summary>
 
-Common cause: volume mount issues (especially on Windows/macOS). Confirm `web/src` is mounted in `docker-compose.yml`. [oai_citation:57‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
+Common cause: volume mount issues (especially Windows/macOS).  
+Confirm `web/src` is mounted correctly in `docker-compose.yml`.
 </details>
 
 <details>
 <summary><strong>Rebuild after dependency changes</strong></summary>
 
-If you changed packages, rebuild the images:
 ```bash
 docker-compose up --build
 # or
 docker-compose build
 ```
- [oai_citation:58‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:59‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
 </details>
 
 ---
 
 ## 🤝 Contributing to the UI (the “KFM way”)
 
-When adding features, keep the contract boundaries crisp:
+> [!TIP]
+> Keep subsystem boundaries crisp. If it feels like UI needs DB access, it’s an API feature.
 
-1) **Add/modify UI components** in `web/src/components/` (map, story, search, layers). [oai_citation:60‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+### When adding a UI feature
+1) 🧩 Add/modify components in `web/src/components/` or a feature module in `web/src/features/`  
+2) 🔌 Route all data access through `web/src/services/` (API wrappers only)  
+3) 🧠 Update global state if it affects map viewport, time selection, layers, story focus  
+4) 🗺️ Update the **layer registry** if you introduced/modified a layer  
+5) ♿ Run an accessibility pass for any new interactive UI  
+6) 🧪 Add or update tests (especially for contract-ish behavior)  
+7) 🛡️ Verify governance: no leaks, no bypasses, no hidden data
 
-2) **Route all data access through API client utilities** (a `services/api.ts` wrapper is typical). [oai_citation:61‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-3) **Update global state** if the feature impacts map viewport, time selection, layers, story focus, or user session info. [oai_citation:62‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:63‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-4) **Never weaken governance** (redaction, restricted layers, “zoom bypass” patterns). [oai_citation:64‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+### If you need a new API endpoint
+Use the template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`  
+(Contracts are first-class artifacts.)
 
 ---
 
-## 📚 Source notes (grounding)
+## 📚 References & further reading 📚
 
-This README is grounded in:
-- KFM blueprint sections on system boundaries (API-mediated UI), frontend stack (React/TS + MapLibre/Cesium), Story Nodes, Focus Mode, and compose-based dev workflow. [oai_citation:65‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:66‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- KFM Markdown Guide “contracts” describing canonical subsystem homes (`web/`) and UI no-leak rules / redaction expectations. [oai_citation:67‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:68‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- 📘 `docs/MASTER_GUIDE_v13.md` — canonical pipeline & subsystem contracts
+- 🧾 `docs/architecture/` — system design docs
+- 🧠 `src/server/` — the governed API boundary
+- 🗺️ `docs/reports/story_nodes/` — governed narrative content
+- 🎨 *Making Maps: A Visual Guide to Map Design for GIS* — cartographic design principles
+- 🕰️ *Visualization of Time-Oriented Data* — timeline interaction patterns (focus+context, brushing/linking)
