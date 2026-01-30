@@ -218,21 +218,21 @@ Tooling idea:
 ## 🗂️ Suggested directory layout
 
 ```text
-tests/
-  perf/
-    README.md                 👈 you are here 📍
-    suites/                   🧪 benchmark entrypoints (python/js)
-      api/
-      db_postgis/
-      db_neo4j/
-      pipelines/
-      ai/
-      ui/
-    workloads/                🎛️ workload definitions (YAML/JSON)
-    queries/                  🧾 SQL/Cypher bundles (versioned!)
-    datasets/                 📦 dataset manifests (size, checksums, provenance pointers)
-    reports/                  📊 generated outputs (gitignored except summaries)
-    tools/                    🧰 helper scripts (parsers, formatters, charting)
+📁 tests/
+└─ 📁 perf/                                   ⚡ performance + benchmarking lane
+   ├─ 📄 README.md                              👈 you are here 📍
+   ├─ 📁 suites/                                🧪 benchmark entrypoints (python/js)
+   │  ├─ 📁 api/                                🌐 API latency/throughput suites
+   │  ├─ 📁 db_postgis/                         🐘 PostGIS query/mutation suites
+   │  ├─ 📁 db_neo4j/                            🕸️ Neo4j traversal/index suites
+   │  ├─ 📁 pipelines/                          🏗️ ETL/pipeline runtime suites
+   │  ├─ 📁 ai/                                 🤖 RAG/LLM evaluation + latency suites
+   │  └─ 📁 ui/                                 🖥️ UI performance (render, interaction, trace replay)
+   ├─ 📁 workloads/                             🎛️ workload definitions (YAML/JSON)
+   ├─ 📁 queries/                               🧾 SQL/Cypher bundles (versioned!)
+   ├─ 📁 datasets/                              📦 dataset manifests (size, checksums, provenance pointers)
+   ├─ 📁 reports/                               📊 generated outputs (gitignored except summaries)
+   └─ 📁 tools/                                 🧰 helper scripts (parsers, formatters, charting)
 ```
 
 > [!TIP]
