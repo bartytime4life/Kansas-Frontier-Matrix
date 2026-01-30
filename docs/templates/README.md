@@ -20,11 +20,11 @@ KFM treats documentation as **first-class, machine-validated artifacts**. These 
 
 ```text
 📁 docs/
-  └── 📁 templates/
-      ├── 📄 README.md  👈 you are here
-      ├── 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md
-      ├── 📄 TEMPLATE__STORY_NODE_V3.md
-      └── 📄 TEMPLATE__API_CONTRACT_EXTENSION.md
+└─ 📁 templates/                               🧩 documentation scaffolds (copy-me starters)
+   ├─ 📄 README.md                              👈 you are here
+   ├─ 📄 TEMPLATE__KFM_UNIVERSAL_DOC.md          📄 universal doc template (KFM-MDP frontmatter + sections)
+   ├─ 📄 TEMPLATE__STORY_NODE_V3.md              📚 Story Node template (narrative + citations + map hooks)
+   └─ 📄 TEMPLATE__API_CONTRACT_EXTENSION.md     🔌 API contract extension template (types, endpoints, examples)
 ```
 
 ---
