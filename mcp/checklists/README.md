@@ -1,218 +1,159 @@
-# ✅ MCP Checklists
+# ✅ MCP Checklists (Quality Gates)
 
-![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-blue)
-![Docs First](https://img.shields.io/badge/docs-first-success)
-![Reproducible](https://img.shields.io/badge/reproducible-required-brightgreen)
-![Fail Closed](https://img.shields.io/badge/governance-fail--closed-critical)
-![Provenance](https://img.shields.io/badge/provenance-first-informational)
+![MCP](https://img.shields.io/badge/MCP-Protocol-2ea44f?style=for-the-badge)
+![Provenance](https://img.shields.io/badge/Provenance-First-blue?style=for-the-badge)
+![Fail%20Closed](https://img.shields.io/badge/Governance-Fail%20Closed-critical?style=for-the-badge)
 
-> 🧭 **Purpose:** This folder is the “quality & traceability control panel” for the repo.  
-> Checklists here help ensure **end-to-end provenance**, **reproducible pipelines**, and **auditable results**—especially for geospatial + data + AI workflows.
+Welcome to `mcp/checklists/` 👋  
+This folder contains **copy/paste checklists** used across Kansas-Frontier-Matrix (KFM) to keep contributions:
 
----
+- 🧾 **Evidence-backed & traceable**
+- 🧪 **Reproducible**
+- 🧭 **Pipeline-correct**
+- 🛡️ **Policy-compliant (fail-closed)**  
+- 🤝 **Reviewable by humans + CI**
 
-## 📌 Quick Start (Use in PRs)
-
-1) **Pick the checklist(s)** that match your change (data, pipeline, model, UI, infra, release).  
-2) **Copy** the checklist into your PR description (don’t just link it).  
-3) **Check items** and add **evidence links** (files, commands, logs, screenshots, commit hashes).  
-4) If something is truly not applicable: mark **N/A** and explain **why**.
-
-> ✅ **Rule of thumb:** If it changes data, behavior, results, or public output → add a checklist.
+> ⚠️ **Fail-Closed Rule:** If you can’t verify an item, treat it as **NOT DONE**. No “trust me bro.” 😄
 
 ---
 
-## 🧱 The Golden Path (How This Repo Wants Work Done)
+## 🧠 Why checklists exist
 
-This project follows a “pipeline → catalog/provenance → database → API → UI” flow.  
-Checklists are intentionally organized to match that lifecycle.
+KFM is a **pipeline → catalog → database → API → UI** system, where everything (including AI outputs) should be traceable back to original sources. Checklists are the smallest “unit of discipline” that keeps the whole system from turning into a black box.
 
-```mermaid
-flowchart LR
-  A[📥 Raw] --> B[🧪 Processed]
-  B --> C[🧾 Catalog / Provenance]
-  C --> D[🗄️ Database]
-  D --> E[🔌 API]
-  E --> F[🖥️ UI]
-```
-
-> 🚫 **No shortcuts:** If a change bypasses the flow (ex: “inject data straight into UI”) it should be treated as a red flag and justified explicitly.
+They also make reviews faster: maintainers scan for ✅ “done + linked evidence” instead of re-deriving context from scratch.
 
 ---
 
-## 🗂️ What Lives Here
+## 🚀 Quick Start
+
+### ✅ In a Pull Request
+1. Choose the relevant checklist(s) below.
+2. Paste into the PR description.
+3. Check items with links to evidence (files, logs, screenshots, commit SHAs).
+
+### ✅ In an Issue
+Use checklists to define “done” (especially for data adds, experiments, and AI changes).
+
+---
+
+## 📦 Checklist Index
+
+> If a checklist file listed here doesn’t exist yet, treat it as **planned** and add it (or open an issue). 🛠️
+
+| Checklist | Use it when… | Typical reviewers |
+|---|---|---|
+| `pr.md` 🧩 | Any code change | Maintainers + domain owner |
+| `data_addition.md` 🗺️ | Adding new data (raw/processed/catalog/prov) | Data steward + geo reviewer |
+| `pipeline_run.md` ⚙️ | Running/adding ETL steps | Pipeline owner |
+| `metadata_provenance.md` 🧾 | Any new dataset or transformation | Data steward |
+| `experiment.md` 🧪 | Any analysis, evaluation, benchmark, or AI experiment | Research lead + reviewer |
+| `model_card.md` 🤖 | Adding/updating any model (NER/LLM/classifier/etc.) | ML reviewer + maintainer |
+| `policy_ethics_fair_care.md` 🧑‍⚖️ | Anything with sensitive data, access, community impacts | Governance + maintainer |
+| `security_privacy.md` 🛡️ | Anything touching auth, user data, external APIs, uploads | Security reviewer |
+| `release_milestone.md` 🏁 | Cutting releases, major merges, big dataset drops | Maintainers |
+
+---
+
+## 🧭 The “Golden Path” (KFM Flow)
+
+Use this mental model when selecting checklists:
 
 ```text
-📁 mcp/
-└─ 📁 checklists/                           ✅ standardized checklists (repeatable “done means done”)
-   ├─ 📄 README.md                            👈 you are here ✅
-   ├─ 📁 templates/                           🧩 “copy-me” checklist shells (starter blanks)
-   ├─ 📁 pr/                                  🔍 PR review + documentation checklists
-   ├─ 📁 data/                                🧾 sources, licensing, provenance, QA gates
-   ├─ 📁 pipelines/                           ⚙️ reproducible processing + validation gates
-   ├─ 📁 ai/                                  🤖 model cards, evals, safety checks
-   ├─ 📁 web/                                 🗺️ UI + map/timeline + accessibility checks
-   ├─ 📁 security/                            🔐 secrets, auth, privacy, abuse-case checks
-   └─ 📁 release/                             🚀 shipping readiness + rollback checklist
+🧱 Raw → 🧼 Processed → 🧾 Catalog/Provenance → 🗄️ Database → 🔌 API → 🖥️ UI
 ```
 
-> 🧠 **Tip:** Keep checklists short, atomic, and evidence-driven. If a checklist grows past ~25 items, split it.
+If a change “teleports” around the system (example: UI reads raw files directly), you’re probably skipping governance and traceability gates 🚫.
 
 ---
 
-## 🧾 Checklist Index
+## 🧾 What “Good Evidence” Looks Like
 
-> If a file is missing, treat this index as the **canonical TODO list** for what we should create next.
+When checking items, prefer **links to repo artifacts**:
 
-### ✅ PR & Review
-- `pr/code-review.md` — code quality, tests, deterministic behavior
-- `pr/docs-review.md` — docs-first compliance, examples, run instructions
-- `pr/risk-assessment.md` — what can break, blast radius, rollback plan
+- ✅ File paths (e.g. `data/catalog/...`, `data/provenance/...`)
+- ✅ CLI output pasted into PR (short)
+- ✅ Screenshots for GIS alignment checks (QGIS/MapLibre sanity)
+- ✅ Commit SHA referencing exact code used
+- ✅ Metrics tables or plots committed as artifacts
 
-### 🧺 Data & Provenance
-- `data/dataset-addition.md` — new dataset intake (raw retention, metadata, licensing)
-- `data/provenance-metadata.md` — lineage, STAC-like catalog entries, checksums
-- `data/geospatial-quality.md` — CRS/projection, bounds, topology, georeferencing QA
-- `data/sensitive-sites.md` — ethical handling, redaction, access constraints (when applicable)
-
-### ⚙️ Pipelines
-- `pipelines/ingest-validate-publish.md` — repeatable runs, validations, artifacts
-- `pipelines/reproducibility.md` — rerunability, pinned deps, deterministic outputs
-- `pipelines/performance.md` — perf baselines, caching impacts, cost notes
-
-### 🤖 AI / Analysis
-- `ai/experiment-report.md` — hypothesis → method → results → limitations
-- `ai/model-card.md` — training data, intended use, risks, evaluation, caveats
-- `ai/evaluation.md` — metrics, bias checks, regression tracking
-- `ai/ai-in-the-loop-metadata.md` — “AI drafted it, human approved it” governance
-
-### 🖥️ Web / UX / Cartography
-- `web/map-ui.md` — layers, time slider behavior, interaction sanity checks
-- `web/accessibility.md` — keyboard nav, contrast, alt text, reduced motion
-- `web/cartographic-design.md` — symbology, legends, scale, projection disclosure
-
-### 🔐 Security & Privacy
-- `security/secrets-and-keys.md` — no secrets in git, rotation, least privilege
-- `security/threat-model-lite.md` — abuse cases + mitigations
-- `security/data-privacy.md` — PII scanning, retention, consent, access logs
-
-### 🚀 Release
-- `release/release-readiness.md` — changelog, migrations, rollback, monitoring
-- `release/data-versioning.md` — dataset version bump rules, compatibility notes
+> Tip: Prefer **small, atomic evidence** per checkbox rather than one mega write-up.
 
 ---
 
-## 🧩 How To Use a Checklist (Recommended Pattern)
+## 🧰 Recommended PR Snippet (copy/paste)
 
-### ✅ PR Description Snippet (copy/paste)
+<details>
+<summary><b>📋 PR Mini-Checklist (Generic)</b> (click to expand)</summary>
 
-```markdown
-## MCP Checklist(s)
+- [ ] This PR has a clear goal statement (1–3 sentences)
+- [ ] I linked relevant Issue(s) / Decision(s) / ADR(s)
+- [ ] I ran tests / checks locally (or explained why not)
+- [ ] I updated docs where behavior changed
+- [ ] If data is involved, I included `data_addition.md` checklist items
+- [ ] If an experiment/model is involved, I included `experiment.md` / `model_card.md`
+- [ ] Nothing bypasses policy / provenance expectations (“fail-closed”)
+- [ ] I added rollback notes (how to undo safely)
 
-### 📦 Data: Dataset Addition
-- [ ] Source link(s) recorded + snapshot stored in `data/raw/` (or equivalent)
-- [ ] License verified + documented
-- [ ] Metadata created (bbox, CRS, temporal coverage, processing notes)
-- [ ] Checksums recorded for raw + processed artifacts
-- [ ] Validation run + results attached (link logs / CI run)
-
-**Evidence:**
-- Raw: `data/raw/...`
-- Metadata: `data/catalog/...`
-- CI run: (link)
-- Notes: (anything surprising)
-```
-
-### ✅ What Counts as “Evidence”?
-- A **path** to a file committed in the repo
-- A **CI link** (logs + artifacts)
-- A **command** you ran + output (sanitized)
-- A **commit hash** or tag
-- A **screenshot** (UI changes)
-
-> 🧯 Avoid: “trust me” statements. If we can’t trace it, it doesn’t exist.
+</details>
 
 ---
 
-## 🧑‍⚖️ Reviewer Mode (Fast Review Heuristics)
+## 🧪 Experiments & AI (special rules)
 
-When reviewing a PR with checklists:
+If your PR adds or changes **analysis** or **model behavior**, expect to include:
 
-- 🔍 **Spot-check evidence**: open at least 2 linked artifacts (raw + processed, or code + CI run)
-- 🧪 **Re-run critical path**: if it affects pipelines, confirm CI executes the pipeline stage
-- 🧷 **Traceability**: ensure anything user-facing can be traced back to sources
-- 🧯 **Risk**: confirm rollback/migration notes if behavior or schema changes
-- 🧠 **AI changes**: require a model card / experiment report if model behavior shifts
+- 🧪 an **experiment report** (or update an existing one)
+- 🤖 a **model card** (for any model you ship or fine-tune)
+- 🧾 data & provenance references (what data, which version, how produced)
+- 🔁 reproducibility details (seeds, environment, parameters)
 
----
-
-## 🛡️ Ethics Note (Important)
-
-Checklists help, but they **do not solve ethics** by themselves.  
-Treat ethical items as prompts for **ongoing deliberation**, not a box-ticking exercise.
-
-> ✅ Use the ethics-related checklists to force conversations early—and keep revisiting them as context changes.
+If the work can’t be reproduced by another contributor, it’s not “done” yet.
 
 ---
 
-## 🧰 Creating a New Checklist
+## 🧑‍⚖️ Ethics / CARE / Sensitive Data
 
-1) Copy: `templates/checklist_template.md`  
-2) Name it: `area/topic.md` (keep names boring and searchable 😄)  
-3) Add it to the **Checklist Index** above  
-4) Keep items:
-   - ✅ atomic (one thing per checkbox)
-   - ✅ verifiable (needs evidence)
-   - ✅ minimal (prefer 10–20 items)
+Some data and locations are sensitive. If your change touches:
 
-### 🧱 Suggested Checklist Header (Standard)
+- sacred sites / burial grounds
+- exact coordinates for vulnerable resources
+- personally identifiable information
+- community-owned knowledge
 
-```markdown
----
-id: CHK-AREA-TOPIC
-owner: "@team-or-handle"
-applies_to:
-  - "paths/*"
-risk: low|medium|high
----
-```
+…then you **must** run `policy_ethics_fair_care.md` and document:
+- why the contribution provides collective benefit 🌱
+- who has authority to control access 🔐
+- how responsibility/ethics are handled 🧭
+- what safety mitigations exist (redaction, aggregation, tiered access)
 
 ---
 
-## 🤖 Automation Hooks (Optional but Recommended)
+## 🧱 How to add a new checklist
 
-If/when we wire CI enforcement:
-
-- ✅ **Fail-closed**: PRs touching `data/` or `pipelines/` must include relevant checklist sections
-- ✅ CI can verify presence of:
-  - dataset metadata files
-  - checksums
-  - reproducible run commands
-  - model cards / experiment logs (for AI changes)
-
-> 🧱 Philosophy: automation should enforce **minimum standards**, not become busywork.
+1. Create a new file in `mcp/checklists/` (lowercase, underscores):  
+   `domain_purpose.md` ✅
+2. Keep it **short**, **binary**, and **auditable**:
+   - Good: “License is present and compatible (link to file)”
+   - Bad: “Data looks fine”
+3. Add it to the **Checklist Index** above.
+4. If you can automate it in CI later, note it in a `TODO:` line. 🤖
 
 ---
 
-## ❓ FAQ
+## 🔗 Related (handy paths)
 
-**Do I have to use a checklist for tiny PRs?**  
-If it changes docs only → usually `pr/docs-review.md` is enough.  
-If it changes behavior/data/results → yes, pick the smallest relevant checklist.
-
-**Can I mark items N/A?**  
-Yes—**with a reason**. “N/A” without explanation is not accepted.
-
-**Where do experiments go?**  
-Use `/mcp/experiments/` (or equivalent) and link them from the PR via the AI/experiment checklist.
+- 🏠 Project root: [`../../README.md`](../../README.md)
+- 📚 Docs: [`../../docs/`](../../docs/)
+- 🗺️ Data: [`../../data/`](../../data/)
+- ⚙️ Pipelines: [`../../pipelines/`](../../pipelines/)
+- 🔌 API: [`../../api/`](../../api/)
+- 🖥️ Web UI: [`../../web/`](../../web/)
+- 🧪 Experiments (if present): [`../../experiments/`](../../experiments/)
 
 ---
 
-## 🧾 Maintainer Notes (Living System)
+## ✅ Philosophy (simple)
 
-- This folder is meant to evolve.
-- If you notice repeated review comments, turn them into a checklist item.
-- If a checklist item never catches real issues, simplify or remove it.
-
-✨ **Goal:** Make “doing it right” the default and “doing it fast” still possible.
-
+Checklists are not bureaucracy. They are **how KFM scales without losing trust** 🧠✨  
+If we can’t explain where something came from, how it was produced, and why it’s safe to use… then it doesn’t belong in the system (yet).
