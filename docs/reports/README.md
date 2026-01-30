@@ -70,18 +70,19 @@ These are “hard rules” for anything placed under `docs/reports/`:
 Current canonical layout (v13-style):
 
 ```text
-docs/reports/
-├── README.md
-└── story_nodes/
-    ├── templates/
-    ├── draft/
-    │   └── <story_slug>/
-    │       ├── story.md
-    │       └── assets/
-    └── published/
-        └── <story_slug>/
-            ├── story.md
-            └── assets/
+📁 docs/
+└─ 📁 reports/                              📊 authored outputs (reviewed + versioned)
+   ├─ 📄 README.md                            📘 reports index + publishing rules
+   └─ 📁 story_nodes/                         📚 Story Node reports (narrative + citations + map hooks)
+      ├─ 📁 templates/                        🧩 Story Node templates + scaffolds
+      ├─ 📁 draft/                            📝 in-progress Story Nodes (working)
+      │  └─ 📁 <story_slug>/                  🏷️ one Story Node (draft)
+      │     ├─ 📄 story.md                    📚 narrative + citations + map/timeline hooks
+      │     └─ 📁 assets/                     📎 local assets (images, clips, small tables)
+      └─ 📁 published/                        ✅ released Story Nodes (versioned)
+         └─ 📁 <story_slug>/                  🏷️ one Story Node (published)
+            ├─ 📄 story.md                    📚 final narrative + citations + map/timeline hooks
+            └─ 📁 assets/                     📎 released assets (stable + checksummed if needed)
 ```
 
 ### 🧩 Conventions
