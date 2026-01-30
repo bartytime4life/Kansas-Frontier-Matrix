@@ -1,265 +1,228 @@
 # 🧰 KFM Toolbelt (`tools/kfm/`)
 
-![KFM](https://img.shields.io/badge/KFM-Toolbelt-0b7285?style=flat-square)
-![Repo Pattern](https://img.shields.io/badge/Monorepo-code%2Bdata%2Bdocs-2f9e44?style=flat-square)
-![Docker](https://img.shields.io/badge/Docker%20Compose-dev%20stack-2496ED?style=flat-square&logo=docker&logoColor=white)
-![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-governed-success?style=flat-square)
-![Provenance](https://img.shields.io/badge/PROV-lineage%20tracked-7950f2?style=flat-square)
+<p align="center">
+  <img alt="KFM Toolbelt" src="https://img.shields.io/badge/KFM-tools%2Fkfm-2b6cb0?style=for-the-badge" />
+  <img alt="Provenance First" src="https://img.shields.io/badge/Provenance-first-16a34a?style=for-the-badge" />
+  <img alt="Fail Closed" src="https://img.shields.io/badge/Governance-fail%20closed-f97316?style=for-the-badge" />
+  <img alt="FAIR+CARE" src="https://img.shields.io/badge/FAIR%20%2B%20CARE-by%20design-a855f7?style=for-the-badge" />
+</p>
 
-> ⚠️ **North Star:** KFM is a *provenance-first* system. This toolbelt exists to make the **canonical pipeline flow** fast, repeatable, and hard-to-mess-up.  
-> If a workflow bypasses metadata + provenance, it’s not a KFM workflow. 🧾🧬
-
----
-
-## 🧭 What this folder is for
-
-This directory is the **developer/operator toolbelt** for Kansas Frontier Matrix (KFM). It’s where we keep the scripts/CLIs that:
-
-- 🚀 **Bring the stack up/down** quickly (DBs + API + Web UI + optional policy engines)
-- 🧪 Run **smoke tests** and common dev checks (lint/test, endpoint pings, dataset integrity)
-- 🧰 Run/validate **pipelines** and enforce “no surprises” ETL behavior
-- 🗂️ Generate/validate **STAC/DCAT catalog** entries and **W3C PROV** lineage logs
-- 🧠 Provide “one-liners” to **reindex** / refresh derived stores (graph/search) when needed
-- 🧯 Provide consistent **troubleshooting** patterns (ports, permissions, container health)
-
-> 💡 Keep this folder **boring**: deterministic inputs → deterministic outputs.  
-> “It worked on my machine” is not a valid KFM data artifact. 😅
+> **“The map behind the map.”** Every layer, dataset, story, and even AI-generated output is expected to be traceable back to original sources.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🔁 KFM canonical flow (do not skip steps)
+## 🎯 What belongs in `tools/kfm/`
 
-```mermaid
-flowchart LR
-  A["📥 data/raw — immutable snapshots"] --> B["🧹 data/processed — clean + standardized outputs"]
-  B --> C["🗂️ data/catalog (STAC/DCAT)"]
-  B --> D["🧬 data/provenance (W3C PROV lineage)"]
-  C --> E["🗺️ PostGIS"]
-  D --> E
-  C --> F["🕸️ Neo4j"]
-  D --> F
-  E --> G["⚙️ api/ — FastAPI"]
-  F --> G
-  G --> H["🌐 web/ — React UI"]
-  G --> I["🧠 Focus Mode — AI tooling"]
-```
+`tools/kfm/` is the **developer + ops toolbelt** for the Kansas Frontier Matrix (KFM): scripts and CLIs that keep the system **reproducible**, **auditable**, and **policy-compliant** across the full stack.
+
+KFM is designed as a **pipeline → catalog → database → API → UI** system that transforms raw files into trustworthy, explorable knowledge.  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### ✅ Typical responsibilities
+
+- 🏗️ **Orchestrate pipelines** (run ETL plugins/modules in the right order)
+- 🧾 **Generate + validate metadata** (STAC/DCAT + required dataset descriptors)
+- 🧬 **Generate + validate provenance** (W3C PROV logs + lineage checks)
+- 🧪 **Run quality gates** (schema checks, geometry checks, license checks → “fail closed”)
+- 🧰 **Dev helpers** (docker-compose wrappers, smoke tests, log tailing)
+- 🗃️ **Ops helpers** (reindex search/graph, seed initial data, export snapshots)
 
 ---
 
-## ⚡ Quickstart (dev ergonomics)
+## 🧠 Mental model: the canonical data path
 
-> These are “lowest common denominator” commands that should work even if your local `kfm` CLI wrapper isn’t installed yet.
+KFM treats this order as **non-negotiable**:
 
-### 1) Start the dev stack 🐳
+**Raw → Processed → Catalog/Prov → Database → API → UI**  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-```bash
-# from repo root
-docker-compose up --build
-```
+### Why this matters
+- “Shortcuts” (injecting data directly into UI/DB or skipping provenance/metadata) are considered **flawed** unless proven otherwise.  [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- Governance is designed to **fail closed**: if policy/metadata/license checks fail, the action is blocked (e.g., CI rejects merges).  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-Typical services include (names may vary by compose file):
-- `db` → Postgres + PostGIS (often `localhost:5432`)
-- `graph` → Neo4j (often `localhost:7474` + bolt `7687`)
-- `api` → FastAPI (often `localhost:8000`)
-- `web` → React dev server (often `localhost:3000`)
-- `opa` → optional policy sidecar (often `localhost:8181`)
+---
 
-### 2) Explore APIs 🔎
+## 🧩 Where `tools/kfm` sits in the monorepo
 
 ```text
-Swagger UI:  http://localhost:8000/docs
-GraphQL:     http://localhost:8000/graphql   (if enabled)
-Neo4j UI:    http://localhost:7474           (if enabled)
-Web UI:      http://localhost:3000
-```
-
-### 3) Run tests (inside container) ✅
-
-```bash
-docker-compose exec api pytest
-```
+📦 Kansas-Frontier-Matrix/
+├── api/                     # FastAPI backend
+├── web/                     # React + TypeScript frontend
+├── pipelines/               # ETL pipelines + simulations
+├── data/
+│   ├── raw/                 # Immutable source snapshots
+│   ├── processed/           # Cleaned/standardized outputs
+│   ├── catalog/             # STAC / DCAT metadata
+│   └── provenance/          # W3C PROV lineage logs
+├── policy/                  # Governance policies (e.g., OPA/Rego)
+└── tools/
+    └── kfm/                 # 👈 this directory
+        └── README.md
+```  
+ [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧩 Expected layout (this toolbelt’s “contract”)
+## 🚀 Quickstart: “How do I poke the system?”
 
-This repo may evolve, but this folder should generally look like:
+> This project expects you to work through the API layer (and its governance), not around it.  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 1) Start the dev stack (Docker Compose)
+```bash
+docker-compose up
+```
+
+**Common pitfalls** (ports, resources, volumes):
+- Port conflicts (e.g., `5432`, `7474`, `8000/3000`)
+- Docker memory limits during large dataset loads
+- Volume permissions / mounts not applying as expected  
+ [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 2) Explore the API (Swagger)
+With the environment up, open:
+- `http://localhost:8000/docs` (Swagger UI)  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 3) Use “CLI-ish” commands via containers
+The blueprint suggests the repository may provide CLI utilities like `manage.py`, or scripts under `api/scripts/`. Typical patterns look like:
+
+```bash
+docker-compose exec api python manage.py [command]
+```
+
+Or drop into the container and run ad-hoc code:
+
+```bash
+docker-compose exec api bash
+python -c "print('hello from api container')"
+```
+
+ [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🛠️ Tooling interface (recommended target)
+
+To keep the developer experience consistent, aim for a single entrypoint:
+
+- `kfm` (or `./kfm`) with subcommands
+
+### Suggested command map 🧭
+> These are *recommended conventions* for what should live here, aligned with the blueprint’s operational guidance.  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ```text
-📁 tools/
-└─ 📁 kfm/                                  🧰 KFM tooling + CLI surface
-   ├─ 📄 README.md                            👈 you are here (install + usage + command map)
-   ├─ 🚀 kfm                                  ◻️ optional: single-entry CLI (shell/python/node)
-   ├─ 📁 commands/                            🧱 subcommands grouped by domain (stack/pipeline/catalog/…)
-   ├─ 📁 templates/                           🧾 STAC/DCAT/PROV templates + scaffolds
-   ├─ 📁 checks/                              ✅ validation rules (schema checks, lint rules, policies)
-   └─ 📁 examples/                            🧪 example invocations + sample configs
+kfm dev up|down|logs|shell
+kfm api open-docs
+kfm pipeline run <plugin> [--since DATE] [--dry-run]
+kfm data validate <path-or-dataset-id>
+kfm catalog build <dataset-id>
+kfm prov init <dataset-id>
+kfm db load <dataset-id>
+kfm search reindex
+kfm export snapshot [--out DIR]
 ```
 
-> ✍️ If you add a script/command here, also update this README so the “contract” stays accurate.
+### Command behavior principles ✅
+- ♻️ **Idempotent**: safe to run twice (no double-loading unless intended)
+- 🧾 **Auditable**: produce structured logs + provenance artifacts
+- 🧪 **Fail closed**: validation errors stop execution (no partial “success”)
+- 🧷 **Deterministic**: same inputs → same outputs (or explicitly versioned outputs)
 
 ---
 
-## 🧑‍💻 The `kfm` CLI (recommended interface)
+## 🧬 Dataset contribution workflow (the “happy path”)
 
-If this repo includes a `kfm` entrypoint (script/binary), treat the following as the **preferred UX**.
+### 0) Before you begin
+KFM is intentionally strict:
+- Nothing enters without provenance + metadata
+- CI is expected to reject undocumented / unlicensed additions  [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-> Not all commands may exist yet — this list is the *target* command surface. Add incrementally.
+### 1) Add raw source snapshot
+- Place unmodified source data in `data/raw/...` (treat as immutable)  [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### 🐳 Stack commands
+### 2) Run or implement the pipeline step
+- Pipelines should produce:
+  - `data/processed/...` outputs  
+  - `data/catalog/...` metadata (STAC/DCAT)  
+  - `data/provenance/...` lineage (W3C PROV)  
+ [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-```bash
-kfm stack up         # docker-compose up --build
-kfm stack down       # docker-compose down
-kfm stack status     # container health summary
-kfm stack logs api   # tail logs for a service
-```
+### 3) Validate outputs
+Your toolbelt should validate (at minimum):
+- ✅ GeoJSON/JSON validity (and basic geometry sanity)
+- ✅ Metadata exists + is complete (STAC/DCAT)
+- ✅ Provenance exists + links inputs → scripts → outputs (PROV)
+- ✅ License/rights metadata present (fail if missing)  [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### 🧪 Developer checks
-
-```bash
-kfm doctor           # environment + ports + dependencies check
-kfm test             # run api/web tests (or delegates)
-kfm lint             # formatting/lint checks (repo conventions)
-```
-
-### 🧼 Pipeline commands (ETL + sims)
-
-```bash
-kfm pipeline list
-kfm pipeline run <pipeline_name> [--since <date>] [--force]
-kfm pipeline report <pipeline_name>   # summarize records, extents, outputs
-```
-
-### 🗂️ Catalog & provenance validation
-
-```bash
-kfm catalog validate             # STAC/DCAT schema checks + required fields
-kfm provenance validate          # PROV schema checks + required links
-kfm publish check <dataset_id>   # “ready for DB/API/UI?” gate ✅/❌
-```
-
-### 🗄️ Load to databases
-
-```bash
-kfm db load postgis <dataset_id>
-kfm db load neo4j  <dataset_id>
-kfm db reset --yes-i-mean-it      # dangerous: local/dev only
-```
-
-### 🧠 AI / Focus Mode checks
-
-```bash
-kfm ai status
-kfm ai test "List major trails in Kansas and their purposes."
-```
+### 4) Commit & PR
+- CI checks should enforce catalog/provenance presence and consistency  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧾 Non-negotiables (data integrity rules)
+## 🤖 Tooling + AI “Focus Mode” (why this folder matters)
 
-These rules exist to protect KFM’s core promise: **everything is evidence-backed and traceable** 🧬
+KFM’s AI assistant is **not** meant to be an ungoverned chatbot. It is constrained by policy and designed to return answers with citations and traceability.  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### ✅ Pipelines must be deterministic
+The blueprint describes an approach where the AI can call safe tools (search/query) and “show its work,” with traces recorded as part of provenance logs.  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-- 🚫 No interactive prompts in official pipelines
-- 🧪 Re-running with the same inputs should produce **byte-identical** outputs
-- ♻️ Pipelines should be **idempotent** (don’t duplicate outputs on repeated runs)
-
-### ✅ Raw data is read-only
-
-- `data/raw/` is the **snapshot** of the source (don’t “clean” it in place)
-- All transformation happens downstream → outputs go to `data/processed/`
-
-### ✅ Every dataset must ship with boundary artifacts
-
-For each published dataset or “evidence artifact”:
-- 📦 Processed output(s) in `data/processed/...`
-- 🗂️ STAC/DCAT record(s) in `data/catalog/...`
-- 🧬 PROV lineage in `data/provenance/...`
-
-> 🧠 **AI outputs are also datasets.** If an analysis/LLM produces a layer, it must be cataloged + traced like anything else.
+**Implication for `tools/kfm/`:**
+- Tools here should be safe to call from agent workflows (bounded, logged, permission-aware).
 
 ---
 
-## 🧱 Adding a new domain (repeatable pattern)
+## 🧯 Troubleshooting checklist
 
-When you add a new data domain, aim for isolation + clarity:
-
-- 📥 `data/raw/<domain>/...`
-- 🧪 (optional) `data/work/<domain>/...` for intermediates (if used in this repo)
-- 📦 `data/processed/<domain>/...`
-- 🗂️ `data/catalog/...` (STAC/DCAT entries)
-- 🧬 `data/provenance/...` (PROV lineage)
-- 📚 `docs/data/<domain>/README.md` (runbook: sources, ETL steps, gotchas)
-
-✅ This keeps PR review simple and provenance auditable.
-
----
-
-## 🔐 Governance posture (how tools should behave)
-
-KFM tooling should be **fail-closed by default**:
-
-- Missing license? ❌ block / fail CI
-- Missing metadata/provenance? ❌ block publish
-- Policy violation? ❌ deny access / deny merge
-
-Tooling should help contributors “do the right thing” by default, with clear error messages and links to the fix.
+- 🔌 **Port conflicts**: change compose port mappings or stop local services (Postgres on `5432`, etc.)  [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- 🐳 **Resource limits**: increase Docker memory if containers are killed/slow  [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- 📁 **Volume permissions**: ensure mounted directories are writable from containers  [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- 🔁 **Rebuild when deps change**:
+  ```bash
+  docker-compose up --build
+  # or
+  docker-compose build
+  ```
+   [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧯 Troubleshooting (common dev pains)
+## 🔗 Helpful links (inside this repo)
 
-### 🔌 Port conflicts
-If you already have services running locally, you may collide with:
-- `5432` (Postgres)
-- `7474/7687` (Neo4j)
-- `8000` (API)
-- `3000` (Web)
+- `../../docs/` → architecture & narrative docs  
+- `../../pipelines/` → ingestion + transformation modules  
+- `../../data/catalog/` → STAC/DCAT metadata  
+- `../../data/provenance/` → W3C PROV lineage logs  
+- `../../policy/` → governance rules (“fail closed”)  
 
-✅ Fix: stop the conflicting service or change compose port mappings.
-
-### 🧱 Volume permissions / file writes
-If containers can’t write into `data/` (mounted volume), you may see permission errors.
-
-✅ Fix ideas:
-- ensure local folder permissions allow Docker to write
-- align container user UID/GID to host (compose/devcontainer settings)
-
-### 🐢 Slow / killed containers
-Large datasets can exceed default Docker memory settings.
-
-✅ Fix:
-- increase Docker memory/CPU
-- run fewer services during pipeline work
+(These paths align to the blueprint’s repository structure discussion.)  [oai_citation:24‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧷 Helpful links (within this repo)
+## 📚 Background reading (project library)
 
-- 🏠 Project root: `../../README.md`
-- 🧠 Architecture overview: `../../docs/architecture/system_overview.md`
-- 🧪 Pipelines: `../../pipelines/`
-- 🗃️ Data lake: `../../data/`
-- 📚 Docs hub: `../../docs/`
+> These PDFs are part of the project’s reference stack and inform design choices in mapping, ethics, time-oriented visualization, and scalable systems.
 
----
-
-## ✅ Toolbelt maintenance checklist
-
-When you change tooling in `tools/kfm/`:
-
-- [ ] Update this README (command surface + examples)
-- [ ] Add/adjust validation checks (catalog/prov gates)
-- [ ] Keep commands **non-interactive** and **idempotent**
-- [ ] Prefer “dry-run” modes for anything destructive
-- [ ] Add one “happy path” example in `tools/kfm/examples/`
-- [ ] Ensure errors are actionable (tell the user *what* to fix + *where*)
+- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint**  [oai_citation:25‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+- **Introduction to Digital Humanism**  [oai_citation:26‡Introduction to Digital Humanism.pdf](sediment://file_0000000090a071f5afd5c78c4383e488)  
+- **Visualization of Time-Oriented Data**  [oai_citation:27‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)  
+- **Scalable Data Management for Future Hardware**  [oai_citation:28‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](sediment://file_00000000a58071f586f00793dee712d6)  
 
 ---
 
-### 🧡 Philosophy
-KFM is an atlas, a lab notebook, and a community artifact — all at once.  
-This toolbelt exists to keep the *lab notebook* honest. 🧾🗺️
+## 🗺️ Roadmap for `tools/kfm/`
 
+- [ ] Bootstrap `kfm` CLI scaffold (Typer/Click/etc.)
+- [ ] `kfm data validate` (schema + license + geometry)
+- [ ] `kfm catalog build` (STAC/DCAT templates + generation)
+- [ ] `kfm prov init` (W3C PROV templates + run stamping)
+- [ ] `kfm pipeline run` (plugin discovery + orchestrated runs)
+- [ ] `kfm db load` (safe loaders; no direct UI → DB)
+- [ ] `kfm search reindex` (graph/search refresh hooks)
+- [ ] Agent-safe wrappers for Focus Mode tool calls (bounded + logged)
+
+---
+
+## 🤝 Contributing guidelines for tool scripts
+
+- ✅ Keep tooling **thin**: orchestrate + validate; don’t embed business logic that belongs in `pipelines/` or `api/`.
+- ✅ Prefer **explicit inputs/outputs**: file paths, dataset ids, and version stamps.
+- ✅ Always produce **machine-readable logs** (JSON lines recommended).
+- ✅ If it’s not reproducible, it doesn’t ship. 🔒
+
+---
