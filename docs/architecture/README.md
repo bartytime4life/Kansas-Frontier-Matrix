@@ -1,3 +1,11 @@
+---
+title: "Architecture"
+description: "System design index for Kansas Frontier Matrix (KFM) 🧭"
+status: "living-document"
+version: "0.1.0"
+last_updated: "2026-01-29"
+---
+
 # 🏛️ Architecture (docs/architecture)
 
 ![Status](https://img.shields.io/badge/status-living%20doc-brightgreen)
