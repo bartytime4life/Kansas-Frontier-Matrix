@@ -1,16 +1,3 @@
-<!-- According to a document from 2026-01-30 (KFM blueprint + repo master guide): this MCP is aligned to the non-negotiable KFM pipeline, boundary artifacts (STAC/DCAT/PROV), and fail-closed governance. -->
-
----
-title: "MCP — Master Coder Protocol (Docs • Rigor • Reproducibility)"
-path: "mcp/README.md"
-version: "v1.1.0"
-last_updated: "2026-01-30"
-status: "active"
-doc_kind: "Protocol"
-mcp_protocol_version: "1.1"
-pipeline_contract: "ETL → Catalogs → Graph → APIs → UI → Story Nodes → Focus Mode"
----
-
 # 🧠 MCP — Master Coder Protocol (Docs • Rigor • Reproducibility)
 
 ![MCP](https://img.shields.io/badge/MCP-Master%20Coder%20Protocol-111827?style=for-the-badge)
