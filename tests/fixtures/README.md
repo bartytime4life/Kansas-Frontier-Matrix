@@ -37,34 +37,35 @@ Use the right home so the repo stays clean and scalable:
 > Add folders only when a real test needs them.
 
 ```text
-tests/fixtures/
-├── README.md                         # you are here ✨
-├── manifest/
-│   ├── fixtures.yaml                 # fixture inventory + checksums
-│   └── fixtures.schema.json          # optional: schema for the manifest
-├── data/
-│   ├── raw/                          # 📥 raw snapshots (tiny!)
-│   ├── processed/                    # 🧹 expected processed outputs
-│   ├── catalog/                      # 🗂️ STAC/DCAT-style test metadata
-│   │   ├── stac/
-│   │   └── dcat/
-│   └── provenance/                   # 🧾 PROV-like lineage artifacts
-├── db/
-│   ├── postgis/                      # SQL seed scripts, expected tables
-│   └── neo4j/                        # Cypher seeds / JSON graph snapshots
-├── api/
-│   ├── requests/                     # request payloads (JSON)
-│   ├── responses/                    # golden responses (JSON)
-│   └── errors/                       # expected error bodies
-├── policy/
-│   ├── inputs/                       # policy input JSON (OPA-style)
-│   └── expected/                     # expected allow/deny decisions
-├── ai/
-│   ├── prompts/                      # Focus Mode prompts / tool traces
-│   └── expected/                     # expected responses + citations
-└── web/
-    ├── story_nodes/                  # minimal Story Node markdown fixtures
-    └── map/                          # style snippets / layer configs for UI tests
+📁 tests/
+└─ 📁 fixtures/                                   🧰 governed, tiny test fixtures (goldens + seeds)
+   ├─ 📄 README.md                                  👈 you are here ✨
+   ├─ 📁 manifest/                                  🧾 fixture inventory + integrity
+   │  ├─ 🧾 fixtures.yaml                            ✅ fixture registry + checksums + owners
+   │  └─ 📄 fixtures.schema.json                     ◻️ optional: schema for validating fixtures.yaml
+   ├─ 📁 data/                                      📦 data fixtures (tiny + representative)
+   │  ├─ 📁 raw/                                     📥 raw snapshots (tiny!)
+   │  ├─ 📁 processed/                               🧹 expected processed outputs (goldens)
+   │  ├─ 📁 catalog/                                 🗂️ STAC/DCAT-style test metadata
+   │  │  ├─ 📁 stac/                                 🛰️ STAC fixture objects (collections/items)
+   │  │  └─ 📁 dcat/                                 🧾 DCAT fixture objects (JSON-LD)
+   │  └─ 📁 provenance/                              🧬 PROV-like lineage artifacts (receipts)
+   ├─ 📁 db/                                        🗄️ database seeds + snapshots
+   │  ├─ 📁 postgis/                                 🐘 SQL seed scripts + expected tables/views
+   │  └─ 📁 neo4j/                                   🕸️ Cypher seeds / JSON graph snapshots
+   ├─ 📁 api/                                       🌐 API I/O fixtures (contract goldens)
+   │  ├─ 📁 requests/                                📤 request payloads (JSON)
+   │  ├─ 📁 responses/                               ✅ golden responses (JSON)
+   │  └─ 📁 errors/                                  🧯 expected error bodies (JSON)
+   ├─ 📁 policy/                                    🛡️ policy-as-code fixtures (OPA-style)
+   │  ├─ 📁 inputs/                                  🧾 policy input JSON
+   │  └─ 📁 expected/                                ✅ expected allow/deny decisions
+   ├─ 📁 ai/                                        🤖 Focus Mode fixtures (prompts + expected citations)
+   │  ├─ 📁 prompts/                                 💬 prompts / tool traces / contexts
+   │  └─ 📁 expected/                                ✅ expected responses + citations
+   └─ 📁 web/                                       🖥️ UI fixtures (Story Nodes + map snippets)
+      ├─ 📁 story_nodes/                             📚 minimal Story Node markdown fixtures
+      └─ 📁 map/                                     🗺️ style snippets / layer configs for UI tests
 ```
 
 ---
