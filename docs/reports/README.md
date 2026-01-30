@@ -61,18 +61,18 @@ Story Nodes have a **canonical home** and structure:
 Recommended “minimum viable” structure:
 
 ```text
-docs/
-  reports/
-    README.md
-    story_nodes/
-      draft/
-        <story_slug>/
-          STORY.md
-          assets/
-      published/
-        <story_slug>/
-          STORY.md
-          assets/
+📁 docs/
+└─ 📁 reports/                              📊 authored outputs (reviewed + versioned)
+   ├─ 📄 README.md                            📘 reports index + publishing rules
+   └─ 📁 story_nodes/                         📚 Story Node reports (narrative + citations + map hooks)
+      ├─ 📁 draft/                            📝 in-progress Story Nodes (working)
+      │  └─ 📁 <story_slug>/                  🏷️ one Story Node (draft)
+      │     ├─ 📄 STORY.md                    📚 draft narrative + citations + map/timeline hooks
+      │     └─ 📁 assets/                     📎 working assets (images, clips, small tables)
+      └─ 📁 published/                        ✅ released Story Nodes (versioned)
+         └─ 📁 <story_slug>/                  🏷️ one Story Node (published)
+            ├─ 📄 STORY.md                    📚 final narrative + citations + map/timeline hooks
+            └─ 📁 assets/                     📎 released assets (stable + checksummed if needed)
 ```
 
 > 🧩 Tip: keep **all story-specific images** in that story’s folder so the UI/story exporter can bundle cleanly.
