@@ -39,30 +39,31 @@ Fixtures must be **sanitized**:
 > This layout is designed to match KFM’s required staging + catalog boundaries while keeping fixture sets self‑contained.:contentReference[oaicite:10]{index=10}
 
 ```text
-tests/data/
-├── 📁 fixtures/
-│   ├── 📁 kfm_minimal/                      # One self-contained fixture set ✅
-│   │   ├── 📁 raw/                          # Immutable source inputs
-│   │   │   └── 📁 <domain>/                 # e.g. historical/, hydrology/, air-quality/
-│   │   ├── 📁 work/                         # Intermediate artifacts (optional but supported)
-│   │   │   └── 📁 <domain>/
-│   │   ├── 📁 processed/                    # Golden processed outputs (what pipelines should produce)
-│   │   │   └── 📁 <domain>/
-│   │   ├── 📁 stac/
-│   │   │   ├── 📁 collections/              # STAC Collections
-│   │   │   └── 📁 items/                    # STAC Items
-│   │   ├── 📁 catalog/
-│   │   │   └── 📁 dcat/                     # DCAT dataset entries (JSON-LD)
-│   │   ├── 📁 prov/                         # PROV lineage bundles (JSON/JSON-LD)
-│   │   ├── 📁 db/                           # Optional: PostGIS/Neo4j seed dumps for integration tests
-│   │   └── 📄 README.md                     # Fixture runbook: “what this set proves”
-│   └── 📁 <another_fixture_set>/
-│
-├── 📁 snapshots/
-│   ├── 📁 api/                              # Golden HTTP responses (contract tests)
-│   └── 📁 graphql/                          # Golden GraphQL responses (if used)
-│
-└── 📁 generated/                            # Optional: test outputs (should be gitignored)
+📁 tests/
+└─ 📁 data/                                        🧪 data-oriented test lane (fixtures + goldens)
+   ├─ 📁 fixtures/                                   🧰 self-contained fixture sets (end-to-end data truth files)
+   │  ├─ 📁 kfm_minimal/                              ✅ one minimal fixture set (golden “known good”)
+   │  │  ├─ 📁 raw/                                   🧾 immutable source inputs
+   │  │  │  └─ 📁 <domain>/                            🧭 e.g., historical/, hydrology/, air-quality/
+   │  │  ├─ 📁 work/                                  🧪 intermediate artifacts (optional but supported)
+   │  │  │  └─ 📁 <domain>/
+   │  │  ├─ 📁 processed/                              ✅ golden processed outputs (expected pipeline results)
+   │  │  │  └─ 📁 <domain>/
+   │  │  ├─ 📁 stac/                                  🛰️ STAC geospatial catalog fixtures
+   │  │  │  ├─ 📁 collections/                         🧩 STAC Collections
+   │  │  │  └─ 📁 items/                               📦 STAC Items
+   │  │  ├─ 📁 catalog/                                🗂️ DCAT discovery fixtures
+   │  │  │  └─ 📁 dcat/                                 🧾 DCAT dataset entries (JSON-LD)
+   │  │  ├─ 📁 prov/                                   🧬 PROV lineage bundles (JSON/JSON-LD)
+   │  │  ├─ 📁 db/                                     ◻️ optional: PostGIS/Neo4j seeds (integration helpers)
+   │  │  └─ 📄 README.md                                📘 fixture runbook (“what this set proves”)
+   │  └─ 📁 <another_fixture_set>/                      ➕ additional fixture sets (same structure)
+   │
+   ├─ 📁 snapshots/                                   📸 golden responses (contract-level truth files)
+   │  ├─ 📁 api/                                       🌐 golden HTTP responses (REST contract tests)
+   │  └─ 📁 graphql/                                   🕸️ golden GraphQL responses (if used)
+   │
+   └─ 📁 generated/                                   ◻️ optional: test outputs (should be gitignored)
 ```
 
 ### 🧩 Domain naming
