@@ -52,23 +52,23 @@ Suggested (and recommended) structure:
 
 ```text
 📁 tests/
-└── 📁 e2e/
-    ├── 📄 README.md                 👈 you are here
-    ├── 📁 specs/                    ✅ test specs (grouped by feature)
-    │   ├── 📄 smoke.spec.ts
-    │   ├── 📄 map.spec.ts
-    │   ├── 📄 catalog.spec.ts
-    │   ├── 📄 storynodes.spec.ts
-    │   ├── 📄 policy.spec.ts
-    │   └── 📄 focus-mode-ai.spec.ts
-    ├── 📁 fixtures/                 🧰 small, governed test fixtures only
-    │   ├── 📁 users/
-    │   ├── 📁 datasets/
-    │   └── 📁 story_nodes/
-    ├── 📁 helpers/                  🛠️ shared helpers (API clients, waits, etc.)
-    ├── 📁 pages/                    🧩 page objects (optional, but helpful)
-    ├── 📁 artifacts/                📎 screenshots/videos/reports (gitignored)
-    └── 📄 e2e.env.example           🔐 env vars for local runs
+└─ 📁 e2e/                                   🧪 end-to-end tests (UI + API + services)
+   ├─ 📄 README.md                              👈 you are here
+   ├─ 📁 specs/                                 ✅ test specs (grouped by feature)
+   │  ├─ 🧪 smoke.spec.ts                        🚦 critical smoke path (boot + basic nav)
+   │  ├─ 🧪 map.spec.ts                          🗺️ map interactions (pan/zoom/layers/hover)
+   │  ├─ 🧪 catalog.spec.ts                      🗂️ catalog browsing + STAC/DCAT surfaces
+   │  ├─ 🧪 storynodes.spec.ts                   📚 story node read + citation rendering
+   │  ├─ 🧪 policy.spec.ts                       🛡️ policy gates + fail-closed behavior
+   │  └─ 🧪 focus-mode-ai.spec.ts                🤖 Focus Mode chat + citations + attachments
+   ├─ 📁 fixtures/                              🧰 small, governed test fixtures only
+   │  ├─ 📁 users/                               👤 test users/roles (non-sensitive)
+   │  ├─ 📁 datasets/                            📦 tiny datasets + pointers (no large binaries)
+   │  └─ 📁 story_nodes/                         📝 sample story nodes + attachments (small)
+   ├─ 📁 helpers/                               🛠️ shared helpers (API clients, waits, assertions)
+   ├─ 📁 pages/                                 ◻️ optional: page objects (selectors + actions)
+   ├─ 📁 artifacts/                             📎 screenshots/videos/reports (gitignored)
+   └─ 📄 e2e.env.example                        🔐 env vars for local runs (NO secrets committed)
 ```
 
 > [!TIP]
