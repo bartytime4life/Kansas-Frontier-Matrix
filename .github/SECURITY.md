@@ -1,165 +1,243 @@
-# 🔐 Security Policy
+# 🔒 Security Policy — Kansas Frontier Matrix (KFM)
 
-![Security Policy](https://img.shields.io/badge/Security-Policy-blue?style=for-the-badge)
-![Responsible Disclosure](https://img.shields.io/badge/Responsible-Disclosure-brightgreen?style=for-the-badge)
-![No Public Exploits](https://img.shields.io/badge/Please-No%20Public%20Issues%20for%20Vulns-red?style=for-the-badge)
+![Responsible Disclosure](https://img.shields.io/badge/security-responsible%20disclosure-brightgreen)
+![Policy as Code](https://img.shields.io/badge/governance-policy--as--code-orange)
+![Auditability](https://img.shields.io/badge/audit-logging%20%26%20traceability-blue)
 
-> ⚠️ **Please do not open public GitHub Issues/Discussions for security vulnerabilities.**  
-> Use the **private reporting** process below so we can investigate and fix safely.
+KFM is a public-facing, open-data platform **and** a secure internal analytics system. This security policy explains how to report vulnerabilities responsibly and what security expectations are baked into the project. 🛡️🌻
+
+---
+
+## 📚 Table of Contents
+- [✅ Supported Versions](#-supported-versions)
+- [📣 Reporting a Vulnerability](#-reporting-a-vulnerability)
+- [🧾 What to Include in a Report](#-what-to-include-in-a-report)
+- [🤝 Responsible Disclosure Guidelines](#-responsible-disclosure-guidelines)
+- [⏱️ Disclosure &️ & Response Targets](#️-disclosure--response-targets)
+- [🧠 Security-by-Design Principles](#-security-by-design-principles)
+- [🔐 Platform Security Overview](#-platform-security-overview)
+- [🧰 Secure Development & CI/CD](#-secure-development--cicd)
+- [🔑 Secrets, Keys, and Credentials](#-secrets-keys-and-credentials)
+- [📦 Data Contributions & Sensitive Data](#-data-contributions--sensitive-data)
+- [🚨 Incident Response](#-incident-response)
+- [🙏 Security Credits](#-security-credits)
 
 ---
 
 ## ✅ Supported Versions
 
-We provide security updates for:
+We support security fixes for:
+- ✅ **`main`** (active development)
+- ✅ **The latest tagged release**
+- ⚠️ Older releases may not receive backported fixes.
 
-| Version / Branch | Supported | Notes |
-|---|:---:|---|
-| `main` | ✅ | Actively developed |
-| Latest GitHub Release | ✅ | Recommended for production deployments |
-| Older releases / forks | ❌ | Please upgrade and re-test |
-
-> 🧭 If you’re unsure which version you’re on, include the **commit SHA** and any **tag/release** in your report.
+> If you are running a fork or downstream deployment, you are responsible for timely patching and safe configuration. 🧩
 
 ---
 
-## 🚨 Reporting a Vulnerability
+## 📣 Reporting a Vulnerability
 
-### Preferred: GitHub Private Vulnerability Report (Security Advisories)
+### Preferred: GitHub Private Vulnerability Reporting 🕵️‍♀️
+If this repository has **Private Vulnerability Reporting** enabled:
+1. Go to the repo **Security** tab
+2. Click **Report a vulnerability**
+3. Submit your details privately
 
-1. Go to this repository on GitHub  
-2. Click **Security** → **Report a vulnerability** (or **Advisories** → **New draft advisory**)  
-3. Submit your report with as much detail as possible (template below)
+### Alternative: Email ✉️
+If private reporting is not enabled, email the maintainers at:
 
-### Alternate: Private contact (if GitHub reporting is unavailable)
+- **`security@kansasfrontiermatrix.org`** *(replace with your official security mailbox)*
 
-- Contact the maintainers **privately** via the repository owner/maintainer channels (e.g., the maintainer’s GitHub profile contact links).
-- As a last resort, open a **public issue with *no technical details*** titled:  
-  `Security: Request private reporting channel`  
-  ✅ Include only: how to reach you + confirmation you have details to share privately.
+### Please do NOT:
+- ❌ Open a public GitHub Issue for a security vulnerability
+- ❌ Post exploit details on Discussions, social media, or public channels
+- ❌ Exfiltrate sensitive data (especially anything that might be PII)
 
----
-
-## 🧾 What to Include in Your Report
-
-Please include:
-
-- 🔎 **Summary** of the issue and why it matters  
-- 🎯 **Affected component(s)** (API, UI, pipelines, auth, policy, data layer, CI, etc.)  
-- 🧪 **Reproduction steps** (or a minimal PoC)  
-- 💥 **Impact** (what an attacker can do)  
-- 🧷 **Version info**: commit SHA, branch, release tag, deployment type (local/docker/cloud)  
-- 📎 **Logs/screenshots** if helpful (**redact secrets & personal info**)  
-- 🛠️ **Suggested fix/mitigation** (optional but appreciated)
-
-<details>
-<summary><strong>📋 Copy/Paste Report Template</strong></summary>
-
-```text
-Title:
-Severity (guess): Critical / High / Medium / Low
-Affected area(s):
-- e.g., src/api, auth, policy engine, UI, pipeline, infra
-
-Environment:
-- commit SHA:
-- release/tag:
-- deployment: local / docker / cloud
-- OS/runtime:
-
-Description:
-Steps to reproduce:
-1)
-2)
-3)
-
-Expected result:
-Actual result:
-
-Impact:
-- What can be accessed/changed/executed?
-
-Proof of concept (optional):
-- code / request / payload (redacted)
-
-Suggested mitigation (optional):
-```
-</details>
+If you accidentally discover **exposed personal or restricted data**, stop immediately and report it using the steps above. 🚫🧬
 
 ---
 
-## ⏱️ Response Targets (Best Effort)
+## 🧾 What to Include in a Report
 
-We aim to:
+To help us validate and fix quickly, please include:
 
-- 📩 **Acknowledge** within **3 business days**
-- 🧭 **Triage** within **7 business days**
-- 🧯 Provide a **fix or mitigation plan** as soon as practical
-- 🤝 Coordinate a **responsible disclosure timeline** (typically ~**30–90 days**, depending on severity & complexity)
+- **Summary** (what is the issue?)
+- **Component(s)** (e.g., `api/`, `web/`, `pipelines/`, `data/`, `policy/`, container images, IaC)
+- **Impact** (what could an attacker do?)
+- **Reproduction steps** (minimal and safe)
+- **Affected versions / commit** (if known)
+- **Proof-of-concept** (PoC) — *only if safe and minimal*
+- **Logs / screenshots** (redact secrets!)
+- **Suggested fix** (optional but welcome 🙌)
 
-> We may ask for additional details, logs, or a test environment to confirm the issue.
-
----
-
-## 🧩 Scope
-
-### ✅ In Scope
-
-- 🔐 Authentication / authorization flaws (RBAC/ABAC/policy bypass, privilege escalation)
-- 🗃️ Data exposure (including “restricted”/sensitive datasets, metadata leaks, unintended downloads)
-- 🧬 Injection issues (SQL/Cypher/GraphQL/command/template injection)
-- 🌐 SSRF, request smuggling, CORS misconfig, insecure redirects
-- 🧨 RCE / sandbox escape / container breakout
-- 🧷 Secrets exposure (tokens/keys committed, logs leaking secrets)
-- 🧷 Supply-chain vulnerabilities **introduced by this repo** (dependency compromise, build script risk)
-- 🤖 AI-specific security issues **when they cause real impact**, e.g.:
-  - policy bypass leading to restricted data leakage
-  - prompt injection leading to unintended tool actions
-  - data exfiltration via retrieval/agent behaviors
-
-### ❌ Out of Scope (Generally)
-
-- 🔨 Denial-of-service (DoS) via very high traffic / volumetric attacks
-- 🎭 Social engineering / phishing
-- 🧱 Physical attacks
-- 🧩 Vulnerabilities in third-party services outside our control (unless we misuse them)
-- 🧪 Reports without a reasonable proof/impact explanation
-
-> If you’re unsure, **report it anyway**—we’ll help classify it.
+### Nice-to-have 🔥
+- CVSS estimate (if you know it)
+- A patch PR **after** we coordinate privately
 
 ---
 
-## 🔒 Sensitive Data & Privacy Notes
+## 🤝 Responsible Disclosure Guidelines
 
-- 🚫 **Do not** include secrets, access tokens, private keys, or personal data in reports.
-- 🧯 If you believe sensitive data is exposed (even accidentally), treat it as a **security issue** and report privately.
+We welcome good-faith security research. ✅  
+To keep users and public infrastructure safe, please follow these rules:
 
----
+### ✅ Allowed (Good Faith)
+- Testing on **your own** deployment / local dev stack
+- Minimal, non-destructive probing to confirm a vulnerability
+- Reporting promptly and privately
 
-## 🛡️ Safe Harbor (Good-Faith Security Research)
+### 🚫 Not Allowed
+- Denial-of-service (DoS) testing, load testing, or “scan storms”
+- Social engineering, phishing, or physical attacks
+- Accessing, copying, or sharing data beyond what’s necessary to prove the issue
+- Targeting third-party systems not controlled by KFM (unless explicitly authorized)
 
-We support good-faith security research that helps keep the community safe. Please:
-
-- ✅ Make a good-faith effort to **avoid privacy violations**, data destruction, and service disruption
-- ✅ Use the **minimum necessary** access to demonstrate the issue
-- ✅ Report promptly and keep details **confidential** until a fix is available
-- ❌ Do not use vulnerabilities for extortion, persistence, or lateral movement
-
----
-
-## 🏷️ Credit
-
-If you’d like, we’re happy to credit reporters in release notes or advisories. 🙌  
-(Just tell us the name/handle to use—or ask to remain anonymous.)
+> When in doubt: **pause and report**. We’d rather get a careful report than a dramatic proof. 🧯
 
 ---
 
-## 📁 Related Governance Docs
+## ⏱️ Disclosure & Response Targets
 
-- 📄 `CONTRIBUTING.md` — contribution rules & review expectations  
-- 📄 `CODE_OF_CONDUCT.md` — community standards  
-- 📄 `.github/workflows/*` — CI checks (lint/tests/security scanning where configured)
+We aim to follow a clear, transparent flow:
+
+1. **Acknowledgement:** within ~72 hours  
+2. **Triage:** severity + scope assessment  
+3. **Mitigation:** temporary controls if needed  
+4. **Fix:** patch developed + tested  
+5. **Release:** security fix shipped  
+6. **Disclosure:** coordinated public write-up (when appropriate)
+
+> Timelines vary depending on severity, exploitability, and operational constraints. 🧠⚙️
 
 ---
 
-**Thanks for helping keep this project and its users safe.** 🧡
+## 🧠 Security-by-Design Principles
+
+KFM’s blueprint emphasizes that security isn’t “a feature” — it’s **woven into** architecture and governance. 🧵🛡️  
+Key design principles include:
+
+- **Minimize sensitive data exposure** by default
+- **Encrypt data in transit and at rest**
+- **Strong identity + role-based access control**
+- **Rate limiting and abuse prevention for public APIs**
+- **Auditable access, especially for restricted datasets**
+- **Policy-as-code with “fail closed” behavior** (block unsafe contributions/outputs rather than letting them slip through)
+
+---
+
+## 🔐 Platform Security Overview
+
+This section is a high-level map of how KFM is intended to stay secure across data, APIs, and infrastructure. 🗺️
+
+### 🧍 Privacy & PII Handling
+- Prefer **aggregate** or **non-personal** datasets
+- Apply **de-identification** (remove/obfuscate direct identifiers) before anything becomes part of public catalogs
+- Treat sensitive domains (health, education, etc.) as **restricted-by-default** with strict access controls
+
+### 🌐 Transport Security
+- All external endpoints should enforce **HTTPS/TLS**  
+- No plaintext credentials or tokens over the wire
+
+### 🗄️ Storage Security
+- Encrypt sensitive data **at rest**, using a managed key system (KMS-style approach)
+- Encrypt backups and treat them as production-sensitive assets
+
+### 🪪 Identity, Authentication & Authorization
+- Internal users: **SSO** (OAuth2 / OIDC) with role-based access control (**RBAC**)
+- Public access: open datasets where appropriate, but use:
+  - **API keys** for certain endpoints (if needed)
+  - **Rate limiting** / throttling to prevent abuse
+
+### 🧱 Network & Infrastructure Security
+- Deploy within a secure network boundary (VPC-style design)
+- Keep databases in **private subnets** (no direct internet exposure)
+- Restrict ingress/egress to required ports and sources only
+- Enable monitoring for intrusion attempts and suspicious patterns
+
+### 🧾 Monitoring, Logging & Auditability
+- Enable access logs for APIs and datasets
+- Increase audit logging for sensitive datasets (who accessed what, when)
+- Alert on unusual patterns (e.g., unexpectedly large downloads)
+
+---
+
+## 🧰 Secure Development & CI/CD
+
+We aim for **security checks as part of normal development** (not a “pre-launch scramble”). 🧪✅
+
+Typical controls include:
+- 🔍 **Static code analysis** (SAST)
+- 📦 **Dependency vulnerability scanning**
+- 🐳 **Container image scanning**
+- 🧯 Periodic resilience drills (e.g., disaster recovery simulations / failover tests)
+
+### 🧠 Policy-as-Code (CI + Runtime)
+KFM’s blueprint supports a governance model where:
+- CI checks can **fail closed** when required metadata/policies are missing
+- Runtime requests can be evaluated against **policy rules** (OPA-style) before data or AI responses are returned
+- Policy decisions can be logged with a policy version/hash for accountability
+
+> If your deployment enables this model, keep `policy/` rules and CI checks as “release blockers,” not optional lint. 🧷
+
+---
+
+## 🔑 Secrets, Keys, and Credentials
+
+**Never commit secrets.** 🚫🔐
+
+Use:
+- Environment variables (`.env` files are for local only — keep them out of git)
+- Secret managers (cloud secrets store, GitHub Actions secrets, etc.)
+- Short-lived tokens where possible
+
+If you believe a secret was committed:
+1. Revoke/rotate it immediately  
+2. Report the exposure privately using the instructions above  
+3. Purge it from git history if necessary (and rotate again)
+
+---
+
+## 📦 Data Contributions & Sensitive Data
+
+Because KFM is an open-data project, data safety matters as much as code safety. 📊🧬
+
+### ✅ Before contributing a dataset
+- Confirm the license permits use and redistribution
+- Provide provenance/lineage metadata (how it was created + source references)
+- Validate the dataset does **not** include restricted personal data
+
+### 🚫 Do not submit
+- Raw personal identifiers (names, precise addresses, IDs, etc.)
+- Restricted records that are exempt from disclosure
+- “Scraped” datasets that violate a source’s terms of use
+
+If sensitive data is required for internal analytics:
+- Keep it out of public catalogs
+- Gate it behind RBAC and audited access
+- Apply masking/generalization where appropriate
+
+---
+
+## 🚨 Incident Response
+
+KFM deployments should maintain an incident response plan that covers:
+- Detection and containment
+- Credential rotation
+- Scope analysis and forensic preservation (logs, traces)
+- Public communication (if applicable)
+- Post-incident review and hardening
+
+> If you’re running a downstream deployment, document your own escalation path and on-call rotation. 📟
+
+---
+
+## 🙏 Security Credits
+
+We’re happy to credit responsible reporters (unless you prefer anonymity). 🌟  
+Include your preferred name/handle in your report.
+
+---
+
+<p align="center">
+  Built with care 🧡 — secure data, open insights, accountable systems.
+</p>
