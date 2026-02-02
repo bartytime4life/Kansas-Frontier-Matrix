@@ -1,54 +1,44 @@
 <!--
 📍 File: .github/README.md
-Purpose: Project-facing README shown on GitHub for both developers + public visitors.
+Kansas Frontier Matrix (KFM) — Project Overview for Developers + Public
 -->
 
 # Kansas Frontier Matrix (KFM) 🚀🌻
 
-![Status](https://img.shields.io/badge/status-alpha-orange)
+<!-- 🔧 Replace <ORG>/<REPO> in badges once finalized -->
+![Status](https://img.shields.io/badge/status-planning%20%2F%20active-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)
-![Focus](https://img.shields.io/badge/focus-open%20data%20%7C%20gis%20%7C%20ai-blue)
+![Focus](https://img.shields.io/badge/focus-open%20data%20%7C%20gis%20%7C%20ai-purple)
 
-> **An integrated open-data and analytics platform** connecting Kansas’s environment, infrastructure, and communities — breaking down data silos to drive informed decision-making and transparency.
-
----
-
-## ✨ What is KFM?
-
-KFM is a unified **data + geospatial + analytics** ecosystem designed to:
-
-- 🧩 **Unify data** across agencies, domains, and formats (tabular, geospatial, imagery, streams)
-- 🔍 **Make data discoverable** via a metadata catalog and search
-- 🧠 **Generate insights** using GIS analysis + ML/AI pipelines
-- 🌐 **Deliver access** via dashboards, APIs, and open data downloads
-- 🧾 **Support transparency** for public stakeholders and internal decision-makers
+> **An open, GIS-first data + analytics platform** connecting Kansas’s environment, infrastructure, and communities — breaking down data silos to drive evidence-based decisions and public transparency.
 
 ---
 
-## 📌 Quick Links
+## 🧭 What is KFM?
 
-- 🧭 [Vision & Mission](#-vision-and-mission)
-- 🏗️ [Architecture Overview](#️-architecture-overview)
-- 🖥️ [Tech Stack](#️-tech-stack)
-- ⚙️ [Installation & Setup](#️-installation--setup-developers)
-- 📊 [Public Dashboards](#-public-dashboards)
-- 🌐 [Open Data & APIs](#-open-data-and-api-access)
-- 🤝 [Contributing](#-contributing)
-- ❓ [FAQ](#-faq)
-- 💬 [Support](#-support)
-- 📜 [License](#-license)
+KFM is a **pipeline → catalog → databases → API → UI** platform that transforms raw files into **trustworthy, explorable knowledge** — including maps, datasets, historical narratives, and AI-assisted analysis.
+
+It’s designed for:
+- 🏛️ **Agencies**: coordination, decision support, internal analytics
+- 🧑‍🏫 **Educators & researchers**: reproducible data + stories + citations
+- 🧑‍💻 **Developers**: clean APIs, standards-based GIS services, predictable workflows
+- 🌎 **The public**: dashboards, download portals, transparent provenance
 
 ---
 
-## 📖 Table of Contents
+## 📚 Table of Contents
 
-- [🎯 Vision and Mission](#-vision-and-mission)
+- [🕰️ History & Roadmap](#️-history--roadmap)
+- [🧭 Core Principles](#-core-principles)
 - [🏗️ Architecture Overview](#️-architecture-overview)
-- [🖥️ Tech Stack](#️-tech-stack)
-- [⚙️ Installation & Setup (Developers)](#️-installation--setup-developers)
-- [📊 Public Dashboards](#-public-dashboards)
-- [🌐 Open Data and API Access](#-open-data-and-api-access)
+- [📦 Monorepo Layout](#-monorepo-layout)
+- [🧰 Tech Stack](#-tech-stack)
+- [⚙️ Installation & Setup](#️-installation--setup)
+- [🔐 Governance, Privacy & Security](#-governance-privacy--security)
+- [🧩 Standards & Interoperability](#-standards--interoperability)
+- [📊 Public Dashboards & Open Data](#-public-dashboards--open-data)
+- [📖 Stories & Historical Narratives](#-stories--historical-narratives)
 - [🤝 Contributing](#-contributing)
 - [❓ FAQ](#-faq)
 - [💬 Support](#-support)
@@ -56,266 +46,330 @@ KFM is a unified **data + geospatial + analytics** ecosystem designed to:
 
 ---
 
-## 🎯 Vision and Mission
+## 🕰️ History & Roadmap
 
-The **Kansas Frontier Matrix (KFM)** is an integrated data and analytics platform that unifies diverse information about Kansas’s environment, infrastructure, and communities into a coherent system.
+KFM is built on the earlier **KFM 2.0** foundation and evolves the concept into a unified blueprint that combines:
+- 🛠️ technical implementation (data systems, GIS, AI, remote sensing)
+- 🧾 policy + governance (open standards, stakeholder integration, ethics)
+- 🌐 public-facing tools (dashboards, visualizations, interactive web tools)
 
-**Mission:** Break down data silos, encourage evidence-based decision-making, and ensure transparency for stakeholders at all levels.
+### 🗺️ Implementation phases (from the blueprint)
 
-**Vision:** Become the central hub for Kansas’s data-driven innovation — where agencies coordinate with better insight, and where citizens, researchers, and businesses access previously siloed data to drive civic engagement and informed decision-making.
+> Dates reflect the current planning roadmap and can be refined as execution progresses.
 
-In short, KFM leverages **cloud**, **GIS**, and **AI** technologies responsibly to connect people with the information they need and unlock the full value of Kansas’s data resources for the benefit of all.
+- **Phase 0 — Initiation (Q1 2026)** 🧭  
+  Blueprint approval, team formation, initial cloud environments, governance/policy framework.
+- **Phase 1 — Core Infrastructure & Data Integration (Q2–Q4 2026)** 🗄️  
+  Base architecture, ingestion framework, initial datasets, metadata catalog, internal prototype dashboards.
+- **Phase 2 — Analytics & Advanced Features (Q1–Q3 2027)** 🧠  
+  ML/AI integration, advanced processing, performance scaling.
+- **Phase 3 — Public Launch “KFM 3.0” (Q4 2027)** 🌐  
+  Public portal deployment with polished dashboards + open data catalog, public communications, support channels.
+- **Phase 4 — Iteration & Expansion (2028+) 🔁**  
+  Dataset growth, UX & performance improvements, collaborations (hackathons, research projects), long-term sustainment.
+
+---
+
+## 🧭 Core Principles
+
+KFM is not just “a data portal.” It’s an **accountable, provenance-first system**.
+
+### 🧬 Provenance-first (“the map behind the map”)
+- Every dataset, layer, story, and AI-assisted output should be traceable back to original sources.
+- The platform emphasizes reproducibility and auditability.
+
+### ✅ Canonical pipeline order (no shortcuts)
+KFM enforces a predictable flow:
+
+```mermaid
+flowchart LR
+  R[Raw] --> P[Processed] --> C[Catalog + Metadata] --> V[Provenance (W3C PROV)]
+  V --> D[(Databases: PostGIS + Graph)]
+  D --> A[API Layer]
+  A --> U[UI: Dashboards + Stories + Tools]
+```
+
+### 🧯 “Fail closed” governance by default
+If a policy check fails, KFM blocks the action (e.g., missing license/metadata → CI fails → no merge).  
+This keeps the platform trustworthy as it scales.
+
+### 🌱 FAIR + CARE by design
+KFM bakes ethical and open-data principles into architecture and workflow:
+- **FAIR**: Findable, Accessible, Interoperable, Reusable
+- **CARE**: Collective Benefit, Authority to Control, Responsibility, Ethics
 
 ---
 
 ## 🏗️ Architecture Overview
 
-KFM’s system architecture follows a **layered, modular design** for maximum scalability and maintainability.
+KFM uses a layered, modular architecture:
+- **Data ingestion** → **unified repository** → **analytics/AI** → **APIs** → **apps**
+- Microservices for ingestion, processing, mapping, analytics, etc.
+- Loose coupling + open standards + “single source of truth”
 
-At a high level:
-
-- Sources ⟶ Ingestion ⟶ Storage ⟶ Analytics/AI ⟶ Dashboards + APIs
-- Built as **microservices** (ingestion, processing, mapping, analytics, etc.)
-- Uses **open standards** to keep everything interoperable
-- Uses a **single source of truth** approach to reduce duplication
-
-### 🔑 Key Architecture Layers
+### 🔑 High-level flow
 
 ```mermaid
 flowchart LR
-    subgraph Data Sources
-        A[Open Data Repositories]
-        B[IoT Sensor Feeds]
-        C[Satellite Imagery]
-        D[Historical Databases]
-    end
-    A -- ETL jobs --> E[Ingestion Microservices]
-    B -- Streaming --> E
-    C -- Imagery API --> E
-    D -- ETL jobs --> E
-    E --> F[(Data Lake & Spatial DB)]
-    F --> G[Analytics & AI Processing]
-    G --> H[Interactive Dashboards]
-    G --> I[Open Data APIs & Services]
+  subgraph Data Sources
+    A[Open Data Repositories]
+    B[IoT / Streaming Feeds]
+    C[Satellite & Remote Sensing]
+    D[Historical Archives / DBs]
+  end
+
+  A --> E[Ingestion Pipelines]
+  B --> E
+  C --> E
+  D --> E
+
+  E --> F[(Data Lake + Spatial DB)]
+  F --> G[Analytics + AI Layer]
+  G --> H[Dashboards + Explorers]
+  G --> I[Open Data APIs + Services]
 ```
 
-### 🧠 Why this architecture?
-- ✅ Add new datasets without redesigning everything
-- ✅ Scale tiers independently (storage ≠ compute ≠ API)
-- ✅ Treat GIS as a first-class citizen (spatial DB + map services)
-- ✅ Support both batch (ETL) and streaming ingestion (IoT)
-- ✅ Serve both humans (dashboards) and systems (APIs)
+### 🔒 Access pattern (important)
+- The **UI never directly touches databases**.
+- All access is mediated by APIs, validation, and policy enforcement layers.
 
 ---
 
-## 🖥️ Tech Stack
+## 📦 Monorepo Layout
 
-KFM is built on a modern, **polyglot** stack balancing enterprise reliability and open-source flexibility.
+KFM’s comprehensive blueprint describes a monorepo approach where code, pipelines, data, provenance, and docs live together:
+
+```text
+📦 Kansas-Frontier-Matrix/
+├── api/                       # Backend API (e.g., FastAPI)
+├── web/                       # Frontend (React + TypeScript)
+├── pipelines/                 # ETL pipelines / processing scripts
+├── data/
+│   ├── raw/                   # Immutable source snapshots
+│   ├── processed/             # Standardized outputs
+│   ├── catalog/               # STAC items, DCAT dataset records
+│   └── provenance/            # W3C PROV lineage logs
+└── docs/                      # Documentation + narratives / stories
+```
+
+---
+
+## 🧰 Tech Stack
+
+KFM is intentionally polyglot and modular.
 
 ### ☁️ Cloud & Infrastructure
-- AWS or Azure (compute + storage + managed services)
+- Cloud provider: AWS or Azure
 - IaC: Terraform / CloudFormation
 - Containers: Docker 🐳
-- Orchestration: Kubernetes ☸️ (or ECS/Fargate equivalents)
+- Orchestration: Kubernetes ☸️ (or cloud-native equivalents)
+- Observability: centralized logs + metrics (ELK/Prometheus or cloud services)
 
-### 🗄️ Data Storage & Databases
-- Data Lake: S3 / Azure Data Lake (imagery, files, streams)
+### 🗄️ Storage & Databases
+- Data Lake: S3 / Azure Data Lake (files, imagery, logs)
 - Spatial DB: PostgreSQL + PostGIS 🗺️
-- Search/Metadata Index: Elasticsearch (or alternative)
+- Graph/context linking (optional): Neo4j or equivalent
+- Search index: Elasticsearch or equivalent
 
-### 🔄 Data Integration & ETL
-- Orchestration: Apache Airflow (or Step Functions)
-- Streaming: Kafka (or Kinesis)
+### 🔄 Data Engineering
+- Orchestration: Airflow (or managed workflows)
+- Streaming: Kafka/Kinesis-class tools
 - Processing: Python (pandas, GeoPandas, GDAL/OGR)
 
-### 🗺️ GIS & Mapping
-- GIS Server: ArcGIS Enterprise **or** GeoServer
-- Standards: OGC WMS / WFS (tiles + features)
-- Spatial tooling: ArcPy, QGIS processing, Python GIS libs
+### 🛰️ GIS & Remote Sensing
+- GIS server: ArcGIS Enterprise or GeoServer
+- Raster delivery: Cloud Optimized GeoTIFF (COGs)
+- Distributed compute: Spark + spatial extensions (as needed)
 
-### 🛰️ Remote Sensing & Big Data
-- Raster formats: COGs (Cloud Optimized GeoTIFFs)
-- Distributed compute: Spark + spatial extensions
-- Prototyping: Google Earth Engine (optional)
+### 🤖 Analytics & AI
+- Frameworks: PyTorch / TensorFlow
+- Notebooks: JupyterHub
+- MLOps: SageMaker / Azure ML style pipelines
 
-### 🤖 AI/ML Analytics
-- Frameworks: TensorFlow / PyTorch
-- Training & MLOps: SageMaker / Azure ML
-- Collaboration: JupyterHub notebooks
-
-### 🌐 API Layer
-- REST: Node.js/Express or Python Flask/FastAPI
-- Optional: GraphQL for complex query patterns
-- Docs: OpenAPI/Swagger
-- Security: OAuth2 for protected resources
-
-### 🎛️ Front-End & Visualization
-- SPA: React + TypeScript ⚛️
-- Charts: D3 / Plotly
-- Accessibility: WCAG 2.1 AA
+### 🌐 APIs & UI
+- REST + JSON APIs
+- Optional GraphQL for complex queries
+- Auth: OAuth2 for protected resources
+- Frontend: React + TypeScript ⚛️
+- Visuals: maps + charts (Leaflet/Mapbox/Esri JS API + Plotly/D3)
 
 ---
 
-## ⚙️ Installation & Setup (Developers)
+## ⚙️ Installation & Setup
 
-> Want to run KFM locally or contribute? Start here 👇
+> Developer setup is designed around reproducible environments and automation.
 
-### 1) ✅ Prerequisites
+### ✅ Prerequisites
 Install:
 - Git
-- Docker (Docker Desktop recommended)
-- Node.js + npm (LTS, e.g., Node 18.x)
-- Python 3.8+ (venv/Conda optional)
+- Docker + Docker Compose
+- Node.js (LTS) + npm
+- Python 3.8+
 
-### 2) 📥 Clone the Repository
+### 📥 Clone
 ```bash
-git clone https://github.com/KansasDataGov/KFM-Project.git
-cd KFM-Project
+git clone https://github.com/<ORG>/<REPO>.git
+cd <REPO>
 ```
 
-### 3) 🧩 Configuration (.env)
-Copy sample env files:
+### 🧩 Configure environment variables
 ```bash
 cp .env.example .env
 ```
 
 Repeat for any service folder that includes its own `.env.example`.
 
-> Some features may require API keys (e.g., Map tiles, external feeds). You can run without them initially.
-
-### 4) 🐳 Launch with Docker Compose
+### 🐳 Run the stack
 ```bash
 docker-compose up --build
 ```
 
-If successful, you’ll typically have:
-- 🗄️ Postgres/PostGIS: `localhost:5432`
-- 🌐 API: `http://localhost:5000`
-- 🖥️ Web Portal: `http://localhost:3000` (or `:8080` depending on config)
+### 🔎 Verify services
+- **Web UI**: check compose logs for the exact port (commonly `http://localhost:3000`)
+- **API docs (Swagger UI)**: commonly `http://localhost:8000/docs` (FastAPI default)
+- **GraphQL (if enabled)**: commonly `http://localhost:8000/graphql`
 
-**Helpful commands**
+### 🧪 Tests (example pattern)
 ```bash
-docker-compose up -d
-docker-compose logs -f <service>
-docker-compose ps
+docker-compose exec api pytest
 ```
 
-### 5) 🌐 Verify Locally
-- Web Portal: `http://localhost:3000`
-- API (example): `GET http://localhost:5000/api/datasets`
+<details>
+<summary>🛠️ Troubleshooting tips (ports, volumes, resources)</summary>
+
+- **Port conflicts**: if you already run Postgres locally, remap container ports in `docker-compose.yml`.
+- **Docker memory**: large datasets need more RAM; increase Docker Desktop memory if containers are slow/killed.
+- **Volume permissions**: ensure `data/` is writable on your host OS.
+- **Rebuild after dependency changes**:
+  ```bash
+  docker-compose build
+  docker-compose up --build
+  ```
+
+</details>
 
 ---
 
-## 📊 Public Dashboards
+## 🔐 Governance, Privacy & Security
 
-KFM’s public dashboards allow users — citizens, policymakers, researchers, and developers — to explore Kansas data through:
+KFM follows an “**open by default, protected where required**” approach.
 
-- 🗺️ Interactive maps (layer toggles, pan/zoom, drill-down)
-- 📈 Linked charts & trends (time series, breakdowns)
-- 🎛️ Filters (dates, geography, categories)
-- 📱 Responsive UI (mobile + tablet friendly)
-- ♿ Accessibility-friendly experiences (WCAG-aligned)
+### 🧾 Data governance (how data gets in)
+- Each dataset has a **steward/owner** responsible for accuracy and updates.
+- Every dataset must include rich metadata (source, last update, update frequency, contact info, etc.).
+- Metadata standards include **DCAT** (and potentially ISO 19115 for geospatial metadata).
+- Data lifecycle policies support archiving/deprecation without losing historical records.
+- Open licensing by default (e.g., Creative Commons Attribution) unless restricted by agreements.
 
-Example dashboard themes:
-- 🌿 Environment
-- 🚧 Transportation
-- 💼 Economy
-- 🏥 Public Health
-- 🎓 Education
+### 🕵️ Privacy by design (PII minimization)
+- Most datasets should be aggregate/non-personal.
+- If sensitive datasets exist, KFM enforces strict access controls and anonymization.
+- Personal data should be de-identified before inclusion in open catalogs.
+- Privacy practices align with best-practice principles (e.g., FIPPs) and modern expectations.
+
+### 🛡️ Security posture
+- Mandatory security training, incident response planning, periodic audits.
+- Access is logged and auditable; sensitive dataset access can be tracked per user.
 
 ---
 
-## 🌐 Open Data and API Access
+## 🧩 Standards & Interoperability
 
-### 🧭 Open Data Portal (Dataset Catalog)
-Users can browse/search datasets with rich metadata:
-- Description + source agency
-- Coverage and update cadence
-- Methods/notes
-- Licensing details
+KFM is designed to plug into the broader GIS + open data ecosystem:
 
-Common download formats:
-- CSV / Excel
-- GeoJSON / Shapefile
-- GeoTIFF (imagery/raster)
+- 🗺️ **OGC standards**: WMS (maps), WFS (features), WCS (coverage/imagery)
+- 🛰️ **STAC**: for remote sensing / spatiotemporal asset catalogs
+- 🧾 **DCAT**: machine-readable dataset catalog export (harvestable to broader catalogs)
+- 🔐 **OAuth2**: standard auth where required
+- 📦 Common download formats: CSV, GeoJSON, Shapefile, KML, GeoTIFF
 
-Large datasets (e.g., LiDAR) may offer alternate delivery methods (cloud links or request-based access).
+---
 
-### 🔌 APIs for Developers
-- Public datasets via REST endpoints
-- GIS services via ArcGIS REST and/or OGC WMS/WFS
-- Optional unified API layer for higher-level operations (aggregation, joins, on-demand analysis)
+## 📊 Public Dashboards & Open Data
 
-Docs will be provided via:
-- 📘 OpenAPI/Swagger
-- 🧪 Interactive API explorer
-- 🧩 Example requests + code snippets
+KFM’s public experience focuses on clarity, interactivity, and accessibility:
+- 🗺️ map-driven dashboards
+- 📈 charts and time-series exploration
+- 🎛️ filters (geography, time, category)
+- ♿ accessibility-minded UI patterns
+
+### 🌐 Open Data Portal
+- searchable dataset catalog with metadata
+- downloads in common formats
+- APIs for programmatic access
+
+---
+
+## 📖 Stories & Historical Narratives
+
+A unique pillar of KFM is its “living atlas” concept:
+- historical narratives sit beside maps and datasets
+- stories carry metadata (author/date/sources)
+- stories and datasets are version-controlled and reviewed via GitHub PRs
+
+This bridges Kansas’s **past and present** — combining archives, spatial truth, and modern analytics.
 
 ---
 
 ## 🤝 Contributing
 
-KFM is open-source, and contributions are welcome! 🙌
+We welcome code, data, documentation, and story contributions 🙌
 
-### 🔁 Workflow
-- PR-based development via GitHub
-- `main` stays stable
-- Feature branches merge via review
+### 🧑‍💻 What you can contribute
+- **Code**: API services, UI components, pipeline modules
+- **Data**: new datasets, validations, catalog records, provenance logs
+- **Stories**: historical narratives with citations and metadata
+- **Docs**: architecture guides, runbooks, tutorials
 
-### 🧼 Standards
-- Python: PEP8-style conventions
-- JS/TS: ESLint + Prettier (if configured)
-- Add tests when feasible
-- Keep docs updated when behavior changes
+### ✅ Contribution rules of thumb
+- No “mystery data” — include licenses and sources
+- Add metadata + provenance with datasets
+- If checks fail, CI should block merges (“fail closed”)
 
-### ✅ Guidelines
-- Discuss large changes via Issues/Discussions first
-- Use descriptive branch names (e.g., `feature/add-traffic-ingest`)
-- Include context and screenshots/logs when relevant
-- Be responsive during review (we’ll do the same)
+<details>
+<summary>✨ Suggested contribution flow</summary>
 
-> If available, see: `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
+1. Fork the repo  
+2. Create a branch: `feature/<short-name>`  
+3. Make changes + add tests/docs  
+4. Open a PR with:
+   - what changed
+   - why it changed
+   - how to test
+   - any data lineage + citations (if relevant)
+
+</details>
 
 ---
 
 ## ❓ FAQ
 
-### Who can use KFM? Is it free?
-Yes — KFM is designed for everyone and is intended to be free for public access. Some advanced API usage may require keys for monitoring, but public datasets are open by default.
+### Is KFM open-source?
+Yes — KFM is designed as an open, collaborative platform.
 
-### What kinds of data are included?
-KFM integrates:
-- Environmental (weather, water, land cover)
-- Infrastructure (roads, utilities, broadband)
-- Socio-economic (census, indicators)
-- Public safety and alerting (where appropriate)
+### Is KFM “just a GIS portal”?
+No. KFM is a full pipeline–catalog–database–API–UI system with governance, provenance, and reproducibility built in.
 
-### Dashboards vs Open Data Portal — what’s the difference?
-- **Dashboards** = visual exploration (maps + charts + filters)
-- **Open Data Portal** = dataset discovery + downloads + API endpoints
-
-### Is KFM open source?
-Yes. Contributions can include code, docs, dataset suggestions, dashboard feedback, and tooling improvements.
+### How does KFM ensure trust?
+Provenance-first design: traceable sources, metadata standards, version control, and policy enforcement.
 
 ---
 
 ## 💬 Support
 
-Need help?
-
-- 🧾 Check the docs in the repo (if present)
-- 🐛 Open a GitHub Issue for bugs or feature requests
-- 💬 Join the community chat (Slack/Discord/forum link if available)
-- ✉️ Contact maintainers (project-specific contact info if available)
+- 🐛 Report issues via GitHub Issues
+- 💡 Propose enhancements via Discussions
+- 📚 Explore `docs/` for architecture and governance details
+- 🤝 Join the contributor community (links can be added here)
 
 ---
 
 ## 📜 License
 
-This project is licensed under the **MIT License**.
+MIT License (see `LICENSE`).
 
-> Note: Individual datasets may have their own licensing and usage policies. The MIT license applies to the KFM platform code.
+> Note: datasets may have their own licenses/terms; KFM’s governance model requires that licensing is documented and honored.
 
 ---
 
-<p align="center">Made with ❤️ by the Kansas Frontier Matrix team — unlocking data for a better Kansas.</p>
+<p align="center">Made with ❤️ for Kansas — an open, living atlas of data, maps, and stories.</p>
