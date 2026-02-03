@@ -74,14 +74,14 @@ These invariants are the “do not regress” rules that drive CI/CD, code revie
 ### 🧩 “Truth Path” flow
 ```mermaid
 flowchart LR
-  A[📥 Raw Sources\n(data/raw)] --> B[🏭 ETL Pipelines\n(pipelines/)]
-  B --> C[🧼 Processed Outputs\n(data/processed)]
-  C --> D[🏷️ Catalog Metadata\n(data/catalog: STAC/DCAT)]
-  D --> E[🧾 Provenance Logs\n(data/provenance: PROV)]
-  E --> F[🗃️ Runtime Stores\nPostGIS • Neo4j • Search • Object Storage]
-  F --> G[🌐 Governed API\n(FastAPI/GraphQL + OPA gates)]
-  G --> H[🗺️ Web UI\n(React + MapLibre/Cesium)]
-  G --> I[🤖 Focus Mode AI\n(retrieval + citations)]
+  A["📥 Raw Sources — (data/raw)"] --> B["🏭 ETL Pipelines — (pipelines/)"]
+  B --> C["🧼 Processed Outputs — (data/processed)"]
+  C --> D["🏷️ Catalog Metadata — (data/catalog: STAC/DCAT)"]
+  D --> E["🧾 Provenance Logs — (data/provenance: PROV)"]
+  E --> F["🗃️ Runtime Stores — PostGIS • Neo4j • Search • Object Storage"]
+  F --> G["🌐 Governed API — (FastAPI/GraphQL + OPA gates)"]
+  G --> H["🗺️ Web UI — (React + MapLibre/Cesium)"]
+  G --> I["🤖 Focus Mode AI — (retrieval + citations)"]
 ```
 
 ### 🧠 Clean layering (implementation tip)
