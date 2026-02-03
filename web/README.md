@@ -1,65 +1,43 @@
-# 🌾 Kansas Frontier Matrix (KFM) — Web Frontend (`web/`) 🗺️
+# 🌐 KFM Web UI (`/web`) — Map · Timeline · Story Nodes · Focus Mode
 
-![React](https://img.shields.io/badge/React-SPA-555?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-typed-555?logo=typescript)
-![MapLibre](https://img.shields.io/badge/MapLibre-2D%20maps-555)
-![Cesium](https://img.shields.io/badge/Cesium-3D%20globe-555)
-![API%20Only](https://img.shields.io/badge/API--only-no%20DB%20access-555)
-![Provenance](https://img.shields.io/badge/Provenance-first-555)
-![Contracts](https://img.shields.io/badge/Contract--first-555)
+![React](https://img.shields.io/badge/React-UI-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-typed-3178C6?logo=typescript&logoColor=white)
+![MapLibre](https://img.shields.io/badge/MapLibre-2D%20maps-000000?logo=mapbox&logoColor=white)
+![Cesium](https://img.shields.io/badge/Cesium-3D%20globe-2B2B2B?logo=cesium&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-dev%20stack-2496ED?logo=docker&logoColor=white)
 
-> [!IMPORTANT]
-> `web/` is **KFM’s user-facing interface**: a **React + TypeScript** app for map-based exploration that **only talks to the governed backend API** (REST/GraphQL) and **never touches databases or raw data directly**.  
-> This is a *hard system boundary* — breaking it breaks trust.
+> 🧭 **What this is:** the **user-facing** frontend for **Kansas Frontier Matrix (KFM)** — a provenance-first, evidence-driven “living atlas” of Kansas.  
+> 🧱 **Hard rule:** the UI **does not** talk to databases directly — it only consumes **governed API** endpoints.
 
 ---
 
-## 🧭 Quick links (repo map)
+## ✨ What lives in this folder?
 
-- 📘 **Master Guide (v13)**: `docs/MASTER_GUIDE_v13.md`
-- 🧱 **Architecture**: `docs/architecture/`
-- 🧾 **Governance / Ethics / Sovereignty**: `docs/governance/`
-- 🧩 **UI schemas**: `schemas/ui/`
-- 🧠 **API implementation (the only gateway)**: `src/server/`
-- 🗺️ **Story Nodes** (governed narratives): `docs/reports/story_nodes/`
-- 🧰 **Story Node template**: `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- 🔌 **API contract extension template**: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+`web/` is the **single source of truth** for the KFM client application:
+- **React + TypeScript** app (map-centric, narrative + analysis UI)
+- **2D map** via **MapLibre GL JS**
+- Optional/future **3D** via **CesiumJS**
+- UI primitives like **TimelineSlider**, **LayerControl**, **StoryPanel**, **SearchBar**
+- **Focus Mode** chat UI (AI assistant) — *UI calls backend endpoints; never calls the model directly*
 
 ---
 
-## ✨ What this UI is (and is not)
+## 🧭 Core UX (what the UI is built to do)
 
-### ✅ It *is*
-- A **map-first “living atlas” UI** for exploring Kansas-focused historical + geospatial knowledge: layers, timelines, stories, comparisons.
-- A **renderer**: it visualizes what the backend returns (tiles/GeoJSON, metadata, citations, story content).
-- The canonical home for web client code: **React components**, map state, layer configs, UI utilities, styling, accessibility.
-
-### ❌ It is *not*
-- A place to stash data files, “just this one query,” or bypass governance.
-- A data pipeline, a catalog writer, or a provenance generator.
-- A backdoor around restricted access or redaction rules.
+- 🗺️ **Explore map layers** (historic trails, hydrology, parcels, rasters, etc.)
+- 🕰️ **Scrub time** with a timeline slider (and “play” style animation)
+- 📚 **Story Nodes**: guided narrative steps that move the map/timeline
+- 🧵 **Scrollytelling (next-stage)**: scroll-driven narrative where map + timeline animate in sync
+- 🔎 **Search** datasets + evidence through the catalog/search API
+- 🧠 **Focus Mode**: ask questions, get answers *with provenance-linked context*
 
 ---
 
-## 🧱 KFM invariants this UI must never violate
-
-> [!WARNING]
-> These are non-negotiable “do not regress” rules. If a feature proposal breaks one, the feature proposal is flawed.
-
-- **Pipeline ordering is absolute**:  
-  `ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode`
-- **API boundary rule**: the UI **never** queries Neo4j / PostGIS / search indexes directly.
-- **Provenance-first**: nothing is displayed without a traceable origin (dataset/story/claim/citation).
-- **Evidence-first narrative**: Story Nodes & Focus Mode must not introduce unsourced claims.
-- **Sovereignty & classification propagation**: the UI must not “leak” sensitive data via zooming, caching, tooltips, or reconstruction.
-
----
-
-## 🧩 Architecture at a glance (where `web/` sits)
+## 🏗️ Architecture at a glance
 
 ```mermaid
 flowchart LR
-  subgraph Data["📦 Data & Metadata"]
+  subgraph Data
     A["Raw Sources"] --> B["ETL + Normalization"]
     B --> C["STAC Items + Collections"]
     C --> D["DCAT Dataset Views"]
@@ -67,7 +45,7 @@ flowchart LR
   end
 
   C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction/policy)"]
+  G --> H["API Layer (contracts + redaction)"]
   H --> I["Map UI — React · MapLibre · (optional) Cesium"]
   I --> J["Story Nodes (governed narratives)"]
   J --> K["Focus Mode (provenance-linked context bundle)"]
@@ -75,292 +53,213 @@ flowchart LR
 
 ---
 
-## 🧰 Tech stack & core UI concepts
+## 🚀 Quick start (recommended) — run full stack via Docker
 
-### Core stack 🧱
-- **React SPA** + **TypeScript** for type safety
-- **MapLibre GL JS** for interactive **2D** maps
-- **CesiumJS** for **3D** globe/terrain (typically as a 2D ↔ 3D toggle)
-- **Global state store** (Redux Toolkit or React Context) to keep map, timeline, layers, and story panels synchronized
+> If your repo supports Docker Compose, this is the fastest way to get **API + Web** running together.
 
-### First-class UI concepts 🗺️
-- 🧭 **Map Viewer**: pan/zoom, feature inspection, legend, layer toggles
-- 🕰️ **Time controls**: timeline slider, animations, time filtering, range selection
-- 🧩 **Layer registry**: a single source of truth for what layers exist and how they render
-- 📖 **Story Nodes**: narrative content linked to map states (evolving toward scrollytelling)
-- 🧠 **Focus Mode**: policy-governed AI assistant that returns *cited* answers (UI only renders what the API returns)
+1) From repo root, create your env file:
+- Copy `.env.example` → `.env`
+
+2) Start the stack:
+```bash
+docker compose up --build
+# or: docker-compose up --build
+```
+
+3) Open the app:
+- Web UI: `http://localhost:3000`
+- API docs (Swagger): `http://localhost:8000/docs`
 
 ---
 
-## 🚀 Quickstart (recommended): run via Docker Compose
+## 🧪 Web-only dev (without Docker)
 
-> [!NOTE]
-> KFM’s development workflow expects a compose stack with `api` + stores + `web` for hot reload and realistic end-to-end testing.
+> Use this when the API is already running elsewhere (local or remote).
 
-### 1) Start everything (from repo root)
 ```bash
-docker-compose up --build
-# (If your system uses the newer Docker plugin:)
-# docker compose up --build
+cd web
+npm install
+npm start
 ```
 
-Expected services (typical):
-- `api` → `http://localhost:8000`
-- `web` → `http://localhost:3000`
-- PostGIS (5432), Neo4j (7474/7687), plus optional policy/search tooling
-
-### 2) Open the UI + API docs
-- 🌐 Web UI: `http://localhost:3000`
-- 📚 API docs (Swagger): `http://localhost:8000/docs`
-- 🧠 GraphQL (if enabled): `http://localhost:8000/graphql`
-
-### 3) Hot reload expectations 🔥
-- Editing `web/src/*` should trigger React hot reload
-- If you change env vars: restart containers (common: `down` then `up`)
+Then point the UI at the API base URL via `REACT_APP_API_URL` (see below).
 
 ---
 
 ## 🔧 Configuration (environment variables)
 
-> [!TIP]
-> `.env.example` and `docker-compose.yml` are the source of truth for wiring.
+KFM uses a simple env setup so the **Web port** and **API base URL** are configurable.
 
-Typical variables you may see:
-- `FASTAPI_PORT=8000`
-- `WEB_PORT=3000`
-- `REACT_APP_API_URL=http://localhost:8000` (CRA-style prefix)
+| Variable | Scope | Meaning | Typical |
+|---|---:|---|---|
+| `WEB_PORT` | Web | Dev server port | `3000` |
+| `FASTAPI_PORT` | API | API port | `8000` |
+| `REACT_APP_API_URL` | Web | Base URL the UI calls for REST/GraphQL | `http://localhost:8000` |
+| `OLLAMA_MODEL` | AI/backend | Model name for Focus Mode (backend-side) | *(varies)* |
 
-> [!NOTE]
-> AI model configuration (Ollama/OpenAI/etc.) is typically **backend-owned**.  
-> The UI calls the API and renders policy-filtered results.
+> 🧠 **Note:** `OLLAMA_MODEL` is included here because the web UI exposes Focus Mode, but the **model runs server-side**.
 
 ---
 
-## 🗂️ Folder guide (typical layout)
+## 🗂️ Expected folder layout
+
+> Names can vary a bit depending on whether this is CRA/Vite/etc., but the structure below matches the intended architecture.
 
 ```text
 web/
-├─ public/                       🧷 Static assets (icons, manifest, robots.txt)
-└─ src/
-   ├─ components/                🧩 UI blocks (MapViewer, TimelineSlider, StoryPanel…)
-   ├─ features/                  🧱 Feature modules (layers, stories, focus-mode, search…)
-   ├─ state/                     🧠 Global store (map/timeline/layers/session)
-   ├─ services/                  🔌 API clients (REST/GraphQL), caching, request utils
-   ├─ layers/                    🗺️ Layer registry + legend helpers + style adapters
-   ├─ hooks/                     🪝 Reusable hooks (debounce, map events, hotkeys)
-   ├─ styles/                    🎨 Theme tokens + global styles
-   ├─ types/                     🧾 Shared TS types (API DTOs, layer models, citations)
-   ├─ pages/ (optional)          🧭 Route-level screens (if using React Router)
-   └─ App.tsx                    🏁 App shell / routing
+├─ 📄 README.md
+├─ 📄 package.json
+├─ 📁 public/
+└─ 📁 src/
+   ├─ 📁 components/
+   │  ├─ 🗺️ MapViewer/         # MapLibre (2D) + optional Cesium toggle
+   │  ├─ 🕰️ TimelineSlider/    # time scrubber + playback controls
+   │  ├─ 📚 StoryPanel/        # Story Nodes + (future) scrollytelling
+   │  ├─ 🔎 SearchBar/         # catalog + text search entry
+   │  └─ 🧩 LayerControl/      # layer toggles + legend
+   ├─ 🧠 store/                # global state (Redux/Context)
+   ├─ 🔌 services/             # API client wrappers (fetch/GraphQL)
+   ├─ 🎨 styles/               # CSS/Sass + theming
+   └─ ⚙️ App.tsx               # routing/layout shell (if routing is used)
 ```
 
 ---
 
-## 🗺️ Working with maps
+## 🧩 Key UI components
 
-### 2D (MapLibre GL JS) 🧭
-**Rule of thumb:** serve big data as tiles, small data as GeoJSON.
+### 🗺️ `MapViewer`
+- Initializes **MapLibre** map instance for 2D vector/raster rendering
+- Adds layers from:
+  - **Tile endpoints** (vector `.pbf` / raster `.png` or `.webp`) for large datasets
+  - **GeoJSON overlays** for smaller/simpler datasets
+- Optional toggle to **Cesium** for 3D globe/terrain mode
 
-- **Vector/raster tiles** (best for large datasets)
-- **GeoJSON overlays** (best for small, interactive overlays)
-- The UI styles layers and drives:
-  - legend entries
-  - layer toggles
-  - feature click/hover inspection
+### 🕰️ `TimelineSlider`
+- Controls current “time slice” (year/period)
+- Updates global state so **map layers** and **story state** stay synchronized
 
-**Example: vector tiles endpoint (illustrative)**  
-`/api/tiles/historic_trails/{z}/{x}/{y}.pbf`
+### 📚 `StoryPanel`
+- Renders **Story Nodes** (step-based narrative)
+- Supports “Next” actions that update map/timeline
+- Next-stage: **scroll-linked** narrative (“scrollytelling”)
 
-> [!IMPORTANT]
-> Don’t ship datasets in the frontend bundle.  
-> The UI should request tiles/GeoJSON/metadata from the API and render what it receives.
+### 🔎 `SearchBar`
+- Hooks into catalog search (`/api/v1/catalog/search`), plus full-text search if exposed
 
-### 3D (CesiumJS) 🌎
-Cesium is used for:
-- 3D globe + terrain viewing
-- Flyovers / tours / camera bookmarks (often story-driven)
-- Future-facing: 3D Tiles (meshes, point clouds, photogrammetry) as governed layers
-
----
-
-## 🧩 Layer registry (the UI contract that prevents “map drift”)
-
-> [!NOTE]
-> The KFM guide treats the layer registry as a **contract artifact** for the UI subsystem.
-
-A good registry makes layers:
-- discoverable (name/description/source)
-- renderable (style defaults + legend)
-- governable (classification, redaction hints, access requirements)
-- testable (stable IDs + predictable behaviors)
-
-**Suggested shape (TypeScript example)**
-```ts
-export type LayerSource =
-  | { kind: "vector-tiles"; urlTemplate: string }
-  | { kind: "raster-tiles"; urlTemplate: string }
-  | { kind: "geojson"; url: string };
-
-export type LayerLegendItem = {
-  label: string;
-  // keep legend semantic; UI can map to style tokens
-  symbol: "line" | "fill" | "circle" | "icon";
-};
-
-export type KfmLayer = {
-  id: string;                     // stable ID (contract)
-  title: string;
-  description?: string;
-  source: LayerSource;
-  legend?: LayerLegendItem[];
-  minZoom?: number;
-  maxZoom?: number;
-  supportsTime?: boolean;
-  classification?: "public" | "restricted" | "sensitive";
-};
-```
+### 🧩 `LayerControl`
+- Toggles layers on/off and manages legend/symbology
 
 ---
 
-## 🕰️ Timeline, time filtering, and “time as a first-class dimension”
+## 🔌 API integration (what the UI expects)
 
-KFM is explicitly designed for time-oriented exploration:
-- Timeline slider updates what’s drawn
-- Animations can play through years/periods
-- Stories can “snap” time and map state together
+The frontend consumes **governed API endpoints** for:
+- 📦 **Dataset metadata** (DCAT summary + asset links)
+- 🧭 **Catalog search** (keyword + bbox + time range)
+- 🧱 **Tiles** (vector/raster) for map rendering
+- 🧠 **Focus Mode** query endpoint (AI assistant)
 
-**Design patterns worth using**:
-- **Dynamic queries**: map updates live as the user scrubs time (debounce for performance).
-- **Brushing & linking**: selecting a time range highlights matching map features and charts.
-- **Focus + context**: show overview + zoomed window for long time spans (e.g., 1800–2020).
-
----
-
-## 📖 Story Nodes & scrollytelling
-
-Story Nodes link narrative content with map states:
-- “Next”/“Previous” steps can update layers, camera, and time
-- Future evolution: **scroll-linked scrollytelling** (text scroll drives map/timeline)
-
-**Implementation note (planned pattern):**
-- Use the **Intersection Observer API** to trigger map/timeline changes as narrative sections enter the viewport.
+Examples of endpoints the UI may call:
+- `GET /api/v1/datasets/{id}`
+- `GET /api/v1/catalog/search`
+- `GET /api/v1/datasets/{id}/data?format=geojson&bbox=...`
+- `GET /tiles/{layer}/{z}/{x}/{y}.pbf`
+- `GET /tiles/{layer}/{z}/{x}/{y}.png`
 
 ---
 
-## 🧠 Focus Mode (AI assistant) — UI responsibilities
+## 🧠 Focus Mode (AI assistant) — UI contract
 
-Focus Mode is:
-- policy-governed
-- evidence-linked
-- citation-forward
+✅ The UI includes a Focus Mode chat interface.  
+✅ The UI calls backend endpoints such as `POST /focus-mode/query`.  
+🚫 The UI does *not* call the LLM runtime directly.
 
-### UI checklist ✅
-- Provide an input surface (question + optional context)
-- POST the question to the API (example: `POST /ai/query`)
-- Render the response **with citations** and clickable source affordances
-- Treat responses as **policy-filtered** output; never attempt to reconstruct redacted content
+This keeps the frontend “model-agnostic” and ensures governance + provenance rules stay enforced at the API boundary.
 
 ---
 
-## 🛡️ Security, governance, and “no leak” rules
+## ⚡ Performance & UX standards (map-heavy UI)
 
-> [!WARNING]
-> UI work can accidentally undermine governance via caching, tooltips, map zoom behavior, or dev shortcuts.
+Because map layers can be huge:
+- Prefer **tiled services** for large geometries/rasters
+- Use **progressive loading** and **generalization** (simplify when zoomed out)
+- Provide **visible feedback** during tile/layer loading (spinner/dimmer)
+- Keep interactions intuitive: clicking a list item should highlight/pan/zoom on the map, and vice versa
 
-Non-negotiables:
-- ✅ All data access routes through the API
-- ✅ No direct DB access (Neo4j/PostGIS/search)
-- ✅ No “hidden” packaged datasets inside the web bundle
-- ✅ Don’t cache sensitive data in LocalStorage/IndexedDB unless explicitly approved
-- ✅ Tooltips, downloads, and deep-zoom behavior must respect redaction/classification constraints
-- ✅ Prefer “fail closed” UI behavior if access is unclear (don’t guess)
+Also: “standard UI foundations” matter — clear layouts, consistent patterns, and immediate feedback.
 
 ---
 
-## ♿ Accessibility & cartographic design 🎨
+## 🧱 Deployment notes (reverse proxy friendly)
 
-KFM’s UI must be usable in workshops and field devices:
-- responsive layouts
-- keyboard navigation
-- accessible contrast and clear focus states
-- legends and symbology that explain themselves
-
-### Cartography rules of thumb 🗺️
-- Use **figure–ground**: keep the basemap subtle; make the “theme layer” pop.
-- Always ship a **legend** with meaningful labels.
-- Provide **scale** (and north/heading indicator if applicable).
-- Prefer clear, minimal encodings; avoid “rainbow confusion” unless justified.
-- If a layer is qualitative vs quantitative, style appropriately (categories vs gradients).
-
----
-
-## 🧪 Testing expectations
-
-Testing varies by tooling, but the contract expectations don’t:
-- Component tests for critical UI building blocks
-- Integration tests for map + timeline + layer toggles
-- Contract awareness: don’t silently break API response expectations
-
-**Good targets:**
-- `LayerControl` toggles render the right sources
-- timeline changes request the right filters
-- Focus Mode renders citations correctly
-- restricted content is not displayed or cached
+A common pattern is serving the React bundle and proxying API routes via Nginx:
+- Proxy `/api/` to the API service (e.g. `localhost:8000/api/`)
+- Similarly proxy `/graphql` and Focus Mode endpoints
+- Configure compression/caching for static assets
+- Ensure CORS is configured correctly if the UI and API are on different origins
 
 ---
 
 ## 🧯 Troubleshooting
 
-<details>
-<summary><strong>Port conflicts</strong> (Postgres 5432, Neo4j 7474/7687, API 8000, Web 3000)</summary>
+### The UI loads but shows no data
+- Confirm `REACT_APP_API_URL` points to the running API
+- Verify API is reachable (try: `http://localhost:8000/docs`)
+- Confirm dataset catalog endpoints are responding (`/api/v1/catalog/search`, `/api/v1/datasets/{id}`)
 
-Stop the conflicting local services or adjust compose port mappings / `.env`.
-</details>
+### Port already in use
+- Adjust `WEB_PORT` / `FASTAPI_PORT` and restart
+- Watch for conflicts around common ports like `8000` and `3000`
 
-<details>
-<summary><strong>Web container not hot reloading</strong></summary>
-
-Common cause: volume mount issues (especially Windows/macOS).  
-Confirm `web/src` is mounted correctly in `docker-compose.yml`.
-</details>
-
-<details>
-<summary><strong>Rebuild after dependency changes</strong></summary>
-
-```bash
-docker-compose up --build
-# or
-docker-compose build
-```
-</details>
+### CORS errors
+- Ensure API allows the frontend origin via CORS config
+- If behind a reverse proxy, align paths (`/api`, `/graphql`, `/focus-mode/...`) so browser stays same-origin
 
 ---
 
-## 🤝 Contributing to the UI (the “KFM way”)
+## 🧭 Glossary (UI terms)
 
-> [!TIP]
-> Keep subsystem boundaries crisp. If it feels like UI needs DB access, it’s an API feature.
-
-### When adding a UI feature
-1) 🧩 Add/modify components in `web/src/components/` or a feature module in `web/src/features/`  
-2) 🔌 Route all data access through `web/src/services/` (API wrappers only)  
-3) 🧠 Update global state if it affects map viewport, time selection, layers, story focus  
-4) 🗺️ Update the **layer registry** if you introduced/modified a layer  
-5) ♿ Run an accessibility pass for any new interactive UI  
-6) 🧪 Add or update tests (especially for contract-ish behavior)  
-7) 🛡️ Verify governance: no leaks, no bypasses, no hidden data
-
-### If you need a new API endpoint
-Use the template: `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`  
-(Contracts are first-class artifacts.)
+- **Story Node** 🧾: a governed narrative artifact that is machine-ingestible and provenance-linked.
+- **Focus Mode** 🧠: an interactive map-and-narrative experience powered by provenance-linked evidence (AI is constrained by policy + evidence).
 
 ---
 
-## 📚 References & further reading 📚
+<details>
+<summary>📚 Grounding (project-file references used to write this README)</summary>
 
-- 📘 `docs/MASTER_GUIDE_v13.md` — canonical pipeline & subsystem contracts
-- 🧾 `docs/architecture/` — system design docs
-- 🧠 `src/server/` — the governed API boundary
-- 🗺️ `docs/reports/story_nodes/` — governed narrative content
-- 🎨 *Making Maps: A Visual Guide to Map Design for GIS* — cartographic design principles
-- 🕰️ *Visualization of Time-Oriented Data* — timeline interaction patterns (focus+context, brushing/linking)
+- KFM is provenance-first; UI never talks to DB directly; Focus Mode constrained by policy.  
+   [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+- `web/` is React/TypeScript and includes core components (MapViewer, TimelineSlider, StoryPanel, SearchBar, LayerControl) and global state.  
+   [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+- State management + routing expectations; services/utilities; styling; MapLibre + Cesium details.  
+   [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
+   [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+- Focus Mode UI calls backend endpoint (e.g. `/focus-mode/query`); API orchestrates retrieval + Ollama.  
+   [oai_citation:4‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+- API dataset/catalog/tile endpoints consumed by the UI.  
+   [oai_citation:5‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+- Docker dev setup: ports and Swagger docs at `localhost:8000/docs`.  
+   [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+- Env vars: `FASTAPI_PORT`, `WEB_PORT`, `REACT_APP_API_URL`, `OLLAMA_MODEL`.  
+   [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+- “Scrollytelling” roadmap: scroll-linked story where map/timeline animate in sync.  
+   [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+- v13 invariants: API boundary rule; pipeline ordering; UI must not query graph/DB directly.  
+   [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+- Map library choices & timeline slider concept (MapLibre/Leaflet, Cesium future).  
+   [oai_citation:10‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-ShqHKgjxCS9UT9vbcxDNzA)
+
+- UX foundations (usability + feedback) and map-UI performance strategies.  
+   [oai_citation:11‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
+   [oai_citation:12‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+</details>
