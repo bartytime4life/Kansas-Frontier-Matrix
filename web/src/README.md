@@ -67,32 +67,33 @@ If you’re new here, start by locating:
 <summary><b>📁 Click to expand a clean, scalable layout</b></summary>
 
 ```text
-web/src/
-  App.tsx
-  main.tsx | index.tsx
-  routes/                 🧭 route definitions (if multi-page)
-  components/             🧱 reusable UI building blocks
-    MapViewer/            🗺️ MapLibre + Cesium adapter + interactions
-    TimelineSlider/       ⏳ time controls (scrub/play)
-    LayerControl/         🧩 layer toggles + legend + source info
-    StoryPanel/           📚 story node renderer + map linking
-    FocusMode/            🤖 chat UI + citation rendering
-    SearchBar/            🔎 catalog/search UI
-  features/               🧠 “vertical slices” (optional, great for scaling)
-    catalog/
-    stories/
-    focusMode/
-    analytics/
-  layers/                 🧾 layer registry + style + metadata bindings
-  state/                  🧠 global store (Redux Toolkit / Context)
-    slices/
-    selectors/
-  services/               🌐 API clients (REST/GraphQL), auth, telemetry
-  hooks/                  🪝 shared hooks (debounce, viewport sync, etc.)
-  styles/                 🎨 global styles, tokens, theming
-  types/                  🧾 shared TS types (GeoJSON, catalog DTOs, etc.)
-  utils/                  🧰 helpers (formatting, guards, parsing)
-  assets/                 🖼️ icons, images (small + UI only)
+web/
+└─ 📁 src/
+   ├─ ⚛️ App.tsx
+   ├─ ⚡ main.tsx | index.tsx
+   ├─ 📁 routes/                 # 🧭 route definitions (if multi-page)
+   ├─ 📁 components/             # 🧱 reusable UI building blocks
+   │  ├─ 📁 MapViewer/            # 🗺️ MapLibre + Cesium adapter + interactions
+   │  ├─ 📁 TimelineSlider/       # ⏳ time controls (scrub/play)
+   │  ├─ 📁 LayerControl/         # 🧩 layer toggles + legend + source info
+   │  ├─ 📁 StoryPanel/           # 📚 story node renderer + map linking
+   │  ├─ 📁 FocusMode/            # 🤖 chat UI + citation rendering
+   │  └─ 📁 SearchBar/            # 🔎 catalog/search UI
+   ├─ 📁 features/               # 🧠 “vertical slices” (optional, great for scaling)
+   │  ├─ 📁 catalog/
+   │  ├─ 📁 stories/
+   │  ├─ 📁 focusMode/
+   │  └─ 📁 analytics/
+   ├─ 📁 layers/                 # 🧾 layer registry + style + metadata bindings
+   ├─ 📁 state/                  # 🧠 global store (Redux Toolkit / Context)
+   │  ├─ 📁 slices/
+   │  └─ 📁 selectors/
+   ├─ 📁 services/               # 🌐 API clients (REST/GraphQL), auth, telemetry
+   ├─ 📁 hooks/                  # 🪝 shared hooks (debounce, viewport sync, etc.)
+   ├─ 📁 styles/                 # 🎨 global styles, tokens, theming
+   ├─ 📁 types/                  # 🧾 shared TS types (GeoJSON, catalog DTOs, etc.)
+   ├─ 📁 utils/                  # 🧰 helpers (formatting, guards, parsing)
+   └─ 📁 assets/                 # 🖼️ icons, images (small + UI only)
 ```
 </details>
 
