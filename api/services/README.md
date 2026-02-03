@@ -1,292 +1,265 @@
-# 🧩 `api/services/` — Service (Use‑Case) Layer
+# 🧩 `api/services/` — Service Layer (Use-Cases)
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-informational?logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
-![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%26%20Layered-blueviolet)
-![Governance](https://img.shields.io/badge/Governance-Policy%20Enforced-critical)
-![Provenance](https://img.shields.io/badge/Provenance-First-success)
-![LLM](https://img.shields.io/badge/LLM-Ollama%20(Local)-orange)
+![Layer](https://img.shields.io/badge/layer-service%20%2F%20use--cases-blue)
+![API](https://img.shields.io/badge/api-REST%20%2B%20GraphQL-informational)
+![Data](https://img.shields.io/badge/data-PostGIS%20%7C%20Neo4j%20%7C%20Search%20%7C%20Object%20Store-orange)
+![Governance](https://img.shields.io/badge/governance-OPA%20policy%20gates-success)
+![AI](https://img.shields.io/badge/ai-Focus%20Mode%20%28RAG%29%20%2B%20Ollama-purple)
 
-> 🧠 **What this folder is:** the **business logic + orchestration layer** for the KFM backend.  
-> 🔒 **What it is *not*:** FastAPI route handlers, database code, or framework glue.
-
----
-
-## 📌 Why `services/` exists
-
-KFM follows a layered approach where the **UI never talks to databases directly**—everything is mediated by the backend API, which performs validation + governance checks. The service layer is where we implement **use-cases**: workflows, analysis routines, and “do the thing” logic.
-
-✅ Services should:
-- Orchestrate **domain entities/models**
-- Call **repository/adapters** via interfaces (not direct DB calls)
-- Apply **decision rules**, algorithms, and governance rules
-- Be **easy to test** (mock repositories)
-- Return **domain objects / DTOs**, not web-framework responses
+> **Purpose:** `api/services/` holds KFM’s *application services / use-cases* — the orchestration layer that turns domain intent into governed, traceable outcomes.  
+> Services sit **between** API routers/controllers and **adapters** (DBs, search, LLM, storage), enforcing the “truth path” and KFM’s evidence-first rules.
 
 ---
 
-## 🧭 Mental Model (Request Flow)
+## 📌 What belongs here?
+
+✅ **DO put in `api/services/`:**
+- Use-case orchestration (`CatalogService.search()`, `TilesService.get_tile()`, `FocusModeService.query()`)
+- Business rules and workflow sequencing
+- Evidence bundling and citation mapping (the “map behind the map” mindset)
+- Governance hooks: policy checks, provenance logging, allowlists/guardrails
+
+❌ **DO NOT put in `api/services/`:**
+- FastAPI routers/controllers (HTTP parsing/response formatting)
+- Raw SQL, Cypher, or vendor SDK calls (those belong in adapters/repos)
+- Framework globals (request objects, app state, etc.)
+- “Just a helper” utilities with no business meaning (put in `api/utils/`)
+
+---
+
+## 🧱 Architectural role (Clean Architecture fit)
+
+KFM follows a layered architecture where services implement the **Service / Use-Case Layer**:
+- **Domain layer** = core entities/models (framework-agnostic)
+- **Service layer (this folder)** = workflows + decision rules + orchestration
+- **Integration/Adapter layer** = PostGIS/Neo4j/search/object-store/LLM clients and repositories
+- **Infrastructure** = FastAPI app wiring, DI, routers, startup config
+
+**Rule of thumb:**  
+> **Services depend on interfaces (ports), not implementations.**  
+> This keeps use-cases testable and prevents DB/LLM details from leaking into business logic.
+
+---
+
+## 🗂️ Suggested folder map
+
+> (Actual filenames may vary; keep the *intent* consistent.)
+
+```text
+api/
+  services/ 🧩
+    README.md  ← you are here 📍
+
+    catalog_service.py        # DCAT/STAC dataset discovery & retrieval
+    query_service.py          # constrained ad-hoc query interface (allowlisted)
+    tiles_service.py          # vector/raster tile orchestration
+    graph_service.py          # graph/relationship use-cases (GraphQL resolvers call here)
+    focus_mode_service.py     # RAG pipeline orchestration (Prompt Gate → Retrieval → LLM → Policy)
+    provenance_service.py     # provenance ledger logging + citation maps
+    policy_service.py         # OPA wrapper (authorization + content/policy checks)
+
+  adapters/ 🔌                # PostGIS/Neo4j/Search/Ollama/Object-store implementations
+  domain/ 🧬                  # Pydantic/dataclass domain models (no I/O)
+  routers/ 🌐                 # FastAPI routers/controllers
+```
+
+---
+
+## 🧠 Service design principles
+
+### 1) Evidence-first by default 🧾
+Services should make it *easy* to do the right thing:
+- Prefer return types that include **data + evidence metadata**
+- Keep “citation mapping” close to the logic that selects evidence
+- If evidence is missing, fail safely (or return “insufficient evidence”)
+
+### 2) Governed access (policy gates) 🛡️
+Every service that exposes data should:
+- Validate inputs (bbox, time range, query params)
+- Enforce allowlists (tables, layers, fields, datasets)
+- Run authorization/policy checks (OPA or policy module)
+
+### 3) Traceability (provenance logging) 🧷
+Services that produce user-visible outputs should log:
+- Request context (user/role, map context, time filters)
+- The exact datasets/documents used
+- The transformation steps (if any)
+- Output IDs + citations map
+
+### 4) Keep services stateless ♻️
+- No hidden caches unless explicit and documented
+- Prefer pure functions + injected dependencies
+- Make operations idempotent where possible
+
+---
+
+## 📚 “Service catalog” (what we expect to find here)
+
+| Service | What it owns 🧩 | Typical callers 🌐 | Notes |
+|---|---|---|---|
+| `CatalogService` | Dataset metadata, discovery, dataset asset links | `/api/v1/datasets/*`, `/api/v1/catalog/search` | Returns DCAT/STAC summaries + links |
+| `QueryService` | Constrained “power user” querying | `/api/v1/query` | Must be allowlisted + logged |
+| `TilesService` | Tile orchestration + layer gating | `/tiles/{layer}/{z}/{x}/{y}.*` | Keeps map clients on the same tile “well” |
+| `GraphService` | Relationship-driven use-cases | `/graphql` resolvers | Often joins Neo4j + PostGIS |
+| `FocusModeService` | RAG orchestration for Focus Mode | `/focus-mode/query` | Prompt Gate → retrieval → LLM → policy → citations |
+| `PolicyService` | OPA integration + content rules | called by all services | Centralize policy logic here |
+| `ProvenanceService` | Immutable audit + citation maps | called by key services | “No provenance, no publish” |
+
+---
+
+## 🔍 Focus Mode (RAG) service workflow
+
+This is the *canonical* AI-related service orchestration pattern.
 
 ```mermaid
 flowchart LR
-  UI[🖥️ Web UI] --> R[🧰 FastAPI Routes / GraphQL Resolvers]
-  R --> S[🧩 Services (Use‑Cases)]
-  S -->|interfaces| A[🔌 Adapters / Repositories]
-  A --> P[(🗺️ PostGIS)]
-  A --> N[(🕸️ Neo4j)]
-  A --> E[(🔎 Search Index)]
-  A --> X[(🌐 External APIs)]
-  S --> G[🛡️ Policy / Governance Checks]
-  S --> V[🧾 Provenance + Audit Logs]
+  A[User question 🗨️] --> B[Prompt Gate 🧼]
+  B --> C[Hybrid Retrieval 🔎\nNeo4j + PostGIS + Full-text + Vector]
+  C --> D[Evidence Bundle 📦\nnumbered sources + IDs]
+  D --> E[LLM Generate 🤖\n(Ollama)]
+  E --> F[Policy Check 🛡️\n(OPA rules)]
+  F --> G[Response + Citation Map 🧾]
+  G --> H[Provenance Log 🧷\n(question, sources, model, prompt ver)]
 ```
 
----
-
-## 🗂️ Suggested Layout
-
-> Your exact files may vary — this is the **recommended convention**.
-
-```text
-📁 api/
-  📁 routes/                # Thin controllers (HTTP)
-  📁 graphql/               # Optional resolvers/schema
-  📁 models/ or domain/     # Pydantic/domain entities (lingua franca)
-  📁 repositories/          # Interfaces + implementations (or adapters/)
-  📁 db/                    # Database clients (PostGIS, Neo4j, etc.)
-  📁 services/              # ✅ You are here
-    📄 analysis_service.py
-    📄 story_service.py
-    📄 search_service.py
-    📁 ai/
-      📄 ai_query_service.py
-    📄 __init__.py
-```
+### Implementation notes (service-level)
+- Keep retrieval *compact and high-signal* (snippets, not whole documents).
+- Ensure output contains required citation markers (e.g., `[1]`, `[2]`) before returning.
+- If policy fails (missing citations, sensitive content, role mismatch), return a governed fallback.
 
 ---
 
-## ✅ Service Design Rules (The “Commandments”)
+## 🧪 Testing expectations
 
-### 1) Keep services framework‑agnostic 🧼
-- ✅ OK: pure Python + domain models
-- ❌ Avoid: importing `fastapi.Request`, `Depends`, router objects, response classes
+### ✅ Unit tests (fast)
+- Services tested with **fake repositories/adapters**
+- Assert:
+  - policy hooks are called
+  - allowlists enforce correctly
+  - provenance is emitted on successful flows
+  - “insufficient evidence” behavior is consistent
 
-### 2) No direct DB calls from services 🚫🗄️
-Services should never know whether data came from:
-- PostGIS
-- Neo4j
-- CSV / file pipeline output
-- External API
+### 🔧 Integration tests (real deps)
+- Adapter-level tests against PostGIS/Neo4j/search/ollama containers (compose profile)
+- Golden tests for:
+  - tile generation contract (headers/content-type)
+  - query constraints (blocked tables/columns)
+  - GraphQL resolver consistency
 
-Instead, they call **interfaces** (repositories/adapters) and operate on **domain objects**.
-
-### 3) Prefer dependency injection (constructor or explicit params) 🧩
-Pass repositories/adapters into services:
-- Constructor injection for long‑lived services
-- Function arguments for simpler use-cases
-
-### 4) Split “Queries” vs “Commands” ⚖️
-- **Query**: read/aggregate/search → returns data
-- **Command**: create/update/delete → returns result + writes provenance/audit trails
-
-### 5) Provenance isn’t optional 🧾
-If a service produces:
-- an analysis output,
-- an AI answer,
-- a generated artifact,
-
-…it should also produce/trigger whatever logging is required for provenance & auditability.
-
-### 6) Fail closed by default 🛑
-When policy checks fail:
-- return a safe refusal / sanitized result
-- don’t “best effort” leak restricted content
+### 📜 Contract tests
+- Ensure service return shapes remain stable for routers/controllers.
 
 ---
 
-## 🧪 Testing Expectations
+## 🧯 Error handling contract
 
-Services are intended to be highly testable.
+Keep a consistent pattern so controllers can map to HTTP cleanly.
 
-### Unit tests (fast + pure) ✅
-- Mock repository interfaces
-- Provide synthetic domain objects
-- Validate:
-  - correct calculations
-  - decision rules
-  - policy outcomes (allow/deny/mask)
+**Recommended:**
+- Define service exceptions with:
+  - `code` (stable string)
+  - `message` (safe for users)
+  - optional `details` (internal)
+- Avoid leaking raw DB/LLM errors upward.
 
-### Integration tests (endpoints) 🔗
-- Use FastAPI test client at the route layer
-- Optionally spin up ephemeral DB(s) for realistic queries
-
----
-
-## 🧰 Common Service Patterns
-
-### Pattern A — Thin service function (simple use-case)
-```python
-def get_story_node(story_repo, story_id: str):
-    node = story_repo.get_story_node(story_id)
-    if not node:
-        raise ValueError("Story node not found")
-    return node
-```
-
-### Pattern B — Service class (stateful dependencies + workflows)
-```python
-class StoryService:
-    def __init__(self, story_repo, graph_repo, policy):
-        self.story_repo = story_repo
-        self.graph_repo = graph_repo
-        self.policy = policy
-
-    def get_story_with_related(self, user, story_id: str):
-        self.policy.check_access(user=user, resource_id=story_id)
-        story = self.story_repo.get_story_node(story_id)
-        related = self.graph_repo.get_related_events(story_id)
-        return {"story": story, "related": related}
-```
+Example patterns:
+- `NotFoundError("dataset_not_found")`
+- `PolicyDeniedError("not_authorized")`
+- `ValidationError("invalid_bbox")`
+- `EvidenceError("no_source_no_answer")`
 
 ---
 
-## 🌾 Example Use‑Case: `DroughtAnalysisService`
-
-This is the archetype for analytic services:
-- Pull domain records via repositories (rainfall, yield, etc.)
-- Compute a result (drought impact summary)
-- Return a clean model/summary
+## 🧰 Example service skeleton (Python)
 
 ```python
-class DroughtAnalysisService:
-    def __init__(self, rainfall_repo, yield_repo):
-        self.rainfall_repo = rainfall_repo
-        self.yield_repo = yield_repo
+from dataclasses import dataclass
+from typing import Protocol
 
-    def drought_report(self, year_range: tuple[int, int]):
-        rainfall = self.rainfall_repo.get_records(year_range)
-        yields = self.yield_repo.get_records(year_range)
+class DatasetRepo(Protocol):
+    async def get_dataset(self, dataset_id: str) -> dict: ...
+    async def search(self, *, q: str | None, bbox=None, time=None) -> list[dict]: ...
 
-        # 🔬 Domain logic here (compute drought index, correlate yield drop, etc.)
-        report = compute_drought_impact(rainfall, yields)
+class Policy(Protocol):
+    async def assert_allowed(self, *, actor, action: str, resource: dict) -> None: ...
 
-        return report
+class Provenance(Protocol):
+    async def log(self, *, actor, action: str, inputs: dict, outputs: dict) -> None: ...
+
+@dataclass
+class CatalogService:
+    repo: DatasetRepo
+    policy: Policy
+    prov: Provenance
+
+    async def get_dataset(self, *, actor, dataset_id: str) -> dict:
+        ds = await self.repo.get_dataset(dataset_id)
+        await self.policy.assert_allowed(actor=actor, action="datasets:read", resource=ds)
+        await self.prov.log(
+            actor=actor,
+            action="datasets:read",
+            inputs={"dataset_id": dataset_id},
+            outputs={"dataset_id": dataset_id},
+        )
+        return ds
 ```
 
 ---
 
-## 🤖 AI Services: Focus Mode + Local LLM (Ollama)
+## ➕ Adding a new service (checklist)
 
-KFM’s **Focus Mode** is designed to run a **local LLM via Ollama**, with governance:
-- AI only uses **approved tools/APIs**
-- AI must provide **citations** for factual claims
-- Output is run through a **policy engine** before returning
-- Typical backend endpoint shape: `POST /ai/query`
+1. **Name the use-case** 🎯  
+   Example: `WaterWellsAnalysisService` vs `utils_wells.py`
 
-### Recommended service split
-- `AiQueryService`: orchestration + policy + provenance
-- `RetrievalService`: semantic search / “search database” tooling
-- `CitationService`: normalizes and attaches citations
-- `PolicyService`: allow/deny/sanitize decisions
+2. **Define the inputs/outputs** 🧬  
+   Prefer domain models or small typed DTOs.
 
-```python
-class AiQueryService:
-    def __init__(self, llm_client, retrieval, policy, provenance, citation):
-        self.llm = llm_client
-        self.retrieval = retrieval
-        self.policy = policy
-        self.provenance = provenance
-        self.citation = citation
+3. **Create ports (interfaces)** 🔌  
+   Repositories/clients your service needs (PostGIS, Neo4j, search, object store).
 
-    def answer(self, user, question: str):
-        # 1) Pre-check question (fail closed)
-        self.policy.precheck_ai_question(user=user, question=question)
+4. **Write the service logic** 🧩  
+   Keep DB/SDK details out.
 
-        # 2) Retrieve grounded context (safe tools only)
-        snippets = self.retrieval.fetch_context(question)
+5. **Wire dependencies** 🧷  
+   Add DI bindings so routers can construct the service.
 
-        # 3) Ask local LLM (Ollama) for answer + citations
-        raw = self.llm.generate(question=question, context=snippets)
+6. **Enforce governance** 🛡️  
+   Policy checks + allowlists + provenance logging.
 
-        # 4) Attach/normalize citations + enforce policy on final answer
-        answered = self.citation.attach(raw, snippets)
-        self.policy.postcheck_ai_answer(user=user, answer=answered)
+7. **Add tests** ✅  
+   Unit tests first, then integration tests if needed.
 
-        # 5) Record provenance / audit trail
-        self.provenance.record_ai_interaction(user=user, question=question, answer=answered)
-
-        return answered
-```
-
-> ✨ Design goal: AI isn’t an oracle — it “shows its work” by retrieving data and citing it.
+8. **Document** 📝  
+   Update this README and any domain README that applies.
 
 ---
 
-## 🧩 How Routes Should Use Services
+## 🧭 Operational notes (dev + prod)
 
-Routes/controllers should be *thin*:
-- parse & validate inputs
-- call service
-- serialize outputs
+### Local dev via containers 🐳
+The broader KFM stack is designed to run with Docker Compose (API + PostGIS + Neo4j + web + optional OPA/Ollama).  
+Services should assume dependencies are reachable via container DNS names (e.g., `db`, `graph`, `ollama`) when running in compose.
 
-### REST
-- Swagger UI typically lives at: `/docs`
-
-### GraphQL (optional)
-Resolvers should call the **same services** as REST to avoid duplicating business logic.
+### Scalability 📈
+- Keep services stateless so the API layer can scale horizontally.
+- Expensive operations should be cached *only if governed* (cache keys must include policy context).
 
 ---
 
-## 🧱 Adding a New Service (Checklist)
+## 🔗 Related docs (repo pointers)
 
-1. **Name it by use-case**: `parcel_service.py`, `analysis_service.py`, `ai_query_service.py` 🏷️  
-2. Define/confirm the **domain model** you’ll return (`api/models` or `api/domain`) 🧬  
-3. Add or reuse **repository interfaces** (no direct DB calls) 🔌  
-4. Implement service logic (pure, deterministic where possible) 🧠  
-5. Add policy hooks (pre/post checks) 🛡️  
-6. Add provenance hooks if outputs must be traceable 🧾  
-7. Write unit tests with mocked repos ✅  
-8. Wire it into routes/resolvers with DI 🧰  
+> These are the docs that define system-level expectations for the service layer:
+- `docs/architecture/system_overview.md` (truth path + API role)
+- `docs/architecture/ai/AI_SYSTEM_OVERVIEW.md` (AI boundaries)
+- `docs/architecture/ai/OLLAMA_INTEGRATION.md` (Focus Mode RAG pipeline)
+- `pipelines/README.md` (data lifecycle + provenance artifacts)
 
 ---
 
-## 🧨 Common Pitfalls (Avoid These)
+## 🧼 Philosophy recap
 
-- ❌ Service imports FastAPI objects (`Request`, `Depends`, `HTTPException`)
-- ❌ SQL/Cypher query strings embedded in service methods
-- ❌ Returning raw DB rows or ORM models instead of domain models
-- ❌ Skipping policy checks because “it’s just internal”
-- ❌ Generating AI answers without citations / provenance
+- **One truth path:** Raw → Processed → Catalog → Databases → API → UI/AI  
+- **No backdoors:** UIs don’t query DBs directly; services are the controlled gateway.  
+- **No source, no answer:** If we can’t cite it, we shouldn’t claim it.
 
----
-
-## 🔗 Handy Navigation
-
-- 📁 `api/routes/` — HTTP endpoints (thin controllers)
-- 📁 `api/repositories/` / `api/adapters/` — external integration surface
-- 📁 `api/db/` — PostGIS/Neo4j clients and sessions
-- 📁 `policy/` — policy-as-code (OPA/Rego), governance rules
-
----
-
-## 🧭 Service Quality Bar (Quick Scorecard)
-
-| Requirement | Must? | Notes |
-|---|:---:|---|
-| Pure business logic (no framework) | ✅ | Keep route handlers thin |
-| Uses repository interfaces | ✅ | No direct DB access |
-| Easy to unit test | ✅ | Mock repos |
-| Policy enforcement | ✅ | Fail closed |
-| Provenance hooks where needed | ✅ | Especially for AI + derived artifacts |
-| Returns domain models / DTOs | ✅ | Stable contracts |
-
----
-
-<details>
-  <summary>📦 “What belongs in services vs repositories vs routes?”</summary>
-
-- **Routes**: request/response boundary (HTTP), validation, status codes  
-- **Services**: orchestration + business rules + workflows  
-- **Repositories/Adapters**: “how to fetch/store data” (PostGIS/Neo4j/external APIs)  
-- **Domain Models**: shared language across all layers  
-
-</details>
+✨ If you keep services clean, everything else becomes easier: testing, governance, scaling, and trust.
