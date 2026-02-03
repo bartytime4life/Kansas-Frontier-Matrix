@@ -1,235 +1,211 @@
-# 📦 `data/external/` — External Data Staging (Local-Only)
+# 📦 `data/external/` — External Data Staging (Bring-Your-Own-Data)
 
-![Scope](https://img.shields.io/badge/scope-data%2Fexternal-blue)
-![Tracking](https://img.shields.io/badge/tracking-local--only-lightgrey)
-![Rule](https://img.shields.io/badge/rule-provenance--first-success)
+![Data Layer](https://img.shields.io/badge/Data-Layer%3A%20External-6f42c1?style=for-the-badge)
+![Policy](https://img.shields.io/badge/Policy-Provenance--First-success?style=for-the-badge)
+![Repo Hygiene](https://img.shields.io/badge/Repo-Hygiene-important?style=for-the-badge)
 
-> [!IMPORTANT]
-> `data/external/` is a **staging area** for data that is **not yet publishable** (or may never be publishable) inside the version-controlled KFM data lifecycle.
->
-> **Nothing in here should be assumed “trusted,” “clean,” or “redistributable.”**  
-> If it becomes part of KFM, it must be promoted into the canonical pipeline (`data/raw → data/processed → catalog + provenance`) ✅
+> 🧭 **Purpose:** `data/external/` is a **local staging area** for datasets that **cannot** (or **should not**) live in Git — e.g., too large, license-restricted, or access-controlled.  
+> ✅ KFM still requires the **same documentation discipline**: metadata + provenance + reproducible fetch instructions.
 
 ---
 
-## 🧭 Why this folder exists
+## 🧠 How this fits the KFM data flow
 
-This directory exists to hold **external inputs** that are:
+KFM follows a strict, traceable sequence:
 
-- 🔒 **License-restricted / non-redistributable** (e.g., copyrighted scans, partner-only files)
-- 🧱 **Too large** or too volatile for git history (huge rasters, bulk exports, temporary drops)
-- 🧪 **Experimental** or **pre-QA** (needs cleaning, schema work, redaction, or validation)
-- 🧰 **Cache-like** (downloaded archives that pipelines unpack during transforms)
+➡️ **Raw → Processed → Catalog/Provenance → Database → API → UI**
 
-**Goal:** keep the repo clean + reproducible without forcing questionable data into version control.
-
----
-
-## ✅ What belongs here
-
-- Raw downloads / vendor drops / one-off exports (ZIP, TAR, GeoTIFF, SHP bundles, PDFs, etc.)
-- Temporary staging to support pipelines (e.g., you need to unpack + inspect before standardizing)
-- Files pending governance review (license unclear, sensitivity unclear, provenance incomplete)
-- Data that will be used **only to produce** derived, publishable outputs (after redaction & provenance)
+`data/external/` exists *alongside* that sequence as a **storage pressure valve**:
+- It holds **inputs** and **intermediate artifacts** that are sourced externally.
+- The **source of truth** remains:
+  - `data/raw/` for “commit-worthy” raw evidence
+  - `data/processed/` for curated outputs
+  - `data/catalog/` + `data/provenance/` for traceability and auditability
 
 ---
 
-## ❌ What does *not* belong here
+## ✅ What belongs here (and what does NOT)
 
-- 🚫 **Final** or **published** datasets that the platform serves
-- 🚫 Anything intended to be loaded directly into PostGIS / API without going through pipelines
-- 🚫 Secrets (API keys, credentials), private notes with sensitive identifiers, etc.
-- 🚫 “Mystery data” with no source, no date, no license, no contact
+### ✅ Good candidates for `data/external/`
+- 🛰️ **Huge rasters / imagery** (e.g., multi-GB GeoTIFF collections)
+- 🔐 **License-restricted datasets** (requires separate download agreement)
+- 🏛️ **Archive scans** (TIFF/PDF bundles too large for repo)
+- 🌐 **API exports** or **bulk pulls** that are reproducible but not commit-friendly
+- 🧪 **Working caches** used during pipeline runs (downloaded once; re-used locally)
 
-> [!TIP]
-> If the UI should ever show it, the API should ever serve it, or the graph should ever reference it — it **must** be promoted into the canonical lifecycle with metadata + provenance.
-
----
-
-## 🗺️ Canonical lifecycle (where “real” data lives)
-
-Once an external dataset is accepted into KFM, it **moves out of here** and follows the pipeline:
-
-```mermaid
-flowchart LR
-  X["data/external<br/>Untracked / restricted / staging"] --> R["data/raw<br/>Immutable source snapshots"]
-  R --> W["data/work<br/>Intermediate transforms (optional)"]
-  W --> P["data/processed<br/>Standardized outputs"]
-  P --> C["data/catalog<br/>STAC/DCAT discovery records"]
-  P --> V["data/provenance<br/>W3C PROV lineage"]
-  C --> G["Neo4j graph<br/>References catalog IDs"]
-  G --> A["API layer<br/>contracts + redaction"]
-  A --> U["UI<br/>maps + stories"]
-```
+### ❌ Do **NOT** put these here
+- 🔑 **Secrets / API keys / credentials** (use env vars + secret managers)
+- 🧬 **Processed outputs meant to ship** (those go in `data/processed/`)
+- 🧾 **Anything that should be reviewable in PR diff** (commit it properly)
+- 🧍 **Sensitive/PII** unless the project explicitly supports private deployments + governance
 
 ---
 
-## 🧱 Recommended folder layout
+## 🧷 Golden Rules (Non-Negotiables)
 
-Keep external data **organized by source and dataset** so we can audit + promote cleanly.
+1) 🧊 **Treat external data as immutable**  
+   Never “edit in place.” If something’s wrong, re-download or re-export.
+
+2) 🧾 **Everything must be reproducible**  
+   If someone can’t recreate your external files from:
+   - a manifest + checksums + script + documented source  
+   …then it doesn’t belong in the system.
+
+3) 🧭 **No data enters KFM undocumented**  
+   Even if the bytes aren’t committed, the dataset must have:
+   - **Metadata** (catalog record)
+   - **Provenance** (lineage: inputs → script → outputs)
+
+4) ⚖️ **Respect licensing & access restrictions**  
+   If the license forbids redistribution, only commit manifests/metadata and keep bytes external.
+
+---
+
+## 📁 Recommended folder layout
+
+> This layout is designed to keep things organized **by dataset ID** and make fetches repeatable.
 
 ```text
-data/external/
-├─ README.md                 # (this file) ✅ tracked
-├─ _cache/                   # downloads/unpacked scratch ❌ gitignored
-├─ _scratch/                 # experiments & throwaways ❌ gitignored
-└─ <provider>/               # e.g., usgs / noaa / partnerX
-   └─ <dataset_slug>/        # short, stable identifier
-      ├─ MANIFEST.yml        # metadata-only ✅ tracked (recommended)
-      ├─ LICENSE.txt         # if provided ✅ tracked (only if redistributable)
-      └─ <version_or_date>/  # YYYY-MM-DD or v1.2.3
-         └─ ...files...      # ❌ typically gitignored
+data/
+  external/
+    README.md
+    manifests/                 # ✅ committed: fetch recipes + checksums
+      <dataset_id>.yml
+    cache/                     # ❌ not committed: temporary downloads, partials
+    sources/                   # ❌ not committed: downloaded data organized by provider/topic
+      <provider_or_topic>/
+        <dataset_id>/
+          (files...)
 ```
-
-### Naming conventions ✍️
-- **provider**: lowercase (`usgs`, `noaa`, `kansas_gov`, `partner_x`)
-- **dataset_slug**: lowercase + underscores (`nhd_flowlines`, `census_1900_tables`)
-- **version**: `YYYY-MM-DD` (download date) *or* `vX.Y.Z`
-- Avoid spaces. Keep paths boring. Boring = reliable. ✅
 
 ---
 
-## 🧾 `MANIFEST.yml` (required for anything serious)
+## 🧾 External dataset manifest (required)
 
-Even if the actual data stays untracked, we still need **reproducibility**.
+Create a manifest per dataset at:
 
-Create a `MANIFEST.yml` next to the dataset folder:
+✅ `data/external/manifests/<dataset_id>.yml`
 
+### Suggested schema
 ```yaml
-# data/external/<provider>/<dataset_slug>/MANIFEST.yml
-
-dataset_id: <provider>__<dataset_slug>
-title: "Human-friendly title"
-description: >
-  What this is, why we pulled it, and what we intend to produce from it.
-
+id: ks_usgs_water_daily_v1
+title: "USGS Water Daily Export (Kansas)"
+provider: "USGS"
 source:
-  provider: "<provider org/name>"
-  url: "<source landing page or download endpoint>"
-  citation: "Preferred citation text (if provided)"
-  retrieved_at: "YYYY-MM-DD"
-  contact: "<email or org contact (optional)>"
-
-license:
-  name: "<e.g., Public Domain / CC-BY-4.0 / Proprietary>"
-  redistributable: false
-  notes: "Any restrictions / attribution requirements / share-alike requirements"
-
-sensitivity:
-  access_level: "public | restricted | private"
-  rationale: "Why classified this way (CARE/safety/etc.)"
-  redaction_required: true
-  redaction_notes: "What needs to be removed/blurred/generalized"
-
+  type: "http"
+  url: "https://example.gov/dataset/export.zip"
+license: "public-domain-or-url"
+retrieval:
+  method: "pipelines/usgs_water/fetch.py"
+  notes: "Requires bbox + date range params"
 integrity:
-  checksums:
-    - path: "<relative path to file>"
-      algo: "sha256"
-      value: "<hash>"
-  expected_files:
-    - "<pattern or filename>"
-
-processing_intent:
-  target_domain: "<kfm domain module>"
-  planned_outputs:
-    - "data/processed/<domain>/<output_name>.geojson"
-    - "data/processed/<domain>/<output_name>.tif"
-  pipeline_entrypoint: "<pipelines/... script or command>"
-  notes: "Any assumptions, parameters, CRS notes, QA notes"
+  sha256: "<sha256-of-archive-or-primary-file>"
+  bytes: 123456789
+storage:
+  location: "data/external/sources/usgs/ks_usgs_water_daily_v1/"
+  git_tracked: false
+kfm:
+  raw_equivalent: "data/raw/usgs_water/"     # if a smaller canonical subset is committed
+  processed_outputs:
+    - "data/processed/hydrology/usgs_water_daily.parquet"
+  catalog_record: "data/catalog/ks_usgs_water_daily_v1.stac.json"
+  provenance_record: "data/provenance/ks_usgs_water_daily_v1.prov.json"
 ```
 
-> [!NOTE]
-> Keep manifests **non-secret**. If you must store credentials for fetching, use environment variables or secret managers — never commit keys.
+> 🧷 **Tip:** Store checksums for the **primary artifact** (zip/tar/geotiff) and optionally per-file for multi-asset bundles.
 
 ---
 
-## ✅ Promotion checklist (External → KFM)
+## 🛠️ Workflow: Adding a new external dataset
 
-Before moving anything from `data/external/` into `data/raw/` + `data/processed/`, confirm:
+### 1) Decide: `raw/` vs `external/`
+Use this quick test:
 
-### Legal / licensing 🧑‍⚖️
-- [ ] License is known and compatible with KFM’s intended use
-- [ ] Attribution / citation requirements are documented
-- [ ] Redistributability is explicitly determined (true/false)
+- ✅ Put it in `data/raw/` when:
+  - It’s small enough to version
+  - License allows redistribution
+  - It’s stable “evidence” you want forever
 
-### Provenance & traceability 🔎
-- [ ] Source URL (or archival reference) is captured
-- [ ] Retrieval date is captured
-- [ ] Checksums exist for source artifacts
+- ✅ Put it in `data/external/` when:
+  - It’s too large for repo norms
+  - License prohibits redistribution
+  - It requires authentication / gated access
+  - It’s generated via a reproducible export pipeline
 
-### Metadata completeness 🗂️
-- [ ] Spatial reference / CRS is known
-- [ ] Temporal coverage is documented (where applicable)
-- [ ] Field definitions / schema notes exist (even if rough)
+### 2) Add a fetch script (or reuse an existing one)
+- Put the fetch logic under `pipelines/<source>/` (preferred).
+- The script should:
+  - download/export
+  - write into `data/external/sources/...`
+  - compute SHA256
+  - update or validate the manifest
 
-### Governance & safety 🛡️
-- [ ] Sensitivity classification is set (public/restricted/private)
-- [ ] Redaction/generalization needs are identified
-- [ ] If culturally sensitive / sovereignty-related, a governance review is triggered
+### 3) Add catalog + provenance records
+Even if bytes are external, KFM expects:
+- 🧾 `data/catalog/` record (STAC/DCAT-style)
+- 🧬 `data/provenance/` record (lineage: source → fetch → transform → outputs)
 
-### Publishing requirements 📦
-- [ ] Raw snapshot is placed in `data/raw/<domain>/...` (immutable)
-- [ ] Processed output is placed in `data/processed/<domain>/...`
-- [ ] Catalog entries exist (STAC/DCAT as applicable)
-- [ ] PROV lineage record exists (pipeline run, agents, inputs, outputs, params)
-
----
-
-## ⚖️ Governance notes (FAIR + CARE)
-
-External data is where governance risk tends to start. Treat it accordingly:
-
-- 🧩 **FAIR**: don’t promote data without findability + metadata + reuse clarity  
-- 🪶 **CARE**: respect authority-to-control, sensitivity, and takedown/withdrawal realities  
-- 🔐 If data is restricted, ensure the *processed outputs* and API exposure are restricted too (redaction is not optional).
-
-> [!WARNING]
-> If you can’t answer **“Where did this come from, under what license, and who is accountable?”**  
-> it doesn’t graduate from `data/external/`.
+### 4) Produce *processed* outputs into `data/processed/`
+Pipelines should generate curated outputs that:
+- are standardized
+- are usable by database loaders / API endpoints
+- have stable identifiers
 
 ---
 
-## 🧪 Common workflows
+## 🧼 Git hygiene (recommended)
 
-<details>
-<summary><strong>1) New external dataset (pre-ingest)</strong></summary>
+✅ Only commit:
+- `README.md`
+- `manifests/**`
 
-1. Create folder: `data/external/<provider>/<dataset_slug>/`
-2. Add `MANIFEST.yml` (minimum: source, retrieved_at, license, sensitivity)
-3. Drop files into a dated version folder (usually gitignored)
-4. Run exploration/QA locally (don’t assume CRS, encoding, units)
-5. Decide: **discard**, **derive-only**, or **promote** into KFM lifecycle
+❌ Do not commit:
+- `sources/**`
+- `cache/**`
 
-</details>
+Suggested `.gitignore` (add in `data/external/.gitignore`):
+```gitignore
+# Ignore everything by default
+*
 
-<details>
-<summary><strong>2) Promote into KFM (publish)</strong></summary>
-
-1. Copy immutable snapshot into `data/raw/<domain>/...`
-2. Run deterministic pipeline to generate standardized outputs in `data/processed/<domain>/...`
-3. Generate catalog + provenance artifacts
-4. Commit processed + metadata + provenance and open PR  
-5. Ensure CI passes (missing license/metadata/provenance should block merges)
-
-</details>
+# Keep docs + manifests
+!README.md
+!manifests/
+!manifests/**
+!.gitignore
+```
 
 ---
 
 ## 🧯 Troubleshooting
 
-- **“I don’t know the license.”**  
-  → Keep it in `data/external/` until resolved. Add manifest notes + open a governance issue.
+### “My pipeline works locally but fails in CI”
+✅ Expected if your pipeline depends on `data/external/`.  
+CI environments often **do not** have access to gated data.
 
-- **“It’s too big to commit.”**  
-  → Keep raw artifacts external; commit **manifests + checksums + fetch instructions**. Promote only derived, small, or legally redistributable outputs.
+Fix patterns:
+- Provide a **tiny committed fixture** under `data/raw/fixtures/…`
+- Add a **mock mode** for CI
+- Separate “fetch” from “transform” so transform can run on fixtures
 
-- **“It contains sensitive locations/PII.”**  
-  → Do not publish raw. Plan redaction/generalization in the pipeline. Ensure restricted access policies.
+### “My external dataset changed upstream”
+If upstream is not stable:
+- Pin to a versioned release if possible
+- Capture **retrieval date**, **URL**, and **hash**
+- Consider storing a **snapshot** in an approved external bucket (S3/Drive/etc.)
+  - Commit only the pointer + checksum + governance notes
 
 ---
 
-## 🧩 TODOs for maintainers
+## 🔗 Related folders
 
-- [ ] Ensure `.gitignore` enforces “local-only” behavior for bulk files in this folder
-- [ ] Add a small “fetch helper” pattern for repeatable downloads (config-driven)
-- [ ] Add validation scripts for manifests (schema + required fields)
+- 📁 `data/raw/` — canonical raw evidence (when commit-friendly)
+- 📁 `data/processed/` — curated datasets used by the platform
+- 📁 `data/catalog/` — dataset metadata (STAC/DCAT)
+- 📁 `data/provenance/` — lineage logs (W3C PROV / custom)
+
+---
+
+## 🧭 One-line definition
+
+> `data/external/` is **where big or restricted inputs live**, while **documentation, metadata, and provenance still live in Git** ✨
