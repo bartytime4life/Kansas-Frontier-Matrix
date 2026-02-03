@@ -1,195 +1,218 @@
-# 🧪 API Test Suite (`api/tests/`)
+<!-- According to a document from 2026-02-03 -->
 
-![pytest](https://img.shields.io/badge/pytest-ready-blue) ![fastapi](https://img.shields.io/badge/FastAPI-tested-009688) ![governance](https://img.shields.io/badge/fail--closed-governance-critical-red)
+# 🧪 API Tests (KFM) — `api/tests/`
 
-Welcome to the **KFM API test suite** ✅  
-This folder is the home for **unit**, **integration**, and **contract-style** tests that keep the FastAPI backend reliable, reproducible, and safe-by-default.
+![Python](https://img.shields.io/badge/Python-3.x-blue)
+![pytest](https://img.shields.io/badge/pytest-test%20runner-brightgreen)
+![FastAPI](https://img.shields.io/badge/FastAPI-API%20server-teal)
+![Docker](https://img.shields.io/badge/Docker-Compose-informational)
+![OPA](https://img.shields.io/badge/OPA-Policy%20as%20Code-purple)
+
+> ✅ **Testing mantra:** **Evidence-first. Policy-gated. Reproducible.**  
+> 🧷 **No Source, No Answer** is a *feature*, not a suggestion.
 
 ---
 
-## 🎯 What these tests protect
+## 📚 What lives here?
 
-### ✅ Reliability & regressions
-- Endpoints keep returning the expected **status codes** and **response shapes**
-- Service-layer logic stays correct as models evolve
-- Query filters/pagination don’t silently break
-
-### 🔐 Governance & “fail-closed” behavior
-- If a policy/validation check fails, the API must **block** the action (not “best effort”)
-- Sensitive/special cases must return the **expected error** (403/422/400/etc.)
-- Changes that would weaken guardrails should be caught early
-
-### 🧾 Provenance-first mindset
-- Prefer deterministic tests and fixture-driven expectations
-- Keep test data small, explicit, and easy to audit
+This folder contains the **backend API test suite** for the Kansas Frontier Matrix (KFM) server:
+- REST endpoints (OpenAPI / Swagger)
+- GraphQL endpoint (if enabled)
+- “Focus Mode” AI endpoint (RAG pipeline + citations + policy checks)
+- Security & governance behaviors (RBAC / policy enforcement)
+- Integration behavior with core services (PostGIS, Neo4j, search, vector store, etc.)
 
 ---
 
 ## ⚡ Quickstart
 
-> Most common workflow: run tests **inside the API container**.
-
-### 🐳 Docker Compose (recommended)
-From the repo root:
-
+### 1) Bring up the dev stack 🐳
 ```bash
-# if the stack isn't already running
 docker-compose up -d
-
-# run all backend tests
-docker-compose exec api pytest
+# or
+docker compose up -d
 ```
 
-### 🧰 Helpful pytest commands
+### 2) Run the backend tests ✅
 ```bash
-# run a single test file
-docker-compose exec api pytest api/tests/test_health.py
-
-# run tests matching a substring
-docker-compose exec api pytest -k "datasets"
-
-# show prints/logs (useful when debugging)
-docker-compose exec api pytest -s
-
-# fail fast on first error
-docker-compose exec api pytest -x
+docker-compose exec api pytest
+# (some stacks name the service api-server)
+docker-compose exec api-server pytest
 ```
 
-> If your tests require databases (PostGIS/Neo4j), make sure the compose stack is up.
+### 3) Run policy checks (if you have Conftest) 🛡️
+```bash
+conftest test .
+# or target the repo policy directory, e.g.
+conftest test policy/
+```
+
+> 💡 Keep the compose stack running during development so integration tests can hit real services.
 
 ---
 
-## 🗂️ Recommended directory layout
+## 🧭 Test philosophy (KFM-specific)
 
-> Your repo may vary — this is a **suggested** structure that scales well.
+KFM isn’t a “basic CRUD API.” The backend includes an **AI-assisted RAG pipeline** and **policy enforcement** at runtime. That means our tests must validate not only correctness, but also **trust guarantees**:
+
+### 🔎 Core guarantees we test
+- **Citations exist** and match the required bracket format: `[1]`, `[2]`, …  
+- **Prompt injection is neutralized** (Prompt Gate behavior)
+- **Policy checks run** (OPA / Rego) and can deny unsafe or un-cited output
+- **Role-based access control** works for sensitive datasets
+- **Contracts don’t drift** (OpenAPI + response schemas)
+- **Provenance/audit hooks** are triggered where expected
+
+---
+
+## 🗂️ Recommended folder layout
+
+> Your exact structure may vary — but please keep *intent* clear.
 
 ```text
 api/tests/
-├── README.md                # 👈 you are here
-├── conftest.py              # 🧩 shared pytest fixtures
-├── unit/                    # ✅ fast, pure-python tests
-│   ├── test_services_*.py
-│   └── test_models_*.py
-├── integration/             # 🔌 API + DB/Adapters (TestClient + test DB)
-│   ├── test_routes_*.py
-│   └── test_authz_*.py
-├── contract/                # 📜 schema & contract checks (OpenAPI/GraphQL)
-│   ├── test_openapi_*.py
-│   └── test_graphql_*.py
-└── fixtures/                # 🧪 small JSON/GeoJSON/CSV fixtures
-    ├── datasets/
-    ├── stories/
-    └── graph/
+  README.md                👈 you are here
+  conftest.py              🧩 shared pytest fixtures
+  unit/                    🧪 fast tests (no network / no DB)
+  contract/                📜 OpenAPI + schema + response-shape tests
+  integration/             🧱 requires Docker services (PostGIS/Neo4j/etc.)
+  ai/                      🤖 Focus Mode + citation + policy gating tests
+  security/                🛡️ authn/authz + negative access tests
+  fixtures/                🧰 small deterministic datasets & payloads
 ```
 
 ---
 
-## 🧩 Fixtures & test data rules
+## 🧷 pytest markers (recommended)
 
-### ✅ DO
-- Keep fixtures **minimal** (small JSON/GeoJSON snippets)
-- Use factories/helpers to build valid Pydantic models quickly
-- Prefer **explicit** test setup over “magic” data generation
-- Use temp dirs (`tmp_path`) for any filesystem writes
+Use markers so CI can run fast-by-default:
 
-### ❌ DON’T
-- Don’t commit large datasets here (tests should stay fast ⚡)
-- Don’t include secrets, tokens, or any real sensitive data
-- Don’t mutate “raw” pipeline inputs (treat them as read-only evidence)
+- `unit` — pure logic, no IO  
+- `contract` — schema & endpoint shape  
+- `integration` — needs Docker services running  
+- `ai` — Focus Mode (may mock LLM by default)  
+- `slow` — big queries / heavier seeds
 
----
-
-## 🧪 Writing tests (practical patterns)
-
-### 1) Unit tests (fast, isolated)
-Use these for:
-- service-layer logic
-- parsing/validation helpers
-- domain rules
-- small transformers that don’t require a DB
-
-✅ Preferred traits:
-- no network
-- no DB (or mocked repository interfaces)
-- deterministic
-
----
-
-### 2) Integration tests (end-to-end-ish)
-Use these for:
-- router behavior (inputs/outputs)
-- dependency injection wiring
-- authorization + governance checks
-- DB adapters (PostGIS/Neo4j) using test fixtures
-
-Typical approach:
-- Load fixtures (or seed a test DB)
-- Call endpoints through **FastAPI TestClient**
-- Assert on the JSON + status code
-
----
-
-### 3) Contract tests (schemas must stay honest)
-Use these for:
-- OpenAPI schema invariants
-- GraphQL schema invariants (if enabled)
-- “Known input → known output contract” checks for critical endpoints
-
----
-
-## 🧭 Manual API exploration (great for debugging)
-Even with tests, it’s helpful to quickly poke the API:
-
-- Swagger UI: `http://localhost:8000/docs` 🧭  
-- GraphQL (if enabled): `http://localhost:8000/graphql` 🧬
-
----
-
-## 🧱 CI expectations (what will block your PR)
-
-Most repos run these checks automatically in CI:
-
-- ✅ **Backend tests** (`pytest`)
-- 🧹 Lint/format checks (e.g., `black --check`, `flake8`, etc.)
-- 📜 API contract tests (OpenAPI/GraphQL expectations)
-- 🔍 Policy & governance scans (secret/PII/sensitive checks)
-- 🧾 Documentation/link/schema validation (where configured)
-
-**Rule of thumb:**  
-If you change behavior, **add or update tests** in the same PR. ✅
-
----
-
-## 🧯 Troubleshooting
-
-### Ports / container readiness
-If DB containers are still starting, tests may fail with connection errors.  
-Try re-running after the stack is fully healthy:
-
+Example:
 ```bash
-docker-compose ps
-docker-compose logs -f api
+pytest -m unit
+pytest -m "not integration"
+pytest -m "integration and not slow"
+pytest -m "ai and not slow"
 ```
 
-### “It works in Swagger but fails in tests”
-- Make sure your test fixtures match the seeded data (or the mocked adapters)
-- Confirm the route prefix/version (`/api/v1/...`) used by the app
+---
+
+## 🧩 Fixtures & patterns
+
+### ✅ FastAPI client
+Provide a `client` fixture that builds the app in **test mode** and uses `TestClient` / `httpx`:
+- Avoid “real network” in unit tests.
+- Prefer dependency overrides (DB session, policy engine, model client).
+
+### 🧪 Deterministic data
+- Keep fixtures tiny and readable (`api/tests/fixtures/`).
+- Prefer explicit IDs in tests (`ks_hydrology_1880` style IDs are great).
+- Use seeds/migrations only in integration tests.
+
+### 🤖 LLM handling in tests
+Most tests should NOT require a real model:
+- Mock the Ollama/OpenAI client (return predictable text + citations)
+- Assert the pipeline **rejects** un-cited answers
+- Add *optional* “real model” tests behind a marker/flag
+
+Example (pattern):
+- default: `pytest -m ai` runs mocked model tests
+- optional: `pytest -m ai --run-real-ollama` runs end-to-end (developer machine only)
 
 ---
 
-## ✅ Test-writing checklist (copy/paste)
+## ✅ High-value test targets
 
-- [ ] I wrote/updated a unit test for the service logic (when applicable)
-- [ ] I wrote/updated an integration test for the endpoint behavior (when applicable)
-- [ ] I asserted **status code + response shape**
-- [ ] I added at least one **negative** test (bad input / forbidden action)
-- [ ] Tests run locally via `docker-compose exec api pytest`
-- [ ] No secrets / sensitive data added anywhere 🛑
+### 🩺 Health & readiness
+Test that “platform sanity” endpoints behave correctly:
+- `GET /healthz`
+- `GET /readyz`
+- `GET /version` (or equivalent)
+
+### 📜 OpenAPI contract tests
+- `GET /openapi.json` returns valid JSON
+- The OpenAPI schema includes core endpoints (datasets, search, AI if enabled)
+
+### 🗃️ Data catalog & datasets
+Contract + integration tests for:
+- dataset metadata has license/title/description
+- search supports filters (keyword, bbox, time range)
+- dataset data endpoint supports format + bbox filtering
+
+### 🧠 Focus Mode (AI) — trust tests
+Minimum required behaviors:
+- `POST /focus-mode/query` returns an answer containing citations like `[1]`
+- Prompt injection attempts are removed/neutralized (Prompt Gate)
+- Policy denies:
+  - answers without citations
+  - disallowed content
+  - role violations for sensitive sources
+
+### 🛡️ Security
+- unauthorized users cannot access restricted datasets
+- policy enforcement produces correct HTTP codes (`401/403`) and safe messages
 
 ---
 
-### 🧠 Tip
-If you’re unsure where a behavior belongs:
-- **Unit test** the “rule”
-- **Integration test** the “wiring” (router + DI + adapter calls)
-- **Contract test** the “promise” (schema + stable responses)
+## 🧪 “No Source, No Answer” regression tests
+
+Because citations are a core UX + trust mechanic, keep a dedicated regression suite that tests:
+- **missing citations ⇒ denied** (policy gate)
+- **hallucinated citations ⇒ rejected** (if your implementation validates citation IDs)
+- citation mapping attaches metadata (if the API/UI expects footnote links)
+
+> 🧯 These tests prevent “it still answers, but without sources” regressions.
+
+---
+
+## 🧰 Troubleshooting (common dev issues)
+
+### 🐳 Docker/Compose flakiness
+- If a service isn’t ready, try re-running `docker-compose up` (or wait for healthchecks).
+- Check logs:
+  ```bash
+  docker-compose logs api
+  docker-compose logs db
+  docker-compose logs neo4j
+  ```
+
+### 🔌 Port conflicts
+- If `5432`, `7474`, `8000`, or `3000` are in use, stop local services or change compose ports.
+
+### 🧱 Permissions on mounted volumes
+- If the API can’t write to `data/` or a mounted path, ensure the directory is writable by the container user.
+
+---
+
+## ✅ Contribution checklist
+
+Before you open a PR:
+
+- [ ] New endpoint? **Add contract + behavior tests**
+- [ ] Bug fix? **Add a regression test**
+- [ ] Touch AI pipeline? **Add citation + policy gating coverage**
+- [ ] Touch metadata/pipelines? **Run Conftest policy checks**
+- [ ] CI green locally: `pytest` + policy checks
+
+---
+
+## 🔗 Useful cross-links
+
+From the repo root, these docs usually matter for test authors:
+
+- `src/server/api/README.md` — API surface area & examples  
+- `docs/architecture/ai/OLLAMA_INTEGRATION.md` — Focus Mode / RAG pipeline behavior  
+- `policy/` — OPA/Rego policies (governance gates)  
+- `pipelines/README.md` — data build steps that may affect integration tests
+
+---
+
+## 🧠 Guiding principle
+
+> If a test can’t explain **what trust guarantee it protects**, it probably belongs in `unit/` or doesn’t belong at all. 😉
