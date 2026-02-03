@@ -274,15 +274,15 @@ This repo’s blueprint references route modules like `api/routes/datasets.py`.
 A common structure looks like:
 
 ```text
-api/
-├─ app/                 # FastAPI app init, middleware, lifecycle
-├─ routes/              # Routers (datasets, catalog, tiles, health, focus-mode)
-├─ schemas/             # Pydantic models (requests/responses)
-├─ services/            # Business logic (catalog search, feature streaming)
-├─ adapters/            # DB/Neo4j/search/LLM clients
-├─ policies/            # OPA policy bundles / helpers
-├─ scripts/             # One-off maintenance tasks
-└─ tests/               # pytest
+📦 api/
+├── 🚀 app/        # FastAPI app init, middleware, lifecycle
+├── 🧭 routes/     # Routers (datasets, catalog, tiles, health, focus-mode)
+├── 🧾 schemas/    # Pydantic models (requests/responses)
+├── 🧠 services/   # Business logic (catalog search, feature streaming)
+├── 🔌 adapters/   # DB/Neo4j/search/LLM clients
+├── 🛡️ policies/   # OPA policy bundles / helpers
+├── 🧰 scripts/    # One-off maintenance tasks
+└── ✅ tests/      # pytest
 ```
 
 ---
