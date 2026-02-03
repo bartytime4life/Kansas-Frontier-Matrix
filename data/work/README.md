@@ -1,188 +1,221 @@
-# 🧪 `data/work/` — Working Space (WIP ➜ Canonical)  
+# 🧰 `data/work/` — Working Data Sandbox (Non‑Authoritative)
 
-![Status](https://img.shields.io/badge/status-WIP%20friendly-blue)
-![Data](https://img.shields.io/badge/data-deterministic%20pipelines-5865F2)
-![Provenance](https://img.shields.io/badge/provenance-required-brightgreen)
-![Metadata](https://img.shields.io/badge/metadata-STAC%20%2B%20PROV-orange)
+![purpose](https://img.shields.io/badge/purpose-working%20sandbox-blue)
+![data](https://img.shields.io/badge/data-non--authoritative-orange)
+![provenance](https://img.shields.io/badge/provenance-required-success)
+![policy](https://img.shields.io/badge/no%20bypasses-truth%20path-critical)
 
-> [!IMPORTANT]
-> **`data/work/` is a scratch + staging area** for datasets, experiments, and intermediate artifacts that are **not yet ready** to become canonical KFM inputs/outputs.  
-> Canonical data still flows **Raw → Processed → Catalog/Prov → Database → API → UI**. [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
----
-
-## 🧭 Why this folder exists
-
-KFM is designed so **raw inputs remain immutable evidence** and **processed outputs remain ready-to-serve, versioned deliverables**—with metadata + provenance as hard requirements. [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-`data/work/` exists to keep in-progress work *useful* without polluting canonical folders:
-
-- 🧩 **Staging** for downloads, decompressions, and exploratory slices before committing anything into `data/raw/`.
-- 🧪 **Experimentation** (QA checks, small prototypes, trial transformations) before “locking” an approach into a pipeline.
-- 🧾 **Repro notes & run logs** that help others repeat your process (and help *future-you*).
-- 🧹 **Clean separation**: “Work-in-progress” stays here until it earns promotion into the canonical pipeline.
+> [!WARNING]
+> **Nothing in `data/work/` is “source of truth.”**  
+> This directory exists for *iteration*, *experiments*, and *scratch outputs* only. Anything destined for publication must be promoted into the governed pipeline (Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI).
 
 ---
 
-## ✅ What belongs here vs. what doesn’t
+## 🎯 What this folder is for
 
-### ✅ Good fits for `data/work/`
-- 📦 Unzipped source bundles you’re still inspecting (e.g., “what’s in this ZIP?”)
-- 🧪 Notebook outputs / quick plots / QA summaries
-- 🧱 Intermediate conversion products (e.g., reprojected shapefiles, clipped rasters) **not final**
-- 🧰 One-off scripts used during research (before being formalized into `pipelines/`)
-- 🧾 Draft metadata + provenance files while iterating
+`data/work/` is the **hands-on workshop** for the Kansas Frontier Matrix (KFM) data pipeline: quick prototypes, staging, exploratory transformations, QA checks, and intermediate artifacts created while you learn/iterate.
 
-### 🚫 Not allowed / strongly discouraged
-- 🔐 Secrets / tokens / private keys (never store these anywhere in-repo)
-- 🧨 Anything you can’t legally redistribute
-- 🧱 “Final” data that the API/UI should rely on  
-  → that belongs in `data/processed/` **only after** it’s standardized and documented. [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- ✍️ Manual-only workflows that cannot be rerun  
-  → official pipelines must be **deterministic, reproducible, and non-interactive**. [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Typical uses:
+- 🧪 **Exploratory ETL**: rough transforms, schema experiments, trial joins, validation spikes
+- 🧊 **Caches**: downloaded source bundles, API responses (when allowed), temporary tiles
+- 🧹 **Pre-QA / QA**: profiling, row counts, geometry checks, bounding boxes, sampling
+- 🧾 **Run manifests**: lightweight logs + provenance notes to preserve “how we got here”
+- 🗺️ **Preview outputs**: small sample GeoJSON, plots, screenshots, debug tiles (small only)
 
 ---
 
-## 🗂️ Recommended structure
+## 🧭 Where `work/` fits in the “truth path”
 
-You can organize however you like, but this pattern keeps things predictable:
+```mermaid
+flowchart LR
+  A[Raw 📥] --> B[Processed 🧼] --> C[Catalog 🗂️] --> D[Databases 🗃️] --> E[API 🌐] --> F[UI/AI 🗺️🤖]
+  W[(work 🧰)]
+  W -. scratch outputs .-> B
+  W -. download cache .-> A
+  W -. notes & manifests .-> C
+```
+
+**Rule:** `work/` can *assist* any stage, but **must not replace** any stage.
+
+---
+
+## 📁 Recommended structure
+
+Keep `work/` predictable so tools and humans can find things fast:
 
 ```text
 data/
-└── work/ 🧪
-    ├── incoming/ 📥            # temp downloads / raw bundles before promotion into data/raw/
-    ├── scratch/ 🧻             # throwaway transforms, quick checks, spikes
-    ├── notebooks/ 📓           # exploratory notebooks (ensure they can be rerun!)
-    ├── runs/ 🧾                # dated run logs + reproducibility details
-    ├── qa/ ✅                   # validation reports, schema checks, spot-check notes
-    ├── exports/ 📤             # shareable snapshots (small) used in PR discussion
-    └── _templates/ 🧰          # starter templates for work items (README, metadata drafts)
+├─ raw/ 📥                  # immutable source snapshots (governed)
+├─ processed/ 🧼            # cleaned/standardized outputs (governed)
+├─ catalog/ 🗂️             # metadata, STAC/DCAT, provenance (governed)
+└─ work/ 🧰                 # (YOU ARE HERE) scratch + iteration (NOT governed)
+   ├─ tmp/ 🧯               # throwaway files (safe to delete anytime)
+   ├─ cache/ 🧊             # re-download avoidance (safe to delete anytime)
+   ├─ runs/ 🏃              # one folder per experiment/run (recommended)
+   ├─ experiments/ 🧪       # notebooks / ad-hoc spikes (small outputs only)
+   └─ reports/ 📊           # QA summaries, profiling results (small text/plots)
 ```
 
 > [!TIP]
-> If something in `data/work/` becomes important for others to reproduce, promote it into:
-> - `pipelines/` (the *how*)  
-> - `data/raw/` (the *evidence*)  
-> - `data/processed/` (the *deliverable*)  
-> - `data/catalog/` + `data/provenance/` (the *why + lineage*) [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> Treat `tmp/` and most of `cache/` as **rebuildable**. If it can’t be rebuilt, it doesn’t belong here.
 
 ---
 
-## 🧬 “Promotion” path: from WIP to Canonical
+## 🏃 Run folder contract (✅ do this)
 
-When your work is ready to become part of KFM, the promotion steps should follow the project’s canonical order. [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 1) 📥 Stage evidence into `data/raw/` (immutable)
-Raw data should be a **write-once snapshot**, treated as evidence and never modified by pipelines. [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 2) 🧪 Convert/clean via a deterministic pipeline
-Pipelines should:
-- produce identical results given identical inputs/config
-- avoid interactive prompts/manual steps
-- control randomness (fixed seeds) [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 3) 📦 Write deliverables into `data/processed/`
-Processed outputs are the **ready-to-use** forms (GeoJSON/Parquet/GeoTIFF/etc.) served by the system. [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 4) 🧾 Add metadata + provenance (hard requirement)
-For every dataset, create/update:
-- **Catalog metadata** (e.g., STAC Item/Collection, DCAT record)  
-- **Provenance record** (e.g., W3C PROV or project provenance log) describing inputs, script version, run date, and outputs [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-> [!WARNING]
-> KFM treats metadata/provenance as non-optional: *no data enters without documentation.* [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### 5) 🔁 PR + CI validation
-When you open a PR, CI may verify processed outputs have corresponding catalog/provenance and basic validations pass. [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
----
-
-## 🧾 Minimum “work item” template (copy/paste)
-
-Create a subfolder per effort:
+Each meaningful experiment should get a dedicated run folder:
 
 ```text
-data/work/
-└── <topic-or-dataset-slug>/ 🧪
-    ├── README.md
-    ├── sources.md
-    ├── notes.md
-    ├── runbook.md
-    ├── inputs/             # local copies BEFORE promotion to data/raw/
-    ├── intermediates/      # temporary transforms (not canonical)
-    └── outputs/            # preview outputs for review (small!)
+data/work/runs/YYYY-MM-DD__<pipeline>__<dataset_slug>/
+├─ manifest.yml             # what you did + where inputs came from
+├─ provenance.jsonld        # optional but recommended: PROV-style record
+├─ logs/                    # stdout/stderr, validation logs
+├─ inputs/                  # small samples only (or pointers)
+├─ outputs/                 # small outputs only (or pointers)
+└─ notes.md                 # decisions, issues, next steps
 ```
 
-### `README.md` (inside your work item) should include:
-- 🎯 **Goal** (what you’re trying to add/learn)
-- 🔗 **Sources & licensing notes**
-- 🧰 **Tools used** (versions, environment notes)
-- 🔁 **Exact repro steps**
-- ✅ **QA checklist + results**
-- 📌 **Promotion decision**: what will move to `data/raw/`, `data/processed/`, and what will be discarded
+### `manifest.yml` (template)
+```yaml
+run_id: "2026-02-03__ingest__ks_dasc_counties"
+owner: "@your-handle"
+goal: "Validate geometry + normalize CRS; prep for processed promotion"
+
+inputs:
+  - name: "DASC counties layer"
+    source: "https://…"
+    retrieved_at: "2026-02-03T20:00:00Z"
+    license: "TBD"
+    checksum_sha256: "TBD"
+
+processing:
+  steps:
+    - "download"
+    - "inspect schema"
+    - "reproject to EPSG:4326"
+    - "fix invalid geometries"
+  code_ref:
+    git_sha: "TBD"
+    entrypoint: "pipelines/…"
+  environment:
+    container: "TBD"
+    tool_versions:
+      python: "TBD"
+      gdal: "TBD"
+
+outputs:
+  - name: "counties_sample.geojson"
+    path: "data/work/runs/.../outputs/counties_sample.geojson"
+    size_bytes: 123456
+    notes: "sample only; full data promoted elsewhere"
+
+promotion_intent:
+  target_stage: "processed"
+  required_checks:
+    - "license verified"
+    - "schema validated"
+    - "provenance recorded"
+```
+
+---
+
+## ✅ Promotion checklist (work ➜ governed pipeline)
+
+Before anything leaves `work/` and becomes “real”:
+
+1. 🔒 **License & rights check**
+   - Confirm allowed use + redistribution
+   - Record license string & source link in metadata
+
+2. 🧾 **Provenance captured (“map behind the map”)**
+   - Source URL(s), retrieval date/time, checksums
+   - Toolchain + parameters + code reference (git SHA)
+
+3. 🧪 **Quality gates**
+   - Schema validation (types, null rules)
+   - Spatial validation (CRS, geometry validity, bbox sanity)
+   - Basic profiling (row counts, uniqueness, join keys)
+
+4. 🗂️ **Catalog entry created**
+   - Minimum viable metadata (title, description, extent, license, lineage)
+   - Add STAC/DCAT/PROV artifacts *where your repo expects them*
+
+5. 🗃️ **Load & serve through the API (no bypasses)**
+   - No UI direct-to-DB shortcuts
+   - Publish via the service layer
+
+> [!IMPORTANT]
+> Promotion is a **one-way mindset**: once promoted, the governed copies become the reference—not the scratch files in `work/`.
+
+---
+
+## 🧼 What NOT to put in `data/work/`
+
+**Hard “no” list:**
+- 🔑 Secrets (API keys, tokens, `.env`, credentials)
+- 🧍 PII / sensitive records unless explicitly approved + governed
+- 🏋️ Huge binaries (rasters, LiDAR, full tilesets) committed to git
+- 📌 Anything “production-critical” that can’t be recreated
 
 > [!NOTE]
-> Treat this like an “experiment capsule”: document versions and what changed.  
-> A changelog + snapshots/checkpoints are recommended for traceability. [oai_citation:16‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
+> Large artifacts belong in object storage + referenced via metadata (STAC items, manifests, or catalog pointers), not committed here.
 
 ---
 
-## 🏷️ Naming + organization conventions
+## 🧷 Git hygiene (keep the repo healthy)
 
-### ✅ Folder naming
-Use `kebab-case` or `snake_case` consistently:
-- `census-1900-import/`
-- `usgs-waterways-v1/`
-- `landsat-drought-spike/`
+Recommended approach:
+- ✅ Commit: `README.md`, run manifests (`manifest.yml`), small QA reports, tiny samples
+- ❌ Do not commit: big downloads, big intermediate outputs, database dumps
 
-### 🗓️ Run folders
-Use ISO dates so sorting is automatic:
-
+If needed, keep empty dirs with a `.gitkeep`:
 ```text
-data/work/runs/
-└── 2026-01-30__census-1900__trial-02/
+data/work/tmp/.gitkeep
+data/work/cache/.gitkeep
 ```
 
-### 🧾 Logs
-If you’re producing logs, include:
-- input file list (with checksums if possible)
-- script name + commit hash (if available)
-- runtime parameters
-- output file list and summary stats
+---
 
-This aligns with the provenance expectation that runs record *what produced what, when, and from which sources.* [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+## 🧠 Workflow philosophy (why this exists)
+
+This folder is intentionally designed for:
+- **Iterative cycles** (try ➜ observe ➜ refine ➜ promote)
+- **Fast feedback** with minimal ceremony *until* you’re ready to govern the output
+- **Transparent decisions** via lightweight manifests + notes
 
 ---
 
-## 🧷 Metadata discipline (even in WIP)
+## 🔗 Related docs (inside the repo)
 
-Even before promotion, start capturing metadata early. Strong metadata improves interoperability and reduces “mystery datasets.” [oai_citation:18‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
+- `../../docs/architecture/` 🏛️ *(system overview, truth path, governance)*
+- `../../pipelines/` 🧰 *(ETL entrypoints, dataset recipes, loaders)*
+- `../../docs/data/` 🗂️ *(metadata standards, catalog format, naming rules)*
 
-A good working metadata stub includes:
-- 📛 identification (what is it)
-- ✅ quality (known issues, accuracy, validation)
-- 🧭 spatial reference (CRS/projection)
-- 🧱 schema (entities/attributes)
-- 📦 distribution + license
-- 🕒 temporal coverage (collected/updated)
-- 📣 citation guidance + contacts [oai_citation:19‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-
-> [!TIP]
-> KFM’s architecture leans heavily on **centralized metadata** as a way to connect and govern datasets at scale (a “data hub” concept). [oai_citation:20‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
+> If these paths differ in your checkout, update links here to match the repo layout.
 
 ---
 
-## 🧹 Cleanup rules
+## 🙌 Quick start (copy/paste)
 
-- 🗑️ Assume `data/work/` is disposable unless explicitly promoted.
-- 🧯 Keep large blobs out of Git history whenever possible (prefer references + reproducible download scripts).
-- 🧽 Delete stale WIP folders that aren’t being actively worked—especially if they duplicate what’s already in `data/raw/`.
+```bash
+# 1) Create a new run folder
+mkdir -p data/work/runs/$(date +%F)__<pipeline>__<dataset_slug>/{logs,inputs,outputs}
+
+# 2) Add a manifest
+touch data/work/runs/$(date +%F)__<pipeline>__<dataset_slug>/manifest.yml
+
+# 3) Do your work, then promote outputs into governed stages
+#    raw/ -> processed/ -> catalog/ -> db -> api -> ui/ai
+```
 
 ---
 
-## 📚 References used for this folder’s conventions
+## 📌 Maintainership
 
-- Kansas Frontier Matrix — pipeline order, raw/processed roles, and metadata/provenance requirements. [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Map data best practices — why metadata matters and what it should contain. [oai_citation:24‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-- Research traceability — changelogs, snapshots/checkpoints, and reproducible experiment capsules. [oai_citation:25‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-- Data Spaces — metadata-as-the-hub pattern for integrating many distributed data assets. [oai_citation:26‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
+- Default owner: **Data / Pipeline maintainers**
+- PR expectation: If you add a new workflow, include at least:
+  - `manifest.yml` (or equivalent)
+  - a short `notes.md`
+  - a clear promotion plan (where it lands in the governed pipeline)
+
+✨ Keep it rebuildable. Keep it traceable. Keep it honest.
