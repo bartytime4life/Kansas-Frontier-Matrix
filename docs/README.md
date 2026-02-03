@@ -51,12 +51,12 @@ KFM is explicitly designed so **nothing bypasses the provenance pipeline**.
 
 ```mermaid
 flowchart LR
-  A[🧾 Raw Sources] --> B[⚙️ Ingestion & ETL]
-  B --> C[🧼 Processed Data]
-  C --> D[🏷️ Catalog + Provenance<br/>STAC / DCAT / W3C PROV]
-  D --> E[(🗄️ Databases<br/>PostGIS + Neo4j + Search)]
-  E --> F[🧩 API Layer<br/>FastAPI (Governed)]
-  F --> G[🖥️ UI + 🤖 Focus Mode]
+  A["🧾 Raw Sources"] --> B["⚙️ Ingestion & ETL"]
+  B --> C["🧼 Processed Data"]
+  C --> D["🏷️ Catalog + Provenance — STAC / DCAT / W3C PROV"]
+  D --> E["🗄️ Databases — PostGIS + Neo4j + Search"]
+  E --> F["🧩 API Layer — FastAPI (Governed)"]
+  F --> G["🖥️ UI + 🤖 Focus Mode"]
 ```
 
 ✅ **Canonical order:** `Raw → Processed → Catalog/Prov → Database → API → UI`  
