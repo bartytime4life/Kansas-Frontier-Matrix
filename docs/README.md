@@ -1,363 +1,292 @@
-# 📚 docs/ — Kansas Frontier Matrix Documentation 🗺️
+<div align="center">
 
-![Docs](https://img.shields.io/badge/docs-governed-2ea44f?style=flat-square)
-![Evidence](https://img.shields.io/badge/narrative-evidence--first-blue?style=flat-square)
-![Provenance](https://img.shields.io/badge/provenance-PROV-orange?style=flat-square)
-![Catalogs](https://img.shields.io/badge/catalog-STAC%20%7C%20DCAT-informational?style=flat-square)
-![Contracts](https://img.shields.io/badge/API-contract--first-critical?style=flat-square)
+# 📚 Kansas Frontier Matrix — Docs Hub
 
-> 🧭 **The map behind the map.**  
-> KFM docs are **governed**, **evidence-first**, **contract-first**, and **provenance-first**.
+**Evidence-first documentation** for an open, governed geospatial knowledge platform 🌎🧭  
+_“The map behind the map” — every layer, chart, and AI answer should trace back to sources._
 
----
+<img alt="docs" src="https://img.shields.io/badge/docs-provenance--first-blue" />
+<img alt="governance" src="https://img.shields.io/badge/governance-fail--closed-critical" />
+<img alt="data" src="https://img.shields.io/badge/data-FAIR%20%2B%20CARE-success" />
+<img alt="architecture" src="https://img.shields.io/badge/architecture-layered%20%26%20modular-informational" />
+<img alt="ai" src="https://img.shields.io/badge/AI-Focus%20Mode%20(RAG)-purple" />
 
-## 🧭 Jump links
-- [🚦 Start here](#-start-here)
-- [🧱 The governed docs contract](#-the-governed-docs-contract)
-- [🗺️ KFM pipeline mental model](#️-kfm-pipeline-mental-model)
-- [🗂️ docs/ directory map](#️-docs-directory-map)
-- [🧩 Templates](#-templates-dont-freestyle)
-- [📦 Adding a new data domain](#-adding-a-new-data-domain-docs--data-checklist)
-- [✍️ Story Nodes rules](#️-writing-rules-for-story-nodes-and-narrative-docs)
-- [🤖 Focus Mode + AI notes](#-focus-mode--ai-notes-for-doc-authors)
-- [🎨 Cartography + metadata expectations](#-cartography--metadata-expectations-why-docs-care)
-- [📚 Reference Library](#-reference-library-project-files)
+</div>
 
 ---
 
-## 🚦 Start here
+## 🧭 Start here (recommended reading order)
 
-### 🧩 Core entry points (canonical paths inside `docs/`)
-- **📘 Master Guide (primary):** [`./MASTER_GUIDE_v13.md`](./MASTER_GUIDE_v13.md)
-- **🏗️ Architecture & blueprints:**
-  - [`./architecture/`](./architecture/)
-  - [`./architecture/KFM_REDESIGN_BLUEPRINT_v13.md`](./architecture/KFM_REDESIGN_BLUEPRINT_v13.md)
-  - [`./architecture/KFM_NEXT_STAGES_BLUEPRINT.md`](./architecture/KFM_NEXT_STAGES_BLUEPRINT.md)
-  - [`./architecture/KFM_VISION_FULL_ARCHITECTURE.md`](./architecture/KFM_VISION_FULL_ARCHITECTURE.md)
-- **⚖️ Governance (rules + review gates):**
-  - [`./governance/`](./governance/)
-  - [`./governance/ROOT_GOVERNANCE.md`](./governance/ROOT_GOVERNANCE.md)
-  - [`./governance/ETHICS.md`](./governance/ETHICS.md)
-  - [`./governance/SOVEREIGNTY.md`](./governance/SOVEREIGNTY.md)
-- **🌐 Standards & Profiles (STAC/DCAT/PROV + protocols):** [`./standards/`](./standards/)
-  - **Work protocol:** [`./standards/KFM_MARKDOWN_WORK_PROTOCOL.md`](./standards/KFM_MARKDOWN_WORK_PROTOCOL.md)
-- **🧩 Templates (universal docs, Story Nodes, API changes):** [`./templates/`](./templates/)
-- **🧠 Story Nodes (draft/published):** [`./reports/story_nodes/`](./reports/story_nodes/)
-- **🗃️ Data domain runbooks:** [`./data/`](./data/) *(domain READMEs live here)*
-- **🧾 Glossary (if present):** [`./glossary.md`](./glossary.md)
+> If you’re new: **read the architecture overview first**, then jump to governance, then AI.
 
-> [!TIP]
-> If you only open one thing: **`MASTER_GUIDE_v13.md`** → then jump to **architecture** → then **standards**.
-
-### 👥 “I’m here for…”
-- **🧱 Maintainers / system builders:** `MASTER_GUIDE_v13.md` → `architecture/` → `standards/` → `governance/`
-- **🗃️ Domain stewards (historians/scientists):** `docs/data/<domain>/README.md` → `templates/` → `standards/`
-- **🧠 Narrative editors:** `reports/story_nodes/` → `templates/TEMPLATE__STORY_NODE_V3.md`
-- **🔌 API contributors:** `templates/TEMPLATE__API_CONTRACT_EXTENSION.md` + `architecture/` (boundary rules + redaction)
-- **🧭 UX/cartography:** `architecture/` + `standards/` + “Cartography + metadata expectations” below 🎨
+### 🔗 Quick links
+- 🏗 **System architecture**: `./architecture/system_overview.md`
+- 🤖 **AI architecture**: `./architecture/AI_SYSTEM_OVERVIEW.md`
+- 🧠 **Ollama integration** (Focus Mode): `./architecture/ai/OLLAMA_INTEGRATION.md`
+- 🧩 **Future roadmap / next stages**: `./architecture/KFM_NEXT_STAGES_BLUEPRINT.md`
+- 🏛️ **Governance council structure**: `./governance/council-structure.md`
 
 ---
 
-## 🧱 The governed docs contract
+## 🌾 What this documentation is for
 
-KFM documentation is not “extra.” It is part of the system’s **trust surface** 🛡️  
-If it ships without provenance, it doesn’t ship.
+Kansas Frontier Matrix (KFM) is a **geospatial knowledge & modeling platform** that integrates:
+- 🗺️ Maps + geospatial layers  
+- 📚 Historical records + narratives  
+- 🧪 Data-driven analysis  
+- 🤖 AI-assisted Q&A (“Focus Mode”)  
 
-### ✅ Non‑negotiable invariants (don’t fight these)
-- **Pipeline ordering is absolute:** *ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode.*
-- **Contract-first:** schemas + API contracts are first-class; breaking changes require **versioning + checks**.
-- **Evidence-first narrative:** no unsourced narrative in Story Nodes or Focus Mode.
-- **Graph is not the source of truth:** the graph **references** catalog artifacts; catalogs remain authoritative.
-- **API boundary rule:** UI must not query the graph directly; it must go through the governed API (redaction + policy).
+…inside a **provenance-first framework** where outputs are **traceable** and **auditable**.
 
-> [!IMPORTANT]
-> Assume **CI will validate**: structure, schemas, catalogs (STAC/DCAT/PROV), provenance completeness, and Story Node requirements.
-
-<details>
-<summary>🧪 What CI/review gates typically enforce (expand)</summary>
-
-- ✅ **Contract/schema tests** (API contracts + JSON schema validation)  
-- ✅ **Pipeline determinism checks** (repeat runs yield stable outputs/hashes)  
-- ✅ **Data integrity checks** (STAC/DCAT/PROV validation + provenance completeness)  
-- ✅ **Story Node validation** (required sections, citations, entity refs)  
-- ✅ **Security scans** (SAST + dependency audits)  
-- ✅ **Breaking change discipline** (versioned contract updates + migration notes)
-
-</details>
-
-<details>
-<summary>⚖️ When governance review is automatically triggered (expand)</summary>
-
-- New external data sources (license + attribution + provenance review)
-- New or altered API endpoints that change access patterns or sensitivity handling
-- New narrative surfaces (Story Nodes / Focus Mode) that present interpretation
-- Anything touching **sensitive locations**, sovereignty constraints, or redaction rules
-- Any AI-generated layer or summary intended for end users (must be transparent + sourced)
-
-</details>
+This `docs/` folder is the **single place** to:
+- explain how KFM works (architecture, AI, governance),
+- document how to add data, stories, and features safely,
+- standardize how we write, cite, and review knowledge.
 
 ---
 
-## 🗺️ KFM pipeline mental model
+## 🧱 The “Truth Path” (non-negotiable)
+
+KFM is explicitly designed so **nothing bypasses the provenance pipeline**.
 
 ```mermaid
 flowchart LR
-  %% High-level KFM pipeline (governed ordering)
-  subgraph Data["📦 Data (staged + reproducible)"]
-    A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views"]
-    C --> E["PROV Lineage Bundles"]
-  end
-
-  C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
-  I --> J["Story Nodes (governed narratives)"]
-  J --> K["Focus Mode (provenance-linked context bundle)"]
+  A[🧾 Raw Sources] --> B[⚙️ Ingestion & ETL]
+  B --> C[🧼 Processed Data]
+  C --> D[🏷️ Catalog + Provenance<br/>STAC / DCAT / W3C PROV]
+  D --> E[(🗄️ Databases<br/>PostGIS + Neo4j + Search)]
+  E --> F[🧩 API Layer<br/>FastAPI (Governed)]
+  F --> G[🖥️ UI + 🤖 Focus Mode]
 ```
 
-> [!NOTE]
-> If the diagram doesn’t render, view this file in GitHub’s renderer or a Mermaid viewer.
+✅ **Canonical order:** `Raw → Processed → Catalog/Prov → Database → API → UI`  
+🚫 Any feature that “shortcuts” this path is considered flawed unless proven otherwise.
 
 ---
 
-## 🧭 What belongs where (docs vs data vs code)
+## 🗂️ Documentation map (what belongs where)
 
-KFM is a monorepo: **docs + data + code evolve together** 🧬  
-This keeps provenance traceable through Git history and standardized paths.
-
-### 🧾 Quick placement guide
-- **Docs & governance** → `docs/`
-- **Data (raw/work/processed + catalogs + prov)** → `data/` *(repo root)*
-- **ETL pipelines / graph build / API** → `src/` *(repo root)*
-- **Schemas (STAC/DCAT/PROV + API contracts)** → `schemas/` *(repo root)*
-- **Methods & experiments (if used)** → `mcp/` *(repo root)*
-
----
-
-## 🗂️ docs/ directory map
-
-> This is the **documentation home** for governed guides, standards, templates, and narrative content.
+> This tree is a *guide*; keep it aligned with the actual folder layout as it evolves.
 
 ```text
-docs/
-├── 🧭 README.md                     # you are here
-├── 📘 MASTER_GUIDE_v13.md           # primary entrypoint
-├── 🧾 glossary.md                   # shared vocabulary (if present)
-├── 🧠 INDEX.md                      # docs portal (optional)
-├── 🏗️ architecture/                # system design docs, blueprints, ADRs
-├── ⚖️ governance/                  # ethics, sovereignty, review gates
-├── 🌐 standards/                   # KFM profiles (STAC/DCAT/PROV), protocols
-├── 🧩 templates/                   # governed templates (universal doc, story node, API)
-├── 🧠 reports/
-│   └── story_nodes/
-│       ├── 🧩 templates/           # story templates (draft/published conventions)
-│       ├── 🚧 draft/               # works-in-progress (review required)
-│       └── ✅ published/           # reviewed + provenance-complete stories
-└── 🗃️ data/                        # domain READMEs / runbooks (one folder per domain)
+📁 docs/
+├─ 📄 README.md                         ← (you are here) docs index + rules
+│
+├─ 📁 architecture/                     ← system design, “truth path”, service boundaries
+│  ├─ 📄 system_overview.md
+│  ├─ 📄 AI_SYSTEM_OVERVIEW.md
+│  ├─ 📄 KFM_NEXT_STAGES_BLUEPRINT.md
+│  └─ 📁 ai/
+│     └─ 📄 OLLAMA_INTEGRATION.md
+│
+├─ 📁 governance/                       ← policy, roles, review gates, council structure
+│  └─ 📄 council-structure.md
+│
+├─ 📁 standards/                        ← (recommended) writing, citations, metadata, diagrams
+│  ├─ 📄 doc_style_guide.md
+│  ├─ 📄 citation_and_provenance.md
+│  └─ 📄 glossary.md
+│
+├─ 📁 stories/                          ← (recommended) narrative “Story Nodes” + templates
+│  ├─ 📄 story_template.md
+│  └─ 📁 published/
+│
+└─ 📁 reference/                        ← (optional) curated research PDFs + reading list
+   ├─ 📄 reading_list.md
+   └─ 📁 pdfs/
 ```
 
 ---
 
-## 🧩 Templates (don’t freestyle)
+## 👥 Reading paths by role
 
-Templates keep docs **machine-readable**, **reviewable**, and **consistent** at scale 🔧
+### 🧑‍💻 Developer (backend / frontend)
+1. `./architecture/system_overview.md` 🏗  
+2. `./governance/council-structure.md` 🏛  
+3. API docs (often live near code, e.g. `src/server/api/README.md`) 🔌  
+4. UI docs (often live near `web/` or `src/`) 🖥️  
 
-- **📄 Universal doc template:** `./templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- **🧠 Story Node template:** `./templates/TEMPLATE__STORY_NODE_V3.md`
-- **🔌 API contract extension template:** `./templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+### 🗺️ GIS / Data contributor
+1. Architecture overview (to understand the pipeline gates) 🧱  
+2. Data catalog + metadata standards (STAC/DCAT/PROV) 🏷️  
+3. Governance policies (licenses, sensitivity labels, approvals) 🔐  
 
-> [!TIP]
-> Templates aren’t bureaucracy — they’re how KFM stays automatable (validators, CI gates, ingestion, and UI rendering).
+### 🤖 AI / ML contributor (Focus Mode)
+1. `./architecture/AI_SYSTEM_OVERVIEW.md` 🧠  
+2. `./architecture/ai/OLLAMA_INTEGRATION.md` 🐙  
+3. Governance + safety gates (prompt gate, citation rule, audit log) ✅  
 
----
-
-## 📦 Adding a new data domain (docs + data checklist)
-
-When you add a new domain, you are adding **evidence pipelines**, not just files 🧾🧱
-
-### ✅ Minimum “domain done” checklist
-- [ ] Create **domain runbook**: `docs/data/<domain>/README.md`
-- [ ] Stage inputs + outputs (repo root):
-  - [ ] Raw inputs → `data/raw/<domain>/`
-  - [ ] Intermediate products (if needed) → `data/work/<domain>/`
-  - [ ] Final outputs → `data/processed/<domain>/`
-- [ ] Emit boundary artifacts (required before “published”):
-  - [ ] **STAC** (collections + items) → `data/stac/collections/` and `data/stac/items/`
-  - [ ] **DCAT** dataset entry → `data/catalog/dcat/` *(JSON-LD)*
-  - [ ] **PROV** lineage bundle → `data/prov/`
-- [ ] Confirm **cross-layer linkage**:
-  - [ ] STAC → points to actual assets + includes attribution/license
-  - [ ] DCAT → links to STAC and/or distribution downloads
-  - [ ] PROV → links raw → work → processed + includes run/config identifiers
-  - [ ] Graph → stores references (e.g., STAC IDs), not bulk payloads
-- [ ] Treat **derived / AI-generated outputs** as first-class **evidence artifacts**:
-  - [ ] Stored like any processed dataset
-  - [ ] Cataloged (STAC/DCAT) with “derived/AI-generated” flags
-  - [ ] Fully traced in PROV (inputs, methods, parameters, confidence)
-  - [ ] Exposed only via governed API (never hardcoded into UI)
-- [ ] Link the domain README from the appropriate index docs (often the Master Guide)
+### 🏫 Educator / Story author
+1. Stories overview + templates (see `docs/stories/`) 📚  
+2. Citation & provenance guide (how to link sources clearly) 🔎  
 
 ---
 
-## ✍️ Writing rules for Story Nodes and narrative docs
+## 🤖 Focus Mode (AI) — what docs must enforce
 
-Story Nodes are **machine-ingestible storytelling** 🧠🗺️
+Focus Mode is not an ungoverned chatbot. It is designed as a **governed RAG pipeline** where:
+- the UI calls the backend (not the model),
+- the backend retrieves evidence from official stores,
+- the model must answer using those sources with citations.
 
-### ✅ Narrative requirements
-- **Every factual claim must be traceable** to cataloged evidence.
-- **Fact vs interpretation** must be explicitly separated.
-- **Entity references** should point to stable IDs (catalog/graph identifiers), not only free text.
-- Story metadata (author, date, sources) should be carried with the story (front matter or adjacent metadata file).
-- Drafts live in `reports/story_nodes/draft/` until review gates are satisfied.
+### 🧠 High-level flow
+```mermaid
+sequenceDiagram
+  participant U as 🧑 User
+  participant UI as 🖥️ UI (React/TS)
+  participant API as 🧩 API (FastAPI)
+  participant K as 🗄️ Stores (Neo4j/PostGIS/Search/Vector)
+  participant L as 🐙 Ollama (LLM)
 
-### ✅ “Published” requirements (hard gate)
-- Citations are complete and clickable in UI (linking to datasets, STAC/DCAT views, or PROV logs).
-- Provenance is complete for all referenced artifacts.
-- Sensitive content handling (redaction/labels) is respected.
-- Reviewer approval recorded via PR flow.
+  U->>UI: Ask a question
+  UI->>API: POST /focus-mode/query
+  API->>API: 🧼 Prompt Gate (sanitize & block injections)
+  API->>K: 🔎 Retrieve context (graph + spatial + docs + vector)
+  K-->>API: ✅ Evidence bundle w/ source IDs
+  API->>L: 🧾 Prompt + sources + citation rules
+  L-->>API: ✍️ Draft answer
+  API-->>UI: ✅ Answer + citations + policy decision
+```
 
----
-
-## 🤖 Focus Mode + AI notes (for doc authors)
-
-KFM supports AI augmentation, but it is **policy-governed** 🧷
-
-### ✅ AI rules of the road
-- AI is a **tool-using analyst**, not an oracle:
-  - It must retrieve from allowed sources and **show citations**.
-  - If reasoning traces are requested, they should be auditable and tied into provenance logs.
-- AI-generated layers/summaries intended for users must be:
-  - **Opt-in** (when appropriate)
-  - **Transparent** (clearly labeled)
-  - **Source-backed** (no black-box claims)
-
-> [!CAUTION]
-> If an AI output is user-facing, treat it like a dataset: **STAC/DCAT/PROV + governed API** — every time.
+### ✅ Doc implication
+When documenting Focus Mode behavior:
+- Always specify **what store(s)** provide truth (Neo4j, PostGIS, search index, vectors).
+- Always specify **what policy gate** enforces the rule.
+- Always show **where audit logs / provenance** live (so it’s reproducible).
 
 ---
 
-## 🎨 Cartography + metadata expectations (why docs care)
+## 🔐 Governance mindset (docs must reflect it)
 
-Even when you’re “just making a map,” KFM treats presentation as part of evidence integrity 🎛️🗺️
+KFM treats governance as a **first-class feature**:
+- “Fail closed” by default: if metadata/policy is missing → block the operation 🛑  
+- Role-based access control (RBAC) with scoped permissions 👤  
+- Policy-as-code enforcement (e.g., OPA policy packs) 🧾  
+- Mandatory provenance records (W3C PROV) for publishable datasets 🔗  
 
-### 🧾 Metadata expectations (minimum shape)
-Docs introducing a dataset/map layer should capture:
-- Identification (what is it, why it exists)
-- Quality (limits, uncertainty, resolution, completeness)
-- Spatial organization (vector/raster; schema)
-- Spatial reference (CRS, coordinate system, projection)
-- Entities & attributes (data dictionary)
-- Distribution + use policy (license, access rules)
-- Citation guidance (how to cite)
-- Temporal coverage (when collected, updated)
-- Contacts (who owns/maintains it)
-
-### 🪪 Rights & reuse expectations
-- Map **representations** can be copyrighted even if the underlying **facts** are not.
-- Document sources and avoid copying protected representations; prefer licensed/open data and regenerate outputs.
-
-### 🧭 Navigation / “read the map” reminders (when relevant)
-- When publishing navigation-like or field-map layers, include basic orientation notes (e.g., declination awareness, grid conventions) and any CRS-specific caveats.
+**Docs should never describe a workflow that bypasses governance.**  
+If you discover a bypass: document it as a **bug / risk** and route it through the governance process.
 
 ---
 
-## 📚 Reference Library (project files)
+## ✍️ Documentation rules of engagement
 
-These are “foundation texts” used to shape KFM’s design + implementation choices 📖  
-*(Not all are normative standards; some are conceptual scaffolding.)*
+### ✅ The evidence rule (golden rule)
+> If it sounds factual, it needs a source.
 
-### 🧠 AI / Knowledge systems
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf` — system invariants, tool-using AI posture, provenance-first design
-- `Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf` — local-first LLM ops + model runner workflows
-- `Various AI Concepts & Information.pdf` — working notes and concept atlas
+**Preferred sources in descending order:**
+1. 🏷️ Dataset catalog entry (STAC/DCAT)  
+2. 🔗 Provenance record (W3C PROV)  
+3. 📄 Pipeline code output / manifest logs  
+4. 🧾 External authoritative source (state/federal agency, archive)  
 
-### 🗺️ GIS / Cartography / Navigation
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf` — map design, metadata discipline, copyright/representation caveats
-- `Map Reading & Land Navigation.pdf` — grids, declination, marginalia, foundational map literacy *(⚠️ verify distribution constraints before sharing externally)*
-- `Map Projections Used by the U.S. Geological Survey.pdf` — projection reference for USGS workflows
-- `Archaeological 3D GIS.pdf` — 3D GIS patterns, archaeological representation
-- `Mobile Mapping - project_muse.pdf` — mobile mapping framing + field capture context
+### 🧩 Cross-linking rules
+- Use **relative links** inside `docs/` so forks and offline builds work.
+- Link to code with **stable paths** (and optional line ranges when possible).
+- Avoid “dead-end docs”: every page should link back to the hub or neighbors.
 
-### 🛰️ Remote sensing + geospatial computation
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf` — Earth Engine workflows + cloud scale patterns
-- `GIS-Mapping-Geocomputation-Python.pdf` — Python geospatial patterns
-- `KFM- python-geospatial-analysis-cookbook-over-60-recipes-to-work-with-topology-overlays-indoor-routing-and-web-application-analysis-with-python.pdf` — practical recipes (topology, routing, web analysis)
+### 🧱 Page structure template (recommended)
+Copy/paste when creating a new doc page:
 
-### 📈 Visualization + methods
-- `Visualization of Time-Oriented Data.pdf` — timelines, time series, time-based UI patterns
-- `Introduction to Digital Humanism.pdf` — interpretive framing and human-centered systems thinking
-- `Understanding Statistics & Experimental Design.pdf` — experimental hygiene, claims discipline
-- `graphical-data-analysis-with-r.pdf` — EDA patterns and statistical visualization
+```markdown
+# 📌 Title
 
-### 🕸️ Graphs + structure + optimization (use selectively)
-- `Spectral Geometry of Graphs.pdf` — graph structure + spectral viewpoints (for advanced graph reasoning/quality)
-- `Generalized Topology Optimization for Structural Design.pdf` — optimization perspectives (transferable thinking, not GIS-specific)
+## 🎯 Purpose
+What problem does this doc solve?
 
-### 🗄️ Data systems at scale (pipeline + API performance thinking)
-- `Database Performance at Scale.pdf`
-- `Scalable Data Management for Future Hardware.pdf`
-- `Data Spaces.pdf` — governance, trust, sovereignty patterns for data sharing ecosystems
+## 🧱 System context
+Where does this sit in the Truth Path?
 
-### 🧰 Engineering & programming bundles
-- `Programming Resources.pdf` — multi-doc programming shelf (treat as a “library omnibus”)
-- `UI-TypeScript-WebDesign-API-Android-iPhone-Html5-CSS-SVG-ReactJS-NodeJs-RestFull Web services.pdf`
-- `Data Mining-Data Sciences-Deep Learning-Python Geographin Data Analysis-Social Enginering Hacking-OCaml-Psychology of fake news-vuejs-web app security-Computational algorithms.pdf`
+## 🔌 Interfaces
+Inputs/outputs, APIs, schemas, contracts.
+
+## ✅ Governance & safety
+What policies/gates apply?
+
+## 🔎 Provenance & citations
+Where are sources recorded? How is this auditable?
+
+## 🧪 Examples
+Concrete examples (requests, responses, configs).
+
+## 🧭 Next steps
+TODOs, open questions, follow-ups.
+```
+
+### ✅ PR checklist for docs
+- [ ] I used **relative links** (not absolute local paths)
+- [ ] I included **sources / provenance pointers** for factual claims
+- [ ] I didn’t describe any workflow that bypasses **Raw → … → UI**
+- [ ] I updated `docs/README.md` if I added a new top-level doc section
+- [ ] I added/updated diagrams (Mermaid) where architecture changed
 
 ---
 
-## 🧰 Suggested next docs to add (if missing)
-- `docs/STYLEGUIDE.md` — writing style + diagrams + citation norms + naming conventions
-- `docs/INDEX.md` — narrative “docs portal” for non-technical users
-- `docs/CONTRIBUTING_DOCS.md` — doc PR checklist + what CI will check + review rubric
-- `docs/standards/VALIDATION_MATRIX.md` — single page mapping artifacts → validators → owners
+## 📚 Reference library (project PDFs)
+
+> These are the “support shelf” 📖 — design, GIS, DevOps, AI, and scientific tooling references.
+> Keep this list curated (add short notes, remove duplicates, prefer the best source).
+
+### 🗺️ GIS, cartography, mapping design
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf` 🧭
+- `Mapping Urban Spaces.pdf` 🏙️
+- `Archaeological 3D GIS.pdf` 🏺🧊
+- `GIS-Mapping-Topology.pdf` 🧩🗺️
+
+### 🤖 AI, ML, statistics
+- `Neural Nerworks-Build Ai-Statistical Learning-Deep Learing-AI Safety-Linear Regression-bayesian.pdf` 🧠
+- `Artificial Intelligence & Machine Learning in Health Care & Medical Sciences.pdf` 🏥
+- `MATLAB-PyTorch-Numpy-SciPy-Statisctics-Programming Science Tools.pdf` 📈
+- `graphical-data-analysis-with-r.pdf` 📊
+
+### 🧰 Engineering, performance, pipelines
+- `foundations-of-software-and-system-performance-engineering-process-performance-modeling-requirements-testing-scalability-and-practice.pdf` ⚙️
+- `Database-Docker-CI-Pipeline-DevOps-Security-Git-Shell-PowerShell.pdf` 🐳🔐
+- `Various Programming Concepts.pdf` 🧩
+- `Programming Design-Flexibility-Machine Learning-Test Development-Verilog-Software Qualify Assurance.pdf` 🧪
+
+### 🌐 Web / UI building blocks
+- `Web Design.pdf` 🎨
+- `professional-web-design-techniques-and-templates.pdf` 🧱
+- `learn-to-code-html-and-css-develop-and-style-websites.pdf` 🧷
+- `CSS-HTML-JAVA-WebDesign.pdf` 🕸️
+- `Node.js-React-CSS-HTML.pdf` ⚛️
+
+### 🧮 MATLAB / scientific computing
+- `Applications from Engineering with MATLAB Concepts.pdf` 🧮
+- `Hands-On Accelerator Physics Using MATLAB.pdf` 🧲
+
+### 🧠 Creativity / semantics / misc applied research
+- `ssoar-2022-zipp-Programming_Creativity_Semantics_and_Organisation.pdf` ✨
+- `Data Science-Data Engineering-Machine Learing-Steganography-Bilogical Atonomy-PYthon Scripting-Sine Cosine Algorithm-People Anylitics-Experimental Design-Visualizations of Time-Oriented Data-Creativity.pdf` 🧠🧪
 
 ---
 
-<!--
-GROUNDING / SOURCES USED (hidden to keep README clean)
+## 🧾 Glossary (starter)
 
-Key KFM doc invariants + CI gates + structure:
-- Canonical pipeline order + graph-as-index + API boundary + evidence-first narrative + Focus Mode hard gate:
-   [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- CI gates (schema/contracts, determinism, STAC/DCAT/PROV validation, story validation, security scans):
-   [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- Governance review triggers (external sources, narratives, sensitive locations, AI user-facing outputs):
-   [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **STAC** 🏷️ — SpatioTemporal Asset Catalog (dataset/asset metadata standard)  
+- **DCAT** 🗂️ — Data Catalog Vocabulary (dataset discovery metadata)  
+- **W3C PROV** 🔗 — provenance standard (lineage: inputs → process → outputs)  
+- **OPA** 🧾 — Open Policy Agent (policy-as-code enforcement)  
+- **PostGIS** 🗺️ — spatial database extension for PostgreSQL  
+- **Neo4j** 🧩 — graph database for entities, relationships, events  
+- **RAG** 🔎 — Retrieval-Augmented Generation (LLM answers from retrieved evidence)  
+- **Focus Mode** 🤖 — KFM’s governed AI assistant (runs through the API + policies)
 
-Data staging + boundary artifacts + domain expansion + evidence artifacts:
-- Staging areas + STAC/DCAT/PROV canonical output locations + domain README runbook expectations:
-   [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- Evidence artifact pattern (AI/analysis outputs treated as first-class datasets, catalog + PROV + API exposure):
-   [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+---
 
-Focus Mode + AI tool-use + citations + provenance traces:
-- Focus Mode AI uses tool calls, returns citations, can produce reasoning traces recorded in PROV logs:
-   [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Provenance-first principle + black-box outputs unacceptable:
-   [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+## ✅ Next improvements (good “first doc PRs”)
 
-Cartography + metadata + copyright/representation:
-- Metadata components + interoperability framing + copyright vs facts distinction:
-   [oai_citation:7‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-- Coordinate systems and UTM basics (supporting CRS awareness section):
-   [oai_citation:8‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)
+- 🧾 Add `docs/standards/doc_style_guide.md`
+- 🔎 Add `docs/standards/citation_and_provenance.md` with examples (STAC/DCAT/PROV linking)
+- 📚 Add `docs/reference/reading_list.md` with “what to read for what task”
+- 🧱 Add a “Docs Build/Publish” note if we generate a docs site (MkDocs/Docusaurus/etc.)
 
-Navigation + declination/map literacy reminder:
-- Orienting a map + declination diagram reference:
-   [oai_citation:9‡Map Reading & Land Navigation.pdf](sediment://file_00000000b14c7230b1b262ddd9df4e5d)
+---
 
-Data spaces governance framing:
-- Data spaces as trustworthy data sharing ecosystems + rule/policy enforcement:
-   [oai_citation:10‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)
+<div align="center">
 
-FILECITE MARKERS (tool surfacing; keep hidden for GitHub cleanliness):
--  [oai_citation:11‡Data Spaces.pdf](sediment://file_0000000053c071f5a9733b1b09cc9f76)  Data Spaces.pdf
--  [oai_citation:12‡Introduction to Digital Humanism.pdf](sediment://file_0000000090a071f5afd5c78c4383e488)  Introduction to Digital Humanism.pdf
--  [oai_citation:13‡Visualization of Time-Oriented Data.pdf](sediment://file_000000001468722f929b8752236e5a72)  Visualization of Time-Oriented Data.pdf
--  [oai_citation:14‡Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf](sediment://file_00000000a58071f586f00793dee712d6)  Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf
--  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)   Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf
--  [oai_citation:16‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)   making-maps-a-visual-guide-to-map-design-for-gis.pdf
--  [oai_citation:17‡Map Reading & Land Navigation.pdf](sediment://file_00000000b14c7230b1b262ddd9df4e5d)   Map Reading & Land Navigation.pdf
--->
+### 🏁 Goal of this docs folder
+**Make KFM understandable, auditable, and easy to extend — without breaking provenance.** ✅
+
+</div>
