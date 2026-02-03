@@ -287,31 +287,32 @@ Minimum:
 > Adjust to match your repo layout — the goal is consistency.
 
 ```
-src/pipelines/
-  📁 <domain>/
-    📁 <dataset_id>/
-      📄 pipeline.yaml
-      📄 source_manifest.yaml
-      🐍 extract.py
-      🐍 transform.py
-      🐍 load.py
-      🐍 publish.py
-      📁 tests/
-        🧪 test_contracts.py
-        🧪 test_metadata.py
-      📄 README.md   # dataset-specific runbook (optional)
+src/
+└─ pipelines/
+   └─ 📁 <domain>/
+      └─ 📁 <dataset_id>/
+         ├─ 📄 pipeline.yaml
+         ├─ 📄 source_manifest.yaml
+         ├─ 🐍 extract.py
+         ├─ 🐍 transform.py
+         ├─ 🐍 load.py
+         ├─ 🐍 publish.py
+         ├─ 🧪 tests/
+         │  ├─ 🧪 test_contracts.py
+         │  └─ 🧪 test_metadata.py
+         └─ 📄 README.md   # dataset-specific runbook (optional)
 
 tools/
-  🧰 validate.py
-  🧰 stac_build.py
-  🧰 dcat_build.py
-  🧰 prov_build.py
+├─ 🧰 validate.py
+├─ 🧰 stac_build.py
+├─ 🧰 dcat_build.py
+└─ 🧰 prov_build.py
 
 data/
-  📁 <domain>/
-    🧱 raw/
-    🧪 work/
-    ✅ processed/
+└─ 📁 <domain>/
+   ├─ 🧱 raw/
+   ├─ 🧪 work/
+   └─ ✅ processed/
 ```
 
 ---
