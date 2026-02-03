@@ -97,15 +97,51 @@ Focus Mode is **not** a free-form chatbot. It’s a governed, retrieval-augmente
 
 ```text
 📦 Kansas-Frontier-Matrix/
-├── api/                     # FastAPI backend (Python)
-├── web/                     # React + TypeScript front-end
-├── pipelines/               # ETL pipelines & simulation scripts
-├── data/                    # Versioned datasets & metadata
-│   ├── raw/                 # Immutable source snapshots
-│   ├── processed/           # Standardized outputs
-│   ├── catalog/             # STAC items + DCAT dataset records
-│   └── provenance/          # W3C PROV lineage documents
-└── docs/                    # Documentation + narratives (Story content)
+├── 🐍 api/                               # FastAPI backend (Python)
+│   ├── 📁 app/                            # FastAPI app init, middleware, lifecycle
+│   ├── 📁 routes/                         # Routers (datasets, catalog, tiles, health, focus-mode)
+│   ├── 📁 schemas/                        # Pydantic models (requests/responses)
+│   ├── 📁 services/                       # Business logic (catalog search, feature streaming)
+│   ├── 📁 adapters/                       # DB/Neo4j/search/LLM clients
+│   ├── 📁 policies/                       # OPA policy bundles / helpers
+│   ├── 📁 scripts/                        # One-off maintenance tasks
+│   └── 🧪 tests/                          # pytest
+│
+├── 🌐 web/                                # React + TypeScript front-end
+│
+├── 🏭 pipelines/                          # ETL pipelines & simulation scripts
+│   ├── 📁 src/
+│   │   └── 📁 pipelines/
+│   │       └── 📁 <domain>/
+│   │           └── 📁 <dataset_id>/
+│   │               ├── 📄 pipeline.yaml
+│   │               ├── 📄 source_manifest.yaml
+│   │               ├── 🐍 extract.py
+│   │               ├── 🐍 transform.py
+│   │               ├── 🐍 load.py
+│   │               ├── 🐍 publish.py
+│   │               ├── 🧪 tests/
+│   │               │   ├── 🧪 test_contracts.py
+│   │               │   └── 🧪 test_metadata.py
+│   │               └── 📄 README.md       # dataset-specific runbook (optional)
+│   │
+│   └── 🧰 tools/
+│       ├── 🐍 validate.py
+│       ├── 🐍 stac_build.py
+│       ├── 🐍 dcat_build.py
+│       └── 🐍 prov_build.py
+│
+├── 🗃️ data/                               # Versioned datasets & metadata
+│   ├── 🧱 raw/                            # Immutable source snapshots
+│   ├── ✅ processed/                      # Standardized outputs
+│   ├── 🗺️ catalog/                        # STAC items + DCAT dataset records
+│   ├── 🧾 provenance/                     # W3C PROV lineage documents
+│   └── 📁 <domain>/                       # (optional) domain-scoped lake layout
+│       ├── 🧱 raw/
+│       ├── 🧪 work/
+│       └── ✅ processed/
+│
+└── 📚 docs/                               # Documentation + narratives (Story content)
 ```
 
 🔎 Related docs you’ll likely want:
