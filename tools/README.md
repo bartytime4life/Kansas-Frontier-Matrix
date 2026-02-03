@@ -1,449 +1,251 @@
-# 🧰 Tools
+# 🧰 Tools (Dev + Ops Utilities)
 
-![Status](https://img.shields.io/badge/status-prototype-orange)
-![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
-![Provenance](https://img.shields.io/badge/provenance-W3C%20PROV-blue)
-![Catalog](https://img.shields.io/badge/catalog-STAC%20%7C%20DCAT-informational)
-![Stack](https://img.shields.io/badge/runtime-Docker%20Compose-2496ED)
-![Geo](https://img.shields.io/badge/geo-PostGIS%20%7C%20Neo4j-informational)
-![AI](https://img.shields.io/badge/AI-Ollama%20(local%20LLM)-6E40C9)
+![KFM](https://img.shields.io/badge/KFM-tools%20hub-1f6feb?style=for-the-badge)
+![Scope](https://img.shields.io/badge/scope-dev%20%7C%20data%20ops%20%7C%20qa-0b7285?style=for-the-badge)
+![Principle](https://img.shields.io/badge/principle-provenance--first-6f42c1?style=for-the-badge)
 
-Developer utilities & operational scripts for the **Kansas Frontier Matrix (KFM)** monorepo—built to keep **code + data + docs** reproducible, traceable, and governance-compliant.  
-The monorepo philosophy is intentional: *every artifact evolves in lockstep* so lineage is auditable from Git history **and** structured provenance logs.[^kfm-v13][^kfm-blueprint]
+This folder contains **developer + operator tools** used to run, validate, and maintain the **Kansas Frontier Matrix (KFM)** platform in a **reproducible, provenance-first** way.
 
-> [!IMPORTANT]
-> **Tools do not “skip the line.”** If a tool creates/changes data, it must respect KFM’s canonical pipeline order and publish boundary artifacts (metadata catalogs + provenance) before anything gets loaded into the graph or served by APIs.[^kfm-v13]
+> 🧠 Guiding idea: tools should **help** the platform—not bypass it.  
+> Prefer **pipeline + catalog + API** workflows over direct DB edits whenever possible.
 
 ---
 
-## 🧭 Table of Contents
+## 🧭 Table of contents
 
-- [⚡ Quickstart](#-quickstart)
-- [🧩 Why this folder exists](#-why-this-folder-exists)
-- [🧭 Where `tools/` fits in KFM](#-where-tools-fits-in-kfm)
-- [📦 What belongs in `tools/`](#-what-belongs-in-tools)
-- [🧱 Tool contract (non-negotiables)](#-tool-contract-non-negotiables)
-- [🗂️ Suggested folder layout](#️-suggested-folder-layout)
-- [🧠 Tool playbooks](#-tool-playbooks)
-  - [🗺️ Data & GIS](#️-data--gis)
-  - [🧾 Catalog & Metadata](#-catalog--metadata)
-  - [🧬 Provenance](#-provenance)
-  - [🧠 AI / Focus Mode](#-ai--focus-mode)
-  - [🧠 Graph & Indexing](#-graph--indexing)
-  - [🛠️ Dev / Ops](#️-dev--ops)
+- [🧩 What belongs in `tools/`?](#-what-belongs-in-tools)
+- [🚀 Quickstart](#-quickstart)
+- [📁 Tool index](#-tool-index)
+- [🏃 Running tools safely](#-running-tools-safely)
+- [🔌 Common API calls (useful for tools)](#-common-api-calls-useful-for-tools)
+- [🧪 MCP standards for tool authors](#-mcp-standards-for-tool-authors)
+- [🛠️ Troubleshooting](#️-troubleshooting)
 - [➕ Adding a new tool](#-adding-a-new-tool)
-- [🩺 Troubleshooting](#-troubleshooting)
-- [📚 Sources used to ground this README](#-sources-used-to-ground-this-readme)
 
 ---
 
-## ⚡ Quickstart
+## 🧩 What belongs in `tools/`
 
-### 1) Bring up the KFM stack (preferred) 🐳
+`tools/` is for **repeatable** utilities that support:
 
-```bash
-# From repo root (choose one):
-docker compose up --build
-# or
-docker-compose up --build
-```
+- 🧱 **Environment & stack management** (dev workflows, helper CLIs)
+- 🧬 **Data operations** (ingest triggers, batch exports, format conversions)
+- ✅ **Validation / QA** (schema checks, catalog integrity checks, spatial sanity tests)
+- 📦 **Packaging** (dataset bundles, release helpers, artifact stamping)
+- 🔎 **Diagnostics** (health checks, dependency verification, port checks)
 
-### 2) Run tools inside the API container ✅
+What *doesn’t* belong here:
 
-> [!TIP]
-> If a tool needs PostGIS/Neo4j/GDAL/PROJ/etc., run it inside the container to match production-like dependencies and mounted volumes.[^kfm-blueprint]
-
-```bash
-# Design target examples:
-docker compose exec api python -m tools.kfm --help
-docker compose exec api python -m tools.kfm doctor
-```
-
-### 3) Run a pipeline (and validate it) 🔁
-
-```bash
-# Design target examples:
-docker compose exec api python -m src.pipelines.run --pipeline pipelines/example/pipeline.yml
-docker compose exec api python -m tools.kfm catalog validate
-docker compose exec api python -m tools.kfm prov lint
-```
-
-> [!NOTE]
-> Treat commands labeled **design target** as the intended UX/shape—even if the exact entrypoints evolve.
+- ❌ One-off experiments that aren’t repeatable  
+- ❌ Manual “hot fixes” that bypass governance / provenance  
+- ❌ Secret keys or sensitive datasets
 
 ---
 
-## 🧩 Why this folder exists
+## 🚀 Quickstart
 
-KFM needs repeatable utilities to keep a **single-repo system** consistent:
+### 1) Bring up the dev stack
+From repo root (see main README for the canonical commands):
 
-- 🔁 **Repeatable ETL helpers** that support plugin pipelines (ingest → transform → load), without bypassing them.[^kfm-v13]
-- 🧬 **Provenance-first workflows** so every dataset and major derived artifact has lineage.[^kfm-v13]
-- ✅ **Fail-closed governance** so missing metadata/license/provenance/schema causes a hard stop (local or CI).[^kfm-v13]
+```bash
+docker compose up -d
+# or (older)
+docker-compose up -d
+```
+
+### 2) Confirm the API is reachable
+- Swagger UI: `http://localhost:8000/docs` 🔎
+
+### 3) Run tools
+Tools may run:
+- **On your host** (shell/node/python scripts), or
+- **Inside containers** via `docker compose exec` for consistent deps + mounted volumes.
 
 ---
 
-## 🧭 Where `tools/` fits in KFM
+## 📁 Tool index
 
-KFM’s canonical pipeline ordering (don’t skip steps):[^kfm-v13]
+> Add new tools here as they are introduced. Keep this list current ✅
+
+### 🧰 Current tools
+
+- **`tools/kfm/`** — KFM helper CLI / operational utilities  
+  👉 See: [`tools/kfm/README.md`](./kfm/README.md)
+
+---
+
+## 🏃 Running tools safely
+
+### ✅ Preferred: run “in context” of the stack
+Running inside the API container is often best because the environment already has:
+- database connectivity (PostGIS / graph DB, etc.)
+- mounted `data/` volumes
+- any geospatial deps (GDAL/proj/etc.) installed in the image
+
+Examples:
+
+```bash
+# open a shell inside the API container
+docker compose exec api bash
+
+# run a one-off pipeline script (example path)
+docker compose exec api python pipelines/my_pipeline.py
+```
+
+### 🧯 Safety checklist
+Before you run anything that changes data:
+
+- [ ] Are you in the **correct environment** (dev vs prod)?
+- [ ] Do you have a **dry-run** mode available?
+- [ ] Are outputs versioned / logged?
+- [ ] Are you preserving the **canonical pipeline order**?
+
+---
+
+## 🔁 Canonical pipeline order
+
+Tools should reinforce the platform’s “source → proof → product” model:
 
 ```mermaid
 flowchart LR
-  A[Raw Data<br/>data/raw] --> B[Processed Artifacts<br/>data/processed]
-  B --> C[Catalog + Provenance<br/>STAC/DCAT/PROV]
-  C --> D[Graph + Search Index<br/>Neo4j, embeddings]
-  D --> E[Governed APIs<br/>src/server]
-  E --> F[Web UI<br/>web/]
-  F --> G[Story Nodes<br/>docs/reports/story_nodes]
-  G --> H[Focus Mode<br/>grounded answers]
-```
+  raw[📥 Raw data] --> processed[⚙️ Processed]
+  processed --> prov[🧾 Catalog & Provenance]
+  prov --> db[🗄️ Databases]
+  db --> api[🧩 API]
+  api --> ui[🗺️ UI]
 
-**Tools exist to make this ordering easy to follow**:
-- scaffold pipeline/plugin templates 🧩
-- validate artifacts before publish ✅
-- lint provenance + metadata 🧬
-- run “doctor” checks on the environment 🩺
-- rebuild indexes (graph/search/embeddings) **only after** publish boundary artifacts 🧠
-
----
-
-## 📦 What belongs in `tools/`
-
-`tools/` is for **cross-cutting utilities** that don’t belong to runtime code or pipeline plugins.
-
-**Typically belongs here ✅**
-- Validators (schema/metadata/license/provenance/CRS/geometry)
-- Scaffolding generators (new pipeline plugin + config + templates)
-- Converters (format conversion, reprojection, tiling, simplification)
-- Auditors (governance checks, “what changed?” diffs, checksum verification)
-- Rebuilders (graph/search/embedding indices)
-- “Doctor” scripts (environment sanity checks)
-
-**Typically belongs elsewhere 🧭**
-- ETL logic → `src/pipelines/` (plugins and orchestrator)[^kfm-v13]
-- Graph loading code → `src/graph/`[^kfm-v13]
-- API/runtime → `src/server/`[^kfm-v13]
-- UI → `web/`[^kfm-v13]
-- Story nodes & narrative outputs → `docs/reports/story_nodes/`[^kfm-v13]
-- Schemas → `schemas/`[^kfm-v13]
-
----
-
-## 🧱 Tool contract (non-negotiables)
-
-### 1) Provenance-first 🧬
-If a tool produces a derived artifact, it **must also** produce/update provenance (and link inputs → outputs), before that artifact is considered publishable.[^kfm-v13]
-
-### 2) Fail closed 🚫
-If required metadata/license/provenance/schema integrity is missing → **stop** and print *exactly what to fix* (and where).
-
-> [!WARNING]
-> CI should treat missing provenance/catalog artifacts as a hard failure.[^kfm-v13]
-
-### 3) Deterministic + idempotent by default 🔁
-Tools should be:
-- **config-driven** (inputs/params recorded)
-- **repeatable** (same inputs → same outputs)
-- **idempotent** (safe to re-run)
-- **logged** (stable IDs/hashes + clear run manifests)[^kfm-v13]
-
-### 4) Sovereignty + classification propagation 🛡️
-- No output can be **less restricted** than its inputs.
-- Redaction/generalization rules must be enforced end-to-end.[^kfm-v13]
-
-### 5) API boundary rule (don’t punch holes) 🧱
-UI and external consumers must access governed data **via APIs**, not direct graph queries.[^kfm-v13]  
-Tools that touch Neo4j should be treated as privileged operations (local dev + CI only).
-
-### 6) Metadata + licensing are first-class 🧾
-Geo artifacts require reliable metadata: identification, quality, spatial reference (CRS/projection), distribution/use policy, citation, temporal info, and contact/ownership.[^making-maps]  
-When in doubt, assume works are copyrighted until you confirm otherwise.[^making-maps]
-
-### 7) Evidence-first outputs 📌
-If a tool produces human-readable reports (QA summaries, audits, story fragments), they must be **evidence-first**: every claim ties back to catalog/prov IDs (or citations).[^kfm-v13]
-
----
-
-## 🗂️ Suggested folder layout
-
-> [!NOTE]
-> This is a recommended structure. Create folders as you implement tools.
-
-```text
-🧰 tools/
-├─ 📘 README.md
-├─ 🐍 kfm/                        # (recommended) Python package for a unified CLI
-│  ├─ __init__.py
-│  ├─ __main__.py                 # `python -m tools.kfm ...`
-│  ├─ cli.py                      # Typer/Click entrypoint (recommended)
-│  └─ commands/
-│     ├─ doctor.py                # env + connectivity checks
-│     ├─ data.py                  # GIS/data helpers (CRS, geometry QA, conversions)
-│     ├─ catalog.py               # STAC/DCAT validators + generators
-│     ├─ prov.py                  # provenance generators/linters (W3C PROV)
-│     ├─ graph.py                 # Neo4j load/index helpers (post-publish only)
-│     └─ ai.py                    # Focus Mode smoke tests / embedding jobs
-├─ 🧪 fixtures/                   # tiny + public test inputs
-├─ 🧾 templates/                  # scaffold templates (pipeline/plugin/metadata/prov)
-└─ 🧪 tests/                      # unit tests for tools
+  tools((🧰 Tools))
+  tools --> processed
+  tools --> prov
+  tools --> api
 ```
 
 ---
 
-## 🧠 Tool playbooks
+## 🔌 Common API calls (useful for tools)
 
-### 🗺️ Data & GIS
+These examples are handy when writing scripts that interact with KFM via the **backend API**.
 
-**Typical jobs**
-- Convert ↔ validate ↔ simplify (vector/raster)
-- Reproject / normalize CRS
-- Validate geometry + bounds + topology
-- Validate temporal fields (time-series sanity)
+> 🧩 Tip: If you’re unsure which endpoints exist in your current build, use Swagger: `http://localhost:8000/docs`
 
-**Core quality gates**
-- ✅ Geometry validity (PostGIS `ST_IsValid*`) and human-readable error output.[^postgis-cookbook]
-- ✅ CRS sanity (explicit EPSG; avoid “unknown CRS”)
-- ✅ Coordinate range checks (no NaNs; lat/lon in plausible ranges if EPSG:4326)
-- ✅ Temporal QA: catch missing/duplicate/outdated/implausible/ambiguous timestamps and time-zone mistakes.[^time-vis]
-
-<details>
-<summary><b>✅ Suggested commands (design targets)</b></summary>
-
+### 🗂️ Dataset metadata
 ```bash
-# Vector geometry QA (design target)
-python -m tools.kfm data validate-geoms --dsn "$POSTGIS_DSN" --table "data_processed.parcels"
-
-# Reproject GeoJSON (design target)
-python -m tools.kfm data reproject \
-  --in data/raw/example/a.geojson \
-  --out data/processed/example/a.geojson \
-  --to-epsg 4326
-
-# Temporal QA (design target)
-python -m tools.kfm data validate-time \
-  --in data/processed/example/events.parquet \
-  --time-col observed_at \
-  --timezone America/Chicago
+curl -s "http://localhost:8000/api/v1/datasets/ks_hydrology_1880" | jq
 ```
 
-</details>
-
-> [!TIP]
-> Prefer “small, composable” tools: one command = one contract, one output, one provenance update.
-
----
-
-### 🧾 Catalog & Metadata
-
-KFM treats catalogs + metadata as **publish boundary artifacts** (not optional).[^kfm-v13]
-
-**Typical jobs**
-- Ensure every `data/processed/**` artifact has:
-  - a catalog entry (STAC/DCAT)
-  - a provenance record (PROV)
-  - a license + citation + CRS + temporal coverage
-
-**Minimum metadata expectations**
-- Identification (title/description)
-- Quality notes (limits, known issues)
-- Spatial reference (CRS/projection)
-- Distribution/use policy + licensing
-- Citation + temporal coverage + contact info[^making-maps]
-
-<details>
-<summary><b>✅ Suggested commands (design targets)</b></summary>
-
+### 🔎 Catalog search
 ```bash
-# Validate catalogs (design target)
-python -m tools.kfm catalog validate --root data
-
-# Generate catalog stubs for new processed outputs (design target)
-python -m tools.kfm catalog scaffold --from data/processed/example --out data/catalog
+curl -s "http://localhost:8000/api/v1/catalog/search?q=railroad" | jq
 ```
 
-</details>
-
----
-
-### 🧬 Provenance
-
-**What “good provenance” looks like**
-A provenance file should capture:
-
-- **Entities:** input raw files (source pointer + checksums) + output artifacts
-- **Activity:** pipeline/tool name, timestamp, parameters/config hash
-- **Agents:** who/what ran it (person + software version)[^kfm-v13]
-
-> [!WARNING]
-> If something doesn’t have provenance, it’s a governance red flag in KFM.[^kfm-v13]
-
-<details>
-<summary><b>🧾 Minimal PROV record (illustrative shape)</b></summary>
-
-```json
-{
-  "prov_version": "1.0",
-  "activity": {
-    "id": "prov:activity:2026-01-30T18:02:11Z:reproject_geojson",
-    "tool": "tools.kfm.data.reproject",
-    "params": {"to_epsg": 4326},
-    "started_at": "2026-01-30T18:02:11Z",
-    "ended_at": "2026-01-30T18:02:14Z"
-  },
-  "entities": {
-    "input": [{"path": "data/raw/example/a.geojson", "sha256": "…"}],
-    "output": [{"path": "data/processed/example/a.geojson", "sha256": "…"}]
-  },
-  "agents": {
-    "user": {"id": "git:author", "name": "…"},
-    "software": {"id": "tools.kfm", "version": "0.1.0"}
-  }
-}
-```
-
-</details>
-
----
-
-### 🧠 AI / Focus Mode
-
-Focus Mode assumes:
-- local model execution (often via **Ollama**)
-- governance constraints (citations, provenance, restricted outputs)
-- auditability (PROV traces for AI interactions)[^kfm-blueprint]
-
-**Where tools help**
-- Smoke tests for AI endpoints
-- Local model setup checks (Ollama reachable)
-- Rebuild embeddings/semantic indexes (if used)
-
-**Ollama note**
-Ollama runs a local server and exposes a REST API (and often an OpenAI-compatible API) typically at `http://localhost:11434`.[^ollama]
-
-<details>
-<summary><b>🧪 Suggested “AI Doctor” checks (design targets)</b></summary>
-
+### 🧾 Stream dataset data (GeoJSON example)
 ```bash
-# 1) Is Ollama up?
-curl -s http://localhost:11434/api/tags | head
-
-# 2) Can the API container reach Ollama?
-docker compose exec api python -c "
-import os, requests
-base = os.getenv('AI_BACKEND_URL','http://host.docker.internal:11434')
-print(requests.get(base + '/api/tags', timeout=5).status_code)
-"
+curl -s "http://localhost:8000/api/v1/datasets/ks_hydrology_1880/data?format=geojson&bbox=-102,36,-94,40" \
+  | jq '.features[0]'
 ```
 
-</details>
+### 🏗️ Trigger an ingest pipeline
+```bash
+curl -s -X POST "http://localhost:8000/api/v1/ingest/runPipeline" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pipeline_id": "example_pipeline",
+    "args": {"force": false}
+  }' | jq
+```
+
+### 🧠 Focus Mode (AI-assisted query)
+```bash
+curl -s -X POST "http://localhost:8000/api/v1/ai/query" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "List major trails in Kansas and their purposes."
+  }' | jq
+```
+
+### 🕸️ GraphQL (if enabled)
+```bash
+curl -s -X POST "http://localhost:8000/graphql" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "query { storyNodes { id title yearRange } }"
+  }' | jq
+```
 
 ---
 
-### 🧠 Graph & Indexing
+## 🧪 MCP standards for tool authors
 
-**Purpose**
-- Load published artifacts into Neo4j
-- Build graph indexes / search indices / embedding indices
+KFM is built around **reproducibility + rigor**. Tools should follow “MCP” expectations:
 
-**Hard rule**
-Graph/index rebuild tools **must assume**:
-- inputs are already in `data/processed/`
-- catalogs are published (STAC/DCAT)
-- provenance exists (PROV)[^kfm-v13]
+### ✅ Tool quality bar
+- **Reproducible:** same input → same output (or explain nondeterminism)
+- **Auditable:** logs include timestamps, versions, and key parameters
+- **Traceable:** outputs link back to sources (dataset IDs, file paths, commit SHA, etc.)
+- **Governed:** don’t bypass catalog/provenance rules
 
-<details>
-<summary><b>✅ Suggested commands (design targets)</b></summary>
-
-```bash
-# Load published artifacts into graph (design target)
-python -m tools.kfm graph load --from data/processed --require-prov --require-catalog
-
-# Rebuild graph indexes (design target)
-python -m tools.kfm graph reindex
-```
-
-</details>
+### 🔒 Minimum features (strongly recommended)
+- `--help` with examples
+- `--dry-run` (or “plan” mode) for destructive actions
+- deterministic output naming (include dataset IDs + timestamps)
+- `--json` output option for machine-readable results
+- exit codes (0 success, non-zero failure)
 
 ---
 
-### 🛠️ Dev / Ops
+## 🛠️ Troubleshooting
 
-**Typical jobs**
-- Environment checks (ports, service health, credentials)
-- DB connectivity tests
-- Seed test data / fixtures
-- “Doctor” workflow: one command that tells you what’s broken and how to fix it
-
-<details>
-<summary><b>🩺 Example checks (design targets)</b></summary>
-
+### 🧱 Containers won’t start / DB connection issues
 ```bash
-python -m tools.kfm doctor \
-  --check postgis \
-  --check neo4j \
-  --check gdal \
-  --check catalogs \
-  --check prov
+docker compose logs api --tail=200
 ```
 
-</details>
+Common causes:
+- **dependency timing:** DB not ready yet (restart stack)
+- **port conflicts:** local Postgres on `5432`, Neo4j on `7474`, web/app on `3000/8000`
+- **volume permissions:** container can’t write to mounted `data/`
+
+### 🔁 Code changes not reflected
+```bash
+docker compose up -d --build
+```
 
 ---
 
 ## ➕ Adding a new tool
 
-### ✅ Checklist
-- [ ] Name is action-oriented (`validate_catalog`, `prov_lint`, `reproject_geojson`)
-- [ ] Tool has a clear **input contract** and **output contract**
-- [ ] Writes outputs only to intended locations (`data/work`, `data/processed`, and publish artifacts)
-- [ ] Produces/updates provenance for derived artifacts[^kfm-v13]
-- [ ] Fails closed on missing metadata/license/provenance/schema issues[^kfm-v13]
-- [ ] Includes a tiny public fixture + unit test
-- [ ] Documented in this README (playbook + example)
+Create a self-contained folder per tool:
 
-### 🧩 Prefer supporting pipelines, not bypassing them
-If you’re doing ingestion work, consider whether it belongs as a **pipeline plugin**, with tools acting as scaffolding + validation around it.[^kfm-v13]
+```text
+tools/
+  my-tool/
+    README.md
+    bin/
+      my-tool
+    src/
+    tests/
+```
 
----
-
-## 🩺 Troubleshooting
-
-<details>
-<summary><b>🐳 Docker/Compose issues</b></summary>
-
-- **Port conflicts** (5432/7474/8000/3000): change mappings or stop local services.
-- **Volume permissions**: if the API can’t write to `data/`, fix host permissions or container user mapping.
-- **Service readiness**: if API starts before DB/graph are ready, check logs and restart stack.[^kfm-blueprint]
-
-</details>
-
-<details>
-<summary><b>🗺️ GIS issues</b></summary>
-
-- **Invalid geometry**: run a validity scan and fix upstream (often in QGIS); PostGIS validity functions can return detailed error info.[^postgis-cookbook]
-- **CRS confusion**: always declare CRS explicitly and reproject intentionally.
-- **Time zone bugs**: validate time fields; watch for wrong time zones or ambiguous timestamps.[^time-vis]
-
-</details>
+### 📌 Expectations
+- Include **purpose**, **inputs/outputs**, and **examples** in the tool’s README
+- Prefer container-executed workflows (`docker compose exec api ...`) when tools need DB/GDAL/etc.
+- Update this index: [📁 Tool index](#-tool-index)
 
 ---
 
-## 📚 Sources used to ground this README
+### ✅ Suggested conventions
 
-- **KFM Master Spec (v13)** — canonical pipeline order, required publish artifacts (STAC/DCAT/PROV), governance invariants, and repo path conventions.[^kfm-v13]  
-- **KFM Technical Blueprint** — Docker Compose execution patterns, operational assumptions, and Focus Mode governance concepts.[^kfm-blueprint]  
-- **Metadata + licensing foundations (GIS)** — essential metadata fields + copyright/citation cautions.[^making-maps]  
-- **Time-oriented data QA** — common temporal data quality failures (missing/duplicate/outdated/ambiguous timestamps, time zone errors).[^time-vis]  
-- **Ollama local LLM** — local server + REST/OpenAI-compatible API expectations.[^ollama]  
-- **PostGIS geometry validity** — practical use of `ST_IsValid*` checks for quality gates.[^postgis-cookbook]  
-- **Data Spaces (FAIR)** — emphasizes machine-readable metadata, access controls, interoperability, and reusability via licenses + provenance.[^data-spaces]
+| Item | Recommendation |
+|------|----------------|
+| Naming | short, verb-ish (`reindex`, `export`, `validate`) |
+| Logging | always log inputs + output locations |
+| Safety | add `--dry-run` + “danger zone” callouts |
+| Docs | include a “What it changes” section |
+| CI | add at least a smoke test if feasible |
 
 ---
 
-[^kfm-v13]: **MARKDOWN_GUIDE_v13.md.gdoc** — project spec for KFM pipeline ordering, governance invariants, and canonical repo structure.
-[^kfm-blueprint]: **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf** — architecture/ops reference for KFM.
-[^making-maps]: **making-maps-a-visual-guide-to-map-design-for-gis.pdf** — metadata & copyright/usage guidance for GIS artifacts.
-[^time-vis]: **Visualization of Time-Oriented Data.pdf** — taxonomy + methods for diagnosing time-oriented data quality issues.
-[^ollama]: **Comprehensive Guide to Ollama and Its Supported Open-Source LLMs.pdf** — local server + API usage notes.
-[^postgis-cookbook]: **KFM- python-geospatial-analysis-cookbook…pdf** — PostGIS validity checks and practical geospatial workflows.
-[^data-spaces]: **Data Spaces.pdf** — FAIR-style expectations: machine-readable metadata, access controls, interoperability, reusability via licenses + provenance.
+> 🧭 If you’re unsure where something should live:  
+> - “one time experiment” → `docs/` or `notebooks/` (if present)  
+> - “repeatable utility” → `tools/` ✅  
+> - “core platform feature” → backend/frontend modules
