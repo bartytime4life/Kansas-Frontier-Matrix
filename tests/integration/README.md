@@ -1,259 +1,352 @@
 # 🧪 Integration Tests (KFM)
 
-![scope](https://img.shields.io/badge/scope-integration-blue)
-![stack](https://img.shields.io/badge/stack-docker%20compose%20%2B%20pytest-0aa)
-![mindset](https://img.shields.io/badge/mindset-provenance--first%20%26%20fail--closed-6a5acd)
-
-Welcome to `tests/integration/` ✅  
-These tests validate **KFM’s real service boundaries** (API ↔ databases ↔ pipelines ↔ policy gates) using a **containerized dev stack** — not mocks.
-
----
-
-## 🧭 What counts as “integration” in KFM?
-
-KFM is designed as a **pipeline → catalog/provenance → database → API → UI** system. Integration tests should **prove the seams hold**:
-
-- ✅ API talks to **real** PostGIS + graph DB containers
-- ✅ Data follows the canonical flow (no “UI talks to DB” shortcuts)
-- ✅ Governance checks (policy-as-code) are enforced in the same repo reality as CI
-- ✅ “Smoke paths” remain stable: `/docs`, GraphQL (if enabled), DB connectivity, seed data pipelines, etc.
+[![tests](https://img.shields.io/badge/tests-integration-blue)](#-integration-tests-kfm)
+[![runner](https://img.shields.io/badge/runner-Docker%20Compose-2496ED?logo=docker&logoColor=white)](#-quickstart)
+[![framework](https://img.shields.io/badge/api-FastAPI-009688?logo=fastapi&logoColor=white)](#-api-integration)
+[![db](https://img.shields.io/badge/db-PostGIS-336791?logo=postgresql&logoColor=white)](#-service-stack)
+[![kg](https://img.shields.io/badge/kg-Neo4j-008CC1?logo=neo4j&logoColor=white)](#-service-stack)
+[![policy](https://img.shields.io/badge/policy-OPA-7C3AED?logo=openpolicyagent&logoColor=white)](#-policy--governance-tests)
+[![py](https://img.shields.io/badge/python-pytest-0A9EDC?logo=python&logoColor=white)](#-running-the-suite)
 
 > [!IMPORTANT]
-> **Integration tests should only touch databases through the API layer** (by design).  
-> If a test directly queries DB tables to “verify UI behavior,” you’re probably writing the wrong test.
+> Integration tests verify the full **“truth path”** (a.k.a. canonical pipeline):  
+> `Raw ➜ Processed ➜ Catalog/Provenance ➜ Databases/KG ➜ API ➜ UI/AI`  
+> If it can’t be **provenanced/cited**, it can’t be considered “done.” ✅
 
 ---
 
-## 📦 Recommended folder layout
+## 🧭 What lives in `tests/integration/`?
+
+Integration tests cover **cross-boundary behavior** (real services talking to each other):
+
+- ✅ API ↔ PostGIS (spatial queries, migrations, indexes, geometry formats)
+- ✅ API ↔ Neo4j (graph relationships, entity lookups, link integrity)
+- ✅ Pipelines ↔ Catalog/Provenance (STAC/DCAT + PROV outputs exist & validate)
+- ✅ Policy enforcement (OPA gates: ingestion ✅ / serving ✅ / AI ✅)
+- ✅ Focus Mode AI: answers include **citations** + pass policy checks
+- ✅ Optional UI “smoke”: API contracts match what the map/timeline UI expects
+
+**Not** the place for:
+- Unit tests (pure functions + mocks)
+- Load/performance tests (`tests/performance/`, `bench/`)
+- Full browser E2E (prefer `tests/e2e/`)
+
+---
+
+## 📁 Suggested layout
 
 ```text
 tests/
-└── integration/
-    ├── README.md                👈 you are here
-    ├── conftest.py              🧰 pytest fixtures (base_url, clients, retries, cleanup)
-    ├── test_health.py           ❤️ /health or minimal “API up” checks
-    ├── test_datasets_api.py     🗂️ list/read datasets endpoints
-    ├── test_graphql_smoke.py    🧬 optional GraphQL smoke tests
-    ├── test_provenance.py       🧾 provenance artifacts exist for seeded data
-    ├── test_policy_gates.py     🛡️ policy outcomes observable via API
-    └── test_ai_focus_mode.py    🤖 optional (only if AI backend configured)
+  integration/
+    README.md
+    docker/
+      docker-compose.itest.yml        # test overrides/additional services
+    fixtures/
+      data/
+        raw/
+        processed/
+        catalog/
+        provenance/
+      sql/
+      cypher/
+      prompts/
+    api/
+      test_datasets.py
+      test_features.py
+      test_search.py
+    pipelines/
+      test_ingest_smoke.py
+      test_catalog_validation.py
+      test_prov_lineage.py
+    policies/
+      test_opa_serving.py
+      test_opa_ingestion.py
+      test_opa_ai.py
+    focus_mode/
+      test_ai_citations_required.py
+      test_ai_policy_blocks_sensitive.py
+    helpers/
+      clients.py
+      wait_for.py
+      assertions.py
 ```
-
----
-
-## ✅ Prerequisites
-
-### Required
-- 🐳 **Docker + Docker Compose** (Compose V2 recommended)
-- 🐍 Python environment available **inside the API container** (tests generally run there)
-
-### Optional (but recommended)
-- 🛡️ **Conftest** for running policy gates locally (mirrors CI’s policy checks)
-- 🤖 AI backend (e.g., Ollama or hosted provider) if you want to run AI integration tests
-
----
-
-## 🚀 Quickstart: run integration tests locally
 
 > [!TIP]
-> Run integration tests from the **repo root** so Compose paths & env files resolve cleanly.
-
-### 1) Start the dev stack
-
-```bash
-# Option A (classic)
-docker-compose up -d
-
-# Option B (Compose V2)
-docker compose up -d
-```
-
-### 2) Run tests inside the API container
-
-```bash
-# Run all integration tests (recommended marker approach if configured)
-docker-compose exec api pytest -m integration
-
-# Or run just this folder
-docker-compose exec api pytest tests/integration -q
-```
-
-### 3) Tear down when done
-
-```bash
-docker-compose down -v
-```
+> Keep fixtures **tiny + deterministic**.  
+> If a test needs a state-wide dataset to pass, it’s probably a **benchmark**, not an integration test.
 
 ---
 
-## 🌱 Seeding sample data (so tests have something real to hit)
+## 🧰 Service stack
 
-Many integration tests are more meaningful with a tiny “known-good” dataset seeded into:
+Most integration tests assume you can run a realistic stack with **Docker Compose**, typically including:
 
-- `data/raw/`
-- `data/processed/`
-- `data/catalog/`
-- `data/provenance/`
-- plus DB inserts done via pipelines
+- 🌐 **API** (FastAPI)
+- 🐘 **PostgreSQL + PostGIS**
+- 🕸️ **Neo4j**
+- 🔎 *(Optional)* Search index (Elasticsearch/OpenSearch/vector store)
+- 🪣 *(Optional)* Object storage (S3/MinIO) for COGs/tiles/large artifacts
+- 🧑‍⚖️ **OPA** (Open Policy Agent) policy gatekeeper
+- 🤖 *(Optional)* Ollama (local LLM runtime) for Focus Mode regression tests
+- 🗺️ *(Optional)* Web UI (React/MapLibre/Cesium) for smoke checks
 
-Suggested pattern:
-
-```bash
-# Example: run a one-off pipeline inside the API container
-docker-compose exec api python pipelines/import_rainfall.py
-```
+### Ports you’ll commonly see 👇
+- `8000` API
+- `5432` PostGIS
+- `7474/7687` Neo4j
+- `8181` OPA *(varies)*
+- `3000` Web UI *(varies)*
 
 > [!NOTE]
-> If your repo doesn’t ship `import_rainfall.py`, keep the pattern and swap the script name for whatever sample pipeline exists.
+> Port collisions are common (especially `5432`, `7474`, `8000`, `3000`).  
+> If you already run services locally, remap host ports in Compose.
 
 ---
 
-## 🔎 Manual smoke checks (fast sanity before you debug tests)
+## 🚀 Quickstart
 
-These are “human integration tests” that quickly confirm your stack is wired correctly.
+### 1) Bring up the test stack
 
-### ✅ API docs
-- Open: `http://localhost:8000/docs`
-
-### ✅ GraphQL (if enabled)
-- Open: `http://localhost:8000/graphql`
-- Example query:
-```graphql
-query {
-  storyNodes {
-    id
-    title
-    yearRange
-  }
-}
-```
-
-### ✅ Web UI (if running)
-- Open: `http://localhost:3000`
-
-### ✅ Databases (for debugging only)
-- PostGIS: `localhost:5432`
-- Graph DB UI (e.g., Neo4j): `http://localhost:7474`
-
-> [!WARNING]
-> Use DB UIs for debugging, not as your “test harness.”
-> Integration truth should be asserted through the API responses and system outputs.
-
----
-
-## 🧪 Test conventions (please follow)
-
-### ✅ Naming & structure
-- Files: `test_*.py`
-- Tests: `test_<behavior>__<expected_outcome>()`
-- Pattern: **Arrange → Act → Assert**
-- Prefer **black-box** assertions:
-  - “calling endpoint returns expected schema”
-  - “seeded dataset appears in `/datasets`”
-  - “policy prevents restricted access (403/deny response)”
-
-### ✅ Keep tests stable
-- Avoid time-based flake: add small retry helpers for service readiness
-- Prefer idempotent setup:
-  - write tests that can run twice without requiring manual cleanup
-- Keep payload sizes tiny; integration tests should be fast enough for CI
-
----
-
-## 🛡️ Policy checks (OPA/Rego) in the integration workflow
-
-KFM uses “policy-as-code” to prevent non-compliant changes (e.g., missing license metadata, missing provenance artifacts, etc.).  
-You should run these checks locally when your change touches:
-
-- `data/processed/`
-- `data/catalog/`
-- `data/provenance/`
-- policy files / AI prompt configs
-
-### Run policy checks locally (if Conftest is installed)
+From repo root:
 
 ```bash
-conftest test .
+# Option A (recommended): base compose + integration overrides
+docker compose -f docker-compose.yml -f tests/integration/docker/docker-compose.itest.yml up -d --build
 
-# Targeted check example:
-conftest test data/processed/mydata.csv
+# Option B: integration stack only (if self-contained)
+docker compose -f tests/integration/docker/docker-compose.itest.yml up -d --build
+```
+
+### 2) Configure environment (common vars)
+
+Most stacks use a `.env` derived from `.env.example` at repo root. Common variables:
+
+- `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`
+- `NEO4J_AUTH`
+- `OPA_URL` (or similar)
+- `S3_ENDPOINT`, `S3_BUCKET` *(if using MinIO/S3)*
+
+> [!IMPORTANT]
+> Integration tests should run against **ephemeral** services (Compose / CI services).  
+> Never point tests at production resources.
+
+### 3) Seed minimal test data (if required)
+
+```bash
+# Example: run a tiny seed/pipeline inside the API container
+docker compose exec api python pipelines/seed_minimal.py
+```
+
+### 4) Run the suite
+
+```bash
+# Python-based integration tests
+pytest -q -m integration
+
+# Or repo wrapper (if provided)
+make test-integration
+```
+
+---
+
+## 🧪 Running the suite
+
+### Test “lanes” 🛣️
+
+| Lane | Goal | When to run | Typical runtime |
+|---|---|---:|---:|
+| `smoke` | Stack health + 1 request per critical path | every PR | minutes |
+| `integration` | Full cross-service coverage | main / targeted PRs | 5–20 min |
+| `policy` | OPA allow/deny checks at boundaries | PRs touching policies | minutes |
+| `migration` | DB schema/migrations/seed | PRs touching DB | minutes |
+| `ai` | Focus Mode regressions (citations + policy) | nightly / gated | varies |
+
+### Common commands
+
+```bash
+# Run only smoke tests
+pytest -q -m smoke
+
+# Run API integration tests
+pytest -q -m "integration and api"
+
+# Run policy gate tests
+pytest -q -m policy
+
+# Run AI tests (requires Ollama service or a deterministic AI mock)
+pytest -q -m ai
 ```
 
 > [!TIP]
-> If CI fails on a policy gate, treat it like a **test failure**: fix the inputs until the rule passes.
+> Prefer **markers** over directory-only filtering so you can keep tests organized by capability *and* by execution lane.
+
+---
+
+## 🔌 API integration
+
+Focus areas:
+- **Dataset browsing** endpoints return metadata + asset links (STAC/DCAT).
+- **Search** endpoints filter by bbox/time range and return stable schemas.
+- **Feature/entity** endpoints return consistent IDs and geometry formats.
+- **Gatekeeping**: UI should only access data through the API (no bypass paths).
+
+### Contract expectations ✅
+Any API response representing a dataset should include (or link to):
+- `id`
+- `license` / `accessLevel` *(or equivalent)*
+- provenance pointer/reference
+- links to assets / tiles / documents
+
+> [!TIP]
+> Validate response schemas in tests (Pydantic models or JSONSchema) to prevent silent breaking changes.
+
+---
+
+## 🏭 Pipelines + Catalog + Provenance tests
+
+These tests validate the canonical pipeline:
+
+1. Drop a tiny raw input into `data/raw/` (or test fixtures)
+2. Run a pipeline step
+3. Assert outputs exist in:
+   - `data/processed/`
+   - `data/catalog/` (STAC/DCAT)
+   - `data/provenance/` (PROV logs)
+4. Load into PostGIS/Neo4j (if applicable)
+5. Confirm API now serves it with correct metadata + lineage
+
+### Suggested checks ✅
+- STAC items are valid JSON and required fields exist
+- DCAT metadata includes license + source attribution
+- PROV records reference inputs + processing steps
+- Pipeline is **idempotent** (running twice doesn’t double-insert)
+
+---
+
+## 🧑‍⚖️ Policy & governance tests (OPA)
+
+Policy tests verify that rules are enforced at boundaries:
+
+- Serving layer denies restricted datasets to unauthorized roles
+- AI layer refuses/redacts restricted/sensitive content
+- Ingestion blocks datasets lacking required license metadata
+
+### Patterns to test
+- ✅ Allowed: public dataset is listed and queryable
+- ❌ Blocked: restricted dataset does not appear in listings
+- ❌ Blocked: direct asset access is gated/denied (or requires auth)
+- ✅ Auditable: denials produce structured logs (if implemented)
+
+> [!IMPORTANT]
+> Policies are code. Treat them like code: versioned, reviewed, and tested.
+
+---
+
+## 🤖 Focus Mode AI regression tests
+
+Goal: prevent “AI drift” from silently breaking trust guarantees.
+
+What we test:
+- Answers include **at least one citation** for factual claims
+- “How do you know?” style queries return explainable sources
+- Policy engine blocks disallowed outputs (sensitive sites, PII, restricted datasets)
+- Optional: tool-usage traces recorded to provenance logs
+
+### Two modes
+1. **Fast mode (CI-friendly)**  
+   - Use a small local model or deterministic mock
+2. **Full mode (nightly)**  
+   - Run Ollama + target model
+   - Execute curated prompt set (“golden prompts”)
+
+> [!TIP]
+> Store *expectations*, not full answers.  
+> Prefer checking: citations present ✅, key entities present ✅, disallowed content absent ✅.
+
+---
+
+## 🧼 Reset & cleanup
+
+```bash
+# Stop stack
+docker compose -f docker-compose.yml -f tests/integration/docker/docker-compose.itest.yml down
+
+# Nuke volumes (⚠️ wipes DB and local test data)
+docker compose -f docker-compose.yml -f tests/integration/docker/docker-compose.itest.yml down -v
+```
 
 ---
 
 ## 🧯 Troubleshooting
 
-<details>
-<summary><strong>⚠️ Port conflicts</strong> (Postgres 5432, Graph 7474, API 8000, Web 3000)</summary>
+### Common issues
+- **DB not ready**: add `depends_on` + healthchecks, or retry test setup
+- **Port conflicts**: remap host ports in compose (5432/7474/8000/3000)
+- **Volume permissions**: ensure container user can write to mounted `data/`
+- **Stale containers**: rebuild after dependency changes (`--build`)
 
-If you already run Postgres locally (or another service binds these ports), you may see failures.
-
-**Fix options:**
-- Stop the conflicting service
-- Change host port mappings in `docker-compose.yml`
-- Restart the stack after updating `.env` or compose config
-</details>
-
-<details>
-<summary><strong>🐢 Containers start but API can’t reach DB</strong></summary>
-
-Common causes:
-- DB container not ready when API starts
-- Missing `depends_on` or health checks
-- First boot takes longer on low-resource machines
-
-**Try:**
+### Debug helpers
 ```bash
-docker-compose logs api
-docker-compose logs db
-docker-compose up -d
+# Follow logs
+docker compose logs -f api
+docker compose logs -f db
+docker compose logs -f neo4j
+docker compose logs -f opa
+
+# Exec into a container
+docker compose exec api bash
+docker compose exec db psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"
 ```
-</details>
-
-<details>
-<summary><strong>🗂️ Volume / permissions issues</strong> (especially macOS/Windows)</summary>
-
-If the API writes into `data/` and you see permission errors:
-- Ensure repo folders are writable by Docker
-- Check volume mounts are correct
-- Rebuild with `--build` if dependencies changed
-</details>
 
 ---
 
-## ➕ Adding a new integration test
+## 🤝 Writing a new integration test
 
-1. Pick the seam you’re validating:
-   - API ↔ PostGIS
-   - API ↔ Graph DB
-   - API ↔ pipeline outputs
-   - API ↔ policy decision surface
-2. Add/extend fixtures in `tests/integration/conftest.py`
-3. Keep assertions **API-facing**
-4. Ensure:
-   - test passes on a clean `docker-compose up -d`
-   - test does not depend on your local machine state
+1. Pick the **boundary** you’re testing (API↔DB, pipeline↔catalog, policy gate, AI)
+2. Add/reuse a **tiny fixture**
+3. Assert on:
+   - correctness
+   - metadata/provenance completeness
+   - policy compliance (allow/deny)
+4. Ensure the test is:
+   - deterministic
+   - isolated (no hidden dependency on other tests)
+   - CI-friendly
 
-> [!TIP]
-> If you need “known data,” prefer adding a tiny seed pipeline step (or a sample dataset) rather than hardcoding DB inserts in tests.
-
----
-
-## 🎯 Definition of Done (DoD) for integration test PRs
-
-- [ ] `docker-compose up -d` works on a fresh checkout
-- [ ] Integration tests pass: `pytest tests/integration`
-- [ ] Policy checks pass (when relevant): `conftest test .`
-- [ ] No direct DB coupling for UI behavior
-- [ ] Test failures are actionable (clear asserts + helpful messages)
+### Naming convention
+- `test_<capability>__<expectation>.py`  
+  Example: `test_datasets__requires_license.py`
 
 ---
 
-### 🧾 Related docs (recommended)
-- `docs/architecture/` 📐
-- Root `README.md` 🗺️
-- `policy/` 🛡️
-- `pipelines/` 🔁
+## 🧬 CI notes
+
+Recommended CI strategy:
+- PRs: run `smoke` + any impacted lanes (api/policies/pipelines)
+- Main: run full `integration`
+- Nightly: run `ai` full mode
+
+Example workflow idea (pseudo):
+
+```yaml
+# .github/workflows/integration-tests.yml
+# (illustrative — adapt to your repo)
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker compose -f docker-compose.yml -f tests/integration/docker/docker-compose.itest.yml up -d --build
+      - run: pytest -q -m integration
+      - if: always()
+        run: docker compose -f docker-compose.yml -f tests/integration/docker/docker-compose.itest.yml down -v
+```
+
+---
+
+## 📚 Related docs in this repo
+
+- `docs/architecture/` (system overview + truth path)
+- `pipelines/` (ETL conventions + validation rules)
+- `policies/` or `opa/` (policy bundles + Rego)
+- `src/server/api/` (API contract + endpoints)
