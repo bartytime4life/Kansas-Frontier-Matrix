@@ -1,240 +1,215 @@
-# 🧱 `data/raw/` — Immutable Raw Data (Source Snapshots)
+# 📦 `data/raw/` — Immutable Source Data (Read‑Only) 🧊
 
-![stage](https://img.shields.io/badge/data-stage_raw-blue)
-![policy](https://img.shields.io/badge/policy-write_once%20%7C%20read_only-orange)
-![provenance](https://img.shields.io/badge/provenance-required-brightgreen)
-![governance](https://img.shields.io/badge/governance-FAIR%2BCARE-purple)
+![Data Stage](https://img.shields.io/badge/data_stage-raw-informational)
+![Truth Path](https://img.shields.io/badge/policy-truth_path-critical)
+![Provenance](https://img.shields.io/badge/provenance-required-success)
+![No Edits](https://img.shields.io/badge/rule-never_edit_in_place-red)
 
-> **Raw = evidence.** This folder holds *exact source snapshots* (downloads, scans, scrapes) and is treated as **write-once / read-only**.  
-> Pipelines may **read** from here, but must **never modify** anything here. [^kfm-raw]
+> 🧭 **“The map behind the map” starts here.**  
+> `data/raw/` holds **unaltered source snapshots** that feed KFM pipelines. Treat it like a museum archive: label it, checksum it, don’t “fix” it.
 
 ---
 
 ## 🎯 Purpose
 
-`data/raw/` is the **staging area for input data as obtained from original sources**, preserved without modification to keep an auditable “chain of custody” from evidence → outputs. [^kfm-raw]
+This folder is the **landing zone for original inputs** (downloads, exports, scans, vendor drops, agency releases) **before** they are cleaned, standardized, or transformed.
 
-This enables:
-- 🧾 **Reproducibility**: re-run ETL years later against the same artifacts. [^kfm-raw]
-- 🧬 **Traceability**: provenance can reference *exact* inputs (including checksums / source pointers). [^prov-inputs]
-- 🧠 **Governed knowledge**: no dataset “enters” KFM without licensing + metadata gates. [^kfm-doc-gate] [^kfm-fail-closed]
+**Raw ➜ Processed ➜ Catalog/Provenance ➜ Databases ➜ API ➜ UI/AI**  
+Nothing skips the line. ✅
 
 ---
 
-## ✅ What goes in `data/raw/`
+## 🧱 Golden Rules (Non‑Negotiable)
 
-Examples (non-exhaustive):
-- 📦 **Zips / archives** exactly as downloaded (optionally *plus* extracted contents in the same folder)
-- 🗺️ **Shapefiles** (and sidecar files) / GeoPackages as delivered
-- 🧾 **CSVs** / JSON exports / scraped dumps (unchanged)
-- 🖼️ **Scanned maps** (`.tif`, `.jpg`, `.pdf`) as scanned
-- 🛰️ **Raster sources** (if small enough for Git) or **pointers** to object storage/DVC (if large) [^kfm-large] [^dvc]
+1. **🚫 Never edit raw files in place**
+   - If something is “wrong,” that’s part of the historical record.
+   - Fixes happen in `pipelines/` and land in `data/processed/`.
+
+2. **🧾 Every dataset gets “source context”**
+   - Record where it came from, when it was fetched, license, and what’s inside.
+
+3. **🧼 No derived outputs in `raw/`**
+   - No cleaned CSVs, reprojected GeoJSON, clipped rasters, simplified shapes, etc.
+
+4. **🧩 Preserve original packaging**
+   - Keep vendor/agency folder structure when possible.
+   - Prefer storing the original `.zip` plus (optional) extracted contents *only if required*.
+
+5. **🔐 No secrets or sensitive personal data**
+   - Never store API keys, tokens, passwords, or private datasets here.
 
 ---
 
-## 🚫 What does **NOT** go in `data/raw/`
+## 🗂 Recommended Folder Structure
 
-- ❌ Anything *cleaned*, normalized, reprojected, clipped, deduped, etc. → put that in `data/processed/`
-- ❌ Pipeline intermediates / scratch outputs → use `data/work/` or an equivalent temp workspace [^mg-domain]
-- ❌ “Quick fixes” to outputs → fix **pipeline code** (or replace raw snapshot properly) and re-run [^kfm-no-edits]
+You can organize by **domain** then **dataset** (preferred), or by dataset only—pick one approach and be consistent.
 
----
-
-## 🗂️ Recommended structure
-
-KFM allows organizing by **source** or **topic/domain** (choose one and be consistent within a domain). [^kfm-raw]
-
-### Option A — group by *source/provider* ✅
 ```text
 data/raw/
-  usgs_water/
-    <dataset>/
-      snapshot_YYYY-MM-DD/
-        ...
-  noaa_climate/
-    <dataset>/
-      snapshot_YYYY-MM-DD/
-        ...
+  README.md  ✅ (this file)
+  <domain>/                        # e.g., hydrology/, historical/, remote_sensing/
+    <dataset_id>/                  # stable slug (snake_case)
+      source.yaml                  # required 🧾
+      checksums.sha256             # strongly recommended 🔒
+      snapshots/                   # optional but great for immutability 🧊
+        2026-02-03/                # ISO date of acquisition
+          original.zip
+          extracted/               # only if needed by pipeline
+            ...
 ```
 
-### Option B — group by *topic/domain* ✅
-```text
-data/raw/
-  historical_maps/
-    1930_county_map/
-      1930_county_map.pdf
-      source.yaml
-      checksums.sha256
-  census/
-    1900/
-      census_1900.csv
-      source.yaml
-      checksums.sha256
-```
-
-### 🧭 Domain expansion rule (when adding a new domain)
-- Put raw sources under `data/raw/<new-domain>/`
-- Use `data/work/<new-domain>/` for intermediate processing
-- Output final curated artifacts to `data/processed/<new-domain>/`
-- Document ETL + sources in a domain runbook under `docs/data/<new-domain>/` [^mg-domain]
+### ✅ Dataset IDs (`<dataset_id>`)
+Use **lowercase `snake_case`** and keep it stable over time:
+- `census_1900_county`
+- `usgs_nwis_daily_discharge`
+- `kdot_roads_centerlines`
+- `landsat_scenes_kansas`
 
 ---
 
-## 🧾 Required “sidecar” files (per dataset folder)
+## 🏷️ Naming Conventions
 
-Raw files should be accompanied by **minimal machine + human readable context**, so downstream PROV/STAC/DCAT can be generated accurately and reviewed quickly. [^maps-metadata] [^mg-stac]
+- **Dates:** ISO format `YYYY-MM-DD` (sortable!)
+- **Versioned snapshots:** `snapshots/YYYY-MM-DD/`
+- **Avoid spaces:** use `_` not spaces
+- **Keep originals recognizable:** don’t rename beyond necessity
 
-### 1) `source.yaml` (minimum metadata)
+Examples:
+- `2026-02-03__kdot_roads.zip`
+- `2025-11-01__nwis_daily.csv`
 
-Create **one `source.yaml` per dataset folder** (or per snapshot if the dataset updates over time):
+---
+
+## 🧾 Required Sidecar Metadata: `source.yaml`
+
+Each dataset folder must include a `source.yaml` describing provenance and constraints.
+
+<details>
+<summary><strong>📄 Minimal <code>source.yaml</code> template (copy/paste)</strong></summary>
 
 ```yaml
-dataset_id: historical_maps__1930_county_map
-title: "Kansas County Map (1930) — Scanned PDF"
-description: >
-  Briefly describe what this raw artifact is, what it covers, and why it matters.
+id: "<dataset_id>"
+title: ""
+description: ""
 
-source:
-  provider: "Kansas Historical Society"
-  homepage: null
-  url: "https://example.org/source-page"   # where it came from
-  retrieved_at: "2026-01-30"
-  retrieved_by: "YOUR_NAME_OR_HANDLE"
-  method: "download|scan|scrape|api_export"
-  license: "UNKNOWN|Public Domain|CC-BY-4.0|..."  # do not leave ambiguous
-  citation: "Provider (Year). Title. URL. Accessed YYYY-MM-DD."
+origin:
+  publisher: ""
+  source_urls:
+    - ""
+  retrieved_at: "YYYY-MM-DD"
+  retrieved_by: ""
+  license: ""             # SPDX if possible (e.g., CC-BY-4.0), otherwise plain text
+  citation: ""            # preferred formal citation if provided
 
-coverage:
-  spatial:
-    region: "Kansas"
-    bbox_wgs84: null
-  temporal:
-    start: "1930-01-01"
-    end: "1930-12-31"
+scope:
+  geography: "Kansas"
+  spatial_extent:
+    bbox_wgs84: [minLon, minLat, maxLon, maxLat]   # optional but helpful
+  temporal_extent:
+    start: "YYYY-MM-DD"     # optional
+    end: "YYYY-MM-DD"       # optional
 
-data_characteristics:
-  format: "pdf"
-  notes: "Any quirks, missing pages, encoding issues, etc."
+files:
+  packaging: "zip|folder|single_file|api_export"
+  contents:
+    - path: "snapshots/YYYY-MM-DD/original.zip"
+      description: ""
+      sha256: ""            # optional here if using checksums.sha256
 
-governance:
-  sensitivity: "public|internal|restricted"
-  pii: false
-  restrictions: null
+notes:
+  known_issues: []
+  pii: "none|possible|present"
+  restrictions: ""
 ```
+</details>
 
-**Why this matters:** dependable geographic data expects metadata such as identification, spatial reference, distribution/use policy, citation, temporal info, and contact details. [^maps-metadata]
+---
 
-### 2) `checksums.sha256` (immutability proof)
+## 🔒 Checksums: `checksums.sha256` (Strongly Recommended)
 
-```bash
-# from inside the dataset folder
-sha256sum * > checksums.sha256
-```
+Why: helps detect accidental edits, corrupted transfers, and supports deterministic re-runs.
 
 Example file:
 ```text
-9d5c... 1930_county_map.pdf
+<sha256>  snapshots/2026-02-03/original.zip
+<sha256>  snapshots/2026-02-03/extracted/roads.shp
 ```
 
-> These checksums are especially helpful because provenance logs commonly reference raw inputs by filename **plus** checksum and/or source URL pointers. [^prov-inputs]
+---
+
+## 🧰 Large Files (COGs, LiDAR, Big Rasters) 🐘
+
+Raw artifacts can be huge. Recommended options:
+- **DVC** (preferred for big data artifacts)
+- **Git LFS** (acceptable when appropriate)
+- **External object storage pointers** (S3/Azure/GCS), tracked with metadata
+
+Rule of thumb:
+- If it makes Git painful, don’t force it into Git. Track it cleanly.
 
 ---
 
-## 🧩 Adding new raw data (PR checklist)
+## ⚙️ How Pipelines Should Use `data/raw/`
 
-- [ ] Create a domain folder under `data/raw/<domain>/...` (or extend an existing one) [^kfm-raw]
-- [ ] Add raw files **exactly as obtained** (no “helpful” conversions) [^kfm-raw]
-- [ ] Add `source.yaml` with **license + citation + retrieval date** [^maps-metadata]
-- [ ] Add `checksums.sha256`
-- [ ] If the raw artifact is large, follow the **Large Files Policy** (below) [^kfm-large] [^dvc]
-- [ ] Add/adjust pipeline(s) to produce outputs in `data/processed/` (no manual edits) [^kfm-no-edits]
-- [ ] Ensure downstream metadata + provenance are created/updated (`data/catalog/`, `data/provenance/`) — CI expects it [^kfm-doc-gate] [^mg-stac]
+Pipelines should:
+- ✅ **Read from** `data/raw/<domain>/<dataset_id>/...`
+- 🚫 **Never modify** anything in `data/raw/`
+- ✅ Write outputs to:
+  - `data/processed/` (cleaned/standardized outputs)
+  - `data/catalog/` (STAC/DCAT metadata)
+  - `data/provenance/` (W3C PROV lineage logs)
 
----
-
-## 🧯 Fixing issues found in raw data
-
-Raw is treated as “sacrosanct evidence.” If an error is found:
-- Prefer **adding a corrected snapshot** (new `snapshot_YYYY-MM-DD/`) and recording what changed in `source.yaml`
-- Or replace the artifact in Git with clear history (and/or keep the old copy elsewhere + reference it), but avoid “silent edits” [^kfm-raw]
+> If you can’t regenerate processed outputs from raw + pipeline code, it’s not reproducible. 🧪
 
 ---
 
-## 📦 Large Files Policy (Git-friendly, still auditable)
+## 🔁 Updating or Re‑Fetching Data (Don’t Overwrite!)
 
-KFM recognizes that **very large data** can be challenging in Git and may require:
-- storing **references + hashes** in the repo,
-- slicing into smaller diffable chunks,
-- or using object storage (e.g., S3) while keeping the repo as the **catalog of record**. [^kfm-large]
+If a source updates:
+- Add a **new snapshot**: `snapshots/YYYY-MM-DD/`
+- Update `source.yaml` if scope or license changed
+- Run the pipeline to create updated processed outputs + provenance
 
-For large rasters / 3D / point clouds, the project design also supports **DVC** to track big artifacts without bloating Git. [^dvc]
-
-**Rule of thumb**
-- ✅ Small/medium artifacts: commit directly into `data/raw/`
-- ✅ Large artifacts: commit a **pointer + checksum** (and keep the remote location stable and governed)
+✅ This keeps an audit trail and supports time-based comparisons.
 
 ---
 
-## 🔁 Where `data/raw/` sits in the canonical pipeline
+## ✅ Intake Checklist (Before a PR)
 
-```mermaid
-flowchart LR
-  raw["🧱 data/raw/ (evidence)"] --> etl["⚙️ pipelines/ (deterministic ETL)"]
-  etl --> processed["📦 data/processed/ (curated outputs)"]
-  processed --> catalogs["🧾 data/catalog/ (STAC/DCAT)"]
-  processed --> prov["🧾 data/provenance/ (PROV lineage)"]
-  catalogs --> graph["🕸️ graph/runtime stores"]
-  prov --> graph
-  graph --> api["🔌 API layer"]
-  api --> ui["🗺️ UI"]
-  ui --> stories["📚 Story Nodes"]
-```
-
-The ordering is **non-negotiable**: ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes. [^mg-order]
+- [ ] Created `data/raw/<domain>/<dataset_id>/`
+- [ ] Added `source.yaml` with **URL + retrieval date + license**
+- [ ] Stored raw artifact(s) in `snapshots/YYYY-MM-DD/`
+- [ ] Added `checksums.sha256` (or equivalent)
+- [ ] Confirmed no derived/cleaned outputs are placed in `raw/`
+- [ ] Confirmed no secrets / sensitive personal data present
+- [ ] Ran pipeline and produced:
+  - [ ] `data/processed/...`
+  - [ ] `data/catalog/...`
+  - [ ] `data/provenance/...`
 
 ---
 
-## ⚖️ Licensing, copyright, and “don’t break the build”
+## 🆘 Common Gotchas
 
-### License is mandatory ✅
-If data is added without a license, KFM is designed to **fail closed** (CI blocks the merge). [^kfm-fail-closed]
+- **“I reprojected the shapefile to EPSG:4326 and replaced it.”**  
+  ❌ Don’t. Put the reprojected result in `data/processed/`.
 
-### Maps and scanned works require extra care 🗺️
-Maps/charts are covered by copyright in their *representation*, and it’s best to assume works are copyrighted until verified otherwise. [^maps-copyright]
+- **“The agency ZIP has nested folders and weird names.”**  
+  ✅ Keep it. Normalize in the pipeline.
 
----
-
-## 🧭 Related docs & standards (project files)
-
-- 📘 KFM Comprehensive Technical Blueprint  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
-- 🧾 Master Guide v13 (STAC/DCAT/PROV + invariants)  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
-- 🗺️ Metadata & copyright notes (GIS map design guide)  [oai_citation:2‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)  
-- 🧩 Large data versioning option (DVC design note)  [oai_citation:3‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)  
+- **“This dataset contains addresses / individuals.”**  
+  🚫 Stop. Move to restricted storage and document the handling plan.
 
 ---
 
-## 📌 Footnotes / Sources
+## 🔗 Related (Repo‑Local)
 
-[^kfm-raw]: `data/raw/` is defined as immutable source snapshots (write-once/read-only) and can be grouped by source/topic; raw is preserved as evidence and is not edited by pipelines.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- `pipelines/` — ETL scripts and notebooks
+- `data/processed/` — cleaned outputs
+- `data/catalog/` — STAC/DCAT metadata
+- `data/provenance/` — lineage logs (W3C PROV)
+- `docs/standards/` — project governance + profiles (STAC/DCAT/PROV)
 
-[^kfm-no-edits]: KFM rule: processed data must not be manually edited; fix pipeline or raw inputs and re-run to maintain reproducibility.  [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+---
 
-[^kfm-doc-gate]: Pipelines must update catalog + provenance artifacts; contributions missing these are expected to be rejected by CI (“no data enters KFM without documentation”).  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-[^kfm-fail-closed]: “Fail closed” governance: if checks fail (e.g., missing license), CI blocks the action/merge.  [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-[^kfm-large]: Large data in Git is challenging; KFM may store references/hashes for huge data (e.g., rasters), slice into diffable chunks, or use external storage while keeping the repo as the record.  [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-[^prov-inputs]: Provenance logs record raw input entities with references such as filename plus checksum and/or pointer to source URL.  [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-[^mg-stac]: KFM requires STAC/DCAT/PROV alignment for each dataset/evidence artifact; CI validates conformance to defined profiles.  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-[^mg-order]: Pipeline ordering is stated as absolute/inviolable in the Master Guide invariants.  [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-[^mg-domain]: Domain expansion pattern: use `data/raw/<new-domain>/`, `data/work/<new-domain>/`, output to `data/processed/<new-domain>/`, and maintain a domain README/runbook in `docs/data/<new-domain>/`.  [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
-[^maps-metadata]: GIS guidance highlights the need for detailed metadata (identification, quality, spatial reference, distribution/use policy, citation, temporal info, contact) and emphasizes standards/interoperability.  [oai_citation:13‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-
-[^maps-copyright]: GIS guidance notes maps/charts are covered under copyright for their representation and recommends assuming works are copyrighted until confirmed otherwise.  [oai_citation:14‡making-maps-a-visual-guide-to-map-design-for-gis.pdf](sediment://file_00000000602471f786dfbbaac9329fb9)
-
-[^dvc]: Design note proposes DVC for large data artifacts to avoid bloating Git while still tracking data versions alongside code.  [oai_citation:15‡Kansas-Frontier-Matrix_ Open-Source Geospatial Historical Mapping Hub Design.pdf](file-service://file-BJN3xmP44EHc9NRCccCn4H)
+**✨ Reminder:** Raw is sacred. Processing is where the magic happens. 🧙‍♂️
