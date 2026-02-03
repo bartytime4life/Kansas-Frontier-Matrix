@@ -1,436 +1,352 @@
-# 🧪 Tests (KFM / Kansas Matrix System)
-
-[![CI](https://github.com/<ORG>/<REPO>/actions/workflows/ci.yml/badge.svg)](https://github.com/<ORG>/<REPO>/actions/workflows/ci.yml)
-![Coverage Target](https://img.shields.io/badge/coverage-target%3A%2080%25-informational)
-![Policy](https://img.shields.io/badge/policy-fail--closed-critical)
-![Contracts](https://img.shields.io/badge/contracts-contract--first-blueviolet)
-![Evidence](https://img.shields.io/badge/evidence-evidence--first-ff69b4)
-![Stack](https://img.shields.io/badge/stack-FastAPI%20%7C%20PostGIS%20%7C%20Neo4j%20%7C%20React%20%7C%20MapLibre-blue)
-![CI Gates](https://img.shields.io/badge/CI%20gates-lint%20%7C%20test%20%7C%20policy%20%7C%20schema-success)
-
-> ✅ This folder is the **guardrail suite** for KFM’s **canonical pipeline** — from ETL outputs, to catalog boundary artifacts (STAC/DCAT/PROV), to graph/API/UI contracts, to Story Node + Focus Mode governance.  
-> 🔒 If tests or policies fail, we **fail closed** (PR should not merge).  
-> 🧭 Tests mirror reality: every stage must produce what the next stage expects.
-
----
-
-## 📌 Contents
-
-- [⚡ Quickstart](#-quickstart)
-- [🧭 Non-negotiable invariants](#-non-negotiable-invariants)
-- [🧩 Repo alignment (v13)](#-repo-alignment-v13)
-- [🗂️ What belongs in `tests/`](#️-what-belongs-in-tests)
-- [🧪 Test suites](#-test-suites)
-- [🔁 CI gates (what should run on PRs)](#-ci-gates-what-should-run-on-prs)
-- [🧱 Writing great tests (KFM style)](#-writing-great-tests-kfm-style)
-- [🧯 Troubleshooting](#-troubleshooting)
-- [📚 References (repo-friendly)](#-references-repo-friendly)
-
----
-
-## ⚡ Quickstart
-
-### 0) Prereqs ✅
-- Docker + Compose (recommended for consistent PostGIS + Neo4j + API + UI)
-- Python toolchain (backend + pipelines tests)
-- Node toolchain (frontend tests)
-- Conftest (OPA) for policy validation 🔒
-
-> 🧯 Heads-up: the most common port collisions are **5432** (Postgres/PostGIS), **7474** (Neo4j), plus typical app ports like **8000/3000**.
-
----
-
-### 1) Start the dev stack 🧱
-```bash
-# either form is fine (depending on your Docker version)
-docker compose up -d
-# or
-docker-compose up -d
-```
-
----
-
-### 2) Run backend tests (Python) 🐍
-```bash
-docker compose exec api pytest
-# or
-docker-compose exec api pytest
-```
-
-✅ Tip: if you’re iterating, run the smallest slice:
-```bash
-pytest tests/unit -q
-```
-
----
-
-### 3) Run frontend tests (React / TypeScript) ⚛️
-```bash
-docker compose exec web npm test
-# or
-docker-compose exec web npm test
-```
-
----
-
-### 4) Run policy checks (fail-closed governance) 🔒
-```bash
-conftest test .
-```
-
-> 🔐 Policy failures should block merges. Treat them like failing unit tests.
-
----
-
-## 🧭 Non-negotiable invariants
-
-These are “system truths.” If a PR violates one, **tests must catch it**. ✅
-
-1) **Pipeline ordering is absolute**  
-   `ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode`  
-   No leapfrogging. No bypassing boundary artifacts.
-
-2) **API boundary rule**  
-   The **UI must never query Neo4j (or databases) directly**. Everything goes through the governed API.
-
-3) **Provenance-first publishing**  
-   Nothing is “published” without boundary artifacts: STAC/DCAT metadata + PROV lineage.
-
-4) **Deterministic, idempotent ETL**  
-   Same inputs ⇒ stable outputs. Pipelines should be safely re-runnable.
-
-5) **Evidence-first narrative**  
-   No unsourced narrative in Story Nodes or Focus Mode. AI output must be labeled + provenance-linked.
-
-6) **Sovereignty & classification propagation**  
-   Outputs can’t be “less restricted” than inputs. Sensitive locations must not leak through the UI.
-
-7) **Governance fails closed** 🔒  
-   Missing license, missing provenance, schema violations, policy denials ⇒ pipeline/CI stops.
-
----
-
-## 🧩 Repo alignment (v13)
-
-This `tests/` folder is **repo-wide** and maps to the v13 subsystem homes:
-
-```text
-📦 repo-root/
-├─ 🗂️ data/                    # raw/work/processed + catalog outputs
-├─ 🧾 schemas/                 # JSON Schemas (STAC/DCAT/PROV/story/UI/etc.)
-├─ 🧱 src/
-│  ├─ 🛠️ pipelines/            # ETL jobs + normalization
-│  ├─ 🕸️ graph/                # Neo4j build + constraints + migrations
-│  └─ 🔌 server/               # API boundary + contracts + enforcement
-├─ 🌐 web/                     # React + MapLibre UI
-├─ 🔒 policy/                  # OPA policies (tested via Conftest)
-├─ 🧭 docs/                    # governed docs + story nodes
-└─ 🧪 tests/                   # automated tests for all modules ✅
-```
-
-### 🗺️ Canonical pipeline (for mental model)
-
-```mermaid
-flowchart LR
-  A["Raw Sources"] --> B["ETL + Normalization"]
-  B --> C["STAC Items + Collections"]
-  C --> D["DCAT Dataset Views"]
-  C --> E["PROV Lineage Bundles"]
-  C --> G["Neo4j Graph (references catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI — React · MapLibre · (optional) Cesium"]
-  I --> J["Story Nodes (governed narratives)"]
-  J --> K["Focus Mode (provenance-linked context bundle)"]
-```
-
----
-
-## 🗂️ What belongs in `tests/`
-
-**Yes** ✅
-- 🔬 Unit tests (pure logic, no network, no DB)
-- 🔌 Integration tests (API ↔ PostGIS/Neo4j ↔ services)
-- 🧾 Boundary artifact tests (STAC/DCAT/PROV schema + linkage)
-- 🕸️ Graph constraints + ontology/label integrity tests
-- 🗺️ Geo correctness tests (CRS, geometry validity, GeoJSON output)
-- 🔒 Policy tests (Conftest/OPA)
-- 🧭 Story Node + Focus Mode governance checks
-- 🤖 AI gateway contract tests (stub by default; opt-in live runs)
-
-**No** ❌
-- Large raw datasets (use tiny fixtures)
-- Flaky tests that depend on real external services by default
-- UI tests that bypass the API boundary (that’s a failure condition)
-
----
-
-## 🧪 Test suites
-
-> 🎯 Rule of thumb: **each pipeline boundary gets a test suite**.  
-> If a stage consumes outputs from the previous stage, that is a **contract** → contracts get tests.
-
----
-
-### 1) 🔬 Unit tests (fast, deterministic)
-**Goal:** prove core logic works without containers.
-
-Examples:
-- schema validators
-- provenance builders
-- parsers / normalizers
-- CRS conversion utilities
-- helper functions used by UI/Story Nodes
-
-✅ Best practice: unit tests should exercise **domain/service** logic and mock adapters.
-
----
-
-### 2) 🛠️ Pipeline/ETL tests (raw → work → processed)
-**Goal:** ensure ETL is deterministic, idempotent, and emits stable outputs.
-
-Recommended checks:
-- output file naming + stable IDs
-- hashing/signatures on inputs/outputs
-- “re-run produces identical artifacts” (or logged deltas)
-- pipeline logs exist and are parseable
-
-📁 Data staging convention:
-- `data/raw/<domain>/`
-- `data/work/<domain>/`
-- `data/processed/<domain>/`
-
----
-
-### 3) 🧾 Boundary artifact tests (STAC/DCAT/PROV)
-**Goal:** enforce “publishable = validated metadata + lineage.”
-
-Checks:
-- STAC records exist (collections + items)
-- DCAT dataset entry exists (title/description/license/keywords/distributions)
-- PROV lineage bundle exists and links raw → work → processed
-- cross-links are consistent (STAC ↔ DCAT ↔ PROV ↔ graph IDs)
-
-📦 Canonical catalog locations:
-- `data/stac/collections/`
-- `data/stac/items/`
-- `data/catalog/dcat/`
-- `data/prov/`
-
-✅ “Boundary artifacts” are the interface to downstream stages (graph/API/UI). Treat them like APIs.
-
----
-
-### 4) 🕸️ Graph tests (Neo4j integrity + migrations)
-**Goal:** keep graph structure stable unless migrations are deliberate.
-
-Recommended checks:
-- no orphan labels/types
-- required indexes/constraints exist
-- ontology changes require migration scripts
-- graph nodes reference catalogs (STAC IDs / DCAT IDs) instead of duplicating payloads
-
----
-
-### 5) 🔌 API integration + contract tests (FastAPI ↔ PostGIS/Neo4j)
-**Goal:** validate backend behavior, stability, and enforcement.
-
-Checks:
-- endpoint status codes + error shapes
-- filtering/sorting/pagination
-- OpenAPI contract stability (breaking change ⇒ version bump)
-- policy enforcement: API calls must respect allow/deny decisions
-- redaction/classification behavior (no sensitive leaks)
-- provenance links returned alongside data products
-
-✅ Test the API as your “security boundary” — because it is.
-
----
-
-### 6) 🌐 UI tests (React + MapLibre)
-**Goal:** ensure UI behavior matches contracts and never bypasses governance.
-
-Checks:
-- UI only talks to API (no direct graph/db calls)
-- layer registry configs load expected layers
-- accessibility sanity checks (basic a11y)
-- map interactions do not leak sensitive location detail when restricted
-
-> 🧱 If a UI test would be easier by calling the DB directly: **don’t** — write an API fixture instead.
-
----
-
-### 7) 🧭 Story Node + Focus Mode tests
-**Goal:** keep narrative machine-ingestible, provenance-linked, and safe.
-
-Checks:
-- Story Node uses the governed template
-- every factual claim has citations/links to cataloged evidence
-- referenced entities (people/places/events/docs) use stable graph identifiers
-- fact vs interpretation is clearly separated
-- Focus Mode rules enforced:
-  - only provenance-linked content renders
-  - AI contributions are opt-in + labeled + confidence surfaced
-  - sensitive locations are generalized/blurred (no side-channel leakage)
-
-✅ These tests protect the “no hallucinations” rule.
-
----
-
-### 8) 🔒 Policy tests (Conftest / OPA)
-**Goal:** encode governance so it’s enforceable.
-
-Run:
-```bash
-conftest test .
-```
-
-Patterns:
-- `policy/` contains OPA rules
-- `tests/policy/fixtures/` contains minimal examples
-- policy tests should prove it blocks:
-  - missing license
-  - missing provenance
-  - missing required metadata
-  - schema/profile violations
-  - restricted datasets exposed without authorization
-
----
-
-### 9) 🗺️ Geospatial correctness tests (CRS, geometry, GeoJSON)
-**Goal:** prevent “maps that look right but are wrong.”
-
-Suggested checks:
-- CRS sanity (expected EPSG / axis order / coordinate bounds)
-- geometry validity (no self-intersections, empties, invalid rings)
-- bbox correctness
-- distance/area sanity (use projected CRS when required)
-- GeoJSON output is complete (FeatureCollection/Feature, not geometry-only blobs)
-
-🧠 Metadata matters (test it): include map projection / coordinate system / spatial extent / scale, plus copyright & usage permissions where applicable.
-
----
-
-### 10) 🧭 Navigation & grid overlay tests (UTM / MGRS / lat-long)
-If you ship grid overlays or coordinate readouts, test them with known fixtures:
-
-- known lat/long ↔ UTM ↔ MGRS conversions
-- formatting and precision rules
-- “read right then up” helpers (eastings then northings)
-
-✅ These are perfect for deterministic unit tests.
-
----
-
-### 11) 🤖 AI / local inference tests (optional, but powerful)
-Treat LLMs like any external dependency: **stub by default**.
-
-#### 🧰 Local-first with Ollama
-Recommended test layers:
-- **unit:** prompt templates + “no unsourced claims” guards
-- **integration:** API contract to AI gateway (mock server)
-- **live/manual:** opt-in tests talking to a real local Ollama instance
-
-Example local setup:
-```bash
-ollama serve
-ollama run <model>
-```
-
-Optional: if you route AI via env config, document test defaults (e.g., stubbed AI, local Ollama only for manual runs).
-
----
-
-## 🔁 CI gates (what should run on PRs)
-
-> ✅ The goal is a permanently **CI-clean** main branch.
-
-Minimum gates:
-- 🧹 linting (Python + JS/TS)
-- 🧪 unit + integration tests (backend + pipelines)
-- ⚛️ frontend tests
-- 🔒 policy checks (Conftest/OPA)
-- 🧾 schema/profile validation (STAC/DCAT/PROV/story)
-- 🔐 security scans (secrets/sensitive info leaks)
-
-### ✅ PR checklist (copy/paste)
-- [ ] I added/updated tests for the behavior I changed
-- [ ] Any new dataset includes required STAC/DCAT/PROV artifacts
-- [ ] Any Story Node change follows the template and includes citations
-- [ ] Policy checks pass (`conftest test .`)
-- [ ] No sensitive data leaks (UI + API + catalogs reflect classification)
-
----
-
-## 🧱 Writing great tests (KFM style)
-
-### ✅ Principles (practical, not preachy)
-- **Deterministic** 🎯 (fixed seeds, stable fixtures)
-- **Idempotent** 🔁 (ETL can re-run safely)
-- **Fast by default** ⚡ (heavy tests are opt-in / nightly)
-- **Small fixtures** 🧰 (tiny, legible datasets > giant dumps)
-- **Evidence-first failures** 🧾 (tests should explain *why* they failed)
-- **Contract-first mindset** 📜 (schemas + OpenAPI + profiles are first-class)
-
-### 🏷️ Naming conventions
-- `test_<component>__<behavior>__<expected>()`
-- Prefer “behavior” tests over implementation tests.
-
-### 🧪 Suggested markers (recommended)
-- `@pytest.mark.unit`
-- `@pytest.mark.integration`
-- `@pytest.mark.e2e`
-- `@pytest.mark.geo`
-- `@pytest.mark.policy`
-
----
-
-## 🧯 Troubleshooting
-
-### 🧨 “Port already in use”
-- Stop the conflicting local service, or change ports in `docker-compose.yml`
-- Common collisions: `5432`, `7474`, `8000`, `3000`
-
-### 🧱 DB container not ready / migrations not applied
-```bash
-docker compose down
-docker compose up -d
-```
-Then rerun tests after DB is healthy.
-
-### 🧩 Flaky e2e tests
-- stabilize fixtures
-- avoid time-based assumptions
-- poll readiness endpoints
-- stub non-critical external services
-
----
-
-## 📚 References (repo-friendly)
-
-> 🧭 These should live in-repo under `docs/` (and optionally `docs/library/` for PDFs).  
-> Keep links stable — tests will rely on governed contracts and templates.
-
-- `docs/MASTER_GUIDE_v13.md` (canonical pipeline + invariants + directory layout)
-- `docs/standards/` (STAC/DCAT/PROV profiles, schema rules)
-- `docs/templates/` (universal docs, Story Node template, API contract template)
-- `docs/reports/story_nodes/` (governed narratives: draft → published)
-- `docs/governance/` (ethics, sovereignty, FAIR/CARE)
-- `policy/` (OPA policies; validated via Conftest)
-- `schemas/` (machine-validated contracts)
+# 🧪 `tests/` — Kansas Frontier Matrix (KFM)
+
+![CI](https://img.shields.io/badge/CI-gated%20by%20tests-2ea44f?logo=githubactions&logoColor=white)
+![Policy](https://img.shields.io/badge/policy-OPA%20%2B%20Conftest-1f6feb?logo=openpolicyagent&logoColor=white)
+![Provenance](https://img.shields.io/badge/provenance-PROV%20required-8b5cf6)
+![API](https://img.shields.io/badge/API-FastAPI%20%2B%20GraphQL-009688?logo=fastapi&logoColor=white)
+![GIS](https://img.shields.io/badge/GIS-PostGIS%20%2B%20Neo4j-0ea5e9)
+
+> **Core promise:** “No Source, No Answer.” 🤖📚  
+> **Core posture:** “Fail closed.” If metadata/policy/provenance is missing → the build blocks. 🧯🚫
 
 ---
 
 <details>
-<summary>🧪 “Where do I add my test?” (quick map)</summary>
+<summary><strong>📚 Table of contents</strong></summary>
 
-| You changed… | Add tests in… | And run… |
-|---|---|---|
-| ETL pipeline code | `tests/pipelines/` | `pytest tests/pipelines` |
-| Catalog schemas/metadata | `tests/catalog/` | `pytest tests/catalog` |
-| Graph ingest/ontology | `tests/graph/` | `pytest tests/graph` |
-| API endpoints/contracts | `tests/api/` | `pytest tests/api` |
-| UI behavior | `web/` tests | `npm test` |
-| Policies | `tests/policy/` | `conftest test .` |
-| Story Nodes / Focus Mode | `tests/story/` | `pytest tests/story` |
+- [🎯 What this test suite protects](#-what-this-test-suite-protects)
+- [🧱 Test pyramid](#-test-pyramid)
+- [📁 Recommended folder layout](#-recommended-folder-layout)
+- [🚀 Quick start](#-quick-start)
+- [🧩 Suites](#-suites)
+  - [🧪 Backend API](#-backend-api)
+  - [🗺️ Data pipeline & metadata artifacts](#️-data-pipeline--metadata-artifacts)
+  - [🔒 Policy-as-code (OPA)](#-policy-as-code-opa)
+  - [🤖 Focus Mode AI regression](#-focus-mode-ai-regression)
+  - [🧭 UI & E2E (optional but recommended)](#-ui--e2e-optional-but-recommended)
+- [🏷️ Markers, tags, and conventions](#️-markers-tags-and-conventions)
+- [✅ CI expectations](#-ci-expectations)
+- [🧰 Troubleshooting](#-troubleshooting)
+- [🧾 Add-a-test checklist](#-add-a-test-checklist)
 
 </details>
+
+---
+
+## 🎯 What this test suite protects
+
+KFM is **not** “just a map app” or “just a chatbot.” It is a governed system where:
+
+- 🧾 **Provenance is mandatory** (PROV lineage for anything publishable).
+- 🔒 **Policies are enforcement gates** (OPA rules in CI and runtime).
+- 🌐 **The API is the single entry point** (no direct DB access from UI).
+- 🤖 **Focus Mode must cite sources** (answers must carry citations or refuse).
+
+This `tests/` directory is the **evidence layer** that guards these guarantees.
+
+---
+
+## 🧱 Test pyramid
+
+```mermaid
+flowchart TD
+  U[Unit tests 🧩\nfast, deterministic] --> I[Integration tests 🧪\ncontainers + real deps]
+  I --> E[E2E tests 🧭\nUI flows + tiles + Focus Mode]
+  I --> P[Policy gates 🔒\nOPA/Conftest]
+  I --> V[Provenance checks 🧾\nSTAC/DCAT/PROV artifacts]
+  I --> A[AI regression 🤖\ncitations + safety + governance]
+```
+
+**Rule of thumb** 🧠:
+- Unit tests: *logic correctness*
+- Integration tests: *contracts + real dependencies*
+- E2E tests: *user-critical flows*
+- Policy/provenance/AI tests: *trust-critical invariants*
+
+---
+
+## 📁 Recommended folder layout
+
+> This layout is flexible—match your repo, but keep the **intent** consistent.
+
+```text
+tests/
+├─ README.md                  # 👈 you are here
+├─ unit/                      # 🧩 pure logic (fast)
+│  ├─ api/
+│  ├─ services/
+│  └─ utils/
+├─ integration/               # 🧪 real services (containers)
+│  ├─ api_endpoints/
+│  ├─ db_postgis/
+│  ├─ db_neo4j/
+│  └─ tiles/
+├─ policy/                    # 🔒 rego + conftest + fixtures
+│  ├─ rego/
+│  ├─ testdata/
+│  └─ conftest/
+├─ data/                      # 🧾 pipeline, catalog, artifacts
+│  ├─ fixtures/
+│  ├─ stac/
+│  ├─ dcat/
+│  └─ prov/
+├─ ai/                        # 🤖 Focus Mode regression tests
+│  ├─ prompts/
+│  ├─ fixtures/
+│  └─ eval/
+└─ e2e/                       # 🧭 Playwright/Cypress (optional)
+   ├─ specs/
+   └─ fixtures/
+```
+
+---
+
+## 🚀 Quick start
+
+### ✅ Prereqs
+- 🐳 Docker + Docker Compose (for PostGIS / Neo4j / OPA / optional Ollama)
+- 🐍 Python (recommended for FastAPI backend tests; commonly `pytest`)
+- 🧑‍💻 Node.js (recommended for UI/E2E tests; optional if you only test backend)
+
+### 🏃 Run “fast” tests (unit only)
+```bash
+pytest -q
+```
+
+### 🧪 Run integration tests (requires services)
+```bash
+# Start only what you need (example service names)
+docker compose up -d postgis neo4j opa
+
+pytest -m integration -q
+```
+
+### 🔒 Run policy tests (OPA / Conftest)
+```bash
+conftest test policy/ -p policy/rego
+```
+
+### 🤖 Run Focus Mode AI regression (optional)
+```bash
+# start ollama if your AI tests need it
+docker compose up -d ollama
+
+pytest -m ai -q
+```
+
+> Tip 💡: If your AI tests are run in CI, prefer a **small deterministic model** (or mock the LLM) and assert **structure** (citations + policy compliance) instead of exact prose.
+
+---
+
+## 🧩 Suites
+
+## 🧪 Backend API
+
+### What we test
+- ✅ **HTTP contracts**: status codes, error format, pagination, timeouts
+- ✅ **Governance hooks**: access checks, redaction/sanitization, logging
+- ✅ **Key endpoints** (examples):
+  - `/api/v1/datasets/{id}` (metadata + asset links)
+  - `/api/v1/catalog/search` (keyword/bbox/time filtering)
+  - `/api/v1/query` (safe, constrained querying)
+  - `/tiles/{layer}/{z}/{x}/{y}.*` (vector/raster tiles)
+  - `/api/v1/ai/query` (+ optional `/ai/stream`) for Focus Mode
+
+### Patterns we prefer
+- 🧪 Use the framework’s test client (e.g., FastAPI TestClient) for endpoint tests.
+- 🧱 Dependency injection overrides for unit tests (fake repo adapters).
+- 🐳 For integration tests, use containers and **real** PostGIS/Neo4j/OPA.
+
+### Example assertions (good ✅ vs brittle 🚫)
+✅ Assert:
+- response schema keys
+- policy denial is 403 (or sanitized shape)
+- citations exist in AI output
+- tiles are valid MVT/PNG and cache headers are sane
+
+🚫 Avoid:
+- exact full-text AI answers
+- relying on live external APIs
+- “sleep-based” race handling
+
+---
+
+## 🗺️ Data pipeline & metadata artifacts
+
+KFM’s data lifecycle is staged and traceable:
+
+- `data/raw/<domain>/` ➜ `data/work/<domain>/` ➜ `data/processed/<domain>/`
+- Publication requires boundary artifacts:
+  - 🧾 STAC records
+  - 🧾 DCAT dataset entry
+  - 🧾 PROV lineage bundle
+
+### What we test
+- ✅ New/changed datasets produce **STAC + DCAT + PROV**
+- ✅ Missing/invalid provenance fails (publish blocked)
+- ✅ Determinism: same inputs → same outputs (checksums/manifests)
+- ✅ Geo sanity:
+  - CRS correctness
+  - geometry validity
+  - non-empty extents
+  - stable IDs / primary keys
+
+### Suggested checks
+- 📦 “Artifact presence” test per dataset domain
+- 🧬 Schema validation (JSON Schema for STAC/DCAT/PROV)
+- 🔁 “Re-run pipeline yields identical manifest” test (where feasible)
+
+---
+
+## 🔒 Policy-as-code (OPA)
+
+KFM uses policy gates at **CI time** and **runtime**.
+
+### What we test
+- ✅ Rego rules compile
+- ✅ Expected allow/deny cases for:
+  - RBAC roles (Public Viewer / Contributor / Maintainer / Admin)
+  - sensitivity labels (public/internal/sensitive)
+  - AI output rules (citations required, restricted content blocked)
+- ✅ “Fail closed” behavior:
+  - missing license / missing sensitivity label / missing PROV → CI fails
+- ✅ Policy decision metadata is traceable (policy bundle/version tagging if implemented)
+
+### Tooling recommendations
+- **Conftest** for CI policy tests
+- “Golden” decision fixtures (`input.json` → `allow: false/true`) 🧊
+
+---
+
+## 🤖 Focus Mode AI regression
+
+Focus Mode is governed: it must cite sources or refuse.
+
+### What we test
+- ✅ Output includes **citations** (at least one) when answering factual questions
+- ✅ Output refuses when evidence is insufficient (“No Source, No Answer”)
+- ✅ Output passes policy (no restricted leakage)
+- ✅ Optional: ensure certain key terms appear for specific fixtures (lightweight checks)
+
+### How to keep AI tests stable
+- 🔧 Prefer:
+  - a small local model, or
+  - a mock Ollama client returning deterministic responses, or
+  - fixed retrieval context fixtures (freeze the evidence bundle)
+- 🧪 Assert **structure**, not style:
+  - citations present
+  - no forbidden phrases
+  - output type + fields are correct (e.g., `answer`, `citations[]`, `audit_id`)
+
+### Suggested AI fixture approach
+- `tests/ai/fixtures/<case>/question.txt`
+- `tests/ai/fixtures/<case>/sources.json` (retrieval payload)
+- `tests/ai/fixtures/<case>/expected.json` (minimal required invariants)
+
+---
+
+## 🧭 UI & E2E (optional but recommended)
+
+E2E ensures users can actually do the “Kansas time-travel map” workflows 🗺️🕰️.
+
+### What we test
+- ✅ App boots
+- ✅ Map loads + tiles render
+- ✅ Layer toggles work
+- ✅ Timeline changes update the view
+- ✅ Focus Mode returns an answer with citations (or refusal)
+- ✅ RBAC: restricted layers not visible to unauthorized roles
+
+### Tools
+- Playwright or Cypress
+- Use seeded data fixtures + test accounts
+
+---
+
+## 🏷️ Markers, tags, and conventions
+
+### Pytest markers (suggested)
+- `unit` 🧩
+- `integration` 🧪
+- `policy` 🔒
+- `data` 🧾
+- `ai` 🤖
+- `e2e` 🧭
+- `slow` 🐢
+
+Example run:
+```bash
+pytest -m "not slow" -q
+pytest -m "integration and not ai" -q
+```
+
+### Naming
+- `test_<thing>_<behavior>.py`
+- One **primary assertion** per test (multiple small asserts are fine; avoid mega-tests).
+
+---
+
+## ✅ CI expectations
+
+### PR (fast + trust-critical)
+- ✅ unit
+- ✅ policy (rego + conftest)
+- ✅ artifact validation for touched datasets
+- ✅ lightweight integration (API smoke)
+
+### Nightly / scheduled (heavier)
+- ✅ full integration suite (DB + tiles)
+- ✅ AI regression suite (if enabled)
+- ✅ E2E flows
+
+> CI should be treated as a **governance gate**—if it fails, we assume the system would violate provenance/policy promises. 🚧
+
+---
+
+## 🧰 Troubleshooting
+
+### 🐳 Containers won’t start / ports collide
+- Check local ports used by Postgres (5432), Neo4j (7474/7687), OPA (8181), Ollama (11434)
+- Stop conflicting services or re-map ports in your test compose file.
+
+### 🧠 Neo4j memory errors
+- Reduce dataset fixture size
+- Increase container memory limits
+
+### 🧾 “Missing PROV / license / sensitivity label”
+- This is expected “fail closed” behavior ✅  
+  Fix the dataset’s boundary artifacts and re-run the checks.
+
+### 🤖 AI tests are flaky
+- Switch to mock Ollama client
+- Freeze retrieval payloads
+- Assert citations + policy compliance only
+
+---
+
+## 🧾 Add-a-test checklist
+
+When you add or change something, make sure you also add tests that prove the trust contract:
+
+### If you add an API endpoint 🌐
+- [ ] Unit tests for service logic
+- [ ] Integration test for endpoint contract
+- [ ] Policy test (authorized vs unauthorized)
+- [ ] Audit/provenance log assertion (if applicable)
+
+### If you add a dataset / pipeline 🗂️
+- [ ] Pipeline tests produce `processed/` outputs
+- [ ] STAC/DCAT/PROV generated and valid
+- [ ] Determinism/manifest check (where feasible)
+- [ ] Policy gate tests (license/sensitivity present)
+
+### If you change Focus Mode 🤖
+- [ ] Regression test ensures citations
+- [ ] Refusal behavior for insufficient evidence
+- [ ] Policy block for restricted info
+- [ ] Optional: snapshot minimal response structure (not prose)
+
+---
+
+🧠 **Design philosophy:** The tests don’t just prevent bugs — they preserve *trust*.  
+🧭 If something cannot be proven (policy, provenance, citation), it’s not “done.”
