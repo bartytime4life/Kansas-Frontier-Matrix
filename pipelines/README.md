@@ -1,6 +1,3 @@
-> According to a document from **February 3, 2026**, KFM follows a **canonical pipeline order**:  
-> **Raw → Processed → Catalog/Prov → Database → API → UI** ✅ (no shortcuts)
-
 # 🚰 Pipelines
 
 ![Pipelines](https://img.shields.io/badge/Pipelines-ETL%20%7C%20GIS%20%7C%20AI-blue)
