@@ -1,450 +1,209 @@
----
-title: "Raw Domain Intake — README"
-path: "data/raw/<domain>/README.md"
-version: "v1.0.0"
-last_updated: "2026-01-12"
-status: "draft"
-doc_kind: "Guide"
-license: "CC-BY-4.0"
+# 🧱 `data/raw/<domain>/` — Raw Data (Immutable Source Snapshots)
 
-markdown_protocol_version: "KFM-MDP v11.2.6"
-mcp_version: "MCP-DL v6.3"
-ontology_protocol_version: "KFM-ONTO v4.1.0"
-pipeline_contract_version: "KFM-PPC v11.0.0"
-stac_profile: "KFM-STAC v11.0.0"
-dcat_profile: "KFM-DCAT v11.0.0"
-prov_profile: "KFM-PROV v11.0.0"
+![Stage](https://img.shields.io/badge/data%20stage-raw-blue)
+![Policy](https://img.shields.io/badge/governance-fail%20closed-critical)
+![Provenance](https://img.shields.io/badge/provenance-required-success)
+![Formats](https://img.shields.io/badge/prefer-open%20formats-lightgrey)
 
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-review_gates_ref: "docs/governance/REVIEW_GATES.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "mixed"
-classification: "mixed"
-jurisdiction: "US-KS"
-
-doc_uuid: "urn:kfm:doc:data:raw:domain:readme:v1.0.0"
-semantic_document_id: "kfm-data-raw-domain-readme-v1.0.0"
-event_source_id: "ledger:kfm:doc:data:raw:domain:readme:v1.0.0"
-commit_sha: "<latest-commit-hash>"
-
-ai_transform_permissions:
-  - "summarize"
-  - "structure_extract"
-  - "translate"
-  - "keyword_index"
-ai_transform_prohibited:
-  - "generate_policy"
-  - "infer_sensitive_locations"
-
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
----
-
-<a id="top"></a>
-
-<div align="center">
-
-# 📥 Raw Domain Intake — `<domain>` (`data/raw/<domain>/`)
-
-![stage](https://img.shields.io/badge/data%20stage-raw-2563EB)
-![domain](https://img.shields.io/badge/domain-<domain>-0EA5E9)
-![policy](https://img.shields.io/badge/policy-append--only-16A34A)
-![integrity](https://img.shields.io/badge/integrity-checksums%20%2B%20receipts-7C3AED)
-![provenance](https://img.shields.io/badge/provenance-source.json%20%2B%20PROV-0EA5E9)
-![governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-8B5CF6)
-![security](https://img.shields.io/badge/security-no%20secrets%20in%20git-DC2626)
-
-**This directory holds immutable, as‑received inputs for the `<domain>` domain.**  
-Raw is where KFM starts building trust: **receipts → checksums → deterministic ETL**. 🧾🔑🛠️
-
-</div>
-
-> [!IMPORTANT]
-> **If you changed bytes, it’s not raw anymore.**  
-> Reprojection, OCR, resampling, schema edits, normalization, tiling, format conversion → `data/work/` (intermediate) or `data/processed/` (publishable).
+> 🧊 **Rule #1: Raw is read-only.** This folder stores **original, unmodified** source snapshots for `<domain>`.  
+> 🧭 Everything downstream must be reproducible from what’s stored here.
 
 ---
 
-## ⚡ Quick links (domain-local)
-
-- 🧭 Back to raw root rules → [`../README.md`](../README.md)
-- 🧾 Source manifests (external dataset receipts) → [`../../sources/`](../../sources/) *(if present)*
-- 🧪 Work / ETL sandbox → [`../../work/`](../../work/)
-- 📦 Certified outputs → [`../../processed/`](../../processed/)
-- 🛰️ STAC boundary (assets) → [`../../stac/`](../../stac/)
-- 🗂️ DCAT boundary (discovery) → [`../../catalog/dcat/`](../../catalog/dcat/)
-- 🧬 PROV boundary (lineage) → [`../../prov/`](../../prov/)
-- 🔐 Security policy → [`../../../SECURITY.md`](../../../SECURITY.md) *(or `../../../.github/SECURITY.md`)*
-
----
-
-<details>
-<summary><strong>📌 Table of contents</strong></summary>
-
-- [🎯 What this folder is](#-what-this-folder-is)
-- [🧭 Where this domain fits in the pipeline](#-where-this-domain-fits-in-the-pipeline)
-- [🗂️ Domain registry (recommended)](#️-domain-registry-recommended)
-- [🧱 Directory contract](#-directory-contract)
-- [🧾 Drop contract (required receipts)](#-drop-contract-required-receipts)
-- [🧰 Intake SOP (domain)](#-intake-sop-domain)
-- [🧭 Domain-specific notes (pick what applies)](#-domain-specific-notes-pick-what-applies)
-- [🔐 Governance, classification, sovereignty](#-governance-classification-sovereignty)
-- [✅ QA & CI gates (raw-stage)](#-qa--ci-gates-raw-stage)
-- [🙃 Common anti-patterns](#-common-anti-patterns)
-- [📚 Reference shelf (project library)](#-reference-shelf-project-library)
-
-</details>
-
----
-
-## 🎯 What this folder is
-
-### ✅ This folder **IS**
-- the canonical home for **as‑received input snapshots** for the `<domain>` domain
-- the place we record **retrieval receipts** + **licensing** + **classification** up front
-- the anchor for **deterministic ETL** and future **PROV lineage**
-
-### ❌ This folder is **NOT**
-- a scratchpad (`data/work/`)
-- a publishing location (`data/processed/`)
-- a catalog (`data/stac/`, `data/catalog/dcat/`)
-- a “helpful conversions” folder (COG/Parquet/OCR/tiles → not raw)
-
-> [!TIP]
-> Raw is allowed to look messy. It is **not** allowed to be mysterious.
-
----
-
-## 🧭 Where this domain fits in the pipeline
-
-**Canonical order (non‑negotiable):**  
-**Raw → Work/ETL → Processed → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+## 🗺️ The “Truth Path” (How raw becomes trusted)
 
 ```mermaid
 flowchart LR
-  SOURCES["Source manifests\n(data/sources/)"] --> RAW["Raw inputs\n(data/raw/<domain>/)"]
-  RAW --> WORK["Work / ETL\n(data/work/<domain>/ or data/work/)"]
-  WORK --> PROC["Processed outputs\n(data/processed/<domain>/)"]
-  PROC --> BOUND["Boundary artifacts\n(STAC/DCAT/PROV)"]
-  BOUND --> GRAPH["Graph runtime\n(Neo4j refs)"]
-  GRAPH --> API["Governed API\n(contract + redaction)"]
-  API --> UI["UI\n(map/timeline/story)"]
+  A["🗃️ data/raw/<domain><br/>Raw snapshots (you are here)"] --> B["🏗️ data/work/<domain><br/>Intermediate outputs"]
+  B --> C["✅ data/processed/<domain><br/>Final standardized datasets"]
+  C --> D["🧾 data/stac/*<br/>STAC Items + Collections"]
+  C --> E["📚 data/catalog/dcat/*<br/>DCAT JSON-LD dataset entries"]
+  C --> F["🧬 data/prov/*<br/>PROV lineage bundles"]
+  C --> G["🗺️ Runtime Stores<br/>PostGIS · Graph · Search"]
+  G --> H["🌐 API Layer<br/>policy + contracts"]
+  H --> I["🖥️ UI / 🤖 AI<br/>maps · stories · Focus Mode"]
 ```
+
+**Why it matters:** no dataset is “publishable” until it has **processed outputs + STAC/DCAT metadata + PROV lineage** (and passes policy gates). ✅
 
 ---
 
-## 🗂️ Domain registry (recommended)
+## 🎯 Purpose of `data/raw/<domain>/`
 
-To keep raw discoverable (without becoming a second catalog), this domain should maintain:
+Raw data is for:
+
+- 📥 **Original downloads / exports** from authoritative sources (APIs, portals, archives, partner drops)
+- 🧾 **Evidence artifacts** that must remain untouched (e.g., PDFs, scans, original CSV dumps)
+- 🧊 **Reproducibility anchors** for ETL pipelines (the pipeline reads raw; it never edits raw)
+
+Raw data is **NOT** for:
+
+- 🚫 Cleaned/standardized files (put those in `data/processed/<domain>/`)
+- 🚫 Intermediate transformations (put those in `data/work/<domain>/`)
+- 🚫 Derived analytics / AI outputs (those are first-class datasets → `data/processed/...`)
+- 🚫 Secrets, credentials, tokens, or private keys (never commit)
+- 🚫 Sensitive personal data without explicit approval + labeling (see governance section)
+
+---
+
+## 📁 Recommended folder layout (inside `<domain>`)
+
+Use a structure that makes **source + dataset + version** obvious at a glance:
 
 ```text
-📁 data/
-└─ 📁 raw/
-   └─ 📁 <domain>/
-      ├─ 📄 README.md                          👈 you are here
-      ├─ 📄 datasets_index.md                  ⭐ human-friendly list (recommended)
-      ├─ 📄 datasets_registry.csv              🤖 machine-friendly index (recommended)
-      └─ 📁 <dataset_slug>/                    📦 actual raw drops
-         └─ 📁 <drop_id>/                      🧱 immutable intake boundary (append-only)
-            ├─ 📄 README.md                    🧾 human receipt
-            ├─ 📄 source.json                  🧾 machine receipt
-            ├─ 🔑 checksums.sha256             🔒 integrity
-            ├─ 📁 original/                    📦 as-received bytes
-            ├─ 📁 extracted/                   🧩 lossless unpack only (optional)
-            ├─ 📁 receipts/                    🧾 request/response proofs (redacted)
-            └─ 📁 notes/                       📝 intake notes (NO secrets)
+data/raw/<domain>/
+├── 📁 <source_org_or_program>/
+│   ├── 📁 <dataset_id>/
+│   │   ├── 📁 vYYYY-MM-DD/                     # retrieval/version stamp
+│   │   │   ├── 📄 original.<ext>               # file(s) exactly as obtained
+│   │   │   ├── 📄 checksums.sha256             # hashes for integrity
+│   │   │   └── 📄 source.manifest.yml          # required metadata (see below)
+│   │   └── 📁 vYYYY-MM-DD/...
+│   └── 📁 <dataset_id>/...
+└── 📄 README.md                                 # this file
 ```
 
-### `datasets_index.md` (suggested columns)
-- dataset slug → link to folder
-- upstream publisher
-- license
-- typical update cadence
-- classification (public/internal/confidential/restricted)
-- “where it becomes real” (processed dataset id / STAC collection id)
+### ✅ Naming conventions
+- Use **lowercase-kebab-case** for folder names: `kansas-dasc`, `usgs-3dep`, `census-1900`
+- Use **stable dataset ids**: `hydrology-streamgages`, `land-patents-glo`, `sentinel-2-scenes`
+- Version folders should be **date-stamped** (`v2026-02-03`) or semver if the source provides it.
 
-### `datasets_registry.csv` (suggested columns)
-```csv
-dataset_slug,publisher,license,classification,update_cadence,last_drop_id,notes
+---
+
+## 🧾 Required metadata per dataset version
+
+Every dataset version folder **must** include:
+
+### 1) `source.manifest.yml` (required)
+A minimal manifest that answers: **what is this, where did it come from, what license governs it, and how do we verify integrity?**
+
+```yaml
+dataset_id: "<dataset_id>"
+domain: "<domain>"
+title: "Human friendly title"
+description: "1–3 sentences describing what the raw snapshot contains."
+
+source:
+  organization: "<source_org_or_program>"
+  url: "https://example.source/download/or/api"
+  retrieved_at: "YYYY-MM-DD"
+  retrieval_method: "manual | script | api | partner_drop"
+  contact: "name/email if available"
+
+license:
+  spdx: "CC-BY-4.0 | CC0-1.0 | ODC-BY-1.0 | Public-Domain | UNKNOWN"
+  license_url: "https://..."
+  attribution: "Required attribution text (if any)"
+
+coverage:
+  spatial:
+    bbox_wgs84: [minLon, minLat, maxLon, maxLat]   # if known
+    region: "Kansas"                                # or county/area
+  temporal:
+    start: "YYYY-MM-DD"
+    end: "YYYY-MM-DD"
+
+files:
+  - path: "original.<ext>"
+    sha256: "<sha256>"
+    size_bytes: 123456
+    media_type: "text/csv | application/pdf | image/tiff | application/zip"
+notes:
+  sensitivity: "public | restricted | confidential"
+  pii: false
+  indigenous_cultural_sensitivity: false
 ```
 
-> [!NOTE]
-> This registry is an **intake index**, not a replacement for DCAT/STAC.  
-> It helps humans find inputs and helps CI enforce “no mystery sources.”
+### 2) `checksums.sha256` (required)
+Store hashes for **every** file in the version folder.
 
----
-
-## 🧱 Directory contract
-
-Organize raw inputs by **dataset → immutable drop**:
-
-```text
-📁 data/
-└── 📁 raw/
-    └── 📁 <domain>/
-        └── 📁 <dataset_slug>/
-            └── 📁 <drop_id>/
-                ├── 📄 README.md                  🧾 human receipt / context
-                ├── 📄 source.json                🧾 machine receipt / provenance
-                ├── 🔑 checksums.sha256           🔒 integrity (sha256)
-                ├── 📁 original/                  📦 as received (preferred)
-                ├── 📁 extracted/                 🧩 lossless unpack only (optional)
-                ├── 📁 receipts/                  🧾 request/response metadata (redacted)
-                └── 📁 notes/                     📝 human notes (NO secrets)
+```bash
+# example format
+<sha256>  original.csv
+<sha256>  supplementary.zip
 ```
 
-### Naming rules (practical)
-- `<dataset_slug>`: `kebab-case`, stable, no dates inside
-- `<drop_id>`: `YYYY-MM-DD` or `vX` or `run-YYYYMMDD-HHMMSSZ`
-- Never overwrite: new pull/delivery → new drop folder
+### 3) Optional (recommended)
+- `README.source.md` — human notes about quirks / parsing gotchas
+- `download.sh` or `download.py` — deterministic retrieval script (preferred if legal/feasible)
+- `CITATION.txt` — if the source provides a preferred citation
 
 ---
 
-## 🧾 Drop contract (required receipts)
+## 🔐 Governance, security, and “fail closed” rules
 
-Every drop must include:
+### 🧷 Sensitivity labeling
+All raw datasets must be labeled in the manifest as one of:
+- **public** (safe to expose broadly after processing + policy gates)
+- **restricted** (limited access; may require redaction/aggregation)
+- **confidential** (generally not publishable; requires explicit approval)
 
-| Item | Required | Why |
-|---|---:|---|
-| `README.md` | ✅ | human context (what/where/why, caveats) |
-| `source.json` | ✅ | machine receipt (license, retrieval, classification, extents, pointers) |
-| `checksums.sha256` | ✅ | integrity + tamper evidence |
-| `original/` | ◻️ | as-received bytes (preferred) |
-| `extracted/` | ◻️ | lossless unpack only (optional) |
-| `receipts/` | ◻️ | deterministic retrieval proof (optional) |
+### 🧑‍⚖️ License is mandatory
+If the license is missing or unclear:
+- set `license.spdx: "UNKNOWN"`
+- document what you checked in `notes`
+- expect policy gates / CI to block publication until resolved ✅
 
-> [!CAUTION]
-> If redistribution is restricted, commit only the receipts (README + `source.json` + checksums) and store bytes in approved restricted storage.
-
----
-
-## 🧰 Intake SOP (domain)
-
-### 1) Create the dataset folder (if new)
-```text
-data/raw/<domain>/<dataset_slug>/
-```
-- add a short dataset-level `README.md` **inside** `<dataset_slug>/` if the dataset is complex *(recommended)*
-
-### 2) Add a new immutable drop
-```text
-data/raw/<domain>/<dataset_slug>/<drop_id>/
-```
-
-### 3) Place bytes (or pointers)
-- preferred: put upstream delivery in `original/`
-- optionally unpack losslessly into `extracted/`
-- if bytes can’t be stored here: store externally and point to them in `source.json` (and optionally `data/sources/`)
-
-### 4) Write receipts
-- `README.md`: what it is + what’s inside + caveats + known issues
-- `source.json`: license + retrieval method + classification + extents
-
-### 5) Generate checksums
-- generate `checksums.sha256` and verify locally
-- if you later discover an error: create a **new** drop (never edit the old one)
-
-### 6) Update the domain registry
-- add/update `datasets_index.md` and `datasets_registry.csv`
+### 🧼 Privacy/ethics checklist (raw stage)
+- [ ] No secrets or credentials included
+- [ ] No accidental PII (names, addresses, phone numbers) unless explicitly approved + classified
+- [ ] Any culturally sensitive data (e.g., sacred locations) is flagged and treated as restricted/confidential
 
 ---
 
-## 🧭 Domain-specific notes (pick what applies)
+## 🧰 How to add a new raw dataset (quick checklist)
 
-> [!TIP]
-> Keep this section “choose-your-own-domain.” Delete what doesn’t apply or keep it as a checklist for future maintainers.
-
-### 🛰️ If `<domain>` is remote sensing / imagery
-- ✅ keep original metadata sidecars (MTL, manifests, XML)
-- ✅ preserve original tiling/granules (don’t mosaic in raw)
-- ✅ store request receipts for API pulls (AOI, date range, collection id)
-- ❌ don’t convert to COG/tiles/PMTiles here (do that in `data/work/`)
-
-### 🗺️ If `<domain>` is vector GIS / boundaries / administrative data
-- ✅ preserve whole delivery sets (e.g., full Shapefile set, not just `.shp`)
-- ✅ preserve encoding + schema (watch `.cpg`)
-- ❌ don’t repair geometry or reproject here
-
-### 🧾 If `<domain>` is documents / scans / historical maps
-- ✅ keep the original PDF/TIFF/JPEG masters unchanged
-- ✅ keep any “as delivered” index spreadsheets (if provided)
-- ❌ don’t OCR in place (OCR outputs go to `data/work/`; publishable OCR goes to `data/processed/` + catalogs)
-
-### 🌊 If `<domain>` is time-series / sensors / real-time feeds
-- ✅ treat each pull as a drop (append-only snapshots)
-- ✅ record retrieval receipts (query params, time window, endpoint)
-- ✅ document update cadence + known latency
-- ❌ don’t aggregate or “fix timestamps” in raw
-
-### 🧊 If `<domain>` includes 3D assets / binary formats
-- ✅ treat as untrusted input; store unchanged; scan/sandbox parsers during ETL
-- ✅ store file format/version notes in `README.md`
-- ❌ don’t run “conversion tools” inside raw
+1. 📁 Create folder: `data/raw/<domain>/<source>/<dataset_id>/vYYYY-MM-DD/`
+2. 📥 Place the original file(s) **unchanged** in that version folder
+3. 🔎 Generate hashes → write `checksums.sha256`
+4. 🧾 Create `source.manifest.yml` (license + retrieval date are non-negotiable)
+5. 🏗️ Run the domain pipeline (outputs must land in `data/work/` and `data/processed/`)
+6. 🧬 Ensure publication artifacts exist (downstream of raw):
+   - `data/stac/collections/…` + `data/stac/items/…`
+   - `data/catalog/dcat/…`
+   - `data/prov/…`
+7. ✅ Open PR with a clear description + screenshots/summary (if map layers change)
 
 ---
 
-## 🔐 Governance, classification, sovereignty
+## 🧠 FAQ
 
-### Classification (minimum policy)
-- declare classification in every `source.json`
-- **no classification downgrade** across the pipeline
-- if restricted: prefer receipt-only + governed access paths
+### “Can I fix a typo in a raw CSV?”
+**No.** Raw stays immutable.  
+✅ Add a new version folder with a new retrieval date **only if** the upstream publisher changed it, or store corrections as a processing step (documented + reproducible) into `data/processed/<domain>/`.
 
-### Sensitive locations & cultural sovereignty
-- don’t publish precise restricted coordinates in public receipts
-- prefer generalized coverage (county/Kansas-level) in raw receipts when needed
-- route review through governance docs and follow `SECURITY.md` if risk exists
+### “Where do AI-derived layers go?”
+Treat them like first-class datasets:
+- store outputs in `data/processed/<domain>/...`
+- generate full STAC/DCAT/PROV like any other dataset
 
-### Supply chain mindset (raw is an attack surface)
-- treat all external files as untrusted (especially office docs, PDFs, binaries)
-- scan where policy allows; never execute embedded macros/scripts from a drop
-- keep receipts of scanning/validation in `notes/` (no secrets)
-
----
-
-## ✅ QA & CI gates (raw-stage)
-
-### Minimum PR gates for `data/raw/<domain>/**`
-- [ ] append-only: no edits to existing drops
-- [ ] receipts present: `README.md`, `source.json`, `checksums.sha256`
-- [ ] checksums verify locally
-- [ ] license + classification present in `source.json`
-- [ ] secrets scan passes
-- [ ] restricted redistribution handled (receipt-only if required)
-
-### Recommended gates (fast, high value)
-- [ ] `source.json` validates against a schema (if you add one under `schemas/sources/`)
-- [ ] `dataset_slug` and `drop_id` naming lint
-- [ ] “policy pack” checks (classification consistency, sensitive-location safeguards)
-- [ ] if the PR also updates catalogs: run catalog QA (links + required fields)
+### “Do we store large raw files in Git?”
+Prefer governance-friendly approaches:
+- keep only small/medium raw files in Git
+- for large assets, use a data remote (e.g., DVC/object storage) and keep **pointers + manifests** here  
+(Your repo’s contribution rules decide the exact mechanism.)
 
 ---
 
-## 🙃 Common anti-patterns
+## 🔗 Related paths (for maintainers)
 
-- “I fixed the CSV in place” → **new drop**; cleanup happens in `data/work/`
-- “I reprojected it so it lines up” → `data/work/` / `data/processed/`
-- “I renamed files for convenience” → keep originals; map names later
-- “I committed a token in a script” → rotate + remove; use `.env` + secret store
-- “I added derived previews into raw” → previews belong in work/processed with lineage
-
----
-
-## 📚 Reference shelf (project library)
-
-> ⚠️ Reference PDFs may have licenses different from repository code/data.  
-> Treat this as a **reading pack / influence map** for rigor, not a redistribution mandate. 📚
-
-<details>
-<summary><strong>📖 Core KFM docs (system + governance context)</strong></summary>
-
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.docx`
-- `🌟 Kansas Frontier Matrix – Latest Ideas & Future Proposals.docx`
-
-</details>
-
-<details>
-<summary><strong>🗺️ GIS, cartography, formats (helps avoid raw-stage “oops”)</strong></summary>
-
-- `python-geospatial-analysis-cookbook.pdf`
-- `PostgreSQL Notes for Professionals - PostgreSQLNotesForProfessionals.pdf`
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `Mobile Mapping_ Space, Cartography and the Digital - 9789048535217.pdf`
-- `compressed-image-file-formats-jpeg-png-gif-xbm-bmp.pdf`
-
-</details>
-
-<details>
-<summary><strong>🛰️ Remote sensing</strong></summary>
-
-- `Cloud-Based Remote Sensing with Google Earth Engine-Fundamentals and Applications.pdf`
-
-</details>
-
-<details>
-<summary><strong>📈 Statistics, experiments, reproducibility discipline</strong></summary>
-
-- `Understanding Statistics & Experimental Design.pdf`
-- `regression-analysis-with-python.pdf`
-- `Regression analysis using Python - slides-linear-regression.pdf`
-- `graphical-data-analysis-with-r.pdf`
-- `think-bayes-bayesian-statistics-in-python.pdf`
-
-</details>
-
-<details>
-<summary><strong>🧪 Modeling, simulation, uncertainty</strong></summary>
-
-- `Scientific Modeling and Simulation_ A Comprehensive NASA-Grade Guide.pdf`
-- `Generalized Topology Optimization for Structural Design.pdf`
-- `Spectral Geometry of Graphs.pdf`
-
-</details>
-
-<details>
-<summary><strong>⚙️ Systems, scale, interoperability</strong></summary>
-
-- `Scalable Data Management for Future Hardware.pdf`
-- `Data Spaces.pdf`
-- `concurrent-real-time-and-distributed-programming-in-java-threads-rtsj-and-rmi.pdf`
-
-</details>
-
-<details>
-<summary><strong>🌐 Web & 3D visualization (input formats + downstream consumers)</strong></summary>
-
-- `responsive-web-design-with-html5-and-css3.pdf`
-- `webgl-programming-guide-interactive-3d-graphics-programming-with-webgl.pdf`
-
-</details>
-
-<details>
-<summary><strong>❤️ Ethics, autonomy, AI law</strong></summary>
-
-- `Introduction to Digital Humanism.pdf`
-- `Principles of Biological Autonomy - book_9780262381833.pdf`
-- `On the path to AI Law’s prophecies and the conceptual foundations of the machine learning age.pdf`
-
-</details>
-
-<details>
-<summary><strong>🛡️ Security (defensive mindset only)</strong></summary>
-
-- `ethical-hacking-and-countermeasures-secure-network-infrastructures.pdf`
-- `Gray Hat Python - Python Programming for Hackers and Reverse Engineers (2009).pdf`
-
-> These are used to inform **defensive controls** (threat modeling, incident response, secure coding).  
-> They are **not** a request for offensive tooling contributions.
-
-</details>
-
-<details>
-<summary><strong>🧰 General programming shelf (bundles)</strong></summary>
-
-- `A programming Books.pdf`
-- `B-C programming Books.pdf`
-- `D-E programming Books.pdf`
-- `F-H programming Books.pdf`
-- `I-L programming Books.pdf`
-- `M-N programming Books.pdf`
-- `O-R programming Books.pdf`
-- `S-T programming Books.pdf`
-- `U-X programming Books.pdf`
-- `Deep Learning for Coders with fastai and PyTorch - Deep.Learning.for.Coders.with.fastai.and.PyTorchpdf` *(filename as provided)*
-
-</details>
+- `data/work/<domain>/` — intermediate outputs (scratch + staging)
+- `data/processed/<domain>/` — final standardized datasets
+- `data/stac/collections/` + `data/stac/items/` — STAC metadata
+- `data/catalog/dcat/` — DCAT dataset entries
+- `data/prov/` — PROV lineage bundles (inputs → activities → outputs)
 
 ---
 
-## ✅ Domain README “Definition of Done”
+## 🧩 Domain profile (fill this in)
 
-- [ ] `<domain>` description filled in (what counts as this domain)
-- [ ] domain registry created (`datasets_index.md` + `datasets_registry.csv`) *(recommended)*
-- [ ] intake SOP matches how the team actually works (scripts, contacts, access policy)
-- [ ] classification defaults (if any) documented without leaking sensitive detail
-- [ ] linked from `data/raw/README.md` *(recommended)*
+| Field | Value |
+|---|---|
+| Domain | `<domain>` |
+| Owner / Maintainer | `@<github-handle>` |
+| Primary sources | `<source_orgs>` |
+| Default CRS (if spatial) | `EPSG:4326 (unless specified)` |
+| Processing entrypoint | `src/pipelines/<domain>/...` |
+| Publication review gates | `docs/governance/REVIEW_GATES.md` |
 
-<p align="right"><a href="#top">⬆️ Back to top</a></p>
-
+> ✅ Keep this README updated as the domain grows (new sources, new pipelines, new governance constraints).
