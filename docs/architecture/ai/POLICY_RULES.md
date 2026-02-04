@@ -85,18 +85,18 @@ src/
 
 ```mermaid
 flowchart LR
-  U[User 🧑‍🚀] --> UI[Focus Mode UI 🗺️]
-  UI --> API[Backend API Orchestrator 🧩]
+  U["🧑 User"] --> UI["🗺️ Focus Mode UI"]
+  UI --> API["🧩 Backend API Orchestrator"]
 
-  API --> PG[Prompt Gate 🧼\n(sanitize user input)]
-  PG --> RET[Retrieval 🔎\n(Neo4j/PostGIS/Search/Vectors)]
-  RET --> PROMPT[Prompt Builder 🧱\n(numbered SOURCES + rules)]
-  PROMPT --> LLM[LLM Runtime 🧠\n(Ollama)]
-  LLM --> PP[Postprocess ✂️\n(parse citations + structure)]
-  PP --> OPA[OPA Policy Engine 🛡️\n(Rego decision)]
-  OPA -->|allow| OUT[Answer ✅\n+ citations map]
-  OPA -->|deny/transform| SAFE[Fallback 🚧\n+ redactions]
-  OUT --> LOG[Provenance Ledger ⛓️]
+  API --> PG["🧼 Prompt Gate (sanitize user input)"]
+  PG --> RET["🔎 Retrieval (Neo4j / PostGIS / Search / Vectors)"]
+  RET --> PROMPT["🧱 Prompt Builder (numbered sources + rules)"]
+  PROMPT --> LLM["🧠 LLM Runtime (Ollama)"]
+  LLM --> PP["✂️ Postprocess (parse citations + structure)"]
+  PP --> OPA["🛡️ OPA Policy Engine (Rego decision)"]
+  OPA -->|"allow"| OUT["✅ Answer + citations map"]
+  OPA -->|"deny/transform"| SAFE["🚧 Fallback + redactions"]
+  OUT --> LOG["⛓️ Provenance Ledger"]
   SAFE --> LOG
 ```
 
