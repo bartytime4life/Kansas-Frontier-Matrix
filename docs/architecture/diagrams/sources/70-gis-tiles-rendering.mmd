@@ -1,1 +1,153 @@
+%% ------------------------------------------------------------------------------------
+%% 🧩 KFM | GIS Tiles Rendering (Vector + Raster)
+%% 📄 docs/architecture/diagrams/sources/70-gis-tiles-rendering.mmd
+%%
+%% Runtime (public consumption):
+%%   - Vector tiles: GET /tiles/:layer/:z/:x/:y.pbf  (MVT)
+%%   - Raster tiles: GET /tiles/:layer/:z/:x/:y.png  (or .webp)
+%%
+%% Offline (optional but recommended for scale):
+%%   - Vector + raster prep (PostGIS, COGs), optionally build PMTiles/MBTiles/XYZ pyramids
+%%   - Publish versions to support cache-busting and reproducible map states
+%% ------------------------------------------------------------------------------------
+
+%%{init: {'flowchart': {'curve': 'basis'}}}%%
+flowchart TB
+
+  %% =========================
+  %% 👤 CLIENTS
+  %% =========================
+  subgraph Clients["👤 Clients (consume tiles)"]
+    direction LR
+    web["🌐 Web UI\nMapLibre GL JS"]
+    openlayers["🗺️ External clients\nOpenLayers / QGIS / custom apps"]
+    globe["🧭 3D / Globe\nCesium"]
+    mobile["📱 Mobile / AR"]
+    earth["🌎 Google Earth"]
+  end
+
+  %% =========================
+  %% 🚪 EDGE / DELIVERY
+  %% =========================
+  subgraph Edge["🚪 Edge / Delivery"]
+    direction LR
+    cdn["🧊 CDN / Edge cache"]
+    waf["🛡️ WAF + TLS termination"]
+  end
+
+  %% =========================
+  %% 🧠 API + GOVERNANCE
+  %% =========================
+  subgraph API["🧠 API + Governance"]
+    direction TB
+    auth["🔐 AuthN\n(JWT / session)"]
+    policy["🛡️ Policy gate\n(OPA/Rego)"]
+    tiles["🧩 Tiles endpoint\nGET /tiles/:layer/:z/:x/:y.pbf (MVT)\nGET /tiles/:layer/:z/:x/:y.png|webp"]
+    cache["⚡ Read-through tile cache\n(Redis / disk)"]
+    audit["🧾 Audit + metrics\n(trace id, rate limits, access logs)"]
+    deny["⛔ Deny / sanitize\n(403 or masked tile)"]
+  end
+
+  %% =========================
+  %% 🎨 RENDERERS
+  %% =========================
+  subgraph Render["🎨 Renderers"]
+    direction LR
+    kind{"🧭 Tile kind?"}
+    vtr["🧱 Vector tile renderer\nMVT (.pbf)"]
+    rtr["🖼️ Raster tile renderer\nPNG / WEBP"]
+    proxy["🔁 Proxy / re-tile\nWMS/WMTS passthrough"]
+  end
+
+  %% =========================
+  %% 🗄️ STORES
+  %% =========================
+  subgraph Stores["🗄️ Stores"]
+    direction LR
+    postgis["🗺️ PostGIS\n(vector features + spatial indexes)"]
+    pmtiles["📦 PMTiles / MBTiles\n(prebuilt tilesets)"]
+    cog["🛰️ Cloud-Optimized GeoTIFFs (COG)\n(+ overviews / pyramids)"]
+    lake["☁️ Data lake / object store\n(large rasters, artifacts)"]
+    extsvc["🔗 External GIS services\n(ArcGIS, WMS/WMTS)"]
+    catalog["📚 Catalog + Layer Registry\n(STAC/DCAT metadata + routing)"]
+  end
+
+  %% =========================
+  %% 🏗️ OFFLINE PIPELINE (OPTIONAL)
+  %% =========================
+  subgraph Offline["🏗️ Offline ingest + prep (optional)"]
+    direction TB
+    ingest["📥 Ingest\n(federated harvest / uploads / STAC feeds)"]
+    prep["🧪 Preprocess\n(clip/mosaic/reproject → indexes + COGs)"]
+    build["🧱 Build tilesets\n(tile pyramid / PMTiles / MBTiles / XYZ)"]
+    publish["🚀 Publish + version\n(cache-bust + catalog update)"]
+  end
+
+  %% =========================
+  %% RUNTIME FLOW
+  %% =========================
+  web --> cdn
+  openlayers --> cdn
+  globe --> cdn
+  mobile --> cdn
+  earth --> cdn
+
+  cdn --> waf --> auth --> policy
+  policy -->|deny| deny --> cdn
+  policy -->|allow| tiles
+
+  tiles -->|layer config| catalog
+  tiles --> audit
+  policy --> audit
+
+  tiles --> cache
+  cache -->|HIT| cdn
+  cache -->|MISS| kind
+
+  kind -->|vector| vtr
+  kind -->|raster| rtr
+  kind -->|proxy| proxy
+
+  vtr -->|query| postgis
+  vtr -->|read| pmtiles
+
+  rtr -->|read| pmtiles
+  rtr -->|read| cog
+  rtr -->|read| lake
+
+  proxy -->|fetch| extsvc
+
+  vtr -->|write| cache
+  rtr -->|write| cache
+  proxy -->|write| cache
+
+  %% =========================
+  %% OFFLINE FLOW
+  %% =========================
+  ingest --> prep --> build --> publish
+  prep --> postgis
+  prep --> cog
+  prep --> lake
+  build --> pmtiles
+  publish --> catalog
+  publish -->|invalidate| cache
+
+  %% =========================
+  %% STYLES
+  %% =========================
+  classDef client fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px,color:#0D47A1;
+  classDef edge fill:#F3E5F5,stroke:#8E24AA,stroke-width:1px,color:#4A148C;
+  classDef api fill:#E8F5E9,stroke:#43A047,stroke-width:1px,color:#1B5E20;
+  classDef render fill:#FFF3E0,stroke:#FB8C00,stroke-width:1px,color:#E65100;
+  classDef store fill:#ECEFF1,stroke:#546E7A,stroke-width:1px,color:#263238;
+  classDef warn fill:#FFEBEE,stroke:#E53935,stroke-width:1px,color:#B71C1C;
+  classDef offline fill:#F1F8E9,stroke:#7CB342,stroke-width:1px,color:#33691E;
+
+  class web,openlayers,globe,mobile,earth client;
+  class cdn,waf edge;
+  class auth,policy,tiles,cache,audit api;
+  class kind,vtr,rtr,proxy render;
+  class postgis,pmtiles,cog,lake,extsvc,catalog store;
+  class deny warn;
+  class ingest,prep,build,publish offline;
 
