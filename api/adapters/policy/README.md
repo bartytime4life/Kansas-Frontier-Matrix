@@ -1,16 +1,3 @@
----
-title: "Policy Adapter 🛡️"
-path: "api/adapters/policy/README.md"
-version: "KFM-MDP v11.2.6"
-last_updated: "2026-02-03"
-status: "active"
-doc_kind: "readme"
-audience: ["backend", "security", "governance", "platform"]
-owners: ["KFM-GOV", "KFM-API"]
-tags: ["policy", "opa", "rego", "authorization", "governance", "fail-closed", "adapters"]
-license: "CC-BY-4.0"
----
-
 # 🛡️ Policy Adapter (API ➜ Policy Decision Point)
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen)
