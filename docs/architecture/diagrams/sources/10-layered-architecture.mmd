@@ -1,81 +1,46 @@
-%% 📁 docs/architecture/diagrams/sources/
-%% └── 10-layered-architecture.mmd
-%%
-%% 🧭 Kansas Frontier Matrix (KFM) — 10-Layered Architecture
-%% Evidence-first “Truth Path”: Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
-%% Source: "Kansas Frontier Matrix (KFM) – Comprehensive System Documentation" (project PDF)
-
-%%{init: {"theme":"base","flowchart":{"curve":"linear"},"themeVariables":{"fontFamily":"ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial","fontSize":"14px"}}}%%
 flowchart TB
+  %% 🧭 KFM — 10-layered architecture (source diagram)
+  %% Truth Path: Raw -> Processed -> Catalog -> Databases -> API -> UI/AI
 
-  %% ─────────────────────────────────────────────────────────────
-  %% 10 Layers (top-to-bottom data pipeline + governed request path)
-  %% ─────────────────────────────────────────────────────────────
+  L01["01 External Data Sources 📦\n- state/federal open data\n- community archives\n- remote sensing & LiDAR"]:::layer
+  L02["02 Ingestion & Orchestration 📥\n- connectors/harvesters\n- schedulers (Airflow/Step Functions)\n- streams (Kafka/Kinesis)"]:::layer
+  L03["03 Immutable Raw Storage 🧊\n- append-only landing zone\n- raw retained for audit/reprocessing"]:::layer
+  L04["04 Processing & Normalization 🏭\n- clean/harmonize/reproject\n- raster prep (COG/tiles)\n- extract hints (time/entities)"]:::layer
+  L05["05 Curated Data Products 🧰\n- processed datasets + derived layers\n- versioned, reproducible outputs"]:::layer
+  L06["06 Catalog & Metadata 🗂️\n- STAC / DCAT\n- dataset contracts (JSON-LD)"]:::layer
+  L07["07 Provenance & Governance Ledger 🔎\n- W3C PROV lineage\n- license/sensitivity gates + audit trails"]:::layer
+  L08["08 Runtime Knowledge Stores 🗃️\n- PostGIS + Neo4j\n- search index + vector store\n- object storage (COGs/PDFs/tiles)"]:::layer
+  L09["09 Service & Policy Gateway 🌐\n- FastAPI (REST/GraphQL)\n- adapters for stores\n- OPA policy enforcement"]:::layer
+  L10["10 User Experiences 🗺️🤖\n- React UI (MapLibre/Cesium)\n- timelines + stories\n- Focus Mode (RAG + citations)"]:::layer
 
-  L01["01️⃣ External Data Sources 📦<br/>• State & federal open data (CSV, APIs, ArcGIS services)<br/>• Community archives (PDFs, photos, oral history)<br/>• Remote sensing & LiDAR (STAC feeds)"]:::layer
+  %% Truth Path (publish pipeline)
+  L01 -->|collect| L02 -->|land raw| L03 -->|transform| L04 -->|produce curated| L05 -->|describe| L06 -->|prove & gate| L07 -->|load| L08 -->|serve| L09 -->|deliver| L10
 
-  L02["02️⃣ Ingestion & Orchestration 📥<br/>• Connectors, harvesters, stream subscribers<br/>• Schedulers: Airflow / Step Functions<br/>• Streams: Kafka / Kinesis"]:::layer
-
-  L03["03️⃣ Immutable Raw Storage 🧊<br/>• Append-only landing zone (object storage)<br/>• Raw retained for audit + reprocessing"]:::layer
-
-  L04["04️⃣ Processing & Normalization 🏭<br/>• Cleaning, schema harmonization, reprojection<br/>• Raster prep: COG + pyramids/tiles<br/>• Extract time/entity hints where possible"]:::layer
-
-  L05["05️⃣ Curated Data Products 🧰<br/>• Processed datasets + derived layers + tiles<br/>• Standardized, versioned, reproducible outputs"]:::layer
-
-  L06["06️⃣ Catalog & Metadata 🗂️<br/>• STAC / DCAT (discoverability + interoperability)<br/>• JSON-LD / dataset contracts"]:::layer
-
-  L07["07️⃣ Provenance & Governance Ledger 🔎<br/>• W3C PROV lineage links (\"map behind the map\")<br/>• License/sensitivity gates + signed audit trails"]:::layer
-
-  L08["08️⃣ Runtime Knowledge Stores 🗃️<br/>• PostGIS (spatial) + Neo4j (knowledge graph)<br/>• Search index + vector store (semantic retrieval)<br/>• Object storage for large assets (COGs, PDFs, tiles)"]:::layer
-
-  L09["09️⃣ Service & Policy Gateway 🌐<br/>• FastAPI: REST + GraphQL + OpenAPI<br/>• Adapter modules for PostGIS/Neo4j/indexes<br/>• OPA middleware enforces authz + rules"]:::layer
-
-  L10["🔟 User Experiences 🗺️🤖<br/>• React/TypeScript web app (MapLibre + Cesium 3D)<br/>• Timelines, narratives, external clients (mobile/AR)<br/>• Focus Mode: RAG retrieval + Ollama LLM + citations"]:::layer
-
-  %% Data “truth path” (publication pipeline)
-  L01 -->|collect| L02
-  L02 -->|land raw| L03
-  L03 -->|transform| L04
-  L04 -->|produce curated| L05
-  L05 -->|describe| L06
-  L06 -->|prove & gate| L07
-  L07 -->|load| L08
-  L08 -->|serve| L09
-  L09 -->|deliver| L10
-
-  %% Governed request path (runtime queries)
+  %% Governed request path (runtime)
   L10 -.->|queries| L09
   L09 -.->|retrieves| L08
 
-  %% ─────────────────────────────────────────────────────────────
-  %% Focus Mode loop (API-orchestrated, citation-first, policy-checked)
-  %% ─────────────────────────────────────────────────────────────
-
-  subgraph FM["🧠 Focus Mode Loop (API-orchestrated, citation-first)"]
+  %% Focus Mode loop (API-orchestrated)
+  subgraph FM["Focus Mode Loop 🧠 (citation-first, policy-checked)"]
     Q["User question"]:::focus
-    R["Retrieve context<br/>• Neo4j + PostGIS + search/vector"]:::focus
-    G["Generate draft<br/>• Ollama LLM service"]:::focus
-    P["Policy check<br/>• OPA (citations, sensitivity, role)"]:::focus
-    A["Answer + citation map<br/>• UI shows audit panel"]:::focus
+    R["Retrieve context\n- PostGIS / Neo4j / search+vector"]:::focus
+    G["Generate draft\n- LLM (Ollama)"]:::focus
+    P["Policy check\n- OPA + sensitivity rules"]:::focus
+    A["Answer + citation map\n- UI audit panel"]:::focus
     Q --> R --> G --> P --> A
   end
 
-  %% Hook Focus Mode into layered architecture
   L10 -.-> Q
   A -.-> L10
   L09 -.-> R
   R -.-> L08
-  G -.-> L09
   P -.-> L07
 
-  %% ─────────────────────────────────────────────────────────────
-  %% Optional platform foundation (cross-cutting, not a numbered layer)
-  %% ─────────────────────────────────────────────────────────────
-
-  subgraph PF["⚙️ Platform Foundation (cross-cutting)"]
-    DEP["Containers & orchestration<br/>• Docker + Kubernetes / ECS"]:::platform
-    SEC["Security posture<br/>• least-privilege services<br/>• centralized policy gates (OPA)"]:::platform
-    OBS["Observability<br/>• logs + metrics + auditability"]:::platform
+  %% Cross-cutting platform foundation (not a numbered layer)
+  subgraph PF["Platform Foundation ⚙️ (cross-cutting)"]
+    DEP["Containers & orchestration\n- Docker + K8s/ECS"]:::platform
+    SEC["Security posture\n- least privilege + centralized policy"]:::platform
+    OBS["Observability\n- logs/metrics/auditability"]:::platform
   end
 
   DEP -.-> L02
@@ -86,8 +51,6 @@ flowchart TB
   OBS -.-> L09
   OBS -.-> L10
 
-  %% Styling
   classDef layer fill:#f8fafc,stroke:#334155,color:#0f172a,stroke-width:1px;
   classDef focus fill:#ecfdf5,stroke:#16a34a,color:#052e16,stroke-width:1px;
   classDef platform fill:#fff7ed,stroke:#c2410c,color:#431407,stroke-width:1px;
-
