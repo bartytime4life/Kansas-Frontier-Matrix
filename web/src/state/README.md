@@ -1,383 +1,206 @@
-<!--
-📍 File: web/src/state/README.md
-🧠 Purpose: Global + cross-cutting UI state for the KFM web app
--->
+# 🧠 `web/src/state` — Frontend State (Global Store)
 
-# 🧠 KFM UI State (`web/src/state`)
+![React](https://img.shields.io/badge/React-UI-2ea44f)
+![TypeScript](https://img.shields.io/badge/TypeScript-Typed%20State-3178c6)
+![State](https://img.shields.io/badge/State-Global%20Store-6f42c1)
+![Provenance](https://img.shields.io/badge/Provenance-First-ff7a18)
 
-![Contract-first](https://img.shields.io/badge/Contract--First-✅-0b7285?style=for-the-badge)
-![Provenance-first](https://img.shields.io/badge/Provenance--First-🔎-364fc7?style=for-the-badge)
-![Evidence-backed AI](https://img.shields.io/badge/Focus%20Mode-Evidence--Backed-845ef7?style=for-the-badge)
-![React + TS](https://img.shields.io/badge/React%20%2B%20TypeScript-SPA-087f5b?style=for-the-badge)
-![MapLibre + Cesium](https://img.shields.io/badge/MapLibre%20%2B%20Cesium-2D%2F3D-5f3dc4?style=for-the-badge)
-
-> **Non‑negotiable pipeline order** (a.k.a. “don’t put the cart before the horse”):  
-> **ETL → STAC/DCAT/PROV → Graph → APIs → React/Map UI → Story Nodes → Focus Mode** ✅:contentReference[oaicite:0]{index=0}
-
-This folder is the **single canonical home** for **global/cross-feature UI state** that makes KFM feel cohesive:
-- 🗺️ Map view (2D/3D) + layer toggles/opacity/legends
-- 🕰️ Timeline slider + temporal filtering + event markers
-- 🎬 Story Nodes playback (Markdown narrative + JSON map actions)
-- 🧠 Focus Mode panel state (questions, context selection, citations)
-- 🔍 Search / selection / “inspect this feature” UX
-- 🔒 Auth + roles (what the UI shows/enables)
-- 🧾 Provenance hooks (“map behind the map” tooltips, citations, metadata)
-
-KFM’s front-end is a React (TypeScript) SPA with **MapLibre GL JS** for 2D and **CesiumJS** for 3D, with layer toggles/opacity/legends and a timeline slider.:contentReference[oaicite:1]{index=1}
+Welcome to the **state layer** for the Kansas Frontier Matrix (KFM) web UI ✅  
+This folder exists so **disparate UI components stay in sync** (map ↔ timeline ↔ story ↔ charts ↔ Focus Mode).  
+Example: when the user selects a new year on the timeline, the store updates `currentYear` and both the map and story panel react to it.  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 Table of Contents
+## ✨ What this folder is responsible for
 
-- [🎯 Design Goals](#-design-goals)
-- [🚧 Guardrails](#-guardrails)
-- [🧩 What Belongs in State](#-what-belongs-in-state)
-- [🗂️ Suggested Layout](#️-suggested-layout)
-- [🔁 Data Flow](#-data-flow)
-- [🗺️ Map + Timeline State](#️-map--timeline-state)
-- [🎬 Story Nodes State](#-story-nodes-state)
-- [🧠 Focus Mode State](#-focus-mode-state)
-- [🔎 Provenance & Sensitivity](#-provenance--sensitivity)
-- [⚡ Performance Rules](#-performance-rules)
-- [💾 Persistence Rules](#-persistence-rules)
-- [🧪 Testing](#-testing)
-- [🧰 Debugging & DevTools](#-debugging--devtools)
-- [➕ Adding a New Slice](#-adding-a-new-slice)
-- [📚 Project Sources](#-project-sources)
+### ✅ Owns
+- **App-wide UI state** that multiple components rely on:
+  - 🗺️ Map view state (2D MapLibre / 3D Cesium toggle, active layers, params like year)
+  - 🕰️ Timeline state (`currentYear`, playback/animation, range filters)
+  - 📖 Story / scrollytelling state (active story/section, “mapState” choreography, narrative sync)
+  - 🤖 Focus Mode state (conversation turns, citations, selected context like time/place)
+- **Predictable updates** (actions → reducers → selectors/hooks) suitable for debugging and auditing (design docs lean toward Redux for scale/time‑travel style debugging). [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
----
+### ❌ Does *not* own
+- Component-local UI details (hover states, a single input field value, etc.)
+- Direct DB access or filesystem access (**never** from UI)
+- Hidden “magic” side effects in reducers
 
-## 🎯 Design Goals
-
-1. **One mental model**: predictable “single source of truth” for global UI behavior.
-2. **Provenance everywhere**: anything visible is explainable and traceable (metadata + citations).:contentReference[oaicite:2]{index=2}
-3. **Contract-first**: state stores *typed* shapes that match API contracts (no random JSON blobs).:contentReference[oaicite:3]{index=3}
-4. **Performance by design**: map apps die from accidental re-renders and huge in-memory GeoJSON.
-5. **Composable features**: map, timeline, stories, and Focus Mode must interlock without “repo drift”.:contentReference[oaicite:4]{index=4}
+> 🔒 KFM principle: the **UI communicates exclusively through the backend API** (REST/GraphQL) and **never directly touches databases** — this is essential for governance and consistency.  [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🚧 Guardrails
-
-### 1) API boundary rule (hard)
-The frontend must **never** query Neo4j directly. All data access flows through the governed API layer.:contentReference[oaicite:5]{index=5}
-
-✅ UI state stores **IDs + view preferences + request status**  
-🚫 UI state stores **raw graph query strings / direct drivers / credentials**
-
----
-
-### 2) Evidence-first UI (hard)
-Focus Mode and Story Nodes must remain **grounded** and **inspectable**:
-- Focus Mode is **assistive**, not autonomous, and answers are **evidence-backed**.:contentReference[oaicite:6]{index=6}
-- Focus Mode has a hard gate: **only provenance-linked content** is allowed; “no sources → no answer.”:contentReference[oaicite:7]{index=7}
-
----
-
-### 3) New features must connect back to provenance (hard)
-If you add a new UI layer/feature, you must tie it to:
-- Dataset catalog metadata
-- Citation/provenance panels
-- Sensitivity rules (e.g., coordinate redaction when needed):contentReference[oaicite:8]{index=8}
-
----
-
-## 🧩 What Belongs in State
-
-Think in 3 buckets:
-
-### ✅ Bucket A: **UI state** (this folder)
-Stuff the user manipulates directly:
-- active layer IDs + visibility/opacity
-- selected time range / cursor year
-- selected feature IDs
-- story playback step
-- Focus Mode panel open/closed + selected context items
-- auth role + feature gating flags
-- toasts, modals, keyboard shortcuts, etc.
-
-### ✅ Bucket B: **Server/cache state** (fetch layer)
-Fetched datasets, responses, and caching. Prefer a dedicated cache layer (e.g., React Query/TanStack Query, SWR, etc.).  
-Store only references in UI state (IDs, request keys, pagination cursors).
-
-### ✅ Bucket C: **Local component state**
-Ephemeral: form drafts, hover highlights, temporary UI toggles that don’t affect other parts of the app.
-
----
-
-## 🗂️ Suggested Layout
-
-> This README documents the intended organization. If files differ, update the tree to match reality ✍️
-
-```text
-📁 web/src/state/
-├─ 📄 README.md               # you are here 🙂
-├─ 📄 index.ts                # re-exports (public surface area)
-├─ 📁 slices/                 # feature “domains” (small, focused)
-│  ├─ 🗺️ map.slice.ts
-│  ├─ 🕰️ timeline.slice.ts
-│  ├─ 🧱 layers.slice.ts
-│  ├─ 🎬 story.slice.ts
-│  ├─ 🧠 focusMode.slice.ts
-│  ├─ 🔎 search.slice.ts
-│  ├─ 🔒 auth.slice.ts
-│  └─ 🧾 provenance.slice.ts
-├─ 📁 selectors/              # derived state (pure, memoized)
-├─ 📁 persistence/            # localStorage/IndexedDB wiring (safe subset only)
-├─ 📁 middleware/             # logging, devtools, telemetry hooks
-└─ 📁 types/                  # IDs, schema helpers, shared state types
-```
-
-> **Rule of thumb**: slices hold **minimal canonical state + actions**. Anything derived belongs in selectors.
-
----
-
-## 🔁 Data Flow
+## 🧭 Mental model
 
 ```mermaid
 flowchart LR
-  ETL["🛠️ ETL jobs"] --> CATS["🗂️ Catalogs - STAC DCAT PROV"]
-  CATS --> GRAPH["🧠 Knowledge graph"]
-  GRAPH --> API["🔌 Governed APIs"]
-  API --> CACHE["📦 Client fetch cache"]
-  CACHE --> STATE["🧠 UI state - this folder"]
-  STATE --> UI["🖥️ React UI + Map engines"]
-  UI --> STORY["🎬 Story Nodes"]
-  UI --> FOCUS["🧠 Focus Mode"]
-  STORY --> STATE
-  FOCUS --> STATE
+  U[🧑 User action] --> A[🎬 Dispatch action]
+  A --> R[🧩 Reducer updates store]
+  R --> S[🔎 Selectors / hooks]
+  S --> V[🖥️ UI re-renders]
+  V -->|if needed| E[🌐 API call (thunk/service)]
+  E --> A2[🎬 Dispatch success/failure]
+  A2 --> R
 ```
 
-The order and responsibilities match the v13 pipeline rules.:contentReference[oaicite:9]{index=9}
+This matches the “keep components in sync” goal described in the KFM blueprint (timeline year → map filter + story highlight). [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🗺️ Map + Timeline State
+## 🗂️ Suggested layout (guiding pattern)
 
-### Map (2D/3D)
-KFM uses MapLibre for 2D and Cesium for 3D; users toggle layers, adjust opacity, and view legends.:contentReference[oaicite:10]{index=10}
+> 📌 The exact filenames may differ, but the *roles* below should exist.
 
-State should typically include:
-- `viewMode`: `"2d" | "3d"`
-- `camera`: `{ center, zoom }` (2D) and/or `{ position, heading, pitch, roll }` (3D)
-- `selectedFeatureIds`: stable IDs (not whole geometries)
-- `inspectPanel`: open/closed + active entity ID
-- `interactionMode`: pan/measure/draw/select, etc.
-
-> 🚫 Don’t put full **GeoJSON feature collections** in global state. Store IDs + bounding boxes + request keys.
-
-### Timeline
-The UI includes a timeline slider; time-filtered layers respond to slider movement and can show event markers (e.g., Dust Bowl).:contentReference[oaicite:11]{index=11}
-
-State should include:
-- `timeCursor`: a canonical “current time” (year/date)
-- `timeRange`: optional range selection
-- `timelineEvents`: IDs of curated event markers (resolved from catalog/API)
-- `animation`: `{ playing, speed, loop }`
-
----
-
-## 🎬 Story Nodes State
-
-Story Nodes are Markdown narratives + JSON “map actions”. The front-end reads the Markdown and uses the JSON to drive map behavior (e.g., activate layer, set camera, set time).:contentReference[oaicite:12]{index=12}
-
-State should include:
-- `activeStoryId`
-- `activeStepIndex`
-- `stepStatus`: `"idle" | "transitioning" | "ready"`
-- `playback`: `{ playing, speed }`
-- `userOverride`: whether user interactions temporarily override story-driven camera/layers
-
-💡 Pattern suggestion:
-- Store **desired** story-driven map directives separately from **actual** camera state coming from map events:
-  - `storyDesiredView` vs `mapActualView`
-  - a reconciler decides which wins based on `playback` + `userOverride`
-
----
-
-## 🧠 Focus Mode State
-
-Focus Mode is an assistive layer: users ask questions and receive narrative answers grounded in KFM data, with references users can verify.:contentReference[oaicite:13]{index=13}
-
-The UI pattern described:
-- user selects a topic (place/time layer set)
-- Focus Mode gathers relevant graph/data context and returns answer + citations
-- users can click citations and jump to map layers / features / docs:contentReference[oaicite:14]{index=14}
-
-State should include:
-- `threadId` / `sessionId`
-- `messages[]`: `{ role, content, citations[], createdAt }`
-- `selectedContext`: `{ placeIds[], layerIds[], timeRange, documentIds[] }`
-- `status`: `"idle" | "thinking" | "error"`
-- `lastEvidenceCheck`: for “no citations → block response” UX:contentReference[oaicite:15]{index=15}
-
-> ✅ Focus Mode answers must be **distinguished** from human-authored content (UI labeling) and always be **evidence-backed**.:contentReference[oaicite:16]{index=16}
-
----
-
-## 🔎 Provenance & Sensitivity
-
-KFM’s philosophy: show “the map behind the map”—tooltips/inspect panels should expose data sources and metadata instead of hiding them.:contentReference[oaicite:17]{index=17}
-
-### Provenance in state: minimum viable pattern
-Store **provenance references** alongside anything user can see or cite.
-
-Example shape (illustrative):
-```ts
-type ProvRef = {
-  // stable reference keys (prefer IDs over raw URLs)
-  datasetId?: string;      // DCAT dataset id
-  assetId?: string;        // STAC item/asset id
-  provActivityId?: string; // PROV activity/lineage id
-  citations?: Array<{
-    title: string;
-    locator?: string;      // page/line/section
-    uri?: string;          // optional external link
-  }>;
-};
+```text
+📦 web/src/state/
+├─ 🧠 store.ts                # store setup (middleware/devtools)
+├─ 🧩 slices/                 # domain reducers (map/timeline/story/focus/etc.)
+│  ├─ 🗺️ mapSlice.ts
+│  ├─ 🕰️ timelineSlice.ts
+│  ├─ 📖 storySlice.ts
+│  ├─ 🤖 focusModeSlice.ts
+│  └─ 🧰 uiSlice.ts
+├─ 🔎 selectors/              # derived/memoized selectors
+├─ 🧱 types.ts                # shared state types/interfaces
+├─ 💾 persistence/            # localStorage/session persistence (prefs)
+└─ 🧪 __tests__/              # reducer/selector tests
 ```
 
-### Sensitivity rules
-If something is sensitive (e.g., precise coordinates for a protected site), the UI must:
-- generalize / redact coordinate display
-- gate download/export controls
-- preserve provenance even when redacting details:contentReference[oaicite:18]{index=18}
+---
+
+## 🧩 Core state domains (recommended)
+
+### 🗺️ Map domain
+KFM’s UI is map-centric and uses **MapLibre GL JS (2D)** and **CesiumJS (3D)** with a UI toggle between modes.  [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+Store should typically track:
+- `map.mode`: `"2d" | "3d"`
+- `map.view`: `{ center, zoom, bearing, pitch }`
+- `map.layers.active`: list of visible layers
+- `map.layers.params`: per-layer params (example: year/opacity)
+- `map.selection`: selected feature(s) by **ID**, not entire geometry blobs
+- `map.draw`: drawn bbox/polygon (if enabling spatial queries)
+
+> 🧠 Tip: keep **MapLibre/Cesium instances out of global state** (store only serializable view + flags).  
+> This keeps time-travel debugging clean and prevents non-serializable state from leaking everywhere.
 
 ---
 
-## ⚡ Performance Rules
+### 🕰️ Timeline domain
+The blueprint explicitly calls out a timeline driving map filtering and narrative syncing (e.g., `currentYear`). [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### 1) Normalize entities (IDs first)
-Prefer “entity maps” over nested duplication:
-- `layersById`, `placesById`, `datasetsById`
-- arrays store ordering only
-
-This aligns with “generic entities” thinking: unify synonymous “things” behind stable identifiers to reduce duplication and drift.:contentReference[oaicite:19]{index=19}
-
-### 2) Store *references*, not payloads
-- ✅ store `layerId`, `datasetId`, `tileSourceId`, `bbox`, `timeKey`
-- 🚫 store huge GeoJSON, raw raster arrays, full 3D tiles, etc.
-
-### 3) Selector discipline
-- derive “visibleLayers” via selectors
-- memoize expensive computations
-- subscribe narrowly (avoid re-rendering whole app when 1 layer opacity changes)
-
-### 4) Streaming + windowing mindset
-KFM can deal with time series and “moving windows” (timeline, NDVI series, etc.). Build state updates as:
-- incremental events
-- bounded buffers/ring buffers
-- checkpoints for resumability (especially for long-running UI sessions)
-
-(See stream/window semantics notes for stateful systems.):contentReference[oaicite:20]{index=20}
+Store should track:
+- `timeline.currentYear`
+- `timeline.range` (min/max)
+- `timeline.playback`: `{ playing, speed }`
+- `timeline.snap`: snapping rules (year/decade/event)
 
 ---
 
-## 💾 Persistence Rules
+### 📖 Story domain (scrollytelling)
+Stories can include a **JSON script** that maps narrative sections to **map actions** (center/zoom/layers/annotations + timeline year). The UI reads this JSON and triggers map changes as the user scrolls.  [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-KFM can be configured to work as a static site / PWA for offline demos and learning scenarios, so persistence is useful—but must be safe.:contentReference[oaicite:21]{index=21}
-
-Persist **only**:
-- theme, units, panel layout
-- last map view (optional)
-- last selected story step (optional)
-
-Never persist:
-- secrets, tokens, raw API keys
-- private documents
-- sensitive coordinates / restricted features
+Store should track:
+- `story.activeStoryId`
+- `story.activeSectionId`
+- `story.progress` (scroll position / section index)
+- `story.script.mapState` (or computed “next map state”)
+- `story.lockMap` (optional: when story drives map vs user drives map)
 
 ---
 
-## 🧪 Testing
+### 🤖 Focus Mode domain
+Focus Mode is **strictly layered**: the UI **does not call the LLM directly**; it calls backend endpoints (e.g., `/focus-mode/query`) and the API layer orchestrates retrieval and model calls.  [oai_citation:7‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
-Minimum bar for each slice:
-- ✅ reducer/action tests (pure state transitions)
-- ✅ selector tests (derived outputs)
-- ✅ “integration” tests for cross-slice flows (e.g., story step updates layers + timeline)
+Store should track:
+- `focus.sessionId`
+- `focus.messages[]` (user/assistant turns)
+- `focus.streaming`: `{ active, partialText }`
+- `focus.context`: `{ place?, time?, layers?, selection? }`
+- `focus.citations[]` (normalized reference objects)
 
-Suggested test table:
-| Test Type | What to verify | Example |
-|---|---|---|
-| Unit | actions update minimal canonical state | toggle layer visibility |
-| Selector | derived state correctness | visible layers obey time cursor |
-| Flow | cross-feature choreography | story step sets camera + time |
-| Regression | bug never returns | “opacity slider flicker” |
+> 🔗 Evidence-first is a hard requirement: answers include citation markers and the UI renders them as clickable footnotes.  [oai_citation:8‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
 ---
 
-## 🧰 Debugging & DevTools
-
-Recommended dev-only helpers:
-- 🧾 “Last N actions” log (bounded)
-- 🧪 state snapshot export/import (for reproducible bug reports)
-- 🛰️ perf markers around heavy selector work
-- 🧠 Focus Mode evidence inspector (why was an answer allowed/blocked?)
-
-Remember: the goal is not just debugging—it’s **auditability** (proof a UI outcome was grounded and reproducible).:contentReference[oaicite:22]{index=22}
+### 🧰 UI shell domain
+Examples:
+- Left/right panels open/closed
+- Active tool (inspect / draw / measure / annotate)
+- Toasts / alerts
+- Theme / accessibility mode
 
 ---
 
-## ➕ Adding a New Slice
+## 🌐 State ↔ API contract (don’t skip this)
 
-Checklist ✅
+KFM exposes API endpoints for:
+- dataset metadata & catalog search
+- constrained ad-hoc querying
+- map tiles (`/tiles/{layer}/{z}/{x}/{y}.pbf` / raster variants)  
+…and clients like MapLibre consume those tile URLs.  [oai_citation:9‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
-1. **Name the domain** (map, story, focusMode, etc.) and create `*.slice.ts`
-2. **Define the minimal canonical state**
-   - don’t store derived state
-   - don’t store raw heavy payloads
-3. **Add actions with clear intent**
-   - prefer `setX`, `toggleY`, `selectZ`
-4. **Add selectors** for computed views
-5. **Wire provenance**
-   - every visible thing has a provenance hook:contentReference[oaicite:23]{index=23}
-6. **Respect the API boundary**
-   - no direct graph access:contentReference[oaicite:24]{index=24}
-7. **Add tests** for actions + selectors
-8. **Update this README** if you add new conventions or domains ✍️
+### ✅ Pattern to follow
+- State stores **IDs + parameters**
+- API/data layer fetches the real payload
+- Reducers only update “what the UI needs”
+
+### 🚫 Anti-pattern
+- “Reducer calls `fetch()`”
+- “Component bypasses API and loads data directly”
+- “State stores raw megabytes of GeoJSON when tiles exist”
 
 ---
 
-## 📚 Project Sources
+## 🧾 Provenance & governance in state (KFM flavor)
 
-### Core governance / architecture (must-read)
-- **KFM Technical Documentation** (platform, UI, Focus Mode, 2D/3D, timeline, provenance) :contentReference[oaicite:25]{index=25} :contentReference[oaicite:26]{index=26}  
-- **MASTER_GUIDE v13** (pipeline ordering, API boundary, provenance rules, Focus Mode gates) :contentReference[oaicite:27]{index=27}
+When you add *anything* that changes what the user can see (layers, story sections, selected entities), make sure the UI can still “show its work”:
 
-### Engineering references used in this README
-- **Database Performance at Scale** (performance mindset & bottlenecks) :contentReference[oaicite:28]{index=28} :contentReference[oaicite:29]{index=29}  
-- **Scalable Data Management for Future Hardware** (windowing/stateful systems thinking) :contentReference[oaicite:30]{index=30} :contentReference[oaicite:31]{index=31}  
-- **Flexible Software Design** (generic entities / ID-first modeling) :contentReference[oaicite:32]{index=32} :contentReference[oaicite:33]{index=33}  
-- **Archaeological 3D GIS** (3D GIS context) :contentReference[oaicite:34]{index=34} :contentReference[oaicite:35]{index=35}  
-- **Understanding Machine Learning** (ML concepts for model result UX) :contentReference[oaicite:36]{index=36}  
-- **Implementing Programming Languages** (pipeline mental model) :contentReference[oaicite:37]{index=37}  
-- **MATLAB Notes / Bash Notes** (tooling references) :contentReference[oaicite:38]{index=38} :contentReference[oaicite:39]{index=39}  
+- **Every map layer should link back to provenance/metadata** (DCAT/STAC) and display citations in the UI.  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- For user-interaction features (highlighting a location, selecting a feature), ensure **CARE** compliance (example given: hide precise coordinates if sensitive).  [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-<details>
-<summary>📦 Full project reference shelf (PDFs provided in this workspace)</summary>
+---
 
-> Tip: treat this as a “stack of lenses” 🥽—mapping, simulation, stats, ML, databases, UI, and ethics all inform how we design *trustworthy* state.
+## 🧪 Testing expectations
 
-- 🛰️ Cloud-Based Remote Sensing with Google Earth Engine (Fundamentals and Applications)
-- 🧮 Regression analysis with Python
-- 📈 Understanding Statistics & Experimental Design
-- 🧠 Think Bayes (Bayesian statistics in Python)
-- 🗺️ Making Maps (map design for GIS)
-- 🧭 Mobile Mapping (space, cartography, digital)
-- 🌐 Responsive Web Design (HTML5/CSS3)
-- 🎮 WebGL Programming Guide
-- 🧱 PostgreSQL Notes for Professionals
-- 🧾 Data Spaces
-- 🧬 Principles of Biological Autonomy
-- 🤖 Introduction to Digital Humanism
-- ⚖️ On the path to AI Law’s prophecies…
-- 🧯 Ethical Hacking & Countermeasures (security mindset)
-- 🐍 Gray Hat Python (historical reference; use responsibly)
-- 🖼️ Compressed Image File Formats (JPEG/PNG/GIF/etc.)
-- 🧊 Generalized Topology Optimization (structural design)
-- 🧠 Spectral Geometry of Graphs
-- 🧪 Scientific Modeling and Simulation (NASA-grade guide)
-- 🧰 Programming Books Bundles (A, B–C, D–E, F–H, I–L, M–N, O–R, S–T, U–X)
+- Reducers should be unit-testable (pure, deterministic)
+- Selectors should be tested for derived correctness
+- Story “mapState choreography” should be regression-tested (section → expected map view/layers/year)  [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-</details>
+---
 
+## 🛠️ “How do I add new state?” (fast checklist)
+
+1. 🧱 Define types and initial state (keep it serializable)
+2. 🧩 Add/extend the domain slice (map/timeline/story/focus/ui)
+3. 🎬 Create actions that describe *user intent* (not implementation)
+4. 🔎 Add selectors (prefer memoized derived reads)
+5. 🔌 Wire UI via hooks/context
+6. 🧪 Add tests for reducers/selectors
+7. 🧾 Confirm provenance + citation UX if this affects displayed facts/layers  [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 🚦Quick “Do / Don’t” rules
+
+### ✅ Do
+- Keep shared state **small** and **serializable**
+- Store references by **ID**, not whole blobs
+- Use global state for cross-component coordination (timeline ↔ map ↔ story) [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Keep Focus Mode UI layered: UI → API → retrieval/LLM [oai_citation:15‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+### ❌ Don’t
+- Put MapLibre/Cesium instance objects in the store
+- Make reducers async
+- Skip provenance/citation wiring for new layers/features [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 📚 Sources (design grounding)
+- Global store keeps map/timeline/story in sync; Redux suggested for scale/time-travel patterns. [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Frontend stack: React/TypeScript + MapLibre (2D) + Cesium (3D), timeline, scrollytelling, global store, API-only access from UI. [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Story JSON scripts can drive section → mapState + timeline changes (“scrollytelling choreography”). [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Focus Mode UI is decoupled from model calls; it calls backend endpoints that orchestrate retrieval + generation. [oai_citation:20‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+- API provides dataset/catalog endpoints and map tile endpoints consumable by map clients. [oai_citation:21‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+- Evidence-first: citations in responses and UI renders them as clickable footnotes. [oai_citation:22‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+- UI changes/layers must tie back to provenance and respect CARE constraints (e.g., coordinate redaction if sensitive). [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
