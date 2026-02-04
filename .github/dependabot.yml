@@ -1,13 +1,18 @@
-# 🤖 Dependabot config
+# 🤖 Dependabot Configuration
 
-📁 `.github/`  
-└── 🤖 `dependabot.yml`
+📄 **Target file:** `.github/dependabot.yml`  
+🧭 **Cadence:** Weekly (Mondays) — `America/Chicago` timezone  
+🧩 **Scopes covered:** GitHub Actions • Docker • Web (npm) • API (pip)
+
+---
+
+## ✅ `.github/dependabot.yml`
 
 ```yaml
 version: 2
 
 updates:
-  # ✅ Keep GitHub Actions pinned versions fresh (/.github/workflows)
+  # 🧩 GitHub Actions (workflow dependencies)
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -15,12 +20,45 @@ updates:
       day: "monday"
       time: "06:00"
       timezone: "America/Chicago"
-    rebase-strategy: "auto"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
     commit-message:
-      prefix: "chore"
+      prefix: "deps"
+      prefix-development: "deps(dev)"
       include: "scope"
+    groups:
+      gh-actions-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
-  # ✅ Frontend deps (web/)
+  # 🐳 Docker (root docker-compose.yml and any Dockerfiles in /)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps(dev)"
+      include: "scope"
+    groups:
+      docker-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # 🌐 Web Frontend (React/TS) — package.json in /web
   - package-ecosystem: "npm"
     directory: "/web"
     schedule:
@@ -29,68 +67,63 @@ updates:
       time: "06:00"
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
-    rebase-strategy: "auto"
+    labels:
+      - "dependencies"
     commit-message:
-      prefix: "chore"
+      prefix: "deps"
+      prefix-development: "deps(dev)"
       include: "scope"
     groups:
-      web-prod:
-        dependency-type: "production"
-        update-types:
-          - "minor"
-          - "patch"
-      web-dev:
-        dependency-type: "development"
-        update-types:
-          - "minor"
-          - "patch"
-
-  # ✅ Backend deps (api/)
-  - package-ecosystem: "pip"
-    directory: "/api"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "America/Chicago"
-    open-pull-requests-limit: 10
-    rebase-strategy: "auto"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-    groups:
-      api-python:
+      web-minor-and-patch:
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
 
-  # ✅ Dockerfile base image updates (api/, web/)
-  - package-ecosystem: "docker"
-    directories:
-      - "/api"
-      - "/web"
+  # 🐍 API (FastAPI) — dependency manifests under /src/server/api
+  - package-ecosystem: "pip"
+    directory: "/src/server/api"
     schedule:
       interval: "weekly"
       day: "monday"
       time: "06:00"
       timezone: "America/Chicago"
-    rebase-strategy: "auto"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
     commit-message:
-      prefix: "chore"
+      prefix: "deps"
+      prefix-development: "deps(dev)"
       include: "scope"
+    groups:
+      api-minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
-  # ✅ docker-compose.yml image tag updates (repo root)
-  - package-ecosystem: "docker-compose"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "America/Chicago"
-    rebase-strategy: "auto"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
+  # ➕ Optional: enable if you keep separate Python manifests under /src/pipelines
+  # - package-ecosystem: "pip"
+  #   directory: "/src/pipelines"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "06:00"
+  #     timezone: "America/Chicago"
+  #   open-pull-requests-limit: 10
+  #   labels:
+  #     - "dependencies"
+  #   commit-message:
+  #     prefix: "deps"
+  #     prefix-development: "deps(dev)"
+  #     include: "scope"
+  #   groups:
+  #     pipelines-minor-and-patch:
+  #       patterns:
+  #         - "*"
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
 ```
