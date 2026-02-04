@@ -139,7 +139,9 @@ This is the “multi-step RAG pipeline” contract. :contentReference[oaicite:18
 
 ```mermaid
 flowchart TB
-  subgraph "🧭 Canonical Pipeline (Truth Path)"
+  subgraph P
+    direction TB
+    T1["🧭 Canonical Pipeline (Truth Path)"]
     RAW["🏭 ETL: data/raw -> data/work -> data/processed"]
     CAT["🗂️ Catalogs: STAC / DCAT / PROV"]
     KG["🕸️ Graph: Neo4j + Ontology"]
@@ -147,19 +149,23 @@ flowchart TB
     UIB["🗺️ UI: web/ (Map + Story + Focus Mode)"]
     STORY["📖 Story Nodes: docs/reports/story_nodes/"]
     FOCUS["🤖 Focus Mode: governed experience"]
-    RAW --> CAT --> KG --> APIB --> UIB --> STORY --> FOCUS
+    T1 --> RAW --> CAT --> KG --> APIB --> UIB --> STORY --> FOCUS
   end
 
-  subgraph "🧠 AI Subsystem (inside the boundary)"
+  subgraph AIsub
+    direction TB
+    T2["🧠 AI Subsystem (inside the boundary)"]
     PG["🚧 Prompt Gate"]
     RET["🔎 Retrieval: Neo4j / PostGIS / Search / Vector"]
     LLM["🦙 Ollama LLM Runtime"]
     OPA["🛡️ OPA Policy Check"]
     LEDGER["📒 Provenance Ledger + PROV records"]
+    T2 --> PG --> RET --> LLM --> OPA
   end
 
   UIB -->|"📨 POST /focus-mode/query"| APIB
-  APIB --> PG --> RET --> LLM --> OPA --> APIB
+  APIB --> PG
+  OPA --> APIB
   APIB --> LEDGER
 ```
 
