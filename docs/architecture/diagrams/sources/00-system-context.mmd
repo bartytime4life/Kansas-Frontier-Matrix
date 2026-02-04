@@ -1,81 +1,78 @@
-%% 🧭 Kansas-Matrix-System — System Context
+%% 🧭 Kansas-Matrix-System — System Context (C4: Context)
 %% 📄 docs/architecture/diagrams/sources/00-system-context.mmd
-%% 🎯 Context-level view: people + external systems around Kansas Frontier Matrix (KFM)
-%% 🧩 Notes:
-%%   - Roles reflect RBAC concepts: Public Viewer / Contributor / Maintainer / Admin
-%%   - Data sources reflect Kansas + federal + community archives (imagery, LiDAR, hydro/climate, historical records)
-%%   - Interop reflects open formats & standards (GeoJSON/STAC/COG/OGC-ready APIs) + external GIS tools
+%% ✅ Mermaid-safe labels: NO parentheses inside node text (prevents parse errors)
+%% 🧩 Scope: People + external systems + KFM as a single “system” box
 
 flowchart LR
-  %% =========================
-  %% 👥 People & Roles
-  %% =========================
-  subgraph P["👥 People & Roles"]
-    direction TB
-    publicViewer([🧭 Public Viewer<br/>(read-only public datasets & stories)])
-    researcher([🔬 Researcher<br/>(analysis + export)])
-    educator([🎓 Educator<br/>(teaching + storytelling)])
-    policymaker([🏛️ Policy Maker<br/>(evidence-backed decisions)])
-    contributor([✍️ Contributor<br/>(draft data/stories)])
-    maintainer([🛠️ Maintainer<br/>(review + publish)])
-    admin([🔐 Admin<br/>(run pipelines, configure policies)])
-    governance([🧑‍⚖️ Governance / Data Stewards<br/>(incl. Indigenous stakeholders)])
-  end
 
-  %% =========================
-  %% 🗺️ System (KFM)
-  %% =========================
-  kfm[[🗺️ Kansas Frontier Matrix (KFM)<br/>Evidence-first geospatial knowledge platform<br/><br/>📌 "Map behind the map"<br/>🔎 Provenance + citations on every insight<br/>🔗 Open formats + interoperable APIs]]
+%% =========================
+%% 👥 People & Roles
+%% =========================
+subgraph P["👥 People & Roles"]
+  direction TB
+  publicViewer["🧭 Public Viewer<br/>read-only public datasets and stories"]
+  researcher["🔬 Researcher<br/>analysis and export workflows"]
+  educator["🎓 Educator<br/>teaching and storytelling"]
+  policymaker["🏛️ Policy Maker<br/>evidence-backed decisions"]
+  contributor["✍️ Contributor<br/>draft data and story submissions"]
+  maintainer["🛠️ Maintainer<br/>review and publish approvals"]
+  admin["🔐 Admin<br/>operate pipelines and configure policies"]
+  governance["🧑‍⚖️ Governance and Data Stewards<br/>including Indigenous stakeholders"]
+end
 
-  %% =========================
-  %% 🌎 External Data Providers
-  %% =========================
-  subgraph D["🌎 External Data Providers"]
-    direction TB
-    state[[🏢 Kansas sources<br/>(Kansas GIS Hub, KDHE, KWO, KGS, KSHS, K-State/Mesonet, etc.)]]
-    federal[[🇺🇸 Federal sources<br/>(USGS/NASA imagery, NOAA climate, USDA agriculture, EPA water quality, FEMA hazards, Census, etc.)]]
-    archives[[🏛️ Libraries & archives<br/>(community archives, universities, Library of Congress, etc.)]]
-    partners[[🤝 Partner / licensed collections<br/>(when permitted)]]
-  end
+%% =========================
+%% 🗺️ System (KFM)
+%% =========================
+kfm["🗺️ Kansas Frontier Matrix<br/>KFM evidence-first geospatial knowledge platform<br/><br/>🧾 map behind the map<br/>🔎 provenance and citations on every insight<br/>🧩 open standards and interoperable APIs"]
 
-  %% =========================
-  %% 🔌 External Services & Integrations
-  %% =========================
-  subgraph S["🔌 External Services & Integrations"]
-    direction TB
-    idp[[🪪 Identity Provider<br/>(OAuth/OIDC and/or API keys)]]
-    gisTools[[🧰 External tools<br/>(QGIS, ArcGIS, Google Earth, notebooks: Jupyter/R/Python)]]
-    earthEngine[[🛰️ Google Earth Engine<br/>(optional analysis/prototyping)]]
-    cicd[[🤖 Source control + CI/CD<br/>(GitHub/GitLab automations)]]
-    downstream[[📣 Downstream consumers<br/>(third-party apps/portals via APIs)]]
-  end
+%% =========================
+%% 🌎 External Data Providers
+%% =========================
+subgraph D["🌎 External Data Providers"]
+  direction TB
+  state["🏢 Kansas and regional sources<br/>state agencies and GIS hubs"]
+  federal["🇺🇸 Federal sources<br/>USGS NOAA USDA EPA FEMA Census and more"]
+  archives["🏛️ Libraries and archives<br/>universities community collections"]
+  partners["🤝 Partner and licensed collections<br/>when permitted"]
+end
 
-  %% =========================
-  %% 🔁 Relationships
-  %% =========================
-  publicViewer -->|Browse public maps & stories| kfm
-  researcher -->|Query, analyze, export| kfm
-  educator -->|Use curated stories in lessons| kfm
-  policymaker -->|Explore insights with citations| kfm
-  contributor -->|Submit drafts (data/story)| kfm
-  maintainer -->|Review/approve content + datasets| kfm
-  admin -->|Operate system + ingestion runs| kfm
-  governance -->|Define policy + sensitivity rules (CARE, RBAC)| kfm
+%% =========================
+%% 🔌 External Services & Integrations
+%% =========================
+subgraph S["🔌 External Services & Integrations"]
+  direction TB
+  idp["🪪 Identity Provider<br/>OAuth OIDC and or API keys"]
+  cicd["🤖 Source control and CI CD<br/>automations and policy checks"]
+  gisTools["🧰 External tools<br/>QGIS ArcGIS notebooks Jupyter R Python"]
+  earthEngine["🛰️ Google Earth Engine<br/>optional analysis and prototyping"]
+  downstream["📣 Downstream consumers<br/>third-party apps via APIs"]
+end
 
-  state -->|Provide datasets for ingestion + catalog| kfm
-  federal -->|Provide open datasets/imagery for ingestion| kfm
-  archives -->|Provide historical records/text/media| kfm
-  partners -->|Provide licensed data under governance| kfm
+%% =========================
+%% 🔁 Relationships
+%% =========================
+publicViewer -->|Browse public maps and stories| kfm
+researcher -->|Query analyze export| kfm
+educator -->|Use curated stories| kfm
+policymaker -->|Explore insights with citations| kfm
+contributor -->|Submit drafts| kfm
+maintainer -->|Review approve publish| kfm
+admin -->|Run operations and ingestion| kfm
+governance -->|Define policy sensitivity and CARE rules| kfm
 
-  idp -->|Issue tokens/keys for AuthN| kfm
-  cicd -->|Trigger controlled pipeline runs + checks| kfm
-  kfm -->|Exports + APIs (REST/GraphQL, STAC/COG/GeoJSON, OGC-ready)| gisTools
-  kfm -->|APIs for integration| downstream
-  kfm -.->|Optional export/compute/import derivatives| earthEngine
+state -->|Provide datasets for ingestion and catalog| kfm
+federal -->|Provide open datasets and imagery| kfm
+archives -->|Provide historical records media texts| kfm
+partners -->|Provide licensed data under governance| kfm
 
-  %% =========================
-  %% 🎨 Light styling (theme-friendly)
-  %% =========================
-  classDef system stroke-width:2px;
-  class kfm system;
+idp -->|Issue auth tokens| kfm
+cicd -->|Trigger governed builds tests gates| kfm
+kfm -->|Exports and APIs STAC COG GeoJSON OGC-ready| gisTools
+kfm -->|APIs for integration| downstream
+kfm -.->|Optional export compute import derivatives| earthEngine
 
+%% =========================
+%% 🎨 Light styling
+%% =========================
+classDef system stroke-width:2px;
+class kfm system;
