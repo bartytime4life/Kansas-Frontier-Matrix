@@ -138,30 +138,29 @@ This is the canonical orchestration pattern for Focus Mode questions:
 This is the “multi-step RAG pipeline” contract. :contentReference[oaicite:18]{index=18} :contentReference[oaicite:19]{index=19}
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant U as User
-  participant UI as Focus Mode UI
-  participant API as API Orchestrator
-  participant PG as Prompt Gate
-  participant R as Retrieval
-  participant L as Ollama LLM
-  participant P as OPA Policy Gate
-  participant A as Audit Ledger
+flowchart TB
+  subgraph "🧭 Canonical Pipeline (Truth Path)"
+    RAW["🏭 ETL: data/raw -> data/work -> data/processed"]
+    CAT["🗂️ Catalogs: STAC / DCAT / PROV"]
+    KG["🕸️ Graph: Neo4j + Ontology"]
+    APIB["🔌 API Boundary: src/server/"]
+    UIB["🗺️ UI: web/ (Map + Story + Focus Mode)"]
+    STORY["📖 Story Nodes: docs/reports/story_nodes/"]
+    FOCUS["🤖 Focus Mode: governed experience"]
+    RAW --> CAT --> KG --> APIB --> UIB --> STORY --> FOCUS
+  end
 
-  U->>UI: Ask question
-  UI->>API: POST /focus-mode/query
-  API->>PG: sanitize(input)
-  PG-->>API: sanitized_question
-  API->>R: retrieve evidence (Neo4j/PostGIS/Search/Vector)
-  R-->>API: sources[] (with IDs + snippets)
-  API->>L: prompt(question + map context + SOURCES [1..n])
-  L-->>API: draft_answer (with [1..n] citations)
-  API->>P: policy_check(answer + user role + sensitivity)
-  P-->>API: allow / deny / redact
-  API->>A: append log (q, sources, model, prompt, decision)
-  API-->>UI: answer + citations map
-  UI-->>U: render answer with clickable citations
+  subgraph "🧠 AI Subsystem (inside the boundary)"
+    PG["🚧 Prompt Gate"]
+    RET["🔎 Retrieval: Neo4j / PostGIS / Search / Vector"]
+    LLM["🦙 Ollama LLM Runtime"]
+    OPA["🛡️ OPA Policy Check"]
+    LEDGER["📒 Provenance Ledger + PROV records"]
+  end
+
+  UIB -->|"📨 POST /focus-mode/query"| APIB
+  APIB --> PG --> RET --> LLM --> OPA --> APIB
+  APIB --> LEDGER
 ```
 
 ---
