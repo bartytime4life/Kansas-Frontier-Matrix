@@ -1,1 +1,131 @@
+%%{init: {"theme": "neutral", "flowchart": {"curve": "linear"}}}%%
+%% 🧠 KFM Diagram #40 — AI Focus Mode RAG (Retrieval-Augmented Generation)
+%% Source: "Kansas Frontier Matrix – Comprehensive System Documentation" (Focus Mode / Ollama integration)
+%% Key ideas:
+%% - UI never calls Ollama directly; all traffic flows through FastAPI.
+%% - Hybrid retrieval: Neo4j + PostGIS + Full-text + Vector search (embeddings).
+%% - Evidence-first: "No Source, No Answer" + citations [1..n].
+%% - Guardrails: Prompt Gate (input) + OPA (output) + immutable provenance logging.
+
+flowchart TB
+
+  %% ----------------------------
+  %% Styling 🎨
+  %% ----------------------------
+  classDef ui fill:#E3F2FD,stroke:#1E88E5,stroke-width:1px,color:#0D47A1;
+  classDef svc fill:#E8F5E9,stroke:#43A047,stroke-width:1px,color:#1B5E20;
+  classDef data fill:#F3E5F5,stroke:#8E24AA,stroke-width:1px,color:#4A148C;
+  classDef llm fill:#FFEBEE,stroke:#E53935,stroke-width:1px,color:#B71C1C;
+  classDef gov fill:#FFF3E0,stroke:#FB8C00,stroke-width:1px,color:#E65100;
+
+  %% ----------------------------
+  %% UI Layer 🗺️
+  %% ----------------------------
+  subgraph UI["🗺️ UI"]
+    u((👤 User)):::ui
+    web["🌐 Web App (React/TypeScript)\nMap • Timeline • Focus Mode panel"]:::ui
+    ans["📝 Focus Mode Answer\n+ clickable citations [1..n]"]:::ui
+    audit["🔎 Audit Panel\nretrieved snippets + provenance"]:::ui
+
+    u -->|"ask"| web
+    web -->|"render"| ans
+    web -->|"render"| audit
+  end
+
+  %% ----------------------------
+  %% Backend Orchestration 🧠
+  %% ----------------------------
+  subgraph API["🧠 Backend API (FastAPI)"]
+    endpoint["POST /focus-mode/query\n(question + map context)"]:::svc
+    pg["🧼 Prompt Gate\nsanitize • anti-injection • profanity"]:::gov
+    rag["🔍 RAG Orchestrator\nhybrid retrieval + context assembly"]:::svc
+    ctx["📦 Context Pack\nSOURCES [1..n]\n(snippets + source_ids)"]:::svc
+    tpl["🧾 Prompt Template\n\"No Source, No Answer\"\nCite every claim [n]"]:::svc
+    asm["📬 Response Assembly\nanswer + citation map + audit payload"]:::svc
+    cache["⚡ Context Cache\nhot queries + session memory"]:::data
+  end
+
+  web -->|"HTTP"| endpoint
+  endpoint -->|"1) sanitize"| pg
+  pg -->|"2) retrieve"| rag
+  rag <-->|lookup / store| cache
+
+  %% ----------------------------
+  %% Governed Data Stores 🗃️
+  %% ----------------------------
+  subgraph DATA["🗃️ Governed Data Stores"]
+    neo["🕸️ Neo4j\nKnowledge Graph"]:::data
+    gis["🗃️ PostGIS\nSpatial + stats queries"]:::data
+    search["🔤 Full-text Search Index\n(e.g., Elasticsearch)"]:::data
+    vec["🧲 Vector Store\n(e.g., Chroma / Qdrant / pgvector)"]:::data
+    obj["🗄️ Object Storage\n(PDFs • COGs • tiles)"]:::data
+    cat["🏷️ Catalog\n(STAC/DCAT + Source IDs)"]:::data
+  end
+
+  rag -->|"graph"| neo
+  rag -->|"geo/stats"| gis
+  rag -->|"full-text"| search
+
+  %% ----------------------------
+  %% Ollama Runtime 🤖
+  %% ----------------------------
+  subgraph OLLAMA["🤖 Ollama (Local LLM Runtime)"]
+    embed["🧬 Embeddings Model\n/api/embeddings\n(e.g., mxbai-embed-large)"]:::llm
+    gen["💬 Generation Model\n/api/generate\n(e.g., kfmllama2:latest)"]:::llm
+    sandbox["🔒 AI Sandbox\nno internet • no DB • no tools"]:::llm
+
+    sandbox -. "least privilege" .-> gen
+  end
+
+  rag -->|"vector route\ncompute query embedding"| embed
+  embed -->|"query embedding → top-k"| vec
+
+  neo --> ctx
+  gis --> ctx
+  search --> ctx
+  vec --> ctx
+
+  ctx -->|"resolve titles/links/provenance"| cat
+  ctx --> tpl
+  tpl -->|"3) grounded prompt\nSOURCES [1..n]"| gen
+
+  %% ----------------------------
+  %% Governance + Provenance 🛡️
+  %% ----------------------------
+  subgraph GOV["🛡️ Governance & Audit"]
+    opa["✅ OPA Policy Check (Rego)\n- citations required\n- sensitivity labels\n- RBAC/roles"]:::gov
+    block["⛔ Block / Redact / Clarify\nsafe fallback"]:::gov
+    ledger["⛓️ Provenance Ledger\nappend-only log (PROV-O)\nQ + sources + model + prompt + decision"]:::gov
+  end
+
+  gen -->|"draft answer + [1..n]"| opa
+  opa -->|"allow"| asm
+  opa -->|"deny"| block --> asm
+
+  asm --> ledger
+  asm -->|"5) response\n(answer + citations + audit data)"| web
+
+  %% Guardrail: UI never calls Ollama directly 🚫
+  web -. "🚫 UI never calls Ollama directly" .-> gen
+
+  %% ----------------------------
+  %% Offline Indexing & Embeddings (ETL) 📚
+  %% ----------------------------
+  subgraph ETL["📚 Offline Indexing & Embeddings (ETL)"]
+    sources["📄 Sources\n(newspapers • archives • reports • PDFs)"]:::data
+    etl["📥 Ingestion/ETL Workers\n(Airflow/Jobs)"]:::svc
+    ocr["🔎 OCR + NLP\nchunk + entity extract"]:::svc
+    index["📚 Index Builder\n(full-text + vector)"]:::svc
+
+    sources --> etl --> ocr --> index
+    ocr -->|"store binaries"| obj
+    ocr -->|"entities/relations"| neo
+    index -->|"update"| search
+    index -->|"upsert vectors"| vec
+    index -->|"register sources + lineage"| cat
+    index -->|"batch embeddings"| embed
+  end
+
+  %% Truth path reminder 🔁
+  %% Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
 
