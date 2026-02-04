@@ -44,23 +44,23 @@ Focus Mode retrieval is part of the orchestrated pipeline from user question →
 
 ```mermaid
 flowchart TD
-  U[🧑 User Question] --> PG[🧼 Prompt Gate\nsanitize input]
-  PG --> PI[🧭 Parse intent\nentities, dates, location]
-  PI --> G[🕸️ Neo4j\nGraph context]
-  PI --> S[🗺️ PostGIS\nSpatial/stat context]
-  PI --> FT[🔎 Full-text search\nkeywords & phrases]
-  PI --> VS[🧲 Vector search\nembeddings similarity]
-  G --> M[🧩 Merge + rank + dedupe\nEvidence bundle]
+  U["🧑 User Question"] --> PG["🧼 Prompt Gate — sanitize input"]
+  PG --> PI["🧭 Parse intent — entities, dates, location"]
+  PI --> G["🕸️ Neo4j — graph context"]
+  PI --> S["🗺️ PostGIS — spatial/stat context"]
+  PI --> FT["🔎 Full-text search — keywords & phrases"]
+  PI --> VS["🧲 Vector search — embedding similarity"]
+  G --> M["🧩 Merge + rank + dedupe — evidence bundle"]
   S --> M
   FT --> M
   VS --> M
-  M --> PA[🧾 Context assembly\nSOURCES [1..N]]
-  PA --> LLM[🤖 Ollama\n/api/generate]
-  LLM --> OPA[🛡️ OPA policy gate\ncitations + safety + RBAC]
-  OPA -->|allow| PP[🧷 Post-process\nattach clickable citations\nwrite provenance]
-  OPA -->|deny| SAFE[🚫 Safe fallback\nor ask clarification]
-  PP --> UI[📤 Return answer + citations]
-  PP --> LEDGER[📒 Append-only ledger / PROV logs]
+  M --> PA["🧾 Context assembly — sources 1..N"]
+  PA --> LLM["🤖 Ollama — POST /api/generate"]
+  LLM --> OPA["🛡️ OPA policy gate — citations + safety + RBAC"]
+  OPA -->|"allow"| PP["🧷 Post-process — attach citations; write provenance"]
+  OPA -->|"deny"| SAFE["🚫 Safe fallback — or ask clarification"]
+  PP --> UI["📤 Return answer + citations"]
+  PP --> LEDGER["📒 Append-only ledger / PROV logs"]
 ```
 
 The pipeline includes:
