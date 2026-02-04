@@ -1,431 +1,339 @@
----
-title: "🚀 Kansas Frontier Matrix — Dataset Promotion & Release Governance"
-path: "docs/governance/promotion/README.md"
-version: "v11.2.6"
-last_updated: "2025-12-13"
+# 🚀 Promotion Governance
 
-release_stage: "Stable / Governed"
-lifecycle: "Long-Term Support (LTS)"
-review_cycle: "Quarterly · FAIR+CARE Council · Reliability & Security Board"
-content_stability: "stable"
+![Governance](https://img.shields.io/badge/governance-policy--as--code-blue)
+![Promotion](https://img.shields.io/badge/promotion-gated-critical)
+![Default](https://img.shields.io/badge/default-fail--closed-important)
+![Traceability](https://img.shields.io/badge/traceability-provenance--first-success)
+![Metadata](https://img.shields.io/badge/metadata-STAC%2FDCAT%2FPROV-informational)
 
-status: "Active / Enforced"
-doc_kind: "Governance & Architecture Guide"
-intent: "dataset-promotion-saga"
-header_profile: "standard"
-footer_profile: "standard"
-
-license: "CC-BY 4.0"
-mcp_version: "MCP-DL v6.3"
-markdown_protocol_version: "KFM-MDP v11.2.6"
-ontology_protocol_version: "KFM-OP v11"
-pipeline_contract_version: "KFM-PDC v11"
-stac_profile: "KFM-STAC v11"
-dcat_profile: "KFM-DCAT v11"
-prov_profile: "KFM-PROV v11"
-
-governance_ref: "../ROOT-GOVERNANCE.md"
-ethics_ref: "../../faircare/FAIRCARE-GUIDE.md"
-sovereignty_policy: "../../sovereignty/INDIGENOUS-DATA-PROTECTION.md"
-
-classification: "Public"
-sensitivity: "Low"
-fair_category: "F1-A1-I1-R1"
-care_label: "Public · Low-Risk"
-jurisdiction: "US-KS"
-indigenous_rights_flag: true
-data_steward: "FAIR+CARE Council"
-
-commit_sha: "<latest-commit-hash>"
-signature_ref: null
-provenance_chain:
-  - "docs/governance/promotion/README.md@v11.2.6"
-
-doc_uuid: "9b84fd7a-6f8b-4b83-bd8b-9accc9f2e65b"
-semantic_document_id: "urn:kfm:doc:governance:dataset-promotion:v11.2.6"
-event_source_id: "urn:kfm:event_source:docs:governance:promotion"
-
-ai_transform_permissions:
-  - "summarize"
-  - "extract-metadata"
-  - "generate-checklists"
-  - "generate-non-normative-examples"
-ai_transform_prohibited:
-  - "alter-normative-requirements"
-  - "invent-governance-status"
-  - "fabricate-provenance"
-  - "generate-release-signatures-or-attestations"
----
-
-# 🚀 Dataset Promotion & Release Governance
-
-## 📘 Overview
-
-**Purpose**  
-Define the canonical KFM dataset promotion lifecycle that moves data assets from internal processing into **trusted, signed, attested, published, and cataloged releases**.
-
-Dataset promotion in KFM exists to:
-
-- Guarantee **cryptographic trust** of released datasets
-- Preserve **full lineage and provenance** across environments
-- Enforce **FAIR + CARE + sovereignty** constraints before exposure
-- Prevent partial or ambiguous releases
-- Enable **safe rollback without data erasure**
-
-**Promotion is a deterministic saga**  
-Promotion is enforced as a deterministic saga: every step is ordered, replayable, auditable, and compensatable (rollback-safe), without destructive deletes.
-
-**Core terms (normative)**
-- **dataset_id**: stable dataset identifier (string; stable across versions)
-- **dataset_version**: immutable version label for one dataset build (string; content-addressed where possible)
-- **promotion_id**: idempotency key for a single end-to-end promotion attempt (string; stable across retries)
-- **release_id**: immutable identifier for an externally discoverable release packet (string; derived from content digest + governance context)
-- **stage**: one of `sign`, `attest`, `publish`, `catalog`
-- **terminal state**: `succeeded` or `failed` (with an auditable reason), optionally followed by `compensated`
-
-**Promotion lifecycle (ordered stages)**
-1. **Sign**
-2. **Attest**
-3. **Publish**
-4. **Catalog**
-
-Each stage:
-- Is idempotent (safe to retry)
-- Emits OpenLineage + PROV‑O events
-- Records immutable audit artifacts
-- Has a defined compensation action (rollback without erasure)
+> [!IMPORTANT]
+> **Promotion** in KFM is not “merging code.”  
+> It’s **elevating an artifact** (data, metadata, story, AI behavior, infrastructure) from *draft/staging* → *trusted/published/production* **without breaking the truth-path** 🧭
 
 ---
 
-## 🗂️ Directory Layout
+## 🧭 Quick Links
 
-Promotion governance is expressed in repository layout expectations for artifacts, logs, and catalogs.
-
-~~~text
-📁 KansasFrontierMatrix/
-├── 📁 docs/                                      — Documentation layer (governance, standards, guides)
-│   ├── 📁 governance/                             — Governance docs (authority + enforcement)
-│   │   ├── 📄 ROOT-GOVERNANCE.md                  — Governance charter (binding authority)
-│   │   └── 📁 promotion/                          — Dataset promotion governance (this doc)
-│   │       └── 📄 README.md                       — ← Dataset Promotion & Release Governance
-│   ├── 📁 faircare/                               — FAIR+CARE guidance (stewardship + ethics)
-│   └── 📁 sovereignty/                            — Indigenous data protection + sovereignty policy
-│
-├── 📁 data/                                      — Data layer (raw → processed → released + cataloged)
-│   ├── 📁 sources/                                — Source manifests (license/rights, checksums, access)
-│   ├── 📁 processed/                              — Deterministic ETL outputs (pre-promotion)
-│   ├── 📁 releases/                               — Immutable release packets (post-promotion)
-│   ├── 📁 stac/                                   — STAC Collections/Items (discovery)
-│   └── 📁 dcat/                                   — DCAT records (publication interoperability)
-│
-├── 📁 mcp/                                       — Reproducibility + run records
-│   └── 📁 runs/                                   — Promotion run logs/config snapshots (saga traces)
-│
-└── 📁 .github/
-    ├── 📁 workflows/                              — CI/CD workflows (validation + promotion automation)
-    └── 📁 lineage/                                — CI lineage emission patterns (PROV‑O JSON‑LD)
-        └── 📄 README.md                           — Single-job lineage emission guide
-~~~
+- 🧩 Root Governance: `docs/governance/ROOT_GOVERNANCE.md`
+- 🧠 AI Gates & Agent Safety: `docs/governance/langgraph-gates/README.md`
+- 🧑‍⚖️ Ethics: `docs/governance/ETHICS.md`
+- 🪶 Sovereignty: `docs/governance/SOVEREIGNTY.md`
+- 📘 Master Guide (pipeline + invariants): `docs/MASTER_GUIDE_v13.md`
 
 ---
 
-## 🧭 Context
+## 📌 What “Promotion” Means Here
 
-KFM treats “release” as a **governed claim**: a dataset is not “published” merely because files exist. A dataset becomes **trusted** only after promotion completes with full auditability and governance gates.
+Promotion is the controlled, auditable act of changing an artifact’s **status**, **visibility**, or **execution context**, such that it becomes:
 
-**Environment semantics**
-- **dev**: iteration and experimentation; artifacts may be mutable
-- **staging**: rehearsal of promotion; must be replayable; gates enforced
-- **production**: immutability and discoverability; catalog aliasing and rollback required
+- ✅ discoverable in catalog/search
+- ✅ served via governed API
+- ✅ visible in UI / dashboards
+- ✅ usable by AI / Focus Mode
+- ✅ eligible for downstream builds / public outputs
 
-**Non-goals**
-- Promotion does not authorize exposure of restricted knowledge.
-- Promotion does not weaken sovereignty protections (it strengthens enforceability and audit).
+### Promotion can happen to…
 
----
-
-## 🧪 Validation & CI/CD
-
-Promotion must be continuously enforced by CI and runtime validators.
-
-**Minimum validation expectations (policy-aligned)**
-- Schema and metadata validity (required front-matter keys, required dataset metadata)
-- License validation and compatibility
-- Indigenous sensitivity classification and sovereignty checks
-- PII and restricted-knowledge scanning (including protected-site leakage controls)
-- Determinism/replayability checks (pipeline contract compliance)
-- Provenance completeness checks (OpenLineage + PROV‑O coverage per stage)
-
-**Lineage emission (required)**
-Each promotion stage emits:
-- An OpenLineage event (per stage boundary)
-- A PROV‑O bundle or stage-scoped PROV entity graph
-
-CI jobs SHOULD also emit a job-local provenance artifact following the CI lineage convention (see `.github/lineage/README.md`).
-
-**Failure handling (normative)**
-
-| Failure Point | Result |
-|--------------|--------|
-| Pre-sign gate | Promotion blocked (no stage side-effects permitted) |
-| Sign failure | Retry or abort; emit auditable terminal state |
-| Attest failure | Signature retained; publish blocked; emit auditable terminal state |
-| Publish failure | Attestation retained; catalog blocked; emit auditable terminal state |
-| Catalog failure | Release remains non-discoverable; emit auditable terminal state |
-
-All failures MUST produce a terminal, auditable state and MUST NOT rely on destructive deletion for “cleanup.”
+| Track 🧱 | What gets promoted 🧩 | Typical “promotion target” 🎯 |
+|---|---|---|
+| 📦 Data | raw → processed datasets, derived layers | “publishable” / “catalog-ready” / “public-ready” |
+| 🧾 Metadata | STAC/DCAT/PROV boundary artifacts | “indexable” / “harvestable” |
+| 🕸️ Graph | entities + relationships | “queryable” (but still governed) |
+| 🌐 API | endpoints + contracts + redaction | “stable interface” |
+| 🗺️ UI | map layers, dashboards, tiles | “user-facing” |
+| 📚 Stories | Story Nodes + Focus bundles | “governed narrative” |
+| 🤖 AI | prompts, retrieval rules, model versions | “safe + citeable behavior” |
+| 🧰 Infra | deployments, policy bundles | “production environment” |
 
 ---
 
-## 📦 Data & Metadata
+## 🧱 Non‑Negotiable Invariants
 
-Promotion is governed by **explicit artifacts** and **machine-validated metadata**.
+These invariants are **promotion blockers**. If violated, the artifact **does not promote** 🚫
 
-### Required artifacts per stage (normative)
+1. **Canonical truth-path ordering**  
+   Raw ➜ Processed ➜ Catalog/Provenance ➜ Database/Graph ➜ API ➜ UI ➜ Story ➜ Focus Mode  
+   (No bypassing steps, even “temporarily.”)
 
-**1) Sign**
-- Dataset content digest (SHA‑256)
-- Signature artifact (Sigstore/Cosign or governed equivalent)
-- Signature reference (URI or content-addressed path)
+2. **API boundary is sacred**  
+   UI and AI do **not** “reach around” the API to query storage/graph directly.
 
-**2) Attest**
-- SLSA provenance attestation (or governed equivalent)
-- Input dataset references + checksums
-- Pipeline version, environment hashes, and reproducibility evidence
-- SBOM references (when applicable)
+3. **Provenance-first**  
+   If provenance can’t prove chain-of-custody, the artifact is not publishable.
 
-**3) Publish**
-- Content-addressed artifact paths (immutable)
-- Release manifest entry (immutable)
-- Storage tier and residency compliance record (jurisdiction-aware)
+4. **Contract-first interfaces**  
+   API contracts and schemas are first-class; breaking changes require versioning discipline.
 
-**4) Catalog**
-- STAC Item/Collection updates (versioned)
-- DCAT Dataset/Distribution updates (versioned)
-- PROV‑O lineage edges linking released artifacts to processing inputs
-- Graph ingestion inputs for Neo4j entities/relationships
+5. **Deterministic pipelines**  
+   Data transforms are idempotent/config-driven so results are reproducible.
 
-### Release manifest expectations (normative)
+6. **Fail closed (block by default)**  
+   If anything is missing/invalid (metadata, policy, classification), **promotion fails**.
 
-A release manifest SHOULD be a single machine-readable document that binds:
-- dataset_id, dataset_version, promotion_id, release_id
-- stage completion timestamps
-- digests for all release assets
-- signature references
-- attestation references
-- catalog record references (STAC/DCAT ids)
-- governance gates evaluated + outcomes
-
-Example (non-normative shape):
-
-~~~json
-{
-  "dataset_id": "example.dataset",
-  "dataset_version": "2025-12-13",
-  "promotion_id": "prom_01JH9YXXXXXXX",
-  "release_id": "rel_sha256_abcdef...",
-  "digests": {
-    "dataset": "sha256:...",
-    "manifest": "sha256:..."
-  },
-  "sign": {
-    "status": "succeeded",
-    "signature_ref": "cosign://..."
-  },
-  "attest": {
-    "status": "succeeded",
-    "attestation_ref": "attest://..."
-  },
-  "publish": {
-    "status": "succeeded",
-    "artifact_root": "data/releases/example.dataset/rel_sha256_abcdef..."
-  },
-  "catalog": {
-    "status": "succeeded",
-    "stac_ref": "data/stac/example.dataset/collection.json",
-    "dcat_ref": "data/dcat/example.dataset.jsonld"
-  }
-}
-~~~
-
-### No destructive deletes (normative)
-
-Rollback is implemented via:
-- Deny-lists / tombstones (logical removals)
-- Alias pointer rollback (catalog pointer to prior trusted version)
-- Superseding records (revocations or withdrawals) that remain auditable
+> [!TIP]
+> Treat promotion like a **supply chain**: every stage needs verifiable inputs, signatures, and gates 🔐
 
 ---
 
-## 🌐 STAC, DCAT & PROV Alignment
+## 👥 Roles & Responsibilities (Promotion Authority)
 
-Promotion outputs MUST remain interoperable through the KFM STAC/DCAT/PROV profiles.
+Promotion authority is **role-scoped** (RBAC + policy-as-code):
 
-### STAC (discovery)
+- 👀 **Public Viewer**: reads *approved* public artifacts only
+- ✍️ **Contributor**: can draft/submit artifacts but cannot publish directly
+- 🧑‍🔧 **Maintainer**: reviews, approves, manages content + publication decisions
+- 🛡️ **Admin**: runs ingestion pipelines, configures policies, executes high-risk operations
 
-Catalog stage SHOULD produce:
-- A STAC Collection for the dataset lineage (stable `collection.id`)
-- A STAC Item per released dataset_version (stable, versioned `item.id`)
-- Assets that point to immutable release artifacts (content-addressed where possible)
-
-### DCAT (publication interoperability)
-
-Catalog stage SHOULD produce:
-- A DCAT Dataset record for dataset_id
-- One or more Distributions representing:
-  - the released artifact package(s)
-  - associated metadata/manifest
-  - license and access constraints
-
-### PROV‑O (lineage)
-
-Promotion stages map naturally to PROV:
-- `prov:Entity`: raw inputs, processed outputs, released artifacts, catalogs
-- `prov:Activity`: sign/attest/publish/catalog actions (each stage)
-- `prov:Agent`: CI runner, pipeline service, signing authority, governance councils (as applicable)
-
-Required relationship patterns:
-- `prov:used` (stage consumes prior entities)
-- `prov:generated` (stage produces artifacts)
-- `prov:wasAssociatedWith` (agent responsibility)
-- `prov:wasDerivedFrom` (released dataset derives from processed artifacts)
+> [!NOTE]
+> “Who can promote?” is enforced in **two places**:
+> 1) **CI gates** (policy/tests block merges)  
+> 2) **Runtime policy** (OPA/policy pack blocks live requests)
 
 ---
 
-## 🧱 Architecture
+## 🧬 Promotion Lifecycle
 
-Dataset promotion is a **saga** with strict ordering, idempotency, and compensations.
+Promotion is best modeled as a state machine (same concept for data, story, AI, and infra).
 
-### Promotion lifecycle (saga model)
+```mermaid
+stateDiagram-v2
+  [*] --> Draft
+  Draft --> InReview: PR opened / proposal submitted
+  InReview --> Approved: Maintainer approval (+ gates)
+  Approved --> Published: Merge + deploy / index + serve
+  Published --> Withdrawn: takedown / policy revoke
+  Withdrawn --> Archived: retain lineage, remove serving
+```
 
-All datasets must pass the following ordered stages:
-
-1. **Sign**
-2. **Attest**
-3. **Publish**
-4. **Catalog**
-
-Each stage:
-- Is idempotent
-- Emits OpenLineage + PROV‑O events
-- Records immutable audit artifacts
-- Has a defined compensation (rollback) action
-
-### Stage definitions
-
-#### 1) 🔐 Sign
-
-**Objective**  
-Establish cryptographic identity and integrity.
-
-**Outputs**
-- Dataset digest (SHA‑256)
-- Signature artifact (Sigstore / Cosign)
-- Signature reference (URI or governed path)
-
-**Governance gates**
-- License validation
-- Indigenous sensitivity classification
-- PII & restricted-knowledge scans
-
-**Compensation**
-- Signature revocation or superseding invalidation record
-- Trust-list exclusion (no destructive deletes)
-
-#### 2) 🧾 Attest
-
-**Objective**  
-Bind dataset to its production context.
-
-**Outputs**
-- SLSA provenance attestation
-- Input datasets + checksums
-- Pipeline version & environment hashes
-- SBOM references (if applicable)
-
-**Governance gates**
-- Pipeline contract validation (KFM‑PDC)
-- Reproducibility score ≥ policy threshold
-
-**Compensation**
-- Superseding “withdrawn” attestation linked by `promotion_id`
-
-#### 3) 📦 Publish
-
-**Objective**  
-Release immutable artifacts into governed storage.
-
-**Outputs**
-- Content-addressed artifact paths
-- Write-once object storage records (or governed equivalent)
-- Release manifest entry
-
-**Governance gates**
-- Storage tier approval
-- Jurisdictional data residency rules
-
-**Compensation**
-- Logical tombstone (deny-list)
-- Pointer rollback to prior trusted version
-
-#### 4) 🗂 Catalog
-
-**Objective**  
-Expose dataset through discovery and graph systems.
-
-**Outputs**
-- STAC Item / Collection
-- DCAT Dataset / Distributions
-- PROV‑O lineage edges
-- Neo4j graph entities
-
-**Governance gates**
-- Metadata completeness checks
-- FAIR/CARE labeling
-- Public-safety review (if applicable)
-
-**Compensation**
-- Revert catalog alias to previous version
-- Retain historical catalog records (no erasure)
-
-### Exactly-once guarantees
-
-KFM promotion enforces exactly-once semantics through:
-- End-to-end idempotency keys (`promotion_id`)
-- Transactional outbox pattern
-- Content-addressed storage
-- Versioned catalog aliasing
-
-No stage may introduce side effects without a persisted saga state update.
+### Promotion rule of thumb 🧠
+**If it can reach a user, it must have:**
+- provenance ✅
+- policy decision ✅
+- classification ✅
+- audit trail ✅
 
 ---
 
-## ⚖ FAIR+CARE & Governance
+## 🔐 Gates
 
-Promotion governance explicitly enforces:
-- Indigenous data sovereignty controls
-- NHPA §304 restrictions (where applicable)
-- Jurisdictional export and residency constraints
-- License compatibility matrices
-- Ethical risk classifications and access constraints
+### ✅ Automated Gates (must be green)
 
-**Non-bypass rule (normative)**  
-No dataset may bypass promotion stages. Any exposure channel (API, catalog, graph, download) MUST point only to datasets in a terminal `succeeded` promotion state (or an approved exception explicitly recorded in governance with provenance).
+Common automated gates include:
+
+- 🧾 **Schema + contract validation** (contract-first)
+- 🧪 **Unit/integration tests**
+- 🔎 **Policy checks** (OPA/Conftest-style)
+- 🧰 **Security checks** (secrets scanning, dependency checks)
+- 📦 **Metadata completeness** (license, publisher, classification, citations)
+- 🧬 **Provenance completeness** (PROV present and linked)
+- 🧠 **AI response constraints** (citations required, disallowed content blocked)
+
+### 👀 Human Gates (explicit sign-off)
+
+- 🧑‍🔧 Maintainer approval required for “publish”
+- 🧑‍⚖️ Governance escalation for:
+  - sovereignty-sensitive artifacts 🪶
+  - privacy risk 🔒
+  - “public-facing AI behavior” changes 🤖
+  - anything requiring takedown/withdrawal 🧯
 
 ---
 
-## 🕰️ Version History
+## 🛣️ Promotion Runbooks
 
-| Version | Date | Notes |
-|-------:|------|-------|
-| v11.2.6 | 2025-12-13 | Canonical saga governance alignment; normalized KFM-MDP v11.2.6 headings/metadata; clarified artifact expectations, idempotency, and non-destructive rollback. |
+### 1) 📦 Data & Metadata Promotion
+
+**Target:** move a dataset from “present” ➜ “cataloged” ➜ “served” ➜ “visible”
+
+#### ✅ Required repo staging (canonical)
+
+- `data/raw/<domain>/...` (source inputs)
+- `data/work/<domain>/...` (intermediate)
+- `data/processed/<domain>/...` (final outputs)
+- Boundary artifacts (publish step):
+  - `data/stac/collections/`
+  - `data/stac/items/`
+  - `data/catalog/dcat/`
+  - `data/prov/`
+
+#### ✅ Promotion steps
+
+1. **Add raw sources** under `data/raw/<domain>/`  
+2. **Run deterministic ETL** producing:
+   - intermediate results in `data/work/<domain>/`
+   - final results in `data/processed/<domain>/`
+3. **Generate boundary artifacts** (STAC/DCAT/PROV)
+4. **Run validation gates** (CI + local preflight)
+5. **Load downstream (DB/graph)** only through governed pipeline jobs
+6. **Maintainer approves** publication
+7. **Publish** (catalog indexed + API served + UI layer available)
+
+#### ✅ Data promotion checklist
+
+- [ ] Source manifest present (publisher, license, classification)
+- [ ] Dataset outputs exist in `data/processed/…`
+- [ ] STAC created (collection + items)
+- [ ] DCAT dataset entry created
+- [ ] PROV lineage created + linked to dataset + activities
+- [ ] CI gates green
+- [ ] Maintainer approval recorded
 
 ---
 
-<div align="center">
+### 2) 🧠 Evidence Artifacts (AI/analysis outputs)
 
-[⬅️ Back to Governance Index](../README.md) · [⬅️ Back to Data Architecture](../../architecture/repo-focus.md) · [⬅️ Back to ROOT-GOVERNANCE](../ROOT-GOVERNANCE.md)
+**Policy:** Any analysis output is treated as a first-class dataset:
+- stored as processed data
+- cataloged like any dataset
+- traced in provenance
+- served only via governed API
 
-[🏛️ Governance Charter](../ROOT-GOVERNANCE.md) · [🤝 FAIR+CARE Guide](../../faircare/FAIRCARE-GUIDE.md) · [🪶 Indigenous Data Protection](../../sovereignty/INDIGENOUS-DATA-PROTECTION.md)
+✅ If an AI-generated layer can be seen on a map, it must be promotable **the same way** as a “regular dataset.”
 
-</div>
+---
+
+### 3) 📚 Story Node Promotion
+
+**Target:** publish narratives that remain machine-ingestible + provenance-linked.
+
+#### ✅ Requirements
+
+- Story node follows template(s) (with front-matter)
+- Claims link to datasets / schemas / citations
+- “Focus Mode” bundles must reference catalogs and provenance
+
+#### ✅ Promotion steps
+
+1. Draft story node in PR (Contributor)
+2. Run doc lint + link checks
+3. Maintainer reviews:
+   - citations & tone
+   - sovereignty flags
+   - safety + ethical presentation
+4. Merge → published (UI + Focus Mode can now surface it)
+
+#### ✅ Story promotion checklist
+
+- [ ] Front-matter complete and valid
+- [ ] Every claim has a dataset/citation target
+- [ ] Linked dataset IDs exist in catalog
+- [ ] Sensitive content is flagged appropriately
+- [ ] Maintainer sign-off
+
+---
+
+### 4) 🤖 AI / Focus Mode Promotion
+
+AI promotion includes changes to:
+- prompt templates
+- retrieval rules / context assembly
+- model version + adapters
+- policy rules that govern answers
+- citation enforcement behavior
+
+#### ✅ Promotion rules
+
+- AI must **refuse** unsourced or disallowed content.
+- AI must **always include citations** if it answers.
+- AI changes that affect public behavior require:
+  - evaluation set pass ✅
+  - policy checks pass ✅
+  - maintainer approval ✅
+  - possible manual deployment approval ✅
+
+#### ✅ AI promotion checklist
+
+- [ ] Prompt injection defenses remain intact
+- [ ] Citation policy still enforces “no citations → no answer”
+- [ ] Model version/tag recorded in provenance
+- [ ] Evaluation suite passes (quality + safety)
+- [ ] Maintainer approval (and admin approval if production)
+
+---
+
+### 5) 🧰 Code & Infrastructure Promotion
+
+Code promotion is still “promotion,” because it changes serving behavior.
+
+#### Standard pipeline 🧪
+
+1. Feature branch → PR
+2. CI gates run (tests + policy + security)
+3. Maintainer merges only when green ✅
+4. Deploy to staging
+5. Promote staging → prod (manual approval for high-risk changes)
+
+> [!IMPORTANT]
+> Critical changes (AI system, infra, policy bundles) may require **explicit environment promotion** even after merge.
+
+---
+
+## 🧯 Rollback & De‑Promotion
+
+Promotion is reversible, but **never silently**.
+
+### De‑promotion options (choose the least destructive)
+
+1. 🧾 **Withdraw via metadata + policy**
+   - mark dataset status as withdrawn
+   - policy denies serving it
+   - UI should hide it by default
+2. 🛑 **Disable serving layer**
+   - API can deny/sanitize access
+3. ⏪ **Revert commit**
+   - last resort (prefer audit-friendly withdrawal)
+
+### Rollback checklist
+
+- [ ] Incident ticket / issue logged
+- [ ] Who authorized rollback recorded
+- [ ] Policy + metadata updated
+- [ ] Audit trail preserved
+- [ ] Postmortem written (what gate failed?)
+
+---
+
+## ✅ PR Checklist Template (Copy/Paste)
+
+```markdown
+### Promotion Readiness Checklist ✅
+
+**Type:** (data / metadata / story / ai / infra)
+
+- [ ] I did not bypass the canonical pipeline (raw→processed→catalog→db/graph→api→ui→story→focus).
+- [ ] Provenance is complete (PROV + linkage).
+- [ ] Metadata is complete (license, publisher, classification).
+- [ ] CI gates are green (tests + policy checks).
+- [ ] If AI-facing: citations are enforced + disallowed content is blocked.
+- [ ] If sovereignty-sensitive: reviewed against docs/governance/SOVEREIGNTY.md
+- [ ] Maintainer approval requested (tagging appropriate reviewers).
+```
+
+---
+
+## 🗂️ Appendix: Canonical Promotion Paths
+
+```text
+📁 data/
+  📁 raw/<domain>/
+  📁 work/<domain>/
+  📁 processed/<domain>/
+  📁 stac/
+    📁 collections/
+    📁 items/
+  📁 catalog/
+    📁 dcat/
+  📁 prov/
+
+📁 docs/
+  📁 governance/
+    📁 promotion/
+      📄 README.md   👈 you are here
+```
+
+---
+
+## 📎 Notes
+
+- Promotion is **governance**, not bureaucracy.
+- The goal is **trustworthy outputs**: every layer is explainable, auditable, and policy-controlled 🧾🔐
