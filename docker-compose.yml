@@ -1,363 +1,296 @@
-# 🐳 `docker-compose.yml` — Kansas Frontier Matrix (KFM) local stack
-
-Local dev stack for the **canonical KFM pipeline order**:
-
-> **ETL → STAC/DCAT/PROV → Graph/DB → API → UI → Story Nodes → Focus Mode**
-
-✅ Design goals: **deterministic**, **catalog-first**, **policy-ready**, **CI-friendly**, and **secure-by-default** (host ports bound to `127.0.0.1`).
+According to a document from February 4, 2026, the **Kansas Frontier Matrix (KFM)** local dev stack is intended to run via **Docker Compose**, orchestrating **PostGIS**, **Neo4j**, a **FastAPI** backend, and a **React** frontend (with optional policy services like OPA). [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🚀 Quickstart
+# 🐳 `docker-compose.yml` (KFM Dev Stack)
 
-```bash
-# 1) Configure
-cp .env.example .env   # if present
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
+![PostGIS](https://img.shields.io/badge/PostgreSQL-PostGIS-336791?logo=postgresql&logoColor=white)
+![Neo4j](https://img.shields.io/badge/Neo4j-Graph-008CC1?logo=neo4j&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-Web-61DAFB?logo=react&logoColor=black)
 
-# 2) Run the core stack
-docker compose up --build
+## 🎯 What this stack runs
 
-# 3) Optional profiles
-docker compose --profile ops up --build        # ETL + graph sync runners
-docker compose --profile obj up --build        # MinIO object store (S3-compatible)
-docker compose --profile policy up --build     # OPA policy engine
+KFM’s Compose setup commonly includes these services and ports:
+
+- 🗄️ **`db`** → PostGIS (PostgreSQL + PostGIS) → `localhost:5432` [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🧠 **`graph`** → Neo4j → `localhost:7474` (HTTP UI) + `localhost:7687` (Bolt) [oai_citation:4‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- ⚡ **`api`** → FastAPI (Uvicorn) → `localhost:8000` (Swagger at `/docs`) [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🖥️ **`web`** → React dev server → `localhost:3000` [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🛡️ **`opa`** (optional) → Policy server → `localhost:8181` [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+> 🔌 Internal networking note: containers can reach each other by **service name** (e.g., API connects to Postgres at `db` and Neo4j at `graph`). [oai_citation:11‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 📁 Expected repo layout (what this compose assumes)
+
+This matches the repo layout described in the blueprint:
+
+```text
+📦 Kansas-Frontier-Matrix/
+├── api/                     # ⚡ FastAPI backend (Python)
+├── web/                     # 🖥️ React + TypeScript frontend
+├── pipelines/               # 🧪 ETL + simulation scripts
+├── data/                    # 🗂️ Versioned datasets + metadata
+│   ├── raw/
+│   ├── processed/
+│   ├── catalog/
+│   └── provenance/
+└── docs/                    # 📚 Documentation + narratives
 ```
 
----
-
-## 🧩 Services (at a glance)
-
-- 🐘 **PostGIS** (`postgres`) — spatial index + queries (catalog-gated data use)
-- 🕸️ **Neo4j** (`neo4j`) — derived knowledge graph (loads from catalogs only)
-- 🧵 **Redis** (`redis`) — job queue / async orchestration backbone
-- 🛡️ **API** (`api`) — governed boundary (contracts + auth + classification + evidence)
-- 🌐 **UI** (`ui`) — Map UI (talks only to API; not on backend network)
-- 📦 **MinIO** (`minio`, optional) — S3-compatible artifact store
-- 🧾 **OPA** (`opa`, optional) — executable policy engine
-- 🧪 **Ops runners** (`etl`, `graph_sync`, optional) — thin wrappers (should call canonical modules)
+ [oai_citation:12‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## ✅ Updated Compose file
+## 🔧 0) Create `.env` (recommended)
 
-> Copy/paste the YAML below into `docker-compose.yml`.
+The blueprint references copying a template env file (like `.env.example`) to `.env`, including common variables like PostGIS creds, `NEO4J_AUTH`, and ports for FastAPI/React. [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+Here’s a solid baseline `.env` you can start with:
+
+```env
+# ----------------------------
+# Ports
+# ----------------------------
+POSTGRES_PORT=5432
+NEO4J_HTTP_PORT=7474
+NEO4J_BOLT_PORT=7687
+FASTAPI_PORT=8000
+WEB_PORT=3000
+OPA_PORT=8181
+
+# ----------------------------
+# Postgres / PostGIS
+# ----------------------------
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=kfm
+
+# ----------------------------
+# Neo4j
+# ----------------------------
+# Format: user/password
+NEO4J_AUTH=neo4j/test
+
+# ----------------------------
+# API
+# ----------------------------
+# Override if your app entrypoint differs
+UVICORN_APP=api.main:app
+
+# Optional: if you run Ollama on the host, the API can point to it.
+# (The docs mention host.docker.internal:11434 patterns.) [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+AI_BACKEND_URL=http://host.docker.internal:11434
+```
+
+> 🧯 Port conflicts: if you already have something running on `5432`, `7474`, `8000`, or `3000`, change the host-side port mapping in Compose (or update `.env`). [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🧠 Hot reload expectations (dev ergonomics)
+
+- Backend: mount `api/` and run Uvicorn with `--reload`. [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Frontend: mount `web/src` (or the entire `web/`) so React hot reload works. [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+# ✅ `docker-compose.yml`
+
+> 📌 Place this file at repo root: `📦 Kansas-Frontier-Matrix/docker-compose.yml`
 
 ```yaml
-# docker-compose.yml — Kansas Frontier Matrix (KFM) local stack 🐳🧭
-#
-# Canonical pipeline (non-negotiable):
-#   ETL → STAC/DCAT/PROV → Graph/DB → API → UI → Story Nodes → Focus Mode
-#
-# Canonical code homes (v13 target):
-#   🧪 src/pipelines/   🕸️ src/graph/   🛡️ src/server/   🌐 web/   🧰 tools/   📓 mcp/
-#
-# Canonical data roots (v13 target):
-#   📦 data/raw/ • data/work/ • data/processed/
-#   🗂️ data/catalog/stac/ • 🏷️ data/catalog/dcat/ • 🧬 data/prov/ • 🕸️ data/graph/
-#
-# Quickstart:
-#   cp .env.example .env   # if present
-#   docker compose up --build
-#
-# Optional profiles:
-#   docker compose --profile ops up --build       # ETL + graph sync runners
-#   docker compose --profile obj up --build       # MinIO object store (S3-compatible)
-#   docker compose --profile policy up --build    # OPA policy engine
-#
-# Security posture (dev):
-#   - All host ports bind to 127.0.0.1 by default
-#   - Default passwords are dev-only; override in .env for realism
-
 name: kfm
 
-x-kfm-bind: &kfm_bind
-  - ./:/workspace
-
-x-kfm-env: &kfm_env
-  # Repo paths (mounted at /workspace)
-  KFM_REPO_ROOT: /workspace
-  KFM_DATA_ROOT: /workspace/data
-  KFM_DOCS_ROOT: /workspace/docs
-  KFM_SCHEMAS_ROOT: /workspace/schemas
-  KFM_TOOLS_ROOT: /workspace/tools
-  KFM_MCP_ROOT: /workspace/mcp
-
-  # Governed metadata roots (catalog-first)
-  KFM_STAC_ROOT: /workspace/data/catalog/stac
-  KFM_DCAT_ROOT: /workspace/data/catalog/dcat
-  KFM_PROV_ROOT: /workspace/data/prov
-  KFM_GRAPH_ROOT: /workspace/data/graph
-
-  # Environment selector (used across pipelines/tools)
-  KFM_ENV: ${KFM_ENV:-dev}
-
 services:
-  postgres:
-    image: postgis/postgis:${POSTGIS_IMAGE_TAG:-16-3.4}
-    container_name: kfm-postgres
+  # ----------------------------
+  # 🗄️ PostGIS (Postgres + PostGIS)
+  # ----------------------------
+  db:
+    image: postgis/postgis:16-3.4
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:${PG_PORT:-5432}:5432"
     environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-kfm}
-      POSTGRES_USER: ${POSTGRES_USER:-kfm}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kfm_dev_password}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      # Optional: SQL init scripts (extensions, roles, seed refs)
-      - ./data/db/init:/docker-entrypoint-initdb.d:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} >/dev/null 2>&1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-    networks:
-      - kfm_backend
-
-  neo4j:
-    image: "neo4j:${NEO4J_IMAGE_TAG:-5}"
-    container_name: kfm-neo4j
-    restart: unless-stopped
     ports:
-      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"
-      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
-    environment:
-      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:-kfm_dev_password}"
-      # Exposed for local healthchecks/tools only (avoid this pattern in production)
-      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
-      # Optional plugins (comment out if not needed)
+  # ----------------------------
+  # 🧠 Neo4j (Graph DB)
+  # ----------------------------
+  graph:
+    image: neo4j:5
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: ${NEO4J_AUTH:-neo4j/test}
+      # Optional but common: APOC plugin for convenience in graph workflows
       NEO4J_PLUGINS: '["apoc"]'
-
-      # Laptop-friendly defaults (tune in .env)
-      NEO4J_server_memory_pagecache_size: "${NEO4J_PAGECACHE:-512M}"
-      NEO4J_server_memory_heap_initial__size: "${NEO4J_HEAP_INIT:-512M}"
-      NEO4J_server_memory_heap_max__size: "${NEO4J_HEAP_MAX:-1G}"
-    volumes:
-      - neo4j_data:/data
-      - neo4j_logs:/logs
-      - neo4j_plugins:/plugins
-      # Catalog-gated graph exports (read-only)
-      - ./data/graph/csv:/import:ro
-      - ./data/graph/cypher:/kfm-graph-cypher:ro
-    healthcheck:
-      test: ["CMD-SHELL", "cypher-shell -u neo4j -p $NEO4J_PASSWORD 'RETURN 1' >/dev/null 2>&1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-    networks:
-      - kfm_backend
-
-  redis:
-    image: redis:${REDIS_IMAGE_TAG:-7-alpine}
-    container_name: kfm-redis
-    restart: unless-stopped
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
+      NEO4J_dbms_security_procedures_allowlist: "apoc.*"
     ports:
-      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
-    command: ["redis-server", "--appendonly", "yes"]
+      - "${NEO4J_HTTP_PORT:-7474}:7474"
+      - "${NEO4J_BOLT_PORT:-7687}:7687"
     volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping | grep PONG >/dev/null 2>&1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-    networks:
-      - kfm_backend
+      - graph_data:/data
+      - graph_logs:/logs
+      - graph_import:/var/lib/neo4j/import
+      - graph_plugins:/plugins
 
-  # Optional S3-compatible object store (enable if your API/workers use S3 URLs)
-  # Start with: docker compose --profile obj up --build
-  minio:
-    image: minio/minio:${MINIO_IMAGE_TAG:-latest}
-    container_name: kfm-minio
-    profiles: ["obj"]
+  # ----------------------------
+  # ⚡ FastAPI backend (Uvicorn)
+  # ----------------------------
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     restart: unless-stopped
-    command: ["server", "/data", "--console-address", ":9001"]
-    ports:
-      - "127.0.0.1:${MINIO_PORT:-9000}:9000"
-      - "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      graph:
+        condition: service_started
+
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-kfm}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-kfm_dev_password}
-    volumes:
-      - minio_data:/data
-    networks:
-      - kfm_backend
+      # Docker-internal hostnames (service names)
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      NEO4J_HOST: graph
+      NEO4J_BOLT_PORT: 7687
 
-  # Optional policy engine (OPA) for executable governance checks
-  # Start with: docker compose --profile policy up --build
-  opa:
-    image: openpolicyagent/opa:${OPA_IMAGE_TAG:-0.64.1}
-    container_name: kfm-opa
-    profiles: ["policy"]
+      # App entrypoint string (override in .env if needed)
+      UVICORN_APP: ${UVICORN_APP:-api.main:app}
+
+      # Optional: local AI gateway (e.g., Ollama running on host)
+      AI_BACKEND_URL: ${AI_BACKEND_URL:-http://host.docker.internal:11434}
+
+    # Helps Linux containers reach host services via host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    ports:
+      - "${FASTAPI_PORT:-8000}:8000"
+
+    volumes:
+      - ./api:/app/api
+      - ./pipelines:/app/pipelines
+      - ./data:/app/data
+      - ./docs:/app/docs
+
+    working_dir: /app
+
+    command: >
+      sh -c "uvicorn $$UVICORN_APP --host 0.0.0.0 --port 8000 --reload"
+
+  # ----------------------------
+  # 🖥️ React frontend (dev server)
+  # ----------------------------
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
     restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - api
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    environment:
+      # If your React app uses a dev proxy (recommended), you may not need this.
+      REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:8000}
+
+      # Better file watching in Docker on Mac/Windows (and sometimes Linux)
+      CHOKIDAR_USEPOLLING: "true"
+
+    volumes:
+      - ./web:/app/web
+      - web_node_modules:/app/web/node_modules
+
+    working_dir: /app/web
+    command: >
+      sh -c "npm install && npm start"
+
+  # ----------------------------
+  # 🛡️ OPA (optional policy engine)
+  # Enable with: docker compose --profile opa up --build
+  # ----------------------------
+  opa:
+    image: openpolicyagent/opa:latest
+    restart: unless-stopped
+    profiles: ["opa"]
+    ports:
+      - "${OPA_PORT:-8181}:8181"
+    volumes:
+      - ./policies:/policies:ro
     command:
       - "run"
       - "--server"
-      - "--log-format=json"
-      - "--set=decision_logs.console=true"
+      - "--addr=0.0.0.0:8181"
       - "/policies"
-    ports:
-      - "127.0.0.1:${OPA_PORT:-8181}:8181"
-    volumes:
-      # Prefer storing Rego policies under tools/validation/rego (repo-dependent)
-      - ./tools/validation/rego:/policies:ro
-    networks:
-      - kfm_backend
-
-  api:
-    build:
-      context: .
-      dockerfile: ./src/server/Dockerfile
-    image: kfm-api:dev
-    container_name: kfm-api
-    restart: unless-stopped
-    init: true
-    environment:
-      <<: *kfm_env
-
-      # Runtime
-      APP_ENV: ${APP_ENV:-dev}
-      FASTAPI_ENV: "${FASTAPI_ENV:-development}"
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
-
-      # Data stores
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kfm:kfm_dev_password@postgres:5432/kfm}
-      NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
-      NEO4J_USER: "${NEO4J_USER:-neo4j}"
-      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-
-      # Policy (optional)
-      POLICY_ENGINE: ${POLICY_ENGINE:-internal}        # internal|opa
-      OPA_URL: ${OPA_URL:-http://opa:8181}             # used when POLICY_ENGINE=opa
-
-      # Object store (optional; enable minio profile or point to real S3)
-      OBJECT_STORE_URL: ${OBJECT_STORE_URL:-}          # e.g., s3://kfm-dev
-      OBJECT_STORE_ENDPOINT: ${OBJECT_STORE_ENDPOINT:-http://minio:9000}
-      OBJECT_STORE_ACCESS_KEY: ${MINIO_ROOT_USER:-kfm}
-      OBJECT_STORE_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-kfm_dev_password}
-
-      # Observability (optional)
-      OTEL_SERVICE_NAME: ${OTEL_SERVICE_NAME:-kfm-api}
-      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
-    volumes: *kfm_bind
-    working_dir: /workspace
-    ports:
-      - "127.0.0.1:${API_PORT:-8000}:${API_CONTAINER_PORT:-8000}"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - kfm_backend
-      - kfm_app
-    # Health endpoint is part of the API contract in this repo’s docs
-    healthcheck:
-      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health').read()\" >/dev/null 2>&1"]
-      interval: 10s
-      timeout: 5s
-      retries: 30
-    security_opt:
-      - no-new-privileges:true
-
-  ui:
-    build:
-      context: .
-      dockerfile: ./web/Dockerfile
-    image: kfm-ui:dev
-    container_name: kfm-ui
-    restart: unless-stopped
-    init: true
-    environment:
-      # IMPORTANT: these values are compiled into browser JS.
-      # Default is host-reachable. If you change API_PORT, update these (or set via .env).
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8000}
-      REACT_APP_API_BASE_URL: ${REACT_APP_API_BASE_URL:-http://localhost:8000}
-    ports:
-      - "127.0.0.1:${UI_PORT:-3000}:${UI_CONTAINER_PORT:-3000}"
-    depends_on:
-      api:
-        condition: service_healthy
-    networks:
-      - kfm_app
-    security_opt:
-      - no-new-privileges:true
-
-  # ----- Optional ops containers (run with: docker compose --profile ops up ...) -----
-
-  # Thin wrapper runner for ETL jobs (prefer Make targets or a module entrypoint).
-  etl:
-    image: kfm-api:dev
-    container_name: kfm-etl
-    profiles: ["ops"]
-    restart: "no"
-    environment:
-      <<: *kfm_env
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://kfm:kfm_dev_password@postgres:5432/kfm}
-      NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
-      NEO4J_USER: "${NEO4J_USER:-neo4j}"
-      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
-      # Choose a pipeline job id/slug that exists in your repo
-      KFM_PIPELINE_JOB: ${KFM_PIPELINE_JOB:-example/job}
-    volumes: *kfm_bind
-    working_dir: /workspace
-    command:
-      - "bash"
-      - "-lc"
-      - "make pipeline-run JOB=$KFM_PIPELINE_JOB ENV=$KFM_ENV"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      neo4j:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - kfm_backend
-    security_opt:
-      - no-new-privileges:true
-
-  # Sync catalogs → graph (must consume catalog roots; never ad-hoc inserts).
-  graph_sync:
-    image: kfm-api:dev
-    container_name: kfm-graph-sync
-    profiles: ["ops"]
-    restart: "no"
-    environment:
-      <<: *kfm_env
-      NEO4J_URI: "${NEO4J_URI:-bolt://neo4j:7687}"
-      NEO4J_USER: "${NEO4J_USER:-neo4j}"
-      NEO4J_PASSWORD: "${NEO4J_PASSWORD:-kfm_dev_password}"
-    volumes: *kfm_bind
-    working_dir: /workspace
-    command:
-      - "bash"
-      - "-lc"
-      - "make graph-build && make graph-load"
-    depends_on:
-      neo4j:
-        condition: service_healthy
-    networks:
-      - kfm_backend
-    security_opt:
-      - no-new-privileges:true
 
 volumes:
-  postgres_data:
-  redis_data:
-  minio_data:
-  neo4j_data:
-  neo4j_logs:
-  neo4j_plugins:
-
-networks:
-  # Internal graph/data network (UI is intentionally NOT attached here)
-  kfm_backend:
-  # App-facing network (UI <-> API)
-  kfm_app:
+  db_data:
+  graph_data:
+  graph_logs:
+  graph_import:
+  graph_plugins:
+  web_node_modules:
 ```
+
+---
+
+## 🚀 Run it
+
+The blueprint calls out launching the stack like this:
+
+```bash
+docker-compose up --build
+```
+
+ [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+Modern CLI equivalent:
+
+```bash
+docker compose up --build
+```
+
+To enable OPA profile:
+
+```bash
+docker compose --profile opa up --build
+```
+
+---
+
+## 🔎 Quick links (once running)
+
+- ⚡ FastAPI Swagger: `http://localhost:8000/docs` [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🧠 Neo4j Browser UI: `http://localhost:7474` [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- 🖥️ Web UI (React dev server): `http://localhost:3000` [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🧪 Common dev commands
+
+```bash
+# Follow logs
+docker compose logs -f api
+
+# Run a one-off pipeline inside the API container (example pattern)
+docker compose exec api python pipelines/my_pipeline.py
+```
+
+(These workflows are explicitly described as part of the dev cycle.) [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:23‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
