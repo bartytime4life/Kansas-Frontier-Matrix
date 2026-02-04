@@ -1,1 +1,172 @@
+%%---------------------------------------------------------------------------
+%% 📁 docs/architecture/diagrams/sources/60-ci-cd-devsecops.mmd
+%% 🧭 Kansas Frontier Matrix — CI/CD + DevSecOps (high-level pipeline)
+%% Source: "Deployment Instructions" (CI/CD + deployment) in:
+%%         Kansas Frontier Matrix Comprehensive System Documentation.pdf
+%%---------------------------------------------------------------------------
+
+%%{init: {"flowchart": {"curve": "basis"}} }%%
+flowchart TB
+
+  %% ===== Styles (kept subtle for GitHub light/dark) =====
+  classDef actor stroke-width:2px;
+  classDef ci stroke-width:1px;
+  classDef sec stroke-width:1px,stroke-dasharray: 3 3;
+  classDef artifact stroke-width:1px;
+  classDef gate stroke-width:2px,stroke-dasharray: 5 5;
+  classDef runtime stroke-width:1px;
+  classDef obs stroke-width:1px;
+
+  %%--------------------------------------------------------------------------
+  %% 🧑‍💻 SOURCE CONTROL & COLLABORATION
+  %%--------------------------------------------------------------------------
+  subgraph SOURCE["🧑‍💻 Source Control & Collaboration"]
+    direction TB
+    DEV["🧑‍💻 Developer"]
+    REPO["🐙 GitHub Repo<br/>Kansas-Frontier-Matrix"]
+    PR["🔀 Pull Request<br/>review + merge"]
+    DEV -->|git push| REPO
+    REPO -->|open PR| PR
+    PR -->|merge to main| REPO
+  end
+  class DEV,REPO,PR actor
+
+  %%--------------------------------------------------------------------------
+  %% ⚙️ CI — GITHUB ACTIONS
+  %%--------------------------------------------------------------------------
+  subgraph CI["⚙️ CI — GitHub Actions"]
+    direction TB
+    CI_TRIGGER["⏱️ Workflows<br/>on: pull_request / push / schedule"]
+    LINT["🔎 Lint + Format"]
+    TESTS["✅ Automated Tests<br/>unit + integration"]
+    SAST["🧯 SAST<br/>static code analysis"]
+    SECRETSCAN["🕵️ Secrets Scan<br/>prevent credential leaks"]
+    SCA["📦 Dependency / SCA Scan<br/>vulns + licenses"]
+    IAC_SCAN["🏗️ IaC Scan<br/>compose / k8s / terraform"]
+    BUILD["🐳 Build Docker Images<br/>api + web"]
+    IMAGE_SCAN["🧫 Container/Image Scan<br/>vulns + misconfig"]
+    SBOM["🧾 SBOM + Provenance<br/>SPDX/CycloneDX"]
+    SIGN["🔏 Sign / Attest Artifacts<br/>(optional)"]
+    PUSH["📤 Publish Images<br/>GHCR / Docker Hub"]
+    GHA_SECRETS["🔐 GitHub Actions Secrets<br/>(SSH key, registry creds)"]
+
+    CI_TRIGGER --> LINT --> TESTS --> SAST --> SECRETSCAN --> SCA --> IAC_SCAN --> BUILD --> IMAGE_SCAN --> SBOM --> SIGN --> PUSH
+  end
+  class CI_TRIGGER,LINT,TESTS,BUILD,SBOM,SIGN,PUSH ci
+  class SAST,SECRETSCAN,SCA,IAC_SCAN,IMAGE_SCAN sec
+
+  REPO -->|push / PR| CI_TRIGGER
+  GHA_SECRETS -.->|auth to registry| PUSH
+
+  %%--------------------------------------------------------------------------
+  %% 📦 ARTIFACTS & SUPPLY-CHAIN
+  %%--------------------------------------------------------------------------
+  subgraph ARTIFACTS["📦 Artifacts & Supply-Chain"]
+    direction TB
+    REGISTRY["📦 Container Registry<br/>GHCR / Docker Hub"]
+    SBOM_STORE["🧾 SBOM Store<br/>workflow artifact / release asset"]
+    RELEASE["🏷️ Versioned Release<br/>tag + changelog"]
+    PUSH --> REGISTRY
+    SBOM --> SBOM_STORE
+    PUSH --> RELEASE
+  end
+  class REGISTRY,SBOM_STORE,RELEASE artifact
+
+  %%--------------------------------------------------------------------------
+  %% 🚀 CD — DEPLOYMENT AUTOMATION
+  %%--------------------------------------------------------------------------
+  subgraph CD["🚀 CD — Deployment Automation"]
+    direction TB
+    IAC_APPLY["🏗️ Provision / Configure Infra<br/>Terraform / CloudFormation / Ansible"]
+    DEPLOY_STG["🚀 Deploy → Staging<br/>SSH pull + docker-compose up -d<br/>or apply K8s manifests"]
+    SMOKE["🧪 Staging Verification<br/>• Web UI + map layers<br/>• /api + /graphql<br/>• Focus Mode (citations)<br/>• DB migrations/seeds"]
+    DAST["🕷️ DAST (staging)<br/>API + UI attack-surface checks"]
+    APPROVAL{"🛑 Approval Gate<br/>manual + policy checks"}
+    DEPLOY_PROD["🚀 Deploy → Production<br/>compose restart / rolling update"]
+    POSTCHECK["✅ Post-Deploy Checks<br/>port scan (80/443)<br/>basic vuln scan + health checks"]
+
+    IAC_APPLY --> DEPLOY_STG --> SMOKE --> DAST --> APPROVAL --> DEPLOY_PROD --> POSTCHECK
+  end
+  class DAST,POSTCHECK sec
+  class APPROVAL gate
+
+  REGISTRY -->|pull images| DEPLOY_STG
+  RELEASE -->|tag/version| DEPLOY_STG
+  GHA_SECRETS -.->|SSH deploy key| DEPLOY_STG
+
+  %%--------------------------------------------------------------------------
+  %% 🛰️ RUNTIME — KFM STACK
+  %%--------------------------------------------------------------------------
+  subgraph RUNTIME["🛰️ Runtime — KFM Stack (Docker Compose / ☸️ K8s)"]
+    direction TB
+    HOST["🖥️ Ubuntu Server / Cloud VM<br/>public: 80/443"]
+    PROXY["🌐 Nginx / Apache Reverse Proxy<br/>TLS (Let's Encrypt)<br/>security headers + caching"]
+    ORCH["🐳 docker-compose.yml<br/>or ☸️ Kubernetes/ECS"]
+
+    WEB["🖥️ web (React)<br/>static assets"]
+    API["🧠 api (FastAPI + Uvicorn)<br/>REST / GraphQL / Focus Mode"]
+    POSTGIS["🗺️ db-postgis<br/>PostgreSQL + PostGIS"]
+    NEO4J["🕸️ db-neo4j<br/>Graph DB"]
+    OLLAMA["🤖 ollama<br/>LLM service"]
+    OPA["🛡️ opa (OPA)<br/>Policy-as-Code sidecar"]
+    SECRETS_RT["🔑 Secrets + Env<br/>.env.example → prod .env<br/>Docker secrets"]
+
+    HOST --> PROXY
+    HOST --> ORCH
+
+    PROXY --> WEB
+    PROXY --> API
+
+    ORCH --> WEB
+    ORCH --> API
+    ORCH --> POSTGIS
+    ORCH --> NEO4J
+    ORCH --> OLLAMA
+    ORCH --> OPA
+
+    API --> POSTGIS
+    API --> NEO4J
+    API --> OLLAMA
+    API --> OPA
+
+    SECRETS_RT --> API
+    SECRETS_RT --> POSTGIS
+    SECRETS_RT --> NEO4J
+    SECRETS_RT --> OLLAMA
+  end
+  class HOST,PROXY,ORCH,WEB,API,POSTGIS,NEO4J,OLLAMA,OPA,SECRETS_RT runtime
+
+  DEPLOY_PROD -->|restart/update| ORCH
+  DEPLOY_PROD -->|config/proxy reload| PROXY
+
+  %%--------------------------------------------------------------------------
+  %% 📈 OBSERVABILITY + OPS + FEEDBACK LOOP
+  %%--------------------------------------------------------------------------
+  subgraph OBS["📈 Observability, Ops, and Feedback"]
+    direction TB
+    LOGS["🪵 Centralized Logs<br/>proxy + api + DB"]
+    METRICS["📈 Metrics<br/>Prometheus"]
+    DASH["📊 Dashboards<br/>Grafana"]
+    ALERTS["🚨 Alerts<br/>on-call / email / chat"]
+    BACKUPS["💾 Backups<br/>Postgres + Neo4j"]
+    AUDIT["🧾 Audit Trails<br/>auth + data access"]
+
+    LOGS --> DASH
+    METRICS --> DASH --> ALERTS
+
+    POSTGIS --> BACKUPS
+    NEO4J --> BACKUPS
+    API --> AUDIT
+  end
+  class LOGS,METRICS,DASH,ALERTS,BACKUPS,AUDIT obs
+
+  API --> LOGS
+  PROXY --> LOGS
+  API --> METRICS
+
+  %% 🔁 Continuous feedback into engineering
+  ALERTS -->|incident / bug report| REPO
+
+  %% 🧯 Recovery path (conceptual)
+  POSTCHECK -->|rollback → redeploy previous tag| DEPLOY_PROD
 
