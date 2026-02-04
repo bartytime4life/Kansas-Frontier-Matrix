@@ -1,132 +1,205 @@
-# 📜 CHANGELOG
+# 📌 CHANGELOG — Kansas Matrix System 🗺️🧠
 
-![Keep a Changelog](https://img.shields.io/badge/Keep%20a%20Changelog-1.1.0-informational)
-![SemVer](https://img.shields.io/badge/SemVer-2.0.0-blue)
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Repo](https://img.shields.io/badge/repo-Kansas%20Frontier%20Matrix%20(KFM)-black)
+![Keep a Changelog](https://img.shields.io/badge/keep%20a%20changelog-1.1.0-orange)
+![SemVer-ish](https://img.shields.io/badge/versioning-SemVer--style%20%2B%20draft-blue)
+![Governed](https://img.shields.io/badge/governance-contract--first%20%7C%20evidence--first-brightgreen)
 
-All notable changes to this repository will be documented in this file.  
-This format is based on **Keep a Changelog**, and the repository follows **Semantic Versioning** with major versions reflecting structural shifts (e.g., `v13`) and minor versions adding backwards-compatible enhancements. :contentReference[oaicite:0]{index=0}
-
----
-
-## ✨ Legend
-
-- **➕ Added** — new features, modules, docs, schemas, datasets, or workflows  
-- **✏️ Changed** — modifications to behavior, structure, contracts, governance, or pipelines  
-- **⚠️ Deprecated** — still available, but planned for removal  
-- **🗑️ Removed** — removed features, files, or APIs  
-- **🛠️ Fixed** — bug fixes, broken links, broken build steps, etc.  
-- **🔒 Security** — security hardening, scanning, sensitive data protections  
+> [!IMPORTANT]
+> This changelog is **governance-critical**. Any change that impacts **schemas**, **API contracts**, **pipeline order**, **directory canonical homes**, or **review gates** must be recorded here. ✅
 
 ---
 
-## 🧭 Project invariants (do not regress)
+## 🧾 Conventions
 
-KFM enforces a strict pipeline order and boundary contracts. Releases should **never** introduce changes that violate these invariants without an explicit breaking-change note and migration path. :contentReference[oaicite:1]{index=1}
-
-- **Pipeline ordering is absolute:**  
-  `ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode` :contentReference[oaicite:2]{index=2}
-- **API boundary rule:** the UI must not query Neo4j directly; access is through governed APIs. :contentReference[oaicite:3]{index=3}
-- **Provenance-first publishing:** published data must be registered with provenance before graph/UI use. :contentReference[oaicite:4]{index=4}
-- **Evidence-first narrative:** Story Nodes / Focus Mode content must be provenance-linked; no unsourced narrative; AI output must be disclosed and evidence-bound. :contentReference[oaicite:5]{index=5}
+- **Format:** [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+- **Dates:** `YYYY-MM-DD`
+- **Versions:** SemVer-style with a `-draft` prerelease label when the repository/spec is still in governed draft mode.
+- **Where to write changes first:** `## [Unreleased]`
 
 ---
 
-## 🧰 Repo structure snapshot (v13 expectation)
+## 🧭 Non‑Negotiables (don’t regress) 🧱
 
-<details>
-<summary>🗂️ Canonical top-level layout (click to expand)</summary>
-
-```text
-📁 data/                                   🛰️ datasets + catalogs (STAC/DCAT/PROV) + external lanes
-📁 docs/                                   📚 documentation (governance, architecture, guides, reports)
-📁 mcp/                                    🧠 Master Coder Protocol (runbooks, templates, model cards)
-📁 schemas/                                🧾 shared schemas/contracts (JSON Schema, YAML, validation)
-📁 src/                                    🏗️ backend + pipelines + graph/ETL core (APIs, workers, jobs)
-📁 tests/                                  🧪 unit/integration/e2e/perf/policy tests
-📁 tools/                                  🧰 developer tooling (generators, fixtures, CI helpers)
-📁 web/                                    🗺️ frontend UI (React + MapLibre/Cesium + Story + Focus Mode)
-📁 releases/                               🏷️ versioned release artifacts + notes (optional, curated)
-
-📄 README.md                                📌 project overview + quickstart + repo map
-📄 LICENSE                                  📜 repository license
-📄 CITATION.cff                             📎 citation metadata for academic use
-📄 CHANGELOG.md                             🗓️ release history (human-readable)
-📄 CONTRIBUTING.md                          🤝 contribution guide + workflow expectations
-📄 SECURITY.md                              🔐 security policy + reporting process
-📄 docker-compose.yml                       🐳 local dev stack (services + networking)
-📄 .env.example                             🧪 environment template (copy to .env; no secrets committed)
-```
-
-(Shown in the v13 Master Guide’s repo layout.) :contentReference[oaicite:6]{index=6}
-</details>
+- 🧩 **Contract-first:** schemas + API contracts are first-class artifacts; edits trigger strict versioning/compatibility review.
+- 🧪 **Deterministic pipeline:** ETL transforms are idempotent, config-driven, and fully logged for reproducibility.
+- 🧾 **Evidence-first:** catalog + provenance come *before* narrative or UI claims.
+- 🔗 **Canonical pipeline order (hard rule):**  
+  `ETL → STAC/DCAT/PROV catalogs → Graph → APIs → React/Map UI → Story Nodes → Focus Mode`
 
 ---
 
 ## [Unreleased] 🚧
 
-### ➕ Added (planned / in-progress)
-- 🧠 **Focus Mode AI assistant** (governed, evidence-bound): natural-language queries routed through approved tools/APIs, requiring citations for factual outputs. :contentReference[oaicite:7]{index=7}
-- 🦙 **Local LLM runtime via Ollama** for privacy/offline capability in sensitive + field deployments (no external AI API calls). :contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9}
-- 🧲 **Local embeddings + retrieval** to support semantic search / RAG style workflows (local vectorization + optional tool-calling models). :contentReference[oaicite:10]{index=10}
-- 🧭 **Navigation & map-reading capability modules** (research + UI concepts), including distance/direction workflow patterns for field use. :contentReference[oaicite:11]{index=11}
-- 🧱 **3D GIS / immersive research track** for future visualization and analysis modes (incl. machine learning classification trends in 3D GIS platforms). :contentReference[oaicite:12]{index=12}
+### ✨ Added
+- 📝 Created `CHANGELOG.md` to standardize versioned change tracking.
+- 📚 Documented a **Reference Library inventory** (see below) to anchor future design + implementation decisions.
 
-### ✏️ Changed (planned / in-progress)
-- 📦 Tighten “contract-first” change workflow: schema/API changes require explicit changelog notes + version bump + compatibility notes. :contentReference[oaicite:13]{index=13}
-- 🧾 Stronger provenance guarantees for “evidence artifacts” (AI/analysis outputs) so they behave like first-class datasets (catalog + lineage + governed API exposure). :contentReference[oaicite:14]{index=14}
+### 🔁 Changed
+- TBD
 
-### 🔒 Security (planned / in-progress)
-- 🔍 Expand automated scanning for secrets + PII + sensitive layers, with governance triggers on high-risk additions. :contentReference[oaicite:15]{index=15}
+### 🐛 Fixed
+- TBD
 
----
+### 🔒 Security
+- TBD
 
-## [v13.0.0-draft] 🧱 - 2025-12-28
-
-### ➕ Added
-- 📁 Introduced/standardized canonical roots used across the pipeline, including:  
-  `schemas/`, `releases/`, `data/prov/`, `data/catalog/dcat/`. :contentReference[oaicite:16]{index=16}
-- 🗂️ Moved Story content into governed structure under `docs/reports/story_nodes/` with `draft/` vs `published/` workflow. :contentReference[oaicite:17]{index=17}
-
-### ✏️ Changed
-- 🧭 Enforced **one canonical directory per subsystem** (reducing duplicate/mystery folders) and clarified canonical homes (e.g., `src/server/` for APIs and `web/` for UI). :contentReference[oaicite:18]{index=18}
-- ✅ Strengthened “contract-first” and “evidence-first” workflows repo-wide (catalog-before-narrative; schemas/contracts first-class). :contentReference[oaicite:19]{index=19}
-- 🧪 Updated profiles references (STAC/DCAT/PROV v11) and expanded CI/validation expectations. :contentReference[oaicite:20]{index=20}
-
-### ⚠️ Breaking / migration notes
-- Any integrations relying on pre-v13 folder locations may require path updates (canonical home enforcement). :contentReference[oaicite:21]{index=21}
+### 🗺️ Roadmap / Proposed
+- ⏱️ Near real-time ingestion + update cadence for event-driven layers (e.g., flood mapping).
+- 🧪 Simulation modules + validation harness.
+- 🕶️ Immersive modes (3D/AR exploration) as optional UI layers.
+- 🧠 Federated / multi-model AI extensions + feedback loops to improve evidence-backed Q&A.
 
 ---
 
-## [v12.0.1-draft] ✍️ - 2025-12-27
+## [13.0.0-draft] - 2025-12-28 🧱
 
-### ✏️ Changed
-- 📐 Refined documentation structure to align with the Universal Doc template.
-- 🧭 Clarified canonical paths, invariants, and contract-first / evidence-first boundaries. :contentReference[oaicite:22]{index=22}
+### ✨ Added
+- 📁 New governed top-level subsystem homes:
+  - `schemas/` ✅ (STAC/DCAT/PROV + StoryNodes + UI + telemetry schemas)
+  - `releases/` ✅ (versioned release artifacts)
+  - `data/prov/` ✅ (provenance roots)
+  - `data/catalog/dcat/` ✅ (DCAT roots)
 
----
+### 🔁 Changed
+- 🧭 Enforced **one canonical directory per subsystem** (resolved duplicate/mystery folders).
+- 🧩 Enforced **contract-first** across schema + API changes.
+- 🧾 Enforced **evidence-first** (catalog before narrative).
+- 🗺️ Reorganized Story Nodes under: `docs/reports/story_nodes/`  
+  with a governed workflow: `draft/` → `published/`.
+- ✅ Updated profile references (STAC/DCAT/PROV v11) and CI/validation gates.
+- 🔄 Declared v13 as the successor to v12 (v13 supersedes v12 guide).
 
-## [v12.0.0-draft] 🏁 - 2025-12-17
-
-### ➕ Added
-- 🧩 Initial scaffolding of Master Guide v12.
-- 🧭 Established pipeline ordering and governance structure foundation. :contentReference[oaicite:23]{index=23}
-
----
-
-## 📚 Provenance notes (why this changelog looks like this)
-
-This changelog is aligned to the **KFM Master Guide v13** concept of:
-- strict pipeline ordering,
-- contract-first interfaces,
-- evidence-first narrative governance,
-- and repo-level semantic versioning expectations. :contentReference[oaicite:24]{index=24}:contentReference[oaicite:25]{index=25}:contentReference[oaicite:26]{index=26}
-
-The **AI / Focus Mode** roadmap items are sourced from the **Comprehensive Technical Blueprint**, which describes local LLM operation via Ollama and evidence-bound, governed AI behavior. :contentReference[oaicite:27]{index=27}
+### ⚠️ Breaking
+- Story content paths moved into the governed `docs/reports/story_nodes/` structure — update any tooling/scripts that read legacy locations.
 
 ---
 
-## 🔗 Link references (optional)
+## [12.0.1-draft] - 2025-12-27 🧹
 
-> TODO: Add GitHub compare links once tags are created (e.g., `v12.0.1-draft...v13.0.0-draft`) ✅
+### 🔁 Changed
+- 🧾 Refined the Master Guide to align with the Universal Doc template.
+- 🧭 Clarified canonical paths, invariants, and contract-first/evidence-first boundaries.
+
+---
+
+## [12.0.0-draft] - 2025-12-17 🌱
+
+### ✨ Added
+- 🏗️ Initial scaffolding for the v12 Master Guide:
+  - Established baseline pipeline ordering
+  - Established governance structure
+
+---
+
+## 🗂️ Expected Repo Layout (v13 snapshot)
+
+<details>
+<summary>📁 Click to expand the governed directory map</summary>
+
+```text
+📁 data/
+├── 📁 <domain>/
+│   ├── 📁 raw/          (read-only sources)
+│   ├── 📁 work/         (intermediate outputs)
+│   ├── 📁 processed/    (final outputs)
+│   ├── 📁 mappings/     (dataset → STAC/DCAT/PROV docs, optional)
+│   └── 📄 README.md
+└── 📄 README.md
+
+📁 docs/
+├── 📄 MASTER_GUIDE_v12.md
+├── 📄 MASTER_GUIDE_v13.md
+├── 📄 glossary.md
+├── 📁 architecture/
+├── 📁 standards/
+├── 📁 templates/
+├── 📁 governance/
+└── 📁 reports/
+    └── 📁 story_nodes/
+        ├── 📁 templates/
+        ├── 📁 draft/
+        └── 📁 published/
+
+📁 mcp/
+📁 schemas/
+📁 src/
+├── 📁 pipelines/
+├── 📁 graph/
+└── 📁 server/
+📁 web/
+📁 releases/
+📁 tests/
+📁 tools/
+
+📄 README.md
+📄 LICENSE
+📄 CITATION.cff
+📄 CHANGELOG.md
+📄 CONTRIBUTING.md
+📄 SECURITY.md
+📄 docker-compose.yml
+📄 .env.example
+```
+
+</details>
+
+---
+
+## 🏷️ Release & Data Versioning Notes
+
+- 🧷 The repo can be treated as a **catalog of record**: tags/commits represent reproducible snapshots.
+- 📌 For *major dataset milestones*, consider time-based tags like `v2025.1` (or SemVer tags) and ensure `CITATION.cff` points to the release tag so downstream users can cite the exact snapshot.
+
+---
+
+## 📚 Reference Library Inventory
+
+<details>
+<summary>📚 Click to expand the current reference library list</summary>
+
+### 🗺️ GIS & Mapping
+- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
+- `GIS-Mapping-Topology.pdf`
+- `Mapping Urban Spaces.pdf`
+- `Archaeological 3D GIS.pdf`
+
+### 📊 R / Data Visualization
+- `graphical-data-analysis-with-r.pdf`
+- `R-Python-Ruby-Various.pdf`
+
+### 🤖 AI / ML
+- `Neural Nerworks-Build Ai-Statistical Learning-Deep Learing-AI Safety-Linear Regression-bayesian.pdf`
+- `Artificial Intelligence & Machine Learning in Health Care & Medical Sciences.pdf`
+
+### 🌐 Web / UI
+- `Web Design.pdf`
+- `professional-web-design-techniques-and-templates.pdf`
+- `learn-to-code-html-and-css-develop-and-style-websites.pdf`
+- `CSS-HTML-JAVA-WebDesign.pdf`
+- `Node.js-React-CSS-HTML.pdf`
+
+### 🧰 DevOps / Security / Performance
+- `Database-Docker-CI-Pipeline-DevOps-Security-Git-Shell-PowerShell.pdf`
+- `foundations-of-software-and-system-performance-engineering-process-performance-modeling-requirements-testing-scalability-and-practice.pdf`
+
+### 🧮 Scientific Computing
+- `MATLAB-PyTorch-Numpy-SciPy-Statisctics-Programming Science Tools.pdf`
+- `Applications from Engineering with MATLAB Concepts.pdf`
+- `Hands-On Accelerator Physics Using MATLAB.pdf`
+
+### 🧠 General Programming / Creativity
+- `Various Programming Concepts.pdf`
+- `Programming Design-Flexibility-Machine Learning-Test Development-Verilog-Software Qualify Assurance.pdf`
+- `ssoar-2022-zipp-Programming_Creativity_Semantics_and_Organisation.pdf`
+- `Data Science-Data Engineering-Machine Learing-Steganography-Bilogical Atonomy-PYthon Scripting-Sine Cosine Algorithm-People Anylitics-Experimental Design-Visualizations of Time-Oriented Data-Creativity.pdf`
+
+</details>
+
+---
+
+## 🔗 Links (fill in your repo URL)
+
+- [Unreleased]: `<REPO_URL>/compare/v13.0.0-draft...HEAD`
+- [13.0.0-draft]: `<REPO_URL>/compare/v12.0.1-draft...v13.0.0-draft`
+- [12.0.1-draft]: `<REPO_URL>/compare/v12.0.0-draft...v12.0.1-draft`
+- [12.0.0-draft]: `<REPO_URL>/releases/tag/v12.0.0-draft`
