@@ -1,78 +1,43 @@
+# 📄 CITATION.cff
+
+```yaml
 cff-version: 1.2.0
-message: >-
-  If you use this software, please cite it using the metadata from this file.
-  🙏
-title: Kansas Frontier Matrix (KFM)
+message: "If you use this software and/or data in your work, please cite it using this metadata."
+title: "Kansas Frontier Matrix (KFM)"
 type: software
-version: v13.0.0-draft
-date-released: 2025-12-28
+
 authors:
-  - name: Kansas Frontier Matrix Contributors
-  - name: bartytime4life
-license: Apache-2.0
-license-url: https://www.apache.org/licenses/LICENSE-2.0
-url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
-repository-code: https://github.com/bartytime4life/Kansas-Frontier-Matrix
-issue-tracker: https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues
-documentation: https://github.com/bartytime4life/Kansas-Frontier-Matrix#readme
+  - name: "bartytime4life"
+
+contact:
+  - name: "bartytime4life"
+    url: "https://github.com/bartytime4life"
+
+repository-code: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
+
 abstract: >-
-  Kansas Frontier Matrix (KFM) is an open-source geospatial + historical knowledge
-  platform (a living atlas of Kansas) that ingests heterogeneous sources, publishes
-  governed metadata catalogs (STAC for spatial assets, DCAT for dataset/distribution
-  discovery, PROV for lineage), builds a semantically structured knowledge graph, and
-  serves evidence through contract-first APIs into a combined map-and-narrative UI.
-  The canonical pipeline is ETL -> STAC/DCAT/PROV catalogs -> graph -> APIs -> UI ->
-  Story Nodes -> Focus Mode, ensuring that every derived artifact and narrative claim is
-  provenance-linked, reproducible, and auditable. Governance is aligned with FAIR+CARE
-  principles and Trustworthy-AI constraints (human oversight, transparency, and
-  protection against unsourced outputs or sensitive location leaks).
+  Kansas Frontier Matrix (KFM) is an integrated data and analytics platform designed to unify diverse
+  information about Kansas’s environment, infrastructure, and communities into a coherent geospatial system,
+  with ingestion pipelines, a unified repository, analytics/AI processing, and public-facing dashboards and APIs.
+
 keywords:
   - Kansas
-  - living atlas
   - geospatial
   - GIS
-  - remote sensing
-  - historical mapping
-  - cartography
-  - spatiotemporal
-  - data engineering
-  - ETL
-  - metadata catalogs
-  - catalog-first
-  - STAC
+  - open data
+  - data catalog
   - DCAT
-  - PROV
-  - provenance
-  - contract-first
-  - evidence-first
-  - OpenAPI
-  - knowledge graph
-  - Neo4j
-  - PostgreSQL
-  - PostGIS
-  - web mapping
-  - MapLibre
-  - WebGL
-  - Story Nodes
-  - Focus Mode
-  - scientific modeling
-  - simulation
-  - statistics
-  - Bayesian statistics
-  - regression analysis
+  - STAC
+  - analytics
   - machine learning
-  - uncertainty quantification
-  - reproducibility
+  - remote sensing
+  - digital twin
+  - provenance
   - FAIR
   - CARE
-  - sovereignty
-  - digital humanism
-preferred-citation:
-  type: software
-  title: Kansas Frontier Matrix (KFM)
-  authors:
-    - name: Kansas Frontier Matrix Contributors
-    - name: bartytime4life
-  version: v13.0.0-draft
-  date-released: 2025-12-28
-  url: https://github.com/bartytime4life/Kansas-Frontier-Matrix
+  - dashboards
+  - microservices
+  - RAG
+  - LLM
+```
