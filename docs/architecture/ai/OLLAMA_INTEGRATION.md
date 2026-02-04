@@ -83,16 +83,16 @@ KFM follows a strict multi-layer architecture:
 
 ```mermaid
 flowchart LR
-  UI[💬 React Focus Mode UI] -->|POST /focus-mode/query| API[🧠 FastAPI Orchestrator]
+  UI["💬 React Focus Mode UI"] -->|"POST /focus-mode/query"| API["🧠 FastAPI Orchestrator"]
 
-  API --> PG[🚧 Prompt Gate<br/>sanitize input]
-  PG --> RET[🔎 Hybrid Retrieval]
+  API --> PG["🚧 Prompt Gate — sanitize input"]
+  PG --> RET["🔎 Hybrid Retrieval"]
 
-  subgraph Evidence Sources
-    NEO[Neo4j<br/>graph context]
-    GIS[PostGIS<br/>spatial/stat context]
-    FTS[Full-text search<br/>docs/stories]
-    VEC[Vector store<br/>semantic chunks]
+  subgraph "Evidence Sources"
+    NEO["🕸️ Neo4j — graph context"]
+    GIS["🗺️ PostGIS — spatial/stat context"]
+    FTS["📚 Full-text search — docs/stories"]
+    VEC["🧠 Vector store — semantic chunks"]
   end
 
   RET --> NEO
@@ -100,14 +100,14 @@ flowchart LR
   RET --> FTS
   RET --> VEC
 
-  RET --> PACK[📦 Context Packager<br/>SOURCES [1..n]]
-  PACK -->|/api/generate| OLL[🦙 Ollama]
+  RET --> PACK["📦 Context Packager — sources 1..n"]
+  PACK -->|"POST /api/generate"| OLL["🦙 Ollama"]
 
-  OLL --> OPA[🛡️ OPA Policy Check]
-  OPA -->|deny| SAFE[🙅 Safe fallback / clarify]
-  OPA -->|allow| RESP[✅ Answer + Citation Map]
+  OLL --> OPA["🛡️ OPA Policy Check"]
+  OPA -->|"deny"| SAFE["🙅 Safe fallback / clarify"]
+  OPA -->|"allow"| RESP["✅ Answer + Citation Map"]
 
-  RESP --> LEDGER[📒 Provenance Ledger<br/>(append-only)]
+  RESP --> LEDGER["📒 Provenance Ledger (append-only)"]
   SAFE --> LEDGER
 
   RESP --> UI
