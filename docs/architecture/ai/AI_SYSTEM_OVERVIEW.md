@@ -1,10 +1,3 @@
----
-title: "AI System Overview"
-path: "docs/architecture/ai/AI_SYSTEM_OVERVIEW.md"
-status: "draft"
-last_updated: "2026-02-04"
----
-
 # 🤖 AI System Overview
 
 <kbd>🧠 RAG</kbd> <kbd>🦙 Ollama</kbd> <kbd>🛡️ OPA</kbd> <kbd>⛓️ PROV</kbd> <kbd>✅ No Source, No Answer</kbd> <kbd>🗺️ Map + Timeline + Story</kbd>
