@@ -1,5 +1,3 @@
-> According to a document from **2025-12-17**, the KFM Master Guide v13 defines “minimum CI gates” and governance invariants that this folder is responsible for enforcing automatically.  [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-
 # 🛠️ `.github/workflows/` — CI/CD + Governance Gates
 
 This directory holds **GitHub Actions workflows** that keep Kansas Frontier Matrix (KFM) **CI-clean** ✅, **policy-compliant** 🛡️, and **provenance-first** 🧾.
