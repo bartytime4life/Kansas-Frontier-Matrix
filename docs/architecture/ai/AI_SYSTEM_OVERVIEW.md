@@ -82,28 +82,30 @@ AI is a *layered* component—never a shortcut around governance.
 
 ```mermaid
 flowchart TB
-  subgraph P[Canonical Pipeline (Truth Path)]
-    RAW[ETL: data/raw ➜ data/work ➜ data/processed]
-    CAT[Catalogs: STAC/DCAT/PROV]
-    GRAPH[Graph: Neo4j + Ontology]
-    API[API Boundary: src/server/]
-    UI[UI: web/ (Map + Story + Focus Mode)]
-    STORY[Story Nodes: docs/reports/story_nodes/]
-    FOCUS[Focus Mode: governed experience]
-    RAW --> CAT --> GRAPH --> API --> UI --> STORY --> FOCUS
+  subgraph P
+    direction TB
+    RAW["🏭 ETL: data/raw -> data/work -> data/processed"]
+    CAT["🗂️ Catalogs: STAC / DCAT / PROV"]
+    KG["🕸️ Graph: Neo4j + Ontology"]
+    APIB["🔌 API Boundary: src/server/"]
+    UIB["🗺️ UI: web/ (Map + Story + Focus Mode)"]
+    STORY["📖 Story Nodes: docs/reports/story_nodes/"]
+    FOCUS["🤖 Focus Mode: governed experience"]
+    RAW --> CAT --> KG --> APIB --> UIB --> STORY --> FOCUS
   end
 
-  subgraph AI[AI Subsystem (inside the boundary)]
-    PG[Prompt Gate]
-    RET[Retrieval: Neo4j/PostGIS/Search/Vector]
-    LLM[Ollama LLM Runtime]
-    OPA[OPA Policy Check]
-    LEDGER[Provenance Ledger + PROV records]
+  subgraph AIsub
+    direction TB
+    PG["🚧 Prompt Gate"]
+    RET["🔎 Retrieval: Neo4j / PostGIS / Search / Vector"]
+    LLM["🦙 Ollama LLM Runtime"]
+    OPA["🛡️ OPA Policy Check"]
+    LEDGER["📒 Provenance Ledger + PROV records"]
   end
 
-  UI -->|POST /focus-mode/query| API
-  API --> PG --> RET --> LLM --> OPA --> API
-  API --> LEDGER
+  UIB -->|"📨 POST /focus-mode/query"| APIB
+  APIB --> PG --> RET --> LLM --> OPA --> APIB
+  APIB --> LEDGER
 ```
 
 AI is “powered by retrieval + governance” rather than “powered by model guessing.” :contentReference[oaicite:10]{index=10} :contentReference[oaicite:11]{index=11}
