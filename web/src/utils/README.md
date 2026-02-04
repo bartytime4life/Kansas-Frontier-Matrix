@@ -1,396 +1,344 @@
-# 🧰 `web/src/utils` — Shared UI Helpers
+# 🧰 `web/src/utils`
 
-![TypeScript](https://img.shields.io/badge/TypeScript-typed-blue) ![Tests](https://img.shields.io/badge/tests-required-success) ![Deps](https://img.shields.io/badge/deps-lightweight-informational) ![KFM](https://img.shields.io/badge/KFM-provenance--first-6f42c1)
+![TypeScript](https://img.shields.io/badge/TypeScript-ready-3178C6?logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-used-61DAFB?logo=react&logoColor=black)
+![Maps](https://img.shields.io/badge/Maps-MapLibre%20%2B%20Cesium-0B7285)
+![Policy](https://img.shields.io/badge/KFM-Truth%20Path%20Preserved-2F9E44)
 
-> The **“boring but powerful”** toolbox for small, reusable helpers used across the KFM web UI 🌾🗺️  
-> Keep it **pure**, **typed**, **tested**, **dependency-light**, and **audit-friendly**.
-
----
-
-<details>
-<summary><strong>📚 Table of Contents</strong></summary>
-
-- [🧭 What this folder is for](#-what-this-folder-is-for)
-- [🧱 KFM guardrails this folder must uphold](#-kfm-guardrails-this-folder-must-uphold)
-- [🚦 Where should new code go?](#-where-should-new-code-go)
-- [✅ What belongs here](#-what-belongs-here)
-- [🚫 What should NOT be in <code>utils/</code>](#-what-should-not-be-in-utils)
-- [🗂️ Suggested internal layout](#️-suggested-internal-layout)
-- [🧩 Conventions](#-conventions)
-- [🧪 Testing expectations](#-testing-expectations)
-- [🗺️ Geo-specific gotchas](#️-geo-specific-gotchas)
-- [📊 Stats & modeling gotchas](#-stats--modeling-gotchas)
-- [⚡ Performance & scale gotchas](#-performance--scale-gotchas)
-- [✍️ Adding a new util (checklist)](#️-adding-a-new-util-checklist)
-- [🔗 Related folders](#-related-folders)
-- [📚 Project reference shelf](#-project-reference-shelf)
-
-</details>
+> **Utilities = small, sharp tools** 🔧  
+> This folder keeps UI components clean by centralizing reusable logic: API calls, data transforms (GeoJSON → map layers), performance helpers (debounce), and safe persistence (preferences).
 
 ---
 
-## 🧭 What this folder is for
+## 🧭 Why this folder exists
 
-`src/utils/` is for **cross-feature utility code** that:
+KFM’s web UI is **map-centric** and **data-heavy**. To keep components readable and the system auditable, we centralize repeatable logic here:
 
-- ✅ Can be expressed as a **pure transform** (input ➜ output)
-- ✅ Is **generic** enough to be used by *multiple* features (map, timeline, dashboard, auth, story/focus, etc.)
-- ✅ Helps keep components clean and readable (less “inline logic”)
-- ✅ Supports **traceability** (deterministic outputs, stable IDs, predictable formatting)
-
-> 🧠 Rule of thumb: if a helper is only used by *one* feature, prefer placing it **inside that feature** (e.g. `src/features/map/utils/`) to avoid a “junk drawer” utils folder.
+- 🌐 **API client wrappers** (keep data access consistent, typed, and policy-aligned)
+- 🗺️ **Geo + map transforms** (GeoJSON → MapLibre/Cesium-ready objects)
+- ⚡ **Performance helpers** (debounce/throttle, stable IDs, memo helpers)
+- 💾 **Preference persistence** (local storage wrappers for *non-sensitive* UI state)
+- 🧱 **Formatting & guards** (string/date formatting, runtime checks, safe parsing)
 
 ---
 
-## 🧱 KFM guardrails this folder must uphold
+## ✅ What belongs in `utils`
 
-KFM is **provenance-first** and **governed** end-to-end. Even UI helpers must not accidentally violate system contracts.
+Put it here if it’s…
 
-### 🚧 Non‑negotiables (frontend implications)
+- **Pure + reusable** (same inputs → same outputs) 🧪
+- **Framework-agnostic** (shouldn’t depend on React rendering) 🧼
+- **Shared across multiple features** (map, timeline, story panel, search) 🔁
+- **A boundary helper** (API client, schema validation, storage wrapper) 🚧
 
-- **API boundary is sacred** 🌐  
-  The UI must never “reach around” governed APIs (no direct graph/DB access, no hidden data fetch logic).
+---
 
-- **No data leakage** 🔒  
-  Utilities that affect *map zooming, filtering, aggregation, or export* must preserve redaction rules and classification constraints. If a feature would leak sensitive detail, the util should make it **hard to do wrong** (e.g., explicit `redactionPolicy` inputs).
+## 🚫 What does *not* belong in `utils`
 
-- **Evidence-first display** 🧾  
-  If a helper formats or composes narrative text, tooltips, “insight cards,” etc., it must support **citation/provenance attachment** (even if the UI chooses not to render it in a given view).
+Keep these elsewhere:
 
-- **Determinism by default** 🎯  
-  A util that changes behavior “based on the current time” or randomness is a red flag. Prefer:
-  - pass `now` as an argument
-  - pass `rng` or `seed` explicitly
-  - keep outputs stable across runs for auditing
+- 🧩 **React components** → `web/src/components/`
+- 🪝 **React hooks** → `web/src/hooks/`
+- 🗃️ **Global state slices / reducers** → `web/src/store/` (or equivalent)
+- 🧠 **Backend business logic** → belongs in API/services (not UI utilities)
+- 🔐 **Secrets / tokens / sensitive data handling** (don’t persist in browser)
 
-### 🔁 Canonical pipeline reminder
+---
+
+## 🧱 Guiding principles
+
+### 1) Preserve the “Truth Path” 🧾🗺️
+The UI must **never bypass the backend**. All data access should go through the API client utilities—this keeps governance and audit rules enforceable in one place.
 
 ```mermaid
 flowchart LR
-  A[ETL] --> B["Catalogs<br>(STAC/DCAT/PROV)"]
-  B --> C[Graph]
-  C --> D[API]
-  D --> E[UI]
-  E --> F[Story Nodes]
-  F --> G[Focus Mode]
+  UI["🗺️ React UI"] -->|typed calls| API["🌐 API Client Utils"]
+  API -->|HTTP| SVC["🧠 Backend API (REST/GraphQL)"]
+  SVC -->|policy| OPA["🛡️ Policy Engine"]
+  SVC --> DB["🗃️ PostGIS / Neo4j / Search"]
 ```
 
-> 🗺️ **Utilities are UI infrastructure**. They should make it *easier* for feature code to stay inside the guardrails above.
+### 2) Keep side effects isolated 🧯
+- Effects are okay, but **quarantine them**:
+  - `utils/api/*` ✅
+  - `utils/storage/*` ✅
+  - Random side effects in formatting functions ❌
+
+### 3) Prefer *typed* boundaries ✅
+- Parse/validate at edges (API responses, URL params, localStorage reads).
+- Inside the app, keep types trustworthy.
+
+### 4) Make testing easy 🧪
+- Prefer functions over classes.
+- Avoid hidden globals.
+- Accept dependencies as parameters when possible (e.g., `now`, `fetchImpl`, `storageImpl`).
 
 ---
 
-## 🚦 Where should new code go?
+## 📂 Suggested layout (adapt to match the repo)
 
-```mermaid
-flowchart TD
-  A[Need to add code?] --> B{Is it a React component?}
-  B -->|Yes| C[src/components or src/features/*]
-  B -->|No| D{Is it a React hook?}
-  D -->|Yes| E[src/hooks or src/features/*/hooks]
-  D -->|No| F{Is it an API call / client?}
-  F -->|Yes| G[src/services]
-  F -->|No| H{Is it feature-specific?}
-  H -->|Yes| I[src/features/<feature>/utils]
-  H -->|No| J{Is it reusable across features?}
-  J -->|Yes| K[src/utils ✅]
-  J -->|No| I
-```
-
-> ✅ If it’s shared across features **and** can remain **pure + deterministic**, it’s a strong `src/utils` candidate.
-
----
-
-## ✅ What belongs here
-
-Examples of good `utils/` candidates:
-
-- 🔁 **Data transforms**: normalize objects, map/filter helpers, stable sorting/grouping, dedupe, indexing
-- 🕒 **Time helpers**: safe parsing, timeline ranges, timezone-safe formatting, interval math
-- 🗺️ **Geo helpers** (when shared): bbox math, coordinate normalization, GeoJSON guards, CRS/unit labeling
-- 🧪 **Guards**: runtime type checks, safe narrowing, `assertNever`, `invariant`
-- ⚙️ **Environment helpers**: safe accessors for `import.meta.env` / `process.env`, SSR-safe checks
-- 🧵 **Async helpers**: `sleep`, `retry`, `withTimeout`, `throttle/debounce` (only if used across features)
-- 🧾 **Provenance helpers**: citation formatting, evidence reference helpers, “must-have provenance” assertions
-- 📊 **Stats helpers** (UI-focused): summary stats, quantiles, histogram binning, safe rounding/formatting
-- 🎛️ **Formatting**: bytes, distance, area, percentages, uncertainty/confidence badges (format-only)
-
----
-
-## 🚫 What should NOT be in `utils/`
-
-- ❌ React components, JSX, UI render logic
-- ❌ Feature-specific helpers that don’t generalize
-- ❌ API client logic (belongs in `src/services/`)
-- ❌ “Hidden data” or datasets (UI should consume data via governed APIs + catalogs)
-- ❌ Big third‑party “convenience” libraries unless clearly justified (bundle size matters 📦)
-- ❌ Anything that silently bypasses governance (e.g., “just fetch the raw graph endpoint”)
-
----
-
-## 🗂️ Suggested internal layout
-
-> Keep this folder **discoverable**. Group by *domain* (time, geo, provenance, etc.), not by “random”.
+> This is a **recommended structure**—update as the folder evolves.
 
 ```text
-📁 web/
-  └─ 📁 src/
-     ├─ 📁 features/
-     │  ├─ 📁 map/
-     │  │  └─ 📁 utils/                 # map-only helpers live here ✅
-     │  ├─ 📁 timeline/
-     │  │  └─ 📁 utils/                 # timeline-only helpers live here ✅
-     │  └─ 📁 story/
-     │     └─ 📁 utils/                 # story/focus-only helpers live here ✅
-     └─ 📁 utils/                       # shared across features ✅
-        ├─ 📁 geo/                      # LonLat, bbox, GeoJSON safety, units
-        ├─ 📁 time/                     # parsing, ranges, display formatting
-        ├─ 📁 format/                   # bytes, numbers, labels, display strings
-        ├─ 📁 guards/                   # runtime checks + narrowing
-        ├─ 📁 perf/                     # memoize, chunking, throttle/debounce
-        ├─ 📁 stats/                    # UI-safe summaries, bins, quantiles
-        ├─ 📁 provenance/               # citations, evidence refs, audit helpers
-        ├─ 📁 security/                 # safe parsing, escaping, URL helpers
-        ├─ 📁 webgl/                    # 3D/map math helpers (if shared)
-        ├─ 📄 index.ts                  # optional barrel exports
-        └─ 📄 README.md                 # (this file) 📘
+📁 web/src/utils/
+├─ 📁 api/
+│  ├─ 📄 client.ts          # fetch wrapper + base URL + headers
+│  ├─ 📄 errors.ts          # ApiError normalization
+│  └─ 📄 index.ts
+├─ 📁 geo/
+│  ├─ 📄 geojson.ts         # safe GeoJSON helpers
+│  ├─ 📄 bbox.ts            # bbox math / fit bounds helpers
+│  ├─ 📄 maplibre.ts        # layer/source builders
+│  └─ 📄 cesium.ts          # (optional) Cesium entity helpers
+├─ 📁 perf/
+│  ├─ 📄 debounce.ts
+│  ├─ 📄 throttle.ts
+│  └─ 📄 memo.ts
+├─ 📁 storage/
+│  ├─ 📄 storage.ts         # JSON-safe get/set wrapper
+│  └─ 📄 keys.ts            # key registry + prefixes
+├─ 📁 format/
+│  ├─ 📄 dates.ts
+│  ├─ 📄 numbers.ts
+│  └─ 📄 strings.ts
+└─ 📄 index.ts              # barrel exports (optional)
 ```
-
-> ✨ If you can’t name the subfolder, the util probably isn’t reusable yet.
 
 ---
 
-## 🧩 Conventions
+## 🌐 API utilities
 
-### 1) TypeScript-first 🟦
-- Prefer **TypeScript** and explicit types.
-- Avoid `any` (use generics, unions, or runtime guards).
-- Encode intent in types whenever possible:
-  - `Meters` vs `Degrees`
-  - `LonLat` vs `LatLon`
-  - `UtcIsoString` vs “string”
+### Goals
+- **One** place to manage:
+  - base URL resolution
+  - auth headers / session tokens (if applicable)
+  - JSON parsing + error normalization
+  - request tracing IDs (optional)
+  - retry/timeout policy (optional)
 
-### 2) Deterministic by default 🎯
-- A util should be a **pure function** unless the name makes side effects explicit.
-- Avoid:
-  - `Date.now()` inside transforms (pass `now`)
-  - `Math.random()` inside transforms (pass `rng` or `seed`)
-  - relying on ambient locale/timezone without making it explicit
-
-### 3) Small + single responsibility 🎯
-- One file = one “unit of reuse”
-- Prefer a couple of tiny utilities over one mega-helper.
-
-### 4) Named exports ✅
-Named exports make refactors safer and help tree-shaking:
+### Example pattern: `apiJson<T>()`
 
 ```ts
-export function clamp(n: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, n));
+// utils/api/client.ts
+export type ApiError = {
+  status: number;
+  message: string;
+  details?: unknown;
+};
+
+function isJsonResponse(res: Response) {
+  return (res.headers.get("content-type") ?? "").includes("application/json");
+}
+
+async function toApiError(res: Response): Promise<ApiError> {
+  let details: unknown = undefined;
+
+  if (isJsonResponse(res)) {
+    try {
+      details = await res.json();
+    } catch {
+      // ignore parse failure; fall back to status text
+    }
+  }
+
+  return {
+    status: res.status,
+    message: res.statusText || "Request failed",
+    details,
+  };
+}
+
+export async function apiJson<T>(
+  path: string,
+  init: RequestInit = {},
+  opts: { baseUrl?: string } = {}
+): Promise<T> {
+  const baseUrl = opts.baseUrl ?? import.meta.env.VITE_API_BASE_URL ?? "";
+  const url = `${baseUrl}${path}`;
+
+  const res = await fetch(url, {
+    ...init,
+    headers: {
+      "accept": "application/json",
+      ...(init.headers ?? {}),
+    },
+  });
+
+  if (!res.ok) {
+    throw await toApiError(res);
+  }
+
+  return (await res.json()) as T;
 }
 ```
 
-### 5) No hidden side effects 🧼
-A util should not silently mutate inputs.
-
-If it touches `window`, `document`, storage, or network:
-- make it explicit in the name (e.g. `readLocalStorageSafely`)
-- handle SSR/build-time safety (`typeof window !== "undefined"`)
-
-### 6) Stable identifiers > derived labels 🧷
-- Prefer backend-provided IDs.
-- Avoid UI keys from array indexes.
-- If you need a deterministic key, build it from stable fields (and document it).
+**Rule of thumb:** components should call *named endpoint helpers* (e.g., `getDataset(id)`), not `fetch()` directly.
 
 ---
 
-## 🧪 Testing expectations
+## 🗺️ Geo + map utilities
 
-Utilities are ideal for fast unit tests.
+### Typical responsibilities
+- Convert **GeoJSON** into:
+  - MapLibre **sources + layers**
+  - styling presets (line/polygon/point)
+  - feature-id helpers (stable IDs for hover/select)
+- Shared spatial helpers:
+  - bbox calculation
+  - centroid
+  - geometry type guards
 
-- Add `*.test.ts` (or the project’s preferred convention)
-- Focus on:
-  - edge cases
-  - timezones/locale pitfalls
-  - geo coordinate order pitfalls
-  - null/undefined safety
-  - determinism (same input ➜ same output)
-
-Example test skeleton:
-
-```ts
-import { clamp } from "./clamp";
-
-describe("clamp", () => {
-  it("bounds values inclusively", () => {
-    expect(clamp(5, 0, 10)).toBe(5);
-    expect(clamp(-1, 0, 10)).toBe(0);
-    expect(clamp(999, 0, 10)).toBe(10);
-  });
-});
-```
-
-💡 Bonus patterns (when useful):
-- **Property-based tests** (great for geo + parsing)
-- **Fuzz tests** for “unsafe inputs” (`null`, weird strings, NaN, Infinity)
-- **Golden tests** for formatting utilities (stable snapshots)
-
----
-
-## 🗺️ Geo-specific gotchas (don’t skip) ⚠️
-
-When adding geospatial utilities:
-
-- 🌐 Be explicit about coordinate order (`[lon, lat]` vs `[lat, lon]`)
-- 🧭 Document projections/units (degrees vs meters, CRS assumptions)
-- 🧱 Guard invariants:
-  - latitude ∈ `[-90, 90]`
-  - longitude ∈ `[-180, 180]` (or documented wrapping policy)
-- 🧨 Handle tricky cases:
-  - antimeridian / dateline crossing
-  - bbox intersection near wrapping longitudes
-  - floating point drift (avoid equality checks on coords)
-
-Tip: encode intent into types:
+### Example: GeoJSON → MapLibre source/layer builder (shape)
 
 ```ts
-export type LonLat = readonly [lon: number, lat: number];
-export type LatLon = readonly [lat: number, lon: number];
+// utils/geo/maplibre.ts (shape example)
+import type { FeatureCollection } from "geojson";
 
-export type BBox = readonly [
-  west: number,
-  south: number,
-  east: number,
-  north: number
-];
+export function makeGeoJsonSource(id: string, data: FeatureCollection) {
+  return {
+    id,
+    type: "geojson" as const,
+    data,
+  };
+}
+
+export function makeLineLayer(id: string, sourceId: string) {
+  return {
+    id,
+    type: "line" as const,
+    source: sourceId,
+    paint: {
+      // keep style tokens centralized; don’t scatter them across components
+      "line-width": 2,
+    },
+  };
+}
 ```
 
 ---
 
-## 📊 Stats & modeling gotchas (UI edition) ⚠️
+## ⚡ Performance helpers
 
-KFM surfaces analytics and model outputs; UI helpers must not accidentally mislead.
+### `debounce()` (common for search + sliders)
+Use debouncing for:
+- search typing
+- map hover/inspect events (if needed)
+- expensive recomputations tied to rapid input
 
-- 🧊 **Missing values are information**  
-  Don’t silently coerce `null/undefined` to `0` unless explicitly intended.
-- 📉 **Be honest about uncertainty**  
-  If you format confidence intervals, error bars, probabilities, etc., prefer helpers that return **structured data**, not just strings.
-- 🧮 **Rounding can change meaning**  
-  Provide:
-  - raw numeric value (for computation)
-  - display value (for humans)
-  - units + method (optional)
-- 🧾 **Evidence linkage**  
-  If a chart tooltip says “trend,” it should be possible to attach the evidence reference (dataset/run/model metadata) next to that output.
+```ts
+// utils/perf/debounce.ts
+export function debounce<TArgs extends unknown[]>(
+  fn: (...args: TArgs) => void,
+  waitMs = 200
+) {
+  let t: number | undefined;
 
----
-
-## ⚡ Performance & scale gotchas
-
-KFM deals with **big spatial datasets**, **timelines**, and sometimes **raster-ish** things. Helpers can silently become hotspots.
-
-- 📦 Avoid heavy dependencies; prefer tiny utilities or standard library
-- 🧵 Avoid O(n²) operations in transforms used on large arrays (maps, tables)
-- 🧠 Prefer streaming-friendly helpers:
-  - `chunk(array, size)`
-  - `groupBy` that doesn’t double-scan
-- 🗜️ Avoid copies when possible (especially typed arrays)
-- 🧰 If adding memoization:
-  - document cache key assumptions
-  - ensure it can’t leak sensitive data across contexts
-  - prefer “memoize last call” patterns for UI-derived transforms
+  return (...args: TArgs) => {
+    if (t !== undefined) window.clearTimeout(t);
+    t = window.setTimeout(() => fn(...args), waitMs);
+  };
+}
+```
 
 ---
 
-## ✍️ Adding a new util (checklist)
+## 💾 Preferences & local storage
 
-- [ ] Used by **2+ features**? If not, put it in `src/features/<feature>/utils/`
-- [ ] Clear name + single purpose
-- [ ] Fully typed (no `any`)
-- [ ] Deterministic / pure (or explicitly named side effect)
-- [ ] Has tests for edge cases
-- [ ] Does **not** violate KFM guardrails (no leakage, no bypassing APIs)
-- [ ] Doesn’t introduce a heavy dependency without strong reason
-- [ ] If it formats or composes narrative/insights: supports **provenance attachment**
+### What we store ✅
+Local storage is for **non-sensitive**, user-local preferences, like:
+- last map style / basemap
+- timeline position
+- layer toggles
+- UI layout preferences
 
----
+### What we never store ❌
+- tokens, secrets, personal data, or anything that would violate governance expectations
 
-## 🔗 Related folders
+### Example wrapper: JSON-safe `get/set`
 
-- 🧩 `src/components/` — reusable UI building blocks
-- 🪝 `src/hooks/` — reusable hooks
-- 🗺️ `src/features/map/` — map feature code (including map-only utils)
-- 🕒 `src/features/timeline/` — timeline feature code (including timeline-only utils)
-- 🧾 `src/features/story/` — story/focus experiences (including story-only utils)
-- 🌐 `src/services/` — API clients + network calls
-- 🗃️ `src/store/` — global state (Redux slices / contexts)
+```ts
+// utils/storage/storage.ts
+const PREFIX = "kfm:";
 
----
+export const storage = {
+  get<T>(key: string): T | null {
+    try {
+      const raw = localStorage.getItem(PREFIX + key);
+      if (raw == null) return null;
+      return JSON.parse(raw) as T;
+    } catch {
+      return null;
+    }
+  },
 
-## 📚 Project reference shelf
+  set<T>(key: string, value: T): void {
+    localStorage.setItem(PREFIX + key, JSON.stringify(value));
+  },
 
-> 📖 This folder’s standards are shaped by the project’s core docs + the internal reference library (architecture, geospatial, modeling, performance, and responsible computing).  
-> Keep this list updated as the library grows.
+  remove(key: string): void {
+    localStorage.removeItem(PREFIX + key);
+  },
+};
+```
 
-### 🧱 Governance / architecture / provenance (core)
-- Kansas Frontier Matrix (KFM) — Comprehensive Technical Documentation  [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Documentation.pdf](file-service://file-AkqwUuYPp5zePf7pv5SMxi)
-- MARKDOWN_GUIDE_v13 (repo contracts, pipeline ordering, UI leakage rules)  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
-- Scientific Method / Research / Master Coder Protocol (reproducibility & documentation discipline)  [oai_citation:4‡Scientific Method _ Research _ Master Coder Protocol Documentation.pdf](file-service://file-HTpax4QbDgguDwxwwyiS32)
-- Comprehensive Markdown Guide (documentation + provenance patterns)  [oai_citation:5‡Comprehensive Markdown Guide_ Syntax, Extensions, and Best Practices.docx](file-service://file-J6rFRcp4ExCCeCdTevQjxz)
-- Introduction to Digital Humanism (human-centered, accountable systems)  [oai_citation:6‡Introduction to Digital Humanism.pdf](file-service://file-HC311tLjkcn1yRbyTBLJQQ)
+### Recommended key registry 🗝️
+Keep keys in one file to avoid collisions and typos.
 
-### 🗺️ Geo / mapping / cartography / 3D
-- Making Maps: A Visual Guide to Map Design for GIS
-- Mobile Mapping: Space, Cartography and the Digital
-- Python Geospatial Analysis Cookbook  [oai_citation:7‡python-geospatial-analysis-cookbook.pdf](file-service://file-HT14njz1MhrTZCE7Pwm5Cu)
-- Cloud-Based Remote Sensing with Google Earth Engine — Fundamentals and Applications
-- Archaeological 3D GIS  [oai_citation:8‡Archaeological 3D GIS_26_01_12_17_53_09.pdf](file-service://file-6DRx5ELzDPBso9Y5Qcbqm2)
-- WebGL Programming Guide — Interactive 3D Graphics Programming with WebGL
-- Spectral Geometry of Graphs
-
-### 📊 Data science / stats / modeling
-- Scientific Modeling and Simulation (NASA-grade thinking, verification/validation mindset)
-- Regression Analysis with Python
-- Regression analysis using Python (slides)
-- Understanding Statistics & Experimental Design
-- Graphical Data Analysis with R
-- Think Bayes: Bayesian Statistics in Python
-- Deep Learning for Coders with fastai and PyTorch (UI implications: leakage awareness, interpretation caution)
-
-### 🗄️ Data management / databases / scaling
-- Database Performance at Scale  [oai_citation:9‡Database Performance at Scale.pdf](file-service://file-36z8qyiVJRtrSs6QG7Epen)
-- PostgreSQL Notes for Professionals
-- Scalable Data Management for Future Hardware
-- Data Spaces (microservices/adapter boundaries)
-
-### 🧠 Systems / security / engineering depth
-- Flexible Software Design (stable identifiers, long-term change)  [oai_citation:10‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)
-- Ethical Hacking and Countermeasures: Secure Network Infrastructures
-- Gray Hat Python
-- Concurrent Real-Time and Distributed Programming in Java (threads, time, correctness)
-- Compressed Image File Formats (JPEG/PNG/GIF/BMP) — practical constraints for UI media handling
-- Generalized Topology Optimization for Structural Design
-- Principles of Biological Autonomy
-- On the path to AI Law’s prophecies… (responsible AI framing & conceptual caution)
-
-### 📦 Language reference collections (internal shelf)
-- A programming Books.pdf
-- B-C programming Books.pdf  [oai_citation:11‡B-C programming Books.pdf](file-service://file-7V9zHZSJakZZrJAw9ASCMJ)
-- D-E programming Books.pdf
-- F-H programming Books.pdf  [oai_citation:12‡F-H programming Books.pdf](file-service://file-QofzooQDG9grJwh9nFN9SY)
-- I-L programming Books.pdf
-- M-N programming Books.pdf
-- O-R programming Books.pdf  [oai_citation:13‡O-R programming Books.pdf](file-service://file-M6zCNBGmJbot7A2aaUUy9M)
-- S-T programming Books.pdf  [oai_citation:14‡S-T programming Books.pdf](file-service://file-NT32tqqzGW9RvfcNZmMH1K)
-- U-X programming Books.pdf
+```ts
+// utils/storage/keys.ts
+export const StorageKeys = {
+  BasemapStyle: "pref:basemapStyle",
+  TimelineYear: "pref:timelineYear",
+  ActiveLayers: "pref:activeLayers",
+} as const;
+```
 
 ---
 
-## 🧠 Philosophy (why we care)
+## 🧾 Citations helpers (when rendering “Focus Mode” content)
 
-Good utilities keep the UI layer:
-- easier to read 👀
-- easier to test 🧪
-- easier to evolve without breaking unrelated features 🔧
-- easier to **audit** (deterministic transforms + provenance-friendly outputs) 🧾
+KFM’s UI supports citation markers (e.g., `[1]`, `[2]`) and should preserve them through formatting/render steps.
 
-When in doubt: **keep utils boring**—that’s the superpower 💪
+If you need to manipulate AI output:
+- do **not** strip brackets
+- do **not** renumber unless you also update the mapping
+- prefer a small parser utility that extracts citations for UI tooltips/footnotes
+
+```ts
+// utils/format/citations.ts (tiny helper example)
+export function extractCitationNumbers(text: string): number[] {
+  const matches = text.matchAll(/\[(\d+)\]/g);
+  const out: number[] = [];
+  for (const m of matches) out.push(Number(m[1]));
+  return Array.from(new Set(out)).sort((a, b) => a - b);
+}
+```
+
+---
+
+## 🧪 Testing utilities
+
+### Recommendations
+- ✅ Unit test pure utils heavily (geo math, parsers, formatters)
+- ✅ Mock `fetch` for API client tests (or use MSW)
+- ✅ Mock `localStorage` for storage tests
+- ✅ Add regression tests for any bug-fix utilities
+
+---
+
+## ✅ Checklist when adding a new util
+
+- [ ] Is this used in **2+ places** (or clearly will be soon)?
+- [ ] Is it **pure** (or are side effects isolated to `api/` or `storage/`)?
+- [ ] Are inputs/outputs **typed** (no `any`)?
+- [ ] If it touches external data, do we **validate/guard**?
+- [ ] Did we add/adjust **tests**?
+- [ ] Did we update this README (if it introduces a new category)?
+
+---
+
+## 🔗 Related docs (repo-relative)
+
+- 📘 `../../../docs/architecture/system_overview.md` (architecture + “truth path”)
+- 🌐 `../../../src/server/api/README.md` (API contracts + endpoints)
+- 🤖 `../../../docs/architecture/ai/OLLAMA_INTEGRATION.md` (citation requirements & format)
