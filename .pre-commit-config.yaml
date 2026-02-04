@@ -1,384 +1,200 @@
-# Kansas-Frontier-Matrix (KFM) — pre-commit configuration ✅
-# Docs: https://pre-commit.com
-#
-# Install once:
-#   pre-commit install
-#
-# Run manually:
-#   pre-commit run --all-files
-#
-# Notes 🧭
-# - “Fast” hooks run on commit (default).
-# - Heavier hooks (Docker, security, full tests, contract gates) are manual or CI-gated.
-# - KFM adds a trust-first supply-chain hook (kfm-dtk) to stop lockfile / registry / SBOM nonsense early. 🛡️🌾
+# 🧹 pre-commit hooks setup (repo-root)
 
-minimum_pre_commit_version: "3.2.0"
-default_stages: [pre-commit]
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
+![python](https://img.shields.io/badge/python-hooks-blue?logo=python&logoColor=white)
+![frontend](https://img.shields.io/badge/frontend-prettier-informational?logo=prettier&logoColor=white)
+
+> ✅ Goal: consistent formatting, basic hygiene checks, Python lint/format, workflow linting, and lightweight security scanning.
+
+---
+
+## 📁 Recommended layout
+
+```text
+📦 repo-root/
+├─ ✅ .pre-commit-config.yaml
+├─ 🔐 .secrets.baseline          # required if you keep detect-secrets enabled
+├─ 🧾 pyproject.toml             # recommended for ruff/black config
+└─ ...
+```
+
+---
+
+## 📄 `.pre-commit-config.yaml`
+
+> Copy the block below into **repo-root** as: `./.pre-commit-config.yaml`
+
+```yaml
+# .pre-commit-config.yaml
+# 🧹 Keep the repo clean & consistent before changes land
+
 fail_fast: false
+default_install_hook_types: [pre-commit, pre-push]
 
-# Exclude heavy/binary/derived artifacts 🧱
-# (Keep contracts/metadata JSON in-scope; exclude raw/work/processed + image assets.)
+default_language_version:
+  python: python3
+
 exclude: |
   (?x)^(
-    # --- caches / envs ---
-    \.venv/|
-    \.tox/|
-    \.nox/|
+    # 🧪 caches / builds
     \.mypy_cache/|
     \.pytest_cache/|
     \.ruff_cache/|
-    \.cache/|
+    \.tox/|
+    \.venv/|
+    venv/|
     __pycache__/|
-    node_modules/|
-
-    # --- build / release outputs ---
-    dist/|
     build/|
-    releases/|
-    mcp/runs/|
-
-    # --- data dirs (raw/work/processed/tmp/exports) ---
-    data/(raw|work|processed|tmp|exports)/|
-
-    # --- published story / focus-mode static assets ---
-    docs/reports/story_nodes/published/.*/assets/|
-    docs/reports/visualization/focus_mode/story_nodes/published/.*/assets/|
-    docs/reports/visualization/focus_mode/story_nodes/assets/|
-
-    # --- binary / large / non-text ---
-    .*\.pdf$|
-    .*\.png$|
-    .*\.jpe?g$|
-    .*\.gif$|
-    .*\.webp$|
-    .*\.tiff?$|
-    .*\.ico$|
-    .*\.zip$|
-    .*\.7z$|
-    .*\.tar$|
-    .*\.gz$|
-    .*\.bz2$|
-    .*\.xz$|
-    .*\.parquet$|
-    .*\.feather$|
-    .*\.arrow$|
-    .*\.sqlite$|
-    .*\.db$|
-    .*\.docx$|
-    .*\.pptx$|
-    .*\.xlsx$
+    dist/|
+    coverage/|
+    node_modules/|
+    \.next/|
+    \.cache/|
+    # 🧱 vendor / generated
+    vendor/|
+    third_party/|
+    generated/|
+    # 🗺️ big binaries (keep in LFS / artifacts instead)
+    .*\.min\.(js|css)$
   )
 
-# pre-commit.ci settings 🤖 (safe defaults)
-# - pre-commit.ci runs in a clean environment; local-only KFM toolchain hooks are skipped here.
-ci:
-  autofix_prs: true
-  autoupdate_schedule: monthly
-  autoupdate_commit_msg: "chore(pre-commit): autoupdate hooks"
-  skip:
-    - hadolint-docker
-    - bandit
-    - pytest
-    - kfm-precommit
-    - kfm-lock-verify
-    - kfm-reg-audit
-    - kfm-ns-scan
-    - kfm-provenance-verify
-    - kfm-sbom-diff
-    - kfm-fallback-test
-    - kfm-stac-gate
-    - kfm-stac-policy
-
 repos:
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🧼 Baseline sanity checks (whitespace, yaml/json validity, merge conflicts)
-  # ──────────────────────────────────────────────────────────────────────────────
+  # ✅ Validate this config itself
+  - repo: https://github.com/pre-commit/pre-commit
+    rev: v4.5.1
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+
+  # 🧽 Repo hygiene (whitespace, yaml/json validity, merge conflicts, etc.)
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-      - id: check-case-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
       - id: check-merge-conflict
+      - id: check-case-conflict
       - id: check-symlinks
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
 
-      - id: mixed-line-ending
-        args: ["--fix=lf"]
-
-      - id: end-of-file-fixer
-
-      # Preserve intentional Markdown hard line breaks (two trailing spaces)
-      - id: trailing-whitespace
-        args: ["--markdown-linebreak-ext=md"]
-
-      # Also treat *.md.gdoc as Markdown (KFM internal docs export) 📝
-      - id: trailing-whitespace
-        name: trailing-whitespace (md.gdoc)
-        files: '\.md\.gdoc$'
-        args: ["--markdown-linebreak-ext=md.gdoc"]
-
-      # YAML (include CITATION.cff), JSON (include GeoJSON), TOML, XML
-      - id: check-yaml
-        files: '\.(yml|yaml|cff)$'
-      - id: check-json
-        files: '\.(json|geojson|topojson|jsonld)$'
-      - id: check-toml
-      - id: check-xml
-
-      # Guardrail against accidental giant commits (tune as needed)
       - id: check-added-large-files
-        args: ["--maxkb=20480"]
+        args: [--maxkb=5120]
 
       - id: detect-private-key
 
-      # Catch stray debugging before it lands 🔥
+      # Python sanity checks
+      - id: check-ast
       - id: debug-statements
 
-      # Optional but useful: avoid committing directly to protected branches 🌿
-      - id: no-commit-to-branch
-        args: ["--branch", "main", "--branch", "master"]
-
-      # Keep schema JSON tidy + deterministic (scope to /schemas only) 🧾
-      - id: pretty-format-json
-        args: ["--autofix", "--indent", "2"]
-        files: '^schemas/.*\.(json|jsonld)$'
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🧩 Schema + config validation (GitHub workflows, CITATION.cff, compose, metaschema)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.36.0
+  # 🐍 Python lint (fast) + autofix
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
     hooks:
-      - id: check-github-workflows
-      - id: check-citation-file-format
-      - id: check-compose-spec
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
 
-      # Ensure KFM's JSON Schemas are valid schemas (contract-first + deterministic) 🧾🧬
-      - id: check-metaschema
-        files: '^schemas/.*\.json$'
+  # 🎨 Python formatting
+  - repo: https://github.com/psf/black
+    rev: 26.1.0
+    hooks:
+      - id: black
 
-      # Optional: validate KFM "governed" JSON docs (only if you vendor schemas)
-      # - id: check-jsonschema
-      #   name: KFM UI/Telemetry JSON instances (schema) 📡
-      #   files: '^docs/reports/visualization/focus_mode/.*\.json$'
-      #   args: ["--schemafile", "schemas/telemetry/reports-visualization-focusmode-panels-v1.json"]
+  # 🧼 Frontend + docs formatting (JS/TS/CSS/JSON/YAML/MD/etc.)
+  - repo: https://github.com/JoC0de/pre-commit-prettier
+    rev: v3.7.4
+    hooks:
+      - id: prettier
+        files: \.(js|jsx|ts|tsx|css|scss|json|ya?ml|md|mdx|html|svg)$
+        exclude: |
+          (?x)^(
+            package-lock\.json|
+            pnpm-lock\.yaml|
+            yarn\.lock
+          )
 
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🧪 GitHub Actions workflow linting (semantic checks beyond schema)
-  # ──────────────────────────────────────────────────────────────────────────────
+  # ✅ GitHub Actions workflow linting
   - repo: https://github.com/rhysd/actionlint
     rev: v1.7.10
     hooks:
       - id: actionlint
+        files: ^\.github/workflows/.*\.(yml|yaml)$
 
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🐍 Python lint + format (fast)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+  # ✅ GitHub Actions workflow schema validation
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.36.1
     hooks:
-      - id: ruff-check
-        args: ["--fix", "--exit-non-zero-on-fix"]
-      - id: ruff-format
+      - id: check-github-workflows
+        files: ^\.github/workflows/.*\.(yml|yaml)$
 
-  # ──────────────────────────────────────────────────────────────────────────────
-  # ✍️ Spelling (kept to docs-y text to avoid domain false positives)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
-    hooks:
-      - id: codespell
-        files: '\.(md|md\.gdoc|rst|txt)$'
-        args:
-          - "--check-filenames"
-          - "--check-hidden"
-          # Common KFM domain tokens to reduce noise (extend as needed)
-          - "--ignore-words-list=nd,ndvi,epsg,postgis,prov,stac,dcat,rego,sbom,slsa,geotiff,cog"
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 📝 Markdown style checks (line-length + HTML are allowed in KFM docs)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.46.0
-    hooks:
-      - id: markdownlint
-        files: '\.(md|md\.gdoc)$'
-        args: ["--disable", "MD013", "MD033", "MD041"]
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🌐 Web formatting (Prettier, pinned & isolated via pre-commit Node env)
-  # - Runs only when files under /web change → Python-only contributors don’t need Node.
-  # - Pinning exact Prettier version keeps diffs deterministic across machines. ✨
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: local
-    hooks:
-      - id: web-prettier
-        name: web: prettier (pinned) 🌐✨
-        entry: prettier --write
-        language: node
-        additional_dependencies: ["prettier@3.7.4"]
-        files: '^web/.*\.(js|jsx|ts|tsx|json|css|scss|less|html|md|yaml|yml)$'
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🐚 Shell scripting
-  # ──────────────────────────────────────────────────────────────────────────────
+  # 🐚 Shell scripts (Bash/sh)
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.11.0.1
     hooks:
       - id: shellcheck
-        args: ["--severity=warning"]
 
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🔐 Secret scanning (lightweight, good baseline)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/Yelp/detect-secrets
-    rev: v1.5.0
-    hooks:
-      - id: detect-secrets
-        # If/when you add a baseline:
-        # args: ["--baseline", ".secrets.baseline"]
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🐳 Dockerfile lint (requires Docker) — manual stage
-  # ──────────────────────────────────────────────────────────────────────────────
+  # 🐳 Dockerfiles (runs via Docker image) — pre-push keeps commits fast
   - repo: https://github.com/hadolint/hadolint
     rev: v2.14.0
     hooks:
       - id: hadolint-docker
-        stages: [manual]
+        stages: [pre-push]
 
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🔎 Security static analysis — manual stage (avoid friction / false positives)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.9.2
+  # 🔐 Secret scanning (baseline-driven to reduce noise)
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
     hooks:
-      - id: bandit
-        stages: [manual]
-        args: ["-q"]
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🧪 Local “run tests” hook — manual stage
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest (manual) 🧪
-        entry: pytest
-        language: system
-        pass_filenames: false
-        stages: [manual]
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🧯 Guardrails: never commit local .env (defense-in-depth)
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: local
-    hooks:
-      - id: forbid-dotenv
-        name: forbid committing .env 🚫🧪
-        entry: bash -lc 'git diff --cached --name-only | grep -E "(^|/)\.env$" && echo "❌ .env is not allowed in git. Use .env.example + env vars/secrets." && exit 1 || exit 0'
-        language: system
-        pass_filenames: false
-
-  # ──────────────────────────────────────────────────────────────────────────────
-  # 🛡️ KFM DTK — Supply-chain & governance pre-commit (recommended on dev machines)
-  #
-  # Implements KFM “trust-first” gates:
-  # - lockfile pinning verification
-  # - registry audit (strict)
-  # - namespace/dependency-confusion scan
-  # - provenance verification (local)
-  # - SBOM drift detection (local)
-  # - fallback / hermetic sandbox validation
-  #
-  # Script path is repo-owned:
-  #   tools/kfm-dtk/hooks/kfm-precommit.sh
-  #
-  # Tip: keep this scoped to dependency / contract / security changes to stay fast.
-  # ──────────────────────────────────────────────────────────────────────────────
-  - repo: local
-    hooks:
-      - id: kfm-precommit
-        name: KFM supply-chain + governance gate 🛡️🌾
-        entry: bash -lc 'tools/kfm-dtk/hooks/kfm-precommit.sh'
-        language: system
-        pass_filenames: false
-        files: |
+      - id: detect-secrets
+        args: ["--baseline", ".secrets.baseline"]
+        exclude: |
           (?x)^(
-            pyproject\.toml|
-            uv\.lock|
-            poetry\.lock|
-            requirements(\..+)?\.txt|
-            package\.json|
-            package-lock\.json|
-            pnpm-lock\.yaml|
-            yarn\.lock|
-            docker-compose\.ya?ml|
-            Dockerfile|
-            \.github/workflows/.*\.ya?ml|
-            schemas/.*|
-            data/(stac|catalog|prov)/.*|
-            docs/security/.*|
-            docs/governance/.*|
-            SBOM(\..+)?\.(json|spdx|spdx\.json|cyclonedx\.json)
+            \.secrets\.baseline
           )$
 
-      # Optional: expose sub-commands as manual hooks for quick isolation/debugging 🧰
-      - id: kfm-lock-verify
-        name: KFM lockfile verify (manual) 🔒
-        entry: kfm-lock-verify
-        language: system
-        pass_filenames: false
-        stages: [manual]
+ci:
+  autoupdate_schedule: weekly
+```
 
-      - id: kfm-reg-audit
-        name: KFM registry audit (manual, strict) 🧾
-        entry: kfm-reg-audit --strict
-        language: system
-        pass_filenames: false
-        stages: [manual]
+---
 
-      - id: kfm-ns-scan
-        name: KFM namespace scan (manual) 🛰️
-        entry: kfm-ns-scan .
-        language: system
-        pass_filenames: false
-        stages: [manual]
+## 🚀 One-time install (local)
 
-      - id: kfm-provenance-verify
-        name: KFM provenance verify (manual) 🧬
-        entry: kfm-provenance-verify --local
-        language: system
-        pass_filenames: false
-        stages: [manual]
+```bash
+python -m pip install --upgrade pre-commit
+pre-commit install
+pre-commit run --all-files
+```
 
-      - id: kfm-sbom-diff
-        name: KFM SBOM drift check (manual) 📦
-        entry: kfm-sbom-diff --local
-        language: system
-        pass_filenames: false
-        stages: [manual]
+> 🐳 If you want the Dockerfile linting hook to run (it’s configured for **pre-push**), `pre-commit install` above already installs pre-push too.
 
-      - id: kfm-fallback-test
-        name: KFM fallback / hermetic sandbox (manual) 🧪🧊
-        entry: kfm-fallback-test --validate
-        language: system
-        pass_filenames: false
-        stages: [manual]
+---
 
-      # Optional contract gate helpers (manual) — matches KFM contract-first philosophy 🗂️
-      - id: kfm-stac-gate
-        name: STAC validation gate (manual) 🗺️🧾
-        entry: bash -lc 'tools/validation/stac-check.sh'
-        language: system
-        pass_filenames: false
-        stages: [manual]
-        files: '^data/stac/.*\.json$|^schemas/stac/.*\.json$'
+## 🔐 Create the detect-secrets baseline
 
-      - id: kfm-stac-policy
-        name: STAC policy checks (manual, conftest/OPA) 🧾🛡️
-        entry: bash -lc 'conftest test --policy policy --all-namespaces'
-        language: system
-        pass_filenames: false
-        stages: [manual]
-        files: '^data/stac/.*\.json$|^policy/.*'
+If this is a brand-new repo: create the baseline once, then commit it.
+
+```bash
+python -m pip install --upgrade detect-secrets
+detect-secrets scan > .secrets.baseline
+pre-commit run detect-secrets --all-files
+```
+
+---
+
+## 🧩 Quick tuning knobs (optional)
+
+- **Python rules**: configure ruff + black in `pyproject.toml` (recommended)
+- **Large files**: adjust `check-added-large-files --maxkb=...`
+- **Prettier scope**: adjust the `files:` regex if you add more frontend file types (e.g. `vue`, `svelte`)
+- **Docker hook speed**: keep `hadolint-docker` on `pre-push` (as-is) unless you really want it on every commit
+
+✅ Done.
