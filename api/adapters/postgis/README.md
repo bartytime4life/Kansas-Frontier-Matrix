@@ -1,25 +1,3 @@
----
-title: "PostGIS Adapter 🐘🗺️"
-path: "api/adapters/postgis/README.md"
-version: "KFM-MDP v11.2.6"
-last_updated: "2026-02-03"
-status: "active"
-doc_kind: "readme"
-owners:
-  - "KFM Engineering"
-  - "GIS/DB Working Group"
-tags:
-  - "kfm"
-  - "api"
-  - "adapters"
-  - "postgis"
-  - "spatial-sql"
-  - "mvt"
-  - "provenance"
-  - "policy-gate"
-license: "Apache-2.0"
----
-
 # PostGIS Adapter 🐘🗺️
 
 ![adapter](https://img.shields.io/badge/layer-adapter-blue)
