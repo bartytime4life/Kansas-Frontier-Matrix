@@ -1,1 +1,175 @@
+%% =============================================================================
+%% 📄 docs/architecture/diagrams/sources/50-security-trust-boundaries.mmd
+%% 🔐 Kansas Frontier Matrix (KFM) — Security Trust Boundaries
+%% =============================================================================
+%% Project sources used:
+%% - Kansas Frontier Matrix Comprehensive System Documentation (PDF)
+%%   - Multi-layer “truth path” & “UI cannot query DB directly” (pp. 1–2)
+%%   - Security + governance: RBAC, OPA, provenance, audit ledger, policy gates (pp. 10–11)
+%%   - Deployment: Docker Compose services, Nginx reverse proxy, HTTPS/HSTS/CSP, CI/CD (pp. 15–17)
+%%   - Focus Mode RAG + Prompt Gate + Ollama sandbox + OPA output filtering (pp. 6, 166–167)
+%% =============================================================================
+
+%%{init: {"theme":"neutral","flowchart":{"curve":"linear"}}}%%
+flowchart LR
+
+  %% ---------- Styles ----------
+  classDef actor fill:#ffffff,stroke:#333333,stroke-width:1px;
+  classDef service fill:#e8f4ff,stroke:#1e88e5,stroke-width:1px;
+  classDef control fill:#ffe8e8,stroke:#d9534f,stroke-width:1px;
+  classDef datastore fill:#fff2cc,stroke:#f1c232,stroke-width:1px;
+  classDef note fill:#f7f7f7,stroke:#aaaaaa,stroke-dasharray: 3 3;
+
+  %% ---------- TB0: External / Untrusted ----------
+  subgraph TB0["TB0 🌐 External / Untrusted Zone"]
+    user["👤 Users\nPublic • Contributor • Maintainer • Admin"]:::actor
+    ext_data["🌎 External Data Sources\nCSV uploads • APIs • ArcGIS • STAC feeds"]:::actor
+    dev["👩‍💻 Developers"]:::actor
+    github["🐙 GitHub Repo"]:::service
+  end
+  style TB0 fill:#fafafa,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- TB1: Edge / DMZ ----------
+  subgraph TB1["TB1 🛡 Edge / DMZ (Internet-Facing)"]
+    nginx["🌐 Reverse Proxy\nNginx/Apache\nTLS ✅ • HSTS ✅ • CSP ✅"]:::service
+    edge_ctrl["🧯 Edge Controls\nrate limiting • basic WAF rules"]:::control
+    open_ports["🔓 Exposed Ports\n80/443 only (recommended)"]:::note
+  end
+  style TB1 fill:#f5fbff,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- TB2: Runtime Compute ----------
+  subgraph TB2["TB2 🏗 Runtime Compute (Trusted Services)"]
+    web["🗺️ Web UI (SPA)\nReact + MapLibre/Cesium"]:::service
+    api["⚙️ API Layer\nFastAPI + REST/GraphQL"]:::service
+    focus["🎯 Focus Mode Orchestrator\nRAG • citation enforcement"]:::service
+    opa_rt["🧱 OPA (Runtime Policy)\nRBAC • sensitivity gates • fail-closed"]:::control
+    secrets["🔑 Secrets\nJWT secret • DB creds\n(env vars / Docker secrets / vault)"]:::datastore
+  end
+  style TB2 fill:#f0fff4,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- TB2b: Data Pipeline Compute ----------
+  subgraph TB2b["TB2b 📥 Data Pipeline Compute"]
+    etl["🏭 ETL / Pipeline Workers\ningest ➜ transform ➜ validate ➜ publish"]:::service
+    gates["🚦 Policy Gates\nlicense • classification • metadata completeness"]:::control
+  end
+  style TB2b fill:#f0fff4,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- TB3: Restricted Data Tier ----------
+  subgraph TB3["TB3 🔒 Restricted Data Tier (Datastores)"]
+    raw["🪣 Raw Storage (immutable)"]:::datastore
+    processed["🗃️ Processed Data Store"]:::datastore
+    catalog["📚 Catalog & Metadata\nSTAC • DCAT • PROV"]:::datastore
+    postgis["🗄️ PostGIS (spatial DB)"]:::datastore
+    neo4j["🕸️ Neo4j (knowledge graph)"]:::datastore
+    search["🔍 Search + Vector Index\nDocs • embeddings"]:::datastore
+    prov["🧾 Provenance + Audit Ledger\nappend-only • signed/timestamped (planned)"]:::datastore
+  end
+  style TB3 fill:#fffdf0,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- TB4: AI Containment Zone ----------
+  subgraph TB4["TB4 🤖 AI Containment (Sandboxed LLM)"]
+    promptgate["🧼 Prompt Gate\nsanitize inputs • block injection/profanity"]:::control
+    ollama["🧠 Ollama LLM\n/api/generate\n🚫 no internet • 🚫 no tools"]:::service
+    opa_ai["🛡 OPA Output Filter\nallow/redact/block per policy"]:::control
+  end
+  style TB4 fill:#fdf7ff,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- TB5: CI/CD + Supply Chain ----------
+  subgraph TB5["TB5 🧪 CI/CD & Supply Chain"]
+    policy_pack["📜 Policy Pack (OPA)\npolicies-as-code"]:::control
+    ci["🤖 CI Workflows\nunit/integration tests • policy tests"]:::control
+    scans["🧯 Security Checks\nSBOM • SLSA • dependency scan • OWASP ZAP"]:::control
+    sign["✍️ Image Signing\nCosign • transparency logs"]:::control
+    registry["📦 Container Registry\n(GHCR/Docker Hub)"]:::service
+    deploy["🚀 Deploy\nDocker Compose / Kubernetes"]:::service
+  end
+  style TB5 fill:#fff7f0,stroke:#999999,stroke-width:2px,stroke-dasharray: 6 3
+
+  %% ---------- Primary Flows (User ↔ Runtime) ----------
+  user -- "HTTPS 443" --> nginx
+  nginx --> edge_ctrl
+  edge_ctrl --> nginx
+  nginx --> open_ports
+
+  nginx -- "static assets" --> web
+  nginx -- "/api • /graphql • /focus-mode/*" --> api
+
+  web -- "authenticated requests\n(token/session)" --> api
+  api -- "policy decision" --> opa_rt
+  opa_rt -- "allow/deny + masking" --> api
+
+  secrets --> api
+  secrets --> etl
+  secrets -. "❌ not mounted" .-> ollama
+
+  %% ---------- Runtime ↔ Datastores ----------
+  api -- "queries (least privilege)" --> postgis
+  api -- "graph queries" --> neo4j
+  api -- "search" --> search
+  api -- "read large assets" --> raw
+  api -- "metadata" --> catalog
+  api -- "audit/provenance writes" --> prov
+
+  %% ---------- Focus Mode (RAG) Flow ----------
+  api -- "POST /focus-mode/query" --> focus
+  focus --> promptgate
+  promptgate -- "sanitized query" --> focus
+
+  focus -- "retrieve evidence" --> neo4j
+  focus -- "retrieve evidence" --> postgis
+  focus -- "retrieve evidence" --> search
+  focus -- "retrieve metadata" --> catalog
+
+  focus -- "prompt + SOURCES[n]" --> ollama
+  ollama -- "draft answer" --> opa_ai
+  opa_ai -- "allow/redact/block" --> focus
+
+  focus -- "answer + citations\n(+ policy decision)" --> api
+  focus -- "append-only audit" --> prov
+
+  %% ---------- Data Pipeline (External Sources → Truth Path) ----------
+  ext_data --> etl
+  etl --> gates
+  gates -- "pass" --> raw
+  raw --> processed
+  processed --> catalog
+  catalog --> postgis
+  catalog --> neo4j
+  catalog --> search
+  etl --> prov
+
+  %% ---------- CI/CD (Dev → Prod) ----------
+  dev --> github
+  github --> ci
+  github --> policy_pack
+  policy_pack --> ci
+  policy_pack --> opa_rt
+  policy_pack --> opa_ai
+  policy_pack --> gates
+
+  ci --> scans
+  scans --> sign
+  sign --> registry
+  registry --> deploy
+  deploy --> api
+  deploy --> web
+  deploy --> opa_rt
+  deploy --> ollama
+  deploy --> etl
+
+  %% ---------- Explicitly Blocked Paths (Trust Boundary Enforcement) ----------
+  user -. "❌ internal-only (no direct service ports)" .-> postgis
+  user -. "❌ internal-only (no direct service ports)" .-> neo4j
+  user -. "❌ internal-only (no direct service ports)" .-> ollama
+  web  -. "❌ UI never queries DB directly (API only)" .-> postgis
+  ollama -. "❌ no DB creds / no DB access" .-> postgis
+
+  %% ---------- Legend ----------
+  subgraph LEG["📌 Legend"]
+    l1["🔒 Trust Boundaries = dashed containers (TB0..TB5)"]:::note
+    l2["🧱 OPA enforces RBAC + sensitivity + output filtering (fail-closed)"]:::note
+    l3["🧾 Provenance/audit is append-only; datasets & AI answers are traceable"]:::note
+    l4["🧠 LLM is sandboxed; only sees curated prompt + retrieved sources"]:::note
+  end
+  style LEG fill:#ffffff,stroke:#dddddd,stroke-width:1px
 
