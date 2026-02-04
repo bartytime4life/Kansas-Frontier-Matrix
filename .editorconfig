@@ -1,18 +1,9 @@
-# .editorconfig 🌾🧱
-# -----------------------------------------------------------------------------
-# KFM goals:
-# - Deterministic diffs (clean endings, stable whitespace) ✅
-# - Contract-first metadata files stay machine-readable (JSON/YAML) 🧾
-# - Markdown-first docs remain pleasant to edit (don’t strip intentional breaks) 📚
-#
-# Docs: https://editorconfig.org
-# -----------------------------------------------------------------------------
+# 🧭 .editorconfig
+# Consistent formatting across editors/IDEs ✅
 
 root = true
 
-# ------------------------------------------------------------
-# Defaults (safe for mixed Python + Node/Web + Data/Docs repos)
-# ------------------------------------------------------------
+# 🌎 Global defaults
 [*]
 charset = utf-8
 end_of_line = lf
@@ -21,155 +12,52 @@ trim_trailing_whitespace = true
 
 indent_style = space
 indent_size = 2
-tab_width = 2
 
-# Some editors respect this (helps keep diffs readable)
-max_line_length = 120
-
-# -----------------------
-# Python (Black / Ruff)
-# -----------------------
+# 🐍 Python
 [*.py]
 indent_size = 4
-tab_width = 4
-max_line_length = 88
 
 [*.pyi]
 indent_size = 4
-tab_width = 4
-max_line_length = 88
 
-# Jupyter notebooks are JSON
-[*.ipynb]
-indent_size = 2
-tab_width = 2
+# 🧪 PowerShell
+[*.ps1]
+indent_size = 4
 
-# -----------------------
-# JavaScript / TypeScript
-# -----------------------
-[*.{js,jsx,ts,tsx,cjs,mjs}]
-indent_size = 2
-tab_width = 2
-max_line_length = 120
+[*.psm1]
+indent_size = 4
 
-# -------------
-# Web / Styling
-# -------------
-[*.{html,htm}]
-indent_size = 2
-tab_width = 2
-
-[*.{css,scss,sass,less}]
-indent_size = 2
-tab_width = 2
-
-# -------------------
-# Config / Data files
-# -------------------
-# KFM contracts & catalogs are mostly JSON (schemas/, STAC/DCAT/PROV, GeoJSON, JSON-LD).
-# Disable editor-enforced line wrapping for JSON-like files (URLs + arrays get long).
-[*.{json,jsonc,jsonld,geojson,topojson}]
-indent_size = 2
-tab_width = 2
-max_line_length = off
-
-# YAML (includes GitHub Actions, docker-compose, and CITATION.cff)
-[*.{yml,yaml,cff}]
-indent_size = 2
-tab_width = 2
-
-# TOML/INI/CFG (pyproject.toml, tool configs)
-[*.{toml,ini,cfg}]
-indent_size = 2
-tab_width = 2
-
-# Env files (never commit real secrets)
-[{.env,.env.*}]
-indent_size = 2
-tab_width = 2
-
-# ----------
-# Markdown
-# ----------
-# NOTE: trailing whitespace can be meaningful in Markdown (line breaks).
-# KFM also uses exported docs like: *.md.gdoc (Google Doc exports).
-[*.{md,mdx,rst}]
-indent_size = 2
-tab_width = 2
-trim_trailing_whitespace = false
-max_line_length = 120
-
-[*.md.gdoc]
-indent_size = 2
-tab_width = 2
-trim_trailing_whitespace = false
-max_line_length = 120
-
-# Mermaid diagrams (architecture / pipelines / docs)
-[*.{mmd,mermaid}]
-indent_size = 2
-tab_width = 2
-
-# -------------------------
-# Shell / CLI / Dev tooling
-# -------------------------
-[*.{sh,bash,zsh}]
-indent_size = 2
-tab_width = 2
-
-# Dockerfiles (no extension)
-[{Dockerfile,Dockerfile.*}]
-indent_size = 2
-tab_width = 2
-
-# -------------------------
-# Makefiles must use tabs
-# -------------------------
-[{Makefile,makefile,*.mk}]
-indent_style = tab
-tab_width = 4
-
-# -------------------------
-# Go (gofmt uses tabs)
-# -------------------------
-[*.go]
-indent_style = tab
-tab_width = 4
-
-# -------------------------
-# SQL (Postgres/PostGIS)
-# -------------------------
-[*.{sql,psql}]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------
-# Graph / policy / query languages (KFM)
-# -----------------------------------------
-# - cypher/cql: graph queries
-# - graphql/gql: API contracts (if used)
-# - rego: policy-as-code (OPA/conftest)
-[*.{cypher,cql,graphql,gql,rego}]
-indent_size = 2
-tab_width = 2
-
-# -------------------------
-# MATLAB / Octave
-# -------------------------
+# 🧮 MATLAB / Octave
 [*.m]
 indent_size = 4
-tab_width = 4
 
-# -----------------------------------
-# Windows scripts keep CRLF newlines
-# -----------------------------------
-[*.{bat,cmd,ps1}]
-end_of_line = crlf
-indent_size = 2
-tab_width = 2
-
-# -------------------------
-# CSV/TSV: preserve spacing
-# -------------------------
-[*.{csv,tsv}]
+# 📝 Markdown / docs (keep intentional hard breaks)
+[*.md]
 trim_trailing_whitespace = false
+
+[*.mdx]
+trim_trailing_whitespace = false
+
+[*.rst]
+trim_trailing_whitespace = false
+
+# 📊 Data files (avoid accidental whitespace trimming)
+[*.csv]
+trim_trailing_whitespace = false
+
+[*.tsv]
+trim_trailing_whitespace = false
+
+[data/**]
+trim_trailing_whitespace = false
+
+# 🧰 Makefiles require tabs
+[Makefile]
+indent_style = tab
+
+# 🪟 Windows scripts
+[*.bat]
+end_of_line = crlf
+
+[*.cmd]
+end_of_line = crlf
