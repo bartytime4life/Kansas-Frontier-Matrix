@@ -1,12 +1,8 @@
 %% 🧠 KFM Diagram #40 — AI Focus Mode RAG (Retrieval-Augmented Generation)
 %% KFM-MDP: v11.2.6
 %% Path: docs/architecture/diagrams/sources/40-ai-focus-mode-rag.mmd
-%% Truth Path (must not be bypassed): Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
-%% Notes:
-%% - UI never calls Ollama directly; all traffic goes through FastAPI.
-%% - Evidence-first: answers must cite sources (1..n); “no source, no answer”.
-%% - Fail-closed: OPA gate can deny/redact/require-clarification.
-%% - Immutable audit: prompts, sources, decisions logged as provenance.
+%% Truth Path: Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
+%% Guardrails: Prompt Gate (input) + OPA (output) + Provenance (append-only)
 
 flowchart TB
 
@@ -24,7 +20,7 @@ flowchart TB
   %% ----------------------------
   subgraph UI["🗺️ UI"]
     u((👤 User)):::ui
-    web["🌐 Web App (React/TS)<br/>Map • Timeline • Focus Mode panel"]:::ui
+    web["🌐 Web App (React/TS)<br/>Map • Timeline • Focus Mode"]:::ui
     ans["📝 Answer View<br/>Citations (1..n)"]:::ui
     audit["🔎 Audit View<br/>Snippets + provenance"]:::ui
 
@@ -38,7 +34,7 @@ flowchart TB
   %% ----------------------------
   subgraph API["🧠 Backend API (FastAPI)"]
     endpoint["POST /focus-mode/query<br/>Question + map context"]:::svc
-    pg["🧼 Prompt Gate<br/>sanitize • anti-injection • policy hints"]:::gov
+    pg["🧼 Prompt Gate<br/>sanitize • anti-injection"]:::gov
     rag["🔍 RAG Orchestrator<br/>hybrid retrieval + context assembly"]:::svc
     cache["⚡ Context Cache<br/>hot queries + session memory"]:::data
     ctx["📦 Context Pack<br/>SOURCES (1..n)<br/>snippets + source_ids"]:::svc
@@ -47,11 +43,11 @@ flowchart TB
   end
 
   web -->|HTTP| endpoint
-  endpoint -->|1) sanitize| pg
-  pg -->|2) retrieve| rag
+  endpoint -->|sanitize| pg
+  pg -->|retrieve| rag
   rag <-->|lookup/store| cache
   rag -->|assemble| ctx
-  ctx -->|grounded prompt| tpl
+  ctx -->|ground prompt| tpl
 
   %% ----------------------------
   %% Governed Data Stores 🗃️
@@ -89,7 +85,7 @@ flowchart TB
 
   rag -->|embed query| embed
   embed -->|top-k| vec
-  tpl -->|3) generate grounded answer| gen
+  tpl -->|generate grounded answer| gen
   sandbox -. least privilege .-> gen
 
   %% ----------------------------
@@ -103,10 +99,11 @@ flowchart TB
 
   gen -->|draft + citations| opa
   opa -->|allow| asm
-  opa -->|deny| block --> asm
+  opa -->|deny| block
+  block --> asm
 
   asm -->|write audit| ledger
-  asm -->|5) response payload| web
+  asm -->|response payload| web
 
   %% Guardrail: UI never calls Ollama directly 🚫
   web -. "🚫 UI never calls Ollama directly" .-> gen
@@ -116,11 +113,14 @@ flowchart TB
   %% ----------------------------
   subgraph ETL["📚 Offline Indexing & Embeddings (ETL)"]
     sources["📄 Sources<br/>archives • reports • PDFs • datasets"]:::data
-    etl["📥 Ingestion Workers<br/>Airflow/Jobs"]:::svc
+    ing["📥 Ingestion Workers<br/>Airflow/Jobs"]:::svc
     chunk["✂️ Chunk + NLP<br/>entities • dedupe • normalize"]:::svc
     index["📚 Index Builder<br/>full-text + vectors"]:::svc
 
-    sources --> etl --> chunk --> index
+    sources --> ing
+    ing --> chunk
+    chunk --> index
+
     chunk -->|store binaries| obj
     chunk -->|entities/relations| neo
     index -->|update| search
