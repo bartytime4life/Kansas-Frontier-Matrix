@@ -1,203 +1,226 @@
-<!-- .github/workflows/README.md -->
+> According to a document from **2025-12-17**, the KFM Master Guide v13 defines “minimum CI gates” and governance invariants that this folder is responsible for enforcing automatically.  [oai_citation:0‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-# ⚙️ GitHub Actions Workflows (CI/CD)
+# 🛠️ `.github/workflows/` — CI/CD + Governance Gates
 
-> **Folder:** `.github/workflows/` 📁  
-> **Purpose:** Automated quality + governance gates for the Kansas Frontier Matrix (KFM) monorepo.
+This directory holds **GitHub Actions workflows** that keep Kansas Frontier Matrix (KFM) **CI-clean** ✅, **policy-compliant** 🛡️, and **provenance-first** 🧾.
 
-<p align="center">
-  <a href="../../README.md">🏠 Repo Home</a> •
-  <a href="../../CONTRIBUTING.md">🤝 Contributing</a> •
-  <a href="../../docs/">📚 Docs</a> •
-  <a href="../../policy/">🛡️ Policy</a>
-</p>
+KFM is designed as a **pipeline → catalog → database → API → UI** system where every artifact must remain traceable and governed end-to-end.  [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
 ---
 
-## 🧭 What lives in this folder?
-
-This folder contains the GitHub Actions workflow definitions that run on **push** and **pull requests** to keep KFM’s code, data, and narratives *verifiable + compliant* (tests, linting, and CI/CD orchestration).:contentReference[oaicite:0]{index=0}
-
-KFM is a **monorepo** (backend + frontend + pipelines + governed data/docs), so CI must validate *multiple subsystems* together.:contentReference[oaicite:1]{index=1}
-
----
-
-## ✅ Non‑negotiable principle: “Fail Closed” 🧱
-
-> [!IMPORTANT]
-> If a check fails, **the merge should be blocked** — especially governance/policy checks. This is intentional: incomplete or non‑compliant contributions must not land on `main`.:contentReference[oaicite:2]{index=2}
-
----
-
-## 🧪 What CI should enforce (KFM “definition of done”)
-
-KFM’s CI gates aren’t just “tests pass” — they include **policy-as-code** and **evidence-first publishing**.
-
-### 1) 🧩 Code Quality Gates (API + UI)
-- ✅ Backend tests (e.g., `pytest`):contentReference[oaicite:3]{index=3}
-- ✅ Frontend tests (e.g., `npm test`):contentReference[oaicite:4]{index=4}
-- ✅ Linters/formatters (Python + JS) such as `black --check`, `flake8`, `eslint`, `prettier`:contentReference[oaicite:5]{index=5}
-
-### 2) 🛡️ Governance Gates (OPA/Rego via Conftest)
-- ✅ CI runs **Conftest** against `policy/*.rego` to prevent merges that violate governance requirements (e.g., missing license metadata, missing provenance artifacts, disallowed AI prompt text).:contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}
-
-Example failure pattern you’ll see in CI logs:
-- `Dataset "mydata" is missing required field "license"`:contentReference[oaicite:8]{index=8}
-
-### 3) 📚 Docs + Story Node Governance
-- ✅ Markdown protocol validation (YAML front‑matter + required sections):contentReference[oaicite:9]{index=9}
-- ✅ Link/reference validation (no broken internal links, citations, or references):contentReference[oaicite:10]{index=10}
-
-### 4) 🗂️ Data Evidence Gates (Schemas + Provenance)
-- ✅ JSON schema validation for structured artifacts:
-  - STAC, DCAT, PROV (and Story Node schemas when applicable):contentReference[oaicite:11]{index=11}
-- ✅ Classification + sovereignty checks (no “downgrade” of sensitive inputs to public outputs):contentReference[oaicite:12]{index=12}
-
-### 5) 🔒 Security & Safety Gates
-- ✅ Secret scanning (no tokens, passwords, keys committed):contentReference[oaicite:13]{index=13}
-- ✅ PII / sensitive data scanning (including sensitive coordinates):contentReference[oaicite:14]{index=14}
-- ✅ Classification consistency checks (prevent accidental exposure):contentReference[oaicite:15]{index=15}
-
-### 6) 🧾 Release-time provenance (optional, but recommended)
-Some steps belong at **release time**, not every PR:
-- 🔏 Signed artifacts + SBOMs + provenance attestations:contentReference[oaicite:16]{index=16}
-
----
-
-## 🗺️ Pipeline invariants CI must not violate
-
-> [!NOTE]
-> KFM’s pipeline ordering is **inviolable** (ETL → Catalogs → Graph → API → UI → Story Nodes → Focus Mode). Workflows should reinforce this ordering with validation gates, not bypass it.:contentReference[oaicite:17]{index=17}
-
----
-
-## 🧰 Workflow map (recommended file set)
-
-> [!TIP]
-> If you don’t have all of these yet, start with **`ci.yml` + `policy.yml`** and expand over time.
-
-| Workflow file 🧾 | What it does ✅ | Typical triggers ⏱️ |
-|---|---|---|
-| `ci.yml` | Main PR gate: API tests + UI tests + lint/format + lightweight smoke checks | `pull_request`, `push` |
-| `policy.yml` | Runs Conftest (OPA/Rego) governance rules against repo changes | `pull_request`, `push` |
-| `docs.yml` | Markdown protocol checks + link validation | `pull_request` (paths: `docs/**`) |
-| `schemas.yml` | Validate STAC/DCAT/PROV + other JSON schema artifacts | `pull_request` (paths: `data/**`, `schemas/**`) |
-| `security.yml` | Secrets/PII/sensitive-location scans + dependency review | `pull_request`, `schedule` |
-| `docker.yml` | Build Docker images (API/Web) and optionally push to registry after merge | `push` (main), `workflow_dispatch` |
-| `release.yml` | Tag/release workflow: SBOM + signing + provenance attestations | `workflow_dispatch`, `release`, tags |
-
----
-
-## 🧑‍💻 Run the same checks locally (fast feedback)
-
-### 🐍 Backend (FastAPI) — tests
-```bash
-docker-compose exec api pytest
-```
-(Backend tests in CI are expected to use `pytest`.):contentReference[oaicite:18]{index=18}
-
-### 🌐 Frontend (React/TS) — tests
-```bash
-cd web
-npm test
-```
-(Frontend tests are expected in CI.):contentReference[oaicite:19]{index=19}
-
-### 🛡️ Policy checks — Conftest
-```bash
-conftest test .
-```
-(Use this to reproduce CI policy failures locally.):contentReference[oaicite:20]{index=20}
-
----
-
-## 🧯 Troubleshooting CI failures (common patterns)
-
-### ❌ “Policy checks” failed
-- **Most common causes**
-  - Missing license field in dataset metadata
-  - Missing provenance artifact (PROV) for a processed output
-  - Sensitive classification “downgrade” detected
-- **What to do**
-  - Read the CI log line: Conftest usually tells you *exactly* which rule + file failed:contentReference[oaicite:21]{index=21}
-  - Fix the artifact (metadata/provenance/classification), then re-run:
-    - `conftest test .`:contentReference[oaicite:22]{index=22}
-
-### ❌ Docs check failed (front‑matter / missing sections / broken links)
-- Ensure YAML front‑matter is valid and required sections exist:contentReference[oaicite:23]{index=23}
-- Fix broken internal references (moved files, renamed anchors):contentReference[oaicite:24]{index=24}
-
-### ❌ Secrets / PII / sensitive content flagged
-- Remove the secret from git history (if needed), rotate the key, and prefer GitHub Secrets
-- Validate data contributions for inadvertent PII / sensitive coordinates:contentReference[oaicite:25]{index=25}
-
----
-
-## 🔐 Secrets & permissions (workflow hygiene)
-
-> [!WARNING]
-> Never commit secrets. CI is expected to scan for secrets and fail builds when found.:contentReference[oaicite:26]{index=26}
-
-**Common secrets you may need** (varies by workflow):
-- `GHCR_TOKEN` / registry credentials (for Docker pushes)
-- `CODECOV_TOKEN` (if using external coverage reporting)
-- `OPENAI_API_KEY` (only if you run *non-default* CI jobs that require it — most CI should mock AI calls)
-
-✅ Prefer GitHub’s `GITHUB_TOKEN` wherever possible and grant minimal permissions per workflow.
-
----
-
-## 🧱 Conventions for adding/editing workflows
-
-### ✅ Keep workflows KFM‑aligned
-- Use **path filters** to avoid running heavy checks on unrelated changes
-- Keep jobs **deterministic** and cache dependencies (pip/npm)
-- Prefer **small fixture datasets** for graph/API integration tests (don’t pull huge real data in PR checks)
-- Treat governance checks as **required** status checks (“fail closed”):contentReference[oaicite:27]{index=27}
-
-### 🧩 Suggested patterns
-- `concurrency:` cancel outdated PR runs
-- “Reusable workflows” for shared steps across `ci.yml`, `docs.yml`, etc.
-- Pin third-party actions to major versions (or SHAs for high assurance)
-
----
-
-## 📎 Design references (why CI is strict)
-
-- CI includes tests, linting, Conftest policy enforcement, and may build Docker images post‑merge:contentReference[oaicite:28]{index=28}
-- Governance policies are “policy-as-code” (OPA/Rego) and CI enforcement uses Conftest to block non‑compliant merges:contentReference[oaicite:29]{index=29}
-- Minimum CI gates include docs validation, schema validation, security scans, and classification consistency checks:contentReference[oaicite:30]{index=30}
-- Pipeline ordering is absolute; workflows should validate artifacts at the correct boundaries:contentReference[oaicite:31]{index=31}
-
----
-
-## 🧾 Quick folder view
+## 📁 What lives here
 
 ```text
-📁 .github/
-└── 📁 workflows/
-    ├── 🧪 ci.yml
-    ├── 🛡️ policy.yml
-    ├── 📚 docs.yml
-    ├── 🗂️ schemas.yml
-    ├── 🔒 security.yml
-    ├── 🐳 docker.yml
-    ├── 🏷️ release.yml
-    └── 📄 README.md   👈 you are here
+.github/
+  workflows/
+    README.md   👈 you are here
+    *.yml       🤖 GitHub Actions workflows (CI, policy, security, release, scheduled jobs)
+```
+
+> [!NOTE]
+> Workflow filenames can vary by repo iteration. Use this README as the **responsibility map** for what each workflow _should_ cover, then keep it synced with the actual `.yml` files.
+
+---
+
+## 🧭 The non‑negotiables these workflows protect
+
+KFM’s “must not regress” invariants are enforced through automated CI/CD gates:
+
+- **Pipeline ordering is absolute**: ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode.  [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **API boundary rule**: the UI must never talk to the graph directly; access goes through the governed API layer.  [oai_citation:4‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Provenance first**: published data must be registered with provenance before graph/UI usage.  [oai_citation:5‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **“Fail closed” security posture**: missing metadata / failed policy ⇒ block by default.  [oai_citation:6‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+---
+
+## ✅ CI gates (a.k.a. “definition of done” for merges)
+
+These are the **core validation gates** the workflows should run on PRs and mainline pushes:
+
+### 📘 Docs + Story validation
+- **Markdown protocol & front‑matter checks** (YAML front-matter + required sections).  [oai_citation:7‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Link/reference validation** (no broken internal refs/citations).  [oai_citation:8‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 🗺️ Metadata integrity (STAC/DCAT/PROV)
+- **JSON schema validation** for:
+  - STAC Items/Collections
+  - DCAT dataset entries
+  - PROV bundles
+  - Story Node schemas (where applicable)  [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 🕸️ Graph correctness
+- **Graph integrity tests** against a fixture dataset (constraints, ontology expectations).  [oai_citation:10‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 🔌 API contract & schema tests
+- **Contract tests** + OpenAPI/GraphQL schema linting to prevent accidental breaking changes.  [oai_citation:11‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### 🔐 Security + governance scans
+- **Secret scanning** (prevent keys/tokens in repo).  [oai_citation:12‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **PII / sensitive data scanning** (catch accidental inclusion).  [oai_citation:13‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Sensitive location checks** (ensure protected coordinates aren’t leaking into public outputs).  [oai_citation:14‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Classification consistency** (no “downgrade” of sensitivity through processing without approved de-identification).  [oai_citation:15‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+> [!TIP]
+> Only when these gates pass (or are explicitly waived by maintainers in special cases) should merges be allowed.  [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 🛡️ Policy-as-Code (OPA/Rego) + CI enforcement
+
+KFM governance is encoded as **policy-as-code** in the repo (typically under `policy/`), intended to be **machine-enforceable** and versioned like application code.  [oai_citation:17‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+**How it’s enforced in CI:**
+- CI runs **Conftest** to evaluate Rego policies against PR changes.  [oai_citation:18‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- Typical “hard stop” failures include:
+  - dataset metadata missing required fields (e.g., **license**)  
+  - missing provenance artifacts (e.g., **PROV**)  
+  - disallowed phrases/unsafe AI prompt content  [oai_citation:19‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:20‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 🏃 Run the same checks locally (recommended)
+
+Keeping CI fast means **you run the same gates before pushing**.
+
+### 🐍 Backend (Python)
+```bash
+# run tests (containerized dev setup)
+docker-compose exec api pytest
+```
+### ✨ Format / lint
+```bash
+# Python style gates (examples used in project docs)
+black .            # or black --check .
+flake8
+```
+
+### 🌐 Frontend (Node)
+```bash
+npm test
+npm run lint -- --fix
+```
+
+### 🧾 Policy checks (Conftest)
+```bash
+conftest test .
+# or narrow it down
+conftest test data/processed/mydata.csv
+```
+
+These commands are explicitly called out as the expected local mirrors for CI in KFM docs.  [oai_citation:21‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+## 📦 Build, images, and release flow
+
+### 🧱 Build + push (post-merge)
+After merge to `main`, CI/CD may:
+- build Docker images for the API (and optionally frontend)
+- tag them (e.g., commit SHA)
+- push to a registry  [oai_citation:22‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### 🏷️ Releases (tagged)
+At release time, KFM’s pipeline may also produce **signed artifacts**, including:
+- **SBOMs**
+- **provenance attestations**  [oai_citation:23‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+> [!IMPORTANT]
+> Keep “release-time” steps (signing, SBOM generation) separate from “PR-time” steps unless PR verification explicitly requires it.  [oai_citation:24‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## ⏰ Scheduled workflows (maintenance + hygiene)
+
+GitHub Actions scheduled workflows can be used for routine operations like:
+- retraining models on a cadence
+- clearing logs
+- refreshing derived dashboards/outputs  [oai_citation:25‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+---
+
+## 🔑 Secrets, permissions, and environments
+
+KFM’s philosophy is governance-first and “fail closed.”  [oai_citation:26‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+Recommended GitHub Actions conventions:
+- Use **least-privilege** workflow permissions (`permissions:` block) 🔒
+- Prefer **GitHub Environments** for any deploy jobs (adds manual approvals + scoped secrets)
+- Never print secrets; scrub logs; upload only sanitized artifacts
+
+Example secrets you *might* need (repo-dependent):
+- `GHCR_TOKEN` / registry credentials (if pushing images)
+- cloud provider credentials (only if deploying)
+- `SENTRY_AUTH_TOKEN` / telemetry tooling tokens (if used)
+
+> [!NOTE]
+> This README doesn’t assume a specific cloud provider; wire secrets to your actual deployment target.
+
+---
+
+## 🧩 Authoring workflow rules (recommended)
+
+To keep workflows aligned with KFM architecture:
+
+- ✅ **Use path filters** so data-only PRs don’t run full container builds (but still run metadata/policy checks).
+- ✅ **Add concurrency** to cancel redundant PR runs.
+- ✅ **Cache dependencies** (pip/npm) to keep CI fast.
+- ✅ **Upload artifacts** (test reports, schema validation outputs) for debugging.
+- ❌ Don’t add workflow steps that bypass the canonical pipeline (e.g., “publish UI artifact” without metadata/provenance gates).  [oai_citation:27‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:28‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+---
+
+## 🗺️ CI mental model (Mermaid)
+
+```mermaid
+flowchart TD
+  PR[Pull Request / Push] --> A[Lint + Tests]
+  A --> B[Policy-as-Code: Conftest/Rego]
+  B --> C[Metadata: STAC/DCAT/PROV Schema Validation]
+  C --> D[Docs/Links Validation]
+  D --> E[Security Scans: Secrets/PII/Sensitive Locations]
+  E --> F{All Gates Pass?}
+  F -- No --> X[❌ Block Merge (Fail Closed)]
+  F -- Yes --> M[✅ Merge Allowed]
+  M --> R[Release/Deploy (optional)]
 ```
 
 ---
 
+## 🧯 Troubleshooting (common CI failures)
+
 <details>
-<summary>🏷️ Badge template (optional)</summary>
+<summary><strong>Click to expand</strong> 🔍</summary>
 
-> Replace `OWNER/REPO` + workflow filenames to match your repo.
+### ❌ “Style issues found”
+- Python: run `black .` (or `black --check .`) + `flake8` locally.  [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- JS: run `npm run lint -- --fix`.  [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-```md
-![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)
-![Policy](https://github.com/OWNER/REPO/actions/workflows/policy.yml/badge.svg)
-![Docs](https://github.com/OWNER/REPO/actions/workflows/docs.yml/badge.svg)
-![Security](https://github.com/OWNER/REPO/actions/workflows/security.yml/badge.svg)
-```
+### ❌ “Dataset missing license / missing PROV / policy violation”
+- Run `conftest test .` locally to reproduce.
+- Fix metadata/provenance gaps (license fields, PROV bundles, required schema fields).  [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:32‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+### ❌ “Broken links / unresolved references”
+- CI checks docs + Story Node references; fix paths or update citations.  [oai_citation:33‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+### ❌ “Classification consistency / sensitive location flagged”
+- Ensure outputs are not less restricted than inputs and that protected coordinates are generalized/withheld.  [oai_citation:34‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
 </details>
+
+---
+
+## 🔗 Related docs (worth reading 🧠)
+
+- `docs/governance/ROOT_GOVERNANCE.md` (governance model)  [oai_citation:35‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- `docs/governance/ETHICS.md` (ethics policy)  [oai_citation:36‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- `docs/governance/SOVEREIGNTY.md` (sovereignty + sensitive data handling)  [oai_citation:37‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- KFM Master Guide v13 (Draft) — CI gates + invariants  [oai_citation:38‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU) [oai_citation:39‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- KFM Comprehensive Blueprint — policy-as-code + Conftest enforcement  [oai_citation:40‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+
+---
+
+### ✅ README upkeep checklist
+
+- [ ] When a new workflow `.yml` is added, update this README with what it enforces.
+- [ ] If a CI gate is added/removed, update the “CI gates” section so contributors know the rules.
+- [ ] Keep “policy checks” aligned with `policy/*.rego` changes (policy drift is a hidden foot-gun 🧨).
