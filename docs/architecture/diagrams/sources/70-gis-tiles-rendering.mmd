@@ -1,27 +1,21 @@
-%% ------------------------------------------------------------------------------------
-%% 🧩 KFM | GIS Tiles Rendering (Vector + Raster)
-%% 📄 docs/architecture/diagrams/sources/70-gis-tiles-rendering.mmd
-%%
-%% Runtime (public consumption):
-%%   - Vector tiles: GET /tiles/:layer/:z/:x/:y.pbf  (MVT)
-%%   - Raster tiles: GET /tiles/:layer/:z/:x/:y.png  (or .webp)
-%%
-%% Offline (optional but recommended for scale):
-%%   - Vector + raster prep (PostGIS, COGs), optionally build PMTiles/MBTiles/XYZ pyramids
-%%   - Publish versions to support cache-busting and reproducible map states
-%% ------------------------------------------------------------------------------------
-
-%%{init: {'flowchart': {'curve': 'basis'}}}%%
 flowchart TB
+  %% ------------------------------------------------------------------------------------
+  %% 🧩 KFM | GIS Tiles Rendering (Vector + Raster)
+  %% 📄 docs/architecture/diagrams/sources/70-gis-tiles-rendering.mmd
+  %%
+  %% NOTE (Mermaid compatibility):
+  %% - Keep "flowchart TB" as the FIRST non-empty line (some renderers require this).
+  %% - Avoid Mermaid init blocks here; prefer repo-wide Mermaid config if needed.
+  %% ------------------------------------------------------------------------------------
 
   %% =========================
   %% 👤 CLIENTS
   %% =========================
   subgraph Clients["👤 Clients (consume tiles)"]
     direction LR
-    web["🌐 Web UI\nMapLibre GL JS"]
-    openlayers["🗺️ External clients\nOpenLayers / QGIS / custom apps"]
-    globe["🧭 3D / Globe\nCesium"]
+    web["🌐 Web UI<br/>MapLibre GL JS"]
+    openlayers["🗺️ External clients<br/>OpenLayers / QGIS / custom apps"]
+    globe["🧭 3D / Globe<br/>Cesium"]
     mobile["📱 Mobile / AR"]
     earth["🌎 Google Earth"]
   end
@@ -40,12 +34,12 @@ flowchart TB
   %% =========================
   subgraph API["🧠 API + Governance"]
     direction TB
-    auth["🔐 AuthN\n(JWT / session)"]
-    policy["🛡️ Policy gate\n(OPA/Rego)"]
-    tiles["🧩 Tiles endpoint\nGET /tiles/:layer/:z/:x/:y.pbf (MVT)\nGET /tiles/:layer/:z/:x/:y.png|webp"]
-    cache["⚡ Read-through tile cache\n(Redis / disk)"]
-    audit["🧾 Audit + metrics\n(trace id, rate limits, access logs)"]
-    deny["⛔ Deny / sanitize\n(403 or masked tile)"]
+    auth["🔐 AuthN<br/>(JWT / session)"]
+    policy["🛡️ Policy gate<br/>(OPA/Rego)"]
+    tiles["🧩 Tiles endpoint<br/>GET /tiles/:layer/:z/:x/:y.pbf (MVT)<br/>GET /tiles/:layer/:z/:x/:y.png|webp"]
+    cache["⚡ Read-through tile cache<br/>(Redis / disk)"]
+    audit["🧾 Audit + metrics<br/>(trace id, rate limits, access logs)"]
+    deny["⛔ Deny / sanitize<br/>(403 or masked tile)"]
   end
 
   %% =========================
@@ -54,9 +48,9 @@ flowchart TB
   subgraph Render["🎨 Renderers"]
     direction LR
     kind{"🧭 Tile kind?"}
-    vtr["🧱 Vector tile renderer\nMVT (.pbf)"]
-    rtr["🖼️ Raster tile renderer\nPNG / WEBP"]
-    proxy["🔁 Proxy / re-tile\nWMS/WMTS passthrough"]
+    vtr["🧱 Vector tile renderer<br/>MVT (.pbf)"]
+    rtr["🖼️ Raster tile renderer<br/>PNG / WEBP"]
+    proxy["🔁 Proxy / re-tile<br/>WMS/WMTS passthrough"]
   end
 
   %% =========================
@@ -64,12 +58,12 @@ flowchart TB
   %% =========================
   subgraph Stores["🗄️ Stores"]
     direction LR
-    postgis["🗺️ PostGIS\n(vector features + spatial indexes)"]
-    pmtiles["📦 PMTiles / MBTiles\n(prebuilt tilesets)"]
-    cog["🛰️ Cloud-Optimized GeoTIFFs (COG)\n(+ overviews / pyramids)"]
-    lake["☁️ Data lake / object store\n(large rasters, artifacts)"]
-    extsvc["🔗 External GIS services\n(ArcGIS, WMS/WMTS)"]
-    catalog["📚 Catalog + Layer Registry\n(STAC/DCAT metadata + routing)"]
+    postgis["🗺️ PostGIS<br/>(vector features + spatial indexes)"]
+    pmtiles["📦 PMTiles / MBTiles<br/>(prebuilt tilesets)"]
+    cog["🛰️ Cloud-Optimized GeoTIFFs (COG)<br/>(+ overviews / pyramids)"]
+    lake["☁️ Data lake / object store<br/>(large rasters, artifacts)"]
+    extsvc["🔗 External GIS services<br/>(ArcGIS, WMS/WMTS)"]
+    catalog["📚 Catalog + Layer Registry<br/>(STAC/DCAT metadata + routing)"]
   end
 
   %% =========================
@@ -77,10 +71,10 @@ flowchart TB
   %% =========================
   subgraph Offline["🏗️ Offline ingest + prep (optional)"]
     direction TB
-    ingest["📥 Ingest\n(federated harvest / uploads / STAC feeds)"]
-    prep["🧪 Preprocess\n(clip/mosaic/reproject → indexes + COGs)"]
-    build["🧱 Build tilesets\n(tile pyramid / PMTiles / MBTiles / XYZ)"]
-    publish["🚀 Publish + version\n(cache-bust + catalog update)"]
+    ingest["📥 Ingest<br/>(federated harvest / uploads / STAC feeds)"]
+    prep["🧪 Preprocess<br/>(clip/mosaic/reproject → indexes + COGs)"]
+    build["🧱 Build tilesets<br/>(tile pyramid / PMTiles / MBTiles / XYZ)"]
+    publish["🚀 Publish + version<br/>(cache-bust + catalog update)"]
   end
 
   %% =========================
@@ -150,4 +144,3 @@ flowchart TB
   class postgis,pmtiles,cog,lake,extsvc,catalog store;
   class deny warn;
   class ingest,prep,build,publish offline;
-
