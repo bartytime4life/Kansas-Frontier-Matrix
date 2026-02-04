@@ -1,224 +1,217 @@
-# 🧩 `.github/actions` — Local Reusable GitHub Actions
+# 🧩 `.github/actions/` — Reusable GitHub Actions (KFM CI/CD Building Blocks)
 
-![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white)
-![Policy as Code](https://img.shields.io/badge/Policy%20as%20Code-Conftest%20%2B%20OPA-7B42BC?logo=openpolicyagent&logoColor=white)
-![Monorepo](https://img.shields.io/badge/Repo-Monorepo-0B7285?logo=git&logoColor=white)
-![Dev Env](https://img.shields.io/badge/Dev-Docker%20Compose-2496ED?logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-local%20actions-blue?logo=githubactions)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-automation%20first-success)
+![Security](https://img.shields.io/badge/security-least%20privilege-important)
 
-> [!NOTE]
-> This folder holds **repo-local Actions** (mostly **composite actions**) that are reused by workflows in [`../workflows/`](../workflows/).
-> The goal: **less YAML duplication**, **more consistency**, and **one place** to evolve CI building blocks. 🧱✨
+Welcome to the **local Actions library** for the Kansas Frontier Matrix (KFM) repo.  
+This folder is where we keep **reusable, versioned, reviewable automation blocks** (usually **composite actions**) that power our workflows in:
 
----
+📁 `.github/workflows/`
 
-## 🧭 Quick navigation
-
-- 🔁 CI/CD entrypoints (workflows): [`../workflows/`](../workflows/)
-- 🤝 Contribution rules: [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md)
-- 🛡️ Governance policies (Rego): [`../../policy/`](../../policy/)
-- 📚 Docs hub: [`../../docs/`](../../docs/)
-- 🏠 Project README: [`../../README.md`](../../README.md)
+> ✅ Why local actions?  
+> - **Consistency** across workflows (one lint/test setup, many pipelines)  
+> - **Less copy/paste YAML** (and fewer subtle differences)  
+> - **Easier upgrades** (update once → all workflows inherit)  
+> - **KFM-friendly automation** (policy checks, Docker builds, deploy gates)
 
 ---
 
-## 🎯 Why local actions?
+## 🧭 Quick start: using a local action in a workflow
 
-KFM CI is designed to enforce a few consistent “gates” on pull requests:
+In a workflow file (example: `.github/workflows/ci.yml`):
 
-- ✅ **Linting / formatting**
-- ✅ **Backend + frontend tests**
-- ✅ **Policy-as-code checks** (Conftest + Rego), e.g., metadata/license requirements
-- ✅ **(Optional) Build steps** like Docker image builds/pushes after merges
+```yaml
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-Local actions let us implement these checks once, then reuse them across multiple workflows (backend, frontend, docs, data) without copy/paste drift.
+      # Local action reference 👇 (path is relative to repo root)
+      - name: Setup Python + deps
+        uses: ./.github/actions/setup-python
 
-> [!TIP]
-> Keep workflows boring. Put reusable logic here. Put “what runs when” in `.github/workflows/*.yml`. 😌
-
----
-
-## 🧱 How this fits into KFM CI
-
-```mermaid
-flowchart LR
-  PR[Pull Request] --> Lint[Lint & Format Checks]
-  Lint --> Tests[Unit / Integration Tests]
-  Tests --> Policy[Policy-as-Code (Conftest)]
-  Policy --> Build[Build (optional)]
-  Build --> Deploy[Deploy (optional)]
+      - name: Run tests
+        run: pytest -q
 ```
 
 ---
 
-## 📁 Directory conventions
+## 🗂️ Recommended folder layout
 
 Each action lives in its own folder:
 
-```
-.github/
-  workflows/                 # CI/CD entrypoints (pipelines)
-  actions/                   # Reusable building blocks (this folder)
-    <action-name>/           # kebab-case
-      action.yml             # required
-      README.md              # required (usage + inputs/outputs)
-      scripts/               # optional (bash/python/node helpers)
-      tests/                 # optional (self-tests)
+```text
+.github/actions/
+  README.md                👈 you are here
+  <action-name>/
+    action.yml             ✅ required
+    README.md              ✅ required (action-specific docs)
+    src/                   (optional) scripts used by composite action
 ```
 
-### ✅ Naming rules
+### ✅ Naming convention
+Keep names:
+- **kebab-case**
+- **verb-first**
+- scoped when helpful (ex: `kfm-opa-policy-check`)
 
-- Use **kebab-case**: `policy-conftest`, `python-quality`, `docker-buildx`
-- Prefer **verbs**: `run-*`, `validate-*`, `setup-*`
-- Keep actions **single-responsibility** (small + composable) 🧩
+Examples:
+- `setup-python`
+- `setup-node`
+- `docker-build-push`
+- `compose-smoke-test`
+- `opa-conftest-policy`
 
 ---
 
-## 🧩 Action standards
+## 🧱 How KFM uses these actions
 
-### Composite actions by default 🧰
+KFM’s architecture and tooling typically needs CI/CD to orchestrate:
 
-Prefer composite actions unless you **must** ship a Docker container.
+- 🧪 unit + integration testing
+- 🧹 formatting + linting
+- 🐳 Docker image builds for services (ex: `api`, `web`)
+- 🔐 policy gates (OPA/Conftest) for governance + safety checks
+- 🚀 deploy steps (staging → production) with Infrastructure-as-Code (IaC)
 
-Composite checklist:
+### 🧠 Pipeline mental model (high-level)
 
-- ✅ `runs.using: "composite"`
-- ✅ Shell steps use `bash` + `set -euo pipefail`
-- ✅ Inputs are documented (with sane defaults)
-- ✅ Behavior is deterministic (pin versions; avoid floating tags)
-- ✅ No secrets printed (ever) 🔒
-
-### Pin external actions 🔒
-
-When workflows use third‑party actions, prefer pinning by **commit SHA** (supply‑chain hygiene).
-If you use tags, document why in the workflow.
-
-### Logs that are easy to read 👀
-
-Use GitHub log groups:
-
-```bash
-echo "::group::Conftest policy checks"
-# ...
-echo "::endgroup::"
+```mermaid
+flowchart TD
+  A[PR / Push] --> B[Fast Checks<br/>lint • format • unit tests]
+  B --> C[Policy Gates<br/>OPA/Conftest • metadata rules]
+  C --> D[Build Artifacts<br/>Docker images • web bundle]
+  D --> E[Integration Smoke<br/>docker compose up • health checks]
+  E --> F{Deploy?}
+  F -->|staging| G[Deploy Staging<br/>IaC / scripts]
+  F -->|prod (gated)| H[Deploy Prod<br/>Approvals + environments]
 ```
 
-…and add failure output that answers: **what failed + how to fix locally**.
+Local actions are the **lego bricks** used to assemble that pipeline.
 
 ---
 
-## ➕ Creating a new action
+## 📚 Action catalog
 
-1. Create a folder:
+> ℹ️ This section is intentionally lightweight:  
+> **the source of truth is the folders in `.github/actions/*/`**.
 
-   ```
-   .github/actions/<action-name>/
-   ```
+### What every action must include ✅
+- `action.yml` with:
+  - `name`, `description`
+  - `runs: using: composite`
+  - explicit `inputs` and `outputs` (when relevant)
+- `README.md` inside the action folder describing:
+  - purpose
+  - inputs/outputs
+  - example usage snippet
+  - troubleshooting
 
-2. Add `action.yml`.
-3. Add `README.md` for that action (copy template below).
-4. Wire it into one or more workflows in `../workflows/`.
-5. Update **Action Catalog** in *this* README.
-
-> [!IMPORTANT]
-> If an action enforces governance (policies / provenance / metadata), treat changes like API changes:
-> update docs + keep backward compatibility when possible. 🧾
-
----
-
-## 🧪 Debugging CI locally
-
-Even with GitHub Actions, you should be able to reproduce most failures locally.
-
-### Backend tests 🐍
-
-```bash
-docker-compose exec api pytest
-```
-
-### Frontend checks 🌐 (example)
-
-```bash
-docker-compose exec web npm test
-docker-compose exec web npm run lint -- --fix
-```
-
-### Policy checks 🛡️ (Conftest)
-
-```bash
-conftest test .
-# or narrow to a target:
-conftest test data/processed/some_dataset.*
-```
-
-> [!NOTE]
-> If CI fails on a policy rule (e.g., “dataset missing license”), the fix is usually in metadata (or a missing artifact), not in code.
+### Optional but encouraged ⭐
+- A `src/` folder with scripts to keep `action.yml` clean
+- Small, composable actions (prefer 1 responsibility)
+- A minimal `permissions:` footprint in workflows that call the action
 
 ---
 
-## 🗂️ Action Catalog
+## 🔒 Security + governance rules (non-negotiable)
 
-> [!TIP]
-> Keep this table current — it becomes the “API surface” of our CI building blocks. 🧠
-
-| Action 📦 | What it does ✅ | Used by 🔁 | Status 🚦 |
-|---|---|---|---|
-| *(add yours)* | *(describe in 1 line)* | `ci.yml`, `policy.yml`, … | 🟡 planned |
-| `policy-conftest` | Run Rego policy checks via Conftest | PR validation | 🟡 planned |
-| `python-quality` | Run `black/flake8` + `pytest` (or call `make ci-python`) | Backend CI | 🟡 planned |
-| `frontend-quality` | Run `npm ci` + `npm test` + `npm run build` | Frontend CI | 🟡 planned |
-| `docs-quality` | Markdown lint + front‑matter validation + link checks | Docs CI | 🟡 planned |
-| `docker-buildx` | Build (and optionally push) Docker images | Main branch | 🟡 planned |
-
----
-
-## 🧾 Template: `action.yml` (composite)
+### 1) Least privilege by default 🛡️
+Workflows that use these actions should set:
 
 ```yaml
-name: "Example Action"
-description: "One-line description of what this action does"
+permissions:
+  contents: read
+```
 
+…and only elevate when necessary (ex: `packages: write` for GHCR pushes).
+
+### 2) Secrets handling 🔐
+- Never echo secrets
+- Prefer masked env vars and GitHub Secrets
+- If deploying (SSH / cloud), keep credentials **only** in:
+  - `GitHub Environments`
+  - `GitHub Secrets`
+  - OIDC (preferred if cloud supports it)
+
+### 3) Policy gates (KFM-style) ✅
+If the repo includes governance rules (metadata, licensing, provenance, safety), local actions should support:
+- running **Conftest**
+- running **OPA** tests
+- failing fast with clear messages
+
+> Tip: If a policy fails, the workflow should point to the exact rule + file to fix.
+
+---
+
+## 🛠️ Creating a new local action (template)
+
+1) Create a folder:
+```bash
+mkdir -p .github/actions/<action-name>
+```
+
+2) Add `action.yml` (composite action template):
+```yaml
+name: "<action-name>"
+description: "Describe what this action does (1 sentence)."
 inputs:
   example_input:
-    description: "What this input controls"
+    description: "Example input."
     required: false
-    default: "true"
-
+    default: ""
 runs:
   using: "composite"
   steps:
     - name: Do the thing
       shell: bash
       run: |
-        set -euo pipefail
-        echo "Running example action..."
+        echo "Hello from <action-name>"
 ```
 
----
-
-## 📄 Template: per-action `README.md`
-
-Each action folder should include a minimal README containing:
-
-- 🎯 Purpose (what it does / why it exists)
-- 🧾 Inputs / outputs (table preferred)
-- 🧪 Example usage snippet (`uses: ./.github/actions/<name>`)
-- 🧰 “Run locally” instructions
-- 🧯 Failure modes (“If you see X, do Y”)
+3) Add `README.md` inside the action folder with:
+- what it does
+- inputs/outputs
+- example workflow usage
+- common failure modes
 
 ---
 
-## 🔐 Security + permissions checklist
+## 🧪 Local debugging tips
 
-- 🔒 Follow least privilege in workflows (`permissions:` minimized)
-- 🧯 Don’t echo secrets; avoid `set -x`
-- 🧾 Prefer verified/pinned dependencies
-- 🧪 Validate inputs (don’t trust workflow-provided strings blindly)
-- 🧹 Avoid writing untrusted input into `$GITHUB_ENV` or `$GITHUB_OUTPUT` without sanitizing
+### Run workflows locally (optional)
+If you use `act`, you can simulate GitHub Actions runs locally (useful for faster iteration).
+
+> ⚠️ Caveat: service containers + networking can differ from GitHub-hosted runners.
+
+### Prefer “thin actions”
+If an action grows too large:
+- split it into smaller actions
+- or move complex logic into scripts in `src/`
 
 ---
 
-## 🔗 Related
+## ✅ Definition of done for CI/CD actions
 
-- CI entrypoints: [`../workflows/`](../workflows/)
-- Governance policies: [`../../policy/`](../../policy/)
-- Developer workflow: [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md)
+An action is “done” when:
+- ✅ has docs
+- ✅ has deterministic output
+- ✅ fails loudly and clearly
+- ✅ avoids hidden side effects
+- ✅ supports KFM’s automation-first pipeline philosophy
+
+---
+
+## 🔁 Related folders
+
+- 📁 `.github/workflows/` — pipeline definitions that call these actions
+- 📁 `infra/` / `k8s/` (if present) — deployment & IaC
+- 📁 `api/` / `web/` (if present) — service Docker builds + tests
+
+---
+
+## 🧾 License / attribution
+
+These local actions are part of the KFM repository and follow the repo’s license and contribution rules.
