@@ -1,1 +1,133 @@
+%% Kansas Frontier Matrix (KFM) — API Surface
+%% Source: "API Schemas and Developer Interfaces" section in Kansas Frontier Matrix Comprehensive System Documentation.pdf
+%%{init: {"theme":"base","flowchart":{"curve":"linear"}}}%%
+flowchart LR
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Clients
+    %% ─────────────────────────────────────────────────────────────────────
+    subgraph C[🧑‍💻 Clients]
+        web[🌐 Web Frontend]
+        mobile[📱 Mobile / AR]
+        gis[🗺️ GIS Tools]
+        ext[🧪 Scripts / Integrations]
+    end
+
+    api[🚪 Unified API Layer<br/>FastAPI<br/>REST + GraphQL]
+
+    web --> api
+    mobile --> api
+    gis --> api
+    ext --> api
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Governance (applies to every request)
+    %% ─────────────────────────────────────────────────────────────────────
+    subgraph GOV[🛡️ Governance & Safety Rails]
+        auth[🔑 AuthN/AuthZ<br/>API key or OAuth token]
+        rbac[👮 RBAC + data sensitivity filters]
+        audit[🧾 Audit logging]
+        limits[⏱️ Pagination + timeouts<br/>GraphQL depth/cost limits]
+    end
+
+    api -.enforces.-> auth
+    api -.enforces.-> rbac
+    api -.records.-> audit
+    api -.protects.-> limits
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Public API surface
+    %% ─────────────────────────────────────────────────────────────────────
+    subgraph PUB[🔌 Public API Surface]
+        meta["ℹ️ Health & Docs<br/>GET /healthz<br/>GET /readyz<br/>GET /version<br/>GET /openapi.json<br/>GET /docs"]
+        catalog["📚 Data Catalog & Datasets<br/>GET /api/v1/datasets/{id}<br/>GET /api/v1/catalog/search<br/>GET /api/v1/datasets/{id}/data<br/>↳ params: format=geojson, bbox=…"]
+        query["🧮 Ad-hoc Spatial Query<br/>GET /api/v1/query<br/>↳ params: table, bbox, where, select, format"]
+        tiles["🗺️ Map Tiles<br/>GET /tiles/{layer}/{z}/{x}/{y}.pbf (MVT)<br/>GET /tiles/{layer}/{z}/{x}/{y}.png (.webp)"]
+        gql["🧬 Knowledge Graph & Search<br/>POST /graphql"]
+        story["🧵 Story Nodes<br/>POST /api/v1/story (contributors)<br/>GET story by id + search (bbox/time/tags)"]
+        ai["✨ Focus Mode AI<br/>POST /api/v1/ai/query<br/>POST /api/v1/ai/stream (experimental)<br/>GET /api/v1/ai/suggestions"]
+    end
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Admin / Maintainer surface (restricted roles)
+    %% ─────────────────────────────────────────────────────────────────────
+    subgraph ADM[🔐 Admin / Maintainer Surface]
+        ingest["🚚 Ingestion & Pipeline Control<br/>POST /api/v1/ingest/runPipeline<br/>+ run status + provenance logs"]
+    end
+
+    api --> meta
+    api --> catalog
+    api --> query
+    api --> tiles
+    api --> gql
+    api --> story
+    api --> ai
+    api --> ingest
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Core backends
+    %% ─────────────────────────────────────────────────────────────────────
+    subgraph CORE[🧱 Core Backends]
+        postgis[(🗄️ PostGIS)]
+        neo4j[(🕸️ Neo4j)]
+        obj[(🪣 Object Storage<br/>STAC assets / exports)]
+        tileSvc[(🧊 Tile Service)]
+        retrieval[(🧷 Retrieval + Citations)]
+        ollama[(🧠 Ollama)]
+        pipelines[(⚙️ ETL / Pipeline Runner)]
+    end
+
+    %% Data / query paths
+    catalog --> postgis
+    catalog --> obj
+    query --> postgis
+
+    tiles --> tileSvc
+    tileSvc --> postgis
+
+    gql --> neo4j
+    gql --> postgis
+
+    story --> postgis
+
+    %% AI paths (grounded answers)
+    ai --> retrieval
+    retrieval --> postgis
+    retrieval --> neo4j
+    retrieval --> obj
+    retrieval --> ollama
+
+    %% Ingestion paths
+    ingest --> pipelines
+    pipelines --> obj
+    pipelines --> postgis
+    pipelines --> neo4j
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Roadmap / planned interop
+    %% ─────────────────────────────────────────────────────────────────────
+    subgraph ROADMAP[🧭 Interop Roadmap]
+        ogc["🛰️ OGC APIs (WMS/WFS/OGC Features)"]
+        gqlSub["🔔 GraphQL subscriptions / streaming (WebSocket)"]
+    end
+
+    api -.planned.-> ogc
+    api -.planned.-> gqlSub
+
+    %% ─────────────────────────────────────────────────────────────────────
+    %% Styling
+    %% ─────────────────────────────────────────────────────────────────────
+    classDef apiNode fill:#0b5fff,color:#ffffff,stroke:#0847b8,stroke-width:2px;
+    classDef surface fill:#f4f6ff,stroke:#8a93c2,stroke-width:1px;
+    classDef admin fill:#fff5f5,stroke:#d48a8a,stroke-width:1px;
+    classDef backend fill:#f3fff6,stroke:#7ac28a,stroke-width:1px;
+    classDef govern fill:#fffaf0,stroke:#c2a36b,stroke-width:1px;
+    classDef roadmap fill:#f8f8f8,stroke:#bdbdbd,stroke-dasharray: 5 5;
+
+    class api apiNode;
+    class meta,catalog,query,tiles,gql,story,ai surface;
+    class ingest admin;
+    class postgis,neo4j,obj,tileSvc,retrieval,ollama,pipelines backend;
+    class auth,rbac,audit,limits govern;
+    class ogc,gqlSub roadmap;
 
