@@ -1,5 +1,3 @@
-> According to a document from **February 5, 2026**, Focus Mode’s UI is designed to stay **decoupled from direct model calls** and instead talk to a **governed backend API** that performs retrieval + citation enforcement. ✅
-
 # 🧠 Focus Mode Hooks (`web/src/hooks/focus-mode`)
 
 ![React](https://img.shields.io/badge/React-Hooks-61DAFB?logo=react&logoColor=000)
