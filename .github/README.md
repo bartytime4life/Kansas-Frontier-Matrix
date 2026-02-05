@@ -1,12 +1,55 @@
-# 🧰 `.github` — Community Health & Automation for **Kansas Frontier Matrix (KFM)**
+# 🧰 `.github` — Community Health & Automation for **Kansas Frontier Matrix (KFM)** 🚧
 
-![License](https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge)
-![Last Commit](https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge)
-![Repo Size](https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge)
-![Issues](https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge)
+<div align="center">
+  <picture>
+    <source srcset="./assets/kfm-seal-animated.gif" type="image/gif">
+    <img src="./assets/kfm-seal-320.png" width="280" alt="Kansas Frontier Matrix (KFM) seal — animated">
+  </picture>
+
+  <br/>
+
+  <!-- Status / Safety -->
+  <img alt="Status: Under Construction" src="https://img.shields.io/badge/status-under_construction-orange?style=for-the-badge&logo=github">
+  <img alt="Governance: Evidence-First" src="https://img.shields.io/badge/governance-evidence--first-0b7285?style=for-the-badge">
+  <img alt="Policy: Fail-Closed" src="https://img.shields.io/badge/policy-fail--closed-8a2be2?style=for-the-badge">
+
+  <br/>
+
+  <!-- Repo badges -->
+  <img alt="License" src="https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+  <img alt="Last Commit" src="https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+  <img alt="Repo Size" src="https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+  <img alt="Issues" src="https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+</div>
 
 > 🧭 **Start here:** this folder is where we codify *how we collaborate* and *what must be true before anything ships*.  
 > ✅ Templates + ✅ Policies + ✅ CI/CD gates = **governed contributions**.
+
+---
+
+## 🚧 Under Construction (Read First)
+
+This `.github/` directory is actively being assembled into **Governance-as-Code**. Expect some churn while we lock:
+- ✅ contribution templates that **ask for evidence**
+- ✅ workflows that validate **metadata + provenance**
+- ✅ policy checks that **fail closed** (no silent bypasses)
+
+### ✅ Current vs Planned (Live Checklist)
+
+- [x] Baseline structure + README guidance 📘  
+- [ ] `PULL_REQUEST_TEMPLATE.md` with governance gates ✅  
+- [ ] Issue Forms (`ISSUE_TEMPLATE/*.yml`) for ingest / map / contract / bug 🧾  
+- [ ] `CODEOWNERS` rules for “high blast radius” areas 👀  
+- [ ] `dependabot.yml` for dependency hygiene 🔄  
+- [ ] CI workflows (lint/test/build) ⚙️  
+- [ ] Contract + schema validation (OpenAPI / JSON Schema) 📜  
+- [ ] Catalog validation (STAC / DCAT) 🗂️  
+- [ ] Provenance validation (PROV / JSON-LD) 🧾  
+- [ ] Security scanning (CodeQL / secret scanning / SBOM) 🔐  
+- [ ] Policy-as-code gates (OPA) ⚖️  
+
+> 🔥 **Treat changes here like production infrastructure.**  
+> A tiny YAML change can unblock—or break—every PR.
 
 ---
 
@@ -23,12 +66,13 @@
 
 ---
 
-## 📁 What Lives in `.github/`
+## 📁 What Lives in `.github/` (and why it matters)
 
-This directory holds GitHub-native “community health” + automation. Typical structure:
+This directory holds GitHub-native **community health + automation**.
 
 ```text
 .github/
+├─ assets/                      🖼️ Images/GIFs used by .github markdown
 ├─ ISSUE_TEMPLATE/              🧾 Issue forms & templates
 ├─ PULL_REQUEST_TEMPLATE.md     ✅ PR checklist + governance gates
 ├─ workflows/                   ⚙️ GitHub Actions (CI/CD + governance checks)
@@ -38,17 +82,21 @@ This directory holds GitHub-native “community health” + automation. Typical 
 └─ FUNDING.yml                  💖 Sponsorship links (optional)
 ```
 
-> 🔥 **Treat changes here like production infrastructure.**  
-> A tiny YAML change can unblock—or break—every PR.
+### 🖼️ `.github/assets/` (Brand + UX)
+We keep README visuals here so they’re versioned, reviewable, and consistent.
+- ✅ Use **PNG** for crisp static graphics
+- ✅ Use **GIF** for safe animations (GitHub READMEs don’t run CSS/JS animations)
+- ✅ Keep assets small (optimize & resize) to protect page load and mobile readers 📱
 
 ---
 
-## 🧭 The KFM “Truth Path” (Why GitHub Automation Matters)
+## 🧭 KFM “Truth Path” (Why GitHub Automation Matters)
 
 KFM is built around a non‑negotiable flow of evidence → governed artifacts → user experiences:
 
-```text
-Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
+```mermaid
+flowchart LR
+  raw[Raw 📥] --> proc[Processed 🏭] --> cat[Catalog 🗂️] --> db[Databases 🗃️] --> api[API 🌐] --> ui[UI/AI 🗺️🤖]
 ```
 
 ### ✅ Non‑Negotiables We Enforce via GitHub (Templates + CI)
@@ -58,16 +106,17 @@ Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
 - 🔒 **Classification propagation**: outputs can’t be less restricted than inputs.
 - ♻️ **Deterministic pipelines**: idempotent, config‑driven, logged, re‑runnable.
 - 🧱 **API boundary**: UI/AI does **not** query PostGIS/Neo4j directly—API is the enforcement layer.
+- 🧠 **Focus Mode constraints**: AI outputs must be traceable to cataloged evidence (“map behind the map”).
 
 ---
 
-## 🧩 Glossary Mini-Pack (KFM Terms You’ll See in Templates)
+## 🧩 Glossary Mini‑Pack (KFM Terms You’ll See in Templates)
 
-- **Catalogs** 🗂️: STAC (assets), DCAT (dataset discovery), PROV (lineage)
+- **Catalogs** 🗂️: **STAC** (assets), **DCAT** (dataset discovery), **PROV** (lineage)
 - **Contract artifact** 📜: versioned schema/spec (JSON Schema, OpenAPI, GraphQL SDL, UI config)
-- **Evidence artifact** 🧪: derived output that is registered in catalogs **before** being used in UI/narratives
-- **Story Node** 📚: narrative artifact that is machine-ingestible and provenance-linked
-- **Focus Mode** 🎯: Story Node + map/timeline context, constrained to provenance-linked content
+- **Evidence artifact** 🧪: derived output registered in catalogs **before** use in UI/narratives
+- **Story Node** 📚: narrative artifact that is machine‑ingestible and provenance‑linked
+- **Focus Mode** 🎯: Story Node + map/timeline context, constrained to provenance‑linked content
 
 ---
 
@@ -90,7 +139,7 @@ We prefer work to start as an issue when it’s:
 
 ## ✅ Pull Requests: What “Good” Looks Like Here
 
-### 📦 PR Title Style
+### 🏷️ PR Title Style
 Use a clear prefix + short summary:
 
 - `feat(api): add dataset search filter for bbox + time`
@@ -98,7 +147,7 @@ Use a clear prefix + short summary:
 - `docs(governance): clarify classification propagation rules`
 - `data(catalog): register new STAC collection + DCAT dataset`
 
-### 🧪 Minimum PR Payload
+### 📦 Minimum PR Payload
 Your PR should include:
 - **What changed** and **why**
 - **Proof** (tests, screenshots, sample outputs, validation logs)
@@ -132,6 +181,7 @@ Your PR should include:
 - `area:graph` 🕸️
 - `area:governance` ⚖️
 - `area:ai` 🎯
+- `area:data-sovereignty` 🪶 *(for Indigenous data governance / CARE-aligned work)*
 
 ### Priority / Status
 - `priority:p0` 🔥 / `priority:p1` ⚡ / `priority:p2` 🧊
@@ -141,7 +191,7 @@ Your PR should include:
 
 ---
 
-## ⚙️ CI/CD & Governance Gates (What Workflows Typically Do)
+## ⚙️ CI/CD & Governance Gates (What Workflows Should Do)
 
 Even if filenames evolve, the intent stays consistent:
 
@@ -177,6 +227,7 @@ Some workflows may export CI + governance telemetry artifacts to support:
 - Validate YAML locally (lint) if tooling exists
 - Keep workflows **deterministic** and **cache-safe**
 - Pin third‑party actions by version (and ideally by SHA for critical workflows)
+- Avoid “magic” environment differences: workflows should be reproducible from a clean checkout ♻️
 
 ### ✅ When changing issue/PR templates
 - Optimize for *fewer back-and-forth comments*
@@ -210,11 +261,13 @@ When a PR affects UI map rendering or narrative display:
 
 ---
 
-## 🆘 Need Help?
+## 🪶 Data Ethics & Indigenous Data Sovereignty (When Applicable)
 
-- 🧾 Open an issue with the closest template
-- 🧠 For unclear governance questions: tag `area:governance`
-- 🧱 For schema/contract questions: tag `area:catalog` or `area:api`
+KFM includes Indigenous history and land-related materials. When work touches Indigenous data:
+- ✅ prefer community-backed context over deficit framing  
+- ✅ document permissions/terms clearly (licenses + access boundaries)
+- ✅ treat “open” ≠ “unrestricted” (governance still applies)
+- ✅ label and route review via `area:data-sovereignty` 🪶
 
 > 🏁 Goal: **fast collaboration without sacrificing trust.**  
 > If it can’t be traced, validated, and reproduced… it doesn’t merge. ✅
