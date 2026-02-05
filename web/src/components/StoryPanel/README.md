@@ -1,5 +1,3 @@
-> According to a document from **February 3, 2026**, KFM’s web frontend is a **React/TypeScript** app whose reusable components include **MapViewer**, **TimelineSlider**, and **StoryPanel** (story content + scroll linking). [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
 # 🧩📜 StoryPanel
 
 ![Component](https://img.shields.io/badge/component-StoryPanel-6e40c9)
