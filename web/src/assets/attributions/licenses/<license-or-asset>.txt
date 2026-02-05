@@ -1,1 +1,43 @@
+# 📚 Third‑Party Attribution — *Professional Web Design: Techniques and Templates (5th Edition)*
 
+> 📁 **Target path:** `web/src/assets/attributions/licenses/professional-web-design-techniques-and-templates.txt`
+
+---
+
+## ✅ Asset Metadata
+
+| Field | Value |
+|---|---|
+| 📕 Title | *Professional Web Design: Techniques and Templates, Fifth Edition* |
+| ✍️ Author | Clint Eccher |
+| 🏢 Publisher | Cengage Learning PTR |
+| ©️ Copyright | © 2015 Cengage Learning PTR |
+| 🔢 ISBN‑13 | 978‑1‑305‑25752‑8 |
+| 🔢 ISBN‑10 | 1‑305‑25752‑9 |
+| 🔢 eISBN‑10 | 1‑305‑25753‑7 |
+| 🗃️ LCCN | 2014937100 |
+
+---
+
+## 🔒 Rights / License Summary
+
+- **All rights reserved.**
+- Reproduction, transmission, storage, or use is restricted without prior written permission, **except where permitted under U.S. Copyright law** (e.g., fair use + library/archive exceptions).
+- Trademarks remain the property of their respective owners.
+- Images are © Cengage Learning unless otherwise noted; **cover images are © Clint Eccher**.
+
+---
+
+## ✉️ Permissions & Contact
+
+- 🌐 Permissions portal: `cengage.com/permissions`
+- 📧 Email: `permissionrequest@cengage.com`
+- ☎️ Customer & Sales Support: `1-800-354-9706`
+- 🏢 Address: Cengage Learning PTR, 20 Channel Center Street, Boston, MA 02210, USA
+
+---
+
+## 🧭 Kansas Frontier Matrix Usage Notes
+
+This asset is included **for reference/research** in the Kansas Frontier Matrix project.  
+If the project distributes any portion beyond what is permitted by law, **obtain written permission** from the publisher before doing so.
