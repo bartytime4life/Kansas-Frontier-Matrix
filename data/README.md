@@ -1,381 +1,315 @@
-# 📦 `data/` — Versioned Datasets, Metadata, & Provenance (KFM) 🗺️
+<div align="center">
 
-![data](https://img.shields.io/badge/data-versioned-informational)
-![truth-path](https://img.shields.io/badge/truth%20path-raw%E2%86%92processed%E2%86%92catalog%E2%86%92api-blue)
-![catalogs](https://img.shields.io/badge/catalogs-STAC%20%2B%20DCAT-purple)
-![provenance](https://img.shields.io/badge/provenance-W3C%20PROV-005a9c)
-![governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-brightgreen)
-![fail-closed](https://img.shields.io/badge/policy-fail--closed-critical)
-![ci-gated](https://img.shields.io/badge/CI-metadata%20%2B%20license%20gates-orange)
-![formats](https://img.shields.io/badge/formats-geojson%20%7C%20parquet%20%7C%20cog%20%7C%20csv-lightgrey)
+<!-- 🚧 UNDER CONSTRUCTION -->
+<img src="../docs/assets/brand/kfm-seal-animated-320.gif" width="160" alt="Kansas Frontier Matrix (KFM) Seal (Animated)" />
+<br/>
 
-Welcome to the **canonical source-of-truth** for Kansas Frontier Matrix (KFM) datasets 🧾  
-This folder is **not “just a dump of files”** — it’s a *provenance-first* data vault where **every processed layer is traceable back to raw sources** and **discoverable via catalogs**.
+# 📦 `data/` — Evidence Vault, Versioned Datasets, Metadata, & Provenance 🗺️🧾
 
-> ✅ **KFM invariant:** if it’s used by the system, it must be **(1) processed**, **(2) cataloged**, and **(3) provenance-linked**.  
-> ⛔ Anything missing metadata / lineage / license is treated as **not publishable** (fail-closed by design). 🔒
+**KFM’s canonical “source-of-truth” for everything that powers maps, stories, and Focus Mode — traceable end-to-end.**  
+<sub><em>“The map behind the map” — every layer has receipts.</em></sub>
+
+<br/>
+
+![Status](https://img.shields.io/badge/status-🚧_UNDER_CONSTRUCTION-yellow?style=for-the-badge)
+![Truth Path](https://img.shields.io/badge/truth_path-raw→processed→catalog→db→api→ui/ai-1f6feb?style=for-the-badge)
+![Catalogs](https://img.shields.io/badge/catalogs-STAC_+_DCAT-a855f7?style=for-the-badge)
+![Provenance](https://img.shields.io/badge/provenance-W3C_PROV-005a9c?style=for-the-badge)
+![Governance](https://img.shields.io/badge/governance-FAIR_+_CARE-22c55e?style=for-the-badge)
+![Fail Closed](https://img.shields.io/badge/policy-fail--closed-dc2626?style=for-the-badge)
+![Formats](https://img.shields.io/badge/formats-GeoJSON_•_GeoParquet_•_COG_•_PMTiles_•_CSV-6b7280?style=for-the-badge)
+
+<br/>
+
+<a href="#-quick-nav">🧭 Quick Nav</a> •
+<a href="#-kfm-invariant-the-truth-path-is-non-negotiable">🧱 Truth Path</a> •
+<a href="#-folder-layout-v13-canonical">📁 Layout</a> •
+<a href="#-dataset-contract-bundle-completeness">📦 Dataset Contract</a> •
+<a href="#-governance-fair--care--data-sovereignty">⚖️ Governance</a> •
+<a href="#-validation--ci-gates-fail-closed">🧪 CI Gates</a>
+
+</div>
+
+---
+
+> [!WARNING]
+> **This `data/` folder is under active construction.**  
+> Structure, validators, and naming rules are stabilizing. Expect migrations (with redirects / compatibility notes), and expect CI to get stricter over time. 🚧
+
+---
+
+## ✨ What this folder is
+
+`data/` is KFM’s **evidence vault**: a **versioned, reviewable, rebuildable** data layer where:
+
+- 📌 **Raw sources are preserved** (immutability = reproducibility)
+- 🧼 **Processed outputs are standardized** (serve-ready, analysis-ready)
+- 🗺️ **Catalogs make datasets discoverable** (STAC + DCAT)
+- 🧬 **Provenance makes datasets defensible** (W3C PROV)
+- 🔒 **Governance gates stop bad merges** (fail-closed by design)
+
+KFM is not a “black-box portal” — it’s an evidence-first system where insights must remain traceable.  [oai_citation:0‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
 ---
 
 ## 🧭 Quick Nav
 
-- [📁 Folder layout (v13 canonical)](#folder-layout-v13-canonical)
-- [🧩 Legacy path compatibility map](#legacy-path-compatibility-map)
-- [🔁 The Truth Path lifecycle](#the-truth-path-lifecycle)
-- [🧱 What goes where](#what-goes-where)
-- [🧾 STAC / DCAT / PROV alignment](#stac--dcat--prov-alignment)
-- [🏷️ Dataset naming & conventions](#dataset-naming--conventions)
-- [✅ Publishing checklist (Definition of Done)](#publishing-checklist-definition-of-done)
-- [🧪 Example: dataset “bundle”](#example-dataset-bundle)
-- [📦 Handling large files](#handling-large-files)
-- [🤖 Evidence artifacts (AI + analysis outputs)](#evidence-artifacts-ai--analysis-outputs)
-- [🧪 Validation & CI gates](#validation--ci-gates)
-- [📚 Further reading](#further-reading)
+- [🧱 KFM invariant: the Truth Path is non-negotiable](#-kfm-invariant-the-truth-path-is-non-negotiable)
+- [📁 Folder layout (v13 canonical)](#-folder-layout-v13-canonical)
+- [🧩 Legacy path compatibility map](#-legacy-path-compatibility-map)
+- [📦 Dataset contract (bundle completeness)](#-dataset-contract-bundle-completeness)
+- [🏷️ Naming, versioning, & identifiers](#-naming-versioning--identifiers)
+- [🗂️ STAC / DCAT / PROV alignment](#-stac--dcat--prov-alignment)
+- [🧱 Formats, storage tiers, & “large file” strategy](#-formats-storage-tiers--large-file-strategy)
+- [🛰️ Remote sensing & raster conventions](#-remote-sensing--raster-conventions)
+- [🤖 Evidence artifacts (AI + analysis outputs)](#-evidence-artifacts-ai--analysis-outputs)
+- [⚖️ Governance: FAIR + CARE + data sovereignty](#-governance-fair--care--data-sovereignty)
+- [🧪 Validation & CI gates (fail-closed)](#-validation--ci-gates-fail-closed)
+- [✅ Publishing checklist (Definition of Done)](#-publishing-checklist-definition-of-done)
+- [📚 References](#-references--standards)
 
 ---
 
-<a id="folder-layout-v13-canonical"></a>
-## 📁 Folder layout (v13 canonical)
+## 🧱 KFM invariant: the Truth Path is non-negotiable
 
-> Goal: make data **diffable**, **reviewable**, **rebuildable** — like code. ✅  
-> Databases are **derivative performance caches**, not the authoritative store.
+KFM enforces a strict order from evidence → outputs. Nothing ships by bypassing steps.  [oai_citation:1‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
 ```text
-📦 data/
-├─ 🧾 raw/                         # Immutable source snapshots (evidence)
-│  └─ 📁 <domain>/                 # e.g., census_1900/, usgs_water/, historical_maps/
-│
-├─ 🧪 work/                        # Intermediate artifacts (recommended staging)
-│  └─ 📁 <domain>/
-│
-├─ ✅ processed/                   # Curated outputs used by DB/API/UI
-│  └─ 📁 <domain>/
-│
-├─ 🗺️ stac/                        # Spatial/temporal discovery metadata
-│  ├─ 📁 collections/              # STAC Collections
-│  └─ 📁 items/                    # STAC Items
-│
-├─ 🗂️ catalog/
-│  └─ 📁 dcat/                     # DCAT dataset records (JSON-LD / TTL)
-│
-├─ 🧬 prov/                        # Lineage logs (W3C PROV bundles)
-│
-└─ 🧱 external/                    # Manifests/pointers for large assets (LFS/S3/etc.)
-   └─ 📄 manifest.*                # JSON/YAML w/ sha256, size, retrieval method
+Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI
 ```
 
-### 🔗 Nearby (not inside `data/`, but tightly coupled)
-```text
-🧾 schemas/                        # JSON Schemas for STAC/DCAT/PROV + contracts
-⚙️ src/pipelines/                  # Deterministic ETL that writes raw→work→processed
-📚 docs/data/<domain>/README.md     # Domain runbooks & source notes (required for new domains)
-```
+Why this matters:
+
+- 🧯 **If a database is wiped**, we can rebuild it from `data/processed/` + boundary artifacts + pipeline code.
+- 🧾 **If an answer is questioned**, we can trace it to catalogs + provenance.
+- 🔒 **If metadata is missing**, merges and publication should be blocked.
+
+> [!IMPORTANT]
+> **Databases are performance caches.**  
+> The repository (data + catalogs + provenance + pipelines) is the authority.
 
 ---
 
-<a id="legacy-path-compatibility-map"></a>
-## 🧩 Legacy path compatibility map
-
-KFM evolved over time. Some repos may still contain older folder names. ✅  
-**Preferred rule:** write *new* work to the **v13 canonical** layout above, and migrate/alias legacy paths as needed.
-
-| Concept | v13 canonical | Legacy patterns you may still see |
-|---|---|---|
-| STAC metadata | `data/stac/...` | `data/catalog/stac/...` |
-| DCAT metadata | `data/catalog/dcat/...` | `data/catalog/dcat/...` (usually same) |
-| Provenance | `data/prov/...` | `data/provenance/...` |
-| Intermediate artifacts | `data/work/...` | *(missing; pipelines wrote temp files elsewhere)* |
-
-> 💡 If you can’t migrate immediately: consider **symlinks** or a **thin redirect** (README + pointers) so tooling can find canonical outputs.
-
----
-
-<a id="the-truth-path-lifecycle"></a>
-## 🔁 The Truth Path lifecycle (non-negotiable ordering)
+## 🗺️ The Truth Path lifecycle
 
 ```mermaid
 flowchart LR
-  subgraph Data["📦 Data"]
-    A[🧾 Raw Sources<br/>data/raw/] --> B[🧪 Work Artifacts<br/>data/work/]
-    B --> C[✅ Processed Assets<br/>data/processed/]
-    C --> D[🗺️ STAC<br/>data/stac/]
-    C --> E[🗂️ DCAT<br/>data/catalog/dcat/]
-    C --> F[🧬 PROV<br/>data/prov/]
+  subgraph D["📦 data/ (source of truth)"]
+    A[🧾 raw/<domain>/\nimmutable evidence] --> B[🧪 work/<domain>/\nintermediate auditables]
+    B --> C[✅ processed/<domain>/\nserve-ready outputs]
+    C --> S[🗺️ stac/\ncollections + items]
+    C --> K[🗂️ catalog/dcat/\ndiscovery records]
+    C --> P[🧬 prov/\nlineage bundles]
   end
 
-  subgraph Knowledge["🧠 Storage & Knowledge"]
-    D --> G[(🗃️ PostGIS<br/>spatial cache)]
-    D --> H[(🕸️ Neo4j<br/>semantic graph)]
-    F --> G
-    F --> H
+  subgraph X["🗄️ Derivative stores (rebuildable caches)"]
+    S --> PG[(PostGIS)]
+    S --> NX[(Graph / Search)]
+    P --> PG
+    P --> NX
   end
 
-  subgraph Delivery["🚀 Delivery"]
-    G --> I[🧰 API Layer<br/>(contracts + redaction)]
-    H --> I
-    I --> J[🗺️ Map UI<br/>React · MapLibre · (optional) Cesium]
-    J --> K[📖 Story Nodes<br/>governed narratives]
-    K --> L[🎯 Focus Mode<br/>provenance-linked context bundle]
+  subgraph Y["🚀 Delivery"]
+    PG --> API[🧩 API layer\ncontracts + redaction + policy]
+    NX --> API
+    API --> UI[🖥️ UI / Maps / Stories]
+    API --> AI[🎯 Focus Mode\nretrieval + citations]
   end
 ```
 
-**Key idea:** wipe the DB? No problem. Rebuild from `data/processed/` + STAC/DCAT/PROV + pipeline code. ♻️
+---
+
+## 📁 Folder layout (v13 canonical)
+
+This layout is mirrored in KFM’s master guide: raw → work → processed, then boundary artifacts (STAC/DCAT/PROV).  [oai_citation:2‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
+```text
+📦 data/
+├─ 🧾 raw/                          # Immutable source snapshots (evidence)
+│  └─ <domain>/                     # e.g., census/, railroads/, historical_maps/
+│
+├─ 🧪 work/                         # Intermediate artifacts worth preserving
+│  └─ <domain>/
+│
+├─ ✅ processed/                    # Curated outputs used downstream
+│  └─ <domain>/
+│
+├─ 🗺️ stac/                         # Spatial/temporal discovery layer
+│  ├─ collections/
+│  └─ items/
+│
+├─ 🗂️ catalog/
+│  └─ dcat/                         # Dataset discovery records (JSON-LD, etc.)
+│
+├─ 🧬 prov/                         # W3C PROV lineage bundles
+│
+└─ 🧱 external/                     # Pointers/manifests for huge assets
+   └─ manifest.*                    # JSON/YAML w/ sha256 + retrieval method
+```
+
+### 🔗 “Nearby” coupling (not inside `data/`, but mandatory in spirit)
+```text
+⚙️ pipelines/ or src/pipelines/      # Deterministic ETL writing raw→work→processed
+🧾 schemas/                          # JSON Schemas for STAC/DCAT/PROV + contracts
+📚 docs/data/<domain>/README.md       # Domain runbooks & source notes
+```
+
+> [!TIP]
+> Keep `data/` **review-friendly**: prefer diffable formats (GeoParquet/Parquet) and store large binaries via manifests/LFS.
 
 ---
 
-<a id="what-goes-where"></a>
-## 🧱 What goes where
+## 🧩 Legacy path compatibility map
 
-### 🧾 `raw/` — immutable “evidence”
-- Exact snapshots from original sources (ZIPs, CSVs, Shapefiles, PDFs, imagery, etc.)
-- **Never edited by pipelines**
-- If a source is wrong: add a corrected **new snapshot** and document the change in metadata + provenance
+KFM evolves. When legacy paths exist, **don’t fork the truth** — redirect to canonical paths.
 
-✅ Good:
-- `data/raw/census_1900/census_1900.csv`
-- `data/raw/historical_maps/1930_county_map.pdf`
+| Concept | Canonical | Legacy patterns you may still see |
+|---|---|---|
+| STAC metadata | `data/stac/...` | `data/catalog/stac/...` |
+| DCAT metadata | `data/catalog/dcat/...` | (often the same) |
+| Provenance | `data/prov/...` | `data/provenance/...` |
+| Intermediate artifacts | `data/work/...` | missing / scattered |
 
-⛔ Not allowed:
-- Hand-editing raw CSV rows “just to fix a typo” without a new snapshot + provenance
-
----
-
-### 🧪 `work/` — intermediate artifacts (recommended)
-- Temporary outputs that matter for auditability or reproducibility
-- Examples: cloud masks, cleaned-but-not-final tables, intermediate joins, QA summaries
-
-✅ Good:
-- `data/work/weather/noaa_cleaned_1900_1950.parquet`
-- `data/work/imagery/landsat_cloudmask_2010.tif`
-
-> 💡 Pipelines may also use ephemeral temp dirs, but if an intermediate step affects interpretability, capture it here and link it in PROV.
+**Migration stance**
+- ✅ New work goes to canonical layout
+- ✅ Legacy gets a README redirect, symlink, or tooling alias (so validators still find artifacts)
 
 ---
 
-### ✅ `processed/` — curated “ready-to-serve”
-- Cleaned, standardized, analysis-ready products
-- Primary inputs to DB loaders and API serving
-- Prefer **open formats** + **review-friendly diffs** (when possible)
+## 📦 Dataset contract (bundle completeness)
 
-Recommended format defaults:
-- Vector: GeoJSON / GeoParquet
-- Tabular/time-series: Parquet (partitioned by time/region if large)
-- Raster: Cloud Optimized GeoTIFF (COG) or Zarr (when appropriate)
+A dataset is not “real” in KFM until it has its **boundary artifacts**.  [oai_citation:3‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
 
-✅ Good:
-- `data/processed/census/1900_population.geojson`
-- `data/processed/weather/daily_rainfall.parquet`
-- `data/processed/imagery/landsat_2010_kansas.cog.tif`
+### ✅ Minimum viable dataset bundle
 
----
+| Artifact | Purpose | Canonical location |
+|---|---|---|
+| Processed output(s) | What DB/API/UI consume | `data/processed/<domain>/...` |
+| STAC Item (+ Collection if new) | Spatial/temporal + asset linking | `data/stac/items/*.json` (+ `collections/*.json`) |
+| DCAT record | Human-facing discovery + license + distributions | `data/catalog/dcat/*.jsonld` |
+| PROV bundle | Lineage: inputs → activities → outputs | `data/prov/*.prov.json` |
 
-### 🗺️ `stac/` — spatial/temporal asset metadata (Findable ✅)
-STAC should answer:  
-- “What is this layer?”  
-- “Where/when does it apply?”  
-- “How do I access the actual asset?”  
-- “What provenance explains this output?”
+> [!IMPORTANT]
+> Missing any of the above should be treated as **fail-closed**: not publishable, not mergable, not servable. 🔒
 
-Recommended structure:
-- `data/stac/collections/<collection_id>.json`
-- `data/stac/items/<item_id>.json`
+### 🧩 Strongly recommended “bundle manifest” (lightweight glue)
+Create a tiny “dataset bill of materials” to make reviews and CI painless:
 
----
+`data/processed/<domain>/<dataset_id>/bundle.yaml`
 
-### 🗂️ `catalog/dcat/` — dataset discovery metadata (Discoverable 🔎)
-DCAT provides higher-level dataset records:
-- title, description, publisher/creator, keywords
-- license and access notes
-- distributions (links to STAC, direct files, or external manifests)
-
-Recommended structure:
-- `data/catalog/dcat/<dataset_id>.jsonld`
-
----
-
-### 🧬 `prov/` — provenance bundles (Trustworthy 🧠)
-Provenance should answer:
-- **What inputs produced this output?**
-- **Which pipeline + parameters were used?**
-- **When did it run, and under what repo version/commit?**
-- **Who/what ran it (agent)?**
-
-> 🚩 If a dataset has no provenance bundle, treat it as *suspect* until proven otherwise.
-
-Recommended structure:
-- `data/prov/<dataset_id>.prov.json`
+```yaml
+dataset_id: "kfm.census.population.1900"
+domain: "census"
+version: "v1"
+outputs:
+  - path: "data/processed/census/population__kansas__1900__v1.geoparquet"
+    sha256: "REPLACE_ME"
+stac:
+  item: "data/stac/items/kfm.census.population.1900.json"
+  collection: "data/stac/collections/kfm.census.population.json"
+dcat:
+  record: "data/catalog/dcat/kfm.census.population.1900.jsonld"
+prov:
+  bundle: "data/prov/kfm.census.population.1900.prov.json"
+license:
+  spdx: "CC-BY-4.0"
+sensitivity:
+  classification: "public"  # or restricted/internal/etc.
+```
 
 ---
 
-### 🧱 `external/` — pointers/manifests for huge assets
-Used when assets are too large for normal Git storage:
-- Git LFS pointer files
-- S3/Blob object storage references
-- chunked stores (Zarr) with checksums
-
-Recommended: keep **a manifest** that records:
-- logical name
-- storage location
-- size
-- checksum (sha256)
-- retrieval method & credentials assumptions (if any)
-
----
-
-<a id="stac--dcat--prov-alignment"></a>
-## 🧾 STAC / DCAT / PROV alignment
-
-KFM expects **cross-linking** between boundary artifacts so downstream stages can navigate evidence.
-
-### 🔗 Cross-linking expectations (minimum)
-- **STAC Item → PROV** (link: “provenance”)
-- **STAC Item → asset(s)** (local file or external pointer)
-- **DCAT Dataset → STAC** (distribution link)
-- **PROV → raw + work + processed entities** (entities with hashes where possible)
-
-> ✅ Think of STAC/DCAT/PROV as the **API contract** for the data layer.
-
-### 🧩 Recommended “dataset contract”
-A dataset is considered complete when these exist (at minimum):
-
-- `data/processed/<domain>/<something>.<ext>`
-- `data/stac/items/<dataset_id>.json`
-- `data/catalog/dcat/<dataset_id>.jsonld`
-- `data/prov/<dataset_id>.prov.json`
-
-Optional but encouraged:
-- `data/stac/collections/<collection_id>.json` (when introducing a new collection)
-- `data/external/manifest.json` (when any asset is external/LFS-managed)
-- `docs/data/<domain>/README.md` (domain runbook)
-
----
-
-<a id="dataset-naming--conventions"></a>
-## 🏷️ Dataset naming & conventions
+## 🏷️ Naming, versioning, & identifiers
 
 ### 📛 Domain folders
-Use `snake_case` domain names that match the real-world theme/source:
-- `census`, `weather`, `land_treaties`, `railroads`, `soil`, `historical_maps`, `imagery`
+Use `snake_case` domains aligned with real-world sources/themes:
+- `census`, `weather`, `railroads`, `soil`, `imagery`, `historical_maps`, `land_treaties`
 
-### 🧩 Dataset IDs (recommended)
-A stable dataset identifier keeps catalogs + provenance + narratives aligned:
+### 🧩 Dataset IDs (stable + boring = good)
+Recommended format:
 
-**Format**
-- `kfm.<domain>.<topic>.<version_or_year>`
+```text
+kfm.<domain>.<topic>.<time_or_edition>
+```
 
-**Examples**
+Examples:
 - `kfm.census.population.1900`
 - `kfm.weather.precip.daily.v1`
 - `kfm.historical_maps.county_boundaries.1930`
 
-### 🗂️ Processed file naming (recommended)
-Make file names “scan readable”:
-
-`<topic>__<coverage>__<time>__<vX>.<ext>`
-
-Example:
-- `population__kansas__1900__v1.geojson`
-- `precip__kansas__daily__1850-2020__v2.parquet`
-
-### 🗺️ Spatial reference & units
-Every processed dataset must document:
-- CRS / EPSG
-- units
-- null conventions
-- temporal resolution & timezone assumptions (for time series)
-
-> 💡 Put the human-friendly notes in DCAT + domain README, and the machine-critical fields in STAC + PROV.
-
----
-
-<a id="publishing-checklist-definition-of-done"></a>
-## ✅ Publishing checklist (Definition of Done)
-
-A dataset PR is only “done” when **all** required artifacts exist and pass validation.
-
-### ✅ Required
-- [ ] 📥 Raw snapshot stored under `data/raw/<domain>/...` (or referenced via `data/external/`)
-- [ ] 🧼 Deterministic pipeline exists/updated (writes `raw → work → processed`)
-- [ ] ✅ Outputs written to `data/processed/<domain>/...`
-- [ ] 🗺️ STAC Item created/updated (assets + bbox/time + links)
-- [ ] 🗂️ DCAT record created/updated (title/desc/license/keywords/distributions)
-- [ ] 🧬 PROV bundle created/updated (entities, activities, agents, parameters)
-- [ ] ⚖️ License clearly declared (and compatible with repo policy)
-- [ ] 🧪 Validation passes (schemas, geometry validity, required fields)
-- [ ] 🔍 Review includes **data diffs + metadata diffs** (not just code)
-
-### 🌟 Strongly recommended
-- [ ] 📚 Domain runbook updated: `docs/data/<domain>/README.md`
-- [ ] 🔐 Sensitivity classification recorded (CARE-aware handling)
-- [ ] 🧾 External manifest includes sha256 for any off-repo asset
-
----
-
-<a id="example-dataset-bundle"></a>
-## 🧪 Example: dataset bundle
-
-Let’s say we add a historical census extract:
-
+### 🧾 Processed filename conventions (scan-readable)
 ```text
-data/
-├─ raw/
-│  └─ census_1900/
-│     └─ census_1900.csv
-│
-├─ work/
-│  └─ census/
-│     └─ census_1900_cleaned.parquet
-│
-├─ processed/
-│  └─ census/
-│     └─ population__kansas__1900__v1.geojson
-│
-├─ stac/
-│  ├─ collections/
-│  │  └─ kfm.census.population.json
-│  └─ items/
-│     └─ kfm.census.population.1900.json
-│
-├─ catalog/
-│  └─ dcat/
-│     └─ kfm.census.population.1900.jsonld
-│
-└─ prov/
-   └─ kfm.census.population.1900.prov.json
+<topic>__<coverage>__<time>__<vX>.<ext>
 ```
 
-✅ Now the dataset is:
-- **Usable** (processed file exists)
-- **Findable** (STAC + DCAT exist)
-- **Auditable** (PROV exists)
-- **Rebuildable** (pipeline + raw evidence exist)
+Examples:
+- `population__kansas__1900__v1.geoparquet`
+- `precip__kansas__daily__1850-2020__v2.parquet`
+- `landsat__kansas__2010-06-15__v1.cog.tif`
+
+> [!TIP]
+> Treat version bumps like code releases: **why did it change?** (source update, bug fix, improved method, reproject, etc.) — record it in DCAT + PROV.
 
 ---
 
-<a id="handling-large-files"></a>
-## 📦 Handling large files
+## 🧾 STAC / DCAT / PROV alignment
 
-Geospatial assets get big fast (rasters, point clouds, dense time-series). KFM’s stance:
+KFM relies on open standards and strict cross-linking so every layer is discoverable and defensible.  [oai_citation:4‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
-- ✅ Small–medium: store directly in Git (prefer diff-friendly formats)
-- 🧱 Large binaries: store via one of these patterns:
-  1) **Git LFS** pointer files  
-  2) **External object storage** (S3/Blob) + **checksum/hash recorded in-repo**  
-  3) **Chunked, diffable** structures (e.g., partitioned Parquet; Zarr for rasters)
+### 🔗 Cross-linking expectations (minimum)
 
-### 🧾 External manifest (recommended)
-Store a manifest under `data/external/` for anything that isn’t fully in Git:
+- **STAC Item → assets** (hrefs to processed files or external manifests)
+- **STAC Item → PROV** (a `provenance` link or equivalent)
+- **DCAT Dataset → STAC** (distribution entry pointing to STAC item/collection)
+- **PROV → raw/work/processed entities** (with hashes where practical)
+
+> ✅ Think of STAC/DCAT/PROV as the **data-layer API** that downstream stages consume.
+
+### 🧠 Practical rule
+If a Story Node or Focus Mode response cites a dataset, we must be able to walk:
+
+```text
+Story ➜ Dataset (DCAT) ➜ Assets (STAC) ➜ Lineage (PROV) ➜ Inputs (raw snapshots)
+```
+
+---
+
+## 🧱 Formats, storage tiers, & “large file” strategy
+
+KFM prefers open, interoperable formats for longevity and tool compatibility.  [oai_citation:5‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+### ✅ Recommended defaults
+| Data type | Preferred format | Notes |
+|---|---|---|
+| Vector | **GeoParquet** (or GeoJSON for small) | GeoParquet is diff/size/perf friendly |
+| Tabular/time-series | **Parquet** (partitioned when large) | keep schema stable, document units |
+| Raster | **COG GeoTIFF** | cloud-optimized, streamable |
+| Tiles | **PMTiles / MVT / XYZ** | consistent map delivery & caching |
+
+> [!NOTE]
+> KFM explicitly calls out COGs and cloud-friendly tile sets (PMTiles/XYZ) for efficient visualization and interoperability.  [oai_citation:6‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+### 📦 Large assets: what belongs in Git vs manifests
+- ✅ Small/medium: store directly in Git (prefer diffable)
+- 🧱 Big binaries: use Git LFS or external object storage + checksum manifest
+- 🧾 Always record:
+  - `sha256`
+  - `size_bytes`
+  - `uri` / retrieval method
+  - access assumptions (public/private)
+
+Example `data/external/manifest.json`:
 
 ```json
 {
   "assets": [
     {
-      "logical_name": "landsat_2010_kansas.cog.tif",
+      "logical_name": "landsat__kansas__2010-06-15__v1.cog.tif",
       "storage": "s3",
-      "uri": "s3://kfm-data/imagery/landsat_2010_kansas.cog.tif",
+      "uri": "s3://kfm-data/imagery/landsat__kansas__2010-06-15__v1.cog.tif",
       "sha256": "REPLACE_ME",
       "size_bytes": 1234567890,
-      "retrieval": "aws s3 cp ..."
+      "retrieval": "aws s3 cp s3://kfm-data/imagery/... ./data/work/imagery/"
     }
   ]
 }
@@ -383,57 +317,166 @@ Store a manifest under `data/external/` for anything that isn’t fully in Git:
 
 ---
 
-<a id="evidence-artifacts-ai--analysis-outputs"></a>
+## 🛰️ Remote sensing & raster conventions
+
+KFM’s system design explicitly supports continuous remote sensing ingestion via STAC feeds and automated preprocessing.  [oai_citation:7‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+Typical pipeline steps (recommended):
+1. 📥 Subscribe/poll STAC feed for new scenes over Kansas
+2. ✂️ Clip/mosaic to Kansas AOI
+3. 🌐 Reproject into KFM standard CRS (document EPSG!)
+4. 🧱 Convert to **COG** + build pyramids/tiles for web rendering
+5. 🗺️ Register STAC Item (bbox/time/resolution) + link PROV
+6. 🤖 Optional: run ML (cloud mask, land cover, change detection) → publish derived layers as first-class datasets
+
+> [!IMPORTANT]
+> AI-derived outputs (classifications, masks, change layers) become **new datasets** with their own STAC/DCAT/PROV.  [oai_citation:8‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+---
+
 ## 🤖 Evidence artifacts (AI + analysis outputs)
 
-KFM treats AI outputs and analysis artifacts as **first-class datasets** 🧠  
+KFM treats analysis outputs and AI-generated artifacts as **first-class datasets**, not “misc outputs.”  [oai_citation:9‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+
 Examples:
-- OCR-derived corpora
-- model-predicted map layers
-- simulation outputs
-- QA-derived “confidence layers”
+- OCR corpora from scanned archives
+- inferred features (trails, land cover, settlement footprints)
+- simulation outputs (hydrology, climate scenarios)
+- QA confidence layers (uncertainty bands, flags)
 
-**Rule:** if an artifact can influence a narrative, map, or query result, it must be:
-- ✅ stored in `data/processed/...`
-- 🗺️ cataloged (STAC/DCAT)
-- 🧬 provenance-linked (PROV)
-- 🔐 governed (license + sensitivity + validation)
-
-> 🧯 No “black box” evidence: derived artifacts must be explainable, traceable, and reviewable.
+**Rule:** If it can influence a map, story, statistic, or AI answer, then it must:
+- live in `data/processed/...`
+- be cataloged (STAC/DCAT)
+- be provenance-linked (PROV)
+- be governed (license + sensitivity + policy tags)
 
 ---
 
-<a id="validation--ci-gates"></a>
-## 🧪 Validation & CI gates
+## ⚖️ Governance: FAIR + CARE + data sovereignty
 
-KFM is designed to **fail closed** 🔒  
-CI should block merges when:
-- metadata is missing
-- provenance is missing
-- license is missing/unclear
-- schemas don’t validate
-- geometries are invalid
-- external assets lack checksums
+KFM’s governance explicitly aligns with **FAIR + CARE** and treats governance as part of the data lifecycle, not an afterthought.  [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
 
-### ✅ Minimum checks (suggested)
-- STAC JSON schema validation
-- DCAT JSON-LD validation (or shape constraints)
-- PROV schema validation
-- “bundle completeness” check (processed ↔ STAC ↔ DCAT ↔ PROV)
-- basic geometry validity + bounding-box sanity
-- required fields present (domain-specific)
-- checksum verification for external manifests
+### 🌱 FAIR (Findable, Accessible, Interoperable, Reusable)
+- Achieved via consistent formats + metadata + catalogs.
+
+### 🤝 CARE (Collective Benefit, Authority to Control, Responsibility, Ethics)
+CARE exists as a necessary complement to FAIR, especially for data relating to Indigenous Peoples, lands, waters, and territories.  [oai_citation:11‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)
+
+**KFM stance (practical):**
+- 🧾 **If data concerns Indigenous Peoples or territories**, treat it as CARE-sensitive by default.
+- 🏷️ Encode sensitivity/classification in metadata (DCAT + PROV + policy tags).
+- 🔒 Make access policy-explicit (fail-closed if uncertain).
+- 🧠 Preserve provenance so communities can validate, contest, or contextualize.
+
+Indigenous Data Governance emphasizes **decision-making authority** and control over collection, access, and use — including when data is held by institutions.  [oai_citation:12‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)
+
+> [!NOTE]
+> If you’re unsure whether a dataset triggers CARE obligations: **raise it early** (issue + governance label). Default to caution.
+
+---
+
+## 🧪 Validation & CI gates (fail-closed)
+
+KFM’s architecture explicitly relies on policy gating and provenance logging before publication.  [oai_citation:13‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+
+### ✅ Minimum CI checks (recommended)
+- **Bundle completeness:** processed ↔ STAC ↔ DCAT ↔ PROV all exist
+- **Schema validation:** STAC + DCAT + PROV conform to project profiles
+- **Geometry sanity:** valid geometries, bbox sanity, CRS declared
+- **License checks:** license present + compatible + attribution present
+- **External manifest integrity:** checksum present and verified
+- **Determinism smoke test:** pipeline rerun does not produce drift without a version bump
+
+<details>
+<summary><b>🧪 Suggested “dataset PR gates” checklist</b> (expand) ✅</summary>
+
+- [ ] Raw snapshot added (or external manifest updated)
+- [ ] Pipeline updated/added and deterministic
+- [ ] Processed outputs written to canonical location
+- [ ] STAC Item updated (bbox/time/links/assets)
+- [ ] DCAT record updated (title/desc/license/distributions)
+- [ ] PROV updated (inputs/activities/agents/params)
+- [ ] Sensitivity classification recorded (policy tags)
+- [ ] Validators pass locally + in CI
+- [ ] Reviewer can reproduce output from documented steps
+
+</details>
 
 ---
 
-## 📚 Further reading
+## ✅ Publishing checklist (Definition of Done)
 
-These project references influenced how `data/` is organized:
+A dataset is “done” when:
 
-- 📘 *Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint* 🧩
-- 🧭 *MARKDOWN_GUIDE_v13* (pipeline ordering, governance, STAC/DCAT/PROV alignment) 🏗️
-- 🧠 *Data Spaces* (data ecosystems, access control patterns, governance) 🔐
-- 🛰️ *Cloud-Based Remote Sensing with Google Earth Engine* (remote sensing workflows & dataset patterns) ☁️
-- ⏳ *Visualization of Time-Oriented Data* (spatiotemporal/time-series analysis & visualization ideas) 🕰️
+### ✅ Required
+- [ ] 📥 Raw snapshot under `data/raw/<domain>/...` **or** external manifest with checksum
+- [ ] 🧼 Deterministic pipeline writes `raw → work → processed`
+- [ ] ✅ Output(s) in `data/processed/<domain>/...`
+- [ ] 🗺️ STAC item exists + links to assets + provenance
+- [ ] 🗂️ DCAT record exists + license + distributions
+- [ ] 🧬 PROV bundle exists + connects raw/work/processed
+- [ ] ⚖️ License is explicit + attribution is present
+- [ ] 🔐 Sensitivity classification recorded (policy can enforce)
+- [ ] 🧪 CI gates pass (fail-closed)
+
+### 🌟 Strongly recommended
+- [ ] 📚 Domain runbook: `docs/data/<domain>/README.md`
+- [ ] 🧾 Checksums recorded for *all* large binaries (even if stored in Git)
+- [ ] 📈 QA summaries stored in `data/work/` and linked in PROV
 
 ---
+
+## 🧪 Example: dataset bundle (end-to-end)
+
+```text
+data/
+├─ raw/
+│  └─ census/
+│     └─ census_1900_source.csv
+├─ work/
+│  └─ census/
+│     └─ census_1900_cleaned.parquet
+├─ processed/
+│  └─ census/
+│     └─ population__kansas__1900__v1.geoparquet
+├─ stac/
+│  ├─ collections/
+│  │  └─ kfm.census.population.json
+│  └─ items/
+│     └─ kfm.census.population.1900.json
+├─ catalog/
+│  └─ dcat/
+│     └─ kfm.census.population.1900.jsonld
+└─ prov/
+   └─ kfm.census.population.1900.prov.json
+```
+
+✅ Now the dataset is: **usable**, **findable**, **auditable**, and **rebuildable**.
+
+---
+
+## 📚 References & standards
+
+Project anchor docs (recommended reading):
+- **KFM — Comprehensive System Documentation**  [oai_citation:14‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+- **KFM — Comprehensive Technical Blueprint**  [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- **KFM Markdown + Data Guide (v13)**  [oai_citation:16‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)
+- **Indigenous Statistics (FAIR + CARE, data sovereignty governance)**  [oai_citation:17‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)
+- **Digital Humanism (data + AI governance, provenance & quality)**  [oai_citation:18‡Introduction to Digital Humanism.pdf](sediment://file_0000000090a071f5afd5c78c4383e488)
+
+---
+
+<div align="center">
+
+### 🧭 North Star
+**If it can’t be traced → it can’t be served.**  
+**If it can’t be governed → it can’t be merged.** ✅🔒
+
+</div>
+
+<!-- ✅ TODOs (Roadmap for this README)
+- Add canonical STAC/DCAT/PROV profiles used by KFM (links to schemas/)
+- Add a real "bundle.yaml" template used by validators
+- Add "CRS policy" + "time policy" sections once standardized
+- Add examples for raster + tiles + time-series domains
+-->
