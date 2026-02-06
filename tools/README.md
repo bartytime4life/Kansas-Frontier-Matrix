@@ -79,21 +79,24 @@ KFM is a governance system as much as it is a data system.
 
 ```mermaid
 flowchart LR
-  subgraph TruthPath["🧭 KFM Truth Path"]
-    A[🧾 Raw] --> B[🧪 Work] --> C[✅ Processed]
-    C --> D[🏷️ Catalog<br/>STAC + DCAT]
-    C --> E[🔗 Provenance<br/>W3C PROV]
-    D --> F[(🗄️ Datastores<br/>PostGIS • Neo4j • Search)]
+  subgraph TruthPath
+    direction LR
+    TP["🧭 KFM Truth Path"]
+    A["🧾 Raw"] --> B["🧪 Work"] --> C["✅ Processed"]
+    C --> D["🏷️ Catalog — STAC + DCAT"]
+    C --> E["🔗 Provenance — W3C PROV"]
+    D --> F["🗄️ Datastores — PostGIS • Neo4j • Search"]
     E --> F
-    F --> G[🧩 API (Governed)]
-    G --> H[🖥️ UI + 🤖 Focus Mode]
+    F --> G["🧩 API (Governed)"]
+    G --> H["🖥️ UI + 🤖 Focus Mode"]
+    TP --> A
   end
 
-  T((🧰 Tools))
-  T -->|validate/build/verify| C
-  T -->|emit/verify| D
-  T -->|emit/verify| E
-  T -->|prefer calling| G
+  T["🧰 Tools"]
+  T -->|"validate/build/verify"| C
+  T -->|"emit/verify"| D
+  T -->|"emit/verify"| E
+  T -->|"prefer calling"| G
 ```
 
 **Design intent:** Tools are accelerators — not shortcuts.  
