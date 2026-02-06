@@ -84,29 +84,37 @@ KFM aims to be **FAIR** (findable, accessible, interoperable, reusable) *and* **
 
 ```mermaid
 flowchart LR
-  %% --- Data Plane ---
-  subgraph DP[📥 Data Plane]
-    A[Sources<br/>scans • CSV • rasters • archives] --> B[ETL Pipelines<br/>clean • georeference • enrich]
-    B --> C[Versioned Lake<br/>data/raw • data/processed]
+  subgraph DP
+    direction LR
+    DP_T["📥 Data Plane"]
+    A["Sources — scans • CSV • rasters • archives"] --> B["ETL Pipelines — clean • georeference • enrich"]
+    B --> C["Versioned Lake — data/raw • data/processed"]
+    DP_T --> A
   end
 
-  %% --- Knowledge Plane ---
-  subgraph KP[🧾 Knowledge Plane]
-    C --> D[Catalog + Provenance<br/>STAC • DCAT • PROV]
-    D --> E[(Datastores<br/>PostGIS • Neo4j • Search/Vector)]
+  subgraph KP
+    direction LR
+    KP_T["🧾 Knowledge Plane"]
+    C --> D["Catalog + Provenance — STAC • DCAT • PROV"]
+    D --> E["Datastores — PostGIS • Neo4j • Search/Vector"]
+    KP_T --> D
   end
 
-  %% --- Serving Plane ---
-  subgraph SP[🧩 Serving Plane]
-    E --> F[API Layer<br/>FastAPI (+ optional GraphQL)<br/>policy + validation gates]
-    F --> G[Policy Engine<br/>OPA (Rego)<br/>RBAC + classification]
+  subgraph SP
+    direction LR
+    SP_T["🧩 Serving Plane"]
+    E --> F["API Layer — FastAPI (+ optional GraphQL) — policy + validation gates"]
+    F --> G["Policy Engine — OPA (Rego) — RBAC + classification"]
+    SP_T --> F
   end
 
-  %% --- Experience Plane ---
-  subgraph XP[🖥️ Experience Plane]
-    F --> H[Web UI<br/>React + TS<br/>Map + Story + Timeline]
-    F --> I[Focus Mode (AI)<br/>RAG + citations<br/>Ollama runtime]
-    H --> J[2D/3D Maps<br/>MapLibre (2D) + Cesium (3D)]
+  subgraph XP
+    direction LR
+    XP_T["🖥️ Experience Plane"]
+    F --> H["Web UI — React + TS — Map + Story + Timeline"]
+    F --> I["🤖 Focus Mode (AI) — RAG + citations — Ollama runtime"]
+    H --> J["🗺️ 2D/3D Maps — MapLibre (2D) + Cesium (3D)"]
+    XP_T --> H
   end
 ```
 
