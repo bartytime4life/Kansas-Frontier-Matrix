@@ -1,10 +1,11 @@
-# 🧰 `.github` — Community Health & Automation for **Kansas Frontier Matrix (KFM)** 🚧
-
 <div align="center">
- <picture>
+
+<picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/kfm-seal-320.png">
   <img src="docs/assets/branding/kfm-seal-animated-320.gif" width="220" alt="Kansas Frontier Matrix (KFM) — seal (animated)" />
 </picture>
+
+# 🧰 `.github` — Community Health & Automation for **Kansas Frontier Matrix (KFM)** 🚧
 
   <br/>
 
