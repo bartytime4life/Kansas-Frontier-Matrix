@@ -1,394 +1,505 @@
-<!--
-🛡️ Kansas Frontier Matrix — Policy Pack README
-Location: api/policies/README.md
--->
-
-<div align="center">
-
-<img src="./docs/assets/badges/opa-policy-pack.svg" alt="KFM OPA Policy Pack" height="84" />
-
 # 🛡️ KFM API Policy Pack (OPA) — `api/policies/`
 
-**Policy-as-Code** 🧩 • **Fail Closed** 🔒 • **Least Privilege** 🧠 • **Evidence-First (“No Source, No Answer”)** 📎 • **FAIR + CARE** 🌾
+<p align="center">
+  <strong>Policy-as-Code</strong> 🧩 • <strong>Fail Closed</strong> 🔒 • <strong>Least Privilege</strong> 🧠 • <strong>Evidence-First (“No Source, No Answer”)</strong> 📎 • <strong>FAIR + CARE</strong> 🌾
+</p>
 
-**The policy “brain” for the KFM API layer** — consistent allow/deny/sanitize for **REST**, **GraphQL**, **tiles**, and **AI/Focus Mode** endpoints.
-
-</div>
+<!-- ✅ Badge block (replace <ORG>/<REPO> + workflow filenames as needed) -->
+<p align="center">
+  <a href="https://github.com/<ORG>/<REPO>/actions">
+    <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/ci.yml?branch=main&label=CI&logo=githubactions">
+  </a>
+  <a href="https://github.com/<ORG>/<REPO>/actions">
+    <img alt="Policy Gate" src="https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/policy-gate.yml?branch=main&label=Policy%20Gate&logo=opa">
+  </a>
+  <a href="https://github.com/<ORG>/<REPO>/actions">
+    <img alt="CodeQL" src="https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/codeql.yml?branch=main&label=CodeQL&logo=github">
+  </a>
+  <a href="https://github.com/<ORG>/<REPO>/blob/main/LICENSE">
+    <img alt="License" src="https://img.shields.io/github/license/<ORG>/<REPO>?label=license">
+  </a>
+  <a href="https://github.com/<ORG>/<REPO>/releases">
+    <img alt="Release" src="https://img.shields.io/github/v/release/<ORG>/<REPO>?include_prereleases&label=release">
+  </a>
+  <img alt="OPA" src="https://img.shields.io/badge/OPA-policy--engine-blue">
+  <img alt="Rego" src="https://img.shields.io/badge/Rego-policy--language-informational">
+  <img alt="Fail Closed" src="https://img.shields.io/badge/default-fail--closed-critical">
+</p>
 
 ---
 
-## 🧭 Navigation
+## 🚦 TL;DR
 
-- [🎯 Purpose & non‑negotiables](#-purpose--non-negotiables)
-- [🧠 Policy philosophy](#-policy-philosophy)
+- **Every request** (REST / GraphQL / tiles / AI) gets a **policy decision** 🧠
+- The system **fails closed**: missing license, sensitivity, provenance, unknown role → **deny** 🔒
+- Policies run in **CI** (block non-compliant changes) **and** at **runtime** (authorize + sanitize) ✅
+- AI is **evidence-first**: *“No Source, No Answer”* 📎
+
+> **Design mantra:** *No UI → DB shortcuts. Everything flows through the governed API “truth path.”* 🧱
+
+---
+
+## 🧭 Contents
+
+- [🧠 What this policy pack is](#-what-this-policy-pack-is)
 - [🧱 Where policies run](#-where-policies-run)
-- [📦 Runtime + CI policy gates](#-runtime--ci-policy-gates)
-- [🧾 Contracts](#-contracts)
-  - [📥 Input contract](#-input-contract)
-  - [📤 Decision contract](#-decision-contract)
-- [🗂️ Policy domains](#️-policy-domains)
-- [🏷️ Governance taxonomy](#️-governance-taxonomy)
-- [🧪 Testing](#-testing)
-- [🧩 Adding or changing a policy](#-adding-or-changing-a-policy)
-- [🧾 Auditing, provenance & replay](#-auditing-provenance--replay)
-- [🧯 Troubleshooting](#-troubleshooting)
+- [📁 Folder layout](#-folder-layout)
+- [📦 Entrypoints](#-entrypoints)
+- [🧾 Input contract](#-input-contract)
+- [🎛️ Decision contract](#️-decision-contract)
+- [🧽 Sanitization directives](#-sanitization-directives)
+- [✅ CI policy gate](#-ci-policy-gate)
+- [⚙️ Runtime integration patterns](#️-runtime-integration-patterns)
+- [🧪 Testing & debugging](#-testing--debugging)
+- [🧩 Adding a new policy](#-adding-a-new-policy)
+- [📎 Examples](#-examples)
+- [🧾 Auditing & provenance](#-auditing--provenance)
 - [❓ FAQ](#-faq)
-- [📚 Project library references](#-project-library-references)
+- [📚 Project references](#-project-references)
 
 ---
 
-## 🎯 Purpose & non‑negotiables
+## 🧠 What this policy pack is
 
-KFM is an **evidence-first geospatial knowledge system** built around a governed “truth path”:
+Welcome to the **policy “brain”** for the Kansas Frontier Matrix (KFM) API layer. This directory defines **how requests are allowed, denied, or sanitized**—consistently—across:
 
-> **Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI**  
-> ✅ Nothing bypasses the governed API layer. No “UI → DB shortcuts.” 🧱  
-> ✅ No public exposure without **license + sensitivity + provenance**.  
-> ✅ AI outputs are treated as first-class artifacts with **traceability**. 🧾
+- 🌐 REST endpoints
+- 🧬 GraphQL queries
+- 🗺️ Tile services (vector/raster/PMTiles)
+- 🤖 AI endpoints (“Focus Mode”)
 
-This policy pack enforces those invariants at **CI time** and **runtime**, so the system behaves predictably as the platform grows.
+KFM’s broader architecture is intentionally **governed and evidence-first**: data and answers must remain **traceable**, **auditable**, and **policy-compliant** end-to-end (the “map behind the map”). 📎🗺️
 
-### ✅ Non‑negotiables (quality bar)
-- **Default deny** everywhere 🔒 (missing metadata = deny)
-- **Stable contracts**: one predictable decision object per entrypoint
-- **Machine‑readable reasons** (not just strings)
-- **Sanitization is explicit and testable** (no “silent” filtering)
-- **Auditability**: every decision is replayable by version hash
-- **CARE + FAIR**: open exploration *without* violating cultural protections 🌾
-
----
-
-## 🧠 Policy philosophy
-
-### 1) 🔒 Fail closed by default
-If anything is missing or ambiguous (license absent, sensitivity unset, provenance missing, unknown role/group), **deny**.
-
-### 2) 🧠 Least privilege (RBAC + ABAC)
-Authorization is derived from:
-- **RBAC**: user roles/capabilities
-- **ABAC**: resource tags (sensitivity, license, owner group, dataset status)
-- **Context**: endpoint type, query shape, environment, org membership, request risk
-
-### 3) 🌾 FAIR + CARE governance is “real”
-We support open discovery (FAIR) while honoring Indigenous and community governance (CARE):
-- **Collective benefit** ✅
-- **Authority to control** 🧭
-- **Responsibility** 🤝
-- **Ethics** 🧠
-
-### 4) 📎 Evidence-first AI (“No Source, No Answer”)
-AI must be grounded and verifiable:
-- If the system can’t cite sources it is permitted to use → **refuse or de‑escalate**
-- Policies must be able to enforce **citations**, **topic limits**, **sensitive-data protections**, and **prompt‑injection resistance**
+> 🔒 **Fail-Closed Rule:** If policy cannot prove a request is safe + compliant, the answer is **no**.
 
 ---
 
 ## 🧱 Where policies run
 
-### 🗺️ The KFM “truth path” with policy gates
-
 ```mermaid
 flowchart LR
-  R[📥 Raw Sources] --> P[🏭 Processing / ETL]
-  P --> C[🗂️ Catalog (STAC/DCAT + PROV)]
-  C --> D[(🗃️ Runtime Stores<br/>PostGIS • Graph • Search • Object)]
-  D --> A[🌐 API Layer<br/>REST • GraphQL • Tiles • AI]
-  A --> U[🗺️ UI + 🤖 Focus Mode]
-
-  %% Gates
-  P -.-> G1{🛡️ Gate: Ingest Rules}
-  C -.-> G2{🛡️ Gate: Metadata Completeness}
-  A -.-> G3{🛡️ Gate: Runtime Authorization}
-  U -.-> G4{🛡️ Gate: Evidence/Citation Rules}
-
-  G1 --> P
-  G2 --> C
-  G3 --> A
-  G4 --> U
-```
-
-### 🌐 Runtime request flow (allow / deny / sanitize)
-
-```mermaid
-flowchart LR
-  A[👤 Client] --> B[🌐 KFM API Gateway]
+  A[👤 Client: UI / External App] --> B[🌐 KFM API (REST/GraphQL/Tiles/AI)]
   B --> C{🛡️ OPA Decision}
-  C -->|allow ✅| D[📦 Respond]
-  C -->|deny ⛔| E[401/403 + safe refusal]
-  C -->|sanitize 🧽| F[✅ Filter/round/aggregate then respond]
+  C -->|allow ✅| D[📦 Data / Tiles / AI Answer]
+  C -->|deny ⛔| E[401/403 or safe refusal]
+  C -->|sanitize 🧽| F[✅ Filtered / rounded / aggregated output]
+
+  subgraph CI[🤖 CI Policy Gate]
+    G[PR change] --> H[🧪 Conftest + Rego tests]
+    H -->|pass ✅| I[merge]
+    H -->|fail ⛔| J[block + report violations]
+  end
 ```
 
----
-
-## 📦 Runtime + CI policy gates
-
-### 🤖 CI: prevent non-compliant changes from shipping
-Policies in CI should block:
-- publishing datasets without **license** ✅
-- missing **sensitivity classification** ✅
-- missing **provenance/lineage** (PROV) ✅
-- schema regressions (breaking input/decision contract) ✅
-- new endpoints without policy coverage ✅
-
-### 🧯 Runtime: “every request gets a decision”
-At runtime, OPA evaluates **every call** into:
-- REST endpoints
-- GraphQL operations (query + mutation + subscription if used)
-- tile services (vector/raster tiles, feature services)
-- AI endpoints (prompt + sources + draft answer)
+### 🧱 The “Truth Path” (why this matters)
+KFM is designed so **nothing bypasses governance**. Policies are the guardrails that keep the system honest—especially for:
+- licensing / attribution
+- sensitivity + privacy protections
+- provenance requirements
+- AI safety + evidence rules
+- culturally protected knowledge (CARE) 🌾
 
 ---
 
-## 🧾 Contracts
+## 📁 Folder layout
 
-### 📥 Input contract
-
-A stable input shape makes policy predictable, testable, and portable across services.
-
-✅ Recommended high-level input schema:
-
-```json
-{
-  "request": {
-    "id": "req_123",
-    "method": "GET",
-    "path": "/api/v1/datasets/ks-water-rights",
-    "query": {"bbox": "-99,37,-94,40"},
-    "headers": {"user-agent": "..."},
-    "ip": "203.0.113.10"
-  },
-  "user": {
-    "id": "user_456",
-    "roles": ["viewer"],
-    "groups": ["public"],
-    "org": "kfm",
-    "scopes": ["read:catalog"],
-    "auth": {"assurance": "mfa"}
-  },
-  "resource": {
-    "type": "dataset",
-    "id": "ks-water-rights",
-    "status": "published",
-    "license": "CC-BY-4.0",
-    "sensitivity": "restricted",
-    "tags": ["hydrology"],
-    "owner_group": "kansas-agency-x",
-    "provenance": {"prov": true, "stac": true, "dcat": true}
-  },
-  "context": {
-    "service": "rest",
-    "env": "prod",
-    "time_utc": "2026-02-06T12:00:00Z",
-    "risk": {"automated": false, "rate": "normal"}
-  },
-  "ai": {
-    "mode": "focus",
-    "prompt": "…",
-    "sources": [{"dataset_id": "…", "record_ids": ["…"]}],
-    "draft_answer": "…",
-    "citations": ["[12]", "[13]"]
-  }
-}
-```
-
-#### 🧩 Service-specific extensions (recommended)
-- **GraphQL**: include operation name, type (query/mutation), and parsed shape summary
-- **Tiles**: include `z/x/y`, `bbox`, `layer_id`, `feature_count_estimate`
-- **AI**: include `tool_calls`, `retrieval_ids`, and citation structure (not just text)
-
----
-
-### 📤 Decision contract
-
-**Every entrypoint returns a single decision object** with a stable shape.
-
-✅ Recommended decision object:
-
-```json
-{
-  "allow": false,
-  "reasons": [
-    {"code": "default_deny", "message": "Missing required governance conditions"}
-  ],
-  "sanitize": {
-    "mode": "none",
-    "mask_coordinates": false,
-    "rounding_meters": 0,
-    "suppress_fields": [],
-    "aggregate": null
-  },
-  "obligations": {
-    "audit": true,
-    "log_level": "info",
-    "policy_version_required": true,
-    "provenance_stamp_required": true,
-    "decision_cache_ttl_seconds": 0
-  },
-  "meta": {
-    "policy_pack": "kfm-policy-pack",
-    "policy_version": "git:SHA_OR_BUNDLE_HASH",
-    "decision_id": "dec_789"
-  }
-}
-```
-
-#### Key semantics 🧠
-- `allow=false` may still include `sanitize` instructions **if** you implement “safe partial disclosure”
-- `reasons[]` must be **machine-readable** (codes you can aggregate in logs)
-- `obligations` are the “must‑dos” the API layer enforces (audit logging, provenance stamping, etc.)
-
----
-
-## 🗂️ Suggested folder layout
-
-> Keep policy packs boring and predictable. Predictability = safety ✅
+> Keep it boring. Predictable structure = testable governance 😄
 
 ```text
 📦 api/
   └── 🛡️ policies/
       ├── README.md
-      ├── policy-pack.yaml                 # ✅ pack metadata (version, schemas, entrypoints)
       ├── 📜 rego/
-      │   ├── security.rego                # RBAC/ABAC, endpoint rules
-      │   ├── data_policies.rego           # license/sensitivity/provenance gating
-      │   ├── compliance.rego              # CARE/FAIR, publish/withdraw rules
-      │   ├── ai_policies.rego             # evidence-first AI safety & disclosure rules
+      │   ├── security.rego            # RBAC/ABAC, endpoint & method protection
+      │   ├── data_policies.rego       # license/sensitivity/provenance gating
+      │   ├── ai_policies.rego         # citations, AI safety, sensitive output checks
+      │   ├── compliance.rego          # governance council / publish rules
       │   └── lib/
-      │       ├── schema.rego              # input/decision helpers + type checks
-      │       ├── reasons.rego             # canonical reason codes + builders
-      │       ├── sanitize.rego            # sanitize builders (geo/PII/field suppression)
-      │       ├── graphql.rego             # operation shape helpers (optional)
-      │       ├── tiles.rego               # z/x/y helpers (optional)
-      │       └── time.rego                # time/window helpers
+      │       ├── strings.rego
+      │       ├── sanitize.rego
+      │       ├── time.rego
+      │       └── schema.rego          # (recommended) input/decision validation helpers
       ├── 🧪 tests/
       │   ├── security_test.rego
       │   ├── data_policies_test.rego
-      │   ├── compliance_test.rego
       │   ├── ai_policies_test.rego
-      │   └── fixtures/
-      │       ├── inputs/                  # golden inputs (json)
-      │       └── expected/                # golden decisions (json)
+      │   └── compliance_test.rego
       ├── 🗂️ data/
-      │   ├── roles.json                   # role→capabilities map
-      │   ├── sensitivities.json           # sensitivity taxonomy
-      │   ├── licenses.json                # allowed licenses + constraints
-      │   ├── protected_tags.json          # culturally protected / sensitive tags
-      │   └── denylist.json                # disallowed prompts/patterns (AI)
-      ├── 🧰 schemas/
-      │   ├── input.schema.json            # (optional) JSON Schema mirror
+      │   ├── roles.json               # role → capabilities map (optional)
+      │   ├── sensitivities.json       # standard taxonomy + constraints (optional)
+      │   ├── licenses.json            # allowed license identifiers (optional)
+      │   └── denylist.json            # disallowed prompt patterns, etc. (optional)
+      ├── 🧬 schemas/                  # (recommended) JSON schemas for input/decision
+      │   ├── input.schema.json
       │   └── decision.schema.json
       └── 📦 bundle/
-          └── (OPA bundle output artifacts)
+          └── (optional OPA bundle outputs)
+```
+
+<details>
+<summary>✨ Why add <code>schemas/</code>?</summary>
+
+Schema files let you:
+- validate policy input shape early (fail fast, clearer errors)
+- keep the API ↔ policy boundary stable as the system grows
+- generate documentation for clients that need to craft input payloads
+
+</details>
+
+---
+
+## 📦 Entrypoints
+
+We keep **stable, boring** entrypoints so API integration stays simple.
+
+Recommended packages + entrypoint rules:
+
+- `data.kfm.security.decision` 🔐
+- `data.kfm.data.decision` 🧾
+- `data.kfm.ai.decision` 🤖
+- `data.kfm.compliance.decision` 🌾
+
+> ✅ **Rule:** once published, avoid renaming packages/entrypoints unless you version them (`v1`, `v2`, …).
+
+---
+
+## 🧾 Input contract
+
+OPA input should be **explicit, minimal, and complete**. Treat it like an API request DTO.
+
+✅ Suggested input shape (example):
+
+```json
+{
+  "request": {
+    "id": "req_01HX…",
+    "method": "GET",
+    "path": "/api/v1/datasets/ks-1857",
+    "query": {"year": "1857"},
+    "headers": {"x-request-id": "…"},
+    "ip": "203.0.113.42"
+  },
+  "user": {
+    "id": "user_123",
+    "roles": ["public_viewer"],
+    "groups": ["public"],
+    "org": "kfm"
+  },
+  "resource": {
+    "type": "dataset",
+    "id": "ks-1857",
+    "license": "CC-BY-4.0",
+    "sensitivity": "public",
+    "provenance": {"prov_present": true},
+    "tags": ["history", "census"]
+  },
+  "context": {
+    "environment": "prod",
+    "endpoint_kind": "rest",
+    "time": "2026-02-06T00:00:00Z"
+  },
+  "ai": {
+    "question": null,
+    "answer": null,
+    "citations": []
+  }
+}
+```
+
+### 🔎 Input hygiene rules
+- **Never** rely on hidden state (if the policy needs it, pass it)
+- Prefer **typed enums** for sensitivity, endpoint kind, roles
+- Pass only what you’re willing to log (OPA inputs often end up in audits)
+
+---
+
+## 🎛️ Decision contract
+
+Every entrypoint returns a **single decision object** with a stable shape. This is the “contract” between the API and policies.
+
+✅ Recommended decision output:
+
+```json
+{
+  "allow": false,
+  "reasons": [
+    { "code": "default_deny", "detail": "Missing or ambiguous governance requirements." }
+  ],
+  "sanitize": [],
+  "obligations": [
+    { "op": "audit_log", "level": "info" },
+    { "op": "attach_policy_version" }
+  ],
+  "meta": {
+    "policy_package": "kfm.data",
+    "policy_version": "git:COMMIT_SHA_OR_BUNDLE_HASH",
+    "decision_id": "dec_01HX…"
+  }
+}
+```
+
+### ✅ Meaning of each field
+| Field | Purpose |
+|------|---------|
+| `allow` | hard allow/deny gate |
+| `reasons[]` | machine-readable reason codes (✅ for client UX + auditing) |
+| `sanitize[]` | transformations the API **must apply** before returning data |
+| `obligations[]` | required side effects (audit, provenance stamp, risk logging, etc.) |
+| `meta` | policy provenance (bundle hash / git SHA) |
+
+> 🧠 **Key idea:** `allow=false` can still return **safe refusal guidance**; `allow=true` can still require sanitization.
+
+---
+
+## 🧽 Sanitization directives
+
+Sanitization is how we keep legitimate use-cases working **without** over-sharing.
+
+Common directives:
+- 🗺️ `round_coordinates` (reduce precision)
+- 🧱 `aggregate_to_admin_level` (point → county)
+- 🧍 `suppress_fields` (remove identifiers)
+- 🧪 `apply_thresholding` (suppress low-count groups)
+- 🎭 `mask_geometry` (strip exact shapes; provide bounding boxes)
+- ⛔ `redact_text_spans` (remove restricted strings in narratives)
+
+Example sanitize payload:
+
+```json
+{
+  "sanitize": [
+    { "op": "round_coordinates", "meters": 5000 },
+    { "op": "suppress_fields", "fields": ["owner_name", "exact_geometry"] },
+    { "op": "aggregate_to_admin_level", "level": "county" }
+  ]
+}
+```
+
+> 🌾 This is especially important for **sensitive locations** (e.g., archaeological sites, culturally protected places), where public views should be generalized.
+
+---
+
+## ✅ CI policy gate
+
+Policy checks run in CI to prevent non-compliant changes from shipping.
+
+### What CI should block ⛔
+- dataset added/modified without a license
+- sensitivity not declared
+- provenance missing (no PROV record / lineage metadata)
+- “disallowed intent” patterns introduced into AI prompts/templates
+- governance-required approvals missing (publish rules)
+
+### Local parity (recommended)
+Run the same checks locally before PRs:
+
+```bash
+# ✅ Rego unit tests
+opa test api/policies -v
+
+# ✅ Repo-wide Conftest checks (CI parity)
+conftest test . -p api/policies/rego
 ```
 
 ---
 
-## 🗂️ Policy domains
+## ⚙️ Runtime integration patterns
 
-### 🔐 1) `security.rego` — RBAC + endpoint protection
-Examples:
-- only Admin can trigger ingestion/pipelines
-- contributors can draft/submit but not publish
-- public viewers can read **only** public-approved outputs
+KFM can enforce policies at runtime via:
 
-### 🧾 2) `data_policies.rego` — dataset governance
-Examples:
-- dataset must have **license** before publish/read in public flows
-- dataset must declare **sensitivity**
-- dataset must have **provenance** (PROV) before public catalog exposure
+### 1) 🧱 OPA sidecar (common)
+- API sends input to OPA over HTTP
+- OPA returns decision JSON
+- API enforces allow/deny/sanitize + obligations
 
-### 🌾 3) `compliance.rego` — governance rules (FAIR + CARE)
-Examples:
-- **withdrawn** datasets are inaccessible
-- culturally protected datasets require owner-group authorization
-- release processes require approvals (modeled as metadata assertions)
+Example query:
 
-### 🤖 4) `ai_policies.rego` — evidence + safety for Focus Mode
-Examples:
-- require citations and source manifests
-- deny disallowed intents (exploitation, targeted harm, bypass attempts)
-- prevent disclosure of private info about living people
-- block restricted dataset references for unauthorized users
-- sanitize outputs (rounding, aggregation, field suppression)
+```bash
+curl -s \
+  -X POST "http://opa:8181/v1/data/kfm/security/decision" \
+  -H "Content-Type: application/json" \
+  -d @input.json | jq
+```
+
+### 2) 🧩 Embedded evaluation (WASM / library)
+- Evaluate Rego in-process (fast, fewer network hops)
+- Still version + audit decisions the same way
+
+> ✅ Either way, **policies in this directory remain the source-of-truth**.
 
 ---
 
-## 🏷️ Governance taxonomy
+## 🧪 Testing & debugging
 
-### 📌 Dataset lifecycle states
-- `draft` 📝 (internal only)
-- `review` 👀 (restricted; approvals required)
-- `published` ✅ (servable with policy checks)
-- `withdrawn` 🧯 (deny everywhere unless explicitly authorized for audit)
+### ✅ Evaluate decisions locally
+```bash
+opa eval \
+  -d api/policies/rego \
+  -d api/policies/data \
+  -i input.json \
+  "data.kfm.data.decision"
+```
 
-### 🔎 Sensitivity levels (example)
-- `public` 🌐
-- `restricted` 🔐 (authorized users; may sanitize for others)
-- `sensitive_location` 🗺️ (precision controls required)
-- `culturally_protected` 🌾 (CARE rules + owner authority required)
-- `pii` 🧍 (default deny unless explicit legal/ethical basis)
+### 🧯 Debug tips
+- Add **reason codes** early (debugging “deny with no explanation” is misery)
+- Prefer `tests/` coverage over “it works on my machine”
+- Keep reusable helpers in `rego/lib/*` to avoid logic spaghetti 🍝
 
-> ✅ Recommendation: keep taxonomy small, stable, and well‑tested.
+<details>
+<summary>🧠 Suggested “reason code” naming</summary>
+
+Use consistent, grep-friendly codes:
+
+- `default_deny`
+- `missing_license`
+- `missing_sensitivity`
+- `missing_provenance`
+- `role_not_authorized`
+- `culturally_protected_requires_owner_group`
+- `ai_missing_citations`
+- `ai_restricted_dataset_reference`
+- `privacy_low_count_suppression_required`
+
+</details>
 
 ---
 
-## 📎 Examples (upgraded)
+## 🧩 Adding a new policy
 
-### 1) 📎 Evidence-first AI: require citations + source manifest
+### ✅ Checklist
+- [ ] Pick the domain: **security / data / AI / compliance**
+- [ ] Add rule(s) under `rego/` with **default deny**
+- [ ] Add tests under `tests/` (must include deny + allow cases)
+- [ ] If needed, add standard data under `data/`
+- [ ] Update this README if you introduce new `sanitize` ops or obligations
+- [ ] Document the **risk** being mitigated + **examples** of pass/fail
 
-**Rule goal:** “No Source, No Answer” — missing citations → safe refusal.
+### ✍️ Style conventions
+- Keep packages stable: `package kfm.*`
+- Prefer readable entrypoints:
+  - `kfm.security.decision`
+  - `kfm.data.decision`
+  - `kfm.ai.decision`
+  - `kfm.compliance.decision`
+- Avoid deep nesting; extract to `rego/lib/*`
+- Reasons should be **machine-readable** objects, not just strings
+
+---
+
+## 📎 Examples
+
+### 1) 🤖 Evidence-first AI: require citations
+
+Enforce: answers must include at least one citation marker (example: `[12]`).
 
 ```rego
 package kfm.ai
 
-import data.kfm.lib.reasons as reasons
+default decision = {
+  "allow": false,
+  "reasons": [{"code": "ai_missing_citations"}],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.ai"}
+}
 
-default decision := reasons.deny("missing_citations")
-
-decision := reasons.allow_with_obligations({
-  "audit": true,
-  "provenance_stamp_required": true
-}) {
-  # Example: require at least one citation marker and at least one structured source
-  re_match("\\[\\d+\\]", input.ai.draft_answer)
-  count(input.ai.sources) > 0
+decision = {
+  "allow": true,
+  "reasons": [],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.ai"}
+} {
+  re_match("\\[\\d+\\]", input.ai.answer)
 }
 ```
 
-### 2) 🗺️ Sensitive location handling: sanitize precision
+💡 Upgrade idea: if missing citations, return a **safe refusal** obligation:
+
+```json
+{
+  "obligations": [
+    { "op": "safe_refusal", "template": "No Source, No Answer. Please provide sources or use approved datasets." }
+  ]
+}
+```
+
+---
+
+### 2) 🗺️ Sensitive location handling (mask / round / aggregate)
 
 ```rego
 package kfm.data
 
-import data.kfm.lib.reasons as reasons
-import data.kfm.lib.sanitize as san
+default decision = {
+  "allow": false,
+  "reasons": [{"code": "default_deny"}],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.data"}
+}
 
-default decision := reasons.deny("default_deny")
-
-# Public datasets: allow cleanly
-decision := reasons.allow() {
+# ✅ Public is readable
+decision = {
+  "allow": true,
+  "reasons": [],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.data"}
+} {
   input.resource.sensitivity == "public"
 }
 
-# Sensitive locations: allow only with precision reduction
-decision := reasons.allow_with_sanitize(
-  san.geo_rounding(5000)  # meters
-) {
-  input.resource.sensitivity == "sensitive_location"
-  "researcher" in input.user.roles
+# ✅ Restricted allowed for admins
+decision = {
+  "allow": true,
+  "reasons": [],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.data"}
+} {
+  input.resource.sensitivity == "restricted"
+  "admin" in input.user.roles
+}
+
+# 🧽 Restricted sanitized for non-admins (optional pattern)
+decision = {
+  "allow": true,
+  "reasons": [{"code": "sanitized_restricted_dataset"}],
+  "sanitize": [
+    {"op": "round_coordinates", "meters": 5000},
+    {"op": "suppress_fields", "fields": ["exact_geometry"]}
+  ],
+  "obligations": [{"op": "audit_log", "level": "warn"}],
+  "meta": {"policy_package": "kfm.data"}
+} {
+  input.resource.sensitivity == "restricted"
+  not ("admin" in input.user.roles)
 }
 ```
 
-### 3) 🔐 Endpoint protection: pipeline triggers (fail closed)
+---
+
+### 3) 🔐 Endpoint protection (pipeline triggers)
 
 ```rego
 package kfm.security
 
-import data.kfm.lib.reasons as reasons
+default decision = {
+  "allow": false,
+  "reasons": [{"code": "role_not_authorized"}],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "warn"}],
+  "meta": {"policy_package": "kfm.security"}
+}
 
-default decision := reasons.deny("default_deny")
-
-decision := reasons.allow() {
+decision = {
+  "allow": true,
+  "reasons": [],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.security"}
+} {
   input.request.path == "/api/v1/ingest/runPipeline"
   input.request.method == "POST"
   "admin" in input.user.roles
@@ -397,135 +508,102 @@ decision := reasons.allow() {
 
 ---
 
-## 🧪 Testing
+### 4) 🧾 Publish gating: license + sensitivity + provenance required
 
-### ✅ OPA unit tests
-```bash
-opa test api/policies -v
-```
+> **Fail closed**: if metadata isn’t complete, it’s not publishable.
 
-### ✅ Conftest checks (CI parity)
-```bash
-conftest test . -p api/policies/rego
-```
+```rego
+package kfm.compliance
 
-### ✅ Golden decision fixtures (recommended)
-- Put representative inputs in: `tests/fixtures/inputs/*.json`
-- Put expected outputs in: `tests/fixtures/expected/*.json`
-- Write tests that compare full decision objects (including sanitize/obligations)
+default decision = {
+  "allow": false,
+  "reasons": [{"code": "default_deny"}],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "warn"}],
+  "meta": {"policy_package": "kfm.compliance"}
+}
 
-### ✅ Style & safety checks (recommended)
-```bash
-opa fmt -w api/policies/rego
-opa check api/policies/rego
+decision = {
+  "allow": true,
+  "reasons": [],
+  "sanitize": [],
+  "obligations": [{"op": "audit_log", "level": "info"}],
+  "meta": {"policy_package": "kfm.compliance"}
+} {
+  input.resource.license != ""
+  input.resource.sensitivity != ""
+  input.resource.provenance.prov_present == true
+}
 ```
 
 ---
 
-## 🧩 Adding or changing a policy
-
-### ✅ Checklist
-- [ ] Choose the domain: **security / data / compliance / AI**
-- [ ] Add rules with **default deny**
-- [ ] Add/extend tests (unit + fixtures)
-- [ ] Update taxonomy data if needed (`data/*.json`)
-- [ ] Confirm decision contract compatibility (no breaking changes)
-- [ ] Document:
-  - risk mitigated 🛡️
-  - allow/deny examples ✅⛔
-  - sanitize behavior 🧽
-  - logging obligations 🧾
-
-### ✍️ Style conventions (keep it boring ✅)
-- Stable packages: avoid renaming `package kfm.*`
-- Prefer **single entrypoint** per domain:
-  - `kfm.security.decision`
-  - `kfm.data.decision`
-  - `kfm.compliance.decision`
-  - `kfm.ai.decision`
-- Keep logic shallow → extract helpers to `rego/lib/*`
-- Use canonical reason codes via `lib/reasons.rego`
-- Avoid “stringly‑typed” decisions; return structured objects
-
----
-
-## 🧾 Auditing, provenance & replay
+## 🧾 Auditing & provenance
 
 Policies must be **auditable** and **replayable**.
 
-### ✅ Required audit fields (API responsibility; policy can demand via obligations)
+Recommended audit fields (API executes; policies require via obligations):
 - `request_id`
-- `user_id` (or pseudonymous id if required)
-- `resource_id` (dataset/story/layer)
+- `user_id` (or pseudonymous ID if required)
 - `decision.allow`
 - `decision.reasons[]`
-- `decision.sanitize`
-- `decision.obligations`
+- `decision.sanitize[]`
 - `policy_version` (commit SHA or bundle hash)
+- `resource_id` (dataset/story/tile layer id)
 - `timestamp`
 
-### 🔁 Replay guarantee
-> If a decision is challenged later, we must be able to reproduce it by re-running:
-- the same `input` JSON
-- the same policy bundle version
-- the same policy data (`data/*.json`)
+### 🤖 AI provenance (Focus Mode)
+AI outputs should be stored as first-class artifacts:
+- question + answer
+- sources/citations used
+- model version
+- policy decision (including sanitize + obligations)
 
----
-
-## 🧯 Troubleshooting
-
-### “Everything is denied!”
-- Confirm the API is passing the expected `input.user.roles/groups`
-- Confirm resource metadata includes `license`, `sensitivity`, `status`, and `provenance`
-- Check `reasons[]` codes and ensure they’re logged
-
-### “Sanitization didn’t happen”
-- Verify the API actually *applies* `decision.sanitize`
-- Add golden fixture tests that assert sanitize behavior
-
-### “GraphQL feels hard to govern”
-- Start with coarse-grained rules:
-  - block mutations except for specific roles
-  - require dataset sensitivity checks for any resolver touching protected data
-- Add operation-shape summaries to `input` rather than passing full AST everywhere
+> This enables “show your work” accountability—especially when decisions are challenged later.
 
 ---
 
 ## ❓ FAQ
 
-### “Deny or sanitize?”
+### “Should policies deny, or sanitize?”
 Both are valid:
-- **deny** when risk is unacceptable or required governance metadata is missing 🔒
-- **sanitize** when the use-case is legitimate but precision/detail is harmful 🧽
+- **deny** when risk is unacceptable or requirements are missing (fail closed)
+- **sanitize** when the use-case is legitimate but precision is harmful (e.g., sensitive sites)
 
-### “Do we enforce only at runtime?”
-No. CI gates prevent non-compliant assets from shipping.
+### “Do we enforce policies only at runtime?”
+No—**CI policy gates** prevent non-compliant assets and metadata from ever shipping.
 
 ### “Where does token validation happen?”
-Typically outside OPA (API middleware validates token), then passes claims to OPA:
-- roles, groups, org affiliation, scopes, assurance level
+Typically **outside** OPA:
+- API middleware validates token/session
+- claims are passed into OPA (`user.roles`, `user.groups`, `user.org`, etc.)
+- OPA decides allow/deny + obligations; API enforces.
 
-OPA makes the authorization + obligations decision; the API enforces obligations.
-
----
-
-## 📚 Project library references
-
-These internal references inform the KFM governance posture, API “truth path,” and CARE/FAIR alignment:
-
-- **Kansas Frontier Matrix (KFM) — Comprehensive System Documentation**  [oai_citation:0‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
-- **Indigenous Statistics (2nd ed., 2025): Data sovereignty, CARE principles, culturally embedded statistics**  [oai_citation:1‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)  
-- **Node.js / Web stack background (optional for API services & tooling)**  [oai_citation:2‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)  
-- **Web documentation + structure patterns (UX for READMEs & developer docs)**  [oai_citation:3‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  
-- **Media/format literacy for web assets (helpful for map tiles, imagery, and docs assets)**  [oai_citation:4‡Various Programming Concepts.pdf](sediment://file_00000000e86c71fd9eceb7eec4bba22e)  
+### “How does FAIR + CARE show up in code?”
+- FAIR can be enforced as **required metadata gates** (license, provenance, catalog fields)
+- CARE shows up as **collective protection rules** (culturally protected data handling, access by owner group, precision reduction, consent-driven constraints)
 
 ---
 
-### ✅ Keep this README aligned with reality 🌱
+## 📚 Project references
 
-If you rename entrypoints, add new endpoints, or adjust metadata requirements:
-- update this README
-- update fixtures/tests
-- update `policy-pack.yaml`
+> These are the primary design sources informing the governance + policy-as-code posture of KFM.
 
-**Policy docs that drift from implementation are a security bug.** 🐛🛡️
+- **Kansas Frontier Matrix — Comprehensive System Documentation**  [oai_citation:0‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
+- **KFM — Comprehensive Technical Blueprint** (governance, CI gates, runtime enforcement patterns)  [oai_citation:1‡Artificial Intelligence & Machine Learning in Health Care & Medical Sciences.pdf](sediment://file_0000000036fc71fda445161776f735db)  
+- **Indigenous Statistics (2nd ed., 2025)** (Indigenous Data Sovereignty + CARE framing)  [oai_citation:2‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)  
+- **Node.js / Web service foundations** (supporting API/CI ergonomics context)  [oai_citation:3‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)  
+- **Documentation + layout polish references** (Markdown + web presentation best practices)  [oai_citation:4‡professional-web-design-techniques-and-templates.pdf](sediment://file_000000000acc71f8b2e5128c030179fc)  [oai_citation:5‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  
+- **Visuals / diagram asset considerations** (when embedding images in docs)  [oai_citation:6‡Various Programming Concepts.pdf](sediment://file_00000000e86c71fd9eceb7eec4bba22e)  
+
+---
+
+### ✅ House rule (keep this README honest) 🌱
+If you change:
+- entrypoints,
+- reason codes,
+- sanitize ops,
+- obligations,
+- or CI gate behavior…
+
+…update this README in the same PR. No surprises.
