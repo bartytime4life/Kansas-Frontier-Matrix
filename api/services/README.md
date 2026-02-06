@@ -1,289 +1,290 @@
-# 🧩 `api/services/` — Service Layer (Use‑Cases & Orchestration)
+# 🧩 `api/services/` — Service Layer and Use Cases
 
-<p align="left">
-  <img alt="Layer" src="https://img.shields.io/badge/layer-service%20%2F%20use--cases-2563eb?style=for-the-badge">
-  <img alt="Architecture" src="https://img.shields.io/badge/architecture-clean%20%2B%20ports%20%26%20adapters-0ea5e9?style=for-the-badge">
-  <img alt="Governance" src="https://img.shields.io/badge/governance-OPA%20policy%20gates-22c55e?style=for-the-badge">
-  <img alt="Evidence" src="https://img.shields.io/badge/trust-evidence--first%20%2B%20provenance-f97316?style=for-the-badge">
-  <img alt="AI" src="https://img.shields.io/badge/ai-Focus%20Mode%20(RAG)%20%2B%20Ollama-a855f7?style=for-the-badge">
-</p>
+![Layer](https://img.shields.io/badge/layer-service%20%2F%20use--cases-blue)
+![API](https://img.shields.io/badge/api-REST%20%2B%20GraphQL-informational)
+![Data](https://img.shields.io/badge/data-PostGIS%20%7C%20Neo4j%20%7C%20Search%20%7C%20Object%20Store-orange)
+![Governance](https://img.shields.io/badge/governance-OPA%20policy%20gates-success)
+![AI](https://img.shields.io/badge/ai-Focus%20Mode%20RAG%20%2B%20Ollama-purple)
+![Observability](https://img.shields.io/badge/observability-logs%20%7C%20metrics%20%7C%20traces-9cf)
+![Architecture](https://img.shields.io/badge/architecture-clean%20%2B%20ports--adapters-black)
 
-<p align="left">
-  <img alt="API" src="https://img.shields.io/badge/api-REST%20%2B%20GraphQL-64748b?style=flat-square">
-  <img alt="Data" src="https://img.shields.io/badge/data-PostGIS%20%7C%20Neo4j%20%7C%20Search%20%7C%20Object%20Store-64748b?style=flat-square">
-  <img alt="Security" src="https://img.shields.io/badge/security-allowlists%20%2B%20audit%20%2B%20supply%20chain-64748b?style=flat-square">
-  <img alt="Testing" src="https://img.shields.io/badge/testing-unit%20%2B%20integration%20%2B%20contract-64748b?style=flat-square">
-</p>
+> **Purpose:** `api/services/` contains KFM’s **application services** (use cases).  
+> This is the orchestration layer that turns domain intent into **governed, evidence-backed, traceable outcomes** — the *truth-path gateway* between routers/controllers and adapters.
 
-> **Purpose 🎯**  
-> `api/services/` holds KFM’s **application services / use‑cases** — the orchestration layer that turns *domain intent* into **governed, traceable outcomes**.  
-> Services sit **between** routers/resolvers and **adapters** (DBs, search, object store, LLM), enforcing KFM’s **truth path** and **evidence-first** rules.
+> **North Star ✨:** *The map behind the map.*  
+> If we can’t show **where it came from**, we shouldn’t ship it.
 
 ---
 
 ## 🧭 Quick navigation
 
-<details>
-  <summary><b>Open table of contents</b> 📚</summary>
-
 - [What belongs here](#-what-belongs-here)
-- [Architectural role](#-architectural-role-clean-architecture-fit)
-- [Non-negotiables](#-non-negotiables-the-4-golden-rules)
-- [Standard service flow](#-standard-service-flow-truth-path-inside-the-api)
-- [Folder map](#-suggested-folder-map)
-- [Return types](#-service-return-types-data--evidence--citations)
+- [Role in the architecture](#-role-in-the-architecture)
+- [Service contracts](#-service-contracts)
+- [Cross-cutting concerns](#-cross-cutting-concerns)
+- [Suggested folder map](#-suggested-folder-map)
 - [Service catalog](#-service-catalog)
-- [Focus Mode workflow](#-focus-mode-rag-service-workflow)
-- [Governance & sensitivity](#-governance--data-sensitivity-fair--care)
+- [Focus Mode RAG workflow](#-focus-mode-rag-workflow)
+- [Error model](#-error-model)
 - [Testing expectations](#-testing-expectations)
-- [Error contract](#-error-handling-contract)
-- [Observability](#-observability--operability)
-- [Example skeleton](#-example-service-skeleton-python)
-- [Adding a new service](#-adding-a-new-service-checklist)
-- [Related docs](#-related-docs-repo-pointers)
-
-</details>
+- [PR checklist](#-pr-checklist)
+- [Templates](#-templates)
+- [Related docs](#-related-docs)
+- [References](#-references)
 
 ---
 
-## 📌 What belongs here?
+## 📌 What belongs here
 
-✅ **DO put in `api/services/`:**
-- **Use-case orchestration** (`CatalogService.search()`, `TilesService.get_tile()`, `FocusModeService.query()`)
-- **Business rules** & workflow sequencing (validate → authorize → retrieve → transform → package evidence)
-- **Evidence bundling** + citation mapping *(“the map behind the map”)*  
-- **Governance hooks**: allowlists, policy checks (OPA), provenance logging, data sensitivity handling
-- **Cross-store coordination** (Neo4j + PostGIS + search + object store) behind a clean interface
+### ✅ DO put in `api/services/`
+- **Use-case orchestration**  
+  Example: `CatalogService.search()`, `TilesService.get_tile()`, `FocusModeService.query()`
+- **Workflow sequencing and decision rules**  
+  Example: validate → allowlist → retrieve → policy gate → assemble evidence → log provenance
+- **Evidence bundling and citation mapping** 🧾  
+  The “numbered sources → citation map” workflow stays close to the logic selecting evidence
+- **Governance hooks** 🛡️  
+  Policy checks, role-based constraints, sensitivity filters, license gates
+- **Provenance emission** 🧷  
+  Immutable audit records, correlation IDs, model/prompt versions for AI flows
 
-❌ **DO NOT put in `api/services/`:**
-- FastAPI routers/controllers / GraphQL resolvers (HTTP parsing & response formatting)
-- Raw SQL/Cypher/vendor SDK calls (put those in adapters/repos)
-- Framework globals (`Request`, app state, `Depends`, etc.)
-- “Just a helper” utilities with no domain meaning (put in `api/utils/`)
+### ❌ DO NOT put in `api/services/`
+- FastAPI routers/controllers (HTTP parsing & response formatting) → `api/routers/`
+- Raw SQL / Cypher / vendor SDK calls → `api/adapters/` (repos/clients)
+- Framework globals (request objects, app state) → routers or DI wiring
+- Generic “helpers” without business meaning → `api/utils/`
+
+> [!TIP]
+> If a function would still make sense if HTTP, PostGIS, Neo4j, Search, and the LLM were swapped out… it probably belongs in services.
 
 ---
 
-## 🧱 Architectural role (Clean Architecture fit)
+## 🧱 Role in the architecture
 
-KFM uses a layered approach:
+KFM follows a layered architecture with a strict **truth path**:
 
+> **Raw → Processed → Catalog → Databases → API → UI and AI** ✅  
+> **No backdoors**: UI does not talk to DBs directly; services are the controlled gateway.
+
+### 🧠 Layer responsibilities
 - **Domain layer** 🧬  
-  Entities + value objects + domain rules *(framework-agnostic)*
-
-- **Service / Use‑Case layer (this folder)** 🧩  
-  Workflows + decision rules + orchestration *(policy + provenance + evidence assembly)*
-
-- **Adapters / Integrations** 🔌  
-  PostGIS/Neo4j/search/object store/LLM clients + repositories *(I/O lives here)*
-
-- **Infrastructure / Composition** 🏗  
-  FastAPI app wiring, DI container, router mounting, startup/shutdown, config
+  Entities, value objects, domain rules (framework-agnostic)
+- **Service layer** 🧩 *(this folder)*  
+  Use cases, orchestration, decision logic, governance + provenance hooks
+- **Adapters** 🔌  
+  PostGIS, Neo4j, search, object store, LLM client, repositories
+- **Infrastructure** 🏗️  
+  FastAPI app wiring, DI, routers, startup config, deployments
 
 **Rule of thumb:**  
-> **Services depend on ports (interfaces), not implementations.**  
-> This keeps use‑cases testable and prevents DB/LLM details from leaking into business logic.
+> **Services depend on interfaces (ports), not implementations.**  
+> This keeps use cases testable and prevents DB/LLM details from leaking into business logic.
 
 ---
 
-## 🥇 Non-negotiables: the 4 golden rules
+## 📦 Service contracts
 
-### 1) Evidence-first by default 🧾
-- Prefer return types that include **data + evidence metadata**
-- Keep citation mapping close to the logic that selects evidence
-- If evidence is missing: **fail safely** (`EvidenceError`) or return “insufficient evidence”
+### ✅ Return shapes should be evidence-aware
 
-### 2) Governed access (policy gates) 🛡️
-Any service that exposes data or narratives must:
-- Validate inputs (bbox, time range, IDs, query params)
-- Enforce **allowlists** (layers, tables, fields, datasets, resolver ops)
-- Run authorization/policy checks (**OPA**) before returning outputs
+Services should prefer return types that include:
+- **Data payload**
+- **Evidence bundle** (sources used)
+- **Citation map** (markers → source metadata)
+- **Provenance record ID** (or correlation ID)
+- **Warnings** (partial data, redactions, stale caches)
 
-### 3) Traceability (provenance logging) 🧷
-Services that produce user-visible outputs must log:
-- Actor context (role, tenant/org, session, UI map context)
-- Exact sources used (dataset IDs, document IDs, graph node IDs)
-- Transform steps + versions (pipeline ID, prompt version, model ID)
-- Output IDs + **citation map**
+> [!NOTE]
+> Router/controller code should be “dumb”: map service results → HTTP responses.  
+> The service should be “smart”: enforce truth path + governance + provenance.
 
-### 4) Stateless by design ♻️
-- No hidden caches unless explicit and documented
-- Prefer pure orchestration + injected dependencies
-- Make operations idempotent when possible (especially write flows)
+### Recommended minimal contract
 
----
+```python
+from dataclasses import dataclass
+from typing import Any, Generic, Mapping, TypeVar
 
-## 🛤 Standard service flow (truth path inside the API)
+T = TypeVar("T")
 
-Services are the “truth-path gatekeepers” inside the API. A strong default flow looks like:
+@dataclass(frozen=True)
+class EvidenceItem:
+    source_id: str        # stable internal ID
+    title: str
+    uri: str | None       # external link if applicable
+    snippet: str | None   # short, high-signal excerpt
+    kind: str             # dataset | document | graph_node | tile_asset | etc.
 
-1. **Normalize** inputs (types, defaults, canonical IDs)
-2. **Validate** constraints (schema, bbox sanity, time bounds, allowlists)
-3. **Authorize** actor & action (OPA / policy module)
-4. **Retrieve** from approved stores (ports only)
-5. **Transform** using domain rules (no I/O)
-6. **Assemble evidence** (snippets, IDs, titles, bounding boxes, timestamps)
-7. **Policy-check outputs** (citations present, sensitivity honored)
-8. **Log provenance** (inputs + outputs + evidence map)
-9. **Return** stable service DTOs
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant R as Router/Resolver 🌐
-  participant S as Service 🧩
-  participant P as PolicyService 🛡️ (OPA)
-  participant A as Adapters/Repos 🔌
-  participant V as Provenance 🧷
-
-  R->>S: call use_case(actor, input, context)
-  S->>S: normalize + validate + allowlist
-  S->>P: assert_allowed(actor, action, resource)
-  S->>A: fetch/compute (ports only)
-  A-->>S: data + evidence IDs/snippets
-  S->>P: assert_output_allowed(result + citations)
-  S->>V: log(action, inputs, outputs, citations)
-  S-->>R: ServiceResult (data + evidence + citation_map)
+@dataclass(frozen=True)
+class ServiceResult(Generic[T]):
+    data: T
+    evidence: list[EvidenceItem]
+    citations: Mapping[str, str]     # e.g. {"[1]": "source_id:abc", "[2]": "source_id:def"}
+    provenance_id: str | None
+    warnings: list[str]              # user-safe, not internal stack traces
 ```
 
 ---
 
-## 🗂 Suggested folder map
+## 🛡️ Cross-cutting concerns
 
-> Filenames may vary; keep the **intent** consistent.
+Services are the **one place** we can enforce the rules consistently.
+
+### 1) Evidence-first 🧾
+- Prefer returning **data + evidence metadata** by default
+- Keep citation mapping close to evidence selection
+- If evidence is missing: **fail safely** or return “insufficient evidence”
+
+**Mantra:**  
+> **No source, no answer.**
+
+### 2) Governed access 🛡️
+Every service that exposes data should:
+- Validate inputs (bbox, time range, layer IDs, query params)
+- Enforce allowlists (tables, datasets, fields, graph labels)
+- Run authorization/policy checks (OPA or policy module)
+
+### 3) Provenance and auditability 🧷
+Services producing user-visible outputs should log:
+- Actor context (role, org, purpose)
+- Inputs (filters, bbox, timeframe, layer, dataset IDs)
+- Evidence set (exact dataset/document IDs used)
+- Output IDs + citation map
+- For AI: model ID + prompt template version + retrieval channels used
+
+### 4) Observability 🛰️
+Services should emit:
+- **Structured logs** (JSON fields; no secrets)
+- **Metrics** (latency, cache hit rate, policy denies, retrieval counts)
+- **Tracing** (correlation IDs propagated router → service → adapters)
+
+### 5) Statelessness by default ♻️
+- No hidden caches unless explicit and documented
+- Prefer pure functions + injected dependencies
+- Make operations idempotent where possible
+
+### 6) Indigenous data governance and sensitivity 🧡
+When services touch Indigenous-related data, align behavior to:
+- **CARE** principles and community governance expectations  
+- Sensitivity labels and redaction rules where applicable
+- Avoid “open by default” assumptions for culturally sensitive content
+
+> [!WARNING]
+> Governance is not “just security.” It includes **licenses**, **sensitivity**, **community control**, and **harm prevention**.
+
+---
+
+## 🗂️ Suggested folder map
+
+> (Actual filenames may vary; keep the *intent* consistent.)
 
 ```text
 api/
   services/ 🧩
     README.md  ← you are here 📍
 
-    catalog_service.py          # DCAT/STAC dataset discovery & retrieval
-    query_service.py            # constrained ad-hoc query interface (allowlisted)
-    tiles_service.py            # vector/raster tile orchestration + gating
-    graph_service.py            # relationship-driven use-cases (GraphQL resolvers call here)
-    focus_mode_service.py       # RAG orchestration (Prompt Gate → Retrieval → LLM → Policy)
-    provenance_service.py       # provenance ledger logging + citation maps
-    policy_service.py           # OPA wrapper (authorization + content/safety rules)
-    sensitivity_service.py      # optional: FAIR+CARE labels → masking/aggregation rules
+    catalog_service.py        🧭  # DCAT/STAC discovery & retrieval
+    query_service.py          🔎  # constrained ad-hoc query interface (allowlisted)
+    tiles_service.py          🧱  # vector/raster tile orchestration + layer gating
+    graph_service.py          🕸️  # relationship use cases (GraphQL resolvers call here)
+    focus_mode_service.py     🤖  # RAG orchestration (Prompt Gate → Retrieval → LLM → Policy)
+    provenance_service.py     🧷  # provenance ledger + citation maps
+    policy_service.py         🛡️  # OPA wrapper (authz + content/policy checks)
 
-  adapters/ 🔌                  # PostGIS/Neo4j/Search/Ollama/Object-store implementations
-  domain/ 🧬                    # domain models (no I/O)
-  routers/ 🌐                   # FastAPI routers/controllers
-  graphql/ 🧠                   # schema + resolvers (resolvers should call services)
+  adapters/ 🔌                # PostGIS/Neo4j/Search/Ollama/Object-store implementations
+  domain/ 🧬                  # Pydantic/dataclass domain models (no I/O)
+  routers/ 🌐                 # FastAPI routers/controllers
+  utils/ 🧰                   # generic helpers without business meaning
 ```
 
 ---
 
-## 📦 Service return types (data + evidence + citations)
-
-To make the “no source, no answer” rule easy to follow, prefer **structured envelopes**:
-
-### ✅ Recommended DTO shape
-
-```python
-@dataclass(frozen=True)
-class EvidenceItem:
-    id: str                 # stable source ID (dataset/doc/graph node)
-    kind: str               # "dataset" | "document" | "graph" | "tile" | ...
-    title: str
-    snippet: str | None     # short excerpt (never dump whole docs)
-    uri: str | None         # internal link / catalog URI
-    bbox: tuple[float, float, float, float] | None
-    time_range: tuple[str, str] | None
-    sensitivity: str = "public"  # public | internal | sensitive | restricted
-
-@dataclass(frozen=True)
-class CitationMap:
-    # e.g. "[1]" -> EvidenceItem.id
-    citations: dict[str, str]
-
-@dataclass(frozen=True)
-class ServiceResult[T]:
-    data: T
-    evidence: list[EvidenceItem]
-    citation_map: CitationMap
-    provenance_id: str | None
-```
-
-> **Why this matters 💡**  
-> Routers should never “invent” citations. If the service can’t return citations, it should **not** return claims.
-
----
-
-## 📚 Service catalog
+## 🧩 Service catalog
 
 | Service | What it owns 🧩 | Typical callers 🌐 | Notes |
 |---|---|---|---|
 | `CatalogService` | Dataset metadata, discovery, asset links | `/api/v1/datasets/*`, `/api/v1/catalog/search` | Returns DCAT/STAC summaries + links |
-| `QueryService` | Constrained “power user” querying | `/api/v1/query` | Must be allowlisted + audited |
+| `QueryService` | Constrained power queries | `/api/v1/query` | Must be allowlisted + logged |
 | `TilesService` | Tile orchestration + layer gating | `/tiles/{layer}/{z}/{x}/{y}.*` | Keeps map clients on the same tile “well” |
-| `GraphService` | Relationship-driven use-cases | `/graphql` resolvers | Often joins Neo4j + PostGIS |
+| `GraphService` | Relationship-driven use cases | GraphQL resolvers | Often joins Neo4j + PostGIS |
 | `FocusModeService` | RAG orchestration for Focus Mode | `/focus-mode/query` | Prompt Gate → retrieval → LLM → policy → citations |
 | `PolicyService` | OPA integration + content rules | called by all services | Centralize policy logic here |
 | `ProvenanceService` | Immutable audit + citation maps | called by key services | “No provenance, no publish” |
 
 ---
 
-## 🔍 Focus Mode (RAG) service workflow
+## 🔁 Typical request flow
 
-This is the **canonical AI orchestration pattern**.
+```mermaid
+flowchart LR
+  U[Client UI 🗺️] --> R[Router/Controller 🌐]
+  R --> S[Service 🧩\nUse-case orchestration]
+  S --> P[Policy Gate 🛡️\nOPA / rules]
+  S --> A[Adapters 🔌\nRepos/Clients]
+  A --> D[(Data Stores 🗃️\nPostGIS • Neo4j • Search • Object Store)]
+  S --> V[Provenance 🧷\nLedger + citations]
+  S --> R
+  R --> U
+```
+
+---
+
+## 🤖 Focus Mode RAG workflow
+
+This is the canonical AI service orchestration pattern.
 
 ```mermaid
 flowchart LR
   A[User question 🗨️] --> B[Prompt Gate 🧼]
   B --> C[Hybrid Retrieval 🔎\nNeo4j + PostGIS + Full-text + Vector]
   C --> D[Evidence Bundle 📦\nnumbered sources + IDs]
-  D --> E[LLM Generate 🤖\n(Ollama)]
-  E --> F[Policy Check 🛡️\n(OPA rules)]
+  D --> E[LLM Generate 🤖\nOllama]
+  E --> F[Policy Check 🛡️\nOPA rules]
   F --> G[Response + Citation Map 🧾]
-  G --> H[Provenance Log 🧷\n(question, sources, model, prompt ver)]
+  G --> H[Provenance Log 🧷\nquestion, sources, model, prompt version]
 ```
 
-### Service-level requirements ✅
-- Retrieval must be **compact and high-signal** (snippets, not whole documents).
-- Output must include required citation markers (e.g., `[1]`, `[2]`) **before** returning.
-- If policy fails (missing citations, sensitivity violation, role mismatch): return a **governed fallback**.
-
-### Retrieval channels (expected)
-- **Neo4j**: related entities/events/relationships
-- **PostGIS**: spatial joins, aggregates, counts, bbox filtering
-- **Full‑text search**: keyword matches for documents/stories
-- **Vector search**: semantic similarity over chunked text
+### Implementation notes
+- Keep retrieval **compact and high-signal** (snippets, not entire documents)
+- Ensure output contains required citation markers (`[1]`, `[2]`, …) **before** returning
+- If policy fails (missing citations, sensitivity violation, role mismatch), return a governed fallback:
+  - “Insufficient evidence”
+  - “Not authorized”
+  - “Please refine your question” + show what evidence is missing
 
 ---
 
-## 🧠 Governance & data sensitivity (FAIR + CARE)
+## 🧯 Error model
 
-KFM aims for “open + explorable” while respecting data sovereignty and sensitive contexts.
+Services should throw **typed, stable** exceptions that routers can map to HTTP cleanly.
 
-### Sensitivity labels 🏷️
-Services should treat sensitivity as **data**, not a comment:
-- `public` → safe to show as-is
-- `internal` → authenticated users only
-- `sensitive` → may require masking/aggregation/content warnings
-- `restricted` → role/group-based access (may be fully hidden)
+### ✅ Recommended shape
+- `code` (stable string)
+- `message` (safe for users)
+- optional `details` (internal)
+- optional `hint` (actionable next step)
 
-### Common service-level mitigations 🧯
-- **Generalize locations** for sensitive sites (e.g., rounding/aggregation; county-level output)
-- **Suppress small counts** to reduce re-identification risk (k-anonymity style thresholds)
-- **Query auditing & limits** to prevent “needle-in-haystack” inference attacks
-- **Role-aware output shaping** (same use-case, different detail level)
+Examples:
+- `NotFoundError(code="dataset_not_found")`
+- `PolicyDeniedError(code="not_authorized")`
+- `ValidationError(code="invalid_bbox")`
+- `EvidenceError(code="no_source_no_answer")`
 
-> **Ethics reminder 🌾**  
-> Data is never “just data.” Services should resist accidental harm: avoid amplifying deficit-only narratives, add context, and attach provenance so users can verify and interpret responsibly.
+> [!IMPORTANT]
+> Avoid leaking raw DB/LLM errors upward.  
+> Services translate vendor failures into stable service errors + internal logs.
 
 ---
 
 ## 🧪 Testing expectations
 
-### ✅ Unit tests (fast)
+### ✅ Unit tests
 - Services tested with **fake repositories/adapters**
 - Assert:
-  - allowlists enforce correctly
+  - allowlists are enforced
   - policy hooks are called
   - provenance is emitted on successful flows
-  - “insufficient evidence” is consistent and safe
+  - insufficient evidence behavior is consistent
 
-### 🔧 Integration tests (real deps)
+### 🔧 Integration tests
 - Adapter-level tests against PostGIS/Neo4j/search/ollama containers (compose profile)
 - Golden tests for:
   - tile generation contract (headers/content-type)
@@ -291,85 +292,46 @@ Services should treat sensitivity as **data**, not a comment:
   - GraphQL resolver consistency
 
 ### 📜 Contract tests
-- Ensure service return envelopes remain stable for routers/controllers
-- Treat `ServiceResult` as a public contract inside the backend
+- Ensure service return shapes remain stable for routers/controllers
+- Pin service “public DTOs” so UI work doesn’t break silently
 
 ---
 
-## 🧯 Error handling contract
+## ✅ PR checklist
 
-Keep a consistent pattern so controllers can map to HTTP cleanly.
+When adding or changing a service, confirm:
 
-**Recommended:**
-- Define service exceptions with:
-  - `code` (stable string)
-  - `message` (safe for users)
-  - optional `details` (internal)
-  - optional `http_status` (default mapping)
-
-Example patterns:
-- `NotFoundError("dataset_not_found")`
-- `PolicyDeniedError("not_authorized")`
-- `ValidationError("invalid_bbox")`
-- `EvidenceError("no_source_no_answer")`
-- `ConflictError("version_conflict")`
-
-> Avoid leaking raw DB/LLM errors upward. Convert them at adapter/service boundaries.
+- [ ] Use case name matches intent (not “utils”) 🎯
+- [ ] Inputs validated (bbox/time/layer/query) ✅
+- [ ] Allowlists applied (datasets/tables/fields/labels) 🧱
+- [ ] Policy gate invoked (OPA/rules) 🛡️
+- [ ] Evidence produced or service fails safely 🧾
+- [ ] Citation map produced for user-visible claims 🧷
+- [ ] Provenance emitted for publishable outputs 🧷
+- [ ] Observability: logs + metrics + trace IDs 🛰️
+- [ ] Unit tests added/updated 🧪
+- [ ] Integration tests updated if adapter contracts changed 🔧
+- [ ] README/docs updated where needed 📝
 
 ---
 
-## 📈 Observability & operability
+## 🧰 Templates
 
-Services should be “debuggable in production” without guessing.
-
-### Minimum instrumentation 📍
-- Structured logs: `service`, `action`, `actor`, `request_id`, `provenance_id`
-- Metrics: latency, error counts by `code`, policy denies, cache hit rate
-- Tracing: span per service method + downstream adapter calls (OpenTelemetry friendly)
-
-### Performance notes ⚡
-- Keep services stateless so API pods can scale horizontally.
-- Cache expensive operations **only if governed**:
-  - cache keys must include policy context (actor/role/tenant)
-  - never cache restricted data into a public keyspace
-- Prefer caching **retrieval context** (snippets/evidence IDs) rather than entire model outputs.
-
----
-
-## 🧰 Example service skeleton (Python)
+### Minimal service skeleton
 
 ```python
-from __future__ import annotations
-
 from dataclasses import dataclass
-from typing import Protocol, Generic, TypeVar
+from typing import Protocol
 
-T = TypeVar("T")
+class Policy(Protocol):
+    async def assert_allowed(self, *, actor, action: str, resource: dict) -> None: ...
+
+class Provenance(Protocol):
+    async def log(self, *, actor, action: str, inputs: dict, outputs: dict, evidence: list[dict]) -> str: ...
 
 class DatasetRepo(Protocol):
     async def get_dataset(self, dataset_id: str) -> dict: ...
     async def search(self, *, q: str | None, bbox=None, time=None) -> list[dict]: ...
-
-class Policy(Protocol):
-    async def assert_allowed(self, *, actor, action: str, resource: dict) -> None: ...
-    async def assert_output_allowed(self, *, actor, action: str, output: dict) -> None: ...
-
-class Provenance(Protocol):
-    async def log(self, *, actor, action: str, inputs: dict, outputs: dict, citations: dict) -> str: ...
-
-@dataclass(frozen=True)
-class EvidenceItem:
-    id: str
-    kind: str
-    title: str
-    snippet: str | None = None
-
-@dataclass(frozen=True)
-class ServiceResult(Generic[T]):
-    data: T
-    evidence: list[EvidenceItem]
-    citation_map: dict[str, str]   # "[1]" -> EvidenceItem.id
-    provenance_id: str | None
 
 @dataclass
 class CatalogService:
@@ -377,78 +339,68 @@ class CatalogService:
     policy: Policy
     prov: Provenance
 
-    async def get_dataset(self, *, actor, dataset_id: str) -> ServiceResult[dict]:
+    async def get_dataset(self, *, actor, dataset_id: str) -> dict:
         ds = await self.repo.get_dataset(dataset_id)
-
-        # 1) policy gate
         await self.policy.assert_allowed(actor=actor, action="datasets:read", resource=ds)
 
-        # 2) evidence bundle (example: dataset itself is evidence)
-        ev = EvidenceItem(id=ds["id"], kind="dataset", title=ds.get("title", ds["id"]))
-        citations = {"[1]": ev.id}
-
-        # 3) output gate (e.g., ensure restricted fields removed)
-        await self.policy.assert_output_allowed(
-            actor=actor,
-            action="datasets:read",
-            output={"dataset_id": ds["id"], "citations": citations},
-        )
-
-        # 4) provenance log
         prov_id = await self.prov.log(
             actor=actor,
             action="datasets:read",
             inputs={"dataset_id": dataset_id},
-            outputs={"dataset_id": ds["id"]},
-            citations=citations,
+            outputs={"dataset_id": dataset_id},
+            evidence=[{"source_id": ds.get("id"), "kind": "dataset"}],
         )
 
-        return ServiceResult(data=ds, evidence=[ev], citation_map=citations, provenance_id=prov_id)
+        ds["_provenance_id"] = prov_id
+        return ds
+```
+
+### Evidence-first response template
+
+```python
+@dataclass(frozen=True)
+class Citation:
+    marker: str      # "[1]"
+    source_id: str
+    title: str
+    uri: str | None
+
+@dataclass(frozen=True)
+class AnswerWithCitations:
+    answer: str
+    citations: list[Citation]
+    provenance_id: str
+    warnings: list[str]
 ```
 
 ---
 
-## ➕ Adding a new service (checklist)
+## 🔗 Related docs
 
-1. **Name the use-case** 🎯  
-   Example: `WaterWellsAnalysisService` ✅ vs `utils_wells.py` ❌
-
-2. **Define inputs/outputs** 🧬  
-   Prefer domain models or small typed DTOs.
-
-3. **Create ports (interfaces)** 🔌  
-   Repos/clients needed (PostGIS, Neo4j, search, object store, LLM).
-
-4. **Implement orchestration** 🧩  
-   Keep DB/SDK details out; keep validation + policy + evidence close.
-
-5. **Wire dependencies** 🧷  
-   Add DI bindings so routers/resolvers can construct the service.
-
-6. **Enforce governance** 🛡️  
-   Policy checks + allowlists + sensitivity handling + provenance logging.
-
-7. **Test** ✅  
-   Unit tests first; then integration/contract tests as needed.
-
-8. **Document** 📝  
-   Update this README and any related architecture docs.
-
----
-
-## 🔗 Related docs (repo pointers)
-
-- `docs/architecture/system_overview.md` (truth path + layering)
-- `docs/architecture/ai/AI_SYSTEM_OVERVIEW.md` (AI boundaries)
-- `docs/architecture/ai/OLLAMA_INTEGRATION.md` (Focus Mode RAG pipeline)
-- `pipelines/README.md` (data lifecycle + provenance artifacts)
+- `docs/architecture/system_overview.md` — truth path + API role
+- `docs/architecture/ai/AI_SYSTEM_OVERVIEW.md` — AI boundaries
+- `docs/architecture/ai/OLLAMA_INTEGRATION.md` — Focus Mode pipeline
+- `pipelines/README.md` — data lifecycle + provenance artifacts
 
 ---
 
 ## 🧼 Philosophy recap
 
-- **One truth path:** Raw → Processed → Catalog → Databases → API → UI/AI  
-- **No backdoors:** UIs don’t query DBs directly; services are the controlled gateway.  
-- **No source, no answer:** If we can’t cite it, we shouldn’t claim it.
+- **One truth path:** Raw → Processed → Catalog → Databases → API → UI and AI ✅  
+- **No backdoors:** UIs don’t query DBs directly; services are the controlled gateway 🔒  
+- **No source, no answer:** If we can’t cite it, we shouldn’t claim it 🧾  
+- **No provenance, no publish:** If it can’t be audited, it can’t be trusted 🧷  
 
-✨ Keep services clean and everything else gets easier: testing, governance, scaling, and trust.
+✨ Keep services clean and everything else becomes easier: testing, governance, scaling, and trust.
+
+---
+
+## 📚 References
+
+These project sources inform the governance and documentation standards used in this README:
+
+- Kansas Frontier Matrix system documentation  [oai_citation:0‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
+- Indigenous data sovereignty and CARE-aligned practice context  [oai_citation:1‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)  
+- Web documentation structure, usability, and information architecture patterns  [oai_citation:2‡professional-web-design-techniques-and-templates.pdf](sediment://file_000000000acc71f8b2e5128c030179fc)  
+- Consistent semantics and readable technical writing conventions  [oai_citation:3‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  
+- Module boundaries and stable error-handling conventions inspiration  [oai_citation:4‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)  
