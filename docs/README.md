@@ -1,6 +1,6 @@
 <div align="center">
 
-<!-- 🌀 Animated seal (add file at: docs/assets/kfm-seal-animated-320.gif) -->
+<!-- 🌀 Animated seal (add file at: docs/assets/branding/kfm-seal-animated-320.gif) -->
 <img src="./assets/kfm-seal-animated-320.gif" width="220" alt="Kansas Frontier Matrix Seal (Animated)" />
 
 # 📚 Kansas Frontier Matrix — Docs Hub
