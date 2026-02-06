@@ -1,15 +1,82 @@
-# 🤖 Dependabot Configuration
+# 🤖 Dependabot Governance & Supply‑Chain Hygiene 🛡️
 
-📄 **Target file:** `.github/dependabot.yml`  
-🧭 **Cadence:** Weekly (Mondays) — `America/Chicago` timezone  
-🧩 **Scopes covered:** GitHub Actions • Docker • Web (npm) • API (pip)
+![Dependabot](https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot)
+![Cadence](https://img.shields.io/badge/Cadence-weekly%20(Mon%2006%3A00%20CT)-blue)
+![Scopes](https://img.shields.io/badge/Scopes-actions%20%7C%20docker%20%7C%20compose%20%7C%20npm%20%7C%20pip-purple)
+
+> [!IMPORTANT]
+> This document is **copy/paste-ready** for the Kansas‑Matrix‑System repo structure and operating style: **small frequent updates**, **clear governance**, **security-first**, and **CI-gated merges**. ✅
 
 ---
 
-## ✅ `.github/dependabot.yml`
+## 🎯 What this config optimizes for
+
+### ✅ Outcomes
+- **Predictable weekly cadence** (Mon @ 06:00 America/Chicago) ⏰
+- **Noise control** via **grouping minor + patch** updates into fewer PRs 🧹
+- **Major updates stay visible** as separate PRs (intentionally) 🚨
+- **Security updates stay urgent** and can be **batched** per ecosystem (opt-in) 🔐
+- **Conventional-commits friendly** commit messages (`chore(deps): …`) 🧾
+- **Stabilization window** via cooldown so brand‑new releases don’t immediately churn the repo 🧊
+
+---
+
+## 🗺️ Coverage map
+
+| Surface | Ecosystem | Directory | What gets updated | PR shape |
+|---|---|---:|---|---|
+| CI/CD | `github-actions` | `/` | workflow action versions | grouped minor/patch + optional security batch |
+| Containers | `docker` | `/` | Dockerfile base images | grouped minor/patch |
+| Compose | `docker-compose` | `/` | compose image tags | grouped minor/patch |
+| Web | `npm` | `/web` | frontend deps | grouped minor/patch split by prod/dev + optional security batch |
+| API | `pip` | `/src/server/api` | backend deps | grouped minor/patch split by prod/dev + optional security batch |
+
+---
+
+## 🗂️ Assumed repo shape (for alignment) 📦
+
+```text
+📦 repo-root
+├─ .github/
+│  └─ dependabot.yml     👈 (this file)
+├─ web/                  🌐 React/TS app
+│  ├─ package.json
+│  └─ (lockfile)
+└─ src/
+   └─ server/
+      └─ api/             🐍 FastAPI
+         ├─ requirements*.txt and/or pyproject.toml
+         └─ (lockfile)
+```
+
+---
+
+## ✅ Drop‑in `.github/dependabot.yml`
+
+> [!TIP]
+> This version avoids hardcoding custom labels (so you keep GitHub’s default Dependabot labels).  
+> If you want custom label routing, see the **Optional Enhancements** section below. 🏷️
 
 ```yaml
 version: 2
+
+# 🔐 Optional: private registries (uncomment + configure only if you need them)
+# registries:
+#   ghcr:
+#     type: docker-registry
+#     url: https://ghcr.io
+#     username: YOUR_USERNAME_OR_TOKEN_USER
+#     password: ${{ secrets.DEPENDABOT_GHCR_TOKEN }}
+#
+#   npm-private:
+#     type: npm-registry
+#     url: https://registry.npmjs.org
+#     token: ${{ secrets.DEPENDABOT_NPM_TOKEN }}
+#
+#   pypi-private:
+#     type: python-index
+#     url: https://pypi.org/simple
+#     token: ${{ secrets.DEPENDABOT_PYPI_TOKEN }}
 
 updates:
   # 🧩 GitHub Actions (workflow dependencies)
@@ -21,21 +88,28 @@ updates:
       time: "06:00"
       timezone: "America/Chicago"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
+    pull-request-branch-name:
+      # "-" must be quoted so YAML doesn't parse it as a list item
+      separator: "-"
     commit-message:
-      prefix: "deps"
-      prefix-development: "deps(dev)"
+      # Conventional commits friendly:
+      #   chore(deps): bump …
+      prefix: "chore"
       include: "scope"
     groups:
-      gh-actions-minor-and-patch:
+      actions-minor-patch:
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
+      # ✅ Optional: batch any security PRs for this ecosystem
+      actions-security:
+        applies-to: "security-updates"
+        patterns:
+          - "*"
 
-  # 🐳 Docker (root docker-compose.yml and any Dockerfiles in /)
+  # 🐳 Dockerfiles (base images pinned in Dockerfiles under /)
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
@@ -44,14 +118,44 @@ updates:
       time: "06:00"
       timezone: "America/Chicago"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
-      prefix: "deps"
-      prefix-development: "deps(dev)"
+      prefix: "chore"
       include: "scope"
+    cooldown:
+      # 🧊 Stabilization window (helps avoid "release just dropped" churn)
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 14
     groups:
-      docker-minor-and-patch:
+      docker-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # 🧱 Docker Compose (compose.yml / docker-compose.yml in /)
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 5
+    pull-request-branch-name:
+      separator: "-"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 14
+    groups:
+      compose-minor-patch:
         patterns:
           - "*"
         update-types:
@@ -67,19 +171,43 @@ updates:
       time: "06:00"
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
-      prefix: "deps"
-      prefix-development: "deps(dev)"
+      prefix: "chore"
       include: "scope"
+    cooldown:
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 14
     groups:
-      web-minor-and-patch:
+      # ✅ Keep production and dev updates separate for cleaner risk review
+      web-prod-minor-patch:
+        dependency-type: "production"
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
+      web-dev-minor-patch:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ✅ Optional: batch security updates (fast triage, fewer PRs)
+      web-security-prod:
+        applies-to: "security-updates"
+        dependency-type: "production"
+        patterns:
+          - "*"
+      web-security-dev:
+        applies-to: "security-updates"
+        dependency-type: "development"
+        patterns:
+          - "*"
 
   # 🐍 API (FastAPI) — dependency manifests under /src/server/api
   - package-ecosystem: "pip"
@@ -90,19 +218,44 @@ updates:
       time: "06:00"
       timezone: "America/Chicago"
     open-pull-requests-limit: 10
-    labels:
-      - "dependencies"
+    pull-request-branch-name:
+      separator: "-"
     commit-message:
-      prefix: "deps"
-      prefix-development: "deps(dev)"
+      prefix: "chore"
       include: "scope"
+    cooldown:
+      # If pip versions aren't semver-clean, "default-days" still provides a buffer.
+      default-days: 3
+      semver-patch-days: 3
+      semver-minor-days: 7
+      semver-major-days: 14
     groups:
-      api-minor-and-patch:
+      api-prod-minor-patch:
+        dependency-type: "production"
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
+      api-dev-minor-patch:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+      # ✅ Optional: batch security updates
+      api-security-prod:
+        applies-to: "security-updates"
+        dependency-type: "production"
+        patterns:
+          - "*"
+      api-security-dev:
+        applies-to: "security-updates"
+        dependency-type: "development"
+        patterns:
+          - "*"
 
   # ➕ Optional: enable if you keep separate Python manifests under /src/pipelines
   # - package-ecosystem: "pip"
@@ -113,17 +266,149 @@ updates:
   #     time: "06:00"
   #     timezone: "America/Chicago"
   #   open-pull-requests-limit: 10
-  #   labels:
-  #     - "dependencies"
+  #   pull-request-branch-name:
+  #     separator: "-"
   #   commit-message:
-  #     prefix: "deps"
-  #     prefix-development: "deps(dev)"
+  #     prefix: "chore"
   #     include: "scope"
+  #   cooldown:
+  #     default-days: 3
+  #     semver-patch-days: 3
+  #     semver-minor-days: 7
+  #     semver-major-days: 14
   #   groups:
-  #     pipelines-minor-and-patch:
+  #     pipelines-prod-minor-patch:
+  #       dependency-type: "production"
   #       patterns:
   #         - "*"
   #       update-types:
   #         - "minor"
   #         - "patch"
+  #     pipelines-dev-minor-patch:
+  #       dependency-type: "development"
+  #       patterns:
+  #         - "*"
+  #       update-types:
+  #         - "minor"
+  #         - "patch"
+  #     pipelines-security-prod:
+  #       applies-to: "security-updates"
+  #       dependency-type: "production"
+  #       patterns:
+  #         - "*"
+  #     pipelines-security-dev:
+  #       applies-to: "security-updates"
+  #       dependency-type: "development"
+  #       patterns:
+  #         - "*"
 ```
+
+---
+
+## 🧠 Governance rules (how to treat these PRs)
+
+### 🟢 Patch updates (default “safe” lane)
+- Merge after CI passes ✅
+- Prefer auto-merge (optional workflow below) 🤝
+
+### 🟡 Minor updates (controlled evolution)
+- Merge after CI passes ✅
+- Quick smoke test for runtime-critical paths 🔍
+
+### 🔴 Major updates (intentional change)
+- Treat like a feature PR: review release notes + run full test suite 🧪
+- Prefer dedicated PRs (Dependabot will do this automatically since majors aren’t in the minor/patch groups) 🚨
+
+> [!NOTE]
+> Grouping intentionally **does not hide majors** — it isolates them.
+
+---
+
+## ✅ Review checklist (fast, consistent, reproducible)
+
+- [ ] CI is green ✅
+- [ ] Lockfiles updated and consistent 🔒
+- [ ] No suspicious transitive dependency changes (scan PR diff) 🧬
+- [ ] For API: run minimal contract checks (FastAPI startup, import graph) 🧪
+- [ ] For Web: build + basic runtime check (bundle + minimal smoke) 🌐
+- [ ] For Docker: image still builds (and base tag moves as expected) 🐳
+
+---
+
+## 🧰 Optional Enhancements (recommended) 🔥
+
+<details>
+<summary>🤝 Auto-merge Dependabot patch PRs (CI-gated)</summary>
+
+> [!IMPORTANT]
+> This is **optional** and should be enabled only after your required checks are solid.
+
+Create: `.github/workflows/dependabot-automerge.yml`
+
+```yaml
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Enable auto-merge for patch updates
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+✅ Result: Dependabot patch PRs will merge automatically **once branch protection + CI checks pass**.
+
+</details>
+
+<details>
+<summary>🏷️ Label routing (if you want better triage)</summary>
+
+Dependabot can apply custom labels, but defining `labels:` in `dependabot.yml` **replaces** GitHub’s defaults.
+
+**Recommended approach:** keep Dependabot defaults, then label via a small workflow using `dependabot/fetch-metadata` (see GitHub Docs).  
+This lets you label:
+- `area:web` vs `area:api`
+- `deps:prod` vs `deps:dev`
+- `deps:major/minor/patch`
+
+</details>
+
+<details>
+<summary>🧩 Multi-ecosystem “single PR” batches (advanced / future)</summary>
+
+If you ever want **one PR per week** that updates multiple ecosystems together, GitHub supports **multi-ecosystem updates**.
+
+This is powerful but can make PRs larger. Only enable once your CI is very strong. ✅
+
+</details>
+
+---
+
+## 🧾 TL;DR
+
+✅ This setup is “boringly reliable”:
+- weekly,
+- grouped minor/patch,
+- majors isolated,
+- optional security batching,
+- conventional commits,
+- cooldown buffer.
+
+Ship small. Ship often. Verify with CI. 🧠✅
