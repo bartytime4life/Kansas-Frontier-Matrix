@@ -49,12 +49,12 @@
 ### 🧭 Pipeline at a glance (trust path)
 ```mermaid
 flowchart LR
-  A[🧪 ETL / Ingest] --> B[🗂️ STAC + DCAT + PROV]
-  B --> C[🕸️ Graph Build / Ontology]
-  C --> D[🛡️ API Boundary + Policy]
-  D --> E[🌐 UI + Visualization]
-  E --> F[📚 Story Nodes]
-  F --> G[🎯 Focus Mode (advisory)]
+  A["🧪 ETL / Ingest"] --> B["🗂️ STAC + DCAT + PROV"]
+  B --> C["🕸️ Graph Build / Ontology"]
+  C --> D["🛡️ API Boundary + Policy"]
+  D --> E["🌐 UI + Visualization"]
+  E --> F["📚 Story Nodes"]
+  F --> G["🎯 Focus Mode (advisory)"]
 ```
 
 ### 🧱 What “contract-first” means here
