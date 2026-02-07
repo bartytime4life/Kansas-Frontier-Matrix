@@ -1,144 +1,222 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-reduced-motion: reduce)" srcset="docs/assets/kfm-seal-320.png">
-  <img src="docs/assets/branding/kfm-seal-animated-320.gif" width="220" alt="Kansas Frontier Matrix (KFM) — seal (animated)" />
+  <source media="(prefers-reduced-motion: reduce)" srcset="../docs/assets/kfm-seal-320.png">
+  <img src="../docs/assets/branding/kfm-seal-animated-320.gif" width="220" alt="Kansas Frontier Matrix (KFM) — seal (animated)" />
 </picture>
 
-# 🧰 `.github` — Community Health & Automation for **Kansas Frontier Matrix (KFM)** 🚧
+# 🧰 `.github` — Governance-as-Code, Community Health & Automation for **Kansas Frontier Matrix (KFM)** 🚧
 
-  <br/>
+<br/>
 
-  <!-- Status / Safety -->
-  <img alt="Status: Under Construction" src="https://img.shields.io/badge/status-under_construction-orange?style=for-the-badge&logo=github">
-  <img alt="Governance: Evidence-First" src="https://img.shields.io/badge/governance-evidence--first-0b7285?style=for-the-badge">
-  <img alt="Policy: Fail-Closed" src="https://img.shields.io/badge/policy-fail--closed-8a2be2?style=for-the-badge">
+<!-- Status / Safety -->
+<img alt="Status: Under Construction" src="https://img.shields.io/badge/status-under_construction-orange?style=for-the-badge&logo=github">
+<img alt="Governance: Evidence-First" src="https://img.shields.io/badge/governance-evidence--first-0b7285?style=for-the-badge">
+<img alt="Policy: Fail-Closed" src="https://img.shields.io/badge/policy-fail--closed-8a2be2?style=for-the-badge">
+<img alt="Aligned: Master Guide v13" src="https://img.shields.io/badge/aligned-master_guide_v13-1f6feb?style=for-the-badge">
+<br/>
+<img alt="Metadata: STAC/DCAT/PROV" src="https://img.shields.io/badge/metadata-STAC%2FDCAT%2FPROV-005bbb?style=for-the-badge">
+<img alt="Policy Engine: OPA/Conftest" src="https://img.shields.io/badge/policy_engine-OPA%2FConftest-6f42c1?style=for-the-badge">
 
-  <br/>
+<br/>
 
-  <!-- Repo badges -->
-  <img alt="License" src="https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
-  <img alt="Last Commit" src="https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
-  <img alt="Repo Size" src="https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
-  <img alt="Issues" src="https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+<!-- Repo badges -->
+<img alt="License" src="https://img.shields.io/github/license/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+<img alt="Last Commit" src="https://img.shields.io/github/last-commit/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+<img alt="Repo Size" src="https://img.shields.io/github/repo-size/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+<img alt="Issues" src="https://img.shields.io/github/issues/bartytime4life/Kansas-Frontier-Matrix?style=for-the-badge">
+
 </div>
 
 > 🧭 **Start here:** this folder is where we codify *how we collaborate* and *what must be true before anything ships*.  
-> ✅ Templates + ✅ Policies + ✅ CI/CD gates = **governed contributions**.
+> ✅ Templates + ✅ CI/CD + ✅ Policy gates = **governed contributions** (no “trust me” merges).
+
+---
+
+## 🧱 Alignment: KFM v13 “One Fact, One Place” 📍
+
+KFM’s repo structure is intentionally **canonical** (v13): documentation, standards, templates, schemas, pipelines, and data catalogs each have a single home.  
+**`.github/` doesn’t define truth — it enforces truth.** It orchestrates checks against:
+
+- 📚 **Standards:** `docs/standards/` (STAC/DCAT/PROV profiles + repo rules)  
+- ⚖️ **Governance:** `docs/governance/` (ethics, sovereignty, review gates)  
+- 📐 **Schemas:** `schemas/` (JSON Schema + shapes for validation)  
+- ⚖️ **Policy Pack:** `policy/` (OPA/Rego + policy tests)  
+- 🗂️ **Catalog outputs:** `data/stac/`, `data/catalog/dcat/`, `data/prov/` *(legacy: `data/provenance/`)*
+
+---
+
+## 🔗 Quick Links (Repo Truth Anchors)
+
+- ⬅️ **Project Overview:** [`../README.md`](../README.md)
+- 🧭 **Master Guide v13:** [`../docs/MASTER_GUIDE_v13.md`](../docs/MASTER_GUIDE_v13.md)
+- 🏗️ **Architecture:** [`../docs/architecture/`](../docs/architecture/)
+- 📜 **Standards (Profiles + Repo rules):** [`../docs/standards/`](../docs/standards/)
+- ⚖️ **Governance (Ethics + Sovereignty + Review Gates):** [`../docs/governance/`](../docs/governance/)
+- 📚 **Story Nodes:** [`../docs/reports/story_nodes/`](../docs/reports/story_nodes/)
+- 📐 **Schemas:** [`../schemas/`](../schemas/)
+- ⚖️ **OPA Policy Pack:** [`../policy/`](../policy/)
+- 🗂️ **STAC:** [`../data/stac/`](../data/stac/)
+- 🌐 **DCAT:** [`../data/catalog/dcat/`](../data/catalog/dcat/)
+- 🧾 **PROV:** [`../data/prov/`](../data/prov/)
+- 🧪 **Tests:** [`../tests/`](../tests/)
+- 🔧 **Tools & Validators:** [`../tools/`](../tools/)
+- 🔐 **Security Policy:** [`../SECURITY.md`](../SECURITY.md) *(or `.github/SECURITY.md` if used)*
 
 ---
 
 ## 🚧 Under Construction (Read First)
 
-This `.github/` directory is actively being assembled into **Governance-as-Code**. Expect some churn while we lock:
+This `.github/` directory is being assembled into **Governance-as-Code**. Expect churn while we lock:
+
 - ✅ contribution templates that **ask for evidence**
-- ✅ workflows that validate **metadata + provenance**
+- ✅ workflows that validate **metadata + provenance + schemas**
 - ✅ policy checks that **fail closed** (no silent bypasses)
+- ✅ security automation (scanning + SBOM) 🔐
 
-### ✅ Current vs Planned (Live Checklist)
+> 🔥 Treat changes here like production infrastructure.  
+> A tiny YAML change can unblock—or break—every PR.
 
-- [x] Baseline structure + README guidance 📘  
+### ✅ Roadmap Checklist (Governed Contributions)
+
+- [x] Baseline `.github/README.md` aligned to v13 structure 📘  
 - [ ] `PULL_REQUEST_TEMPLATE.md` with governance gates ✅  
-- [ ] Issue Forms (`ISSUE_TEMPLATE/*.yml`) for ingest / map / contract / bug 🧾  
+- [ ] Issue Forms (`ISSUE_TEMPLATE/*.yml`) for ingest / map / contract / story node / bug 🧾  
 - [ ] `CODEOWNERS` rules for “high blast radius” areas 👀  
 - [ ] `dependabot.yml` for dependency hygiene 🔄  
 - [ ] CI workflows (lint/test/build) ⚙️  
-- [ ] Contract + schema validation (OpenAPI / JSON Schema) 📜  
-- [ ] Catalog validation (STAC / DCAT) 🗂️  
-- [ ] Provenance validation (PROV / JSON-LD) 🧾  
+- [ ] Contract + schema validation (OpenAPI / JSON Schema / GraphQL SDL) 📜  
+- [ ] Catalog validation (**STAC / DCAT**) 🗂️  
+- [ ] Provenance validation (**PROV / JSON‑LD**) 🧾  
 - [ ] Security scanning (CodeQL / secret scanning / SBOM) 🔐  
-- [ ] Policy-as-code gates (OPA) ⚖️  
-
-> 🔥 **Treat changes here like production infrastructure.**  
-> A tiny YAML change can unblock—or break—every PR.
-
----
-
-## 🔗 Quick Links
-
-- ⬅️ **Project Overview:** [`../README.md`](../README.md)
-- 🧱 **Architecture & Standards:** [`../docs/`](../docs/)
-- 🧪 **Tests:** [`../tests/`](../tests/)
-- 🔧 **Tooling & Validators:** [`../tools/`](../tools/)
-- ⚙️ **Workflows:** [`./workflows/`](./workflows/)
-- 🧩 **Composite Actions:** [`./actions/`](./actions/)
-- 📝 **Issue Templates:** [`./ISSUE_TEMPLATE/`](./ISSUE_TEMPLATE/)
-- 🔐 **Security Policy:** [`../SECURITY.md`](../SECURITY.md) *(if present)*
+- [ ] Policy-as-code gates (OPA + Conftest) ⚖️  
+- [ ] Release gating (signed manifests + reproducible bundles) 📦  
 
 ---
 
 ## 📁 What Lives in `.github/` (and why it matters)
 
-This directory holds GitHub-native **community health + automation**.
+This directory holds GitHub-native **community health + automation**. In v13 terms: **it enforces the repo’s truth contracts**.
 
 ```text
 .github/
-├─ assets/                      🖼️ Images/GIFs used by .github markdown
-├─ ISSUE_TEMPLATE/              🧾 Issue forms & templates
-├─ PULL_REQUEST_TEMPLATE.md     ✅ PR checklist + governance gates
-├─ workflows/                   ⚙️ GitHub Actions (CI/CD + governance checks)
-├─ actions/                     🧩 Composite actions shared across workflows
-├─ dependabot.yml               🔄 Automated dependency updates
-├─ CODEOWNERS                   👀 Review ownership rules
-└─ FUNDING.yml                  💖 Sponsorship links (optional)
+├─ README.md                     📘 This document
+├─ workflows/                    ⚙️ GitHub Actions (CI/CD + governance checks)
+├─ actions/                      🧩 Composite actions shared across workflows
+├─ ISSUE_TEMPLATE/               🧾 Issue forms & templates
+├─ PULL_REQUEST_TEMPLATE.md      ✅ PR checklist + governance gates
+├─ CODEOWNERS                    👀 Review ownership rules
+├─ dependabot.yml                🔄 Automated dependency updates
+├─ SECURITY.md                   🔐 Security policy (optional, GitHub-recognized)
+└─ FUNDING.yml                   💖 Sponsorship links (optional)
 ```
 
-### 🖼️ `.github/assets/` (Brand + UX)
-We keep README visuals here so they’re versioned, reviewable, and consistent.
-- ✅ Use **PNG** for crisp static graphics
-- ✅ Use **GIF** for safe animations (GitHub READMEs don’t run CSS/JS animations)
-- ✅ Keep assets small (optimize & resize) to protect page load and mobile readers 📱
+### 🖼️ Assets: Where visuals should live
+- ✅ **Global branding** (used across docs + UI): `docs/assets/branding/`  
+- ✅ **Community-only visuals** (used only in `.github/*` docs): `.github/assets/` *(optional)*  
+- ✅ Keep assets small + optimized (mobile-friendly) 📱
 
 ---
 
 ## 🧭 KFM “Truth Path” (Why GitHub Automation Matters)
 
-KFM is built around a non‑negotiable flow of evidence → governed artifacts → user experiences:
+KFM is built around a non‑negotiable flow of evidence → governed artifacts → user experiences.
 
 ```mermaid
 flowchart LR
-  raw[Raw 📥] --> proc[Processed 🏭] --> cat[Catalog 🗂️] --> db[Databases 🗃️] --> api[API 🌐] --> ui[UI/AI 🗺️🤖]
+  raw[Raw 📥 data/<domain>/raw] --> work[Work 🧪 data/<domain>/work]
+  work --> proc[Processed ✅ data/<domain>/processed]
+  proc --> cat[Catalogs 🗂️ STAC + DCAT + PROV]
+  cat --> graph[Graph 🕸️ Neo4j refs (not payloads)]
+  graph --> api[API Boundary 🌐 src/server]
+  api --> ui[UI 🗺️ web/]
+  api --> focus[Focus Mode 🎯]
+  story[Story Nodes 📚 docs/reports/story_nodes] --> focus
 ```
 
-### ✅ Non‑Negotiables We Enforce via GitHub (Templates + CI)
+### ✅ Non‑Negotiables enforced via `.github/` gates
 
-- 🧾 **Provenance-first**: nothing moves downstream without **STAC + DCAT + PROV** metadata.
-- 🛑 **Fail‑closed**: missing checks block merges (no “ship now, fix later”).
+- 🧾 **Provenance-first**: no dataset or evidence artifact moves forward without **STAC + DCAT + PROV** alignment.
+- 🛑 **Fail‑closed by default**: missing requirements block merges.
 - 🔒 **Classification propagation**: outputs can’t be less restricted than inputs.
 - ♻️ **Deterministic pipelines**: idempotent, config‑driven, logged, re‑runnable.
-- 🧱 **API boundary**: UI/AI does **not** query PostGIS/Neo4j directly—API is the enforcement layer.
-- 🧠 **Focus Mode constraints**: AI outputs must be traceable to cataloged evidence (“map behind the map”).
+- 🧱 **API boundary**: UI/AI does **not** query PostGIS/Neo4j directly.
+- 🧠 **Focus Mode constraints**: AI outputs must be traceable to cataloged evidence and governed citations.
 
 ---
 
-## 🧩 Glossary Mini‑Pack (KFM Terms You’ll See in Templates)
+## ⚖️ Governance Gates (What Workflows Must Prove)
 
-- **Catalogs** 🗂️: **STAC** (assets), **DCAT** (dataset discovery), **PROV** (lineage)
-- **Contract artifact** 📜: versioned schema/spec (JSON Schema, OpenAPI, GraphQL SDL, UI config)
-- **Evidence artifact** 🧪: derived output registered in catalogs **before** use in UI/narratives
-- **Story Node** 📚: narrative artifact that is machine‑ingestible and provenance‑linked
-- **Focus Mode** 🎯: Story Node + map/timeline context, constrained to provenance‑linked content
+Workflows should validate *claims* **and** *shape*:
+
+### 🗂️ Metadata + Catalog Gates
+- STAC JSON validates against `schemas/stac/` and the project STAC profile (`docs/standards/KFM_STAC_PROFILE.md`)
+- DCAT JSON‑LD validates against `schemas/dcat/` and the DCAT profile (`docs/standards/KFM_DCAT_PROFILE.md`)
+- PROV bundles validate against `schemas/prov/` and the PROV profile (`docs/standards/KFM_PROV_PROFILE.md`)
+
+### 📐 Contract + Schema Gates
+- Any change to API/UI contracts must validate against versioned schemas:
+  - `schemas/storynodes/` (Story Node format + fields)
+  - `schemas/ui/` (UI config, layer specs, telemetry if applicable)
+  - API specs and extensions (OpenAPI / GraphQL SDL / JSON Schema)
+
+### 🧾 Provenance + Audit Gates
+- PROV must link raw inputs → processes → outputs
+- Checksums/manifests (where used) must match referenced assets
+- Policy decisions should be traceable to a specific **policy bundle hash/version** (auditability)
+
+### 🔐 Security Gates
+- CodeQL + dependency scanning (and optional SBOM generation)
+- Secret scanning (fail on leaked credentials)
+- Dependency hygiene (Dependabot + pinned actions)
+
+---
+
+## 🧪 Local “Run It Like CI” (Developer Workflow)
+
+CI should never surprise you. Typical local checks:
+
+```bash
+# Policy gates (OPA/Conftest)
+conftest test .
+
+# Backend tests (if using docker-compose dev stack)
+docker-compose exec api pytest
+
+# Frontend tests (depending on tooling)
+npm test
+# or: pnpm test
+
+# Lint/format examples (project-specific)
+black --check .
+eslint .
+```
+
+> 💡 Prefer “thin workflows”: keep logic in `tools/` scripts and call them from Actions.  
+> Workflows should orchestrate, not become a second codebase.
 
 ---
 
 ## 🧾 Issues: The “Front Door” for Work
 
-We prefer work to start as an issue when it’s:
-- 🧭 new dataset ingest / cataloging
-- 🗺 map layer additions or styling changes
-- 🧠 AI/Focus Mode behavior changes
-- 🧱 contract / schema changes
-- 🔥 anything that could break governance guarantees
+Work should start as an issue when it touches:
 
-### 🧷 Issue Writing Rules (Keeps Us Fast)
-- ✅ **One problem per issue**
-- 🧩 Include **context + expected outcome**
-- 🧾 Include **evidence links** (datasets, docs, screenshots) when relevant
-- 🏷️ Use labels (see below) to route the issue correctly
+- 📥 new dataset ingest / cataloging
+- 🗺 map layer additions or styling changes
+- 🧠 Focus Mode / AI behavior changes
+- 📐 contract / schema changes
+- ⚖️ policy pack / governance rules
+- 🔥 anything with high blast radius
+
+### 🧷 Issue Writing Rules (Keeps us fast)
+- ✅ one problem per issue
+- 🧩 include context + expected outcome
+- 🧾 include evidence links (datasets, docs, screenshots)
+- 🏷️ add labels to route review
 
 ---
 
-## ✅ Pull Requests: What “Good” Looks Like Here
+## ✅ Pull Requests: What “Good” Looks Like
 
 ### 🏷️ PR Title Style
 Use a clear prefix + short summary:
@@ -147,6 +225,7 @@ Use a clear prefix + short summary:
 - `fix(pipeline): make ingest idempotent for ks_hydrology_1880`
 - `docs(governance): clarify classification propagation rules`
 - `data(catalog): register new STAC collection + DCAT dataset`
+- `policy(opa): tighten citation enforcement for focus-mode`
 
 ### 📦 Minimum PR Payload
 Your PR should include:
@@ -157,6 +236,20 @@ Your PR should include:
 
 > 🧠 If it changes a **contract** (schema/API/UI config), it must include:  
 > ✅ version bump, ✅ validator updates, ✅ migration notes (if needed)
+
+---
+
+## 👀 CODEOWNERS: “High Blast Radius” Review Routing
+
+CODEOWNERS should require additional review for:
+
+- `policy/**` ⚖️ (OPA policy pack)
+- `schemas/**` 📐 (schema changes ripple everywhere)
+- `.github/workflows/**` ⚙️ (governance enforcement)
+- `src/server/**` 🌐 (API boundary / auth)
+- `data/stac/**`, `data/catalog/dcat/**`, `data/prov/**` 🗂️🧾 (catalog truth)
+- `docs/governance/**` ⚖️ (ethics/sovereignty/review gates)
+- `releases/**` 📦 (shipping artifacts, manifests, SBOM)
 
 ---
 
@@ -171,6 +264,9 @@ Your PR should include:
 - `type:docs` 📚
 - `type:data` 🧱
 - `type:security` 🔐
+- `type:policy` ⚖️
+- `type:schema` 📐
+- `type:release` 📦
 - `type:chore` 🧹
 
 ### Area
@@ -182,7 +278,7 @@ Your PR should include:
 - `area:graph` 🕸️
 - `area:governance` ⚖️
 - `area:ai` 🎯
-- `area:data-sovereignty` 🪶 *(for Indigenous data governance / CARE-aligned work)*
+- `area:data-sovereignty` 🪶 *(CARE-aligned work)*
 
 ### Priority / Status
 - `priority:p0` 🔥 / `priority:p1` ⚡ / `priority:p2` 🧊
@@ -192,80 +288,33 @@ Your PR should include:
 
 ---
 
-## ⚙️ CI/CD & Governance Gates (What Workflows Should Do)
-
-Even if filenames evolve, the intent stays consistent:
-
-### ✅ Quality Gates
-- 🧹 formatting / lint
-- 🧪 unit + integration tests
-- 🔍 type checking (where applicable)
-- 📜 contract validation (OpenAPI/GraphQL/JSON Schema)
-- 🗂️ catalog validation (**STAC / DCAT**)
-- 🧾 provenance validation (**PROV / JSON‑LD**)
-
-### 🔐 Security Gates
-- 🧯 secret scanning / dependency scanning
-- 🧾 SBOM generation/verification
-- 🔒 policy checks (governance / classification propagation)
-
-### 📚 Docs Gates
-- docs build validation (so published docs don’t break)
-- link checks (optional but recommended)
-
-### 🛰️ Telemetry (Optional but Powerful)
-Some workflows may export CI + governance telemetry artifacts to support:
-- audit trails ✅
-- performance tracking 📈
-- sustainability reporting 🌱 (where applicable)
-
----
-
-## 🧩 Editing Templates & Workflows Safely
-
-### ✅ When changing `.github/workflows/*`
-- Prefer small PRs (one workflow change at a time)
-- Validate YAML locally (lint) if tooling exists
-- Keep workflows **deterministic** and **cache-safe**
-- Pin third‑party actions by version (and ideally by SHA for critical workflows)
-- Avoid “magic” environment differences: workflows should be reproducible from a clean checkout ♻️
-
-### ✅ When changing issue/PR templates
-- Optimize for *fewer back-and-forth comments*
-- Ask for:
-  - reproduction steps (bugs)
-  - expected behavior (features)
-  - evidence links (data + Story Nodes)
-  - validation checklist (catalog/provenance)
-
----
-
 ## 🔐 Secrets & Sensitive Data
 
-- 🚫 Never commit secrets (API keys, tokens, private URLs, credentials)
-- ✅ Use `.env.example` as the only commit-safe env reference
-- ✅ Store secrets in GitHub Secrets / environment protection rules
-- 🧯 If you accidentally commit a secret:
+- 🚫 never commit secrets (API keys, tokens, private URLs, credentials)
+- ✅ use `.env.example` as the only commit-safe env reference
+- ✅ store secrets in GitHub Secrets / environment protection rules
+- 🧯 if you accidentally commit a secret:
   1) rotate it immediately  
-  2) open a security issue (or private report if available)  
+  2) open a security issue (or private report)  
   3) scrub history if required  
 
 ---
 
-## 🗺️ Map/UI Changes: Extra Review Expectations
+## 🧠 Focus Mode & AI Governance (What we enforce)
 
-When a PR affects UI map rendering or narrative display:
-- ♿ confirm accessibility (contrast, font sizes, keyboard nav where relevant)
-- 🧭 confirm legend/units/scale semantics are correct
-- 🧾 confirm every displayed claim/layer has traceable provenance
-- 🧪 include screenshots (before/after) + minimal test coverage where feasible
+When AI/Focus Mode is involved:
+- ✅ AI output must be traceable to cataloged sources (dataset IDs / document refs)
+- ✅ citation enforcement is **policy-backed** (fail if missing)
+- ✅ restricted inputs remain restricted in derived outputs (classification propagation)
+- ✅ AI answers should be logged as audit artifacts (question + sources + model + policy decision)
 
 ---
 
 ## 🪶 Data Ethics & Indigenous Data Sovereignty (When Applicable)
 
 KFM includes Indigenous history and land-related materials. When work touches Indigenous data:
-- ✅ prefer community-backed context over deficit framing  
+
+- ✅ prefer community-backed context over deficit framing
 - ✅ document permissions/terms clearly (licenses + access boundaries)
 - ✅ treat “open” ≠ “unrestricted” (governance still applies)
 - ✅ label and route review via `area:data-sovereignty` 🪶
