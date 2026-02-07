@@ -1,27 +1,36 @@
+```yaml
 # .github/release-drafter.yml
 # -----------------------------------------------------------------------------
-# Kansas Frontier Matrix (KFM) — Release Drafter
+# 🌾 Kansas Frontier Matrix (KFM) — Release Drafter
 #
-# 🎯 Auto-draft release notes from merged PRs using labels + path-aware autolabeling.
-# ⛓️ Pipeline framing: ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode
-# 🛡️ Posture: evidence-first • deny-by-default for promotion • supply-chain aware
+# 🎯 Auto-draft release notes from merged PRs using labels + autolabeling.
+# 🧭 KFM Truth Path: ETL → STAC/DCAT/PROV → Graph → API → UI → Story → Focus
+# 🛡️ Posture: evidence-first • contract-first • governance-aware • supply-chain attentive
 #
-# Label strategy (recommended):
-# - 1x "type:*" label (intent)  + 1+ "area:*" labels (surface)
-# - Use "governance:*" labels when policy/sensitivity/classification is involved
-# - Keep labels stable; release notes are only as good as label hygiene
+# Label contract (recommended):
+#   ✅ 1× type:*              (intent; drives SemVer + clean notes)
+#   ✅ 1+ area:*              (surface; subsystem visibility)
+#   ✅ 0–2 governance:*       (privacy/sovereignty/license/sensitive-locations)
+#   ✅ 0–1 ops:* / risk:*     (migrations/rollouts/high-risk)
+#   ✅ optional release:highlight (curated “top of release”)
+#
+# Release notes are only as good as label hygiene. Keep labels stable. 🌾
 # -----------------------------------------------------------------------------
 
 commitish: "main"
 filter-by-commitish: true
 
+# 🧯 Scale controls (keeps drafts stable in large PR bursts / long-lived branches)
+pull-request-limit: 50
+history-limit: 50
+# initial-commits-since: "2025-12-01T00:00:00Z"  # optional for first-ever draft
+
 # 🏷️ Release naming & tags
 name-template: "v$RESOLVED_VERSION 🌾"
 tag-template: "v$RESOLVED_VERSION"
-tag-prefix: "v"
 
 # 🧾 How each PR entry renders
-change-template: "- $TITLE — #$NUMBER (@$AUTHOR)"
+change-template: "- $TITLE — [#$NUMBER]($URL) (@$AUTHOR)"
 change-title-escapes: "\\<*_&@#`"
 no-changes-template: "- No user-facing changes in this release."
 
@@ -32,6 +41,7 @@ sort-direction: "descending"
 # 🚫 Exclusions (PRs with these labels will not appear in release notes)
 exclude-labels:
   - "skip-changelog"
+  - "skip-release-notes"
   - "no-release-notes"
   - "meta"
   - "internal-only"
@@ -54,111 +64,117 @@ version-resolver:
   major:
     labels:
       - "breaking-change"
+      - "type:breaking"
       - "semver:major"
       - "major"
   minor:
     labels:
+      - "type:feature"
       - "semver:minor"
       - "minor"
-      - "type:feature"
       - "feature"
       - "enhancement"
   patch:
     labels:
+      - "type:bug"
+      - "type:perf"
+      - "type:security"
+      - "type:docs"
+      - "type:chore"
       - "semver:patch"
       - "patch"
-      - "type:bug"
       - "bug"
       - "fix"
       - "perf"
       - "refactor"
-      - "type:docs"
       - "docs"
-      - "type:data"
-      - "data"
-      - "type:pipeline"
-      - "pipeline"
-      - "type:security"
       - "security"
-      - "type:chore"
       - "chore"
       - "dependencies"
       - "deps"
   default: "patch"
 
 # 🧩 Categorize PRs into release note sections (label-driven)
-# Tip: Prefer 1x "type:*" per PR to keep categories clean.
+category-template: "### $TITLE"
 categories:
+  - title: "✨ Highlights"
+    labels:
+      - "release:highlight"
+      - "highlight"
+
   - title: "💥 Breaking changes"
     labels:
       - "breaking-change"
+      - "type:breaking"
       - "semver:major"
       - "major"
 
-  - title: "🔐 Security & governance"
+  - title: "🔐 Security, privacy & governance"
     labels:
       - "type:security"
       - "security"
       - "sec"
       - "vuln"
       - "cve"
+      - "policy"
+      - "policy-gate"
+      - "supply-chain"
       - "governance:privacy"
       - "governance:sensitive-locations"
       - "governance:sovereignty"
       - "governance:license"
-      - "policy"
-      - "policy-gate"
+      - "governance:care"
+      - "governance:fair"
+
+  - title: "🧾 Catalogs & provenance (STAC/DCAT/PROV)"
+    labels:
+      - "area:catalog"
+      - "catalog"
+      - "area:stac"
+      - "stac"
+      - "area:dcat"
+      - "dcat"
+      - "area:prov"
+      - "prov"
+      - "area:data"
+      - "data"
 
   - title: "🧰 ETL & pipelines"
     labels:
-      - "type:pipeline"
+      - "area:pipeline"
       - "pipeline"
       - "etl"
       - "ingest"
-      - "area:pipeline"
-
-  - title: "🗃️ Data & catalogs (STAC/DCAT/PROV)"
-    labels:
-      - "type:data"
-      - "data"
-      - "catalog"
-      - "area:catalog"
-      - "stac"
-      - "area:stac"
-      - "dcat"
-      - "area:dcat"
-      - "prov"
-      - "area:prov"
 
   - title: "🕸️ Graph & ontology"
     labels:
+      - "area:graph"
       - "graph"
       - "neo4j"
       - "ontology"
-      - "area:graph"
 
   - title: "🔌 API boundary"
     labels:
+      - "area:api"
       - "api"
       - "backend"
       - "server"
-      - "area:api"
 
   - title: "🌐 Web / UI"
     labels:
+      - "area:web"
       - "web"
       - "ui"
       - "frontend"
       - "map"
       - "webgl"
-      - "area:web"
 
   - title: "🎬 Story nodes & narrative"
     labels:
+      - "area:story"
       - "type:story"
       - "story"
       - "narrative"
-      - "area:story"
 
   - title: "🧠 Focus mode & analytics"
     labels:
@@ -175,21 +191,42 @@ categories:
       - "modeling"
       - "sim"
 
+  - title: "📈 Performance & reliability"
+    labels:
+      - "type:perf"
+      - "perf"
+      - "benchmark"
+      - "observability"
+      - "logging"
+      - "metrics"
+
+  - title: "⚠️ Ops, migrations & rollouts"
+    labels:
+      - "ops:migration"
+      - "ops:rollback"
+      - "risk:high"
+      - "migration"
+      - "db-migration"
+
   - title: "🧰 CI / infra / ops"
     labels:
       - "ci"
       - "infra"
       - "devops"
       - "docker"
+      - "k8s"
+      - "terraform"
       - "area:db"
+      - "database"
+      - "postgis"
 
   - title: "📚 Docs / SOPs"
     labels:
+      - "area:docs"
       - "type:docs"
       - "docs"
       - "documentation"
       - "sop"
-      - "area:docs"
 
   - title: "⬆️ Dependencies"
     collapse-after: 8
@@ -208,13 +245,20 @@ categories:
 header: |
   ## 🌾 Kansas Frontier Matrix — Release Notes
 
-  > 🧾 Drafted from merged PRs (label-driven). Evidence-first • contract-first • governance-aware.
+  > Drafted from merged PRs (label-driven). Evidence-first • contract-first • governance-aware.
   >
-  > ⛓️ Pipeline: **ETL → Metadata (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
+  > ⛓️ Truth Path: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
 
 template: |
   ## ✅ Changes
   $CHANGES
+
+  ## 🧪 Verification snapshot
+  - [ ] CI green (tests + lint)
+  - [ ] Policy gates passed (OPA/Conftest) where applicable
+  - [ ] SBOM / attestations present where applicable
+  - [ ] STAC/DCAT/PROV updated for any published data or evidence artifacts
+  - [ ] Redaction + sovereignty review performed where required
 
   ## 🧑‍🤝‍🧑 Contributors
   $CONTRIBUTORS
@@ -223,18 +267,67 @@ footer: |
   ## 🔎 Governance reminders
   - Promotion-critical outputs (data, catalogs, models, stories) must be **traceable**: STAC/DCAT/PROV + checksums where appropriate.
   - Prefer **pointers over payloads** for large artifacts; attach run evidence in CI artifacts.
-  - If a change affects policy/redaction/classification, treat it as **high-scrutiny** and ensure policy gates passed.
+  - If a change affects privacy, sovereignty, sensitive locations, or licensing, treat it as **high-scrutiny** and ensure policy gates passed.
 
 # 🔁 Optional: linkify CVE IDs in PR titles
 replacers:
   - search: "/CVE-(\\d{4})-(\\d+)/g"
     replace: "[CVE-$1-$2](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2)"
 
-# 🤖 Autolabeler: apply labels automatically based on touched paths (glob matching)
+# 🤖 Autolabeler: apply labels automatically based on touched paths / titles / branches
 # Label must exist in the repo for automatic labeling to work.
 autolabeler:
   # ───────────────────────────────────────────────────────────────────────────
-  # 🌐 Surfaces (area:* + legacy labels)
+  # 🧠 Conventional title → type:* (keeps labeling effortless)
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "breaking-change"
+    title:
+      - "/BREAKING CHANGE/i"
+      - "/^.+!:/"
+
+  - label: "type:feature"
+    title:
+      - "/^feat(\\(.+\\))?:/i"
+    branch:
+      - "/^feat\\//"
+      - "/^feature\\//"
+
+  - label: "type:bug"
+    title:
+      - "/^fix(\\(.+\\))?:/i"
+    branch:
+      - "/^fix\\//"
+      - "/^bug\\//"
+
+  - label: "type:perf"
+    title:
+      - "/^perf(\\(.+\\))?:/i"
+    branch:
+      - "/^perf\\//"
+
+  - label: "type:docs"
+    title:
+      - "/^docs(\\(.+\\))?:/i"
+    branch:
+      - "/^docs\\//"
+
+  - label: "type:security"
+    title:
+      - "/^sec(\\(.+\\))?:/i"
+      - "/\\bsecurity\\b/i"
+      - "/CVE-\\d{4}-\\d+/i"
+    branch:
+      - "/^security\\//"
+      - "/^sec\\//"
+
+  - label: "type:chore"
+    title:
+      - "/^chore(\\(.+\\))?:/i"
+    branch:
+      - "/^chore\\//"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🗂️ Areas (v13 canonical homes)
   # ───────────────────────────────────────────────────────────────────────────
   - label: "area:web"
     files:
@@ -245,9 +338,11 @@ autolabeler:
 
   - label: "area:api"
     files:
-      - "api/**"
+      - "src/server/**"
+      - "api/**" # legacy compatibility
   - label: "api"
     files:
+      - "src/server/**"
       - "api/**"
 
   - label: "area:graph"
@@ -261,36 +356,54 @@ autolabeler:
       - "data/graph/**"
       - "docs/ontology/**"
 
-  - label: "area:db"
+  - label: "area:pipeline"
     files:
-      - "**/*.sql"
-      - "api/**/migrations/**"
-      - "api/**/alembic/**"
-      - "docker-compose.yml"
-  - label: "postgis"
-    files:
-      - "api/**/migrations/**"
-      - "docker-compose.yml"
+      - "src/pipelines/**"
+      - "tools/**"
+      - "scripts/**"
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🗃️ Data + catalogs + provenance
-  # ───────────────────────────────────────────────────────────────────────────
-  - label: "type:data"
+  - label: "area:data"
     files:
       - "data/**"
   - label: "data"
     files:
       - "data/**"
 
+  - label: "area:docs"
+    files:
+      - "docs/**"
+      - ".github/*.md"
+      - "README.md"
+      - "**/*.md"
+      - "**/*.mdx"
+
+  - label: "area:story"
+    files:
+      - "docs/reports/story_nodes/**"
+      - "web/story_nodes/**"
+
+  - label: "area:db"
+    files:
+      - "**/*.sql"
+      - "src/server/**/migrations/**"
+      - "src/server/**/alembic/**"
+      - "docker-compose.yml"
+      - "docker/**"
+  - label: "postgis"
+    files:
+      - "src/server/**/migrations/**"
+      - "docker-compose.yml"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🧾 Catalog outputs (STAC/DCAT/PROV)
+  # ───────────────────────────────────────────────────────────────────────────
   - label: "area:catalog"
     files:
       - "data/catalog/**"
-      - "data/stac/**"
       - "data/**/catalog/**"
   - label: "catalog"
     files:
       - "data/catalog/**"
-      - "data/stac/**"
       - "data/**/catalog/**"
 
   - label: "area:stac"
@@ -298,11 +411,13 @@ autolabeler:
       - "**/collection.json"
       - "**/catalog.json"
       - "data/**/stac/**"
+      - "data/stac/**"
   - label: "stac"
     files:
       - "**/collection.json"
       - "**/catalog.json"
       - "data/**/stac/**"
+      - "data/stac/**"
 
   - label: "area:dcat"
     files:
@@ -323,16 +438,37 @@ autolabeler:
       - "data/provenance/**"
 
   # ───────────────────────────────────────────────────────────────────────────
-  # 🧰 Tooling / pipelines / automation
+  # 📜 Schemas & contracts (contract-first posture)
   # ───────────────────────────────────────────────────────────────────────────
-  - label: "type:pipeline"
+  - label: "contracts"
     files:
-      - "tools/**"
-      - "src/pipelines/**"
-      - "api/scripts/**"
-      - "scripts/**"
-      - ".github/workflows/**"
-      - ".github/actions/**"
+      - "schemas/**"
+      - "src/server/contracts/**"
+      - "src/server/**/openapi/**"
+      - "src/server/**/openapi*.yml"
+      - "src/server/**/openapi*.yaml"
+  - label: "schema"
+    files:
+      - "schemas/**"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # ⚠️ Ops / migrations (make them visible)
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "ops:migration"
+    files:
+      - "src/server/**/migrations/**"
+      - "src/server/**/alembic/**"
+
+  - label: "risk:high"
+    files:
+      - "src/server/**/migrations/**"
+      - "tools/validation/policy/**"
+      - "policies/**"
+      - ".kfm/**"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🧰 Tooling / CI / automation
+  # ───────────────────────────────────────────────────────────────────────────
   - label: "ci"
     files:
       - ".github/workflows/**"
@@ -340,43 +476,22 @@ autolabeler:
       - ".github/dependabot.yml"
       - ".pre-commit-config.yaml"
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🎬 Narrative layer
-  # ───────────────────────────────────────────────────────────────────────────
-  - label: "type:story"
+  - label: "devops"
     files:
-      - "docs/reports/story_nodes/**"
-      - "web/story_nodes/**"
-  - label: "story"
-    files:
-      - "docs/reports/story_nodes/**"
-      - "web/story_nodes/**"
-
-  # ───────────────────────────────────────────────────────────────────────────
-  # 📚 Documentation
-  # ───────────────────────────────────────────────────────────────────────────
-  - label: "type:docs"
-    files:
-      - "docs/**"
-      - ".github/*.md"
-      - "README.md"
-      - "**/*.md"
-      - "**/*.mdx"
-  - label: "docs"
-    files:
-      - "docs/**"
-      - ".github/*.md"
-      - "README.md"
-
-  # Large reference PDFs are usually not release-note worthy
-  - label: "internal-only"
-    files:
-      - "docs/library/**"
+      - "docker/**"
+      - "docker-compose.yml"
+      - "infra/**"
 
   # ───────────────────────────────────────────────────────────────────────────
   # 🧑‍⚖️ Governance / policy gates (OPA/Conftest)
   # ───────────────────────────────────────────────────────────────────────────
   - label: "policy"
+    files:
+      - "tools/validation/policy/**"
+      - "policies/**"
+      - "docs/governance/**"
+
+  - label: "policy-gate"
     files:
       - "tools/validation/policy/**"
       - "policies/**"
@@ -395,7 +510,24 @@ autolabeler:
       - "tools/validation/policy/rego/governance/classification_propagation.rego"
       - ".kfm/**"
 
-  # Supply chain policy and gates
+  - label: "governance:privacy"
+    files:
+      - "tools/validation/policy/rego/governance/privacy/**"
+      - "policies/privacy/**"
+
+  - label: "governance:care"
+    files:
+      - "docs/governance/**"
+      - "policies/**/care/**"
+
+  - label: "governance:fair"
+    files:
+      - "docs/standards/**"
+      - "schemas/**"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🔒 Supply chain (SBOM / attestations)
+  # ───────────────────────────────────────────────────────────────────────────
   - label: "supply-chain"
     files:
       - "tools/validation/policy/rego/supply_chain/**"
@@ -403,6 +535,7 @@ autolabeler:
       - ".github/workflows/attest.yml"
       - ".github/actions/sbom/**"
       - ".github/actions/attest/**"
+      - "releases/**"
 
   # ───────────────────────────────────────────────────────────────────────────
   # ⬆️ Dependency-only changes
@@ -421,3 +554,47 @@ autolabeler:
       - "**/Gemfile.lock"
       - "**/composer.lock"
       - ".github/dependabot.yml"
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 🧳 Large reference PDFs (usually not release-note worthy)
+  # ───────────────────────────────────────────────────────────────────────────
+  - label: "internal-only"
+    files:
+      - "docs/library/**"
+```
+
+---
+
+## 🏷️ Label taxonomy (recommended) ✅
+
+| Prefix | Example | Meaning | Why it matters |
+|---|---|---:|---|
+| `type:*` | `type:feature` | **Intent** | drives SemVer + keeps notes clean |
+| `area:*` | `area:api` | **Surface** | aligns release notes with subsystem owners |
+| `governance:*` | `governance:sovereignty` | **Sensitivity** | forces scrutiny + “why/how” audit posture |
+| `ops:*` | `ops:migration` | **Operational risk** | prevents silent migrations / rollout traps |
+| `release:*` | `release:highlight` | **Curated** | allows a small, human-curated “top of release” |
+
+> **Rule of thumb:** If you can’t explain the label in one sentence, it’s too vague. 🧹
+
+---
+
+## 🧠 PR author checklist (fast & strict)
+
+- [ ] Add **exactly one** `type:*` label (or use a conventional title like `feat:` / `fix:`)
+- [ ] Confirm `area:*` labels match touched subsystems (autolabeler should help)
+- [ ] If touching sensitive domains: add `governance:*` labels and ensure policy gates
+- [ ] If DB/schema migration: add (or allow auto) `ops:migration`
+- [ ] If this is “top of release”: add `release:highlight` ✨
+
+---
+
+## 🧑‍🔧 Maintainer checklist (release time)
+
+- [ ] Scan **💥 Breaking changes** first (migration notes + rollout plan)
+- [ ] Verify **policy-gate / governance** PRs include evidence + redaction outcomes
+- [ ] Confirm **STAC/DCAT/PROV** updates exist for any published datasets
+- [ ] Confirm **SBOM / attestations** on releases that ship artifacts
+- [ ] Collapse dependency noise if needed (already auto-collapsed) ✅
+
+---
