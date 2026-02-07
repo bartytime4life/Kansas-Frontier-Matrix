@@ -1,11 +1,3 @@
-# 📄 `CITATION.cff` — Enhanced Metadata for **Kansas Frontier Matrix (KFM)** 🧭
-
-> ✅ **Copy/paste** the YAML below into your repo root as `CITATION.cff` to strengthen citation quality, schema-alignment, and discoverability — while reflecting KFM’s **provenance-first “truth path”** design. :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
-
----
-
-## ✅ Enhanced `CITATION.cff` (copy/paste)
-
 ```yaml
 cff-version: 1.2.0
 
