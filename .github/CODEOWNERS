@@ -1,17 +1,40 @@
-# CODEOWNERS 🧭 Kansas Frontier Matrix (KFM)
+# 🧭 CODEOWNERS Upgrade — Kansas Frontier Matrix (KFM) v13+  
+**Status:** ✅ Ready to paste • **Scope:** Ownership planes + governance surfaces • **Maintainer:** @bartytime4life
+
+> KFM is built on a **strict “truth path”** (no bypass):  
+> **Raw → Processed → Catalog → Databases → API → UI/AI**  
+> and a **canonical pipeline ordering** for everything we ship:  
+> **ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode**  
+
+---
+
+## ✅ Copy/Paste Target: `.github/CODEOWNERS`
+
+> Paste the block below into `.github/CODEOWNERS` (or the repo’s canonical CODEOWNERS location).  
+> The structure is **future-team ready**, but remains **fully valid today** with a single maintainer owner.
+
+```text
+# CODEOWNERS 🧭 Kansas Frontier Matrix (KFM) — v13 Ownership Planes
 # -----------------------------------------------------------------------------
 # ✅ Auto-assign PR reviewers by subsystem + governance surface area.
-# ⛓️ Canonical pipeline framing:
-#    ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode
+#
+# 🧬 Canonical pipeline (non-negotiable ordering):
+#    ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode
+#
+# 🔒 "Truth path" principle:
+#    Raw → Processed → Catalog → Databases → API → UI/AI  (no bypass)
 #
 # GitHub precedence rules (important):
 # - Patterns are evaluated top → bottom
 # - If multiple patterns match, the *last matching* pattern wins
 # - Put broad fallbacks first, then add more specific overrides later
 #
-# Current setup: single maintainer owner.
-# Future (recommended) org teams (swap in later):
+# Owners (current):
+#   @bartytime4life
+#
+# Future (recommended) org teams (create later; keep as comments until they exist):
 #   @Kansas-Frontier-Matrix/core
+#   @Kansas-Frontier-Matrix/infra
 #   @Kansas-Frontier-Matrix/data
 #   @Kansas-Frontier-Matrix/graph
 #   @Kansas-Frontier-Matrix/server
@@ -19,6 +42,7 @@
 #   @Kansas-Frontier-Matrix/docs
 #   @Kansas-Frontier-Matrix/governance
 #   @Kansas-Frontier-Matrix/security
+#   @Kansas-Frontier-Matrix/ai
 # -----------------------------------------------------------------------------
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -27,10 +51,11 @@
 * @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🔐 Control plane: repo policy, CI/CD, supply chain, governance gates
+# 🔐 Tier 0 — Control Plane (repo policy, CI/CD, supply chain, governance gates)
 # ─────────────────────────────────────────────────────────────────────────────
 
-# 🤖 GitHub ops layer
+# 🤖 GitHub ops layer (supply-chain sensitive)
+# (Workflows + actions are “blast radius” multipliers—treat as protected.)
 /.github/ @bartytime4life
 /.github/CODEOWNERS @bartytime4life
 /.github/README.md @bartytime4life
@@ -44,8 +69,7 @@
 /.github/release-drafter.yml @bartytime4life
 /.github/FUNDING.yml @bartytime4life
 
-# 🧩 Local composite actions (treat as supply-chain sensitive)
-# (These are also covered by /.github/actions/, but listed explicitly for future team routing.)
+# 🧩 Local composite actions (explicit list = future team routing)
 /.github/actions/attest/ @bartytime4life
 /.github/actions/build-info/ @bartytime4life
 /.github/actions/catalog-qa/ @bartytime4life
@@ -70,7 +94,7 @@
 /CHANGELOG.md @bartytime4life
 /README.md @bartytime4life
 
-# 🧯 Operational switches / governance-as-code
+# 🧯 Governance-as-code switches (treat as protected)
 /.kfm/ @bartytime4life
 /.kfm/kill-switch.yml @bartytime4life
 /policies/ @bartytime4life
@@ -80,6 +104,22 @@
 /tools/validation/policy/README.md @bartytime4life
 /tools/validation/policy/rego/ @bartytime4life
 /tools/validation/policy/tests/ @bartytime4life
+
+# 📜 Schemas & contracts (validation + CI gates)
+/schemas/ @bartytime4life
+/schemas/** @bartytime4life
+
+# 📦 Dependency manifests & lockfiles (supply chain)
+package.json @bartytime4life
+package-lock.json @bartytime4life
+pnpm-lock.yaml @bartytime4life
+yarn.lock @bartytime4life
+requirements*.txt @bartytime4life
+pyproject.toml @bartytime4life
+poetry.lock @bartytime4life
+Pipfile @bartytime4life
+Pipfile.lock @bartytime4life
+environment.yml @bartytime4life
 
 # 🐳 Platform + environment files
 /.editorconfig @bartytime4life
@@ -91,21 +131,54 @@
 /docker-compose.yml @bartytime4life
 /Dockerfile @bartytime4life
 
+# ☁️ Infra / deploy surfaces (safe even if folders don’t exist yet)
+/infra/ @bartytime4life
+/deploy/ @bartytime4life
+/k8s/ @bartytime4life
+/helm/ @bartytime4life
+/terraform/ @bartytime4life
+/pulumi/ @bartytime4life
+
 # ─────────────────────────────────────────────────────────────────────────────
-# 📚 Docs plane: architecture, specs, governance, research, narratives
+# 📚 Tier 1 — Docs Plane (architecture, specs, governance, research, narratives)
 # ─────────────────────────────────────────────────────────────────────────────
 /docs/ @bartytime4life
-/docs/specs/ @bartytime4life
+
+# 🧭 Master Guides & “source-of-truth” docs
+/docs/MASTER_GUIDE_v13.md @bartytime4life
+/docs/MASTER_GUIDE_v12.md @bartytime4life
+
+# 🧱 Architecture & ADRs
 /docs/architecture/ @bartytime4life
 /docs/architecture/adr/ @bartytime4life
-/docs/standards/ @bartytime4life
-/docs/templates/ @bartytime4life
-/docs/library/ @bartytime4life
+/docs/specs/ @bartytime4life
 
-# 🧭 Governance & security docs (treat as protected)
+# 🧾 Standards (STAC/DCAT/PROV + authoring protocols)
+/docs/standards/ @bartytime4life
+/docs/standards/KFM_STAC_PROFILE.md @bartytime4life
+/docs/standards/KFM_DCAT_PROFILE.md @bartytime4life
+/docs/standards/KFM_PROV_PROFILE.md @bartytime4life
+/docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md @bartytime4life
+
+# 🧩 Templates (universal + story node + API contract extension)
+/docs/templates/ @bartytime4life
+/docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md @bartytime4life
+/docs/templates/TEMPLATE__STORY_NODE_V3.md @bartytime4life
+/docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md @bartytime4life
+
+# 🧑‍⚖️ Governance & security docs (treat as protected)
 /docs/governance/ @bartytime4life
+/docs/governance/ROOT_GOVERNANCE.md @bartytime4life
+/docs/governance/ETHICS.md @bartytime4life
+/docs/governance/SOVEREIGNTY.md @bartytime4life
 /docs/security/ @bartytime4life
 /docs/policy/ @bartytime4life
+
+# 🗂️ Domain modules (runbooks + stewardship)
+/docs/data/ @bartytime4life
+/docs/data/historical/land-treaties/ @bartytime4life
+/docs/data/air-quality/ @bartytime4life
+/docs/data/soils/ @bartytime4life
 
 # 🎬 Narratives (Story Nodes / Focus Mode artifacts)
 /docs/reports/ @bartytime4life
@@ -122,23 +195,23 @@
 /web/story_nodes/**/assets/ @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🗃️ Data plane: lifecycle staging, catalogs, provenance, registries
+# 🗃️ Tier 2 — Data Plane (lifecycle staging, catalogs, provenance, registries)
 # ─────────────────────────────────────────────────────────────────────────────
 /data/ @bartytime4life
 
-# 📥🧪🗄️ v13 canonical lifecycle staging
+# 📥🧪🗄️ v13 lifecycle staging
 /data/raw/ @bartytime4life
 /data/work/ @bartytime4life
 /data/processed/ @bartytime4life
 
-# 🧾🗂️🧬 v13 canonical catalogs + provenance
-/data/catalog/ @bartytime4life
-/data/catalog/stac/ @bartytime4life
+# 🌐🧾 Catalogs + provenance (canonical v13)
+/data/stac/ @bartytime4life
 /data/catalog/dcat/ @bartytime4life
 /data/prov/ @bartytime4life
 
 # 🧰 Legacy/alternate locations (keep until fully migrated)
-/data/stac/ @bartytime4life
+/data/catalog/ @bartytime4life
+/data/catalog/stac/ @bartytime4life
 /data/dcat/ @bartytime4life
 /data/provenance/ @bartytime4life
 
@@ -148,14 +221,19 @@
 # 🗺️ Source registries / dataset descriptors
 /data/sources/ @bartytime4life
 
-# ─────────────────────────────────────────────────────────────────────────────
-# 📜 Schemas & contracts (validation + CI gates)
-# ─────────────────────────────────────────────────────────────────────────────
-/schemas/ @bartytime4life
-/schemas/** @bartytime4life
+# 🪶 Culturally sensitive / sovereignty-governed content (CARE/FAIR alignment)
+# (Patterns are intentionally broad to ensure “no silent bypass” for sensitive domains.)
+/data/**/indigenous*/ @bartytime4life
+/data/**/tribal*/ @bartytime4life
+/data/**/treaty*/ @bartytime4life
+/data/**/archaeolog*/ @bartytime4life
+/docs/**/indigenous*/ @bartytime4life
+/docs/**/tribal*/ @bartytime4life
+/docs/**/treaty*/ @bartytime4life
+/docs/**/archaeolog*/ @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🧱 Core code plane: pipelines, graph, server/API boundary, tools, tests
+# 🧱 Tier 3 — Core Code Plane (pipelines, graph, server/API, tools, tests, MCP)
 # ─────────────────────────────────────────────────────────────────────────────
 
 # 🧩 v13 canonical code locations
@@ -164,11 +242,12 @@
 /src/graph/ @bartytime4life
 /src/server/ @bartytime4life
 
-# 📜 API contracts (often live under server/)
+# 📜 API contracts (contract-first surface)
 /src/server/contracts/ @bartytime4life
 /src/server/contracts/openapi.yaml @bartytime4life
 
-# 🧯 Legacy/alternate API home (keep until fully migrated)
+# 🧯 Legacy/alternate homes (keep until fully migrated)
+/pipelines/ @bartytime4life
 /api/ @bartytime4life
 /api/src/ @bartytime4life
 /api/scripts/ @bartytime4life
@@ -178,6 +257,7 @@
 
 # ✅ Tooling & validators (catalog QA, schema validation, geo checks)
 /tools/ @bartytime4life
+/tools/kfm/ @bartytime4life
 /tools/validation/ @bartytime4life
 /tools/validation/catalog_qa/ @bartytime4life
 /tools/kfm-sim-run/ @bartytime4life
@@ -198,7 +278,7 @@
 /mcp/notebooks/ @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
-# 🌐 UI plane: web viewer + assets + overlays
+# 🌐 Tier 4 — UI Plane (web viewer + assets + overlays)
 # ─────────────────────────────────────────────────────────────────────────────
 /web/ @bartytime4life
 /web/src/ @bartytime4life
@@ -216,12 +296,53 @@
 # ─────────────────────────────────────────────────────────────────────────────
 /Kansas-Frontier-Matrix/ @bartytime4life
 /Kansas-Frontier-Matrix/.github/ @bartytime4life
+/Kansas-Frontier-Matrix/.kfm/ @bartytime4life
+/Kansas-Frontier-Matrix/policies/ @bartytime4life
 /Kansas-Frontier-Matrix/docs/ @bartytime4life
 /Kansas-Frontier-Matrix/data/ @bartytime4life
 /Kansas-Frontier-Matrix/src/ @bartytime4life
+/Kansas-Frontier-Matrix/pipelines/ @bartytime4life
 /Kansas-Frontier-Matrix/api/ @bartytime4life
 /Kansas-Frontier-Matrix/web/ @bartytime4life
 /Kansas-Frontier-Matrix/schemas/ @bartytime4life
 /Kansas-Frontier-Matrix/tools/ @bartytime4life
 /Kansas-Frontier-Matrix/mcp/ @bartytime4life
 /Kansas-Frontier-Matrix/tests/ @bartytime4life
+/Kansas-Frontier-Matrix/releases/ @bartytime4life
+```
+
+---
+
+## 🧩 What’s Better Now (Design + Governance Wins) ✨
+
+- **Plane-based structure** (Tier 0→4) makes the repo feel like a **governed system**, not “just folders.”  
+- **Contract-first + evidence-first ready:** explicit owners for **schemas**, **OpenAPI contracts**, **catalogs**, and **PROV**.  
+- **Catalog alignment upgrade:** treats `data/stac/`, `data/catalog/dcat/`, `data/prov/` as first-class “boundary artifacts.”  
+- **Sovereignty-aware patterns:** broad matchers ensure sensitive domains can’t slip through without review. 🪶  
+- **Future-team migration is painless:** the file is already “team shaped”; you’ll just swap owners.
+
+---
+
+## 🔒 Optional Next Step: Branch Protection Checklist (to match this CODEOWNERS)
+
+> CODEOWNERS routes reviewers, but branch protection enforces it.
+
+- Require **CODEOWNERS review** on `main`
+- Require **2 approvals** on Tier 0 paths:
+  - `.github/`, `.kfm/`, `policies/`, `schemas/`
+- Require **status checks** on Tier 0 and Tier 2:
+  - schema validation, policy checks, catalog/prov checks, story lint
+
+---
+
+## 🗺️ Quick Ownership Map (mental model)
+
+- 🔐 **Tier 0 Control Plane:** supply chain + governance gates  
+- 📚 **Tier 1 Docs Plane:** architecture + governance + Story Nodes  
+- 🗃️ **Tier 2 Data Plane:** raw/work/processed + catalogs + provenance  
+- 🧱 **Tier 3 Code Plane:** pipelines + graph + API boundary + tools + MCP  
+- 🌐 **Tier 4 UI Plane:** map viewers + assets + story node rendering
+
+---
+
+💡 If you want, the next evolution is adding **real teams** and turning Tier 0 into “two-key approval” (e.g., Security + Governance) for policy, workflows, schemas, and provenance.
