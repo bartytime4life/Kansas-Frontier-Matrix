@@ -1,39 +1,16 @@
-# 🧹 pre-commit hooks setup (repo-root)
-
-![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
-![python](https://img.shields.io/badge/python-hooks-blue?logo=python&logoColor=white)
-![frontend](https://img.shields.io/badge/frontend-prettier-informational?logo=prettier&logoColor=white)
-
-> ✅ Goal: consistent formatting, basic hygiene checks, Python lint/format, workflow linting, and lightweight security scanning.
-
----
-
-## 📁 Recommended layout
-
-```text
-📦 repo-root/
-├─ ✅ .pre-commit-config.yaml
-├─ 🔐 .secrets.baseline          # required if you keep detect-secrets enabled
-├─ 🧾 pyproject.toml             # recommended for ruff/black config
-└─ ...
-```
-
----
-
-## 📄 `.pre-commit-config.yaml`
-
-> Copy the block below into **repo-root** as: `./.pre-commit-config.yaml`
-
-```yaml
 # .pre-commit-config.yaml
-# 🧹 Keep the repo clean & consistent before changes land
+# 🧹 Repo hygiene + lint + format + lightweight security checks
 
+minimum_pre_commit_version: "4.5.1"
 fail_fast: false
+
+# Install both commit + push gates by default
 default_install_hook_types: [pre-commit, pre-push]
 
 default_language_version:
   python: python3
 
+# Keep hooks focused on source, not build artifacts
 exclude: |
   (?x)^(
     # 🧪 caches / builds
@@ -47,21 +24,29 @@ exclude: |
     build/|
     dist/|
     coverage/|
+
+    # 🌐 node / web builds
     node_modules/|
     \.next/|
     \.cache/|
+    \.turbo/|
+
+    # 🧱 infra / tooling caches
+    \.direnv/|
+    \.terraform/|
+
     # 🧱 vendor / generated
     vendor/|
     third_party/|
     generated/|
-    # 🗺️ big binaries (keep in LFS / artifacts instead)
+
+    # 🗺️ minified assets (treat as build output)
     .*\.min\.(js|css)$
   )
 
 repos:
-  # ✅ Validate this config itself
-  - repo: https://github.com/pre-commit/pre-commit
-    rev: v4.5.1
+  # ✅ Validate this config itself (fast, no network)
+  - repo: meta
     hooks:
       - id: check-hooks-apply
       - id: check-useless-excludes
@@ -70,37 +55,41 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
+      # config sanity
       - id: check-yaml
       - id: check-json
       - id: check-toml
       - id: check-xml
 
+      # whitespace / line endings
       - id: end-of-file-fixer
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
       - id: mixed-line-ending
         args: [--fix=lf]
 
+      # "oops" checks
       - id: check-merge-conflict
       - id: check-case-conflict
       - id: check-symlinks
       - id: check-executables-have-shebangs
       - id: check-shebang-scripts-are-executable
 
+      # size & key hygiene
       - id: check-added-large-files
         args: [--maxkb=5120]
-
       - id: detect-private-key
 
-      # Python sanity checks
+      # python sanity
       - id: check-ast
       - id: debug-statements
 
   # 🐍 Python lint (fast) + autofix
+  # NOTE: keep the lint hook before formatters when using --fix
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.0
     hooks:
-      - id: ruff
+      - id: ruff-check
         args: [--fix, --exit-non-zero-on-fix]
 
   # 🎨 Python formatting
@@ -160,41 +149,164 @@ repos:
             \.secrets\.baseline
           )$
 
+# 🤖 Optional: pre-commit.ci autoupdates (if you enable the app)
 ci:
   autoupdate_schedule: weekly
 ```
 
 ---
 
-## 🚀 One-time install (local)
+## 🧾 Recommended `pyproject.toml` (Ruff + Black)
 
-```bash
-python -m pip install --upgrade pre-commit
-pre-commit install
-pre-commit run --all-files
+> Put this in `pyproject.toml` (or merge into your existing config).
+
+```toml
+[tool.ruff]
+line-length = 88
+# target-version = "py311"  # optionally pin to your baseline
+fix = true
+show-fixes = true
+
+# Keep this conservative by default; tune per project
+# select = ["E", "F", "I", "B", "UP"]
+# ignore = []
+
+[tool.black]
+line-length = 88
 ```
 
-> 🐳 If you want the Dockerfile linting hook to run (it’s configured for **pre-push**), `pre-commit install` above already installs pre-push too.
+> 🧩 Tuning hint: start small → expand rules gradually to avoid “lint shock” on day 1.
 
 ---
 
-## 🔐 Create the detect-secrets baseline
+## 🎨 Recommended Prettier config
 
-If this is a brand-new repo: create the baseline once, then commit it.
+### `.prettierrc`
+
+```json
+{
+  "printWidth": 100,
+  "singleQuote": true,
+  "semi": true
+}
+```
+
+### `.prettierignore`
+
+```gitignore
+# dependencies & builds
+node_modules
+dist
+build
+coverage
+.next
+.cache
+
+# lockfiles (keep untouched)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+```
+
+---
+
+## 🎛️ Recommended `.editorconfig` (optional, powerful)
+
+```ini
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+
+[*.py]
+indent_size = 4
+```
+
+---
+
+## 🔐 detect-secrets baseline
+
+### Create baseline (first time)
 
 ```bash
 python -m pip install --upgrade detect-secrets
 detect-secrets scan > .secrets.baseline
 pre-commit run detect-secrets --all-files
+git add .secrets.baseline
 ```
+
+### Update baseline (when you intentionally add a known-safe token)
+
+```bash
+detect-secrets scan --baseline .secrets.baseline > .secrets.baseline
+pre-commit run detect-secrets --all-files
+```
+
+> 🧯 If detect-secrets blocks you unexpectedly, **stop** and inspect the diff. Don’t “just baseline it” unless you’re certain it’s safe.
 
 ---
 
-## 🧩 Quick tuning knobs (optional)
+## 🤖 CI enforcement (recommended)
 
-- **Python rules**: configure ruff + black in `pyproject.toml` (recommended)
-- **Large files**: adjust `check-added-large-files --maxkb=...`
-- **Prettier scope**: adjust the `files:` regex if you add more frontend file types (e.g. `vue`, `svelte`)
-- **Docker hook speed**: keep `hadolint-docker` on `pre-push` (as-is) unless you really want it on every commit
+Even if everyone runs hooks locally, CI should still enforce the same rules.
 
-✅ Done.
+### Option A: GitHub Actions (simple + effective)
+
+Create: `./.github/workflows/pre-commit.yml`
+
+```yaml
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: --all-files
+```
+
+### Option B: pre-commit.ci (auto-fix PRs + optional autoupdates)
+
+If you enable **pre-commit.ci**, the `ci:` section in the config can auto-update hook revisions weekly.
+
+---
+
+## 🧯 Troubleshooting (fast fixes)
+
+### “Hooks changed files, but commit failed”
+That’s expected: formatters modify the working tree.
+
+```bash
+git add -A
+git commit
+```
+
+### Run a single hook
+```bash
+pre-commit run ruff-check --all-files
+pre-commit run black --all-files
+pre-commit run prettier --all-files
+```
+
+### Temporarily skip a hook (use sparingly)
+```bash
+SKIP=detect-secrets git commit -m "WIP: unblock (will fix)"
+```
+
+### First run feels slow
+That’s normal: pre-commit downloads/builds hook environments on first use. Subsequent runs are much faster.
