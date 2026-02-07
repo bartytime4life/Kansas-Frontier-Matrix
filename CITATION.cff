@@ -1,43 +1,122 @@
-# 📄 CITATION.cff
+# 📄 `CITATION.cff` — Enhanced Metadata for **Kansas Frontier Matrix (KFM)** 🧭
+
+> ✅ **Copy/paste** the YAML below into your repo root as `CITATION.cff` to strengthen citation quality, schema-alignment, and discoverability — while reflecting KFM’s **provenance-first “truth path”** design. :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+
+---
+
+## ✅ Enhanced `CITATION.cff` (copy/paste)
 
 ```yaml
 cff-version: 1.2.0
-message: "If you use this software and/or data in your work, please cite it using this metadata."
+
+message: >-
+  If you use Kansas Frontier Matrix (KFM) in your work, please cite it using this metadata.
+  For dataset-level reuse (derived layers, Story Nodes, models/outputs), cite the specific
+  catalog record (DCAT dataset entry and/or STAC Item/Collection) so provenance, licensing,
+  and versioning remain intact across the full “truth path.”
+
 title: "Kansas Frontier Matrix (KFM)"
 type: software
 
 authors:
   - name: "bartytime4life"
+    website: "https://github.com/bartytime4life"
 
 contact:
   - name: "bartytime4life"
-    url: "https://github.com/bartytime4life"
+    website: "https://github.com/bartytime4life"
+  - name: "Kansas Frontier Matrix (KFM) Issue Tracker"
+    website: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues"
 
 repository-code: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
 url: "https://github.com/bartytime4life/Kansas-Frontier-Matrix"
 
+license: "Apache-2.0"
+
 abstract: >-
-  Kansas Frontier Matrix (KFM) is an integrated data and analytics platform designed to unify diverse
-  information about Kansas’s environment, infrastructure, and communities into a coherent geospatial system,
-  with ingestion pipelines, a unified repository, analytics/AI processing, and public-facing dashboards and APIs.
+  Kansas Frontier Matrix (KFM) is a provenance-first, governance-as-code living atlas for Kansas:
+  a pipeline → catalog → database → API → UI system that transforms raw spatial and historical sources
+  into vetted, explorable knowledge with STAC/DCAT metadata and W3C PROV lineage. KFM serves curated
+  geospatial layers and narrative “Story Nodes” via governed endpoints for maps, tiles, timelines,
+  dashboards, and citation-rich AI-assisted exploration (Focus Mode). Stewardship is designed to align
+  with FAIR + CARE so open science and community value can coexist with traceability, access constraints,
+  and Indigenous data governance considerations.
 
 keywords:
   - Kansas
+  - living atlas
   - geospatial
   - GIS
+  - frontier history
   - open data
-  - data catalog
-  - DCAT
-  - STAC
-  - analytics
-  - machine learning
-  - remote sensing
   - digital twin
+  - data catalog
+  - STAC
+  - DCAT
+  - JSON-LD
+  - W3C PROV
   - provenance
+  - lineage
+  - evidence-first
+  - governance-as-code
+  - fail-closed
+  - deterministic pipelines
+  - classification propagation
+  - policy-as-code
+  - Open Policy Agent
+  - OPA
+  - Story Nodes
+  - Focus Mode
+  - maps
+  - timelines
+  - dashboards
+  - APIs
+  - vector tiles
+  - MapLibre
+  - OpenLayers
+  - PostGIS
+  - PostgreSQL
+  - Neo4j
+  - knowledge graph
+  - microservices
+  - reproducible research
   - FAIR
   - CARE
-  - dashboards
-  - microservices
+  - Indigenous data governance
+  - remote sensing
+  - machine learning
   - RAG
   - LLM
 ```
+
+---
+
+## 🧩 What was upgraded (high-signal changes)
+
+- ✅ **Schema-accurate people/entity fields**: uses `website` for author/contact entries (instead of `url`) per the CFF 1.2.0 schema guide. :contentReference[oaicite:2]{index=2}  
+- ✅ **License included (SPDX)**: adds `license: Apache-2.0`, matching the repo’s published license. :contentReference[oaicite:3]{index=3}  
+- ✅ **Message now matches KFM’s governance model**: it nudges users to cite *catalog records* (DCAT/STAC) when using derived layers or Story Nodes, preserving provenance/versioning. 【203:5†Kansas Frontier Matrix Comprehensive System Documentation.pdf†L6-L1:contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}t + provenance-first + governed-AI posture (“map behind the map”, Focus Mode constraints). 【203:1†Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pd:contentReference[oaicite:6]{index=6}:contentReference[oaicite:7]{index=7}CAT/PROV), architecture (API boundary, pipelines), and AI (RAG/LLM), consistent with KFM docs and governance language. 【203:5†Kansas Frontier Matrix Comprehensive System Documentation.pdf†L27-L:contentReference[oaicite:8]{index=8}:contentReference[oaicite:9]{index=9}  
+
+---
+
+## 🧬 Why this metadata aligns with KFM (not “just citation fluff”)
+
+### 🛤️ KFM’s “Truth Path” is the backbone — and the citation file should reinforce it
+KFM’s architecture explicitly enforces a non-negotiable flow: **Raw → Processed → Catalog/Provenance → Databases → API → UI/AI**, preventing “silent bypass” and ensuring every downstream artifact is traceable. 【203:15†Kansas Frontier Matrix Comprehensive System Documentation.pdf†L22-L30】【203:10†MARKDOWN_GUIDE_v13.md.gdoc†L21-L47】 :contentReference[oaicite:10]{index=10}:contentReference[oaicite:11]{index=11}:contentReference[oaicite:12]{index=12}ot only the repository URL. 【203:5†Kansas Frontier Matrix Comprehensive System Documentation.pdf†L6-L16】
+
+### 🧾 Provenance-first + “map behind the map” is a core promise
+KFM is explicitly framed as **evidence-f:contentReference[oaicite:13]{index=13}nd AI answers) should remain anchored to cataloged sources. 【203:1†Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf†L9-L33】 :contentReference[oaicite:14]{index=14}  
+
+### 🤝 FAIR + CARE alignment is a governance stance, not a buzzword
+KFM’s fra:contentReference[oaicite:15]{index=15} complement to FAIR for Indigenous data considerations (collective benefit, authority to control, responsibility, ethics). 【207:2†Indigenous Statistics.pdf†L48-L54】
+
+---
+
+## 📚 Project sources used for this upgrade
+
+-  Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint  
+-  Kansas Frontier Matrix Compre:contentReference[oaicite:18]{index=18} MARKDOWN_GUIDE_v13 (pipeline + boundar:contentReference[oaicite:20]{index=20} Indigenous Statistics (CARE ↔ FAIR + governance cont:contentReference[oaicite:22]{index=22} 2) OUTSIDE-THE-BOX NOTES (OPTIONAL)
+
+- **Fast next “wow” upgra:contentReference[oaicite:23]{index=23}:** mint a DOI (e.g., Zenodo) and then add `doi:` + `dat:contentReference[oaicite:24]{index=24}on:` to `CITATION.cff` for truly publication-grade citations. (I didn’t guess values here to avoid incorrect metadata.)
+- **If you start tagging versions:** consider adding `repository-artifact:` pointing to a release artifact location; it becomes extra valuable once releases are real and versioned (schema supports it). :contentReference[oaicite:25]{index=25}
+::contentReference[oaicite:26]{index=26}
