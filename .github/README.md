@@ -124,14 +124,14 @@ KFM is built around a non‑negotiable flow of evidence → governed artifacts �
 
 ```mermaid
 flowchart LR
-  raw[Raw 📥 data/<domain>/raw] --> work[Work 🧪 data/<domain>/work]
-  work --> proc[Processed ✅ data/<domain>/processed]
-  proc --> cat[Catalogs 🗂️ STAC + DCAT + PROV]
-  cat --> graph[Graph 🕸️ Neo4j refs (not payloads)]
-  graph --> api[API Boundary 🌐 src/server]
-  api --> ui[UI 🗺️ web/]
-  api --> focus[Focus Mode 🎯]
-  story[Story Nodes 📚 docs/reports/story_nodes] --> focus
+  raw["Raw 📥 data/{domain}/raw"] --> work["Work 🧪 data/{domain}/work"]
+  work --> proc["Processed ✅ data/{domain}/processed"]
+  proc --> cat["Catalogs 🗂️ STAC + DCAT + PROV"]
+  cat --> kg["Graph 🕸️ Neo4j refs (not payloads)"]
+  kg --> api["API Boundary 🌐 src/server"]
+  api --> ui["UI 🗺️ web/"]
+  api --> focus["Focus Mode 🎯"]
+  story["Story Nodes 📚 docs/reports/story_nodes"] --> focus
 ```
 
 ### ✅ Non‑Negotiables enforced via `.github/` gates
