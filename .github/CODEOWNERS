@@ -207,14 +207,15 @@ environment.yml @bartytime4life
 
 # 🪶 Culturally sensitive / sovereignty-governed content (CARE/FAIR alignment)
 # (Patterns are intentionally broad to ensure “no silent bypass” for sensitive domains.)
-/data/**/indigenous*/ @bartytime4life
-/data/**/tribal*/ @bartytime4life
-/data/**/treaty*/ @bartytime4life
-/data/**/archaeolog*/ @bartytime4life
-/docs/**/indigenous*/ @bartytime4life
-/docs/**/tribal*/ @bartytime4life
-/docs/**/treaty*/ @bartytime4life
-/docs/**/archaeolog*/ @bartytime4life
+# Fixed: Removed trailing slashes to match both files AND directories at any depth.
+/data/**/indigenous* @bartytime4life
+/data/**/tribal* @bartytime4life
+/data/**/treaty* @bartytime4life
+/data/**/archaeolog* @bartytime4life
+/docs/**/indigenous* @bartytime4life
+/docs/**/tribal* @bartytime4life
+/docs/**/treaty* @bartytime4life
+/docs/**/archaeolog* @bartytime4life
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 🧱 Tier 3 — Core Code Plane (pipelines, graph, server/API, tools, tests, MCP)
@@ -293,38 +294,3 @@ environment.yml @bartytime4life
 /Kansas-Frontier-Matrix/mcp/ @bartytime4life
 /Kansas-Frontier-Matrix/tests/ @bartytime4life
 /Kansas-Frontier-Matrix/releases/ @bartytime4life
-```
-
----
-
-## 🧩 What’s Better Now (Design + Governance Wins) ✨
-
-- **Plane-based structure** (Tier 0→4) makes the repo feel like a **governed system**, not “just folders.”  
-- **Contract-first + evidence-first ready:** explicit owners for **schemas**, **OpenAPI contracts**, **catalogs**, and **PROV**.  
-- **Catalog alignment upgrade:** treats `data/stac/`, `data/catalog/dcat/`, `data/prov/` as first-class “boundary artifacts.”  
-- **Sovereignty-aware patterns:** broad matchers ensure sensitive domains can’t slip through without review. 🪶  
-- **Future-team migration is painless:** the file is already “team shaped”; you’ll just swap owners.
-
----
-
-## 🔒 Optional Next Step: Branch Protection Checklist (to match this CODEOWNERS)
-
-> CODEOWNERS routes reviewers, but branch protection enforces it.
-
-- Require **CODEOWNERS review** on `main`
-- Require **2 approvals** on Tier 0 paths:
-  - `.github/`, `.kfm/`, `policies/`, `schemas/`
-- Require **status checks** on Tier 0 and Tier 2:
-  - schema validation, policy checks, catalog/prov checks, story lint
-
----
-
-## 🗺️ Quick Ownership Map (mental model)
-
-- 🔐 **Tier 0 Control Plane:** supply chain + governance gates  
-- 📚 **Tier 1 Docs Plane:** architecture + governance + Story Nodes  
-- 🗃️ **Tier 2 Data Plane:** raw/work/processed + catalogs + provenance  
-- 🧱 **Tier 3 Code Plane:** pipelines + graph + API boundary + tools + MCP  
-- 🌐 **Tier 4 UI Plane:** map viewers + assets + story node rendering
-
----
