@@ -1,4 +1,3 @@
-```markdown
 <div align="center">
 
 <!-- 🚧 UNDER CONSTRUCTION -->
@@ -571,13 +570,4 @@ Repo-local anchors (recommended reading):
 **If it can’t be traced → it can’t be served.**  
 **If it can’t be governed → it can’t be merged.** ✅🔒
 
-</div>
-
-<!-- ✅ TODOs (Roadmap for this README)
-- Link specific KFM profiles under docs/standards/ + schemas/ once names are finalized
-- Add a validator-facing bundle manifest spec if/when tools/ adopts one
-- Add CRS + temporal policy section once standardized
-- Add examples for raster + tile-pack + time-series domains
-- Add a "domain README template" and enforce via CI
--->
-```
+<div align="center">
