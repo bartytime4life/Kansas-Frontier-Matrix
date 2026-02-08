@@ -1,30 +1,36 @@
 <div align="center">
 
-<img src="../assets/brand/kfm-seal-animated-320.gif" width="160" alt="Kansas Frontier Matrix (KFM) — Seal (Animated)" />
+<picture>
+  <source media="(prefers-reduced-motion: reduce)" srcset="../docs/assets/kfm-seal-320.png">
+  <img src="../docs/assets/branding/kfm-seal-animated-320.gif" width="180" alt="Kansas Frontier Matrix (KFM) — seal (animated)" />
+</picture>
 
 # 🚰 KFM Pipelines
 
-**Deterministic ingestion + GIS processing + AI-derived layers — published only when metadata, provenance, and policy gates pass.**  
-<sub><em>“Raw ➜ Processed ➜ Catalog ➜ Databases ➜ API ➜ UI/AI” — the Truth Path is non‑negotiable.</em></sub>
+**Deterministic ingestion + GIS processing + evidence/AI-derived artifacts — published only when metadata, provenance, and policy gates pass.**  
+<sub><em>“ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode” — the canonical ordering is non‑negotiable.</em></sub>
 
 <br/>
 
-![Status](https://img.shields.io/badge/status-UNDER%20CONSTRUCTION-yellow?style=for-the-badge)
-![Pipelines](https://img.shields.io/badge/pipelines-ETL%20%7C%20GIS%20%7C%20AI-blue?style=for-the-badge)
-![Standards](https://img.shields.io/badge/standards-STAC%20%7C%20DCAT%20%7C%20W3C%20PROV-green?style=for-the-badge)
-![Governance](https://img.shields.io/badge/governance-OPA%20%7C%20Fail--Closed-critical?style=for-the-badge)
-![Storage](https://img.shields.io/badge/storage-PostGIS%20%7C%20Object%20Store-orange?style=for-the-badge)
-![Interoperability](https://img.shields.io/badge/interoperability-OGC%20Tiles%20%7C%20GeoJSON%20%7C%20COG-informational?style=for-the-badge)
+<!-- Project posture -->
+<img alt="Status: Under Construction" src="https://img.shields.io/badge/status-under_construction-yellow?style=for-the-badge">
+<img alt="Governance: Fail-Closed" src="https://img.shields.io/badge/governance-fail--closed-critical?style=for-the-badge">
+<img alt="Evidence: Provenance-First" src="https://img.shields.io/badge/evidence-provenance--first-8a2be2?style=for-the-badge">
+<img alt="Boundary Artifacts: STAC/DCAT/PROV" src="https://img.shields.io/badge/boundary_artifacts-STAC%20%7C%20DCAT%20%7C%20PROV-1f6feb?style=for-the-badge">
+<br/>
+<img alt="Runtime Stores" src="https://img.shields.io/badge/stores-PostGIS%20%7C%20Neo4j%20%7C%20Search/Vector-0ea5e9?style=for-the-badge">
+<img alt="API Boundary" src="https://img.shields.io/badge/api-trust_membrane-111827?style=for-the-badge">
 
 <br/>
 
 <a href="#-purpose">🎯 Purpose</a> •
-<a href="#-the-truth-path">🧭 Truth Path</a> •
+<a href="#-canonical-truth-path">🧭 Truth Path</a> •
+<a href="#-where-pipeline-code-lives-v13">📍 Code Location</a> •
 <a href="#-pipeline-types">🛰️ Types</a> •
-<a href="#-contracts--artifacts">📜 Contracts</a> •
-<a href="#-running-pipelines">🚀 Run</a> •
-<a href="#-quality--policy-gates-fail-closed">🛡️ Gates</a> •
-<a href="#-observability--audit">🧾 Audit</a> •
+<a href="#-contracts--required-artifacts">📜 Contracts</a> •
+<a href="#-running-pipelines-local-to-ci">🚀 Run</a> •
+<a href="#-gates-fail-closed">🛡️ Gates</a> •
+<a href="#-auditability--observability">🧾 Audit</a> •
 <a href="#-author-a-new-pipeline">🧰 New Pipeline</a>
 
 </div>
@@ -33,335 +39,273 @@
 
 > [!WARNING]
 > 🚧 **Under Construction (Active Development)**  
-> This pipeline hub is evolving alongside the KFM platform. Treat it as the **current intent + guardrails**, not a finalized spec.  
-> **If something here conflicts with the repository’s actual implementation, implementation wins — then update this doc.** ✅
+> This hub captures the **current intent + guardrails** for pipelines in KFM.  
+> If this doc conflicts with implementation, **implementation wins** — then update this doc to restore alignment.
 
 ---
 
 ## 🎯 Purpose
 
-This directory is the **runbook + conventions hub** for Kansas Frontier Matrix (KFM) pipelines.
+Pipelines are where KFM turns **raw evidence** into **publishable, governed artifacts**.
 
-Pipelines are where we turn **evidence** into **publishable artifacts**:
+A KFM-grade pipeline is responsible for:
 
-- 📥 **Ingest** raw sources (vector, raster, tabular, scans, PDFs, APIs, feeds)
-- 🧪 **Transform** into interoperable, queryable formats
-- 🧾 **Record lineage** (W3C PROV) for audit + reproducibility
-- 🏷️ **Publish catalogs** (STAC + DCAT) so datasets are findable & discoverable
-- 🗄️ **Load caches** (PostGIS / tile caches / graph index) for performance
-- 🧩 **Expose** only via governed interfaces (API), never direct DB from UI
-- 🤖 **Produce AI-derived layers** only when governance + provenance are complete
-
-KFM’s architecture is explicitly layered and “truth-path” driven; the pipeline stage is the start of that governed chain.  [oai_citation:0‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
-
----
-
-## 🧭 Quick links
-
-- 🏗️ System architecture: `../docs/architecture/system_overview.md`
-- 🤖 AI system overview: `../docs/architecture/AI_SYSTEM_OVERVIEW.md`
-- 🧰 Tooling & validators: `../tools/`
-- 📦 Data vault + catalogs: `../data/`
-  - STAC: `../data/stac/`
-  - DCAT: `../data/catalog/dcat/`
-  - PROV: `../data/prov/`
-- 🧩 API gateway: `../api/` (or your repo’s API root)
-- 🧪 Tests: `../tests/` (plus per-pipeline tests)
-
----
-
-## 🧭 The Truth Path
+- 📥 **Ingesting raw snapshots** (immutable evidence)
+- 🧪 Producing **work artifacts** (auditables, QA outputs, intermediate transforms)
+- ✅ Emitting **processed outputs** (serve-ready, analysis-ready, reproducible)
+- 🗂️ Publishing **boundary artifacts** for discovery + reuse:
+  - **STAC** (spatiotemporal assets)
+  - **DCAT** (dataset discovery + distributions)
+  - **PROV** (lineage: inputs → activities → outputs)
+- 🗄️ Loading **runtime stores** for performance (PostGIS / Neo4j / search/vector)
+- 🔒 Enforcing **fail-closed governance** at publish boundaries (license/attribution/sensitivity required)
 
 > [!IMPORTANT]
-> **Pipelines may transform data — they may not lower trust.**  
-> If metadata, provenance, licensing, or policy classification is missing: **stop** (fail‑closed). 🔒
+> **Databases are performance caches — not truth.**  
+> Truth is the versioned artifacts in `data/` + their catalogs/provenance + the pipeline code that can rebuild them.
 
-KFM enforces a strict ordering so any dataset can be rebuilt, audited, and governed end‑to‑end.  [oai_citation:1‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+---
+
+## 🧭 Canonical Truth Path
+
+KFM enforces a strict ordering so every dataset (and every derived layer) is **rebuildable, auditable, and governable**:
+
+```text
+ETL → STAC/DCAT/PROV catalogs → Neo4j graph → APIs → React/Map UI → Story Nodes → Focus Mode
+```
+
+No stage may leapfrog or bypass prior contracts/outputs. ✅
+
+### Data-lifecycle view (what pipelines actually do)
 
 ```mermaid
 flowchart LR
-  A[🧾 Raw<br/>immutable snapshots] --> B[🧪 Work<br/>intermediate artifacts]
-  B --> C[✅ Processed<br/>publishable assets]
-  C --> D[🏷️ Catalog<br/>STAC + DCAT]
-  C --> E[🔗 Provenance<br/>W3C PROV]
-  D --> F[(🗺️ PostGIS / Tiles)]
-  D --> G[(🕸️ Neo4j / Graph Index)]
-  E --> F
-  E --> G
-  F --> H[🧩 API Gateway<br/>policy + contracts]
-  G --> H
-  H --> I[🖥️ UI + 🎯 Focus Mode]
+  R["🧾 Raw snapshots<br/>data/raw/&lt;domain&gt;/"] --> W["🧪 Work artifacts<br/>data/work/&lt;domain&gt;/"]
+  W --> P["✅ Processed outputs<br/>data/processed/&lt;domain&gt;/"]
+
+  P --> STAC["🗂️ STAC<br/>data/stac/collections + items"]
+  P --> DCAT["🗃️ DCAT<br/>data/catalog/dcat/"]
+  P --> PROV["🔗 PROV<br/>data/prov/"]
+
+  STAC --> PG[(PostGIS)]
+  STAC --> OBJ[(Object store/CDN<br/>COGs • PMTiles • 3D Tiles)]
+  DCAT --> S[(Search/Vector)]
+  PROV --> PG
+  PROV --> S
+  PG --> API["🧩 API boundary<br/>src/server/ (policy + contracts)"]
+  S --> API
+  API --> UI["🖥️ UI / Maps"]
+  API --> SN["📚 Story Nodes"]
+  API --> FM["🎯 Focus Mode"]
 ```
 
-**Design axiom:** Databases are **performance caches**, not the source of truth.  
-The source of truth is the versioned artifacts in `data/` + pipeline code.  [oai_citation:2‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+> [!CAUTION]
+> If a “shortcut” bypasses catalogs/provenance/policy, it’s treated as a **defect** — not a feature.
 
 ---
 
-## 🛰️ Pipeline Types
+## 📍 Where pipeline code lives (v13)
 
-KFM pipelines typically fall into these buckets:
+In the v13 layout, pipeline implementation is **canonical** under:
 
-| Type | Examples | Primary outputs | Cataloging expectations |
-|---|---|---|---|
-| 🗺️ Vector + tabular ingest | boundaries, trails, census tables, railroads, historic points | GeoJSON / GeoParquet / Parquet | DCAT required; STAC if spatiotemporal assets; PROV always |
-| 🛰️ Remote sensing ingest | Landsat/Sentinel scenes, LiDAR products, NOAA rasters | COGs, PMTiles, thumbnails, derived rasters | STAC item/collection required + PROV; DCAT for dataset record |
-| 🕸️ Knowledge graph enrichment | entity extraction, relationship building, story-to-data linking | graph CSV/JSON, Neo4j load bundles | DCAT + PROV; graph contract docs encouraged |
-| 🤖 AI-derived layers | classification layers, OCR corpora, change detection, “confidence layers” | publishable geo layers + run cards | **extra governance gates** + PROV must include model/run context |
-| 🧪 QA / validation pipelines | geometry checks, schema validation, data profiling | reports, metrics, “data quality artifacts” | publish if referenced by UI/AI; otherwise keep as work artifacts |
-
-Remote sensing automation (e.g., STAC feeds that trigger ingest, COG creation, tile generation, and STAC item emission) is explicitly part of KFM’s design direction.  [oai_citation:3‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
-
----
-
-## 📜 Contracts & artifacts
-
-### ✅ The dataset contract (minimum publishable bundle)
-
-A dataset is “real” in KFM only when these exist:
-
-- ✅ `data/processed/...` (the actual asset)
-- 🏷️ `data/stac/...` (STAC Item/Collection when appropriate)
-- 🗂️ `data/catalog/dcat/...` (DCAT dataset record)
-- 🔗 `data/prov/...` (W3C PROV run bundle / lineage)
+- `src/pipelines/` — ETL jobs and domain pipelines  
+- `data/` — raw/work/processed outputs + catalog/prov boundary artifacts  
+- `src/server/` — API boundary (serves only governed outputs)  
+- `web/` — UI (never direct DB access)
 
 > [!TIP]
-> **Think of STAC/DCAT/PROV as the data-layer API contract.**  
-> The rest of the system (DB loaders, API, UI, AI) relies on these artifacts being accurate and linked.
+> If you create a new pipeline, place it in `src/pipelines/` — don’t scatter data processing code elsewhere.
 
-### 🧾 Pipeline contract (how pipelines are defined)
+---
 
-A pipeline should be describable without reading the code:
+## 🧭 Quick links (repo-local)
 
-- `pipeline.yaml` → **what it does**
-- `source_manifest.yaml` → **where it came from + licensing + sensitivity**
-- `extract/transform/load/publish` → **how it runs**
-- `tests/` → **how we prove it works**
-- `README.md` → dataset runbook (optional but strongly encouraged)
+- 🏗️ System architecture: `../docs/architecture/system_overview.md`
+- 🤖 AI / Focus Mode: `../docs/architecture/AI_SYSTEM_OVERVIEW.md`
+- 🧾 Standards & profiles: `../docs/standards/`
+- 📦 Data vault rules: `../data/README.md`
+  - STAC: `../data/stac/`
+  - DCAT: `../data/catalog/dcat/`
+  - PROV: `../data/prov/`
+- 🌐 API boundary: `../src/server/`
+- ✅ Tests: `../tests/`
+- 🧰 Tools & validators: `../tools/`
 
-Recommended structure:
+---
+
+## 🛰️ Pipeline types
+
+| Type | Examples | Primary outputs | Boundary artifacts |
+|---|---|---|---|
+| 🗺️ Vector + tabular ingest | boundaries, railroads, trails, census tables | GeoParquet/Parquet (GeoJSON only when small) | DCAT + PROV always; STAC when assetized/spatiotemporal |
+| 🛰️ Raster / remote sensing | Landsat/Sentinel, LiDAR products, NOAA rasters | COGs, PMTiles, thumbnails, derived rasters | STAC item/collection + PROV; DCAT record for dataset discovery |
+| 🕸️ Graph enrichment | entity extraction, relationship building, story-to-data linking | Neo4j import CSV + mapping artifacts | DCAT + PROV (graph references catalogs; no bulky duplication) |
+| 🤖 Evidence/AI-derived artifacts | OCR corpora, masks, change layers, confidence layers | publishable layers + run documentation | Treated as **first-class datasets**: STAC/DCAT/PROV required + extra governance |
+| 🧪 QA / validation | schema checks, geometry QA, profiling | reports, metrics, QA artifacts | Publish only if referenced downstream; otherwise keep as work artifacts |
+
+---
+
+## 📜 Contracts & required artifacts
+
+### ✅ Dataset contract: minimum publishable bundle
+
+A dataset is “servable” in KFM only when these exist and cross-link correctly:
+
+| Artifact | Canonical location |
+|---|---|
+| Raw snapshot(s) | `data/raw/<domain>/...` |
+| Work artifacts (optional but recommended) | `data/work/<domain>/...` |
+| Processed output(s) | `data/processed/<domain>/...` |
+| STAC Items/Collections (when applicable) | `data/stac/collections/*.json` + `data/stac/items/*.json` |
+| DCAT dataset record | `data/catalog/dcat/*.jsonld` |
+| PROV lineage bundle | `data/prov/*.(prov.)json` |
+
+> [!IMPORTANT]
+> Missing license / attribution / sensitivity metadata is a **publish blocker**.  
+> CI and policy should treat incomplete bundles as **fail-closed**.
+
+### 🔗 Cross-link expectations (what “traceable” means)
+
+If something is shown on a map, used in a story, or retrieved for Focus Mode, reviewers must be able to walk:
 
 ```text
-pipelines/
-└─ 📁 src/
-   └─ 📁 pipelines/
-      └─ 📁 <domain>/
-         └─ 📁 <dataset_id>/
-            ├─ 📄 pipeline.yaml
-            ├─ 📄 source_manifest.yaml
-            ├─ 🐍 extract.py
-            ├─ 🐍 transform.py
-            ├─ 🐍 load.py
-            ├─ 🐍 publish.py
-            ├─ 🧪 tests/
-            │  ├─ 🧪 test_contracts.py
-            │  └─ 🧪 test_metadata.py
-            └─ 📄 README.md
+UI/Story/Focus → DCAT → STAC → PROV → Raw Evidence
 ```
 
 ---
 
-## 🧱 Data formats & interoperability
-
-KFM is built for interoperability with standard geo tooling and web viewers.  [oai_citation:4‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
-
-### ✅ Recommended defaults
-- 🗺️ Vector: **GeoParquet** (preferred for big) or GeoJSON (good for small, reviewable diffs)
-- 📊 Tabular/time-series: **Parquet** (partitioned by time/region if large)
-- 🛰️ Raster: **COG** (Cloud‑Optimized GeoTIFF) for web‑friendly partial reads
-- 🧱 Tiles: **MVT/PBF** (vector) and PNG/WebP (raster)
-
-### 🧩 Media artifacts (docs, thumbnails, previews)
-Keep repo assets lightweight and intentional:
-- GIF is great for short animations (like the KFM seal)
-- PNG is best for crisp diagrams (lossless)
-- JPEG is best for photo-like imagery
-
-(General image format characteristics and tradeoffs are well-studied; optimize for clarity + size.)  [oai_citation:5‡Various Programming Concepts.pdf](sediment://file_00000000e86c71fd9eceb7eec4bba22e)
-
----
-
-## 🚀 Running pipelines
+## 🚀 Running pipelines (local to CI)
 
 > [!NOTE]
-> The commands below show **common patterns**. Adjust to match the repo’s actual runner(s).
+> Runner commands vary by repo iteration. Prefer calling thin wrappers in `tools/` or `Makefile` targets when available.
 
-### Option A — Local dev (Compose) 🐳
-1) Start dependencies:
+### Pattern A — Local dev stack (Docker Compose)
 ```bash
 docker compose up -d
 ```
 
-2) Run a pipeline (examples):
+### Pattern B — Run a pipeline via a CLI runner (examples)
 ```bash
-# Pattern 1 — python module runner
+# Example patterns (adjust to match the repo’s actual runner)
 python -m kfm.pipelines run <dataset_id>
-
-# Pattern 2 — repo runner entrypoint
-python -m pipelines run <dataset_id>
-
-# Pattern 3 — Makefile shortcut
+python -m src.pipelines.<domain>.<pipeline_module> --help
 make pipeline PIPELINE=<dataset_id>
 ```
 
-3) Validate outputs:
+### Pattern C — Validate outputs “like CI”
 ```bash
-make validate
-# or
-python -m tools.validate all
+# Examples (adjust to match repo tooling)
+conftest test .            # policy gates (OPA/Conftest)
+python -m tools.validate   # schema/catalog/prov validators
+pytest                     # pipeline/unit tests
 ```
-
-### Option B — Trigger via API (maintainers) 🔐
-Useful for CI automation and controlled remote runs:
-
-```bash
-curl -X POST "http://localhost:8000/api/v1/pipelines/run" \
-  -H "Authorization: Bearer $KFM_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"pipeline":"<dataset_id>","reason":"new raw drop"}'
-```
-
-### Option C — Scheduled / event-driven ⏱️
-Common schedules:
-- 🌙 Nightly: refresh federated datasets, rebuild indexes
-- 📆 Weekly: heavier recompute/derived analytics
-- 🛰️ Event-driven: STAC feed triggers remote sensing ingest
-
-KFM’s design anticipates orchestration options like Airflow/Step Functions and event streaming (Kafka/Kinesis) for larger deployments.  [oai_citation:6‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
 
 ---
 
-## 🛡️ Quality & policy gates (Fail-Closed)
+## 🛡️ Gates (fail-closed)
 
 > [!IMPORTANT]
-> **Default deny.** If policy can’t decide: **deny**. 🔒  
-> If metadata/provenance/license is missing: **deny**. 🔒
+> **Default deny.** If policy can’t decide: deny.  
+> If required metadata/provenance/license is missing: deny.
 
-### Gate 0 — Source manifest (before processing)
-A pipeline cannot begin unless a `source_manifest.yaml` exists with at least:
-- publisher/origin
-- acquisition method + timestamp (or snapshot ID)
-- license/usage rights
-- sensitivity classification (`public | internal | restricted`)
-- notes on limitations / known issues
+### Gate 0 — Source & rights (before processing)
+A pipeline should not begin unless the source can be described in a reviewable way:
+- publisher/origin and acquisition method
+- license/rights statement
+- sensitivity classification/tagging (and any handling constraints)
 
-### Gate 1 — Validation (before publish)
-Before writing to `processed/`, confirm:
-- schema validity (domain-specific)
+### Gate 1 — Output validity (before “processed” is accepted)
+Before considering outputs publishable:
+- schema validity (domain-specific + common invariants)
 - geometry validity + bbox sanity (if spatial)
-- CRS documented (EPSG), units documented
-- null conventions defined
-- sampling/aggregation methods documented for derived stats
+- CRS explicitly declared (don’t guess)
+- null conventions documented
+- deterministic behavior (same inputs/config → same outputs, or differences explainable)
 
-### Gate 2 — Catalog completeness (before listing/search)
+### Gate 2 — Boundary artifacts (before discovery/search/UI)
 A dataset cannot appear in search/UI unless:
 - DCAT record exists and validates
 - STAC exists when required (imagery/tiled/spatiotemporal assets)
-- PROV exists and links inputs→steps→outputs
-- external assets include checksums + retrieval method
+- PROV exists and links inputs → steps → outputs
+- external assets include checksums + retrieval method (if not committed)
 
-### Gate 3 — AI-derived outputs (extra checks)
-AI outputs are treated as **first-class datasets**:
-- must include model + version + parameters + evaluation notes
-- must include citations/inputs where applicable
-- must pass governance checks (classification propagation, redaction rules)
-- must log provenance and route through policy packs
-
-> [!TIP]
-> The CARE principles exist because “open” data practices can still harm communities if control, responsibility, and ethics are ignored.  
-> KFM’s governance model intentionally pairs **FAIR + CARE** and treats data sovereignty as a real constraint, not a slogan.  [oai_citation:7‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)
+### Gate 3 — Evidence/AI-derived outputs (extra governance)
+If a pipeline emits AI/analysis outputs:
+- record model/tool version + parameters in PROV (and/or a run card)
+- enforce sensitivity propagation (outputs cannot be less restricted than inputs)
+- ensure downstream retrieval/citation behavior can point back to the bundle
 
 ---
 
-## 🧾 Observability & audit
+## 🧾 Auditability & observability
 
-Pipelines should produce artifacts humans can review **and** machines can validate:
+Pipelines should produce artifacts humans can review **and** machines can validate.
 
-### ✅ Minimum telemetry per run
-- `run_id` (timestamp + dataset id + git sha)
+### Minimum per run
+- `run_id` (timestamp + dataset id + git sha or build id)
 - structured logs (JSON preferred)
-- a PROV bundle (inputs, transforms, outputs, agents)
 - checksums for publishable outputs
-- counts/summary stats (feature count, time coverage, bbox)
+- PROV bundle describing:
+  - inputs (raw snapshots)
+  - activities (transforms)
+  - agents (pipeline/tooling)
+  - outputs (processed assets + boundary artifacts)
 
-### ⭐ Recommended (especially for CI and long-running pipelines)
-- metrics: rows/sec, tiles/sec, memory usage
-- traces across extract→transform→load→publish (OpenTelemetry-friendly)
-- a “Run Card” markdown (human summary) stored under `data/prov/` or `docs/runs/`
-
-> [!NOTE]
-> KFM’s platform goal is to make every layer, chart, and answer traceable back to evidence — provenance is not optional.  [oai_citation:8‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
-
----
-
-## ⚡ Performance & scaling patterns
-
-Pipelines should scale from laptop → workstation → cloud without changing logic:
-
-- ♻️ **Idempotency by design**: reruns shouldn’t duplicate rows/tiles
-- 🧩 **Partition big data**: by year, county, quadkey, or domain-relevant shards
-- 🗺️ **Index consciously**: spatial indexes + constraints for PostGIS loads
-- 🛰️ **Tile smart**: prebuild where needed; cache where possible
-- 📦 **Avoid giant GeoJSON**: prefer GeoParquet + streaming APIs
-- 🧠 **Keep DB as cache**: rebuildable from `processed/` + catalogs + loaders
-
-These principles align with KFM’s modular, service‑separated architecture approach for scalability and maintainability.  [oai_citation:9‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
+### Strongly recommended
+- a short “Run Card” markdown summarizing:
+  - what changed
+  - counts/bbox/time coverage deltas
+  - QA warnings
+  - policy outcomes / obligations
 
 ---
 
 ## 🔒 Security & sensitivity
 
 Pipelines must:
-- 🧷 propagate classification from inputs → outputs (no “less restricted” outputs)
-- 🧹 redact/sanitize outputs where required (columns, geometry precision, access rules)
-- 🔐 never embed secrets in manifests or code
-- 🛡️ enforce policy checks at boundaries (ingest, publish, API serve)
-- 🕵️ log sensitive access and AI answers for audit
+- propagate classification from inputs → outputs (no “less restricted” outputs)
+- redact/sanitize outputs when required (attributes, geometry precision, derived aggregates)
+- never embed secrets in configs/manifests
+- log sensitive runs appropriately (audit posture depends on policy tier)
 
 ---
 
 ## 🧰 Author a new pipeline
 
-### 1) Choose a stable dataset id 🏷️
-Prefer a stable scheme:
-- `kfm.<domain>.<topic>.<year_or_version>`
-- examples: `kfm.census.population.1900`, `kfm.trails.historic.v1`, `kfm.imagery.landsat.ndvi.monthly.v2`
+This sequence aligns with the project’s “add a dataset” flow.
 
-### 2) Add a source manifest 🧾
-`source_manifest.yaml` (minimum):
+1) **Add raw snapshot**  
+   Place source snapshots under: `data/raw/<domain>/...`  
+   (If assets are too large, commit a pointer strategy + checksums rather than silently omitting identity.)
 
-```yaml
-id: kfm.census.population.1900
-title: "Kansas Census Population (1900)"
-publisher: "<agency_or_archive>"
-source_url: "<where_it_came_from>"
-license: "<license_name_or_url>"
-sensitivity: public  # public | internal | restricted
-update_frequency: one-time  # or daily/weekly/monthly/event-driven
-spatial_extent: "Kansas"
-temporal_coverage: "1900"
-notes: "Digitization caveats, known missingness, etc."
-```
+2) **Write pipeline code (rebuildable from scratch)**  
+   Create a script/module under: `src/pipelines/<domain>/...`  
+   It should read raw inputs, write intermediates to `data/work/<domain>/...`, and publish outputs to `data/processed/<domain>/...`.
 
-### 3) Implement stages 🧱→✅
-Recommended breakdown:
-- `extract` → fetch/read/normalize raw
-- `transform` → clean/standardize/projection fixes
-- `validate` → schema + geometry + constraints
-- `load` → PostGIS / object store / graph loaders
-- `publish` → STAC/DCAT/PROV + tile registration where applicable
+3) **Generate boundary artifacts**  
+   For processed outputs, create:
+   - STAC (item/collection) under `data/stac/`
+   - DCAT under `data/catalog/dcat/`
+   - PROV under `data/prov/`
 
-### 4) Emit catalogs + provenance 🏷️🔗
-- DCAT dataset summary + distributions (files + API links)
-- STAC items/collections for spatiotemporal assets
-- PROV bundle with hashes, parameters, container digests (when available)
+4) **Update indexes/caches (only if needed for runtime)**  
+   Load into PostGIS/Neo4j, and/or update search/vector indexes where appropriate.
 
-### 5) Add tests ✅
-Minimum:
-- schema validation
-- metadata completeness checks (STAC/DCAT/PROV links)
-- a “smoke serve” check (can the API serve it?)
-- policy checks (OPA pack evaluation)
+5) **Expose via the API boundary (if new surface needed)**  
+   If existing dataset endpoints suffice, prefer reuse.  
+   If new behavior is needed, extend FastAPI routes under `src/server/` and keep UI/API separation strict.
+
+6) **Confirm governance completeness**  
+   Ensure license, attribution, and sensitivity tagging are present — CI should flag missing requirements.
+
+### ✅ Definition of Done (pipeline PR)
+- [ ] Raw snapshot (or pointer + checksum strategy) is present and documented
+- [ ] Pipeline is deterministic and rerunnable
+- [ ] Outputs land in `data/work/<domain>/` and `data/processed/<domain>/`
+- [ ] STAC/DCAT/PROV exist, validate, and cross-link correctly
+- [ ] Any required cache loads (PostGIS/Neo4j/indexes) are reproducible
+- [ ] Tests + validators pass locally and in CI
+- [ ] Docs/runbook updated (domain notes, known caveats)
 
 ---
 
@@ -370,30 +314,31 @@ Minimum:
 <details>
 <summary><b>Pipeline won’t start</b> 🚫</summary>
 
-- Missing `source_manifest.yaml`  
-- License is missing/ambiguous  
-- Sensitivity classification not declared  
-- Runner can’t locate pipeline config
+Common causes:
+- missing or ambiguous rights/license info
+- sensitivity not declared
+- runner can’t locate the pipeline module/config
 
 </details>
 
 <details>
 <summary><b>Dataset doesn’t show up in search/UI</b> 🔎</summary>
 
-- DCAT not published or invalid  
-- STAC item missing (for imagery/tiled assets)  
-- PROV missing or not linked  
-- “bundle completeness” gate failing in CI
+Common causes:
+- DCAT record missing/invalid
+- STAC missing (for assets that require it)
+- PROV missing or not linked
+- policy denies due to missing metadata or sensitivity tags
 
 </details>
 
 <details>
 <summary><b>Tiles 404</b> 🧱</summary>
 
-- layer not registered  
-- tiles not built (or built in the wrong place)  
-- permissions/policy denied  
-- bbox/time constraints excluding requests
+Common causes:
+- layer not registered in API
+- tiles not built or built to non-canonical paths
+- policy denies tile access/caching due to classification
 
 </details>
 
@@ -401,25 +346,13 @@ Minimum:
 
 ## 🧠 Glossary
 
-- **STAC** 🏷️: SpatioTemporal Asset Catalog (assets metadata: where/when/what)
+- **STAC** 🏷️: SpatioTemporal Asset Catalog (asset metadata: where/when/what)
 - **DCAT** 🗂️: Data Catalog Vocabulary (dataset discovery + distributions)
 - **W3C PROV** 🔗: provenance model (inputs → process → outputs)
 - **COG** 🛰️: Cloud‑Optimized GeoTIFF (partial reads, web-friendly)
-- **MVT/PBF** 🧩: Mapbox Vector Tiles (fast vector map rendering)
+- **PMTiles / MVT** 🧩: tile packaging and vector tile formats for web maps
 - **OPA** 🧾: Open Policy Agent (policy-as-code enforcement)
 - **Fail‑Closed** 🔒: default deny; publish only on complete compliance
-
----
-
-## 📚 Reference shelf (project files)
-
-These project references inform pipeline design, governance posture, and implementation patterns:
-
-- 📘 **KFM — Comprehensive System Documentation** (architecture, truth path, remote sensing ingest patterns)  [oai_citation:10‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
-- 🧭 **Indigenous Statistics (2e)** (data sovereignty framing; FAIR + CARE rationale)  [oai_citation:11‡Indigenous Statistics.pdf](sediment://file_0000000033ec72308e1f791a79f61bfe)  
-- 🧱 **Node.js & server scalability** (event-driven I/O patterns; dev ergonomics for tooling services)  [oai_citation:12‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)  
-- 🎨 **Learn to Code HTML & CSS** (documentation UX and readable structure patterns)  [oai_citation:13‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  
-- 🖼️ **Compressed Image File Formats** (choosing GIF/PNG/JPEG wisely for repo media)  [oai_citation:14‡Various Programming Concepts.pdf](sediment://file_00000000e86c71fd9eceb7eec4bba22e)  
 
 ---
 
@@ -429,3 +362,13 @@ These project references inform pipeline design, governance posture, and impleme
 <sub>When in doubt: make it reproducible, traceable, and policy-compliant.</sub>
 
 </div>
+
+<details>
+<summary><b>📎 Source material used to shape this Pipelines hub</b> (audit trail)</summary>
+
+- **KFM v13 canonical ordering + directory layout:** `docs/MASTER_GUIDE_v13.md` (see project master guide)
+- **Dataset addition workflow (pipeline → STAC/DCAT/PROV → stores → API):** KFM System Documentation
+- **API boundary (“trust membrane”) posture and “DB as cache” framing:** KFM Developer Guide
+- **FAIR/CARE and sovereignty posture:** Indigenous Statistics / KFM blueprint governance sections
+
+</details>
