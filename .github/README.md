@@ -138,12 +138,12 @@ KFM is built around a non‑negotiable ordering of evidence → governed artifac
 
 ```mermaid
 flowchart LR
-  raw["Raw 📥 data/<domain>/raw"] --> work["Work 🧪 data/<domain>/work"]
-  work --> proc["Processed ✅ data/<domain>/processed"]
+  raw["Raw 📥 data/{domain}/raw"] --> work["Work 🧪 data/{domain}/work"]
+  work --> proc["Processed ✅ data/{domain}/processed"]
 
-  proc --> catalogs["Catalogs 🗂️ STAC + DCAT + PROV<br/>data/stac • data/catalog/dcat • data/prov"]
-  catalogs --> graph["Graph refs 🕸️ Neo4j (refs, not payloads)"]
-  graph --> api["API boundary 🌐 src/server"]
+  proc --> catalogs["Catalogs 🗂️ STAC + DCAT + PROV — data/stac • data/catalog/dcat • data/prov"]
+  catalogs --> kg["Graph refs 🕸️ Neo4j (refs, not payloads)"]
+  kg --> api["API boundary 🌐 src/server"]
 
   api --> ui["UI 🗺️ web/"]
   ui --> story["Story Nodes 📚 docs/reports/story_nodes"]
