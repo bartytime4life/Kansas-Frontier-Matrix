@@ -1,38 +1,77 @@
-# `data/graph/` — Knowledge Graph Build Artifacts (Neo4j)
+# 🕸️ `data/graph/` — Knowledge Graph Build Artifacts (Neo4j)
 
-This directory contains **graph build artifacts** used to (re)construct and maintain the **Neo4j knowledge graph** in Kansas Frontier Matrix (KFM).
+**CSV exports + Cypher scripts used to (re)build KFM’s Neo4j knowledge graph**  
+<sub><em>Graph is an accelerator for relationships — it must reference catalogs, not duplicate datasets.</em></sub>
 
-In KFM’s pipeline, the graph is *downstream* of the governed “truth path” and is intended to **model relationships** and **reference published catalog/provenance records**—not to become another copy of datasets.
+<br/>
+
+![Status](https://img.shields.io/badge/status-active-2ea44f?style=for-the-badge)
+![Layer](https://img.shields.io/badge/layer-data%2Fgraph-6f42c1?style=for-the-badge)
+![Graph](https://img.shields.io/badge/neo4j-graph_db-008cc1?style=for-the-badge&logo=neo4j&logoColor=white)
+![Import](https://img.shields.io/badge/import-csv_%7C_cypher-0b7285?style=for-the-badge)
+![Provenance](https://img.shields.io/badge/provenance-STAC%20%2B%20DCAT%20%2B%20PROV-7d3c98?style=for-the-badge)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-0aa?style=for-the-badge)
+![Policy](https://img.shields.io/badge/policy-fail--closed-8a2be2?style=for-the-badge)
+
+</div>
 
 ---
 
-## Where `data/graph/` sits in the KFM pipeline
+## 🧭 Quick Navigation
 
-KFM’s documented pipeline flow treats the **catalog outputs** as boundary artifacts that feed downstream systems, including the graph.
+<details>
+<summary><strong>Table of contents</strong></summary>
+
+- [What lives here](#what-lives-here)
+- [KFM pipeline context](#kfm-pipeline-context)
+- [Directory layout](#directory-layout)
+- [Graph contract](#graph-contract)
+- [CSV export standards](#csv-export-standards)
+- [Cypher scripts](#cypher-scripts)
+- [Import patterns](#import-patterns)
+- [Validation checklist](#validation-checklist)
+- [Related paths](#related-paths)
+
+</details>
+
+---
+
+## What lives here
+
+> [!IMPORTANT]
+> `data/graph/` contains **derived build artifacts** (imports + scripts).  
+> The **canonical source-of-truth** remains upstream in `data/**` (raw/work/processed) + **catalog boundary artifacts** (STAC/DCAT/PROV).
+
+| Subfolder | Purpose | Inputs | Outputs |
+|---|---|---|---|
+| `csv/` | Bulk/stream import tables | STAC/DCAT/PROV + processed stores | Node/edge CSVs + manifest |
+| `cypher/` | Post-load schema & migrations | Governance + ontology changes | Constraints, indexes, migrations |
+
+---
+
+## KFM pipeline context
 
 ```mermaid
 flowchart LR
-  subgraph Data
-    A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views"]
-    C --> E["PROV Lineage Bundles"]
+  subgraph Data["KFM Truth Path"]
+    A["Raw"] --> B["Work"]
+    B --> C["Processed"]
+    C --> S["STAC Items + Collections"]
+    S --> D["DCAT Dataset Views"]
+    S --> P["PROV Lineage Bundles"]
   end
 
-  C --> G["Neo4j Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["UI (Map / Story Nodes / Focus Mode)"]
+  S --> G["Neo4j Graph (references back to catalogs)"]
+  G --> API["API Boundary (contracts + redaction)"]
+  API --> UI["UI / Story Nodes / Focus Mode"]
 ```
 
-**Implications for this folder**
-- The graph should be built from **published metadata boundary artifacts** (STAC / DCAT / PROV).
-- Graph entities should store **references to catalog/provenance identifiers** (e.g., STAC Item IDs, DOIs, PROV bundle identifiers) rather than duplicating bulky payloads.
+> [!NOTE]
+> The graph is a **relationship index**: it should store **identifiers + links** back to catalog/provenance records, not copy full payloads.
 
 ---
 
 ## Directory layout
-
-This repo’s directory standard reserves `data/graph/` for graph import artifacts:
 
 ```text
 data/graph/
@@ -40,118 +79,200 @@ data/graph/
 └─ cypher/     # Optional post-import scripts
 ```
 
-### `csv/` — Graph import CSV exports
-This folder holds **generated CSVs** intended for graph ingestion (e.g., bulk import or `LOAD CSV` workflows).
+<details>
+<summary><strong>Recommended files (opinionated)</strong></summary>
 
-Typical contents (recommended conventions; adapt to whatever `src/graph/` generates):
-- Node tables (one or more CSVs)
-- Relationship tables (one or more CSVs)
-- A lightweight build manifest (recommended):
-  - build/run identifier (run ID)
-  - producing code version (commit hash)
-  - input catalog/prov versions used to generate the graph export
-  - checksums (optional but recommended)
+```text
+data/graph/
+├─ csv/
+│  ├─ _manifest.yaml
+│  ├─ nodes__*.csv
+│  ├─ rels__*.csv
+│  └─ _checksums.sha256
+└─ cypher/
+   ├─ 00_constraints.cypher
+   ├─ 10_indexes.cypher
+   ├─ 20_migrations__<slug>.cypher
+   └─ 90_postload_checks.cypher
+```
 
-> **Key principle:** IDs should be stable and traceable back to catalog/provenance records.
-
-### `cypher/` — Optional post-import scripts
-This folder holds Cypher scripts that can be applied after loading the CSVs, commonly:
-- constraints (uniqueness, existence constraints where appropriate)
-- indexes
-- migrations required by ontology/schema changes
-- cleanup or normalization steps
-
-**Recommended naming convention**
-- Prefix with a two-digit order key so scripts can be applied deterministically:
-  - `00_constraints.cypher`
-  - `10_indexes.cypher`
-  - `20_migrations_<short_name>.cypher`
-  - `90_postload_checks.cypher`
+</details>
 
 ---
 
-## Contract: cross-layer linkage (STAC / DCAT / PROV / Graph)
+## Graph contract
 
-KFM requires the catalogs and lineage to remain in sync with the graph. At minimum:
+### 1) The “reference, don’t duplicate” rule
 
-- **STAC → data assets**  
-  STAC Items should point to the data assets (often in `data/processed/**` or stable storage), including attribution/license.
+> [!IMPORTANT]
+> **Do not** embed large blobs (documents, rasters, full dataset rows) in Neo4j.  
+> Instead, persist **stable IDs** and **catalog/provenance pointers** so every relationship can be audited.
 
-- **DCAT → distribution**  
-  DCAT should provide high-level discovery, pointing to STAC and/or distribution links.
+**Recommended node properties (minimum)**
+- `kfm_id` — stable identifier (string)
+- `kind` — entity type (e.g., `Place`, `Event`, `Dataset`, `Document`)
+- `title` / `name` — human label
+- `stac_item_id` / `stac_collection_id` (when applicable)
+- `dcat_dataset_id` (when applicable)
+- `prov_bundle_id` (when applicable)
+- `source_uri` — canonical reference to upstream artifact
 
-- **PROV end-to-end**  
-  PROV lineage should link raw → work → processed, and identify the producing run/config (e.g., run ID or commit hash).
+### 2) Governance-by-default
 
-- **Graph references catalogs**  
-  Graph nodes should carry **references** (STAC Item IDs / DOIs / DCAT identifiers), rather than embedding full payloads.
+> [!CAUTION]
+> Any node/relationship carrying restricted/sensitive attributes must be **tagged** and **policy-gated** before it can be exposed via API/UI.
 
-> If an analysis/AI run produces new entities or relationships, it must be treated as a first-class dataset with full STAC/DCAT/PROV—and only then loaded into the graph with explicit provenance.
+Suggested fields:
+- `classification` (e.g., `open`, `restricted`)
+- `sensitivity` (e.g., `public`, `community`, `sensitive`)
+- `care_label` (project-specific)
 
----
+### 3) Deterministic build provenance
 
-## Versioning expectations (especially important for `data/graph/`)
-
-KFM expects versioning across:
-- **Datasets:** new versions should link to prior versions via DCAT and PROV (e.g., `prov:wasRevisionOf`).
-- **Graph & ontology:** keep labels/relationship types **backwards-compatible** unless a deliberate migration is performed. Breaking ontology changes must be handled via migration scripts and recorded in version history.
-- **System:** repository releases follow semantic versioning; structural guide updates and changelog entries should reflect breaking vs non-breaking changes.
-
-**What this means here**
-- Treat `data/graph/csv/` outputs as **derived artifacts**: reproducible, regeneratable, and attributable to a specific build/run.
-- Treat `data/graph/cypher/` as **schema governance**: migrations and constraints must be explicit, ordered, and reviewable.
-
----
-
-## Loading into Neo4j (developer workflow)
-
-> The Neo4j runtime database lives in the Neo4j container volume; this folder holds the **import artifacts** used to populate it.
-
-A safe, repeatable workflow is:
-
-1. **Generate** graph artifacts  
-   Use the graph build tooling in `src/graph/` to generate:
-   - CSV exports into `data/graph/csv/`
-   - Cypher scripts into `data/graph/cypher/` (when needed)
-
-2. **Apply constraints/indexes first** (if your ingestion approach supports it)  
-   Constraints/indexes help prevent accidental duplicates and speed up load.
-
-3. **Load data**  
-   Use the ingestion mechanism your `src/graph/` tooling expects (bulk import vs. Cypher `LOAD CSV` vs. driver-based loading).
-
-4. **Run post-load checks**  
-   Validate counts, key invariants, and sample traversals.
+Every graph build should be reproducible from:
+- upstream catalog/prov artifacts
+- a pinned code revision
+- a captured run configuration
 
 ---
 
-## What NOT to put in `data/graph/`
+## CSV export standards
 
-- Raw data, intermediate work products, or authoritative “final” datasets  
-  Those belong in the governed stages (`data/raw/`, `data/work/`, `data/processed/`) and their catalog/prov counterparts.
-- Large binary payloads (imagery, rasters, PDFs)  
-  The graph should reference these via catalog identifiers and distributions.
-- Secrets / credentials / access tokens  
-  Never store them here (or anywhere in the repo).
+### File naming
+
+| Pattern | Meaning |
+|---|---|
+| `nodes__<label>__v<schema>.csv` | Node table for a label |
+| `rels__<type>__v<schema>.csv` | Relationship table for a relationship type |
+| `_manifest.yaml` | Build manifest and provenance pointers |
+| `_checksums.sha256` | Integrity of CSV artifacts |
+
+### Node CSV shape (recommended)
+
+> [!TIP]
+> Keep node CSVs **label-pure** (one label per file) for predictable constraints + easier review.
+
+Required columns:
+- `kfm_id:ID` (unique)
+- `:LABEL` (or implicit label by file)
+- `title`
+- `kind`
+- `source_uri`
+
+Optional:
+- `stac_item_id`
+- `dcat_dataset_id`
+- `prov_bundle_id`
+- `classification`
+- `sensitivity`
+- `care_label`
+
+### Relationship CSV shape (recommended)
+
+Required columns:
+- `:START_ID`
+- `:END_ID`
+- `:TYPE`
+
+Optional:
+- `role`
+- `weight`
+- `confidence`
+- `source_uri`
+- `prov_bundle_id`
 
 ---
 
-## Related project paths
+## Cypher scripts
 
-- `src/graph/` — graph build code (ontology bindings, ingest scripts, constraints)
-- `data/stac/` — STAC collections/items
-- `data/catalog/dcat/` — DCAT outputs (JSON-LD)
-- `data/prov/` — PROV lineage bundles
-- `docs/MASTER_GUIDE_v13.md` — canonical structure + pipeline contract
-- `docs/standards/` — profiles (STAC/DCAT/PROV) and repo structure standards
+### Ordering convention
+
+> [!NOTE]
+> Scripts are applied deterministically by filename prefix.
+
+| Prefix | Use |
+|---:|---|
+| `00_` | constraints / existence rules |
+| `10_` | indexes |
+| `20_` | migrations (ontology/schema evolution) |
+| `90_` | post-load checks (counts, invariants) |
+
+### Examples (snippets)
+
+```cypher
+// uniqueness
+CREATE CONSTRAINT kfm_id_unique IF NOT EXISTS
+FOR (n:KFMEntity)
+REQUIRE n.kfm_id IS UNIQUE;
+```
+
+```cypher
+// indexing common lookup keys
+CREATE INDEX stac_item_id_idx IF NOT EXISTS
+FOR (n:KFMEntity)
+ON (n.stac_item_id);
+```
 
 ---
 
-## Quick checklist (for PRs touching `data/graph/`)
+## Import patterns
 
-- [ ] Graph artifacts are **derived** from published boundary artifacts (STAC/DCAT/PROV).
-- [ ] Node/edge identifiers can be traced back to catalog/prov IDs.
-- [ ] Any new label/type changes include a migration Cypher script (if needed).
-- [ ] Post-load checks or validation queries are included/updated (if applicable).
-- [ ] No bulky payloads or sensitive attributes are embedded in the graph export.
+> [!IMPORTANT]
+> Choose one import mode per environment and document it in `csv/_manifest.yaml`.
+
+<details>
+<summary><strong>Option A — Bulk import (empty DB)</strong></summary>
+
+- Use Neo4j bulk import tooling (fastest).
+- Best for CI rebuilds and ephemeral environments.
+- Requires exclusive DB rebuild.
+
+</details>
+
+<details>
+<summary><strong>Option B — Incremental import (existing DB)</strong></summary>
+
+- Use `LOAD CSV` or driver-based ingestion (slower but flexible).
+- Best for small deltas and iterative development.
+- Requires stronger idempotency strategy.
+
+</details>
+
+---
+
+## Validation checklist
+
+### Pre-import (artifact checks)
+- [ ] `_manifest.yaml` exists and pins inputs + run identifiers
+- [ ] CSV schemas match expected headers
+- [ ] All `kfm_id` values are stable, non-null, unique
+- [ ] All rel endpoints exist in node tables
+- [ ] Checksums present (or generated in CI)
+
+### Post-import (graph invariants)
+- [ ] Constraints created successfully
+- [ ] Expected node/edge counts within tolerance
+- [ ] No orphan relationships
+- [ ] Sample traversals return expected results
+- [ ] Sensitive attributes are tagged and policy-visible only when permitted
+
+---
+
+## Related paths
+
+| Area | Path | Notes |
+|---|---|---|
+| Graph build code | `../../src/graph/` | Ontology bindings, ingest scripts, constraints |
+| STAC | `../stac/` | Collections + items (boundary artifacts) |
+| DCAT | `../catalog/dcat/` | Dataset-level discovery metadata |
+| PROV | `../prov/` | Lineage bundles (runs + activities) |
+| System docs | `../../docs/MASTER_GUIDE_v13.md` | Canonical layout + contracts |
+| Standards | `../../docs/standards/` | FAIR+CARE, profiles, governance |
+
+---
+
+> [!TIP]
+> If you change the graph schema (labels, relationships, required props), add:
+> 1) a migration script in `cypher/20_migrations__*.cypher`, and  
+> 2) a matching update to graph export generation in `src/graph/`.
 
