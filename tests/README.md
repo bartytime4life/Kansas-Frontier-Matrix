@@ -11,15 +11,16 @@
 <br/>
 
 ![Status](https://img.shields.io/badge/status-🚧_under_construction-yellow?style=for-the-badge)
-![CI](https://img.shields.io/badge/CI-tests_gate_merges-2ea44f?style=for-the-badge&logo=githubactions&logoColor=white)
+![CI](https://img.shields.io/badge/CI-validation_gates_block_merges-2ea44f?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Policy](https://img.shields.io/badge/policy-OPA_%2B_Conftest-1f6feb?style=for-the-badge&logo=openpolicyagent&logoColor=white)
+![Contracts](https://img.shields.io/badge/contracts-OpenAPI_%2B_GraphQL_%2B_JSON_Schema-0ea5e9?style=for-the-badge)
 ![Provenance](https://img.shields.io/badge/provenance-STAC_%2B_DCAT_%2B_PROV-8b5cf6?style=for-the-badge)
-![API](https://img.shields.io/badge/API-FastAPI_%2B_GraphQL-009688?style=for-the-badge&logo=fastapi&logoColor=white)
-![GIS](https://img.shields.io/badge/GIS-PostGIS_%2B_Neo4j-0ea5e9?style=for-the-badge)
-![AI](https://img.shields.io/badge/Focus_Mode-citations_required-purple?style=for-the-badge)
+![GIS](https://img.shields.io/badge/GIS-PostGIS_%2B_Neo4j-10b981?style=for-the-badge)
+![AI](https://img.shields.io/badge/Focus_Mode-cite_or_refuse-purple?style=for-the-badge)
 
 <a href="#-quickstart">🚀 Quickstart</a> •
 <a href="#-the-kfm-trust-contract">🧬 Trust Contract</a> •
+<a href="#-truth-path-the-non-negotiable-ordering">🛣️ Truth Path</a> •
 <a href="#-suite-map">🧩 Suite Map</a> •
 <a href="#-ci-expectations">✅ CI</a> •
 <a href="#-add-a-test-checklist">🧾 Add a Test</a>
@@ -30,54 +31,68 @@
 
 > [!WARNING]
 > 🚧 **Under construction (active development):**  
-> Folder names, commands, and service names may evolve. **Keep the intent stable** even if implementation shifts.
+> Folder names and commands may evolve, but **the invariants and gates do not**.
 
 ---
 
 ## 🔗 Quick links (recommended reading order) 🧭
 
-- 🏗️ System architecture: `../docs/architecture/system_overview.md`
-- 🤖 AI architecture: `../docs/architecture/AI_SYSTEM_OVERVIEW.md`
-- 🐙 Focus Mode + Ollama integration: `../docs/architecture/ai/OLLAMA_INTEGRATION.md`
-- 🚰 Pipelines hub: `../pipelines/README.md`
-- 📦 Data vault rules: `../data/README.md` *(or `../data/` docs if split)*
+- 📘 **Master Guide (v13)**: `../docs/MASTER_GUIDE_v13.md`
+- 🧭 System architecture overview: `../docs/architecture/system_overview.md`
+- 🧱 v13 redesign blueprint: `../docs/architecture/KFM_REDESIGN_BLUEPRINT_v13.md`
+- 🐳 Local dev stack (Compose): `../docs/dev/docker-compose.md`
+- 📐 Schemas (STAC/DCAT/PROV/Story/Telemetry): `../schemas/`
+- 📦 Data catalog rules + staging: `../data/README.md`
+- 🔒 Policy-as-code source: `../policy/`
+- 🧾 Story Node template (citation-governed): `../docs/templates/TEMPLATE__STORY_NODE_V3.md`
+
+> [!NOTE]
+> The **tests suite is the executable version** of the Master Guide invariants:
+> if a thing can’t be proven (contract / provenance / policy / citation / classification)… it does not ship.
 
 ---
 
 ## 🧬 The KFM trust contract
 
-This test suite exists to protect the **non‑negotiables**:
+This test suite exists to protect the **non‑negotiables**.
 
 ### 🔥 Invariants we treat as “system law”
-- 🧾 **Provenance is mandatory**: publishable outputs must have lineage (W3C PROV) + discovery metadata (STAC/DCAT).
-- 🛡️ **Policy is the enforcement membrane**: authorization & redaction are **policy-driven** and **fail closed**.
-- 🧱 **API is the only gateway**: no UI-side direct DB access (PostGIS/Neo4j). Ever.
-- 🤖 **Focus Mode must cite or refuse**: if evidence is insufficient → refusal. If evidence exists → citations required.
-- 🧬 **Classification propagates forward**: outputs cannot be less restricted than their inputs.
+- 🛣️ **Pipeline ordering is absolute**: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.
+- 🧱 **API boundary rule**: the UI never queries Neo4j (or PostGIS) directly — all access is through the governed API boundary.
+- 🧾 **Provenance first**: publishable artifacts must be registered (STAC/DCAT) and lineage-linked (PROV) *before* graph/UI/story/AI use.
+- 🧪 **Deterministic, idempotent ETL**: same input → same output; repeatable runs; reproducible results.
+- 🧾 **Evidence-first narrative**: Story Nodes and Focus Mode do not allow unsourced claims. If it can’t cite, it must refuse.
+- 🏷️ **Sovereignty + classification propagation**: no output artifact may be less restricted than its inputs.
+- 🧯 **Fail closed**: missing metadata, missing lineage, forbidden content, policy uncertainty → blocked by default.
 
 > [!IMPORTANT]
-> ✅ “Fail closed” means **default deny** when policy, provenance, license, sensitivity, or metadata is missing.  
-> If a test blocks a PR, treat it as a **trust feature**, not an inconvenience. 🧯
+> ✅ “Fail closed” here means: **default deny** when required artifacts, required fields, or policy decisions are missing.
+> If CI blocks a PR, treat it as a **trust feature**, not friction.
 
 ---
 
-## 🧭 The “Truth Path” tests must enforce (end‑to‑end)
+## 🛣️ Truth Path (the non-negotiable ordering)
+
+KFM’s “Truth Path” is both a *data pipeline* and a *governance pipeline*.
 
 ```mermaid
 flowchart LR
-  A[🧾 Raw Evidence] --> B[🧪 Processed Outputs]
-  B --> C[🏷️ Catalog: STAC + DCAT]
-  B --> D[🔗 Provenance: W3C PROV]
-  C --> E[(🗺️ PostGIS)]
-  C --> F[(🕸️ Neo4j)]
-  D --> E
-  D --> F
-  E --> G[🧩 API Layer]
-  F --> G
-  G --> H[🖥️ UI + 🤖 Focus Mode]
+  subgraph Data
+    A["📥 Raw Sources<br/>data/raw/&lt;domain&gt;/"] --> B["🧪 ETL + Normalization<br/>data/work/&lt;domain&gt;/ → data/processed/&lt;domain&gt;/"]
+    B --> C["🏷️ STAC (Collections + Items)<br/>data/stac/"]
+    C --> D["📦 DCAT (JSON-LD)<br/>data/catalog/dcat/"]
+    C --> E["🔗 PROV Lineage Bundles<br/>data/prov/"]
+  end
+
+  C --> G["🕸️ Neo4j Graph<br/>(references back to catalogs)"]
+  G --> H["🧱 API Layer<br/>(contracts + redaction)"]
+  H --> I["🖥️ Map UI<br/>React · MapLibre · (optional) Cesium"]
+  I --> J["📚 Story Nodes<br/>(governed narratives)"]
+  J --> K["🤖 Focus Mode<br/>(provenance-linked context bundle)"]
 ```
 
-**If you can wipe the DB and rebuild from `data/processed/` + STAC/DCAT/PROV + pipeline code… the platform stays honest.** ♻️
+**Tests enforce that each stage only consumes the formal outputs of the stage before it.**  
+That’s how we preserve traceability from **raw evidence → public narrative**.
 
 ---
 
@@ -85,36 +100,41 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-  U[🧩 Unit\nfast + deterministic] --> C[📜 Contract\nOpenAPI/GraphQL/JSON Schema]
-  C --> I[🧪 Integration\ncontainers + real deps]
-  I --> P[🔒 Policy\nOPA/Conftest allow/deny]
-  I --> D[🧾 Data Artifacts\nSTAC/DCAT/PROV bundle checks]
-  I --> A[🤖 AI Regression\ncitations + refusals + audit]
-  I --> E[🧭 E2E\nmap + timeline + story + focus]
+  U[🧩 Unit<br/>fast + deterministic] --> C[📜 Contract<br/>OpenAPI/GraphQL/JSON Schema]
+  C --> I[🧪 Integration<br/>containers + real deps]
+  I --> P[🔒 Policy<br/>OPA/Conftest allow/deny + redaction]
+  I --> D[🧾 Data Artifacts<br/>STAC/DCAT/PROV boundary checks]
+  I --> A[🤖 AI Regression<br/>citations + refusals + audit]
+  I --> E[🧭 E2E<br/>map + timeline + story + focus]
 ```
 
-**Rule of thumb:**  
-- Unit → correctness ✅  
-- Contract → stability 🧷  
-- Integration → reality check 🐳  
-- Policy/Provenance/AI → trust guarantees 🧾🛡️  
+**Rule of thumb:**
+- Unit → correctness ✅
+- Contract → stability 🧷
+- Integration → reality check 🐳
+- Policy/Provenance/AI → trust guarantees 🧾🛡️
 - E2E → “does the Kansas time-travel experience actually work?” 🗺️🕰️
 
 ---
 
-## 📁 Recommended structure (adjust to repo as needed)
+## 📁 Recommended structure (v13-aligned; adjust to repo if needed)
+
+> [!TIP]
+> Prefer mapping tests to canonical subsystem homes:
+> `src/pipelines/`, `src/graph/`, `src/server/`, `web/`, `schemas/`, `policy/`, `data/`.
 
 ```text
 tests/
 ├─ README.md                        👈 you are here
 │
 ├─ unit/                            🧩 pure logic, no services
-│  ├─ api/
-│  ├─ services/
-│  ├─ schemas/
+│  ├─ server/                       # src/server/ units (handlers/services/utils)
+│  ├─ pipelines/                    # src/pipelines/ units (transform helpers)
+│  ├─ graph/                        # src/graph/ units (mapping/constraints)
+│  ├─ schemas/                      # schema helper utilities
 │  └─ utils/
 │
-├─ contract/                        📜 interface guarantees
+├─ contract/                        📜 interface guarantees (contract-first)
 │  ├─ openapi/
 │  ├─ graphql/
 │  └─ jsonschema/
@@ -133,8 +153,7 @@ tests/
 │  ├─ prov/
 │  └─ bundle_checks/
 │
-├─ policy/                          🔒 policy-as-code (OPA)
-│  ├─ rego/
+├─ policy/                          🔒 policy tests (policy source lives in ../policy/)
 │  ├─ conftest/
 │  └─ testdata/
 │
@@ -149,47 +168,53 @@ tests/
    └─ fixtures/
 ```
 
-> [!TIP]
-> Keep fixtures **small, legal, and deterministic**:  
-> tests should prove governance rules without shipping sensitive or licensed material.
-
 ---
 
 ## 🚀 Quickstart
 
 > [!NOTE]
-> Command names vary across repo versions. Use this as a **pattern**.
+> Commands vary by environment. Use this as a **repeatable pattern**, not a rigid script.
 
 ### ✅ Prereqs
-- 🐳 Docker + Docker Compose *(for PostGIS / Neo4j / OPA / optional Ollama)*
-- 🐍 Python *(commonly `pytest`)*
-- 🧑‍💻 Node.js *(optional unless you run UI/E2E tests)*
+- 🐳 Docker + Docker Compose v2 (PostGIS / Neo4j / OPA; optional others)
+- 🐍 Python (pytest)
+- 🧑‍💻 Node.js (only if running UI/E2E tests)
+
+### 0) Boot the core stack (recommended for integration/policy realism)
+```bash
+# From repo root
+docker compose up -d --build
+```
 
 ### 1) Fast tests (unit + contract)
 ```bash
-pytest -q
+pytest -m "unit or contract" -q
 ```
 
 ### 2) Integration tests (real services)
 ```bash
-docker compose up -d postgis neo4j opa
-pytest -m integration -q
+pytest -m "integration and not slow" -q
 ```
 
-### 3) Policy tests (Conftest)
+### 3) Policy checks (Conftest)
 ```bash
-conftest test tests/policy/ -p tests/policy/rego
+# Run the same policy scans CI runs (exact target can vary by repo)
+conftest test .
 ```
 
-### 4) Focus Mode regression (optional)
+Run policy checks on a specific path:
 ```bash
-docker compose up -d ollama
+conftest test data/
+conftest test policy/
+```
+
+### 4) AI regression (optional; if configured)
+```bash
 pytest -m ai -q
 ```
 
 ### 5) UI/E2E (optional)
 ```bash
-# Example only
 npm ci
 npm run test:e2e
 ```
@@ -199,90 +224,94 @@ npm run test:e2e
 ## 🧩 Suite map
 
 ### 🧩 Unit tests — “small truths” (fast ✅)
-**Purpose:** prove correctness of pure logic.  
-**Examples:**
-- schema helpers (STAC/DCAT/PROV validation utilities)
+**Purpose:** prove correctness of pure logic with **no network, no time, no randomness**.
+
+Examples:
 - bbox/time parsing & normalization
 - geometry utilities & ID normalization
+- schema helpers (STAC/DCAT/PROV validation utilities)
 - redaction utilities (precision reduction, column masking)
 - policy client wrappers (input shaping, decision parsing)
-
-✅ Prefer **no network, no time, no randomness**.
 
 ---
 
 ### 📜 Contract tests — “stable interfaces” 🧷
-**Purpose:** prove we didn’t accidentally break:
+**Purpose:** protect the contract-first rule:
 - OpenAPI request/response shapes
-- GraphQL schema types + backward compatibility
-- JSON Schema contracts (dataset manifests, metadata, provenance bundles)
+- GraphQL schema types + compatibility
+- JSON Schema contracts (dataset manifests, provenance bundles, Story Nodes)
 
-✅ Typical patterns:
+Patterns:
 - snapshot OpenAPI schema and compare changes intentionally
 - validate example payloads against JSON Schema
 - check GraphQL schema composition + query cost limits *(if implemented)*
 
 > [!TIP]
-> Contract tests are where “**breaking changes**” should be caught early — before a human reviewer needs to notice. 👀
+> Contract tests are where breaking changes get caught **before** reviewers miss them.
 
 ---
 
 ### 🧪 Integration tests — “real stack, real rules” 🐳
-**Purpose:** run against containers for:
-- PostGIS spatial queries
-- Neo4j graph traversals
+**Purpose:** prove KFM works with real dependencies:
+- PostGIS spatial queries + bbox/time constraints
+- Neo4j traversals (graph references back to cataloged entities)
 - tile serving (MVT/raster)
-- search index behavior
-- API authZ + redaction behavior
-- audit/provenance logging hooks
+- search behavior
+- API authZ + redaction behavior (OPA-driven)
+- audit/provenance hooks *(where implemented)*
 
-✅ Good integration assertions (stable):
+Good integration assertions:
 - endpoint returns correct status + schema
 - unauthorized requests → 403 or sanitized output
-- data queries obey bbox/time constraints
-- tiles render and are valid MVT/PNG/WEBP
-- every response includes correlation/audit identifiers *(if designed)*
+- tiles render and validate (MVT/PNG/WEBP)
+- classification propagation holds across transforms and responses
 
-🚫 Avoid brittle checks:
-- exact full-text AI prose
+Avoid brittle checks:
+- exact AI prose
 - timing-based sleeps
 - live calls to external agencies
 
 ---
 
 ### 🧾 Data artifacts suite — “nothing ships without boundary artifacts”
-**Purpose:** enforce dataset bundle completeness & alignment:
-- processed asset exists ✅
-- STAC item references correct assets ✅
-- DCAT distribution links STAC and/or assets ✅
-- PROV bundle explains raw → processed transform ✅
-- license + sensitivity are present ✅
+**Purpose:** enforce bundle completeness & alignment.
 
-#### Minimum bundle rule (recommended)
-A publishable dataset should have *at least*:
-- `data/processed/...`
-- `data/stac/items/<dataset_id>.json`
-- `data/catalog/dcat/<dataset_id>.jsonld`
-- `data/prov/<dataset_id>.prov.json`
+**Boundary artifacts are required** before data is considered published:
+- processed asset exists ✅ (`data/processed/<domain>/...`)
+- STAC references correct assets ✅ (`data/stac/items/` + `data/stac/collections/`)
+- DCAT distribution links STAC/assets ✅ (`data/catalog/dcat/`)
+- PROV explains raw → processed transform ✅ (`data/prov/`)
+- license + classification/sensitivity present ✅
+- deterministic manifest/checksum where feasible ✅
+
+#### Minimum publishable bundle (recommended)
+```text
+data/processed/<domain>/<dataset_id>/...
+data/stac/items/<dataset_id>.json
+data/catalog/dcat/<dataset_id>.jsonld
+data/prov/<dataset_id>.prov.json
+```
 
 > [!IMPORTANT]
-> If a dataset is visible in UI/search or usable by Focus Mode, it must be **cataloged + provenance-linked** first. ✅
+> Evidence artifacts (including AI/analysis outputs) are treated like first-class datasets:
+> store them in processed, catalog them, and trace them in PROV.
 
 ---
 
 ### 🔒 Policy-as-code suite (OPA / Conftest) — “governance is executable”
 **Purpose:** prove:
 - rego compiles
-- expected allow/deny decisions for RBAC and sensitivity levels
+- expected allow/deny decisions for RBAC + classification levels
 - “fail closed” behavior when required fields are missing
-- policy decisions can be traced to a policy bundle/version *(if implemented)*
+- policy decisions are stable and testable (goldens)
 
 #### Recommended policy test cases
 - Public user requests restricted dataset → deny
-- Contributor requests internal dataset → allow *(if role permits)*
+- Authorized user requests restricted dataset → allow (or sanitize if required)
 - Missing license/sensitivity/provenance → deny + CI fail
-- AI answer without citations → deny or force refusal response
-- Sensitive location precision → enforce masking/rounding rules
+- Story Node missing citations → deny + CI fail
+- Focus Mode answer without citations → deny or force refusal response
+- Sensitive locations → enforce masking/rounding rules
 
 <details>
 <summary><b>🧊 Golden test pattern (recommended)</b> — deterministic and reviewable</summary>
@@ -299,7 +328,7 @@ tests/policy/testdata/
 
 Run:
 ```bash
-conftest test tests/policy/ -p tests/policy/rego
+conftest test .
 ```
 </details>
 
@@ -309,21 +338,20 @@ conftest test tests/policy/ -p tests/policy/rego
 **Purpose:** prove Focus Mode behaves like a governed analyst:
 - answers include citations when answering factual questions
 - refuses when evidence is insufficient
-- respects sensitivity classifications and redaction rules
-- produces audit/provenance records for responses *(design goal)*
+- respects classification + redaction rules
+- emits audit/provenance linkage metadata *(where implemented)*
 
-#### How to keep AI tests stable
-✅ Prefer:
+#### Stability rules for AI tests
+Prefer:
 - frozen retrieval bundles (graph + spatial + docs snippets)
 - deterministic prompts/templates
-- small local model or mocked Ollama client
-- assertions on **structure** not prose:
-  - `citations[]` present
+- assertions on **structure**, not prose:
+  - `citations[]` present (e.g., bracket style like `[1]` or structured citations)
   - `refusal_reason` when no evidence
   - `policy_decision` metadata
   - `audit_id` / `prov_link` fields
 
-🚫 Avoid:
+Avoid:
 - exact paragraph matching
 - “model mood” tests
 
@@ -343,7 +371,7 @@ Example `expected_invariants.json`:
   "must_refuse_if_no_sources": true,
   "min_citations": 1,
   "must_not_include": ["as an AI language model"],
-  "must_include_fields": ["answer", "citations", "audit_id"]
+  "must_include_fields": ["answer", "citations"]
 }
 ```
 </details>
@@ -356,7 +384,7 @@ Example `expected_invariants.json`:
 - map loads & tiles render
 - layer toggles work
 - time slider updates layers
-- story nodes render and link to sources
+- Story Nodes render and link to sources
 - Focus Mode returns citation-bearing answers or refusals
 - RBAC hides restricted layers for unauthorized roles
 
@@ -392,30 +420,32 @@ pytest -m "policy or data" -q
 ## ✅ CI expectations
 
 > [!IMPORTANT]
-> CI is not “just quality control.” In KFM it’s a **governance gate**. 🧾🛡️
+> CI is not “just quality control.” In KFM it’s a **governance gate**.
 
 ### PR checks (fast + trust‑critical)
 - ✅ unit + contract
-- ✅ policy (rego compile + conftest allow/deny)
-- ✅ metadata/provenance bundle checks for touched datasets
-- ✅ API smoke test (healthz + core endpoints)
+- ✅ policy scans (rego compile + conftest)
+- ✅ schema validation (JSON Schema / OpenAPI / GraphQL)
+- ✅ boundary artifact checks for touched datasets (STAC/DCAT/PROV + license/classification)
+- ✅ API smoke test (health endpoints + core endpoints)
 
 ### Nightly / scheduled (heavier)
 - ✅ full integration matrix (PostGIS + Neo4j + tiles + search)
 - ✅ Focus Mode regression suite
 - ✅ UI/E2E (seeded fixtures)
-- ✅ optional performance checks (tile latency budget, query cost ceilings)
+- ✅ optional performance budgets (tile latency, query ceilings)
 
 ---
 
 ## 🧰 Troubleshooting
 
 ### 🐳 Containers won’t start / ports collide
-Common ports:
+Common defaults:
 - PostGIS: `5432`
 - Neo4j: `7474` (UI) / `7687` (bolt)
+- API: `8000`
+- UI: `3000`
 - OPA: `8181`
-- Ollama: `11434`
 
 Fix:
 - stop conflicting services, or
@@ -424,41 +454,47 @@ Fix:
 ### 🧠 Neo4j memory issues
 - shrink fixtures (prefer tiny graphs)
 - increase container memory limit
-- prefer “schema + traversal correctness” over huge datasets
+- prioritize “schema + traversal correctness” over huge datasets
 
 ### 🧾 “Missing PROV / license / sensitivity”
 ✅ This is the system working as designed.  
 Add the missing boundary artifacts and rerun.
 
 ### 🤖 AI tests are flaky
-- mock Ollama client
 - freeze retrieval bundles
-- assert citations + refusal logic + policy compliance only
+- assert citation/refusal/policy compliance only
+- avoid golden prose diffs
 
 ---
 
 ## 🧾 Add-a-test checklist
 
-### If you add an API endpoint 🌐
+### If you add/modify an API endpoint 🌐
 - [ ] unit tests for service logic
 - [ ] contract test (OpenAPI/GraphQL schema)
 - [ ] integration test for endpoint behavior
 - [ ] policy tests (allowed/denied + redaction)
-- [ ] audit/provenance assertions *(if applicable)*
+- [ ] classification propagation checks (response never less restricted than inputs)
 
 ### If you add a dataset / pipeline 🗂️
-- [ ] pipeline produces `processed/` outputs
+- [ ] raw → work → processed staging respected (`data/raw/`, `data/work/`, `data/processed/`)
 - [ ] STAC/DCAT/PROV generated and valid
-- [ ] bundle completeness passes
+- [ ] boundary artifact completeness passes
 - [ ] geometry + CRS + bbox sanity checks
-- [ ] license + sensitivity present
-- [ ] deterministic manifest/checksum where feasible
+- [ ] license + classification/sensitivity present
+- [ ] deterministic manifests/checksums where feasible
+- [ ] (v13) domain runbook updated/added under `docs/data/<domain>/...`
+
+### If you change Story Nodes 📚
+- [ ] template compliance
+- [ ] citations required (no unsourced claims)
+- [ ] links point to cataloged artifacts (STAC/DCAT) where applicable
 
 ### If you change Focus Mode 🤖
-- [ ] citations required test
+- [ ] citations required test (“answer must cite”)
 - [ ] refusal behavior test (“no evidence → refuse”)
-- [ ] policy denial test for restricted data
-- [ ] audit trail present *(if designed/implemented)*
+- [ ] policy denial/sanitization for restricted data
+- [ ] classification propagation enforced
 
 ---
 
@@ -467,6 +503,6 @@ Add the missing boundary artifacts and rerun.
 <div align="center">
 
 ### 🧾 Tests preserve trust — not just correctness.
-If policy, provenance, or citations can’t be proven… it doesn’t merge. ✅
+If policy, provenance, contracts, or citations can’t be proven… it doesn’t merge. ✅
 
 </div>
