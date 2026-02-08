@@ -291,27 +291,28 @@ sequenceDiagram
   participant U as User
   participant UI as Web UI
   participant API as FastAPI
-  participant P as Policy (OPA + checks)
-  participant R as Retrieval (Neo4j/PostGIS/Search/Object)
+  participant P as Policy
+  participant R as Retrieval
   participant LLM as LLM Runtime
-  participant L as Ledger (Audit/Provenance)
+  participant L as Ledger
 
-  U->>UI: Ask question (optionally with map/time context)
-  UI->>API: POST /api/v1/ai/query
-  API->>P: Prompt Gate (sanitize + validate)
-  P-->>API: Allow/Deny (+ obligations)
-  alt Allowed
-    API->>R: Retrieve evidence bundle (policy-scoped)
-    R-->>API: Sources [1..n] (snippets + IDs)
-    API->>LLM: Prompt with SOURCES + citation rules
-    LLM-->>API: Draft answer w/ citations
-    API->>P: Enforce output rules (citations present; content allowed)
-    P-->>API: Allow / block / redact
-    API->>L: Append audit record (question, sources, model, policy)
-    API-->>UI: Final answer + clickable sources
-  else Denied
-    API->>L: Record deny event (minimal)
-    API-->>UI: 401/403 (+ request id)
+  U->>UI: 💬 Ask question (map/time context)
+  UI->>API: 📨 POST /api/v1/ai/query
+  API->>P: 🚧 Prompt gate (sanitize + validate)
+  P-->>API: 🛡️ Allow/Deny (+ obligations)
+
+  alt ✅ Allowed
+    API->>R: 🔎 Retrieve evidence bundle (policy-scoped)
+    R-->>API: 📦 Sources 1..n (snippets + IDs)
+    API->>LLM: 🧱 Prompt with SOURCES + citation rules
+    LLM-->>API: ✍️ Draft answer with citations
+    API->>P: ✅ Enforce output rules (citations + allowed content)
+    P-->>API: 🛡️ Allow / 🚫 Block / ✂️ Redact
+    API->>L: 📒 Append audit record (question, sources, model, policy)
+    API-->>UI: 📤 Final answer + clickable sources
+  else 🚫 Denied
+    API->>L: 🧾 Record deny event (minimal)
+    API-->>UI: ⛔ 401/403 (+ request id)
   end
 ```
 
