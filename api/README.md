@@ -8,19 +8,20 @@
     <img src="../docs/assets/branding/kfm-seal-animated-320.gif" width="180" alt="Kansas Frontier Matrix (KFM) seal — animated" />
   </picture>
 
-  <h1>🛰️ Kansas Frontier Matrix — API</h1>
+  <h1>🛰️ Kansas Frontier Matrix — API Boundary</h1>
 
   <p><strong>The single, policy-enforced gateway to KFM data, maps, the knowledge graph, and Focus Mode.</strong></p>
-  <p><sub><em>“Trust membrane” — every request is validated, authorized, logged, and provenance-linked.</em></sub>
+  <p><sub><em>“Trust membrane” — every request is validated, authorized, audited, and provenance-linked.</em></sub></p>
 
   <p>
     <img alt="Status" src="https://img.shields.io/badge/status-under_construction-yellow?style=for-the-badge" />
     <img alt="Governance" src="https://img.shields.io/badge/governance-fail_closed-critical?style=for-the-badge" />
-    <img alt="Provenance" src="https://img.shields.io/badge/provenance-first-8A2BE2?style=for-the-badge" />
+    <img alt="Evidence" src="https://img.shields.io/badge/evidence-first-0b7285?style=for-the-badge" />
+    <img alt="Provenance" src="https://img.shields.io/badge/provenance-STAC%20%7C%20DCAT%20%7C%20PROV-005bbb?style=for-the-badge" />
     <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-ready-009688?style=for-the-badge" />
     <img alt="OpenAPI" src="https://img.shields.io/badge/OpenAPI-3.x-blue?style=for-the-badge" />
     <img alt="GraphQL" src="https://img.shields.io/badge/GraphQL-optional-7b3fe4?style=for-the-badge" />
-    <img alt="OPA" src="https://img.shields.io/badge/Policy-OPA-black?style=for-the-badge" />
+    <img alt="OPA" src="https://img.shields.io/badge/policy-OPA%20%2F%20Rego-black?style=for-the-badge" />
     <img alt="PostGIS" src="https://img.shields.io/badge/PostGIS-geo-336791?style=for-the-badge" />
     <img alt="Neo4j" src="https://img.shields.io/badge/Neo4j-graph-008CC1?style=for-the-badge" />
     <img alt="Tiles" src="https://img.shields.io/badge/tiles-MVT%20%7C%20raster%20%7C%203D%20tiles-2b2d42?style=for-the-badge" />
@@ -29,163 +30,180 @@
 
   <p>
     <a href="../README.md">🏠 Main README</a> •
-    <a href="#-quickstart-docker-compose">🚀 Quickstart</a> •
-    <a href="#-architecture--data-flow">🏗️ Architecture</a> •
-    <a href="#-api-surface-area">🧩 API Surface</a> •
-    <a href="#-focus-mode-ai-governed">🤖 Focus Mode</a> •
-    <a href="#-governance--security">🛡️ Governance</a> •
-    <a href="#-contracts--standards">📜 Contracts</a> •
-    <a href="#-contributing-to-the-api">🤝 Contribute</a>
+    <a href="#quickstart-docker-compose">🚀 Quickstart</a> •
+    <a href="#architecture-data-flow">🏗️ Architecture</a> •
+    <a href="#api-surface-area">🧩 API Surface</a> •
+    <a href="#focus-mode">🤖 Focus Mode</a> •
+    <a href="#governance-security">🛡️ Governance</a> •
+    <a href="#contracts-standards">📜 Contracts</a> •
+    <a href="#contributing-to-the-api">🤝 Contribute</a>
   </p>
 </div>
 
 > [!WARNING]
 > 🚧 **Under construction (active development).**  
-> Endpoints, schemas, and service names may shift while we harden contracts and governance gates.  
-> **Non-negotiable stays constant:** UI/AI never bypass the API, and “fail‑closed” is the default. 🔒
+> Endpoints, schemas, and service names may evolve while we harden contracts and governance gates.  
+> **Non‑negotiable stays constant:** UI/AI never bypass the API, and **fail‑closed** is the default.
 
 ---
 
-## 🧭 What this folder is
+<a id="what-this-folder-is"></a>
 
-This folder contains the **backend API boundary** for **Kansas Frontier Matrix (KFM)** — the one place where:
+## 🧭 What this is
 
-- ✅ requests are **validated**
-- ✅ access is **authorized** (RBAC + classification)
-- ✅ outputs are **audited** (request IDs + decision logs)
-- ✅ responses are **provenance-linked** (dataset ↔ catalog ↔ lineage)
+This is the **backend API boundary** for **Kansas Frontier Matrix (KFM)** — the one place where:
+
+- ✅ requests are **validated** (schema + shape)
+- ✅ access is **authorized** (RBAC + classification) via **policy-as-code**
+- ✅ actions are **audited** (request IDs + decision logs)
+- ✅ responses are **provenance-linked** (dataset ↔ STAC/DCAT ↔ PROV lineage)
 
 > [!IMPORTANT]
-> **If it needs data, it goes through this API.**  
-> No UI-only backdoors. No “just query PostGIS.” No “AI direct-connect.” 🧫
+> **If it needs data, it goes through this API.**
+> No UI-only backdoors. No “just query PostGIS.” No “AI direct-connect.”
 
 ---
 
-## 🛣️ Truth Path (canonical data flow)
+<a id="truth-path"></a>
 
-KFM’s “truth path” is the contract the API depends on:
+## 🛣️ Truth Path (v13 canonical flow)
+
+This API is built to serve only **governed artifacts** produced by the pipeline. The **canonical flow** is:
 
 ```text
-Raw ➜ Processed ➜ Catalog + Provenance ➜ Runtime Stores ➜ API ➜ UI/AI/Clients
+raw → work → processed → catalogs (STAC/DCAT/PROV) → graph/stores → API → UI → story nodes → Focus Mode
 ```
 
-### 🧾 Governance gates (always-on)
-KFM uses **policy gates at each stage** so ungoverned artifacts never reach users:
+### ✅ Why this matters to the API
 
-- 📥 **Ingestion gate**: raw inputs must carry a source manifest (publisher/attribution, license, and classification)
-- 🗂️ **Catalog gate**: published datasets must have linked **STAC/DCAT** metadata and **PROV** lineage
-- 🤖 **AI gate**: Focus Mode answers must include **citations** and must not contain disallowed content
-- 🛑 **Default behavior**: if policy cannot decide → **deny** (fail‑closed)
-
-> [!CAUTION]
-> The API is only as trustworthy as its weakest bypass.  
-> **Bypasses are treated as defects** — and they will be closed. ✅
+- **Catalogs are the boundary artifacts**: STAC/DCAT/PROV are the interface the API trusts.
+- Runtime stores (PostGIS/Neo4j/search indexes/object storage) are **read-optimized mirrors**, not the truth.
+- If metadata, license, classification, or provenance is missing: the safe behavior is to **deny** or **redact** (only when policy explicitly allows).
 
 ---
 
-## 🔗 Quick links (local)
+<a id="quick-links-repo"></a>
 
-Once running locally:
+## 🔗 Repo truth anchors (start here)
 
-- 🧪 **Swagger / OpenAPI UI** → `http://localhost:8000/docs`
-- 📜 **OpenAPI JSON** → `http://localhost:8000/openapi.json`
-- 🕸️ **GraphQL endpoint (if enabled)** → `http://localhost:8000/graphql`
-- ❤️ **Health** → `http://localhost:8000/healthz`
+- 📘 Master Guide v13: `../docs/MASTER_GUIDE_v13.md`
+- 🏗️ Architecture blueprints: `../docs/architecture/`
+- ⚖️ Governance roots: `../docs/governance/`
+- 📜 Standards (STAC/DCAT/PROV profiles): `../docs/standards/`
+- 📐 Schemas: `../schemas/`
+- ⚖️ Policy pack (OPA/Rego): `../policy/`
+- 🗂️ STAC: `../data/stac/`
+- 🌐 DCAT: `../data/catalog/dcat/`
+- 🧾 PROV: `../data/prov/`
+- 🧪 Tests: `../tests/`
+- 🧰 Tools & validators: `../tools/`
+
+> [!TIP]
+> The README is a *governance contract & intent*.  
+> The **source of truth** for current endpoints is always the OpenAPI/Swagger docs.
 
 ---
+
+<a id="design-pillars"></a>
 
 ## 🧠 Design pillars (KFM-grade API)
 
-### 1) 🧾 Provenance-first (responses explain themselves)
+### 1) 🧾 Provenance-first responses
 Every meaningful response should carry:
-- dataset identity (stable ID + version where applicable)
-- links/pointers to catalog records (STAC/DCAT)
-- lineage pointer (W3C PROV / provenance manifest)
-- request correlation ID (for audit & debugging)
+- stable dataset identity (ID + version when applicable)
+- pointers to STAC/DCAT records
+- a PROV / run-manifest pointer for lineage
+- a request correlation ID (audit & debugging)
 
-### 2) 🛡️ Policy-first (governance lives outside business logic)
-Routes should be “thin”:
+### 2) 🛡️ Policy-first enforcement (OPA / fail-closed)
+Routes stay “thin”:
 
 > **validate → authorize → service → record → respond**
 
-Policy is centralized in an **OPA “policy pack”** so we can:
-- enforce tiered access (public/internal/confidential/restricted)
-- propagate classification (outputs can’t be less restricted than inputs)
-- enforce AI citation rules the same way we enforce data access
+Policy is centralized in a **policy pack** so:
+- RBAC + classification are consistent across endpoints
+- outputs cannot be less restricted than inputs
+- Focus Mode rules (citations, allowed content) are enforced like any other access rule
 
 ### 3) 📜 Contract-first (OpenAPI is a product)
 - versioned API surface (`/api/v1/...`)
 - stable response envelopes and error semantics
-- schema validation tests + backward-compat checks
+- schema validation tests + compatibility checks
 
-### 4) 🌎 GIS-native (the API speaks “map”)
+### 4) 🌎 GIS-native primitives
 - bbox/time filters are first-class
 - GeoJSON / MVT / raster tiles
-- streaming for big feature sets
-- predictable performance constraints (timeouts, limits, caching)
+- predictable performance constraints (timeouts, limits, caching strategy)
 
-### 5) 🔒 Fail-closed by default
-If metadata is missing, policy cannot evaluate, or provenance is absent:
-- deny access (or return a sanitized result when policy explicitly allows redaction)
-- return actionable error messages (**with request ID**)
+### 5) 🔒 Fail-closed is the default
+If policy cannot decide, provenance is absent, or metadata is incomplete:
+- deny access (or return a **sanitized** response when policy explicitly allows)
+- return actionable errors **with request ID**
 
 ---
+
+<a id="architecture-data-flow"></a>
 
 ## 🏗️ Architecture & data flow
 
 ```mermaid
 flowchart LR
-  subgraph Ingestion["📥 Ingestion & Processing (Truth Path)"]
-    raw["🧱 Raw (immutable snapshots)"]
-    processed["✅ Processed (standardized outputs)"]
-    catalog["🗂️ Catalog (STAC/DCAT)"]
-    prov["🧾 Provenance (W3C PROV + run manifests)"]
-    raw --> processed --> catalog --> prov
+  subgraph TruthPath["📥 Truth Path (governed artifacts)"]
+    RAW["raw/ (immutable snapshots)"]
+    WORK["work/ (intermediate)"]
+    PROC["processed/ (publishable outputs)"]
+    STAC["STAC (collections/items)"]
+    DCAT["DCAT (JSON-LD)"]
+    PROV["PROV (lineage bundles / manifests)"]
+    RAW --> WORK --> PROC --> STAC
+    PROC --> DCAT
+    PROC --> PROV
   end
 
   subgraph Stores["🗄️ Runtime Stores (read-optimized mirrors)"]
-    postgis[(PostGIS<br/>Spatial DB)]
-    neo4j[(Neo4j<br/>Graph DB)]
-    search[(Search/Vector Index)]
-    object[(Object Store / CDN<br/>COGs • PMTiles • 3D Tiles)]
+    postgis[(PostGIS)]
+    neo4j[(Neo4j)]
+    search[(Search / Vector index)]
+    object[(Object store / CDN<br/>COGs • PMTiles • 3D Tiles)]
   end
 
-  subgraph Backend["🧩 Serving Plane (Trust Membrane)"]
-    api["FastAPI API<br/>(REST + optional GraphQL)"]
-    opa["OPA Policy Engine<br/>(deny by default)"]
-    audit["Audit + Provenance Ledger<br/>(append-only)"]
+  subgraph Membrane["🧫 API Boundary (Trust membrane)"]
+    api["FastAPI API (REST + optional GraphQL)"]
+    opa["OPA Policy Engine (deny-by-default)"]
+    audit["Audit + Provenance Ledger (append-only intent)"]
   end
 
   subgraph Clients["🖥️ Clients"]
-    ui["Web UI<br/>(React + MapLibre/Cesium)"]
-    ai["🤖 Focus Mode Client<br/>(API consumer, not a backdoor)"]
-    ext["External clients<br/>(GIS tools • notebooks • exports)"]
+    ui["Web UI (React + MapLibre/Cesium)"]
+    notebooks["Notebooks / GIS tools (QGIS, scripts)"]
+    focus["Focus Mode client (via API only)"]
   end
 
-  processed --> postgis & neo4j
-  catalog --> search
-  processed --> object
+  STAC --> search
+  DCAT --> search
+  PROC --> postgis & neo4j & object
 
   postgis & neo4j & search & object --> api --> ui
-  ui --> api
-  ai --> api
-  api --> ext
+  notebooks --> api
+  focus --> api
 
   opa -.enforces.-> api
   api --> audit
 ```
 
 > [!NOTE]
-> KFM’s backend aims for **clean layered design** (domain → services → adapters → infrastructure).  
-> That’s how we keep governance stable even as storage engines and clients evolve.
+> The API orchestrates across multiple stores (spatial + graph + search) but treats the **catalog/provenance boundary**
+> as the system’s “explainability contract.”
 
 ---
+
+<a id="api-surface-area"></a>
 
 ## 🧩 API surface area
 
 > [!TIP]
-> ✅ The **source of truth** is always `/docs` (Swagger UI).  
-> This README describes the *governance contract* and *design intent*.
+> ✅ The **source of truth** is always Swagger/OpenAPI.  
+> This README describes the **governance contract** and **design intent**.
 
 ### 📍 Health & meta
 - `GET /healthz` — liveness
@@ -195,10 +213,10 @@ flowchart LR
 ---
 
 ### 🗂️ Catalog & datasets (REST, versioned)
-Typical patterns:
+Common patterns:
 
 - `GET /api/v1/datasets/{id}`  
-  Dataset summary (DCAT-style) + links to STAC assets + provenance pointers
+  Dataset summary + links to STAC assets + provenance pointers
 
 - `GET /api/v1/catalog/search?q=...&bbox=...&time=...`  
   Discovery (keyword + spatial + temporal)
@@ -223,106 +241,51 @@ curl -s "http://localhost:8000/api/v1/datasets/ks_hydrology_1880/data?format=geo
 
 ---
 
-### 🧪 Ad-hoc safe spatial queries (power users, governed)
-KFM supports a *safe*, *logged* SQL-like interface for advanced users:
-
-- `GET /api/v1/query?table=...&select=...&where=...&bbox=...`
-
-✅ Intended use:
-- “give me a filtered view of an approved table/view”
-- “let a notebook/QGIS plugin query without DB credentials”
-
-🚫 Not allowed:
-- arbitrary SQL execution
-- unapproved tables
-- bypassing row/column policy constraints
-
-<details>
-<summary><strong>🧾 Example</strong> (illustrative)</summary>
-
-```bash
-curl -s "http://localhost:8000/api/v1/query?table=geo_counties&select=name,pop_1890&where=pop_1890>10000" | jq
-```
-</details>
-
----
-
 ### 🗺️ Tiles (MapLibre-first, Cesium-friendly)
+Typical patterns:
 
-- `GET /tiles/{layer}/{z}/{x}/{y}.pbf` — vector tiles (MVT)
-- `GET /tiles/{layer}/{z}/{x}/{y}.png` / `.webp` — raster tiles
-- 🧭 (Planned/optional) `GET /tiles3d/{layer}/tileset.json` — Cesium 3D Tiles entrypoint
+- `GET /api/tiles/{layer}/{z}/{x}/{y}.pbf` — vector tiles (MVT)
+- `GET /api/tiles/{layer}/{z}/{x}/{y}.png` / `.webp` — raster tiles
+- *(Planned/optional)* `GET /api/tiles3d/{layer}/tileset.json` — Cesium 3D Tiles entrypoint
 
-Example (MapLibre-style):
-```text
-/tiles/historic_trails/{z}/{x}/{y}.pbf
-```
-
-> [!TIP]
-> Tile endpoints should be:
-> - cache-friendly (**ETags / Cache-Control**)
+> [!IMPORTANT]
+> Tile routes must be:
+> - cache-friendly (**ETag / Cache-Control**)
 > - policy-aware (restricted layers must **not** be cached publicly)
 > - deterministic (same request + same data version → same bytes)
 
 ---
 
-### 🕸️ Knowledge graph & stories (REST and/or GraphQL)
-
-- `POST /graphql` — GraphQL (optional but powerful for connected queries)
-
-GraphQL is ideal when clients need to traverse relationships (places ↔ datasets ↔ events ↔ stories) without overfetching.
-
-Example (illustrative):
-```graphql
-query {
-  storyNodes {
-    recallId
-    title
-    yearRange
-    relatedPlaces { id name }
-  }
-}
-```
+### 🕸️ Knowledge graph & narratives (REST and/or GraphQL)
+- `POST /graphql` — GraphQL (optional; powerful for connected queries)
 
 > [!NOTE]
-> GraphQL is governed like REST: same authN/authZ, plus query cost/depth limits to prevent abuse.
+> If GraphQL is enabled, it must reuse the same service layer as REST so governance and semantics never diverge.
+> Apply query depth/cost limits to prevent abuse.
 
 ---
 
-## 🤖 Focus Mode (AI, governed)
+<a id="focus-mode"></a>
 
-<a id="-focus-mode-ai-governed"></a>
+## 🤖 Focus Mode (AI) — retrieval-grounded, citation-enforced
 
-Focus Mode is **not** “chat with the database.” It is a retrieval-grounded, policy-constrained pipeline that:
+Focus Mode is **not** “chat with the database.” It is a governed workflow:
 
-- retrieves *allowed* context (datasets, story nodes, docs)
-- generates an answer **only using retrieved sources**
+- retrieves **allowed** context (datasets, stories, docs)
+- generates an answer **only from retrieved sources**
 - returns **citations** (e.g., `[1]`, `[2]`, …)
-- records a provenance/audit trail for every response
+- logs an audit/provenance record of the interaction
 
 ### ✅ Primary endpoints (design contract)
 - `POST /api/v1/ai/query` — generate a cited answer (primary)
-- `POST /api/v1/ai/stream` — streaming output (experimental/optional)
-- `GET /api/v1/ai/suggestions` — suggested next questions / relevant datasets (optional)
+- `POST /api/v1/ai/stream` — streaming output *(optional / experimental)*
+- `GET /api/v1/ai/suggestions` — suggested questions / relevant datasets *(optional)*
 
 > [!IMPORTANT]
-> Focus Mode is a **controlled, read-only interpreter** of KFM knowledge.  
-> No free-styling. No internet lookup. No bypassing policy. 🔒
+> **Least‑privilege AI:** the model sees only retrieved snippets and must cite them.
+> Treat the LLM like an untrusted generator — **policy + contracts do the enforcing.**
 
-<details>
-<summary><strong>🧪 Example request</strong> (illustrative)</summary>
-
-```bash
-curl -s http://localhost:8000/api/v1/ai/query \
-  -H "content-type: application/json" \
-  -d '{
-    "question": "List major trails in Kansas and their purposes.",
-    "scope": { "bbox": [-102,36,-94,41], "time_range": [1850, 1900] }
-  }' | jq
-```
-</details>
-
-### 🧬 Focus Mode lifecycle (prompt gate → retrieval → cite → policy)
+### Focus Mode lifecycle (prompt gate → retrieve → cite → enforce)
 ```mermaid
 sequenceDiagram
   participant U as User
@@ -330,7 +293,7 @@ sequenceDiagram
   participant API as FastAPI
   participant P as Policy (OPA + checks)
   participant R as Retrieval (Neo4j/PostGIS/Search/Object)
-  participant LLM as LLM Runtime (Ollama)
+  participant LLM as LLM Runtime
   participant L as Ledger (Audit/Provenance)
 
   U->>UI: Ask question (optionally with map/time context)
@@ -342,112 +305,110 @@ sequenceDiagram
     R-->>API: Sources [1..n] (snippets + IDs)
     API->>LLM: Prompt with SOURCES + citation rules
     LLM-->>API: Draft answer w/ citations
-    API->>P: Enforce output rules (citations present, content allowed)
+    API->>P: Enforce output rules (citations present; content allowed)
     P-->>API: Allow / block / redact
     API->>L: Append audit record (question, sources, model, policy)
     API-->>UI: Final answer + clickable sources
   else Denied
     API->>L: Record deny event (minimal)
-    API-->>UI: 403/401 (+ request id)
+    API-->>UI: 401/403 (+ request id)
   end
 ```
 
 > [!CAUTION]
-> If citations are missing → **return an error or regenerate**.  
-> “Best effort” answers without sources are treated as *non-compliant output*. 🛑
+> If citations are missing → **fail** (reject or regenerate).
+> “Best effort” answers without sources are treated as *non-compliant output.*
 
 ---
+
+<a id="governance-security"></a>
 
 ## 🛡️ Governance & security
 
 ### 🔐 AuthN (who are you?)
-Common choices:
+Common options:
 - OAuth2 / OIDC (preferred for multi-user)
 - JWT for dev/local
-- API keys (only for scoped machine clients, if needed)
+- API keys *(only for tightly-scoped machine clients)*
 
 ### 🧱 AuthZ (what are you allowed to do?)
-Authorization is a **policy decision** — not scattered `if role == ...` checks.
+Authorization is a **policy decision**, not scattered `if role == ...` checks.
 
-OPA-style policy pack should decide:
+Policy decides:
 - dataset access by role + classification
 - export permissions (download vs preview vs aggregate-only)
-- AI restrictions (topic scope, citation enforcement, injection defense)
-- audit obligations (which routes require stronger logging)
+- AI restrictions (scope, citations, injection defense)
+- audit obligations (what to log, how strongly)
 
----
-
-### 👥 Roles (RBAC) — human-readable contract
+### 👥 Roles (RBAC) — baseline contract
 A practical baseline:
 
 | Role 👤 | Intended capability ✅ | Examples |
 |---|---|---|
 | **Public Viewer** | Read-only on publicly approved content | browse public layers, read public stories |
-| **Contributor** | Draft, suggest, propose changes | author Story Nodes (draft), propose datasets |
+| **Contributor** | Draft/suggest/propose | author Story Nodes (draft), propose datasets |
 | **Maintainer** | Review + approve + publish | approve stories/datasets, manage releases |
-| **Admin** | Operate the system | run ingestion pipelines, manage policies |
+| **Admin** | Operate the system | run pipelines, manage policies |
 
 > [!IMPORTANT]
-> These roles are enforced per-request and combined with dataset classification.  
-> Even Admin workflows are expected to go through governed endpoints (no DB shell as a workflow).
+> Even Admin workflows should flow through governed endpoints.
+> DB shells are for break-glass, not a “workflow.”
 
----
-
-### 🏷️ Data classification (propagates downstream)
-A simple ladder (expand as needed):
+### 🏷️ Classification & propagation
+A baseline ladder (expand as needed):
 
 | Classification 🏷️ | Who can access? 👤 | Caching 🧊 | Notes |
 |---|---|---|---|
 | **Public** | everyone | public cache ok | safest distribution tier |
-| **Internal** | contributors+ | no public cache | may include working notes |
+| **Internal** | contributors+ | no public cache | working notes / pre-release |
 | **Confidential** | selected users | no public cache | stronger logging, tighter export |
 | **Restricted** | selected users | no public cache | may require extra controls & review |
 
-> [!CAUTION]
-> **Propagation rule:** outputs can’t be less restricted than inputs.  
-> Example: a public tile cannot be generated from restricted features.
+**Propagation rule:** outputs cannot be less restricted than inputs.
 
-### 🧼 Redaction & “policy obligations” (sanitized results)
+### 🧼 Redaction & policy obligations
 Policy may allow partial disclosure, e.g.:
 - rounding/masking coordinates
 - removing attributes
-- converting feature-level outputs to aggregates
+- converting feature outputs to aggregates
 
-This allows KFM to remain useful while respecting sensitive data constraints.
+This keeps KFM useful while honoring sensitive data constraints.
 
----
-
-### 🧾 Provenance & audit trails (mandatory)
-- Every dataset in the catalog should have an associated **PROV** record capturing lineage (inputs, processes, outputs).
-- Pipeline runs should emit run manifests (checksums, timestamps, “who ran it”) stored as immutable records.
-- Focus Mode should append a ledger entry for every answer (question, sources, model version, policy decision).
+### 🧾 Audit trails (mandatory)
+- request correlation IDs for every call
+- policy decision logs (include policy bundle version/hash when possible)
+- Focus Mode ledger entry per response (question + sources + model + decision)
 
 > [!NOTE]
-> The long-term target is an append-only ledger that can be cryptographically signed/timestamped for tamper evidence.
+> Long-term target: append-only ledger that can be cryptographically signed/timestamped for tamper-evidence.
 
 ---
+
+<a id="contracts-standards"></a>
 
 ## 📜 Contracts & standards
 
-KFM favors open standards to keep the platform interoperable:
+KFM favors open standards for interoperability:
 
-- **STAC** 🗂️ for geospatial assets (items/collections)
-- **DCAT** 🧾 for dataset discovery (publisher, license, themes)
-- **PROV (W3C)** ⛓️ for lineage (raw → processed → published)
-- **GeoJSON / MVT / COG / PMTiles** 🗺️ for spatial delivery
-- **3D Tiles** 🌐 for Cesium-class 3D experiences (optional/planned)
-- **OpenAPI** 📘 as the REST contract
-- **GraphQL SDL** 🕸️ as the graph contract (if enabled)
+- **STAC** for geospatial assets (items/collections)
+- **DCAT** for dataset discovery (publisher, license, themes)
+- **PROV (W3C)** for lineage (raw → processed → published)
+- **GeoJSON / MVT / COG / PMTiles** for spatial delivery
+- **3D Tiles** for Cesium-class 3D experiences *(optional/planned)*
+- **OpenAPI** as the REST contract
+- **GraphQL SDL** as the graph contract *(if enabled)*
 
 > [!TIP]
-> If a dataset can’t link to **license + attribution + provenance**, it should not be served. ✅
+> If a dataset can’t link to **license + attribution + provenance**, it should not be served.
 
 ---
+
+<a id="quickstart-docker-compose"></a>
 
 ## 🚀 Quickstart (Docker Compose)
 
 > [!NOTE]
-> Exact service names/ports may vary. When in doubt: open `docker-compose.yml` and `.env.example`.
+> Exact service names/ports vary by environment. When in doubt: open `../docker-compose.yml` and `../.env.example`.
 
 ### 1) Start the stack
 ```bash
@@ -457,14 +418,16 @@ docker-compose up -d --build
 ```
 
 ### 2) Open interactive docs
-- `http://localhost:8000/docs`
+```text
+http://localhost:8000/docs
+```
 
-### 3) Run tests 🧪
+### 3) Run tests
 ```bash
 docker compose exec api pytest
 ```
 
-### 4) Tail logs 🧯
+### 4) Tail logs
 ```bash
 docker compose logs -f api
 ```
@@ -482,39 +445,31 @@ docker compose logs -f api
 
 ---
 
-## 📦 Suggested (typical) internal layout
+<a id="internal-layout"></a>
 
-This structure supports thin routes + clean layering + auditable AI:
+## 📦 Backend layout (v13-aligned layering)
+
+> [!TIP]
+> Prefer **clean layering**: domain rules stay framework-free; services orchestrate; adapters talk to infra.
+> This keeps governance stable even as DB/search/LLM choices evolve.
+
+A typical v13-friendly server layout:
 
 ```text
-📦 api/
-├── 🚀 app/                   # FastAPI init, middleware, lifecycle
-│   ├── main.py               # app entrypoint
-│   ├── deps.py               # DI providers (db sessions, auth context)
-│   └── middleware/           # CORS, request-id, logging, timing, auth
-│
-├── 🧭 routes/                # Routers (thin endpoints)
-│   ├── health.py
-│   ├── datasets.py
-│   ├── catalog.py
-│   ├── query.py              # safe ad-hoc query endpoint
-│   ├── tiles.py
-│   ├── stories.py
-│   ├── graphql.py            # optional
-│   └── ai.py                 # Focus Mode endpoints (/api/v1/ai/*)
-│
-├── 🧠 domain/                # domain entities + invariants (framework-free)
-├── 🧩 services/              # use-cases / workflows (testable orchestration)
-├── 🔌 adapters/              # PostGIS/Neo4j/search/object-store/OPA/LLM clients
-├── 🤖 ai/                    # Focus pipeline (retrieve → prompt → validate)
-├── 🧾 schemas/               # Pydantic models (req/resp + error envelopes)
-├── 🛡️ policies/              # OPA bundles + helpers + policy tests
-├── 🧰 scripts/               # migrations, seed, backfills
-└── ✅ tests/                 # pytest (unit + integration + contract)
+src/server/
+├── app/                 # FastAPI init, middleware, lifecycle
+├── routes/              # thin routers (validate → authorize → service → record → respond)
+├── schemas/             # request/response models + error envelopes
+├── domain/              # framework-free entities + invariants
+├── services/            # use-cases / orchestration (testable)
+├── adapters/            # PostGIS/Neo4j/search/object-store/OPA/LLM clients
+├── ai/                  # Focus pipeline (retrieve → prompt → validate)
+├── policies/            # policy bundle wiring + helpers (source-of-truth lives in /policy/)
+└── tests/               # unit + integration + contract tests
 ```
 
 > [!NOTE]
-> If GraphQL is enabled, it should reuse the same service layer so REST + GraphQL never diverge.
+> If GraphQL is enabled, it should call the same service layer as REST.
 
 ---
 
@@ -525,9 +480,9 @@ This structure supports thin routes + clean layering + auditable AI:
 docker compose logs api
 ```
 
-- ensure `depends_on` + health checks are configured in Compose
-- check DB credentials and network names
-- verify policy engine is reachable (OPA)
+- verify DB credentials and Docker network names
+- confirm OPA is reachable (policy engine)
+- ensure health checks and `depends_on` are configured
 
 ### Port conflicts
 If `5432`, `7474`, `8000`, or `3000` are already used:
@@ -541,46 +496,39 @@ docker compose up -d --build
 
 ---
 
-## 🤝 Contributing to the API
+<a id="contributing-to-the-api"></a>
 
-<a id="-contributing-to-the-api"></a>
+## 🤝 Contributing to the API
 
 ### ✅ Route discipline (non‑negotiable)
 - routes stay thin: **validate → authorize → service → record → respond**
 - no business logic in routers
-- no “UI-only backdoors”
 - no policy checks hidden in random helpers
+- no “UI-only” backdoors
 
-### ✅ PR checklist (API)
-- [ ] OpenAPI docs updated (auto-generated and/or route descriptions improved)
-- [ ] Tests added/updated (unit + integration where appropriate)
-- [ ] Policy tests updated (especially if access rules changed)
-- [ ] Provenance/audit obligations satisfied (new endpoints must log appropriately)
-- [ ] Backwards compatibility considered (`/api/v1` should not break quietly)
-
-> [!TIP]
-> If you add an endpoint, assume you also need to:
-> - update OPA rules (who can call it?)
-> - add audit logging (what gets recorded?)
-> - validate contracts (schemas + error envelopes)
-> - consider caching + classification behavior
+### ✅ PR checklist (API boundary)
+- [ ] OpenAPI reflects the change (docs/routes/schemas)
+- [ ] Tests added/updated (unit + integration + contract)
+- [ ] Policy rules/tests updated (OPA/Rego + Conftest) if access behavior changed
+- [ ] Audit/provenance obligations satisfied (new endpoints log appropriately)
+- [ ] Backward compatibility considered (`/api/v1` should not break quietly)
 
 ---
 
 ## 📚 Related docs (repo-local)
 
-- `../docs/architecture/system_overview.md` 🏗️
-- `../docs/architecture/AI_SYSTEM_OVERVIEW.md` 🤖
-- `../docs/architecture/ai/OLLAMA_INTEGRATION.md` 🦙
-- `../pipelines/README.md` 🏭
+- `../docs/architecture/` 🏗️
+- `../docs/governance/` ⚖️
+- `../docs/standards/` 📜
 - `../policy/` 🛡️
+- `../schemas/` 📐
 
 ---
 
 <div align="center">
 
 🧭 <strong>Ad Astra Per Aspera.</strong>  
-<strong>The API is the “trust membrane” of KFM.</strong>  
-If it can’t be traced, validated, authorized, and reproduced… it doesn’t ship. ✅
+<strong>The API boundary is the “trust membrane” of KFM.</strong>  
+If it can’t be traced, validated, authorized, and reproduced… it doesn’t ship.
 
 </div>
