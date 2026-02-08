@@ -106,15 +106,15 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  PR[Pull Request Opened] --> Lint[Markdown lint + repo lint]
-  Lint --> Links[Link integrity + asset checks]
-  Links --> Schema[Schema validation<br/>(STAC/DCAT/PROV/Story Nodes)]
-  Schema --> Policy[Policy gate<br/>(OPA/Conftest rules)]
-  Policy --> Tests[Unit + Integration tests]
-  Tests --> Sec[Security scans<br/>(deps/secrets/SBOM)]
-  Sec --> Merge{All gates pass?}
-  Merge -->|Yes| Main[Merge allowed]
-  Merge -->|No| Block[Fail closed + actionable errors]
+  PR["🔀 Pull Request Opened"] --> Lint["🧹 Markdown lint + repo lint"]
+  Lint --> Links["🔗 Link integrity + asset checks"]
+  Links --> Schema["🧾 Schema validation (STAC / DCAT / PROV / Story Nodes)"]
+  Schema --> Policy["🛡️ Policy gate (OPA / Conftest rules)"]
+  Policy --> Tests["🧪 Unit + Integration tests"]
+  Tests --> Sec["🔒 Security scans (deps / secrets / SBOM)"]
+  Sec --> Merge{"✅ All gates pass?"}
+  Merge -->|"Yes"| Main["🎉 Merge allowed"]
+  Merge -->|"No"| Block["⛔ Fail closed + actionable errors"]
 ```
 
 ---
