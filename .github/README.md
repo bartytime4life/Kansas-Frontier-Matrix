@@ -90,16 +90,16 @@
 ### The KFM Truth Path (what CI protects)
 
 ```mermaid
-flowchart LR
-  A[data/raw<br/>Immutable sources] --> B[src/pipelines<br/>ETL + normalization]
-  B --> C[data/processed<br/>Analysis-ready artifacts]
-  C --> D[data/catalog + data/stac + data/prov<br/>DCAT + STAC + PROV]
-  D --> E[(Databases<br/>PostGIS + Neo4j + Search/Vector)]
-  E --> F[API boundary<br/>FastAPI + OPA/policy]
-  F --> G[Web UI<br/>React + MapLibre/Cesium]
-  G --> H[Story Nodes<br/>Governed narratives]
-  H --> I[Focus Mode<br/>Evidence-backed AI]
-  I --> G
+flowchart TD
+  PR["🔀 Pull Request Opened"] --> Lint["🧹 Markdown lint + repo lint"]
+  Lint --> Links["🔗 Link integrity + asset checks"]
+  Links --> Schema["🧾 Schema validation (STAC / DCAT / PROV / Story Nodes)"]
+  Schema --> Policy["🛡️ Policy gate (OPA / Conftest rules)"]
+  Policy --> Tests["🧪 Unit + Integration tests"]
+  Tests --> Sec["🔒 Security scans (deps / secrets / SBOM)"]
+  Sec --> Merge{"✅ All gates pass?"}
+  Merge -->|"Yes"| Main["🎉 Merge allowed"]
+  Merge -->|"No"| Block["⛔ Fail closed + actionable errors"]
 ```
 
 ### CI as the “Trust Membrane” (deny-by-default)
