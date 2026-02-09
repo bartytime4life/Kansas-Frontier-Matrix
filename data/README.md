@@ -1,22 +1,3 @@
----
-title: "KFM Data Directory (data/)"
-doc_type: "README"
-governed: true
-layer: "infrastructure"
-status: "draft"
-version: "1.0.0"
-last_updated: "2026-02-09"
-owners:
-  - "Data Stewardship (TBD)"
-tags:
-  - "evidence-first"
-  - "contract-first"
-  - "stac"
-  - "dcat"
-  - "prov"
-  - "reproducible-pipelines"
----
-
 # `data/` — KFM datasets, staging, and catalogs
 
 🏷️ **Governed** • 🏷️ **Evidence-first** • 🏷️ **Contract-first** • 🏷️ **Deterministic pipelines** • 🏷️ **Trust membrane**
