@@ -1,154 +1,180 @@
-# Kansas Frontier Matrix (KFM) — `.github/` (CI/CD + Contribution Gates)
+# Kansas Frontier Matrix (KFM) — `.github/` Governance Automation
 
-> This folder is part of KFM’s **governance membrane**: it holds GitHub-native automation and templates that help ensure changes (code, data, and docs) remain **validated, provenance-linked, and policy-compliant** before they reach `main`.
+This directory contains **GitHub-native governance controls** (CI workflows + contribution templates) that help enforce KFM’s core invariants:
 
----
+- **Evidence-first**: no narrative, dataset, or AI output ships without provenance.
+- **Contract-first**: schemas and API contracts are treated as first-class artifacts.
+- **Trust membrane**: clients do not access databases directly; all access is mediated by the governed API layer.
 
-## 📘 Overview
-
-### Purpose
-The `.github/` directory centralizes **contribution gates** and repo automation (CI checks, review scaffolding, and optional issue/PR templates) so that:
-- **Every pull request** is validated by automation (tests + lint + governance checks).
-- Documentation changes remain **template-aligned** (emoji-section headings, required sections, valid citations/refs, link integrity).
-- Sensitive data governance expectations are enforced consistently at review time.
-
-### Scope
-**In scope (this folder typically contains):**
-- GitHub Actions workflows under `.github/workflows/` (CI and optionally CD).
-- PR and issue templates that route contributors through required checklists and governance expectations.
-
-**Out of scope (handled elsewhere in the repo):**
-- System architecture details: see `docs/` (architecture, governance, standards).
-- Data pipeline + catalogs: see `data/` + `docs/` (Truth Path, STAC/DCAT/PROV).
-- Source code and service config: see `src/`, `web/`, `docker-compose.yml`, etc.
-
-### Audience
-- Contributors opening PRs (docs, data, code).
-- Reviewers / maintainers enforcing KFM governance and release quality.
-- Governance reviewers (FAIR+CARE / sovereignty / ethics reviewers) when changes touch sensitive topics or data.
-
-### Definitions (KFM-specific)
-- **Governed document:** a Markdown file that follows an approved template structure and is subject to CI validation.
-- **Truth Path:** the staged data lifecycle from raw → processed → published outputs (with validation gates + provenance).
-- **Focus Mode:** an AI-assisted Q&A interface that must use verified KFM data and provide citations.
-- **IDS / Indigenous Data Sovereignty:** Indigenous peoples’ right to control data about their peoples, lands, and cultures; includes special handling for sensitive knowledge and Indigenous participation in governance.
-
-### Key artifacts & references (start here)
-> Prefer canonical docs + checklists over “tribal knowledge.”
-
-- `docs/MASTER_GUIDE_v13.md` *(canonical repo structure + pipeline sequencing; path/name expected per standards)*
-- `docs/standards/` *(Markdown + work protocols, assistant usage rules)*
-- `docs/ci/` and `docs/ci/checklists/` *(PR + validation checklists; required gates)*
-- `docs/governance/` *(ROOT_GOVERNANCE, ETHICS, SOVEREIGNTY policies)*
-- `docs/templates/` *(TEMPLATE__KFM_UNIVERSAL_DOC, TEMPLATE__STORY_NODE_V3, etc.)*
-
-> [!IMPORTANT]
-> KFM treats documentation as **governed**: CI may reject a PR if Markdown structure, headings, citations/references, links, or sensitivity handling do not conform to the required standards.
+> [!NOTE]
+> This README explains **what `.github/` is responsible for** (automation + contribution UX).
+> For platform architecture + the canonical pipeline, start with:
+> - `../docs/MASTER_GUIDE_v13.md`
+> - `../docs/architecture/`
 
 ---
 
-## 🗂️ Directory Layout
+## What “governed” means (as enforced through GitHub)
 
-This README documents **`.github/`**. Common contents include:
+KFM is a pipeline–catalog–database–API–UI system where **every stage emits boundary artifacts** and **every merge is gated by validation**.
 
-| Area | Path | What it’s for |
-|---|---|---|
-| Workflows | `.github/workflows/` | CI pipelines (tests, linting, Markdown validation, security scans, OPA policy tests). |
-| PR template | `.github/PULL_REQUEST_TEMPLATE.md` | Enforces PR metadata + links to required checklists and governance prompts. |
-| Issue templates | `.github/ISSUE_TEMPLATE/` | Structured bug/feature/data-submission templates (optional). |
-| Repo automation | `.github/dependabot.yml` | Dependency update automation (optional). |
+### Non‑negotiable invariants
 
-Related (outside `.github/`) but frequently referenced by workflows/templates:
+1. **Canonical pipeline order**  
+   Raw → Processed → Catalog/PROV → Database → API → UI  
+   (Shortcuts are treated as design defects unless explicitly justified and reviewed.)
 
-| Area | Path | What it’s for |
-|---|---|---|
-| CI guidance + checklists | `docs/ci/` | How CI gates work; validation rules; PR checklist(s). |
-| Governance | `docs/governance/` | Sensitivity, ethics, sovereignty rules; approval requirements. |
-| Templates | `docs/templates/` | Governed doc templates (universal docs, story nodes, API extension docs). |
+2. **Trust membrane (no bypass paths)**  
+   - UI/external clients never connect directly to PostGIS/Neo4j.
+   - Backend business logic never bypasses repository interfaces to talk directly to storage.
 
----
+3. **Provenance-first publishing**  
+   - Datasets are not “published” until required catalog artifacts exist.
+   - Story Nodes and Focus Mode outputs must remain provenance-linked.
 
-## 🧭 Context
-
-KFM is designed so that **quality and trust are enforced programmatically**:
-- Every commit/PR passes through CI gates (tests, linting/formatting, doc validation, and security scanning).
-- Documentation governance is validated automatically (required sections, emoji headings, reference integrity, no broken links).
-- Policy rules are testable (e.g., OPA policy tests) and can be used to block invalid or non-compliant changes.
-
-This is the practical meaning of the **governance membrane**: external contributions can be accepted, but only after automated checks + maintainer approval confirm the change does not compromise integrity.
+4. **FAIR + CARE / sovereignty aware**  
+   - Sensitive content may require redaction/generalization.
+   - Exact locations for protected sites are treated as high-risk.
 
 ---
 
-## 🗺️ Diagrams
-
-### PR gating path (high-level)
+## Pipeline map (mental model)
 
 ```mermaid
 flowchart LR
-  A[Contributor] --> B[Pull Request]
-  B --> C[CI: tests + lint + doc validator]
-  C --> D[CI: security scans + policy tests]
-  D --> E[Maintainer review]
-  E -->|approved| F[Merge to protected branch]
-  F --> G[Optional: CD to staging/prod]
+  subgraph Data
+    A["data/raw/<domain>/"] --> B["data/work/<domain>/"]
+    B --> C["data/processed/<domain>/"]
+    C --> S["STAC: data/stac/collections + data/stac/items"]
+    C --> D["DCAT: data/catalog/dcat"]
+    C --> P["PROV: data/prov/"]
+  end
+
+  S --> G["Neo4j Graph (references catalogs; models relationships)"]
+  D --> G
+  P --> G
+
+  G --> H["API Layer (contracts + redaction + policy checks)"]
+  H --> I["Map UI (React + MapLibre)"]
+  I --> J["Story Nodes (governed narratives)"]
+  J --> K["Focus Mode (provenance-linked context)"]
 ```
 
 ---
 
-## 🧪 Validation & CI/CD
+## What CI in `.github/workflows/` should enforce
 
-### What CI is expected to enforce
-CI should be treated as **required** for merge. Common gates described in KFM docs include:
+CI is the automated “governance membrane” that blocks merges when a change violates KFM rules.
 
-- ✅ **Test suite** (backend/frontend/unit/integration as applicable)
-- ✅ **Linters + formatters** for code
-- ✅ **Markdown linter/validator** for governed docs
-  - Confirms required sections exist (e.g., Overview, Version History)
-  - Confirms emoji headings match the registry
-  - Confirms citations/refs are consistent and links aren’t broken
-- ✅ **Security checks**
-  - Static analysis, dependency vulnerability scans
-  - Secret scanning / “no secrets in repo” expectations
-- ✅ **Policy tests** (e.g., `opa test` for Rego rules) to ensure governance rules behave as intended
+> [!IMPORTANT]
+> Workflow filenames differ by repo, but the **gates below** should exist in some form.
+> Check `.github/workflows/` for the authoritative job names.
 
-> [!NOTE]
-> The goal is not “green CI at all costs.” The goal is **traceable correctness**: if it’s not standard, it doesn’t progress.
+### CI gate checklist
 
-### Data + documentation contribution gates
-When a PR includes **data, story nodes, or metadata**, CI should also support gates such as:
-- Presence of required metadata (e.g., DCAT record, sensitivity tags where needed)
-- Data validation tests (schemas, checksums, expected outputs)
-- Checklist-driven review prompts for sensitive/sovereignty-relevant content
-
-### Local workflow tips (before opening a PR)
-Use this as a minimal pre-flight checklist:
-
-- [ ] Run local checks where available (e.g., `pre-commit run --all-files`)
-- [ ] Preview Markdown rendering (GitHub/VSCode)
-- [ ] Verify links + references
-- [ ] Update **🕰️ Version History** for non-trivial doc changes
-- [ ] If touching sensitive content, confirm governance handling + reviewers are flagged
+| Gate | What it checks | Why it matters | Typical fix |
+|---|---|---|---|
+| **Code quality** | unit/integration tests; type checks; lint | prevents regressions and drift from contracts | fix tests/types; update interfaces/adapters |
+| **Docs governance** | markdown lint; required template sections; link checks; accessibility checks | keeps docs machine-ingestible and UI-safe | fix headings/sections; repair links; add alt text |
+| **Dataset governance** | schema validation; “no null geometries”; value ranges; required metadata present | ensures datasets “build clean” like code | fix pipeline output; add missing metadata |
+| **Policy-as-code** | OPA/Rego checks (via Conftest or equivalent) for sensitivity/license/citation rules | blocks policy violations before merge | add licenses/tags; redact restricted info |
+| **Story Nodes** | Template v3 compliance; **every factual claim cited** | prevents unsourced narratives | add citations; split fact vs interpretation |
+| **Focus Mode / AI** | AI outputs must include citations and respect sensitivity rules | prevents “freeform” or leaking responses | add/repair citations; reduce/aggregate sensitive data |
+| **Security hygiene** | secret scan; dependency alerts (if enabled) | prevents credential leaks | remove secrets; rotate keys; use env vars |
 
 ---
 
-## ⚖️ FAIR+CARE & Governance
+## Local pre-flight checklist (before opening a PR)
 
-KFM governance is shaped by **FAIR + CARE** and Indigenous Data Sovereignty expectations:
-- **FAIR:** Findable, Accessible, Interoperable, Reusable
-- **CARE:** Collective Benefit, Authority to Control, Responsibility, Ethics
+If you can reproduce CI locally, your PR review becomes faster and more deterministic.
 
-Implications for `.github/` automation and templates:
-- PR workflows should prompt contributors to include provenance/metadata (and not ship “naked facts”).
-- Review templates should flag when specialized review is required (e.g., sovereignty-sensitive content).
-- CI/policy checks should support protective handling (e.g., sensitivity metadata, policy-enforced access controls, and safeguards like coordinate blurring where required by governance decisions).
+- [ ] Run local checks (when configured), e.g.:
+  ```bash
+  pre-commit run --all-files
+  ```
+- [ ] Run backend tests (service name varies by repo):
+  ```bash
+  pytest
+  ```
+- [ ] Run frontend checks (if applicable):
+  ```bash
+  npm test
+  npm run lint
+  ```
+- [ ] If you touched docs:
+  - [ ] verify links resolve
+  - [ ] verify template-required sections exist
+  - [ ] verify alt text and heading hierarchy
+- [ ] If you added/changed data:
+  - [ ] ensure correct staging (`raw → work → processed`)
+  - [ ] ensure boundary artifacts exist (STAC + DCAT + PROV)
+  - [ ] ensure policy checks pass (sensitivity/license/citations)
 
-### Disclosure
-If AI assistance was used to draft or modify governed documentation, note that in the relevant **Version History** entry (and ensure the content is still evidence-backed and policy-compliant).
+> [!TIP]
+> Treat datasets and Story Nodes as **build artifacts**: if they don’t validate, they don’t ship.
 
 ---
 
-## 🕰️ Version History
+## Story Nodes & Focus Mode rules (what CI must protect)
 
-| Version | Date (YYYY-MM-DD) | Summary of Changes | Author |
-|---|---:|---|---|
-| v1.0 | 2026-02-09 | Initial `.github/README.md` describing KFM CI/CD and contribution governance gates. | KFM Maintainers (AI-assisted draft) |
+### Story Nodes (governed narrative artifacts)
+
+Story Nodes are treated as **structured, machine-ingestible narrative datasets**:
+
+- every factual statement is traceable to evidence,
+- key entities reference stable identifiers,
+- fact vs interpretation is clearly separated.
+
+### Focus Mode (hard gate)
+
+Focus Mode is a provenance-only experience:
+
+- **Only provenance-linked content appears**
+- AI contributions must be **opt-in** and **clearly labeled**
+- sensitive locations are **generalized or omitted** to prevent side-channel leaks
+
+> [!WARNING]
+> If your change could reveal sensitive locations or culturally restricted knowledge:
+> - redact/generalize in data + narrative
+> - flag for governance review
+> - do not “work around” policy gates
+
+---
+
+## Where the rules live (repo pointers)
+
+The `.github/` automation exists to enforce rules defined elsewhere:
+
+- Master guide + canonical pipeline: `../docs/MASTER_GUIDE_v13.md`
+- Templates:
+  - `../docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+  - `../docs/templates/TEMPLATE__STORY_NODE_V3.md`
+  - `../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- Standards/profiles:
+  - `../docs/standards/` (STAC/DCAT/PROV + markdown work protocol)
+- Policy-as-code (if present): `../policy/` (OPA/Rego)
+
+---
+
+## Typical contents of `.github/`
+
+<details>
+<summary>Expand to see common files you may find here</summary>
+
+- `.github/workflows/`  
+  GitHub Actions pipelines (CI gates described above)
+- `.github/ISSUE_TEMPLATE/`  
+  Structured issue intake (bug reports, data requests, story proposals)
+- `PULL_REQUEST_TEMPLATE.md`  
+  The “governance membrane” checklist for reviewers and contributors
+- `CODEOWNERS`  
+  Routing for required reviews (docs, data, policy, API, UI)
+</details>
+
+---
+
+## Version history
+
+| Version | Date | Summary | Author |
+|---:|---|---|---|
+| v0.1.0 | 2026-02-09 | Initial `.github/README.md` aligned to v13 governance | (fill in) |
