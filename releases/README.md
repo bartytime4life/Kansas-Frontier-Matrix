@@ -1,248 +1,314 @@
-# Releases
+# releases/ — KFM Release Artifacts (Manifest + SBOM + Provenance)
 
-This directory is the canonical home for **packaged release artifacts** for the Kansas Frontier Matrix (KFM) repository.
+<kbd>Governed</kbd> <kbd>CI-Ready</kbd> <kbd>Reproducible</kbd> <kbd>Manifest+SBOM</kbd> <kbd>FAIR+CARE</kbd>
 
-KFM’s day-to-day “source of truth” remains the repository itself (data + metadata + provenance + code + governed docs). A **release** is an **immutable, versioned snapshot** of that state that is packaged for:
-
-- distribution (offline / air-gapped use, mirroring, archiving),
-- deployment (bootstrapping derivative stores like PostGIS/Neo4j from canonical repo outputs),
-- citation (pinning research, reports, or downstream products to a specific version).
-
-> **Important:** Official releases may include **signed artifacts** (e.g., SBOMs and provenance attestations). These are produced **at release time** (not on every PR).
+> **Governed document.** This README defines the *packaging and verification contract* for KFM release artifacts.
+> Changes here can affect downstream release automation, verification, and auditability.
 
 ---
 
-## What belongs in `releases/`
+## 📘 Overview
 
-A release directory typically contains:
+### Purpose
 
-- **Release manifest** describing the snapshot + listing all artifacts
-- **Checksums** for every artifact in the release
-- **SBOM(s)** for official releases (format is implementation-defined; keep it machine-readable)
-- **Provenance attestation(s)** for official releases (format is implementation-defined; keep it machine-readable)
-- **Bundle archives** (e.g., “repo snapshot”, “data bundle”, “graph export bundle”) and/or **pointers** to externally stored large artifacts, each with content hashes recorded in the manifest
+The `releases/` directory is the canonical home for **packaged release artifacts** (e.g., versioned bundles) and the **release metadata needed to verify, audit, and reproduce** those artifacts later. At minimum, releases are expected to include a **manifest** and an **SBOM**. [^kfm-structure]
+
+This aligns with KFM’s architecture goals:
+- **Governed access + traceability** across system components and datasets (trust membrane).
+- **Reproducibility** of builds and data bundles (so a past release can be recreated and audited). [^kfm-impl] [^release-mgmt]
+
+### Scope
+
+This README covers:
+- What belongs in `releases/`
+- A recommended directory layout per release
+- Minimum required metadata (manifest + checksums + SBOM + provenance pointers)
+- Release gates (CI + governance review expectations)
+
+Out of scope:
+- Detailed CI workflow YAML specifics (those live under `.github/workflows/` if present)
+- The full STAC/DCAT/PROV schemas (those live under `schemas/` and data catalogs under `data/`)
+
+### Audience
+
+- Maintainers cutting a release (code, data, narrative bundles)
+- Reviewers performing governance checks (FAIR/CARE, sensitivity)
+- Contributors troubleshooting “what shipped in release X?”
+
+### Definitions
+
+| Term | Meaning |
+|---|---|
+| Release | A versioned, distributable snapshot of KFM code+config and/or data+metadata bundles. |
+| Release ID | A stable identifier for a release (often a Git tag). |
+| Manifest | Machine-readable index of what’s included in the release (artifacts, hashes, inputs, build info). [^kfm-structure] |
+| SBOM | Software Bill of Materials for shipped software artifacts (format e.g., SPDX or CycloneDX). [^kfm-structure] |
+| PROV | Provenance bundle(s) describing how data outputs were derived (inputs → transforms → outputs). |
+| Trust membrane | Architectural rule: clients never bypass the governed API; core logic never bypasses repository interfaces. [^kfm-impl] [^kfm-blueprint] |
 
 ---
 
-## What must NOT be placed in `releases/`
+## 🗂️ Directory Layout
 
-- **Raw sources** or intermediate working files (those belong in canonical data staging locations, per the Master Guide)
-- **Secrets** (API keys, tokens, passwords)
-- Anything that violates KFM’s sovereignty/classification invariants (no “downgrading” restrictions between inputs and outputs)
+### This document
 
----
+- **Path:** `releases/README.md`
 
-## Directory layout
+### Directory intent
 
-Each release is stored under a directory named for its git tag:
+`releases/` is intended for **immutable, versioned** bundles plus the metadata needed to validate them (manifest, SBOM, checksums, provenance pointers). [^kfm-structure]
+
+> [!IMPORTANT]
+> Treat release folders as **append-only**. Do not “edit history” by mutating already-published release bundles.
+> If a correction is needed, cut a new patch release and document the change.
+
+### Recommended structure
 
 ```text
 releases/
-  vX.Y.Z/
-    manifest.json
-    checksums.sha256
-    sbom.*                (optional per policy; REQUIRED for official releases)
-    provenance.*          (optional per policy; REQUIRED for official releases)
-    bundles/
-      <bundle files...>
-    release-notes.md
+├── README.md
+└── <release_id>/                        # one folder per release (e.g., v1.2.3)
+    ├── manifest.yaml                    # or manifest.json (choose one convention)
+    ├── sbom.spdx.json                   # SBOM (format must be declared in manifest)
+    ├── checksums.sha256                 # checksums for all artifacts in this folder
+    ├── notes.md                         # human-readable release notes (optional but recommended)
+    ├── prov/                            # provenance bundles OR pointers to canonical PROV outputs
+    │   └── prov_bundle.json
+    └── artifacts/                       # packaged binaries / bundles / exports
+        ├── kfm_api_container.tar         # example
+        ├── kfm_web_build.zip             # example
+        ├── data_bundle.tar.zst           # example
+        └── graph_export.cypher.zst       # example
 ```
 
-**Conventions**
-- Use **semantic version tags** like `v13.0.0`, `v13.1.0`, `v13.1.1`.
-- Treat each `releases/<tag>/` directory as **immutable** once published.
-  - If something must change, publish a **new patch release** rather than editing an existing release.
+> [!NOTE]
+> Exact artifact types (containers, zips, dumps) depend on the release type. The invariants are:
+> **manifest + SBOM + checksums + provenance pointers**.
 
 ---
 
-## Release identity and versioning rules
+## 🧭 Context
 
-KFM is versioned at multiple layers; releases must respect each:
+### Why releases are “governed”
 
-### 1) Repository release versioning (tags)
-- Tags follow **semantic versioning**.
-  - **Major** version: significant structural changes (breaking or coordinated changes).
-  - **Minor** version: backwards-compatible feature additions.
-  - **Patch** version: backwards-compatible fixes.
+KFM is designed around:
+- clean layered architecture (Domain → Use Case → Integration → Infrastructure), and
+- a strict trust membrane where all data access is mediated by governed interfaces and the unified API boundary. [^kfm-impl] [^kfm-blueprint]
 
-### 2) Dataset versioning (catalog + provenance)
-When datasets are updated or reprocessed:
-- New dataset versions should be **linked to prior versions** in DCAT/PROV.
-- PROV should capture lineage and “how it was produced” (inputs, activities, agents, parameters), ideally including a run identifier and/or commit hash.
+Releases must therefore be packaged in a way that:
+- preserves API boundaries (e.g., UI is configured to call the governed API; no direct DB coupling),
+- includes enough metadata to explain **what shipped** and **how it was produced**, and
+- supports audits, reproducibility, and safety review.
 
-### 3) Graph & ontology versioning
-- Graph schemas should remain backwards-compatible unless a deliberate migration is performed.
-- Ontology changes require migration scripts and must be recorded in version history.
+### Release ID convention
 
-### 4) API versioning
-- Breaking API changes require either a new versioned endpoint or a negotiated deprecation strategy.
-- The OpenAPI/GraphQL schema is the contract; breaking it implies a version increment.
+**Preferred (recommended):** Semantic Versioning `vMAJOR.MINOR.PATCH`  
+**Optional:** pre-releases like `-alpha.N`, `-beta.N`, `-rc.N` when testing is needed.
 
----
-
-## Required “boundary artifacts” before data is considered publishable
-
-For any dataset included in a release snapshot, KFM requires:
-- STAC Collection and Item(s)
-- DCAT Dataset entry
-- PROV activity bundle
-
-These “boundary artifacts” are the interface from data → graph → API → UI. If the dataset has no provenance record, that is a red flag.
+> [!CAUTION]
+> The authoritative versioning policy is **(not confirmed in repo)**.
+> If your repo already defines version rules (e.g., in `CHANGELOG.md` or governance docs), follow that and update this README accordingly.
 
 ---
 
-## CI, security, and governance gates for release readiness
+## 🗺️ Diagrams
 
-A release must be cut from a state that passes (or is explicitly waived under policy) KFM’s minimum quality and safety gates. This includes:
-
-- API contract tests (OpenAPI / GraphQL lint + contract tests)
-- Security & governance scans (examples include secret scanning, PII/sensitive content scans, sensitive location checks, and classification consistency checks)
-
-### Governance review triggers (manual)
-Certain changes should trigger a manual governance review before release, including:
-- Introducing sensitive data / sovereignty-related layers
-- New AI-driven narrative features that could be perceived as factual
-- New external data sources (license/provenance/standards review)
-- New public-facing outputs that might expose sensitive info
-- Classification or sensitivity changes
-
-Document outcomes in `docs/governance/REVIEW_GATES.md` (if present) or the canonical governance record.
-
----
-
-## Release artifact checklist
-
-### Minimum contents (REQUIRED for every release directory)
-- [ ] `manifest.json` present
-- [ ] `checksums.sha256` present (covers every bundle and every machine-readable artifact)
-- [ ] `release-notes.md` present (see template below)
-
-### Official-release additions (REQUIRED for official releases)
-- [ ] SBOM present (e.g., `sbom.spdx.json` or equivalent)
-- [ ] Provenance attestation present (e.g., `provenance.intoto.jsonl` or equivalent)
-- [ ] Any signatures / verification material present (format/policy defined by maintainers)
-
-### Data integrity / governance (REQUIRED when data is included)
-- [ ] All included datasets have STAC + DCAT + PROV boundary artifacts
-- [ ] Classification is not “downgraded” across processing/output boundaries
-- [ ] Redaction/generalization applied across every layer where required (processed data, STAC/DCAT, API, UI)
-- [ ] Governance review completed when triggers apply (and documented)
-
----
-
-## Manifest format (recommended)
-
-KFM does not mandate a single manifest schema here, but **the manifest must be machine-readable** and must allow a user to verify:
-
-- which git tag + commit it corresponds to,
-- what bundles exist,
-- cryptographic hashes for each artifact,
-- (if applicable) where external artifacts live and how to verify them.
-
-Example `manifest.json` (illustrative):
-
-```json
-{
-  "release_tag": "v13.0.0",
-  "commit": "abc123def456...",
-  "created_at": "2026-02-08T00:00:00Z",
-  "artifacts": [
-    {
-      "path": "bundles/kfm-repo-snapshot-v13.0.0.tar.gz",
-      "role": "repo_snapshot",
-      "sha256": "<sha256-hex>",
-      "notes": "Snapshot of code + docs + governed metadata for this tag."
-    },
-    {
-      "path": "bundles/kfm-data-bundle-v13.0.0.tar.zst",
-      "role": "data_bundle",
-      "sha256": "<sha256-hex>",
-      "notes": "Processed data + STAC/DCAT/PROV boundary artifacts."
-    },
-    {
-      "path": "sbom.spdx.json",
-      "role": "sbom",
-      "sha256": "<sha256-hex>"
-    },
-    {
-      "path": "provenance.intoto.jsonl",
-      "role": "provenance_attestation",
-      "sha256": "<sha256-hex>"
-    }
-  ]
-}
+```mermaid
+flowchart LR
+  A[Commit on main] --> B[Tag release_id]
+  B --> C[CI: build + test + validate]
+  C --> D[Package artifacts]
+  D --> E[Generate manifest + checksums + SBOM]
+  E --> F[Attach PROV pointers/bundles]
+  F --> G[Governance review + sign-off]
+  G --> H[Publish GitHub Release + store artifacts in releases/]
 ```
 
----
-
-## How to cut a release (maintainer procedure)
-
-1. **Choose the version**
-   - Determine whether the change is major/minor/patch.
-   - Confirm graph/ontology/API changes comply with versioning expectations (migrations + versioned endpoints if needed).
-
-2. **Confirm governance**
-   - Check whether review triggers apply (sensitive data, classification changes, new public outputs, new external sources, AI narrative changes).
-   - Ensure redaction and “no downgraded restrictions” invariants are upheld.
-
-3. **Run/confirm CI gates**
-   - Ensure contract tests, validators, and security/governance scans pass on the release commit.
-
-4. **Build bundles**
-   - Create the bundle(s) you intend to distribute.
-   - Generate a `manifest.json`.
-   - Generate checksums covering **every** artifact.
-   - For official releases: generate SBOM + provenance attestations (and signatures if policy requires).
-
-5. **Publish**
-   - Create and push the git tag.
-   - Attach artifacts to the release channel used by maintainers (e.g., GitHub Releases) and/or commit the `releases/<tag>/` folder, per repo policy.
-
-6. **Post-release verification**
-   - Validate checksums.
-   - Validate manifests/SBOM/provenance files are parseable.
-   - Perform a clean bootstrap from the bundle(s) and confirm derivative stores (e.g., PostGIS/Neo4j) can be regenerated from canonical outputs.
+> [!NOTE]
+> KFM’s documentation guidance emphasizes CI validation, provenance, and review gates. [^kfm-markdown]
 
 ---
 
-## How to verify a release (consumer procedure)
+## 📦 Data & Metadata
 
-1. Verify you have:
-   - `manifest.json`
-   - `checksums.sha256`
+### Minimum required files (per release folder)
 
-2. Verify checksums (example):
+| File | Required | Purpose |
+|---|---:|---|
+| `manifest.yaml` (or `.json`) | ✅ | Canonical index of artifacts and their hashes; ties release to source commit(s). |
+| `checksums.sha256` | ✅ | Verifies artifact integrity (and helps detect tampering). |
+| `sbom.*` | ✅ | Software dependency transparency for shipped software artifacts. [^kfm-structure] |
+| `prov/*` | ✅ | Provenance bundles or pointers to canonical PROV outputs for released data. |
+| `notes.md` | ➕ | Human-readable release notes (recommended). |
+
+### Manifest content (minimum fields)
+
+Choose YAML or JSON and keep it consistent repo-wide.
+
+```yaml
+release_id: "vX.Y.Z"
+release_date_utc: "YYYY-MM-DDTHH:MM:SSZ"
+
+source:
+  git:
+    tag: "vX.Y.Z"
+    commit: "<sha>"            # exact commit used to build artifacts
+    dirty: false               # must be false for published releases (recommended)
+
+artifacts:
+  - name: "data_bundle.tar.zst"
+    type: "data-bundle"
+    sha256: "<sha256>"
+    bytes: 123456789
+  - name: "sbom.spdx.json"
+    type: "sbom"
+    sha256: "<sha256>"
+  - name: "kfm_web_build.zip"
+    type: "ui-bundle"
+    sha256: "<sha256>"
+
+provenance:
+  prov_bundles:
+    - path: "prov/prov_bundle.json"
+  stac:
+    # either pointers or packaged snapshots (choose one approach)
+    collections: ["<stac-collection-id>"]     # (not confirmed in repo)
+    items: ["<stac-item-id>"]                 # (not confirmed in repo)
+  dcat:
+    datasets: ["<dcat-dataset-id>"]           # (not confirmed in repo)
+
+security:
+  checksums_file: "checksums.sha256"
+  signatures:
+    enabled: false                            # (not confirmed in repo)
+    # if enabled: include signature paths + key metadata
+
+build:
+  runner: "CI"                                # or "local" (discouraged for published releases)
+  toolchain:
+    # record enough to reproduce (OS, compilers, libraries, etc.)
+    os: "<os-version>"
+    python: "<python-version>"
+    node: "<node-version>"
+    docker: "<docker-version>"
+```
+
+This matches standard release-management guidance: to reproduce a release, record the **exact versions of source components, build tools, platform, and configuration** used. [^release-mgmt]
+
+---
+
+## 🌐 STAC, DCAT & PROV Alignment
+
+KFM expects structured metadata outputs (e.g., STAC/DCAT/PROV) to support findability, interoperability, and auditability. [^kfm-markdown]
+
+For a release that includes data products:
+- Include **PROV bundles** (or stable pointers to PROV stored under the canonical `data/prov/` structure).
+- Include either:
+  - a **snapshot** of STAC/DCAT outputs shipped with the release, *or*
+  - stable identifiers/pointers that resolve inside the repo at the tagged commit.
+
+> [!IMPORTANT]
+> If the release includes Story Nodes or narrative content, ensure all narrative claims remain evidence-backed and properly cited.
+
+---
+
+## 🧱 Architecture
+
+### Boundary invariants (must hold in every release)
+
+- **Frontend never accesses databases directly**; it must go through the governed API.
+- **Core backend logic never bypasses repository interfaces** to talk directly to storage. [^kfm-impl] [^kfm-blueprint]
+
+These invariants should be reflected in how release artifacts are packaged and configured (e.g., environment variables point UI → API, not UI → DB).
+
+### What “software artifacts” may include
+
+Depending on your release type, `artifacts/` may contain:
+- API server build artifacts (e.g., container images or build tarballs)
+- UI bundles (e.g., a compiled web build)
+- Data bundles (processed datasets and metadata exports)
+- Graph exports for knowledge graph builds (format depends on graph pipeline)
+
+> [!CAUTION]
+> Do not include secrets (API keys, DB passwords, private tokens) in any release bundle.
+
+---
+
+## 🧠 Story Node & Focus Mode Integration
+
+If a release includes curated narratives (Story Nodes) for Focus Mode:
+- Ensure they follow the appropriate Story Node template and list provenance pointers (dataset IDs, STAC/DCAT IDs, graph node IDs where applicable).
+- Ensure sensitivity handling (redactions/generalization) is applied for culturally sensitive or vulnerable locations. [^kfm-markdown]
+
+Recommended: include Story Node releases as a separate artifact type (e.g., `story_nodes_bundle.tar.zst`) so they can be independently audited and versioned.
+
+---
+
+## 🧪 Validation & CI/CD
+
+KFM documentation standards call for automated validation (pre-commit + PR CI), including markdown linting, structure validation, link checks, provenance/sensitivity scans, and accessibility checks. [^kfm-markdown]
+
+### Release gates (minimum)
+
+#### ✅ Required gates (published releases)
+
+- [ ] All unit/integration tests pass (if applicable to release contents)
+- [ ] Markdown lint + structure validation pass for any changed docs
+- [ ] No broken internal links (and **no hot-linked external images**) in governed Markdown
+- [ ] Provenance/sensitivity scan passes (or explicit governance exception is recorded)
+- [ ] `checksums.sha256` generated and verified
+- [ ] SBOM generated for shipped software artifacts
+- [ ] Manifest present and includes: commit SHA + artifact hashes + provenance pointers
+
+#### ➕ Recommended gates
+
+- [ ] Reproducibility check (re-build artifacts from tag and match checksums)
+- [ ] Artifact signing + signature verification (**not confirmed in repo**)
+- [ ] “Dry run” install/launch test in a clean environment
+
+### Local workflow tip
+
+If your repo uses pre-commit, run:
+
 ```bash
-sha256sum -c checksums.sha256
+pre-commit run --all-files
 ```
 
-3. If present, verify signatures / provenance attestations according to project policy.
-
-4. Confirm the tag + commit in `manifest.json` match the release you intended to consume.
+(Exact hooks are repo-specific.) [^kfm-markdown]
 
 ---
 
-## Release notes template (recommended)
+## ⚖️ FAIR+CARE & Governance
 
-Create `release-notes.md` with:
+KFM documentation and data handling should align with **FAIR + CARE** principles, including sensitivity handling and “authority to control” considerations for culturally sensitive content. [^kfm-markdown]
 
-- Summary (what changed)
-- Breaking changes (if any) + migration steps
-- Data changes (new datasets, updated datasets, removals)
-- Governance notes (any reviews performed; any sensitivity/classification notes)
-- Verification notes (hashes, signatures, SBOM/provenance presence)
+### Governance checklist (release reviewer)
 
----
+- [ ] Release does not expose culturally restricted or vulnerable-site precise locations
+- [ ] Sensitive content is generalized/redacted where required
+- [ ] Provenance pointers are complete (inputs → transforms → outputs)
+- [ ] Manifest includes enough information to reproduce and audit the release
+- [ ] Any AI-generated summaries/content are disclosed where applicable (recommended)
 
-## Related canonical references
-
-- Master Guide (system source of truth): `../docs/MASTER_GUIDE_v13.md`
-- Standards (profiles, schemas): `../docs/standards/`
-- Governance (review gates, sovereignty/ethics): `../docs/governance/`
-- Data catalogs/provenance roots:
-  - `../data/stac/`
-  - `../data/catalog/dcat/`
-  - `../data/prov/`
+> [!IMPORTANT]
+> If governance reviewers require additional review gates for a specific release (e.g., sensitive datasets),
+> record that requirement in `notes.md` and ensure the release folder includes the review record or pointer.
 
 ---
 
+## 🕰️ Version History
+
+| Version | Date | Summary of Changes | Author |
+|---:|---|---|---|
+| v1.0.0 | 2026-02-10 | Initial governed README for `releases/` packaging contract (manifest + SBOM + provenance + CI gates). | KFM AI assistant (human review required) |
+
+---
+
+## 🔖 Provenance & References
+
+[^kfm-structure]: Repository structure guidance identifies `releases/` as the location for “packaged release artifacts (versioned data bundles, manifest, SBOM).”  [oai_citation:1‡MARKDOWN_GUIDE_v13.md.gdoc](file-service://file-UYVruFXfueR8veHMUKeugU)  
+[^kfm-markdown]: KFM Markdown governance + CI expectations (linting, structure validation, link checks, provenance/sensitivity scan, accessibility checks; and FAIR+CARE guidance).  [oai_citation:2‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)  
+[^kfm-impl]: KFM System Implementation Guide (clean layered architecture; trust membrane; UI must consume governed API; core logic uses repository interfaces).  [oai_citation:3‡Kansas Frontier Matrix (KFM) System Implementation Guide.pdf](sediment://file_00000000fca871f890bb5ef3aa2e9a93)  
+[^kfm-blueprint]: KFM System Implementation Blueprint & Capabilities Guide (layer responsibilities; trust membrane enforcement).  [oai_citation:4‡Kansas Frontier Matrix (KFM) System Implementation Blueprint & Capabilities Guide.pdf](sediment://file_00000000bb9071f596e5cb45d384df0b)  
+[^github-release]: KFM Unified Technical Blueprint notes GitHub release patterns (tags/releases + attaching artifacts) as a distribution mechanism.  [oai_citation:5‡Kansas Frontier Matrix (KFM) - Unified Technical Bluprint & Supporting Ideas.pdf](sediment://file_00000000e6e07230834be9e2958cb309)  
+[^release-mgmt]: Release management guidance: document exact source/tool/platform versions and keep artifacts/config so releases can be recreated.  [oai_citation:6‡Various Programming Concepts.pdf](sediment://file_00000000e86c71fd9eceb7eec4bba22e)
