@@ -1,330 +1,246 @@
-# Master Coder Protocol — MCP
+# 🧩 MCP — Master Coder Protocol (KFM)
 
-> 🧭 **KFM’s governed contribution contract**: *no shortcuts*, *evidence-first*, and *CI-enforced* quality across **code + data + docs + policy**.
+<kbd>GOVERNED</kbd> <kbd>PROVENANCE-FIRST</kbd> <kbd>FAIR+CARE</kbd> <kbd>CI-VALIDATED</kbd>
+
+> [!IMPORTANT]
+> **MCP (“Master Coder Protocol”) is KFM’s reproducibility + documentation contract** for experiments, SOPs, model cards, and shared vocabulary.
+> If it’s not documented with provenance, it’s not “real” in the KFM knowledge system.
 
 ---
 
-## At a glance
+## 📘 Overview
 
-| “Badge” | What it means in practice |
+### Purpose
+This directory defines how we:
+- record experiments in a way others can reproduce (inputs → method → outputs → interpretation),
+- standardize repeatable procedures (SOPs),
+- document models (model cards) and data assumptions,
+- maintain a shared glossary so collaboration stays precise.
+
+### Scope
+
+| In Scope ✅ | Out of Scope ❌ |
 |---|---|
-| 🛡️ **Governed** | Changes must pass the governance membrane: standards, validation, approvals, and auditability. |
-| 🧾 **Provenance-first** | Every substantive claim and every published artifact must be traceable to sources + processing lineage. |
-| 🧪 **Test-required** | “Green tests” is a merge gate; tests are part of the deliverable, not a nice-to-have. |
-| 📚 **Docs-required** | If you ship it, you document it (including Story Nodes, templates, and API contracts). |
-| 🔒 **Policy-as-code** | Policy rules (OPA) protect the trust membrane and enforce compliance at runtime + CI. |
-| 🌱 **FAIR + CARE aware** | Sensitive/culturally restricted information is handled with extra care, labeling, and review. |
+| Experiment logs + experiment report templates | Raw data storage (see `data/`) |
+| SOPs for repeatable tasks | Production incident runbooks (unless explicitly designated) |
+| Model cards for trained models / heuristics | “Uncited narrative” or undocumented findings |
+| Glossary / terminology registry | Bypassing governance or provenance gates |
 
----
+### Audience
+- **Primary:** KFM contributors (data/pipeline, backend, frontend, research, historians)
+- **Secondary:** reviewers, governance stewards, external collaborators (when permitted)
 
-## Non-negotiables
+### Definitions (local quick reference)
 
-> [!IMPORTANT]
-> **Trust membrane rules**
-> - The **frontend (React/MapLibre)** and external clients **never** bypass the official API to query data stores.  
-> - Core backend logic **never** bypasses repository interfaces to talk directly to databases.  
-> These are not “style preferences” — they are governance and security boundaries.
-
-> [!IMPORTANT]
-> **Evidence-first**
-> - If you cannot ground a statement in a repo artifact (dataset ID, doc reference, commit hash, etc.), you must mark it: **“(not confirmed in repo)”** and include the *minimal verification step*.
-
----
-
-## Scope of MCP
-
-MCP applies to **everything that can affect system behavior or public narrative**, including:
-
-- ✅ Backend logic (domain, services/use-cases, interface ports/contracts, infra adapters)
-- ✅ Frontend UI + API clients
-- ✅ ETL and data pipelines (raw → work → processed)
-- ✅ Metadata & catalogs (STAC, DCAT, PROV)
-- ✅ Story Nodes and governed documentation (templates, standards, runbooks)
-- ✅ Policy rules (Open Policy Agent / Rego)
-- ✅ CI/CD workflow configuration and security checks
-
----
-
-## Architecture rules
-
-### Clean layers and boundaries
-
-MCP assumes a **clean / ports-and-adapters** style split that keeps business rules stable while allowing infrastructure to evolve.
-
-| Layer | Purpose | May depend on | Must not depend on |
-|---|---|---|---|
-| Domain | Pure entities + domain rules | nothing external | DB, web frameworks, UI, filesystem, vendor SDKs |
-| Use Case / Service | Workflows + business rules | Domain + abstract ports | DB drivers, HTTP frameworks, UI |
-| Integration & Interface | Ports/contracts + adapters boundaries | Domain + Services | direct storage calls from core logic |
-| Infrastructure | Real implementations | anything it must implement | (no restriction, but *keep it outside the core*) |
-
-### Trust membrane
-
-- **UI → API only** (no DB calls, no “sneaky connections”).
-- **API → services → repositories** (no service-level direct DB queries).
-- **OPA policy** is a first-class enforcement mechanism for authorization + compliance.
-
----
-
-## Contribution workflow
-
-```mermaid
-flowchart LR
-  A[Issue / Change Request] --> B[Branch & Implement]
-  B --> C[Local Checks<br/>lint + unit tests + docs build]
-  C --> D[Pull Request]
-  D --> E[CI Gates<br/>tests + schemas + policy + security]
-  E --> F[Review<br/>architecture + governance + CARE/FAIR]
-  F --> G[Merge]
-  G --> H[Deploy to Staging]
-  H --> I[Manual Approval Gate<br/>for Production]
-  I --> J[Production Deploy + Monitoring]
-```
-
----
-
-## Definition of Done
-
-### PR-level Definition of Done
-
-- [ ] **Change intent** is clear (issue linked, user impact stated)
-- [ ] **Architecture boundaries** respected (no trust membrane violations)
-- [ ] **Tests added/updated** (and meaningful)
-- [ ] **Docs added/updated** (user-facing and/or developer-facing)
-- [ ] **No secrets** or credentials committed; configuration uses env vars / secret manager
-- [ ] **Metadata & provenance updated** (if data changed)
-- [ ] **CI passes** locally (as much as feasible) and in PR
-- [ ] **CARE/FAIR** handling applied where relevant
-- [ ] **Review-ready**: small, understandable, reversible when possible
-
----
-
-## Change types and required artifacts
-
-### Backend code changes
-
-**Minimum artifacts**
-- Tests for new logic (unit tests for domain/service; integration tests at boundaries)
-- Updated docs if behavior changes (API, services, data contracts)
-- Updated policy if authorization/sensitivity is affected
-
-**Hard no**
-- Business logic in route handlers
-- Direct DB access from service layer
-- Bypassing repository ports
-
----
-
-### Frontend changes
-
-**Minimum artifacts**
-- UI change description + screenshots (if relevant)
-- Tests for key components or user flows (where feasible)
-- Confirm API contract compatibility
-
-**Hard no**
-- Any direct database access
-- Any bypass of the governed API gateway
-
----
-
-### New dataset or data update
-
-**Minimum artifacts**
-- Raw source and/or source reference + manifest
-- Processing pipeline code (script/notebook/config)
-- Processed outputs in standardized formats
-- **STAC Collection + Items**
-- **DCAT dataset entry**
-- **PROV lineage bundle** (raw → work → processed, including run/config identifiers)
-- Validation outputs as required (schema checks, link checks, etc.)
-
-> [!NOTE]
-> Metadata must be aligned and cross-linked: STAC ↔ DCAT ↔ PROV, and the graph should reference catalog IDs (not duplicate bulky assets).
-
----
-
-### Story Nodes and narrative docs
-
-**Minimum artifacts**
-- Follow **Story Node Template v3**
-- Required sections like **Overview**
-- Step directives (map state) per story conventions
-- **Citations for factual claims** (footnotes or reference links)
-- CI validation passes (template conformance, link checks, dataset ID checks, etc.)
-
-> [!IMPORTANT]
-> Story Nodes are governed narrative artifacts and require governance review before publication.
-
----
-
-### Policy changes OPA
-
-**Minimum artifacts**
-- Rego policy change + policy tests
-- Clear description of impact (what becomes allowed/denied)
-- Evidence that policy changes do not weaken required compliance (e.g., citation requirements)
-
----
-
-### CI/CD and infrastructure changes
-
-**Minimum artifacts**
-- Updated pipeline config + documentation
-- Threat-aware review (secrets, dependency scanning, least privilege)
-- Proof that the stack is reproducible (Docker/Compose/K8s specs remain valid)
-
----
-
-## CI gates and typical checks
-
-> [!NOTE]
-> Exact tooling can vary by repo config, but MCP expects CI to enforce **code + data + docs** compliance, not code alone.
-
-| Gate | Examples of what it enforces |
+| Term | Meaning in this repo |
 |---|---|
-| Lint / formatting | Python + JS formatting and style checks |
-| Unit tests | Domain + service logic verification |
-| Integration tests | API + DB boundary correctness; containerized stack tests |
-| Schema validation | JSON schema checks for metadata (DCAT/STAC/PROV, doc front-matter) |
-| Docs validation | Markdown lint rules, template conformance, link checks |
-| Policy checks | OPA rules tested against scenarios (auth, sensitivity, citations) |
-| Security checks | SAST + dependency scanning; secret scanning |
+| **Experiment Log** | An indexed “lab notebook” entry: what was tested, why, how, and what happened |
+| **Experiment Report** | A detailed write-up (often 1:1 with an experiment ID) enabling reproduction |
+| **SOP** | Standard Operating Procedure: repeatable steps + verification criteria |
+| **Model Card** | A short document describing a model’s purpose, training data context, performance, and limits |
+| **Provenance** | Dataset IDs / record IDs / commit hashes / lineage artifacts that substantiate claims |
 
 ---
 
-## Local “pre-flight” commands
-
-> [!TIP]
-> Run these before pushing to avoid CI churn. Adapt to the repo’s actual scripts.
-
-```bash
-# Backend
-pytest
-# or (if containerized)
-docker-compose exec backend pytest
-
-# Frontend
-npm run lint
-npm test
-
-# Docs (if applicable)
-mkdocs serve
-```
-
----
-
-## Provenance and metadata requirements
-
-### STAC, DCAT, PROV alignment
-
-- **STAC** describes geospatial assets with spatial/temporal metadata.
-- **DCAT** provides discoverability and distributions linking to STAC or data resources.
-- **PROV** records end-to-end lineage and configuration so outputs are reproducible.
-
-### Versioning expectations
-
-- Dataset versioning links revisions (e.g., prov:wasRevisionOf) through metadata.
-- Graph schema changes must remain compatible unless migrated deliberately.
-- API breaking changes require versioning strategy and contract updates.
-
----
-
-## Story Nodes and Focus Mode
-
-A Story Node is a curated narrative tied to map views and evidence, authored in Markdown with structured directives.
-
-MCP expectations:
-- Story content is **structured**, **cited**, and **machine-validated**
-- Focus Mode output must preserve evidence, citations, and governance rules
-
----
-
-## Security and ethics
-
-> [!WARNING]
-> If content includes **sensitive locations** or culturally restricted information:
-> - generalize/redact,
-> - label clearly,
-> - route for governance review,
-> - do not “fill in gaps” with speculation.
-
-Also:
-- Never commit secrets (keys, tokens, credentials)
-- Prefer env vars + secret manager integrations
-- Use policy enforcement at the API layer to keep a single controlled entry point
-
----
-
-## Directory layout
+## 🗂️ Directory Layout
 
 > [!NOTE]
-> This README defines MCP. Additional MCP artifacts may be added over time.
+> Treat this as the **expected** MCP structure. Create folders/files as needed (and keep links stable).
+
+### Tree
 
 ```text
 mcp/
-  README.md                         # You are here: protocol overview + rules
-  checklists/                       # Optional: PR + change-type checklists
-    PR_DOD.md
-    DATASET_DOD.md
-    STORYNODE_DOD.md
-    POLICY_DOD.md
-  templates/                        # Optional: reusable templates for governed work
-    EXPERIMENT_PROTOCOL.md
-    CHANGELOG_ENTRY.md
-  examples/                         # Optional: example PRs / story nodes / dataset bundles
-    dataset_bundle_minimal/
-    story_node_minimal/
+  README.md                         # (this file) MCP overview + contributor contract
+  experiments/
+    EXPERIMENT_LOG.md               # Master index of experiments (by ID) (recommended)
+    experiment_template.md          # Template for experiment reports
+    <exp_id>__<slug>/               # Optional: per-experiment folder
+      README.md                     # Detailed experiment report (or link to it)
+      artifacts/                    # Optional: plots, outputs, hashes, configs (no large raw data)
+  sops/
+    SOP_INDEX.md                    # Optional: index of SOPs
+    sop_template.md                 # SOP template
+    SOP__<slug>.md                  # SOPs (repeatable procedures)
+  glossary.md                       # Shared vocabulary (or use glossary/ folder)
+  model_cards/
+    MODEL__<slug>.md                # Model cards (human-readable + governance notes)
+```
+
+### What belongs where
+
+| Path | What goes here | Typical reviewers |
+|---|---|---|
+| `mcp/experiments/` | Experiment index + reports + small artifacts (plots/configs/hashes) | domain reviewers + maintainers |
+| `mcp/sops/` | SOPs for repeatable tasks; verification + troubleshooting required | maintainers + ops/pipeline reviewers |
+| `mcp/model_cards/` | Model cards (intended use, limits, evaluation context) | maintainers + governance reviewers |
+| `mcp/glossary.md` | Canonical definitions/acronyms used across docs and UI | everyone (esp. narrative/UI) |
+
+---
+
+## 🧭 Context
+
+KFM is “evidence-first”: story nodes, UI panels, and AI answers are intended to remain auditable and traceable to sources. MCP is the **human-side protocol** that keeps experimentation, repeatable work, and model usage from turning into “tribal knowledge.”
+
+### MCP operating principles
+- **Reproducibility over vibes:** document enough detail that a skilled contributor can replicate.
+- **Version everything:** code versions and data versions/hashes must be traceable.
+- **No orphan artifacts:** outputs without an experiment ID and write-up are treated as scratch.
+- **Governance-aware:** sensitive information is generalized/redacted and flagged for review.
+
+---
+
+## 🧩 Diagrams
+
+### How MCP artifacts flow into KFM
+
+```mermaid
+flowchart LR
+  A[Question / Hypothesis] --> B[Experiment Protocol + ID]
+  B --> C[Run + Capture configs/params/seed]
+  C --> D[Outputs + Small Artifacts]
+  D --> E[Experiment Report + Log Entry]
+  E --> F[Metadata + Provenance Links]
+  F --> G[Governed Integration: catalogs / APIs / narratives]
 ```
 
 ---
 
-## Canonical references inside the repo
+## 📦 Data & Metadata
 
-These are the “do not contradict” sources for governed work (paths may vary by repo version):
+### Minimum required fields
 
-- `docs/MASTER_GUIDE_v13.md`
-- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
-- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
-- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md`
-- `docs/standards/KFM_CHATGPT_WORK_PROTOCOL.md`
-- `docs/governance/ROOT_GOVERNANCE.md`
-- `ETHICS.md`
-- `SOVEREIGNTY.md`
+> [!TIP]
+> If you can’t fill a field, write `TBD` and explain why. Don’t delete fields—missing provenance is a review blocker.
+
+#### Experiment Log Entry (index row)
+- **Date**
+- **Experiment ID** (unique + stable)
+- **Author(s)**
+- **Purpose / Question**
+- **Method summary**
+- **References** (links to protocol/report, code commit, dataset IDs)
+- **Results summary**
+- **Conclusion / Next steps**
+
+#### Experiment Report (per experiment)
+Use `mcp/experiments/experiment_template.md` and include:
+- **Objective**
+- **Inputs & data references** (dataset IDs / hashes / versions; never “mystery data”)
+- **Method** (params, environment notes, assumptions)
+- **Results** (metrics, plots, outputs)
+- **Interpretation**
+- **Reproduction steps** (commands, scripts, or pipeline invocation)
+- **Known limitations / failure modes**
+
+#### SOP (repeatable procedure)
+Use `mcp/sops/sop_template.md` and include:
+- **Purpose**
+- **Tools needed**
+- **Steps**
+- **Verification**
+- **Troubleshooting**
+
+#### Model Card
+In `mcp/model_cards/` include:
+- **Intended use / non-use**
+- **Training data context** (what kinds of data; how it was sourced)
+- **Evaluation context** (what “good” means; what was measured)
+- **Limitations & risks** (bias, uncertainty, failure cases)
+- **Operational notes** (how it is invoked; dependencies; compatibility)
+
+### Data docs live elsewhere (but MCP must link to them)
+Raw/processed datasets and their catalogs/lineage should live under the repo’s data/pipeline conventions (e.g., dataset catalogs and provenance artifacts). MCP artifacts should **link out** to those dataset records rather than duplicating them.
 
 ---
 
-## Appendix
+## 🏗️ Architecture Alignment
 
-<details>
-<summary><strong>PR checklist mini-template</strong></summary>
+> [!WARNING]
+> MCP docs must **not** recommend architecture “shortcuts” that bypass KFM’s governance and trust boundaries.
 
-- [ ] I did **not** bypass the trust membrane (UI→API only; service→repo only).
-- [ ] I added/updated **tests** appropriate to the change.
-- [ ] I updated **docs** (and Story Nodes/templates if relevant).
-- [ ] I updated **metadata + provenance** (STAC/DCAT/PROV) if data changed.
-- [ ] I considered **CARE/FAIR** and flagged sensitive content appropriately.
-- [ ] CI should pass with minimal reviewer guesswork.
+### Invariants MCP docs must respect
+- **Trust membrane:** UI and external clients access governed backends via APIs—not databases directly.
+- **Clean boundaries:** core workflows should use repository/service interfaces; avoid “quick hacks” that skip governance gates.
+- **Pipeline order:** document changes so lineage remains consistent (raw → processed → catalog/prov → DB → API → UI).
 
-</details>
+### Quick Do/Don’t
 
-<details>
-<summary><strong>Experiment protocol skeleton</strong></summary>
+| ✅ Do | ❌ Don’t |
+|---|---|
+| Link experiments to dataset IDs + code commits | “I ran something locally; trust me” |
+| Use SOPs for repeatable processes | Write one-off tribal steps in chat only |
+| Record parameters, seeds, versions | Omit run conditions and expect reproducibility |
+| Flag sensitive info and redact precise locations | Publish precise vulnerable/sacred locations in public docs |
 
-```text
-Objective:
-Background:
-Hypothesis:
-Methods / Procedure:
-Variables:
-Data collection plan:
-Analysis plan:
-Expected outcome:
-Deviations log:
-Results:
-Conclusion:
-Next steps:
+---
+
+## 🧭 Story Nodes & Focus Mode Integration
+
+Even when MCP artifacts are “internal,” they often support:
+- story node claims (what evidence supports a narrative step),
+- model-driven layers or analyses (what a model is allowed to do),
+- auditability in Focus Mode (what provenance is displayed).
+
+If an MCP experiment motivates a story node update, ensure the story node cites:
+- the experiment report (by ID),
+- the underlying dataset records (IDs/hashes),
+- any relevant governance or sensitivity notes.
+
+---
+
+## 🧪 Validation & CI/CD
+
+MCP artifacts are treated like governed documentation. Expect checks such as:
+- Markdown linting
+- Template/structure validation
+- Link + image validation (avoid hot-linked external images)
+- Provenance/sensitivity scan
+- Accessibility checks (headings, alt text, table headers)
+
+### Local workflow tips
+```bash
+# Example (if configured in the repo):
+pre-commit run --all-files
 ```
 
-</details>
+Before opening a PR:
+1. Preview the Markdown rendered (GitHub/VSCode).
+2. Verify all internal links resolve.
+3. Confirm provenance links exist (dataset IDs, commit hashes, etc.).
+4. Update **Version History** for non-trivial changes.
+
+---
+
+## ⚖️ FAIR+CARE & Governance
+
+KFM adheres to FAIR+CARE practices:
+- **Findable:** consistent naming, stable IDs, clear paths
+- **Accessible:** readable Markdown, descriptive links, alt text
+- **Interoperable:** standards terminology (e.g., STAC/DCAT/PROV) used consistently
+- **Reusable:** explicit assumptions + version history
+
+CARE reminders:
+- **Authority to Control / Ethics:** protect culturally sensitive information; redact precise locations of sacred/vulnerable sites; flag docs requiring special review.
+- If you suspect content requires restricted handling, **generalize + flag** rather than publish details.
+
+---
+
+## 🕰️ Version History
+
+| Version | Date (YYYY-MM-DD) | Summary | Author |
+|---|---:|---|---|
+| v0.1.0 | 2026-02-10 | Initial MCP README establishing structure, governance, and contributor contract | KFM maintainers |
+
+---
+
+## ✅ Definition of Done (for MCP contributions)
+
+- [ ] New/updated MCP doc follows the intended structure and headings
+- [ ] All substantive claims include provenance links (dataset IDs / commits / sources)
+- [ ] Experiment entries include parameters/configs and reproduction steps
+- [ ] SOPs include verification + troubleshooting
+- [ ] No sensitive locations/details leaked; governance flags included if needed
+- [ ] Links and images validated (no broken links; no hot-linked images)
+- [ ] Ran local checks where possible (e.g., `pre-commit`)
+- [ ] Version History updated for non-trivial edits
