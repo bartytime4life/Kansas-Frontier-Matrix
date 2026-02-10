@@ -419,7 +419,3 @@ Route handlers must **not**:
 - [ ] Links resolve and render in GitHub
 - [ ] Examples match `/docs` output (endpoints/params exist)
 - [ ] Reviewed by a maintainer or governance reviewer
-
----
-
-## 🧾 References (Project Artifacts)
