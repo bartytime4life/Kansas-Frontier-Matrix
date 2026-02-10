@@ -1,237 +1,271 @@
-# data/ — KFM Governed Data Layer 🧭🗺️
+# `data/` — Governed Data (Kansas Frontier Matrix)
 
-![Governed](https://img.shields.io/badge/pipeline-governed-blue)
-![Metadata](https://img.shields.io/badge/metadata-STAC%20%7C%20DCAT%20%7C%20PROV-informational)
-![Principles](https://img.shields.io/badge/principles-FAIR%20%2B%20CARE-brightgreen)
-![Policy](https://img.shields.io/badge/policy-OPA%20(Rego)-lightgrey)
-![Reproducible](https://img.shields.io/badge/ETL-deterministic-orange)
+**Path:** `data/README.md`  
+**Status “badges”:** ✅ Governed • 🧬 Provenance-required • 🧪 CI-validated • 🛡️ Policy-as-code • 🧭 FAIR+CARE
+
+KFM treats **datasets, metadata, and provenance as first-class, governed artifacts**. This folder is where we keep the *auditable truth* of what the platform can show and serve.
 
 > [!IMPORTANT]
-> KFM treats the repository itself as a **versioned data lake**: code, data, and docs evolve in lockstep.
-> Every dataset change must preserve **lineage**, satisfy **metadata + provenance** requirements, and pass
-> **policy/quality validation** before it is eligible to power APIs/UI.
+> **Nothing becomes “live”** (API/UI-visible) unless it passes governance checks *and* ships with complete metadata + lineage.  
+> If a dataset doesn’t have the required contract artifacts, **CI should fail** and block merge.
 
 ---
 
 ## What lives in `data/`
 
-This folder holds:
+This directory holds the **canonical dataset lifecycle**:
 
-- **Raw immutable snapshots** (never edited in place).
-- **Processed, analysis-ready outputs** (reproducible from raw).
-- **Machine-readable metadata** (STAC + DCAT) and **provenance** (W3C PROV).
-- (Optionally) intermediate “scratch” outputs used during transformation.
-
-> [!NOTE]
-> Runtime databases/search/graph stores are *derived accelerators*, not the canonical source of truth.
-> Canonical artifacts live here in `data/` alongside their metadata + provenance.
+- 📥 **Raw** inputs: immutable snapshots exactly as acquired
+- 🧪 **Work** outputs: transient scratch/intermediate files (reproducible, not user-facing)
+- ✅ **Processed** outputs: standardized, analysis-ready **source of truth**
+- 🧾 **Catalog metadata**: STAC + DCAT records for discovery/interoperability
+- 🧬 **Provenance**: PROV lineage (what produced what, from which sources, when, under which rules)
 
 ---
 
-## Non-negotiables ✅
-
-- **Raw is immutable**: if upstream changes, ingest a *new* raw version; don’t overwrite.
-- **Processed is reproducible**: rerunning the same pipeline on the same raw inputs should produce identical outputs.
-- **No data enters without context**: every raw dataset requires a manifest; processed datasets require STAC/DCAT/PROV.
-- **Governance is enforced in CI**: validation + policy checks are “fail closed” (PRs must pass before merge).
-- **Sensitivity is real**: sensitive/culturally restricted location detail must be generalized/redacted and flagged for review.
-
----
-
-## Directory layout 📁
-
-> This layout is the **canonical intent** described by KFM implementation + governance docs.
-> If your repo differs, align to this structure or document the deviation in this README.
-
-```text
-data/
-  raw/                    # immutable source snapshots + per-dataset manifest(s)
-  work/                   # intermediate scratch outputs (often transient / gitignored)
-  processed/              # canonical, standardized, analysis-ready outputs (reproducible)
-  stac/
-    collections/          # STAC Collections (dataset-level metadata)
-    items/                # STAC Items (asset-level metadata)
-  catalog/
-    dcat/                 # DCAT JSON-LD (dataset/distribution discovery)
-  prov/                   # provenance bundles (W3C PROV; may be named "provenance/" in some specs)
-```
-
----
-
-## The “Truth Path” (raw → processed → catalog → provenance)
+## Canonical “truth path” (end-to-end)
 
 ```mermaid
 flowchart LR
-  A[data/raw<br/>immutable snapshots] --> B[data/work<br/>scratch transforms]
-  B --> C[data/processed<br/>canonical outputs]
-  C --> D[data/stac<br/>STAC collections/items]
-  C --> E[data/catalog/dcat<br/>DCAT JSON-LD]
-  A --> F[data/prov<br/>W3C PROV lineage]
-  B --> F
-  C --> F
-  C --> G[(Runtime stores: PostGIS / Neo4j / Search Index)]
-  D --> G
-  E --> G
-  G --> H[Governed API Gateway]
-  H --> I[UI / External Clients]
+  raw[data/raw<br/>(immutable snapshots)]
+  etl[ETL pipelines<br/>(code + rules)]
+  work[data/work<br/>(scratch / intermediate)]
+  processed[data/processed<br/>(canonical outputs)]
+  stac[data/stac<br/>(STAC Items/Collections)]
+  dcat[data/catalog/dcat<br/>(DCAT JSON-LD)]
+  prov[data/provenance<br/>(PROV lineage logs)]
+  stores[(Runtime stores<br/>PostGIS / Neo4j / search index)]
+  api[Governed API gateway]
+  ui[UI + external clients]
+
+  raw --> etl --> work --> processed
+  processed --> stac
+  processed --> dcat
+  processed --> prov
+  processed --> stores --> api --> ui
 ```
 
----
-
-## Required artifacts per dataset
-
-| Artifact | Lives in | Purpose | Gate? |
-|---|---|---:|:---:|
-| Raw file(s) | `data/raw/...` | Immutable evidence of what was ingested | ✅ |
-| Raw manifest | `data/raw/.../manifest.(yml|json)` | Source URL/origin, acquisition timestamp, checksums, license, format | ✅ |
-| Processed output(s) | `data/processed/...` | Standardized analysis-ready outputs | ✅ |
-| STAC | `data/stac/...` | Asset + collection metadata with links to processed assets | ✅ |
-| DCAT (JSON-LD) | `data/catalog/dcat/...` | Catalog/discovery + distribution metadata | ✅ |
-| PROV | `data/prov/...` | Lineage record: raw → work → processed (+ agents/activities) | ✅ |
-
-> [!TIP]
-> Keep identifiers stable. Metadata should **link to the actual files** in `data/processed/` and provenance
-> should describe transformations that produced those outputs.
+**Trust membrane rule:** the UI and external clients do **not** read raw files or databases directly—access is mediated through the governed API.
 
 ---
 
-## Adding or updating a dataset (contributor workflow)
-
-### 1) Ingest raw (immutable)
-- Place upstream snapshot(s) under `data/raw/…`
-- Include a timestamp or version identifier in naming (or directory path) to preserve lineage.
-- Add a manifest next to the raw snapshot(s).
-
-### 2) Transform (work → processed)
-- Use `data/work/` for intermediate artifacts (large, transient, experimental).
-- Emit the canonical result to `data/processed/`.
-
-### 3) Generate metadata + provenance
-- Create/Update:
-  - STAC Collection/Items under `data/stac/`
-  - DCAT JSON-LD under `data/catalog/dcat/`
-  - PROV bundle under `data/prov/`
-
-### 4) Pass gates (CI will enforce)
-- Schema validation (manifests + metadata)
-- Data quality checks (domain-specific)
-- Policy checks (OPA/Rego; includes sensitivity handling)
-- License/source presence (show-stopper if missing)
-
-### Definition of Done (PR checklist)
-- [ ] Raw snapshot added (no destructive overwrite)
-- [ ] Raw manifest added and validates
-- [ ] Processed outputs added (reproducible, standardized)
-- [ ] STAC updated (assets resolve to processed files)
-- [ ] DCAT updated (license + source present)
-- [ ] PROV updated (lineage complete raw→work→processed)
-- [ ] Sensitivity assessed + tagged (and escalated if needed)
-- [ ] CI is green
-
----
-
-## Raw manifest: minimum fields (template)
+## Directory layout
 
 > [!NOTE]
-> Field names may evolve; CI enforces the exact schema. This template captures the **minimum intent**:
-> source/origin, acquisition time, checksums, license, and format.
+> The exact dataset subfolder structure can vary by domain, but the *stage boundaries* below should remain stable.
 
-```yaml
-dataset:
-  name: "<human-friendly name>"
-  id: "<stable-id>"
-source:
-  origin: "<source organization / archive name>"
-  url: "<source URL or reference>"
-  acquired_at: "YYYY-MM-DDTHH:MM:SSZ"
-files:
-  - path: "<relative path to raw file>"
-    checksum:
-      algo: "sha256"
-      value: "<hex>"
-    format: "<csv|geojson|tif|...>"
-license:
-  spdx: "<SPDX id or 'custom'>"
-  text: "<short license note or pointer>"
-governance:
-  sensitivity: ["public"]   # e.g., public | internal | restricted | indigenous (example)
-  notes: "<any access constraints, contact, etc.>"
+```text
+data/
+  raw/                     # Immutable source snapshots (never edited in place)
+    <domain>/
+      <dataset_slug>/
+        <source_files...>
+        manifest.(yml|json)   # Source manifest (required)
+
+  work/                    # Transient/intermediate artifacts (scratch space)
+    <domain>/
+      <dataset_slug>/
+        <intermediate_outputs...>
+
+  processed/               # Canonical, standardized outputs (source of truth)
+    <domain>/
+      <dataset_slug>/
+        <final_outputs...>
+
+  stac/                    # STAC Items and Collections describing processed assets
+    <...>.json
+
+  catalog/
+    dcat/                  # DCAT JSON-LD dataset records
+      <...>.jsonld
+
+  provenance/              # PROV lineage logs (what -> how -> derived outputs)
+    <...>.prov.json
 ```
 
 ---
 
-## Governance & sensitivity (FAIR + CARE)
+## Dataset contract
 
-KFM’s data layer is governed, not just “stored”:
+Every dataset introduced to KFM must include the following **minimum contract**.
 
-- **FAIR**: data must be findable/discoverable with metadata, accessible via governed APIs, interoperable via standard formats, and reusable via clear licensing.
-- **CARE**: for culturally sensitive knowledge, respect authority to control, responsibility, ethics, and collective benefit.
+| Artifact | Where | Required | Why |
+|---|---|:---:|---|
+| Raw source file(s) | `data/raw/...` | ✅ | Immutable audit reference of what was ingested |
+| Source manifest (machine-readable) | beside raw | ✅ | Captures source, acquisition time, checksum, license, etc. |
+| Processed canonical output(s) | `data/processed/...` | ✅ | Standardized outputs used internally and for publication |
+| STAC Item/Collection | `data/stac/...` | ✅ | Findable + interoperable geospatial asset metadata |
+| DCAT record (JSON-LD) | `data/catalog/dcat/...` | ✅ | Catalog interoperability (harvestable metadata) |
+| PROV lineage | `data/provenance/...` | ✅ | Reproducibility + traceability (inputs → transforms → outputs) |
+
+> [!TIP]
+> Treat this like a compile target: if any required artifact is missing, the “build” should fail.
+
+---
+
+## Raw stage rules (`data/raw/`) 📥
+
+**Raw inputs are immutable snapshots.** Do not “clean up” raw files in place.
+
+**Alongside each raw dataset**: include a **manifest** (JSON or YAML) that records, at minimum:
+
+- Source/origin reference (URL or authoritative citation)
+- Acquisition date/time
+- File checksums (e.g., SHA-256) for integrity
+- License/terms
+- Format/schema hints
+- Who/what ingested it and (if applicable) which project/permission context
+- Sensitivity flags (if any)
+
+<details>
+<summary><strong>Example: minimal manifest template (YAML)</strong></summary>
+
+```yaml
+dataset_slug: rainfall_1930
+domain: climate
+title: "Rainfall observations (1930) — Kansas"
+description: >
+  Canonicalized rainfall observations for Kansas in 1930.
+source:
+  name: "Authoritative provider name"
+  url_or_citation: "<source URL or citation text>"
+  acquired_at: "YYYY-MM-DDTHH:MM:SSZ"
+files:
+  - path: "rainfall_1930.csv"
+    sha256: "<sha256>"
+    media_type: "text/csv"
+license:
+  spdx: "CC-BY-4.0"
+provenance:
+  ingested_by: "<person|team|service>"
+  ingestion_method: "<script|pipeline|manual>"
+sensitivity:
+  classification: "public"   # public|internal|restricted (adjust to policy)
+  flags: []                  # e.g., ["indigenous", "sacred_site", "pii_risk"]
+```
+
+</details>
+
+---
+
+## Work stage (`data/work/`) 🧪
+
+`data/work/` is **scratch space** for intermediate transforms:
+
+- temporary reprojections
+- merges
+- normalization steps
+- QA artifacts used during transformation
+
+Work files:
+- should be **reproducible** from `data/raw/` + pipeline code
+- are **not** user-facing
+- may be excluded from version control if large/transient (follow repo policy)
+
+---
+
+## Processed stage (`data/processed/`) ✅
+
+Processed outputs are the **canonical source of truth**:
+
+- standardized format(s)
+- consistent schema(s)
+- consistent coordinate reference system (e.g., WGS84 or a Kansas state plane choice—follow repo conventions)
+- ready for loading into runtime stores (e.g., PostGIS/Neo4j/search indexes) as **derivative caches**
+
+**Reproducibility principle:** re-running the same transformation code on the same raw inputs should produce the same processed outputs.
+
+<details>
+<summary><strong>Typical processed targets (examples)</strong></summary>
+
+- Rasters: Cloud-Optimized GeoTIFF (COG) w/ tiling pyramids (for web maps)
+- Tables: Parquet (normalized, typed)
+- Vectors: GeoJSON / GeoParquet (with valid geometries)
+
+</details>
+
+---
+
+## Validation gates (CI “fail closed”) 🧪🛑
+
+KFM uses validation gates at transitions:
+
+1. **After raw ingestion**  
+   - manifest completeness + schema validation  
+   - checksums/integrity  
+   - minimum license + source attribution
+
+2. **After processing**  
+   - schema validation on outputs  
+   - quality rules (e.g., no null geometries, plausible ranges)
+
+3. **Before catalog publication**  
+   - policy checks (e.g., Open Policy Agent / similar) for:
+     - disallowed sensitive content
+     - prohibited personal identifiers (if policy forbids)
+     - license compatibility, etc.
+
+If validation fails, the dataset **must not progress** and PR merge should be blocked.
 
 > [!WARNING]
-> If a dataset is tagged with high sensitivity (example: `indigenous`), it must be treated as **restricted**:
-> - **do not publish precise locations**
-> - **require governance review/approval**
-> - CI/policy should block promotion until approved
-
-Additionally, metadata may support access-control semantics such as:
-- `accessLevel` (public/internal/restricted)
-- `ownerGroup`
-- `status` (e.g., active/withdrawn)
+> CI may also enforce documentation rules (e.g., link checks, image checks, provenance/sensitivity scans).  
+> Avoid hot-linking external images inside governed docs unless explicitly permitted by repo policy.
 
 ---
 
-## Validation gates (what CI/policy should be checking)
+## FAIR + CARE governance ⚖️🧭
 
-Common gate categories:
+KFM’s design explicitly aligns data stewardship to:
 
-1. **Manifest completeness**
-   - source/origin present
-   - license present
-   - checksums present
-2. **Metadata validity**
-   - STAC + DCAT are syntactically valid
-   - STAC assets point to `data/processed` files that exist
-3. **Provenance completeness**
-   - PROV contains: Entities (raw/processed), Activities (transform), Agents (pipeline/operator)
-4. **Content & sensitivity policy**
-   - detect/deny sensitive location disclosures where prohibited
-   - detect personal identifiers where disallowed
-5. **Security hygiene**
-   - no secrets committed
-   - dependency/tooling risks managed (where applicable)
+- **FAIR** (Findable, Accessible, Interoperable, Reusable)
+- **CARE** (Collective Benefit, Authority to Control, Responsibility, Ethics)
 
----
+### Sensitivity handling (do not “guess”)
+If a dataset intersects with Indigenous knowledge, sacred/vulnerable sites, or living-person information:
 
-## Large or non-repo-friendly assets 🧱
-
-Some datasets (e.g., large rasters) can exceed practical Git limits.
-
-Recommended approaches:
-- Git LFS for large binaries **when appropriate**
-- Pointer files / checksum references to external object storage (data lake)
-- Keep provenance + metadata in-repo even if payload is external
+- mark the manifest with sensitivity flags
+- expect **extra human review**
+- expect policies to restrict publication and/or precision (e.g., AI responses should not disclose precise locations)
 
 > [!IMPORTANT]
-> Even when payload is stored externally, KFM still requires:
-> manifest + metadata + provenance in-repo so lineage and governance remain auditable.
+> When in doubt: **generalize/redact** and route for governance review.
 
 ---
 
-## Security considerations (data is production software)
+## Adding or updating a dataset (workflow) 🧩
 
-- Apply **least privilege** and **defense in depth** to ingestion tooling and storage.
-- Treat pipeline configuration as code; require review for changes.
-- Protect against **supply-chain risks** (malicious dependencies / pipeline compromise).
-- Avoid cloud/storage **misconfigurations**; enable logging/monitoring for auditability.
+### Checklist (Definition of Done)
+- [ ] Raw snapshot stored under `data/raw/...` (no edits-in-place)
+- [ ] Manifest present and validated (source + acquisition + checksum + license)
+- [ ] Transformation produces canonical outputs in `data/processed/...`
+- [ ] STAC metadata produced under `data/stac/...`
+- [ ] DCAT JSON-LD record produced under `data/catalog/dcat/...`
+- [ ] PROV lineage log produced under `data/provenance/...`
+- [ ] Sensitivity flags set appropriately (and governance review requested if needed)
+- [ ] CI passes: data validation + policy checks + docs checks
+
+### Suggested PR hygiene
+- Keep data additions small and reviewable
+- Prefer reproducible ingestion scripts over manual steps
+- Document assumptions and tradeoffs in PR description
 
 ---
 
-## Related governed specs (design sources)
+## FAQ
 
-These documents define the “why” behind the rules above:
+### Why can’t the UI consume `data/raw/` directly?
+Because `data/raw/` is not standardized and may contain content that hasn’t passed governance checks. KFM’s “truth path” requires processing + metadata + provenance before anything is served.
 
-- `MARKDOWN_GUIDE_v13.md` (governance + artifact conventions; STAC/DCAT/PROV alignment)
-- `Kansas Frontier Matrix (KFM) System Implementation Guide`
-- `Kansas Frontier Matrix (KFM) System Implementation Blueprint & Capabilities Guide`
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint`
-- `Software Security Guide for Developers (2026 Edition)` (security foundations & DevSecOps)
+### Are runtime databases the “source of truth”?
+No. Runtime stores are derivative caches built from `data/processed/`. The canonical truth is versioned processed files + metadata + provenance.
+
+### Where do policies live?
+In a policy-as-code system (repo-defined). If you’re adding a new data class or sensitivity category, you may also need to update policy rules (and tests).
+
+---
+
+## Version history 🕰️
+
+| Version | Date (YYYY-MM-DD) | Summary | Author |
+|---:|---:|---|---|
+| v1.0.0 | 2026-02-10 | Initial governed `data/` README drafted from KFM project guides | KFM AI assistant |
