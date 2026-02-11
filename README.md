@@ -1,231 +1,289 @@
-# Kansas Frontier Matrix (KFM) 🧭🗺️  
-**Provenance-first geospatial knowledge + storytelling platform for Kansas (“the map behind the map”).**
+# Kansas Frontier Matrix (KFM) 🧭🗺️
+*A governed, provenance-first geospatial + historical knowledge system for Kansas (data → pipelines → APIs → UI/Focus Mode).*
 
-![Status](https://img.shields.io/badge/status-draft-blue)
-![Governance](https://img.shields.io/badge/governance-FAIR%2BCARE-informational)
-![Provenance](https://img.shields.io/badge/provenance-first-brightgreen)
-![Policy](https://img.shields.io/badge/policy-OPA%20(Rego)-orange)
-![Docs](https://img.shields.io/badge/docs-governed%20Markdown-purple)
-
-> [!IMPORTANT]
-> **Trust membrane / governance invariant:** the **UI never directly touches the databases**. All access is mediated by the **backend API** and its validation + policy enforcement layers. [oai_citation:0‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+![Status](https://img.shields.io/badge/status-active%20build-orange)
+![Governance](https://img.shields.io/badge/governance-FAIR%20%2B%20CARE-2b6cb0)
+![Provenance](https://img.shields.io/badge/provenance-PROV--O%20%7C%20STAC%20%7C%20DCAT-2f855a)
+![Containers](https://img.shields.io/badge/docker-compose-ready-2563eb)
+![Focus Mode](https://img.shields.io/badge/AI-Focus%20Mode%20%28RAG%29-6b46c1)
 
 ---
 
 ## What is KFM?
 
-The **Kansas Frontier Matrix (KFM)** is a **full-stack geospatial information system** designed to integrate historical + spatial data about Kansas into **interactive maps, timelines, and narrative “Story Nodes”**, with an integrated, governed AI assistant (“Focus Mode”). [oai_citation:1‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578) [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+**Kansas Frontier Matrix (KFM)** is a **governed geospatial/historical knowledge system** designed to turn *raw files and archival materials* into **trustworthy map layers, narratives (Story Nodes), and AI-assisted exploration (Focus Mode)**.
 
-KFM is explicitly described as a **pipeline → catalog → database → API → UI** system that turns raw files into **trustworthy, explorable knowledge**, where every layer/story/answer remains traceable back to sources (“the map behind the map”). [oai_citation:3‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+KFM is intentionally built around:
 
----
+- **Provenance-first UX** (“the map behind the map”)  
+- **FAIR + CARE governance** (rights, ethics, and responsible reuse)
+- **Clean architecture boundaries** (domain → use cases → interfaces → infrastructure)
+- A strict **trust membrane**: UI and external clients **never** talk to databases directly (API-only access)
 
-## Key capabilities
-
-- **Interactive mapping + timeline exploration** with narrative Story Nodes. [oai_citation:4‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578)
-- **Provenance-first by design:** maps/stories/AI answers are intended to be backed by versioned data + citations. [oai_citation:5‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Governed AI (“Focus Mode”):** constrained by policy to support ethical + factual responses (not an ungoverned chatbot). [oai_citation:6‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- **Clean architecture + strict boundaries** (domain/use-case/interface/infrastructure layers). [oai_citation:7‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578)
-- **FAIR + CARE alignment** (findable/interoperable + community ethics and sovereignty). [oai_citation:8‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:9‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578)
+> [!NOTE]
+> KFM is *not* a generic upload-and-forget GIS portal. Every layer/story/answer is expected to be evidence-backed, validated, and reviewable.
 
 ---
 
-## Architecture at a glance
+## Table of contents
 
-### Core components (as described in project docs)
+- [Core capabilities](#core-capabilities)
+- [Integrated domains & map layers](#integrated-domains--map-layers)
+- [System architecture](#system-architecture)
+- [Repository layout](#repository-layout)
+- [Quickstart (Docker Compose)](#quickstart-docker-compose)
+- [Workflows](#workflows)
+  - [Add a new dataset layer](#add-a-new-dataset-layer)
+  - [Add a Story Node](#add-a-story-node)
+  - [Run AI-driven experiments](#run-ai-driven-experiments)
+- [Governance & sensitive data](#governance--sensitive-data)
+- [Contributing](#contributing)
+- [Docs & references](#docs--references)
+- [License](#license)
 
-| Layer / Component | Expected responsibility |
-|---|---|
-| Data pipelines | Ingest + process datasets; attach metadata + lineage |
-| Catalogs | Treat catalogs (e.g., **STAC/DCAT/PROV**) as canonical interfaces between pipeline outputs and runtime services [oai_citation:10‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) |
-| Storage | **PostgreSQL + PostGIS** for geospatial-relational data; **Neo4j** for the knowledge graph; **Elasticsearch/OpenSearch** for full-text/vector search [oai_citation:11‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578) |
-| API | **FastAPI** providing unified REST (and GraphQL) services [oai_citation:12‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578) |
-| UI | **React (JS/TS)** + **MapLibre GL** for interactive maps, timeline, layer controls, Story Node reading, Focus Mode UI [oai_citation:13‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578) |
-| Policy enforcement | OPA/Rego policy-as-code expected in CI and runtime gating (deny/sanitize sensitive outputs) [oai_citation:14‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) |
+---
 
-### Data + governance flow (conceptual)
+## Core capabilities
+
+### 🗺️ Interactive mapping + time navigation
+- Layer toggles + timeline controls
+- 2D maps and (optionally) 3D/terrain experiences
+- Feature inspection with metadata and provenance
+
+### 📚 Story Nodes (governed narrative artifacts)
+- Markdown-authored narrative slides/steps
+- Each claim is expected to be supported by citations
+- Story steps can drive map state (“next” changes extent/layers)
+
+### 🤖 Focus Mode (AI assistant, evidence-bound)
+- Retrieval-augmented Q&A **grounded in KFM’s internal knowledge base**
+- Citations and source links attached to answers
+- Policy gating + audit/provenance logging
+
+### 🔎 Search + cross-linking
+- Metadata catalog + full-text search
+- Knowledge graph relationships (people ↔ places ↔ events ↔ documents)
+- Cross-layer reasoning (“what changed here over time?”)
+
+---
+
+## Integrated domains & map layers
+
+The previous README draft didn’t explicitly cover several critical integrations. This version **adds** the missing domains and frames them as **first-class layers** in the KFM data model + pipeline.
+
+> [!IMPORTANT]
+> For some domains (notably **land ownership**), KFM must support **access controls, aggregation, and redaction** to avoid exposing sensitive or restricted information.
+
+### Coverage matrix
+
+| Domain / Layer | What it enables in KFM | Typical representations | Notes |
+|---|---|---|---|
+| **Land ownership / parcels** 🧾 | Ownership history, land-use transitions, reservation boundaries, deed/patent overlays | Parcels, PLSS grids, transactions, time-sliced ownership | Must handle PII + restricted datasets |
+| **Historical figures** 👤 | People-centric exploration (who/where/when), relationships, biographies, travel routes | `Person` nodes, roles, affiliations, event links | Extracted from documents + curated records |
+| **Hydrology** 💧 | River/stream networks, watershed context, groundwater, water quality and infrastructure | NHD networks, gages, aquifers, wells, quality observations | Supports flood + drought narratives |
+| **Geology** 🪨 | Bedrock/stratigraphy, core samples, formations, geologic change context | Polygons + points with depth metadata | Often linked to soils + water |
+| **Disasters** ⚠️ | Floods, tornado events, emergencies, drought timelines, recovery impacts | Event layers + affected areas + dates | Tie to Story Nodes + impact analyses |
+| **Air quality / smoke** 🌫️ | Smoke plume visualization, AQ trend mapping, health-impact framing | Time-series rasters, station points, plume polygons | Typically paired with fires + meteorology |
+| **Soils** 🌱 | Soil constraints, agricultural suitability, erosion risk, dust bowl analysis | SSURGO polygons, erosion indices, properties | Heavily used in land-use history |
+| **Fires** 🔥 | Burn perimeters, ignition points, prescribed burns, historical fire regimes | Perimeters + attributes + time slices | Links tightly with smoke |
+| **Roads** 🛣️ | Settlement access, corridor growth, logistics, routing, economic history | Road networks (by era), nodes/edges, attributes | Supports network + accessibility analyses |
+| **Trains / railroads** 🚆 | Railroad expansion, depot towns, commodity flows, migration patterns | Rail lines (by year built), stations, corridors | High value for historical narratives |
+
+---
+
+## System architecture
 
 ```mermaid
 flowchart LR
-  A[Raw sources] --> B[Ingest & transform pipelines]
-  B --> C[Catalogs: STAC / DCAT / PROV]
-  C --> D[(PostGIS)]
-  C --> E[(Neo4j)]
-  C --> F[(Search: OpenSearch/Elastic)]
-  D --> G[Governed API (FastAPI REST/GraphQL)]
-  E --> G
-  F --> G
-  G --> H[Web UI (React + MapLibre)]
-  G --> I[Focus Mode (Governed AI)]
-  P[OPA policies (policy/)] --> G
-  P --> CI[CI policy + schema validation]
+  A[Raw data<br/>data/raw/] --> B[Ingestion & processing<br/>ETL pipelines]
+  B --> C[Processed datasets<br/>data/processed/]
+  C --> D[Catalog + metadata<br/>STAC/DCAT + PROV]
+  D --> E[(PostGIS<br/>spatial)]
+  D --> F[(Neo4j<br/>knowledge graph)]
+  D --> G[(Object storage<br/>rasters/COGs/tiles)]
+  E --> H[API layer<br/>REST/GraphQL]
+  F --> H
+  G --> H
+  H --> I[Web UI<br/>React + MapLibre]
+  H --> J[Focus Mode AI<br/>RAG + policy gating]
+  J --> H
 ```
 
-> [!NOTE]
-> Some elements above are presented in the docs as design/blueprint expectations. Validate exact service names and ports in your checked-out repo if they differ. (If something is unknown, mark it **“(not confirmed in repo)”**.) [oai_citation:15‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
-
----
-
-## Quickstart (local development via Docker Compose)
-
-### Prerequisites
-- Docker + Docker Compose (v2 recommended)
-
-### Steps
-
-```bash
-cp .env.example .env
-docker compose up --build
-```
-
-Open:
-- UI: `http://localhost:3000`  
-- API docs (Swagger): `http://localhost:8000/docs`  
-- Neo4j Browser: `http://localhost:7474`  (not confirmed in repo, but referenced in docs)
-
-> [!TIP]
-> If you change core dependencies or base images, rebuild with `--build`. If ports are in use, adjust `.env` or Compose port mappings.
+### Trust membrane rule (non-negotiable)
+- **Web UI and external clients** access data **only via the governed API**
+- **Core services** access storage **only through repository interfaces** (no direct DB calls from domain/use-case logic)
 
 ---
 
 ## Repository layout
 
-> [!NOTE]
-> The project docs describe KFM as a monorepo containing **data/**, **docs/**, **src/**, **web/**, etc. If your actual repo differs, update this section to match what `tree -L 2` shows.
+> [!TIP]
+> The structure below follows the KFM clean-layer boundaries. Your repo may vary slightly; treat this as the *intended* monorepo layout.
 
 ```text
 .
+├── .github/
+│   └── workflows/                # CI validation: docs, schemas, links, tests
 ├── data/
-│   ├── raw/
-│   ├── work/
-│   ├── processed/
-│   ├── catalog/
-│   └── provenance/
+│   ├── raw/                      # raw downloads / vendor exports / scans
+│   └── processed/                # normalized outputs ready for load + tiling
 ├── docs/
-│   ├── 00-front-matter/
-│   ├── 01-architecture/
-│   ├── 02-data/
-│   ├── 03-governance/
-│   ├── 04-api/
-│   ├── 05-ui/
-│   ├── 06-focus_mode/
-│   ├── 07-story_nodes/
-│   ├── standards/
-│   └── templates/
-├── mcp/
-├── schemas/
+│   ├── architecture/             # system overview, boundaries, policies
+│   ├── datasets/                 # dataset registry + data dictionaries
+│   ├── governance/               # FAIR/CARE, sensitivity policy, access rules
+│   ├── stories/                  # Story Nodes (Markdown) + media manifests
+│   └── runbooks/                 # operational notes, deployment, troubleshooting
+├── experiments/
+│   ├── README.md                 # how experiments are run + logged
+│   └── <experiment_slug>/        # reproducible experiment units
 ├── src/
-│   ├── api/
-│   ├── backend/
-│   ├── pipelines/
-│   └── shared/
-├── tests/
-├── tools/
+│   ├── domain/                   # pure entities/models (no DB/UI deps)
+│   ├── usecases/                 # workflows + business rules
+│   ├── interfaces/               # ports/contracts + repository interfaces
+│   ├── infrastructure/           # DB/Neo4j/FS implementations + adapters
+│   ├── pipelines/                # ingestion + transformation pipelines
+│   └── services/                 # API + indexing + AI orchestration
 ├── web/
-├── releases/
-├── README.md
-├── LICENSE
-├── CITATION.cff
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── SECURITY.md
+│   └── app/                      # React/TypeScript + MapLibre UI
 ├── docker-compose.yml
-└── .env.example
+└── README.md
 ```
 
 ---
 
-## Data domains and example sources (inventory)
-
-KFM’s data inventory materials include examples such as:
-
-| Domain | Example sources mentioned in project materials |
-|---|---|
-| Biodiversity / species | GBIF, iNaturalist, eButterfly, state extension resources |
-| Birds | eBird, Kansas Ornithological Society |
-| Climate / weather | NOAA (NCEI), Kansas Mesonet, NASA POWER |
-| Demographics | US Census, IPUMS NHGIS |
-| Agriculture | USDA NASS QuickStats, Kansas Dept. of Agriculture |
+## Quickstart (Docker Compose)
 
 > [!IMPORTANT]
-> Treat these as **examples** from the inventory docs. Each dataset must be ingested through the governed pipeline and cataloged with required provenance metadata before it is considered usable in KFM’s runtime services. [oai_citation:16‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+> If you see port conflicts (e.g., `5432`, `7474`, `8000`, `3000`), update your compose port mappings or stop local services using those ports.
+
+```bash
+# 1) clone
+git clone <YOUR_REPO_URL>
+cd Kansas-Frontier-Matrix
+
+# 2) configure environment
+cp .env.example .env
+
+# 3) start stack
+docker compose up --build
+```
+
+### Common dev entrypoints
+- API docs: `http://localhost:8000/docs`
+- GraphQL (if enabled): `http://localhost:8000/graphql`
+- Web UI: `http://localhost:3000`
 
 ---
 
-## Story Nodes and Focus Mode
+## Workflows
 
-**Story Nodes** are governed narrative Markdown documents that tie evidence + context together for the UI (and for Focus Mode to render citations/attribution). The Story Node template expects:  
-- short, neutral paragraphs,  
-- citations per factual sentence,  
-- an entity index and relationships,  
-- explicit listing of the Story Node file path + referenced dataset IDs + graph node IDs. [oai_citation:17‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
+### Add a new dataset layer
 
-### Templates you should use (governed)
-- `docs/templates/TEMPLATE__STORY_NODE_V3.md` [oai_citation:18‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
-- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` [oai_citation:19‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
-- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` [oai_citation:20‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
-- `docs/standards/KFM_CHATGPT_WORK_PROTOCOL.md` [oai_citation:21‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
-- Governance docs: `docs/governance/ROOT_GOVERNANCE.md`, `ETHICS.md`, `SOVEREIGNTY.md` [oai_citation:22‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
+Use this checklist when adding **land parcels**, **hydrology**, **soil**, **railroads**, **fires**, etc.
+
+- [ ] **Decide sensitivity + access rules** (public vs restricted vs aggregated)
+- [ ] Add raw source to `data/raw/<dataset>/` (or document the fetch script)
+- [ ] Create/update pipeline in `src/pipelines/`  
+- [ ] Output normalized artifact(s) to `data/processed/<dataset>/`
+- [ ] Generate/update **metadata** (STAC/DCAT) and **provenance** (PROV)
+- [ ] Load to stores (PostGIS / Neo4j / object storage) via infrastructure adapters
+- [ ] Expose via API (REST/GraphQL) **without leaking restricted fields**
+- [ ] Add UI layer toggle + legend + attribution
+- [ ] Add docs: dataset registry entry + schema + examples
+- [ ] Add tests: pipeline idempotency + contract tests + policy checks
+
+<details>
+<summary><strong>Definition of Done for a dataset layer</strong></summary>
+
+- Provenance record exists and is linked from UI layer info
+- Source license/terms are documented
+- Reproducible pipeline (same input → same output hash)
+- No UI/AI path bypasses policy checks
+- Story Nodes can cite the dataset by stable identifier
+
+</details>
+
+---
+
+### Add a Story Node
+
+1. Create a new file under `docs/stories/<StoryName>.md`
+2. Follow the Story Node template (required headings/ordering)
+3. Include citations for every factual claim
+4. Ensure CI validation passes (structure, links, media, provenance refs)
+
+---
+
+### Run AI-driven experiments
+
+KFM supports **AI driving experiments** in a *governed* way—meaning experiments must be reproducible, use vetted datasets, and produce auditable outputs.
+
+Recommended experiment shape:
+
+```text
+experiments/<slug>/
+├── README.md            # hypothesis, dataset IDs, metrics, results
+├── config.yml           # pinned inputs + parameters
+├── run.py               # entrypoint
+└── outputs/             # generated artifacts (gitignored if large)
+```
+
+Example experiment themes aligned to KFM domains:
+- Smoke plume detection → compare models or thresholds (fires ↔ air quality)
+- Flood-risk mapping → hydrology + disasters overlays
+- Parcel ownership change → land ownership + historical events
+- Railroad expansion correlation → trains + towns + economics
+- Named-entity extraction → historical figures + documents + knowledge graph
 
 > [!NOTE]
-> Story Node placement may vary. A docs source notes that as of v13, Story Nodes are expected under a `docs/reports/<topic>/story_nodes/` hierarchy **(not confirmed in repo)**. [oai_citation:23‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
+> Experiments should write outputs that can be referenced by Story Nodes **only after review** (to avoid “model says so” narratives).
 
 ---
 
-## Documentation governance (Definition of Done)
+## Governance & sensitive data
 
-For any governed doc (including Story Nodes) to be merge-ready, the docs require at least:
+> [!WARNING]
+> KFM may handle culturally restricted information, sensitive site locations, and personally identifying data (especially around land ownership and living individuals). **When in doubt: redact, aggregate, or restrict** and route for governance review.
 
-- [ ] Required template structure and headings (order matters) [oai_citation:24‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)  
-- [ ] **Provenance for all substantive claims** (no claim stands without evidence) [oai_citation:25‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)  
-- [ ] Governance tags + sensitivity handling (redact/generalize sensitive locations; flag for review) [oai_citation:26‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)  
-- [ ] Advanced Markdown used appropriately (tables, Mermaid, callouts, details, etc.) [oai_citation:27‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)  
-- [ ] CI validation passes (markdown lint, structure/schema validation, link checks, sensitivity/accessibility scans) [oai_citation:28‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)
-
----
-
-## Policy enforcement (OPA / Rego)
-
-The blueprint describes policy-as-code patterns where:
-- CI can fail on missing provenance artifacts (e.g., missing PROV), or disallowed content patterns.
-- Runtime requests (including AI answers) can be allowed/denied/sanitized based on policy decisions.  
-- `policy/` is treated as the policy source of truth. [oai_citation:29‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-> [!TIP]
-> The blueprint also suggests contributors can run policy checks locally using tools like Conftest **(exact commands not confirmed in repo)**. [oai_citation:30‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Key expectations:
+- FAIR + CARE principles must be respected
+- Policy-as-code enforcement (deny-by-default for restricted datasets)
+- AI answers must cite sources or abstain
+- Provenance must be visible and auditable
 
 ---
 
 ## Contributing
 
-1. Read `CONTRIBUTING.md` (and the docs standards under `docs/standards/`).  
-2. Use templates first (`docs/templates/`).  
-3. Keep the **trust membrane** intact: no direct DB access from UI; backend logic should respect repository interfaces and clean architecture boundaries. [oai_citation:31‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d) [oai_citation:32‡Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf](sediment://file_000000004530722f96d93b826296d578)
-4. Ensure your change passes the documentation Definition of Done checklist (above).
+Contributions are welcome—but KFM treats docs, story content, and datasets as **governed artifacts**.
+
+**Before opening a PR:**
+- [ ] Data source + license documented
+- [ ] Metadata + provenance included
+- [ ] Sensitivity reviewed + access rules declared
+- [ ] Tests added/updated
+- [ ] Story content uses the template and includes citations
 
 ---
 
-## License and citation
+## Docs & references
 
-- License information should be confirmed in `LICENSE` (and any doc licensing conventions in doc front-matter).  
-- If present, use `CITATION.cff` when citing KFM in academic or public work (not confirmed in repo beyond documented repo layout expectations).
+KFM design and workflow are grounded in internal project documentation. Suggested doc placement (adjust to match your repo):
+
+- `docs/architecture/` — system overview, boundaries, diagrams  
+- `docs/datasets/` — dataset inventory + dictionaries  
+- `docs/governance/` — FAIR/CARE + sensitivity and access policy  
+- `docs/stories/` — Story Nodes (Markdown)  
+
+Internal reference sources used to build this README (titles may be mirrored into `docs/reference/`):
+- **Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint**
+- **Kansas Frontier Matrix (KFM) – Unified Technical Blueprint & Supporting Ideas**
+- **KFM-Data for Kansas**
+- **Kansas-Frontier-Matrix: Open-Source Geospatial Historical Mapping Hub Design**
+- **Kansas Frontier Matrix (KFM) Comprehensive Guide**
 
 ---
 
-## See also (recommended reading order)
+## License
 
-- `docs/MASTER_GUIDE_v13.md` (canonical structure + governance gates) [oai_citation:33‡KFM Markdown Guide.docx.pdf](sediment://file_000000007d1c71f5827af1abdbf2b2fa)  
-- `docs/01-architecture/` (system architecture + trust membrane)  
-- `docs/03-governance/` (FAIR+CARE, sovereignty, ethics)  
-- `docs/07-story_nodes/` (Story Node guidance and examples)  
-- `docs/06-focus_mode/` (Focus Mode behavior + auditing + citations)
-
----
-
-### Maintainers: README reality-check checklist
-
-- [ ] Confirm actual directory layout matches the tree above; update if needed.  
-- [ ] Confirm local ports and URLs in `docker-compose.yml`.  
-- [ ] Confirm whether GraphQL is enabled and what endpoint path is used.  
-- [ ] Confirm doc canonical paths (Story Nodes location, templates).  
-- [ ] Confirm license(s) for code vs docs/story nodes.
+**TBD** (add your project’s license file and update this section)
