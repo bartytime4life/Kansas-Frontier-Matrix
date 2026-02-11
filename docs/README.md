@@ -144,16 +144,17 @@ KFM documentation is treated as part of the platform’s contract. Drift or ambi
 ### Documentation contribution workflow (governed)
 ```mermaid
 flowchart TD
-  A[Start from template] --> B[Write content]
-  B --> C[Add provenance for claims]
-  C --> D[Add governance notes / sensitivity handling]
-  D --> E[Self-review: structure, links, accessibility]
-  E --> F[Run local checks]
-  F --> G[Open PR]
-  G --> H[Review: maintainers + governance (as needed)]
-  H --> I{CI validation passes?}
-  I -->|Yes| J[Merge]
-  I -->|No| K[Fix + iterate]
+  A["Start from template"] --> B["Write content"]
+  B --> C["Add provenance for claims"]
+  C --> D["Add governance notes / sensitivity handling"]
+  D --> E["Self-review: structure, links, accessibility"]
+  E --> F["Run local checks"]
+  F --> G["Open PR"]
+  G --> H["Review: maintainers + governance (as needed)"]
+  H --> I{"CI validation passes?"}
+  I -->|"Yes"| J["Merge"]
+  I -->|"No"| K["Fix issues + re-run checks"]
+  K --> F
 ```
 
 ### Canonical pipeline (high-level)
