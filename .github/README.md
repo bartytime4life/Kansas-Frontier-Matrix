@@ -218,19 +218,19 @@ CI gating recommendations:
 
 ```mermaid
 flowchart LR
-  PR["Pull Request"] --> Lint["Docs lint + structure (links, a11y, sensitivity)"]
-  PR --> Catalog["Data catalog validation (STAC/DCAT/PROV + provenance rules)"]
-  PR --> Layers["Layer QA (vector + raster + coverage)"]
-  PR --> KG["Knowledge graph checks (events + figures + IDs)"]
-  PR --> Haz["Hazards & environment (disaster/fire/smoke/AQ/water)"]
-  PR --> Trans["Transport QA (roads + rail topology)"]
-  PR --> Exp["AI experiment governance (manifest + eval + model cards)"]
-  PR --> Contracts["API contract checks (OpenAPI/GraphQL)"]
-  PR --> Policy["OPA policy tests (default deny / fail closed)"]
-  PR --> E2E["End-to-end flows (UI provenance + citations)"]
-  PR --> Supply["SBOM + provenance attestations"]
+  PR[Pull Request] --> Lint[Docs lint + structure\n+ links + a11y + sensitivity]
+  PR --> Catalog[Data catalog validation\n(STAC/DCAT/PROV + provenance rules)]
+  PR --> Layers[Layer QA\n(vector + raster + coverage)]
+  PR --> KG[Knowledge graph checks\n(events + figures + IDs)]
+  PR --> Haz[Hazards & environment\n(disaster/fire/smoke/AQ/water)]
+  PR --> Trans[Transport QA\n(roads + rail topology)]
+  PR --> Exp[AI experiment governance\n(manifest + eval + model cards)]
+  PR --> Contracts[API contract checks\n(OpenAPI/GraphQL)]
+  PR --> Policy[OPA policy tests\n(default deny / fail closed)]
+  PR --> E2E[End-to-end flows\n(UI provenance + citations)]
+  PR --> Supply[SBOM + provenance attestations]
 
-  Lint --> Merge{"Merge allowed?"}
+  Lint --> Merge{Merge allowed?}
   Catalog --> Merge
   Layers --> Merge
   KG --> Merge
