@@ -1,199 +1,257 @@
-# `policy/` — Governance Policies & Policy-as-Code
+# policy/ — KFM Policy-as-Code (OPA/Rego)
 
-> ✅ CI-enforced · 🧾 Evidence-first · 🛡️ Trust membrane · ⚖️ FAIR+CARE · 🔒 Safe-by-default
-
-This directory encodes **Kansas Frontier Matrix (KFM)** governance rules as **versioned artifacts**, designed to be reviewed, tested, and enforced just like code. The technical blueprint explicitly frames the repository’s `policy/` directory as the place where governance rules are made **transparent** and **auditable** via Git history (“policy as code”).  
-
----
-
-## 📘 Purpose
-
-The `policy/` directory exists to:
-
-- Make KFM governance **explicit, testable, and reviewable** (“policy as code”).
-- Provide a single, discoverable home for rules that protect:
-  - data integrity and provenance,
-  - sovereignty/sensitivity requirements,
-  - AI behavior constraints (citations, no leakage),
-  - security and access boundaries,
-  - compliance gates for contribution and publication.
+🏷️ **governed-doc** · 🏷️ **policy-as-code** · 🏷️ **OPA/Rego** · 🏷️ **CI-gated** · 🏷️ **FAIR+CARE**
 
 > [!IMPORTANT]
-> KFM governance is designed to operate as a **membrane**: nothing becomes “live” without automated checks and maintainer review.
+> **This directory is governed.** Changes here can affect **data access**, **content redaction**, and **AI/Focus Mode outputs**.
+> Treat policy PRs as **high-risk** and ensure review + CI gates are satisfied before merge.
 
 ---
 
-## 🧭 Non‑Negotiable Invariants
+## 📘 Overview
 
-These invariants must hold across **every** policy, doc, and implementation:
+### Purpose
+This folder contains **KFM policy-as-code** used to:
+- Enforce **governance rules** (FAIR + CARE, privacy, sensitive locations, licensing metadata).
+- Gate contributions in **CI** (preventing non-compliant data/docs/config from merging).
+- Enforce **runtime authorization + redaction** decisions (API + AI output constraints).
 
-1. **Canonical pipeline ordering is sacred**  
-   `ETL → STAC/DCAT/PROV → Graph → APIs → UI → Story Nodes → Focus Mode`  
-   Policies must never encourage shortcuts that contradict this ordering.
+### Scope
+In-scope for this folder:
+- Rego policies (OPA) and supporting policy data (e.g., dataset classification registries).
+- Policy tests and examples used by CI and developer workflows.
+- Documentation explaining enforcement points, decision contracts, and review gates.
 
-2. **Trust membrane / API boundary is enforced**  
-   - Frontend clients **never** access databases directly.
-   - Core backend logic **never** bypasses repository interfaces to talk to storage.
-   - External integrations and UI access go through the governed API gateway.
+Out-of-scope:
+- Application business logic (belongs in service/use-case layer).
+- Database access logic (belongs behind repositories/adapters).
+- Secrets/credentials (never store in repo, never include in docs).
 
-3. **Evidence-first & no uncited claims (especially for AI + narratives)**  
-   If a statement cannot be tied to a project artifact (dataset ID, doc, commit, or known source), it must be framed as a hypothesis or omitted. If a detail is unknown, mark it: *“(not confirmed in repo)”*.
+### Audience
+- **Engineers** implementing API/Focus Mode enforcement points.
+- **Maintainers & governance reviewers** validating rule intent, fairness, and sensitivity handling.
+- **Contributors** running local policy checks before opening PRs.
 
-4. **Safe-by-default with sensitive content**  
-   If something may be sensitive (e.g., sacred/vulnerable site locations), **omit or generalize** and flag for governance review.
+### Definitions
+- **OPA**: Open Policy Agent, a policy decision engine.
+- **Rego**: Policy language evaluated by OPA.
+- **Policy bundle**: A packaged set of policies + data deployed to OPA/runtime.
+- **Decision log**: Audit trail of allow/deny decisions, ideally including policy hash/commit.
+- **Redaction**: Policy-directed transformation of outputs (e.g., masking or generalizing sensitive coordinates).
 
 ---
 
 ## 🗂️ Directory Layout
 
 > [!NOTE]
-> The blueprint describes a `policy/` directory and anticipates “policy-as-code” (e.g., OPA/Rego) patterns. The exact file names below are **recommended** and may not yet exist *(not confirmed in repo)*.
+> Some filenames/directories below are shown as a **recommended structure**. If your repo differs, update this README to match and remove any `*(not confirmed in repo)*` markers.
 
-| Path | Type | What it’s for | Status |
-|---|---|---|---|
-| `policy/README.md` | Markdown | You are here — policy index + operating rules | ✅ authoritative |
-| `policy/**/*.rego` | Rego (OPA) | Policy-as-code rules (datasets, AI, security, compliance) | *(not confirmed in repo)* |
-| `policy/tests/**` | Test fixtures | Policy test cases (positive/negative examples) | *(not confirmed in repo)* |
-| `policy/fixtures/**` | Data/doc fixtures | Minimal sample inputs for policy checks | *(not confirmed in repo)* |
-| `policy/docs/**` | Markdown | Deep-dive docs per policy domain (optional) | *(not confirmed in repo)* |
-
-### Suggested policy modules *(not confirmed in repo)*
-
-- `policy/data_policies.rego` — dataset/metadata requirements (licenses, provenance, required fields)
-- `policy/ai_policies.rego` — AI output constraints (citations, no PII leakage, sensitivity handling)
-- `policy/security.rego` — access boundary and authorization rules
-- `policy/compliance.rego` — publication gates (privacy, takedown/withdrawal handling, restricted data rules)
+### Recommended layout (policy/)
+```text
+policy/
+├── README.md                         # This document
+├── rego/                             # Rego modules (OPA policies)
+│   ├── data_policies.rego            # Dataset governance (license/citation/access) *(not confirmed in repo)*
+│   ├── ai_policies.rego              # AI/Focus Mode governance *(not confirmed in repo)*
+│   ├── security.rego                 # Access control rules *(not confirmed in repo)*
+│   └── compliance.rego               # Regulatory / privacy / takedown rules *(not confirmed in repo)*
+├── data/                             # Policy input data (registries used by Rego)
+│   ├── datasets.json                 # Dataset registry (ids, accessLevel, ownerGroup, status) *(not confirmed in repo)*
+│   └── roles.json                    # Role/group registry *(not confirmed in repo)*
+├── tests/                            # Policy tests
+│   ├── rego/                         # `opa test` unit tests *(not confirmed in repo)*
+│   └── conftest/                     # CI test fixtures *(not confirmed in repo)*
+└── examples/                         # Example inputs/outputs for local verification
+    ├── input_access.json             # OPA input contract example *(not confirmed in repo)*
+    └── output_decision.json          # OPA output contract example *(not confirmed in repo)*
+```
 
 ---
 
-## 🧪 Enforcement Model
+## 🧭 Context
 
-KFM governance is intended to be enforced at **two points**:
+### Non‑negotiable invariants (KFM-wide)
+- **Pipeline order is sacred**: do not bypass the canonical pipeline steps (no UI/database shortcuts, no missing provenance/metadata steps).
+- **Trust membrane**: the UI never talks directly to databases; access is mediated via governed APIs/services.
+- **Evidence-first + safe-by-default**: avoid uncited assertions, and omit/flag sensitive information when uncertain.
+- **No secrets**: never place credentials, API keys, or private tokens in this repo or docs.
 
-1. **Pull Request / CI gate** — prevent non-compliant contributions from merging.
-2. **Runtime API gate** — prevent disallowed access or disallowed combinations of outputs at query time.
+### Policy goals (what “good” looks like)
+- **Least privilege by default**: deny unless explicit allow.
+- **Actionable denials**: every deny should return a clear reason and remediation path.
+- **Auditability**: decisions should be reproducible later (policy hash/commit + input context).
+- **CARE-aligned controls**: enable authority-to-control, takedown/withdrawal, and safe handling of culturally sensitive data.
+
+---
+
+## 🗺️ Diagrams
+
+### Policy lifecycle (CI + runtime)
 
 ```mermaid
 flowchart LR
-  A[Pull Request] --> B[CI: linters + tests]
-  B --> C[CI: policy checks]
-  C -->|pass| D[Maintainer review]
-  C -->|fail| X[Block merge]
-  D -->|merge| E[Main branch]
-  E --> F[Deploy]
-  F --> G[Runtime: API gateway]
-  G --> H[Policy evaluation]
-  H -->|allow| I[Serve response]
-  H -->|deny| J[Deny / redact / require auth]
+  A[Contributor PR] --> B[CI: Conftest + Policy Checks]
+  B -->|pass| C[Merge to main]
+  B -->|fail| D[Fix metadata/policy violations]
+  C --> E[Build policy bundle]
+  E --> F[Deploy runtime (OPA sidecar or embedded)]
+  F --> G[API + AI request]
+  G --> H[OPA evaluate input]
+  H -->|allow| I[Return response]
+  H -->|deny| J[Return 403 / refusal]
+  H -->|redact| K[Return sanitized output]
+  H --> L[Decision log (policy hash/commit)]
 ```
-
-### CI enforcement *(typical pattern — verify in repo)*
-
-The technical blueprint describes running policy checks in CI using **Conftest** (OPA policy testing) to evaluate repository changes against governance rules *(not confirmed in repo)*.
-
-<details>
-  <summary><strong>Example local command set (adjust to match repo)</strong></summary>
-
-```bash
-# Example only (not confirmed in repo):
-# conftest test -p policy/ path/to/changed/files
-
-# Run formatting/lint checks (examples only):
-pre-commit run --all-files
-```
-</details>
-
-### Runtime enforcement
-
-The implementation blueprint describes an **Open Policy Agent (OPA)** integrated at the **API layer**, ensuring external calls respect rules (authz, restricted datasets, citation expectations, and disallowed combinations).  
-This enforces the “trust membrane” consistently for the official UI and for external clients.
 
 ---
 
-## ⚖️ FAIR + CARE in Policy Terms
+## 📦 Data & Metadata
 
-KFM explicitly commits to **FAIR** (Findable, Accessible, Interoperable, Reusable) plus **CARE** (Collective Benefit, Authority to Control, Responsibility, Ethics). Policies operationalize these values:
+### Minimum policy-controlled metadata (recommended contract)
+Policies commonly depend on dataset/story metadata fields like:
 
-- **FAIR as “entry checklist”**: if minimum metadata/provenance requirements aren’t met, data should not enter the system.
-- **CARE as rights-aware governance**:  
-  - protect culturally sensitive material,
-  - support authority to control (group-restricted access, withdrawal/takedown handling),
-  - require responsibility signals (warnings, provenance, auditability),
-  - prioritize ethics in downstream usage.
+| Field | Type | Example | Why it matters |
+|---|---:|---|---|
+| `id` | string | `dataset_ks_census_1880` | Stable referent for policy decisions |
+| `license` | string | `CC-BY-4.0` | FAIR reuse gate (legal clarity) |
+| `citation` | string | `Author, Title, Year...` | Evidence traceability |
+| `accessLevel` | string | `Restricted` | Authorization + redaction decisions |
+| `ownerGroup` | string | `TribeABC` | CARE Authority-to-Control |
+| `status` | string | `active` / `withdrawn` | Takedown/withdraw enforcement |
+| `sensitivityTags` | array | `["sacred_site","living_persons"]` | Drives redaction + review gates |
 
 > [!CAUTION]
-> CARE requirements may override “default-open” instincts. If a dataset/story touches Indigenous data sovereignty or culturally restricted knowledge, treat policy review as mandatory.
+> If `status = withdrawn`, policies should deny display/use and ensure the UI does not surface the resource.
+
+### Example: FAIR enforcement rule (illustrative)
+```rego
+# Illustrative only — adapt package/rules to your repo.
+package kfm.data
+
+deny[msg] {
+  input.dataset.license == ""
+  msg := "Dataset missing license (FAIR: Reusable). Add a non-empty license field."
+}
+
+deny[msg] {
+  input.dataset.citation == ""
+  msg := "Dataset missing citation (evidence-first). Add a citation string or dataset reference."
+}
+```
 
 ---
 
-## 🔐 Sensitivity, Sovereignty, and Redaction Rules
+## 🧱 Architecture
 
-Policies should treat sensitive content as **governed**, not merely “private”:
+### Where policy is enforced
 
-### Always prohibited in public outputs
-- Exact coordinates or operational details of sacred/vulnerable sites unless explicitly cleared.
-- Personally identifying information for living individuals, unless explicitly authorized and required.
+1) **CI (static enforcement)**
+- Runs on PRs to prevent merging non-compliant changes.
+- Typical failures include missing provenance/metadata or disallowed content patterns.
 
-### Common policy patterns *(examples — not confirmed in repo)*
-- `accessLevel: "Restricted"` + `ownerGroup: "<GroupID>"` ⇒ only authorized roles/groups may access.
-- `status: "withdrawn"` ⇒ deny access and remove from catalogs/UI listings.
+2) **Runtime (dynamic enforcement)**
+- Backend calls OPA before returning:
+  - **Dataset access** results (allow/deny/sanitize).
+  - **AI/Focus Mode** outputs (block restricted references; refuse disallowed queries; require citations).
+- Deployment pattern options:
+  - OPA **sidecar** queried via HTTP
+  - Embedded OPA evaluation (e.g., WASM/Go library)
 
-### Governance review triggers
-- Any new dataset or story node involving:
-  - Indigenous communities, sovereignty concerns, or culturally sensitive narratives,
-  - restricted/withdrawn data,
-  - new AI behaviors or summarization modes,
-  - new export pathways or external integrations.
+### Decision contract (recommended)
 
----
+#### Input (OPA request)
+```json
+{
+  "subject": {
+    "userId": "user123",
+    "roles": ["public"],
+    "groups": []
+  },
+  "action": "read",
+  "resource": {
+    "type": "dataset",
+    "id": "dataset456",
+    "accessLevel": "Restricted",
+    "ownerGroup": "TribeABC",
+    "status": "active"
+  },
+  "context": {
+    "channel": "api",
+    "endpoint": "/v1/datasets/dataset456",
+    "requestedFields": ["geometry", "title", "summary"]
+  }
+}
+```
 
-## 🤝 Changing Policy
-
-Because policy is code:
-
-- Every policy change must be proposed via PR.
-- CI must pass (including policy tests).
-- Maintainers must review for:
-  - alignment with pipeline and trust membrane invariants,
-  - unintended broadening of access,
-  - regressions in evidence/citation requirements,
-  - safety and sensitivity handling.
-
-> [!IMPORTANT]
-> A “small” policy change can have system-wide impact. Prefer small, reversible diffs and include explicit rationale.
-
----
-
-## ✅ Definition of Done (for Policy PRs)
-
-- [ ] Policy change is minimal and clearly scoped.
-- [ ] Policy has at least **one failing** and **one passing** test case *(not confirmed in repo; implement if test harness exists)*.
-- [ ] No new bypass paths introduced (UI → DB direct access; backend → DB direct access).
-- [ ] No secrets, tokens, or credentials committed.
-- [ ] Documentation updated (this README + any relevant docs).
-- [ ] Governance review performed when sensitivity/sovereignty triggers apply.
-- [ ] Version History updated.
-
----
-
-## 📚 Related Governance References (Repository)
+#### Output (OPA decision)
+```json
+{
+  "allow": false,
+  "deny_reason": "Restricted dataset: user not in ownerGroup",
+  "redactions": null,
+  "policy_ref": {
+    "bundle_hash": "<sha256>",
+    "commit": "<git_sha>"
+  }
+}
+```
 
 > [!NOTE]
-> The KFM documentation set references these artifacts. Verify existence in-repo and update links if paths differ.
+> Prefer returning **structured reasons** (machine-readable codes + human text) so the API/UI can render helpful feedback.
 
-- Governance root: `docs/governance/ROOT_GOVERNANCE.md` *(not confirmed in repo)*
-- Ethics: `docs/governance/ETHICS.md` *(not confirmed in repo)*
-- Sovereignty: `docs/governance/SOVEREIGNTY.md` *(not confirmed in repo)*
-- Documentation governance:
-  - `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(not confirmed in repo)*
-  - `docs/standards/KFM_CHATGPT_WORK_PROTOCOL.md` *(not confirmed in repo)*
-- Canonical pipeline + governance structure:
-  - `docs/MASTER_GUIDE_v13.md` *(not confirmed in repo)*
+---
+
+## 🧪 Validation & CI/CD
+
+### CI gates (expected)
+- ✅ Policy checks via **Conftest** (evaluating repo artifacts against Rego policies)
+- ✅ Policy unit tests via `opa test` (if present)
+- ✅ Markdown lint / structure checks for governed docs where relevant
+- ✅ Sensitivity scans (flag potential leaks requiring review)
+
+### Local workflow (recommended)
+1. Run policy tests locally before PR.
+2. Confirm any new dataset/story includes required metadata fields (license/citation/provenance).
+3. Ensure denial messages are actionable (what failed + how to fix).
+
+#### Example local commands (illustrative)
+```bash
+# Run policy unit tests (if you have opa tests)
+opa test policy/rego -v
+
+# Run Conftest on repo content (paths will vary)
+conftest test data/ -p policy/rego
+conftest test docs/ -p policy/rego
+```
+
+---
+
+## ⚖️ FAIR+CARE & Governance
+
+### CARE-aligned policy behaviors
+- **Collective benefit**: refuse or restrict exploitative uses (especially for sensitive cultural data).
+- **Authority to control**: enforce `ownerGroup` access; support takedown by setting `status=withdrawn`.
+- **Responsibility & ethics**: require warnings/redactions for sensitive narratives; avoid exposing sacred/vulnerable site locations.
+
+### Review gates (recommended minimum)
+| Change type | Examples | Required review |
+|---|---|---|
+| Access control logic | role/group allowlists, `ownerGroup` behavior | Maintainer + Governance reviewer |
+| Redaction rules | coordinate rounding/masking, sensitive tags | Governance reviewer |
+| AI policy rules | refusal conditions, citation requirements | Maintainer + Governance reviewer |
+| FAIR enforcement | required metadata, license compatibility rules | Data steward + Maintainer |
+| Compliance/takedown | `withdrawn` behavior, privacy constraints | Governance reviewer |
+
+> [!IMPORTANT]
+> The Governance section for any policy change PR should state whether **additional review** is required and why.
+
+### AI assistance disclosure
+This document may be drafted or edited with AI assistance, but must remain **project-file grounded** and must not invent repo facts.
 
 ---
 
 ## 🕰️ Version History
 
-| Version | Date | Summary | Author |
-|---|---:|---|---|
-| v1.0.0 | 2026-02-09 | Initial `policy/README.md` defining policy scope, invariants, enforcement model, and change process | KFM AI Assistant |
+| Version | Date (YYYY-MM-DD) | Summary of Changes | Author |
+|---:|---:|---|---|
+| v0.1.0 | 2026-02-10 | Initial `policy/README.md` establishing policy-as-code conventions, enforcement points, and review gates. | KFM AI Assistant |
