@@ -83,27 +83,35 @@ If you are looking for ingestion, cataloging, or storage code, those live elsewh
 
 ```mermaid
 flowchart LR
-  subgraph UI["web/ (React UI)"]
+  subgraph UI
+    direction TB
+    UI_T["web/ (React UI)"]
     Map["Map View (MapLibre)"]
     Time["Timeline / Time Scrubber"]
     Layers["Layer Panel + Legend"]
-    Prov["Provenance Panel"]
+    ProvPanel["Provenance Panel"]
     Story["Story Node Viewer"]
     Focus["Focus Mode Chat + Audit"]
+    UI_T --> Map
   end
 
-  subgraph API["Backend API (governed)"]
+  subgraph APIB
+    direction TB
+    API_T["Backend API (governed)"]
     Catalog["Catalog (STAC/DCAT)"]
     ProvAPI["Provenance (PROV)"]
-    Tiles["Tiles/Features/Timeseries endpoints"]
+    Tiles["Tiles / Features / Timeseries endpoints"]
     Search["Search + Retrieval endpoints"]
     Policy["Policy Engine (OPA)"]
+    API_T --> Catalog
   end
 
-  UI -->|HTTP(S)| API
-  API --> Policy
-  Catalog --> UI
-  ProvAPI --> Prov
+  Focus -->|"HTTP(S)"| Search
+  UI_T -->|"HTTP(S)"| API_T
+  API_T --> Policy
+
+  Catalog --> UI_T
+  ProvAPI --> ProvPanel
   Tiles --> Map
   Search --> Focus
   Story --> Map
