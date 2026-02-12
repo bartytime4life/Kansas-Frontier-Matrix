@@ -94,11 +94,11 @@ KFM contains *relational/spatial* storage and *graph* storage. The graph store e
 
 ```mermaid
 flowchart LR
-  UI[React/Map UI + Focus Mode] -->|HTTP| API[Governed API Layer]
-  API -->|calls| UC[Use Cases / Services]
-  UC -->|port interface| GP[Graph Port / Repository Interface]
-  GP -->|implemented by| GA[Graph Adapter (this folder)]
-  GA -->|driver| GDB[(Graph Database)]
+  UI["React/Map UI + Focus Mode"] -->|"HTTP"| API["Governed API Layer"]
+  API -->|"calls"| UC["Use Cases / Services"]
+  UC -->|"port interface"| GP["Graph Port / Repository Interface"]
+  GP -->|"implemented by"| GA["Graph Adapter (this folder)"]
+  GA -->|"driver"| GDB["Graph Database"]
 ```
 
 ### Query execution path (adapter internals)
