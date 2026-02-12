@@ -97,18 +97,18 @@ KFM is built with strict boundaries:
 
 ```mermaid
 flowchart TB
-  UI[Frontend: React/Map UI] -->|HTTPS| GW[API Gateway]
-  Ext[External Clients] -->|HTTPS| GW
+  UI["Frontend: React/Map UI"] -->|"HTTPS"| GW["API Gateway"]
+  Ext["External Clients"] -->|"HTTPS"| GW
 
-  GW --> POL[Policy (OPA)<br/>default deny]
+  GW --> POL["Policy (OPA) — default deny"]
   POL --> GW
 
-  GW --> API[App Services<br/>Use Cases]
-  API -->|ports| Repo[(Repo Interfaces)]
-  Repo --> PG[(PostGIS/Postgres)]
-  Repo --> GDB[(Graph DB)]
-  Repo --> OBJ[(Object Storage<br/>COGs • catalogs • docs)]
-  API --> AUD[(Audit Ledger<br/>append-only)]
+  GW --> API["App Services — Use Cases"]
+  API -->|"ports"| Repo["Repo Interfaces"]
+  Repo --> PG["PostGIS/Postgres"]
+  Repo --> GDB["Graph DB"]
+  Repo --> OBJ["Object Storage (COGs • catalogs • docs)"]
+  API --> AUD["Audit Ledger (append-only)"]
 ```
 
 > [!IMPORTANT]
