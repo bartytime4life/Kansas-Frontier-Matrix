@@ -1,334 +1,106 @@
-```ini
-# 🧭 .editorconfig
-# Consistent formatting across editors/IDEs ✅
+# EditorConfig is awesome: https://editorconfig.org
 #
-# KFM-aligned principle: smaller diffs → clearer provenance → faster review.
-# (Especially important in pipeline/ETL + mapping layers + UI + infra repos.) :contentReference[oaicite:1]{index=1}
-
+# Kansas Frontier Matrix (KFM) — repository formatting baseline
+# - Keep editors consistent across OSes and IDEs
+# - Language-specific overrides follow community norms
+# - Lint/formatter tools (Prettier, gofmt, black, etc.) still win for final formatting
+#
+# NOTE: root=true stops EditorConfig from searching parent directories.
 root = true
 
-# -----------------------------------------------------------------------------
-# 🌎 Global defaults (sane, boring, reliable)
-# -----------------------------------------------------------------------------
 [*]
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# Default indentation (overridden per-language below)
 indent_style = space
 indent_size = 2
-tab_width = 2
 
-# Helps readability in reviews (soft guideline; tooling may override).
-max_line_length = 120
+# Not all editors honor this, but it's harmless and helpful where supported.
+max_line_length = 100
 
-# -----------------------------------------------------------------------------
-# 📝 Markdown / docs (keep intentional hard breaks + trailing spaces)
-# -----------------------------------------------------------------------------
-[*.md]
+
+# --- Docs / prose -------------------------------------------------------------
+
+[*.{md,mdx,rst,adoc}]
+# Markdown uses trailing spaces for hard line breaks; many docs also include deliberate whitespace.
 trim_trailing_whitespace = false
 max_line_length = off
 
-[*.mdx]
+[*.{diff,patch}]
 trim_trailing_whitespace = false
-max_line_length = off
 
-[*.rst]
-trim_trailing_whitespace = false
-max_line_length = off
 
-# Plain text: don’t force wrapping preferences
-[*.txt]
-max_line_length = off
+# --- Web / config ------------------------------------------------------------
 
-# -----------------------------------------------------------------------------
-# 🐍 Python (APIs, ETL, analytics)
-# -----------------------------------------------------------------------------
-[*.py]
-indent_size = 4
-tab_width = 4
-max_line_length = 88
-
-[*.pyi]
-indent_size = 4
-tab_width = 4
-max_line_length = 88
-
-[*.pyw]
-indent_size = 4
-tab_width = 4
-max_line_length = 88
-
-# -----------------------------------------------------------------------------
-# 🧪 PowerShell (ops, automation)
-# -----------------------------------------------------------------------------
-[*.ps1]
-indent_size = 4
-tab_width = 4
-
-[*.psm1]
-indent_size = 4
-tab_width = 4
-
-[*.psd1]
-indent_size = 4
-tab_width = 4
-
-# -----------------------------------------------------------------------------
-# 🧮 MATLAB / Octave
-# -----------------------------------------------------------------------------
-[*.m]
-indent_size = 4
-tab_width = 4
-
-# -----------------------------------------------------------------------------
-# 🧱 JavaScript / TypeScript (React UI + Node tooling)
-# -----------------------------------------------------------------------------
-[*.js]
+[*.{html,htm,css,scss,sass,less}]
+indent_style = space
 indent_size = 2
-tab_width = 2
 
-[*.cjs]
+[*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}]
+indent_style = space
 indent_size = 2
-tab_width = 2
 
-[*.mjs]
+[*.{json,jsonc,json5}]
+indent_style = space
 indent_size = 2
-tab_width = 2
 
-[*.jsx]
+[*.{yml,yaml}]
+indent_style = space
 indent_size = 2
-tab_width = 2
-
-[*.ts]
-indent_size = 2
-tab_width = 2
-
-[*.tsx]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------------------------------------------
-# 🎨 Web assets (templates + styling)
-# -----------------------------------------------------------------------------
-[*.html]
-indent_size = 2
-tab_width = 2
-
-[*.css]
-indent_size = 2
-tab_width = 2
-
-[*.scss]
-indent_size = 2
-tab_width = 2
-
-[*.less]
-indent_size = 2
-tab_width = 2
-
-# SVG is XML; keep it consistent when edited (minified SVG handled below)
-[*.svg]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------------------------------------------
-# 🧩 Config & metadata (common in CI/CD + pipelines)
-# -----------------------------------------------------------------------------
-[*.json]
-indent_size = 2
-tab_width = 2
-
-[*.jsonc]
-indent_size = 2
-tab_width = 2
-
-[*.ndjson]
-indent_size = 2
-tab_width = 2
-
-[*.yaml]
-indent_size = 2
-tab_width = 2
-
-[*.yml]
-indent_size = 2
-tab_width = 2
 
 [*.toml]
+indent_style = space
 indent_size = 2
-tab_width = 2
 
-[*.ini]
+[*.{graphql,gql}]
+indent_style = space
 indent_size = 2
-tab_width = 2
 
-[*.cfg]
+[*.{proto,proto3}]
+indent_style = space
 indent_size = 2
-tab_width = 2
 
-[*.conf]
-indent_size = 2
-tab_width = 2
 
-# .env files sometimes rely on exact spacing; be conservative
-[.env]
-trim_trailing_whitespace = false
+# --- Backends / general-purpose languages -----------------------------------
 
-[*.env]
-trim_trailing_whitespace = false
+[*.py]
+indent_style = space
+indent_size = 4
 
-# -----------------------------------------------------------------------------
-# 🗺️ GIS / mapping-friendly text formats
-# (KFM frequently lives in GeoJSON + metadata-first patterns.) :contentReference[oaicite:2]{index=2}
-# -----------------------------------------------------------------------------
-[*.geojson]
-indent_size = 2
-tab_width = 2
-
-[*.topojson]
-indent_size = 2
-tab_width = 2
-
-[*.kml]
-indent_size = 2
-tab_width = 2
-
-[*.gpx]
-indent_size = 2
-tab_width = 2
-
-# WKT/PRJ are often copied verbatim; avoid “helpful” whitespace edits
-[*.wkt]
-trim_trailing_whitespace = false
-
-[*.prj]
-trim_trailing_whitespace = false
-
-# -----------------------------------------------------------------------------
-# 🗄️ SQL (PostGIS, migrations, warehouse)
-# -----------------------------------------------------------------------------
-[*.sql]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------------------------------------------
-# 🐳 Containers & orchestration
-# -----------------------------------------------------------------------------
-[Dockerfile]
-indent_size = 2
-tab_width = 2
-
-[Dockerfile.*]
-indent_size = 2
-tab_width = 2
-
-[*.dockerfile]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------------------------------------------
-# 🧱 Infrastructure as Code (Terraform / HCL)
-# -----------------------------------------------------------------------------
-[*.tf]
-indent_size = 2
-tab_width = 2
-
-[*.tfvars]
-indent_size = 2
-tab_width = 2
-
-[*.hcl]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------------------------------------------
-# 🧰 Shell scripts
-# -----------------------------------------------------------------------------
-[*.sh]
-indent_size = 2
-tab_width = 2
-
-[*.bash]
-indent_size = 2
-tab_width = 2
-
-[*.zsh]
-indent_size = 2
-tab_width = 2
-
-# -----------------------------------------------------------------------------
-# 📊 Data files (avoid accidental whitespace trimming)
-# Data integrity matters—especially when datasets are source-of-truth. :contentReference[oaicite:3]{index=3}
-# -----------------------------------------------------------------------------
-[*.csv]
-trim_trailing_whitespace = false
-
-[*.tsv]
-trim_trailing_whitespace = false
-
-[data/**]
-trim_trailing_whitespace = false
-
-[**/data/**]
-trim_trailing_whitespace = false
-
-# -----------------------------------------------------------------------------
-# 🧾 Diffs / patches (whitespace matters)
-# -----------------------------------------------------------------------------
-[*.diff]
-trim_trailing_whitespace = false
-
-[*.patch]
-trim_trailing_whitespace = false
-
-# -----------------------------------------------------------------------------
-# 🧊 Minified / vendor artifacts (don’t “reformat” generated files)
-# -----------------------------------------------------------------------------
-[*.min.js]
-insert_final_newline = false
-trim_trailing_whitespace = false
-
-[*.min.css]
-insert_final_newline = false
-trim_trailing_whitespace = false
-
-[*.min.svg]
-insert_final_newline = false
-trim_trailing_whitespace = false
-
-# -----------------------------------------------------------------------------
-# 🧰 Makefiles require tabs
-# -----------------------------------------------------------------------------
-[Makefile]
+[*.go]
+# gofmt uses tabs for indentation; align editors with gofmt.
 indent_style = tab
-tab_width = 4
+indent_size = 4
 
-[**/Makefile]
+[*.rs]
+indent_style = space
+indent_size = 4
+
+[*.{java,kt,kts}]
+indent_style = space
+indent_size = 4
+
+[*.{c,cc,cpp,cxx,h,hh,hpp,hxx,cs}]
+indent_style = space
+indent_size = 4
+
+
+# --- Shell / build -----------------------------------------------------------
+
+[*.{sh,bash,zsh}]
+indent_style = space
+indent_size = 2
+
+# Make requires tabs in recipe lines
+[{Makefile,makefile,*.mk}]
 indent_style = tab
-tab_width = 4
+indent_size = 4
 
-[*.mk]
-indent_style = tab
-tab_width = 4
 
-# -----------------------------------------------------------------------------
-# 🪟 Windows scripts (CRLF to avoid Windows shell weirdness)
-# -----------------------------------------------------------------------------
-[*.bat]
+# --- Windows scripts ---------------------------------------------------------
+
+[*.{bat,cmd}]
 end_of_line = crlf
-
-[*.cmd]
-end_of_line = crlf
-
-# Optional: Windows-centric project files (common CRLF expectation)
-[*.sln]
-end_of_line = crlf
-
-[*.vcxproj]
-end_of_line = crlf
-
-[*.csproj]
-end_of_line = crlf
-```
