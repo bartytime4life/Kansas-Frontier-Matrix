@@ -1,354 +1,246 @@
-# Kansas Frontier Matrix (KFM) — `.github` 🧭🛡️
-
-![Governed Docs](https://img.shields.io/badge/docs-governed-informational)
-![Provenance-first](https://img.shields.io/badge/provenance-first-success)
-![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-aligned-purple)
-![Policy-as-Code](https://img.shields.io/badge/policy-as--code-OPA-blue)
-![Trust Membrane](https://img.shields.io/badge/trust--membrane-enforced-critical)
-![Layer Coverage](https://img.shields.io/badge/layers-land%2Fwater%2Fgeo%2Fhazards%2Ftransport%2FAI-informational)
-
-> [!IMPORTANT]
-> This directory is part of KFM’s **trust membrane**: contributors and automation should enforce that clients never bypass governed APIs/policies to reach data stores directly.
-> If you change what users can see (data layers, narratives, AI output), expect CI gates to require provenance, policy checks, and validation.
+# `.github` — Governance, Community Health, and Automation 🧭🛡️
 
 > [!NOTE]
-> Some filenames and workflows below are **recommended defaults** and may differ in your repository. If a path is missing, treat it as **(not confirmed in repo)** and align it to the canonical standards in `docs/`.
+> This folder holds **GitHub-specific** “community health” files and automation for the **Kansas Frontier Matrix (KFM)** repo.
+> If anything in this document diverges from actual workflows/templates in the repo, **treat this README as the source to update next** (not the source of truth by itself).
 
 ---
 
-## Table of contents
+## Quick Links
 
-- [Why `.github` exists](#why-github-exists)
-- [Directory layout](#directory-layout)
-- [CI quality gates](#ci-quality-gates)
-  - [Gate registry](#gate-registry)
-  - [Layer integration and coverage gates](#layer-integration-and-coverage-gates)
-  - [AI-driven experiments and “driving” workflows](#ai-driven-experiments-and-driving-workflows)
-- [CI flow](#ci-flow)
-- [Local preflight](#local-preflight)
-- [Pull request checklist](#pull-request-checklist)
-- [Governance and sensitive information](#governance-and-sensitive-information)
-- [Key internal references](#key-internal-references)
+- **Open an issue** → use the templates in `.github/ISSUE_TEMPLATE/`
+- **Open a PR** → follow `.github/PULL_REQUEST_TEMPLATE.md` (and the checklists below)
+- **Security** → see `.github/SECURITY.md` (do **not** file vulnerabilities publicly)
 
 ---
 
-## Why `.github` exists
+## What Lives in `.github/`
 
-KFM is an evidence-first, provenance-centric geospatial system:
-
-**pipelines + catalogs + knowledge graph + governed API + map/timeline UI + Story Nodes + Focus Mode**
-
-This directory operationalizes that stance in GitHub by housing:
-
-- **CI workflows** (lint/validate/test/build gates)
-- **Contribution UX** (issue forms, PR template, CODEOWNERS)
-- **Security / policy entry points** (as applicable)
-
-The goal: keep changes reviewable and safe-by-design—especially for provenance, governance, sensitive-location handling, and **layer coverage** across:
-
-- **Land ownership / cadastral**
-- **Historical events + historical figures**
-- **Hydrology / water systems**
-- **Geology / terrain**
-- **Disasters / hazards**
-- **Air quality + smoke**
-- **Soils**
-- **Fires**
-- **Transportation: roads + rail/trains**
-- **AI-driven experiments** (including remote-sensing extraction, routing/“driving distance”, and modeling workflows)
-
----
-
-## Directory layout
+| Path | Purpose | Notes |
+|---|---|---|
+| `.github/README.md` | This file | How we use GitHub for governance + operations |
+| `.github/workflows/` | CI / policy gates / automation | Contract tests, linting, security scans, provenance checks |
+| `.github/ISSUE_TEMPLATE/` | Issue + intake templates | Bug, feature, data intake, governance review, story node |
+| `.github/PULL_REQUEST_TEMPLATE.md` | PR “Definition of Done” | Evidence-first + checks required |
+| `.github/CODEOWNERS` | Review routing | Enforces domain ownership |
+| `.github/SECURITY.md` | Vulnerability reporting | Private reporting instructions |
+| `.github/dependabot.yml` | Dependency update automation | Optional but recommended |
+| `.github/labels.yml` | Label taxonomy (optional) | Helpful for consistent triage |
 
 > [!TIP]
-> If you add new automation, prefer small, composable workflows with clear names and explicit “what/why” descriptions.
-> If you already run these checks in fewer workflows (single “mega-workflow”), keep the **gate semantics** stable.
+> Keep automation “boring”: **small workflows**, **clear names**, **fast feedback**, and **fail-closed** on governance gates.
 
-```text
-.github/
-  README.md                        # (this file) how GitHub automation enforces KFM gates
-  workflows/
-    docs.yml                       # docs lint + structure + link + accessibility + sensitivity
-    data-catalog.yml               # STAC/DCAT/PROV validation + provenance checks
-    layers.yml                     # geospatial layer QA (geometry/raster) + thematic layer coverage
-    knowledge-graph.yml            # graph schema checks (events, figures, orgs) + provenance links
-    hazards-env.yml                # disasters + fires + smoke/air-quality + water time-series checks
-    transport.yml                  # roads + rail network integrity checks (topology, connectivity)
-    ai-experiments.yml             # experiment manifests + reproducibility + model cards (fail closed)
-    api-contracts.yml              # OpenAPI/GraphQL contract & compatibility checks
-    policy.yml                     # OPA/Rego unit tests (+ “fail closed” posture checks)
-    e2e.yml                        # UI + API end-to-end tests (provenance panel, citations)
-    supply-chain.yml               # SBOM + provenance attestations (SLSA/in-toto)
-  ISSUE_TEMPLATE/
-    bug_report.yml
-    feature_request.yml
-    story_node.yml                 # optional: Story Node proposal intake
-    layer_request.yml              # optional: new layer request intake (land/water/soil/etc.)
-    experiment_report.yml          # optional: experiment proposal/results intake
-  PULL_REQUEST_TEMPLATE.md
-  CODEOWNERS
-  dependabot.yml                   # optional
-  SECURITY.md                      # optional
+---
+
+## Governance Principles (KFM)
+
+KFM is a governed geospatial/historical knowledge system (data → pipeline → APIs → UI/Focus Mode).  
+This `.github` layer is where we translate governance into **repeatable checks**.
+
+### Evidence-First (Non-negotiable)
+
+Every substantive PR must include **at least one** evidence pointer:
+
+- Dataset/catalog identifier (e.g., STAC/DCAT/PROV object ID)
+- Document path (e.g., `docs/...`), schema path, or contract path
+- Commit hash / release tag / artifact digest
+- Test proving behavior change
+
+> [!IMPORTANT]
+> If you cannot provide evidence, label the change **“proposal”** and route it to governance review.
+
+### FAIR + CARE + Sensitivity
+
+Some content may be sensitive (e.g., precise locations, culturally restricted knowledge).  
+When in doubt:
+
+- **Generalize / redact** precise coordinates or sensitive attributes
+- Add a **governance review** note in the PR
+- Prefer “need-to-know” exposure in UI and APIs
+
+---
+
+## Architecture Invariants (Trust Membrane + Clean Layers)
+
+### Trust Membrane Rule
+
+- **Frontends and external clients never access databases directly.**
+- All access must go through the **governed API layer**.
+
+### Clean Architecture Boundaries
+
+- **Domain**: pure entities/models (no DB/UI)
+- **Use Case / Service**: workflows + business rules via interfaces
+- **Integration & Interface**: ports/contracts/adapters (API boundaries)
+- **Infrastructure**: storage, queues, web servers, deployment
+
+```mermaid
+flowchart TB
+  subgraph Clients
+    UI[React/MapLibre UI]
+    Ext[External Clients]
+  end
+
+  subgraph Governed_API["Governed API Gateway (Trust Membrane)"]
+    API[REST/GraphQL/API Layer]
+    Policy[Policy Enforcement (OPA/Rego, etc.)]
+    Audit[Audit + Provenance Logging]
+  end
+
+  subgraph DataPlane["Data Plane"]
+    PG[(PostGIS/PostgreSQL)]
+    Graph[(Graph DB)]
+    Obj[(Object/Artifact Store)]
+  end
+
+  UI --> API
+  Ext --> API
+  API --> Policy
+  API --> Audit
+  API --> PG
+  API --> Graph
+  API --> Obj
 ```
 
-> [!NOTE]
-> If `layers.yml` / `hazards-env.yml` / `transport.yml` / `ai-experiments.yml` don’t exist, **do not create “stub” workflows**.
-> Instead, implement their checks as jobs inside existing workflows and update this README to reflect the final arrangement.
-
----
-
-## CI quality gates
-
-> [!WARNING]
-> CI gates are not “nice to have” in KFM. Docs, data, policies, and experiments are governed artifacts:
-> **a PR that weakens validation/provenance/sensitivity requirements is a governance change**.
-
-### Gate registry
-
-| Gate | What it checks | Why it exists | Typical implementation notes |
-|---|---|---|---|
-| Docs lint + structure | Markdown lint, heading order, template compliance | Prevents drift from governed templates; keeps docs machine-ingestible | Pair with link-check + accessibility |
-| Provenance rules | “No claim without evidence,” references resolved | Supports cite-or-abstain behavior and auditability | Treat missing evidence as **blockers** |
-| Link integrity | No broken internal links/images | Keeps docs renderable & CI-clean | Include relative-link checks |
-| Accessibility | Alt text, table headers, heading hierarchy | Makes docs usable and reviewable | Fail on missing alt text for meaningful images |
-| Sensitivity scanning | Flags sensitive content (precise locations, culturally restricted data) | Prevents unsafe exposure; protects community rights | Prefer redaction/generalization; add review flags |
-| **Land/ownership governance** | Parcel/ownership fields reviewed; PII rules; license/terms checks | Land records can carry sensitive info and legal constraints | Default to aggregation/redaction; policy-gated fields[^pii] |
-| Data catalog validation | STAC / DCAT v3 / PROV(-O) structure | Ensures interoperability and traceable lineage | Validate JSON + JSON-LD where applicable |
-| **Layer QA (vector/raster)** | Geometry validity, CRS, bounds, nodata, tiling readiness | Prevents broken map layers and invalid analytics | Use GDAL/OGR + lightweight checks; fail fast |
-| **Hydrology & water time-series QA** | Temporal schema, units, missingness, station metadata | Water layers are both spatial and temporal; errors mislead | Validate time windows + units; require provenance |
-| **Geology & terrain QA** | Raster metadata, resolutions, hillshade/DEM consistency | Terrain layers underpin many derived analyses | Enforce CRS + pixel size + provenance |
-| **Disaster & hazard QA** | Event integrity, geometry/time alignment, categorization | Timelines must remain queryable and explainable | Treat “unknown time/place” as explicit uncertainty |
-| **Fire + smoke/air-quality QA** | Fire perimeters, smoke extents, AQ time series, linkage | Avoids inconsistent hazard narratives and maps | Require explicit source + update cadence notes |
-| **Transport (roads/rail) QA** | Connectivity, topology, route break detection | Routing and “driving distance” analyses depend on topology | Add sanity checks: disconnected components, invalid lines |
-| Knowledge graph validation | Graph schema (nodes/edges), IDs, backrefs to evidence | Keeps history/people/places joinable with sources | Validate ID conventions; require evidence links |
-| API contract checks | OpenAPI diffs; consumer contract tests | Prevents breaking clients; keeps API governed | Require versioning + compatibility notes |
-| Policy-as-code tests | OPA/Rego unit tests for allow/deny | Ensures governance gates behave predictably | Default-deny / fail-closed posture |
-| End-to-end flows | UI provenance panel; Story Node citations; Focus Mode citation resolution | Ensures provenance UX works in practice | Treat “citation missing” as failure |
-| Supply chain integrity | SBOM + provenance attestations | Hardens build integrity | Generate SPDX + SLSA/in-toto attestations |
-
----
-
-### Layer integration and coverage gates
-
-KFM treats “adding a layer” as **more than adding a file**. A “layer” is *integrated* only when it is:
-
-1) processed/normalized,  
-2) cataloged (STAC/DCAT) + provenance logged (PROV),  
-3) stored via governed interfaces,  
-4) exposed via governed API,  
-5) policy-scoped, and  
-6) visible in UI/Story Nodes with citations.
-
 > [!IMPORTANT]
-> Any PR that tries to “just drop a GeoJSON into the UI” (or bypass metadata/provenance) violates KFM’s pipeline–catalog–API invariant and should be blocked in CI.
-
-#### Coverage matrix (themes → minimum CI expectations)
-
-| Theme | Typical artifacts (examples; paths may vary) | CI must enforce | Governance notes |
-|---|---|---|---|
-| **Land ownership / cadastral** | parcels, grants/patents, plats | PII/sensitivity scan; schema validation; provenance required | Aggregate/redact owners/addresses by default[^pii] |
-| **Historical figures** | person/org entity records linked to events/places | Evidence links required; disambiguation + stable IDs | Avoid doxxing; treat living persons with extra care |
-| **Hydrology** | rivers/streams, watersheds, aquifers, gauges | Time-series QA + spatial QA; unit checks | Clearly label uncertainty and data gaps |
-| **Geology / terrain** | DEM/hillshade/geo units | Raster QA (CRS/resolution/nodata); provenance | Derived products must cite inputs |
-| **Disasters** | FEMA/NOAA-style events, impact footprints | Event schema + time/space coherence; provenance | “Unknown” fields must be explicit |
-| **Air quality / smoke** | AQ sensors, smoke plumes, derived AQ maps | Time-series QA; smoke/AQ linkage tests; provenance | Communicate limitations/latency |
-| **Soil** | soil surveys, soil moisture/erosion proxies | Schema + units; spatial QA | Respect licensing + attribution |
-| **Fires** | incident perimeters, burn severity | Geometry/time QA; link to smoke/AQ where relevant | Do not publish sensitive tactical details |
-| **Roads** | road network lines, classifications | Topology/connectivity checks; CRS | Routing outputs must be reproducible |
-| **Rail / trains** | rail network lines, stations/yards | Topology/connectivity checks; CRS | Some assets may be security-sensitive |
-| **AI-driven “driving” workflows** | experiment manifests, eval outputs | Reproducibility gates; model cards; data locks | No silent model changes; fail closed |
-
-> [!TIP]
-> You can enforce coverage by requiring a small **layer manifest** (recommended; not confirmed in repo) where every map-visible layer is declared with:
-> - `layer_id`
-> - `theme` (land/hydro/geo/hazards/air/soil/fire/transport)
-> - dataset IDs (STAC/DCAT)
-> - provenance IDs (PROV)
-> - policy tags (OPA)
-> - UI exposure flags
+> If a change bypasses repository interfaces to talk directly to storage, it violates the architecture.
 
 ---
 
-### AI-driven experiments and “driving” workflows
+## Contribution Workflow
 
-KFM explicitly supports AI-assisted analysis, but **only under governance**.
+### Issues
 
-That includes experiments such as:
+Use the templates. At minimum, include:
 
-- Remote-sensing extraction of **roads/railways** and infrastructure features
-- Spatiotemporal modeling of hazards (**fires**, **smoke**, **air quality**, **floods**, etc.)
-- Graph-based analyses that can include “driving distance” style routing over road networks
-- AI-assisted story drafting (must remain evidence-backed and reviewed)
+- **What happened / what you expected**
+- **Reproduction steps**
+- **Evidence** (logs, dataset IDs, query, provenance pointer)
+- **Scope** (domain, UI, API, pipeline, docs)
 
-#### What CI should require for experiments (recommended default)
+### Pull Requests
 
-> [!CAUTION]
-> Experiments are not “just notebooks.” They can alter narratives, map layers, and public claims. Treat experiment outputs as governed artifacts.
-
-Minimum expectations (paths are recommended; not confirmed in repo):
-
-- `experiments/<id>/manifest.yaml`  
-  - dataset IDs + exact versions (STAC/DCAT references)  
-  - code revision reference (commit SHA)  
-  - parameters + seeds  
-  - intended use + limitations  
-- `experiments/<id>/results/`  
-  - metrics + evaluation summary  
-  - artifacts with hashes (if applicable)  
-- `mcp/model_cards/<model>.md` (or equivalent)  
-  - what the model does/doesn’t do  
-  - training/eval data provenance  
-  - risks + bias notes  
-- **Policy checks** (OPA) for:  
-  - whether the output is allowed to ship to public UI  
-  - whether it may reference sensitive locations/attributes  
-  - whether it may be used by Focus Mode as a citation source
-
-CI gating recommendations:
-
-- Fail if an experiment references datasets without resolvable catalog/provenance IDs.
-- Fail if results are missing **limitations** or **uncertainty** fields.
-- Fail if a model is changed without updating its model card + evaluation summary.
-- Fail closed by default: experiments don’t become “public layers” unless explicitly promoted via a governed step.
-
----
-
-## CI flow
+All PRs should be small, reviewable, and reversible.
 
 ```mermaid
 flowchart LR
-  PR["Pull Request"] --> Lint["Docs lint + structure (links, a11y, sensitivity)"]
-  PR --> Catalog["Data catalog validation (STAC/DCAT/PROV + provenance rules)"]
-  PR --> Layers["Layer QA (vector + raster + coverage)"]
-  PR --> KG["Knowledge graph checks (events + figures + IDs)"]
-  PR --> Haz["Hazards & environment (disaster/fire/smoke/AQ/water)"]
-  PR --> Trans["Transport QA (roads + rail topology)"]
-  PR --> Exp["AI experiment governance (manifest + eval + model cards)"]
-  PR --> Contracts["API contract checks (OpenAPI/GraphQL)"]
-  PR --> Policy["OPA policy tests (default deny / fail closed)"]
-  PR --> E2E["End-to-end flows (UI provenance + citations)"]
-  PR --> Supply["SBOM + provenance attestations"]
-
-  Lint --> Merge{"Merge allowed?"}
-  Catalog --> Merge
-  Layers --> Merge
-  KG --> Merge
-  Haz --> Merge
-  Trans --> Merge
-  Exp --> Merge
-  Contracts --> Merge
-  Policy --> Merge
-  E2E --> Merge
-  Supply --> Merge
+  A[Branch] --> B[PR Opened]
+  B --> C[CI: Lint + Tests]
+  C --> D[CI: Governance Gates]
+  D --> E[Review + Approvals]
+  E --> F[Merge]
+  F --> G[Release/Publish (if applicable)]
 ```
 
 ---
 
-## Local preflight
+## CI Quality Gates (Recommended Baseline)
 
-> [!TIP]
-> Run local checks before you push. If the repo includes `pre-commit`, it’s usually the fastest “CI mirror.”
+> [!NOTE]
+> Exact workflow filenames vary by repo. Keep the *intent* stable even if implementation changes.
 
-Recommended preflight sequence:
+| Gate | What it Protects | Typical Failure Mode | Fix |
+|---|---|---|---|
+| Format/Lint | Consistency, fast review | Style drift | Run formatter + lint |
+| Unit/Integration Tests | Behavioral correctness | Regression | Add/repair tests |
+| Contract/API Checks | Trust membrane + API stability | Breaking schema | Update contract + versioning |
+| Docs Lint/Link Check | CI-ready docs | Broken anchors/links | Fix references |
+| License/CARE Checks | Legal/ethical governance | Unknown license | Add metadata + review |
+| Security Scans | Supply chain + code safety | Vulnerable deps | Patch/bump deps |
+| Provenance Checks | Traceability/audit | Missing IDs/digests | Add provenance index pointers |
 
-```bash
-# 1) Run local hooks (if configured)
-pre-commit run --all-files
+---
 
-# 2) Preview Markdown (GitHub / VSCode preview)
-# 3) Verify links and references resolve
-# 4) For non-trivial doc changes, update Version History (where required by the doc template)
+## PR Definition of Done ✅
+
+### Required (All PRs)
+
+- [ ] Linked issue (or explain why not)
+- [ ] Clear scope (Domain / Use Case / Integration / Infra / UI)
+- [ ] Tests added/updated (or “no test needed” justification)
+- [ ] Docs updated (if behavior/contract changes)
+- [ ] No secrets committed (keys, tokens, credentials)
+- [ ] Governance notes included if sensitive data is involved
+- [ ] All required CI checks pass
+
+### If You Touch Data Pipelines
+
+- [ ] Data license confirmed + recorded
+- [ ] Deterministic IDs/digests preserved
+- [ ] QA/validation artifacts generated
+- [ ] Provenance updated (inputs → transforms → outputs)
+- [ ] Rollback plan documented
+
+---
+
+## Label Taxonomy (Suggested)
+
+| Label | Meaning | Typical Owner |
+|---|---|---|
+| `domain:*` | Domain model/spec changes | Domain owner |
+| `pipeline:*` | Ingestion/transforms/catalog | Data engineering |
+| `api:*` | API contracts and services | API team |
+| `ui:*` | React/Map UI/Focus Mode | UI team |
+| `governance` | Needs policy review | Governance group |
+| `security` | Security-relevant | Security owner |
+| `docs` | Documentation-only | Docs owner |
+
+---
+
+## Security
+
+> [!WARNING]
+> **Do not** disclose vulnerabilities in public issues/PRs.
+
+- Follow `.github/SECURITY.md` for reporting
+- Treat credentials as compromised if exposed
+- Rotate keys and invalidate tokens immediately (maintainers)
+
+---
+
+## Expected Repository Layout (Informational)
+
+> [!NOTE]
+> This is a **typical** KFM-style monorepo layout. Confirm against the actual repo and adjust.
+
+```text
+.github/
+  workflows/
+  ISSUE_TEMPLATE/
+  PULL_REQUEST_TEMPLATE.md
+docs/
+src/
+web/
+data/
 ```
 
-If you are modifying pipelines, policies, layer data, or contracts, also run the relevant local test commands for those subsystems **(not confirmed in repo)**.
-
 ---
 
-## Pull request checklist
+## Maintainers: Keep This Folder Healthy
 
-- [ ] **Scope is declared** (docs / data / backend / web / policy / experiments)
-- [ ] **Provenance included** for every substantive claim or new layer/story assertion
-- [ ] **Layer coverage declared** (what theme? land/hydro/geo/hazards/air/soil/fire/transport)
-- [ ] **Sensitive content reviewed**: precise locations redacted/generalized; review flags added
-- [ ] **Land ownership reviewed** (PII/terms/licensing) if parcel/ownership-like fields appear
-- [ ] **Hydrology/air/soil/fire/disaster** time-series or event integrity validated (units + time windows)
-- [ ] **Roads/rail** topology sanity checked (connectivity / invalid geometries)
-- [ ] **Historical figures** have stable IDs + evidence links (no “unsourced biography”)
-- [ ] **Docs are template-aligned** (if using governed templates)
-- [ ] **Policy impact assessed** (OPA rules updated + tests added where needed)
-- [ ] **Contracts updated** (OpenAPI/GraphQL) with compatibility notes
-- [ ] **Experiment governance satisfied** (manifest + eval + model card) if touching AI/ML
-- [ ] **Validators and tests pass** locally (or explain why CI should be the source of truth)
-- [ ] **No trust-membrane violations** (no direct DB access from UI/external clients)
-
----
-
-## Governance and sensitive information
-
-KFM is committed to:
-
-- **FAIR** (Findable, Accessible, Interoperable, Reusable)
-- **CARE** (Collective Benefit, Authority to Control, Responsibility, Ethics)
-
-Practical implications for GitHub work:
-
-- Treat docs/data/policies/experiments as **governed artifacts**, not “just text.”
-- Avoid publishing **precise locations** of sacred/vulnerable sites.
-- Avoid publishing **personal data** in land/ownership-like datasets (names, addresses, phone numbers, etc.). Prefer aggregation or redaction.[^pii]
-- If content touches Indigenous histories or culturally restricted information, add an explicit **review trigger** in the PR description and route to governance reviewers **(process specifics may vary by repo)**.
-- For hazards (fires/disasters), avoid operationally sensitive details (e.g., tactical response locations) unless explicitly cleared for release.
-
-> [!IMPORTANT]
-> When in doubt: **generalize, redact, and flag for governance review** rather than exposing details.
-
----
-
-## Key internal references
-
-All paths below are referenced by KFM’s documentation standards; if any are missing, treat them as **(not confirmed in repo)** and reconcile to the canonical layout.
-
-- Docs standards:
-  - `../docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md`
-  - `../docs/standards/KFM_CHATGPT_WORK_PROTOCOL.md`
-- Doc templates:
-  - `../docs/templates/TEMPLATE__STORY_NODE_V3.md`
-  - `../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
-- Governance:
-  - `../docs/governance/ROOT_GOVERNANCE.md`
-  - `../docs/governance/ETHICS.md`
-  - `../docs/governance/SOVEREIGNTY.md`
-- Data catalog + provenance (recommended; not confirmed in repo):
-  - `../data/catalog/` (STAC/DCAT)
-  - `../data/provenance/` (PROV)
-  - `../data/sources/` (source inventories; e.g., hydrology/terrain/etc.)
-- Story Nodes (recommended; not confirmed in repo):
-  - `../docs/stories/`
-  - `../docs/stories/media/`
-- AI + experiments (recommended; not confirmed in repo):
-  - `../experiments/`
-  - `../mcp/model_cards/`
-
----
+- Prefer **explicit workflow names** and stable check IDs (so branch protection remains consistent)
+- Keep “policy-as-code” rules versioned and reviewed
+- Regularly prune stale templates/labels
+- Document any “break glass” procedures (incident response, rollback)
 
 <details>
-  <summary>Maintainers: how to extend CI gates safely</summary>
+<summary><strong>Maintainer Checklist (Quarterly)</strong></summary>
 
-- Prefer adding a **new job** to an existing workflow over creating many small workflows, *unless* the gate needs independent approvals.
-- Any gate change that relaxes provenance/sensitivity requirements should be treated as a **governance change**:
-  - document rationale
-  - add tests
-  - require review by governance owners (e.g., via CODEOWNERS)
-- Keep workflow outputs legible:
-  - write clear step names
-  - attach artifacts (lint reports, schema validation logs) when failures are complex
-- For new “layer themes” (e.g., adding a new hazard category):
-  - update the **coverage matrix**
-  - add policy tags + OPA tests
-  - add at least one E2E scenario proving provenance and citations render correctly
+- [ ] Review CI runtime + flakiness
+- [ ] Update dependency automation (Dependabot/Renovate)
+- [ ] Revisit label taxonomy + CODEOWNERS
+- [ ] Audit security reporting instructions
+- [ ] Validate docs link-check remains green
+- [ ] Ensure governance gates still match policy
 
 </details>
 
 ---
 
-[^pii]: Land/parcel ownership and related records can contain personally identifying information. In KFM, publishing such fields should be policy-gated by default (aggregate/redact), and any exposure should be reviewed as a governance decision.
+## Reference Pointers (Project Docs)
+
+- KFM architecture and governance docs (see `docs/` and root project guides)
+- Documentation formatting and CI expectations (see docs style guide materials)
+
+> [!TIP]
+> Keep this `.github/README.md` short and operational. Put deeper system design in `docs/` and keep links stable.
