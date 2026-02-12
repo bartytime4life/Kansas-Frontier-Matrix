@@ -34,12 +34,12 @@ This directory contains the **Search Adapter(s)** for Kansas Frontier Matrix (KF
 
 ```mermaid
 flowchart LR
-  UI[Frontend UI<br/>(React/MapLibre)] --> API[Governed API Boundary<br/>(REST/GraphQL)]
-  API --> POLICY[Policy Engine<br/>(OPA / policy-as-code)]
-  POLICY --> UC[Use Case: Search / Retrieval]
-  UC --> PORT[Port/Interface<br/>SearchPort]
-  PORT --> ADAPTER[Adapter<br/>OpenSearch/Elasticsearch]
-  ADAPTER --> INDEX[(Search Index<br/>Text + Vector)]
+  UI["Frontend UI (React/MapLibre)"] --> API["Governed API Boundary (REST/GraphQL)"]
+  API --> POLICY["Policy Engine (OPA / policy-as-code)"]
+  POLICY --> UC["Use Case: Search / Retrieval"]
+  UC --> PORT["Port/Interface: SearchPort"]
+  PORT --> ADAPTER["Adapter: OpenSearch/Elasticsearch"]
+  ADAPTER --> INDEX["Search Index (Text + Vector)"]
 ```
 
 ### Layering rules (enforced by convention + CI)
