@@ -1,18 +1,3 @@
----
-title: "Graph Adapter — src/adapters/graph"
-path: "src/adapters/graph/README.md"
-version: "v0.1.0"
-last_updated: "2026-02-12"
-status: "draft"
-doc_kind: "README"
-layer: "Integration / Adapters"
-component: "Graph"
-license: "See root LICENSE (not confirmed in repo)"
-doc_uuid: "urn:kfm:doc:src:adapters:graph:readme:v0.1.0 (not confirmed in repo)"
-commit_sha: "<fill_on_merge>"
-doc_integrity_checksum: "sha256:<fill_on_merge>"
----
-
 # 🕸️ Graph Adapter (src/adapters/graph)
 
 🏷 **Layer:** Integration/Adapters · 🏷 **Boundary:** Use Cases ↔ Graph Store · 🏷 **Mode:** Policy-mediated access only
