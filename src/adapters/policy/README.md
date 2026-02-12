@@ -29,13 +29,13 @@ This adapter is how those checks are performed at runtime — without leaking po
 
 ```mermaid
 flowchart LR
-  UI[Web UI (React/TS)] --> API[API Gateway (FastAPI)]
-  API -->|PolicyPort calls| PAD[Policy Adapter<br/>(this directory)]
-  PAD -->|structured input| PDP[OPA / PDP]
-  API --> DATA[(PostGIS / Neo4j / Search)]
-  API --> AUDIT[(Audit Ledger / Provenance Logs)]
-  PDP -->|decision + obligations| PAD
-  PAD -->|allow/deny + redactions + reason codes| API
+  UI["Web UI (React/TS)"] --> API["API Gateway (FastAPI)"]
+  API -->|"PolicyPort calls"| PAD["Policy Adapter (this directory)"]
+  PAD -->|"structured input"| PDP["OPA / PDP"]
+  API --> DATA["PostGIS / Neo4j / Search"]
+  API --> AUDIT["Audit Ledger / Provenance Logs"]
+  PDP -->|"decision + obligations"| PAD
+  PAD -->|"allow/deny + redactions + reason codes"| API
 ```
 
 **Boundary rules (non-negotiable):**
