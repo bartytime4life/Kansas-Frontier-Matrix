@@ -6,83 +6,127 @@ If you change meaning (not just phrasing), route through the governance review p
 
 <div align="center">
 
-# Kansas Frontier Matrix (KFM‑NG) 🧭  
-### A governed, evidence‑first geospatial + historical knowledge system (Kansas)  
+# Kansas Frontier Matrix (KFM‑NG) — Governed Geospatial & Historical Knowledge System 🧭🗺️
 
-**Maps + narratives + AI answers you can audit.**
+**KFM turns heterogeneous Kansas history + geospatial data into a governed, evidence-first system:**  
+**data → pipeline → catalogs → governed APIs → Focus Mode + map UI**
+
+<br/>
 
 ![Status](https://img.shields.io/badge/status-governed%20draft-blue)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-required-informational)
-![Trust membrane](https://img.shields.io/badge/trust%20membrane-policy%20enforced-success)
-![Focus Mode](https://img.shields.io/badge/focus%20mode-cite%20or%20abstain-critical)
-![Catalogs](https://img.shields.io/badge/catalogs-STAC%20%7C%20DCAT%20%7C%20PROV-6a5acd)
+![Trust membrane](https://img.shields.io/badge/trust%20membrane-API%20%2B%20policy%20boundary-success)
 ![Policy](https://img.shields.io/badge/policy-OPA%20default%20deny-black)
+![Catalogs](https://img.shields.io/badge/catalogs-STAC%20%7C%20DCAT%20%7C%20PROV-6a5acd)
+![Focus Mode](https://img.shields.io/badge/focus%20mode-cite%20or%20abstain-critical)
+
+<!-- OPTIONAL: replace ORG/REPO with real values once workflows exist -->
+<!--
+[![CI](https://github.com/ORG/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/ci.yml)
+[![Docs](https://github.com/ORG/REPO/actions/workflows/docs.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/docs.yml)
+[![Policy](https://github.com/ORG/REPO/actions/workflows/policy.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/policy.yml)
+-->
 
 </div>
 
 > [!IMPORTANT]
-> KFM‑NG is **designed around a trust membrane** (API + policy boundary).  
-> **Frontend never talks to databases.** Policy evaluates **every** request.  
+> KFM‑NG is designed around a **trust membrane** (governed API + policy boundary).  
+> **UI/external clients never talk to databases.** Policy evaluates **every** request and **fails closed**.  
 > Focus Mode **must cite or abstain**. When in doubt: **deny**.
 
 ---
 
-## Quick navigation
+## Table of Contents
 
-- [What KFM‑NG is](#what-kfmng-is)
-- [Non‑negotiable guarantees](#non-negotiable-guarantees)
-- [System at a glance](#system-at-a-glance)
-- [Data lifecycle: Raw → Work → Processed](#data-lifecycle-raw--work--processed)
-- [Focus Mode + evidence resolver](#focus-mode--evidence-resolver)
-- [Repository structure (clean layers)](#repository-structure-clean-layers)
-- [Local development (Compose baseline)](#local-development-compose-baseline)
-- [CI gates (what must pass)](#ci-gates-what-must-pass)
-- [Roadmap (epics → deliverables)](#roadmap-epics--deliverables)
-- [Governance + sensitivity](#governance--sensitivity)
+- [Why KFM Exists](#why-kfm-exists)
+- [Non-Negotiable Guarantees](#non-negotiable-guarantees)
+- [How KFM Works End-to-End](#how-kfm-works-end-to-end)
+- [System Architecture](#system-architecture)
+- [Data Lifecycle Raw → Work → Processed](#data-lifecycle-raw--work--processed)
+- [Focus Mode and Evidence Resolver](#focus-mode-and-evidence-resolver)
+- [Repository Structure](#repository-structure)
+- [Local Development](#local-development)
+- [CI Gates](#ci-gates)
+- [Roadmap](#roadmap)
+- [Governance and Sensitivity](#governance-and-sensitivity)
 - [Contributing](#contributing)
 - [Security](#security)
+- [License](#license)
+- [Provenance Notes](#provenance-notes)
 
 ---
 
-## What KFM‑NG is
+## Why KFM Exists
 
-KFM‑NG (Kansas Frontier Matrix — Next Generation) is a **provenance‑first geospatial knowledge hub** for Kansas research and storytelling:
+Kansas history and geography live across **maps, archives, datasets, and narrative sources**. KFM‑NG unifies those sources into a **reproducible, inspectable, citation-first** system that supports:
 
-- **Explore layers** on an interactive map (with provenance + licensing surfaced).
-- **Read Story Nodes** (governed narrative units) that synchronize map/time state.
-- **Ask Focus Mode** (grounded Q&A) that returns **citations + an audit reference** — or **abstains**.
+- **Layered maps over time** (raster + vector; historical → modern)
+- **Text-to-place linkage** (documents tied to locations + dates)
+- **Governed AI** that must show its work (**citations + audit references**)
+- **Public-facing exploration** (web map UI + Focus Mode + Story Nodes)
 
-> [!NOTE]
-> This repository treats standards and governance as build requirements, not optional polish:
-> - **STAC / DCAT / PROV** artifacts are first‑class outputs.
-> - **Policy‑as‑code (OPA)** is a required enforcement point.
-> - **Audit + provenance** are produced on the normal request path.
+KFM‑NG is a **provenance-first geospatial knowledge hub**:
+
+- Explore layers on an interactive map (with provenance + licensing surfaced).
+- Read **Story Nodes** (governed narrative units) that synchronize map/time state.
+- Ask **Focus Mode** (grounded Q&A) that returns **citations + an audit reference** — or **abstains**.
+
+> [!IMPORTANT]
+> If evidence cannot be resolved, the system must **abstain** rather than guess.
 
 ---
 
-## Non‑negotiable guarantees
+## Non-Negotiable Guarantees
 
 These are the invariants the system must keep true **regardless of implementation details**.
 
-| Invariant | Why it exists | Minimum enforcement |
-|---|---|---|
-| **No UI direct DB access** | Prevent governance bypass | Network isolation + CI checks |
-| **Policy checks fail closed** | Deny unsafe access when uncertain | OPA default deny + gateway middleware |
-| **No dataset promotion without STAC/DCAT/PROV** | Traceability + interoperability | Promotion gate + validators |
-| **Focus Mode must cite or abstain** | Prevent ungrounded claims | Output validator + policy rule |
-| **Processed zone is the source of truth** | Avoid serving unvalidated intermediates | API serves from processed catalogs only |
+| Invariant | What it means | Why it exists | Minimum enforcement |
+|---|---|---|---|
+| **Trust membrane** | UI/external clients never access databases directly; all access goes through **governed API + policy boundary** | Prevents bypassing governance, provenance, and sensitivity rules | Network isolation + gateway middleware |
+| **Fail-closed policy** | If policy cannot prove a request is allowed, **deny** | Safer-than-sorry for sensitive or uncertain cases | OPA default deny + policy tests |
+| **Dataset promotion gates** | Only promoted datasets can serve production queries | Stops “raw/unvalidated” artifacts from becoming “truth” | CI checksums + catalog validation |
+| **Focus Mode must cite or abstain** | Every answer returns citations + an **audit reference** | Prevents ungrounded claims | Output validator + policy rule |
+| **Processed zone is source of truth** | API serves only validated artifacts | Avoids serving intermediates | Serve from processed catalogs only |
 
 ### Definition of Done ✅ (top-level)
 
 - [ ] Datasets ingest via **raw → processed** promotion with **STAC/DCAT/PROV** artifacts
 - [ ] Web UI browses layers + Story Nodes
 - [ ] Focus Mode returns **citations or abstains**
-- [ ] Policy **fails closed** and is unit‑tested
+- [ ] Policy **fails closed** and is unit-tested
 - [ ] Governed docs/data/stories/policies pass CI validation
 
 ---
 
-## System at a glance
+## How KFM Works End-to-End
+
+```mermaid
+flowchart LR
+  A[External Sources<br/>maps • records • APIs • archives] --> B[Ingest + Normalize<br/>fetch • convert • reproject • parse]
+  B --> C[data/raw<br/>immutable inputs + checksums]
+  C --> D[data/work<br/>intermediate + QA reports]
+  D -->|promotion gate| E[data/processed<br/>serving truth]
+  E --> F[Catalogs<br/>STAC + DCAT + PROV]
+  F --> G[Governed APIs<br/>data • tiles • search • evidence • Focus Mode]
+  G --> H[UI + Story Nodes + Focus Mode<br/>map • timeline • narrative]
+  G --> I[Audit Ledger<br/>append-only<br/>policy + outputs]
+```
+
+---
+
+## System Architecture
+
+### Clean layers + trust membrane
+
+KFM‑NG follows strict boundaries:
+
+- **Domain layer:** pure entities + invariants (no DB/UI deps)
+- **Use case/service layer:** workflows + business rules; depends only on interfaces
+- **Interfaces/integration layer:** ports/contracts + DTOs; API boundaries live here
+- **Infrastructure layer:** PostGIS/Postgres, graph DB, search/vector, object storage, runtime hosts
+
+> [!IMPORTANT]
+> **Trust membrane** = UI never talks directly to storage, and core logic never bypasses repository interfaces.
 
 ### Trust membrane + runtime components (container view)
 
@@ -101,7 +145,7 @@ flowchart LR
 
   GW --> PG[(PostGIS: geo + tiles)]
   GW --> G[(Neo4j: knowledge graph)]
-  GW --> S[(Search/Vector: OpenSearch or PG)]
+  GW --> S[(Search/Vector: OpenSearch or Postgres)]
   GW --> O[(Object store: COGs + media)]
   GW --> PL[Pipeline/orchestrator]
   GW --> AL[(Audit ledger: append-only)]
@@ -131,7 +175,7 @@ sequenceDiagram
 
 ---
 
-## Data lifecycle: Raw → Work → Processed
+## Data Lifecycle Raw → Work → Processed
 
 KFM‑NG organizes data into zones with **promotion gates** (CI + steward review):
 
@@ -144,7 +188,7 @@ flowchart LR
   API --> UI[UI layers + stories + Focus Mode]
 ```
 
-### Promotion gate checklist (CI-enforced)
+### Promotion Gate Checklist (CI-enforced)
 
 To promote anything to **processed/public**, require:
 
@@ -156,7 +200,7 @@ To promote anything to **processed/public**, require:
 - [ ] Audit event recorded
 - [ ] Human approval if sensitive
 
-### Minimum artifacts (recommended)
+### Minimum Artifacts (recommended)
 
 | Artifact | Purpose | Typical location (recommended) |
 |---|---|---|
@@ -169,7 +213,7 @@ To promote anything to **processed/public**, require:
 
 ---
 
-## Focus Mode + evidence resolver
+## Focus Mode and Evidence Resolver
 
 ### Contract fragment (documented)
 
@@ -178,11 +222,11 @@ To promote anything to **processed/public**, require:
 **Response:** `FocusAnswer { answer_markdown, citations[], audit_ref }`
 
 > [!IMPORTANT]
-> Focus Mode **cannot “just answer.”** Every nontrivial claim must be traceable via citations — otherwise it **abstains**.
+> Focus Mode cannot “just answer.” Every nontrivial claim must be traceable via citations — otherwise it **abstains**.
 
 ### Evidence reference schemes
 
-Every `citation.ref` must be resolvable to a human‑readable evidence view in a small number of API calls.
+Every `citation.ref` must be resolvable to a human-readable evidence view in a small number of API calls.
 
 | Scheme | What it points to | Why it exists |
 |---|---|---|
@@ -221,9 +265,10 @@ Every `citation.ref` must be resolvable to a human‑readable evidence view in a
   "audit_ref": "audit://event/01J..."
 }
 ```
+
 </details>
 
-### Policy-as-code: “default deny” + cite-or-abstain
+### Policy-as-code: default deny + cite-or-abstain
 
 ```rego
 package kfm.ai
@@ -241,44 +286,65 @@ allow if {
 
 ---
 
-## Repository structure (clean layers)
+## Repository Structure
 
-KFM‑NG follows **clean architecture boundaries** with a hard trust membrane:
-
-- **Domain**: pure entities + invariants (no DB/UI deps)
-- **Use Cases**: workflows/business rules; call only ports
-- **Integration (Ports/DTOs)**: contracts, schemas, API boundaries
-- **Infrastructure**: concrete adapters (DB, OPA, API handlers, search, object store)
+This README assumes a repo layout that supports governance + CI gates. Adjust names, keep the intent.
 
 ### Suggested layout (CI-friendly + reviewable)
 
 ```text
 .
-├── src/
-│   ├── domain/                 # entities, value objects, invariants
-│   ├── usecases/               # workflows + business rules
-│   ├── integration/            # ports/contracts + DTOs + schemas
-│   └── infrastructure/         # DB clients, API handlers, OPA adapters
-├── ui/                         # React/TS + MapLibre (trust membrane enforced)
+├── .github/
+│   ├── README.md
+│   ├── workflows/
+│   │   ├── ci.yml
+│   │   ├── docs.yml
+│   │   ├── policy.yml
+│   │   └── data-gates.yml
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── docs/
+│   ├── architecture/
+│   ├── governance/
+│   ├── runbooks/
+│   └── story-nodes/
+│       └── templates/
+├── services/
+│   ├── api-gateway/
+│   ├── focus-mode/
+│   ├── data-catalog/
+│   └── policy/
+├── packages/
+│   ├── ui/
+│   └── shared/
 ├── data/
 │   ├── raw/
 │   ├── work/
 │   ├── processed/
 │   └── catalog/
-│       ├── dcat/
 │       ├── stac/
+│       ├── dcat/
 │       └── prov/
-├── policy/                     # OPA/Rego modules + tests
-├── deploy/
-│   ├── compose/                # local Compose baseline (recommended)
-│   └── k8s/                     # production manifests (recommended)
-├── docs/
-│   ├── governance/             # sensitivity classes, review rules
-│   ├── adr/                    # Architecture Decision Records
-│   └── runbook/                # ops, backup/restore, incident response
-└── .github/
-    ├── workflows/              # CI gates
-    └── README.md               # (this file if used as org/profile README)
+├── infra/
+│   ├── docker/
+│   ├── k8s/
+│   └── terraform/
+├── scripts/
+└── Makefile
+```
+
+### Clean-architecture service skeleton (recommended)
+
+Each backend service can be structured internally with clean layers (example):
+
+```text
+services/focus-mode/
+├── src/
+│   ├── domain/
+│   ├── usecases/
+│   ├── integration/     # ports/contracts + DTOs + schemas
+│   └── infrastructure/  # DB/search adapters, HTTP handlers, OPA adapter
+└── tests/
 ```
 
 > [!WARNING]
@@ -286,11 +352,10 @@ KFM‑NG follows **clean architecture boundaries** with a hard trust membrane:
 
 ---
 
-## Local development (Compose baseline)
+## Local Development
 
 > [!NOTE]
-> The blueprint calls for a Compose-based local stack. Exact service names/ports must match
-> your repo’s `deploy/compose/*` files.
+> Local commands are template-friendly. Replace with your real Make targets / Compose files once confirmed in-repo.
 
 ### Typical workflow (recommended)
 
@@ -313,7 +378,7 @@ docker compose down
 
 ---
 
-## CI gates (what must pass)
+## CI Gates
 
 Recommended minimal CI hardening includes:
 
@@ -323,9 +388,18 @@ Recommended minimal CI hardening includes:
 - [ ] **Policy:** `opa test` (default deny, cite-or-abstain)
 - [ ] **Supply chain:** SBOM (SPDX) + provenance attestation (SLSA/in-toto)
 
+<details>
+<summary><strong>Recommended CI philosophy</strong></summary>
+
+- Fail fast on policy violations (default deny).
+- Treat data/catalog validation as “tests,” not “best effort.”
+- Require proofs (checksums + provenance) before serving new datasets.
+
+</details>
+
 ---
 
-## Roadmap (epics → deliverables)
+## Roadmap
 
 The blueprint proposes converting core requirements into a tracked backlog:
 
@@ -340,7 +414,7 @@ The blueprint proposes converting core requirements into a tracked backlog:
 
 ---
 
-## Governance + sensitivity
+## Governance and Sensitivity
 
 KFM governance explicitly incorporates **FAIR + CARE** considerations.
 
@@ -359,6 +433,8 @@ If a dataset includes sensitive locations or culturally restricted knowledge:
 
 ## Contributing
 
+We welcome contributions—**with provenance**.
+
 ### Pull request checklist ✅
 
 - [ ] I did **not** introduce UI → DB direct access
@@ -371,16 +447,16 @@ If a dataset includes sensitive locations or culturally restricted knowledge:
 
 Use ADRs to keep decisions reviewable and auditable:
 
-- Status: Proposed | Accepted | Deprecated  
+- Status: Proposed \| Accepted \| Deprecated
 - Context → Decision → Alternatives → Consequences → Verification
 
 ---
 
 ## Security
 
-- **Policy-as-code (OPA)**: default deny; output validation for Focus Mode
-- **Audit ledger**: append-only; checkpointed with checksums (tamper-evident)
-- **Supply chain**: SBOM + provenance attestations as CI gates
+- **Policy-as-code (OPA):** default deny; output validation for Focus Mode
+- **Audit ledger:** append-only; checkpointed with checksums (tamper-evident)
+- **Supply chain:** SBOM + provenance attestations as CI gates
 
 > [!NOTE]
 > Security is a system property: trust membrane + policy + provenance are enforced together.
@@ -393,7 +469,13 @@ Use ADRs to keep decisions reviewable and auditable:
 
 ---
 
-## Provenance notes (for reviewers)
+## Provenance Notes
 
-- The blueprint explicitly warns that detailed endpoint sets beyond `/api/v1/ai/query` and the exact Story Node v3 schema must be verified against the repository before enforcement.
-- This README uses “recommended / proposed / illustrative” language when specifics may vary by implementation.
+- This README intentionally treats some items as **recommended / proposed / illustrative** when repo-specific details (exact service names, ports, Story Node v3 schema, additional endpoints) may vary by implementation.
+- If you need to “lock” a detail into CI enforcement, first verify it against the repository contracts and governed docs before making it a release gate.
+
+<div align="center">
+
+**KFM Principle:** *If it can’t be traced, it can’t be trusted.* 🔎
+
+</div>
