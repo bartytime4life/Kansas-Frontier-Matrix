@@ -1,10 +1,3 @@
-According to a document from *(date not stated in the retrieved excerpt)*, KFM’s API layer is organized around **router modules** that declare endpoints, validate inputs, call the service layer, and centralize **governance checks** (e.g., `policy.check_access(...)`) and provenance logging so rules aren’t scattered across the UI or databases. The same document also states the **UI never directly touches databases** (all access is mediated by the backend API), and that data should follow the canonical **Raw → Processed → Catalog/Prov → Database → API → UI** flow.
-
-I created `src/api/routes/README.md` for you here:
-
-[Download src/api/routes/README.md](sandbox:/mnt/data/src/api/routes/README.md)
-
-````md
 # KFM API Routes 🧭
 
 ![Layer](https://img.shields.io/badge/layer-interface%20%26%20adapters-0b5fff)
