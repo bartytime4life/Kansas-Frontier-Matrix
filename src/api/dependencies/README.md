@@ -25,14 +25,14 @@ This folder is where that enforcement is *wired in* to the FastAPI request lifec
 
 ```mermaid
 flowchart LR
-  U[Client / UI] --> R[FastAPI Router]
-  R --> D[Dependencies\n(auth • tenant • policy • context)]
-  D --> H[Route Handler]
-  H --> UC[Use Case / Service]
-  UC --> P[(Ports / Repos)]
-  P --> INF[(Infrastructure:\nPostGIS • Neo4j • Search • Object Store)]
-  D -->|policy decision| OPA[Policy Engine / OPA (optional)]
-  H --> AUD[Audit / Provenance sink]
+  U["Client / UI"] --> R["FastAPI Router"]
+  R --> D["Dependencies (auth • tenant • policy • context)"]
+  D --> H["Route Handler"]
+  H --> UC["Use Case / Service"]
+  UC --> P["Ports / Repos"]
+  P --> INF["Infrastructure (PostGIS • Neo4j • Search • Object Store)"]
+  D -->|"policy decision"| OPA["Policy Engine / OPA (optional)"]
+  H --> AUD["Audit / Provenance sink"]
 ```
 
 ---
