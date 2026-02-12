@@ -132,23 +132,26 @@ KFM‑NG follows strict boundaries:
 
 ```mermaid
 flowchart LR
-  subgraph UI[Web UI (React/TS + MapLibre)]
-    Map[Map + Layers]
-    Story[Story Nodes]
-    Focus[Focus Mode Panel]
-    Audit[Audit / Evidence Drawer]
+  subgraph UI
+    direction TB
+    UI_T["Web UI (React/TS + MapLibre)"]
+    Map["Map + Layers"]
+    Story["Story Nodes"]
+    Focus["Focus Mode Panel"]
+    Audit["Audit / Evidence Drawer"]
+    UI_T --> Map
   end
 
-  UI -->|HTTPS| GW[API Gateway (FastAPI REST + optional GraphQL)]
-  GW --> PDP[Policy PDP (OPA/Rego)]
-  PDP -->|allow/deny| GW
+  UI_T -->|"HTTPS"| GW["API Gateway (FastAPI REST + optional GraphQL)"]
+  GW --> PDP["Policy PDP (OPA/Rego)"]
+  PDP -->|"allow/deny"| GW
 
-  GW --> PG[(PostGIS: geo + tiles)]
-  GW --> G[(Neo4j: knowledge graph)]
-  GW --> S[(Search/Vector: OpenSearch or Postgres)]
-  GW --> O[(Object store: COGs + media)]
-  GW --> PL[Pipeline/orchestrator]
-  GW --> AL[(Audit ledger: append-only)]
+  GW --> PG["PostGIS: geo + tiles"]
+  GW --> KG["Neo4j: knowledge graph"]
+  GW --> SV["Search/Vector: OpenSearch or Postgres"]
+  GW --> OBJ["Object store: COGs + media"]
+  GW --> PL["Pipeline/orchestrator"]
+  GW --> AL["Audit ledger: append-only"]
 ```
 
 ### Key runtime flow: Focus Mode query
