@@ -1,3 +1,10 @@
+According to a document from *(date not stated in the retrieved excerpt)*, KFM’s API layer is organized around **router modules** that declare endpoints, validate inputs, call the service layer, and centralize **governance checks** (e.g., `policy.check_access(...)`) and provenance logging so rules aren’t scattered across the UI or databases. The same document also states the **UI never directly touches databases** (all access is mediated by the backend API), and that data should follow the canonical **Raw → Processed → Catalog/Prov → Database → API → UI** flow.
+
+I created `src/api/routes/README.md` for you here:
+
+[Download src/api/routes/README.md](sandbox:/mnt/data/src/api/routes/README.md)
+
+````md
 # KFM API Routes 🧭
 
 ![Layer](https://img.shields.io/badge/layer-interface%20%26%20adapters-0b5fff)
@@ -86,3 +93,85 @@ flowchart LR
   Repos --> Adapters[DB / Search / External Adapters]
   Adapters --> Storage[(PostGIS / Neo4j / Object Store)]
   Routes -->|emit| Prov[Provenance / Audit Logs]
+````
+
+---
+
+## Example: minimal router template (FastAPI-style)
+
+```py
+from fastapi import APIRouter, Depends, HTTPException, status
+
+# from ..dependencies import get_current_user
+# from ..services.datasets import DatasetService
+# from ..schemas.datasets import DatasetOut
+
+router = APIRouter(prefix="/datasets", tags=["datasets"])
+
+@router.get("/{dataset_id}")  # response_model=DatasetOut
+def get_dataset(
+    dataset_id: str,
+    # user=Depends(get_current_user),
+    # svc: DatasetService = Depends(),
+):
+    # 1) Policy check (pseudo)
+    # policy.check_access(user, dataset_id)
+
+    # 2) Call service/use-case layer
+    # dataset = svc.get_dataset(dataset_id)
+
+    # 3) Translate to HTTP response
+    # if not dataset:
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
+    # return dataset
+    raise HTTPException(status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="Example stub")
+```
+
+> [!TIP]
+> Keep endpoints “boring”: validate → authorize → call service → translate → return.
+
+---
+
+## Adding a new route (Definition of Done ✅)
+
+* [ ] Endpoint has a clear **owner domain** (dataset, story, search, etc.).
+* [ ] Request/response schemas are defined and used consistently.
+* [ ] No direct DB calls from the route layer.
+* [ ] Policy checks are applied (or explicitly documented as not required).
+* [ ] Provenance/audit logging is present where relevant.
+* [ ] Contract expectations are captured (OpenAPI/GraphQL schema updated if applicable).
+* [ ] Tests:
+
+  * [ ] unit tests for service logic
+  * [ ] route-level tests for status codes + error shapes
+  * [ ] contract/regression test for breaking changes
+* [ ] Docs updated:
+
+  * [ ] route list / examples updated (this README or higher-level API docs)
+
+---
+
+## Common pitfalls 🚫
+
+<details>
+  <summary><strong>Click to expand</strong></summary>
+
+* **Leaking business logic into routes** → makes it hard to test and reuse.
+* **Skipping policy checks “just for now”** → almost always becomes a data leak later.
+* **Returning storage-shaped objects** (raw ORM rows, graph records) → breaks API stability.
+* **Inconsistent error responses** → makes UI and client SDKs harder to maintain.
+* **Doing heavy compute in request handlers** → causes latency + timeouts; use async jobs instead.
+
+</details>
+
+---
+
+## Where to look next
+
+* `src/api/main.py` or equivalent: app bootstrap + router registration (if present)
+* `src/api/schemas/`: request/response models (if present)
+* `src/services/` (or similar): business workflows / use cases (if present)
+* `src/infra/` (or similar): adapters for PostGIS / Neo4j / search / external APIs (if present)
+
+```
+```
