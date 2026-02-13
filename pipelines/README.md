@@ -1,314 +1,478 @@
-# Pipelines 🧪🗺️
+# KFM Pipelines 📦🧬🗺️
 
-> **Governed document** · **Evidence-first** · **Pipeline-synced** · **FAIR+CARE** · **CI-ready**  
-> Text-badges (CI-safe): `governed-doc` · `truth-path` · `no-leapfrogging` · `provenance-required` · `no-external-images`
-
-This directory contains KFM’s **data ingestion + ETL pipelines**: scripts, notebooks, and/or simulation workflows that transform **raw inputs** into **processed, publishable datasets** with machine-readable **metadata (STAC/DCAT)** and **lineage (PROV)**.  
-KFM operates as a **pipeline → catalog → database → API → UI** system: users and the UI never “jump the queue.”[^truth-path]
-
----
-
-## 📘 Overview
-
-### Purpose
-Provide a single, governed runbook for:
-- What “counts” as a KFM pipeline
-- Required outputs (processed data + boundary artifacts)
-- Hard governance rules (what is **not allowed**)
-- Contribution expectations (Definition of Done for pipelines)
-
-### Scope
-In scope:
-- ETL jobs (extract → transform → load/publish)
-- Domain-specific pipeline modules and shared pipeline utilities
-- Pipeline validation, metadata/provenance emission, and DB/graph load hooks (where applicable)
-
-Out of scope:
-- One-off manual transformations that cannot be reproduced
-- Ad-hoc, undocumented analysis outputs without full metadata + provenance
-
-### Audience
-- Engineers implementing and testing pipelines
-- Data stewards validating sources, licenses, and sensitivity
-- Governance reviewers assessing FAIR+CARE compliance
-
-### Definitions (project-meaning)
-- **Boundary artifacts**: required publish-time outputs: STAC + DCAT + PROV (see “📦 Data & Metadata”).
-- **Truth path**: canonical sequence from raw → pipeline → processed + catalogs → runtime stores → API → UI. No bypassing.
-- **Governed doc**: a Markdown file subject to governance + CI validation; this README is governed.[^governed-doc]
+> **Scope:** This README governs the **pipeline layer** (ingestion, normalization, validation, promotion, catalog/provenance emission, and downstream index refresh triggers).
+>
+> **Applies to:** `pipelines/` (or `src/pipelines/` depending on repo layout).
+>
+> **Design intent:** KFM pipelines are **not “scripts”**. They are **governed production systems** that create *publishable, reproducible, auditable* datasets.
 
 ---
 
-## 🗂️ Directory Layout
+## Badges (wire these to real workflows)
 
-### This document
-- **Path:** `pipelines/README.md`
+![CI](https://img.shields.io/badge/CI-required-brightgreen)
+![Policy](https://img.shields.io/badge/OPA-default%20deny-critical)
+![Catalogs](https://img.shields.io/badge/STAC%2FDCAT%2FPROV-validated-blue)
+![Provenance](https://img.shields.io/badge/cite--or--abstain-enforced-orange)
 
-### Related repository paths (expected)
 > [!NOTE]
-> Exact folder names can vary by repo revision. If your repo differs, **align to the current Master Guide / standards docs** and update this README accordingly.
+> Replace the placeholders above with real GitHub Actions / CI badges once workflow names exist.
 
-| Area | Path(s) | What lives here |
-|---|---|---|
-| Raw inputs | `data/raw/` | Immutable source drops (snapshots) |
-| Working/intermediate | `data/work/` | Intermediate artifacts and staging outputs |
-| Final processed | `data/processed/` | Publishable outputs used downstream |
-| STAC | `data/stac/` | STAC collections + items |
-| DCAT | `data/catalog/dcat/` | DCAT dataset catalog entries (JSON-LD) |
-| Provenance | `data/prov/` *(or `data/provenance/`)* | PROV lineage bundles/logs |
-| Docs (domain notes) | `docs/data/<domain>/` | Domain runbooks (sources, ETL notes, quirks) |
-| Schemas | `schemas/` | JSON Schemas for catalogs, story nodes, etc. |
+---
 
-### Recommended pipeline module shape
-> [!TIP]
-> This is a recommended structure to keep pipelines discoverable and testable.
+## Table of contents
+
+- [Non-negotiables](#non-negotiables)
+- [What lives here](#what-lives-here)
+- [Truth path](#truth-path)
+- [Data zones and promotion gates](#data-zones-and-promotion-gates)
+- [Artifact contracts (required outputs)](#artifact-contracts-required-outputs)
+- [Connector contract](#connector-contract)
+- [Validation gates](#validation-gates)
+- [Promotion to processed](#promotion-to-processed)
+- [Policy + sensitivity (redaction-first)](#policy--sensitivity-redaction-first)
+- [Orchestration, scheduling, and backfills](#orchestration-scheduling-and-backfills)
+- [CI/CD gates (must pass)](#cicd-gates-must-pass)
+- [Local development (Docker Compose)](#local-development-docker-compose)
+- [Operations runbook (pipelines)](#operations-runbook-pipelines)
+- [PR checklist](#pr-checklist)
+- [Sources and provenance for this README](#sources-and-provenance-for-this-readme)
+
+---
+
+## Non-negotiables
+
+These are **build invariants**. If you violate them, you are not “moving fast”—you are breaking KFM.
+
+1) **Processed is the only publishable source of truth.**  
+   - Raw/work are **never served** directly to users.
+
+2) **Every pipeline run emits:**
+   - a **run record** (JSON) and
+   - a **validation report** (JSON).  
+   Promotion is **blocked** unless both exist and are complete.
+
+3) **Promotion gate checklist (minimum):**
+   - License present
+   - Sensitivity classification present
+   - Schema + geospatial checks pass
+   - Checksums computed
+   - STAC/DCAT/PROV artifacts exist **and validate**
+   - Audit event recorded
+   - Human approval if sensitive
+
+4) **Trust membrane rules apply end-to-end:**
+   - Frontend/external clients never access databases directly
+   - Policy evaluation on every data/story/AI request
+   - Audit + provenance are part of the normal request path
+
+5) **Evidence resolution is mandatory:**
+   - Every provenance/citation reference must be resolvable via an evidence endpoint (e.g., `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`).
+
+> [!IMPORTANT]
+> Pipelines must be designed so **Focus Mode can cite or abstain**—which is only possible when datasets have complete catalogs + provenance.
+
+---
+
+## What lives here
+
+Pipeline code is responsible for:
+
+- **Connectors** (acquire from upstream APIs/files)
+- **Normalization** (canonical encoding/geometry/time)
+- **Validation** (schema + geometry + time + license/policy)
+- **Enrichment** (join keys, place/time normalization, entity-resolution candidates)
+- **Publication** (promotion to processed + catalog/prov emission + index refresh triggers)
+- **Backfills** (documented strategy for historical ranges)
+- **Deterministic versioning** (content-hash versioning via raw manifest/manifests)
+- **Governed outputs** (run records, validation reports, checksums, STAC/DCAT/PROV)
+
+### Recommended (not repo-confirmed) directory layout
+
+> [!NOTE]
+> This is a **recommended** structure aligned with the “ETL jobs live in pipelines” repository mapping. If your repo already has a different structure, **keep your existing structure** but preserve the invariants above.
 
 ```text
 pipelines/
-  _shared/                   # shared helpers (io, hashing, metadata emitters, validators)
-  <domain>/                  # e.g., climate/, migration/, treaties/, railroads/
-    README.md                # domain-level pipeline runbook
-    <dataset_id>/            # optional: subfolder per dataset/product
-      pipeline.py            # deterministic entrypoint
-      config/                # params (non-secret), mapping tables
-      tests/                 # unit + golden tests
-      fixtures/              # tiny sample inputs for CI
+├─ README.md                          # this file
+├─ registry/                          # dataset/source registry (governed configs)
+│  ├─ datasets.yaml                   # dataset_id → connector + schedule + policy_label
+│  └─ sources/                        # per-source configs and capability metadata
+├─ connectors/
+│  └─ <source_slug>/
+│     ├─ connector.(py|ts|go)         # implements acquire/discover and paging
+│     ├─ mapping.yml                  # source fields → canonical schema mapping
+│     ├─ fixtures/                    # small frozen slices for integration tests
+│     └─ tests/
+├─ transforms/
+├─ validators/
+├─ catalogs/
+│  ├─ dcat/
+│  ├─ stac/
+│  └─ prov/
+├─ orchestration/
+│  ├─ schedules/                      # cron / workflow schedules
+│  └─ backfills/                      # backfill specs and runbooks
+└─ scripts/
 ```
 
 ---
 
-## 🧭 Context
+## Truth path
 
-KFM is designed so that **every user-facing fact is traceable** back to versioned evidence, and every derived dataset has explicit lineage.[^truth-path]  
-Pipelines are the mechanism that makes this possible.
+KFM’s “truth path” is a required mental model for every pipeline change.
 
-> [!IMPORTANT]
-> **Hard rule:** Do not shortcut the truth path.  
-> - The UI must not read raw data directly.  
-> - Every dataset exposed downstream must have an associated catalog entry and provenance record.
-
-### Non-negotiable invariants (hard gates)
-- ✅ **Deterministic & reproducible**: same inputs + same config → same outputs (byte-identical where feasible)
-- ✅ **No interactive prompts / manual steps** in official pipelines (pipelines must be runnable unattended)
-- ✅ **Raw is immutable**: `data/raw/` is treated as read-only snapshots
-- ✅ **Boundary artifacts required** before publish: STAC + DCAT + PROV
-- ✅ **Fail closed**: if required provenance/metadata/sensitivity checks are missing → pipeline must stop
-
-> [!WARNING]
-> If a pipeline produces processed outputs but skips metadata/provenance emission, the data is **not publishable** and must not be loaded into runtime stores or referenced by story content.
-
----
-
-## 🗺️ Diagrams
-
-### End-to-end “truth path” flow
 ```mermaid
 flowchart LR
-  raw[data/raw] --> etl[ETL Pipelines]
-  etl --> work[data/work]
-  work --> processed[data/processed]
-
-  processed --> stac[data/stac]
-  processed --> dcat[data/catalog/dcat]
-  processed --> prov[data/prov or data/provenance]
-
-  processed --> postgis[(PostGIS)]
-  processed --> neo4j[(Neo4j)]
-  stac --> search[(Search Index)]
-
-  postgis --> api[API Boundary]
-  neo4j --> api
-  search --> api
-
-  api --> ui[Web UI]
-  ui --> story[Story Nodes]
-  story --> focus[Focus Mode]
-```
-
-### Single pipeline run (recommended lifecycle)
-```mermaid
-flowchart TD
-  A[Extract: read data/raw] --> B[Transform: normalize/clean]
-  B --> C[Validate: schema + constraints]
-  C --> D[Write: data/work + data/processed]
-  D --> E[Emit boundary artifacts: STAC + DCAT + PROV]
-  E --> F{Optional: load runtime stores?}
-  F -->|Yes| G[Load to PostGIS/Neo4j/Search via governed loaders]
-  F -->|No| H[Stop at publish artifacts]
+  S[Upstream Source\nAPI/files] --> R[Raw zone\nimmutable]
+  R --> W[Work zone\nrepeatable transforms + QA]
+  W --> P[Processed zone\npublishable]
+  P --> C[Catalogs\nDCAT + STAC + PROV]
+  C --> STORES[Stores\n(PostGIS / Object Store / Search / Graph)]
+  STORES --> API[Governed API Gateway]
+  API --> UI[Web UI]
+  API --> STORIES[Story Nodes]
+  API --> FM[Focus Mode\n(cite or abstain)]
 ```
 
 ---
 
-## 📦 Data & Metadata
+## Data zones and promotion gates
 
-### Required staging model
-| Stage | Location | Rules |
-|---|---|---|
-| Raw | `data/raw/<domain>/...` | Immutable snapshot; no in-place edits |
-| Work | `data/work/<domain>/...` | Intermediate outputs; can be re-generated |
-| Processed | `data/processed/<domain>/...` | Final publishable outputs; versioned |
+Every dataset flows through three zones. **Promotion is only allowed** when machine-checkable catalogs and validations succeed.
 
-### Boundary artifacts (publish contract)
+### Zones
+
+| Zone | Purpose | Allowed operations | Must exist before promotion |
+|------|---------|--------------------|-----------------------------|
+| **Raw** | Immutable capture of source-of-truth | Append-only writes; no transforms | Checksums + raw manifest; source license captured |
+| **Work** | Repeatable transforms + QA staging | Derivation, normalization, enrichment | PROV activity; intermediate QA reports |
+| **Processed** | Query-ready artifacts exposed via API | Publishable outputs only | Checksums + catalogs (DCAT always; STAC/PROV as applicable) + audit event |
+
 > [!IMPORTANT]
-> A dataset is not “published” until these boundary artifacts exist and validate.
-
-| Artifact | Purpose | Typical location |
-|---|---|---|
-| STAC Collection + Items | Spatial asset metadata (collections/items) | `data/stac/collections/` and `data/stac/items/` |
-| DCAT Dataset entry | Dataset discovery view (JSON-LD) | `data/catalog/dcat/` |
-| PROV bundle/log | Lineage: inputs, activities, agents | `data/prov/` *(or `data/provenance/`)* |
-
-### Minimal provenance contract (recommended fields)
-Use PROV to record:
-- **Inputs**: raw file IDs/paths + checksums
-- **Activities**: pipeline steps + parameters + versions
-- **Agents**: author/service account + toolchain versions
-- **Outputs**: processed artifacts + checksums
-- **Code identity**: commit hash / release tag that produced the run
-- **Sensitivity & redaction**: any withheld/generalized fields
+> “Processed” is the **only** publishable zone. If a feature is visible to users, it must trace back to **processed**.
 
 ---
 
-## 🌐 STAC, DCAT & PROV Alignment
+## Artifact contracts (required outputs)
 
-### Alignment rules
-- **STAC ↔ DCAT ↔ PROV must cross-reference** stable dataset IDs.
-- **No ad-hoc metadata fields**: extend project profiles/schemas instead.
-- **Versioning must be explicit** (dataset version and/or run id).
+Pipelines are required to produce **machine-readable artifacts** that make the system reproducible and auditable.
 
-### Pipeline publish checklist
-- [ ] Processed data written to `data/processed/<domain>/...`
-- [ ] STAC collection + item(s) generated and validated
-- [ ] DCAT dataset entry generated and validated
-- [ ] PROV bundle generated and validated
-- [ ] Artifact IDs cross-link correctly (STAC/DCAT/PROV)
-- [ ] Sensitivity classification recorded (and redactions applied where needed)
-- [ ] License/provenance evidence recorded for every external source
+### 1) Raw manifest (`data/raw/<dataset_id>/manifest.yml`) — illustrative
 
----
-
-## 🧱 Architecture
-
-### Clean layers + trust membrane (pipeline implications)
-Pipelines may touch storage and external sources, but they must still respect boundaries:
-- **No direct UI access to DBs**: UI and clients consume data through the API boundary.
-- **No bypass of governance**: anything loaded into runtime stores must be backed by boundary artifacts and policy checks.
-
-> [!NOTE]
-> If your pipeline loads into PostGIS/Neo4j/Search, treat those loaders as **adapters** behind stable interfaces. Do not scatter DB credentials or inline queries throughout dataset scripts.
-
-### Recommended pipeline interface
-Each pipeline should expose a deterministic entrypoint that can run in CI or batch:
-
-```python
-# pseudo-interface (illustrative; not a required implementation)
-def run(*, dataset_id: str, inputs: dict, config: dict, run_id: str) -> dict:
-    """
-    Returns a manifest describing outputs + checksums + emitted STAC/DCAT/PROV paths.
-    Must be non-interactive and deterministic.
-    """
+```yaml
+dataset_id: example_dataset
+source:
+  type: http
+  uri: "https://example.org/source.csv"
+license: "CC-BY-4.0"
+expected_files:
+  - name: source.csv
+    sha256: "..."
+sensitivity_level: "public"
 ```
 
----
+### 2) Run record (`run_record.json`) — illustrative (required)
 
-## 🧠 Story Node & Focus Mode Integration
+```json
+{
+  "run_id": "run_...",
+  "dataset_id": "example_dataset",
+  "inputs": [{"uri": "data/raw/example.csv", "sha256": "..."}],
+  "code": {"git_sha": "...", "image": "kfm/pipeline:..."},
+  "outputs": [{"uri": "data/processed/example.parquet", "sha256": "..."}],
+  "validation_report": "data/work/example_dataset/validation_report.json",
+  "prov_ref": "data/catalog/prov/example_dataset/run_....json"
+}
+```
 
-Story nodes are “machine-ingestible storytelling” that must be **evidence-backed** and **provenance-linked**.[^governed-doc]
+### 3) Validation report (`validation_report.json`) — required
 
-Pipeline responsibilities that enable story content:
-- Produce stable dataset IDs that story nodes can reference
-- Ensure every derived layer has STAC/DCAT/PROV artifacts
-- Keep provenance “human-auditable” (clear activities/agents/inputs)
+**Minimum expectations:**
+- schema validation results
+- geometry validity + bounds results (if spatial)
+- temporal sanity results
+- license present + policy label present
+- sensitivity classification present
+- summary stats/profile (row counts, null rates, key uniqueness) for regression tracking
 
 > [!TIP]
-> When a story references a derived layer, it should cite the **dataset ID** and/or boundary artifacts produced here, not raw files.
+> Keep the validation report stable and versioned—it becomes your regression baseline.
+
+### 4) Checksums (`checksums.txt`) — required for processed artifacts
+
+- A deterministic checksum list for every publishable artifact.
+- Promotion must compute and verify checksums before serving through the API.
+
+### 5) DCAT (dataset catalog) — required
+
+- Every promoted dataset version must have a DCAT record capturing:
+  - license + attribution
+  - access restrictions
+  - temporal/spatial coverage
+  - dataset_id + version identifier
+
+### 6) STAC (geospatial asset catalog) — required when assets are spatial
+
+- Spatial assets (rasters/vectors) should register in a STAC collection.
+- Include collection + items (per asset) and link STAC to DCAT dataset identity.
+
+### 7) PROV (lineage) — required
+
+- Every promoted artifact must have a PROV chain linking raw inputs → work transforms → processed outputs.
+- Treat provenance as queryable, first-class data (not “logs”).
 
 ---
 
-## 🧪 Validation & CI/CD
+## Connector contract
 
-### Local validation (typical)
+Connectors must support the ingestion workflow:
+
+1) **Discover**: resolve endpoints/parameters/auth; cache capability metadata  
+2) **Acquire**: fetch incremental slices when possible; otherwise snapshot+diff  
+3) **Normalize**: canonical encodings (UTF‑8), geometry (WGS84), time (ISO 8601)  
+4) **Validate**: schema + geometry + timestamp sanity + license/policy checks  
+5) **Enrich**: derive join keys (GeoIDs), place/time normalization, entity resolution candidates  
+6) **Publish**: promote to processed, update catalogs (DCAT/STAC/PROV), trigger index refresh (search/graph)
+
+### Connector config keys (minimum)
+
+| Key | Rule |
+|-----|------|
+| `schedule` | cadence (near real-time / daily / annual / etc.) |
+| `incremental_cursor` | `modified_date`/`eventDate`/`publicationDate` when possible; else snapshot+diff |
+| `auth` | none unless required; **secrets stored in vault and never committed** |
+| `rate_limit` | respect provider limits; exponential backoff; cache common queries |
+| `format_targets` | JSON/CSV for tabular; GeoJSON/Parquet for vectors; COG for rasters; PDF/JPEG/PNG for artifacts |
+| `policy_label` | `public` \| `restricted` \| `sensitive-location` (per source and sometimes per record) |
+
+### Identity mapping rules (minimum)
+
+- Persist `dataset_id` + upstream identifier; dataset **version** is a content-hash of the raw manifest (deterministic).
+- `source_record_id` must be stable per upstream semantics (used in evidence citations).
+
+---
+
+## Validation gates
+
+**Minimum validation gates (must be automated + CI-enforced):**
+
+- Row-level schema validation (required fields, coercion rules documented)
+- Geometry validity + bounds (no self-intersections; expected extent when applicable)
+- Temporal consistency (no future dates for historic archives; no negative durations)
+- License + attribution captured in DCAT; restrictions encoded in policy
+- Provenance completeness: every promoted artifact has a PROV chain + deterministic checksum
+
+### Test plan (CI-ready)
+
+- **Unit:** schema mapping/type coercion; geometry validity helpers; incremental window logic
+- **Integration:** connector runs against a fixed small slice; asserts stable checksums + counts
+- **Contract:** API response includes provenance bundle and respects policy redaction
+- **Regression:** dataset profiling metrics stable or explainably versioned
+
+---
+
+## Promotion to processed
+
+Promotion is a **separate job** from ingestion. It is the controlled act of making data publishable.
+
+### Promotion steps (minimum)
+
+1) Confirm run record + validation report exist
+2) Copy/create processed artifacts
+3) Compute checksums (`checksums.txt`)
+4) Generate + validate catalogs:
+   - DCAT (required)
+   - STAC (if spatial assets)
+   - PROV (required)
+5) Write audit event to ledger referencing `run_id`
+6) Trigger downstream refresh (search/graph indices) *from canonical catalogs*
+
+> [!IMPORTANT]
+> Promotion fails if any catalog is invalid.
+
+---
+
+## Policy + sensitivity (redaction-first)
+
+Pipelines must treat sensitivity classification as a **first-class field** and support redaction/generalization as a transformation.
+
+### Minimum policy behavior
+
+- **Fail closed** when policy label or sensitivity is missing/unknown.
+- For `sensitive-location`, return generalized geometry at query time (and/or store a generalized derivative).
+
+### Human review gate
+
+If a dataset triggers sensitive flags, route it to governance review (do not publish by default).
+
+---
+
+## Orchestration, scheduling, and backfills
+
+### Orchestration expectations
+
+- Jobs must be **idempotent** (safe to re-run).
+- Retries must be bounded; backoff must respect upstream rate limits.
+- Keep “discover/acquire/normalize/validate/enrich/publish” stages observable and measurable.
+
+### Backfills
+
+Every dataset connector must include:
+
+- historical range coverage
+- expected runtime and resource profile
+- safe restart strategy
+- a “stop-the-bleed” mechanism (ability to disable quickly)
+
+> [!CHECKLIST]
+> **Backfill strategy documented** is part of Definition-of-Done for a dataset integration.
+
+---
+
+## CI/CD gates (must pass)
+
+These checks must block merge/promotion:
+
+### CI hardening (minimum set)
+
+- **Docs:** lint + link-check + template validator
+- **Stories:** v3 validator + citation resolution
+- **Data:** STAC/DCAT/PROV validation + checksums
+- **Policy:** `opa test` policy suite (default deny)
+- **Supply chain:** SBOM (SPDX) + provenance attestation (SLSA/in-toto style)
+
+### Dataset integration Definition of Done (DoD)
+
+A dataset integration ticket is complete only when:
+
+- [ ] Connector implemented + registered in data-source registry config
+- [ ] Raw acquisition produces deterministic manifest + checksums
+- [ ] Normalization emits canonical schema and/or STAC assets
+- [ ] Validation gates implemented and enforced in CI
+- [ ] Policy labels defined; restricted fields/locations are redacted per rules
+- [ ] Catalogs emitted (DCAT always; STAC/PROV as applicable) and link-check clean
+- [ ] API contract tests pass for at least one representative query
+- [ ] Backfill strategy documented (historical ranges + expected runtime)
+
+---
+
+## Local development (Docker Compose)
+
+Local development is expected to run via Docker Compose.
+
+### Quickstart
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Expected (documented) defaults:
+- UI: `http://localhost:3000`
+- API docs: `http://localhost:8000/docs`
+
+### Compose baseline (reference)
+
+A baseline stack includes:
+- `api`
+- `web`
+- `postgis`
+- `neo4j`
+- `opensearch`
+- `opa`
+
 > [!NOTE]
-> Exact commands depend on repo tooling *(not confirmed in repo)*. Prefer whatever `Makefile`/`taskfile`/`invoke`/`npm` scripts exist.
+> Pipeline workers may run as separate containers/jobs, or as one-shot runs inside the API container, depending on repo implementation.
 
-Recommended minimum checks:
-- [ ] Unit tests for transforms (including edge cases)
-- [ ] “Golden” tests for determinism on tiny fixtures
-- [ ] Schema validation for STAC/DCAT/PROV outputs
-- [ ] Provenance completeness check (required fields present)
-- [ ] Sensitivity scan / redaction rules enforced
+### Recommended local execution pattern (not repo-confirmed)
 
-<details>
-<summary><strong>Example command patterns (adjust to repo)</strong></summary>
-
-```bash
-# Run a single pipeline (example shape)
-python -m pipelines.<domain>.<dataset_id>.pipeline --config config/run.yml --run-id "$(git rev-parse HEAD)"
-
-# Validate emitted artifacts (example shape)
-python -m pipelines._shared.validate_artifacts --stac data/stac --dcat data/catalog/dcat --prov data/prov
-```
-</details>
-
-### OpenShift / Kubernetes execution (recommended pattern)
-If pipelines run as cluster jobs:
-- Build a **pipeline-runner image** with pinned dependencies (portable, reproducible)
-- Execute as a **batch job** (CronJob for schedules; Job for ad-hoc runs)
-- Promote “published artifacts” through GitOps (declarative environments)
-
-<details>
-<summary><strong>Example OpenShift run shape (adjust to your cluster)</strong></summary>
-
-```bash
-# Build + push pipeline runner image (example; adjust registry/auth)
-podman build -t <registry>/kfm/pipeline-runner:<tag> .
-podman push <registry>/kfm/pipeline-runner:<tag>
-
-# Run a one-off Job (YAML not shown here; keep it in deploy/ or infra/)
-oc apply -f deploy/jobs/pipeline-<dataset_id>.yaml
-oc logs job/pipeline-<dataset_id> -f
-```
-</details>
-
-### GitOps promotion (recommended pattern)
-- Treat **pipeline infra manifests** (jobs, schedules, secrets refs) as code.
-- Keep separation between **cluster foundation** and **application workloads** (common GitOps practice).[^gitops]
-
----
-
-## ⚖️ FAIR+CARE & Governance
-
-FAIR+CARE is not optional: pipelines must respect collective benefit, authority to control, responsibility, and ethics.[^governed-doc]
-
-### Sensitive data handling
 > [!WARNING]
-> If a dataset contains culturally sensitive, private, or restricted information, **generalize/redact** and trigger governance review. Do not publish precise locations or personally identifying details by default.
+> The exact CLI/entrypoint must match your repo. If you don’t have one yet, this is the recommended shape.
 
-Minimum governance gates:
-- [ ] Source license/terms recorded and compatible
-- [ ] Sensitivity classification recorded (with appropriate redaction)
-- [ ] Provenance complete (inputs/agents/activities/outputs)
-- [ ] No leapfrogging the truth path (UI/API must only see curated outputs)
+```bash
+# example: run an ingest for a dataset_id (containerized)
+docker compose run --rm api \
+  python -m pipelines.ingest --dataset example_dataset
 
----
-
-## 🕰️ Version History
-
-| Version | Date | Summary | Author |
-|---|---:|---|---|
-| v0.1.0 | 2026-02-10 | Initial governed pipelines README (template-aligned; adds truth-path, boundary artifacts, and CI gates). | AI-assisted draft (review required) |
+# example: promote to processed (separate controlled step)
+docker compose run --rm api \
+  python -m pipelines.promote --dataset example_dataset
+```
 
 ---
 
-## References (project docs)
-- `KFM Markdown Guide.docx.pdf` (governed documentation rules, section registry, CI expectations)
-- `Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf` (truth path + architecture)
-- `Kansas Frontier Matrix (KFM) Comprehensive Guide.pdf` (repo layout and validation guidance)
-- `DataPipelines-OpenShift-Podman-Kubernetes-Git.pdf` (OpenShift pipeline execution patterns)
-- `Docker-GitOps-OpenShift.pdf` (GitOps and CI/CD operational patterns)
+## Operations runbook (pipelines)
+
+### Start/stop and health checks
+
+- Start order: deploy **web/api/opa first**, then **stores**, then **pipeline workers**.
+- Minimum smoke tests:
+  - load home map
+  - toggle a layer
+  - open provenance panel
+  - run one Focus Mode query
+
+### Backup and restore (pipeline-critical)
+
+- PostGIS backups daily; periodic restore verification.
+- Object store versioning on; immutable retention for catalogs and audit checkpoints.
+- Graph (Neo4j) is rebuildable from canonical catalogs; align backups to rebuild strategy.
+- Audit ledger checkpoints must verify hash chain after restore.
+
+### Incident response (pipeline-related)
+
+- **Data leak:** deny via policy toggle; rotate credentials; withdraw affected artifacts; publish redacted derivative.
+- **AI unsafe output:** disable `/ai/query` via policy; preserve audit logs; fix policy/validator/prompt; add regression test.
+- **Corrupted processed artifacts:** verify checksums; rollback dataset version; rebuild indexes.
+
+> [!IMPORTANT]
+> Maintain an emergency policy switch that can disable public endpoints and Focus Mode without deploying code.
 
 ---
 
-[^governed-doc]: Governed docs must be template-aligned, evidence-first, and CI-validatable (see KFM Markdown Guide).
-[^truth-path]: KFM’s end-to-end flow preserves lineage from raw → processed + catalogs → stores → API → UI; no bypassing (see KFM technical blueprint).
-[^gitops]: Use GitOps for declarative promotion and auditable environment changes (see GitOps references).
+## Optional: Production orchestration (Kubernetes/OpenShift + GitOps)
+
+> [!NOTE]
+> This section describes recommended patterns for running pipelines and promoting data in a GitOps-aligned way.
+
+### Why GitOps fits pipeline promotion
+
+GitOps uses a reconciliation loop to continuously apply desired state from Git. This can be adapted to **data promotion** by treating “which dataset versions are in prod” as a declarative manifest.
+
+### Suggested (not required) pattern
+
+- CI builds pipeline images and runs validations.
+- Promotion happens by updating a “desired dataset versions” manifest in Git (via PR).
+- A GitOps controller (Argo CD / Flux / OpenShift GitOps) reconciles that manifest into:
+  - promoted dataset artifacts in object storage / databases
+  - updated catalog indexes
+  - deployed pipeline worker schedules
+
+### Secrets in GitOps
+
+Do **not** store secrets in plaintext in Git. Use encrypted secrets or external secret stores and store only references.
+
+---
+
+## PR checklist
+
+Before merging any pipeline PR:
+
+- [ ] No changes violate the **trust membrane** (no UI direct DB access; policy enforced centrally)
+- [ ] Run records + validation reports emitted for every pipeline run
+- [ ] Promotion gate enforced (license + sensitivity + schema/geo + checksums + catalogs + audit)
+- [ ] STAC/DCAT/PROV validate and are link-check clean
+- [ ] Policy tests pass (`opa test ...`) and default-deny behavior preserved
+- [ ] Backfill strategy updated (if dataset ranges/cadence changed)
+- [ ] Observability added/updated (logs, metrics, run record fields)
+
+---
+
+## Sources and provenance for this README
+
+This README is derived from governed KFM design documents (internal):
+
+- **KFM Next-Gen Blueprint & Primary Guide** (draft, 2026-02-12): truth path, zones, run records, promotion gates, CI hardening, local dev baseline, audit ledger and evidence UX requirements.
+- **KFM Comprehensive Data Source Integration Blueprint** (2026-02-12): ingestion framework (discover/acquire/normalize/validate/enrich/publish), connector config rules, minimum validation gates, CI-ready test plans, integration DoD.
+- Optional operations references: GitOps and OpenShift pipeline patterns (for productionization guidance).
