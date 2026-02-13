@@ -1,19 +1,56 @@
-# src
+<!--
+File: src/README.md
+KFM governed artifact: yes (system behavior)
+-->
 
-This directory contains **KFM executable code**. It is intentionally split into three areas:
+# `src/` — KFM pipelines, graph build, and API boundary
 
-- `src/pipelines/` — ingestion + transformation jobs that produce governed outputs
-- `src/graph/` — knowledge graph build and maintenance utilities
-- `src/server/` — the governed API boundary and request-path governance
+This directory contains KFM’s **source code** for:
+
+- **ETL / transformations** (`src/pipelines/`)
+- **Knowledge graph build + ingest tooling** (`src/graph/`)
+- **Governed API boundary** (`src/server/`)
+
+If you’re looking for the frontend, go to `web/`. If you’re looking for governed docs or Story Nodes, go to `docs/`. If you’re looking for catalogs and promoted datasets, go to `data/`.
+
+---
+
+## Table of contents
+
+- [What lives here](#what-lives-here)
+- [Non-negotiables](#non-negotiables)
+- [Directory map](#directory-map)
+- [Request flow](#request-flow)
+- [Local dev quickstart](#local-dev-quickstart)
+- [Clean layers inside `src/server/`](#clean-layers-inside-srcserver)
+- [Where to make changes](#where-to-make-changes)
+- [Testing expectations](#testing-expectations)
+- [Troubleshooting](#troubleshooting)
+- [Governance notes](#governance-notes)
+
+---
+
+## What lives here
+
+KFM is built as a **pipeline → catalogs → stores → API → UI → Story Nodes → Focus Mode** system.
+
+`src/` is responsible for the **code** that makes that chain real:
+
+- Pipelines produce processed artifacts and machine-readable catalogs.
+- Graph tooling produces/imports graph artifacts and constraints.
+- The API serves **only governed/publishable outputs** through a policy gate and emits audit/provenance references.
+
+---
+
+## Non-negotiables
 
 > [!IMPORTANT]
-> KFM’s **trust membrane** is a build invariant:
-> - The frontend does not access databases directly.
-> - Every data, story, and AI request is policy-evaluated.
-> - Backend logic uses repository interfaces and does not bypass them.
-> - Audit and provenance are produced as part of normal request handling.
+> These are release-blocking invariants.
 >
-> If you are about to “just query the DB from the UI” or “just write a quick script that skips catalogs,” stop and route it through the intended layer.
+> - **No UI → DB direct access.** The frontend must never talk to PostGIS/Neo4j/Search/ObjectStore directly.
+> - **Fail-closed policy.** If authorization is uncertain, deny by default.
+> - **Repository interfaces only.** Backend business logic cannot bypass ports/contracts to talk straight to storage.
+> - **Audit + provenance are normal-path outputs.** Every governed response should be traceable.
 
 ---
 
@@ -21,161 +58,137 @@ This directory contains **KFM executable code**. It is intentionally split into 
 
 ```text
 src/
-├── pipelines/   # ETL jobs, data transformations, validators, catalog writers
-├── graph/       # Graph build, imports/exports, constraints, alignment utilities
-└── server/      # Governed API service + policy/audit integration
+├── pipelines/   # ETL jobs + domain transformations
+├── graph/       # graph build code (ontology bindings, ingest scripts, constraints)
+└── server/      # governed API boundary (service + API contract defs)
 ```
 
 ---
 
-## What goes where
+## Request flow
 
-| Path | What it is | Primary outputs |
+### Conceptual sequence (governed)
+
+```mermaid
+sequenceDiagram
+  participant UI as UI (web/)
+  participant API as API Gateway (src/server)
+  participant OPA as Policy PDP (policy/)
+  participant Stores as Stores (PostGIS / Neo4j / Search / Object Store)
+  participant Focus as Focus Mode (optional)
+  participant Audit as Audit Ledger
+
+  UI->>API: request (data/story/focus)
+  API->>OPA: authorize(request)
+  OPA-->>API: allow | deny
+
+  API->>Stores: retrieve governed artifacts
+
+  opt Focus Mode request
+    API->>Focus: retrieval + draft response
+    API->>OPA: validate output (cite-or-abstain)
+  end
+
+  API->>Audit: append audit record
+  API-->>UI: response + citations + audit_ref
+```
+
+### Data “truth path” (why pipelines matter)
+
+```mermaid
+flowchart LR
+  Raw[data/<domain>/raw] --> Work[data/<domain>/work]
+  Work --> Proc[data/<domain>/processed]
+  Proc --> Cat[STAC / DCAT / PROV catalogs]
+  Cat --> Stores[(Runtime stores)]
+  Stores --> API[src/server]
+  API --> UI[web/]
+  UI --> Stories[Story Nodes]
+  Stories --> Focus[Focus Mode]
+```
+
+---
+
+## Local dev quickstart
+
+> [!NOTE]
+> Run the stack from the **repo root** unless your branch documents otherwise.
+
+1) Create your env file:
+
+```bash
+cp .env.example .env
+```
+
+2) Start the compose stack:
+
+```bash
+docker compose up --build
+```
+
+3) Confirm you can reach:
+- **API docs** at `http://localhost:8000/docs`
+- **Web UI** at `http://localhost:3000`
+
+If your branch exposes GraphQL, it may be available at `/graphql` (optional).
+
+---
+
+## Clean layers inside `src/server/`
+
+KFM backend code is expected to follow **clean architecture** boundaries. The goal is to make governance enforceable and testable.
+
+| Layer | What goes here | What must *not* go here | Tests expected |
+|---|---|---|---|
+| Domain | Entities, value objects, invariants | DB calls, web handlers, policy calls | Pure unit tests |
+| Use Cases | Workflows + business rules | DB clients, framework code | Use-case tests with mocked ports |
+| Integration | Ports/contracts + DTOs | Storage implementations | Contract/schema tests |
+| Infrastructure | DB clients, API handlers, OPA adapters | Business rules | Integration + end-to-end smoke tests |
+
+> [!TIP]
+> Treat ports/contracts as the “trust membrane’s seam”: it is how we prevent accidental bypassing of governance.
+
+---
+
+## Where to make changes
+
+| You need to… | Edit here | Notes |
 |---|---|---|
-| `src/pipelines/` | Connector-driven ingestion + processing (raw → work → processed) | Processed artifacts + run records + validation reports + catalogs |
-| `src/graph/` | Builds/updates graph representations from processed zone | Graph import artifacts and constraint checks |
-| `src/server/` | Governed API boundary enforcing auth, policy, audit, evidence resolution | API responses with citations + `audit_ref` |
-
----
-
-## Guardrails
-
-### Do not cross layers
-
-KFM’s backend uses Clean Architecture boundaries. Keep code in the *lowest* layer that can correctly own it.
-
-<details>
-<summary><strong>Recommended layering inside <code>src/server/</code></strong></summary>
-
-A typical layout inside `src/server/` should mirror clean layers:
-
-```text
-src/server/
-├── domain/            # entities + invariants (no DB, no HTTP)
-├── usecases/          # workflows and business rules (depends on domain + ports)
-├── integration/       # ports/contracts/DTOs (interfaces; schema/contract tests)
-└── infrastructure/    # concrete adapters: DB clients, HTTP handlers, OPA client, audit logger
-```
-
-Rules of thumb:
-
-- **Domain**: zero framework imports; deterministic logic; easiest to unit test.
-- **Use cases**: orchestrate domain logic; talk only to interfaces/ports.
-- **Integration**: defines contracts the outside world must follow.
-- **Infrastructure**: the only place that knows PostGIS/Neo4j/search/object store specifics.
-
-If your current repo layout differs, align the code to these boundaries or update this README to match reality.
-
-</details>
-
-### Treat pipelines as governed manufacturing
-
-Pipelines are not “scripts.” They are the manufacturing line that produces publishable artifacts. The safe default is the connector pattern:
-
-- discover → acquire → normalize → validate → enrich → publish
-
-and publish means:
-
-- promote to **Processed**
-- update catalogs (DCAT/STAC/PROV as applicable)
-- trigger index refresh (graph/search) when needed
-
----
-
-## `src/pipelines/`
-
-### Responsibilities
-
-- Acquire source data into **Raw** (immutable, append-only capture).
-- Transform and QA in **Work** (intermediate, repeatable).
-- Publish governed artifacts to **Processed** (query-ready, cataloged, checksummed).
-- Emit **run records** and **validation reports** so CI can enforce promotion gates.
-
-### Definition of done for a pipeline change
-
-- [ ] Inputs are versioned (content-addressable or checksum-manifested)
-- [ ] Required validations are implemented and fail loudly
-- [ ] Outputs are deterministic for the same inputs + code revision
-- [ ] Catalogs are generated/updated as required (DCAT always; STAC/PROV as applicable)
-- [ ] Policy labels are assigned and redaction is applied where required
-- [ ] Tests exist: unit + integration slice + contract expectations
-
----
-
-## `src/graph/`
-
-### Responsibilities
-
-- Build and update graph structures from **Processed** artifacts only.
-- Enforce constraints that prevent “story-shaped” contradictions:
-  - time validity
-  - identity stability
-  - provenance linkability
-- Generate import/export artifacts and any post-import steps (if used).
-
-### Common anti-patterns
-
-- Building graph directly from `data/work/` intermediates
-- Creating edges without preserving the source record IDs needed for evidence citations
-
----
-
-## `src/server/`
-
-### Responsibilities
-
-`src/server/` is the **governed boundary**. It is where:
-
-- authn/authz + policy checks run
-- request shaping/redaction occurs
-- audit/provenance logging is written
-- evidence resolution endpoints live
-- the UI and external clients interact with KFM
-
-### Adding a new API capability
-
-Use this checklist to keep changes reviewable and compliant:
-
-- [ ] Add or update **domain** entity/value object and invariants if needed
-- [ ] Implement a **use case** that expresses the workflow
-- [ ] Define/extend a **port/contract** in `integration/`
-- [ ] Implement the adapter in **infrastructure** (DB/graph/search/OPA/audit)
-- [ ] Wire into the HTTP layer (routes/handlers)
-- [ ] Add policy checks (default deny) for the new access pattern
-- [ ] Ensure responses include provenance/citations and an `audit_ref`
-- [ ] Add tests:
-  - domain unit tests
-  - use case tests with mocked ports
-  - contract/schema tests
-  - integration or smoke tests for the end-to-end path
+| Add a new ETL job / transform | `src/pipelines/` | Must produce governed outputs + catalogs |
+| Update graph ingest / constraints | `src/graph/` | Ensure deterministic IDs and repeatable builds |
+| Add/modify API endpoints | `src/server/` | Must route through policy + audit |
+| Change who can access what | `policy/` (outside `src/`) | Default deny, policy tests required |
+| Change UI behavior | `web/` (outside `src/`) | UI never talks directly to databases |
 
 ---
 
 ## Testing expectations
 
-| Area | Minimum tests expected |
-|---|---|
-| Domain | pure unit tests |
-| Use cases | use-case tests with mocked ports |
-| Integration | contract tests, schema tests |
-| Infrastructure | integration tests + end-to-end smoke tests |
+> [!IMPORTANT]
+> Any change that could affect governed output must have tests.
+
+Minimum bar (by layer):
+- **Domain**: unit tests for invariants
+- **Use cases**: tests with mocked ports (no live DB)
+- **Contracts**: schema/DTO/contract tests (breakage = CI fail)
+- **Infrastructure**: integration tests (policy + stores + API boundary)
 
 ---
 
-## Local development reminder
+## Troubleshooting
 
-Use the repo’s documented compose workflow (see the top-level README and `docs/` runbooks):
-
-```bash
-cp .env.example .env
-docker compose up --build
-```
+- **Port conflicts**: common offenders are Postgres (`5432`), Neo4j (`7474`), API (`8000`), UI (`3000`). Stop the conflicting service or adjust compose port mappings.
+- **Compose startup timing**: if a dependency wasn’t ready, rerun `docker compose up` or verify `depends_on`.
+- **Hot reload not working**: check volume mounts (e.g., `web/src` mounted into the web container) and whether the API server runs with reload enabled in compose.
+- **Env changes not applied**: restart relevant containers (down/up).
 
 ---
 
-## References in this repo
+## Governance notes
 
-- `docs/MASTER_GUIDE_v13.md` — canonical repo structure and documentation protocol
-- `docs/architecture/` — architecture blueprints and ADRs
-- `policy/` — OPA policies (default deny) and regression tests
-- `schemas/` — schemas for story nodes, catalogs, and telemetry
+- **Evidence-first**: if output can’t be supported, the system must “cite or abstain.”
+- **Sensitivity**: if a dataset includes sensitive locations or culturally restricted knowledge, do not publish precise derivatives without a governed redaction/generalization path and separate provenance.
+
+---
+
+<!-- End of governed src README -->
