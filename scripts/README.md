@@ -1,33 +1,90 @@
-# scripts/
+<!--
+Path: scripts/README.md
+Governance: This is a governed document. Treat edits as production changes.
+-->
 
-Governed command-line scripts used to build, validate, and operate Kansas Frontier Matrix (KFM).
+# scripts
+
+Governed command-line scripts used to **build**, **validate**, and **operate** Kansas Frontier Matrix (KFM).
+
+**Status:** Governed 🔒  
+**Default posture:** Fail-closed ✅ • Deterministic outputs ✅ • CI-parity ✅ • No trust-membrane bypass ✅
 
 > [!IMPORTANT]
-> Anything in `scripts/` can affect dataset promotion, policy enforcement, and evidence provenance.
-> Treat changes as production changes: review, test, and keep outputs deterministic.
+> Anything in `scripts/` can affect **dataset promotion**, **policy enforcement**, and **evidence provenance**.  
+> Treat changes as **production changes**: review, test, and keep outputs deterministic.
 
-## Principles (non-negotiables)
+---
 
-These scripts exist to help enforce KFM’s hard system guarantees:
+## Table of Contents
+
+- [Purpose and Scope](#purpose-and-scope)
+- [Non-Negotiable System Guarantees](#non-negotiable-system-guarantees)
+- [Repository Layout](#repository-layout)
+- [Quickstart](#quickstart)
+- [Script Catalog](#script-catalog)
+- [Where Scripts Fit in the KFM Truth Path](#where-scripts-fit-in-the-kfm-truth-path)
+- [Promotion Gates and Required Artifacts](#promotion-gates-and-required-artifacts)
+- [Standard Script Interface](#standard-script-interface)
+- [Determinism Checklist](#determinism-checklist)
+- [Sensitivity, Redaction, and Safety](#sensitivity-redaction-and-safety)
+- [Script Design Standards](#script-design-standards)
+- [Adding or Changing a Script](#adding-or-changing-a-script)
+- [Troubleshooting](#troubleshooting)
+- [Grounding References](#grounding-references)
+
+---
+
+## Purpose and Scope
+
+`scripts/` exists to make KFM’s governance **enforceable**:
+
+- Run the same validations locally that CI runs.
+- Provide operational “runbooks as code” that are **safe by default**.
+- Prevent regressions into ad-hoc or uncited behavior by enforcing checks for:
+  - catalogs (STAC/DCAT/PROV)
+  - checksums
+  - Story Node structure/citation rules
+  - policy-as-code (OPA)
+
+> [!NOTE]
+> If a script can change what gets published, what gets served, or what gets cited, it is governed.
+
+---
+
+## Non-Negotiable System Guarantees
+
+These scripts exist to enforce KFM’s hard invariants:
 
 - **Trust membrane:** UI and external clients never access databases directly; all access is via the governed API + policy boundary.
-- **Fail-closed policy:** if policy cannot be evaluated or evidence is incomplete, deny by default.
+- **Fail-closed policy:** if policy cannot be evaluated or evidence is incomplete, **deny by default**.
 - **Dataset promotion gates:** Raw → Work → Processed; promotion requires deterministic checksums and STAC/DCAT/PROV catalogs.
 - **Focus Mode cite-or-abstain:** AI answers must include citations (or refuse) and produce an audit reference.
 - **Processed-only publishing:** the processed zone is the only publishable source of truth; raw/work are never served directly.
 
-## What belongs in `scripts/`
+---
 
-✅ Good fits:
+## Repository Layout
 
-- **CI entrypoints** (thin wrappers) that run validators locally exactly as CI does.
-- **Operational runbooks as code:** backfills, connector dry-runs, index refreshes (when approved).
-- **Developer utilities** that do *not* weaken governance (e.g., seeding *demo* data).
+Recommended (and easiest to keep governed):
 
-🚫 Not a good fit:
+```text
+scripts/
+  README.md
+  lint_docs.sh
+  validate_story_nodes.sh
+  validate_catalogs.sh
+  validate_checksums.sh
 
-- One-off personal experiments (use `notebooks/` or `tools/`, and label as non-governed).
-- Anything that bypasses governance (e.g., “quick” direct DB writes that skip catalogs/policy).
+  lib/                    # optional shared helpers (pure functions, no side effects)
+    common.sh
+    json.sh
+```
+
+> [!TIP]
+> Keep shared helpers in `scripts/lib/` and source them. Avoid copy/paste drift.
+
+---
 
 ## Quickstart
 
@@ -45,32 +102,56 @@ chmod +x scripts/*.sh
 opa test policy -v
 ```
 
-### Prerequisites (repo-specific)
+### Prerequisites
 
 Typical dependencies (adjust to your environment):
 
-- bash + coreutils
+- `bash` + coreutils
 - OPA CLI (`opa`) for policy tests
-- python3 (only if you use Python scripts)
-- docker / podman (only if scripts call containerized services)
-
-## Script catalog
+- `python3` (only if you use Python scripts)
+- `docker` / `podman` (only if scripts call containerized services)
+- Optional linters (recommended): `shellcheck`, `shfmt`
 
 > [!NOTE]
-> The **script names below are referenced by the KFM CI blueprint**. If any are missing in your repo, create them (or update CI and this table together).
+> Scripts should run in **CI and local dev** with minimal extra setup. If you add a new dependency, document it here and pin versions where practical.
 
-| Script | Role | Expected inputs *(defaults)* | Expected outputs |
-|---|---|---|---|
-| `lint_docs.sh` | Lint governed Markdown docs | `docs/**`, `stories/**` *(recommended)* | Non-zero exit on violations |
-| `validate_story_nodes.sh` | Validate Story Node bundles (template, required sections, citation rules) | `stories/**` *(recommended)* | Non-zero exit + optional report |
-| `validate_catalogs.sh` | Validate STAC/DCAT/PROV artifacts for changed datasets | `data/catalog/**` *(recommended)* | Non-zero exit + optional report |
-| `validate_checksums.sh` | Compute/verify deterministic checksums for promoted artifacts | `data/**` | Non-zero exit + optional manifest |
+---
 
-## Where scripts fit in the KFM “truth path”
+## Script Catalog
+
+> [!IMPORTANT]
+> The scripts in the **Required** table are referenced by KFM CI expectations.  
+> If you rename them, update CI and this README in the **same PR**.
+
+### Required
+
+| Script | Type | Role | Inputs (defaults) | Outputs | Fails when |
+|---|---|---|---|---|---|
+| `lint_docs.sh` | Validator | Lint governed Markdown docs | `docs/**`, `stories/**` | Exit code only *(optionally a report)* | Markdown violates governed style or structure |
+| `validate_story_nodes.sh` | Validator | Validate Story Node bundles | `stories/**` | Exit code + optional report | Template/required sections/citations are invalid |
+| `validate_catalogs.sh` | Validator | Validate STAC/DCAT/PROV artifacts | `data/catalog/**` | Exit code + optional report | Catalogs missing/invalid/broken links |
+| `validate_checksums.sh` | Validator | Verify deterministic checksums for promoted artifacts | `data/**` | Exit code + optional manifest | Any promoted artifact lacks checksum or checksum mismatch |
+
+### Optional
+
+These are allowed, but must follow the same governance and determinism rules:
+
+| Script pattern | Examples | Special rules |
+|---|---|---|
+| Operational runbooks | `backfill_*.sh`, `refresh_index_*.sh` | Default **dry-run**; require explicit `--apply` |
+| Connector dry-runs | `run_connector_*.py` | Must emit `run_record.json` + `validation_report.json` |
+| Dev-only utilities | `seed_demo_data.sh` | Must not weaken governance; never seed real restricted data |
+
+> [!CAUTION]
+> “Quick fixes” that bypass catalogs/policy (e.g., direct DB writes) are **not allowed** in `scripts/`.
+
+---
+
+## Where Scripts Fit in the KFM Truth Path
 
 KFM’s provenance chain is designed as:
 
-Raw → Work → Processed → STAC/DCAT/PROV → Stores → API → UI → Stories → Focus Mode (cited)
+Raw → Work → Processed → STAC/DCAT/PROV → Stores → API → UI → Stories → Focus Mode
 
 ```mermaid
 flowchart LR
@@ -84,16 +165,18 @@ flowchart LR
   Stories --> Focus["Focus Mode (cited)"]
 ```
 
-Scripts primarily cover:
+### What scripts cover
 
 - building and validating **raw/work/processed** artifacts
 - validating **catalogs** (STAC/DCAT/PROV)
 - validating **Story Nodes**
 - running **policy tests** (`opa test policy -v`) so failures are caught before deploy
 
-## Data promotion gates
+---
 
-Promotion to `processed/` (and anything public-facing) must be blocked unless all gates pass:
+## Promotion Gates and Required Artifacts
+
+Promotion into `processed/` (and anything public-facing) must be blocked unless all gates pass:
 
 - license present
 - sensitivity classification present
@@ -112,9 +195,61 @@ Operational expectations:
   - a `validation_report.json`
   - and the catalogs/checksums needed for promotion
 
-## Sensitivity and redaction
+---
 
-KFM treats some domains as sensitive (examples include ownership/PII risk, precise archaeological site locations, and sensitive species locations).
+## Standard Script Interface
+
+To keep scripts predictable and CI-friendly, **new scripts** should implement a common interface.
+
+### Minimum CLI contract
+
+- `-h, --help` prints usage + examples
+- `--format text|json` *(recommended)* for machine-readable validation output
+- `--report <path>` *(recommended)* to write a JSON report artifact
+- `--paths <glob-or-dir>` *(recommended)* to scope validation
+- Exit codes:
+  - `0` success
+  - `1` validation failed / policy denied
+  - `2` misuse (bad args)
+  - `>2` unexpected error
+
+### Default safety posture
+
+Scripts that can modify state MUST:
+
+- default to `--dry-run` behavior
+- require explicit `--apply` to change anything
+- never write directly across the trust membrane
+- never publish from raw/work zones
+
+> [!TIP]
+> If a script can change data, treat it like a migration: require a ticket/issue reference and produce a run record.
+
+---
+
+## Determinism Checklist
+
+Deterministic outputs prevent “it passed locally but failed in CI” and make provenance reproducible.
+
+Recommended baseline:
+
+- Set stable locale/time assumptions:
+  - `TZ=UTC`
+  - `LC_ALL=C`
+- Avoid embedding timestamps in generated artifacts unless explicitly required and then:
+  - store them in `run_record.json` (not inside the data artifact)
+- Ensure stable ordering:
+  - sort file lists
+  - sort JSON keys when writing JSON (`jq -S`, Python `sort_keys=True`)
+- Use content hashing for artifacts:
+  - prefer `sha256sum`
+  - avoid platform-specific hash tools unless pinned
+
+---
+
+## Sensitivity, Redaction, and Safety
+
+KFM treats some domains as sensitive (examples: ownership/PII risk, precise archaeological site locations, sensitive species locations).
 
 Rules of thumb for scripts:
 
@@ -132,49 +267,23 @@ CI policy regression should include:
 - field-level tests: owner names, exact coordinates, and small-count health/crime indicators are redacted
 - audit integrity tests: every API response includes an audit reference (and, ideally, an evidence bundle hash)
 
-## Script design standards
+> [!CAUTION]
+> Never add scripts that print secrets, dump restricted rows, or “temporarily” bypass policy checks. This is exactly how governance regressions happen.
 
-### Bash (`.sh`)
+---
+
+## Script Design Standards
+
+### Bash
 
 - Use strict mode: `set -euo pipefail`
 - Print usage on `-h/--help`
 - Never echo secrets (tokens, keys)
 - Be idempotent (safe to rerun)
-- Prefer machine-readable output for validation (JSON) when practical
-- Exit codes *(recommended)*:
-  - `0` success
-  - `1` validation failed / policy denied
-  - `2` misuse (bad args)
-  - `>2` unexpected error
-
-### Python (`.py`)
-
-- Use `argparse` (or equivalent) with `--help`
-- Write deterministic outputs:
-  - stable ordering
-  - explicit hashing
-  - explicit schema versions
-- Prefer calling governed library code (e.g., validators under `src/`) over ad-hoc DB access
-- For any script that creates/promotes artifacts, produce:
-  - `run_record.json`
-  - `validation_report.json`
-  - checksums for every output artifact
-
-## Adding a new script
-
-When adding a new script, aim for “CI-ready by default”.
-
-### Definition of Done
-
-- [ ] Has `--help` and at least one concrete example
-- [ ] Deterministic outputs + checksums (when producing artifacts)
-- [ ] Writes a validation report + run record (for pipeline-style scripts)
-- [ ] Annotated with governance notes if it touches sensitive data
-- [ ] Covered by CI (or explicitly documented why it is not)
-- [ ] Updates the Script catalog table in this README
+- Prefer machine-readable output (JSON) for validators when practical
 
 <details>
-<summary>Bash script skeleton</summary>
+<summary>Bash skeleton</summary>
 
 ```bash
 #!/usr/bin/env bash
@@ -188,21 +297,48 @@ Description:
   (Fill in)
 
 Options:
-  -h, --help   Show help
+  -h, --help         Show help
+  --format <fmt>     text|json (default: text)
+  --report <path>    Write JSON report to file
+  --paths <path>     Paths/globs to operate on
 EOF
 }
 
-if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  usage
-  exit 0
-fi
+FORMAT="text"
+REPORT=""
+PATHS=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage; exit 0 ;;
+    --format) FORMAT="${2:-}"; shift 2 ;;
+    --report) REPORT="${2:-}"; shift 2 ;;
+    --paths) PATHS="${2:-}"; shift 2 ;;
+    *) echo "Unknown arg: $1" >&2; usage; exit 2 ;;
+  esac
+done
 
 # Script body...
+# - Print human output to stderr
+# - Print JSON to stdout (if FORMAT=json)
 ```
 </details>
 
+### Python
+
+- Use `argparse` with `--help`
+- Write deterministic outputs:
+  - stable ordering
+  - explicit hashing
+  - explicit schema versions
+- Prefer calling governed library code (e.g., validators under `src/`) over ad-hoc DB access
+- For any script that creates/promotes artifacts, produce:
+  - `run_record.json`
+  - `validation_report.json`
+  - checksums for every output artifact
+
 <details>
-<summary>Python script skeleton</summary>
+<summary>Python skeleton</summary>
 
 ```python
 #!/usr/bin/env python3
@@ -211,42 +347,97 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from dataclasses import dataclass, asdict
+
+@dataclass(frozen=True)
+class Report:
+  ok: bool
+  notes: list[str]
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    # add args...
-    _args = parser.parse_args()
+  parser = argparse.ArgumentParser()
+  parser.add_argument("--format", choices=["text", "json"], default="text")
+  parser.add_argument("--report", default="")
+  args = parser.parse_args()
 
-    report = {"ok": True, "notes": []}
-    json.dump(report, sys.stdout, indent=2)
+  report = Report(ok=True, notes=[])
+
+  if args.format == "json":
+    json.dump(asdict(report), sys.stdout, indent=2, sort_keys=True)
     sys.stdout.write("\n")
-    return 0
+  else:
+    sys.stderr.write("OK\n")
+
+  if args.report:
+    with open(args.report, "w", encoding="utf-8") as f:
+      json.dump(asdict(report), f, indent=2, sort_keys=True)
+      f.write("\n")
+
+  return 0
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+  raise SystemExit(main())
 ```
 </details>
 
+---
+
+## Adding or Changing a Script
+
+Aim for **CI-ready by default**.
+
+### Definition of Done
+
+- [ ] Has `--help` and at least one concrete example
+- [ ] Deterministic outputs + checksums (when producing artifacts)
+- [ ] Writes a validation report + run record (for pipeline-style scripts)
+- [ ] Annotated with governance notes if it touches sensitive data
+- [ ] Covered by CI (or explicitly documented why it is not)
+- [ ] Updates the Script Catalog table in this README
+- [ ] Includes a minimal regression test (fixture-based when possible)
+
+### PR Review Checklist
+
+- [ ] No trust membrane bypass (no direct DB access from scripts unless through governed adapters)
+- [ ] No raw/work publishing paths
+- [ ] Output is stable across reruns
+- [ ] Secrets are not logged
+- [ ] Failure modes are fail-closed with clear exit codes
+
+---
+
 ## Troubleshooting
 
-- `validate_catalogs.sh` fails:
-  - missing license/sensitivity label
-  - STAC/DCAT/PROV schema mismatch
-  - broken links between catalogs (e.g., STAC collection not linking to DCAT dataset)
+### `validate_catalogs.sh` fails
 
-- `validate_checksums.sh` fails:
-  - artifact changed but checksum manifest not updated
-  - non-deterministic build output (timestamps, unordered fields)
+Common causes:
 
-- Policy tests fail:
-  - new endpoint missing policy coverage
-  - cite-or-abstain checks reject an AI answer without citations/audit ref
+- missing license/sensitivity label
+- STAC/DCAT/PROV schema mismatch
+- broken links between catalogs (e.g., STAC collection not linking to DCAT dataset)
 
-## Grounding references
+### `validate_checksums.sh` fails
 
-This README is aligned to KFM’s 2026-02-12 governed design artifacts:
+Common causes:
 
-- **KFM Next-Generation Blueprint & Primary Guide** (draft)
-- **KFM Comprehensive Data Source Integration Blueprint** (v1.0)
+- artifact changed but checksum manifest not updated
+- non-deterministic build output (timestamps, unordered fields)
 
-Update this file if the official CI workflow, promotion gates, or policy expectations change.
+### Policy tests fail
+
+Common causes:
+
+- new endpoint missing policy coverage
+- cite-or-abstain checks reject an AI answer without citations/audit ref
+
+---
+
+## Grounding References
+
+This README aligns to the following governed design artifacts:
+
+- **KFM Next-Generation Blueprint & Primary Guide** (draft, 2026-02-12)
+- **KFM Comprehensive Data Source Integration Blueprint** (v1.0, 2026-02-12)
+
+> [!IMPORTANT]
+> If the official CI workflow, promotion gates, or policy expectations change, update this file in the same PR as the workflow/policy change.
