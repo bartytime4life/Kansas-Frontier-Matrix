@@ -1,342 +1,473 @@
-<!--
-GOVERNED ARTIFACT NOTICE
-This README documents KFM’s runtime trust boundary and deployment invariants.
-If you change meaning (not just phrasing), route through governance review.
--->
+# `/infra` — KFM Infrastructure (Governed, GitOps-ready)
 
-<div align="center">
+## Why this folder exists
 
-# infra/ 🧱
-### KFM Infrastructure: local dev → CI → GitOps → cluster runtime (Kubernetes/OpenShift)
+This directory contains the **deployable infrastructure** for Kansas Frontier Matrix (KFM): local runtime orchestration, Kubernetes/OpenShift deployment manifests, GitOps structures, operational runbooks, and environment configuration patterns.
 
-**This directory is the *runtime truth* of KFM.**  
-If it isn’t reproducible, policy-enforced, auditable, and fail-closed — it doesn’t ship.
-
-<br/>
-
-![Status](https://img.shields.io/badge/status-governed%20draft-blue)
-![GitOps](https://img.shields.io/badge/deploy-gitops-success)
-![Kubernetes](https://img.shields.io/badge/platform-kubernetes%20%7C%20openshift-informational)
-![Policy](https://img.shields.io/badge/policy-OPA%20%7C%20fail--closed-critical)
-![Trust%20Membrane](https://img.shields.io/badge/trust%20membrane-enforced-success)
-![Observability](https://img.shields.io/badge/observability-logs%20%7C%20metrics%20%7C%20traces-informational)
-
-</div>
+KFM is not “just an app.” It is a **governed knowledge system**. Infrastructure is therefore a **governed artifact**: infra must uphold the system invariants below or CI must fail (fail-closed).
 
 ---
 
-## Contents
+## Non‑negotiable system invariants (must be true in every environment)
 
-- [Why infra exists](#why-infra-exists)
-- [Non-negotiables](#non-negotiables)
-- [Professional directory layout](#professional-directory-layout)
-- [Golden paths](#golden-paths)
-  - [Local dev](#local-dev)
-  - [GitOps deploy](#gitops-deploy)
-  - [Policy bundles](#policy-bundles)
-  - [Secrets](#secrets)
-  - [Observability](#observability)
-- [CI gates](#ci-gates)
-- [Runbooks](#runbooks)
-- [Infra PR checklist](#infra-pr-checklist)
+> These are not preferences—these are build invariants.
 
----
+### 🧱 Trust membrane (enforced boundary)
+- **Frontend never talks to databases directly.**
+- **All requests** (data, stories, Focus Mode) cross the **API Gateway → Policy (OPA)** boundary.
+- Backend logic must not bypass repository interfaces/ports to reach storage.
 
-## Why infra exists
+### 🧑‍⚖️ Policy-as-code (fail-closed)
+- **Default deny** policy posture.
+- Policy is evaluated:
+  - **on request** (access control, shaping/redaction)
+  - **on response** (Focus Mode “cite-or-abstain” output validation)
 
-Infrastructure is the layer that turns architecture into *enforced behavior*:
+### 📦 Dataset promotion gates (truth path)
+- Data must flow **Raw → Work → Processed**.
+- **Processed** is the **only publishable source of truth**.
+- Promotion requires **checksums + STAC/DCAT/PROV** catalogs (machine-checkable).
 
-- **Reproducible environments** (local, CI, dev/stage/prod)
-- **Policy-as-code** at the trust membrane (default deny)
-- **Governed deployment** (GitOps convergence; minimal imperative drift)
-- **Operational visibility** (audit IDs, logs/metrics/traces, SLOs)
-- **Security posture** (least privilege, secret hygiene, supply-chain checks)
-
-> [!TIP]
-> Think of `infra/` as: **the contract between “what we built” and “what actually runs.”**
+### 🧾 Evidence-first UX + auditability
+- Every user-visible claim must be traceable to evidence.
+- Focus Mode must **cite or abstain** and produce an **audit reference** for every answer.
+- Audit/provenance is produced as part of the normal request path.
 
 ---
 
-## Non-negotiables
+## Table of contents
 
-> [!IMPORTANT]
-> ### Trust membrane invariant (fail-closed)
-> - **Frontend and external clients never access databases directly.**
-> - All requests go through the **governed API gateway** and **policy decision point (OPA)**.
-> - **Default deny**: missing/invalid policy input → **deny**.
-> - Focus Mode must **cite or abstain** and emit an **audit reference**.
-
-> [!CAUTION]
-> ### Data-zone invariant
-> Runtime services (API/search/tiles/UI) serve from the **processed** zone only.  
-> `raw/` and `work/` are pipeline-only concerns and must not be reachable from public APIs.
-
-> [!NOTE]
-> These invariants are enforced through:
-> - deployment topology (no DB exposure)
-> - network policy / ingress rules
-> - OPA policy bundles + regression tests
-> - CI gates (render/validate/test) and protected branches
+- [What lives in `/infra`](#what-lives-in-infra)
+- [Architecture (runtime components)](#architecture-runtime-components)
+- [Local development (Docker Compose)](#local-development-docker-compose)
+- [Kubernetes/OpenShift deployment](#kubernetesopenshift-deployment)
+- [GitOps structure (Argo CD pattern)](#gitops-structure-argo-cd-pattern)
+- [Environments & promotion](#environments--promotion)
+- [Secrets management](#secrets-management)
+- [Storage & stateful services](#storage--stateful-services)
+- [Observability (logs/metrics/traces)](#observability-logsmetricstraces)
+- [Security baseline](#security-baseline)
+- [CI/CD & governance gates](#cicd--governance-gates)
+- [Operations (runbooks, DR, backups)](#operations-runbooks-dr-backups)
+- [Change management (ADRs)](#change-management-adrs)
+- [Troubleshooting](#troubleshooting)
+- [Appendix: Glossary](#appendix-glossary)
 
 ---
 
-## Professional directory layout
+## What lives in `/infra`
 
-> [!NOTE]
-> Layout below is the **recommended** `infra/` structure. If your repo differs, treat it as **drift** and either:
-> 1) align the repo to this structure, or  
-> 2) update this README as a governed change.  
-> *(Some paths may not exist yet.)*
+> ⚠️ If a listed path is missing in the repo, treat this README as the **desired contract** and create the missing path as part of the next infra PR.
+
+### Directory layout (canonical)
 
 ```text
 infra/
-├─ README.md
-
-├─ _meta/
-│  ├─ OWNERS.md                      # infra reviewers/approvers (optional)
-│  ├─ ADR/                           # infra-only ADRs (networking, GitOps, secrets)
-│  └─ diagrams/                      # mermaid sources + exported SVGs (optional)
-
-├─ local/
-│  ├─ compose/                       # local dev stack (Docker/Podman)
-│  │  ├─ docker-compose.yml
-│  │  ├─ docker-compose.override.yml
-│  │  └─ README.md
-│  ├─ env/
-│  │  ├─ .env.example                # never secrets
-│  │  └─ README.md
-│  └─ scripts/
-│     ├─ up.sh                       # bring-up helpers
-│     ├─ down.sh
-│     └─ smoke.sh                    # local smoke checks
-
-├─ gitops/
-│  ├─ argocd/                        # Argo CD app-of-apps (or equivalent)
-│  │  ├─ bootstrap/                  # initial Argo apps
-│  │  └─ projects/                   # Argo Projects / RBAC scoping
-│  ├─ kustomize/
-│  │  ├─ base/
-│  │  │  ├─ platform/                # namespaces, ingress, operators, storage classes
-│  │  │  ├─ security/                # network policies, PSP/PSS, RBAC, admission
-│  │  │  ├─ observability/           # collectors, dashboards, alerts
-│  │  │  └─ apps/                    # api, ui, pipeline, policy, search, tiles
-│  │  └─ overlays/
-│  │     ├─ dev/
-│  │     ├─ stage/
-│  │     └─ prod/
-│  └─ helm/                          # optional: Helm charts or wrappers (use sparingly)
-
-├─ policy/
-│  ├─ opa/
-│  │  ├─ bundles/
-│  │  │  └─ kfm/                     # rego + data packaged for PDP deployment
-│  │  ├─ tests/                      # opa test suites (unit + regression)
-│  │  └─ README.md
-│  └─ conftest/
-│     ├─ policies/                   # conftest policies for YAML/manifests (optional)
-│     └─ README.md
-
-├─ ci/
-│  ├─ workflows/                     # CI workflows (GitHub Actions / Tekton / etc.)
-│  ├─ checks/
-│  │  ├─ render-kustomize.sh
-│  │  ├─ validate-yaml.sh
-│  │  ├─ opa-test.sh
-│  │  ├─ secret-scan.sh
-│  │  └─ sbom-attest.sh              # optional
-│  └─ README.md
-
-├─ security/
-│  ├─ secret-management.md           # patterns (External Secrets / Sealed Secrets)
-│  ├─ rbac-model.md
-│  └─ threat-model.md                # infra threat model (optional)
-
-├─ observability/
-│  ├─ dashboards/
-│  ├─ alerts/
-│  ├─ logging/
-│  ├─ tracing/
-│  └─ README.md
-
-└─ runbooks/
-   ├─ incident-response.md
-   ├─ restore.md
-   ├─ rotate-secrets.md
-   ├─ policy-deny-debugging.md
-   └─ dr-gitops.md
+├── README.md                       # you are here
+├── compose/                        # local dev + smoke-test orchestration
+│   ├── docker-compose.yml
+│   ├── .env.example
+│   └── volumes/                    # optional bind mounts for local persistence
+├── gitops/                         # GitOps "desired state" repo subtree
+│   ├── bootstrap/
+│   │   ├── base/
+│   │   └── overlays/
+│   │       └── default/
+│   ├── components/
+│   │   ├── applicationsets/
+│   │   └── argocdproj/
+│   ├── core/                       # cluster-level capabilities
+│   │   ├── gitops-controller/
+│   │   ├── policy-pdp-opa/
+│   │   ├── ingress-or-routes/
+│   │   ├── observability-stack/
+│   │   └── storage-classes/
+│   └── apps/                       # KFM workloads (dev/stage/prod overlays)
+│       ├── kfm-api/
+│       ├── kfm-web/
+│       ├── kfm-pipeline/
+│       ├── kfm-data-services/      # postgis/neo4j/search/object-store (if in-cluster)
+│       └── kfm-jobs/               # backfills/reindex/nightly maintenance
+├── k8s/                            # optional: non-GitOps "raw" k8s manifests (escape hatch)
+│   ├── base/
+│   └── overlays/
+│       ├── dev/
+│       ├── stage/
+│       └── prod/
+├── openshift/                      # OpenShift-specific objects (Routes, SCC notes, etc.)
+│   ├── routes/
+│   ├── quotas/
+│   └── rbac/
+├── iac/                            # optional: IaC for cloud/cluster provisioning
+│   ├── terraform/
+│   └── ansible/
+├── scripts/                        # bootstrap utilities (cluster, registry, validation helpers)
+└── runbooks/                       # operational checklists and incident playbooks
+    ├── BACKUPS.md
+    ├── RESTORE.md
+    ├── INCIDENT_RESPONSE.md
+    └── TROUBLESHOOTING.md
 ```
+
+### Responsibilities by area
+
+| Area | Owns | Must NOT do |
+|---|---|---|
+| `compose/` | Local runtime orchestration | Become “production truth”; prod uses GitOps |
+| `gitops/` | Declarative desired state for clusters | Contain plaintext secrets |
+| `core/` | Cluster capabilities (policy, observability, ingress, storage defaults) | Embed app-specific config |
+| `apps/` | Deploy KFM workloads with env overlays | Bypass the trust membrane |
+| `runbooks/` | Operational steps (human-executable, auditable) | Require tribal knowledge |
 
 ---
 
-## Golden paths
+## Architecture (runtime components)
 
-### Local dev
-
-> [!IMPORTANT]
-> Local dev must preserve production boundaries: **UI → API Gateway → Policy → Data**.  
-> No shortcuts (no UI→DB direct connects, even “just locally”).
-
-<details>
-<summary><strong>Local bring-up (Docker or Podman)</strong></summary>
-
-**Prereqs**
-- Docker *or* Podman
-- Compose runner (`docker compose` / `podman-compose`)
-- Optional: `kubectl`, `oc`, `kustomize`, `helm` (for cluster parity)
-
-**Start**
-```bash
-# example (paths may vary)
-docker compose -f infra/local/compose/docker-compose.yml up -d --build
-```
-
-**Check**
-```bash
-docker compose -f infra/local/compose/docker-compose.yml ps
-docker compose -f infra/local/compose/docker-compose.yml logs -f --tail=200
-```
-
-**Stop**
-```bash
-docker compose -f infra/local/compose/docker-compose.yml down
-```
-
-**Reset (destructive)**
-```bash
-docker compose -f infra/local/compose/docker-compose.yml down -v
-```
-
-</details>
-
-<details>
-<summary><strong>Default ports (update to match your compose)</strong></summary>
-
-| Component | Default port(s) | Notes |
-|---|---:|---|
-| API Gateway (FastAPI) | 8000 | Governed REST (optional GraphQL) |
-| Web UI (React) | 3000 | Always calls API gateway |
-| PostGIS | 5432 | Not exposed publicly |
-| Neo4j | 7474 / 7687 | Not exposed publicly |
-| OPA PDP | 8181 | Policy decisions (deny by default) |
-
-</details>
-
----
-
-### GitOps deploy
-
-GitOps means: **Git declares desired state** and a controller converges the cluster.
+### Container view (trust membrane enforced)
 
 ```mermaid
 flowchart LR
-  Dev[Pull Request] --> CI[CI: test + build + render]
-  CI --> Reg[(Image Registry)]
-  CI --> Git[GitOps manifests updated]
-  Git --> CD[Argo CD / GitOps controller]
-  CD --> Cluster[Kubernetes/OpenShift]
-  Cluster --> Obs[Logs/Metrics/Traces + Audit]
+  UI[Web UI\nReact/TS + Map] -->|HTTPS| API[API Gateway\n(FastAPI REST + optional GraphQL)]
+  API -->|authorize| OPA[Policy PDP\nOPA/Rego]
+  API -->|query via ports| PGIS[(PostGIS)]
+  API -->|query via ports| NEO[(Neo4j)]
+  API -->|search| SEARCH[(Search/Vector)]
+  API -->|assets| OBJ[(Object Store)]
+  API -->|append| AUD[(Audit Ledger\nappend-only)]
+  PIPE[Pipeline/Orchestrator] -->|promote| PGIS
+  PIPE -->|index| SEARCH
+  PIPE -->|catalogs| OBJ
 ```
 
-> [!TIP]
-> If you “kubectl apply” changes directly to prod, you’re creating **configuration drift**.  
-> Drift is a governance bug.
+### “Truth path” (data governance pipeline)
+
+```mermaid
+flowchart LR
+  SRC[Source API/Files] --> RAW[Raw Zone\nimmutable]
+  RAW --> WORK[Work Zone\nrepeatable transforms]
+  WORK --> PROC[Processed Zone\nquery-ready]
+  PROC --> CAT[Catalogs\nSTAC/DCAT/PROV + checksums]
+  CAT --> STORES[Stores\nPostGIS/Graph/Search/Object]
+  STORES --> API[Governed API + Policy]
+  API --> UI[UI / Stories / Focus Mode]
+```
 
 ---
 
-### Policy bundles
+## Local development (Docker Compose)
 
-OPA is a first-class dependency: it must be deployed, tested, and versioned.
+> Local development is standardized around Docker Compose: copy `.env.example` to `.env` and run `docker compose up --build`. UI is expected on `:3000`, API docs on `:8000/docs`.
 
-**Recommended contract**
-- API calls PDP with a structured input (actor, action, resource, sensitivity, purpose)
-- PDP returns allow/deny + optional obligations (redaction rules, max precision, etc.)
-- Missing inputs → **deny** (fail-closed)
+### Prerequisites
+- Docker + Docker Compose (v2)
+- A `.env` file (from `.env.example`)
+- Enough RAM for search + graph services (Neo4j + OpenSearch are not lightweight)
 
-<details>
-<summary><strong>OPA policy testing (example)</strong></summary>
+### Quickstart
 
 ```bash
-opa test infra/policy/opa/tests -v
+cd infra/compose
+cp .env.example .env
+docker compose up --build
 ```
 
-</details>
+### Services (baseline)
+
+The documented baseline includes:
+- `api` (KFM API gateway)
+- `web` (React UI)
+- `postgis` (geospatial store)
+- `neo4j` (knowledge graph)
+- `opensearch` (search/vector)
+- `opa` (policy decision point)
+
+#### Default ports (recommended)
+| Service | Port(s) | Notes |
+|---|---:|---|
+| web | 3000 | UI dev server |
+| api | 8000 | API + OpenAPI docs at `/docs` |
+| postgis | 5432 | local only |
+| neo4j | 7474 / 7687 | local only |
+| opensearch | 9200 | local only |
+| opa | 8181 | local only |
+
+### Local data persistence
+- Prefer **named volumes** for PostGIS/Neo4j/OpenSearch.
+- Use `infra/compose/volumes/` only if you intentionally want bind mounts.
+
+### Resetting local state
+```bash
+cd infra/compose
+docker compose down -v
+```
+
+> 🔥 This deletes local volumes. Do not do this if you care about persisted local datasets.
 
 ---
 
-### Secrets
+## Kubernetes/OpenShift deployment
 
-**Rules**
-- No secrets in Git history
-- No secrets in CI logs
-- Minimize token scopes + rotate regularly
-- Prefer managed secret sources (Vault/provider) or sealed/encrypted secrets
+KFM supports Kubernetes-style deployment (OpenShift is Kubernetes with additional primitives). KFM productionization expects:
+- versioned container images
+- declarative manifests
+- GitOps reconciliation
+- observability
+- runbooks, backups, and incident drills
 
-> [!WARNING]
-> “Temporary secrets” are still secrets. Never commit them.
+### Deployment primitives (recommended)
+- **Deployments** for `kfm-api` and `kfm-web`
+- **Jobs/CronJobs** for:
+  - pipeline ingest runs
+  - catalog validation
+  - index rebuilds
+  - periodic integrity checks (checksums)
+- OpenShift-specific:
+  - **Routes** (instead of Ingress) where appropriate
 
----
-
-### Observability
-
-KFM infra should emit four signals:
-
-1) **Logs** (structured JSON, request IDs, audit IDs)  
-2) **Metrics** (latency, error rates, saturation, queue depth)  
-3) **Traces** (cross-service correlation: UI → gateway → policy → storage)  
-4) **Audit ledger hooks** (append-only references for governed outputs)
-
-> [!NOTE]
-> Observability is part of governance: “why did the system answer this way” must be inspectable.
-
----
-
-## CI gates
-
-Infra changes must be **renderable, valid, policy-tested, and secure**.
-
-Minimum gates for any PR touching `infra/`:
-
-- YAML/JSON linting
-- Kustomize/Helm render for all overlays (`dev`, `stage`, `prod`)
-- OPA tests pass (unit + regression)
-- Secret scanning (push protection where possible)
-- Supply chain checks (SBOM / signing) if enabled
-- “Trust membrane checks” (no DB service publicly exposed)
+### Scaling expectations (baseline)
+- `kfm-api`: 2–3 replicas (stateless)
+- `kfm-web`: 2 replicas (stateless)
+- stateful services: scale carefully; use appropriate storage classes and backups
 
 ---
 
-## Runbooks
+## GitOps structure (Argo CD pattern)
 
-Runbooks should be written as if the on-call is tired and under pressure.
+KFM GitOps adopts the common “bootstrap/components/core/apps” model.
 
-At minimum:
-- incident-response
-- restore / backup verification
-- secret rotation
-- policy deny debugging
-- GitOps drift + recovery
+### Why GitOps here
+- Desired state is **in Git** (auditable).
+- Cluster drift is detected and corrected by reconciliation.
+- Promotion is achieved via pull requests / merges.
+
+### Repo structure (pattern)
+```text
+gitops/
+├── bootstrap/     # installs Argo + creates baseline projects
+├── components/    # ApplicationSets, Argo projects, RBAC
+├── core/          # cluster capabilities (policy/ingress/observability)
+└── apps/          # app workloads with env overlays (dev/stage/prod)
+```
+
+### How KFM maps to `core/` vs `apps/`
+- `core/` contains shared platform services and guardrails:
+  - OPA deployment + configuration (PDP)
+  - ingress/routes + TLS termination
+  - observability stack
+  - storage defaults
+  - cluster RBAC, quotas, namespaces/projects
+- `apps/` contains KFM workloads:
+  - `kfm-api`, `kfm-web`
+  - pipeline runner (jobs, schedules)
+  - optional: in-cluster PostGIS/Neo4j/OpenSearch (or external managed services)
 
 ---
 
-## Infra PR checklist
+## Environments & promotion
 
-Copy/paste into PR descriptions:
+### Environments (recommended)
+- `dev`: fastest iteration, lowest restrictions
+- `stage`: pre-prod integration + governance verification
+- `prod`: strict gates, immutable releases, auditable changes only
 
-- [ ] I did **not** introduce UI → DB direct access.
-- [ ] Policy remains **fail-closed** (default deny).
-- [ ] Rendered manifests are attached or CI-rendered for all overlays.
-- [ ] OPA policy tests pass (unit + regression).
-- [ ] Secret scanning is clean (no secrets added).
-- [ ] Network exposure reviewed (ingress/routes/services).
-- [ ] Observability updated (dashboards/alerts) if behavior changed.
-- [ ] Runbook updated if operational procedure changed.
-- [ ] Any governed invariant changes were routed to governance review.
+### Promotion rules (infrastructure)
+- Promote by **merging** changes to the desired-state manifests (or updating image tags) in Git.
+- The GitOps controller reconciles to clusters.
+
+### Promotion rules (data)
+- Treat data versions as promotable artifacts:
+  - Raw/Work are not served to users.
+  - Processed is served only after STAC/DCAT/PROV + checksums validate.
+- If you represent “desired data state” declaratively, promotions should be PR-based (audit trail).
 
 ---
 
-<div align="center">
+## Secrets management
 
-**If it can’t be audited, it can’t be trusted.**  
-**If it can’t be reproduced, it can’t be operated.**
+### Hard rules
+- **Never commit plaintext secrets**.
+- Local dev uses `.env` only (ignored by git).
+- Cluster secrets use one of:
+  - sealed/encrypted secrets committed to Git, **or**
+  - external secret references (Vault/External Secrets)
 
-</div>
+### What counts as a secret here
+- DB passwords, Neo4j credentials
+- OIDC client secrets
+- API keys for upstream data sources
+- signing keys (JWT, cookies)
+- object store keys
+
+### Rotation
+- Document rotation steps in `infra/runbooks/`.
+- Rotation must not break GitOps reconciliation (avoid manual “click ops”).
+
+---
+
+## Storage & stateful services
+
+### Services and what they store
+| Component | Stores | Notes |
+|---|---|---|
+| PostGIS | processed geospatial datasets, tiles metadata, audit ledger table | must not be reachable from UI |
+| Neo4j | knowledge graph edges/nodes, concept relationships | policy-controlled access via API |
+| Search/Vector | retrieval index for Focus Mode and discovery | rebuildable from catalogs + processed |
+| Object store | large assets (COGs/media), catalog files, audit checkpoints | preferred for big blobs |
+
+### Backups (must exist before “prod”)
+- PostGIS: logical + snapshot strategy
+- Object store: versioning + lifecycle policies
+- Search index: rebuild strategy (nightly rebuild job + diff checks recommended)
+- Neo4j: snapshot/backup procedure if used in prod
+
+> ✅ Definition of “ready for production”: backups tested + restore drill completed + runbook exists.
+
+---
+
+## Observability (logs/metrics/traces)
+
+### Minimum observability contract
+- **OpenTelemetry traces**: correlate UI → API → OPA → stores → model/tooling
+- Structured logs include:
+  - `request_id`
+  - `audit_ref`
+  - decision results (allow/deny) without leaking secrets
+- Dashboards should cover:
+  - tile latency
+  - Focus Mode latency
+  - policy denials
+  - pipeline success rate
+  - index rebuild duration
+
+### Alerts (baseline)
+- elevated 5xx rate on API
+- increased OPA deny rate (may indicate policy regressions)
+- ingestion/promotion failures
+- storage utilization thresholds
+
+---
+
+## Security baseline
+
+### Identity & access control
+- AuthN: OIDC provider issues JWTs; API gateway verifies tokens.
+- AuthZ: OPA evaluates role/attributes; dataset/layer/story access enforced centrally.
+- Rate limiting: stricter on Focus Mode endpoints.
+
+### Network hardening
+- Only the API gateway (and UI) are exposed externally.
+- Databases/search/graph are cluster-internal only.
+- Enforce TLS end-to-end in stage/prod.
+
+### Supply chain
+- Build produces:
+  - SBOM (SPDX)
+  - build provenance attestation (SLSA/in-toto)
+- Publish versioned container images only if all gates pass.
+
+---
+
+## CI/CD & governance gates
+
+Infra changes are not “just YAML.” They must uphold governance.
+
+### Required CI checks (minimum hardening set)
+- Docs: lint + link-check + template validator
+- Stories: v3 validator + citation resolution
+- Data: STAC/DCAT/PROV validation + checksums
+- Policy: `opa test` (default deny + cite-or-abstain)
+- Supply chain: SBOM + provenance attestation
+- Build: container images published only after gates pass
+
+### Where CI lives
+- `.github/workflows/*` (repo root)
+- Scripts in `scripts/` should be called by CI and runnable locally.
+
+---
+
+## Operations (runbooks, DR, backups)
+
+### Runbook expectations
+Runbooks must be:
+- deterministic (inputs → commands → expected outputs → next step)
+- safe-by-default (avoid destructive commands without explicit warnings)
+- usable by someone who is not the original author
+
+### Required runbooks (minimum)
+- `BACKUPS.md` — how backups are taken and validated
+- `RESTORE.md` — how to restore PostGIS + object store + policy bundles
+- `INCIDENT_RESPONSE.md` — triage steps; who to page; what to capture
+- `TROUBLESHOOTING.md` — common failures and how to interpret them
+
+### Disaster recovery (DR) checklist (minimum)
+- [ ] secrets recreation documented
+- [ ] fresh install steps documented
+- [ ] object store “bucket info” documented (names, regions, lifecycle)
+- [ ] restore steps for all stateful services
+- [ ] restore drill completed and signed off
+
+---
+
+## Change management (ADRs)
+
+Any infrastructure decision that affects:
+- trust membrane enforcement
+- policy evaluation
+- data promotion gates
+- storage engines
+- observability stack
+- CI gates
+
+…must be recorded in an ADR.
+
+Recommended path:
+- `docs/adr/ADR-000X-<title>.md`
+
+ADR must include:
+- context
+- decision
+- alternatives
+- consequences
+- verification (tests/metrics + rollback plan)
+
+---
+
+## Troubleshooting
+
+### “OPA denies everything”
+1. Confirm OPA is reachable from the API service.
+2. Confirm policy bundles loaded and `default deny` rules are expected.
+3. Verify policy input schema is being passed correctly (missing keys should fail-closed).
+
+### “UI loads but no data”
+- Check API is reachable from UI (CORS + route/ingress)
+- Check API logs for policy denials
+- Confirm datasets are served only from **Processed** and catalogs exist
+
+### “Search results empty”
+- Confirm indexing job ran successfully
+- Rebuild search index from canonical catalogs (do not hand-edit indices)
+
+### “Pipeline produced files but nothing is visible”
+- Promotion gate likely blocked:
+  - missing checksums
+  - invalid STAC/DCAT/PROV
+  - missing run record / validation report
+
+---
+
+## Appendix: Glossary
+
+| Term | Meaning |
+|---|---|
+| Trust membrane | The API + policy boundary where governance is enforced |
+| OPA | Open Policy Agent (policy-as-code engine) |
+| PDP | Policy Decision Point (OPA service) |
+| GitOps | Desired state in Git; reconciler applies it continuously |
+| STAC | SpatioTemporal Asset Catalog (geospatial assets) |
+| DCAT | Data Catalog Vocabulary (dataset discovery/interoperability) |
+| PROV | Provenance model for lineage/auditability |
+| Processed zone | Only publishable truth source (query-ready) |
+| Audit ledger | Append-only event stream for actions + policy decisions + AI outputs |
+
+---
