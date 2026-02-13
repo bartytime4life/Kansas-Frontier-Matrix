@@ -1,329 +1,342 @@
-# Infrastructure
+<!--
+GOVERNED ARTIFACT NOTICE
+This README documents KFM’s runtime trust boundary and deployment invariants.
+If you change meaning (not just phrasing), route through governance review.
+-->
 
-This directory defines **how KFM runs** (local dev + CI + cluster deploy) without violating the **trust membrane**.
+<div align="center">
 
-> [!IMPORTANT]
-> **Trust membrane invariant**
-> - The frontend never talks to databases directly.
-> - Every request is policy-evaluated and audited.
-> - Backend logic must not bypass repository interfaces.
+# infra/ 🧱
+### KFM Infrastructure: local dev → CI → GitOps → cluster runtime (Kubernetes/OpenShift)
 
-If anything in this directory conflicts with those invariants, it is a **bug**.
+**This directory is the *runtime truth* of KFM.**  
+If it isn’t reproducible, policy-enforced, auditable, and fail-closed — it doesn’t ship.
 
----
+<br/>
 
-## What this directory is for
+![Status](https://img.shields.io/badge/status-governed%20draft-blue)
+![GitOps](https://img.shields.io/badge/deploy-gitops-success)
+![Kubernetes](https://img.shields.io/badge/platform-kubernetes%20%7C%20openshift-informational)
+![Policy](https://img.shields.io/badge/policy-OPA%20%7C%20fail--closed-critical)
+![Trust%20Membrane](https://img.shields.io/badge/trust%20membrane-enforced-success)
+![Observability](https://img.shields.io/badge/observability-logs%20%7C%20metrics%20%7C%20traces-informational)
 
-Infrastructure is the “runtime truth” of KFM:
-
-- **Local dev**: reproducible service bring-up for engineers (containers + dependencies)
-- **Cluster deploy**: GitOps-managed Kubernetes/OpenShift manifests and environment overlays
-- **Policy enforcement**: OPA policies and deployment wiring
-- **Secrets**: patterns and guardrails for secret material
-- **Observability**: logs, metrics, tracing, and audit hooks
-- **CI gates**: checks that prevent regressions in governance or security
-
----
-
-## Non-negotiable invariants
-
-These are enforced by design and should be enforced by CI.
-
-### Trust membrane and governance
-
-- UI/external clients **never access databases directly**; all access goes through the governed API + policy boundary.
-- Policy checks **fail-closed** (default deny).
-- Runtime serves from the **processed zone** only (no “raw/work” reads from the API).
-- Dataset promotion requires machine-checkable **STAC/DCAT/PROV** artifacts.
-- Focus Mode must **cite or abstain**, and produce an audit reference.
-
-### Clean layers and boundary hygiene
-
-- Domain and use cases depend only on **ports/contracts**
-- Infrastructure implements ports (DB clients, OPA adapter, API handlers, queues, object storage)
-- No “shortcut” direct DB calls from UI or use cases
-
-> [!NOTE]
-> This README describes the intended infrastructure model and directory layout. If your current repo differs, treat mismatches as **implementation drift** and update either the code or this doc.
+</div>
 
 ---
 
-## Directory layout
+## Contents
+
+- [Why infra exists](#why-infra-exists)
+- [Non-negotiables](#non-negotiables)
+- [Professional directory layout](#professional-directory-layout)
+- [Golden paths](#golden-paths)
+  - [Local dev](#local-dev)
+  - [GitOps deploy](#gitops-deploy)
+  - [Policy bundles](#policy-bundles)
+  - [Secrets](#secrets)
+  - [Observability](#observability)
+- [CI gates](#ci-gates)
+- [Runbooks](#runbooks)
+- [Infra PR checklist](#infra-pr-checklist)
+
+---
+
+## Why infra exists
+
+Infrastructure is the layer that turns architecture into *enforced behavior*:
+
+- **Reproducible environments** (local, CI, dev/stage/prod)
+- **Policy-as-code** at the trust membrane (default deny)
+- **Governed deployment** (GitOps convergence; minimal imperative drift)
+- **Operational visibility** (audit IDs, logs/metrics/traces, SLOs)
+- **Security posture** (least privilege, secret hygiene, supply-chain checks)
 
 > [!TIP]
-> This is the **recommended** structure for `infra/` in the monorepo. Some folders may not exist yet (scaffold as needed).
+> Think of `infra/` as: **the contract between “what we built” and “what actually runs.”**
+
+---
+
+## Non-negotiables
+
+> [!IMPORTANT]
+> ### Trust membrane invariant (fail-closed)
+> - **Frontend and external clients never access databases directly.**
+> - All requests go through the **governed API gateway** and **policy decision point (OPA)**.
+> - **Default deny**: missing/invalid policy input → **deny**.
+> - Focus Mode must **cite or abstain** and emit an **audit reference**.
+
+> [!CAUTION]
+> ### Data-zone invariant
+> Runtime services (API/search/tiles/UI) serve from the **processed** zone only.  
+> `raw/` and `work/` are pipeline-only concerns and must not be reachable from public APIs.
+
+> [!NOTE]
+> These invariants are enforced through:
+> - deployment topology (no DB exposure)
+> - network policy / ingress rules
+> - OPA policy bundles + regression tests
+> - CI gates (render/validate/test) and protected branches
+
+---
+
+## Professional directory layout
+
+> [!NOTE]
+> Layout below is the **recommended** `infra/` structure. If your repo differs, treat it as **drift** and either:
+> 1) align the repo to this structure, or  
+> 2) update this README as a governed change.  
+> *(Some paths may not exist yet.)*
 
 ```text
 infra/
-  README.md
+├─ README.md
 
-  local/
-    docker-compose.yml            # local stack (not confirmed in repo)
-    .env.example                  # local env defaults (never secrets)
-    volumes/                      # optional local bind mounts (avoid committing data)
+├─ _meta/
+│  ├─ OWNERS.md                      # infra reviewers/approvers (optional)
+│  ├─ ADR/                           # infra-only ADRs (networking, GitOps, secrets)
+│  └─ diagrams/                      # mermaid sources + exported SVGs (optional)
 
-  gitops/
-    bootstrap/                    # Argo CD app-of-apps entrypoint (or equivalent)
-    components/
-      core/                       # infra primitives: namespaces, operators, CRDs
-      apps/                       # application manifests: api, ui, policy, pipeline
-    base/                         # shared kustomize/helm base
-    overlays/
-      dev/
-      stage/
-      prod/
+├─ local/
+│  ├─ compose/                       # local dev stack (Docker/Podman)
+│  │  ├─ docker-compose.yml
+│  │  ├─ docker-compose.override.yml
+│  │  └─ README.md
+│  ├─ env/
+│  │  ├─ .env.example                # never secrets
+│  │  └─ README.md
+│  └─ scripts/
+│     ├─ up.sh                       # bring-up helpers
+│     ├─ down.sh
+│     └─ smoke.sh                    # local smoke checks
 
-  policy/
-    opa/
-      bundles/                    # policy bundles to deploy
-      tests/                      # policy unit tests
+├─ gitops/
+│  ├─ argocd/                        # Argo CD app-of-apps (or equivalent)
+│  │  ├─ bootstrap/                  # initial Argo apps
+│  │  └─ projects/                   # Argo Projects / RBAC scoping
+│  ├─ kustomize/
+│  │  ├─ base/
+│  │  │  ├─ platform/                # namespaces, ingress, operators, storage classes
+│  │  │  ├─ security/                # network policies, PSP/PSS, RBAC, admission
+│  │  │  ├─ observability/           # collectors, dashboards, alerts
+│  │  │  └─ apps/                    # api, ui, pipeline, policy, search, tiles
+│  │  └─ overlays/
+│  │     ├─ dev/
+│  │     ├─ stage/
+│  │     └─ prod/
+│  └─ helm/                          # optional: Helm charts or wrappers (use sparingly)
 
-  ci/
-    workflows/                    # CI templates (GitHub Actions, Tekton, etc.)
-    checks/                       # scripts for lint/validate
+├─ policy/
+│  ├─ opa/
+│  │  ├─ bundles/
+│  │  │  └─ kfm/                     # rego + data packaged for PDP deployment
+│  │  ├─ tests/                      # opa test suites (unit + regression)
+│  │  └─ README.md
+│  └─ conftest/
+│     ├─ policies/                   # conftest policies for YAML/manifests (optional)
+│     └─ README.md
 
-  openshift/
-    notes.md                      # OpenShift-specific runbooks/snippets
-    templates/                    # optional OpenShift templates (use sparingly)
+├─ ci/
+│  ├─ workflows/                     # CI workflows (GitHub Actions / Tekton / etc.)
+│  ├─ checks/
+│  │  ├─ render-kustomize.sh
+│  │  ├─ validate-yaml.sh
+│  │  ├─ opa-test.sh
+│  │  ├─ secret-scan.sh
+│  │  └─ sbom-attest.sh              # optional
+│  └─ README.md
 
-  observability/
-    dashboards/
-    alerts/
-    logging/
-    tracing/
+├─ security/
+│  ├─ secret-management.md           # patterns (External Secrets / Sealed Secrets)
+│  ├─ rbac-model.md
+│  └─ threat-model.md                # infra threat model (optional)
 
-  runbooks/
-    incident-response.md
-    restore.md
-    rotate-secrets.md
+├─ observability/
+│  ├─ dashboards/
+│  ├─ alerts/
+│  ├─ logging/
+│  ├─ tracing/
+│  └─ README.md
+
+└─ runbooks/
+   ├─ incident-response.md
+   ├─ restore.md
+   ├─ rotate-secrets.md
+   ├─ policy-deny-debugging.md
+   └─ dr-gitops.md
 ```
 
 ---
 
-## Local development
+## Golden paths
 
-### Prerequisites
-
-- Container runtime: Docker or Podman
-- Compose runner: `docker compose` or `podman-compose`
-- Optional: `oc` (OpenShift), `kubectl`, `kustomize`, `helm` depending on your workflow
+### Local dev
 
 > [!IMPORTANT]
-> Local dev should mirror production boundaries: **no UI → DB direct connections**. Even locally, go through the API gateway.
+> Local dev must preserve production boundaries: **UI → API Gateway → Policy → Data**.  
+> No shortcuts (no UI→DB direct connects, even “just locally”).
 
-### Bring up the stack
+<details>
+<summary><strong>Local bring-up (Docker or Podman)</strong></summary>
 
-If this repo includes a compose file at `infra/local/docker-compose.yml` (not confirmed in repo):
+**Prereqs**
+- Docker *or* Podman
+- Compose runner (`docker compose` / `podman-compose`)
+- Optional: `kubectl`, `oc`, `kustomize`, `helm` (for cluster parity)
 
+**Start**
 ```bash
-docker compose -f infra/local/docker-compose.yml up -d --build
+# example (paths may vary)
+docker compose -f infra/local/compose/docker-compose.yml up -d --build
 ```
 
-Common follow-ups:
-
+**Check**
 ```bash
-docker compose -f infra/local/docker-compose.yml ps
-docker compose -f infra/local/docker-compose.yml logs -f
+docker compose -f infra/local/compose/docker-compose.yml ps
+docker compose -f infra/local/compose/docker-compose.yml logs -f --tail=200
 ```
 
-### Default ports
+**Stop**
+```bash
+docker compose -f infra/local/compose/docker-compose.yml down
+```
 
-These defaults are common in KFM’s reference setup. If your compose differs, update this table.
+**Reset (destructive)**
+```bash
+docker compose -f infra/local/compose/docker-compose.yml down -v
+```
 
-| Service | Default port(s) | Purpose |
+</details>
+
+<details>
+<summary><strong>Default ports (update to match your compose)</strong></summary>
+
+| Component | Default port(s) | Notes |
 |---|---:|---|
-| PostGIS (PostgreSQL) | 5432 | Geospatial storage, tiles, query-ready datasets |
-| Neo4j | 7474, 7687 | Knowledge graph |
-| API gateway | 8000 | Governed REST gateway (optionally GraphQL) |
-| Web UI | 3000 | React/TypeScript UI |
+| API Gateway (FastAPI) | 8000 | Governed REST (optional GraphQL) |
+| Web UI (React) | 3000 | Always calls API gateway |
+| PostGIS | 5432 | Not exposed publicly |
+| Neo4j | 7474 / 7687 | Not exposed publicly |
+| OPA PDP | 8181 | Policy decisions (deny by default) |
 
-If a port is already in use, stop the conflicting service or adjust the compose bindings.
-
-### API docs in local dev
-
-If the API is FastAPI-based (as in the KFM reference architecture), the docs are typically:
-
-- Swagger UI: `http://localhost:8000/docs`
-- OpenAPI JSON: `http://localhost:8000/openapi.json`
-
-If GraphQL is enabled, it is commonly exposed at:
-
-- `http://localhost:8000/graphql`
-
-> [!NOTE]
-> Endpoints are implementation-dependent. If they differ, update this doc and add a CI check that enforces the canonical endpoints.
-
-### Tear down and cleanup
-
-```bash
-docker compose -f infra/local/docker-compose.yml down
-```
-
-To drop volumes too:
-
-```bash
-docker compose -f infra/local/docker-compose.yml down -v
-```
-
-If you need a full local reset (use with care):
-
-```bash
-docker system prune -af
-```
+</details>
 
 ---
 
-## Cluster deployment
+### GitOps deploy
 
-KFM is designed to run on Kubernetes, with an OpenShift-friendly posture.
-
-### GitOps workflow
-
-**Principle**: the cluster converges to the desired state declared in Git. Runtime changes happen via pull requests, not `kubectl apply` from a laptop.
-
-Typical lifecycle:
-
-1. CI builds and tests application images
-2. Images are pushed to a registry
-3. GitOps repo is updated (tags/digests + config)
-4. GitOps controller syncs the cluster
+GitOps means: **Git declares desired state** and a controller converges the cluster.
 
 ```mermaid
 flowchart LR
-  Dev[Engineer PR] --> CI[CI tests + build]
-  CI --> Registry[Container registry]
-  CI --> GitOps[GitOps repo update]
-  GitOps --> Argo[GitOps controller]
-  Argo --> Cluster[K8s or OpenShift cluster]
-  Cluster --> Obs[Logs/metrics/traces + audit]
+  Dev[Pull Request] --> CI[CI: test + build + render]
+  CI --> Reg[(Image Registry)]
+  CI --> Git[GitOps manifests updated]
+  Git --> CD[Argo CD / GitOps controller]
+  CD --> Cluster[Kubernetes/OpenShift]
+  Cluster --> Obs[Logs/Metrics/Traces + Audit]
 ```
-
-### Environments
-
-Use overlays for environment-specific concerns:
-
-- `dev`: fast iteration, lower resource requests, test identities
-- `stage`: production-like configuration and policy, pre-prod data
-- `prod`: locked-down policy, restricted secrets, audited changes only
-
-> [!IMPORTANT]
-> Environment differences must **not** weaken governance invariants. Policy should remain fail-closed everywhere.
-
-### OpenShift notes
-
-OpenShift often uses:
-- Projects (namespaces) for isolation
-- Routes for ingress
-- Operator-managed components
-
-Keep OpenShift specifics isolated in `infra/openshift/` and prefer portable Kubernetes patterns in `infra/gitops/` unless there’s a strong reason.
-
----
-
-## Secrets management
-
-Rules:
-
-- **No plaintext secrets in Git**, including “temporary” ones.
-- Prefer **cluster-native secret stores** (or sealed/encrypted secret workflows).
-- CI should block secrets with scanning and pre-commit hooks where possible.
-
-Recommended patterns:
-
-- External Secrets operator (secrets referenced from a vault/provider)
-- Sealed Secrets (encrypted secrets stored in Git; decrypted in cluster)
-- GitOps-friendly secret templates where only non-sensitive values are in Git
-
-> [!WARNING]
-> Never “solve” secret rotation by committing new secrets. Rotation must happen in the secret source of truth, with Git holding references/metadata only.
-
----
-
-## Policy enforcement
-
-Policy-as-code is a first-class runtime dependency.
-
-### OPA policy model
-
-- Policy is evaluated on **every request** crossing the trust membrane
-- Default deny for unsafe/unknown cases
-- Policy decisions can shape/redact results, not just allow/deny
-
-Suggested directory:
-
-```text
-infra/policy/opa/
-  bundles/
-    kfm/           # rego + data files packaged for deployment
-  tests/
-    *.rego         # opa test suite
-```
-
-### Policy testing and CI
-
-At minimum, CI should:
-
-- run `opa test` for policy bundles
-- ensure “fail-closed” behavior for missing/invalid input
-- enforce that “cited answers” are required where applicable
-
----
-
-## Observability and audit
-
-KFM needs observability for reliability **and** governance.
-
-### Required signals
-
-- **Application logs**: structured JSON, request IDs, audit IDs
-- **Metrics**: latency, error rates, DB saturation, queue depth, tile generation
-- **Tracing**: cross-service tracing for “why did this answer happen”
-- **Audit ledger**: append-only, queryable by audit reference
-
-### OpenShift metrics
-
-If you rely on autoscaling or objective pod scaling, ensure a metrics stack exists (Prometheus or the OpenShift metrics stack). Treat it as foundational infrastructure, not an optional add-on.
-
----
-
-## CI gates for infra changes
-
-Any PR touching `infra/` should pass:
-
-- [ ] YAML/JSON lint, schema validation where applicable
-- [ ] Kustomize/Helm render checks for all overlays
-- [ ] Policy tests pass (OPA)
-- [ ] Secrets scanning passes
-- [ ] Governance checks: Story Nodes and governed docs remain valid if impacted
-- [ ] A minimal “smoke deploy” plan exists (dev overlay) or a dry-run render is captured
 
 > [!TIP]
-> Add a `Definition of Done` checklist to every infra PR description to keep reviews consistent.
+> If you “kubectl apply” changes directly to prod, you’re creating **configuration drift**.  
+> Drift is a governance bug.
 
 ---
 
-## Troubleshooting
+### Policy bundles
 
-| Symptom | Likely cause | Fix |
-|---|---|---|
-| `port already allocated` on 5432 | Local Postgres already running | Stop local Postgres or change compose port mapping |
-| Neo4j won’t start | Port conflict or volume permissions | Stop conflicting service; wipe local volume if safe |
-| API runs but UI shows no data | UI bypassing gateway or wrong API base URL | Ensure UI calls the API gateway; check env config |
-| GitOps sync drift | Manual kubectl changes | Revert manual changes; re-sync from Git; lock RBAC |
-| Policy denies unexpectedly | Missing inputs or wrong actor context | Inspect audit logs; run policy tests locally |
+OPA is a first-class dependency: it must be deployed, tested, and versioned.
+
+**Recommended contract**
+- API calls PDP with a structured input (actor, action, resource, sensitivity, purpose)
+- PDP returns allow/deny + optional obligations (redaction rules, max precision, etc.)
+- Missing inputs → **deny** (fail-closed)
+
+<details>
+<summary><strong>OPA policy testing (example)</strong></summary>
+
+```bash
+opa test infra/policy/opa/tests -v
+```
+
+</details>
 
 ---
 
-## References
+### Secrets
 
-These documents informed the conventions in this README:
+**Rules**
+- No secrets in Git history
+- No secrets in CI logs
+- Minimize token scopes + rotate regularly
+- Prefer managed secret sources (Vault/provider) or sealed/encrypted secrets
 
-- KFM Next-Gen Blueprint and Primary Guide (draft)
-- KFM Comprehensive Data Source Integration Blueprint
-- KFM Comprehensive Technical Blueprint
-- Docker, GitOps, and OpenShift training/reference notes
-- Data pipelines with OpenShift/Podman/Kubernetes reference notes
-- Software Security Guide for Developers (2026 Edition)
+> [!WARNING]
+> “Temporary secrets” are still secrets. Never commit them.
 
-Update this list as governed artifacts evolve.
+---
 
+### Observability
+
+KFM infra should emit four signals:
+
+1) **Logs** (structured JSON, request IDs, audit IDs)  
+2) **Metrics** (latency, error rates, saturation, queue depth)  
+3) **Traces** (cross-service correlation: UI → gateway → policy → storage)  
+4) **Audit ledger hooks** (append-only references for governed outputs)
+
+> [!NOTE]
+> Observability is part of governance: “why did the system answer this way” must be inspectable.
+
+---
+
+## CI gates
+
+Infra changes must be **renderable, valid, policy-tested, and secure**.
+
+Minimum gates for any PR touching `infra/`:
+
+- YAML/JSON linting
+- Kustomize/Helm render for all overlays (`dev`, `stage`, `prod`)
+- OPA tests pass (unit + regression)
+- Secret scanning (push protection where possible)
+- Supply chain checks (SBOM / signing) if enabled
+- “Trust membrane checks” (no DB service publicly exposed)
+
+---
+
+## Runbooks
+
+Runbooks should be written as if the on-call is tired and under pressure.
+
+At minimum:
+- incident-response
+- restore / backup verification
+- secret rotation
+- policy deny debugging
+- GitOps drift + recovery
+
+---
+
+## Infra PR checklist
+
+Copy/paste into PR descriptions:
+
+- [ ] I did **not** introduce UI → DB direct access.
+- [ ] Policy remains **fail-closed** (default deny).
+- [ ] Rendered manifests are attached or CI-rendered for all overlays.
+- [ ] OPA policy tests pass (unit + regression).
+- [ ] Secret scanning is clean (no secrets added).
+- [ ] Network exposure reviewed (ingress/routes/services).
+- [ ] Observability updated (dashboards/alerts) if behavior changed.
+- [ ] Runbook updated if operational procedure changed.
+- [ ] Any governed invariant changes were routed to governance review.
+
+---
+
+<div align="center">
+
+**If it can’t be audited, it can’t be trusted.**  
+**If it can’t be reproduced, it can’t be operated.**
+
+</div>
