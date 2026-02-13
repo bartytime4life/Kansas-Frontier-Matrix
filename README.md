@@ -576,49 +576,171 @@ Maintain a policy-controlled kill switch that can disable public endpoints and F
 
 ```text
 .
+.
 ├── .github/
-│   ├── workflows/
+│   ├── workflows/                         # CI gates: docs, policy, data catalogs, contracts, build
+│   │   ├── ci.yml
+│   │   ├── docs.yml
+│   │   ├── policy.yml
+│   │   ├── data-gates.yml
+│   │   └── contract-tests.yml
 │   ├── ISSUE_TEMPLATE/
-│   └── PULL_REQUEST_TEMPLATE.md
-├── docs/
-│   ├── adr/
-│   ├── architecture/
-│   ├── contracts/
-│   ├── governance/
-│   ├── runbooks/
-│   └── story-nodes/
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── CODEOWNERS                         # Governance ownership: policy/, data/catalog/, docs/story-nodes/
+│
+├── docs/                                  # Governed documentation (lintable + link-check clean)
+│   ├── README.md                          # “Docs hub” landing page
+│   ├── adr/                               # Architecture Decision Records (auditable decisions)
+│   ├── architecture/                      # C4 diagrams, clean layers, trust membrane writeups
+│   ├── governance/                        # FAIR/CARE, sensitivity classes, review paths, redaction rules
+│   ├── contracts/                         # OpenAPI / GraphQL / JSON schema refs (human + machine)
+│   │   ├── openapi/
+│   │   ├── graphql/
+│   │   └── examples/
+│   ├── runbooks/                          # Ops SOPs, incident response, backup/restore
+│   ├── reports/                           # Generated/curated reports (validation summaries, audits)
+│   │   └── story_nodes/
+│   └── story_nodes/                       # Story Node v3 content lifecycle
 │       ├── templates/
 │       ├── drafts/
 │       └── published/
-├── policy/
-│   ├── rego/
-│   ├── tests/
-│   └── schemas/
-├── data/
-│   ├── raw/
-│   ├── work/
-│   ├── processed/
-│   └── catalog/
-│       ├── dcat/
-│       ├── stac/
-│       └── prov/
-├── pipelines/
-│   ├── connectors/
-│   ├── transforms/
-│   ├── validators/
-│   └── orchestration/
-├── src/
-│   ├── api/
-│   ├── services/
-│   └── tests/
-├── web/
+│
+├── schemas/                               # Canonical JSON Schemas (CI validates governed artifacts)
+│   ├── audit/                             # e.g., audit_record.json (append-only ledger event schema)
+│   ├── story_nodes/                       # story_front_matter_v3.json, story_step schema, etc.
+│   ├── policy/                            # OPA input/output schemas (what PDP expects)
+│   ├── catalogs/
+│   │   ├── dcat/
+│   │   ├── stac/
+│   │   └── prov/
+│   └── api/                               # API DTO schemas (if you validate responses)
+│
+├── policy/                                # OPA/Rego policies are governed artifacts
+│   ├── rego/                              # policy modules (default deny)
+│   ├── tests/                             # opa test suites + regression cases (“never again” leaks)
+│   ├── bundles/                           # versioned bundles (optional but recommended for promotion)
+│   ├── data/                              # policy data: roles, sensitivity classes, dataset labels
+│   └── README.md                          # policy philosophy + how to run locally
+│
+├── data/                                  # Governed data zones + catalogs (promotion gates live here)
+│   ├── README.md                          # data governance + promotion rules + storage guidance
+│   ├── registry/                          # “source of truth” registries
+│   │   ├── sources.yml                    # upstream endpoints, cadence, auth expectations
+│   │   ├── datasets.yml                   # dataset_id, sensitivity, license, steward, status
+│   │   └── crosswalks/                    # canonical mappings (ids, place/time normalization)
+│   │
+│   ├── raw/                               # immutable source drops (inputs only) + checksums
+│   │   └── <dataset_id>/
+│   │       ├── manifest.yml
+│   │       ├── checksums.sha256
+│   │       └── blobs/                     # (small in git; large objects referenced externally)
+│   │
+│   ├── work/                              # intermediate artifacts + QA outputs (not served)
+│   │   └── <dataset_id>/
+│   │       ├── runs/<run_id>/             # run_record.json, logs, metrics snapshots
+│   │       ├── validation/                # validation_report.json + generated QA
+│   │       └── scratch/                   # temp outputs (ignored by default)
+│   │
+│   ├── processed/                         # publishable/queryable “truth” (served by APIs)
+│   │   └── <dataset_id>/
+│   │       ├── <version_id>/              # versioned by content hash or semver+hash
+│   │       └── latest -> <version_id>/    # optional pointer (avoid magic; document rules)
+│   │
+│   ├── catalog/                           # machine-readable discovery (validated in CI)
+│   │   ├── dcat/
+│   │   └── stac/
+│   │       ├── collections/
+│   │       └── items/
+│   │
+│   ├── prov/                              # provenance bundles (lineage for runs + transforms)
+│   │   └── <dataset_id>/
+│   │       └── <version_id>/
+│   │
+│   ├── audit/                             # append-only audit exports/checkpoints (hash-chained)
+│   │   ├── ledger/
+│   │   └── checkpoints/
+│   │
+│   └── fixtures/                          # tiny deterministic slices for CI integration tests
+│       └── <dataset_id>/
+│
+├── src/                                   # Backend + pipeline + graph build (clean architecture)
+│   ├── server/                            # API gateway app (REST + optional GraphQL)
+│   │   ├── app/                           # HTTP handlers/controllers (thin)
+│   │   ├── middleware/                    # auth, policy enforcement hook, request logging
+│   │   ├── modules/                       # bounded contexts (catalog, evidence, layers, stories, ai)
+│   │   ├── contracts/                     # DTOs + serializers + schema links (keep in sync w/ docs/contracts)
+│   │   └── tests/
+│   │
+│   ├── services/                          # Clean-layer service implementations (recommended pattern)
+│   │   ├── focus_mode/
+│   │   │   ├── domain/
+│   │   │   ├── usecases/
+│   │   │   ├── integration/               # ports + interfaces + DTOs
+│   │   │   ├── infrastructure/            # adapters: search/graph/db/opa/audit
+│   │   │   └── tests/
+│   │   ├── evidence/
+│   │   ├── catalogs/
+│   │   └── stories/
+│   │
+│   ├── pipelines/                         # ingest/normalize/validate/promote jobs
+│   │   ├── connectors/
+│   │   ├── transforms/
+│   │   ├── validators/
+│   │   ├── orchestration/
+│   │   └── tests/
+│   │
+│   ├── graph/                             # KG build tooling (imports/exports/migrations)
+│   │   ├── loaders/
+│   │   ├── mappings/
+│   │   └── tests/
+│   │
+│   └── shared/                            # shared domain primitives, ids, hashing, time/geo utils
+│
+├── web/                                   # Frontend (React/TS + MapLibre)
 │   ├── app/
-│   └── tests/
-├── infra/
+│   ├── components/
+│   ├── routes/
+│   ├── styles/
+│   ├── tests/
+│   └── README.md
+│
+├── tests/                                 # Cross-cutting tests (stack-level)
+│   ├── contract/                          # API contract tests (OpenAPI/GraphQL conformance)
+│   ├── integration/                       # bring up compose, run golden queries, verify redaction
+│   └── e2e/                               # UI smoke tests (map load, layer toggle, evidence drawer)
+│
+├── tools/                                 # Developer tooling + CI helpers
+│   ├── lint/
+│   ├── validate/                          # stac/dcat/prov validators, story validator wrappers
+│   ├── scripts/
+│   └── dev/                               # local bootstrap helpers
+│
+├── mcp/                                   # Methods & Computational Experiments (governed research area)
+│   ├── notebooks/
+│   ├── experiments/
+│   ├── evals/                             # Focus Mode eval harness + regression prompts
+│   └── README.md
+│
+├── releases/                              # Release packaging + SBOM + attestations
+│   ├── sbom/
+│   ├── attestations/
+│   ├── changelogs/
+│   └── artifacts/
+│
+├── infra/                                 # (Optional) deployment artifacts (compose/k8s/gitops)
 │   ├── docker/
 │   ├── k8s/
-│   └── openshift/
-└── scripts/
+│   ├── openshift/
+│   └── terraform/
+│
+├── docker-compose.yml
+├── .env.example
+├── Makefile
+├── README.md                              # Main governed README (trust boundary invariants)
+├── LICENSE
+├── SECURITY.md
+├── CONTRIBUTING.md
+└── CHANGELOG.md
 ```
 
 ---
