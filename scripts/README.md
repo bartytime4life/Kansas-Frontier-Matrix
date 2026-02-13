@@ -74,14 +74,14 @@ Raw → Work → Processed → STAC/DCAT/PROV → Stores → API → UI → Stor
 
 ```mermaid
 flowchart LR
-  Raw[Raw data] --> Work[Work / QA artifacts]
-  Work --> Processed[Processed (publishable)]
-  Processed --> Catalogs[STAC/DCAT/PROV + checksums]
-  Catalogs --> Stores[Stores (PostGIS/Search/Graph/Object)]
-  Stores --> API[Governed API + Policy]
-  API --> UI[Web UI]
-  UI --> Stories[Story Nodes]
-  Stories --> Focus[Focus Mode (cited)]
+  Raw["Raw data"] --> Work["Work / QA artifacts"]
+  Work --> Processed["Processed (publishable)"]
+  Processed --> Catalogs["STAC/DCAT/PROV + checksums"]
+  Catalogs --> Stores["Stores (PostGIS / Search / Graph / Object)"]
+  Stores --> API["Governed API + Policy"]
+  API --> UI["Web UI"]
+  UI --> Stories["Story Nodes"]
+  Stories --> Focus["Focus Mode (cited)"]
 ```
 
 Scripts primarily cover:
