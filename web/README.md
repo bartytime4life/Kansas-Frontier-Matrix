@@ -1,76 +1,157 @@
-# KFM Web App
+# Kansas Frontier Matrix — Web UI (KFM-Web)
 
-This directory (`web/`) contains the **Kansas Frontier Matrix (KFM)** web frontend: an evidence-first, policy-governed mapping and narrative interface.
+![Governed](https://img.shields.io/badge/governed-evidence--first-2ea44f)
+![Trust Membrane](https://img.shields.io/badge/trust--membrane-enforced-0b5394)
+![Policy](https://img.shields.io/badge/policy-OPA%2FRego-6a1b9a)
+![Map](https://img.shields.io/badge/map-MapLibre-111827)
+![Frontend](https://img.shields.io/badge/frontend-React%20%2B%20TypeScript-0ea5e9)
 
-The web UI is designed to:
-- Explore map layers with provenance
-- Synchronize map + time state with Story Nodes
-- Provide Focus Mode Q&A that **must cite evidence or abstain**
-- Offer a “review evidence” experience for both map layers and Focus Mode outputs
+KFM-Web is the **React/TypeScript + MapLibre** interface for exploring **governed geospatial/historical knowledge**:
+- **Map + time** exploration (layers, inspection, filtering)
+- **Story Nodes** (narratives synchronized to map/time state)
+- **Focus Mode** (Q&A that must **cite or abstain**)
+- **Evidence & audit** UX (inspect provenance, licensing, and policy decisions)
 
 > [!IMPORTANT]
-> This UI is inside KFM’s **trust membrane**:
-> - It **must never** access databases or the graph directly.
-> - All reads go through the governed API boundary (`src/server/`) so policy/redaction/schema guarantees are enforced consistently.
+> KFM-Web is **not** “just a map UI.” It is an **evidence-first product surface**: every dataset, claim, and AI answer must be inspectable via citations/provenance, and access is enforced at the **API + policy boundary**.
 
 ---
 
-## What lives here
+## Table of contents
 
-### Core capabilities
-- **MapCanvas**: MapLibre map rendering, layer display, feature inspection
-- **LayerPanel**: Toggle/filter layers; show dataset metadata, license, and attribution
-- **Timeline**: Time range controls; optional playback/scrub
-- **StoryViewer**: Render story steps; actions update map/time ViewState; show citations inline
-- **FocusPanel**: Ask questions; display cited answers; deep-link to evidence
-- **AuditDrawer**: View provenance chains and audit events
+- [What lives in `web/`](#what-lives-in-web)
+- [Product mental model](#product-mental-model)
+- [Non-negotiables](#non-negotiables)
+- [Architecture at a glance](#architecture-at-a-glance)
+- [Core UI components](#core-ui-components)
+- [State contract: `ViewState`](#state-contract-viewstate)
+- [Evidence UX: citations, provenance, audit](#evidence-ux-citations-provenance-audit)
+- [Local development quickstart](#local-development-quickstart)
+- [Testing & quality gates](#testing--quality-gates)
+- [Troubleshooting](#troubleshooting)
+- [Where to look next](#where-to-look-next)
+
+---
+
+## What lives in `web/`
+
+This directory contains the **client application**.
+
+KFM’s canonical repository layout separates concerns to preserve governance boundaries:
+
+- `web/` — **React UI** (build/test/a11y + “no direct DB” checks)
+- `src/` — backend (clean layers: domain/usecases/adapters/infrastructure)
+- `policy/` — OPA policies (default deny, cite-or-abstain)
+- `data/` — raw/work/processed zones + catalogs (STAC/DCAT/PROV)
+- `docs/` — governed documentation + Story Nodes
+- `.github/` — CI workflows enforcing gates
 
 > [!NOTE]
-> The KFM UI component responsibilities above are treated as a *design contract* because they map directly to evidence-first behavior and governance expectations.
+> If you’re new: start here (Web), then follow the “truth path” into catalogs, policy, and the API.
 
 ---
 
-## Non-negotiable contracts
+## Product mental model
 
-### Pipeline ordering is absolute
-KFM’s system order is inviolable:
+KFM-Web is built around a simple “loop”:
 
-**ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
+1. **Pick a layer** → understand what it is (metadata + license)
+2. **Inspect features** → see provenance where available
+3. **Adjust time range** → changes both map rendering and story context
+4. **Open a story** → step-by-step narrative updates the map/time state
+5. **Ask Focus Mode** → get a cited answer + audit reference
+6. **Open evidence** → resolve citations to a human-readable evidence view
 
-The UI must only consume artifacts that passed the upstream stages’ outputs and validations.
-
-### Trust membrane and API boundary
-- UI **does not** query Neo4j directly.
-- UI **does not** query PostGIS directly.
-- UI **does not** “read files from data/” as an implicit API.
-- UI **does** call the governed API, which is responsible for:
-  - access control
-  - redaction and sensitivity handling
-  - schema stability and versioning
-  - audit logging
-
-### Fail closed
-If policy denies a request, the UI must:
-- render a “Not authorized / Restricted / Redacted” state
-- avoid leaking information via error messages, debug views, or cached payloads
-
-### Evidence-first behavior
-- **Story Nodes**: no unsourced narrative claims
-- **Focus Mode**: must **cite or abstain**
-- Evidence references must be reviewable by the user (via resolver endpoints and evidence panels)
+**If a claim can’t be backed by evidence, the system abstains.**
 
 ---
 
-## ViewState contract
+## Non-negotiables
 
-The web UI maintains a canonical `ViewState` that synchronizes:
-- map bbox
-- active layers
-- temporal context
-- story context
-- user role context for policy behavior
+> [!WARNING]
+> These are architectural invariants. Breaking them creates governance risk and future refactors.
 
-Recommended contract:
+### ✅ Trust membrane (must hold)
+- The **frontend never talks to databases directly**.
+- Every request that returns data, stories, or AI output is enforced through:
+  - **API Gateway** (service boundary)
+  - **Policy evaluation** (OPA/Rego)
+  - **Audit/provenance** captured on the request path
+
+### ✅ Evidence-first UX (must ship)
+- Every layer exposes **provenance + licensing metadata**
+- Story Nodes require citations for factual claims
+- Focus Mode answers must include **citations + audit reference**
+- Evidence must be resolvable in the UI (see [Evidence UX](#evidence-ux-citations-provenance-audit))
+
+### ✅ Processed zone only (publishable truth)
+- `processed/` is the only publishable source of truth
+- `raw/` and `work/` are never served directly to end users
+
+---
+
+## Architecture at a glance
+
+```mermaid
+flowchart LR
+  UI[Web UI<br/>React/TS + MapLibre] -->|API calls| GW[API Gateway<br/>FastAPI REST<br/>(optional GraphQL)]
+  GW -->|authorize| OPA[Policy PDP<br/>OPA/Rego]
+  GW -->|read| STORES[(Stores)]
+  STORES --> PG[(PostGIS<br/>geo + tiles)]
+  STORES --> N4J[(Neo4j<br/>knowledge graph)]
+  STORES --> OS[(Search/Vector<br/>OpenSearch or PG)]
+  STORES --> OBJ[(Object Store<br/>COGs + media)]
+  GW -->|append| AUD[(Audit Ledger<br/>append-only)]
+  GW --> UI
+```
+
+### Key runtime sequence (conceptual)
+
+```mermaid
+sequenceDiagram
+  participant UI as Web UI
+  participant API as API Gateway
+  participant OPA as OPA Policy
+  participant DB as Stores
+  participant FM as Focus Mode (RAG)
+  participant AUD as Audit Ledger
+
+  UI->>API: Request (layer/story/ai) + ViewState
+  API->>OPA: Authorize request
+  OPA-->>API: allow/deny (+ obligations)
+  API->>DB: Retrieve governed data (processed)
+  alt Focus Mode request
+    API->>FM: Retrieve + draft answer
+    API->>OPA: Validate output (cite-or-abstain)
+    OPA-->>API: allow/deny
+  end
+  API->>AUD: Append audit event
+  API-->>UI: Response + citations + audit_ref
+```
+
+---
+
+## Core UI components
+
+These are the canonical UI building blocks and their evidence responsibilities:
+
+| Component | Responsibility | Evidence behavior |
+|---|---|---|
+| `MapCanvas` | Render map + layers + inspect | Shows provenance for hovered features (where available) |
+| `LayerPanel` | Toggle/filter layers | Links each layer to dataset metadata + license |
+| `Timeline` | Control time range / playback | Records time range into `ViewState` passed to Focus Mode |
+| `StoryViewer` | Render story steps | Displays citations inline; step actions update `ViewState` |
+| `FocusPanel` | Chat Q&A | Renders footnotes; links to evidence-resolver views |
+| `AuditDrawer` | Audit/provenance viewer | Fetches PROV chains + audit ledger entries |
+
+> [!TIP]
+> If you’re adding a new UI feature, decide **which component owns it** and **which evidence obligation it introduces**.
+
+---
+
+## State contract: `ViewState`
+
+The UI and the rest of the system synchronize via a small, explicit state object.
 
 ```ts
 export type ViewState = {
@@ -83,168 +164,161 @@ export type ViewState = {
 };
 ```
 
-> [!TIP]
-> Treat `ViewState` as the *only* state object that crosses boundaries:
-> - UI components can derive internal state, but outgoing requests should be driven by `ViewState`
-> - `ViewState` should be serializable (URL state or export bundles) when possible
+### Why this matters
+- Stories become reproducible: “this claim is about **this view** at **this time**”
+- Focus Mode becomes grounded: the AI sees the user’s current map/time context
+- Audit becomes meaningful: we can replay context during review
 
 ---
 
-## Focus Mode contract expectations
+## Evidence UX: citations, provenance, audit
 
-At minimum, the UI should be able to call a Focus endpoint and render the response:
+### Evidence resolver (acceptance criterion)
+The UI must be able to resolve a `citation.ref` to a **human-readable evidence view** in **≤ 2 API calls**.
 
-- **Request** includes:
-  - `question`
-  - `context` derived from `ViewState` (time range, bbox, active layers, story node id)
-- **Response** includes:
-  - `answer_markdown`
-  - `citations[]`
-  - `audit_ref`
+**Practical implication:** design the UI so citations are *clickable* and resolve quickly, with:
+- source document / dataset
+- page range or geometry/time bounds
+- provenance chain (PROV)
+- license/attribution text
+
+### “Cite or abstain” in the UI
+- If the API returns an abstention, the UI should:
+  - show the abstention clearly (no hallucinated phrasing)
+  - provide a “what evidence is missing?” hint (if present in payload)
+  - allow users to open audit context to understand why
+
+### Sensitivity handling (UI behavior)
+If sensitive locations or culturally restricted knowledge exist:
+- show generalized derivatives for public audiences
+- keep precise data behind policy-controlled access
+- present content warnings where appropriate
 
 > [!IMPORTANT]
-> Rendering `answer_markdown` must be done safely:
-> - Do not render unsanitized HTML.
-> - Prefer a Markdown renderer configured to a safe subset.
-> - Treat all server-provided strings as untrusted input.
+> **Never “work around” missing access** by caching restricted responses in the client.
 
 ---
 
-## Evidence resolution UX
+## Local development quickstart
 
-Evidence references may use resolver schemes like:
-- `prov://...`
-- `stac://...`
-- `dcat://...`
-- `doc://...`
-- `graph://...`
+KFM’s default local dev workflow is **Docker Compose**.
 
-UI requirements:
-- Provide a **review evidence** view for:
-  - map layer provenance (datasets, transformations, publication time)
-  - Focus Mode citations (open cited sources/objects)
-- Keep evidence resolution efficient:
-  - target: resolve `citation.ref` to a human-readable evidence view in **≤ 2 API calls**
+### Start the stack
 
----
-
-## Data flow
-
-```mermaid
-flowchart LR
-  UI[Web UI] -->|ViewState + requests| API[Governed API Boundary]
-  API -->|policy check| OPA[Policy Engine]
-  API -->|catalog + graph + search| KB[Knowledge + Catalogs]
-  API -->|FocusAnswer + citations + audit_ref| UI
-  UI -->|review evidence| API
-  API -->|resolve prov/stac/dcat/doc/graph refs| KB
+```bash
+cp .env.example .env
+docker compose up --build
 ```
 
----
+### Default dev URLs
+- Web UI: `http://localhost:3000`
+- API docs (Swagger): `http://localhost:8000/docs`
 
-## Local development
+### Baseline services (conceptual)
+Your compose baseline should include:
+
+- `web`
+- `api`
+- `postgis`
+- `neo4j`
+- `opensearch`
+- `opa`
 
 > [!NOTE]
-> Script names and ports are intentionally described generically here because they depend on the `web/package.json` and the repo’s `docker-compose.yml`.
-
-### Prerequisites
-- Node.js (LTS recommended)
-- A package manager: npm, pnpm, or yarn
-- Optional: Docker + Docker Compose for full-stack development
-
-### Install
-```bash
-cd web
-npm install
-```
-
-### Run the web dev server
-Common patterns include:
-```bash
-npm run dev
-# or
-npm start
-```
-
-To discover available scripts:
-```bash
-npm run
-```
-
-### Run the full stack
-From the repo root, many KFM setups use Docker Compose:
-```bash
-docker compose up
-```
-
-Then point the web app to the local API base URL via environment configuration.
+> If you’re running UI-only (host-native), inspect `web/package.json` for available scripts and use the same API base URL configured in `.env`.
 
 ---
 
-## Configuration
+## Testing & quality gates
 
-### Environment variables
-This UI should be configurable without code changes. Typical config values include:
-- API base URL
-- tile/style endpoints
-- feature flags (reviewer mode UI, debug overlays)
-- build metadata (commit SHA, build timestamp)
+KFM treats docs/data/policy/UI as **governed artifacts**. The web app must be testable and CI-friendly.
 
-> [!TIP]
-> If using Vite, environment variables typically use a `VITE_` prefix.
-> If using other tooling, follow its conventions. Prefer `.env.example` + `.env.local` workflows.
+### Minimum expectations for `web/`
+- ✅ Unit tests for state and reducers (where applicable)
+- ✅ Integration tests for:
+  - layer toggling
+  - timeline changes
+  - story step → ViewState updates
+  - focus answer rendering (citations & audit_ref)
+- ✅ Accessibility checks for critical flows (keyboard navigation, readable citations)
+- ✅ “No direct DB access” guardrail:
+  - UI only talks to the API gateway (never directly to PostGIS/Neo4j/OpenSearch)
 
-### Roles and policy-aware UX
-The UI may show different evidence detail depending on policy decisions and user role. The UI must not infer permissions client-side; it must rely on API responses.
-
----
-
-## Testing and quality gates
-
-Recommended layers of tests:
-- **Unit tests**: pure functions, reducers/selectors
-- **Component tests**: key flows (layer toggling, time range changes, evidence panel open)
-- **End-to-end tests**: run against a deployed build and governed API
-
-Recommended non-functional checks:
-- Accessibility checks for map controls, dialogs, and focus management
-- No-leak checks: verify restricted data stays hidden at all zoom levels and in exports
-- Contract checks: UI behavior consistent with API response schemas
+### Definition of Done (UI feature)
+- [ ] Uses `ViewState` where relevant
+- [ ] Includes evidence affordances (metadata/license/provenance as appropriate)
+- [ ] Handles abstentions safely (no client-side “fill in the blanks”)
+- [ ] Adds/updates tests
+- [ ] Does not introduce new network paths that bypass API + policy boundary
 
 ---
 
-## Security and privacy notes
+## Troubleshooting
 
-- Never commit secrets into `web/`.
-- Avoid storing tokens in persistent browser storage unless explicitly required and reviewed.
-- Treat any content (including Markdown) from the API as untrusted input.
-- Do not add “backdoor” data access paths (direct DB calls, direct graph calls, hidden data bundles).
+### Ports already in use
+If you already have services bound to common ports (e.g., 5432/7474/8000/3000), update compose port mappings or stop the conflicting service.
 
----
+### Web container not reflecting code changes
+If hot reload isn’t working:
+- confirm `web/src` is mounted correctly in compose
+- rebuild after dependency changes: `docker compose up --build`
 
-## Contribution checklist
-
-Before opening a PR that changes the web app:
-
-- [ ] Does the change preserve the trust membrane and API-only access rule?
-- [ ] Does it preserve evidence-first UX (citations reviewable; no uncited narrative surfaces)?
-- [ ] If it adds or changes any API calls, was the API contract updated in `src/server/` and validated?
-- [ ] If it changes layer rendering or provenance views, does it still show license/attribution correctly?
-- [ ] If it affects sensitive data handling, was a governance review triggered where required?
-- [ ] Do tests pass (and were any new behaviors covered by tests)?
+### Performance: map rendering
+Map rendering performance is heavily style/data dependent. If you see slowdowns:
+- verify layer filters and feature counts at the current zoom
+- profile React renders and MapLibre source/layer configuration
+- consider tile strategy for heavy layers (vector tiles, PMTiles, etc.)
 
 ---
 
-## Reference documents used for this module
+## Where to look next
 
-These documents define (or strongly constrain) the web UI’s intended behavior and governance requirements:
+### System blueprints (governance + architecture)
+- **Next-Gen Blueprint & Primary Guide** (architecture, UI blueprint, trust membrane, local dev, CI)
+- **Comprehensive Data Source Integration Blueprint** (dataset promotion gates, catalogs, invariants)
 
-- KFM Next-Gen Blueprint and Primary Guide v1.2 (Web UI Blueprint, ViewState contract, evidence UX requirements)
-- KFM Master Guide v13 (repo structure, invariants, API boundary rule, pipeline ordering)
-- KFM Comprehensive Data Source Integration Blueprint v1.0 (trust membrane, fail-closed policy, cite-or-abstain requirements)
-
-> [!NOTE]
-> If these documents are stored in-repo, prefer referencing them by stable path and version tag
-> in future README edits to keep CI link-check clean.
+### Key repo areas (typical)
+- `policy/` → OPA/Rego rules for access + cite-or-abstain
+- `docs/` → Story Nodes and governed documentation
+- `data/processed/` → publishable artifacts + STAC/DCAT/PROV catalogs
+- `src/` → API gateway + clean architecture backend
 
 ---
+
+<details>
+<summary><strong>Appendix: MapLibre integration notes</strong></summary>
+
+KFM-Web uses MapLibre for rendering.
+
+Common approaches in the React ecosystem include:
+- MapLibre-focused wrapper: `@vis.gl/react-maplibre`
+- Dual Mapbox/MapLibre wrapper: `react-map-gl` (MapLibre endpoint supported)
+
+When designing layers, keep an eye on:
+- style JSON complexity
+- feature counts by zoom
+- tile format and hosting strategy (vector tiles, PMTiles/MBTiles where applicable)
+
+</details>
+
+---
+
+## Contributing (web)
+
+If you’re adding UI capabilities:
+
+1. Start with the **evidence obligation**:
+   - What must the user be able to inspect?
+   - Where does provenance/licensing appear?
+   - How do citations resolve?
+2. Preserve the **trust membrane**:
+   - Only call the API gateway
+   - Never add direct DB endpoints
+3. Add tests and keep changes reviewable:
+   - small PRs
+   - clear acceptance criteria
+   - update docs if UI behavior changes
+
+---
+
+**KFM principle:** if it can’t be cited, it can’t be shipped.
