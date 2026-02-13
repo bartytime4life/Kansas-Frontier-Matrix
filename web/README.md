@@ -1,410 +1,250 @@
-<!--
-GOVERNED ARTIFACT NOTICE
-This README is part of the KFM trust boundary: it encodes non-negotiable UI invariants.
-If you change meaning (not just phrasing), route through the governance review path.
--->
+# KFM Web App
 
-# KFM Web UI (`web/`)
+This directory (`web/`) contains the **Kansas Frontier Matrix (KFM)** web frontend: an evidence-first, policy-governed mapping and narrative interface.
 
-The **KFM Web UI** is the browser client for KFM’s governed geospatial + historical system:
-**maps + time + Story Nodes + evidence review + Focus Mode (citation-backed Q&A)**.
+The web UI is designed to:
+- Explore map layers with provenance
+- Synchronize map + time state with Story Nodes
+- Provide Focus Mode Q&A that **must cite evidence or abstain**
+- Offer a “review evidence” experience for both map layers and Focus Mode outputs
 
 > [!IMPORTANT]
-> **Trust membrane (frontend):** the UI never talks to databases, object storage, or internal services directly.
-> All access goes through the **governed API gateway**, which enforces **policy** (fail-closed) and writes **audit/provenance** records.
+> This UI is inside KFM’s **trust membrane**:
+> - It **must never** access databases or the graph directly.
+> - All reads go through the governed API boundary (`src/server/`) so policy/redaction/schema guarantees are enforced consistently.
 
 ---
 
-## Table of contents
+## What lives here
 
-- [What the UI is responsible for](#what-the-ui-is-responsible-for)
-- [Non-negotiables](#non-negotiables)
-- [System architecture](#system-architecture)
-- [Directory layout (foundation rebuilt)](#directory-layout-foundation-rebuilt)
-- [Import boundaries](#import-boundaries)
-- [Evidence + citations (UI contract)](#evidence--citations-ui-contract)
-- [ViewState (shared context)](#viewstate-shared-context)
-- [Environment configuration](#environment-configuration)
-- [Development](#development)
-- [Testing](#testing)
-- [Security checklist](#security-checklist)
-- [How to add a new feature](#how-to-add-a-new-feature)
-- [Related docs](#related-docs)
-
----
-
-## What the UI is responsible for
-
-- **Map exploration:** render layers, inspect features, filter by time/context
-- **Story Nodes:** read narrative steps with citations and interactive map actions
-- **Focus Mode:** ask questions and receive **citations or abstain**
-- **Evidence + audit:** open provenance chains, see *why allowed/denied*, review sources
-
----
-
-## Non-negotiables
-
-### 1) Trust membrane (fail-closed)
-
-- ✅ UI calls **API gateway only** (REST and/or GraphQL behind the same policy boundary)
-- ✅ **Policy fails closed:** if policy/evidence checks are uncertain, the UI shows denial/abstain
-- 🚫 No direct PostGIS/Neo4j/S3/OpenSearch calls from the browser (ever)
-- 🚫 No “temporary bypass” endpoints without policy + audit
-
-### 2) Evidence-first UX (cite or abstain)
-
-- Focus Mode responses must include:
-  - `answer_markdown`
-  - `citations[]` (structured, resolvable)
-  - `audit_ref` (opens audit/provenance view)
-- If citations are empty, the UI renders an explicit **abstention** state with next-step guidance.
-
-### 3) Sensitive data handling
-
-- Some datasets require **redaction/generalization** (e.g., protected sites).
-- Redaction is enforced server-side; UI must **not** attempt to reconstruct restricted fields.
-- Avoid persisting sensitive content in local storage/logs by default.
-
-### 4) Safe rendering
-
-- Treat Story Node markdown and Focus Mode `answer_markdown` as **untrusted**.
-- Sanitize output and restrict allowed elements to prevent XSS.
-
----
-
-## System architecture
-
-```mermaid
-flowchart LR
-  subgraph Client["Browser"]
-    UI["KFM Web UI\n(React/TS + map renderer)"]
-  end
-
-  subgraph Boundary["Trust membrane (governed boundary)"]
-    API["API Gateway\n(REST + optional GraphQL)"]
-    PDP["Policy PDP\n(OPA/Rego)"]
-    AUD["Audit + provenance\n(PROV / ledger)"]
-  end
-
-  subgraph Stores["Stores (not directly reachable by UI)"]
-    PG["PostGIS\n(geo + tiles)"]
-    KG["Graph store\n(Neo4j)"]
-    SRCH["Search/Vector"]
-    OBJ["Object store\n(COGs/media)"]
-  end
-
-  UI -->|HTTPS| API
-  API --> PDP
-  API --> AUD
-  API --> PG
-  API --> KG
-  API --> SRCH
-  API --> OBJ
-```
+### Core capabilities
+- **MapCanvas**: MapLibre map rendering, layer display, feature inspection
+- **LayerPanel**: Toggle/filter layers; show dataset metadata, license, and attribution
+- **Timeline**: Time range controls; optional playback/scrub
+- **StoryViewer**: Render story steps; actions update map/time ViewState; show citations inline
+- **FocusPanel**: Ask questions; display cited answers; deep-link to evidence
+- **AuditDrawer**: View provenance chains and audit events
 
 > [!NOTE]
-> Concrete tech choices (Vite/Next.js, MapLibre/Cesium, query libs, etc.) are **not confirmed in repo**
-> unless reflected by actual files like `web/package.json` and `web/src/*`.
+> The KFM UI component responsibilities above are treated as a *design contract* because they map directly to evidence-first behavior and governance expectations.
 
 ---
 
-## Directory layout (foundation rebuilt)
+## Non-negotiable contracts
 
-This layout is designed so the UI can grow without collapsing into:
-- a `components/` dumping ground,
-- random `fetch(...)` calls everywhere,
-- duplicated evidence/citation rendering,
-- blurred boundaries between “app wiring” and “feature behavior.”
+### Pipeline ordering is absolute
+KFM’s system order is inviolable:
 
-### Design principles (the foundation)
+**ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
 
-1. **Feature-first slicing**: map/story/focus/audit/evidence evolve independently.
-2. **Single API boundary**: networking is centralized and typed.
-3. **Evidence is first-class**: citations resolve to human-readable evidence views consistently.
-4. **Generated code is quarantined**: API types/clients live in a read-only zone.
-5. **Boundaries are enforceable**: lint rules + import maps make this structural, not aspirational.
+The UI must only consume artifacts that passed the upstream stages’ outputs and validations.
 
-### Tree (with lines)
+### Trust membrane and API boundary
+- UI **does not** query Neo4j directly.
+- UI **does not** query PostGIS directly.
+- UI **does not** “read files from data/” as an implicit API.
+- UI **does** call the governed API, which is responsible for:
+  - access control
+  - redaction and sensitivity handling
+  - schema stability and versioning
+  - audit logging
 
-```text
-web/
-├── README.md
-├── package.json
-├── tsconfig.json
-├── vite.config.ts                 # (or framework config) (not confirmed in repo)
-├── index.html                     # (not confirmed in repo)
-├── public/
-│   └── ...static assets...
-├── src/
-│   ├── main.tsx
-│   │
-│   ├── app/                       # App shell: routing, layouts, providers
-│   │   ├── App.tsx
-│   │   ├── routes.tsx
-│   │   ├── layouts/
-│   │   ├── providers/
-│   │   └── error/
-│   │
-│   ├── gen/                       # GENERATED (read-only)
-│   │   └── openapi/               # typed clients + schemas from API contract
-│   │
-│   ├── lib/                       # Shared primitives (no feature logic)
-│   │   ├── api/                   # the only place that does fetch/http
-│   │   ├── auth/                  # token handling, guards (if enabled)
-│   │   ├── policy/                # policy-explain helpers (deny reasons, banners)
-│   │   ├── telemetry/             # logging/metrics hooks (if enabled)
-│   │   ├── evidence/              # citation model + resolver primitives
-│   │   ├── ui/                    # reusable UI primitives (buttons/panels/dialogs)
-│   │   └── utils/                 # tiny pure helpers (not a dumping ground)
-│   │
-│   ├── features/                  # Feature slices (own behavior + orchestration)
-│   │   ├── map/
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   ├── state/
-│   │   │   ├── services/
-│   │   │   └── types.ts
-│   │   ├── story/
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   ├── state/
-│   │   │   ├── services/
-│   │   │   ├── markdown/
-│   │   │   └── types.ts
-│   │   ├── focus/
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   ├── state/
-│   │   │   ├── services/
-│   │   │   └── types.ts
-│   │   ├── audit/
-│   │   │   ├── components/
-│   │   │   ├── hooks/
-│   │   │   ├── state/
-│   │   │   ├── services/
-│   │   │   └── types.ts
-│   │   └── evidence/
-│   │       ├── components/        # evidence cards/drawer/views
-│   │       ├── hooks/
-│   │       ├── services/          # orchestration around resolver + UI
-│   │       └── types.ts
-│   │
-│   ├── styles/
-│   │   ├── globals.css
-│   │   └── tokens.css
-│   │
-│   ├── assets/
-│   │   ├── brand/
-│   │   ├── icons/
-│   │   └── images/
-│   │
-│   └── types/
-│       └── ambient.d.ts
-│
-└── tests/
-    ├── contract/                  # API/citation/audit contract tests (must-have)
-    ├── unit/
-    └── e2e/                       # Playwright/Cypress (if used)
-```
+### Fail closed
+If policy denies a request, the UI must:
+- render a “Not authorized / Restricted / Redacted” state
+- avoid leaking information via error messages, debug views, or cached payloads
 
-### What goes where (the “why”, not just the “what”)
-
-| Path | Purpose | Owns logic? | Hard rule |
-|---|---|---:|---|
-| `src/app/` | App shell wiring: routes, layouts, providers | Minimal | No feature logic dumps here |
-| `src/features/*/` | Feature behavior + orchestration | Yes | Features do **not** do raw networking |
-| `src/lib/api/` | **Single API boundary** (http client, retries, auth headers) | Yes | 🚫 no `fetch` outside `lib/api` |
-| `src/gen/openapi/` | Generated typed clients/types | No | Read-only; generated in CI/dev |
-| `src/lib/evidence/` | Citation model + resolver primitives | Yes | Shared: story/focus/map/audit |
-| `src/features/evidence/` | Evidence UI views | Yes | Must resolve `citation.ref` reliably |
-| `tests/contract/` | Guards KFM invariants (cite/abstain, resolver, audit links) | Yes | Must run in CI |
-
-> [!TIP]
-> The moment two features copy the same logic, it belongs in `lib/` (primitive) or `features/evidence/` (evidence UI).
-> Don’t create a “shared/” junk drawer.
+### Evidence-first behavior
+- **Story Nodes**: no unsourced narrative claims
+- **Focus Mode**: must **cite or abstain**
+- Evidence references must be reviewable by the user (via resolver endpoints and evidence panels)
 
 ---
 
-## Import boundaries
+## ViewState contract
 
-These rules keep the tree meaningful.
+The web UI maintains a canonical `ViewState` that synchronizes:
+- map bbox
+- active layers
+- temporal context
+- story context
+- user role context for policy behavior
 
-### Allowed imports
-
-- `src/app/*` → may import from `features/*`, `lib/*`, `gen/*`
-- `src/features/*` → may import from `lib/*`, `gen/*`, and its own subtree
-- `src/lib/*` → must **not** import from `features/*`
-- `src/gen/*` → imports nothing from `src/` (generated output)
-
-### Recommended enforcement (not confirmed in repo)
-
-- ESLint import boundaries (e.g., `eslint-plugin-boundaries` or equivalent)
-- TS path aliases:
-  - `@app/*`, `@features/*`, `@lib/*`, `@gen/*`
-
----
-
-## Evidence + citations (UI contract)
-
-### Citation model (UI-facing)
-
-The UI should treat citations as structured objects (not strings).
-
-```ts
-export type Citation = {
-  ref: string;              // resolvable reference: prov://, stac://, dcat://, doc://, graph://
-  label?: string;           // short display label
-  locator?: string;         // page/feature/id hint
-  confidence?: number;      // optional, if the API exposes it
-};
-```
-
-### Evidence resolution requirement
-
-> [!IMPORTANT]
-> Given any `citation.ref` in a Story Node or Focus Mode answer, the UI must be able to render a
-> human-readable evidence view (card/drawer/page) via the governed API.
-
-**Acceptance target:** resolve in **≤ 2 API calls** per citation (cache-friendly).
-
----
-
-## ViewState (shared context)
-
-The UI maintains a single **ViewState** representing user context for grounded queries.
+Recommended contract:
 
 ```ts
 export type ViewState = {
-  timeRange: [string, string];              // ISO strings
-  bbox: [number, number, number, number];   // [minLon, minLat, maxLon, maxLat]
-  activeLayers: string[];                   // layer IDs
+  timeRange: [string, string];
+  bbox: [number, number, number, number];
+  activeLayers: string[];
   storyNodeId?: string;
   storyStepId?: string;
-  userRole?: string;                        // if surfaced client-side
+  userRole?: string;
 };
 ```
 
----
-
-## Environment configuration
-
-> [!NOTE]
-> Exact variable names and tooling are **not confirmed in repo**. If you use Vite, prefer `VITE_*`.
-
-Example `.env.local`:
-
-```ini
-# Governed API gateway base URL
-VITE_KFM_API_BASE_URL=http://localhost:8080
-
-# Optional auth (OIDC) if enabled
-VITE_KFM_AUTH_ENABLED=false
-VITE_KFM_OIDC_ISSUER=
-VITE_KFM_OIDC_CLIENT_ID=
-```
+> [!TIP]
+> Treat `ViewState` as the *only* state object that crosses boundaries:
+> - UI components can derive internal state, but outgoing requests should be driven by `ViewState`
+> - `ViewState` should be serializable (URL state or export bundles) when possible
 
 ---
 
-## Development
+## Focus Mode contract expectations
+
+At minimum, the UI should be able to call a Focus endpoint and render the response:
+
+- **Request** includes:
+  - `question`
+  - `context` derived from `ViewState` (time range, bbox, active layers, story node id)
+- **Response** includes:
+  - `answer_markdown`
+  - `citations[]`
+  - `audit_ref`
 
 > [!IMPORTANT]
-> Verify scripts in `web/package.json`. Commands below are conventional defaults.
+> Rendering `answer_markdown` must be done safely:
+> - Do not render unsanitized HTML.
+> - Prefer a Markdown renderer configured to a safe subset.
+> - Treat all server-provided strings as untrusted input.
 
-```sh
+---
+
+## Evidence resolution UX
+
+Evidence references may use resolver schemes like:
+- `prov://...`
+- `stac://...`
+- `dcat://...`
+- `doc://...`
+- `graph://...`
+
+UI requirements:
+- Provide a **review evidence** view for:
+  - map layer provenance (datasets, transformations, publication time)
+  - Focus Mode citations (open cited sources/objects)
+- Keep evidence resolution efficient:
+  - target: resolve `citation.ref` to a human-readable evidence view in **≤ 2 API calls**
+
+---
+
+## Data flow
+
+```mermaid
+flowchart LR
+  UI[Web UI] -->|ViewState + requests| API[Governed API Boundary]
+  API -->|policy check| OPA[Policy Engine]
+  API -->|catalog + graph + search| KB[Knowledge + Catalogs]
+  API -->|FocusAnswer + citations + audit_ref| UI
+  UI -->|review evidence| API
+  API -->|resolve prov/stac/dcat/doc/graph refs| KB
+```
+
+---
+
+## Local development
+
+> [!NOTE]
+> Script names and ports are intentionally described generically here because they depend on the `web/package.json` and the repo’s `docker-compose.yml`.
+
+### Prerequisites
+- Node.js (LTS recommended)
+- A package manager: npm, pnpm, or yarn
+- Optional: Docker + Docker Compose for full-stack development
+
+### Install
+```bash
 cd web
 npm install
+```
+
+### Run the web dev server
+Common patterns include:
+```bash
 npm run dev
+# or
+npm start
 ```
 
-Typical checks:
-
-```sh
-npm run lint
-npm run typecheck
-npm test
-npm run build
+To discover available scripts:
+```bash
+npm run
 ```
 
-### Generated API client (recommended) (not confirmed in repo)
+### Run the full stack
+From the repo root, many KFM setups use Docker Compose:
+```bash
+docker compose up
+```
 
-A common pattern is to generate `src/gen/openapi/*` from the governed API schema:
-
-- `npm run gen:openapi`
-- CI regenerates and verifies that generated output matches the committed contract
-
----
-
-## Testing
-
-### Contract tests (must-have)
-
-These protect KFM’s credibility.
-
-- **Cite-or-abstain UX**
-  - If `citations.length === 0`, the UI renders an explicit abstain state
-  - UI suggests next steps: tighten time range, activate layers, open evidence search
-- **Evidence resolution**
-  - For each `citation.ref`, UI can render an evidence card/view
-  - Resolver returns a meaningful failure mode (no silent “null”)
-- **Audit link presence**
-  - Every Focus Mode answer exposes `audit_ref`
-  - UI can open the audit/provenance view for that reference
-
-### E2E (recommended)
-
-- Map → hover feature → open evidence/provenance
-- Story step → updates ViewState → citations remain resolvable
-- Focus query → answer + citations → open evidence drawer → open audit timeline
+Then point the web app to the local API base URL via environment configuration.
 
 ---
 
-## Security checklist
+## Configuration
 
-- [ ] Sanitize markdown/HTML output (Story + Focus) with an allowlist
-- [ ] Safe external links (`rel="noopener noreferrer"`, clear external indicators)
-- [ ] Avoid logging tokens or sensitive payloads client-side
-- [ ] Minimal persistence by default (localStorage/sessionStorage opt-in only)
-- [ ] CSP aligned with deployment (where applicable)
-- [ ] Dependency scanning and lockfile hygiene
+### Environment variables
+This UI should be configurable without code changes. Typical config values include:
+- API base URL
+- tile/style endpoints
+- feature flags (reviewer mode UI, debug overlays)
+- build metadata (commit SHA, build timestamp)
 
----
+> [!TIP]
+> If using Vite, environment variables typically use a `VITE_` prefix.
+> If using other tooling, follow its conventions. Prefer `.env.example` + `.env.local` workflows.
 
-## How to add a new feature
-
-Example: adding a `features/timeline/` module.
-
-1. Create the slice:
-   - `src/features/timeline/components/`
-   - `src/features/timeline/hooks/`
-   - `src/features/timeline/state/`
-   - `src/features/timeline/services/`
-   - `src/features/timeline/types.ts`
-
-2. Add API calls only via `src/lib/api/` (or a tiny wrapper in `services/` that calls `lib/api`).
-
-3. If it needs citations/evidence:
-   - Use `@lib/evidence` primitives
-   - Render via `features/evidence` UI components (don’t invent a new evidence view)
-
-4. Wire into `src/app/routes.tsx` and/or a layout in `src/app/layouts/`.
-
-5. Add at least one contract test in `tests/contract/` if it touches:
-   - citations
-   - evidence resolution
-   - audit references
-   - policy-deny UX
-
-**Definition of done (feature):**
-- [ ] No raw `fetch` outside `lib/api`
-- [ ] Uses shared evidence resolver + UI where relevant
-- [ ] Has a contract test covering its invariant
-- [ ] Error/deny states are explicit and human-readable
+### Roles and policy-aware UX
+The UI may show different evidence detail depending on policy decisions and user role. The UI must not infer permissions client-side; it must rely on API responses.
 
 ---
 
-## Related docs
+## Testing and quality gates
 
-- Root `README.md` (system overview)
-- `CONTRIBUTING.md` (workflow + standards)
-- `SECURITY.md` (reporting + policy)
-- API schemas (OpenAPI/GraphQL) used to generate `src/gen/openapi/`
+Recommended layers of tests:
+- **Unit tests**: pure functions, reducers/selectors
+- **Component tests**: key flows (layer toggling, time range changes, evidence panel open)
+- **End-to-end tests**: run against a deployed build and governed API
+
+Recommended non-functional checks:
+- Accessibility checks for map controls, dialogs, and focus management
+- No-leak checks: verify restricted data stays hidden at all zoom levels and in exports
+- Contract checks: UI behavior consistent with API response schemas
+
+---
+
+## Security and privacy notes
+
+- Never commit secrets into `web/`.
+- Avoid storing tokens in persistent browser storage unless explicitly required and reviewed.
+- Treat any content (including Markdown) from the API as untrusted input.
+- Do not add “backdoor” data access paths (direct DB calls, direct graph calls, hidden data bundles).
+
+---
+
+## Contribution checklist
+
+Before opening a PR that changes the web app:
+
+- [ ] Does the change preserve the trust membrane and API-only access rule?
+- [ ] Does it preserve evidence-first UX (citations reviewable; no uncited narrative surfaces)?
+- [ ] If it adds or changes any API calls, was the API contract updated in `src/server/` and validated?
+- [ ] If it changes layer rendering or provenance views, does it still show license/attribution correctly?
+- [ ] If it affects sensitive data handling, was a governance review triggered where required?
+- [ ] Do tests pass (and were any new behaviors covered by tests)?
+
+---
+
+## Reference documents used for this module
+
+These documents define (or strongly constrain) the web UI’s intended behavior and governance requirements:
+
+- KFM Next-Gen Blueprint and Primary Guide v1.2 (Web UI Blueprint, ViewState contract, evidence UX requirements)
+- KFM Master Guide v13 (repo structure, invariants, API boundary rule, pipeline ordering)
+- KFM Comprehensive Data Source Integration Blueprint v1.0 (trust membrane, fail-closed policy, cite-or-abstain requirements)
+
+> [!NOTE]
+> If these documents are stored in-repo, prefer referencing them by stable path and version tag
+> in future README edits to keep CI link-check clean.
+
+---
