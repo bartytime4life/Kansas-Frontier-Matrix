@@ -1,216 +1,214 @@
-# src
+<!--
+GOVERNED ARTIFACT NOTICE
+This README lives inside KFM’s trust boundary: it documents architecture invariants and layering rules.
+If you change meaning (not just phrasing), route through governance review.
+-->
 
-`src/` is the **backend source** for the Kansas Frontier Matrix (KFM): core domain models, governed use-cases, adapters, and API delivery code.
+<div align="center">
 
-🧱 **Clean Architecture** · 🔒 **Trust membrane** · 🧾 **Provenance-first** · ⚖️ **FAIR+CARE**
+# `src/` — KFM Backend Core 🧭⚙️
 
----
+**Clean layers + trust membrane enforcement.**  
+This directory is where KFM’s governed backend behavior is implemented: domain rules, use cases, ports, adapters, and infrastructure—**with policy + audit as first-class citizens**.
 
-## What belongs in this folder
-
-This folder holds backend code that powers KFM’s governed data path:
-
-- **Domain layer**: pure entities and value objects that model KFM concepts (no DB/UI dependencies).
-- **Use-case layer**: business workflows that orchestrate domain entities (DB/UI agnostic).
-- **Integration layer**: repository interfaces (ports) and adapters (PostGIS/Neo4j/Search/etc.).
-- **Infrastructure layer**: concrete implementations and environment-specific concerns.
-- **API delivery**: FastAPI routes/presenters that expose governed services to clients (UI, Focus Mode, external tools).
-
-> [!NOTE]
-> KFM is designed as a pipeline → catalog/provenance → database → API → UI system. The backend’s job is to enforce that contract end-to-end.
+</div>
 
 ---
 
-## Non-negotiable invariants
+## Why This Folder Exists
 
-> [!IMPORTANT]
-> **Trust membrane**: clients must **never** bypass the API to access data stores.
-> - Frontend and external clients **do not** connect to PostGIS/Neo4j/Search directly.
-> - Core logic **does not** reach into infrastructure directly; it goes through repository interfaces.
+KFM is not “a web app with a database.”  
+KFM is a **governed system**: every data/story/AI request must pass through **policy enforcement** and produce **auditable evidence trails**.
 
-> [!IMPORTANT]
-> **Truth path**: data must follow the canonical flow and must not “skip” metadata/provenance steps.
+`src/` is the backend implementation of that promise.
+
+> **Non-negotiables**
+> - **No UI → DB access. Ever.** UI talks only to governed APIs.
+> - **Fail-closed policy checks** occur on every request.
+> - Backend code uses **ports (interfaces)** and **cannot bypass them**.
+> - **Audit/provenance** are produced on the normal request path.
 >
-> Raw → Work → Processed → STAC/DCAT/PROV → PostGIS/Neo4j/Search → API → UI → Story Nodes → Focus Mode
-
-> [!WARNING]
-> **Fail closed**: if a policy check fails, KFM blocks the action by default (security/governance first).
-> This applies to sensitive data access, licensing checks, and AI/Focus Mode constraints.
-
-> [!WARNING]
-> **No secrets**: never commit API keys, passwords, tokens, or private URLs. Use placeholders like `<API_KEY>` and `.env` files.
+> If you violate these, you’re not “moving fast”—you’re breaking the system guarantee.
 
 ---
 
-## Directory layout
+## Quick Links (Start Here)
 
-The repo’s canonical top-level layout includes `src/` as the backend folder:
+- 🧠 **Domain layer**: [`src/domain/`](./domain/README.md)
+- 🧩 **Use cases**: [`src/use_cases/`](./use_cases/README.md)
+- 🔌 **Ports (contracts)**: [`src/ports/`](./ports/README.md)
+- 🧱 **Adapters**: [`src/adapters/`](./adapters/README.md)
+  - DB: [`src/adapters/db/`](./adapters/db/README.md)
+  - Graph: [`src/adapters/graph/`](./adapters/graph/README.md)
+  - Policy: [`src/adapters/policy/`](./adapters/policy/README.md)
+  - Search: [`src/adapters/search/`](./adapters/search/README.md)
+- 🏗️ **Infrastructure**: [`src/infrastructure/`](./infrastructure/README.md)
+- 🌐 **API boundary**: [`src/api/`](./api/README.md)
+- 🧪 **Tests**: [`src/tests/`](./tests/README.md)
 
-```text
-repo-root/
-  data/       # raw/work/processed + catalogs
-  docs/       # governed system docs, standards, templates
-  src/        # backend: domain/usecases/adapters/infrastructure
-  web/        # UI: React/TS + MapLibre
-  policy/     # OPA Rego policies
-  .github/    # CI workflows
-```
+---
 
-Inside `src/`, this is the **recommended** structure (update to match the actual repo if different):
+## Directory Layout
+
+> This is the *architectural* map of `src/`. Some subfolders may expand over time, but the dependency direction must not.
 
 ```text
 src/
-  domain/                  # core entities, value objects, enums
-  use_cases/               # application workflows (ingestion, queries, timeline generation)
-  ports/                   # abstract interfaces (repositories, policy checks, external services)
-  adapters/                # implementations of ports (db/search/external APIs)
-    db/
-    graph/
-    search/
-    policy/
-  infrastructure/          # concrete tech wiring (clients, config, persistence glue)
-  api/                     # FastAPI app + delivery layer (REST and optional GraphQL)
-    main.py
-    routes/
-    dependencies/
-    schemas/
-  tests/                   # unit + integration tests for backend behavior
+├── domain/                 # Pure entities + value objects + invariants
+├── use_cases/              # Orchestrated workflows (business rules)
+├── ports/                  # Interfaces/contracts (repositories, policy, audit, search)
+├── adapters/               # Port implementations (db/graph/policy/search/…)
+├── infrastructure/         # Concrete clients + wiring (db drivers, http clients, runtime config)
+├── api/                    # HTTP boundary (routes, schemas, dependencies)
+└── tests/                  # Unit + contract + integration tests (mirrors src structure)
 ```
-
-> [!NOTE]
-> Some project materials describe a `backend/` directory for API code. If the live repo still uses `backend/` (not confirmed in repo), either migrate to `src/` or update docs to keep a single source of truth.
 
 ---
 
-## Clean Architecture map
+## Clean Layers (What Goes Where)
 
-| Layer | Owns | Can depend on | Must not depend on | Typical location |
-|---|---|---|---|---|
-| Domain | Entities, value objects, invariants | nothing (or stdlib) | DB, HTTP, UI, frameworks | `src/domain/` |
-| Use cases | Workflows, orchestration, business rules | Domain + Ports | DB implementations, HTTP framework | `src/use_cases/` |
-| Ports | Interfaces for persistence, policy, external services | Domain | concrete DB/search clients | `src/ports/` |
-| Adapters | PostGIS/Neo4j/Search/API clients implementing Ports | Ports + Domain | frontend/UI | `src/adapters/`, `src/infrastructure/` |
-| API delivery | FastAPI routers, request parsing, response shaping | Use cases + Ports | DB clients directly | `src/api/` |
+| Layer | What it contains | Must **NOT** contain | Tests that should exist |
+|---|---|---|---|
+| **Domain** | Entities, value objects, invariants | DB clients, HTTP frameworks, OPA calls | Pure unit tests |
+| **Use Cases** | Workflows, business rules, orchestration | Web handlers, SQL/Cypher, concrete SDK calls | Use-case tests w/ mocked ports |
+| **Ports** | Interfaces + DTOs + boundary contracts | Concrete implementations | Contract tests + schema tests |
+| **Adapters** | Implement ports for DB/graph/policy/search | Business logic that belongs in use cases | Adapter integration tests |
+| **Infrastructure** | Runtime wiring, concrete clients, config | Domain rules | Integration + smoke tests |
+| **API** | Routes/controllers, request parsing, response shaping | Direct DB access, business logic | Route tests + contract tests |
+
+---
+
+## The Trust Membrane (How Requests Flow)
+
+**Everything** crosses the membrane through the governed API boundary.
 
 ```mermaid
 flowchart LR
-  subgraph Core["Core"]
-    D["Domain"]
-    U["Use Cases"]
-    P["Ports"]
-    D --> U --> P
+  subgraph Client["Client"]
+    UI["Web UI (React/TS + Map UI)"]
   end
 
-  subgraph Outer["Outer"]
-    A["Adapters"]
-    I["Infrastructure"]
-    API["API delivery"]
+  subgraph Membrane["Trust Membrane (Governed Boundary)"]
+    API["API Gateway (REST; optional GraphQL)"]
+    PDP["Policy PDP (OPA/Rego)"]
+    AUDIT["Audit + Provenance (append-only)"]
   end
 
-  P --> A --> I
-  API --> U
-  API -.policy checks.-> P
+  subgraph Stores["Stores (Never Directly Reached by UI)"]
+    PG["PostGIS (geo + tiles)"]
+    G["Graph Store (Neo4j)"]
+    S["Search/Vector"]
+    OBJ["Object Store (COGs + media)"]
+  end
+
+  UI --> API
+  API --> PDP
+  API --> AUDIT
+  API --> PG
+  API --> G
+  API --> S
+  API --> OBJ
 ```
 
 ---
 
-## FastAPI delivery layer rules
+## How to Add a New Capability (The “Thin Slice” Path)
 
-- Keep route handlers **thin**: validate inputs, call a use case, return a response.
-- Put business logic in **use cases**.
-- Enforce authorization/policy checks centrally (dependency injection, middleware, or explicit `policy.check_access(...)` calls).
-- Prefer returning domain-derived DTOs/schemas, not raw DB rows.
+> The fastest safe path is a **walking skeleton**: add the smallest vertical slice that proves the contracts and policy gates.
 
-```mermaid
-sequenceDiagram
-  autonumber
-  participant Client as UI / Focus Mode / External Client
-  participant API as FastAPI route
-  participant UC as Use Case
-  participant Port as Port interface
-  participant Adapter as Adapter (PostGIS/Neo4j/Search)
-  Client->>API: Request
-  API->>UC: Call workflow
-  UC->>Port: Use abstract repo/policy interface
-  Port->>Adapter: Resolve to concrete implementation
-  Adapter-->>UC: Domain objects / results
-  UC-->>API: Result DTO
-  API-->>Client: Response
-```
+### 1) Start in the Domain
+- Add/extend entities and invariants in `src/domain/`
+- Keep logic pure and deterministic
+
+### 2) Define the Contract in Ports
+- Create a port interface (e.g., `DatasetRepo`, `GraphRepo`, `PolicyClient`, `AuditWriter`)
+- Define DTOs and error/result types
+
+### 3) Implement a Use Case
+- Add a workflow in `src/use_cases/`
+- Depend **only** on ports
+- Add use-case tests that mock ports
+
+### 4) Implement an Adapter
+- Implement the port in `src/adapters/<target>/`
+- Add adapter-level integration tests (against local containers if needed)
+
+### 5) Expose Through API (No Business Logic Here)
+- Add request/response schemas in `src/api/schemas/`
+- Add route wiring in `src/api/routes/`
+- Ensure:
+  - **AuthZ** happens before data access
+  - **Audit** is written on success/failure paths
+  - Responses include any required `audit_ref` and citations metadata
+
+### 6) Add/Update Policy Rules
+- Ensure policy is **default deny**
+- Add regression tests for allowed/denied cases
+
+### 7) Prove It With Tests + Gates
+Minimum expected coverage:
+- ✅ Domain unit tests
+- ✅ Use-case tests (mock ports)
+- ✅ Contract/schema tests
+- ✅ Adapter integration tests
+- ✅ End-to-end smoke test (compose)
 
 ---
 
-## Adding a new feature in `src/`
+## Testing Expectations
 
-Use this sequence to keep layering clean and governance intact:
+KFM testing is not optional—**it’s governance enforcement**.
 
-1. **Define or extend a domain model** in `src/domain/`.
-2. **Add a port** (interface) in `src/ports/` for any new persistence/external capability.
-3. **Write or update a use case** in `src/use_cases/` that implements the workflow.
-4. **Implement adapters** in `src/adapters/` for PostGIS/Neo4j/Search/external services.
-5. **Expose via API** by adding a route in `src/api/routes/`.
-6. **Attach governance hooks** (authorization, sensitivity labels, license checks, provenance logging).
-7. **Add tests** under `src/tests/` (unit tests for use cases, integration tests for routes/adapters).
+- **Unit**: domain invariants and pure functions
+- **Use-case**: behavior with mocked ports
+- **Contract**: schemas, DTOs, OpenAPI fragments (where applicable)
+- **Integration**: adapters against local services
+- **Smoke/E2E**: compose-based “happy path + deny path” checks
 
-> [!IMPORTANT]
-> If a feature exposes data publicly, it must be traceable to catalogs/provenance and must respect sensitivity rules. When in doubt, **generalize/redact** and flag for governance review.
+> Tip: Mirror folder structure in `src/tests/` so “where do I test this?” is always obvious.
 
 ---
 
-## Local development
+## Local Development (Preferred)
 
-### Recommended
-
-Run the full stack with Docker Compose from the repo root:
+From the repo root, KFM’s documented baseline uses Docker Compose:
 
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
-Then open:
-
-- UI: `http://localhost:3000`
-- API docs: `http://localhost:8000/docs`
-
-### Backend from source
-
-You can run the backend without rebuilding containers (useful for debugging):
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# Replace with the actual module path where the FastAPI `app` is defined.
-uvicorn <module_path>:app --reload
-```
-
-> [!NOTE]
-> The exact module path for the FastAPI `app` is repo-specific (not confirmed in repo). Search for `FastAPI(` or `app = FastAPI(` in `src/api/`.
+If you add new services/adapters, update compose and ensure tests still run in a clean environment.
 
 ---
 
-## Testing and quality gates
+## Code Standards That Matter Here
 
-```bash
-# Typical backend test runner
-pytest
-```
-
-Definition-of-done for changes under `src/`:
-
-- [ ] Unit tests cover new/changed use cases
-- [ ] Integration tests cover new routes/adapters where applicable
-- [ ] No policy bypass paths introduced
-- [ ] No secrets or private URLs committed
-- [ ] Any new public data output includes provenance pointers or IDs
-- [ ] CI passes (lint, tests, link checks where applicable)
+- **Dependency direction is sacred**: `domain -> use_cases -> ports -> adapters/infrastructure -> api`
+- **No “just this once” bypass** of ports to “speed things up”
+- **Fail-closed by default**:
+  - policy errors → deny
+  - missing provenance/citations → abstain/deny (as applicable)
+- **Deterministic IDs and reproducible runs** (pipeline/audit friendliness)
+- **Explicit time model** for historical/temporal data (don’t hand-wave timestamps)
 
 ---
 
-## Pointers
+## Definition of Done (Backend Change)
 
-- Backend policies: `../policy/`
-- System architecture: `../docs/architecture/` (path not confirmed in repo)
-- Documentation standards and templates: `../docs/standards/` and `../docs/templates/`
+- [ ] Added/updated domain + tests
+- [ ] Added/updated port contract + contract tests
+- [ ] Implemented use case + mocked-port tests
+- [ ] Implemented adapter + integration tests
+- [ ] API route added with schema validation
+- [ ] Policy rule updated + regression test
+- [ ] Audit/provenance emitted on the request path
+- [ ] Documentation updated (as a governed artifact)
+
+---
+
+### Need the bigger picture?
+- System invariants + trust membrane rationale live in the architecture blueprints (see `docs/architecture/`).
+- UI is deliberately separate (`web/`) and must never reach into backend internals.
+
+---
