@@ -9,7 +9,7 @@ If you change meaning (not just phrasing), route through the governance review p
 # Kansas Frontier Matrix (KFM‑NG) — Governed Geospatial & Historical Knowledge System 🧭🗺️
 
 **KFM turns heterogeneous Kansas history + geospatial data into a governed, evidence-first system:**  
-**data → pipeline → catalogs → governed APIs → Focus Mode + map UI**
+**data → pipeline → catalogs/provenance → governed APIs → Focus Mode + map UI**
 
 <br/>
 
@@ -19,12 +19,15 @@ If you change meaning (not just phrasing), route through the governance review p
 ![Policy](https://img.shields.io/badge/policy-OPA%20default%20deny-black)
 ![Catalogs](https://img.shields.io/badge/catalogs-STAC%20%7C%20DCAT%20%7C%20PROV-6a5acd)
 ![Focus Mode](https://img.shields.io/badge/focus%20mode-cite%20or%20abstain-critical)
+![Promotion gates](https://img.shields.io/badge/data%20promotion-raw%E2%86%92work%E2%86%92processed-important)
+![Audit](https://img.shields.io/badge/audit-append--only%20ledger-informational)
 
 <!-- OPTIONAL: replace ORG/REPO with real values once workflows exist -->
 <!--
 [![CI](https://github.com/ORG/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/ci.yml)
 [![Docs](https://github.com/ORG/REPO/actions/workflows/docs.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/docs.yml)
 [![Policy](https://github.com/ORG/REPO/actions/workflows/policy.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/policy.yml)
+[![Data Gates](https://github.com/ORG/REPO/actions/workflows/data-gates.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/data-gates.yml)
 -->
 
 </div>
@@ -36,23 +39,77 @@ If you change meaning (not just phrasing), route through the governance review p
 
 ---
 
+## If You’re New Here: Start Here
+
+1) **Read the invariants** in [Non‑Negotiable Guarantees](#non-negotiable-guarantees).  
+2) Run the stack via [Quickstart](#quickstart-local).  
+3) Learn how we prevent “raw becomes truth” via [Data Lifecycle Raw → Work → Processed](#data-lifecycle-raw--work--processed).  
+4) Learn how Focus Mode can’t bluff via [Focus Mode and Evidence Resolver](#focus-mode-and-evidence-resolver).  
+5) If you’re adding a source: use [Adding or Updating a Dataset](#adding-or-updating-a-dataset).
+
+---
+
 ## Table of Contents
 
+- [If You’re New Here: Start Here](#if-youre-new-here-start-here)
+- [Quickstart (Local)](#quickstart-local)
 - [Why KFM Exists](#why-kfm-exists)
 - [Non-Negotiable Guarantees](#non-negotiable-guarantees)
 - [How KFM Works End-to-End](#how-kfm-works-end-to-end)
 - [System Architecture](#system-architecture)
-- [Data Lifecycle Raw → Work → Processed](#data-lifecycle-raw--work--processed)
+- [Governed API Surface (Overview)](#governed-api-surface-overview)
 - [Focus Mode and Evidence Resolver](#focus-mode-and-evidence-resolver)
+- [Data Lifecycle Raw → Work → Processed](#data-lifecycle-raw--work--processed)
+- [Adding or Updating a Dataset](#adding-or-updating-a-dataset)
+- [Governed Artifacts and CI Ownership](#governed-artifacts-and-ci-ownership)
 - [Repository Structure](#repository-structure)
 - [Local Development](#local-development)
 - [CI Gates](#ci-gates)
+- [Operations Runbook (Minimum)](#operations-runbook-minimum)
 - [Roadmap](#roadmap)
 - [Governance and Sensitivity](#governance-and-sensitivity)
 - [Contributing](#contributing)
 - [Security](#security)
 - [License](#license)
 - [Provenance Notes](#provenance-notes)
+
+---
+
+## Quickstart (Local)
+
+> [!NOTE]
+> This repo is built to be **stack-first**: bring up the trust membrane + stores + API + UI together so the
+> governance paths are exercised end-to-end.
+
+### Prerequisites
+
+- Docker + Docker Compose (v2)
+- A modern Node.js toolchain (for UI), and a Python toolchain (for API/pipeline) **as required by your implementation**
+- Optional but common: `make`, `jq`, `opa`
+
+### Bring up the stack (documented baseline)
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+### What to open
+
+- UI: `http://localhost:3000`
+- API docs: `http://localhost:8000/docs`
+
+### Smoke test (minimum)
+
+- Load the map UI
+- Toggle a layer (should show provenance metadata, not just “pretty tiles”)
+- Open the Evidence/Audit drawer
+- Run one Focus Mode query and confirm:
+  - citations exist **or** the response abstains
+  - `audit_ref` exists
+
+> [!IMPORTANT]
+> If OPA is down, policy fails to load, or required keys are missing, **the system must deny**.
 
 ---
 
@@ -82,19 +139,19 @@ These are the invariants the system must keep true **regardless of implementatio
 
 | Invariant | What it means | Why it exists | Minimum enforcement |
 |---|---|---|---|
-| **Trust membrane** | UI/external clients never access databases directly; all access goes through **governed API + policy boundary** | Prevents bypassing governance, provenance, and sensitivity rules | Network isolation + gateway middleware |
-| **Fail-closed policy** | If policy cannot prove a request is allowed, **deny** | Safer-than-sorry for sensitive or uncertain cases | OPA default deny + policy tests |
-| **Dataset promotion gates** | Only promoted datasets can serve production queries | Stops “raw/unvalidated” artifacts from becoming “truth” | CI checksums + catalog validation |
-| **Focus Mode must cite or abstain** | Every answer returns citations + an **audit reference** | Prevents ungrounded claims | Output validator + policy rule |
-| **Processed zone is source of truth** | API serves only validated artifacts | Avoids serving intermediates | Serve from processed catalogs only |
+| **Trust membrane** | UI/external clients never access databases directly; all access goes through **governed API + policy boundary** | Prevents bypassing governance, provenance, sensitivity rules | Network isolation + gateway middleware + architecture lint rules |
+| **Fail-closed policy** | If policy cannot prove a request is allowed, **deny** | Safer-than-sorry for sensitive/uncertain cases | OPA default deny + policy tests |
+| **Dataset promotion gates** | Only promoted datasets can serve production queries | Stops “raw/unvalidated” artifacts from becoming “truth” | CI checksums + catalog validation + steward review |
+| **Focus Mode must cite or abstain** | Every answer returns citations + an **audit reference** (or abstains) | Prevents ungrounded claims; supports audits | Output validator + policy rule + audit append |
+| **Processed zone is source of truth** | API serves only validated artifacts (never raw/work) | Avoids serving intermediates | Serve from processed catalogs only |
 
 ### Definition of Done ✅ (top-level)
 
-- [ ] Datasets ingest via **raw → processed** promotion with **STAC/DCAT/PROV** artifacts
-- [ ] Web UI browses layers + Story Nodes
-- [ ] Focus Mode returns **citations or abstains**
+- [ ] Datasets ingest via **raw → work → processed** promotion with **STAC/DCAT/PROV** artifacts
+- [ ] Web UI browses layers + Story Nodes (with provenance visible)
+- [ ] Focus Mode returns **citations or abstains**, and always includes `audit_ref`
 - [ ] Policy **fails closed** and is unit-tested
-- [ ] Governed docs/data/stories/policies pass CI validation
+- [ ] Governed docs/data/stories/policies/contracts pass CI validation
 
 ---
 
@@ -122,11 +179,13 @@ KFM‑NG follows strict boundaries:
 
 - **Domain layer:** pure entities + invariants (no DB/UI deps)
 - **Use case/service layer:** workflows + business rules; depends only on interfaces
-- **Interfaces/integration layer:** ports/contracts + DTOs; API boundaries live here
-- **Infrastructure layer:** PostGIS/Postgres, graph DB, search/vector, object storage, runtime hosts
+- **Interfaces/integration layer:** ports/contracts + DTOs + schemas; API boundaries live here
+- **Infrastructure layer:** PostGIS/Postgres, graph DB, search, object storage, runtime hosts
 
 > [!IMPORTANT]
-> **Trust membrane** = UI never talks directly to storage, and core logic never bypasses repository interfaces.
+> Trust membrane rule (non-negotiable):  
+> **Frontend/external clients never access databases directly.**  
+> **Core backend logic never bypasses repository interfaces to talk directly to storage.**
 
 ### Trust membrane + runtime components (container view)
 
@@ -140,6 +199,9 @@ flowchart LR
     Focus["Focus Mode Panel"]
     Audit["Audit / Evidence Drawer"]
     UI_T --> Map
+    UI_T --> Story
+    UI_T --> Focus
+    UI_T --> Audit
   end
 
   UI_T -->|"HTTPS"| GW["API Gateway (FastAPI REST + optional GraphQL)"]
@@ -148,8 +210,8 @@ flowchart LR
 
   GW --> PG["PostGIS: geo + tiles"]
   GW --> KG["Neo4j: knowledge graph"]
-  GW --> SV["Search/Vector: OpenSearch or Postgres"]
-  GW --> OBJ["Object store: COGs + media"]
+  GW --> SV["Search/Vector: OpenSearch (or equivalent)"]
+  GW --> OBJ["Object store: COGs + media + checkpoints"]
   GW --> PL["Pipeline/orchestrator"]
   GW --> AL["Audit ledger: append-only"]
 ```
@@ -178,41 +240,27 @@ sequenceDiagram
 
 ---
 
-## Data Lifecycle Raw → Work → Processed
+## Governed API Surface (Overview)
 
-KFM‑NG organizes data into zones with **promotion gates** (CI + steward review):
+> [!NOTE]
+> Only some endpoints may be implemented at any given time. Treat this as an **API map**; lock details
+> into OpenAPI/GraphQL contracts before enforcing in CI.
 
-```mermaid
-flowchart LR
-  Raw[data/raw<br/>immutable manifests + checksums] --> Work[data/work<br/>validation reports + run records]
-  Work -->|promotion gate| Proc[data/processed<br/>queryable, publishable artifacts]
-  Proc --> Cat[data/catalog<br/>DCAT + STAC + PROV]
-  Cat --> API[Governed API]
-  API --> UI[UI layers + stories + Focus Mode]
-```
+**Core principles:**
+- Every endpoint is authorized by policy (default deny).
+- Every response is attributable to promoted artifacts (processed + catalogs).
+- “Evidence resolution” is a first-class API capability.
 
-### Promotion Gate Checklist (CI-enforced)
+### Endpoint families (recommended)
 
-To promote anything to **processed/public**, require:
-
-- [ ] License present
-- [ ] Sensitivity classification present
-- [ ] Schema + geospatial checks pass
-- [ ] Checksums computed
-- [ ] **STAC/DCAT/PROV** artifacts exist **and validate**
-- [ ] Audit event recorded
-- [ ] Human approval if sensitive
-
-### Minimum Artifacts (recommended)
-
-| Artifact | Purpose | Typical location (recommended) |
+| Family | Example endpoints | Purpose |
 |---|---|---|
-| `manifest.yml` | Deterministic acquisition + expected checksums | `data/raw/<dataset_id>/manifest.yml` |
-| `run_record.json` | Captures inputs/outputs/code hash | `data/work/<dataset_id>/run_record.json` |
-| `validation_report.json` | Gate report (what passed/failed) | `data/work/<dataset_id>/validation_report.json` |
-| DCAT JSON | Dataset discovery + distributions | `data/catalog/dcat/<dataset_id>.json` |
-| STAC Collection/Items | Geospatial assets + extent | `data/catalog/stac/<dataset_id>/...` |
-| PROV record | Provenance lineage + agents/activities | `data/catalog/prov/<dataset_id>/...` |
+| **Health** | `GET /healthz` | readiness + connectivity checks |
+| **Catalogs** | `GET /api/v1/catalog/dcat/...`, `GET /api/v1/catalog/stac/...`, `GET /api/v1/catalog/prov/...` | machine-readable discovery + lineage |
+| **Data/tiles** | `GET /api/v1/layers/...`, `GET /api/v1/tiles/{z}/{x}/{y}` | map rendering + layer metadata |
+| **Stories** | `GET /api/v1/stories/{story_id}` | governed narrative playback |
+| **Evidence** | `GET /api/v1/evidence/resolve?ref=prov://...` | resolves `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` |
+| **Focus Mode** | `POST /api/v1/ai/query` | grounded Q&A with citations + audit |
 
 ---
 
@@ -262,7 +310,7 @@ Every `citation.ref` must be resolvable to a human-readable evidence view in a s
       "id": "c1",
       "kind": "prov",
       "ref": "prov://activity/run_2026-02-12T...",
-      "locator": "processed/example.parquet (sha256=...)"
+      "locator": "data/processed/example.parquet (sha256=...)"
     }
   ],
   "audit_ref": "audit://event/01J..."
@@ -284,21 +332,118 @@ allow if {
 }
 ```
 
-> [!NOTE]
-> Policies should validate their input schema explicitly and **fail closed** if required keys are missing.
+### Required abstention behavior
+
+If evidence is insufficient for the current view (time/bbox/layers), Focus Mode must return an abstain response with an audit reference.
+
+```json
+{
+  "answer_markdown": "I can't answer that from the verified KFM sources available for this view. Try narrowing the time range or selecting relevant layers.",
+  "citations": [],
+  "audit_ref": "audit://event/01J..."
+}
+```
+
+---
+
+## Data Lifecycle Raw → Work → Processed
+
+KFM‑NG organizes data into zones with **promotion gates** (CI + steward review):
+
+```mermaid
+flowchart LR
+  Raw[data/raw<br/>immutable manifests + checksums] --> Work[data/work<br/>validation reports + run records]
+  Work -->|promotion gate| Proc[data/processed<br/>queryable, publishable artifacts]
+  Proc --> Cat[data/catalog<br/>DCAT + STAC + PROV]
+  Cat --> API[Governed API]
+  API --> UI[UI layers + stories + Focus Mode]
+```
+
+### Promotion Gate Checklist (CI-enforced)
+
+To promote anything to **processed/public**, require:
+
+- [ ] License present
+- [ ] Sensitivity classification present
+- [ ] Schema + geospatial checks pass
+- [ ] Checksums computed
+- [ ] **STAC/DCAT/PROV** artifacts exist **and validate**
+- [ ] Audit event recorded
+- [ ] Human approval if sensitive
+
+### Minimum Artifacts (recommended)
+
+| Artifact | Purpose | Typical location (recommended) |
+|---|---|---|
+| `manifest.yml` | Deterministic acquisition + expected checksums | `data/raw/<dataset_id>/manifest.yml` |
+| `run_record.json` | Captures inputs/outputs/code hash | `data/work/<dataset_id>/run_record.json` |
+| `validation_report.json` | Gate report (what passed/failed) | `data/work/<dataset_id>/validation_report.json` |
+| DCAT JSON | Dataset discovery + distributions | `data/catalog/dcat/<dataset_id>.json` |
+| STAC Collection/Items | Geospatial assets + extent | `data/catalog/stac/<dataset_id>/...` |
+| PROV record | Provenance lineage + agents/activities | `data/catalog/prov/<dataset_id>/...` |
+
+---
+
+## Adding or Updating a Dataset
+
+> [!IMPORTANT]
+> “Data added” is not “data served.” Only **processed + cataloged + policy-labeled** datasets can be served.
+
+### The integration workflow (raw → work → processed)
+
+1) **Discover**: endpoints, auth, rate limits, update cadence  
+2) **Acquire**: incremental when possible; otherwise snapshot+diff  
+3) **Normalize**: canonical encodings (UTF‑8), geometry (WGS84), time (ISO 8601)  
+4) **Validate**: schema, geometry validity, timestamp sanity, license/policy checks  
+5) **Enrich**: derive join keys (GeoIDs), place/time normalization, entity resolution candidates  
+6) **Publish**: promote to processed, emit catalogs (DCAT/STAC/PROV), trigger index refresh
+
+### Dataset integration “Definition of Done” (minimum)
+
+- [ ] Connector implemented and registered in the source registry
+- [ ] Raw acquisition produces deterministic manifest + checksums
+- [ ] Normalization emits canonical schema and/or STAC assets
+- [ ] Validation gates implemented and enforced in CI
+- [ ] Policy labels defined; restricted fields/locations are redacted per rules
+- [ ] Catalogs emitted (DCAT always; STAC/PROV as applicable) and link-check clean
+- [ ] API contract tests pass for at least one representative query
+- [ ] Backfill strategy documented (historical ranges and expected runtime)
+
+### Secret handling (non-negotiable)
+
+- Credentials/API keys live in a secret manager (vault/KMS) in real environments.
+- Secrets are **never committed**.
+- Local `.env` is for local-only convenience.
+
+---
+
+## Governed Artifacts and CI Ownership
+
+Treat these as “production inputs” (changes require review and validation).
+
+| Artifact type | What it controls | Typical path | CI checks (minimum) |
+|---|---|---|---|
+| **Policies** | authorization + redaction + cite-or-abstain | `policy/` | `opa test` + regression suite |
+| **Catalogs** | what can be served + how it’s cited | `data/catalog/` | JSON schema + link-check + checksums |
+| **Processed data** | queryable “truth” | `data/processed/` | checksums + invariants + drift checks |
+| **Story Nodes** | governed narrative state machine | `docs/story-nodes/` | template validator + citation resolution |
+| **API contracts** | public surface | `docs/contracts/` | OpenAPI/JSON Schema lint + contract tests |
+| **Runbooks** | ops invariants | `docs/runbooks/` | link-check + required sections |
 
 ---
 
 ## Repository Structure
 
-This README assumes a repo layout that supports governance + CI gates. Adjust names, keep the intent.
+This README assumes a layout that supports governance + CI gates. Adjust names, keep the intent.
 
-### Suggested layout (CI-friendly + reviewable)
+> [!IMPORTANT]
+> Canonical top-level paths emphasized in the blueprint: `data/`, `docs/`, `src/`, `web/`, `policy/`, `.github/`.
+
+### Suggested layout (heavier, CI-friendly, reviewable)
 
 ```text
 .
 ├── .github/
-│   ├── README.md
 │   ├── workflows/
 │   │   ├── ci.yml
 │   │   ├── docs.yml
@@ -307,46 +452,62 @@ This README assumes a repo layout that supports governance + CI gates. Adjust na
 │   ├── ISSUE_TEMPLATE/
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── docs/
-│   ├── architecture/
-│   ├── governance/
-│   ├── runbooks/
+│   ├── adr/                   # architecture decisions
+│   ├── architecture/          # diagrams + C4 + clean layers writeups
+│   ├── contracts/             # OpenAPI/JSONSchema/GraphQL (if used)
+│   ├── governance/            # sensitivity, FAIR/CARE, review rules
+│   ├── runbooks/              # ops SOPs + incident response
 │   └── story-nodes/
-│       └── templates/
-├── services/
-│   ├── api-gateway/
-│   ├── focus-mode/
-│   ├── data-catalog/
-│   └── policy/
-├── packages/
-│   ├── ui/
-│   └── shared/
+│       ├── templates/         # Story Node v3 canonical template
+│       ├── drafts/
+│       └── published/
+├── policy/
+│   ├── rego/                  # OPA policies
+│   ├── bundles/               # versioned policy bundles (optional)
+│   ├── tests/                 # opa test suites + regression cases
+│   └── schemas/               # policy input/output JSON schemas
 ├── data/
-│   ├── raw/
-│   ├── work/
-│   ├── processed/
+│   ├── raw/                   # immutable source drops + manifests + checksums
+│   ├── work/                  # run records + validation reports + QA outputs
+│   ├── processed/             # publishable, query-ready artifacts
 │   └── catalog/
-│       ├── stac/
 │       ├── dcat/
+│       ├── stac/
 │       └── prov/
+├── pipelines/
+│   ├── connectors/            # per-source ingestion connectors
+│   ├── transforms/            # normalization/enrichment jobs
+│   ├── validators/            # schema/geo/time/license/sensitivity checks
+│   └── orchestration/         # scheduling/backfills (Airflow/Prefect/etc)
+├── src/
+│   ├── api/                   # API gateway app (FastAPI)
+│   ├── services/              # clean-layer service modules (optional)
+│   ├── shared/                # shared domain/types/utilities
+│   └── tests/                 # unit/integration/contract tests
+├── web/
+│   ├── app/                   # React UI
+│   ├── components/
+│   ├── routes/
+│   └── tests/
 ├── infra/
-│   ├── docker/
-│   ├── k8s/
-│   └── terraform/
+│   ├── docker/                # compose baseline + dockerfiles
+│   ├── k8s/                   # manifests/helm (if used)
+│   ├── openshift/             # GitOps overlays (if used)
+│   └── terraform/             # IaC (if used)
 ├── scripts/
 └── Makefile
 ```
 
 ### Clean-architecture service skeleton (recommended)
 
-Each backend service can be structured internally with clean layers (example):
+If a module is a “service” (Focus Mode, Catalog, Evidence, etc.), keep clean layers:
 
 ```text
-services/focus-mode/
-├── src/
-│   ├── domain/
-│   ├── usecases/
-│   ├── integration/     # ports/contracts + DTOs + schemas
-│   └── infrastructure/  # DB/search adapters, HTTP handlers, OPA adapter
+src/services/focus-mode/
+├── domain/
+├── usecases/
+├── integration/       # ports/contracts + DTOs + schemas
+├── infrastructure/    # adapters (DB/search), HTTP handlers, OPA adapter
 └── tests/
 ```
 
@@ -357,20 +518,43 @@ services/focus-mode/
 
 ## Local Development
 
-> [!NOTE]
-> Local commands are template-friendly. Replace with your real Make targets / Compose files once confirmed in-repo.
-
-### Typical workflow (recommended)
+### Typical workflow
 
 ```bash
-# 1) Bring up the stack
+# Bring up stack
 docker compose up -d --build
 
-# 2) Watch logs
+# Watch logs
 docker compose logs -f
 
-# 3) Tear down
+# Tear down
 docker compose down
+```
+
+### Compose baseline (illustrative)
+
+```yaml
+services:
+  api:
+    build: ./src
+    ports: ["8000:8000"]
+    depends_on: [postgis, neo4j, opensearch, opa]
+  web:
+    build: ./web
+    ports: ["3000:3000"]
+    depends_on: [api]
+  postgis:
+    image: postgis/postgis:16-3.4
+    ports: ["5432:5432"]
+  neo4j:
+    image: neo4j:5
+    ports: ["7474:7474", "7687:7687"]
+  opensearch:
+    image: opensearchproject/opensearch:2
+    ports: ["9200:9200"]
+  opa:
+    image: openpolicyagent/opa:latest
+    ports: ["8181:8181"]
 ```
 
 ### Troubleshooting checklist
@@ -387,8 +571,8 @@ Recommended minimal CI hardening includes:
 
 - [ ] **Docs:** lint + link-check + template validator
 - [ ] **Stories:** Story Node v3 validator + citation resolution
-- [ ] **Data:** STAC/DCAT/PROV validation + checksums
-- [ ] **Policy:** `opa test` (default deny, cite-or-abstain)
+- [ ] **Data:** STAC/DCAT/PROV validation + checksums + drift checks
+- [ ] **Policy:** `opa test` (default deny, cite-or-abstain, regression suite)
 - [ ] **Supply chain:** SBOM (SPDX) + provenance attestation (SLSA/in-toto)
 
 <details>
@@ -397,18 +581,64 @@ Recommended minimal CI hardening includes:
 - Fail fast on policy violations (default deny).
 - Treat data/catalog validation as “tests,” not “best effort.”
 - Require proofs (checksums + provenance) before serving new datasets.
+- Include regression tests for prior leakage bugs (“this must never happen again”).
 
 </details>
 
 ---
 
+## Operations Runbook (Minimum)
+
+> [!IMPORTANT]
+> Production readiness requires operational discipline. The system is “safe by design” only if policy + audit + backups are real.
+
+### Start/stop and health checks
+
+- Start: deploy **web/api/opa first**, then stores, then pipeline workers.
+- Health endpoints:
+  - API: `/healthz`
+  - OPA: policy loaded check
+  - Stores: readiness checks for connectivity
+- Smoke tests:
+  - load home map, toggle a layer, open provenance panel, run one Focus Mode query
+
+### Backup and restore
+
+- PostGIS backups daily; retain per policy; verify restores regularly.
+- Object store versioning on; immutable retention for catalogs and audit checkpoints.
+- Neo4j backup schedule aligned with graph rebuild strategy (graph is rebuildable from canonical catalogs).
+- Audit ledger checkpoints: verify hash chain after restore.
+
+### Incident response (minimum patterns)
+
+- Data leak:
+  - deny via policy toggle (emergency switch)
+  - rotate credentials
+  - withdraw affected artifacts
+  - publish redacted derivative with separate provenance chain
+- AI unsafe output:
+  - disable `/ai/query` via policy (no redeploy required)
+  - preserve audit logs
+  - fix policy/validator/prompt
+  - add regression test
+- Corrupted processed artifacts:
+  - verify checksums
+  - rollback to previous dataset version
+  - rebuild indexes
+
+### Emergency deny switch (required)
+
+Maintain a policy-controlled kill switch that can disable public endpoints and Focus Mode without deploying code.
+
+---
+
 ## Roadmap
 
-The blueprint proposes converting core requirements into a tracked backlog:
+Convert core requirements into a tracked backlog:
 
 | Epic | Deliverables | Acceptance criteria |
 |---|---|---|
-| **E1 Governance + CI** | Story validator, catalog validator, policy tests, SBOM + provenance | PR fails if governed artifacts invalid; release gates enforced |
+| **E1 Governance + CI** | Story validator, catalog validator, policy tests, SBOM+provenance | PR fails if governed artifacts invalid; release gates enforced |
 | **E2 Data pipeline** | Run records, validators, promotion gate, catalog generators | Processed datasets always have STAC/DCAT/PROV + checksums |
 | **E3 Evidence resolver** | Evidence endpoints + UI evidence views | All citation refs resolvable; evidence view shows locator/snippet |
 | **E4 Focus Mode** | Retrieval pipeline + audit ledger + evaluation harness | Cite-or-abstain enforced; audit_ref always present; regression passes |
@@ -474,8 +704,8 @@ Use ADRs to keep decisions reviewable and auditable:
 
 ## Provenance Notes
 
-- This README intentionally treats some items as **recommended / proposed / illustrative** when repo-specific details (exact service names, ports, Story Node v3 schema, additional endpoints) may vary by implementation.
-- If you need to “lock” a detail into CI enforcement, first verify it against the repository contracts and governed docs before making it a release gate.
+- This README treats some items as **recommended / proposed / illustrative** where repo-specific details may vary.
+- If you need to “lock” a detail into CI enforcement, first verify it against canonical contracts and governed docs before making it a release gate.
 
 <div align="center">
 
