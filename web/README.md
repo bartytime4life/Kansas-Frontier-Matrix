@@ -40,27 +40,36 @@ KFM is a pipeline → catalogs → stores → API → UI system. The UI sits out
 ```mermaid
 flowchart LR
   subgraph Client
-    UI[KFM Web UI\nReact + TypeScript + MapLibre]
+    direction TB
+    UI_T["Client"]
+    UI["KFM Web UI (React + TypeScript + MapLibre)"]
+    UI_T --> UI
   end
 
-  subgraph TrustMembrane[Trust membrane]
-    API[API Gateway\nREST (optionally GraphQL)]
-    OPA[Policy engine\nOPA/Rego]
-    AUDIT[Audit + provenance services]
+  subgraph TrustMembrane
+    direction TB
+    TM_T["Trust membrane"]
+    API["API Gateway (REST; optionally GraphQL)"]
+    OPA["Policy engine (OPA/Rego)"]
+    AUDIT["Audit + provenance services"]
+    TM_T --> API
   end
 
   subgraph Stores
-    PG[PostGIS\ngeo + tiles]
-    G[Graph store\nNeo4j]
-    S[Search/Vector]
-    OBJ[Object storage\nCOGs + media]
+    direction TB
+    ST_T["Stores"]
+    PG["PostGIS (geo + tiles)"]
+    KG["Graph store (Neo4j)"]
+    S["Search/Vector"]
+    OBJ["Object storage (COGs + media)"]
+    ST_T --> PG
   end
 
   UI --> API
   API --> OPA
   API --> AUDIT
   API --> PG
-  API --> G
+  API --> KG
   API --> S
   API --> OBJ
 ```
