@@ -1,309 +1,349 @@
-# KFM Documentation (`docs/`) 📚
+# 🧭 `docs/` — Governed Documentation (Kansas Frontier Matrix)
 
-> [!IMPORTANT]
-> This directory contains **governed** Kansas Frontier Matrix (KFM) documentation. Treat docs as part of the system’s contract: **template-first**, **evidence-first**, and **CI-validated**. If something cannot be verified from project artifacts, label it **“(not confirmed in repo)”** rather than guessing.
+![Governed](https://img.shields.io/badge/governed-yes-blue)
+![Evidence-first](https://img.shields.io/badge/evidence--first-required-brightgreen)
+![Policy](https://img.shields.io/badge/policy-OPA%20default%20deny-orange)
+![Docs](https://img.shields.io/badge/docs-lint%20%2B%20link--check%20%2B%20template%20validation-informational)
 
-<details>
-<summary><strong>What you’ll find in this README</strong></summary>
-
-- 📘 Overview (how docs are governed + how to use this folder)
-- 🗂️ Directory Layout (canonical documentation placement)
-- 🧭 Context (non‑negotiable invariants)
-- 🗺️ Diagrams (workflow + canonical pipeline)
-- 📦 Data & Metadata (provenance + citation patterns)
-- 🌐 STAC, DCAT & PROV Alignment (standards expectations)
-- 🧱 Architecture (where technical design docs belong)
-- 🧠 Story Node & Focus Mode Integration (narratives + UI consumption)
-- 🧪 Validation & CI/CD (what must pass before merge)
-- ⚖️ FAIR+CARE & Governance (sensitivity + review triggers)
-- 🕰️ Version History
-
-</details>
+> **Scope:** This README covers **everything** in `docs/`: governed documentation, standards, templates, and Story Nodes (narratives) that power KFM’s public-facing understanding.
+>
+> **Audience:** engineering leads, data stewards, governance reviewers, and contributors authoring or reviewing governed artifacts.
 
 ---
 
-## 📘 Overview
+## 📌 Non-negotiables (Boss Mode)
 
-### Purpose
-This README is the **entry point for `docs/`**. It explains:
-- where different kinds of KFM documentation belong,
-- how to keep docs **governed, consistent, and reviewable**,
-- what checks must pass for documentation changes.
+These are “stop-the-line” rules for **all** documentation and story content:
 
-### Scope
-This covers **Markdown documentation** living under `docs/` (system docs, standards, templates, governance, Story Nodes, reports, API docs). Non-Markdown sources (PDFs, DOCX, external research) are typically treated as **references** unless explicitly promoted to canonical docs.
+1) **Trust membrane:** UI/external clients never access databases directly — access is only via the governed API + policy boundary.  
+2) **Fail-closed policy** on every request (data, Story Nodes, AI).  
+3) **Dataset promotion gates:** Raw → Work → Processed; promotion requires checksums + STAC/DCAT/PROV catalogs.  
+4) **Focus Mode must cite or abstain;** every answer produces an audit reference.
 
-### Audience
-- **Contributors** (engineers, data stewards, story authors)
-- **Reviewers** (governance/ethics/sovereignty, maintainers)
-- **Auditors/partners** who need traceability and reproducibility
-
-### Definitions (working)
-- **Governed document:** Markdown that follows an approved structure and is subject to CI validation.
-- **Provenance linkages:** explicit references to datasets, catalogs, commits, or documents that substantiate claims.
-- **Story Node:** narrative Markdown that is template-structured and evidence-linked for UI/Focus Mode consumption.
-- **Focus Mode:** a read-only narrative + evidence view that depends on structured Story Nodes to render citations and context without unsourced claims.
-
-### Key artifacts & references (expected paths)
-> These are *expected* homes per KFM documentation standards. If your repo differs, reconcile with the project’s canonical guidance and update this README accordingly.
-
-- Standards & protocols: `docs/standards/`
-- Templates: `docs/templates/`
-- Governance policies: `docs/governance/`
-- CI checklists/guides: `docs/ci/`
-- Architecture/system guides: `docs/architecture/` and other topical subfolders
-- Reference library: `docs/reference/`
-- Story Nodes: `docs/reports/<topic>/story_nodes/` *(preferred in v13-era guidance; align to your canonical convention if different)*
-
-### Definition of Done ✅ (for doc changes)
-A documentation change is “merge-ready” when:
-
-- [ ] **Template structure** is followed (appropriate sections/headings for doc type; consistent ordering).
-- [ ] **Provenance exists for every substantive claim** (dataset ID, catalog ID, document ref, commit hash, etc.).
-- [ ] Any unknowns are labeled **“(not confirmed in repo)”** (not guessed).
-- [ ] **Governance & sensitivity** handling is explicit where relevant (redaction/generalization; review flags).
-- [ ] **Advanced Markdown** is used where it improves readability and machine/UI consumption (tables, task lists, callouts, Mermaid, footnotes, collapsible details).
-- [ ] **Validation passes** (lint, structure/schema checks, link integrity, sensitivity scanning, accessibility checks).
+> If a document conflicts with these, the document is wrong. Fix the doc or flag for governance review.
 
 ---
 
-## 🗂️ Directory Layout
+## 🧭 Quick navigation
 
-### Documentation placement in the repository
-All official KFM Markdown documentation lives under `docs/`, organized by purpose.
+- [What belongs in `docs/`](#what-belongs-in-docs)
+- [`docs/` directory map](#docs-directory-map)
+- [Documentation types](#documentation-types)
+- [Templates (required)](#templates-required)
+- [Standards (required)](#standards-required)
+- [Governance & review gates](#governance--review-gates)
+- [Evidence & citations](#evidence--citations)
+- [Sensitivity handling & redaction](#sensitivity-handling--redaction)
+- [Story Nodes](#story-nodes)
+- [Quality gates & CI expectations](#quality-gates--ci-expectations)
+- [Contribution workflow](#contribution-workflow)
+- [Definition of Done (Docs PR)](#definition-of-done-docs-pr)
+- [Troubleshooting](#troubleshooting)
 
-### Canonical `docs/` map (recommended)
-> [!NOTE]
-> This is a canonical *documentation* layout. The repository may include other top-level folders (e.g., `data/`, `src/`, `web/`, `.github/`). If the current repo differs, update this tree and/or align the repo to the canonical structure.
+---
+
+## What belongs in `docs/`
+
+`docs/` is the **governed documentation system** for KFM:
+
+- architecture docs, ADRs, diagrams
+- standards and profiles (STAC/DCAT/PROV, repo standards, markdown protocol)
+- templates that define required headings/ordering for governed docs
+- governance policies (ethics, sovereignty, review gates)
+- Story Nodes (narrative content) in draft/published form with assets and citations
+
+**Rule of thumb:** if it changes system behavior, public narrative, datasets/catalog behavior, or Focus Mode output behavior → it must be documented here as a governed artifact.
+
+---
+
+## `docs/` directory map
+
+> **Keep this map accurate.** When you add a new doc subtree, update this README.
 
 ```text
 docs/
-  README.md                          # (this file) docs navigation + governance rules for docs/
-  standards/                         # protocols, work rules, writing rules, contracts
-  templates/                         # governed templates (universal doc, story node v3, api extension)
-  governance/                        # ROOT_GOVERNANCE, ETHICS, SOVEREIGNTY, review triggers
-  architecture/                      # system overviews, redesign blueprints, subsystem contracts
-  api/                               # human-readable API docs; link to schemas living elsewhere
-  data/                              # domain data docs, data dictionaries, dataset notes
-  reports/                           # run logs, curation notes, validation summaries, topic bundles
-    <topic>/
-      story_nodes/                   # preferred story node home (topic-scoped)
-      provenance/                    # (optional) provenance logs or exports for that topic
-  ci/                                # checklists + doc validation guidance
-    checklists/
-  reference/                         # external standards, bibliography, supporting references
-  archive/                           # (optional) retired/merged docs kept for traceability (not confirmed in repo)
-```
-
-### Folder responsibilities (quick registry)
-
-| Folder | What belongs here | What must be true |
-|---|---|---|
-| `docs/standards/` | Cross-cutting protocols (Markdown rules, AI-assist rules, data contract standards) | “Rules of the road” for contributors; should be stable and versioned |
-| `docs/templates/` | Official templates (Universal doc, Story Node v3, API contract extension) | Template-first authoring; changes require extra scrutiny |
-| `docs/governance/` | Governance & ethics policies | Must not be contradicted elsewhere; include review triggers |
-| `docs/architecture/` | System architecture, redesign plans, subsystem boundaries | Must reflect canonical pipeline + trust boundaries |
-| `docs/api/` | API usage docs, contract notes, change proposals | Must align with actual OpenAPI/GraphQL schemas (wherever stored) |
-| `docs/data/` | Dataset docs, domain glossaries, dictionaries | Must cite dataset/catalog identifiers and lineage |
-| `docs/reports/` | Validation logs, provenance exports, curation notes | Prefer machine-readable structure; include run IDs where applicable |
-| `docs/reports/<topic>/story_nodes/` | Story Nodes used by UI/Focus Mode | Must follow Story Node v3 template and evidence rules |
-| `docs/reference/` | External standards and reading library | Don’t treat as canonical system truth unless promoted |
-| `docs/archive/` | Deprecated or superseded docs | Keep with clear deprecation notices and pointers forward |
-
-### File naming & organization rules
-- Use descriptive names (full words; underscores or hyphens).
-- Include version in filename when the doc is versioned materially (e.g., `MASTER_GUIDE_v13.md`).
-- Template files should be prefixed `TEMPLATE__...`.
-- Keep a **single canonical home** for each subject area; avoid duplicate “truths” across multiple files.
-
----
-
-## 🧭 Context
-
-### Why documentation is “governed”
-KFM documentation is treated as part of the platform’s contract. Drift or ambiguity can cause:
-- pipeline misuse,
-- incorrect attributions,
-- governance oversights,
-- UI/Focus Mode narrative errors.
-
-### Non-negotiable invariants (must not regress)
-> [!IMPORTANT]
-> If a proposal or doc implies breaking one of these, it must be explicitly justified and reviewed; otherwise it is presumed incorrect.
-
-- **Evidence-first:** substantive claims require provenance linkages.
-- **Canonical pipeline ordering:** data must flow through a staged pipeline (see diagram below).
-- **Trust boundary (“trust membrane”):** clients must not bypass governed APIs to reach data stores.
-- **Template-first authoring:** new docs start from official templates; deviations require template changes.
-- **Cite-or-abstain posture for narratives:** if evidence is missing, omit or mark uncertainty instead of filling gaps.
-
----
-
-## 🗺️ Diagrams
-
-### Documentation contribution workflow (governed)
-```mermaid
-flowchart TD
-  A["Start from template"] --> B["Write content"]
-  B --> C["Add provenance for claims"]
-  C --> D["Add governance notes / sensitivity handling"]
-  D --> E["Self-review: structure, links, accessibility"]
-  E --> F["Run local checks"]
-  F --> G["Open PR"]
-  G --> H["Review: maintainers + governance (as needed)"]
-  H --> I{"CI validation passes?"}
-  I -->|"Yes"| J["Merge"]
-  I -->|"No"| K["Fix issues + re-run checks"]
-  K --> F
-```
-
-### Canonical pipeline (high-level)
-```mermaid
-flowchart LR
-  Raw[Raw] --> Processed[Processed]
-  Processed --> CatalogProv[Catalog + PROV]
-  CatalogProv --> DB[Database]
-  DB --> API[Governed API]
-  API --> UI[UI / Focus Mode]
+├── MASTER_GUIDE_v12.md                      # (legacy) prior canonical guide (if retained)
+├── MASTER_GUIDE_v13.md                      # canonical repository + pipeline structure reference
+├── glossary.md                              # canonical terms (used by humans + tooling)
+│
+├── architecture/
+│   ├── KFM_REDESIGN_BLUEPRINT_v13.md        # design rationale + structure updates
+│   ├── KFM_VISION_FULL_ARCHITECTURE.md      # long-term system architecture vision
+│   ├── diagrams/                            # diagrams (Mermaid, SVG, PNG) used by docs
+│   └── adr/                                 # Architecture Decision Records (ADRs)
+│
+├── standards/
+│   ├── KFM_MARKDOWN_WORK_PROTOCOL.md        # governed markdown rules for KFM docs
+│   ├── KFM_REPO_STRUCTURE_STANDARD.md       # canonical folder conventions + invariants
+│   ├── KFM_STAC_PROFILE.md                  # STAC profile requirements
+│   ├── KFM_DCAT_PROFILE.md                  # DCAT profile requirements
+│   └── KFM_PROV_PROFILE.md                  # PROV lineage requirements
+│
+├── templates/
+│   ├── TEMPLATE__KFM_UNIVERSAL_DOC.md       # default governed doc template (required headings)
+│   ├── TEMPLATE__STORY_NODE_V3.md           # story node template (required headings)
+│   └── TEMPLATE__API_CONTRACT_EXTENSION.md  # governed API contract change template
+│
+├── governance/
+│   ├── ROOT_GOVERNANCE.md                   # top-level governance rules
+│   ├── ETHICS.md                            # ethics requirements & constraints
+│   ├── SOVEREIGNTY.md                       # FAIR/CARE, authority to control, stewardship
+│   └── REVIEW_GATES.md                      # how docs/data/policy changes are approved
+│
+└── reports/
+    └── story_nodes/
+        ├── templates/                       # story-specific scaffolds, helper snippets
+        ├── draft/                           # work-in-progress narratives
+        └── published/                       # published story nodes (reviewed)
+            └── <story_slug>/
+                ├── story.md                 # the story node itself
+                └── assets/                  # images/maps/figures used by the story
 ```
 
 ---
 
-## 📦 Data & Metadata
+## Documentation types
 
-### Provenance expectations
-When a doc states something factual (a dataset meaning, a layer’s origin, a boundary decision, a narrative claim), it should include **at least one** of:
-- dataset/catalog identifier (e.g., STAC Collection ID, DCAT dataset ID),
-- provenance artifact reference (PROV export, run log, transformation note),
-- document reference (canonical design doc or policy),
-- commit hash / PR reference (for implementation claims).
+KFM documentation falls into a few governed “types.” Use the right type and template.
 
-> [!TIP]
-> Prefer **short, stable identifiers** in the text and put full citation details in footnotes.
-
-### Practical citation patterns (examples)
-Use footnotes to keep main text readable:
-
-- “This layer is derived from X and filtered to Y.”[^cite-example]
-- “Sensitive site locations are generalized per governance policy.”[^gov-example]
-
-> [!WARNING]
-> Do not include precise locations for culturally sensitive or vulnerable sites in public docs unless explicitly cleared. Default to generalization and governance review.
-
-### Structured registries belong in tables
-Examples of content that should be tabular:
-- layer registries,
-- dataset inventories,
-- contract/interface registries,
-- review-trigger matrices.
+| Doc type | Use it for | Canonical home | Must use template |
+|---|---|---|---|
+| **Universal Doc** | most design docs, runbooks, specs | `docs/…` | ✅ `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md` |
+| **Story Node v3** | narratives powering UI/Focus Mode | `docs/reports/story_nodes/**/story.md` | ✅ `docs/templates/TEMPLATE__STORY_NODE_V3.md` |
+| **API Contract Extension** | changes to API behavior/contracts | `docs/…` (usually `docs/architecture/` or `docs/standards/`) | ✅ `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` |
+| **ADR** | decisions with context & tradeoffs | `docs/architecture/adr/` | (ADR format governed by repo standard) |
 
 ---
 
-## 🌐 STAC, DCAT & PROV Alignment
+## Templates (required)
 
-When writing docs that describe datasets, catalogs, or pipeline steps:
-- use consistent standards terminology (STAC, DCAT, PROV),
-- describe how identifiers link across layers (catalog ↔ DB ↔ API ↔ UI),
-- document versioning expectations and lineage.
+> **Do not improvise headings** for governed docs. Templates exist to keep docs machine-parseable and CI-checkable.
 
-> [!NOTE]
-> If your doc is *not* data-related (e.g., a UI style guide), you may omit this section. If it is data/pipeline-related, include it.
+- `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`
+- `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
 
----
-
-## 🧱 Architecture
-
-### Where architecture docs should live
-- System and subsystem architecture: `docs/architecture/`
-- Cross-cutting design guidance: `docs/` root or a topic folder (e.g., `docs/design/` if used)
-- API contract narratives: `docs/api/`
-
-### Architecture boundary reminders (trust membrane)
-- Frontends/external clients should access data only via governed APIs.
-- Backend logic should respect defined interfaces/ports rather than bypassing governance controls.
-
-> [!TIP]
-> If you introduce a new subsystem, add:
-> - a short architecture doc in `docs/architecture/`,
-> - an interface/contract note (API or internal port),
-> - and update this `docs/README.md` if it changes doc placement.
+**If you need a new template:**
+1) add it under `docs/templates/`
+2) update this README
+3) add a CI rule/gate to validate it (template validators must be updated)
 
 ---
 
-## 🧠 Story Node & Focus Mode Integration
+## Standards (required)
 
-### What Story Nodes are for
-Story Nodes are the narrative layer that ties evidence to interpretation in a structured, machine-ingestible way so the UI can render:
-- citations,
-- attributions,
-- context and key entities,
-- and governance labels.
+Standards are **build constraints**, not suggestions:
+
+- `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md`
+- `docs/standards/KFM_REPO_STRUCTURE_STANDARD.md`
+- `docs/standards/KFM_STAC_PROFILE.md`
+- `docs/standards/KFM_DCAT_PROFILE.md`
+- `docs/standards/KFM_PROV_PROFILE.md`
+
+> If an implementation diverges from a standard, either:
+> - fix the implementation, or  
+> - update the standard via governance review (with explicit rationale + migration plan).
+
+---
+
+## Governance & review gates
+
+Governance docs define how KFM prevents “repo drift,” uncited narratives, and sensitivity violations:
+
+- `docs/governance/ROOT_GOVERNANCE.md`
+- `docs/governance/ETHICS.md`
+- `docs/governance/SOVEREIGNTY.md`
+- `docs/governance/REVIEW_GATES.md`
+
+### Governance expectations for doc authors
+
+- Treat any doc that affects system behavior as a production change.
+- Prefer minimal, reversible changes.
+- When uncertain, explicitly label:
+  - assumptions
+  - risks
+  - tradeoffs
+  - verification steps (minimum work to confirm unknowns)
+
+---
+
+## Evidence & citations
+
+### Evidence-first contract (applies to docs, stories, and Focus Mode)
+
+KFM requires evidence-first behavior:
+
+- Every **user-visible claim** must link to a dataset version and the exact record(s) used.
+- If evidence cannot be resolved, the system (and narratives) must **abstain** rather than guessing.
+
+### What “good citations” look like
+
+A citation is **not** just a URL. It should support reproducibility:
+
+- dataset identifier + version (or content hash)
+- record identifiers (when applicable)
+- page/line/offset spans when referencing documents
+- license/attribution captured (and carried into evidence views)
+
+> **Docs should be written so an evidence resolver can locate what you referenced in ≤2 API calls** once the evidence UX is wired.
+
+---
+
+## Sensitivity handling & redaction
+
+Some content must be treated as sensitive (examples include: private ownership, precise archaeological site locations, some health/public-safety indicators). Documentation must never leak restricted information.
+
+### Recommended sensitivity classes
+
+- **Public:** safe to publish without redaction  
+- **Restricted:** role-based access required (e.g., parcel ownership)  
+- **Sensitive-location:** coordinates must be generalized or suppressed (e.g., archaeology, sensitive species)  
+- **Aggregate-only:** publish only above thresholds (e.g., small-count health/crime)
+
+### Redaction as a first-class transformation
+
+If a doc references redacted or generalized data, it must state:
+- what was redacted/generalized
+- why (policy label)
+- how (transformation)
+- provenance references for the redacted derivative
+
+---
+
+## Story Nodes
+
+Story Nodes are the narrative core of KFM’s public understanding. They must be **citable, reproducible, and reviewable**.
 
 ### Where Story Nodes live
-Preferred convention:
-- `docs/reports/<topic>/story_nodes/`
 
-If your repository currently uses a different convention, reconcile it with the project’s canonical guidance and keep one canonical home.
+- Draft: `docs/reports/story_nodes/draft/<story_slug>/story.md` (or within `draft/` conventions)
+- Published: `docs/reports/story_nodes/published/<story_slug>/story.md`
+- Assets: `docs/reports/story_nodes/**/<story_slug>/assets/`
 
-### Story Node authoring rules (minimum)
-- Start from the **Story Node v3** template (`docs/templates/...`).
-- Every narrative claim must be evidence-linked or explicitly labeled as uncertain.
-- Include governance notes where sensitive content might exist.
-- Ensure the Story Node can be rendered without external context (Focus Mode consumption).
+### Story Node authoring rules
 
----
-
-## 🧪 Validation & CI/CD
-
-### Common checks (expected)
-Docs should pass automated checks, such as:
-- Markdown linting
-- Structure/schema validation (template compliance)
-- Link integrity (no broken links/images)
-- Sensitivity scanning
-- Accessibility checks (alt text, heading hierarchy, table headers)
-
-### Local workflow tips (before PR)
-- [ ] Run local checks (example: `pre-commit run --all-files`)
-- [ ] Preview Markdown rendering (GitHub/VS Code)
-- [ ] Verify links/references
-- [ ] Update Version History for non-trivial changes
-
-> [!IMPORTANT]
-> If checks fail, the doc should be revised until it is validation-clean.
+- Must use `docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- Must include citations and evidence references for each claim
+- Must avoid sensitive-location disclosure unless explicitly allowed by governance + policy
 
 ---
 
-## ⚖️ FAIR+CARE & Governance
+## Quality gates & CI expectations
 
-KFM documentation is written with **FAIR** (Findable, Accessible, Interoperable, Reusable) and **CARE** (Collective Benefit, Authority to Control, Responsibility, Ethics) values.
+`docs/` is governed and must be validated like code.
 
-### Practical governance rules for docs
-- **Findable:** consistent structure and clear headings; avoid duplicating canonical truth.
-- **Accessible:** descriptive link text; alt text for images; avoid walls of text.
-- **Interoperable:** consistent standards terminology and identifiers.
-- **Reusable:** version history; explicit assumptions; evidence that supports reuse.
+### Minimum gates expected for docs changes
 
-### Sensitivity & review triggers
-> [!WARNING]
-> If content may reveal culturally sensitive information (including precise locations of sacred/vulnerable sites), **generalize/redact** and add a clear note that governance review is required.
+- Markdown linting / formatting rules (governed)
+- Link-check (no broken internal references)
+- Template validation (required headings/order)
+- Citation checks (where tooling is available)
+- Story Node schema validation (for Story Nodes)
+- Policy-as-code regression suite (when docs change touches policy behavior)
 
-Include a “Governance review required” note when:
-- culturally sensitive information may be present,
-- restrictions or access controls are implied,
-- community authority-to-control considerations apply.
+### Architecture boundary reminder (trust membrane)
+
+Documentation must never instruct clients to bypass the trust membrane.
+
+```mermaid
+sequenceDiagram
+  participant UI as UI
+  participant API as API Gateway
+  participant OPA as OPA (authorize/validate)
+  participant Stores as Stores (PostGIS/Neo4j/Search/Object)
+  participant Focus as Focus Mode (optional)
+
+  UI->>API: request
+  API->>OPA: authorize
+  API->>Stores: retrieve governed data
+  API->>Focus: (optional) draft answer
+  API->>OPA: validate output (cite-or-abstain)
+  API-->>UI: response + citations + audit_ref
+```
+
+### “Truth path” reminder (docs must match system reality)
+
+```mermaid
+flowchart LR
+  Raw[Raw] --> Work[Work] --> Processed[Processed]
+  Processed --> Catalogs[STAC / DCAT / PROV]
+  Catalogs --> Stores[Stores]
+  Stores --> API[Governed API + Policy]
+  API --> UI[Web UI]
+  UI --> Stories[Story Nodes]
+  Stories --> Focus[Focus Mode]
+```
 
 ---
 
-## 🕰️ Version History
+## Contribution workflow
 
-| Version | Date | Summary of Changes | Author |
-|---|---:|---|---|
-| v1.0.0 | 2026-02-11 | Initial `docs/README.md` created (governed docs orientation + directory map). | (AI-assisted; reviewer TBD) |
+### Where to start
+
+1) Read: `docs/MASTER_GUIDE_v13.md`  
+2) Read the relevant standard(s) in `docs/standards/`  
+3) Pick the correct template from `docs/templates/`
+
+### Editing rules (practical)
+
+- Prefer small PRs (reviewable, reversible).
+- If changing a standard, include:
+  - rationale
+  - migration notes
+  - acceptance criteria/tests (or CI gate updates)
+- If adding new directories, update the directory map in this README.
+
+### Suggested PR labels (optional, but helpful)
+
+- `docs:governed`
+- `docs:story-node`
+- `docs:standards`
+- `governance-review-required`
+- `sensitivity-review-required`
 
 ---
 
-## Footnotes
+## Definition of Done (Docs PR)
 
-[^cite-example]: Example placeholder citation. Replace with a dataset/catalog ID, provenance artifact reference, or doc/commit reference that supports the claim.
-[^gov-example]: Example placeholder citation. Replace with the governing policy document reference (e.g., sovereignty/ethics policy) that dictates sensitivity handling.
+Use this checklist before requesting review:
+
+- [ ] Correct doc type chosen (Universal Doc / Story Node / API Contract Extension / ADR)
+- [ ] Correct template used; required headings preserved
+- [ ] No sensitive-location leakage (or explicitly governed)
+- [ ] Evidence-first: claims are supported with resolvable citations
+- [ ] Link-check clean (internal links + referenced assets)
+- [ ] Markdown lint clean
+- [ ] Any referenced diagrams/assets committed to the right folder
+- [ ] If doc changes system behavior: acceptance criteria included + CI gates identified/updated
+- [ ] If doc touches policy behavior: OPA/policy regression expectations noted
+- [ ] If doc touches data publication: Raw/Work/Processed + STAC/DCAT/PROV invariants respected
+
+---
+
+## Troubleshooting
+
+### “My doc failed validation”
+
+Common causes:
+- missing required headings (template mismatch)
+- broken relative links
+- assets stored outside the expected subtree
+- citations missing where required by tooling
+- Story Node schema mismatch
+
+### “I don’t know where this doc belongs”
+
+Use this rule:
+- Architecture/decisions → `docs/architecture/` (and `adr/` for decisions)
+- Standards/profiles → `docs/standards/`
+- Reusable formats → `docs/templates/`
+- Governance/policy rules → `docs/governance/`
+- Narrative content → `docs/reports/story_nodes/`
+
+If still unclear, place it under `docs/architecture/` as a **draft** and flag it for governance review.
+
+---
+
+## Appendix: Canonical repo boundary reminder (context)
+
+KFM’s canonical layout separates concerns (docs/data/src/web/policy) and enforces governance checks per area. Don’t mix code/data/policy guidance into docs in a way that blurs boundaries — link to the correct subsystem instead.
