@@ -85,24 +85,24 @@ These are system invariants that registry entries must support:
 
 ```text
 src/
-  pipelines/
-    registry/
-      README.md
-
-      pipelines/                 # one file per pipeline/connector entry
-        <pipeline_id>.yaml
-
-      watchers/                  # one file per watcher entry
-        <watcher_id>.yaml
-
-      policies/                  # optional: policy bundles referenced by entries
-        promotion_contract/      # e.g., required checks, failure modes
-        provenance_guard/
-        materiality_rules/
-
-      _examples/
-        pipeline.example.yaml
-        watcher.example.yaml
+└─ pipelines/
+   └─ registry/                               # Pipeline registry: declarative entries for pipelines + watchers
+      ├─ README.md                            # How registry entries work, validation rules, and CI gates
+      │
+      ├─ pipelines/                           # Pipeline/connector definitions (ONE file per pipeline_id)
+      │  └─ <pipeline_id>.yaml                # Pipeline entry (inputs, transforms, outputs, catalogs, promotion rules)
+      │
+      ├─ watchers/                            # Watcher definitions (ONE file per watcher_id)
+      │  └─ <watcher_id>.yaml                 # Watcher entry (schedule/triggers, scope, provenance defaults, actions)
+      │
+      ├─ policies/                            # Optional policy bundles referenced by registry entries
+      │  ├─ promotion_contract/               # Promotion contract bundle (required checks + fail-closed behavior)
+      │  ├─ provenance_guard/                 # Provenance completeness bundle (PROV links, receipts, digests)
+      │  └─ materiality_rules/                # Materiality thresholds (what changes trigger re-review/re-promotion)
+      │
+      └─ _examples/                           # Copy/paste examples (kept in sync with schema + validators)
+         ├─ pipeline.example.yaml             # Minimal valid pipeline entry (annotated)
+         └─ watcher.example.yaml              # Minimal valid watcher entry (annotated)
 ```
 
 ---
