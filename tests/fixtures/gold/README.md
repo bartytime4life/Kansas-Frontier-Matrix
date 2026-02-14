@@ -84,38 +84,38 @@ Recommended layout:
 
 ~~~text
 tests/fixtures/gold/
-  README.md                        # (this file)
-
-  catalogs/
-    stac/
-      case__stac_minimal_v1/
-      case__stac_with_assets_v1/
-    dcat/
-      case__dcat_dataset_minimal_v1/
-    prov/
-      case__prov_activity_minimal_v1/
-
-  policy/
-    case__deny_missing_license_v1/
-    case__redact_sensitive_location_v1/
-
-  api/
-    openapi/
-      case__openapi_snapshot_v1/
-    graphql/
-      case__graphql_schema_snapshot_v1/
-
-  story_nodes/
-    valid/
-      case__story_node_v3_minimal_v1/
-    invalid/
-      case__story_node_missing_citations_v1/
-
-  focus_mode/
-    case__cite_or_abstain_response_shape_v1/
-
-  vectors/
-    case__spec_hash_vectors_v1/
+├─ README.md                                      # (This file) — what “gold” means + update/review rules
+│
+├─ catalogs/                                      # Golden catalog artifacts + expected validator outcomes
+│  ├─ stac/
+│  │  ├─ case__stac_minimal_v1/                   # Minimal valid STAC (baseline shape + required fields)
+│  │  └─ case__stac_with_assets_v1/               # STAC w/ assets & links (asset rules, media-types, href norms)
+│  ├─ dcat/
+│  │  └─ case__dcat_dataset_minimal_v1/           # Minimal valid DCAT dataset record (baseline contract)
+│  └─ prov/
+│     └─ case__prov_activity_minimal_v1/          # Minimal valid PROV activity (lineage prerequisites)
+│
+├─ policy/                                        # Golden policy scenarios (inputs + expected decisions)
+│  ├─ case__deny_missing_license_v1/              # Deny when licensing is missing/unknown (fail-closed)
+│  └─ case__redact_sensitive_location_v1/         # Redaction required for sensitive locations (or deny if impossible)
+│
+├─ api/                                           # API contract snapshots (normalized; stable diffs)
+│  ├─ openapi/
+│  │  └─ case__openapi_snapshot_v1/               # OpenAPI spec snapshot (compatibility gate baseline)
+│  └─ graphql/
+│     └─ case__graphql_schema_snapshot_v1/        # GraphQL schema snapshot (breaking-change detection)
+│
+├─ story_nodes/                                   # Story Node structure + governance cases (valid/invalid)
+│  ├─ valid/
+│  │  └─ case__story_node_v3_minimal_v1/          # Minimal valid Story Node v3 (frontmatter + citations + assets refs)
+│  └─ invalid/
+│     └─ case__story_node_missing_citations_v1/   # Invalid: missing citations (should fail policy/validators)
+│
+├─ focus_mode/                                    # Focus Mode contract cases (shape + citation/abstain behavior)
+│  └─ case__cite_or_abstain_response_shape_v1/    # Response envelope + required citation fields (or abstain reason)
+│
+└─ vectors/                                       # Low-level deterministic vectors (hashing, canonicalization, etc.)
+   └─ case__spec_hash_vectors_v1/                 # spec_hash inputs + expected outputs (canonical baseline)
 ~~~
 
 Notes:
