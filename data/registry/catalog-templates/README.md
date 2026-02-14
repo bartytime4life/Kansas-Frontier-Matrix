@@ -73,19 +73,26 @@ flowchart LR
 ### This directory
 
 ```text
-data/registry/catalog-templates/
-├── README.md
-├── dcat/
-│   └── *.template.jsonld
-├── stac/
-│   └── *.template.json
-├── prov/
-│   └── *.template.json
-└── shared/
-    ├── contexts/
-    │   └── *.json
-    └── vocab/
-        └── *.json
+data/
+└── registry/
+    └── catalog-templates/                         # Canonical templates for KFM catalogs (STAC/DCAT/PROV)
+        ├── README.md                              # How templates are used, naming rules, and validation expectations
+        │
+        ├── dcat/                                  # DCAT JSON-LD templates (dataset/distribution patterns)
+        │   └── *.template.jsonld                  # Reusable DCAT shapes (fill-in placeholders; keep stable IDs/contexts)
+        │
+        ├── stac/                                  # STAC JSON templates (Collections/Items/Assets patterns)
+        │   └── *.template.json                    # Reusable STAC shapes (minimal → extended; link/asset conventions)
+        │
+        ├── prov/                                  # PROV JSON templates (activities/entities/agents/linking patterns)
+        │   └── *.template.json                    # Reusable PROV shapes (lineage prerequisites + run linkage)
+        │
+        └── shared/                                # Shared building blocks referenced by templates across standards
+            ├── contexts/                          # JSON-LD contexts (namespace mappings; versioned + audited)
+            │   └── *.json                         # Context files used by DCAT (and any JSON-LD in the system)
+            │
+            └── vocab/                             # Controlled vocabularies/enums used across templates
+                └── *.json                         # Canonical terms (licenses, roles, sensitivity levels, etc.)
 ```
 
 ### Related canonical output locations
