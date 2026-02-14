@@ -126,41 +126,51 @@ sequenceDiagram
 ### Suggested / expected structure (Clean Architecture)
 
 ```text
-src/server/
-  README.md                  # (this file)
-  app/
-    main.py                  # FastAPI app factory, middleware wiring, router registration
-  api/
-    routes/                  # HTTP endpoints grouped by domain (datasets, layers, stories, evidence, ai)
-    schemas/                 # Pydantic request/response models (API boundary DTOs)
-    deps/                    # FastAPI dependencies (auth context, repo wiring)
-    middleware/              # correlation-id, authn/z, CORS, rate limits, etc.
-  domain/
-    models/                  # pure domain entities/value objects
-    errors/                  # domain errors (no HTTP here)
-  usecases/
-    *                         # workflows: resolve evidence, fetch layer descriptor, run Focus Mode, etc.
-  ports/
-    repositories.py          # Protocols/interfaces (PostGISRepo, GraphRepo, CatalogRepo, AuditRepo…)
-    policy.py                # PolicyClient interface
-  adapters/
-    opa_client.py            # OPA adapter implementing PolicyClient
-    object_store.py          # object store adapter (catalogs, COGs, media)
-  infrastructure/
-    postgis_repo.py          # concrete repos
-    neo4j_repo.py
-    search_repo.py
-    audit_repo.py
-  policy_contracts/
-    input_schemas/           # schemas for OPA input bundles (actor/request/answer)
-  tests/
-    unit/
-    integration/
-    contract/
-    e2e/                     # optional (often lives at repo root, but can be referenced)
-  scripts/
-    export_openapi.py        # export OpenAPI snapshot (if used)
-    export_schema.py         # export GraphQL schema (if GraphQL enabled)
+src/server/                                      # Governed API backend (FastAPI): routes → use-cases → ports → adapters
+├─ README.md                                      # (This file) architecture, boundaries, and how to run/test the server
+│
+├─ app/
+│  └─ main.py                                     # FastAPI app factory: middleware wiring + router registration
+│
+├─ api/                                           # HTTP boundary layer (DTOs + routing + dependency wiring)
+│  ├─ routes/                                     # Endpoints grouped by domain (datasets/layers/stories/evidence/ai)
+│  ├─ schemas/                                    # Pydantic request/response models (API boundary DTOs only)
+│  ├─ deps/                                       # FastAPI dependencies (auth context, port wiring, request-scoped deps)
+│  └─ middleware/                                 # Cross-cutting middleware (correlation-id, authn/z, CORS, rate limits)
+│
+├─ domain/                                        # Pure domain layer (no FastAPI, no I/O, no persistence)
+│  ├─ models/                                     # Entities/value objects + invariants
+│  └─ errors/                                     # Domain errors (typed; mapped to HTTP at the boundary)
+│
+├─ usecases/                                      # Application workflows (orchestration; all I/O via ports)
+│  └─ *                                           # e.g., resolveEvidence, queryMapFeatures, publishStoryNode, queryFocusMode
+│
+├─ ports/                                         # Interfaces (protocols) the use-cases depend on
+│  ├─ repositories.py                             # Repo interfaces (PostGISRepo, GraphRepo, CatalogRepo, AuditRepo…)
+│  └─ policy.py                                   # PolicyClient interface (OPA gateway abstraction)
+│
+├─ adapters/                                      # Adapters implementing ports (edge integrations)
+│  ├─ opa_client.py                               # OPA adapter implementing PolicyClient (decision + redaction results)
+│  └─ object_store.py                             # Object store adapter (catalogs/COGs/media; digests + refs)
+│
+├─ infrastructure/                                # Concrete repo implementations (databases/search/audit sinks)
+│  ├─ postgis_repo.py                             # PostGIS-backed repository implementations
+│  ├─ neo4j_repo.py                               # Neo4j-backed repository implementations
+│  ├─ search_repo.py                              # Search/vector repository implementations (if used)
+│  └─ audit_repo.py                               # Audit persistence (append-only store; trace IDs)
+│
+├─ policy_contracts/                              # OPA contract artifacts maintained by the server
+│  └─ input_schemas/                              # Schemas for OPA input bundles (actor/request/answer/context)
+│
+├─ tests/                                         # Server-scoped tests (often mirrored by repo-root tests/)
+│  ├─ unit/                                       # Hermetic unit tests (domain/use-cases/validation/policy_input)
+│  ├─ integration/                                # Service-backed tests (DB/OPA/object store/search)
+│  ├─ contract/                                   # Contract tests (OpenAPI/GraphQL/snapshots, response shapes)
+│  └─ e2e/                                        # Optional local E2E (repo-root E2E may be the canonical suite)
+│
+└─ scripts/                                       # Dev/CI utilities for contract exports
+   ├─ export_openapi.py                           # Export OpenAPI snapshot (for contract tests / docs)
+   └─ export_schema.py                            # Export GraphQL schema (if GraphQL is enabled)
 ```
 
 ---
