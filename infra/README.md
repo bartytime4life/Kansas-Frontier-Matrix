@@ -126,19 +126,19 @@ make -C infra/ci verify   # recommended thin wrapper around all checks
 
 ```mermaid
 flowchart LR
-  U[Users / Analysts] --> UI[Web UI]
-  UI -->|HTTPS| API[Governed API Gateway / Backend]
-  API -->|Policy Check| OPA[Policy Engine (OPA)]
-  API -->|Allowed Query| DB[(Stores: PostGIS / Graph / Search)]
-  API -->|Evidence + Audit Ref| AUD[Audit Ledger / Provenance Store]
+  U["Users / Analysts"] --> UI["Web UI"]
+  UI -->|"HTTPS"| API["Governed API Gateway / Backend"]
+  API -->|"Policy Check"| OPA["Policy Engine (OPA)"]
+  API -->|"Allowed Query"| DB["Stores: PostGIS / Graph / Search"]
+  API -->|"Evidence + Audit Ref"| AUD["Audit Ledger / Provenance Store"]
 
-  PIPE[Data Pipelines] -->|Ingest + Validate| RAW[(Raw Zone)]
-  RAW -->|Promotion Gates| WORK[(Work Zone)]
-  WORK -->|Promotion Gates| PROC[(Processed Zone)]
+  PIPE["Data Pipelines"] -->|"Ingest + Validate"| RAW["Raw Zone"]
+  RAW -->|"Promotion Gates"| WORK["Work Zone"]
+  WORK -->|"Promotion Gates"| PROC["Processed Zone"]
   PROC --> DB
 
-  API --> FM[Focus Mode Answer Service]
-  FM -->|Must cite or abstain| AUD
+  API --> FM["Focus Mode Answer Service"]
+  FM -->|"Must cite or abstain"| AUD
 ```
 
 ### Data Truth Path
