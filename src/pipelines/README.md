@@ -59,14 +59,14 @@ Pipelines in this folder must:
 
 ```mermaid
 flowchart LR
-  S[Source APIs / Files] --> R[Raw zone<br/>immutable]
-  R --> W[Work zone<br/>normalize + QA]
-  W --> P[Processed zone<br/>query-ready + versioned]
-  P --> C[Catalogs<br/>DCAT + STAC + PROV]
-  C --> ST[Stores<br/>object store + PostGIS + graph/search]
-  ST --> A[Governed API<br/>(policy + redaction + audit)]
-  A --> UI[Web UI / Map / Timeline]
-  UI --> N[Stories / Focus Mode<br/>(cite or abstain)]
+  S["Source APIs / Files"] --> R["Raw zone (immutable)"]
+  R --> W["Work zone (normalize + QA)"]
+  W --> P["Processed zone (query-ready + versioned)"]
+  P --> C["Catalogs (DCAT + STAC + PROV)"]
+  C --> ST["Stores (object store + PostGIS + graph/search)"]
+  ST --> A["Governed API (policy + redaction + audit)"]
+  A --> UI["Web UI / Map / Timeline"]
+  UI --> N["Stories / Focus Mode (cite or abstain)"]
 ```
 
 ### Non-negotiable invariants
