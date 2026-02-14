@@ -125,27 +125,30 @@ This folder is designed to be portable across KFM repos. CI can treat it as a re
 
 ```text
 tools/
-  supply-chain/
-    README.md                  # you are here
-    tool-versions.yaml         # tool constraints + pins used by CI (normative)
-    scripts/                   # local + CI entrypoints (bash/python/node)
-      install-tools.sh         # install pinned tools (or validate container toolchain)
-      verify.sh                # runs the acceptance harness (fail-closed)
-      sbom.sh                  # generates SBOM for a target artifact
-      provenance.sh            # emits SLSA/in-toto provenance for a build
-      sign.sh                  # cosign sign/attest wrapper (digest-only)
-      discover-referrers.sh    # lists OCI referrers for a subject digest
-    policies/
-      provenance-guard/        # minimum promotion contract policies
-        policy.rego
-        policy_test.rego
-      materiality/             # optional: provider-aware triggers and thresholds
-        policy.rego
-        policy_test.rego
-    fixtures/
-      example-run_receipt.v1.json
-      example-sbom.spdx.json
-      example-provenance.intoto.json
+└── supply-chain/                             # Supply-chain security tooling (SBOM, provenance, signing, verification)
+    ├── README.md                             # You are here: how to run + how CI uses this folder
+    ├── tool-versions.yaml                    # Normative tool pins/constraints used by CI + local parity
+    │
+    ├── scripts/                              # Entry points (local + CI) — keep behavior deterministic
+    │   ├── install-tools.sh                   # Install pinned tools (or validate container toolchain matches pins)
+    │   ├── verify.sh                          # Run acceptance harness (fail-closed; blocks promotion on mismatch)
+    │   ├── sbom.sh                            # Generate SBOM for a target artifact (e.g., SPDX/CycloneDX)
+    │   ├── provenance.sh                      # Emit SLSA / in-toto provenance for a build (predicate + metadata)
+    │   ├── sign.sh                            # Cosign sign/attest wrapper (digest-only; no tag signing)
+    │   └── discover-referrers.sh              # List OCI referrers for a subject digest (sboms/attestations/etc.)
+    │
+    ├── policies/                              # Policy pack for promotion/verification gates
+    │   ├── provenance-guard/                  # Minimum promotion contract (required provenance fields + checks)
+    │   │   ├── policy.rego                    # Rego rules (deny-by-default; require attestations/receipts)
+    │   │   └── policy_test.rego               # Unit tests for provenance-guard policy
+    │   └── materiality/                       # Optional: provider-aware triggers/thresholds (what changes require what)
+    │       ├── policy.rego                    # Materiality rules (diff thresholds, dependency classes, risk levels)
+    │       └── policy_test.rego               # Unit tests for materiality policy
+    │
+    └── fixtures/                              # Golden test vectors for acceptance + regression tests
+        ├── example-run_receipt.v1.json        # Example run receipt (inputs/outputs/digests/decision summary)
+        ├── example-sbom.spdx.json             # Example SBOM output (SPDX JSON baseline)
+        └── example-provenance.intoto.json     # Example in-toto/SLSA provenance (predicate baseline)
 ```
 
 > [!NOTE]
