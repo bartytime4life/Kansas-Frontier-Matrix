@@ -331,12 +331,12 @@ This README (and each domain runbook) should be written with CI in mind:
 
 ```mermaid
 flowchart LR
-  A[Raw zone] --> B[Work zone]
-  B --> C[Processed zone]
-  C --> D[Catalogs: DCAT/STAC/PROV]
-  D --> E[Stores: PostGIS / Object Store / Graph / Search]
-  E --> F[Governed API + Policy (Trust Membrane)]
-  F --> G[UI + Story Nodes + Focus Mode]
+  A["Raw zone"] --> B["Work zone"]
+  B --> C["Processed zone"]
+  C --> D["Catalogs: DCAT / STAC / PROV"]
+  D --> E["Stores: PostGIS / Object Store / Graph / Search"]
+  E --> F["Governed API + Policy (Trust Membrane)"]
+  F --> G["UI + Story Nodes + Focus Mode"]
 ```
 
 This flow reflects KFM’s core “truth path” and reinforces the invariant that processed + catalogs are the publishable interface to downstream systems.:contentReference[oaicite:44]{index=44}
