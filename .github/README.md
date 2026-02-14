@@ -194,15 +194,15 @@ KFM supports publishing a dataset + its evidence as a **single typed OCI artifac
 
 ```mermaid
 flowchart LR
-  PR[PR: data + receipts + catalogs] --> CI[CI: validate + conftest + cosign verify]
-  CI -->|publish @sha256| OCI[(OCI Registry)]
-  OCI -->|referrers| SBOM[SBOM (SPDX)]
-  OCI -->|referrers| SLSA[SLSA/in-toto provenance]
-  OCI -->|referrers| PROV[PROV record]
-  OCI -->|referrers| DCAT[DCAT record]
-  OCI -->|referrers| STAC[STAC collection/items]
-  OCI --> API[Evidence Resolver /bundles/{digest}]
-  API --> UI[UI: Receipt Viewer + Trust Badges]
+  PR["PR: data + receipts + catalogs"] --> CI["CI: validate + conftest + cosign verify"]
+  CI -->|"publish sha256 digest"| OCI["OCI Registry"]
+  OCI -->|"referrers"| SBOM["SBOM (SPDX)"]
+  OCI -->|"referrers"| SLSA["SLSA / in-toto provenance"]
+  OCI -->|"referrers"| PROV["PROV record"]
+  OCI -->|"referrers"| DCAT["DCAT record"]
+  OCI -->|"referrers"| STAC["STAC collection/items"]
+  OCI --> API["Evidence Resolver: /bundles/{digest}"]
+  API --> UI["UI: Receipt Viewer + Trust Badges"]
 ```
 
 **Repo expectation:**
