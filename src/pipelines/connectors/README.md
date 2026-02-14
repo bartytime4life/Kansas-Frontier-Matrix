@@ -30,14 +30,14 @@ Connectors are *not* the place to:
 
 ```mermaid
 flowchart LR
-  A[Upstream Provider\nAPI / Files / STAC / DCAT] --> B[Connector\nsrc/pipelines/connectors/*]
-  B --> C[Raw Zone\nimmutable capture]
-  C --> D[Work Zone\nnormalize + QA]
-  D --> E[Processed Zone\npublishable artifacts]
-  E --> F[Catalogs\nSTAC / DCAT / PROV + checksums]
-  F --> G[Stores + Indexes]
-  G --> H[Governed API + Policy\n(trust membrane)]
-  H --> I[UI / Stories / Focus Mode]
+  A["Upstream Provider (API / Files / STAC / DCAT)"] --> B["Connector (src/pipelines/connectors/)"]
+  B --> C["Raw Zone (immutable capture)"]
+  C --> D["Work Zone (normalize + QA)"]
+  D --> E["Processed Zone (publishable artifacts)"]
+  E --> F["Catalogs (STAC / DCAT / PROV + checksums)"]
+  F --> G["Stores + Indexes"]
+  G --> H["Governed API + Policy (trust membrane)"]
+  H --> I["UI / Stories / Focus Mode"]
 ```
 
 ---
@@ -51,16 +51,18 @@ Recommended structure:
 
 ```text
 src/
-  pipelines/
-    connectors/
-      README.md                      # this file
-      _contracts/                    # connector interface, DTOs, config schemas
-      _shared/                       # shared HTTP client, retry, auth helpers, parsing utils
-      <source_id>/                   # one connector per upstream source
-        connector.<ext>              # implementation (language/framework per repo)
-        mapping/                     # canonical field mapping + transforms
-        fixtures/                    # small deterministic fixtures for CI
-        tests/                       # unit/contract/integration tests (as supported)
+└─ pipelines/
+   └─ connectors/                                 # Upstream connectors: ingest → normalize → validate → emit governed outputs
+      ├─ README.md                                # (This file) connector rules, contracts, testing, and promotion expectations
+      │
+      ├─ _contracts/                              # Versioned connector interfaces + DTOs + config schemas (source-agnostic)
+      ├─ _shared/                                 # Shared helpers (HTTP/retry/auth/parsing/normalization; no source specifics)
+      │
+      └─ <source_id>/                             # One connector per upstream source (stable id; kebab/snake-case)
+         ├─ connector.<ext>                       # Connector implementation entrypoint (language/framework per repo)
+         ├─ mapping/                              # Canonical field mappings + transforms (source → KFM canonical)
+         ├─ fixtures/                             # Deterministic fixtures for CI (synthetic; tiny; no secrets/PII)
+         └─ tests/                                # Connector tests (unit/contract/integration as supported)
 ```
 
 ---
