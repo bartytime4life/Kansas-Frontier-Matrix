@@ -99,12 +99,14 @@ data/
 
 ```text
 data/
-├── stac/
-│   ├── collections/
-│   └── items/
-├── catalog/
-│   └── dcat/
-└── prov/
+├── stac/                                   # STAC catalog (spatial/temporal asset discovery)
+│   ├── collections/                        # STAC Collections (groupings by theme/region/time/source)
+│   └── items/                              # STAC Items (atomic assets w/ geometry + datetime + asset links)
+│
+├── catalog/                                # Non-STAC catalogs (registry-style metadata)
+│   └── dcat/                               # DCAT datasets/distributions (publishable metadata index)
+│
+└── prov/                                   # PROV lineage (how/when/with-what inputs outputs were produced)
 ```
 
 ---
