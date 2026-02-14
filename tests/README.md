@@ -467,4 +467,3 @@ Because KFM’s core value is *trust*. Tests are the automated enforcement mecha
 A “green build” is not merely “code works” — it is “the governed system still satisfies its trust contract.”
 
 </details>
-
