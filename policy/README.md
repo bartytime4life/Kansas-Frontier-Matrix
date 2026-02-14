@@ -262,28 +262,29 @@ Policy evaluation must be **portable** across:
 > If your repo already has a policy layout, keep it—but map it to these responsibilities.
 
 ```text
-policy/
-  README.md
-
-  rego/
-    kfm/
-      ai.rego                # Focus Mode cite-or-abstain + output validation
-      data.rego              # dataset access rules
-      publish.rego           # dataset promotion / publishing gates (CI + runtime)
-      audit.rego             # audit requirements (presence, shape, etc.)
-
-  tests/
-    kfm_ai_test.rego
-    kfm_data_test.rego
-    fixtures/
-      inputs/
-      expected/
-
-  schemas/
-    policy_input.schema.json
-    audit_record.schema.json
-
-  bundles/
+policy/                                         # OPA policy pack (source-of-truth) + tests + schemas + optional bundles
+├─ README.md                                    # How to run OPA tests, fixture conventions, and CI gates (fail-closed)
+│
+├─ rego/                                        # Rego modules (authoritative rules)
+│  └─ kfm/                                      # KFM policy namespace (package kfm.*)
+│     ├─ ai.rego                                # Focus Mode: cite-or-abstain + response/contract validation
+│     ├─ data.rego                              # Dataset access rules (default-deny; scopes/labels/filters)
+│     ├─ publish.rego                           # Promotion/publishing gates (CI + runtime prerequisites)
+│     └─ audit.rego                             # Audit requirements (presence, shape, required fields)
+│
+├─ tests/                                       # OPA unit tests + deterministic fixtures
+│  ├─ kfm_ai_test.rego                          # Tests for kfm.ai (citations required, abstain shape, edge cases)
+│  ├─ kfm_data_test.rego                        # Tests for kfm.data (allow/deny matrix, sensitivity gating)
+│  └─ fixtures/                                 # Test vectors (synthetic; deterministic)
+│     ├─ inputs/                                # Inputs to policy evaluation (actor/resource/context/answer)
+│     └─ expected/                              # Expected decisions (allow/deny + reasons/redactions/snapshots)
+│
+├─ schemas/                                     # Contract schemas used by policy + test harness
+│  ├─ policy_input.schema.json                  # Policy input envelope (what OPA receives)
+│  └─ audit_record.schema.json                  # Audit record envelope (what must be emitted/validated)
+│
+└─ bundles/                                     # Optional: built OPA bundles emitted by CI (artifacted for deployment)
+   └─ (generated)                               # CI-owned outputs only; do not edit by hand
     # (optional) built OPA bundles emitted by CI
 ```
 
