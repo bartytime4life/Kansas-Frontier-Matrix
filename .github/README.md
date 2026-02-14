@@ -125,18 +125,18 @@ These are not “guidelines.” They are **contracts** that CI + policy must enf
 
 ```mermaid
 flowchart LR
-  UI[Web UI / External Client] -->|HTTP| GW[API Gateway / Backend API]
-  GW -->|authorize| OPA[OPA Policy PDP]
-  OPA -->|allow/deny + redaction decisions| GW
+  UI["Web UI / External Client"] -->|"HTTP"| GW["API Gateway / Backend API"]
+  GW -->|"authorize"| OPA["OPA Policy PDP"]
+  OPA -->|"allow/deny + redaction decisions"| GW
 
-  GW -->|read/write via repository ports| STORES[(Data Stores)]
-  STORES -->|results| GW
+  GW -->|"read/write via repository ports"| STORES["Data Stores"]
+  STORES -->|"results"| GW
 
-  GW -->|evidence refs (prov:// stac:// dcat:// doc:// graph://)| EVID[Evidence Resolver API]
-  EVID -->|resolved evidence views| GW
+  GW -->|"evidence refs (PROV, STAC, DCAT, DOC, GRAPH)"| EVID["Evidence Resolver API"]
+  EVID -->|"resolved evidence views"| GW
 
-  GW -->|validate response: citations + sensitivity| OPA
-  GW -->|append audit event| LEDGER[(Audit Ledger)]
+  GW -->|"validate response (citations + sensitivity)"| OPA
+  GW -->|"append audit event"| LEDGER["Audit Ledger"]
   GW --> UI
 ```
 
