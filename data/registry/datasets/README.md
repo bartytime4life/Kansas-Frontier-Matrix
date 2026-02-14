@@ -73,21 +73,21 @@ data/
 
 ```mermaid
 flowchart LR
-  R[Dataset registry entry<br/>data/registry/datasets/*.dataset.json] --> P[Connector / pipeline config]
-  P --> RAW[data/raw/<domain>/...]
-  RAW --> WORK[data/work/<domain>/...]
-  WORK --> PROC[data/processed/<domain>/...]
+  R["Dataset registry entry (data/registry/datasets/{name}.dataset.json)"] --> P["Connector / pipeline config"]
+  P --> RAW["data/raw/{domain}/..."]
+  RAW --> WORK["data/work/{domain}/..."]
+  WORK --> PROC["data/processed/{domain}/..."]
 
-  PROC --> STAC[data/stac/collections & items]
-  PROC --> DCAT[data/catalog/dcat/]
-  PROC --> PROV[data/prov/]
+  PROC --> STAC["data/stac/ (collections + items)"]
+  PROC --> DCAT["data/catalog/dcat/"]
+  PROC --> PROV["data/prov/"]
 
-  STAC --> G[Graph index / lineage views]
+  STAC --> G["Graph index / lineage views"]
   DCAT --> G
   PROV --> G
 
-  G --> API[Governed API<br/>(policy + audit + evidence bundle)]
-  API --> UI[Map UI / Story Nodes / Focus Mode]
+  G --> API["Governed API (policy + audit + evidence bundle)"]
+  API --> UI["Map UI / Story Nodes / Focus Mode"]
 ```
 
 ---
