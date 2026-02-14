@@ -62,28 +62,32 @@ This folder is intentionally boring and CI-friendly:
 ```text
 data/
 └── registry/
-    └── schemas/
-        ├── README.md
-        ├── kfm/                     # KFM-owned JSON Schemas (authoritative)
-        │   ├── kfm.schema.run_manifest.v1.schema.json
-        │   ├── kfm.schema.watcher.v1.schema.json
-        │   ├── kfm.schema.focus_answer.v1.schema.json
-        │   ├── kfm.schema.focus_request.v1.schema.json
-        │   ├── kfm.schema.story_node.v3.schema.json
-        │   ├── kfm.schema.validation_report.v1.schema.json
-        │   └── kfm.schema.policy_input.v1.schema.json
-        ├── external/                # Optional pinned upstream schemas (reproducibility)
-        │   ├── stac/                # pinned snapshots or references used by CI
-        │   ├── dcat/
-        │   └── prov/
-        ├── examples/                # Minimal, valid examples for every KFM-owned schema
-        │   ├── run_manifest.v1.example.json
-        │   ├── watcher.v1.example.json
-        │   ├── focus_answer.v1.example.json
-        │   └── story_node.v3.example.md
-        └── tests/                   # Contract tests for schemas (CI runs these)
-            ├── schemas_smoke_test.yml
-            └── fixtures/
+   └─ schemas/                                         # Schema registry (contracts that gate ingestion, APIs, and AI outputs)
+      ├─ README.md                                     # How schemas are versioned, validated, and enforced in CI
+      │
+      ├─ kfm/                                          # KFM-owned JSON Schemas (authoritative system contracts)
+      │  ├─ kfm.schema.run_manifest.v1.schema.json      # Run manifest contract (inputs/outputs/digests + trace IDs)
+      │  ├─ kfm.schema.watcher.v1.schema.json           # Watcher/monitoring contract (events, triggers, schedules)
+      │  ├─ kfm.schema.focus_answer.v1.schema.json      # Focus Mode answer envelope (citations, abstain reasons, audit refs)
+      │  ├─ kfm.schema.focus_request.v1.schema.json     # Focus Mode request envelope (query, scope, policy context)
+      │  ├─ kfm.schema.story_node.v3.schema.json        # Story Node v3 contract (frontmatter, citations, assets refs)
+      │  ├─ kfm.schema.validation_report.v1.schema.json # Validator output contract (errors/warnings, machine-readable)
+      │  └─ kfm.schema.policy_input.v1.schema.json      # Policy input contract (actor/resource/context passed to OPA)
+      │
+      ├─ external/                                     # Optional pinned upstream schemas for reproducibility (CI-stable)
+      │  ├─ stac/                                      # STAC schema snapshots/references used by validators
+      │  ├─ dcat/                                      # DCAT schema snapshots/references used by validators
+      │  └─ prov/                                      # PROV schema snapshots/references used by validators
+      │
+      ├─ examples/                                     # Minimal valid examples for every KFM-owned schema (golden inputs)
+      │  ├─ run_manifest.v1.example.json               # Example matching run_manifest.v1 schema
+      │  ├─ watcher.v1.example.json                    # Example matching watcher.v1 schema
+      │  ├─ focus_answer.v1.example.json               # Example matching focus_answer.v1 schema
+      │  └─ story_node.v3.example.md                   # Example Story Node markdown (paired w/ schema expectations)
+      │
+      └─ tests/                                        # Schema contract tests (CI runs these; fail-closed)
+         ├─ schemas_smoke_test.yml                     # Smoke suite: every schema validates its example(s)
+         └─ fixtures/                                  # Test-only fixtures (invalid cases, edge cases, normalization inputs)
 ```
 
 > [!IMPORTANT]
