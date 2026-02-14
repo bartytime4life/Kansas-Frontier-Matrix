@@ -1,24 +1,3 @@
----
-title: "docs/ — Governed Documentation (Kansas Frontier Matrix)"
-path: "docs/README.md"
-doc_kind: "Directory README"
-version: "vNext"
-status: "governed"
-last_updated: "2026-02-14"
-owners:
-  - "docs-stewards"
-  - "governance-reviewers"
-tags:
-  - "governance"
-  - "evidence-first"
-  - "story-nodes"
-  - "standards"
-  - "templates"
-sensitivity: "public"
-classification: "open"
-policy_posture: "OPA default deny"
----
-
 # 🧭 `docs/` — Governed Documentation (Kansas Frontier Matrix)
 
 ![Governed](https://img.shields.io/badge/governed-yes-blue)
