@@ -190,8 +190,6 @@ tools/policy/                                 # KFM policy pack: OPA/Rego + test
     └── acceptance_verify.sh                  # Contract checks: fixtures/input vs fixtures/expected
 ```
 
-```
-
 > [!TIP]
 > Keep fixtures **small and synthetic**. Policy tests should be fast enough to run on every PR.
 
