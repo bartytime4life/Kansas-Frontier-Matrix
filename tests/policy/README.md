@@ -103,27 +103,31 @@ This README documents how policy testing works end-to-end. A canonical layout lo
 
 ```text
 .
-├─ policy/                       # OPA/Rego source of truth
-│  ├─ kfm/                        # Rego packages (data access, promotion, AI, redaction)
-│  │  ├─ access.rego
-│  │  ├─ access_test.rego
-│  │  ├─ promotion.rego
-│  │  ├─ promotion_test.rego
-│  │  ├─ ai.rego
-│  │  ├─ ai_test.rego
-│  │  └─ (additional policy modules)
-│  └─ data/                       # Policy data (controlled vocabularies, sensitivity maps)
-│     ├─ sensitivity_levels.json
-│     └─ (additional policy data files)
-└─ tests/
-   └─ policy/
-      ├─ README.md                # (this file)
-      ├─ fixtures/                # Governed JSON/YAML inputs used by tests
-      │  ├─ focus_mode/
-      │  ├─ promotion/
-      │  ├─ access/
-      │  └─ redaction/
-      └─ cases/                   # Optional “scenario packs” (end-to-end regression inputs)
+policy/                                           # OPA/Rego source of truth (deny-by-default; governs access + promotion + AI)
+├─ kfm/                                           # Rego packages (package kfm.*)
+│  ├─ access.rego                                 # Access control rules (actor/resource/scopes; default-deny)
+│  ├─ access_test.rego                            # Unit tests for access rules (allow/deny matrix + edge cases)
+│  ├─ promotion.rego                              # Promotion gates (STAC/DCAT/PROV + digests/receipts prerequisites)
+│  ├─ promotion_test.rego                         # Unit tests for promotion gates (missing lineage, materiality, etc.)
+│  ├─ ai.rego                                     # Focus Mode policy (cite-or-abstain, response contract, safety gates)
+│  ├─ ai_test.rego                                # Unit tests for Focus Mode policy (citations, abstain reasons, redaction)
+│  └─ …                                           # Additional modules (redaction, licensing, audit, thresholds, etc.)
+│
+└─ data/                                          # Policy data (versioned, controlled vocabularies + mappings)
+   ├─ sensitivity_levels.json                     # Canonical sensitivity levels/taxonomy referenced by policies
+   └─ …                                           # Other policy data (allowlists, thresholds, role maps, vocab)
+
+tests/
+└─ policy/                                        # Policy test harness (fixtures + optional scenario packs)
+   ├─ README.md                                   # (This file) how to run opa/conftest, naming rules, update workflow
+   │
+   ├─ fixtures/                                   # Governed test inputs (synthetic; deterministic; reviewed)
+   │  ├─ focus_mode/                              # Focus Mode inputs (answers/requests/context) for allow/deny cases
+   │  ├─ promotion/                               # Promotion input vectors (catalog triplet, receipts, digests)
+   │  ├─ access/                                  # Access vectors (claims/roles/scopes/resources)
+   │  └─ redaction/                               # Redaction vectors (precision rules, restricted fields, transforms)
+   │
+   └─ cases/                                      # Optional scenario packs (end-to-end regression inputs, multi-fixture)
 ```
 
 **Rules of thumb**
