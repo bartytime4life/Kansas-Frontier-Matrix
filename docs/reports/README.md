@@ -105,22 +105,25 @@ The **canonical** layout for story content is governed and should not drift.
 
 ```text
 docs/
-└── reports/
-    ├── README.md                         # (this file)
-    └── story_nodes/
-        ├── templates/                    # helper copies/snippets for authors (optional)
-        ├── draft/                        # work-in-progress story nodes
-        │   └── river-trade-1850s/        # example slug (kebab-case)
-        │       ├── story.md
-        │       └── assets/
-        │           ├── overview-map.png
-        │           └── river-corridor.geojson
-        └── published/                    # reviewed + released story nodes
-            └── river-trade-1850s/
-                ├── story.md
-                └── assets/
-                    ├── overview-map.png
-                    └── river-corridor.geojson
+└── reports/                                   # Long-form, governed narrative outputs (human-readable, citation-backed)
+    ├── README.md                              # (This file) — how reports/story nodes work, rules, and publishing flow
+    │
+    └── story_nodes/                           # Story Nodes: auditable narratives tied to evidence + datasets
+        ├── templates/                         # Optional: starter bundles/snippets for authors (frontmatter, sections, ADR refs)
+        │
+        ├── draft/                             # Work-in-progress Story Nodes (not authoritative; may change without notice)
+        │   └── river-trade-1850s/             # Story Node slug (kebab-case; stable identifier once published)
+        │       ├── story.md                   # Draft narrative (must include citations + evidence links where possible)
+        │       └── assets/                    # Supporting artifacts referenced by story.md (keep small; prefer derived outputs)
+        │           ├── overview-map.png        # Visual summary for the story (rendered/derived, not raw source data)
+        │           └── river-corridor.geojson  # Spatial overlay used in figures/maps (derived; include provenance notes in story)
+        │
+        └── published/                         # Reviewed + released Story Nodes (authoritative; versioned + stable)
+            └── river-trade-1850s/             # Published slug matches draft slug (enables diff + traceability)
+                ├── story.md                   # Final narrative (passes policy: cite-or-abstain, sensitivity, licensing)
+                └── assets/                    # Published assets (frozen; must match story references exactly)
+                    ├── overview-map.png        # Released figure (immutable unless version bump / republish)
+                    └── river-corridor.geojson  # Released overlay (immutable; changes require republish + new provenance)
 ```
 
 ### Optional subfolders (create only when needed)
