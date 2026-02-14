@@ -71,15 +71,16 @@ This folder contains **operator-facing** and **developer-facing** scripts that o
 Recommended (not confirmed in repo):
 
 ```text
-scripts/
-  connectors/                # dataset-specific runners (ingest/normalize/validate/publish)
-  validators/                # reusable validators (stac/dcat/prov/checksums/geo/time)
-  admin/                     # controlled ops (reindex, bootstrap, backfill triggers)
-  ci/                        # CI entrypoints/wrappers (composite checks)
-  dev/                       # safe developer utilities (non-production)
-  _lib/                      # shared script helpers (logging, hashing, manifests)
-  registry.yaml              # required: script registry (source of truth for this README table)
-  README.md
+scripts/                                      # Operational scripts (governed): build, validate, promote, and maintain KFM
+├─ README.md                                   # What runs where (local/CI), safety rules, and script conventions
+├─ registry.yaml                               # REQUIRED: script registry (source of truth for README tables/links)
+│
+├─ connectors/                                 # Dataset-specific runners (ingest → normalize → validate → publish)
+├─ validators/                                 # Reusable validators (STAC/DCAT/PROV, checksums, geo/time, schemas)
+├─ admin/                                      # Controlled ops (reindex, bootstrap, backfills, trigger management)
+├─ ci/                                         # CI entrypoints/wrappers (composite checks; fail-closed)
+├─ dev/                                        # Safe dev utilities (non-production; no side effects by default)
+└─ _lib/                                       # Shared script helpers (logging, hashing, manifests, IO utilities)
 ```
 
 ---
