@@ -109,32 +109,36 @@ Even for synthetic data, we still declare:
 This is the **recommended** structure for `tests/data/` in KFM:
 
 ```text
-tests/data/
-  README.md
-
-  manifest.json                 # authoritative index of fixtures + digests
-
-  fixtures/
-    catalogs/
-      stac/                      # minimal STAC Collections/Items (valid/invalid)
-      dcat/                      # minimal DCAT dataset records (valid/invalid)
-      prov/                      # minimal PROV docs used as publish prerequisites
-    provenance/
-      run_receipts/              # run receipt examples (pass/fail)
-      spec_hash_vectors/         # canonicalization inputs + expected spec_hash outputs
-      digest_vectors/            # file digest examples + expected values
-    policy/
-      inputs/                    # policy input objects (actor/resource/answer)
-      expected/                  # expected allow/deny outputs (or snapshots)
-    geo/
-      geojson/                   # tiny GeoJSON features (points/lines/polys)
-      wkt/                       # tiny WKT examples
-      time/                      # time-range fixtures
-    api/
-      responses/                 # golden response JSON for contract tests (if used)
-
-  golden/
-    README.md                    # what “golden” means in this repo (optional)
+tests/
+└─ data/                                              # Test data + validation vectors (deterministic, reviewable)
+   ├─ README.md                                       # How these fixtures are used + rules (size, safety, naming)
+   ├─ manifest.json                                   # Authoritative index: fixture paths → digests/metadata (normative)
+   │
+   ├─ fixtures/                                       # All reusable test vectors (valid + intentionally invalid)
+   │  ├─ catalogs/                                    # Minimal catalog artifacts used by validators
+   │  │  ├─ stac/                                     # STAC Collections/Items (valid/invalid edge cases)
+   │  │  ├─ dcat/                                     # DCAT dataset records (valid/invalid edge cases)
+   │  │  └─ prov/                                     # PROV docs required for publish/promotion prerequisites
+   │  │
+   │  ├─ provenance/                                  # Provenance + integrity vectors (hashing, digests, receipts)
+   │  │  ├─ run_receipts/                             # Run receipt examples (pass/fail; minimal → full envelopes)
+   │  │  ├─ spec_hash_vectors/                        # Canonicalization inputs + expected spec_hash outputs
+   │  │  └─ digest_vectors/                           # File digest samples + expected values (sha256, etc.)
+   │  │
+   │  ├─ policy/                                      # Policy test vectors (OPA/Rego / Conftest)
+   │  │  ├─ inputs/                                   # Input objects (actor/resource/answer/context)
+   │  │  └─ expected/                                 # Expected decisions (allow/deny + reasons/redactions/snapshots)
+   │  │
+   │  ├─ geo/                                         # Small geospatial/time fixtures for transforms + validators
+   │  │  ├─ geojson/                                  # Tiny GeoJSON features (points/lines/polys; valid/invalid)
+   │  │  ├─ wkt/                                      # Tiny WKT examples (valid/invalid; SRID/axis edge cases)
+   │  │  └─ time/                                     # Time-range fixtures (intervals, open/closed bounds, TZ cases)
+   │  │
+   │  └─ api/                                         # Contract test snapshots (only if used by suite)
+   │     └─ responses/                                # Golden response JSON (normalized; stable ordering)
+   │
+   └─ golden/                                         # “Golden set” conventions (optional but recommended)
+      └─ README.md                                    # Definition of “golden”, update rules, and review requirements
 ```
 
 If your repo does not yet contain some of these folders, create them when introducing the first fixture of that type.
