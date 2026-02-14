@@ -94,31 +94,24 @@ The platform’s minimum acceptance criteria map to test types as follows:
 The exact layout can vary by implementation language, but KFM standardizes on these concepts:
 
 ```text
-tests/                                      # KFM test suite (governed): unit → integration → contract → policy → E2E
-├── README.md                               # (This file) test governance, how-to run, required env, CI mapping
+tests/
+├─ README.md                  # Test governance + how-to (what runs where, required env, fail-closed rules)
 │
-├── unit/                                   # Fast, hermetic tests for domain logic + use-cases (no network/services)
+├─ unit/                      # Fast, hermetic domain/use-case unit tests (no services, no network)
+├─ integration/               # Service-backed integration tests (DB/API/queue/etc.)
+├─ contract/                  # OpenAPI schema + compatibility tests (backward/forward expectations)
+├─ policy/                    # OPA/Rego tests + policy fixtures (deny-by-default, enforcement validation)
+├─ data/                      # STAC/DCAT/PROV validation fixtures + catalog/dataset checks
+├─ focus/                     # Focus Mode eval harness + gold sets (citations, abstain, determinism)
+├─ ui/                        # E2E UI tests + static analysis rules (lint/a11y/perf budgets)
+├─ security/                  # Security regression checks (deps, secrets, hardening, baseline diffs)
 │
-├── integration/                            # Multi-component tests requiring real services (DB, API, queue, etc.)
+├─ fixtures/                  # Shared deterministic fixtures used across suites
+│  ├─ synthetic/              # Safe synthetic data only (no restricted real records)
+│  ├─ gold/                   # Gold sets (queries + expected outcomes; reviewed changes only)
+│  └─ snapshots/              # Normalized stable outputs (diff-friendly regression baselines)
 │
-├── contract/                               # Compatibility checks (OpenAPI schemas, backward-compat, client expectations)
-│
-├── policy/                                 # OPA/Rego policy tests + policy fixtures (fail-closed enforcement)
-│
-├── data/                                   # Catalog + dataset validation tests/fixtures (STAC/DCAT/PROV, manifests, checksums)
-│
-├── focus/                                  # Focus Mode eval harness (gold queries, citation checks, abstain behavior)
-│
-├── ui/                                     # UI quality gates: E2E flows + static analysis rules (lint, a11y, bundle checks)
-│
-├── security/                               # Security regression checks (secrets scanning, dependency policy, hardening tests)
-│
-├── fixtures/                               # Shared deterministic inputs/expected outputs used across test layers
-│   ├── synthetic/                          # Safe synthetic data only (no restricted real records; reproducible generators)
-│   ├── gold/                               # Gold sets (queries + expected outcomes; versioned + reviewed changes only)
-│   └── snapshots/                          # Normalized “known-good” outputs (stable; diff-friendly; prevents churn)
-│
-└── helpers/                                # Shared test utilities (deterministic; avoid hidden time/randomness)
+└─ helpers/                   # Shared helpers/utilities (keep deterministic; avoid hidden time/randomness)
 ```
 
 > [!NOTE]
