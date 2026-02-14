@@ -61,20 +61,23 @@ This directory is where we standardize the shared vocabulary and helper utilitie
 
 ```text
 schemas/
-  stac/        # STAC profile + JSON Schema validators
-  dcat/        # DCAT profile + JSON Schema / SHACL (as used)
-  prov/        # PROV(-JSON/JSON-LD) profiles and constraints
-  ui/          # UI-facing contracts (e.g., EvidenceResolver responses)
+├─ stac/                                   # STAC profile + JSON Schema validators (KFM constraints + pinning strategy)
+├─ dcat/                                   # DCAT profile + JSON Schema / SHACL (as used in KFM)
+├─ prov/                                   # PROV(-JSON/JSON-LD) profiles + constraints (lineage prerequisites)
+└─ ui/                                     # UI-facing contracts (e.g., EvidenceResolver payload shapes)
+
 src/
-  shared/
-    provenance/
-      README.md         # you are here
-      (not confirmed in repo) index.ts
-      (not confirmed in repo) types.ts
-      (not confirmed in repo) refs.ts
-      (not confirmed in repo) specHash.ts
-      (not confirmed in repo) validators.ts
-      (not confirmed in repo) __tests__/
+└─ shared/
+   └─ provenance/                           # Provenance primitives (pure logic; reusable across pipeline/server/tests)
+      ├─ README.md                          # You are here: provenance model, invariants, spec_hash rules, usage patterns
+      │
+      ├─ index.ts                           # (not confirmed in repo) Public exports for provenance module
+      ├─ types.ts                           # (not confirmed in repo) Core types: RunRef, ArtifactRef, Lineage, Receipt, etc.
+      ├─ refs.ts                            # (not confirmed in repo) Stable reference builders/parsers (IDs, URIs, link formats)
+      ├─ specHash.ts                        # (not confirmed in repo) Canonicalization + spec_hash computation (deterministic)
+      ├─ validators.ts                      # (not confirmed in repo) Pure validators (shape, linkage, completeness, invariants)
+      │
+      └─ __tests__/                         # (not confirmed in repo) Unit tests for determinism + edge cases
 ```
 
 ---
