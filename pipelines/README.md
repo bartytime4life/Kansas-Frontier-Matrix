@@ -124,15 +124,15 @@ KFM’s “truth path” is a required mental model for every pipeline change.
 
 ```mermaid
 flowchart LR
-  S[Upstream Source\nAPI/files] --> R[Raw zone\nimmutable]
-  R --> W[Work zone\nrepeatable transforms + QA]
-  W --> P[Processed zone\npublishable]
-  P --> C[Catalogs\nDCAT + STAC + PROV]
-  C --> STORES[Stores\n(PostGIS / Object Store / Search / Graph)]
-  STORES --> API[Governed API Gateway]
-  API --> UI[Web UI]
-  API --> STORIES[Story Nodes]
-  API --> FM[Focus Mode\n(cite or abstain)]
+  S["Upstream Source (API/files)"] --> R["Raw zone (immutable)"]
+  R --> W["Work zone (repeatable transforms + QA)"]
+  W --> P["Processed zone (publishable)"]
+  P --> C["Catalogs (DCAT + STAC + PROV)"]
+  C --> STORES["Stores (PostGIS / Object Store / Search / Graph)"]
+  STORES --> API["Governed API Gateway"]
+  API --> UI["Web UI"]
+  API --> STORIES["Story Nodes"]
+  API --> FM["Focus Mode (cite or abstain)"]
 ```
 
 ---
