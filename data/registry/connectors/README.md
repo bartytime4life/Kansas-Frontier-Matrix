@@ -44,17 +44,17 @@ KFM connectors and this registry exist to enforce these invariants:
 
 ```mermaid
 flowchart LR
-  A[Upstream Source<br/>(API / Files / Services)] --> B[Connector<br/>(DataSourceConnector)]
-  B --> C[Raw Zone<br/>(immutable, append-only)]
-  C --> D[Work Zone<br/>(repeatable transforms + QA)]
-  D --> E[Processed Zone<br/>(query-ready)]
-  E --> F[Governed API + Policy<br/>(Trust Membrane)]
-  F --> G[Web UI / Map / Focus Mode]
+  A["Upstream Source (API / Files / Services)"] --> B["Connector (DataSourceConnector)"]
+  B --> C["Raw Zone (immutable, append-only)"]
+  C --> D["Work Zone (repeatable transforms + QA)"]
+  D --> E["Processed Zone (query-ready)"]
+  E --> F["Governed API + Policy (Trust Membrane)"]
+  F --> G["Web UI / Map / Focus Mode"]
 
-  E --> H[Catalogs on Promotion]
-  H --> H1[DCAT (datasets)]
-  H --> H2[STAC (spatial assets)]
-  H --> H3[PROV (lineage)]
+  E --> H["Catalogs on Promotion"]
+  H --> H1["DCAT (datasets)"]
+  H --> H2["STAC (spatial assets)"]
+  H --> H3["PROV (lineage)"]
 ```
 
 > [!NOTE]
