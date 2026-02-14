@@ -138,19 +138,19 @@ flowchart TB
 This is a **recommended** layout for clarity and discoverability. Create folders as needed.
 
 ```text
-src/shared/
-  README.md
-
-  errors/          # error codes, typed failures, exception helpers
-  result/          # Ok/Err or Result<T> patterns, response envelopes
-  ids/             # stable ID types, parsing/validation helpers
-  time/            # ISO8601/time-range helpers
-  geo/             # bbox helpers, geometry precision helpers (NO GIS DB code)
-  evidence/        # citation refs, evidence pack primitives, resolver helpers
-  policy/          # policy input primitives, redaction helpers (pure logic)
-  schema/          # schema helpers (jsonschema, pydantic-ish utilities, etc.)
-  logging/         # interface + minimal helpers (no runtime logger init)
-  testing/         # shared test helpers (pure, deterministic)
+src/shared/                                   # Cross-cutting shared code (pure, reusable, no service wiring)
+├─ README.md                                  # What belongs here, layering rules, and “no side effects” expectations
+│
+├─ errors/                                    # Error codes + typed failures + exception helpers (portable)
+├─ result/                                    # Result<T> / Ok-Err patterns + standard response envelopes
+├─ ids/                                       # Stable ID types + parsing/validation (slugs, ULIDs/UUIDs, canonical forms)
+├─ time/                                      # ISO-8601 helpers, time-range utilities, timezone-safe parsing
+├─ geo/                                       # Bounding box + geometry precision helpers (NO GIS DB code here)
+├─ evidence/                                  # Citation refs + Evidence bundle primitives + resolver-friendly helpers
+├─ policy/                                    # Policy input primitives + redaction helpers (pure logic; no OPA runtime)
+├─ schema/                                    # Schema helpers (jsonschema validation, model utilities, normalizers)
+├─ logging/                                   # Logging interfaces + thin helpers (NO runtime logger initialization)
+└─ testing/                                   # Shared test utilities (pure + deterministic; no network/files unless injected)
 ```
 
 ---
