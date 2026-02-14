@@ -111,19 +111,19 @@ Avoid putting these in `tests/helpers`:
 
 ```text
 tests/
-  helpers/
-    README.md                # ← you are here
-
-    assertions/              # custom matchers, reusable asserts
-    builders/                # factories/builders for domain objects/DTOs
-    fixtures/                # small synthetic fixtures (JSON, GeoJSON, YAML, etc.)
-    fakes/                   # in-memory fakes / stubs for ports & adapters
-    harness/                 # reusable harness runners (contract, gold-set, etc.)
-    http/                    # test clients, request builders, auth stubs
-    policy/                  # helpers for OPA inputs/outputs + policy test utilities
-    snapshots/               # stable snapshots / golden files (small)
-    time/                    # freeze time, deterministic clocks
-    tmp/                     # temp dirs, file helpers, cleanup utilities
+└─ helpers/
+   ├─ README.md                       # ← You are here: helper design rules (determinism, layering, reuse contracts)
+   │
+   ├─ assertions/                     # Custom matchers + reusable assertions (domain-aware, diff-friendly failures)
+   ├─ builders/                       # Factories/builders for domain objects/DTOs (valid defaults + override knobs)
+   ├─ fixtures/                       # Small synthetic fixtures (JSON/GeoJSON/YAML/etc.) used by helper utilities
+   ├─ fakes/                          # In-memory fakes/stubs for ports & adapters (no network, predictable state)
+   ├─ harness/                        # Reusable test runners (contract suites, gold-set eval loops, batch runners)
+   ├─ http/                           # Test clients, request builders, auth stubs (normalizes headers, retries off)
+   ├─ policy/                         # OPA helpers: build inputs, load fixtures, compare decisions, pretty diffs
+   ├─ snapshots/                      # Stable snapshots/golden files (small; normalized for consistent diffs)
+   ├─ time/                           # Deterministic time utilities (freeze time, monotonic clocks, TZ fixtures)
+   └─ tmp/                            # Temp dirs + file helpers (auto-cleanup, safe paths, deterministic names)
 ```
 
 > ✅ Rule of thumb: if it can be used by more than one test suite (backend + UI + policy), it belongs in `tests/helpers/`.
