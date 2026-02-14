@@ -291,17 +291,20 @@ This README targets `tools/docs/` specifically. A typical layout looks like:
 
 ```text
 tools/
-└── docs/
-    ├── README.md
-    ├── examples/
-    │   ├── example.docx
-    │   └── example_render.md
-    ├── scripts/
-    │   ├── render_docx_to_pdf.sh
-    │   └── render_pdf_to_png.sh
-    └── src/
-        ├── __init__.py
-        └── docx_tools.py
+└── docs/                                     # Documentation toolchain: rendering, conversion, and utilities
+    ├── README.md                              # How to use this toolchain + required deps + CI/local parity notes
+    │
+    ├── examples/                              # Golden examples used for regression + “how-to” reference
+    │   ├── example.docx                       # Sample DOCX input (covers styles, headings, tables, images, etc.)
+    │   └── example_render.md                  # Expected/representative render output (baseline for comparisons)
+    │
+    ├── scripts/                               # CLI entrypoints (shell wrappers for consistent rendering)
+    │   ├── render_docx_to_pdf.sh              # Convert DOCX → PDF (pinned engine/options; deterministic settings)
+    │   └── render_pdf_to_png.sh               # Convert PDF → PNG pages (for previews, diffs, docs-site artifacts)
+    │
+    └── src/                                   # Python library code (importable utilities used by scripts/CI)
+        ├── __init__.py                        # Package init (exports public helpers)
+        └── docx_tools.py                      # Core functions: load/inspect DOCX, normalize styles, render helpers
 ```
 
 > [!NOTE]
