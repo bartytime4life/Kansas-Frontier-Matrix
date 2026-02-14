@@ -203,17 +203,17 @@ Because KFM standards explicitly note that the signing mechanism decision may be
 
 ```mermaid
 flowchart LR
-  W[Watcher run] -->|detects upstream change| M[Materiality decision]
-  M -->|not material| N[No PR; record heartbeat receipt]
-  M -->|material| PR[Open PR: data + receipts + catalogs]
+  W["Watcher run"] -->|"detects upstream change"| M["Materiality decision"]
+  M -->|"not material"| N["No PR; record heartbeat receipt"]
+  M -->|"material"| PR["Open PR: data + receipts + catalogs"]
 
-  PR --> CI[CI acceptance harness]
-  CI -->|pass| MERGE[Merge allowed]
-  CI -->|fail| BLOCK[Merge blocked (fail-closed)]
+  PR --> CI["CI acceptance harness"]
+  CI -->|"pass"| MERGE["Merge allowed"]
+  CI -->|"fail"| BLOCK["Merge blocked (fail-closed)"]
 
-  MERGE --> PUB[Publish artifacts (OCI/digest pinned)]
-  PUB --> ATTEST[Attach attestations + signatures]
-  ATTEST --> REG[Update Watchers Registry + DCAT wrapper]
+  MERGE --> PUB["Publish artifacts (OCI/digest pinned)"]
+  PUB --> ATTEST["Attach attestations + signatures"]
+  ATTEST --> REG["Update Watchers Registry + DCAT wrapper"]
 ```
 
 ### 8.2 CI acceptance harness responsibilities
