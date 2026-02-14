@@ -70,13 +70,13 @@ KFM is intentionally layered:
 
 ```mermaid
 flowchart TB
-  UI[UI / External Clients] -->|HTTP| API[Server Interfaces Layer<br/>Routes/Controllers]
-  API -->|calls| UC[Use Cases / Services]
-  UC -->|depends on| INT[Integration Layer<br/>Ports + Contracts + Schemas]
-  INT -->|implemented by| INFRA[Infrastructure<br/>DB/Object Store/Search/OPA/HTTP Clients]
+  UI["UI / External Clients"] -->|"HTTP"| API["Server Interfaces Layer (Routes/Controllers)"]
+  API -->|"calls"| UC["Use Cases / Services"]
+  UC -->|"depends on"| INT["Integration Layer (Ports + Contracts + Schemas)"]
+  INT -->|"implemented by"| INFRA["Infrastructure (DB / Object Store / Search / OPA / HTTP Clients)"]
 
-  API -->|authorize| OPA[Policy Engine (OPA)]
-  API -->|audit| AUDIT[Audit/Provenance Sink]
+  API -->|"authorize"| OPA["Policy Engine (OPA)"]
+  API -->|"audit"| AUDIT["Audit/Provenance Sink"]
 
   style INT fill:#dbeafe,stroke:#1d4ed8,stroke-width:2px
 ```
