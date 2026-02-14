@@ -106,31 +106,36 @@ Conftest and OPA behavior can change across versions (e.g., Rego syntax defaults
 
 ```text
 policy/
-└── rego/
-    └── kfm/
-        ├── README.md                      # (this file)
-        ├── data/                          # governed static inputs (controlled vocabularies)
-        │   ├── sensitivity.json           # public/restricted classes + flags (CARE/FAIR tags)
-        │   ├── license_policy.json        # allow/deny lists, SPDX-like ids, attribution rules
-        │   └── config.json                # feature flags (e.g., emergency deny)
-        ├── lib/                           # shared helpers (pure functions)
-        │   ├── input_validation.rego
-        │   ├── strings.rego
-        │   └── evidence_refs.rego
-        ├── kfm/                           # policy modules (OPA packages)
-        │   ├── ai.rego                    # Focus Mode cite-or-abstain gate
-        │   ├── data.rego                  # dataset access allow/deny
-        │   ├── promotion.rego             # dataset promotion gate checks
-        │   ├── sensitivity.rego           # redaction decisions + sensitivity constraints
-        │   ├── audit.rego                 # audit invariants + bundle version surfacing
-        │   └── story.rego                 # (optional) Story Node evidence enforcement
-        └── tests/
-            ├── ai_test.rego
-            ├── data_test.rego
-            ├── promotion_test.rego
-            ├── sensitivity_test.rego
-            ├── audit_test.rego
-            └── story_test.rego
+└─ rego/
+   └─ kfm/                                           # KFM OPA policy pack (source-of-truth)
+      ├─ README.md                                   # (This file) how to run, bundle layout, and fail-closed rules
+      │
+      ├─ data/                                       # Governed static inputs (versioned; reviewed like code)
+      │  ├─ sensitivity.json                         # Sensitivity classes/flags (public/restricted + CARE/FAIR tags)
+      │  ├─ license_policy.json                      # License allow/deny lists + SPDX-like IDs + attribution rules
+      │  └─ config.json                              # Feature flags / emergency controls (e.g., global deny switch)
+      │
+      ├─ lib/                                        # Shared Rego helpers (pure functions; no policy decisions here)
+      │  ├─ input_validation.rego                    # Input shape checks + safe defaults (prevents undefined behavior)
+      │  ├─ strings.rego                             # String helpers (normalization, matching, formatting)
+      │  └─ evidence_refs.rego                       # Citation/EvidenceRef helpers (parsing, canonical forms)
+      │
+      ├─ kfm/                                        # Policy modules (OPA packages: package kfm.*)
+      │  ├─ ai.rego                                  # Focus Mode gate: cite-or-abstain + response validation
+      │  ├─ data.rego                                # Dataset access control (allow/deny by actor/scope/sensitivity)
+      │  ├─ promotion.rego                           # Promotion gates (STAC/DCAT/PROV + digests/receipts prerequisites)
+      │  ├─ sensitivity.rego                         # Sensitivity constraints + redaction decisions (precision/field rules)
+      │  ├─ audit.rego                               # Audit invariants (required fields + policy bundle version surfacing)
+      │  └─ story.rego                               # (Optional) Story Node evidence enforcement (citations/assets rules)
+      │
+      └─ tests/                                      # OPA unit tests (opa test …) for each module
+         ├─ ai_test.rego                             # Tests for kfm.ai (citations, abstain shape, edge cases)
+         ├─ data_test.rego                           # Tests for kfm.data (deny-by-default, role/scope matrix)
+         ├─ promotion_test.rego                      # Tests for kfm.promotion (missing lineage, gating behavior)
+         ├─ sensitivity_test.rego                    # Tests for kfm.sensitivity (redaction vs deny, precision limits)
+         ├─ audit_test.rego                          # Tests for kfm.audit (audit record requirements + bundle metadata)
+         └─ story_test.rego                          # Tests for kfm.story (citation rules, required evidence refs)
+
 ```
 
 ### “Source of truth” rule
