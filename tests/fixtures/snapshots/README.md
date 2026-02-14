@@ -78,36 +78,36 @@ Recommended substructure (create folders as needed; keep it tidy):
 
 ```text
 tests/
-  fixtures/
-    snapshots/
-      README.md
-
-      api/
-        v1/
-          evidence/
-            resolve-basic.snap.json
-          datasets/
-            list-public.snap.json
-
-      catalogs/
-        dcat/
-          dataset-minimal.snap.json
-        stac/
-          collection-minimal.snap.json
-          item-example.snap.json
-        prov/
-          run-receipt-minimal.snap.json
-
-      policy/
-        redaction/
-          restricted-fields-redacted.snap.json
-        denies/
-          sensitive-location-deny.snap.json
-          restricted-field-deny.snap.json
-
-      ui/
-        focus-mode/
-          cite-panel.snap.md
+└─ fixtures/
+   └─ snapshots/                                           # Normalized “known-good” outputs for regression diffs
+      ├─ README.md                                         # Snapshot rules (normalization, update workflow, review gates)
+      │
+      ├─ api/                                              # API response snapshots (contract/regression)
+      │  └─ v1/                                            # API version namespace
+      │     ├─ evidence/
+      │     │  └─ resolve-basic.snap.json                  # Evidence resolver: minimal happy-path response
+      │     └─ datasets/
+      │        └─ list-public.snap.json                    # Dataset listing: public-only view (policy-filtered)
+      │
+      ├─ catalogs/                                         # Catalog render snapshots (validator outputs)
+      │  ├─ dcat/
+      │  │  └─ dataset-minimal.snap.json                   # Minimal DCAT dataset snapshot (canonical field ordering)
+      │  ├─ stac/
+      │  │  ├─ collection-minimal.snap.json                # Minimal STAC Collection snapshot (canonicalized)
+      │  │  └─ item-example.snap.json                      # Example STAC Item snapshot (geometry/time/assets)
+      │  └─ prov/
+      │     └─ run-receipt-minimal.snap.json               # Minimal PROV/run-receipt snapshot (lineage envelope)
+      │
+      ├─ policy/                                           # Policy decision + transform snapshots (deny/redact)
+      │  ├─ redaction/
+      │  │  └─ restricted-fields-redacted.snap.json        # Redaction transform output (restricted fields removed/masked)
+      │  └─ denies/
+      │     ├─ sensitive-location-deny.snap.json           # Deny decision: sensitive location precision not allowed
+      │     └─ restricted-field-deny.snap.json             # Deny decision: restricted field present without clearance
+      │
+      └─ ui/                                               # UI snapshots (content renders; markdown/text diffs)
+         └─ focus-mode/
+            └─ cite-panel.snap.md                          # Focus Mode citation panel render (stable layout/text)
 ```
 
 Notes:
