@@ -142,14 +142,14 @@ KFM ingestion is a governed pipeline that must produce evidence artifacts **befo
 
 ```mermaid
 flowchart TD
-  A[Discover] --> B[Acquire]
-  B --> C[Normalize]
-  C --> D[Validate]
-  D --> E[Enrich]
-  E --> F[Publish/Promote]
-  D -->|fail| X[STOP: Block promotion & open issue]
-  F --> G[Emit catalogs: STAC/DCAT/PROV]
-  G --> H[Trigger index refresh (search/graph)]
+  A["Discover"] --> B["Acquire"]
+  B --> C["Normalize"]
+  C --> D["Validate"]
+  D --> E["Enrich"]
+  E --> F["Publish/Promote"]
+  D -->|"fail"| X["STOP: Block promotion & open issue"]
+  F --> G["Emit catalogs: STAC/DCAT/PROV"]
+  G --> H["Trigger index refresh (search/graph)"]
 ```
 
 **Stage intent**
