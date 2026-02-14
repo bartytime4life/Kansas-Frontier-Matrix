@@ -72,39 +72,45 @@ These tests exist to enforce the platform invariants:
 Recommended structure:
 
 ```text
-tests/contract/
-├── README.md
-├── openapi/
-│   ├── test_openapi_lint.py
-│   ├── test_openapi_compat.py
-│   └── test_endpoints_conformance.py
-├── policy/
-│   ├── test_policy_default_deny.py
-│   ├── test_policy_roles_scopes.py
-│   └── fixtures/
-│       ├── claims_public.json
-│       ├── claims_reviewer.json
-│       └── claims_denied.json
-├── focus_mode/
-│   ├── test_cite_or_abstain.py
-│   ├── test_audit_ref_present.py
-│   └── gold/
-│       ├── questions.json
-│       └── expected_outcomes.json
-├── evidence/
-│   ├── test_citation_resolves.py
-│   └── fixtures/
-│       └── citations.json
-├── schemas/
-│   ├── test_jsonschema_validation.py
-│   └── fixtures/
-│       ├── run_manifest.valid.json
-│       ├── run_manifest.invalid.json
-│       └── story_node_meta.valid.yml
-└── utils/
-    ├── http_client.py
-    ├── openapi_loader.py
-    └── assertions.py
+tests/contract/                                     # Contract tests: compatibility + schemas + policy + Focus/Evidence guarantees
+├─ README.md                                        # How to run, required services, and what breaks builds (fail-closed)
+│
+├─ openapi/                                         # OpenAPI spec quality + compatibility guarantees
+│  ├─ test_openapi_lint.py                           # Lint/spec hygiene (naming, required fields, descriptions, tags)
+│  ├─ test_openapi_compat.py                         # Backward-compat checks (breaking change detection)
+│  └─ test_endpoints_conformance.py                  # Endpoint behavior matches OpenAPI (status codes, shapes, headers)
+│
+├─ policy/                                          # Policy-as-contract (roles/scopes/default-deny at the API boundary)
+│  ├─ test_policy_default_deny.py                    # Unknown/insufficient context must deny (no implicit allows)
+│  ├─ test_policy_roles_scopes.py                    # Claims → roles/scopes mapping + enforcement expectations
+│  └─ fixtures/                                     # Claims fixtures (synthetic; no secrets)
+│     ├─ claims_public.json                          # Public/anonymous-ish claims (least privilege)
+│     ├─ claims_reviewer.json                        # Reviewer claims (elevated but bounded)
+│     └─ claims_denied.json                          # Explicitly denied claims (blocked paths)
+│
+├─ focus_mode/                                      # Focus Mode response contract (shape + governance fields)
+│  ├─ test_cite_or_abstain.py                        # Must cite sources or abstain with reasons (no “free answers”)
+│  ├─ test_audit_ref_present.py                      # Audit reference required (traceability for every answer)
+│  └─ gold/                                         # Gold-set questions + expected outcomes (regression baseline)
+│     ├─ questions.json                              # Canonical prompts/queries for contract runs
+│     └─ expected_outcomes.json                      # Expected behavior class (cite/abstain/deny) + key fields
+│
+├─ evidence/                                        # Evidence resolution contract (citations → resolvable artifacts)
+│  ├─ test_citation_resolves.py                      # Every citation must resolve (or fail with governed error shape)
+│  └─ fixtures/
+│     └─ citations.json                              # Canonical citation objects (formats + edge cases)
+│
+├─ schemas/                                         # Schema contracts (JSONSchema/YAML validation for governed artifacts)
+│  ├─ test_jsonschema_validation.py                  # Valid/invalid fixture validation (and error message quality)
+│  └─ fixtures/
+│     ├─ run_manifest.valid.json                     # Passes schema
+│     ├─ run_manifest.invalid.json                   # Fails schema (known error cases)
+│     └─ story_node_meta.valid.yml                   # Valid story node metadata (YAML frontmatter contract)
+│
+└─ utils/                                           # Shared contract-test utilities (keep deterministic; no hidden retries)
+   ├─ http_client.py                                 # Minimal client w/ normalized headers, timeouts, trace IDs
+   ├─ openapi_loader.py                               # Loads/normalizes OpenAPI spec for tests (stable ordering)
+   └─ assertions.py                                   # Contract assertions (shape checks, diff-friendly failures)
 ```
 
 If the repo already has a different layout, keep the **same conceptual partitioning** even if filenames differ.
