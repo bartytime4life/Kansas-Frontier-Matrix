@@ -77,33 +77,39 @@ A **recommended** repo layout (adjust if your repo differs):
 
 ```text
 .
-├─ policy/
-│  ├─ kfm/
-│  │  ├─ ai.rego
-│  │  ├─ ai_test.rego
-│  │  ├─ promotion.rego
-│  │  ├─ promotion_test.rego
-│  │  ├─ access.rego
-│  │  ├─ access_test.rego
-│  │  └─ ...
-│  └─ data/
-│     ├─ sensitivity_levels.json
-│     └─ ...
-└─ tests/
-   └─ policy/
-      ├─ README.md
-      ├─ fixtures/
-      │  ├─ focus_mode/
-      │  │  ├─ allow_with_citations.json
-      │  │  ├─ deny_no_citations.json
-      │  │  └─ deny_sensitive_not_ok.json
-      │  ├─ promotion/
-      │  │  ├─ ok_has_stac_dcat_prov.json
-      │  │  └─ deny_missing_prov.json
-      │  └─ redaction/
-      │     └─ sensitive_location_precision.json
-      └─ cases/
-         └─ README.md
+policy/                                              # Policy source-of-truth (OPA/Rego + normative policy data)
+├─ kfm/                                              # KFM policy packages (package kfm.*)
+│  ├─ ai.rego                                        # Focus Mode gate: cite-or-abstain + response/contract validation
+│  ├─ ai_test.rego                                   # Unit tests for ai.rego (opa test …)
+│  ├─ promotion.rego                                 # Dataset promotion gates (Raw → Work → Processed prerequisites)
+│  ├─ promotion_test.rego                            # Unit tests for promotion.rego (provenance/materiality rules)
+│  ├─ access.rego                                    # Access control: actor/resource checks (default-deny)
+│  ├─ access_test.rego                               # Unit tests for access.rego (allow/deny matrix, edge cases)
+│  └─ ...                                            # Additional policy modules (redaction, licensing, audit, etc.)
+│
+└─ data/                                             # Normative policy data inputs (versioned; treated as governed)
+   ├─ sensitivity_levels.json                        # Canonical sensitivity taxonomy/levels used by policies
+   └─ ...                                            # Other static policy data (allowlists, thresholds, mappings)
+
+tests/
+└─ policy/                                           # Policy test harness (fixtures + documented cases)
+   ├─ README.md                                      # How to run policy tests + how fixtures/cases are structured
+   │
+   ├─ fixtures/                                      # Test vectors fed into policy eval (deterministic, synthetic-only)
+   │  ├─ focus_mode/                                 # Focus Mode input objects + expected pass/fail behavior
+   │  │  ├─ allow_with_citations.json                # Allowed: has citations + required fields
+   │  │  ├─ deny_no_citations.json                   # Denied: missing citations (fail-closed)
+   │  │  └─ deny_sensitive_not_ok.json               # Denied: sensitive content without required redaction/clearance
+   │  │
+   │  ├─ promotion/                                  # Promotion prerequisite vectors (catalogs/provenance required)
+   │  │  ├─ ok_has_stac_dcat_prov.json               # Allowed: STAC+DCAT+PROV present/linked as required
+   │  │  └─ deny_missing_prov.json                   # Denied: missing PROV lineage prerequisites
+   │  │
+   │  └─ redaction/                                  # Redaction vectors (precision/rounding/removal expectations)
+   │     └─ sensitive_location_precision.json        # Enforces location precision limits (or deny if cannot comply)
+   │
+   └─ cases/                                         # Human-readable case index + expectations (maps to fixtures)
+      └─ README.md                                   # Case catalog (intent, inputs, expected decision + rationale)
 ```
 
 Notes:
