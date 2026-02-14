@@ -38,20 +38,23 @@ This directory contains **JSON Schemas that define the shapes used by KFM policy
 
 ```text
 policy/
-  schemas/
-    README.md                      # you are here
-    inputs/                        # OPA input contracts
-      policy_input.v1.schema.json
-      focus_answer.v1.schema.json  # optional: validate AI output contract pre-policy
-    artifacts/                     # things policies/gates validate before publish
-      dataset_manifest.v1.schema.json
-      run_record.v1.schema.json
-      audit_record.v1.schema.json
-      story_front_matter.v3.schema.json
-      run_manifest.v1.schema.json  # aka run_receipt
-      watcher.v1.schema.json
-    _vendored/                     # optional: pinned external schema snapshots
-      README.md
+└─ schemas/                                        # Policy-facing schema registry (contracts for inputs + governed artifacts)
+   ├─ README.md                                     # You are here: versioning rules, validation flow, and CI gates
+   │
+   ├─ inputs/                                       # OPA input contracts (what gets sent to policy evaluation)
+   │  ├─ policy_input.v1.schema.json                # Canonical OPA input envelope (actor/resource/request/context)
+   │  └─ focus_answer.v1.schema.json                # Optional pre-policy validation of AI output contract (Focus Mode)
+   │
+   ├─ artifacts/                                    # Artifacts policies/gates validate before publish/promotion
+   │  ├─ dataset_manifest.v1.schema.json            # Dataset manifest (files, digests, sizes, provenance refs)
+   │  ├─ run_record.v1.schema.json                  # Pipeline run record (inputs/outputs, steps, digests, trace IDs)
+   │  ├─ audit_record.v1.schema.json                # Audit record (decision, actor, timestamps, refs, policy bundle id)
+   │  ├─ story_front_matter.v3.schema.json          # Story Node front matter (citations, assets, licensing, sensitivity)
+   │  ├─ run_manifest.v1.schema.json                # Run manifest / run receipt (aka run_receipt; minimal audit envelope)
+   │  └─ watcher.v1.schema.json                     # Watcher contract (triggers/schedule/scope/action configuration)
+   │
+   └─ _vendored/                                    # Optional: pinned external schema snapshots (reproducible validation)
+      └─ README.md                                  # What’s vendored, why, and how updates are reviewed
 ```
 
 ---
