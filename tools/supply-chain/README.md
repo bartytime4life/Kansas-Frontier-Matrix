@@ -83,22 +83,22 @@ This is the canonical flow for turning upstream material into promoted, governed
 
 ```mermaid
 flowchart TD
-  A[Upstream provider\nAPI / files / STAC / DCAT] --> B[Watcher or pipeline\n(acquire)]
-  B --> C[Validate schemas\n(STAC/DCAT/PROV + receipt schema)]
-  C -->|fail| X[Fail closed:\nblock merge/promotion\nopen issue]
-  C --> D[Canonicalize spec\n(RFC 8785 JCS where applicable)]
-  D --> E[Compute spec_hash\n+ artifact digests]
-  E --> F[Write run_receipt / run_manifest\n(+ rights + materiality)]
-  F --> G[Generate catalogs\nSTAC / DCAT + PROV links]
-  G --> H[Generate SBOM\n(SPDX JSON)]
-  H --> I[Generate provenance attestation\n(SLSA / in-toto predicate)]
-  I --> J[Policy tests\n(OPA/Rego via conftest)]
-  J -->|fail| X
-  J --> K[Sign + attest\n(cosign)]
-  K --> L[Publish\n(OCI registry / object store)]
-  L --> M[Attach referrers\n(SBOM / PROV / QA / receipts)]
-  M --> N[Serve via API]
-  N --> O[UI consumes\nvia evidence resolver only]
+  A["Upstream provider (API / files / STAC / DCAT)"] --> B["Watcher or pipeline (acquire)"]
+  B --> C["Validate schemas (STAC/DCAT/PROV + receipt schema)"]
+  C -->|"fail"| X["Fail closed: block merge/promotion; open issue"]
+  C --> D["Canonicalize spec (RFC 8785 JCS where applicable)"]
+  D --> E["Compute spec_hash + artifact digests"]
+  E --> F["Write run_receipt / run_manifest (+ rights + materiality)"]
+  F --> G["Generate catalogs (STAC / DCAT + PROV links)"]
+  G --> H["Generate SBOM (SPDX JSON)"]
+  H --> I["Generate provenance attestation (SLSA / in-toto predicate)"]
+  I --> J["Policy tests (OPA/Rego via conftest)"]
+  J -->|"fail"| X
+  J --> K["Sign + attest (cosign)"]
+  K --> L["Publish (OCI registry / object store)"]
+  L --> M["Attach referrers (SBOM / PROV / QA / receipts)"]
+  M --> N["Serve via API"]
+  N --> O["UI consumes (via evidence resolver only)"]
 ```
 
 ---
