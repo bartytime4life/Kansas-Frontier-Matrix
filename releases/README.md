@@ -146,13 +146,13 @@ The table below is the **minimum** for an official release.
 
 ```mermaid
 flowchart LR
-  A[Upstream change / repo change] --> B[PR opened]
-  B --> C[CI: validation gates]
-  C -->|pass| D[Promotion / Publish]
-  C -->|fail| X[Merge blocked (fail-closed)]
-  D --> E[Immutable distribution<br/>OCI digests / object store]
-  E --> F[Write release record<br/>releases/vX.Y.Z]
-  F --> G[Update releases/index.json]
+  A["Upstream change / repo change"] --> B["PR opened"]
+  B --> C["CI: validation gates"]
+  C -->|"pass"| D["Promotion / Publish"]
+  C -->|"fail"| X["Merge blocked (fail-closed)"]
+  D --> E["Immutable distribution (OCI digests / object store)"]
+  E --> F["Write release record (releases/vX.Y.Z)"]
+  F --> G["Update releases/index.json"]
 ```
 
 Key idea: **publish by digest**, not by mutable tag, and attach evidence as referrers/attestations where supported.
