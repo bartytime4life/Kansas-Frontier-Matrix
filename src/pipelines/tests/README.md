@@ -30,24 +30,23 @@ These tests focus on the “truth path” for datasets and derived artifacts:
 
 ```mermaid
 flowchart LR
-  R[Raw zone\n(manifest + source slice)] -->|ingest| W[Work zone\n(intermediates)]
-  W --> VR[validation_report.json]
-  W --> RR[run_record.json]
-  W -->|promote| P[Processed zone\n(published artifacts)]
-  P --> CS[checksums.txt]
-  P --> STAC[STAC]
-  P --> DCAT[DCAT]
-  P --> PROV[PROV]
-  P --> AUDIT[Audit event]
+  R["Raw zone (manifest + source slice)"] -->|"ingest"| W["Work zone (intermediates)"]
+  W --> VR["validation_report.json"]
+  W --> RR["run_record.json"]
+  W -->|"promote"| P["Processed zone (published artifacts)"]
+  P --> CS["checksums.txt"]
+  P --> STAC["STAC"]
+  P --> DCAT["DCAT"]
+  P --> PROV["PROV"]
+  P --> AUDIT["Audit event"]
 
-  %% Test layers
-  U[Unit tests] -.-> VR
-  I[Integration tests] -.-> P
-  C[Contract tests] -.-> STAC
+  U["Unit tests"] -.-> VR
+  I["Integration tests"] -.-> P
+  C["Contract tests"] -.-> STAC
   C -.-> DCAT
   C -.-> PROV
-  POL[Policy tests] -.-> AUDIT
-  REG[Regression tests] -.-> POL
+  POL["Policy tests"] -.-> AUDIT
+  REG["Regression tests"] -.-> POL
 ```
 
 > [!NOTE]
