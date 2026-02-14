@@ -47,33 +47,33 @@ KFM’s platform contracts require **fail-closed behavior** (deny-by-default) an
 
 ```text
 tests/
-  fixtures/
-    README.md                         # you are here
-
-    receipts/                         # run receipts / ingestion receipts (synthetic)
-      kfm.run_receipt.v1.example.json
-
-    catalog/                          # “golden” catalog artifacts and expected outputs
-      stac/
-      dcat/
-      prov/
-
-    policy/                           # policy test vectors (allow/deny) + expected decisions
-      inputs/
-      expected/
-
-    api/                              # request/response snapshots for governed endpoints
-      requests/
-      responses/
-
-    data/                             # tiny datasets used by connector/transform tests
-      tabular/
-      geojson/
-      parquet/                        # only if tiny and justified
-
-    docs/                             # fixtures for Story Nodes / Focus Mode formatting tests
-      story_node_v3/
-      focus_mode/
+└─ fixtures/
+   ├─ README.md                              # You are here: fixture rules (deterministic, synthetic-only, versioning)
+   │
+   ├─ receipts/                              # Synthetic run/ingestion receipts (audit envelopes used in tests)
+   │  └─ kfm.run_receipt.v1.example.json     # Example receipt (v1 schema) for validation + regression checks
+   │
+   ├─ catalog/                               # “Golden” catalog artifacts + expected renders/validations
+   │  ├─ stac/                               # STAC Items/Collections + canonical JSON outputs
+   │  ├─ dcat/                               # DCAT datasets/distributions + expected mappings
+   │  └─ prov/                               # PROV documents (lineage) + expected link structure
+   │
+   ├─ policy/                                # Policy test vectors (allow/deny) + expected decision payloads
+   │  ├─ inputs/                             # Inputs to OPA/Conftest (request context, resource attrs)
+   │  └─ expected/                           # Expected decisions (allow/deny + reasons/redactions)
+   │
+   ├─ api/                                   # Governed endpoint snapshots (contract + regression)
+   │  ├─ requests/                           # Canonical request bodies/headers (normalized)
+   │  └─ responses/                          # Expected responses (normalized; redactions applied)
+   │
+   ├─ data/                                  # Tiny datasets for connector/transform tests (keep minimal + safe)
+   │  ├─ tabular/                            # CSV/TSV micro-fixtures (schema edge cases)
+   │  ├─ geojson/                            # Small geometries (valid + intentionally invalid cases)
+   │  └─ parquet/                            # Parquet micro-fixtures (only if tiny and justified)
+   │
+   └─ docs/                                  # Fixtures for doc-format + narrative pipelines
+      ├─ story_node_v3/                      # Story Node structure/version tests (frontmatter, assets refs, etc.)
+      └─ focus_mode/                         # Focus Mode formatting/citation/abstain contract fixtures
 ```
 
 ---
