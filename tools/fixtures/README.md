@@ -453,16 +453,16 @@ Before merging changes under `tools/fixtures/`:
 
 ```mermaid
 flowchart TD
-  A[Fixture Pack] --> B[Schema Validators]
-  A --> C[Catalog Validators\nSTAC/DCAT/PROV]
-  A --> D[Policy Tests\nOPA/Rego default deny]
-  A --> E[Hash Checks\nspec_hash & artifact_digest]
-  B --> F{Gate}
+  A["Fixture Pack"] --> B["Schema Validators"]
+  A --> C["Catalog Validators (STAC/DCAT/PROV)"]
+  A --> D["Policy Tests (OPA/Rego default deny)"]
+  A --> E["Hash Checks (spec_hash + artifact_digest)"]
+  B --> F{"Gate"}
   C --> F
   D --> F
   E --> F
-  F -->|pass| G[Promotion / Publish Allowed]
-  F -->|fail| H[Blocked (Fail-Closed)]
+  F -->|"pass"| G["Promotion / Publish Allowed"]
+  F -->|"fail"| H["Blocked (Fail-Closed)"]
 ```
 
 ---
