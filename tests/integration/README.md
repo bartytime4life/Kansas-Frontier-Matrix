@@ -93,35 +93,39 @@ This README defines the **canonical layout** for integration tests.
 
 ```text
 tests/
-└── integration/
-    ├── README.md
-    ├── requirements.txt                # Optional: extra deps for host-side test runner
-    ├── pytest.ini                      # Integration markers + default options
-    ├── conftest.py                     # Shared fixtures (base URLs, clients, wait-for)
-    ├── fixtures/
-    │   ├── datasets/
-    │   │   └── example_dataset/
-    │   │       ├── raw/                # deterministic small slice (test-only)
-    │   │       ├── work/               # validation reports, intermediate
-    │   │       ├── processed/          # publishable artifacts for tests
-    │   │       └── catalog/
-    │   │           ├── dcat/           # DCAT JSON(-LD) records
-    │   │           ├── stac/           # STAC collection/items
-    │   │           └── prov/           # PROV records/run refs
-    │   └── policy/
-    │       ├── input/                  # OPA input payload fixtures
-    │       └── expected/               # expected allow/deny + redaction outcomes
-    ├── scripts/
-    │   ├── wait_for_http.sh            # wait until endpoint is healthy
-    │   ├── wait_for_tcp.sh             # wait until port accepts connections
-    │   └── dump_logs.sh                # CI helper: dump docker logs on failure
-    └── testcases/
-        ├── test_trust_membrane.py
-        ├── test_policy_default_deny.py
-        ├── test_promotion_gate.py
-        ├── test_policy_redaction.py
-        ├── test_evidence_resolver.py
-        └── test_focus_mode_cite_or_abstain.py
+└─ integration/                                     # Service-backed tests (API/DB/OPA/etc.) — validates end-to-end behavior
+   ├─ README.md                                     # How to run locally/CI, required services, env vars, failure triage
+   ├─ requirements.txt                              # Optional: extra deps for host-side runner (kept minimal)
+   ├─ pytest.ini                                    # Integration markers, default opts, timeouts/retry conventions
+   ├─ conftest.py                                   # Shared fixtures: base URLs, clients, auth stubs, wait-for helpers
+   │
+   ├─ fixtures/                                     # Deterministic inputs used by integration tests (synthetic + small)
+   │  ├─ datasets/
+   │  │  └─ example_dataset/                        # Test-only dataset slice (stable across runs)
+   │  │     ├─ raw/                                 # Tiny deterministic raw slice (never publish; used to exercise pipeline)
+   │  │     ├─ work/                                # Intermediate artifacts (validation reports, transforms, logs)
+   │  │     ├─ processed/                           # Publishable artifacts used by tests (what “would ship”)
+   │  │     └─ catalog/                             # Catalog triplet required for promotion/serving
+   │  │        ├─ dcat/                             # DCAT JSON/JSON-LD dataset + distribution records
+   │  │        ├─ stac/                             # STAC Collections/Items describing processed assets
+   │  │        └─ prov/                             # PROV lineage records + run references tying outputs to inputs
+   │  │
+   │  └─ policy/
+   │     ├─ input/                                  # OPA input payload fixtures (actor/resource/context)
+   │     └─ expected/                               # Expected allow/deny decisions + redaction outputs (snapshots)
+   │
+   ├─ scripts/                                      # CI helpers (service readiness + diagnostics)
+   │  ├─ wait_for_http.sh                           # Wait for HTTP endpoint health (poll /healthz or similar)
+   │  ├─ wait_for_tcp.sh                            # Wait for port readiness (DB/OPA/etc. accepting connections)
+   │  └─ dump_logs.sh                               # On failure: dump docker/service logs for CI artifacts
+   │
+   └─ testcases/                                    # Integration test suite (asserts cross-component invariants)
+      ├─ test_trust_membrane.py                     # UI/API boundary invariant: no forbidden direct-access paths
+      ├─ test_policy_default_deny.py                # Fail-closed policy: unknown/invalid context must deny
+      ├─ test_promotion_gate.py                     # Promotion prerequisites: STAC+DCAT+PROV + manifests/digests required
+      ├─ test_policy_redaction.py                   # Redaction behavior: allowed transforms vs deny when impossible
+      ├─ test_evidence_resolver.py                  # Evidence resolver: citation → artifact fetch, policy filtering applied
+      └─ test_focus_mode_cite_or_abstain.py         # Focus Mode contract: citations required or explicit abstain w/ reasons
 ```
 
 > [!TIP]
