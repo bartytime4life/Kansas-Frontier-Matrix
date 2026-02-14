@@ -81,13 +81,13 @@ This service implements KFM’s **trust membrane**:
 
 ```mermaid
 flowchart TB
-  UI[Web UI\n(React/TS + MapLibre)] -->|HTTPS| API[API Gateway\n(FastAPI REST\n+ optional GraphQL)]
-  API -->|authorize| OPA[Policy PDP\n(OPA/Rego)\nDefault deny]
-  API -->|query| PG[PostGIS\n(geo + tiles)]
-  API -->|query| G[Neo4j\n(knowledge graph)]
-  API -->|query| S[Search/Vector\n(OpenSearch or PG)]
-  API -->|fetch| OBJ[Object Store\n(COGs + media + catalogs)]
-  API -->|append| AUD[Audit Ledger\n(append-only)]
+  UI["Web UI (React/TS + MapLibre)"] -->|"HTTPS"| API["API Gateway (FastAPI REST + optional GraphQL)"]
+  API -->|"authorize"| OPA["Policy PDP (OPA/Rego) — default deny"]
+  API -->|"query"| PG["PostGIS (geo + tiles)"]
+  API -->|"query"| KG["Neo4j (knowledge graph)"]
+  API -->|"query"| S["Search/Vector (OpenSearch or Postgres)"]
+  API -->|"fetch"| OBJ["Object Store (COGs + media + catalogs)"]
+  API -->|"append"| AUD["Audit Ledger (append-only)"]
 ```
 
 ### Request flow invariants
