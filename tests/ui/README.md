@@ -169,28 +169,32 @@ If your environment differs, set `KFM_WEB_BASE_URL` and `KFM_API_BASE_URL` accor
 
 ```text
 tests/ui/
-├─ README.md
-├─ playwright.config.ts
-├─ package.json
-├─ specs/
-│  ├─ smoke.spec.ts
-│  ├─ trust-membrane.spec.ts
-│  ├─ evidence-resolver.spec.ts
-│  ├─ map-and-timeline.spec.ts
-│  ├─ story-nodes.spec.ts
-│  └─ focus-mode.spec.ts
-├─ pages/                 # Page Objects (recommended)
-│  ├─ appShell.page.ts
-│  ├─ map.page.ts
-│  ├─ story.page.ts
-│  └─ focusMode.page.ts
-├─ fixtures/
-│  ├─ users.json          # test user handles only (no secrets)
-│  └─ queries.json        # canonical queries for Focus Mode (if applicable)
-└─ utils/
-   ├─ netAssertions.ts
-   ├─ selectors.ts
-   └─ waiters.ts
+├─ README.md                               # How to run UI tests (local/CI), env vars, and governance rules (no secrets)
+├─ playwright.config.ts                    # Playwright config (projects, retries, tracing, baseURL, timeouts)
+├─ package.json                            # UI test deps + scripts (test, test:ci, lint, format)
+│
+├─ specs/                                  # Test specs (prefer “user journeys” + governed assertions)
+│  ├─ smoke.spec.ts                        # Fast sanity checks: app loads, critical routes render, basic auth path
+│  ├─ trust-membrane.spec.ts               # Verifies UI never bypasses API (no direct DB endpoints, no forbidden hosts)
+│  ├─ evidence-resolver.spec.ts            # Citation UX + evidence fetch behavior (links, previews, error states)
+│  ├─ map-and-timeline.spec.ts             # Map + timeline core flows (layers, time slider, basemap, perf guardrails)
+│  ├─ story-nodes.spec.ts                  # Story Node browse/read flows (assets render, citations present, navigation)
+│  └─ focus-mode.spec.ts                   # Focus Mode UX (ask/abstain/cite, streaming, retries, audit refs)
+│
+├─ pages/                                  # Page Objects (recommended): stable interfaces over fragile selectors
+│  ├─ appShell.page.ts                     # App shell layout helpers (nav, auth state, global banners/toasts)
+│  ├─ map.page.ts                          # Map interactions (layers, hover/inspect, bbox, screenshot helpers)
+│  ├─ story.page.ts                        # Story Node page helpers (open, toc, citations, asset panels)
+│  └─ focusMode.page.ts                    # Focus Mode helpers (submit query, parse answer, citation panel assertions)
+│
+├─ fixtures/                               # Deterministic UI inputs (no secrets; keep stable + minimal)
+│  ├─ users.json                           # Test user handles only (no tokens/passwords; credentials injected via env)
+│  └─ queries.json                         # Canonical Focus Mode queries + expected behavior class (cite/abstain)
+│
+└─ utils/                                  # Small utilities used across specs/pages (keep deterministic)
+   ├─ netAssertions.ts                     # Network assertions (blocked domains, allowlist routes, API-only checks)
+   ├─ selectors.ts                         # Shared selectors (data-testid map; avoid brittle CSS selectors)
+   └─ waiters.ts                           # Wait helpers (network idle, spinners, toasts, streaming completion)
 ```
 
 > [!NOTE]
