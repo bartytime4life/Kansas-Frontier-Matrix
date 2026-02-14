@@ -55,57 +55,57 @@ If you need to change server behavior, do it in code **and** update the contract
 This layout is intentionally explicit so humans and CI can find the authoritative spec quickly.
 
 ```text
-src/server/contracts/
-  README.md
-
-  openapi/
-    kfm.openapi.yaml              # REST boundary (OpenAPI 3.1)
-    overlays/                     # Optional: per-env overlays (servers, auth)
-
-  graphql/
-    schema.graphql                # Optional: GraphQL boundary (SDL)
-
-  schemas/
-    common/
-      error.schema.json           # Standard error envelope
-      pagination.schema.json
-      citation.schema.json        # CitationRef, EvidenceRef
-      evidence.schema.json        # EvidenceRecord, EvidenceBundle
-      audit.schema.json           # AuditRecord
-      sensitivity.schema.json     # sensitivity labels + rules
-
-    focus/
-      focusQuery.schema.json      # Focus Mode request
-      focusAnswer.schema.json     # Focus Mode response (cite-or-abstain + audit_ref)
-
-    catalog/
-      dataset.schema.json         # DatasetSummary / DatasetDetail
-      layer.schema.json           # LayerSummary / LayerDetail
-
-    pipeline/
-      run_record.schema.json      # (Recommended) pipeline run record schema
-      validation_report.schema.json
-
-  policy/
-    input.schema.json             # What OPA receives (actor/request/answer)
-    bundles/
-      kfm_ai.rego                 # Example: cite-or-abstain, default deny
-      kfm_catalog.rego            # Example: sensitivity gating, redaction
-    tests/
-      *.rego                      # OPA unit tests
-
-  events/
-    audit_event.schema.json       # Audit append-only event
-    telemetry_event.schema.json   # Minimal telemetry envelope
-
-  examples/
-    focus/
-      query.json
-      answer_with_citations.json
-      answer_abstain.json
-    errors/
-      forbidden.json
-      validation_failed.json
+src/server/contracts/                               # Public contracts: API boundaries, schemas, policy I/O, and examples
+├─ README.md                                        # How contracts are versioned, validated, and enforced (CI gates)
+│
+├─ openapi/                                         # REST boundary (OpenAPI 3.1)
+│  ├─ kfm.openapi.yaml                               # Canonical REST contract (paths, components, auth, errors)
+│  └─ overlays/                                     # Optional: per-env overlays (servers/auth tweaks; must not break contract)
+│
+├─ graphql/                                         # Optional GraphQL boundary (if enabled)
+│  └─ schema.graphql                                # GraphQL SDL (types/queries/mutations; contract snapshot)
+│
+├─ schemas/                                         # JSON Schemas for governed payloads (request/response/event contracts)
+│  ├─ common/                                       # Shared envelopes + primitives used across the API
+│  │  ├─ error.schema.json                          # Standard error envelope (code/message/details/trace_id)
+│  │  ├─ pagination.schema.json                     # Pagination contract (cursor/limit/next, totals if allowed)
+│  │  ├─ citation.schema.json                       # CitationRef/EvidenceRef (stable IDs + resolver hints)
+│  │  ├─ evidence.schema.json                       # EvidenceRecord/EvidenceBundle (what citations resolve to)
+│  │  ├─ audit.schema.json                          # AuditRecord (who/what/when/decision + refs)
+│  │  └─ sensitivity.schema.json                    # Sensitivity labels + handling rules (classification + redaction hints)
+│  │
+│  ├─ focus/                                        # Focus Mode contracts (governed AI boundary)
+│  │  ├─ focusQuery.schema.json                     # Focus request envelope (query, scope, policy context)
+│  │  └─ focusAnswer.schema.json                    # Focus answer envelope (cite-or-abstain + audit_ref required)
+│  │
+│  ├─ catalog/                                      # Catalog-serving contracts (datasets/layers exposed to UI/clients)
+│  │  ├─ dataset.schema.json                        # DatasetSummary/DatasetDetail (metadata + links + sensitivity)
+│  │  └─ layer.schema.json                          # LayerSummary/LayerDetail (map-ready layer descriptors)
+│  │
+│  └─ pipeline/                                     # Pipeline output contracts (traceability + validation)
+│     ├─ run_record.schema.json                     # (Recommended) pipeline run record (inputs/outputs/digests/provenance)
+│     └─ validation_report.schema.json              # Validator output (errors/warnings + machine-readable details)
+│
+├─ policy/                                          # Policy contract: what the service sends to OPA + bundled examples
+│  ├─ input.schema.json                              # OPA input shape (actor/request/resource/answer/context)
+│  ├─ bundles/                                      # Example policy bundles for contract testing / reference implementations
+│  │  ├─ kfm_ai.rego                                 # Example: cite-or-abstain + default deny for Focus
+│  │  └─ kfm_catalog.rego                             # Example: sensitivity gating + redaction behavior
+│  └─ tests/                                        # OPA unit tests for bundled examples (if shipped here)
+│     └─ *.rego                                      # Rego tests (opa test …)
+│
+├─ events/                                          # Event envelopes (append-only, schema-validated)
+│  ├─ audit_event.schema.json                       # Audit append-only event (decision log event contract)
+│  └─ telemetry_event.schema.json                   # Minimal telemetry envelope (low-sensitivity, bounded fields)
+│
+└─ examples/                                        # Canonical example payloads (used by docs + tests)
+   ├─ focus/
+   │  ├─ query.json                                 # Example Focus request
+   │  ├─ answer_with_citations.json                 # Example allowed answer (citations + evidence refs present)
+   │  └─ answer_abstain.json                        # Example abstain response (reason + audit_ref; no unsupported claims)
+   └─ errors/
+      ├─ forbidden.json                             # Example 403 error envelope (policy denied)
+      └─ validation_failed.json                     # Example 422 error envelope (schema/contract violations)
 ```
 
 > [!TIP]
