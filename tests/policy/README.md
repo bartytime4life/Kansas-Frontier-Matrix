@@ -1,27 +1,47 @@
 # Policy Test Suite (OPA/Rego)
 
-This directory documents **how KFM policy is tested** (locally and in CI) and how to add/maintain policy test coverage.
+![Policy](https://img.shields.io/badge/policy-OPA%2FRego-informational)
+![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
+![KFM](https://img.shields.io/badge/KFM-evidence--first-success)
 
-KFM’s governance model is **fail‑closed**: if policy cannot be evaluated (missing bundle, bad input, missing evidence), the system must deny access/promotion rather than “best-effort allow.”
+This directory (`tests/policy/`) is the **merge-blocking policy test suite** for the KFM OPA/Rego policy pack.
+
+- **Policy source of truth:** `policy/` (Rego modules + policy data)
+- **Test harness & fixtures:** `tests/policy/` (unit tests, regression cases, and governed fixtures)
+
+KFM governance is **default-deny** and **fail-closed**. If policy cannot be evaluated (missing bundle, invalid input, missing evidence, runtime error), the system must **deny** access/promotion/answers rather than "best-effort allow".
+
+> ✅ **Non‑negotiables (KFM):**
+> - **Trust membrane**: UI/external clients never access databases directly; all access goes through the governed API + policy boundary.
+> - **Policy on every request**: data, Story Nodes, and AI/Focus Mode.
+> - **Fail‑closed**: evaluation errors result in deny.
+> - **Promotion gates**: Raw → Work → Processed; promotion requires checksums + STAC/DCAT/PROV artifacts.
+> - **Focus Mode**: cite-or-abstain; every governed answer produces an `audit_ref`.
 
 ---
 
 ## Table of Contents
 
 - [What This Covers](#what-this-covers)
-- [How Policy Tests Fit Into KFM](#how-policy-tests-fit-into-kfm)
+- [Where Policy Runs (CI + Runtime)](#where-policy-runs-ci--runtime)
 - [Repository Layout](#repository-layout)
 - [Quickstart](#quickstart)
   - [Run the Unit Tests (OPA)](#run-the-unit-tests-opa)
+  - [Run Formatting (OPA fmt)](#run-formatting-opa-fmt)
   - [Run Conftest Checks (Optional)](#run-conftest-checks-optional)
 - [CI Expectations](#ci-expectations)
-- [Policy Surfaces and “Contracts”](#policy-surfaces-and-contracts)
-  - [Common Input Shape](#common-input-shape)
-  - [Common Decision Shape](#common-decision-shape)
+  - [Minimal CI Job (Example)](#minimal-ci-job-example)
+  - [What Must Be Merge-Blocking](#what-must-be-merge-blocking)
+- [Policy Surfaces and Contracts](#policy-surfaces-and-contracts)
+  - [Policy Surface Matrix](#policy-surface-matrix)
+  - [Input Contract (Common Shape)](#input-contract-common-shape)
+  - [Decision Contract (Common Shape)](#decision-contract-common-shape)
+  - [Error Semantics (Fail-Closed)](#error-semantics-fail-closed)
 - [Writing Policy Tests](#writing-policy-tests)
   - [Unit Tests (Rego)](#unit-tests-rego)
-  - [Regression/Golden Tests](#regressiongolden-tests)
+  - [Regression / Golden Fixtures](#regression--golden-fixtures)
   - [Negative/Safety Tests (Sensitive Data)](#negativesafety-tests-sensitive-data)
+  - [Test Naming & Organization](#test-naming--organization)
 - [Fixtures and Test Data Rules](#fixtures-and-test-data-rules)
 - [Debugging](#debugging)
 - [Pull Request Checklist](#pull-request-checklist)
@@ -31,92 +51,86 @@ KFM’s governance model is **fail‑closed**: if policy cannot be evaluated (mi
 
 ## What This Covers
 
-Policy tests in KFM exist to ensure:
+Policy tests exist to guarantee that KFM governance stays true through refactors, new datasets, new Story Nodes, and model changes.
 
-- **Default deny** remains true everywhere, always.
-- **Dataset promotion** is blocked unless required governance artifacts are present and valid.
-- **Story Nodes and Focus Mode** obey “cite or abstain” constraints.
-- **Sensitive records** are never leaked (including by accident or regression).
-- **Audit integrity** requirements are enforced (e.g., an `audit_ref` must be produced for governed outputs).
+At minimum, this suite must protect against:
 
-If a policy rule changes behavior, the tests in this suite should make that change **explicit, reviewed, and merge-blocking**.
+- **Default deny regressions** (any missing/unknown value must not accidentally allow).
+- **Dataset promotion bypass** (promotion blocked unless required governance artifacts exist and validate).
+- **Cite-or-abstain violations** in Focus Mode (no uncited factual answers).
+- **Sensitive-record leakage** (precise coordinates, restricted attributes, small-count aggregates).
+- **Audit integrity drift** (policy decisions produce stable reason codes and obligations, and runtime produces an `audit_ref`).
+
+If a policy change alters behavior, tests must make that change **explicit, reviewed, and merge‑blocking**.
 
 ---
 
-## How Policy Tests Fit Into KFM
+## Where Policy Runs (CI + Runtime)
 
-Policy is the enforcement layer for the **trust membrane**. The UI and external clients must never bypass it.
+Policy is the enforcement layer for the **trust membrane**.
 
 ```mermaid
-flowchart LR
-  Dev[PR / Change] --> CI[CI Gates]
-  CI -->|opa test| PolicyTests[Policy Unit Tests]
-  CI -->|validators| CatalogTests[Catalog + Receipt Validators]
-  CI -->|link/lint| DocTests[Docs + Story Validators]
-  PolicyTests -->|pass| Merge[Merge Allowed]
-  PolicyTests -->|fail| Block[Merge Blocked]
+flowchart TB
+  subgraph CI[CI / PR Gates]
+    PR[Pull Request] --> OPA_TEST[opa test ./policy]
+    PR --> VALIDATORS[validators: STAC/DCAT/PROV + docs]
+    PR --> SECURITY[toolchain & supply-chain checks]
+    OPA_TEST -->|pass| MERGE[Merge allowed]
+    OPA_TEST -->|fail| BLOCK[Merge blocked]
+  end
 
-  Runtime[Runtime Requests] --> API[API Gateway / Backend]
-  API --> OPA[OPA Decision]
-  OPA -->|allow| Serve[Serve Data / Answer]
-  OPA -->|deny| Deny[403 / Abstain / Redact]
+  subgraph RT[Runtime]
+    UI[Web UI / External Client] --> API[API Gateway]
+    API --> PDP[OPA Policy Decision Point]
+    PDP -->|allow| HANDLER[Handlers / Use-Cases]
+    PDP -->|deny| DENY[403 / Abstain / Redact]
+
+    HANDLER --> STORES[(PostGIS / Graph / Search / Object Store)]
+    HANDLER --> PDP2[OPA Output Validation]
+    PDP2 -->|allow| RESP[Response + citations + audit_ref]
+    PDP2 -->|deny| ABSTAIN[Abstain / redact / block publish]
+
+    RESP --> AUDIT[(Audit ledger append-only)]
+    ABSTAIN --> AUDIT
+  end
 ```
-
-Two complementary styles exist:
-
-1. **OPA unit tests** (fast, deterministic) — validate Rego logic directly.
-2. **Policy regression cases** (fixtures + golden tests) — keep “past leaks” fixed forever.
 
 ---
 
 ## Repository Layout
 
-This README lives at `tests/policy/README.md` and documents policy testing end-to-end.
-
-A **recommended** repo layout (adjust if your repo differs):
+This README documents how policy testing works end-to-end. A canonical layout looks like this:
 
 ```text
 .
-policy/                                              # Policy source-of-truth (OPA/Rego + normative policy data)
-├─ kfm/                                              # KFM policy packages (package kfm.*)
-│  ├─ ai.rego                                        # Focus Mode gate: cite-or-abstain + response/contract validation
-│  ├─ ai_test.rego                                   # Unit tests for ai.rego (opa test …)
-│  ├─ promotion.rego                                 # Dataset promotion gates (Raw → Work → Processed prerequisites)
-│  ├─ promotion_test.rego                            # Unit tests for promotion.rego (provenance/materiality rules)
-│  ├─ access.rego                                    # Access control: actor/resource checks (default-deny)
-│  ├─ access_test.rego                               # Unit tests for access.rego (allow/deny matrix, edge cases)
-│  └─ ...                                            # Additional policy modules (redaction, licensing, audit, etc.)
-│
-└─ data/                                             # Normative policy data inputs (versioned; treated as governed)
-   ├─ sensitivity_levels.json                        # Canonical sensitivity taxonomy/levels used by policies
-   └─ ...                                            # Other static policy data (allowlists, thresholds, mappings)
-
-tests/
-└─ policy/                                           # Policy test harness (fixtures + documented cases)
-   ├─ README.md                                      # How to run policy tests + how fixtures/cases are structured
-   │
-   ├─ fixtures/                                      # Test vectors fed into policy eval (deterministic, synthetic-only)
-   │  ├─ focus_mode/                                 # Focus Mode input objects + expected pass/fail behavior
-   │  │  ├─ allow_with_citations.json                # Allowed: has citations + required fields
-   │  │  ├─ deny_no_citations.json                   # Denied: missing citations (fail-closed)
-   │  │  └─ deny_sensitive_not_ok.json               # Denied: sensitive content without required redaction/clearance
-   │  │
-   │  ├─ promotion/                                  # Promotion prerequisite vectors (catalogs/provenance required)
-   │  │  ├─ ok_has_stac_dcat_prov.json               # Allowed: STAC+DCAT+PROV present/linked as required
-   │  │  └─ deny_missing_prov.json                   # Denied: missing PROV lineage prerequisites
-   │  │
-   │  └─ redaction/                                  # Redaction vectors (precision/rounding/removal expectations)
-   │     └─ sensitive_location_precision.json        # Enforces location precision limits (or deny if cannot comply)
-   │
-   └─ cases/                                         # Human-readable case index + expectations (maps to fixtures)
-      └─ README.md                                   # Case catalog (intent, inputs, expected decision + rationale)
+├─ policy/                       # OPA/Rego source of truth
+│  ├─ kfm/                        # Rego packages (data access, promotion, AI, redaction)
+│  │  ├─ access.rego
+│  │  ├─ access_test.rego
+│  │  ├─ promotion.rego
+│  │  ├─ promotion_test.rego
+│  │  ├─ ai.rego
+│  │  ├─ ai_test.rego
+│  │  └─ (additional policy modules)
+│  └─ data/                       # Policy data (controlled vocabularies, sensitivity maps)
+│     ├─ sensitivity_levels.json
+│     └─ (additional policy data files)
+└─ tests/
+   └─ policy/
+      ├─ README.md                # (this file)
+      ├─ fixtures/                # Governed JSON/YAML inputs used by tests
+      │  ├─ focus_mode/
+      │  ├─ promotion/
+      │  ├─ access/
+      │  └─ redaction/
+      └─ cases/                   # Optional “scenario packs” (end-to-end regression inputs)
 ```
 
-Notes:
+**Rules of thumb**
 
-- **`policy/` is the source of truth.** Policy modules live there and are tested by `opa test`.
-- `tests/policy/fixtures/` holds structured JSON/YAML inputs used by unit tests and regression tests.
-- `tests/policy/cases/` can hold higher-level “scenario packs” for CI regression.
+- **`policy/` is the source of truth.** Runtime and CI both evaluate policy from this directory.
+- Keep fixtures **small, explicit, and governed**. Fixtures are part of your security posture.
+- Prefer deterministic inputs and stable reason codes so regressions are obvious.
 
 ---
 
@@ -140,20 +154,24 @@ opa test ./policy/kfm -v
 opa test ./policy/kfm/ai_test.rego -v
 ```
 
-If you don’t have `opa` installed locally, you can run the same command via Docker:
+Docker equivalent (recommended when you want "works on my machine" parity):
 
 ```bash
-docker run --rm -v "$PWD":/work -w /work openpolicyagent/opa:latest \
+docker run --rm -v "$PWD":/work -w /work openpolicyagent/opa:<PINNED_VERSION> \
   test ./policy -v
 ```
 
-> ⚠️ **Recommended practice:** pin the OPA version used in CI (and ideally local tooling) so policy behavior is stable.
+### Run Formatting (OPA fmt)
+
+Keep policy readable and diffs clean:
+
+```bash
+opa fmt -w ./policy
+```
 
 ### Run Conftest Checks (Optional)
 
-KFM often uses Conftest as a “policy harness” to test Rego against JSON/YAML artifacts (manifests, catalogs, etc.).
-
-Example pattern:
+Conftest is useful when you want to test policy decisions **against real artifact shapes** (catalog JSON, run receipts, Story Node front matter, etc.).
 
 ```bash
 conftest test \
@@ -161,87 +179,158 @@ conftest test \
   ./tests/policy/fixtures
 ```
 
-If you standardize fixture structure, this becomes a quick way to confirm real artifacts still satisfy governance rules.
+If you use Conftest in CI, pin its version and keep the command in CI identical to the local command.
 
 ---
 
 ## CI Expectations
 
-Policy tests should be **merge-blocking**.
+Policy tests are **merge-blocking**.
 
-A minimal CI job should run at least:
+### Minimal CI Job (Example)
 
-```bash
-opa test ./policy -v
+Example GitHub Actions job using the pinned OPA container (adapt to your repo):
+
+```yaml
+name: policy
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  opa-test:
+    runs-on: ubuntu-latest
+    env:
+      # Pin this to a specific tag (or digest) used by the repo.
+      # Examples (choose one):
+      #   openpolicyagent/opa:0.XX.X
+      #   openpolicyagent/opa@sha256:<digest>
+      OPA_IMAGE: openpolicyagent/opa:<PINNED_VERSION>
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Policy unit tests
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/work -w /work \
+            "$OPA_IMAGE" \
+            test ./policy -v
+
+      - name: Policy formatting check
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/work -w /work \
+            "$OPA_IMAGE" \
+            fmt -w ./policy
+          git diff --exit-code
 ```
 
-If you use Conftest regression tests, add them as a separate CI step (or include them in the `opa test` inputs via data files).
+> 🔒 **Pin versions:** Do not rely on “latest” for policy toolchains in CI. If you upgrade OPA/Conftest/Rego syntax, add a policy regression PR that updates the pinned version *and* fixes tests.
+
+### What Must Be Merge-Blocking
+
+At minimum, CI must fail the PR when any of these fail:
+
+- `opa test ./policy -v`
+- required Conftest checks (if used as a promotion gate)
+- any validators that feed policy decisions (STAC/DCAT/PROV validators, Story Node validators)
 
 ---
 
 ## Policy Surfaces and Contracts
 
-KFM policy is typically evaluated in these contexts:
+### Policy Surface Matrix
 
-| Surface | Example decision | Failure mode | Test type |
+| Surface | Purpose | Expected failure mode | Minimum test coverage |
 |---|---|---|---|
-| API access (roles/scopes) | allow/deny dataset/layer/story access | deny | unit + regression |
-| Dataset promotion | allow promotion from work → processed | deny + explain | unit + conftest |
-| Story Node publishing | allow publish only if citations resolve | deny | unit + validator integration |
-| Focus Mode output | allow only if citations present AND sensitivity OK | abstain/deny | unit + gold regression |
-| Redaction rules | return “generalized” output for sensitive locations | redact | regression |
+| API access | Who can read what (datasets/layers/stories) | deny | unit + regression |
+| Dataset promotion | Block promotion without required artifacts | deny + explain | unit + conftest |
+| Story publishing | Enforce Story Node citation rules | deny | unit + validator integration |
+| Focus Mode output | Enforce cite-or-abstain + sensitivity | abstain/deny | unit + golden regression |
+| Redaction | Convert sensitive outputs to generalized views | redact/deny | regression |
 
-### Common Input Shape
+### Input Contract (Common Shape)
 
-Use a **stable input schema** so policy is testable and the API boundary is well-defined. A common KFM shape is:
+Keep policy inputs stable and explicit. A recommended shape:
 
 ```json
 {
   "actor": {
+    "id": "user_123",
     "role": "public|reviewer|admin",
-    "attributes": {}
+    "scopes": ["datasets:read", "stories:read"],
+    "attributes": {
+      "org": "kfm",
+      "custodian_grants": ["sensitive-location:read"]
+    }
   },
   "request": {
-    "endpoint": "/api/v1/...",
-    "context": {}
+    "method": "GET|POST",
+    "endpoint": "/api/v1/ai/query",
+    "trace_id": "trace_abc"
   },
   "resource": {
     "kind": "dataset|layer|story|ai_answer",
-    "id": "...",
+    "id": "dataset_ks_soils_v3",
     "labels": {
-      "sensitivity": "public|restricted|sensitive-location|aggregate-only"
+      "sensitivity": "public|restricted|sensitive-location|aggregate-only",
+      "license": "CC-BY-4.0"
     }
   },
+  "evidence": {
+    "has_stac": true,
+    "has_dcat": true,
+    "has_prov": true
+  },
   "answer": {
-    "text": "...",
-    "has_citations": true,
-    "citations": [{"ref": "prov://..."}],
+    "text": "Kansas entered the Union in 1861.",
+    "citations": [{"ref": "prov://dataset/run_789#locator=page:12"}],
     "sensitivity_ok": true
   }
 }
 ```
 
-You can omit fields that do not apply to a surface, but keep naming consistent across the repo.
+Notes:
 
-### Common Decision Shape
+- Keep **missing labels conservative**. If `resource.labels.sensitivity` is missing, treat it as **restricted** (or deny) rather than assume public.
+- Treat `evidence.*` as **required inputs** for surfaces that depend on provenance.
 
-Policies should return a decision object that is easy to audit and test:
+### Decision Contract (Common Shape)
+
+Policies should return a decision object that is easy to audit and test.
 
 ```json
 {
   "allow": false,
   "reason": "missing_citations",
   "obligations": [
-    {"kind": "abstain", "message": "No verified evidence available."}
-  ]
+    {
+      "kind": "abstain",
+      "message": "No verified evidence available for this answer.",
+      "user_safe": true
+    }
+  ],
+  "policy_version": "sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 }
 ```
 
-Recommended conventions:
+Conventions:
 
-- `allow` must exist and default to `false`.
-- `reason` should be a stable identifier suitable for metrics (e.g., `policy_denied_total{reason=...}`).
-- `obligations` is where you describe required follow-up (abstain, redact, add audit event, etc.).
+- `allow` **must exist** and default to `false`.
+- `reason` must be **stable** (safe to use as a metric label).
+- `obligations` describes what the caller must do (abstain, redact, require approval, emit audit event).
+- `policy_version` should allow incident forensics (often derived from the policy bundle digest or Git SHA).
+
+### Error Semantics (Fail-Closed)
+
+KFM treats policy evaluation failures as denials.
+
+Your policy design + tests should ensure:
+
+- missing required inputs do not crash evaluation in a way that becomes “allow by accident”
+- rules default deny
+- decisions include a stable failure reason (`invalid_input`, `missing_evidence`, `unknown_sensitivity`, etc.)
 
 ---
 
@@ -249,9 +338,9 @@ Recommended conventions:
 
 ### Unit Tests (Rego)
 
-**Rule of thumb:** every non-trivial policy file must have a corresponding `*_test.rego`.
+**Rule of thumb:** every non-trivial policy file has a corresponding `*_test.rego`.
 
-Example (minimal):
+Example policy:
 
 ```rego
 package kfm.ai
@@ -259,131 +348,156 @@ package kfm.ai
 default allow := false
 
 allow if {
-  input.answer.has_citations == true
+  count(input.answer.citations) > 0
   input.answer.sensitivity_ok == true
 }
 ```
 
-Unit tests:
+Example unit tests:
 
 ```rego
 package kfm.ai
 
 import future.keywords.if
 
-test_allow_when_citations_and_sensitivity_ok if {
+test_allow_when_cited_and_safe if {
   allow with input as {
-    "answer": {"has_citations": true, "sensitivity_ok": true, "citations": [{"id": "c1"}]}
+    "answer": {
+      "citations": [{"ref": "prov://run/1"}],
+      "sensitivity_ok": true
+    }
   }
 }
 
 test_deny_when_missing_citations if {
   not allow with input as {
-    "answer": {"has_citations": false, "sensitivity_ok": true, "citations": []}
+    "answer": {"citations": [], "sensitivity_ok": true}
   }
 }
 
-test_deny_when_sensitivity_not_ok if {
+test_deny_when_not_safe if {
   not allow with input as {
-    "answer": {"has_citations": true, "sensitivity_ok": false, "citations": [{"id": "c1"}]}
+    "answer": {"citations": [{"ref": "prov://run/1"}], "sensitivity_ok": false}
   }
 }
 ```
 
-### Regression/Golden Tests
+### Regression / Golden Fixtures
 
-Regression tests are for “this must never happen again” cases.
+Regression tests are for “**this must never happen again**” failures.
 
-Patterns that should always have regression coverage:
+Use them for:
 
-- A previous **sensitive field leak** (owner name, exact site coordinates, small-count health data).
-- A previous **Focus Mode citation failure** that produced an uncited factual answer.
-- A previous **promotion bypass** that allowed publishing without PROV/DCAT/STAC artifacts.
+- a previously discovered sensitive-field leak
+- a Focus Mode uncited factual answer
+- a promotion path that incorrectly allowed publishing without required catalogs
 
-Recommended approach:
+Recommended workflow:
 
-1. Add a fixture input under `tests/policy/fixtures/<surface>/...`.
-2. Add a unit test that evaluates the relevant rule with that fixture.
-3. Keep the fixture **byte-stable** (do not rewrite historical fixtures unless you are intentionally changing requirements).
+1. Add a fixture under `tests/policy/fixtures/<surface>/<case>.json`.
+2. Add/extend a unit test that evaluates the relevant rule using that fixture.
+3. Keep fixtures **byte-stable** (do not rewrite historical fixtures except as part of an intentional spec change).
 
 ### Negative/Safety Tests (Sensitive Data)
 
-At minimum, keep negative tests for:
+For each sensitivity rule, maintain **paired tests**:
 
-- **Sensitive-location**: unauthorized callers must never receive high-precision coordinates.
-- **Restricted**: field-level PII must be redacted or denied unless caller has explicit grants.
-- **Aggregate-only**: small counts must be suppressed or thresholded.
+- ✅ allow (authorized OR generalized output is produced)
+- ❌ deny (unauthorized OR too-precise output is blocked)
 
-If you add a new sensitivity class or new redaction rule, add:
+Minimum safety scenarios:
 
-- one allow test (authorized or generalized output)
-- one deny test (unauthorized or too-precise output)
-- one regression fixture
+- **sensitive-location**: callers without grants never receive high-precision coordinates
+- **restricted**: PII fields require explicit grants or are denied/redacted
+- **aggregate-only**: small counts are suppressed/thresholded
+
+### Test Naming & Organization
+
+Naming convention (recommended):
+
+- `test_allow_<condition>` for allow rules
+- `test_deny_<condition>` for deny expectations
+- put tests next to the policy they cover (`*_test.rego` in the same package)
+
+Organize by **surface**, not by project team:
+
+- `kfm.access` → access decisions
+- `kfm.promotion` → promotion gates
+- `kfm.ai` → Focus Mode output validation
+- `kfm.redaction` → obligations for masking/generalization
 
 ---
 
 ## Fixtures and Test Data Rules
 
-Because policy tests can easily become a data-leak vector, fixtures must be treated as governed artifacts.
+Fixtures are governed artifacts. Treat them like code.
 
-Rules:
+✅ Do:
 
-- ✅ Prefer **synthetic** data.
-- ✅ If you must use real data, strip PII and coordinates; keep only what is necessary to test semantics.
-- ✅ Do not include secrets, tokens, API keys, or private endpoints.
-- ✅ Use obviously fake identifiers for restricted entities (e.g., `parcel_id: "FAKE-123"`).
-- ✅ If a fixture encodes a previously discovered leak, describe it in a short comment near the test.
+- Prefer synthetic data.
+- Use obviously fake identifiers for restricted entities (example: `parcel_id: "FAKE-123"`).
+- Keep fixtures minimal (only fields required to test policy semantics).
+- If a fixture represents an incident/regression, add a short comment in the test that explains why it exists.
+
+❌ Do not:
+
+- include secrets, tokens, credentials, or private endpoints
+- include real PII or precise sensitive site coordinates
+- include large raw datasets (fixtures should remain small and reviewable)
 
 ---
 
 ## Debugging
 
-When a test fails:
+Run tests with verbose output:
 
 ```bash
-# Run with verbose output
 opa test ./policy -v
-
-# Evaluate a specific expression interactively
-opa eval -d ./policy -I \
-  'data.kfm.ai.allow' \
-  --input ./tests/policy/fixtures/focus_mode/allow_with_citations.json
 ```
 
-Helpful workflow:
+Evaluate a specific rule with a fixture:
 
-1. Identify which package/rule failed.
-2. Evaluate the rule with the fixture using `opa eval`.
-3. Print intermediate rules (create temporary helper rules or use `trace()` if needed).
-4. Update the policy and tests together.
+```bash
+opa eval -d ./policy -I \
+  'data.kfm.ai.allow' \
+  --input ./tests/policy/fixtures/<surface>/<case>.json
+```
+
+Inspect which packages and rules exist:
+
+```bash
+opa inspect ./policy
+```
+
+When you need to see why a decision happened, temporarily add `trace()` calls and re-run the failing test. Remove tracing before merging.
 
 ---
 
 ## Pull Request Checklist
 
-Policy changes are **behavior changes**. Use this checklist before requesting review:
+Policy changes are behavior changes.
 
 - [ ] I ran `opa test ./policy -v` locally.
-- [ ] Any new/changed rule has unit tests.
+- [ ] I ran `opa fmt -w ./policy` (or the repo’s formatting equivalent).
+- [ ] Every changed rule has unit tests.
 - [ ] Any security-sensitive change has a regression fixture.
 - [ ] Default deny behavior still holds.
 - [ ] Focus Mode outputs are **cite-or-abstain** (no uncited factual answers).
-- [ ] Sensitive-location / restricted / aggregate-only rules were validated with negative tests.
-- [ ] If this change affects publishing/promotion, I verified the promotion gate behavior.
+- [ ] Sensitive-location / restricted / aggregate-only rules have negative tests.
+- [ ] If this affects promotion, I verified that STAC/DCAT/PROV + checksums requirements are enforced.
 
 ---
 
 ## FAQ
 
-### Why do we prefer OPA unit tests over “manual review” for policy?
+### Why are policy tests merge-blocking?
 
-Because policy is a **merge gate**. If humans are the only enforcement mechanism, the system will drift.
+Because policy is a product guarantee (governance), not a suggestion. If humans are the only enforcement mechanism, the system will drift.
 
-### What if policy needs to redact rather than deny?
+### When should we redact instead of deny?
 
-Return an `obligations` entry (e.g., `{kind:"redact", fields:[...], precision:"1km"}`) and test that obligations are present.
+When the system can safely provide a generalized view. Encode this as `obligations` (for example: `{ "kind": "redact", "precision": "1km" }`) and test that the obligation appears for the right cases.
 
-### What if an endpoint cannot provide evidence for a Focus Mode answer?
+### What happens if evidence cannot be produced for a Focus Mode answer?
 
-The policy should require abstention in that case. Add a regression test that ensures an uncited answer is denied.
-
+Policy must force abstention/deny. Add a regression test that ensures an uncited answer cannot be returned.
