@@ -114,16 +114,16 @@ Update this table **whenever** a schema is added/removed or a major version chan
 ### Fail-closed request path (conceptual)
 ```mermaid
 flowchart LR
-  UI[UI / client] --> API[API Gateway]
-  API --> SV[Schema validate (request / artifacts)]
-  SV -->|fail| DENY[Deny / Block promotion]
-  SV -->|pass| PDP[OPA/Rego PDP]
-  PDP -->|deny| DENY
-  PDP -->|allow| APP[Application / pipeline]
-  APP --> OUTSV[Schema validate (outputs / receipts)]
-  OUTSV -->|fail| DENY
-  OUTSV -->|pass| AUDIT[Append audit record]
-  AUDIT --> RESP[Response / publish]
+  UI["UI / client"] --> API["API Gateway"]
+  API --> SV["Schema validate (request / artifacts)"]
+  SV -->|"fail"| DENY["Deny / Block promotion"]
+  SV -->|"pass"| PDP["OPA/Rego PDP"]
+  PDP -->|"deny"| DENY
+  PDP -->|"allow"| APP["Application / pipeline"]
+  APP --> OUTSV["Schema validate (outputs / receipts)"]
+  OUTSV -->|"fail"| DENY
+  OUTSV -->|"pass"| AUDIT["Append audit record"]
+  AUDIT --> RESP["Response / publish"]
 ```
 
 ### CI acceptance harness (what MUST be checked)
