@@ -1,21 +1,3 @@
----
-title: "KFM — docs/reports (Governed Reports & Story Nodes)"
-path: "docs/reports/README.md"
-version: "v1.0.0"
-last_updated: "2026-02-14"
-status: "active"
-doc_kind: "README"
-license: "CC-BY-4.0"
-sensitivity: "public"
-care_label: "Public"
-markdown_protocol_version: "1.0"
-governance:
-  root: "../governance/ROOT_GOVERNANCE.md"
-  review_gates: "../governance/REVIEW_GATES.md"
-  ethics: "../governance/ETHICS.md"
-  sovereignty: "../governance/SOVEREIGNTY.md"
----
-
 # docs/reports — Governed Reports & Story Nodes 🧭🧾
 
 ![Governed](https://img.shields.io/badge/Governed-Yes-blue)
