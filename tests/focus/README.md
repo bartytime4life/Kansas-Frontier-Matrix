@@ -126,17 +126,20 @@ All resolution goes through governed API endpoints.
 This is the **recommended** test organization. Some folders may be absent if a Focus sub-surface is not implemented yet; in that case, the corresponding tests should be explicitly skipped (never silently ignored).
 
 ```text
-tests/focus/
-  README.md                # you are here
-  fixtures/                # synthetic fixtures (no sensitive real-world payloads)
-  golden/                  # gold-set regression cases (questions + context + expectations)
-  policy/                  # OPA/Rego unit tests specific to Focus Mode
-  contract/                # API contract + evidence resolution tests (HTTP-level)
-  ui/                      # UI component/E2E tests for Focus surfaces
-  offline/                 # offline persistence + sync tests (if applicable)
-  realtime/                # websocket/presence ordering + reconnect tests (if applicable)
-  security/                # security regression tests (redaction, token leakage, CSRF)
-  perf/                    # load/perf regression tests (latency, throughput, UI jank)
+tests/focus/                                  # Focus Mode test suite (contracts + policy + UX + regression)
+├─ README.md                                  # You are here: how to run, what’s gated, gold-set update rules
+│
+├─ fixtures/                                  # Synthetic fixtures only (no sensitive real-world payloads)
+├─ golden/                                    # Gold-set regression cases (questions + context + expected outcomes)
+│
+├─ policy/                                    # Focus-specific OPA/Rego unit tests (cite/abstain, redaction, allow/deny)
+├─ contract/                                  # HTTP-level contract tests (API responses + evidence resolution behavior)
+├─ ui/                                        # UI tests for Focus surfaces (component + E2E flows)
+│
+├─ offline/                                   # Offline persistence + sync tests (if applicable)
+├─ realtime/                                  # Realtime ordering/reconnect tests (websocket/presence; if applicable)
+├─ security/                                  # Security regressions (redaction, token leakage, CSRF, header rules)
+└─ perf/                                      # Performance regressions (latency, throughput, UI jank/budgets)
 ```
 
 > [!TIP]
