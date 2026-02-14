@@ -145,35 +145,41 @@ npm test -- src/server/tests/integration
 > If your repo differs, keep the **intent** and update the folders, not the intent.
 
 ```text
-src/server/tests/
-├── README.md
-├── unit/
-│   ├── domain/
-│   ├── usecases/
-│   ├── validation/
-│   └── policy_input/
-├── contract/
-│   ├── openapi/
-│   ├── graphql/
-│   └── snapshots/
-├── integration/
-│   ├── db_postgis/
-│   ├── graph_neo4j/
-│   ├── object_store/
-│   ├── search_vector/
-│   └── opa_gateway/
-├── e2e/
-│   └── smoke/
-├── fixtures/
-│   ├── data/
-│   ├── catalogs/
-│   ├── prov/
-│   └── graph/
-└── helpers/
-    ├── builders/
-    ├── fakes/
-    ├── http/
-    └── time/
+src/server/tests/                                   # Server test suite (API + policy + persistence + contracts)
+├─ README.md                                        # How to run (local/CI), required services, markers, and triage tips
+│
+├─ unit/                                            # Fast, hermetic unit tests (no services/network)
+│  ├─ domain/                                       # Core domain logic (entities, value objects, invariants)
+│  ├─ usecases/                                     # Application/service layer logic (ports mocked, pure decisions)
+│  ├─ validation/                                   # Schema + request validation helpers (error shapes, edge cases)
+│  └─ policy_input/                                 # OPA input construction/normalization (stable, deterministic)
+│
+├─ contract/                                        # Boundary compatibility tests (specs + snapshots)
+│  ├─ openapi/                                      # OpenAPI lint + compat + endpoint conformance checks
+│  ├─ graphql/                                      # GraphQL schema checks (SDL snapshot, breaking changes)
+│  └─ snapshots/                                    # Normalized “known-good” spec/response snapshots (diff-friendly)
+│
+├─ integration/                                     # Service-backed tests (compose real dependencies)
+│  ├─ db_postgis/                                   # PostGIS integration (migrations, queries, geo behavior)
+│  ├─ graph_neo4j/                                  # Neo4j integration (writes/reads, constraints, traversal contracts)
+│  ├─ object_store/                                 # Object store integration (artifacts, manifests, digests)
+│  ├─ search_vector/                                # Vector search integration (indexing, retrieval, scoring expectations)
+│  └─ opa_gateway/                                  # OPA gateway integration (default-deny, redaction, decision caching)
+│
+├─ e2e/                                             # End-to-end tests across the full server boundary
+│  └─ smoke/                                        # Minimal happy-path coverage (startup, health, core endpoints)
+│
+├─ fixtures/                                        # Deterministic fixtures used across server tests (synthetic + small)
+│  ├─ data/                                         # Tiny dataset/test inputs (tabular/geo/etc.)
+│  ├─ catalogs/                                     # STAC/DCAT fixture artifacts (valid/invalid)
+│  ├─ prov/                                         # PROV/run receipt fixtures (lineage prerequisites)
+│  └─ graph/                                        # Graph fixture inputs/expected outputs (nodes/edges, constraints)
+│
+└─ helpers/                                         # Shared server-test utilities (deterministic; no hidden I/O)
+   ├─ builders/                                     # Object/DTO builders with safe defaults + overrides
+   ├─ fakes/                                        # In-memory fakes for ports/adapters (no network, predictable state)
+   ├─ http/                                         # Test client wrappers + request builders + auth stubs
+   └─ time/                                         # Time freezing + deterministic clock helpers (TZ-safe)
 ```
 
 ### Naming conventions
