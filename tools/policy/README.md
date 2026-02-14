@@ -150,41 +150,46 @@ sequenceDiagram
 This README assumes the following **baseline** structure (adapt as needed, but keep the concepts):
 
 ```text
-tools/policy/
-  README.md
+```text
+tools/policy/                                 # KFM policy pack: OPA/Rego + tests + fixtures + CI-parity scripts
+├── README.md                                 # How to run policy checks, add rules, write tests, interpret failures
+│
+├── rego/                                     # Rego source-of-truth (packaged for OPA/Conftest)
+│   └── kfm/                                  # Root policy namespace (package kfm.*)
+│       ├── data.rego                         # Baseline data-access rules (default-deny, allow/deny + rationale)
+│       ├── ai.rego                           # Focus Mode output gate (cite-or-abstain, schema/contract checks)
+│       │
+│       ├── promotion/                        # Dataset lifecycle gates (Raw → Work → Processed)
+│       │   ├── provenance_guard.rego         # Requires provenance completeness (PROV links, checksums, manifests)
+│       │   └── materiality_rules.rego        # Materiality thresholds (changes forcing re-review/re-promotion)
+│       │
+│       └── sensitivity/                      # Sensitivity controls (classification & redaction)
+│           ├── classification.rego           # Classification inference/propagation rules (public/restricted/etc.)
+│           └── redaction.rego                # Redaction transforms + deny rules when redaction is impossible
+│
+├── tests/                                    # OPA unit tests (run: opa test rego/ tests/)
+│   ├── kfm_data_test.rego                    # Tests for kfm.data (deny-by-default, allow paths, edge cases)
+│   ├── kfm_ai_test.rego                      # Tests for kfm.ai (citations required, contract enforcement)
+│   └── promotion_guard_test.rego             # Tests for promotion gates (provenance/materiality)
+│
+├── fixtures/                                 # Deterministic JSON fixtures for unit + contract/acceptance tests
+│   ├── input/                                # Inputs to policy evaluation (request context)
+│   │   ├── focus_answer_allow.json           # Valid Focus Mode response (should pass)
+│   │   ├── focus_answer_deny.json            # Invalid Focus Mode response (should fail w/ reasons)
+│   │   ├── dataset_public.json               # Public dataset example (should allow publication/serving)
+│   │   ├── dataset_restricted.json           # Restricted dataset example (should redact/deny as configured)
+│   │   └── run_receipt_minimal.json          # Minimal run receipt (audit/trace envelope for governed actions)
+│   └── expected/                             # Expected outputs after evaluation/transforms
+│       └── redacted_response.json            # Canonical redaction result (regression/contract baseline)
+│
+├── conftest/                                 # Conftest integration (optional; used by CI checks)
+│   └── conftest.toml                         # Policy paths, input routing, output formatting, fail-closed knobs
+│
+└── scripts/                                  # Local wrappers to match CI behavior exactly
+    ├── policy_test.sh                        # Runs opa test with pinned flags + consistent output
+    └── acceptance_verify.sh                  # Contract checks: fixtures/input vs fixtures/expected
+```
 
-  rego/                      # Rego policies (source of truth)
-    kfm/
-      data.rego              # Data access baseline (default deny)
-      ai.rego                # Focus Mode output validation (cite-or-abstain)
-      promotion/
-        provenance_guard.rego
-        materiality_rules.rego
-      sensitivity/
-        classification.rego
-        redaction.rego
-
-  tests/                     # OPA unit tests (opa test ...)
-    kfm_data_test.rego
-    kfm_ai_test.rego
-    promotion_guard_test.rego
-
-  fixtures/                  # Deterministic fixtures for Conftest + contract tests
-    input/
-      focus_answer_allow.json
-      focus_answer_deny.json
-      dataset_public.json
-      dataset_restricted.json
-      run_receipt_minimal.json
-    expected/
-      redacted_response.json
-
-  conftest/                  # Optional conftest config
-    conftest.toml
-
-  scripts/                   # Optional wrappers (local parity with CI)
-    policy_test.sh
-    acceptance_verify.sh
 ```
 
 > [!TIP]
