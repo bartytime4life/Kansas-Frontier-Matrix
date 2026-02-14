@@ -68,13 +68,13 @@ KFM’s “truth path” (conceptual) looks like this:
 
 ```mermaid
 flowchart LR
-  UP[Upstream provider] --> W[Watcher\npoll/webhook/hybrid]
-  W --> R[Typed receipt\nrun_manifest / run_receipt]
-  R --> CI[CI gates\nvalidators + OPA/Rego]
-  CI -->|pass| PUB[Publish/Promote\n(digest-pinned, cataloged)]
-  CI -->|fail| STOP[Fail closed\nmerge blocked]
-  PUB --> API[KFM API\n(policy boundary)]
-  API --> UI[Web UI + Story Nodes\nFocus Mode cite-or-abstain]
+  UP["Upstream provider"] --> W["Watcher (poll/webhook/hybrid)"]
+  W --> R["Typed receipt (run_manifest / run_receipt)"]
+  R --> CI["CI gates (validators + OPA/Rego)"]
+  CI -->|"pass"| PUB["Publish/Promote (digest-pinned, cataloged)"]
+  CI -->|"fail"| STOP["Fail closed (merge blocked)"]
+  PUB --> API["KFM API (policy boundary)"]
+  API --> UI["Web UI + Story Nodes (Focus Mode cite-or-abstain)"]
 ```
 
 **What matters for this folder**:
