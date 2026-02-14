@@ -116,14 +116,14 @@ The libraries here support KFM’s governed “truth path” from acquisition �
 
 ```mermaid
 flowchart LR
-  A[Acquire / Watch] --> B[Raw Zone]
-  B --> C[Work Zone]
-  C --> D[Processed Zone]
-  D --> E[Catalogs: STAC / DCAT + PROV links]
-  E --> F[Stores: object/registry/search]
-  F --> G[Governed API boundary + policy checks]
-  G --> H[UI / Story Nodes]
-  H --> I[Focus Mode (cite-or-abstain)]
+  A["Acquire / Watch"] --> B["Raw Zone"]
+  B --> C["Work Zone"]
+  C --> D["Processed Zone"]
+  D --> E["Catalogs: STAC / DCAT + PROV links"]
+  E --> F["Stores: object / registry / search"]
+  F --> G["Governed API boundary + policy checks"]
+  G --> H["UI / Story Nodes"]
+  H --> I["Focus Mode (cite-or-abstain)"]
 ```
 
 > [!NOTE]
