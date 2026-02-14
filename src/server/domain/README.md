@@ -33,20 +33,15 @@ KFM is implemented using **clean layers**. This folder is the **innermost** laye
 
 ```mermaid
 flowchart TB
-  %% Outer systems
-  UI[Web UI] --> API[API Gateway / Controllers]
-  API --> PDP[Policy PDP (OPA/Rego)]
-  API --> AUDIT[Audit Ledger]
+  UI["Web UI"] --> API["API Gateway / Controllers"]
+  API --> PDP["Policy PDP (OPA/Rego)"]
+  API --> AUDIT["Audit Ledger"]
 
-  %% Backend clean layers
-  API --> UC[Use Cases]
-  UC --> D[Domain]
-  API --> INFRA[Infrastructure Adapters]
-  INFRA --> PORTS[Interfaces / Ports]
+  API --> UC["Use Cases"]
+  UC --> D["Domain"]
+  API --> INFRA["Infrastructure Adapters"]
+  INFRA --> PORTS["Interfaces / Ports"]
   PORTS --> D
-
-  %% Key note
-  %% Domain MUST NOT depend on UC/PORTS/INFRA/API/PDP.
 ```
 
 ### Layer responsibilities (quick map)
