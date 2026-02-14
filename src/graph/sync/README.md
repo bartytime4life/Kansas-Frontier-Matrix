@@ -1,378 +1,514 @@
-# Graph Sync (`src/graph/sync/`)
+<!--
+File: src/graph/sync/README.md
 
-> **Purpose:** keep KFM’s Neo4j knowledge graph(s) synchronized with **governed, published** artifacts (processed data + STAC/DCAT/PROV + run receipts + bundles), so the API/UI/Focus Mode can traverse provenance, entities, and concepts **without bypassing governance**.
+KFM Governed README
+- Evidence-first
+- Policy-aware (default deny at the trust membrane)
+- Provenance-first + audit-logged
+-->
+
+![Subsystem](https://img.shields.io/badge/subsystem-graph%20sync-blue)
+![Governance](https://img.shields.io/badge/governance-governed-blueviolet)
+![Policy](https://img.shields.io/badge/policy-default%20deny-critical)
+![Evidence](https://img.shields.io/badge/evidence-cite%20or%20abstain-critical)
+![Catalogs](https://img.shields.io/badge/catalogs-STAC%20%7C%20DCAT%20%7C%20PROV-informational)
+![Provenance](https://img.shields.io/badge/provenance-PROV--O-informational)
+![Audit](https://img.shields.io/badge/audit-append--only-important)
+![Trust Membrane](https://img.shields.io/badge/trust%20membrane-enforced-critical)
+![Integrity](https://img.shields.io/badge/integrity-idempotent%20sync-success)
+
+<details>
+<summary>📛 Optional: enable dynamic GitHub badges (replace <code>&lt;ORG&gt;/&lt;REPO&gt;</code>)</summary>
+
+> These are intentionally **not** enabled by default to avoid broken links in forks/templates.
+
+- CI  
+  `https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/ci.yml?branch=main`
+- Coverage  
+  `https://img.shields.io/codecov/c/github/<ORG>/<REPO>`
+- Release  
+  `https://img.shields.io/github/v/release/<ORG>/<REPO>`
+- License  
+  `https://img.shields.io/github/license/<ORG>/<REPO>`
+- Last commit  
+  `https://img.shields.io/github/last-commit/<ORG>/<REPO>`
+
+</details>
+
+# 🔁 Graph Sync
+
+`src/graph/sync/` contains the **governed synchronization engine** that materializes KFM’s **processed + cataloged** artifacts into the **graph index** (e.g., Neo4j/property-graph) in a way that is:
+
+- **Evidence-first** (every claim-bearing node/edge must carry resolvable evidence references)
+- **Fail-closed** (promotion/sync aborts if required artifacts are missing/invalid)
+- **Idempotent + deterministic** (same inputs ⇒ same graph state)
+- **Audited + provenance-linked** (sync emits run receipts + audit records)
+
+> [!IMPORTANT]
+> This module is **not** a user-facing API and must **never** be called directly from the frontend.
+> All graph reads/writes visible to users go through the governed API boundary (`src/server/`) where
+> authentication, policy evaluation, redaction, and audit/provenance logging are enforced.
 
 ---
 
-## 📌 Where this fits in KFM (truth path)
+## Table of contents
 
-KFM’s “truth path” is designed so **raw/work** are never served directly; **processed + catalogs** are what runtime trusts and loads into stores before the API serves anything. Graph Sync lives in the “catalogs → stores” part of that chain. :contentReference[oaicite:0]{index=0}:contentReference[oaicite:1]{index=1}
+<details>
+<summary>Open</summary>
+
+- [Scope](#scope)
+- [Hard requirements (non-negotiable)](#hard-requirements-non-negotiable)
+- [Architecture](#architecture)
+- [Inputs and outputs](#inputs-and-outputs)
+- [Directory layout](#directory-layout)
+- [CLI contract](#cli-contract)
+- [Configuration](#configuration)
+- [Sync modes](#sync-modes)
+- [Validation gates](#validation-gates)
+- [Audit + provenance outputs](#audit--provenance-outputs)
+- [Migrations and schema evolution](#migrations-and-schema-evolution)
+- [Testing strategy](#testing-strategy)
+- [Observability](#observability)
+- [Troubleshooting](#troubleshooting)
+- [How to extend](#how-to-extend)
+- [Definition of Done](#definition-of-done)
+- [References](#references)
+
+</details>
+
+---
+
+## Scope
+
+**In scope (this folder):**
+
+- Planning + applying **graph sync** from governed artifacts
+- Running **Cypher migrations** / schema constraints (directly or by delegating to `src/graph/migrations/`)
+- Generating **offline import CSVs** (if used) into `data/graph/`
+- Writing **run receipts** + **validation reports**
+- Emitting **audit events** (append-only ledger) referencing evidence/provenance
+
+**Out of scope (by design):**
+
+- STAC/DCAT/PROV generation (lives under pipelines/tools)
+- API boundary + redaction logic (lives under `src/server/`)
+- UI/Focus Mode rendering (lives under `web/`)
+- Dataset ETL transformations (lives under `src/pipelines/`)
+
+---
+
+## Hard requirements (non-negotiable)
+
+> [!NOTE]
+> These are KFM invariants; if you’re changing this module and you must violate one, that change
+> requires a governance review and likely a version bump of contracts/schemas.
+
+1. **Canonical pipeline ordering is enforced**  
+   ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI → Story Nodes → Focus Mode.
+
+2. **Fail-closed promotion posture**  
+   If required artifacts (catalogs, checksums, receipts, validation reports, policy labels) are missing or invalid,
+   **sync must abort** and record an audit event. No partial “best effort” sync is allowed.
+
+3. **Evidence-first graph contract**  
+   Any node/edge representing a claim must include resolvable `evidence_refs` such that clients can resolve:
+   `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` (through the governed API).
+
+4. **Idempotent upserts**  
+   Sync must be safe to re-run. Use deterministic IDs + unique constraints and avoid “create-only” behavior
+   that duplicates entities.
+
+5. **No trust-membrane bypass**  
+   The graph is an internal index. User access is mediated by the API boundary and policy engine.
+   Frontend never reads/writes the graph directly.
+
+---
+
+## Architecture
 
 ```mermaid
 flowchart LR
-  A[Raw] --> B[Work]
-  B --> C[Processed]
-  C --> D[STAC/DCAT/PROV + run_record/run_receipt]
-  D --> E[Graph Sync: upsert Neo4j]
-  E --> F[API Gateway]
-  F --> G[UI / Focus Mode]
+  subgraph Upstream["Upstream artifacts (must exist before graph sync)"]
+    P[data/processed/*<br/>query-ready datasets]
+    C[data/catalog/*<br/>DCAT + STAC + PROV]
+    R[data/work/*<br/>run_record.json + validation_report.json]
+  end
+
+  subgraph Sync["src/graph/sync (this module)"]
+    PLAN[Plan: diff desired vs current]
+    MIG[Migrate: constraints + indexes]
+    APPLY[Apply: upsert nodes/edges]
+    CHECK[Validate: integrity + evidence refs]
+    AUD[Emit audit events]
+  end
+
+  subgraph Stores["Backends (behind interfaces/ports)"]
+    G[(Graph store / index)]
+    L[(Audit ledger: append-only)]
+    O[(Object store: receipts / bundles)]
+  end
+
+  P --> PLAN
+  C --> PLAN
+  R --> PLAN
+
+  PLAN --> MIG --> APPLY --> CHECK
+  APPLY --> G
+  CHECK --> AUD --> L
+  CHECK --> O
 ```
 
 ---
 
-## ✅ Non‑negotiable invariants (governance hard rules)
+## Inputs and outputs
 
-> [!IMPORTANT]
-> These are not “nice-to-haves.” If Graph Sync violates these, KFM’s safety/credibility model breaks.
+### Inputs (minimum)
 
-- **Processed zone is the only publishable source of truth.** Graph Sync must not ingest from raw/work as if it were publishable. :contentReference[oaicite:2]{index=2}
-- **Fail‑closed behavior.** Missing required catalogs / invalid schema / missing required provenance must block sync (and, upstream, promotion). :contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}
-- **Trust membrane is enforced at the API boundary.** Frontend never talks to databases directly; policy is evaluated on requests; backend uses ports and cannot bypass repository interfaces. :contentReference[oaicite:5]{index=5}
-- **Sensitivity handling:** if precise locations or culturally restricted knowledge exist, publish a generalized derivative for general audiences and store precise assets under restricted access with separate provenance chains. Graph Sync must preserve that separation and carry classification/policy metadata into the graph. :contentReference[oaicite:6]{index=6}
+| Input | Where it comes from | Why it matters |
+|------|----------------------|----------------|
+| Dataset versions + processed artifacts | `data/processed/**` | Provides the **facts** to index |
+| Catalogs (DCAT/STAC/PROV) | `data/catalog/**`, `data/stac/**`, `data/prov/**` | Provides **discoverability + lineage** |
+| Run record + validation report | `data/work/**` (or pipeline output) | Anchors **reproducibility + promotion gate** |
+| Policy labels / sensitivity flags | dataset metadata + policy bundle | Ensures **governance posture** is carried into graph |
 
----
+### Outputs (minimum)
 
-## 🧭 What Graph Sync is responsible for
-
-### Primary responsibilities
-
-1. **Load governed provenance + catalog objects into Neo4j**
-   - Minimum viable provenance graph: **Dataset / Ingestion / Activity / Agent** with PROV-aligned relationships and timeline-friendly attributes. :contentReference[oaicite:7]{index=7}
-   - Link catalog objects (STAC/DCAT) to the provenance chain (run_id / stac_id / dataset_id). :contentReference[oaicite:8]{index=8}
-
-2. **Maintain idempotent, deterministic upserts**
-   - Prevent duplicates by enforcing uniqueness constraints and using stable IDs (details below). :contentReference[oaicite:9]{index=9}
-
-3. **Ensure graph schema + constraints are applied**
-   - Constraints/indexes must be applied before loading data; sync should fail fast if schema is not applied.
-
-4. **Write a sync run record (auditability)**
-   - Each sync run must be traceable to inputs (catalog refs + artifact digests) and outputs (counts, timestamps), and linked to the originating pipeline run(s).
-
-### Secondary responsibilities (often needed)
-
-- **Support incremental sync** (new/changed datasets only) and **backfills** (rebuild all).
-- **Support “dry run” / plan mode** so we can detect what would change before writing.
-- **Produce machine-verifiable checks** (expected counts, hash lists) to make CI reliable.
+| Output | Typical location | Notes |
+|-------|-------------------|------|
+| Graph updates | graph backend | Upserts in transactions / batch jobs |
+| Run receipt (graph sync) | `data/work/graph_sync/<run_id>/run_record.json` | Must reference inputs/outputs + hashes |
+| Validation report (graph sync) | `data/work/graph_sync/<run_id>/validation_report.json` | Must include pass/fail and details |
+| Audit record | audit ledger backend | Append-only event(s) with `audit_ref` + hashes |
+| Optional offline import artifacts | `data/graph/csv/**` | If using `neo4j-admin import` or similar |
 
 ---
 
-## 🚫 What Graph Sync is NOT responsible for
-
-- Running ETL/pipelines that produce processed artifacts (that’s `src/pipelines/…`).
-- Serving graph queries to clients (that’s API layer).
-- Enforcing request-time authorization (that’s OPA + API gateway).
-- Replacing the “evidence resolver” endpoints that make citations resolvable (separate module).
-
----
-
-## 🗃️ Inputs and outputs
-
-| Category | Input | Required? | Produced by | Used for |
-|---|---|---:|---|---|
-| Processed artifacts | GeoParquet/COG/media (by reference) | ✅ | pipeline promotion | graph nodes link to evidence bundles/assets |
-| Catalogs | STAC Items/Collections | ✅ | promotion job | dataset-layer metadata + evidence links |
-| Catalogs | DCAT dataset entry | ✅ | promotion job | dataset catalog metadata |
-| Provenance | PROV bundle(s) | ✅ | pipeline + promotion | lineage + “how produced” chain |
-| Run metadata | run_record / run_receipt | ✅ | pipeline | deterministic IDs + replay + audit trail |
-| Supply chain | SBOM / attestation refs | ⛳ recommended | build/release | trust + reproducibility gates |
-
-> [!NOTE]
-> “data/graph/csv” + “data/graph/cypher” export locations are part of the documented repo layout expectations (if implemented in this repo). :contentReference[oaicite:10]{index=10}
-
----
-
-## 🧩 The graph(s) we sync (two subgraphs)
-
-KFM uses graphs for **runtime provenance/knowledge** and also for **document/concept extraction** supporting Focus Mode retrieval. :contentReference[oaicite:11]{index=11}
-
-### A) Provenance + Catalog Graph (runtime “truth graph”)
-
-Minimum viable ER model (from KFM New Ideas integration report): :contentReference[oaicite:12]{index=12}
-
-```mermaid
-erDiagram
-  DATASET ||--o{ INGESTION : versions
-  AGENT ||--o{ ACTIVITY : performed
-  ACTIVITY ||--o{ INGESTION : generated
-  INGESTION ||--|| RUN_RECEIPT : described_by
-  INGESTION ||--o{ STAC_ITEM : publishes
-  DATASET ||--|| DCAT_DATASET : cataloged_as
-  STAC_ITEM }o--|| DCAT_DATASET : derived_from
-  INGESTION ||--o{ INGESTION : was_derived_from
-```
-
-**Recommended relationship naming (align with integration report “I‑12”):**  
-`(Agent)-[:PERFORMED]->(Activity)-[:GENERATED]->(Ingestion)-[:VERSIONS]->(Dataset)` :contentReference[oaicite:13]{index=13}
-
-### B) Extraction Graph (docs → sections → chunks → concepts → relations)
-
-This supports Focus Mode / concept catalog retrieval and is described as a canonical extraction graph. :contentReference[oaicite:14]{index=14}
-
-```mermaid
-erDiagram
-  SOURCE_DOCUMENT ||--o{ SECTION : contains
-  SECTION ||--o{ CHUNK : yields
-  SECTION ||--o{ CONCEPT : expresses
-  CONCEPT ||--o{ RELATION : participates_in
-  CHUNK ||--o{ CITATION : references
-  CONCEPT ||--o{ PROVENANCE_RECORD : traced_by
-```
-
-> [!WARNING]
-> If this repo currently only syncs the provenance graph (and not extraction), keep the schema sections but mark the extraction graph as “planned” rather than deleting it. Deleting it tends to create “missing aspects” later when Focus Mode integration begins.
-
----
-
-## 🆔 Identity + determinism requirements
-
-### Stable IDs (must not drift)
-
-Graph Sync must treat these as **primary identifiers**:
-
-- `dataset_id` (canonical dataset identifier)
-- `ingestion_id` (dataset version/ingestion identifier)
-- `run_id` (pipeline run record / receipt identifier)
-- `stac_id` (STAC Item/Collection IDs)
-- `artifact_digest` / `sha256` digests for content addressing
-
-### `spec_hash` definition (avoid incomparable hashes)
-
-The integration report flags a gap where `spec_hash` semantics vary. Recommendation: define  
-`spec_hash = sha256(JCS(spec))` and carry `spec_schema_id` + `spec_recipe_version`. :contentReference[oaicite:15]{index=15}
-
-> [!IMPORTANT]
-> Graph Sync must **not** compute ad-hoc hashes. It should only ingest/propagate `spec_hash` generated by the governed pipeline step, and validate that required fields exist.
-
----
-
-## 🧱 Schema and constraints (Neo4j)
-
-> [!NOTE]
-> Exact labels/constraints are **(not confirmed in repo)**. The pattern below is the minimum to prevent duplicates and brittle queries, aligning with the integration report’s normalization concerns. :contentReference[oaicite:16]{index=16}
-
-### Required uniqueness constraints (minimum)
-
-- `(:Dataset {dataset_id})` unique
-- `(:Ingestion {ingestion_id})` unique
-- `(:RunReceipt {run_id})` unique
-- `(:StacItem {stac_id})` unique (or `id` per STAC)
-- `(:DcatDataset {dataset_id})` unique (or `dcat_uri`)
-
-### Required indexes (minimum)
-
-- `Ingestion.at` (timeline)
-- `Activity.startedAt / endedAt` (timeline)
-- `Dataset.classification` / sensitivity tags (policy filters)
-
----
-
-## 🔁 Sync strategies
-
-Graph Sync typically supports two modes:
-
-1. **Online upsert (transactional)**
-   - Uses Neo4j driver / Bolt; merges nodes by stable IDs; writes relationships.
-   - Best for: incremental daily syncs, small-medium batches.
-
-2. **Offline bulk load (CSV + import)**
-   - Emits `data/graph/csv/` and optional `data/graph/cypher/` scripts for constraints and post-load steps (if the repo implements this pattern). :contentReference[oaicite:17]{index=17}
-   - Best for: initial graph builds and large backfills.
-
-> [!IMPORTANT]
-> Either mode must remain **idempotent** and **replayable**: re-running with the same inputs should not create duplicates or drift.
-
----
-
-## 🧪 “Fail‑closed” rules enforced by Graph Sync
-
-Graph Sync must refuse to write if:
-
-- required catalogs are missing (STAC/DCAT/PROV)
-- run record/receipt is missing required digests
-- classification/sensitivity metadata is missing for publishable datasets
-- constraints are not applied (risk of duplicates)
-- input schemas do not validate (schema drift)
-
-This matches KFM’s pipeline flow expectations where promotion is blocked on failures and evidence is produced before exposure. :contentReference[oaicite:18]{index=18}:contentReference[oaicite:19]{index=19}
-
----
-
-## 🛡️ Sensitivity handling in the graph
-
-From the KFM‑NG sensitivity pattern: publish generalized data for public, store precise under restricted access, with separate provenance chains. :contentReference[oaicite:20]{index=20}
-
-**Graph Sync requirements:**
-
-- Store **classification** and **policy tags** on Dataset/Ingestion nodes.
-- Do **not** attach precise geometry blobs directly to public graph nodes.
-- Prefer linking to **bundle/evidence references** (digest-addressed), and rely on the API+OPA “trust membrane” for access control. :contentReference[oaicite:21]{index=21}
-
----
-
-## ▶️ Running Graph Sync
-
-> [!WARNING]
-> Exact commands/entrypoints are **(not confirmed in repo)**. Keep this section updated to match the implementation once confirmed.
-
-### Local development (expected baseline)
-
-The blueprint describes local dev via Docker Compose with `api/web/postgis/neo4j/opensearch/opa`. :contentReference[oaicite:22]{index=22}
-
-```bash
-cp .env.example .env
-docker compose up --build
-```
-
-### Typical sync invocation patterns
-
-#### Incremental sync (recommended default)
-```bash
-# Example shape (verify flags/paths in repo):
-kfm graph sync \
-  --catalog-root data/catalog \
-  --processed-root data/**/processed \
-  --neo4j-uri bolt://localhost:7687 \
-  --neo4j-database neo4j \
-  --mode incremental
-```
-
-#### Full rebuild / backfill
-```bash
-kfm graph sync --mode rebuild --from-scratch
-```
-
-#### Dry run / plan
-```bash
-kfm graph sync --dry-run --mode incremental
-```
-
----
-
-## ⚙️ Configuration
-
-> [!NOTE]
-> Names/keys are **(not confirmed in repo)**. If implementation differs, update this table instead of deleting it.
-
-| Variable | Example | Why it exists |
-|---|---|---|
-| `NEO4J_URI` | `bolt://neo4j:7687` | connection |
-| `NEO4J_USER` | `neo4j` | auth |
-| `NEO4J_PASSWORD` | `…` | auth |
-| `NEO4J_DATABASE` | `neo4j` | multi-db support |
-| `KFM_CATALOG_ROOT` | `data/catalog` | where STAC/DCAT/PROV live |
-| `KFM_PROCESSED_ROOT` | `data/**/processed` | artifact refs |
-| `KFM_SYNC_MODE` | `incremental|rebuild|export` | behavior |
-| `KFM_SYNC_BATCH_SIZE` | `1000` | performance/backpressure |
-| `KFM_SYNC_CONCURRENCY` | `4` | parallelism (must remain safe) |
-
----
-
-## 📈 Observability (logs, metrics, traces)
-
-Minimum required signals:
-
-- `sync_run_id` (unique ID per sync run)
-- counts: nodes/edges upserted, datasets processed, skipped, failed
-- latency per dataset/ingestion
-- Neo4j retry counts / transient errors
-- validation failures (schema IDs + file paths)
+## Directory layout
 
 > [!TIP]
-> Always include `run_id` / `ingestion_id` / `dataset_id` in log context so incidents can be traced back to a specific provenance chain.
+> Keep “graph definitions” and “graph build logic” in canonical locations only:
+> - Code: `src/graph/**`
+> - Static import artifacts: `data/graph/**`
+
+### This module (recommended structure)
+
+```text
+src/graph/
+├── README.md                         # graph subsystem overview
+└── sync/
+    ├── README.md                     # this document
+    ├── ports/                        # interfaces: GraphStore, AuditLedger, CatalogReader, PolicyEvaluator
+    ├── adapters/                     # infra adapters (Neo4j driver, file IO, Postgres audit client, etc.)
+    ├── plan/                         # diffing + deterministic SyncPlan creation
+    ├── apply/                        # batched upserts / transactions / rollback strategies
+    ├── validate/                     # integrity checks + evidence resolver checks
+    ├── cli/                          # CLI entrypoint (optional but recommended)
+    └── __tests__/                    # unit + integration tests (ephemeral graph container)
+```
+
+### Related canonical paths (cross-subsystem)
+
+```text
+data/
+└── graph/
+    ├── csv/                          # offline import CSV exports (nodes/edges)
+    └── cypher/                       # optional post-import scripts / maintenance cypher
+```
 
 ---
 
-## 🧯 Troubleshooting + recovery runbook
+## CLI contract
 
-### Common failures and what to do
+> [!IMPORTANT]
+> This section is a **contract**. Even if the implementation differs (TS/Python/Go),
+> keep flags stable so CI/runbooks don’t churn.
 
-<details>
-<summary><strong>Missing STAC/DCAT/PROV for a dataset</strong></summary>
+### Command shape
 
-**Expected behavior:** Graph Sync fails closed.
+```text
+kfm graph sync \
+  --mode <plan|apply|validate|dry-run|full-rebuild|incremental> \
+  --dataset-id <dataset_id|all> \
+  --version-id <version_id|latest> \
+  --run-id <run_*> \
+  --target <graph|csv> \
+  --out-dir <path> \
+  [--since <ISO-8601>] \
+  [--policy-bundle <path|uri>] \
+  [--fail-closed true|false]
+```
 
-**Fix:** run (or re-run) the promotion/catalog generation step to produce valid STAC/DCAT/PROV, then re-run sync. Promotion itself should be blocked until catalogs validate. :contentReference[oaicite:23]{index=23}
+### Exit codes
 
-</details>
+| Code | Meaning |
+|------|---------|
+| `0` | Success |
+| `2` | Validation failure (expected fail-closed) |
+| `3` | Policy denied (fail-closed) |
+| `4` | Graph migration failure |
+| `5` | Apply failure / transaction failure |
+| `6` | Unexpected exception |
 
-<details>
-<summary><strong>Duplicate nodes (uniqueness violations / no constraints)</strong></summary>
+### Examples
 
-**Expected behavior:** sync refuses to run if constraints are missing.
+```bash
+# Dry-run: compute plan only (no writes)
+kfm graph sync --mode plan --dataset-id all --version-id latest --run-id run_2026-02-14T120000Z --target graph --out-dir data/work/graph_sync/run_2026-02-14T120000Z
 
-**Fix:** apply schema migration (constraints + indexes), then re-run. See “Schema and constraints” above. :contentReference[oaicite:24]{index=24}
+# Incremental sync for one dataset
+kfm graph sync --mode incremental --dataset-id kansas_historic_counties --version-id latest --run-id run_... --target graph --out-dir data/work/graph_sync/run_...
 
-</details>
-
-<details>
-<summary><strong>Sensitivity metadata missing</strong></summary>
-
-**Expected behavior:** fail closed (don’t publish/sync ambiguous sensitivity).
-
-**Fix:** update dataset metadata/policy tags in the upstream governed artifacts; regenerate catalogs; re-run.
-
-</details>
-
-### Recovery principles
-
-- **Idempotent:** safe to re-run after fixing the cause.
-- **Checkpointed:** long rebuilds should be resumable (dataset-by-dataset commits).
-- **No silent partial success:** if a dataset fails, report it clearly and fail the run unless running in a documented “best-effort” mode (not recommended for production).
-
----
-
-## ✅ Tests + CI gates
-
-Graph Sync changes must come with tests.
-
-### Unit tests (required)
-- ID generation / normalization (dataset_id, ingestion_id, stac_id mapping)
-- PROV/DCAT/STAC parsing + validation
-- mapping functions to graph node/edge DTOs
-
-### Integration tests (required)
-- Neo4j upsert behavior with constraints enabled
-- Incremental update: re-run same input → no duplicates
-- “Delete/tombstone” behavior (if supported)
-
-### Contract tests (recommended)
-- “Catalog → graph schema” contract snapshot (labels, required props)
-- “Evidence refs resolvable” contract (prov://, stac://, dcat:// expectations) :contentReference[oaicite:25]{index=25}
-
-### CI “Definition of Done” for a PR touching this module
-
-- [ ] Schema migrations reviewed (constraints/indexes)
-- [ ] Unit tests added/updated
-- [ ] Integration tests pass against ephemeral Neo4j
-- [ ] Deterministic IDs validated (no drift)
-- [ ] Fail-closed behavior preserved
-- [ ] Sensitivity rules preserved (no precise geometry leaks)
-- [ ] README updated (this file) if behavior/flags change
+# Export CSVs (for offline import workflows)
+kfm graph sync --mode full-rebuild --dataset-id all --version-id latest --run-id run_... --target csv --out-dir data/graph/csv/run_...
+```
 
 ---
 
-## 🗂️ Expected directory layout (this folder)
+## Configuration
+
+> [!CAUTION]
+> Treat graph credentials and audit-ledger credentials as secrets. Never commit them.
+
+### Environment variables (recommended)
+
+| Variable | Example | Required | Notes |
+|---------|---------|----------|------|
+| `KFM_GRAPH_URI` | `neo4j+s://localhost:7687` | ✅ | Use TLS in non-dev |
+| `KFM_GRAPH_USER` | `neo4j` | ✅ |  |
+| `KFM_GRAPH_PASSWORD` | `********` | ✅ |  |
+| `KFM_AUDIT_LEDGER_DSN` | `postgres://...` | ⛔/✅ | Required if audit ledger is enabled in this run |
+| `KFM_POLICY_BUNDLE` | `policy/bundle.tar.gz` | ⛔/✅ | Required if sync does policy pre-checks |
+| `KFM_DATA_ROOT` | `data/` | ⛔ | Defaults to repo `data/` |
+
+---
+
+## Sync modes
+
+| Mode | What it does | When to use |
+|------|--------------|-------------|
+| `plan` | Builds a `SyncPlan` and writes it to `out-dir` | CI previews, PR reviews |
+| `apply` | Applies a previously built plan | Controlled releases |
+| `validate` | Runs post-sync integrity checks | Always, and in CI |
+| `dry-run` | Full pipeline without writes | Debugging |
+| `incremental` | Computes + applies deltas | Routine updates |
+| `full-rebuild` | Rebuilds graph from scratch | Schema changes, corruption, new ontology |
+
+> [!TIP]
+> Prefer **incremental** for day-to-day updates; require explicit approvals for **full-rebuild**.
+
+---
+
+## Validation gates
+
+Validation is a **product requirement**, not a developer convenience.
+
+### Minimum validation checks
+
+- **Catalog presence:** DCAT/STAC/PROV exist for the dataset version(s)
+- **Receipt presence:** run record exists and links to inputs/outputs
+- **Checksum integrity:** referenced artifacts exist and hash-match
+- **Graph schema integrity:** uniqueness constraints and indexes exist
+- **Graph ontology integrity:** no forbidden orphan node types; required relationships exist
+- **Evidence resolvability:** all `evidence_refs` resolve via the evidence resolver contract (API layer)
+
+### Suggested integrity queries (examples)
+
+```cypher
+// Example: ensure every DatasetVersion has a PROV bundle ref
+MATCH (dv:DatasetVersion)
+WHERE dv.prov_ref IS NULL
+RETURN count(dv) AS missing_prov_refs;
+
+// Example: uniqueness by canonical_id
+MATCH (e:Entity)
+WITH e.canonical_id AS id, count(*) AS c
+WHERE c > 1
+RETURN id, c
+ORDER BY c DESC;
+```
+
+---
+
+## Audit + provenance outputs
+
+### Run record (graph sync)
+
+Write a `run_record.json` for the sync job itself.
+
+```json
+{
+  "run_id": "run_2026-02-14T120000Z_graph_sync",
+  "job_type": "kfm:graph_sync",
+  "dataset_id": "all",
+  "inputs": [
+    {"uri": "data/catalog/dcat/datasets.jsonld", "sha256": "..."},
+    {"uri": "data/prov/run_2026-02-14T110000Z.json", "sha256": "..."}
+  ],
+  "code": {"git_sha": "...", "image": "kfm/graph-sync:..."},
+  "outputs": [
+    {"uri": "graph://snapshot/run_2026-02-14T120000Z", "sha256": "..."},
+    {"uri": "data/work/graph_sync/run_.../validation_report.json", "sha256": "..."}
+  ],
+  "validation_report": "data/work/graph_sync/run_.../validation_report.json",
+  "prov_ref": "prov://bundle/run_2026-02-14T120000Z_graph_sync"
+}
+```
+
+### Validation report (graph sync)
+
+```json
+{
+  "run_id": "run_2026-02-14T120000Z_graph_sync",
+  "status": "pass|fail",
+  "checks": [
+    {"id": "catalogs.present", "status": "pass"},
+    {"id": "graph.constraints", "status": "pass"},
+    {"id": "evidence.resolvable", "status": "fail", "details": {"missing": ["prov://..."]}}
+  ],
+  "summary": {"errors": 1, "warnings": 0}
+}
+```
+
+### Audit record (minimum fields)
+
+> [!IMPORTANT]
+> Audit records are append-only. Never edit past events; emit a corrective event.
+
+```json
+{
+  "audit_ref": "audit://graph_sync/run_2026-02-14T120000Z",
+  "timestamp": "2026-02-14T12:00:00Z",
+  "event_type": "graph.sync.applied",
+  "actor": {"service": "graph-sync", "git_sha": "..."},
+  "subject": {"dataset_id": "all", "run_id": "run_..."},
+  "evidence_refs": ["prov://bundle/run_...", "dcat://dataset/..."],
+  "prev_hash": "sha256:...",
+  "event_hash": "sha256:..."
+}
+```
+
+---
+
+## Migrations and schema evolution
+
+Graph schema changes must be explicit, reviewable, and replayable.
+
+### Rules
+
+- Every breaking schema change requires:
+  1. A migration script (Cypher) with a monotonic version ID
+  2. A rollback or rebuild plan
+  3. Updated validation rules + tests
+- Never “hot patch” schema in production by hand.
+
+### Suggested migration naming
+
+```text
+src/graph/migrations/
+  0001_init_constraints.cypher
+  0002_datasetversion_unique.cypher
+  0003_add_evidence_refs_indexes.cypher
+```
+
+---
+
+## Testing strategy
+
+### Unit tests (fast)
+
+- Plan diff correctness (input manifests ⇒ stable `SyncPlan`)
+- ID determinism (canonical IDs do not drift)
+- Policy pre-check behavior (missing keys ⇒ deny)
+
+### Integration tests (ephemeral graph)
+
+- Spin up a disposable graph store (Docker) and apply:
+  - migrations
+  - a small fixture dataset
+  - validate invariants with Cypher queries
+
+### Contract tests (system-level)
+
+- API queries that depend on graph shape must pass after sync
+- Evidence references emitted by sync must be resolvable by the evidence resolver endpoints
+
+> [!TIP]
+> Graph sync is only “done” when API contracts still hold.
+
+---
+
+## Observability
+
+Minimum telemetry for each run:
+
+- `run_id`, `dataset_id`, `mode`, `start/end`, `counts` (nodes/edges upserted), `duration_ms`
+- `fail_reason` (categorical), `policy_decision_ref` (if applicable)
+- Structured logs (JSON), scrub secrets
+
+Recommended metrics:
+
+- `graph_sync_runs_total{status=pass|fail}`
+- `graph_sync_apply_duration_seconds`
+- `graph_sync_nodes_upserted_total`
+- `graph_sync_edges_upserted_total`
+- `graph_sync_validation_failures_total{check_id=...}`
+
+---
+
+## Troubleshooting
+
+### “Duplicate nodes / edge explosion”
+
+- Confirm uniqueness constraints exist
+- Ensure `MERGE` uses the correct deterministic key(s)
+- Re-run `mode=plan` and inspect the plan for repeated creates
+
+### “Policy denied” / fail-closed
+
+- Ensure required policy labels exist on dataset metadata
+- Ensure input schema to policy evaluation includes required keys
+- Confirm catalogs (DCAT/STAC/PROV) are present and valid
+
+### “Evidence refs not resolvable”
+
+- Confirm the referenced PROV/DCAT/STAC artifacts exist and are addressable
+- Confirm the API evidence resolver understands the scheme (`prov://`, etc.)
+- Fail the run (do not silently drop evidence refs)
+
+---
+
+## How to extend
+
+### Add a new entity type / relationship
+
+1. Update ontology definition (canonical place for ontology is in `src/graph/` or `docs/standards/` per repo policy)
+2. Add a migration (constraints/indexes)
+3. Update exporter/upserter mapping (new nodes/edges)
+4. Add validation checks (no orphan nodes, required evidence refs)
+5. Add/adjust contract tests for API queries
+6. Update docs + Story Node / Focus Mode expectations if user-facing
+
+---
+
+## Definition of Done
+
+- [ ] Sync remains **idempotent** (rerun produces no drift)
+- [ ] Required artifacts exist (DCAT/STAC/PROV + run record + validation report)
+- [ ] Graph schema changes include migrations (+ rollback/rebuild plan)
+- [ ] Evidence refs are **resolvable** via API scheme(s)
+- [ ] Audit event emitted (append-only) with `event_hash` chain
+- [ ] Policy posture preserved (default deny across trust membrane; redaction works)
+- [ ] Unit + integration + contract tests updated and passing
+- [ ] This README updated if contracts/flags/outputs change
+
+---
+
+## References
+
+- `docs/MASTER_GUIDE_v13.md` (repository structure + subsystem homes)
+- `docs/architecture/*` (trust membrane, policy-as-code, provenance requirements)
+- `schemas/*` (run record / audit record / catalog schemas)
+- `policy/*` (OPA/Rego policy packs and tests)
 
 > [!NOTE]
-> **(not confirmed in repo)** — fill in with actual filenames once verified, but keep the categories.
-
-| Path | What lives here |
-|---|---|
-| `src/graph/sync/` | sync orchestration / entrypoints |
-| `src/graph/sync/mappers/` | STAC/DCAT/PROV → graph DTO mapping |
-| `src/graph/sync/schema/` | constraints/index definitions + migrations |
-| `src/graph/sync/ports/` | interfaces (catalog reader, graph writer, run ledger) |
-| `src/graph/sync/adapters/` | Neo4j adapter, filesystem/catalog adapters |
-| `src/graph/sync/tests/` | unit + integration tests |
-
----
-
-## 📚 References (governed)
-
-- **KFM Next‑Gen Blueprint & Primary Guide (draft, 2026‑02‑12)** — architecture invariants (trust membrane, processed-only publishable truth), policy fail-closed patterns, knowledge layer (graph + extraction graph). :contentReference[oaicite:26]{index=26}:contentReference[oaicite:27]{index=27}
-- **KFM Integration Report for KFM New Ideas (2026‑02‑08)** — end-to-end fail-closed lifecycle with “Load graph: Dataset/Ingestion/Activity/Agent”, plus graph schema recommendations and spec_hash normalization. :contentReference[oaicite:28]{index=28}:contentReference[oaicite:29]{index=29}
-- **Repo layout expectations** (docs guide) — `src/graph/` is “graph build code (ontology bindings, ingest scripts, constraints)” and `data/graph/{csv,cypher}` are suggested export locations. :contentReference[oaicite:30]{index=30}
-
----
-
+> If any of the referenced paths differ in your repo, update this section to keep link-checking clean.
