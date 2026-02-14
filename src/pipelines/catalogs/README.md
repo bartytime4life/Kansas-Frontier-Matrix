@@ -83,21 +83,26 @@ flowchart LR
 
 ```text
 data/
-  stac/
-    collections/             # STAC Collection JSON
-    items/                   # STAC Item JSON
-  catalog/
-    dcat/                    # DCAT outputs (typically JSON-LD)
-  prov/                      # PROV bundles/records (per run and/or dataset)
-  <domain>/
-    raw/                     # immutable drops/manifests
-    work/                    # validation + QA artifacts
-    processed/               # publishable data products
-schemas/
-  stac/
-  dcat/
-  prov/
-tools/
+├─ stac/
+│  ├─ collections/                       # STAC Collection JSON (groupings for discovery)
+│  └─ items/                             # STAC Item JSON (asset-level entries w/ geometry/time + links)
+│
+├─ catalog/
+│  └─ dcat/                              # DCAT outputs (typically JSON-LD datasets/distributions for publishing)
+│
+├─ prov/                                 # PROV bundles/records (lineage per run and/or dataset)
+│
+└─ <domain>/                             # One domain per dataset family (e.g., hydrology, parcels, railroads)
+   ├─ raw/                               # Immutable drops/manifests (read-only source snapshots/slices)
+   ├─ work/                              # Validation + QA artifacts (intermediate, safe to regenerate)
+   └─ processed/                         # Publishable data products (pipeline-produced; never hand-edited)
+│
+schemas/                                 # Validation contracts + profiles
+├─ stac/                                 # STAC profiles + schema validators
+├─ dcat/                                 # DCAT profiles + schema/constraints (JSONSchema/SHACL if used)
+└─ prov/                                 # PROV profiles/constraints (PROV-JSON/JSON-LD as applicable)
+│
+tools/                                   # Tooling packs (policy, docs rendering, supply-chain, CI helpers)
   ... (standalone validators, linters, CI harness wrappers)
 ```
 
