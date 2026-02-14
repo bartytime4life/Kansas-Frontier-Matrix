@@ -187,16 +187,16 @@ data/
 
 ```mermaid
 flowchart LR
-  REG[Registry\n(dataset profiles)] --> RAW[Raw zone\n(manifest + checksums)]
-  RAW --> WORK[Work zone\n(run record + validation + QA)]
-  WORK --> PROC[Processed zone\n(immutable versioned artifacts)]
-  PROC --> CATS[Catalogs\nDCAT + STAC + PROV]
-  CATS --> BUNDLE[Evidence bundle\n(OCI digest addressed)]
-  BUNDLE --> STORES[Stores\n(PostGIS / Graph / Search / Object Store)]
-  STORES --> API[GOVERNED API\n(auth + policy + redaction + audit)]
-  API --> UI[Web UI\n(map/time/story)]
-  UI --> STORIES[Story Nodes\n(governed narratives)]
-  STORIES --> FOCUS[Focus Mode\n(cite-or-abstain)]
+  REG["Registry (dataset profiles)"] --> RAW["Raw zone (manifest + checksums)"]
+  RAW --> WORK["Work zone (run record + validation + QA)"]
+  WORK --> PROC["Processed zone (immutable versioned artifacts)"]
+  PROC --> CATS["Catalogs (DCAT + STAC + PROV)"]
+  CATS --> BUNDLE["Evidence bundle (OCI digest-addressed)"]
+  BUNDLE --> STORES["Stores (PostGIS / Graph / Search / Object Store)"]
+  STORES --> API["GOVERNED API (auth + policy + redaction + audit)"]
+  API --> UI["Web UI (map/time/story)"]
+  UI --> STORIES["Story Nodes (governed narratives)"]
+  STORIES --> FOCUS["Focus Mode (cite-or-abstain)"]
 ```
 
 > [!IMPORTANT]
