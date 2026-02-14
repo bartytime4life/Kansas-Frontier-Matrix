@@ -55,12 +55,12 @@ KFM’s publishable lineage is **not negotiable**:
 
 ```mermaid
 flowchart LR
-  Raw[Raw Zone\n(immutable capture)] --> Work[Work Zone\n(repeatable transforms + QA)]
-  Work --> Processed[Processed Zone\n(publishable artifacts)]
-  Processed --> Catalogs[Catalog Zone\nSTAC/DCAT/PROV + checksums]
-  Catalogs --> API[Governed API Boundary\n(Trust Membrane + Policy)]
-  API --> UI[UI / Stories]
-  UI --> Focus[Focus Mode\n(cite or abstain)]
+  Raw["Raw Zone<br/>(immutable capture)"] --> Work["Work Zone<br/>(repeatable transforms + QA)"]
+  Work --> Processed["Processed Zone<br/>(publishable artifacts)"]
+  Processed --> Catalogs["Catalog Zone<br/>STAC/DCAT/PROV + checksums"]
+  Catalogs --> API["Governed API Boundary<br/>(Trust Membrane + Policy)"]
+  API --> UI["UI / Stories"]
+  UI --> Focus["Focus Mode<br/>(cite or abstain)"]
 ```
 
 ### Zone invariants
