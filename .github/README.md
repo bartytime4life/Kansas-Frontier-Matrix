@@ -201,7 +201,7 @@ flowchart LR
   OCI -->|"referrers"| PROV["PROV record"]
   OCI -->|"referrers"| DCAT["DCAT record"]
   OCI -->|"referrers"| STAC["STAC collection/items"]
-  OCI --> API["Evidence Resolver: /bundles/{digest}"]
+  OCI --> API["Evidence Resolver: /bundles/:digest"]
   API --> UI["UI: Receipt Viewer + Trust Badges"]
 ```
 
