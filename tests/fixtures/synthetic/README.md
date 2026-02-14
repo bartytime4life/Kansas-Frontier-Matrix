@@ -76,20 +76,31 @@ If you must exceed this:
 
 ```text
 tests/fixtures/synthetic/
-  README.md                      # you are here
-  packs/                         # fixture packs (scenario-based)
-    <pack_id>/                   # one pack = one test scenario family
-      pack.meta.json             # required: pack metadata + intent
-      checksums.sha256           # required: sha256 for every file in this pack
-      inputs/                    # raw-ish inputs to pipelines/services
-      expected/                  # golden outputs (normalized + stable)
-      catalog/                   # STAC/DCAT/PROV synthetic artifacts
-      policy/                    # OPA input + expected decisions
-      notes.md                   # optional: human notes for reviewers
-  shared/                        # reusable primitives (tiny building blocks)
-    geo/                         # canonical small geometries / extents
-    time/                        # canonical timestamps, ranges, calendars
-    ids/                         # canonical ID examples, patterns, edge cases
+├─ README.md                                   # You are here: synthetic-fixture rules (safe-only, deterministic, reviewed)
+│
+├─ packs/                                      # Scenario-based fixture packs (one pack = one “test story”)
+│  └─ <pack_id>/                               # Pack identifier (kebab/snake OK; keep stable once referenced)
+│     ├─ pack.meta.json                        # REQUIRED: pack metadata (intent, version, owners, target tests)
+│     ├─ checksums.sha256                      # REQUIRED: sha256 for every file in this pack (tamper detection)
+│     │
+│     ├─ inputs/                               # Raw-ish inputs to pipelines/services (tiny; synthetic; reproducible)
+│     ├─ expected/                             # Golden outputs (normalized/stable; diff-friendly)
+│     │
+│     ├─ catalog/                              # Synthetic catalog artifacts (publish prerequisites)
+│     │  ├─ stac/                              # STAC Collections/Items for this scenario
+│     │  ├─ dcat/                              # DCAT dataset/distribution records
+│     │  └─ prov/                              # PROV lineage/run refs tying inputs → outputs
+│     │
+│     ├─ policy/                               # Policy vectors for this scenario
+│     │  ├─ inputs/                            # OPA input objects (actor/resource/context)
+│     │  └─ expected/                          # Expected decisions (allow/deny + reasons/redactions)
+│     │
+│     └─ notes.md                              # Optional: reviewer notes (why this exists, what edge case it covers)
+│
+└─ shared/                                     # Reusable primitives (tiny building blocks used by multiple packs)
+   ├─ geo/                                     # Canonical small geometries/extents (points/lines/polys; valid/invalid)
+   ├─ time/                                    # Canonical timestamps/ranges/calendars (TZ, open/closed intervals)
+   └─ ids/                                     # Canonical ID patterns + edge cases (slugs, UUIDs, stable refs)
 ```
 
 > [!TIP]
