@@ -337,28 +337,38 @@ For deterministic ingestion + provenance hub patterns, a richer `run_receipt` is
 KFM’s directory conventions matter because the API, graph build, and UI assume stable canonical locations.
 
 ```text
-data/
-  <domain>/
-    raw/          # read-only source snapshots or slices
-    work/         # intermediate artifacts + validation reports
-    processed/    # published outputs (never manually edited)
-  stac/
-    collections/
-    items/
-  catalog/
-    dcat/
-  prov/
-  graph/
-    csv/
-    cypher/
-schemas/
-src/
-  pipelines/
-  graph/
-  server/
-web/
-tools/
-tests/
+├─ data/                                        # Governed data zones + catalogs/provenance + graph exports
+│  ├─ <domain>/                                 # One domain per dataset family (e.g., hydrology, parcels, railroads)
+│  │  ├─ raw/                                   # Read-only source snapshots/slices (never served; never edited in place)
+│  │  ├─ work/                                  # Intermediate artifacts + validation reports (safe to regenerate)
+│  │  └─ processed/                             # Published outputs (immutable; created only by pipelines)
+│  │
+│  ├─ stac/                                     # STAC discovery catalog (spatial/temporal + assets)
+│  │  ├─ collections/                           # STAC Collections (groupings)
+│  │  └─ items/                                 # STAC Items (atomic assets w/ geometry/time + asset links)
+│  │
+│  ├─ catalog/                                  # Registry-style catalogs
+│  │  └─ dcat/                                  # DCAT datasets/distributions (publishable index)
+│  │
+│  ├─ prov/                                     # PROV lineage (inputs → transforms → outputs; run references)
+│  │
+│  └─ graph/                                    # Graph exports/build inputs (derived; no manual edits)
+│     ├─ csv/                                   # Node/edge tables (deterministic exports)
+│     └─ cypher/                                # Optional Cypher loads/migrations (generated)
+│
+├─ schemas/                                     # Contracts (JSONSchema/OpenAPI/GraphQL) used across the system
+│
+├─ src/                                         # Application + pipeline code (governed boundaries)
+│  ├─ pipelines/                                # ETL/ELT runners, validators, promotion gates, registry integration
+│  ├─ graph/                                    # Graph build/transform logic (Neo4j models, exports, loaders)
+│  ├─ server/                                   # Governed API boundary (REST/GraphQL), policy enforcement, evidence resolver
+│  └─ shared/                                   # Pure shared libs (ids/time/geo/evidence/policy primitives)
+│
+├─ web/                                         # UI (maps/timelines/story nodes/focus mode surfaces)
+│
+├─ tools/                                       # Developer/CI tooling (policy packs, docs toolchain, supply-chain, etc.)
+│
+└─ tests/                                       # Test suites + fixtures (unit/integration/contract/policy/ui/focus)
 ```
 
 > [!IMPORTANT]
