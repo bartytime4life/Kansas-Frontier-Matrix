@@ -103,10 +103,10 @@ KFM uses a layered architecture (Domain → Use Cases → Ports/Adapters → Inf
 
 ```mermaid
 flowchart TB
-  D[Domain\n(pure models, invariants)] --> U[Use Cases\n(workflows)]
-  U --> P[Ports\n(interfaces/contracts)]
-  P --> A[Adapters\n(Neo4j, search, etc)]
-  A --> I[Infrastructure\n(drivers, config, containers)]
+  D["Domain (pure models, invariants)"] --> U["Use Cases (workflows)"]
+  U --> P["Ports (interfaces/contracts)"]
+  P --> A["Adapters (Neo4j, search, etc)"]
+  A --> I["Infrastructure (drivers, config, containers)"]
 ```
 
 ---
