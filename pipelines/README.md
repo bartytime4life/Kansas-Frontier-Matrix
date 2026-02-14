@@ -93,27 +93,33 @@ Pipeline code is responsible for:
 > This is a **recommended** structure aligned with the “ETL jobs live in pipelines” repository mapping. If your repo already has a different structure, **keep your existing structure** but preserve the invariants above.
 
 ```text
-pipelines/
-├─ README.md                          # this file
-├─ registry/                          # dataset/source registry (governed configs)
-│  ├─ datasets.yaml                   # dataset_id → connector + schedule + policy_label
-│  └─ sources/                        # per-source configs and capability metadata
-├─ connectors/
-│  └─ <source_slug>/
-│     ├─ connector.(py|ts|go)         # implements acquire/discover and paging
-│     ├─ mapping.yml                  # source fields → canonical schema mapping
-│     ├─ fixtures/                    # small frozen slices for integration tests
-│     └─ tests/
-├─ transforms/
-├─ validators/
-├─ catalogs/
-│  ├─ dcat/
-│  ├─ stac/
-│  └─ prov/
-├─ orchestration/
-│  ├─ schedules/                      # cron / workflow schedules
-│  └─ backfills/                      # backfill specs and runbooks
-└─ scripts/
+pipelines/                                          # Data production system: ingest → transform → validate → catalog → publish
+├─ README.md                                         # (This file) concepts, lifecycle, how to run, and promotion gates
+│
+├─ registry/                                         # Governed registry (declarative configs; CI-validated)
+│  ├─ datasets.yaml                                  # dataset_id → source/connector + schedule + policy label(s)
+│  └─ sources/                                       # Per-source configs + capability metadata (paging, formats, limits)
+│
+├─ connectors/                                       # One connector per upstream source
+│  └─ <source_slug>/                                 # Stable source id (kebab-case)
+│     ├─ connector.(py|ts|go)                        # Acquire/discover implementation (paging, retries, auth)
+│     ├─ mapping.yml                                 # Source → canonical schema mapping (units, transforms, defaults)
+│     ├─ fixtures/                                   # Frozen tiny slices for integration tests (synthetic; deterministic)
+│     └─ tests/                                      # Connector tests (unit/contract/integration as supported)
+│
+├─ transforms/                                       # Normalization + enrichment steps (pure, repeatable, versioned)
+├─ validators/                                       # Reusable validators (schema, checksums, geo/time, policy prerequisites)
+│
+├─ catalogs/                                         # Catalog writers/builders (publishable metadata products)
+│  ├─ dcat/                                          # DCAT outputs (dataset/distribution records; typically JSON-LD)
+│  ├─ stac/                                          # STAC outputs (Collections/Items; asset href conventions)
+│  └─ prov/                                          # PROV outputs (lineage bundles, run references, activity/entity links)
+│
+├─ orchestration/                                    # Scheduling + operational run specs
+│  ├─ schedules/                                     # Cron/workflow schedules (what runs when)
+│  └─ backfills/                                     # Backfill specs + runbooks (controlled reprocessing)
+│
+└─ scripts/                                          # Pipeline entrypoints (local parity with CI; thin wrappers)
 ```
 
 ---
