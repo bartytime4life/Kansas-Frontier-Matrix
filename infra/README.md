@@ -1,255 +1,282 @@
-# KFM Infrastructure 🧱🔐🌾
+<!--
+GOVERNED ARTIFACT NOTICE
+This README is part of the KFM trust boundary (runtime + GitOps control plane).
+If you change meaning (not just phrasing), route through the governance review path (CODEOWNERS + CI gates).
+-->
 
-![Status](https://img.shields.io/badge/status-draft-lightgrey?style=flat-square)
+# KFM Infrastructure (`infra/`) 🧱🔐🌾
+
+![Status](https://img.shields.io/badge/status-governed%20draft-blue?style=flat-square)
 ![GitOps](https://img.shields.io/badge/GitOps-Argo%20CD%20%2F%20OpenShift%20GitOps-blue?style=flat-square)
-![Policy](https://img.shields.io/badge/policy-fail--closed-critical?style=flat-square)
-![Data](https://img.shields.io/badge/data%20promotion-RAW%E2%86%92WORK%E2%86%92PROCESSED-orange?style=flat-square)
-![Catalogs](https://img.shields.io/badge/catalogs-STAC%20%2B%20DCAT%20%2B%20PROV-brightgreen?style=flat-square)
-![Evidence](https://img.shields.io/badge/evidence-bundles%20%2B%20receipts-blueviolet?style=flat-square)
+![Trust membrane](https://img.shields.io/badge/trust%20membrane-enforced-16a34a?style=flat-square)
+![Policy](https://img.shields.io/badge/policy-default%20deny-111827?style=flat-square)
+![Promotion](https://img.shields.io/badge/promotion-raw%E2%86%92work%E2%86%92processed-orange?style=flat-square)
+![Receipts](https://img.shields.io/badge/receipts-run__manifest%20%7C%20spec__hash-6a5acd?style=flat-square)
+![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb?style=flat-square)
+![Evidence](https://img.shields.io/badge/evidence-digest%20bundles%20%2B%20resolver-4b0082?style=flat-square)
 ![Security](https://img.shields.io/badge/security-defense--in--depth-important?style=flat-square)
 ![Docs](https://img.shields.io/badge/docs-governed-blueviolet?style=flat-square)
 
-> **Purpose:** `infra/` is the **single source of truth** for KFM’s platform configuration, GitOps state, policy-as-code, and operational runbooks.
->
-> **Primary goal:** Make it impossible (by default) to violate KFM governance invariants—even accidentally.
->
-> **Secondary goal:** Make “evidence-first” operational: promotion gates, receipts, catalogs, signatures, and audit references are produced and verified continuously.
+> **Purpose:** `infra/` is the single source of truth for KFM’s **runtime platform configuration**, **GitOps desired state**, **policy enforcement surfaces**, and **ops runbooks**.  
+> **Primary goal:** make it impossible (by default) to violate KFM governance invariants—even accidentally.  
+> **Secondary goal:** make evidence-first operational: promotion gates, receipts, catalogs, signatures/attestations (when enabled), and audit references are produced and verified continuously.
 
 ---
 
-## Table of Contents 📚
+## Governance header
 
-- [Non-Negotiables](#non-negotiables)
-- [What Lives in infra](#what-lives-in-infra)
-- [Quickstart](#quickstart)
-- [Architecture Overview](#architecture-overview)
-- [Governed Infra Artifacts](#governed-infra-artifacts)
-- [Repository and Directory Layout](#repository-and-directory-layout)
+| Field | Value |
+|---|---|
+| Document | `infra/README.md` |
+| Status | **Governed draft** |
+| Applies to | cluster + GitOps + policy enforcement + promotion surfaces + evidence/audit operability |
+| Version | `v1.1.0-draft` |
+| Effective date | 2026-02-14 |
+| Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
+| Review cadence | quarterly + out-of-band for security/toolchain changes |
+| Review triggers | any change touching trust membrane, policy defaults, promotion rules, evidence resolution, secrets, egress, or storage |
+
+> [!WARNING]
+> **Fail-closed rule:** if a required enforcement surface is missing (policy, receipts, catalogs, contract tests), promotion/serve must **deny** by default.
+
+---
+
+## Table of contents 📚
+
+- [Non-negotiables](#non-negotiables)
+- [What lives in `infra/`](#what-lives-in-infra)
+- [Authority ladder](#authority-ladder)
+- [Architecture overview](#architecture-overview)
+- [Repository and directory layout](#repository-and-directory-layout)
 - [Environments](#environments)
-- [GitOps Delivery Model](#gitops-delivery-model)
-- [CI and Acceptance Harness](#ci-and-acceptance-harness)
-- [Evidence Bundles and Addressing](#evidence-bundles-and-addressing)
-- [Platform Foundations](#platform-foundations)
-- [Security and Compliance](#security-and-compliance)
+- [GitOps delivery model](#gitops-delivery-model)
+- [CI and acceptance harness](#ci-and-acceptance-harness)
+- [Evidence bundles and canonical addressing](#evidence-bundles-and-canonical-addressing)
+- [Platform foundations](#platform-foundations)
+- [Security and compliance](#security-and-compliance)
 - [Observability and SLOs](#observability-and-slos)
-- [Backups and Disaster Recovery](#backups-and-disaster-recovery)
-- [Emergency Controls](#emergency-controls)
-- [Operations Runbooks](#operations-runbooks)
-- [Change Management](#change-management)
+- [Backups and disaster recovery](#backups-and-disaster-recovery)
+- [Emergency controls](#emergency-controls)
+- [Operations runbooks](#operations-runbooks)
+- [Change management](#change-management)
 - [Glossary](#glossary)
 - [References](#references)
 
 ---
 
-## Non-Negotiables ✅
+## Non-negotiables ✅
 
 > [!IMPORTANT]
-> **Trust membrane:** UI and external clients never access databases directly. All access is through the governed API + policy boundary.
+> These invariants are **release barriers**. If any one is weakened, the change requires governance review and typically triggers MAJOR version implications (contract behavior change).
 
-> [!IMPORTANT]
-> **Fail-closed policies:** Every request (data, Story Nodes, Focus Mode) is evaluated by policy. **Deny-by-default** unless explicitly allowed.
+### 1) Trust membrane
+- UI and external clients never access databases directly.
+- All access flows through the governed API + policy boundary.
+- Network policy and routing must prevent accidental bypass (UI → DB denied).
 
-> [!IMPORTANT]
-> **Dataset promotion gates:** Promotion is **Raw → Work → Processed**, and requires **checksums** plus **STAC/DCAT/PROV** catalogs and link-check validation.
+### 2) Fail-closed policy everywhere
+- Default deny at policy boundaries.
+- Missing policy inputs / missing receipts / missing catalogs / missing citations → **deny**.
+- Policy must be evaluated for:
+  - data queries and downloads
+  - Story Nodes
+  - Focus Mode answers
+  - evidence resolution endpoints
 
-> [!IMPORTANT]
-> **Evidence-first UX:** Focus Mode must **cite or abstain** and every response must produce an **audit reference**.
+### 3) Promotion Contract is mandatory (Raw → Work → Processed)
+Promotion requires proofs:
+- deterministic checksums
+- run receipts (run manifest/run record)
+- validation report(s)
+- catalogs: **DCAT always; STAC conditional; PROV required**
+- policy labels + redaction provenance (if sensitive)
 
-> [!IMPORTANT]
-> **Deterministic identity:** Any “build spec” / ingest spec / receipt is **hashable deterministically**. KFM uses `spec_hash` computed as **sha256(JCS(spec))** over a schema-defined object, with explicit `spec_schema_id` and `spec_recipe_version`. *(Implementation must use RFC 8785 JSON canonicalization when hashing JSON.)*
+### 4) Deterministic identity (`spec_hash`)
+KFM uses deterministic spec hashing for governed specs:
+- `spec_hash = sha256(JCS(spec))` (RFC 8785 canonical JSON)
+- include `spec_schema_id` and `spec_recipe_version` where possible for comparability
 
-> [!IMPORTANT]
-> **Canonical addressing:** “Where is the data?” must be deterministic. Evidence is addressed by **content digest** (OCI digest for evidence bundles), with stable gateway URLs derived from the digest; raw storage URLs remain an implementation detail.
+### 5) Canonical addressing and immutability
+- Evidence and promotion artifacts should be addressable by immutable digests.
+- Prefer digest-addressed evidence bundles; storage URLs are implementation details.
 
-> [!WARNING]
-> Any change that could weaken these invariants **must** be flagged for governance review (see [Change Management](#change-management)).
+### 6) Focus Mode: cite or abstain
+- Every answer must contain resolvable citations or abstain.
+- Every response must include an `audit_ref`.
+- UI must be able to resolve evidence references quickly and safely (no leaks).
+
+### 7) Emergency deny switch
+- Must be possible to disable risky surfaces (public endpoints, Focus Mode, promotion/publish steps) **without redeploying code** (policy-controlled kill switch).
 
 ---
 
-## What Lives in infra 🧰
+## What lives in `infra/` 🧰
 
-This folder covers **everything** needed to operate KFM safely in dev/stage/prod:
+This folder covers everything needed to operate KFM safely in dev/stage/prod:
 
-- 🧱 **Cluster bootstrap** (namespaces, base operators, ingress, storage class defaults)
-- 🧭 **GitOps** (Argo CD / OpenShift GitOps Applications + ApplicationSets)
-- 🔐 **Security** (RBAC, network policies, admission policies, image policy, secrets patterns)
-- 🧾 **Policy-as-code** (OPA/Gatekeeper/Kyverno + Conftest CI gates)
-- 📦 **Deployments** (KFM API, UI, pipelines, catalogs, search, graph, etc.)
-- 🧪 **Acceptance harness** (catalog validators + policy regression + signature/receipt verification)
-- 🧾 **Contracts & schemas** (promotion contract, run manifest schema, policy pack interfaces)
-- 📈 **Observability** (metrics/logging/tracing, dashboards, alerts, SLOs)
-- 🧯 **Backups/DR** (object store backups, DB backups, restore procedures)
-- 🧪 **Infra CI** (linting, drift checks, policy regression suite)
-- 📓 **Runbooks** (incident response, common failures, upgrades, emergency deny switch)
+- 🧱 cluster bootstrap (namespaces, operators, ingress, storage defaults)
+- 🔁 GitOps desired state (Argo CD / OpenShift GitOps Applications, AppProjects, ApplicationSets)
+- 🔐 security primitives (RBAC, network policies, admission policies, image policy, secrets patterns)
+- 🧾 policy-as-code (CI gates + admission/runtime enforcement hooks)
+- 📦 deployments (KFM API, UI, pipelines, evidence resolver, audit ledger, and dependencies)
+- 🧪 acceptance harness (catalog validators + policy regression + receipt checks + optional signature verification)
+- 🧾 contracts and schema pinning (promotion contract, run manifest schema, policy input schemas)
+- 📈 observability (metrics/logging/tracing dashboards, alerts, SLOs)
+- 🧯 backups/DR (DB and object store backups, restore procedures)
+- 📓 runbooks (incident response, upgrades, emergency deny switch, leak response)
 
 ---
 
-## Quickstart 🚀
+## Authority ladder
+
+If documents or implementation disagree, use this ordering:
+
+1) **Non-negotiables** in this README + `.github/README.md`
+2) Policy remains **default deny** (fail closed)
+3) Promotion Contract / receipt schemas (contracts/schemas)
+4) Runtime policy enforcement + admission controls
+5) Convenience tooling and local-dev scripts
 
 > [!NOTE]
-> This repo is designed so **humans propose**, **CI validates**, and **GitOps reconciles**.
-
-### 1) Prereqs
-
-- `git`
-- `kubectl` and/or `oc`
-- `kustomize` (or `kubectl -k`)
-- `helm` (if used)
-- `conftest` (OPA-based policy tests)
-- `cosign` (signature and attestation verification) *(if enabled by policy)*
-- Validation tools (examples): `kubeconform`, JSON schema validator(s) for STAC/DCAT/PROV
-- Access to:
-  - a cluster (dev/stage/prod), or a local sandbox (Kind / OpenShift Local / CRC)
-
-### 2) Day-1 Bootstrap (High-Level)
-
-1. Install cluster prerequisites (ingress, storage, cert-manager, etc.)
-2. Install GitOps controller (OpenShift GitOps / Argo CD)
-3. Apply `infra/bootstrap/...` (cluster baseline)
-4. Apply `infra/gitops/...` (AppProjects, ApplicationSets, repo credentials)
-5. GitOps begins reconciling `infra/apps/...` + `infra/platform/...`
-
-### 3) Validate Locally Before PR
-
-```bash
-# Examples — adapt to your repo’s tooling
-conftest test infra/ -p infra/policy/conftest/
-kustomize build infra/clusters/dev | kubeconform -strict
-make -C infra/ci verify   # recommended thin wrapper around all checks
-```
+> If a conflict requires a behavior change, file an ADR and update contracts + tests before relaxing enforcement.
 
 ---
 
-## Architecture Overview 🗺️
+## Architecture overview 🗺️
 
-### The Trust Membrane Must Hold
+### The trust membrane must hold
 
 ```mermaid
 flowchart LR
-  U["Users / Analysts"] --> UI["Web UI"]
-  UI -->|"HTTPS"| API["Governed API Gateway / Backend"]
-  API -->|"Policy Check"| OPA["Policy Engine (OPA)"]
-  API -->|"Allowed Query"| DB["Stores: PostGIS / Graph / Search"]
-  API -->|"Evidence + Audit Ref"| AUD["Audit Ledger / Provenance Store"]
+  U["Users / Analysts"] --> UI["Web UI (public surface)"]
+  UI -->|"HTTPS"| API["Governed API Gateway"]
+  API -->|"authorize"| PDP["Policy PDP (OPA/Rego or equivalent)"]
+  PDP -->|"allow/deny + obligations"| API
 
-  PIPE["Data Pipelines"] -->|"Ingest + Validate"| RAW["Raw Zone"]
-  RAW -->|"Promotion Gates"| WORK["Work Zone"]
-  WORK -->|"Promotion Gates"| PROC["Processed Zone"]
-  PROC --> DB
+  API --> STORES["Stores (internal)"]
+  STORES --> PG["PostGIS"]
+  STORES --> G["Graph DB"]
+  STORES --> S["Search/Vector"]
+  STORES --> OBJ["Object Store"]
 
-  API --> FM["Focus Mode Answer Service"]
-  FM -->|"Must cite or abstain"| AUD
+  API --> EV["Evidence Resolver<br/>ref → human view"]
+  API --> BND["Bundle Resolver<br/>digest → evidence pack"]
+  API --> AUD["Audit Ledger<br/>append-only"]
+
+  PIPE["Pipelines/Workers"] --> RAW["Raw"]
+  RAW --> WORK["Work"]
+  WORK -->|"Promotion Contract"| PROC["Processed (served truth)"]
+  PROC --> CAT["Catalogs (DCAT/STAC/PROV)"]
+  CAT --> STORES
 ```
 
-### Data Truth Path
+### GitOps delivery loop (humans propose, CI validates, GitOps reconciles)
 
 ```mermaid
-flowchart TB
-  R[Raw: immutable source drops] -->|checksums + schema + policy| W[Work: normalized + aligned]
-  W -->|STAC/DCAT/PROV + QA + receipts| P[Processed: publishable + indexed]
-  P -->|publish| C[Catalogs + APIs + Evidence Resolver]
+flowchart LR
+  PR["PR to infra/"] --> CI["CI: render + validate + policy tests"]
+  CI --> MERGE["Merge to main"]
+  MERGE --> GITOPS["GitOps controller reconciles desired state"]
+  GITOPS --> CLUSTER["Cluster applies changes"]
+  CLUSTER --> OBS["Observability confirms SLOs + drift"]
+  OBS --> PR
 ```
 
 ---
 
-## Governed Infra Artifacts 🧾
-
-> [!IMPORTANT]
-> In KFM, **infrastructure is governed content** when it influences policy, data promotion, story publishing, or Focus Mode behavior.
-
-### Artifact Types We Treat as Governed
-
-| Artifact | Where | Validated by | Why |
-|---|---|---|---|
-| **Policy packs** (OPA/Rego, Gatekeeper/Kyverno) | `infra/policy/` | Conftest + admission tests | Fail-closed enforcement |
-| **Schemas** (run manifests, watcher registry, etc.) | `infra/contracts/` | JSON schema tests | Deterministic receipts + interoperability |
-| **Promotion contract** | `infra/contracts/standards/` | acceptance harness | Prevent “publish without evidence” |
-| **Catalog validators** (STAC/DCAT/PROV) | `infra/ci/acceptance-harness/` | CI + golden fixtures | Promotion gates + link-checks |
-| **Runbooks** (incl. emergency deny switch) | `infra/runbooks/` | doc lint + table-top drills | Operability under pressure |
-
----
-
-## Repository and Directory Layout 🗂️
+## Repository and directory layout 🗂️
 
 > [!TIP]
-> If the repo already has a different `infra/` structure, **map these sections to the current reality**.
-> The goal is completeness + discoverability, not churn.
+> If the repo already has a different `infra/` structure, map these sections to current reality.
+> The goal is completeness and discoverability, not churn.
 
-### Canonical Layout Recommended
+### Canonical layout (recommended)
 
 ```text
-infra/
-├── README.md                              # You are here (infra control-plane docs)
+infra/                                               # GitOps + platform + app deploy (cluster-ready, repeatable, auditable)
+├─ README.md                                         # You are here: how infra is organized + day-1 → day-2 workflows
 │
-├── bootstrap/                             # Cluster bootstrap (minimal baseline)
-│   ├── base/
-│   └── overlays/                          # per-cluster overlays (dev/stage/prod)
+├─ bootstrap/                                        # Day-1 cluster baseline (minimal, repeatable)
+│  ├─ base/                                          # Common baseline manifests (CRDs, core namespaces, baseline policies)
+│  └─ overlays/                                      # Per-cluster overlays (dev/stage/prod) for small deltas only
 │
-├── clusters/                              # GitOps entrypoints (desired state roots)
-│   ├── dev/
-│   ├── stage/
-│   └── prod/
+├─ clusters/                                         # GitOps entrypoints (desired-state roots)
+│  ├─ dev/                                           # Dev desired state (apps + platform refs)
+│  ├─ stage/                                         # Stage desired state
+│  └─ prod/                                          # Prod desired state (strictest controls)
 │
-├── gitops/                                # OpenShift GitOps / Argo CD config
-│   ├── projects/                          # AppProjects (tenancy boundaries)
-│   ├── applicationsets/                   # AppSets for platform + apps
-│   └── argocd/                            # (optional) self-managed Argo CD config
+├─ gitops/                                           # Argo CD / OpenShift GitOps configuration
+│  ├─ projects/                                      # AppProjects (tenancy boundaries + repo/namespace allowlists)
+│  ├─ applications/                                  # Apps-of-apps (optional aggregation layer)
+│  ├─ applicationsets/                               # AppSets (generate apps per cluster/env)
+│  └─ argocd/                                        # Argo CD config (optional/self-managed installation)
 │
-├── platform/                              # Shared platform controls
-│   ├── namespaces/
-│   ├── rbac/
-│   ├── network/
-│   ├── storage/
-│   ├── ingress/
-│   ├── observability/
-│   └── policy/                            # Admission policies (Gatekeeper/Kyverno)
+├─ platform/                                         # Shared platform controls (security + ops guardrails)
+│  ├─ namespaces/                                    # Namespace definitions + labels/quotas (if used)
+│  ├─ rbac/                                          # Roles/RoleBindings/ServiceAccounts (least privilege)
+│  ├─ network/                                       # NetworkPolicies (trust membrane enforcement + segmentation)
+│  ├─ ingress/                                       # Ingress controllers/routes + TLS policy
+│  ├─ egress/                                        # Egress allowlists (block unknown destinations by default)
+│  ├─ storage/                                       # StorageClasses/PVC patterns + backup hooks
+│  ├─ observability/                                 # Logging/metrics/tracing (OTel collectors, dashboards, alerts)
+│  └─ admission/                                     # Optional admission policy (Gatekeeper/Kyverno runtime controls)
 │
-├── apps/                                  # KFM workloads (declarative)
-│   ├── kfm-api/
-│   ├── kfm-ui/
-│   ├── kfm-pipelines/
-│   ├── kfm-catalog/
-│   └── dependencies/                      # Postgres, Neo4j, object store, search, etc.
+├─ apps/                                             # KFM workloads (declarative; environment overlays live nearby)
+│  ├─ kfm-api/                                       # Governed API service (policy-enforced boundary)
+│  ├─ kfm-web/                                       # Web UI deployment (static + edge config)
+│  ├─ kfm-pipelines/                                 # Pipeline runners/cronjobs/workflows
+│  ├─ kfm-evidence/                                  # Evidence resolver + bundle resolver (if split out)
+│  ├─ kfm-audit/                                     # Audit ledger/append-only store (if split out)
+│  └─ dependencies/                                  # Managed deps deployed alongside KFM (or references to external)
+│     ├─ postgis/                                    # PostGIS database
+│     ├─ neo4j/                                      # Neo4j graph database
+│     ├─ object-store/                               # S3/MinIO/etc. (catalogs, artifacts, media)
+│     ├─ search/                                     # Search service (e.g., OpenSearch/Elasticsearch)
+│     ├─ vector/                                     # Vector DB/service (if separate)
+│     └─ opa/                                        # OPA policy PDP (runtime decisions/redaction)
 │
-├── contracts/                             # Governed contracts used by CI + runtimes
-│   ├── schemas/                           # run_manifest, watcher registry, etc.
-│   └── standards/                         # promotion contract, minimum catalog versions, etc.
+├─ contracts/                                        # Governed standards used by CI + runtime (infra-owned references)
+│  ├─ promotion/                                     # Promotion Contract (requirements + policy interfaces)
+│  ├─ schemas/                                       # run_manifest, audit_record, registry schemas, etc.
+│  └─ catalog-minimums/                              # Minimum STAC/DCAT/PROV versions/requirements
 │
-├── policy/                                # CI policy tests + rego (fail-closed checks)
-│   ├── packs/                             # provenance_guard, materiality_rules, etc.
-│   ├── conftest/
-│   ├── rego/
-│   └── fixtures/
+├─ policy/                                           # Infra CI gates + runtime policy packaging (fail-closed)
+│  ├─ rego/                                          # Rego packs used by conftest/opa test
+│  ├─ conftest/                                      # Conftest harness/config (what to check + how to fail)
+│  ├─ fixtures/                                      # Golden inputs/expected denies (incident regression)
+│  └─ bundles/                                       # Built policy bundles (if generated)
 │
-├── ci/                                    # CI glue that must be reproducible locally
-│   ├── acceptance-harness/                # catalog + policy + signature verification
-│   ├── tools.lock/                        # pinned tool versions (recommended)
-│   └── Makefile                           # `make verify` entrypoint (recommended)
+├─ ci/                                               # Reproducible verification (local parity with CI)
+│  ├─ acceptance-harness/                            # Validate catalogs + receipts (+ optional cosign verify)
+│  ├─ tools.lock/                                    # Pinned tool versions (recommended for deterministic CI)
+│  ├─ Makefile                                       # Common entrypoints (make verify/lint/render)
+│  └─ scripts/                                       # CI helper scripts (thin wrappers, consistent flags)
 │
-├── secrets/                               # Secret patterns (NEVER plaintext secrets)
-│   ├── sealed-secrets/
-│   ├── sops/
-│   └── external-secrets/
+├─ secrets/                                          # Secret patterns ONLY (NEVER plaintext secrets committed)
+│  ├─ external-secrets/                              # ExternalSecrets operator patterns (preferred in many setups)
+│  ├─ sops/                                          # SOPS-encrypted manifests (if used)
+│  └─ sealed-secrets/                                # SealedSecrets patterns (if used)
 │
-└── runbooks/
-    ├── oncall/
-    ├── incident-response/
-    ├── backups/
-    └── upgrades/
+└─ runbooks/                                         # Ops runbooks (day-2 operations + incident handling)
+   ├─ oncall/                                        # Oncall checklists, alerts, dashboards, escalation paths
+   ├─ incident-response/                             # Incident workflow, comms templates, postmortem format
+   ├─ backups/                                       # Backup/restore procedures + verification drills
+   ├─ upgrades/                                      # Upgrade runbooks (cluster, dependencies, KFM services)
+   └─ governance/                                    # Governance ops (policy changes, approvals, emergency switches)
 ```
 
-### Directory Responsibilities
+### Directory responsibilities
 
-| Path | Owner | Purpose | Done When |
+| Path | Typical owner | Purpose | “Done” means |
 |---|---|---|---|
-| `infra/bootstrap/` | Platform | Minimal cluster baseline | Cluster ready for GitOps |
-| `infra/gitops/` | Platform | Reconciliation config | Apps reconcile automatically |
-| `infra/platform/` | Platform + Security | Shared controls | Policy + RBAC + networking enforced |
-| `infra/apps/` | App teams | Workloads + dependencies | Apps deploy via GitOps only |
-| `infra/contracts/` | Platform + Data Gov | Schemas + standards | CI validates receipts/catalogs |
-| `infra/policy/` | Security + Platform | Fail-closed rules | PRs fail if invariants break |
-| `infra/ci/` | Platform + Security | Acceptance harness | Reproducible verification locally + in CI |
-| `infra/runbooks/` | On-call | How to operate + recover | New on-call can follow it |
+| `infra/bootstrap/` | platform | minimal baseline | cluster ready for GitOps |
+| `infra/gitops/` | platform | reconciliation config | apps reconcile automatically |
+| `infra/platform/` | platform + security | shared controls | RBAC + network + admission enforced |
+| `infra/apps/` | app teams | workloads + deps | deployable via GitOps only |
+| `infra/contracts/` | governance + platform | schemas + standards | CI validates receipts/catalogs |
+| `infra/policy/` | security + governance | fail-closed rules | PRs fail if invariants break |
+| `infra/ci/` | platform | acceptance harness | reproducible verify locally + CI |
+| `infra/runbooks/` | on-call | operate + recover | drills completed; new on-call can follow |
 
 ---
 
@@ -258,259 +285,253 @@ infra/
 > [!NOTE]
 > Prefer **directories/overlays**, not long-lived branches.
 
-| Environment | Purpose | Allowed Data | Risk Posture |
+| Environment | Purpose | Allowed data | Risk posture |
 |---|---|---|---|
 | `dev` | fast iteration | synthetic / limited | looser SLOs, strict policy still |
-| `stage` | pre-prod validation | scrubbed subset | production-like gating |
+| `stage` | pre-prod validation | scrubbed subset | production-like gates |
 | `prod` | real users | governed + audited | highest restrictions + approvals |
 
 ---
 
-## GitOps Delivery Model 🔁
+## GitOps delivery model 🔁
 
-GitOps is the **delivery and drift-correction** mechanism: desired state lives in Git; controllers reconcile continuously.
+GitOps is KFM’s delivery and drift-correction mechanism: desired state lives in Git; controllers reconcile continuously.
 
-### Core Rules
+### Core rules
+- ✅ all infra changes happen via PR
+- ✅ CI runs render + schema validation + policy gates + harness checks
+- ✅ merge triggers reconciliation
+- ❌ no “click-ops” in prod (except break-glass; audited; time-limited)
 
-- ✅ All infra changes happen via PR
-- ✅ CI runs policy + validation gates
-- ✅ Merge triggers reconciliation
-- ❌ No “click-ops” in prod (except break-glass; see runbooks)
+### Promotion pattern (apps)
+Promote by changing overlays (or values) via PR:
+- `apps/<svc>/overlays/dev`
+- `apps/<svc>/overlays/stage`
+- `apps/<svc>/overlays/prod`
 
-### Promotion Pattern
-
-- `apps/.../overlays/dev`
-- `apps/.../overlays/stage`
-- `apps/.../overlays/prod`
-
-Promotion is a **PR-based** change (version bump, values update, image tag/digest update), not a manual redeploy.
+**Prefer digest pinning** for images and governance-critical artifacts where supported.
 
 ---
 
-## CI and Acceptance Harness 🧪
+## CI and acceptance harness 🧪
 
 > [!IMPORTANT]
-> Governance is enforced by **validators + CI gates**. Human review is **trigger-based** (sensitivity, policy changes, high-risk infra changes).
+> Governance is enforced by validators + CI gates. Human review is trigger-based (sensitivity, policy changes, high-risk infra changes).
 
-### Minimum CI Gates
+### Minimum CI gates (infra)
+- Render manifests (Kustomize/Helm) → validate schema (`kubeconform`/`kubeval` equivalent)
+- Conftest policy gates (default deny, trust membrane rules, required labels)
+- Admission policy lint/tests (Gatekeeper/Kyverno), if used
+- Receipt schema validation for promotions (run manifests, checksums)
+- Catalog validation (DCAT always; STAC/PROV as applicable) + cross-link checks
+- Secret hygiene checks (no plaintext secrets committed)
+- Workflow hardening checks (pinned actions, least-privilege permissions), where enforced
 
-- ✅ Render manifests (Kustomize/Helm) and validate schema (`kubeconform`)
-- ✅ Conftest policy tests (default deny, trust membrane rules)
-- ✅ Admission policy tests (Gatekeeper/Kyverno)
-- ✅ Validate STAC/DCAT/PROV artifacts for changed datasets and link-check cross-refs
-- ✅ Verify run manifests / receipts exist for promotions (when applicable)
-- ✅ Verify signatures / attestations for promoted artifacts (when enabled)
-- ✅ Regression suite: “golden queries” that must never leak sensitive fields
-
-### “Acceptance Harness” Concept
-
-`infra/ci/acceptance-harness/` is the standard, pinned toolchain invoked by:
-- CI pipelines
-- `make verify`
+### Acceptance harness concept
+`infra/ci/acceptance-harness/` is the pinned toolchain invoked by:
+- GitHub Actions CI
+- local `make verify`
 - release/promotion workflows
 
-Recommended: pin tool versions in `infra/ci/tools.lock/` to prevent silent breakage from default behavior changes.
+Recommended: pin tool versions in `infra/ci/tools.lock` to prevent silent behavior drift.
 
 ---
 
-## Evidence Bundles and Addressing 📦
+## Evidence bundles and canonical addressing 📦
 
 > [!IMPORTANT]
 > KFM must be able to answer: **“What evidence produced this?”** and **“Where do I fetch it?”** deterministically.
 
-### Canonical Address Scheme
+### Canonical address hierarchy (required)
 
-1. **Evidence bundle digest** (OCI digest, immutable)
-2. **Stable gateway URL derived from digest**
-3. **Storage location** (implementation detail)
+1) **Digest-addressed evidence bundle** (immutable provenance root)  
+   - Example: `oci://registry.example.org/kfm/bundles/<dataset>@sha256:<digest>` *(example only)*
 
-### Evidence Resolver Expectations
+2) **Stable gateway URL derived from digest** (UI fetch path)  
+   - Example: `/api/v1/bundles/sha256:<digest>`
 
-- Every citation reference should be resolvable via an evidence resolver endpoint (e.g., `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`).
-- Add a bundle resolver endpoint (example): `/bundles/{digest}`
+3) **Storage URL** (implementation detail)  
+   - object store paths, bucket URLs, etc.
+
+### Evidence resolver expectations
+- Citation schemes must resolve to human-readable evidence views:
+  - `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` (+ `oci://` when bundles exist)
+- Resolver must be fail-closed:
+  - missing target → 404
+  - unauthorized → 403
+  - policy denial → 403 (non-leaky reason codes)
 
 > [!TIP]
-> Treat evidence bundles like “release artifacts”:
-> - immutable
-> - digest pinned
-> - verified
-> - discoverable via referrers/attachments (where supported)
+> Treat evidence bundles like release artifacts:
+> immutable, digest pinned, verifiable, discoverable via attached referrers/metadata where supported.
 
 ---
 
-## Platform Foundations 🏗️
+## Platform foundations 🏗️
 
-### Networking and Ingress Egress 🌐
+### Networking / ingress / egress 🌐
+- Ingress via platform-managed controllers/routes
+- Egress deny-by-default where feasible (allowlists per service)
+- Sensitive services (databases, internal catalogs) are not exposed externally
 
-- Ingress is via platform-managed routes/ingress controllers
-- Egress is **deny-by-default** where feasible
-- Sensitive services (databases, catalogs) are **not exposed** externally
-
-**Trust-membrane enforcement examples:**
+**Trust membrane enforcement examples**
 - Network policies deny UI → DB
-- Only governed API namespaces may talk to DB namespaces
-- Pipeline workers have scoped DB rights (write to staging, not directly to prod DB)
+- Only API namespace can reach DB namespaces
+- Pipeline workers have scoped DB rights (write to staging; promotion through governed steps)
 
-### Identity and Access 🪪
-
-- Centralized auth (OIDC/SAML) (implementation-specific)
-- RBAC is least-privilege
-- Break-glass access is time-limited and audited (see runbooks)
+### Identity and access 🪪
+- Centralized auth (OIDC/SAML) *(implementation-specific)*
+- Least-privilege RBAC (no wildcard cluster-admin in workloads)
+- Break-glass access is time-limited and audited (runbook required)
 
 ### Storage 💾
-
 Separate:
-- transactional (DB)
-- object storage (raw/work/processed artifacts + catalogs + audit checkpoints)
-- search/graph indexes
+- transactional DB (PostGIS)
+- graph DB (Neo4j or equivalent)
+- object store (raw/work/processed artifacts, catalogs, audit checkpoints)
+- search/vector indexes (rebuildable from catalogs where possible)
 
 > [!WARNING]
-> Storage choices can become irreversible. Any storage class change needs a rollback/restore plan.
+> Storage changes can be hard to reverse. Any storage class migration requires a rollback and restore plan.
 
 ---
 
-## Security and Compliance 🛡️
+## Security and compliance 🛡️
 
-### Secrets No Plaintext 🔑
+### Secrets: no plaintext 🔑
+Choose one primary approach and document it:
+- external secrets (preferred with a real secret manager)
+- SOPS (encrypted files in Git)
+- sealed secrets (encrypted secrets committed)
 
-Choose **one** primary approach (document it here):
+**Requirements**
+- no plaintext secrets in YAML
+- rotation plan
+- audit trail
 
-- **External Secrets** (preferred when you have a real secret manager)
-- **SOPS** (encrypted files in Git, decrypted in-cluster)
-- **Sealed Secrets** (encrypted secrets committed to Git)
-
-✅ Requirements:
-- No secrets in plaintext YAML
-- Rotation plan
-- Audit trail
-
-### Policy-as-Code Admission and Runtime 📜
-
-Two layers:
-
-1) **CI policy gates** (fail PR if violating invariants)  
+### Policy-as-code (two layers) 📜
+1) **CI policy gates** (fail PRs violating invariants)  
 2) **Runtime admission policy** (deny unsafe manifests)
-   - Pod Security / restricted defaults
-   - Block hostPath, privileged, wildcard RBAC, etc.
-   - Enforce network policy presence for sensitive namespaces
+   - Pod Security “restricted” defaults where possible
+   - block privileged/hostPath
+   - enforce network policy presence for sensitive namespaces
+   - enforce image provenance policy where enabled
 
 > [!IMPORTANT]
-> Policies are not optional. If policy blocks a deployment, fix the workload—not the policy.
+> If policy blocks a deployment, fix the workload—not the policy.
 
-### Supply Chain and Provenance Verification 📦
-
-Adopt incrementally, but design “hooks” now:
-
+### Supply chain verification (incremental) 📦
+Adopt incrementally, but design hooks now:
 - SBOM generation
-- Vulnerability scanning
-- Image signing and verification
-- Provenance attestations
-- Tool version pinning for verifiers (avoid “silent failure”)
+- vulnerability scanning
+- image signing + verification
+- provenance attestations
+- toolchain pinning for verifiers (avoid silent failure)
 
 ---
 
 ## Observability and SLOs 📈
 
-### What We Measure
+### What we measure (minimum)
 
 | Signal | Minimum | Why |
 |---|---|---|
 | Logs | centralized + searchable | incidents + audits |
 | Metrics | platform + app | SLOs + capacity |
-| Traces | key APIs | latency + root-cause |
-| Audit Logs | cluster + API | governance accountability |
-| Evidence resolution failures | tracked | “cite” must be resolvable |
+| Traces | key APIs | latency + root cause |
+| Policy denials | counted + reason codes | detect breaks and attempted misuse |
+| Evidence resolution failures | tracked | citations must be resolvable |
+| Promotion outcomes | pass/fail + reasons | governance visibility |
 
-### Minimum SLO Set Template
+### Minimum SLO template
 
 | Service | SLI | Target | Window |
 |---|---|---:|---|
-| API Gateway | availability | 99.9% | 30d |
+| API gateway | availability | 99.9% | 30d |
 | Focus Mode | cite-or-abstain compliance | 100% | per response |
-| Catalog | query success | 99.5% | 30d |
-| Pipelines | on-time runs | 95% | 30d |
 | Evidence resolver | citation resolvability | ≥99% | 30d |
+| Pipelines | on-time runs | 95% | 30d |
+| Promotion | fail-closed correctness | 100% | per promotion |
 
 ---
 
-## Backups and Disaster Recovery 🧯
+## Backups and disaster recovery 🧯
 
 > [!IMPORTANT]
 > If it isn’t restorable, it isn’t backed up.
 
-### Backups Must Cover
-
-- Object storage (Raw/Work/Processed artifacts + catalogs)
-- Databases (PostGIS, graph DB, search snapshots)
+### Backups must cover
+- object store (raw/work/processed artifacts + catalogs + audit checkpoints)
+- databases (PostGIS, graph DB, search snapshots)
 - GitOps state (Git is part of DR)
-- Secrets (via secret manager / sealed strategy)
-- Audit ledger / provenance store (including checkpoints)
+- secrets (via chosen secret strategy)
+- audit ledger/provenance store (including checkpoints)
 
-### DR Checklist Template
-
-- [ ] Restore to empty cluster from GitOps
-- [ ] Restore object storage (with versioning/immutability as configured)
-- [ ] Restore DB snapshots
-- [ ] Validate policy gates still enforce invariants
-- [ ] Validate Focus Mode cite-or-abstain behavior
-- [ ] Validate audit references and evidence bundle hashes still resolve
+### DR checklist (template)
+- [ ] restore empty cluster from GitOps
+- [ ] restore object storage (with versioning/immutability as configured)
+- [ ] restore DB snapshots
+- [ ] validate policy gates still enforce invariants
+- [ ] validate Focus Mode cite-or-abstain behavior
+- [ ] validate audit refs and evidence bundles still resolve
 
 ---
 
-## Emergency Controls 🧯🛑
+## Emergency controls 🧯🛑
 
 > [!IMPORTANT]
-> Maintain an **emergency deny switch** that can disable public endpoints and Focus Mode **without deploying code**.
+> Maintain an emergency deny switch that can disable public endpoints and Focus Mode without deploying code.
 
-Examples of what the switch may control (implementation-specific):
-- Disable `/api/v1/ai/query`
-- Disable public dataset download endpoints
-- Force “maintenance mode” on UI routes
-- Increase policy strictness temporarily (deny-by-default for broader classes)
+Common controls (implementation-specific):
+- disable `/api/v1/ai/query`
+- deny promotion/publish jobs
+- disable public dataset download endpoints
+- force maintenance mode on UI routes
+- temporarily tighten policy classes (broader denies)
 
-Runbook: see `infra/runbooks/incident-response/emergency-deny-switch.md` *(create if missing)*.
+Runbook path (recommended): `infra/runbooks/incident-response/emergency-deny-switch.md`
 
 ---
 
-## Operations Runbooks 📓
+## Operations runbooks 📓
 
 <details>
-  <summary><strong>Common Runbooks Click to Expand</strong></summary>
+  <summary><strong>Runbooks (recommended minimum)</strong></summary>
 
-- 🔥 Incident response (SEV triage, comms, rollback)
-- 🔁 GitOps stuck / drift remediation
-- 🔐 Secret rotation
-- 🧱 Cluster upgrade process
-- 💾 Storage expansion/migration
-- 🗃️ DB restore + point-in-time recovery
-- 🧪 Pipeline backfill & reprocessing
-- 🧾 Audit log queries for governance review
-- 🛑 Emergency deny switch for AI and public endpoints
+- Incident response (SEV triage, comms, rollback)
+- GitOps stuck / drift remediation
+- Secret rotation
+- Cluster upgrade process
+- Storage expansion/migration
+- DB restore + point-in-time recovery
+- Pipeline backfill & reprocessing
+- Audit log queries for governance review
+- Emergency deny switch (AI + public endpoints)
+- Data leak response (deny → withdraw → reissue redacted derivative → regression test)
 
 </details>
 
 ---
 
-## Change Management 🔀
+## Change management 🔀
 
-### When You Need Governance Review 🧑‍⚖️
-
-- Any change that could enable UI → DB access
-- Any reduction in policy enforcement (CI or runtime)
-- Any new dataset class or sensitivity handling changes
-- Any change affecting cite-or-abstain behavior / audit refs
-- Any new external egress route from restricted namespaces
-- Any change to promotion contract / run manifest schema / signature verification
+### When you need governance review 🧑‍⚖️
+- any change that could enable UI → DB access
+- any reduction in policy enforcement (CI or runtime)
+- any change affecting promotion contract / receipt schema / catalog minimums
+- any change impacting cite-or-abstain behavior or audit reference semantics
+- any new external egress route from restricted namespaces
+- any change to secrets strategy or storage classes
 
 ### PR Definition of Done ✅
-
-- [ ] Policy tests pass (CI)
-- [ ] Kustomize/Helm renders valid YAML
-- [ ] No plaintext secrets
-- [ ] Network policies present for sensitive namespaces
-- [ ] Rollback plan included (or explicit “not needed”)
-- [ ] Runbook updated if operational behavior changed
-- [ ] If promotion-related: receipts/manifests + catalogs + signatures verified in CI
+- [ ] policy tests pass (CI)
+- [ ] manifests render valid YAML (kustomize/helm) and validate schema
+- [ ] no plaintext secrets
+- [ ] network policies present for sensitive namespaces
+- [ ] rollback plan included (or explicit “not needed”)
+- [ ] runbook updated if operational behavior changed
+- [ ] if promotion-related: receipts + catalogs validate; fail-closed verified
+- [ ] toolchain versions pinned/updated intentionally when relevant
 
 ---
 
@@ -518,23 +539,22 @@ Runbook: see `infra/runbooks/incident-response/emergency-deny-switch.md` *(creat
 
 | Term | Meaning |
 |---|---|
-| Trust Membrane | Boundary enforcing that clients never talk to DBs directly |
-| Fail-Closed | Default deny unless explicitly allowed |
-| Promotion Gate | Required checks before moving data between zones |
-| STAC DCAT PROV | Machine-readable catalogs + provenance metadata |
-| Run Manifest / Receipt | Canonical machine-readable record describing a run (inputs, outputs, hashes, toolchain) |
-| spec_hash | Deterministic hash of a schema-defined spec (sha256 over canonical JSON form) |
-| Evidence Bundle | Immutable, digest-addressed package of evidence + metadata + receipts |
+| Trust membrane | boundary enforcing clients never talk to DBs directly |
+| Fail-closed | default deny unless explicitly allowed |
+| Promotion Contract | required checks/proofs before moving artifacts to processed/served truth |
+| Receipts | run record + run manifest + validation report + checksums proving reproducibility |
+| `spec_hash` | deterministic hash of a schema-defined spec (`sha256(JCS(spec))`) |
+| Canonical addressing | digest as provenance root; gateway URLs derived from digest |
+| Evidence bundle | immutable, digest-addressed pack of evidence + catalogs + receipts (where used) |
+| Evidence resolver | service that resolves `ref` schemes to human-readable evidence views |
+| GitOps | reconcile desired state from Git; drift correction |
 
 ---
 
 ## References 🔗
 
-- KFM Next-Gen Blueprint & Primary Guide (invariants, truth path, audit/evidence requirements)
-- KFM Comprehensive Data Source Integration Blueprint (promotion gates, sensitivity handling, CI regression)
-- KFM Integration Report for Feb-2026 “New Ideas” (spec_hash, canonical addressing, watcher and supply-chain gaps)
-- GitOps references (OpenShift GitOps / Argo CD repository structures and ApplicationSets)
-- Standards: RFC 8785 (JSON Canonicalization), STAC, DCAT, PROV
-
-> [!TIP]
-> Treat documentation changes that affect system behavior as production changes.
+- `.github/README.md` — repo governance + required CI gates
+- KFM Next-Gen Blueprint & Primary Guide (internal draft) — trust membrane, truth path, evidence/audit expectations
+- KFM Comprehensive Data Source Integration Blueprint — promotion gates, catalogs/receipts, sensitivity handling
+- KFM Feb-2026 integration patterns — spec_hash semantics, canonical addressing, evidence bundles, kill switch expectations
+- Standards: RFC 8785 (JSON canonicalization), STAC, DCAT, W3C PROV
