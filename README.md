@@ -788,52 +788,52 @@ Maintain a policy-controlled kill switch to disable public endpoints and Focus M
 
 ```text
 .
-├── .github/
-│   ├── workflows/                         # CI gates: docs, policy, catalogs, receipts, api-contract, build
-│   ├── ISSUE_TEMPLATE/
-│   ├── PULL_REQUEST_TEMPLATE.md
-│   └── CODEOWNERS                         # Ownership: policy/, catalogs, docs/story_nodes, registry
+├─ .github/
+│  ├─ workflows/                              # CI gates: docs, policy, catalogs, receipts, api-contract, build
+│  ├─ ISSUE_TEMPLATE/                         # Issue templates (bugs, datasets, governance requests, etc.)
+│  ├─ PULL_REQUEST_TEMPLATE.md                # PR checklist (policy/tests/catalogs/provenance compliance)
+│  └─ CODEOWNERS                              # Ownership: policy/, catalogs, docs/story_nodes, registry (required reviewers)
 │
-├── docs/                                  # (expected) docs hub, ADRs, architecture, governance, runbooks, stories
-│   ├── adr/
-│   ├── architecture/
-│   ├── governance/
-│   ├── runbooks/
-│   └── story_nodes/
-│       ├── templates/
-│       ├── drafts/
-│       └── published/
+├─ docs/                                      # Docs hub: ADRs, architecture, governance, runbooks, Story Nodes
+│  ├─ adr/                                    # Architectural Decision Records (why we did it this way)
+│  ├─ architecture/                           # System diagrams + boundaries (trust membrane, pipelines, contracts)
+│  ├─ governance/                             # Policies, contribution rules, licensing, sensitivity handling
+│  ├─ runbooks/                               # Operational procedures (incidents, backfills, releases)
+│  └─ story_nodes/                            # Narrative layer (citation-backed, policy-gated)
+│     ├─ templates/                           # Author templates/snippets
+│     ├─ drafts/                              # Work-in-progress (not authoritative)
+│     └─ published/                           # Reviewed + released (authoritative)
 │
-├── contracts/                              # (preferred) Promotion Contract + schemas (or use ./schemas/ as canonical)
-│   ├── promotion/
-│   ├── receipts/
-│   ├── catalogs/
-│   └── api/
+├─ contracts/                                 # Preferred: Promotion Contract + schemas (or use ./schemas/ as canonical)
+│  ├─ promotion/                              # Promotion/publishing contract (what “processed” must prove)
+│  ├─ receipts/                               # Run receipts / run records / audit envelopes (schemas + examples)
+│  ├─ catalogs/                               # STAC/DCAT/PROV contracts and validation profiles
+│  └─ api/                                    # API boundary contracts (OpenAPI/GraphQL, response envelopes)
 │
-├── policy/
-│   ├── rego/
-│   ├── tests/
-│   ├── bundles/
-│   └── README.md
+├─ policy/                                    # OPA/Rego policy system (default-deny; explicit allow)
+│  ├─ rego/                                   # Source-of-truth Rego modules + shared libs/data
+│  ├─ tests/                                  # Unit + regression + golden leak cases (synthetic/redacted)
+│  ├─ bundles/                                # Optional built bundles (CI-emitted; deployable artifacts)
+│  └─ README.md                               # Policy overview + how to run + how CI enforces
 │
-├── data/
-│   ├── registry/                           # sources, datasets, watchers (signed objects)
-│   ├── raw/                                # immutable manifests + checksums
-│   ├── work/                               # run records + receipts + validation reports
-│   ├── processed/                          # publishable, policy-labeled outputs (CI-only writes)
-│   ├── catalog/                            # DCAT/STAC/PROV (validated + cross-linked)
-│   │   ├── dcat/
-│   │   ├── stac/
-│   │   └── prov/
-│   ├── bundles/                            # bundle descriptors + fixtures
-│   └── audit/                              # checkpoints (if stored in-repo; often object store instead)
+├─ data/                                      # Governed data zones + catalogs/provenance (writes gated by CI/pipelines)
+│  ├─ registry/                               # Sources/datasets/watchers (signed/validated objects)
+│  ├─ raw/                                    # Immutable manifests + checksums (ingest snapshots; never hand-edited)
+│  ├─ work/                                   # Run records/receipts + validation reports (intermediate; reproducible)
+│  ├─ processed/                              # Publishable outputs (policy-labeled; CI-only writes; immutable)
+│  ├─ catalog/                                # Validated + cross-linked catalogs (publish prerequisites)
+│  │  ├─ dcat/                                # DCAT datasets/distributions (publish index; typically JSON-LD)
+│  │  ├─ stac/                                # STAC Collections/Items (discovery; spatial/temporal + assets)
+│  │  └─ prov/                                # PROV bundles (lineage; inputs → transforms → outputs)
+│  ├─ bundles/                                # Bundle descriptors + fixtures (policy/catalog packs as needed)
+│  └─ audit/                                  # Audit checkpoints (if stored in-repo; often lives in object store instead)
 │
-├── src/                                    # backend API (ports/adapters enforced)
-├── web/                                    # React/TS UI (no direct DB calls)
-├── scripts/                                # local wrappers for validators + harness
-├── infra/                                  # deployment (k8s/helm/gitops)
-├── docker-compose.yml
-└── README.md
+├─ src/                                       # Backend API + pipelines (ports/adapters; policy enforced at boundary)
+├─ web/                                       # React/TS UI (trust membrane: no direct DB calls)
+├─ scripts/                                   # Local wrappers for validators + harness (parity with CI)
+├─ infra/                                     # Deployment + ops (k8s/helm/gitops, env configs)
+├─ docker-compose.yml                          # Local dev stack (DB/OPA/object store/search as applicable)
+└─ README.md                                   # Project entrypoint (concepts, quickstart, links to governance/contracts)
 ```
 
 > [!NOTE]
