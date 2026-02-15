@@ -31,14 +31,14 @@ KFM is *governance-first*: production behavior is a function of **validated proc
 
 ```mermaid
 flowchart LR
-  U[Users] --> UI[Web UI]
-  UI -->|HTTPS| API[Governed API Gateway]
-  API --> OPA[Policy Engine (OPA)]
-  API --> STORES[(Runtime Stores:\nPostGIS / Graph / Search)]
-  API --> OBJ[(Artifact Storage:\nRaw / Work / Processed + Catalogs)]
-  API --> AUDIT[(Audit Ledger / Provenance Logs)]
+  U["Users"] --> UI["Web UI"]
+  UI -->|"HTTPS"| API["Governed API Gateway"]
+  API --> OPA["Policy Engine (OPA)"]
+  API --> STORES["Runtime Stores (PostGIS / Graph / Search)"]
+  API --> OBJ["Artifact Storage (Raw / Work / Processed + Catalogs)"]
+  API --> AUDIT["Audit Ledger / Provenance Logs"]
 
-  PIPE[Pipeline Workers\n(ingest / validate / promote)] --> OBJ
+  PIPE["Pipeline Workers (ingest / validate / promote)"] --> OBJ
   PIPE --> STORES
 
   OPA --> API
