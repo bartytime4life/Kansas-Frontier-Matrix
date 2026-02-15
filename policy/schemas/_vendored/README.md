@@ -61,17 +61,17 @@ A recommended structure:
 
 ```
 policy/
-  schemas/
-    _vendored/
-      README.md
-      SOURCES.lock.yml          # registry of vendored schemas (required)
-      LICENSES/                 # license/notice texts when required by upstream
-      <vendor_or_standard>/
-        <name>/
-          <version_or_commit>/
-            schema.json
-            ... (dependent referenced schemas)
-    <kfm_owned_schema_groups>/  # KFM-owned policy input/output schemas (NOT vendored)
+└─ schemas/
+   └─ _vendored/                                   # Pinned upstream schema snapshots (reproducible validation)
+      ├─ README.md                                  # What’s vendored, why, and the update/review procedure
+      ├─ SOURCES.lock.yml                           # REQUIRED: registry of vendored schemas (url/ref, hash, license, notes)
+      ├─ LICENSES/                                  # Upstream license/notice texts (when required by source terms)
+      │
+      └─ <vendor_or_standard>/                      # Source namespace (e.g., stac, w3c, schema-org, opengis, etc.)
+         └─ <name>/                                 # Schema family/project name
+            └─ <version_or_commit>/                 # Immutable version tag or commit SHA (no “latest”)
+               ├─ schema.json                        # Primary entry schema (the root contract used by validators)
+               └─ …                                  # Any referenced/dependent schemas (kept alongside for offline use)
 ```
 
 > [!TIP]
