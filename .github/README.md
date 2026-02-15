@@ -3,6 +3,9 @@ GOVERNED ARTIFACT NOTICE
 FILE: .github/README.md
 This README defines repo governance + CI enforcement surfaces. Changes are production changes.
 If you change meaning (not just phrasing), route through governance review (CODEOWNERS + CI gates).
+
+KFM RULE: This document is a contract. If the repo cannot satisfy a stated “Required” item, that is a
+governance gap and MUST fail closed until remediated (or the contract is amended via governance review).
 -->
 
 # .github/ — KFM GitHub Operations, Governance & CI Gates
@@ -13,7 +16,7 @@ If you change meaning (not just phrasing), route through governance review (CODE
 ![Promotion Contract](https://img.shields.io/badge/promotion%20contract-required-red)
 ![Receipts](https://img.shields.io/badge/receipts-run__manifest%20%7C%20spec__hash-6a5acd)
 ![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
-![Supply Chain](https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20attestations%20optional-6b7280)
+![Supply Chain](https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20attestations-6b7280)
 ![CI](https://img.shields.io/badge/CI-required-success)
 ![Focus Mode](https://img.shields.io/badge/focus%20mode-cite%20or%20abstain-critical)
 ![Kill Switch](https://img.shields.io/badge/kill--switch-required-orange)
@@ -22,26 +25,27 @@ If you change meaning (not just phrasing), route through governance review (CODE
 > [!IMPORTANT]
 > **Why this file exists**
 >
-> This `.github/README.md` is the **single source of truth** for repo governance and CI enforcement:
+> This `.github/README.md` is the **single source of truth (SSoT)** for GitHub operations and CI enforcement:
 > what must exist in `.github/`, which checks are mandatory, and which rules are **non-negotiable**.
 >
-> **Change impact:** Treat changes to this file as **production changes** (governance surface).
+> **Change impact:** Treat changes to this file as **production changes** (trust boundary + enforcement surface).
 
 ---
 
-## 📌 Quick links
+## 📌 Quick Links
 
 Repo governance surfaces:
-- Repo root README: `../README.md`
-- CODEOWNERS: `./CODEOWNERS` *(required)*
-- Security policy: `./SECURITY.md`
-- Contributing: `../CONTRIBUTING.md`
-- PR template: `./PULL_REQUEST_TEMPLATE.md` *(recommended)*
-- Workflows: `./workflows/` *(required)*
-- Dependabot: `./dependabot.yml` *(recommended)*
-- Release drafter: `./release-drafter.yml` *(optional)*
+- Repo root README (system guarantees): `../README.md`
+- CODEOWNERS: `./CODEOWNERS` ✅ *(required)*
+- Security policy: `./SECURITY.md` ✅ *(required)*
+- Contributing: `../CONTRIBUTING.md` ⛳ *(recommended; required if repo is open to external contributions)*
+- PR template: `./PULL_REQUEST_TEMPLATE.md` ⛳ *(recommended)*
+- Workflows: `./workflows/` ✅ *(required)*
+- Dependabot: `./dependabot.yml` ⛳ *(recommended; required once dependencies exist)*
+- Release drafter config: `./release-drafter.yml` 🟦 *(optional)*
+- Issue templates: `./ISSUE_TEMPLATE/` ⛳ *(recommended; required for governance incidents in mature repos)*
 
-Governed planes:
+Governed planes (contracts must align):
 - Docs: `../docs/README.md`
 - Data: `../data/README.md`
 - Backend: `../src/README.md`
@@ -52,45 +56,68 @@ Governed planes:
 
 ---
 
-## 🧭 Table of contents
+## 🧭 Table Of Contents
 
-- [Governance header](#governance-header-treat-as-production)
-- [Non-negotiables](#non-negotiables-kfm-invariants)
-- [Governance surfaces](#governance-surfaces-what-is-protected)
-- [Required `.github/` inventory](#required-github-inventory)
-- [Branch protections and required checks](#branch-protections-and-required-checks)
-- [Status check contract](#status-check-contract)
-- [CI gate matrix](#ci-gate-matrix-no-merge-without-proof)
-- [Promotion Contract enforcement](#promotion-contract-enforcement)
-- [Evidence resolver contract](#evidence-resolver-contract)
-- [Kill switch requirements](#kill-switch-requirements)
-- [Workflow security](#workflow-security)
-- [Supply chain](#supply-chain-release-and-deploy)
-- [Governance incidents and break-glass](#governance-incidents-and-break-glass)
-- [When CI fails](#when-ci-fails-quick-diagnosis)
-- [Definition of done](#definition-of-done-for-githubreadmemd)
+- [Governance Header](#governance-header-treat-as-production)
+- [Authority Ladder](#authority-ladder-github-operations)
+- [Non-Negotiables](#non-negotiables-kfm-invariants)
+- [Governance Surfaces](#governance-surfaces-what-is-protected)
+- [Required `.github/` Inventory](#required-github-inventory)
+- [Repository Settings Baseline](#repository-settings-baseline-required-to-hold-the-line)
+- [Branch Protections And Required Checks](#branch-protections-and-required-checks)
+- [Status Check Contract](#status-check-contract)
+- [Required Workflow Inventory](#required-workflow-inventory-stable-names--outputs)
+- [CI Artifacts And Reporting Contract](#ci-artifacts-and-reporting-contract)
+- [CI Gate Matrix](#ci-gate-matrix-no-merge-without-proof)
+- [Promotion Contract Enforcement](#promotion-contract-enforcement)
+- [Evidence Resolver Contract](#evidence-resolver-contract)
+- [Focus Mode And Story Nodes Governance](#focus-mode-and-story-nodes-governance)
+- [Kill Switch Requirements](#kill-switch-requirements)
+- [Policy Parity: CI And Runtime](#policy-parity-ci-and-runtime)
+- [Workflow Security](#workflow-security)
+- [Supply Chain](#supply-chain-release-and-deploy)
+- [Dependency Updates Policy](#dependency-updates-policy-dependabotrenovate)
+- [Governance Incidents And Break-Glass](#governance-incidents-and-break-glass)
+- [When CI Fails](#when-ci-fails-quick-diagnosis)
+- [Definition Of Done](#definition-of-done-for-githubreadmemd)
 
 ---
 
-## Governance header (treat as production)
+## Governance Header (Treat As Production)
 
 | Field | Value |
 |---|---|
 | Document | `.github/README.md` |
 | Status | **Governed** (changes require review) |
 | Applies to | workflows, branch protections, CODEOWNERS, templates, release gating, promotion enforcement |
-| Version | `v1.7.0` |
+| Version | `v1.8.0` *(bump when meaning changes)* |
 | Effective date | **2026-02-15** |
 | Review cadence | quarterly + out-of-band for security advisories/toolchain changes |
-| Owners | defined in `.github/CODEOWNERS` *(required)* |
+| Owners | defined in `.github/CODEOWNERS` ✅ *(required)* |
 | Review triggers | changes touching `.github/**`, `policy/**`, `contracts/**`/`schemas/**`, `data/**`, `docs/**`, `releases/**` |
 
 > [!WARNING]
-> **Fail-closed governance rule:** If a required enforcement surface is missing (policy, receipts, catalogs, contract tests), the system denies promotion/merge/release by default.
+> **Fail-closed governance rule:** If a required enforcement surface is missing (policy, receipts, catalogs, contract tests, workflow hardening), the system denies promotion/merge/release by default.
 
 ---
 
-## Non-negotiables (KFM invariants)
+## Authority Ladder (GitHub Operations)
+
+If something conflicts, resolve in this order:
+
+1) **Repo guarantees** (`../README.md` and this file)  
+2) **Fail-closed policy** (default deny beats convenience)  
+3) **Contracts/schemas** (`contracts/**` or `schemas/**`)  
+4) **Receipts + catalogs** (`data/work/**`, `data/catalog/**`)  
+5) **Workflows** (`.github/workflows/**`) must implement (not redefine) the contract  
+6) **Runbooks/docs** (`docs/**`) clarify, but do not weaken gates  
+
+> [!NOTE]
+> If you need to relax an invariant: write an ADR, update contracts + tests first, then adjust gates. Never weaken gates as a shortcut.
+
+---
+
+## Non-Negotiables (KFM Invariants)
 
 1) **Trust membrane**
 - UI/external clients never access databases or object storage directly.
@@ -122,11 +149,11 @@ Governed planes:
 
 ---
 
-## Governance surfaces (what is protected)
+## Governance Surfaces (What Is Protected)
 
 These paths are governance-critical and must be CODEOWNED and CI-gated:
 
-- `.github/**` (workflows, templates, CODEOWNERS, security policy)
+- `.github/**` (workflows, templates, CODEOWNERS, security policy, issue templates)
 - `policy/**` (OPA/Rego, tests, bundles)
 - `contracts/**` and/or `schemas/**` (Promotion Contract + receipt/catalog/api schemas)
 - `data/**` (zones, catalogs, receipts, checksums)
@@ -139,7 +166,7 @@ These paths are governance-critical and must be CODEOWNED and CI-gated:
 
 ---
 
-## Required `.github/` inventory
+## Required `.github/` Inventory
 
 This section is intentionally explicit. If any **Required** item is missing, CI must fail closed.
 
@@ -149,43 +176,81 @@ This section is intentionally explicit. If any **Required** item is missing, CI 
 | `.github/CODEOWNERS` | ✅ | Review enforcement for governed paths | CODEOWNERS |
 | `.github/SECURITY.md` | ✅ | Vulnerability reporting + security expectations | CODEOWNERS |
 | `.github/workflows/` | ✅ | CI gatehouse + release workflows | CODEOWNERS |
+| `.github/PULL_REQUEST_TEMPLATE.md` | ⛳ | PR evidence checklist (recommended) | CODEOWNERS |
 | `.github/dependabot.yml` | ⛳ | Dependency updates + hygiene (recommended) | CODEOWNERS |
-| `.github/PULL_REQUEST_TEMPLATE.md` | ⛳ | Standard PR evidence checklist (recommended) | CODEOWNERS |
+| `.github/ISSUE_TEMPLATE/` | ⛳ | Standardized issues + incidents (recommended) | CODEOWNERS |
 | `.github/release-drafter.yml` | 🟦 | Release note automation (optional) | CODEOWNERS |
+| `.github/actions/` | 🟦 | Reusable composite actions (optional; if used, must be pinned + CODEOWNED) | CODEOWNERS |
 
-> [!NOTE]
+> [!IMPORTANT]
 > If you add any new `.github/**` file, it is automatically a governance surface and must be CODEOWNED.
 
-### Canonical workflow naming (recommended)
+### Recommended issue templates (mature governance)
 
-To reduce confusion and keep branch protection stable, status checks should use stable names.
+If `./ISSUE_TEMPLATE/` exists, include these names (or equivalents):
 
-Recommended prefix: `kfm/…` (example: `kfm/docs`), but the minimum contract below accepts the shorter existing names.
+- `governance-incident.yml` *(required once break-glass exists)*
+- `security-vulnerability.yml` *(or direct to SECURITY.md)*
+- `dataset-onboarding.yml`
+- `contract-change.yml`
+- `policy-change.yml`
 
 ---
 
-## Branch protections and required checks
+## Repository Settings Baseline (Required To Hold The Line)
+
+These are **GitHub settings** (not files) that must be configured. If not configured, treat as a governance gap.
+
+> [!IMPORTANT]
+> The repo is not “governed” because a README says so. It becomes governed when GitHub settings enforce it.
+
+### Required org/repo settings (minimum)
+
+- Require PRs (no direct pushes) on protected branches
+- Require CODEOWNERS reviews
+- Require status checks to pass (no bypass)
+- Disallow force-push on protected branches
+- Enable secret scanning + push protection (where available)
+- Enable dependency graph + Dependabot alerts
+- Enable code scanning (e.g., CodeQL) on default branch
+
+### Recommended hardening (strongly recommended)
+
+- Require 2FA for organization members
+- Require signed commits and signed tags
+- Require branches to be up to date before merging
+- Linear history (unless merge commits are used for audit semantics)
+- Restrict who can bypass branch protections to a minimal “break-glass” group
+
+<details>
+<summary><strong>Verification checklist for maintainers (manual)</strong></summary>
+
+- [ ] Branch protection rule exists for `main` (and `release/*` if used)
+- [ ] Required status checks list matches this README
+- [ ] CODEOWNERS review is required and cannot be bypassed
+- [ ] Secret scanning / push protection enabled
+- [ ] Code scanning enabled and scheduled
+- [ ] “Allow GitHub Actions to create and approve pull requests” disabled unless explicitly needed
+
+</details>
+
+---
+
+## Branch Protections And Required Checks
 
 ### Required branch protection settings (e.g., `main`)
 
 - PRs required; no direct pushes
 - CODEOWNERS reviews required
-- required status checks must pass (**no bypass**)
-- no force push
-- “require branches to be up to date before merging” *(recommended)*
-- signed commits and signed tags *(strongly recommended; enforce when org is ready)*
-- linear history *(recommended unless you rely on merge commits for audit semantics)*
-
-### Minimum required repo/org settings (recommended)
-
-- Require 2FA for organization members
-- Enable secret scanning + push protection (where available)
-- Enable dependency graph + Dependabot alerts
-- Enable code scanning (e.g., CodeQL) on default branch
+- Required status checks must pass (**no bypass**)
+- No force push
+- “Require branches to be up to date before merging” *(recommended)*
+- Signed commits and signed tags *(strongly recommended; enforce when org is ready)*
+- Linear history *(recommended unless you rely on merge commits for audit semantics)*
 
 ---
 
-## Status check contract
+## Status Check Contract
 
 These checks are **merge-blocking** on governed branches.
 
@@ -219,7 +284,75 @@ These checks are **merge-blocking** on governed branches.
 
 ---
 
-## CI gate matrix (no merge without proof)
+## Required Workflow Inventory (Stable Names + Outputs)
+
+The boss-level missing piece in many repos is not “what checks exist,” but **which workflow file produces which check name** and **what artifacts it must upload**.
+
+> [!WARNING]
+> **Contract:** Branch protection MUST reference workflow `name:` values that are stable.
+
+### Recommended workflow files and `name:` values
+
+| Workflow file | Workflow `name:` | Produces status check | Runs on | Notes |
+|---|---|---|---|---|
+| `.github/workflows/docs.yml` | `docs` | `docs` | PR + push | markdownlint + link check + template lint |
+| `.github/workflows/stories.yml` | `stories` | `stories` | PR + push | Story Node v3 schema + citation resolver |
+| `.github/workflows/contracts.yml` | `contracts` | `contracts` | PR + push | JSON Schema + compat tests |
+| `.github/workflows/receipts.yml` | `receipts` | `receipts` | PR + push | spec_hash + checksums + run manifests |
+| `.github/workflows/catalogs.yml` | `catalogs` | `catalogs` | PR + push | DCAT/STAC/PROV validators + link integrity |
+| `.github/workflows/policy.yml` | `policy` | `policy` | PR + push | opa test + conftest + regression suite |
+| `.github/workflows/api-contract.yml` | `api-contract` | `api-contract` | PR + push | OpenAPI diff + breaking change gate |
+| `.github/workflows/build.yml` | `build` | `build` | PR + push | build + unit tests + smoke |
+| `.github/workflows/security.yml` | `security` | `security` | schedule + PR | CodeQL + dependency review + secrets |
+| `.github/workflows/supply-chain.yml` | `supply-chain` | `supply-chain` | release/tag | SBOM + attestations + signatures |
+| `.github/workflows/release.yml` | `release` | *(not a merge gate)* | tag | writes immutable release records |
+| `.github/workflows/break-glass.yml` | `break-glass` | *(restricted)* | manual | emergency containment only |
+
+> [!NOTE]
+> If the repo uses fewer workflows, it is still responsible for producing the **required status checks** above.
+> “One mega workflow” is acceptable if it emits the same check names, fails closed, and uploads required artifacts.
+
+<details>
+<summary><strong>Workflow authoring rule (mandatory)</strong></summary>
+
+- Workflows MUST use stable `name:` values.
+- Jobs SHOULD also use stable `name:` values (helps debugging).
+- Third-party actions MUST be pinned by commit SHA.
+- `permissions:` MUST be minimal per job; default to read-only.
+
+</details>
+
+---
+
+## CI Artifacts And Reporting Contract
+
+CI is not just pass/fail. CI must produce **reviewable evidence**.
+
+### Required artifact outputs (minimum)
+
+| Gate | Must upload artifacts | Where reviewers find it |
+|---|---|---|
+| `docs` | lint report + link check report | PR checks artifacts |
+| `stories` | schema validation report + citation resolution report | PR checks artifacts |
+| `contracts` | schema validation output + compat diff report | PR checks artifacts |
+| `receipts` | receipt validation report + checksum verification report | PR checks artifacts |
+| `catalogs` | validation output + cross-link integrity report | PR checks artifacts |
+| `policy` | opa/conftest test output + policy regression summary | PR checks artifacts |
+| `api-contract` | OpenAPI diff (breaking/non-breaking) | PR checks artifacts |
+| `build` | unit test summary + smoke logs | PR checks artifacts |
+
+> [!IMPORTANT]
+> “Works on my machine” is not evidence. If a gate asserts a guarantee, it must upload proof that reviewers can inspect.
+
+### Artifact retention and sensitivity
+
+- Artifacts must not include secrets or sensitive coordinates.
+- Prefer redaction/generalization in reports when needed.
+- Retention should be long enough for incident analysis (recommend ≥ 30 days for PR artifacts; ≥ 180 days for release artifacts).
+
+---
+
+## CI Gate Matrix (No Merge Without Proof)
 
 This is the “merge gatehouse” for the truth path.
 
@@ -244,7 +377,7 @@ Required validations:
   - Every citation must resolve to an evidence view
   - Missing or unresolvable citations → fail
 
-### Contracts & schemas
+### Contracts & Schemas
 
 Required validations:
 - JSON Schema validation for:
@@ -256,24 +389,24 @@ Required validations:
   - “No breaking change” gate for `/api/v1`
   - Breaking change → require `/api/v2` or feature flag plan
 
-### Receipts & promotion proofs
+### Receipts & Promotion Proofs
 
 Required validations:
-- run manifest schema validation
+- Run manifest schema validation
 - `spec_hash` semantics validation:
   - correct canonicalization + hashing method
   - mismatch → fail
-- checksums verification for referenced artifacts
-- deterministic outputs (when applicable):
+- Checksums verification for referenced artifacts
+- Deterministic outputs (when applicable):
   - repeated run must not drift without version bump + new receipts
 
-### Catalogs & provenance
+### Catalogs & Provenance
 
 Required validations:
 - DCAT validation (**always**)
 - STAC validation (**when spatial assets exist**)
 - PROV validation (**always**; required lineage)
-- cross-link integrity:
+- Cross-link integrity:
   - catalogs must point to checksums/receipts
   - evidence resolver must be able to traverse references
   - broken links → fail
@@ -290,17 +423,17 @@ Required validations:
 
 ---
 
-## Promotion Contract enforcement
+## Promotion Contract Enforcement
 
 Promotion is merge-blocking and release-blocking.
 
 Rules:
-- any change that results in new/updated `data/processed/**` must also include:
+- Any change that results in new/updated `data/processed/**` must also include:
   - valid receipts/run manifest(s)
   - checksums (deterministic)
   - catalogs (DCAT + PROV; STAC if spatial)
 - CI must deny if receipts/catalogs/checksums are missing or invalid
-- runtime policy must deny serving artifacts that lack required promotion proofs
+- Runtime policy must deny serving artifacts that lack required promotion proofs
 
 > [!WARNING]
 > **No “manual exceptions”** that bypass receipts/catalogs/checksums.
@@ -308,7 +441,7 @@ Rules:
 
 ---
 
-## Evidence resolver contract
+## Evidence Resolver Contract
 
 Acceptance criteria (non-negotiable):
 - every `citation.ref` returned by Focus Mode resolves to a human-readable evidence view in **≤ 2 API calls**
@@ -334,7 +467,28 @@ CI must include contract tests that assert:
 
 ---
 
-## Kill switch requirements
+## Focus Mode And Story Nodes Governance
+
+Both Story Nodes and Focus Mode are user-facing claim surfaces. They must obey the same rule:
+
+> [!IMPORTANT]
+> **Cite or abstain.** Every answer/story claim is either:
+> - supported by resolvable citations, or
+> - explicitly abstains, and still emits an `audit_ref`.
+
+Required CI gates:
+- Story Node schema validation
+- Citation resolution tests for all `citation.ref` values
+- Sensitivity gates for published Story Nodes (redaction/generalization where required)
+- Output contract validation for Focus Mode response shape (when mockable in CI)
+
+Recommended additional gates:
+- Gold-set evaluation harness for Focus Mode (truthfulness + abstention correctness)
+- Regression tests for known sensitive queries and denial behavior
+
+---
+
+## Kill Switch Requirements
 
 KFM must be able to disable risky surfaces **without redeploying code**.
 
@@ -356,28 +510,52 @@ Recommended expansions:
 
 ---
 
-## Workflow security
+## Policy Parity: CI And Runtime
+
+A common “missing thing” is **policy drift**: CI tests one policy bundle, runtime runs another.
+
+> [!WARNING]
+> **Contract:** The same policy bundle (or the same policy commit SHA) must be used for:
+> - CI regression tests, and
+> - runtime policy decision point (PDP).
+
+Required practices:
+- Build a versioned policy bundle artifact from `policy/**`
+- Stamp it with:
+  - `policy_bundle_sha`
+  - source commit SHA
+  - build timestamp (non-authoritative metadata)
+- Validate in CI that:
+  - policy bundle build is deterministic (where feasible)
+  - default-deny behavior holds
+- Record the policy bundle reference in release records
+
+Recommended:
+- Treat policy bundle as a release artifact, not an environment “config tweak”
+- Disallow serving when policy cannot load (fail closed)
+
+---
+
+## Workflow Security
 
 These rules apply to **all** workflows in `.github/workflows/**`.
 
 ### Action hardening (required)
 
-- pin third-party actions by **commit SHA**
-- least-privilege `GITHUB_TOKEN` permissions per job:
-  - default `permissions: read-all` (or more strict)
+- Pin third-party actions by **commit SHA**
+- Least-privilege `GITHUB_TOKEN` permissions per job:
+  - default to read-only permissions
   - elevate only where needed, per job
-- avoid `pull_request_target` unless absolutely necessary
-- secrets scanning/push protection enabled (where available)
-- prefer OIDC / GitHub Apps over long-lived PATs
-- treat forks/untrusted PRs as hostile:
+- Avoid `pull_request_target` unless absolutely necessary
+- Treat forks/untrusted PRs as hostile:
   - do not expose secrets to untrusted code
   - do not run privileged jobs on untrusted PRs
 
 ### Runner hygiene (required)
 
-- avoid self-hosted runners for untrusted PRs
-- if self-hosted runners are used:
-  - isolate per-repo or per-trust tier
+- Avoid self-hosted runners for untrusted PRs
+- If self-hosted runners are used:
+  - isolate per repo or per trust tier
   - ephemeral runners preferred
   - restrict network egress where possible
   - separate “build” from “publish” runners
@@ -387,7 +565,8 @@ These rules apply to **all** workflows in `.github/workflows/**`.
 
 ```yaml
 # Example only. Align actual permissions to the minimum required.
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   docs:
@@ -402,12 +581,12 @@ jobs:
 
 ---
 
-## Supply chain (release and deploy)
+## Supply Chain (Release And Deploy)
 
 When enabled:
-- SBOM (SPDX) produced/verified
+- SBOM (SPDX or CycloneDX) produced/verified
 - provenance attestations (in-toto/SLSA) produced/verified
-- signatures verified (cosign/rekor)
+- signatures verified (cosign/rekor or equivalent)
 
 Release records in `releases/` must be immutable and verifiable by checksums.
 
@@ -423,7 +602,25 @@ Release records in `releases/` must be immutable and verifiable by checksums.
 
 ---
 
-## Governance incidents and break-glass
+## Dependency Updates Policy (Dependabot/Renovate)
+
+Dependency updates are a security surface. They must be governed, not “auto-merged blindly.”
+
+Minimum rules:
+- Automated update PRs must still pass **all required checks**
+- Updates that touch `.github/**`, `policy/**`, `contracts/**`, or `releases/**` require CODEOWNERS review
+- Auto-merge (if enabled) is allowed only for:
+  - patch/minor updates that do not touch governance surfaces, and
+  - after required checks pass
+
+Recommended:
+- Group GitHub Actions updates separately from application dependencies
+- Pin actions; let Dependabot bump pinned SHAs where possible
+- Require a `security` gate for dependency updates that introduce high/critical issues
+
+---
+
+## Governance Incidents And Break-Glass
 
 > [!CAUTION]
 > **Definition — Governance incident:** any change, configuration, workflow, or exception that weakens
@@ -441,9 +638,15 @@ Minimum break-glass requirements:
   - add regression tests proving the bypass is closed
   - document root cause + remediation steps
 
+Recommended extras:
+- A dedicated `break-glass` workflow that:
+  - runs only on `workflow_dispatch`
+  - requires environment approvals
+  - logs an incident artifact (who/what/why/when)
+
 ---
 
-## When CI fails (quick diagnosis)
+## When CI Fails (Quick Diagnosis)
 
 | Failure | Usually means | Fix |
 |---|---|---|
@@ -457,12 +660,14 @@ Minimum break-glass requirements:
 
 ---
 
-## Definition of done for `.github/README.md`
+## Definition Of Done For `.github/README.md`
 
 - [ ] required `.github` items exist and are CODEOWNED
-- [ ] branch protections enforce PR + CODEOWNERS + required checks
+- [ ] repository settings enforce PR + CODEOWNERS + required checks
+- [ ] required status check names are stable and mapped to workflows
 - [ ] CI gates run on every PR and fail closed
 - [ ] promotion contract enforced via receipts + catalogs + checksums
 - [ ] evidence resolver and cite-or-abstain contracts are enforced
+- [ ] policy parity: CI bundle == runtime bundle (no drift)
 - [ ] workflows are hardened (pinned actions + least privilege + fork-safe)
 - [ ] releases are immutable and verifiable via `releases/`
