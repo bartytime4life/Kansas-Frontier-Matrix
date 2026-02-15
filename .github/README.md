@@ -307,25 +307,25 @@ Legend: ✅ required • 🟦 release required • 🟨 recommended • 🧭 opt
 
 ```text
 repo-root/
-├─ .github/
-├─ docs/
-├─ contracts/               # or schemas/
-├─ policy/
-├─ data/
-│  ├─ raw/
-│  ├─ work/
-│  ├─ processed/
-│  └─ catalog/
-│     ├─ dcat/
-│     ├─ stac/
-│     └─ prov/
-├─ src/
-├─ web/
-├─ tools/
-├─ tests/
-├─ scripts/                 # optional
-├─ watchers/                # optional
-└─ infra/                   # optional
+├─ .github/                              # CI workflows + repo governance (CODEOWNERS, templates, gated checks)
+├─ docs/                                 # Governed documentation hub (standards, ADRs, runbooks, story nodes)
+├─ contracts/                            # Promotion Contract + schemas (or use ./schemas/ as canonical alternative)
+├─ policy/                               # OPA/Rego source + tests + bundles (default-deny; explicit allow)
+├─ data/                                 # Governed data zones + catalogs/provenance
+│  ├─ raw/                               # Immutable captures/manifests (never served)
+│  ├─ work/                              # Regeneratable intermediates + receipts/validation (never served)
+│  ├─ processed/                         # Publishable artifacts (servable; immutable per version)
+│  └─ catalog/                           # Served catalogs (validated + cross-linked)
+│     ├─ dcat/                           # DCAT publish index (datasets/distributions)
+│     ├─ stac/                           # STAC discovery catalog (collections/items)
+│     └─ prov/                           # PROV lineage bundles (run-linked)
+├─ src/                                  # Backend + pipelines + graph (clean layers, ports/adapters, policy enforced)
+├─ web/                                  # React/TS UI (trust membrane: network only via API/services)
+├─ tools/                                # Tooling packs (policy, docs rendering, supply-chain, CI helpers)
+├─ tests/                                # Repo-wide tests (unit/integration/contract/policy/ui/focus)
+├─ scripts/                              # Optional: local wrappers + admin helpers (kept CI-parity where possible)
+├─ watchers/                             # Optional: watcher registry (schedules/triggers) if not under data/registry
+└─ infra/                                # Optional: deployment/GitOps (k8s/helm/argocd, secrets patterns, runbooks)
 ```
 
 ---
