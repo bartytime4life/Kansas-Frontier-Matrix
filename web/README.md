@@ -94,14 +94,14 @@ KFM-Web is built around a simple “loop”:
 
 ```mermaid
 flowchart LR
-  UI[Web UI<br/>React/TS + MapLibre] -->|API calls| GW[API Gateway<br/>FastAPI REST<br/>(optional GraphQL)]
-  GW -->|authorize| OPA[Policy PDP<br/>OPA/Rego]
-  GW -->|read| STORES[(Stores)]
-  STORES --> PG[(PostGIS<br/>geo + tiles)]
-  STORES --> N4J[(Neo4j<br/>knowledge graph)]
-  STORES --> OS[(Search/Vector<br/>OpenSearch or PG)]
-  STORES --> OBJ[(Object Store<br/>COGs + media)]
-  GW -->|append| AUD[(Audit Ledger<br/>append-only)]
+  UI["Web UI (React/TS + MapLibre)"] -->|"API calls"| GW["API Gateway (FastAPI REST; optional GraphQL)"]
+  GW -->|"authorize"| OPA["Policy PDP (OPA/Rego)"]
+  GW -->|"read"| STORES["Stores"]
+  STORES --> PG["PostGIS (geo + tiles)"]
+  STORES --> N4J["Neo4j (knowledge graph)"]
+  STORES --> OS["Search/Vector (OpenSearch or Postgres)"]
+  STORES --> OBJ["Object Store (COGs + media)"]
+  GW -->|"append"| AUD["Audit Ledger (append-only)"]
   GW --> UI
 ```
 
