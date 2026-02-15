@@ -73,54 +73,61 @@ KFM’s canonical layout separates concerns to preserve governance boundaries:
 > identical and document the mapping in this README.
 
 ```text
-web/
-├─ README.md
-├─ package.json
-├─ package-lock.json            # or pnpm-lock.yaml / yarn.lock (use one)
-├─ tsconfig.json
-├─ .env.example                 # optional: UI-only env defaults (never commit secrets)
-├─ public/                      # static assets (icons, manifest, robots)
-│  ├─ index.html
-│  └─ ...
+web/                                                   # React/TS UI (trust membrane: network only via services/)
+├─ README.md                                           # How to run, env vars, and UI governance rules (no secrets)
+├─ package.json                                        # Scripts + dependencies
+├─ package-lock.json                                   # Or pnpm-lock.yaml / yarn.lock (choose ONE lockfile)
+├─ tsconfig.json                                       # TypeScript config
+├─ .env.example                                        # Optional UI-only defaults (never commit secrets)
+│
+├─ public/                                             # Static assets (no build step; shipped as-is)
+│  ├─ index.html                                       # App entry HTML
+│  └─ …                                                # Icons, manifest, robots, etc.
+│
 └─ src/
-   ├─ main.tsx                  # app bootstrap (router, providers)
-   ├─ app/                       # app wiring (routes, providers, layout)
+   ├─ main.tsx                                         # App bootstrap (router + providers mount)
+   │
+   ├─ app/                                             # App wiring (routes, providers, layout composition)
    │  ├─ App.tsx
    │  ├─ router.tsx
-   │  ├─ providers.tsx          # query client, theme, feature flags (no secrets)
-   │  └─ layout/
-   ├─ contracts/                 # GOVERNED client-side contracts (keep in sync with API)
-   │  ├─ viewstate.ts           # ViewState type + validation helpers
-   │  ├─ citations.ts           # citation/ref types + schemes
-   │  ├─ evidence.ts            # evidence view DTOs
-   │  └─ api.ts                 # typed endpoint DTOs (manual or codegen)
-   ├─ services/                  # THE ONLY NETWORK LAYER (trust membrane in code)
-   │  ├─ apiClient.ts           # base URL allowlist, headers, timeouts
-   │  ├─ evidenceResolver.ts    # resolve citation refs → evidence views (≤ 2 calls)
-   │  ├─ bundleResolver.ts      # resolve digest → evidence pack (optional)
-   │  └─ auditClient.ts         # fetch audit context by audit_ref (non-leaky)
-   ├─ components/
+   │  ├─ providers.tsx                                 # Query client, theme, feature flags (no secrets)
+   │  └─ layout/                                       # Shell layout components (nav, panels, responsive frames)
+   │
+   ├─ contracts/                                       # GOVERNED client-side DTOs (keep in sync with API contracts)
+   │  ├─ viewstate.ts                                  # ViewState type + validation helpers
+   │  ├─ citations.ts                                  # Citation/EvidenceRef types + schemes
+   │  ├─ evidence.ts                                   # Evidence view DTOs (drawer/bundle display models)
+   │  └─ api.ts                                        # Typed endpoint DTOs (manual or codegen)
+   │
+   ├─ services/                                        # ✅ THE ONLY NETWORK LAYER (enforces trust membrane in code)
+   │  ├─ apiClient.ts                                  # Base URL allowlist, headers, timeouts, correlation IDs
+   │  ├─ evidenceResolver.ts                            # CitationRef → Evidence views (bounded fanout, ≤2 calls)
+   │  ├─ bundleResolver.ts                              # Digest → Evidence pack (optional; bounded + cached)
+   │  └─ auditClient.ts                                 # Fetch audit context via audit_ref (non-leaky, policy-safe)
+   │
+   ├─ components/                                      # UI building blocks (prefer data-testid; no network here)
    │  ├─ map/
-   │  │  ├─ MapCanvas.tsx
-   │  │  ├─ LayerPanel.tsx
-   │  │  ├─ Timeline.tsx
-   │  │  └─ InspectPanel.tsx
+   │  │  ├─ MapCanvas.tsx                               # Map surface (MapLibre/Cesium wrapper)
+   │  │  ├─ LayerPanel.tsx                              # Layer selection + toggles
+   │  │  ├─ Timeline.tsx                                # Time slider/controls
+   │  │  └─ InspectPanel.tsx                            # Feature inspect + hover/select details
    │  ├─ story/
-   │  │  └─ StoryViewer.tsx
+   │  │  └─ StoryViewer.tsx                             # Story Node reader (citations, assets, navigation)
    │  ├─ focus/
-   │  │  └─ FocusPanel.tsx
+   │  │  └─ FocusPanel.tsx                              # Focus Mode surface (ask/abstain/cite, streaming UI)
    │  ├─ evidence/
-   │  │  ├─ EvidenceDrawer.tsx
-   │  │  ├─ BundleViewer.tsx
-   │  │  └─ CitationList.tsx
+   │  │  ├─ EvidenceDrawer.tsx                          # Evidence drawer (resolver results)
+   │  │  ├─ BundleViewer.tsx                            # Evidence bundle view (grouped/filtered)
+   │  │  └─ CitationList.tsx                            # Citation list component (links, previews)
    │  └─ audit/
-   │     └─ AuditDrawer.tsx
-   ├─ features/                  # optional: feature modules (layer browser, story engine, etc.)
-   ├─ hooks/                     # React hooks (pure UI; avoid hidden side effects)
-   ├─ styles/                    # CSS/Tailwind tokens/themes
-   ├─ assets/                    # local images/icons used by components
-   ├─ test/                      # test utils + fixtures (NO sensitive data)
-   └─ __tests__/                 # unit/integration tests (tooling-dependent)
+   │     └─ AuditDrawer.tsx                             # Audit panel (decision + refs; safe fields only)
+   │
+   ├─ features/                                        # Optional feature modules (layer browser, story engine, etc.)
+   ├─ hooks/                                           # React hooks (UI-only; avoid hidden side effects)
+   ├─ styles/                                          # CSS/Tailwind tokens/themes
+   ├─ assets/                                          # Local images/icons imported by components
+   ├─ test/                                            # Test utilities + fixtures (NO sensitive data)
+   └─ __tests__/                                       # Unit/integration tests (tooling-dependent)
 ```
 
 ### Layout rules (KFM-Web invariants)
