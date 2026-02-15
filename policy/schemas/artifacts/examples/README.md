@@ -48,32 +48,37 @@ policy/
 └─ schemas/
    └─ artifacts/
       ├─ (authoritative schema files live here)
-      └─ examples/
-         ├─ README.md  ← you are here
-         ├─ focus-mode/
-         │  ├─ query.valid.min.json
-         │  ├─ query.invalid.missing-evidence-scope.json
-         │  ├─ answer.valid.min.json
-         │  └─ answer.invalid.missing-citations.json
-         ├─ story-node/
-         │  ├─ frontmatter.v3.valid.yml
-         │  ├─ frontmatter.v3.invalid.bad-date.yml
-         │  └─ snippet.valid.md
-         ├─ provenance/
-         │  ├─ run-receipt.valid.min.json
-         │  ├─ run-receipt.valid.full.json
-         │  ├─ run-receipt.invalid.hash-mismatch.json
-         │  └─ prov-bundle.valid.jsonld
-         ├─ catalogs/
-         │  ├─ stac.collection.valid.json
-         │  ├─ stac.item.valid.json
-         │  ├─ dcat.dataset.valid.jsonld
-         │  └─ dcat.dataset.invalid.missing-license.jsonld
-         └─ policy/
-            ├─ input.valid.min.json
-            ├─ input.invalid.missing-subject.json
-            ├─ decision.allow.example.json
-            └─ decision.deny.example.json
+      └─ examples/                                     # Schema examples (used by CI + docs; synthetic + deterministic)
+         ├─ README.md                                   # ← You are here: naming rules + how CI validates these examples
+         │
+         ├─ focus-mode/                                 # Focus Mode request/response examples (pre-policy + contract)
+         │  ├─ query.valid.min.json                     # Minimal valid Focus query (baseline envelope)
+         │  ├─ query.invalid.missing-evidence-scope.json# Invalid: missing evidence scope/context
+         │  ├─ answer.valid.min.json                    # Minimal valid Focus answer (audit_ref + citations or abstain)
+         │  └─ answer.invalid.missing-citations.json    # Invalid: claims without citations (fail-closed)
+         │
+         ├─ story-node/                                 # Story Node examples (frontmatter + markdown snippets)
+         │  ├─ frontmatter.v3.valid.yml                 # Valid Story Node frontmatter v3
+         │  ├─ frontmatter.v3.invalid.bad-date.yml      # Invalid: malformed/illegal date field
+         │  └─ snippet.valid.md                         # Valid markdown snippet (citations/assets refs pattern)
+         │
+         ├─ provenance/                                 # Provenance/run artifacts (receipts + PROV bundles)
+         │  ├─ run-receipt.valid.min.json               # Minimal valid run receipt (required fields only)
+         │  ├─ run-receipt.valid.full.json              # Full run receipt (optional fields populated)
+         │  ├─ run-receipt.invalid.hash-mismatch.json   # Invalid: digest/checksum mismatch
+         │  └─ prov-bundle.valid.jsonld                 # Valid PROV bundle (JSON-LD) with linked entities/activities
+         │
+         ├─ catalogs/                                   # Catalog artifacts (STAC/DCAT) used by gates/validators
+         │  ├─ stac.collection.valid.json               # Valid STAC Collection
+         │  ├─ stac.item.valid.json                     # Valid STAC Item (geometry/time/assets)
+         │  ├─ dcat.dataset.valid.jsonld                # Valid DCAT dataset (JSON-LD)
+         │  └─ dcat.dataset.invalid.missing-license.jsonld # Invalid: missing/unknown license (deny-by-default)
+         │
+         └─ policy/                                     # Policy I/O examples (OPA input + decision envelope)
+            ├─ input.valid.min.json                     # Minimal valid policy input (actor/resource/context)
+            ├─ input.invalid.missing-subject.json       # Invalid: missing subject/actor identity
+            ├─ decision.allow.example.json              # Example allow decision output (includes reasons/metadata)
+            └─ decision.deny.example.json               # Example deny decision output (fail-closed reasons)
 ```
 
 ---
