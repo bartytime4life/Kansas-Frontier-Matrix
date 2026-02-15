@@ -113,60 +113,60 @@ To keep architecture boundaries clean:
 > Keep this map accurate. When you add a doc subtree, update this README.
 
 ```text
-docs/
-├── README.md                               # this file (governed)
-├── glossary.md                             # canonical terms (humans + tooling)
+docs/                                               # Documentation hub (governed): standards + architecture + runbooks + stories
+├─ README.md                                        # (This file) docs index + governance rules for edits
+├─ glossary.md                                      # Canonical terms (humans + tooling)
 │
-├── master_guides/                          # authoritative guides (versioned)
-│   ├── MASTER_GUIDE_v12.md                 # legacy (if retained)
-│   └── MASTER_GUIDE_v13.md                 # canonical repo + pipeline reference
+├─ master_guides/                                   # Authoritative guides (versioned)
+│  ├─ MASTER_GUIDE_v12.md                           # Legacy reference (keep only if still needed)
+│  └─ MASTER_GUIDE_v13.md                           # Canonical repo + pipeline reference
 │
-├── architecture/                           # system design + decision records
-│   ├── overview.md                         # high-level architecture summary
-│   ├── c4/                                 # C4 diagrams (optional)
-│   ├── diagrams/                           # Mermaid/SVG/PNG diagrams (with alt text)
-│   └── adr/                                # Architecture Decision Records
+├─ architecture/                                    # System design + decisions
+│  ├─ overview.md                                   # High-level architecture summary (trust membrane + data lifecycle)
+│  ├─ c4/                                           # Optional C4 diagrams (Context/Container/Component)
+│  ├─ diagrams/                                     # Mermaid/SVG/PNG diagrams (include alt text + source files)
+│  └─ adr/                                          # Architecture Decision Records (ADRs)
 │
-├── standards/                              # build constraints (not suggestions)
-│   ├── KFM_MARKDOWN_WORK_PROTOCOL.md
-│   ├── KFM_REPO_STRUCTURE_STANDARD.md
-│   ├── KFM_STAC_PROFILE.md
-│   ├── KFM_DCAT_PROFILE.md
-│   └── KFM_PROV_PROFILE.md
+├─ standards/                                       # Build constraints (not suggestions)
+│  ├─ KFM_MARKDOWN_WORK_PROTOCOL.md                 # Formatting + doc hygiene rules (CI-enforced if configured)
+│  ├─ KFM_REPO_STRUCTURE_STANDARD.md                # Canonical repo layout + invariants
+│  ├─ KFM_STAC_PROFILE.md                           # STAC profile constraints used by validators
+│  ├─ KFM_DCAT_PROFILE.md                           # DCAT profile constraints used by validators
+│  └─ KFM_PROV_PROFILE.md                           # PROV profile constraints used by validators
 │
-├── templates/                              # governed templates (machine-validated)
-│   ├── TEMPLATE__KFM_UNIVERSAL_DOC.md
-│   ├── TEMPLATE__STORY_NODE_V3.md
-│   └── TEMPLATE__API_CONTRACT_EXTENSION.md
+├─ templates/                                       # Governed templates (machine-validated)
+│  ├─ TEMPLATE__KFM_UNIVERSAL_DOC.md                # Default template for governed docs
+│  ├─ TEMPLATE__STORY_NODE_V3.md                    # Story Node v3 authoring template
+│  └─ TEMPLATE__API_CONTRACT_EXTENSION.md           # API contract extension template (endpoints/schemas/examples)
 │
-├── governance/                             # rules for safe operation & authorship
-│   ├── ROOT_GOVERNANCE.md
-│   ├── ETHICS.md
-│   ├── SOVEREIGNTY.md
-│   └── REVIEW_GATES.md
+├─ governance/                                      # Rules for safe operation & authorship
+│  ├─ ROOT_GOVERNANCE.md                            # Top-level governance model + non-negotiables
+│  ├─ ETHICS.md                                     # Ethics + safety commitments (CARE/FAIR alignment)
+│  ├─ SOVEREIGNTY.md                                # Data sovereignty + stewardship rules
+│  └─ REVIEW_GATES.md                               # Required reviews + CI gates (what blocks merges)
 │
-├── runbooks/                               # operational docs (production-grade)
-│   ├── oncall/
-│   ├── incident-response/
-│   ├── backups/
-│   ├── upgrades/
-│   └── governance/
+├─ runbooks/                                        # Operational docs (production-grade)
+│  ├─ oncall/                                       # Oncall playbooks, dashboards, alert runbooks
+│  ├─ incident-response/                            # Incident process + templates + postmortems
+│  ├─ backups/                                      # Backup/restore procedures + verification drills
+│  ├─ upgrades/                                     # Upgrade procedures (deps, platform, services)
+│  └─ governance/                                   # Governance operations (policy changes, approvals, emergency switches)
 │
-├── data/                                   # domain runbooks (NOT actual data)
-│   └── <domain>/
-│       └── README.md                       # sources, ETL, validation gates, policy labels, catalog links
+├─ data/                                            # Domain runbooks (NOT actual data)
+│  └─ <domain>/                                     # One per domain (hydrology, parcels, railroads, etc.)
+│     └─ README.md                                  # Sources, ETL, validation gates, policy labels, catalog links
 │
-└── reports/
-    └── story_nodes/                        # governed narrative system
-        ├── templates/                      # helper snippets / scaffolds
-        ├── draft/                          # work-in-progress narratives
-        │   └── <story_slug>/
-        │       ├── story.md
-        │       └── assets/
-        └── published/                      # reviewed + publishable narratives
-            └── <story_slug>/
-                ├── story.md
-                └── assets/
+└─ reports/                                         # Reports + narrative outputs (citation-backed)
+   └─ story_nodes/                                  # Governed narrative system (draft → reviewed → published)
+      ├─ templates/                                 # Helper snippets / scaffolds (optional)
+      ├─ draft/                                     # Work-in-progress narratives (not authoritative)
+      │  └─ <story_slug>/                            # Kebab-case slug (stable once published)
+      │     ├─ story.md                              # Draft story (citations required where claims are made)
+      │     └─ assets/                               # Supporting assets referenced by story.md (derived, small)
+      └─ published/                                  # Reviewed + publishable narratives (authoritative)
+         └─ <story_slug>/
+            ├─ story.md                              # Final story (passes policy gates + review)
+            └─ assets/                               # Frozen assets (changes require republish/version bump)
 ```
 
 > [!NOTE]
