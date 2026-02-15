@@ -112,12 +112,18 @@ This README does not require these folders to exist yet, but this structure is t
 
 ```text
 policy/
-  bundles/
-    _shared/
-      README.md
-      lib/                 # shared rego modules (recommended)
-      data/                # shared static data (JSON) used by policies (optional)
-      tests/               # shared unit tests (opa test)
+└─ bundles/
+   └─ _shared/                                  # Shared bundle components reused across policy packs
+      ├─ README.md                               # What belongs here, reuse rules, and versioning expectations
+      │
+      ├─ lib/                                    # Shared Rego modules (recommended)
+      │   └─ *.rego                               # Pure helpers + common decision utilities (no product-specific wiring)
+      │
+      ├─ data/                                   # Optional shared static policy data (OPA data documents)
+      │   └─ *.json                               # Controlled vocabularies, role maps, thresholds, flags (if shared)
+      │
+      └─ tests/                                  # Shared unit tests (run with: opa test …)
+          └─ *.rego                               # Regression + smoke tests for shared lib/data behavior
 ```
 
 **Notes**
