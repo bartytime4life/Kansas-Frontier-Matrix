@@ -4,7 +4,8 @@ message: >-
   If you use Kansas Frontier Matrix (KFM) in your work, please cite it using this metadata.
   For dataset-level reuse (derived layers, Story Nodes, models/outputs), cite the specific
   catalog record (DCAT dataset entry and/or STAC Item/Collection) so provenance, licensing,
-  and versioning remain intact across the full “truth path.”
+  and versioning remain intact across the full “truth path.” Prefer digest-addressed
+  evidence bundles when available.
 
 title: "Kansas Frontier Matrix (KFM)"
 type: software
@@ -26,12 +27,14 @@ license: "Apache-2.0"
 
 abstract: >-
   Kansas Frontier Matrix (KFM) is a provenance-first, governance-as-code living atlas for Kansas:
-  a pipeline → catalog → database → API → UI system that transforms raw spatial and historical sources
-  into vetted, explorable knowledge with STAC/DCAT metadata and W3C PROV lineage. KFM serves curated
-  geospatial layers and narrative “Story Nodes” via governed endpoints for maps, tiles, timelines,
-  dashboards, and citation-rich AI-assisted exploration (Focus Mode). Stewardship is designed to align
-  with FAIR + CARE so open science and community value can coexist with traceability, access constraints,
-  and Indigenous data governance considerations.
+  a watchers + pipelines → receipts → catalogs → stores → governed API → map UI system that
+  transforms raw spatial and historical sources into vetted, explorable knowledge with
+  STAC/DCAT metadata and W3C PROV lineage. KFM serves curated geospatial layers and narrative
+  “Story Nodes” via policy-enforced endpoints for maps, tiles, timelines, dashboards, and
+  citation-rich AI-assisted exploration (Focus Mode). Focus Mode must cite resolvable evidence
+  or abstain, and every answer produces an audit reference. Stewardship is designed to align
+  with FAIR + CARE so open science and community value can coexist with traceability,
+  access constraints, and Indigenous data governance considerations.
 
 keywords:
   - Kansas
@@ -52,12 +55,19 @@ keywords:
   - governance-as-code
   - fail-closed
   - deterministic pipelines
-  - classification propagation
+  - spec_hash
+  - digest pinning
+  - receipts
+  - run manifest
   - policy-as-code
   - Open Policy Agent
   - OPA
   - Story Nodes
   - Focus Mode
+  - cite or abstain
+  - audit ledger
+  - evidence bundles
+  - OCI referrers
   - maps
   - timelines
   - dashboards
@@ -69,7 +79,6 @@ keywords:
   - PostgreSQL
   - Neo4j
   - knowledge graph
-  - microservices
   - reproducible research
   - FAIR
   - CARE
