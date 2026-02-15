@@ -1,219 +1,278 @@
-# Leak Case Golden Tests
+# leak_cases — Golden policy tests for leakage prevention
 
-**Status:** ✅ Governed • **Suite:** 🧪 Golden non‑regression • **Risk class:** 🔒 Data leakage prevention
+![Status](https://img.shields.io/badge/status-governed-informational)
+![Type](https://img.shields.io/badge/tests-golden-blue)
+![Policy](https://img.shields.io/badge/policy-default--deny-critical)
 
-This folder contains **golden leak cases**: minimal, repeatable scenarios that *previously* caused KFM to expose **restricted fields** (e.g., ownership/PII) or **overly‑precise sensitive locations** (e.g., archaeology / protected species), and must **never** be allowed again.
+Golden regression cases that ensure **policy enforcement remains leak-safe** as OPA/Rego rules evolve.
 
-Leak cases are intentionally **small**, **stable**, and **fail‑closed**: if something is ambiguous, the expected behavior is deny or sanitize.
-
----
-
-## What counts as a “leak”
-
-A “leak” is any of the following outcomes for an **unauthorized** actor:
-
-- A **restricted field** is returned (e.g., owner names, direct identifiers, private attributes).
-- A **sensitive-location geometry** is returned at **high precision** (or in any form that can be reverse‑engineered to high precision).
-- An **aggregate-only** dataset returns values below disclosure thresholds (e.g., small-count health/crime).
-- A response omits required **audit** and **evidence** references, reducing traceability and accountability.
+> [!IMPORTANT]
+> **Use synthetic fixtures only.** Never commit real PII, private addresses, culturally restricted locations, sensitive site coordinates, or secrets into this folder.
 
 ---
 
-## Non‑negotiable invariants (acceptance criteria)
+## Table of contents
 
-The leak-case suite exists to enforce these invariants:
+- [Purpose](#purpose)
+- [What counts as a leak](#what-counts-as-a-leak)
+- [How golden leak cases work](#how-golden-leak-cases-work)
+- [Directory layout](#directory-layout)
+- [Case contract](#case-contract)
+- [Running the suite](#running-the-suite)
+- [Adding a new leak case](#adding-a-new-leak-case)
+- [Updating goldens safely](#updating-goldens-safely)
+- [Common failure modes](#common-failure-modes)
+- [Governance and review rules](#governance-and-review-rules)
+- [Glossary](#glossary)
 
-- **Golden queries that previously leaked restricted fields must fail tests forever (non‑regression).**
-- **Negative tests:** sensitive-location layers cannot be returned at **high precision** to unauthorized roles.
-- **Field‑level tests:** owner names, health small counts, and exact archaeological coordinates are **redacted**.
-- **Audit integrity:** every API response includes an **audit reference** and an **evidence bundle hash/digest**.
+---
 
-If a PR causes any leak case to pass incorrectly (or stop running), treat it as a **security/data governance regression**.
+## Purpose
+
+This directory exists to prevent regressions where **restricted fields** (or restricted precision) accidentally appear in outputs when they should be denied, generalized, or redacted.
+
+These tests support KFM’s core governance expectations:
+
+- **Default-deny** policy posture (allow only when explicitly permitted).
+- **Policy evaluation on every request** (data/story/AI output validation where applicable).
+- “**No Source, No Answer**” / cite-or-abstain style guardrails for governed outputs.
+- A stable **golden output** comparison so policy changes cannot silently weaken protections.
+
+---
+
+## What counts as a leak
+
+A case is considered a “leak” if any of the following happen for a request context that should not receive sensitive information:
+
+1. **Restricted fields appear**  
+   Example: exact coordinates, unredacted personal identifiers, private site attributes, sensitive provenance fields, or restricted geometry.
+
+2. **Over-precise geometry is returned**  
+   Example: a sensitive record returns exact point geometry instead of generalized geometry or a coarse bounding region.
+
+3. **Policy bypass / privilege escalation**  
+   Example: a non-privileged actor gets an `allow=true` decision for a restricted dataset.
+
+4. **Output validation allows unsafe answers** (when applicable)  
+   Example: an AI/story response is marked allowed even though it lacks required citations or fails sensitivity checks.
+
+> [!WARNING]
+> **Leak cases should be minimal and deterministic.** If a case depends on timestamps, random IDs, network calls, or environment-specific ordering, it is not a good golden case.
+
+---
+
+## How golden leak cases work
+
+Each leak case is a small, self-contained fixture:
+
+- An **input** document representing the policy evaluation context (actor, resource, request).
+- An **expected** output (“golden”) representing the correct policy decision and any redactions/obligations.
+
+A test harness runs the policy against the input and compares the normalized result to the expected output.
+
+```mermaid
+flowchart LR
+  A[Leak Case: input.json] --> B[Test Harness]
+  B --> C[OPA/Rego Policy Evaluation]
+  C --> D[Decision Result]
+  D --> E[Normalize Result<br/>(stable ordering, no timestamps)]
+  E --> F[Compare to expected.json]
+  F -->|match| G[PASS ✅]
+  F -->|diff| H[FAIL ❌<br/>review + governance]
+```
 
 ---
 
 ## Directory layout
 
+Recommended structure (one directory per case):
+
 ```text
 policy/tests/golden/leak_cases/
 ├── README.md
-├── LC-0001-<slug>.yaml
-├── LC-0002-<slug>.yaml
-└── … (one file per leak scenario)
+├── LC-0001-precise-geometry-denied/
+│   ├── input.json
+│   ├── expected.json
+│   └── notes.md
+├── LC-0002-sensitive-field-redacted/
+│   ├── input.json
+│   ├── expected.json
+│   └── notes.md
+└── ...
 ```
 
-> Tip: Keep **one** scenario per file. If you need variants (different roles/scopes), model them as separate cases to preserve clarity and blame.
+| File | Required | Purpose |
+|---|:---:|---|
+| `input.json` | ✅ | Policy input payload for evaluation (what the system *would* send to OPA). |
+| `expected.json` | ✅ | Golden output (what the policy *must* decide/return). |
+| `notes.md` | ⛔️ (strongly recommended) | Human-readable rationale: what is being prevented, why it matters, and which rule(s) cover it. |
 
 ---
 
-## Case naming conventions
+## Case contract
 
-Use:
+### Naming rules
 
-- **Prefix:** `LC-` (Leak Case)
-- **ID:** 4 digits, zero-padded (`0001`, `0002`, …)
-- **Slug:** short kebab-case descriptor
-
-**Pattern:** `LC-<id>-<slug>.yaml`
+- Case directory name format: `LC-####-short-kebab-name`
+  - `####` is zero-padded (e.g., `0007`) to keep ordering stable.
+  - `short-kebab-name` should describe the *leak being prevented* (not the implementation detail).
 
 Examples:
 
-- `LC-0007-parcel-owner-name-redaction.yaml`
-- `LC-0012-archaeology-precise-geometry-deny.yaml`
+- `LC-0007-precise-geometry-denied`
+- `LC-0012-ai-output-denied-without-citations`
+- `LC-0031-sensitive-record-must-generalize-geometry`
 
----
+### `input.json` (policy input payload)
 
-## Case file requirements (what each case must capture)
+Use a stable shape aligned to your policy packages (typical patterns include `input.actor`, `input.resource`, and `input.request`).
 
-Leak cases are “golden” only if they are **self-explanatory** and **actionable**.
+Example (illustrative):
 
-### Required fields (recommended contract)
-
-| Field | Type | Required | Meaning |
-|---|---:|:---:|---|
-| `id` | string | ✅ | Unique case identifier (matches filename). |
-| `title` | string | ✅ | One-line description of the leak being prevented. |
-| `risk` | string | ✅ | `restricted-field` \| `sensitive-location` \| `aggregate-only` \| `audit-integrity` \| `other`. |
-| `origin` | object | ✅ | Where this leak came from (incident/issue/PR), plus dates. |
-| `input` | object | ✅ | Actor + request context used by the policy/API harness. |
-| `expected` | object | ✅ | The expected enforcement outcome (deny/redact/generalize) + audit/evidence requirements. |
-| `notes` | string | optional | Extra context (why this mattered, gotchas). |
-
-> ⚠️ If your current harness uses a different schema, keep the file **semantically equivalent** and update the harness later—do **not** water down the case.
-
----
-
-## Example leak case (template)
-
-```yaml
-id: LC-0000-example-template
-title: "Public role must never receive restricted fields (example template)"
-risk: restricted-field
-
-origin:
-  discovered_date: "YYYY-MM-DD"
-  reference:
-    kind: "incident|issue|pr"
-    id: "TBD"
-  summary: "Describe the original leak in one sentence."
-
-input:
-  actor:
-    role: "public"          # e.g., public | reviewer | admin | custodian
-    scopes: []              # keep empty unless your auth model requires scopes
-    grants: []              # use for custodian grants if applicable
-  request:
-    kind: "api|graphql|focus_mode"
-    route: "<ROUTE_OR_OPERATION_NAME>"
-    params: {}              # query params if applicable
-    body: {}                # request body if applicable
-  resource:
-    kind: "dataset|layer|record"
-    id: "<DATASET_OR_LAYER_ID>"
-    sensitivity: "restricted"
-
-expected:
-  decision: "deny|allow_with_redaction|allow_with_generalization"
-  must_not_expose:
-    fields:
-      - "owner_name"
-      - "owner_address"
-    geometry:
-      - "precise_coordinates"
-  geometry_precision:
-    # Use one of: "suppressed", "generalized", "precise"
-    required: "generalized"
-    # Optional: if your harness supports numeric precision caps
-    max_decimal_places: 3
-  audit:
-    require_audit_ref: true
-    require_evidence_bundle_hash: true
+```json
+{
+  "actor": { "role": "viewer", "id": "user_synthetic_001" },
+  "resource": {
+    "kind": "dataset",
+    "dataset_id": "ds_synthetic_sensitive_001",
+    "sensitivity": "restricted"
+  },
+  "request": {
+    "action": "read",
+    "fields": ["geometry", "site_name", "notes"],
+    "geometry_precision": "exact"
+  }
+}
 ```
 
+### `expected.json` (golden decision)
+
+At minimum, the golden output should be explicit about **allow/deny** and any **required redactions/obligations**.
+
+Example (illustrative):
+
+```json
+{
+  "allow": false,
+  "deny_reason": [
+    "resource_is_restricted",
+    "actor_role_insufficient"
+  ],
+  "obligations": {
+    "return_geometry": "none"
+  }
+}
+```
+
+If your policy returns a richer decision object, include it. The key is that the expected output is:
+
+- **Deterministic** (no timestamps, UUIDs, machine-specific paths).
+- **Minimal** (only what is needed to enforce the invariant).
+- **Stable** (formatting and ordering normalized).
+
+<details>
+<summary>Recommended normalization rules (so goldens stay stable)</summary>
+
+- Sort object keys (or serialize with a canonical JSON strategy).
+- Sort arrays that are semantically sets (e.g., reason codes).
+- Strip transient fields:
+  - timestamps (`generated_at`, `now`, etc.)
+  - random IDs
+  - environment-dependent paths
+- Prefer stable reason codes over full prose messages.
+
+</details>
+
 ---
 
-## How leak cases are evaluated (conceptual)
+## Running the suite
 
-Leak cases may be exercised by one or both of these mechanisms:
+This repository uses policy-as-code and expects policies to be testable via a CLI harness (commonly **Conftest + OPA/Rego**).
 
-1. **Policy evaluation** (OPA/Rego): validate allow/deny and required redaction/generalization decisions.
-2. **API contract evaluation**: validate response shape never includes restricted fields or overly-precise geometry.
+Typical options:
 
-```mermaid
-flowchart LR
-  Case[Leak case file\nLC-####-slug.yaml] --> Harness[Policy/API test harness]
-  Harness --> Policy[OPA/Rego decision\n(default-deny)]
-  Policy -->|deny| Deny[Deny / fail-closed]
-  Policy -->|allow w/ controls| Controls[Redact / generalize]
-  Controls --> Response[Response]
-  Response --> Checks[Assertions:\n- no restricted fields\n- no high-precision sensitive locations\n- audit_ref present\n- evidence digest present]
+### Option A — Run via the repo’s policy test entrypoint
+
+If the repo provides a wrapper script / Make target, use it (preferred, because it pins versions and normalization).
+
+### Option B — Run Conftest directly (example)
+
+From repo root:
+
+```sh
+conftest test policy/tests/golden/leak_cases -p policy
 ```
+
+> If your policy uses Rego v1 defaults (or pins flags explicitly), keep a compatibility check in CI to prevent silent drift from toolchain changes.
 
 ---
 
 ## Adding a new leak case
 
-1. **Reproduce** the leak in a safe/dev environment (never using production secrets).
-2. **Minimize** the scenario:
-   - smallest request that triggers the issue
-   - smallest fixture data needed to prove it
-3. **Write** a new `LC-####-<slug>.yaml`:
-   - describe the leak and its origin
-   - define actor role/scopes
-   - specify expected deny/redact/generalize outcome
-4. **Ensure the case is safe to commit**:
-   - replace any real owner names, addresses, or sensitive coordinates with synthetic values
-5. **Run the policy test harness locally** (use whatever entrypoint CI uses).
-6. **Confirm**:
-   - case fails before the fix (or demonstrates the vulnerability)
-   - case passes only after the fix
-7. **Open PR** with:
-   - the new case file
-   - the policy/app change that closes the leak
-   - a short explanation of why the fix is correct and non-bypassable
+Use this checklist to keep additions reviewable and consistent:
+
+- [ ] Pick the next available ID: `LC-####`
+- [ ] Create a new case folder under `leak_cases/`
+- [ ] Add `input.json` representing the request context
+- [ ] Add `expected.json` representing the correct decision
+- [ ] Add `notes.md` explaining:
+  - the leak being prevented
+  - why it matters (risk)
+  - the expected behavior (deny/redact/generalize)
+  - policy module/rule references (as identifiers, not fragile line numbers)
+- [ ] Ensure fixtures are **synthetic** and **non-sensitive**
+- [ ] Run the suite locally and confirm the new case passes
+- [ ] In your PR description: explain why this case belongs in `leak_cases` and what regression it prevents
 
 ---
 
-## Definition of Done ✅ (for PRs touching leak cases)
+## Updating goldens safely
 
-- [ ] New/updated leak case has a unique `LC-####` ID and clear title.
-- [ ] Case uses **synthetic** values (no real PII; no real sensitive coordinates).
-- [ ] Expected outcome is **deny or sanitize** (not “best effort”).
-- [ ] Case asserts **audit reference** + **evidence digest** presence.
-- [ ] Local run of the policy test harness passes.
-- [ ] CI passes, and the leak case is included in the executed suite (not skipped).
-- [ ] If behavior changed intentionally, the PR includes a governance note explaining why.
+Golden updates are governed changes because they can weaken (or strengthen) enforcement.
 
----
+**Only update `expected.json` when:**
 
-## Governance & safety rules (do not skip)
+1. The policy behavior is intentionally changed (with rationale), **and**
+2. A reviewer has validated the new behavior does not introduce leakage.
 
-> **🚫 Never commit real sensitive data**  
-> Leak cases must not contain real parcel ownership/PII, real addresses, or precise archaeological site locations. Use synthetic fixtures that preserve *shape* (field names/types) without real-world risk.
+Suggested process:
 
-> **🔐 “UI never fetches precise geometry w/o grant”**  
-> Include or maintain at least one leak case asserting that **precise geometry is inaccessible** without an explicit grant/role. This prevents accidental reintroduction of precision leaks through UI/API changes.
-
----
-
-## Troubleshooting
-
-### “A leak case failed after my change”
-- Check whether your change altered:
-  - the policy input schema
-  - role/scope mapping
-  - redaction/generalization behavior
-- If you intended to change behavior:
-  - update the case to reflect the new *governed* expectation **and**
-  - document the governance rationale in the PR (do not silently weaken cases)
-
-### “Leak cases aren’t running in CI”
-- Find the workflow step that runs policy tests and ensure it includes this directory.
-- Leak cases are **merge-blocking** by design; if they are skipped, treat as a governance incident.
+1. Change policy code (or harness normalization) in a single PR.
+2. Run tests; inspect diffs for each failing case.
+3. For each case, answer in the PR:
+   - *Why is the new decision correct?*
+   - *Does this expand access or increase precision?*
+4. Update goldens only after the above is documented.
+5. Ensure CI passes and that case notes still reflect reality.
 
 ---
 
-## Ownership
+## Common failure modes
 
-Changes in this folder should be reviewed by **policy maintainers** and **data governance reviewers**. These cases represent institutional memory; deleting or weakening them requires explicit rationale and auditability.
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| Goldens fail with noisy diffs | Non-deterministic fields included | Normalize output; remove transient fields |
+| `allow` flips unexpectedly | Rule ordering / defaults changed | Re-check default-deny; add explicit tests |
+| Precision leak (exact geometry returned) | Missing obligation/redaction enforcement | Add/strengthen geometry handling rules + test |
+| Toolchain drift causes failures | Rego/OPA defaults changed | Pin versions/flags; add compatibility tests |
+| A case requires real data to reproduce | Fixture too realistic / sensitive | Replace with synthetic minimal fixture |
 
+---
+
+## Governance and review rules
+
+- Treat this directory as a **governed artifact**:
+  - Changes can affect what information KFM is allowed to reveal.
+- **Never** include real sensitive content in fixtures.
+- Any change that expands access, precision, or fields should receive heightened review.
+- Prefer adding a new case over deleting a failing one (deletions can hide regressions).
+
+---
+
+## Glossary
+
+- **Golden test**: a test that compares current output to a stored expected output (“golden file”).
+- **Leak case**: a test designed to ensure restricted information cannot appear in output.
+- **Default-deny**: policy strategy where access is denied unless explicitly allowed.
+- **Obligation**: a required post-condition (e.g., “generalize geometry”, “redact fields”) attached to an allow/deny decision.
+- **Normalization**: making outputs deterministic so golden comparisons are meaningful.
