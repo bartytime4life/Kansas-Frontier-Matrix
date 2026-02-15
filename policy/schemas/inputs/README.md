@@ -29,13 +29,15 @@ This folder contains **JSON Schema contracts** for documents used as **OPA `inpu
 
 ```text
 policy/
-  policies/                 # Rego packages (default deny; explicit allow)
-  schemas/
-    inputs/                 # ✅ this directory (OPA + validator input schemas)
-      README.md             # ✅ this file
-      (recommended) *.schema.json
-    outputs/                # Policy decision outputs / normalized responses (recommended)
-  tests/                    # Policy regression fixtures (redacted/synthetic)
+├─ policies/                              # Rego packages (default-deny; explicit allow)
+├─ schemas/                               # Schema contracts used by policy tooling and validators
+│  ├─ inputs/                             # ✅ OPA + validator input schemas (authoritative “what we accept”)
+│  │  ├─ README.md                        # ✅ This file: versioning, naming, and validation rules
+│  │  └─ *.schema.json                    # Recommended: versioned input schemas (e.g., policy_input.v1.schema.json)
+│  │
+│  └─ outputs/                            # Recommended: decision/output schemas (what policy emits/normalizes)
+│
+└─ tests/                                 # Policy regression fixtures (synthetic/redacted; diff-friendly)
 ```
 
 > [!NOTE]
