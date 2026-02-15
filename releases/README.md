@@ -110,35 +110,44 @@ These invariants are non-negotiable for official KFM releases.
 ### Top-level contract
 
 ```text
-releases/
-├── README.md
-├── index.json
-└── vX.Y.Z/
-    ├── release-notes.md
-    ├── manifest.release.json
-    ├── checksums/
-    │   └── SHA256SUMS.txt
-    ├── catalogs/
-    │   ├── dcat/                    # REQUIRED
-    │   ├── prov/                    # REQUIRED
-    │   └── stac/                    # REQUIRED when spatial assets are shipped/referenced
-    ├── receipts/                    # REQUIRED for any dataset included
-    │   ├── run_manifests/           # run_manifest.json snapshots or pointers
-    │   └── run_records/             # optional: run_record.json snapshots or pointers
-    ├── policy/
-    │   ├── bundle.tar.gz
-    │   └── bundle.meta.json
-    ├── api/
-    │   ├── openapi.yaml
-    │   └── graphql.schema.graphql   # optional
-    ├── sbom/                        # optional (recommended for software releases)
-    │   └── sbom.spdx.json
-    ├── attestations/                # optional (recommended when supply-chain is enabled)
-    │   ├── provenance.intoto.jsonl
-    │   └── signatures.json
-    └── artifacts/
-        ├── pointers.json            # REQUIRED: immutable payload references (OCI digests/object URIs)
-        └── small/                   # optional: tiny bundled artifacts safe for git
+releases/                                           # Immutable release ledger (what shipped, with proofs)
+├─ README.md                                        # How releases are built/verified + what “required” means
+├─ index.json                                       # Release index (latest pointer + list of versions + metadata)
+│
+└─ vX.Y.Z/                                          # One immutable release directory per version (semantic or repo-defined)
+   ├─ release-notes.md                              # Human-readable notes (changes, risks, migrations)
+   ├─ manifest.release.json                         # Release manifest (contents, digests, policy IDs, compatibility)
+   │
+   ├─ checksums/                                    # Integrity checks for on-repo artifacts
+   │  └─ SHA256SUMS.txt                             # SHA-256 sums for files shipped in this release folder
+   │
+   ├─ catalogs/                                     # REQUIRED: catalogs shipped/declared by this release
+   │  ├─ dcat/                                      # REQUIRED: DCAT records for datasets/distributions
+   │  ├─ prov/                                      # REQUIRED: PROV lineage bundles/refs for included datasets
+   │  └─ stac/                                      # REQUIRED when spatial assets are shipped/referenced
+   │
+   ├─ receipts/                                     # REQUIRED when any dataset is included
+   │  ├─ run_manifests/                             # REQUIRED: run_manifest.json snapshots or immutable pointers
+   │  └─ run_records/                               # Optional: run_record.json snapshots or immutable pointers
+   │
+   ├─ policy/                                       # Policy bundle used to validate/promote this release
+   │  ├─ bundle.tar.gz                              # Built OPA bundle (deployable)
+   │  └─ bundle.meta.json                           # Bundle metadata (version, commit, build inputs, digests)
+   │
+   ├─ api/                                          # API contract snapshots for this release
+   │  ├─ openapi.yaml                               # OpenAPI snapshot (REST boundary)
+   │  └─ graphql.schema.graphql                     # Optional: GraphQL schema snapshot (SDL)
+   │
+   ├─ sbom/                                         # Optional (recommended for software releases)
+   │  └─ sbom.spdx.json                             # SBOM (SPDX JSON; normalized)
+   │
+   ├─ attestations/                                 # Optional (recommended when supply-chain is enabled)
+   │  ├─ provenance.intoto.jsonl                    # in-toto/SLSA provenance (append-only JSONL)
+   │  └─ signatures.json                            # Signature material/refs (e.g., cosign payload summaries)
+   │
+   └─ artifacts/                                    # Payload references (do not rely on mutable tags/paths)
+      ├─ pointers.json                              # REQUIRED: immutable payload refs (OCI digests, object URIs)
+      └─ small/                                     # Optional: tiny safe artifacts bundled in git (strict size cap)
 ```
 
 ### Naming rules
