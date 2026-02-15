@@ -1,9 +1,10 @@
 # EditorConfig is awesome: https://editorconfig.org
 #
-# Kansas Frontier Matrix (KFM) — repository formatting baseline
+# Kansas Frontier Matrix (KFM) — repository formatting baseline (governed)
 # - Keep editors consistent across OSes and IDEs
 # - Language-specific overrides follow community norms
 # - Lint/formatter tools (Prettier, gofmt, black, etc.) still win for final formatting
+# - Docs are production inputs: preserve Markdown semantics (intentional trailing spaces)
 #
 # NOTE: root=true stops EditorConfig from searching parent directories.
 root = true
@@ -62,6 +63,48 @@ indent_size = 2
 [*.{proto,proto3}]
 indent_style = space
 indent_size = 2
+
+
+# --- Infrastructure / policies / data contracts ------------------------------
+
+[*.tf]
+indent_style = space
+indent_size = 2
+
+[*.tfvars]
+indent_style = space
+indent_size = 2
+
+[*.{rego,opa}]
+indent_style = space
+indent_size = 2
+
+[*.cue]
+indent_style = space
+indent_size = 2
+
+[*.{schema,jsonschema}]
+indent_style = space
+indent_size = 2
+
+[*.{sql,psql}]
+indent_style = space
+indent_size = 2
+
+[*.{csv,tsv}]
+# Keep raw data files stable; do not trim trailing whitespace by default.
+trim_trailing_whitespace = false
+# line length is irrelevant for delimited data
+max_line_length = off
+
+[*.geojson]
+indent_style = space
+indent_size = 2
+
+[*.ndjson]
+indent_style = space
+indent_size = 2
+max_line_length = off
 
 
 # --- Backends / general-purpose languages -----------------------------------
