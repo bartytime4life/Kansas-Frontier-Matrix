@@ -1,15 +1,41 @@
-# releases/ — KFM Releases (Immutable Shipping Records)
+<!--
+GOVERNED ARTIFACT NOTICE
+This README defines KFM release records. Releases are immutable shipping evidence.
+If you change meaning (not just phrasing), route through governance review (CODEOWNERS + CI gates).
+-->
 
-![Governed](https://img.shields.io/badge/governance-governed-blue)
-![Fail-Closed](https://img.shields.io/badge/policy-fail--closed-critical)
-![Evidence-First](https://img.shields.io/badge/evidence-cite%20or%20abstain-brightgreen)
-![SBOM](https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20provenance-informational)
+# `releases/` — KFM Releases (Immutable Shipping Records) 📦🧾🔒
+
+![Governed](https://img.shields.io/badge/governance-governed-2563eb)
+![Fail-Closed](https://img.shields.io/badge/policy-default%20deny-111827)
+![Evidence-First](https://img.shields.io/badge/evidence-cite%20or%20abstain-0f766e)
+![Receipts](https://img.shields.io/badge/receipts-run__manifest%20%7C%20checksums-6a5acd)
+![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
+![Digest pinning](https://img.shields.io/badge/digest%20pinning-prefer%20sha256-4b0082)
+![Supply chain](https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20attestations%20optional-6b7280)
 
 > [!IMPORTANT]
-> **This folder is the canonical, versioned record of _what KFM shipped_.**
+> This folder is the canonical, versioned record of **what KFM shipped**.
 >
-> It contains **packaged release artifacts**, a **release manifest**, and **release evidence** (e.g., checksums, catalogs, SBOM, provenance/attestations, signatures).  
+> It contains release notes, a release manifest, checksums, and evidence (catalog snapshots, receipts, and optional supply-chain proofs).  
 > **Nothing in an existing release folder is ever edited.** If something changes, ship a **new release**.
+
+---
+
+## Governance header
+
+| Field | Value |
+|---|---|
+| Document | `releases/README.md` |
+| Status | **Governed** |
+| Applies to | release record format, immutability rules, verification expectations |
+| Version | `v2.0.0-draft` |
+| Effective date | 2026-02-15 |
+| Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
+| Review triggers | changes to required artifacts, manifest schema, verification rules, or immutability semantics |
+
+> [!WARNING]
+> **Fail-closed rule:** missing/invalid required artifacts must block release publication.
 
 ---
 
@@ -19,6 +45,7 @@
 - [Release invariants](#release-invariants)
 - [Directory layout](#directory-layout)
 - [Required artifact contract](#required-artifact-contract)
+- [Canonical addressing and digest pinning](#canonical-addressing-and-digest-pinning)
 - [Release lifecycle](#release-lifecycle)
 - [How to cut a release](#how-to-cut-a-release)
 - [How to verify a release](#how-to-verify-a-release)
@@ -32,47 +59,49 @@
 
 ## What belongs here
 
-This `releases/` directory exists to support **reproducibility, auditability, and governed distribution**.
+`releases/` exists to support reproducibility, auditability, and governed distribution.
 
-A **KFM release** is an **immutable snapshot** of one or more governed components such as:
+A KFM release is an immutable snapshot of one or more governed components such as:
 
-- **Processed datasets** (or pointers to their immutable published form)
-- **Catalog snapshots** (DCAT always; STAC/PROV as applicable)
-- **Policy pack snapshot** (OPA/Rego bundle used to enforce governance)
-- **API contracts** (OpenAPI / GraphQL schema / client contracts)
-- **Release evidence**:
-  - file checksums
-  - SBOM (SPDX)
-  - provenance / in-toto attestations
-  - signatures and verification metadata
+- processed dataset versions (or pointers to immutable digests)
+- catalog snapshots (DCAT always; STAC conditional; PROV required)
+- policy snapshot (policy bundle used to enforce governance)
+- API contracts (OpenAPI + optional GraphQL schema)
+- release evidence:
+  - checksums for everything stored in `releases/<release_id>/`
+  - receipts references (run manifests / run records) for included datasets
+  - optional supply-chain proofs (SBOM, attestations, signatures)
 
 > [!NOTE]
-> This folder is **not** for “latest build output,” dev artifacts, or temporary exports.
-> Those belong in CI artifacts, registries/object storage, or the governed data zones (`raw/`, `work/`, `processed/`).
+> This folder is not for “latest build output,” dev artifacts, or temporary exports.
+> Those belong in CI artifacts, registries/object storage, or governed data zones (`data/raw`, `data/work`, `data/processed`).
 
 ---
 
 ## Release invariants
 
-These invariants are **non-negotiable** for “official” KFM releases:
+These invariants are non-negotiable for official KFM releases.
 
-1. **Immutability**
-   - Existing releases are **append-only**: you may add a new release folder; you may update `releases/index.json` to reference it.
-   - You may **not** modify or delete files under `releases/<release_id>/` once published.
+1) **Immutability**
+- existing releases are append-only: add a new release folder; update `releases/index.json`
+- never modify or delete files under `releases/<release_id>/` once published
 
-2. **Fail-closed**
-   - Any missing or invalid required artifacts, catalogs, checksums, policies, or attestations must **block release publication**.
+2) **Fail-closed**
+- missing/invalid required artifacts block publication
+- verification failures mean the release is untrusted
 
-3. **Promotion gates**
-   - Any dataset included in a release must have passed the governed promotion path **Raw → Work → Processed** and must have:
-     - deterministic checksums
-     - required catalogs (DCAT always; STAC/PROV when applicable)
+3) **Promotion Contract compliance**
+- datasets referenced by a release must have passed Raw → Work → Processed with:
+  - receipts (run manifest)
+  - deterministic checksums
+  - catalogs (DCAT always; STAC conditional; PROV required)
 
-4. **Trust membrane safety**
-   - Releases must not contain secrets, credentials, or any artifact that would enable bypassing the governed API/policy boundary.
+4) **Trust membrane safety**
+- releases must not contain secrets, credentials, or artifacts enabling bypass of governed API/policy boundary
 
-5. **Evidence-first**
-   - Every shipped component is traceable via the release manifest + catalogs + provenance chain.
+5) **Evidence-first**
+- every shipped component is traceable via manifest + catalogs + provenance chain
+- citations and evidence refs remain resolvable
 
 ---
 
@@ -90,55 +119,74 @@ releases/
     ├── checksums/
     │   └── SHA256SUMS.txt
     ├── catalogs/
-    │   ├── dcat/              # REQUIRED (always)
-    │   ├── prov/              # REQUIRED if lineage exists / recommended always
-    │   └── stac/              # REQUIRED when shipping spatial assets
+    │   ├── dcat/                    # REQUIRED
+    │   ├── prov/                    # REQUIRED
+    │   └── stac/                    # REQUIRED when spatial assets are shipped/referenced
+    ├── receipts/                    # REQUIRED for any dataset included
+    │   ├── run_manifests/           # run_manifest.json snapshots or pointers
+    │   └── run_records/             # optional: run_record.json snapshots or pointers
     ├── policy/
     │   ├── bundle.tar.gz
     │   └── bundle.meta.json
     ├── api/
     │   ├── openapi.yaml
-    │   └── graphql.schema.graphql
-    ├── sbom/
+    │   └── graphql.schema.graphql   # optional
+    ├── sbom/                        # optional (recommended for software releases)
     │   └── sbom.spdx.json
-    ├── attestations/
+    ├── attestations/                # optional (recommended when supply-chain is enabled)
     │   ├── provenance.intoto.jsonl
     │   └── signatures.json
     └── artifacts/
-        ├── pointers.json      # references to immutable published payloads (OCI digests, object URIs)
-        └── small/             # optional: small bundled artifacts safe for git
+        ├── pointers.json            # REQUIRED: immutable payload references (OCI digests/object URIs)
+        └── small/                   # optional: tiny bundled artifacts safe for git
 ```
 
-### Naming
-
-- `release_id` is **SemVer** with a leading `v`:
-  - Examples: `v0.1.0`, `v1.2.3`, `v2.0.0`
-- Directory name must match `release_id`.
-- Do **not** use ambiguous identifiers like `latest`, `prod`, `final`.
+### Naming rules
+- `release_id` is SemVer with leading `v` (e.g., `v1.2.3`)
+- directory name must match `release_id`
+- do not use ambiguous identifiers like `latest`, `prod`, `final`
 
 ---
 
 ## Required artifact contract
 
-The table below is the **minimum** for an official release.
+Minimum requirements for an official release:
 
 | Path | Required | Purpose | Gate / validator |
 |---|---:|---|---|
-| `releases/index.json` | ✅ | Machine-discoverable list of releases | JSON schema + link-check |
-| `releases/<release_id>/release-notes.md` | ✅ | Human readable “what changed / why” | Markdown lint + link-check |
-| `releases/<release_id>/manifest.release.json` | ✅ | Canonical release manifest (all pointers + evidence) | JSON schema + referential integrity |
-| `releases/<release_id>/checksums/SHA256SUMS.txt` | ✅ | Deterministic integrity for every file in the release folder | checksum verification |
-| `releases/<release_id>/catalogs/dcat/` | ✅ | Dataset discovery + rights/license + distributions | JSON-LD validation |
-| `releases/<release_id>/catalogs/prov/` | ✅* | Lineage for promoted artifacts | PROV validation |
-| `releases/<release_id>/catalogs/stac/` | ✅** | Spatial asset catalogs | STAC validation |
-| `releases/<release_id>/policy/bundle.tar.gz` | ✅ | Policy snapshot used during promotion + serving | OPA/Conftest tests |
-| `releases/<release_id>/api/openapi.yaml` | ✅ | Governed API contract shipped with release | OpenAPI validation |
-| `releases/<release_id>/sbom/sbom.spdx.json` | ✅ | SBOM for shipped software artifacts | SPDX validation |
-| `releases/<release_id>/attestations/provenance.intoto.jsonl` | ✅ | Provenance attestation for release build/publish | in-toto/SLSA verification |
-| `releases/<release_id>/artifacts/pointers.json` | ✅ | Immutable payload references (e.g., OCI digests) | digest format validation |
+| `releases/index.json` | ✅ | machine-discoverable release index | JSON schema + link-check |
+| `releases/<release_id>/release-notes.md` | ✅ | human release notes | markdown lint + link-check |
+| `releases/<release_id>/manifest.release.json` | ✅ | canonical release manifest | JSON schema + referential integrity |
+| `releases/<release_id>/checksums/SHA256SUMS.txt` | ✅ | integrity for every file in release folder | checksum verification |
+| `releases/<release_id>/catalogs/dcat/` | ✅ | dataset discovery + license + restrictions | DCAT validation |
+| `releases/<release_id>/catalogs/prov/` | ✅ | lineage for promoted artifacts | PROV validation |
+| `releases/<release_id>/catalogs/stac/` | ◻︎ conditional | spatial asset catalogs | STAC validation |
+| `releases/<release_id>/receipts/run_manifests/` | ✅* | Promotion Contract receipts for included datasets | receipt schema validation |
+| `releases/<release_id>/policy/bundle.tar.gz` | ✅ | policy snapshot used for governance | OPA/Conftest tests |
+| `releases/<release_id>/api/openapi.yaml` | ✅ | governed API contract | OpenAPI validation + diff gate |
+| `releases/<release_id>/artifacts/pointers.json` | ✅ | immutable payload references | digest/address format validation |
+| `releases/<release_id>/sbom/sbom.spdx.json` | ◻︎ recommended | SBOM for shipped software | SPDX validation |
+| `releases/<release_id>/attestations/provenance.intoto.jsonl` | ◻︎ recommended | build/publish provenance | verification where enabled |
 
-\* **PROV** is strongly recommended for all releases and required whenever any shipped artifact has a transformation lineage.  
-\** **STAC** is required for releases that ship or reference spatial assets intended for map/timeline rendering.
+\* Required whenever the release includes or references dataset versions.
+
+---
+
+## Canonical addressing and digest pinning
+
+KFM prefers immutable, digest-addressed references for provenance roots.
+
+### Address hierarchy (recommended)
+1) digest address (OCI digest or content hash)  
+2) stable gateway URL derived from digest (when applicable)  
+3) storage location (implementation detail)
+
+### `pointers.json` expectations
+`pointers.json` should reference payloads by immutable identifiers:
+- OCI subject digests (`...@sha256:...`)
+- content-addressed object references (or versioned immutable URIs)
+
+Mutable tags may exist as aliases, but must not be provenance roots.
 
 ---
 
@@ -146,165 +194,132 @@ The table below is the **minimum** for an official release.
 
 ```mermaid
 flowchart LR
-  A["Upstream change / repo change"] --> B["PR opened"]
-  B --> C["CI: validation gates"]
-  C -->|"pass"| D["Promotion / Publish"]
+  A["Upstream change"] --> B["PR opened"]
+  B --> C["CI: validators + policy + contracts + receipts"]
+  C -->|"pass"| D["Publish payloads by digest"]
   C -->|"fail"| X["Merge blocked (fail-closed)"]
-  D --> E["Immutable distribution (OCI digests / object store)"]
-  E --> F["Write release record (releases/vX.Y.Z)"]
-  F --> G["Update releases/index.json"]
+  D --> E["Write release record (releases/vX.Y.Z)"]
+  E --> F["Update releases/index.json"]
+  F --> G["Tag repo at release commit"]
 ```
 
-Key idea: **publish by digest**, not by mutable tag, and attach evidence as referrers/attestations where supported.
+Key idea: publish by digest, attach evidence, and record the immutable release proof.
 
 ---
 
 ## How to cut a release
 
 > [!IMPORTANT]
-> Official releases must be produced via a **PR + CI** workflow so that policy gates and attestations are enforced.
-> No hand-edits in `releases/` after publication.
+> Official releases must be produced via PR + CI so gates and evidence are enforced. No hand-edits in `releases/` after publication.
 
 ### Step-by-step
 
-1. **Decide the version**
-   - **MAJOR**: breaking changes to API contracts, policy semantics, or data schemas
-   - **MINOR**: additive changes (new datasets, new endpoints, new non-breaking fields)
-   - **PATCH**: fixes (bug fixes, backfill corrections, doc fixes that do not change contracts)
+1) Decide the version (SemVer):
+- MAJOR: breaking API/contract/policy semantics changes
+- MINOR: additive changes (new datasets, endpoints, optional fields)
+- PATCH: bug fixes with identical contract meaning
 
-2. **Ensure governed promotion prerequisites**
-   - All included datasets are in **Processed** and have:
-     - deterministic checksums
-     - DCAT emitted
-     - STAC/PROV emitted as applicable
-   - Policy labels and redaction rules are finalized for any sensitive fields.
+2) Ensure promotion prerequisites:
+- all datasets referenced are processed and cataloged
+- receipts exist (run manifests)
+- checksums exist
+- sensitivity labels and redactions are finalized
 
-3. **Run the release build in CI (required for official)**
-   CI must:
-   - validate catalogs (DCAT/STAC/PROV)
-   - run policy tests (OPA/Rego)
-   - build API contracts (OpenAPI/GraphQL) and validate them
-   - generate SBOM (SPDX)
-   - generate provenance attestation (SLSA / in-toto)
-   - compute SHA-256 checksums for the release folder
+3) Run release build in CI:
+- validate catalogs (DCAT/STAC/PROV)
+- validate receipts (run manifests)
+- run policy tests (default deny preserved)
+- validate OpenAPI (and diff gate for `/api/v1`)
+- compute checksums for release folder
+- optionally generate SBOM/attestations and verify signatures when enabled
 
-4. **Create the release folder**
-   - Add `releases/<release_id>/` with the required structure.
-   - Ensure the manifest references only **immutable** payload addresses (e.g., `@sha256:` digests).
+4) Create `releases/<release_id>/` and populate required artifacts.
 
-5. **Update `releases/index.json`**
-   - Append the new release entry (latest first recommended).
-   - Do not remove existing entries.
+5) Update `releases/index.json` (append new release entry; do not remove old ones).
 
-6. **Write `release-notes.md`**
-   Must include:
-   - summary of what changed
-   - any migration notes
-   - any governance notes (e.g., redaction changes)
-   - exact referenced dataset versions / digests
+6) Write release notes:
+- what changed
+- migration notes (if any)
+- governance notes (redaction/sensitivity changes)
+- exact dataset versions/digests referenced
 
-7. **Publish**
-   - Merge the PR after CI passes.
-   - Tag the repo at the release commit (`vX.Y.Z`) and publish via the standard release channel.
-   - Do not “rebuild” a release with the same ID.
+7) Publish by merging PR; tag repo at release commit. Do not rebuild the same `release_id`.
 
-### Release Definition of Done (DoD)
-
-- [ ] `releases/<release_id>/manifest.release.json` exists and is schema-valid
-- [ ] `releases/<release_id>/checksums/SHA256SUMS.txt` covers **every** file under the release folder
-- [ ] DCAT snapshot is present and passes validation
-- [ ] STAC snapshot is present **when** spatial assets are shipped/referenced
-- [ ] PROV snapshot is present for all transformed artifacts (recommended always)
-- [ ] Policy bundle included + policy tests pass (fail-closed)
-- [ ] API contract included + contract validation passes
-- [ ] SBOM present (SPDX) + validator passes
-- [ ] Provenance attestation present + verification passes
-- [ ] `releases/index.json` updated and points to the new manifest
-- [ ] No modifications to previously published releases
+### Release Definition of Done
+- [ ] manifest schema-valid + referential integrity passes
+- [ ] SHA256SUMS covers every file in release folder
+- [ ] DCAT snapshot present and validates
+- [ ] PROV snapshot present and validates
+- [ ] STAC snapshot present when spatial assets are referenced
+- [ ] run manifests present for included datasets and validate
+- [ ] policy bundle present and tests pass
+- [ ] OpenAPI present and validates; `/api/v1` diff gate passes
+- [ ] pointers are immutable (digests)
+- [ ] index updated
+- [ ] no modifications to prior releases
 
 ---
 
 ## How to verify a release
 
 ### Quick verification (human)
+1) locate release in `releases/index.json`
+2) open `manifest.release.json` and confirm:
+   - pointers are immutable (digests)
+   - catalogs/receipts paths exist
+   - policy bundle present
+3) recompute SHA256 for all files and compare to `SHA256SUMS.txt`
 
-1. Open `releases/index.json` and locate the target `release_id`.
-2. Open `releases/<release_id>/manifest.release.json` and confirm:
-   - all referenced payloads use immutable addresses (digests)
-   - catalogs paths exist
-   - policy bundle is present
-3. Verify checksums:
-   - recompute SHA-256 for all files in the release folder
-   - confirm they match `checksums/SHA256SUMS.txt`
-
-### Full verification (consumer / deployment gate)
-
-A consumer (CI deploy job, downstream system, or audit process) should:
-
-- Validate manifest schema + referential integrity
-- Validate DCAT (rights/license, distributions, provenance links)
-- Validate STAC collections/items if present
-- Validate PROV if present
-- Verify SBOM is present and matches shipped images/artifacts
-- Verify provenance attestation and signatures using the approved toolchain
-- Confirm policy bundle is present and that policy tests pass (or were attested)
+### Full verification (consumer/deploy gate)
+- validate manifest schema + referential integrity
+- validate DCAT (license/rights/restrictions)
+- validate STAC when present
+- validate PROV (lineage completeness)
+- validate receipts (run manifests) for included datasets
+- verify OpenAPI + compatibility gate for `/api/v1`
+- verify policy bundle tests pass (or are attested)
+- verify SBOM/attestations/signatures when enabled
 
 > [!NOTE]
-> If any verification step fails, treat the release as **untrusted** and do not deploy.
+> If any verification fails, treat the release as untrusted and do not deploy.
 
 ---
 
 ## Hotfixes, rollbacks, and deprecations
 
 ### Hotfix (preferred)
-
-- Ship a **new patch release**: `vX.Y.(Z+1)`
-- Reference the corrected artifacts by new digests/versions
-- Add a note in `release-notes.md` explaining:
-  - what was wrong
-  - why the hotfix is safe
-  - any consumer action required
+- ship a new patch release: `vX.Y.(Z+1)`
+- reference corrected artifacts by new digests/versions
+- explain the change and consumer action in release notes
 
 ### Rollback
-
-- Never delete a release record.
-- Rollback by redeploying a prior `release_id` whose verification passes.
-- Add an operational note in your deployment logs / incident record (outside this folder).
+- never delete release records
+- rollback by redeploying a prior `release_id` whose verification passes
 
 ### Deprecation
-
-- If a release is later found to be problematic, do **not** remove it.
-- Add a deprecation notice in the next release notes and (optionally) in an external advisory log.
-- Keep the old release for audit traceability.
+- do not remove problematic releases
+- record deprecation in next release notes and (optionally) an external advisory log
+- keep old release for audit traceability
 
 ---
 
 ## Governance and sensitive data
 
-Releases are governed artifacts.
-
-- Do not ship secrets, credentials, private keys, or raw unredacted sensitive exports.
-- Ensure **license + attribution** are present in DCAT metadata for any dataset.
-- Ensure **restrictions** are enforced through policy bundles and that redaction/generalization is applied before promotion/publish.
-- When a dataset is “sensitive-location” or similar, the release must only include the **approved generalized** representation and the policy constraints that enforce it.
+Releases are governed artifacts:
+- never ship secrets, credentials, private keys
+- ensure license/attribution are present in DCAT for any dataset
+- ensure restrictions are enforced by policy and that redaction/generalization is applied before promotion
+- sensitive-location releases must include only approved generalized representations (public) and policy constraints
 
 ---
 
 ## References
 
-These documents define the release expectations and gating philosophy:
-
-- **KFM Comprehensive Data Source Integration Blueprint v1.0 (2026-02-12)**  
-  Trust membrane + fail-closed + promotion gates Raw→Work→Processed and required catalogs/checksums.
-
-- **MASTER_GUIDE v13 (Canonical pipeline & structure reference)**  
-  Repository structure and the expectation that `releases/` contains packaged release artifacts (versioned bundles, manifest, SBOM).
-
-- **KFM Next-Gen Blueprint (Appendix: CI Hardening Checklist)**  
-  CI should validate stories/catalogs/policies and generate SBOM (SPDX) + SLSA/in-toto provenance attestations.
-
-- **Integrating “New Ideas Feb-2026” Into Knowledge-First Management**  
-  Promotion contract, run manifests/receipts, provenance guard policies, and digest-pinning/OCI referrers patterns.
+- `.github/README.md` — repo governance + required CI gates
+- KFM Next-Gen Blueprint & Primary Guide — promotion gates, audit/evidence expectations
+- KFM Comprehensive Data Source Integration Blueprint — receipts/catalog requirements
+- Feb-2026 integration patterns — digest pinning, evidence bundles/referrers, spec_hash semantics
+- Standards: STAC, DCAT (W3C), PROV (W3C), RFC 8785 (JCS)
 
 ---
 
@@ -318,47 +333,35 @@ These documents define the release expectations and gating philosophy:
   "schema": "kfm.schema.release_manifest.v1",
   "release_id": "v1.2.0",
   "created_at": "2026-02-14T00:00:00Z",
-  "git": {
-    "tag": "v1.2.0",
-    "commit": "9f2c2a2b2d7a4c0f9d9f4c2a1b0e8d7c6a5b4c3d"
-  },
+  "git": { "tag": "v1.2.0", "commit": "9f2c2a2b2d7a4c0f..." },
   "release_type": ["data", "api", "policy"],
   "components": {
     "datasets": [
       {
-        "dataset_id": "kfm.hazards.fema_disaster_declarations",
-        "dataset_version": "sha256:2c26b46b68ffc68ff99b453c1d30413413422f1643c6aa3f8b6f0a1b6b1d9f2a",
-        "zone": "processed",
+        "dataset_id": "kfm.example_dataset",
+        "dataset_version": "sha256:...",
+        "receipts": {
+          "run_manifest": "receipts/run_manifests/run_2026-02-14T18:02:11Z.json"
+        },
         "catalogs": {
-          "dcat": "catalogs/dcat/kfm.hazards.fema_disaster_declarations.jsonld",
-          "prov": "catalogs/prov/kfm.hazards.fema_disaster_declarations.prov.json",
-          "stac": "catalogs/stac/kfm.hazards.fema_disaster_declarations/collection.json"
+          "dcat": "catalogs/dcat/kfm.example_dataset.json",
+          "prov": "catalogs/prov/kfm.example_dataset/run_2026-02-14T18:02:11Z.json",
+          "stac": "catalogs/stac/kfm.example_dataset/collection.json"
         },
         "distribution": {
-          "oci_subject": "ghcr.io/kfm/datasets/fema_disaster_declarations@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-          "notes": "Published by digest; referrers attach SBOM/PROV/QA as supported by registry."
+          "oci_subject": "ghcr.io/kfm/datasets/example@sha256:aaaaaaaa...",
+          "notes": "Published by digest; referrers attach evidence where supported."
         }
       }
     ],
-    "policy": {
-      "bundle": "policy/bundle.tar.gz",
-      "meta": "policy/bundle.meta.json"
-    },
-    "api": {
-      "openapi": "api/openapi.yaml",
-      "graphql_schema": "api/graphql.schema.graphql"
-    }
+    "policy": { "bundle": "policy/bundle.tar.gz", "meta": "policy/bundle.meta.json" },
+    "api": { "openapi": "api/openapi.yaml", "graphql_schema": "api/graphql.schema.graphql" }
   },
   "evidence": {
     "checksums_sha256": "checksums/SHA256SUMS.txt",
     "sbom_spdx": "sbom/sbom.spdx.json",
     "provenance_attestation": "attestations/provenance.intoto.jsonl",
     "signatures": "attestations/signatures.json"
-  },
-  "governance": {
-    "fail_closed": true,
-    "policy_labels": ["public"],
-    "notes": "Any restricted/sensitive-location datasets must be redacted/generalized prior to promotion."
   }
 }
 ```
@@ -379,4 +382,3 @@ b1946ac92492d2347c6235b4d2611184a8a2b8d7c6a5b4c3d2e1f0a9b8c7d6e  manifest.releas
 ```
 
 </details>
-
