@@ -9,7 +9,9 @@
 ![Supply Chain](https://img.shields.io/badge/supply%20chain-SBOM%20%7C%20SLSA%20%7C%20in--toto-0a7)
 ![CI](https://img.shields.io/badge/CI-required-success)
 ![Focus Mode](https://img.shields.io/badge/focus%20mode-cite%20or%20abstain-blue)
+![Kill Switch](https://img.shields.io/badge/kill--switch-supported-orange)
 
+> [!IMPORTANT]
 > **Why this file exists**
 >
 > This `.github/README.md` is the **single source of truth for repo governance and CI enforcement**:
@@ -30,10 +32,11 @@
 - **Docs**: `../docs/` *(not confirmed in repo — expected for KFM)*
 - **Architecture**: `../docs/architecture/` *(not confirmed in repo — expected)*
 - **Governance**: `../docs/governance/` *(not confirmed in repo — expected)*
-- **Contracts & schemas**: `../contracts/` *(not confirmed in repo — expected: Promotion Contract, Run Manifest schema, catalog minimums)*
+- **Contracts & schemas**: `../contracts/` *(not confirmed in repo — expected: Promotion Contract, Run Manifest schema, catalog minimums, policy input schemas)*
 - **Policies (OPA/Rego + Conftest)**: `../policy/` *(path name may differ — verify in repo)*
 - **Data zones**: `../data/` *(path name may differ — verify in repo)*
 - **Catalogs**: `../data/catalog/` *(preferred per KFM examples; your repo may use `../catalog/` — verify)*
+- **Watchers / automations registry**: `../watchers/` *(not confirmed in repo — expected if using watcher→PR automation patterns)*
 - **Infra / GitOps**: `../infra/` *(not confirmed in repo — expected for KFM)*
 - **Scripts**: `../scripts/` *(not confirmed in repo — expected: validators + acceptance harness wrappers)*
 
@@ -42,10 +45,13 @@
 ## 🧭 Table of Contents
 
 - [Governance Header](#-governance-header-treat-as-production)
+- [Change Summary](#-change-summary-what-changed-in-v140)
 - [Non‑Negotiables](#-nonnegotiables-kfm-invariants)
 - [Trust Membrane](#-trust-membrane--how-requests-flow)
+- [Canonical Addressing & Evidence Resolver Contract](#-canonical-addressing--evidence-resolver-contract)
 - [Promotion Contract, Receipts, and Digest Pinning](#-promotion-contract-receipts--digest-pinning-failclosed)
 - [OCI Evidence Bundles & Provenance Hub](#-oci-evidence-bundles--provenance-hub)
+- [Toolchain Pinning & Security Advisory Response](#-toolchain-pinning--security-advisory-response)
 - [What MUST Live in `.github/`](#-what-must-live-in-github)
 - [Expected Repo Directory Layout](#-expected-repo-directory-layout-kfm-standard)
 - [CI Gates](#-ci-gates--the-kfm-no-merge-without-proof-standard)
@@ -53,6 +59,7 @@
 - [Evidence & Audit Guarantees](#-evidence--audit-guarantees)
 - [Data Zones & Promotion Gates](#-data-zones--promotion-gates-raw--work--processed)
 - [Sensitivity Handling](#-sensitivity-handling-fair--care-enforced)
+- [Watchers & Automation Governance](#-watchers--automation-governance)
 - [PR Workflow](#-pr-workflow-mandatory)
 - [Supply Chain](#-supply-chain-release--deploy-hard-requirement)
 - [When CI Fails](#-when-ci-fails--quick-diagnosis)
@@ -68,13 +75,24 @@
 | Document | `.github/README.md` |
 | Status | **Governed** (changes require review) |
 | Applies to | GitHub Actions, branch protections, CODEOWNERS, templates, supply chain attestations, promotion contract enforcement |
-| Version | `v1.3.0` *(update aligns to Feb‑2026 Promotion Contract / receipts / OCI provenance hub patterns)* |
-| Effective date | **2026-02-14** |
+| Version | `v1.4.0` *(tightens spec_hash semantics + address hierarchy + toolchain pinning + watchers governance)* |
+| Effective date | **2026-02-15** |
 | Review cadence | **Quarterly** + **out‑of‑band for security advisories/toolchain changes** |
 | Owners | Defined in `.github/CODEOWNERS` *(required)* |
-| Review triggers | Any change touching `policy/`, `.github/workflows/`, `contracts/`, catalogs, receipts, Story Nodes, or validators |
+| Review triggers | Any change touching `policy/`, `.github/workflows/`, `contracts/`, catalogs, receipts, Story Nodes, validators, or watcher automation |
 
+> [!WARNING]
 > **Fail‑closed governance rule:** If a required enforcement surface is missing (policy, catalogs, receipts, contract tests), the system **denies** promotion/merge/release by default.
+
+---
+
+## 🧷 Change Summary (what changed in v1.4.0)
+
+- Clarified **spec_hash** as `sha256(JCS(spec))` and required `spec_schema_id` + `spec_recipe_version` for comparability across pipelines.
+- Added **canonical addressing hierarchy** (OCI digest → gateway resolver URL → storage URL as implementation detail).
+- Added **toolchain pinning** section with explicit security‑advisory response expectations (including Cosign verification-bypass CVE guidance).
+- Added **watchers governance** (registry, ownership, compliance constraints, and CI gates).
+- Hardened example CI workflow with **least‑privilege permissions** and safer defaults.
 
 ---
 
@@ -118,6 +136,7 @@ These are not “guidelines.” They are **contracts** that CI + policy must enf
    - Branch protection + required status checks are mandatory.
    - Workflows run with **least privilege** and avoid unsafe triggers for untrusted PRs.
    - Third‑party Actions are pinned and controlled by CODEOWNERS.
+   - Prefer **GitHub Apps and OIDC** over long‑lived PATs for automation.
 
 ---
 
@@ -144,6 +163,35 @@ flowchart LR
 
 ---
 
+## 🔗 Canonical Addressing & Evidence Resolver Contract
+
+> [!IMPORTANT]
+> If clients (UI, Focus Mode, auditors) can’t deterministically fetch “the thing a citation points to,” the system is not evidence-first.
+
+### Canonical address hierarchy (required)
+
+1) **OCI digest address** *(governance root; immutable)*  
+   - Example: `oci://registry.example.org/kfm/bundles/example_dataset@sha256:<digest>`
+
+2) **Gateway resolver URL** *(stable, derived from digest; preferred for UI fetch)*  
+   - Example: `https://api.example.org/api/v1/bundles/sha256:<digest>`
+
+3) **Storage URL** *(implementation detail; never used as provenance root)*  
+   - Example: `s3://...` / `https://blob...`
+
+### Evidence resolver acceptance criteria
+
+- Every citation reference must be resolvable via an API endpoint using stable schemes:
+  - `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`, plus `oci://` for bundles.
+- A KFM-quality UX means:
+  - Given any `citation.ref` in a Focus Mode answer, the UI can resolve it to a human‑readable evidence view in **≤ 2 API calls**.
+- Resolver must be **fail‑closed**:
+  - missing target → `404`
+  - unauthorized → `403`
+  - policy denial → `403` (with a non-leaky denial reason code)
+
+---
+
 ## 🧩 Promotion Contract, Receipts & Digest Pinning (fail‑closed)
 
 > **Promotion Contract** is the canonical *merge‑blocking* rule set: what must be present to publish datasets, layers, Story Nodes, docs, and artifacts.
@@ -154,7 +202,7 @@ flowchart LR
 |---|---:|---|---|
 | Raw manifest (immutable) | ✅ | `data/raw/<dataset>/manifest.yml` | Must capture license + expected files + checksums + sensitivity label |
 | Deterministic checksums | ✅ | `data/**/checksums.*` | Applies to inputs and outputs |
-| Run manifest / run receipt *(run record)* | ✅ | `data/work/<dataset>/run_manifest.json` *(or `run_record.json`)* | Must include inputs/outputs digests + `spec_hash` + code identity |
+| Run manifest / run receipt *(run record)* | ✅ | `data/work/<dataset>/run_manifest.json` *(or `run_record.json`)* | Must include inputs/outputs digests + `spec_hash` + spec schema/version + code identity |
 | Validation report | ✅ | `data/work/<dataset>/validation_report.json` | Includes schema, geometry, temporal, license/policy checks |
 | PROV record | ✅ | `data/catalog/prov/<dataset>/run_*.json` | Links raw → processed derivatives |
 | DCAT record | ✅ | `data/catalog/dcat/<dataset>.json` | License + attribution + restrictions |
@@ -167,20 +215,51 @@ flowchart LR
   - `registry.example.org/kfm/bundles/example_dataset@sha256:<digest>`
 - Avoid mutable tags for governance‑critical lookups (tags are allowed as *aliases*, not as provenance roots).
 
+### 🧬 spec_hash (required semantics)
+
+> [!IMPORTANT]
+> `spec_hash` MUST be comparable across runs. “Some hash existed” is not enough.
+
+**Definition (required):**
+- `spec_hash = sha256(JCS(spec))` where:
+  - `spec` is a schema-defined object
+  - `JCS` is JSON Canonicalization Scheme (RFC 8785)
+
+**Required companion fields:**
+- `spec_schema_id` — stable schema identifier (URI or canonical ID)
+- `spec_recipe_version` — semver string for the pipeline recipe that interprets `spec`
+
 ### 🧾 Run manifest schema (illustrative excerpt)
 
 ```json
 {
-  "run_id": "run_2026-02-14T12:34:56Z",
+  "run_id": "run_2026-02-15T12:34:56Z",
   "dataset_id": "example_dataset",
+
+  "spec_schema_id": "kfm.schema.run_spec.v1",
+  "spec_recipe_version": "1.2.0",
   "spec_hash": "sha256:...",
+
   "inputs": [{"uri":"data/raw/example.csv","sha256":"..."}],
   "code": {"git_sha":"...","image":"kfm/pipeline@sha256:..."},
   "outputs": [{"uri":"data/processed/example.parquet","sha256":"..."}],
+
   "validation_report": "data/work/example/validation_report.json",
   "prov_ref": "data/catalog/prov/example/run_....json",
-  "policy": {"sensitivity":"public|restricted|culturally_sensitive|pii_risk", "tags":["..."]},
-  "attestations": {"sbom_ref":"...", "slsa_provenance_ref":"...", "rekor_proof_ref":"..."}
+
+  "policy": {
+    "classification": "public|internal|restricted",
+    "sensitivity_flags": ["sensitive_location","culturally_sensitive","pii_risk"],
+    "redistribution": "allowed|attribution_required|noncommercial_only|no_redistribution|unknown",
+    "tags": ["..."],
+    "custodian": {"org":"...", "grant_ref":"..."}
+  },
+
+  "attestations": {
+    "sbom_ref":"...",
+    "slsa_provenance_ref":"...",
+    "rekor_proof_ref":"..."
+  }
 }
 ```
 
@@ -195,13 +274,13 @@ KFM supports publishing a dataset + its evidence as a **single typed OCI artifac
 ```mermaid
 flowchart LR
   PR["PR: data + receipts + catalogs"] --> CI["CI: validate + conftest + cosign verify"]
-  CI -->|"publish sha256 digest"| OCI["OCI Registry"]
+  CI -->|"publish sha256 digest"| OCI["OCI Registry (subject digest)"]
   OCI -->|"referrers"| SBOM["SBOM (SPDX)"]
   OCI -->|"referrers"| SLSA["SLSA / in-toto provenance"]
   OCI -->|"referrers"| PROV["PROV record"]
   OCI -->|"referrers"| DCAT["DCAT record"]
   OCI -->|"referrers"| STAC["STAC collection/items"]
-  OCI --> API["Evidence Resolver: /bundles/:digest"]
+  OCI --> API["Evidence Resolver: /api/v1/bundles/{digest}"]
   API --> UI["UI: Receipt Viewer + Trust Badges"]
 ```
 
@@ -211,13 +290,44 @@ flowchart LR
 
 ---
 
+## 🧷 Toolchain Pinning & Security Advisory Response
+
+> [!WARNING]
+> Tooling is part of the governance surface. Unpinned tooling can silently weaken “fail‑closed.”
+
+### Required pinning rules
+
+- Pin third‑party GitHub Actions by **commit SHA**, not tag.
+- Pin **Cosign**, **OPA**, **Conftest**, **ORAS**, and validators to known-good versions.
+- Updates require:
+  - a PR with tool version bumps,
+  - regression tests,
+  - and an entry in the repo change log (or ADR if behavior changes).
+
+### Minimum toolchain baseline (recommended)
+
+| Tool | Pinning expectation | Why |
+|---|---|---|
+| GitHub Actions | `uses: <action>@<commit-sha>` | mutable tags are a supply-chain risk |
+| Cosign | **≥ 2.6.2** (v2) or **≥ 3.0.4** (v3) | CVE-2026-22703: verification-bypass class issue (verify via NVD / Sigstore advisory) |
+| OPA | pinned | policy correctness + reproducibility |
+| Conftest | pinned | policy runner behavior changes can alter allow/deny outcomes |
+| ORAS | pinned | OCI artifact push/discovery must be deterministic |
+| STAC/DCAT/PROV validators | pinned | metadata validation must not drift |
+
+**Reference links (non-authoritative in this repo; verify before adopting):**
+- NVD CVE detail: `https://nvd.nist.gov/vuln/detail/CVE-2026-22703`
+- Sigstore advisory example: `https://github.com/sigstore/cosign/security/advisories/`
+
+---
+
 ## 🗂️ What MUST Live in `.github/`
 
 This directory is where KFM’s repo‑level governance becomes enforceable.
 
 ### Required files and folders
 
-Legend: ✅ required • 🟦 required for release/publish • 🟨 recommended
+Legend: ✅ required • 🟦 required for release/publish • 🟨 recommended • 🧭 optional (only if you use watchers)
 
 | Path | Required | Purpose | Governed impact |
 |---|---:|---|---|
@@ -225,15 +335,16 @@ Legend: ✅ required • 🟦 required for release/publish • 🟨 recommended
 | `.github/CODEOWNERS` | ✅ | Enforced review ownership | High |
 | `.github/workflows/ci.yml` | ✅ | PR gates: docs/stories/contracts/catalogs/receipts/policy/build | High |
 | `.github/workflows/policy-regression.yml` | ✅ | OPA + Conftest regression suite (default deny) | High |
+| `.github/workflows/api-contract.yml` | ✅ | OpenAPI “governed artifact” + no breaking change gate | High |
 | `.github/workflows/release.yml` | 🟦 | Releases only when gates pass; attestations; signing | High |
 | `.github/workflows/supply-chain.yml` | 🟦 | SBOM + SLSA/in‑toto provenance + signature verification | High |
-| `.github/workflows/api-contract.yml` | ✅ | OpenAPI “governed artifact” + no breaking change gate | High |
-| `.github/actions/kfm-acceptance-harness/` | ✅ | Reusable CI module for validators + cosign + `spec_hash` checks | High |
+| `.github/workflows/watchers.yml` | 🧭 | Watcher→PR automation checks + registry validation | High |
+| `.github/actions/kfm-acceptance-harness/` | ✅ | Reusable CI module: validators + cosign + `spec_hash` checks | High |
 | `.github/PULL_REQUEST_TEMPLATE.md` | ✅ | PR checklist for governance compliance | Medium |
 | `.github/ISSUE_TEMPLATE/` | ✅ | Structured governance-friendly issues | Medium |
 | `.github/SECURITY.md` | ✅ | Responsible disclosure + reporting | Medium |
 | `.github/dependabot.yml` | 🟨 | Dependency visibility + updates | Medium |
-| `.github/renovate.json` *(optional alt to dependabot)* | 🟨 | Alternative dependency automation | Medium |
+| `.github/renovate.json` *(optional alt)* | 🟨 | Alternative dependency automation | Medium |
 
 > If any ✅ item is missing, open an issue labeled `governance-gap` and block releases until resolved.
 
@@ -248,8 +359,9 @@ Legend: ✅ required • 🟦 required for release/publish • 🟨 recommended
 repo-root/
 ├─ .github/                        # CI + governance enforcement (this folder)
 ├─ docs/                           # governed docs, Story Nodes, runbooks, ADRs
-├─ contracts/                      # Promotion Contract + schemas (run manifest, catalog minimums)
+├─ contracts/                      # Promotion Contract + schemas (run manifest, catalog minimums, policy input schemas)
 ├─ policy/                         # OPA/Rego + Conftest tests (default deny)
+├─ watchers/                       # watcher registry + automation specs (optional; governed if present)
 ├─ data/
 │  ├─ raw/                         # immutable acquisitions + manifests + checksums
 │  ├─ work/                        # normalized/validated intermediates + receipts + validation reports
@@ -279,13 +391,13 @@ CI must validate:
   - Story Node v3 validator + citation resolvability checks
 
 - **Contracts**
-  - Promotion Contract schema + run manifest schema + catalog minimums schema validate
+  - Promotion Contract schema + run manifest schema + policy input schemas + catalog minimums schema validate
   - API contract diff: OpenAPI is a governed artifact (no breaking changes on `/api/v1`)
 
 - **Data**
   - STAC/DCAT/PROV validation
   - checksums & deterministic build outputs
-  - run manifest/receipt validation (including `spec_hash`)
+  - run manifest/receipt validation (including `spec_hash`, `spec_schema_id`, `spec_recipe_version`)
 
 - **Policy**
   - `opa test` (unit tests)
@@ -302,12 +414,13 @@ CI must validate:
 |---|---|---|---:|
 | `docs` | governed documentation integrity | markdown lint, link-check, doc build receipt (if enabled) | ✅ |
 | `stories` | Story Node validity + evidence | schema validation, citation resolvability | ✅ |
-| `contracts` | global interoperability | schema validate Promotion Contract + run manifest + catalog minimums | ✅ |
+| `contracts` | global interoperability | schema validate Promotion Contract + run manifest + policy inputs + catalog minimums | ✅ |
 | `catalogs` | dataset discovery + provenance | STAC/DCAT/PROV validate; link-check clean | ✅ |
-| `receipts` | promotion correctness | run manifest schema + `spec_hash` + checksum verification | ✅ |
+| `receipts` | promotion correctness | run manifest schema + `spec_hash` semantics + checksum verification | ✅ |
 | `policy` | governance safety | OPA tests + Conftest promotion guard suite | ✅ |
 | `api-contract` | compatibility | OpenAPI diff; no breaking changes on `/api/v1` | ✅ |
 | `build` | deployability | container builds + smoke tests | ✅ |
+| `watchers` | automation governance | watcher registry schema + policy constraints | 🧭 optional |
 | `security` | repo hygiene | secret scan, dependency scan, pinned actions | 🟨 recommended |
 | `supply-chain` | artifact integrity | SBOM + provenance + signature verify | 🟦 release required |
 
@@ -320,17 +433,22 @@ CI must validate:
 
 ```yaml
 name: ci
+
 on:
   pull_request:
   push:
+    branches: [main]
 
-permissions: read-all
+# Default: least privilege.
+permissions:
+  contents: read
 
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # pin by SHA in production
+      - name: Checkout
+        uses: actions/checkout@<PINNED_SHA>
       - run: ./scripts/lint_docs.sh
       - run: ./scripts/validate_story_nodes.sh
       - run: ./scripts/doc_build_receipt.sh  # optional: deterministic doc digest + receipt
@@ -338,40 +456,40 @@ jobs:
   contracts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: ./scripts/validate_contracts.sh  # JSON Schema: promotion + run manifest + catalog minimums
+      - uses: actions/checkout@<PINNED_SHA>
+      - run: ./scripts/validate_contracts.sh  # JSON Schema: promotion + run manifest + policy inputs + catalog minimums
 
   catalogs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@<PINNED_SHA>
       - run: ./scripts/validate_catalogs.sh   # DCAT/STAC/PROV + link-check
 
   receipts:
     runs-on: ubuntu-latest
     needs: [contracts]
     steps:
-      - uses: actions/checkout@v4
-      - run: ./scripts/validate_receipts.sh   # run manifest schema + spec_hash + checksums
+      - uses: actions/checkout@<PINNED_SHA>
+      - run: ./scripts/validate_receipts.sh   # run manifest schema + spec_hash semantics + checksums
 
   policy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@<PINNED_SHA>
       - run: opa test policy -v
       - run: conftest test . -p policy/conftest  # promotion guard regression suite
 
   api-contract:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@<PINNED_SHA>
       - run: ./scripts/openapi_no_breaking_changes.sh  # /api/v1 gate
 
   build:
     runs-on: ubuntu-latest
     needs: [docs, contracts, catalogs, receipts, policy, api-contract]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@<PINNED_SHA>
       - run: docker build -t kfm-api ./src
       - run: docker build -t kfm-web ./web
       - run: ./scripts/smoke_tests.sh
@@ -403,12 +521,15 @@ default allow := false
 # Allow promotion only when required governed artifacts exist and validate.
 allow if {
   input.run_manifest.valid == true
+  input.run_manifest.spec_hash_valid == true
   input.catalogs.dcat.valid == true
   input.catalogs.prov.valid == true
+
   # STAC required when spatial assets are present:
   not input.catalogs.stac.required
 } else if {
   input.run_manifest.valid == true
+  input.run_manifest.spec_hash_valid == true
   input.catalogs.dcat.valid == true
   input.catalogs.prov.valid == true
   input.catalogs.stac.required
@@ -425,7 +546,7 @@ allow if {
 ### Evidence resolution acceptance criteria
 
 - Every citation reference must be resolvable via an API endpoint using stable schemes:
-  - `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`
+  - `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`, `oci://`
 - A KFM-quality UX means:
   - Given any `citation.ref` in a Focus Mode answer, the UI can resolve it to a human‑readable evidence view in **≤ 2 API calls**.
 - System returns `answer_markdown` with citations and `audit_ref`; auditors can resolve `audit_ref` to an evidence pack.
@@ -470,12 +591,12 @@ allow if {
 - [ ] Temporal consistency checks
 - [ ] License + attribution captured in DCAT; restrictions encoded in policy
 - [ ] Provenance completeness: every promoted artifact has a PROV chain + deterministic checksum
-- [ ] Run manifest/receipt exists + validates; includes `spec_hash` + artifact digests + code identity
+- [ ] Run manifest/receipt exists + validates; includes `spec_hash` + `spec_schema_id` + `spec_recipe_version` + artifact digests + code identity
 - [ ] Policy labels defined; restricted fields/locations redacted per rules
 - [ ] Catalogs emitted (DCAT always; STAC/PROV as applicable) and link-check clean
 - [ ] API contract tests pass for at least one representative query
 - [ ] Backfill strategy documented (if applicable)
-- [ ] Human approval recorded if sensitivity != public
+- [ ] Human approval recorded if classification != public
 
 ---
 
@@ -491,27 +612,32 @@ KFM must treat some data as sensitive (examples include private ownership, preci
 
 ---
 
-## 🧰 Local Dev + Smoke Tests (recommended baseline)
+## 🛰️ Watchers & Automation Governance
 
-> These commands are a *recommended baseline*; adjust to match your repo’s actual tooling.
+> [!IMPORTANT]
+> Watchers are **governance-critical automation**. Treat watcher code/specs like production.
 
-### Quickstart
+### Watcher rules (baseline)
 
-1. Copy env file:
-   - `cp .env.example .env` *(if present)*
-2. Start:
-   - `docker compose up --build`
-3. Confirm:
-   - UI: `http://localhost:3000`
-   - API docs: `http://localhost:8000/docs`
+- Watchers MUST:
+  - use conditional requests (ETag / Last-Modified) where possible
+  - respect provider terms and rate/row limits
+  - emit typed receipts (`run_manifest`) on every material run
+  - be discoverable via a **watcher registry** (schema-validated + signed if required)
 
-### Smoke tests (minimum)
+### Watcher registry (recommended structure)
 
-- [ ] API health endpoint returns 200
-- [ ] OPA reachable and returns expected deny/allow decisions
-- [ ] “Focus Mode” endpoint denies answers without citations (policy test)
-- [ ] A sample citation can be resolved to an evidence view
-- [ ] Promotion guard Conftest suite runs locally (`conftest test ...`)
+- `watchers/registry.json` (or `.yml`) containing:
+  - `watcher_id`, `provider`, `endpoint`, `poll_interval`, `outputs`, `policy`, `spec_hash`, `signature_ref`
+- CI validates registry schema and blocks merge if invalid.
+
+### Kill switch (required pattern)
+
+Provide an emergency stop for automation/promotion:
+
+- If repo/org variable `KFM_GOVERNANCE_KILL_SWITCH=true`:
+  - CI MUST fail any job that would publish/promote
+  - Release workflows MUST not run “publish” steps
 
 ---
 
@@ -530,6 +656,7 @@ KFM must treat some data as sensitive (examples include private ownership, preci
 
 - [ ] No UI-to-DB direct access introduced (trust membrane preserved)
 - [ ] Promotion Contract requirements satisfied (receipts + checksums + catalogs + policy labels)
+- [ ] `spec_hash` semantics preserved (`sha256(JCS(spec))` + schema/version fields)
 - [ ] Story Nodes validate and citations resolve
 - [ ] OPA + Conftest tests pass; default deny preserved
 - [ ] Sensitive data reviewed; policy labels + redaction provenance present where needed
@@ -562,6 +689,7 @@ Minimum recommended ownership map:
 | `.github/actions/**` | platform + security owners |
 | `contracts/**` | governance + data stewardship owners |
 | `policy/**` | governance + security owners |
+| `watchers/**` | data stewardship + platform owners |
 | `data/**` | data stewardship owners |
 | `src/**` | backend owners |
 | `web/**` | frontend owners |
@@ -589,7 +717,7 @@ Minimum release artifacts:
 |---|---|---|
 | `validate_contracts` | Promotion Contract / schema mismatch | update schema + samples; keep fail-closed |
 | `validate_catalogs` | missing/invalid DCAT/STAC/PROV | add/repair catalogs; ensure link-check clean |
-| `validate_receipts` | run manifest missing fields / checksum mismatch | regenerate receipts deterministically; fix `spec_hash` logic |
+| `validate_receipts` | run manifest missing fields / checksum mismatch / spec_hash mismatch | regenerate receipts deterministically; fix JCS canonicalization; ensure schema/version fields |
 | `conftest test` | policy regression | update policy/tests; do not weaken default deny |
 | `opa test` | policy unit test failure | fix policy inputs, add tests for new cases |
 | `openapi_no_breaking_changes` | `/api/v1` breaking change | bump version strategy or refactor to `/api/v2` |
@@ -606,8 +734,8 @@ If something conflicts:
 3) Escalate via ADR (Architecture Decision Record) instead of weakening gates
 
 **Primary authority sources (by design):**
-- KFM Next‑Gen Blueprint & Primary Guide (internal draft)
-- KFM Comprehensive Data Source Integration Blueprint
+- KFM Next‑Gen Blueprint & Primary Guide (internal draft, 2026‑02‑12)
+- KFM Comprehensive Data Source Integration Blueprint (2026‑02‑12)
 - KFM “New Ideas Feb‑2026” integration patterns (Promotion Contract, Run Manifest schema, Provenance Guard, Acceptance Harness, OCI referrers)
 - KFM governance + ethics + sovereignty docs *(expected in `docs/governance/`, not confirmed in repo)*
 
@@ -621,8 +749,10 @@ This document is “done” when:
 - [ ] Branch protections require PRs + CODEOWNERS + required checks
 - [ ] CI gates run on every PR: docs/stories/contracts/catalogs/receipts/policy/api-contract/build
 - [ ] OPA + Conftest enforce default deny + cite-or-abstain + promotion guard rules
+- [ ] spec_hash semantics standardized and tested (`sha256(JCS(spec))` + schema/version fields)
 - [ ] Supply chain attestations exist for releases (SBOM + SLSA/in‑toto + signature policy)
 - [ ] Contributors can run the checks locally via `scripts/` equivalents (including Conftest suite)
+- [ ] (If watchers exist) watcher registry is schema-validated + CODEOWNED + governed
 
 ---
 
@@ -633,6 +763,6 @@ This document is “done” when:
 - Use least-privilege `GITHUB_TOKEN` permissions per job (default read-only).
 - Avoid risky triggers for untrusted PRs (be cautious with `pull_request_target`).
 - Enable secret scanning / push protection and dependency scanning (Dependabot or equivalent).
-- Require PR reviews for `.github/workflows/**`, `policy/**`, `contracts/**`.
-- Prefer GitHub App identities for automation over long-lived PATs (where applicable).
+- Require PR reviews for `.github/workflows/**`, `policy/**`, `contracts/**`, and (if present) `watchers/**`.
+- Prefer GitHub App identities and OIDC for automation over long-lived PATs.
 </details>
