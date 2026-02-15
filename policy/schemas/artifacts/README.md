@@ -50,11 +50,11 @@ These schemas exist to make KFM’s governance enforceable in tooling:
 
 ```mermaid
 flowchart LR
-  A[Artifact JSON] --> B[Schema validation]
-  B -->|valid| C[Policy tests (OPA/Conftest)]
-  C -->|allow| D[Promote / Publish]
-  C -->|deny| E[Block merge / Block publish]
-  B -->|invalid| E
+  A["Artifact JSON"] --> B["Schema validation"]
+  B -->|"valid"| C["Policy tests (OPA/Conftest)"]
+  C -->|"allow"| D["Promote / Publish"]
+  C -->|"deny"| E["Block merge / Block publish"]
+  B -->|"invalid"| E
 ```
 
 Typical enforcement points:
