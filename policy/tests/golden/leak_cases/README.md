@@ -72,13 +72,13 @@ A test harness runs the policy against the input and compares the normalized res
 
 ```mermaid
 flowchart LR
-  A[Leak Case: input.json] --> B[Test Harness]
-  B --> C[OPA/Rego Policy Evaluation]
-  C --> D[Decision Result]
-  D --> E[Normalize Result<br/>(stable ordering, no timestamps)]
-  E --> F[Compare to expected.json]
-  F -->|match| G[PASS ✅]
-  F -->|diff| H[FAIL ❌<br/>review + governance]
+  A["Leak Case: input.json"] --> B["Test Harness"]
+  B --> C["OPA/Rego Policy Evaluation"]
+  C --> D["Decision Result"]
+  D --> E["Normalize Result (stable ordering, no timestamps)"]
+  E --> F["Compare to expected.json"]
+  F -->|"match"| G["PASS"]
+  F -->|"diff"| H["FAIL (review + governance)"]
 ```
 
 ---
@@ -88,17 +88,20 @@ flowchart LR
 Recommended structure (one directory per case):
 
 ```text
-policy/tests/golden/leak_cases/
-├── README.md
-├── LC-0001-precise-geometry-denied/
-│   ├── input.json
-│   ├── expected.json
-│   └── notes.md
-├── LC-0002-sensitive-field-redacted/
-│   ├── input.json
-│   ├── expected.json
-│   └── notes.md
-└── ...
+policy/tests/golden/leak_cases/                 # “Never regress” leakage scenarios (highest bar: must deny/redact)
+├─ README.md                                   # What a leak case is, how IDs work, and the update/review workflow
+│
+├─ LC-0001-precise-geometry-denied/            # Leak Case 0001: precise geometry must be denied (or forced to coarse)
+│  ├─ input.json                               # Policy input payload (synthetic; deterministic)
+│  ├─ expected.json                            # Expected decision/output (deny=true or redaction result + reasons)
+│  └─ notes.md                                 # Human context: what incident/bug this prevents + acceptance criteria
+│
+├─ LC-0002-sensitive-field-redacted/           # Leak Case 0002: sensitive fields must be redacted (or denied if impossible)
+│  ├─ input.json                               # Policy input payload (synthetic; deterministic)
+│  ├─ expected.json                            # Expected redacted output + decision metadata (reasons, policy id)
+│  └─ notes.md                                 # Human context: threat model + what changed when this was introduced
+│
+└─ …                                           # Additional LC-#### case folders (one scenario per folder; stable IDs)
 ```
 
 | File | Required | Purpose |
