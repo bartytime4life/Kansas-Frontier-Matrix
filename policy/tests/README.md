@@ -1,7 +1,16 @@
-# KFM Policy Test Suite (`/policy/tests`)
+# KFM Policy Test Suite
+
+**Path:** `/policy/tests`
+
+[![Policy tests](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/policy-tests.yml?branch=main&label=policy%20tests&style=flat-square)](https://github.com/<ORG>/<REPO>/actions/workflows/policy-tests.yml)
+[![OPA](https://img.shields.io/badge/OPA-OPA_VERSION-blue?style=flat-square)](#tooling)
+[![Conftest](https://img.shields.io/badge/Conftest-CONFTEST_VERSION-informational?style=flat-square)](#tooling)
+[![Governance](https://img.shields.io/badge/governance-fail--closed-critical?style=flat-square)](#non-negotiables-these-tests-enforce)
+[![Focus Mode](https://img.shields.io/badge/focus-cite--or--abstain-ff69b4?style=flat-square)](#non-negotiables-these-tests-enforce)
+[![Trust membrane](https://img.shields.io/badge/trust--membrane-enforced-success?style=flat-square)](#non-negotiables-these-tests-enforce)
 
 > [!IMPORTANT]
-> This directory exists to make KFM governance **enforceable**, **reviewable**, and **non-regressing**.
+> This directory exists to make KFM governance **enforceable**, **reviewable**, and **non-regressing**.  
 > Policy changes are *production changes*.
 >
 > **Fail-closed by default** is required: if inputs/metadata/provenance are missing or invalid, the system must deny (or abstain) rather than guess.
@@ -17,24 +26,30 @@
 - [Tooling](#tooling)
 - [Running tests locally](#running-tests-locally)
 - [Test categories and required coverage](#test-categories-and-required-coverage)
-  - [OPA unit tests (`opa test`)](#opa-unit-tests-opa-test)
-  - [Conftest fixture tests (`conftest test`)](#conftest-fixture-tests-conftest-test)
-  - [CI policy regression suite (must-have)](#ci-policy-regression-suite-must-have)
-  - [Schema/input-contract tests (must-have)](#schemainput-contract-tests-must-have)
-  - [Optional: API contract/smoke tests](#optional-api-contractsmoke-tests)
+  - [OPA unit tests](#opa-unit-tests)
+  - [Conftest fixture tests](#conftest-fixture-tests)
+  - [CI policy regression suite](#ci-policy-regression-suite)
+  - [Schema and input-contract tests](#schema-and-input-contract-tests)
+  - [Optional API contract and smoke tests](#optional-api-contract-and-smoke-tests)
 - [How to add a new policy rule safely](#how-to-add-a-new-policy-rule-safely)
 - [How to add a new regression test](#how-to-add-a-new-regression-test)
-- [CI integration (merge-blocking)](#ci-integration-merge-blocking)
-- [Debugging & troubleshooting](#debugging--troubleshooting)
-- [Security & privacy rules for test data](#security--privacy-rules-for-test-data)
-- [Governance checklist (Definition of Done for policy changes)](#governance-checklist-definition-of-done-for-policy-changes)
+- [CI integration](#ci-integration)
+- [Debugging and troubleshooting](#debugging-and-troubleshooting)
+- [Security and privacy rules for test data](#security-and-privacy-rules-for-test-data)
+- [Governance checklist](#governance-checklist)
 - [Appendix: Canonical fixture shapes](#appendix-canonical-fixture-shapes)
+- [Appendix: Badge configuration](#appendix-badge-configuration)
 
 ---
 
 ## Why this exists
 
-KFM is an evidence-first platform where credibility and safety depend on *policy enforcement that cannot be bypassed* and *does not drift over time*. Policy tests are therefore designed to:
+KFM is an evidence-first platform where credibility and safety depend on:
+
+- policy enforcement that cannot be bypassed, and
+- policy behavior that does not drift over time.
+
+Policy tests are designed to:
 
 - Prevent regressions that re-introduce sensitive-data leakage.
 - Enforce **cite-or-abstain** behavior for Focus Mode outputs.
@@ -49,12 +64,14 @@ KFM uses policy-as-code to enforce governance at two levels:
 
 1. **Runtime access decisions**  
    Examples: “May this actor access this dataset/field/precision level?” “May this AI answer be returned (citations + sensitivity OK)?”
+
 2. **CI/CD merge gates**  
    Examples: “Is this dataset allowed to be promoted/published?” “Do the required catalogs/receipts/attestations exist?” “Are Story Nodes and citations valid?”  
    These are *merge-blocking* to prevent shipping non-compliant artifacts.
 
 > [!NOTE]
 > The same Rego policies (or closely related policy packs) may be evaluated:
+>
 > - in CI (static fixtures / file scanning), and/or
 > - at runtime (OPA sidecar / embedded evaluation).
 
@@ -112,8 +129,9 @@ policy/
 
 > [!TIP]
 > If your repo structure differs, keep the **intent** constant:
-> - tests are separated into **unit**, **fixtures**, and **golden non-regression** sets,
-> - and CI runs all of them on every PR.
+>
+> - tests are separated into **unit**, **fixtures**, and **golden non-regression** sets, and
+> - CI runs all of them on every PR.
 
 ---
 
@@ -131,7 +149,7 @@ Recommended additional tooling (depends on how your CI is wired):
 - Supply-chain verification tools (if acceptance harness includes them).
 
 > [!IMPORTANT]
-> Pin tool versions in CI and in local dev instructions.
+> Pin tool versions in CI and in local dev instructions.  
 > Policy and tooling are part of the security boundary—silent behavior changes are unacceptable.
 
 ---
@@ -179,7 +197,7 @@ make policy-test
 
 ## Test categories and required coverage
 
-### OPA unit tests (`opa test`)
+### OPA unit tests
 
 OPA unit tests are **logic-level** tests for policy modules.
 
@@ -210,12 +228,12 @@ test_deny_without_citations if {
 ```
 
 > [!NOTE]
-> If your policies are Conftest-style `deny[msg]`, keep unit tests focused on the decision surface your API/CI uses.
+> If your policies are Conftest-style `deny[msg]`, keep unit tests focused on the decision surface your API/CI uses.  
 > You can also unit-test `deny` length (`count(deny) == 0` / `> 0`) if that’s your chosen contract.
 
 ---
 
-### Conftest fixture tests (`conftest test`)
+### Conftest fixture tests
 
 Conftest is best for **file-based governance gates**, like:
 
@@ -233,7 +251,7 @@ Required characteristics:
 
 ---
 
-### CI policy regression suite (must-have)
+### CI policy regression suite
 
 This is the “never again” suite.
 
@@ -261,7 +279,7 @@ At minimum, keep these as permanent test classes:
 
 ---
 
-### Schema/input-contract tests (must-have)
+### Schema and input-contract tests
 
 Policies should not accept “whatever JSON happens to arrive.”
 
@@ -278,7 +296,7 @@ Recommended approach:
 
 ---
 
-### Optional: API contract/smoke tests
+### Optional API contract and smoke tests
 
 If the repo includes integration tests that hit a running API:
 
@@ -307,7 +325,7 @@ If the repo includes integration tests that hit a running API:
 3. **Add fixture tests**
    - Put minimal JSON/YAML fixtures under `fixtures/allow` and `fixtures/deny`.
 
-4. **Add/extend regression coverage if the change fixes an incident**
+4. **Add or extend regression coverage if the change fixes an incident**
    - Add a golden test that would have caught the issue.
 
 5. **Run locally**
@@ -334,7 +352,7 @@ The golden fixture should:
 
 ---
 
-## CI integration (merge-blocking)
+## CI integration
 
 Policy tests are merge-blocking.
 
@@ -343,6 +361,7 @@ Minimum recommended CI steps:
 1. Install pinned versions of:
    - `opa`
    - `conftest`
+
 2. Run:
    - `opa test ./policy -v`
    - `conftest test ./policy/tests/fixtures -p ./policy`
@@ -359,12 +378,12 @@ Example GitHub Actions step (illustrative):
 ```
 
 > [!IMPORTANT]
-> CI should be configured to fail on policy violations.
+> CI should be configured to fail on policy violations.  
 > If an emergency “deny switch” (kill-switch) exists, include tests that verify it works and is default-deny safe.
 
 ---
 
-## Debugging & troubleshooting
+## Debugging and troubleshooting
 
 ### Print decisions for a single fixture
 
@@ -381,7 +400,7 @@ opa eval -d ./policy -i ./policy/tests/fixtures/deny/example.json "data.kfm.ai"
 
 ---
 
-## Security & privacy rules for test data
+## Security and privacy rules for test data
 
 - **Never commit real secrets** (API keys, tokens, cookies).
 - **Never commit real PII** (names, addresses, personal identifiers), even in “test-only” fixtures.
@@ -392,7 +411,7 @@ opa eval -d ./policy -i ./policy/tests/fixtures/deny/example.json "data.kfm.ai"
 
 ---
 
-## Governance checklist (Definition of Done for policy changes)
+## Governance checklist
 
 Use this checklist in PRs that touch `policy/`:
 
@@ -451,3 +470,43 @@ Use this checklist in PRs that touch `policy/`:
 }
 ```
 
+---
+
+## Appendix: Badge configuration
+
+> [!TIP]
+> The badges at the top of this README are intentionally **safe placeholders**.
+> Replace `<ORG>`, `<REPO>`, and workflow/tool versions with your repo’s real values.
+
+### 1) GitHub Actions badge (policy tests)
+
+- Update: `policy-tests.yml` → your workflow filename.
+- Update: `main` → your default branch.
+
+```text
+https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/policy-tests.yml?branch=main&label=policy%20tests&style=flat-square
+```
+
+### 2) Tool version badges (OPA / Conftest)
+
+These are “informational” badges until you wire them to a real version source.
+
+- Option A (static): replace `OPA_VERSION` and `CONFTEST_VERSION`.
+- Option B (dynamic): point Shields to a raw JSON file in your repo (recommended once you have one).
+
+Static examples:
+
+```text
+https://img.shields.io/badge/OPA-OPA_VERSION-blue?style=flat-square
+https://img.shields.io/badge/Conftest-CONFTEST_VERSION-informational?style=flat-square
+```
+
+Dynamic JSON example (requires you to publish a `policy/tool-versions.json` or similar):
+
+```text
+https://img.shields.io/badge/dynamic/json?url=https://raw.githubusercontent.com/<ORG>/<REPO>/main/policy/tool-versions.json&query=$.opa&label=OPA&color=blue
+```
+
+> [!NOTE]
+> If you add a `tool-versions.json`, treat it as a governed artifact:
+> pin values, review changes, and run policy tests on every PR.
