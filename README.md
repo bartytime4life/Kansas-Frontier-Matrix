@@ -1,13 +1,17 @@
 <!--
 GOVERNED ARTIFACT NOTICE
 FILE: README.md
-This README is part of the KFM trust boundary: it communicates non-negotiable invariants, repo boundaries, and the “truth path.”
-If you change meaning (not just phrasing), route through the governance review path (CODEOWNERS + CI gates).
+
+This README is part of the KFM trust boundary: it communicates non-negotiable invariants,
+repo boundaries, and the “truth path.”
+
+If you change meaning (not just phrasing), route through the governance review path:
+CODEOWNERS + required CI gates + promotion contract checks.
 -->
 
 <div align="center">
 
-# Kansas Frontier Matrix (KFM-NG) — Governed Geospatial and Historical Knowledge System 🧭🗺️
+# Kansas Frontier Matrix — KFM‑NG Governed Geospatial and Historical Knowledge System 🧭🗺️
 
 **KFM turns heterogeneous Kansas history + geospatial data into a governed, evidence-first system:**  
 **data → watchers/connectors + pipelines → receipts + catalogs → governed APIs → map UI + Story Nodes + Focus Mode**
@@ -33,16 +37,16 @@ If you change meaning (not just phrasing), route through the governance review p
 <!-- OPTIONAL: replace ORG/REPO with real values once workflows exist -->
 <!--
 [![CI](https://github.com/ORG/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/ci.yml)
-[![Policy](https://github.com/ORG/REPO/actions/workflows/policy-regression.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/policy-regression.yml)
+[![Policy](https://github.com/ORG/REPO/actions/workflows/policy-regression.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/policy-regression.yml/badge.svg)
 [![API Contract](https://github.com/ORG/REPO/actions/workflows/api-contract.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/api-contract.yml)
 [![Supply Chain](https://github.com/ORG/REPO/actions/workflows/supply-chain.yml/badge.svg)](https://github.com/ORG/REPO/actions/workflows/supply-chain.yml)
 -->
 </div>
 
 > [!IMPORTANT]
-> **Trust membrane:** a governed API + policy boundary mediates _all_ access.  
-> **UI/external clients never talk to databases or object storage directly.**  
-> **Fail-closed:** missing policy inputs/receipts/catalogs/citations → deny/abstain.  
+> **Trust membrane:** a governed API plus policy boundary mediates **all access**.  
+> **UI and external clients never talk to databases or object storage directly.**  
+> **Fail closed:** missing policy inputs, receipts, catalogs, or citations → **deny or abstain**.  
 > **Focus Mode must cite or abstain** and always returns an **audit reference**.
 
 ---
@@ -52,90 +56,88 @@ If you change meaning (not just phrasing), route through the governance review p
 | Field | Value |
 |---|---|
 | Document | `README.md` |
-| Status | **Governed draft** (changes require review) |
-| Applies to | system guarantees, trust membrane, promotion/receipt requirements, evidence UX requirements |
-| Version | `v1.7.0-draft` |
+| Status | **Governed draft** |
+| Applies to | invariants, trust membrane, promotion requirements, evidence UX requirements |
+| Version | `v1.8.0-draft` |
 | Effective date | **2026-02-15** |
-| Review cadence | quarterly + out-of-band for security/toolchain changes |
+| Review cadence | quarterly + out-of-band for security or toolchain changes |
 | Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
 | Change impact | invariant changes are **release-blocking** until governance review completes |
 
 > [!WARNING]
-> **Fail-closed governance rule:** If required enforcement surfaces are missing (policy, receipts, catalogs, contract tests), promotion/merge/release must **deny** by default.
+> **Fail-closed governance rule:** if required enforcement surfaces are missing (policy, receipts, catalogs, contract tests), promotion, merge, and release must **deny** by default.
 
 ---
 
-## What KFM is for
+## Repository status signal
 
-KFM is a “living atlas” for Kansas built to be **inspectable**:
+This repo can contain both implemented and design-intent surfaces.
 
-- 🗺️ **Maps + layers** with provenance and licensing surfaced
-- ⏳ **Time navigation** (time ranges, timelines, temporal filters)
-- 📖 **Story Nodes** (governed narratives synchronized to map/time state)
-- 🎯 **Focus Mode** grounded Q&A that must **cite or abstain**
-- 🔎 **Evidence UX** (resolve citations to human-readable evidence views)
-- 🧾 **Receipts + catalogs** that prove how publishable artifacts were produced
-- 🧯 **Safety controls** (sensitivity classes, redaction/generalization, default deny)
-- 🧱 **Auditability** (`audit_ref` on governed responses; append-only audit ledger)
+**KFM rule:** if a guarantee is not machine-enforced (schemas + validators + CI wiring), treat it as **not yet proven**.
 
-> [!NOTE]
-> This repo can contain both “implemented” and “design-intent” parts. Anything required for trust is treated as governed and must be enforced by CI + policy (see `.github/README.md`).
+> [!TIP]
+> Add a small, runnable “verification harness” early (`make verify` or equivalent). If it is missing, that is a P0 governance gap.
 
 ---
 
 ## Quick links
 
-### Governance SSoT (start here)
-- **Repo governance + CI gates (SSoT):** `.github/README.md`
+### Governance single source of truth
+
+- **Repo governance and CI gates:** `.github/README.md`
 - **Security reporting:** `.github/SECURITY.md`
 - **Contributing:** `CONTRIBUTING.md` and `.github/PULL_REQUEST_TEMPLATE.md`
-- **CODEOWNERS (required):** `.github/CODEOWNERS`
+- **CODEOWNERS:** `.github/CODEOWNERS`
 
-### System planes (each is governed)
+### System planes
+
+Each plane is a governed surface. If a plane README is missing, treat it as a governance gap.
+
 - **Docs governance:** `docs/README.md`
 - **Data governance:** `data/README.md`
 - **Backend governance:** `src/README.md`
 - **Web UI governance:** `web/README.md`
-- **Tools (validators):** `tools/README.md`
-- **Tests (trust gates):** `tests/README.md`
-- **Releases (immutable shipping records):** `releases/README.md`
+- **Tools and validators:** `tools/README.md`
+- **Tests and trust gates:** `tests/README.md`
+- **Releases:** `releases/README.md`
 
 ---
 
 ## Table of contents
 
-- [If you are new here](#if-you-are-new-here-start-here)
+- [If you are new here start here](#if-you-are-new-here-start-here)
 - [Authority ladder](#authority-ladder)
-- [Non-negotiable guarantees](#non-negotiable-guarantees)
+- [KFM constitutional contracts](#kfm-constitutional-contracts)
 - [Core features](#core-features)
+- [Standards compatibility matrix](#standards-compatibility-matrix)
 - [Repo directory layout](#repo-directory-layout)
 - [Truth path](#truth-path)
-- [Quickstart local](#quickstart-local)
-- [How to verify](#how-to-verify-no-merge-without-proof)
-- [System architecture](#system-architecture)
 - [Promotion Contract and proof artifacts](#promotion-contract-and-proof-artifacts)
-- [Evidence resolver and citation schemes](#evidence-resolver-and-citation-schemes)
+- [Evidence resolution and citation schemes](#evidence-resolution-and-citation-schemes)
 - [Focus Mode contract](#focus-mode-contract)
-- [Audit ledger](#audit-ledger-tamper-evident)
-- [Sensitivity and redaction](#sensitivity-redaction-and-faircare)
+- [Audit ledger and tamper evidence](#audit-ledger-and-tamper-evidence)
+- [Sensitivity redaction and FAIR CARE](#sensitivity-redaction-and-fair-care)
 - [CI gates](#ci-gates)
-- [Release model](#release-model-immutable-shipping-records)
+- [Quickstart local](#quickstart-local)
+- [How to verify with no merge without proof](#how-to-verify-with-no-merge-without-proof)
+- [Release model immutable shipping records](#release-model-immutable-shipping-records)
 - [Operations runbook minimum](#operations-runbook-minimum)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Security](#security)
 - [License and citation](#license-and-citation)
+- [Glossary](#glossary)
 - [Provenance notes](#provenance-notes)
 
 ---
 
 ## If you are new here start here
 
-1) Read **[Non-negotiable guarantees](#non-negotiable-guarantees)**.  
-2) Run **[Quickstart local](#quickstart-local)**.  
-3) Run the verification harness (**[How to verify](#how-to-verify-no-merge-without-proof)**).  
-4) Internalize **processed is truth** via **[Truth path](#truth-path)** and **[Promotion Contract](#promotion-contract-and-proof-artifacts)**.  
-5) Learn why Focus Mode cannot bluff via **[Evidence resolver](#evidence-resolver-and-citation-schemes)** and **[Focus Mode contract](#focus-mode-contract)**.
+1) Read **[KFM constitutional contracts](#kfm-constitutional-contracts)**.  
+2) Run **[Quickstart local](#quickstart-local)** (or confirm the stack is runnable).  
+3) Run the verification harness: **[How to verify with no merge without proof](#how-to-verify-with-no-merge-without-proof)**.  
+4) Internalize **processed serves truth** via **[Truth path](#truth-path)**.  
+5) Learn why KFM cannot bluff via **[Evidence resolution](#evidence-resolution-and-citation-schemes)** and **[Focus Mode contract](#focus-mode-contract)**.
 
 ---
 
@@ -143,77 +145,115 @@ KFM is a “living atlas” for Kansas built to be **inspectable**:
 
 If something conflicts, resolve in this order:
 
-1) **Non-negotiable guarantees** (this README + `.github/README.md`)  
+1) **KFM constitutional contracts** (this README + `.github/README.md`)  
 2) **Policy remains default deny** (fail closed)  
-3) **Contracts/schemas** (`contracts/` or `schemas/`)  
-4) **Receipts + catalogs** (`data/work/**`, `data/catalog/**`)  
-5) **Docs/runbooks** (`docs/**`)  
+3) **Contracts and schemas** (`contracts/` or `schemas/`)  
+4) **Receipts and catalogs** (`data/work/**`, `data/catalog/**`)  
+5) **Docs and runbooks** (`docs/**`)  
 
 > [!NOTE]
 > If a change requires relaxing an invariant, write an ADR and update contracts + tests first. Do not weaken gates as a shortcut.
 
 ---
 
-## Non-negotiable guarantees
+## KFM constitutional contracts
 
-These invariants must remain true regardless of implementation.
+These invariants must remain true regardless of implementation. Each contract has an ID so it can be referenced in:
+- CI gate names
+- policy tests
+- incident reports
+- ADRs
 
-| Invariant | What it means | Minimum enforcement |
-|---|---|---|
-| **Trust membrane** | UI/external clients never access DBs/object storage directly | network isolation + API-only access |
-| **Fail-closed policy** | missing inputs/proofs → deny | default deny + regression tests |
-| **Processed serves truth** | only processed + cataloged artifacts are served | API reads from processed catalogs only |
-| **Promotion Contract required** | promotion denies without receipts/checksums/catalogs | CI gates + schema validation |
-| **Deterministic spec hashing** | `spec_hash = sha256(JCS(spec))` (RFC 8785) | receipt gate + reproducibility tests |
-| **Evidence refs resolvable** | citations resolve to evidence views | resolver contract tests |
-| **Focus Mode cite-or-abstain** | cite or abstain; `audit_ref` always | output validator + policy |
-| **Audit tamper-evident** | append-only audit events; integrity verifiable | ledger + checkpoints |
-| **No silent redaction** | redaction/generalization is a provenance-tracked transform | derived datasets + PROV |
+| Contract ID | Invariant | Meaning | Minimum enforcement surface |
+|---|---|---|---|
+| **KFM‑C0** | **Trust membrane** | UI and external clients never access DBs or object storage directly | network isolation + API-only access + no direct credentials in frontend |
+| **KFM‑C1** | **Fail-closed policy** | missing inputs or proofs → deny | default deny policies + regression tests |
+| **KFM‑C2** | **Processed serves truth** | only processed + cataloged artifacts are served | API reads from processed catalogs only |
+| **KFM‑C3** | **Promotion Contract required** | promotion denies without receipts, checksums, catalogs | CI gates + schema validation |
+| **KFM‑C4** | **Deterministic spec hashing** | `spec_hash = sha256(JCS(spec))` (RFC 8785) | receipt gate + reproducibility tests |
+| **KFM‑C5** | **Evidence refs resolvable** | citations resolve to evidence views | resolver contract tests |
+| **KFM‑C6** | **Cite or abstain with audit reference** | Story Nodes and Focus Mode must cite or abstain; `audit_ref` always | output validator + policy |
+| **KFM‑C7** | **Audit ledger integrity** | append-only audit events; integrity verifiable | ledger + checkpoints |
+| **KFM‑C8** | **No silent redaction** | redaction and generalization are provenance-tracked transforms | derived datasets + PROV |
+| **KFM‑C9** | **Immutable releases** | releases are append-only shipping records | release folder immutability + checksums |
 
 > [!IMPORTANT]
-> **No source, no answer** is not a slogan. It is an enforced contract.
+> **No source, no answer** is an enforced contract in KFM.
+
+### Repository health checklist
+
+These are **repository-level** requirements. If any are missing, treat as governance gaps.
+
+- [ ] `.github/CODEOWNERS` exists and covers all governed surfaces  
+- [ ] branch protections require PR review + required checks for protected branches  
+- [ ] CI is wired to fail closed (no green builds without proof artifacts)  
+- [ ] secrets are never committed; secret scanning and pre-commit checks are enabled  
+- [ ] GitHub Actions are pinned or constrained to reduce supply-chain risk  
+- [ ] “verify” target exists (`make verify` or equivalent) and matches CI behavior  
+- [ ] promotion gates validate receipts, catalogs, and cross-links before publish  
+
+> [!NOTE]
+> GitHub settings like branch protection and org-level 2FA are not stored in the repo. Track them as governance requirements in `.github/README.md` and enforce via “configuration drift” checks where feasible.
 
 ---
 
 ## Core features
 
-These are the “boss-level” features KFM is designed to provide (some may be partially implemented depending on repo state):
+These are the “boss-level” product capabilities KFM is designed to provide.
 
-### 🗺️ Map + time product surface
+### Map and time product surface
+
 - Layer browsing, toggles, filters, feature inspection
 - Time-range control and time-aware layer rendering
-- Provenance/metadata drawer per layer (license, attribution, coverage)
-- Evidence drawer that resolves citations into human-readable evidence views
+- Provenance drawer per layer: attribution, license, coverage, freshness
+- Evidence drawer: resolves citations into human-readable evidence views
 
-### 📖 Story Nodes
-- Narrative steps that synchronize map/time state (“interactive documentary”)
-- Inline citations with resolvable evidence refs
-- Draft/published lifecycle with template validation and CI gates
+### Story Nodes
 
-### 🎯 Focus Mode (grounded Q&A)
-- Uses **ViewState** (time range, bbox, active layers, story context)
-- Builds an evidence pack; answer is allowed only when citations are present and sensitivity is OK
+- Narrative steps synchronized to map and time state
+- Inline citations with resolvable evidence references
+- Draft and published lifecycle with template validation and CI gates
+
+### Focus Mode
+
+- Grounded Q&A using **ViewState** (time range, bbox, active layers, story context)
+- Builds an evidence pack; answer is allowed only when citations are present and sensitivity is allowed
 - Returns `{ answer_markdown, citations[], audit_ref }` or abstains with `audit_ref`
 
-### 🧾 Receipts, catalogs, provenance (the proof layer)
+### Proof layer with receipts catalogs and provenance
+
 - Run receipts: `run_record.json`, `run_manifest.json`, `validation_report.json`
-- Catalogs: DCAT (required), STAC (conditional), PROV (required)
+- Catalogs: **DCAT required**, **STAC conditional**, **PROV required**
 - Determinism: checksums for artifacts + `spec_hash` for specs (RFC 8785 JCS + sha256)
 
-### 🛡️ Policy-as-code governance
+### Policy as code governance
+
 - Default deny across sensitive surfaces
-- Field-level redaction, sensitive-location precision constraints, aggregate-only thresholds
+- Field-level redaction, precision constraints, aggregate-only thresholds
 - Promotion guard policies that block publish without proofs
-- Kill switch to deny publish/promote and risky endpoints without redeploy
+- Kill switch to deny publish and risky endpoints without redeploy
 
-### 🔎 Evidence resolution and auditability
-- Evidence resolver supports ref schemes (`prov://`, `stac://`, `dcat://`, `doc://`, `graph://`, optional `oci://`)
-- Evidence resolution is bounded (UI goal: ≤ 2 API calls per citation)
-- Audit ledger is append-only; every governed response yields `audit_ref`
+---
 
-### 📦 Immutable releases
-- `releases/` holds immutable shipping records (manifest + checksums + evidence snapshots)
-- Never edit an existing release folder; ship a new release
+## Standards compatibility matrix
+
+KFM is standards-first. Pin exact versions in `docs/standards/standards-matrix.md` (or equivalent) and validate in CI.
+
+| Standard or spec | Used for | Required in KFM | Where enforced |
+|---|---|---:|---|
+| RFC 8785 JSON Canonicalization Scheme | deterministic JSON hashing | ✅ | receipt validators + reproducibility checks |
+| SHA-256 checksums | artifact integrity | ✅ | promotion gates + release manifests |
+| DCAT | dataset catalog interoperability | ✅ | catalog validators |
+| STAC | spatiotemporal asset metadata | ⚠️ conditional | stac-validate + contract tests |
+| W3C PROV | lineage and transformations | ✅ | provenance validators + evidence resolver |
+| OpenAPI | API contracts | ✅ | contract tests + CI |
+| JSON Schema | receipts and contract validation | ✅ | tools + CI |
+| GeoJSON | work/debug vectors and STAC Items | ✅ | validators |
+| GeoParquet | publish-ready vectors | ✅ recommended | validators + downstream compatibility tests |
+| COG or equivalent | publish-ready rasters | ✅ recommended | validators + STAC asset metadata |
+
+> [!TIP]
+> Keep this matrix small and enforceable. Standards exist to reduce ambiguity, not to create compliance theater.
 
 ---
 
@@ -226,36 +266,35 @@ These are the “boss-level” features KFM is designed to provide (some may be 
 repo-root/
 ├─ .github/                     # governance SSoT: CI gates, templates, branch protection expectations
 ├─ policy/                      # OPA/Rego policies + tests (default deny; promotion guard; cite-or-abstain)
-├─ contracts/                   # Promotion Contract + receipt schemas + catalog minimums + API contracts (or ./schemas/)
-├─ schemas/                     # optional alternate canonical home (choose ONE: contracts/ OR schemas/)
+├─ contracts/                   # Promotion Contract + receipt schemas + catalog minimums + API contracts
 │
-├─ data/                        # governed data boundary (raw/work/processed + catalogs + bundles)
-│  ├─ registry/                 # dataset/watchers registry + controlled vocab (classification/flags)
+├─ data/                        # governed data boundary: raw/work/processed + catalogs + bundles
+│  ├─ registry/                 # dataset registry + controlled vocab (classification and flags)
 │  ├─ raw/                      # immutable manifests + checksums (never served)
 │  ├─ work/                     # receipts + validation reports (never served)
 │  ├─ processed/                # publishable artifacts + checksums (servable truth)
 │  ├─ catalog/
-│  │  ├─ dcat/                  # DCAT (required)
-│  │  ├─ stac/                  # STAC (conditional)
-│  │  └─ prov/                  # PROV (required)
-│  ├─ bundles/                  # optional: bundle descriptors + fixtures
+│  │  ├─ dcat/                  # DCAT required
+│  │  ├─ stac/                  # STAC conditional
+│  │  └─ prov/                  # PROV required
+│  ├─ bundles/                  # optional: evidence bundles + fixtures
 │  └─ audit/                    # optional: local audit checkpoints (prod often external)
 │
 ├─ docs/                        # governed docs + standards + templates + Story Nodes + runbooks
-├─ src/                         # backend: API gateway + pipelines + graph + shared (clean layers)
-├─ web/                         # React/TS UI (never direct DB)
-├─ tools/                       # validators and CI gates (verification tooling)
+├─ src/                         # backend: API gateway + pipelines + graph + shared utilities
+├─ web/                         # UI: React or equivalent (never direct DB)
+├─ tools/                       # validators + CI gates (verification tooling)
 ├─ tests/                       # trust gates (policy/receipts/catalogs/evidence/ai/ui)
-├─ scripts/                     # thin runners/wrappers (parity with CI; fail-closed) (optional)
-├─ watchers/                    # automation registry/specs (optional; governed if present)
-├─ infra/                       # GitOps/cluster/deploy (optional; governed if present)
+├─ scripts/                     # thin runners (parity with CI; fail closed)
+├─ watchers/                    # automation specs (optional; governed if present)
+├─ infra/                       # GitOps and deploy (optional; governed if present)
 └─ releases/                    # immutable shipping records + manifests + checksums
 ```
 
-### Deep layout highlights (the “easy to miss” pieces)
+### Deep layout highlights
 
 <details>
-<summary><strong>📁 data plane (what makes truth servable)</strong></summary>
+<summary><strong>Data plane</strong></summary>
 
 ```text
 data/
@@ -275,13 +314,13 @@ data/
 </details>
 
 <details>
-<summary><strong>📁 docs plane (templates + story nodes + runbooks)</strong></summary>
+<summary><strong>Docs plane</strong></summary>
 
 ```text
 docs/
-├─ templates/                   # universal doc + story node v3 + api contract extension
-├─ standards/                   # STAC/DCAT/PROV profiles + markdown work protocol
-├─ governance/                  # ethics/sovereignty/review gates
+├─ templates/                   # universal doc + story node + api contract extensions
+├─ standards/                   # STAC/DCAT/PROV profiles + governance standards
+├─ governance/                  # ethics, sovereignty, review gates
 ├─ runbooks/                    # ops playbooks + incident response
 └─ reports/story_nodes/
    ├─ draft/<story_slug>/story.md
@@ -290,14 +329,14 @@ docs/
 </details>
 
 <details>
-<summary><strong>📁 src plane (clean layers + ports/adapters)</strong></summary>
+<summary><strong>Backend plane</strong></summary>
 
 ```text
 src/
 ├─ server/                      # governed API + evidence resolver + audit
-├─ pipelines/                   # ingestion/promotion/catalogs/receipts
+├─ pipelines/                   # ingestion, promotion, catalogs, receipts
 ├─ graph/                       # ontology + migrations + sync jobs
-└─ shared/                      # ids/time/provenance helpers
+└─ shared/                      # IDs, time, provenance helpers
 ```
 </details>
 
@@ -305,9 +344,11 @@ src/
 
 ## Truth path
 
+This is the only allowed route to “servable truth.”
+
 ```mermaid
 flowchart LR
-  S[Sources] --> W[Watchers/Connectors<br/>conditional fetch • spec_hash]
+  S[Sources] --> W[Watchers and Connectors<br/>conditional fetch • spec_hash]
   W --> RAW[data/raw<br/>manifests • checksums]
   RAW --> RUN[Pipeline runs<br/>normalize • validate • enrich]
   RUN --> WORK[data/work<br/>run_record • validation_report • run_manifest]
@@ -319,97 +360,58 @@ flowchart LR
   API --> AUD[Audit ledger<br/>append-only]
 ```
 
----
+### Promotion gates are explicit and fail closed
 
-## Quickstart local
+Promotion is denied unless each gate passes:
 
-### Prerequisites
-- Docker + Docker Compose v2
-- Recommended: `make`, `jq`, `opa`, `conftest`
+1) **Raw capture gate:** immutable manifest + checksums  
+2) **Run receipt gate:** `run_record.json` + `validation_report.json` + `run_manifest.json`  
+3) **Determinism gate:** spec hashing + artifact digests are stable  
+4) **Catalog gate:** DCAT + PROV and optional STAC exist and validate  
+5) **Cross-link gate:** citations resolve; catalogs reference digests; PROV references outputs  
+6) **Policy gate:** classification exists; redaction transforms are tracked  
+7) **Audit gate:** promotion event emitted; `audit_ref` recorded  
 
-### Start the stack
-```bash
-cp .env.example .env
-docker compose up --build
-```
-
-Optional profiles (if defined):
-```bash
-docker compose --profile policy --profile storage --profile vector --profile search up --build
-```
-
-### Default URLs
-- UI: `http://localhost:3000`
-- API docs: `http://localhost:8000/docs`
-- Neo4j: `http://localhost:7474`
-- OPA (optional): `http://localhost:8181`
-
----
-
-## How to verify (no merge without proof)
-
-Preferred: run the same checks CI runs.
-
-```bash
-# umbrella (recommended if present)
-make verify
-```
-
-Useful drills (repo-dependent wrappers):
-```bash
-# policy
-opa test policy -v
-conftest test . -p policy/conftest
-
-# receipts/catalogs (examples; adjust to your scripts/tools)
-./scripts/validate_receipts.sh
-./scripts/validate_catalogs.sh
-./scripts/validate_contracts.sh
-```
-
-> [!IMPORTANT]
-> If any validator cannot run due to missing tooling, that is a governance gap. Add the tooling or adjust the repo to make checks reproducible.
-
----
-
-## System architecture
-
-KFM follows clean boundaries (Domain → Usecases → Integration → Infrastructure) and enforces the trust membrane:
-- UI never talks to stores directly
-- core backend never bypasses repository ports to storage
-- policy and audit are on the request path
+> [!WARNING]
+> If any gate cannot be executed reproducibly in CI, treat it as a P0 gap and fix the gate before scaling data onboarding.
 
 ---
 
 ## Promotion Contract and proof artifacts
 
-Promotion requires (minimum):
+Promotion requires at minimum:
+
 - receipts: `run_record.json` + `run_manifest.json`
 - validation: `validation_report.json`
 - deterministic checksums (raw + processed)
 - catalogs: DCAT always; STAC conditional; PROV required
-- sensitivity classification + redaction provenance when needed
-- audit event recorded
+- sensitivity classification and redaction provenance when needed
+- audit event recorded and referenced
+
+> [!NOTE]
+> Keep the Promotion Contract schema minimal but strict. Add fields only when a validator and a consumer exist.
 
 ---
 
-## Evidence resolver and citation schemes
+## Evidence resolution and citation schemes
 
 KFM treats citations as resolvable references, not URLs.
 
-Supported schemes (expected):
-- `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` (+ optional `oci://`)
+Supported schemes:
+
+- `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` and optional `oci://`
 
 Acceptance criteria:
+
 - citations resolve to human-readable evidence views
-- missing target → 404; unauthorized/policy deny → 403 (non-leaky)
+- missing target → 404; unauthorized or policy deny → 403 with non-leaky error semantics
 - UI goal: resolve any citation in ≤ 2 API calls
 
 ---
 
 ## Focus Mode contract
 
-Focus Mode must cite resolvable evidence or abstain; always returns `audit_ref`.
+Focus Mode must cite resolvable evidence or abstain. Every response returns `audit_ref`.
 
 ```json
 {
@@ -419,31 +421,45 @@ Focus Mode must cite resolvable evidence or abstain; always returns `audit_ref`.
 }
 ```
 
+### Cite-or-abstain is enforced
+
+- If the evidence pack is empty → abstain
+- If policy denies any required evidence → abstain
+- If citations cannot resolve → abstain
+- If sensitivity requires generalization and it is not available → abstain
+
 ---
 
-## Audit ledger (tamper-evident)
+## Audit ledger and tamper evidence
 
 Audit is governed:
+
 - append-only writes
 - `audit_ref` returned on governed responses
-- checkpoints/integrity chaining where supported
+- checkpoints or integrity chaining where supported
 
-No audit, no answer.
+**No audit, no answer.**
 
 ---
 
-## Sensitivity, redaction, and FAIR/CARE
+## Sensitivity redaction and FAIR CARE
 
 Common sensitivity classes:
-- public
-- restricted
-- sensitive-location
-- aggregate-only
+
+- `public`
+- `restricted`
+- `sensitive-location`
+- `aggregate-only`
 
 Rules:
-- redaction/generalization is a first-class transformation (tracked in PROV)
-- deny on missing classification (fail closed)
+
+- redaction and generalization are first-class transforms tracked in PROV
+- deny on missing classification
 - never leak precise sensitive coordinates to unauthorized roles
+- when in doubt: reduce precision, aggregate, or abstain
+
+> [!IMPORTANT]
+> If you introduce a new sensitivity class, you must update: vocabulary, policy, validators, and tests.
 
 ---
 
@@ -451,22 +467,84 @@ Rules:
 
 Authoritative list: `.github/README.md`
 
-Expected minimum:
-- docs + stories
-- contracts + receipts
-- catalogs
-- policy
-- api-contract
-- build/smoke
+Expected minimum gates:
+
+- docs and Story Nodes validation
+- contracts and schemas validation
+- receipts validation
+- catalogs validation
+- policy tests and regressions
+- evidence resolver contract tests
+- build and smoke tests
 - optional supply-chain verification when enabled
 
 ---
 
-## Release model: immutable shipping records
+## Quickstart local
+
+### Prerequisites
+
+- Docker + Docker Compose v2
+- Recommended: `make`, `jq`, `opa`, `conftest`
+
+### Start the stack
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Optional profiles if defined:
+
+```bash
+docker compose --profile policy --profile storage --profile vector --profile search up --build
+```
+
+### Default URLs
+
+- UI: `http://localhost:3000`
+- API docs: `http://localhost:8000/docs`
+- Neo4j: `http://localhost:7474`
+- OPA: `http://localhost:8181`
+
+> [!NOTE]
+> If the repo cannot start a local stack, treat that as a P0 delivery gap. KFM governance depends on runnable verification.
+
+---
+
+## How to verify with no merge without proof
+
+Preferred: run the same checks CI runs.
+
+```bash
+# umbrella target if present
+make verify
+```
+
+Useful drills:
+
+```bash
+# policy
+opa test policy -v
+conftest test . -p policy/conftest
+
+# receipts and catalogs (examples; adjust to your tools)
+./scripts/validate_receipts.sh
+./scripts/validate_catalogs.sh
+./scripts/validate_contracts.sh
+```
+
+> [!IMPORTANT]
+> If any validator cannot run due to missing tooling, treat it as a governance gap. Fix the tooling or adjust the repo until checks are reproducible.
+
+---
+
+## Release model immutable shipping records
 
 Releases are immutable proof of what shipped:
+
 - `releases/` is append-only
-- do not edit existing release folders
+- never edit an existing release folder
 - release manifests + checksums are required
 
 See `releases/README.md`.
@@ -476,38 +554,51 @@ See `releases/README.md`.
 ## Operations runbook minimum
 
 Minimum operational signals:
-- ingest success/failure + duration
-- dataset freshness vs cadence
-- drift metrics (missingness/distributions/geometry errors)
+
+- ingest success and failure with durations
+- dataset freshness versus cadence
+- drift metrics: missingness, distributions, geometry errors
 - policy denials and evidence resolution failures
-- audit ledger health
+- audit ledger health and checkpoint integrity
 
 Emergency controls:
-- policy-controlled kill switch to disable publish/promote and risky endpoints without redeploy
+
+- policy-controlled kill switch to disable publish and risky endpoints without redeploy
 
 ---
 
 ## Roadmap
 
-- governance and CI hardening (validators, policy regressions)
+- governance and CI hardening: validators, policy regressions, contract tests
 - Promotion Contract and receipts standardization
-- evidence bundles + resolver UX
-- dataset integrations at scale (registry-driven, repeatable)
-- Story Nodes and Focus Mode eval harness (gold sets)
+- evidence bundles and resolver UX
+- dataset integrations at scale: registry-driven and repeatable
+- Story Nodes and Focus Mode evaluation harness
 
 ---
 
 ## Contributing
 
-See `CONTRIBUTING.md` and `.github/PULL_REQUEST_TEMPLATE.md`.  
-Keep changes small and evidence-backed; prefer reversible increments.
+See `CONTRIBUTING.md` and `.github/PULL_REQUEST_TEMPLATE.md`.
+
+Contribution rules:
+
+- keep changes small and evidence-backed
+- do not weaken gates to “make CI green”
+- if you change meaning of a contract: update schemas, validators, and tests first
 
 ---
 
 ## Security
 
-See `.github/SECURITY.md` for private vulnerability reporting.  
-Security is a system property: trust membrane + policy + receipts + catalogs + audit must hold together.
+See `.github/SECURITY.md` for private vulnerability reporting.
+
+Security is a system property. These must hold together:
+
+- trust membrane
+- default-deny policy
+- receipts and catalogs
+- auditability
 
 ---
 
@@ -518,11 +609,30 @@ Security is a system property: trust membrane + policy + receipts + catalogs + a
 
 ---
 
+## Glossary
+
+| Term | Meaning in KFM |
+|---|---|
+| **Watcher or connector** | a governed fetch and normalization boundary for upstream sources |
+| **Dataset ID** | stable identifier for a dataset family |
+| **Version ID** | stable identifier for a promoted processed version |
+| **Run ID** | immutable identifier for a pipeline run producing receipts and outputs |
+| **Receipt** | machine-validated proof artifacts of how an output was produced |
+| **Catalog** | discoverability and interoperability metadata: DCAT and STAC |
+| **Provenance** | lineage graph that records entities, activities, and agents |
+| **Evidence ref** | resolvable reference like `prov://...` used for citations |
+| **Audit ref** | resolvable reference like `audit://event/...` proving governed outputs were logged |
+| **Fail closed** | deny or abstain if proofs are missing or policy cannot prove allow |
+| **Processed serves truth** | only processed outputs with catalogs and receipts are served |
+
+---
+
 ## Provenance notes
 
-Aligned to Feb-2026 governance patterns:
-- fail-closed promotion (receipts + catalogs + checksums)
-- deterministic spec hashing (RFC 8785 JCS + sha256)
+Aligned to Feb 2026 governance patterns:
+
+- fail-closed promotion using receipts, catalogs, and checksums
+- deterministic spec hashing using RFC 8785 JCS plus sha256
 - cite-or-abstain Focus Mode with resolvable evidence refs
 - audit references on governed responses
 - immutable releases as shipping proof
