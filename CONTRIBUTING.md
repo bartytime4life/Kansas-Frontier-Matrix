@@ -114,15 +114,15 @@ flowchart LR
 > This is the expected shape (some paths may differ in your checkout). If your repo diverges, follow the repo as source-of-truth and submit a PR updating this file.
 
 ```text
-.github/     CI workflows + repo governance (SSoT: .github/README.md)
-contracts/   Promotion Contract + schemas (or schemas/ as canonical alt)
-schemas/     (optional alt) schemas for receipts/catalogs/docs/policy inputs
-data/        raw/ work/ processed + catalog/{dcat,stac,prov} + checksums
-docs/        governed docs + Story Nodes + runbooks + ADRs
-policy/      OPA/Rego + tests (default deny)
-src/         backend + pipelines + graph (clean layers)
-web/         React/TS map UI (no direct DB access)
-scripts/     local wrappers for validators + acceptance harness (not confirmed in repo)
+.github/      # CI workflows + repo governance (SSoT: .github/README.md)
+contracts/    # Promotion Contract + schemas (or ./schemas/ as canonical alternative)
+schemas/      # (Optional alt) Schemas for receipts/catalogs/docs/policy inputs (if not under ./contracts/)
+data/         # Data zones: raw/ work/ processed/ + catalog/{dcat,stac,prov}/ + checksums/manifests
+docs/         # Governed docs hub: ADRs, architecture, runbooks, Story Nodes (draft/published)
+policy/       # OPA/Rego policy pack + tests (default-deny; explicit allow; golden leak cases)
+src/          # Backend + pipelines + graph (clean layers, ports/adapters, governed boundaries)
+web/          # React/TS map UI (trust membrane: no direct DB access)
+scripts/      # Local wrappers for validators + acceptance harness (not confirmed in repo)
 ```
 
 ---
