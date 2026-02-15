@@ -96,21 +96,26 @@ This README is for `policy/rego/kfm/lib`, but contributors need orientation in t
 
 ```text
 policy/
-  rego/
-    kfm/
-      lib/                 # ← YOU ARE HERE (shared helpers)
-        README.md
-        *.rego
-      bundles/             # deployable / queryable policy packs (entrypoints)
-        *.rego
-      tests/               # golden + regression tests (or colocated *_test.rego)
-        *.rego
-      schemas/             # JSON Schemas used by CI and/or policy input validation
-        *.json
-      data/                # data.json / role maps / controlled vocabularies (OPA data documents)
-        *.json
-      examples/            # example inputs used in docs/tests
-        *.json
+└─ rego/
+   └─ kfm/                                         # KFM OPA policy pack (source-of-truth)
+      ├─ lib/                                      # ← YOU ARE HERE: shared helpers (pure; reusable; no allow/deny rules)
+      │  ├─ README.md                              # Library conventions, naming, and “no decisions” rule
+      │  └─ *.rego                                 # Helper modules (string utils, input guards, evidence ref helpers, etc.)
+      │
+      ├─ bundles/                                  # Deployable/queryable packs (entrypoints + exports)
+      │  └─ *.rego                                 # Bundle entry modules (define exported decisions, e.g., allow/deny/redact)
+      │
+      ├─ tests/                                    # Golden + regression tests (or colocated *_test.rego)
+      │  └─ *.rego                                 # Test suites (opa test …); cover incident regressions + edge cases
+      │
+      ├─ schemas/                                  # JSON Schemas used by CI and/or pre-policy input validation
+      │  └─ *.json                                 # policy_input, audit_record, focus_answer, etc.
+      │
+      ├─ data/                                     # OPA data documents (controlled vocabularies + role maps)
+      │  └─ *.json                                 # sensitivity, license policy, role/scope maps, feature flags, …
+      │
+      └─ examples/                                 # Example inputs used by docs/tests (synthetic; safe)
+         └─ *.json                                 # Minimal allow/deny samples, redaction demos, focus answers, etc.
 ```
 
 If your repo differs, keep this README accurate and update the tree.
