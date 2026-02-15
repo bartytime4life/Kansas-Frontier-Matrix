@@ -1,44 +1,19 @@
-```yaml
-# .github/release-drafter.yml
-# -----------------------------------------------------------------------------
-# 🌾 Kansas Frontier Matrix (KFM) — Release Drafter
-#
-# 🎯 Auto-draft release notes from merged PRs using labels + autolabeling.
-# 🧭 KFM Truth Path: ETL → STAC/DCAT/PROV → Graph → API → UI → Story → Focus
-# 🛡️ Posture: evidence-first • contract-first • governance-aware • supply-chain attentive
-#
-# Label contract (recommended):
-#   ✅ 1× type:*              (intent; drives SemVer + clean notes)
-#   ✅ 1+ area:*              (surface; subsystem visibility)
-#   ✅ 0–2 governance:*       (privacy/sovereignty/license/sensitive-locations)
-#   ✅ 0–1 ops:* / risk:*     (migrations/rollouts/high-risk)
-#   ✅ optional release:highlight (curated “top of release”)
-#
-# Release notes are only as good as label hygiene. Keep labels stable. 🌾
-# -----------------------------------------------------------------------------
-
 commitish: "main"
 filter-by-commitish: true
 
-# 🧯 Scale controls (keeps drafts stable in large PR bursts / long-lived branches)
 pull-request-limit: 50
-history-limit: 50
-# initial-commits-since: "2025-12-01T00:00:00Z"  # optional for first-ever draft
+history-limit: 200
 
-# 🏷️ Release naming & tags
 name-template: "v$RESOLVED_VERSION 🌾"
 tag-template: "v$RESOLVED_VERSION"
 
-# 🧾 How each PR entry renders
 change-template: "- $TITLE — [#$NUMBER]($URL) (@$AUTHOR)"
 change-title-escapes: "\\<*_&@#`"
 no-changes-template: "- No user-facing changes in this release."
 
-# 🧠 Sorting (keeps diffs stable & reviewer-friendly)
 sort-by: "merged_at"
 sort-direction: "descending"
 
-# 🚫 Exclusions (PRs with these labels will not appear in release notes)
 exclude-labels:
   - "skip-changelog"
   - "skip-release-notes"
@@ -49,7 +24,6 @@ exclude-labels:
   - "status:blocked"
   - "do-not-merge"
 
-# 🧑‍🤝‍🧑 Don’t list bots as contributors
 exclude-contributors:
   - "dependabot"
   - "dependabot[bot]"
@@ -58,8 +32,6 @@ exclude-contributors:
   - "renovate"
   - "renovate[bot]"
 
-# 🧭 Resolve the next version via labels (SemVer)
-# Highest bump found in included PRs wins.
 version-resolver:
   major:
     labels:
@@ -94,20 +66,13 @@ version-resolver:
       - "deps"
   default: "patch"
 
-# 🧩 Categorize PRs into release note sections (label-driven)
 category-template: "### $TITLE"
 categories:
   - title: "✨ Highlights"
-    labels:
-      - "release:highlight"
-      - "highlight"
+    labels: ["release:highlight", "highlight"]
 
   - title: "💥 Breaking changes"
-    labels:
-      - "breaking-change"
-      - "type:breaking"
-      - "semver:major"
-      - "major"
+    labels: ["breaking-change", "type:breaking", "semver:major", "major"]
 
   - title: "🔐 Security, privacy & governance"
     labels:
@@ -118,22 +83,31 @@ categories:
       - "cve"
       - "policy"
       - "policy-gate"
-      - "supply-chain"
       - "governance:privacy"
       - "governance:sensitive-locations"
       - "governance:sovereignty"
       - "governance:license"
       - "governance:care"
       - "governance:fair"
+      - "supply-chain"
 
-  - title: "🧾 Catalogs & provenance (STAC/DCAT/PROV)"
+  - title: "🧾 Receipts & promotion (run manifests, checksums, spec_hash)"
+    labels:
+      - "area:receipts"
+      - "receipts"
+      - "run-manifest"
+      - "spec_hash"
+      - "promotion"
+      - "promotion-contract"
+
+  - title: "🧾 Catalogs & provenance (DCAT/STAC/PROV)"
     labels:
       - "area:catalog"
       - "catalog"
-      - "area:stac"
-      - "stac"
       - "area:dcat"
       - "dcat"
+      - "area:stac"
+      - "stac"
       - "area:prov"
       - "prov"
       - "area:data"
@@ -167,29 +141,25 @@ categories:
       - "ui"
       - "frontend"
       - "map"
+      - "maplibre"
       - "webgl"
 
-  - title: "🎬 Story nodes & narrative"
+  - title: "🎬 Story Nodes & narrative"
     labels:
       - "area:story"
       - "type:story"
       - "story"
       - "narrative"
 
-  - title: "🧠 Focus mode & analytics"
+  - title: "🧠 Focus Mode & analytics"
     labels:
+      - "area:focus"
       - "focus"
       - "focus-mode"
       - "analysis"
       - "ml"
       - "ai"
       - "model"
-
-  - title: "🧫 Simulation / modeling"
-    labels:
-      - "simulation"
-      - "modeling"
-      - "sim"
 
   - title: "📈 Performance & reliability"
     labels:
@@ -208,7 +178,7 @@ categories:
       - "migration"
       - "db-migration"
 
-  - title: "🧰 CI / infra / ops"
+  - title: "🧱 CI / infra / ops"
     labels:
       - "ci"
       - "infra"
@@ -230,9 +200,7 @@ categories:
 
   - title: "⬆️ Dependencies"
     collapse-after: 8
-    labels:
-      - "dependencies"
-      - "deps"
+    labels: ["dependencies", "deps"]
 
   - title: "🧹 Chores"
     labels:
@@ -241,45 +209,40 @@ categories:
       - "build"
       - "maintenance"
 
-# 🧾 Release body framing (KFM “evidence-first” posture)
 header: |
   ## 🌾 Kansas Frontier Matrix — Release Notes
 
-  > Drafted from merged PRs (label-driven). Evidence-first • contract-first • governance-aware.
+  > Drafted from merged PRs (label-driven). Evidence-first • contract-first • governance-aware • fail-closed.
   >
-  > ⛓️ Truth Path: **ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+  > 🧭 Truth Path: **Raw → Work → Processed → DCAT/STAC/PROV → Stores → API(+Policy) → UI/Stories → Focus Mode**
 
 template: |
   ## ✅ Changes
   $CHANGES
 
-  ## 🧪 Verification snapshot
+  ## 🧪 Verification snapshot (release bar)
   - [ ] CI green (tests + lint)
   - [ ] Policy gates passed (OPA/Conftest) where applicable
-  - [ ] SBOM / attestations present where applicable
-  - [ ] STAC/DCAT/PROV updated for any published data or evidence artifacts
+  - [ ] Receipt gates passed (run_manifest + checksums + spec_hash semantics) where applicable
+  - [ ] DCAT/STAC/PROV validated for any published data or evidence artifacts
+  - [ ] Evidence resolver contract remains valid (refs resolve or deny safely)
   - [ ] Redaction + sovereignty review performed where required
+  - [ ] SBOM / attestations present where applicable (release artifacts)
 
   ## 🧑‍🤝‍🧑 Contributors
   $CONTRIBUTORS
 
 footer: |
   ## 🔎 Governance reminders
-  - Promotion-critical outputs (data, catalogs, models, stories) must be **traceable**: STAC/DCAT/PROV + checksums where appropriate.
-  - Prefer **pointers over payloads** for large artifacts; attach run evidence in CI artifacts.
-  - If a change affects privacy, sovereignty, sensitive locations, or licensing, treat it as **high-scrutiny** and ensure policy gates passed.
+  - Promotion-critical outputs (data, catalogs, models, stories) must be traceable: **receipts + catalogs + checksums**.
+  - Prefer digest-addressed pointers over payloads for large artifacts; attach proofs (SBOM/attestations) where enabled.
+  - If a change affects privacy, sovereignty, sensitive locations, or licensing, treat it as high-scrutiny and ensure policy gates passed.
 
-# 🔁 Optional: linkify CVE IDs in PR titles
 replacers:
   - search: "/CVE-(\\d{4})-(\\d+)/g"
     replace: "[CVE-$1-$2](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-$1-$2)"
 
-# 🤖 Autolabeler: apply labels automatically based on touched paths / titles / branches
-# Label must exist in the repo for automatic labeling to work.
 autolabeler:
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🧠 Conventional title → type:* (keeps labeling effortless)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "breaking-change"
     title:
       - "/BREAKING CHANGE/i"
@@ -326,275 +289,112 @@ autolabeler:
     branch:
       - "/^chore\\//"
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🗂️ Areas (v13 canonical homes)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "area:web"
-    files:
-      - "web/**"
-  - label: "web"
-    files:
-      - "web/**"
-
+    files: ["web/**"]
   - label: "area:api"
-    files:
-      - "src/server/**"
-      - "api/**" # legacy compatibility
-  - label: "api"
-    files:
-      - "src/server/**"
-      - "api/**"
-
-  - label: "area:graph"
-    files:
-      - "src/graph/**"
-      - "data/graph/**"
-      - "docs/ontology/**"
-  - label: "graph"
-    files:
-      - "src/graph/**"
-      - "data/graph/**"
-      - "docs/ontology/**"
-
+    files: ["src/server/**", "api/**"]
   - label: "area:pipeline"
-    files:
-      - "src/pipelines/**"
-      - "tools/**"
-      - "scripts/**"
-
+    files: ["src/pipelines/**", "pipelines/**", "scripts/**"]
+  - label: "area:graph"
+    files: ["src/graph/**", "data/graph/**", "docs/**/ontology/**"]
   - label: "area:data"
-    files:
-      - "data/**"
-  - label: "data"
-    files:
-      - "data/**"
-
+    files: ["data/**"]
   - label: "area:docs"
-    files:
-      - "docs/**"
-      - ".github/*.md"
-      - "README.md"
-      - "**/*.md"
-      - "**/*.mdx"
-
+    files: ["docs/**", ".github/*.md", "README.md", "**/*.md", "**/*.mdx"]
   - label: "area:story"
-    files:
-      - "docs/reports/story_nodes/**"
-      - "web/story_nodes/**"
+    files: ["docs/**/story_nodes/**", "web/**/story_nodes/**"]
+  - label: "area:focus"
+    files: ["src/server/**/ai/**", "src/server/**/focus/**", "docs/**/focus/**"]
 
-  - label: "area:db"
+  - label: "area:receipts"
     files:
-      - "**/*.sql"
-      - "src/server/**/migrations/**"
-      - "src/server/**/alembic/**"
-      - "docker-compose.yml"
-      - "docker/**"
-  - label: "postgis"
+      [
+        "data/work/**/runs/**/run_manifest.json",
+        "data/work/**/runs/**/run_record.json",
+        "contracts/**/receipts/**",
+        "schemas/**/receipts/**",
+      ]
+  - label: "promotion-contract"
     files:
-      - "src/server/**/migrations/**"
-      - "docker-compose.yml"
+      [
+        "contracts/**/promotion/**",
+        "schemas/**/promotion/**",
+        "data/work/**/runs/**/run_manifest.json",
+      ]
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🧾 Catalog outputs (STAC/DCAT/PROV)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "area:catalog"
-    files:
-      - "data/catalog/**"
-      - "data/**/catalog/**"
-  - label: "catalog"
-    files:
-      - "data/catalog/**"
-      - "data/**/catalog/**"
-
+    files: ["data/catalog/**", "data/**/catalog/**"]
+  - label: "area:dcat"
+    files: ["data/catalog/dcat/**", "data/**/dcat/**"]
   - label: "area:stac"
     files:
-      - "**/collection.json"
-      - "**/catalog.json"
-      - "data/**/stac/**"
-      - "data/stac/**"
-  - label: "stac"
-    files:
-      - "**/collection.json"
-      - "**/catalog.json"
-      - "data/**/stac/**"
-      - "data/stac/**"
-
-  - label: "area:dcat"
-    files:
-      - "data/**/dcat/**"
-      - "data/catalog/dcat/**"
-  - label: "dcat"
-    files:
-      - "data/**/dcat/**"
-      - "data/catalog/dcat/**"
-
+      ["data/catalog/stac/**", "data/**/stac/**", "**/collection.json", "**/catalog.json"]
   - label: "area:prov"
-    files:
-      - "data/prov/**"
-      - "data/provenance/**"
-  - label: "prov"
-    files:
-      - "data/prov/**"
-      - "data/provenance/**"
+    files: ["data/catalog/prov/**", "data/prov/**", "data/provenance/**"]
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 📜 Schemas & contracts (contract-first posture)
-  # ───────────────────────────────────────────────────────────────────────────
-  - label: "contracts"
-    files:
-      - "schemas/**"
-      - "src/server/contracts/**"
-      - "src/server/**/openapi/**"
-      - "src/server/**/openapi*.yml"
-      - "src/server/**/openapi*.yaml"
-  - label: "schema"
-    files:
-      - "schemas/**"
-
-  # ───────────────────────────────────────────────────────────────────────────
-  # ⚠️ Ops / migrations (make them visible)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "ops:migration"
     files:
-      - "src/server/**/migrations/**"
-      - "src/server/**/alembic/**"
+      ["src/server/**/migrations/**", "src/server/**/alembic/**", "src/graph/migrations/**"]
+  - label: "area:db"
+    files: ["**/*.sql", "docker-compose.yml", "docker/**", "infra/**"]
 
-  - label: "risk:high"
-    files:
-      - "src/server/**/migrations/**"
-      - "tools/validation/policy/**"
-      - "policies/**"
-      - ".kfm/**"
-
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🧰 Tooling / CI / automation
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "ci"
     files:
-      - ".github/workflows/**"
-      - ".github/actions/**"
-      - ".github/dependabot.yml"
-      - ".pre-commit-config.yaml"
-
+      [
+        ".github/workflows/**",
+        ".github/actions/**",
+        ".github/dependabot.yml",
+        ".pre-commit-config.yaml",
+      ]
   - label: "devops"
-    files:
-      - "docker/**"
-      - "docker-compose.yml"
-      - "infra/**"
+    files: ["docker/**", "docker-compose.yml", "infra/**"]
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🧑‍⚖️ Governance / policy gates (OPA/Conftest)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "policy"
-    files:
-      - "tools/validation/policy/**"
-      - "policies/**"
-      - "docs/governance/**"
-
+    files: ["policy/**", "tools/policy/**", "tools/**/policy/**", "docs/governance/**"]
   - label: "policy-gate"
-    files:
-      - "tools/validation/policy/**"
-      - "policies/**"
+    files: ["policy/**", "tools/**/policy/**"]
 
   - label: "governance:license"
     files:
-      - "tools/validation/policy/rego/**/license_allowlist.rego"
-      - "tools/validation/policy/rego/governance/attribution.rego"
-
+      ["docs/standards/**", "policy/**/license**", "tools/**/license**", "data/catalog/dcat/**"]
   - label: "governance:sensitive-locations"
-    files:
-      - "tools/validation/policy/rego/governance/sensitive_locations.rego"
-
+    files: ["policy/**/sensitive**", "tools/**/sensitive**", "docs/governance/**", "data/registry/**"]
   - label: "governance:sovereignty"
-    files:
-      - "tools/validation/policy/rego/governance/classification_propagation.rego"
-      - ".kfm/**"
-
+    files: ["docs/governance/**", "data/registry/**", "policy/**"]
   - label: "governance:privacy"
-    files:
-      - "tools/validation/policy/rego/governance/privacy/**"
-      - "policies/privacy/**"
-
+    files: ["policy/**/privacy/**", "tools/**/privacy/**", "docs/governance/**"]
   - label: "governance:care"
-    files:
-      - "docs/governance/**"
-      - "policies/**/care/**"
-
+    files: ["docs/governance/**", "data/registry/**"]
   - label: "governance:fair"
-    files:
-      - "docs/standards/**"
-      - "schemas/**"
+    files: ["docs/standards/**", "schemas/**", "contracts/**"]
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🔒 Supply chain (SBOM / attestations)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "supply-chain"
     files:
-      - "tools/validation/policy/rego/supply_chain/**"
-      - ".github/workflows/sbom.yml"
-      - ".github/workflows/attest.yml"
-      - ".github/actions/sbom/**"
-      - ".github/actions/attest/**"
-      - "releases/**"
+      [
+        "releases/**",
+        "tools/supply-chain/**",
+        ".github/workflows/**sbom**",
+        ".github/workflows/**attest**",
+        ".github/actions/**sbom**",
+        ".github/actions/**attest**",
+      ]
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # ⬆️ Dependency-only changes
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "dependencies"
     files:
-      - "**/package-lock.json"
-      - "**/pnpm-lock.yaml"
-      - "**/yarn.lock"
-      - "**/requirements*.txt"
-      - "**/poetry.lock"
-      - "**/Pipfile.lock"
-      - "**/Cargo.lock"
-      - "**/go.mod"
-      - "**/go.sum"
-      - "**/Gemfile.lock"
-      - "**/composer.lock"
-      - ".github/dependabot.yml"
+      [
+        "**/package-lock.json",
+        "**/pnpm-lock.yaml",
+        "**/yarn.lock",
+        "**/requirements*.txt",
+        "**/poetry.lock",
+        "**/Pipfile.lock",
+        "**/Cargo.lock",
+        "**/go.mod",
+        "**/go.sum",
+        "**/Gemfile.lock",
+        "**/composer.lock",
+        ".github/dependabot.yml",
+      ]
 
-  # ───────────────────────────────────────────────────────────────────────────
-  # 🧳 Large reference PDFs (usually not release-note worthy)
-  # ───────────────────────────────────────────────────────────────────────────
   - label: "internal-only"
-    files:
-      - "docs/library/**"
-```
-
----
-
-## 🏷️ Label taxonomy (recommended) ✅
-
-| Prefix | Example | Meaning | Why it matters |
-|---|---|---:|---|
-| `type:*` | `type:feature` | **Intent** | drives SemVer + keeps notes clean |
-| `area:*` | `area:api` | **Surface** | aligns release notes with subsystem owners |
-| `governance:*` | `governance:sovereignty` | **Sensitivity** | forces scrutiny + “why/how” audit posture |
-| `ops:*` | `ops:migration` | **Operational risk** | prevents silent migrations / rollout traps |
-| `release:*` | `release:highlight` | **Curated** | allows a small, human-curated “top of release” |
-
-> **Rule of thumb:** If you can’t explain the label in one sentence, it’s too vague. 🧹
-
----
-
-## 🧠 PR author checklist (fast & strict)
-
-- [ ] Add **exactly one** `type:*` label (or use a conventional title like `feat:` / `fix:`)
-- [ ] Confirm `area:*` labels match touched subsystems (autolabeler should help)
-- [ ] If touching sensitive domains: add `governance:*` labels and ensure policy gates
-- [ ] If DB/schema migration: add (or allow auto) `ops:migration`
-- [ ] If this is “top of release”: add `release:highlight` ✨
-
----
-
-## 🧑‍🔧 Maintainer checklist (release time)
-
-- [ ] Scan **💥 Breaking changes** first (migration notes + rollout plan)
-- [ ] Verify **policy-gate / governance** PRs include evidence + redaction outcomes
-- [ ] Confirm **STAC/DCAT/PROV** updates exist for any published datasets
-- [ ] Confirm **SBOM / attestations** on releases that ship artifacts
-- [ ] Collapse dependency noise if needed (already auto-collapsed) ✅
-
----
+    files: ["docs/library/**"]
