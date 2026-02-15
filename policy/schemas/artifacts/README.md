@@ -1,264 +1,209 @@
 <!--
-path: policy/schemas/artifacts/README.md
-governance: governed_artifact
+KFM — Governed Policy Artifact Schemas
+Path: policy/schemas/artifacts/README.md
 -->
 
-# KFM Policy + Schema Artifacts (Governed)
+# KFM Policy Schemas — Artifact Contracts
 
-**Status:** 🛡️ Governed · 🔒 Fail‑Closed · 🧾 Provenance‑First · ✅ CI‑Gated
+![Governed](https://img.shields.io/badge/governed-artifact-blue)
+![Fail-closed](https://img.shields.io/badge/fail--closed-default%20deny-critical)
+![JSON Schema](https://img.shields.io/badge/JSON%20Schema-draft%202020--12-informational)
+![Policy](https://img.shields.io/badge/policy-OPA%2FRego-7d64ff)
+![Validation](https://img.shields.io/badge/validation-schema%20%2B%20conftest-success)
 
-This directory contains **versioned, machine-verifiable artifacts** that enforce KFM’s governance contract:
-OPA/Rego policy bundles + JSON Schemas + checksums/signatures + test vectors.
+Contract-first JSON Schemas for KFM’s **promotion-gated artifacts** (manifests, run receipts, audit records, Story Node front matter, etc.).
 
-If you are looking for the *source* Rego or the *source* schema definitions, they are **upstream of this folder**
-(implementation-specific). This folder is the **build output / release payload** that CI and runtime deployments
-should consume.
+> [!IMPORTANT]
+> This directory sits on the *governance boundary*: **if an artifact is not schema-valid, it is not promotable**.
+> Prefer **strict** schemas and **fail-closed** validation. When in doubt, deny promotion.
 
----
+## Table of contents
 
-## Why this exists
+- [What lives here](#what-lives-here)
+- [How these schemas are used](#how-these-schemas-are-used)
+- [Artifact schema registry](#artifact-schema-registry)
+- [Schema conventions](#schema-conventions)
+- [Validation (local + CI)](#validation-local--ci)
+- [Change control](#change-control)
+- [Troubleshooting](#troubleshooting)
 
-KFM’s credibility depends on *enforceable* invariants:
-
-- **Fail closed (default deny):** missing inputs, missing policy data, missing metadata ⇒ **deny**.
-- **Cite-or-abstain:** Focus Mode responses are allowed only when citations exist and sensitivity is OK.
-- **Promotion gates:** datasets/citations are not publishable unless required evidence artifacts validate.
-- **Auditability:** decisions must be attributable to a specific **policy+schema artifact digest**.
-
-This folder is the “trust anchor” for policy + schema enforcement because it is:
-- **immutable-by-convention**, and
-- **checksum/signed**, so CI/runtime can verify exactly what was enforced.
-
----
-
-## What belongs here
-
-### ✅ Included (expected)
-
-- **OPA bundles** (compiled policy payloads)
-- **JSON Schema bundles** (contracts used by validators, policy input/output, receipts)
-- **Checksums** (`sha256`) for every bundle and manifest file
-- **Signatures / attestations** (when enabled) for supply-chain verification
-- **Test vectors** used in CI to prove “deny-by-default” and “cite-or-abstain” behaviors
-- **Artifact manifest** that ties everything together (digests, versions, toolchain, source commit)
-
-### 🚫 Not included (belongs elsewhere)
-
-- Raw/processed datasets, STAC/DCAT/PROV catalogs (typically under `data/` or `releases/`)
-- Application code (API/UI/pipelines)
-- Secrets (keys, tokens, creds)
-
----
-
-## Directory layout
-
-> The names below are the **recommended** stable contract for this directory.  
-> Keep it boring: deterministic paths enable deterministic CI and reproducible builds.
+## What lives here
 
 ```text
 policy/schemas/artifacts/
 ├─ README.md
-├─ manifest/
-│  ├─ artifact_manifest.v1.json
-│  └─ artifact_manifest.v1.json.sha256
-├─ bundles/
-│  ├─ opa/
-│  │  ├─ kfm-policy.bundle.tar.gz
-│  │  └─ kfm-policy.bundle.tar.gz.sha256
-│  └─ schemas/
-│     ├─ kfm-schemas.bundle.tar.gz
-│     └─ kfm-schemas.bundle.tar.gz.sha256
-├─ signatures/                       # optional (recommended for releases)
-│  ├─ kfm-policy.bundle.cosign.sig
-│  ├─ kfm-policy.bundle.cosign.bundle
-│  ├─ kfm-schemas.bundle.cosign.sig
-│  └─ kfm-schemas.bundle.cosign.bundle
-└─ test-vectors/
-   ├─ focus_answer/
-   │  ├─ allow.minimal.json
-   │  ├─ deny.no_citations.json
-   │  └─ deny.sensitivity_not_ok.json
-   └─ policy_input/
-      ├─ allow.public_dataset.json
-      └─ deny.restricted_dataset_public_actor.json
+├─ *.schema.json
+└─ examples/
+   ├─ *.valid.json
+   └─ *.invalid.json
 ```
 
----
+- **`*.schema.json`**: Governed JSON Schema contracts for KFM artifacts.
+- **`examples/`**: Minimal valid/invalid fixtures used for CI and reviewer sanity checks.
 
-## Artifact inventory (what CI/runtime consumes)
+> [!NOTE]
+> Keep **real data** out of this folder. This is for *contracts* and *fixtures*, not production datasets.
 
-| Artifact | Path | Purpose | Must be immutable |
-|---|---|---:|:---:|
-| Artifact manifest | `manifest/artifact_manifest.v1.json` | Single source of truth: what was built, from what, with which digests | ✅ |
-| OPA policy bundle | `bundles/opa/kfm-policy.bundle.tar.gz` | Runtime + CI policy evaluation (default deny) | ✅ |
-| Schema bundle | `bundles/schemas/kfm-schemas.bundle.tar.gz` | Contract enforcement (validators, policy I/O, receipts, audit records) | ✅ |
-| Checksums | `*.sha256` | Deterministic verification without network access | ✅ |
-| Signatures (optional) | `signatures/*.cosign.*` | Supply-chain attestation for releases | ✅ |
-| Test vectors | `test-vectors/**` | CI regression: prove deny-by-default + cite-or-abstain | ✅ |
+## How these schemas are used
 
----
-
-## The “Promotion / Answer” contract this folder supports
-
-### Focus Mode: cite-or-abstain (minimum contract)
-
-**A FocusAnswer is only allowed when:**
-- it contains **citations**, and
-- it passes **sensitivity checks**, and
-- it includes an **audit_ref** (so the response is traceable).
-
-If evidence is insufficient, the system must **abstain** (return a structured refusal and still include `audit_ref`).
-
-### Dataset access: default deny (minimum contract)
-
-**A dataset is only accessible when:**
-- it is `public`, OR
-- the actor has an elevated role (e.g., `reviewer`/`admin`) consistent with policy rules.
-
-> NOTE  
-> Exact role names and sensitivity vocabulary must be treated as a controlled vocabulary and enforced consistently.
-
----
-
-## Artifact manifest (required)
-
-This manifest ties digests + versions together for auditability.
-
-```json
-{
-  "manifest_version": "v1",
-  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
-
-  "source": {
-    "repo": "kfm-repo",
-    "git_sha": "<commit>",
-    "build_id": "<ci-run-id>"
-  },
-
-  "bundles": {
-    "opa_policy_bundle": {
-      "path": "bundles/opa/kfm-policy.bundle.tar.gz",
-      "sha256": "sha256:<hex>",
-      "policy_bundle_version": "v1.0.0"
-    },
-    "schemas_bundle": {
-      "path": "bundles/schemas/kfm-schemas.bundle.tar.gz",
-      "sha256": "sha256:<hex>",
-      "schema_bundle_version": "v1.0.0"
-    }
-  },
-
-  "toolchain": {
-    "opa": "<version>",
-    "conftest": "<version>",
-    "schema_validator": "<tool+version>"
-  }
-}
-```
-
----
-
-## CI gates (merge-blocking expectations)
-
-A PR that changes governed artifacts should fail if any of these checks fail:
-
-- **OPA unit tests pass**
-- **(Optional) Conftest policy tests pass** (if using conftest as the harness)
-- **Schema validation passes** for policy inputs/outputs + receipts
-- **Checksums match** for every file in `manifest/` and `bundles/`
-- **(Optional) signatures verify** for bundles (when enabled)
-- **Regression vectors pass** (deny-by-default, cite-or-abstain)
-- **spec_hash reproducibility** holds for canonicalized specs (when receipts/manifests are present)
+These schemas exist to make KFM’s governance enforceable in tooling:
 
 ```mermaid
-flowchart TD
-  A[PR changes policy/schema sources] --> B[Build artifacts in CI]
-  B --> C[OPA tests / Conftest tests]
-  C -->|fail| X[❌ Merge blocked]
-  C --> D[Validate JSON Schemas + test vectors]
-  D -->|fail| X
-  D --> E[Compute & verify sha256 checksums]
-  E -->|fail| X
-  E --> F[Verify signatures (optional)]
-  F -->|fail| X
-  F --> G[✅ Merge allowed]
+flowchart LR
+  A[Artifact JSON] --> B[Schema validation]
+  B -->|valid| C[Policy tests (OPA/Conftest)]
+  C -->|allow| D[Promote / Publish]
+  C -->|deny| E[Block merge / Block publish]
+  B -->|invalid| E
 ```
 
----
+Typical enforcement points:
 
-## Versioning rules (do not improvise)
+- **CI (PR gates):**
+  - Validate artifact instances against these schemas.
+  - Run **Conftest** policy packs that assume schema-valid inputs.
+- **Runtime (trust membrane):**
+  - Gate API requests and promotions with **default-deny** policy.
+  - Validate policy inputs and produced artifacts before returning them to any client.
 
-### Bundles
-- Bundles **must** be content-addressed by checksum (sha256).
-- A change to any policy/schema content ⇒ new bundle checksum.
-- File naming should be stable; the checksum is the identity.
+## Artifact schema registry
 
-### Schemas
-- JSON Schema `$id` values should be **versioned** (major version bumps for breaking changes).
-- Prefer explicit semver (`v1`, `v2`, …) and keep old schemas available for audits.
+This folder is for **artifact contracts** (things that are created, signed, promoted, published, audited, or cited).
 
-### `spec_hash` (receipt determinism)
-When receipts/manifests use `spec_hash`, it must be:
-- `spec_hash = sha256(JCS(spec))`, where `spec` is validated against a schema-defined object.
-- Include `spec_schema_id` + `spec_recipe_version` so hashes stay comparable across time.
+| Artifact | Schema (expected filename) | Purpose (why it’s governed) | Typical gates |
+|---|---|---|---|
+| Dataset manifest (raw/source metadata) | `dataset_manifest.v1.schema.json` | Minimum metadata to ingest safely (source, license/rights, sensitivity/classification) | ingest → validate |
+| Run manifest / run receipt | `run_manifest.v1.schema.json` | Reproducibility + provenance anchor (spec_hash, inputs/outputs, attestations/signature refs) | promote → validate + attest |
+| Story Node front matter (v3) | `story_front_matter.v3.schema.json` | Ensures Story Nodes are reviewable and citeable | story PR → validate |
+| Audit record | `audit_record.v1.schema.json` | Append-only audit/log record validation (event type, subject, evidence refs, hash chain) | runtime → log + validate |
+| Watcher entry (registry record) | `watcher.v1.schema.json` | Makes watchers discoverable + attestable (endpoint, schedule, outputs, signature ref) | watcher PR → validate + sign |
 
----
+> [!TIP]
+> If you add a new artifact type, add **(1)** a schema, **(2)** at least one `*.valid.json` and `*.invalid.json`,
+> and **(3)** a policy/unit test that proves a broken artifact is rejected.
 
-## Local verification (recommended developer workflow)
+## Schema conventions
 
-> These commands are examples; wire them into your repo’s `make verify` or CI job.
+### JSON Schema draft + metadata
+
+- Use **JSON Schema draft 2020-12**.
+- Every schema must define:
+  - `"$schema"` (metaschema URL)
+  - `"$id"` (stable canonical identifier for tooling/audit logs)
+  - `title`, `description`
+  - `type`, and explicit `required` fields
+
+Recommended baseline:
+
+- `additionalProperties: false` at top-level (unless you explicitly document why it must be open-ended).
+- Prefer `oneOf` / `anyOf` only when you also provide **examples** for every branch.
+
+### Versioning rules
+
+- Treat schemas as **governed artifacts**.
+- **Breaking change = new major version** (new filename and new `$id`).
+- Deprecate old versions, but do not delete them unless a governance decision explicitly allows removal.
+
+A pragmatic filename pattern that works well in Git:
+
+- `NAME.vMAJOR.schema.json` (e.g., `run_manifest.v1.schema.json`)
+- If the artifact already has a domain version (e.g., Story template `v3`), keep that as the version token.
+
+### IDs, hashes, and receipts
+
+When a schema includes a reproducibility hash (e.g., `spec_hash`), include enough fields to make hashes comparable:
+
+- `spec_schema_id` (points to the schema `$id` the hash was computed over)
+- `spec_recipe_version` (how canonicalization/hashing was performed)
+- `spec_hash` (digest of the canonicalized spec)
+
+> [!IMPORTANT]
+> Hashes without a schema ID and recipe version become ambiguous over time.
+
+## Validation (local + CI)
+
+### 1) Validate schemas (metaschema)
+
+Pick a validator (examples below). Run this whenever you edit a `*.schema.json`.
 
 ```bash
-# 1) Validate checksums
-sha256sum -c manifest/artifact_manifest.v1.json.sha256
-sha256sum -c bundles/opa/kfm-policy.bundle.tar.gz.sha256
-sha256sum -c bundles/schemas/kfm-schemas.bundle.tar.gz.sha256
-
-# 2) Run OPA unit tests (source paths vary by repo)
-opa test <POLICY_SOURCE_DIR> -v
-
-# 3) Run conftest (if your repo uses it as the harness)
-conftest test <POLICY_SOURCE_DIR> -p <POLICY_SOURCE_DIR>
+# Option A: Python (simple + CI-friendly)
+python -m pip install --upgrade check-jsonschema
+check-jsonschema --check-metaschema policy/schemas/artifacts/*.schema.json
 ```
 
----
+```bash
+# Option B: Node (fast local feedback)
+npm install -g ajv-cli
+ajv validate -m 2020 -s policy/schemas/artifacts/run_manifest.v1.schema.json -d policy/schemas/artifacts/examples/run_manifest.valid.json
+```
 
-## Change control (PR checklist)
+### 2) Validate example instances
 
-Any PR affecting policy/schema behavior must include:
+```bash
+check-jsonschema \
+  --schemafile policy/schemas/artifacts/run_manifest.v1.schema.json \
+  policy/schemas/artifacts/examples/run_manifest.valid.json
+```
 
-- [ ] Updated source policy/schema definitions (not hand edits to bundles)
-- [ ] Regenerated bundles + updated checksums
-- [ ] Updated `artifact_manifest.v1.json`
-- [ ] Added/updated unit tests and/or test vectors demonstrating expected deny/allow behavior
-- [ ] Clear note if change is breaking (requires major version bump)
-- [ ] Evidence that CI gates run and are merge-blocking
+### 3) Run policy/unit tests (OPA/Conftest)
 
----
+Exact commands depend on where policy packs live in this repo, but the pattern is:
+
+```bash
+# Example shape:
+conftest test <artifact-or-bundle-path> -p <rego-policy-dir> -d <policy-data-dir>
+```
+
+> [!NOTE]
+> Policy packs should assume schema-valid inputs and **fail closed** if required keys are missing.
+
+## Change control
+
+All changes to this folder should be treated like production changes.
+
+### Definition of done
+
+- [ ] Schema change is reviewed (governance + engineering).
+- [ ] Metaschema validation passes (`--check-metaschema`).
+- [ ] Example fixtures added/updated (`examples/*.valid.json` + `examples/*.invalid.json`).
+- [ ] Policy/unit tests updated (Conftest/OPA) so invalid artifacts are rejected.
+- [ ] Breaking changes are versioned (new major, migration notes added somewhere discoverable).
+
+### Suggested review routing
+
+- Add `CODEOWNERS` entries for:
+  - governance reviewers (policy + sensitivity)
+  - security reviewers (signatures/attestations)
+  - domain stewards (schema semantics)
 
 ## Troubleshooting
 
-### “CI denies everything”
-- Confirm you did not remove required keys from policy input.
-- Confirm bundle checksums match what CI expects.
-- Confirm default-deny policies have an explicit allow path for the intended case.
+<details>
+<summary><strong>“Schema passes, but policy fails”</strong></summary>
 
-### “Focus Mode answer rejected”
-- Ensure `citations[]` is non-empty for non-abstain answers.
-- Ensure `sensitivity_ok` is true and the citations are of allowed kinds.
-- Ensure `audit_ref` exists on both allow and abstain outcomes.
+Common causes:
 
-### “Checksum mismatch”
-- Bundles were rebuilt with different tool versions or non-deterministic inputs.
-- Ensure canonicalization steps are deterministic and toolchain is pinned.
+- Policy expects a field name that differs from the schema (rename drift).
+- Schema allows optional fields, but policy treats them as required (tighten schema or loosen policy).
+- Examples are out-of-date (update fixtures and pin schema versions in CI).
 
----
+Fix approach:
 
-## Governance note
+1. Make the schema/policy contract explicit (align names).
+2. Add a failing fixture in `examples/*.invalid.json`.
+3. Add/adjust a Conftest unit test proving the denial case.
 
-This directory is a **governed artifact surface**. Treat changes as production-impacting:
-policy changes alter access; schema changes alter what can be published; both affect auditability.
+</details>
 
-If you are unsure whether a change is breaking or could weaken fail-closed behavior:
-**default to deny** and add a test that proves the new behavior is safe.
+<details>
+<summary><strong>“We need additionalProperties=true”</strong></summary>
 
+Allowing arbitrary fields increases audit ambiguity.
+
+If you must permit extension fields:
+
+- scope them under a single namespace object (e.g., `extensions: { ... }`)
+- document the extension policy and add tests that prevent abuse (e.g., disallow overriding governed keys)
+
+</details>
