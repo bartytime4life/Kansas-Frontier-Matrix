@@ -1,20 +1,3 @@
----
-title: "KFM Kill Switch — Emergency Deny Switch Specification & Operations Runbook"
-doc_kind: "ops_runbook"
-status: "DRAFT"
-version: "0.9.0"
-prepared_date: "2026-02-15"
-source_basis:
-  - "KFM Next-Generation Blueprint & Primary Guide (Prepared 2026-02-12)"
-  - "Integrating “New Ideas Feb-2026” Into Knowledge-First Management"
-  - "KFM Comprehensive Technical Blueprint (runtime OPA enforcement notes)"
-owners:
-  - "Incident Commander (IC) — (not confirmed in repo)"
-  - "Governance Owner — (not confirmed in repo)"
-  - "Platform/SRE Owner — (not confirmed in repo)"
-review_cadence: "quarterly + after incidents"
----
-
 # 🚨 KFM Kill Switch (Emergency Deny Switch)
 
 > **Purpose:** Provide a rapid, auditable, fail-closed mechanism to stop risky KFM behavior (especially **public endpoints** and **Focus Mode**) **without deploying code**, by using a **policy toggle** at the trust membrane boundary.  
