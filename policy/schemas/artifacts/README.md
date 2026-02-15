@@ -30,12 +30,13 @@ Contract-first JSON Schemas for KFM’s **promotion-gated artifacts** (manifests
 ## What lives here
 
 ```text
-policy/schemas/artifacts/
-├─ README.md
-├─ *.schema.json
-└─ examples/
-   ├─ *.valid.json
-   └─ *.invalid.json
+policy/schemas/artifacts/                        # Schemas for governed artifacts checked by policy/promotion gates
+├─ README.md                                      # What artifacts are validated, versioning rules, and CI wiring
+├─ *.schema.json                                  # Artifact schemas (versioned; e.g., run_record.v1.schema.json)
+│
+└─ examples/                                      # Example payloads for each schema (used by CI + reviewers)
+   ├─ *.valid.json                                 # Minimal valid examples (must pass schema + policy prerequisites)
+   └─ *.invalid.json                               # Intentionally invalid examples (must fail with clear errors)
 ```
 
 - **`*.schema.json`**: Governed JSON Schema contracts for KFM artifacts.
