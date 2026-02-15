@@ -1,18 +1,20 @@
 <!--
 KFM Governed Artifact
 File: data/README.md
+If you change meaning (not just phrasing), route through governance review (CODEOWNERS + CI gates).
 -->
 
 # 🧾 `data/` — KFM Governed Data Zones, Registry, Catalogs, Evidence Bundles, & Provenance
 
 ![status](https://img.shields.io/badge/status-governed%20artifact-blue)
-![evidence](https://img.shields.io/badge/evidence-first-critical)
-![policy](https://img.shields.io/badge/policy-OPA%20default%20deny-important)
-![zones](https://img.shields.io/badge/zones-Raw%20%E2%86%92%20Work%20%E2%86%92%20Processed-success)
-![catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-informational)
-![bundles](https://img.shields.io/badge/evidence%20bundle-OCI%20digest%20addressed-informational)
-![hashing](https://img.shields.io/badge/hashing-spec__hash%20%2B%20sha256-important)
-![attest](https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20SLSA%20attestations-informational)
+![evidence](https://img.shields.io/badge/evidence--first-required-0f766e)
+![trust-membrane](https://img.shields.io/badge/trust%20membrane-enforced-16a34a)
+![policy](https://img.shields.io/badge/policy-default%20deny-111827)
+![zones](https://img.shields.io/badge/zones-raw%E2%86%92work%E2%86%92processed-success)
+![catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
+![bundles](https://img.shields.io/badge/evidence%20bundles-digest%20addressed-4b0082)
+![spec_hash](https://img.shields.io/badge/spec__hash-RFC8785%20JCS%20%2B%20sha256-6a5acd)
+![attest](https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20SLSA%20optional-6b7280)
 ![registry](https://img.shields.io/badge/build%20driver-dataset%20registry-success)
 
 > [!IMPORTANT]
@@ -20,34 +22,53 @@ File: data/README.md
 > - what the API is allowed to serve
 > - what the UI can cite (and resolve)
 > - what Story Nodes may publish
-> - what Focus Mode may answer (cite‑or‑abstain)
+> - what Focus Mode may answer (cite-or-abstain)
 > - what auditors can verify
 >
 > **Rule of thumb:** if you can’t point to **processed artifacts + checksums + catalogs + lineage**, it is **not** servable.
 
 ---
 
+## Governance header
+
+| Field | Value |
+|---|---|
+| Document | `data/README.md` |
+| Status | **Governed** |
+| Applies to | data zones, registry, promotion gates, catalogs, evidence bundles, provenance, sensitivity controls |
+| Version | `v2.0.0-draft` |
+| Effective date | 2026-02-15 |
+| Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
+| Review triggers | any change touching promotion rules, receipt schemas, catalog minimums, sensitivity classes, evidence addressing |
+
+> [!WARNING]
+> **Fail-closed rule:** if required enforcement surfaces are missing (policy, receipts, catalogs, checksums), promotion/serve must **deny** by default.
+
+---
+
 ## Alignment snapshot
 
-This README is aligned to KFM-NG’s documented invariants:
-- promotion gates and catalogs must exist **before** scaling to many datasets
-- dataset integrations are **registry-driven deliverables**, not ad-hoc drops
-- every served result must carry **evidence bundle + citations + audit reference**
+This README is aligned to KFM-NG invariants:
+- promotion gates and catalogs exist **before** scaling to many datasets
+- dataset integrations are **registry-driven** deliverables, not ad-hoc drops
+- every served result must carry **evidence references** and an **audit reference**
+- deterministic spec identity (`spec_hash`) is standardized (RFC 8785 JCS + sha256)
+- evidence bundles are **digest-addressed** provenance roots (where implemented)
 
 > [!NOTE]
-> If this README and the implementation ever diverge, treat it as a **governance incident** and resolve via ADR + CI gates.
+> If this README and implementation diverge, treat it as a governance incident and resolve via ADR + CI gates.
 
 ---
 
 ## Table of contents
 
-- [Non‑negotiables](#nonnegotiables)
+- [Non-negotiables](#nonnegotiables)
 - [Quick workflow: add or update a dataset](#quick-workflow-add-or-update-a-dataset)
 - [Directory layout](#directory-layout)
 - [Truth path: how data becomes servable](#truth-path-how-data-becomes-servable)
 - [Registry: the build driver](#registry-the-build-driver)
 - [Data zones](#data-zones)
-- [Promotion contract: what “publishable” means](#promotion-contract-what-publishable-means)
+- [Promotion Contract: what “publishable” means](#promotion-contract-what-publishable-means)
 - [Deterministic hashing: `spec_hash` + checksums](#deterministic-hashing-spec_hash--checksums)
 - [Catalogs: DCAT, STAC, PROV](#catalogs-dcat-stac-prov)
 - [Evidence bundles & canonical addressing](#evidence-bundles--canonical-addressing)
@@ -63,7 +84,7 @@ This README is aligned to KFM-NG’s documented invariants:
 
 ---
 
-## Non‑negotiables
+## Non-negotiables
 
 These are **system invariants**. Breaking them breaks KFM governance.
 
@@ -71,7 +92,7 @@ These are **system invariants**. Breaking them breaks KFM governance.
    - UI and external clients never access databases or object storage directly.
    - All access is through the **governed API + policy boundary + audit logging**.
 
-2) **Fail‑closed policy**
+2) **Fail-closed policy**
    - Authorization is **default deny**.
    - If evidence is missing or ambiguous, deny/abstain rather than “best guess.”
 
@@ -79,50 +100,50 @@ These are **system invariants**. Breaking them breaks KFM governance.
    - Every dataset must be registered before ingestion/promotion.
    - The registry is the authoritative inventory and build plan (prevents “forgotten sources”).
 
-4) **Mandatory promotion gates**
+4) **Mandatory promotion gates (Promotion Contract)**
    - Data flows **Raw → Work → Processed**.
-   - Promotion is blocked unless checksums + validation + catalogs + lineage exist.
+   - Promotion denies unless **receipts + checksums + catalogs + lineage** exist and validate.
 
 5) **Processed is the only publishable source of truth**
    - Raw/work are never served (directly or indirectly).
 
-6) **Cite‑or‑abstain everywhere**
-   - API answers and Focus Mode responses must include citations **or abstain**.
-   - Every response must include an `audit_ref` and an evidence bundle reference.
+6) **Cite-or-abstain**
+   - Governed answers (including Focus Mode) include citations **or abstain**.
+   - Every governed response includes an `audit_ref`.
+   - Citations must resolve to human-readable evidence views.
 
 ---
 
 ## Quick workflow: add or update a dataset
 
 > [!TIP]
-> Keep this fast and repeatable. A dataset integration should feel like “run the playbook,” not “invent a new pipeline.”
+> A dataset integration should feel like “run the playbook,” not “invent a new pipeline.”
 
 1) **Register the dataset**
-   - Add or update a dataset integration profile in `data/registry/…`
+   - Add or update the dataset profile in `data/registry/...`
    - Define: license, cadence, sensitivity expectations, connector config, and backfill policy.
 
-2) **Add or update the raw manifest**
+2) **Create/update raw manifest**
    - Add `data/raw/<dataset_id>/manifest.yml`
-   - Raw is append-only: new versions = new manifests or new manifest revisions with their own hashes.
+   - Add `data/raw/<dataset_id>/checksums.sha256` for any in-repo assets (or pointer checksums if using remote/object storage).
 
-3) **Run ingest (containerized)**
-   - Pipeline writes work artifacts:
-     - run record/receipt
-     - validation report
-     - QA report(s)
-     - provisional lineage (PROV activity)
+3) **Run ingest**
+   - Pipeline writes work artifacts (run-scoped):
+     - run record
+     - validation report (+ optional QA/profile)
+     - provisional lineage stub
 
 4) **Promote**
-   - Pipeline writes processed artifacts + checksums
-   - Generate/validate catalogs (DCAT always; STAC/PROV as applicable)
-   - Produce an **evidence bundle reference** (digest-first)
+   - Pipeline writes processed artifacts + processed checksums
+   - Generate/validate catalogs (DCAT always; STAC conditional; PROV required)
+   - Write evidence bundle reference (digest-first) if bundles are used
 
 5) **CI enforces promotion**
-   - Catalog validation, hash verification, policy tests, contract tests
-   - Optionally: verify SBOM/SLSA attestations for the evidence bundle
+   - Schema checks, checksums, catalogs validation, policy tests, contract tests
+   - Optional: verify SBOM/SLSA attestations when enabled
 
 6) **Indexes refresh from catalogs**
-   - PostGIS/Graph/Search rebuilds are derived from canonical catalogs & processed artifacts
+   - PostGIS/graph/search refresh derives from canonical catalogs & processed artifacts
    - No “hand edits” in downstream stores
 
 ---
@@ -130,55 +151,62 @@ These are **system invariants**. Breaking them breaks KFM governance.
 ## Directory layout
 
 > [!IMPORTANT]
-> The layout below is the **KFM-NG target layout** for a governed repo. If your repo differs, either:
-> - migrate toward this, or
-> - document the deviation in an ADR + update the validators accordingly.
+> This is the KFM governed layout target. If your repo differs, either migrate toward it or document the deviation in an ADR and update validators.
 
 ```text
 data/
 ├─ README.md
 │
-├─ registry/                               # authoritative dataset inventory + integration profiles
-│  ├─ datasets/                            # one profile per dataset_id (YAML/JSON)
+├─ registry/                                   # authoritative dataset inventory + integration profiles
+│  ├─ datasets/                                # one profile per dataset_id
 │  │  └─ <dataset_id>.yml
-│  ├─ policy_taxonomy.yml                  # controlled vocabulary (sensitivity/CARE/FAIR/redistribution)
-│  └─ schemas.lock.yml                     # pinned schema/tool versions used by validators (optional)
+│  ├─ sources.yml                              # upstream capability metadata (optional)
+│  ├─ policy_taxonomy.yml                      # controlled vocabulary (classification/flags/redistribution)
+│  └─ schemas.lock.yml                         # pinned schema/tool versions for validators (optional)
 │
-├─ raw/                                    # immutable inputs or fetch manifests (never served)
+├─ raw/                                        # immutable captures / manifests (never served)
 │  └─ <dataset_id>/
-│     ├─ manifest.yml                      # governed raw manifest (license + sensitivity required)
-│     ├─ checksums.txt                     # sha256 for raw assets (or pointers) referenced by manifest
-│     └─ pointers/                         # optional: pointer files (object store / upstream URLs)
+│     ├─ manifest.yml                          # license + sensitivity required
+│     ├─ checksums.sha256                      # sha256 for raw assets (or pointers)
+│     └─ pointers/                             # optional: pointer files to object storage / upstream URLs
 │
-├─ work/                                   # regeneratable intermediates; QA and profiling (never served)
+├─ work/                                       # regeneratable intermediates (never served)
 │  └─ <dataset_id>/
-│     └─ runs/<run_id>/                    # run-scoped artifacts (do not overwrite prior runs)
-│        ├─ run_record.json                # aka run_receipt: inputs/outputs/spec_hash/tooling
-│        ├─ validation_report.json         # schema/license/sensitivity/geo/time checks
-│        ├─ qa/report.json                 # quick QC summary (machine-readable)
-│        ├─ profiling/                     # drift stats, samples, geometry error logs
-│        └─ scratch/                       # temp outputs (gitignored recommended)
+│     └─ runs/<run_id>/                        # run-scoped; do not overwrite prior runs
+│        ├─ run_record.json                    # run metadata + inputs/outputs + code identity
+│        ├─ validation_report.json             # schema/geo/time/license/policy checks
+│        ├─ run_manifest.json                  # Promotion Contract receipt (required)
+│        ├─ qa/                                # optional QC summaries (machine-readable)
+│        ├─ profiling/                         # optional drift stats, samples, error logs
+│        └─ scratch/                           # temp outputs (gitignored recommended)
 │
-├─ processed/                              # publishable artifacts (servable); immutable per version_id
+├─ processed/                                  # publishable artifacts (servable); immutable per version
 │  └─ <dataset_id>/
-│     └─ <version_id>/
-│        ├─ data.parquet                   # or GeoParquet / partitioned layout
-│        ├─ tiles/                         # optional: prebuilt tiles
-│        ├─ media/                         # optional: publishable derivatives (PDF/PNG/etc)
-│        ├─ checksums.txt                  # sha256 for every published artifact in this version
-│        └─ evidence_bundle.ref.json       # canonical bundle digest + resolver href (digest-first)
+│     └─ <version_id>/                         # version_id must be stable and content-addressable
+│        ├─ data/                              # parquet/geoparquet/partitioned outputs
+│        ├─ tiles/                             # optional: prebuilt tiles/pmtiles
+│        ├─ media/                             # optional: publishable derivatives (PDF/PNG/etc)
+│        ├─ checksums.sha256                   # sha256 for every artifact in this version
+│        └─ evidence_bundle.ref.json           # optional: bundle digest + resolver href
 │
-└─ catalog/                                # machine-readable catalogs consumed by runtime services
-   ├─ dcat/
-   │  ├─ <dataset_id>.json                 # dataset-level DCAT (may list versions/distributions)
-   │  └─ <dataset_id>/<version_id>.json    # version/distribution record (recommended for immutability)
-   ├─ stac/
-   │  └─ <dataset_id>/
-   │     ├─ collection.json                # one collection per dataset/product
-   │     └─ items/<version_id>/*.json      # items grouped by version_id (or time slices)
-   └─ prov/
-      └─ <dataset_id>/
-         └─ run_<run_id>.json              # PROV activity + entities linking raw→work→processed
+├─ catalog/                                    # machine-readable catalogs (served by API)
+│  ├─ dcat/
+│  │  ├─ <dataset_id>.json                     # dataset-level DCAT record
+│  │  └─ <dataset_id>/<version_id>.json        # version/distribution record (recommended)
+│  ├─ stac/
+│  │  └─ <dataset_id>/
+│  │     ├─ collection.json
+│  │     └─ items/<version_id>/*.json
+│  └─ prov/
+│     └─ <dataset_id>/
+│        └─ run_<run_id>.json                  # lineage linking raw → work → processed
+│
+├─ bundles/                                    # optional: evidence bundle descriptors + tiny fixtures
+│  └─ <bundle_digest>/
+│     └─ descriptor.json
+│
+└─ audit/                                      # optional: local/dev audit checkpoints (prod often external)
+   └─ checkpoints/
 ```
 
 ---
@@ -187,253 +215,209 @@ data/
 
 ```mermaid
 flowchart LR
-  REG["Registry (dataset profiles)"] --> RAW["Raw zone (manifest + checksums)"]
-  RAW --> WORK["Work zone (run record + validation + QA)"]
-  WORK --> PROC["Processed zone (immutable versioned artifacts)"]
+  REG["Registry (dataset profiles)"] --> RAW["Raw (manifest + checksums)"]
+  RAW --> WORK["Work (run record + validation + receipt)"]
+  WORK -->|Promotion Contract| PROC["Processed (immutable versioned artifacts)"]
   PROC --> CATS["Catalogs (DCAT + STAC + PROV)"]
-  CATS --> BUNDLE["Evidence bundle (OCI digest-addressed)"]
+  CATS --> BUNDLE["Evidence bundle (digest-addressed)"]
   BUNDLE --> STORES["Stores (PostGIS / Graph / Search / Object Store)"]
-  STORES --> API["GOVERNED API (auth + policy + redaction + audit)"]
-  API --> UI["Web UI (map/time/story)"]
-  UI --> STORIES["Story Nodes (governed narratives)"]
+  STORES --> API["Governed API (policy + redaction + audit)"]
+  API --> UI["Web UI"]
+  UI --> STORIES["Story Nodes"]
   STORIES --> FOCUS["Focus Mode (cite-or-abstain)"]
 ```
 
 > [!IMPORTANT]
-> **Only `processed/` + `catalog/` are eligible to be served** (directly or indirectly).
-> Raw/work exist to support reproducibility, QA, and auditability.
+> Only `processed/` artifacts and `catalog/` metadata are eligible to be served (directly or indirectly). Raw/work are for reproducibility and QA.
 
 ---
 
 ## Registry: the build driver
 
-The **registry** is the authoritative system for:
-- what datasets exist
-- how they are ingested (connector configuration)
-- how they are validated (required gates)
-- how they are classified (license/sensitivity/policy tags)
-- how backfills are performed (explicit, versioned)
+The registry is the authoritative inventory and build plan:
+- what datasets exist (`dataset_id`)
+- how they ingest (connector/watchers config)
+- required validations/gates
+- license + attribution + redistribution constraints
+- sensitivity defaults + redaction rules
+- backfill policy and cadence expectations
 
-### What belongs in a dataset profile (minimum)
-- `dataset_id` + upstream identifiers
-- access mechanism + cadence
-- license + attribution requirements
-- sensitivity defaults + redaction policy
-- validation requirements + thresholds
-- storage targets (tabular/geo/raster/artifact)
-- backfill policy (ranges, batching, expected runtime)
-- provider compliance constraints (rate limits, ToS, row limits, consent requirements)
-
-> [!NOTE]
-> The README is not the inventory. The registry is.
+### Dataset profile minimum fields (recommended)
+- `dataset_id` (stable ID; prefer snake_case)
+- source identifiers + access method (API/file/object store)
+- cadence + freshness target
+- license + attribution
+- classification + sensitivity flags + redistribution policy
+- validation requirements (schema/geo/time) + thresholds
+- output formats (tabular/vector/raster/artifact)
+- backfill strategy (ranges, batching, expected runtime)
+- provider constraints (rate limits, ToS)
 
 ---
 
 ## Data zones
 
-| Zone | Servable? | Mutability | What belongs here | What must *never* happen |
+| Zone | Servable? | Mutability | What belongs here | Must never happen |
 |---|---:|---|---|---|
-| `raw/` | ❌ | Append-only / immutable per asset | Source drops, fetch manifests, upstream identifiers, raw checksums | Editing raw history; serving raw to users |
-| `work/` | ❌ | Regeneratable | Run-scoped work products: run record, validation, QA, profiling | Treating work as truth; publishing directly |
-| `processed/` | ✅ | Immutable per `version_id` | Final publishable artifacts + checksums + bundle ref | Mutating an already published version |
-| `catalog/` | ✅ (metadata) | Append-only by version | DCAT/STAC/PROV records; cross-links; schema-validated JSON | Missing/broken cross-links; catalogs that don’t match hashes |
+| `raw/` | ❌ | append-only | manifests, raw captures, pointer maps, raw checksums | serving raw to users; rewriting history |
+| `work/` | ❌ | regeneratable | run artifacts: run record, validation, receipt, QA/profile | treating work as truth; publishing directly |
+| `processed/` | ✅ | immutable per version | publishable outputs + processed checksums + bundle ref | mutating an already published version |
+| `catalog/` | ✅ (metadata) | append-only by version | DCAT/STAC/PROV; cross-links; schema-validated | catalogs that don’t match hashes or versions |
 
 ---
 
-## Promotion contract: what “publishable” means
+## Promotion Contract: what “publishable” means
 
-Promotion is a **contract**, not a convenience.
+Promotion is a contract, not a convenience. A dataset version is publishable only if all required proofs exist and validate.
 
 ### Required promotion evidence (minimum)
-A dataset version is publishable only if **all** of these exist and validate:
-
-- **Raw**: manifest + raw checksums
-- **Work**: run record + validation report + QA report
-- **Processed**: artifacts + checksums
-- **Catalogs**:
+- raw manifest + raw checksums
+- run record + validation report + run manifest (receipt)
+- processed artifacts + processed checksums
+- catalogs:
   - DCAT (always)
-  - STAC (if spatial assets)
-  - PROV (lineage chain)
-- **Evidence bundle reference** (digest-first, canonical addressing)
-- **Policy labels** attached and enforceable (public/restricted/sensitive-location/etc.)
-- **API contract tests** for at least one representative query
-- **Audit event** recorded on promotion and on serve
+  - STAC (if spatial assets exist)
+  - PROV (required lineage)
+- policy labels attached and enforceable
+- audit event recorded on promotion
 
-### Promotion gate checklist (CI-enforced)
-- [ ] Raw assets checksummed and addressable by content hash
-- [ ] License present and propagated into catalogs
-- [ ] Sensitivity + policy tags present and propagated into policy labels
-- [ ] Schema validation passes (required fields, types, null thresholds)
-- [ ] Geospatial validation passes (valid geometries, CRS declared, bounds sane)
-- [ ] Temporal validation passes (ranges sane, time model requirements met)
-- [ ] QA report stored as a run artifact with a stable ID
-- [ ] Processed artifacts are immutable, with `checksums.txt` computed
-- [ ] Catalog writers succeed (DCAT/STAC/PROV well-formed + link-check clean)
-- [ ] Evidence bundle reference created (digest-first)
-- [ ] (If enabled) SBOM + SLSA attestations verified for bundle digest
-- [ ] API contract tests pass
-- [ ] Audit record appended, referencing `run_id` + `version_id`
+### Promotion checklist (CI-enforced)
+- [ ] license present and propagated to DCAT
+- [ ] classification/sensitivity flags present and enforced (fail closed if missing)
+- [ ] schema validation passes
+- [ ] geo/time validation passes (if applicable)
+- [ ] checksums computed and verified (raw + processed)
+- [ ] run manifest validates receipt schema and links artifacts
+- [ ] DCAT validates (required); STAC validates when required; PROV validates (required)
+- [ ] evidence bundle ref created when bundles are used
+- [ ] audit event appended referencing `run_id` and `version_id`
 
 ---
 
 ## Deterministic hashing: `spec_hash` + checksums
 
-Two different hash families exist and both are required:
+Two different hash families exist and both matter:
 
-### 1) `checksums.txt` (content integrity)
-- Purpose: prove that **bytes** served match the bytes that were promoted
-- Scope: every raw and processed artifact
+### 1) Checksums (content integrity)
+- Prove that served bytes match what was promoted.
+- Applies to raw and processed artifacts.
 
+Preferred file: `checksums.sha256`  
 Format: `sha256 <hex>  <relative_path>` (sha256sum style)
 
 ### 2) `spec_hash` (semantic spec identity)
-- Purpose: prove that **the same spec** leads to the same identifiers / ETags / receipts
-- Scope: manifests, run records/receipts, connector specs, catalog writer inputs
+- Proves that the same governed spec yields the same receipts and identities.
+- Applies to manifests, ingest specs, promotion specs, watcher specs, and receipts.
 
 **Standard definition (KFM):**
-- `spec_hash = sha256(JCS(spec))`
-- where `spec` is a schema-defined object
-- and JCS means RFC 8785 JSON Canonicalization Scheme
-- store alongside:
+- `spec_hash = sha256(JCS(spec))`  
+- JCS = RFC 8785 JSON Canonicalization Scheme  
+- Store alongside:
   - `spec_schema_id`
-  - `spec_recipe_version` (semver)
-
-> [!WARNING]
-> If different teams compute “spec_hash” differently, hashes become incomparable and audits can’t establish equivalence.
+  - `spec_recipe_version`
 
 ---
 
 ## Catalogs: DCAT, STAC, PROV
 
-KFM uses catalogs to make data:
-- discoverable (DCAT)
-- mappable + time-addressable (STAC)
-- reproducible + auditable (PROV)
+Catalogs make data discoverable, mappable, and auditable.
 
-### DCAT (dataset discovery)
+### DCAT (required)
 DCAT entries must capture:
 - dataset identity and description
-- publisher/maintainer contact (where applicable)
-- license + attribution text
+- license + attribution + restrictions
 - distributions pointing to processed artifacts (or bundle resolver)
+- temporal/spatial coverage (when applicable)
 - update frequency / cadence
 
-### STAC (spatiotemporal assets)
-STAC is required for spatial assets (vectors/rasters/footprints):
-- spatial extent (bbox)
-- temporal extent (interval)
-- asset media types + roles
-- link to DCAT dataset and PROV lineage (KFM profile)
+### STAC (conditional, required for spatial assets)
+STAC must capture:
+- collection identity + extent
+- items/assets with roles, media types, and stable href conventions
+- linkage to DCAT and PROV (per KFM profile)
 
-> [!NOTE]
-> KFM must pin and enforce a single STAC baseline + extension policy (via validator).
-
-### PROV (lineage)
+### PROV (required)
 PROV is the lineage spine:
-- raw inputs → work steps → processed outputs
-- links every derived artifact to inputs + activity + agent/tooling
-- includes deterministic hashes for promoted artifacts
+- raw inputs → work transforms → processed outputs
+- activity metadata (run_id, toolchain, code identity)
+- entity identities and digests for promoted artifacts
 
 ---
 
 ## Evidence bundles & canonical addressing
 
-KFM treats “where is the data?” as a governed question.
+KFM treats “where is the evidence?” as a governed question.
 
-### Canonical addressing hierarchy (must be consistent)
-1) **Evidence bundle digest address** (canonical)
-2) **Stable gateway URL derived from digest** (servable)
-3) **Storage URLs** (implementation detail; never relied on by UI citations)
+### Canonical address hierarchy
+1) **Digest-addressed evidence bundle** (canonical provenance root)  
+2) **Stable gateway URL derived from digest** (servable)  
+3) **Storage URLs** (implementation detail; not provenance roots)
 
-### Evidence bundle contents (recommended minimum)
+### Evidence bundle minimum contents (recommended)
 - catalogs (DCAT/STAC/PROV)
-- processed artifacts (or pointers)
-- run record/receipt + validation + QA
-- SBOM + SLSA provenance attestations (if enabled)
-- signatures / transparency proofs (if enabled)
-
-> [!IMPORTANT]
-> The bundle digest is the **canonical reference** used by citations and audit resolution.
+- receipts (run record + run manifest + validation)
+- checksums
+- processed artifacts or pointers
+- optional: SBOM + SLSA provenance attestations and signatures (when enabled)
 
 ---
 
 ## Audit & evidence resolution
 
-KFM treats provenance and audit as **queryable first-class objects**.
-
 ### Evidence resolution requirement
 All citations/provenance references must be resolvable by the governed API.
 
-Canonical “citation kinds”:
+Canonical citation kinds:
 - `dcat`
 - `stac`
 - `prov`
 - `doc`
 - `graph`
+- optional: `oci` (digest bundles)
 
-### Citation object (minimum)
-```yaml
-Citation:
-  required: [id, kind, ref]
-  properties:
-    id: string
-    kind: dcat|stac|prov|doc|graph
-    ref: string
-    locator: string   # page/span/time/bbox/feature_id/etc.
-    note: string
-```
-
-### Audit record expectations (minimum)
+### Audit record minimum fields
 - `audit_ref`
-- timestamps
-- actor metadata (role/claims)
+- timestamp
+- actor metadata (role/claims; avoid PII)
 - event type + subject/resource
 - evidence bundle digest + citations
-- integrity chaining (`prev_hash`, `event_hash`) for tamper evidence
+- tamper-evident chaining (`prev_hash`, `event_hash`) when ledger supports it
 
 ---
 
 ## Sensitivity, CARE/FAIR taxonomy, and redaction
 
-KFM handles sensitive data explicitly and conservatively.
-
 ### Controlled vocabulary (must exist)
-Define a small, enforced taxonomy covering:
-- classification levels (public / restricted / …)
-- culturally/tribally sensitive flags
-- redistribution rules / license constraints
-- sensitive-location precision rules
-- PII risk flags
+Enforced taxonomy should cover:
+- classification (public/internal/restricted)
+- sensitivity flags (sensitive_location, culturally_sensitive, pii_risk, etc.)
+- redistribution constraints
+- precision rules for sensitive geometry
+- consent/authority metadata (CARE alignment)
 
 > [!IMPORTANT]
-> These tags are **enforceable inputs** to policy, not documentation.
+> These tags are enforceable inputs to policy, not documentation.
 
 ### Sensitive locations: split assets (recommended)
-- Public/generalized geometry: servable
-- Restricted/precise geometry: separate artifact/store
-- Access authorized by policy on read
-- UI must not fetch precise geometry without explicit grant
-- All generalization/suppression is recorded in PROV
+- public/generalized geometry: servable
+- restricted/precise geometry: separate artifact (or denied)
+- all generalization/suppression recorded in PROV
 
 ---
 
 ## Connectors, watchers, and backfills
 
 ### Connector phases (conceptual)
-1) discover capabilities  
-2) acquire raw data (manifested + checksummed)  
-3) normalize + enrich (work artifacts)  
-4) validate (reports)  
-5) publish (processed + catalogs + bundle ref)  
+discover → acquire → normalize/enrich → validate → receipt → catalog → promote
 
-### Watchers (for frequently changing sources)
-- must respect provider compliance constraints
-- use conditional requests (ETag / Last-Modified)
-- structured backoff + retry policies
+### Watchers (when used)
+- conditional requests (ETag/Last-Modified)
+- bounded retries + backoff
 - emit delta receipts (what changed, when, why)
+- respect provider constraints
 
 ### Backfills
-- always explicit runs with their own provenance
+- explicit runs with their own provenance
 - never overwrite prior releases
 - backfill scope and batching defined in registry
 
@@ -442,59 +426,51 @@ Define a small, enforced taxonomy covering:
 ## Formats & normalization standards
 
 ### Canonical normalization (minimum)
-- Text encoding: UTF‑8
-- Geometry CRS: WGS84 (declare explicitly)
-- Time: ISO 8601 (UTC where applicable)
+- UTF-8 text encoding
+- WGS84 geometry (declare CRS explicitly)
+- ISO 8601 time (UTC where applicable)
 
 ### Recommended publish formats
-- Tabular: Parquet (processed)
-- Vectors: GeoParquet (processed); GeoJSON (work, for debugging)
-- Rasters: Cloud-Optimized GeoTIFF (COG) (processed)
-- Artifacts/media: PDF/JPEG/PNG (originals + derivatives with provenance)
+- tabular: Parquet
+- vectors: GeoParquet (processed); GeoJSON (work/debug)
+- rasters: COG (processed)
+- artifacts/media: PDF/JPEG/PNG (originals + derivatives with provenance)
 
 ---
 
 ## CI gates & Definition of Done
 
 ### CI minimal hardening set (data-related)
-- Validate raw manifest schema + `spec_hash`
-- Validate run record + validation/QA reports
-- Validate processed checksums
-- Validate DCAT/STAC/PROV outputs + cross-links
-- Run OPA policy unit/regression tests (default deny; cite‑or‑abstain)
-- Run API contract tests for:
-  - catalogs/layers
-  - evidence resolution
-  - at least one representative dataset query
-- (If enabled) Verify SBOM + SLSA attestations for evidence bundle digest
+- validate raw manifest schema + spec_hash semantics
+- validate receipts (run record, validation report, run manifest)
+- verify checksums (raw + processed)
+- validate DCAT/STAC/PROV outputs + cross-links
+- run OPA policy tests (default deny; promotion guard; cite-or-abstain)
+- run API contract tests for catalogs/evidence resolution
 
-### Definition of Done (dataset integration ticket)
-- [ ] Dataset profile exists in registry
-- [ ] Raw manifest + raw checksums produced deterministically
-- [ ] Normalization emits canonical schema and/or STAC assets
-- [ ] Validation gates implemented and enforced in CI
-- [ ] Policy labels defined; restricted fields/locations redacted per rules
-- [ ] Catalogs emitted and link-check clean
-- [ ] Evidence bundle reference present (digest-first)
-- [ ] API contract tests pass (one representative query minimum)
-- [ ] Backfill strategy documented (ranges + expected runtime)
+### Definition of Done (dataset integration)
+- [ ] dataset profile exists in registry
+- [ ] raw manifest + raw checksums deterministic
+- [ ] work artifacts emitted (run record + validation + receipt)
+- [ ] processed artifacts immutable with checksums
+- [ ] catalogs emitted and validate (DCAT always; STAC conditional; PROV required)
+- [ ] evidence bundle reference present if bundles are used
+- [ ] API contract tests pass (representative query)
+- [ ] backfill strategy documented
 
 ---
 
 ## Operations & monitoring
 
-### Freshness SLOs (per dataset)
-Each dataset declares a freshness expectation based on cadence:
-- sub-hourly (real-time sensors)
-- daily/weekly (periodic sources)
-- exempt (static archives)
+### Freshness SLOs
+Each dataset should declare a freshness expectation based on cadence.
 
 ### Observability signals (minimum)
 - ingest runs: success/fail, duration, rows/bytes, retries
-- freshness: last successful run timestamp vs expected cadence
-- drift: missingness, distribution shifts, geometry error rate
-- API: latency, cache hits, policy denials, evidence resolution failures
-- index drift: rebuild from canonical catalogs + diff checks
+- freshness: last success vs expected cadence
+- drift: missingness, distributions, geometry error rate
+- API: latency, policy denials, evidence resolution failures
+- index drift: rebuild from canonical catalogs with diff checks
 
 ---
 
@@ -512,8 +488,8 @@ source:
 license: "CC-BY-4.0"
 attribution: "Example Publisher"
 sensitivity:
-  level: public        # must be in controlled vocabulary
-  tags: [fair:open]    # must be in controlled vocabulary
+  classification: public
+  flags: []
 expected_files:
   - name: source.csv
     sha256: "..."
@@ -521,18 +497,18 @@ expected_files:
 </details>
 
 <details>
-<summary><strong>Template: <code>run_record.json</code> (aka run receipt)</strong></summary>
+<summary><strong>Template: <code>run_record.json</code></strong></summary>
 
 ```json
 {
-  "run_id": "run_2026_02_14T120000Z_abc123",
+  "run_id": "run_2026-02-15T12:34:56Z",
   "dataset_id": "example_dataset",
   "spec_schema_id": "kfm.schema.run_record.v1",
   "spec_recipe_version": "1.0.0",
   "spec_hash": "sha256:...",
   "inputs": [{ "uri": "data/raw/example_dataset/source.csv", "sha256": "..." }],
-  "code": { "git_sha": "...", "image": "kfm/pipeline:..." },
-  "outputs": [{ "uri": "data/processed/example_dataset/<version_id>/data.parquet", "sha256": "..." }],
+  "code": { "git_sha": "...", "image": "kfm/pipeline@sha256:..." },
+  "outputs": [{ "uri": "data/processed/example_dataset/<version_id>/data/data.parquet", "sha256": "..." }],
   "validation_report": "data/work/example_dataset/runs/<run_id>/validation_report.json",
   "prov_ref": "data/catalog/prov/example_dataset/run_<run_id>.json"
 }
@@ -546,7 +522,7 @@ expected_files:
 {
   "bundle_digest": "sha256:...",
   "canonical_resolver": "/bundles/sha256:...",
-  "includes": ["dcat", "stac", "prov", "run_record", "validation", "checksums"]
+  "includes": ["dcat", "stac", "prov", "run_record", "run_manifest", "validation", "checksums"]
 }
 ```
 </details>
@@ -560,7 +536,8 @@ Route for governance review if any of the following are true:
 - culturally restricted knowledge
 - personal data / ownership names / PII risk
 - small-area health or public safety counts enabling re-identification
-- datasets with redistribution constraints beyond the standard licenses
+- redistribution constraints beyond standard licenses
+- any change affecting promotion rules, receipt schemas, catalog minimums, or sensitivity taxonomy
 
 ---
 
