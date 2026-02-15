@@ -154,59 +154,59 @@ These are **system invariants**. Breaking them breaks KFM governance.
 > This is the KFM governed layout target. If your repo differs, either migrate toward it or document the deviation in an ADR and update validators.
 
 ```text
-data/
-├─ README.md
+data/                                                   # Governed data workspace: inventory → raw → work → processed → catalogs
+├─ README.md                                            # How this tree works + invariants + “what is served vs never served”
 │
-├─ registry/                                   # authoritative dataset inventory + integration profiles
-│  ├─ datasets/                                # one profile per dataset_id
+├─ registry/                                            # Authoritative dataset inventory + integration profiles (governed)
+│  ├─ datasets/                                         # One profile per dataset_id (source, cadence, labels, contacts)
 │  │  └─ <dataset_id>.yml
-│  ├─ sources.yml                              # upstream capability metadata (optional)
-│  ├─ policy_taxonomy.yml                      # controlled vocabulary (classification/flags/redistribution)
-│  └─ schemas.lock.yml                         # pinned schema/tool versions for validators (optional)
+│  ├─ sources.yml                                       # Optional upstream capability metadata (paging, formats, limits)
+│  ├─ policy_taxonomy.yml                               # Controlled vocab (classification/flags/redistribution rules)
+│  └─ schemas.lock.yml                                  # Optional pins for schemas/tools used by validators (reproducibility)
 │
-├─ raw/                                        # immutable captures / manifests (never served)
+├─ raw/                                                 # Immutable captures/manifests (NEVER served; never edited in place)
 │  └─ <dataset_id>/
-│     ├─ manifest.yml                          # license + sensitivity required
-│     ├─ checksums.sha256                      # sha256 for raw assets (or pointers)
-│     └─ pointers/                             # optional: pointer files to object storage / upstream URLs
+│     ├─ manifest.yml                                   # REQUIRED: license + sensitivity labels + source notes
+│     ├─ checksums.sha256                               # REQUIRED: sha256 for raw assets (or pointer targets)
+│     └─ pointers/                                      # Optional: pointers to object storage / upstream URLs (no big blobs)
 │
-├─ work/                                       # regeneratable intermediates (never served)
+├─ work/                                                # Regeneratable intermediates (NEVER served; run-scoped; reproducible)
 │  └─ <dataset_id>/
-│     └─ runs/<run_id>/                        # run-scoped; do not overwrite prior runs
-│        ├─ run_record.json                    # run metadata + inputs/outputs + code identity
-│        ├─ validation_report.json             # schema/geo/time/license/policy checks
-│        ├─ run_manifest.json                  # Promotion Contract receipt (required)
-│        ├─ qa/                                # optional QC summaries (machine-readable)
-│        ├─ profiling/                         # optional drift stats, samples, error logs
-│        └─ scratch/                           # temp outputs (gitignored recommended)
+│     └─ runs/<run_id>/                                 # Run-scoped directory (append-only; never overwrite old runs)
+│        ├─ run_record.json                             # Run metadata: inputs/outputs + code identity + parameters
+│        ├─ validation_report.json                      # Validation results: schema/geo/time/license/policy checks
+│        ├─ run_manifest.json                           # REQUIRED: Promotion Contract receipt (a.k.a. run_receipt)
+│        ├─ qa/                                         # Optional QC summaries (machine-readable; small)
+│        ├─ profiling/                                  # Optional drift stats, samples, error logs (bounded)
+│        └─ scratch/                                    # Optional temp outputs (recommend gitignored)
 │
-├─ processed/                                  # publishable artifacts (servable); immutable per version
+├─ processed/                                           # Publishable artifacts (servable) — immutable per version
 │  └─ <dataset_id>/
-│     └─ <version_id>/                         # version_id must be stable and content-addressable
-│        ├─ data/                              # parquet/geoparquet/partitioned outputs
-│        ├─ tiles/                             # optional: prebuilt tiles/pmtiles
-│        ├─ media/                             # optional: publishable derivatives (PDF/PNG/etc)
-│        ├─ checksums.sha256                   # sha256 for every artifact in this version
-│        └─ evidence_bundle.ref.json           # optional: bundle digest + resolver href
+│     └─ <version_id>/                                  # Stable + content-addressable version identifier
+│        ├─ data/                                       # Parquet/GeoParquet/partitioned outputs (canonical product)
+│        ├─ tiles/                                      # Optional prebuilt tiles/PMTiles (map-optimized derivatives)
+│        ├─ media/                                      # Optional publishable derivatives (PDF/PNG/etc.)
+│        ├─ checksums.sha256                            # REQUIRED: sha256 for every artifact in this version
+│        └─ evidence_bundle.ref.json                    # Optional: bundle digest + resolver href (evidence linkage)
 │
-├─ catalog/                                    # machine-readable catalogs (served by API)
-│  ├─ dcat/
-│  │  ├─ <dataset_id>.json                     # dataset-level DCAT record
-│  │  └─ <dataset_id>/<version_id>.json        # version/distribution record (recommended)
-│  ├─ stac/
+├─ catalog/                                             # Machine-readable catalogs served by the API (cross-linked)
+│  ├─ dcat/                                             # DCAT records (dataset + distribution/version entries)
+│  │  ├─ <dataset_id>.json                              # Dataset-level DCAT record
+│  │  └─ <dataset_id>/<version_id>.json                 # Version/distribution record (recommended)
+│  ├─ stac/                                             # STAC discovery catalog (collections/items)
 │  │  └─ <dataset_id>/
-│  │     ├─ collection.json
-│  │     └─ items/<version_id>/*.json
-│  └─ prov/
+│  │     ├─ collection.json                             # STAC Collection for the dataset
+│  │     └─ items/<version_id>/*.json                    # STAC Items for a given published version
+│  └─ prov/                                             # PROV lineage (run-linked; ties zones together)
 │     └─ <dataset_id>/
-│        └─ run_<run_id>.json                  # lineage linking raw → work → processed
+│        └─ run_<run_id>.json                            # Lineage linking raw → work → processed (+ catalogs)
 │
-├─ bundles/                                    # optional: evidence bundle descriptors + tiny fixtures
+├─ bundles/                                             # Optional evidence bundle descriptors + tiny fixtures
 │  └─ <bundle_digest>/
-│     └─ descriptor.json
+│     └─ descriptor.json                                # Bundle descriptor (what’s inside + resolver references)
 │
-└─ audit/                                      # optional: local/dev audit checkpoints (prod often external)
-   └─ checkpoints/
+└─ audit/                                               # Optional local/dev audit checkpoints (prod often external)
+   └─ checkpoints/                                      # Checkpoint snapshots (bounded; never sensitive/secret)
 ```
 
 ---
