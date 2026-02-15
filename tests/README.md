@@ -1,472 +1,466 @@
-# 🧪 KFM Test Suite (tests/)
+<!--
+GOVERNED ARTIFACT NOTICE
+This README defines KFM test governance. Tests are part of the trust boundary.
+If you change meaning (not just phrasing), route through governance review (CODEOWNERS + CI gates).
+-->
 
-![Governed](https://img.shields.io/badge/governed-artifacts-blue)
-![Fail Closed](https://img.shields.io/badge/CI-fail--closed-critical)
-![Evidence First](https://img.shields.io/badge/trust-evidence--first-success)
-![Policy as Code](https://img.shields.io/badge/policy-OPA%2FRego-informational)
+# 🧪 KFM Test Suite (`tests/`)
 
-This folder documents **how KFM tests enforce trust guarantees** across the system:
+![Governed](https://img.shields.io/badge/governed-artifacts-critical)
+![Fail-closed](https://img.shields.io/badge/fail--closed-required-111827)
+![Evidence-first](https://img.shields.io/badge/evidence--first-required-0f766e)
+![Trust membrane](https://img.shields.io/badge/trust%20membrane-enforced-16a34a)
+![Policy-as-code](https://img.shields.io/badge/policy-OPA%2FRego-2563eb)
+![Receipts](https://img.shields.io/badge/receipts-run__manifest%20%7C%20spec__hash-6a5acd)
+![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
+![Cite or abstain](https://img.shields.io/badge/focus%20mode-cite%20or%20abstain-critical)
 
-- **Evidence-first** behavior (no evidence → abstain/refuse)
-- **Fail-closed** CI gates (no merge/promotion if required governance artifacts fail validation)
-- **Trust membrane** (frontend/external clients never access databases directly; only via governed APIs)
-- **Sensitivity controls** (restricted/sensitive-location/aggregate-only handling must not regress)
+This folder documents how KFM tests enforce trust guarantees across the system:
+
+- evidence-first behavior (no evidence → abstain/deny)
+- fail-closed CI gates (no merge/promotion if required governance artifacts fail)
+- trust membrane (UI/external clients never access DBs directly)
+- sensitivity controls (restricted/sensitive-location/aggregate-only must not regress)
+- deterministic specs/receipts (`spec_hash`) and promotion proofs (run manifests + checksums)
+- audit integrity (every governed response has `audit_ref` and resolvable evidence refs)
 
 > [!IMPORTANT]
-> Tests are part of governance. If a change alters any governed artifact (policy, schemas, Story Nodes, catalogs, dataset manifests), **the matching test category must be updated/added** so CI remains deterministic and fail-closed.
+> Tests are part of governance. If a change alters any governed artifact (policy, contracts/schemas, Story Nodes, catalogs, receipts, dataset manifests),
+> the matching test category must be updated/added so CI remains deterministic and fail-closed.
 
 ---
 
 ## 📌 Table of contents
 
-- [Principles & non-negotiables](#-principles--non-negotiables)
-- [Acceptance criteria matrix](#-acceptance-criteria-matrix)
-- [Test taxonomy](#-test-taxonomy)
-- [Directory layout](#-directory-layout)
-- [Quickstart: run tests](#-quickstart-run-tests)
-- [Governed artifacts & validation](#-governed-artifacts--validation)
-- [Policy tests (OPA/Rego)](#-policy-tests-oparego)
-- [Contract tests (OpenAPI / API stability)](#-contract-tests-openapi--api-stability)
-- [Pipeline & catalog tests (STAC/DCAT/PROV)](#-pipeline--catalog-tests-stacdcatprov)
-- [Focus Mode regression tests (gold sets)](#-focus-mode-regression-tests-gold-sets)
-- [UI trust membrane tests](#-ui-trust-membrane-tests)
-- [Sensitivity regression suite](#-sensitivity-regression-suite)
-- [Audit integrity tests](#-audit-integrity-tests)
-- [CI mapping (required gates)](#-ci-mapping-required-gates)
-- [Contributing rules & PR checklists](#-contributing-rules--pr-checklists)
-- [Troubleshooting](#-troubleshooting)
-- [References](#-references)
+- [Governance header](#governance-header)
+- [Principles & non-negotiables](#principles--non-negotiables)
+- [Acceptance criteria matrix](#acceptance-criteria-matrix)
+- [Test taxonomy](#test-taxonomy)
+- [Directory layout](#directory-layout)
+- [Quickstart: run tests](#quickstart-run-tests)
+- [Governed artifacts & validation](#governed-artifacts--validation)
+- [Policy tests (OPA/Rego)](#policy-tests-oparego)
+- [Receipt & promotion tests (run manifests, checksums, spec_hash)](#receipt--promotion-tests-run-manifests-checksums-spec_hash)
+- [Contract tests (OpenAPI / API stability)](#contract-tests-openapi--api-stability)
+- [Pipeline & catalog tests (DCAT/STAC/PROV)](#pipeline--catalog-tests-dcatstacprov)
+- [Evidence resolver contract tests](#evidence-resolver-contract-tests)
+- [Focus Mode regression tests (gold sets)](#focus-mode-regression-tests-gold-sets)
+- [UI trust membrane tests](#ui-trust-membrane-tests)
+- [Sensitivity regression suite](#sensitivity-regression-suite)
+- [Audit integrity tests](#audit-integrity-tests)
+- [CI mapping (required gates)](#ci-mapping-required-gates)
+- [Contributing rules & PR checklists](#contributing-rules--pr-checklists)
+- [Troubleshooting](#troubleshooting)
+- [References](#references)
 
 ---
 
-## 🧭 Principles & non-negotiables
+## Governance header
+
+| Field | Value |
+|---|---|
+| Document | `tests/README.md` |
+| Status | **Governed** |
+| Applies to | test taxonomy, required gates, fail-closed behaviors, regression baselines |
+| Version | `v2.0.0-draft` |
+| Effective date | 2026-02-15 |
+| Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
+| Review triggers | any change affecting required gates, deny-by-default semantics, sensitivity leak protections, contract stability expectations |
+
+---
+
+## Principles & non-negotiables
 
 ### What tests must guarantee
 
-1. **Fail closed**: If a required proof (schema validation, catalog validation, policy test, contract test) fails → **no merge**.
-2. **Evidence-first**: Anything user-facing that asserts facts must carry resolvable evidence references, or abstain.
-3. **Sensitivity & CARE/FAIR**: Tests must prevent disclosure regressions for restricted and sensitive-location data.
-4. **Determinism**: Tests must be repeatable:
-   - Pin tool versions where possible.
-   - Use fixed fixtures/snapshots.
-   - Avoid non-deterministic timestamps/randomness without seeding.
-5. **Trust membrane**: UI and external clients do not connect to internal stores (PostGIS/Neo4j/etc.). Only the governed API gateway/policy boundary can.
+1) **Fail closed**  
+If a required proof fails (schema validation, receipt validation, catalog validation, policy test, contract test) → no merge and no promotion.
+
+2) **Evidence-first**  
+User-facing factual outputs must carry resolvable evidence references or abstain/deny.
+
+3) **Sensitivity & CARE/FAIR**  
+Tests must prevent disclosure regressions for restricted and sensitive-location data.
+
+4) **Determinism**  
+Tests must be repeatable:
+- pin tool versions where possible
+- use fixed fixtures/snapshots
+- seed randomness; freeze time where needed
+
+5) **Trust membrane**  
+UI and external clients never connect to internal stores directly (PostGIS/Neo4j/search/object store). Only the governed API/policy boundary can.
 
 > [!NOTE]
-> If you’re uncertain which test type applies to a change, start from the [Acceptance criteria matrix](#-acceptance-criteria-matrix) and add the smallest test that prevents a regression in that category.
+> If unsure which test applies, start from the acceptance criteria matrix and add the smallest test that prevents the regression.
 
 ---
 
-## ✅ Acceptance criteria matrix
-
-The platform’s minimum acceptance criteria map to test types as follows:
+## Acceptance criteria matrix
 
 | Subsystem | Acceptance criteria (must hold) | Primary test type(s) |
 |---|---|---|
-| **Pipeline** | Promotion blocked without valid catalogs + checksums (STAC/DCAT/PROV as applicable) | Integration + CI gate tests |
-| **API** | OpenAPI contract stable under `/api/v1` (no breaking changes) | Contract tests |
-| **Policy** | Default deny; allow only when policy conditions are satisfied (e.g., citations required) | OPA/Rego unit tests |
-| **Focus Mode** | Citations resolve; abstain when missing evidence | Gold-set regression tests |
-| **UI** | No direct DB calls; provenance/evidence views work | E2E + static analysis |
+| Promotion | promotion blocked without receipts + checksums + catalogs (DCAT always; STAC conditional; PROV required) | receipts + catalog integration tests |
+| API | `/api/v1` contract stable (no breaking changes) | OpenAPI diff + contract tests |
+| Policy | default deny; allow only when conditions satisfied | OPA/Rego unit + conftest regression |
+| Evidence | citation refs resolvable (or deny safely) in bounded calls | evidence resolver contract tests |
+| Focus Mode | cite or abstain; never bluff | gold-set regression |
+| UI | no direct DB calls; evidence UX works | static analysis + E2E smoke |
+| Audit | every governed response has `audit_ref` and evidence linkage | contract + integration tests |
 
 > [!IMPORTANT]
-> The above criteria are treated as **release-blocking**. Any PR that touches the affected subsystem must include/adjust the corresponding tests.
+> These criteria are release-blocking. PRs touching the subsystem must include/adjust the corresponding tests.
 
 ---
 
-## 🧩 Test taxonomy
+## Test taxonomy
 
 | Category | Goal | Runs where | Typical scope |
 |---|---|---|---|
-| **Unit** | Pure logic correctness (domain + use-cases), no external systems | Local + CI | Fast, deterministic |
-| **Integration** | Adapter correctness with real services (DB/graph/search/object store/OPA) | CI + local (containers) | Medium/slower |
-| **Contract** | API compatibility and schema enforcement (`/api/v1` stability, response fields) | CI | Medium |
-| **Policy** | OPA/Rego logic: default deny, cite-or-abstain, sensitivity rules | CI + local | Fast |
-| **Data/Catalog validation** | STAC/DCAT/PROV schema + link correctness; checksums | CI + local | Medium |
-| **Regression (gold sets)** | Prevent behavior drift (Focus Mode outputs, policy decisions, redaction) | CI | Medium/slower |
-| **E2E** | Full user flows (UI ↔ API ↔ policy ↔ evidence resolver) | CI nightly / pre-release | Slowest |
-| **Security checks** | SAST/dependency checks, secrets scanning, policy drift detection | CI | Medium |
+| Unit | pure logic correctness (domain/use-cases), no external systems | local + CI | fast |
+| Integration | adapters + real services (DB/graph/search/object store/OPA) | CI + local (containers) | medium/slower |
+| Contract | API compatibility + schema enforcement (`/api/v1` stability) | CI | medium |
+| Policy | OPA/Rego logic: default deny, cite-or-abstain, sensitivity rules | CI + local | fast |
+| Receipts | run_manifest/run_record schema + checksum + spec_hash semantics | CI + local | fast/medium |
+| Data/Catalogs | DCAT/STAC/PROV validation + cross-links + checksums | CI + local | medium |
+| Regression (gold sets) | prevent behavior drift (Focus Mode, policy decisions, redaction) | CI | medium/slower |
+| E2E | full user flows (UI ↔ API ↔ policy ↔ evidence) | nightly / pre-release | slowest |
+| Security | dependency/secret scanning, hardening baselines | CI | medium |
 
 ---
 
-## 🗂️ Directory layout
+## Directory layout
 
-The exact layout can vary by implementation language, but KFM standardizes on these concepts:
+Exact layout can vary by language/tooling, but KFM standardizes these concepts:
 
 ```text
 tests/
-├─ README.md                  # Test governance + how-to (what runs where, required env, fail-closed rules)
+├─ README.md                      # this file
 │
-├─ unit/                      # Fast, hermetic domain/use-case unit tests (no services, no network)
-├─ integration/               # Service-backed integration tests (DB/API/queue/etc.)
-├─ contract/                  # OpenAPI schema + compatibility tests (backward/forward expectations)
-├─ policy/                    # OPA/Rego tests + policy fixtures (deny-by-default, enforcement validation)
-├─ data/                      # STAC/DCAT/PROV validation fixtures + catalog/dataset checks
-├─ focus/                     # Focus Mode eval harness + gold sets (citations, abstain, determinism)
-├─ ui/                        # E2E UI tests + static analysis rules (lint/a11y/perf budgets)
-├─ security/                  # Security regression checks (deps, secrets, hardening, baseline diffs)
+├─ unit/                          # hermetic unit tests (no services/network)
+├─ integration/                   # service-backed integration tests (DB/OPA/etc.)
+├─ contract/                      # OpenAPI validity + compatibility tests
+├─ policy/                        # OPA/Rego tests + fixtures (deny-by-default)
+├─ receipts/                      # run_record/run_manifest + spec_hash + checksum tests
+├─ data/                          # DCAT/STAC/PROV validation fixtures + catalog/dataset checks
+├─ evidence/                      # evidence resolver contract tests (ref → view, deny safely)
+├─ focus/                         # Focus Mode eval harness + gold sets
+├─ ui/                            # E2E UI tests + static analysis rules (trust membrane)
+├─ security/                      # security regression checks (deps, secrets, baselines)
 │
-├─ fixtures/                  # Shared deterministic fixtures used across suites
-│  ├─ synthetic/              # Safe synthetic data only (no restricted real records)
-│  ├─ gold/                   # Gold sets (queries + expected outcomes; reviewed changes only)
-│  └─ snapshots/              # Normalized stable outputs (diff-friendly regression baselines)
+├─ fixtures/                      # shared deterministic fixtures
+│  ├─ synthetic/                  # synthetic only (no restricted real records)
+│  ├─ gold/                       # gold sets (reviewed changes only)
+│  └─ snapshots/                  # normalized stable outputs (diff-friendly)
 │
-└─ helpers/                   # Shared helpers/utilities (keep deterministic; avoid hidden time/randomness)
+└─ helpers/                       # shared helpers (deterministic; no hidden time/randomness)
 ```
 
 > [!NOTE]
-> If your repo uses a different structure, keep this README accurate and retain the taxonomy above. CI should still enforce the same gates.
+> If your repo differs, keep this README accurate and retain the taxonomy. CI should still enforce the same gates.
 
 ---
 
-## 🚀 Quickstart: run tests
+## Quickstart: run tests
 
-Because KFM can be implemented in different stacks (Go / Node / Python, etc.), we define a **tool-oriented** runbook. Use the commands that match the tooling present in your repo.
+Because KFM can be implemented in different stacks (Go/Node/Python), use the commands your repo supports.
 
-### 1) Fast local checks (no containers)
+### Fast local checks (no containers)
+Run before opening a PR:
+- unit tests (Go/Node/Python depending on repo)
+- policy tests (`opa test` and/or `conftest test`)
+- docs/story validators (if present)
 
-Run these before opening a PR:
-
-- **Unit tests** (choose the one your repo uses):
-  - Go: `go test ./...`
-  - Node: `npm test` or `pnpm test`
-  - Python: `pytest -q`
-
-- **Policy unit tests**:
-  - OPA: `opa test ./policy -v`
-  - Conftest: `conftest test ./policy -p ./policy`
-
-- **Governed document validation** (Story Nodes + governed Markdown):
-  - If your repo has a validator CLI, run it (examples):
-    - `./scripts/validate-docs.sh`
-    - `npm run validate:docs`
-    - `python -m kfm_validate docs stories`
-
-> [!TIP]
-> The “fast checks” should finish in a few minutes and catch most PR-level issues early.
-
-### 2) Full suite (integration + contract + gold sets)
-
-Integration tests require a local service stack (commonly via containers). Start your stack (example):
-
+### Full suite (integration + contract + gold sets)
+Start services (example):
 ```bash
 docker compose up -d --build
 ```
 
 Then run:
+- integration tests
+- contract tests (OpenAPI)
+- receipts/catalog validations
+- Focus Mode gold-set regression
+- UI trust membrane checks (static + smoke E2E)
 
-- **Integration tests** (examples):
-  - Go: `go test ./... -tags=integration`
-  - Node: `npm run test:integration`
-  - Python: `pytest -m integration`
-
-- **Contract tests**:
-  - OpenAPI schema validation + compatibility checks (see [Contract tests](#-contract-tests-openapi--api-stability))
-
-- **Focus Mode gold-set regression**:
-  - Run the Focus Mode evaluation harness (see [Focus Mode regression tests](#-focus-mode-regression-tests-gold-sets))
-
-Stop services when done:
-
+Stop services:
 ```bash
 docker compose down -v
 ```
 
 > [!IMPORTANT]
-> If your tests require credentials (e.g., API keys), use **local env files** and CI secrets. Never commit secrets.
+> Use local env files and CI secrets for credentials. Never commit secrets.
 
 ---
 
-## 📜 Governed artifacts & validation
+## Governed artifacts & validation
 
-KFM treats these as governed and therefore testable:
+Governed artifacts are testable and must not drift silently:
+- Story Nodes (template + citations + link hygiene)
+- policy packs (OPA/Rego must compile and pass tests)
+- receipts (run_record/run_manifest schema + spec_hash semantics)
+- catalogs (DCAT always; STAC/PROV where applicable)
+- OpenAPI contracts (`/api/v1` stability)
+- evidence resolver behavior (resolvable refs or safe denial)
+- audit linkage (audit_ref present, evidence refs attached)
 
-- **Story Nodes**: schema + required headings + citations + link hygiene
-- **Policy packs** (OPA/Rego): must compile + pass unit tests
-- **Catalog outputs**: STAC/DCAT/PROV validation + checksums
-- **OpenAPI contract**: `/api/v1` stability guarantees + non-breaking diffs
-- **Evidence bundles**: resolvable refs; audit linkage; stable content hashes
-
-### Recommended validation style
-
-- Prefer **schema validation** over ad-hoc parsing.
-- Prefer **golden fixtures** for outputs that must not drift.
-- Prefer **negative tests** for forbidden outcomes (e.g., leakage of restricted fields).
+Recommended validation style:
+- prefer schema validation over ad-hoc parsing
+- prefer golden fixtures for outputs that must not drift
+- prefer negative tests for forbidden outcomes (leaks)
 
 ---
 
-## 🛡️ Policy tests (OPA/Rego)
+## Policy tests (OPA/Rego)
 
-Policy is enforced with a **default deny** posture; tests must prove the allow cases and deny cases.
+Policy is default deny. Tests must prove allow and deny cases.
 
 ### What to test
+- default deny: missing/invalid policy input → deny
+- cite-or-abstain: missing citations → deny/abstain
+- sensitivity gates: restricted/sensitive-location/aggregate-only must not leak
+- role-based access: only authorized roles can access restricted assets
 
-- **Default deny**: missing/invalid policy input → deny
-- **Cite-or-abstain**: if a response has no citations → deny/abstain
-- **Sensitivity gates**: restricted/sensitive-location/aggregate-only must not leak
-- **Role-based access**: only authorized roles can access restricted assets
-
-### How to run
-
-Using OPA directly:
-
+### How to run (examples)
 ```bash
 opa test ./policy -v
+conftest test . -p policy/conftest
 ```
 
-Using Conftest:
-
-```bash
-conftest test ./policy -p ./policy
-```
-
-### Test design rules
-
-- Keep policy tests **table-driven** and minimal.
-- Include both:
-  - **Allow** tests (positive)
-  - **Deny** tests (negative)
-- Include tests for **missing keys** (fail-closed behavior).
+### Design rules
+- table-driven tests
+- include missing-keys tests (fail closed)
+- include regression denies for known leak patterns
 
 ---
 
-## 📜 Contract tests (OpenAPI / API stability)
+## Receipt & promotion tests (run manifests, checksums, spec_hash)
 
-KFM’s API contract under `/api/v1` must remain stable. Contract tests enforce:
+Promotion is blocked unless receipts and proofs validate.
 
-- schema validity (OpenAPI parses + validates),
-- response shape invariants for core endpoints,
-- and **no breaking changes** in `/api/v1`.
+### What to test
+- `run_record.json` schema validity + required fields
+- `run_manifest.json` schema validity (Promotion Contract receipt)
+- checksums exist and match artifacts
+- `spec_hash` semantics: `sha256(JCS(spec))` (RFC 8785 canonical JSON) when applicable
+- catalogs referenced by receipts exist and validate
 
-### Recommended contract test components
+### Negative tests (required)
+- missing license/sensitivity → fail promotion
+- missing receipt keys → fail promotion
+- checksum mismatch → fail promotion
+- missing catalogs (DCAT/PROV) → fail promotion
 
-1. **OpenAPI lint/validate**
-   - Ensure OpenAPI is valid and references exist.
-2. **Breaking-change detection**
-   - Run an OpenAPI diff against the main branch (or last release tag).
-3. **Runtime contract checks**
-   - Run a tool that generates requests from OpenAPI and validates responses.
+---
 
-### Common tool choices (pick one, pin versions)
+## Contract tests (OpenAPI / API stability)
 
-- `schemathesis` (OpenAPI-driven runtime testing)
-- `openapi-diff` style tools (breaking-change checks)
-- Custom JSON Schema validators
+`/api/v1` must remain stable.
+
+### What to test
+- OpenAPI validates and references resolve
+- breaking-change detection against baseline (main branch or last release tag)
+- runtime contract checks for critical endpoints (catalogs, evidence resolve, Focus Mode output schema)
 
 > [!IMPORTANT]
-> If you must make a breaking API change, do it in `/api/v2` (or equivalent) and keep `/api/v1` compatible.
+> Breaking changes belong in `/api/v2` (or equivalent), not `/api/v1`.
 
 ---
 
-## 🗺️ Pipeline & catalog tests (STAC/DCAT/PROV)
+## Pipeline & catalog tests (DCAT/STAC/PROV)
 
-These tests ensure that promotion/publishing is blocked unless required catalogs and checksums are present and valid.
+These tests ensure promotion/publishing is blocked unless required catalogs and checksums are present and valid.
 
-### Minimum required validations
-
-- **STAC** (for spatial assets): collections/items validate; asset links are coherent
-- **DCAT**: dataset metadata exists (license/attribution/sensitivity labels)
-- **PROV**: lineage links raw inputs to processed outputs and records transformations
-- **Checksums**: promoted assets have deterministic checksums recorded and verified
+### Minimum validations
+- DCAT exists and validates (license/attribution/restrictions present)
+- STAC validates when spatial assets exist (collections/items/assets coherent)
+- PROV validates (raw → processed lineage recorded)
+- catalogs cross-link cleanly (no dangling refs)
+- checksums/digests match declared artifacts
 
 ### Test styles
-
-- **Schema validation tests**: run validators on fixtures
-- **Golden file tests**: compare normalized output to expected snapshots
-- **Integration slice tests**: ingest a fixed small slice and assert stable counts/checksums
+- schema validation against fixtures
+- golden snapshot tests for normalized catalog output
+- integration slice tests (tiny fixed slice → stable digests + counts)
 
 ---
 
-## 🧠 Focus Mode regression tests (gold sets)
+## Evidence resolver contract tests
 
-Focus Mode must be **evaluable** and **non-regressing**.
+Evidence must be reviewable. Refs must resolve or deny safely.
 
-### What gold-set tests must assert
+### What to test
+- `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` (and optionally `oci://`) resolve to a human-readable view
+- unauthorized access returns 403 (non-leaky)
+- missing refs return 404
+- resolver responses include required metadata (license/attribution, ids/digests where available)
 
-- For questions requiring evidence: responses contain citations and pass policy checks.
-- For questions with insufficient evidence: responses **abstain** (do not hallucinate).
-- Citation references are **resolvable** to evidence views (the UI can resolve a `citation.ref` efficiently).
-- Outputs respect sensitivity gates and never leak restricted data.
+### Acceptance criterion
+- a citation ref can be resolved in a bounded number of calls (UI requirement); tests should enforce the server-side contract that makes this possible.
+
+---
+
+## Focus Mode regression tests (gold sets)
+
+Focus Mode must be evaluable and non-regressing.
+
+### Gold-set assertions
+- evidence-required questions → citations present and policy allows
+- insufficient evidence → abstain (no hallucination)
+- citations resolvable via evidence resolver
+- sensitivity gates respected (no restricted leakage)
+- `audit_ref` always present
 
 ### Suggested gold-set format
-
-Use a structured file format that is easy to diff in PRs (YAML/JSON). Example fields:
-
-- `id`: stable identifier
-- `question`: prompt/query
-- `view_state`: bbox/time range/layers context (if applicable)
-- `expected`:
-  - `allowed`: true/false
-  - `must_abstain`: true/false
-  - `min_citations`: integer
-  - `deny_reasons`: list of expected policy reasons (if denied)
+Structured YAML/JSON:
+- `id`, `question`, `view_state`
+- `expected.allowed`, `expected.must_abstain`, `expected.min_citations`
+- `expected.deny_reasons` for deny cases (optional)
 
 > [!NOTE]
-> Gold sets are not “model outputs you like.” They are **regression contracts** that codify evidence + policy requirements.
+> Gold sets are governance contracts, not “answers you like.”
 
 ---
 
-## 🧱 UI trust membrane tests
+## UI trust membrane tests
 
 UI must not bypass the governed API boundary.
 
 ### What to enforce
-
-- No database connection strings in frontend code.
-- No direct calls to PostGIS/Neo4j/search stores from the UI.
-- All data retrieval flows:
-  - UI → governed API → (policy decision + stores) → API response → UI rendering.
+- no DB connection strings or store endpoints in frontend code
+- no direct calls to PostGIS/Neo4j/search/object stores from UI
+- all flows: UI → API → (policy + stores) → API → UI
 
 ### Test mechanisms
-
-- **Static analysis**:
-  - Grep rules / lint rules for forbidden imports and forbidden URLs/ports.
-- **E2E tests**:
-  - Validate provenance/evidence panels work.
-  - Validate citations render and evidence resolver endpoints are hit (not DB).
+- static analysis rules (forbidden ports/hosts/imports)
+- E2E smoke: evidence panels work, citations render, evidence resolver used (not DB)
 
 ---
 
-## 🔒 Sensitivity regression suite
+## Sensitivity regression suite
 
-KFM treats some data as sensitive and requires redaction + non-regression checks.
+KFM requires redaction and non-regression for sensitive outputs.
 
-### Sensitivity classes (common baseline)
-
-- **Public**: safe to publish without redaction
-- **Restricted**: requires role-based access (e.g., parcel ownership)
-- **Sensitive-location**: coordinates must be generalized/suppressed (e.g., archaeology, sensitive species)
-- **Aggregate-only**: only publish above thresholds (e.g., small health/crime counts)
+### Sensitivity classes (baseline)
+- public
+- restricted
+- sensitive-location
+- aggregate-only
 
 ### Required regression tests
-
-1. **Golden queries**
-   - Queries that previously leaked restricted fields must fail forever.
-2. **Negative tests**
-   - Unauthorized roles must not receive high-precision sensitive-location output.
-3. **Field-level tests**
-   - Verify restricted fields (owner names, exact archaeology coordinates, small counts) are redacted/suppressed.
-4. **Audit integrity**
-   - Every API response includes audit reference and evidence bundle hash.
+1) golden deny queries (previous leak patterns must fail forever)
+2) negative tests for unauthorized high-precision sensitive-location outputs
+3) field-level tests for redaction/suppression
+4) audit linkage checks for governed responses
 
 > [!IMPORTANT]
-> The sensitivity suite must include **deny cases**. Passing tests must *prove* the system refuses/abstains/redacts correctly.
+> Sensitivity suite must include deny cases. Passing tests must prove refusal/redaction is correct.
 
 ---
 
-## 🧾 Audit integrity tests
+## Audit integrity tests
 
 Auditability is a trust requirement.
 
 ### What to test
+- governed responses include `audit_ref`
+- responses include evidence refs (citations) or abstain
+- audit records can be fetched and link back to:
+  - policy version/bundle (when available)
+  - evidence refs / bundle digest (when available)
 
-- Responses that contain data or claims include:
-  - an `audit_ref` (or equivalent audit reference)
-  - an evidence bundle/content hash reference (or equivalent)
-- Audit entries are:
-  - present for the request
-  - linked to the policy bundle/version used (if available)
-  - linked to citations/evidence references
-
-### Recommended test approach
-
-- Add contract tests asserting required audit fields exist on responses.
-- Add integration tests that fetch the audit record and validate linkage:
-  - request → audit record → evidence bundle references.
+Recommended approaches:
+- contract tests asserting `audit_ref` on response schemas
+- integration tests that fetch audit record and validate linkage
 
 ---
 
-## 🧰 CI mapping (required gates)
+## CI mapping (required gates)
 
-CI should enforce (at minimum):
-
-1. ✅ Governed Markdown + Story Node validation
-2. ✅ STAC/DCAT/PROV validation for new/changed datasets
-3. ✅ OPA/Rego policy tests (default deny; cite-or-abstain)
-4. ✅ OpenAPI contract tests for `/api/v1`
-5. ✅ Focus Mode gold-set regression suite
-6. ✅ UI trust membrane static analysis + selected E2E checks
-7. ✅ Sensitivity regression suite + audit integrity tests
+CI should enforce at minimum:
+1) docs/story validation
+2) receipt validation + checksum verification + spec_hash semantics checks
+3) DCAT/STAC/PROV validation + cross-links
+4) OPA/Rego policy tests + regression denies
+5) OpenAPI contract tests for `/api/v1`
+6) Focus Mode gold-set regression
+7) UI trust membrane static analysis + selected E2E smoke
+8) sensitivity regression suite + audit integrity checks
 
 > [!TIP]
-> Keep “fast checks” on every PR, and move heavier E2E/perf checks to nightly/pre-release—**but do not weaken the fail-closed gates** for governed artifacts.
+> Keep fast checks on every PR and move heavier E2E/perf checks to nightly/pre-release—but do not weaken fail-closed gates.
 
 ---
 
-## 🤝 Contributing rules & PR checklists
+## Contributing rules & PR checklists
 
-### PR checklist (all PRs)
+### All PRs
+- [ ] tests updated/added for touched subsystems
+- [ ] no secrets in code/logs/fixtures
+- [ ] deterministic outputs (seed randomness, freeze time)
+- [ ] link hygiene (no broken internal references)
 
-- [ ] Added/updated tests matching the subsystem(s) changed
-- [ ] No secrets in code/logs/fixtures
-- [ ] Deterministic outputs (seed randomness, freeze time where needed)
-- [ ] Link hygiene (no broken internal references)
+### Policy PRs
+- [ ] allow + deny unit tests added/updated
+- [ ] default deny preserved
+- [ ] sensitivity regressions updated if affected
 
-### If your PR changes policy (OPA/Rego)
+### OpenAPI/API PRs
+- [ ] contract tests updated
+- [ ] `/api/v1` compatibility proven (or create `/api/v2`)
+- [ ] audit schema expectations updated if response shape changed
 
-- [ ] Added/updated policy unit tests proving allow + deny behavior
-- [ ] Updated sensitivity regression tests if affected
-- [ ] Confirmed default-deny posture preserved
+### Dataset integration PRs
+- [ ] receipt + catalog fixtures added (DCAT always; STAC/PROV as applicable)
+- [ ] checksum tests added
+- [ ] sensitivity labels + redaction tests added when needed
+- [ ] representative API contract test query added
 
-### If your PR changes OpenAPI or endpoints
-
-- [ ] Updated contract tests
-- [ ] Proved `/api/v1` remains compatible (or created `/api/v2` for breaking change)
-- [ ] Updated audit integrity expectations if response shape changed
-
-### If your PR adds/updates a dataset integration
-
-- [ ] Added catalog fixtures (DCAT always; STAC/PROV as applicable)
-- [ ] Added validator tests (schema + checksums)
-- [ ] Added sensitivity labels + redaction tests if needed
-- [ ] Added at least one representative API contract test query
-
-### If your PR changes Focus Mode behavior
-
-- [ ] Updated/added gold-set tests
-- [ ] Verified abstention behavior when evidence is missing
-- [ ] Verified citations remain resolvable and policy allows only with citations
+### Focus Mode PRs
+- [ ] gold sets updated/added (with governance review if sensitive impacts)
+- [ ] abstention behavior verified
+- [ ] citations resolvable verified
 
 ---
 
-## 🧯 Troubleshooting
+## Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Policy tests deny everything | Missing input keys or default-deny rule hit | Add required input keys to fixtures; keep deny-by-default but prove allow cases |
-| STAC/DCAT/PROV validation fails | Missing required fields, invalid geometry/time, bad links | Fix catalogs; regenerate fixtures; ensure checksums match |
-| Contract tests fail on `/api/v1` | Breaking change introduced | Restore compatibility; move breaking change to `/api/v2` |
-| Gold-set regressions | Behavior drift in Focus Mode or retrieval | Confirm drift is intended; update gold sets *only* with governance review for sensitive impacts |
-| UI membrane test fails | Frontend attempted to call DB/service directly | Route via governed API; remove forbidden endpoints/imports |
+| Policy denies everything | missing input keys or deny-by-default triggered | fix fixtures; prove allow cases without weakening deny |
+| Receipt tests fail | missing run_manifest keys/spec_hash semantics mismatch | update receipt emitter; keep fail-closed |
+| Catalog tests fail | invalid DCAT/STAC/PROV or broken links | fix catalogs; regenerate normalized outputs; verify checksums |
+| Contract tests fail | `/api/v1` breaking change | restore compatibility or move to `/api/v2` |
+| Gold set fails | behavior drift | confirm intent; update gold set only with governance review if sensitive |
+| UI membrane fails | UI trying to call stores directly | route through API gateway; remove forbidden endpoints |
 
 ---
 
-## 📚 References
+## References
 
-Internal KFM documents that define test expectations:
-
-- **KFM Next-Gen Blueprint and Primary Guide (v1.2)** — CI minimal hardening, acceptance criteria matrix, policy-as-code patterns, Focus Mode cite-or-abstain.
-- **KFM Data Source Integration Blueprint (v1.0)** — sensitivity classes, redaction as transformation, CI policy regression suite, audit integrity expectations.
-- **KFM Integration Report (New Ideas 2-8-26)** — normalization notes for spec hashing and governance gaps (useful for reproducibility tests).
+Internal KFM documents defining test expectations:
+- KFM Next-Gen Blueprint & Primary Guide — CI hardening, acceptance criteria, cite-or-abstain, audit expectations
+- KFM Data Source Integration Blueprint — sensitivity classes, redaction as transformation, policy regressions
+- Feb-2026 integration patterns — spec_hash semantics (RFC 8785), digest pinning, acceptance harness patterns
 
 External standards frequently used in validation:
-
 - STAC (OGC community standard)
 - DCAT (W3C)
 - PROV (W3C)
-- OPA / Rego (Open Policy Agent)
+- OPA/Rego (Open Policy Agent)
 
 ---
 
 <details>
-  <summary><strong>FAQ: Why do we treat tests as governance artifacts?</strong></summary>
+  <summary><strong>FAQ: Why treat tests as governance artifacts?</strong></summary>
 
-Because KFM’s core value is *trust*. Tests are the automated enforcement mechanism for:
+Because KFM’s core value is trust. Tests are the automated enforcement mechanism for:
 - provenance completeness,
 - evidence-first behavior,
 - policy correctness,
 - and preventing sensitivity leaks.
 
-A “green build” is not merely “code works” — it is “the governed system still satisfies its trust contract.”
+A green build is not merely “code works”—it is “the governed system still satisfies its trust contract.”
 
 </details>
