@@ -325,12 +325,12 @@ allow if {
 
 ```mermaid
 flowchart LR
-  UI[UI / Client] -->|request| GW[API Gateway (Trust Membrane)]
-  GW -->|input context| PDP[OPA/Rego PDP]
-  PDP -->|allow/deny + obligations| GW
-  GW -->|enforce obligations| SVC[Data Service / Repos]
-  SVC -->|data + evidence refs| GW
-  GW -->|audit_ref + evidence bundle hash| UI
+  UI["UI / Client"] -->|"request"| GW["API Gateway (Trust Membrane)"]
+  GW -->|"input context"| PDP["OPA/Rego PDP"]
+  PDP -->|"allow/deny + obligations"| GW
+  GW -->|"enforce obligations"| SVC["Data Service / Repos"]
+  SVC -->|"data + evidence refs"| GW
+  GW -->|"audit_ref + evidence bundle hash"| UI
 ```
 
 ---
