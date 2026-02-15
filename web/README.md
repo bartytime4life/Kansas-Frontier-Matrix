@@ -33,6 +33,7 @@ KFM-Web is the **React/TypeScript + MapLibre** interface for exploring **governe
 ## Table of contents
 
 - [What lives in `web/`](#what-lives-in-web)
+- [Directory layout](#directory-layout)
 - [Product mental model](#product-mental-model)
 - [Non-negotiables](#non-negotiables)
 - [Architecture at a glance](#architecture-at-a-glance)
@@ -62,6 +63,70 @@ KFM’s canonical layout separates concerns to preserve governance boundaries:
 
 > [!NOTE]
 > If you’re new: start with the UI mental model, then follow the “truth path” into receipts, catalogs, policy, and the API.
+
+---
+
+## Directory layout
+
+> [!NOTE]
+> This is the **recommended / expected** structure for KFM-Web. If your repo differs, keep the *boundaries* and *contracts*
+> identical and document the mapping in this README.
+
+```text
+web/
+├─ README.md
+├─ package.json
+├─ package-lock.json            # or pnpm-lock.yaml / yarn.lock (use one)
+├─ tsconfig.json
+├─ .env.example                 # optional: UI-only env defaults (never commit secrets)
+├─ public/                      # static assets (icons, manifest, robots)
+│  ├─ index.html
+│  └─ ...
+└─ src/
+   ├─ main.tsx                  # app bootstrap (router, providers)
+   ├─ app/                       # app wiring (routes, providers, layout)
+   │  ├─ App.tsx
+   │  ├─ router.tsx
+   │  ├─ providers.tsx          # query client, theme, feature flags (no secrets)
+   │  └─ layout/
+   ├─ contracts/                 # GOVERNED client-side contracts (keep in sync with API)
+   │  ├─ viewstate.ts           # ViewState type + validation helpers
+   │  ├─ citations.ts           # citation/ref types + schemes
+   │  ├─ evidence.ts            # evidence view DTOs
+   │  └─ api.ts                 # typed endpoint DTOs (manual or codegen)
+   ├─ services/                  # THE ONLY NETWORK LAYER (trust membrane in code)
+   │  ├─ apiClient.ts           # base URL allowlist, headers, timeouts
+   │  ├─ evidenceResolver.ts    # resolve citation refs → evidence views (≤ 2 calls)
+   │  ├─ bundleResolver.ts      # resolve digest → evidence pack (optional)
+   │  └─ auditClient.ts         # fetch audit context by audit_ref (non-leaky)
+   ├─ components/
+   │  ├─ map/
+   │  │  ├─ MapCanvas.tsx
+   │  │  ├─ LayerPanel.tsx
+   │  │  ├─ Timeline.tsx
+   │  │  └─ InspectPanel.tsx
+   │  ├─ story/
+   │  │  └─ StoryViewer.tsx
+   │  ├─ focus/
+   │  │  └─ FocusPanel.tsx
+   │  ├─ evidence/
+   │  │  ├─ EvidenceDrawer.tsx
+   │  │  ├─ BundleViewer.tsx
+   │  │  └─ CitationList.tsx
+   │  └─ audit/
+   │     └─ AuditDrawer.tsx
+   ├─ features/                  # optional: feature modules (layer browser, story engine, etc.)
+   ├─ hooks/                     # React hooks (pure UI; avoid hidden side effects)
+   ├─ styles/                    # CSS/Tailwind tokens/themes
+   ├─ assets/                    # local images/icons used by components
+   ├─ test/                      # test utils + fixtures (NO sensitive data)
+   └─ __tests__/                 # unit/integration tests (tooling-dependent)
+```
+
+### Layout rules (KFM-Web invariants)
+- `src/services/**` is the **only** place allowed to perform network IO.
+- `src/contracts/**` is treated as **governed** (changing it often implies API/contract review).
+- Test fixtures must never contain sensitive locations or restricted fields.
 
 ---
 
@@ -371,4 +436,3 @@ If you’re adding UI capabilities:
    - update docs if UI behavior changes
 
 **KFM principle:** if it can’t be traced, it can’t be trusted. 🔎
-
