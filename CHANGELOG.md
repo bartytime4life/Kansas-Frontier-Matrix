@@ -1,21 +1,31 @@
-# 📌 CHANGELOG — Kansas Matrix System 🗺️🧠  
-![Keep a Changelog](https://img.shields.io/badge/keep%20a%20changelog-1.1.0-orange)  
-![Versioning](https://img.shields.io/badge/versioning-SemVer%20%2B%20data%20tags-blue)  
-![Governance](https://img.shields.io/badge/governance-contract--first%20%7C%20evidence--first-brightgreen)  
-![Provenance](https://img.shields.io/badge/provenance-STAC%20%7C%20DCAT%20%7C%20PROV-informational)  
-![AI Policy](https://img.shields.io/badge/AI-no%20source%2C%20no%20answer-critical)  
+<!--
+GOVERNED ARTIFACT NOTICE
+This CHANGELOG is part of the Kansas Matrix System (KFM/KMS) trust boundary.
+If you change meaning (not just phrasing), route through the governance review path.
+-->
+
+# 📌 CHANGELOG — Kansas Matrix System (KFM / KFM-NG) 🗺️🧠
+
+![Keep a Changelog](https://img.shields.io/badge/keep%20a%20changelog-1.1.0-orange)
+![Versioning](https://img.shields.io/badge/versioning-SemVer%20%2B%20data%20tags-blue)
+![Governance](https://img.shields.io/badge/governance-contract--first%20%7C%20evidence--first-brightgreen)
+![Provenance](https://img.shields.io/badge/provenance-STAC%20%7C%20DCAT%20%7C%20PROV-informational)
+![AI Policy](https://img.shields.io/badge/AI-no%20source%2C%20no%20answer-critical)
 ![FAIR+CARE](https://img.shields.io/badge/data-FAIR%20%2B%20CARE%20principles-purple)
+![Fail-Closed](https://img.shields.io/badge/policy-default%20deny-black)
+![Trust Membrane](https://img.shields.io/badge/trust%20membrane-enforced-success)
 
 > [!IMPORTANT]
-> This changelog is **governance‑critical**. Any change that impacts **schemas**, **API contracts**, **pipeline order**, **directory canonical homes**, **security/privacy controls**, **data sensitivity rules**, or **review gates** must be recorded here. ✅  
+> This changelog is **governance-critical**. Any change that impacts **schemas**, **API contracts**, **pipeline order**, **directory canonical homes**, **security/privacy controls**, **data sensitivity rules**, or **review gates** must be recorded here. ✅  
 > _If it changes what “truth” means in the system, it belongs here._
 
 ---
 
 ## 🧭 Quick Nav
+
 - 🔥 **Unreleased work:** [Unreleased](#unreleased-)
-- 🧱 **Latest governed draft:** [13.0.0-draft](#1300-draft---2025-12-28-)
-- 🗂️ **Repo layout snapshot:** [Expected Repo Layout](#-expected-repo-layout-v13-snapshot)
+- 🧱 **Latest governed draft:** [14.0.0-draft](#1400-draft---2026-02-14-)
+- 🗂️ **Repo layout snapshot:** [Expected Repo Layout](#-expected-repo-layout-v14-snapshot)
 - 🧾 **Versioning rules:** [Versioning & Compatibility](#-versioning--compatibility-rules)
 - 🛡️ **Governance gates:** [Review Gates](#-review-gates--release-barriers)
 - 📚 **Reference Library:** [Inventory](#-reference-library-inventory)
@@ -23,20 +33,27 @@
 ---
 
 ## 🧾 Conventions
-- **Format:** [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+
+- **Format:** Keep a Changelog 1.1.0
 - **Dates:** `YYYY-MM-DD`
 - **Versions:** SemVer-style with a `-draft` prerelease label while in governed draft mode.
 - **Where to write changes first:** `## [Unreleased]`
 - **What “Done” means:** merged + validated + documented + reproducible (tests + metadata + provenance).
 
+> [!NOTE]
+> This repository treats **docs as production inputs**. Documentation changes that affect governance, promotion rules,
+> evidence resolution behavior, or API compatibility are **release-impacting**.
+
 ---
 
 ## 🧬 Versioning & Compatibility Rules
+
 > [!NOTE]
 > SemVer applies to **contracts** (schemas + APIs + pipeline invariants).  
 > Data can also be released with **dataset tags** (time-based or semver) when it’s the primary artifact.
 
 ### ✅ SemVer Triggers (Contract-First)
+
 | Change Type | Examples | Version Bump |
 |---|---|---|
 | **Breaking** 🧨 | Schema field removal/rename, contract behavior change, pipeline order change, canonical directory move, auth/privacy semantics change | **MAJOR** |
@@ -44,58 +61,68 @@
 | **Fix-only** 🩹 | Bug fixes, doc clarifications, typo corrections, perf improvements with identical outputs | **PATCH** |
 
 ### 🗓️ Data Release Tags (Evidence-First)
+
 Use data tags when the **data catalog** is the product:
 - `v2026.1` (time-based) or `data-v1.3.0` (semver-style)
 - Align release tag with `CITATION.cff` so downstream citations are stable.
 
 ---
 
-## 🧭 Non‑Negotiables (don’t regress) 🧱
+## 🧭 Non-Negotiables (don’t regress) 🧱
+
 > _These are system invariants. If any invariant changes, it is automatically MAJOR._
 
-### 🧩 Contract‑First
+### 🧩 Contract-First
 - Schemas + API contracts are first-class artifacts.
 - Contract changes trigger strict compatibility review + version bump.
 
-### 🧾 Evidence‑First (“the map behind the map”)
+### 🧾 Evidence-First (“the map behind the map”)
 - Catalog + provenance come *before* narrative, UI, or AI claims.
 - Every map layer, chart, and AI answer must trace back to sources.
 
 ### 🔁 Deterministic Pipeline
-- ETL transforms are idempotent, config-driven, and fully logged for reproducibility.
+- Transforms are idempotent, spec-driven, and fully receipted for reproducibility.
 - No “hand edits” to processed outputs without an auditable pipeline step.
 
 ### 🔗 Canonical Pipeline Order (hard rule)
-`ETL → STAC/DCAT/PROV catalogs → Graph → APIs → React/Map UI → Story Nodes → Focus Mode`
+`ETL → STAC/DCAT/PROV catalogs → Graph/Search → Governed APIs → Map UI → Story Nodes → Focus Mode`
 
 ### 🧭 Truth Path (no bypassing)
-- No component bypasses the governed chain (UI never queries DB directly; AI never answers without evidence context).  
-- “Truth path” must remain intact across deploys and dev tooling.
+- UI never queries DB directly; all access is via governed API + policy boundary.
+- Focus Mode never answers without resolvable evidence context (“cite or abstain”).
+
+### 🔐 Fail-Closed Governance
+- Missing policy input / missing receipts / missing catalogs / missing citations → **deny**.
 
 ### 🧿 FAIR + CARE (data sharing with protection)
 - Open where possible, protected where necessary.
-- Sensitive locations and community-contributed datasets must honor data governance, minimization, and safe disclosure.
+- Sensitive locations and culturally restricted knowledge must honor governance, minimization, and safe disclosure.
 
 ---
 
 ## 🛡️ Review Gates & Release Barriers
+
 > [!IMPORTANT]
 > If a change triggers any gate below, the PR **must** link to its evidence (tests, validations, migration notes, and schema diffs).
 
 ### 🚦Gate Checklist (apply as relevant)
+
 - **🧩 Contract Gate:** schema diffs + compatibility verdict + migration notes.
 - **🧾 Catalog/PROV Gate:** STAC/DCAT/PROV validation + provenance completeness.
-- **🔐 Security Gate:** threat review + dependency posture + secrets hygiene.
-- **🕵️ Privacy/Sensitivity Gate:** data classification tags applied (e.g., `public/internal/sensitive`) + suppression/rounding rules for sensitive geography.
-- **🧠 AI Evidence Gate:** “no source, no answer” enforcement + regression tests that verify citations exist.
+- **🧾 Receipt Gate:** run manifest/receipt schema validate + `spec_hash` reproducibility + checksums.
+- **🔐 Security Gate:** threat review + dependency posture + secrets hygiene + pinned actions/toolchain.
+- **🕵️ Privacy/Sensitivity Gate:** classification tags + suppression/generalization rules for sensitive geography.
+- **🧠 AI Evidence Gate:** “no source, no answer” enforcement + regression tests verifying citations exist.
 - **⚡ Performance Gate:** performance budget checks + scalable defaults.
 - **♿ Accessibility Gate:** keyboard + contrast + map controls + screen-reader safe patterns.
 - **📦 Release Gate:** release notes compiled + artifacts staged + `CITATION.cff` updated.
+- **🧯 Kill-Switch Gate:** emergency deny switch behavior verified for publish/promote surfaces.
 
 ### 🧾 Changelog Entry Minimums (for governance-critical changes)
+
 Every governance-impact entry must include:
 - **Impact:** what changes for users/systems
-- **Scope:** which subsystem(s) (`schemas/`, `src/server/`, `src/pipelines/`, `web/`, `docs/`, `data/`)
+- **Scope:** which subsystem(s) (`schemas/`, `policy/`, `src/server/`, `src/pipelines/`, `web/`, `docs/`, `data/`, `.github/`)
 - **Migration:** steps + compatibility notes
 - **Validation:** tests/linters/validators executed
 - **Owner:** maintainer or working group
@@ -103,6 +130,7 @@ Every governance-impact entry must include:
 ---
 
 ## 🧭 System Map (for alignment) 🗺️
+
 ```mermaid
 flowchart LR
   RAW[📥 Raw Sources] --> ETL[🏭 ETL / Processing]
@@ -119,9 +147,7 @@ flowchart LR
 ## [Unreleased] 🚧
 
 ### ✨ Added
-- 📝 Created `CHANGELOG.md` to standardize versioned change tracking.
-- 📚 Documented a **Reference Library inventory** (see below) to anchor future design + implementation decisions.
-- 🧭 Added governance scaffolding: **versioning triggers**, **review gates**, and **changelog entry minimums** (this file).
+- TBD
 
 ### 🔁 Changed
 - TBD
@@ -133,24 +159,84 @@ flowchart LR
 - TBD
 
 ### 🗺️ Roadmap / Proposed (intent, not shipped)
-> [!NOTE]
-> Items here are **directional**. Move them into `Added/Changed` only once merged + validated.
 
-- ⏱️ **Near real-time ingestion** for event-driven layers (e.g., flood mapping)  
+> [!NOTE]
+> Items here are **directional**. Move them into `Added/Changed/Fixed/Security` only once merged + validated.
+
+- ⏱️ **Near real-time ingestion** for event-driven layers (e.g., flood mapping)
   - ✅ Acceptance: idempotent streaming → deterministic materializations → catalog updates
   - 🔁 Includes: cadence registry + replay window + provenance granularity
 
-- 🧪 **Simulation modules + validation harness**  
+- 🧪 **Simulation modules + validation harness**
   - ✅ Acceptance: reproducible runs + parameter manifests + result registries
 
-- 🕶️ **Immersive modes** (3D/AR exploration) as optional UI layers  
+- 🕶️ **Immersive modes** (3D/AR exploration) as optional UI layers
   - ✅ Acceptance: UI toggles do not bypass governance; citations remain visible in immersive views
 
-- 🧠 **Federated / multi-model AI extensions**  
+- 🧠 **Federated / multi-model AI extensions**
   - ✅ Acceptance: model registry + eval baselines + “no source, no answer” stays enforceable
 
-- 🧩 **Indigenous Data Governance integration** (FAIR + CARE implementation depth)  
-  - ✅ Acceptance: data classification + consent/authority metadata + culturally safe disclosure controls
+- 🧩 **Indigenous Data Governance integration** (FAIR + CARE implementation depth)
+  - ✅ Acceptance: classification + consent/authority metadata + culturally safe disclosure controls
+
+---
+
+## [14.0.0-draft] - 2026-02-14 🧱
+
+> [!IMPORTANT]
+> v14 is a governance hardening release: it formalizes **promotion as evidence**, standardizes **spec_hash** semantics,
+> and consolidates repo governance into merge-blocking CI gates.
+
+### ✨ Added
+- 🧾 **Promotion evidence bundle concept**:
+  - Receipt-first promotion model: raw/work/processed publishability requires receipts + catalogs + checksums.
+  - Canonical addressing guidance introduced: prefer digest-addressed artifacts for provenance roots.
+  - Impact: reviewers can verify “why this is allowed” from receipts and catalogs without reading pipeline code.
+
+- 🔐 **Deterministic spec identity semantics** (standardized):
+  - `spec_hash = sha256(JCS(spec))` (RFC 8785 canonical JSON) as the reproducible spec identity baseline.
+  - Companion fields recommended for comparability across tools: `spec_schema_id`, `spec_recipe_version`.
+
+- 📦 **OCI “evidence bundle” / referrers direction** (design target):
+  - Single subject digest with attached referrers (SBOM, provenance, catalogs, receipts) as the portable provenance hub.
+
+- 🧯 **Kill switch pattern** (governance control):
+  - Emergency deny switch requirements defined for publish/promote surfaces (policy-controlled, no redeploy).
+
+- 🧭 **Repo governance SSoT**:
+  - `.github/README.md` elevated as canonical “what is required in CI + branch protections” governance doc.
+  - CI gate matrix formalized: docs/stories/contracts/catalogs/receipts/policy/api-contract/build.
+
+### 🔁 Changed
+- 🧱 **Repo layout snapshot updated to v14** (see below) to reflect:
+  - canonical `data/catalog/{dcat,stac,prov}/` placement,
+  - explicit contracts/schemas home expectations,
+  - optional `watchers/` governance surface (only if used).
+
+- 🧠 **AI behavior clarified**:
+  - “No source, no answer” enforced as policy gate expectation (cite-or-abstain, always emit audit reference).
+
+### 🐛 Fixed
+- 🧾 Corrected outdated/ambiguous “catalog roots” language by standardizing on `data/catalog/…` as the preferred boundary (mapping allowed if repo differs, but boundary must remain identical).
+
+### 🔒 Security
+- 🛡️ **Workflow hardening expectations**:
+  - pin third-party Actions by commit SHA,
+  - least-privilege `GITHUB_TOKEN` permissions,
+  - prefer OIDC/GitHub App over PATs,
+  - toolchain pinning emphasized for policy/verification tools.
+
+### ⚠️ Breaking
+- Canonical spec identity requirements (“spec_hash semantics”) are now treated as contract-level expectations.
+  - Any existing receipts/specs that used non-canonical hashing must migrate.
+
+### 🧰 Migration Notes
+- Update receipt generation to compute `spec_hash` using canonical JSON (RFC 8785 / JCS).
+- Ensure run manifests/receipts include:
+  - `spec_hash`, `spec_schema_id`, `spec_recipe_version`,
+  - input/output digests, and
+  - links to DCAT/PROV (and STAC when spatial assets are published).
+- Update CI to require the new receipt checks (fail closed) on PR.
 
 ---
 
@@ -199,60 +285,68 @@ flowchart LR
 
 ---
 
-## 🗂️ Expected Repo Layout (v13 snapshot)
+## 🗂️ Expected Repo Layout (v14 snapshot)
 
 <details>
 <summary>📁 Click to expand the governed directory map</summary>
 
 ```text
-📁 data/
-├── 📁 <domain>/
-│   ├── 📁 raw/          (read-only sources)
-│   ├── 📁 work/         (intermediate outputs)
-│   ├── 📁 processed/    (final outputs)
-│   ├── 📁 mappings/     (dataset → STAC/DCAT/PROV docs, optional)
-│   └── 📄 README.md
-└── 📄 README.md
-
-📁 docs/
-├── 📄 MASTER_GUIDE_v12.md
-├── 📄 MASTER_GUIDE_v13.md
-├── 📄 glossary.md
-├── 📁 architecture/
-├── 📁 standards/
-├── 📁 templates/
-├── 📁 governance/
-└── 📁 reports/
-    └── 📁 story_nodes/
-        ├── 📁 templates/
-        ├── 📁 draft/
-        └── 📁 published/
-
-📁 mcp/
-📁 schemas/
-📁 src/
-├── 📁 pipelines/
-├── 📁 graph/
-└── 📁 server/
-📁 web/
-📁 releases/
-📁 tests/
-📁 tools/
-
-📄 README.md
-📄 LICENSE
-📄 CITATION.cff
-📄 CHANGELOG.md
-📄 CONTRIBUTING.md
-📄 SECURITY.md
-📄 docker-compose.yml
-📄 .env.example
+repo-root/
+├── .github/                        # governance + CI enforcement (SSoT: .github/README.md)
+│   ├── workflows/                  # docs/policy/contracts/catalogs/receipts/api-contract/build gates
+│   ├── actions/                    # reusable acceptance harness (recommended)
+│   ├── CODEOWNERS
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── SECURITY.md
+│
+├── policy/                         # OPA/Rego + Conftest packs + tests (default deny)
+├── contracts/                      # promotion contract + schemas (or canonical ./schemas/)
+├── schemas/                        # (optional alt) canonical schemas if contracts/ not used
+│
+├── data/
+│   ├── raw/                        # immutable acquisitions + manifests + checksums
+│   ├── work/                       # intermediates + validation reports + run receipts/manifests
+│   ├── processed/                  # publishable outputs (CI-only writes)
+│   └── catalog/
+│       ├── dcat/                   # licensing + dataset discovery metadata
+│       ├── stac/                   # spatiotemporal asset catalogs (conditional)
+│       └── prov/                   # lineage (activities/entities/agents)
+│
+├── docs/                           # governed docs, ADRs, runbooks, Story Nodes
+│   ├── architecture/
+│   ├── governance/
+│   ├── runbooks/
+│   └── reports/story_nodes/
+│       ├── templates/
+│       ├── draft/
+│       └── published/
+│
+├── src/                            # pipelines + server + graph (clean layers, trust membrane enforced)
+├── web/                            # React/Map UI (no direct DB access)
+├── scripts/                        # local wrappers for validators + acceptance harness
+├── tests/                          # unit/integration/contract/e2e
+├── releases/                       # SBOMs, attestations, release artifacts
+├── infra/                          # deployment (k8s/helm/gitops)
+│
+├── docker-compose.yml
+├── .env.example
+├── README.md
+├── CITATION.cff
+└── CHANGELOG.md
 ```
 </details>
+
+> [!NOTE]
+> If your repo differs, document the mapping — but keep the **boundaries** identical:
+> - UI never accesses DB directly
+> - processed zone is the only publishable truth source
+> - promotion requires receipts + catalogs + checksums
+> - policy fails closed
 
 ---
 
 ## 🏷️ Release & Data Versioning Notes
+
 - 🧷 Treat the repo as a **catalog of record**: tags/commits represent reproducible snapshots.
 - 🧾 For major dataset milestones:
   - Use `data-vX.Y.Z` or `v2026.1`
@@ -261,6 +355,7 @@ flowchart LR
 ---
 
 ## 🧩 Changelog Entry Template (copy/paste)
+
 <details>
 <summary>🧱 Template for governance-grade entries</summary>
 
@@ -270,6 +365,7 @@ flowchart LR
 ### ✨ Added
 - (Subsystem) Change summary
   - Impact:
+  - Scope:
   - Migration:
   - Validation:
   - Owner:
@@ -292,61 +388,65 @@ flowchart LR
 <details>
 <summary>📚 Click to expand the current reference library list</summary>
 
-### 🧭 System Blueprint / Governance Core
-- `Kansas Frontier Matrix (KFM) – Comprehensive System Documentation.pdf` :contentReference[oaicite:0]{index=0}  
-  - Key alignment: “truth path”, governed API-only access, provenance-first outputs, Focus Mode evidence policy.
-- `Indigenous Statistics; From Data Deficits to Data Sovereignty; Second Edition.pdf` :contentReference[oaicite:1]{index=1}  
-  - Key alignment: Indigenous Data Sovereignty, data governance, CARE principles, culturally safe data handling.
+> [!NOTE]
+> This is an **inventory list**, not an endorsement that every item is primary/authoritative for the system.
+> Prefer system-governed docs/contracts and upstream standards specs for enforcement.
+
+### 🧭 System Blueprint / Governance Core (internal)
+- `KFM_NextGen_Blueprint_and_Primary_Guide_v1_2_EXPANSIVE_TOC.pdf`
+- `KFM_Comprehensive_Data_Source_Integration_Blueprint_v1_massive.pdf`
+- `Integrating “New Ideas Feb-2026” Into Knowledge-First Management.pdf`
+- `KFM Integration Report for KFM New Ideas 2-8-26.pdf`
+- `Updating Documents to Align With Newly Developed KFM System Ideas.pdf`
+- `Deep Research Report on Craft KFM Focus Mode.pdf`
+- `Crafting a Comprehensive Story Mode for the KFM Spatio-Temporal Mapping Platform.pdf`
 
 ### 🗺️ GIS & Mapping
-- `making-maps-a-visual-guide-to-map-design-for-gis.pdf`
-- `GIS-Mapping-Topology.pdf`
 - `Mapping Urban Spaces.pdf`
 - `Archaeological 3D GIS.pdf`
+- `Thinking Time Geography.pdf`
+- `Cartography-A tool for Spatial Analysis.pdf`
+- `Elements of map projection with applications to map and chart construction.pdf`
 
-### 📊 R / Data Visualization
-- `graphical-data-analysis-with-r.pdf`
-- `R-Python-Ruby-Various.pdf`
+### 🌐 Web / UI / Frontend
+- `responsive-web-design-with-html5-and-css3.pdf`
+- `stunning-css3-a-project-based-guide-to-the-latest-in-css.pdf`
+- `the-css3-anthology-4th-edition-take-your-sites-to-new-heights.pdf`
+- `transitions-and-animations-in-css-adding-motion-with-css.pdf`
+- `TypeScript-AngularJS-FullStack.pdf`
+- `React-Go-API.pdf`
+- `SurviveJS - Webpack and React.pdf`
 
-### 🤖 AI / ML
-- `Neural Nerworks-Build Ai-Statistical Learning-Deep Learing-AI Safety-Linear Regression-bayesian.pdf`
-- `Artificial Intelligence & Machine Learning in Health Care & Medical Sciences.pdf` :contentReference[oaicite:2]{index=2}  
-  - Key alignment: rigorous evaluation culture, failure modes, accountability expectations.
+### 🧰 Backend / APIs / Systems
+- `RESTful Web Services.pdf`
+- `Node.js-GraphQL.pdf`
+- `nodejs-in-action.pdf`
+- `Client-Server Web Apps with JavaScript and Java.pdf`
 
-### 🌐 Web / UI
-- `Web Design.pdf`
-- `professional-web-design-techniques-and-templates.pdf` :contentReference[oaicite:3]{index=3}  
-- `learn-to-code-html-and-css-develop-and-style-websites.pdf` :contentReference[oaicite:4]{index=4}  
-- `CSS-HTML-JAVA-WebDesign.pdf`
-- `Node.js-React-CSS-HTML.pdf`
+### 🛡️ DevOps / Security
+- `Docker-GitOps-OpenShift.pdf`
+- `DataPipelines-OpenShift-Podman-Kubernetes-Git.pdf`
+- `Software Security Guide for Developers (2026 Edition) – Expanded Sections.pdf`
 
-### 🧰 DevOps / Security / Performance
-- `Database-Docker-CI-Pipeline-DevOps-Security-Git-Shell-PowerShell.pdf`
-- `foundations-of-software-and-system-performance-engineering-process-performance-modeling-requirements-testing-scalability-and-practice.pdf`
+### 🧮 Databases / Time
+- `sql-the-complete-reference-third-edition-sep-2009.pdf`
+- `developing-time-oriented-database-applications-in-sql.pdf`
 
-### 🧮 Scientific Computing
-- `MATLAB-PyTorch-Numpy-SciPy-Statisctics-Programming Science Tools.pdf`
-- `Applications from Engineering with MATLAB Concepts.pdf`
-- `Hands-On Accelerator Physics Using MATLAB.pdf`
-
-### 🧠 General Programming / Creativity
-- `Various Programming Concepts.pdf`
-- `Programming Design-Flexibility-Machine Learning-Test Development-Verilog-Software Qualify Assurance.pdf`
-- `ssoar-2022-zipp-Programming_Creativity_Semantics_and_Organisation.pdf`
-- `Data Science-Data Engineering-Machine Learing-Steganography-Bilogical Atonomy-PYthon Scripting-Sine Cosine Algorithm-People Anylitics-Experimental Design-Visualizations of Time-Oriented Data-Creativity.pdf`
-
-### 🧱 Runtime / Backend Foundations
-- `Node.js (book).pdf` :contentReference[oaicite:5]{index=5}  
-  - Key alignment: Node fundamentals and patterns relevant for service development.
-
+### 🧠 Math / Science
+- `Scientific Computing with MATLAB.pdf`
+- `Scientific & Engineering Applications Using MATLAB.pdf`
+- `Applications of MATLAB in Science & Engineering.pdf`
+- `Graph Theory & Additive Combinatorics.pdf`
 </details>
 
 ---
 
 ## 🔗 Links (fill in your repo URL)
+
 > Tip: replace `<REPO_URL>` with your canonical repo URL once stable (e.g., GitHub org repo).
 
-- [Unreleased]: `<REPO_URL>/compare/v13.0.0-draft...HEAD`
+- [Unreleased]: `<REPO_URL>/compare/v14.0.0-draft...HEAD`
+- [14.0.0-draft]: `<REPO_URL>/compare/v13.0.0-draft...v14.0.0-draft`
 - [13.0.0-draft]: `<REPO_URL>/compare/v12.0.1-draft...v13.0.0-draft`
 - [12.0.1-draft]: `<REPO_URL>/compare/v12.0.0-draft...v12.0.1-draft`
 - [12.0.0-draft]: `<REPO_URL>/releases/tag/v12.0.0-draft`
