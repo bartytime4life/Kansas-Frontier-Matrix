@@ -5,6 +5,8 @@ Governance: This README is a GOVERNED artifact. Treat changes as production chan
 alter trust guarantees, promotion gates, evidence behavior, and policy enforcement.
 -->
 
+<a id="top"></a>
+
 # 🧭 KFM `src/` — Governed Backend: API, Pipelines, Knowledge Graph
 
 ![Governed](https://img.shields.io/badge/status-governed-2563eb)
@@ -401,6 +403,7 @@ Any PR touching `src/` SHOULD be merge-blocked on:
 - ✅ architecture lint (no forbidden imports; no layer violations)
 - ✅ supply-chain hygiene (pinned actions; dependency scanning; secret scanning)
 - ✅ integration smoke tests (DB + policy engine reachable)
+- ✅ documentation lint/link-check when governed docs are touched (e.g., `src/README.md`)
 
 > [!WARNING]
 > If you can’t explain how your change preserves **fail-closed** and **cite-or-abstain**, you’re not done.
@@ -542,22 +545,28 @@ Common failure modes:
 
 ## Governed references
 
-These are design-authority sources for the contracts described above:
+These are design-authority sources for the contracts described above.
 
-- KFM Next-Generation Blueprint & Primary Guide :contentReference[oaicite:0]{index=0}  
-- KFM Comprehensive Data Source Integration Blueprint :contentReference[oaicite:1]{index=1}  
-- Kansas Frontier Matrix Project Blueprint :contentReference[oaicite:2]{index=2}  
-- Kansas Frontier Matrix Companion Blueprint :contentReference[oaicite:3]{index=3}  
-- KFM Cultivated Integration Ideas (thin slices + DoD packs) :contentReference[oaicite:4]{index=4}  
-- KFM Master Corpus Consolidation & Build-Integration Specification :contentReference[oaicite:5]{index=5}  
-- Kansas Frontier Matrix System Audit and Expansion Report :contentReference[oaicite:6]{index=6}  
-- Massive Gap-Filling Diagnosis for Kansas Frontier Matrix :contentReference[oaicite:7]{index=7}  
-- Software Security Guide for Developers (2026 Edition) — Expanded Sections :contentReference[oaicite:8]{index=8}  
-- RESTful Web Services (Richardson & Ruby) :contentReference[oaicite:9]{index=9}  
-- Professional Markdown Guide for GitHub Documentation :contentReference[oaicite:10]{index=10}  
+> [!IMPORTANT]
+> Do not treat “good ideas” as authority. If it isn’t listed here (or otherwise designated as design authority),
+> it MUST NOT silently override the Promotion Contract, policy behavior, or evidence rules.
+
+| Reference | Design-authority role |
+|---|---|
+| **KFM Next-Generation Blueprint & Primary Guide** | Primary architecture + governance authority |
+| **KFM Comprehensive Data Source Integration Blueprint** | Data source onboarding + pipeline rules |
+| **Kansas Frontier Matrix Project Blueprint** | System scope, goals, and roadmap |
+| **Kansas Frontier Matrix Companion Blueprint** | Supporting patterns + implementation notes |
+| **KFM Cultivated Integration Ideas (thin slices + DoD packs)** | Incremental build steps + Definitions of Done |
+| **KFM Master Corpus Consolidation & Build-Integration Specification** | Corpus strategy + integration boundaries |
+| **Kansas Frontier Matrix System Audit and Expansion Report** | Audit findings + risk remediation targets |
+| **Massive Gap-Filling Diagnosis for Kansas Frontier Matrix** | Known gaps + priority fixes |
+| **Software Security Guide for Developers (2026 Edition) — Expanded Sections** | Security engineering baseline |
+| **RESTful Web Services (Richardson & Ruby)** | REST design constraints + uniform interface norms |
+| **Professional Markdown Guide for GitHub Documentation** | Documentation quality + formatting norms |
 
 ---
 
 ### Back to top
 
-[⬆️ Back to top](#-kfm-src--governed-backend-api-pipelines-knowledge-graph)
+[⬆️ Back to top](#top)
