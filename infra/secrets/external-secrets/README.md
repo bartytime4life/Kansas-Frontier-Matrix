@@ -1,333 +1,247 @@
-# 🧵 Pipelines · Orchestration
+# External Secrets (ESO) — KFM Infra
 
-![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
-![Determinism](https://img.shields.io/badge/determinism-required-informational)
-![Provenance](https://img.shields.io/badge/provenance-STAC%2FDCAT%2FPROV-blue)
-![Promotion](https://img.shields.io/badge/promotion-PR--gated-success)
+![Governed](https://img.shields.io/badge/governed-evidence--first-blue)
+![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-aligned-success)
+![GitOps](https://img.shields.io/badge/GitOps-declarative%20%26%20reconciled-success)
+![Secrets](https://img.shields.io/badge/secrets-no%20plaintext%20in%20git-critical)
+![Kubernetes](https://img.shields.io/badge/kubernetes-external--secrets.io-informational)
 
-This directory defines **how/when** KFM pipelines execute, and **under what gates** they are allowed to publish.
+**Path:** `infra/secrets/external-secrets/`
 
-**Orchestration is the “control plane” for runs**:
-- schedules + triggers (cron / upstream events / manual runs)
-- backfills (historic ranges) with explicit audit trails
-- resource pools + freshness targets
-- promotion gates (preview → attest → promote)
-- run metadata + telemetry hooks
+This folder is the **GitOps-managed** configuration for the **External Secrets Operator (ESO)**: a Kubernetes operator that syncs secrets from an external secrets backend (Vault / AWS Secrets Manager / GCP Secret Manager / Azure Key Vault / etc.) into **Kubernetes Secret** objects.
 
 > [!IMPORTANT]
-> Orchestration owns **execution + policy**. It does *not* own domain ETL logic.
->
-> - ✅ Domain-specific pipeline code belongs in: `src/pipelines/**`
-> - ✅ Published artifacts + catalogs belong in: `data/**` (raw/work/processed + STAC/DCAT/PROV)
-> - ✅ Validation/policy tooling belongs in: `tools/**`
-> - ✅ CI wiring (GitHub Actions, etc.) belongs in: `.github/**`
+> **Do not commit plaintext secrets** to Git (including `Secret` manifests with `data:` / `stringData:`).  
+> This folder stores **references** and **access configuration**, not secret values.
 
 ---
 
-## System shape
+## Why this exists
 
-KFM’s operational shape is:
+KFM’s governance posture treats security and policy as *system rules*. Practically, that means:
 
-> **ETL → STAC/DCAT/PROV → Graph → Governed API → UI → Story Nodes → Focus Mode**
+- **No secrets in Git** — we store **only references** and have the cluster retrieve secrets at runtime.
+- **Least privilege** — access to secret backends is scoped per cluster/environment/namespace.
+- **Fail-closed** — if a secret cannot be fetched, the system should not “guess” values or proceed silently.
+- **Auditable changes** — all changes are PR-reviewed and observable via operator events/logs.
+
+> [!WARNING]
+> Kubernetes `Secret` objects are **not encrypted by default** unless the cluster enables **encryption-at-rest** (etcd/KMS). Treat the cluster and RBAC as part of the security boundary.
+
+---
+
+## What ESO is (in one minute)
+
+ESO is a set of CRDs + controllers:
+
+- `SecretStore` / `ClusterSecretStore`: define *how* to authenticate to an external secret backend.
+- `ExternalSecret`: defines *what* to fetch and how to project it into a Kubernetes `Secret`.
+
+### Data flow
 
 ```mermaid
 flowchart LR
-  subgraph Triggers
-    Cron[Cron / cadence]:::t
-    Event[Upstream event / webhook]:::t
-    Manual[Manual run / backfill request]:::t
-  end
-
-  Orchestrator[Orchestration layer\n(pipelines/orchestration)]:::o
-  Runner[Runner adapter\n(GitHub Actions / Tekton / Argo WF / etc.)]:::o
-  Connector[Connector / Asset code\n(src/pipelines/...)]:::p
-
-  Raw[(Raw zone)]:::d
-  Work[(Work zone)]:::d
-  Processed[(Processed zone)]:::d
-
-  Catalogs[Catalogs\n(STAC/DCAT/PROV)]:::c
-  Lineage[Lineage\n(PROV + OpenLineage)]:::c
-  Gates[Validation + policy gates\n(schema + OPA/Conftest + signatures)]:::g
-  PR[Promotion PR]:::g
-  Merge[Merge = promotion]:::g
-
-  Graph[Graph build\n(Neo4j ingest)]:::s
-  API[Governed API]:::s
-  UI[UI + Story + Focus]:::s
-
-  Cron --> Orchestrator
-  Event --> Orchestrator
-  Manual --> Orchestrator
-  Orchestrator --> Runner --> Connector
-
-  Connector --> Raw --> Work --> Processed
-  Connector --> Catalogs
-  Connector --> Lineage
-  Catalogs --> Gates --> PR --> Merge --> Graph --> API --> UI
-  Lineage --> Gates
-
-  classDef t fill:#fff,stroke:#666,stroke-width:1px;
-  classDef o fill:#fff,stroke:#0aa,stroke-width:2px;
-  classDef p fill:#fff,stroke:#06c,stroke-width:2px;
-  classDef d fill:#fff,stroke:#333,stroke-width:1px;
-  classDef c fill:#fff,stroke:#8a2be2,stroke-width:2px;
-  classDef g fill:#fff,stroke:#d35400,stroke-width:2px;
-  classDef s fill:#fff,stroke:#2d862d,stroke-width:2px;
+  A[External Secret Backend\nVault / AWS SM / GCP SM / Azure KV] -->|API + Auth| B[External Secrets Operator]
+  B -->|creates/updates| C[(Kubernetes Secret)]
+  C --> D[Workloads\nDeployments / Jobs / CronJobs]
 ```
 
 ---
 
-## What belongs here
+## Repository layout
 
-### ✅ In scope
-- **Schedules & cadences**: “real-time”, “daily”, “weekly”, “annual”, “static”
-- **Backfill orchestration**: explicit historic range runs (not “hidden loops”)
-- **Promotion semantics**: preview builds, attestations, and promotion/rollback steps
-- **Runner adapters**: glue to your runtime (GitHub Actions / Tekton / Argo Workflows / etc.)
-- **Policy and quality gates wiring**: schema validation, OPA checks, signature verification hooks
-- **Telemetry + run ledger hooks**: run lifecycle + freshness + artifact URIs
-
-### 🚫 Out of scope (put elsewhere)
-- Domain ETL logic (connectors, transforms): `src/pipelines/**`
-- Graph ingest code / ontology constraints: `src/graph/**`
-- API implementation/contracts: `src/server/**`
-- Frontend/UI clients: `web/**`
-- Secrets: **never in-repo** (use Vault / workload identity / K8s secrets references)
-
-> [!NOTE]
-> Trust membrane rule: **frontend and external clients never touch databases directly** — all reads go through the governed API boundary.
-
----
-
-## Non-negotiables (enforced by orchestration)
-
-These are “always-on” engineering properties. If any fail, promotion should fail closed.
-
-- **Determinism**: stable IDs, stable partitions, stable packaging, replayability from recorded configs.
-- **Evidence-first publishing**: every surfaced layer/claim resolves to artifacts (catalog + provenance) with checksums/digests.
-- **Fail-closed policy**: missing required fields, signatures, attestations, or governance labels → fail promotion.
-- **Sensitivity & sovereignty**: redaction/masking + access rights encoded as machine-checkable fields (not prose).
-- **Human review**: validation failures (or low-confidence merges) route to QA with diffs + evidence links.
-
----
-
-## Canonical connector contract
-
-Orchestration assumes pipeline units conform to a connector-like contract (implementation language may vary).
-
-```ts
-// Canonical interface (conceptual)
-// Implementations live under src/pipelines/**.
-interface DataSourceConnector {
-  discover(ctx): Capabilities
-  acquire(ctx, plan): RawManifest
-  transform(ctx, manifest): WorkArtifacts
-  validate(ctx, work): ValidationReport
-  publish(ctx, work, report): DatasetVersionRef
-}
-```
-
-### Orchestration rules (must-haves)
-- **Schedule connectors by cadence** (real-time, daily, weekly, annual, static).
-- **Idempotency**: re-running a job never mutates an already-published `DatasetVersion`.
-- **Backfills are explicit**: historic ranges run as separate “runs” with their own audit trail.
-- **Operational metadata** is recorded: start/end, rows read/written, error counts, latency, freshness.
-
----
-
-## Execution modes
-
-### 1) Scheduled runs (cadence-based)
-Use for sources with a known update cadence.
-
-**Typical cadences**
-| Cadence | Examples | Notes |
-|---|---|---|
-| real-time (1–5 min) | sensor feeds, stream-like APIs | throttle politely; store polling checkpoints; event-first preferred |
-| daily | daily postings, nightly releases | incremental windows where possible |
-| weekly | weekly datasets | best for “diff” production & QA review |
-| annual | annual reports/series | treat as versioned snapshots |
-| static | reference layers | run once; re-run only on schema/tool changes |
-
-> [!TIP]
-> Prefer **event-first** triggers (object-store events/webhooks) with a **poll fallback** (ETag/If-None-Match) for HTTP sources.
-
-### 2) Backfills (historic ranges)
-Backfills are *not* special “modes”; they are just runs with explicit range plans:
-
-- backfill plan defines: time window(s), partitioning strategy, expected runtime & resource pool, and acceptance gates
-- backfill outputs must still be deterministic and evidence-linked
-- backfills should be resumable, with per-partition run ledger entries
-
-### 3) PR-centric orchestration (Preview → Attest → Promote)
-Use when changes are governed via pull requests and must be reviewable.
-
-```mermaid
-sequenceDiagram
-  actor Dev as PR author / reviewer
-  participant CI as CI / Runner
-  participant Preview as Preview workspace
-  participant Store as Artifact store
-  participant Gate as Gates (schema + OPA + sig)
-  participant Main as main branch
-
-  Dev->>CI: Open/Update PR
-  CI->>Preview: Create/update preview branch or namespace
-  CI->>Store: Build deterministic artifacts (digest-addressed)
-  CI->>Gate: Validate + policy check + verify attestations
-  Gate-->>CI: PASS / FAIL
-  CI-->>Dev: Status checks + diffs + evidence links
-  Dev->>Main: Merge PR (approval required)
-  Main->>Store: Promote artifacts (pointer move / merge)
-```
-
-**Core idea**: PR builds create **previewable**, **idempotent**, **digest-addressed** outputs. Promotion is a controlled, auditable step (often “merge == promotion”).
-
-### 4) Discovery → Draft PR (catalog-first)
-When “discovery” finds a dataset/update, it should open a **draft PR** that:
-- updates **STAC Items/Collections**, **DCAT datasets**, and **PROV run bundles**
-- blocks merge until validation + attestation gates pass
-- produces deterministic diffs that humans can review
-
----
-
-## Pools + freshness targets (asset-style orchestration)
-
-Orchestration can declare work as **assets** with:
-- freshness policy (how stale is allowed)
-- execution pool (what resources it can consume)
-- deterministic partitions (what “unit of work” means)
-
-### Minimum telemetry signals
-These signals are the baseline for dashboards and alerting:
-
-| Signal | Meaning |
-|---|---|
-| `run.lifecycle` | queued → started → succeeded / failed / cancelled |
-| `freshness.delta_minutes` | observed staleness vs target SLO |
-| `pool.wait_ms` | queue pressure / saturation |
-| `artifact.size_bytes` | output sizes |
-| `artifact.uri` | content-addressed URIs or storage paths |
-
----
-
-## Promotion gates
-
-Gates are executed at **two moments**:
-1) **Before publish/promotion** (prevent bad artifacts from shipping)
-2) **At serve time** via governed API policy evaluation (prevent unsafe exposure)
-
-### Gate categories
-- **Schema gates**: STAC/DCAT/PROV JSON schema validation
-- **Policy gates**: OPA/Rego rules (redaction requirements, sensitive throttles, promotion prerequisites)
-- **Integrity gates**: checksums/digests present; signatures verified
-- **Quality gates**: row counts sanity, tile coverage, geometry validity, link checks
-- **Graph gates** (when applicable): ensure catalog/lineage consistency before graph promotion
-
-> [!WARNING]
-> Default stance is **fail-closed**. If a required governance label/signature/attestation is missing, promotion fails.
-
----
-
-## Runner adapters (where the “workflow YAML” goes)
-
-KFM can be orchestrated by different runners. The important rule:
-
-> **Runner choice must not change semantics** (idempotency, provenance, gates, promotion).
-
-Common options (supported by the broader docs):
-- GitHub Actions (repo-native CI orchestration)
-- Tekton (Kubernetes-native CI/CD CRDs; “pipeline-as-code” patterns)
-- Argo Workflows (Kubernetes-native DAG/step workflows)
-- Argo CD / Flux (GitOps reconciliation for deployments)
-
-If multiple runners exist, keep adapters thin and route them into shared scripts/libs (to avoid drift).
-
----
-
-## Directory layout (this folder)
+> (not confirmed in repo) — Adjust to match the repo’s existing GitOps/Kustomize/ArgoCD conventions.
 
 ```text
-pipelines/orchestration/
-├── README.md
-├── schedules/                # cadence/trigger definitions (cron/event/manual)
-├── backfills/                # backfill plans + templates + run ledgers (if kept in-repo)
-├── runners/                  # runner adapters (GitHub Actions/Tekton/Argo/etc.)
-├── policies/                 # orchestration-level policy wiring (OPA/Conftest hooks)
-├── templates/                # reusable YAML/templates for schedules/backfills/promotion
-└── examples/                 # redaction-safe examples and golden fixtures (recommended)
+infra/
+  secrets/
+    external-secrets/
+      README.md
+      base/
+        namespace.yaml
+        rbac.yaml
+        externalsecrets-crds/        # if you vendor/pin CRDs
+        operator/                   # helm/kustomize install manifests
+        stores/                     # SecretStore / ClusterSecretStore definitions (NO credentials)
+      overlays/
+        dev/
+        stage/
+        prod/
+      examples/
+        externalsecret.example.yaml
+        secretstore.vault.example.yaml
+        secretstore.aws.example.yaml
 ```
 
-### Cross-links to “where things live”
-| Area | Path | What lives there |
-|---|---|---|
-| Pipelines (domain ETL) | `../../src/pipelines/` | connector implementations, transforms, validators |
-| Data artifacts + catalogs | `../../data/` | raw/work/processed + STAC/DCAT/PROV outputs |
-| Validation tooling | `../../tools/` | schema validators, catalog QA, policy checks |
-| CI workflows | `../../.github/workflows/` | build/test gates and PR checks |
-| Governed docs | `../../docs/` | standards, patterns, runbooks |
-| Schemas | `../../schemas/` | JSON schemas for catalogs, telemetry, docs |
+---
+
+## Installation and bootstrap
+
+### Prerequisites
+
+- A chosen **external secrets backend** (Vault, AWS Secrets Manager, etc.).
+- A defined **auth mechanism** for the cluster → backend (e.g., Vault Kubernetes auth, AWS IRSA, workload identity, etc.).
+- Cluster admin access for initial operator install.
+- Network access from the operator namespace to the backend endpoints.
+
+### Install ESO (pick one installation path)
+
+#### Option A — Upstream ESO via Helm (portable, common)
+- Recommended when you want upstream parity and version pinning in GitOps.
+- You should pin the chart/operator version and record it in Git.
+
+#### Option B — OLM / OperatorHub install (common in OpenShift)
+- Often used in OpenShift environments where cluster operators are lifecycle-managed.
+
+#### Option C — Red Hat OpenShift “External Secrets Operator” (productized)
+- **Check support level before production.** Some OpenShift distributions may label this as Technology Preview depending on version/channel.
+
+> [!TIP]
+> Whatever installation method you choose:
+> - Pin versions (operator + CRDs).
+> - Treat the operator namespace as **platform-owned** and PR-gated.
+> - Do **not** grant broad secret-backend access by default.
 
 ---
 
-## Adding a new orchestrated pipeline
+## Core resources you will manage here
 
-### Definition of Done (orchestration side)
-- [ ] A schedule/trigger exists (or a backfill plan exists) with an explicit cadence.
-- [ ] Job is **idempotent** (safe retries; no mutation of published `DatasetVersion`).
-- [ ] Run ledger captures start/end, counts, latency, freshness, and errors.
-- [ ] Artifacts are content-addressed (checksums/digests are recorded).
-- [ ] Catalogs emitted/updated (DCAT always; STAC/PROV where applicable).
-- [ ] Lineage emitted (OpenLineage + PROV bundles).
-- [ ] Policy gates pass (schema + OPA/Conftest + attestation verification).
-- [ ] Sensitive sources/fields have machine-checkable labels and redaction rules.
-- [ ] A human-review path exists for failures or low-confidence merges.
-
-### Minimal workflow (thin slice)
-1. Implement/extend connector in `src/pipelines/<domain>/<pipeline>/`.
-2. Add/extend schedule in `pipelines/orchestration/schedules/`.
-3. Wire runner adapter (or reuse existing) in `pipelines/orchestration/runners/`.
-4. Ensure gates run in CI and are required PR checks.
-5. Ensure promotion is PR-gated (preview/attest before merge).
+| Resource | Scope | Purpose | Owned by |
+|---|---:|---|---|
+| `SecretStore` | Namespace | Namespaced backend config | App/platform (depending on policy) |
+| `ClusterSecretStore` | Cluster | Shared backend config | Platform/Security |
+| `ExternalSecret` | Namespace | Declares remote keys → local Secret | App team (PR reviewed) |
+| `Secret` | Namespace | **Output** created by ESO | ESO controller |
 
 ---
 
-## Security & secrets
+## Minimal example: create a secret reference (ExternalSecret)
 
-- **Never commit secrets.** Use vault/workload identity/K8s secret references.
-- Include **emitter identity** in run metadata for audit trails.
-- If using polling, store checkpoints in a small KV store (not in source control).
+> Replace placeholders with your org’s conventions. The *remote key path* must not contain sensitive values.
+
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: kfm-api-db
+  namespace: kfm-api
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: kfm-prod-store
+  target:
+    name: kfm-api-db          # name of the Kubernetes Secret ESO will create/update
+    creationPolicy: Owner
+    deletionPolicy: Retain
+    template:
+      type: Opaque
+  data:
+    - secretKey: DATABASE_URL
+      remoteRef:
+        key: kfm/prod/kfm-api/DATABASE_URL
+```
+
+### Consume the created Kubernetes Secret in a Deployment
+
+```yaml
+envFrom:
+  - secretRef:
+      name: kfm-api-db
+```
+
+> [!IMPORTANT]
+> Workloads should reference the **generated Kubernetes Secret** (e.g., `kfm-api-db`), **not** the `ExternalSecret` object.
 
 ---
 
-## Related docs (expected / recommended)
+## Store configuration patterns
 
-> [!NOTE]
-> Some paths below are referenced by blueprint materials; create them if missing.
+### ClusterSecretStore vs SecretStore
 
-- `docs/patterns/orchestration/pr-previews.md` — Preview → attest → promote flow
-- `docs/patterns/discovery-to-draft-pr.md` — Discovery → draft PR (catalog-first)
-- `docs/patterns/replay_safe_outbox_idempotency.md` — Replay safety + idempotency
-- `docs/patterns/provenance_attestations.md` — Signing/attestations (SLSA/in-toto/Sigstore)
-- `docs/runbooks/reliability/trigger-retry-matrix.md` — Choosing triggers + retry strategy
-- `docs/runbooks/reliability/trigger-mechanisms/README.md` — Webhook vs polling vs object events
+- Prefer **`SecretStore`** when teams should be isolated by namespace and the platform wants hard boundaries.
+- Prefer **`ClusterSecretStore`** when you want a centrally-managed “gateway” that multiple namespaces can use, but you still enforce access by:
+  - backend-side policies (Vault policies / IAM conditions)
+  - Kubernetes RBAC to create `ExternalSecret` objects
+  - admission/policy checks (OPA/Gatekeeper/Kyverno) to restrict allowed stores and key prefixes
 
----
-
-## Glossary
-
-- **Run**: One execution attempt with explicit inputs, outputs, and a run ledger record.
-- **DatasetVersion**: Immutable published version; re-runs create new versions, not mutations.
-- **Backfill**: A run plan over historic partitions/ranges with its own audit trail.
-- **Promotion**: The governed step that makes artifacts “official” (often “merge == promote”).
-- **Fail-closed**: Missing required governance field/signature/attestation blocks promotion.
+> (not confirmed in repo)  
+> Decide and document: **who** is allowed to create stores, and whether app teams can create `SecretStore` in their own namespaces.
 
 ---
 
-## References (governance sources)
+## Security, governance, and CI gates
 
-- KFM Data Source Integration Blueprint (v1.0)
-- KFM Integration Idea Pack / Pulse-derived patterns
-- KFM CI/CD + tooling comparison notes
-- KFM Markdown documentation standards (repo-wide)
+### Non-negotiables
+
+- ✅ No plaintext secrets in git
+- ✅ No “temporary” secrets in PRs
+- ✅ No secret values in logs, build args, Helm values, or manifests
+- ✅ Least privilege from cluster → backend
+- ✅ Rotation tested + documented
+
+### Recommended CI checks
+
+- **Secret scanning:** `gitleaks` / `trufflehog` (block merges)
+- **Policy-as-code:** `conftest` (OPA/Rego) to deny:
+  - `kind: Secret` with `data`/`stringData` in `infra/`
+  - `ExternalSecret` referencing disallowed key prefixes
+  - `ClusterSecretStore` changes without platform approval
+- **Kubernetes manifest validation:** `kubeconform` / `kubeval` against pinned CRDs
+
+### Definition of Done
+
+- [ ] ESO installed and healthy (pods ready; CRDs present)
+- [ ] Store configured (SecretStore/ClusterSecretStore) with least privilege
+- [ ] ExternalSecret produces a Secret successfully (events show synced state)
+- [ ] App uses the generated Secret (and fails closed if missing)
+- [ ] Rotation drill completed (backend rotate → ESO sync → app stable)
+- [ ] CI gates enforce “no secrets in Git”
+
+---
+
+## Troubleshooting
+
+### Quick checks
+
+```bash
+# List externalsecrets and their status
+kubectl -n <ns> get externalsecret
+kubectl -n <ns> describe externalsecret <name>
+
+# Confirm the output Secret exists
+kubectl -n <ns> get secret <targetSecretName>
+
+# Operator logs (namespace varies by install method)
+kubectl -n external-secrets logs deploy/external-secrets -f
+```
+
+### Common failure modes
+
+- **Auth denied**: store credentials/identity not mapped to backend policy.
+- **Wrong key path**: `remoteRef.key` doesn’t exist or is mis-typed.
+- **Network**: operator cannot reach backend endpoint.
+- **RBAC**: app namespace cannot create `ExternalSecret`, or operator lacks permission to write `Secret`.
+
+---
+
+## References
+
+- External Secrets Operator docs: https://external-secrets.io/
+- API reference: `ExternalSecret`, `SecretStore`, `ClusterSecretStore` (match your pinned operator version)
+- OpenShift install patterns (if applicable): OperatorHub/OLM channels and support status
+
+---
+
+## Assumptions and verification steps
+
+> These are intentionally explicit to keep the system evidence-first.
+
+1. **Secret backend** is not specified in repo.  
+   **Verify:** identify which backend is approved (Vault / AWS / GCP / Azure) and record it here.
+
+2. **GitOps controller** (Argo CD / OpenShift GitOps / Flux) is not specified in this folder.  
+   **Verify:** confirm the bootstrap mechanism and align `base/` + `overlays/` accordingly.
+
+3. **Policy enforcement** tooling is not specified (OPA/Gatekeeper/Kyverno/Conftest).  
+   **Verify:** confirm the policy toolchain and add deny-by-default rules for secrets hygiene.
