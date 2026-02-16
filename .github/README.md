@@ -39,7 +39,7 @@ Repo governance surfaces:
 - CODEOWNERS: `./CODEOWNERS` ✅ *(required)*
 - Security policy: `./SECURITY.md` ✅ *(required)*
 - Contributing: `../CONTRIBUTING.md` ⛳ *(recommended; required if repo is open to external contributions)*
-- PR template: `./PULL_REQUEST_TEMPLATE.md` ⛳ *(recommended)*
+- PR template: `./PULL_REQUEST_TEMPLATE.md` ⛳ *(recommended; required once multiple contributors exist)*
 - Workflows: `./workflows/` ✅ *(required)*
 - Dependabot: `./dependabot.yml` ⛳ *(recommended; required once dependencies exist)*
 - Release drafter config: `./release-drafter.yml` 🟦 *(optional)*
@@ -61,11 +61,15 @@ Governed planes (contracts must align):
 - [Governance Header](#governance-header-treat-as-production)
 - [Authority Ladder](#authority-ladder-github-operations)
 - [Non-Negotiables](#non-negotiables-kfm-invariants)
+- [Contract-To-Gate Mapping](#contract-to-gate-mapping-what-proves-what)
 - [Governance Surfaces](#governance-surfaces-what-is-protected)
 - [Required `.github/` Inventory](#required-github-inventory)
+- [CODEOWNERS Contract](#codeowners-contract-coverage--validation)
+- [PR And Issue Workflow Contract](#pr-and-issue-workflow-contract-evidence--incidents)
 - [Repository Settings Baseline](#repository-settings-baseline-required-to-hold-the-line)
 - [Branch Protections And Required Checks](#branch-protections-and-required-checks)
 - [Status Check Contract](#status-check-contract)
+- [Check Run Naming Contract](#check-run-naming-contract-github-actions-reality-check)
 - [Required Workflow Inventory](#required-workflow-inventory-stable-names--outputs)
 - [CI Artifacts And Reporting Contract](#ci-artifacts-and-reporting-contract)
 - [CI Gate Matrix](#ci-gate-matrix-no-merge-without-proof)
@@ -77,6 +81,7 @@ Governed planes (contracts must align):
 - [Workflow Security](#workflow-security)
 - [Supply Chain](#supply-chain-release-and-deploy)
 - [Dependency Updates Policy](#dependency-updates-policy-dependabotrenovate)
+- [Governance Config Drift Detection](#governance-config-drift-detection-settings-are-part-of-the-system)
 - [Governance Incidents And Break-Glass](#governance-incidents-and-break-glass)
 - [When CI Fails](#when-ci-fails-quick-diagnosis)
 - [Definition Of Done](#definition-of-done-for-githubreadmemd)
@@ -90,7 +95,7 @@ Governed planes (contracts must align):
 | Document | `.github/README.md` |
 | Status | **Governed** (changes require review) |
 | Applies to | workflows, branch protections, CODEOWNERS, templates, release gating, promotion enforcement |
-| Version | `v1.8.0` *(bump when meaning changes)* |
+| Version | `v1.8.1` *(bump when meaning changes)* |
 | Effective date | **2026-02-15** |
 | Review cadence | quarterly + out-of-band for security advisories/toolchain changes |
 | Owners | defined in `.github/CODEOWNERS` ✅ *(required)* |
@@ -149,6 +154,26 @@ If something conflicts, resolve in this order:
 
 ---
 
+## Contract-To-Gate Mapping (What Proves What)
+
+This table answers the recurring “missing thing” question: **which CI checks prove which promises**.
+
+| Repo promise (root README) | CI check(s) that prove it | Runtime enforcement surface |
+|---|---|---|
+| Trust membrane (no direct DB/object access) | `build` + `security` (static checks) + optional e2e | network policy + API gateway + authn/authz |
+| Fail closed (default deny) | `policy` (OPA/conftest regressions) | PDP denies on missing inputs / load failures |
+| Processed serves truth | `receipts` + `catalogs` | API reads only from processed catalogs |
+| Promotion Contract required | `receipts` + `catalogs` + `contracts` | deny serving artifacts lacking proofs |
+| Deterministic spec hashing | `receipts` | receipt validator + determinism checks |
+| Evidence refs resolvable | `stories` + (contract tests) | evidence resolver: 404/403 semantics |
+| Cite-or-abstain + audit_ref | `stories` + `policy` + (focus contract tests) | Focus/Story response validator + audit sink |
+| Immutable releases | `release` (and `supply-chain` when enabled) | append-only release folder + checksum verify |
+
+> [!IMPORTANT]
+> If a promise has no proving CI gate, it is **not a guarantee** yet.
+
+---
+
 ## Governance Surfaces (What Is Protected)
 
 These paths are governance-critical and must be CODEOWNED and CI-gated:
@@ -197,6 +222,93 @@ If `./ISSUE_TEMPLATE/` exists, include these names (or equivalents):
 
 ---
 
+## CODEOWNERS Contract (Coverage + Validation)
+
+A common “missing part” is **CODEOWNERS drift**: the file exists, but it doesn’t actually protect the trust surfaces.
+
+### Coverage requirements (minimum)
+
+`./CODEOWNERS` MUST:
+
+- Cover **all governance surfaces** listed above.
+- Include explicit ownership for:
+  - `.github/workflows/**` (workflows are the gatehouse)
+  - `policy/**` (default deny is life-or-death for governance)
+  - `contracts/**` / `schemas/**` (Promotion Contract + schemas)
+  - `data/**` and `releases/**` (truth + shipping records)
+- Avoid “orphan paths” where a new directory can be created without an owner.
+
+### Validation requirements (required)
+
+CI must include a **CODEOWNERS validation gate** that fails closed if:
+
+- CODEOWNERS has syntax errors,
+- required governed path patterns are missing, or
+- protected paths are not actually owned (e.g., wildcard mistakes).
+
+> [!TIP]
+> Put the CODEOWNERS validator under `tools/` and run it in the `contracts` or `policy` workflow as an early step.
+
+<details>
+  <summary><strong>Example minimal CODEOWNERS patterns (illustrative)</strong></summary>
+
+```text
+# Governance gatehouse
+.github/ @ORG/kfm-governance
+
+# Policy and contracts
+policy/ @ORG/kfm-governance @ORG/kfm-security
+contracts/ @ORG/kfm-governance
+schemas/ @ORG/kfm-governance
+
+# Truth surfaces
+data/ @ORG/kfm-data-stewards @ORG/kfm-governance
+releases/ @ORG/kfm-release-managers @ORG/kfm-governance
+
+# Product/code planes
+src/ @ORG/kfm-backend
+web/ @ORG/kfm-frontend
+docs/ @ORG/kfm-docs
+tests/ @ORG/kfm-quality
+tools/ @ORG/kfm-quality
+```
+</details>
+
+---
+
+## PR And Issue Workflow Contract (Evidence + Incidents)
+
+### Pull request evidence contract (recommended → required when >1 contributor)
+
+PRs that touch governance surfaces MUST include:
+
+- **What changed** (short)
+- **What contract it affects** (Promotion/Policy/Evidence/Audit/etc.)
+- **What proof exists** (CI artifacts, reports)
+- **How to verify locally** (commands)
+- **Risk notes** (what could break; rollback)
+
+> [!NOTE]
+> If `.github/PULL_REQUEST_TEMPLATE.md` exists, it should include a checklist aligned to the required CI gates.
+
+### Governance incident mechanics (required once break-glass exists)
+
+Repo must have:
+- an issue template for governance incidents *(recommended above)*,
+- labels:
+  - `governance-incident`
+  - `security`
+  - `policy-change`
+  - `contract-change`
+  - `dataset-onboarding`
+  - `release-blocker`
+- a documented “close-the-loop” expectation:
+  - restore gates
+  - add regression tests
+  - publish incident summary (internal is fine)
+
+---
+
 ## Repository Settings Baseline (Required To Hold The Line)
 
 These are **GitHub settings** (not files) that must be configured. If not configured, treat as a governance gap.
@@ -221,6 +333,7 @@ These are **GitHub settings** (not files) that must be configured. If not config
 - Require branches to be up to date before merging
 - Linear history (unless merge commits are used for audit semantics)
 - Restrict who can bypass branch protections to a minimal “break-glass” group
+- Protect tags used for releases (e.g., `v*`) to prevent tag rewriting
 
 <details>
 <summary><strong>Verification checklist for maintainers (manual)</strong></summary>
@@ -231,6 +344,8 @@ These are **GitHub settings** (not files) that must be configured. If not config
 - [ ] Secret scanning / push protection enabled
 - [ ] Code scanning enabled and scheduled
 - [ ] “Allow GitHub Actions to create and approve pull requests” disabled unless explicitly needed
+- [ ] Tag protection exists for release tags (if org supports it)
+- [ ] Merge method policy is explicit (squash vs merge vs rebase) and consistent with audit needs
 
 </details>
 
@@ -275,6 +390,7 @@ These checks are **merge-blocking** on governed branches.
 | `supply-chain` | Release integrity | SBOM + provenance attestations + signature verify |
 | `e2e` | UI/API integration | Nightly/pre-release |
 | `watchers` | Connectors integrity | Only if watchers exist and can be exercised |
+| `config-drift` | GitHub settings drift | See [Config Drift](#governance-config-drift-detection-settings-are-part-of-the-system) |
 
 > [!IMPORTANT]
 > If you change the **name** of any required check, you must update:
@@ -284,26 +400,72 @@ These checks are **merge-blocking** on governed branches.
 
 ---
 
+## Check Run Naming Contract (GitHub Actions Reality Check)
+
+This is a frequently-missed detail and a common “boss sees missing parts” finding:
+
+> [!IMPORTANT]
+> GitHub branch protection requires **check run names**, which (for GitHub Actions) are effectively the **job names** (or job IDs if no `name:` is set) — *not* the workflow filename, and not reliably the workflow `name:`.
+
+### Required practices (to keep required checks stable)
+
+- For each required check (`docs`, `policy`, etc.), ensure there is a **job** with:
+  - `id:` (job key) stable, and
+  - `name:` set exactly to the required check name (recommended).
+- Prefer **one required job per workflow** (simple and stable).
+- If you use a “mega workflow” with multiple jobs:
+  - branch protection must list the **job `name` values**,
+  - the required set must always run on PRs.
+- If you call reusable workflows (`workflow_call`):
+  - verify the resulting check run names are stable (they can differ from expectations).
+
+<details>
+  <summary><strong>Minimal stable check naming skeleton (recommended)</strong></summary>
+
+```yaml
+name: docs
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@<PINNED_SHA>
+      - run: make docs-lint
+```
+</details>
+
+---
+
 ## Required Workflow Inventory (Stable Names + Outputs)
 
-The boss-level missing piece in many repos is not “what checks exist,” but **which workflow file produces which check name** and **what artifacts it must upload**.
+The boss-level missing piece in many repos is not “what checks exist,” but **which workflow produces which check** and **what proof it uploads**.
 
 > [!WARNING]
-> **Contract:** Branch protection MUST reference workflow `name:` values that are stable.
+> **Contract:** Required checks MUST correspond to stable **job names** (see [Check Run Naming Contract](#check-run-naming-contract-github-actions-reality-check)).
 
-### Recommended workflow files and `name:` values
+### Recommended workflow files and job outputs
 
-| Workflow file | Workflow `name:` | Produces status check | Runs on | Notes |
+| Workflow file | Workflow `name:` | Job name (required check) | Runs on | Notes |
 |---|---|---|---|---|
 | `.github/workflows/docs.yml` | `docs` | `docs` | PR + push | markdownlint + link check + template lint |
 | `.github/workflows/stories.yml` | `stories` | `stories` | PR + push | Story Node v3 schema + citation resolver |
-| `.github/workflows/contracts.yml` | `contracts` | `contracts` | PR + push | JSON Schema + compat tests |
+| `.github/workflows/contracts.yml` | `contracts` | `contracts` | PR + push | JSON Schema + compat tests + CODEOWNERS validation |
 | `.github/workflows/receipts.yml` | `receipts` | `receipts` | PR + push | spec_hash + checksums + run manifests |
 | `.github/workflows/catalogs.yml` | `catalogs` | `catalogs` | PR + push | DCAT/STAC/PROV validators + link integrity |
 | `.github/workflows/policy.yml` | `policy` | `policy` | PR + push | opa test + conftest + regression suite |
 | `.github/workflows/api-contract.yml` | `api-contract` | `api-contract` | PR + push | OpenAPI diff + breaking change gate |
 | `.github/workflows/build.yml` | `build` | `build` | PR + push | build + unit tests + smoke |
-| `.github/workflows/security.yml` | `security` | `security` | schedule + PR | CodeQL + dependency review + secrets |
+| `.github/workflows/security.yml` | `security` | `security` | schedule + PR | CodeQL + dependency review + secret scans |
+| `.github/workflows/config-drift.yml` | `config-drift` | `config-drift` | schedule + manual | checks GitHub settings baseline |
 | `.github/workflows/supply-chain.yml` | `supply-chain` | `supply-chain` | release/tag | SBOM + attestations + signatures |
 | `.github/workflows/release.yml` | `release` | *(not a merge gate)* | tag | writes immutable release records |
 | `.github/workflows/break-glass.yml` | `break-glass` | *(restricted)* | manual | emergency containment only |
@@ -312,15 +474,12 @@ The boss-level missing piece in many repos is not “what checks exist,” but *
 > If the repo uses fewer workflows, it is still responsible for producing the **required status checks** above.
 > “One mega workflow” is acceptable if it emits the same check names, fails closed, and uploads required artifacts.
 
-<details>
-<summary><strong>Workflow authoring rule (mandatory)</strong></summary>
+### Workflow authoring rules (mandatory)
 
-- Workflows MUST use stable `name:` values.
-- Jobs SHOULD also use stable `name:` values (helps debugging).
 - Third-party actions MUST be pinned by commit SHA.
-- `permissions:` MUST be minimal per job; default to read-only.
-
-</details>
+- `permissions:` MUST be minimal per workflow and per job.
+- Workflows MUST be fork-safe (no secrets to untrusted PRs).
+- Each gate MUST upload proof artifacts (see next section).
 
 ---
 
@@ -330,25 +489,44 @@ CI is not just pass/fail. CI must produce **reviewable evidence**.
 
 ### Required artifact outputs (minimum)
 
-| Gate | Must upload artifacts | Where reviewers find it |
+| Gate | Must upload artifacts | Format expectations |
 |---|---|---|
-| `docs` | lint report + link check report | PR checks artifacts |
-| `stories` | schema validation report + citation resolution report | PR checks artifacts |
-| `contracts` | schema validation output + compat diff report | PR checks artifacts |
-| `receipts` | receipt validation report + checksum verification report | PR checks artifacts |
-| `catalogs` | validation output + cross-link integrity report | PR checks artifacts |
-| `policy` | opa/conftest test output + policy regression summary | PR checks artifacts |
-| `api-contract` | OpenAPI diff (breaking/non-breaking) | PR checks artifacts |
-| `build` | unit test summary + smoke logs | PR checks artifacts |
+| `docs` | lint report + link check report | `report.json` *(machine)* + `report.md` *(human)* |
+| `stories` | schema validation report + citation resolution report | machine + human |
+| `contracts` | schema validation output + compat diff report | machine + human |
+| `receipts` | receipt validation report + checksum verification report | machine + human |
+| `catalogs` | validation output + cross-link integrity report | machine + human |
+| `policy` | opa/conftest output + regression summary | machine + human |
+| `api-contract` | OpenAPI diff (breaking/non-breaking) | machine + human |
+| `build` | unit test summary + smoke logs | machine + human |
 
 > [!IMPORTANT]
 > “Works on my machine” is not evidence. If a gate asserts a guarantee, it must upload proof that reviewers can inspect.
+
+### Artifact naming contract (recommended)
+
+To make artifacts predictable:
+
+- Artifact name: `kfm-ci-<gate>-reports`
+- Inside artifact:
+  - `reports/<gate>/report.json`
+  - `reports/<gate>/report.md`
+  - optional raw logs under `reports/<gate>/logs/**`
+
+### Use GitHub Step Summary (recommended)
+
+Each job should also write a short summary to `GITHUB_STEP_SUMMARY` linking:
+- what was checked,
+- what artifacts were uploaded,
+- failure hints (when failing).
 
 ### Artifact retention and sensitivity
 
 - Artifacts must not include secrets or sensitive coordinates.
 - Prefer redaction/generalization in reports when needed.
-- Retention should be long enough for incident analysis (recommend ≥ 30 days for PR artifacts; ≥ 180 days for release artifacts).
+- Retention should be long enough for incident analysis:
+  - recommend ≥ 30 days for PR artifacts
+  - recommend ≥ 180 days for release artifacts
 
 ---
 
@@ -570,6 +748,7 @@ permissions:
 
 jobs:
   docs:
+    name: docs
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -600,6 +779,15 @@ Release records in `releases/` must be immutable and verifiable by checksums.
   - (optional) SBOM + attestations
 - editing an existing release folder is a governance incident
 
+### Release tagging contract (recommended)
+
+- Tag format: `vMAJOR.MINOR.PATCH`
+- Protect tags (if org supports it) to prevent rewriting shipped tags
+- Release workflow must:
+  - verify required gates
+  - write immutable release record folder
+  - attach or reference SBOM/attestations when enabled
+
 ---
 
 ## Dependency Updates Policy (Dependabot/Renovate)
@@ -617,6 +805,34 @@ Recommended:
 - Group GitHub Actions updates separately from application dependencies
 - Pin actions; let Dependabot bump pinned SHAs where possible
 - Require a `security` gate for dependency updates that introduce high/critical issues
+
+---
+
+## Governance Config Drift Detection (Settings Are Part Of The System)
+
+GitHub settings are governance infrastructure. If they drift, the system is no longer governed.
+
+### Required (manual) drift check
+
+Maintainers MUST periodically confirm:
+- branch protections still exist and match required checks,
+- CODEOWNERS review is still required and non-bypassable,
+- secret scanning / push protection is enabled,
+- code scanning is enabled.
+
+### Recommended (automated) drift check
+
+Add a scheduled workflow `config-drift` that:
+
+- calls GitHub APIs (or `gh api`) to inspect:
+  - branch protection rules
+  - required checks list
+  - bypass allowances (who can bypass)
+- fails (or opens an issue) on mismatch
+- never exposes secrets (read-only)
+
+> [!NOTE]
+> Not all orgs allow reading all settings via token scope. If the drift check cannot be implemented, track as a governance gap and handle manually until enabled.
 
 ---
 
@@ -650,24 +866,28 @@ Recommended extras:
 
 | Failure | Usually means | Fix |
 |---|---|---|
-| `contracts` | schema mismatch | update schema + fixtures; keep fail closed |
+| `contracts` | schema mismatch / CODEOWNERS invalid | update schema + fixtures; fix CODEOWNERS; keep fail closed |
 | `receipts` | run manifest invalid / checksum mismatch | regenerate deterministically; fix spec_hash or checksums |
 | `catalogs` | invalid DCAT/STAC/PROV or broken links | repair catalogs; fix cross-links |
-| `policy` | policy regression | update policy/tests; do not weaken deny |
+| `policy` | policy regression / drift | update policy/tests; do not weaken deny |
 | `api-contract` | `/api/v1` breaking change | refactor or bump to `/api/v2` |
 | `docs/stories` | template/citation failures | fix headings/citations/resolution |
 | `build` | build/smoke failures | align Docker contexts; fix env wiring |
+| `config-drift` | GitHub settings drift | restore protections/settings; record incident if needed |
 
 ---
 
 ## Definition Of Done For `.github/README.md`
 
 - [ ] required `.github` items exist and are CODEOWNED
+- [ ] CODEOWNERS coverage is validated and protects governance surfaces
 - [ ] repository settings enforce PR + CODEOWNERS + required checks
-- [ ] required status check names are stable and mapped to workflows
+- [ ] required status check names are stable and mapped to **job names**
 - [ ] CI gates run on every PR and fail closed
+- [ ] CI uploads reviewable proof artifacts (machine + human reports)
 - [ ] promotion contract enforced via receipts + catalogs + checksums
 - [ ] evidence resolver and cite-or-abstain contracts are enforced
 - [ ] policy parity: CI bundle == runtime bundle (no drift)
 - [ ] workflows are hardened (pinned actions + least privilege + fork-safe)
 - [ ] releases are immutable and verifiable via `releases/`
+- [ ] (recommended) config drift detection exists (manual or automated)
