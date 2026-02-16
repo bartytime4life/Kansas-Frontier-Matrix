@@ -1,189 +1,230 @@
-# 📏 KFM Standards (Governed) ✅
+---
+title: "KFM Standards"
+path: "docs/standards/README.md"
+version: "v1.0.0"
+last_updated: "2026-02-16"
+status: "draft"
+doc_kind: "Standards Index"
+license: "TBD"
 
-![governed](https://img.shields.io/badge/standards-governed-2ea44f)
-![contract-first](https://img.shields.io/badge/principle-contract--first-6f42c1)
-![evidence-first](https://img.shields.io/badge/principle-evidence--first-0969da)
-![deterministic](https://img.shields.io/badge/pipelines-deterministic-f85149)
+# Governance & classification
+fair_category: "FAIR+CARE"
+care_label: "Public"
+sensitivity: "public"
+classification: "internal"
 
-> **Standards = “what must be true”** (normative).  
-> If something is *required* for KFM correctness, provenance, sovereignty, safety, or interoperability — it belongs in **`docs/standards/`**.
+# Cross-refs (expected)
+governance_ref: "../governance/ROOT_GOVERNANCE.md"
+ethics_ref: "../governance/ETHICS.md"
+sovereignty_ref: "../governance/SOVEREIGNTY.md"
+review_gates_ref: "../governance/REVIEW_GATES.md"
+
+# Integrity fields
+doc_uuid: "urn:kfm:doc:standards:index:v1.0.0"
+commit_sha: "<set-by-ci>"
+doc_integrity_checksum: "sha256:<set-by-ci>"
+---
+
+![Status](https://img.shields.io/badge/status-draft-orange)
+![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
+![Claims](https://img.shields.io/badge/claims-evidence--first-blue)
+![Policy](https://img.shields.io/badge/policy-OPA%2FRego-informational)
+
+# KFM Standards
+
+This directory holds **contract-grade standards** for Kansas Frontier Matrix (KFM).
+
+These documents are treated like code:
+
+- **Contract-first:** schemas and API contracts are first-class artifacts; changes require strict versioning + compatibility checks.
+- **Deterministic pipeline:** transformations are idempotent, config-driven, and fully logged so outputs are reproducible.
+- **Fail-closed governance:** if evidence, signatures, or policies fail → nothing ships.
+
+> **Non-negotiable:** Standards changes MUST be paired with enforcement (schemas, policy, CI gates). If you can’t enforce it, it’s a guideline, not a standard.
 
 ---
 
-## 🧭 Quick Links
+## What lives here
 
-- 📘 **Master Guide (Canonical)**: [`docs/MASTER_GUIDE_v13.md`](../MASTER_GUIDE_v13.md)
-- ⚖️ **Governance & Review Gates**: [`docs/governance/`](../governance/)
-- 🧩 **Templates (Write docs the KFM way)**: [`docs/templates/`](../templates/)
-- 🧪 **Schemas (Machine validation source)**: [`schemas/`](../../schemas/)
-- 🗂️ **Data boundary artifacts**: [`data/stac/`](../../data/stac/) · [`data/catalog/dcat/`](../../data/catalog/dcat/) · [`data/prov/`](../../data/prov/)
+| Standard | Path | What it governs | Enforced by | Notes |
+|---|---|---|---|---|
+| Markdown work protocol | `docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` | Front-matter, section structure, accessibility, citations | Markdown lint + schema checks in CI | Treat doc failures like failing unit tests |
+| Repo structure standard | `docs/standards/KFM_REPO_STRUCTURE_STANDARD.md` | Directory layout + “where things go” | Reviews + CI structure checks (where implemented) | Keeps the repo navigable |
+| KFM STAC profile | `docs/standards/KFM_STAC_PROFILE.md` | KFM-required fields/extensions for STAC items/collections | STAC JSON Schema validation in CI | May begin as a placeholder |
+| KFM DCAT profile | `docs/standards/KFM_DCAT_PROFILE.md` | KFM-required fields for DCAT (datasets + distributions) | DCAT validation in CI | Referenced as present in repo docs |
+| KFM PROV profile | `docs/standards/KFM_PROV_PROFILE.md` | KFM-required PROV-O JSON-LD bundle shape | PROV JSON-LD validation in CI | May begin as a placeholder |
 
----
-
-## 🧠 What “Standards” Mean in KFM
-
-KFM is built around **contract-first**, **evidence-first**, and a **deterministic pipeline**:
-
-- **Contract-first**: schemas and API contracts are first-class artifacts; changes require versioning + compatibility checks.
-- **Evidence-first**: every claim shown in UI/narratives must trace back to governed evidence.
-- **Deterministic pipeline**: ETL is idempotent + config-driven + logged; same inputs ⇒ stable outputs.
-
-These principles are enforced through **standards docs**, **schemas**, and **CI gates**.
+> **Tip:** If you’re adding a new standard, also add its companion validator(s) under `schemas/` and a CI job that fails closed.
 
 ---
 
-## 🚦 Non‑Negotiables
+## Related directories
 
-### 1) Canonical pipeline ordering (no leapfrogging)
-**ETL → STAC/DCAT/PROV catalogs → Graph → APIs → UI → Story Nodes → Focus Mode**
-
-If a feature attempts to bypass a stage (ex: UI reading directly from “processed” files, or narratives not linked to evidence), it’s non-compliant.
-
-### 2) “Published” data requires boundary artifacts
-A dataset is not considered published until its boundary artifacts exist:
-
-- **STAC** items/collections (spatial + temporal indexing)
-- **DCAT** dataset entries (discovery + distribution)
-- **PROV** bundles (lineage)
-
-These artifacts are the “handoff contract” to downstream stages (graph/API/UI).
-
-### 3) Focus Mode safety baseline
-Focus Mode operationalizes: **“no new narrative without sources, no data without provenance.”**  
-AI assistance (if used) must be **opt‑in**, **labeled**, and must not leak sensitive locations.
-
----
-
-## 📚 Standards Index (This Folder)
-
-> Keep this list tight and authoritative. If you add a new standard, add it here.
-
-| 📄 Standard | Purpose | When to read |
-|---|---|---|
-| **[`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md)** | Authoring rules for governed docs (front‑matter, claims, structure, linking) | Writing/editing docs or Story Nodes |
-| **[`KFM_REPO_STRUCTURE_STANDARD.md`](./KFM_REPO_STRUCTURE_STANDARD.md)** | Canonical folder layout + “one home per subsystem” | Creating/moving folders, adding domains |
-| **[`KFM_STAC_PROFILE.md`](./KFM_STAC_PROFILE.md)** | KFM-required STAC fields + extensions | Adding geospatial assets / STAC |
-| **[`KFM_DCAT_PROFILE.md`](./KFM_DCAT_PROFILE.md)** | KFM-required DCAT dataset/distribution fields | Publishing datasets for discovery |
-| **[`KFM_PROV_PROFILE.md`](./KFM_PROV_PROFILE.md)** | KFM-required provenance model + fields | Any transformation / derived output |
-
----
-
-## 🗂️ What Belongs Here vs Elsewhere
-
-✅ Put it in `docs/standards/` if it is:
-- A **must-follow** rule for system integrity (pipeline ordering, provenance requirements, security gates).
-- A **profile** or **spec** (STAC/DCAT/PROV/StoryNode/UI config).
-- A **definition** of required validations (what CI must check, and why).
-
-🚫 Don’t put it here if it is:
-- **How-to guides / runbooks** → `docs/` or `docs/data/<domain>/`
-- **Design proposals / rationale** → `docs/architecture/` (and ADRs)
-- **Templates** → `docs/templates/`
-- **Policies / ethics / sovereignty / review gates** → `docs/governance/`
-
----
-
-## 🗺️ Canonical Flow (Reference Diagram)
-
-```mermaid
-flowchart LR
-  subgraph Data
-    A["Raw Sources"] --> B["ETL + Normalization"]
-    B --> C["STAC Items + Collections"]
-    C --> D["DCAT Dataset Views"]
-    C --> E["PROV Lineage Bundles"]
-  end
-
-  C --> G["Graph (references back to catalogs)"]
-  G --> H["API Layer (contracts + redaction)"]
-  H --> I["Map UI (React + MapLibre; optional Cesium)"]
-  I --> J["Story Nodes (governed narratives)"]
-  J --> K["Focus Mode (provenance-linked context bundle)"]
+```text
+repo-root/
+├── docs/
+│   ├── standards/
+│   │   ├── README.md
+│   │   ├── KFM_MARKDOWN_WORK_PROTOCOL.md
+│   │   ├── KFM_REPO_STRUCTURE_STANDARD.md
+│   │   ├── KFM_STAC_PROFILE.md
+│   │   ├── KFM_DCAT_PROFILE.md
+│   │   └── KFM_PROV_PROFILE.md
+│   ├── templates/
+│   │   ├── TEMPLATE__KFM_UNIVERSAL_DOC.md
+│   │   ├── TEMPLATE__STORY_NODE_V3.md
+│   │   └── TEMPLATE__API_CONTRACT_EXTENSION.md
+│   └── governance/
+│       ├── ROOT_GOVERNANCE.md
+│       ├── ETHICS.md
+│       ├── SOVEREIGNTY.md
+│       └── REVIEW_GATES.md
+├── schemas/
+│   ├── stac/
+│   ├── dcat/
+│   ├── prov/
+│   ├── storynodes/
+│   ├── ui/
+│   └── telemetry/
+└── .github/workflows/
 ```
 
 ---
 
-## ✅ Definition of Done for Any Standard Doc
+## Non-negotiables
 
-A standards PR is not “done” until:
+### 1) Evidence-first & cite-or-abstain
 
-- ✅ **Front-matter is complete and valid** (and follows the template rules)
-- ✅ **Claims link to datasets/schemas/sources** (no “trust me” statements)
-- ✅ **Validation steps are listed and repeatable**
-- ✅ **Governance + FAIR/CARE + sovereignty considerations are explicit**
-- ✅ **Schemas/tests updated** (if the standard changes machine-validated behavior)
+- Every user-visible claim must resolve to **dataset version + exact records** (or document/page span).
+- If evidence cannot be resolved, the system must **abstain** rather than speculate.
 
-> Tip: If you can’t point to the exact schema/test/validator enforcing the rule, the rule is not “real” yet.
+### 2) Trust membrane
 
----
+Clients (including the Web UI) must never touch storage directly.
 
-## 🧪 Validation & CI Expectations
+- All access routes through governed APIs.
+- Policy-as-code runs at the boundary and mediates RBAC, sensitivity classes, and citation rules.
 
-KFM CI should (at minimum) enforce:
+### 3) Fail-closed promotion (no “manual publish”)
 
-- 🧾 **Front‑matter & Markdown protocol checks**
-- 🔗 **Link/reference validation** (no broken internal links, no missing refs)
-- 🧩 **Schema validation** for STAC/DCAT/PROV (+ Story Nodes and UI config if applicable)
-- 🧠 **Graph integrity tests** (constraints, ontology expectations, fixture loads)
+Promotion to any “served” or “public” state is blocked unless required metadata, provenance, and policies validate.
 
-If standards require validation, CI must be updated accordingly.
+### 4) Deterministic identity & receipts
+
+- Deterministic identity is required (e.g., `spec_hash` computed from canonicalized inputs).
+- Every pipeline run emits typed receipts/manifests (e.g., `run_receipt`, `run_manifest`) as first-class artifacts.
 
 ---
 
-## 🧱 Data + Pipeline Standards (Quick Checklist)
+## Enforcement model (schemas + policy + CI)
 
-When adding a dataset or “evidence artifact”:
+KFM standards are enforced at two main choke points:
 
-1. 📥 Place source files under `data/<domain>/raw/` *(read-only snapshots)*
-2. 🧰 Use `data/<domain>/work/` for intermediate outputs
-3. 📦 Write final outputs to `data/<domain>/processed/`
-4. 🧾 Generate metadata:
-   - `data/stac/collections/` + `data/stac/items/`
-   - `data/catalog/dcat/`
-   - `data/prov/`
-5. 🧠 (Optional) Load derived entities into the graph **with explicit provenance**
-6. 🔌 Expose through governed APIs (redaction/classification happens here)
-7. 🗺️ UI and Story Nodes consume **only provenance-linked** content
+1) **CI gates** (PR-time, fail closed)
+2) **Trust membrane policy** (runtime, deny by default)
 
----
+### Minimum CI hardening set (baseline)
 
-## 🧷 Change Management (Standards Versioning)
+- Validate Story Nodes and governed Markdown structure
+- Validate STAC/DCAT/PROV artifacts for any new/updated dataset
+- Run OPA policy tests (unit tests for allow/deny)
+- Generate SBOM (SPDX) + build provenance attestation (SLSA/in-toto)
+- Publish a versioned container image **only** if all checks pass
 
-Standards are contracts. Changing a contract is serious.
+> **Policy design guideline:** keep denials explainable—errors should point to the missing field, violated constraint, and remediation.
 
-**Rules of thumb:**
-- 🔁 **Backward-compatible** changes: additive fields, relaxed validation, clarifications → minor version bump
-- 💥 **Breaking** changes: required field changes, renamed semantics, removed behavior → major version bump + migration plan
-- 🧊 Deprecations: mark as deprecated, provide replacement path, and set a removal milestone
+### Governance-by-construction loop
 
-When in doubt: write an ADR in `docs/architecture/adr/` and link it from the standard.
-
----
-
-## 🧾 Mini Glossary
-
-- **Catalogs**: STAC (assets), DCAT (dataset discovery), PROV (lineage)
-- **Contract artifact**: schema/spec that defines an interface (JSON Schema, OpenAPI, etc.)
-- **Evidence artifact**: derived output treated as a dataset with STAC/DCAT + PROV
-- **Story Node**: governed narrative document with citations to cataloged evidence
-- **Focus Mode**: UI mode that only shows provenance-linked content (no unsourced narrative)
+```mermaid
+flowchart LR
+  Watch[Watch sources] --> Hash[Canonicalize → spec_hash]
+  Hash --> Receipt[Emit run_receipt / run_manifest]
+  Receipt --> Validate[Schema validate + policy tests]
+  Validate -->|pass| Attest[Sign + attest artifacts]
+  Validate -->|fail| Block[Fail-closed: block promotion]
+  Attest --> Publish[Publish immutable artifacts]
+  Publish --> Serve[Serve via governed APIs]
+  Serve --> UI[Web UI / Focus Mode]
+  UI --> Cite[Evidence resolver + citations]
+  Cite --> Publish
+```
 
 ---
 
-## 🤝 Contributing to Standards
+## Versioning, compatibility, and migrations
 
-1. 🔎 Identify the correct standard (or propose a new one)
-2. 🧩 Update schemas/validators/tests **with** the doc change
-3. 🧪 Ensure CI gates cover the new rule
-4. 🧾 Add/update an ADR for non-trivial changes
-5. ✅ Update this README index if you add a new standard
+Because docs embed version identifiers (template/protocol versions, doc UUIDs, profile versions), KFM is structurally prepared for compatibility governance **if** those versions are enforced in CI and runtime endpoints.
+
+Standards changes MUST include one of:
+
+- **Non-breaking** update (additive fields, optional constraints), or
+- **Breaking change** with explicit version bump + migration guide + rollout/rollback plan.
+
+### Required versioning behaviors
+
+- **API versioning:** freeze `/api/v1/*` semantics; introduce `/api/v2/*` only for breaking changes.
+- **Schema/profile versioning:** keep STAC/DCAT/PROV profile versions (e.g., `KFM-STAC vN`) and publish migration scripts for each bump.
+- **Story Node template versioning:** enforce Story Node v3; provide a transformer script; block merge if template mismatch.
+- **Deprecation policy:** document timelines inside the API contract extension template.
 
 ---
 
-## 📌 Roadmap Hooks (Optional)
+## Sensitivity, sovereignty, and licensing
 
-- Add missing profile placeholders if referenced by CI but not implemented
-- Build/extend validators in `tools/` and wire into `.github/workflows/`
-- Maintain a “Standards Changelog” section per file for auditability
+Standards must make sensitive handling *automatic*:
+
+- If documentation or data includes sensitive locations or personal data, apply CARE defaults (redact or generalize). Use front-matter fields like `care_label` to trigger stricter review.
+- Licenses and reuse constraints are operational requirements: ingestion and APIs must distinguish “metadata + pointer” ingest vs “content mirroring,” and encode rights controls in pipeline + API output.
 
 ---
+
+## How to change a standard (PR checklist)
+
+### 1) Make the change traceable
+
+- [ ] Update the relevant `docs/standards/*.md` document.
+- [ ] Update matching schemas under `schemas/`.
+- [ ] Update policy packs under `policy/opa/` (if applicable).
+- [ ] Add/adjust CI checks under `.github/workflows/`.
+
+### 2) Make it safe
+
+- [ ] If breaking: bump version + add migration guide.
+- [ ] Add/update tests (schema validation tests, contract tests, policy tests).
+- [ ] Add a rollback plan (or explicit statement why rollback is unnecessary).
+
+### 3) Make it governed
+
+- [ ] Confirm CARE/sensitivity implications.
+- [ ] Ensure denial messages are explainable.
+- [ ] Ensure docs are link-check clean and pass markdown lint.
+
+---
+
+## Glossary
+
+<details>
+<summary>Click to expand</summary>
+
+| Term | Meaning in KFM |
+|---|---|
+| **STAC** | SpatioTemporal Asset Catalog: JSON catalogs describing geospatial assets |
+| **DCAT** | Data Catalog Vocabulary: describes datasets and distributions |
+| **PROV-O** | W3C provenance ontology (entities, activities, agents) |
+| **OPA/Rego** | Policy-as-code used for CI gates and runtime checks |
+| **SBOM** | Software Bill of Materials (e.g., SPDX/CycloneDX) |
+| **SLSA** | Supply-chain Levels for Software Artifacts: provenance model/levels |
+| **Trust membrane** | The governed boundary: clients never access storage directly |
+| **Fail-closed** | Default to deny/block; ship only when all checks pass |
+| **spec_hash** | Deterministic hash of canonicalized inputs used for identity/integrity |
+
+</details>
+
+---
+
+## Definition of Done (this document)
+
+- [ ] Front-matter complete + valid
+- [ ] All claims link to datasets, schemas, or source references (as applicable)
+- [ ] Validation steps are listed and repeatable (for any process described)
+- [ ] Governance, FAIR/CARE, and sovereignty considerations are explicitly stated
