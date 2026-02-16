@@ -1,16 +1,3 @@
----
-title: "KFM Toolchain Entrypoints (tools/bin)"
-doc_id: "kfm.tools.bin.readme"
-version: "1.0.0"
-status: "active"
-last_updated: "2026-02-14"
-audience:
-  - engineers
-  - data_engineers
-  - ops
-scope: "repo"
----
-
 # tools/bin — KFM CLI utilities
 
 ![governed](https://img.shields.io/badge/governed-yes-2ea44f)
