@@ -1,30 +1,3 @@
----
-title: "KFM Governance Runbooks (Infra)"
-path: "infra/runbooks/governance/README.md"
-version: "v0.1.0-draft"
-last_updated: "2026-02-16"
-status: "draft"
-doc_kind: "Runbook Index"
-license: "TBD (inherit repo license)"
-markdown_protocol_version: "TBD"
-pipeline_contract_version: "TBD"
-
-# Governance anchors (expected repo paths; adjust if the repo differs)
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_ref: "docs/governance/SOVEREIGNTY.md"
-
-fair_category: "FAIR+CARE"
-care_label: "Public (this doc); runbook-specific overrides apply"
-sensitivity: "public"
-classification: "internal"
-jurisdiction: "US-KS"
-
-doc_uuid: "urn:kfm:doc:runbook:governance:index:v0.1.0-draft"
-commit_sha: "<fill-on-merge>"
-doc_integrity_checksum: "sha256:<fill-on-merge>"
----
-
 # Governance Runbooks (Infra)
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
