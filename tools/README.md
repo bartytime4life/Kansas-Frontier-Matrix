@@ -20,8 +20,8 @@ KFM’s `tools/` directory contains **validators, enforcement harnesses, and rep
 - deterministic specs and receipts (`spec_hash`, run manifests)
 - schema-validated catalogs (DCAT/STAC/PROV) and cross-links
 - policy-as-code gates (default deny)
-- supply-chain hooks (optional: SBOM/attestations verification)
-- reproducible, local-first verification (no CI-only magic)
+- supply-chain hooks *(optional: SBOM/attestations verification)*
+- reproducible, local-first verification *(no CI-only magic)*
 
 > [!IMPORTANT]
 > Tools are enforcement mechanisms, not “nice-to-have scripts.”  
@@ -39,7 +39,7 @@ KFM’s `tools/` directory contains **validators, enforcement harnesses, and rep
 | Version | `v2.0.0-draft` |
 | Effective date | 2026-02-15 |
 | Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
-| Review triggers | any change affecting pass/fail semantics, default-deny posture, receipt validation, catalog validation, sensitivity handling |
+| Review triggers | any change affecting pass/fail semantics, default-deny posture, receipt validation, catalog validation, sensitivity handling, **exit code meanings**, **report schema** |
 
 > [!WARNING]
 > **Fail-closed rule:** missing required signals (citations, receipts, catalogs, checksums, policy inputs) must be treated as failures, not warnings.
@@ -72,6 +72,11 @@ KFM’s `tools/` directory contains **validators, enforcement harnesses, and rep
   - UI code belongs in `web/`
 - one-off personal scripts that aren’t deterministic, tested, and documented
 - secrets/credentials/private keys
+- **tools that “fix” artifacts implicitly** (autofix is allowed only as an explicit opt-in mode)
+
+> [!NOTE]
+> A good rule: **verification defaults to read-only**. If a tool can mutate files (formatting, autofix),
+> it must require an explicit flag (e.g., `--fix`) and CI should run in non-mutating mode.
 
 ---
 
@@ -95,7 +100,7 @@ flowchart LR
 ## 🧱 Tooling principles (non-negotiable)
 
 ### Deterministic and replayable
-Tools must produce stable results for the same inputs (or explicitly record differences in structured reports).
+Tools must produce stable results for the same inputs *(or explicitly record differences in structured reports)*.
 
 ### Fail-closed
 Missing required signals are hard failures:
@@ -111,7 +116,12 @@ Every validator should emit:
 - a structured report (JSON recommended) for CI artifact upload and audit trails
 
 ### No trust-membrane bypass
-Tools may interrogate the system but must not introduce shortcuts that bypass governed API/policy boundaries (no UI→DB encouragement, no direct DB reads to “make it work”).
+Tools may interrogate the system but must not introduce shortcuts that bypass governed API/policy boundaries
+*(no UI→DB encouragement, no direct DB reads to “make it work”)*.
+
+### No “CI-only” dependencies
+If CI can run it, a developer must be able to run it locally with the same code path.
+- If a dependency is missing, that is a **tool execution error** (not a pass, not a skip).
 
 ---
 
@@ -146,6 +156,17 @@ Preferred: one umbrella command that matches CI.
 ### Recommended default
 - `make verify` *(or equivalent wrapper)*
 
+### Scoped verification (fast local / CI optimization)
+If your CI passes a changed-files list, tools should support:
+- `--paths-from <file>` *(recommended contract)*
+
+Example (shell):
+- `git diff --name-only origin/main...HEAD > /tmp/changed_files.txt`
+- `kfm verify --strict --paths-from /tmp/changed_files.txt`
+
+> [!TIP]
+> Keep the umbrella command as the default workflow and individual steps as debugging tools.
+
 ### Debug drills (when you need isolation)
 1) docs gate  
 2) story gate  
@@ -153,10 +174,7 @@ Preferred: one umbrella command that matches CI.
 4) receipts gate  
 5) policy gate  
 6) evidence resolver gate  
-7) supply chain gate (optional; release-only)
-
-> [!TIP]
-> Keep the umbrella command as the default workflow and individual steps as debugging tools.
+7) supply chain gate *(optional; release-only)*
 
 ---
 
@@ -172,7 +190,7 @@ If a gate is required in CI, it must be runnable locally from `tools/` using the
 | Receipts | promotion correctness | validate run_manifest/run_record + checksums + spec_hash semantics | missing receipt fields, digest mismatch, non-canonical spec hash |
 | Policy | governance safety | `opa test` and/or `conftest test`, default deny preserved | regressions, allow-by-default drift |
 | Evidence | reviewability | verify `ref` schemes resolve or deny safely | unresolvable refs, leaky denials |
-| Supply chain | artifact integrity | SBOM + attestation verification (when enabled) | unsigned artifacts, provenance mismatch |
+| Supply chain | artifact integrity | SBOM + attestation verification *(when enabled)* | unsigned artifacts, provenance mismatch |
 
 ---
 
@@ -180,21 +198,25 @@ If a gate is required in CI, it must be runnable locally from `tools/` using the
 
 ### CLI conventions
 - `--help` prints usage and exits `0`
-- `--json <path>` writes a machine report (and still prints human logs)
-- `--strict` converts warnings into failures (recommended default for CI)
+- `--json <path>` writes a machine report *(and still prints human logs)*
+- `--strict` converts warnings into failures *(recommended default for CI)*
 - `--paths-from <file>` accepts a changed-files list for scoped CI
 
 ### Exit codes (recommended)
 - `0`: success
-- `2`: validation failure (artifact invalid)
-- `3`: tool execution error (missing dep/crash)
-- `4`: policy denial / governance failure (explicit deny outcome)
+- `2`: validation failure *(artifact invalid / governance requirements not met)*
+- `3`: tool execution error *(missing dependency, unreadable file, crash, misconfiguration)*
+- `4`: policy denial / governance failure *(explicit deny outcome; default deny preserved)*
+
+> [!NOTE]
+> If you can’t read the thing you’re supposed to validate, that’s usually **exit 3**, not exit 2.
+> Exit 2 means “we successfully evaluated it and it failed.”
 
 ### JSON report conventions (recommended)
 - `tool_id`, `tool_version`
-- `inputs` (paths, hashes where applicable)
-- `checks[]` (id, status, message, evidence pointers)
-- `summary` (pass/fail counts)
+- `inputs` *(paths, hashes where applicable)*
+- `checks[]` *(id, status, message, evidence pointers)*
+- `summary` *(pass/fail counts)*
 - `timestamp` *(optionally fixed/omitted in strict deterministic mode)*
 
 ---
@@ -205,12 +227,12 @@ Tools used as CI gates must be tested.
 
 ### Minimum expectations
 - unit tests for parsing/validation logic
-- golden fixtures (small, deterministic)
-- regression tests for previously-seen failures (especially policy and provenance)
+- golden fixtures *(small, deterministic)*
+- regression tests for previously-seen failures *(especially policy and provenance)*
 
 ### Fixture rules
 - keep fixtures tiny and synthetic where possible
-- avoid licensing issues (fixtures must be owned/created for the repo)
+- avoid licensing issues *(fixtures must be owned/created for the repo)*
 - never include restricted/sensitive real-world records in fixtures
 
 ---
@@ -223,18 +245,18 @@ Tools used as CI gates must be tested.
 
 ### No silent downgrades
 - missing dependency/unreadable file is a failure, not a skip
-- optional checks must be explicit (no surprise behavior changes)
+- optional checks must be explicit *(no surprise behavior changes)*
 
 ### Dependency hygiene
-- pin toolchain versions where possible (avoid “latest” drift)
-- prefer offline-capable validation (important for air-gapped environments)
+- pin toolchain versions where possible *(avoid “latest” drift)*
+- prefer offline-capable validation *(important for air-gapped environments)*
 
 ---
 
 ## 🧩 When to put code in `tools/` vs `src/`
 
 Rule of thumb:
-- `src/pipelines/` (or `pipelines/`): ETL jobs that produce outputs and catalogs
+- `src/pipelines/` *(or `pipelines/`)*: ETL jobs that produce outputs and catalogs
 - `src/server/`: runtime API behavior and policy-enforced access
 - `src/graph/`: graph build/ingest/constraints
 - `web/`: UI
@@ -248,10 +270,11 @@ Rule of thumb:
 ## 🛠️ Adding a new tool (checklist)
 
 - [ ] pick the correct home (`tools/docs`, `tools/story`, `tools/data`, `tools/receipts`, `tools/policy`, `tools/evidence`, `tools/supply-chain`, or `tools/lib`)
-- [ ] add a minimal README in the tool folder (purpose, inputs/outputs, usage, exit codes)
-- [ ] add tests and fixtures (or extend existing fixtures)
-- [ ] ensure deterministic output (stable ordering; avoid nondeterministic timestamps in strict mode)
-- [ ] ensure CI can call it headlessly (no prompts)
+- [ ] add a minimal README in the tool folder *(purpose, inputs/outputs, usage, exit codes)*
+- [ ] add tests and fixtures *(or extend existing fixtures)*
+- [ ] ensure deterministic output *(stable ordering; avoid nondeterministic timestamps in strict mode)*
+- [ ] ensure CI can call it headlessly *(no prompts)*
+- [ ] ensure verify mode is **non-mutating by default** *(autofix opt-in)*
 - [ ] add the tool to the Tool Index below
 
 ---
@@ -273,7 +296,7 @@ Rule of thumb:
 ## 🧯 Troubleshooting
 
 ### “Passes locally but fails in CI”
-- ensure you ran tools in strict mode (CI should be strict)
+- ensure you ran tools in strict mode *(CI should be strict)*
 - ensure tool versions are pinned locally
 - compare scope: CI may validate more files than your local run
 
@@ -287,18 +310,18 @@ Rule of thumb:
   - a rule id
   - a short message
   - a stable module reference
-  - a link to the governance rationale (docs/governance) when applicable
+  - a link to the governance rationale (`docs/governance/`) when applicable
 
 ---
 
 ## 📚 References inside this repo
 
 Common governed references tools should validate against:
-- `.github/README.md` (required CI gates + governance SSoT)
+- `.github/README.md` *(required CI gates + governance SSoT)*
 - `docs/standards/` and `docs/templates/`
 - `docs/governance/`
-- `contracts/` or `schemas/` (receipt/catalog minimums)
-- `policy/` (default deny)
+- `contracts/` or `schemas/` *(receipt/catalog minimums)*
+- `policy/` *(default deny)*
 - `data/catalog/` and `data/work/` receipts
 
 ---
@@ -306,8 +329,8 @@ Common governed references tools should validate against:
 ## ✅ Definition of Done for changes under `tools/`
 
 A PR that changes tooling is “done” when:
-- the tool is documented (this README + local README as needed)
+- the tool is documented *(this README + local README as needed)*
 - tests are updated or added
 - CI can run the tool headlessly
 - outputs are deterministic and machine-readable
-- governance/security risks are considered (especially around sensitive data, provenance, and fail-closed behavior)
+- governance/security risks are considered *(especially around sensitive data, provenance, and fail-closed behavior)*
