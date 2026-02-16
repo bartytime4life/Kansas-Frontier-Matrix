@@ -22,6 +22,7 @@ treat it as NOT yet proven.
 
 <br/>
 
+<!-- Core governance posture -->
 ![Status](https://img.shields.io/badge/status-governed%20draft-2563eb)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-required-0f766e)
 ![Trust membrane](https://img.shields.io/badge/trust%20membrane-enforced-16a34a)
@@ -34,6 +35,11 @@ treat it as NOT yet proven.
 ![Kill switch](https://img.shields.io/badge/kill--switch-required-orange)
 ![CI](https://img.shields.io/badge/CI-no%20merge%20without%20proof-success)
 ![Releases](https://img.shields.io/badge/releases-immutable%20records-4b0082)
+
+<!-- Nice-to-have (targets; treat as “not proven” until enforced by CI) -->
+![Interoperability](https://img.shields.io/badge/interoperability-STAC%20%2B%20DCAT%20%2B%20PROV-2563eb)
+![Data formats](https://img.shields.io/badge/formats-GeoParquet%20%7C%20COG%20%7C%20PMTiles-0f766e)
+![Observability](https://img.shields.io/badge/observability-OpenTelemetry%20(target)-6b7280)
 ![Supply chain](https://img.shields.io/badge/supply%20chain-SBOM%20%2B%20attestations%20recommended-6b7280)
 
 <!-- OPTIONAL: replace ORG/REPO with real values once workflows exist -->
@@ -58,7 +64,7 @@ treat it as NOT yet proven.
 |---|---|
 | Document | `README.md` |
 | Status | **Governed draft** |
-| Version | `v2.0.0-draft` |
+| Version | `v2.1.0-draft` |
 | Effective date | **2026-02-16** |
 | Applies to | constitutional invariants, repo boundaries, promotion requirements, evidence UX requirements |
 | Review cadence | quarterly + out-of-band for security/toolchain changes |
@@ -74,20 +80,28 @@ treat it as NOT yet proven.
 ## Table of contents
 
 - [Start here](#start-here)
+- [What makes KFM different](#what-makes-kfm-different)
+- [North-star experiences](#north-star-experiences)
 - [Authority ladder](#authority-ladder)
 - [KFM constitution](#kfm-constitution)
+- [Core concepts](#core-concepts)
 - [System overview](#system-overview)
 - [Truth path](#truth-path)
+- [Evidence chain](#evidence-chain)
 - [Governed artifacts inventory](#governed-artifacts-inventory)
 - [Promotion Contract](#promotion-contract)
 - [Catalogs and provenance cross-links](#catalogs-and-provenance-cross-links)
 - [Evidence resolution and citations](#evidence-resolution-and-citations)
+- [Evidence packs and retrieval constraints](#evidence-packs-and-retrieval-constraints)
 - [Story Nodes](#story-nodes)
 - [Focus Mode](#focus-mode)
+- [Knowledge graph and entity resolution](#knowledge-graph-and-entity-resolution)
+- [Data quality uncertainty and reproducibility](#data-quality-uncertainty-and-reproducibility)
 - [Visualization governance](#visualization-governance)
 - [Policy decision point](#policy-decision-point)
 - [Audit ledger](#audit-ledger)
 - [Security baseline](#security-baseline)
+- [Operations and observability](#operations-and-observability)
 - [CI gates and verification harness](#ci-gates-and-verification-harness)
 - [Quickstart local](#quickstart-local)
 - [Repository layout](#repository-layout)
@@ -95,6 +109,7 @@ treat it as NOT yet proven.
 - [Definition of done checklists](#definition-of-done-checklists)
 - [Contributing and governance workflow](#contributing-and-governance-workflow)
 - [License data rights and citation](#license-data-rights-and-citation)
+- [References and source anchors](#references-and-source-anchors)
 - [Glossary](#glossary)
 - [Provenance notes](#provenance-notes)
 
@@ -110,6 +125,65 @@ treat it as NOT yet proven.
 
 > [!TIP]
 > If there is no runnable `make verify` (or equivalent) that matches CI, treat it as a **P0 governance gap**.
+
+---
+
+## What makes KFM different
+
+Most “data + map” systems break trust in subtle ways: drift between raw and published outputs, unclear rights, silent edits, and AI answers that *sound right* but can’t be traced.
+
+KFM is designed so **trust is not a vibe**—it’s **machine-enforced**:
+
+- **Every served claim can be traced** to cataloged evidence through a resolver.
+- **Every publish/promotion is provable** via receipts, checksums, and catalogs.
+- **Every user-facing output returns an `audit_ref`** so actions are accountable.
+- **Missing proof is not a warning—it is a block** (deny or abstain).
+
+> [!IMPORTANT]
+> KFM’s product promise is not “pretty maps.”  
+> It’s **reproducible, citeable Kansas history and geography—served safely.**
+
+---
+
+## North-star experiences
+
+These are “exciting details” *and* testable UX contracts. Each item implies a validator or integration test.
+
+### 1) “Follow the truth” (one click)
+
+A user reads a claim in a Story Node or Focus Mode answer and clicks a citation:
+
+`Claim → citation → evidence view → (catalog + receipt + checksum) → raw source`
+
+✅ If any hop fails to resolve: the system must **block publication** (Story) or **abstain** (Focus Mode).
+
+### 2) “Time travel Kansas” (playback with receipts)
+
+A Story Node step rewinds Kansas to 1870 county boundaries, overlays rail corridors, and shows population change.
+The step includes:
+
+- ViewState (time range, bbox, layers, camera)
+- Citations for every layer + derived statistic
+- Sensitivity flags
+- Replayability: the same Story Node renders the same view for the same versions
+
+### 3) “Ask hard questions, get grounded answers”
+
+A user asks: “Which counties grew fastest from 1870→1880 and what changed nearby?”
+
+Focus Mode:
+
+- Builds an evidence pack from **only** policy-allowed, promoted, cataloged artifacts
+- Produces a cited answer *or abstains*
+- Emits an `audit_ref` always
+
+### 4) “Publish safely by default”
+
+If a dataset contains sensitive or culturally restricted locations, KFM:
+
+- Serves generalized representations (heatmaps, coarse grids, bounding regions)
+- Logs the transform as provenance (no silent redaction)
+- Blocks raw coordinates unless policy explicitly allows
 
 ---
 
@@ -159,6 +233,28 @@ Each contract has an ID so it can be referenced in:
 
 ---
 
+## Core concepts
+
+This section is intentionally “definition-first” so that docs, contracts, UI labels, and API payloads stay consistent.
+
+| Concept | Definition | Where enforced |
+|---|---|---|
+| **Dataset family** | A repeatable ingestion unit (stable `dataset_id`) with a registry profile and pipeline blueprint | registry schema + CI onboarding checks |
+| **Dataset version** | A promoted “servable truth” snapshot (stable `version_id`) | Promotion Contract + catalogs |
+| **Run** | A single pipeline execution producing receipts and outputs (stable `run_id`) | receipts schema + audit |
+| **Receipt bundle** | Machine-validatable proof for what ran and what it produced | Promotion Contract validator |
+| **Evidence ref** | A resolvable reference used for citations (`prov://…`, `stac://…`, `dcat://…`) | evidence resolver contract |
+| **Evidence view** | A bounded, UI-ready explanation of lineage + checksums + access decision | resolver + policy |
+| **Evidence pack** | The set of evidence objects retrieved for an answer (bounded, policy-filtered) | retrieval + policy + output validator |
+| **ViewState** | Serialized map/time UI state for replay (bbox, time range, layers, camera, filters) | Story Node schema + playback test |
+| **Sensitivity class** | Policy label that drives redaction/generalization behavior | registry + policy |
+| **Audit ref** | Stable handle proving an action/answer was logged | audit ledger |
+
+> [!TIP]
+> Treat these definitions as API vocabulary. If the UI invents a new term, update the glossary and schema.
+
+---
+
 ## System overview
 
 KFM is a *governed system*, not “a map with data.” Governance is a first-class production concern.
@@ -184,6 +280,42 @@ KFM follows clean architecture boundaries:
 | **Governance plane** | policy + contracts + validators + audit | allow/deny decisions + machine-readable reports |
 | **Product plane** | APIs + UI + Story Nodes + Focus Mode | evidence-backed user experiences |
 
+### Target runtime architecture (conceptual)
+
+> [!NOTE]
+> This is a *reference architecture* diagram. Treat it as “intended” until proven by runnable stack + smoke tests.
+
+```mermaid
+flowchart TB
+  subgraph DataPlane[Data plane]
+    S[Upstream sources] --> W[Watchers / connectors]
+    W --> RAW[data/raw]
+    RAW --> P[Pipeline orchestration]
+    P --> WORK[data/work receipts]
+    WORK --> PROMO[Promotion gate]
+    PROMO --> PROC[data/processed]
+    PROC --> CAT[Catalog emit: DCAT/STAC/PROV]
+  end
+
+  subgraph Stores[Stores]
+    PROC --> OBJ[(Object store)]
+    PROC --> PG[(PostGIS)]
+    PROC --> IDX[(Search / Vector index)]
+    PROC --> G[(Graph store)]
+  end
+
+  subgraph GovPlane[Governance plane]
+    POL[Policy engine<br/>default deny] --> API
+    AUD[Audit ledger<br/>append-only] --> API
+  end
+
+  subgraph ProductPlane[Product plane]
+    API[Governed API + Evidence Resolver] --> UI[Map UI + Timeline]
+    API --> STORY[Story Nodes]
+    API --> FM[Focus Mode (cite or abstain)]
+  end
+```
+
 ---
 
 ## Truth path
@@ -206,6 +338,23 @@ flowchart LR
 
 > [!WARNING]
 > If any link in this chain is bypassed (e.g., serving from `raw/` or `work/`), KFM’s trust model is broken.
+
+---
+
+## Evidence chain
+
+KFM’s “truth path” explains how data is produced. The **evidence chain** explains how **claims** are allowed to exist.
+
+```mermaid
+flowchart LR
+  CLAIM[User-visible claim<br/>Story Node or Focus Mode] --> CIT[Citation object<br/>ref + label + span]
+  CIT --> RES[Evidence resolver]
+  RES --> VIEW[Evidence view<br/>bounded + UI-ready]
+  VIEW --> LINKS[Cross-links<br/>DCAT/STAC/PROV + receipts]
+  LINKS --> RAWREF[Raw manifest + checksums]
+```
+
+**Fail-closed rule:** if any node in this chain is missing or denied → **do not publish / abstain**.
 
 ---
 
@@ -365,6 +514,50 @@ Evidence resolution should return a compact “view” suitable for UI display (
 
 ---
 
+## Evidence packs and retrieval constraints
+
+This is the missing “bridge concept” between governance doctrine and AI behavior.
+
+### What is an evidence pack?
+
+An **evidence pack** is a bounded set of evidence objects selected for a question or story step:
+
+- contains only **promoted** and **cataloged** artifacts  
+- filtered by **policy** (roles, sensitivity class, rights, environment)
+- includes enough provenance to support citations
+- is **auditable** (record pack composition by reference, not raw payload)
+
+> [!IMPORTANT]
+> A Focus Mode answer is only allowed to reference evidence inside the evidence pack.
+
+### Why it matters
+
+Without explicit evidence packs, systems “accidentally” do unsafe things:
+
+- retrieving from raw/work zones
+- mixing versions across time
+- citing a dataset without tying to a specific version/run
+- leaking sensitive point locations via “helpful” aggregation
+
+### Suggested evidence pack record (illustrative)
+
+```json
+{
+  "pack_id": "ep_01J0EXAMPLE",
+  "question": "What counties grew fastest between 1870 and 1880 in Kansas?",
+  "inputs": {
+    "view_state": {"time_range": ["1870-01-01", "1880-12-31"], "layers": ["nhgis_county_population"]}
+  },
+  "evidence_refs": [
+    "dcat://nhgis_county_population/v_1870_1880",
+    "prov://nhgis_county_population/run/run_01J0EXAMPLE#entity=out_0"
+  ],
+  "policy": {"decision": "allow", "decision_ref": "audit://policy/dec_..."}
+}
+```
+
+---
+
 ## Story Nodes
 
 Story Nodes are governed narrative artifacts that synchronize map/time state and citations.
@@ -376,6 +569,20 @@ Story Nodes are governed narrative artifacts that synchronize map/time state and
 - contains map/timeline state deltas (ViewState) per step
 - carries sensitivity flags and obeys policy gates
 - publish is blocked if any citation is unresolvable or policy denies
+
+### Optional “exciting” Story Node patterns (planned, but high leverage)
+
+<details>
+<summary><strong>Patterns that make Story Mode feel “alive” without breaking governance</strong></summary>
+
+- **Martini-glass structure:** guided steps → free exploration (publishable because every guided step is cited; exploration remains within policy boundaries).
+- **Forensic arc:** start with a present-day pattern → rewind to causal candidates → compare evidence lenses → explicitly list assumptions.
+- **Split-map comparisons:** observed vs scenario layers with synchronized time scrubber (scenario outputs must record model version + inputs + citations).
+- **Checkpoint + snapshot:**  
+  - *checkpoint* = “where I am in the story”  
+  - *snapshot* = “the evidence pack + view state + outputs I can cite later”
+
+</details>
 
 ### Minimal Story Node shape (illustrative)
 
@@ -448,6 +655,60 @@ Focus Mode is KFM’s grounded Q&A surface. It must cite resolvable evidence or 
 
 > [!IMPORTANT]
 > Focus Mode must never “fill in” missing evidence with plausible text.
+
+### Example (human-readable)
+
+> **Q:** “Did rail expansion correlate with population growth in western Kansas before 1880?”  
+> **A:** KFM returns either:  
+> - a short cited summary (with evidence refs + audit_ref), **or**  
+> - “Cannot answer from available evidence” (with audit_ref), with a hint about what evidence is missing (non-leaky).
+
+---
+
+## Knowledge graph and entity resolution
+
+KFM becomes dramatically more powerful when places/people/events can be linked across datasets—**but only if linking is governed.**
+
+### What the graph is for (intended)
+
+- **Entities:** places, counties, towns, rail lines, land parcels (PLSS), persons/organizations, events
+- **Links:** “same-as,” “located-in,” “occurred-at,” “mentions,” “derived-from”
+- **Queries:** “show me everything related to Fort Hays in 1870–1880” (and cite the results)
+
+### Governance rules for linking
+
+- entity merges must be **auditable**
+- probabilistic matching must surface **confidence + rationale**
+- graph results must still cite through evidence resolver (no “graph-only facts”)
+
+> [!WARNING]
+> Entity resolution is a primary source of narrative error. Treat it as a governed pipeline product with receipts.
+
+---
+
+## Data quality uncertainty and reproducibility
+
+If KFM is going to be used in teaching, journalism, or research, it must surface *what’s solid* and *what’s uncertain*.
+
+### Minimum validation categories (recommended)
+
+- **Schema validity:** required columns/fields present, types correct  
+- **Geometry validity:** valid polygons/lines, non-self-intersecting, non-empty  
+- **CRS correctness:** declared CRS matches data; transformations recorded  
+- **Time model:** dates normalized; time precision explicit (year vs day)  
+- **Completeness:** missingness rates; “coverage holes” flagged  
+- **Duplicates / joins:** duplicate keys and join explosions detected  
+- **Rights & access:** license fields present; access restrictions explicit  
+- **Sensitivity:** classification present; generalization outputs exist when required  
+
+### Uncertainty UX (high-impact “exciting detail”)
+
+- show confidence intervals or “data quality badges” per layer
+- highlight boundary changes (e.g., historical county line changes) that can mislead comparisons
+- provide “cannot compare directly” warnings when versions/geometries differ
+
+> [!TIP]
+> If you can’t compute uncertainty, say so—and block public claims that require it.
 
 ---
 
@@ -572,12 +833,40 @@ Minimum viable security for a governed system (treat missing items as governance
 - **dependency hygiene**: pinned actions where feasible; dependency review for critical paths  
 - **logging**: do not log sensitive payloads; logs include `audit_ref` and request IDs  
 
+### GitHub hardening (recommended)
+
+- branch protection on main/release branches (PR reviews + required checks)
+- CODEOWNERS on high-risk paths (`.github/`, `policy/`, `contracts/`, `infra/`)
+- signed commits (where feasible)
+- Actions pinned to commit SHAs
+- workflow permissions set to least privilege; avoid risky triggers for untrusted PRs
+
+> [!NOTE]
+> These are standard repo/pipeline hardening patterns and should be treated as merge-blocking once implemented. :contentReference[oaicite:0]{index=0}
+
 ### Supply chain (recommended)
 
 - SBOM generation + verification
 - provenance attestations (SLSA/in-toto style)
 - signature verification (where supported)
 - “no unsigned release artifacts” policy for production
+
+---
+
+## Operations and observability
+
+KFM should be operable as a long-lived system, not a demo.
+
+### Recommended operational signals
+
+- **SLOs:** API latency (tiles/features/evidence), error rates, policy decision latency
+- **data freshness:** last successful run per dataset, staleness alerts
+- **governance drift:** number of failing validators by gate + trendline
+- **cost controls:** storage growth (processed + catalogs), index size, tile generation cost
+- **a11y checks:** baseline Story Mode and Focus Mode usability (keyboard + contrast)
+
+> [!TIP]
+> Treat governance checks as “production health,” not “docs quality.”
 
 ---
 
@@ -717,8 +1006,15 @@ KFM prefers **thin slices** that produce shippable, validated artifacts.
 - **Slice 6 — One domain end-to-end**  
   Pick one domain and implement full loop: ETL → catalogs → graph → API → UI/Focus Mode + legends + telemetry + governance sign-off.
 
-> [!IMPORTANT]
-> Separate “design intent” from “enforced behavior.” A slice is only complete when CI proves it.
+### Candidate “anchor datasets” (examples)
+
+> [!NOTE]
+> These are suggested candidates for early end-to-end proof. Treat as a planning list until a dataset registry entry exists for each.
+
+- NHGIS / historical census geographies and tables (good for time-series + boundary change)
+- BLM GLO land patents (excellent for “names + parcels + time” stories)
+- Kansas Mesonet climate observations (strong for time-series + public-domain-ish rules)
+- Kansas Memory / Kansas Historical Society collections (high value, but rights-sensitive; may require metadata-only mirroring)
 
 ---
 
@@ -783,6 +1079,26 @@ Rules:
 
 ---
 
+## References and source anchors
+
+These internal documents are treated as **design authority inputs** for KFM’s governed patterns and are useful for deeper implementation detail:
+
+- Software Security Guide for Developers (2026 Edition) – Expanded Sections :contentReference[oaicite:1]{index=1}  
+- RESTful Web Services (resource-oriented API design reference) :contentReference[oaicite:2]{index=2}  
+- KFM Data Sources inventory :contentReference[oaicite:3]{index=3}  
+- Professional Markdown Guide for GitHub Documentation (doc style/quality) :contentReference[oaicite:4]{index=4}  
+- KFM Comprehensive Data Source Integration Blueprint v1 (engineering blueprint) :contentReference[oaicite:5]{index=5}  
+- Deep Research Report on Craft KFM Focus Mode (cross-system “focus” patterns; adapt carefully) :contentReference[oaicite:6]{index=6}  
+- Crafting a Comprehensive Story Mode for KFM (Story Mode patterns + governance) :contentReference[oaicite:7]{index=7}  
+- KFM Cultivated Integration Ideas (thin slices + modules) :contentReference[oaicite:8]{index=8}  
+- Kansas Frontier Matrix Companion Blueprint (system synthesis) :contentReference[oaicite:9]{index=9}  
+- Kansas Frontier Matrix Project Blueprint (governance-first roadmap) :contentReference[oaicite:10]{index=10}  
+- KFM Master Corpus Consolidation and Build-Integration Specification (LLM retrieval + corpus governance) :contentReference[oaicite:11]{index=11}  
+- Kansas Frontier Matrix System Audit and Expansion Report (gap + plan) :contentReference[oaicite:12]{index=12}  
+- Massive Gap-Filling Diagnosis for Kansas Frontier Matrix (P0 enforcement gaps) :contentReference[oaicite:13]{index=13}  
+
+---
+
 ## Glossary
 
 | Term | Meaning in KFM |
@@ -795,9 +1111,11 @@ Rules:
 | **Catalog** | discoverability + interoperability metadata (DCAT/STAC) |
 | **Provenance** | lineage graph recording entities, activities, and agents |
 | **Evidence ref** | resolvable reference like `prov://...` used for citations |
+| **Evidence pack** | policy-bounded set of evidence refs used to answer a question |
 | **Audit ref** | resolvable reference proving governed outputs were logged |
 | **Fail closed** | deny or abstain if proofs are missing or policy cannot prove allow |
 | **Processed serves truth** | only processed outputs with catalogs + receipts are served |
+| **ViewState** | serialized map/time UI state for replay (bbox, time range, layers, camera, filters) |
 
 ---
 
