@@ -144,15 +144,15 @@ The Truth Path is the required pipeline worldview.
 
 ```mermaid
 flowchart LR
-  S["Upstream Sources"] --> C["Connectors/Watchers<br/>discover + acquire"]
-  C --> RAW["RAW zone<br/>immutable capture + manifests + checksums"]
-  RAW --> WORK["WORK zone<br/>normalize + validate + enrich + receipts"]
-  WORK -->|Promotion Contract gate<br/>(fail-closed)| PROC["PROCESSED zone<br/>publishable artifacts"]
-  PROC --> META["Catalogs<br/>DCAT + STAC + PROV"]
-  META --> STORES["Stores<br/>PostGIS / Object Store / Search / Graph"]
-  STORES --> API["Governed API Gateway<br/>+ Policy (default deny)"]
+  S["Upstream Sources"] --> C["Connectors/Watchers (discover + acquire)"]
+  C --> RAW["RAW zone (immutable capture + manifests + checksums)"]
+  RAW --> WORK["WORK zone (normalize + validate + enrich + receipts)"]
+  WORK -->|"Promotion Contract gate (fail-closed)"| PROC["PROCESSED zone (publishable artifacts)"]
+  PROC --> META["Catalogs (DCAT + STAC + PROV)"]
+  META --> STORES["Stores (PostGIS / Object Store / Search / Graph)"]
+  STORES --> API["Governed API Gateway (+ Policy default deny)"]
   API --> UI["Map UI / Story Mode"]
-  API --> FM["Focus Mode<br/>(cite or abstain)"]
+  API --> FM["Focus Mode (cite or abstain)"]
 ```
 
 ---
