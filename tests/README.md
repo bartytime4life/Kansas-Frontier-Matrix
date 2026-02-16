@@ -48,6 +48,7 @@ KFM is a governed system. That means tests do more than validate correctness —
 - [Test taxonomy](#test-taxonomy)
 - [Directory layout](#directory-layout)
 - [Local quickstart](#local-quickstart)
+- [Determinism guardrails](#determinism-guardrails)
 - [Test data governance](#test-data-governance)
 - [Governed artifact validation](#governed-artifact-validation)
 - [Policy tests](#policy-tests)
@@ -61,6 +62,7 @@ KFM is a governed system. That means tests do more than validate correctness —
 - [Audit integrity tests](#audit-integrity-tests)
 - [Security gates](#security-gates)
 - [CI gatehouse mapping](#ci-gatehouse-mapping)
+- [Gate IDs registry](#gate-ids-registry)
 - [Contributing rules](#contributing-rules)
 - [Troubleshooting](#troubleshooting)
 - [References](#references)
@@ -75,10 +77,10 @@ KFM is a governed system. That means tests do more than validate correctness —
 | Document | `tests/README.md` |
 | Status | **Governed** |
 | Scope | Test taxonomy, release-blocking gates, fixture & baseline rules, deterministic receipts, sensitivity protections |
-| Version | `v3.0.0` *(governed; SemVer applies)* |
+| Version | `v3.1.0` *(governed; SemVer applies)* |
 | Effective date | 2026-02-16 |
 | Owners | `.github/CODEOWNERS` *(if missing → governance gap)* |
-| Review triggers | Any change affecting: fail-closed semantics, deny-by-default policy, sensitivity handling, contract compatibility, receipts/spec hashing, audit requirements |
+| Review triggers | Any change affecting: fail-closed semantics, deny-by-default policy, sensitivity handling, contract compatibility, receipts/spec hashing, audit requirements, **or gate status-check names** |
 
 > [!NOTE]
 > “SemVer applies” means: if you change a contract or gate requirement, you’re changing system behavior.  
@@ -157,6 +159,15 @@ These are invariants. Tests exist specifically to make violations impossible to 
   - stable normalized catalogs
   - stable receipts (or stable equivalence fields)
 
+7) **Governance surface protection**
+- The enforcement artifacts must be protected from unreviewed change:
+  - `.github/CODEOWNERS` must exist
+  - governance surfaces (tests/policy/schemas/CI workflows) must be CODEOWNERS-owned
+  - CI must include the gates listed in this document (fail-closed)
+
+> [!IMPORTANT]
+> If governance surfaces are not protected, an attacker (or accident) can weaken gates and change “truth.”
+
 ---
 
 ## Change impact map
@@ -174,6 +185,7 @@ Use this to decide what must be updated in the same PR.
 | UI data access or network layer | trust membrane static checks + e2e smoke flows | ui membrane gate |
 | Redaction/generalization rules | sensitivity regression suite + deny/leak tests + approval updates | sensitivity gate |
 | Audit/logging surfaces | audit integrity tests + audit fetch/linkage tests | audit gate |
+| Governance ownership / CI gate list | CODEOWNERS protection tests + CI “required checks” registry updates | governance surface gate |
 
 > [!TIP]
 > If you’re unsure, add the smallest negative test that would have caught the regression you’re afraid of.
@@ -195,6 +207,7 @@ KFM tests are grouped by the kind of trust guarantee they enforce.
 | Regression | gold sets for Focus Mode, redaction, story rendering | ✅ | PR + main |
 | E2E | full system flow (UI ↔ API ↔ policy ↔ evidence) | ✅ *(controlled env)* | nightly + release |
 | Security | scanning + hardened CI rules | ✅ | PR + main |
+| Governance surface | verifies enforcement artifacts are protected and present | ✅ | PR + main |
 
 ---
 
@@ -218,6 +231,7 @@ tests/
 ├─ sensitivity/                      # redaction/generalization + leak regressions
 ├─ audit/                            # audit_ref presence + audit linkage tests
 ├─ security/                         # SAST/SCA/secret scanning + workflow hardening tests
+├─ governance/                       # CODEOWNERS + CI gate registry + governed-doc integrity tests
 │
 ├─ fixtures/
 │  ├─ synthetic/                     # synthetic only (preferred)
@@ -257,6 +271,7 @@ make test-policy
 make test-contract
 make test-receipts
 make test-catalogs
+make test-governance
 ```
 
 ### Full suite
@@ -274,6 +289,33 @@ docker compose down -v
 > [!NOTE]
 > Your repo may not use `make`. If so, implement the same interface via scripts
 > (e.g., `./tools/test/*.sh`) so CI and local workflows stay consistent.
+
+---
+
+## Determinism guardrails
+
+Determinism isn’t a vibe. It’s a testable property.
+
+### Required controls
+
+- Freeze time in tests (or inject a clock) — no “now()” in golden outputs
+- Seed randomness in any test that uses RNG
+- Normalize ordering before snapshotting (stable key order, stable list order)
+- Fix locale/timezone in CI:
+  - `TZ=UTC`
+  - `LC_ALL=C` (or another explicit locale)
+- For reproducible archives/build outputs, prefer a deterministic timestamp input such as `SOURCE_DATE_EPOCH`
+  *(where your build tools support it)*
+
+### Required assertions
+
+- Two runs of the same spec + same fixtures produce identical:
+  - `spec_hash`
+  - checksums
+  - normalized catalogs/snapshots
+
+> [!TIP]
+> If a test flakes, treat it as a trust failure until proven otherwise.
 
 ---
 
@@ -336,6 +378,11 @@ Tests must validate (and block drift of) these artifact classes:
 - **Audit artifacts**
   - response `audit_ref`
   - server-side audit record linking decisions → evidence
+
+- **Governance surfaces**
+  - `.github/CODEOWNERS` exists
+  - CODEOWNERS covers: `tests/**`, `policy/**`, `schemas/**`, `.github/workflows/**` *(or equivalent paths)*
+  - CI exports status checks listed in [Gate IDs registry](#gate-ids-registry)
 
 > [!IMPORTANT]
 > If a governed artifact exists, it must be validated.
@@ -400,6 +447,39 @@ Promotion is blocked unless proofs validate.
 - missing catalogs → fail
 - missing required receipt keys → fail
 - missing sensitivity classification → fail
+
+### Normative `spec_hash` algorithm (v1)
+
+This defines the minimum deterministic contract for `spec_hash` *(additive, governed)*.
+
+- Inputs:
+  - a **spec object** (pipeline config) in JSON form
+- Canonicalization (KFM-CJSON-1):
+  - UTF‑8
+  - object keys sorted lexicographically
+  - no insignificant whitespace
+  - numbers rendered without exponent where possible, with trailing zeros removed
+- Hash:
+  - `spec_hash = sha256(canonical_json_bytes)`
+  - rendered as lowercase hex (64 chars)
+
+Example representation:
+
+```text
+spec_hash: "ea37e38b850144a874afbf15e42c5f8fcb187ecf78166e6194eb12c9eb503643"
+```
+
+### Normative checksum file format (v1)
+
+- Hash algorithm: SHA‑256
+- File: `SHA256SUMS` (or equivalent) containing lines like:
+
+```text
+<hex_sha256><two_spaces><relative_path>
+```
+
+- Lines must be sorted by `relative_path` (stable diff)
+- Verifiers must treat missing checksum entries as **fail-closed**
 
 ---
 
@@ -468,6 +548,28 @@ Evidence must be reviewable — citations are not “decorations.”
 
 - citations must resolve in a **bounded number of calls** (UI requirement)
 - tests should enforce server-side behavior that supports this
+
+### Normative evidence reference grammar (v1)
+
+Evidence references must be parseable and resolvable by the evidence resolver.
+
+Minimum contract:
+
+- `evidence_ref` MUST be a URI with a known scheme
+- schemes MAY include (non-exhaustive): `stac://`, `dcat://`, `prov://`, `file://`
+- unknown scheme → deny/abstain
+
+Recommended EBNF:
+
+```ebnf
+evidence_ref = scheme, "://", path, [ "#", fragment ] ;
+scheme       = 1*( ALPHA / DIGIT / "+" / "-" / "." ) ;
+path         = 1*( pchar / "/" ) ;
+fragment     = 1*( pchar / "/" / "?" ) ;
+```
+
+> [!NOTE]
+> This grammar is intentionally minimal; scheme-specific parsing belongs to the resolver adapter layer.
 
 ---
 
@@ -600,6 +702,12 @@ Minimum expectations:
   - required status checks
   - optional signed commits for high-trust repos
 
+Additional governance surface expectations:
+
+- `.github/CODEOWNERS` exists and is reviewed like code
+- CODEOWNERS covers enforcement surfaces:
+  - tests, policy, schemas, CI workflows, gate registry docs
+
 > [!IMPORTANT]
 > CI is part of the trust boundary.  
 > If an attacker can change the tests or skip them, they can change “truth.”
@@ -621,6 +729,7 @@ KFM should structure CI so that fail-closed gates run on every PR, with heavier 
 - ✅ UI trust membrane static analysis
 - ✅ sensitivity regression (core deny cases)
 - ✅ audit integrity assertions
+- ✅ governance surface validation (CODEOWNERS + gate registry presence)
 
 ### Main branch / post-merge gates
 
@@ -635,6 +744,30 @@ KFM should structure CI so that fail-closed gates run on every PR, with heavier 
 - performance/regression tracking
 - long-running ingestion/promotion rehearsal
 - security deep scans (if slower)
+
+---
+
+## Gate IDs registry
+
+These are the **normative** gate identifiers and recommended CI status-check names.
+Branch protection should require the status checks in this table (or documented equivalents).
+
+> [!IMPORTANT]
+> If a gate is required by this document but absent in CI, that is a governance gap.
+
+| Gate ID | Recommended status check name | Merge-blocking? | Notes |
+|---|---|---:|---|
+| `unit` | `kfm/unit` | ✅ | fast + hermetic |
+| `policy` | `kfm/policy` | ✅ | deny-by-default proofs |
+| `contract` | `kfm/contract` | ✅ | OpenAPI validity + diff |
+| `receipts` | `kfm/receipts` | ✅ | `spec_hash` + checksums |
+| `catalogs` | `kfm/catalogs` | ✅ | DCAT required; STAC/PROV as applicable |
+| `focus` | `kfm/focus` | ✅ | curated gold-set pack |
+| `ui-membrane` | `kfm/ui-membrane` | ✅ | static checks + smoke |
+| `sensitivity` | `kfm/sensitivity` | ✅ | must include deny cases |
+| `audit` | `kfm/audit` | ✅ | `audit_ref` + linkage checks |
+| `governance-surface` | `kfm/governance-surface` | ✅ | CODEOWNERS + gate registry |
+| `security` | `kfm/security` | ✅ | secrets/SCA/workflow hardening |
 
 ---
 
@@ -689,6 +822,7 @@ KFM should structure CI so that fail-closed gates run on every PR, with heavier 
 | Contract tests fail | `/api/v1` breaking change | restore compatibility or move change to `/api/v2` |
 | Gold set fails | behavior drift or policy tightening | confirm intent; update gold set only with governance rationale |
 | UI trust membrane fails | UI calling stores directly | route through governed API; remove forbidden hosts/ports |
+| Governance surface gate fails | CODEOWNERS missing or not protecting enforcement paths | add/repair CODEOWNERS; ensure gate registry is enforced |
 
 ---
 
