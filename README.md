@@ -287,32 +287,44 @@ KFM follows clean architecture boundaries:
 
 ```mermaid
 flowchart TB
-  subgraph DataPlane[Data plane]
-    S[Upstream sources] --> W[Watchers / connectors]
-    W --> RAW[data/raw]
-    RAW --> P[Pipeline orchestration]
-    P --> WORK[data/work receipts]
-    WORK --> PROMO[Promotion gate]
-    PROMO --> PROC[data/processed]
-    PROC --> CAT[Catalog emit: DCAT/STAC/PROV]
+  subgraph DataPlane
+    direction TB
+    DP_T["Data plane"]
+    S["Upstream sources"] --> W["Watchers / connectors"]
+    W --> RAW["data/raw"]
+    RAW --> P["Pipeline orchestration"]
+    P --> WORK["data/work receipts"]
+    WORK --> PROMO["Promotion gate"]
+    PROMO --> PROC["data/processed"]
+    PROC --> CAT["Catalog emit: DCAT / STAC / PROV"]
+    DP_T --> S
   end
 
-  subgraph Stores[Stores]
-    PROC --> OBJ[(Object store)]
-    PROC --> PG[(PostGIS)]
-    PROC --> IDX[(Search / Vector index)]
-    PROC --> G[(Graph store)]
+  subgraph StoresPlane
+    direction TB
+    SP_T["Stores"]
+    PROC --> OBJ["Object store"]
+    PROC --> PG["PostGIS"]
+    PROC --> IDX["Search / Vector index"]
+    PROC --> GDB["Graph store"]
+    SP_T --> OBJ
   end
 
-  subgraph GovPlane[Governance plane]
-    POL[Policy engine<br/>default deny] --> API
-    AUD[Audit ledger<br/>append-only] --> API
+  subgraph GovPlane
+    direction TB
+    GP_T["Governance plane"]
+    POL["Policy engine (default deny)"] --> API
+    AUD["Audit ledger (append-only)"] --> API
+    GP_T --> POL
   end
 
-  subgraph ProductPlane[Product plane]
-    API[Governed API + Evidence Resolver] --> UI[Map UI + Timeline]
-    API --> STORY[Story Nodes]
-    API --> FM[Focus Mode (cite or abstain)]
+  subgraph ProductPlane
+    direction TB
+    PP_T["Product plane"]
+    API["Governed API + Evidence Resolver"] --> UI["Map UI + Timeline"]
+    API --> STORY["Story Nodes"]
+    API --> FM["Focus Mode (cite or abstain)"]
+    PP_T --> API
   end
 ```
 
