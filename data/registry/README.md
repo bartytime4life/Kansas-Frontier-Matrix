@@ -1,465 +1,386 @@
-<!--
-File: data/registry/README.md
-Kansas Frontier Matrix (KFM) — Governed Data Registry
--->
-
-# KFM Data Registry (`data/registry/`) 🧭🗂️
-
-![governance](https://img.shields.io/badge/governance-governed-blue)
-![policy](https://img.shields.io/badge/policy-deny--by--default-critical)
-![catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-success)
-![integrity](https://img.shields.io/badge/integrity-checksums%20%2B%20signatures-informational)
-![ci](https://img.shields.io/badge/CI-merge--blocking-important)
-
-This folder is the **single, human-reviewable source of truth** for:
-
-- **What** KFM ingests (datasets, sources, watchers)
-- **How** KFM ingests (connector parameters, schedules, incremental cursors, backfills)
-- **What must be true before publishing** (schemas, validation gates, promotion contract)
-- **How trust is proven** (checksums, canonical hashes, signatures, catalog/provenance requirements)
+# `data/registry/` — KFM Dataset Registry (Build Driver) + Controlled Vocabularies  
+![status](https://img.shields.io/badge/status-governed%20artifact-blue) ![build-driver](https://img.shields.io/badge/build%20driver-dataset%20registry-success) ![fail-closed](https://img.shields.io/badge/fail--closed-default%20deny-111827) ![evidence-first](https://img.shields.io/badge/evidence--first-required-0f766e) ![policy](https://img.shields.io/badge/policy-input%20surface-OPA%2FRego-6f42c1) ![no-secrets](https://img.shields.io/badge/no%20secrets-ever-critical)
 
 > [!IMPORTANT]
-> **Registry-driven is non-negotiable.**  
-> If a dataset, watcher, policy label, or catalog template is not declared here (and validated in CI), it **must not** be promoted to publishable outputs.
+> The registry is the **authoritative inventory + obligation ledger** for datasets in KFM.
+>
+> **If it isn’t registered, it isn’t real.**  
+> Unregistered datasets must not be ingested, promoted, served, or cited.
 
 ---
 
-## Non-negotiables (KFM governance invariants)
+## Governance header
 
-### Trust membrane (access boundary)
-- **No UI or external client may access databases or object storage directly.**
-- All reads go through the **governed API boundary** where **policy-as-code** is evaluated.
-- Registry changes are “governed artifact changes”: versioned, reviewed, validated, and auditable.
+| Field | Value |
+|---|---|
+| Document | `data/registry/README.md` |
+| Status | **Governed** |
+| Scope | Dataset inventory, dataset profile contracts, controlled vocabulary for classification/sensitivity, optional source capability manifests, schema/tool pins |
+| Version | `v1.0.0` |
+| Effective date | `2026-02-16` (America/Chicago) |
+| Owners | `.github/CODEOWNERS` *(required; if missing → governance gap)* |
+| Change control | **Fail closed**: missing/invalid registry entries → deny ingestion/promotion/serve |
+| Enforcement truth source | `../../.github/README.md` *(authoritative list of merge-blocking gates)* |
 
-### Publish only from Processed (truth path)
-KFM’s “truth path” is:
+---
+
+## Table of contents
+
+- [What this folder is](#what-this-folder-is)
+- [What must never live here](#what-must-never-live-here)
+- [Directory layout](#directory-layout)
+- [Registry contracts](#registry-contracts)
+  - [Dataset profiles](#dataset-profiles)
+  - [Controlled vocabulary](#controlled-vocabulary)
+  - [Optional registries](#optional-registries)
+- [How to register a dataset](#how-to-register-a-dataset)
+- [Change management](#change-management)
+- [Validation expectations](#validation-expectations)
+- [See also](#see-also)
+
+---
+
+## What this folder is
+
+`data/registry/` is a **governed input surface** that drives the rest of the KFM truth path:
+
+- **Pipelines** use the registry as the build plan (connectors, cadence, backfills, expected outputs).
+- **Promotion gates** use the registry as the obligation baseline (license, sensitivity, validation thresholds).
+- **Policy** uses registry labels/taxonomy as enforceable inputs (default-deny if missing/unknown).
+- **UI / Story Nodes / Focus Mode** depend on registry-backed identities and metadata to avoid “mystery datasets.”
+
+### The registry’s job (in one sentence)
+Turn “a dataset exists somewhere” into “KFM has a **defined, reviewable, enforceable contract** for that dataset.”
 
 ```mermaid
 flowchart LR
-  R[Raw zone] --> W[Work zone] --> P[Processed zone]
-  P --> C[Catalogs: DCAT/STAC/PROV]
-  C --> S[Stores: object store + PostGIS + search + graph]
-  S --> A[Governed API]
-  A --> U[UI / Story Nodes / Focus Mode]
+  REG["Registry (dataset profiles + vocab)"] --> PIPE["Connectors + Pipelines"]
+  PIPE --> RAW["data/raw (immutable capture)"]
+  RAW --> WORK["data/work (receipts + validation)"]
+  WORK -->|Promotion Contract| PROC["data/processed (servable truth)"]
+  PROC --> CAT["data/catalog (DCAT + STAC + PROV)"]
+  CAT --> API["Governed API (policy + audit + evidence resolver)"]
 ```
 
-Raw and Work are **never** served directly. Processed is the only publishable source.
-
-### Fail-closed by default
-- If validation, policy checks, or signature verification fails, the system **blocks promotion**.
-- “Unknown” must be treated as **deny**, not “allow”.
+> [!CAUTION]
+> Editing registry files can change what the system is allowed to ingest, promote, serve, and cite.  
+> Treat registry changes like production changes.
 
 ---
 
-## What lives here (and what does not)
+## What must never live here
 
-### ✅ Lives here
-- **Dataset registry** entries (what we ingest + how we publish)
-- **Connector registry** entries (how to acquire/normalize/validate)
-- **Watcher registry** entries (poll/webhook/hybrid monitors that emit receipts)
-- **Schemas** (JSON Schema / schema bundles) used for merge-blocking validation
-- **Policy taxonomy** (controlled vocabulary) used in enforcement + UI treatment
-- **Catalog templates** (minimum required fields for DCAT/STAC/PROV)
-- **Examples + fixtures** (small deterministic samples for CI)
+To preserve the trust boundary and reduce leak risk:
 
-### ❌ Does not live here
-- Secrets, API keys, tokens, credentials (**vault only**)
-- Raw data files, large fixtures, or production datasets
-- Runtime code (connectors/watchers are implemented elsewhere; only **declared** here)
+- **No secrets** (tokens, API keys, credentials, cookies, signed URLs).
+- **No raw datasets** (CSV dumps, GeoJSON exports, PDFs as “evidence blobs”, etc.).
+- **No personal contact details** unless governance-approved; prefer team aliases and role-based contacts.
+- **No precise sensitive locations** (if you need a reference, register the dataset and handle precision via policy + derived artifacts + PROV).
+
+> [!WARNING]
+> If you find secrets here, treat it as a security incident: rotate credentials and purge history where required by policy.
 
 ---
 
 ## Directory layout
 
-> If a directory below does not exist yet in your repo, **create it** and follow the structure as written.  
-> This README is the contract for the registry layer.
+This is the **target governed layout** for `data/registry/`.
 
-| Path | Purpose | Typical contents |
-|---|---|---|
-| `data/registry/README.md` | You are here | Contract + workflow |
-| `data/registry/datasets/` | Dataset registry (source-of-truth list) | `*.dataset.yaml` |
-| `data/registry/connectors/` | Connector registry | `*.connector.yaml` |
-| `data/registry/watchers/` | Watcher registry | `*.watcher.json` |
-| `data/registry/policy/` | Policy taxonomy + rules metadata | `taxonomy.yaml`, `tags.yaml` |
-| `data/registry/schemas/` | JSON Schemas for registries + catalogs | `*.schema.json` |
-| `data/registry/catalog-templates/` | Minimum field templates (DCAT/STAC/PROV) | `dcat.min.jsonld`, `stac.collection.min.json`, `prov.min.json` |
-| `data/registry/examples/` | Small fixtures for CI | sample dataset/watcher/receipt fixtures |
-
----
-
-## Registry object types (contracts)
-
-### 1) Dataset Registry (`datasets/*.dataset.yaml`)
-
-A **Dataset** in KFM is a governed product with explicit versioning and provenance. Each ingest run yields:
-- a new **DatasetVersion** (checksums + run metadata),
-- a **DCAT dataset** record,
-- a **PROV activity** linking raw assets to derivatives,
-- and **STAC** assets when spatial rasters/vectors are involved.
-
-#### Dataset registry minimal fields
-Dataset entries MUST include enough metadata to emit DCAT and to drive ingestion orchestration.
-
-```yaml
-# data/registry/datasets/example.dataset.yaml
-dataset_id: kfm.<domain>.<source>.<name>
-title: "Human readable title"
-description: "What is this dataset, why it exists, what it supports."
-domain: <land|water|heritage|climate|census|...>
-
-publisher:
-  org_id: "<stable org id>"
-  name: "Publisher name"
-
-license:
-  spdx_or_url: "CC-BY-4.0" # or URL
-  attribution: "Required attribution text (if any)"
-
-coverage:
-  spatial:
-    # one of:
-    bbox_wgs84: [-102.05, 36.99, -94.60, 40.00]
-    # or:
-    admin: ["US-KS"]
-  temporal:
-    start: "1854-01-01"
-    end: "2026-02-01"  # can be rolling; update as derived
-
-cadence:
-  accrual_periodicity: "monthly"  # aligned with DCAT dct:accrualPeriodicity
-  freshness_slo: "P30D"           # ISO 8601 duration recommended
-
-classification:
-  policy_label: public  # public | restricted | sensitive-location | aggregate-only
-  policy_tags:
-    - care:tribal_sensitive=false
-    - redistribution:allowed=true
-
-ingestion:
-  connector_id: kfm.connector.<provider>.<name>
-  schedule: "infrequent"          # static_historical | ongoing | infrequent | realtime | ...
-  incremental_cursor: "modified_date"  # or eventDate/publicationDate; else snapshot+diff
-  format_targets: ["parquet", "geojson"] # tabular/spatial/artifact targets
-
-backfill:
-  enabled: true
-  strategy: "range-batched"
-  historical_coverage:
-    start: "1854-01-01"
-    end: "1950-12-31"
-  batching:
-    window: "P1Y"  # ISO 8601 duration windows (e.g., 1 year batches)
-  expected_runtime: "PT8H" # ISO 8601 duration (estimate)
-
-publish:
-  catalogs:
-    dcat: required
-    prov: required
-    stac: conditional  # required for spatial assets
-  distributions:
-    - kind: "api"
-      accessURL: "https://api.example/kfm/v1/..."
-    - kind: "download"
-      accessURL: "https://download.example/kfm/..."
+```text
+data/registry/
+├─ README.md                 # (this file) registry contract + how-to
+├─ datasets/                 # one dataset profile per dataset_id (governed)
+│  └─ <dataset_id>.yml
+├─ policy_taxonomy.yml       # controlled vocab for classification/sensitivity/constraints (recommended)
+├─ sources.yml               # optional: upstream capabilities (formats, limits, rate rules)
+└─ schemas.lock.yml          # optional: schema/tool pins for reproducibility
 ```
 
 > [!NOTE]
-> The **registry is the authoritative place** to declare: cadence, policy label, backfill coverage, and expected runtimes.  
-> These are required for operational freshness checks and safe backfills.
+> Some optional files may not exist yet. That is acceptable **only if** the repo documents the gap and fails closed where the missing file would otherwise be required.
 
 ---
 
-### 2) Connector Registry (`connectors/*.connector.yaml`)
+## Registry contracts
 
-A **Connector** is a governed ingestion adapter declaration. The registry stores **config defaults** and **constraints** that drive the ingestion framework.
+### Dataset profiles
 
-#### Required connector fields (recommended baseline)
+A **dataset profile** is the registry entry that declares:
+
+- identity (`dataset_id`, title, description)
+- source access method and constraints
+- license + attribution + redistribution rules
+- cadence / freshness expectations
+- sensitivity labels (classification + flags) and expected redaction/generalization posture
+- output types and canonical formats (tabular/vector/raster/media/tiles)
+- validation requirements and acceptance thresholds
+- backfill policy (time ranges, batching, idempotency)
+- governance contacts (role-based)
+
+#### File naming and IDs
+
+- Profile path: `data/registry/datasets/<dataset_id>.yml`
+- `<dataset_id>` SHOULD be stable, lowercase, `snake_case`
+- Recommended regex: `^[a-z][a-z0-9_]{2,63}$`
+
+> [!IMPORTANT]
+> `dataset_id` is a governance identifier. Renaming it is a breaking change across pipelines, catalogs, policy inputs, and citations.
+
+#### Minimum fields (promotion blockers)
+
+These are the fields that SHOULD be treated as **required** for ingestion/promotion:
+
+| Field | Why it’s required |
+|---|---|
+| `dataset_id` | stable identity + joins across catalogs/provenance/policy |
+| `title` | user-facing name and catalog identity |
+| `source` | tells connectors how acquisition works |
+| `license` | rights-first publishing; missing rights → deny |
+| `cadence` | freshness expectations + monitoring |
+| `sensitivity` | policy enforcement; unknown labels → deny |
+| `outputs` | expected shapes/formats so validators can run |
+| `validation` | defines gates and thresholds |
+| `backfill` | makes backfills explicit and reproducible |
+| `contacts` | escalation path for governance and incidents |
+
+<details>
+<summary><strong>Dataset profile template (YAML — illustrative)</strong></summary>
+
+> This template is intentionally verbose. The schema in your repo may be stricter or differently named.  
+> If a schema is missing, treat it as a governance gap and close it (fail-closed posture).
+
 ```yaml
-# data/registry/connectors/example.connector.yaml
-connector_id: kfm.connector.<provider>.<name>
-provider: "<upstream org/provider name>"
-upstream:
-  accessURL: "https://provider.example/api"
-  auth: none  # none | api_key | oauth | signed_url
-  rate_limit:
-    strategy: "respect-provider"
-    backoff: "exponential"
-  caching:
-    conditional_fetch: true  # use ETag / If-Modified-Since when available
+# data/registry/datasets/<dataset_id>.yml
 
-defaults:
-  schedule: "static_historical"
-  incremental_cursor: "publicationDate"
-  format_targets: ["json", "csv", "parquet", "geojson", "cog", "pdf", "png"]
+dataset_id: example_dataset
+title: "Example Dataset"
+description: "Short description of what this dataset is and why it exists in KFM."
 
-policy:
-  default_policy_label: public
-  redaction_supported: true
+# Optional but recommended: make schema identity explicit for validation + evolution
+profile_schema_id: "kfm.registry.dataset_profile.v1"   # (repo-defined)
+profile_version: "1.0.0"                                # (semver recommended)
+
+source:
+  kind: "api|file|scrape|archive|manual"
+  provider: "Provider org or collection name"
+  homepage: "https://example.org/datasets/example"
+  access:
+    method: "https|s3|ftp|manual"
+    url: "https://example.org/data/download"
+    authentication: "none|api_key|oauth2|session|manual"
+    rate_limits:
+      requests_per_minute: 60
+    notes: "Any special terms, headers, usage constraints, or gotchas."
+
+license:
+  id: "CC-BY-4.0|ODC-By|custom|unknown"
+  name: "Human-readable license name"
+  url: "https://example.org/license"
+  attribution: "Required attribution statement (as required by licensor)"
+  redistribution: "allowed|restricted|unknown"
+  notes: "Any relevant rights constraints or special requirements."
+
+cadence:
+  expected: "daily|weekly|monthly|quarterly|annual|static"
+  freshness_slo_hours: 240
+  timezone: "UTC"
+
+sensitivity:
+  classification: "public|restricted|internal"  # MUST come from policy taxonomy
+  flags:
+    - "sensitive_location"                      # MUST come from policy taxonomy
+  notes: "Describe expected redaction/generalization posture."
+
+outputs:
+  - output_id: "primary"
+    kind: "vector|tabular|raster|media|tiles"
+    canonical_format: "GeoParquet|Parquet|COG|PMTiles|PDF|PNG"
+    geometry:
+      type: "Point|LineString|Polygon|Mixed|None"
+      crs: "EPSG:4326"
+    temporal:
+      kind: "instant|interval|none"
+      timezone: "UTC"
+      fields:
+        start: "start_date"
+        end: "end_date"
+    schema:
+      # repo-defined: either explicit column schema or a pointer to a schema artifact
+      ref: "schema://kfm/schemas/example_dataset/v1"
 
 validation:
-  schema_ids:
-    - "kfm.schema.<domain>.<name>.v1"
-  geometry_rules:
-    wgs84_required: true
-    validate_topology: true
-  temporal_rules:
-    forbid_future_dates: true
+  required:
+    - check: "license"
+    - check: "schema"
+    - check: "geo"       # if geometry exists
+    - check: "time"      # if temporal exists
+    - check: "policy"    # classification + flags recognized; default deny on unknown
+  thresholds:
+    max_null_pct: 0.02
+    max_geometry_error_pct: 0.00
+    max_duplicate_key_pct: 0.00
+
+backfill:
+  allowed: true
+  default_range: "1854-01-01/1900-12-31"
+  batching: "year"
+  idempotency_required: true
+
+contacts:
+  - role: "steward"
+    name: "KFM Data Stewards"
+    email: "data-stewards@example.org"   # prefer group alias
+  - role: "source_owner"
+    name: "Provider Support"
+    url: "https://example.org/support"
 ```
-
-> [!IMPORTANT]
-> **Secrets must never be committed.**  
-> If upstream requires credentials, store them in a vault/secret manager and reference them only by name/handle in runtime configuration (not in this registry).
+</details>
 
 ---
 
-### 3) Watcher Registry (`watchers/*.watcher.json`)
+### Controlled vocabulary
 
-A **Watcher** is an always-on monitor that detects upstream changes, produces **typed receipts** (`run_manifest` / `run_receipt`), and triggers CI validation and promotion.
+The registry SHOULD include a controlled taxonomy file so that:
 
-#### Watcher schema: required fields
-Watcher JSON MUST include:
+- dataset `classification` values are recognized and enforceable
+- sensitivity flags are validated (unknown flag → fail closed)
+- policy can translate labels into obligations (e.g., generalize geometry)
 
-- `watcher_id`
-- `endpoint`
-- `poll`
-- `policy`
-- `outputs`
-- `spec_hash`
-- `signature_ref`
+Recommended file: `data/registry/policy_taxonomy.yml`
 
-```json
-{
-  "watcher_id": "kfm.watcher.<provider>.<dataset>.<purpose>",
-  "endpoint": {
-    "accessURL": "https://provider.example/api",
-    "method": "GET"
-  },
-  "poll": {
-    "enabled": true,
-    "interval": "PT6H",
-    "conditional_fetch": {
-      "etag": true,
-      "last_modified": true
-    }
-  },
-  "policy": {
-    "policy_label": "public",
-    "policy_tags": [
-      "care:tribal_sensitive=false",
-      "redistribution:allowed=true"
-    ]
-  },
-  "outputs": {
-    "receipts": ["kfm.run_receipt.v1", "kfm.run_manifest.v1"],
-    "catalogs": ["dcat", "prov", "stac"]
-  },
-  "spec_hash": "sha256:<hex>", 
-  "signature_ref": "cosign://<registry>/<path>@sha256:<digest>"
-}
+A controlled vocabulary should cover (minimum):
+
+- **classification** (`public`, `restricted`, …)
+- **sensitivity flags** (`sensitive_location`, `culturally_sensitive`, `pii_risk`, …)
+- **redistribution constraints**
+- **precision rules** (e.g., when/how to generalize geometry)
+- **authority/consent metadata** (CARE alignment)
+- **retention rules** (where applicable)
+
+> [!IMPORTANT]
+> Labels are policy inputs, not documentation.  
+> If a label is not recognized, policy must deny by default.
+
+<details>
+<summary><strong>Policy taxonomy sketch (YAML — illustrative)</strong></summary>
+
+```yaml
+version: 1
+
+classification:
+  - id: public
+    description: "Safe to publish to the public."
+  - id: restricted
+    description: "Requires role-based access; deny to public by default."
+  - id: internal
+    description: "Non-public; intended for maintainers/reviewers only."
+
+sensitivity_flags:
+  - id: sensitive_location
+    description: "Coordinates must be generalized or suppressed for public outputs."
+    default_obligations:
+      - type: generalize_geometry
+        precision: "coarse"
+  - id: culturally_sensitive
+    description: "May require community governance review before publishing."
+  - id: pii_risk
+    description: "Contains or could infer personal data; enforce redaction/aggregation."
+
+redistribution:
+  - id: allowed
+  - id: restricted
+  - id: unknown
 ```
-
-#### `spec_hash` (deterministic hashing)
-To prevent hash drift and enable reproducible provenance checks:
-
-- Compute `spec_hash = sha256(JCS(spec))`
-- `spec` MUST be a schema-defined object
-- Record both `spec_schema_id` and `spec_recipe_version` in receipts/manifests when applicable
-
-> [!IMPORTANT]
-> Canonical JSON hashing MUST use **RFC 8785** (JSON Canonicalization Scheme) to ensure stable hashes across languages and platforms.
+</details>
 
 ---
 
-### 4) Schema Registry (`schemas/`)
+### Optional registries
 
-Schemas are used for **merge-blocking validation** in CI. This includes:
+#### `sources.yml` (optional)
+A normalized list of upstream providers/systems and their capabilities:
 
-- registry schemas (dataset/connector/watcher)
-- receipt schemas (`run_manifest`, `run_receipt`)
-- catalog schemas (DCAT/STAC/PROV minimum conformance)
+- preferred formats
+- stable endpoints
+- rate limits / quotas
+- required headers / auth patterns
+- “watch” support (ETag / Last-Modified)
+- terms of use notes
 
-#### Minimum expectations
-- Schemas MUST be versioned (`v1`, `v2`, …) and backwards compatibility MUST be explicit.
-- A schema change is a governed change (requires review and CI updates).
-- CI MUST include:
-  - schema validation tests for each connector/watcher
-  - golden-file tests for catalog outputs
+This helps connectors avoid “tribal knowledge.”
 
----
+#### `schemas.lock.yml` (optional)
+Pins schema/tool/profile versions for reproducibility, e.g.:
 
-### 5) Policy taxonomy (`policy/`)
+- registry profile schema version(s)
+- DCAT/STAC/PROV profile versions
+- validator tool versions
 
-KFM uses a controlled vocabulary for classification and enforcement. At minimum:
-
-| `policy_label` | Meaning | Typical enforcement |
-|---|---|---|
-| `public` | safe to publish without redaction | normal access |
-| `restricted` | requires role-based access | authz required; redact fields for unauthorized |
-| `sensitive-location` | precise coords must be generalized/suppressed | never return high-precision geometry without grant |
-| `aggregate-only` | only publish above thresholds | k-anonymity / minimum-count gates |
-
-**Redaction is a first-class transformation**:
-- redactions MUST be recorded in PROV
-- raw remains immutable
-- redacted derivative is a separate DatasetVersion (often separate dataset_id) with documented policy label
+This enables deterministic replays and prevents “same dataset profile, different validation semantics.”
 
 ---
 
-### 6) Catalog templates (`catalog-templates/`)
+## How to register a dataset
 
-These templates define **minimum required fields** for the catalog layer. They should be implemented as **schema-validated emitters**.
+1) Create a dataset profile:  
+   `data/registry/datasets/<dataset_id>.yml`
 
-#### DCAT minimum fields (dataset metadata)
-- `dct:title`, `dct:description`
-- `dct:publisher` (org id)
-- `dct:license` (SPDX or URL)
-- `dct:spatial` (bbox or admin coverage)
-- `dct:temporal` (start/end)
-- `dct:accrualPeriodicity` (update cadence)
-- `dcat:distribution` (download/API endpoints)
-- `prov:wasGeneratedBy` (link to PROV activity)
+2) Ensure:
+   - required minimum fields are present
+   - `classification` and `flags` exist in `policy_taxonomy.yml` *(or the repo’s authoritative taxonomy source)*
+   - license and attribution are explicit (rights-first)
 
-#### STAC minimum fields (spatial assets)
-Collection:
-- `id`, `title`, `description`, `license`
-- `extent.spatial` (bbox), `extent.temporal` (interval)
-- `keywords`, `providers`
+3) Run registry validation (repo-dependent; fail closed).  
+   If no validator exists, open a governance issue and treat it as a P0 gap.
 
-Item:
-- `id`, `geometry`, `bbox`, `datetime`
-- `assets` (`data`, `thumbnail`, `metadata`) with roles + hrefs
-- `links` including provenance linkage (`derived_from`), plus `self`, `collection`
+4) Open a PR and get CODEOWNERS review.
 
-#### PROV minimum fields (lineage)
-- Entities (raw_asset, normalized_table, derived_tile, ocr_text, …)
-- Activities (ingest_run, transform_job, redaction_job)
-- Agents (connector/service, steward approval)
-- Relationships: `wasGeneratedBy`, `used`, `wasDerivedFrom`, `wasAssociatedWith`
+5) Only after the dataset is merged into the registry should ingestion begin.  
+   Next step: follow `data/README.md` for raw → work → processed → catalogs.
 
 ---
 
-## Promotion contract (merge-blocking CI expectations)
+## Change management
 
-A dataset/watcher change MUST NOT be promotable unless CI verifies:
+### PR checklist (registry)
 
-### Registry validation
-- [ ] Dataset/connector/watcher registry files validate against JSON Schema
-- [ ] Policy labels and tags validate against controlled vocabulary
-- [ ] No secrets are present in registry artifacts
+- [ ] Change is scoped and reversible
+- [ ] Dataset profile still satisfies minimum required fields
+- [ ] Any new taxonomy labels are added to `policy_taxonomy.yml` **and** policy is updated accordingly
+- [ ] No secrets added (explicit scan)
+- [ ] No sensitive location leakage introduced
+- [ ] If renaming `dataset_id`: migration plan included (catalog/policy/citation impacts)
+- [ ] CI/validators updated if the schema meaning changed
+- [ ] References updated in: `../README.md` (data plane) if layout responsibilities change
 
-### Data integrity + provenance
-- [ ] Deterministic manifests exist (stable ordering + stable hashing)
-- [ ] Checksums exist for promoted artifacts
-- [ ] PROV chain exists for every promoted artifact
-- [ ] `spec_hash` reproducibility checks pass (canonical JSON hashing)
-
-### Catalog conformance
-- [ ] DCAT emitted and valid (always required)
-- [ ] STAC valid when spatial assets are present
-- [ ] PROV emitted and cross-links with DCAT/STAC
-- [ ] Golden-file tests for catalog outputs pass (to prevent drift)
-
-### Policy regression suite (non-regression)
-- [ ] Queries that previously leaked restricted data **must fail forever**
-- [ ] Sensitive-location outputs cannot be returned at high precision without grant
-- [ ] Field-level redaction tests pass (names, small counts, precise coords, etc.)
-- [ ] Every API response includes audit reference + evidence bundle hash
-
-### API contract tests
-- [ ] Representative query returns data **with** provenance bundle references
-- [ ] Responses respect policy redaction rules
-
-> [!IMPORTANT]
-> Promotion is blocked if **any** gate fails. This is how KFM maintains evidence-first trust at scale.
+> [!WARNING]
+> Changing the meaning of registry fields without updating validators is “paper governance.”  
+> Treat as a governance incident until resolved.
 
 ---
 
-## Backfills and historical coverage
+## Validation expectations
 
-Backfills are **explicit** and governed:
+Registry validation SHOULD include (minimum):
 
-- The registry MUST define:
-  - historical coverage (start/end)
-  - batching strategy (windows)
-  - expected runtime estimate
-- Backfills MUST create **new DatasetVersions** with their own provenance.
-- Backfills MUST NEVER overwrite existing releases.
+- schema validation of every `datasets/*.yml`
+- `dataset_id` format validation + uniqueness
+- controlled vocab validation:
+  - unknown `classification` → fail
+  - unknown `flags` → fail
+- required fields present (promotion blockers)
+- “no secrets” scanning for registry files
+- optional: link validation (homepage/license URLs), if allowed by CI environment
 
----
-
-## Change workflow (how to add/update registry entries)
-
-### Add a new dataset (happy path)
-1. Create `data/registry/datasets/<dataset_id>.dataset.yaml`
-2. Ensure:
-   - DCAT-minimum metadata is present
-   - classification/policy label is set correctly
-   - backfill coverage is explicit (or explicitly disabled)
-3. Create/confirm connector entry:
-   - `data/registry/connectors/<connector_id>.connector.yaml`
-4. Add or update schemas in `data/registry/schemas/`
-5. Add deterministic example fixtures in `data/registry/examples/` (small + stable)
-6. Verify that:
-   - catalogs validate (DCAT always; STAC/PROV as applicable)
-   - policy regression tests cover any sensitive/restricted fields
-7. Submit PR; CI must pass all promotion gates.
-
-### Add or update a watcher
-1. Create/update `data/registry/watchers/<watcher_id>.watcher.json`
-2. Compute and set `spec_hash` (RFC 8785 canonical JSON hash)
-3. Ensure `signature_ref` points to a verifiable signed artifact (if your org uses signing)
-4. Add/update receipt fixtures to keep CI deterministic.
+> [!TIP]
+> The authoritative list of **merge-blocking** CI gates lives in `../../.github/README.md`.
 
 ---
 
-## Troubleshooting
+## See also
 
-### “Schema validation failed”
-- Confirm you used the correct schema version (e.g., `kfm.schema.watcher.v1`)
-- Ensure required fields exist and are correctly typed (strings vs objects vs arrays)
-
-### “Policy tag rejected”
-- Policy tags must come from controlled vocabulary in `data/registry/policy/`
-- If you need a new tag, update taxonomy and add tests (do not “invent” tags ad hoc)
-
-### “Catalog validation failed”
-- Check minimum field requirements for DCAT/STAC/PROV
-- Ensure cross-linking fields exist (e.g., DCAT references PROV activity; STAC items link to provenance)
-
-### “Promotion blocked: sensitive-location”
-- Either:
-  - generalize/suppress geometry in derived outputs, or
-  - implement role-based grant handling and add deny-by-default tests
-- Ensure redaction is modeled as a PROV-recorded transformation and a distinct DatasetVersion
-
----
-
-## Glossary
-
-| Term | Meaning |
-|---|---|
-| Dataset | A governed collection of records/assets with metadata + policy + provenance requirements |
-| DatasetVersion | An immutable version produced by an ingest run, with checksums + run metadata |
-| Connector | Adapter definition for acquisition/normalization/validation |
-| Watcher | Monitor that detects upstream changes and emits receipts to trigger validation/promotion |
-| Run manifest / run receipt | Typed receipt artifacts describing what was fetched, when, and how it hashes |
-| Promotion gate | Merge/publish-blocking checks required to move artifacts to publishable state |
-| DCAT | Dataset catalog metadata vocabulary |
-| STAC | Spatiotemporal asset catalog format for geospatial assets |
-| PROV | Provenance model for lineage and transformation history |
-| `spec_hash` | Deterministic hash of a schema-defined spec (`sha256(JCS(spec))`) |
-
----
-
-## Governance review triggers (when to require explicit signoff)
-
-- Any dataset with `policy_label != public`
-- Any dataset that includes precise locations for:
-  - protected sites, sensitive species, or culturally restricted places
-- Any policy taxonomy change
-- Any schema change (registry, receipts, catalogs)
-- Any change that alters promotion contract or CI gates
-
-> [!IMPORTANT]
-> If the risk is “inadvertent disclosure,” the default answer is **block promotion** until policy + tests are in place.
-
+- Data plane contract: `../README.md`
+- Repo guarantees (trust membrane, truth path, promotion contract): `../../README.md`
+- Policy library (default deny, sensitivity and redaction): `../../policy/README.md`
+- Backend architecture (registry readers, promotion/pipeline flow): `../../src/README.md`
+- Governance gatehouse (what CI actually enforces): `../../.github/README.md`
