@@ -1,300 +1,168 @@
-# 📦 `data/raw/` — Immutable Source Data (Read‑Only) 🧊
+# 🧱 `data/raw/` — Immutable Raw Data (Evidence Zone)
 
-![Data Stage](https://img.shields.io/badge/data_stage-raw-informational)
-![Truth Path](https://img.shields.io/badge/policy-truth_path-critical)
-![Provenance](https://img.shields.io/badge/provenance-required-success)
-![No Edits](https://img.shields.io/badge/rule-never_edit_in_place-red)
+![zone](https://img.shields.io/badge/zone-raw-blue)
+![mutability](https://img.shields.io/badge/mutability-immutable-important)
+![promotion](https://img.shields.io/badge/promotion-gated%20by%20manifest%20%2B%20checksums-orange)
+![served](https://img.shields.io/badge/served-no-lightgrey)
+![governance](https://img.shields.io/badge/governance-default%20deny-red)
 
-> 🧭 **“The map behind the map” starts here.**  
-> `data/raw/` holds **unaltered source snapshots** that feed KFM pipelines. Treat it like a museum archive: label it, checksum it, don’t “fix” it.
-
----
-
-## 🎯 Overview
-
-### Purpose
-This folder is the **landing zone for original inputs** (downloads, exports, scans, vendor drops, agency releases) **before** they are cleaned, standardized, or transformed.
-
-### Canonical Ordering (Non‑Negotiable)
-KFM’s pipeline is strict. **Nothing skips the line.**  
-
-**Raw → Work → Processed → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**
-
-> If an output cannot be regenerated from raw + pipeline code + config (with lineage), it is not reproducible.
+> [!IMPORTANT]
+> `data/raw/` is the **staging area for input data exactly as obtained from original sources**.
+> Treat raw files as evidence: **write-once, then read-only**.
 
 ---
 
-## ✅ What Belongs in `data/raw/`
+## Purpose
 
-- Original vendor/agency archives (`.zip`, `.7z`, `.tar.gz`)
-- Original file exports (`.csv`, `.xlsx`, `.gpkg`, `.shp`, `.tif`, `.pdf`, etc.)
-- Original scans (TIFF/JPEG/PDF)
-- Original API exports as delivered (no normalization)
-- Sidecar provenance notes (**see `source.yaml`**) and integrity files (**see `checksums.sha256`**)
+`data/raw/` exists to preserve **source-of-truth artifacts** so that any processed dataset can be traced back to the original inputs and re-processed reproducibly (even years later).
 
-### ❌ What Must *Never* Be in `data/raw/`
-- Cleaned/normalized CSVs
-- Reprojected / clipped / dissolved / simplified geodata
-- Derived tiles / COG conversions / geometry fixes
-- Model outputs, OCR outputs, AI-derived layers (those are **evidence artifacts → `data/processed/`**)
-- Secrets: tokens, keys, passwords, `.env`, private credentials
-- Unreviewed sensitive personal data (PII) or restricted community data (see governance section below)
+Raw-zone examples include:
+- Agency/archival file drops (ZIPs, shapefiles, CSV/JSON exports)
+- Scraped or fetched exports (CSV snapshots, HTML captures)
+- Documents & media used as evidence (PDF scans, images)
 
 ---
 
-## 🧱 Golden Rules (Non‑Negotiable)
+## Truth path
 
-1. **🚫 Never edit raw files in place**
-   - If something is “wrong,” that’s part of the historical record.
-   - Fixes happen in `src/pipelines/` and land in `data/processed/`.
+```mermaid
+flowchart LR
+  S[Source APIs / files] --> R[data/raw<br/>immutable capture]
+  R --> W[data/work<br/>normalize + QA]
+  W --> P[data/processed<br/>query-ready]
+  P --> A[API + Policy<br/>trust membrane]
+```
 
-2. **📌 Raw is an audit trail**
-   - Raw must remain stable so provenance can point back to exact artifacts.
-
-3. **🧼 No derived outputs in `raw/`**
-   - Derived artifacts belong in `data/work/` (intermediate) or `data/processed/` (canonical outputs).
-
-4. **🧳 Preserve original packaging**
-   - Prefer storing the original archive as‑is.
-   - Only extract if the pipeline requires it (and keep the original archive too).
-
-5. **🔐 Security + sovereignty first**
-   - Do not place secrets here.
-   - Do not place restricted/sensitive datasets here unless they are explicitly approved and handled per governance (often: store in restricted storage and commit only metadata/pointers).
+> [!NOTE]
+> Nothing in `data/raw/` is served directly to users. Serving happens from **processed** artifacts via governed APIs.
 
 ---
 
-## 🗂 Directory Layout
+## Zone rules
 
-### Primary (Stage‑First) Layout (this folder)
+| Zone | Purpose | Allowed operations | Not allowed | Promotion prerequisites |
+|---|---|---|---|---|
+| **Raw** | Immutable capture of source-of-truth data | Append-only writes | Transforms, normalization | **Checksums + raw manifest**; license captured |
+| **Work** | Repeatable transformations + QA staging | Derivation, normalization, enrichment | Ad-hoc undocumented steps | PROV activity + QA/validation reports |
+| **Processed** | Query-ready datasets exposed via API | Read-optimized storage + indexing | Policy-bypassing publication | DCAT dataset; STAC (if spatial); PROV chain; policy labels |
+
+---
+
+## Non-negotiables
+
+### ✅ Do
+- Keep raw **exactly as obtained** (no manual edits, no “quick fixes”)
+- Record **source URI/file** and **license** in a manifest
+- Use **checksums** to guarantee repeatability and detect drift
+- Set and respect **sensitivity classification**
+- Route sensitive/sensitive-location triggers to governance review before any promotion
+
+### ❌ Don’t
+- Commit secrets (API keys, tokens) anywhere under `data/raw/`
+- Put cleaned/normalized outputs here (belongs in `data/work/` or `data/processed/`)
+- “Overwrite history” without leaving evidence (prefer new files/versions + manifest updates)
+
+---
+
+## Directory conventions
+
+Recommended: one folder per dataset intake (dataset-oriented).
+
 ```text
 data/raw/
-  README.md
-  <domain>/                          # e.g., hydrology/, historical/, remote_sensing/
-    <dataset_id>/                    # stable slug (snake_case)
-      source.yaml                    # intake metadata + provenance starter
-      checksums.sha256               # integrity manifest (recommended)
-      snapshots/                     # immutability snapshots (recommended)
-        2026-02-03/                  # ISO acquisition date
-          original.zip               # original packaging
-          extracted/                 # only if required by pipeline
-            ...
+├── README.md
+├── <dataset_id>/
+│   ├── manifest.yml
+│   └── <original files as acquired>
+└── ...
 ```
 
-### Equivalent (Domain‑First) Layout (if your repo uses it)
-Some v13 layouts group by domain under `data/<domain>/raw|work|processed`.  
-If you use that structure, **apply the same rules** and keep `source.yaml` + checksums adjacent to the raw artifacts.
+Also acceptable: group by source/topic (source-oriented).
 
 ```text
-data/
-  <domain>/
-    raw/
-      <dataset_id>/
-        ...
+data/raw/<source_or_topic>/<dataset_id>/...
 ```
 
----
-
-## 🏷 Dataset IDs (`<dataset_id>`)
-Use **lowercase `snake_case`** and keep it stable over time:
-- `census_1900_county`
-- `usgs_nwis_daily_discharge`
-- `kdot_roads_centerlines`
-- `landsat_scenes_kansas`
-
-Recommendation: Align `<dataset_id>` with the identifiers used in:
-- STAC Collection IDs (for cataloging)
-- DCAT dataset identifiers (for discovery)
-- PROV entity identifiers (for lineage)
+> [!TIP]
+> Prefer stable, human-readable folder names for `<dataset_id>` so reviewers can reason about provenance quickly.
 
 ---
 
-## 🏷 Naming Conventions
+## Required: `manifest.yml`
 
-- **Dates:** ISO `YYYY-MM-DD` (sortable)
-- **Snapshots:** `snapshots/YYYY-MM-DD/`
-- **Avoid spaces:** use `_`
-- **Keep originals recognizable:** do not rename beyond necessity
+Each dataset intake must include a manifest that CI can validate.  
+This manifest is part of the evidence chain and should remain stable for a given dataset version.
 
-Examples:
-- `2026-02-03__kdot_roads.zip`
-- `2025-11-01__nwis_daily.csv`
-
----
-
-## 🧾 Required Intake Sidecar: `source.yaml`
-
-KFM requires metadata + license + sensitivity context **before outputs can be treated as published**.  
-We capture that as early as possible in `data/raw/.../source.yaml` so pipelines can generate the required catalog/provenance artifacts later.
-
-<details>
-<summary><strong>📄 Minimal <code>source.yaml</code> template (copy/paste)</strong></summary>
+### Minimal manifest shape (recommended)
 
 ```yaml
-id: "<dataset_id>"
-title: ""
-description: ""
-
-origin:
-  publisher: ""
-  source_urls:
-    - ""
-  retrieved_at: "YYYY-MM-DD"
-  retrieved_by: ""
-  license: ""              # SPDX if possible (e.g., CC-BY-4.0), else plain text
-  citation: ""             # formal citation if provided
-  upstream_version: ""     # optional: agency version tag / release id
-
-governance:
-  # IMPORTANT: classification must never be downgraded downstream without review.
-  sensitivity: "public|internal|restricted"
-  classification: "open|restricted|confidential"
-  care_label: "Public|Restricted|Tribal Sensitive"
-  restrictions: ""         # free text summary (e.g., "no redistribution", "IRB required")
-  pii: "none|possible|present"
-
-  # Optional: use when sovereignty/ownership controls apply
-  owner_group: ""          # e.g., tribal nation / steward group
-  access_level: "public|restricted"
-  consent_basis: ""        # optional: "community consent", "public domain", etc.
-  takedown_contact: ""     # optional: who to contact for corrections/takedown
-
-scope:
-  geography: "Kansas"
-  spatial_extent:
-    bbox_wgs84: [minLon, minLat, maxLon, maxLat]   # optional
-  temporal_extent:
-    start: "YYYY-MM-DD"     # optional
-    end: "YYYY-MM-DD"       # optional
-
-files:
-  packaging: "zip|folder|single_file|api_export"
-  contents:
-    - path: "snapshots/YYYY-MM-DD/original.zip"
-      description: ""
-      sha256: ""            # optional here if using checksums.sha256
-
-notes:
-  known_issues: []
-  processing_hints: []      # optional: any upstream quirks for ETL maintainers
-```
-</details>
-
----
-
-## 🔒 Checksums: `checksums.sha256` (Strongly Recommended)
-
-Integrity manifests help detect accidental edits/corruption and support deterministic re-runs.
-
-Example:
-```text
-<sha256>  snapshots/2026-02-03/original.zip
-<sha256>  snapshots/2026-02-03/extracted/roads.shp
+dataset_id: example_dataset
+source:
+  type: http        # http | file | api | scrape | ...
+  uri: "https://example.org/path/to/source.zip"
+license: "CC-BY-4.0"
+expected_files:
+  - name: "source.zip"
+    sha256: "<sha256-of-exact-bytes>"
+sensitivity_level: "public"  # public | restricted | sensitive-location
 ```
 
----
-
-## ⚖ Governance, Sovereignty, and Sensitive Data Handling
-
-KFM’s governance requires:
-- **no data leakage**
-- **no silent downgrades of sensitivity/classification**
-- **review gates for restricted or sovereignty-sensitive datasets**
-
-Practical rules for `data/raw/`:
-- If a dataset is **restricted/confidential**, prefer **restricted storage** (object store / private repo) and commit:
-  - `source.yaml`
-  - checksums (if appropriate)
-  - a pointer/reference file describing where the raw artifact is stored and how access is governed
-- If you find **PII present** and it’s not explicitly authorized/approved:
-  - stop intake,
-  - move the artifact to restricted handling,
-  - document the decision and next steps in the domain runbook (`docs/data/<domain>/...`)
+### Rules
+- `expected_files[*].sha256` must match the **exact bytes** stored in `data/raw/<dataset_id>/`.
+- **No secrets** in the manifest. If auth is required, credentials belong in the project’s secret store (vault), not git.
+- Sensitivity classification must be explicit; when in doubt, classify conservatively and route to review.
 
 ---
 
-## 🧰 Large Artifacts (COGs, LiDAR, Big Rasters) 🐘
+## Ingest workflow
 
-If it makes Git painful, don’t force it:
-- Use **DVC** or **Git LFS** for big binaries when appropriate
-- Or store in **object storage** (S3/MinIO/etc.) and reference from catalogs
-- Keep `source.yaml` and checksums so the lineage stays intact
-
----
-
-## ⚙️ How Pipelines Should Use Raw Data
-
-Pipelines must:
-- ✅ **Read from** `data/raw/<domain>/<dataset_id>/...`
-- 🚫 **Never modify** anything in `data/raw/`
-- ✅ Write intermediate work to: `data/work/<domain>/...`
-- ✅ Write canonical outputs to: `data/processed/<domain>/...`
-
-Then (before anything is “published” / consumed by graph, API, UI, or Story Nodes), produce the required boundary artifacts:
-- ✅ STAC: `data/stac/collections/` and `data/stac/items/`
-- ✅ DCAT: `data/catalog/dcat/`
-- ✅ PROV: `data/prov/`
-
-> Evidence artifacts (OCR corpora, model outputs, AI-derived layers) follow the exact same rule: **processed + cataloged + prov’d**, never placed into raw.
+1. Add raw files + `manifest.yml` under `data/raw/<dataset_id>/`.
+2. Run the **containerized ingest pipeline**.
+3. The pipeline must produce:
+   - `data/work/<dataset_id>/validation_report.json`
+   - `data/work/<dataset_id>/run_record.json`
+   - initial PROV activity artifacts (example location: `data/catalog/prov/<dataset_id>/...`)
+4. If sensitive flags trigger, **stop promotion** and route to governance review.
 
 ---
 
-## 🔁 Updating or Re‑Fetching Data (Never Overwrite)
+## Definition of Done for a raw intake PR
 
-If an upstream source updates:
-- Add a **new snapshot**: `snapshots/YYYY-MM-DD/`
-- Update `source.yaml` if license/scope/classification changed
-- Re-run pipelines to create updated processed outputs + catalogs + lineage
-
-This preserves the audit trail and supports time-based comparisons.
-
----
-
-## ✅ Intake Checklist (Before a PR)
-
-- [ ] Created `data/raw/<domain>/<dataset_id>/`
-- [ ] Added `source.yaml` with **URL + retrieval date + license + classification**
-- [ ] Stored raw artifact(s) under `snapshots/YYYY-MM-DD/`
-- [ ] Added `checksums.sha256` (or equivalent)
-- [ ] Confirmed **no derived outputs** were placed in `data/raw/`
-- [ ] Confirmed **no secrets** are present
-- [ ] Confirmed PII/sensitive handling is correct for governance level
-- [ ] Ran pipeline and produced:
-  - [ ] `data/work/...` (if applicable)
-  - [ ] `data/processed/...`
-  - [ ] `data/stac/...`
-  - [ ] `data/catalog/dcat/...`
-  - [ ] `data/prov/...`
+- [ ] Source URI/file exists and is reachable (or included in PR)
+- [ ] License is **known** and recorded in `manifest.yml`
+- [ ] Contributor has permission to ingest (documented in PR)
+- [ ] Manifest passes schema validation in CI
+- [ ] Checksums exist and match raw files
+- [ ] Validation report includes license and sensitivity classification
+- [ ] Run record includes hashes for inputs/outputs
 
 ---
 
-## 🆘 Common Gotchas
+## Sensitivity and culturally restricted data
 
-- **“I reprojected the shapefile to EPSG:4326 and replaced it.”**  
-  ❌ Don’t. Put the reprojected result in `data/processed/`.
+Some domains (notably heritage/archaeology) can include sensitive locations or legally protected details.
 
-- **“The agency ZIP has nested folders and weird names.”**  
-  ✅ Keep it. Normalize in the pipeline.
-
-- **“I ran OCR / an ML model and put outputs next to the raw scans.”**  
-  ❌ Don’t. That’s an evidence artifact → `data/processed/` + STAC/DCAT/PROV.
-
-- **“This dataset contains addresses / individuals.”**  
-  🚫 Stop. Move to restricted handling and document the plan.
+**Fail-closed policy for sensitive-location:**
+- Classify in `manifest.yml` (`sensitivity_level: sensitive-location`)
+- Produce public derivatives with generalized coordinates and separate provenance chains
+- Never publish exact protected locations in processed/public layers without governance approval
 
 ---
 
-## 🔗 Related (Repo‑Local)
+## Handling corrections
 
-- `src/pipelines/` — ETL code (domain pipelines)
-- `data/work/` — intermediate outputs (ephemeral / reproducible)
-- `data/processed/` — canonical cleaned outputs
-- `data/stac/` — STAC collections/items (catalog interface)
-- `data/catalog/dcat/` — DCAT dataset entries (discovery interface)
-- `data/prov/` — W3C PROV lineage bundles (lineage interface)
-- `docs/data/<domain>/` — domain runbooks + intake notes
-- `docs/standards/` — KFM profiles (STAC/DCAT/PROV) + governance protocols
+If a raw data error is discovered:
+- Prefer adding a corrected file/version **without destroying evidence**
+- Update the manifest and/or create a new dataset version
+- Preserve the ability to reproduce prior processed releases from prior raw inputs
 
 ---
 
-**✨ Reminder:** Raw is sacred. Processing is where the magic happens. 🧙‍♂️
+## Large files
+
+KFM versions datasets in git, but size constraints may apply.
+
+If raw artifacts are too large for normal git workflows, use the repo’s approved large-file strategy (e.g., DVC pointers, object-store-backed artifacts, or other governed mechanism), while still maintaining:
+- deterministic manifests
+- checksums
+- provenance/run receipts
