@@ -1,211 +1,148 @@
-# docs/data — Data Documentation (KFM)
+# `docs/data/` — Data Documentation (KFM) 📚🗺️  
+![Governance](https://img.shields.io/badge/governance-governed%20artifact-critical) ![Evidence-first](https://img.shields.io/badge/evidence--first-required-brightgreen) ![Fail-closed](https://img.shields.io/badge/policy-default%20deny-black) ![Zones](https://img.shields.io/badge/zones-Raw%E2%86%92Work%E2%86%92Processed-orange) ![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-6a5acd)
 
-![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
-![Evidence](https://img.shields.io/badge/evidence-first-brightgreen)
-![Data%20Zones](https://img.shields.io/badge/data-raw%E2%86%92work%E2%86%92processed-orange)
-![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-blue)
-
-This folder contains **governed documentation** for KFM datasets and domains: runbooks, rules, and checklists for integrating sources and maintaining the data lifecycle.
+This folder contains **governed documentation** for KFM datasets and domains: **runbooks, rules, templates, and checklists** for integrating sources and maintaining the **Raw → Work → Processed** lifecycle.
 
 > [!IMPORTANT]
-> **This is documentation.** The data artifacts themselves live under `data/` (raw/work/processed + catalogs).
-> The “truth path” and “promotion gates” described below are **non‑negotiable invariants** in the KFM blueprint and integration plan.  
-> - All requests must cross the **trust membrane** (auth → policy → redaction/query shaping → audit/provenance logging).:contentReference[oaicite:2]{index=2}  
-> - **Processed is the only publishable source of truth**; raw/work are never served directly to users.:contentReference[oaicite:3]{index=3}
+> **This is documentation, not the data plane.**  
+> **Data artifacts** live under [`data/`](../../data/README.md) (raw/work/processed + catalogs + receipts).  
+> If you need to publish, validate, or serve “truth,” you must do it via the data plane and its promotion gates.
+
+> [!CAUTION]
+> **Non‑negotiables apply here, too:**  
+> - **Trust membrane:** external clients never access storage directly; all access goes through the governed API + policy boundary.  
+> - **Fail‑closed:** missing proofs (receipts/catalogs/citations) → deny promotion/deny publish/abstain.  
+> - **Processed serves truth:** raw/work are never user-facing sources of truth.
+
+---
+
+## Quick links 🔗
+
+- Project root invariants: [`README.md`](../../README.md)
+- Docs governance overview: [`docs/README.md`](../README.md)
+- Data plane contract + directory layout: [`data/README.md`](../../data/README.md)
+- CI/governance gatehouse: [`.github/README.md`](../../.github/README.md)
+
+---
+
+## Governance header 🧾
+
+| Field | Value |
+|---|---|
+| Document | `docs/data/README.md` |
+| Status | **Governed** (changes require review) |
+| Purpose | Domain runbooks + dataset documentation rules for the data plane |
+| Applies to | Dataset/domain documentation that impacts ingestion, validation, cataloging, promotion, Story Nodes, and Focus Mode |
+| Effective date | 2026-02-16 |
+| Owners | CODEOWNERS (repo-defined) |
+| Review triggers | Changes touching dataset/domain obligations (license/sensitivity), promotion gates, catalog expectations, or anything that affects what can be served/cited |
 
 ---
 
 ## Table of contents
 
-- [What belongs in `docs/data`](#what-belongs-in-docsdata)
-- [How this relates to `data/`](#how-this-relates-to-data)
-- [Data zones](#data-zones)
-- [Catalog boundary artifacts](#catalog-boundary-artifacts)
-- [Promotion gates](#promotion-gates)
-- [Sensitivity and redaction](#sensitivity-and-redaction)
+- [What belongs in `docs/data/`](#what-belongs-in-docsdata)
+- [What does not belong in `docs/data/`](#what-does-not-belong-in-docsdata)
+- [Directory map](#directory-map)
+- [Domain index](#domain-index)
 - [Domain runbooks](#domain-runbooks)
-- [Add a new dataset](#add-a-new-dataset)
-- [ID and path conventions](#id-and-path-conventions)
-- [CI validation expectations](#ci-validation-expectations)
-- [Glossary](#glossary)
+  - [Required sections](#required-sections)
+  - [Runbook template](#runbook-template)
+- [Add or update a dataset](#add-or-update-a-dataset)
+- [Cross-linking and evidence references](#cross-linking-and-evidence-references)
+- [Sensitivity and redaction](#sensitivity-and-redaction)
+- [CI expectations for `docs/data/`](#ci-expectations-for-docsdata)
+- [Definition of Done](#definition-of-done)
+- [Appendix: Data-to-UI flow](#appendix-data-to-ui-flow)
 
 ---
 
-## What belongs in `docs/data`
+## What belongs in `docs/data/`
 
-`docs/data/` is the **human + maintainer facing** layer for:
+`docs/data/` is the **human + maintainer-facing** documentation layer for:
 
-- **Domain runbooks**: one folder per domain (e.g., air quality, land, hydrology).
-- **Operational checklists**: how to ingest, validate, redact, and promote datasets.
-- **Governance notes**: sensitivity classes, required approvals, and what must never ship.
-- **Evidence patterns**: how datasets are made citeable (catalog + provenance + locators).
+- **Domain runbooks** (one folder per domain)  
+  Examples: land, hydrology, transportation, census, archives, newspapers, imagery.
+- **Dataset documentation** when a dataset needs special handling beyond the domain runbook  
+  (rate limits, schema drift quirks, nonstandard licensing, unusual geometry/time semantics).
+- **Obligations and governance notes**  
+  License/attribution requirements, redistribution constraints, steward approvals, sensitivity defaults.
+- **Mapping notes**  
+  How upstream fields map into KFM entities/concepts (and what gets generalized/redacted).
+- **Validation expectations**  
+  What “good” means for this domain (geo validity rules, CRS, temporal normalization, thresholds, QA metrics).
 
-### Expected `docs/data/` layout
-
-```text
-docs/data/
-├── README.md                        # (this file) global rules + templates + checklists
-└── <domain>/
-    ├── README.md                    # domain runbook (required once a domain exists)
-    └── (optional) datasets/
-        ├── <dataset_id>.md          # dataset-specific notes (only if needed)
-        └── ...
-```
-
-> [!NOTE]
-> If a domain has *any* processed/published data, it must have a domain runbook: `docs/data/<domain>/README.md`.  
-> The master guide recommends domain runbooks under `docs/data/<new-domain>/` to document ETL procedures and domain considerations.:contentReference[oaicite:4]{index=4}
+> [!TIP]
+> Rule of thumb: if it affects **system behavior**, **public narrative**, **dataset/catalog behavior**, or **what Focus Mode may answer**, it belongs in governed docs somewhere—and domain/dataset rules usually belong here.
 
 ---
 
-## How this relates to `data/`
+## What does not belong in `docs/data/`
 
-The `data/` folder is where KFM stores:
-- **Raw**, **Work**, **Processed** datasets (the lifecycle zones),
-- and the **catalog boundary artifacts** consumed by downstream services:
-  - **DCAT** (dataset metadata),
-  - **STAC** (geospatial assets),
-  - **PROV** (lineage / run provenance).:contentReference[oaicite:5]{index=5}
+To protect boundaries (and prevent silent governance bypass):
 
-This README documents how to keep that structure correct and governed.
+- ❌ **Raw data, intermediates, processed outputs** → belong under [`data/`](../../data/README.md)
+- ❌ **Secrets** (API keys, tokens), even “temporary” → use secret managers/runtime config
+- ❌ **PII or sensitive-location coordinates** → document handling rules; do **not** embed risky payloads
+- ❌ **Instructions that bypass the trust membrane** (e.g., “UI queries PostGIS directly”) → not allowed
 
 ---
 
-## Data zones
-
-KFM’s integration blueprint defines **three zones**, and explicitly ties **promotion** to machine-checkable validation plus catalog artifacts.:contentReference[oaicite:6]{index=6}
-
-### Zone definitions
-
-| Zone | Purpose | Allowed operations | Promotion requires |
-|---|---|---|---|
-| **Raw** | Immutable capture of source-of-truth data | Append-only writes; **no transforms** | Checksums + raw manifest; source license captured:contentReference[oaicite:7]{index=7} |
-| **Work** | Repeatable transforms + QA staging | Normalize / enrich / derive | PROV activity + intermediate QA reports:contentReference[oaicite:8]{index=8} |
-| **Processed** | Query-ready + publishable | Read-optimized outputs + indexes | DCAT (always); STAC (if spatial); PROV chain; policy labels:contentReference[oaicite:9]{index=9} |
+## Directory map
 
 > [!IMPORTANT]
-> Processed is the only publishable source of truth. Raw/work are never served directly to users.:contentReference[oaicite:10]{index=10}
-
-### Recommended `data/` layout (zone-first)
+> Keep this map accurate. When you add a new domain folder, update the index table below.
 
 ```text
-data/
-├── raw/
-│   └── <domain>/<dataset_id>/<version_id>/...
-├── work/
-│   └── <domain>/<dataset_id>/<run_id>/...
-├── processed/
-│   └── <domain>/<dataset_id>/<version_id>/...
-├── stac/
-│   ├── collections/
-│   └── items/
-├── catalog/
-│   └── dcat/
-├── prov/
-└── graph/
-    ├── csv/
-    └── cypher/
+docs/
+└─ data/
+   ├─ README.md                  # (this file) global rules + templates + checklists
+   └─ <domain>/                  # one folder per domain (required once domain is active)
+      ├─ README.md               # domain runbook (required)
+      └─ datasets/               # optional: dataset-specific notes (only if needed)
+         └─ <dataset_id>.md
 ```
 
+---
+
+## Domain index
+
 > [!NOTE]
-> The repo documentation examples describe catalog outputs under `data/stac/...`, `data/catalog/dcat/...`, and PROV under `data/prov/...`.:contentReference[oaicite:11]{index=11}  
-> Some earlier draft snippets show `data/catalog/prov/...` for `prov_ref` in run records; treat this as a legacy alias if it exists in your implementation, but keep **one canonical PROV root** to avoid drift.:contentReference[oaicite:12]{index=12}:contentReference[oaicite:13]{index=13}
+> Start empty. Add entries as domains become real (i.e., once a domain has registry entries and/or processed artifacts).
 
----
-
-## Catalog boundary artifacts
-
-These artifacts are the **contract** between pipeline outputs and downstream systems (graph, API, UI, Story Nodes, Focus Mode). The integration blueprint explicitly calls out DCAT/STAC/PROV as the standard trio for publishability.:contentReference[oaicite:14]{index=14}
-
-### What each catalog is for
-
-| Artifact | Purpose | Produced when | Typical content |
-|---|---|---|---|
-| **DCAT** | Dataset-level discovery metadata | Always for promoted datasets | publisher, license, temporal/spatial coverage, update cadence, contacts:contentReference[oaicite:15]{index=15} |
-| **STAC** | Geospatial assets for map/timeline rendering | When data is spatial/temporal asset-like | Collections (product) + Items (scene/time/area):contentReference[oaicite:16]{index=16} |
-| **PROV** | Lineage: how outputs were generated from inputs | Always for promoted derivatives | entities, activities, agents, and derivation links:contentReference[oaicite:17]{index=17} |
-
-### Why this matters for the UI and Focus Mode
-
-KFM’s blueprint requires that provenance/citation references be resolvable via evidence endpoints (e.g., `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`) so users can review evidence for layers and answers.:contentReference[oaicite:18]{index=18}
-
----
-
-## Promotion gates
-
-Promotion gates are **CI-enforced** checks plus (when sensitive) steward review. They exist to prevent ad-hoc “just ship it” data.
-
-### Promotion checklist (minimum)
-
-From the KFM blueprint and integration plan, promotion is blocked unless required evidence exists and validates, including license and sensitivity classification, checksums, catalogs, audit event, and (when needed) human approval.:contentReference[oaicite:19]{index=19}:contentReference[oaicite:20]{index=20}
-
-**CI-enforced gate (required):**
-- [ ] Raw assets are checksummed and content-addressable (hash recorded):contentReference[oaicite:21]{index=21}
-- [ ] License captured (and compatible with intended publication scope):contentReference[oaicite:22]{index=22}
-- [ ] Sensitivity classification present (public/restricted/etc.):contentReference[oaicite:23]{index=23}
-- [ ] Schema + geospatial validation passes; QA report saved with stable ID:contentReference[oaicite:24]{index=24}
-- [ ] Policy labels attached (public, restricted, sensitive-location, aggregate-only, …):contentReference[oaicite:25]{index=25}
-- [ ] Catalog writers succeed: DCAT/STAC/PROV are well-formed and link-check clean:contentReference[oaicite:26]{index=26}
-- [ ] Contract tests pass for at least one representative API query that depends on the dataset:contentReference[oaicite:27]{index=27}
-
-**Steward review (required when sensitive):**
-- [ ] A human approval step is recorded when sensitivity requires it:contentReference[oaicite:28]{index=28}
-- [ ] Redaction is documented and captured in PROV (see below):contentReference[oaicite:29]{index=29}
-
----
-
-## Sensitivity and redaction
-
-KFM explicitly expects some datasets to be sensitive (e.g., parcel ownership/PII, precise archaeological site locations, certain public-safety indicators). Sensitivity is handled through policy labels, redaction derivatives with provenance, and fail-closed checks.:contentReference[oaicite:30]{index=30}
-
-### Recommended sensitivity classes
-
-From the integration blueprint’s governance section:​:contentReference[oaicite:31]{index=31}
-
-| Class | Meaning | Typical handling |
-|---|---|---|
-| **Public** | Safe to publish without redaction | Standard promotion gates |
-| **Restricted** | Requires role-based access | Field-level or dataset-level access control |
-| **Sensitive-location** | Coordinates must be generalized or suppressed | Publish redacted derivatives + enforce precision limits |
-| **Aggregate-only** | Only publish above thresholds (small-count risk) | Enforce aggregation + minimum-count rules |
-
-### Redaction is a first-class transformation
-
-Redaction must be recorded in **PROV**; the raw dataset remains immutable, and the redacted derivative is a separate DatasetVersion (often a separate dataset_id) with a documented policy label.:contentReference[oaicite:32]{index=32}
+| Domain | Status | Primary dataset_ids | Sensitivity default | Runbook |
+|---|---|---|---|---|
+| _(add domain)_ | draft | _(list)_ | _(public/restricted/etc.)_ | `./<domain>/README.md` |
 
 ---
 
 ## Domain runbooks
 
-Each domain runbook lives at:
+### Required sections
 
-- `docs/data/<domain>/README.md`
+Every domain runbook **MUST** cover (minimum):
 
-…and should be treated as **operational documentation**: the “how it works” and “how we keep it governed.”
+1. **Domain overview** (what it is, why it exists in KFM)
+2. **Upstream sources** (providers, access method, cadence, constraints)
+3. **Licensing & attribution rules** (including redistribution constraints)
+4. **Sensitivity defaults** (and what triggers restricted handling)
+5. **Canonical mapping notes** (field mapping, CRS, time model, identifiers)
+6. **Lifecycle** (Raw → Work → Processed)
+7. **Validation gates** (schema/geo/time/rights/policy + thresholds)
+8. **Catalog outputs** (DCAT always; STAC/PROV as applicable) + where they live in `data/`
+9. **API/UI dependencies** (layers/endpoints/queries that rely on the domain)
+10. **Backfills & refresh cadence** (idempotency rules, batching, SLOs)
+11. **Operational notes** (rate limits, failure modes, rollback plan)
 
-### Required sections for every domain runbook
-
-Use this as your minimum outline:
-
-1. **Domain overview**
-2. **Data sources in this domain** (upstream providers + access method)
-3. **Licensing & attribution rules**
-4. **Sensitivity classification defaults**
-5. **Canonical mapping notes** (how upstream fields map to KFM concepts)
-6. **Ingestion workflow** (raw → work → processed)
-7. **Validation gates + regression tests**
-8. **Catalog outputs** (DCAT/STAC/PROV + where stored)
-9. **API surfaces** (which endpoints/layers/queries depend on it)
-10. **Known caveats** (rate limits, provider quirks, schema drift)
-11. **Backfill + refresh cadence**
-
-### Domain runbook template (copy/paste)
+### Runbook template
 
 <details>
-<summary><strong>📄 Template: <code>docs/data/&lt;domain&gt;/README.md</code></strong></summary>
+<summary><strong>Click to expand: Domain runbook template</strong></summary>
 
 ```markdown
-# <Domain> — Data Runbook
+# <domain> — Data Runbook
+
+> Governed runbook for the <domain> domain. Treat changes as production changes.
 
 ## Overview
 What this domain covers and why it exists.
@@ -213,131 +150,204 @@ What this domain covers and why it exists.
 ## Upstream sources
 | Source | Access | Cadence | License | Notes |
 |---|---|---:|---|---|
+| | | | | |
+
+## Licensing & attribution
+- License summary:
+- Attribution requirements:
+- Redistribution constraints:
+- Link to authoritative terms (if available):
 
 ## Default sensitivity
-- Default: <Public|Restricted|Sensitive-location|Aggregate-only>
+- Default classification: `public|restricted|sensitive-location|aggregate-only|...`
 - Rationale:
-- Redaction strategy (if applicable):
+- Redaction/generalization strategy (if applicable):
 
-## Data lifecycle (raw → work → processed)
+## Canonical mapping notes
+- CRS requirements:
+- Geometry types:
+- Time model (event time vs interval vs validity ranges):
+- Identifier strategy (dataset_id/version_id/run_id + key fields):
+
+## Data lifecycle (Raw → Work → Processed)
 - Raw:
+  - Where the manifest lives:
+  - What “immutable capture” means here:
 - Work:
+  - Transform steps:
+  - QA artifacts produced:
 - Processed:
+  - Canonical publishable outputs:
+  - Partitioning/indexing notes:
 
 ## Validation gates
 - Schema validation:
 - Geospatial validation:
 - Temporal validation:
+- Rights/license validation:
 - Policy validation:
 - Regression suite:
 
-## Catalog outputs
+## Catalog outputs (boundary artifacts)
 - DCAT:
-- STAC:
+- STAC (if spatial):
 - PROV:
-- Evidence resolvers (prov:// / stac:// / dcat://):
+- Evidence references expected (prov:// / stac:// / dcat:// / doc:// / graph://):
 
-## Backfills and refresh
+## Backfills & refresh
 - Historical coverage:
-- Incremental strategy:
-- SLO / freshness expectations:
+- Incremental update plan:
+- Backfill batching:
+- Idempotency rules:
+- Freshness expectations / SLO:
+
+## API/UI dependencies
+- Map layers:
+- API endpoints / queries:
+- Story Node usage patterns:
 
 ## Operational notes
 - Provider rate limits:
 - Failure modes:
 - Rollback plan:
+- Contacts (roles, not personal emails):
 ```
 
 </details>
 
 ---
 
-## Add a new dataset
+## Add or update a dataset
 
-This is the **minimum thin-slice** process for adding a dataset in a governed way.
+This is the **thin-slice** workflow that keeps governance enforceable:
 
-### 1) Document first (in `docs/data/`)
+1) **Document first (this folder)**  
+- Add/update a **domain runbook** at `docs/data/<domain>/README.md`  
+- If needed, add dataset-specific notes at `docs/data/<domain>/datasets/<dataset_id>.md`
 
-- Create/update `docs/data/<domain>/README.md`
-- Add: license, sensitivity defaults, ingestion plan, validation gates, and catalog outputs
+2) **Register the dataset (data plane)**  
+- Add/update the dataset profile under the registry (see [`data/README.md`](../../data/README.md))  
+- Ensure license, cadence, and sensitivity are **explicit** and **machine-checkable**
 
-### 2) Implement ingestion and staged outputs (in `data/`)
+3) **Ingest to Raw → Work → Processed**  
+- Raw manifest + checksums (immutable capture)  
+- Work run artifacts (run record/receipt + validation report + QA)  
+- Processed artifacts + checksums (publishable outputs)
 
-- Land raw artifacts in `data/raw/<domain>/<dataset_id>/<version_id>/`
-- Emit intermediate artifacts + validation report in `data/work/<domain>/<dataset_id>/<run_id>/`
-- Emit publishable artifacts in `data/processed/<domain>/<dataset_id>/<version_id>/`
+4) **Generate required boundary artifacts**  
+- DCAT (required)  
+- STAC (required when spatial assets exist)  
+- PROV (required)  
+- Cross-links must be traversable end-to-end (catalogs ↔ receipts ↔ checksums)
 
-### 3) Generate required “boundary artifacts” (catalogs + provenance)
+5) **Pass promotion gates in CI**  
+If any required proof is missing or invalid → fail closed.
 
-At promotion time, catalogs should be written to canonical locations (STAC + DCAT + PROV), and these artifacts are required before the dataset is considered fully published.:contentReference[oaicite:33]{index=33}
-
-### 4) Pass promotion gates in CI
-
-Use the checklist in [Promotion gates](#promotion-gates).
-
-### 5) Ensure evidence is resolvable
-
-Evidence/citation references must resolve via evidence endpoints (prov/stac/dcat/doc/graph), enabling “review evidence” UX for both map layers and Focus Mode answers.:contentReference[oaicite:34]{index=34}
-
----
-
-## ID and path conventions
-
-These conventions keep catalogs, provenance, and evidence resolvers stable across time.
-
-### Identifiers (recommended)
-
-| Identifier | What it identifies | Stability rule |
-|---|---|---|
-| `dataset_id` | A governed dataset concept | Stable name; does not change across versions |
-| `version_id` | A specific ingested version | Derived from raw manifest content hash (preferred) |
-| `run_id` | A specific pipeline execution | Unique per execution; timestamped IDs are acceptable |
-
-> [!NOTE]
-> The integration blueprint emphasizes deterministic versioning using content-hash of raw manifests for dataset versions (so you can always tie a version to the exact raw inputs).:contentReference[oaicite:35]{index=35}
-
-### Run records and validation reports
-
-KFM’s blueprint recommends that each pipeline job emit a run record (JSON) plus a validation report, and that promotion is blocked unless both exist and are complete.:contentReference[oaicite:36]{index=36}
+> [!TIP]
+> Docs are not “nice to have” here: domain runbooks prevent ad-hoc ingestion and make obligations reviewable **before** data becomes publishable.
 
 ---
 
-## CI validation expectations
+## Cross-linking and evidence references
 
-This README (and each domain runbook) should be written with CI in mind:
+Docs must refer to datasets in a way that’s compatible with the evidence resolver and audit chain.
 
-- ✅ Markdown lint (format + headings)
-- ✅ Link-check (avoid stale/broken references)
-- ✅ “No secrets in docs” scan
-- ✅ Governance gate compatibility (checklists align with required promotion gates)
+### Use stable identifiers
+
+- `dataset_id` — stable dataset family identifier
+- `version_id` — immutable promoted snapshot
+- `run_id` — immutable pipeline execution identifier
+
+### Prefer resolvable evidence references
+
+When documenting “what proves this,” prefer references that can be resolved into evidence views:
+
+- `dcat://...` — rights + distributions + dataset metadata
+- `stac://...` — spatial/temporal assets (collections/items)
+- `prov://...` — lineage (entities/activities/agents)
+- `doc://...` — governed document spans (page/offsets)
+- `graph://...` — graph facts tied back to evidence objects
 
 > [!IMPORTANT]
-> Trust membrane enforcement is not optional: all reads/writes crossing the boundary must pass auth, policy evaluation, redaction/query shaping, and audit/provenance logging, and this is enforced by tests.:contentReference[oaicite:37]{index=37}
+> If a reference can’t be resolved to an evidence view, it **cannot** be used for publishable claims (Story Nodes / Focus Mode / user-visible layers).
 
 ---
 
-## Glossary
+## Sensitivity and redaction
 
-- **Trust membrane**: API/policy boundary where governance is enforced; UI never accesses databases directly.:contentReference[oaicite:38]{index=38}
-- **Promotion gate**: Automated + stewarded checks required to publish a dataset to Processed.:contentReference[oaicite:39]{index=39}
-- **DCAT**: Dataset-level metadata for discovery/interoperability.:contentReference[oaicite:40]{index=40}
-- **STAC**: Geospatial asset catalogs for map/timeline rendering (Collections + Items).:contentReference[oaicite:41]{index=41}
-- **PROV**: Lineage/provenance model; records how outputs were derived from inputs.:contentReference[oaicite:42]{index=42}
-- **Sensitivity label**: Classification driving policy checks and redaction behavior (public/restricted/sensitive-location/aggregate-only).:contentReference[oaicite:43]{index=43}
+KFM assumes some content is sensitive by nature.
+
+### Recommended sensitivity classes
+
+| Class | Meaning | Typical handling |
+|---|---|---|
+| **Public** | Safe to publish | Standard promotion gates |
+| **Restricted** | Role-based access | Dataset- or field-level policy gates |
+| **Sensitive-location** | Precise coordinates must not be published | Publish generalized derivatives; enforce precision limits |
+| **Aggregate-only** | Small-count re-identification risk | Enforce minimum-count/aggregation thresholds |
+
+### Redaction is a first-class transformation
+
+- Never “silently” remove or blur data.
+- Publish a redacted/generalized **derivative** with its own provenance chain.
+- Ensure lineage makes it clear **what changed**, **why**, and **how**.
+
+> [!CAUTION]
+> If a runbook touches culturally restricted knowledge or sensitive site locations, do not include precise coordinates or directions.  
+> Document the **handling policy** and ensure the data plane contains generalized products suitable for publishing.
 
 ---
 
-### Appendix: Data-to-UI flow (conceptual)
+## CI expectations for `docs/data/`
+
+Docs in this subtree should be written to be **CI-checkable**:
+
+- ✅ Markdown lint (headings, formatting)
+- ✅ Link-check (avoid broken relative references)
+- ✅ “No secrets in docs” scan
+- ✅ Sensitivity leakage scan (when enabled)
+- ✅ Governance review gates (CODEOWNERS / required approvals)
+
+> [!IMPORTANT]
+> If a documentation change effectively changes “what’s allowed to publish,” treat it like code: it must be reviewed and must not weaken fail-closed constraints.
+
+---
+
+## Definition of Done
+
+### DoD — Add a new domain runbook
+
+- [ ] Domain folder exists: `docs/data/<domain>/README.md`
+- [ ] Required sections are present (sources, license, sensitivity, lifecycle, validation, catalogs, ops)
+- [ ] Domain index table updated in this README
+- [ ] Runbook references dataset_ids (or states “none yet”)
+- [ ] No sensitive payloads embedded in docs
+- [ ] Markdown + links pass repo validators
+
+### DoD — Update dataset documentation
+
+- [ ] Domain runbook updated (or dataset note added) describing the change
+- [ ] License/attribution impacts stated
+- [ ] Sensitivity impacts stated (and redaction/generalization strategy documented if needed)
+- [ ] Validation gates updated (and thresholds stated)
+- [ ] Catalog outputs expectations updated (DCAT/STAC/PROV)
+- [ ] Any change that affects publishability includes a verification step (“how to prove it in CI”)
+
+---
+
+## Appendix: Data-to-UI flow
 
 ```mermaid
 flowchart LR
-  A["Raw zone"] --> B["Work zone"]
-  B --> C["Processed zone"]
-  C --> D["Catalogs: DCAT / STAC / PROV"]
-  D --> E["Stores: PostGIS / Object Store / Graph / Search"]
-  E --> F["Governed API + Policy (Trust Membrane)"]
-  F --> G["UI + Story Nodes + Focus Mode"]
+  DOCS["docs/data (runbooks + obligations)"] --> REG["data/registry (machine-checkable profiles)"]
+  REG --> RAW["data/raw (manifests + checksums)"]
+  RAW --> WORK["data/work (receipts + validation + QA)"]
+  WORK -->|Promotion Contract| PROC["data/processed (immutable publishable artifacts)"]
+  PROC --> CATS["data/catalog (DCAT + STAC + PROV)"]
+  CATS --> API["Governed API + Policy (trust membrane)"]
+  API --> UI["UI + Story Nodes + Focus Mode (cite or abstain)"]
 ```
 
-This flow reflects KFM’s core “truth path” and reinforces the invariant that processed + catalogs are the publishable interface to downstream systems.:contentReference[oaicite:44]{index=44}
-
+> [!NOTE]
+> This README governs **how we document** datasets and domains.
+> The authoritative contract for the data plane layout and promotion gates is [`data/README.md`](../../data/README.md).
