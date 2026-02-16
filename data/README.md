@@ -4,7 +4,9 @@ File: data/README.md
 If you change meaning (not just phrasing), route through governance review (CODEOWNERS + CI gates).
 -->
 
-# 🧾 `data/` — KFM Governed Data Plane  
+<a id="top"></a>
+
+# 🧾 `data/` — KFM Governed Data Plane
 ## Zones • Registry • Catalogs • Evidence Bundles • Provenance • Promotion Gates
 
 ![status](https://img.shields.io/badge/status-governed%20artifact-blue)
@@ -64,12 +66,14 @@ If this README disagrees with implementation, treat it as a **governance inciden
 ## Table of Contents
 
 - [Non-Negotiables](#non-negotiables)
+- [Quickstart: Onboard One Dataset](#quickstart-onboard-one-dataset)
 - [Core Concepts](#core-concepts)
 - [Directory Layout](#directory-layout)
 - [Truth Path](#truth-path)
 - [Registry](#registry)
 - [Data Zones](#data-zones)
 - [Promotion Contract](#promotion-contract)
+- [Naming & ID Conventions](#naming--id-conventions)
 - [Deterministic Identity](#deterministic-identity)
 - [Catalog Layer](#catalog-layer)
 - [Evidence Bundles](#evidence-bundles)
@@ -113,6 +117,59 @@ These are **system invariants**. If any are violated, the system is not “KFM�
 6) **Cite-or-Abstain**
    - Focus Mode and Story Nodes **must include citations** that resolve to evidence, or abstain.
    - Every governed response must include an `audit_ref`.
+
+---
+
+## Quickstart: Onboard One Dataset
+
+> [!NOTE]
+> This is a **developer quickstart** to reduce “what do I do first?” friction.
+> It does **not** loosen any gate: missing proofs still deny promotion/serve.
+
+### Minimal thin-slice (one dataset → one promoted version)
+
+1) **Register the dataset**
+   - Create: `data/registry/datasets/<dataset_id>.yml`
+   - Run CI: registry schema validation
+
+2) **Capture raw**
+   - Create: `data/raw/<dataset_id>/manifest.yml`
+   - Create: `data/raw/<dataset_id>/checksums.sha256`
+
+3) **Run pipeline (work zone)**
+   - Emit: `data/work/<dataset_id>/runs/<run_id>/run_record.json`
+   - Emit: `data/work/<dataset_id>/runs/<run_id>/validation_report.json`
+   - Emit: `data/work/<dataset_id>/runs/<run_id>/run_manifest.json` *(Promotion Contract receipt)*
+
+4) **Write processed outputs**
+   - Write to: `data/processed/<dataset_id>/<version_id>/data/...`
+   - Compute: `data/processed/<dataset_id>/<version_id>/checksums.sha256`
+
+5) **Emit catalogs**
+   - DCAT: `data/catalog/dcat/<dataset_id>.json` *(required)*
+   - STAC: `data/catalog/stac/<dataset_id>/collection.json` *(required if spatial assets exist)*
+   - PROV: `data/catalog/prov/<dataset_id>/run_<run_id>.json` *(required for all promotions)*
+
+6) **(Optional) Create evidence bundle descriptor**
+   - `data/processed/<dataset_id>/<version_id>/evidence_bundle.ref.json`
+   - `data/bundles/<bundle_digest>/descriptor.json`
+
+7) **Promote**
+   - Promotion gate validates proofs and writes audit event.
+   - Only after promotion can any downstream derived store (PostGIS/Graph/Search) ingest.
+
+### Definition of Done (DoD) for a promoted version
+
+- [ ] Registry profile exists and validates
+- [ ] Raw manifest + raw checksums exist and validate
+- [ ] Work receipts exist and validate
+- [ ] Processed artifacts exist, with checksums for **every** servable artifact
+- [ ] DCAT validates and includes license + attribution + distributions
+- [ ] STAC validates if spatial assets exist
+- [ ] PROV validates and links raw → work → processed (+ catalogs)
+- [ ] Policy labels are present and enforceable (missing → deny)
+- [ ] Evidence resolution works: citations resolve to evidence objects
+- [ ] Audit event exists for promotion (`audit_ref`)
 
 ---
 
@@ -327,6 +384,41 @@ Promotion is a **contract**, not a convenience. A dataset version is *publishabl
 
 ---
 
+## Naming & ID Conventions
+
+> [!IMPORTANT]
+> IDs are governance surface area. Make them predictable and validate them in CI.
+
+### `dataset_id` (recommended)
+
+- lowercase, snake_case
+- stable, not vendor-branded if avoidable
+- avoid spaces and punctuation
+- **Example:** `kansas_landgrants`, `usgs_historical_maps`
+
+**Recommended regex:** `^[a-z][a-z0-9_]{2,63}$`
+
+### `run_id` (recommended)
+
+- unique per execution
+- sortable by time
+- include timestamp and optionally a short spec hash prefix
+
+**Example:** `run_2026-02-16T12-34-56Z_8f3a2c1d`
+
+### `version_id` (recommended)
+
+- immutable release identifier
+- should be derivable from promotion receipt and/or timestamp
+- sortable is preferred
+
+**Example:** `v_2026-02-16T12-34-56Z_8f3a2c1d`
+
+> [!NOTE]
+> Exact conventions are enforceable only if validators exist. If you adopt a convention, add a CI validator.
+
+---
+
 ## Deterministic Identity
 
 KFM uses **two** hash families and they serve different jobs.
@@ -508,6 +600,10 @@ discover → acquire → normalize/enrich → validate → receipt → catalog �
 - never overwrite prior releases
 - backfill scope and batching must be declared in registry
 - idempotency is a requirement: re-running must not create ambiguous duplicates
+
+> [!WARNING]
+> Credentials/tokens are **not** data artifacts. Never store secrets in `data/` (including `audit/`).
+> Secrets belong in secret managers and runtime configuration only.
 
 ---
 
@@ -730,4 +826,4 @@ Route through governance review (CODEOWNERS + CI gates) if any of the following 
 
 ### Back to Top
 
-[↑ Back to top](#-data----kfm-governed-data-plane)
+[↑ Back to top](#top)
