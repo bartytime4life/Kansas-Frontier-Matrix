@@ -1,254 +1,241 @@
-# 🗺️ Kansas Frontier Matrix — Web UI Source (`web/src`)
+# web/src — KFM Web UI Source 🗺️🧾
 
-<p align="center">
-  <b>React + TypeScript • MapLibre (2D) • Cesium (3D) • Timeline • Story Nodes • Focus Mode 🤖</b><br/>
-  <sub><i>This README is scoped to <code>web/src</code> (frontend source). For full app setup, see <code>web/README.md</code> (or repo root README).</i></sub>
-</p>
+![Status](https://img.shields.io/badge/status-governed%20UI-blueviolet)
+![UI](https://img.shields.io/badge/ui-React%20%2B%20MapLibre%20(%2B%20optional%20Cesium)-informational)
+![Evidence](https://img.shields.io/badge/evidence-cite--or--abstain-critical)
+![Policy](https://img.shields.io/badge/policy-fail--closed-red)
 
-<p align="center">
-  <img alt="react" src="https://img.shields.io/badge/React-SPA-blue?logo=react" />
-  <img alt="typescript" src="https://img.shields.io/badge/TypeScript-typed-blue?logo=typescript" />
-  <img alt="maplibre" src="https://img.shields.io/badge/MapLibre-2D%20maps-success" />
-  <img alt="cesium" src="https://img.shields.io/badge/Cesium-3D%20globe-success" />
-  <img alt="provenance" src="https://img.shields.io/badge/Provenance-first-%E2%9C%85-important" />
-  <img alt="governance" src="https://img.shields.io/badge/Governed%20UI-%F0%9F%9B%A1%EF%B8%8F-critical" />
-</p>
+This folder contains **the web UI implementation** for the Kansas Frontier Matrix (KFM). It is the **presentation layer** that renders maps, timelines, Story Nodes, and the **Focus Mode evidence UX**.
 
----
-
-## 🔎 What lives in `web/src`?
-
-This folder is the **frontend implementation** of the Kansas Frontier Matrix (KFM) UI: a map-and-narrative experience that lets users explore **layers over time**, open **evidence-backed story content**, and ask **Focus Mode** questions that return **citation-bearing** answers.
-
-### 🧩 The 4 UI pillars (mental model)
-
-1. **🗺️ Map View**  
-   - 2D: MapLibre GL JS (vector/raster tiles, GeoJSON overlays)  
-   - 3D: CesiumJS (terrain/globe; optional toggle)
-2. **⏳ Timeline / Time Control**  
-   - A shared temporal state (e.g., `currentYear`) drives filtering/visibility across UI.
-3. **📚 Story / Evidence Panels**  
-   - Story Nodes (governed markdown narratives) render alongside map context.
-4. **🤖 Focus Mode Assistant**  
-   - Chat UI that **calls backend endpoints** (never model servers directly) and renders citations.
+> [!IMPORTANT]
+> **This folder is governed.**
+> If UI code **surfaces data** (map layers, popups, Story Nodes, AI answers), it **MUST** preserve:
+> - **Trust membrane** (API-only access)
+> - **Provenance-first UX** (citations, resolvable evidence)
+> - **CARE/sensitivity constraints** (generalize/redact when required)
 
 ---
 
-## 🚧 Non‑negotiables (KFM UI invariants)
+## Quick links
 
-> **These rules keep KFM “evidence-first” and policy-safe.** ✅
-
-- **API boundary rule:** The UI must **never** query Neo4j/PostGIS (or any datastore) directly. All data access flows through the governed API layer. 🧱  
-- **Pipeline ordering is absolute:** **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**. No skipping stages. 🔒  
-- **Provenance-first UX:** If the UI shows a dataset/layer/claim, it must be traceable to cataloged evidence (STAC/DCAT) and lineage (PROV). ⛓️  
-- **CARE / sensitivity safeguards:** If a dataset is sensitive, the UI must respect redaction/generalization rules (e.g., don’t reveal precise locations when policy says “no”). 🛡️  
-- **Focus Mode is API-driven:** The UI calls backend endpoints (e.g., `/focus-mode/query` or `/ai/query`) and renders citations; it does not call the LLM runtime directly. 🤝
+- Repo-level architecture & invariants: `../../docs/MASTER_GUIDE_v13.md` (or latest)
+- Standards & profiles: `../../docs/standards/`
+- Templates (Story Nodes, governed docs): `../../docs/templates/`
+- Web app root docs (if present): `../README.md`
 
 ---
 
-## 🧭 Where to start in this folder
+## What lives in `src/`
 
-If you’re new here, start by locating:
+`web/src/` is expected to contain:
 
-- **Entry point**: `src/main.tsx` (Vite) or `src/index.tsx` (CRA)  
-- **App shell & routes**: `src/App.tsx`  
-- **State store**: `src/state/*` or `src/store/*`  
-- **Map container**: `src/components/MapViewer/*`  
-- **Layer registry/config**: `src/layers/*`  
-- **API client wrapper**: `src/services/api.ts`
-
-> Tip 💡: Keep UI “dumb” about data authority. It should **render what the API returns** + attach provenance affordances (legend, source, license, citations).
+- **App shell & composition** (providers, routing, layout, global UI state)
+- **Map visualization** (MapLibre GL JS; optional Cesium where enabled)
+- **Timeline UI** (time filtering + synchronized map/story state)
+- **Story Node reader** (governed narrative + citations + entity links)
+- **Focus Mode UI** (chat panel + citations + audit/explain affordances)
+- **Provenance UX** (timeline + “how do we know?” drawers)
 
 ---
 
-## 🗂️ Suggested `src/` layout (recommended pattern)
+## Non-negotiable invariants (must not regress)
 
-<details>
-<summary><b>📁 Click to expand a clean, scalable layout</b></summary>
+### 1) Pipeline ordering is inviolable
+The UI **must not** present anything as “truth” unless it comes through the governed lifecycle:
 
-```text
-web/
-└─ 📁 src/
-   ├─ ⚛️ App.tsx
-   ├─ ⚡ main.tsx | index.tsx
-   ├─ 📁 routes/                 # 🧭 route definitions (if multi-page)
-   ├─ 📁 components/             # 🧱 reusable UI building blocks
-   │  ├─ 📁 MapViewer/            # 🗺️ MapLibre + Cesium adapter + interactions
-   │  ├─ 📁 TimelineSlider/       # ⏳ time controls (scrub/play)
-   │  ├─ 📁 LayerControl/         # 🧩 layer toggles + legend + source info
-   │  ├─ 📁 StoryPanel/           # 📚 story node renderer + map linking
-   │  ├─ 📁 FocusMode/            # 🤖 chat UI + citation rendering
-   │  └─ 📁 SearchBar/            # 🔎 catalog/search UI
-   ├─ 📁 features/               # 🧠 “vertical slices” (optional, great for scaling)
-   │  ├─ 📁 catalog/
-   │  ├─ 📁 stories/
-   │  ├─ 📁 focusMode/
-   │  └─ 📁 analytics/
-   ├─ 📁 layers/                 # 🧾 layer registry + style + metadata bindings
-   ├─ 📁 state/                  # 🧠 global store (Redux Toolkit / Context)
-   │  ├─ 📁 slices/
-   │  └─ 📁 selectors/
-   ├─ 📁 services/               # 🌐 API clients (REST/GraphQL), auth, telemetry
-   ├─ 📁 hooks/                  # 🪝 shared hooks (debounce, viewport sync, etc.)
-   ├─ 📁 styles/                 # 🎨 global styles, tokens, theming
-   ├─ 📁 types/                  # 🧾 shared TS types (GeoJSON, catalog DTOs, etc.)
-   ├─ 📁 utils/                  # 🧰 helpers (formatting, guards, parsing)
-   └─ 📁 assets/                 # 🖼️ icons, images (small + UI only)
-```
-</details>
+**ETL → STAC/DCAT/PROV → Graph → API → UI → Story Nodes → Focus Mode**
+
+If a UI feature needs something earlier than this chain provides, **the feature is premature**.
+
+### 2) Trust membrane: API-only access
+The UI **never** queries Neo4j/DBs directly and never bypasses the policy boundary.
+All reads flow through the **governed API** (versioned endpoints + policy + redaction + audit refs).
+
+### 3) Evidence-first narrative
+No unsourced narrative is allowed:
+- Story Nodes must cite evidence for claims
+- Focus Mode must **cite or abstain**
+- Any AI-assisted text must be clearly distinguished from primary evidence
+
+### 4) Focus Mode is a thin client (server-side logic)
+Focus Mode UI:
+- sends `{question, context, user_role}` to the API
+- renders `{answer, citations[], audit_ref}` (or a refusal)
+- provides citation click-through to evidence views/snippets
+
+The web client does **not** run an LLM or call an LLM provider directly.
 
 ---
 
-## 🔁 Data flow at a glance (how the UI should think)
+## Dataflow (UI perspective)
 
 ```mermaid
 flowchart LR
-  UI[React UI<br/>web/src] -->|REST / GraphQL| API[FastAPI + GraphQL<br/>src/server]
-  API -->|Catalog queries| CATALOG[STAC / DCAT]
-  API -->|Lineage| PROV[PROV records]
-  API -->|Spatial| POSTGIS[(PostGIS)]
-  API -->|Graph| NEO4J[(Neo4j)]
-  UI -->|Tiles| TILES[Tile endpoints<br/>MVT/PNG/WebP]
-  UI -->|Focus Mode query| FM[Focus Mode API]
-  FM -->|RAG + governance| POLICY[OPA / Policy Gate]
+  User((User)) --> UI[React UI: Map • Timeline • Story • Focus]
+  UI -->|GET/POST /api/v1/*| API[Governed API Boundary]
+  API -->|policy + redaction + audit refs| UI
+
+  subgraph Data_Lifecycle["Lifecycle (enforced)"]
+    ETL[ETL / Pipelines] --> CATS[STAC • DCAT • PROV]
+    CATS --> GRAPH[Neo4j / Graph]
+    GRAPH --> API
+  end
+
+  UI -->|evidence resolve| EV[/Evidence Resolver/]
+  EV --> API
 ```
 
-**UI principle:** It’s okay for the UI to be powerful—**as long as it’s not authoritative**. The API is the authority. ✅
+---
+
+## Suggested directory layout (safe defaults)
+
+> [!NOTE]
+> This is a **recommended** layout. If the repo already has a different structure, keep the *principles*
+> (separation, provenance-first UI) and update this README to match the actual tree.
+
+```text
+web/src/
+  app/                    # App shell: providers, routing, layout, global state wiring
+  features/               # Vertical slices (preferred)
+    map/                  # MapLibre/Cesium adapters, layer registry, legend, popups
+    timeline/             # Time slider, playback, temporal filters
+    story/                # Story Node reader, story index, story-to-map choreography
+    focus/                # Focus Mode panel: Q&A + citations + audit/explain UI
+    provenance/           # Provenance timeline, "how do we know?" drawers
+  shared/
+    components/           # Design-system-ish shared UI components
+    hooks/                # Reusable hooks (useDebounce, useHotkeys, etc.)
+    types/                # Shared TS types (EvidenceRef, DatasetRef, etc.)
+    utils/                # Pure utilities (formatters, guards, etc.)
+  services/
+    api/                  # API client(s): fetch wrappers, typed endpoints, error handling
+    evidence/             # Citation resolver client + evidence view models
+  styles/                 # Global styles/tokens (prefer tokens + component scoping)
+  assets/                 # Static assets (icons, images)
+  main.tsx|index.tsx       # Entrypoint (depends on bundler)
+  App.tsx                  # Root component / router shell
+```
+
+### “Where should this code go?” decision table
+
+| If you’re building… | Put code in… | Notes |
+|---|---|---|
+| A new map overlay / layer toggle | `features/map/` | Must include provenance (legend/popup) + CARE handling |
+| A new Story Node reader capability | `features/story/` | Markdown rendering must remain safe + evidence-first |
+| A Focus Mode UI enhancement | `features/focus/` | Must preserve citations + audit affordances |
+| A “how do we know?”/lineage view | `features/provenance/` | Prefer timeline + detail drawer pattern |
+| Generic button/modal/table | `shared/components/` | Keep feature logic out of shared |
+| Calling the backend | `services/api/` | No raw `fetch` sprinkled through components |
 
 ---
 
-## 🗺️ Mapping: MapLibre (2D) + Cesium (3D)
+## Evidence UX requirements
 
-### 2D (MapLibre)
-Common patterns:
-- Initialize a MapLibre `Map` with a basemap style (OSM or project style).
-- Add layers as:
-  - **Vector tiles (MVT)** for large datasets  
-  - **Raster tiles** (PNG/WebP) for imagery/COGs served as tiles  
-  - **GeoJSON overlays** for small layers or ad-hoc results
+### Citation model: “resolvable in bounded calls”
+UI must treat citations as **first-class** objects:
+- Render inline markers (e.g., `[1]`)
+- On click, open an evidence view (tooltip/panel/modal)
+- Evidence must resolve via a stable resolver endpoint (see “Evidence Resolver” below)
 
-**Typical tile endpoints** (served by backend):
-- `GET /tiles/{layer}/{z}/{x}/{y}.pbf` (vector tiles)
-- `GET /tiles/{layer}/{z}/{x}/{y}.png` or `.webp` (raster tiles)
-
-### 3D (Cesium)
-Common patterns:
-- Provide a UI toggle for 2D ↔ 3D.
-- In 3D mode, mount a Cesium `Viewer` and add imagery + terrain layers.
-- Keep state in sync (viewport/time/layers) with the 2D view when possible.
-
-> ✅ Recommendation: treat 3D as an *alternate renderer* fed by the same catalog + API. Don’t fork your data sources.
+### CARE/sensitivity surfaced (no silent precision leaks)
+When coordinates or other sensitive fields were generalized/redacted, UI must surface that fact
+(e.g., a “generalized to 1 km” badge, or a sensitivity label) rather than implying precision.
 
 ---
 
-## ⏳ Timeline: “one time state to rule them all”
+## Evidence Resolver (client-side expectations)
 
-The UI maintains a global time selection (often `currentYear` or `currentTimeRange`) used by:
-- Map filtering (show only relevant tiles/features)
-- Story highlighting (scroll sync, “this paragraph matches this time”)
-- Search filters (catalog/time range)
-- Focus Mode context (“You’re viewing 1874–1882 near Fort…”)  
+The governed design expects a stable “evidence resolver” contract with reference schemes like:
 
-**Pattern:**  
-- Store `currentYear` in the global store  
-- Components subscribe via selectors/hooks  
-- Updates flow through actions (predictable + testable)
+- `prov://...`
+- `stac://...`
+- `dcat://...`
+- `doc://...`
+- `graph://...`
 
----
+The UI should avoid hardcoding storage URLs and instead call the resolver, e.g.:
 
-## 🤖 Focus Mode: chat UI that stays governed
+`GET /api/v1/evidence/resolve?ref=<scheme://...>`
 
-**Frontend responsibilities**
-- Provide chat input + conversation panel
-- Send user queries to backend endpoint (examples):
-  - `POST /focus-mode/query`
-  - `POST /ai/query`
-- Render:
-  - The answer
-  - **Citations** as clickable references (footnotes, popovers, or side panel)
-  - Policy notices if content is redacted/blocked
-
-**Hard rules**
-- ❌ Never call an LLM runtime directly from the UI  
-- ✅ Always call the governed API (which handles retrieval, policy gating, and citation formatting)
-
-> UX tip 💡: Make citations obvious and frictionless. KFM trust comes from “show your receipts” behavior.
+…and then render:
+- **human-readable evidence view** (snippet / dataset entry)
+- **machine-readable metadata** (IDs, links)
+- **access decision / redaction obligations** (handle 403/404 cleanly)
 
 ---
 
-## 🧾 Provenance UX: make evidence visible (without being annoying)
+## Map implementation notes (MapLibre)
 
-When you add or display anything “real” (layer, chart, claim), add a path to evidence:
+### Interaction: click → rendered feature query → popup
+Use `queryRenderedFeatures` on click for interactive inspection, and ensure the popup links to provenance.
 
-- **Layer legend** includes:
-  - Dataset name
-  - Time coverage
-  - License
-  - Source link (via catalog record)
-- **Popup / inspect panel** includes:
-  - Feature properties
-  - “Source” section (DCAT/STAC references)
-  - “Lineage” link (PROV summary)
-- **Story + Focus Mode**:
-  - Must show citations for factual claims
-  - Distinguish fact vs interpretation where applicable
+### Tiles and packaging
+Prefer tile-based delivery for large/static datasets:
+- vector tiles (API-served `{z}/{x}/{y}`)
+- or **PMTiles** where “single-file pyramid + range requests” makes sense
 
----
-
-## 🧑‍💻 Adding things safely (recipes)
-
-### ✅ Add a new map layer (the KFM way)
-1. **Backend first (usually):**
-   - Ensure dataset exists + tiles/data endpoints are available
-2. **Register layer in UI**
-   - Extend the **layer registry/config**
-3. **Attach provenance**
-   - Add legend/popup UI that references DCAT/STAC
-4. **Respect sensitivity**
-   - If restricted: mask/blur/generalize in UI (don’t rely on “frontend secrecy” alone)
-
-### ✅ Add a new UI feature
-- Put data access in `services/` (REST/GraphQL client)
-- Store shared state in the global store (if cross-component)
-- Keep “dumb” components in `components/`
-- Keep feature logic grouped in `features/<feature>/` (optional but recommended)
+### Performance checklist (MapLibre)
+- Prefer vector tiles over huge GeoJSON blobs for large static datasets
+- If GeoJSON is unavoidable: constrain zoom + min/max zoom ranges
+- Use worker tuning cautiously
+- Use debug toggles for diagnosing (tile boundaries / collisions / overdraw)
 
 ---
 
-## 🧪 Testing & quality (expectations)
+## Focus Mode UI (evidence-first assistant)
 
-- Prefer **small pure functions** for map style builders, filters, selectors, and parsers ✅
-- Keep map integration code isolated (easy to mock) 🧰
-- Use type guards when consuming API payloads 🧾
-- Avoid “silent fallbacks” for missing provenance: fail loud in dev builds 🚨
+### UX shape
+- Chat-like panel (sidebar/dialog)
+- Context-aware (selected map area, active layers, selected year, etc.)
+- Inline citations per claim
+- Evidence click-through + optional “Audit/Explain” view
 
----
-
-## 🧯 Troubleshooting quick hits
-
-- **Tiles render blank**  
-  - Check layer id & endpoint paths
-  - Verify z/x/y matches what MapLibre requests
-- **Timeline changes don’t update map**  
-  - Confirm map layer uses time filter (query params or style filters)
-  - Ensure store updates propagate (selectors/hooks)
-- **Focus Mode returns no citations**  
-  - Confirm backend is returning citation markers + citation objects
-  - Ensure the renderer isn’t stripping bracket tokens like `[1]`
+### Client responsibilities
+- Build a *minimal* context object (only what’s needed; do not include restricted/sensitive data unless policy allows)
+- POST question + context to the API
+- Render answer + citations
+- Provide “refine question” affordances and a clear refusal UI
 
 ---
 
-## 📘 Glossary (tiny)
+## Provenance timeline UI
 
-- **STAC**: Catalog format for geospatial assets (spatiotemporal metadata)  
-- **DCAT**: Dataset catalog metadata (discovery + distributions)  
-- **PROV**: Provenance / lineage record (how things were produced)  
-- **MVT**: Mapbox Vector Tiles (`.pbf`)  
-- **RAG**: Retrieval-Augmented Generation (AI answers grounded in retrieved evidence)
+Recommended pattern:
+- `ProvenanceTimeline` component (filters by dataset + date window)
+- “Detail drawer” for a selected ingestion: who/when/why, policy bundle, lineage parents, commit SHA
+- Link out to STAC/DCAT/receipt/prov as appropriate
 
 ---
 
-## 🧭 Keep this README honest ✅
+## Accessibility and i18n expectations
 
-This README is intended to reflect **how `web/src` should be organized** and **how KFM expects the UI to behave**.  
-If the folder layout changes, update the tree and “Where to start” section so new contributors can ramp quickly. 🚀
+- Treat accessibility as a release blocker for core flows (map interaction, story reading, focus chat)
+- Keep keyboard navigation working for all essential actions
+- Provide readable focus states and meaningful labels
+- Plan for locale-aware formatting and language tags (BCP47 + CLDR conventions)
+
+---
+
+## Definition of Done for UI changes (PR checklist)
+
+### If your change surfaces a dataset/layer/story/focus answer:
+- [ ] Provenance is visible (popup/legend/citation block)
+- [ ] Citation(s) resolve through the evidence resolver
+- [ ] Sensitive data is generalized/redacted and clearly labeled
+- [ ] Works without direct DB/graph access (API-only)
+- [ ] Error states are non-leaky (403/404 don’t expose metadata)
+- [ ] A11y basics verified (keyboard + contrast + labels)
+
+### If your change touches map performance:
+- [ ] Tested at representative zoom ranges and feature counts
+- [ ] Verified style/layers do not evaluate heavy filters outside needed zooms
+- [ ] Debug toggles used during validation where applicable
+
+---
+
+## Contributing notes (local conventions)
+
+- Keep feature logic inside `features/*` (avoid “god components” in shared)
+- Prefer pure functions and typed models for evidence/provenance shaping
+- Never embed secrets in the client; never ship privileged endpoints to browsers
+- Update this README when you introduce new conventions or new top-level folders
