@@ -1,53 +1,54 @@
 <!--
 File: src/README.md
 Purpose: Canonical “don’t leave anything out” README for all governed backend code under /src.
-This README is a GOVERNED artifact: changes should be reviewed as production changes because they can alter trust guarantees.
+Governance: This README is a GOVERNED artifact. Treat changes as production changes because they can
+alter trust guarantees, promotion gates, evidence behavior, and policy enforcement.
 -->
 
-# 🧭 KFM `src/` — Governed Backend, Pipelines, and Graph
+# 🧭 KFM `src/` — Governed Backend: API, Pipelines, Knowledge Graph
 
 ![Governed](https://img.shields.io/badge/status-governed-2563eb)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-required-0f766e)
 ![Trust membrane](https://img.shields.io/badge/trust%20membrane-enforced-16a34a)
 ![Fail-closed](https://img.shields.io/badge/policy-default%20deny-111827)
-![Receipts](https://img.shields.io/badge/receipts-run__manifest%20%7C%20spec__hash-6a5acd)
+![Promotion Contract](https://img.shields.io/badge/promotion-raw%E2%86%92work%E2%86%92processed-f97316)
+![Receipts](https://img.shields.io/badge/receipts-run__record%20%7C%20run__manifest%20%7C%20spec__hash-6a5acd)
 ![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
 
-`src/` is the canonical home for KFM’s server-side code: the **API backend**, **data pipelines**, and **knowledge graph** build/sync logic.
+`src/` is the canonical home for KFM’s governed server-side system:
+- **Governed API** (data + evidence + Story Nodes + Focus Mode)
+- **Data pipelines** (ingest → validate → promote → catalog → publish)
+- **Knowledge graph** build/sync (derived from processed artifacts)
+- **Shared governed libraries** (IDs, time model, provenance, receipts)
 
-This is where KFM’s credibility guarantees are enforced in code:
-- **Trust membrane:** UI/external clients never hit databases directly; everything flows through the governed API + policy boundary.
-- **Fail-closed policy:** every governed request is authorized; denials are the default.
-- **Evidence-first:** outputs are grounded; Focus Mode answers must include citations or abstain.
-- **Auditability:** governed request paths emit `audit_ref` and evidence references.
+KFM’s credibility is not a vibe. It is enforced here—by **policy**, **validation gates**, **receipts**, and **auditable evidence resolution**.
 
 > [!IMPORTANT]
-> If you change code in `src/` in a way that weakens any invariant below, treat it as a governance incident until fixed.
+> If you touch code in `src/` that weakens any invariant below, treat it as a **governance incident** until fixed.
 
 ---
 
-## Table of contents
+## Quick navigation
 
 - [Governance header](#governance-header)
-- [Non-negotiables](#1-nonnegotiables-what-must-always-remain-true)
-- [What belongs in `src/` and what does not](#2-what-belongs-in-src-and-what-does-not)
-- [Repo context](#3-repo-context-how-src-fits-the-toplevel-layout)
-- [Canonical directory layout](#4-canonical-directory-layout-the-one-source-of-truth)
-- [Architecture contract](#5-architecture-contract-clean-layers--trust-membrane)
-- [Subsystems](#6-subsystems)
-  - [`src/server/` — Governed API](#61-srcserver--governed-api)
-  - [`src/pipelines/` — Ingestion + promotion + catalogs](#62-srcpipelines--ingestion--promotion--catalogs)
-  - [`src/graph/` — Knowledge graph build/sync](#63-srcgraph--knowledge-graph-buildsync)
-  - [`src/shared/` — Cross-cutting governed helpers](#64-srcshared--crosstutting-governed-helpers)
-- [Evidence, receipts, and provenance](#7-evidence-receipts-and-provenance-first-class)
-- [Policy-as-code integration](#8-policy-as-code-integration-opa)
-- [Testing strategy](#9-testing-strategy-required-test-types)
-- [Local development](#10-local-development-minimum-supported-workflow)
-- [Extension playbooks](#11-how-to-add-things-safely-extension-playbooks)
-- [CI and governance gates](#12-ci--governance-gates-for-src-changes)
-- [Security and secrets](#13-security--secrets-do-not-leak)
-- [Troubleshooting](#14-troubleshooting)
-- [Glossary](#15-glossary)
+- [Keywords and norms](#keywords-and-norms)
+- [What `src/` is responsible for](#what-src-is-responsible-for)
+- [Non-negotiables](#non-negotiables)
+- [Repository context](#repository-context)
+- [Canonical directory layout](#canonical-directory-layout)
+- [Architecture contract](#architecture-contract)
+- [Runtime flows](#runtime-flows)
+- [Evidence, citations, receipts, and provenance](#evidence-citations-receipts-and-provenance)
+- [Policy-as-code](#policy-as-code)
+- [Testing strategy](#testing-strategy)
+- [CI and governance gates](#ci-and-governance-gates)
+- [Local development](#local-development)
+- [Extension playbooks](#extension-playbooks)
+- [Security and secrets](#security-and-secrets)
+- [Operations and observability](#operations-and-observability)
+- [Troubleshooting](#troubleshooting)
+- [Glossary](#glossary)
+- [Governed references](#governed-references)
 
 ---
 
@@ -57,82 +58,113 @@ This is where KFM’s credibility guarantees are enforced in code:
 |---|---|
 | Document | `src/README.md` |
 | Status | **Governed** |
-| Applies to | backend trust membrane, policy enforcement, receipts/catalog emission, evidence/audit contracts |
-| Version | `v2.0.0-draft` |
-| Effective date | 2026-02-15 |
-| Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
-| Review triggers | policy changes, contract/schema changes, promotion logic changes, evidence/audit behavior changes |
+| Scope | Backend trust membrane, policy enforcement, promotion gates, receipts/catalog emission, evidence & audit contracts |
+| Version | `v3.0.0-draft` |
+| Effective date | 2026-02-16 (America/Chicago) |
+| Owners | `.github/CODEOWNERS` *(required; if missing → governance gap)* |
+| Review triggers | Policy changes · Contract/schema changes · Promotion logic changes · Evidence/audit behavior changes · New stores/adapters |
 
 > [!WARNING]
-> **Fail-closed rule:** missing policy input / missing receipts / missing catalogs / missing citations must result in deny/abstain, not best-effort.
+> **Fail-closed rule (always):** missing policy input / missing receipts / missing catalogs / missing citations must result in **deny or abstain**, not best-effort.
 
 ---
 
-## 1. Non-negotiables (what must always remain true)
+## Keywords and norms
+
+This README uses RFC-style keywords:
+
+- **MUST / MUST NOT**: non-negotiable governance requirements
+- **SHOULD / SHOULD NOT**: strong defaults; exceptions require explicit rationale and tests
+- **MAY**: optional or context-dependent behaviors
+
+---
+
+## What `src/` is responsible for
+
+### The promise `src/` must keep
+
+KFM’s backend is not “just an API.” It is a governed system that guarantees:
+
+- **Trust membrane:** the UI and external clients never touch databases or object stores directly.
+- **Fail-closed policy:** policy denial is the default; allow requires proof.
+- **Evidence-first output:** any surfaced claim must resolve to evidence or the system abstains.
+- **Auditability:** every governed path emits an `audit_ref` and stores the decision trace.
+- **Promotion Contract:** only artifacts that pass gates can become “processed truth.”
+- **Determinism:** specs/receipts have stable identities (`spec_hash`) to prevent “truth drift.”
+
+### What belongs in `src/`
+
+✅ **Belongs**
+- Backend runtime (REST; optional GraphQL) including **contracts**, **policy middleware**, **evidence resolution**, and **audit hooks**
+- Pipelines for acquisition, normalization, validation, promotion, catalog/provenance writing
+- Graph build/sync logic and migrations
+- Shared governed helpers used by server/pipelines/graph
+
+❌ **Does not belong**
+- UI code → `web/`
+- Policy source (Rego/OPA bundles) → `policy/`
+- Raw/work/processed data artifacts and catalogs → `data/`
+- CI-only tooling (linters, validators not used at runtime) → `tools/` or `scripts/` (repo-dependent)
+- Story Node content and narratives → `docs/**/story_nodes/**`
+
+> [!TIP]
+> If you’re about to add server logic outside `src/`, stop. `src/` is the canonical home for governed backend behavior.
+
+---
+
+## Non-negotiables
 
 ### System invariants enforced by `src/`
 
-| Invariant | What it means in code | Primary enforcement surface |
-|---|---|---|
-| **No UI direct DB access** | frontend never connects to PostGIS/Neo4j/search/object store | network isolation + API-only exposure via `src/server/` |
-| **Policy evaluates governed requests** | every data/story/AI/evidence request authorized; default deny | `src/server/` policy middleware + policy ports/adapters |
-| **Focus Mode cite-or-abstain** | answer must include resolvable citations or abstain | Focus Mode pipeline + output validator + policy gate |
-| **Audit on the hot path** | governed requests produce `audit_ref` and append audit events | audit port/adapter + ledger |
-| **Promotion Contract gating** | Raw → Work → Processed denies without receipts/checksums/catalogs | `src/pipelines/` promotion gate + CI |
-| **Deterministic spec identity** | governed specs have reproducible `spec_hash` | receipt writer + spec canonicalizer (RFC 8785 JCS) |
-| **Evidence resolution** | citations resolve to evidence views (or deny safely) | evidence resolver endpoints + contract tests |
+| Invariant | Meaning | Failure mode if violated | Primary enforcement surface |
+|---|---|---|---|
+| **No UI direct DB/object access** | Browser never connects to PostGIS/Neo4j/search/object store | bypass of policy + audit | network isolation + API-only exposure |
+| **Default deny** | every governed request is authorized; missing inputs deny | silent data leaks | policy middleware + policy input schema validation |
+| **Cite-or-abstain** | answers/narratives must include resolvable citations or abstain | hallucinated truth | response validator + policy output gate |
+| **Processed-only truth** | the API serves only processed, cataloged artifacts | unverifiable “raw truth” | repository adapters + promotion gates |
+| **Audit on hot path** | responses include `audit_ref`; audit ledger is append-only | no accountability | audit port/adapter + contract tests |
+| **Promotion Contract gating** | raw→work→processed requires receipts + catalogs + checksums | untrusted artifacts promoted | pipeline promotion gate + CI |
+| **Deterministic identity** | canonical spec hashing avoids drift (`spec_hash`) | same “spec” ≠ same hash | spec canonicalizer + receipt writer |
+| **Evidence resolution** | returned citations must resolve via governed endpoints | broken trust UX | evidence resolver endpoints + link checks |
+
+> [!CAUTION]
+> A “temporary bypass” is still a bypass. If you need a bypass to debug, implement a **local-only dev flag** that cannot ship (CI-enforced).
 
 ---
 
-## 2. What belongs in `src/` (and what does not)
+## Repository context
 
-### ✅ Belongs in `src/`
-- API backend (REST; optional GraphQL) including contract definitions and evidence/audit behavior.
-- Pipelines/ETL/promotion logic, including catalog writing (DCAT/STAC/PROV), receipts, and validators.
-- Graph build/sync logic (ontology, migrations, sync jobs).
-- Shared governed libraries used by the above (IDs, time model, provenance/evidence helpers).
-
-### ❌ Does not belong in `src/`
-- UI code → `web/`
-- OPA policies → `policy/`
-- raw/work/processed data → `data/`
-- Story Nodes and governed narratives → `docs/**/story_nodes/**`
-- CI glue and validators that are not runtime code → `tools/` or `scripts/` (repo-dependent)
-
-> If you’re about to add server logic outside `src/`, stop. This is the canonical home.
-
----
-
-## 3. Repo context (how `src/` fits the top-level layout)
-
-KFM is organized so each subsystem has one canonical home:
+KFM is organized so each plane has a canonical home:
 
 ```text
 repo/
-├─ data/        # raw/work/processed + catalogs + checksums
+├─ data/        # raw/work/processed + catalogs + checksums + receipts
 ├─ docs/        # governed docs + templates + Story Nodes
 ├─ src/         # (you are here) server + pipelines + graph + shared
-├─ web/         # React UI (never direct DB access)
+├─ web/         # UI (trust membrane: no direct DB access)
 ├─ policy/      # OPA/Rego policies (default deny)
-├─ tools/       # validators and CI gates (verification tooling)
+├─ tools/       # validators & CI gates (verification tooling)
 ├─ scripts/     # orchestration glue (thin runners; fail-closed)
 └─ .github/     # CI workflows enforcing governance gates
 ```
 
+> [!NOTE]
+> Exact folder names may evolve, but **ownership planes + canonical homes MUST remain stable**.
+
 ---
 
-## 4. Canonical directory layout (the one source of truth)
+## Canonical directory layout
 
-> The exact file names may differ, but the roles and boundaries must hold.
+`src/` is split into four subsystems. This is the **one source of truth** for backend code placement.
 
 ```text
 src/
 ├─ server/                       # governed API gateway + evidence/audit behavior
 │  ├─ contracts/                 # OpenAPI + JSON Schemas (+ optional GraphQL SDL)
-│  ├─ domain/                    # pure entities/value objects + invariants
+│  ├─ domain/                    # pure entities/value objects + invariants (no IO)
 │  ├─ usecases/                  # workflows + business rules (ports only)
 │  ├─ integration/               # ports/contracts + DTOs + schema-bound models
-│  ├─ infrastructure/            # DB clients, HTTP handlers, OPA adapters, repo implementations
+│  ├─ infrastructure/            # DB/HTTP/OPA adapters, repo implementations
 │  ├─ tests/                     # unit/usecase/contract/integration tests
 │  └─ README.md
 │
@@ -147,53 +179,35 @@ src/
 │  ├─ tests/
 │  └─ README.md
 │
-├─ graph/                        # graph build/sync/migrations (derived from processed catalogs)
+├─ graph/                        # graph build/sync/migrations (derived from processed artifacts)
 │  ├─ ontology/
 │  ├─ migrations/
 │  ├─ sync/
 │  ├─ tests/
 │  └─ README.md
 │
-└─ shared/                       # cross-cutting governed helpers (keep small)
+└─ shared/                       # cross-cutting governed helpers (keep small & stable)
    ├─ ids/                       # deterministic ids, hashing, stable identifiers
    ├─ time/                      # time model helpers (intervals, uncertainty)
    ├─ provenance/                # PROV helpers, evidence ref helpers, bundle helpers
+   ├─ policy/                    # shared policy input/output models
    └─ README.md
 ```
 
 ### No duplicates rule (hard)
-- API code lives in `src/server/` only (no parallel `src/api/`).
-- ETL/promotion logic lives in `src/pipelines/` (not scattered across tools/scripts).
+
+- API behavior lives in `src/server/` only (no parallel `src/api/`).
+- ETL/promotion logic lives in `src/pipelines/` (not scattered across `tools/`).
 - Graph schema changes are versioned in `src/graph/migrations/` (no hot patches).
+- Shared helpers remain **minimal** (if it grows, split into subsystem-local libs).
 
 ---
 
-## 5. Architecture contract (clean layers + trust membrane)
+## Architecture contract
 
-### 5.1 Trust membrane (runtime flow)
+KFM uses clean architecture + a strict trust membrane. Dependencies point inward.
 
-```mermaid
-sequenceDiagram
-  participant UI as Web UI (web/)
-  participant API as API Gateway (src/server)
-  participant PDP as Policy PDP (OPA)
-  participant STORES as Stores (PostGIS/Neo4j/Search/Object)
-  participant EV as Evidence Resolver
-  participant AUDIT as Audit Ledger
-
-  UI->>API: Request (data/story/ai) + ViewState
-  API->>PDP: Authorize (default deny)
-  PDP-->>API: allow/deny (+ obligations)
-  API->>STORES: Read/write via repository ports (no bypass)
-  API->>EV: Resolve/attach evidence refs (or return refs for UI)
-  API->>PDP: Validate output (citations + sensitivity)
-  API->>AUDIT: Append audit event; return audit_ref
-  API-->>UI: Response + citations[] + audit_ref
-```
-
-### 5.2 Clean layers (dependency rules)
-
-Dependencies point inward only:
+### Clean layers (dependency rules)
 
 ```mermaid
 flowchart TD
@@ -204,235 +218,346 @@ flowchart TD
 
 Allowed dependencies:
 
-| Layer | May import | Must NOT import |
+| Layer | MAY import | MUST NOT import |
 |---|---|---|
 | Domain | Domain only | usecases/integration/infrastructure/frameworks |
-| Usecases | Domain + Integration ports/DTOs | DB/HTTP/OPA clients |
+| Usecases | Domain + Integration ports | DB/HTTP/OPA clients |
 | Integration | Domain (when needed) | infrastructure implementations |
-| Infrastructure | all above | (respect ports; no business logic leakage) |
+| Infrastructure | all above | (no business logic leakage; respect ports) |
+
+### Trust membrane rule (non-negotiable)
+
+Frontend and external clients **never** access databases or object stores directly. All access goes through:
+1) **API** (governed contracts + validation), and  
+2) **Policy boundary** (default deny), and  
+3) **Evidence + audit** mechanisms.
 
 ---
 
-## 6. Subsystems
+## Runtime flows
 
-## 6.1 `src/server/` — Governed API
+### 1) Governed request (data/story/ai)
 
-### Responsibilities
-- define and serve governed endpoints (REST; optional GraphQL)
-- enforce policy on every governed request (default deny)
-- expose evidence resolution endpoints (refs → human-readable views)
-- emit audit events and return `audit_ref`
-- ensure responses are attributable to processed artifacts + catalogs
+```mermaid
+sequenceDiagram
+  participant UI as Web UI (web/)
+  participant API as API (src/server)
+  participant PDP as Policy PDP (OPA)
+  participant STORES as Stores (PostGIS/Neo4j/Search/Object)
+  participant EV as Evidence Resolver
+  participant AUD as Audit Ledger
 
-### Contract-first (required)
-Contracts live under `src/server/contracts/` and must be tested. Treat contracts as public law.
+  UI->>API: Request + ViewState/context
+  API->>PDP: Authorize (default deny)
+  PDP-->>API: allow/deny + obligations
+  API->>STORES: Access via repository ports (no bypass)
+  API->>EV: Resolve/attach citations (or return resolvable refs)
+  API->>PDP: Validate output (citations + sensitivity + obligations)
+  API->>AUD: Append audit event; return audit_ref
+  API-->>UI: Response + citations[] + audit_ref
+```
 
-Minimum Focus Mode contract (illustrative):
-- `POST /api/v1/ai/query`
-  - request includes `question` + `context` (time range, bbox, active layers, story ids)
-  - response includes `answer_markdown`, `citations[]`, `audit_ref`
-  - if insufficient evidence: abstain + `audit_ref`
+### 2) Pipeline promotion (raw → work → processed)
+
+```mermaid
+flowchart LR
+  RAW[Raw Zone<br/>immutable capture] --> WORK[Work Zone<br/>run-scoped transforms]
+  WORK -->|Validation gates| GATE{Promotion Contract}
+  GATE -->|pass| PROC[Processed Zone<br/>servable truth]
+  GATE -->|fail| HOLD[Blocked<br/>fix inputs or transforms]
+
+  PROC --> CAT[Catalogs<br/>DCAT/STAC/PROV]
+  PROC --> RCP[Receipts<br/>run_record + validation_report + run_manifest]
+  CAT --> API2[Served via API only]
+  RCP --> API2
+```
+
+**Rule:** If the Promotion Contract can’t prove promotability, promotion MUST fail.
+
+### 3) Graph build/sync (derived only)
+
+```mermaid
+flowchart TB
+  PROC2[Processed artifacts + catalogs] --> EX[Extract entities/relations]
+  EX --> MIG[Apply versioned migrations]
+  MIG --> SYNC[Sync to graph store]
+  SYNC --> CHECKS[Integrity checks]
+  CHECKS -->|pass| READY[Graph ready for queries]
+  CHECKS -->|fail| STOP[Stop + emit failure receipt]
+```
+
+---
+
+## Evidence, citations, receipts, and provenance
+
+### Evidence is first-class (not an afterthought)
+
+KFM treats provenance as queryable data. Every user-visible claim should be traceable to:
+- a **processed artifact**
+- a **catalog entry** (DCAT/STAC) and **lineage** (PROV)
+- a **receipt** (run_record/run_manifest) and **checksums**
+- an **audit event** (`audit_ref`) tying the request to the served evidence
+
+### Citation contract (minimum)
+
+A citation is a resolvable reference—not a freeform string.
+
+**Minimum fields (illustrative):**
+```json
+{
+  "ref": "stac://kfm/catalog/collections/landsat/items/LC08_...#asset=visual",
+  "label": "Landsat 8 scene (visual)",
+  "locator": {
+    "page": 3,
+    "bbox": [-100.2, 38.6, -99.9, 38.8],
+    "time": "1936-01-01/1936-12-31"
+  },
+  "confidence": "high"
+}
+```
 
 ### Evidence resolution requirement
-Any `citation.ref` returned by the API must be resolvable through governed endpoints for supported schemes:
-- `prov://`, `stac://`, `dcat://`, `doc://`, `graph://` (+ optional `oci://` bundles)
+
+Every `citation.ref` returned by the API **MUST** be resolvable through governed endpoints for supported schemes.
+
+Recommended supported schemes (expand as needed):
+- `prov://` — provenance bundles/entities
+- `stac://` — STAC catalog objects
+- `dcat://` — DCAT datasets/distributions
+- `doc://` — governed documents & Story Nodes
+- `graph://` — graph entities/paths (with provenance links)
+- `oci://` — optional immutable bundles in OCI artifact stores
+
+> [!IMPORTANT]
+> If a citation cannot be resolved, the response is invalid and MUST be rejected (deny/abstain).
+
+### Receipts (Promotion Contract proofs)
+
+Pipelines MUST emit, at minimum:
+
+- `run_record.json` — inputs/outputs, environment, code identity, refs
+- `validation_report.json` — pass/fail for each gate with details
+- `run_manifest.json` — promotion receipt; merge/publish blocker
+- `checksums.*` — cryptographic digests for artifacts and catalogs
+
+### Deterministic spec identity (`spec_hash`)
+
+To prevent “same spec, different hash” drift:
+- specs MUST be canonicalized deterministically (e.g., JSON canonicalization)
+- hashes MUST be stable across environments
+- receipts MUST include both spec and spec hash
 
 ---
 
-## 6.2 `src/pipelines/` — Ingestion + promotion + catalogs
-
-### Responsibilities
-- discover/acquire sources (connectors)
-- normalize/enrich deterministically
-- validate schema/geo/time/license/policy prerequisites
-- emit receipts (run_record + run_manifest) and checksums
-- promote raw/work → processed only when Promotion Contract gates pass
-- emit catalogs (DCAT always; STAC conditional; PROV required)
-- drive downstream refresh triggers from canonical catalogs (search/graph/vector)
-
-### Promotion gates (non-negotiable)
-Promotion denies unless:
-- license present
-- sensitivity classification present
-- schema/geo/time checks pass
-- checksums computed and verified
-- DCAT validates (required)
-- STAC validates when spatial assets exist
-- PROV validates (required lineage)
-- audit event recorded (promotion event)
-
-### Receipts
-Pipelines must emit:
-- `run_record.json` (inputs/outputs + code identity + refs)
-- `validation_report.json` (pass/fail for gates)
-- `run_manifest.json` (Promotion Contract receipt; merge/publish blocker)
-
----
-
-## 6.3 `src/graph/` — Knowledge graph build/sync
-
-### Responsibilities
-- ontology and mappings
-- versioned migrations (reviewable, repeatable)
-- sync jobs driven by processed datasets and catalogs
-- integrity checks (constraints, no orphan types, controlled schema evolution)
-
-### Data placement rule
-Static import data belongs under `data/graph/` (or another data zone), not in `src/graph/`.
-
----
-
-## 6.4 `src/shared/` — Crosstutting governed helpers
-
-Keep shared helpers small and stable:
-- deterministic id generation and hashing
-- time model utilities
-- provenance helpers and evidence ref utilities
-- receipt/canonicalization helpers (shared across pipelines/server)
-
----
-
-## 7. Evidence, receipts, and provenance (first-class)
-
-KFM treats provenance as queryable, first-class data.
-
-### Catalog standards (pipelines emit; server serves)
-- DCAT: discovery + licensing + restrictions + distributions
-- STAC: spatial assets and extents (when applicable)
-- PROV: lineage chain linking raw → processed outputs
-
-### Audit ledger
-Audit is append-only and supports `audit_ref` lookups for:
-- API responses (data/story/ai/evidence)
-- pipeline promotions
-- policy denials (for regression tracking)
-
----
-
-## 8. Policy-as-code integration (OPA)
+## Policy-as-code
 
 ### Fail-closed expectations
-- default deny
-- enforce role-based access, field-level redactions, sensitivity classes
-- enforce sensitive-location precision suppression/generalization
-- enforce cite-or-abstain for Focus Mode outputs
 
-### Regression suite (non-negotiable)
-Policy changes must include regression tests:
-- prior leak patterns must fail forever
-- negative tests for sensitive-location precision
-- field-level redaction tests (owner names, small counts, exact coords)
-- audit integrity expectations (`audit_ref` always; evidence refs attached)
+- Default deny
+- Enforce role-based access + sensitivity rules
+- Enforce output obligations (redaction/generalization)
+- Enforce cite-or-abstain for Focus Mode and Story Nodes
+- Enforce evidence resolution (no “dangling citations”)
+
+### Obligations pattern (recommended)
+
+Policy decisions SHOULD return:
+- allow/deny
+- obligations (what the response MUST do)
+- redaction directives (fields/geometries/time precision)
+- audit metadata requirements
+
+> [!NOTE]
+> Treat obligations as part of the contract: ignoring them is a governance bug.
 
 ---
 
-## 9. Testing strategy (required test types)
+## Testing strategy
 
-Minimum bar for `src/` changes: unit + usecase + contract + integration coverage.
+Minimum bar for changes under `src/`: **unit + usecase + contract + integration**.
 
-| Area | Test type | What it proves |
+| Area | Test type | Proves |
 |---|---|---|
-| Domain | unit | invariants hold |
-| Usecases | unit/usecase with mocked ports | business rules without infra coupling |
-| Contracts | contract/schema | request/response stability; governed DTOs |
-| Infrastructure | integration + smoke | DB/OPA wiring works; audit/evidence emitted |
+| Domain | unit tests | invariants hold without IO |
+| Usecases | unit/usecase tests with mocked ports | business logic is correct and portable |
+| Contracts | schema/contract tests | requests/responses are stable and validated |
+| Infrastructure | integration tests | DB/OPA/audit wiring works; no bypass paths |
+| Pipelines | validation + golden tests | promotion gates fail correctly; receipts/catalogs are correct |
+| Evidence | resolver tests | citations resolve; broken links fail closed |
+
+> [!TIP]
+> Tests are part of governance. A missing negative test is a future leak.
 
 ---
 
-## 10. Local development (minimum supported workflow)
+## CI and governance gates
 
-Canonical local dev workflow uses Docker Compose.
+Any PR touching `src/` SHOULD be merge-blocked on:
 
-1) `cp .env.example .env`  
-2) `docker compose up --build`  
-3) verify:
+- ✅ unit tests (domain + usecases)
+- ✅ contract/schema validation (OpenAPI + JSON Schemas)
+- ✅ policy regression suite (default deny, redactions, cite-or-abstain)
+- ✅ pipeline validation (catalog/prov validity; receipts present)
+- ✅ architecture lint (no forbidden imports; no layer violations)
+- ✅ supply-chain hygiene (pinned actions; dependency scanning; secret scanning)
+- ✅ integration smoke tests (DB + policy engine reachable)
+
+> [!WARNING]
+> If you can’t explain how your change preserves **fail-closed** and **cite-or-abstain**, you’re not done.
+
+---
+
+## Local development
+
+The canonical local dev target is a containerized stack (e.g., Compose) that includes:
+- API service
+- UI (optional, for end-to-end testing)
+- PostGIS
+- Graph store (e.g., Neo4j)
+- Policy PDP (OPA)
+- Search/index service (optional)
+
+Minimum workflow (illustrative):
+
+1. `cp .env.example .env`  
+2. `docker compose up --build`  
+3. Verify:
    - API docs: `http://localhost:8000/docs`
    - UI: `http://localhost:3000`
 
-Baseline services commonly include:
-- `api`, `web`, `db` (PostGIS), `graph` (Neo4j), optional policy/search/vector services
+> [!NOTE]
+> If the repo does not provide a runnable compose baseline yet, treat that as a **P0 gap** and prioritize it.
 
 ---
 
-## 11. How to add things safely (extension playbooks)
+## Extension playbooks
 
-### 11.1 Add a new dataset connector (pipelines) — DoD
-- connector implemented + registered (registry-driven)
-- raw manifest + checksums deterministic
-- normalization emits canonical schema and/or STAC assets
-- validation gates enforced in CI
-- receipts emitted (run_record + validation_report + run_manifest)
-- catalogs emitted (DCAT always; STAC conditional; PROV required) and link-check clean
-- policy labels applied; redaction/generalization where required
-- representative API contract test passes
-- backfill strategy documented
+<details>
+<summary><strong>Playbook A — Add a new dataset connector (pipelines)</strong></summary>
 
-### 11.2 Add/change an API endpoint (server) — checklist
-- update contract in `src/server/contracts/`
-- add request/response schema validation
-- implement a port-driven use case
-- implement infrastructure adapters behind ports
-- add/adjust policy rules + policy tests (default deny)
-- ensure response includes evidence refs and `audit_ref`
-- add/adjust contract + integration tests
+### Definition of Done
 
-### 11.3 Change the graph schema (graph) — checklist
-- versioned migration in `src/graph/migrations/`
-- update ontology mappings
-- add integrity checks
-- validate in CI/smoke environment
+- [ ] Connector implemented + registered (registry-driven)
+- [ ] Raw capture is immutable; filenames are deterministic
+- [ ] Checksums computed and verified
+- [ ] Normalization produces canonical schema (and STAC assets when spatial)
+- [ ] Validation gates pass (schema/geo/time/license/sensitivity/policy labels)
+- [ ] Receipts emitted (`run_record`, `validation_report`, `run_manifest`)
+- [ ] Catalogs emitted (DCAT always; STAC conditional; PROV required)
+- [ ] Link-check clean (no broken catalog/prov refs)
+- [ ] Promotion gate enforces fail-closed (missing proof = blocked)
+- [ ] Representative API contract test passes
+- [ ] Backfill/refresh cadence documented + tested (at least a dry-run)
 
----
+</details>
 
-## 12. CI / governance gates for `src/` changes
+<details>
+<summary><strong>Playbook B — Add/change an API endpoint (server)</strong></summary>
 
-Any PR touching `src/` should pass:
-- unit tests (domain + usecases)
-- contract/schema tests (OpenAPI/JSON Schemas)
-- integration tests (DB + OPA + search/graph wiring)
-- architecture lint (no forbidden imports/layer violations)
-- policy regression suite (if policy-sensitive behavior changes)
-- catalog/provenance validation (if pipelines emit catalogs)
-- receipts validation (run_manifest + checksums + spec_hash semantics)
+### Checklist
 
-> [!WARNING]
-> If you can’t explain how your change preserves cite-or-abstain and fail-closed behavior, you’re not done.
+- [ ] Update contract in `src/server/contracts/` (OpenAPI/Schema-first)
+- [ ] Validate request/response against schemas at runtime
+- [ ] Implement port-driven use case (no direct DB calls)
+- [ ] Implement infrastructure adapter behind ports
+- [ ] Add/adjust policy rules + regression tests (default deny)
+- [ ] Ensure response includes citations (or abstains) + `audit_ref`
+- [ ] Add contract tests + integration tests
+- [ ] Add observability hooks (metrics/traces) without leaking sensitive payloads
 
----
+</details>
 
-## 13. Security & secrets (do not leak)
+<details>
+<summary><strong>Playbook C — Change graph schema (graph)</strong></summary>
 
-Rules:
-- never commit secrets (keys, tokens, upstream creds)
-- inject secrets via secret manager / CI secrets
-- do not log secrets or sensitive payloads
-- respect provider rate limits; implement backoff; avoid scraping patterns that violate terms
+### Checklist
+
+- [ ] Create versioned migration in `src/graph/migrations/`
+- [ ] Update ontology mappings and constraints
+- [ ] Provide a rollback strategy (when feasible)
+- [ ] Add integrity checks (no orphan nodes, required relationships)
+- [ ] Validate in CI with a smoke dataset and receipts
+
+</details>
 
 ---
 
-## 14. Troubleshooting
+## Security and secrets
+
+### Repository + CI security expectations
+
+- Branch protection + required reviews for governed paths
+- Least privilege for CI tokens (read-only by default; elevate only per job)
+- Secret scanning enabled; rotate immediately if leaked
+- Pin third-party CI actions to commit SHAs (supply-chain hardening)
+- Avoid dangerous CI triggers for untrusted code (e.g., treat `pull_request_target` with caution)
+
+### Runtime security expectations
+
+- Never log secrets or sensitive payloads
+- Apply rate limits and abuse controls at the API boundary
+- Treat all Focus Mode and “server action” inputs as untrusted; validate and authorize
+- Redaction/generalization is a first-class transformation (not a UI concern)
+
+---
+
+## Operations and observability
+
+Recommended signals to emit from `src/`:
+
+- **Audit events**: append-only, queryable by `audit_ref`
+- **Policy decisions**: allow/deny counts, obligation types, denial reasons (non-sensitive)
+- **Promotion outcomes**: pass/fail by gate; time-to-promote; dataset freshness
+- **Evidence resolution health**: broken refs, latency, cache hit rates
+- **API health**: request latency, errors, SLOs by endpoint
+
+> [!IMPORTANT]
+> Observability MUST NOT become a data leak. Prefer structured, redacted logs and metrics.
+
+---
+
+## Troubleshooting
 
 Common failure modes:
-- policy denies everything: confirm PDP reachable; ensure required input keys; deny-by-default is correct
-- Focus Mode returns no citations: output validator/policy should deny; fix evidence pack and citations
-- promotion blocked: open validation report; missing license/sensitivity/receipts/catalogs are hard stops
-- graph migrations drift: ensure single migration path; never hot patch without provenance and versioning
+
+- **Policy denies everything**: verify PDP reachable; confirm required policy input keys; default deny is correct.
+- **Focus Mode returns no citations**: response validator/policy should abstain; fix retrieval constraints and evidence packing.
+- **Promotion blocked**: inspect `validation_report.json`; missing license/sensitivity/receipts/catalogs are hard stops.
+- **Broken evidence links**: run link-check; any unresolved citation ref is a merge blocker.
+- **Graph drift**: ensure a single migration path; never hot patch without a migration + provenance.
 
 ---
 
-## 15. Glossary
+## Glossary
 
-- Trust membrane: governed boundary enforcing API+policy mediation for all access.
-- Promotion Contract: required proofs before artifacts become processed/servable.
-- Receipts: run_record + run_manifest + validation report + checksums proving reproducibility.
-- `spec_hash`: deterministic spec identity (`sha256(JCS(spec))` using RFC 8785).
-- Cite-or-abstain: Focus Mode rule to cite resolvable evidence or abstain.
-- Audit ledger: append-only log producing `audit_ref`.
+- **Trust membrane**: the governed boundary enforcing API+policy mediation for all access.
+- **Fail-closed**: if proof is missing, deny/abstain rather than guessing.
+- **Promotion Contract**: required proofs before artifacts become processed/servable.
+- **Receipts**: run_record + validation report + run_manifest + checksums proving reproducibility.
+- **`spec_hash`**: deterministic spec identity (stable hashing of canonicalized specs).
+- **Cite-or-abstain**: rule that answers must cite resolvable evidence or abstain.
+- **Audit ledger**: append-only log producing `audit_ref`.
 
 ---
 
-### References (governed design sources)
+## Governed references
 
-- KFM Next-Gen Blueprint & Primary Guide (internal, 2026-02-12)
-- KFM Comprehensive Data Source Integration Blueprint (internal, 2026-02-12)
-- KFM Feb-2026 integration patterns (spec_hash, digest pinning, receipts, acceptance harness)
+These are design-authority sources for the contracts described above:
+
+- KFM Next-Generation Blueprint & Primary Guide :contentReference[oaicite:0]{index=0}  
+- KFM Comprehensive Data Source Integration Blueprint :contentReference[oaicite:1]{index=1}  
+- Kansas Frontier Matrix Project Blueprint :contentReference[oaicite:2]{index=2}  
+- Kansas Frontier Matrix Companion Blueprint :contentReference[oaicite:3]{index=3}  
+- KFM Cultivated Integration Ideas (thin slices + DoD packs) :contentReference[oaicite:4]{index=4}  
+- KFM Master Corpus Consolidation & Build-Integration Specification :contentReference[oaicite:5]{index=5}  
+- Kansas Frontier Matrix System Audit and Expansion Report :contentReference[oaicite:6]{index=6}  
+- Massive Gap-Filling Diagnosis for Kansas Frontier Matrix :contentReference[oaicite:7]{index=7}  
+- Software Security Guide for Developers (2026 Edition) — Expanded Sections :contentReference[oaicite:8]{index=8}  
+- RESTful Web Services (Richardson & Ruby) :contentReference[oaicite:9]{index=9}  
+- Professional Markdown Guide for GitHub Documentation :contentReference[oaicite:10]{index=10}  
+
+---
+
+### Back to top
+
+[⬆️ Back to top](#-kfm-src--governed-backend-api-pipelines-knowledge-graph)
