@@ -95,25 +95,30 @@ flowchart LR
 
 ```text
 web/src/
-  app/                    # App shell: providers, routing, layout, global state wiring
-  features/               # Vertical slices (preferred)
-    map/                  # MapLibre/Cesium adapters, layer registry, legend, popups
-    timeline/             # Time slider, playback, temporal filters
-    story/                # Story Node reader, story index, story-to-map choreography
-    focus/                # Focus Mode panel: Q&A + citations + audit/explain UI
-    provenance/           # Provenance timeline, "how do we know?" drawers
-  shared/
-    components/           # Design-system-ish shared UI components
-    hooks/                # Reusable hooks (useDebounce, useHotkeys, etc.)
-    types/                # Shared TS types (EvidenceRef, DatasetRef, etc.)
-    utils/                # Pure utilities (formatters, guards, etc.)
-  services/
-    api/                  # API client(s): fetch wrappers, typed endpoints, error handling
-    evidence/             # Citation resolver client + evidence view models
-  styles/                 # Global styles/tokens (prefer tokens + component scoping)
-  assets/                 # Static assets (icons, images)
-  main.tsx|index.tsx       # Entrypoint (depends on bundler)
-  App.tsx                  # Root component / router shell
+├─ app/                               # App shell: providers, routing, layout, global wiring (no feature logic)
+│
+├─ features/                          # Vertical slices (preferred: each owns UI + state + contracts for its domain)
+│  ├─ map/                            # Map adapters (MapLibre/Cesium), layer registry, legend, popups, inspect tools
+│  ├─ timeline/                       # Time slider/playback + temporal filters (shared time state boundaries)
+│  ├─ story/                          # Story Node reader/index + story↔map choreography
+│  ├─ focus/                          # Focus Mode panel: Q&A + citations + audit/explain surfaces
+│  └─ provenance/                     # Provenance views: “how do we know?” drawers + lineage timelines
+│
+├─ shared/                            # Cross-feature UI primitives (pure + reusable)
+│  ├─ components/                     # Design-system-ish components (buttons, panels, drawers, tables, toasts)
+│  ├─ hooks/                          # Reusable hooks (useDebounce, useHotkeys, etc.)
+│  ├─ types/                          # Shared TS types (EvidenceRef, DatasetRef, ViewState, etc.)
+│  └─ utils/                          # Pure utilities (formatters, guards, normalizers)
+│
+├─ services/                          # ✅ Network boundary (trust membrane in code)
+│  ├─ api/                            # API clients: fetch wrappers, typed endpoints, error handling, timeouts
+│  └─ evidence/                       # Citation resolver client + evidence view models (bounded fanout)
+│
+├─ styles/                            # Global styles/tokens (prefer tokens + component scoping)
+├─ assets/                            # Static assets (icons/images used by the app)
+│
+├─ main.tsx | index.tsx               # Entrypoint (depends on bundler)
+└─ App.tsx                            # Root component / router shell
 ```
 
 ### “Where should this code go?” decision table
