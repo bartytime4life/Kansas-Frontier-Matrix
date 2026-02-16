@@ -709,18 +709,52 @@ Before merging pipeline changes:
 
 ## Sources and provenance for this README
 
-This README is derived and expanded from KFM governed architecture and integration materials and aligned security/documentation guidance:
+This README is derived and expanded from KFM governed architecture and integration materials and aligned security/documentation guidance.
 
-- KFM Next-Generation Blueprint & Primary Guide (draft, 2026-02-12). :contentReference[oaicite:0]{index=0}  
-- KFM Comprehensive Data Source Integration Blueprint (v1.0, 2026-02-12). :contentReference[oaicite:1]{index=1}  
-- Kansas Frontier Matrix Project Blueprint (governance-first system framing). :contentReference[oaicite:2]{index=2}  
-- Kansas Frontier Matrix Companion Blueprint (implementation patterns + enforcement loop). :contentReference[oaicite:3]{index=3}  
-- KFM Cultivated Integration Ideas (thin-slice modules: catalogs, validation, provenance, sensitivity). :contentReference[oaicite:4]{index=4}  
-- Massive Gap-Filling Diagnosis (contract vs enforcement gap framing). :contentReference[oaicite:5]{index=5}  
-- Software Security Guide for Developers (2026 Edition) – Expanded Sections (GitHub/CI supply-chain controls). :contentReference[oaicite:6]{index=6}  
-- Professional Markdown Guide (formatting and maintainability practices). :contentReference[oaicite:7]{index=7}  
-- KFM Data Sources inventory (dataset integration targets and licensing constraints). :contentReference[oaicite:8]{index=8}  
-- Focus Mode and Story Mode design references (cite-or-abstain and evidence UX requirements). :contentReference[oaicite:9]{index=9} :contentReference[oaicite:10]{index=10}  
-- Master corpus consolidation spec (schemas + governance-made-physical approach). :contentReference[oaicite:11]{index=11}  
+> [!IMPORTANT]
+> **Reference hygiene:** pin each referenced document by **filename + sha256** in a reference manifest (example: `docs/references/manifest.yml`).  
+> If a referenced document is missing, treat it as a **governance gap** and **fail closed** on promotion.
+
+### Primary KFM internal references
+
+- KFM Comprehensive Data Source Integration Blueprint (v1.0, 2026-02-12).[^kfm_dsi]
+- KFM Next‑Generation Blueprint & Primary Guide (v1.1 draft; prepared 2026-02-12).[^kfm_nextgen]
+- Kansas Frontier Matrix System Audit and Expansion Report (date not confirmed in repo).[^kfm_audit]
+- Kansas Frontier Matrix Project Blueprint (date not confirmed in repo).[^kfm_proj]
+- KFM Integration Ideas / Unified Technical Blueprint & Supporting Ideas (date not confirmed in repo).[^kfm_ideas]
+- KFM Master Corpus Consolidation and Build‑Integration Specification (date not confirmed in repo).[^kfm_mcc]
+
+### UX + narrative system references
+
+- Focus Mode design reference (cite‑or‑abstain, evidence UX constraints).[^kfm_focus]
+- Story Mode design reference (Story Nodes and narrative constraints).[^kfm_story]
+
+### Supporting guidance (implementation + documentation)
+
+- Software Security Guide for Developers (2026 Edition) – Expanded Sections.[^sec_guide]
+- Professional Markdown Guide for GitHub Documentation.[^md_guide]
+- KFM Data Sources inventory (governed internal reference for dataset targets and constraints).[^kfm_sources]
+
+### Standards used by this README (normative)
+
+- DCAT (Data Catalog Vocabulary)
+- STAC (SpatioTemporal Asset Catalog)
+- PROV-O (W3C Provenance Ontology)
+- RFC 8785 (JSON Canonicalization Scheme, JCS)
+- OPA/Rego (policy-as-code default deny patterns)
+
+---
+
+[^kfm_dsi]: Internal PDF: `KFM_Comprehensive_Data_Source_Integration_Blueprint_v1_massive.pdf` (Version 1.0, 2026‑02‑12). *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_nextgen]: Internal PDF: `KFM_NextGen_Blueprint_and_Primary_Guide_v1_2_EXPANSIVE_TOC.pdf` (v1.1 draft; prepared 2026‑02‑12). *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_audit]: Internal PDF: `Kansas Frontier Matrix System Audit and Expansion Report.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_proj]: Internal PDF: `Kansas Frontier Matrix Project Blueprint.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_ideas]: Internal PDF: `Kansas Frontier Matrix (KFM) - Unified Technical Bluprint & Supporting Ideas.pdf` (title spelling as provided). *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_mcc]: Internal PDF: `KFM Master Corpus Consolidation and Build-Integration Specification.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_focus]: Internal PDF: `Deep Research Report on Craft KFM Focus Mode.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_story]: Internal PDF: `Crafting a Comprehensive Story Mode for the KFM Spatio-Temporal Mapping Platform.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^sec_guide]: Internal PDF: `Software Security Guide for Developers (2026 Edition) – Expanded Sections.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^md_guide]: Internal PDF: `Professional Markdown Guide for GitHub Documentation.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
+[^kfm_sources]: Internal PDF: `KFM Data Sources.pdf`. *(Repo path not confirmed; recommended location: `docs/references/`.)*
 
 ---
