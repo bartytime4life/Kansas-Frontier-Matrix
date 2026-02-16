@@ -41,6 +41,8 @@ If you change meaning (not just phrasing), route through the governance review p
 
 ---
 
+<a id="table-of-contents"></a>
+
 ## Table of contents 📚
 
 - [Non-negotiables](#non-negotiables)
@@ -63,6 +65,8 @@ If you change meaning (not just phrasing), route through the governance review p
 - [References](#references)
 
 ---
+
+<a id="non-negotiables"></a>
 
 ## Non-negotiables ✅
 
@@ -110,6 +114,8 @@ KFM uses deterministic spec hashing for governed specs:
 
 ---
 
+<a id="what-lives-in-infra"></a>
+
 ## What lives in `infra/` 🧰
 
 This folder covers everything needed to operate KFM safely in dev/stage/prod:
@@ -127,6 +133,8 @@ This folder covers everything needed to operate KFM safely in dev/stage/prod:
 
 ---
 
+<a id="authority-ladder"></a>
+
 ## Authority ladder
 
 If documents or implementation disagree, use this ordering:
@@ -141,6 +149,8 @@ If documents or implementation disagree, use this ordering:
 > If a conflict requires a behavior change, file an ADR and update contracts + tests before relaxing enforcement.
 
 ---
+
+<a id="architecture-overview"></a>
 
 ## Architecture overview 🗺️
 
@@ -183,6 +193,8 @@ flowchart LR
 ```
 
 ---
+
+<a id="repository-and-directory-layout"></a>
 
 ## Repository and directory layout 🗂️
 
@@ -280,6 +292,8 @@ infra/                                               # GitOps + platform + app d
 
 ---
 
+<a id="environments"></a>
+
 ## Environments 🌎
 
 > [!NOTE]
@@ -292,6 +306,8 @@ infra/                                               # GitOps + platform + app d
 | `prod` | real users | governed + audited | highest restrictions + approvals |
 
 ---
+
+<a id="gitops-delivery-model"></a>
 
 ## GitOps delivery model 🔁
 
@@ -312,6 +328,8 @@ Promote by changing overlays (or values) via PR:
 **Prefer digest pinning** for images and governance-critical artifacts where supported.
 
 ---
+
+<a id="ci-and-acceptance-harness"></a>
 
 ## CI and acceptance harness 🧪
 
@@ -336,6 +354,8 @@ Promote by changing overlays (or values) via PR:
 Recommended: pin tool versions in `infra/ci/tools.lock` to prevent silent behavior drift.
 
 ---
+
+<a id="evidence-bundles-and-canonical-addressing"></a>
 
 ## Evidence bundles and canonical addressing 📦
 
@@ -367,6 +387,8 @@ Recommended: pin tool versions in `infra/ci/tools.lock` to prevent silent behavi
 
 ---
 
+<a id="platform-foundations"></a>
+
 ## Platform foundations 🏗️
 
 ### Networking / ingress / egress 🌐
@@ -395,6 +417,8 @@ Separate:
 > Storage changes can be hard to reverse. Any storage class migration requires a rollback and restore plan.
 
 ---
+
+<a id="security-and-compliance"></a>
 
 ## Security and compliance 🛡️
 
@@ -430,6 +454,8 @@ Adopt incrementally, but design hooks now:
 
 ---
 
+<a id="observability-and-slos"></a>
+
 ## Observability and SLOs 📈
 
 ### What we measure (minimum)
@@ -455,6 +481,8 @@ Adopt incrementally, but design hooks now:
 
 ---
 
+<a id="backups-and-disaster-recovery"></a>
+
 ## Backups and disaster recovery 🧯
 
 > [!IMPORTANT]
@@ -477,6 +505,8 @@ Adopt incrementally, but design hooks now:
 
 ---
 
+<a id="emergency-controls"></a>
+
 ## Emergency controls 🧯🛑
 
 > [!IMPORTANT]
@@ -492,6 +522,8 @@ Common controls (implementation-specific):
 Runbook path (recommended): `infra/runbooks/incident-response/emergency-deny-switch.md`
 
 ---
+
+<a id="operations-runbooks"></a>
 
 ## Operations runbooks 📓
 
@@ -512,6 +544,8 @@ Runbook path (recommended): `infra/runbooks/incident-response/emergency-deny-swi
 </details>
 
 ---
+
+<a id="change-management"></a>
 
 ## Change management 🔀
 
@@ -535,6 +569,8 @@ Runbook path (recommended): `infra/runbooks/incident-response/emergency-deny-swi
 
 ---
 
+<a id="glossary"></a>
+
 ## Glossary 🧠
 
 | Term | Meaning |
@@ -550,6 +586,8 @@ Runbook path (recommended): `infra/runbooks/incident-response/emergency-deny-swi
 | GitOps | reconcile desired state from Git; drift correction |
 
 ---
+
+<a id="references"></a>
 
 ## References 🔗
 
