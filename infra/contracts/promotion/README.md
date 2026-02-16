@@ -1,29 +1,3 @@
----
-title: "Promotion Contracts — Promotion Manifest + Gate Verdict"
-path: "infra/contracts/promotion/README.md"
-version: "v1.0.0"
-last_updated: "2026-02-16"
-status: "draft"
-doc_kind: "Contract README"
-license: "CC-BY-4.0"
-
-# Profile versions (if applicable)
-markdown_protocol_version: "1.0"
-pipeline_contract_version: "TBD"
-promotion_contract_version: "v1"
-
-# Governance + sensitivity flags
-fair_category: "FAIR+CARE"
-care_label: "TBD"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US"
-
-doc_uuid: "urn:kfm:doc:infra:contracts:promotion:readme:v1.0.0"
-commit_sha: "TBD"
-doc_integrity_checksum: "sha256:TBD"
----
-
 # 🏁 Promotion Contracts (Governed Promotion Gate)
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
