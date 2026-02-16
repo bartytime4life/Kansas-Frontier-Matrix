@@ -97,25 +97,30 @@ These are KFM system-level guarantees. Graph migrations **must not** violate the
 Recommended layout:
 
 ```text
-src/graph/migrations/
-├── README.md
-├── versioned/                 # ordered, one-time migrations
-│   ├── 20260214T120000Z__init_prov_graph.cypher
-│   ├── 20260216T091500Z__add_vector_index_chunks.cypher
-│   └── 20260218T203000Z__backfill_entity_canonical_ids.cypher
-├── repeatable/                # re-runnable migrations (idempotent), e.g. views/derived structures
-│   ├── R__refresh_materialized_edges.cypher
-│   └── R__rebuild_search_projection.cypher
-├── fixtures/                  # tiny deterministic graph fixtures for CI tests
-│   ├── fixture_min_prov.cypher
-│   └── fixture_storynode_smoke.cypher
-├── contracts/                 # schema & receipt contracts (JSON Schema, docs) used by CI
-│   ├── migration_receipt.schema.json
-│   └── graph_schema_expectations.md
-└── runner/                    # migration runner / CLI (TS/JS), if migrations are executed programmatically
-    ├── cli.ts
-    ├── run.ts
-    └── checksum.ts
+src/graph/migrations/                               # Neo4j/Cypher migrations (deterministic, auditable, CI-validated)
+├─ README.md                                        # How migrations run, ordering rules, receipts, and rollback guidance
+│
+├─ versioned/                                       # One-time, ordered migrations (append-only)
+│  ├─ 20260214T120000Z__init_prov_graph.cypher       # Initialize PROV graph primitives/constraints
+│  ├─ 20260216T091500Z__add_vector_index_chunks.cypher # Add vector index/projection for chunks (if used)
+│  └─ 20260218T203000Z__backfill_entity_canonical_ids.cypher # Backfill canonical IDs (stable refs)
+│
+├─ repeatable/                                      # Re-runnable, idempotent migrations (derived structures/views)
+│  ├─ R__refresh_materialized_edges.cypher           # Refresh derived/materialized edges (must be safe to rerun)
+│  └─ R__rebuild_search_projection.cypher            # Rebuild search projection/index (idempotent)
+│
+├─ fixtures/                                        # Tiny deterministic graph fixtures for CI tests (synthetic; safe)
+│  ├─ fixture_min_prov.cypher                        # Minimal PROV fixture (smoke + constraint checks)
+│  └─ fixture_storynode_smoke.cypher                 # Story node linkage fixture (smoke path)
+│
+├─ contracts/                                       # CI contracts for migration execution + expected graph shape
+│  ├─ migration_receipt.schema.json                  # Receipt schema for a migration run (inputs, checksums, outcomes)
+│  └─ graph_schema_expectations.md                   # Human-readable expectations (labels, rels, constraints, indexes)
+│
+└─ runner/                                          # Migration runner/CLI (when executed programmatically)
+   ├─ cli.ts                                         # CLI entrypoint (commands: plan/apply/verify)
+   ├─ run.ts                                         # Execution engine (ordering, retries, receipts, fail-closed)
+   └─ checksum.ts                                    # Checksum/digest utilities (detect drift + ensure immutability)
 ```
 
 ---
