@@ -371,12 +371,12 @@ KFM’s truth path is:
 
 ```mermaid
 flowchart LR
-  A[Raw Zone\nimmutable capture] --> B[Work Zone\nreproducible intermediates]
-  B -->|Promotion Contract\n(run_manifest + catalogs + checksums)| C[Processed Zone\npublishable truth]
-  C --> D[Catalogs\nDCAT / STAC / PROV]
-  D --> E[Stores\nPostGIS / Graph / Search / Object]
-  E --> F[API Gateway + Policy\n(trust membrane)]
-  F --> G[UI / Story Nodes / Focus Mode]
+  A["Raw Zone (immutable capture)"] --> B["Work Zone (reproducible intermediates)"]
+  B -->|"Promotion Contract (run_manifest + catalogs + checksums)"| C["Processed Zone (publishable truth)"]
+  C --> D["Catalogs (DCAT / STAC / PROV)"]
+  D --> E["Stores (PostGIS / Graph / Search / Object)"]
+  E --> F["API Gateway + Policy (trust membrane)"]
+  F --> G["UI / Story Nodes / Focus Mode"]
 ```
 
 ### Zone semantics
