@@ -6,7 +6,7 @@ If you change meaning (not just phrasing), route through the governance review p
 
 # 🧭 `docs/` — Governed Documentation System (Kansas Frontier Matrix)
 
-![Governed](https://img.shields.io/badge/governed-artifact-critical)
+![Governed](https://img.shields.io/badge/governed--artifact-critical)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-required-0f766e)
 ![Trust membrane](https://img.shields.io/badge/trust%20membrane-enforced-16a34a)
 ![Fail-closed](https://img.shields.io/badge/policy-default%20deny-111827)
@@ -22,6 +22,7 @@ If you change meaning (not just phrasing), route through the governance review p
 - **Add a Story Node** → use Story Node v3, keep claims citation-backed, run the Story validations.
 - **Change standards, policy expectations, or promotion rules** → treat it as a production change; expect governance review.
 - **Find where something belongs** → see [Where things go](#where-things-go) and [Docs directory map](#docs-directory-map).
+- **Wire docs into CI** → see [Quality gates and CI expectations](#quality-gates-and-ci-expectations) and [Docs gate matrix](#docs-gate-matrix).
 
 ---
 
@@ -33,10 +34,12 @@ If you change meaning (not just phrasing), route through the governance review p
 | Doc ID | `kfm.docs.readme` |
 | Status | **Governed** |
 | Scope | docs templates, standards, governance rules, runbooks, Story Nodes, public narrative surfaces |
-| Version | `v3.0.0-draft` |
+| Version | `v3.1.0-draft` |
 | Effective date | 2026-02-16 |
 | Owners | `.github/CODEOWNERS` *(required; if missing, treat as a governance gap)* |
 | Review triggers | any change affecting trust membrane, policy defaults, promotion rules, citation behavior, sensitivity handling, template structure, CI validation expectations |
+| Critical dependency | **Docs validators + policy gates** (fail-closed) |
+| Default posture | **deny / abstain** when evidence or validators are missing |
 
 > [!WARNING]
 > **Fail-closed rule (docs):** if required validation surfaces are missing (templates / validators / citation resolution rules),
@@ -78,6 +81,7 @@ These invariants apply to **all** documentation, narrative content, and any desc
 ## Quick navigation
 
 - [Purpose of `docs/`](#purpose-of-docs)
+- [How docs participates in the trust boundary](#how-docs-participates-in-the-trust-boundary)
 - [What belongs in `docs/`](#what-belongs-in-docs)
 - [What does not belong in `docs/`](#what-does-not-belong-in-docs)
 - [Where things go](#where-things-go)
@@ -88,8 +92,10 @@ These invariants apply to **all** documentation, narrative content, and any desc
 - [Docs lifecycle and versioning](#docs-lifecycle-and-versioning)
 - [Evidence and citations](#evidence-and-citations)
 - [Sensitivity and redaction](#sensitivity-and-redaction)
+- [Diagrams and assets](#diagrams-and-assets)
 - [Story Nodes](#story-nodes)
 - [Document corpora as evidence](#document-corpora-as-evidence)
+- [Docs gate matrix](#docs-gate-matrix)
 - [Quality gates and CI expectations](#quality-gates-and-ci-expectations)
 - [Contribution workflow](#contribution-workflow)
 - [Definition of Done](#definition-of-done)
@@ -109,6 +115,35 @@ KFM is not a “dashboard with data.” It is an evidence-first system where:
 - and the public-facing interpretation of Kansas frontier history does not drift into uncited claims.
 
 `docs/` is the home of the written contracts that make that possible.
+
+---
+
+## How docs participates in the trust boundary
+
+Docs are “code that defines allowed reality.” They influence:
+
+- **Policy posture** (what is permitted vs denied)
+- **Promotion rules** (what becomes “servable truth”)
+- **Narrative behavior** (Story Nodes + Focus Mode grounding requirements)
+- **Validator expectations** (what CI blocks/permits)
+
+### Trust boundary surfaces touched by `docs/`
+
+```mermaid
+flowchart LR
+  Docs[docs/** governed docs] -->|standards + templates| Validators[Docs validators]
+  Docs -->|policy expectations| Policy[OPA/Rego policies]
+  Docs -->|story + citations| Stories[Story Nodes]
+  Stories --> Focus[Focus Mode]
+  Validators --> CI[CI gates]
+  Policy --> API[Governed API]
+  API --> UI[Web UI]
+  Focus -->|cite-or-abstain + audit_ref| API
+```
+
+> [!IMPORTANT]
+> Any doc change that alters how **validators**, **policy**, **promotion**, or **citations** behave is a production change.
+> Treat it with the same review rigor as backend policy or schema changes.
 
 ---
 
@@ -309,6 +344,17 @@ Recommended doc statuses:
 > [!TIP]
 > If a document is “machine depended upon” (template, validator rule docs, schema fragments), treat it like an API.
 
+### Review path for governed docs (minimum)
+
+> [!IMPORTANT]
+> This is an operational expectation. Repository enforcement is configured in `.github/` (CODEOWNERS + branch protection).
+
+1) Author opens PR with a narrow scope + checklist
+2) CI runs required docs validators (lint/link/template/story/citation where available)
+3) CODEOWNERS review is required for governed paths
+4) If sensitivity/policy surfaces are touched → governance reviewers must sign off
+5) Merge only after all required checks pass (fail-closed)
+
 ---
 
 ## Evidence and citations
@@ -389,6 +435,36 @@ If a doc references redacted/generalized data, it must state:
 
 ---
 
+## Diagrams and assets
+
+Diagrams and assets are governed because they affect understanding and can accidentally leak sensitive information.
+
+### Diagrams as code (recommended)
+
+- **Mermaid source is canonical** for architecture/story flows when feasible.
+- If you export to SVG/PNG, keep the source alongside it.
+- Diagrams that embed data extracts must follow the same sensitivity rules as datasets.
+
+**Recommended storage pattern:**
+```text
+docs/architecture/diagrams/
+├─ trust-membrane.mmd
+├─ trust-membrane.svg
+└─ trust-membrane.md      # provenance + meaning + change log
+```
+
+### Asset hygiene rules (minimum)
+
+- Every image must have **alt text** in the referencing doc.
+- Avoid screenshots with:
+  - names/emails/addresses
+  - exact coordinates for sensitive sites
+  - secrets/tokens/keys
+- Prefer **small derived assets** in `docs/**/assets/`.
+- Primary evidence belongs in `data/**` with catalogs + provenance.
+
+---
+
 ## Story Nodes
 
 Story Nodes are the narrative core of KFM’s public understanding. They must be citable, reproducible, and reviewable.
@@ -446,6 +522,25 @@ Minimum provenance fields for extracted artifacts:
 
 ---
 
+## Docs gate matrix
+
+This matrix describes **what should block merges** (fail-closed). Exact wiring is implemented in `.github/` workflows.
+
+| Path(s) changed | Typical impact | Minimum required checks | Required reviewers |
+|---|---|---|---|
+| `docs/templates/**` | Machine-validated contracts | lint + link-check + template-structure validation + downstream schema tests | CODEOWNERS + governance reviewers |
+| `docs/standards/**` | Build constraints | lint + link-check + standards diff review checklist | CODEOWNERS + governance reviewers |
+| `docs/governance/**` | Policy posture | lint + link-check + governance review gate | CODEOWNERS + governance reviewers |
+| `docs/reports/story_nodes/**` | Public narrative | lint + link-check + story-node schema validation + citation resolution (when available) + sensitivity scan | CODEOWNERS + story reviewers + sensitivity reviewer if flagged |
+| `docs/runbooks/**` | Ops behavior | lint + link-check + runbook checklist | CODEOWNERS + ops reviewer |
+| `docs/architecture/**` | System contract | lint + link-check + ADR checks where applicable | CODEOWNERS + architecture reviewer |
+
+> [!NOTE]
+> If any required validator is missing in the repo, treat that as a governance gap: do not reduce expectations;
+> add the missing validator or block merge.
+
+---
+
 ## Quality gates and CI expectations
 
 `docs/` is governed and must be validated like code.
@@ -475,6 +570,20 @@ Because docs are within the trust boundary, repository protection matters:
 > [!NOTE]
 > This section describes a recommended hardening baseline; the repository’s actual enforcement is defined by
 > `.github/` configuration and CI wiring.
+
+### Local validation (recommended)
+
+> [!IMPORTANT]
+> Exact commands depend on your repo wiring. If you don’t have these scripts/targets, treat it as an action item:
+> add them and wire them into CI (fail-closed).
+
+Suggested targets (examples):
+- `make docs-lint`
+- `make docs-links`
+- `make docs-templates-validate`
+- `make docs-story-validate`
+- `make docs-citations-validate`
+- `make docs-sensitivity-scan`
 
 ---
 
