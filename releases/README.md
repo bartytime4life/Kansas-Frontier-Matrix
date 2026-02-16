@@ -508,7 +508,7 @@ Rules:
 
 - Repo governance and gates: `.github/README.md`
 - Promotion Contract and catalogs: KFM standards docs in `docs/standards/`
-- Release security hardening baseline (internal): *Software Security Guide for Developers (2026 Edition) – Expanded Sections* :contentReference[oaicite:0]{index=0}
+- Release security hardening baseline (internal): *Software Security Guide for Developers (2026 Edition) – Expanded Sections*
 
 ---
 
