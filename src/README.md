@@ -240,21 +240,21 @@ Frontend and external clients **never** access databases or object stores direct
 
 ```mermaid
 sequenceDiagram
-  participant UI as Web UI (web/)
-  participant API as API (src/server)
-  participant PDP as Policy PDP (OPA)
-  participant STORES as Stores (PostGIS/Neo4j/Search/Object)
+  participant UI as Web UI
+  participant API as API
+  participant PDP as Policy PDP
+  participant STORES as Stores
   participant EV as Evidence Resolver
   participant AUD as Audit Ledger
 
-  UI->>API: Request + ViewState/context
+  UI->>API: Request with view state and context
   API->>PDP: Authorize (default deny)
-  PDP-->>API: allow/deny + obligations
+  PDP-->>API: Allow or deny with obligations
   API->>STORES: Access via repository ports (no bypass)
-  API->>EV: Resolve/attach citations (or return resolvable refs)
-  API->>PDP: Validate output (citations + sensitivity + obligations)
-  API->>AUD: Append audit event; return audit_ref
-  API-->>UI: Response + citations[] + audit_ref
+  API->>EV: Attach citations or return resolvable refs
+  API->>PDP: Validate output (citations, sensitivity, obligations)
+  API->>AUD: Append audit event and create audit_ref
+  API-->>UI: Response with citations and audit_ref
 ```
 
 ### 2) Pipeline promotion (raw → work → processed)
