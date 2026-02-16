@@ -63,24 +63,24 @@ KFM enforces a trust membrane through the API gateway and policy-as-code. **Fron
 > Keep a small, predictable tree. Prefer **content-addressed / hashed** filenames for anything cacheable.
 
 ```text
-web/public/
-  README.md                 # you are here
-  robots.txt
-  manifest.json
-  favicon.ico
-
-  icons/                    # app icons (PWA, favicons, apple-touch)
-    icon-192.png
-    icon-512.png
-
-  images/
-    brand/                  # logos, wordmarks
-    ui/                     # UI illustrations/icons not handled by bundler
-
-  fonts/                    # ONLY if web redistribution is allowed
-
-  _licenses/                # third-party license texts / notices (recommended)
-  _provenance/              # asset provenance notes (recommended)
+web/public/                                      # Static public assets (served as-is; no bundler processing)
+├─ README.md                                     # You are here: rules for public assets + licensing/provenance expectations
+├─ robots.txt                                    # Crawler directives
+├─ manifest.json                                 # PWA manifest (name, icons, theme, start URL)
+├─ favicon.ico                                   # Browser favicon
+│
+├─ icons/                                        # App icons (PWA + favicons + apple-touch)
+│  ├─ icon-192.png                               # PWA icon (192×192)
+│  └─ icon-512.png                               # PWA icon (512×512)
+│
+├─ images/                                       # Images served directly (not imported via bundler)
+│  ├─ brand/                                     # Logos/wordmarks (keep canonical source + export sizes)
+│  └─ ui/                                        # UI illustrations/icons not handled by bundler
+│
+├─ fonts/                                        # Fonts ONLY if redistribution is permitted (license must be present)
+│
+├─ _licenses/                                    # Third-party license texts/notices for assets (recommended)
+└─ _provenance/                                  # Asset provenance notes (recommended: source, author, date, license)
 ```
 
 ---
