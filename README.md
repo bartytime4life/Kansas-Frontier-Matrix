@@ -21,17 +21,19 @@ KFM rule: if a guarantee is not machine‑enforced (schemas + validators + CI wi
 
 <br/>
 
-<!-- Governance posture (claims must be enforced to be "real") -->
+<!-- Enforcement posture: do not over-claim. -->
 ![Status](https://img.shields.io/badge/status-governed%20build-informational)
+![Enforced Today](https://img.shields.io/badge/enforced%20today-build%20%7C%20docs%20%7C%20contracts-success)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-cite%20or%20abstain-0f766e)
-![Trust Membrane](https://img.shields.io/badge/trust%20membrane-API%20only-16a34a)
-![Fail Closed](https://img.shields.io/badge/policy-default%20deny-111827)
-![Promotion Contract](https://img.shields.io/badge/promotion-contract-required-critical)
-![Receipts](https://img.shields.io/badge/receipts-run__record%20%7C%20run__manifest-6a5acd)
-![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
-![Audit](https://img.shields.io/badge/audit-audit__ref%20always-6b21a8)
-![Releases](https://img.shields.io/badge/releases-append--only-4b0082)
-![Kill Switch](https://img.shields.io/badge/kill--switch-required-orange)
+
+![Trust Membrane](https://img.shields.io/badge/trust%20membrane-contract%20%28planned%20enforcement%29-6b7280)
+![Fail Closed](https://img.shields.io/badge/policy-default%20deny%20%28planned%20enforcement%29-6b7280)
+![Promotion Contract](https://img.shields.io/badge/promotion-contract%20first%20%28planned%20gates%29-6b7280)
+![Receipts](https://img.shields.io/badge/receipts-planned-6b7280)
+![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV%20%28planned%29-6b7280)
+![Audit](https://img.shields.io/badge/audit-audit__ref%20always%20%28planned%29-6b7280)
+![Releases](https://img.shields.io/badge/releases-append--only%20%28planned%29-6b7280)
+![Kill Switch](https://img.shields.io/badge/kill--switch-runtime%20control%20%28planned%29-6b7280)
 
 <br/>
 
@@ -40,7 +42,7 @@ KFM rule: if a guarantee is not machine‑enforced (schemas + validators + CI wi
 </div>
 
 > [!IMPORTANT]
-> **What leadership should know (the “are we moving backwards?” answer):**  
+> **Leadership reality check (the “are we moving backwards?” answer):**  
 > KFM is intentionally built **contract‑first** so we stop re‑building the same system every time a new dataset, story, or AI feature arrives.  
 > Forward progress in KFM is measured by **enforcement loops**—schemas → validators → CI gates → runtime policy—because that is what prevents regression and rework.
 >
@@ -55,10 +57,11 @@ KFM rule: if a guarantee is not machine‑enforced (schemas + validators + CI wi
 |---|---|
 | Document | `README.md` |
 | Status | **Governed** |
-| Version | `v3.0.0-draft` |
+| Version | `v3.0.0` |
 | Effective date | **2026-02-16** (America/Chicago) |
 | Applies to | invariants, trust boundary, repo boundaries, truth path, publish rules |
 | Owners | `.github/CODEOWNERS` *(required; if missing, governance gap)* |
+| Enforcement truth source | `.github/README.md` *(authoritative list of enforced gates)* |
 | Change impact | meaning changes are **release‑blocking** until governance review completes |
 
 > [!WARNING]
@@ -69,7 +72,7 @@ KFM rule: if a guarantee is not machine‑enforced (schemas + validators + CI wi
 
 ## Quick Links
 
-- **Repo governance gatehouse:** `.github/README.md` *(required; CI and branch protection contract)*
+- **Repo governance gatehouse (CI + branch protection contract):** `.github/README.md`
 - **Security reporting:** `.github/SECURITY.md`
 - **Contribution workflow:** `CONTRIBUTING.md`
 - **Docs plane:** `docs/README.md`
@@ -84,12 +87,14 @@ KFM rule: if a guarantee is not machine‑enforced (schemas + validators + CI wi
 ## Table of Contents
 
 - [Start Here](#start-here)
-- [What KFM Ships](#what-kfm-ships)
+- [Enforcement Snapshot](#enforcement-snapshot)
+- [What KFM Is Built to Ship](#what-kfm-is-built-to-ship)
 - [How We Prove Progress](#how-we-prove-progress)
 - [KFM Constitution](#kfm-constitution)
 - [Architecture and Boundaries](#architecture-and-boundaries)
 - [Truth Path](#truth-path)
 - [Evidence and Citation Chain](#evidence-and-citation-chain)
+- [Identity and Reference Schemes](#identity-and-reference-schemes)
 - [Governed Artifact Inventory](#governed-artifact-inventory)
 - [Promotion Contract](#promotion-contract)
 - [Story Nodes](#story-nodes)
@@ -110,7 +115,7 @@ KFM rule: if a guarantee is not machine‑enforced (schemas + validators + CI wi
 Read **[KFM Constitution](#kfm-constitution)**. These are non‑negotiable.
 
 ### If you need to judge if we’re moving forward
-Read **[How We Prove Progress](#how-we-prove-progress)**. That’s the scoreboard.
+Read **[Enforcement Snapshot](#enforcement-snapshot)** and **[How We Prove Progress](#how-we-prove-progress)**. That’s the scoreboard.
 
 ### If you’re building
 Read **[Truth Path](#truth-path)** and **[Promotion Contract](#promotion-contract)**, then implement validators and CI wiring until the repo can **fail closed**.
@@ -121,36 +126,70 @@ Read **[Truth Path](#truth-path)** and **[Promotion Contract](#promotion-contrac
 
 ---
 
-## What KFM Ships
+## Enforcement Snapshot
 
-KFM ships **governed outputs**—not just “data” and not just “a map.”
+This section is here to prevent accidental over-claiming.
+
+> [!IMPORTANT]
+> **Authoritative enforcement list:** `.github/README.md` controls what is *actually* merge-blocking.
+> Anything not listed there is **contract-only** (desired) until wired into CI + branch protection.
+
+### Enforced today (merge-blocking gates)
+
+| Gate / Guarantee | Status | Where enforced |
+|---|---|---|
+| PR-based workflow + CODEOWNERS review *(repo setting)* | ✅ Required | GitHub branch protection / rulesets (verify in GitHub settings) |
+| `build` check | ✅ Required | CI required status check |
+| `docs` check | ✅ Required | CI required status check |
+| `contracts` check | ✅ Required | CI required status check |
+
+### Contract-only today (planned enforcement)
+
+| Contract area | Status | Becomes “real” when… |
+|---|---|---|
+| `policy` (default deny regression) | 🧪 Planned | policy tests exist + job is required |
+| `receipts` (promotion proof) | 🧪 Planned | receipt schema + validator + required check |
+| `catalogs` (DCAT/STAC/PROV) | 🧪 Planned | validators + cross-link tests + required check |
+| `stories` (cite-or-abstain publishing) | 🧪 Planned | story schema + citation resolution + required check |
+| `security` (SAST/SCA/secrets) | 🧪 Planned | CodeQL/dependency review + required check |
+| `supply-chain` (SBOM/attestations) | 🧪 Planned | release pipeline produces + verifies SBOM/provenance |
+| `config-drift` (settings integrity) | 🧪 Planned | drift check exists + alerts/fails read-only |
+
+---
+
+## What KFM Is Built to Ship
+
+KFM is built to ship **governed outputs**—not just “data” and not just “a map.”
 
 ### 1) Governed datasets (servable truth)
+When KFM serves data, it serves:
 - `data/processed/**` artifacts that are **promoted**
 - checksums for every artifact
-- catalogs/provenance that cross‑link: **DCAT + PROV required**, **STAC when spatial**
+- catalogs/provenance that cross‑link: **DCAT + PROV required**, **STAC when spatial** *(contract; enforcement planned)*
 
 ### 2) Governed narratives (Story Nodes)
+When KFM publishes narratives, they include:
 - replayable map/time state
 - citations that resolve via evidence resolver
-- publish blocked if citations don’t resolve or policy denies
+- publish blocked if citations don’t resolve or policy denies *(contract; enforcement planned)*
 
 ### 3) Governed Q&A (Focus Mode)
+When KFM answers questions, it:
 - returns **cited answer or abstains**
 - **always** emits `audit_ref`
-- uses only policy‑allowed evidence packs (no “free text guesses”)
+- uses only policy‑allowed evidence packs (no “free text guesses”) *(contract; enforcement planned)*
 
 ---
 
 ## How We Prove Progress
 
-This section exists to prevent the “we are moving backwards” perception. KFM progress is not measured by the number of pages of documentation. It’s measured by how many **closed loops** exist where the system can prove its own claims.
+This section exists to prevent “moving backwards” narratives. KFM progress is not measured by the number of pages of documentation. It’s measured by how many **closed loops** exist where the system can prove its own claims.
 
 ### The KFM proof ladder
 
 | Level | What exists | What it proves | How you demo it |
 |---:|---|---|---|
-| 0 | **Docs only** | Intent (no guarantees) | “Here’s what we want” |
+| 0 | Docs only | Intent (no guarantees) | “Here’s what we want” |
 | 1 | Schemas + fixtures | Shapes are defined | validate a sample object |
 | 2 | Validators + reports | Checks are executable | validator outputs JSON report |
 | 3 | CI gates + branch protection | Checks are enforced | PR cannot merge if failing |
@@ -163,11 +202,11 @@ This section exists to prevent the “we are moving backwards” perception. KFM
 
 ### Leadership demo script (10 minutes, no hand‑waving)
 
-1) **Promote** one dataset version (raw → work → processed).  
-2) Show the **receipt bundle** with `spec_hash` and checksums.  
-3) Open **DCAT** (rights + distributions) and **PROV** (lineage).  
-4) In UI/Story/Focus: click a citation and show the **evidence view**.  
-5) Show the **audit event** referenced by `audit_ref`.
+1) Promote one dataset version (raw → work → processed).  
+2) Show the receipt bundle with `spec_hash` and checksums.  
+3) Open DCAT (rights + distributions) and PROV (lineage).  
+4) In UI/Story/Focus: click a citation and show the evidence view.  
+5) Show the audit event referenced by `audit_ref`.
 
 If we cannot do steps 1–5 for at least one domain, the project is incomplete—not failing, just incomplete.
 
@@ -179,17 +218,17 @@ These invariants must remain true regardless of implementation details.
 
 ### Constitutional contracts (IDs for CI + incidents + ADRs)
 
-| Contract ID | Invariant | Meaning | Minimum enforcement surface |
+| Contract ID | Invariant | Meaning | How it becomes provable |
 |---|---|---|---|
-| **KFM‑C0** | Trust membrane | UI/external clients never access DBs/object storage directly | API-only access + network isolation |
-| **KFM‑C1** | Fail closed | Missing inputs/proofs → deny or abstain | default‑deny policies + regression tests |
-| **KFM‑C2** | Processed serves truth | Only processed + cataloged artifacts are served | API reads from processed catalogs only |
-| **KFM‑C3** | Promotion Contract required | No promotion without receipts/checksums/catalogs | CI gate + schema validation |
-| **KFM‑C4** | Deterministic identity | `spec_hash = sha256(JCS(spec))` (RFC 8785) | receipt validator + determinism tests |
+| **KFM‑C0** | Trust membrane | UI/external clients never access DBs/object storage directly | architecture tests + runtime network controls |
+| **KFM‑C1** | Fail closed | Missing inputs/proofs → deny or abstain | default‑deny policy tests + CI gate |
+| **KFM‑C2** | Processed serves truth | Only processed + cataloged artifacts are served | API reads only from processed catalogs |
+| **KFM‑C3** | Promotion Contract required | No promotion without receipts/checksums/catalogs | receipts + catalogs validators + CI gate |
+| **KFM‑C4** | Deterministic identity | `spec_hash = sha256(JCS(spec))` (RFC 8785) | determinism tests + receipt validator |
 | **KFM‑C5** | Evidence refs resolvable | Citations resolve via evidence resolver | resolver contract tests |
 | **KFM‑C6** | Cite or abstain + audit_ref | Story/Focus must cite or abstain; always emit `audit_ref` | output validator + policy gate |
 | **KFM‑C7** | Audit integrity | Append‑only audit events, integrity verifiable | ledger + checkpoints/hash chain |
-| **KFM‑C8** | No silent redaction | Redaction/generalization is provenance‑tracked | derived outputs + PROV |
+| **KFM‑C8** | No silent redaction | Redaction/generalization is provenance‑tracked | derived outputs + PROV lineage |
 | **KFM‑C9** | Immutable releases | Releases are append‑only shipping records | release validator + checksum verify |
 | **KFM‑C10** | Rights‑first publishing | Missing rights/license/access terms → deny promotion | DCAT required fields + promotion gate |
 
@@ -211,7 +250,7 @@ KFM is a governed system with clean architecture layers.
 ### Trust membrane (non‑negotiable)
 - Frontend and external clients never access databases or object storage directly.
 - Backend business logic never bypasses repository interfaces to talk directly to storage.
-- All user-visible claims cross a **policy decision point**.
+- All user-visible claims cross a policy decision point.
 
 > [!NOTE]
 > “We have a frontend” is not architecture. The trust membrane is architecture.
@@ -256,6 +295,35 @@ flowchart LR
 ```
 
 **Fail‑closed rule:** if any node in this chain is missing or denied → **do not publish / abstain**.
+
+---
+
+## Identity and Reference Schemes
+
+These conventions are part of the governance contract; enforcement is done via schemas + validators.
+
+### IDs
+
+| Field | Example | Notes |
+|---|---|---|
+| `dataset_id` | `kfm_example_dataset` | stable snake_case identifier for a dataset family |
+| `run_id` | `run_01J0EXAMPLE` | stable run identifier (ULID recommended) |
+| `version_id` | `v_2026_02_16_001` | promoted snapshot identifier |
+| `spec_hash` | `sha256:<hex>` | `sha256(JCS(spec))` per RFC 8785 |
+| `audit_ref` | `audit://event/<id>` | points to an append-only audit record |
+
+### Evidence refs
+
+| Scheme | Meaning | Resolved by |
+|---|---|---|
+| `prov://...` | lineage proof | evidence resolver |
+| `stac://...` | spatiotemporal assets | evidence resolver |
+| `dcat://...` | dataset rights + distributions | evidence resolver |
+| `doc://...` | governed docs | evidence resolver |
+| `graph://...` | graph facts/edges | evidence resolver |
+
+> [!IMPORTANT]
+> If a ref scheme is not resolvable, it cannot be used in a published citation.
 
 ---
 
@@ -515,22 +583,18 @@ KFM advances by shipping **thin slices** that close enforcement loops.
 
 ## References
 
-These documents are treated as **design authority inputs** for KFM patterns:
+These are treated as **design authority inputs** for KFM patterns (store as governed references when possible):
 
-- KFM Data Sources inventory :contentReference[oaicite:0]{index=0}  
-- Professional Markdown Guide for GitHub Documentation :contentReference[oaicite:1]{index=1}  
-- KFM Comprehensive Data Source Integration Blueprint :contentReference[oaicite:2]{index=2}  
-- Deep Research Report on Craft KFM Focus Mode :contentReference[oaicite:3]{index=3}  
-- Crafting a Comprehensive Story Mode for KFM :contentReference[oaicite:4]{index=4}  
-- KFM Cultivated Integration Ideas :contentReference[oaicite:5]{index=5}  
-- Kansas Frontier Matrix Companion Blueprint :contentReference[oaicite:6]{index=6}  
-- Kansas Frontier Matrix Project Blueprint :contentReference[oaicite:7]{index=7}  
-- React Reference Guide for LLM Ingestion and Use :contentReference[oaicite:8]{index=8}  
-- KFM Master Corpus Consolidation and Build‑Integration Specification :contentReference[oaicite:9]{index=9}  
-- GIS Applications for Knowledge Forest Management :contentReference[oaicite:10]{index=10}  
-- Kansas Frontier Matrix System Audit and Expansion Report :contentReference[oaicite:11]{index=11}  
-- Massive Gap‑Filling Diagnosis for Kansas Frontier Matrix :contentReference[oaicite:12]{index=12}  
-- KFM Next‑Generation Blueprint & Primary Guide :contentReference[oaicite:13]{index=13}  
+- `KFM Data Sources.pdf`
+- `Professional Markdown Guide for GitHub Documentation.pdf`
+- `KFM_Comprehensive_Data_Source_Integration_Blueprint_v1_massive.pdf`
+- `Deep Research Report on Craft KFM Focus Mode.pdf`
+- `Crafting a Comprehensive Story Mode for the KFM Spatio-Temporal Mapping Platform.pdf`
+- `KFM-Bluprint-&-Ideas.pdf`
+- `KFM-Software Support.pdf`
+
+> [!NOTE]
+> References must be treated as inputs, not guarantees. Guarantees require schemas + validators + CI enforcement.
 
 ---
 
