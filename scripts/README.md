@@ -4,52 +4,58 @@ KANSAS FRONTIER MATRIX (KFM) — GOVERNED REPO ARTIFACT
 If you change meaning (not just phrasing), route through governance review (CODEOWNERS + CI gates).
 -->
 
-# `scripts/` — KFM CLI Scripts & Pipeline Runners 🧰🗺️
+# `scripts/` — KFM CLI Orchestration, Validators, and Pipeline Runners 🧰🗺️
 
 ![Governed](https://img.shields.io/badge/governed-artifact-2b6cb0)
 ![Evidence-first](https://img.shields.io/badge/evidence--first-required-0f766e)
 ![Policy](https://img.shields.io/badge/policy-default%20deny-111827)
 ![Promotion](https://img.shields.io/badge/promotion-contract%20required-critical)
-![Receipts](https://img.shields.io/badge/receipts-run__manifest%20%7C%20spec__hash-6a5acd)
+![Receipts](https://img.shields.io/badge/receipts-run__record%20%7C%20run__manifest%20%7C%20spec__hash-6a5acd)
 ![Catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-2563eb)
 
-This folder contains **operator-facing** and **developer-facing** scripts that orchestrate KFM’s governed workflows:
+The `scripts/` folder contains **operator-facing** and **developer-facing** command-line tooling that *orchestrates* KFM’s governed workflows:
 
 - acquire raw sources (or verify snapshots),
-- normalize / validate / enrich,
-- emit **run records**, **run manifests (receipts)**, **validation reports**, **checksums**, and **DCAT/STAC/PROV** catalogs,
-- trigger controlled admin ops (reindexing, bootstrapping, backfills),
-- support CI validation and local reproducibility.
+- normalize / transform / enrich into reproducible intermediates,
+- validate governance prerequisites (license, sensitivity, schema, geo/time sanity),
+- promote **only** when Promotion Contract proofs exist (receipts + checksums + catalogs),
+- support controlled admin operations (reindexing, backfills, bootstraps),
+- generate machine-readable outputs for CI, audit, and evidence UX.
 
 > [!IMPORTANT]
 > **Non-negotiable KFM invariant:** **Processed is the only publishable source of truth.**  
-> Scripts must respect zones, catalogs, provenance, policy gates, and auditing. Raw/work are never served.
+> `scripts/` may *write* to `raw/` and `work/` as part of ingestion, but **only `processed/` artifacts backed by receipts + catalogs are eligible for serving**.
 
 ---
 
 ## Table of contents
 
 - [Governance header](#governance-header)
+- [Core invariants (read this first)](#core-invariants-read-this-first)
 - [What belongs in `scripts/`](#what-belongs-in-scripts)
-- [Directory layout](#directory-layout)
-- [Quickstart (local dev)](#quickstart-local-dev)
+- [Directory layout and naming conventions](#directory-layout-and-naming-conventions)
+- [Quickstart](#quickstart)
 - [Common CLI contract](#common-cli-contract)
-- [Script registry](#script-registry)
-- [Truth path + data zones](#truth-path--data-zones)
-- [Required artifacts & contracts](#required-artifacts--contracts)
-  - [Run record contract (`run_record.json`)](#run-record-contract-run_recordjson)
-  - [Run manifest contract (`run_manifest.json`)](#run-manifest-contract-run_manifestjson)
-  - [Validation report contract (`validation_report.json`)](#validation-report-contract-validation_reportjson)
-  - [Audit event contract (`audit_event.json`)](#audit-event-contract-audit_eventjson)
-- [Deterministic identity (`spec_hash`) and versioning](#deterministic-identity-spec_hash-and-versioning)
-- [Catalogs: DCAT/STAC/PROV](#catalogs-dcatstacprov)
-- [Evidence refs + resolvers](#evidence-refs--resolvers)
+- [Run artifacts and “receipts”](#run-artifacts-and-receipts)
+  - [`run_record.json` (execution receipt)](#run_recordjson-execution-receipt)
+  - [`validation_report.json` (gate report)](#validation_reportjson-gate-report)
+  - [`run_manifest.json` (Promotion Contract receipt)](#run_manifestjson-promotion-contract-receipt)
+  - [`audit_event.json` (governed side-effect trail)](#audit_eventjson-governed-side-effect-trail)
+- [Deterministic identity and versioning](#deterministic-identity-and-versioning)
+- [Zones, truth path, and publish boundary](#zones-truth-path-and-publish-boundary)
+- [Catalog obligations: DCAT, STAC, PROV](#catalog-obligations-dcat-stac-prov)
+- [Policy + sensitivity handling](#policy--sensitivity-handling)
 - [Security requirements](#security-requirements)
-- [Testing + CI gates](#testing--ci-gates)
+- [Testing, CI gates, and “fail closed” behavior](#testing-ci-gates-and-fail-closed-behavior)
 - [Operations cookbook](#operations-cookbook)
 - [Troubleshooting](#troubleshooting)
-- [Contributing / adding a new script](#contributing--adding-a-new-script)
+- [Adding a new script (DoD + checklist)](#adding-a-new-script-dod--checklist)
 - [Appendices](#appendices)
+  - [A. Script header templates](#a-script-header-templates)
+  - [B. Canonical artifact paths (quick reference)](#b-canonical-artifact-paths-quick-reference)
+  - [C. Recommended exit codes](#c-recommended-exit-codes)
+  - [D. Glossary](#d-glossary)
+- [References](#references)
 
 ---
 
@@ -59,286 +65,261 @@ This folder contains **operator-facing** and **developer-facing** scripts that o
 |---|---|
 | Document | `scripts/README.md` |
 | Status | **Governed** |
-| Applies to | CLI orchestration, promotion/publish tooling, validators, CI wrappers |
-| Version | `v2.0.0-draft` |
-| Effective date | 2026-02-15 |
+| Applies to | CLI orchestration, validators, promotion/publish tooling, CI wrappers |
+| Version | `v3.0.0-draft` |
+| Effective date | 2026-02-16 |
 | Owners | `.github/CODEOWNERS` *(required; if missing, treat as governance gap)* |
-| Review triggers | any change affecting promotion rules, receipts, catalogs, policy posture, or evidence resolution |
+| Review triggers | Any change affecting promotion rules, receipts, catalogs, policy posture, evidence resolution, or sensitivity handling |
 
 > [!WARNING]
-> **Fail-closed rule:** if required governance inputs are missing (license/sensitivity/receipts/catalogs), scripts must deny or abstain rather than proceed.
+> **Fail-closed rule:** If required governance inputs are missing (license, sensitivity class, receipts, catalogs, policy inputs), scripts must **deny** or **abstain** rather than proceed.
+
+---
+
+## Core invariants (read this first)
+
+These are KFM’s “constitutional” rules for anything under `scripts/`:
+
+1) **Processed-only serving truth**  
+   - Raw and work are **never** publishable or served.
+   - Promotion to processed requires checksums + catalogs + receipts.
+
+2) **Promotion is not “copy files”**  
+   Promotion is a governed act with proofs:
+   - `run_record.json` + `validation_report.json` + `run_manifest.json`
+   - processed checksums (`sha256`)
+   - DCAT always; STAC when geospatial assets exist; PROV always for lineage
+   - audit event emitted or staged
+
+3) **Default deny / fail closed**  
+   Any uncertainty in policy inputs, licensing, or sensitivity classification is a **hard stop**.
+
+4) **Evidence-first everywhere**  
+   Scripts must emit machine-readable artifacts that downstream systems can resolve (UI, Story Nodes, Focus Mode, auditors).
+
+> [!NOTE]
+> These invariants are system-wide, but `scripts/` is where they become operational and testable.
 
 ---
 
 ## What belongs in `scripts/`
 
 ### ✅ In-scope
-- **Thin runners / glue** that orchestrate pipeline work (acquire → normalize → validate → promote/publish).
-- **Validators** that confirm schemas/catalogs/checksums/geometry/time sanity/link integrity.
-- **Admin/operator utilities** (bootstrap, controlled backfills, reindex triggers).
-- **CI helpers** that validate governed artifacts and produce machine-readable reports.
 
-### 🚫 Out-of-scope (move elsewhere)
-- Core domain logic → belongs in governed application layers (`src/...`) behind interfaces.
-- UI code → belongs under `web/`.
-- Policy logic → belongs under `policy/` (OPA/Rego).
-- Long-lived services → belong in `src/` with tests + contracts.
+- **Thin orchestration** of pipeline stages (acquire → normalize → validate → promote).
+- **Validators** (schemas, catalogs, checksums, geo/time, policy prereqs).
+- **Controlled admin utilities** (reindex, bootstrap, backfills) that produce audit events.
+- **CI wrappers** that run deterministic checks and output machine-readable reports.
+- **Shared CLI helpers** (_lib) that enforce the common contract (logging, hashing, receipt IO, path conventions).
+
+### 🚫 Out-of-scope
+
+- **Core domain logic** belongs in the governed application layer (`src/`) behind interfaces.
+- **Policy logic** belongs in `policy/` (OPA/Rego); scripts can *invoke* policy checks but must not fork the rules.
+- **Long-lived services/daemons** belong in the runtime stack, not as scripts.
+- **UI code** belongs under `web/`.
 
 ---
 
-## Directory layout
+## Directory layout and naming conventions
 
 > [!NOTE]
-> If your repo uses different names (`tools/` vs `scripts/`, `pipelines/` vs `src/pipelines/`), update this section to reflect reality.
-> This README is governed; drift is not allowed.
-
-Recommended (not confirmed in repo):
+> Layout below is a **recommended** contract. If your repo uses different names, update this README to match reality (this file is governed; drift is not allowed).
 
 ```text
 scripts/
-├─ README.md                                   # this file
-├─ registry.yaml                               # REQUIRED: script registry (source of truth for tables/links)
+├─ README.md
+├─ registry.yaml                     # REQUIRED: script registry (source-of-truth for CI + docs tables)
 │
-├─ connectors/                                 # dataset-scoped runners (ingest/transform/publish)
-│  └─ <dataset_id>/                            # stable dataset id or source slug
-│     ├─ ingest.(py|sh)                        # acquire → raw/work
-│     ├─ validate.(py|sh)                      # work validation gates
-│     ├─ promote.(py|sh)                       # controlled promotion to processed + catalogs
-│     └─ backfill.(py|sh)                      # explicit backfill runner (optional)
+├─ connectors/                       # dataset-scoped orchestration (thin glue around src/ pipelines)
+│  └─ <dataset_id>/                  # stable dataset identifier (slug)
+│     ├─ ingest.(py|ts|sh)           # acquire → raw/work (no processed writes)
+│     ├─ transform.(py|ts|sh)        # optional: work→work (deterministic transform steps)
+│     ├─ validate.(py|ts|sh)         # required: work validations + policy prereqs
+│     ├─ promote.(py|ts|sh)          # required: promotion to processed + catalogs + manifest
+│     └─ backfill.(py|ts|sh)         # optional: explicit windowed reruns (must emit receipts)
 │
-├─ validators/                                 # reusable validators (schemas/catalogs/checksums/geo/time)
-│  ├─ catalogs/                                # DCAT/STAC/PROV validators + link-check
-│  ├─ receipts/                                # run_record/run_manifest schema checks
-│  ├─ checksums/                               # sha256sum verify helpers
-│  └─ policy/                                  # policy input validation prerequisites (fail closed)
+├─ validators/
+│  ├─ receipts/                      # run_record / run_manifest schema validation
+│  ├─ catalogs/                      # DCAT / STAC / PROV validation + cross-link integrity
+│  ├─ checksums/                     # sha256 generation + verification helpers
+│  ├─ geo_time/                      # CRS/time range/bbox sanity checks
+│  └─ policy_inputs/                 # validate inputs required for policy evaluation
 │
-├─ admin/                                      # controlled ops (reindex, bootstrap, maintenance)
-├─ ci/                                         # CI wrappers (composite checks; fail-closed)
-├─ dev/                                        # safe developer utilities (no side effects by default)
-└─ _lib/                                       # shared helpers (logging, hashing, manifests, IO)
+├─ admin/                            # controlled ops (reindex, bootstrap, maintenance)
+├─ ci/                               # CI composites / “acceptance harness” wrappers
+├─ dev/                              # safe developer utilities (no side effects by default)
+└─ _lib/                             # shared CLI helpers (logging, hashing, paths, JSON I/O)
 ```
+
+### Naming rules
+
+- **dataset-scoped scripts** live under `scripts/connectors/<dataset_id>/...`
+- use verbs that map to governance stages:
+  - `ingest` (raw/work only)
+  - `transform` (work only; deterministic)
+  - `validate` (work gating)
+  - `promote` (processed + catalogs + manifest)
+  - `backfill` (explicit incremental reruns)
+- **validators** must be reusable across datasets and never embed dataset-specific assumptions.
 
 ---
 
-## Quickstart (local dev)
+## Quickstart
 
-Local dev is typically driven by Docker Compose.
+### Prerequisites
 
-1) Create environment file:
-```bash
-cp .env.example .env
-```
-
-2) Build & start services:
-```bash
-docker compose up --build
-```
-
-3) Common local endpoints (adjust to match compose):
-- Web UI: `http://localhost:3000`
-- API docs: `http://localhost:8000/docs`
-- OPA (optional): `http://localhost:8181`
-- PostGIS: `localhost:5432`
-- Neo4j: `http://localhost:7474` and `bolt://localhost:7687`
+- You can run the KFM stack locally (typically via Docker Compose).
+- You have a `.env` configured (or your CI provides equivalents).
 
 > [!IMPORTANT]
-> If a script requires a service, it must verify health (or fail fast with a clear error).
+> If a script requires services (PostGIS, OPA, object storage, etc.), it must verify health and fail fast with actionable errors.
+
+### Typical local usage pattern
+
+```bash
+# inside the container where runtime deps exist (recommended)
+docker compose exec api python scripts/connectors/<dataset_id>/ingest.py --help
+```
+
+> [!TIP]
+> When possible, prefer “inside-container” execution for deterministic dependencies and consistent hashing.
 
 ---
 
 ## Common CLI contract
 
-Every script under `scripts/` must:
+Every script in `scripts/` must:
 
-- support `--help`,
-- accept a dataset identifier if dataset-scoped,
-- support `--dry-run` when practical,
-- write machine-readable outputs (receipts/reports),
-- be fail-closed when governance inputs (license/sensitivity/policy labels) are missing.
+- implement `--help` (and keep it accurate),
+- accept a dataset identifier for dataset-scoped runners,
+- support `--dry-run` where practical,
+- produce machine-readable receipts/reports,
+- be **idempotent** when possible (safe to re-run with same inputs),
+- be **fail-closed** when governance inputs are missing.
 
-### Standard flags (recommended baseline)
+### Standard flags (baseline)
 
-| Flag | Meaning |
+| Flag | Purpose |
 |---|---|
 | `--dataset_id <id>` | stable dataset identifier (required for dataset-scoped scripts) |
-| `--run_id <id>` | optional override; otherwise generate deterministic or timestamp-based run id |
-| `--spec <path>` | governed spec file used for reproducibility (should produce `spec_hash`) |
-| `--since <ISO8601>` / `--until <ISO8601>` | time window for incremental ingest/backfill slices |
-| `--config <path>` | connector/script config path (YAML/JSON) |
-| `--raw_dir <path>` / `--work_dir <path>` / `--processed_dir <path>` | override default zone paths |
-| `--emit_catalogs` | emit DCAT/STAC/PROV artifacts where applicable |
-| `--dry-run` | no writes outside work; still runs validation |
-| `--force` | requires explicit operator intent; may bypass only non-governance safety checks |
-| `--log_json` | structured JSON logs for CI/ops ingestion |
+| `--run_id <id>` | optional override; otherwise generate a stable ID per run policy |
+| `--spec <path>` | governed spec used for reproducibility (must emit `spec_hash`) |
+| `--since <ISO8601>` / `--until <ISO8601>` | time window for incremental runs/backfills |
+| `--config <path>` | connector config path (YAML/JSON) |
+| `--raw_dir <path>` / `--work_dir <path>` / `--processed_dir <path>` | override zone roots (rare; CI or special ops only) |
+| `--emit_catalogs` | generate DCAT/STAC/PROV as applicable |
+| `--dry-run` | no writes outside `work/`; still runs validations |
+| `--force` | requires explicit operator intent; **must never bypass governance checks** |
+| `--log_json` | structured JSON logs (recommended for CI ingestion) |
 
-### Standard exit codes (recommended)
-- `0`: success
-- `2`: usage/argument error
-- `10`: validation failed (expected failure, machine-actionable)
-- `20`: policy denied / governance missing (fail-closed)
-- `30`: upstream acquisition failed (network/auth/provider issues)
-- `50`: unexpected error/bug
+### Logging contract
 
----
+Scripts should support:
 
-## Script registry
-
-**This table is a “nothing-left-out” guarantee.**  
-Every file added/renamed/removed under `scripts/` must be reflected here in the same PR.
-
-> [!TIP]
-> Prefer generating this table from `scripts/registry.yaml` and enforcing via CI.
-
-| Script path | Type | What it does | Inputs | Outputs (zones) | Evidence produced | Sensitivity impact | Typical invocation |
-|---|---|---|---|---|---|---|---|
-| `scripts/connectors/<dataset_id>/ingest.py` | pipeline | acquire + normalize to raw/work | `--dataset_id` `--spec` | raw + work | run_record + validation_report | depends | `python ... --dataset_id ... --spec ...` |
-| `scripts/connectors/<dataset_id>/promote.py` | pipeline | promote to processed + catalogs | `--dataset_id` `--run_id` | processed + catalog | run_manifest + catalogs + checksums + audit | high | `python ... --dataset_id ... --run_id ...` |
-| `scripts/validators/catalogs/validate_catalogs.py` | validator | validate DCAT/STAC/PROV | paths | none | report only | none | `python ... --all` |
-| `scripts/admin/reindex.py` | admin | rebuild indexes from catalogs | `--scope` | stores (derived) | audit event | medium | `python ... --scope ...` |
-
-**Script types**
-- `pipeline` — ingest/transform/promote/publish
-- `validator` — schemas/catalogs/checksums/geo/time checks
-- `admin` — operational tasks (reindex, maintenance)
-- `ci` — CI wrappers for governed checks
-- `dev` — developer convenience (safe by default)
+- human-readable console output by default,
+- `--log_json` for structured logs,
+- a **stable** event shape for CI parsers (timestamp, level, dataset_id, run_id, msg, details).
 
 ---
 
-## Truth path + data zones
+## Run artifacts and “receipts”
 
-KFM’s truth path:
-
-```mermaid
-flowchart LR
-  A[Raw Zone] --> B[Work Zone]
-  B -->|Promotion Contract| C[Processed Zone]
-  C --> D[Catalogs: DCAT/STAC/PROV]
-  D --> E[Stores: PostGIS/Graph/Search/Object]
-  E --> F[API Gateway + Policy]
-  F --> G[UI]
-  G --> H[Story Nodes]
-  H --> I[Focus Mode]
-```
-
-### Zones (hard invariant)
-- **Raw**: immutable capture; append-only; referenced by lineage.
-- **Work**: intermediate artifacts; regeneratable; QA/profiling/receipts live here.
-- **Processed**: publishable artifacts with required checksums + catalogs.
-- **Catalog**: DCAT/STAC/PROV entries runtime services consume.
+KFM treats receipts as first-class, merge-blocking proof objects.
 
 > [!IMPORTANT]
-> Processed is the only publishable source of truth. Raw/work are never served directly.
+> If a script writes to `data/processed/` or `data/catalog/`, it **must** emit:
+> - `run_record.json`
+> - `validation_report.json`
+> - `run_manifest.json`
+> - checksums for processed assets
+> - DCAT (always), STAC (conditional), PROV (always)
+> - audit event (or staged audit artifact)
 
----
+### `run_record.json` (execution receipt)
 
-## Required artifacts & contracts
+A `run_record.json` captures **what happened** and **what was used**.
 
-If a script **publishes or promotes** a dataset (any change to `data/processed/` or `data/catalog/`), it must emit:
+Minimum required fields:
 
-- `run_record.json`
-- `validation_report.json`
-- `run_manifest.json` *(Promotion Contract receipt; fail-closed)*
-- processed checksums
-- required catalogs: **DCAT always**, and **STAC/PROV when applicable**
-- an audit event (or staged audit artifact)
-
-Promotion must be blocked unless these exist and validate.
-
-### Canonical artifact paths (recommended)
-- `data/raw/<dataset_id>/manifest.yml`
-- `data/work/<dataset_id>/runs/<run_id>/run_record.json`
-- `data/work/<dataset_id>/runs/<run_id>/validation_report.json`
-- `data/work/<dataset_id>/runs/<run_id>/run_manifest.json`
-- `data/processed/<dataset_id>/<version_id>/checksums.sha256`
-- `data/catalog/dcat/<dataset_id>.json` (+ version records where used)
-- `data/catalog/stac/<dataset_id>/...` (if spatial)
-- `data/catalog/prov/<dataset_id>/run_<run_id>.json`
-
----
-
-## Run record contract (`run_record.json`)
-
-### Minimum required fields
-Required keys:
 - `run_id`
 - `dataset_id`
-- `inputs[]` (each has `uri` + `sha256`)
-- `code` (`git_sha` and/or image digest reference)
-- `outputs[]` (each has `uri` + `sha256`)
-- `validation_report` (path)
+- `started_at`, `ended_at` *(recommended even if not required)*
+- `inputs[]` with `{ uri, sha256 }`
+- `code` identity: `{ git_sha, image_digest? }`
+- `outputs[]` with `{ uri, sha256 }`
+- `validation_report` (path or evidence ref)
 - `prov_ref` (path or evidence ref)
 
-### Recommended additional fields
-- `started_at`, `ended_at`
-- `actor` (service account/operator identity)
+Recommended fields:
+
+- `actor` (operator/service identity)
 - `spec_hash`, `spec_schema_id`, `spec_recipe_version`
-- `policy` summary (classification/flags/redactions)
 - `tool_versions`
-- `metrics` (row counts, null rates, bbox/time ranges)
+- `metrics` (row counts, bbox/time range summaries, null rates)
 - `warnings[]` / `errors[]`
 
----
+### `validation_report.json` (gate report)
 
-## Run manifest contract (`run_manifest.json`)
+A deterministic, machine-readable summary of validation checks.
 
-The run manifest is the **Promotion Contract receipt**. It is the merge/publish blocker.
-
-### Minimum required fields (baseline)
-- `run_id`, `dataset_id`
-- `spec_hash` (+ `spec_schema_id`, `spec_recipe_version` recommended)
-- `inputs[]` and `outputs[]` digests
-- `code` identity (git SHA + image digest when available)
-- `validation_report` reference
-- catalog references (DCAT required; STAC conditional; PROV required)
-- policy classification/sensitivity flags
-- optional: attestations/signature refs when supply-chain verification is enabled
-
-> [!IMPORTANT]
-> If `run_manifest.json` is missing or invalid, promotion must deny.
-
----
-
-## Validation report contract (`validation_report.json`)
-
-Validation must be deterministic and machine-readable.
-
-### Fail-closed rule (required)
-If license or sensitivity classification is missing/unknown, overall status must be `fail` and promotion must be blocked.
+**Fail-closed rule:** missing license or missing sensitivity classification → `overall_status: "fail"`.
 
 Recommended shape:
+
 ```json
 {
   "dataset_id": "example_dataset",
-  "run_id": "run_...",
-  "overall_status": "pass|fail",
+  "run_id": "run_2026-02-16T00:00:00Z",
+  "overall_status": "pass",
   "checks": [
-    { "id": "license.present", "status": "pass|fail", "details": {} },
-    { "id": "sensitivity.classified", "status": "pass|fail", "details": {} },
-    { "id": "schema.valid", "status": "pass|fail", "details": {} },
-    { "id": "geo.valid", "status": "pass|fail", "details": {} },
-    { "id": "time.valid", "status": "pass|fail", "details": {} },
-    { "id": "catalogs.valid", "status": "pass|fail", "details": { "dcat": true, "stac": false, "prov": true } },
-    { "id": "checksums.present", "status": "pass|fail", "details": {} }
+    { "id": "license.present", "status": "pass", "details": {} },
+    { "id": "sensitivity.classified", "status": "pass", "details": { "class": "public|restricted|high" } },
+    { "id": "schema.valid", "status": "pass", "details": {} },
+    { "id": "geo.valid", "status": "pass", "details": { "crs": "EPSG:4326" } },
+    { "id": "time.valid", "status": "pass", "details": { "min": "...", "max": "..." } },
+    { "id": "catalogs.valid", "status": "pass", "details": { "dcat": true, "stac": true, "prov": true } },
+    { "id": "checksums.present", "status": "pass", "details": {} }
   ],
-  "summary": { "errors": 0, "warnings": 0 }
+  "summary": { "errors": 0, "warnings": 1 }
 }
 ```
 
----
+### `run_manifest.json` (Promotion Contract receipt)
 
-## Audit event contract (`audit_event.json`)
+The Promotion Contract receipt is the **merge/publish blocker**.
 
-Scripts causing governed effects (promotion, publish, redaction, backfill, index refresh) must emit an audit artifact.
-If an audit ledger API exists, call it; otherwise stage an audit artifact for ingestion.
+If this file is missing or invalid, promotion must deny.
+
+Minimum fields:
+
+- `run_id`, `dataset_id`
+- `spec_hash` (+ schema/version fields recommended)
+- `inputs[]` + `outputs[]` (digests)
+- `code` identity (git SHA + image digest if available)
+- `validation_report` ref
+- catalog refs: DCAT required; STAC conditional; PROV required
+- policy summary: license + sensitivity classification + any redactions
+- optional attestations/signatures (supply chain)
+
+### `audit_event.json` (governed side-effect trail)
+
+Any script that causes governed side effects must emit an audit artifact:
+
+- promotion/publish
+- redaction/generalization
+- backfill
+- index refresh
+- policy bundle change application
 
 Recommended shape:
+
 ```json
 {
   "audit_ref": "audit_...",
-  "timestamp": "2026-02-15T00:00:00Z",
+  "timestamp": "2026-02-16T00:00:00Z",
   "actor": { "kind": "service_account", "id": "ci-bot" },
-  "action": "dataset.promote|dataset.backfill|index.refresh|policy.change",
+  "action": "dataset.promote|dataset.backfill|index.refresh|policy.apply",
   "subject": { "dataset_id": "example_dataset", "run_id": "run_..." },
   "decision": { "result": "allow|deny", "policy_label": "public|restricted" },
   "evidence": {
@@ -353,115 +334,202 @@ Recommended shape:
 
 ---
 
-## Deterministic identity (`spec_hash`) and versioning
+## Deterministic identity and versioning
 
-Goal: “same spec ⇒ same hash ⇒ comparable receipts.”
+KFM’s reproducibility principle: **same spec ⇒ same `spec_hash` ⇒ comparable receipts**.
 
-### Required definition
-- `spec_hash = sha256(JCS(spec))` (RFC 8785 canonical JSON)
-- include `spec_schema_id` and `spec_recipe_version` where possible
+### `spec_hash` (required)
 
-Used for:
-- raw manifest identity
-- watcher/connector specs
+Recommended definition:
+
+- `spec_hash = sha256(JCS(spec))` where `JCS` is RFC 8785 JSON Canonicalization Scheme.
+
+Use `spec_hash` for:
+
+- pipeline recipe identity
 - run manifests/receipts
-- material-change detection in CI
+- CI material-change detection
+- promotion comparison (“did the recipe change?”)
+
+### Recommended identifier set
+
+| Identifier | Purpose | Stability |
+|---|---|---|
+| `dataset_id` | dataset family slug | stable |
+| `run_id` | one execution instance | stable per run |
+| `version_id` | promoted processed version | immutable |
+| `spec_hash` | canonical recipe hash | deterministic |
+
+> [!TIP]
+> Prefer a `version_id` derived from `{dataset_id, spec_hash, run_id}` (or from processed artifact digests) so “what shipped” is always reconstructable.
 
 ---
 
-## Catalogs: DCAT/STAC/PROV
+## Zones, truth path, and publish boundary
 
-### Cross-linking (required)
-Catalog artifacts must cross-link cleanly (no dangling refs):
-- DCAT is always required for promoted dataset versions
-- STAC is required when spatial assets are published
-- PROV is required to link raw → processed lineage
+KFM’s truth path is:
 
-### Promotion gate checklist (merge-blocking)
-Promotion to processed/public must be blocked unless:
+```mermaid
+flowchart LR
+  A[Raw Zone\nimmutable capture] --> B[Work Zone\nreproducible intermediates]
+  B -->|Promotion Contract\n(run_manifest + catalogs + checksums)| C[Processed Zone\npublishable truth]
+  C --> D[Catalogs\nDCAT / STAC / PROV]
+  D --> E[Stores\nPostGIS / Graph / Search / Object]
+  E --> F[API Gateway + Policy\n(trust membrane)]
+  F --> G[UI / Story Nodes / Focus Mode]
+```
+
+### Zone semantics
+
+- **Raw**: immutable capture; append-only; referenced by lineage.
+- **Work**: intermediates; regeneratable; where validators run; receipts live here.
+- **Processed**: immutable publishable outputs backed by proofs.
+- **Catalog**: machine-readable discovery + lineage metadata used by runtime services.
+
+> [!WARNING]
+> If anything in runtime (API/UI/Focus Mode) reads from raw/work directly, the trust model is broken.
+
+---
+
+## Catalog obligations: DCAT, STAC, PROV
+
+KFM requires cross-linkable catalogs:
+
+- **DCAT**: always required for promoted datasets (catalog interoperability).
+- **STAC**: required when publishing spatial/temporal assets (imagery, tiles, geospatial items).
+- **PROV**: required to link raw → processed lineage and transformations.
+
+### Cross-link integrity (merge-blocking)
+
+Catalogs must:
+
+- contain no dangling references,
+- accurately reflect checksums/digests claimed in receipts,
+- be schema-valid against their respective profiles.
+
+### Promotion gate checklist (must pass)
+
 - [ ] license present
 - [ ] sensitivity classification present
-- [ ] schema/geo/time checks pass
-- [ ] checksums computed and verified
-- [ ] DCAT validates (required)
-- [ ] STAC validates when spatial assets exist
-- [ ] PROV validates (required)
-- [ ] audit event recorded (or staged)
+- [ ] schema checks pass
+- [ ] geo/time checks pass
+- [ ] processed checksums computed and verified
+- [ ] DCAT validates
+- [ ] STAC validates (if spatial assets exist)
+- [ ] PROV validates
+- [ ] `run_manifest.json` validates
+- [ ] audit event recorded or staged
 
 ---
 
-## Evidence refs + resolvers
+## Policy + sensitivity handling
 
-KFM treats evidence references as resolvable URIs:
-- `prov://...`
-- `stac://...`
-- `dcat://...`
-- `doc://...`
-- `graph://...`
-- optional: `oci://...` for digest bundles
+KFM treats sensitivity as a first-class concern:
+
+- sensitive locations may require generalization or redaction in publishable derivatives,
+- restricted data must not leak via logs, catalogs, or “helpful” debug output,
+- missing classification is a hard stop.
+
+**Recommended classes (example):**
+- `public`
+- `restricted`
+- `high_sensitivity` (e.g., culturally restricted sites)
 
 > [!IMPORTANT]
-> Every citation/provenance reference must be resolvable via API so the UI can “review evidence” in a bounded number of calls.
+> Generalization/redaction must be recorded in provenance (PROV) and summarized in receipts.
 
 ---
 
 ## Security requirements
 
 ### Secrets and credentials
-- never commit secrets
-- prefer env vars + secret managers
-- do not log tokens/API keys/PII
 
-### Sensitive locations / culturally restricted data
-- publish generalized derivatives publicly
-- store precise data under restricted access
-- record generalization/redaction in PROV
-- fail closed if classification/flags are missing
+- Never commit secrets.
+- Prefer environment variables + secret managers.
+- Never print tokens/keys/PII to logs.
+- Ensure CI does not expose secrets to untrusted forks.
 
 ### Least privilege
-- scripts should assume minimum privileges
-- missing governance inputs ⇒ deny (exit code 20)
+
+- Scripts should use the minimum permissions required.
+- If policy inputs are missing → deny (not “warn and continue”).
+
+### Supply-chain hygiene (repo-level guidance)
+
+Scripts should assume the repo enforces:
+- protected branches,
+- required CI checks,
+- controlled modifications to workflow files (CODEOWNERS),
+- pinned dependencies where possible.
 
 ---
 
-## Testing + CI gates
+## Testing, CI gates, and “fail closed” behavior
 
-Script changes affecting governed behavior should be enforced by CI:
+Changes under `scripts/` are high leverage and should be gated.
 
-- docs/stories validation when docs are touched
-- data checksums + DCAT/STAC/PROV validation
+### Required CI expectations (project-level)
+
 - receipt schema validation (run_record + run_manifest)
-- policy tests (`opa test` + conftest regression)
-- API contract tests where scripts affect servable surfaces
-- optional supply-chain verification (SBOM/attestations) when enabled
+- catalog validation (DCAT/STAC/PROV)
+- checksum verification (processed assets)
+- policy regression tests (OPA + conftest if used)
+- documentation lint where applicable
 
-> [!IMPORTANT]
-> Any script that writes to `data/processed/` must produce receipts and catalogs.
+### Script-level test expectations
+
+- unit tests for `_lib/` helpers
+- fixture-based validation tests (known-good and known-bad receipts/catalogs)
+- deterministic output tests (stable ordering, stable hashing)
+
+> [!TIP]
+> Treat CI as the “acceptance harness” for governance promises: **if the harness can’t prove it, the system must not publish it.**
 
 ---
 
 ## Operations cookbook
 
-### Enter the API container (debug)
+> [!NOTE]
+> Commands below are shapes. Adjust paths and container names to match your actual stack.
+
+### Enter the API container
+
 ```bash
 docker compose exec api sh
 ```
 
-### Run a dataset ingest (example shape)
+### Ingest a dataset (raw/work only)
+
 ```bash
 docker compose exec api python scripts/connectors/example_dataset/ingest.py \
-  --dataset_id example_dataset --spec specs/ingest/example_dataset.json --log_json
+  --dataset_id example_dataset \
+  --spec specs/ingest/example_dataset.json \
+  --log_json
 ```
 
-### Promote (controlled step)
+### Validate (work gating)
+
+```bash
+docker compose exec api python scripts/connectors/example_dataset/validate.py \
+  --dataset_id example_dataset \
+  --run_id run_2026-02-16T00:00:00Z \
+  --log_json
+```
+
+### Promote (processed + catalogs + receipts)
+
 ```bash
 docker compose exec api python scripts/connectors/example_dataset/promote.py \
-  --dataset_id example_dataset --run_id run_2026-02-15T00:00:00Z --emit_catalogs
+  --dataset_id example_dataset \
+  --run_id run_2026-02-16T00:00:00Z \
+  --emit_catalogs \
+  --log_json
 ```
 
-### Reindex (if present)
+### Reindex (if implemented)
+
 ```bash
-docker compose exec api python scripts/admin/reindex.py --scope all
+docker compose exec api python scripts/admin/reindex.py --scope all --log_json
 ```
 
 ---
@@ -469,76 +537,100 @@ docker compose exec api python scripts/admin/reindex.py --scope all
 ## Troubleshooting
 
 <details>
-<summary><strong>Common failures & fixes</strong></summary>
+<summary><strong>Catalog validation failed</strong></summary>
 
-### “Catalog validation failed”
-- ensure required DCAT/STAC/PROV files exist
-- ensure cross-links resolve (no dangling refs)
-- ensure catalogs match the digests/checksums they claim
+- Verify DCAT/STAC/PROV files exist where the manifest says they do.
+- Verify cross-links resolve (no dangling refs).
+- Ensure catalogs reference the correct checksums/digests for processed outputs.
+- Ensure the correct profile/schema version is being validated against.
 
-### “Promotion blocked”
-Expected causes:
-- run manifest missing/invalid
-- validation report missing/failed
+</details>
+
+<details>
+<summary><strong>Promotion blocked</strong></summary>
+
+Common (expected) blockers:
+
+- missing/invalid `run_manifest.json`
+- `validation_report.json` reports `fail`
 - license missing
 - sensitivity classification missing
+- processed checksums missing or mismatch
 - catalogs missing/invalid
-- audit event missing (or cannot be written)
-- sensitive dataset lacks explicit approval path (repo-specific)
+- audit event missing or cannot be written
 
-### “Works on my machine”
-If outputs differ across machines:
-- pin container images/deps
-- capture git SHA + image digest in receipts
-- ensure deterministic ordering for checksums and catalog writers
+Remember: this is the system working as intended — **fail closed**.
+
+</details>
+
+<details>
+<summary><strong>Non-deterministic outputs (“works on my machine”)</strong></summary>
+
+- run scripts inside pinned containers
+- capture `git_sha` + `image_digest` in receipts
+- ensure stable file ordering when hashing
+- avoid timestamps in content-addressed artifacts (timestamps belong in receipts, not in deterministic payloads)
 
 </details>
 
 ---
 
-## Contributing / adding a new script
+## Adding a new script (DoD + checklist)
 
 ### Definition of Done (DoD)
-- [ ] script added to registry
-- [ ] `--help` exists and is accurate
-- [ ] inputs/outputs documented (zones)
-- [ ] emits `run_record.json` + `validation_report.json` + `run_manifest.json` if promoting/publishing
-- [ ] produces/updates catalogs (DCAT always; STAC/PROV as applicable)
-- [ ] deterministic checksums computed and verified
-- [ ] sensitivity/policy labels applied (fail closed if missing)
-- [ ] tests added/updated
-- [ ] no secrets committed; no sensitive data in logs/artifacts
-- [ ] CI passes
 
-### Style rules
-- Python: prefer module-backed CLIs; type hints encouraged.
-- Bash: `set -euo pipefail`; quote vars; no destructive defaults.
-- All: structured logs, explicit intent flags, idempotent where possible.
+- [ ] script is registered in `scripts/registry.yaml`
+- [ ] `--help` exists and matches actual behavior
+- [ ] inputs/outputs documented (including zone writes)
+- [ ] **if promotion/publish occurs**: emits `run_record.json`, `validation_report.json`, `run_manifest.json`
+- [ ] checksums computed and verified for processed outputs
+- [ ] DCAT emitted and validates; STAC/PROV emitted as applicable
+- [ ] sensitivity classification enforced (missing ⇒ fail)
+- [ ] policy prereqs enforced (missing ⇒ fail)
+- [ ] structured logs supported (`--log_json`)
+- [ ] tests added (fixtures + negative cases)
+- [ ] no secrets committed; no sensitive data in logs
+- [ ] CI passes (merge-blocking gates)
+
+### “Smallest safe” integration pattern
+
+1) add the dataset connector skeleton under `scripts/connectors/<dataset_id>/`
+2) implement `ingest → validate → promote` with receipts
+3) wire validators (receipt + catalogs) into CI
+4) only then scale to additional datasets
 
 ---
 
 ## Appendices
 
-<details>
-<summary><strong>Appendix A — Script header template (copy/paste)</strong></summary>
+### A. Script header templates
 
-### Python header
+#### Python
+
 ```python
 """
 KFM Script: <name>
 Type: pipeline|validator|admin|ci|dev
-Purpose: <one sentence>
-Inputs: <what it reads>
-Outputs: <what it writes (zones: raw/work/processed/catalog)>
+
+Purpose:
+  <one sentence>
+
+Inputs:
+  <what it reads>
+
+Outputs:
+  <what it writes, explicitly listing zones raw/work/processed/catalog>
+
 Governance:
-  - processed-only publishable truth
-  - fail-closed if license/sensitivity/receipts missing
-  - emit receipts (run_record, run_manifest) + validation_report when promoting
-  - catalogs required: DCAT always; STAC conditional; PROV required
+  - Processed-only publishable truth
+  - Fail-closed if license/sensitivity/receipts/catalogs missing
+  - Emit receipts (run_record, validation_report, run_manifest) when promoting
+  - Catalog obligations: DCAT always; STAC conditional; PROV required
 """
 ```
 
-### Bash header
+#### Bash
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -546,32 +638,59 @@ set -euo pipefail
 # KFM Script: <name>
 # Type: pipeline|validator|admin|ci|dev
 # Purpose: <one sentence>
-# Safety: refuse to run without explicit dataset_id/spec; no destructive defaults
+# Safety:
+#   - Refuse to run without explicit dataset_id/spec when applicable
+#   - No destructive defaults
+#   - Fail closed when governance inputs are missing
 ```
 
-</details>
+### B. Canonical artifact paths (quick reference)
 
-<details>
-<summary><strong>Appendix B — Canonical artifacts (quick reference)</strong></summary>
+```text
+data/raw/<dataset_id>/manifest.yml
+data/work/<dataset_id>/runs/<run_id>/run_record.json
+data/work/<dataset_id>/runs/<run_id>/validation_report.json
+data/work/<dataset_id>/runs/<run_id>/run_manifest.json
+data/processed/<dataset_id>/<version_id>/checksums.sha256
+data/catalog/dcat/<dataset_id>.json
+data/catalog/stac/<dataset_id>/**            # if spatial assets exist
+data/catalog/prov/<dataset_id>/run_<run_id>.json
+```
 
-- `data/raw/<dataset_id>/manifest.yml`
-- `data/work/<dataset_id>/runs/<run_id>/run_record.json`
-- `data/work/<dataset_id>/runs/<run_id>/validation_report.json`
-- `data/work/<dataset_id>/runs/<run_id>/run_manifest.json`
-- `data/processed/<dataset_id>/<version_id>/checksums.sha256`
-- `data/catalog/dcat/<dataset_id>.json`
-- `data/catalog/stac/<dataset_id>/**` (if spatial)
-- `data/catalog/prov/<dataset_id>/run_<run_id>.json`
+### C. Recommended exit codes
 
-</details>
+| Code | Meaning |
+|---:|---|
+| 0 | success |
+| 2 | usage / argument error |
+| 10 | validation failed (expected, machine-actionable) |
+| 20 | policy denied / governance missing (fail-closed) |
+| 30 | upstream acquisition failed (network/auth/provider) |
+| 50 | unexpected error/bug |
+
+### D. Glossary
+
+| Term | Meaning |
+|---|---|
+| **Truth path** | Raw → Work → Processed lifecycle ending in cataloged, receipt-backed publishable artifacts |
+| **Promotion Contract** | The rule that processed outputs require checksums + catalogs + receipts (run manifest) |
+| **Receipt** | Machine-readable proof artifact (run record/manifest/validation report/audit event) |
+| **Fail closed** | When uncertain, deny/abstain; never “best-effort publish” |
+| **Trust membrane** | UI/clients never access storage directly; all access via API + policy boundary |
 
 ---
 
-## References (governance grounding)
+## References
 
-- `.github/README.md` — repo governance + required CI gates
-- KFM Next-Gen Blueprint & Primary Guide — trust membrane; promotion gates; audit/evidence requirements
-- KFM Comprehensive Data Source Integration Blueprint — ingestion stages; validation gates; test plans
-- Feb-2026 integration patterns — spec_hash semantics (RFC 8785), receipts/manifests, acceptance harness patterns
+These are the primary governance and engineering guides that shape this folder’s contracts:
 
-> This README is a governed operational artifact: keep it accurate, complete, and reviewable.
+- KFM Next-Generation Blueprint & Primary Guide (draft, 2026-02-12). :contentReference[oaicite:0]{index=0}  
+- KFM Comprehensive Data Source Integration Blueprint (2026-02-12). :contentReference[oaicite:1]{index=1}  
+- Kansas Frontier Matrix Project Blueprint (2026-02-15). :contentReference[oaicite:2]{index=2}  
+- Kansas Frontier Matrix Companion Blueprint (2026-02-15). :contentReference[oaicite:3]{index=3}  
+- Kansas Frontier Matrix Cultivated Integration Ideas (2026-02-15). :contentReference[oaicite:4]{index=4}  
+- KFM Master Corpus Consolidation and Build-Integration Specification (2026-02-15). :contentReference[oaicite:5]{index=5}  
+- Software Security Guide for Developers (2026 Edition) — Expanded Sections. :contentReference[oaicite:6]{index=6}  
+- Professional Markdown Guide for GitHub Documentation. :contentReference[oaicite:7]{index=7}  
+
+> This README is a governed operational artifact. Keep it accurate, complete, and reviewable.
