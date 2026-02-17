@@ -275,4 +275,3 @@ Recommended CI requirements for any PR touching Focus Mode:
 - KFM Masterpiece Vision: evidence-first, policy-governed, explainable system principles.
 - KFM Blueprint and Ideas: Focus Mode guarantees, auditability expectations, trust membrane constraints.
 - Deep Research Report on Craft KFM Focus Mode: test matrix coverage categories and quality gates.
-
