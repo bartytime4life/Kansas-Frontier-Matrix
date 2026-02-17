@@ -86,34 +86,39 @@ KFM’s UI automation should use **Playwright** for browser-level coverage, incl
 
 ```text
 tests/
-  ui/
-    README.md
-    playwright.config.ts              # (recommended) unified config
-    package.json                      # (optional) if tests are isolated
-    specs/
-      smoke.spec.ts
-      map/
-        layer-toggle.spec.ts
-        timeline-scrub.spec.ts
-      story/
-        story-node-navigation.spec.ts
-      focus/
-        focus-mode-citations.spec.ts
-    fixtures/
-      users.json
-      public-datasets.json
-      story-nodes/
-    helpers/
-      selectors.ts
-      api.ts
-      waiters.ts
-      maplibre.ts
-      cesium.ts
-    snapshots/                        # golden screenshots (scoped!)
-    artifacts/                        # test output (gitignored)
-      traces/
-      videos/
-      screenshots/
+└─ ui/                                            # Playwright UI tests (E2E + journey checks; no secrets)
+   ├─ README.md                                    # How to run locally/CI, env vars, and governance rules
+   ├─ playwright.config.ts                          # (Recommended) unified config (projects, retries, tracing, baseURL)
+   ├─ package.json                                  # (Optional) if UI tests are isolated from repo root tooling
+   │
+   ├─ specs/                                        # Test specs (organized by feature/journey)
+   │  ├─ smoke.spec.ts                              # Fast sanity: app boots + critical routes render
+   │  ├─ map/
+   │  │  ├─ layer-toggle.spec.ts                    # Layers can be toggled; legend/state updates correctly
+   │  │  └─ timeline-scrub.spec.ts                  # Timeline scrub/playback; temporal filtering behaves
+   │  ├─ story/
+   │  │  └─ story-node-navigation.spec.ts           # Story browse/read/navigation; citations/assets load
+   │  └─ focus/
+   │     └─ focus-mode-citations.spec.ts            # Focus Mode: citations panel + evidence resolution UX
+   │
+   ├─ fixtures/                                     # Deterministic inputs (synthetic; no secrets)
+   │  ├─ users.json                                 # Test user handles only (auth injected via env, never stored here)
+   │  ├─ public-datasets.json                       # Canonical public dataset list (stable IDs for UI assertions)
+   │  └─ story-nodes/                               # Story fixtures used by UI tests (minimal + stable)
+   │
+   ├─ helpers/                                      # Shared helpers (keep deterministic; prefer data-testid selectors)
+   │  ├─ selectors.ts                               # Central selector map (avoid brittle CSS selectors)
+   │  ├─ api.ts                                     # API helpers (request stubs, health checks, seed helpers if allowed)
+   │  ├─ waiters.ts                                 # Wait utilities (network idle, spinners, streaming completion)
+   │  ├─ maplibre.ts                                # MapLibre helpers (layer state, feature query helpers)
+   │  └─ cesium.ts                                  # Cesium helpers (camera state, tileset readiness, screenshot helpers)
+   │
+   ├─ snapshots/                                    # Golden screenshots (scoped + minimal; avoid brittle pixel diffs)
+   │
+   └─ artifacts/                                    # Test outputs (gitignored; uploaded by CI as artifacts)
+      ├─ traces/                                    # Playwright traces (failure debugging)
+      ├─ videos/                                    # Videos (usually on failure only)
+      └─ screenshots/                               # Failure screenshots + optional reference captures
 ```
 
 ---
