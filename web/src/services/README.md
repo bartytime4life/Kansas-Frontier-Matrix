@@ -1,285 +1,342 @@
-# 🧰 `web/src/services` — UI Services Layer
+<!--
+File: web/src/services/README.md
+Purpose: Web “services” (integration/adapters) documentation for KFM.
+-->
 
-![TypeScript](https://img.shields.io/badge/TypeScript-typed-informational?logo=typescript)
-![React](https://img.shields.io/badge/React-client-blue?logo=react)
-![API-First](https://img.shields.io/badge/API--First-contracts%20over%20coupling-success)
-![Provenance](https://img.shields.io/badge/Provenance-first%20by%20design-purple)
+# 🧩 `web/src/services` — Web Services (Integration Layer)
 
-> **One job:** this folder is the **network boundary** of the KFM web UI — the single home for **calling backend APIs**, **building tile URLs**, and **normalizing responses/errors**.  
-> Keep components clean. Keep contracts explicit. Keep governance intact. 🧭
+![Layer](https://img.shields.io/badge/layer-integration%20%26%20adapters-blue)
+![Boundary](https://img.shields.io/badge/boundary-governed%20API%20only-critical)
+![Governance](https://img.shields.io/badge/governance-fail--closed-important)
 
----
+This directory is the **trust-membrane boundary** for the web client.
 
-## 📌 What belongs here (and what doesn’t)
+It contains the code that is allowed to:
+- call the **KFM Governed API** (REST + optional GraphQL),
+- connect to **realtime transports** (WebSocket/SSE),
+- read/write **browser persistence** (IndexedDB / Cache API / storage),
+- emit **telemetry** (PII-safe, schema’d),
+- implement **offline-first sync** primitives.
 
-✅ **Belongs in `services/`**
-- `fetch` / HTTP client wrappers (REST + GraphQL)
-- “Domain service” modules (datasets, catalog search, tiles, Focus Mode, etc.)
-- URL builders (e.g., vector tile templates)
-- Request/response typing + error normalization (per endpoint)
-- Cross-cutting concerns at the API edge (timeouts, abort signals, request IDs)
-
-🚫 **Does NOT belong in `services/`**
-- React components / JSX
-- Global state (Redux slices, Zustand stores, etc.)
-- React hooks (put those in `web/src/hooks/` — hooks can *use* services)
-- Any direct DB logic (UI never talks to databases)
-- Any direct LLM/AI calls (UI calls backend endpoints; backend orchestrates)
+> [!IMPORTANT]
+> UI components/hooks should **depend on services**. Services should **never depend on UI**.
 
 ---
 
-## 🧠 Mental model: “UI ↔ Services ↔ API”
+## Why this folder exists
 
-```mermaid
-flowchart LR
-  UI[🖥️ React UI<br/>(components + hooks)] --> SVC[🧰 services/<br/>typed clients + helpers]
-  SVC --> API[🧱 Backend API<br/>(FastAPI + GraphQL)]
-  API --> DS[(🗄️ Datastores<br/>PostGIS / Neo4j / Search Index)]
-  API --> AI[(🤖 Focus Mode<br/>LLM runtime behind API)]
-```
+KFM is designed around a “governed middle tier”:
+- The UI is a **thin client**.
+- **Policy enforcement + audit + provenance** happen at the API boundary.
+- The web client should not “bypass governance” by reaching around the API.
 
-**Rule of thumb:** If you see `fetch(...)` inside a component, it probably belongs here instead. 👀
+This folder makes that boundary concrete and reviewable.
 
 ---
 
-## 🗂 Suggested layout
+## Non-negotiables
 
-> Your repo may already have some of these names — this is the **intended shape** of the folder.
+> [!CAUTION]
+> If you are about to violate one of these, stop and trigger a governance review.
+
+### ✅ Allowed
+- Calling `GET/POST/... /api/v1/...` endpoints.
+- (Optional) Calling `/graphql` **only** when it is routed through the same governed service logic as REST.
+- Fetching evidence/provenance artifacts (receipts, citations, dataset metadata) **for read-only display**.
+- Emitting **schema-validated** telemetry events that avoid PII and sensitive details.
+
+### ❌ Not allowed
+- **Direct database access** of any kind (obvious, but worth stating).
+- Direct calls to any LLM provider from the browser.
+- Sending free-text telemetry payloads that could contain PII or sensitive locations.
+- Copy/pasting “fetch() everywhere” patterns into random UI files (keep network IO centralized).
+
+---
+
+## Suggested directory layout
+
+> [!NOTE]
+> This is a recommended baseline. If your repo layout differs, update the tree below to match reality.
 
 ```text
-📁 web/
-  📁 src/
-    📁 services/
-      📄 README.md
-      📄 apiClient.ts           # fetch wrapper (baseUrl, headers, errors)
-      📄 graphqlClient.ts       # POST /graphql wrapper (typed requests)
-      📄 tiles.ts               # tile URL builders + layer helpers
-      📄 datasets.ts            # dataset metadata + dataset data endpoints
-      📄 catalog.ts             # catalog search endpoints
-      📄 query.ts               # ad-hoc query endpoint wrapper (if enabled)
-      📄 focusMode.ts           # Focus Mode endpoint wrapper
-      📄 index.ts               # barrel exports (optional)
+web/src/services/
+├─ README.md
+├─ http/
+│  ├─ httpClient.ts              # fetch wrapper + headers + retries + error mapping
+│  ├─ requestContext.ts          # correlation IDs, auth context, locale, etc.
+│  └─ errors.ts                  # ApiError, NetworkError, PolicyDeniedError, etc.
+├─ api/
+│  ├─ catalogService.ts          # search/catalog endpoints
+│  ├─ datasetsService.ts         # datasets/tiles/metadata endpoints
+│  ├─ storyService.ts            # story nodes, timeline, layers
+│  ├─ focusModeService.ts        # Focus Mode query + citations
+│  └─ evidenceService.ts         # receipts/provenance resolver (read-only)
+├─ graphql/                      # (optional) GraphQL client + typed operations
+│  ├─ client.ts
+│  └─ operations/
+├─ realtime/
+│  ├─ websocketClient.ts         # presence, collaboration, live updates
+│  └─ channels.ts                # channel names + payload schemas
+├─ storage/
+│  ├─ indexedDb.ts               # durable local store wrapper
+│  ├─ cache.ts                   # Cache API helper
+│  └─ kv.ts                      # small key/value (non-sensitive)
+├─ sync/
+│  ├─ queue.ts                   # offline queue + retry/backoff
+│  └─ serviceWorkerBridge.ts     # background sync hooks (if used)
+├─ telemetry/
+│  ├─ emitter.ts                 # schema’d UI events (PII-safe)
+│  ├─ schemas/                   # JSON schemas (or TS runtime validators)
+│  └─ redact.ts                  # defensive redaction helpers
+└─ types/
+   ├─ dto.ts                     # transport DTOs
+   └─ models.ts                  # client-facing models (mapped from DTOs)
 ```
 
-<details>
-<summary>✨ Why keep it centralized?</summary>
+---
 
-- **Governance & safety**: the UI stays decoupled; the API mediates validation + policy.
-- **Consistency**: one error shape, one auth strategy, one retry/timeout approach.
-- **Refactors don’t hurt**: if `/api/v1/...` changes, update one module, not 47 files.
-</details>
+## Service design rules
+
+### 1) Services are adapters, not “business logic”
+- Put **domain rules** in a domain layer (`web/src/domain/...` or feature-domain folders).
+- Put **IO + mapping** in services:
+  - request building,
+  - response decoding,
+  - error mapping,
+  - retries/backoff,
+  - caching/offline queue,
+  - telemetry emission (PII-safe).
+
+### 2) Every call must be traceable
+At minimum, every request should carry:
+- a per-request **correlation ID** (generated client-side if missing),
+- auth context (if authenticated),
+- a stable **client/app version** (helps audit + debugging).
+
+> [!TIP]
+> If the backend already issues a correlation ID, propagate it through subsequent calls too.
+
+### 3) Prefer explicit typing at the boundary
+- DTOs represent what the API actually sends.
+- Map DTOs into client-facing models, and keep the mapping code here.
+
+### 4) Fail closed (client-side)
+The backend is designed to deny when policy is uncertain; the UI must treat deny/blocked responses as *normal*:
+- show a policy-safe message,
+- avoid retry storms,
+- avoid “leaking” restricted details into logs/toasts.
+
+### 5) No sensitive leakage in telemetry/logging
+- Avoid free text.
+- Avoid precise coordinates unless explicitly permitted by policy.
+- If you must log, log **structural** facts only (event types, IDs, coarse buckets).
 
 ---
 
-## 🔑 Service design principles
+## Request context contract
 
-### 1) 🔒 “Backend is the policy gate”
-Services should assume the API enforces:
-- provenance + citation requirements (especially for Focus Mode)
-- access control / redaction rules
-- validation and query safety
+Define and pass a single “request context” object to all services.
 
-UI services should:
-- surface **HTTP status**, **human-friendly message**, and **request correlation ID** (if returned)
-- avoid inventing facts or falling back to “best guess” data
-
----
-
-### 2) 🧾 Typed contracts (always)
-Prefer exporting explicit types per endpoint.
+Example:
 
 ```ts
-// ✅ Good: each endpoint has a clear input/output surface
-export type DatasetId = string;
+export type RequestContext = {
+  baseUrl: string;
 
-export interface DatasetMeta {
-  id: DatasetId;
-  title: string;
-  description?: string;
-  updatedAt?: string;
-  // ...
+  /** Unique per user action / request chain */
+  correlationId: string;
+
+  /** Authn context (implementation-specific) */
+  accessToken?: string;
+
+  /** Locale info (optional) */
+  locale?: string;
+  timezone?: string;
+
+  /** App/build metadata (optional but useful) */
+  clientVersion?: string;
+};
+```
+
+---
+
+## HTTP client pattern
+
+> [!TIP]
+> Keep `fetch` usage inside `http/httpClient.ts` only.
+
+```ts
+export interface HttpClient {
+  get<T>(path: string, init?: RequestInit): Promise<T>;
+  post<T>(path: string, body: unknown, init?: RequestInit): Promise<T>;
+  patch<T>(path: string, body: unknown, init?: RequestInit): Promise<T>;
+  delete<T>(path: string, init?: RequestInit): Promise<T>;
 }
 ```
 
-If you’re using a schema-driven setup (OpenAPI → types, GraphQL codegen, etc.), this folder is where those types get *consumed*.
+### Error mapping
+Normalize errors into a small set of types:
+- `NetworkError` (offline/DNS/timeouts)
+- `ApiError` (non-2xx)
+- `PolicyDeniedError` (403/451/etc)
+- `ConflictError` (412 precondition, ETag mismatch)
 
 ---
 
-### 3) 🧯 Normalize errors once
-Every service function should throw (or return) a consistent error type.
+## Focus Mode service
 
-**Recommended contract:**
-- `ApiError.status` (HTTP status)
-- `ApiError.code` (optional machine code)
-- `ApiError.details` (optional structured payload)
-- `ApiError.requestId` (if available)
+Focus Mode calls are **server-side RAG + governance**; the browser sends the question + context and renders the answer + citations.
 
 ```ts
-export class ApiError extends Error {
-  status: number;
-  code?: string;
-  details?: unknown;
-  requestId?: string;
-
-  constructor(message: string, init: Partial<ApiError>) {
-    super(message);
-    Object.assign(this, init);
-  }
-}
-```
-
----
-
-### 4) 🧵 Support AbortController (maps + search need it)
-Maps and live search produce rapid request churn. Every call should accept an optional `AbortSignal`.
-
-```ts
-export type RequestOptions = {
-  signal?: AbortSignal;
+export type FocusQueryRequest = {
+  question: string;
+  context?: {
+    bbox?: [number, number, number, number]; // optional; keep coarse if sensitive
+    year?: number;
+    activeLayerIds?: string[];
+    selectedEntityIds?: string[];
+  };
 };
 
-export async function searchCatalog(
-  text: string,
-  opts: RequestOptions = {}
-) {
-  // pass opts.signal through to fetch
+export type FocusQueryResponse = {
+  answer_markdown: string;
+  citations: Array<{
+    id: string;
+    label?: string;
+    source_kind: "dataset" | "document" | "graph";
+    source_id: string;
+    snippet?: string;
+    uri?: string;
+  }>;
+};
+
+export async function askFocusMode(http: HttpClient, req: FocusQueryRequest) {
+  // Example endpoint; keep all AI logic server-side.
+  return http.post<FocusQueryResponse>("/api/v1/ai/query", req);
 }
 ```
 
 ---
 
-## 🌐 Base API patterns
+## Offline-first + sync
 
-### ✅ Centralize base URL (don’t scatter it)
-Pick **one** way to compute the API base URL and reuse it across the folder.
+When a feature requires offline support:
+- write **durable state** to local storage first (IndexedDB),
+- enqueue an upload/sync job,
+- let the sync layer flush when online (service worker optional).
 
-Example (Vite-style):
-```ts
-const API_BASE_URL =
-  (import.meta as any).env?.VITE_API_BASE_URL ?? "";
-```
-
-If your project uses CRA/Next/etc., adapt accordingly — the key is **one source of truth**.
-
----
-
-## 🧱 Common API surfaces used by the UI
-
-> These are the typical backend capabilities the UI consumes (REST + GraphQL + tiles + Focus Mode).  
-> Keep all of these calls inside `services/`.
-
-### 🗃️ Datasets & Catalog
-Typical patterns:
-- `GET /api/v1/datasets/{id}` → dataset metadata
-- `GET /api/v1/datasets/{id}/data` → dataset rows/features
-- `GET /api/v1/catalog/search?text=...` → search datasets (and maybe stories)
-
-**Service modules**
-- `datasets.ts` → `getDatasetMeta(id)`, `getDatasetData(id, params)`
-- `catalog.ts` → `searchCatalog(query, filters)`
+Suggested primitives:
+- `LocalStore` (IndexedDB)
+- `SyncQueue` (retry/backoff + batching)
+- `Reconciler` (handles conflict responses like 412)
 
 ---
 
-### 🧠 Focus Mode (AI assistant)
-**Important:** UI never calls the model directly. The UI hits a backend endpoint (commonly something like `POST /focus-mode/query`) and renders:
-- the answer text
-- the citations/footnotes payload (clickable in UI)
-- optional structured provenance metadata
+## ETag / conditional writes
 
-**Service module**
-- `focusMode.ts` → `askFocusMode({ question, mapContext, selectedLayers, ... })`
+For user-editable resources (profiles, preferences, story edits), prefer:
+- `GET` returns `ETag`
+- `PATCH/PUT` uses `If-Match: <etag>`
+- `412 Precondition Failed` triggers a merge flow
 
-Suggested response shape:
-```ts
-export interface FocusModeCitation {
-  id: string;          // doc/story/dataset ref
-  label?: string;      // short display label
-  url?: string;        // optional deep link
-}
-
-export interface FocusModeResponse {
-  answer: string;                 // may include markers like [1], [2]
-  citations: FocusModeCitation[]; // render as clickable footnotes
-  // optional: provenance, debug traces, etc.
-}
-```
+> [!NOTE]
+> This avoids blind overwrites and makes conflicts explicit.
 
 ---
 
-### 🗺️ Tiles (MapLibre / Cesium)
-Large layers should stream as tiles (vector/raster), while small overlays may use GeoJSON.
+## Telemetry (PII-safe)
 
-✅ Put **tile URL creation** in `tiles.ts` so that map components don’t hardcode paths.
+Telemetry must be **schema’d** and **defensive**.
+
+Recommended rules:
+- **no free-text**
+- **no precise coordinates** unless already public + approved
+- buffer events, flush on:
+  - every N events,
+  - `visibilitychange`,
+  - periodic timer (bounded)
+
+Example schema shape:
 
 ```ts
-export function vectorTileUrl(layer: string) {
-  // Choose your routing convention:
-  // - /tiles/{layer}/{z}/{x}/{y}.pbf
-  // - /api/tiles/{layer}/{z}/{x}/{y}.pbf
-  return `${API_BASE_URL}/api/tiles/${layer}/{z}/{x}/{y}.pbf`;
-}
-```
+export type UiEvent = {
+  event_name:
+    | "story.next"
+    | "story.prev"
+    | "layer.toggle"
+    | "timeline.scrub"
+    | "citation.open";
 
-Then in the map layer code:
-```ts
-map.addSource("historic_trails", {
-  type: "vector",
-  tiles: [vectorTileUrl("historic_trails")],
-});
+  story_node_id?: string;
+  timestamp_bucket: string; // e.g., "2026-02-17T15:00Z"
+
+  // only enums / IDs / coarse buckets
+  layer_id?: string;
+};
 ```
 
 ---
 
-### 🧬 GraphQL
-If the UI uses GraphQL, keep the client in `graphqlClient.ts`.
+## Adding a new service
 
-```ts
-export async function gql<TData, TVars>(
-  query: string,
-  variables?: TVars,
-  opts: RequestOptions = {}
-): Promise<TData> {
-  return apiFetch<TData>("/graphql", {
-    method: "POST",
-    body: JSON.stringify({ query, variables }),
-    signal: opts.signal,
-  });
-}
-```
+1. Create `api/<thing>Service.ts`
+2. Add DTO types in `types/dto.ts` (or `types/<thing>.dto.ts`)
+3. Add mapping function(s) into `types/models.ts` (or `types/<thing>.mapper.ts`)
+4. Add unit tests:
+   - request building
+   - response decoding
+   - error mapping
+5. Add contract tests (if you have OpenAPI/GraphQL schemas available)
+6. Add telemetry events only if:
+   - schema exists
+   - redaction rules exist
+   - governance sign-off is recorded
 
 ---
 
-## 🧪 Testing strategy (quick + sane)
+## Definition of Done checklist
 
-### ✅ Unit tests
-- Mock `apiFetch` and assert:
-  - path + method + body shape
-  - response parsing
-  - error normalization
-
-### ✅ Integration-ish tests
-- Use **MSW** (Mock Service Worker) to simulate the API at the network boundary.
-- Validate:
-  - abort behavior on rapid interactions (search, map pan/zoom)
-  - focus mode citation rendering contract
+- [ ] Service uses centralized `HttpClient` (no raw `fetch()` in the service)
+- [ ] Typed request/response DTOs + mapping
+- [ ] Correlation ID propagated
+- [ ] Errors normalized into standard error types
+- [ ] Telemetry (if any) is schema’d + redacted + tested
+- [ ] Unit tests added
+- [ ] Contract tests updated (if applicable)
+- [ ] No sensitive data in logs/toasts
+- [ ] Docs updated (this README + endpoint notes)
 
 ---
 
-## ✅ Checklist for adding a new service
+## Governance review triggers
 
-- [ ] Create a new `services/<domain>.ts` file (or extend an existing domain module)
-- [ ] Add **typed** input/output
-- [ ] Use the shared `apiClient` wrapper (no raw `fetch`)
-- [ ] Support `AbortSignal` where it matters
-- [ ] Normalize errors (throw `ApiError`)
-- [ ] Do not embed UI assumptions (keep it framework-agnostic)
-- [ ] Export through `services/index.ts` (if you use barrel exports)
+Open a governance review if you:
+- add a new endpoint that exposes sensitive layers/datasets
+- add new telemetry fields (especially anything that could carry PII)
+- add any storage of user content to the browser
+- add a new realtime channel that could expose presence/scope
+- introduce GraphQL queries that increase data surface area
+
+---
+
+## Quick troubleshooting
+
+**“Why is the API returning 403?”**
+- Treat it as policy enforcement, not “an error”. Surface a safe UI message and log the correlation ID.
+
+**“Why does a PATCH fail with 412?”**
+- You likely have an ETag conflict. Refresh the resource, merge client changes, retry with the latest ETag.
+
+**“Why are we getting intermittent websocket disconnects?”**
+- Confirm reconnect backoff is bounded and that you dedupe events after reconnect.
 
 ---
 
-## 🧭 “If you remember nothing else…”
+## Related (governed) docs
 
-> **The UI is a map & narrative explorer. The API is the gatekeeper.  
-> `services/` is the contract glue that keeps that separation clean.** 🔥
+> [!NOTE]
+> Add/replace links below to match the actual repo documentation layout.
 
----
+- KFM API contracts (OpenAPI / GraphQL schema) *(not confirmed in repo)*
+- Governance & policy boundary overview *(not confirmed in repo)*
+- Focus Mode UI + citations behavior *(see project blueprint PDFs in repo docs)*
