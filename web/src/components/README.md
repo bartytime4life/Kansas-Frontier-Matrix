@@ -1,445 +1,268 @@
-<!--
-File: web/src/components/map/README.md
-Purpose: KFM Web UI map surface (React/TypeScript + MapLibre)
--->
+# Components (`web/src/components`)
 
-# 🗺️ Map Components
+![Governed](https://img.shields.io/badge/governed-evidence--first-2ea44f)
+![UI](https://img.shields.io/badge/ui-react%20%2B%20typescript-0b74de)
+![Map-first](https://img.shields.io/badge/map--first-MapLibre%20%2B%20Cesium-6f42c1)
+![Fail-closed](https://img.shields.io/badge/policy-fail--closed-critical)
 
-![React](https://img.shields.io/badge/React-UI-61DAFB?logo=react&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-typed-3178C6?logo=typescript&logoColor=white)
-![MapLibre](https://img.shields.io/badge/MapLibre-GL%20JS-0B5FFF)
-![Governed](https://img.shields.io/badge/KFM-governed%20%26%20evidence--first-222222)
-![Trust Membrane](https://img.shields.io/badge/Trust%20Membrane-UI%20%E2%86%92%20API%20only-important)
+Shared, reusable UI components for the **KFM Web** application.
 
-This folder contains KFM’s **interactive map UI**: the MapLibre map canvas, the layer registry, map interactions (hover/click), and the UI that answers:
-
-> **“What am I looking at, where did it come from, and what am I allowed to see?”**
+> [!IMPORTANT]  
+> **KFM is evidence-first.** Components must help users understand *why* something is believed (citations, provenance, uncertainty), and they must **fail closed** (render “untrusted/unknown”) when evidence cannot be validated.
 
 ---
 
-## ✨ If you’re new, start here
+## What belongs here
 
-### Quick tasks
+Put components here when they are:
 
-- **Just render the map** → jump to [Minimal usage](#-minimal-usage)
-- **Add a new map overlay** → jump to [Add a new layer](#-add-a-new-layer)
-- **Add click-to-identify** → jump to [Identify on click](#-identify-on-click)
-- **Hook map to Story Nodes / Focus Mode** → jump to [Story Node sync](#-story-node-sync)
-- **Fix “blank map during transitions”** → jump to [Instant Story Transitions (LQ styles)](#-instant-story-transitions-lq-styles)
+- **Reusable** across multiple pages/features
+- **UI-first** (rendering + interaction), not long-running workflows
+- **Safe-by-design** (no hidden side effects; no direct access to sensitive systems)
+- **Provenance-aware** when displaying claims (maps, numbers, summaries, AI output)
 
-### What makes KFM’s map different
+Common examples:
 
-KFM’s map is not “just a basemap + layers.” It’s an evidence-first surface:
-
-- **Provenance is first-class UI** (layers have an “info” affordance, not hidden docs)
-- **Policy and sensitivity matter** (some layers must be generalized/redacted or hidden)
-- **Time is a core axis** (timeline and map stay synchronized)
-- **No direct database access from the browser** (trust membrane: UI → governed APIs only)
+- **Evidence surfaces** (receipts, provenance drawers, citations UI, trust badges)
+- **Map UI components** (layer toggles, legends, timelines, scale bars, hover inspectors)
+- **Story Node UI** building blocks (narrative panels, next/prev nav, media cards)
+- **Accessibility primitives** (skip links, landmarks wrappers, keyboard helpers)
 
 ---
 
-## 🧠 Mental model
+## What does not belong here
+
+- ❌ **Direct database access** (never)
+- ❌ **Secrets** (tokens, keys, credentials) or security-sensitive computations
+- ❌ **Business workflows** (dataset promotion, policy decisions, ingestion orchestration)
+- ❌ “Smart” components that **fetch from arbitrary URLs** without going through the governed API boundary
+
+> [!NOTE]  
+> Any network access in the frontend must go through the **governed API** (trust membrane). If you *think* you need to call a storage bucket or database from a component, stop and route through the API boundary instead. *(Exact client path may vary by repo wiring.)*
+
+---
+
+## Directory layout
+
+### Canonical per-component folder pattern
+
+Each component lives in its own folder, with colocated types, styles, tests, and docs.
+
+```text
+web/src/components/
+├── README.md                         # (this file)
+├── <ComponentName>/
+│   ├── <ComponentName>.tsx           # main component
+│   ├── <ComponentName>.test.tsx      # unit tests (if applicable)
+│   ├── <ComponentName>.stories.tsx   # Storybook story (if Storybook enabled)
+│   ├── styles.(css|module.css|scss)  # styles (follow repo standard)
+│   ├── types.ts                      # exported types (optional)
+│   ├── index.ts                      # re-export surface
+│   └── README.md                     # component-level contract + usage notes
+└── ...
+```
+
+### Example referenced in KFM docs (may or may not be present yet)
+
+```text
+web/src/components/
+└── ReceiptViewer/                    # safe, read-only evidence/receipt renderer
+    ├── ReceiptViewer.tsx
+    ├── ReceiptViewer.css
+    └── README.md
+```
+
+> [!CAUTION]  
+> If a component folder structure differs in the current repo, **follow the repo**.  
+> This README documents the **intended standard** and the direction we converge toward.
+
+---
+
+## Component design principles
+
+### 1) Evidence-first UX
+
+If the UI displays *facts*, it should also display:
+
+- **Citations** (what source(s) support this?)
+- **Provenance** (what dataset version / run produced it?)
+- **Uncertainty** (confidence, caveats, redactions)
+- **Policy outcome** (why something is withheld or generalized)
+
+**Rule of thumb:** if a user could screenshot a claim, the screenshot should carry enough context to trace the evidence path.
+
+### 2) Fail-closed rendering
+
+When evidence validation fails (schema mismatch, missing signature, missing source references):
+
+- Render **Untrusted / Unknown**
+- Do **not** “best effort” parse or infer critical fields
+- Offer a safe route to inspect raw data (collapsed JSON view, truncated)
+
+### 3) Trust membrane respect
+
+Components should be **pure renderers** of already-governed data:
+
+- Prefer: `Component(props)` receives a typed model already filtered/redacted by API policy.
+- Avoid: components that fetch, merge, or “repair” untrusted payloads inline.
+
+### 4) Accessibility is non-negotiable
+
+- Keyboard-first interactions
+- Clear focus management
+- Semantic landmarks, headings, and tables
+- Screen reader compatibility for maps (ARIA labels + text alternatives)
+
+### 5) Performance as a feature
+
+Map + timeline UIs can be expensive. Favor:
+
+- Stable references (`useRef`) for map/engine instances
+- Memoization and selective rendering
+- Virtualized lists for large tables
+- Avoiding deep prop drilling for high-frequency signals (mousemove, map events)
+
+---
+
+## Imports and boundaries
+
+### Preferred dependency direction
 
 ```mermaid
 flowchart LR
-  U[User] --> UI[Map UI<br/>React components]
-  UI --> ML[MapLibre Map<br/>(WebGL)]
-  UI -->|data requests| API[Governed API Gateway]
-  API -->|policy checks| PDP[Policy engine<br/>(OPA/PDP)]
-  API --> DS[(Data stores)]
-  API --> PRV[(Catalog + Provenance)]
-  UI --> PRVD[Provenance Drawer<br/>Layer & Answer metadata]
-  UI --> FM[Focus Mode Panel<br/>Cite or abstain]
+  A[Components] --> B[Hooks / View-models]
+  B --> C[Governed API client]
+  C --> D[API Gateway + Policy (OPA)]
+  D --> E[Storage: PostGIS / Object Store / Graph / Search]
+  D --> F[Evidence Resolver + Provenance]
+  F --> C
+  C --> B
+  B --> A
 ```
 
-**Rule of thumb:**  
-If a component needs **data**, it should request it through an API client (never from PostGIS/Neo4j/object storage directly).
+### Anti-patterns
 
-## 📚 Glossary (MapLibre + KFM)
-
-| Term | What it means in practice |
-|---|---|
-| **Style** | A JSON document (Style Spec) that declares sources + layers + paint/layout rules. |
-| **Source** | A data input (vector tiles, raster tiles, GeoJSON, images). Usually added via `map.addSource()`. |
-| **Layer** | A visual rule in the style (line/fill/symbol/etc.) that references a `source` (and optionally `source-layer`). |
-| **`source-layer`** | For vector tiles: the named layer _inside_ the tile archive (not the same as a style layer id). |
-| **TileJSON** | A JSON descriptor for tile endpoints + bounds/zoom metadata. |
-| **PMTiles** | A single-file tile pyramid fetched via HTTP range requests (great for static hosting). |
-| **Provenance Drawer** | KFM UI panel that explains a layer/answer: sources, licenses, transformations, constraints. |
-| **Trust membrane** | UI never talks to databases/object storage directly — only to governed APIs. |
-| **Story Node** | A governed narrative step that can drive map view, time window, and active layers. |
+- Importing server-only code into the browser bundle
+- Reading environment secrets directly in components
+- Calling unverified third-party endpoints from UI without policy mediation
 
 ---
 
-## 📁 What lives in this folder
+## Evidence surfaces
 
-> ⚠️ The exact filenames may vary by branch. Use this as a guide and keep it updated when you rename/move files.
+Evidence surfaces are components designed to “show your work” to the user.
 
-Recommended (or typical) structure:
+### ReceiptViewer (reference contract)
 
-```text
-web/src/components/map/
-├─ README.md                         # you are here
-├─ MapView.tsx                        # top-level map component
-├─ MapProvider.tsx                    # context: map instance + view state
-├─ hooks/
-│  ├─ useMapInstance.ts               # safe access to MapLibre instance
-│  ├─ useMapViewState.ts              # center/zoom/bearing/pitch
-│  ├─ useStoryNodeSync.ts             # applies story node view + time window
-│  └─ useLayerRegistry.ts             # register/toggle layers
-├─ layers/
-│  ├─ layerRegistry.ts                # layer definitions + metadata
-│  ├─ layerTypes.ts                   # shared types (LayerId, LayerMeta, etc.)
-│  ├─ layerVisibility.ts              # visibility rules + zoom/time gating
-│  └─ transitions/
-│     ├─ applyTransitionStyle.ts      # transitionStyleId → styleId swap
-│     └─ fadeInOnSourceReady.ts       # mount-then-fade-in helper
-├─ sources/
-│  ├─ registerSources.ts              # addSource helpers
-│  ├─ pmtiles.ts                      # pmtiles:// protocol registration
-│  └─ transformRequest.ts             # auth + request rewriting hook
-├─ interactions/
-│  ├─ identifyOnClick.ts              # queryRenderedFeatures + popup
-│  ├─ hoverHighlight.ts               # hover/selection styling
-│  └─ cursor.ts                       # cursor affordances
-├─ ui/
-│  ├─ LayerPanel.tsx                  # layer list + toggles
-│  ├─ Legend.tsx                      # symbology
-│  ├─ ProvenanceDrawer.tsx            # “map behind the map”
-│  └─ MapStatus.tsx                   # loading/idle/errors indicators
-└─ __tests__/
-   ├─ layerRegistry.test.ts
-   └─ transitions.test.ts
-```
+A safe receipt viewer follows this trust chain:
 
----
+1. **Validate schema**  
+2. **Verify signature**  
+3. **Render** (with explicit status)
 
-## ✅ Minimal usage
+> [!IMPORTANT]  
+> Evidence surfaces must be safe, **read-only**, and resistant to malformed input.
 
-Example “drop a map on the page” usage.
+**Recommended blocks:**
 
-```tsx
-import React from "react";
-import { MapView } from "./MapView";
+- Status pill: `Valid/Invalid` · `Verified/Unverified`
+- Inputs table: type-aware renderers
+- Signatures panel: signer, thumbprint, issuance/expiry, verification result
+- Links panel: safe external links only
+- JSON viewer: collapsed by default; truncation for very large blobs
 
-export function MapPage() {
-  return (
-    <div style={{ height: "100vh" }}>
-      <MapView />
-    </div>
-  );
+**Guardrails:**
+
+- Never use `dangerouslySetInnerHTML`
+- Validate before computing derived views
+- External links: `target="_blank"` + `rel="noopener noreferrer"`
+
+<details>
+<summary><strong>Minimal component “contract” template</strong></summary>
+
+```ts
+export type ReceiptViewerProps = {
+  schema: object;       // JSON Schema (AJV-compatible)
+  data: unknown;        // raw receipt/manifest payload
+  compact?: boolean;    // e.g., PR previews
+  onAction?: (type: string, payload?: unknown) => void;
 }
 ```
+</details>
 
 ---
 
-## 🧩 Common workflows
+## Styling conventions
 
-### ➕ Add a new layer
-
-A layer in KFM is **never** just a style snippet. At minimum it should have:
-
-- a stable `id`
-- a **user-facing title**
-- a **provenance hook** (how to open DCAT/STAC/PROV info)
-- sensitivity hints (public vs restricted/generalized)
-- default visibility rules (zoom/time gating)
-
-Suggested interface (adjust to match actual types):
-
-```ts
-export type LayerId = string;
-
-export type LayerMeta = {
-  id: LayerId;
-  title: string;
-  description?: string;
-
-  /** Where the UI can fetch layer metadata/provenance for “What is this?” */
-  provenanceRef?: { kind: "dcat" | "stac" | "prov" | "doc"; id: string };
-
-  /** Governance hints used by UI + policy responses */
-  sensitivity?: "public" | "restricted" | "generalized";
-};
-
-export type LayerDef = {
-  meta: LayerMeta;
-  maplibreLayerIds: string[]; // style layer IDs
-  defaultOn?: boolean;
-  minZoom?: number;
-  maxZoom?: number;
-};
-```
-
-Add it to the registry:
-
-```ts
-export const LAYERS: Record<LayerId, LayerDef> = {
-  "roads": {
-    meta: {
-      id: "roads",
-      title: "Roads",
-      provenanceRef: { kind: "dcat", id: "dcat:ksdot_roads_v1" },
-      sensitivity: "public",
-    },
-    maplibreLayerIds: ["roads-line", "roads-casing"],
-    defaultOn: true,
-    minZoom: 4,
-  },
-};
-```
-
-Then expose it in the Layer Panel:
-
-```tsx
-<LayerPanel layers={LAYERS} />
-```
-
-> ✅ Definition of Done (UI layer):  
-> If a user can toggle it on, they can also open “What is this?” and see the provenance/constraints.
-
----
-
-### 🕵️ Identify on click
-
-MapLibre’s `queryRenderedFeatures` is the typical “identify what’s under my cursor” approach.
-
-```ts
-export function attachIdentifyOnClick(map: maplibregl.Map) {
-  map.on("click", (e) => {
-    const hits = map.queryRenderedFeatures(e.point, { layers: ["myroads-line"] });
-    if (!hits.length) return;
-
-    const f = hits[0];
-    new maplibregl.Popup()
-      .setLngLat(e.lngLat)
-      .setHTML(`<pre>${JSON.stringify(f.properties, null, 2)}</pre>`)
-      .addTo(map);
-  });
-}
-```
-
-**KFM add-on:** the popup should include a link/button to open the **Provenance Drawer** for the active layer(s), not just raw JSON.
-
----
-
-### 🧱 Use PMTiles (static “serverless” tiles)
-
-If you serve vector tiles as `.pmtiles` on static hosting / object storage, you can register a `pmtiles://` protocol once and then reference it from styles.
-
-```ts
-import maplibregl from "maplibre-gl";
-import { Protocol, PMTiles } from "pmtiles";
-
-export function registerPMTilesProtocol(pmtilesUrl: string) {
-  const protocol = new Protocol();
-  maplibregl.addProtocol("pmtiles", protocol.tile);
-
-  // keep a shared PMTiles instance (recommended pattern)
-  protocol.add(new PMTiles(pmtilesUrl));
-}
-```
-
-## 🔐 Requests, auth, and safety
-
-Most deployments will need *some* request customization:
-
-- attach auth headers/tokens
-- enforce `credentials` behavior
-- route tile/style requests through the governed API domain
-- block accidental calls to untrusted origins
-
-MapLibre supports request rewriting via `transformRequest`. Keep this logic **centralized** (e.g., `sources/transformRequest.ts`) so the whole app has consistent behavior.
-
-> ✅ KFM expectation: the browser should only ever see **verified, sanitized** links for sensitive artifacts (attestations/logs/etc.). If something needs signature verification, do it server-side, then expose a safe URL.
-
----
-
-## 🧭 Story Node sync
-
-Story Nodes and Focus Mode expect map state to be reproducible (same view, same time window, same layers).
-
-Typical state inputs to sync:
-
-- `bbox` or `{center, zoom, bearing, pitch}`
-- `timeRange` (timeline window)
-- `activeLayers`
-
-Suggested approach:
-
-1. Parse the Story Node’s **view state** (from Story Node config / API).
-2. Apply it to the map via `jumpTo` or `easeTo`.
-3. Apply the time window to the timeline store.
-4. Apply layer visibility through the layer registry (not direct `setLayoutProperty` calls scattered in UI).
-
----
-
-## ⚡ Instant Story Transitions (LQ styles)
-
-Problem: Story navigation can briefly show a blank map while heavy layers load.
-
-Pattern: render a **lightweight “transition style” first**, then upgrade to the full style once the UI is idle + sources are loaded.
-
-High-level flow:
-
-```mermaid
-sequenceDiagram
-  participant UI as React UI
-  participant MAP as MapLibre
-  UI->>MAP: setStyle(transitionStyleId)
-  MAP-->>UI: idle (or sources ready)
-  UI->>UI: requestIdleCallback()
-  UI->>MAP: setStyle(styleId)
-```
-
-Implementation tips:
-
-- Keep the camera + selection state stable across `setStyle()`.
-- Use a small loading indicator to show the map is upgrading (avoid “silent drift”).
-- **CI gate idea:** if a Story Node has `styleId`, require a `transitionStyleId` (or an explicit opt-out).
-
----
-
-## 🌫️ Progressive layer reveal (mount-then-fade-in)
-
-Instead of adding/removing heavy layers during navigation, keep them mounted but transparent, then fade in when the underlying source is ready.
-
-Why it helps:
-
-- reduces add/remove churn
-- avoids late “pop-in”
-- feels smoother during fast Story stepping
-
-Sketch:
-
-```ts
-// 1) mount layer with opacity 0
-map.setPaintProperty("my-layer", "fill-opacity", 0);
-
-// 2) when source is ready, tween to 1
-tweenOpacity({
-  from: 0,
-  to: 1,
-  ms: 300,
-  onTick: (v) => map.setPaintProperty("my-layer", "fill-opacity", v),
-});
-```
-
----
-
-## 🧷 Provenance Drawer UX requirements
-
-Every map layer that is user-visible should surface, at minimum:
-
-- dataset/source name
-- license/usage constraints
-- time coverage
-- last refresh / staleness hints
-- transformations (if this layer is derived)
-- sensitivity classification (public/generalized/restricted)
-
-Keep it easy:
-
-- “ℹ️ About this layer” button next to every layer toggle
-- keyboard accessible (tab order, ESC to close)
-- never hide it behind dev-only toggles
-
----
-
-## ♿ Accessibility expectations
-
-Maps are hard for accessibility — we still treat it as non-negotiable.
+Follow the repository styling standard (CSS Modules, plain CSS, SCSS, CSS-in-JS, etc.).
 
 Minimum expectations:
 
-- Every interactive control is keyboard reachable.
-- Focus is never trapped when panels open/close.
-- Any time-based UI (timeline playback, animations) offers pause/stop.
-- Provide a text alternative for key map insights (e.g., “Selected county: …” panel).
+- Styles are **colocated** with the component
+- Class names are stable and readable
+- Don’t couple behavior to styling (no “CSS as logic”)
+- Avoid global styles unless the repo explicitly uses a design system
 
 ---
 
-## 🚀 Performance notes (practical)
+## Security checklist for UI components
 
-A few things that usually matter most:
-
-- Use vector tiles (or PMTiles) for large datasets.
-- For GeoJSON overlays: cluster, simplify, and constrain zoom ranges.
-- Avoid re-rendering React components on every map mousemove; use MapLibre events + refs.
-- Prefer opacity/visibility changes over add/remove cycles for heavy layers.
-
-Debug toggles that help when diagnosing:
-
-- tile boundaries
-- collision boxes
-- overdraw inspector
+- [ ] No `dangerouslySetInnerHTML` (or sanitize with a vetted sanitizer if unavoidable)
+- [ ] External links use `rel="noopener noreferrer"`
+- [ ] Large payloads are rendered safely (truncate / collapse / lazy render)
+- [ ] No PII in telemetry events; log structural events only
+- [ ] Error states do not leak secrets or internal stack traces
 
 ---
 
-## 🧪 Testing strategy
+## Accessibility checklist
 
-Recommended minimum:
-
-| Layer | What to test | Tooling ideas |
-|---|---|---|
-| Unit | layer registry: visibility rules, metadata present, stable IDs | Jest/Vitest |
-| Component | panels render + keyboard navigation | Testing Library |
-| E2E | Story stepping never blanks the map; provenance opens | Playwright |
-| Contract | API returns required metadata fields for layers | contract tests |
+- [ ] Correct semantic element (`button` for buttons, `nav` for navigation, etc.)
+- [ ] Interactive elements are keyboard reachable
+- [ ] Visible focus indicator
+- [ ] ARIA labels only when semantics are insufficient
+- [ ] Tables use proper `thead/tbody` and headers
+- [ ] Color is never the only carrier of meaning
 
 ---
 
-## 🧾 Governance checklist for PRs
+## Testing and Definition of Done
 
-Before opening a PR that touches this folder:
+### When a component is “done”
 
-- [ ] New layers include provenance metadata (DCAT/STAC/PROV reference)
-- [ ] Sensitive layers have a plan (restricted vs generalized)
-- [ ] UI is still **API-only** (no direct DB/object-store access)
-- [ ] Story Node transitions remain non-blank (transition style or fade-in)
-- [ ] Basic accessibility checks pass (keyboard + focus)
-- [ ] Tests updated/added for the changed behavior
-- [ ] README updated if structure or behavior changed
+- [ ] Types: exported props + key models are typed (no unbounded `any`)
+- [ ] Docs: component has a short `README.md` explaining purpose and usage
+- [ ] Tests: unit tests exist for non-trivial logic and critical rendering states
+- [ ] A11y: validated with at least one automated check and a keyboard pass
+- [ ] Security: guardrails followed (especially for evidence surfaces)
+- [ ] Performance: no obvious render thrash on map/timeline interactions
 
----
+### Evidence surface DoD (additional)
 
-## 🔗 Related docs (repo)
-
-> Update links to match your repo structure.
-
-- `../../../../docs/architecture/ARCHITECTURE.md`
-- `../../../../docs/architecture/TRUST_MEMBRANE.md`
-- `../../../../docs/ui/PROVENANCE_UX.md`
-- `../../../../docs/story_nodes/README.md`
-- `../../../../docs/policies/README.md`
+- [ ] Schema validation is enforced before rendering “trusted” UI
+- [ ] Signature verification result is displayed and defaults to “unverified”
+- [ ] Fail-closed: invalid/unverified payloads never display green/approved affordances
+- [ ] Raw view exists (collapsed JSON; safe truncation)
 
 ---
 
-## 🧰 Troubleshooting (common issues)
+## Contributing notes
 
-<details>
-<summary><strong>Map is blank / controls look broken</strong></summary>
+- Prefer small, reviewable components.
+- Prefer composition over inheritance.
+- Keep components **deterministic**: given the same props, they should render the same output.
+- If the component influences “public narrative” (Story Nodes, summaries, maps), treat the output as a **governed artifact**: cite, qualify, and respect sensitivity flags.
 
-- Did you import MapLibre’s CSS?
-- Is the map container getting a non-zero height?
-- Are you setting the style URL correctly?
+---
 
-</details>
+## Suggested component README template
 
-<details>
-<summary><strong>Vector tiles load but nothing draws</strong></summary>
+Create `web/src/components/<ComponentName>/README.md` with:
 
-- Verify your layer IDs match the style.
-- Check `source-layer` names for vector tile sources.
-- Confirm zoom ranges (`minzoom`/`maxzoom`) align with the tiles.
-
-</details>
-
-<details>
-<summary><strong>PMTiles doesn’t load</strong></summary>
-
-- Ensure `maplibregl.addProtocol("pmtiles", ...)` runs before the map is created.
-- Confirm the PMTiles URL supports HTTP range requests.
-- Check CORS headers (static hosting must allow the browser to fetch ranges).
-
-</details>
+- **Purpose**
+- **Inputs/props**
+- **Outputs/states**
+- **Security notes**
+- **Accessibility notes**
+- **Example usage**
+- **Test coverage expectations**
