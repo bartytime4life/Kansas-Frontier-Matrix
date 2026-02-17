@@ -335,11 +335,11 @@ UI tests should run in CI in a **repeatable** environment.
 
 ```mermaid
 flowchart LR
-  A[Lint + Typecheck] --> B[Unit/Component Tests]
-  B --> C[Spin up KFM stack (ephemeral)]
-  C --> D[UI E2E (Playwright)]
-  D --> E[Upload sanitized artifacts]
-  E --> F[Publish report + status]
+  A["Lint + Typecheck"] --> B["Unit/Component Tests"]
+  B --> C["Spin up KFM stack (ephemeral)"]
+  C --> D["UI E2E (Playwright)"]
+  D --> E["Upload sanitized artifacts"]
+  E --> F["Publish report + status"]
 ```
 
 ### Required pass/fail signals
