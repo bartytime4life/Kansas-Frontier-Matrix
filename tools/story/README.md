@@ -1,439 +1,216 @@
-# 🧭 KFM Story Tools
+# 🧭 KFM Story Tools (`tools/story/`)
 
-![Governance](https://img.shields.io/badge/governance-governed-blue)
-![Evidence-first](https://img.shields.io/badge/evidence--first-required-brightgreen)
-![Template](https://img.shields.io/badge/story%20template-v3-informational)
-![CI](https://img.shields.io/badge/CI-fail--closed-important)
+![Governed](https://img.shields.io/badge/Governed-yes-2b6cb0)
+![Evidence-first](https://img.shields.io/badge/Evidence--first-required-0f766e)
+![Contract-first](https://img.shields.io/badge/Contract--first-required-7c3aed)
+![Trust membrane](https://img.shields.io/badge/Trust%20membrane-non--negotiable-111827)
 
-This folder contains the **governed tooling** for KFM Story Nodes:
-- validating Story Node Markdown against the **v3 template + schema**
-- enforcing **citation** and **link integrity** rules
-- building **StoryNodeBundle** payloads for the API/UI
-- producing a **story bundle index** suitable for deterministic story listing, caching, and governance review
+This folder contains **developer tools** for KFM’s **Story Nodes / Story Mode** workflow—authoring support, validation, packaging, and CI-friendly gates that keep narrative artifacts **machine-ingestible, provenance-linked, and safe to publish**.
 
-> [!IMPORTANT]
-> Story Nodes are not “just docs.” They are **governed content artifacts** that drive UI playback and must remain compatible with:
-> - the KFM **trust membrane** (no UI direct DB access; policy enforced centrally)  
-> - **evidence resolution** (every citation ref must be resolvable)  
-> - **fail-closed** CI gates (invalid stories block merge/publish)
+> ✅ Goal: make it easy to build story content that is **auditable**, **policy-governed**, and **UI-ready** (map + timeline + citations drawer), without bypassing KFM governance.
 
 ---
 
-## Table of contents
+## 📌 What belongs here
 
-- [What this folder is for](#what-this-folder-is-for)
-- [Non-negotiable invariants](#non-negotiable-invariants)
-- [Folder layout](#folder-layout)
-- [Quickstart](#quickstart)
-- [CLI contract](#cli-contract)
-- [Story Node format](#story-node-format)
-  - [Story Node v3 front matter](#story-node-v3-front-matter)
-  - [Required Markdown sections](#required-markdown-sections)
-  - [Citation format](#citation-format)
-  - [Evidence bundle](#evidence-bundle)
-- [Bundling format](#bundling-format)
-- [Publishing workflow](#publishing-workflow)
-- [CI integration](#ci-integration)
-- [Governance and sensitivity](#governance-and-sensitivity)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [References](#references)
+`tools/story` is for *tooling* (CLI scripts, validators, transformers, packagers) that help authors and CI systems:
+
+- **Validate Story Nodes** (structure, front matter, citations, entity references, sensitivity flags).
+- **Transform or migrate Story Nodes** between template versions (e.g., legacy → v3).
+- **Package story artifacts** for offline/field playback (packaging format is TBD) *(not confirmed in repo)*.
+- **Generate or verify manifests** that tie narrative scenes to evidence bundles (STAC/DCAT/PROV + graph IDs).
+- **Run “governance lint” checks** locally the same way CI does (fail closed).
+
+**Not** in scope for this folder:
+- Runtime Story Mode services
+- Direct database access
+- UI components
+- “Freeform” narrative generation without evidence linkage
 
 ---
 
-## What this folder is for
+## 🧱 Non‑negotiable invariants
 
-KFM Story Nodes are governed narratives authored in Markdown, validated in CI, and served to the UI through the API gateway so policy and access control can be enforced consistently.:contentReference[oaicite:3]{index=3}:contentReference[oaicite:4]{index=4}
+These are the guardrails that every tool in this folder must preserve:
 
-The story toolchain exists to ensure Story Nodes:
-- follow the **v3 template** and **front matter schema**
-- include **citations for factual claims**
-- reference only **resolvable evidence**
-- remain safe to publish (sensitivity-aware, fail-closed)
+### 1) Evidence-first (no black boxes)
+- Story Nodes are governed narrative artifacts: **every factual claim must trace to evidence** (catalog entry or cataloged external source).
+- Tools should **refuse** (fail) rather than “guess” if evidence references are missing.
 
----
+### 2) Contract-first (schemas/specs are first-class)
+- Treat **schemas and contracts** as the starting point for implementation.
+- Tools must validate against the canonical templates/schemas (see links below).
 
-## Non-negotiable invariants
+### 3) Trust membrane (no DB from tools)
+- Tools **must not** connect directly to PostGIS/Neo4j/etc.  
+  Use governed APIs or pre-exported snapshots/fixtures only. *(If a tool truly needs data, it should consume a versioned export produced by the pipeline.)*
 
-These invariants are enforced by the validator and must remain true across all future work.
-
-### Evidence-first
-
-- Story Nodes **require citations** for factual claims and are **validated in CI**.:contentReference[oaicite:5]{index=5}
-- Citations must resolve to evidence endpoints (doc/stac/dcat/prov/graph).:contentReference[oaicite:6]{index=6}
-
-### Trust membrane compliance
-
-- The frontend must not talk to databases directly.
-- Policy evaluation occurs on every data/story/AI request.
-- Backend logic uses repository interfaces and cannot bypass them.:contentReference[oaicite:7]{index=7}
-
-> [!NOTE]
-> Story tooling **must not** encourage workflows where the UI fetches raw story files directly from storage bypassing the API/policy boundary. If a local preview exists, it should remain a **developer-only** tool.
-
-### Fail-closed
-
-- CI must fail if required story sections are missing or if citations are missing/unresolvable.:contentReference[oaicite:8]{index=8}
+### 4) Governance & CARE/FAIR safety
+- Tools must detect/flag sensitive content (precise locations, living persons, culturally restricted info) and route to governance review rather than silently passing.
 
 ---
 
-## Folder layout
+## 🔗 Canonical references (don’t re-invent)
 
-This README documents the **intended** structure for `tools/story`. If your repository layout differs, update this section and keep the invariants the same.
+These are the repo-level “sources of truth” this folder should rely on:
+
+- **Story Node template (v3):** `../../docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- **API contract extension template:** `../../docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md`
+- **KFM catalog profiles:**  
+  - `../../docs/standards/KFM_STAC_PROFILE.md`  
+  - `../../docs/standards/KFM_DCAT_PROFILE.md`  
+  - `../../docs/standards/KFM_PROV_PROFILE.md`
+- **Repo structure + doc workflow:** `../../docs/standards/KFM_MARKDOWN_WORK_PROTOCOL.md` *(if present)*
+
+> If these paths differ in your repo, update this README to match the canonical locations. *(not confirmed in repo)*
+
+---
+
+## 🧠 Story Nodes & Focus Mode: mental model
+
+Story Nodes are KFM’s method for turning narrative into **governed data**: Markdown + semantic annotations + citations + stable IDs.
+
+```mermaid
+flowchart LR
+  A[Author Story Node (Markdown + front matter)] --> B[Validate schema + links + citations]
+  B --> C[Resolve references: graph IDs + STAC/DCAT/PROV IDs]
+  C --> D[Package / Publish (versioned)]
+  D --> E[Consume in UI: map + timeline + citation drawer]
+  E --> F[Focus Mode Q&A: cite or abstain + audit log]
+```
+
+---
+
+## ✅ What “valid” Story Node content means (tooling must enforce)
+
+A **valid Story Node** must:
+
+- Include **provenance for every claim** (footnotes or inline citations that resolve to catalog entries).  
+- Reference **graph entities** using stable IDs for people/places/events/documents.  
+- Clearly distinguish **fact vs interpretation** (especially for AI-assisted text).  
+
+Tools in this folder should treat these as *hard validation rules*, not “best effort.”
+
+---
+
+## 🧪 Toolchain entrypoints (expected)
+
+> These command names are illustrative *(not confirmed in repo)*.  
+> Pick one CLI surface and keep it stable (CI depends on it).
+
+### Common operations
+- `kfm-story validate <path>`  
+  Validate Story Node(s): structure, front matter, citations, entity refs, sensitivity flags.
+
+- `kfm-story migrate --from v2 --to v3 <path>`  
+  Transform legacy Story Nodes to `TEMPLATE__STORY_NODE_V3.md`.
+
+- `kfm-story bundle <story_slug>`  
+  Create/verify an evidence bundle manifest (STAC/DCAT/PROV IDs + graph IDs).
+
+- `kfm-story pack <story_slug>`  
+  Build an offline package (story markdown + assets + manifests) *(pack format TBD; not confirmed in repo)*.
+
+### Example (illustrative)
+```bash
+# Validate a single Story Node
+kfm-story validate ../../docs/reports/story_nodes/draft/my_story/story.md
+
+# Validate everything under published/
+kfm-story validate ../../docs/reports/story_nodes/published/
+
+# Migrate legacy → v3
+kfm-story migrate --from v2 --to v3 ../../docs/reports/story_nodes/draft/
+```
+
+---
+
+## 📦 Inputs & outputs
+
+| Artifact | Input/Output | What it is | Must be true |
+|---|---:|---|---|
+| Story Node Markdown | Input | Narrative + front matter + citations | Every factual claim is cited; graph IDs present |
+| Evidence bundle refs | Input | STAC/DCAT/PROV IDs + graph IDs | IDs resolve; versions pinned |
+| Validation report | Output | Machine-readable validation results | CI can fail on errors (non-zero exit) |
+| Packaged story bundle | Output | Offline/portable story package | Contains only approved assets + manifests |
+
+---
+
+## 🗂️ Directory layout (recommended)
+
+This folder may evolve, but keep it **boring and predictable**:
 
 ```text
-tools/
-└── story/
-    ├── README.md                 # you are here
-    ├── schemas/                  # governed JSON Schemas for story artifacts
-    │   ├── story_front_matter_v3.json
-    │   ├── story_bundle.schema.json
-    │   └── citation.schema.json
-    ├── rules/                    # deterministic validator rule inputs
-    │   ├── banned_patterns.yml
-    │   ├── allowed_citation_kinds.yml
-    │   └── required_sections.yml
-    ├── src/                      # implementation (language-agnostic)
-    │   ├── validate.*            # parse+validate story nodes
-    │   ├── bundle.*              # build StoryNodeBundle JSON
-    │   ├── resolve.*             # resolve evidence refs (API or local catalogs)
-    │   ├── index.*               # build story index + checksums
-    │   └── export.*              # exports with embedded citation lists
-    ├── fixtures/
-    │   └── example.story.v3.md    # canonical test story for regression
-    └── tests/
-        ├── test_story_validator.*
-        ├── test_citation_resolution.*
-        └── test_bundle_determinism.*
+tools/story/
+  README.md                      # you are here
+  bin/                           # CLI entrypoints (if using a single CLI)
+  src/                           # implementation
+  fixtures/                      # test fixtures: known-good + known-bad Story Nodes
+  rules/                         # policy packs / lint rules (e.g., Rego) (optional)
+  reports/                       # local tool outputs (gitignored) (optional)
 ```
 
-> [!NOTE]
-> The blueprint explicitly calls out a “verification step” to confirm the canonical v3 template path and schema in the repo and implement validators against that canonical file. Keep this README aligned with whatever is actually canonical in your repo.
+> If your repo already has a different structure, align to the repo standard and update this map. *(not confirmed in repo)*
 
 ---
 
-## Quickstart
+## 🧰 How to add a new tool (contributor checklist)
 
-### 1) Author a Story Node in the governed location
+When adding or changing tooling under `tools/story/`:
 
-Story Nodes are expected to live under governed documentation paths (commonly under `docs/…`). One documented convention is:
-
-```text
-docs/reports/story_nodes/
-  ├── draft/
-  ├── review/
-  └── published/
-```
-
-(If your repo uses a different root such as `docs/stories/`, keep it consistent and update this README.):contentReference[oaicite:11]{index=11}
-
-### 2) Validate locally
-
-Run the story validator before opening a PR. CI will run the same checks and fail-closed if issues exist.:contentReference[oaicite:13]{index=13}
-
-```bash
-# Example CLI name. If your repo uses a different entrypoint, map it in the next section.
-kfm-story validate docs/reports/story_nodes/draft/my_story.md
-```
-
-### 3) Resolve citations and links
-
-```bash
-kfm-story resolve docs/reports/story_nodes/draft/my_story.md \
-  --evidence-base-url http://localhost:8000
-kfm-story link-check docs/reports/story_nodes/draft/my_story.md
-```
+- [ ] Define the **contract first** (schema / expected outputs / CLI interface)
+- [ ] Add fixtures:
+  - [ ] `fixtures/valid/` examples that pass
+  - [ ] `fixtures/invalid/` examples that fail for the right reason
+- [ ] Add tests that run in CI (unit + contract-style)
+- [ ] Ensure fail-closed behavior:
+  - [ ] missing citation → fail
+  - [ ] unresolved ID → fail
+  - [ ] sensitive marker without required fields → fail *(policy-defined)*
+- [ ] Document usage in this README
+- [ ] Add/extend CI wiring (if needed) under `.github/workflows/`
 
 ---
 
-## CLI contract
+## 🛡️ Governance & sensitivity triggers
 
-This section defines the **expected interface** for story tooling. The implementation may be Python/Node/Go/etc., but the contract should remain stable so CI and contributors have a predictable workflow.
+Tools must surface (not bury) risk:
 
-> [!TIP]
-> If you already have an entrypoint (Make/NPM/Justfile), document the mapping here, for example:
-> - `make story-validate` → `kfm-story validate`
-> - `npm run story:validate` → `kfm-story validate`
+- **Sensitive locations**: prefer generalized geometry / bounding boxes when policy requires.
+- **Living persons / PII**: redact or coarsen; require explicit authorization to publish.
+- **Culturally restricted knowledge**: must route to governance review before publishing.
 
-### Commands
-
-| Command | Purpose | Must be deterministic | Must fail-closed |
-|---|---:|---:|---:|
-| `kfm-story validate <paths…>` | Validate v3 template, schema, sections, citation usage | ✅ | ✅ |
-| `kfm-story resolve <paths…>` | Resolve evidence refs against evidence endpoints or local catalogs | ✅ | ✅ |
-| `kfm-story bundle <story.md>` | Build `StoryNodeBundle` JSON for API/UI | ✅ | ✅ |
-| `kfm-story index <rootDir>` | Build story index + checksums + provenance refs | ✅ | ✅ |
-| `kfm-story preview <story.md>` | Local preview of story playback (developer-only) | ✅ | ✅ |
-| `kfm-story export <story.md>` | Export story with embedded citation list | ✅ | ✅ |
-
-### Common flags
-
-| Flag | Meaning |
-|---|---|
-| `--format json|text` | Output format (validation reports should support JSON) |
-| `--report <path>` | Write machine-readable report to disk |
-| `--evidence-base-url <url>` | API base URL for evidence resolution |
-| `--offline` | Resolve using local catalogs only (no network) |
-| `--strict` | Enable all checks; CI should use strict |
+If policy is uncertain: **fail closed**.
 
 ---
 
-## Story Node format
+## 🔌 CI/CD expectations (minimum)
 
-Story Nodes follow a strict template and are validated in CI. Required sections include an overview and titled steps; factual statements require citations.
+Your CI workflow should include checks that call tools from this folder to:
 
-### Story Node v3 front matter
-
-The Story Node v3 front matter schema requires at minimum:
-
-- `story_id`, `title`, `template_version`, `status`
-- `template_version` must be `"v3"` and `status` must be `draft|review|published`
-
-Minimal example (aligned with the documented skeleton):
-
-```yaml
----
-story_id: "kfm.story.example.black_sunday.v1"
-title: "Black Sunday and the Dust Bowl"
-summary: "A short, cited narrative linking map states and evidence."
-template_version: "v3"
-status: "draft"
-tags: ["dust-bowl", "kansas", "1930s"]
-time_range: ["1935-04-01", "1935-04-30"]
-bbox: [-102.05, 36.99, -94.59, 40.00]
-evidence_bundle:
-  stac: ["stac://…"]
-  dcat: ["dcat://…"]
-  prov: ["prov://…"]
-  graph: ["graph://…"]
----
-```
-
-### Required Markdown sections
-
-The documented skeleton defines the following canonical structure:
-
-- `# Overview`
-- `# Step 1: <title>` … (repeat for as many steps as needed)
-- `# Evidence & Citations`
-
-Validator expectations (minimum):
-- Template version declared; required front matter keys present
-- Overview exists
-- Each step has a title and body text
-- Citations exist and resolve
-- Links are valid; banned patterns are absent
-
-### Citation format
-
-KFM uses Markdown footnotes to attach structured citations. The documented skeleton example is:
-
-```md
-Text… [^c1]
-
-# Evidence & Citations
-[^c1]: kind=prov ref="prov://…" locator="…" note="…"
-```
-
-Validator expectations:
-- Every citation **must define** at least:
-  - `kind` in `{dcat, stac, prov, doc, graph}`
-  - `ref` matching the corresponding scheme (`dcat://…`, `stac://…`, etc.)
-- Every `ref` must be resolvable via evidence endpoints (or local offline catalogs).:contentReference[oaicite:22]{index=22}
-
-### Evidence bundle
-
-The front matter can include an `evidence_bundle` listing relevant evidence URIs across STAC/DCAT/PROV/graph. This is part of the documented v3 skeleton and schema.
+- validate Story Nodes + governed Markdown structure
+- validate STAC/DCAT/PROV artifacts for new datasets
+- run policy tests (OPA/Rego)  
+- (optional but recommended) create SBOM + build provenance attestations
 
 ---
 
-## Bundling format
+## 📎 Related docs (starting points)
 
-The API contract defines a `StoryNodeBundle` with:
-
-- `story_id`, `title`, `body_markdown`
-- `steps[]` (each step includes `step_id`, `title`, `text_markdown`, and optional `view_state_patch`)
-- `citations[]`
-- `evidence_bundle`
-
-A bundle build should be **deterministic**:
-- identical inputs → identical JSON output bytes (canonical formatting), so checksums remain stable
-- step IDs should be derived deterministically (recommended: slugged headings + ordering)
-
-Example output shape:
-
-```json
-{
-  "story_id": "kfm.story.example.black_sunday.v1",
-  "title": "Black Sunday and the Dust Bowl",
-  "body_markdown": "# Overview\n...\n",
-  "steps": [
-    {
-      "step_id": "step-1-black-sunday",
-      "title": "Black Sunday",
-      "text_markdown": "Text…",
-      "view_state_patch": {
-        "bbox": [-102.05, 36.99, -94.59, 40.00],
-        "time_range": ["1935-04-14", "1935-04-14"],
-        "active_layers": ["kfm.layer.dust_storms.v1"]
-      }
-    }
-  ],
-  "citations": [
-    {
-      "id": "c1",
-      "kind": "prov",
-      "ref": "prov://…",
-      "locator": "page=12",
-      "note": "Lineage for dataset X"
-    }
-  ],
-  "evidence_bundle": {
-    "prov": ["prov://…"]
-  }
-}
-```
+- Story Node template: `../../docs/templates/TEMPLATE__STORY_NODE_V3.md`
+- Master guide: `../../docs/MASTER_GUIDE_v13.md` *(if present)*
+- Governance: `../../docs/governance/ROOT_GOVERNANCE.md` *(if present)*
+- Story Mode architecture notes: see `docs/` and `schemas/storynodes/`
 
 ---
 
-## Publishing workflow
+## 🧭 “Definition of Done” for this folder
 
-The documented workflow is:
+This folder is “ready” when:
 
-1) Author creates story under template v3 referencing stable dataset/layer IDs  
-2) Automated validator checks required sections, citations, disallowed content  
-3) Peer review approves; governance review triggered as needed  
-4) Publish step creates/updates story bundle index with checksums and provenance references:contentReference[oaicite:26]{index=26}
-
-> [!IMPORTANT]
-> Publishing is not a “copy file” operation. It is a governed promotion step that should record:
-> - checksums
-> - provenance references
-> - any redaction/generalization decisions (if applicable)
-
-### Suggested publish outputs
-
-A typical publish step should produce:
-
-- `story_bundle_index.json`  
-  - list of story IDs
-  - `sha256` checksums for each bundle
-  - provenance refs (if tracked)
-- `StoryNodeBundle` JSON artifacts (or a deterministic build from Markdown at runtime)
-
----
-
-## CI integration
-
-Minimum CI hardening includes:
-- Docs: lint + link-check + template validator  
-- Stories: v3 validator + citation resolution  
-- Data: STAC/DCAT/PROV validation + checksums  
-- Policy: OPA tests  
-…and is intended to fail-closed.
-
-Also, the governed documentation protocol expects markdown lint and link/reference checks for docs content.:contentReference[oaicite:28]{index=28}
-
-### Example GitHub Actions job
-
-```yaml
-name: story-governance
-
-on:
-  pull_request:
-    paths:
-      - "docs/**"
-      - "tools/story/**"
-      - "policy/**"
-
-jobs:
-  story:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Validate Story Nodes
-        run: |
-          kfm-story validate docs/reports/story_nodes --strict --format json --report story.validation.json
-
-      - name: Resolve citations
-        run: |
-          kfm-story resolve docs/reports/story_nodes --strict --format json --report story.resolve.json
-
-      - name: Link check docs
-        run: |
-          kfm-story link-check docs/reports/story_nodes --strict
-```
-
----
-
-## Governance and sensitivity
-
-KFM governance includes FAIR/CARE and explicit sensitivity handling. If content contains sensitive locations or culturally restricted knowledge, publish a generalized derivative for general audiences and store precise data under restricted access, with separate provenance chains documenting the transformation/redaction step.:contentReference[oaicite:29]{index=29}
-
-> [!WARNING]
-> Story Nodes must not disclose restricted coordinates or culturally restricted site details in public stories.
-> If unsure, mark the story as `review` and route through governance review.
-
----
-
-## Troubleshooting
-
-### “Missing required sections”
-
-- Ensure the file includes:
-  - `# Overview`
-  - at least one `# Step N: …`
-  - `# Evidence & Citations`
-
-### “Front matter schema invalid”
-
-- Confirm `template_version: "v3"`
-- Confirm `status` is one of `draft`, `review`, `published`
-- Confirm required keys exist: `story_id`, `title`, `template_version`, `status`
-
-### “Citation ref does not resolve”
-
-- Ensure `kind` is one of: `dcat|stac|prov|doc|graph`
-- Ensure `ref` uses a matching scheme (e.g., `prov://…`)
-- If running online resolution, ensure the evidence resolver endpoint exists and is reachable.
-
-The API blueprint proposes evidence resolver endpoints so every citation ref can be fetched and displayed:​:contentReference[oaicite:31]{index=31}
-
-- `GET /api/v1/evidence/dcat/{id}`
-- `GET /api/v1/evidence/stac/{id}`
-- `GET /api/v1/evidence/prov/{id}`
-- `GET /api/v1/evidence/doc/{id}?page=...&span=...`
-- `GET /api/v1/evidence/graph/{id}`
-
----
-
-## Contributing
-
-### Definition of done for story tool changes
-
-- [ ] Validator remains deterministic and fail-closed
-- [ ] Schema changes update:
-  - [ ] `schemas/story_front_matter_v3.json`
-  - [ ] fixtures and regression tests
-  - [ ] CI job expectations
-- [ ] New rules include:
-  - [ ] documented rationale
-  - [ ] example failing fixture
-  - [ ] example passing fixture
-- [ ] No tooling bypasses the trust membrane:
-  - [ ] no direct DB access patterns introduced
-  - [ ] resolution uses API and/or governed local catalogs:contentReference[oaicite:32]{index=32}
-
----
-
-## References
-
-- KFM Next-Gen Blueprint:
-  - Story Node publishing workflow and requirements:contentReference[oaicite:33]{index=33}
-  - v3 Story Node template skeleton
-  - Story front matter v3 schema excerpt
-  - StoryNodeBundle schema excerpt
-- Markdown governance conventions:
-  - Story nodes folder conventions and doc checks:contentReference[oaicite:37]{index=37}:contentReference[oaicite:38]{index=38}
-
+- [ ] A single **stable CLI** exists (or clearly documented equivalents)
+- [ ] `validate` is deterministic and CI-safe
+- [ ] Fixtures cover common pass/fail cases
+- [ ] Migration path to Story Node v3 is automated (legacy → v3) *(if legacy exists; not confirmed in repo)*
+- [ ] Tool outputs are machine-readable (JSON) + human-readable summaries
+- [ ] All tooling respects the trust membrane and governance rules
