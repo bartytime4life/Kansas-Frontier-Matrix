@@ -1,404 +1,234 @@
-<!--
-File: tests/data/README.md
-Project: Kansas Frontier Matrix (KFM)
-Purpose: Governed, deterministic test fixtures for CI + local testing
-Last-updated: 2026-02-14
--->
+# `tests/data/` — Test Fixtures & Governed Sample Data 🌾🧪
 
-# `tests/data` — KFM Test Fixtures
+![Governed](https://img.shields.io/badge/Governed-FAIR%2BCARE-blue)
+![Evidence-first](https://img.shields.io/badge/Evidence--first-required-success)
+![Deterministic](https://img.shields.io/badge/Deterministic-fixtures-important)
 
-![governed](https://img.shields.io/badge/governed-yes-blue)
-![deterministic](https://img.shields.io/badge/deterministic-required-brightgreen)
-![no-pii](https://img.shields.io/badge/no%20PII-required-orange)
-![ci-fast](https://img.shields.io/badge/CI-fast%20fixtures-success)
+This directory contains **small, deterministic, test-only datasets** used to validate KFM pipelines, services, APIs, and UI behaviors **without** relying on external networks, partner systems, or production databases.
 
-This directory contains **small, deterministic, synthetic** data fixtures used by KFM automated tests (unit, contract, integration, and policy tests). The goal is to keep CI **fast** and to make governance rules **testable** and **repeatable**.
-
-> ✅ **Rule of thumb:** If a fixture would be “unsafe” or “too large” to ship to every developer laptop and CI run, it does **not** belong here.
+> [!IMPORTANT]
+> **No production exports belong here.**  
+> This folder must remain safe to publish (open-source-friendly) unless explicitly marked otherwise and protected by repository access controls.
 
 ---
 
-## Contents
+## What belongs here ✅
 
-- [Why this folder exists](#why-this-folder-exists)
-- [Non-negotiable rules](#non-negotiable-rules)
-- [What belongs here](#what-belongs-here)
-- [Directory layout](#directory-layout)
-- [Fixture manifest](#fixture-manifest)
-- [Naming conventions](#naming-conventions)
-- [Determinism, digests, and golden vectors](#determinism-digests-and-golden-vectors)
-- [How tests should use fixtures](#how-tests-should-use-fixtures)
-- [Adding or updating fixtures](#adding-or-updating-fixtures)
-- [Safety, sensitivity, and CARE/FAIR notes](#safety-sensitivity-and-carefair-notes)
-- [Maintenance rules](#maintenance-rules)
-- [Appendix: Example objects](#appendix-example-objects)
-
----
-
-## Why this folder exists
-
-KFM is a **governed** system: requests must be policy-checked, provenance must be resolvable, and outputs must cite evidence or abstain. Tests should **prove** those invariants with concrete data and expected outcomes.
-
-This folder enables tests that validate:
-
-- **Schema correctness** (required fields, ID patterns, provenance blocks)
-- **Policy gates** (default deny; “No Source, No Answer”)
-- **Provenance integrity** (`spec_hash` reproducibility; artifact digest matches)
-- **Catalog minimums** (STAC/DCAT/PROV are present for publishable artifacts)
-- **Sensitivity handling** (no leaking precise restricted locations; generalized geometry where required)
-
----
-
-## Non-negotiable rules
-
-> These rules are strict because fixtures are “quietly powerful” — they shape what CI accepts.
-
-### 1) Synthetic-first (no real sensitive data)
-
-- ✅ Use synthetic data designed to exercise code paths.
-- ✅ If you must mirror a real structure (e.g., a STAC Item), keep values fake.
-- ❌ Never include secrets (API keys, tokens, credentials), even if expired.
-- ❌ Never include private individuals’ info, private landowner details, or precise restricted site coordinates.
-
-### 2) Small + fast
-
-- Keep fixtures tiny and CI-friendly.
-- Prefer **1–50 rows/features**, not thousands.
-- Prefer text formats (JSON/CSV/GeoJSON) over heavy binaries.
-- If a binary is unavoidable, keep it extremely small and clearly justified.
-
-### 3) Deterministic bytes
-
-Fixtures must not “wiggle” between runs:
-
-- Stable ordering of keys (for JSON) and stable line endings (`\n`).
-- Fixed timestamps where used (do not embed “now”).
-- No random values unless seeded and recorded.
-
-### 4) Every fixture is self-describing
-
-Every fixture must be discoverable via:
-- a **manifest entry** (preferred), and/or
-- a local **README** inside the fixture folder (only when needed)
-
-### 5) License + sensitivity are always declared
-
-Even for synthetic data, we still declare:
-- `license` (use `CC0-1.0` for purely synthetic fixtures unless there is a reason not to)
-- `sensitivity` (`public` for synthetic fixtures unless explicitly modeling restricted behavior)
-
----
-
-## What belongs here
-
-| Fixture category | Purpose | Typical tests |
+| Category | Examples | Why |
 |---|---|---|
-| **Schema fixtures** | Validate JSON schema rules (required fields, ID formats, provenance blocks) | schema/unit tests |
-| **Policy fixtures** | Validate default-deny and cite-or-abstain decision logic | OPA/unit + contract tests |
-| **Provenance fixtures** | Validate receipts, lineage, hashes, and integrity checks | provenance/unit + integration |
-| **Catalog fixtures** | Minimal STAC/DCAT/PROV examples for publish prerequisites | catalog/contract tests |
-| **Geospatial fixtures** | Small GeoJSON/WKT/time range examples for spatial-temporal logic | domain/unit tests |
-| **API golden responses** | Stable expected payloads (with citations/audit refs) | contract tests |
-
-> Production datasets belong in the governed `data/` zones (raw/work/processed/catalogs). This directory is **test-only**.
+| Minimal fixtures | tiny CSV/GeoJSON/JSON used by unit tests | fast, deterministic |
+| Golden snapshots | expected outputs (“known good”) | regression detection |
+| Edge-case samples | malformed geometries, missing dates, weird encodings | harden validators |
+| Redaction examples | “before/after” generalized geometries or removed fields | governance testing |
+| Synthetic data | generated entities/events/locations | avoids privacy & cultural risk |
 
 ---
 
-## Directory layout
+## What does **not** belong here ❌
 
-This is the **recommended** structure for `tests/data/` in KFM:
+- **Real personal data** (names, emails, phone numbers, addresses, free-text notes from individuals).
+- **Sensitive site locations** (e.g., exact archaeological coordinates; culturally restricted info).
+- **Partner-restricted datasets** unless:
+  - license explicitly allows inclusion in this repository, and
+  - governance review approves inclusion, and
+  - access controls are in place (if required).
+- **Large blobs** (full rasters, multi-GB shapefiles, raw satellite stacks).
+- **Anything that forces tests to call the public internet** (tests must be offline-capable).
+
+> [!WARNING]
+> If a test requires “realism,” prefer **small extracts** + **synthetic augmentation** + **documented assumptions**.  
+> Never trade safety and licensing clarity for realism.
+
+---
+
+## Governance rules (non-negotiable) 🛡️
+
+All files in `tests/data/` must comply with these principles:
+
+1. **Evidence-first & traceability**
+   - Every fixture must have a clear origin story (even synthetic ones).
+   - Every non-trivial fixture must be registered in the **Fixture Manifest** (below).
+
+2. **FAIR + CARE alignment**
+   - Metadata must include license, provenance, and any constraints.
+   - If data could represent sensitive knowledge, it must be **generalized/redacted**.
+
+3. **Sensitivity handling**
+   - If a point/line/polygon is derived from a sensitive location, store **generalized geometry**:
+     - reduce coordinate precision,
+     - snap to grid,
+     - aggregate to bounding box or centroid jitter,
+     - or replace with synthetic stand-ins.
+
+4. **Trust membrane preserved**
+   - Fixtures must be used through test adapters/repository interfaces.
+   - Tests should not “reach around” governance by querying DBs directly unless the test is explicitly about DB adapters **and** is isolated in integration tests.
+
+---
+
+## Directory layout 📁
+
+> This layout is the **recommended** structure. If the repo differs, update this README to match reality.
 
 ```text
 tests/
-└─ data/                                              # Test data + validation vectors (deterministic, reviewable)
-   ├─ README.md                                       # How these fixtures are used + rules (size, safety, naming)
-   ├─ manifest.json                                   # Authoritative index: fixture paths → digests/metadata (normative)
-   │
-   ├─ fixtures/                                       # All reusable test vectors (valid + intentionally invalid)
-   │  ├─ catalogs/                                    # Minimal catalog artifacts used by validators
-   │  │  ├─ stac/                                     # STAC Collections/Items (valid/invalid edge cases)
-   │  │  ├─ dcat/                                     # DCAT dataset records (valid/invalid edge cases)
-   │  │  └─ prov/                                     # PROV docs required for publish/promotion prerequisites
-   │  │
-   │  ├─ provenance/                                  # Provenance + integrity vectors (hashing, digests, receipts)
-   │  │  ├─ run_receipts/                             # Run receipt examples (pass/fail; minimal → full envelopes)
-   │  │  ├─ spec_hash_vectors/                        # Canonicalization inputs + expected spec_hash outputs
-   │  │  └─ digest_vectors/                           # File digest samples + expected values (sha256, etc.)
-   │  │
-   │  ├─ policy/                                      # Policy test vectors (OPA/Rego / Conftest)
-   │  │  ├─ inputs/                                   # Input objects (actor/resource/answer/context)
-   │  │  └─ expected/                                 # Expected decisions (allow/deny + reasons/redactions/snapshots)
-   │  │
-   │  ├─ geo/                                         # Small geospatial/time fixtures for transforms + validators
-   │  │  ├─ geojson/                                  # Tiny GeoJSON features (points/lines/polys; valid/invalid)
-   │  │  ├─ wkt/                                      # Tiny WKT examples (valid/invalid; SRID/axis edge cases)
-   │  │  └─ time/                                     # Time-range fixtures (intervals, open/closed bounds, TZ cases)
-   │  │
-   │  └─ api/                                         # Contract test snapshots (only if used by suite)
-   │     └─ responses/                                # Golden response JSON (normalized; stable ordering)
-   │
-   └─ golden/                                         # “Golden set” conventions (optional but recommended)
-      └─ README.md                                    # Definition of “golden”, update rules, and review requirements
+└── data/
+    ├── README.md                      # you are here
+    ├── manifest.yml                   # required: fixture registry (see below)
+    │
+    ├── fixtures/                      # small inputs for unit/integration tests
+    │   ├── tabular/                   # CSV/TSV/Parquet-mini
+    │   ├── geojson/                   # GeoJSON fixtures (small)
+    │   └── json/                      # API payload fixtures (JSON)
+    │
+    ├── golden/                        # expected outputs (snapshots)
+    │   ├── pipeline/                  # pipeline stage outputs
+    │   └── api/                       # API response snapshots
+    │
+    ├── redaction/                     # governance tests (before/after examples)
+    │   ├── before/                    # should never be sensitive in reality; use synthetic
+    │   └── after/                     # generalized/redacted safe versions
+    │
+    └── docs/                          # optional: fixture-specific notes & diagrams
+        └── <fixture-id>.md
 ```
-
-If your repo does not yet contain some of these folders, create them when introducing the first fixture of that type.
 
 ---
 
-## Fixture manifest
+## Fixture Manifest (`tests/data/manifest.yml`) 📌
 
-`manifest.json` is the **index** of all fixtures in this folder. It enables:
+The manifest is the **registry of truth** for this folder: it tells tests (and reviewers) what each file is, where it came from, and how it may be used.
 
-- quick discovery (`id → path`)
-- reproducibility (`sha256` / byte size)
-- lightweight governance (license/sensitivity declared everywhere)
+### Minimal schema (recommended)
 
-### Manifest contract (recommended)
+```yaml
+version: 1
 
-**File:** `tests/data/manifest.json`
-
-```json
-{
-  "manifest_version": "1",
-  "generated_at": "2026-02-14T00:00:00Z",
-  "fixtures": [
-    {
-      "id": "kfm.fixture.provenance.run_receipt.pass.v1",
-      "path": "fixtures/provenance/run_receipts/run_receipt_pass.json",
-      "sha256": "3c8b4d16c6ab0e7b74e5b0b05b35f3c0e5c1b3cf1df7f2a1f4a2bb4a4e9b7c11",
-      "bytes": 742,
-      "license": "CC0-1.0",
-      "sensitivity": "public",
-      "purpose": "Golden pass case for receipt schema validation",
-      "tags": ["provenance", "run_receipt", "pass"]
-    }
-  ]
-}
+fixtures:
+  - id: example_roads_small_v1
+    description: "Tiny road network subset for routing tests (synthetic)."
+    paths:
+      - "fixtures/geojson/roads_small_v1.geojson"
+    format: "geojson"
+    license:
+      spdx: "CC0-1.0"
+      notes: "Synthetic; safe to redistribute."
+    provenance:
+      origin: "synthetic"
+      generated_by: "scripts/generate_test_roads.py"
+      generated_at: "2026-02-16"
+    sensitivity:
+      classification: "public"          # public | internal | sensitive | restricted
+      handling: "none"                 # none | generalized | redacted | permissioned
+    used_by:
+      - "tests/routing/test_shortest_path.py::test_basic_route"
+    guarantees:
+      deterministic: true
+      max_runtime_ms: 200
 ```
 
-### Required fields
+### Required fields checklist
 
-Every `fixtures[]` entry MUST include:
+- [ ] `id` (stable, unique)
+- [ ] `paths` (relative paths)
+- [ ] `format` (csv|tsv|json|geojson|ndjson|parquet|…)
+- [ ] `license` (SPDX where possible)
+- [ ] `provenance` (origin + generator or source reference)
+- [ ] `sensitivity` (classification + handling)
+- [ ] `used_by` (at least one test reference)
 
-- `id` (stable ID; see [Naming conventions](#naming-conventions))
-- `path` (relative to `tests/data/`)
-- `sha256`
-- `bytes`
-- `license`
-- `sensitivity`
-- `purpose`
+> [!TIP]
+> If a fixture is generated, prefer committing:
+> - the **small generated artifact**, and
+> - the **generator script** (or documented command) so it can be reproduced.
 
 ---
 
-## Naming conventions
+## File naming conventions 🏷️
 
-Stable names make tests and reviews easier.
+Use stable, descriptive names:
 
-### Fixture IDs
-
-Use a reverse-domain-ish stable identifier:
-
-```
-kfm.fixture.<category>.<name>.<variant>.v<major>
+```text
+<domain>_<shape>_<size>_v<major>[.<ext>]
 ```
 
 Examples:
-- `kfm.fixture.catalogs.stac.collection.minimal.valid.v1`
-- `kfm.fixture.catalogs.dcat.dataset.minimal.missing_license.v1`
-- `kfm.fixture.provenance.spec_hash.vector.basic.v1`
-- `kfm.fixture.policy.kfm_ai.deny_without_citations.v1`
 
-### File names
+- `events_temporal_micro_v1.json`
+- `counties_bbox_small_v2.geojson`
+- `catalog_minimal_v1.ndjson`
 
-Use `snake_case` and be explicit about pass/fail:
-
-- `*_pass.json`
-- `*_fail_missing_license.json`
-- `*_fail_bad_geometry.json`
+Rules:
+- Use lowercase + underscores.
+- Include a version bump when semantics change (`v1` → `v2`).
+- Keep file names aligned with manifest `id`.
 
 ---
 
-## Determinism, digests, and golden vectors
+## Geospatial fixture rules 🌐
 
-KFM tests often rely on **integrity properties**:
+| Rule | Why |
+|---|---|
+| Prefer EPSG:4326 (WGS84) unless a test is explicitly projection-focused | avoids confusion |
+| Keep geometry counts small | performance + readability |
+| Include at least one invalid geometry fixture (separate file) | validator coverage |
+| Reduce precision for generalized locations | safety & governance |
+| Avoid “real” sensitive points even if public in another context | risk minimization |
 
-- The same canonical spec produces the same `spec_hash`.
-- A catalog-advertised digest matches the computed file digest.
-- Policy behavior stays stable across refactors.
+### Suggested generalization patterns
 
-### SHA-256 digest computation
-
-Use one of:
-
-**Linux:**
-```bash
-sha256sum path/to/file
-```
-
-**macOS:**
-```bash
-shasum -a 256 path/to/file
-```
-
-**Portable (Python):**
-```python
-import hashlib, pathlib
-
-p = pathlib.Path("path/to/file")
-h = hashlib.sha256(p.read_bytes()).hexdigest()
-print(h)
-```
-
-### Golden vectors
-
-“Golden vectors” are fixtures whose **expected outputs must never change** without an intentional review.
-
-Examples:
-- `spec_hash_vectors/*` (input → expected hash)
-- `digest_vectors/*` (file → expected sha256)
-- `api/responses/*` (expected response snapshots)
-
-When a golden vector changes:
-- update the fixture
-- update the test expectation
-- document **why the change is correct** in the PR description
+- **Precision drop:** 6 decimals → 3 decimals (≈ 100m) or worse if needed  
+- **Grid snap:** snap to a fixed grid size (e.g., 1km)
+- **Jitter:** random offset with a fixed seed + bounded radius
+- **Aggregation:** replace a point with a polygon bbox centroid or a coarse polygon
 
 ---
 
-## How tests should use fixtures
+## Determinism & test stability ⏱️
 
-### Path access rule
+To keep CI stable:
 
-Tests should access fixtures **relative to this folder** (not via absolute paths). A typical pattern:
-
-```python
-from pathlib import Path
-
-DATA_DIR = Path(__file__).resolve().parents[1] / "data"   # tests/data
-FIXTURES = DATA_DIR / "fixtures"
-```
-
-### “Do not bake environment assumptions” rule
-
-Fixtures must be readable in:
-- local dev
-- CI runners
-- containers
-- offline mode
-
-So, tests should not rely on:
-- network calls
-- current time
-- system locale
-- external services
-
-### Policy test usage (OPA / Conftest style)
-
-If policy fixtures are used for OPA tests, keep it explicit:
-
-- `fixtures/policy/inputs/*.json` → policy input objects
-- `fixtures/policy/expected/*.json` → expected allow/deny outputs (or snapshots)
+- Fix random seeds (`SEED=42`) for synthetic generators.
+- Don’t use “current time” unless you freeze it in the test.
+- Keep fixtures **tiny** and tests **fast**.
+- If a golden snapshot changes, treat it as a breaking change:
+  - update manifest notes,
+  - explain why,
+  - link to the test(s) impacted.
 
 ---
 
-## Adding or updating fixtures
+## Adding or updating fixtures ✅ (Definition of Done)
 
-### ✅ Definition of Done (fixture PR)
-
-- [ ] Fixture is **synthetic** and contains **no secrets** and **no PII**
-- [ ] Fixture is **small** (justify if > 200 KB)
-- [ ] Fixture is **deterministic** (stable ordering, stable timestamps)
-- [ ] `license` and `sensitivity` are declared in `manifest.json`
-- [ ] `sha256` and `bytes` in `manifest.json` match the committed file
-- [ ] A test references the fixture and asserts something meaningful (not “loads successfully”)
-- [ ] If the fixture is “golden,” the PR explains why the new expected value is correct
-
-### Step-by-step workflow
-
-1. Pick the right folder under `fixtures/` (or create it).
-2. Add the new fixture file(s).
-3. Compute `sha256` and `bytes`.
-4. Add a new entry to `manifest.json`.
-5. Add/extend tests to use the fixture.
-6. Run the test suite locally (or in the repo’s container workflow).
-7. Ensure CI passes.
+- [ ] Fixture file is **small**, **safe**, and **offline-capable**
+- [ ] License is explicit (SPDX if possible)
+- [ ] Provenance is documented (source or generator)
+- [ ] Sensitivity classification set + handling described
+- [ ] `manifest.yml` updated
+- [ ] Tests updated/added and pass locally
+- [ ] CI passes (including any fixture lint checks)
+- [ ] If the fixture models historically/culturally sensitive content: flagged for governance review
 
 ---
 
-## Safety, sensitivity, and CARE/FAIR notes
+## Suggested CI guardrails (optional but recommended) 🤖
 
-KFM handles potentially sensitive material (e.g., private ownership, precise archaeological site locations, and certain safety indicators). Even in tests, we avoid embedding anything that could normalize unsafe patterns.
+If not already present, add a lightweight CI check that fails when:
 
-### Practical safety rules for fixtures
-
-- Use **generalized** geometries when modeling restricted behavior:
-  - Example: use a bounding box or coarse polygon instead of precise points.
-- Use fake place names and fake identifiers.
-- Prefer `public` sensitivity for synthetic fixtures.
-- When modeling restricted cases, label explicitly (but keep the values fake).
-
-> If a fixture *needs* to represent a sensitive scenario, do it with **synthetic values** and ensure the policy path denies/filters appropriately.
+- `tests/data/manifest.yml` missing or invalid
+- new files not registered in the manifest
+- any file exceeds size threshold (e.g., 5–10 MB)
+- disallowed file types are added (e.g., `.sqlite`, `.pdf`, `.tif` unless explicitly permitted)
 
 ---
 
-## Maintenance rules
+## Reference (project principles)
 
-### Keep fixtures prunable
+This folder follows KFM’s overarching principles:
 
-If code changes make a fixture unnecessary, remove it and its manifest entry.
+- Governed, evidence-first “truth path”
+- FAIR + CARE aligned metadata and handling
+- Sensitivity-aware sharing
+- Trust membrane preserved (no direct DB access from clients)
 
-### Avoid fixture sprawl
-
-Before adding a new fixture:
-- check whether an existing one can be extended
-- prefer parameterized tests over new files when reasonable
-
-### Never “fix tests by weakening fixtures”
-
-If a governance rule breaks tests, the correct outcomes are:
-- update the implementation to match the rule, or
-- explicitly change the rule (policy/schema) with review and updated tests
-
----
-
-## Appendix: Example objects
-
-<details>
-  <summary><strong>Example: run receipt (minimal synthetic)</strong></summary>
-
-```json
-{
-  "example": "kfm.run_receipt.v1",
-  "fetched_at": "2026-02-13T00:00:00Z",
-  "accessURL": "https://example.org/source",
-  "etag": "W/\"abc123\"",
-  "last_modified": "Wed, 12 Feb 2026 00:00:00 GMT",
-  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-  "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-  "tool_versions": { "pipeline": "1.0.0" },
-  "policy_gate": {
-    "status": "pass",
-    "checks": ["license_present", "stac_present"]
-  }
-}
-```
-
-</details>
-
-<details>
-  <summary><strong>Example: spec_hash golden vector format</strong></summary>
-
-```json
-{
-  "id": "kfm.fixture.provenance.spec_hash.vector.basic.v1",
-  "canonical_input_json": {
-    "dataset_id": "example_dataset",
-    "license": "CC-BY-4.0",
-    "source": { "type": "http", "uri": "https://example.org/source.csv" }
-  },
-  "expected_spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
-}
-```
-
-</details>
-
+If you change the rules here, treat it as a **governance-impacting change**.
