@@ -1,311 +1,203 @@
-# tools/bin — KFM CLI utilities
+# 🧰 `tools/bin` — KFM Command-Line Utilities
 
-![governed](https://img.shields.io/badge/governed-yes-2ea44f)
-![fail-closed](https://img.shields.io/badge/policy-fail--closed-8a2be2)
-![evidence-first](https://img.shields.io/badge/evidence-first-blue)
-![stac-dcat-prov](https://img.shields.io/badge/metadata-STAC%2FDCAT%2FPROV-orange)
+![Governed](https://img.shields.io/badge/Governed-yes-2ea44f)
+![Evidence-first](https://img.shields.io/badge/Evidence--first-cite%20or%20abstain-blue)
+![Trust%20Membrane](https://img.shields.io/badge/Trust%20Membrane-enforced-important)
+![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-aligned-success)
 
-**What this folder is:** `tools/bin/` is the **single place for repo-local executable entrypoints** used for KFM development, validation, and operations. These tools are designed to be safe, repeatable, and CI-friendly.
+Repo-local **command-line tools** used to operate and validate Kansas Frontier Matrix (KFM) workflows: **ingest → validate → transform → catalog/provenance → serve**.
 
-**What this folder is not:** a place for one-off personal scripts, ad-hoc experiments, or anything that bypasses governance controls (e.g., direct DB pokes, “quick” publication hacks, undocumented dataset transforms).
+> [!IMPORTANT]
+> These tools are **governed entrypoints**. They exist to *prevent* ad-hoc, uncited, un-auditable operations.
+> If a workflow cannot produce machine-checkable artifacts (validation reports, catalogs, provenance/receipts),
+> it does **not** belong here.
 
 ---
 
-## Quick start
+## 📌 Why this folder exists
 
-### 1) Run a tool directly (recommended)
+A `/bin` directory conventionally holds **command-line scripts** and executables. In KFM, `tools/bin` is where we keep **repeatable operational utilities** that support the platform’s “Truth Path”:
 
-From the repo root:
+1) **Acquire** (ingest / capture)  
+2) **Validate** (schema, geometry, QA gates)  
+3) **Enrich** (normalization, linking, classification)  
+4) **Catalog** (DCAT / STAC / PROV + license + sensitivity)  
+5) **Serve** (governed APIs + exports)  
+6) **Explain** (Focus Mode / Story Nodes that cite or abstain)
 
+---
+
+## ✅ Non-negotiables (governance + architecture)
+
+> [!WARNING]
+> Tools in this directory must not create “shadow pipelines” or bypass governance.
+
+### Trust membrane alignment
+- The **UI/external clients never talk to databases directly**.
+- Operational tools must **not** encourage manual DB access from developer laptops for production-like tasks.
+- Where a tool needs data access, it should do so via the **governed backend runtime** (use-case/service layer + repository interfaces), or through **explicitly governed pipeline storage zones**.
+
+### Evidence-first behavior
+- Anything that could affect a user-visible claim must be traceable to:
+  - a **dataset version**, and
+  - the **exact records/assets used**, and
+  - a **provenance chain** (inputs → transformation → outputs).
+
+### Promotion gates (Raw → Work → Processed)
+If a tool participates in dataset lifecycle operations, it must preserve these invariants:
+
+- **Raw**: immutable, append-only capture; no transforms.
+- **Work**: repeatable transforms + QA staging.
+- **Processed**: query-ready; exposed via API; catalogs + provenance required.
+
+Promotion should only happen when:
+- checksums/manifests exist,
+- validations pass,
+- policy labels exist,
+- catalog writers succeed (DCAT/STAC/PROV),
+- contract/API checks relevant to the dataset pass.
+
+---
+
+## 🚀 Running tools
+
+### Discover what exists
 ```bash
-./tools/bin/<tool-name> --help
+ls -la tools/bin
 ```
 
-### 2) Add `tools/bin` to your PATH (optional)
-
-This makes tools callable without `./tools/bin/…`:
-
+### Run a tool
 ```bash
-export PATH="$(pwd)/tools/bin:$PATH"
+./tools/bin/<tool> --help
 ```
 
-> ✅ Tip: add that line to your shell profile if you work on KFM frequently (`~/.bashrc`, `~/.zshrc`, etc.).
-
-### 3) Discover what’s available
-
-List executable files:
-
+### If a tool is not executable
 ```bash
-find tools/bin -maxdepth 1 -type f -perm -111 -print | sort
+chmod +x tools/bin/<tool>
 ```
 
-Generate a quick “catalog” by printing each tool’s first help lines:
-
-```bash
-set -euo pipefail
-for f in tools/bin/*; do
-  [[ -f "$f" && -x "$f" ]] || continue
-  echo
-  echo "================================================================"
-  echo "$(basename "$f")"
-  echo "================================================================"
-  "$f" --help 2>/dev/null | sed -n '1,25p' || echo "(no --help output)"
-done
-```
+> [!NOTE]
+> Prefer running tools in a **reproducible environment** (CI runner / container / dev shell) when available.
+> (Exact orchestration commands depend on the repo’s runtime setup.)
 
 ---
 
-## Non‑negotiable governance invariants
+## 📒 Tool registry (update on every new tool)
 
-These are **hard contracts**. Tools in `tools/bin` must not provide “escape hatches” around them.
+<details>
+<summary><strong>Open registry table</strong></summary>
 
-1. **Trust membrane is real**
-   - No client tooling should encourage or enable **direct UI-to-database** access.
-   - Any access to governed data/services should flow through the **API boundary + policy enforcement**.
+| Tool | Purpose | Typical inputs | Outputs / artifacts | Writes? | Governance notes |
+|---|---|---|---|---:|---|
+| *(add tool here)* | *(what it does)* | dataset_id / paths / config | validation report / catalogs / receipt | ✅/❌ | policy labels, license handling, cite-or-abstain |
+| *(add tool here)* |  |  |  |  |  |
 
-2. **Fail closed**
-   - If a tool cannot validate required inputs, provenance artifacts, signatures, schemas, or policy decisions, it must **error** (not warn-and-continue).
+</details>
 
-3. **Cite-or-abstain**
-   - Any AI-facing tooling (evaluation harnesses, Focus Mode tests, response validators) must enforce: **answers must include citations or explicitly abstain**.
-
-4. **No promotion without provenance**
-   - Tools that publish/promote anything must enforce: **STAC/DCAT/PROV exist and validate** (plus checksums and a run receipt/record).
-
-> ⚠️ If you need something that violates any invariant for debugging, that work must happen in a **separate, explicitly labeled, non-default pathway** and be subject to governance review. Do not ship it in `tools/bin/`.
+> [!TIP]
+> A PR that adds a tool should also update this table so operators can discover it without spelunking.
 
 ---
 
-## How tools/bin fits into the repo
+## 🧾 Run receipts & provenance (required for meaningful tools)
 
-KFM’s expected repo layout places “utility scripts, validators, and devops tools” under `tools/`. `tools/bin/` is the executable edge of that toolbox (entrypoints), while shared libraries/helpers should live elsewhere (commonly `tools/lib/` or `tools/src/`).
+Any tool that changes state (writes files, promotes datasets, builds catalogs, reindexes, etc.) should emit a **run receipt** (JSON) describing:
 
-```text
-tools/
-  bin/        # executable entrypoints (this folder)
-  lib/        # shared functions/modules for tools (recommended)
-  templates/  # skeletons for receipts, manifests, policy tests (optional)
-```
+- tool name + version (or git commit)
+- timestamp(s)
+- inputs + content hashes (where applicable)
+- outputs (paths, IDs, checksums)
+- policy labels / sensitivity class
+- provenance link(s) (PROV activity/entity IDs)
 
----
-
-## Standard CLI behavior (required)
-
-To keep the toolchain predictable, tools in this folder must follow the conventions below.
-
-### Required flags
-
-All tools should implement:
-
-- `--help`  
-  Prints usage, examples, environment variables, and exit codes.
-
-- `--version`  
-  Prints tool version (or git SHA) for reproducibility.
-
-- `--json` *(when output is structured)*  
-  Emits machine-readable output (for CI and downstream steps).
-
-- `--dry-run` *(when a tool mutates anything)*  
-  Shows what would happen without making changes.
-
-### Standard exit codes
-
-| Code | Meaning | Notes |
-|---:|---|---|
-| 0 | Success | All checks passed / operation completed |
-| 1 | General failure | Unexpected error |
-| 2 | Usage error | Invalid flags/args, missing required params |
-| 3 | Validation failure | Schema/provenance/policy checks failed |
-| 4 | Dependency missing | Required binary/service not available |
-| 5 | Permission denied | Auth/policy denies the operation |
-
----
-
-## Logging, receipts, and reproducibility
-
-### Structured logs
-
-Tools should default to human-readable logs, and support structured logs:
-
-- Human logs: good for local dev
-- JSON logs: good for CI, indexing, and audit correlation
-
-Minimum recommended fields for JSON logs:
-
-- `ts` (timestamp)
-- `level` (`debug|info|warn|error`)
-- `tool`
-- `run_id`
-- `dataset_id` *(if applicable)*
-- `request_id` *(if tool calls an API)*
-- `audit_ref` *(if tool triggers governed operations)*
-- `msg`
-
-### Run receipts (run manifests)
-
-Any tool that produces artifacts, transforms data, or promotes content must emit a **receipt** (a run record) that can be attached to provenance and audit flows.
-
-Recommended characteristics:
-- Deterministic identifiers (`run_id`)
-- Content-addressable hashes for inputs/outputs
-- Links to validation reports
-- Git commit / image digest references for reproducibility
-
-Example shape (illustrative; adjust to your repo’s schema):
+Example receipt shape (illustrative):
 
 ```json
 {
-  "run_id": "run_2026-02-14T12-34-56Z_9c3f",
-  "tool": "kfm.<tool-name>",
-  "dataset_id": "example_dataset",
-  "inputs": [{"uri": "data/raw/example.csv", "sha256": "…"}],
-  "outputs": [{"uri": "data/processed/example.parquet", "sha256": "…"}],
-  "code": {"git_sha": "…", "image": "…"},
-  "validation": {
-    "report_uri": "data/work/example/validation_report.json",
-    "passed": true
+  "tool": "kfm-<name>",
+  "started_at": "2026-02-16T18:40:00Z",
+  "finished_at": "2026-02-16T18:41:12Z",
+  "git": { "commit": "abc1234", "dirty": false },
+  "inputs": [
+    { "path": "raw/<dataset>/...", "sha256": "..." }
+  ],
+  "outputs": [
+    { "path": "processed/<dataset>/...", "sha256": "..." }
+  ],
+  "policy": {
+    "labels": ["public|restricted|sensitive-location"],
+    "license": "SPDX-or-text"
+  },
+  "prov": {
+    "activity_id": "prov:activity:...",
+    "entities": ["prov:entity:..."]
   }
 }
 ```
 
-> ✅ Rule of thumb: if a future auditor can’t answer “**what ran, on what inputs, producing what outputs, under what code version**?” from your receipt + catalogs, the tool is not done.
+---
+
+## 🧩 What belongs here (and what does not)
+
+### ✅ Belongs in `tools/bin`
+- Repeatable operational utilities:
+  - validation runners (schema/geometry/time-range/license checks)
+  - catalog builders (DCAT/STAC/PROV)
+  - dataset promotion helpers (Raw → Work → Processed) **with gates**
+  - index rebuilders (search/graph) **with receipts**
+  - CI smoke checks (contract/regression checks) that enforce invariants
+
+### ❌ Does NOT belong in `tools/bin`
+- One-off personal scripts with no receipts, no provenance, no tests
+- Tools that “just update the DB” without:
+  - catalog updates
+  - provenance/receipt output
+  - policy labels
+- Anything that requires copying secrets into files or the repo
 
 ---
 
-## Safety and sensitivity handling
+## 🛠️ Adding a new tool
 
-KFM data can include sensitive locations, culturally restricted knowledge, and restricted-access datasets. Tooling must be designed to avoid accidental disclosure.
+> [!IMPORTANT]
+> New tools are production-affecting surface area. Treat them like API changes.
 
-### Required safety behaviors
+### Naming
+- Prefer: `kfm-<verb>-<noun>` (e.g., `kfm-validate-dataset`, `kfm-build-catalogs`)
+- Keep names explicit; avoid ambiguous “do-stuff” scripts.
 
-- Never print secrets to stdout.
-- Never write tokens into receipts/logs.
-- Never publish raw precise sensitive geometries to “public” outputs.
-- If a tool detects a sensitive classification and the caller lacks authorization, it must:
-  - refuse (default), **or**
-  - produce a generalized/redacted derivative (only if explicitly implemented and policy-approved)
-
-### Recommended redaction posture
-
-- Prefer generating:
-  - **public/generalized** artifacts for broad audiences
-  - **restricted/precise** artifacts for authorized roles
-- Maintain **separate provenance chains** for generalized vs restricted derivatives.
-
----
-
-## CI parity
-
-The goal is: **a contributor can run locally what CI will run**, and get the same pass/fail.
-
-Recommended local parity workflow:
-
-1. Run doc + story validators
-2. Run catalog validators (STAC/DCAT/PROV) + checksum checks
-3. Run policy unit tests
-4. Run minimal integration checks (if configured)
-
-Example commands (your repo may wire these via `scripts/` or directly in `tools/bin/`):
-
-```bash
-# docs / story nodes
-./scripts/lint_docs.sh
-./scripts/validate_story_nodes.sh
-
-# data catalogs and checksums
-./scripts/validate_catalogs.sh
-./scripts/validate_checksums.sh
-
-# policy tests
-opa test policy -v
-```
-
-> If your repo does not use `scripts/`, implement equivalent entrypoints in `tools/bin/` and keep CI calling the same stable interfaces.
+### Definition of Done (DoD)
+- [ ] `--help` documents usage, inputs, outputs, and side effects
+- [ ] Defaults are safe (prefer `--dry-run` or explicit `--apply`)
+- [ ] Emits a **run receipt** for stateful operations
+- [ ] Produces/updates catalogs & provenance when required
+- [ ] Enforces promotion gates (if it promotes)
+- [ ] Does not bypass clean architecture boundaries:
+  - CLI entrypoint → use-case/service → interfaces → infra adapters
+- [ ] Has at least minimal tests (unit/contract/CI gate as appropriate)
+- [ ] Updates the **Tool registry** table in this README
 
 ---
 
-## Trust membrane at a glance
+## 🧭 Directory layout
 
-```mermaid
-flowchart LR
-  Dev[Developer / CI] -->|runs| Tool[tools/bin/*]
-  Tool -->|calls| API[API Gateway]
-  API -->|policy query| OPA[OPA Policy Engine]
-  API --> Stores[(PostGIS / Graph / Search / Object Storage)]
-  Stores --> API
-  API --> Tool
-  Tool --> Dev
-
-  Dev -.->|NOT ALLOWED| Stores
+```text
+tools/
+└── bin/
+    ├── README.md
+    ├── <tool-1>
+    ├── <tool-2>
+    └── ...
 ```
 
 ---
 
-## Authoring a new tool
+## 📚 Design basis (why these rules exist)
 
-### Where it goes
+- **KFM Masterpiece Vision** (Generated 2026-02-16): governance-first platform, trust membrane, validation & provenance expectations.
+- **KFM Data Source Integration Blueprint v1.0** (2026-02-12): clean layers + trust membrane mechanics; dataset zones; promotion gates; DCAT/STAC/PROV requirements.
+- **KFM Blueprint & Ideas**: thin-slice governed delivery and “validators + provenance receipts + tooling” emphasis.
 
-- **Executable entrypoint:** `tools/bin/<name>`
-- **Shared helper code:** `tools/lib/...` (preferred)  
-- **Schemas/templates:** `schemas/` and/or `tools/templates/` as appropriate
-
-### Requirements checklist (Definition of Done)
-
-- [ ] `--help` includes at least one real example and describes side effects
-- [ ] `--version` prints something traceable (semver or git SHA)
-- [ ] Exits non‑zero on validation/policy failure (fail-closed)
-- [ ] Emits a receipt if it produces/changes governed artifacts
-- [ ] Does **not** bypass the API boundary for governed data access
-- [ ] Includes at least one automated test (unit or contract-level)
-- [ ] Produces deterministic output where applicable (stable ordering, stable hashing)
-- [ ] Handles sensitive classifications safely (deny or approved redaction path)
-- [ ] CI can invoke it non-interactively (no prompts unless explicitly gated)
-
----
-
-## Troubleshooting
-
-### “Permission denied” when running a tool
-- Ensure the file is executable:
-  ```bash
-  chmod +x tools/bin/<tool-name>
-  ```
-- Confirm you’re executing from repo root or your PATH includes `tools/bin`.
-
-### Tool says a dependency is missing
-Common dependencies for a KFM toolchain include:
-- `git`
-- `jq`
-- `python` (and venv tooling if used)
-- `node` / `pnpm` (if UI-related tooling exists)
-- `docker` or `podman` (if container workflows exist)
-- `opa` (for policy tests)
-
-A good tool will tell you exactly what’s missing and how to install it.
-
-### “Validation failed”
-Treat this as expected—not exceptional. Fix the underlying issue:
-- missing required metadata
-- schema mismatch
-- missing checksum
-- missing STAC/DCAT/PROV artifacts
-- policy denies the operation
-
----
-
-## Support and escalation
-
-- **Bug reports:** open an issue with:
-  - command line used
-  - tool version (`--version`)
-  - relevant receipt/run_id
-  - minimal repro inputs (redacted if sensitive)
-- **Governance exceptions:** require explicit review and approval; do not ship “temporary bypass” flags.
-
----
-
-## License
-
-This directory’s contents are licensed under the **same terms as the repository**. See the root `LICENSE` file (or repository policy docs) for details.
-
+> [!NOTE]
+> This README is intentionally stricter than a typical tools folder because KFM treats governance
+> as architecture—not a best-effort process.
