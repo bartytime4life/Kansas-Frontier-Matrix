@@ -1,491 +1,185 @@
-# KFM Tooling Fixtures (`tools/fixtures/`) 🧪🧷
+# tools/fixtures
 
-![Fixtures](https://img.shields.io/badge/fixtures-synthetic%20%26%20deterministic-success)
-![Governance](https://img.shields.io/badge/policy-fail--closed-critical)
+![Governed](https://img.shields.io/badge/Governed-yes-2ea44f?style=flat-square)
+![Evidence-first](https://img.shields.io/badge/Evidence--first-required-blue?style=flat-square)
+![Deterministic](https://img.shields.io/badge/Deterministic-golden%20fixtures-orange?style=flat-square)
+![FAIR+CARE](https://img.shields.io/badge/FAIR%20%2B%20CARE-aligned-8a2be2?style=flat-square)
 
-Governed **fixture packs** used to validate KFM’s evidence-first pipeline, catalogs (**STAC/DCAT/PROV**), provenance receipts (**run_receipt/run_manifest**), and policy gates (**OPA/Rego**, cite‑or‑abstain).
-
----
-
-## Why this folder exists
-
-KFM’s credibility depends on **repeatable, audited behavior**. Fixtures in this directory enable CI and local runs to prove:
-
-- **Determinism**: fixed inputs produce fixed hashes/counts/outputs.
-- **Governance**: policy gates **fail closed** (default deny) when required fields, provenance, or rights are missing.
-- **Evidence-first**: outputs intended for end-users are only produced when citations/provenance are present (or they abstain).
-- **Catalog integrity**: what catalogs advertise (digests, links, metadata) matches what artifacts actually are.
+Curated, **small**, **deterministic**, and **governance-safe** fixtures used to test KFM’s truth path:
+**ingest → validate → enrich → catalog/provenance → serve (API+policy) → explain (Focus Mode / Story Nodes)**.
 
 > [!IMPORTANT]
-> Fixtures are treated as **governed artifacts**. Changing them can change system behavior and test baselines.
+> Fixtures are part of the **governance surface**. Treat changes here like production changes:
+> they can affect CI gate behavior, policy enforcement, and what can be considered “proven”.
 
----
+## Why this exists
 
-## Non-negotiables (fixtures must reinforce these)
+KFM is explicitly **evidence-first** and **fail-closed**. That means we need fixtures to support:
 
-KFM is built around hard invariants. Fixtures in this folder **must not** undermine them:
+- **Policy unit tests + regression fixtures**
+- At least one **“smoke” end-to-end test** that brings up the stack (or a stub stack) and runs an **anchor dataset promotion** in dry-run mode
+- **Deterministic “golden” artifacts** so the same spec produces the same outputs over time
 
-- **Trust membrane**: clients/UI do not directly access databases; access is mediated through governed APIs + policy boundary.
-- **Fail-closed policy checks**: missing governance data is a hard failure (deny promotion/deny response).
-- **No promotion without STAC/DCAT/PROV**: promoted datasets/artifacts must have catalogs + provenance.
-- **Focus Mode must cite or abstain**: fixtures must include both *allowed* (cited) and *denied* (uncited / sensitive) cases.
-
----
+This folder is the canonical home for those fixtures.
 
 ## What belongs here
 
-✅ **Good fixture candidates (expected)**
+✅ **Belongs**
 
-- `run_receipt` / `run_manifest` JSON examples:
-  - required fields present vs missing required fields
-  - passing vs failing `policy_gate` outcomes
-  - stable `spec_hash` reproducibility vectors
-  - stable `artifact_digest` matching vectors
-- Minimal, **synthetic** catalog artifacts:
-  - STAC Item/Collection with required links and digest fields
-  - DCAT dataset stub with license/rights
-  - PROV bundle stub referencing the run receipt
-- OPA/Rego test cases:
-  - allow when citations present and sensitivity OK
-  - deny when missing citations, missing rights/license, or sensitivity not OK
-- API contract fixtures:
-  - request + expected response showing provenance bundle links and redaction behavior
-- Small synthetic dataset slices (tabular / vector) to validate:
-  - schema mapping
-  - geometry validity
-  - time normalization rules
-  - stable counts and checksums
+- Minimal input datasets (synthetic / permitted) used in pipeline tests
+- Expected catalog/provenance fragments (DCAT/STAC/PROV) for contract tests
+- Policy allow/deny test cases (including “known leak” negative cases)
+- Golden outputs + checksums for deterministic identity tests
+- API request/response fixtures for contract tests
 
-🚫 **Do not commit**
-- secrets, API keys, tokens, credentials, cookies
-- production data dumps
-- precise sensitive locations or restricted cultural knowledge
-- personal data from real individuals (unless explicitly governed/approved and sanitized)
+❌ **Does not belong**
 
----
+- Large production datasets (store those in governed data zones / object storage)
+- Any sensitive or restricted location data in raw form
+- Anything with unclear rights / license status
+- Secrets (API keys, tokens, credentials)
 
-## Recommended organization
+> [!NOTE]
+> When in doubt: prefer **synthetic** fixtures and test the transform/policy logic, not the raw source data.
 
-Fixtures are easiest to maintain when grouped as **packs**.
+## Directory layout
 
-A **fixture pack** is a self-contained directory that includes:
-- a short README (what it tests, what validators use it)
-- metadata (rights/sensitivity + intent)
-- fixture files (inputs/expected outputs)
-- checksums (so CI can prove byte-stability)
-
-### Suggested tree
+The exact layout may evolve, but keep it **predictable** and **discoverable**.
 
 ```text
 tools/fixtures/
-├── README.md
-├── packs/
-│   ├── run-receipts/
-│   │   ├── demo-pass/
-│   │   │   ├── pack.meta.json
-│   │   │   ├── run_receipt.pass.json
-│   │   │   ├── spec.canonical.json
-│   │   │   ├── expected.spec_hash.txt
-│   │   │   ├── manifest.sha256
-│   │   │   └── README.md
-│   │   └── demo-fail/
-│   │       ├── pack.meta.json
-│   │       ├── run_receipt.fail.missing_license.json
-│   │       ├── expected.policy_decision.json
-│   │       ├── manifest.sha256
-│   │       └── README.md
-│   ├── policy/
-│   │   ├── cite-or-abstain/
-│   │   │   ├── pack.meta.json
-│   │   │   ├── input.allow.json
-│   │   │   ├── input.deny.missing_citations.json
-│   │   │   ├── input.deny.sensitivity_not_ok.json
-│   │   │   ├── expected.allow.json
-│   │   │   ├── expected.deny.json
-│   │   │   ├── manifest.sha256
-│   │   │   └── README.md
-│   ├── catalogs/
-│   │   ├── stac-min/
-│   │   ├── dcat-min/
-│   │   └── prov-min/
-│   └── api-contract/
-│       └── provenance-and-redaction/
-└── _notes/
-    └── rationale.md
-```
-
-> [!NOTE]
-> The tree above is a **recommended** structure. If the repository uses a different layout, keep the **pack contract** (below) consistent.
-
----
-
-## Fixture pack contract (minimum)
-
-Each fixture pack directory **must** include:
-
-| File | Required | Purpose |
-|---|---:|---|
-| `pack.meta.json` | ✅ | Declares what the pack is, plus governance (license/rights, sensitivity). |
-| `manifest.sha256` | ✅ | Byte-level integrity for every file in the pack. |
-| `README.md` | ✅ | Human explanation: what it tests, expected behavior, and how failures should be interpreted. |
-| `*.json / *.geojson / *.parquet / *.ttl / *.md` | ✅ | The actual fixtures (inputs/expected outputs). |
-
-### `pack.meta.json` (recommended schema shape)
-
-```json
-{
-  "pack_id": "kfm.fixtures.run_receipts.demo_pass.v1",
-  "title": "Run receipt demo (policy pass)",
-  "summary": "Synthetic run_receipt + spec_hash/artifact_digest examples for deterministic CI checks.",
-  "owners": ["kfm-engineering"],
-  "governance": {
-    "license": "CC0-1.0",
-    "attribution": "None (synthetic)",
-    "sensitivity": "public",
-    "contains_real_world_data": false
-  },
-  "intent": {
-    "validators": [
-      "receipt_schema_validation",
-      "policy_gate_validation",
-      "spec_hash_reproducibility",
-      "artifact_digest_match"
-    ],
-    "failure_should_block_ci": true
-  },
-  "created_at": "2026-02-14T00:00:00Z",
-  "notes": [
-    "All values are synthetic.",
-    "Spec hash is computed from canonical JSON (RFC 8785 JCS) and hashed with sha256."
-  ]
-}
-```
-
-### `manifest.sha256` (simple, tool-friendly)
-
-Format: one file per line as `sha256  relative/path`.
-
-```text
-7b7a3fddc8d3f8e1d3d2c8f0ff5f0b9c8c88a52a9a6d8f0b1a2c3d4e5f6a7b8c  pack.meta.json
-1a0ad6c2b1d3a4f96c3a1b7c6b4c8b40c1d4d0c1b5e2c7a5e6d1c2b3a4f5e6d7  run_receipt.pass.json
-8d1b2c3a4f5e6d7c8b9a0a1b2c3d4e5f60718293a4b5c6d7e8f9a0b1c2d3e4f5  spec.canonical.json
+├─ README.md
+├─ _templates/                 # Copy/paste templates (fixture manifests, expected outputs)
+├─ policy/                     # Policy-as-code tests: allow/deny cases + “known leak” cases
+├─ datasets/                   # Minimal datasets that drive pipeline + catalog tests
+│  └─ <fixture_id>/
+│     ├─ fixture.yaml          # Required metadata (license, sensitivity, purpose, checksums…)
+│     ├─ input/                # Inputs to a pipeline step / use case
+│     ├─ expected/             # Expected outputs (golden) OR assertions scaffolding
+│     └─ notes.md              # Optional rationale + gotchas
+├─ api/                        # API-level fixtures (requests/responses, OpenAPI/GraphQL samples)
+└─ golden/                     # Canonical outputs + checksums for determinism regression
 ```
 
 > [!TIP]
-> Keep manifests generated by a single, pinned tool (or a pinned OS utility) to avoid cross-platform formatting drift.
+> If your fixture doesn’t fit any category, add a new folder **once**, document it here, and keep the naming consistent.
 
----
+## Fixture manifest (required)
 
-## Determinism rules (hard requirements)
+Each fixture directory **must** include a `fixture.yaml` (or `fixture.json`) sidecar with governance metadata.
 
-Fixtures MUST be reproducible across machines and CI runners:
+| Field | Required | Example | Notes |
+|---|---:|---|---|
+| `id` | ✅ | `anchor_landparcel_v1` | Stable identifier (`snake_case`). |
+| `title` | ✅ | `Anchor: Land parcel mini-set` | Human label. |
+| `purpose` | ✅ | `pipeline_smoke` | One of: `pipeline_smoke`, `policy_regression`, `api_contract`, `determinism_golden`, `ui_smoke`. *(extend as needed)* |
+| `sensitivity` | ✅ | `public` | One of: `public`, `internal`, `restricted`. **Default should be conservative.** |
+| `license` | ✅ | `CC-BY-4.0` | SPDX identifier when possible. |
+| `sources` | ✅ | `[...]` | Evidence pointers (dataset IDs, catalog IDs, doc paths). |
+| `inputs` | ✅ | `['input/parcels.geojson']` | Relative paths. |
+| `expected` | ✅ | `['expected/dcat.jsonld']` | Relative paths. |
+| `checksums` | ✅ | `{ 'input/parcels.geojson': 'sha256:...' }` | Drift detection. |
+| `created_at` | ✅ | `2026-02-16` | ISO date (not a build timestamp). |
+| `maintainers` | ✅ | `['@data-steward', '@platform-eng']` | CODEOWNERS can enforce. *(not confirmed in repo)* |
 
-- **UTF‑8** encoding for text files.
-- **LF** line endings (`\n`) for text fixtures.
-- **Stable JSON**:
-  - no pretty-print differences used for hashing
-  - canonical JSON is preferred for spec hashing (RFC 8785 JCS)
-- **Pinned tool versions** in receipts when the toolchain affects outputs.
-- **Digest-addressable references** where applicable (prefer `@sha256:<digest>` style references over mutable tags).
+### Template `fixture.yaml`
 
----
+```yaml
+id: anchor_landparcel_v1
+title: "Anchor: Land parcel mini-set"
+purpose: pipeline_smoke
+created_at: "2026-02-16"
 
-## Core fixture types
+sensitivity: public           # public | internal | restricted
+license: CC-BY-4.0            # SPDX recommended
 
-### 1) Run receipts (`run_receipt` / `run_manifest`)
+sources:
+  - kind: doc
+    ref: "docs/.../some-spec.md"
+  - kind: dataset
+    ref: "data/registry/<dataset_id>.yaml"   # (not confirmed in repo)
 
-Run receipts bridge “what should have been built” (`spec_hash`) and “what was built” (`artifact_digest`).
+inputs:
+  - "input/parcels.geojson"
+expected:
+  - "expected/dcat.dataset.jsonld"
+  - "expected/prov.activity.json"
+checksums:
+  "input/parcels.geojson": "sha256:<fill>"
+  "expected/dcat.dataset.jsonld": "sha256:<fill>"
+  "expected/prov.activity.json": "sha256:<fill>"
 
-**Policy and provenance tests** commonly assert:
-- required fields exist (`fetched_at`, `accessURL`, `spec_hash`, `artifact_digest`, tool versions, etc.)
-- `spec_hash` is reproducible for the canonical spec (golden vectors)
-- `artifact_digest` matches the advertised digest in catalogs
-- `policy_gate.status` blocks promotion when checks fail
-
-#### Example: passing `run_receipt` (synthetic)
-
-`run_receipt.pass.json`
-
-```json
-{
-  "example": "kfm.run_receipt.v1",
-  "fetched_at": "2026-02-13T00:00:00Z",
-  "accessURL": "https://example.org/source",
-  "etag": "W/\"abc123\"",
-  "last_modified": "Wed, 12 Feb 2026 00:00:00 GMT",
-  "spec_hash": "sha256:7f3f4c45d0674860ccafaba3057762b1ef88fc10b8c927033a4851da02caec37",
-  "artifact_digest": "sha256:e72ce14d61167aaec1cb3206c6cf171736289a5df80a2e7eec8f3ab4fd35f758",
-  "tool_versions": {
-    "pipeline": "1.0.0"
-  },
-  "policy_gate": {
-    "status": "pass",
-    "checks": [
-      "license_present",
-      "stac_present"
-    ]
-  }
-}
+notes:
+  - "Synthetic geometry; no real parcel owner PII."
+  - "Sorted features by stable key for deterministic hashing."
 ```
 
-#### Example: failing `run_receipt` (missing license)
+## Determinism rules (golden fixtures)
 
-`run_receipt.fail.missing_license.json`
+Golden fixtures exist to protect KFM’s **deterministic identity** guarantees.
 
-```json
-{
-  "example": "kfm.run_receipt.v1",
-  "fetched_at": "2026-02-13T00:00:00Z",
-  "accessURL": "https://example.org/source",
-  "spec_hash": "sha256:7f3f4c45d0674860ccafaba3057762b1ef88fc10b8c927033a4851da02caec37",
-  "artifact_digest": "sha256:e72ce14d61167aaec1cb3206c6cf171736289a5df80a2e7eec8f3ab4fd35f758",
-  "tool_versions": {
-    "pipeline": "1.0.0"
-  },
-  "policy_gate": {
-    "status": "fail",
-    "checks": [
-      "license_present"
-    ]
-  }
-}
-```
+**Rules of thumb**
 
----
+- No timestamps, random UUIDs, or unordered maps in golden outputs.
+- Stable sort order for arrays/lists.
+- For JSON used in hashing/signing, canonicalize (e.g., **RFC 8785 JCS**) before hashing.
+  *(Hashing implementation may live elsewhere; fixtures just provide goldens.)*
 
-### 2) `spec_hash` golden test vectors
+## Sensitivity & “known leak” fixtures
 
-The goal is **reproducibility**: same canonical spec → same `spec_hash`.
+Some fixtures exist purely to ensure we **don’t leak** sensitive locations.
 
-`spec.canonical.json`
+- Use **synthetic** coordinates or **generalized** geometries.
+- Include negative fixtures that represent “known leak” patterns, so redaction/generalization logic can be regression-tested.
 
-```json
-{
-  "dataset_id": "kfm.dataset.demo.v1",
-  "source": {
-    "accessURL": "https://example.org/source",
-    "etag": "W/\"abc123\"",
-    "last_modified": "Wed, 12 Feb 2026 00:00:00 GMT"
-  },
-  "transform": {
-    "name": "normalize_demo_v1",
-    "params": {
-      "target_crs": "EPSG:4326",
-      "time_format": "ISO-8601"
-    }
-  },
-  "window": {
-    "start": "2026-02-01T00:00:00Z",
-    "end": "2026-02-02T00:00:00Z"
-  }
-}
-```
+> [!WARNING]
+> Do **not** include restricted archaeology/cultural site coordinates in this repo.
+> If a test needs that shape, generate a synthetic stand-in or a generalized polygon and document the rationale in `notes.md`.
 
-`expected.spec_hash.txt`
+## How to add a fixture
 
-```text
-sha256:7f3f4c45d0674860ccafaba3057762b1ef88fc10b8c927033a4851da02caec37
-```
+1. Create a new folder under the appropriate namespace (`datasets/`, `policy/`, `api/`, `golden/`).
+2. Add `fixture.yaml` with required metadata.
+3. Add `input/` and `expected/` artifacts (or policy cases).
+4. Add/extend tests so the fixture is **actually used**.
+5. Run the test suite and ensure it passes locally.
+6. Open a PR; expect governance review (license + sensitivity + determinism).
 
-> [!NOTE]
-> The canonicalization rules for `spec_hash` must match the repository’s spec-hash standard (RFC 8785 JCS is the recommended baseline). If a reference implementation exists in this repo, fixtures should be generated by that implementation and treated as authoritative.
+### Definition of Done ✅
 
----
+- [ ] Fixture is minimal (smallest possible) and deterministic
+- [ ] `fixture.yaml` complete (license + sensitivity + checksums present)
+- [ ] No restricted/sensitive raw data included
+- [ ] At least one automated test consumes the fixture
+- [ ] Golden outputs updated (if applicable) with stable ordering
+- [ ] Notes explain any non-obvious choices
 
-### 3) Policy fixtures (OPA/Rego)
-
-Policy fixtures should provide:
-- `input.*.json` cases
-- `expected.*.json` decisions
-- a README that explains why each case should allow/deny
-
-#### Example: cite-or-abstain allow input (synthetic)
-
-`input.allow.json`
-
-```json
-{
-  "actor": {
-    "role": "public",
-    "attributes": {
-      "user_id": "u-0001"
-    }
-  },
-  "request": {
-    "endpoint": "/api/v1/ai/query",
-    "context": {
-      "bbox": [-102.05, 36.99, -94.59, 40.0],
-      "timeRange": ["1861-01-01", "1865-12-31"]
-    }
-  },
-  "answer": {
-    "text": "Example answer text with citations.",
-    "has_citations": true,
-    "citations": [
-      {
-        "id": "prov://kfm/demo#c1"
-      }
-    ],
-    "sensitivity_ok": true
-  }
-}
-```
-
-`expected.allow.json`
-
-```json
-{
-  "allow": true
-}
-```
-
-#### Example: deny when sensitivity is not OK
-
-`input.deny.sensitivity_not_ok.json`
-
-```json
-{
-  "actor": {
-    "role": "public",
-    "attributes": {
-      "user_id": "u-0001"
-    }
-  },
-  "request": {
-    "endpoint": "/api/v1/ai/query",
-    "context": {
-      "bbox": [-102.05, 36.99, -94.59, 40.0],
-      "timeRange": ["1861-01-01", "1865-12-31"]
-    }
-  },
-  "answer": {
-    "text": "Example answer text with citations.",
-    "has_citations": true,
-    "citations": [
-      {
-        "id": "prov://kfm/demo#c1"
-      }
-    ],
-    "sensitivity_ok": false
-  }
-}
-```
-
-`expected.deny.json`
-
-```json
-{
-  "allow": false
-}
-```
-
----
-
-## How fixtures map to test layers
-
-Fixtures should support the CI-ready test plan:
-
-| Test layer | What it proves | Typical fixture packs |
-|---|---|---|
-| Unit | pure schema/mapping logic is correct | `datasets/*`, `schemas/*` |
-| Integration | connector works on a fixed small slice; stable checksums/counts | `datasets/*`, `run-receipts/*` |
-| Contract | API responses include provenance bundle links and obey redaction | `api-contract/*` |
-| Regression | profiling metrics are stable or versioned | `datasets/*`, `profiles/*` |
-| Governance/Policy | default-deny behavior; “No Source, No Answer” | `policy/*`, `catalogs/*` |
-
----
-
-## Handling sensitive-location and restricted-field scenarios
-
-Some KFM domains require special handling (e.g., sensitive archaeological site locations):
-
-- Prefer **synthetic** sensitive-location fixtures (made-up coordinates) that still exercise redaction logic.
-- If you must test “precise vs generalized geometry,” keep both synthetic and clearly labeled.
-- Never commit real restricted coordinates unless governance explicitly approves and the repository access controls match the sensitivity.
-
-Recommended approach for fixtures:
-- `public` pack includes generalized geometry only
-- `restricted` pack (if needed) is synthetic or stored in a separate, access-controlled repository
-
----
-
-## Adding or updating fixtures (workflow)
-
-### Add a new fixture pack
-
-1. Create a new pack directory under `tools/fixtures/packs/<category>/<pack-name>/`.
-2. Write `pack.meta.json`:
-   - include **license/rights** and **sensitivity**
-   - state intended validators and whether CI should fail if it breaks
-3. Add fixtures:
-   - inputs and expected outputs
-   - keep datasets **small** and **synthetic** whenever possible
-4. Generate `manifest.sha256` for all files in the pack.
-5. Ensure:
-   - hashes are stable
-   - policy cases include at least one **allow** and one **deny**
-6. Commit with a clear message (fixture packs are governed artifacts).
-
-### Update an existing pack
-
-When changing any fixture file:
-- update the manifest
-- update any expected hashes (only if the change is intended)
-- ensure the change does not weaken governance tests (deny cases must remain deny)
-
----
-
-## Review checklist ✅
-
-Before merging changes under `tools/fixtures/`:
-
-- [ ] All packs include `pack.meta.json`, `manifest.sha256`, and a pack `README.md`.
-- [ ] No secrets or credentials are present.
-- [ ] License/rights and sensitivity are explicitly declared.
-- [ ] Fixtures are deterministic (stable ordering, stable encoding, stable hashing).
-- [ ] Policy fixtures include deny cases for missing required governance fields.
-- [ ] Any “sensitive-location” logic is exercised using synthetic coordinates (or properly governed alternatives).
-- [ ] Changes do not weaken “cite-or-abstain” / default-deny behavior.
-
----
-
-## Visual: how fixtures enforce fail-closed behavior
+## Fixture → test flow
 
 ```mermaid
-flowchart TD
-  A["Fixture Pack"] --> B["Schema Validators"]
-  A --> C["Catalog Validators (STAC/DCAT/PROV)"]
-  A --> D["Policy Tests (OPA/Rego default deny)"]
-  A --> E["Hash Checks (spec_hash + artifact_digest)"]
-  B --> F{"Gate"}
-  C --> F
-  D --> F
-  E --> F
-  F -->|"pass"| G["Promotion / Publish Allowed"]
-  F -->|"fail"| H["Blocked (Fail-Closed)"]
+flowchart LR
+  F[Fixture\ntools/fixtures] --> T[Tests\nunit/contract/smoke]
+  T --> G[Governance Gates\npolicy • validation • determinism]
+  G --> P[Promotion / Serve\ncatalogs • APIs]
 ```
 
 ---
 
-## Glossary
+## FAQ
 
-- **Fixture pack**: a self-contained directory of test inputs/expected outputs + metadata + checksums.
-- **spec_hash**: a deterministic hash of the canonical “spec” (what should be built).
-- **artifact_digest**: sha256 digest of the produced artifact (what was built).
-- **policy_gate**: recorded policy outcome; used to enforce fail-closed behavior.
-- **Cite-or-abstain**: a rule that requires citations for factual answers; otherwise the system abstains.
+<details>
+<summary><strong>Why not store “real” datasets here?</strong></summary>
 
----
+Fixtures are optimized for **repeatability** and **safety**. Real datasets are often large, licensed,
+or sensitive, and belong in governed data zones with explicit promotion gates and audit trails.
+</details>
 
-## Support boundaries
+<details>
+<summary><strong>What if my fixture needs to reference a real source?</strong></summary>
 
-This folder documents and hosts test fixtures only. It must not:
-- act as a substitute for authoritative catalogs
-- embed hidden production knowledge
-- become a data distribution mechanism for restricted datasets
+Prefer: store **a citation pointer** (dataset ID, catalog ID, doc path) in `fixture.yaml`, and keep
+the fixture itself synthetic/minimal.
 
-If you need to add a fixture derived from a real upstream source:
-- encode attribution/license in `pack.meta.json`
-- ensure the fixture’s size and sensitivity posture matches governance expectations
-- ensure any restricted details are removed or generalized
-
+If you must include a small excerpt, ensure the license allows it and the excerpt does not contain
+restricted/sensitive data.
+</details>
