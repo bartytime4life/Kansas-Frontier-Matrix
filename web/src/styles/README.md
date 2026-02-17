@@ -1,358 +1,332 @@
-# 🎨 KFM Styles System (`web/src/styles`)
+# `web/src/styles` 🎨🧭
 
-![scope](https://img.shields.io/badge/scope-web%2Fsrc%2Fstyles-blue)
-![approach](https://img.shields.io/badge/approach-design%20tokens%20%2B%20themes%20%2B%20CSS%20Modules-success)
-![ui](https://img.shields.io/badge/ui-map--first%20%2B%20provenance--first-purple)
-![status](https://img.shields.io/badge/status-living%20document-orange)
+![Status](https://img.shields.io/badge/status-governed-2ea44f)
+![Scope](https://img.shields.io/badge/scope-web%20ui-blue)
+![Theme](https://img.shields.io/badge/theming-css%20variables-informational)
+![A11y](https://img.shields.io/badge/a11y-keyboard%20%2B%20contrast-important)
 
-Welcome to the **global styling hub** for the Kansas Frontier Matrix (KFM) web app.  
-This folder is where we keep **design tokens**, **themes**, and **global/Vendor styles** that must be shared across the UI.
+This directory is the **style foundation** for the KFM web client:
+design tokens → themes → base styles → shared UI patterns → map UI overrides.
 
-> ✅ Goal: a UI that looks consistent, stays maintainable as the app grows, and keeps *trust & evidence* readable (citations, audit panels, provenance cues).
-
----
-
-## 🧭 Quick links
-
-- [What belongs in this folder](#-what-belongs-in-this-folder)
-- [Recommended folder layout](#-recommended-folder-layout)
-- [Styling rules of the road](#-styling-rules-of-the-road)
-- [Theming](#-theming)
-- [Design tokens](#-design-tokens)
-- [CSS Modules & component styles](#-css-modules--component-styles)
-- [Map UI & vendor overrides](#-map-ui--vendor-overrides)
-- [Citations & audit UI](#-citations--audit-ui)
-- [Accessibility & motion](#-accessibility--motion)
-- [Contributing checklist](#-contributing-checklist)
+> [!NOTE]
+> This README documents the **intended** styling approach and directory shape.
+> If some filenames/folders below do not exist yet, treat them as a **target layout** and update the tree once the repo structure is finalized. *(Some details are not confirmed in repo.)*
 
 ---
 
-## 📦 What belongs in this folder
+## Quick rules ✅
 
-### ✅ Put these here
-- **Global tokens** (colors, spacing, typography, radii, shadows, z-index, motion)
-- **Theme definitions** (light/dark + domain accents like Maps/AI/History/etc.)
-- **Global base styles** (reset, typography baseline, app shell layout helpers)
-- **Cross-cutting utilities** that are truly global (rare)
-- **Vendor overrides** (MapLibre/Cesium control styling, third-party widgets)
-
-### ❌ Don’t put these here
-- Component-specific styling that only one component uses  
-  → Keep that next to the component as a CSS Module (e.g., `Button.module.css`).
+- **Prefer tokens** over raw values (colors, spacing, radii, z-index).
+- **Theme via CSS variables** (supports high-contrast and system preferences).
+- **No meaning by color alone** (pair color with icon/text/pattern).
+- **Accessibility is a release gate** (focus states, contrast, reduced motion).
+- **Map UI is special**: MapLibre ships base UI CSS—import it once, then override it.
 
 ---
 
-## 🗂 Recommended folder layout
+## Directory layout 📁
 
-> This is the *intended* structure for long-term sanity. If the repo differs, update this tree so it reflects reality.
+> Update this tree to match reality as the folder fills in. *(not confirmed in repo)*
 
 ```text
-📁 web/
-  📁 src/
-    📁 styles/
-      📄 README.md                👈 you are here
-      📄 index.css                🌍 single import entry for global styles
-      📄 reset.css                🧼 minimal reset / normalize-ish rules
-      📄 tokens.css               🎛️ CSS custom properties (design tokens)
-      📄 themes.css               🌓 light/dark + domain accents
-      📄 globals.css              🧱 typography, base elements, app shell defaults
-      📄 utilities.css            🧰 tiny set of global helpers (keep small!)
-      📁 vendor/
-        📄 maplibre-overrides.css 🗺️ MapLibre control + popup adjustments
-        📄 cesium-overrides.css   🌎 Cesium UI adjustments
+web/
+└─ src/
+   └─ styles/
+      ├─ README.md                  # You are here
+      ├─ index.css                  # Global entry: tokens + base + utilities + overrides
+      │
+      ├─ tokens/                    # Design tokens (CSS variables)
+      │  ├─ color.css               # palette + semantic color roles
+      │  ├─ typography.css          # font stacks, sizes, line heights
+      │  ├─ spacing.css             # spacing scale
+      │  ├─ radii.css               # border-radius scale
+      │  ├─ shadows.css             # shadow tokens (use sparingly)
+      │  └─ zindex.css              # z-index tokens (documented!)
+      │
+      ├─ themes/                    # Theme “overlays” (swap token values)
+      │  ├─ theme-default.css
+      │  ├─ theme-dark.css
+      │  └─ theme-high-contrast.css
+      │
+      ├─ base/                      # Baseline styles
+      │  ├─ reset.css               # normalization/reset
+      │  ├─ typography.css          # headings, body text defaults
+      │  ├─ forms.css               # inputs/selects/textarea
+      │  └─ layout.css              # app shell primitives
+      │
+      ├─ components/                # Shared UI patterns (not per-component CSS Modules)
+      │  ├─ buttons.css
+      │  ├─ badges.css              # status/provenance/sensitivity chips
+      │  ├─ cards.css
+      │  └─ tables.css
+      │
+      ├─ map/                       # Map UI CSS (controls, popups, overlays)
+      │  ├─ maplibre-overrides.css
+      │  ├─ legend.css
+      │  └─ layer-panel.css
+      │
+      └─ utilities/                 # Small reusable helpers
+         ├─ a11y.css                # focus rings, reduced motion, sr-only
+         ├─ helpers.css             # text truncation, flex helpers, etc.
+         └─ print.css               # print/exports if supported
 ```
 
 ---
 
-## 🧱 Styling rules of the road
+## Styling architecture (mental model) 🧱
 
-### 1) Token-first (single source of truth)
-If you catch yourself repeating a value (color/spacing/radius) in multiple places:  
-**promote it to a token** and reuse it.
-
-### 2) Local-by-default
-Component styles should be **scoped** (CSS Modules). Globals are a special case.
-
-### 3) Global CSS is *expensive*
-Every global selector is a future collision risk. Keep global selectors:
-- **predictable**
-- **shallow**
-- **prefixed**
-- **rare**
-
-### 4) Map-first layout
-The map is the canvas; UI panels sit above it.
-- overlays must stay readable over bright/dark imagery
-- controls must be finger-friendly (touch targets) and keyboard-friendly
-- z-index should be governed, not improvised
+```mermaid
+flowchart TD
+  A[Design tokens<br/>CSS variables] --> B[Themes<br/>swap token values]
+  B --> C[Base styles<br/>reset, typography]
+  C --> D[Shared UI patterns<br/>buttons, cards, badges]
+  D --> E[Feature/Component styles<br/>prefer CSS Modules]
+  A --> F[Map UI overrides<br/>MapLibre controls/popup CSS]
+  B --> F
+```
 
 ---
 
-## 🎭 Theming
+## Entry-point imports 🔌
 
-KFM supports:
-- **Base theme**: light/dark
-- **Domain accents**: Maps / AI / History / Ecology / Weather (and future domains)
+### 1) Import MapLibre CSS once
 
-### Theme toggles (recommended)
-Apply theme and domain state as attributes on a single top-level element:
+MapLibre’s built-in controls/popups rely on its base CSS. Import MapLibre first, then add KFM overrides.
 
-```html
-<body data-theme="dark" data-domain="maps">
-  <!-- app -->
-</body>
+```ts
+// Example: src/main.tsx or src/index.tsx (path may differ; not confirmed in repo)
+import "maplibre-gl/dist/maplibre-gl.css";
+import "./styles/index.css";
 ```
 
-### Theme variables (recommended)
-Use CSS variables so components don’t care *which* theme they’re in:
+### 2) `styles/index.css` should be the only global style import
+
+Keep global imports centralized to avoid order bugs.
 
 ```css
-/* themes.css */
+/* styles/index.css (example; not confirmed in repo) */
+
+/* 1) tokens */
+@import "./tokens/color.css";
+@import "./tokens/typography.css";
+@import "./tokens/spacing.css";
+@import "./tokens/radii.css";
+@import "./tokens/shadows.css";
+@import "./tokens/zindex.css";
+
+/* 2) themes (default values + optional system fallbacks) */
+@import "./themes/theme-default.css";
+@import "./themes/theme-dark.css";
+@import "./themes/theme-high-contrast.css";
+
+/* 3) base */
+@import "./base/reset.css";
+@import "./base/typography.css";
+@import "./base/forms.css";
+@import "./base/layout.css";
+
+/* 4) shared patterns */
+@import "./components/buttons.css";
+@import "./components/badges.css";
+@import "./components/cards.css";
+@import "./components/tables.css";
+
+/* 5) map overrides */
+@import "./map/maplibre-overrides.css";
+@import "./map/legend.css";
+@import "./map/layer-panel.css";
+
+/* 6) utilities */
+@import "./utilities/a11y.css";
+@import "./utilities/helpers.css";
+@import "./utilities/print.css";
+```
+
+> [!TIP]
+> If your toolchain doesn’t support `@import` in CSS the way you want, convert `index.css` into explicit imports in the JS entry, or switch to a preprocessor/PostCSS pipeline. *(not confirmed in repo)*
+
+---
+
+## Design tokens 🧩
+
+### Naming conventions
+
+Use a single prefix (recommendation): `--kfm-*`
+
+| Token category | Example | Notes |
+|---|---|---|
+| Semantic colors | `--kfm-color-surface`, `--kfm-color-text`, `--kfm-color-accent` | Use semantics, not “red/blue” |
+| State colors | `--kfm-color-success`, `--kfm-color-warning`, `--kfm-color-danger` | Pair with icon/text too |
+| Spacing | `--kfm-space-1`…`--kfm-space-8` | Consistent rhythm |
+| Typography | `--kfm-font-sans`, `--kfm-font-size-2` | Prefer `rem` |
+| Motion | `--kfm-motion-fast`, `--kfm-motion-slow` | Respect reduced motion |
+| Z-index | `--kfm-z-map`, `--kfm-z-modal`, `--kfm-z-toast` | Document every layer |
+
+> [!IMPORTANT]
+> **Do not bake meaning into raw colors.**
+> Tokens should represent *roles* (surface, text, border, emphasis, focus) so themes can swap values safely.
+
+---
+
+## Themes (including high contrast) 🌓🟨⬛
+
+Themes should override token values, not restyle components directly.
+
+### Recommended mechanism
+
+- Theme attribute on `<html>`: `data-theme="default|dark|high-contrast"`
+- Tokens defined in `:root`
+- Theme overrides in `[data-theme="…"]`
+- Respect user preferences:
+  - `prefers-color-scheme`
+  - `prefers-reduced-motion`
+
+```css
+/* tokens/color.css */
 :root {
-  --kfm-accent: var(--kfm-accent-maps);
-  --kfm-bg: #ffffff;
-  --kfm-fg: #111111;
+  --kfm-color-surface: white;
+  --kfm-color-text: black;
+  --kfm-color-focus: currentColor; /* placeholder */
 }
 
-[data-theme="dark"] {
-  --kfm-bg: #0b0d12;
-  --kfm-fg: #eef2ff;
+/* themes/theme-high-contrast.css */
+html[data-theme="high-contrast"] {
+  /* overwrite tokens only */
+  --kfm-color-surface: black;
+  --kfm-color-text: white;
 }
 
-[data-domain="maps"]   { --kfm-accent: var(--kfm-accent-maps); }
-[data-domain="ai"]     { --kfm-accent: var(--kfm-accent-ai); }
-[data-domain="history"]{ --kfm-accent: var(--kfm-accent-history); }
-[data-domain="ecology"]{ --kfm-accent: var(--kfm-accent-ecology); }
-[data-domain="weather"]{ --kfm-accent: var(--kfm-accent-weather); }
-```
-
-> 💡 The key idea: **components read `--kfm-accent`** (not “Maps green” directly).  
-> That keeps the design system consistent while still giving each domain identity.
-
----
-
-## 🎛 Design tokens
-
-All tokens should live in `tokens.css` as CSS custom properties.
-
-### Naming convention
-Use a stable prefix and consistent categories:
-
-- `--kfm-color-*`
-- `--kfm-space-*`
-- `--kfm-font-*`
-- `--kfm-radius-*`
-- `--kfm-shadow-*`
-- `--kfm-z-*`
-- `--kfm-motion-*`
-
-Example:
-
-```css
-/* tokens.css */
-:root {
-  /* 🎨 Color */
-  --kfm-color-bg: #ffffff;
-  --kfm-color-fg: #111111;
-  --kfm-color-muted: #6b7280;
-
-  /* 🧩 Domain accents */
-  --kfm-accent-maps:   #1f7a3f;
-  --kfm-accent-ai:     #2563eb;
-  --kfm-accent-history:#92400e;
-  --kfm-accent-ecology:#6b8e23;
-  --kfm-accent-weather:#0ea5e9;
-
-  /* 📐 Spacing */
-  --kfm-space-1: 4px;
-  --kfm-space-2: 8px;
-  --kfm-space-3: 12px;
-  --kfm-space-4: 16px;
-
-  /* 🔤 Typography */
-  --kfm-font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  --kfm-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-
-  /* 🧊 Radius */
-  --kfm-radius-1: 6px;
-  --kfm-radius-2: 10px;
-
-  /* 🧱 Elevation / shadows */
-  --kfm-shadow-1: 0 1px 2px rgba(0,0,0,0.10);
-  --kfm-shadow-2: 0 6px 18px rgba(0,0,0,0.18);
-
-  /* 🧷 Layering */
-  --kfm-z-map: 0;
-  --kfm-z-overlay: 10;
-  --kfm-z-panel: 20;
-  --kfm-z-modal: 40;
-  --kfm-z-toast: 50;
-
-  /* 🌀 Motion */
-  --kfm-motion-fast: 120ms;
-  --kfm-motion-med:  180ms;
-}
-```
-
----
-
-## 🧩 CSS Modules & component styles
-
-### Recommended practice
-- Global styles here: `web/src/styles/*`
-- Component styles live next to their components:
-
-```text
-📁 web/src/components/
-  📁 Button/
-    📄 Button.tsx
-    📄 Button.module.css
-```
-
-### Example: a button using tokens + CSS Modules
-```css
-/* Button.module.css */
-.root {
-  font: 600 14px/1 var(--kfm-font-sans);
-  padding: var(--kfm-space-2) var(--kfm-space-3);
-  border-radius: var(--kfm-radius-1);
-  border: 1px solid color-mix(in srgb, var(--kfm-accent), transparent 65%);
-  background: color-mix(in srgb, var(--kfm-accent), transparent 85%);
-  color: var(--kfm-fg);
-}
-
-.root:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--kfm-accent), transparent 40%);
-  outline-offset: 2px;
-}
-```
-
-```tsx
-// Button.tsx
-import styles from "./Button.module.css";
-
-export function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <button {...props} className={styles.root} />;
-}
-```
-
----
-
-## 🗺 Map UI & vendor overrides
-
-KFM’s UI is map-centric, and the map stack often brings its own DOM + default styling.  
-We keep vendor overrides here so they’re easy to locate and audit.
-
-### Vendor CSS rules
-- Put MapLibre/Cesium overrides in `styles/vendor/*`
-- Prefer **targeted** selectors (avoid `*` or broad global rules)
-- Never depend on brittle DOM structure unless unavoidable
-- Keep overrides commented with *why* they exist
-
-```css
-/* vendor/maplibre-overrides.css */
-/* Adjust map controls to match KFM panels and improve touch targets */
-.maplibregl-ctrl-group button {
-  min-width: 36px;
-  min-height: 36px;
-  border-radius: var(--kfm-radius-1);
-}
-```
-
-> 🧠 Tip: If you’re using CSS Modules elsewhere, treat vendor overrides as the exception:
-> vendor libraries usually require global selectors.
-
----
-
-## 🔎 Citations & audit UI
-
-KFM is **provenance-first**: users should be able to *see* and *verify* sources.
-
-That means we style:
-- citation chips / footnote markers
-- “open source” links
-- audit panels / drawers that show retrieved snippets & provenance details
-- “confidence / caveat” callouts (when applicable)
-
-### Recommended global classes (prefixed)
-These classes are global because they often appear in rendered markdown/AI output:
-
-```css
-/* globals.css (or a dedicated citations.css) */
-.kfm-citation {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 8px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--kfm-accent), transparent 60%);
-  background: color-mix(in srgb, var(--kfm-accent), transparent 88%);
-  font: 600 12px/20px var(--kfm-font-sans);
-}
-
-.kfm-citation a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.kfm-citation a:hover {
-  text-decoration: underline;
-}
-```
-
-### Audit panel styling notes
-- Use a **drawer** pattern (right side) or **bottom sheet** on small screens
-- Show snippet text in a readable mono/sans pairing
-- Provide obvious affordances: close button, copy snippet, open source link
-- Don’t over-style: credibility comes from clarity, not decoration
-
----
-
-## ♿ Accessibility & motion
-
-### Focus states
-Never remove focus outlines unless replacing them with something better.
-
-### Reduced motion
-Always respect `prefers-reduced-motion`:
-
-```css
+/* utilities/a11y.css */
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 1ms !important;
+    animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 1ms !important;
+    transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
 }
 ```
 
+<details>
+  <summary><strong>Theme switching in React (example)</strong></summary>
+
+```ts
+// Pseudocode (not confirmed in repo)
+document.documentElement.dataset.theme = "high-contrast";
+```
+
+</details>
+
+---
+
+## Accessibility requirements ♿️
+
+### Focus and keyboard
+
+- Never remove focus outlines without replacement.
+- Use a visible focus ring with sufficient contrast.
+- Ensure map controls and overlay panels are keyboard reachable.
+
 ### Contrast
-- UI overlays must remain legible over satellite imagery and bright basemaps
-- Use scrims/backplates behind text-heavy panels
+
+- Treat WCAG contrast as a **blocking check** for:
+  - text vs background
+  - focus ring vs background
+  - interactive borders/controls
+
+### Motion
+
+- Respect `prefers-reduced-motion`
+- Avoid excessive parallax, long transitions, and animated backgrounds.
+
+> [!CHECKLIST]
+> **A11y DoD for style changes**
+> - [ ] Focus ring visible on all interactive elements
+> - [ ] Contrast checked for text + focus + controls
+> - [ ] `prefers-reduced-motion` honored
+> - [ ] Meaning not conveyed by color alone
 
 ---
 
-## ✅ Contributing checklist
+## Map UI styling (MapLibre) 🗺️
 
-Before you commit style changes:
+There are *two* different “map styling” layers:
 
-- [ ] Did I reuse tokens instead of inventing new one-off values?
-- [ ] Is this style truly global? If not, move it to a CSS Module.
-- [ ] Are vendor overrides isolated under `styles/vendor/`?
-- [ ] Did I check light + dark themes?
-- [ ] Did I check at least one narrow viewport?
-- [ ] Did I verify keyboard focus and hover/focus-visible behavior?
-- [ ] Did I keep selectors shallow and avoid accidental global collisions?
+1) **Map style JSON** (vector tile layers, colors/line widths for map features)  
+2) **CSS** for MapLibre UI elements (controls, popups, attribution, overlays)
+
+This folder mainly addresses **#2**.
+
+### MapLibre CSS overrides pattern
+
+1) Import `maplibre-gl.css` once (entry point)  
+2) Add overrides in `styles/map/maplibre-overrides.css`
+
+```css
+/* map/maplibre-overrides.css */
+
+/* Example: keep overrides scoped to the map container */
+.kfm-map .maplibregl-ctrl-group {
+  /* use tokens, not raw values */
+  background: var(--kfm-color-surface);
+  color: var(--kfm-color-text);
+}
+```
+
+> [!WARNING]
+> If map controls/popups are invisible, check that `maplibre-gl/dist/maplibre-gl.css` is imported before KFM overrides.
 
 ---
 
-## 🧪 Nice-to-have upgrades (future)
+## Governance notes for styles 🧾
 
-- 🧷 Add Stylelint + a small ruleset (especially for globals)
-- 🧫 Add visual regression checks for key UI panels (map controls, citations, audit drawer)
-- 🧰 Convert `utilities.css` to a *tiny* curated set (or remove it if it grows wild)
+KFM is an evidence-first, governed system. UI styling can change meaning and interpretation.
+
+**High-risk style changes (require governance review):**
+- Map palettes that imply value judgements (e.g., “good/bad” colors)
+- Boundary styling that implies certainty where data is uncertain
+- Symbol/icon changes that could affect public narratives
+- “Sensitive” or redaction indicators (ensure they are unambiguous)
+
+**Recommended visual language (semantic roles):**
+- `confirmed` / `not-confirmed` / `inferred`
+- `sensitive` / `redacted` / `approximate`
+
+> [!IMPORTANT]
+> If the UI shows *approximate or generalized locations* for safety, ensure styling makes that explicit (e.g., dashed outlines, “approximate” chip). Do not present generalized data with the same styling as precise data.
 
 ---
 
-💬 If you’re unsure where a style should go: **default to CSS Modules next to the component** — and only promote to `web/src/styles` when multiple parts of the app truly share the rule.
+## Definition of Done for a new style pattern ✅
+
+> Copy/paste into PR descriptions.
+
+- [ ] Uses tokens (`--kfm-*`), no hard-coded “magic values” unless justified
+- [ ] Works across supported themes (default/dark/high-contrast)
+- [ ] Keyboard + focus states verified
+- [ ] Contrast verified for text + controls + focus rings
+- [ ] MapLibre UI verified (controls/popups visible)
+- [ ] No global leakage (styles are scoped; avoids generic selectors like `div {}`)
+- [ ] Added/updated docs in this README if a new convention was introduced
+
+---
+
+## FAQ / troubleshooting 🧯
+
+### “Map controls disappeared”
+- Ensure MapLibre’s base CSS is imported (`maplibre-gl/dist/maplibre-gl.css`) before your overrides.
+- Confirm overrides are scoped (don’t accidentally `display:none` on control containers).
+
+### “Theme switching works, but some components don’t change”
+- Check for hard-coded color values in component styles.
+- Convert component rules to use semantic tokens.
+
+---
+
+## Related (where to document what) 🔗
+
+- **Component-specific styles**: colocate with the component (prefer CSS Modules). *(not confirmed in repo)*
+- **Map style JSON**: keep separate from CSS; document in a `map/` or `mapStyles/` README. *(not confirmed in repo)*
+- **UI patterns** (badges/alerts/provenance chips): document in `web/src/components/...` plus a short entry here.
+
+---
