@@ -1,181 +1,227 @@
-# 🆎 `web/public/fonts` — Fonts & Typography Assets
+# Fonts — `web/public/fonts` 🔤
 
-![Static Assets](https://img.shields.io/badge/assets-static-blue)
-![Format](https://img.shields.io/badge/fonts-WOFF2%20first-success)
-![Performance](https://img.shields.io/badge/perf-weights%20minimized-orange)
-![Governance](https://img.shields.io/badge/KFM-provenance%E2%80%91first-purple)
+![Governed](https://img.shields.io/badge/governed-FAIR%2BCARE-2ea44f)
+![Static Assets](https://img.shields.io/badge/type-static%20assets-blue)
+![License Required](https://img.shields.io/badge/requirement-license%20file-important)
 
-This folder contains **self-hosted web font files** served directly by the KFM web app (the `public/` tree).  
-It exists because some front-end libraries and CSS conventions expect fonts to be resolvable via a predictable `/fonts/...` path (and often via relative paths like `../fonts`). [oai_citation:0‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
+This directory contains **publicly-served font assets** used by the KFM web UI and map rendering stack.
 
-> 🧭 **KFM rule of thumb:** _No license, no font._  
-> KFM is “provenance-first” and built around traceable sources (“the map behind the map”). That mindset applies to UI assets too—especially fonts. [oai_citation:1‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+Because everything under `web/public/` is typically shipped as-is to the browser (no “trust membrane” inside the client), **fonts are treated as third‑party dependencies**: they must be **licensed**, **attributed**, and **pinned**.
 
 ---
 
-## 📦 What belongs here
+## What belongs here
 
-- ✅ `.woff2` (preferred), `.woff` (fallback) font files  
-- ✅ Variable fonts (recommended when available)
-- ✅ Font licenses (`LICENSE.*`) and provenance notes (`SOURCE.md` / `README.md`)
-- ✅ Small font metadata manifests (optional but encouraged)
+### 1) UI Web Fonts
+Files such as:
+- `*.woff2` (preferred)
+- `*.woff` (fallback if required)
+- `*.ttf` (generally avoid shipping to browsers unless you have a specific need)
 
-Fonts are **files** that contain a typeface (design). Typeface and font are often confused, but they are not the same thing. [oai_citation:2‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)
+These are referenced via CSS (`@font-face`) and loaded by the application shell/UI.
+
+### 2) Map Glyphs for Map Rendering
+If the map style uses a `glyphs` URL template (commonly `{fontstack}/{range}.pbf`), this folder may also host **glyph PBFs** so the app can run **without external font CDNs**.
+
+> ✅ Rule: **No runtime fetching of fonts/glyphs from third-party CDNs** unless explicitly approved by governance review (privacy, availability, licensing).
 
 ---
 
-## 🗂️ Recommended folder structure
+## Directory layout
 
-> Keep it boring + predictable. This makes caching, CDN behavior, and debugging much easier.
+Recommended structure (one folder per “font asset unit”):
 
 ```text
-web/
-  public/
-    fonts/                      👈 you are here
-      README.md
-      <family-name>/            (optional but recommended)
-        LICENSE.txt
-        SOURCE.md               (where it came from + link + version)
-        <family>-<axis>.woff2   (variable) or <family>-<weight>.woff2
+web/public/fonts/
+  README.md
+  _manifest/
+    fonts.manifest.json         # optional but recommended
+  <family-name>/
+    LICENSE.txt                 # required
+    SOURCE.json                 # required
+    CHANGELOG.md                # optional
+    web/
+      <family>-<weight>-<style>.woff2
+      <family>-<weight>-<style>.woff
+  glyphs/                       # if self-hosting map glyphs
+    <Font Stack Name>/
+      0-255.pbf
+      256-511.pbf
+      ...
 ```
+
+### Naming conventions
+
+| Asset type | Convention | Example |
+|---|---|---|
+| Folder | kebab-case | `ibm-plex-sans/` |
+| Web font file | `family-weight-style.ext` | `ibm-plex-sans-400-normal.woff2` |
+| Glyph fontstack folder | must match style `text-font` name | `Noto Sans Regular/` |
+
+> ⚠️ Map glyph “fontstack” names must match what your map style requests. If the style requests `["Noto Sans Regular"]`, the folder name must match exactly.
 
 ---
 
-## 🚀 Quick start: add a new font family
+## Governance + compliance requirements (non-negotiable)
 
-### 1) Drop the files
-Put the `.woff2` (and optional `.woff`) inside `web/public/fonts/<family-name>/`.
+Every font family folder **MUST** include:
 
-### 2) Add licensing + provenance
-Before you reference the font in CSS, ensure:
-- a license file is present (e.g., `LICENSE.txt`)
-- you have rights to self-host (or you’re using a clearly permissive source)
+- `LICENSE.txt`  
+  The full license text (or the license file distributed with the font).
 
-Embedding fonts is easy technically—but **licensing still applies**; uploading font files to your server can enable unauthorized reuse if you don’t have permission. [oai_citation:3‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)
+- `SOURCE.json`  
+  A small provenance record that makes the asset auditable.
 
-### 3) Register it in CSS (`@font-face`)
-Web fonts are typically included via `@font-face`, which sets a `font-family` name and a `src` path to the font file(s). [oai_citation:4‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)
+### `SOURCE.json` template
 
-Example (create/update something like `web/src/styles/fonts.css` or `_fonts.scss`):
+```json
+{
+  "asset_type": "web-font | map-glyphs",
+  "family": "Example Sans",
+  "version": "1.002",
+  "license_spdx": "OFL-1.1",
+  "copyright": "Copyright (c) ...",
+  "upstream": {
+    "name": "Upstream project or foundry",
+    "url": "https://example.org/font",
+    "retrieved_utc": "2026-02-17T00:00:00Z"
+  },
+  "files": [
+    { "path": "web/example-sans-400-normal.woff2", "sha256": "<sha256>" }
+  ],
+  "notes": "Describe any subsetting, renaming, or transformation performed."
+}
+```
+
+### “Definition of Done” checklist ✅
+
+- [ ] Font license is compatible with KFM distribution goals.
+- [ ] `LICENSE.txt` is present and accurate.
+- [ ] `SOURCE.json` is present and complete.
+- [ ] All shipped files are **pinned** with `sha256`.
+- [ ] If glyphs exist: glyph folder names match the map style’s requested font stack(s).
+- [ ] No external runtime font URLs remain in CSS or map style JSON.
+
+---
+
+## Adding a new UI font
+
+1. Create a folder:
+   - `web/public/fonts/<family-name>/`
+
+2. Add provenance + license:
+   - `LICENSE.txt`
+   - `SOURCE.json`
+
+3. Add web formats:
+   - Prefer `woff2` first
+   - Add `woff` only if you must support older browsers
+
+4. Reference in CSS (example):
 
 ```css
-/* Example: Self-hosted font */
+/* Example: web/src/styles/fonts.css */
 @font-face {
-  font-family: "KFM Sans";
-  src:
-    local("KFM Sans"),
-    url("/fonts/kfm-sans/kfm-sans.woff2") format("woff2");
-  font-weight: 100 900; /* variable fonts often support ranges */
+  font-family: "Example Sans";
   font-style: normal;
+  font-weight: 400;
   font-display: swap;
-}
-
-/* Use it */
-:root {
-  --font-ui: "KFM Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-body {
-  font-family: var(--font-ui);
+  src:
+    url("/fonts/example-sans/web/example-sans-400-normal.woff2") format("woff2"),
+    url("/fonts/example-sans/web/example-sans-400-normal.woff") format("woff");
 }
 ```
 
-> 💡 If you use `public/`, the font URL is typically absolute-from-site-root (e.g., `/fonts/...`).  
-> In many web app layouts, `public/index.html` is the “centerpiece” that loads the app’s assets, so anything in `public/` is expected to be web-addressable. [oai_citation:5‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
+> ✅ Use `font-display: swap` for perceived performance and accessibility (text remains visible).
 
 ---
 
-## ⚖️ Self-hosting vs Google Fonts
+## Adding / generating map glyphs (self-hosted)
 
-If you’re experimenting, Google Fonts can be integrated quickly (either via `<link>` in `<head>` or `@import`). [oai_citation:6‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444) [oai_citation:7‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
+If your map style includes something like:
 
-However:
-- self-hosting improves long-term stability and reduces third-party dependency risk
-- **only select the weights/styles you actually use**; more selections increase download time (Google even warns about this). [oai_citation:8‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
+```json
+{
+  "glyphs": "/fonts/glyphs/{fontstack}/{range}.pbf"
+}
+```
 
-> ✅ KFM preference: self-host when possible, with explicit licensing + provenance notes (aligned with KFM’s governance model). [oai_citation:9‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+then you must provide glyph PBF ranges under:
+
+- `web/public/fonts/glyphs/<Font Stack Name>/<range>.pbf`
+
+### Recommended approach
+
+- Keep source TTF/OTF files **out of `public/`** unless you explicitly need to ship them to browsers.
+- Generate only the glyph PBF outputs required by your style’s font stacks.
+
+> 🧩 Implementation detail: tooling varies (Fontnik/node-fontnik and similar pipelines exist).  
+> If your repo already contains a `fonts:build` script, use that. If not, add one in a governed PR with reproducible inputs + pinned tool versions.
 
 ---
 
-## 🎛️ Typography guidance (practical)
+## Performance guidance
 
-Typography works best with a **clear hierarchy** and consistent scaling. A common approach is to define a base size and scale headings using percentages/relative sizing so the system is coherent across the UI. [oai_citation:10‡Web Design.pdf](sediment://file_00000000d1987230b931eccca5ab6cda) [oai_citation:11‡Web Design.pdf](sediment://file_00000000d1987230b931eccca5ab6cda)
+- Prefer `woff2`
+- Avoid shipping multiple large families if you can subset (only if the license permits and you record the transformation in `SOURCE.json`)
+- Keep the number of weights/styles minimal (e.g., 400/600 normal, maybe 400 italic)
+- Cache aggressively at the CDN/server layer (fonts are great candidates for long-lived caching)
 
-A simple hierarchy example (illustrative):
+---
 
-```css
-:root {
-  --font-size-base: 16px;
-  --line-height-base: 1.5;
+## Security & privacy notes
+
+- Fonts are **active content** in the sense that they can be complex binary formats. Treat them like any third‑party dependency:
+  - Pin checksums
+  - Prefer reputable upstreams
+  - Avoid “mystery zip files” with unclear provenance
+
+- Do not load fonts from third-party CDNs by default:
+  - avoids passive tracking (network requests)
+  - avoids availability failures
+  - makes builds reproducible
+
+---
+
+## Troubleshooting
+
+### Map labels show boxes/tofu (□) or missing glyphs
+- The map style is requesting a font stack you don’t host.
+- Verify:
+  - `glyphs` URL template points to `/fonts/glyphs/{fontstack}/{range}.pbf`
+  - the folder name under `glyphs/` matches the style’s `text-font` entry exactly
+
+### 404s on `/fonts/...`
+- Confirm the build pipeline copies `web/public/*` to the final static output.
+- Confirm paths begin with `/fonts/...` (leading slash) for absolute URLs.
+
+---
+
+## Optional: add a manifest for quick auditing
+
+If you choose to maintain a manifest, place it here:
+
+- `web/public/fonts/_manifest/fonts.manifest.json`
+
+Example shape:
+
+```json
+{
+  "generated_utc": "2026-02-17T00:00:00Z",
+  "families": [
+    {
+      "slug": "example-sans",
+      "family": "Example Sans",
+      "license_spdx": "OFL-1.1",
+      "source_file": "/fonts/example-sans/SOURCE.json"
+    }
+  ]
 }
-
-body {
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-}
-
-h1 { font-size: 2.2em; }
-h2 { font-size: 1.6em; }
-h3 { font-size: 1.35em; }
 ```
 
 ---
 
-## ⚡ Performance checklist
+## Contact / ownership
 
-- ✅ Prefer **WOFF2** first
-- ✅ Use **variable fonts** to reduce file count (when it doesn’t bloat size)
-- ✅ Limit weights (e.g., 400 + 600) unless you truly need more [oai_citation:12‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
-- ✅ Set `font-display: swap` (avoid invisible text)
-- ✅ Consider subsetting for large fonts (e.g., Latin-only subsets if appropriate)
-- ✅ Cache aggressively (long-lived cache headers) once versions are fingerprinted
-
----
-
-## 🧾 Governance & provenance
-
-KFM emphasizes traceability and responsible reuse (FAIR/CARE) across the system. [oai_citation:13‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  
-For fonts, that means every family should ideally have:
-
-- `LICENSE.*` — the actual license text
-- `SOURCE.md` — where you got it (vendor/site), version, and any build steps (subsetting, axis pinning, etc.)
-- (Optional) `FONTLOG.txt` — if provided by the font author
-
-### Suggested `SOURCE.md` template
-
-```md
-# Source / Provenance
-
-- Font family:
-- Source URL:
-- Retrieved on:
-- License:
-- Modifications:
-  - [ ] Subset (characters/ranges)
-  - [ ] Renamed files
-  - [ ] Converted formats
-- Notes:
-```
-
----
-
-## 🧯 Troubleshooting
-
-### Font loads locally but 404s in prod
-- Ensure the deployed build actually includes `web/public/fonts/**`
-- Verify the URL is `/fonts/...` (not `./fonts/...`) if your router rewrites paths
-- Confirm case sensitivity (Linux servers are strict)
-
-### A library can’t find its fonts (e.g., icons)
-Some CSS packages assume fonts live at `../fonts` relative to the CSS file location.  
-That’s why a top-level `/fonts` directory pattern is common (and why we keep this folder). [oai_citation:14‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
-
----
-
-## 📚 References used for this README
-
-- **KFM provenance-first architecture principles** [oai_citation:15‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)  [oai_citation:16‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
-- **Embedding web fonts with `@font-face` + licensing cautions** [oai_citation:17‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  [oai_citation:18‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  
-- **Why `/fonts` paths matter & common asset layout expectations** [oai_citation:19‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)  
-- **Keeping typography consistent with scale/hierarchy** [oai_citation:20‡Web Design.pdf](sediment://file_00000000d1987230b931eccca5ab6cda) [oai_citation:21‡Web Design.pdf](sediment://file_00000000d1987230b931eccca5ab6cda)
-
----
+- **Owners:** Web UI + Governance reviewers (licenses & provenance)
+- **Review required:** any new font family, any license change, any glyph generation pipeline change
