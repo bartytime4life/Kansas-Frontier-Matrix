@@ -1,290 +1,153 @@
-# 🖼️ `web/public/images` — Public Image Assets
+<!--
+File: web/public/images/README.md
+Scope: Public static image assets for the KFM web app.
+-->
 
-![Assets](https://img.shields.io/badge/assets-images-blue)
-![Performance](https://img.shields.io/badge/perf-optimized-success)
-![Accessibility](https://img.shields.io/badge/a11y-alt%20text%20%26%20captions-important)
-![Provenance](https://img.shields.io/badge/provenance-required-informational)
+# `web/public/images` 🖼️
 
-> **What lives here?** Static images that are served **as-is** by the web app (public assets).  
-> **What doesn’t?** Large geospatial rasters/tiles/data artifacts (those belong in the data/tile pipeline, not `public/`). 🧭
+![Scope](https://img.shields.io/badge/scope-public%20static%20assets-brightgreen)
+![Governance](https://img.shields.io/badge/governance-evidence--first%20%7C%20FAIR%2BCARE-blue)
+![Security](https://img.shields.io/badge/security-no%20secrets%20here-critical)
 
----
+> [!IMPORTANT]
+> Anything placed in `web/public/**` is treated as **publicly readable** once deployed.  
+> If an asset includes sensitive locations, private individuals, or restricted knowledge, **do not put it here**.
 
-## 🔎 Quick links
+## What lives here
 
-- ⬆️ Up one level: [`../`](../)
-- ⬆️ Up to `web/`: [`../../`](../../)
+This folder holds image assets that the frontend can reference directly:
 
----
+- UI icons (SVG)
+- UI illustrations (empty states, hints)
+- Non-sensitive static diagrams/legends
+- Logos (KFM + partners, with permission)
 
-## ✅ Golden Rules
+## What must NOT live here
 
-### 1) “No Source, No Asset” 🧾
-If an image is not **originally created by us**, it must have **provenance + licensing** documented (see **Provenance & Licensing** below).  
-This mirrors KFM’s evidence-first philosophy: assets shown to users must remain **traceable** (the “map behind the map”). 🗺️
+- Raw datasets, scans, or “source” imagery (use the governed pipeline + object storage instead).
+- Any image that reveals **sensitive site locations** (exact coordinates, identifiable landmarks, etc.).
+- Any image containing secrets (API keys, tokens), internal screenshots, or credentials.
+- Anything without a clear reuse license / permission.
 
-### 2) Optimize before commit ⚡
-If it’s bigger than it needs to be, it slows everything down:
-- slower page load
-- slower map UI
-- higher bandwidth for mobile users
+> [!WARNING]
+> If it’s not safe to tweet, it’s not safe for `web/public/`.
 
-### 3) Accessibility isn’t optional ♿
-Every meaningful image needs correct **alt text** and/or a **caption** (when it adds context).
-
-### 4) Keep `public/` clean 🧹
-Everything under `public/` is an “asset” the browser can request directly. That’s powerful… and easy to bloat. Treat this folder as production-critical.  
-(Background: public assets are delivered to the browser as part of the app’s static surface.) [oai_citation:0‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
-
----
-
-## 🧱 Recommended folder layout
-
-> If your folder already differs, don’t panic—this is the **target** structure we should converge toward.
+## Directory layout
 
 ```text
-web/
-└─ public/
-   └─ images/
-      ├─ branding/        # logos, wordmarks, brand marks 🏷️
-      ├─ icons/           # UI icons (prefer SVG) ✳️
-      ├─ ui/              # UI illustrations, empty states, onboarding 🧩
-      ├─ maps/            # map UI assets: legend images, swatches, overlays 🗺️
-      ├─ sprites/         # sprite sheets (e.g., MapLibre sprite.png + sprite.json) 🧵
-      ├─ screenshots/     # docs-only screenshots (prefer docs/images if possible) 📸
-      └─ _meta/           # optional central attributions & licenses 📚
+web/public/images/
+├─ icons/        # small UI icons (prefer SVG)
+├─ logos/        # KFM + partner logos (license/permission required)
+├─ ui/           # UI illustrations, empty-state graphics
+├─ story/        # Story Node cover art & inline illustrations (public-safe only)
+├─ maps/         # non-sensitive map legends, symbology, static explainers
+├─ tmp/          # scratch during dev; do not ship to production
+└─ README.md     # this file
 ```
 
----
+> [!NOTE]
+> Create subfolders as needed, but keep the intent obvious and keep assets public-safe.
 
-## 🧭 How to reference images in the app
+## Naming conventions
 
-Because these files live under `public/`, they should generally be reachable by URL path:
+Use **kebab-case**, keep names stable, and avoid ambiguous `final` / `new` / `v2`.
 
-### HTML
-```html
-<img src="/images/branding/kfm-logo.svg" alt="Kansas Frontier Matrix logo">
+Recommended patterns:
+
+- `icon-<verb>-<modifier>.svg`  
+  (example: `icon-search.svg`, `icon-zoom-in.svg`)
+- `logo-<org>.svg|png`  
+  (example: `logo-kfm.svg`)
+- `ui-<purpose>.<ext>`  
+  (example: `ui-empty-state-search.webp`)
+- `story-<story-id>-cover.<ext>`  
+  (example: `story-snode-012-cover.webp`)
+
+## Formats & performance guidelines
+
+| Use case | Preferred format | Why |
+|---|---|---|
+| Icons | **SVG** | Crisp at any scale; small payload |
+| Photos / raster art | **WebP** (or PNG/JPG if needed) | Better compression; fast loads |
+| Diagrams with transparency | **PNG** or **SVG** | Cleaner edges; predictable rendering |
+
+**Performance targets (guidelines):**
+- Icons (SVG): aim for **< 10 KB**
+- UI illustrations: aim for **< 200 KB**
+- Photos / cover art: aim for **< 500 KB** (or provide multiple sizes)
+
+### SVG safety (required)
+
+SVG can embed scripts and external references. Before committing an SVG:
+
+- ✅ Remove `<script>` tags and event handlers (e.g., `onload=...`)
+- ✅ Avoid external references (`<image href="http...">`, remote fonts)
+- ✅ Run an optimizer (example: `svgo`)
+- ✅ Prefer basic shapes + paths; avoid unnecessary metadata
+
+## Provenance & licensing metadata
+
+For any asset that is not “trivial” (anything beyond tiny hand-made icons), add a sidecar:
+
+- `my-asset.ext`
+- `my-asset.meta.yml`
+
+Example schema:
+
+```yaml
+# my-asset.meta.yml
+title: "KFM Logo (Horizontal)"
+kind: "logo"              # icon | logo | photo | illustration | map | other
+source:
+  origin: "created"       # created | commissioned | partner-provided | public-domain | purchased | unknown
+  url: ""                 # if applicable
+  retrieved_at: ""        # ISO-8601 date, if applicable
+license:
+  spdx: ""                # e.g., CC-BY-4.0, CC0-1.0, proprietary, partner-permission
+  notes: ""               # constraints, attribution text, etc.
+attribution:
+  author: ""
+  required_text: ""       # copy/paste attribution line (if required)
+governance:
+  sensitivity: "public"   # public | internal | restricted (restricted MUST NOT be in this folder)
+  notes: ""               # redactions/generalizations performed, if any
+derivations:
+  - description: "optimized + stripped metadata"
+    tool: "svgo"
+    when: "YYYY-MM-DD"
 ```
 
-### React (typical)
-```tsx
-export function BrandMark() {
-  return (
-    <img
-      src="/images/branding/kfm-logo.svg"
-      alt="Kansas Frontier Matrix logo"
-      width={160}
-      height={160}
-      loading="lazy"
-      decoding="async"
-    />
-  );
-}
-```
+> [!TIP]
+> If you can’t state the license and source confidently, treat the asset as **not shippable**.
 
-> ✅ Prefer explicit `width`/`height` to reduce layout shift (CLS).  
-> ✅ Use `loading="lazy"` for below-the-fold images.  
-> ✅ Use `decoding="async"` when reasonable.
+## How to add an image (PR checklist)
 
----
+- [ ] Asset is appropriate for **public** distribution (no sensitive locations, no private data).
+- [ ] License/permission is known and recorded (`*.meta.yml` for non-trivial assets).
+- [ ] Image is optimized (SVG optimized; raster compressed; EXIF stripped).
+- [ ] Filename follows conventions and is placed in the right subfolder.
+- [ ] The UI uses meaningful `alt` text (or `aria-label` for purely decorative icons).
 
-## 🖼️ Formats: what to use (and when)
+## Using images in the web app
 
-| Format | Best for | Avoid when | Notes |
-|---|---|---|---|
-| **SVG** ✨ | icons, logos, simple illustrations | photos, heavy gradients/filters | Keep SVGs clean: no embedded raster blobs, avoid unnecessary `<metadata>` |
-| **PNG** 🧊 | transparency + pixel-perfect UI | photos (usually) | Use for crisp UI assets or when SVG isn’t viable |
-| **WebP** 📦 | photos, screenshots, rich raster images | tiny icons | Great size/quality tradeoff; consider multiple sizes |
-| **AVIF** 🏎️ | photos (best compression) | if tooling/support is a hassle | Optional “next step” if pipeline supports |
-| **GIF** 🧨 | only tiny simple loops | almost everything else | Prefer MP4/WebM for animation (not typically stored here) |
+General pattern (framework-dependent):
+
+- File: `web/public/images/icons/icon-search.svg`
+- URL: `/images/icons/icon-search.svg`
+
+> [!NOTE]
+> If your framework does not auto-serve `public/` at the web root, adjust accordingly. (Implementation detail)
+
+## When you should NOT put an image here
+
+Use a governed, access-controlled store + API when an image is:
+
+- tied to a restricted dataset,
+- derived from partner data with distribution constraints,
+- or could expose sensitive locations/subjects.
 
 ---
 
-## 📏 Naming conventions (keep it boring = keep it scalable)
+### Owners
 
-### ✅ Do
-- `kebab-case`
-- include semantic meaning
-- include variant tokens when needed: `-dark`, `-light`, `-mono`, `@2x`
-
-Examples:
-- `branding/kfm-logo.svg`
-- `branding/kfm-wordmark-dark.svg`
-- `icons/layer-toggle.svg`
-- `maps/legend-drought-index.webp`
-- `sprites/maplibre-sprite.png` + `maplibre-sprite@2x.png` + `maplibre-sprite.json`
-
-### ❌ Don’t
-- `IMG_1920.png`
-- `final_final_REAL.png`
-- spaces, mixed casing, or mystery abbreviations
-
----
-
-## ⚡ Performance budgets (practical rules)
-
-These are “red flags,” not rigid laws:
-
-- **Icons (SVG):** keep as small as possible (often < 10 KB)
-- **UI PNGs:** aim for < 100 KB
-- **Photos / screenshots (WebP):** aim for < 300–600 KB depending on dimensions
-- **Anything > 1 MB:** stop and ask “should this be a tile, not an image?” 🧠
-
-### Caching 🔁
-Static assets should be served with **strong caching** (e.g., far-future cache headers) so repeat visits are fast. [oai_citation:1‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
-
-> Tip: If you must change an asset frequently, consider versioned filenames like `kfm-logo.v2.svg`.
-
----
-
-## 🧰 Optimization playbook (recommended tools)
-
-> Use whatever tools fit your workflow; these are reliable defaults.
-
-### SVG
-- Run SVGO:
-```bash
-npx svgo -f web/public/images --recursive
-```
-
-### PNG
-- Strip metadata + optimize:
-```bash
-oxipng -o 4 -strip all web/public/images/**/*.png
-```
-
-### WebP
-- Convert (example):
-```bash
-cwebp -q 82 input.png -o output.webp
-```
-
-### Strip EXIF / hidden metadata 🔒
-- Especially important for photos and screenshots:
-```bash
-exiftool -all= -overwrite_original path/to/image.jpg
-```
-
----
-
-## ♿ Accessibility checklist
-
-### Alt text rules
-- **Informational image:** describe the meaning, not the pixels.
-- **Decorative image:** use empty alt (`alt=""`) so screen readers skip it.
-- **Complex diagrams/maps:** provide a short alt + a longer text explanation nearby (or link).
-
-### Captions for context
-When an image benefits from explanation, use semantic figure/caption patterns in docs/pages:
-```html
-<figure>
-  <img src="/images/maps/legend-drought-index.webp" alt="Legend for drought index">
-  <figcaption>Drought Index legend used in the 1930–1939 timeline view.</figcaption>
-</figure>
-```
-
----
-
-## 🧾 Provenance & Licensing (MANDATORY for external assets)
-
-KFM’s platform values traceability and governance—assets should follow the same discipline. ✅  
-If you add an image from an outside source (archives, stock, agencies, community submissions), include a matching metadata file:
-
-### ✅ Convention
-For an asset:
-- `maps/legend-drought-index.webp`
-
-Add:
-- `maps/legend-drought-index.meta.json`
-
-### ✅ Minimal schema (example)
-```json
-{
-  "title": "Drought Index legend",
-  "description": "Legend image used in the web UI for drought index layer.",
-  "created_by": "KFM Team",
-  "created_at": "2026-02-04",
-  "source": {
-    "type": "internal",
-    "name": "KFM",
-    "url": null
-  },
-  "license": {
-    "spdx": "MIT",
-    "attribution": "Kansas Frontier Matrix contributors"
-  },
-  "modifications": [
-    "exported",
-    "optimized",
-    "metadata stripped"
-  ],
-  "related": {
-    "dataset_ids": ["ks_drought_index_1930s"],
-    "story_ids": ["dust-bowl-overview"]
-  }
-}
-```
-
-### ✅ For third-party assets
-Use:
-- `source.url` (where you got it)
-- `source.accessed_at`
-- `license.spdx` (or a clear license string)
-- `license.attribution` (exact wording required)
-
-> If we don’t have license clarity, **don’t ship it**. 🚫
-
----
-
-## 🗺️ Map UI specifics (MapLibre / Cesium)
-
-KFM’s front-end map experience may include **MapLibre (2D)** and **Cesium (3D)**, which can require special asset handling (sprites, icons, etc.). [oai_citation:2‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-
-### MapLibre sprites 🧵
-If we use a MapLibre style that references `sprite`, keep the sprite assets together:
-
-- `sprites/<name>.png`
-- `sprites/<name>@2x.png`
-- `sprites/<name>.json`
-
-> Tip: keep sprite filenames stable—styles often reference them directly.
-
-### Cesium UI icons 🌍
-Cesium overlays and UI often benefit from:
-- crisp SVG icons
-- transparent PNG markers
-- small textures (only when needed)
-
----
-
-## 🔁 PR checklist (copy/paste)
-
-- [ ] Asset is in the right folder (`branding/`, `icons/`, `maps/`, etc.)
-- [ ] Filename follows conventions (`kebab-case`, meaningful, stable)
-- [ ] Optimized (SVG/PNG/WebP) and metadata removed if needed
-- [ ] Accessible usage planned (alt/caption or decorative)
-- [ ] **If external:** added `*.meta.json` with source + license
-- [ ] Verified in-browser (no broken paths, looks correct on dark/light backgrounds)
-- [ ] Size budget makes sense (especially for map UI)
-
----
-
-## 📚 References & project grounding
-
-<details>
-<summary>Why these rules exist (project sources)</summary>
-
-- KFM system emphasizes evidence-first / provenance-first behavior and governed interfaces (informing our “No Source, No Asset” rule).  [oai_citation:3‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)  
-- Web design guidance on choosing correct image formats + compression and avoiding misuse informs our format/optimization rules.  [oai_citation:4‡professional-web-design-techniques-and-templates.pdf](sediment://file_000000000acc71f8b2e5128c030179fc)  
-- HTML/CSS semantics (including figure/caption patterns and separation of structure vs presentation) informs our accessibility + markup guidance.  [oai_citation:5‡learn-to-code-html-and-css-develop-and-style-websites.pdf](sediment://file_00000000ed6471fdb0ecead71e051444)  
-
-Additional supporting excerpts:
-- Public folder assets are part of what the browser downloads/uses to display the app. [oai_citation:6‡Node.js-React-CSS-HTML.pdf](sediment://file_00000000b09c71f8b277cb19b9f597b2)
-- KFM web stack includes 2D MapLibre + 3D Cesium, which impacts how we store sprites/icons. [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
-- Static asset caching guidance (e.g., far-future cache headers) supports performance rules. [oai_citation:8‡Kansas Frontier Matrix Comprehensive System Documentation.pdf](sediment://file_00000000ef40722faf17987b69730695)
-
-</details>
-
----
-
-<p align="right"><a href="#-webpublicimages--public-image-assets">⬆️ Back to top</a></p>
+This directory is owned by the **Web/UI** layer, but governance rules apply to every commit.
