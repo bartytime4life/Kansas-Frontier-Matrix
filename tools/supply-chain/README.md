@@ -1,546 +1,312 @@
-# KFM Supply-Chain Tooling (`tools/supply-chain`)
+<!--
+File: tools/supply-chain/README.md
+KFM: Kansas Frontier Matrix
+-->
 
-[![KFM](https://img.shields.io/badge/KFM-governed%20artifacts-blue)](#kfm-non-negotiables)
-[![Evidence First](https://img.shields.io/badge/evidence--first-cite%20or%20abstain-success)](#kfm-non-negotiables)
-[![Policy as Code](https://img.shields.io/badge/policy-OPA%2FRego-informational)](#policy-packs)
-[![Supply Chain](https://img.shields.io/badge/supply--chain-SBOM%20%2B%20provenance%20%2B%20signatures-orange)](#what-we-produce)
-[![Sigstore](https://img.shields.io/badge/signing-Sigstore%2Fcosign-brightgreen)](#toolchain)
+# 🔗 Supply Chain Tooling (KFM)
 
-This folder defines the **supply-chain security contract** for Kansas Frontier Matrix (KFM). It is how we keep KFM:
+![KFM](https://img.shields.io/badge/KFM-governed-2ea44f)
+![Evidence-first](https://img.shields.io/badge/evidence--first-required-blue)
+![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-aligned-informational)
+![Trust%20Membrane](https://img.shields.io/badge/trust--membrane-enforced-critical)
+![Status](https://img.shields.io/badge/status-scaffold-yellow)
 
-- **fail-closed** (deny by default)
-- **evidence-first** (prove it, or don’t ship it)
-- **audit-ready** (every promotion has receipts + attestations + signatures)
-
-It applies to:
-
-- datasets and derived products (Raw → Work → Processed)
-- catalogs (STAC / DCAT / PROV)
-- watcher outputs and registry entries
-- governed documentation builds (docs are treated as publishable artifacts)
-
-> **Nothing is promoted or deployed unless it can prove (cryptographically + schematically + policy-wise) that it was produced correctly.**
-
----
-
-## Table of contents
-
-- [KFM non-negotiables](#kfm-non-negotiables)
-- [Scope](#scope)
-- [The “golden path” (promotion lifecycle)](#the-golden-path-promotion-lifecycle)
-- [What we produce](#what-we-produce)
-- [Directory layout](#directory-layout)
-- [Toolchain](#toolchain)
-- [Local usage](#local-usage)
-- [CI integration](#ci-integration)
-- [Policy packs](#policy-packs)
-- [OCI referrers “provenance hub”](#oci-referrers-provenance-hub)
-- [`run_receipt` / `run_manifest` contract](#run_receipt--run_manifest-contract)
-- [Security notes](#security-notes)
-- [Troubleshooting](#troubleshooting)
-- [Governance & change control](#governance--change-control)
-- [Glossary](#glossary)
-
----
-
-## KFM non-negotiables
+A **DevSecOps + data-governance toolset** for producing, verifying, and deploying KFM artifacts with:
+- **reproducible builds**
+- **SBOMs** (software bill of materials)
+- **signed artifacts** (images, bundles, manifests)
+- **provenance / attestations**
+- **policy-based gates** that align with KFM governance (“truth path”)
 
 > [!IMPORTANT]
-> These are architectural invariants. Supply-chain tooling exists to **enforce** them, not merely document them.
-
-- **Trust membrane:** UI/external clients never access databases directly; all access is via the governed API + policy boundary.
-- **Fail-closed posture:** policy checks deny by default (no “best effort” promotion).
-- **Promotion gates:** datasets are promoted only when required checksums and catalogs exist and validate (STAC/DCAT/PROV).
-- **Evidence-first UX:** Focus Mode must cite or abstain; every answer is traceable to evidence with an audit reference.
+> This folder is a **governance surface**. If a build or dataset transform cannot be traced to its inputs and validations, it **must not** be promoted to release.  
+> Any output without required provenance should be labeled **“not confirmed”** (or blocked), consistent with KFM’s evidence-first rules.
 
 ---
 
-## Scope
+## What lives here
 
-This folder covers supply-chain controls for:
+This directory is intended to house **portable tooling** used by CI and developers to secure the KFM supply chain.
 
-### 1) Build + ingest pipelines
-- deterministic specs/config (canonicalization) → deterministic identifiers
-- `run_receipt` / `run_manifest` that anchor what ran and what it produced
-- reproducibility checks (where feasible)
+Typical responsibilities:
 
-### 2) Artifact integrity + provenance
-- **SBOMs** attached to artifacts (SPDX JSON)
-- **provenance attestations** (SLSA / in-toto style)
-- **signatures** that bind evidence to the promoted artifact digest
+| Area | What we produce | Why it matters |
+|---|---|---|
+| **Container build** | OCI image + digest | Pin the exact artifact that runs |
+| **SBOM** | SPDX / CycloneDX | Know what’s inside (dependencies, licenses) |
+| **Vuln scan** | report (e.g., SARIF/JSON) | Block known-critical issues from shipping |
+| **Signing** | signature + transparency proof | Prevent tampering; enable verification |
+| **Provenance** | build attestation (SLSA/in-toto style) | Auditability and accountability |
+| **Policy gates** | pass/fail with reasons | Enforce governance consistently |
 
-### 3) Policy enforcement
-- OPA/Rego policies (via `conftest` in CI) that deny promotion when:
-  - required evidence is missing
-  - signatures/attestations are invalid or unverifiable
-  - required governance fields are missing (license, rights, classification, etc.)
-
----
-
-## The “golden path” (promotion lifecycle)
-
-This is the canonical flow for turning upstream material into promoted, governed KFM artifacts.
-
-```mermaid
-flowchart TD
-  A["Upstream provider (API / files / STAC / DCAT)"] --> B["Watcher or pipeline (acquire)"]
-  B --> C["Validate schemas (STAC/DCAT/PROV + receipt schema)"]
-  C -->|"fail"| X["Fail closed: block merge/promotion; open issue"]
-  C --> D["Canonicalize spec (RFC 8785 JCS where applicable)"]
-  D --> E["Compute spec_hash + artifact digests"]
-  E --> F["Write run_receipt / run_manifest (+ rights + materiality)"]
-  F --> G["Generate catalogs (STAC / DCAT + PROV links)"]
-  G --> H["Generate SBOM (SPDX JSON)"]
-  H --> I["Generate provenance attestation (SLSA / in-toto predicate)"]
-  I --> J["Policy tests (OPA/Rego via conftest)"]
-  J -->|"fail"| X
-  J --> K["Sign + attest (cosign)"]
-  K --> L["Publish (OCI registry / object store)"]
-  L --> M["Attach referrers (SBOM / PROV / QA / receipts)"]
-  M --> N["Serve via API"]
-  N --> O["UI consumes (via evidence resolver only)"]
-```
+> [!NOTE]
+> “Supply chain” here covers **software** (services, UI, jobs) *and* **data artifacts** (pipelines, derived layers).  
+> Data artifacts should carry similar guarantees: **lineage, validations, licenses, and redaction rules**.
 
 ---
 
-## What we produce
+## Non-goals
 
-Minimum evidence artifacts expected for promotion:
-
-| Evidence artifact | Typical filename | Purpose | Required for |
-|---|---|---|---|
-| Run receipt / manifest | `run_receipt.json` / `run_manifest.json` | Canonical record of run inputs + outputs + policy decisions | **Always** |
-| Checksums / digests | `SHA256SUMS` (or embedded) | Content-addressed integrity for datasets + bundles | **Always** |
-| Catalog metadata | `stac/…`, `dcat/…`, `prov/…` | Machine-readable discovery + lineage anchors | **Always** for promoted datasets |
-| SBOM (SPDX) | `sbom.spdx.json` | What software components were involved | **Always** for promoted artifacts |
-| Provenance attestation | `provenance.intoto.json` | How the artifact was built (builder, materials, steps) | **Always** for promoted artifacts |
-| Signatures + transparency proof | (cosign sig + Rekor UUID) | Bind evidence to digest; tamper-evident | **Always** |
-| QA evidence (optional, but recommended) | `qa/report.json` + attachments | Domain-specific quality checks | By policy / dataset class |
+- Replacing the project’s CI system (GitHub Actions/GitLab/Tekton/etc.)
+- Acting as a general-purpose security handbook (keep this **executable** and **automatable**)
+- Storing secrets in-repo (no private keys, tokens, or registry creds committed)
+- Allowing any workflow that bypasses the **trust membrane** (frontend/external clients never touch storage directly)
 
 ---
 
 ## Directory layout
 
-This folder is designed to be portable across KFM repos. CI can treat it as a reusable **acceptance harness + policy kit**.
+> [!TIP]
+> If the folder is new, use this layout as the **initial scaffold**.
 
 ```text
 tools/
-└── supply-chain/                             # Supply-chain security tooling (SBOM, provenance, signing, verification)
-    ├── README.md                             # You are here: how to run + how CI uses this folder
-    ├── tool-versions.yaml                    # Normative tool pins/constraints used by CI + local parity
-    │
-    ├── scripts/                              # Entry points (local + CI) — keep behavior deterministic
-    │   ├── install-tools.sh                   # Install pinned tools (or validate container toolchain matches pins)
-    │   ├── verify.sh                          # Run acceptance harness (fail-closed; blocks promotion on mismatch)
-    │   ├── sbom.sh                            # Generate SBOM for a target artifact (e.g., SPDX/CycloneDX)
-    │   ├── provenance.sh                      # Emit SLSA / in-toto provenance for a build (predicate + metadata)
-    │   ├── sign.sh                            # Cosign sign/attest wrapper (digest-only; no tag signing)
-    │   └── discover-referrers.sh              # List OCI referrers for a subject digest (sboms/attestations/etc.)
-    │
-    ├── policies/                              # Policy pack for promotion/verification gates
-    │   ├── provenance-guard/                  # Minimum promotion contract (required provenance fields + checks)
-    │   │   ├── policy.rego                    # Rego rules (deny-by-default; require attestations/receipts)
-    │   │   └── policy_test.rego               # Unit tests for provenance-guard policy
-    │   └── materiality/                       # Optional: provider-aware triggers/thresholds (what changes require what)
-    │       ├── policy.rego                    # Materiality rules (diff thresholds, dependency classes, risk levels)
-    │       └── policy_test.rego               # Unit tests for materiality policy
-    │
-    └── fixtures/                              # Golden test vectors for acceptance + regression tests
-        ├── example-run_receipt.v1.json        # Example run receipt (inputs/outputs/digests/decision summary)
-        ├── example-sbom.spdx.json             # Example SBOM output (SPDX JSON baseline)
-        └── example-provenance.intoto.json     # Example in-toto/SLSA provenance (predicate baseline)
+└── supply-chain/
+    ├── README.md                # (this file) How supply-chain gates work
+    ├── scripts/                 # CLI wrappers used locally + in CI
+    │   ├── build-image.*        # build OCI images (podman/buildah/docker)
+    │   ├── sbom.*               # generate SBOM (spdx/cyclonedx)
+    │   ├── scan.*               # vulnerability scan + policy threshold
+    │   ├── sign.*               # sign artifacts (cosign/sigstore)
+    │   ├── attest.*             # attach provenance + SBOM attestations
+    │   └── verify.*             # verify signatures + attestations
+    ├── policies/                # policy-as-code (OPA/Kyverno/Conftest/etc.)
+    │   ├── vuln-threshold.rego
+    │   ├── license-allowlist.rego
+    │   └── admission/           # k8s admission policies (optional)
+    ├── templates/               # CI snippets, config templates
+    │   ├── cosign.pub.template
+    │   ├── policy-bundle.template
+    │   └── provenance.template.json
+    └── docs/                    # deeper docs / runbooks for this toolset
+        ├── threat-model.md
+        ├── sbom-formats.md
+        └── ci-integration.md
 ```
 
-> [!NOTE]
-> If your repo does not yet have these files, create them exactly as named above. This README is the contract that explains what they must do.
+> [!CAUTION]
+> The exact filenames above are **recommended**, not guaranteed to exist yet.  
+> Keep the public interface stable once CI depends on it (scripts → contract).
 
 ---
 
-## Toolchain
+## End-to-end flow
 
-### Required tools
+```mermaid
+flowchart LR
+  dev[Developer Commit] --> ci[CI Build Runner]
+  ci --> build[Build Artifact<br/>OCI image or data package]
+  build --> sbom[Generate SBOM]
+  sbom --> scan[Vulnerability & License Checks]
+  scan -->|pass| sign[Sign + Attest]
+  scan -->|fail| block[Block / Fail Pipeline]
+  sign --> registry[Publish to Registry / Artifact Store]
+  registry --> verify[Verify at Deploy Time]
+  verify --> deploy[GitOps Deploy<br/>OpenShift/Kubernetes]
+  deploy --> runtime[Runtime Monitoring / Drift Checks]
+```
 
-| Tool | Why it’s needed |
-|---|---|
-| **cosign** | signing + attestation verification |
-| **conftest** + **OPA** | policy-as-code gates (deny by default) |
-| **SBOM generator** (e.g., `syft`) | produce SPDX JSON SBOMs |
-| **ORAS** | publish and discover OCI artifacts/referrers |
-| `jq` / `yq` | deterministic transforms in CI |
-| hash utilities | `sha256sum` / `shasum -a 256` |
+---
 
-### Version pinning and drift control (mandatory)
+## Governance gates
+
+The supply-chain gates should align with KFM’s broader governance steps (acquire → validate → enrich → catalog → serve → explain). In practice, that means **every promoted artifact** must have:
+
+### Required gates (recommended defaults)
+
+| Gate | Minimum output | Default policy |
+|---|---|---|
+| **Build determinism** | image digest + build metadata | Prefer pinned deps, lockfiles, and reproducible builds |
+| **SBOM** | `sbom.(spdx|cdx).json` | Required for releases; optional for local dev |
+| **Vulnerability scan** | `vuln-report.json` | Fail on Critical; allow High only with exception record |
+| **License check** | `license-report.json` | Fail on disallowed licenses (project-defined allowlist) |
+| **Signature** | signature + log proof | Required for anything deployed to shared clusters |
+| **Provenance attestation** | `provenance.json` | Required for releases; must reference source revision |
+| **Verification at deploy** | admission decision | Deploy blocked if signature/attestation invalid |
 
 > [!IMPORTANT]
-> Supply-chain tooling is treated as a **volatile dependency**. Pin versions (or container digests) and run regression tests whenever you upgrade.
->
-> Two concrete risks called out in KFM’s integration work:
-> - a Cosign verification-bypass vulnerability (CVE-2026-22703)
-> - a breaking default change in Conftest (Rego v1 default)
->
-> Treat tool upgrades as security events.
+> Exceptions (e.g., “ship with High CVE”) must be explicit, time-bounded, and recorded as governed artifacts (e.g., `exceptions/*.yaml`) with reviewer + rationale.
 
-#### `tool-versions.yaml` contract
+---
 
-This file is **normative**: CI should fail if it’s missing or if tools do not match it.
+## Quickstart
 
-Minimum keys to include:
+### Prerequisites (local)
 
-```yaml
-# tools/supply-chain/tool-versions.yaml
-cosign:
-  # must satisfy patched constraints (avoid known-vulnerable versions)
-  min_patched_versions: ["2.6.2", "3.0.4"]  # acceptable: 2.6.2+ OR 3.0.4+ (pick one line)
+- A container engine: **Podman** (preferred for rootless) or Docker
+- An SBOM generator: Syft or equivalent
+- A scanner: Grype/Trivy (or platform equivalent)
+- A signing tool: Cosign (Sigstore)
+- `jq` / `yq` for JSON/YAML wrangling
 
-conftest:
-  pinned: true
-opa:
-  pinned: true
-oras:
-  pinned: true
-sbom:
-  tool: "syft"
-  pinned: true
+> [!NOTE]
+> Tool choices are intentionally abstracted behind `tools/supply-chain/scripts/*` so CI can swap implementations without changing every pipeline.
+
+### Example: build → sbom → scan → sign → verify (illustrative)
+
+```bash
+# From repo root:
+cd tools/supply-chain
+
+# 1) Build
+./scripts/build-image.sh \
+  --context ../../services/api-gateway \
+  --file Containerfile \
+  --tag quay.io/kfm/api-gateway:dev
+
+# 2) SBOM
+./scripts/sbom.sh \
+  --image quay.io/kfm/api-gateway:dev \
+  --format spdx-json \
+  --out ../../artifacts/sbom/api-gateway.spdx.json
+
+# 3) Scan (policy gate)
+./scripts/scan.sh \
+  --sbom ../../artifacts/sbom/api-gateway.spdx.json \
+  --fail-on critical \
+  --out ../../artifacts/scan/api-gateway.vuln.json
+
+# 4) Sign + attest
+./scripts/sign.sh --image quay.io/kfm/api-gateway:dev
+./scripts/attest.sh \
+  --image quay.io/kfm/api-gateway:dev \
+  --sbom ../../artifacts/sbom/api-gateway.spdx.json \
+  --provenance ../../artifacts/provenance/api-gateway.provenance.json
+
+# 5) Verify
+./scripts/verify.sh --image quay.io/kfm/api-gateway:dev
 ```
 
 > [!TIP]
-> Prefer containerized toolchains with **digest pinning** in CI to minimize drift.
+> For a first implementation, keep scripts thin wrappers around the chosen tools. The value is in the **consistent contracts** and **gates**, not bespoke scripting.
 
 ---
 
-## Local usage
+## CI/CD integration patterns
 
-### Quick start: verify a PR / candidate artifact
+This folder should be usable from any CI, but KFM typically benefits from a **GitOps deploy** model:
 
-Run the acceptance harness locally before pushing:
+1. CI builds and publishes a signed artifact (image digest, SBOM, provenance)
+2. CI updates a deployment repo (or environment overlay) with **immutable digests**
+3. GitOps controller applies manifests
+4. Cluster admission verifies signatures/attestations before allowing pods
 
-```bash
-# From repository root
-bash tools/supply-chain/scripts/verify.sh
-```
+### Suggested CI stages (portable)
 
-A correct run should:
-
-1. validate schemas (STAC/DCAT/PROV where relevant)
-2. validate the `run_receipt` / `run_manifest` schema
-3. run `conftest test` for applicable policy packs
-4. verify cosign signatures/attestations (fail-closed)
-5. ensure digests/spec_hash are reproducible for the same inputs
-
-### Generate an SBOM (example)
-
-```bash
-# Example: syft generates SPDX JSON for a container image
-syft packages "ghcr.io/example/repo@sha256:0000000000000000000000000000000000000000000000000000000000000000" \
-  -o spdx-json > sbom.spdx.json
-```
-
-### Attach SBOM + provenance (example)
-
-```bash
-SUBJECT="ghcr.io/example/repo@sha256:0000000000000000000000000000000000000000000000000000000000000000"
-
-# Sign the subject digest (prefer digest-only, never mutable tags)
-cosign sign "${SUBJECT}"
-
-# Attach SBOM (as attestation)
-cosign attest --type spdxjson --predicate sbom.spdx.json "${SUBJECT}"
-
-# Attach provenance attestation
-cosign attest --type slsaprovenance --predicate provenance.intoto.json "${SUBJECT}"
-```
-
-### Verify (example)
-
-```bash
-SUBJECT="ghcr.io/example/repo@sha256:0000000000000000000000000000000000000000000000000000000000000000"
-
-cosign verify "${SUBJECT}"
-cosign verify-attestation --type spdxjson "${SUBJECT}"
-cosign verify-attestation --type slsaprovenance "${SUBJECT}"
-```
-
-> [!WARNING]
-> Verification MUST be fail-closed. If verification can’t complete (network, transparency log, missing predicate fields), policy must treat it as failure.
+- `lint` (code, IaC, policies)
+- `test` (unit/integration/contract)
+- `build` (OCI image / data package)
+- `sbom`
+- `scan` (vuln + license)
+- `sign + attest`
+- `publish`
+- `deploy (GitOps)`
+- `verify (post-deploy smoke + policy reports)`
 
 ---
 
-## CI integration
+## Data artifacts: “data supply chain” notes
 
-CI must block merges/promotions unless all gates pass:
+KFM data products (layers, derived tables, vector tiles, model outputs) should be treated like software artifacts:
 
-- ✅ schemas validate (including governed docs/story nodes where relevant)
-- ✅ receipts/manifests exist and validate
-- ✅ SBOM + provenance artifacts exist
-- ✅ signatures + attestations verify
-- ✅ Rego policy tests pass (default deny)
+- **input sources recorded**
+- **transform steps versioned**
+- **QA results attached**
+- **licenses + CARE constraints enforced**
+- **sensitivity/generalization applied before publication**
 
-### Promotion kill-switch
-
-> [!IMPORTANT]
-> Automated promotion should have a **kill-switch**: a single configuration flag that can pause promotion/attestation publishing while still allowing validation to run.
->
-> This protects the platform during incidents (toolchain CVEs, policy breakage, compromised credentials).
-
-### GitHub Actions sketch (copy/paste)
-
-```yaml
-name: Supply Chain Gates
-
-on:
-  pull_request:
-  push:
-    branches: [main]
-
-jobs:
-  supply_chain:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write # required for keyless signing if used
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install / validate toolchain (pinned)
-        run: |
-          bash tools/supply-chain/scripts/install-tools.sh
-
-      - name: Verify (fail-closed)
-        run: |
-          bash tools/supply-chain/scripts/verify.sh
-```
-
-> [!TIP]
-> Pair this job with branch protection rules so merges are impossible unless this check is green.
-
----
-
-## Policy packs
-
-Policy packs are the **promotion contract** expressed as code.
-
-### `provenance-guard` (minimum, always-on)
-
-Denies promotion if required provenance fields, licenses/rights, or attestations are missing/invalid.
-
-#### Minimal Rego example
-
-```rego
-package kfm.provenance_guard
-
-default deny := []
-
-deny[msg] {
-  not input.spec_hash
-  msg := "missing spec_hash"
-}
-
-deny[msg] {
-  not input.spec_schema_id
-  msg := "missing spec_schema_id (what schema defines the hashed spec?)"
-}
-
-deny[msg] {
-  not input.spec_recipe_version
-  msg := "missing spec_recipe_version (what canonicalization/recipe produced spec_hash?)"
-}
-
-deny[msg] {
-  not input.artifact_digest
-  msg := "missing artifact_digest"
-}
-
-deny[msg] {
-  not input.license
-  msg := "missing license"
-}
-
-deny[msg] {
-  not input.rights
-  msg := "missing rights (redistribution / restrictions / CARE flags)"
-}
-
-deny[msg] {
-  input.policy_gate.status != "pass"
-  msg := sprintf("policy_gate.status is not pass (got %v)", [input.policy_gate.status])
-}
-```
-
-Run it with:
-
-```bash
-conftest test --policy tools/supply-chain/policies/provenance-guard run_receipt.json
-```
-
-### `materiality` (optional, provider-aware)
-
-Encodes *when* upstream change is “material” enough to trigger promotion (thresholds, cadence, join keys, etc.). Use when watchers produce PRs automatically.
-
----
-
-## OCI referrers “provenance hub”
-
-KFM treats the OCI registry as a **provenance hub**:
-
-- the promoted artifact digest is the **subject**
-- evidence is attached as **referrers**, such as SBOM, PROV bundles, QA, receipts, and signatures
-
-Consumer flow:
-
-1. retrieve the subject by digest
-2. discover all evidence attached to that digest via referrers
-3. verify signatures/attestations and apply policy checks before use
-
-> [!NOTE]
-> If your registry does not support OCI referrers, define an alternate evidence discovery mechanism and enforce it in policy.
-
----
-
-## `run_receipt` / `run_manifest` contract
-
-Receipts/manifests are the spine of KFM provenance: they anchor `spec_hash`, digests, tool versions, policy decisions, and pointers to catalogs/evidence.
-
-### Spec hash definition (normative)
-
-- `spec_hash = sha256( JCS(spec) )`
-- where `spec` is a **schema-defined object**
-- and the receipt must record:
-  - `spec_schema_id` (which schema defines `spec`)
-  - `spec_recipe_version` (which canonicalization recipe was used)
-
-### Suggested receipt fields
-
-| Field | Meaning |
-|---|---|
-| `example` | schema/type identifier (e.g., `kfm.run_receipt.v1`) |
-| `run_id` | stable run identifier |
-| `fetched_at` | time of acquisition |
-| `accessURL` | upstream source URL (or equivalent locator) |
-| `etag` / `last_modified` | caching + change detection anchors |
-| `spec_schema_id` | identifier of schema that defines the hashed spec |
-| `spec_recipe_version` | canonicalization recipe version |
-| `spec_hash` | deterministic hash of canonicalized spec/config |
-| `artifact_digest` | digest of the produced/published artifact |
-| `produced_artifacts[]` | list of outputs (paths, media types, digests) |
-| `license` | license identifier/statement |
-| `rights` | restrictions, redistribution, CARE/FAIR tags |
-| `rekor_uuid` | transparency log reference (if applicable) |
-| `materiality` | decision record for “material change” triggers |
-| `tool_versions` | toolchain versions used |
-| `policy_gate` | status + checks performed (pass/fail + list) |
-
-### Example receipt (synthetic fixture)
+A minimal *data artifact provenance record* (example shape):
 
 ```json
 {
-  "example": "kfm.run_receipt.v1",
-  "run_id": "run_2026-02-13_example_0001",
-  "fetched_at": "2026-02-13T00:00:00Z",
-  "accessURL": "https://example.org/source",
-  "etag": "W/\"abc123\"",
-  "last_modified": "Wed, 12 Feb 2026 00:00:00 GMT",
-  "spec_schema_id": "kfm.schema.watcher.v1",
-  "spec_recipe_version": "1.0.0",
-  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-  "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-  "produced_artifacts": [
+  "artifact": {
+    "kind": "dataset",
+    "id": "kfm.dataset.<slug>@<version>",
+    "hash": "sha256:<content-hash>"
+  },
+  "inputs": [
     {
-      "path": "stac/catalog.json",
-      "media_type": "application/json",
-      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      "source_id": "source.<catalog-id>",
+      "license": "<spdx-or-custom>",
+      "retrieved_at": "YYYY-MM-DD",
+      "hash": "sha256:<raw-hash>"
     }
   ],
-  "license": "CC-BY-4.0",
-  "rights": {
-    "redistribution": "allowed",
-    "care": { "sensitive": false }
+  "transform": {
+    "pipeline": "pipelines/<name>",
+    "pipeline_version": "<git-sha-or-tag>",
+    "run_id": "<run-uuid>",
+    "parameters": { "example": true }
   },
-  "rekor_uuid": "00000000-0000-0000-0000-000000000000",
-  "materiality": {
-    "status": "material",
-    "reasons": ["etag_changed"]
+  "validation": {
+    "schema": "schemas/<schema-id>@<version>",
+    "checks": [
+      { "id": "geo.sanity", "status": "pass" },
+      { "id": "dedupe", "status": "pass" }
+    ]
   },
-  "tool_versions": { "pipeline": "1.0.0" },
-  "policy_gate": {
-    "status": "pass",
-    "checks": ["license_present", "stac_present"]
+  "governance": {
+    "sensitivity": "public|restricted|redacted",
+    "care_constraints": ["<constraint-id>"]
   }
 }
 ```
 
----
-
-## Security notes
-
-### Treat toolchain upgrades as security events
-
-- Pin tool versions or container digests.
-- Add regression tests for:
-  - cosign verification correctness (fail-closed)
-  - Rego policy evaluation stability (especially around language defaults)
-  - deterministic hashing behavior (`spec_hash` golden vectors)
-
-### Secrets and signing identity
-
-- Prefer keyless signing via CI OIDC where feasible.
-- Never store long-lived signing keys in the repository.
-- If offline signing is required, document key management and require governance review.
-
-### “Docs are artifacts”
-
-Documentation builds that ship to users are promoted artifacts too:
-
-- compute deterministic digests
-- attach provenance receipts
-- fail-closed on any missing evidence
+> [!IMPORTANT]
+> Treat this JSON as a **starting point** (not confirmed in repo).  
+> The authoritative schema should live in the governed catalog once defined.
 
 ---
 
-## Troubleshooting
+## Threat model (quick view)
 
-### “Verification succeeded locally, failed in CI”
-Common causes:
-- tool version drift (pin versions/digests)
-- non-deterministic build inputs (timestamps, file ordering, non-reproducible archives)
-- missing CI permissions for keyless signing/verification
+<details>
+<summary><strong>Common supply-chain threats → controls</strong></summary>
 
-### “Referrers not discoverable”
-- registry may not support OCI referrers
-- evidence attached under a mutable tag instead of digest
-- network/proxy blocks the registry API
+| Threat | Example | Primary control(s) |
+|---|---|---|
+| Dependency poisoning | typosquatting in npm/pypi | lockfiles, allowlists, SBOM, scanning |
+| Build runner compromise | attacker modifies build output | provenance attestation, isolated runners, signing |
+| Registry tampering | image tag repointed | immutable digests, signature verification, admission control |
+| Secrets exfiltration | tokens leaked in logs | secret masking, least privilege, no secrets in artifacts |
+| Policy bypass | manual deploy around gates | GitOps-only deploy, cluster-side verify + deny |
 
-### “Policy says missing license/rights”
-- ensure dataset/catalog metadata includes license + rights fields
-- ensure receipt carries license/rights or references the catalog record that carries them
+</details>
 
 ---
 
-## Governance & change control
+## Definition of Done (DoD) for a “release-ready” artifact
 
-Changes here are production-affecting because they change what KFM can publish.
-
-**Required reviews (minimum):**
-- security reviewer for toolchain changes (cosign/conftest/OPA)
-- data governance reviewer for promotion contract/policy changes
-- CI/infrastructure reviewer for workflow changes
-
-### Definition of done checklist
-
-- [ ] `tool-versions.yaml` exists and is enforced by CI
-- [ ] acceptance harness (`verify.sh`) is deterministic and fail-closed
-- [ ] policy packs include tests (`*_test.rego`) and run in CI
-- [ ] fixtures exist for receipts + SBOM + provenance
-- [ ] CI job is required by branch protection rules
-- [ ] evidence artifacts are discoverable (OCI referrers or alternate enforced mechanism)
-- [ ] upgrade procedure includes regression tests and explicit review
+- [ ] Artifact is published by **digest** (not tag-only)
+- [ ] SBOM generated and stored with the release
+- [ ] Vulnerability scan passes policy (or has a governed exception)
+- [ ] License scan passes policy (or has a governed exception)
+- [ ] Artifact is signed
+- [ ] Provenance attestation exists and references source revision
+- [ ] Deployment verifies signature + provenance before admission
+- [ ] Audit trail retained (who built, when, with what inputs)
 
 ---
 
-## Glossary
+## Contributing
 
-- **SBOM:** Software Bill of Materials (what components are inside an artifact).
-- **Provenance attestation:** A signed statement describing how an artifact was built.
-- **Referrer:** An OCI artifact linked to a subject digest (used to attach evidence like SBOM/PROV).
-- **`spec_hash`:** Deterministic hash of canonicalized spec/config (used to detect changes reproducibly).
-- **Fail-closed:** If verification cannot prove correctness, the system denies promotion by default.
+1. **Prefer contracts over cleverness**: stable script interfaces are more valuable than custom logic.
+2. **Make gates explainable**: failures should say *what failed* and *how to fix*.
+3. **Keep secrets out**: use CI secret stores; never commit private keys.
+4. **Document policy changes**: policy shifts are governance shifts.
 
+> [!TIP]
+> If you add a new gate, also add:
+> - a policy file (if applicable),
+> - a fixture/example,
+> - and a CI stage snippet in `templates/`.
+
+---
+
+## Roadmap (starter)
+
+- [ ] Add `scripts/` wrappers for build/sbom/scan/sign/attest/verify
+- [ ] Add `policies/` for vuln thresholds + license allowlist
+- [ ] Add CI integration examples (GitHub Actions / Tekton)
+- [ ] Add cluster verification options (admission controller policy)
+- [ ] Add standardized provenance schema for software + data artifacts
