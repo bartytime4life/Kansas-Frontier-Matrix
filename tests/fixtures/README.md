@@ -1,184 +1,307 @@
-# `tests/fixtures/` — Test Fixtures (Governed)
-
 <!--
-KFM fixtures are part of the governed delivery surface:
-- They protect the trust membrane, policy gates, and "cite-or-abstain" behaviors.
-- They must stay small, deterministic, and safe to distribute in-repo.
+Path: tests/fixtures/README.md
+Purpose: Governed, deterministic test fixtures for Kansas Frontier Matrix (KFM)
 -->
 
-![fixtures](https://img.shields.io/badge/tests-fixtures-informational)
-![ci](https://img.shields.io/badge/CI-deterministic-success)
-![governance](https://img.shields.io/badge/governance-fail--closed-critical)
+![governed](https://img.shields.io/badge/governed-evidence--first-brightgreen)
+![tests](https://img.shields.io/badge/tests-fixtures-informational)
 
-> **Purpose:** This folder contains **small, synthetic, deterministic** fixtures used across KFM unit, integration, and contract tests.
-> Fixtures here exist to make governance *testable* (non-regression) and CI *fast*.
+# Test Fixtures
+
+This directory contains **deterministic, minimal, reviewable** fixture data used by automated tests across KFM.
+
+Fixtures are treated as **governed artifacts** because they shape system behavior (especially around policy enforcement, provenance, and redaction). Keep them small, explicit, and safe.
 
 ---
 
-## Why this exists
+## Contents
 
-KFM’s platform contracts require **fail-closed behavior** (deny-by-default) and **non-regression** for sensitive data handling and audit integrity. Test fixtures are the stable inputs and “golden outputs” that let us prove those invariants continuously.
+- [What belongs here](#what-belongs-here)
+- [What must not be here](#what-must-not-be-here)
+- [Fixture taxonomy](#fixture-taxonomy)
+- [Directory layout](#directory-layout)
+- [Fixture metadata](#fixture-metadata)
+- [Rules](#rules)
+  - [Determinism rules](#determinism-rules)
+  - [Geospatial rules](#geospatial-rules)
+  - [Governance & sensitivity rules](#governance--sensitivity-rules)
+- [How to add a fixture](#how-to-add-a-fixture)
+- [How to use fixtures in tests](#how-to-use-fixtures-in-tests)
+- [Fixture change policy](#fixture-change-policy)
+- [FAQ](#faq)
+
+---
+
+## What belongs here
+
+✅ Put fixture files here when they are:
+
+- **Synthetic or safely derived** (licensed/redistributable; no restricted content).
+- **Small** (fast test runs; small diffs; easy review).
+- **Deterministic** (stable ordering, stable IDs, stable timestamps, stable randomness).
+- **Purpose-built** (each fixture exists to validate a specific behavior).
+- **Auditable** (metadata describes why it exists and how it was produced).
+
+---
+
+## What must not be here
 
 > [!IMPORTANT]
-> Fixtures are **governed artifacts**.
-> Treat changes like API changes: they can break tests *and* weaken safety guarantees if reviewed poorly.
+> Never commit real secrets, personal data, or restricted site coordinates into fixtures—tests run everywhere, and fixtures get copied everywhere.
+
+🚫 Do **not** include:
+
+- **Credentials** (API keys, tokens, passwords, private keys).
+- **Real PII** (names/emails/phone numbers of private individuals).
+- **Restricted location data** (precise coordinates for sensitive cultural/archaeological sites).
+- **Non-redistributable source content** (unclear license, “for internal use only”, etc.).
+- **Giant datasets** (use generators or subset scripts instead).
 
 ---
 
-## ✅ What belongs here (and what does not)
+## Fixture taxonomy
 
-| ✅ Yes (commit-safe) | 🚫 No (do not commit) |
-|---|---|
-| **Synthetic** records created solely for tests | Production extracts / “real” dumps |
-| **Redacted** examples that cannot re-identify people/places | Any unredacted PII, private ownership, or sensitive coordinates |
-| “Golden” expected outputs for schema/policy/audit checks | Secrets (API keys, tokens), credentials, private endpoints |
-| Minimal STAC/DCAT/PROV samples (tiny) | Large binaries / multi-GB rasters unless explicitly approved |
-| Minimal API request/response snapshots | Anything that violates upstream redistribution terms |
-
-> [!WARNING]
-> If a fixture even *might* contain sensitive location detail (e.g., archaeology or protected species), **generalize** or **suppress** coordinates in the fixture.
-> If you must represent a “precise vs generalized” split for a policy test, represent the *precise* version with **synthetic coordinates** that do not correspond to real sites.
+| Fixture type | Purpose | Typical formats | Example contents |
+|---|---|---|---|
+| **Unit fixtures** | Validate pure domain logic (no I/O) | JSON, YAML | Entities, timelines, small tables |
+| **Integration fixtures** | Validate adapters (DB, graph, object store, filesystem) | SQL, Cypher, JSONL | PostGIS seed data, Neo4j seed data |
+| **Contract fixtures** | Validate API contracts and policy boundaries | JSON, GraphQL, HAR | Request/response snapshots, schema examples |
+| **Pipeline fixtures** | Validate transforms and validators | JSON/GeoJSON, CSV, Parquet (small), YAML | raw→processed expected outputs |
+| **Policy fixtures** | Validate “deny-by-default”, redaction, and leak prevention | GeoJSON, JSON | “known leak” negative cases; access denied cases |
 
 ---
 
 ## Directory layout
 
-> Keep the layout boring and predictable. Prefer adding a new folder only when there is a stable category need.
+This is the **recommended** structure. If the repo uses a different layout, update this README so it stays true.
 
 ```text
 tests/
-└─ fixtures/
-   ├─ README.md                              # You are here: fixture rules (deterministic, synthetic-only, versioning)
-   │
-   ├─ receipts/                              # Synthetic run/ingestion receipts (audit envelopes used in tests)
-   │  └─ kfm.run_receipt.v1.example.json     # Example receipt (v1 schema) for validation + regression checks
-   │
-   ├─ catalog/                               # “Golden” catalog artifacts + expected renders/validations
-   │  ├─ stac/                               # STAC Items/Collections + canonical JSON outputs
-   │  ├─ dcat/                               # DCAT datasets/distributions + expected mappings
-   │  └─ prov/                               # PROV documents (lineage) + expected link structure
-   │
-   ├─ policy/                                # Policy test vectors (allow/deny) + expected decision payloads
-   │  ├─ inputs/                             # Inputs to OPA/Conftest (request context, resource attrs)
-   │  └─ expected/                           # Expected decisions (allow/deny + reasons/redactions)
-   │
-   ├─ api/                                   # Governed endpoint snapshots (contract + regression)
-   │  ├─ requests/                           # Canonical request bodies/headers (normalized)
-   │  └─ responses/                          # Expected responses (normalized; redactions applied)
-   │
-   ├─ data/                                  # Tiny datasets for connector/transform tests (keep minimal + safe)
-   │  ├─ tabular/                            # CSV/TSV micro-fixtures (schema edge cases)
-   │  ├─ geojson/                            # Small geometries (valid + intentionally invalid cases)
-   │  └─ parquet/                            # Parquet micro-fixtures (only if tiny and justified)
-   │
-   └─ docs/                                  # Fixtures for doc-format + narrative pipelines
-      ├─ story_node_v3/                      # Story Node structure/version tests (frontmatter, assets refs, etc.)
-      └─ focus_mode/                         # Focus Mode formatting/citation/abstain contract fixtures
+  fixtures/
+    README.md
+
+    manifest/
+      fixtures.manifest.yaml          # optional registry of fixture sets
+
+    geo/
+      geojson/
+      bbox/
+      invalid/                        # intentionally invalid geometries for negative tests
+
+    catalogs/
+      stac/
+      dcat/
+      prov/
+
+    policy/
+      allow/
+      deny/
+      known-leaks/                    # negative fixtures: prove we *do not* leak
+
+    db/
+      postgis/
+      neo4j/
+
+    api/
+      rest/
+      graphql/
+
+    ui/
+      playwright/                     # storage state, minimal snapshots (if used)
+
+    _generated/                       # gitignored; build-time outputs only
 ```
 
----
-
-## Fixture design rules (KFM defaults)
-
-### 1) Keep fixtures small and deterministic
-- Favor **tiny** inputs (think: tens of rows, not millions).
-- Prefer **synthetic** values.
-- Ensure stable sort order where applicable (IDs, timestamps, features).
-
-### 2) Make governance testable
-Fixtures should enable:
-- **Schema validation** tests (required fields present, formats correct).
-- **Policy gate** tests (“No Source, No Answer” / deny missing license or missing required metadata).
-- **Audit integrity** tests (responses carry required audit/evidence references).
-- **Non-regression** tests: if a bug ever leaked a field, a fixture should exist that would re-trigger the leak if reintroduced.
-
-### 3) Treat redaction as a transformation (even in tests)
-If a fixture represents a redacted derivative, keep:
-- a separate *synthetic “raw-like”* version (if needed),
-- a *redacted* version,
-- and a note in sidecar metadata describing the redaction intent.
-
-> [!NOTE]
-> The goal is not “realism.” The goal is “provable behavior.”
+> [!TIP]
+> If you’re unsure where a fixture belongs, choose the folder matching the **behavior under test** (policy vs. catalog vs. db), not the file format.
 
 ---
 
-## Recommended sidecar metadata (optional but strongly encouraged)
+## Fixture metadata
 
-For any fixture that is used in **policy** or **audit** tests, add a sidecar file:
+Every fixture set should have a small sidecar metadata file so reviewers can quickly assess safety and intent.
 
-- `my.fixture.json`  
-- `my.fixture.meta.yml`
+### Minimal metadata (recommended)
 
-Suggested fields:
+Create a `*.fixture.yaml` (or `*.fixture.json`) next to the fixture file(s):
 
 ```yaml
-fixture_id: kfm.fixtures.receipts.run_receipt.example.v1
-kind: receipt | policy_input | policy_expected | stac | dcat | prov | api_request | api_response | dataset
-schema_id: kfm.run_receipt.v1
-classification: public | restricted | sensitive-location | aggregate-only
-purpose: "Policy regression test: deny-by-default without license"
-used_by:
-  - tests/policy/test_license_gate.py
-  - tests/api/test_audit_headers.py
-notes: "Synthetic values only. No real locations."
+# Example: tests/fixtures/policy/known-leaks/restricted_points.fixture.yaml
+fixture_id: policy.known-leaks.restricted_points.v1
+title: "Policy negative: restricted points must be redacted/denied"
+purpose: "Ensure policy denies asset access and prevents coordinate leakage."
+origin:
+  kind: synthetic
+  notes: "Coordinates are fabricated; NOT real sites."
+license: "CC0-1.0"
+sensitivity:
+  classification: test-only
+  contains_restricted_patterns: true
+  mitigation: "Use fabricated coords; verify API returns generalized/withheld outputs."
+formats:
+  - file: restricted_points.geojson
+    media_type: application/geo+json
+    sha256: "<fill on commit>"
+assumptions:
+  - "Policy evaluation is default-deny on ambiguity."
+  - "Redaction/generalization is enforced before responses leave the API boundary."
 ```
+
+> [!NOTE]
+> If you don’t have a hashing helper yet, you can temporarily set `sha256: "TBD"` **only for local WIP branches**. Do not merge with missing digests unless your repo rules explicitly allow it.
 
 ---
 
-## Example fixture: `kfm.run_receipt.v1` (synthetic)
+## Rules
 
-This is a minimal example of a receipt-shaped fixture intended for deterministic CI.
+### Determinism rules
 
-```json
-{
-  "example": "kfm.run_receipt.v1",
-  "fetched_at": "2026-02-13T00:00:00Z",
-  "accessURL": "https://example.org/source",
-  "etag": "W/\"abc123\"",
-  "last_modified": "Wed, 12 Feb 2026 00:00:00 GMT",
-  "spec_hash": "sha256:<spec>",
-  "artifact_digest": "sha256:<artifact>",
-  "tool_versions": { "pipeline": "1.0.0" },
-  "policy_gate": {
-    "status": "pass",
-    "checks": ["license_present", "stac_present"]
-  }
+- Prefer **static files** over generators *unless* the fixture would be large.
+- If generating, require a **fixed seed** and commit the generator script + expected outputs.
+- Avoid embedding current time; use fixed timestamps (e.g., `1970-01-01T00:00:00Z`).
+- Ensure stable ordering for:
+  - JSON object keys (canonicalize if your tests compare raw text)
+  - arrays of features/records (sort by stable IDs)
+- Keep fixtures small enough to diff in PR review.
+
+### Geospatial rules
+
+- Default CRS for GeoJSON fixtures: **WGS84 (EPSG:4326)**.
+- Validate fixture geometry where appropriate (and include invalid cases under `geo/invalid/`).
+- Keep extents small and explicit (include bbox files when helpful).
+- For “redaction” tests, use **fabricated** points, and test:
+  - denial modes (no access)
+  - generalization modes (coarsened coordinates)
+  - metadata-only stubs (allowed to discover, not allowed to fetch)
+
+### Governance & sensitivity rules
+
+> [!WARNING]
+> If a fixture could be sensitive in the real world, treat it as sensitive in tests too.
+
+- Fixtures that simulate restricted material must be **synthetic**.
+- Model policy behavior explicitly:
+  - allow cases → return full assets
+  - deny cases → return metadata stub only
+  - “known leaks” → ensure outputs do *not* contain sensitive details
+- Never include “real-but-small” restricted coordinates. Small is still a leak.
+
+---
+
+## How to add a fixture
+
+1) Pick a **fixture_id**  
+Use a stable naming pattern:
+- `domain.subdomain.name.vN`  
+Examples:
+- `catalogs.stac.minimal_collection.v1`
+- `db.postgis.rooms_seed.v1`
+- `policy.known-leaks.restricted_points.v1`
+
+2) Create the fixture file(s)  
+Keep them minimal. Prefer:
+- `*.json`, `*.geojson`, `*.yaml`, `*.jsonl`
+- `*.sql` / `*.cypher` only when you need to exercise the DB adapter
+
+3) Add the metadata sidecar  
+Add `*.fixture.yaml` (recommended) describing intent, origin, license, and sensitivity.
+
+4) Add/extend tests that consume it  
+Fixture files without tests quickly become dead weight.
+
+5) Add a negative test when relevant  
+Especially for policy and redaction. (“Known leak” fixtures exist to prove we don’t regress.)
+
+### Definition of Done
+
+- [ ] Fixture is **minimal** and **deterministic**
+- [ ] Fixture has a **metadata sidecar**
+- [ ] Fixture is **synthetic or redistributable**
+- [ ] A test exercises it and asserts the intended behavior
+- [ ] If sensitive-pattern simulation: tests verify **deny/redact** behavior
+
+---
+
+## How to use fixtures in tests
+
+### Python example (pytest-style)
+
+```python
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+FIXTURES_DIR = Path(__file__).resolve().parent / "fixtures"
+
+def load_fixture_json(rel_path: str) -> Any:
+    p = FIXTURES_DIR / rel_path
+    return json.loads(p.read_text(encoding="utf-8"))
+```
+
+Usage:
+
+```python
+def test_policy_denies_known_leak_points(client):
+    payload = load_fixture_json("policy/known-leaks/restricted_points.request.json")
+    resp = client.post("/api/whatever", json=payload)
+    assert resp.status_code in (403, 404)
+```
+
+### Node/TypeScript example (Jest-style)
+
+```ts
+import fs from "node:fs";
+import path from "node:path";
+
+export const FIXTURES_DIR = path.join(__dirname, "..", "fixtures");
+
+export function loadFixtureJson(relPath: string): unknown {
+  const p = path.join(FIXTURES_DIR, relPath);
+  return JSON.parse(fs.readFileSync(p, "utf8"));
 }
 ```
 
----
+Usage:
 
-## Golden tests: what we expect to lock down forever
-
-> [!IMPORTANT]
-> **Golden tests** are supposed to be annoying when they fail. That’s the point.
-
-Use fixtures to maintain:
-- **Golden catalog outputs** (DCAT/STAC/PROV) for known inputs.
-- **Golden policy decisions** for key role/scope combinations.
-- **Golden “leak prevention” queries**: if something leaked once, it must never leak again.
+```ts
+test("policy denies known leak fixture", async () => {
+  const req = loadFixtureJson("policy/known-leaks/restricted_points.request.json");
+  // call API client with req...
+});
+```
 
 ---
 
-## Adding or updating a fixture
+## Fixture change policy
 
-### Checklist
-- [ ] Fixture is **synthetic** (or safely redacted).
-- [ ] Fixture contains **no secrets** and no prohibited redistributable data.
-- [ ] File is **small** and stable (ordering fixed, timestamps pinned where needed).
-- [ ] If it is a policy fixture: it has a **clear expected allow/deny** outcome.
-- [ ] If it is an API snapshot: it includes/validates **audit + evidence references** (as required by the contract).
-- [ ] Update/refresh “golden” expected outputs intentionally (review diff carefully).
+- **Breaking changes** to fixture meaning require a **new version** (`v2`, `v3`, …).
+- If you change formatting only (whitespace/key ordering), prefer keeping semantic equivalence.
+- If you update expected outputs:
+  - confirm the change is intended
+  - note the reason in the PR description
+  - ensure you didn’t mask a regression
 
-### Review posture
-- Treat fixture changes like code changes.
-- Large diffs should be split: “mechanical regen” vs “semantic change.”
+> [!TIP]
+> If a test failure is caused by fixture drift (not behavior drift), consider whether the fixture is too coupled to implementation details. Prefer behavior-facing fixtures.
 
 ---
 
-## Footnotes / local provenance
+## FAQ
 
-- Primary governance expectations for sensitivity handling, redaction, and CI policy regression are described in internal KFM design artifacts (see project docs for the latest).
-- This README intentionally stays language-agnostic (fixtures can be consumed by Go/Python/Node tests as needed).
+### Why do we have negative “known leak” fixtures?
+To prevent regressions where policy changes accidentally allow sensitive details to escape. These fixtures are designed to fail open systems and pass only when deny/redact behavior is correct.
 
+### Are fixtures “just test data”?
+Not in KFM. Fixtures influence governance behaviors, provenance expectations, and policy enforcement. Treat them as governed artifacts.
+
+### Can we store real Kansas locations if they’re public?
+Only if:
+- the license is explicit and compatible, and
+- the content does not increase risk (no restricted sites), and
+- the fixture metadata documents provenance and license clearly.
+
+When in doubt: use synthetic data and/or generalize.
+
+---
