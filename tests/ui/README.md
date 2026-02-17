@@ -1,92 +1,139 @@
-# KFM UI Tests (E2E) — `tests/ui/`
+# UI Tests (KFM) — `tests/ui/`
 
-This folder contains **end-to-end (E2E) UI tests** for the KFM web application.
+![Governed](https://img.shields.io/badge/Governed-Evidence--first-2955C)
+![UI](https://img.shields.io/badge/UI-Map--first-Orange)
+![E2E](https://img.shields.io/badge/E2E-Playwright-informational)
+![A11y](https://img.shields.io/badge/A11y-WCAG%202.2%20AA-important)
 
-These tests are **governance-critical**: they validate user-visible behavior that is part of KFM’s “hard invariants,” including the **trust membrane** and **evidence-first UX** (citable provenance, resolvable citations, and safe deny-by-default behavior).  
+Governed end-to-end and UI-integration tests for Kansas Frontier Matrix (KFM).
 
-> [!IMPORTANT]
-> **Trust membrane invariant:** the **frontend must never talk to databases directly**. All data access must go through the governed API boundary where policy is enforced.:contentReference[oaicite:4]{index=4}
+> ⚠️ **Governance note**
+>
+> UI tests are *governed artifacts* when they validate behavior that affects public narratives, datasets, or sensitive locations.
+> - Do **not** bypass the **trust membrane** (no direct DB/object-store access).
+> - Do **not** introduce or leak sensitive coordinates/PII in fixtures, traces, videos, or screenshots.
+> - Prefer **synthetic** or explicitly **public** test datasets and enforce redaction checks.
 
 ---
 
-## Table of contents
+## Table of Contents
 
-- [What this suite is responsible for](#what-this-suite-is-responsible-for)
-- [Non-negotiable invariants this suite enforces](#non-negotiable-invariants-this-suite-enforces)
-- [Quickstart](#quickstart)
-  - [1) Start a local stack](#1-start-a-local-stack)
-  - [2) Install test dependencies](#2-install-test-dependencies)
-  - [3) Run tests](#3-run-tests)
-- [Configuration](#configuration)
-  - [Environment variables](#environment-variables)
-  - [Base URLs and ports](#base-urls-and-ports)
-- [Test organization](#test-organization)
-  - [Suggested directory layout](#suggested-directory-layout)
-  - [Test tagging / naming](#test-tagging--naming)
-- [Required test scenarios](#required-test-scenarios)
-- [How to write new tests](#how-to-write-new-tests)
+- [What lives here](#what-lives-here)
+- [Core principles](#core-principles)
+- [Tooling](#tooling)
+- [Directory layout](#directory-layout)
+- [Quick start](#quick-start)
+- [Environment variables](#environment-variables)
+- [Writing good UI tests](#writing-good-ui-tests)
+- [Map & WebGL guidance](#map--webgl-guidance)
+- [Governance and sensitivity rules](#governance-and-sensitivity-rules)
+- [Accessibility testing](#accessibility-testing)
 - [CI expectations](#ci-expectations)
-- [Artifacts (what gets saved on failure)](#artifacts-what-gets-saved-on-failure)
 - [Troubleshooting](#troubleshooting)
-- [Security & data sensitivity notes](#security--data-sensitivity-notes)
+- [Related docs](#related-docs)
 
 ---
 
-## What this suite is responsible for
+## What lives here
 
-This UI test suite exists to prove, continuously, that the KFM web app:
+This folder is for UI-level tests that validate **user-visible, contract-driven behavior** across the KFM web experiences:
 
-1. **Loads and navigates** without regressions in core routes.
-2. **Respects the trust membrane** (no UI → DB direct connections).
-3. **Surfaces evidence** correctly:
-   - citation references are **resolvable** via API endpoints (e.g., `prov://`, `stac://`, `dcat://`, `doc://`, `graph://`):contentReference[oaicite:5]{index=5}
-   - “review evidence” UX works for map layers and Focus Mode answers:contentReference[oaicite:6]{index=6}
-4. **Aligns with the documented runtime sequence** (UI → API Gateway → Policy → Stores → Policy validation → UI).:contentReference[oaicite:7]{index=7}
+- Map-first UI (MapLibre GL JS)
+- 3D/terrain/globe UI (CesiumJS) *(if enabled in the running app)*
+- Story Nodes (narrative rail + map/timeline synchronization)
+- Focus Mode UI behaviors (citation drawer, “not confirmed” labeling, offline-first behaviors) *(when present)*
 
-> [!NOTE]
-> This suite is intentionally **E2E-first**. Unit/component tests live elsewhere (e.g., `web/` or `tests/unit/`), while `tests/ui/` focuses on cross-service, user-visible guarantees.
+**Out of scope (usually elsewhere):**
+- Pure unit tests for domain logic
+- Backend contract tests (OpenAPI/GraphQL)
+- Data pipeline QA gates (STAC/DCAT/PROV validation)
 
 ---
 
-## Non-negotiable invariants this suite enforces
+## Core principles
 
-These are treated as **release gates**.
-
-| Invariant | Why it matters | How we validate in UI tests |
+| Principle | What it means in tests | Practical rule |
 |---|---|---|
-| **Frontend never talks to databases directly**:contentReference[oaicite:8]{index=8} | Trust membrane / governance boundary | Network allowlist + DB-port denylist assertions; fail test on any DB host/port traffic |
-| **Policy evaluation occurs on every data/story/AI request**:contentReference[oaicite:9]{index=9} | Fail-closed safety | Verify deny-by-default behaviors (403/empty states) without auth; verify authorized views with test token (when available) |
-| **Citations are resolvable; evidence can be reviewed**:contentReference[oaicite:10]{index=10} | Evidence-first UX; reviewer trust | Click citations; ensure evidence view renders a resolver-backed record |
-| **UI provenance views work** (E2E + static checks):contentReference[oaicite:11]{index=11} | Prevent “black box” UX | E2E verifies provenance panels; static checks prevent forbidden imports / endpoints |
+| Trust membrane | UI behaves like a real client | Only call the governed API base URL; block unexpected egress |
+| Evidence-first UX | Claims are traceable | Verify citation/provenance UI surfaces exist where required |
+| Deterministic | CI must be stable | Avoid flaky waits; prefer explicit “idle/ready” signals |
+| Safety | Avoid harm & leakage | Scrub artifacts; use public/synthetic fixtures only |
+| Accessibility | Keyboard + screen readers | Include automated a11y checks + a small manual checklist |
 
 ---
 
-## Quickstart
+## Tooling
 
-### 1) Start a local stack
+KFM’s UI automation should use **Playwright** for browser-level coverage, including WebGL map/globe workflows.
 
-KFM’s documented local workflow uses **Docker Compose**.:contentReference[oaicite:12]{index=12}
+> If your repo currently uses a different runner (Cypress/Webdriver/etc.), keep this README as the target state and align scripts/configs accordingly.
 
-From the **repo root**:
+**Suggested layers (not all may be present yet):**
 
-```bash
-cp .env.example .env
-docker compose up --build
+| Layer | Typical target | Suggested tool(s) |
+|---|---|---|
+| Smoke E2E | “App boots + map renders + basic navigation” | Playwright |
+| Map/Story E2E | Timeline + layers + Story Node navigation | Playwright |
+| Visual regression (scoped) | Map overlay placement / key UI panels | Playwright screenshots (goldens) |
+| Offline checks (scoped) | Service worker/cache behavior | Playwright + network offline |
+| A11y checks | WCAG/WAI-ARIA regressions | axe (via Playwright) + manual passes |
+
+---
+
+## Directory layout
+
+> This is the **intended** layout. If you don’t have these yet, add them incrementally.
+
+```text
+tests/
+  ui/
+    README.md
+    playwright.config.ts              # (recommended) unified config
+    package.json                      # (optional) if tests are isolated
+    specs/
+      smoke.spec.ts
+      map/
+        layer-toggle.spec.ts
+        timeline-scrub.spec.ts
+      story/
+        story-node-navigation.spec.ts
+      focus/
+        focus-mode-citations.spec.ts
+    fixtures/
+      users.json
+      public-datasets.json
+      story-nodes/
+    helpers/
+      selectors.ts
+      api.ts
+      waiters.ts
+      maplibre.ts
+      cesium.ts
+    snapshots/                        # golden screenshots (scoped!)
+    artifacts/                        # test output (gitignored)
+      traces/
+      videos/
+      screenshots/
 ```
 
-Default dev endpoints (documented):
-
-- Web UI: `http://localhost:3000` :contentReference[oaicite:13]{index=13}
-- API docs: `http://localhost:8000/docs` :contentReference[oaicite:14]{index=14}
-
-> [!TIP]
-> Keep the stack running in one terminal; run UI tests from another terminal.
-
 ---
 
-### 2) Install test dependencies
+## Quick start
 
-From **this directory**:
+### 1) Start the KFM stack (local)
+
+Use your project’s local orchestration (often Docker Compose). Example:
+
+```bash
+# from repo root (example)
+docker compose up -d
+```
+
+Confirm you can open the web app in a browser.
+
+### 2) Install test deps
+
+If `tests/ui` is its own package:
 
 ```bash
 cd tests/ui
@@ -94,39 +141,22 @@ npm ci
 npx playwright install --with-deps
 ```
 
-> [!NOTE]
-> If your repo uses `pnpm` or `yarn`, use the equivalent install command. The test runner commands in this README use `npx` so they remain usable across package managers.
-
----
+If UI tests are part of a monorepo, use the workspace tool your repo standardizes on (npm/pnpm/yarn) and run the equivalent install.
 
 ### 3) Run tests
 
-#### Run all tests (headless)
-
 ```bash
-cd tests/ui
-npx playwright test
+# from tests/ui
+BASE_URL="http://localhost:3000" npx playwright test
 ```
 
-#### Run a single spec file
+Run a small suite:
 
 ```bash
-npx playwright test tests/ui/specs/smoke.spec.ts
+npx playwright test specs/smoke.spec.ts
 ```
 
-#### Run headed (visible browser)
-
-```bash
-npx playwright test --headed
-```
-
-#### Debug mode (slow + inspector)
-
-```bash
-PWDEBUG=1 npx playwright test
-```
-
-#### Generate and open the HTML report
+Open the Playwright report:
 
 ```bash
 npx playwright show-report
@@ -134,276 +164,233 @@ npx playwright show-report
 
 ---
 
-## Configuration
+## Environment variables
 
-### Environment variables
+| Variable | Example | Purpose |
+|---|---|---|
+| `BASE_URL` | `http://localhost:3000` | Web app under test |
+| `API_BASE_URL` | `http://localhost:8000` | Governed API base (optional if app derives it) |
+| `KFM_TEST_PROFILE` | `local` / `ci` | Toggle timeouts, retries, artifact retention |
+| `KFM_TEST_USER` | `test.user@example.org` | Test account (must be non-production) |
+| `KFM_TEST_PASSWORD` | `***` | Supplied via secrets in CI |
+| `KFM_DATASET_SET` | `public_minimal` | Forces known-safe dataset bundle |
+| `KFM_BLOCK_EGRESS` | `1` | Block non-allowlisted network traffic (recommended) |
 
-Set these in your shell or a `.env` file (preferred: `.env` in repo root for Compose + `.env` in `tests/ui/` for Playwright).
+<details>
+<summary><strong>Recommended: network allowlist in Playwright</strong></summary>
 
-| Variable | Default | Meaning |
-|---|---:|---|
-| `KFM_WEB_BASE_URL` | `http://localhost:3000` | Where Playwright starts the browser |
-| `KFM_API_BASE_URL` | `http://localhost:8000` | Used for API health checks / evidence resolver checks (if implemented) |
-| `KFM_TEST_JWT` | _(empty)_ | Optional bearer token for authenticated flows |
-| `KFM_UI_E2E_TRACE` | `on-first-retry` | Playwright trace behavior (`on`, `off`, `retain-on-failure`, etc.) |
-
-> [!IMPORTANT]
-> **Do not** place real credentials in this folder. Use a test identity provider / test tokens only.
-
----
-
-### Base URLs and ports
-
-The KFM blueprint’s local quickstart commonly uses:
-
-- UI on `:3000`
-- API docs on `:8000/docs`:contentReference[oaicite:15]{index=15}
-
-If your environment differs, set `KFM_WEB_BASE_URL` and `KFM_API_BASE_URL` accordingly.
-
----
-
-## Test organization
-
-### Suggested directory layout
-
-```text
-tests/ui/
-├─ README.md                               # How to run UI tests (local/CI), env vars, and governance rules (no secrets)
-├─ playwright.config.ts                    # Playwright config (projects, retries, tracing, baseURL, timeouts)
-├─ package.json                            # UI test deps + scripts (test, test:ci, lint, format)
-│
-├─ specs/                                  # Test specs (prefer “user journeys” + governed assertions)
-│  ├─ smoke.spec.ts                        # Fast sanity checks: app loads, critical routes render, basic auth path
-│  ├─ trust-membrane.spec.ts               # Verifies UI never bypasses API (no direct DB endpoints, no forbidden hosts)
-│  ├─ evidence-resolver.spec.ts            # Citation UX + evidence fetch behavior (links, previews, error states)
-│  ├─ map-and-timeline.spec.ts             # Map + timeline core flows (layers, time slider, basemap, perf guardrails)
-│  ├─ story-nodes.spec.ts                  # Story Node browse/read flows (assets render, citations present, navigation)
-│  └─ focus-mode.spec.ts                   # Focus Mode UX (ask/abstain/cite, streaming, retries, audit refs)
-│
-├─ pages/                                  # Page Objects (recommended): stable interfaces over fragile selectors
-│  ├─ appShell.page.ts                     # App shell layout helpers (nav, auth state, global banners/toasts)
-│  ├─ map.page.ts                          # Map interactions (layers, hover/inspect, bbox, screenshot helpers)
-│  ├─ story.page.ts                        # Story Node page helpers (open, toc, citations, asset panels)
-│  └─ focusMode.page.ts                    # Focus Mode helpers (submit query, parse answer, citation panel assertions)
-│
-├─ fixtures/                               # Deterministic UI inputs (no secrets; keep stable + minimal)
-│  ├─ users.json                           # Test user handles only (no tokens/passwords; credentials injected via env)
-│  └─ queries.json                         # Canonical Focus Mode queries + expected behavior class (cite/abstain)
-│
-└─ utils/                                  # Small utilities used across specs/pages (keep deterministic)
-   ├─ netAssertions.ts                     # Network assertions (blocked domains, allowlist routes, API-only checks)
-   ├─ selectors.ts                         # Shared selectors (data-testid map; avoid brittle CSS selectors)
-   └─ waiters.ts                           # Wait helpers (network idle, spinners, toasts, streaming completion)
-```
-
-> [!NOTE]
-> File names above are **recommended** to keep the suite consistent and reviewable.
-
----
-
-### Test tagging / naming
-
-Use Playwright’s `test.describe()` grouping for stable tags:
-
-- `@smoke` — minimal “site loads” checks (should run on every PR)
-- `@governance` — trust membrane + evidence UX invariants (should be PR-gating)
-- `@auth` — authenticated paths (may require `KFM_TEST_JWT`)
-- `@visual` — optional screenshot diffs (treat as “allowed flaky” only if rendering nondeterminism exists)
-
-Example:
+Use a strict allowlist so UI tests *cannot* accidentally call raw object storage, third-party endpoints, or internal services.
 
 ```ts
-import { test, expect } from "@playwright/test";
+// helpers/network-allowlist.ts (example)
+const ALLOW = [
+  process.env.BASE_URL!,
+  process.env.API_BASE_URL!,
+  "https://fonts.gstatic.com", // if needed
+];
 
-test.describe("@smoke", () => {
-  test("home loads", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.getByTestId("app-shell")).toBeVisible();
-  });
+export function isAllowed(url: string) {
+  return ALLOW.some(prefix => url.startsWith(prefix));
+}
+```
+
+```ts
+// in a test setup (example)
+await page.route("**/*", async (route) => {
+  const url = route.request().url();
+  if (!isAllowed(url)) return route.abort();
+  return route.continue();
 });
 ```
 
----
-
-## Required test scenarios
-
-These scenarios align with KFM’s documented runtime flows (map layer requests, story node retrieval, Focus Mode queries with policy validation + audit logging).:contentReference[oaicite:16]{index=16}:contentReference[oaicite:17]{index=17}
-
-### 1) Smoke: app loads and routes render
-
-- Landing route renders shell
-- Basic navigation works (no uncaught exceptions)
-- Map container initializes (if applicable)
-
-### 2) Trust membrane: network guardrails
-
-At minimum:
-
-- **Allowlist**: UI may call:
-  - `KFM_WEB_BASE_URL` (self)
-  - `KFM_API_BASE_URL` (API gateway boundary)
-- **Denylist**: UI must not call DB ports directly (examples: 5432 Postgres/PostGIS, 7474 Neo4j HTTP, 9200 OpenSearch).  
-  > This is a practical enforcement of “frontend never talks to databases directly.”:contentReference[oaicite:18]{index=18}
-
-### 3) Authorization behavior (deny-by-default)
-
-- Unauthenticated user attempts to open restricted resources:
-  - expect “not authorized” UX (or empty state)
-  - ensure API returns denial (e.g., 401/403) and UI handles it gracefully
-- Authenticated user (with `KFM_TEST_JWT`) sees additional data (if policy allows)
-
-### 4) Evidence resolver + provenance UX
-
-KFM requires that every provenance/citation reference be resolvable and reviewable in the UI.:contentReference[oaicite:19]{index=19}
-
-Minimum checks:
-
-- A citation click opens an evidence view
-- Evidence view renders:
-  - a reference (e.g., `prov://...` / `stac://...` / `dcat://...` / `doc://...` / `graph://...`)
-  - a human-readable summary (dataset title, provenance snippet, or doc locator)
-
-### 5) Story Nodes
-
-- Story list loads
-- Story opens
-- Citations are visible and resolvable (same resolver requirement as above)
-
-### 6) Focus Mode (evidence-first Q&A)
-
-- Enter a query that has evidence:
-  - ensure answer includes citations and links resolve
-- Enter a query that does *not* have evidence:
-  - ensure UI shows an abstention / “no source available” state (no hallucinated claims)
+</details>
 
 ---
 
-## How to write new tests
+## Writing good UI tests
 
-### Design principles
+### Conventions
 
-- Prefer **stable selectors**:
-  - Use `data-testid` attributes.
-  - Avoid brittle CSS selectors based on layout/styling.
-- Use **Page Objects** for complex flows.
-- Make tests **fail-loud** for governance invariants.
+- **Spec naming:** `feature.area.behavior.spec.ts`
+- **Prefer user-facing assertions:** “Provenance drawer shows a dataset badge” > “function X called”
+- **Avoid brittle selectors:** prefer `data-testid` or accessible roles/labels
 
-### Minimal template for a new feature
+**Selector standard (recommended):**
 
-Checklist (PR reviewer-friendly):
+```tsx
+<button data-testid="layer-toggle-historic-trails">Historic Trails</button>
+```
 
-- [ ] E2E spec added under `tests/ui/specs/`
-- [ ] Uses `data-testid` selectors (no layout selectors)
-- [ ] Includes at least one negative case (deny-by-default)
-- [ ] If citations appear in the UI, the test asserts **resolvability**
-- [ ] Adds/updates fixtures (no secrets; sanitized only)
-- [ ] Artifacts verified locally (report/trace created on failure)
+```ts
+await page.getByTestId("layer-toggle-historic-trails").click();
+```
+
+### Anti-flake checklist ✅
+
+- [ ] Wait on explicit app signals (e.g., “map idle”, “layers loaded”) not arbitrary sleeps
+- [ ] Freeze time where needed (use Playwright time mocking if applicable)
+- [ ] Fix viewport size for screenshots
+- [ ] Disable animations/transitions in test mode (CSS class or config flag)
+- [ ] Use deterministic test datasets and stable Story Node fixtures
+
+---
+
+## Map & WebGL guidance
+
+Map/globe UIs are **high-value** and **high-flake** if tested naïvely. Keep these rules:
+
+### 1) Prefer “camera-path” snapshot tests only where necessary
+
+Visual tests should be:
+- **few**
+- **focused**
+- **deterministic**
+
+Good snapshot targets:
+- overlay badge placement
+- legend/provenance drawer
+- Story Node keyframes
+
+Bad snapshot targets:
+- full basemap tiles (often non-deterministic)
+- animated transitions
+- dense label fields
+
+### 2) Stabilize render conditions
+
+Recommended settings:
+- fixed viewport (e.g., 1280×720)
+- fixed device scale factor
+- disable motion (reduce animations)
+- wait for “idle” signals before asserting
+
+<details>
+<summary><strong>Example: wait for MapLibre “idle”</strong></summary>
+
+```ts
+// helpers/maplibre.ts (example approach)
+// Requires your app to expose a test hook OR for you to wait on a DOM signal
+export async function waitForMapIdle(page) {
+  await page.waitForFunction(() => (window as any).__KFM_TEST__?.mapIdle === true);
+}
+```
+
+</details>
+
+### 3) Don’t assert raw coordinates unless the feature is explicitly non-sensitive
+
+If a UI shows coordinates:
+- tests must validate **redaction/generalization** rules for protected content
+- tests must validate role-based access (authorized vs unauthorized views)
+
+---
+
+## Governance and sensitivity rules
+
+### Test data rules (hard gate)
+
+- ✅ Use **synthetic** fixtures or explicitly **public** datasets
+- ✅ Keep any real place/person references generic unless they are in approved public corpora
+- ❌ No private individuals’ data
+- ❌ No precise site locations that increase risk
+- ❌ No “real” API tokens committed to git
+
+### Artifact hygiene (hard gate)
+
+Before uploading CI artifacts (traces/videos/screenshots):
+- [ ] Strip query strings containing tokens
+- [ ] Mask emails/usernames unless they are test-only accounts
+- [ ] Avoid screenshots that expose sensitive layers/coordinates
+- [ ] Prefer short retention for artifacts in CI (esp. PRs from forks)
+
+---
+
+## Accessibility testing
+
+Minimum expectations:
+- keyboard operability (tab order, visible focus)
+- meaningful ARIA labels for dynamic controls
+- no focus traps when hiding/showing panels
+- “Exit Focus Mode” is always reachable by keyboard (if Focus Mode exists)
+
+Automate what you can (axe), but maintain a small manual checklist:
+
+- [ ] Can complete core flows without a mouse
+- [ ] Focus indicator is visible on interactive elements
+- [ ] Dialogs trap focus appropriately and restore focus on close
+- [ ] Live regions don’t spam announcements (timers especially)
 
 ---
 
 ## CI expectations
 
-The UI suite should run in CI as a **headless browser test** against either:
+UI tests should run in CI in a **repeatable** environment.
 
-1) a staging deployment, or  
-2) an ephemeral environment spun up inside CI.
-
-This matches KFM guidance that frontend integration tests can run headless and can be scripted with tools like Playwright/Cypress after deploy to staging or an ephemeral server.:contentReference[oaicite:20]{index=20}
-
-### Minimal CI sequence (conceptual)
+### Suggested CI stages
 
 ```mermaid
 flowchart LR
-  A[Build containers] --> B[Start stack / deploy staging]
-  B --> C[Wait for healthchecks]
-  C --> D[Run Playwright headless]
-  D --> E[Upload artifacts: report/trace/screenshots]
+  A[Lint + Typecheck] --> B[Unit/Component Tests]
+  B --> C[Spin up KFM stack (ephemeral)]
+  C --> D[UI E2E (Playwright)]
+  D --> E[Upload sanitized artifacts]
+  E --> F[Publish report + status]
 ```
 
-### Example GitHub Actions job (template)
+### Required pass/fail signals
 
-```yaml
-name: ui-e2e
-on: [pull_request, push]
-jobs:
-  ui:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Start stack
-        run: |
-          cp .env.example .env
-          docker compose up -d --build
-
-      - name: Install UI test deps
-        working-directory: tests/ui
-        run: |
-          npm ci
-          npx playwright install --with-deps
-
-      - name: Run E2E (headless)
-        working-directory: tests/ui
-        env:
-          KFM_WEB_BASE_URL: http://localhost:3000
-          KFM_API_BASE_URL: http://localhost:8000
-        run: npx playwright test
-
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: tests/ui/playwright-report
-```
-
----
-
-## Artifacts (what gets saved on failure)
-
-Recommended outputs to keep triage fast:
-
-- `playwright-report/` (HTML)
-- `test-results/**/trace.zip` (when tracing enabled)
-- failure screenshots
-- network logs for trust-membrane failures (allowed/blocked destinations)
+- Smoke suite passes on every PR
+- Flake rate is monitored (retries are not a substitute for stability)
+- Visual diffs require explicit review (goldens updated intentionally)
 
 ---
 
 ## Troubleshooting
 
-### “Web UI isn’t reachable”
+<details>
+<summary><strong>WebGL screenshot diffs across machines</strong></summary>
 
-- Confirm the local stack is up:
-  ```bash
-  docker compose ps
-  ```
-- Confirm the UI is reachable:
-  - `http://localhost:3000` (default)
-- If ports are in use, stop the conflicting service or adjust compose port mappings.
+- Ensure fixed viewport and disabled animations
+- Prefer running CI with consistent browser + flags
+- Keep screenshot scope small (UI panels > full basemaps)
+</details>
 
-### “Tests are flaky locally”
+<details>
+<summary><strong>Tests hang waiting for “map ready”</strong></summary>
 
-- Run one worker:
-  ```bash
-  npx playwright test --workers=1
-  ```
-- Increase timeouts for slow CI hosts (prefer targeted waits for known async boundaries).
-- Use trace on first retry:
-  ```bash
-  KFM_UI_E2E_TRACE=on-first-retry npx playwright test
-  ```
+- Verify the app exposes a test hook or DOM-ready signal
+- Add explicit waits for layer load events (not time-based sleeps)
+- Confirm the dataset set is available and API is reachable
+</details>
+
+<details>
+<summary><strong>Service worker/offline tests behave inconsistently</strong></summary>
+
+- Use a clean browser context per test
+- Clear storage between tests (IndexedDB/localStorage)
+- Prefer a dedicated “offline.spec.ts” suite that runs serially
+</details>
 
 ---
 
-## Security & data sensitivity notes
+## Related docs
 
-- **No secrets** in repo under `tests/ui/`.
-- Use **sanitized / non-sensitive fixtures** only.
-- Do not script UI tests that reveal precise restricted locations or policy-protected details.
-- Treat any new UI path that surfaces provenance/evidence as a **governed surface**:
-  - tests must validate access rules (deny-by-default),
-  - citations must resolve,
-  - reviewers must be able to “review evidence” safely.:contentReference[oaicite:21]{index=21}
+These docs (if present in your repo) define the expectations these tests enforce:
 
+- `docs/architecture/*` — trust membrane, API contracts, client boundaries
+- `docs/patterns/*` — UI patterns (Story Nodes, Focus Mode, provenance UX)
+- `schemas/*` — JSON Schemas that UI events/features must validate against
+- `web/*` — UI implementation (React/TypeScript + MapLibre/Cesium integrations)
+
+---
+
+## Definition of Done for new UI test coverage ✅
+
+When adding a new UI feature or workflow, ensure:
+
+- [ ] A smoke or happy-path test exists (Playwright)
+- [ ] Sensitive info is not exposed in logs/screenshots/traces
+- [ ] Provenance/citation UI is validated where the feature surfaces claims/layers
+- [ ] Accessibility check added (automated and/or manual checklist updated)
+- [ ] Tests run headless in CI and are stable (no arbitrary sleeps)
+- [ ] If a schema is involved, fixtures validate and CI enforces validation
