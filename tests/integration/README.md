@@ -1,423 +1,248 @@
-<!--
-File: tests/integration/README.md
-Scope: KFM governed integration test harness + operator runbook
--->
+# Integration Tests (KFM)
 
-# KFM Integration Tests (Governed)
+![Governed](https://img.shields.io/badge/Governed-yes-2b6cb0)
+![Evidence-first](https://img.shields.io/badge/Evidence--first-yes-2f855a)
+![Fail-closed](https://img.shields.io/badge/Gates-fail--closed-c53030)
+
+This directory contains **integration tests** for the Kansas Frontier Matrix (KFM) platform.
+
+Integration tests validate KFM’s governed behavior **across real dependencies** (datastores, policy engine, catalog validators, provenance/attestation tooling) while preserving KFM’s **trust membrane**: external clients only interact with the system through governed APIs and published contracts.
 
 > [!IMPORTANT]
-> **Integration tests are part of KFM’s governance boundary.**
+> **Integration tests are allowed to stand up and inspect infrastructure, but the application code under test must not bypass repository interfaces or the governed API boundary.**
 >
-> They exist to prove end-to-end enforcement of KFM invariants (trust membrane, policy checks, provenance, promotion gates).
-> If you change behavior across services, you are expected to update/add integration tests in the same PR.
+> In other words: tests can “look behind the curtain” to assert outcomes, but production code must not.  
+> (If a test requires DB access from inside the service under test, that’s usually a missing port/interface.)
 
 ---
 
-## Table of contents
+## What “integration” means in KFM
 
-- [What these tests protect](#what-these-tests-protect)
-- [What “integration test” means in KFM](#what-integration-test-means-in-kfm)
-- [Folder layout](#folder-layout)
-- [System under test (SUT)](#system-under-test-sut)
-  - [Compose baseline services](#compose-baseline-services)
-  - [Key runtime flow (conceptual)](#key-runtime-flow-conceptual)
-- [Quickstart](#quickstart)
-  - [Prerequisites](#prerequisites)
-  - [Bring up the stack](#bring-up-the-stack)
-  - [Run the integration tests](#run-the-integration-tests)
-  - [Tear down](#tear-down)
-- [Test suite conventions](#test-suite-conventions)
-  - [Markers and categories](#markers-and-categories)
-  - [Determinism & hermeticity rules](#determinism--hermeticity-rules)
-  - [Fixture data and catalogs](#fixture-data-and-catalogs)
-- [Coverage map: invariants → tests](#coverage-map-invariants--tests)
-- [CI expectations](#ci-expectations)
-- [Troubleshooting](#troubleshooting)
-- [Security & governance notes](#security--governance-notes)
-- [Definition of Done](#definition-of-done)
+| Test type | Where | Goal | Typical runtime |
+|---|---|---|---|
+| Unit | `tests/unit/` | Pure logic (domain + use-case rules) | seconds |
+| Integration | `tests/integration/` | Verify ports/adapters, policy gates, contracts, catalog/provenance behavior with **real services** | minutes |
+| End-to-end (UI) | `tests/e2e/` | Verify user flows (Map UI / Focus Mode UI) in a browser | minutes–tens of minutes |
 
 ---
 
-## What these tests protect
-
-KFM’s platform architecture and governance model define **non-negotiable invariants** that must be enforced continuously in CI and validated through integration testing:
-
-1. **Trust membrane**
-   - The frontend never talks to databases directly.
-   - Policy evaluation occurs on every data/story/AI request.
-   - Backend logic uses repository interfaces (ports) and cannot bypass them.
-   - Audit and provenance are produced as part of the normal request path.
-
-2. **Truth-path and publishable data**
-   - Only **Processed** data is publishable.
-   - Raw/Work zones exist for ingestion and QA, but must not be served as publishable truth.
-
-3. **Promotion gates (raw/work → processed/public)**
-   - Promotion is blocked unless:
-     1) license present,
-     2) sensitivity classification present,
-     3) schema & geospatial checks pass,
-     4) checksums computed,
-     5) STAC/DCAT/PROV artifacts exist and validate,
-     6) audit event recorded,
-     7) human approval if sensitive.
-
-4. **Evidence UX / resolvability**
-   - Every provenance/citation reference used in UI or Focus Mode must be resolvable through an API endpoint and reviewable.
+## Suggested directory layout
 
 > [!NOTE]
-> Integration tests are where we verify *the system behaves like the model*, not just that individual functions work.
-
----
-
-## What “integration test” means in KFM
-
-An integration test in KFM is a test that crosses at least one of these boundaries:
-
-- API ↔ Policy (OPA/Rego) authorization/validation
-- API ↔ Storage (PostGIS, Neo4j, Search, Object Store)
-- Pipeline/catalog outputs ↔ Runtime consumption (STAC/DCAT/PROV)
-- Policy ↔ Redaction / access control behavior
-- Evidence references ↔ Evidence resolution endpoints and formats
-
-This folder is **not** for:
-- Pure unit tests (domain invariants, pure functions)
-- Contract tests for DTO/schema only (unless they need live policy/store)
-- UI end-to-end browser automation (that belongs in web/ e2e suites)
-
----
-
-## Folder layout
-
-This README defines the **canonical layout** for integration tests.
+> This is a **recommended** layout. Keep it tidy, but adapt it to match the repo’s actual stack and tooling.
 
 ```text
 tests/
-└─ integration/                                     # Service-backed tests (API/DB/OPA/etc.) — validates end-to-end behavior
-   ├─ README.md                                     # How to run locally/CI, required services, env vars, failure triage
-   ├─ requirements.txt                              # Optional: extra deps for host-side runner (kept minimal)
-   ├─ pytest.ini                                    # Integration markers, default opts, timeouts/retry conventions
-   ├─ conftest.py                                   # Shared fixtures: base URLs, clients, auth stubs, wait-for helpers
-   │
-   ├─ fixtures/                                     # Deterministic inputs used by integration tests (synthetic + small)
-   │  ├─ datasets/
-   │  │  └─ example_dataset/                        # Test-only dataset slice (stable across runs)
-   │  │     ├─ raw/                                 # Tiny deterministic raw slice (never publish; used to exercise pipeline)
-   │  │     ├─ work/                                # Intermediate artifacts (validation reports, transforms, logs)
-   │  │     ├─ processed/                           # Publishable artifacts used by tests (what “would ship”)
-   │  │     └─ catalog/                             # Catalog triplet required for promotion/serving
-   │  │        ├─ dcat/                             # DCAT JSON/JSON-LD dataset + distribution records
-   │  │        ├─ stac/                             # STAC Collections/Items describing processed assets
-   │  │        └─ prov/                             # PROV lineage records + run references tying outputs to inputs
-   │  │
-   │  └─ policy/
-   │     ├─ input/                                  # OPA input payload fixtures (actor/resource/context)
-   │     └─ expected/                               # Expected allow/deny decisions + redaction outputs (snapshots)
-   │
-   ├─ scripts/                                      # CI helpers (service readiness + diagnostics)
-   │  ├─ wait_for_http.sh                           # Wait for HTTP endpoint health (poll /healthz or similar)
-   │  ├─ wait_for_tcp.sh                            # Wait for port readiness (DB/OPA/etc. accepting connections)
-   │  └─ dump_logs.sh                               # On failure: dump docker/service logs for CI artifacts
-   │
-   └─ testcases/                                    # Integration test suite (asserts cross-component invariants)
-      ├─ test_trust_membrane.py                     # UI/API boundary invariant: no forbidden direct-access paths
-      ├─ test_policy_default_deny.py                # Fail-closed policy: unknown/invalid context must deny
-      ├─ test_promotion_gate.py                     # Promotion prerequisites: STAC+DCAT+PROV + manifests/digests required
-      ├─ test_policy_redaction.py                   # Redaction behavior: allowed transforms vs deny when impossible
-      ├─ test_evidence_resolver.py                  # Evidence resolver: citation → artifact fetch, policy filtering applied
-      └─ test_focus_mode_cite_or_abstain.py         # Focus Mode contract: citations required or explicit abstain w/ reasons
+└── integration/
+    ├── README.md
+    ├── compose/                     # Test stack orchestration (Docker/Podman)
+    │   ├── docker-compose.yml
+    │   └── .env.example
+    ├── api/                         # HTTP-level tests: /api/v1/* behavior + policy
+    ├── contracts/                   # OpenAPI + GraphQL contract checks (diff + conformance)
+    ├── policies/                    # OPA/Rego policy tests (conftest) + fixtures
+    ├── catalogs/                    # STAC/DCAT/PROV validation tests
+    ├── graph/                       # Neo4j “graph QA” checks (Cypher) + runner
+    ├── pipelines/                   # Run a tiny lane end-to-end on synthetic fixtures
+    ├── fixtures/
+    │   ├── synthetic/               # Synthetic, non-sensitive seed inputs
+    │   └── golden/                  # Golden expected outputs / snapshots
+    └── scripts/                     # Bring-up / teardown helpers for local dev + CI
+        ├── up.sh
+        ├── down.sh
+        └── reset.sh
 ```
+
+---
+
+## Test stack
+
+Integration tests should run against a **local, disposable stack**.
+
+Recommended services (adjust as needed):
+
+| Service | Why it exists in integration tests |
+|---|---|
+| API service (your implementation) | System-under-test: governed endpoints, policy checks, evidence resolver |
+| Postgres + PostGIS | Spatial storage + queries |
+| Neo4j | Provenance/lineage graph + “graph QA” gates |
+| Policy engine (OPA via `conftest` and/or sidecar) | Fail-closed allow/deny decisions for promotion + runtime exposure |
+| Local object store (e.g., MinIO) | Simulate versioned bundles/artifacts (COG/PMTiles/GeoParquet/media) |
+| Search (optional) | Contract tests for discovery endpoints, indexing behavior |
 
 > [!TIP]
-> If your repo already has a different structure, you can keep it — but this README should be updated to match reality.
-> “Docs must match behavior” is itself a governance requirement.
+> Keep integration fixtures **tiny**. If the test stack is slow, tests will be skipped and governance will rot.
 
 ---
 
-## System under test (SUT)
+## Running integration tests locally
 
-### Compose baseline services
+### 1) Prerequisites
 
-The expected local/dev baseline uses Docker Compose and includes (at minimum):
+- Container runtime: **Docker** or **Podman**
+- A test runner for your stack (examples below):
+  - Python: `pytest`
+  - Node: `jest` / `vitest`
+- Policy tooling (recommended): `opa` + `conftest`
+- Catalog validators (recommended): `pystac`, `stac-check`, JSON Schema tooling
 
-| Service | Default host port(s) | Why it exists in integration tests |
-|---|---:|---|
-| `api` (FastAPI REST + optional GraphQL) | `8000` | The trust membrane gatekeeper and governed API surface |
-| `web` (React/TS) | `3000` | Optional: smoke checks for “no direct DB” and evidence UX wiring |
-| `postgis` | `5432` | Spatial truth store + tiles + audit ledger persistence |
-| `neo4j` | `7474`, `7687` | Knowledge graph / lineage / relationships |
-| `opensearch` | `9200` | Search index for discovery + retrieval |
-| `opa` | `8181` | Policy decision point (authorize + output validation) |
+### 2) Bring up the stack
 
-> [!NOTE]
-> Integration tests should be able to run against:
-> 1) a running developer Compose stack, or
-> 2) a CI-launched Compose stack (service containers).
-
-### Key runtime flow (conceptual)
-
-```mermaid
-sequenceDiagram
-  participant UI as Web UI (React/TS)
-  participant API as API Gateway (FastAPI)
-  participant OPA as Policy (OPA/Rego)
-  participant STO as Stores (PostGIS/Neo4j/Search/ObjectStore)
-  participant AUD as Audit Ledger
-
-  UI->>API: Request (layer/story/focus query)
-  API->>OPA: Authorize request (default deny)
-  OPA-->>API: allow/deny + obligations
-  API->>STO: Retrieve governed data
-  API->>OPA: Validate output (cite-or-abstain where applicable)
-  OPA-->>API: allow/deny + redaction instructions
-  API->>AUD: Append audit record (audit_ref)
-  API-->>UI: Response + citations + audit_ref
-```
-
----
-
-## Quickstart
-
-### Prerequisites
-
-You need:
-
-- Docker Engine and the Docker Compose plugin (`docker compose`)
-- A working Git checkout of the repo
-- **Recommended:** run tests inside the `api` container so dependency versions match
-
-If you run tests from host (not required), you also need:
-
-- Python + `pytest` (plus whatever client libs are used, e.g., `httpx`)
-
-### Bring up the stack
-
-From repo root:
+From the repo root:
 
 ```bash
-cp .env.example .env
-docker compose up --build -d
+cd tests/integration/compose
+docker compose up -d --build
 ```
 
-Expected endpoints:
-
-- API docs: `http://localhost:8000/docs`
-- UI: `http://localhost:3000`
-
-> [!IMPORTANT]
-> If you change env vars in `.env`, restart the affected services:
-> `docker compose down && docker compose up -d --build`
-
-### Run the integration tests
-
-#### Option A (recommended): run inside the API container
+If you use Podman:
 
 ```bash
-docker compose exec api pytest -m integration -q
+cd tests/integration/compose
+podman compose up -d --build
 ```
 
-If you want verbose output + stop on first failure:
+### 3) Run the tests
+
+<details>
+<summary><strong>Python example</strong> (pytest)</summary>
 
 ```bash
-docker compose exec api pytest -m integration -vv -x
-```
-
-#### Option B: run from host, calling the running API
-
-```bash
-export KFM_BASE_URL="http://localhost:8000"
+# fast path: run only integration-marked tests
 pytest -m integration -q
+
+# run a single file
+pytest tests/integration/api/test_health.py -q
+
+# run with live logs
+pytest -m integration -q -s
 ```
+</details>
 
-> [!NOTE]
-> Host-side runs must be treated as “best-effort convenience.”
-> CI should use containerized runs for reproducibility.
-
-### Tear down
+<details>
+<summary><strong>Node example</strong> (jest/vitest)</summary>
 
 ```bash
+# npm
+npm run test:integration
+
+# pnpm
+pnpm test:integration
+```
+</details>
+
+### 4) Tear down
+
+```bash
+cd tests/integration/compose
 docker compose down -v
 ```
 
 ---
 
-## Test suite conventions
+## What we test here
 
-### Markers and categories
+Integration tests are where KFM proves it is **governed and auditable**, not just “working”.
 
-Integration tests must be explicitly marked.
+### Suites (recommended)
 
-**Required marker:**
-- `integration` — all tests under this folder should be tagged
-
-**Optional markers (use sparingly):**
-- `slow` — long-running; should be excluded from default PR gating unless explicitly enabled
-- `requires_search` — requires OpenSearch to be healthy and seeded
-- `requires_graph` — requires Neo4j to be healthy and seeded
-- `requires_ai` — requires a configured LLM backend (should be skipped by default)
-
-Example:
-
-```python
-import pytest
-
-@pytest.mark.integration
-def test_promotion_requires_license():
-    ...
-```
-
-### Determinism & hermeticity rules
-
-Integration tests must be:
-
-- **Deterministic** (same inputs → same outputs)
-- **Idempotent** (rerunning does not corrupt state)
-- **Fail-closed aware** (policy failures are expected and asserted)
-- **Audit-friendly** (tests should assert an `audit_ref` is returned when required)
-
-Rules:
-
-1. Never depend on external networks or third-party APIs.
-2. Use **fixed small slices** of fixture data.
-3. Avoid time-based assertions unless time is controlled (freeze time or use tolerances).
-4. If a test creates records, it must clean up, or namespace by a unique run/test ID.
-
-### Fixture data and catalogs
-
-Fixture datasets are used to prove promotion gates and evidence resolvability.
-
-A minimal dataset fixture must include:
-
-- Deterministic raw slice (small)
-- Processed artifact(s) (small)
-- Catalog artifacts:
-  - DCAT (always)
-  - STAC (for spatial assets)
-  - PROV (for lineage and “review evidence”)
-
-Recommended example structure:
-
-```text
-tests/integration/fixtures/datasets/example_dataset/
-  raw/...
-  work/validation_report.json
-  processed/example.parquet
-  catalog/
-    dcat/dataset.json
-    stac/collection.json
-    prov/run_record.json
-```
+| Suite | Primary assertions | Examples |
+|---|---|---|
+| `api/` | API semantics, authz/authn posture, policy denies, evidence resolver behavior | `/api/v1/*` contract, deny-by-default responses when missing rights/consent |
+| `contracts/` | No breaking changes without versioning | OpenAPI diff; GraphQL schema checks; consumer-driven contract fixtures |
+| `policies/` | **Fail-closed** policy behavior on promotion/exposure manifests | Missing license → deny; missing consent facet → deny; expired consent → deny |
+| `catalogs/` | Catalog outputs validate (STAC/DCAT/PROV) | `pystac validate …`; DCAT JSON-LD shape checks; PROV bundle required fields |
+| `graph/` | Graph invariants hold before promotion | Missing attestation → fail; duplicate asset href collisions → fail; digest mismatches → fail |
+| `pipelines/` | A tiny lane can run end-to-end deterministically | Same inputs → same digests; run receipt always emitted; promotion blocked when proofs missing |
 
 ---
 
-## Coverage map: invariants → tests
+## CI gate order (reference)
 
-This section is the “boss-level” checklist. If you add a new invariant, you add integration coverage here.
+This is the typical order you want in CI so failures are fast, explainable, and “fail-closed”.
 
-| Invariant / requirement | Minimum integration test(s) | Expected outcome |
-|---|---|---|
-| Frontend does not access DB directly | `test_trust_membrane.py` | No direct DB connections from web; all calls go through API |
-| Policy evaluated on every request | `test_policy_default_deny.py` | Requests without auth/context are denied (default deny) |
-| Backend uses repository ports (no bypass) | `test_trust_membrane.py` | Structural + behavioral checks (e.g., no direct DB creds in API handlers; enforcement via adapter boundary) |
-| Audit + provenance on normal request path | `test_evidence_resolver.py` | Responses include audit reference and resolvable citations where applicable |
-| Processed-only publishable truth | `test_promotion_gate.py` | API refuses serving raw/work artifacts as publishable outputs |
-| Promotion gate checklist enforced | `test_promotion_gate.py` | Missing license/sensitivity/checksums/catalogs blocks promotion |
-| Policy redaction for restricted/sensitive fields | `test_policy_redaction.py` | Restricted fields/geometry are redacted or generalized |
-| Evidence resolvability | `test_evidence_resolver.py` | Every citation/prov ref resolves via API to evidence payload |
-| Focus Mode cite-or-abstain enforced | `test_focus_mode_cite_or_abstain.py` | Output without citations is denied/abstains, and audit_ref is present |
+```mermaid
+flowchart LR
+  PR[Pull Request] --> Lint[Lint + formatting]
+  Lint --> Schema[Schema validation<br/>(STAC/DCAT/PROV/Story Node)]
+  Schema --> Policy[Policy gates<br/>(OPA/Rego + Conftest)]
+  Policy --> Contract[Contract checks<br/>(OpenAPI / GraphQL)]
+  Contract --> GraphQA[Graph QA<br/>(Neo4j Cypher)]
+  GraphQA --> ITest[Integration tests<br/>(API + pipelines)]
+  ITest --> Reports[Publish machine-readable reports<br/>(gate results, artifacts, logs)]
+```
 
 > [!IMPORTANT]
-> When a failure occurs, treat it as one of:
-> 1) A real regression, or
-> 2) An invariant change (requires governance review).
->
-> “Just update the test” is not an acceptable default.
+> CI should **block merges** on any governance violation (schema/policy/provenance/attestation), not just failing unit tests.
 
 ---
 
-## CI expectations
+## Fixtures and test data governance
 
-Integration tests are expected to be **merge-blocking** for changes that touch:
+> [!CAUTION]
+> **Do not commit sensitive locations or restricted cultural knowledge** into test fixtures.
+>
+> - Prefer fully synthetic fixtures.
+> - If you must use real-world shapes, generalize them (coarser geometry, bounding boxes, or aggregated grids).
+> - Treat fixtures as publishable artifacts: licenses and provenance still apply.
 
-- Policy rules
-- API authorization paths
-- Promotion gates and validators
-- Evidence/citation resolution endpoints
-- Data model/schema changes that affect catalogs or provenance
+Recommended fixture conventions:
 
-Recommended CI behavior:
+- `tests/integration/fixtures/synthetic/…`  
+  Small, invented datasets that represent edge cases.
+- `tests/integration/fixtures/golden/…`  
+  Expected outputs (digests, receipts, catalogs) used for snapshot-style assertions.
 
-- PRs: run `pytest -m integration` against a clean, containerized stack
-- Nightly: run `-m "integration and slow"` plus larger fixture slices if maintained
+---
 
-On failure, CI should:
+## Adding a new integration test
 
-1. Dump `docker compose logs` for `api`, `opa`, and stores
-2. Preserve relevant test artifacts (validation reports, snapshots, etc.)
+### Quick checklist
+
+- [ ] The test exercises **a contract** (API response shape, schema, or policy decision), not an implementation detail.
+- [ ] The test is **deterministic** (pinned inputs; stable seeds; no time-based flakiness).
+- [ ] The test leaves the stack **clean** (idempotent setup/teardown).
+- [ ] The test produces artifacts that help debugging (logs, manifests, receipts).
+- [ ] If the test touches governed data concepts: rights/CARE/sensitivity fields are present and asserted.
+
+### Pattern: “Given / When / Then” with evidence
+
+1. **Given** a minimal fixture input + a policy configuration  
+2. **When** the system runs a lane / serves an endpoint  
+3. **Then** the output includes:
+   - valid catalogs (STAC/DCAT/PROV),
+   - a run receipt / provenance link,
+   - and the expected allow/deny decision with reasons.
 
 ---
 
 ## Troubleshooting
 
-### Ports already in use
+<details>
+<summary><strong>Common failure modes</strong></summary>
 
-Common defaults and what to change:
+- **Flaky tests due to time:** freeze time or pass explicit timestamps in fixtures.
+- **Schema failures:** validate fixtures first; keep schemas versioned and referenced in tests.
+- **Policy failures:** print conftest decision outputs (deny reasons) to the test log.
+- **Graph QA failures:** export the minimal subgraph (nodes/edges) for the failing invariant.
+- **Port collisions:** ensure compose uses dynamic host ports (or document fixed ports in `.env.example`).
 
-- Postgres/PostGIS: `5432`
-- API: `8000`
-- Web: `3000`
-- Neo4j: `7474`, `7687`
-- OpenSearch: `9200`
-- OPA: `8181`
+</details>
 
-If you have a local Postgres, stop it or change Compose port mappings.
-
-### Dependencies not ready (race conditions)
-
-If `api` can’t connect to `postgis` on startup:
-
-- Check logs: `docker compose logs api`
-- Restart: `docker compose up -d`
-
-### “My changes don’t show up” (dev volumes)
-
-If the API/web hot-reload isn’t picking up changes:
-
-- Confirm volumes are mounted in `docker-compose.yml`
-- Rebuild: `docker compose up --build -d`
-
-### Debugging OPA decisions
-
-If a request is denied unexpectedly:
-
-1. Capture the input (integration tests should log it).
-2. Query OPA directly (example):
+<details>
+<summary><strong>Reset everything</strong></summary>
 
 ```bash
-curl -s http://localhost:8181/v1/data/<package>/<rule> -d @tests/integration/fixtures/policy/input/request.json
+cd tests/integration/compose
+docker compose down -v
+docker compose up -d --build
 ```
+</details>
 
 ---
 
-## Security & governance notes
+## Related paths (expected; adjust if your repo differs)
 
-- Do **not** commit secrets in test fixtures.
-- Never use production datasets for integration tests unless explicitly approved for this purpose.
-- If a test case needs “sensitive-location” semantics, use synthetic geometry and verify **redaction/generalization behavior**, not real coordinates.
-- Prefer fail-closed outcomes: if a dependency is missing, tests should fail clearly (or skip only when marked optional).
-
----
-
-## Definition of Done
-
-A PR that changes cross-service behavior is not “done” until:
-
-- [ ] All integration tests pass locally (containerized run recommended)
-- [ ] Any new invariant has an integration test and is added to the coverage map
-- [ ] Promotion gate behavior remains enforced (or governance review is attached)
-- [ ] Evidence references used by UI/Focus outputs remain resolvable
-- [ ] CI logs are useful: failures show enough context to diagnose policy/store issues
-- [ ] README stays accurate (no “it should” without also documenting how)
-
----
-
+- `schemas/` — JSON Schemas for STAC/DCAT/PROV/story nodes/UI
+- `tools/validation/` — validators and CI gate runners (catalog, policy, graph QA)
+- `.github/workflows/` — CI workflows that run gates and publish reports
