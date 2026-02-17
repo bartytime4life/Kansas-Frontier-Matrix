@@ -1,279 +1,218 @@
-# KFM Schema Registry (data/registry/schemas)
+<!--
+Path: data/registry/schemas/tests/README.md
+Purpose: Contract tests for governed JSON Schemas (fail-closed).
+-->
 
-![Governed Artifact](https://img.shields.io/badge/governed-artifact-blue)
-![Policy](https://img.shields.io/badge/policy-fail--closed-critical)
-![Catalogs](https://img.shields.io/badge/catalogs-STAC%20%7C%20DCAT%20%7C%20PROV-informational)
-![Evidence](https://img.shields.io/badge/evidence-cite%20or%20abstain-success)
+# 🧪 KFM Schema Contract Tests (Fixtures + Gates)
 
-This directory is the **canonical schema registry** for Kansas Frontier Matrix (KFM) *governed artifacts*.
-If a thing is **validated in CI**, **served by the API**, **used to promote datasets**, **used to publish Story Nodes**, or **used to enforce Focus Mode cite-or-abstain**, its schema belongs here (or is pinned/linked from here).
+![KFM](https://img.shields.io/badge/KFM-governed%20contracts-blue)
+![Gate](https://img.shields.io/badge/gates-fail--closed-critical)
+![CI](https://img.shields.io/badge/CI-required%20status%20check-success)
 
 > [!IMPORTANT]
-> In KFM, schemas are not “nice-to-have docs.” They are **enforceable governance contracts**:
-> - Promotion gates rely on them.
-> - Policy-as-code relies on them.
-> - Runtime request/response validation relies on them.
-> - Audits rely on them.
->
-> **If a governed artifact changes shape, the schema MUST change first, and CI MUST fail-closed until it is updated.**
+> These tests are part of KFM’s **fail-closed governance boundary**:
+> if an artifact **does not match the schema**, it cannot be **trusted**, **signed**, **promoted**, or shown as “green/trusted” in UX.  [oai_citation:2‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
 
 ---
 
-## Why this exists
+## What this folder is for
 
-KFM is explicitly designed around:
-- a **trust membrane** (clients never talk directly to databases; the governed API boundary + policy gate is the only path),
-- **fail-closed** policy enforcement,
-- **promotion gates** (Raw → Work → Processed) requiring catalogs and validation,
-- **Focus Mode cite-or-abstain** with an audit reference per answer.
+This directory contains **schema contract tests**—primarily **fixture instances** that must either:
 
-Schemas are how we make these requirements **testable** and **repeatable**.
+- ✅ **validate** against a schema (valid fixtures), or
+- ❌ **fail validation** (invalid fixtures) in a predictable way
+
+This supports the Phase 0 “contracts first” adoption plan:
+
+- add schemas
+- add valid + invalid fixtures
+- validate in CI
+- document invariants in a short README next to schemas  
+  **DoD:** CI fails on invalid examples; schema compilation is a required status check.  [oai_citation:3‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
 
 ---
 
-## What belongs here
-
-This registry contains (or anchors to) schemas for:
-
-### ✅ KFM-native governed artifacts (JSON Schema)
-- Pipeline **run manifests / run receipts** (`run_manifest`)
-- **Watcher entries** (watchers used to trigger PR/CI/promotion workflows)
-- Story Node templates (front matter + structural requirements)
-- Focus Mode API artifacts (request context, response payloads, evidence refs, `audit_ref`)
-- Data-source “raw fetch manifests” / connector configs (where applicable)
-- Validation reports (what CI and auditors rely on)
-
-### ✅ Standards-aligned publication artifacts (validated, pinned, and/or wrapped)
-- **STAC** Collections/Items (catalog discoverability)
-- **DCAT** Dataset/Distribution (catalog discoverability + license/rights surface)
-- **PROV** records (lineage and audit evidence)
+## Repo layout (expected / recommended)
 
 > [!NOTE]
-> We do **not** reinvent STAC/DCAT/PROV specifications here. Instead we:
-> - validate them with dedicated tools (and/or pinned schema snapshots), and
-> - wrap them into KFM governance rules (required presence, required fields, resolvable refs, fail-closed promotion gates).
-
----
-
-## Directory layout
-
-This folder is intentionally boring and CI-friendly:
+> If your repo layout differs, keep the intent and rename paths accordingly.
 
 ```text
 data/
-└── registry/
-   └─ schemas/                                         # Schema registry (contracts that gate ingestion, APIs, and AI outputs)
-      ├─ README.md                                     # How schemas are versioned, validated, and enforced in CI
-      │
-      ├─ kfm/                                          # KFM-owned JSON Schemas (authoritative system contracts)
-      │  ├─ kfm.schema.run_manifest.v1.schema.json      # Run manifest contract (inputs/outputs/digests + trace IDs)
-      │  ├─ kfm.schema.watcher.v1.schema.json           # Watcher/monitoring contract (events, triggers, schedules)
-      │  ├─ kfm.schema.focus_answer.v1.schema.json      # Focus Mode answer envelope (citations, abstain reasons, audit refs)
-      │  ├─ kfm.schema.focus_request.v1.schema.json     # Focus Mode request envelope (query, scope, policy context)
-      │  ├─ kfm.schema.story_node.v3.schema.json        # Story Node v3 contract (frontmatter, citations, assets refs)
-      │  ├─ kfm.schema.validation_report.v1.schema.json # Validator output contract (errors/warnings, machine-readable)
-      │  └─ kfm.schema.policy_input.v1.schema.json      # Policy input contract (actor/resource/context passed to OPA)
-      │
-      ├─ external/                                     # Optional pinned upstream schemas for reproducibility (CI-stable)
-      │  ├─ stac/                                      # STAC schema snapshots/references used by validators
-      │  ├─ dcat/                                      # DCAT schema snapshots/references used by validators
-      │  └─ prov/                                      # PROV schema snapshots/references used by validators
-      │
-      ├─ examples/                                     # Minimal valid examples for every KFM-owned schema (golden inputs)
-      │  ├─ run_manifest.v1.example.json               # Example matching run_manifest.v1 schema
-      │  ├─ watcher.v1.example.json                    # Example matching watcher.v1 schema
-      │  ├─ focus_answer.v1.example.json               # Example matching focus_answer.v1 schema
-      │  └─ story_node.v3.example.md                   # Example Story Node markdown (paired w/ schema expectations)
-      │
-      └─ tests/                                        # Schema contract tests (CI runs these; fail-closed)
-         ├─ schemas_smoke_test.yml                     # Smoke suite: every schema validates its example(s)
-         └─ fixtures/                                  # Test-only fixtures (invalid cases, edge cases, normalization inputs)
+└─ registry/
+   └─ schemas/
+      ├─ *.schema.json                 # governed JSON Schemas (source of truth)
+      └─ tests/
+         ├─ README.md                  # (this file)
+         ├─ fixtures/                  # instances (valid/invalid)
+         │  └─ <schema_name>/
+         │     ├─ valid__*.json
+         │     └─ invalid__*.json
+         └─ cases.yml                  # optional: declarative list of test cases
 ```
 
-> [!IMPORTANT]
-> **Every schema in `kfm/` MUST have at least one valid example in `examples/`.**
-> Schemas without examples become “paper contracts” and will drift.
+---
+
+## What we validate (and what we don’t)
+
+These contract tests focus on **schema conformance** (shape, required fields, types, patterns, disallowing unexpected fields).
+
+KFM’s broader “minimum validation gates” for promoted datasets also include:
+
+- row-level schema validation ✅ *(this folder helps)*
+- geometry validity + bounds
+- temporal consistency
+- license + attribution
+- provenance completeness + deterministic checksum  
+   [oai_citation:4‡KFM_Comprehensive_Data_Source_Integration_Blueprint_v1_massive.pdf](sediment://file_000000000bbc722f8debeb7985ab63ea)
+
+Those other checks usually live in dataset-specific validators / pipeline gates, not here.
 
 ---
 
-## Schema index
+## Fixture naming conventions
 
-Below is the *expected* minimum registry for KFM governance. If a schema is not present yet, it **must be added before** introducing governed artifacts of that type.
-
-| Schema ID (canonical) | Canonical file | Validates | Where used |
-|---|---|---|---|
-| `kfm.schema.run_manifest.v1` | `kfm/kfm.schema.run_manifest.v1.schema.json` | Run receipt/run manifest for pipeline jobs (inputs/outputs/hashes/rights/materiality/audit refs) | Promotion gates, provenance UI, audit trail, reproducibility checks |
-| `kfm.schema.watcher.v1` | `kfm/kfm.schema.watcher.v1.schema.json` | Watcher entries (endpoint, poll/webhook, outputs, thresholds, spec hash, signature ref) | Watcher → PR → CI → Registry pattern |
-| `kfm.schema.policy_input.v1` | `kfm/kfm.schema.policy_input.v1.schema.json` | OPA/Conftest policy input envelope (actor/request/resource/answer metadata) | Fail-closed policy checks at CI + API boundary |
-| `kfm.schema.story_node.v3` | `kfm/kfm.schema.story_node.v3.schema.json` | Story Node front matter + structural requirements | Story Node CI validation; publishing workflows |
-| `kfm.schema.focus_request.v1` | `kfm/kfm.schema.focus_request.v1.schema.json` | Focus Mode API request context (user role, view state, scope) | `/api/...` request validation + policy input |
-| `kfm.schema.focus_answer.v1` | `kfm/kfm.schema.focus_answer.v1.schema.json` | Focus Mode response (citations/evidence refs, abstain rules, `audit_ref`) | “Cite or abstain” enforcement + UI rendering |
-| `kfm.schema.validation_report.v1` | `kfm/kfm.schema.validation_report.v1.schema.json` | Validation report output (what passed/failed, tool versions, evidence pointers) | Promotion gates, audit review, regression checks |
-
----
-
-## Versioning and compatibility rules (SemVer)
-
-All KFM-owned schemas follow SemVer and encode their major version in the schema ID:
-
-- **MAJOR**: breaking change (artifact producers/consumers must update together)
-- **MINOR**: backward-compatible extensions (add optional fields, widen enums carefully)
-- **PATCH**: non-functional changes (docs, descriptions, tightened constraints that don’t break valid artifacts)
-
-**Rule of thumb:** If a previously valid artifact becomes invalid, it’s a **breaking change** → MAJOR bump.
-
----
-
-## Canonical identifiers and `$id`
-
-Every schema file MUST include:
-- a stable `$id` (URI) and `title`
-- the JSON Schema dialect via `$schema`
-- `additionalProperties: false` for critical governed artifacts (run manifests, Focus answers, policy input) unless explicitly justified
-
-Recommended `$id` pattern (stable + resolvable):
-
-```text
-kfm://schema/<schema_name>/v<major>
-```
-
-This keeps schemas stable even if file paths move.
-
----
-
-## How schemas get enforced
-
-### CI is the primary enforcement mechanism
-
-CI MUST:
-1. Validate changed governed artifacts against the correct schema(s)
-2. Run policy-as-code (OPA/Conftest) with **default deny**
-3. Fail closed if:
-   - a schema-required field is missing,
-   - a required catalog artifact is missing/invalid,
-   - a required signature/attestation is missing (where required),
-   - evidence refs are unresolvable.
-
-### Acceptance harness expectations
-
-The KFM acceptance harness is expected to run a combined verification pass that includes:
-- STAC validation
-- DCAT validation
-- PROV validation
-- Policy tests (OPA/Conftest, deny-by-default)
-- Signature verification for signed artifacts (e.g., cosign verification)
-- Deterministic hashing checks (`spec_hash` / canonicalization)
-
----
-
-## Local validation (recommended developer workflow)
+| Type | Pattern | Meaning |
+|------|---------|---------|
+| Valid | `valid__<short_reason>.json` | Must validate against the schema |
+| Invalid | `invalid__<short_reason>.json` | Must fail schema validation |
+| Minimal | `valid__minimal.json` | The smallest “golden” instance you expect to accept |
+| Edge | `valid__edge__*.json` | Boundary case that must still pass |
 
 > [!TIP]
-> CI is authoritative, but local validation prevents slow feedback loops.
+> Use **small** fixtures. Keep them legible in PR diffs. Prefer synthetic values.
 
-A common local flow looks like:
+---
 
-1) Validate JSON against a schema (choose one tool; examples below)
+## How to run locally
+
+> [!NOTE]
+> The exact command depends on your validator toolchain (Node/AJV vs Python/jsonschema, etc.).
+> Use whichever your repo already standardizes on.
+
+### Option A: AJV CLI (Node)
+
 ```bash
-# Option A: Node (AJV)
-npx ajv-cli validate -s data/registry/schemas/kfm/kfm.schema.run_manifest.v1.schema.json \
-  -d data/registry/schemas/examples/run_manifest.v1.example.json
-
-# Option B: Python (check-jsonschema)
-python -m check_jsonschema --schemafile data/registry/schemas/kfm/kfm.schema.run_manifest.v1.schema.json \
-  data/registry/schemas/examples/run_manifest.v1.example.json
+# Example (adjust schema + fixture paths)
+npx ajv-cli validate \
+  -s ../run_receipt.v1.schema.json \
+  -d fixtures/run_receipt/valid__minimal.json
 ```
 
-2) Run the “full verify” pass (if your repo provides a convenience target)
+### Option B: Python jsonschema CLI
+
 ```bash
-make verify
+# Example (adjust schema + fixture paths)
+python -m jsonschema -i fixtures/run_receipt/valid__minimal.json ../run_receipt.v1.schema.json
 ```
 
 ---
 
-## Governance rules for schema changes
+## Policy gates (OPA / Conftest)
 
-Schema changes are *production changes*.
+Schema validation is necessary but not always sufficient. KFM also uses **OPA/Rego policy packs** as deny-by-default gates for invariants like:
 
-### Required reviews
-- **Data Steward** review (correctness, rights, sensitivity)
-- **Platform/Infra** review (CI gates, signature verification implications)
-- **Security** review when schemas touch:
-  - signatures/attestations
-  - policy input/output envelopes
-  - anything that gates promotion or public responses
+- missing `spec_hash`
+- missing digests / required evidence fields
+- insecure URLs (e.g., `http://`)
+- missing licensing / CARE fields (when applicable)  
+   [oai_citation:5‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
 
-### Required artifacts in the PR
-- ✅ Updated schema file(s)
-- ✅ Updated example(s) proving validity
-- ✅ Negative test fixture(s) (at least one “should fail” case for critical schemas)
-- ✅ Updated policy pack tests if policy inputs/outputs changed
-- ✅ Migration notes if producers/consumers must update
+Example CI/local policy run:
 
----
+```bash
+# Example from KFM Integration Pack (adjust paths)
+conftest test run_receipt.json -p policy/opa
+```
 
-## Sensitivity and redaction compatibility
+ [oai_citation:6‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
 
-Some KFM datasets and narratives may be sensitive (e.g., sensitive locations, culturally restricted knowledge).
-
-**Schema design must support sensitivity handling:**
-- Artifacts MUST carry a sensitivity classification field where promotion/publication decisions depend on it
-- Schemas MUST permit “redacted derivatives” where the original sensitive value is removed but provenance remains intact
-- Evidence refs MUST remain resolvable (even if the resolved view is permission-gated)
+> [!IMPORTANT]
+> Keep schema checks and policy checks **separate**:
+> - **Schema** answers “is the instance shaped correctly?”
+> - **Policy** answers “is it acceptable to promote / expose given governance rules?”
 
 ---
 
-## How this ties into KFM publishing
+## CI behavior (required)
 
-KFM publishing is “provenance-first”:
+At minimum, CI should:
 
-- A dataset is **not publishable** unless required catalogs are emitted and validated.
-- A Story Node is **not publishable** unless it validates and its citations resolve.
-- A Focus Mode answer is **not acceptable** unless it cites resolvable evidence — or abstains with an audit reference.
+1. **Compile / load** every JSON Schema under `data/registry/schemas/`
+2. Validate all `valid__*.json` fixtures ✅
+3. Ensure all `invalid__*.json` fixtures fail ❌
+4. Run OPA/Conftest policy tests (deny-by-default) where configured  
+5. Treat the overall result as a **required status check** for merging  [oai_citation:7‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
 
-This schema registry is the contract layer that makes those rules enforceable.
+A “CI-ready” test plan elsewhere in KFM also expects:
+- unit tests for schema mapping/coercion
+- integration tests asserting stable checksums + counts
+- contract tests for API provenance + redaction
+- regression tests for profiling metrics stability  
+ [oai_citation:8‡KFM_Comprehensive_Data_Source_Integration_Blueprint_v1_massive.pdf](sediment://file_000000000bbc722f8debeb7985ab63ea)
+
+---
+
+## Adding a new schema (Definition of Done)
+
+When you add or change a schema in `../`:
+
+- [ ] Add/modify the schema file (`*.schema.json`)
+- [ ] Add **≥ 1 valid** fixture (`valid__minimal.json`)
+- [ ] Add **≥ 1 invalid** fixture (`invalid__<reason>.json`)
+- [ ] If invariants go beyond schema shape, add/update corresponding **OPA policy tests**
+- [ ] CI runs as a **required status check** and fails on bad fixtures  [oai_citation:9‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
+- [ ] Update this README if you introduced a new invariant category
+
+---
+
+## Governance + safety rules for fixtures
+
+> [!WARNING]
+> Fixtures are repo artifacts. Treat them as publishable.
+
+- Do **not** commit secrets, keys, tokens, or private endpoints.
+- Avoid real PII. Prefer synthetic records.
+- If a schema models sensitive locations/people:
+  - generalize or redact fixture content
+  - ensure policy labels / restrictions are tested in policy packs (fail-closed)
+- Keep fixtures minimal to reduce accidental leakage surface.
+
+---
+
+## Workflow overview
 
 ```mermaid
 flowchart LR
-  A[Raw Acquisition<br/>manifests + checksums] --> B[Work Zone<br/>normalize + validate]
-  B --> C[Processed Zone<br/>publish artifacts]
-  C --> D[Catalogs<br/>STAC/DCAT/PROV]
-  D --> E[API Trust Membrane<br/>policy + validation]
-  E --> F[UI + Focus Mode<br/>cite or abstain]
-
-  S[Schema Registry<br/>data/registry/schemas] -.validates.-> A
-  S -.validates.-> B
-  S -.validates.-> C
-  S -.validates.-> E
-  S -.validates.-> F
+  A[Schema change] --> B[Add fixtures<br/>valid + invalid]
+  B --> C[JSON Schema validation]
+  C -->|pass| D[OPA/Conftest policy gate]
+  C -->|fail| X[❌ Block merge]
+  D -->|allow| E[✅ Required CI check passes]
+  D -->|deny| X
 ```
 
 ---
 
-## FAQ
+## Troubleshooting
 
-### Why are schemas under `data/registry/` instead of `src/`?
-Because schemas are **governed data artifacts**:
-- they are versioned,
-- they gate promotion/publishing,
-- they are auditable,
-- and they must remain stable regardless of application refactors.
+### “format: uri” fails unexpectedly
+Different validators handle JSON Schema formats differently.
+- AJV often needs `ajv-formats` wired in.
+- Some CLIs treat formats as warnings vs errors.
 
-### Can I loosen a schema “just to get CI green”?
-No. In KFM, “green CI” without correct constraints is a trust regression.
-If something is legitimately variable, model it explicitly (e.g., optional field, tagged union, or profile-specific overlay schema).
+### “additionalProperties: false” breaks fixtures
+That’s expected when schemas are strict. Update the fixture or update the schema intentionally—never “just loosen” without governance review.
 
-### Do we allow unknown fields?
-For critical governance objects (run manifests, Focus answers, policy inputs), default posture is:
-- **deny unknown fields** (`additionalProperties: false`)
-- introduce new fields intentionally and version them.
+### Invalid fixtures accidentally pass
+Make the failure unambiguous:
+- remove a required field
+- violate a pattern
+- introduce an unexpected property when `additionalProperties: false`
 
 ---
 
-## Ownership
+## References (design intent)
 
-**Primary owners:** Data Stewardship + Platform Governance  
-**Review required:** Yes (see “Governance rules for schema changes”)
-
-If you are unsure whether an artifact needs a schema, treat it as **yes** and open a PR adding one.
-
+- **KFM Integration Idea Pack** (2026-02-15 draft): Phase 0 contracts-first guidance; Conftest/OPA examples.  [oai_citation:10‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46) [oai_citation:11‡KFM-Bluprint-&-Ideas.pdf](sediment://file_000000004e9c71f598d3d784f6a13c46)
+- **KFM Data Source Integration Blueprint** (v1.0, 2026-02-12): minimum validation gates + CI-ready test plan.  [oai_citation:12‡KFM_Comprehensive_Data_Source_Integration_Blueprint_v1_massive.pdf](sediment://file_000000000bbc722f8debeb7985ab63ea)
