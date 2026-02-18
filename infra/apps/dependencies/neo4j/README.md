@@ -16,13 +16,13 @@ In KFM, Neo4j is **not** a “primary catalog store.” It is a **thin graph hub
 
 ```mermaid
 flowchart LR
-  A[Raw Sources] --> B[ETL / Normalization]
-  B --> C[STAC Items + Collections]
-  C --> D[DCAT Dataset Views]
-  C --> E[Minimal PROV fields embedded in STAC]
-  E --> F[Neo4j Graph\n(references back to catalogs)]
-  F --> G[Governed API Layer\n(contracts + policy boundary)]
-  G --> H[Map UI / Story Nodes / Focus Mode]
+  A["Raw Sources"] --> B["ETL / Normalization"]
+  B --> C["STAC Items + Collections"]
+  C --> D["DCAT Dataset Views"]
+  C --> E["Minimal PROV fields embedded in STAC"]
+  E --> F["Neo4j Graph (references back to catalogs)"]
+  F --> G["Governed API Layer (contracts + policy boundary)"]
+  G --> H["Map UI / Story Nodes / Focus Mode"]
 ```
 
 ---
