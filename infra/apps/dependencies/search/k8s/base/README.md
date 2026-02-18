@@ -242,4 +242,3 @@ curl -sS http://localhost:9200/_cluster/health?pretty
 - Search dependency contract: [`infra/apps/dependencies/search/README.md`](../../README.md)  
 - Local dev stack defaults: [`/docker-compose.yml`](/docker-compose.yml), [`/.env.example`](/.env.example)  
 - Infra governance + trust membrane: [`infra/README.md`](/infra/README.md)
-
