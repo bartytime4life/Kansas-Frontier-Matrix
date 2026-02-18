@@ -1,24 +1,3 @@
----
-title: "Story Nodes — README"
-path: "docs/reports/story_nodes/README.md"
-version: "v0.1.0"
-last_updated: "2026-02-18"
-status: "draft"
-doc_kind: "Repo README"
-license: "CC-BY-4.0" # TODO: verify against repo LICENSE
-markdown_protocol_version: "1.0" # TODO: verify (KFM Markdown Protocol)
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-fair_category: "FAIR+CARE"
-care_label: "Public" # TODO: adjust if special handling required
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US"
-doc_uuid: "urn:kfm:doc:reports:story_nodes:readme:v0.1.0"
-commit_sha: "TBD"
-doc_integrity_checksum: "sha256:TBD"
----
-
 # Story Nodes (`docs/reports/story_nodes/`)
 
 ![governed](https://img.shields.io/badge/Governed-Evidence--First-blue)
