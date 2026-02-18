@@ -1,29 +1,3 @@
----
-title: "KFM Master Guides — README"
-path: "docs/master_guides/README.md"
-version: "v0.1.0"
-last_updated: "2026-02-18"
-status: "active"
-doc_kind: "README"
-license: "CC-BY-4.0"
-
-# Profile versions (optional; keep for tooling)
-markdown_protocol_version: "1.0"
-
-# Governance metadata (keep fields; use TBD if unknown)
-governance_ref: "TBD"
-ethics_ref: "TBD"
-fair_category: "FAIR+CARE"
-care_label: "Public"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US"
-
-doc_uuid: "urn:kfm:doc:master-guides:readme:v0.1.0"
-commit_sha: "TBD"
-doc_integrity_checksum: "sha256:TBD"
----
-
 # KFM Master Guides (docs/master_guides)
 
 ![Governed](https://img.shields.io/badge/Governed-Yes-success)
