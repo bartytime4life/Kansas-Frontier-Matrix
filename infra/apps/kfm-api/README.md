@@ -81,26 +81,28 @@ Recommended GitOps layout (Kustomize-style overlays):
 
 ```text
 infra/
-  apps/
-    kfm-api/
-      base/
-        kustomization.yaml
-        deployment.yaml
-        service.yaml
-        ingress.yaml            # or route.yaml for OpenShift
-        networkpolicy.yaml
-        hpa.yaml
-        pdb.yaml
-      overlays/
-        dev/
-          kustomization.yaml
-          patch-env.yaml
-          patch-resources.yaml
-        stage/
-          kustomization.yaml
-        prod/
-          kustomization.yaml
-      README.md
+└─ apps/
+   └─ kfm-api/                                      # KFM API workload (FastAPI boundary; policy-enforced)
+      ├─ README.md                                  # Deploy notes, required deps, env vars, rollout/rollback runbook
+      │
+      ├─ base/                                      # Common manifests (environment-agnostic defaults)
+      │  ├─ kustomization.yaml                      # Base kustomize entry (resources + common labels/patches)
+      │  ├─ deployment.yaml                         # Deployment (image, env, probes, resources, volumes/config)
+      │  ├─ service.yaml                            # Cluster Service (stable in-cluster address)
+      │  ├─ ingress.yaml                            # Ingress (or route.yaml on OpenShift) + TLS policy
+      │  ├─ networkpolicy.yaml                      # Network policy (trust membrane: allowlist callers/egress)
+      │  ├─ hpa.yaml                                # HorizontalPodAutoscaler (CPU/RPS scaling policy)
+      │  └─ pdb.yaml                                # PodDisruptionBudget (availability during drains/rollouts)
+      │
+      └─ overlays/                                  # Per-environment deltas (keep small; no drift from base)
+         ├─ dev/
+         │  ├─ kustomization.yaml                   # Dev overlay (patches applied to base)
+         │  ├─ patch-env.yaml                       # Dev-only env toggles (safe defaults; never secrets)
+         │  └─ patch-resources.yaml                 # Dev resources/replicas (lighter footprint)
+         ├─ stage/
+         │  └─ kustomization.yaml                   # Stage overlay (prod-like settings where possible)
+         └─ prod/
+            └─ kustomization.yaml                   # Prod overlay (HA, strict policies, tuned resources)
 ```
 
 > [!TIP]
