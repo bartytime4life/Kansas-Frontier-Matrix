@@ -47,13 +47,15 @@ governed API boundary (policy-as-code + audit/provenance).
 
 ```mermaid
 flowchart LR
-  UI[React/MapLibre UI] -->|HTTPS| API[Governed API Gateway\n(FastAPI/GraphQL)]
-  API -->|SQL (internal)| PG[(PostGIS)]
-  API -->|catalog/media| OBJ[(Object Storage)]
-  API -->|search/graph| IDX[(Search / Graph Indices)]
+  UI["React/MapLibre UI"] -->|"HTTPS"| API["Governed API Gateway (FastAPI/GraphQL)"]
+  API -->|"SQL (internal)"| PG["PostGIS"]
+  API -->|"catalog/media"| OBJ["Object Storage"]
+  API -->|"search/graph"| IDX["Search / Graph Indices"]
 
-  subgraph TM[Trust Membrane]
-    API
+  subgraph TM
+    direction TB
+    TM_T["Trust Membrane"]
+    TM_T --> API
   end
 ```
 
