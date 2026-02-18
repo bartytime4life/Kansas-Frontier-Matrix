@@ -201,4 +201,3 @@ If you’re unsure what `vector` refers to in **this repo** (tiles? overlay serv
 1. Inspect `infra/apps/dependencies/vector/base/kustomization.yaml` for `kind`, container images, labels
 2. Search for references to `infra/apps/dependencies/vector` in your GitOps controller app definitions
 3. Identify which KFM service depends on it (UI/API/pipeline), then tighten this README accordingly
-
