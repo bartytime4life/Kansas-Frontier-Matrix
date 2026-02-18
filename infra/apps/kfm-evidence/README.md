@@ -53,13 +53,13 @@ These are *system-level guarantees*, not “best practices”.
 
 ```mermaid
 flowchart LR
-  UI[Web UI / Focus Mode / Story Nodes] --> API[Governed API Gateway]
-  API --> EVID[kfm-evidence (Evidence Resolver)]
-  API --> OPA[OPA / Rego PDP]
-  API --> AUD[Audit Ledger]
+  UI["Web UI / Focus Mode / Story Nodes"] --> API["Governed API Gateway"]
+  API --> EVID["kfm-evidence (Evidence Resolver)"]
+  API --> OPA["OPA / Rego PDP"]
+  API --> AUD["Audit Ledger"]
   EVID --> OPA
-  EVID --> CAT[Catalogs: DCAT / STAC / PROV]
-  EVID --> OBJ[Object Store / Bundle Store]
+  EVID --> CAT["Catalogs: DCAT / STAC / PROV"]
+  EVID --> OBJ["Object Store / Bundle Store"]
   EVID --> AUD
 ```
 
