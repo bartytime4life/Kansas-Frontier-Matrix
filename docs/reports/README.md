@@ -1,21 +1,3 @@
----
-title: "docs/reports — Governed Reports & Story Nodes"
-path: "docs/reports/README.md"
-version: "v0.1.0"
-last_updated: "2026-02-16"
-status: "draft"
-doc_kind: "Repo README"
-license: "SEE_ROOT_LICENSE"
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_ref: "docs/governance/SOVEREIGNTY.md"
-review_gates_ref: "docs/governance/REVIEW_GATES.md"
-templates_ref:
-  universal_doc: "docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md"
-  story_node_v3: "docs/templates/TEMPLATE__STORY_NODE_V3.md"
-  api_contract_extension: "docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md"
----
-
 # docs/reports 🧾 — Governed Reports & Story Nodes
 
 ![Governed](https://img.shields.io/badge/governed-yes-blue)
