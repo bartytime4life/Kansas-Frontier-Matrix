@@ -192,4 +192,3 @@ Recommended: keep patches small and named by intent:
 This README aligns with KFM’s governed architecture principle that Search supports **fast discovery** in a **multi-model storage** platform (spatial + graph + search) and that search should support both **keyword** and **semantic** retrieval.
 
 If you change the operational model (engine choice, exposure model, or what is indexed), treat it as a governed decision and record it in the appropriate architecture/governance docs.
-
