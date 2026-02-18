@@ -1,30 +1,3 @@
----
-title: "KFM Reliability Runbooks"
-path: "docs/runbooks/reliability/README.md"
-doc_kind: "runbook_index"
-status: "draft"
-version: "0.1.0"
-last_updated: "2026-02-18"
-doc_uuid: "9a3f8f4b-7cc0-4c8f-9d9b-1d7e2fd2e2f8"
-audience:
-  primary:
-    - "Ops / SRE"
-    - "Pipeline maintainers"
-    - "Platform maintainers"
-  secondary:
-    - "Backend + API maintainers"
-    - "Governance reviewers"
-governance:
-  evidence_first: true
-  fail_closed: true
-  trust_membrane: true
-fair:
-  enabled: true
-care:
-  label: "TBD"
-  notes: "Runbooks may touch sensitive location handling; follow policy gates and redaction rules."
----
-
 # Reliability Runbooks (KFM)
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
