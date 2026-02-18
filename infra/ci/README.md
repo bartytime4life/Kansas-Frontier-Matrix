@@ -176,20 +176,27 @@ Recommended semantics:
 ## Policy pack layout (OPA/Rego) — recommended structure
 
 ```text
-policy/
-  rego/
-    common/helpers.rego
-    common/license_allowlist.rego
-    catalogs/stac_required.rego
-    catalogs/dcat_required.rego
-    catalogs/prov_required.rego
-    domains/<domain>_*.rego
-    bundles.rego
-  tests/
-    *_test.rego
-    samples/
-      valid/
-      invalid/
+policy/                                          # OPA/Rego policy system (default-deny; explicit allow)
+├─ rego/                                         # Policy source (Rego modules)
+│  ├─ common/                                    # Shared utilities + cross-cutting rules
+│  │  ├─ helpers.rego                            # Pure helper functions (strings, input guards, normalizers)
+│  │  └─ license_allowlist.rego                  # License policy (allow/deny lists + attribution requirements)
+│  │
+│  ├─ catalogs/                                  # Catalog prerequisites (publish/promotion gates)
+│  │  ├─ stac_required.rego                      # STAC minimums (Collection/Item requirements; links/assets rules)
+│  │  ├─ dcat_required.rego                      # DCAT minimums (dataset/distribution + licensing requirements)
+│  │  └─ prov_required.rego                      # PROV minimums (lineage prerequisites; run/entity link rules)
+│  │
+│  ├─ domains/                                   # Domain-specific policy overlays (scoped exceptions/constraints)
+│  │  └─ <domain>_*.rego                         # Per-domain modules (narrow, documented, CI-covered)
+│  │
+│  └─ bundles.rego                               # Bundle entrypoints/exports (what CI/runtime queries)
+│
+└─ tests/                                        # Policy tests + deterministic samples (synthetic; diff-friendly)
+   ├─ *_test.rego                                # OPA unit tests (opa test …) for modules above
+   └─ samples/                                   # File-based test vectors for eval/Conftest
+      ├─ valid/                                  # Inputs expected to pass (allow=true / no violations)
+      └─ invalid/                                # Inputs expected to fail (deny=true / violations present)
 ```
 
 **Policy design guideline:**
