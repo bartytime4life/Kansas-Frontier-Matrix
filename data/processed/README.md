@@ -1,225 +1,167 @@
-<!--
-KANSAS FRONTIER MATRIX (KFM) — GOVERNED ARTIFACT
-Path: data/processed/README.md
-Zone: Processed (Publishable Truth)
--->
+# `data/processed/` ✅ Curated Processed Data (Authoritative)
 
-# 🧪 data/processed/ — Processed Zone (Publishable Truth)
-
-![KFM](https://img.shields.io/badge/KFM-governed-blue)
-![Zone](https://img.shields.io/badge/zone-processed-2ea44f)
-![Policy](https://img.shields.io/badge/policy-fail--closed-critical)
-
-This directory contains **canonical, validated, provenance-linked** datasets that are allowed to power the KFM **API/UI/Stories/Focus Mode**.
+![data-zone](https://img.shields.io/badge/data_zone-processed-2ea44f)
+![governance](https://img.shields.io/badge/governance-promotion_gated-critical)
+![provenance](https://img.shields.io/badge/provenance-required-blue)
 
 > [!IMPORTANT]
-> **Processed is the only publishable source of truth.**  
-> Raw/work artifacts are *inputs* and *intermediates*—they are **not served directly** to users.
+> **Processed serves truth.** Anything committed here is treated as **authoritative** for KFM and may be loaded into databases / served by governed APIs.
+> If it isn’t reproducible from `data/raw/` via repeatable pipelines, it doesn’t belong here.
 
----
+## What belongs here
 
-## ✅ What belongs here
+`data/processed/` holds the **outputs of pipelines**: cleaned, standardized datasets ready for use by:
+- databases (e.g., PostGIS / graph),
+- analysis tools,
+- map rendering,
+- Focus Mode / evidence bundles.
 
-- **Final, standardized outputs** produced by pipelines (repeatable + reproducible).
-- Data that has passed **validation gates** (schema, geospatial, temporal, licensing, policy).
-- Artifacts that have **checksums** and are fully represented in KFM catalogs (**DCAT/STAC/PROV**).
+These assets should be safe to treat as “the current best canonical form” inside KFM.
 
----
+## What does *not* belong here
 
-## 🚫 What must NOT belong here
-
-- “Hand-edited” one-off fixes that bypass pipelines.
-- Any dataset with **unclear license**, missing attribution, or missing sensitivity classification.
-- Sensitive/precise location data published without an approved **redaction/generalization** workflow and a distinct provenance chain.
-
-> [!NOTE]
-> If you discover an error: **fix the pipeline and publish a new version**. Don’t mutate history.
-
----
-
-## 🧭 The KFM truth path (context)
-
-```mermaid
-flowchart LR
-  RAW[Raw zone] --> WORK[Work zone]
-  WORK --> PROC[Processed zone]
-  PROC --> CATS[Catalogs: STAC / DCAT / PROV]
-  CATS --> STORES[(Stores: object store / PostGIS / graph / search)]
-  STORES --> API[Governed API + Policy]
-  API --> UI[UI + Stories + Focus Mode]
-```
-
----
-
-## 📦 Directory layout
-
-KFM documentation has described both a **zone-first** and a **domain-first** layout. This README defines the **contract for the processed zone**, regardless of which layout you use.
-
-### Option A — Zone-first (root processed)
-
-```text
-data/
-├── raw/                     # immutable source drops (read-only)
-├── work/                    # intermediate artifacts + QA outputs
-├── processed/               # ✅ THIS DIRECTORY
-├── stac/                    # STAC collections/items for published assets
-├── catalog/
-│   └── dcat/                # DCAT dataset records (JSON-LD)
-└── prov/                    # PROV bundles (runs + lineage)
-```
-
-### Option B — Domain-first (processed per domain)
-
-```text
-data/
-└── <domain>/
-    ├── raw/
-    ├── work/
-    └── processed/           # same rules as this README
-```
+| ❌ Don’t commit | ✅ Use instead |
+|---|---|
+| raw source snapshots | `data/raw/` |
+| intermediate scratch outputs | `data/work/` (or the pipeline job’s ephemeral storage) |
+| ad‑hoc manual edits / one‑off “fixes” | fix the pipeline and re-run; let Git show diffs |
+| undocumented datasets | add catalogs + provenance first, then promote |
 
 > [!TIP]
-> If you’re using Option B, copy this README into each domain’s `processed/` folder (or link to it) to keep the contract consistent.
+> If you can’t explain **how** a file was produced and **from what raw inputs**, it’s not ready for `data/processed/`.
 
----
+## Directory layout
 
-## 🧾 Dataset packaging contract (what “publishable” means)
-
-Every dataset in `data/processed/` must be explainable and auditable without guesswork.
-
-### Required artifacts (by policy)
-
-| Artifact | Required | Where it lives | Purpose |
-|---|---:|---|---|
-| Processed data file(s) | ✅ | `data/processed/...` | The publishable, canonical output used by downstream components |
-| Checksums (SHA-256) | ✅ | alongside artifacts | Integrity + reproducibility |
-| DCAT dataset record | ✅ | `data/catalog/dcat/...` | License, attribution, coverage, distributions |
-| PROV lineage bundle | ✅ | `data/prov/...` | Traceability: raw → transforms → processed |
-| STAC collection/items | ✅* | `data/stac/...` | Required for spatial assets (map/timeline) |
-| Policy labels / sensitivity class | ✅ | (metadata / policy bundle) | Fail-closed access control + redaction rules |
-| Validation report + run record | ✅ | typically `data/work/...` | Evidence that quality gates passed |
-
-\* **STAC is required if the dataset is spatial** (raster/vector/assets).
-
----
-
-## ✅ Promotion gate checklist (CI enforced)
-
-A processed artifact is **not publishable** unless all gates can prove “allow”.
-
-- [ ] **License present** and compatible with publication
-- [ ] **Sensitivity classification present** (public / restricted / sensitive-location / etc.)
-- [ ] **Schema checks pass** (types, required fields, constraints)
-- [ ] **Geospatial checks pass** (geometry validity, bounds/extent sanity) *(if spatial)*
-- [ ] **Temporal checks pass** (timestamps sane, ranges valid)
-- [ ] **Checksums computed** (content integrity)
-- [ ] **Catalog artifacts exist** and validate: DCAT (+ STAC if spatial + PROV always)
-- [ ] **Cross-links resolve** (STAC ↔ DCAT ↔ PROV are navigable/resolvable)
-- [ ] **Audit event recorded** (if your pipeline emits an audit ledger entry)
-- [ ] **Human approval** required for sensitive datasets
-
-> [!IMPORTANT]
-> KFM is **fail-closed**: if policy/validation cannot prove it is safe and complete, promotion must be blocked.
-
----
-
-## 🔐 Sensitivity & redaction
-
-Some data requires special handling (e.g., private ownership, precise archaeological sites, culturally restricted knowledge).
-
-**Required pattern:**
-1. Create a **generalized/redacted derivative** for broad audiences.
-2. Store **precise data** under restricted access (policy-labeled) or in a restricted store (implementation-dependent).
-3. Maintain **separate provenance chains** for the precise and generalized artifacts (including the redaction/generalization step).
-
-> [!WARNING]
-> Never “quietly” blur or drop sensitive fields without recording it in PROV. Redaction is a first-class transformation.
-
----
-
-## 🔁 Versioning rules (don’t overwrite truth)
-
-- Treat processed artifacts as **append-only by version**.
-- When upstream changes or fixes are required:
-  - publish a **new DatasetVersion**
-  - keep the previous version for traceability and reproducibility
-
-**Recommended on-disk pattern (example):**
+Organize by **theme** or **source**, typically mirroring/complementing `data/raw/`.
 
 ```text
 data/processed/
-└── <dataset_id>/
-    └── <version_id>/
-        ├── artifact_1.parquet
-        ├── artifact_2.geojson
-        ├── checksums.sha256
-        └── README.md              # dataset-level notes (optional)
+  <theme-or-source>/
+    <dataset_slug>.<ext>
+  <theme-or-source>/
+    <dataset_slug>.<ext>
+  ...
 ```
 
+Example (illustrative):
+
+```text
+data/processed/
+  census/
+    1900_population.geojson
+  imagery/
+    landsat_2010_Kansas.tif
+  drought_index.geojson
+```
+
+## Typical formats
+
+Choose formats that match the data and how KFM will serve/use it.
+
+| Data class | Typical formats | Notes |
+|---|---|---|
+| Vector (points/lines/polygons) | GeoJSON, Parquet | Prefer canonical CRS; keep attribute dictionaries in metadata. |
+| Tabular | CSV, Parquet | UTF‑8; explicit field types & units. |
+| Raster/imagery | GeoTIFF (COG where appropriate) | Use STAC for footprints/time coverage; keep processing level. |
+
+## Standardization & normalization rules
+
+Unless there’s a documented exception (in metadata), processed outputs should be normalized to:
+
+- **Encoding:** UTF‑8
+- **Time:** ISO‑8601 (timestamps and ranges)
+- **Geometry/CRS:** WGS84 (EPSG:4326) by default
+- **Attributes:** human-readable field names; units standardized; no unexplained codes
+
+> [!NOTE]
+> If a domain needs a different CRS or encoding (e.g., local engineering grids), that’s allowed — but it must be explicitly documented in the catalog metadata.
+
+## Promotion contract
+
+A dataset can be *added or modified* in `data/processed/` **only** via a governed promotion step.
+
+Promotion is “real” only when the dataset ships with:
+
+- ✅ deterministic **checksums** (for artifacts and/or bundles)
+- ✅ **validation evidence** (schema, geometry, temporal sanity, domain rules)
+- ✅ **license + attribution** captured
+- ✅ **catalog records** (DCAT always; STAC and PROV where applicable)
+- ✅ **policy labels** (sensitivity / redaction / access constraints)
+- ✅ CI gates that enforce “fail‑closed” promotion
+
+### Minimum “Promotion DoD” checklist
+
+- [ ] Processed artifact(s) created by a repeatable pipeline run
+- [ ] Provenance chain links **raw → pipeline run → processed**
+- [ ] Catalog entries exist and cross‑link to the artifact(s) + provenance
+- [ ] Validation gates run and pass
+- [ ] Sensitive fields/locations are redacted/generalized when required
+- [ ] Links are resolvable (no broken catalog/prov pointers)
+
+## Catalog & lineage cross-links
+
+Processed data is only useful if it’s **discoverable** and **traceable**.
+
+You should expect corresponding records in:
+
+- `data/catalog/` — dataset catalog metadata (STAC/DCAT)
+- `data/provenance/` — provenance logs (W3C PROV, typically as JSON/JSON‑LD)
+
+Some earlier drafts refer to legacy aliases like:
+- `data/stac/` (STAC)
+- `data/catalog/dcat/` (DCAT)
+- `data/prov/` (PROV)
+
+> [!IMPORTANT]
+> If the catalogs and provenance don’t exist (or don’t link back to this artifact), **do not promote**.
+
+### Minimal linkage model
+
+```mermaid
+flowchart LR
+  RAW["data/raw/ (immutable evidence)"] -->|pipeline run| PROC["data/processed/ (authoritative)"]
+  PROC --> CAT["data/catalog/ (STAC/DCAT)"]
+  RAW --> PROV["data/provenance/ (PROV)"]
+  PROC --> PROV
+```
+
+## Sensitivity & redaction
+
+Some KFM sources can be sensitive (examples include private ownership records, precise archaeological site locations, and certain health/public-safety indicators). Handle sensitivity by:
+
+- labeling datasets/fields with policy tags,
+- producing redacted/generalized **derivative datasets** (with explicit provenance),
+- enforcing access via the policy boundary (fail‑closed).
+
+> [!CAUTION]
+> If sensitivity is uncertain, **pause promotion** and request governance review before committing to `data/processed/`.
+
+## Large files & storage
+
+`data/processed/` is version-controlled as part of the repo’s “single source of truth” philosophy.
+
+When files are too large for normal Git:
+- use Git LFS **or**
+- store a pointer + checksum + fetch script
+
+…but still treat the artifact as part of `data/processed/` logically (path + identity tracked in Git).
+
+## Adding or updating a dataset (workflow)
+
+1. **Acquire** and store the unmodified snapshot in `data/raw/`
+2. **Transform** via a repeatable pipeline (no manual patching)
+3. **Validate** (schema / geometry / time / domain rules / policy)
+4. **Publish** to `data/processed/`
+5. **Emit metadata**: catalog (DCAT/STAC) + provenance (PROV)
+6. **Promote via PR**: CI must pass; reviewers verify receipts + cross-links
+
 ---
 
-## 🛠️ Adding a new dataset (thin-slice workflow)
+### Quick sanity check (human)
 
-1. **Intake**
-   - Capture raw inputs (immutable) and record source, license, and retrieval details.
-2. **Process**
-   - Run pipeline to normalize/validate/enrich in the work zone.
-3. **Validate**
-   - Produce a validation report (schema/geo/time/profiling) and a run record.
-4. **Publish**
-   - Write outputs to `data/processed/` + compute checksums.
-   - Emit/update catalogs: DCAT (always), STAC (if spatial), PROV (always).
-5. **Promote via PR**
-   - CI must run validators and block promotion if incomplete.
-6. **Serve**
-   - API/UI consume *catalogs* and *processed artifacts* through the policy boundary (trust membrane).
+Before merging a PR that touches `data/processed/`, answer:
 
----
-
-## 🧯 Common failure modes (and how to avoid them)
-
-<details>
-  <summary><strong>“We fixed the data by hand; why is this a problem?”</strong></summary>
-
-Hand edits break reproducibility. KFM expects you to be able to re-run pipelines and regenerate the same processed outputs from raw inputs + pinned code. Fix the pipeline, then publish a new version.
-
-</details>
-
-<details>
-  <summary><strong>“Why do we need DCAT/STAC/PROV for everything?”</strong></summary>
-
-Because KFM treats datasets as governed artifacts: discovery (DCAT), geospatial browse/render (STAC), and lineage/auditability (PROV) are part of what makes KFM evidence-first and safe to serve.
-
-</details>
-
-<details>
-  <summary><strong>“Where do restricted datasets live?”</strong></summary>
-
-Implementation-dependent. Some teams keep restricted artifacts in the same processed zone but policy-label them strictly; others store restricted artifacts outside the repo/object store. Either way, publishable derivatives must be provenance-linked and policy-controlled.
-
-</details>
-
----
-
-## 🔗 Related (expected) references
-
-> Paths may vary by repo version.
-
-- `data/stac/` — STAC collections & items  
-- `data/catalog/dcat/` — DCAT dataset records  
-- `data/prov/` — PROV bundles  
-- `src/pipelines/` — ETL + validation jobs  
-- `schemas/` — JSON Schemas for catalogs, provenance, receipts, etc.
-
----
-
-## ✅ Definition of Done (for a processed dataset PR)
-
-- [ ] Processed artifacts added (no raw/work leaks)
-- [ ] Checksums present and correct
-- [ ] DCAT record present + validated
-- [ ] STAC record present + validated (if spatial)
-- [ ] PROV bundle present + validated
-- [ ] Run record + validation report exist and reference outputs
-- [ ] Sensitivity class + policy labels attached
-- [ ] CI gates pass and promotion is “real”
+- Can I trace this file back to a raw source snapshot?
+- Do catalog records point to the correct artifact path(s)?
+- Is there a provenance record for the producing run?
+- Are license/attribution and sensitivity labels present?
