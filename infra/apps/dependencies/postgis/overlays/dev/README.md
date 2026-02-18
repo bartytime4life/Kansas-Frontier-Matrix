@@ -339,4 +339,3 @@ Check:
 - NetworkPolicy allows ingress on 5432 from the caller namespace/labels
 
 </details>
-
