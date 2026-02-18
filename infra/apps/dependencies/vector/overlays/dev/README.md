@@ -229,4 +229,3 @@ If you’re adding a new patch:
 1. Prefer a small `patches/*.yaml` target (Deployment/StatefulSet/PVC).
 2. Avoid duplicating `base` resources in the overlay.
 3. Keep naming consistent across overlays to simplify promotion.
-
