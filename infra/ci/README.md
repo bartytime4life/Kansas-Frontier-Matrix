@@ -86,23 +86,23 @@ repo-root/
 
 ```mermaid
 flowchart LR
-  A[PR / Push / Schedule] --> B[kfm-policy-gate.yml<br/>Conftest/OPA (fail-closed)]
-  A --> C[kfm-ci.yml<br/>lane fanout (reusable workflow)]
-  C --> D[kfm-reusable-ci.yml<br/>guardrails + gates + artifacts]
-  D --> E[Schema validation<br/>(STAC/DCAT/PROV + run artifacts)]
-  D --> F[Determinism checks<br/>(spec_hash/env_snapshot + replay)]
-  D --> G[Quality thresholds<br/>(counts/coverage/index health)]
-  D --> H[Supply chain evidence<br/>(SBOM + cosign attest/verify)]
-  D --> I[Provenance emit<br/>(OpenLineage + PROV-O JSON-LD)]
-  B --> J{All gates green?}
+  A["PR / Push / Schedule"] --> B["kfm-policy-gate.yml (Conftest/OPA, fail-closed)"]
+  A --> C["kfm-ci.yml (lane fanout; reusable workflow)"]
+  C --> D["kfm-reusable-ci.yml (guardrails + gates + artifacts)"]
+  D --> E["Schema validation (STAC/DCAT/PROV + run artifacts)"]
+  D --> F["Determinism checks (spec_hash/env_snapshot + replay)"]
+  D --> G["Quality thresholds (counts/coverage/index health)"]
+  D --> H["Supply chain evidence (SBOM + cosign attest/verify)"]
+  D --> I["Provenance emit (OpenLineage + PROV-O JSON-LD)"]
+  B --> J{"All gates green?"}
   E --> J
   F --> J
   G --> J
   H --> J
   I --> J
-  J -- "No" --> K[Merge blocked]
-  J -- "Yes" --> L[Merge = Promotion]
-  L --> M[GitOps apply (optional lane)<br/>or publish artifacts by digest]
+  J -->|"No"| K["Merge blocked"]
+  J -->|"Yes"| L["Merge = Promotion"]
+  L --> M["GitOps apply (optional lane) or publish artifacts by digest"]
 ```
 
 ---
