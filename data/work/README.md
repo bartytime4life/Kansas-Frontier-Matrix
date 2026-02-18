@@ -1,177 +1,221 @@
-<!--
-KANSAS FRONTIER MATRIX (KFM) — Governed Data Workspace
-File: data/work/README.md
-Last updated: 2026-02-16
--->
+# `data/work/` — Work Zone (Intermediate Pipeline Artifacts)
 
-# 🧪 `data/work/` — Working Zone (Intermediate Outputs)
-
-![Lifecycle](https://img.shields.io/badge/lifecycle-work--zone-blue)
-![Authoritative](https://img.shields.io/badge/authoritative-no-lightgrey)
-![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
-![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-required-success)
+![Zone](https://img.shields.io/badge/zone-work-orange)
+![Served by API](https://img.shields.io/badge/served_by_API-no-lightgrey)
+![Promotion](https://img.shields.io/badge/promotion-fail--closed-critical)
 
 > [!IMPORTANT]
-> **Nothing in `data/work/` is considered authoritative.**
-> This directory is for **intermediate, reproducible artifacts** produced while transforming:
->
-> `data/raw/` ➜ `data/work/` ➜ `data/processed/`
->
-> **Do not serve, publish, export, or cite `data/work/` outputs as “truth.”**
+> **`data/work/` is not a source of truth.**  
+> Anything that will be **served, cited, or published** must be promoted to `data/processed/` through the **Promotion Contract** (policy + validation + receipts).
+
+## Why this directory exists
+
+KFM uses a **raw → work → processed** lifecycle to ensure only validated, reproducible artifacts become “truth” and intermediates do **not** leak into serving.  
+`data/work/` is the **scratch + receipts** zone for reproducible ETL runs.
+
+### Zones at a glance
+
+| Zone | Role | Mutability | May be served/cited? |
+|---|---|---:|---:|
+| `data/raw/` | Immutable source captures (as obtained) | Write-once | ❌ |
+| `data/work/` | Intermediate artifacts + run receipts | Ephemeral | ❌ |
+| `data/processed/` | Publishable, versioned outputs + checksums | Immutable (per version) | ✅ |
+
+> [!NOTE]
+> This README defines **recommended** conventions for `data/work/`.  
+> If a pipeline/dataset family defines a stricter structure, follow that.
 
 ---
 
-## ✅ What belongs here
+## Non‑negotiable rules ✅ / ❌
 
-- Intermediate ETL outputs (cleaned tables, temporary joins, format conversions, clipped subsets, etc.)
-- Validation artifacts and *run receipts* (e.g., `run_record`, `validation_report`, `run_manifest`)
-- QA snapshots (schema diffs, small redacted samples, checksums)
-- Temporary caches needed to complete a run (**safe to delete**)
-
----
-
-## 🚫 What must NOT belong here
-
-- Final “publishable” datasets (those belong in `data/processed/`)
-- Mutable copies of *raw* source snapshots (raw must remain immutable in `data/raw/`)
-- Secrets (API keys, tokens, passwords), private keys, `.env` files
-- Any content that would violate **rights**, **privacy**, or **sensitivity** if exposed  
-  (treat work artifacts as **sensitive-by-default** unless explicitly cleared)
-
-> [!WARNING]
-> **Sensitive-location risk is real.** If work artifacts contain restricted locations (e.g., archaeological points),
-> assume they are **not publishable** without generalization + governance review.
+- ✅ Pipelines **may** write intermediate artifacts here.
+- ✅ Any run that might be promoted **must** emit receipts:
+  - `run_record` (what ran)
+  - `run_manifest` (what went in/out)
+  - `validation_report` (what passed/failed)
+- ✅ Work outputs must be **reproducible** from `data/raw/` + pipeline code + config.
+- ❌ The API/UI (and Focus Mode) must never serve or cite directly from `data/work/`.
+- ❌ No “manual promotion” (copying files into `data/processed/` by hand).
+- 🔐 Do not store secrets (tokens/keys/passwords). Use ephemeral credentials and secret managers.
 
 ---
 
-## 🧭 Canonical truth path (high-level)
-
-```mermaid
-flowchart LR
-  RAW["data/raw/<domain>/ (immutable inputs)"] --> WORK["data/work/<domain>/ (intermediate outputs + receipts)"]
-  WORK --> PROC["data/processed/<domain>/ (publishable outputs)"]
-  PROC --> CATS["data/stac/ • data/catalog/dcat/ • data/prov/ (boundary catalogs)"]
-  CATS --> API["Governed API (policy + redaction)"]
-  API --> UX["UI / Story Nodes / Focus Mode (cite-or-abstain)"]
-```
-
----
-
-## 🗂️ Directory layout
+## Recommended directory layout 🗂️
 
 ```text
 data/work/
-└── <domain>/                       # bounded topic area (e.g., "land-parcels", "newspapers", "boundaries")
-    ├── runs/                        # recommended: one folder per ETL run
-    │   └── <run_id>/
-    │       ├── receipts/            # REQUIRED for promotion (contract evidence)
-    │       ├── stage/               # intermediate outputs (safe to delete/regenerate)
-    │       └── logs/                # structured logs (NO secrets)
-    ├── scratch/                     # local exploration (should remain local; typically not committed)
-    └── README.md                    # optional domain notes (or keep runbook under docs/)
+├── README.md
+├── .gitignore               # recommended: keep work mostly untracked
+├── runs/                    # per-execution run directories (receipts + intermediates)
+│   └── <dataset_family>/    # e.g. "glo_land_patents", "nhgis", "kansas_memory"
+│       └── <run_id>/        # one ETL execution (time-sortable recommended)
+│           ├── run_record.json
+│           ├── run_manifest.json
+│           ├── validation_report.json
+│           ├── artifacts/   # intermediate outputs (NOT publishable)
+│           ├── logs/        # structured logs (jsonl) + human logs (txt)
+│           └── tmp/         # safe-to-delete scratch for the run
+├── staging/                 # optional: unpacked zips, scratch downloads (non-truth)
+└── cache/                   # optional: derived caches (safe to delete)
 ```
 
-> [!NOTE]
-> Subfolder names under `data/work/<domain>/` can vary by pipeline, but these invariants may not:
-> **intermediate + reproducible + non-authoritative + fail-closed on risk**.
+### What goes where
 
----
-
-## 🧾 Receipts and evidence (promotion prerequisites)
-
-Promotion from Work ➜ Processed is a **governed action**. If evidence is missing, promotion must not happen.
-
-**Minimum expected receipts** (names may vary, but the roles don’t):
-- `run_record` — what ran, when, with what versions/config
-- `validation_report` — checks performed + pass/fail results + quality notes
-- `run_manifest` — inputs/outputs + checksums (so reruns are provable)
-
----
-
-## 🧰 Governance rules (non-negotiable behaviors)
-
-| Rule | Why it exists | Practical enforcement |
+| Path | What lives here | Notes |
 |---|---|---|
-| **Work outputs are not truth** | Prevent intermediates becoming “accidental truth” | UI/API must only expose processed + cataloged assets |
-| **Fail closed on sensitivity** | Reduce harm from restricted/unsafe disclosure | Default classification = restricted until cleared |
-| **Receipts required for promotion** | Preserve auditability + reproducibility | Promotion gate denies if receipts are missing |
-| **No secrets in work** | Prevent credential leakage via artifacts/logs | Secret manager usage + redaction + CI checks |
-| **Reproducible from raw** | Enables rebuilds and external verification | Capture params + versions in receipts |
+| `runs/<dataset_family>/<run_id>/` | A single reproducible ETL run | Receipts are required if run is promotable |
+| `.../artifacts/` | Intermediate outputs (normalized tables, joins, reprojections, thumbnails) | Must **not** be served |
+| `.../logs/` | Run logs (structured + human-readable) | Prefer append-only log files |
+| `.../tmp/` | Scratch | Safe to delete |
+| `staging/` | Convenience workspace | Avoid keeping anything long-term |
+| `cache/` | Performance caches | Treat as disposable |
 
 ---
 
-## ✅ Promotion checklist: `data/work/` ➜ `data/processed/`
+## Promotion flow (conceptual) 🔁
 
-> [!TIP]
-> Treat promotion as a **contract**: if you can’t prove it, you can’t publish it.
-
-- [ ] Raw inputs are immutable and referenced (manifests + checksums exist)
-- [ ] Receipts exist (**required**):
-  - [ ] `run_record`
-  - [ ] `validation_report`
-  - [ ] `run_manifest`
-- [ ] Outputs written to `data/processed/<domain>/` in canonical formats
-- [ ] Boundary catalogs generated + cross-linked (publication boundary artifacts):
-  - [ ] STAC items/collections (`data/stac/...`)
-  - [ ] DCAT dataset record (`data/catalog/dcat/...`)
-  - [ ] PROV lineage bundle (`data/prov/...`)
-- [ ] Rights + attribution metadata captured and validated
-- [ ] Sensitivity tags applied; public outputs generalized/redacted as required
-- [ ] CI gates pass (schema validation + policy checks)
-
----
-
-## 🧹 Cleanup and retention
-
-- `data/work/` may be deleted and regenerated from `data/raw/`.
-- Keep only what is needed for:
-  - completing a run,
-  - debugging a run,
-  - proving promotion evidence (receipts + manifests).
-
-> [!NOTE]
-> If you retain anything long-term in `data/work/`, it should be **small, non-sensitive, and auditable** (receipts/manifests).
-> Publishable assets still belong in `data/processed/`.
-
----
-
-## 🧾 Git hygiene (recommended)
-
-Most `data/work/**` should **not** be committed.
-
-If you must commit artifacts here, prefer:
-- receipts (`*.json`, `*.jsonld`, `*.ttl`) that are **small** and **non-sensitive**
-- checksums/manifests
-- tiny QA samples (**redacted/synthetic only**)
-
-Example `.gitignore` snippet:
-
-```gitignore
-# Intermediate / bulky / local
-data/work/**/stage/
-data/work/**/scratch/
-data/work/**/tmp/
-data/work/**/logs/*.log
-data/work/**/outputs/
-
-# Keep receipts (subject to review gates)
-!data/work/**/receipts/**
+```mermaid
+flowchart LR
+  RAW["data/raw/\nImmutable inputs + checksums"] -->|ETL normalize + validate| WORK["data/work/\nIntermediates + run receipts"] -->|Promotion Contract\n(fail closed)| PROC["data/processed/\nPublishable artifacts + checksums + catalogs"]
 ```
 
----
-
-## 🔎 Verification steps (minimum viable)
-
-1. Pick **one pilot dataset** and run end-to-end: `raw ➜ work ➜ processed`.
-2. Confirm:
-   - deleting `data/work/<domain>/runs/<run_id>/stage/` and re-running reproduces outputs,
-   - promotion fails if **any receipt** is missing,
-   - no UI/API paths reference `data/work/` directly.
+> [!IMPORTANT]
+> **Promotion is a gate, not a file move.**  
+> A run can only be promoted when receipts exist and validation/policy checks pass.
 
 ---
 
-## 📚 Glossary
+## Receipt contract 📜
 
-- **Work zone**: Intermediate artifacts produced during ETL; not served to users.
-- **Promotion Contract**: Fail-closed gate that blocks publication unless required evidence exists.
-- **Receipts**: Machine-readable run records (inputs, outputs, checks, versions) used for audit/provenance.
+Receipts are the minimum evidence required for promotion gating and later auditability.
+
+### Required receipts
+
+| Receipt | Filename (recommended) | Purpose | Minimum contents (suggested) |
+|---|---|---|---|
+| Run record | `run_record.json` | “What ran, when, by whom, with what code” | `run_id`, `dataset_family`, `pipeline_id`, `git_commit`, `started_at`, `ended_at`, `status`, `runner` |
+| Run manifest | `run_manifest.json` | “Exactly what inputs and outputs were used/produced” | `spec_hash`, input digests, output digests, versions, parameters |
+| Validation report | `validation_report.json` | “What gates were checked and what happened” | gate list, pass/fail, metrics, drift notes, policy label outcomes |
+
+<details>
+<summary>📄 Minimal JSON skeletons (copy/paste)</summary>
+
+```json
+// run_record.json
+{
+  "run_id": "01J...ULID",
+  "dataset_family": "example_dataset",
+  "pipeline_id": "pipelines/example_dataset",
+  "git_commit": "abcdef123456",
+  "started_at": "2026-02-18T00:00:00Z",
+  "ended_at": "2026-02-18T00:10:00Z",
+  "status": "success",
+  "runner": {
+    "type": "ci|local|cluster",
+    "host": "hostname",
+    "user": "operator_or_service_account"
+  }
+}
+```
+
+```json
+// run_manifest.json
+{
+  "run_id": "01J...ULID",
+  "spec_hash": "sha256:...",
+  "inputs": [
+    {"path": "data/raw/<...>", "digest": "sha256:...", "role": "primary"}
+  ],
+  "outputs": [
+    {"path": "data/work/runs/<...>/artifacts/<...>", "digest": "sha256:...", "role": "intermediate"}
+  ],
+  "params": {
+    "crs_target": "EPSG:4326",
+    "join_keys": ["geoid"]
+  }
+}
+```
+
+```json
+// validation_report.json
+{
+  "run_id": "01J...ULID",
+  "overall_status": "pass|fail|pass_with_waiver",
+  "gates": [
+    {"name": "schema", "status": "pass", "details": {}},
+    {"name": "geometry_validity", "status": "pass", "details": {}},
+    {"name": "license", "status": "pass", "details": {"license": "public_domain"}}
+  ],
+  "policy": {
+    "labels_emitted": ["public"],
+    "redactions_applied": false
+  }
+}
+```
+
+</details>
+
+> [!NOTE]
+> The exact receipt schemas may evolve; keep them **stable and machine-readable**, and version them if fields change.
+
+---
+
+## Promotion checklist ✅
+
+Use this as the minimum bar before anything from a run is considered promotable:
+
+- [ ] Receipts exist: `run_record`, `run_manifest`, `validation_report`
+- [ ] `validation_report.overall_status` is `pass` (or has an approved waiver record)
+- [ ] Inputs are traceable to `data/raw/` and include **checksums**
+- [ ] Outputs include **checksums** and have stable paths/identifiers
+- [ ] License + attribution are known and recorded (no “unknown license”)
+- [ ] Provenance chain is complete enough to reconstruct the run
+- [ ] Any sensitive fields/locations are labeled and redacted per policy
+
+---
+
+## Cleanup & retention 🧹
+
+`data/work/` is allowed to be **ephemeral**.
+
+Recommended practice:
+- Keep only the last *N* runs per dataset family locally (or keep only runs referenced by open PRs).
+- If a run is promoted, retain receipts and provenance artifacts in the governed locations (e.g., catalogs / PROV bundles) as defined by the promotion workflow.
+
+> [!WARNING]
+> Do not “clean up” a run that is still needed to reproduce a pending promotion or investigation.
+
+---
+
+## Security & sensitivity 🔐
+
+This directory often contains:
+- unpacked upstream archives
+- intermediate joins
+- logs that might include identifiers
+- derived geometry at higher precision than what is publishable
+
+Rules of thumb:
+- Treat `data/work/` as **restricted-by-default** unless you know otherwise.
+- Apply redaction as a first-class transformation (not an afterthought).
+- Prefer short-lived credentials for any external fetch operations.
+- Keep logs structured and avoid dumping raw secrets/headers/payloads.
+
+---
+
+## Related KFM areas
+
+- `data/raw/` — immutable inputs
+- `data/processed/` — publishable outputs served by the platform
+- `data/stac/`, `data/catalog/dcat/`, `data/prov/` — catalog + provenance outputs (if present)
+- `src/pipelines/` — ETL code that should write intermediates here and promote via gating
+
+---
+
+## Questions / changes
+
+If you need to change the structure of `data/work/` for a dataset family:
+1. Update the dataset’s pipeline contract/docs first.
+2. Keep receipts stable (or version them).
+3. Update CI gates and promotion logic accordingly.
