@@ -255,4 +255,3 @@ Use this as the Definition of Done checklist for adding/updating manifests here:
 - KFM concept: Search + vector index supports retrieval across documents/narratives and semantic similarity for evidence gathering (design notes).
 - KFM governance: publish step triggers index refresh only after validation and catalog/provenance updates; policy labels include `public | restricted | sensitive-location`.
 - KFM trust membrane: UI never touches data stores (including search) directly; access is mediated through governed APIs/adapters.
-
