@@ -242,4 +242,3 @@ curl -sS http://localhost:8181/health | jq
 - **GitOps drift:** ensure overlays pin image and config; avoid mutable tags.
 
 </details>
-
