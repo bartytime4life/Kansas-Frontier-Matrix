@@ -429,32 +429,33 @@ All runbooks in this folder should be:
 > This is a suggested structure. Add files as you operationalize each area.
 
 ```text
-docs/operations/
-  README.md
-
-  runbooks/
-    incident-response.md
-    backup-restore.md
-    disaster-recovery.md
-    data-pipeline-failures.md
-    policy-denials-and-redaction.md
-    api-outage-and-rollback.md
-
-  checklists/
-    change-management.md
-    release-promotion.md
-    access-requests.md
-    restore-drills.md
-    governance-review.md
-
-  standards/
-    slo-and-monitoring.md
-    logging-and-audit.md
-    secrets-management.md
-
-  diagrams/
-    ops-architecture.mmd
-    data-promotion-flow.mmd
+docs/operations/                                  # Operations docs: runbooks + checklists + ops standards + diagrams
+├─ README.md                                       # Index + scope + how ops docs map to oncall/CI/promotion gates
+│
+├─ runbooks/                                       # Step-by-step procedures for incidents and recovery
+│  ├─ incident-response.md                         # Triage flow, severity, comms, escalation, postmortems
+│  ├─ backup-restore.md                            # Backup/restore process + verification steps
+│  ├─ disaster-recovery.md                         # DR strategy, RTO/RPO targets, regional failover steps
+│  ├─ data-pipeline-failures.md                    # Pipeline failure taxonomy + diagnostics + safe rerun guidance
+│  ├─ policy-denials-and-redaction.md              # How to interpret denies/redactions + debugging workflow
+│  └─ api-outage-and-rollback.md                   # API outage response + rollback procedure + health checks
+│
+├─ checklists/                                     # Short, repeatable checklists for high-risk operations
+│  ├─ change-management.md                         # Pre-change checklist (approvals, impact, roll-back plan)
+│  ├─ release-promotion.md                         # Release/promotion checklist (receipts, catalogs, policy, evidence)
+│  ├─ access-requests.md                           # Access request workflow (least privilege + audit)
+│  ├─ restore-drills.md                            # Restore drill checklist + proof-of-restore evidence
+│  ├─ governance-review.md                         # Governance review checklist (policy/contracts/schema changes)
+│  └─ restore-drills.md                            # (Duplicate name) consider renaming one if both exist
+│
+├─ standards/                                      # Ops standards (enforced expectations, not suggestions)
+│  ├─ slo-and-monitoring.md                        # SLOs/SLIs, alert thresholds, dashboards, paging policy
+│  ├─ logging-and-audit.md                         # Logging fields, correlation IDs, audit events, retention rules
+│  └─ secrets-management.md                        # Secret handling patterns (no plaintext, rotation, break-glass)
+│
+└─ diagrams/                                       # Operational diagrams (include source + exported images)
+   ├─ ops-architecture.mmd                         # Ops architecture diagram (Mermaid source)
+   └─ data-promotion-flow.mmd                      # Promotion flow diagram (Mermaid source)
 ```
 
 ---
