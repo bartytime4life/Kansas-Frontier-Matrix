@@ -168,9 +168,9 @@ Stage should enforce the trust membrane at the network layer:
 
 ```mermaid
 flowchart LR
-  UI["UI / Clients"] -->|"HTTPS"| API["Governed API Gateway"]
-  API -->|"SQL (internal)"| PG["PostGIS"]
-  UI -. "no direct DB access" .-> PG
+  UI[UI / Clients] -->|HTTPS| API[Governed API Gateway]
+  API -->|SQL (internal)| PG[(PostGIS)]
+  UI -. no direct DB access .-> PG
 ```
 
 ---
@@ -266,4 +266,3 @@ kubectl -n <namespace> logs <pod> -c <container>
 - Whether a `NetworkPolicy` baseline exists in `base/`.
 
 If any of these assumptions are wrong, update this README to match reality (don’t let docs drift).
-
