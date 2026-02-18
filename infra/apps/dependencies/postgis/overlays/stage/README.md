@@ -168,9 +168,9 @@ Stage should enforce the trust membrane at the network layer:
 
 ```mermaid
 flowchart LR
-  UI[UI / Clients] -->|HTTPS| API[Governed API Gateway]
-  API -->|SQL (internal)| PG[(PostGIS)]
-  UI -. no direct DB access .-> PG
+  UI["UI / Clients"] -->|"HTTPS"| API["Governed API Gateway"]
+  API -->|"SQL (internal)"| PG["PostGIS"]
+  UI -. "no direct DB access" .-> PG
 ```
 
 ---
