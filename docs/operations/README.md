@@ -1,317 +1,488 @@
-# KFM Operations 🛠️
+<!--
+File: docs/operations/README.md
+Purpose: Operational entrypoint + index for KFM platform runbooks, checklists, and day-2 operations.
+Status: Draft (bootstrap doc)
+-->
 
-![status](https://img.shields.io/badge/status-governed-blue)
-![policy](https://img.shields.io/badge/policy-fail--closed-critical)
-![architecture](https://img.shields.io/badge/architecture-trust--membrane-important)
-![focus-mode](https://img.shields.io/badge/Focus%20Mode-cite%20or%20abstain-success)
+# 🧭 KFM Operations
 
-This directory is the **operational control plane** for running Kansas Frontier Matrix (KFM) environments (dev/staging/prod) **without breaking governance guarantees**.
+This folder is the **operations spine** for the Kansas Frontier Matrix (KFM): how we deploy, observe, secure, back up, and recover the platform **without violating governance** or the **trust membrane**.
 
-KFM is *governance-first*: production behavior is a function of **validated processed artifacts + catalogs + policy-as-code**, not ad-hoc DB edits or manual patching.
-
----
-
-## Contents
-
-- [System at a glance](#system-at-a-glance)
-- [Operational invariants](#operational-invariants)
-- [Production readiness definition](#production-readiness-definition)
-- [Start/stop and health checks](#startstop-and-health-checks)
-- [Backups, restore, and disaster recovery](#backups-restore-and-disaster-recovery)
-- [Incident response](#incident-response)
-- [Observability and SLOs](#observability-and-slos)
-- [Backfill strategy](#backfill-strategy)
-- [CI/CD gates as operational controls](#cicd-gates-as-operational-controls)
-- [Governance review triggers](#governance-review-triggers)
-- [Templates](#templates)
+> [!IMPORTANT]
+> **KFM Operations is governed documentation.**
+> If an operational step can change system behavior, public narratives, datasets/catalogs, or Focus Mode responses:
+> - Treat it like a production change (review + CI gates + auditability).
+> - Prefer evidence-backed procedures and “fail-closed” defaults.
 
 ---
 
-## System at a glance
+## Document metadata
+
+| Field | Value |
+|---|---|
+| Doc | `docs/operations/README.md` |
+| Status | Draft / bootstrap |
+| Audience | Platform/SRE, Data Eng, Security, Governance stewards |
+| Applies to | local • dev • stage • prod |
+| Last reviewed | 2026-02-18 |
+| Source baseline | KFM Masterpiece Vision (Generated 2026-02-16) + KFM Data Source Integration Blueprint v1.0 (2026-02-12) |
+
+---
+
+## What lives here
+
+- **Runbooks** (incident response, backup/restore, DR, pipeline failures, policy denials)
+- **Checklists** (release promotion, governance reviews, restore drills, access changes)
+- **Operational standards** (SLOs, observability, access control, change management)
+
+---
+
+## Non-negotiables
+
+> [!NOTE]
+> These are operational invariants. If any of these are violated, treat as a **Sev-0 governance breach**.
+
+1. **Trust membrane is enforced**
+   - Frontend/external clients do **not** access databases directly.
+   - All access is mediated by governed APIs + policy boundary.
+2. **Fail-closed governance**
+   - If policy/label/license/provenance is missing or invalid → deny access / block promotion.
+3. **Provenance is not optional**
+   - Every promoted artifact has deterministic checksums + provenance chain + catalog linkage.
+4. **GitOps for change control**
+   - Desired state lives in Git; changes flow through PR review; drift is detected and corrected.
+5. **Sensitive data handling is operational work**
+   - Redaction/generalization + access controls are part of incident response and day-2 operations.
+
+---
+
+## Ops view: how the platform “moves”
 
 ```mermaid
 flowchart LR
-  U["Users"] --> UI["Web UI"]
-  UI -->|"HTTPS"| API["Governed API Gateway"]
-  API --> OPA["Policy Engine (OPA)"]
-  API --> STORES["Runtime Stores (PostGIS / Graph / Search)"]
-  API --> OBJ["Artifact Storage (Raw / Work / Processed + Catalogs)"]
-  API --> AUDIT["Audit Ledger / Provenance Logs"]
+  subgraph ChangeControl["Change Control (GitOps + CI)"]
+    PR["Pull Request (policy/config/app)"] --> CI["CI gates: tests + policy checks"]
+    CI --> Merge["Merge to main (desired state)"]
+    Merge --> Reconcile["GitOps reconcile (continuous)"]
+  end
 
-  PIPE["Pipeline Workers (ingest / validate / promote)"] --> OBJ
-  PIPE --> STORES
+  subgraph DataPlane["Data Plane (governed ingestion)"]
+    Sources["External data sources"] --> Discover["Discover/Acquire"]
+    Discover --> Raw["Raw storage (immutable)"]
+    Raw --> Validate["Validate (schema/geo/time/license/policy)"]
+    Validate --> Work["Work (transform/enrich)"]
+    Work --> Processed["Processed (publish-ready)"]
+    Processed --> Catalogs["Catalogs: DCAT/STAC/PROV"]
+  end
 
-  OPA --> API
+  subgraph ServePlane["Serve Plane (governed access)"]
+    Catalogs --> API["Governed API gateway"]
+    API --> UI["UI / Focus Mode"]
+    API --> Clients["External clients"]
+  end
+
+  Reconcile --> Platform["Cluster runtime (apps + infra)"]
+  Platform --> API
+  Platform --> DataPlane
 ```
 
-**Trust membrane intent:** UI/external clients never touch databases directly; all read/write paths go through the governed API boundary.
-
 ---
 
-## Operational invariants
+## Environments
 
-> [!IMPORTANT]
-> These are **non-negotiable**. If an operational action violates an invariant, it is not “ops”—it is a governance incident.
+> [!WARNING]
+> Environment naming and cluster topology vary by deployment.
+> If your repo uses different names (e.g., `dev`, `stage`, `prod` namespaces/projects), update this table.
 
-### 1) Trust membrane is always enforced
-- All reads/writes crossing the boundary must go through:
-  - authentication/authorization
-  - policy evaluation (default deny)
-  - query shaping / redaction
-  - audit/provenance logging
-
-### 2) Fail-closed behavior
-- If policy, catalogs, or evidence are missing/invalid → **deny** or **abstain** (never “best guess” in production outputs).
-- Focus Mode must be **cite-or-abstain** and must emit an **audit reference** for every response.
-
-### 3) Raw/work artifacts are never served to end users
-- **Raw**: immutable inputs and original copies.
-- **Work**: intermediate artifacts; may be overwritten; not public.
-- **Processed**: promoted artifacts and final catalogs; eligible for serving.
-
-### 4) Runtime stores are rebuildable caches (artifacts are the source of truth)
-- Backups must treat the object store (processed artifacts + catalogs + audit checkpoints) as **authoritative**.
-- PostGIS/Graph/Search may be restored, but must also be **rebuildable from processed**.
-
-### 5) Promotion is gated
-Promotion to **processed** is only allowed when:
-- checksums exist and match,
-- schemas validate,
-- policy labels exist and pass,
-- catalog links resolve,
-- contract/e2e tests pass,
-- a backfill strategy exists (when relevant).
-
-### 6) Emergency deny switch exists
-- Operations must include a “big red button” to disable public endpoints / Focus Mode *without deploying code*.
-
----
-
-## Production readiness definition
-
-A KFM environment is “production-ready” only when the following are true:
-
-- [ ] **Health endpoints** exist and are wired into readiness/liveness checks.
-- [ ] **Smoke test** is automated and documented.
-- [ ] **Backups** are scheduled, retention is defined, and restore is tested.
-- [ ] **Incident playbooks** exist for data leak, AI unsafe output, and corrupted artifacts.
-- [ ] **CI merge gate** blocks schema/policy/catalog violations.
-- [ ] **CI deploy gate** runs environment smoke tests + migration checks + backup verification.
-- [ ] **Evidence resolution** works end-to-end (citations resolve; Focus Mode abstains without evidence).
-- [ ] **Emergency deny switch** is tested and documented.
-
----
-
-## Start/stop and health checks
-
-### Start order (recommended)
-1. Bring up **web + API + policy engine**
-2. Bring up **stores** (PostGIS / graph / search)
-3. Bring up **pipeline workers**
-
-> [!NOTE]
-> Readiness checks must prevent “green” status until store connectivity and policy load checks pass.
-
-### Required health checks
-Minimum expectations (exact endpoints may vary by implementation):
-- API: `GET /healthz`
-- Readiness verifies:
-  - store connectivity
-  - policy bundle loaded
-  - critical catalogs present (processed/public)
-
-### Smoke test (minimum)
-Run after every deploy and after any migration:
-- Load home map
-- Toggle a layer
-- Open provenance panel
-- Run one Focus Mode query (verify citations or abstention)
-
----
-
-## Backups, restore, and disaster recovery
-
-### Backup layers (required)
-| Layer | What | Why | Minimum practice |
+| Environment | Purpose | Change policy | Data policy |
 |---|---|---|---|
-| **Artifact backups** (authoritative) | processed artifacts + catalogs + audit checkpoints | Source of truth | object storage snapshots/versioning + retention + checksum integrity |
-| **Runtime store backups** (rebuildable caches) | PostGIS + graph + search indexes | Faster recovery | backups + restore drills; confirm rebuild-from-processed works |
-
-### Minimum schedules (baseline)
-- PostGIS backups: **daily**
-- Retention: **30 days**
-- Restore verification: **quarterly**
-- Object storage: versioning on; immutable retention for catalogs + audit checkpoints
-- Graph backups aligned with “rebuild from canonical catalogs” strategy
-- After restore: verify audit ledger checkpoints / hash chain (if used)
-
-### Restore drill expectations
-- A restore drill is not “done” until:
-  - the environment serves tiles from processed artifacts
-  - citations resolve
-  - Focus Mode produces either cited answers or abstains
-  - audit ledger integrity checks pass (if applicable)
+| `local` | Developer stack (containers) | Direct local changes allowed | Use synthetic/safe samples (avoid sensitive) |
+| `dev` | Integration + feature testing | PR required | Limited datasets; redaction enforced |
+| `stage` | Release candidate validation | PR + approvals | Prod-like policy checks; restore drills |
+| `prod` | Public/mission operations | PR + approvals + change window | Strictest fail-closed governance |
 
 ---
 
-## Incident response
+## Local operations quickstart (developer + operator)
+
+This is the **minimum** to validate the system works end-to-end on a laptop.
+
+### Start / stop
+
+```bash
+# start stack
+docker-compose up --build
+
+# stop stack
+docker-compose down
+```
+
+### Default local ports (documented baseline)
+
+| Component | Default |
+|---|---|
+| PostGIS | `5432` |
+| Neo4j Browser | `7474` |
+| Neo4j Bolt | `7687` |
+| Backend API (FastAPI) | `8000` |
+| Frontend UI | `3000` |
+
+> [!TIP]
+> If you see port conflicts, stop the other process or change the `.env` / compose ports and document the override here.
+
+### Local “health checks”
+
+- API docs (Swagger): `http://localhost:8000/docs`
+- Backend health endpoint: **(not confirmed in repo — add a `/healthz` endpoint if missing)**
+- UI loads: `http://localhost:3000`
+
+---
+
+## Deployment model (GitOps)
+
+KFM operations prefer **GitOps** for deployments and configuration to make every change:
+- reviewable (PR),
+- reproducible (desired state),
+- auditable (history),
+- auto-healing (drift correction).
+
+### Practical rules
+
+- **Promote manifests, not code**
+  - Code is built into immutable images; deploy by updating the desired-state manifests.
+- **Avoid “floating tags” in production**
+  - Prefer immutable digests or versioned tags that are only produced by CI.
+- **One source of truth**
+  - The cluster runtime should reconcile against Git, not ad-hoc `kubectl apply` changes.
+
+### Suggested GitOps repo layout (example)
+
+> This is an *example* layout; align to your actual repo structure.
+
+```text
+gitops/
+  bootstrap/              # GitOps controller install + base config
+  components/             # shared building blocks (networking, operators, base RBAC)
+  core/                   # platform core (ingress, certs, observability)
+  apps/                   # KFM apps (api, ui, pipelines) by env overlays
+    kfm/
+      base/
+      overlays/
+        dev/
+        stage/
+        prod/
+```
+
+### Change flow (operator view)
+
+1. PR opened → CI validates (tests + policy checks + schema checks).
+2. Merge updates **desired state**.
+3. GitOps controller reconciles the cluster.
+4. Post-deploy verification gates run (smoke tests + contract tests + dashboards).
+
+---
+
+## Secrets management
 
 > [!IMPORTANT]
-> Incidents are governed artifacts. Preserve evidence (logs + audit ledger + relevant catalogs) before making destructive changes.
+> **Never commit plaintext secrets** to Git.
 
-### Severity rubric (recommended)
-| Severity | Example | Target action |
-|---|---|---|
-| SEV-1 | Sensitive data exposure; policy bypass | Immediate deny switch, rotate credentials, preserve evidence |
-| SEV-2 | Corrupted processed artifacts; widespread 5xx | Rollback to last-good processed, rebuild indexes |
-| SEV-3 | Partial degradation; isolated dataset issues | Triage, patch pipeline, schedule backfill |
+Pick one approach and standardize:
 
-### Playbooks (minimum)
+- **Sealed secrets**: encrypted secrets are stored in Git; controller decrypts in-cluster (requires key management + rotation).
+- **External secrets**: secrets remain in an external secret store (Vault/cloud KMS); cluster injects into runtime secrets.
 
-#### A) Data leak / sensitive location exposure
-1. **Deny via policy toggle** (emergency switch if needed)
-2. Rotate credentials / keys (if relevant)
-3. Withdraw affected artifacts (unpublish / revoke processed artifacts)
-4. Publish redacted derivative (new processed version)
-5. Add regression tests: sensitivity propagation + redaction enforcement
-
-#### B) AI unsafe output (Focus Mode)
-1. Disable `/ai/query` via policy
-2. Preserve audit logs + prompt/policy versions
-3. Fix policy/validator/prompt
-4. Add regression test that reproduces the failure mode
-5. Re-enable only after merge + deploy gate passes
-
-#### C) Corrupted processed artifacts
-1. Verify checksums
-2. Roll back dataset version (processed)
-3. Rebuild indexes (graph/search)
-4. Re-run validation gates and re-publish catalogs
-
-### Emergency deny switch
-Maintain and periodically test an emergency switch that can disable:
-- public endpoints
-- Focus Mode
-without deploying code.
+Operational standards:
+- Document **rotation cadence** and who can rotate.
+- Enforce **least privilege** for secret access.
+- Audit secret reads in the secret manager (where supported).
 
 ---
 
 ## Observability and SLOs
 
-> [!NOTE]
-> Targets are environment-dependent. Define SLO targets in a separate governed doc once baseline telemetry exists.
+Operational truth requires:
+- **metrics** (latency, error rates, resource saturation),
+- **logs** (app logs, audit logs, pipeline logs),
+- **traces** (request flows across services),
+- **governance events** (policy decisions + provenance bundles).
 
-### Recommended SLIs (starter set)
-| Area | SLI | Why it matters |
-|---|---|---|
-| Availability | API success rate; UI load success | User access to core system |
-| Latency | p95/p99 for key endpoints | UX + reliability |
-| Governance | policy deny counts; promotion failures by reason | Detect bypass attempts + regressions |
-| Evidence UX | citation resolve rate; evidence endpoint latency | “evidence-first” must be measurable |
-| Data freshness | time since last successful pipeline run per dataset | Detect staleness |
-| Integrity | checksum mismatch counts; audit chain verification failures | Detect corruption/tampering |
+### Minimum dashboards (starter set)
 
-### Alerting principles
-- Alert on **user-visible symptoms** and **governance violations**.
-- Prefer actionable alerts: “what broke + where to look + what to do first.”
-
----
-
-## Backfill strategy
-
-Backfills are not optional glue—they are governed workflows.
-
-### Backfill plan template (copy/paste)
-| Field | Value |
+| Area | Key signals |
 |---|---|
-| Dataset ID | |
-| Backfill range (time) | |
-| Backfill range (space) | |
-| Expected runtime | |
-| Resource profile | |
-| Throttling strategy | |
-| Validation gates | |
-| Rollback plan | |
-| Approvals required (if sensitive) | |
+| API gateway | p50/p95 latency, error rate, auth failures, rate-limit hits |
+| Ingestion pipeline | job success/failure, retry rate, queue depth, run duration |
+| Catalog freshness | last successful publish per dataset, lag vs schedule |
+| Datastores | Postgres connections/slow queries; Neo4j memory/page-cache pressure |
+| Governance | policy denies by rule, redaction counts, sensitive access requests |
 
-### Backfill acceptance criteria
-- Backfill produces processed artifacts with:
-  - checksums
-  - valid catalogs
-  - passing schema + policy checks
-- Rebuild-from-processed remains possible after the backfill
+### SLO placeholders (fill in with real targets)
 
----
+> [!NOTE]
+> Start with “monitoring objectives” before committing to public SLOs.
 
-## CI/CD gates as operational controls
-
-CI is part of operations. It is the *prevention layer*.
-
-### Required CI checks (baseline)
-- Schema validation for DCAT/STAC/PROV artifacts (pinned versions)
-- Policy tests (OPA/Rego), including:
-  - default deny behavior
-  - sensitivity propagation
-- Golden tests for `spec_hash` stability (canonical spec → stable hash)
-- End-to-end tests verifying:
-  - tiles served correspond to processed artifacts
-  - citations resolve via evidence endpoints
-  - Focus Mode refuses/abstains without citations
-
-### Two-gate model
-- **Merge gate:** correctness (schemas, policies, tests)
-- **Deploy gate:** environment smoke tests + migration checks + backup verification
+| SLO | Suggested metric | Target | Notes |
+|---|---|---:|---|
+| API availability | successful requests / total | TBD | define error budget |
+| API latency | p95 latency | TBD | split read vs heavy queries |
+| Data freshness | dataset publish lag | TBD | per dataset cadence |
+| Pipeline reliability | successful runs / total | TBD | include retries policy |
 
 ---
 
-## Governance review triggers
+## Backup, restore, and disaster recovery
 
-Escalate to governance review when a change:
-- alters policy-as-code (Rego), especially default allow/deny logic
-- changes sensitivity classification or redaction rules
-- changes what is considered “public/processed”
-- reduces backup retention or removes restore verification
-- modifies evidence/citation resolution behavior
-- changes audit ledger structure or retention
+Backups are only real if **restore works**.  
+Every environment ≥ `stage` should run **restore drills**.
+
+### PostGIS (logical + physical)
+
+- **Logical backups**: `pg_dump` + `pg_restore` for consistent exports while in use.
+- **Physical backups / replication bootstrapping**: `pg_basebackup` supports base backups and ties into PITR/standby creation.
+
+> [!IMPORTANT]
+> Keep backup artifacts encrypted at rest, with access logged and least-privileged.
+
+### Neo4j (deployment-dependent)
+
+Your approach depends on deployment mode:
+- Docker/self-managed: ensure persistent volumes are backed up; document downtime tolerance.
+- Kubernetes: prefer vendor-recommended Helm/ops patterns; document backup strategy and restore steps.
+- Managed (Aura): understand tier-based retention + export/restore workflows.
+
+### Backup strategy template (copy/paste)
+
+```text
+System: ______________________________
+Data classes: [Public | Sensitive | Highly Sensitive]
+RPO: ________    RTO: ________
+Scope:
+  - PostGIS: [logical | physical | both]
+  - Neo4j:   [online backup | snapshot | managed export]
+  - Object storage: [raw/work/processed + catalogs + provenance]
+Schedule:
+  - Frequency: ________
+  - Retention: ________
+Storage:
+  - Location: ________
+  - Encryption: ________
+Restore drills:
+  - Frequency: ________
+  - Owner: ________
+Success criteria:
+  - App boots, health checks pass
+  - Sample queries match expected results
+  - Provenance/catalog links remain valid
+```
 
 ---
 
-## Templates
+## Incident response
+
+### Severity model (starter)
+
+| Severity | Meaning | Example triggers |
+|---|---|---|
+| Sev-0 | Trust membrane/governance breach | direct DB exposure; policy bypass; sensitive leak |
+| Sev-1 | Production outage / major degradation | API down; ingest blocked for priority datasets |
+| Sev-2 | Partial outage / data quality regression | one dataset publish failing; search stale |
+| Sev-3 | Minor bug / non-urgent | docs issue; cosmetic UI regression |
+
+### Minimum incident steps
+
+1. **Detect / confirm**
+2. **Contain**
+   - Prefer reversible mitigations (feature flags, rollback, disable connector)
+3. **Mitigate**
+4. **Recover**
+5. **Validate**
+   - verify policy enforcement + provenance correctness post-recovery
+6. **Post-incident review**
+   - include governance steward if data/policy involved
+
+> [!WARNING]
+> Any incident involving **sensitive data** requires governance involvement and a written record (what was exposed, for how long, who accessed, what was remediated).
+
+---
+
+## Data pipeline operations (Raw → Work → Processed)
+
+Operationally, ingestion should follow a stable workflow:
+
+- Discover → Acquire → Normalize → Validate → Enrich → Publish
+- Promotion to **Processed** requires validation gates, provenance completeness, and catalog updates.
+
+### Validation gates (minimum)
+
+- schema validation
+- geometry validity + bounds checks (where applicable)
+- temporal consistency checks
+- license + attribution captured and policy restrictions encoded
+- provenance completeness + deterministic checksums
+
+### Backfill + reprocessing
+
+Every dataset integration should include:
+- a backfill plan (historical ranges),
+- expected runtime/compute,
+- idempotency strategy,
+- regression metrics (counts, null rates, min/max, key cardinalities).
+
+---
+
+## Governance, sensitivity, and redaction
+
+Some data is sensitive by nature:
+- private ownership
+- precise archaeological site locations
+- certain health/public-safety indicators
+
+Operational handling:
+- policy labels at dataset/record/field level
+- derivative datasets with explicit redaction provenance
+- fail-closed policy checks
+
+> [!IMPORTANT]
+> If an operator is asked to “just publish it,” the default answer is **no** unless policy labels + redaction provenance + approval are in place.
+
+---
+
+## Security operations (day-2)
+
+### Access control (principles)
+
+- Least privilege everywhere (cluster RBAC, secret access, DB roles)
+- Separate duties where possible (e.g., stewards approve policy changes)
+- Audit:
+  - deployment changes (Git history)
+  - policy decisions (OPA logs / policy engine logs)
+  - data promotions (provenance + catalogs)
+
+### Database access (baseline stance)
+
+- Only backend services should hold DB credentials.
+- Human direct DB access should be time-bound (“breakglass”), logged, and approved.
+- Prefer read-only roles for routine inspection.
+
+---
+
+## Runbook writing standard (LLM-friendly + human-friendly)
+
+All runbooks in this folder should be:
+- stepwise checklists,
+- deterministic commands,
+- explicit “if/then” branches,
+- include verification and rollback,
+- include governance checkpoints.
 
 <details>
-<summary><strong>Incident report template</strong></summary>
+<summary><strong>Runbook template (copy/paste)</strong></summary>
 
-### Incident report (template)
+```markdown
+# Runbook: <short name>
 
-- **Incident ID:**  
-- **Date/time (UTC):**  
-- **Severity:**  
-- **Summary:**  
-- **User impact:**  
-- **Detection:** (alert / user report / audit anomaly)  
-- **Timeline:**  
-- **Root cause:**  
-- **Mitigations applied:**  
-- **Evidence preserved:** (logs, audit refs, catalog versions)  
-- **Corrective actions:**  
-- **Preventive actions:** (tests, policy changes, runbook updates)  
+## Context
+- What this runbook covers
+- Preconditions / scope
+- Safety notes (policy, sensitive data)
+
+## Symptoms
+- What alerts look like
+- What users observe
+
+## Impact
+- What breaks
+- Severity guidance
+
+## Triage checklist
+- [ ] Confirm issue
+- [ ] Determine blast radius
+- [ ] Check recent deployments (Git SHA / release)
+- [ ] Check data promotions (latest DatasetVersion)
+
+## Mitigation steps
+1. ...
+2. ...
+
+## Verification
+- [ ] Health checks
+- [ ] Sample queries (known-good)
+- [ ] Provenance bundle validates
+- [ ] Policy enforcement validated (deny test)
+
+## Rollback
+- Steps to revert safely
+
+## Post-incident actions
+- [ ] Write incident record
+- [ ] Create follow-up tickets
+- [ ] Update this runbook if gaps found
+```
 
 </details>
 
-<details>
-<summary><strong>Restore drill report template</strong></summary>
+---
 
-### Restore drill report (template)
+## Proposed directory layout
 
-- **Drill date:**  
-- **Scenario:** (artifact restore / runtime store restore / full)  
-- **RTO observed:**  
-- **RPO observed:**  
-- **Steps executed:**  
-- **Smoke test results:**  
-- **Rebuild-from-processed validated:** (yes/no + notes)  
-- **Audit integrity validated:** (yes/no + notes)  
-- **Follow-ups:**  
+> This is a suggested structure. Add files as you operationalize each area.
 
-</details>
+```text
+docs/operations/
+  README.md
 
+  runbooks/
+    incident-response.md
+    backup-restore.md
+    disaster-recovery.md
+    data-pipeline-failures.md
+    policy-denials-and-redaction.md
+    api-outage-and-rollback.md
+
+  checklists/
+    change-management.md
+    release-promotion.md
+    access-requests.md
+    restore-drills.md
+    governance-review.md
+
+  standards/
+    slo-and-monitoring.md
+    logging-and-audit.md
+    secrets-management.md
+
+  diagrams/
+    ops-architecture.mmd
+    data-promotion-flow.mmd
+```
+
+---
+
+## Contributing (operations docs)
+
+1. Make the smallest change that improves safety and repeatability.
+2. Prefer **checklists + explicit commands** over narrative.
+3. Include:
+   - assumptions
+   - risks
+   - rollback steps
+   - verification steps
+4. If a procedure touches sensitive data, add a governance checkpoint.
+
+---
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| GitOps | Desired state stored in Git; reconciled continuously by a controller |
+| SLO | Service Level Objective (measurable target) |
+| RPO | Recovery Point Objective (max acceptable data loss) |
+| RTO | Recovery Time Objective (time to restore service) |
+| DCAT | Data Catalog Vocabulary (dataset metadata) |
+| STAC | SpatioTemporal Asset Catalog (geospatial asset metadata) |
+| PROV | Provenance model (activities, entities, agents) |
+| RLS | Row Level Security (DB-level access control) |
+
+---
