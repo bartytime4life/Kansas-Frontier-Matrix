@@ -47,15 +47,13 @@ governed API boundary (policy-as-code + audit/provenance).
 
 ```mermaid
 flowchart LR
-  UI["React/MapLibre UI"] -->|"HTTPS"| API["Governed API Gateway (FastAPI/GraphQL)"]
-  API -->|"SQL (internal)"| PG["PostGIS"]
-  API -->|"catalog/media"| OBJ["Object Storage"]
-  API -->|"search/graph"| IDX["Search / Graph Indices"]
+  UI[React/MapLibre UI] -->|HTTPS| API[Governed API Gateway\n(FastAPI/GraphQL)]
+  API -->|SQL (internal)| PG[(PostGIS)]
+  API -->|catalog/media| OBJ[(Object Storage)]
+  API -->|search/graph| IDX[(Search / Graph Indices)]
 
-  subgraph TM
-    direction TB
-    TM_T["Trust Membrane"]
-    TM_T --> API
+  subgraph TM[Trust Membrane]
+    API
   end
 ```
 
@@ -223,4 +221,3 @@ Use this checklist as a guide when (a) creating this overlay or (b) reviewing ch
 - *Kansas Frontier Matrix (KFM) – Data Source Integration Blueprint* (v1.0, 2026-02-12)
 - *KFM – Software Support* (PostGIS/PG operational + version guidance)
 - *Docker / GitOps / OpenShift* notes (Kustomize base/overlay patterns)
-
