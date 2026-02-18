@@ -48,25 +48,26 @@ flowchart LR
 
 ```text
 infra/
-  apps/
-    dependencies/
-      opa/
-        README.md
-        base/
-          kustomization.yaml
-          deployment.yaml
-          service.yaml
-          # optional hardening:
-          networkpolicy.yaml
-          poddisruptionbudget.yaml
-          servicemonitor.yaml
-        overlays/
-          dev/
-            kustomization.yaml
-          stage/
-            kustomization.yaml
-          prod/
-            kustomization.yaml
+└─ apps/
+   └─ dependencies/
+      └─ opa/                                      # OPA policy PDP (runtime decisions/redaction; fail-closed stance)
+         ├─ README.md                               # How OPA is deployed, updated, and validated (policy bundle wiring)
+         │
+         ├─ base/                                   # Common OPA deployment (environment-agnostic defaults)
+         │  ├─ kustomization.yaml                    # Base kustomize entry (resources + common labels/patches)
+         │  ├─ deployment.yaml                       # OPA Deployment (resources, args, probes, volumes/bundles)
+         │  ├─ service.yaml                          # Cluster Service for OPA (internal-only; no public ingress)
+         │  ├─ networkpolicy.yaml                    # (Optional hardening) restrict who can call OPA (trust membrane)
+         │  ├─ poddisruptionbudget.yaml              # (Optional hardening) availability during node drain/rollouts
+         │  └─ servicemonitor.yaml                   # (Optional hardening) Prometheus scraping (if used)
+         │
+         └─ overlays/                                # Per-environment deltas (keep small and explicit)
+            ├─ dev/
+            │  └─ kustomization.yaml                 # Dev patches (replicas/resources/logging; relaxed only if justified)
+            ├─ stage/
+            │  └─ kustomization.yaml                 # Stage patches (closer to prod; smoke/perf parity)
+            └─ prod/
+               └─ kustomization.yaml                 # Prod patches (HA, strict egress, tight resources, audit-friendly)
 ```
 
 ---
