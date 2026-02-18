@@ -303,4 +303,3 @@ Primary docs:
 - https://www.postgresql.org/docs/current/
 - https://postgis.net/docs/
 ```
-
