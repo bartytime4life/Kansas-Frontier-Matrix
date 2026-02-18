@@ -224,4 +224,3 @@ These are the *conceptual* docs that explain search, retrieval, and governance b
 - [ ] No raw/sensitive fields indexed
 - [ ] Audit logs enabled at least for auth failures (and ideally key actions)
 - [ ] CI gate prevents insecure drift
-
