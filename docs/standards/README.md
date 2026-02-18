@@ -1,35 +1,3 @@
----
-title: "KFM Standards"
-path: "docs/standards/README.md"
-version: "v1.0.0"
-last_updated: "2026-02-16"
-status: "draft"
-doc_kind: "Standards Index"
-license: "TBD"
-
-# Governance & classification
-fair_category: "FAIR+CARE"
-care_label: "Public"
-sensitivity: "public"
-classification: "internal"
-
-# Cross-refs (expected)
-governance_ref: "../governance/ROOT_GOVERNANCE.md"
-ethics_ref: "../governance/ETHICS.md"
-sovereignty_ref: "../governance/SOVEREIGNTY.md"
-review_gates_ref: "../governance/REVIEW_GATES.md"
-
-# Integrity fields
-doc_uuid: "urn:kfm:doc:standards:index:v1.0.0"
-commit_sha: "<set-by-ci>"
-doc_integrity_checksum: "sha256:<set-by-ci>"
----
-
-![Status](https://img.shields.io/badge/status-draft-orange)
-![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
-![Claims](https://img.shields.io/badge/claims-evidence--first-blue)
-![Policy](https://img.shields.io/badge/policy-OPA%2FRego-informational)
-
 # KFM Standards
 
 This directory holds **contract-grade standards** for Kansas Frontier Matrix (KFM).
