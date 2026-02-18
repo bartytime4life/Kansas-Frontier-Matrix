@@ -232,4 +232,3 @@ When changing these scripts, confirm:
 
 - KFM governance notes and the “search + vectors” workstream (see project docs)
 - Vector retrieval tuning and embedding manifest guidance (see project docs)
-
