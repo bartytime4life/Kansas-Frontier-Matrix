@@ -251,4 +251,3 @@ A rebuild must be:
 - `infra/apps/dependencies/search/README.md` — retrieval/index “derived store” philosophy
 
 ---
-
