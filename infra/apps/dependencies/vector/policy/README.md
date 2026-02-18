@@ -297,4 +297,3 @@ These are conceptual pointers (paths may vary):
 4. Confirm the API always emits:
    - an `audit_ref`
    - an `evidence_bundle_digest` (or equivalent) on responses
-
