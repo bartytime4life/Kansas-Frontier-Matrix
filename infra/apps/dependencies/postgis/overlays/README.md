@@ -186,4 +186,3 @@ Treat upgrades as governed change events (ticket + PR + runbook + rollback plan)
 
 - `../base/` – shared PostGIS manifests (source of truth)
 - `../../../../docs/` – governance, runbooks, and architecture docs (repo-defined)
-
