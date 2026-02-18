@@ -252,4 +252,3 @@ WHERE rolname IN ('kfm_owner','kfm_app_rw','kfm_app_ro','kfm_auditor');
 - If you introduce any tables related to sensitive locations or culturally restricted knowledge:
   - prefer to implement protections at the API/policy layer
   - and consider DB-level controls (RLS, views, or schema separation) as defense-in-depth
-
