@@ -290,4 +290,3 @@ These are **minimum** CI checks recommended for production overlays:
 Add a short note per material prod change:
 
 - YYYY-MM-DD — What changed / why / linked PR
-
