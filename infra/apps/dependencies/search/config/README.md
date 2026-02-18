@@ -240,4 +240,3 @@ flowchart LR
 > [!NOTE]
 > This diagram is conceptual: it reflects the trust membrane pattern and the “truth path” sequencing.
 
-
