@@ -50,12 +50,12 @@ KFM distinguishes between:
 
 ```mermaid
 flowchart LR
-  UI[Web UI / MapLibre] -->|HTTPS| GW[Governed API Gateway<br/>(FastAPI/GraphQL)]
-  GW -->|Auth + OPA Policy<br/>Query shaping/redaction<br/>Audit + PROV refs| PG[(PostGIS)]
-  GW --> OBJ[Object Storage<br/>(Raw/Work/Processed artifacts)]
-  GW --> GS[Graph/Search Index]
-  ETL[Ingest/ETL Jobs] -->|write via governed interfaces| GW
-  ETL -->|load/refresh derived tables| PG
+  UI["Web UI / MapLibre"] -->|"HTTPS"| GW["Governed API Gateway (FastAPI/GraphQL)"]
+  GW -->|"Auth + OPA policy; query shaping/redaction; audit + PROV refs"| PG["PostGIS"]
+  GW --> OBJ["Object Storage (Raw/Work/Processed artifacts)"]
+  GW --> GS["Graph/Search Index"]
+  ETL["Ingest/ETL Jobs"] -->|"write via governed interfaces"| GW
+  ETL -->|"load/refresh derived tables"| PG
 ```
 
 **Design intent:** PostGIS is not a “public database.” It is a controlled dependency used by backends and governed jobs.
