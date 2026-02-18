@@ -208,4 +208,3 @@ This is an interpretation based on the cited claim.
 
 - **[CIT-001]** Source title. Dataset: `kfm.dataset.example`; Notes: "p. 12".
 ```
-
