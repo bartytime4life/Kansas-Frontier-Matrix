@@ -224,4 +224,3 @@ docker compose logs -f opensearch
 - KFM Data Source Integration Blueprint (Publish → catalogs + index refresh)
 - KFM Comprehensive Technical Blueprint (trust membrane; API search endpoints)
 - KFM Blueprint & Ideas (OpenSearch dependency; full-text + vector index context)
-
