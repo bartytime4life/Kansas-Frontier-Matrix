@@ -44,14 +44,14 @@ Any shortcut (e.g., “inject data straight into UI” or “UI queries DB”) i
 
 ```mermaid
 flowchart LR
-  Client[Web UI / External Clients] -->|HTTPS| API[kfm-api (FastAPI)]
-  API -->|AuthN/AuthZ + Policy| Policy[Policy Engine / OPA rules]
-  API -->|Ports & Repos| PostGIS[(PostGIS)]
-  API -->|Ports & Repos| Neo4j[(Neo4j)]
-  API -->|Signed/Versioned assets| Obj[(Object Store)]
-  API -->|Read metadata| Catalog[Catalogs: DCAT / STAC]
-  API -->|Attach lineage| Prov[PROV / provenance store]
-  API -->|Logs/Metrics/Traces| Obs[Observability]
+  Client["Web UI / External Clients"] -->|"HTTPS"| API["kfm-api (FastAPI)"]
+  API -->|"AuthN/AuthZ + Policy"| Policy["Policy Engine / OPA rules"]
+  API -->|"Ports & Repos"| PostGIS["PostGIS"]
+  API -->|"Ports & Repos"| Neo4j["Neo4j"]
+  API -->|"Signed/Versioned assets"| Obj["Object Store"]
+  API -->|"Read metadata"| Catalog["Catalogs: DCAT / STAC"]
+  API -->|"Attach lineage"| Prov["PROV / provenance store"]
+  API -->|"Logs/Metrics/Traces"| Obs["Observability"]
 ```
 
 ### Request lifecycle (governed)
