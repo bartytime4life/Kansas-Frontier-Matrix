@@ -49,7 +49,7 @@
 **Kansas-Frontier-Matrix** is the repository + system root.  
 **KFM** is the product shorthand used in docs, schemas, APIs, and the UI.
 
-Kansas-Frontier-Matrix (KFM) is a **governed spatio‑temporal knowledge platform** that turns Kansas data—remote sensing, hydrology, air quality/smoke, soil, resources, infrastructure (roads/bridges), economy, migration, flora/fauna, weather, disasters, geology (incl. core samples), history/archaeology, education, and science—into:
+Kansas Frontier Matrix (KFM) is a **governed spatio‑temporal knowledge platform** that turns Kansas data—remote sensing, hydrology, air quality/smoke, soil, resources, infrastructure (roads/bridges), economy, migration, flora/fauna, weather, disasters, geology (incl. core samples), history/archaeology, education, and science—into:
 
 - 🗺️ **Map layers** that are time-aware and policy-labeled
 - 📖 **Story Mode** narratives that show the “why” with auditable evidence
@@ -61,12 +61,18 @@ Kansas-Frontier-Matrix (KFM) is a **governed spatio‑temporal knowledge platfor
 > **Fail‑closed governance is a feature, not a restriction.**  
 > If schema/QA/policy/provenance cannot be verified, the system must **not** publish.
 
+> [!NOTE]
+> This README describes the **target architecture and governance contract**.  
+> Some paths, workflows, and automation may be **planned** and not yet implemented in the repo.
+
 ---
 
 ## Table of contents
 
+- [Start here](#start-here)
 - [Canonical truth path](#canonical-truth-path)
 - [Non-negotiable invariants](#non-negotiable-invariants)
+- [Governance quick view](#governance-quick-view)
 - [Data domains](#data-domains)
 - [Kansas source registry](#kansas-source-registry)
 - [Source coverage gate](#source-coverage-gate)
@@ -78,7 +84,23 @@ Kansas-Frontier-Matrix (KFM) is a **governed spatio‑temporal knowledge platfor
 - [Repository layout](#repository-layout)
 - [Contributing](#contributing)
 - [Security and sensitivity](#security-and-sensitivity)
+- [License](#license)
 - [Glossary](#glossary)
+
+---
+
+## Start here
+
+If you are new to KFM:
+
+1) **Understand the rules:** Read [Non-negotiable invariants](#non-negotiable-invariants) and [Governance quick view](#governance-quick-view).  
+2) **Understand the flow:** Read [Canonical truth path](#canonical-truth-path) and [Connector contract](#connector-contract).  
+3) **Find what’s missing:** Read [Source coverage gate](#source-coverage-gate) and the [Kansas source registry](#kansas-source-registry).  
+
+If you want to contribute immediately:
+
+- Add a **new source entry** to `catalogs/source_registry.json` and implement a connector that can pass all promotion gates.
+- Or improve governance: add policy tests, redaction profiles, schema validators, and coverage reporting.
 
 ---
 
@@ -88,7 +110,9 @@ Kansas-Frontier-Matrix (KFM) is a **governed spatio‑temporal knowledge platfor
 
 **Data Sources → Pipelines → Catalogs/Provenance → Storage/Index → Governed API → UI/Story + Focus**
 
-### Data lifecycle zones (append-only promotion)
+### Data lifecycle zones
+
+Promotion is append-only. Artifacts move forward only when all gates pass.
 
 ```mermaid
 flowchart LR
@@ -102,13 +126,16 @@ flowchart LR
 
 ## Non-negotiable invariants
 
-### 1) Trust membrane (hard boundary)
+### Trust membrane
+
 - The browser/UI **never** reads from databases, search, or object storage directly.
 - All access flows through the **Governed API** (auth + policy + audit + provenance).
 - Presigned URLs (if used) are issued **server-side after policy** and are **short-lived**.
 
-### 2) Promotion gates (CI enforced; fail closed)
+### Promotion gates
+
 Nothing becomes **Published/Curated** unless CI verifies:
+
 - ✅ domain schema validation
 - ✅ QA metrics + anomaly report
 - ✅ policy labels + redaction rules declared
@@ -116,14 +143,34 @@ Nothing becomes **Published/Curated** unless CI verifies:
 - ✅ catalogs emitted (DCAT always; STAC for spatial assets)
 - ✅ deterministic IDs + immutable versions + checksums (and attestations where required)
 
-### 3) Focus Mode is cite-or-abstain
+### Focus Mode is cite-or-abstain
+
 - Every user-visible claim must cite governed evidence.
 - If evidence is missing or blocked by policy, Focus Mode must **abstain** or return a “needs verification” response with an audit receipt.
 
-### 4) Deterministic identity & immutability
+### Deterministic identity and immutability
+
 - Stable dataset IDs
 - Immutable/content-addressed dataset versions
 - No overwrite; new versions only
+
+---
+
+## Governance quick view
+
+KFM treats governance as an enforcement system, not an afterthought.
+
+| Concern | Enforcement point | Fail-closed rule | Typical mechanism |
+|---|---|---|---|
+| Licensing | Promotion gate + API | No publish without declared license | DCAT license fields + CI checks |
+| Sensitivity | API + catalogs | Restricted ≠ public | Policy labels + redaction profiles |
+| Indigenous Data Sovereignty | Governance process + policy | No assumption of permission | Authority-to-control rules + review |
+| Privacy | API + exports | No doxxing | aggregation, suppression thresholds |
+| Provenance | Promotion gate + Focus Mode | No cite = no claim | PROV graphs + evidence bundles |
+| Auditability | API | Every response gets a receipt | request_id + decision_id |
+
+> [!WARNING]
+> If access, permission, or sensitivity is unclear, treat it as **restricted** until governance review approves publication.
 
 ---
 
@@ -131,23 +178,23 @@ Nothing becomes **Published/Curated** unless CI verifies:
 
 KFM treats Kansas as a **spatio-temporal fabric**: environment + built systems + people + history + science.
 
-### Domain matrix (how things are governed)
+### Domain matrix
 
 | Domain | Examples | Primary forms | Required catalogs | Typical QA gates | Sensitivity default |
 |---|---|---|---|---|---|
 | Remote sensing | satellite imagery, land cover, crop vigor, smoke | rasters, grids | DCAT + STAC + PROV | georeg + timestamps + nodata + stats | public/varies |
-| Weather & climate | station series, reanalysis, radar composites | time series, grids | DCAT (+STAC if spatial) + PROV | units + continuity + outliers | public |
+| Weather and climate | station series, reanalysis, radar composites | time series, grids | DCAT (+STAC if spatial) + PROV | units + continuity + outliers | public |
 | Hydrology | streamflow, flood extents, aquifers | time series, vectors, grids | DCAT (+STAC if spatial) + PROV | topology + gauge sanity + CRS | public/varies |
-| Soil & agriculture | SSURGO, cropland layers, crop stats | vectors, grids, tables | DCAT (+STAC if spatial) + PROV | range checks + joins | public |
-| Geology & resources | mineral layers, induced seismicity, core samples | vectors, tables, scans | DCAT + PROV (+STAC if spatial/scans) | schema + location generalization | **restricted by default** |
-| Transportation & infra | **KDOT** roads/bridges/traffic/projects | vectors, tables | DCAT + PROV | network validity + geometry + timestamps | public/varies |
-| Economy & migration | census/ACS, NASS, IRS migration | tables | DCAT + PROV | totals + continuity + definitions | public |
-| Flora & fauna | GBIF, eBird, iNaturalist, habitats | points, polygons | DCAT + PROV | coordinate plausibility | sensitive species restricted |
-| Hazards & disasters | wildfire perimeters, storm events, drought | vectors, rasters, tables | DCAT (+STAC if spatial) + PROV | event integrity + timestamps | public |
-| History & archaeology | figures, facts, KHRI summaries | text, tables, generalized geometry | DCAT + PROV | citation completeness | **restricted by default** |
-| Land & ownership | patents, PLSS, parcels (if licensed) | vectors, tables | DCAT + PROV | joins + privacy rules | restricted by default |
-| Public safety (stats only) | aggregated crime and justice indicators | tables | DCAT + PROV | suppression thresholds | public stats only |
-| Education & discovery | institutions, research outputs | tables, docs | DCAT + PROV | source credibility | public |
+| Soil and agriculture | SSURGO, cropland layers, crop stats | vectors, grids, tables | DCAT (+STAC if spatial) + PROV | range checks + joins | public |
+| Geology and resources | mineral layers, induced seismicity, core samples | vectors, tables, scans | DCAT + PROV (+STAC if spatial/scans) | schema + location generalization | **restricted by default** |
+| Transportation and infrastructure | **KDOT** roads/bridges/traffic/projects | vectors, tables | DCAT + PROV | network validity + geometry + timestamps | public/varies |
+| Economy and migration | census/ACS, NASS, IRS migration | tables | DCAT + PROV | totals + continuity + definitions | public |
+| Flora and fauna | GBIF, eBird, iNaturalist, habitats | points, polygons | DCAT + PROV | coordinate plausibility | sensitive species restricted |
+| Hazards and disasters | wildfire perimeters, storm events, drought | vectors, rasters, tables | DCAT (+STAC if spatial) + PROV | event integrity + timestamps | public |
+| History and archaeology | figures, facts, KHRI summaries | text, tables, generalized geometry | DCAT + PROV | citation completeness | **restricted by default** |
+| Land and ownership | patents, PLSS, parcels (if licensed) | vectors, tables | DCAT + PROV | joins + privacy rules | restricted by default |
+| Public safety stats | aggregated indicators only | tables | DCAT + PROV | suppression thresholds | public stats only |
+| Education and discovery | institutions, research outputs | tables, docs | DCAT + PROV | source credibility | public |
 
 > [!NOTE]
 > “Ingested” does not mean “public.” Publication is a **policy decision** plus a successful **gate**.
@@ -158,21 +205,22 @@ KFM treats Kansas as a **spatio-temporal fabric**: environment + built systems +
 
 To prevent “we forgot KDOT/core samples/etc.” KFM maintains a **Source Registry**: the canonical list of expected sources and their governance requirements.
 
-**File:** `catalogs/source_registry.json`
+**Expected file:** `catalogs/source_registry.json` (may be planned)
 
-Each entry should declare:
+Each entry declares:
+
 - `source_id` (stable)
 - domain tags
 - priority (P0/P1/P2)
 - required stage (processed/published/curated)
 - required catalogs (`dcat`, `stac`, `prov`)
 - default sensitivity + redaction profile
-- QA profile / thresholds
+- QA profile and thresholds
 - authoritative upstream and access pattern (API/bulk/service/manual)
 
-### Starter registry (P0 targets)
+### Starter registry
 
-> This table is a **starter list**. The real source-of-truth is `catalogs/source_registry.json`.
+> This table is a **starter list**. The canonical source-of-truth is `catalogs/source_registry.json`.
 
 | P | source_id | Domain | What it unlocks | Sensitivity default |
 |---:|---|---|---|---|
@@ -192,7 +240,7 @@ Each entry should declare:
 | P0 | `irs.migration.county` | migration | county-to-county migration patterns | public |
 | P0 | `us_census.acs` | demographics/economy | population, housing, income, commuting | public |
 | P0 | `ipums.nhgis` | historical demographics | long-range historical GIS/stat context | public |
-| P0 | `blm.glo.land_patents` | land ownership (historic) | homesteads/patents mapping + named historic narratives | public/medium (names) |
+| P0 | `blm.glo.land_patents` | historic land | homesteads/patents mapping + named historic narratives | public/medium (names) |
 | P0 | `blm.plss.grid` | land grid | township-range-section joins and patent geocoding | public |
 | P0 | `kshs.kansapedia` | history | figures/facts for Story Mode | public |
 | P0 | `kshs.kansas_memory` | history/media | primary-source scans/photos for stories | public/varies |
@@ -200,7 +248,7 @@ Each entry should declare:
 | P0 | `nifc.wildfire.perimeters` | hazards | wildfire perimeters and trends | public |
 | P0 | `noaa.storm_events` | hazards | tornado/hail/wind event baselines | public |
 | P0 | `gbif.occurrences` | biodiversity | multi-species observations | public/varies |
-| P0 | `ebird.observations` | biodiversity | birds observations + seasonality | medium (sensitive species) |
+| P0 | `ebird.observations` | biodiversity | bird observations + seasonality | medium (sensitive species) |
 | P0 | `inaturalist.observations` | biodiversity | citizen science occurrences | medium (sensitive species) |
 | P0 | `air_quality.fusion.pm25` | smoke/air quality | smoke/PM2.5 narratives + exposure indicators | public/varies |
 
@@ -215,13 +263,16 @@ Each entry should declare:
 KFM automates “what’s missing?” as a **fail-closed CI gate**.
 
 ### Coverage inputs
+
 - `catalogs/source_registry.json` (expected universe)
 - `catalogs/dcat/` (what’s governed)
 - `catalogs/stac/` (what’s spatial/time-sliced)
 - `catalogs/prov/` (what has lineage)
 
-### Coverage rules (examples)
+### Coverage rules
+
 The gate fails if any **P0** source:
+
 - has no DCAT record, or
 - lacks required STAC/PROV catalogs, or
 - has missing/invalid sensitivity labels, or
@@ -229,6 +280,7 @@ The gate fails if any **P0** source:
 - lacks provenance for any promoted artifact.
 
 ### Coverage outputs
+
 - `reports/source_coverage.md` (human-friendly)
 - `reports/source_coverage.json` (machine)
 - non-zero exit code on policy violation
@@ -240,23 +292,24 @@ The gate fails if any **P0** source:
 Remote sensing is treated as first-class, STAC-native, and reproducible.
 
 ### Preferred asset formats
-- **COG GeoTIFF** for imagery and derived index rasters (tile-friendly)
-- **Zarr** for large time-series grids (chunked, cloud-friendly)
-- **GeoParquet / FlatGeobuf** for vector derivatives (fast analytics)
 
-### Product taxonomy (what KFM expects)
+- **COG GeoTIFF** for imagery and derived index rasters
+- **Zarr** for large time-series grids
+- **GeoParquet / FlatGeobuf** for vector derivatives
+
+### Product taxonomy
 
 | Product type | Example | Stored as | Catalog | Notes |
 |---|---|---|---|---|
 | Scene | Sentinel/Landsat scenes | COG | STAC Item | immutable capture + per-scene QA |
-| Mosaic / composite | weekly/monthly composites | COG | STAC Item | derived from scenes; PROV required |
+| Mosaic | weekly/monthly composites | COG | STAC Item | derived from scenes; PROV required |
 | Index raster | NDVI-like, drought proxy | COG | STAC Item | include units/scale in metadata |
 | Gridded time series | precip/temp reanalysis | Zarr/NetCDF | STAC Collection (+Items) | chunk strategy matters |
 | Event products | flood extent, fire perimeter raster | COG + vectors | STAC + DCAT | event IDs and timestamps required |
 | ML inference | building footprints, crop type model | vectors/rasters | STAC + PROV | model card + provenance required |
-| Tiles (rendering) | raster tiles for UI | generated cache | not authoritative | derived convenience only |
+| Tiles | raster tiles for UI | generated cache | not authoritative | derived convenience only |
 
-### Remote sensing “truth flow”
+### Remote sensing truth flow
 
 ```mermaid
 flowchart TD
@@ -269,9 +322,10 @@ flowchart TD
   G --> H[Render\nMap/Story/Focus]
 ```
 
-### Minimum QA metrics (recommended)
+### Minimum QA metrics
+
 - Raster: nodata %, min/max, percentiles, band means/stddev, footprint validity
-- Temporal: no future timestamps (unless forecast), monotonic time ordering where expected
+- Temporal: no future timestamps (unless forecast), monotonic ordering where expected
 - Spatial: CRS + bounds within expected region, pixel size consistency
 - Joinability: stable IDs and crosswalks (county, watershed, ecoregion, GeoID)
 
@@ -284,6 +338,7 @@ Every connector implements the same contract:
 **discover → acquire → normalize → validate → publish**
 
 Each run must generate:
+
 - `run_manifest.json` (inputs, versions, params, environment hashes)
 - `qa_report.json` (metrics, anomalies, thresholds)
 - immutable artifacts with checksums
@@ -292,7 +347,31 @@ Each run must generate:
   - STAC (for spatial assets)
   - PROV (for lineage)
 
-### Definition of Done (DoD) for any new source
+### Example run manifest
+
+```json
+{
+  "run_id": "run_2026-02-19T12:34:56Z_kdot_roads",
+  "source_id": "kdot.transportation.assets",
+  "inputs": [
+    { "uri": "https://...", "retrieved_at": "2026-02-19T12:00:00Z", "sha256": "..." }
+  ],
+  "params": {
+    "crs": "EPSG:4326",
+    "publish_stage": "processed"
+  },
+  "environment": {
+    "container_image": "ghcr.io/kfm/pipelines@sha256:...",
+    "git_commit": "not_confirmed_in_repo"
+  },
+  "outputs": [
+    { "artifact": "kfm://dataset/kdot_roads@sha256:...", "sha256": "..." }
+  ]
+}
+```
+
+### Definition of Done for any new source
+
 - [ ] added to `catalogs/source_registry.json`
 - [ ] DCAT record includes license, owners, cadence, sensitivity, policy tags
 - [ ] PROV lineage covers acquire→normalize→validate→publish
@@ -308,13 +387,14 @@ Each run must generate:
 
 The governed API is the enforcement point.
 
-**Must do:**
-1) authenticate + authorize
-2) evaluate policy (OPA) + apply redactions/aggregation
-3) attach provenance + citations
+It must:
+
+1) authenticate and authorize  
+2) evaluate policy (OPA) and apply redactions and aggregation  
+3) attach provenance and citations  
 4) log an auditable receipt (request_id + decision_id + evidence bundle hash)
 
-### Response envelope (required)
+### Response envelope
 
 ```json
 {
@@ -337,7 +417,8 @@ The governed API is the enforcement point.
 }
 ```
 
-### Minimal endpoint set (starter)
+### Minimal endpoint set
+
 - `GET /api/v1/datasets`
 - `GET /api/v1/datasets/{dataset_id}/versions`
 - `POST /api/v1/stac/search` (policy-filtered)
@@ -352,10 +433,11 @@ The governed API is the enforcement point.
 Notebooks are treated as **governed artifacts**, not ad-hoc files.
 
 ### Notebook project requirements
+
 - immutable dataset version refs (no “latest”)
 - pinned dependencies (lockfile)
 - export manifest (checksums + provenance)
-- explicit policy label for every included dataset/extract
+- explicit policy label for every included dataset or extract
 
 > [!NOTE]
 > Notebooks can be public even if source datasets are not—**only if exports are policy-approved and sanitized**.
@@ -365,6 +447,7 @@ Notebooks are treated as **governed artifacts**, not ad-hoc files.
 ## What-if scenarios
 
 “What if” is a governed workflow:
+
 - scenario spec (inputs + assumptions)
 - deterministic run receipt
 - derived layers (policy-labeled)
@@ -374,6 +457,9 @@ Notebooks are treated as **governed artifacts**, not ad-hoc files.
 ---
 
 ## Repository layout
+
+> [!NOTE]
+> Layout below is the intended structure. Some folders may be planned.
 
 ```text
 Kansas-Frontier-Matrix/
@@ -432,24 +518,28 @@ Kansas-Frontier-Matrix/
 
 ## Contributing
 
-KFM prefers PR-centric promotion:
+KFM prefers PR-centric promotion.
 
-1) add/modify connector spec(s) in `services/pipelines/specs/`
-2) run connector → generate artifacts + receipts + catalogs
-3) ensure `catalogs/source_registry.json` is updated (or confirm it already includes the source)
+1) add or modify connector spec(s) in `services/pipelines/specs/`  
+2) run connector to generate artifacts + receipts + catalogs  
+3) ensure `catalogs/source_registry.json` is updated (or confirm it already includes the source)  
 4) open PR containing:
    - catalogs (DCAT/STAC/PROV)
    - QA reports + receipts
    - evidence bundle references (digests)
-5) CI enforces gates (fail closed)
+5) CI enforces gates  
 6) merge promotes to Published/Curated (per policy)
+
+> [!TIP]
+> If you cannot provide provenance, QA, and policy labeling, contribute upstream improvements (schemas, validators, tests) until the gate can be satisfied.
 
 ---
 
 ## Security and sensitivity
 
 Some domains are inherently sensitive and default to restricted handling:
-- land ownership / parcel-level details
+
+- land ownership and parcel-level details
 - core sample exact locations and certain resource layers (policy dependent)
 - archaeology site coordinates and protected sites
 - protected species precise locations
@@ -457,10 +547,21 @@ Some domains are inherently sensitive and default to restricted handling:
 - critical infrastructure details
 
 Default behavior:
-- generalize/redact location where needed
+
+- generalize or redact location where needed
 - suppress small counts
-- publish summaries/aggregates only unless explicitly cleared
+- publish summaries or aggregates only unless explicitly cleared
 - log policy decisions (decision IDs) for auditability
+
+---
+
+## License
+
+- Documentation in this repo is licensed **CC-BY-4.0** unless otherwise noted in-file.
+- Datasets ingested by KFM retain their upstream licenses and access constraints; KFM catalogs must record this explicitly.
+
+> [!IMPORTANT]
+> “Open source repo” does not mean “all data is open.” Licenses and community authority are enforced at the catalog and API layers.
 
 ---
 
