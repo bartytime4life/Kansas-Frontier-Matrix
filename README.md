@@ -252,13 +252,13 @@ Archives often contain:
 
 ```mermaid
 flowchart TD
-  A[Acquire\noriginal files + checksums + receipt] --> B[Normalize\nformats + metadata crosswalk]
-  B --> C[Extract\ntext (OCR) + thumbnails + audio segments]
-  C --> D[Validate\nrights + PII scan + integrity + OCR quality]
-  D --> E[Catalog\nDCAT + PROV\n(+STAC if spatial/georef)]
-  E --> F[Index\nsearch + embeddings + entity links]
-  F --> G[Serve\nGoverned API\n(evidence resolver)]
-  G --> H[Use\nStory Nodes + Focus Mode\n(cite-or-abstain)]
+  A["Acquire: original files, checksums, receipt"] --> B["Normalize: formats, metadata crosswalk"]
+  B --> C["Extract: OCR text, thumbnails, audio segments"]
+  C --> D["Validate: rights, PII scan, integrity, OCR quality"]
+  D --> E["Catalog: DCAT, PROV; STAC if spatial/georeferenced"]
+  E --> F["Index: search, embeddings, entity links"]
+  F --> G["Serve: governed API; evidence resolver"]
+  G --> H["Use: story nodes + focus mode; cite-or-abstain"]
 ```
 
 ### Minimum validation gates for past collections
