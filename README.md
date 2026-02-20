@@ -32,12 +32,13 @@ All capabilities remain:
 
 ```mermaid
 flowchart LR
-  A[Live Sensors + Satellites] --> B[Streaming Layer]
-  B --> C[State Store<br/>4D Volumetric]
-  C --> D[Simulation Engine]
-  D --> E[Optimization Layer]
-  E --> F[Governed API]
-  F --> G[Map | Story | Focus | Scenario]
+  A[Data Sources] --> B[Connector<br/>discover → acquire]
+  B --> C[Normalize & Validate]
+  C --> D[Immutable Artifacts]
+  D --> E[Catalogs<br/>DCAT + STAC + PROV]
+  E --> F[Storage & Index]
+  F --> G[Governed API<br/>Auth + OPA + Redaction]
+  G --> H["UI<br/>Map &#124; Story &#124; Focus"]
 ```
 
 The Digital Twin maintains a continuously updated state representation of Kansas across:
