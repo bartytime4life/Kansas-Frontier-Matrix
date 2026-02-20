@@ -1,327 +1,300 @@
-# Kansas Frontier Matrix
+# Kansas Frontier Matrix (KFM)
+A governed, map-first, spatio-temporal intelligence platform for Kansas — built so every claim is traceable to versioned evidence.
 
-**Governed • Evidence-first • Map-first • FAIR+CARE aligned**
+![status](https://img.shields.io/badge/status-governed%20build-blue)
+![governance](https://img.shields.io/badge/governance-FAIR%2BCARE-purple)
+![principle](https://img.shields.io/badge/AI-cite--or--abstain-black)
 
-A governed spatio-temporal intelligence platform for Kansas: **data → pipelines → catalogs/provenance → governed APIs → map + story + Focus Mode**.
-
----
-
-## Governance header
-
-| Field | Value |
-|---|---|
-| Status | Alpha • governed rebuild |
-| Owners | Repo CODEOWNERS + maintainers |
-| License | Apache-2.0 |
-| Policy posture | **Fail closed** (default deny) |
-| Trust membrane | **No UI / client direct DB access** |
+**Status:** v13 structure + contracts-first scaffold (implementation may be incomplete; see “Repository Layout” and “Governance & Trust Membrane”).  
+**Primary audiences:** maintainers, contributors, domain stewards (historians/scientists), governance reviewers.
 
 ---
 
-## Badges
-
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-![Governance](https://img.shields.io/badge/governance-fail--closed-informational)
-![Principles](https://img.shields.io/badge/principles-FAIR%2BCARE-informational)
-
----
-
-## Jump to
-
-- [What is KFM](#what-is-kfm)
+## Navigate
+- [What KFM is](#what-kfm-is)
 - [Non-negotiables](#non-negotiables)
 - [Architecture at a glance](#architecture-at-a-glance)
-- [Truth path and data zones](#truth-path-and-data-zones)
-- [Run locally](#run-locally)
-- [Repository map](#repository-map)
-- [Governance and ethics](#governance-and-ethics)
-- [Focus Mode and Story Nodes](#focus-mode-and-story-nodes)
-- [Roadmap](#roadmap)
+- [Truth path and data lifecycle](#truth-path-and-data-lifecycle)
+- [Repository layout](#repository-layout)
+- [How to add a dataset](#how-to-add-a-dataset)
+- [Story Nodes and Focus Mode](#story-nodes-and-focus-mode)
+- [Governance and trust membrane](#governance-and-trust-membrane)
 - [Contributing](#contributing)
 - [Security](#security)
 - [License and citation](#license-and-citation)
 
 ---
 
-## What is KFM
+## What KFM is
+KFM is a **governed geospatial + historical knowledge system** that turns heterogeneous Kansas evidence (archives, sensors, surveys, open data, partner feeds) into **auditable** maps, timelines, and narratives.
 
-**One sentence:** KFM turns Kansas’ scattered records and measurements—across centuries and landscapes—into **governed, auditable, map-first intelligence** that people can query, teach, and build on.
+KFM’s canonical “truth path” (conceptual end-to-end flow):
 
-KFM is:
-- A **governed knowledge system** for geospatial + historical data.
-- A platform where every user-visible output is intended to be **traceable to sources** (datasets, documents, model runs) through catalogs and provenance.
-- A system that serves both:
-  - **Experts** (governed APIs, analysis, exports, reproducible runs)
-  - **Non-experts** (map-first UI, Story Nodes, classroom-friendly narratives)
+**ETL → Catalogs (STAC/DCAT/PROV) → Graph → Governed APIs → Map UI → Story Nodes → Focus Mode**
 
-KFM is not:
-- A black-box AI that improvises. KFM’s AI features are intended to operate **inside guardrails**: cite sources, obey policy, and label anything unverifiable as **not confirmed**.
-
-[Back to top](#kansas-frontier-matrix)
+KFM is **not** a black-box AI that improvises. Any AI assistance must be constrained by governance rules, and user-facing outputs must resolve to evidence (or abstain).
 
 ---
 
 ## Non-negotiables
+These are platform invariants. If you change them, you need a governance review and likely a version bump.
 
-These are **invariants**. If a change weakens one of these, it’s a regression.
+1) **Pipeline ordering is absolute**  
+No stage can consume data that hasn’t passed through the prior stage’s contracted outputs.
 
-| Invariant | What it means | How it should be enforced |
-|---|---|---|
-| Trust membrane | UI and external clients **never** access DB/object storage directly | Governed API boundary + auth + policy checks + audit logs |
-| Fail closed | If the system can’t verify license, sensitivity, provenance, or policy: **deny / block promotion** | CI gates + policy tests + default-deny runtime |
-| Truth path | Outputs are explainable through: sources → pipelines → catalogs/provenance → storage/index → APIs → experiences | Promotion zones + catalogs + receipts + evidence resolver |
-| Cite or abstain | Focus Mode + Story Nodes must cite resolvable evidence, or explicitly label “not confirmed” | Citation verifier + evidence resolver contract + audit references |
+2) **Trust membrane rule**  
+UI and external clients **never** access databases directly. All access flows through governed APIs (policy checks, redaction, auditing).
+
+3) **Evidence-first narrative**  
+Story Nodes and Focus Mode must not introduce unsourced material. Every claim must cite evidence. If evidence cannot be resolved, the system abstains.
+
+4) **Deterministic + replayable ETL**  
+Given the same inputs and configs, pipelines should produce identical outputs (or differences must be logged and explained).
+
+5) **Sovereignty + sensitivity propagation**  
+No output artifact can be less restricted than its inputs. Sensitive locations may be stored precisely but must be served generalized/redacted unless explicitly approved.
 
 ---
 
 ## Architecture at a glance
-
 ```mermaid
 flowchart LR
-  subgraph Sources[Data Sources]
-    A[Archives / PDFs / Tables] --> P
-    B[Sensors / Feeds] --> P
-    C[Open data / Partners] --> P
+  subgraph Data
+    A["Raw sources"] --> B["ETL + normalization"]
+    B --> C["STAC items + collections"]
+    C --> D["DCAT dataset views"]
+    C --> E["PROV lineage bundles"]
   end
 
-  subgraph Pipelines[Pipelines]
-    P[Ingest • Validate • Transform • Version] --> Z
-  end
-
-  subgraph Zones[Truth Path Zones]
-    Z[Raw → Work → Processed → Published] --> CATA
-  end
-
-  subgraph CATA[Catalog and Provenance]
-    D[STAC / DCAT / PROV] --> S
-  end
-
-  subgraph Storage[Storage and Index]
-    S[Object store canonical] --> IDX[Rebuildable indexes]
-    IDX --> PG[PostGIS]
-    IDX --> G[Graph]
-    IDX --> Q[Search / Vector]
-  end
-
-  subgraph Control[Governance Control Plane]
-    POL[Policy-as-code] --> API
-    AUD[Audit receipts] --> API
-  end
-
-  subgraph Experience[Experiences]
-    API[Governed APIs] --> UI[Map UI]
-    API --> STORY[Story Nodes]
-    API --> FM[Focus Mode]
-  end
+  C --> G["Graph (references back to catalogs)"]
+  G --> H["Governed API layer (contracts + redaction)"]
+  H --> I["Map UI (web/)"]
+  I --> J["Story Nodes (governed narratives)"]
+  J --> K["Focus Mode (evidence-linked answers)"]
 ```
-
-Key idea: **object storage is canonical** for artifacts; other stores are typically treated as **rebuildable indexes**. Promotion and serving are governed.
-
-[Back to top](#kansas-frontier-matrix)
 
 ---
 
-## Truth path and data zones
+## Truth path and data lifecycle
+### Data zones
+All datasets move through **three zones**:
 
-The truth path is both a **technical pipeline** and a **trust contract**. A practical version:
+- **Raw**: immutable capture of sources (append-only)
+- **Work**: repeatable transforms + QA staging
+- **Processed**: query-ready, publishable products (the only zone served to most users)
 
-1. **Acquire**: digitize / scrape / ingest, capturing source + license + context  
-2. **Validate**: schema checks, geospatial sanity, deduplication, QA sampling  
-3. **Enrich**: geocoding, temporal normalization, linking, classifications  
-4. **Catalog**: FAIR metadata + CARE constraints + provenance chain + citations  
-5. **Serve**: governed APIs, exports, reproducible jobs  
-6. **Explain**: Focus Mode answers and Story Nodes with resolvable evidence  
+### Boundary artifacts (required to “publish”)
+A dataset is not considered publishable until it emits machine-checkable boundary artifacts:
 
-For zone-specific rules and folder conventions, start here:
-- `data/README.md`
-- `pipelines/README.md`
-- `policy/README.md`
-- `docs/README.md`
+- **STAC** (collections + items) for spatiotemporal assets
+- **DCAT** for dataset-level discovery and distributions
+- **PROV** for end-to-end lineage (inputs → activities → outputs)
 
----
-
-## Run locally
-
-### Prerequisites
-- Docker + Docker Compose v2
-
-### Quick start
-
-```bash
-# 1) Configure environment
-cp .env.example .env
-
-# 2) Start core stack
-docker compose up --build
-```
-
-Defaults (can be overridden via `.env`):
-- Web UI: `http://localhost:3000`
-- API: `http://localhost:8000`
-- PostGIS: `localhost:5432`
-- Neo4j: `http://localhost:7474` and `bolt://localhost:7687`
-
-### Optional services via profiles
-
-This repo supports additional services behind compose profiles:
-
-```bash
-# Start with policy engine + object store + vector + search
-docker compose \
-  --profile policy \
-  --profile storage \
-  --profile vector \
-  --profile search \
-  up --build
-```
-
-Optional endpoints (when enabled):
-- OPA policy engine: `http://localhost:8181`
-- MinIO: `http://localhost:9000` (console `http://localhost:9001`)
-- Qdrant: `http://localhost:6333`
-- Meilisearch: `http://localhost:7700`
-
-### Stop and clean
-
-```bash
-docker compose down -v
-```
-
-> NOTE  
-> `docker-compose.yml` currently mounts `./contracts` and `./schemas` into the API container. If those folders don’t exist yet, either create them or update the compose volumes.
-
-[Back to top](#kansas-frontier-matrix)
+These are the interfaces to downstream stages (graph, API, UI).
 
 ---
 
-## Repository map
+## Repository layout
+This repo follows a **v13 “one canonical home per subsystem”** layout (no duplicate “API” folders, no scattered narrative folders).
 
+> If your working tree diverges from this, treat it as **repo drift**: either (a) refactor toward the canonical layout, or (b) document the deviation and add enforcement tests so drift doesn’t spread.
+
+### Top-levels (expected)
 ```text
 .
-├── .github/        GitHub workflows, issue templates, security docs
-├── data/           Data zones, catalogs, manifests, checksums, promotion rules
-├── docs/           Architecture, ADRs, runbooks, specs, narrative standards
-├── infra/          Deployment infrastructure and environment templates
-├── pipelines/      Ingestion + processing pipelines and validation gates
-├── policy/         Policy-as-code (OPA/Rego), sensitivity rules, tests
-├── releases/       Release artifacts and immutability rules
-├── scripts/        Developer scripts and maintenance utilities
-├── src/            Backend services (API, catalog/provenance, resolvers)
-├── tests/          Cross-cutting tests (policy, contracts, integration)
-├── tools/          Tooling for catalogs, checksums, QA, and governance
-├── web/            Map-first UI, Story Mode UI, Focus Mode UX surfaces
-├── docker-compose.yml
-├── .env.example
+├── data/                      # Raw → Work → Processed + catalogs (STAC/DCAT/PROV)
+│   ├── raw/<domain>/          # Immutable source captures
+│   ├── work/<domain>/         # Intermediate transforms + QA
+│   ├── processed/<domain>/    # Final publishable artifacts (COG/GeoParquet/PMTiles/media/etc.)
+│   ├── stac/
+│   │   ├── collections/
+│   │   └── items/
+│   ├── catalog/
+│   │   └── dcat/
+│   └── prov/
+│
+├── docs/                      # Canonical governed documentation
+│   ├── MASTER_GUIDE_v13.md
+│   ├── glossary.md
+│   ├── architecture/          # Blueprints, ADRs, diagrams
+│   ├── standards/             # KFM STAC/DCAT/PROV profiles, repo structure standards, etc.
+│   ├── templates/             # Universal doc + Story Node + API contract templates
+│   ├── governance/            # ROOT_GOVERNANCE, ETHICS, SOVEREIGNTY, REVIEW_GATES
+│   └── reports/
+│       └── story_nodes/
+│           ├── templates/
+│           ├── draft/
+│           └── published/<story_slug>/
+│               ├── story.md
+│               └── assets/
+│
+├── schemas/                   # JSON Schemas for contracts
+│   ├── stac/
+│   ├── dcat/
+│   ├── prov/
+│   ├── storynodes/
+│   ├── ui/
+│   └── telemetry/
+│
+├── src/                       # Code (no narrative docs embedded in code files)
+│   ├── pipelines/             # ETL + catalog writers + validation emitters
+│   ├── graph/                 # Graph build/sync, ontology bindings, migrations
+│   └── server/                # Governed API boundary (REST and/or GraphQL + contracts)
+│
+├── web/                       # Frontend (map + narrative UI)
+├── tools/                     # Standalone validators, linters, utilities
+├── tests/                     # Unit/integration/contract tests for invariants + gates
+├── mcp/                       # Methods & computational experiments (runs, notebooks, model cards)
+├── releases/                  # Immutable release manifests + published bundles (dataset + catalogs)
+│
+├── README.md
 ├── LICENSE
-└── CITATION.cff
+├── CITATION.cff
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── SECURITY.md
+├── docker-compose.yml         # Optional: local orchestration if present
+└── .env.example               # Optional: environment template if present
 ```
 
-Start here for orientation:
-- `docs/README.md`
-- `data/README.md`
+### Optional but recommended (common repo hygiene)
+- `.github/workflows/` — CI gates (schema validation, policy regression suite, link checks)
+- `.devcontainer/` — reproducible dev environment
+- `infra/` — infrastructure-as-code (kept outside core domain logic)
 
 ---
 
-## Governance and ethics
+## Quickstart
+Because KFM is contract-first, the best “first run” is **reading the contracts**:
 
-KFM treats governance as a **system behavior**, not a policy memo.
+1) Read: `docs/MASTER_GUIDE_v13.md` (canonical pipeline + structure)  
+2) Review: `docs/governance/*` (classification, sensitivity, review gates)  
+3) Confirm schemas exist: `schemas/` (STAC/DCAT/PROV/story nodes/etc.)  
+4) Choose one small “anchor dataset” and run it end-to-end through:
+   - `data/raw` → `data/work` → `data/processed`
+   - Emit **STAC/DCAT/PROV**
+   - Load/update graph references
+   - Serve through governed API
+   - Visualize in UI
+   - Draft a Story Node that cites the dataset version
 
-- **FAIR + CARE**: metadata and interoperability plus community authority and ethics.
-- **Authority to control**: sensitive and culturally restricted knowledge may require permissioning, redaction, or generalized outputs.
-- **Default safety**: for restricted-by-default categories, prefer:
-  - generalized geometry
-  - aggregation (e.g., county / HUC rollups)
-  - small-count suppression
-  - deny-by-default for point outputs
-
-If you’re adding a dataset or feature that could expose sensitive locations or vulnerable infrastructure, expect a governance review and policy tests.
-
-[Back to top](#kansas-frontier-matrix)
+If this repo includes `docker-compose.yml`, a typical pattern is:
+```bash
+cp .env.example .env
+docker compose up --build
+```
+(Exact services/ports are repo-specific; see `docker-compose.yml`.)
 
 ---
 
-## Focus Mode and Story Nodes
+## How to add a dataset
+### Minimal integration steps (golden path)
+1) **Acquire (raw)**  
+   - Place source captures under: `data/raw/<domain>/...`
+   - Record license + source context at ingest time (fail-closed if unknown)
+
+2) **Transform (work)**  
+   - Run deterministic transforms into: `data/work/<domain>/...`
+   - Generate QA reports (schema checks, geo sanity, temporal sanity)
+
+3) **Publish (processed)**  
+   - Output publishable artifacts into: `data/processed/<domain>/...`
+   - Use stable IDs and checksums (content-addressed where practical)
+
+4) **Emit catalogs (boundary artifacts)**  
+   - STAC: `data/stac/collections/` and `data/stac/items/`
+   - DCAT: `data/catalog/dcat/`
+   - PROV: `data/prov/`
+
+5) **Index + serve**
+   - Graph stores references to catalogs (do not duplicate bulky data)
+   - Governed API exposes only policy-compliant access
+   - UI consumes only API outputs
+
+### Definition of Done (new dataset integration)
+- [ ] Connector/pipeline implemented and registered
+- [ ] Raw acquisition produces deterministic manifest + checksums
+- [ ] Normalization emits canonical schema and/or STAC assets
+- [ ] Validation gates implemented and enforced in CI
+- [ ] Policy labels defined; restricted fields/locations are redacted per rules
+- [ ] Catalogs emitted (DCAT always; STAC/PROV as applicable) and link-check clean
+- [ ] API contract tests pass for at least one representative query
+- [ ] Backfill strategy documented (historical ranges and expected runtime)
+
+---
+
+## Story Nodes and Focus Mode
+### Story Nodes
+Story Nodes are **governed, machine-ingestible narratives**. They must:
+- reference evidence already cataloged (STAC/DCAT/PROV),
+- avoid uncited interpretation,
+- include sensitivity-aware handling (generalize/redact locations when needed),
+- move through draft → review → published.
+
+**Canonical home:** `docs/reports/story_nodes/`
 
 ### Focus Mode
-Focus Mode is the policy-aware assistant layer. The contract expectation is:
-- Retrieve governed evidence (datasets, documents, lineage)
-- Produce answers that **cite resolvable evidence**
-- If it cannot cite: **abstain** or label **not confirmed**
-- Emit an audit reference for traceability
-
-### Story Nodes
-Story Nodes are guided narratives that:
-- are **map-native**
-- remain evidence-backed
-- expose provenance/citations in the UI
-- support teaching and reproducible exploration, not entertainment
-
-See:
-- `docs/` for standards and Story Mode design
-- `web/` for UI implementation details
+Focus Mode is the interactive experience that renders a Story Node (and related evidence) into a map/timeline context. It must:
+- show citations/evidence bundles,
+- enforce policy at runtime,
+- abstain when evidence can’t be resolved.
 
 ---
 
-## Roadmap
+## Governance and trust membrane
+KFM governance is an architectural feature, not a policy PDF on the side.
 
-### Baseline platform
-- Promotable datasets with catalogs/provenance
-- Governed APIs + map-first UI
-- Policy-as-code enforcement and audit receipts
-- Story Nodes + Focus Mode grounded Q&A
+### The trust membrane (governed boundary)
+All reads/writes crossing the trust membrane must pass through:
+- authentication,
+- policy evaluation,
+- query shaping/redaction,
+- audit logging + provenance linking.
 
-### vNext++ expansion
-A design proposal expands KFM toward a **governed 4D digital twin**:
-- 4D volumetric data (x, y, z, time)
-- Streaming analytics with bi-temporal semantics
-- Scenario registry, run receipts, ensembles, uncertainty UX
-- Optimization under governance constraints
-
-Deliver vNext++ as **thin slices**, each with governance tests and reversible artifacts.
+### Sensitivity defaults
+When in doubt:
+- **generalize or redact** precise sensitive locations,
+- avoid exact coordinates in public artifacts,
+- flag for governance review.
 
 ---
 
 ## Contributing
+See `CONTRIBUTING.md`. Contributions are expected to be:
+- contract-first (schemas + API specs are first-class),
+- evidence-first (data + provenance before interpretation),
+- test-backed (CI gates enforce invariants).
 
-KFM prefers small, reviewable increments with governance baked in.
-
-### The shortest path to a successful PR
-- Add or modify **one** dataset/pipeline/policy/UI feature at a time
-- Include:
-  - catalogs (STAC/DCAT/PROV as applicable)
-  - checksums/manifests
-  - policy labels and redaction profile
-  - tests that prove the trust membrane and fail-closed posture
-
-<details>
-<summary><strong>Definition of done for a new dataset integration</strong></summary>
-
-- [ ] Source license captured and compatible
-- [ ] Raw assets ingested with immutable checksums
-- [ ] Validation gates pass (schema + geospatial sanity + QA sampling)
-- [ ] Catalog metadata present (STAC/DCAT/PROV as applicable)
-- [ ] Policy label applied (public/restricted/sensitive-location/embargoed)
-- [ ] Promotion rules enforced in CI (fail closed)
-- [ ] Evidence resolver can resolve citations to stable artifacts
-- [ ] UI shows provenance surfaces (version badges, citations, “what changed” where relevant)
-
-</details>
-
-[Back to top](#kansas-frontier-matrix)
+Common contribution types:
+- Add a dataset connector/pipeline (`src/pipelines/`, `data/*`, `schemas/*`)
+- Extend STAC/DCAT/PROV profiles (`docs/standards/`, `schemas/`)
+- Add an API endpoint with contract tests (`src/server/`)
+- Add a UI layer that consumes governed API outputs (`web/`)
+- Draft/publish Story Nodes (`docs/reports/story_nodes/`)
 
 ---
 
 ## Security
+See `SECURITY.md`.
 
-- Report vulnerabilities via `.github/SECURITY.md`
-- Prefer least privilege, secrets hygiene, and auditable changes
-- Treat policy changes as security-sensitive
+Hard rules:
+- No secrets in git history.
+- No UI direct-to-database access.
+- No serving “raw” or “work” zone artifacts to public endpoints unless explicitly policy-approved.
 
 ---
 
 ## License and citation
-
-- License: **Apache-2.0** (see `LICENSE`)
+- Code license: see `LICENSE`
 - Citation: see `CITATION.cff`
 
+If you publish KFM-derived datasets or narratives, retain lineage:
+- dataset version IDs,
+- catalog references,
+- PROV chain links,
+- and any restriction/sovereignty metadata.
+
 ---
+
+### Back to top
+↑ [Back to top](#kansas-frontier-matrix-kfm)
