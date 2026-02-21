@@ -532,50 +532,50 @@ Every source must have a registry entry with:
 
 ~~~text
 Kansas-Frontier-Matrix/
-  README.md
-
-  docs/
-    adr/                      # Architecture Decision Records (ADRs)
-    governance/               # policy labels, obligations, review workflows, rubrics
-    runbooks/                 # operational procedures
-    stories/                  # story templates, examples (if stored in-repo)
-    schemas/                  # human-readable schema docs (if not in contracts/)
-
-  contracts/
-    openapi/                  # OpenAPI contract(s)
-    schemas/                  # JSON Schema (DTOs, manifests, config)
-    profiles/                 # DCAT/STAC/PROV profile constraints + validators
-
-  policy/
-    rego/                     # policy-as-code (default deny)
-    tests/                    # policy tests (fixtures-driven)
-    fixtures/                 # allow/deny + obligation fixtures
-
-  data/                       # canonical artifacts or pointers (repo-dependent)
-    raw/
-    work/
-    processed/
-    catalog/
-    published/
-    audit/
-
-  src/
-    api/                      # governed endpoints
-    evidence/                 # evidence resolver
-    policy/                   # policy adapter, reason codes
-    catalog/                  # parsers/validators/linters
-    ingest/                   # connectors + runner
-    indexers/                 # rebuildable projections (DB/search/tiles)
-    ui/                       # frontend (only if monorepo)
-
-  tests/
-    integration/
-    eval/                     # Focus Mode evaluation harness
-
-  scripts/
-    promote/
-    lint/
-    rebuild/
+├─ README.md                                     # Project entrypoint (what KFM is + quickstart + key links)
+│
+├─ docs/                                         # Governance + engineering docs (human-facing)
+│  ├─ adr/                                       # Architecture Decision Records (why choices were made)
+│  ├─ governance/                                # Policy labels, obligations, review workflows, rubrics
+│  ├─ runbooks/                                  # Operational procedures (oncall, incidents, backups, upgrades)
+│  ├─ stories/                                   # Story templates/examples (if stored in-repo)
+│  └─ schemas/                                   # Human-readable schema docs (if not maintained under contracts/)
+│
+├─ contracts/                                    # Machine-enforced contracts (CI gates + runtime boundaries)
+│  ├─ openapi/                                   # OpenAPI contract(s) (REST boundary)
+│  ├─ schemas/                                   # JSON Schemas (DTOs, manifests, configs, receipts)
+│  └─ profiles/                                  # DCAT/STAC/PROV profile constraints + validators
+│
+├─ policy/                                       # OPA/Rego policy system (default-deny; explicit allow)
+│  ├─ rego/                                      # Policy-as-code (authoritative rules)
+│  ├─ tests/                                     # Policy tests (unit/regression/golden)
+│  └─ fixtures/                                  # Allow/deny + obligation fixtures (synthetic/redacted; deterministic)
+│
+├─ data/                                         # Canonical artifacts or pointers (repo-dependent; governed zones)
+│  ├─ raw/                                       # Immutable captures/manifests (never served)
+│  ├─ work/                                      # Intermediates + receipts/validation (regeneratable; never served)
+│  ├─ processed/                                 # Publishable artifacts (immutable per version)
+│  ├─ catalog/                                   # Machine-readable catalogs (DCAT/STAC/PROV; cross-linked)
+│  ├─ published/                                 # Published releases/exports (if tracked in-repo)
+│  └─ audit/                                     # Audit checkpoints (if stored in-repo; often external in prod)
+│
+├─ src/                                          # Runtime code (services, pipelines, adapters)
+│  ├─ api/                                       # Governed endpoints (routes/DTOs/auth/policy boundary)
+│  ├─ evidence/                                  # Evidence resolver (citations → artifacts; policy-filtered)
+│  ├─ policy/                                    # Policy adapter + reason codes (OPA client/wrapper)
+│  ├─ catalog/                                   # Catalog parsers/validators/linters (STAC/DCAT/PROV)
+│  ├─ ingest/                                    # Connectors + runner (acquire/discover/normalize/emit)
+│  ├─ indexers/                                  # Rebuildable projections (DB/search/tiles; deterministic)
+│  └─ ui/                                        # Frontend (only if monorepo; otherwise lives in top-level web/)
+│
+├─ tests/                                        # Test suites (repo-wide)
+│  ├─ integration/                               # Integration tests (service-backed)
+│  └─ eval/                                      # Focus Mode evaluation harness (gold sets + expectations)
+│
+└─ scripts/                                      # Operational wrappers (CI/local parity)
+   ├─ promote/                                   # Promotion/publish entrypoints (fail-closed; emits receipts)
+   ├─ lint/                                      # Lint/validate entrypoints (docs, schemas, policy, catalogs)
+   └─ rebuild/                                   # Rebuild projections (indexes, tiles, caches) with runbooks
 ~~~
 
 [↑ Back to top](#kansas-frontier-matrix-kfm)
