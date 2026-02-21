@@ -23,6 +23,8 @@
 [Core invariants](#core-invariants) •
 [Key concepts and glossary](#key-concepts-and-glossary) •
 [Architecture](#architecture) •
+[Domain model and spatiotemporal representation](#domain-model-and-spatiotemporal-representation) •
+[Governed API surface](#governed-api-surface) •
 [Truth path and promotion contract](#truth-path-and-promotion-contract) •
 [Deterministic identity and versioning](#deterministic-identity-and-versioning) •
 [Catalog triplet and profiles](#catalog-triplet-and-profiles) •
@@ -32,8 +34,10 @@
 [Governance](#governance) •
 [Datasets and sources](#datasets-and-sources) •
 [Repository layout](#repository-layout) •
+[CI, quality, and release gates](#ci-quality-and-release-gates) •
 [Contributing](#contributing) •
 [Security](#security) •
+[Operations and observability](#operations-and-observability) •
 [Roadmap](#roadmap) •
 [References](#references)
 
@@ -265,6 +269,107 @@ flowchart TB
 
 ---
 
+## Domain model and spatiotemporal representation
+
+KFM spans historical narrative and scientific observation. The domain model must support both without forcing everything into one brittle ontology.
+
+### Core entity set
+
+**PROPOSED pragmatic core (start small, expand by profile):**
+- **Place**: a spatially bounded concept (county, town, river reach, reservation boundary, survey section)
+- **Event**: a time-bounded occurrence (flood, tornado, treaty signing, railroad arrival)
+- **Observation**: a measured/recorded datapoint (streamflow reading, census count)
+- **Artifact**: a file/object (map scan, newspaper page, GeoParquet table)
+- **Dataset / DatasetVersion**: versioned collection
+- **Agent**: person/organization responsible for actions (publisher, pipeline, steward)
+- **Claim**: a narrative statement linked to evidence
+- **EvidenceBundle**: resolved evidence for a claim or feature
+- **Relationship**: typed edge between entities (located_in, part_of, affects, documented_by, etc.)
+
+### Geometry and time representation
+
+**Geometry types (minimum):**
+- points, lines, polygons, multipolygons, geometry collections
+- **Sensitive locations:** store precise geometry only under restricted policy; publish **generalized** derivatives separately
+
+**Time types (minimum):**
+- instant (`datetime`)
+- interval (`start`, `end`)
+- uncertain time (`circa`, ranges, approximate labels)
+
+**For historical data, include explicit time metadata:**
+- `time_precision`: year | month | day | unknown
+- `time_source`: EvidenceRef(s) supporting the time assignment
+
+### Uncertainty as first-class metadata
+
+To close the “rigor gap,” include uncertainty metadata in datasets and stories:
+
+- `spatial_uncertainty_m` (or categorical uncertainty class)
+- `temporal_uncertainty` (days or categorical)
+- `classification_confidence` (0–1) when automated extraction is used
+- `provenance_quality_notes`
+
+### Boundary change handling
+
+Some datasets require boundary changes over time (counties, districts, reservations).
+
+**Two approaches (DECISION NEEDED by domain):**
+- **Option A (simpler MVP):** store a boundary dataset version per change period; stories reference the correct version.
+- **Option B (advanced):** valid-time attributes on boundary features; query by time range.
+
+### Entity resolution strategy
+
+Entity resolution must be provenance-aware:
+
+- never merge entities without recording evidence and decision rationale
+- keep “candidate match” edges separate from “canonical sameAs” edges
+- support steward-only override with an audit record
+
+[↑ Back to top](#kansas-frontier-matrix-kfm)
+
+---
+
+## Governed API surface
+
+KFM’s API is the trust membrane: **policy, evidence resolution, and audit are enforced here**.
+
+### API principles
+
+- **Contract-first** (OpenAPI/JSON Schemas) — breaking changes are gated.
+- **Policy-safe errors** — do not leak restricted existence via response differences.
+- **Audit everywhere** — responses include an `audit_ref` (or equivalent) for traceability.
+
+### Illustrative endpoints (v1)
+
+> **NOTE**  
+> These are target endpoints; your branch may implement a subset.
+
+| Endpoint | Purpose | Policy posture |
+|---|---|---|
+| `GET /api/v1/catalog/datasets` | Dataset discovery (DCAT + policy labels) | Hide restricted by default; filter by role |
+| `GET /api/v1/datasets/{dataset_version_id}/query` | Query slice by bbox/time/filters | Enforce policy; return generalized outputs if required |
+| `GET /api/v1/tiles/{layer_id}/{z}/{x}/{y}` | Tile delivery | Only policy-safe tiles; cache varies by policy/auth |
+| `POST /api/v1/evidence/resolve` | Resolve EvidenceRef → EvidenceBundle | Fail closed if unresolvable/unauthorized |
+| `GET /api/v1/lineage/{dataset_id}` | Lineage graph + run receipts | Redact sensitive fields as required |
+| `POST /api/v1/focus/ask` | Focus Mode Q&A with citations | Must cite or abstain; log retrieval context |
+
+### Error model (starter)
+
+All errors should be stable and policy-safe.
+
+~~~json
+{
+  "error_code": "KFM_ACCESS_DENIED",
+  "message": "Not available.",
+  "audit_ref": "kfm://audit/entry/123"
+}
+~~~
+
+[↑ Back to top](#kansas-frontier-matrix-kfm)
+
+---
+
 ## Truth path and promotion contract
 
 KFM is “map-first,” but the map is only as trustworthy as the data lifecycle behind it.
@@ -431,6 +536,14 @@ KFM defines strict profiles for each catalog so validation is predictable.
 - `prov:used` and `prov:wasGeneratedBy` edges
 - `kfm:policy_decision` references (decision_id + obligations)
 - environment capture: container digest, git commit, parameters
+
+### Controlled vocabularies (starter)
+
+These vocabularies MUST be versioned and treated as production inputs:
+
+- `policy_label`: `public`, `public_generalized`, `restricted`, `restricted_sensitive_location`, `internal`, `embargoed`, `quarantine`
+- `artifact.zone`: `raw`, `work`, `quarantine`, `processed`, `catalog`, `published`
+- `citation.kind`: `dcat`, `stac`, `prov`, `doc`, `graph`, `url` *(discouraged)*
 
 ### Cross-linking rules (must be testable)
 
@@ -734,6 +847,40 @@ These vocabularies must be versioned and maintained:
 > - Do not embed precise coordinates in Story Nodes or Focus outputs unless policy explicitly allows.
 > - Treat redaction/generalization as a first-class transform recorded in PROV.
 
+### Obligations library (starter examples)
+
+Obligations are deterministic transformations and/or UX controls required to safely disclose information.
+
+| Category | Obligation | Purpose |
+|---|---|---|
+| Geometry | `generalize_geometry` | Replace precise geometry with aggregated forms (grid/dissolve/centroid/bbox) |
+| Geometry | `snap_to_grid` | Quantize coordinates to configured grid size |
+| Geometry | `clip_to_admin` | Clip geometry to approved administrative boundary level |
+| Attributes | `remove_attributes` | Apply allowlist/denylist; redact PII-like columns |
+| Attributes | `bucket_values` | Replace values with bins (e.g., age ranges) |
+| Attributes | `topcode_counts` | Cap counts to reduce re-identification by small numbers |
+| Runtime/UX | `show_notice` | Show a policy notice with a human-readable explanation |
+| Runtime/UX | `deny_export` | Block bulk downloads; allow only on-screen viewing |
+| Runtime/UX | `watermark_export` | Add watermark + dataset version + audit reference |
+| Time | `delay_release` | Apply embargo until date; treat as restricted until then |
+| Time | `coarsen_time` | Convert timestamps to coarser granularity (day/month/year) |
+
+### FAIR + CARE as enforceable behavior
+
+KFM adopts **FAIR** (Findable, Accessible, Interoperable, Reusable) and **CARE** (Collective Benefit, Authority to Control, Responsibility, Ethics) as operational principles — translated into gates, fixtures, tests, and UI contracts.
+
+**FAIR: what is enforced (starter)**
+- **Findable:** stable dataset IDs/version IDs/EvidenceRefs; policy-filtered search and faceting
+- **Accessible:** governed APIs with consistent auth + error model; fail-closed semantics
+- **Interoperable:** strict DCAT/STAC/PROV profiles with validated cross-links; standard geospatial formats
+- **Reusable:** explicit license/rights metadata; provenance + QA metrics recorded and exposed via evidence bundles
+
+**CARE: what is enforced (starter)**
+- **Collective benefit:** prefer publish-safe derivatives when raw materials are restricted
+- **Authority to control:** governance council review triggers; partner constraints honored via policy + obligations
+- **Responsibility:** uncertainty + limitations recorded; narratives reviewed for harm vectors
+- **Ethics:** default-deny when sensitivity/rights/community permissions are unclear
+
 ### Policy-as-code (recommended pattern)
 
 - Policy Decision Point (PDP): OPA or equivalent
@@ -799,14 +946,35 @@ Operational rules:
 - Exports must include attribution and license text automatically.
 - Story publishing gate blocks if rights are unclear for included media.
 
-### Narrative review triggers (starter)
+### PII risk and aggregation thresholds (starter rule)
 
-Any story should trigger additional review when:
+Some datasets (property ownership, crime, health, etc.) have re-identification risk.
 
-- it cites `restricted_sensitive_location` datasets
-- it could plausibly enable harm (vulnerable infrastructure, private individuals)
-- it is produced primarily from OCR without corroborating structured data
-- uncertainty is high or data quality is degraded
+Guidance:
+- do not publish individual-level records publicly
+- aggregate to safe geographies and apply minimum count thresholds
+- document thresholds as policy obligations
+- keep raw data restricted even if aggregated outputs are public
+
+### Audit log protections (starter)
+
+Audit logs can contain sensitive operational details.
+
+Rules:
+- logs are append-only
+- logs are redacted for PII and restricted info
+- log access is restricted to stewards/operators
+- retention and deletion policies are defined and enforced
+
+### Gap register and risk register (governed artifacts)
+
+KFM should maintain:
+- a **gap register** (unknowns + decisions needed) with owners and minimum verification steps
+- a **risk register** (threats to invariants) with mitigations + detection signals
+
+**PROPOSED locations:**
+- `docs/governance/gap-register.md`
+- `docs/governance/risk-register.md`
 
 [↑ Back to top](#kansas-frontier-matrix-kfm)
 
@@ -882,78 +1050,120 @@ Every source must have a registry entry with:
 
 ## Repository layout
 
-> **CONFIRMED:** KFM’s blueprints recommend a modular monorepo layout with `apps/` and `packages/` plus governed `data/`, `docs/`, `contracts/`, and `policy/`.  
+> **CONFIRMED (design intent):** KFM’s blueprints recommend a modular monorepo layout with `apps/` and `packages/` plus governed `data/`, `docs/`, `contracts/`, and `policy/`.  
 > **UNKNOWN until verified:** the exact current repo structure on your branch.
 
 ### Expanded layout (target + working structure)
 
-This layout combines the blueprint’s “clean layering” with practical repo needs (pipelines, infra, investigations, quarantine, and eval).
+This layout combines clean layering with practical repo needs (pipelines, infra, investigations, quarantine, CI gates, and eval).
 
 ~~~text
 Kansas-Frontier-Matrix/
 ├─ README.md
+├─ LICENSE                                        # SPDX-friendly (TBD)
+├─ CONTRIBUTING.md                                # Contributor workflow + gates
+├─ SECURITY.md                                    # Vulnerability reporting + security posture
+├─ CODE_OF_CONDUCT.md                             # Optional but recommended
+├─ CHANGELOG.md                                   # Release notes / version deltas (optional early)
 │
-├─ docs/                                         # Human-facing docs (governed; policy-labeled when served)
-│  ├─ adr/                                       # Architecture Decision Records
-│  ├─ governance/                                # Policy labels, obligations, review workflows, rubrics
-│  ├─ runbooks/                                  # Oncall/DR/incident procedures (operations)
-│  ├─ stories/                                   # Story Nodes (markdown + sidecars)
-│  ├─ investigations/                            # Research notebooks, spike notes, controlled experiments
-│  ├─ schemas/                                   # Human-readable schema docs (if not auto-generated)
-│  └─ standards/                                 # MetaBlock templates, doc lint rules, style guides
+├─ .github/                                       # GitHub-native governance and automation
+│  ├─ workflows/                                  # CI gates (lint/tests/policy/linkcheck/eval)
+│  ├─ ISSUE_TEMPLATE/                             # Dataset onboarding, bug, policy change templates
+│  ├─ PULL_REQUEST_TEMPLATE.md                    # PR checklist (governance-aware)
+│  └─ CODEOWNERS                                  # Ownership for policy/contracts/catalogs
 │
-├─ contracts/                                    # Machine-enforced contracts (CI gates + runtime boundaries)
-│  ├─ openapi/                                   # REST boundary contracts
-│  ├─ schemas/                                   # JSON Schemas (DTOs, manifests, receipts, configs)
-│  └─ profiles/                                  # DCAT/STAC/PROV profile constraints + validators
+├─ docs/                                          # Human-facing docs (governed; policy-labeled when served)
+│  ├─ adr/                                        # Architecture Decision Records (+ rollback plan)
+│  ├─ governance/                                 # Roles, labels, obligations, gap/risk registers
+│  ├─ runbooks/                                   # Oncall/DR/incident procedures (operations)
+│  ├─ stories/                                    # Story Nodes (markdown + sidecars)
+│  ├─ investigations/                             # Research notebooks, spikes, experiments
+│  ├─ schemas/                                    # Human-readable schema docs (if not auto-generated)
+│  ├─ standards/                                  # MetaBlock templates, doc lint rules, style guides
+│  └─ diagrams/                                   # Architecture/process diagrams (Mermaid or exports)
 │
-├─ policy/                                       # Policy-as-code (default-deny; explicit allow)
-│  ├─ rego/                                      # Authoritative policy rules
-│  ├─ tests/                                     # Policy tests (fixtures-driven; run in CI)
-│  └─ fixtures/                                  # Allow/deny + obligation fixtures (deterministic)
+├─ contracts/                                     # Machine-enforced contracts (CI gates + runtime boundaries)
+│  ├─ openapi/                                    # REST boundary contracts
+│  ├─ schemas/                                    # JSON Schemas (DTOs, manifests, receipts, configs)
+│  ├─ profiles/                                   # DCAT/STAC/PROV profile constraints + validators
+│  └─ vocab/                                      # Controlled vocab JSON (policy_label, zones, reason codes)
 │
-├─ data/                                         # Governed data zones (may be pointers in prod)
-│  ├─ specs/                                     # Dataset onboarding specs (canonical inputs for spec_hash)
-│  ├─ raw/                                       # Immutable acquisitions (never served)
-│  ├─ work/                                      # Intermediates (regeneratable; never served)
-│  ├─ quarantine/                                # Failed/blocked artifacts (rights/QA/sensitivity)
-│  ├─ processed/                                 # Publishable artifacts (immutable per version)
-│  ├─ catalog/                                   # DCAT/STAC/PROV + receipts (canonical metadata)
-│  ├─ published/                                 # Published releases/exports (policy-safe)
-│  └─ audit/                                     # Audit checkpoints (often external in prod)
+├─ policy/                                        # Policy-as-code (default-deny; explicit allow)
+│  ├─ rego/                                       # Authoritative policy rules
+│  ├─ tests/                                      # Policy tests (fixtures-driven; run in CI)
+│  ├─ fixtures/                                   # Allow/deny + obligation fixtures (deterministic)
+│  └─ bundles/                                    # Built policy bundles (optional; generated)
 │
-├─ apps/                                         # Deployable applications (service boundaries)
-│  ├─ api/                                       # Governed API (policy + evidence enforcement)
-│  ├─ ui/                                        # Map/Story/Focus frontend
-│  └─ workers/                                   # Pipeline runner + index builders
+├─ data/                                          # Governed data zones (may be pointers in prod)
+│  ├─ specs/                                      # Dataset onboarding specs (canonical inputs for spec_hash)
+│  ├─ registry/                                   # Governed registries (inputs to gates)
+│  │  ├─ sources/                                 # Source registry entries (license/cadence/sensitivity)
+│  │  ├─ datasets/                                # Dataset definitions (slugs, coverage, owners)
+│  │  ├─ layers/                                  # Layer configs (UI + tiles + evidence behavior)
+│  │  └─ vocab/                                   # Domain vocabularies (themes, types) beyond contracts/vocab
+│  ├─ raw/                                        # Immutable acquisitions (never served)
+│  ├─ work/                                       # Intermediates (regeneratable; never served)
+│  ├─ quarantine/                                 # Failed/blocked artifacts (rights/QA/sensitivity)
+│  ├─ processed/                                  # Publishable artifacts (immutable per version)
+│  ├─ catalog/                                    # DCAT/STAC/PROV + receipts (canonical metadata)
+│  ├─ published/                                  # Published releases/exports (policy-safe)
+│  └─ audit/                                      # Audit checkpoints (often external in prod)
 │
-├─ packages/                                     # Libraries aligned to clean architecture
-│  ├─ domain/                                    # Pure domain models + invariants
-│  ├─ usecases/                                  # Workflows: ingest/promote/resolve/publish
-│  ├─ adapters/                                  # Infrastructure adapters (DB, object store, OPA, search)
-│  ├─ evidence/                                  # EvidenceRef parsing + bundle assembly
-│  ├─ catalog/                                   # DCAT/STAC/PROV generation + validators
-│  └─ shared/                                    # DTOs, schemas, utils, constants, reason codes
+├─ apps/                                          # Deployable applications (service boundaries)
+│  ├─ api/                                        # Governed API (policy + evidence enforcement)
+│  ├─ ui/                                         # Map/Story/Focus frontend
+│  ├─ workers/                                    # Pipeline runner + index builders
+│  └─ studio/                                     # Optional: Story authoring/review UI (steward-gated)
 │
-├─ infra/                                        # Infrastructure as code (env + provisioning)
-│  ├─ k8s/                                       # Kubernetes manifests (base)
-│  ├─ helm/                                      # Helm charts (optional)
-│  └─ terraform/                                 # Cloud resources (optional)
+├─ packages/                                      # Libraries aligned to clean architecture
+│  ├─ domain/                                     # Pure domain models + invariants
+│  ├─ usecases/                                   # Workflows: ingest/promote/resolve/publish
+│  ├─ adapters/                                   # Infra adapters (DB, object store, OPA, search)
+│  ├─ evidence/                                   # EvidenceRef parsing + bundle assembly
+│  ├─ catalog/                                    # DCAT/STAC/PROV generation + validators
+│  ├─ policy/                                     # Policy client + reason codes + obligation mapping
+│  ├─ ui-components/                              # Optional shared UI components (evidence drawer, badges)
+│  └─ shared/                                     # DTOs, schemas, utils, constants
 │
-├─ tools/                                        # Deterministic validators + linkcheck + hashing tools
-│  ├─ validators/                                # validate_dcat / validate_stac / validate_prov
-│  ├─ linkcheck/                                 # catalog link checking; citation resolvability checks
-│  └─ hash/                                      # spec_hash generation + drift checks
+├─ infra/                                         # Infrastructure as code (env + provisioning)
+│  ├─ k8s/                                        # Kubernetes manifests (base)
+│  ├─ helm/                                       # Helm charts (optional)
+│  ├─ terraform/                                  # Cloud resources (optional)
+│  ├─ gitops/                                     # Argo/Flux overlays (optional)
+│  └─ dashboards/                                 # Grafana dashboards + alert rules (recommended)
 │
-├─ scripts/                                      # Operational entrypoints (CI/local parity)
-│  ├─ promote/                                   # Promotion/publish commands (fail-closed; emits receipts)
-│  ├─ lint/                                      # Lint/validate entrypoints (docs, schemas, policy, catalogs)
-│  ├─ rebuild/                                   # Rebuild projections (DB/search/tiles) from canonical artifacts
-│  └─ dev/                                       # Local dev orchestration helpers
+├─ tools/                                         # Deterministic validators + linkcheck + hashing tools
+│  ├─ validators/                                 # validate_dcat / validate_stac / validate_prov
+│  ├─ linkcheck/                                  # catalog link checking; citation resolvability checks
+│  ├─ hash/                                       # spec_hash generation + drift checks
+│  └─ generators/                                 # scaffolds for datasets/stories/manifests (optional)
 │
-└─ tests/                                        # Test suites (repo-wide)
-   ├─ integration/                               # Integration tests (service-backed)
-   └─ eval/                                      # Focus Mode evaluation harness (gold sets + expectations)
+├─ scripts/                                       # Operational entrypoints (CI/local parity)
+│  ├─ promote/                                    # Promotion/publish commands (fail-closed; emits receipts)
+│  ├─ lint/                                       # Lint/validate (docs, schemas, policy, catalogs)
+│  ├─ rebuild/                                    # Rebuild projections (DB/search/tiles) from canonical artifacts
+│  ├─ dev/                                        # Local dev orchestration helpers
+│  └─ release/                                    # Release automation (notes, tags, bundle publish) (optional)
+│
+├─ configs/                                       # Runtime configs (kept non-secret; override by env)
+│  ├─ env/                                        # Example env files (.env.example equivalents)
+│  ├─ pipelines/                                  # Pipeline runner configs (queues, budgets, schedules)
+│  └─ ui/                                         # UI feature flags, map defaults (policy-safe)
+│
+├─ migrations/                                    # Schema migrations for rebuildable projections
+│  ├─ postgis/                                    # PostGIS schema + migrations
+│  └─ search/                                     # Search index mappings/templates
+│
+├─ examples/                                      # Small, copyable reference artifacts (policy-safe)
+│  ├─ sample_dataset/                             # Minimal dataset spec + tiny data + catalogs
+│  ├─ sample_story/                               # Minimal Story Node v3 + citations
+│  └─ sample_policy/                              # Minimal policy fixtures + tests
+│
+└─ tests/                                         # Test suites (repo-wide)
+   ├─ unit/                                       # Domain/unit tests (recommended)
+   ├─ integration/                                # Integration tests (service-backed)
+   ├─ e2e/                                        # UI/API end-to-end smoke tests (recommended)
+   └─ eval/                                       # Focus Mode evaluation harness (gold sets + expectations)
 ~~~
 
 ### Where “CI gates” live (recommended)
@@ -962,15 +1172,58 @@ Kansas-Frontier-Matrix/
 - `tools/*` – deterministic validators/linkcheck tools used by CI and locally
 - `contracts/*` – schemas/profiles treated as production
 
-**Example CI gate list (starter):**
-- lint + typecheck
-- unit tests
-- validate DCAT/STAC/PROV
-- linkcheck citations
-- OPA policy tests
-- spec_hash drift check
-- evidence resolver contract tests
-- Focus Mode eval (optional early)
+[↑ Back to top](#kansas-frontier-matrix-kfm)
+
+---
+
+## CI, quality, and release gates
+
+KFM’s governance invariants must be encoded as tests that **fail closed**.
+
+### Test categories (minimum)
+
+- **Unit tests:** domain logic, spec_hash canonicalization, controlled vocab validations
+- **Schema tests:** DCAT/STAC/PROV profile validation
+- **Policy tests:** OPA fixture-driven allow/deny/obligation outcomes
+- **Contract tests:** OpenAPI schema diff checks + DTO validation
+- **Integration tests:** evidence resolver resolves sample refs (public + restricted behavior)
+- **E2E UI tests:** layer toggle → evidence drawer shows attribution; story → citations resolve; focus → citations resolve
+- **Eval tests:** Focus Mode golden queries pinned to DatasetVersions
+
+### Merge-blocking CI gates (PROPOSED minimum)
+
+- lint + typecheck (frontend + backend)
+- schema validation for any changed catalog artifacts
+- Story Node template validation
+- policy tests must pass
+- spec_hash tests must pass
+- link checker must pass (no broken citations)
+- security scanning (dependency vulnerabilities) + optional SBOM generation
+- accessibility smoke checks for UI changes (at least keyboard nav for evidence drawer)
+
+### Quality metrics to track (starter)
+
+Track governance and reliability metrics (and avoid perverse incentives):
+
+- % of promoted artifacts with explicit license metadata
+- % of Story Nodes with 100% resolvable citations
+- evidence resolver latency (P95)
+- tile serving latency (P95) for public layers
+- reindex time from processed artifacts
+- number of quarantined datasets (by reason code)
+- number of policy denials (by reason code)
+
+### Release “Definition of Done” (starter)
+
+A release is DONE when:
+
+- all gates pass in CI
+- promotion manifests are created for new dataset versions
+- evidence resolver contract tests pass for both public and restricted scenarios
+- Focus Mode evaluation harness passes golden queries
+- UI regression tests pass and accessibility checks show no major regressions
+- release notes include policy and data changes
+- audit ledger retention and monitoring are configured
 
 [↑ Back to top](#kansas-frontier-matrix-kfm)
 
@@ -1038,10 +1291,52 @@ Kansas-Frontier-Matrix/
 - TM-010: Is the audit ledger append-only and access-controlled? **MUST be YES**
 - TM-011: Are audit logs redacted where they could leak restricted data? **MUST be YES**
 
+### Supply chain integrity (recommended)
+
+To match provenance-first ethos at the software level:
+
+- generate SBOMs (SPDX) for built images
+- generate build provenance attestations (SLSA/in-toto)
+- verify attestations server-side (do not let browsers fetch attestations directly)
+- pin dependencies and verify checksums
+
 ### Reporting
 
 - Security contact: **TBD** (add an email/issue workflow)
 - For vulnerabilities affecting policy, exports, or evidence resolution: treat as **high severity** and fail-closed.
+
+[↑ Back to top](#kansas-frontier-matrix-kfm)
+
+---
+
+## Operations and observability
+
+KFM needs operational discipline because governance failures are production incidents.
+
+### Minimum operational capabilities (starter)
+
+- Dashboards for:
+  - API error rates and P95 latency (especially evidence resolver and tiles)
+  - policy denials by reason code
+  - quarantine counts by reason code
+- Alerts for:
+  - linkcheck failures on promoted datasets
+  - evidence resolver contract regressions
+  - unusually high 403/404 rates (leakage detection)
+- Rebuild pipeline:
+  - scheduled rebuild drills from canonical artifacts
+  - diff checks between projections and catalogs (sample-based)
+- DR rehearsal:
+  - backup/restore drill for canonical catalogs + audit ledger
+  - documented RTO/RPO targets (TBD)
+
+### Runbooks (where to put them)
+
+**Recommended:** `docs/runbooks/` with at least:
+- incident response (policy leakage, rights violation, broken citations)
+- restore from backup + reindex
+- rotate credentials (least privilege, audited)
+- publish rollback procedure (unpublish a DatasetVersion safely)
 
 [↑ Back to top](#kansas-frontier-matrix-kfm)
 
@@ -1098,8 +1393,8 @@ Kansas-Frontier-Matrix/
 ### Secondary reference library (provided PDFs, non-exhaustive)
 
 - GIS + mapping: *Mapping Urban Spaces*; *A Primer of GIS*; *Geostatistical Mapping*; *GIS in Sustainable Urban Planning*
-- Web + UI: *Research-Based Web Design & Usability Guidelines*; *Using SVG with CSS3 and HTML5*
-- DevOps + pipelines: *Docker GitOps OpenShift*; *Open-Source Data Pipelines*
+- Web + UI: *Research-Based Web Design & Usability Guidelines*; *Using SVG with CSS3 and HTML5*; *Professional Markdown Guide for GitHub Documentation*
+- DevOps + pipelines: *Docker GitOps OpenShift*; *Open-Source Data Pipelines*; *Podman in Action*
 - Security: *Software Security Guide for Developers (2026 Edition)*
 
 > **Reminder:** KFM is evidence-first. Don’t add user-visible content that cannot be traced to catalogs + evidence bundles.
