@@ -696,15 +696,66 @@ Kansas-Frontier-Matrix/
 ## References
 
 **Primary KFM specs (vNext):**
-- *KFM — Grand Master Blueprint / Compendium* (2026-02-21)
+- *KFM — Grand Master Blueprint & Governance Compendium* (2026-02-21)
 - *KFM — Definitive Design & Governance Guide* (2026-02-20)
 - *KFM — Ultimate Blueprint (Draft)* (2026-02-20)
 
-**Secondary reference library (provided PDFs, non-exhaustive):**
-- GIS + mapping: *Mapping Urban Spaces*; *A Primer of GIS*; *Geostatistical Mapping*; *GIS in Sustainable Urban Planning*
-- Web + UI: *Research-Based Web Design & Usability Guidelines*; *Using SVG with CSS3 and HTML5*
-- DevOps + pipelines: *Docker GitOps OpenShift*; *Open-Source Data Pipelines*
-- Security: *Software Security Guide for Developers (2026 Edition)*
+**Secondary reference library (provided PDFs, consolidated list):**
+- **GIS + mapping + cartography**
+  - *Mapping Urban Spaces*
+  - *Archaeological 3D GIS*
+  - *The Map Reader: Theories of Mapping Practice and Cartographic Representation*
+  - *A Primer of GIS: Fundamental Geographic and Cartographic Concepts*
+  - *A Practical Guide to Geostatistical Mapping (2nd ed.)*
+  - *GIS in Sustainable Urban Planning and Management: A Global Perspective*
+  - *Earth, Space, and Environmental Science Explorations with ArcGIS Pro (ed2)*
+
+- **Remote sensing / cloud geospatial**
+  - *Google Earth Engine Applications*
+
+- **Web + UX + documentation**
+  - *Research-Based Web Design & Usability Guidelines*
+  - *Professional Markdown Guide for GitHub Documentation*
+  - *Using SVG with CSS3 and HTML5*
+  - *The Ultimate HTML Reference*
+  - *Everything You Know About CSS Is Wrong*
+  - *The Book of JavaScript: A Practical Guide to Interactive Web Pages*
+  - *Build Your First Web App: Learn to Build Web Applications from Scratch*
+
+- **JavaScript / TypeScript / Full-stack**
+  - *Programming TypeScript*
+  - *TypeScript-AngularJS-FullStack*
+  - *Node.js-GraphQL*
+  - *Fullstack GraphQL Applications with GRANDstack*
+  - *Fullstack React: The Complete Guide to ReactJS and Friends*
+  - *ReactJS by Example*
+  - *SurviveJS — Webpack and React*
+  - *Pro MERN Stack Development (Mongo, Express, React, Node)*
+
+- **DevOps + pipelines + Kubernetes**
+  - *Docker GitOps OpenShift*
+  - *Data Pipelines: OpenShift / Podman / Kubernetes / Git*
+  - *Open Source Data Pipelines for Intelligent Applications*
+  - *Podman in Action*
+  - *From Containers to Kubernetes with Node.js*
+
+- **Security + software engineering**
+  - *Software Security Guide for Developers (2026 Edition) — Expanded Sections*
+  - *Software Design*
+
+- **Data science**
+  - *Practical Guide to Pandas for Data Science*
+  - *Data Mining — Concepts and Applications*
+  - *Applications of MATLAB in Science & Engineering*
+
+- **Graphics + 3D**
+  - *Programming 3D Applications with HTML5 and WebGL*
+  - *Developing Graphics Frameworks with Python and OpenGL*
+
+- **Other engineering reference**
+  - *Reverse Engineering of Real-Time System Models from Event Trace Recordings*
+  - *VLSI Physical Design: From Graph Partitioning to Timing Closure*
+  - *Test-Driven Development with Python (Obey the Testing Goat)*
 
 > **Reminder:** KFM is evidence-first. Don’t add user-visible content that cannot be traced to catalogs + evidence bundles.
 
