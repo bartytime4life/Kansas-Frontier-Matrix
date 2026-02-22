@@ -53,7 +53,7 @@ Governed dataset artifacts + catalogs for the KFM Truth Path (RAW → WORK/QUARA
 
 | Area | Purpose | Mutability | Must include |
 |---|---|---:|---|
-| `data/sources/` | **Source registry** entries (machine-readable) | editable | identity, access, cadence, license snapshot, sensitivity intent, QA notes |
+| `data/registry/sources/` | **Source registry** entries (machine-readable) | editable | identity, access, cadence, license snapshot, sensitivity intent, QA notes |
 | `data/raw/` | **Immutable acquisitions** from upstream | append-only | acquisition `manifest.json`, raw `artifacts/`, `checksums.json` |
 | `data/work/` | **Intermediate transforms** + QA + redaction candidates | editable | normalized `artifacts/`, `qa/`, `checksums.json` |
 | `data/processed/` | **Publishable artifacts** in KFM-approved formats | replace-by-version | `artifacts/`, `checksums.json`, derived runtime metadata, `qa/validation_report.json` |
@@ -92,9 +92,10 @@ This repo’s **recommended** layout keeps the “truth path” zones adjacent a
 ```text
 data/
 ├─ README.md
-├─ sources/
-│  ├─ <source_id>.yml
-│  └─ <source_id>.json
+├─ registry/
+│  └─ sources/
+│     ├─ <source_id>.yml
+│     └─ <source_id>.json
 ├─ raw/
 │  └─ <dataset_slug>/
 │     └─ <acquisition_id>/
@@ -182,7 +183,7 @@ KFM uses predictable paths so CI, policy, and evidence resolution can be determi
 
 Every upstream **source** must have a machine-readable registry entry; it is a promotion input (not optional documentation).
 
-Recommended location: `data/sources/<source_id>.yml` (or `.json`)
+Recommended location: `data/registry/sources/<source_id>.yml` (or `.json`)
 
 Minimum fields:
 - `source_id` (stable)
