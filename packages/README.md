@@ -1,252 +1,265 @@
-# packages/
-Shared, versioned, governed building blocks used across Kansas Frontier Matrix (KFM).
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/5d4a9d9c-2b42-4e3b-b4da-60e1fd5ce03b
+title: packages/ — Monorepo package registry
+type: standard
+version: v1
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - ../README.md
+  - ../docs/architecture/
+tags: [kfm, monorepo, packages]
+notes:
+  - This is a repository-facing guide for what belongs in /packages and how to keep boundaries enforceable.
+  - Update placeholders once workspace tooling and the concrete package list are confirmed.
+[/KFM_META_BLOCK_V2] -->
 
-Status: **Draft** • Owners: **TBD** • Policy: **public**
+# `packages/` — KFM Packages
+Buildable, reusable code units for Kansas Frontier Matrix (KFM): libraries, services, jobs, and UI modules.
 
-![status](https://img.shields.io/badge/status-draft-orange)
-![policy](https://img.shields.io/badge/policy-public-blue)
-![posture](https://img.shields.io/badge/posture-governed%20and%20evidence--first-6c5ce7)
+![status: draft](https://img.shields.io/badge/status-draft-orange)
+![scope: monorepo](https://img.shields.io/badge/scope-monorepo-blue)
+![governance: trust membrane](https://img.shields.io/badge/governance-trust--membrane-6f42c1)
+![ux: evidence-first](https://img.shields.io/badge/ux-evidence--first-2ea44f)
+![focus: cite-or-abstain](https://img.shields.io/badge/focus-cite--or--abstain-444)
 
----
-
-## Navigate
+## Quick navigation
 - [Purpose](#purpose)
 - [What belongs here](#what-belongs-here)
-- [Non-negotiable boundaries](#non-negotiable-boundaries)
-- [Package taxonomy](#package-taxonomy)
-- [Architecture reference](#architecture-reference)
-- [Create a new package](#create-a-new-package)
-- [Definition of done](#definition-of-done)
-- [Illustrative layout](#illustrative-layout)
+- [Directory layout](#directory-layout)
+- [Dependency rules](#dependency-rules)
+- [Trust membrane rules](#trust-membrane-rules)
+- [Package quality gates](#package-quality-gates)
+- [Add a new package](#add-a-new-package)
+- [Proposed baseline package set](#proposed-baseline-package-set)
+- [Fill-in repo specifics](#fill-in-repo-specifics)
 
 ---
 
 ## Purpose
-`/packages` is where we put **reusable code and contracts** that are shared across KFM.
+`/packages` is where **reusable, testable units** live.
 
-Examples of what “shared” usually means:
-- Used by more than one service, pipeline, UI surface, or tool.
-- Encodes “one way” of doing something that must stay consistent (IDs, schemas, policy decisions, evidence bindings).
-- Represents a governed contract (schemas, API DTOs, provenance formats, policy labels, redaction rules).
+A “package” is any module we expect to:
+- reuse from multiple places, **or**
+- deploy/build independently, **or**
+- treat as a contract surface (schemas, OpenAPI, policy adapters, etc.).
 
 > **NOTE**
-> This folder is not the “misc” drawer. If something is local to a single app/service, keep it in that app/service.
-
-[Back to top](#packages)
+> Packages are part of the *trust membrane*: if a package bypasses policy enforcement, repository interfaces, or provenance, it weakens the entire system. See [Trust membrane rules](#trust-membrane-rules).
 
 ---
 
 ## What belongs here
-Common good fits:
+Typical package types (mix-and-match based on the repo’s actual language/tooling):
 
-- **Contracts**
-  - JSON Schemas, OpenAPI fragments, GraphQL SDL, policy label enums, obligation libraries, error models.
-- **Governance and policy helpers**
-  - Policy evaluation utilities, redaction/generalization helpers, audit-log event shapes.
-- **Core domain and use-case logic**
-  - Pure code (no network / no filesystem / no DB calls) that is testable and deterministic.
-- **Shared UI primitives**
-  - Evidence drawer components, map layer metadata renderers, time controls (only if truly shared).
-- **Pipeline building blocks**
-  - Normalization helpers, validation runners, provenance/run-receipt writers.
-- **Developer tooling**
-  - Linters, generators, validators, fixtures that enforce contracts and prevent drift.
+### 1) Libraries
+- domain models (entities, invariants)
+- schema registries (DTOs, JSON Schema, STAC/DCAT/PROV profiles)
+- shared utilities (logging, hashing, time utilities, geo utilities)
 
-[Back to top](#packages)
+### 2) Services
+- governed API service(s)
+- evidence resolver service/library
+- policy engine adapter + fixtures
+- catalog validator/generator
 
----
+### 3) Jobs & pipelines
+- ingestion connectors, snapshotters
+- validators and QA reporters
+- index builders (search, graph, tile bundles)
 
-## Non-negotiable boundaries
-These are “fail closed” rules for anything inside `/packages`.
-
-### Do not break the trust membrane
-- Frontend/external clients must not access databases or object storage directly.
-- Core logic must not bypass repository interfaces to talk directly to storage.
-- All access should flow through governed APIs that apply policy, redaction, and logging consistently.
-
-> **WARNING**
-> If a package encourages direct storage access or bypasses the policy boundary, it is a security and governance defect.
-
-### Do not ship secrets
-- No credentials, tokens, private keys, or real production connection strings.
-- No sensitive raw datasets. Packages are code + contracts + safe test fixtures.
-
-### Do not embed “unverifiable truth”
-If a package influences user-facing claims (maps/stories), it must be able to:
-- reference evidence (stable identifiers),
-- produce a reproducible audit record (run receipt),
-- preserve provenance (inputs → transforms → outputs).
-
-[Back to top](#packages)
+### 4) UI modules and SDKs
+- UI components used across surfaces (Map / Story / Focus)
+- client SDKs generated from API contracts (when used)
 
 ---
 
-## Package taxonomy
-Use this taxonomy to keep layers clean and to keep testing easy.
-
-| Package type | What it contains | What it must not contain | Typical tests |
-|---|---|---|---|
-| **Domain** | Entities, value objects, invariants, parsing/formatting of core types | I/O, HTTP, DB drivers, cloud SDKs | Pure unit tests |
-| **Use cases** | Application services, orchestration logic, authorization/policy *decisions* | UI components, storage implementations | Unit + contract tests |
-| **Contracts** | Schemas, DTOs, ID formats, error models, policy labels | Business logic, I/O | Schema validation tests |
-| **Policy** | Policy rules, obligation evaluation, redaction/generalization helpers | DB calls, UI state | Unit + golden tests |
-| **Adapters** | Integrations behind interfaces (storage adapters, external APIs) | Domain rules, UI | Integration tests (mocked upstream) |
-| **UI shared** | Reusable components used by multiple UI routes/apps | API secrets, direct DB/object access | Component/unit tests |
-| **Tooling** | Code generators, linters, validators, CI helpers | Production runtime logic | CLI tests |
-
-> **TIP**
-> If you’re unsure where something belongs, start by deciding what it **depends on**.  
-> “Depends on storage” usually means “adapter,” not “domain.”
-
-[Back to top](#packages)
-
----
-
-## Architecture reference
-This is the default dependency shape we want across packages and services.
-
-```mermaid
-flowchart TB
-  subgraph Clients
-    UI[Map and Story UI]
-    Tools[CLI and Dev Tools]
-  end
-
-  subgraph GovernedRuntime
-    API[Governed APIs]
-    Policy[Policy Decision Point]
-  end
-
-  subgraph Core
-    UseCases[Use Cases]
-    Domain[Domain]
-    Contracts[Contracts]
-  end
-
-  subgraph Infra
-    Repos[Repository Interfaces]
-    Adapters[Infrastructure Adapters]
-  end
-
-  subgraph Stores
-    Obj[Object Storage and Catalogs]
-    DB[Databases and Indexes]
-  end
-
-  UI --> API
-  Tools --> API
-  API --> Policy
-  Policy --> UseCases
-  UseCases --> Domain
-  UseCases --> Contracts
-  UseCases --> Repos
-  Repos --> Adapters
-  Adapters --> Obj
-  Adapters --> DB
-```
-
-Key idea: packages under `/packages` should mainly live in **Core** (Domain/UseCases/Contracts/Policy) and **Tooling**. Adapters can exist here *only* when they are shared across multiple runtimes and still obey the boundary.
-
-[Back to top](#packages)
-
----
-
-## Create a new package
-### Step 1 — Choose the package type
-Pick **one primary type** from the taxonomy above. If you need two, you probably need **two packages**.
-
-### Step 2 — Add documentation metadata
-Use a KFM MetaBlock (no YAML frontmatter). Put it at the top of:
-- the package README, and
-- any contract/spec docs that affect governed behavior.
-
-### Step 3 — Define public surface area
-A package should make its intended API obvious:
-- Export only what is meant to be used.
-- Keep internals internal.
-- Document stability expectations.
-
-### Step 4 — Add tests that enforce invariants
-At minimum, have one of:
-- unit tests for deterministic logic,
-- schema tests for contracts,
-- golden tests for policy/redaction behavior,
-- compatibility tests if you’re changing a shared interface.
-
-### Step 5 — Prove governance compatibility
-If the package touches evidence/provenance/policy:
-- it must produce stable identifiers (or accept them as inputs),
-- it must not create “mystery state” that cannot be audited.
-
-[Back to top](#packages)
-
----
-
-## Definition of done
-Use this checklist before considering a package “ready to depend on.”
-
-- [ ] **Clear purpose** (one paragraph) and explicit non-goals
-- [ ] **Package type** selected from the taxonomy and documented
-- [ ] **KFM MetaBlock** included with owners + policy label
-- [ ] **Public API documented** (what is stable vs internal)
-- [ ] **Tests added** appropriate to the package type
-- [ ] **No secrets** and no production data checked in
-- [ ] **Trust membrane respected**
-- [ ] **Contracts validated** (schemas compile/validate; examples included)
-- [ ] **Change safety**: breaking changes are either avoided or versioned explicitly
-
-[Back to top](#packages)
-
----
-
-## Illustrative layout
-This is an example of what a healthy `/packages` directory can look like. Adjust to match the repo’s actual build system.
+## Directory layout
+Minimum recommended structure (adjust to match repo reality):
 
 ```text
 packages/
-  README.md
-
-  <package-name>/
-    README.md
-    package.json (or equivalent)
-    src/
-    test/
-    contracts/ (optional)
+├─ <package-name>/
+│  ├─ README.md
+│  ├─ src/
+│  ├─ test/                # or tests/
+│  ├─ contracts/           # OPTIONAL: OpenAPI / GraphQL / JSON Schema / profiles
+│  ├─ fixtures/            # OPTIONAL: policy fixtures, golden files
+│  └─ CHANGELOG.md         # OPTIONAL
+└─ README.md               # you are here
 ```
 
-### Optional: package index table
-If you keep an index here, only include packages that actually exist (no placeholders).
+### Package README expectations
+Each package README should answer:
+- **What** it does (1–2 sentences)
+- **Where** it sits in the architecture (Domain / Use Cases / Interfaces / Infra)
+- **Contracts** it owns (schemas, endpoints)
+- **How** to test it locally
+- **How** it is used (imports and/or runtime integration)
 
-| Package | Type | Owner | Notes |
-|---|---|---|---|
-| *(add real packages here)* |  |  |  |
+---
 
-[Back to top](#packages)
+## Dependency rules
+We use a layered architecture to keep packages composable and auditable.
+
+### Allowed dependency direction
+- **Domain** → depends on nothing (pure models + rules)
+- **Use cases** → may depend on Domain
+- **Interfaces** → may depend on Domain + Use cases (contracts, repositories, adapters)
+- **Infrastructure** → may depend on everything (DB, storage, network clients)
+
+```mermaid
+graph TD
+  Domain --> UseCases
+  Domain --> Interfaces
+  UseCases --> Interfaces
+  Interfaces --> Infrastructure
+
+  %% Runtime surfaces
+  Infrastructure --> GovernedAPI
+  GovernedAPI --> UI
+```
+
+### Practical rules of thumb
+- Domain packages **must not** import DB clients, HTTP clients, filesystem, or cloud SDKs.
+- Infrastructure packages **must not** be imported by Domain packages.
+- Contracts (OpenAPI/JSON schemas/etc.) belong close to Interfaces (or in a dedicated `contracts/` package).
+
+> **WARNING**
+> If a package makes it “easy” to access storage directly from UI or client code, it is probably breaking the trust membrane.
+
+---
+
+## Trust membrane rules
+Packages must preserve the trust membrane boundary:
+
+```mermaid
+graph LR
+  UI[UI / External clients] --> API[Governed API boundary]
+  API --> Policy[Policy decisions]
+  API --> Evidence[Evidence resolver]
+  Evidence --> Catalogs[Catalogs: DCAT / STAC / PROV]
+  Evidence --> Storage[(Object storage)]
+  Evidence --> Indexes[(Rebuildable projections)]
+```
+
+**Non-negotiables (apply across packages):**
+- UI and external clients must not talk to databases or object storage directly.
+- Core logic should not bypass repository interfaces to talk directly to storage.
+- Access should flow through governed APIs that apply policy decisions, redactions, and audit logging consistently.
+
+---
+
+## Package quality gates
+“Quality gates” here are the *minimum checks* a package must pass before it can be depended on by runtime surfaces.
+
+### Required for all packages
+- ✅ Deterministic build (same input → same output)
+- ✅ Unit tests for core behavior
+- ✅ Lint/format (whatever the repo standard is)
+- ✅ Clear public API boundary (what is “exported” vs internal)
+- ✅ Minimal docs (package README)
+
+### Additional gates for governance-critical packages
+If a package impacts **policy**, **evidence resolution**, **catalogs/lineage**, or **runtime serving**, it must also include:
+- ✅ Contract tests (OpenAPI/DTO/schema validation, backward compatible changes)
+- ✅ Policy fixtures + tests (fail-closed behavior)
+- ✅ Audit event / run-receipt emission (where applicable)
+- ✅ Redaction/generalization obligations captured at the interface boundary
+
+> **NOTE**
+> If your package produces artifacts that may be promoted into runtime surfaces, it must respect the data lifecycle zones (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED) and must fail closed when required artifacts/metadata are missing.
+
+---
+
+## Add a new package
+1) **Create the folder**
+- `packages/<package-name>/`
+
+2) **Add minimal structure**
+- `README.md`
+- `src/`
+- `test/` (or `tests/`)
+- optional: `contracts/`, `fixtures/`
+
+3) **Pick the layer**
+- Domain / Use cases / Interfaces / Infrastructure  
+…and write it at the top of the package README.
+
+4) **Define the public surface**
+- Export a small, intentional API from a single entrypoint (e.g., `src/index.*`).
+
+5) **Add tests**
+- Unit tests for behavior
+- If it’s an interface boundary: contract tests
+- If it’s governance-critical: policy fixtures + fail-closed tests
+
+6) **Wire it into the repo build**
+- Add the package to the repo workspace configuration (tooling-specific).
+- Ensure CI runs its tests.
+
+---
+
+## Proposed baseline package set
+This is a *suggested* decomposition based on the vNext build plan. Adjust names and grouping based on what actually exists in-repo.
+
+| Package slot | Role | Layer bias |
+|---|---|---|
+| `api` | Governed API endpoints (dataset discovery, queries, tile/feature serving) | Infrastructure |
+| `policy` | Policy engine adapter + fixtures | Interfaces / Infrastructure |
+| `evidence` | Evidence resolver: EvidenceRef → EvidenceBundle (+ redaction) | Interfaces / Infrastructure |
+| `catalog` | Catalog parsers, validators, triplet generation | Interfaces |
+| `ingest` | Connectors + runner (RAW/WORK production) | Infrastructure |
+| `indexers` | Rebuildable projections (search/graph/tiles) | Infrastructure |
+| `ui` | Map/Story/Focus surfaces (client modules) | UI |
+
+---
+
+## Fill-in repo specifics
+Replace the placeholders below once confirmed:
+
+- Workspace tool: **TBD** (pnpm / yarn / npm / poetry / uv / …)
+- Package naming convention: **TBD**
+- Standard test command: **TBD**
+- Standard lint command: **TBD**
+- Where contracts live: **TBD** (`packages/contracts`, per-package `contracts/`, or `docs/contracts/`)
+- Where policy fixtures live: **TBD** (`packages/policy/fixtures`, etc.)
 
 ---
 
 <details>
-  <summary><strong>Appendix: MetaBlock starter snippet</strong></summary>
+<summary>Appendix: Suggested package README template</summary>
 
-Paste and fill for new package docs (example shape only):
+```markdown
+# <package-name>
 
-```text
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<stable-id>
-title: packages/<package-name>/README.md
-type: guide
-version: v1
-status: draft
-owners: <team or names>
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public|restricted|...
-tags:
-  - kfm
-  - packages
-notes:
-  - <short notes>
-[/KFM_META_BLOCK_V2]
+**Layer:** Domain | Use cases | Interfaces | Infrastructure  
+**Owners:** TBD  
+**Policy label:** public | restricted | ...
+
+## What this does
+One paragraph.
+
+## Public API
+- `foo()`: …
+- `bar`: …
+
+## Contracts (if any)
+- OpenAPI: `contracts/openapi.yaml`
+- Schemas: `contracts/*.schema.json`
+
+## How to test
+- `...`
+
+## Notes
+- Trust membrane considerations
+- Promotion / provenance considerations
 ```
-
 </details>
+
+---
+
+[Back to top](#packages--kfm-packages)
