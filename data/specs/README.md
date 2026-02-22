@@ -144,15 +144,15 @@ Promotion gates are enforced elsewhere (CI/policy), but the **inputs** are decla
 
 ```mermaid
 flowchart LR
-  A[dataset spec\n(data/specs/.../spec.v1.json)] --> B[canonicalize + spec_hash]
-  B --> C[dataset_version_id]
-  C --> D[pipeline run]
-  D --> E[run_receipt + checksums]
-  D --> F[processed artifacts]
-  F --> G[DCAT + STAC + PROV catalogs]
+  A["dataset spec<br/>data&#47;specs&#47;...&#47;spec.v1.json"] --> B["canonicalize + spec_hash"]
+  B --> C["dataset_version_id"]
+  C --> D["pipeline run"]
+  D --> E["run_receipt + checksums"]
+  D --> F["processed artifacts"]
+  F --> G["DCAT + STAC + PROV catalogs"]
   E --> G
-  G --> H[promotion manifest]
-  H --> I[published runtime surfaces\n(API + UI + Evidence Resolver)]
+  G --> H["promotion manifest"]
+  H --> I["published runtime surfaces<br/>API + UI + Evidence Resolver"]
 ```
 
 ### Gate→spec linkage (at a glance)
