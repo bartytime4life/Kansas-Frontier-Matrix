@@ -49,14 +49,14 @@ KFM’s “truth path” includes a **WORK/QUARANTINE** stage between **RAW** ac
 
 ```mermaid
 flowchart LR
-  A[Upstream] --> B[RAW]
-  B --> C[WORK]
-  C --> D[QUARANTINE]
-  D -->|cleared| E[PROCESSED]
-  E --> F[CATALOG\n(DCAT+STAC+PROV\n+ run receipts)]
-  F --> G[PUBLISHED\n(governed API/UI)]
+  A["Upstream"] --> B["RAW"]
+  B --> C["WORK"]
+  C --> D["QUARANTINE"]
+  D -->|"cleared"| E["PROCESSED"]
+  E --> F["CATALOG<br/>DCAT + STAC + PROV<br/>run receipts"]
+  F --> G["PUBLISHED<br/>governed API / UI"]
 
-  D -.->|blocked| G
+  D -. "blocked" .-> G
 ```
 
 **Interpretation for this repo:** `data/quarantine/` is an explicit quarantine sub-zone. If your implementation treats quarantine as a subfolder of `data/work/`, adjust paths — the behaviors described here still apply.
