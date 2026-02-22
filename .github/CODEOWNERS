@@ -6,92 +6,92 @@
 ########################################
 # Default (whole repo)
 ########################################
-* @kfm-core-maintainers
+* @bartytime4life
 
 ########################################
 # High-risk: CI / automation
 ########################################
-/.github/ @kfm-devops @kfm-security
-/.github/CODEOWNERS @kfm-devops @kfm-security
-/.github/workflows/ @kfm-devops @kfm-security
-/.github/actions/ @kfm-devops @kfm-security
+/.github/* @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+/.github/workflows/* @bartytime4life
+/.github/actions/* @bartytime4life
 
 ########################################
 # Repo governance / meta docs
 ########################################
-/SECURITY.md @kfm-security @kfm-core-maintainers
-/CONTRIBUTING.md @kfm-governance @kfm-docs-team
-/LICENSE @kfm-core-maintainers
-/CITATION.cff @kfm-docs-team
-/CHANGELOG.md @kfm-release-managers
+/SECURITY.md @bartytime4life
+/CONTRIBUTING.md @bartytime4life
+/LICENSE @bartytime4life
+/CITATION.cff @bartytime4life
+/CHANGELOG.md @bartytime4life
 
 ########################################
 # Documentation (governed)
 ########################################
-/docs/ @kfm-docs-team
-/docs/architecture/ @kfm-architecture
-/docs/standards/ @kfm-standards
-/docs/templates/ @kfm-docs-team
-/docs/governance/ @kfm-governance
+/docs/* @bartytime4life
+/docs/architecture/* @bartytime4life
+/docs/standards/* @bartytime4life
+/docs/templates/* @bartytime4life
+/docs/governance/* @bartytime4life
 
 # Domain module docs are owned by domain stewards (not the general docs team).
-/docs/data/ @kfm-domain-stewards
+/docs/data/* @bartytime4life
 
 # Story Nodes (narratives) are governed content.
-/docs/reports/story_nodes/ @kfm-story-editors @kfm-governance
+/docs/reports/story_nodes/* @bartytime4life
 
 ########################################
 # Data (raw/work/processed + catalogs)
 ########################################
-/data/ @kfm-domain-stewards @kfm-governance
-/data/**/raw/ @kfm-domain-stewards @kfm-governance
-/data/**/work/ @kfm-domain-stewards
-/data/**/processed/ @kfm-domain-stewards
+/data/* @bartytime4life
+/data/**/raw/* @bartytime4life
+/data/**/work/* @bartytime4life
+/data/**/processed/* @bartytime4life
 
 # Catalog outputs (triplet: STAC/DCAT/PROV) — pipeline + standards (and governance if desired).
-/data/stac/ @kfm-pipelines @kfm-standards @kfm-governance
-/data/catalog/dcat/ @kfm-pipelines @kfm-standards @kfm-governance
-/data/prov/ @kfm-pipelines @kfm-standards @kfm-governance
+/data/stac/* @bartytime4life
+/data/catalog/dcat/* @bartytime4life
+/data/prov/* @bartytime4life
 
 # Graph import/export artifacts.
-/data/graph/ @kfm-graph
+/data/graph/* @bartytime4life
 
 ########################################
 # Schemas (contract-first boundary)
 ########################################
-/schemas/ @kfm-standards
-/schemas/stac/ @kfm-standards
-/schemas/dcat/ @kfm-standards
-/schemas/prov/ @kfm-standards
-/schemas/storynodes/ @kfm-story-editors @kfm-standards
-/schemas/ui/ @kfm-frontend @kfm-standards
-/schemas/telemetry/ @kfm-platform @kfm-standards
+/schemas/* @bartytime4life
+/schemas/stac/* @bartytime4life
+/schemas/dcat/* @bartytime4life
+/schemas/prov/* @bartytime4life
+/schemas/storynodes/* @bartytime4life
+/schemas/ui/* @bartytime4life
+/schemas/telemetry/* @bartytime4life
 
 ########################################
 # Runtime code
 ########################################
-/src/pipelines/ @kfm-pipelines
-/src/graph/ @kfm-graph
-/src/server/ @kfm-api-team
-/src/server/contracts/ @kfm-api-team @kfm-standards
-/web/ @kfm-frontend
+/src/pipelines/* @bartytime4life
+/src/graph/* @bartytime4life
+/src/server/* @bartytime4life
+/src/server/contracts/* @bartytime4life
+/web/* @bartytime4life
 
 ########################################
 # Tooling / tests / experiments / releases
 ########################################
-/tools/ @kfm-platform
-/tests/ @kfm-platform
+/tools/* @bartytime4life
+/tests/* @bartytime4life
 
 # Methods & computational experiments (runs, notebooks, model cards).
-/mcp/ @kfm-ml @kfm-governance
+/mcp/* @bartytime4life
 
 # Packaged release artifacts (data bundles, manifests, SBOM, etc).
-/releases/ @kfm-release-managers @kfm-governance @kfm-security
+/releases/* @bartytime4life
 
 ########################################
 # Platform / dev config files (if present)
 ########################################
-/.pre-commit-config.yaml @kfm-platform
-/.editorconfig @kfm-platform
-/docker-compose.yml @kfm-platform
-/.env.example @kfm-platform
+/.pre-commit-config.yaml @bartytime4life
+/.editorconfig @bartytime4life
+/docker-compose.yml @bartytime4life
+/.env.example @bartytime4life
