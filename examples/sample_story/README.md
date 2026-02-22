@@ -1,23 +1,3 @@
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/11111111-1111-1111-1111-111111111111@v1
-title: Example — Sample Story Node v3 (README)
-type: guide
-version: v1
-status: draft
-owners: <fill: team or names>
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: public
-related:
-  - kfm://story/22222222-2222-2222-2222-222222222222@v1
-tags:
-  - kfm
-  - example
-  - story-node
-notes:
-  - This is an example scaffold. Replace placeholder IDs before publishing real content.
-[/KFM_META_BLOCK_V2]
-
 # Sample Story Node v3 (KFM) — Example Folder
 
 Minimal, copy‑pasteable example of a **KFM Story Node v3**: **markdown narrative + JSON sidecar** that binds narrative to **map state** and **citations**.
