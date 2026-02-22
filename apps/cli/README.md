@@ -1,22 +1,3 @@
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/apps_cli_readme@v1
-title: KFM CLI
-type: guide
-version: v1
-status: draft
-owners: TBD
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: public
-tags:
-  - kfm
-  - cli
-  - governance
-  - ops
-notes:
-  - This README documents the intended contract + operator workflow for the CLI in apps/cli.
-[/KFM_META_BLOCK_V2]
-
 # KFM CLI
 Governed command-line interface for Kansas Frontier Matrix (KFM) operations: ingest, validate, promote, rebuild projections, and inspect evidence.
 
