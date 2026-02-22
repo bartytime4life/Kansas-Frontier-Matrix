@@ -1,258 +1,248 @@
-# data/quarantine
-Fail-closed holding area for datasets/artifacts that **must not** be promoted or served until issues are resolved.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/1b9f1c6a-21b9-4c1b-93a4-2c7cbd0fb2a9
+title: data/quarantine — Quarantine zone README
+type: standard
+version: v1
+status: draft
+owners: kfm-core (TBD)
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - kfm://doc/kfm-gdg-vnext (TBD)
+tags:
+  - kfm
+  - data-lifecycle
+  - quarantine
+notes:
+  - Quarantined items are not promotable and must remain default-deny.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Active  
-**Owners:** Data Steward(s) + Pipeline Operator(s) *(fill in per repo governance)*  
-`zone: quarantine` `promotion: blocked` `policy: deny-by-default` `runtime: never serve`
+<a id="top"></a>
 
----
+# `data/quarantine/` — Quarantine zone (promotion blocked)
 
-## Navigation
-- [Purpose](#purpose)
-- [Where quarantine fits](#where-quarantine-fits)
-- [What goes here](#what-goes-here)
-- [What must not go here](#what-must-not-go-here)
-- [Directory layout](#directory-layout)
-- [Quarantine record](#quarantine-record)
-- [Workflow](#workflow)
-- [Promotion checklist](#promotion-checklist)
-- [Safety and sensitive data](#safety-and-sensitive-data)
+> **Purpose:** Store dataset versions/artifacts that cannot be promoted due to validation failure, unclear licensing/rights, sensitivity concerns, or upstream instability.  
+> **Hard rule:** Anything under `data/quarantine/` is **not** served by runtime surfaces (API/UI) and **must not** be promoted until cleared.
+
+![zone](https://img.shields.io/badge/zone-quarantine-blue)
+![promotion](https://img.shields.io/badge/promotion-blocked-critical)
+![policy](https://img.shields.io/badge/policy-default--deny-important)
+![governance](https://img.shields.io/badge/governance-promotion%20contract-informational)
+
+## Quick navigation
+- [Why this folder exists](#why-this-folder-exists)
+- [What belongs here](#what-belongs-here)
+- [What must NOT be here](#what-must-not-be-here)
+- [Directory conventions](#directory-conventions)
+- [Quarantine record required](#quarantine-record-required)
+- [Workflow](#workflow-fail-closed)
+- [How to remediate and promote](#how-to-remediate-and-promote)
+- [Definition of Done for clearing quarantine](#definition-of-done-for-clearing-quarantine)
 - [Appendix: templates](#appendix-templates)
 
 ---
 
-## Purpose
-This directory exists to isolate any dataset version or intermediate artifact that **cannot pass minimum promotion requirements** (e.g., licensing unclear, validation failures, sensitivity concerns, upstream instability). Quarantine is a **fail-closed** safety mechanism: items here are **blocked from promotion** and **must not be served** by any runtime surface (API, Map, Story, Focus).
+## Why this folder exists
 
-> **WARNING:** Do not “temporarily promote” quarantined datasets.  
-> Quarantine exists specifically to prevent ad hoc publication.
-
----
-
-## Where quarantine fits
-Quarantine is part of the broader “WORK / QUARANTINE” stage of the truth path (between RAW acquisition and PROCESSED publishable artifacts).
+KFM’s “truth path” includes a **WORK/QUARANTINE** stage between **RAW** acquisition and **PROCESSED** publishing. Quarantine is the **fail-closed** holding area where we keep intermediate artifacts + evidence while governance/QA issues are resolved.
 
 ```mermaid
 flowchart LR
-  U[Upstream] --> R[RAW]
-  R --> W[WORK]
-  W -->|fails gates / unresolved| Q[QUARANTINE]
-  W --> P[PROCESSED]
-  P --> C[CATALOG]
-  C --> Pub[PUBLISHED surfaces]
+  A[Upstream] --> B[RAW]
+  B --> C[WORK]
+  C --> D[QUARANTINE]
+  D -->|cleared| E[PROCESSED]
+  E --> F[CATALOG\n(DCAT+STAC+PROV\n+ run receipts)]
+  F --> G[PUBLISHED\n(governed API/UI)]
 
-  %% Guidance
-  Q:::blocked
-  classDef blocked fill:#fff3cd,stroke:#b45309,stroke-width:1px;
+  D -.->|blocked| G
 ```
 
----
-
-## What goes here
-Put a dataset/artifact in **quarantine** when any of the following are true:
-
-- **License / rights are unclear** (cannot confidently publish)
-- **Validation fails** (schema/spatial/temporal/link checks, etc.)
-- **Sensitivity classification is unclear** (or indicates restricted categories)
-- **Upstream instability prevents reproducible acquisition** (cannot re-fetch deterministically)
-
-Quarantine may contain:
-- QA/validation reports
-- Normalized intermediate outputs used for debugging and remediation
-- Candidate redactions/generalizations (or notes describing them)
-- Minimal metadata needed to resolve licensing/sensitivity/reproducibility questions
+**Interpretation for this repo:** `data/quarantine/` is an explicit quarantine sub-zone. If your implementation treats quarantine as a subfolder of `data/work/`, adjust paths — the behaviors described here still apply.
 
 ---
 
-## What must not go here
-- Anything already approved for **PROCESSED + CATALOG** release.
-- Anything intended to be read by end users or surfaced as “available data”.
-- Secrets or credentials of any kind.
-- “Temporary” copies meant to bypass gates.
+## What belongs here
 
-If you need a scratch area for experimentation that is not a governance state, use a workspace elsewhere; **do not overload quarantine** for convenience.
+Put an item in `data/quarantine/` when **any** of the following is true:
+
+1. **Validation failed** (schema, geometry, completeness, drift thresholds, etc.).
+2. **Licensing/rights are unclear** (unknown license, conflicting terms, missing attribution requirements).
+3. **Sensitivity classification is unclear** or a **redaction/generalization plan is missing**.
+4. **Upstream instability** prevents reproducible acquisition (e.g., non-deterministic responses, frequently changing endpoints without versioning).
+
+Quarantine may include (typical examples):
+- normalized/intermediate datasets (e.g., parsed tables, reprojected vectors, OCR outputs)
+- QA outputs (machine-readable validation reports)
+- candidate redactions/generalizations
+- provisional entity resolution outputs
 
 ---
 
-## Directory layout
-This repo uses `data/quarantine/` as a **hard isolation boundary**. Organize quarantined items so they are easy to audit, review, and resolve.
+## What must NOT be here
 
-Suggested layout (adapt if the repo already has conventions):
+### Never store secrets
+Do not commit credentials, API tokens, private keys, or other secrets. Use the project’s secret management mechanism.
+
+### Do not replace RAW
+Quarantine is **not** a substitute for RAW acquisition. Original source artifacts belong in RAW (immutable). Quarantine can reference RAW artifacts by digest and include derived/intermediate outputs.
+
+### No “temporary promotion”
+Do not route quarantined artifacts into PROCESSED/CATALOG/PUBLISHED “just for a demo.” If it’s quarantined, promotion is blocked.
+
+---
+
+## Directory conventions
+
+We keep quarantine organized by **dataset identity** and **blocked version** so it can be audited and cleared deterministically.
+
+Recommended layout (adapt if the repo uses a different convention):
 
 ```text
 data/quarantine/
   README.md
-
-  <dataset_slug>/                     # stable dataset identifier (see below)
-    <quarantine_id>/                  # short, unique id OR a dataset_version_id
-      quarantine.json                 # REQUIRED quarantine record (machine-readable)
-      notes.md                        # OPTIONAL human notes / links / discussion
-
-      inputs/                         # OPTIONAL copies if rights allow; otherwise references only
-      qa/                             # validation outputs (prefer JSON)
-      work/                           # normalized intermediates used for remediation/debug
-      redaction_candidates/           # candidate generalizations/redactions, if applicable
+  <dataset_id>/
+    <dataset_version_id>/          # derived from spec_hash or equivalent
+      quarantine.json              # required (reason + remediation plan)
+      qa/
+        validation.json
+        drift.json
+      work/
+        <intermediate artifacts...>
+      notes/
+        README.md                  # optional human notes (no secrets)
 ```
 
-### Naming: dataset_slug
-Keep `dataset_slug` predictable:
-- lowercase
-- underscore-separated words
-- include upstream authority when helpful
-- **do not include dates** in the slug (dates belong in version IDs)
-
-Examples:
-- `noaa_ncei_storm_events`
-- `usgs_nwis_kansas`
-- `fema_disaster_declarations`
+Naming rules:
+- `<dataset_id>` SHOULD be stable and match the project’s dataset naming convention.
+- `<dataset_version_id>` SHOULD be immutable and derived from the dataset spec hash (or equivalent deterministic ID).
 
 ---
 
-## Quarantine record
-Every quarantined item **must** have a machine-readable record that captures *why it is blocked and how it gets unblocked*.
+## Quarantine record required
 
-### Required minimum fields
-Your `quarantine.json` (or equivalent) must include:
+Every quarantined dataset version MUST include a `quarantine.json` (or `quarantine.yaml`) containing:
 
-| Field | Required | Meaning |
-|---|---:|---|
-| `reason_code` | ✅ | A short code explaining why the dataset/artifact is quarantined |
-| `remediation` | ✅ | Who resolves it, by when, and what the plan is |
-| `policy_default` | ✅ | The default posture while quarantined (must be “deny publish”) |
+- `reason_code` (machine-parseable)
+- `reason_detail` (human explanation)
+- `first_quarantined_at`
+- `owner` (person/team responsible)
+- `remediation_plan`
+  - steps
+  - who/role
+  - due date (if applicable)
+- `policy_default` (must be `deny_publish`)
+- references to:
+  - RAW inputs (digests/URIs)
+  - pipeline spec hash / run id (if available)
+  - failing QA report paths
 
-Recommended additional fields:
-- `dataset_slug`
-- `dataset_version_id` (if known) and/or `spec_hash` (if used)
-- pointers to `raw_manifest`, `validation_report`, `sensitivity_scan`, and upstream references
-- `status` (`open`, `in_progress`, `resolved`, `wont_fix`)
-- `created_at`, `updated_at`
-- `resolution_notes` + links to evidence showing it is safe to promote
-
-### Reason codes (starter set)
-Keep reason codes short and audit-friendly:
-- `RIGHTS_UNCLEAR`
-- `VALIDATION_FAIL`
-- `SENSITIVITY_UNCLEAR`
-- `UPSTREAM_UNSTABLE`
-- `OTHER` (use sparingly; add detail in `summary`)
+**Recommended:** treat `quarantine.json` as a mini audit log (append updates via a `history[]` array rather than overwriting fields).
 
 ---
 
-## Workflow
-### 1) Quarantine (fail closed)
-When a gate fails or a required attribute is unknown:
-- Create a new folder under `data/quarantine/<dataset_slug>/<quarantine_id>/`
-- Write a `quarantine.json` with **reason + remediation + deny-by-default**
-- Add/attach any QA artifacts needed to reproduce and fix the issue
+## Workflow (fail-closed)
 
-### 2) Remediate
-Typical remediation actions:
-- **Rights:** obtain explicit license/terms, document attribution, ensure publish compatibility
-- **Validation:** fix schema mappings, CRS/geometry issues, temporal precision, link correctness
-- **Sensitivity:** classify correctly; design a redaction/generalization plan; document it
-- **Reproducibility:** stabilize acquisition (pin versions, snapshot upstream, deterministic ordering)
+### 1) Detect → Quarantine
+- A pipeline, validator, or reviewer flags a gate failure.
+- Move or write outputs into `data/quarantine/<dataset_id>/<dataset_version_id>/`.
+- Write `quarantine.json`.
+- Ensure any “promotion” automation refuses to proceed.
 
-Keep remediation outputs in `qa/`, `work/`, and/or `redaction_candidates/` so reviewers can confirm.
+### 2) Diagnose
+- Re-run validators locally/CI with the same RAW inputs and pinned environment.
+- Identify the minimal fix (schema mapping, rights clarification, redaction plan, upstream pinning).
 
-### 3) Re-run deterministically
-Re-run the pipeline in a deterministic way and produce:
-- validation outputs (prefer JSON)
-- run receipts (inputs/outputs enumerated with checksums)
-- updated artifacts and metadata needed for promotion
+### 3) Remediate
+Common remediation patterns:
+- **License fix:** obtain explicit license, record rights/attribution requirements.
+- **Validation fix:** patch the pipeline/schemas, regenerate intermediate outputs.
+- **Sensitivity fix:** assign policy label, implement redaction/generalization, record the plan in provenance.
+- **Upstream stability fix:** snapshot RAW immutably, pin queries, record versions/checksums.
 
-### 4) Promote (only after gates pass)
-Once the minimum promotion gates pass:
-- write publishable outputs to **PROCESSED**
-- generate/validate catalogs (DCAT/STAC/PROV)
-- record policy label assignment and any obligations applied
-- close out quarantine as `resolved` (keep the record for audit)
-
-> If license or sensitivity is still unclear: **do not promote**.
-
-### 5) Close and retain
-Do not delete quarantine records casually. They are part of the audit trail. If the repo has a retention policy, follow it.
-
-[Back to top](#dataquarantine)
+### 4) Clear → Promote
+Only after all required promotion gates pass should outputs be regenerated into PROCESSED and catalog triplet materials created/validated.
 
 ---
 
-## Promotion checklist
-A quarantined dataset version is eligible to leave quarantine only when all applicable promotion gates are satisfied:
+## How to remediate and promote
 
-- [ ] **Identity/versioning** is stable and deterministic (dataset + version IDs)
-- [ ] **License/rights** are explicit and compatible *(if unclear → stays quarantined)*
-- [ ] **Sensitivity/policy label** assigned; redaction/generalization plan exists if needed
-- [ ] **Catalog triplet** validates and cross-links resolve (DCAT + STAC + PROV)
-- [ ] **Run receipt + checksums** exist for producing runs (inputs/outputs enumerated)
-- [ ] **Policy/contract tests** pass (deny-by-default behavior enforced where applicable)
+Promotion requires producing **publishable artifacts**, **validated catalogs**, **run receipts**, and **policy label assignment**. At a minimum, ensure:
+
+- Stable dataset + dataset version identity
+- Explicit license/rights metadata (**fail closed if unclear**)
+- Policy label assigned + redaction/generalization plan recorded (if needed)
+- DCAT/STAC/PROV triplet exists, validates, and cross-links
+- Run receipt exists with input/output checksums and environment details
+- Policy tests and contract tests pass in CI
 
 ---
 
-## Safety and sensitive data
-- Treat quarantine as **deny-by-default** for publication and access.
-- If a dataset may contain sensitive locations or restricted categories:
-  - avoid storing precise coordinates in casually accessible derived files
-  - prefer candidate generalizations/redactions, then promote only generalized outputs as allowed
-- If rights restrict mirroring:
-  - store **manifests + references + hashes** rather than copying upstream files
+## Definition of Done for clearing quarantine
+
+A quarantined dataset version is considered **cleared** when:
+
+- [ ] Quarantine reason is resolved and documented
+- [ ] License/rights are explicit and recorded
+- [ ] Policy label is assigned; obligations/redactions are implemented and recorded
+- [ ] Validators pass (including any drift thresholds)
+- [ ] Artifacts regenerated deterministically from RAW inputs
+- [ ] Run receipt exists and lists all inputs/outputs with checksums
+- [ ] Catalog triplet validates and cross-links
+- [ ] Promotion automation/CI gates pass
+
+After clearing:
+- [ ] Mark the quarantine record as **resolved** (do not delete it; keep auditability)
+- [ ] Promote through PROCESSED → CATALOG in a reviewed change (PR)
 
 ---
 
 ## Appendix: templates
-### Example `quarantine.json` (starter template)
+
+### `quarantine.json` (minimal)
+
 ```json
 {
-  "kfm_quarantine_record_version": "v1",
-  "dataset_slug": "example_dataset",
-  "dataset_version_id": null,
-  "spec_hash": null,
-
-  "reason_code": "RIGHTS_UNCLEAR",
-  "summary": "License terms are not explicit enough to publish; attribution requirements unknown.",
-
-  "policy_default": {
-    "decision": "deny",
-    "policy_label": "quarantine"
-  },
-
-  "remediation": {
-    "owner": "<role-or-person>",
-    "by": "YYYY-MM-DD",
-    "plan": [
-      "Locate authoritative license/terms page or written permission",
-      "Record attribution and usage constraints in metadata",
-      "Re-run validation gate for rights metadata"
+  "dataset_id": "example.dataset",
+  "dataset_version_id": "spec_hash:abcdef1234",
+  "status": "quarantined",
+  "reason_code": "LICENSE_UNCLEAR",
+  "reason_detail": "Upstream page does not specify license terms; cannot verify redistribution rights.",
+  "first_quarantined_at": "2026-02-22T00:00:00Z",
+  "owner": "kfm-data-stewards",
+  "policy_default": "deny_publish",
+  "references": {
+    "raw_inputs": [
+      { "uri": "raw://example/source/file.csv", "sha256": "..." }
+    ],
+    "run_id": "run:20260222-xyz",
+    "qa_reports": [
+      "qa/validation.json"
     ]
   },
-
-  "evidence": {
-    "raw_manifest": "<path-or-ref>",
-    "validation_report": "<path-or-ref>",
-    "sensitivity_scan": "<path-or-ref>",
-    "upstream_reference": "<path-or-ref>"
-  },
-
-  "status": "open",
-  "created_at": "YYYY-MM-DD",
-  "updated_at": "YYYY-MM-DD"
+  "remediation_plan": {
+    "steps": [
+      "Identify rights holder and obtain explicit license grant or compatible terms",
+      "Record attribution requirements in dataset metadata",
+      "Re-run validation and re-generate artifacts"
+    ],
+    "due_date": "2026-03-15",
+    "assigned_to": "kfm-data-stewards"
+  }
 }
 ```
 
-### Example `notes.md` (optional)
-```md
-# Quarantine notes — <dataset_slug> / <quarantine_id>
+### Reason code suggestions
 
-## What broke
-- …
+| Code | When to use |
+|---|---|
+| `VALIDATION_FAILED` | Any hard validation gate fails |
+| `LICENSE_UNCLEAR` | License/terms cannot be confirmed |
+| `SENSITIVITY_UNCLEAR` | Sensitivity/policy label cannot be assigned yet |
+| `REDACTION_REQUIRED` | Sensitive data needs generalization/redaction work |
+| `UPSTREAM_UNSTABLE` | Upstream changes prevent reproducible acquisition |
 
-## What we need to decide / verify
-- …
+---
 
-## Links
-- Upstream terms/license: …
-- Validation report: …
-- Sensitivity discussion: …
-
-## Resolution
-- …
-```
+<p align="right"><a href="#top">Back to top</a></p>
