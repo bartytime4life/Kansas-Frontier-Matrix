@@ -1,3 +1,23 @@
+<!--
+[KFM_META_BLOCK_V2]
+doc_id: kfm://doc/docs-stories-readme
+title: Stories (Story Nodes)
+type: guide
+version: v1
+status: draft
+owners: KFM Docs & Story Stewards
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+tags:
+  - kfm
+  - stories
+  - story-nodes
+  - narrative
+notes:
+  - Canonical authoring + governance guide for Story Nodes stored under docs/stories/.
+[/KFM_META_BLOCK_V2]
+-->
 # Stories
 Governed **Story Nodes (v3)**: narrative + map state + citations, designed to render in the Map/Story UI and power Focus Mode.
 
