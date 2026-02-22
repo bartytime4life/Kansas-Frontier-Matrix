@@ -68,14 +68,14 @@ Registry entries sit “above” the lifecycle zones. They describe **what** we 
 
 ```mermaid
 flowchart LR
-  R[data/registry<br/>source registry entry] --> S[Pipeline spec<br/>(canonical JSON)]
-  S --> H[spec_hash<br/>DatasetVersion ID]
-  S -->|run| A[Artifacts<br/>raw/work/processed]
-  A --> C[Catalog triplet<br/>DCAT + STAC + PROV]
-  C --> E[Evidence resolver<br/>EvidenceRef → EvidenceBundle]
-  E --> UI[Map/Story UI<br/>+ Focus Mode]
+  R["data/registry<br/>source registry entry"] --> S["Pipeline spec<br/>(canonical JSON)"]
+  S --> H["spec_hash<br/>DatasetVersion ID"]
+  S -->|"run"| A["Artifacts<br/>raw/work/processed"]
+  A --> C["Catalog triplet<br/>DCAT + STAC + PROV"]
+  C --> E["Evidence resolver<br/>EvidenceRef → EvidenceBundle"]
+  E --> UI["Map/Story UI<br/>+ Focus Mode"]
 
-  UI -. trust membrane .-> E
+  UI -. "trust membrane" .-> E
 ```
 
 **Key invariants**
