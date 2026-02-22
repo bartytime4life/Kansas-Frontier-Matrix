@@ -66,7 +66,7 @@ If a dataset version is “published,” it means:
 > NOTE: Treat this as the **target shape** for the catalog layer. If your repo organizes these files differently, keep the *contract responsibilities* the same and update this README accordingly.
 
 Proposed layout:
-
+```text
 ├─ data/
 │  ├─ catalog/
 │  │  ├─ dcat/                # dataset-level metadata (JSON-LD)
@@ -82,7 +82,7 @@ Proposed layout:
 │  │  ├─ schemas/             # JSON Schema / SHACL profiles (validators consume these)
 │  │  ├─ reports/             # validator output (link-check, schema check, counts)
 │  │  └─ README.md            # you are here
-
+```
 ---
 
 ## Contract surfaces
