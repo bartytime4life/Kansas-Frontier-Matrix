@@ -1,22 +1,3 @@
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/2f9f0db9-0aa9-4e41-a4f0-07d5c4b3f8a0
-title: packages/README.md
-type: guide
-version: v1
-status: draft
-owners: TBD
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: public
-tags:
-  - kfm
-  - packages
-  - monorepo
-  - governance
-notes:
-  - Defines what belongs in /packages and the minimum standards for shared code and contracts.
-[/KFM_META_BLOCK_V2]
-
 # packages/
 Shared, versioned, governed building blocks used across Kansas Frontier Matrix (KFM).
 
