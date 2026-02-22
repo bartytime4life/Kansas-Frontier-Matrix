@@ -281,15 +281,15 @@ Golden queries should include explicit `dataset_version_id` where possible. If a
 
 ```mermaid
 flowchart LR
-  A[Golden Suite JSON] --> B[Eval Runner]
-  B --> C[Focus Mode: ask]
-  C --> D[Policy pre-check]
-  D --> E[Retrieve evidence]
-  E --> F[Evidence resolver]
-  F --> G[Answer synthesis]
-  G --> H[Citation verification (HARD)]
-  H --> I[Assertions + report]
-  I --> J[CI Gate: pass/fail]
+  A["Golden Suite JSON"] --> B["Eval Runner"]
+  B --> C["Focus Mode: ask"]
+  C --> D["Policy pre-check"]
+  D --> E["Retrieve evidence"]
+  E --> F["Evidence resolver"]
+  F --> G["Answer synthesis"]
+  G --> H["Citation verification<br/>HARD"]
+  H --> I["Assertions + report"]
+  I --> J["CI Gate: pass/fail"]
 ```
 
 ---
