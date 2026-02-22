@@ -1,253 +1,266 @@
-# Data Registry
-Machine-readable registries that define what KFM ingests **and how it is governed** (inputs to promotion gates).
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/2e4c5d7d-6e91-4a4c-bf3e-bf6f5fa5a8d6
+title: Data Registry
+type: standard
+version: v1
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - data/registry/README.md
+tags:
+  - kfm
+  - data
+  - registry
+notes:
+  - Defines the contract for dataset/source registry entries and how they relate to catalogs, provenance, and promotion gates.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Draft (vNext) • **Owners:** See `CODEOWNERS` (or repository governance owners) • **Scope:** `data/registry/**`
+# Data Registry
+Purpose: **Machine-readable “source registry” entries that drive governed dataset onboarding** (identity → pipelines → catalogs/provenance → governed runtime access).
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
-![governance](https://img.shields.io/badge/governance-fail--closed-critical)
-![evidence](https://img.shields.io/badge/evidence-first-informational)
-![policy](https://img.shields.io/badge/policy-labels%20%2B%20obligations-blue)
-
-**Navigate:** [Purpose](#purpose) • [What lives here](#what-lives-here) • [Truth path fit](#truth-path-fit) • [Registry contracts](#registry-contracts) • [Registry types](#registry-types) • [How to change](#how-to-add-or-change-a-registry-entry) • [Validation and CI](#validation-and-ci) • [Security and sensitivity](#security-and-sensitivity) • [Glossary](#glossary)
+![policy](https://img.shields.io/badge/policy-public-blue)
+![contract](https://img.shields.io/badge/contract-registry%20surface-informational)
 
 ---
 
-## Purpose
-
-`data/registry/` is the **canonical** home for *machine-readable* registry entries that drive:
-
-- **Ingestion** (what sources exist, how they’re accessed, cadence).
-- **Governance** (license/rights, sensitivity classification, policy labels + obligations).
-- **Promotion gating** (what MUST be present before a dataset version can be served).
-- **Evidence resolution** (stable references and cross-links that let UI/Focus show “why you can trust this”).
-
-This directory is intentionally treated like **code**: reviewed, validated, and **fail-closed**.
-
-> NOTE  
-> In KFM, the registry is not optional documentation; it is an **input to promotion gates**.  
-> If it can’t be validated, signed/hashed where required, and reviewed, it must not drive automation or runtime serving.
-
-[[Back to top]](#data-registry)
+## Quick navigation
+- [What lives here](#what-lives-here)
+- [How it fits the KFM truth path](#how-it-fits-the-kfm-truth-path)
+- [Directory layout](#directory-layout)
+- [Registry entry contract](#registry-entry-contract)
+- [Controlled vocabularies](#controlled-vocabularies)
+- [Identity, spec hashing, and DatasetVersion](#identity-spec-hashing-and-datasetversion)
+- [Promotion gates checklist](#promotion-gates-checklist)
+- [PR workflow for adding a dataset](#pr-workflow-for-adding-a-dataset)
+- [Definition of Done](#definition-of-done)
+- [Security and governance notes](#security-and-governance-notes)
 
 ---
 
 ## What lives here
 
-**Registry entries** and **controlled vocabularies** such as:
+This directory is the **registry of datasets/sources** that KFM knows about.
 
-- Source/dataset registry entries (authority, access method, cadence, license snapshot, sensitivity).
-- Watcher allow-lists for automated update detection (poll/webhook schedules, endpoints, outputs).
-- Policy label taxonomy + obligation templates (e.g., “show notice”, “generalize geometry”).
-- Mapping rules needed for consistent downstream projections (e.g., graph mapping conventions).
+It is **not**:
+- a data lake
+- a place to store raw downloads
+- a runtime database
 
-### What must NOT live here
+It **is**:
+- a **reviewable contract surface** for onboarding datasets (licensing + policy label + provenance requirements)
+- the **anchor** that connects:
+  - dataset identity (`kfm://dataset/...`)
+  - pipeline specification (the thing that gets hashed into a DatasetVersion)
+  - catalog/provenance links (DCAT/STAC/PROV)
+  - human stewardship (who reviewed/approved, what obligations apply)
 
-- Raw or processed data payloads (those belong in lifecycle zones like `raw/`, `work/`, `processed/`).
-- Secrets (tokens, API keys, credentials files).
-- Precise locations for sensitive heritage sites unless policy explicitly allows and storage is appropriately restricted.
-
-[[Back to top]](#data-registry)
+> Guiding principle: if it can’t be reviewed in a PR and validated in CI, it shouldn’t be considered “promoted.”
 
 ---
 
-## Truth path fit
+## How it fits the KFM truth path
 
-Registries are upstream inputs; they *constrain* what pipelines may do and what runtime is allowed to serve.
+Registry entries sit “above” the lifecycle zones. They describe **what** we are integrating and **under what governance**, while the pipeline run produces the actual artifacts.
 
 ```mermaid
 flowchart LR
-  R["data/registry<br/>machine-readable specs"] --> P["Pipelines<br/>fetch + normalize + validate"]
-  P --> RAW["RAW<br/>immutable artifacts + checksums"]
-  RAW --> WORK["WORK / QUARANTINE<br/>QA + redaction candidates"]
-  WORK --> PROC["PROCESSED<br/>publishable artifacts + checksums"]
-  PROC --> CAT["CATALOG/TRIPLET<br/>DCAT + STAC + PROV + run receipts"]
-  CAT --> API["Governed API + Policy + Evidence resolver"]
-  API --> UI["Map + Story + Focus<br/>evidence-first UX"]
+  R[data/registry<br/>source registry entry] --> S[Pipeline spec<br/>(canonical JSON)]
+  S --> H[spec_hash<br/>DatasetVersion ID]
+  S -->|run| A[Artifacts<br/>raw/work/processed]
+  A --> C[Catalog triplet<br/>DCAT + STAC + PROV]
+  C --> E[Evidence resolver<br/>EvidenceRef → EvidenceBundle]
+  E --> UI[Map/Story UI<br/>+ Focus Mode]
+
+  UI -. trust membrane .-> E
 ```
 
-**Operational rule of thumb:** if it affects what can be promoted or served, it belongs in a validated registry (or an equivalent policy-controlled contract surface).
-
-[[Back to top]](#data-registry)
-
----
-
-## Registry contracts
-
-### 1) Deterministic identity and versioning
-
-Registry entries MUST be stable and reproducible.
-
-- Use stable identifiers for **datasets** and **watchers**.
-- Changes to meaningfully relevant fields MUST produce a new **spec hash** (and therefore new derived versions where applicable).
-- Prefer canonical JSON hashing (or another deterministic canonicalization strategy) to prevent “hash drift”.
-
-### 2) Fail-closed by default
-
-- If a registry entry is missing required fields, invalid against schema, unsigned when required, or references disallowed endpoints/providers, then:
-  - **automation MUST NOT run**, and
-  - **promotion MUST be blocked**.
-
-### 3) Policy labels + obligations are first-class
-
-Every source/dataset entry MUST include (or map to):
-
-- A `policy_label` (see starter list below),
-- Any obligations required for safe serving (e.g., “generalize geometry”, “show notice”).
-
-### 4) Registry ↔ catalogs ↔ receipts must cross-link
-
-Downstream artifacts must remain evidence-resolvable:
-
-- Each produced artifact MUST link back to a **run receipt** (directly or through catalogs).
-- Catalog records MUST carry enough identifiers to connect to:
-  - dataset identity,
-  - dataset version identity,
-  - policy label,
-  - provenance.
-
-[[Back to top]](#data-registry)
+**Key invariants**
+- **Catalogs + provenance are the canonical interface between pipeline outputs and runtime.**
+- Runtime access should be mediated by governed APIs and policy enforcement, not direct storage access.
 
 ---
 
-## Registry types
+## Directory layout
 
-> This table describes **logical types**. Your repo may split them into subfolders (recommended) or consolidate them into a single registry file.
+> NOTE: This README defines the **intended** structure. If some folders don’t exist yet, create them as you implement onboarding.
 
-| Registry type | What it controls | Typical format | Minimum contract expectations |
-|---|---|---:|---|
-| Source / Dataset registry | Authority, access method, cadence, license snapshot, sensitivity, QA expectations | YAML or JSON | Stable ID; license/rights captured; sensitivity classified; policy label assigned; known limitations + QA checks recorded |
-| Watcher allow-list | Which automated update checks are allowed to run | JSON (schema-validated), sometimes YAML authored | Signed allow-list; strict fields; endpoint + poll schedule; outputs declared; spec hash |
-| Policy label taxonomy | Controlled vocabulary for labels + obligation templates | YAML/JSON | Versioned; referenced by other registries; used by policy tests |
-| Mapping rules | Normalization conventions for derived projections (e.g., graph labels/edges) | YAML | Deterministic; reviewed; tested against fixtures |
-
-[[Back to top]](#data-registry)
-
----
-
-## Policy label starter list
-
-The project should maintain a controlled vocabulary. A practical starter set is:
-
-- `public`
-- `public_generalized`
-- `restricted`
-- `restricted_sensitive_location`
-- `internal`
-- `embargoed`
-- `quarantine`
-
-> TIP  
-> “public_generalized” is useful when the source can’t be safely published with precise geometry, but a generalized representation is allowed.
-
-[[Back to top]](#data-registry)
-
----
-
-## How to add or change a registry entry
-
-### A. Changes that are always required
-
-- [ ] Registry entry validates against its schema (or structural contract).
-- [ ] ID remains stable; any meaningfully material change updates spec hash (where used).
-- [ ] License + rights holder information is explicit (or entry is routed to quarantine).
-- [ ] Sensitivity classification + policy label is present.
-- [ ] Known limitations + QA checks are documented in the entry.
-- [ ] Any redaction/generalization requirements are captured as obligations (and later recorded in provenance when executed).
-
-### B. Changes that require extra review
-
-- Any move from `restricted*` → `public*`
-- Introducing a new automation watcher
-- Adding endpoints that require credentials
-- Adding new controlled vocabulary values (labels, themes, citation kinds)
-
-### C. Suggested workflow
-
-1. Create or edit the registry entry (keep changes small and reviewable).
-2. Run local validation (schema + lint + signature verification if applicable).
-3. Open a PR that includes:
-   - the updated registry entry,
-   - any fixtures/tests needed for policy gating,
-   - a brief explanation of the change’s materiality.
-
-[[Back to top]](#data-registry)
-
----
-
-## Validation and CI
-
-**CI SHOULD** treat these as merge-blocking gates:
-
-- Schema validation for registry entries.
-- Policy tests (allow/deny + obligations) using fixtures.
-- Cross-link checks (registries → receipts → catalogs) where applicable.
-
-### Example validations (adjust to your repo’s tooling)
-
-- Validate JSON entries against JSON Schema.
-- Validate signatures (e.g., sigstore/cosign) when registry is a signed allow-list.
-- Ensure that changes don’t break evidence resolution (at least one EvidenceRef can resolve in CI for touched datasets).
-
-[[Back to top]](#data-registry)
-
----
-
-## Security and sensitivity
-
-### Trust membrane reminder
-
-- Frontend/external clients must not access storage/DB directly.
-- Policy decisions belong in CI/runtime/evidence resolver — not the UI.
-- Never leak restricted metadata through error messages or “helpful” logs.
-
-### Sensitive locations
-
-Default posture:
-
-- Store precise geometries only in restricted datasets.
-- If any public representation is allowed, generate a separate **public generalized** dataset version.
-- Don’t embed precise coordinates in story content or AI outputs unless policy explicitly allows.
-
-### Licensing and rights
-
-Operational expectations:
-
-- “Online availability” is not permission to reuse.
-- Promotion gates require license + rights holder for distributions.
-- Metadata-only cataloging is permitted when mirroring is disallowed by rights.
-
-[[Back to top]](#data-registry)
-
----
-
-## Glossary
-
-- **Dataset**: logical dataset identity (e.g., “USGS NWIS Kansas”).  
-- **DatasetVersion**: immutable version corresponding to a specific promoted output set.  
-- **Artifact**: concrete file/object produced by a run (GeoParquet, PMTiles, COG, JSONL, PDF).  
-- **EvidenceRef**: stable reference scheme (`dcat://`, `stac://`, `prov://`, `doc://`, `graph://`).  
-- **EvidenceBundle**: resolved evidence view returned by the evidence resolver; includes human + machine fields and policy decisions; immutable by digest.
-
----
-
-<details>
-<summary><strong>Appendix: Watcher entry shape (illustrative)</strong></summary>
-
-This is an *illustrative* shape for a watcher allow-list entry. Treat watcher registries as signed allow-lists and validate them strictly.
-
-```json
-{
-  "watcher_id": "example:usgs:nwis",
-  "canonical_id": "usgs-nwis-kansas",
-  "endpoint": "https://example.org/api/...",
-  "poll": { "interval_seconds": 3600, "mode": "poll" },
-  "policy": { "staleness_s": 86400, "spec_change_pct": 0.05, "geom_shift_m": 25 },
-  "outputs": ["dataset:usgs-nwis-kansas"],
-  "schema_url": "https://kfm.org/schemas/watcher.v1.json",
-  "version": "1",
-  "spec_hash": "sha256:...",
-  "signature_ref": "sigstore:..."
-}
+```text
+data/registry/
+├─ README.md                 # (this file) registry contract + workflow
+├─ datasets/                 # one file per dataset/source ("source registry entry")
+│  ├─ <dataset_slug>.yml
+│  └─ ...
+├─ vocab/                    # controlled vocabularies used by registry + catalogs
+│  ├─ policy_label.yml
+│  ├─ theme.yml
+│  └─ citation_kind.yml
+├─ schemas/                  # JSON Schema (or equivalent) to validate registry entries
+│  ├─ dataset_entry.schema.json
+│  └─ ...
+└─ fixtures/                 # tiny samples used for CI policy/tests (optional but recommended)
+   ├─ <dataset_slug>/
+   └─ ...
 ```
 
-</details>
+### Why “one file per dataset”?
+- Small diffs, reviewable history, easy ownership.
+- Enables deterministic spec hashing and “fail closed” review gates.
+
+---
+
+## Registry entry contract
+
+### File naming
+- `datasets/<dataset_slug>.yml`
+- `dataset_slug` should be **stable**, lowercase, underscore-separated.
+- Do **not** embed dates in `dataset_slug` (dates belong to versions / runs).
+
+### Minimum fields (registry entry)
+Below is a pragmatic **minimum** registry contract. Treat these as **required for onboarding PRs**.
+
+| Field | Required | Meaning |
+|---|---:|---|
+| `dataset_slug` | ✅ | Stable short name used in paths |
+| `dataset_id` | ✅ | Stable ID (recommended: `kfm://dataset/<slug>`) |
+| `title` | ✅ | Human-friendly name |
+| `description` | ✅ | What it is, what it’s used for |
+| `publisher` | ✅ | Organization publishing the dataset |
+| `license` or `rights` | ✅ | Explicit license or rights statement |
+| `rights_holder` | ✅ | Who owns/controls rights |
+| `attribution` | ✅ | Required attribution text (if any) |
+| `policy_label` | ✅ | Access + sensitivity classification |
+| `upstream` | ✅ | Where it comes from (URLs, APIs, archives) |
+| `expected_cadence` | ✅ | How often updates are expected |
+| `spatial_coverage` | ✅ | Narrative + optional bbox or admin unit list |
+| `temporal_coverage` | ✅ | Narrative + optional time bounds |
+| `contacts` | ✅ | Steward / maintainer contact(s) |
+| `pipeline_spec` | ✅ | Path to the canonical pipeline spec that will be hashed |
+| `catalog_links` | ⛳ | Where the DCAT/STAC/PROV records will be written after promotion |
+| `notes` | ⛳ | Anything reviewers should know |
+| `governance` | ⛳ | Partner agreements, special handling, redaction obligations |
+
+⛳ = recommended but may start as optional while the system is being built
+
+---
+
+## Controlled vocabularies
+
+Registry entries should refer only to **controlled vocab values** so that governance is testable.
+
+### Required vocab sets
+- `policy_label` (access + sensitivity)
+- `artifact.zone` (data lifecycle)
+- `citation.kind` (evidence types)
+- optionally: `theme` (DCAT theme / category)
+
+Keep these in `data/registry/vocab/` so changes are code-reviewed and versioned.
+
+---
+
+## Identity, spec hashing, and DatasetVersion
+
+KFM relies on **deterministic identity** so artifacts can be cited, cached, audited, and rebuilt.
+
+### Identifier families (recommended)
+Use explicit URI-like IDs, e.g.:
+- `kfm://dataset/<dataset_slug>`
+- `kfm://dataset/@<dataset_version_id>`
+- `kfm://artifact/sha256:<digest>`
+- `kfm://run/<run_id>`
+- `kfm://evidence/<bundle_digest>`
+
+**Avoid embedding environment-specific hostnames** in canonical IDs (hostnames belong in distribution URLs).
+
+### DatasetVersion identity via `spec_hash`
+A DatasetVersion should be derived from a **canonical specification document**, then:
+
+- `spec_hash = sha256( RFC8785_canonical_json(spec) )`
+- `dataset_version_id` is derived from / incorporates `spec_hash` (implementation-specific)
+
+**Hash drift prevention (non-negotiable)**
+- Store the canonical spec used for hashing next to the computed `spec_hash`.
+- Unit test that recomputing `spec_hash` yields the same value.
+- Never hash “pretty printed” JSON or non-deterministic structures.
+
+---
+
+## Promotion gates checklist
+
+A dataset should not be “promoted” (servable to runtime) until it passes minimum gates.
+
+| Gate | Name | What it blocks |
+|---|---|---|
+| A | Identity & versioning | prevents unstable dataset/version identity |
+| B | Licensing & rights | prevents use when rights are unclear |
+| C | Sensitivity & redaction plan | prevents accidental exposure of sensitive data |
+| D | Catalog triplet validation | prevents unverifiable runtime use |
+| E | Run receipt & checksums | prevents non-reproducible builds |
+| F | Policy + contract tests | prevents bypassing governance/evidence resolution |
+| G | Optional production posture | strengthens supply chain, perf, a11y, etc. |
+
+---
+
+## PR workflow for adding a dataset
+
+A practical PR-based workflow (high level):
+
+1. Contributor opens PR adding:
+   - **source registry entry** (this directory)
+   - pipeline spec (hashed into DatasetVersion)
+   - fixture sample + expected outputs (small)
+2. CI runs:
+   - schema validation
+   - policy tests
+   - `spec_hash` stability test
+   - catalog cross-link check (when catalogs exist)
+3. Steward review:
+   - licensing and sensitivity
+   - approve `policy_label`
+4. Operator runs pipeline in controlled environment.
+5. Outputs are written to processed + catalogs.
+6. Release manifest is created and tagged.
+
+---
+
+## Definition of Done
+
+### DoD for a registry entry PR
+- [ ] `datasets/<slug>.yml` validates against schema
+- [ ] License/rights are explicit (no “unknown” for anything other than quarantine)
+- [ ] `policy_label` is set and consistent with handling plan
+- [ ] `pipeline_spec` exists and is hashable (canonical)
+- [ ] Fixture sample exists (if required by CI policy)
+- [ ] Steward approval recorded (method TBD)
+
+### DoD for a dataset integration (end-to-end)
+- [ ] Raw acquisition is reproducible and documented
+- [ ] Work transforms are deterministic
+- [ ] Processed artifacts exist in approved formats and are digest-addressed
+- [ ] Catalog triplet validates and is cross-linked
+- [ ] EvidenceRefs resolve and render in the evidence UI
+- [ ] `policy_label` assigned with documented review
+- [ ] Changelog entry explains what changed and why
+
+---
+
+## Security and governance notes
+
+- If rights are unclear, **fail closed**: keep dataset in `quarantine`.
+- For sensitive-location or restricted datasets:
+  - require a redaction/generalization plan
+  - ensure geometry and extents are consistent with policy label
+- Registry and catalogs are part of the trust surface; treat changes as governed changes.
+
+---
+
+### Sources of truth
+- *Kansas Frontier Matrix (KFM) — Definitive Design & Governance Guide (vNext)* (catalog triplet, evidence resolver, promotion gates, spec hashing)
+- *Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint* (FAIR/CARE framing, governance posture)
+
+---
+
+<p align="right"><a href="#data-registry">Back to top ↑</a></p>
