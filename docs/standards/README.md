@@ -91,14 +91,16 @@ If you can’t express a standard as:
 
 KFM uses **MetaBlock v2** for structured doc metadata **without YAML frontmatter**.
 
-### MetaBlock v2
+## MetaBlock v2 (Hidden in Markdown)
 
-Every standards document in this folder should begin with a `[KFM_META_BLOCK_V2]` block.
+Use the MetaBlock at the top of every standard file, but **hide it in rendered Markdown** by wrapping it in an HTML comment.
 
-Minimal example:
+> GitHub (and most Markdown renderers) will not display content inside `<!-- ... -->`.
+
+**Copy/paste template:**
 
 ```text
-[KFM_META_BLOCK_V2]
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<uuid>
 title: <Title>
 type: standard
@@ -114,7 +116,7 @@ tags:
   - kfm
 notes:
   - <short notes>
-[/KFM_META_BLOCK_V2]
+[/KFM_META_BLOCK_V2] -->
 ```
 
 Guidelines (do not skip):
