@@ -1,10 +1,12 @@
-# .github — Governance & Automation Hub for Kansas Frontier Matrix (KFM)
+# .github — Governance and Automation Hub for Kansas Frontier Matrix
 > **If it can merge, it can ship. If it can ship, it must be governed.**  
 > This folder is where KFM turns governance intent into enforceable behavior: **CI gates**, **CODEOWNERS**, **issue + PR templates**, and **security guardrails**.
 
+**Acronym:** Kansas Frontier Matrix = **KFM**  
 **Status:** vNext (target conventions; align to repo reality)  
 **Posture:** default-deny • fail-closed • reproducible by digest • policy enforced in CI + runtime  
-**Scope:** This directory governs how changes enter KFM—treat changes here as **production**.
+**Scope:** This directory governs how changes enter KFM—treat changes here as **production**.  
+**Owners:** enforced via **CODEOWNERS** (see below)
 
 [![Status](https://img.shields.io/badge/status-vNext-blue)](#)
 [![Governance](https://img.shields.io/badge/governance-fail--closed-critical)](#)
@@ -21,7 +23,7 @@
 - [Why this folder matters](#why-this-folder-matters)
 - [What lives in `.github/`](#what-lives-in-github)
 - [PR → CI → Merge: the governance flow](#pr--ci--merge-the-governance-flow)
-- [CI gates (Promotion Contract → GitHub Actions)](#ci-gates-promotion-contract--github-actions)
+- [CI gates: Promotion Contract to GitHub Actions](#ci-gates-promotion-contract-to-github-actions)
 - [Workflow catalog](#workflow-catalog)
 - [Branch protection posture](#branch-protection-posture)
 - [CODEOWNERS: required reviewers for high-risk changes](#codeowners-required-reviewers-for-high-risk-changes)
@@ -41,7 +43,7 @@ If CI allows a change that violates policy, evidence resolvability, or determini
 > **Rule:** anything that changes enforcement (**workflows**, **CODEOWNERS**, **contracts**, **policy**, **validators**) is governance-critical.  
 > Treat `.github/` edits like production configuration changes.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -60,7 +62,7 @@ If CI allows a change that violates policy, evidence resolvability, or determini
 | `.github/CODEOWNERS` | Mandatory reviewers for protected paths | **High** | Steward/operator ownership |
 | `.github/README.md` | This file: how GitHub governance works | Low | Keep current |
 
-### Recommended additions (if not already present)
+### Recommended additions
 
 These are common “missing pieces” that make governance scalable:
 
@@ -72,7 +74,7 @@ These are common “missing pieces” that make governance scalable:
 | `.github/release-drafter.yml` | Draft release notes from merged PRs | Optional early, valuable later |
 | `.github/FUNDING.yml` | Sponsorship links | Optional |
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -91,15 +93,15 @@ flowchart LR
 
 **KFM posture:** failures **block**. Waivers (if allowed) are governed artifacts and must be explicit, time-bounded, and recorded.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
-## CI gates (Promotion Contract → GitHub Actions)
+## CI gates: Promotion Contract to GitHub Actions
 
 KFM’s Promotion Contract defines what must be true before anything becomes user-visible. GitHub workflows should enforce the **merge-time** portion of those gates.
 
-### Gate mapping (starter)
+### Gate mapping
 
 | Promotion gate | What must be true | CI check (recommended) |
 |---|---|---|
@@ -109,11 +111,11 @@ KFM’s Promotion Contract defines what must be true before anything becomes use
 | **D — Catalog triplet validation** | DCAT/STAC/PROV validate under profiles | validators for each profile |
 | **E — Run receipts & checksums** | digests + environment capture | receipt schema validation + artifact digest checks |
 | **F — Policy + contract tests** | policy fixtures pass; API/evidence contracts pass | OPA tests + OpenAPI tests + evidence tests |
-| **G — Operational readiness (recommended)** | SBOM/provenance + smoke checks | optional security scans + e2e smoke |
+| **G — Operational readiness** | SBOM/provenance + smoke checks | optional security scans + e2e smoke |
 
 > **Fail-closed behavior:** if any required check fails, the PR must not merge.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -135,16 +137,16 @@ KFM’s Promotion Contract defines what must be true before anything becomes use
 | `focus-eval.yml` *(optional early)* | scheduled + `workflow_dispatch` | golden queries + abstention tests | prevents regressions in Focus Mode |
 | `security.yml` *(recommended)* | scheduled + `pull_request` | dep audit, SAST, container scan | shift-left security posture |
 
-### Reusable workflows (recommended pattern)
+### Reusable workflows
 
 If you anticipate multiple pipelines or repos, prefer a reusable workflow pattern:
 
-- `workflows/_reusable/validate-contracts.yml`
-- `workflows/_reusable/policy-tests.yml`
+- `.github/workflows/_reusable/validate-contracts.yml`
+- `.github/workflows/_reusable/policy-tests.yml`
 
 …and call them from thin “entry” workflows. This keeps governance logic centralized and reviewable.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -160,9 +162,10 @@ Minimum recommended branch protection for `main` (and any `release/*` branches):
 - Require conversation resolution
 - Restrict who can dismiss reviews
 - Protect `.github/**`, `policy/**`, `contracts/**`, `infra/**` with stricter reviewers
+- Stabilize required check names (branch protection depends on them)
 - Prefer merge methods that preserve auditability (squash or merge commit—choose and document)
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -183,7 +186,7 @@ Minimum recommended branch protection for `main` (and any `release/*` branches):
 | `apps/api/**` | policy enforcement point | `@<PLATFORM_TEAM>` |
 | `apps/ui/**` | evidence-first UX trust surface | `@<UI_TEAM>` + `@<STEWARD_TEAM>` |
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -201,7 +204,7 @@ Recommended templates (names may vary):
 
 > **Rule:** if an issue changes what becomes user-visible, it must reference evidence/versions (or explicitly state why it cannot yet).
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -220,7 +223,7 @@ Minimum checklist concepts:
 
 If the current PR template doesn’t cover these, update it.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -228,7 +231,7 @@ If the current PR template doesn’t cover these, update it.
 
 **Workflows are privileged code.** Treat them accordingly.
 
-### Recommended GitHub Actions hygiene (starter)
+### Recommended GitHub Actions hygiene
 
 - Prefer `pull_request` workflows for untrusted contributions.
 - Avoid `pull_request_target` unless you deeply understand the risk model and restrict what the workflow does.
@@ -246,7 +249,7 @@ permissions:
 - Keep secrets out of PR contexts (especially forks).  
 - Treat artifact uploads as official build outputs; caches are for speed, not provenance.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -264,7 +267,7 @@ When you add a new CI gate, you’re changing KFM’s enforcement behavior.
 
 **Fail-closed principle:** if the gate cannot run reliably, it should block (or be explicitly waived with governance approval).
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
 
 ---
 
@@ -292,4 +295,4 @@ Use this checklist when changing workflows/templates/owners.
 
 > **Reminder:** In KFM, documentation that changes enforcement is **production**.
 
-[↑ Back to top](#github--governance--automation-hub-for-kansas-frontier-matrix-kfm)
+[↑ Back to top](#github--governance-and-automation-hub-for-kansas-frontier-matrix)
