@@ -1,208 +1,214 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/7a6b7c3e-5b8a-4a2a-9a8d-2f8f7fb9183a
+title: Pull Request Template
+type: standard
+version: v1
+status: draft
+owners: [TBD]
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - kfm://doc/kfm-gdg-vnext
+tags: [kfm, github, pr-template]
+notes:
+  - Evidence-first, fail-closed posture: if rights/policy/citations are unclear, do not promote/publish.
+[/KFM_META_BLOCK_V2] -->
+
 # Pull Request
 
-<!--
-KFM defaults:
-- Map-first • Time-aware • Governed • Evidence-first • Cite-or-abstain
-- Keep this PR description crisp. Prefer links to source-of-truth docs, ADRs, run receipts, and EvidenceBundles.
-- Delete sections that are not applicable.
--->
-
-**Purpose (one line):** <!-- e.g., "Add governed API endpoint for Story Node search" -->
-**Status:** <!-- Draft | Ready for review -->
-**Owners:** <!-- @team or @person -->
-
----
-
-## Quick links
-- [Summary](#summary)
-- [Linked work](#linked-work)
-- [Governance and evidence](#governance-and-evidence)
-- [Risk and rollback](#risk-and-rollback)
-- [Testing](#testing)
-- [Deployment notes](#deployment-notes)
-- [Definition of done](#definition-of-done)
+> **Evidence-first + governed:** Every user-facing claim (Map / Story / Focus) should be backed by resolvable evidence, with policy applied consistently.
+>  
+> **Fail-closed:** If licensing, sensitivity, or citations are unclear → block promotion/publish until resolved.
 
 ---
 
 ## Summary
-### What changed
-<!-- Bullet the key changes. -->
+
+**What changed (1–3 bullets):**
+- 
 - 
 - 
 
-### Why
-<!-- What problem does this solve? What outcome are we aiming for? -->
+**Why (user / ops / governance value):**
 - 
 
-### How to review
-<!-- Give reviewers the fastest possible path. -->
-- Start here:
-- Key files:
-- Non-obvious decisions:
-
-### Screenshots / recordings (if UI/Map/Story changes)
-<!-- Prefer before/after. -->
-- 
+**Scope / surfaces impacted (check all that apply):**
+- [ ] Data pipelines / ingestion
+- [ ] Catalogs / provenance (DCAT / STAC / PROV / receipts)
+- [ ] Indexing / storage / tiles
+- [ ] Governed API
+- [ ] UI (Map / Story / Focus)
+- [ ] Policy-as-code / enforcement / redaction
+- [ ] Infra / deployment / CI
+- [ ] Docs only
 
 ---
 
-## Linked work
-- **Issue(s):** <!-- e.g., #123 -->
-- **ADR(s):** <!-- link(s) -->
-- **Story Node(s):** <!-- link(s) / IDs -->
-- **Dataset(s) / DatasetVersion(s):** <!-- IDs + versions -->
-- **Related PRs:** <!-- link(s) -->
+## PR Type
 
----
-
-## Change type
-- [ ] Bug fix
 - [ ] Feature
-- [ ] Refactor / Cleanup
-- [ ] Docs / Documentation only
-- [ ] Data / Pipeline / Catalog / Provenance
-- [ ] API / Contract (OpenAPI / GraphQL)
-- [ ] UI / Map / Story UX
-- [ ] Infrastructure / DevOps
-- [ ] Security / Privacy / Governance
+- [ ] Bug fix
+- [ ] Refactor / maintenance
+- [ ] Security fix
+- [ ] Data update (new or refreshed dataset version)
+- [ ] Breaking change
 
 ---
 
-## Governance and evidence
+## Changeset Details
 
-### Evidence (cite-or-abstain)
-<!--
-If you are asserting a fact, decision, or claim that matters, link the evidence.
-If you cannot cite it, label it clearly as an assumption.
--->
-- **EvidenceBundle / EvidenceRef(s):** 
-- **Primary source-of-truth link(s):** 
-- **Assumptions (explicit):** 
-- **Open questions / Unknowns:** 
+### Architecture invariants (trust membrane)
 
-### Policy, sensitivity, and safe location handling
-<!-- Default-deny for sensitive locations / private individuals / vulnerable infrastructure. Prefer generalization. -->
-- **Policy labels applied (if any):** 
-- **Redactions/generalizations performed (if any):** 
-- **Contains precise locations?** <!-- Yes/No. If yes, justify + review note. -->
-- **CARE/FAIR considerations (if relevant):** 
+- [ ] **No direct client → DB/object store access** (clients use governed APIs only)
+- [ ] **Backend core logic uses repository interfaces** (no bypass to storage/index)
+- [ ] **Policy is enforced consistently** (CI + runtime semantics aligned)
 
-### Time-awareness (required when applicable)
-<!-- Use explicit dates (YYYY-MM-DD) when describing “recent”, “today”, “yesterday”, etc. -->
-- **Event time vs valid time vs transaction time impacted?** <!-- Yes/No -->
-- **Time semantics documented/verified?** <!-- link -->
-
----
-
-## Data and pipeline changes (fill out if applicable)
-
-### Data lifecycle zone(s) touched
-- [ ] RAW (immutable acquisition)
-- [ ] WORK / QUARANTINE (intermediate transforms)
-- [ ] PROCESSED (publishable)
-- [ ] CATALOG / TRIPLET (DCAT + STAC + PROV)
-- [ ] PUBLISHED (governed runtime)
-
-### Promotion Contract (must be satisfied for promotion)
-- **Inputs (with checksums or immutable refs):**
-- **Outputs (artifacts + checksums):**
-- **License(s) verified:**
-- **Provenance recorded (PROV / lineage):**
-- **Validation rules & results:**
-- **Run receipt / audit record:** <!-- link -->
-
-<details>
-<summary><strong>Data promotion checklist</strong></summary>
-
-- [ ] Source identified, permissions/license confirmed, and citation recorded
-- [ ] Sensitivity classification applied; restricted fields redacted/generalized as required
-- [ ] Schema documented (including spatial + temporal extent, units, CRS/geometry types)
-- [ ] Deterministic IDs/hashes implemented where required
-- [ ] QA gates run (schema checks, null/dup rules, geometry validity, range checks, etc.)
-- [ ] Provenance emitted (inputs/outputs/params + checksums + actor + timestamps)
-- [ ] Artifacts written only to the correct zone(s); no “side writes”
-- [ ] Promotion is reversible (rollback plan and versioned artifacts)
-- [ ] Catalog updated (DCAT/STAC/PROV pointers, metadata completeness)
-
-</details>
-
----
-
-## API / contract changes (fill out if applicable)
-- **Contract updated:** <!-- OpenAPI/GraphQL link(s) -->
-- **Backward compatibility:** <!-- None | Compatible | Breaking -->
-- **Breaking change details & migration path:** 
-- **Authn/Authz changes:** 
-- **Rate limits / quotas impacted:** 
-- **Error model impacted (codes, shape, semantics):** 
-- **Auditing / logging:** <!-- what’s recorded; any PII considerations -->
-
-<details>
-<summary><strong>Trust membrane checklist (API layer boundaries)</strong></summary>
-
-- [ ] Frontend/external clients do NOT access storage directly; all access via governed APIs
-- [ ] Core logic does NOT bypass repository interfaces to talk to storage
-- [ ] Policy checks occur at the boundary (authz + redaction/generalization as needed)
-- [ ] Any new endpoint includes audit fields (who/what/when/why) where required
-
-</details>
-
----
-
-## UI / Map / Story UX changes (fill out if applicable)
-- **User-facing behavior changes (map/story interactions):**
-- **A11y checks done:** <!-- keyboard nav, contrast, labels, focus order -->
-- **Performance impact:** <!-- loading, tile rendering, query latency -->
-- **Evidence-first UX:** <!-- how does UI expose evidence/citations? -->
-- **Telemetry/analytics changes (if any):**
-
----
-
-## Security and privacy
-- **Threat model updated/considered:** <!-- link or notes -->
-- **Secrets handling:** <!-- none | updated; confirm no secrets in repo -->
-- **PII/PHI handling:** <!-- none | fields touched; mitigation -->
-- **Dependency risk:** <!-- new deps? versions? -->
-
----
-
-## Risk and rollback
-- **Impact surface:** <!-- who/what is affected -->
-- **Risk level:** <!-- Low | Medium | High -->
-- **Failure modes to watch:** 
-- **Rollback plan:** <!-- steps + what “rollback complete” means -->
-- **Feature flag(s):** <!-- if used -->
-
----
-
-## Testing
-- **Unit tests:** <!-- what + link to results -->
-- **Integration tests:** 
-- **E2E tests (UI/API):** 
-- **Data validation runs (if data changed):** 
-- **Reproduction steps (local):** 
-- **CI status:** <!-- paste summary, not walls of logs -->
-
----
-
-## Deployment notes
-- **Config changes:** 
-- **Migrations:** <!-- DB/data migrations + reversibility -->
-- **Infrastructure changes:** 
-- **Observability:** <!-- logs/metrics/traces/alerts -->
-- **Post-deploy checks:** <!-- explicit checklist -->
-
----
-
-## Definition of done
-- [ ] Scope matches linked issue/story node(s)
-- [ ] Governance/evidence documented (cite-or-abstain)
-- [ ] Tests added/updated and passing
-- [ ] Docs updated where behavior changed
-- [ ] Rollback plan exists and is plausible
-- [ ] No sensitive data leaked; redaction/generalization applied where required
-- [ ] Required reviewers added (e.g., governance / security / data steward as applicable)
-
-<!-- Optional: a short release note for changelog -->
-### Release note (optional)
+**Notes / exceptions (must justify):**
 - 
+
+---
+
+## Data lifecycle + promotion intent (only if data-related)
+
+### Zones touched (check all that apply)
+- [ ] RAW (immutable acquisition)
+- [ ] WORK / QUARANTINE (normalize, QA, redaction candidates)
+- [ ] PROCESSED (publishable artifacts)
+- [ ] CATALOG/TRIPLET (DCAT + STAC + PROV + run receipts)
+- [ ] PUBLISHED (served via governed runtime)
+
+### Dataset/version inventory
+Fill for each dataset version affected:
+
+| dataset_id | dataset_version_id | spec_hash (if used) | policy_label | publish_candidate? | Notes |
+|---|---|---|---|---|---|
+|  |  |  | public / restricted / … | true / false |  |
+
+### Promotion gates (self-attest)
+- [ ] Identity/versioning is deterministic (stable dataset_id; immutable dataset_version_id)
+- [ ] License + rights holder are explicit (or stays in QUARANTINE)
+- [ ] policy_label assigned; redaction/generalization plan exists if needed
+- [ ] Catalog triplet validates (DCAT / STAC / PROV + cross-links)
+- [ ] run_receipt(s) exist; inputs/outputs enumerated with checksums/digests
+- [ ] Policy tests + contract tests pass (fixtures-driven, deny-by-default)
+
+**Artifacts / evidence links (paths, checksums, or CI outputs):**
+- Run receipt(s):
+- DCAT record(s):
+- STAC collection/item(s):
+- PROV bundle(s):
+- QA report(s):
+
+---
+
+## Policy, sensitivity, and redaction
+
+**Policy label(s):** `public` / `restricted` / `…`
+
+- [ ] No sensitive-location / culturally restricted / vulnerable-site details are exposed
+- [ ] Redaction/generalization transforms are recorded as first-class provenance (PROV)
+- [ ] Error responses do not leak existence via 403/404 differences (policy-safe errors)
+
+**If redaction/generalization applied, describe obligations satisfied:**
+- 
+
+**Governance review needed?**
+- [ ] Legal/rights
+- [ ] Community/Indigenous constraints
+- [ ] Security
+- [ ] Privacy/PII
+- [ ] Other: 
+
+---
+
+## Focus Mode / Evidence UX (only if Map/Story/Focus changes)
+
+- [ ] Every new/changed **Map layer** has an evidence view (dataset version, license, policy label, provenance, checksums)
+- [ ] Every new/changed **Story claim** links to resolvable evidence
+- [ ] Focus Mode changes respect **cite-or-abstain** (hard gate: if citations can’t verify → abstain/reduce scope)
+- [ ] Evidence rendering fails closed (invalid/unsigned/unresolvable evidence shown as **untrusted**)
+
+**Screenshots / screen recordings (UI changes):**
+- 
+
+---
+
+## API contract + compatibility (only if API changes)
+
+- [ ] Backwards compatible (only additive changes)
+- [ ] Breaking change (explain + migration plan below)
+- [ ] Response includes needed governance fields when applicable (e.g., dataset_version_id, policy label, audit_ref)
+- [ ] Stable error model (policy-safe message + audit_ref)
+
+**API endpoints / schemas affected:**
+- 
+
+**Migration / deprecation plan (if breaking):**
+- 
+
+---
+
+## Testing & verification
+
+### Automated tests
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] E2E/UI smoke tests (if UI)
+- [ ] Schema validation (catalogs/receipts/contracts)
+- [ ] Policy tests (fixtures: allow/deny + obligations)
+
+### Manual verification (what you actually did)
+- 
+
+### Performance / safety (if relevant)
+- [ ] Tile / query performance sanity-checked
+- [ ] Evidence resolution latency sanity-checked
+- [ ] No PII in logs; logs are redacted appropriately
+
+---
+
+## Security & supply chain (if relevant)
+
+- [ ] Secrets not committed; no sensitive tokens in diffs/logs
+- [ ] Dependencies reviewed (or pinned); vulnerabilities addressed where applicable
+- [ ] SBOM / build provenance updated (if your build system supports it)
+- [ ] Principle of least privilege maintained for services
+
+---
+
+## Rollout, monitoring, and rollback
+
+**Rollout plan (how this reaches users):**
+- 
+
+**Monitoring signals (what will tell us it’s healthy):**
+- 
+
+**Rollback plan (reversible steps):**
+- 
+
+---
+
+## Reviewer notes (help reviewers help you)
+
+**High-risk areas / tricky parts:**
+- 
+
+**Suggested reviewers (domains):**
+- [ ] Data
+- [ ] Policy/Governance
+- [ ] API
+- [ ] UI/UX + a11y
+- [ ] Security
+- [ ] Infra/CI
+
+---
+
+## Final checklist (must be true to merge)
+
+- [ ] PR title is clear and references the driving issue/story (if any)
+- [ ] Tests pass (or explain why not and why that’s acceptable)
+- [ ] Documentation updated where behavior changed
+- [ ] Governance gates satisfied for anything promoted/published
+- [ ] No “hand-wavy” claims: if evidence can’t be cited, the change fails closed
