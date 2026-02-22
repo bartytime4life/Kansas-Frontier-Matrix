@@ -1,278 +1,292 @@
-# data/audit — Audit Ledger & Run Receipts
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/5f5f2d2b-8c4c-4c2a-a3c7-0d0a785e2d7c
+title: data/audit README
+type: standard
+version: v1
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: internal
+related:
+  - data/prov/
+  - docs/governance/
+tags:
+  - kfm
+  - audit
+  - governance
+  - provenance
+notes:
+  - This README defines the append-only audit ledger posture and local folder conventions.
+[/KFM_META_BLOCK_V2] -->
 
-Append-only, policy-aware audit artifacts that make KFM runs reproducible, reviewable, and enforceable.
+# data/audit
+Append-only audit ledger & operational audit artifacts for KFM (governed, time-aware, evidence-first).
 
-**Status:** Draft (vNext)  
-**Owners:** TBD — Steward + Operator  
+![Status](https://img.shields.io/badge/status-draft-orange)
+![Policy](https://img.shields.io/badge/policy-internal-blue)
+![Ledger](https://img.shields.io/badge/ledger-append--only-success)
+![KFM](https://img.shields.io/badge/kfm-audit-6f42c1)
 
-<kbd>governed</kbd> <kbd>append-only</kbd> <kbd>schema-first</kbd> <kbd>restricted-by-default</kbd>
+**This directory is the “what happened?” memory**: it records governance-relevant events (runs, policy decisions, promotions, access decisions) in a way that is:
+- **append-only**
+- **time-stamped**
+- **policy-labeled**
+- **traceable to evidence/provenance artifacts**
 
-**Quick nav:** [Purpose](#purpose) · [What lives here](#what-lives-here) · [Directory layout](#directory-layout) · [Data contracts](#data-contracts) · [Write path](#write-path) · [Read path](#read-path) · [Security and privacy](#security-and-privacy) · [Definition of Done](#definition-of-done) · [Appendix](#appendix)
+> **WARNING**
+> Audit artifacts can become **sensitive** (PII, precise locations, restricted dataset metadata, credentials/URLs). Default-deny, redact, and treat the ledger itself as a governed dataset.
 
-> [!WARNING]
-> This directory is intended for **governed audit artifacts**. Treat contents as **sensitive operational data** by default.
-> Do **not** publish or mirror outside controlled storage without an explicit retention + access policy.
+---
+
+## Navigation
+- [Purpose](#purpose)
+- [Confirmed requirements](#confirmed-requirements)
+- [Directory layout](#directory-layout)
+- [Audit record types](#audit-record-types)
+- [Append-only rules](#append-only-rules)
+- [Schemas and validation](#schemas-and-validation)
+- [Retention and access](#retention-and-access)
+- [Definition of Done](#definition-of-done)
+- [Appendix: Example records](#appendix-example-records)
 
 ---
 
 ## Purpose
 
-`data/audit/` holds the **audit ledger** (append-only event stream) and **run receipts** (one per governed operation).
+KFM uses audit artifacts to make governance enforceable and reviewable:
+- support promotion gates (“why was this version promoted/blocked?”)
+- support accountability (“which policy version produced this decision?”)
+- support safety (“what was generalized/redacted and when?”)
+- support incident response (“what changed, by whom/what, and what did it touch?”)
 
-KFM uses these artifacts to:
-- make **pipeline runs** (ingest/transform/publish) reproducible,
-- record **policy decisions** (allow/deny + obligations),
-- prove that **promotion gates** were satisfied,
-- and allow stewards/operators to review “what happened” without relying on ad-hoc logs.
+The audit ledger is **not** a debug log. It is a **governance record**.
 
----
-
-## What lives here
-
-### Run receipts (per operation)
-
-A **run receipt** is a structured record emitted for:
-- every pipeline run (ingest/transform/publish),
-- and every governed query path (e.g., Focus Mode, evidence resolution), if implemented.
-
-Receipts capture:
-- inputs/outputs **by digest**,
-- execution environment,
-- validation status,
-- and policy decision references.
-
-### Audit ledger (append-only)
-
-The **audit ledger** is:
-- an **append-only** log,
-- treated as a **governed dataset itself**,
-- with redactions/generalizations applied *via governed process* (typically by creating controlled “views”, not by rewriting history).
+[Back to top](#dataaudit)
 
 ---
 
-## Audit in the truth path
+## Confirmed requirements
 
-```mermaid
-flowchart LR
-  U[Upstream source] --> C[Connectors / Runners]
-  C --> R[Run receipt<br/>inputs/outputs/env/validation/policy]
-  R --> L[Audit ledger<br/>append-only events]
-  R --> P[PROV bundle<br/>Activity/Entity/Agent]
-  P --> T[Catalog triplet<br/>DCAT + STAC + PROV]
-  T --> A[Governed API<br/>policy + evidence resolver]
-  L --> A
-  A --> UI[Map / Story / Focus UI<br/>shows audit_ref (policy-safe)]
-```
+These are the non-negotiable behaviors expected by KFM vNext design guidance:
+
+### CONFIRMED
+- **Every pipeline run and every Focus Mode query emits a run receipt** (inputs/outputs/environment/validation/policy).  
+- The **audit ledger is append-only** and should be treated as a **governed dataset**.  
+- Governance must define an **audit ledger retention and access policy**.
+
+### PROPOSED (implementation posture)
+- The audit ledger entries live under `data/audit/` as NDJSON and/or one-record-per-file JSON.
+- Run receipts remain provenance artifacts under `data/prov/run_receipts/` (or equivalent), while the audit ledger stores **pointers** to those receipts.
+
+### UNKNOWN (needs repo / governance confirmation)
+- Whether this repo stores production audit records or only fixtures (production logs may live in an object store).
+- Exact retention duration and archival workflow.
+- Exact policy label(s) used for audit artifacts (`internal` vs `restricted`).
+
+[Back to top](#dataaudit)
 
 ---
 
 ## Directory layout
 
-> [!NOTE]
-> The exact subfolders may vary by environment (repo checkout vs. object store).  
-> The structure below is the **recommended on-disk convention** for local/dev + CI artifacts.
+> This layout is **PROPOSED**. Keep it stable once adopted (tools will depend on it).
 
 ```text
-data/audit/
-  README.md
-
-  ledger/                      # append-only audit stream(s)
-    audit_ledger.jsonl         # JSONL: 1 event per line (see "Audit ledger contract")
-    audit_ledger.jsonl.sha256  # optional: digest snapshot of the ledger file
-
-  run_receipts/                # 1 JSON per run (immutable once written)
-    YYYY/MM/DD/
-      <run_id>.json
-
-  policy_decisions/            # optional: decision snapshots referenced by receipts/ledger
-    YYYY/MM/DD/
-      <decision_id>.json
-
-  promotions/                  # optional: promotion manifests + approvals
-    YYYY/MM/DD/
-      <dataset_version_id>.json
-
-  _views/                      # derived, publish-safe projections (NOT canonical)
-    redacted_audit_ledger.jsonl
+data/
+└─ audit/
+   ├─ README.md
+   ├─ ledger/                      # append-only “event stream” (governed dataset)
+   │  └─ YYYY/
+   │     └─ YYYY-MM/
+   │        ├─ events.ndjson        # newline-delimited JSON records (append-only)
+   │        └─ events.ndjson.sig    # optional signature/attestation pointer (future)
+   ├─ policy_decisions/             # normalized policy decision records (optional mirror)
+   │  └─ YYYY/
+   │     └─ YYYY-MM/
+   │        └─ decision.<id>.json
+   ├─ indexes/                      # rebuildable indexes derived from ledger (optional)
+   │  └─ README.md
+   └─ fixtures/                     # test fixtures (valid/invalid) for CI gates
+      ├─ valid/
+      └─ invalid/
 ```
 
-**Canonical vs rebuildable note:** the **audit ledger** is canonical; any `_views/` are rebuildable projections.
+### Why NDJSON?
+- Append-only by design (no need to “edit” an array).
+- Stream-friendly (can be tailed and processed incrementally).
+- Simple to validate line-by-line.
+
+[Back to top](#dataaudit)
 
 ---
 
-## Data contracts
+## Audit record types
 
-### Run receipt contract (minimum)
+KFM expects multiple “audit-worthy” events. Keep them **typed**.
 
-A run receipt **MUST** include:
-- a stable `run_id`,
-- `actor` (principal + role),
-- `operation`,
-- `dataset_version_id` (when applicable),
-- `inputs[]` and `outputs[]` with digests,
-- `environment` fields sufficient to reproduce (at least container + commit + params digest),
-- `validation` result,
-- a `policy.decision_id` link,
-- `created_at` timestamp.
+| Type | Producer | Purpose | Must include |
+|---|---|---|---|
+| `run_receipt_ref` | pipeline runner, Focus Mode runtime | Pointer to the canonical run receipt | `run_id`, `receipt_ref`, `dataset_version_id?`, `policy.decision_id?`, timestamps |
+| `policy_decision` | policy PDP/PEP | Accountability for allow/deny + obligations | `decision_id`, `decision`, `policy_label`, `reason_codes`, `obligations`, `rule_id`, `evaluated_at` |
+| `promotion_event` | promotion workflow | Governance trace for dataset lifecycle | `dataset_version_id`, `from_zone`, `to_zone`, approver, gate results, timestamps |
+| `access_event` | governed API gateway | Security trace without leaking restricted metadata | `principal_hash`, `action`, `resource_ref`, allow/deny, `audit_ref` |
+| `security_event` | ops tooling | e.g., secret rotation logged as a structural event | event type + timestamp + scope (no secrets) |
 
-#### Example (template)
+> **NOTE**
+> Keep the audit ledger **structural**: store identifiers, digests, and references—avoid raw payloads, PII, or precise coordinates.
 
-```json
-{
-  "run_id": "kfm://run/<rfc3339>.<suffix>",
-  "actor": { "principal": "svc:<name>", "role": "<role>" },
-  "operation": "<op>",
-  "dataset_version_id": "<dataset_version_id>",
-  "inputs": [
-    { "uri": "<input-uri>", "digest": "sha256:<hex>" }
-  ],
-  "outputs": [
-    { "uri": "<output-uri>", "digest": "sha256:<hex>" }
-  ],
-  "environment": {
-    "container_digest": "sha256:<hex>",
-    "git_commit": "<sha>",
-    "params_digest": "sha256:<hex>"
-  },
-  "validation": { "status": "pass|fail", "report_digest": "sha256:<hex>" },
-  "policy": { "decision_id": "kfm://policy_decision/<id>" },
-  "created_at": "<rfc3339>"
-}
+[Back to top](#dataaudit)
+
+---
+
+## Append-only rules
+
+### HARD RULES
+1. **Never edit or delete existing ledger events.**
+2. Corrections are done by **appending a new event** that references the prior event:
+   - `supersedes_event_id: "<old_event_id>"`
+   - `correction_reason: "<human-readable>"`
+
+3. Every event must include:
+   - `event_id` (unique, stable)
+   - `event_time` (when it happened)
+   - `transaction_time` (when we recorded it)
+   - `actor` (service principal / role; hashed for users)
+   - `policy` (label + decision ref)
+   - `refs` (run_id / dataset_version_id / artifact digests as applicable)
+
+### Recommended ID pattern (PROPOSED)
+- `event_id = "kfm://audit/<UTC_ISO8601>.<type>.<random_or_digest>"`
+
+[Back to top](#dataaudit)
+
+---
+
+## Schemas and validation
+
+### PROPOSED repo hygiene
+- Add JSON Schemas for audit record shapes:
+  - `contracts/schemas/audit_event.schema.json`
+  - `contracts/schemas/policy_decision.schema.json`
+  - `contracts/schemas/run_receipt_ref.schema.json`
+
+- Add fixtures:
+  - `data/audit/fixtures/valid/*.json`
+  - `data/audit/fixtures/invalid/*.json`
+
+- CI gates should:
+  - validate fixtures against schemas
+  - enforce **default-deny** rules for dangerous fields (credentials, exact coordinates, PII)
+  - ensure any `receipt_ref` resolves (at least in integration tests)
+
+[Back to top](#dataaudit)
+
+---
+
+## Retention and access
+
+### CONFIRMED requirement (governance artifact)
+A formal **audit ledger retention and access policy** must exist.
+
+### PROPOSED defaults until governance finalizes
+- Default policy label for audit ledger: `internal`
+- Any ledger entries referencing restricted datasets: classify as `restricted` (or split by policy label partitions)
+- Redact:
+  - user identifiers (store hashes/pseudonyms)
+  - URLs containing tokens / query strings
+  - exact coordinates for sensitive locations
+
+> **SECURITY NOTE**
+> If secrets rotate, record only the fact of rotation + scope + time, never the secret itself.
+
+[Back to top](#dataaudit)
+
+---
+
+## Diagram
+
+```mermaid
+flowchart LR
+  subgraph Producers
+    P[Pipeline runner]
+    F[Focus Mode runtime]
+    PDP[Policy PDP/PEP]
+    API[Governed API Gateway]
+  end
+
+  subgraph CanonicalEvidence
+    RR[Run receipts<br/>data/prov/run_receipts/...]
+    PD[Policy decisions]
+  end
+
+  subgraph Audit
+    L[Audit ledger<br/>data/audit/ledger/...]
+  end
+
+  P --> RR
+  F --> RR
+  PDP --> PD
+  RR --> L
+  PD --> L
+  API --> L
 ```
 
-> [!TIP]
-> Keep receipts **hashable** and **safe to render**: store **digests + references**, not secrets.
-
----
-
-### Audit ledger contract (PROPOSED v1)
-
-The audit ledger is a JSONL file. Each line is a single **append-only** event.
-
-An audit event **SHOULD** include:
-- `audit_ref` (stable identifier for this entry),
-- `event_type` (controlled vocabulary),
-- `who` (principal + role),
-- `what` (operation/endpoint + parameters summary),
-- `when` (timestamp),
-- `why` (optional purpose string, if declared),
-- `inputs`/`outputs` (digests),
-- `policy` outcome summary + decision reference,
-- `links` to run receipt / PROV / catalogs.
-
-#### Example event (template)
-
-```json
-{
-  "audit_ref": "kfm://audit/entry/<id>",
-  "event_type": "run_receipt_emitted",
-  "who": { "principal": "svc:pipeline", "role": "operator" },
-  "what": {
-    "operation": "ingest+publish",
-    "dataset_version_id": "<dataset_version_id>"
-  },
-  "when": "<rfc3339>",
-  "why": "<optional-purpose>",
-  "io": {
-    "inputs": [{ "digest": "sha256:<hex>", "uri": "<uri>" }],
-    "outputs": [{ "digest": "sha256:<hex>", "uri": "<uri>" }]
-  },
-  "policy": {
-    "decision_id": "kfm://policy_decision/<id>",
-    "decision": "allow|deny",
-    "reason_codes": ["<code>"]
-  },
-  "links": {
-    "run_receipt": "data/audit/run_receipts/YYYY/MM/DD/<run_id>.json",
-    "prov_bundle": "<prov-uri-or-digest>",
-    "catalogs": ["<dcat-uri>", "<stac-uri>"]
-  }
-}
-```
-
-> [!IMPORTANT]
-> Treat audit events as **policy-sensitive**: avoid including precise restricted geometry/PII.
-> Prefer digests and high-level summaries that can be expanded only under authorization.
-
----
-
-## Write path
-
-### Rules (fail-closed posture)
-
-- **Append-only:** never edit or delete existing ledger entries or receipts.
-- **Corrections:** emit a *new* event that references the prior `audit_ref` and explains the correction.
-- **Redaction:** do not rewrite history in-place; create a governed redacted view in `_views/` (or an equivalent controlled projection).
-- **Linkability:** audit entries should link to run receipts and any promotion manifests/approvals.
-
-### Minimum emission points
-
-A governed workflow is incomplete unless it emits:
-1. Run receipt (per run),
-2. Audit ledger append (per run + key governance actions),
-3. References from catalogs/PROV to the run receipt (as applicable).
-
----
-
-## Read path
-
-Consumers typically include:
-- stewards/operators reviewing promotions or incidents,
-- CI checks verifying required artifacts exist and conform,
-- UI components rendering safe “receipt views” (read-only) where allowed.
-
-**Policy rule:** UI may show audit metadata only in **policy-safe** form; it must not leak restricted existence through error differences or “ghost metadata.”
-
----
-
-## Security and privacy
-
-Audit artifacts may contain sensitive operational detail.
-
-Minimum posture:
-- logs/receipts are append-only,
-- redact for PII/restricted info,
-- access restricted to stewards/operators,
-- retention + deletion policy defined and enforced.
+[Back to top](#dataaudit)
 
 ---
 
 ## Definition of Done
 
-Use this checklist when adding a new pipeline / governed feature:
+Use this checklist when adding a new audit-producing component:
 
-- [ ] Run receipt emitted for the operation (pipeline run / query / publish).
-- [ ] Audit ledger appended with `who/what/when/(why)/inputs/outputs/policy` summary.
-- [ ] Inputs/outputs recorded **by digest**, not by mutable path alone.
-- [ ] Validation results recorded and fail-closed semantics enforced.
-- [ ] Policy decision reference recorded (decision_id + reason codes).
-- [ ] If promotion-related: approvals captured where required.
-- [ ] Audit artifacts treated as governed: access + retention policy exists.
+- [ ] Defines a **typed** audit event shape and adds/updates a JSON Schema.
+- [ ] Emits **append-only** records (never rewrites).
+- [ ] Includes `policy_label` and a `decision_id` reference when policy applies.
+- [ ] Does **not** emit secrets, raw PII, or restricted geometry.
+- [ ] Adds fixtures (valid + invalid) and CI validates them.
+- [ ] Provides a deterministic way to link audit events to run receipts and dataset versions.
 
----
-
-## Appendix
-
-<details>
-<summary><strong>Controlled vocabulary: suggested <code>event_type</code> values</strong></summary>
-
-- `run_receipt_emitted`
-- `policy_decision_recorded`
-- `dataset_promotion_requested`
-- `dataset_promotion_approved`
-- `catalog_triplet_published`
-- `evidence_resolved`
-- `focus_query_executed`
-- `access_denied` (policy-safe summary only)
-
-</details>
-
-<details>
-<summary><strong>Notes on storage</strong></summary>
-
-If `data/audit/` is mirrored to object storage, treat it as **canonical**. Any indexes/search views over audit data are rebuildable and must be derived from canonical records.
-
-</details>
+[Back to top](#dataaudit)
 
 ---
-_Back to top: [↑](#dataaudit--audit-ledger--run-receipts)_
+
+## Appendix: Example records
+
+### Example: `policy_decision` (shape)
+```json
+{
+  "event_type": "policy_decision",
+  "event_id": "kfm://audit/2026-02-22T00:00:00Z.policy_decision.abc123",
+  "event_time": "2026-02-22T00:00:00Z",
+  "transaction_time": "2026-02-22T00:00:01Z",
+  "actor": { "principal": "svc:pdp", "role": "policy" },
+  "decision": {
+    "decision_id": "kfm://policy_decision/xyz",
+    "policy_label": "restricted",
+    "decision": "deny",
+    "reason_codes": ["SENSITIVE_SITE"],
+    "obligations": [{ "type": "generalize_geometry", "min_cell_size_m": 5000 }],
+    "evaluated_at": "2026-02-22T00:00:00Z",
+    "rule_id": "deny.restricted_dataset.default"
+  },
+  "policy": { "policy_label": "internal" }
+}
+```
+
+### Example: `run_receipt_ref` (pointer)
+```json
+{
+  "event_type": "run_receipt_ref",
+  "event_id": "kfm://audit/2026-02-22T00:10:00Z.run_receipt_ref.def456",
+  "event_time": "2026-02-22T00:10:00Z",
+  "transaction_time": "2026-02-22T00:10:01Z",
+  "actor": { "principal": "svc:pipeline", "role": "operator" },
+  "refs": {
+    "run_id": "kfm://run/2026-02-20T12:34:56Z.noaa_ncei_storm_events.abcd1234",
+    "receipt_ref": "prov://run/2026-02-20T12:34:56Z.noaa_ncei_storm_events.abcd1234",
+    "dataset_version_id": "2026-02.abcd1234"
+  },
+  "policy": { "policy_label": "internal" }
+}
+```
