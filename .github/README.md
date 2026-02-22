@@ -88,7 +88,7 @@ flowchart LR
   D --> E[Optional: Focus eval + UI e2e smoke]
   E --> F[CODEOWNERS review required]
   F --> G[Merge allowed only if all required checks pass]
-  G --> H[Release/publish automation (if configured)]
+  G --> H["Release/publish automation (if configured)"]
 ~~~
 
 **KFM posture:** failures **block**. Waivers (if allowed) are governed artifacts and must be explicit, time-bounded, and recorded.
