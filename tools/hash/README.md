@@ -59,15 +59,15 @@ KFM’s governance loop depends on predictable identity and evidence integrity:
 
 ```mermaid
 flowchart TD
-  A[Dataset spec JSON] -->|RFC 8785 canonicalize| B[spec_hash = sha256(canonical spec)]
-  C[Raw inputs] -->|sha256(bytes)| D[raw artifact digests]
-  E[Transforms] -->|sha256(bytes)| F[processed artifact digests]
-  B --> G[run_receipt]
+  A["Dataset spec JSON"] -->|"RFC 8785 canonicalize"| B["spec_hash = sha256&#40;canonical spec&#41;"]
+  C["Raw inputs"] -->|"sha256 bytes"| D["raw artifact digests"]
+  E["Transforms"] -->|"sha256 bytes"| F["processed artifact digests"]
+  B --> G["run_receipt"]
   D --> G
   F --> G
-  G --> H[promotion_manifest]
-  H --> I[DCAT / STAC / PROV records]
-  I --> J[Evidence drawer + Focus Mode]
+  G --> H["promotion_manifest"]
+  H --> I["DCAT &#47; STAC &#47; PROV records"]
+  I --> J["Evidence drawer + Focus Mode"]
 ```
 
 The evidence UX expects to surface "artifact links and checksums" alongside provenance and policy labels, so hashing is a first-class contract surface.
