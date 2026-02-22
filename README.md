@@ -1,3 +1,21 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/0c6f7a9b-0f6b-4d7d-8d6d-8d70f5c85d20
+title: Kansas Frontier Matrix
+type: standard
+version: vNext
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - README.md
+tags:
+  - kfm
+notes:
+  - Repository README describing the vNext operating model and governance posture.
+[/KFM_META_BLOCK_V2] -->
+
 # Kansas Frontier Matrix
 
 > **Map-first • Time-aware • Governed • Evidence-first • Cite-or-abstain**  
@@ -8,10 +26,10 @@
 **Core promise:** anything you can see, cite, export, or ask KFM to explain is traceable to an immutable **DatasetVersion** + resolvable **EvidenceBundle**, with policy enforced consistently in CI and at runtime.  
 **Primary experiences:** **Map Explorer** + **Timeline** + **Stories** + **Catalog** + **Focus Mode**.
 
-[![Status](https://img.shields.io/badge/status-vNext-blue)](#)
-[![Governance](https://img.shields.io/badge/governance-fail--closed-critical)](#)
-[![Evidence](https://img.shields.io/badge/evidence-cite--or--abstain-important)](#)
-[![Policy](https://img.shields.io/badge/policy-default--deny-critical)](#)
+[![Status](https://img.shields.io/badge/status-vNext-blue)](#roadmap)
+[![Governance](https://img.shields.io/badge/governance-fail--closed-critical)](#governance)
+[![Evidence](https://img.shields.io/badge/evidence-cite--or--abstain-important)](#evidence-and-citations)
+[![Policy](https://img.shields.io/badge/policy-default--deny-critical)](#core-invariants)
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)](#)
 
 ---
@@ -21,7 +39,7 @@
 Pick the path that matches what you’re doing:
 
 - **Contributing code/docs/data**
-  - Read: `CONTRIBUTING.md` (workflow), `.github/README.md` (CI gates + CODEOWNERS), `SECURITY.md` (reporting)
+  - Read: [`CONTRIBUTING.md`](CONTRIBUTING.md) (workflow), [`.github/README.md`](.github/README.md) (CI gates + CODEOWNERS), [`SECURITY.md`](SECURITY.md) (reporting)
   - Know: changes to `.github/`, `policy/`, `contracts/`, and promotion tooling are **governance-critical**
 
 - **Stewardship and governance**
@@ -31,7 +49,7 @@ Pick the path that matches what you’re doing:
   - Read: `docs/runbooks/` and `infra/`
   - Know: DB/search/tiles are rebuildable projections; **canonical truth is processed artifacts + catalogs + receipts + audit**
 
-> **NOTE**  
+> [!NOTE]
 > This README describes the **target operating model** for vNext. If some files/directories are not present on your branch, treat those sections as **PROPOSED** and reconcile with repo reality before enforcing gates.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -106,6 +124,9 @@ If you only read three things first:
 
 These paths change enforcement behavior. Treat changes here as production configuration:
 
+> [!WARNING]
+> A PR that modifies any of the below MUST have explicit owners + required checks, and SHOULD be reviewed like production config.
+
 | Path | Why it’s critical | Expected controls |
 |---|---|---|
 | `.github/` | merge-time enforcement | CODEOWNERS + required checks |
@@ -143,6 +164,7 @@ Before implementing or “fixing” anything, verify what exists **on your branc
 - Confirm the UI stack and how map state is represented and persisted (Story Node sidecars, view-state tokens).
 - Confirm how secrets are managed (must not live in repo; injected via CI/runtime secret stores).
 
+> [!IMPORTANT]
 > **Fail-closed rule:** if any of the above is unclear, default-deny and treat the feature as **PROPOSED** until verified.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -151,22 +173,22 @@ Before implementing or “fixing” anything, verify what exists **on your branc
 
 ## Quick start
 
-> **NOTE**  
+> [!NOTE]
 > Exact commands / package managers / service topology vary by branch.  
 > Prefer `make help` or `scripts/dev/*` if present.
 
 ### 1) Get oriented
 
-~~~bash
+```bash
 git clone <REPO_URL>
 cd Kansas-Frontier-Matrix
 
 ls
-~~~
+```
 
 ### 2) Try the “common entrypoints” (if present)
 
-~~~bash
+```bash
 # If a Makefile exists
 make help
 
@@ -182,11 +204,12 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 pytest
-~~~
+```
 
 ### 3) First principle while exploring
 
-> **Rule of thumb:** if a thing is user-visible, it must be **promotable** and **citeable**.  
+> [!TIP]
+> **Rule of thumb:** if a thing is user-visible, it must be **promotable** and **citable**.  
 > If it cannot be cataloged and cited, it does not belong on the map.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -199,7 +222,7 @@ KFM is map-first, but the map is only as trustworthy as the lifecycle behind it.
 
 ### High-level flow
 
-~~~mermaid
+```mermaid
 flowchart LR
   A[Upstream sources] --> B[Connectors and pipeline runner]
   B --> C[RAW zone]
@@ -212,7 +235,7 @@ flowchart LR
   H --> I[UI Map Explorer Timeline Stories Focus]
   H --> J[Exports and reports]
   H --> K[Append-only audit ledger]
-~~~
+```
 
 ### Trust membrane
 
@@ -225,6 +248,7 @@ flowchart LR
 - **Canonical:** processed artifacts in object storage, catalogs (DCAT/STAC/PROV), run receipts, and audit ledger.
 - **Rebuildable projections:** PostGIS tables, search indexes, graph views, and tile bundles.
 
+> [!IMPORTANT]
 > **Rule:** if a projection and a catalog disagree, the catalog + processed artifacts win.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -247,6 +271,7 @@ KFM’s safest path is to build trust primitives first, UI last.
 - [ ] **Rebuildable projections**: DB/search/tiles built from canonical artifacts
 - [ ] **UI surfaces**: Map Explorer/Stories/Focus render governed API results + evidence drawer
 
+> [!NOTE]
 > **Reasoning:** if EvidenceRef cannot resolve deterministically, “map-first” becomes “trust me.”
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -270,6 +295,7 @@ These are KFM’s non-negotiables. Violating these breaks governance, not “jus
 | **Row-level traceability** | Every feature row in projections carries `dataset_version_id` + an `evidence_ref` | Projection schema + integration tests |
 | **Policy-safe errors** | Public users must not infer restricted dataset existence via error differences | API error model + tests + monitoring |
 
+> [!NOTE]
 > **Norms used in docs:** MUST / MUST NOT / SHOULD / MAY (RFC-style).  
 > **Section tags:** CONFIRMED / PROPOSED / UNKNOWN.  
 > Use **CONFIRMED** only when backed by in-repo artifacts; otherwise use **PROPOSED**.
@@ -303,11 +329,19 @@ Use these terms consistently in code, schemas, tests, and documentation.
 
 KFM uses resolvable, stable identifiers. Examples:
 
-- `kfm://dataset/<slug>@<dataset_version_id>`
-- `kfm://run/<timestamp>.<slug>.<hash>`
-- `kfm://audit/entry/<id>`
-- Evidence refs: `dcat://...`, `stac://...`, `prov://...`, `doc://...`
+```text
+kfm://dataset/<slug>@<dataset_version_id>
+kfm://run/<timestamp>.<slug>.<hash>
+kfm://audit/entry/<id>
+dcat://...
+stac://...
+prov://...
+doc://...
+graph://...
+url://...
+```
 
+> [!IMPORTANT]
 > **Rule:** user-visible claims should reference evidence through an EvidenceRef resolvable to an EvidenceBundle.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -341,7 +375,7 @@ Core components:
 
 ### Architecture diagram
 
-~~~mermaid
+```mermaid
 flowchart TB
   subgraph Clients
     UI[UI Map Story Focus]
@@ -378,7 +412,7 @@ flowchart TB
   API --> GR
   API --> TL
   API --> AUD
-~~~
+```
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -426,7 +460,7 @@ Errors must be policy-safe and consistent so users cannot infer restricted exist
 
 Starter error shape:
 
-~~~json
+```json
 {
   "error": {
     "code": "NOT_FOUND|FORBIDDEN|VALIDATION_FAILED|POLICY_DENY",
@@ -435,7 +469,7 @@ Starter error shape:
     "audit_ref": "kfm://audit/entry/..."
   }
 }
-~~~
+```
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -473,7 +507,7 @@ Minimal fail-closed gates:
 
 ### Promotion manifest template
 
-~~~json
+```json
 {
   "kfm_promotion_manifest_version": "v1",
   "dataset_slug": "example_dataset",
@@ -495,7 +529,7 @@ Minimal fail-closed gates:
     { "role": "steward", "principal": "<id>", "approved_at": "2026-02-20T12:59:00Z" }
   ]
 }
-~~~
+```
 
 ### Run receipt template
 
@@ -506,7 +540,7 @@ A run receipt exists for:
 - story publish events
 - Focus Mode answers
 
-~~~json
+```json
 {
   "kfm_run_receipt_version": "v1",
   "run_id": "kfm://run/2026-02-20T12:34Z.noaa.abcd1234",
@@ -528,7 +562,7 @@ A run receipt exists for:
   "timestamps": { "started_at": "2026-02-20T12:34:56Z", "ended_at": "2026-02-20T12:45:10Z" },
   "audit_ref": "kfm://audit/entry/123"
 }
-~~~
+```
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -548,7 +582,7 @@ PROPOSED: include a human-friendly time component in `dataset_version_id` if it 
 
 Reference layout for the truth path:
 
-~~~text
+```text
 data/
   raw/<dataset_slug>/<dataset_version_id>/
     acquisition_manifest.json
@@ -573,8 +607,9 @@ data/
     exports/...
   audit/
     ledger/<year>/<month>/append-only.log
-~~~
+```
 
+> [!IMPORTANT]
 > **Canonical rule:** once promoted, the processed + catalog artifacts are immutable. Projections must be rebuildable from these.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -639,6 +674,7 @@ A dataset version cannot be promoted unless:
 - Checksums in catalogs match actual artifact digests.
 - Catalogs contain no links to quarantine artifacts.
 
+> [!IMPORTANT]
 > CI MUST include profile validation + link-checking for every promoted DatasetVersion.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -671,7 +707,7 @@ UI goal: evidence resolution should be usable in ≤ 2 calls.
 
 ### EvidenceBundle template
 
-~~~json
+```json
 {
   "bundle_id": "sha256:bundle...",
   "dataset_version_id": "2026-02.abcd1234",
@@ -689,7 +725,7 @@ UI goal: evidence resolution should be usable in ≤ 2 calls.
   "checks": { "catalog_valid": true, "links_ok": true },
   "audit_ref": "kfm://audit/entry/123"
 }
-~~~
+```
 
 ### Evidence drawer requirements
 
@@ -734,7 +770,7 @@ Story Nodes store map state so stories replay the same view, and Focus Mode can 
 
 ### Layer configuration template
 
-~~~json
+```json
 {
   "layer_id": "noaa_storm_events",
   "title": "NOAA Storm Events",
@@ -751,7 +787,7 @@ Story Nodes store map state so stories replay the same view, and Focus Mode can 
   },
   "policy": { "policy_label": "public" }
 }
-~~~
+```
 
 ### Story Nodes
 
@@ -764,8 +800,8 @@ Publishing gate: all citations must resolve through the evidence resolver endpoi
 
 Story Node markdown skeleton:
 
-~~~markdown
-[KFM_META_BLOCK_V2]
+```markdown
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://story/<uuid>@v1
 title: <Story title>
 type: story
@@ -777,7 +813,7 @@ updated: YYYY-MM-DD
 policy_label: public
 related:
   - kfm://dataset/<slug>@<dataset_version_id>
-[/KFM_META_BLOCK_V2]
+[/KFM_META_BLOCK_V2] -->
 
 # <Story title>
 
@@ -794,11 +830,11 @@ related:
 ## Evidence
 - [CITATION: dcat://...]
 - [CITATION: prov://...]
-~~~
+```
 
 Story Node sidecar skeleton:
 
-~~~json
+```json
 {
   "kfm_story_node_version": "v3",
   "story_id": "kfm://story/<uuid>",
@@ -819,7 +855,7 @@ Story Node sidecar skeleton:
     { "ref": "prov://run/2026-02-20T12:34Z...", "kind": "prov" }
   ]
 }
-~~~
+```
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -831,7 +867,7 @@ Focus Mode is not a general chatbot. It is a governed workflow.
 
 ### Control loop
 
-~~~mermaid
+```mermaid
 flowchart LR
   P[Policy pre-check] --> R[Plan retrieval]
   R --> Q[Retrieve policy-filtered evidence]
@@ -840,7 +876,7 @@ flowchart LR
   S --> V[Verify citations hard gate]
   V -->|pass| E[Emit run receipt + audit ref]
   V -->|fail| A[Abstain with policy-safe reason]
-~~~
+```
 
 ### Expectations
 
@@ -1027,7 +1063,7 @@ Rule: the registry is an input to promotion gates, not optional documentation.
 
 Dataset onboarding specs are canonical inputs to deterministic ID generation and pipeline execution (recommended path: `data/specs/<dataset_slug>.json`).
 
-~~~json
+```json
 {
   "kfm_dataset_spec_version": "v1",
   "dataset_slug": "<slug>",
@@ -1052,7 +1088,7 @@ Dataset onboarding specs are canonical inputs to deterministic ID generation and
   ],
   "policy": { "default_policy_label": "public" }
 }
-~~~
+```
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -1062,12 +1098,13 @@ Dataset onboarding specs are canonical inputs to deterministic ID generation and
 
 This layout aligns KFM features with governance boundaries and the truth path zones.
 
+> [!NOTE]
 > UNKNOWN until verified: the exact current repo structure on your branch.  
 > Treat this as a target layout and reconcile with reality.
 
 ### Expanded layout
 
-~~~text
+```text
 Kansas-Frontier-Matrix/
 ├─ README.md
 ├─ LICENSE
@@ -1182,7 +1219,7 @@ Kansas-Frontier-Matrix/
    ├─ integration/
    ├─ e2e/
    └─ eval/
-~~~
+```
 
 ### Where CI gates live
 
