@@ -1,388 +1,297 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/3c2d9af7-c7b5-4c4e-9c1c-4e3ef0d0c72e
-title: apps — Deployable runtime applications
+doc_id: kfm://doc/8a4a8e59-7a6f-4d60-9c56-9f6d5f8b1f3d
+title: apps/ — Runnable application surfaces
 type: standard
 version: v1
 status: draft
-owners: see CODEOWNERS
+owners: TBD (resolve via CODEOWNERS / repo maintainers)
 created: 2026-02-22
 updated: 2026-02-22
 policy_label: public
 related:
-  - apps/README.md
-  - packages/README.md
-  - ops/ (if present)
-tags:
-  - kfm
-  - apps
-  - runtime
-  - governance
-  - trust-membrane
-  - truth-path
+  - kfm://doc/UNKNOWN_SYSTEM_OVERVIEW
+  - ../docs/
+tags: [kfm, apps, ui, trust-membrane, contracts, evidence-first]
 notes:
-  - Aligns apps responsibilities with KFM trust membrane + truth path invariants.
+  - This README is intentionally fail-closed: it does not assume a specific tech stack or app list until confirmed in-repo.
+  - Fill the App Registry section from the actual directory tree as the first follow-up.
 [/KFM_META_BLOCK_V2] -->
 
-# apps
+# apps/ — KFM runnable applications
+**Purpose:** Home for user-facing and operator-facing application surfaces (Map / Story / Focus / Admin) that consume **governed APIs** and expose **evidence-first** UX.
 
-Deployable runtime applications for Kansas Frontier Matrix (KFM): the **governed API**, the **map/story/focus UI**, and the **pipeline + indexing worker**.
-
-**Status:** draft • **Owners:** see `CODEOWNERS` • **Last updated:** 2026-02-22
-
-<!-- Badges (add once workflow names/paths are known):
-[![CI](...)](...)
-[![Security](...)](...)
-[![Docs](...)](...)
--->
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![layer](https://img.shields.io/badge/layer-UI%20surfaces-blue)
+![governance](https://img.shields.io/badge/governance-trust%20membrane-critical)
+![ux](https://img.shields.io/badge/UX-evidence--first-success)
+![ai](https://img.shields.io/badge/AI-focus%20mode%20only-informational)
 
 ---
 
-## Quick navigation
-
-- [What lives in `apps/`](#what-lives-in-apps)
-- [Scope and non-goals](#scope-and-non-goals)
+## Navigation
+- [What belongs here](#what-belongs-here)
+- [Non-negotiable invariants](#non-negotiable-invariants)
+- [App registry](#app-registry)
 - [Directory layout](#directory-layout)
-- [Runtime invariants](#runtime-invariants)
-- [Cross-app contracts](#cross-app-contracts)
-- [App responsibilities](#app-responsibilities)
-  - [`apps/api`](#appsapi)
-  - [`apps/ui`](#appsui)
-  - [`apps/workers`](#appsworkers)
-- [Development](#development)
-- [CI gates](#ci-gates)
-- [Security and governance](#security-and-governance)
-- [Release and deployment](#release-and-deployment)
-- [Definition of Done](#definition-of-done)
-- [Appendix: Glossary](#appendix-glossary)
+- [App manifest contract](#app-manifest-contract)
+- [Local development](#local-development)
+- [Testing & gates](#testing--gates)
+- [Security, privacy, sensitivity](#security-privacy-sensitivity)
+- [Add a new app](#add-a-new-app)
+- [Glossary](#glossary)
 
 ---
 
-## What lives in `apps/`
+## What belongs here
 
-This directory is for **deployable runtime surfaces**:
+This folder is for **runnable applications**—anything a human launches (browser UI, operator console, desktop wrapper) or any standalone “surface” whose primary job is **presenting governed KFM knowledge**.
 
-- **`apps/api/`** — the governed API boundary (“trust membrane”) where policy, evidence resolution, and auditability are enforced.
-- **`apps/ui/`** — the governed client UI: Map Explorer + Story Mode + Focus Mode (and restricted admin/steward surfaces).
-- **`apps/workers/`** — pipeline runner + index builders; moves data through the truth path and (re)builds projections.
+Typical app categories (examples; *verify actual apps in this repo*):
+- **Map UI** (2D/3D): interactive layer rendering, time slider, evidence drawer
+- **Story UI**: narrative browsing, citations/evidence linkage, timelines
+- **Focus Mode UI**: governed Q&A workflow (policy pre-check → evidence retrieval → cite-or-abstain)
+- **Admin / Ops UI**: dataset intake review, promotion gate dashboards, policy fixtures review
 
-Shared, reusable logic should live in `../packages/` (domain, use cases, policy engine, evidence, catalog, shared DTOs/schemas). Applications should mostly be **composition + adapters**, not the home of core domain logic.
-
-[Back to top](#apps)
+> **Non-goal:** placing shared libraries here. Shared code should live under a `packages/` (or equivalent) workspace to avoid copy/paste drift.
 
 ---
 
-## Scope and non-goals
+## Non-negotiable invariants
 
-### In scope
+These rules are **requirements** (not suggestions). Apps are the most visible trust surface; breaking invariants breaks credibility.
 
-- Runtime composition and adapters for:
-  - policy enforcement + audited access (`apps/api`)
-  - governed experiences + trust surfaces (`apps/ui`)
-  - deterministic pipelines + rebuildable projections (`apps/workers`)
-- App-level operational concerns:
-  - configuration boundaries
-  - health/readiness
-  - observability hooks
-  - CI gates relevant to runtime behavior
+### 1) Trust membrane
+- Apps **MUST NOT** access object storage, databases, or internal indexes directly.
+- Apps **MUST** consume data only through **governed APIs** that enforce policy decisions, redactions, and logging.
+- Apps **MUST NOT** embed credentials that could bypass governance.
 
-### Non-goals
+### 2) Truth path awareness
+Apps sit at the end of the KFM “truth path”:
+- Upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/LINEAGE → indexes → **governed API** → **apps**
+- Apps **MUST** assume only *promoted* dataset versions are admissible for public UI surfaces.
 
-- Defining domain logic, core policy rules, or canonical schemas **inside** apps (those live in `../packages/` and governed contracts).
-- Treating projection stores (DB/search/tiles) as the source of truth.
-- “Convenience” shortcuts that bypass the trust membrane.
+### 3) Evidence-first UX (map-first, time-aware)
+- Every layer, claim, chart, or AI output **MUST** be openable into an **evidence view**:
+  - dataset version (immutable ID)
+  - license/rights holder
+  - policy label + redactions/generalizations applied
+  - provenance chain (run receipt / activity)
+  - artifact links + checksums
 
-> **WARNING**
-> If a change makes it possible for a client to reach storage without the API policy boundary, treat it as a **security + governance incident** and fail closed.
+### 4) Focus Mode is not general chat
+- If this repo contains a Focus Mode surface, it **MUST** implement **cite-or-abstain** behavior.
+- If policy denies or citations can’t be verified, the UI **MUST** abstain or reduce scope (and show why).
 
-[Back to top](#apps)
+### 5) Contract-first changes
+- API and schema contracts are first-class artifacts. UI work that depends on new/changed data **MUST** start from a contract change (OpenAPI/GraphQL/JSONSchema), not ad-hoc UI parsing.
+
+---
+
+## Architecture sketch (for orientation)
+
+```mermaid
+flowchart LR
+  subgraph Apps["apps/ (UI Surfaces)"]
+    Map["Map UI"]
+    Story["Story UI"]
+    Focus["Focus Mode UI"]
+    Admin["Admin / Ops UI"]
+  end
+
+  Apps -->|HTTPS| API["Governed API<br/>(Policy + Evidence Resolver)"]
+  API --> Repos["Repository Interfaces"]
+  Repos --> Canon["Canonical Stores<br/>(Artifacts + Catalogs + Provenance)"]
+  Repos --> Proj["Rebuildable Projections<br/>(DB/Search/Graph/Tiles)"]
+```
+
+---
+
+## App registry
+
+> **Fill this table from the actual `apps/` tree.** Until then, keep it explicit what’s unknown.
+
+| App | Type | Primary surface | Policy label | Primary API contract(s) | Owner | Status |
+|---|---|---|---|---|---|---|
+| `TBD` | `web` / `desktop` / `other` | map / story / focus / admin | public / restricted | `TBD` | `TBD` | draft |
+| `TBD` |  |  |  |  |  |  |
+
+**Registry DoD:**
+- [ ] Every app has a one-line purpose.
+- [ ] Every app lists its governed API dependencies.
+- [ ] Every app declares a policy label + any constraints.
+- [ ] Every app links to its evidence UX entry points (where in UI).
 
 ---
 
 ## Directory layout
 
-This README assumes the `apps/` subtree looks like this (adapt if your repo differs):
+### Current layout (UNKNOWN until verified in-repo)
+Replace the block below with the *actual* tree output.
 
-~~~text
-repo/
-  apps/
-    api/                  # governed API (interfaces + adapters)
-    ui/                   # map/story/focus frontend
-    workers/               # pipeline runner + index builders
-    README.md             # (this file)
-~~~
+```text
+apps/
+├─ README.md
+└─ (TBD — populate from repo)
+```
 
-[Back to top](#apps)
+### Recommended layout (template)
+Use this only as a *guideline* if the repo does not already enforce a different convention.
 
----
-
-## Runtime invariants
-
-`apps/` exists to make two system invariants easy to enforce:
-
-1) **Trust membrane**  
-   External clients never access storage directly. The API enforces policy/provenance consistently.
-
-2) **Truth path**  
-   Data and evidence flow through lifecycle zones (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → runtime surfaces). Projections (DB/search/tiles) must be rebuildable from canonical artifacts.
-
-### Trust membrane + truth path (conceptual)
-
-~~~mermaid
-flowchart LR
-  UI[apps/ui<br/>Map · Story · Focus] --> API[apps/api<br/>Governed API<br/>Policy + Evidence]
-  API --> UI
-
-  W[apps/workers<br/>Pipelines + Indexers] --> RAW[RAW]
-  W --> WORK[WORK/QUARANTINE]
-  W --> PROC[PROCESSED]
-  W --> CAT[CATALOG/TRIPLET]
-  W --> AUD[Audit ledger]
-
-  CAT --> DB[PostGIS<br/>rebuildable]
-  CAT --> SEARCH[Search index<br/>rebuildable]
-  PROC --> TILES[Tiles<br/>rebuildable]
-
-  DB --> API
-  SEARCH --> API
-  TILES --> API
-  API --> AUD
-~~~
-
-[Back to top](#apps)
+```text
+apps/
+├─ map/                  # Map surface (2D/3D)
+│  ├─ README.md
+│  ├─ kfm.app.json        # app manifest (see contract below)
+│  └─ (src/ …)
+├─ story/                # Story surface
+│  ├─ README.md
+│  ├─ kfm.app.json
+│  └─ (src/ …)
+├─ focus/                # Focus Mode surface (if present)
+│  ├─ README.md
+│  ├─ kfm.app.json
+│  └─ (src/ …)
+└─ admin/                # Governance/operator surface
+   ├─ README.md
+   ├─ kfm.app.json
+   └─ (src/ …)
+```
 
 ---
 
-## Cross-app contracts
+## App manifest contract
 
-Apps should **consume** shared contracts rather than redefine them. Typical contract surfaces:
+Each app directory **SHOULD** include a small manifest file (example name: `kfm.app.json`) so governance intent is machine-readable.
 
-- **OpenAPI / DTO schemas** (API contract-first)
-- **Policy labels + obligations** (default-deny; redaction requirements)
-- **EvidenceRef → EvidenceBundle resolution**
-- **Catalog triplet validation (DCAT/STAC/PROV)**
-- **Promotion manifests + run receipts**
+### Example `kfm.app.json`
+```json
+{
+  "app_id": "kfm.app.map",
+  "name": "KFM Map",
+  "surface": "map",
+  "policy_label": "public",
+  "governed_api": {
+    "base_url_env": "KFM_API_BASE_URL",
+    "contracts": [
+      "openapi://api/openapi.yaml#tag=tiles",
+      "openapi://api/openapi.yaml#tag=catalog",
+      "openapi://api/openapi.yaml#tag=evidence"
+    ]
+  },
+  "evidence_ux": {
+    "required": true,
+    "entry_points": ["layer_details_drawer", "story_claim_citation_popover"]
+  },
+  "telemetry": {
+    "otel": true,
+    "pii": "none"
+  }
+}
+```
 
-> **NOTE**
-> The exact paths vary by repo; prefer links maintained under `../packages/` and/or a top-level `contracts/` directory if present.
-
-[Back to top](#apps)
-
----
-
-## App responsibilities
-
-### Summary table
-
-| App | Primary purpose | MUST | MUST NOT |
-|---|---|---|---|
-| `apps/api` | Governed API boundary | Enforce policy consistently; return policy-safe metadata for reproducibility; provide evidence resolution + audit references | Leak restricted existence; bypass policy pack; embed domain logic that belongs in `packages/` |
-| `apps/ui` | Governed client UI | Never embed privileged credentials; make trust visible (evidence drawer, dataset version, policy notices); block publishing when citations don’t resolve | Read from storage directly; hide governance; publish stories without resolvable evidence |
-| `apps/workers` | Pipelines + index builders | Treat canonical artifacts as immutable; quarantine on failure; emit run receipts/manifests; rebuild projections from canonical sources | Treat projection stores as source of truth; “patch” published data without promotion gates |
-
-[Back to top](#apps)
-
----
-
-## `apps/api`
-
-The API is the **policy boundary** and the place where policy + evidence + auditing converge.
-
-### Typical responsibilities
-
-- Dataset discovery (catalog-backed; role/policy filtered)
-- Spatial/temporal querying (bbox/time/filter), returning policy-safe results
-- Tile delivery (policy-safe tiles; cache varies by role/policy)
-- Evidence resolution: `EvidenceRef → EvidenceBundle`
-- Lineage/status endpoints for UI trust surfaces
-- Focus Mode request handling with cite-or-abstain + audit receipts
-
-### Implementation guidance
-
-- Keep core business logic in `../packages/…` and use the API as a thin orchestration layer.
-- Treat the OpenAPI contract as a **first-class governed artifact** (versioned, reviewed, and tested).
-- Prefer “policy envelopes” that make policy decisions visible to callers (without leaking restricted existence).
-
-### Suggested contents (create if missing)
-
-- `apps/api/README.md` — local run, env vars, endpoints, contract links
-- `apps/api/openapi/` (or `../contracts/openapi/`) — spec source-of-truth
-- `apps/api/tests/contract/` — contract tests for evidence resolver, policy envelopes, etc.
-
-[Back to top](#apps)
+### Minimum expectations
+- `policy_label` is mandatory.
+- `governed_api.contracts` is mandatory for any app that makes API calls.
+- `evidence_ux.required = true` for any public-facing surface that shows layers/claims.
 
 ---
 
-## `apps/ui`
+## Local development
 
-The UI is a **governed client**, not a privileged operator.
+> This section is intentionally generic until the repo’s actual tooling is verified.
 
-### Core surfaces typically include
+### Quick start (generic)
+1. Identify the workspace toolchain (look for `package.json`, `pnpm-workspace.yaml`, `yarn.lock`, `turbo.json`, etc.).
+2. From repo root, install dependencies using the repo’s chosen package manager.
+3. Run the app’s local dev target from its directory:
+   - check scripts/commands in that app’s config (`package.json`, `Makefile`, etc.)
+   - run the dev server and confirm it points to a **governed API** instance (not direct storage)
 
-- **Map Explorer** (primary)
-- **Story Mode** (narratives with citations + map-state replay)
-- **Catalog** (dataset discovery)
-- **Focus Mode** (evidence-led Q&A with cite-or-abstain + audit refs)
-- **Admin/Steward** (restricted governance tools)
+### Environment variables (proposed baseline)
+- `KFM_API_BASE_URL` — base URL for the governed API gateway
+- `KFM_ENV` — `local|dev|stage|prod`
+- `KFM_POLICY_MODE` — optional UI behavior toggle for policy-deny UX messaging (UI must still rely on API enforcement)
 
-### UI hard requirements
-
-- No privileged credentials in the client.
-- Trust surfaces are visible:
-  - evidence/provenance drawer accessible from map layers and story claims
-  - dataset version labels
-  - explicit policy notices
-  - “what changed?” diffs
-  - automation status badges
-- Publishing MUST be blocked if citations fail to resolve.
-
-### Suggested contents (create if missing)
-
-- `apps/ui/README.md` — dev server, build, routes, a11y, trust surfaces checklist
-- `apps/ui/docs/` — UX contracts for evidence drawer, policy notices, story publishing gates
-
-[Back to top](#apps)
+> Apps must be able to run in a “policy-deny safe” mode where restricted content never renders even if UI code is misconfigured.
 
 ---
 
-## `apps/workers`
+## Testing & gates
 
-The worker is responsible for:
+Apps should be tested like safety-critical surfaces because they control what gets shown to users.
 
-- Running ingestion/normalization pipelines
-- Writing artifacts into lifecycle zones (RAW/WORK/PROCESSED)
-- Generating catalogs (DCAT/STAC/PROV) and run receipts
-- Building rebuildable projections (PostGIS/search/graph/tiles) from promoted artifacts
-- Producing promotion manifests and driving promotion gates
+### CI gates (minimum credible set)
+- [ ] **Unit tests**: components + adapters (map/globe adapters, data transforms)
+- [ ] **Contract checks**: API contract compatibility + schema validation of fixtures
+- [ ] **E2E tests**: critical user flows (layer toggle → evidence drawer → citation click-through)
+- [ ] **Accessibility checks**: keyboard navigation, ARIA labels, safe color semantics
+- [ ] **“No direct storage access”**: enforce via code ownership boundaries + dependency allowlists + static checks
 
-### Design principles
-
-- Canonical stores (object storage + catalogs + audit ledger) MUST be sufficient to rebuild everything else.
-- Projection stores are rebuildable; they never become the source of truth.
-- Failures route to quarantine with actionable QA artifacts; no partial promotion.
-
-### Suggested contents (create if missing)
-
-- `apps/workers/README.md` — how to run pipelines, where artifacts land, how to rebuild indexes
-- `apps/workers/runbooks/` — incident procedures (rebuild, rollback, quarantine triage)
-
-[Back to top](#apps)
+### Recommended E2E flows (map-first)
+- Open app → load basemap → toggle a layer → open evidence view → confirm policy label shown
+- Change time (timeline) → verify layers update → evidence remains consistent with selected dataset version
+- If Focus Mode present: policy pre-check → evidence bundle → answer with citations → citation verification
 
 ---
 
-## Development
+## Security, privacy, sensitivity
 
-This repo’s exact tooling may vary. Prefer app-local READMEs for concrete commands and ports.
+### Secrets and credentials
+- Never ship secrets in the client.
+- Prefer short-lived auth tokens to the governed API, scoped to the least privilege.
+- Treat all external links as untrusted; validate/route through governed API where policy requires.
 
-### Common patterns
+### Sensitive locations & culturally restricted material
+- For precise, private, culturally restricted, or vulnerable sites: **do not render exact coordinates** in public UIs.
+- Prefer generalization (e.g., bounding boxes, coarse centroids) and add an on-screen governance note explaining why.
 
-- Install dependencies once (workspace/root), then run per-app dev servers.
-- Keep secrets out of the repo; use `.env` or secret managers per environment.
-- Run policy tests and contract tests locally before PRs if available.
-
-~~~bash
-# Example flow (adapt to your tooling)
-cd apps/api
-# install deps
-# run dev server
-# run unit + integration tests
-
-cd ../ui
-# run dev server
-
-cd ../workers
-# run pipeline / index rebuild tasks
-~~~
-
-[Back to top](#apps)
+### Evidence links
+- Evidence UX must never become a “data exfiltration” path:
+  - links to attestations/logs/manifests must be mediated by policy and authorization
+  - the UI must gracefully handle “evidence exists but you can’t access it”
 
 ---
 
-## CI gates
+## Add a new app
 
-CI should fail closed and enforce governance invariants. Typical gates include:
-
-- Lint + typecheck
-- Unit tests
-- Catalog validation (DCAT/STAC/PROV)
-- Link-check citations / evidence references
-- Policy tests (default deny + fixtures)
-- Spec hash drift checks
-- Evidence resolver contract tests
-- (Optional) Focus Mode evaluation harness
-
-If your repo does not yet implement these gates, treat this as a target checklist to encode in CI.
-
-[Back to top](#apps)
-
----
-
-## Security and governance
-
-Non-negotiable rules for `apps/`:
-
-- **UI never embeds privileged credentials** and never bypasses the API boundary.
-- **API enforces policy** and returns policy-safe error messages that do not leak restricted existence.
-- **Worker promotes deterministically**: immutable artifacts + digests + run receipts + approvals where required.
-- **Sensitive locations / vulnerable infrastructure**: default to generalized outputs + explicit policy notices; do not ship precise geometry to public surfaces.
-
-[Back to top](#apps)
+### Checklist (contract-first, fail-closed)
+1. **Create app directory**
+   - `apps/<new-app>/README.md`
+   - `apps/<new-app>/kfm.app.json` (or repo-standard manifest)
+2. **Define/extend API contract**
+   - add/extend OpenAPI/GraphQL/JSONSchema artifacts first
+   - add fixtures (golden responses) and validation tests
+3. **Implement UI against governed APIs only**
+   - no direct storage/DB access
+   - evidence UX wired for every public layer/claim
+4. **Add tests**
+   - unit + contract + e2e + a11y
+5. **Register**
+   - add row to [App registry](#app-registry)
 
 ---
 
-## Release and deployment
+## Glossary
 
-`apps/` are deployable units and SHOULD have:
-
-- Versioned artifacts (images/bundles) with reproducible builds
-- GitOps-managed environment manifests (see `../ops/` if present)
-- Rollback strategy (especially for API/UI) and rebuild strategy (especially for worker/indexers)
-
-[Back to top](#apps)
+- **Trust membrane:** the enforced boundary where policy + provenance are applied; clients never access storage directly.
+- **Truth path:** upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/LINEAGE → projections → governed API → UI.
+- **Evidence-first UX:** the UI contract that every claim/layer opens into provenance + rights + checksums.
+- **Cite-or-abstain:** Focus Mode behavior: produce answers only when citations can be verified; otherwise abstain/reduce scope.
+- **Canonical vs rebuildable:** artifacts + catalogs + provenance are canonical; indexes are rebuildable projections.
 
 ---
-
-## Definition of Done
-
-### Any change under `apps/` is “done” when
-
-- [ ] Does not violate trust membrane (no client-to-storage shortcuts)
-- [ ] Does not introduce policy bypass paths
-- [ ] Preserves reproducibility (dataset versions + evidence refs + digests where applicable)
-- [ ] Includes tests (unit + contract/integration where relevant)
-- [ ] Updates app-local docs (`apps/*/README.md`) if behavior changed
-- [ ] CI gates remain green (or are updated to reflect new contracts)
-
-### API-specific
-
-- [ ] OpenAPI/contract updated (if public surface changed)
-- [ ] Contract tests updated/added (especially evidence/policy envelope)
-- [ ] Audit logging + policy-safe errors verified
-
-### UI-specific
-
-- [ ] Trust surfaces preserved (evidence drawer, policy notices, dataset versions)
-- [ ] Accessibility minimums maintained
-- [ ] Story publishing gates block unresolved citations
-
-### Worker-specific
-
-- [ ] Promotion gates enforced (no partial promotion)
-- [ ] Run receipts/manifests emitted for new/changed outputs
-- [ ] Projection rebuild still possible from canonical artifacts
-
-[Back to top](#apps)
-
----
-
-## Appendix: Glossary
 
 <details>
-<summary><strong>Glossary terms</strong> (expand)</summary>
+<summary>Appendix: How to update this README without guessing</summary>
 
-- **Truth path:** Ordered lifecycle from acquisition through RAW/WORK/PROCESSED/CATALOG to published surfaces.
-- **Trust membrane:** Boundary preventing clients from direct storage access and enforcing policy/provenance in governed APIs.
-- **Run receipt:** Immutable record of a run (inputs/outputs by digest, environment capture, validation results, policy decisions).
+- Regenerate the “Current layout” block from the actual repo tree.
+- Populate the App Registry table from real app directories.
+- For each app, link to:
+  - its contract(s)
+  - its evidence UX entry points
+  - its CI gates / test targets
 
 </details>
 
-[Back to top](#apps)
+<!-- Back to top -->
+<p align="right"><a href="#apps--kfm-runnable-applications">Back to top ↑</a></p>
