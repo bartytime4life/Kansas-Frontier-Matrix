@@ -1,256 +1,224 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/f8375fd0-0f12-4ad4-bb38-f3048c11cfad
-title: .github Automation & Governance
+doc_id: kfm://doc/3c0d5c1f-14d4-4b4f-9b2b-9bc3d5c1c7b0
+title: .github/README — GitHub Governance & Community Files
 type: standard
 version: v1
 status: draft
-owners: KFM Maintainers (see CODEOWNERS)
+owners: kfm-engineering; kfm-governance
 created: 2026-02-22
 updated: 2026-02-22
-policy_label: public
+policy_label: restricted
 related:
-  - .github/
+  - kfm://doc/kfm-definitive-design-governance-guide-vnext
+  - ../README.md
+  - ./CONTRIBUTING.md
+  - ./SECURITY.md
+  - ./CODE_OF_CONDUCT.md
 tags:
   - kfm
   - github
-  - ci
   - governance
-  - devsecops
 notes:
-  - This file documents intended responsibilities and guardrails for repository automation.
+  - Badge row uses Shields.io (static) until repo identifiers are wired for dynamic badges.
 [/KFM_META_BLOCK_V2] -->
 
-# .github Automation & Governance
+<a id="top"></a>
 
-How this repo uses GitHub community health files + Actions workflows to **enforce KFM governance invariants** (fail-closed, evidence-first).
+# KFM GitHub Operations
+Map-first • time-aware • governed delivery — **community files + CI/policy gate index**
 
-**Status:** Draft • **Owners:** see `CODEOWNERS` • **Badges:** `ci:merge-blocking` `policy:default-deny` `docs:link-checked` `security:actions-hardened`
+**Status:** Draft (vNext) • **Owners:** KFM Engineering + Governance
 
----
+![status](https://img.shields.io/badge/status-draft-blue)
+![policy](https://img.shields.io/badge/policy-restricted-orange)
+![map-first](https://img.shields.io/badge/map--first-yes-2ea44f)
+![time-aware](https://img.shields.io/badge/time--aware-yes-2ea44f)
+![governed](https://img.shields.io/badge/governed-yes-2ea44f)
+![evidence-first](https://img.shields.io/badge/evidence--first-required-6f42c1)
+![cite-or-abstain](https://img.shields.io/badge/cite--or--abstain-enforced-6f42c1)
+![ci](https://img.shields.io/badge/CI-gates%20required-informational)
+![security](https://img.shields.io/badge/security-default--deny-critical)
 
-## Navigate
-
-- [Scope](#scope)
-- [Directory layout](#directory-layout)
-- [What belongs in workflows](#what-belongs-in-workflows)
-- [Merge-blocking gates](#merge-blocking-gates)
-- [Promotion Contract alignment](#promotion-contract-alignment)
-- [Security and secrets](#security-and-secrets)
-- [Changing this folder](#changing-this-folder)
-- [Troubleshooting](#troubleshooting)
-- [Appendix: terms](#appendix-terms)
-
----
-
-## Scope
-
-This README is the **operational index** for the `.github/` folder.
-
-It should answer:
-
-- What “governance-by-construction” means for CI in this repo.
-- Where workflows live and what they MUST check.
-- How to safely modify CI/CD without breaking policy, provenance, or security.
-
-Non-goals:
-
-- It is **not** a full repo overview (see the root `README.md`).
-- It is **not** a substitute for the actual workflow YAML (YAML is the source of truth for automation behavior).
-
-> **WARNING:** Do not put credentials, private URLs, or sensitive infrastructure details in this folder’s docs. Assume `.github/` is highly visible.
+[Quick start](#quick-start) •
+[Folder map](#folder-map) •
+[CI and promotion gates](#ci-and-promotion-gates) •
+[Issue and PR templates](#issue-and-pr-templates) •
+[Governance and policy](#governance-and-policy) •
+[Security](#security-and-responsible-disclosure) •
+[Contacts](#contacts-and-owners)
 
 ---
 
-## Directory layout
+## Quick start
 
-The exact contents of `.github/` will vary by repo maturity. The table below describes the *intended* responsibilities.
+- **Filing an issue:** use the templates in `.github/ISSUE_TEMPLATE/` (bug, feature, governance, data/pipeline, story node).
+- **Opening a PR:** follow `CONTRIBUTING.md`, keep changes small, and include evidence (links, citations, or artifact hashes).
+- **Changing data or policy behavior:** expect CI to **fail-closed** until promotion/metadata/policy gates pass.
 
-~~~text
+> NOTE  
+> This README is an **index + contract** for the GitHub-side “trust membrane” (workflows, templates, and guardrails).  
+> If a link 404s, it means the file hasn’t been created in this repo yet.
+
+---
+
+## Folder map
+
+Recommended (minimum) structure for `.github/`:
+
+```text
 .github/
-  README.md                   # this document (responsibilities + guardrails)
-  workflows/                  # GitHub Actions workflows (CI lanes, release, policy gates)
-  actions/                    # optional: composite actions pinned + reviewed like code
-  ISSUE_TEMPLATE/             # optional: issue templates
-  PULL_REQUEST_TEMPLATE.md    # optional: PR template (checklists + governance prompts)
-  SECURITY.md                 # optional: security policy + vulnerability reporting
-  dependabot.yml              # optional: dependency update configuration
-  CODEOWNERS                  # optional: required reviewers for sensitive paths
-~~~
+├─ README.md                      # This file
+├─ CODEOWNERS                     # Ownership + review routing (REQUIRED)
+├─ CODE_OF_CONDUCT.md             # Community standards (REQUIRED for public repos)
+├─ CONTRIBUTING.md                # How to contribute (REQUIRED)
+├─ SECURITY.md                    # Vulnerability reporting (REQUIRED)
+├─ PULL_REQUEST_TEMPLATE.md       # PR checklist (RECOMMENDED)
+├─ ISSUE_TEMPLATE/                # Issue forms (RECOMMENDED)
+│  ├─ bug_report.yml
+│  ├─ feature_request.yml
+│  ├─ governance_request.yml
+│  ├─ data_pipeline_change.yml
+│  └─ story_node.yml
+└─ workflows/                     # CI, policy gates, release gates (REQUIRED)
+   ├─ ci.yml
+   ├─ policy-gates.yml
+   ├─ provenance-audit.yml
+   └─ release.yml
+```
 
-### “Sensitive paths” we usually treat as governance-critical
+### What belongs here vs elsewhere
 
-- `.github/workflows/**`
-- `.github/actions/**`
-- `policy/**` (if policy-as-code is present)
-- `schemas/**` (if contract schemas are present)
-- `docs/reports/story_nodes/**` (if Story Nodes are in-repo)
-
-If you add new sensitive paths, update `CODEOWNERS` accordingly.
+- Put **repository-wide defaults** here: templates, owner routing, CI policy gates, security policy.
+- Put **product docs** in `/docs` (or the repo root `README.md`).
+- Put **data schemas / contracts** in their owning package/module (then referenced by CI).
 
 ---
 
-## What belongs in workflows
+## CI and promotion gates
 
-Workflows are not “developer convenience.” In KFM posture they are **promotion gates**: they decide what is allowed to ship.
+KFM uses “fail closed” gates to protect integrity, provenance, and policy obligations.
 
-### CI flow in one picture
-
-~~~mermaid
+```mermaid
 flowchart LR
-  pr[Pull Request] --> lanes[CI lanes (merge gates)]
-  lanes -->|pass| reviews[Required reviews / CODEOWNERS]
-  reviews --> merge[Merge]
-  merge --> promote[Promotion / Release jobs]
-  promote --> published[Published artifacts + catalogs]
-  published --> surfaces[Map • Story • Focus trust surfaces]
-  lanes -->|fail| blocked[Fail closed (nothing ships)]
-~~~
+  dev[Contributor] --> pr[Pull Request]
+  pr --> ci[CI Workflows]
+  ci --> quality[Quality Gates]
+  ci --> policy[Policy Gates]
+  ci --> prov[Provenance Gates]
+  quality --> decision{All gates pass?}
+  policy --> decision
+  prov --> decision
+  decision -->|No| block[Block merge + report]
+  decision -->|Yes| merge[Merge]
+  merge --> promote[Promotion / Release]
+```
 
-### Recommended workflow “lanes”
+### Gate categories
 
-Use separate jobs or reusable workflows so failures are easy to interpret.
+**Quality**
+- formatting/lint
+- unit/integration tests
+- typed builds (TypeScript) where applicable
 
-- **Quality lane**: lint, typecheck, unit tests.
-- **Contract lane**: schema validation for catalogs + contracts.
-- **Policy lane**: policy-as-code checks (deny-by-default).
-- **Evidence lane**: link checking / citation resolution (no broken citations).
-- **Security lane**: dependency scanning, SBOM/provenance attestations (as adopted).
-- **UX lane**: accessibility smoke checks for UI trust surfaces.
+**Security**
+- dependency scanning (and lockfile integrity)
+- SAST/secret scanning (block leaked credentials)
 
----
+**Governance**
+- **policy label required** on datasets, docs that affect behavior, and Story Nodes
+- redaction checks for restricted locations / private persons / vulnerable infrastructure
 
-## Merge-blocking gates
+**Data truth path**
+- no promotion to **Published** without metadata + validation + provenance + checksums
 
-These are the *minimum* merge-blocking checks this repo should enforce when the corresponding surfaces exist.
+```mermaid
+flowchart LR
+  raw[RAW] --> work[WORK / QUARANTINE] --> processed[PROCESSED] --> published[PUBLISHED]
+  published --> runtime[Governed APIs + Map/Story UI + Focus Mode]
+```
 
-### Minimum required gates (baseline)
-
-- **lint + typecheck** (frontend + backend)
-- **schema validation** for any changed catalog artifacts (DCAT/STAC/PROV)
-- **Story Node template validation** (if Story Nodes exist)
-- **policy tests** must pass (deny-by-default with explainable failures)
-- **spec_hash tests** must pass (deterministic identity)
-- **link checker** must pass (no broken citations / cross-links)
-- **security scanning** (dependency vulnerabilities); SBOM generation where adopted
-- **accessibility smoke checks** for UI changes (at least keyboard navigation for evidence drawer)
-
-> **NOTE:** If your repo does not yet include a given surface (e.g., Story Nodes), gate it when that surface is introduced—not before. But once introduced, gates are not optional.
-
----
-
-## Promotion Contract alignment
-
-KFM uses a “Promotion Contract” concept: a dataset/version (or governed story) is only promotable when the evidence, policy inputs, and integrity signals are present.
-
-Map CI checks to Promotion gates so people know *why* something failed.
-
-| Promotion gate | What it typically asserts | Where it usually runs |
-|---|---|---|
-| A — Identity & versioning | Deterministic IDs, version increments, `spec_hash` invariants | CI (PR + main) |
-| B — Licensing & rights | License + rights holder present for every distribution | CI (PR) + publish gate |
-| C — Sensitivity & redaction | Policy label set; obligations recorded (generalize/redact) | CI (PR) + runtime |
-| D — Catalog triplet validation | DCAT/STAC/PROV schema-valid + cross-linked | CI (PR) |
-| E — Run receipt & checksums | Run receipts emitted; artifact digests match | CI (main) + release |
-| F — Policy + contract tests | OPA/Conftest fixtures pass; API contracts stable | CI (PR) |
-| G — Recommended extras | SBOMs, attestations, e2e tests, perf smoke | CI (PR/main) |
-
-> **TIP:** Keep gate failures explainable. A denial message should point to the missing field, violated constraint, and remediation.
+> WARNING  
+> If permissions/sensitivity are unclear, default is **deny** (generalize/redact; require governance review).
 
 ---
 
-## Security and secrets
+## Issue and PR templates
 
-The `.github/` folder is a high-impact supply-chain surface. Treat it as sensitive code.
+### Issue templates
 
-### GitHub Actions hardening checklist
+Use templates to keep triage consistent:
 
-- [ ] Workflows use **least privilege** permissions (don’t default to broad write permissions).
-- [ ] Secrets are stored only in GitHub Secrets / Environments (never committed).
-- [ ] Avoid `pull_request_target` for untrusted PRs (or lock it down so it never checks out PR code).
-- [ ] Third-party Actions are pinned to a **commit SHA** (not a mutable tag).
-- [ ] Critical workflow changes require review via `CODEOWNERS`.
-- [ ] Branch protection requires PR review + passing checks; no force-push to protected branches.
+- **Bug report:** expected vs actual, reproducible steps, logs/artifacts.
+- **Feature request:** user story, acceptance criteria, policy impacts.
+- **Governance request:** policy label changes, redaction guidance, release criteria.
+- **Data/pipeline change:** source/license, schema, validation rules, promotion plan.
+- **Story Node:** narrative claim + evidence bundle refs + map footprint + time bounds.
 
-### Secret and token guidance
+### PR expectations
 
-- Prefer short-lived credentials (OIDC / keyless flows) over long-lived PATs.
-- Never echo secrets to logs, even if they are “masked.”
-- Keep environment variables policy-safe (no leaking restricted identifiers into job summaries).
+A PR should include:
 
----
-
-## Changing this folder
-
-Treat modifications under `.github/` as a governed change.
-
-### When you change workflows/actions/templates
-
-1. **Describe intent** in the PR: what risk it reduces, what gate it affects.
-2. **Classify impact**:
-   - Low: formatting, comments, non-executing docs.
-   - Medium: workflow logic changes without new privileges.
-   - High: permissions, secrets handling, deployment/promotion logic, policy gates.
-3. **Run/observe**: confirm the workflow run shows the intended checks and no secrets leak.
-4. **Require review**: if `CODEOWNERS` is present, don’t bypass it.
-
-### Definition of Done for governance-critical workflow changes
-
-- [ ] Required checks still merge-block.
-- [ ] Permissions are explicitly set (least privilege).
-- [ ] Any new third-party Actions are pinned + reviewed.
-- [ ] Policy/contract checks remain fail-closed.
-- [ ] Documentation in this README is updated if responsibilities changed.
+- scope: what changed + why
+- evidence: links/artifact IDs/checksums (as applicable)
+- tests: added/updated, or justification if not possible
+- rollback: how to revert safely
+- governance: policy labels, redaction notes, approval path
 
 ---
 
-## Troubleshooting
+## Governance and policy
 
-### “Link checker” fails
+These are the non-negotiables enforced through CI + review:
 
-Common causes:
+- **Evidence-first UX:** every claim should link back to evidence or be labeled **Unknown**.
+- **Trust membrane:** frontends never talk directly to storage; access flows through governed APIs.
+- **Promotion contract:** no RAW → Published jumps; each promotion emits an audit record.
 
-- A Story Node references a missing citation.
-- DCAT/STAC/PROV cross-links aren’t reciprocal.
-- An EvidenceRef points to an object that no longer exists after a refactor.
-
-Fix by:
-
-- Validating citations locally (if a local tool exists), then updating the references at the source.
-
-### “Policy gate” fails (deny-by-default)
-
-Common causes:
-
-- Missing license/rightsholder fields.
-- Missing or invalid policy label.
-- Required obligations not declared for sensitive data.
-
-Fix by:
-
-- Adding explicit metadata rather than weakening the policy.
-
-### “spec_hash mismatch”
-
-Common causes:
-
-- Non-canonical JSON ordering / whitespace changes.
-- Inputs changed without bumping version or updating manifests.
-
-Fix by:
-
-- Canonicalizing inputs and ensuring versioning rules are followed.
+If a change touches governance-sensitive areas, tag the PR/issue appropriately and request review from the relevant owners (see `CODEOWNERS`).
 
 ---
 
-## Appendix: terms
+## Security and responsible disclosure
 
-- **Promotion Contract:** The minimum conditions required before publishing/promoting a dataset version or governed story.
-- **Fail closed:** If a gate can’t prove safety/compliance, the default outcome is “no.”
-- **Policy-as-code:** Governance rules expressed as executable policy (deny-by-default + tests) used in CI and runtime.
-- **Catalog triplet:** DCAT (dataset), STAC (assets), PROV (lineage) — cross-linked so evidence resolution is deterministic.
-- **Run receipt:** Per-run record capturing inputs/outputs/digests/timestamps/policy decisions for auditability.
-- **EvidenceRef:** A stable reference scheme used to resolve citations into evidence bundles.
+- Use `SECURITY.md` for reporting vulnerabilities.
+- Never post secrets or exploit details in public issues.
+- Security fixes should land with tests and clear rollback notes.
 
 ---
 
-_This file is intentionally “boring.” If it’s hard to read, it will not be followed._
+## Badge maintenance
+
+The badges at the top use **Shields.io** and are intentionally **static** until this repo’s canonical
+org/repo identifiers and workflow filenames are finalized.
+
+When ready, swap in dynamic badges (examples):
+
+```md
+![CI](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/ci.yml?branch=main)
+![License](https://img.shields.io/github/license/<ORG>/<REPO>)
+![Last commit](https://img.shields.io/github/last-commit/<ORG>/<REPO>)
+```
+
+---
+
+## Contacts and owners
+
+- **Engineering owners:** see `CODEOWNERS`
+- **Governance owners:** see `CODEOWNERS`
+- **Security contact:** see `SECURITY.md`
+
+---
+
+## Definition of Done
+
+- [ ] Badges render and reflect reality (or are clearly marked “static”)
+- [ ] At least one Mermaid diagram renders
+- [ ] Directory tree is present and matches current structure
+- [ ] Templates exist for the main work types (bug/feature/governance/data/story)
+- [ ] CI workflows enforce fail-closed promotion/policy gates
+- [ ] Links are relative and lintable (no broken internal links)
+- [ ] Policy labels + redaction defaults are stated (default-deny if unclear)
+
+---
+
+[Back to top](#top)
