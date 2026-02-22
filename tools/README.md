@@ -1,242 +1,265 @@
-# Tools
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/222a8815-5493-4584-af4d-89f56dfb5e79
+title: tools/ — Utility scripts, validators, and devops tools
+type: standard
+version: v1
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - docs/MASTER_GUIDE_v13.md
+  - docs/governance/ROOT_GOVERNANCE.md
+  - docs/standards/KFM_*_PROFILE.md
+tags: [kfm, tools, validators, devops, governance]
+notes:
+  - This README is a contract + inventory scaffold for the tools/ subtree. Populate the inventory table as tools land.
+[/KFM_META_BLOCK_V2] -->
 
-> Utility scripts, validators, and DevOps helpers for building, validating, and governing Kansas Frontier Matrix (KFM) artifacts.
+# tools/ — Utility scripts, validators, and devops tools
 
-**Status:** Draft  
-**Owners:** TBD (add CODEOWNERS entries per tool subdirectory)
+**Purpose:** a governed home for **utility tooling** (validators, release helpers, ops scripts) that supports KFM’s contract-first + evidence-first pipeline without bypassing policy boundaries.
 
-![status](https://img.shields.io/badge/status-draft-lightgrey) ![scope](https://img.shields.io/badge/scope-internal-blue) ![reproducibility](https://img.shields.io/badge/reproducible-required-brightgreen) ![policy](https://img.shields.io/badge/policy-default--deny-important)
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![scope](https://img.shields.io/badge/scope-tools-blue)
+![governance](https://img.shields.io/badge/governance-fail--closed-critical)
+![outputs](https://img.shields.io/badge/outputs-run%20receipts%20%2B%20reports-informational)
 
-## Navigation
+---
+
+## Quick navigation
+
 - [What belongs in tools](#what-belongs-in-tools)
-- [Directory conventions](#directory-conventions)
-- [Tool lifecycle and data zones](#tool-lifecycle-and-data-zones)
-- [CLI contract](#cli-contract)
-- [Determinism and provenance](#determinism-and-provenance)
+- [Non-goals](#non-goals)
+- [Directory layout](#directory-layout)
+- [How tools fit the canonical pipeline](#how-tools-fit-the-canonical-pipeline)
+- [Tool contract](#tool-contract)
+- [Tool inventory](#tool-inventory)
 - [Governance and safety](#governance-and-safety)
-- [Tool registry](#tool-registry)
-- [Add a new tool](#add-a-new-tool)
+- [Adding a new tool](#adding-a-new-tool)
+- [CI integration checklist](#ci-integration-checklist)
+- [Appendix: recommended CLI flags](#appendix-recommended-cli-flags)
 
 ---
 
 ## What belongs in tools
 
-`tools/` is for **operator-focused utilities**: scripts and CLIs that help maintainers and CI **validate, transform, inspect, and enforce governance**.
+Use `tools/` for **standalone** utilities that:
+- validate or lint boundary artifacts (STAC/DCAT/PROV, schemas, cross-links),
+- provide operator/maintainer helpers (packaging, SBOM generation, diffing receipts),
+- support governance enforcement (policy fixtures validation, redaction checks),
+- provide dev ergonomics (local wrappers that *do not* duplicate core pipeline logic).
 
-Examples of good fits:
-- **Validators** (schema/profile validation; dataset QA; “fail closed” checks)
-- **Link checkers** (catalog cross-link integrity; evidence reference resolvability)
-- **Hashing / determinism helpers** (stable IDs, spec hashing, canonicalization helpers)
-- **One-off domain feed adapters** that *prepare* data for promotion (but do not bypass promotion gates)
-- **DevOps helpers** used by maintainers (lint runners, local environment checks, release packing helpers)
+Use `src/` (especially `src/pipelines/`) for **first-class pipeline code** that produces canonical outputs.
 
-Not a good fit:
-- **Production runtime code** (belongs under runtime subsystems like API/UI/pipelines)
-- **Long-lived datasets** (belong in the data lifecycle zones, not in `tools/`)
-- **Secrets / credentials** (never commit; use runtime/CI secret management)
-- **Unreviewed publish pathways** that skip catalogs, provenance, validation, or policy checks
+> **Rule:** if it’s part of a domain ETL job, it should usually live in `src/pipelines/`. If it’s a reusable validator/helper invoked by CI or humans across domains, it can live in `tools/`.
 
-[Back to top](#navigation)
+[Back to top](#quick-navigation)
 
 ---
 
-## Directory conventions
+## Non-goals
 
-Each tool should be **self-contained** under `tools/<tool_slug>/` and should be runnable from the repo root.
+- ❌ Re-implementing pipeline logic that already exists under `src/pipelines/`.
+- ❌ “Hidden” data processing that writes directly into published surfaces.
+- ❌ Tools that silently mutate RAW artifacts or skip provenance.
+- ❌ UI shortcuts that bypass governed APIs.
 
-Recommended skeleton:
+[Back to top](#quick-navigation)
+
+---
+
+## Directory layout
+
+> This is an **expected / recommended** layout. Treat it as a scaffold; keep subtrees small and cohesive.
 
 ```text
 tools/
-  README.md
-  <tool_slug>/
-    README.md
-    LICENSE.txt                 # optional (if different from repo license)
-    CHANGELOG.md                # optional (if tool is versioned independently)
-    pyproject.toml | requirements.txt | package.json
-    src/ | <tool_entrypoint>.py | <tool_entrypoint>.ts
-    tests/
-    fixtures/
-    schemas/                    # pinned schemas used by the tool (if any)
+├─ README.md                       # you are here
+├─ validation/
+│  ├─ catalog/                     # STAC/DCAT/PROV validators + cross-link checks
+│  ├─ schemas/                     # JSON Schema validation helpers (STAC/DCAT/PROV/story/ui)
+│  └─ geo/                         # spatial sanity checks (bbox, CRS presence, geometry policy rules)
+├─ policy/
+│  ├─ fixtures/                    # policy decision fixtures (allow/deny + obligations)
+│  └─ README.md
+├─ ops/
+│  ├─ release/                     # release packaging helpers (manifests, SBOM, digests)
+│  ├─ watchers/                    # optional: watcher runners (registry may live in docs/ops/)
+│  └─ README.md
+└─ dev/
+   ├─ README.md                    # local developer usage
+   └─ scripts/                     # non-production convenience scripts (never used for promotion)
 ```
 
-Guidelines:
-- **Pin schema versions** you validate against (copy/pin into `schemas/` or reference a pinned version).
-- Keep tools **fast enough for CI** or provide a “quick mode” for gating.
-- If a tool generates artifacts meant for publication, it must integrate with the **promotion contract** (see [Tool lifecycle and data zones](#tool-lifecycle-and-data-zones)).
+### Canonical “homes” reminder
 
-[Back to top](#navigation)
+- `tools/` — utilities (this folder)
+- `src/pipelines/` — ETL jobs and catalog writers
+- `schemas/` — schema sources of truth (JSON Schemas)
+- `data/` — artifacts by zone (raw/work/processed) + catalog outputs
+- `docs/` — governed documentation and runbooks
+
+[Back to top](#quick-navigation)
 
 ---
 
-## Tool lifecycle and data zones
-
-Tools are allowed to *generate* or *validate* artifacts, but **promotion into runtime surfaces must remain gated**.
+## How tools fit the canonical pipeline
 
 ```mermaid
 flowchart LR
-  A[Tool run] --> B[Artifacts generated or validated]
-  B --> C[Data zones raw work processed]
-  C --> D[Boundary artifacts STAC DCAT PROV]
-  D --> E[CI gates fail closed]
-  E --> F[Runtime surfaces API Map Story Focus]
+  A[RAW zone] --> B[WORK or QUARANTINE]
+  B --> C[PROCESSED zone]
+  C --> D[CATALOG triplet<br/>STAC + DCAT + PROV]
+  D --> E[Index builders]
+  E --> F[Governed APIs]
+  F --> G[Map and Story UI]
+  G --> H[Focus Mode]
+
+  T[tools/<br/>validators & helpers] -.validate.-> D
+  T -.gate.-> C
+  T -.report.-> B
 ```
 
-Practical rules:
-- **Intermediate outputs** should land in `data/work/...` (or an explicit quarantine/work area).
-- **Publishable outputs** should land in `data/processed/...` and must have:
-  - required metadata records (STAC/DCAT/PROV),
-  - link integrity checks,
-  - policy decisions recorded,
-  - audit/run receipt emitted (if your pipeline system supports it).
+**Key idea:** tools should help enforce gates (fail-closed), validate boundary artifacts, and generate repeatable reports—without becoming a shadow pipeline.
 
-If you are unsure whether your work is “tool” or “pipeline”:
-- Prefer: tool = **utility + validation + developer ergonomics**  
-- Prefer: pipeline = **canonical ETL jobs and domain transformations**
-
-[Back to top](#navigation)
+[Back to top](#quick-navigation)
 
 ---
 
-## CLI contract
+## Tool contract
 
-Every tool that is intended to be used by others (or CI) should implement:
+Every tool in this directory MUST:
 
-- `--help` (usage, examples, exit codes)
-- `--version` (tool version + git commit if available)
-- Stable exit codes:
-  - `0` success
-  - `1` validation failed / expected failure condition
-  - `2` misuse / bad args
-  - `>=3` unexpected runtime errors
-- Optional but recommended:
-  - `--config <path>` for repeatable runs
-  - `--input <path|uri>` and `--output <path>` (or similar)
-  - `--dry-run` (no writes)
-  - `--json` (machine-readable logs for CI)
+1. **Be deterministic**
+   - Same inputs/config → same outputs (or explicitly declared non-determinism).
+2. **Fail closed**
+   - Non-zero exit code when validations fail or when required metadata is missing.
+3. **Be provenance-aware**
+   - Emit a machine-readable report and support linking to (or generating) a run receipt.
+4. **Be automation-friendly**
+   - CLI-first, stable exit codes, quiet-by-default with `--json` output.
+5. **Respect policy labels**
+   - If data is labeled restricted/sensitive/unclear, tools must not “helpfully” expose exact geometries or disallowed fields.
 
-Tools must be:
-- **Non-interactive by default** (CI-safe)
-- **Deterministic when given the same inputs/config**
-- Explicit about **network access** (if a tool fetches remote data, it should do so intentionally and log provenance)
+### Standard outputs (recommended)
 
-[Back to top](#navigation)
+- `*.report.json` — structured validation results (errors/warnings, file pointers, rule ids)
+- `*.report.md` — optional human-readable summary for PRs
+- `run-receipt.jsonld` — optional receipt artifact for pipeline or validation runs
+
+[Back to top](#quick-navigation)
 
 ---
 
-## Determinism and provenance
+## Tool inventory
 
-If a tool produces artifacts that might be promoted, it must support:
-- **Stable identity** (stable IDs and hashes)
-- **Repeatability** (same inputs/config → same outputs)
-- **Traceability** (log inputs, outputs, digests, and tool version)
+> Populate this table as tools are added. Keep it current—this is how maintainers discover what exists.
 
-A minimal “run record” printed to stdout (or written alongside outputs) should include:
-- tool name + version
-- timestamp (UTC)
-- input URI(s) + digest(s)
-- output path(s) + digest(s)
-- config digest (or embedded config)
-- policy label (if applicable)
+| Tool | Purpose | Inputs | Outputs | Deterministic | CI wired | Owner |
+|---|---|---|---|---:|---:|---|
+| (TBD) | (TBD) | (TBD) | (TBD) | (TBD) | (TBD) | (TBD) |
 
-Example (illustrative):
+### Recommended categories
 
-```bash
-tool_name="example_tool"
-tool_version="0.1.0"
-run_utc="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-echo "tool=${tool_name} version=${tool_version} run=${run_utc}"
-```
+- **Catalog validators:** STAC/DCAT/PROV schema validation + cross-link integrity
+- **Promotion gates:** identity/versioning checks, license checks, sensitivity checks, catalog checks
+- **Ops + release:** build manifests, SBOM, artifact digests, environment capture
+- **Dev helpers:** local wrappers only; must not be required for CI promotion
 
-[Back to top](#navigation)
+[Back to top](#quick-navigation)
 
 ---
 
 ## Governance and safety
 
-### Default-deny posture
-If a tool touches restricted data or can emit publishable artifacts, it should:
-- require an explicit `--policy-label` (or equivalent),
-- default to **deny** unless a policy decision allows release,
-- support obligations like **generalization/redaction**.
+### Default-deny when uncertain
 
-### Sensitive location handling
-For datasets involving sensitive locations (examples: archaeology, culturally restricted sites, vulnerable infrastructure, sensitive species):
-- produce a **restricted precise** version and a **public generalized** version (only if allowed),
-- document the generalization method,
-- add tests to confirm no precise coordinates leak,
-- ensure governance review occurs before publication,
-- ensure the UI communicates generalization and reason.
+If licensing, sensitivity classification, or provenance is unclear:
+- route outputs to **QUARANTINE** (or equivalent),
+- emit a report explaining what is missing,
+- do not generate publishable artifacts.
 
-> **WARNING**
-> If sensitivity or permissions are unclear: fail closed. Do not publish.
+### Sensitive or culturally restricted locations
 
-[Back to top](#navigation)
+Tools MUST support:
+- geometry generalization (cell size / bounding box coarsening),
+- attribute dropping,
+- redaction “obligations” surfaced as machine-readable instructions.
 
----
+### Tooling boundaries
 
-## Tool registry
+- Tools may **validate** and **report** on `data/` artifacts.
+- Tools must **not** write directly into runtime services (DBs, API stores) except via governed, audited interfaces.
 
-This table is a **living registry**. Add an entry whenever a tool becomes relied-on by others or CI.
-
-| Tool | Category | Primary job | CI gate | Status | Owner |
-|---|---|---|---|---|---|
-| `hash/spec_hash_cli` | Determinism | Stable spec hashing for drift detection | Required (if present) | Planned | TBD |
-| `validators/stac_validator` | Validation | Validate STAC artifacts against profile | Required (if present) | Planned | TBD |
-| `validators/dcat_validator` | Validation | Validate DCAT artifacts against profile | Required (if present) | Planned | TBD |
-| `validators/prov_validator` | Validation | Validate PROV bundles against profile | Required (if present) | Planned | TBD |
-| `linkcheck/catalog_linkcheck` | Integrity | Verify cross-links resolve | Required (if present) | Planned | TBD |
-| `wzdx/` | Domain adapter | Validate/normalize WZDx feed to analytics + tiles outputs | Optional | Example pattern | TBD |
-
-> NOTE: If some tools already exist in this repo, replace “Planned/Example” with “Active” and link to their subdirectory READMEs.
-
-[Back to top](#navigation)
+[Back to top](#quick-navigation)
 
 ---
 
-## Add a new tool
+## Adding a new tool
 
-### Minimum requirements checklist
-- [ ] `tools/<tool_slug>/README.md` with: purpose, inputs, outputs, examples
-- [ ] Deterministic behavior documented (sorting, hashing, pinned schemas)
-- [ ] Tests with fixtures (include at least one “known good” and one “known bad”)
-- [ ] CI-safe mode (non-interactive; predictable exit codes)
-- [ ] Provenance output (run record, input/output digests)
-- [ ] Policy-aware behavior if relevant (default-deny; obligations)
-- [ ] Tool added to the [Tool registry](#tool-registry)
+### Minimal steps
 
-### Suggested README template for a tool
-<details>
-<summary>Click to expand</summary>
+1. Create a subdirectory under `tools/<category>/<tool-name>/`.
+2. Add `README.md` with:
+   - purpose,
+   - inputs/outputs,
+   - exit codes,
+   - examples,
+   - limitations.
+3. Add tests (unit and/or golden fixtures).
+4. Wire CI to run it where appropriate (PR gate or scheduled).
+5. Ensure it emits a machine-readable report.
 
-```markdown
-# <tool_slug>
+### “Definition of done” for a tool
 
-One-line purpose.
+- [ ] Deterministic (or documented exceptions)
+- [ ] Fail-closed
+- [ ] Produces `*.report.json`
+- [ ] Has tests + fixtures
+- [ ] Documented usage and contract
+- [ ] Does not bypass governance boundaries
 
-## Usage
+[Back to top](#quick-navigation)
+
+---
+
+## CI integration checklist
+
+When a tool is intended as a gate, CI MUST:
+
+- [ ] Run the tool on fixtures (minimum) and on changed artifacts (preferred).
+- [ ] Upload the report as a build artifact.
+- [ ] Fail the job on validation errors.
+- [ ] Provide a concise PR annotation (summary table or markdown).
+
+[Back to top](#quick-navigation)
+
+---
+
+## Appendix: recommended CLI flags
+
+Tools SHOULD converge on a consistent CLI vocabulary:
+
 ```bash
-# example
+# inputs and outputs
+--in <path>            # input path (file or directory)
+--out <path>           # output path (dir)
+--config <path>        # config file (yaml/json)
+
+# execution
+--strict               # treat warnings as errors
+--dry-run              # do not write outputs
+--json                 # machine-readable output to stdout
+--quiet                # suppress non-error logs
+
+# provenance and audit
+--run-id <id>          # caller-provided run id (optional)
+--receipt <path>       # write run receipt jsonld (optional)
+--env-capture <path>   # write environment capture bundle (optional)
 ```
 
-## Inputs
-- …
+> NOTE: This appendix is a recommendation. If a tool cannot comply, document why in that tool’s README.
 
-## Outputs
-- …
-
-## Determinism rules
-- …
-
-## Policy / governance notes
-- …
-
-## Tests
-```bash
-# example
-```
-```
-
-</details>
-
-[Back to top](#navigation)
+[Back to top](#quick-navigation)
