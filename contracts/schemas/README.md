@@ -156,15 +156,15 @@ These contracts support the core “governance-by-construction” loop (watch �
 
 ```mermaid
 flowchart LR
-  W[Watcher] -->|detect change| R0[Run triggered]
-  R0 --> P[Pipeline / Transform]
-  P --> RR[Run Receipt (JSON)]
-  RR --> G[Policy Gate<br/>OPA/Rego + Conftest]
-  G -->|allow| RM[Run/Promotion Manifest]
-  RM --> CAT[Catalog triplet<br/>DCAT + STAC + PROV]
-  CAT --> EV[Evidence resolver<br/>(EvidenceRef → EvidenceBundle)]
-  EV --> UI[Map / Story / Focus UI<br/>(trust surfaces)]
-  G -->|deny| Q[Quarantine / No promotion]
+  W["Watcher"] -->|detect change| R0["Run triggered"]
+  R0 --> P["Pipeline transform"]
+  P --> RR["Run receipt<br/>JSON"]
+  RR --> G["Policy gate<br/>OPA/Rego + Conftest"]
+  G -->|allow| RM["Run promotion manifest"]
+  RM --> CAT["Catalog triplet<br/>DCAT + STAC + PROV"]
+  CAT --> EV["Evidence resolver<br/>EvidenceRef to EvidenceBundle"]
+  EV --> UI["Map + Story + Focus UI<br/>trust surfaces"]
+  G -->|deny| Q["Quarantine<br/>no promotion"]
 ```
 
 ### EvidenceRef schemes (contracted expectation)
