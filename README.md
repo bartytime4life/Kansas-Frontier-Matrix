@@ -807,7 +807,7 @@ Story Node markdown skeleton:
 doc_id: kfm://story/<uuid>@v1
 title: <Story title>
 type: story
-version: v3
+version: v1
 status: draft
 owners: <names/teams>
 created: YYYY-MM-DD
@@ -1047,6 +1047,7 @@ These are anchor datasets because they support many story arcs and can be integr
 
 - **Tier 0 (build-first):** must-have anchors that unblock Map Explorer + core story arcs.
 - **Tier 1 (expand safely):** high-leverage enrichers once Tier 0 trust primitives are solid.
+- **Tier 2 (contextual/enrichment):** valuable contextual datasets with mixed access postures or rights complexity; integrate after Tier 1 trust primitives are proven.
 - **Tier R (restricted/sensitive):** valuable but **policy-first**; require consultation, redaction, and/or public-generalized derivatives before public surfaces.
 
 #### Full anchor set summary (vNext)

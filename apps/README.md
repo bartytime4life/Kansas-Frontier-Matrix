@@ -47,7 +47,7 @@ Deployable runtime applications for Kansas Frontier Matrix (KFM): the **governed
 - [App responsibilities](#app-responsibilities)
   - [`apps/api`](#appsapi)
   - [`apps/ui`](#appsui)
-  - [`apps/worker`](#appsworker)
+  - [`apps/workers`](#appsworkers)
 - [Development](#development)
 - [CI gates](#ci-gates)
 - [Security and governance](#security-and-governance)
@@ -63,7 +63,7 @@ This directory is for **deployable runtime surfaces**:
 
 - **`apps/api/`** — the governed API boundary (“trust membrane”) where policy, evidence resolution, and auditability are enforced.
 - **`apps/ui/`** — the governed client UI: Map Explorer + Story Mode + Focus Mode (and restricted admin/steward surfaces).
-- **`apps/worker/`** — pipeline runner + index builders; moves data through the truth path and (re)builds projections.
+- **`apps/workers/`** — pipeline runner + index builders; moves data through the truth path and (re)builds projections.
 
 Shared, reusable logic should live in `../packages/` (domain, use cases, policy engine, evidence, catalog, shared DTOs/schemas). Applications should mostly be **composition + adapters**, not the home of core domain logic.
 
@@ -78,7 +78,7 @@ Shared, reusable logic should live in `../packages/` (domain, use cases, policy 
 - Runtime composition and adapters for:
   - policy enforcement + audited access (`apps/api`)
   - governed experiences + trust surfaces (`apps/ui`)
-  - deterministic pipelines + rebuildable projections (`apps/worker`)
+  - deterministic pipelines + rebuildable projections (`apps/workers`)
 - App-level operational concerns:
   - configuration boundaries
   - health/readiness
@@ -107,7 +107,7 @@ repo/
   apps/
     api/                  # governed API (interfaces + adapters)
     ui/                   # map/story/focus frontend
-    worker/               # pipeline runner + index builders
+    workers/               # pipeline runner + index builders
     README.md             # (this file)
 ~~~
 
@@ -132,7 +132,7 @@ flowchart LR
   UI[apps/ui<br/>Map · Story · Focus] --> API[apps/api<br/>Governed API<br/>Policy + Evidence]
   API --> UI
 
-  W[apps/worker<br/>Pipelines + Indexers] --> RAW[RAW]
+  W[apps/workers<br/>Pipelines + Indexers] --> RAW[RAW]
   W --> WORK[WORK/QUARANTINE]
   W --> PROC[PROCESSED]
   W --> CAT[CATALOG/TRIPLET]
@@ -177,7 +177,7 @@ Apps should **consume** shared contracts rather than redefine them. Typical cont
 |---|---|---|---|
 | `apps/api` | Governed API boundary | Enforce policy consistently; return policy-safe metadata for reproducibility; provide evidence resolution + audit references | Leak restricted existence; bypass policy pack; embed domain logic that belongs in `packages/` |
 | `apps/ui` | Governed client UI | Never embed privileged credentials; make trust visible (evidence drawer, dataset version, policy notices); block publishing when citations don’t resolve | Read from storage directly; hide governance; publish stories without resolvable evidence |
-| `apps/worker` | Pipelines + index builders | Treat canonical artifacts as immutable; quarantine on failure; emit run receipts/manifests; rebuild projections from canonical sources | Treat projection stores as source of truth; “patch” published data without promotion gates |
+| `apps/workers` | Pipelines + index builders | Treat canonical artifacts as immutable; quarantine on failure; emit run receipts/manifests; rebuild projections from canonical sources | Treat projection stores as source of truth; “patch” published data without promotion gates |
 
 [Back to top](#apps)
 
@@ -244,7 +244,7 @@ The UI is a **governed client**, not a privileged operator.
 
 ---
 
-## `apps/worker`
+## `apps/workers`
 
 The worker is responsible for:
 
@@ -262,8 +262,8 @@ The worker is responsible for:
 
 ### Suggested contents (create if missing)
 
-- `apps/worker/README.md` — how to run pipelines, where artifacts land, how to rebuild indexes
-- `apps/worker/runbooks/` — incident procedures (rebuild, rollback, quarantine triage)
+- `apps/workers/README.md` — how to run pipelines, where artifacts land, how to rebuild indexes
+- `apps/workers/runbooks/` — incident procedures (rebuild, rollback, quarantine triage)
 
 [Back to top](#apps)
 
@@ -289,7 +289,7 @@ cd apps/api
 cd ../ui
 # run dev server
 
-cd ../worker
+cd ../workers
 # run pipeline / index rebuild tasks
 ~~~
 
