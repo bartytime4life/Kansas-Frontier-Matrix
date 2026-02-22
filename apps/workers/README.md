@@ -1,23 +1,3 @@
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/f964eee3-0dee-4081-9a54-4ebf89532608@v1
-title: apps/workers — Background workers (ingest, indexing, automation)
-type: guide
-version: v1
-status: draft
-owners: KFM Platform (TBD)
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: internal
-summary: Folder-level guide for worker apps and the contracts/governance they must follow.
-tags:
-  - kfm
-  - workers
-  - pipelines
-  - governance
-notes:
-  - Folder-level README for worker apps. Each worker should include its own README with exact run/deploy commands.
-[/KFM_META_BLOCK_V2]
-
 # apps/workers
 
 Background/edge workers that run KFM ingestion, validation, indexing, and governance automation — **producing governed artifacts** (run receipts, catalogs, provenance) and **never bypassing policy**.
