@@ -167,10 +167,10 @@ At minimum, a rebuild pipeline is:
 
 ```mermaid
 flowchart TD
-  A[Catalog triplet<br/>(DCAT + STAC + PROV)<br/>+ existing run receipts] -->|select dataset_version_id| B[Locate processed artifacts<br/>by digest + path]
-  B --> C[Load into projections<br/>DB / search / graph / tiles]
-  C --> D[Validate vs catalog metadata<br/>counts, bbox, time range, checksums]
-  D --> E[Write rebuild run_receipt<br/>append to audit ledger]
+  A["Catalog triplet<br/>DCAT + STAC + PROV<br/>existing run receipts"] -->|"select dataset_version_id"| B["Locate processed artifacts<br/>by digest + path"]
+  B --> C["Load into projections<br/>DB + search + graph + tiles"]
+  C --> D["Validate vs catalog metadata<br/>counts + bbox + time range + checksums"]
+  D --> E["Write rebuild run receipt<br/>append to audit ledger"]
 ```
 
 [Back to top](#scriptsrebuild)
