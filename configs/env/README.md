@@ -72,24 +72,24 @@ This directory exists to make configuration **repeatable**, **reviewable**, and 
 
 ```mermaid
 flowchart LR
-  Template[configs/env templates] --> LocalEnv[Local .env file<br/>(gitignored)]
-  LocalEnv --> Compose[Docker Compose]
-  Compose --> API[API]
-  Compose --> UI[Web UI]
-  Compose --> PostGIS[PostGIS]
-  Compose --> Neo4j[Neo4j]
+  Template["configs/env templates"] --> LocalEnv["Local .env file<br/>gitignored"]
+  LocalEnv --> Compose["Docker Compose"]
+  Compose --> API["API"]
+  Compose --> UI["Web UI"]
+  Compose --> PostGIS["PostGIS"]
+  Compose --> Neo4j["Neo4j"]
 
-  GitOps[GitOps manifests] --> CM[ConfigMap]
-  GitOps --> SecretRef[Secret reference]
-  SecretStore[Secret store] --> SecretRef
+  GitOps["GitOps manifests"] --> CM["ConfigMap"]
+  GitOps --> SecretRef["Secret reference"]
+  SecretStore["Secret store"] --> SecretRef
 
-  CM --> K8s[Kubernetes or OpenShift]
+  CM --> K8s["Kubernetes or OpenShift"]
   SecretRef --> K8s
 
   K8s --> API
   K8s --> UI
 
-  UI --> GovAPI[Governed API<br/>(policy + evidence)]
+  UI --> GovAPI["Governed API<br/>policy + evidence"]
   API --> GovAPI
 ```
 
