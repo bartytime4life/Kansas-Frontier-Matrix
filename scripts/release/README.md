@@ -141,13 +141,13 @@ A release run is **DONE** only when all of the following are true:
 
 ```mermaid
 flowchart LR
-  A[Inputs: processed artifacts + catalogs + receipts] --> B[Verify gates A-G]
-  B -->|pass| C[Package release bundle]
-  B -->|fail| Q[Fail closed: stop / quarantine]
-  C --> D[Write checksums + manifest]
-  D --> E[Optional: SBOM + attestations + signatures]
-  E --> F[Publish (artifact store / OCI / static hosting)]
-  F --> G[Tag + record audit reference]
+  A["Inputs: processed artifacts + catalogs + receipts"] --> B["Verify gates A-G"]
+  B -->|pass| C["Package release bundle"]
+  B -->|fail| Q["Fail closed: stop / quarantine"]
+  C --> D["Write checksums + manifest"]
+  D --> E["Optional: SBOM + attestations + signatures"]
+  E --> F["Publish &#40;artifact store / OCI / static hosting&#41;"]
+  F --> G["Tag + record audit reference"]
 ```
 
 **Key point:** release scripts should be **boring**: predictable IO, explicit inputs, and strict validation.
