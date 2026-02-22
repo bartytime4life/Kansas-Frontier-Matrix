@@ -1,189 +1,340 @@
-# data/work — WORK / QUARANTINE zone
-Intermediate transforms (normalization), QA reports, and redaction/generalization candidates. **Never served directly** to Map / Story / Focus or any public surface.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/5b98d1f0-fb59-4a7e-9ab6-6c70f025e67a
+title: data/work — WORK / QUARANTINE zone README
+type: standard
+version: v1
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - kfm://doc/ZONE_DEFS
+  - kfm://doc/PROMOTION_CONTRACT
+tags:
+  - kfm
+  - data-lifecycle
+  - work-zone
+notes:
+  - This README defines expectations for intermediate artifacts and quarantine handling.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Contract surface (Promotion Contract v1) • **Audience:** Contributors / Operators / Stewards • **Owners:** Data Stewardship + Data/GIS Engineering (set via repo governance)  
-`zone:work/quarantine` `publishable:no` `policy:fail-closed` `contents:unreviewed`
+# `data/work/` — WORK / QUARANTINE zone
 
-**Quick nav:**  
-[Purpose](#purpose) • [What belongs here](#what-belongs-here) • [Quarantine](#quarantine) • [Folder layout](#folder-layout-proposed) • [Receipts and QA](#receipts-and-qa) • [Promotion and exit criteria](#promotion-and-exit-criteria) • [Security-and-safety](#security-and-safety)
+**Purpose:** Intermediate transforms, QA outputs, and redaction candidates. **Not publishable. Not served to runtime.**  
+**Status:** draft • **Owners:** TBD
+
+![zone](https://img.shields.io/badge/zone-WORK%20%7C%20QUARANTINE-blue)
+![promotion](https://img.shields.io/badge/promotion-contract%20gated-critical)
+![repro](https://img.shields.io/badge/reproducibility-deterministic%20transforms-informational)
+![safety](https://img.shields.io/badge/safety-fail--closed%20when%20unclear-red)
 
 ---
 
-## Where this fits in the truth path
+## Quick navigation
 
-```mermaid
-flowchart LR
-  Upstream[Upstream sources] --> RAW[RAW]
-  RAW --> WORK[WORK]
-  WORK --> PROCESSED[PROCESSED]
-  PROCESSED --> CATALOG[CATALOG<br/>DCAT + STAC + PROV + run receipts]
-  CATALOG --> API[Governed API]
-  API --> UI[UI surfaces<br/>Map + Story + Focus]
-
-  WORK --> QUARANTINE[QUARANTINE]
-  QUARANTINE --> WORK
-```
-
-> **WARNING**
-> - **Do not publish** from `data/work/`.  
-> - **Quarantined items are blocked from promotion** and must not enter runtime surfaces.
+- [What belongs here](#what-belongs-here)
+- [What does not belong here](#what-does-not-belong-here)
+- [Quarantine rules](#quarantine-rules)
+- [Truth path and where WORK fits](#truth-path-and-where-work-fits)
+- [Promotion Contract summary](#promotion-contract-summary)
+- [Recommended directory layout](#recommended-directory-layout)
+- [Determinism and spec hashing](#determinism-and-spec-hashing)
+- [Work artifact conventions](#work-artifact-conventions)
+- [Cleanup and retention](#cleanup-and-retention)
+- [Governance triggers](#governance-triggers)
+- [Appendix: templates](#appendix-templates)
 
 ---
 
-## Purpose
-
-`data/work/` is the **intermediate zone** used to transform RAW acquisitions into publishable outputs by:
-- normalizing source data into analysis-friendly structures,
-- generating QA/validation reports,
-- producing **candidate** redactions/generalizations (when needed),
-- producing provisional entity-resolution outputs.
-
-This zone exists so we can do real work while still keeping promotion **fail-closed** and evidence-first.
+> [!WARNING]
+> **Anything in `data/work/` is intermediate.** It may be incomplete, unvalidated, sensitive, or non-compliant.
+> Treat it as **not-for-publication** unless and until it is promoted through the Promotion Contract.
 
 ---
 
 ## What belongs here
 
-### Allowed artifacts (examples)
-- **Normalized representations** (e.g., parsed CSV→Parquet, OCR outputs, cleaned geometry)  
-- **QA reports** (schema checks, spatial checks, completeness checks)  
-- **Candidate redactions / generalizations** (proposals; not “final publish” by default)  
-- **Provisional entity resolution outputs** (linkage tables, match confidence reports)
+This folder is for **WORK** artifacts that arise *after* acquisition and *before* publication-ready outputs.
 
-### Not allowed
-- Anything that is intended to be served directly to users or clients
-- “Final” assets without promotion artifacts (catalog triplet + receipts + approvals)
-- Secrets/credentials or access tokens embedded in specs/logs
-- Unreviewed sensitive location precision in any public-facing derivative
+Typical contents:
+
+- **Normalized representations** (e.g., parsed CSV→Parquet, JSON normalization, OCR outputs).
+- **QA reports** (schema checks, spatial checks, completeness checks, drift checks).
+- **Candidate redactions / generalizations** (draft outputs used to make a publishable version).
+- **Entity resolution outputs (provisional)** (dedupe/linking passes before finalization).
+
+**Back to top:** [Quick navigation](#quick-navigation)
 
 ---
 
-## Quarantine
+## What does not belong here
 
-`QUARANTINE` exists for work outputs that cannot proceed because of:
-- validation failures,
-- unclear licensing/rights,
-- sensitivity concerns,
-- upstream instability that prevents reproducible acquisition.
+- **Canonical raw acquisitions** (those belong in RAW; do not “fix” raw here).
+- **Published artifacts** (those belong in PROCESSED + catalogs).
+- **Secrets** (API keys, credentials, tokens, private certs).
+- **Runtime state** (databases, indexes, tiles served to users).
+- **Anything that bypasses governance** (e.g., ad hoc exports you intend to “ship” without promotion).
 
-**Rule:** Quarantined items are **not promoted**.
+> [!NOTE]
+> If you discover licensing ambiguity, sensitivity issues, or validation failures **move or mark the item as QUARANTINED** immediately (see below). Fail closed.
+
+**Back to top:** [Quick navigation](#quick-navigation)
+
+---
+
+## Quarantine rules
+
+Quarantine exists for intermediate items that **must not** be promoted.
+
+Quarantine is used when any of the following are true:
+
+- Validation fails (schema/spatial/consistency).
+- Licensing is unclear / incompatible / missing rights holder.
+- Sensitivity concerns exist (e.g., restricted locations, vulnerable infrastructure, private individuals).
+- Upstream instability prevents reproducible acquisition.
+
+**Hard rule:** Quarantined items are **not** promoted.
 
 ### Quarantine workflow (minimum)
-1. **Mark or move** the run outputs into a quarantine subfolder (see layout below).
-2. Add a short `QUARANTINE_REASON.md` describing:
-   - the blocking issue(s),
-   - who must review (steward / legal / governance council),
-   - the minimum steps to unblock (re-run, add rights metadata, redact/generalize, etc.).
-3. Do not reference quarantined artifacts from any Story Node, Map layer, or Focus Mode response.
+
+1. **Stop promotion:** do not generate PROCESSED artifacts.
+2. **Record why:** write a short note (issue/ticket reference preferred).
+3. **Contain:** move into `data/work/quarantine/…` or mark clearly within the dataset version folder.
+4. **Remediate:** resolve license/sensitivity/QA, then regenerate WORK outputs deterministically.
+5. **Re-run gates:** only after the Promotion Contract gates pass can it move forward.
+
+**Back to top:** [Quick navigation](#quick-navigation)
 
 ---
 
-## Folder layout (PROPOSED)
+## Truth path and where WORK fits
 
-> **NOTE**
-> This layout is a repo convention recommendation for clarity. The authoritative promotion gates
-> are enforced by the Promotion Contract and policy checks.
+```mermaid
+flowchart LR
+  U[Upstream sources] --> C[Connectors / snapshot runner]
+  C --> RAW[data/raw (RAW: immutable)]
+  RAW --> WORK[data/work (WORK: transforms + QA)]
+  WORK --> PROC[data/processed (publishable)]
+  PROC --> CAT[Catalog triplet: DCAT + STAC + PROV]
+  CAT --> PUB[Published surfaces: API + UI]
 
-```text
-data/work/
-  README.md
-
-  # Per dataset “work runs”
-  <dataset_slug>/
-    <dataset_version_id>/               # Candidate version (deterministic ID; reruns may supersede)
-      manifest.work.json                # Minimal work manifest (inputs, outputs, checks, quarantine flag)
-      normalized/                       # Normalized artifacts (intermediate; not publishable)
-      qa/                               # QA reports (schema/spatial/completeness/etc.)
-      redaction_candidates/             # Candidate redactions/generalizations + diffs/notes
-      entity_resolution/                # Provisional linkage outputs
-      receipts/                         # Run receipts (one per producing run) + validation summaries
-      notes/                            # Optional: analyst notes (non-sensitive)
-
-  # Quarantine lane (blocked from promotion)
-  _quarantine/
-    <dataset_slug>/
-      <dataset_version_id>/
-        QUARANTINE_REASON.md
-        (same subfolders as above)
+  WORK --> QUAR[data/work/quarantine (fail-closed sink)]
+  QUAR -. not promoted .-> PUB
 ```
 
-### Naming guidance (recommended)
-- `dataset_slug`: lowercase, snake-case, stable over time (e.g., `noaa_ncei_storm_events`)
-- `dataset_version_id`: immutable identifier for a specific version candidate (e.g., `2026-02.abcd1234`)
-- Avoid spaces and avoid embedding environment-specific hostnames in paths.
+**Back to top:** [Quick navigation](#quick-navigation)
 
 ---
 
-## Receipts and QA
+## Promotion Contract summary
 
-### Run receipts
-A **run receipt** is emitted for every pipeline run (and for Focus Mode queries). Keep receipts alongside the work outputs that they describe so provenance is not “lost in logs.”
+Promotion is the governed act of moving from **RAW/WORK → PROCESSED + Catalog/Lineage → Published surfaces**.
 
-Minimum expectation:
-- inputs and outputs enumerated with **checksums/digests**
-- environment captured (git commit and container image digest, at minimum)
-- validation status recorded
+A dataset version promotion **must be blocked** unless the minimum gates pass.
 
-### QA reports
-QA reports are required inputs to promotion decisions:
-- schema validity (types, required fields)
-- spatial validity (geometry validity, CRS, bbox sanity)
-- completeness / missingness checks
-- policy-sensitive checks (e.g., “does this contain restricted fields?”)
+### Minimum gates (v1)
 
-If QA fails → quarantine.
+| Gate | Name | What it means (practical) | Where WORK contributes |
+|---:|---|---|---|
+| A | Identity & versioning | Stable Dataset ID; immutable DatasetVersion ID derived from stable `spec_hash` | WORK outputs must be tied to a stable spec + hash |
+| B | Licensing & rights | Explicit license + rights holder + attribution; **unclear license ⇒ QUARANTINE** | WORK must surface license gaps early |
+| C | Sensitivity & redaction | `policy_label` assigned; redaction/generalization plan exists and is recorded in lineage | WORK holds candidate redactions + evidence |
+| D | Catalog triplet validation | DCAT + STAC + PROV exist, validate, and cross-link | WORK must produce metadata inputs required to build catalogs |
+| E | Run receipt + checksums | Run receipt exists; inputs/outputs enumerated with checksums; environment recorded | WORK should emit receipts + digests for each run |
+| F | Policy + contract tests | Policy tests pass; evidence resolution works in CI; schemas/contracts validate | WORK must produce at least one resolvable EvidenceRef |
+| G | Optional (recommended) | SBOM/provenance; performance + a11y smoke checks | WORK should not block, but can provide signals |
 
----
+### Dataset integration “DONE” checklist (operational)
 
-## Promotion and exit criteria
+- [ ] RAW acquisition is reproducible and documented.
+- [ ] WORK transforms are deterministic (same inputs → same outputs; same spec → same hash).
+- [ ] PROCESSED artifacts exist in approved formats and are digest-addressed.
+- [ ] Catalog triplet validates and is cross-linked.
+- [ ] Evidence references resolve and render in evidence UI surfaces.
+- [ ] Policy label is assigned, with documented review.
+- [ ] Changelog entry explains what changed and why.
 
-Work artifacts become eligible for runtime only after **promotion** into:
-- `PROCESSED` artifacts (publishable formats + checksums),
-- validated **catalog triplet** (DCAT + STAC + PROV),
-- run receipts + audit/approvals,
-- policy label assignment and policy tests.
-
-### Promotion Contract summary (for awareness)
-Promotion is blocked unless (at minimum):
-- identity/versioning is deterministic,
-- processed artifacts exist with digests,
-- catalogs validate,
-- cross-links resolve and EvidenceRefs can resolve,
-- policy label is assigned and obligations applied,
-- QA reports exist and failures are quarantined,
-- run receipts and audit trail entries exist.
-
-> **TIP**
-> Treat “promotion-ready” as a **packet**: you should be able to point to a receipt, QA report, and
-> intended policy posture for the exact dataset_version_id—without guesswork.
+**Back to top:** [Quick navigation](#quick-navigation)
 
 ---
 
-## Security and safety
+## Recommended directory layout
 
-Policy posture is **fail-closed**:
-- If sensitivity is unclear, quarantine and escalate review.
-- For sensitive-location / restricted material: default deny, and prefer a separate **public generalized** dataset version when any public representation is allowed.
-- Treat redaction/generalization as a first-class transform that must be recorded in provenance.
+> [!NOTE]
+> The exact layout may vary by pipeline, but keep it predictable. Prefer **domain → dataset → version**.
 
-Operational hygiene:
-- Never embed credentials in specs, manifests, or logs.
-- Don’t leak restricted metadata in errors or “helpful” debug outputs.
-- Keep any PII or culturally restricted site detail out of public paths and out of narrative artifacts.
+```text
+data/
+├─ raw/                         # immutable acquisitions (append-only)
+├─ work/                         # THIS ZONE: intermediate artifacts
+│  ├─ README.md                  # you are here
+│  ├─ quarantine/                # fail-closed items (not promotable)
+│  │  └─ <domain>/<dataset>/<version>/...
+│  └─ <domain>/
+│     └─ <dataset_slug>/
+│        └─ <dataset_version_id>/           # derived from spec_hash (immutable)
+│           ├─ normalized/                  # canonicalized intermediate formats
+│           ├─ qa/                          # reports + summaries
+│           ├─ redaction_candidates/        # draft generalized/public-safe forms
+│           ├─ entity_resolution/           # provisional link/dedupe outputs
+│           ├─ receipts/                    # run receipts, params, environment refs
+│           └─ scratch/                     # optional; safe to delete anytime
+├─ processed/                    # publishable artifacts
+└─ catalog/                      # DCAT + STAC + PROV (+ linkages)
+```
+
+**Back to top:** [Quick navigation](#quick-navigation)
 
 ---
 
-## FAQ
+## Determinism and spec hashing
 
-**Can a Story Node cite work artifacts?**  
-No. Work is not a governed evidence surface. Stories must cite resolvable evidence bundles via governed mechanisms, which implies promoted, policy-checked artifacts only.
+WORK outputs must be **regenerable** and **stable** under the same inputs + spec.
 
-**Do we delete work artifacts after promotion?**  
-Project decision. If retained, treat as internal audit material and keep it policy-labeled. If removed, ensure receipts + PROV + catalogs remain sufficient to reproduce.
+Guidelines:
 
-**Where should heavy binaries live?**  
-Project decision. Prefer object storage and commit only manifests/receipts/reports unless the repo explicitly supports large-file storage.
+- Treat WORK as **rebuildable**; do not rely on manual edits.
+- Keep a single “spec of record” per dataset version (config, parameters, transform graph).
+- Derive `dataset_version_id` from a stable `spec_hash` (canonicalize config before hashing).
+- Record producing environment (at minimum: container image digest, pipeline commit SHA, parameters).
+- Checksums for inputs/outputs are mandatory for promotion readiness.
+
+> [!TIP]
+> If you can’t reproduce WORK outputs deterministically, you can’t trust PROCESSED outputs later.
+
+**Back to top:** [Quick navigation](#quick-navigation)
 
 ---
 
-_Back to top:_ [data/work — WORK / QUARANTINE zone](#datawork--work--quarantine-zone)
+## Work artifact conventions
+
+### Naming
+
+**Dataset slug (recommended):**
+
+- lowercase
+- words separated by underscore
+- include upstream authority when helpful
+- **do not** put dates in the dataset slug (date belongs to the version)
+
+### IDs (recommended families)
+
+Use explicit URI-like identifiers (examples):
+
+- `kfm://dataset/<dataset_slug>`
+- `kfm://dataset/@<dataset_version_id>`
+- `kfm://artifact/sha256:<digest>`
+- `kfm://run/<run_id>`
+- `kfm://evidence/<evidence_id>`
+
+### Minimal files per dataset version (suggested)
+
+Inside `data/work/<domain>/<dataset_slug>/<dataset_version_id>/`:
+
+- `receipts/run_receipt.json` (or `.yaml`)
+- `receipts/params.json` (canonicalized)
+- `qa/summary.json` + human-readable `qa/report.md`
+- `normalized/` intermediates (format depends on pipeline)
+- `redaction_candidates/` (when applicable)
+- `entity_resolution/` (when applicable)
+
+> [!WARNING]
+> **Do not leak restricted metadata** in ad hoc logs or reports. Treat QA outputs as potentially sensitive until policy review assigns a label.
+
+**Back to top:** [Quick navigation](#quick-navigation)
+
+---
+
+## Cleanup and retention
+
+WORK is allowed to be large and messy, but it must be **safe** and **reproducible**.
+
+Recommended posture:
+
+- `scratch/` may be deleted anytime.
+- Keep `qa/` and `receipts/` long enough to support promotion review.
+- Avoid committing large binaries to Git unless explicitly intended (prefer object storage or ephemeral volumes).
+- Never delete QUARANTINE evidence without recording the reason + replacement.
+
+**Back to top:** [Quick navigation](#quick-navigation)
+
+---
+
+## Governance triggers
+
+Escalate for governance review when:
+
+- License terms are missing/unclear or conflict with intended use.
+- Data includes (or may include) sensitive locations, private individuals, culturally restricted sites, or vulnerable infrastructure.
+- Redaction/generalization is required but not yet specified.
+- A dataset is requested for runtime/UI before promotion gates can pass.
+
+Operational safety defaults (summary):
+
+- **Default deny** when sensitivity is unclear.
+- If any public representation is allowed, produce a separate **public generalized** dataset version.
+- Do not embed precise coordinates in narrative outputs unless policy explicitly allows.
+- Treat redaction/generalization as a first-class transform recorded in lineage.
+
+**Back to top:** [Quick navigation](#quick-navigation)
+
+---
+
+## Appendix: templates
+
+<details>
+<summary><strong>Template: run_receipt.json (minimal)</strong></summary>
+
+```json
+{
+  "run_id": "kfm://run/<uuid-or-ulid>",
+  "dataset_id": "kfm://dataset/<dataset_slug>",
+  "dataset_version_id": "kfm://dataset/@<dataset_version_id>",
+  "started_at": "2026-02-22T00:00:00Z",
+  "ended_at": "2026-02-22T00:00:00Z",
+  "inputs": [
+    { "artifact": "kfm://artifact/sha256:<digest>", "role": "raw_input" }
+  ],
+  "outputs": [
+    { "artifact": "kfm://artifact/sha256:<digest>", "role": "work_normalized" }
+  ],
+  "environment": {
+    "pipeline_commit": "<git_sha>",
+    "container_image_digest": "sha256:<digest>",
+    "spec_hash": "sha256:<digest>"
+  },
+  "policy": {
+    "policy_label": "TBD",
+    "redaction_required": false
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><strong>Template: qa/report.md (human-readable)</strong></summary>
+
+```markdown
+# QA Report — <dataset_slug> @ <dataset_version_id>
+
+## Inputs
+- kfm://artifact/sha256:<digest> (raw)
+
+## Checks run
+- Schema validation: PASS/FAIL
+- Spatial validity: PASS/FAIL
+- Temporal coverage sanity: PASS/FAIL
+- Null/missing thresholds: PASS/FAIL
+
+## Findings
+- …
+
+## Recommendation
+- Promote ✅ / Quarantine ⛔ (with reason)
+```
+
+</details>
+
+**Back to top:** [Quick navigation](#quick-navigation)
