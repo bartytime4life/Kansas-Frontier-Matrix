@@ -1,277 +1,251 @@
-# data/processed — PROCESSED zone (publishable artifacts)
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/d64ea623-93b5-433f-ab72-44c9f70eba4e
+title: data/processed — PROCESSED Zone README
+type: standard
+version: v1
+status: draft
+owners: kfm-data-eng; kfm-governance-stewards
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - data/processed/
+tags:
+  - kfm
+  - data
+  - processed
+  - promotion-contract
+  - provenance
+notes:
+  - Defines what is allowed in the PROCESSED zone and the minimum evidence required for promotion.
+[/KFM_META_BLOCK_V2] -->
 
-**Purpose:** Canonical, publishable dataset artifacts + digests, ready to power catalogs, indexes, and governed runtime surfaces (Map / Story / Focus).
+# data/processed — PROCESSED Zone
+Publishable, versioned artifacts produced by governed pipelines **after** promotion gates.
 
-**Status:** Draft (vNext) • **Owners:** Data Stewards (policy) + Pipeline Engineering (implementation)
+![zone](https://img.shields.io/badge/zone-PROCESSED-blue)
+![contract](https://img.shields.io/badge/contract-Promotion%20Contract%20v1-informational)
+![governance](https://img.shields.io/badge/governance-fail--closed-critical)
+![formats](https://img.shields.io/badge/formats-GeoParquet%20%7C%20PMTiles%20%7C%20COG%20%7C%20Text-lightgrey)
 
-**Badges:** `ZONE=PROCESSED` `CANONICAL=YES` `IMMUTABLE=BY_DIGEST` `PROMOTION=FAIL_CLOSED` `RUNTIME=GOVERNED`
+**Status:** draft  
+**Owners:** `kfm-data-eng`, `kfm-governance-stewards`
 
-- Jump to: [What belongs here](#what-belongs-here) · [Truth path context](#truth-path-context) · [Folder layout](#folder-layout) · [Artifact expectations](#artifact-expectations) · [Immutability & digests](#immutability--digests) · [Promotion contract checks](#promotion-contract-checks) · [How to add a dataset version](#how-to-add-a-new-processed-dataset-version) · [Security & sensitivity](#security--sensitivity) · [Appendix](#appendix-example-layout)
+---
 
-## What belongs here
+## Quick navigation
 
-`data/processed/` is the **PROCESSED** zone in the KFM truth path. It contains **publishable artifacts** (e.g., GeoParquet, PMTiles, COG, text corpora) with **checksums/digests**, plus the **derived metadata** needed by runtime builders (catalogs, indexes, tiles, query services).
+- [Purpose](#purpose)
+- [Role in the Truth Path](#role-in-the-truth-path)
+- [What belongs here](#what-belongs-here)
+- [What must not be here](#what-must-not-be-here)
+- [Promotion Contract gates](#promotion-contract-gates)
+- [Recommended layout](#recommended-layout)
+- [Required sidecars](#required-sidecars)
+- [Operational rules](#operational-rules)
+- [Definition of Done for a dataset version](#definition-of-done-for-a-dataset-version)
+- [FAQ](#faq)
 
-These artifacts are the *inputs* to the catalog + provenance surfaces and to any rebuildable projections (PostGIS tables, search indexes, graph DBs, etc.).
+---
+
+## Purpose
+
+`data/processed/` is the **publishable** data zone: artifacts here are considered eligible to be served (subject to policy) once the dataset version has passed promotion gates and has complete catalogs/provenance.
 
 > [!IMPORTANT]
-> If it isn’t promotable (policy/rights/QA unclear), it does **not** belong here.
-> Keep it in `data/work/` (quarantine) until gates pass.
+> Treat this directory as **release-grade output**, not a scratchpad. If you need to experiment, use `data/work/` or a domain-specific quarantine area.
 
-### What is *not* allowed here
+---
 
-- Raw vendor/source drops (those belong in `data/raw/`)
-- Intermediate scratch outputs, staging joins, notebooks (those belong in `data/work/`)
-- Secrets, credentials, private keys, API tokens
-- Anything that bypasses policy labeling / obligations (redaction/generalization)
-
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
-
-## Truth path context
+## Role in the Truth Path
 
 ```mermaid
 flowchart LR
-  A[Upstream sources] --> B[data/raw]
-  B --> C[data/work and quarantine]
-  C --> D[data/processed]
-  D --> E[Catalog triplet DCAT STAC PROV]
-  E --> F[Indexes and projections]
-  F --> G[Governed API]
-  G --> H[Map Story Focus UI]
+  A[Upstream sources] --> B[Connectors / snapshots]
+  B --> C[data/raw<br/>Immutable acquisition]
+  C --> D[data/work<br/>Normalize + QA + redact candidates]
+  D --> E[data/processed<br/>Publishable artifacts]
+  E --> F[Catalog triplet<br/>DCAT + STAC + PROV]
+  F --> G[Index builders<br/>DB + search + tiles]
+  G --> H[Governed API<br/>policy + evidence]
+  H --> I[UI surfaces<br/>Map + Story + Focus]
 ```
 
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
+---
 
-## Folder layout
+## What belongs here
 
-### Naming
+Typical content in `data/processed/`:
 
-This directory is organized by **dataset slug** and **dataset version**.
-
-- **`<dataset_slug>`**: stable, human-readable identifier for the dataset (do **not** change once public).
-- **`<dataset_version_id>`**: immutable release identifier (often includes a date + deterministic hash suffix).
-
-Recommended path pattern:
-
-```
-data/processed/<dataset_slug>/<dataset_version_id>/
-```
-
-Example pattern (illustrative):
-
-```
-data/processed/noaa_ncei_storm_events/2026-02.abcd1234/events.parquet
-```
-
-### Recommended contents per dataset version
-
-A *promoted* dataset version typically includes:
-
-- One or more **artifacts** (data + tiles + rasters + text corpora as applicable)
-- A **promotion manifest** describing the release (dataset_version_id, spec_hash, artifacts + digests, policy label, approvals)
-- The **catalog triplet** (DCAT / STAC / PROV) with cross-links so EvidenceRefs resolve
-- **QA outputs** (validation report + digests), if applicable
-
-Minimal recommended layout:
-
-```
-data/processed/
-  <dataset_slug>/
-    <dataset_version_id>/
-      # Artifacts (publishable)
-      <name>.parquet
-      <name>.pmtiles
-      <name>.tif
-      <name>.jsonl
-
-      # Promotion + provenance
-      promotion.manifest.json
-      run_receipt.json
-
-      # Catalogs (triplet)
-      dcat.jsonld
-      stac/
-        collection.json
-        items/
-          <item_id>.json
-      prov/
-        bundle.jsonld
-
-      # QA (optional but typical)
-      qa/
-        validation_report.json
-        validation_report.sha256
-```
-
-> [!TIP]
-> The exact artifact set depends on the dataset.
-> The contract is: **every artifact referenced by catalogs or the promotion manifest must exist and must have a digest**.
-
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
-
-## Artifact expectations
-
-### Common artifact formats
-
-| Artifact | Typical use | Notes |
-|---|---|---|
-| GeoParquet (`.parquet`) | analytics + feature queries | include geometry + time fields |
-| PMTiles (`.pmtiles`) | fast map rendering | single-file vector tiles (CDN-friendly) |
-| COG (`.tif`) | rasters | tiled + overviews for range reads |
-| Text corpora (`.jsonl`, `.txt`) | governed narrative / NLP | treat as policy-labeled datasets too |
+- **Publishable artifacts** in KFM-approved formats (examples: `GeoParquet`, `PMTiles`, `COG`, text corpora).
+- **Checksums** for every processed artifact.
+- **Derived runtime metadata** (examples: spatial bounding boxes, temporal ranges, counts).
 
 > [!NOTE]
-> “Approved formats” can evolve.
-> Prefer formats with strong ecosystem support and stable, machine-readable metadata.
+> “Publishable” does **not** mean “public.” Restricted datasets can be processed and stored here **if** they carry a `policy_label` and have a recorded redaction/generalization plan where applicable.
 
-### Time-awareness
+---
 
-If the dataset is temporal, processed artifacts should preserve time axes needed by the UI and APIs (event time, transaction time, and valid time when applicable). Keep time fields explicit and documented.
+## What must NOT be here
 
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
+- Raw source snapshots, scrape dumps, unnormalized exports (belongs in `data/raw/`).
+- Intermediate transforms, QA drafts, or candidate redactions (belongs in `data/work/`).
+- Anything with:
+  - failed validation
+  - unclear licensing / rights
+  - unresolved sensitivity concerns
+  - irreproducible acquisition (upstream instability)
+  
+> [!WARNING]
+> **Quarantined items are not promoted.** If licensing/sensitivity is unclear, fail closed and keep it out of `data/processed/`.
 
-## Immutability & digests
+---
 
-This zone is **immutable-by-digest**:
+## Promotion Contract gates
 
-- Every file that matters must have a **SHA-256 digest** recorded in at least one contract surface:
-  - promotion manifest (`artifacts[*].digest`)
-  - DCAT distribution(s)
-  - STAC asset(s)
-  - PROV entities
-- **Never mutate** an artifact in-place after promotion.
-  - If content changes, emit a new `<dataset_version_id>` and write into a new directory.
-  - Old versions remain addressable for reproducibility and “what changed?” diffs.
+A dataset version **must be blocked** from promotion unless all required artifacts exist and validate. The minimum credible set is Gates **A–F** (Gate **G** is strongly recommended for production posture).
 
-Suggested local verification:
+| Gate | What must be true (fail-closed) | Why it matters |
+|---|---|---|
+| **A — Identity & versioning** | Stable dataset ID; immutable dataset version derived from deterministic spec hash | Makes caching, citation, and reproducibility possible |
+| **B — Licensing & rights** | Explicit license; rights holder/attribution requirements captured; unclear license → quarantine | Prevents illegal/unsafe publication |
+| **C — Sensitivity & redaction** | `policy_label` assigned; redaction/generalization plan exists and is recorded in provenance (when needed) | Prevents location/safety harm; enforces default-deny |
+| **D — Catalog triplet validation** | DCAT + STAC + PROV exist (as applicable), validate against profiles, and cross-links resolve | Enables EvidenceRefs without guessing |
+| **E — Run receipt & checksums** | run receipt exists per producing run; inputs/outputs enumerated with checksums; environment recorded | Ensures provenance + tamper evidence |
+| **F — Policy + contract tests** | OPA policy tests pass; EvidenceRef resolution works in CI; schemas/contracts validate | Enforces governance at build + runtime |
+| **G — Optional but recommended** | SBOM + build provenance; perf smoke checks; a11y smoke checks | Production posture and user trust |
 
-```bash
-sha256sum path/to/artifact.parquet
-# compare to the digest recorded in promotion.manifest.json and catalogs
+> [!TIP]
+> If you’re unsure “is this ready for processed?”, the default answer is **no** until Gates A–F are satisfied.
+
+---
+
+## Recommended layout
+
+KFM typically organizes data by **domain** and **dataset**, with versioned outputs underneath.
+
+```text
+data/processed/
+└─ <domain_or_authority>/
+   └─ <dataset_slug>/
+      └─ <dataset_version_id>/                 # immutable release unit
+         ├─ artifacts/                         # publishable outputs
+         │  ├─ features.parquet                # GeoParquet example
+         │  ├─ tiles.pmtiles                   # PMTiles example
+         │  └─ raster.tif                      # COG example (or .tif + COG metadata)
+         ├─ derived/                           # runtime helpers (bbox, temporal, counts)
+         │  └─ runtime_metadata.json
+         ├─ checksums/                         # per-artifact digests
+         │  └─ sha256sums.txt
+         └─ receipts/                          # provenance/run receipts (or links to them)
+            └─ run_receipt.json
 ```
 
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
+> [!NOTE]
+> Your repo may use a different on-disk convention. The non-negotiable is the **behavioral contract**: versioned artifacts + checksums + provenance + policy.
 
-## Promotion contract checks
+---
 
-Anything in `data/processed/` is assumed to be **servable** (directly or indirectly) by governed runtime surfaces.
-Therefore, promotion into this directory is **fail-closed**.
+## Required sidecars
 
-### Minimal fail-closed gates (checklist)
+At minimum, for each `<dataset_version_id>/` you should have:
 
-- [ ] **Identity & versioning**: deterministic `dataset_version_id` + `spec_hash`; promotion manifest exists.
-- [ ] **Artifacts**: processed artifacts exist; each has a digest; paths are predictable; media types recorded.
-- [ ] **Catalogs**: DCAT / STAC / PROV are schema-valid under KFM profiles.
-- [ ] **Cross-links**: all links resolve; asset hrefs exist; EvidenceRefs resolve.
-- [ ] **Policy**: `policy_label` assigned; obligations applied; default-deny tests pass.
-- [ ] **QA**: validation report present; failing runs quarantined.
-- [ ] **Audit**: run receipt emitted; audit ledger appended; approvals captured where required.
+- `checksums/sha256sums.txt` (or equivalent) that covers **every file** in `artifacts/` and critical metadata.
+- A machine-readable `derived/runtime_metadata.json` (or equivalent) that supports runtime needs (bbox, time range, counts).
+- A `receipts/run_receipt.json` (or a resolvable pointer to the canonical receipt location).
+
+Example (illustrative) `runtime_metadata.json`:
+
+```json
+{
+  "dataset_version_id": "YYYY-MM.<spec>",
+  "bbox": [-102.05, 36.99, -94.60, 40.00],
+  "temporal_range": { "start": "1950-01-01T00:00:00Z", "end": "2024-12-31T23:59:59Z" },
+  "counts": { "features": 123456 }
+}
+```
+
+Example (illustrative) `sha256sums.txt`:
+
+```text
+<sha256>  artifacts/features.parquet
+<sha256>  artifacts/tiles.pmtiles
+<sha256>  derived/runtime_metadata.json
+<sha256>  receipts/run_receipt.json
+```
+
+---
+
+## Operational rules
+
+### Immutability and versioning
+
+- A `<dataset_version_id>/` directory is an **immutable release**.
+- If any artifact content changes, you must:
+  - produce a **new** dataset version ID,
+  - regenerate checksums,
+  - regenerate/attach a new run receipt,
+  - update catalogs/provenance accordingly.
+
+### Determinism
+
+Pipelines that produce PROCESSED artifacts should be deterministic:
+
+- dependencies pinned (e.g., container image by digest)
+- stable input ordering
+- avoid clock-dependent content inside artifacts (timestamps recorded separately)
+- reproducible given: raw inputs by digest + pipeline spec hash + environment digest
+
+### Policy-first
+
+- Every processed dataset version must have a `policy_label` and must be evaluated fail-closed.
+- If a layer contains sensitive locations, the public-facing output should be generalized or redacted per an explicit plan recorded in provenance.
 
 > [!WARNING]
-> If any gate fails, do not “fix it live” in `data/processed/`.
-> Keep the candidate release in `data/work/` (quarantine), correct the pipeline/config, and promote a new version.
+> Do not “temporarily promote” datasets with unclear rights or sensitivity. Put them in quarantine until resolved.
 
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
+---
 
-## Determinism & reproducibility expectations
+## Definition of Done for a dataset version
 
-Processed outputs should be reproducible given the same inputs:
+A dataset version is “done” (promotion-ready) only when:
 
-- A run should capture environment + parameters (container digest, git commit, params digest).
-- `spec_hash` should be computed using canonicalized specs/configs (stable ordering, canonical JSON).
-- Promotion should emit a run receipt + promotion manifest as first-class artifacts.
+- [ ] RAW acquisition is reproducible and documented
+- [ ] WORK transforms are deterministic (same inputs → same outputs; same spec → same hash)
+- [ ] PROCESSED artifacts exist in approved formats and are digest-addressed
+- [ ] Catalog triplet validates and is cross-linked (DCAT + STAC + PROV as applicable)
+- [ ] EvidenceRefs resolve and render in the UI evidence drawer
+- [ ] Policy label assigned, with documented review/approval where required
+- [ ] Changelog entry explains what changed and why
 
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
+---
 
-## How to add a new processed dataset version
+## FAQ
 
-1. **Stage in work/quarantine**
-   - Acquire raw inputs into `data/raw/` (immutable).
-   - Run transforms into `data/work/` until validation, licensing, and policy are resolved.
+### Can restricted datasets be stored in `data/processed/`?
+Yes—**if** they are versioned, checksummed, and have complete licensing + policy labeling + provenance. “Processed” means “publishable under policy,” not “public.”
 
-2. **Produce artifacts**
-   - Generate publishable artifacts in approved formats (e.g., `.parquet`, `.pmtiles`, `.tif`).
-   - Compute SHA-256 digests for each artifact.
+### Where do catalogs (DCAT/STAC/PROV) live?
+Wherever the repo’s catalog location is defined (often a sibling tree or a dedicated `catalog/` area). The requirement is that they **exist**, validate, and cross-link back to these processed artifacts.
 
-3. **Emit provenance + catalogs**
-   - Generate the run receipt (inputs + outputs + environment + validation).
-   - Generate DCAT / STAC / PROV catalogs and cross-link them.
+### Can I hand-edit a processed artifact to fix a typo?
+No. Treat processed artifacts as build outputs. Fix the pipeline/spec and produce a new dataset version so checksums + receipts remain trustworthy.
 
-4. **Create the promotion manifest**
-   - Reference every artifact + catalog by path, digest, and media type.
-   - Record the policy label and any required approvals.
-
-5. **Run gates**
-   - Schema validation (DCAT/STAC/PROV profiles)
-   - Link checker (assets, EvidenceRefs)
-   - Policy tests (default deny, obligations)
-   - QA report review
-
-6. **Promote**
-   - Move or copy the version into:
-     ```
-     data/processed/<dataset_slug>/<dataset_version_id>/
-     ```
-   - Ensure immutability-by-digest semantics are preserved in your storage backend.
-
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
-
-## Security & sensitivity
-
-- Every dataset version must carry a **policy label** and be evaluated by policy-as-code.
-- If a dataset is restricted, derive **generalized/redacted** artifacts suitable for the allowed audience and promote *those* (not the sensitive originals).
-- Avoid precise locations for culturally restricted sites, vulnerable infrastructure, or private individuals unless policy explicitly allows it.
-
-[Back to top](#dataprocessed--processed-zone-publishable-artifacts)
-
-## Appendix: example layout
+---
 
 <details>
-<summary>Example promotion manifest skeleton (v1)</summary>
+<summary>Appendix: Reviewer checklist (PRs that touch <code>data/processed/</code>)</summary>
 
-```json
-{
-  "kfm_promotion_manifest_version": "v1",
-  "dataset_slug": "<dataset_slug>",
-  "dataset_version_id": "<dataset_version_id>",
-  "spec_hash": "sha256:<spec_hash>",
-  "released_at": "YYYY-MM-DDTHH:MM:SSZ",
-  "artifacts": [
-    { "path": "events.parquet", "digest": "sha256:<...>", "media_type": "application/x-parquet" }
-  ],
-  "catalogs": [
-    { "path": "dcat.jsonld", "digest": "sha256:<...>" },
-    { "path": "stac/collection.json", "digest": "sha256:<...>" },
-    { "path": "prov/bundle.jsonld", "digest": "sha256:<...>" }
-  ],
-  "qa": { "status": "pass", "report_digest": "sha256:<...>" },
-  "policy": { "policy_label": "<public|restricted|...>", "decision_id": "kfm://policy_decision/<id>" },
-  "approvals": []
-}
-```
+- [ ] Are all added/changed artifacts covered by checksums?
+- [ ] Is there a run receipt that enumerates inputs/outputs and captures environment digests?
+- [ ] Are license + rights explicit and compatible?
+- [ ] Is <code>policy_label</code> set, and are any obligations (generalization/redaction) satisfied?
+- [ ] Do DCAT/STAC/PROV validate and cross-link?
+- [ ] Do EvidenceRefs resolve (at least one in CI)?
+- [ ] If this is a large layer: is there a tile-friendly distribution (e.g., PMTiles), not just raw GeoJSON?
 
 </details>
 
-<details>
-<summary>Example run receipt skeleton (v1)</summary>
+---
 
-```json
-{
-  "run_id": "kfm://run/<timestamp>.<suffix>",
-  "actor": { "principal": "svc:pipeline", "role": "pipeline" },
-  "operation": "<ingest|transform|publish>",
-  "dataset_version_id": "<dataset_version_id>",
-  "inputs": [{ "uri": "data/raw/<...>", "digest": "sha256:<...>" }],
-  "outputs": [{ "uri": "data/processed/<...>", "digest": "sha256:<...>" }],
-  "environment": {
-    "container_digest": "sha256:<...>",
-    "git_commit": "<sha>",
-    "params_digest": "sha256:<...>"
-  },
-  "validation": { "status": "pass", "report_digest": "sha256:<...>" },
-  "policy": { "decision_id": "kfm://policy_decision/<id>" },
-  "created_at": "YYYY-MM-DDTHH:MM:SSZ"
-}
-```
-
-</details>
+_Back to top:_ [↑](#dataprocessed--processed-zone)
