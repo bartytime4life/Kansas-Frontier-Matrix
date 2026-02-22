@@ -1,291 +1,261 @@
-# contracts/schemas
-Machine-readable schema contracts for KFM’s governed data → catalog → API → UI system.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/2e5bb2f6-0401-4fcb-9f7c-3b4ad5663b4e
+title: contracts/schemas — Contract Schemas Registry
+type: standard
+version: v1
+status: draft
+owners: TBD (KFM Platform + Governance)
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - kfm://doc/contracts/policy   # policy pack (OPA/Rego) that enforces these schemas
+  - kfm://doc/catalog/profiles   # DCAT/STAC/PROV profile docs (if present)
+tags: [kfm, contracts, schemas, json-schema, governance, promotion-gates]
+notes:
+  - Canonical registry for governance-critical JSON Schemas.
+  - Contract-first posture: changes require versioning + fixture tests + policy review.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** draft • **Owners:** TBD • **Applies to:** pipelines, catalog triplet (DCAT/STAC/PROV), governed API DTOs, UI sidecars • **Posture:** contract-first, fail-closed
+# contracts/schemas — Contract Schemas Registry
+Canonical JSON Schemas for **governance-critical contracts** (fail-closed).  
+**Status:** draft • **Owners:** TBD • **Policy label:** public
 
-**Badges:** `contract-first` `fail-closed` `time-aware` `map-first` `evidence-first` `cite-or-abstain`
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![principle](https://img.shields.io/badge/principle-contract--first-blue)
+![gates](https://img.shields.io/badge/gates-fail--closed-red)
+![spec](https://img.shields.io/badge/spec-JSON%20Schema-8A2BE2)
+![policy](https://img.shields.io/badge/policy-OPA%2FRego-black)
 
-**Quick navigation**
-- [Purpose](#purpose)
-- [How schemas enforce KFM invariants](#how-schemas-enforce-kfm-invariants)
-- [Directory layout](#directory-layout)
-- [Schema families](#schema-families)
-- [Naming, identity, and versioning](#naming-identity-and-versioning)
-- [Governance and promotion gates](#governance-and-promotion-gates)
+---
+
+## Navigation
+- [What this directory is](#what-this-directory-is)
+- [Contracts in scope](#contracts-in-scope)
+- [Versioning and compatibility](#versioning-and-compatibility)
 - [Validation and CI gates](#validation-and-ci-gates)
-- [Change workflow](#change-workflow)
-- [Definition of Done](#definition-of-done)
-- [References](#references)
+- [How these contracts are used](#how-these-contracts-are-used)
+- [How to add or change a schema](#how-to-add-or-change-a-schema)
+- [Directory layout](#directory-layout)
+- [Appendix: design rules](#appendix-design-rules)
 
 ---
 
-## Purpose
-This directory is the canonical home for **schema contracts** that define and constrain:
-- **Pipeline outputs** in `WORK/QUARANTINE` and `PROCESSED` (validation + QA + candidate redactions).
-- **Catalog triplet artifacts** (**DCAT + STAC + PROV**) that serve as KFM’s interoperability + evidence surface.
-- **Governed API DTOs** (request/response shapes that must be policy-safe and evidence-resolvable).
-- **UI sidecar payloads** (e.g., map state, Story Node v3 sidecars, Focus Mode response shapes).
+## What this directory is
 
-> NOTE  
-> Schemas are not “documentation.” In KFM they are *enforceable gates* that block promotion/publishing when invalid.
+This folder is the **canonical registry** of JSON Schemas that define the **interfaces we govern by construction**.
 
-[Back to top](#contractsschemas)
+**Rule of thumb:** if an artifact influences **promotion**, **policy decisions**, **auditing**, **evidence resolution**, or **UI trust affordances**, it must be schema-validated here (or in a clearly-defined sibling contract registry).
 
----
+### Why this matters
+KFM’s pipeline/runtime loop is intentionally **fail-closed**:
 
-## How schemas enforce KFM invariants
-KFM’s system posture relies on several invariants that become enforceable via contracts:
+- If a run receipt / manifest does **not** validate → it cannot be trusted, signed/attested, promoted, or displayed with “green” trust cues.
+- Schema validation is necessary but not sufficient: **OPA/Rego policy** can add allow-listing, role checks, and sensitivity rules on top.
 
-```mermaid
-flowchart LR
-  Upstream --> RAW --> WORK --> PROCESSED --> TRIPLET --> PUBLISHED
-  WORK -->|validate| Schemas
-  PROCESSED -->|validate| Schemas
-  TRIPLET -->|validate profiles| Schemas
-  PUBLISHED -->|serve| API
-  API --> UI
+> ⚠️ These schemas are “contract surfaces” just like catalogs (DCAT/STAC/PROV) and governed API payloads.
+> If you change a contract, you must treat it like an API change.
 
-  UI --> EvidenceResolver
-  API --> EvidenceResolver
-  EvidenceResolver -->|returns bundles| EvidenceBundle
-  EvidenceBundle --> Schemas
-  PolicyEngine -->|allow/deny + obligations| API
-```
-
-### What “fail-closed” means here
-- If **licensing is unclear**, assets stay in **QUARANTINE** and must not be promoted.
-- If **sensitivity is unclear**, schema + policy labeling must block promotion until reviewed.
-- If **citations cannot be verified** (resolved + allowed), Focus Mode must abstain or reduce scope.
-
-[Back to top](#contractsschemas)
+[Back to top](#navigation)
 
 ---
 
-## Directory layout
-This repository may evolve, but the **recommended layout** below is designed to keep schemas discoverable, versioned, and testable.
+## Contracts in scope
 
-```text
-contracts/
-  schemas/
-    README.md
+The table below lists the **platform-level contracts** that are expected to remain stable across datasets/domains.
 
-    _registry/
-      schemas.index.json              # (recommended) machine-readable registry of schema $id + versions
-      compat.rules.md                 # (recommended) compatibility rules & examples
+| Contract | Filename (example) | Produced by | Consumed by | “Primary gate” expectation |
+|---|---|---|---|---|
+| **Run Receipt (per run)** | `run_receipt.v1.schema.json` | pipeline runs, Focus Mode runs | CI policy gate, audit ledger, evidence resolver, UI receipt viewer | JSON Schema validate → Conftest/OPA rules |
+| **Run / Promotion Manifest (per dataset release)** | `run_manifest.v1.schema.json` | promotion step / release lane | catalog linker, artifact publisher, rollback tooling | JSON Schema validate → promotion checklist |
+| **Watchers Registry entry** | `watcher.v1.schema.json` | governance/ops (allow-list) | watcher workflows + signature verifier | JSON Schema validate → signature verify → allow-list checks |
 
-    core/
-      dataset_v1.schema.json
-      dataset_version_v1.schema.json
-      artifact_v1.schema.json
-      evidence_ref_v1.schema.json
-      evidence_bundle_v1.schema.json
-      policy_decision_v1.schema.json
-      run_receipt_v1.schema.json
-      story_node_sidecar_v3.schema.json
-      focus_response_v1.schema.json
+> ✅ Dataset-specific schemas (e.g., GeoParquet row shape, CSV schemas, domain vocab) usually belong under that dataset’s lane (example: `data/<domain>/<dataset>/schemas/`), not here.
 
-    profiles/
-      dcat/
-        kfm_dcat_profile_v1.schema.json
-      stac/
-        kfm_stac_profile_v1.schema.json
-      prov/
-        kfm_prov_profile_v1.schema.json
-
-    datasets/
-      <dataset_slug>/
-        v1/
-          <dataset_slug>_v1.schema.json
-          examples/
-            minimal.json
-            typical.json
-            edge_cases.json
-```
-
-> TIP  
-> Keep **core** schemas small and reusable. Put dataset-specific fields in `datasets/<dataset_slug>/…`.
-
-[Back to top](#contractsschemas)
+[Back to top](#navigation)
 
 ---
 
-## Schema families
-| Family | What it covers | Typical consumer | Notes |
-|---|---|---|---|
-| `core/` | System-wide entities (Dataset, DatasetVersion, Artifact, EvidenceRef/Bundle, RunReceipt, PolicyDecision, Story Node sidecar, Focus response) | Pipelines, Evidence Resolver, API, UI | These define the “spine” of the platform. |
-| `profiles/` | Validation profiles for DCAT/STAC/PROV artifacts | Catalog generator, CI | Ensures the catalog triplet is consistent and cross-linked. |
-| `datasets/` | Dataset-specific record schemas | Ingest/normalize steps, QA checks | Referenced from dataset onboarding specs. |
-| `_registry/` | Registry + compatibility rules | Tooling + CI | Prevents schema drift and undocumented breaking changes. |
+## Versioning and compatibility
 
-### Minimum core entities (schema targets)
-The KFM blueprint names a minimal set of domain entities; these should have schemas (or schema-equivalent contract definitions) before broad rollout:
-- Dataset, DatasetVersion, Artifact
-- EvidenceRef, EvidenceBundle
-- PolicyDecision
-- RunReceipt
-- StoryNodeVersion/sidecar
-- MapState
-- Focus Mode response DTOs
+### Naming convention
+Use this file naming pattern:
 
-[Back to top](#contractsschemas)
+- `<contract_name>.v<MAJOR>.schema.json`
 
----
+Examples:
+- `run_receipt.v1.schema.json`
+- `run_manifest.v1.schema.json`
+- `watcher.v1.schema.json`
 
-## Naming, identity, and versioning
-### File naming
-Use one of these patterns consistently (pick one repo-wide; don’t mix):
-- `thing_v1.schema.json` (simple, explicit), or
-- `thing.schema.v1.json` (less common), or
-- `v1/thing.schema.json` (directory-versioned)
+### Immutability rule
+Once a schema version is used for:
+- a **published** dataset version, **or**
+- a CI gate that blocks/permits promotion,
 
-### `$id` and stable identity
-Every schema MUST define a stable `$id` and MUST NOT change it on edits that are within the same major version.
+…treat it as **immutable**. Publish a new major version instead of editing in place.
 
-Recommended internal ID shape (example):
-- `kfm://schema/core/evidence_bundle@v1`
+### Breaking vs non-breaking
+- **Breaking change** → bump MAJOR (new file).
+  - removing/renaming fields
+  - changing types
+  - making optional fields required
+  - tightening enums/patterns in a way that rejects previously-valid artifacts
+- **Non-breaking change** → allowed in the same MAJOR only if it is truly backward compatible.
+  - adding optional fields
+  - adding optional enum values (only if old validators tolerate it)
 
-### Versioning rules (SemVer-style)
-- **Major** (`v1 → v2`) = breaking change (required fields removed, type changes, meaning changes).
-- **Minor** (`v1.1`) = additive, backwards compatible (new optional fields).
-- **Patch** = editorial clarifications, metadata, comments; no behavior change.
+> Recommendation: prefer **new major versions** for any change that affects downstream policy, hashing, or UI trust indicators—determinism beats convenience.
 
-> WARNING  
-> Once a schema version is used to validate promoted artifacts, treat it as immutable. Create a new version instead of “fixing in place.”
-
-### Deterministic DatasetVersion IDs and `spec_hash`
-Where dataset version identity is derived from canonical inputs (e.g., a dataset onboarding spec), schema changes must respect deterministic hashing rules:
-- If a field participates in the canonicalized input used for `spec_hash`, changing it changes the DatasetVersion identity.
-- Prefer **explicit schema pointers** in onboarding specs so the validation contract is auditable.
-
-[Back to top](#contractsschemas)
-
----
-
-## Governance and promotion gates
-Schemas participate directly in promotion gating (promotion must block unless required artifacts validate).
-
-### How schemas map to promotion gates
-| Gate | What the gate enforces | Schema role |
-|---|---|---|
-| A — Identity & versioning | Stable Dataset ID, immutable DatasetVersion derived from `spec_hash` | Validate dataset spec inputs and version metadata. |
-| B — Licensing & rights | License is explicit; rights holder/attribution captured; fail-closed on unclear license | Schema requires license/rights metadata presence and shape. |
-| C — Sensitivity & redaction | `policy_label` assigned; redaction/generalization plan recorded in lineage | Schema defines `policy_label` enum + redaction plan structure. |
-| D — Catalog triplet validation | DCAT + STAC + PROV validate + cross-links resolvable | Profile schemas validate the triplet and cross-links. |
-| E — Run receipt & checksums | `run_receipt` exists; inputs/outputs enumerated w/ checksums; environment recorded | RunReceipt schema validates run metadata + checksums list. |
-| F — Policy + contract tests | OPA policy tests pass; evidence resolver can resolve; API contracts/schemas validate | API/DTO schemas must validate responses and evidence resolution outputs. |
-
-> NOTE  
-> Promotion is blocked unless *all* required artifacts exist and validate. This directory is one of the primary mechanisms that makes that enforceable.
-
-[Back to top](#contractsschemas)
+[Back to top](#navigation)
 
 ---
 
 ## Validation and CI gates
-This repo should standardize on a single validator/toolchain (TBD), but the gate behavior should be consistent:
 
-### Minimum CI checks (recommended)
-- **Schema compile/lint:** every schema loads, resolves references, and is syntactically valid.
-- **Example validation:** every `examples/*.json` validates against its schema.
-- **Cross-schema reference check:** `$ref` targets exist and are version-pinned.
-- **Breaking change detection:** any change to a released schema is flagged unless version bumped.
-- **Catalog profile tests:** representative DCAT/STAC/PROV fixtures validate.
-- **Evidence bundle fixture:** at least one EvidenceRef resolves to an EvidenceBundle (CI proof-of-life).
+### Minimum expectations
+At minimum, CI should:
+- validate contract JSON objects against these JSON Schemas
+- fail the build if validation fails
+- run **policy tests** (default deny) for promotion-critical contracts
+- treat “unknown contract versions” as **deny-by-default**
 
-### Suggested local commands (illustrative)
-(Choose your preferred tooling; these are patterns, not mandates.)
+### Local validation examples (choose one toolchain)
+> These are examples only; use the project’s chosen validation tool in CI.
 
-- Validate all schemas:
-  - `npm run schemas:validate`
-- Validate examples:
-  - `npm run schemas:examples`
-- Check for breaking changes:
-  - `npm run schemas:compat`
-
-[Back to top](#contractsschemas)
-
----
-
-## Change workflow
-When adding or modifying schemas:
-
-1. **Decide scope**
-   - Is this a **core** entity? Put it in `core/`.
-   - Is it dataset-specific? Put it in `datasets/<dataset_slug>/vN/`.
-   - Is it a DCAT/STAC/PROV profile? Put it in `profiles/`.
-
-2. **Create a new version if needed**
-   - Breaking change → new major.
-   - Additive change → minor (or new file version if you only do majors).
-
-3. **Add examples**
-   - Minimum: `minimal.json`, `typical.json`, `edge_cases.json`.
-
-4. **Update registry**
-   - Add schema `$id`, file path, version, owner, status, and “used-by” notes.
-
-5. **Add/adjust fixtures and tests**
-   - If schema change impacts promotion gates, add fixtures that prove the gates still pass/fail correctly.
-
-6. **Governance review**
-   - If `policy_label` / sensitivity semantics change, route to steward review before merge.
-
-[Back to top](#contractsschemas)
-
----
-
-## Definition of Done
-A schema PR is DONE when:
-
-- [ ] Schema has stable `$id` and explicit versioning.
-- [ ] Schema passes compile/lint validation.
-- [ ] All examples validate.
-- [ ] Any breaking change is version-bumped and documented.
-- [ ] Registry entry added/updated.
-- [ ] CI gates pass, including at least one evidence-resolve fixture if applicable.
-- [ ] Governance notes included when sensitivity/policy semantics change.
-- [ ] Links in this README remain valid (no repo drift).
-
-[Back to top](#contractsschemas)
-
----
-
-## References
-- **KFM “truth path” lifecycle** and promotion gating posture (RAW → WORK/QUAR → PROCESSED → DCAT/STAC/PROV → PUBLISHED).
-- **Cite-or-abstain Focus Mode** posture: every response cites resolvable evidence bundles or abstains.
-- **KFM MetaBlock v2** guidance for structured metadata without YAML frontmatter.
-
-If your repo has the KFM standards/docs directory, link to:
-- `docs/standards/KFM_DCAT_PROFILE.md`
-- `docs/standards/KFM_STAC_PROFILE.md`
-- `docs/standards/KFM_PROV_PROFILE.md`
-
----
-
-<details>
-<summary><strong>KFM MetaBlock v2 (recommended for governed docs)</strong></summary>
-
-> Copy/paste template (fill in values; keep `doc_id` stable):
-
-```text
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
-title: contracts/schemas README
-type: guide
-version: v1
-status: draft
-owners: <team or names>
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public
-related:
-  - kfm://doc/<guides-and-standards-doc-id>
-tags:
-  - kfm
-  - contracts
-  - schemas
-notes:
-  - Schema contracts are enforceable promotion gates.
-[/KFM_META_BLOCK_V2]
+**AJV (Node.js):**
+```bash
+npx ajv-cli validate \
+  -s contracts/schemas/run_receipt.v1.schema.json \
+  -d path/to/run_receipt.json
 ```
-</details>
+
+**Python jsonschema:**
+```bash
+python -m jsonschema \
+  -i path/to/run_receipt.json \
+  contracts/schemas/run_receipt.v1.schema.json
+```
+
+### Contract fixtures
+Every schema MUST have fixtures:
+- `fixtures/<contract>/<version>/valid/*.json`
+- `fixtures/<contract>/<version>/invalid/*.json`
+
+CI should validate:
+- all `valid/` pass
+- all `invalid/` fail
+
+[Back to top](#navigation)
+
+---
+
+## How these contracts are used
+
+These contracts support the core “governance-by-construction” loop (watch → run → receipts → policy gates → publish → UI evidence).
+
+```mermaid
+flowchart LR
+  W[Watcher] -->|detect change| R0[Run triggered]
+  R0 --> P[Pipeline / Transform]
+  P --> RR[Run Receipt (JSON)]
+  RR --> G[Policy Gate<br/>OPA/Rego + Conftest]
+  G -->|allow| RM[Run/Promotion Manifest]
+  RM --> CAT[Catalog triplet<br/>DCAT + STAC + PROV]
+  CAT --> EV[Evidence resolver<br/>(EvidenceRef → EvidenceBundle)]
+  EV --> UI[Map / Story / Focus UI<br/>(trust surfaces)]
+  G -->|deny| Q[Quarantine / No promotion]
+```
+
+### EvidenceRef schemes (contracted expectation)
+Evidence resolution should be deterministic and avoid guessing. Common schemes include:
+- `dcat://...` dataset/distribution metadata
+- `stac://...` collection/item/asset metadata
+- `prov://...` lineage (activities/entities/agents)
+- `doc://...` governed documents + story citations
+- `graph://...` entity relations (if enabled)
+
+> If you add a new EvidenceRef scheme, it should come with:
+> 1) a schema for the reference format, and  
+> 2) resolver tests (policy allow/deny + obligations).
+
+[Back to top](#navigation)
+
+---
+
+## How to add or change a schema
+
+### New contract checklist
+- [ ] The contract is **platform-level** (belongs here) vs dataset-level (belongs in a dataset lane).
+- [ ] A new schema file is added with a **new MAJOR version** if backward compatibility is uncertain.
+- [ ] Schema includes:
+  - [ ] `$id` (stable identifier)
+  - [ ] clear `title` + `description`
+  - [ ] `additionalProperties: false` where feasible (fail-closed posture)
+  - [ ] `format` constraints for timestamps (`date-time`)
+  - [ ] explicit enums for `policy_label`, `zone`, etc., when stable
+- [ ] Fixtures added (valid + invalid).
+- [ ] CI validation wired (schema + policy).
+- [ ] Downstream producers/consumers updated (pipelines, UI components, policy rules).
+
+### Change control
+Changes to contracts are governance changes. Treat them like API changes:
+- open a PR
+- include fixtures
+- include a short migration note (what breaks, what’s additive)
+- ensure promotion is blocked until all required gates pass
+
+[Back to top](#navigation)
+
+---
+
+## Directory layout
+
+Recommended layout (this folder):
+```text
+contracts/
+└─ schemas/
+   ├─ README.md
+   ├─ run_receipt.v1.schema.json
+   ├─ run_manifest.v1.schema.json
+   ├─ watcher.v1.schema.json
+   └─ fixtures/
+      ├─ run_receipt/v1/{valid,invalid}/
+      ├─ run_manifest/v1/{valid,invalid}/
+      └─ watcher/v1/{valid,invalid}/
+```
+
+If catalog profile schemas are stored here (optional), consider:
+```text
+contracts/schemas/catalogs/
+  ├─ dcat.profile.v1.schema.json
+  ├─ stac.collection.profile.v1.schema.json
+  ├─ stac.item.profile.v1.schema.json
+  └─ prov.bundle.profile.v1.schema.json
+```
+
+[Back to top](#navigation)
+
+---
+
+## Appendix: design rules
+
+### Fail-closed defaults
+- Prefer rejecting unknown fields (`additionalProperties: false`)
+- Prefer explicit enums for sensitive posture inputs (policy labels, zones, run_type)
+- Prefer stable identifiers + digests over implicit names
+
+### Deterministic identity
+If a contract includes `spec_hash`, digests, or canonical “identity,” ensure the producer:
+- canonicalizes inputs before hashing
+- stores the resulting hash in the contract object
+- can re-compute the same hash in CI to detect drift
+
+### Trust membrane reminders
+Contracts should never encourage the UI to bypass governed APIs.
+In particular:
+- UI should not directly fetch from object storage/DBs
+- restricted dataset existence should not leak via errors
+- downloads/exports must be policy-checked
+
+(These are enforced by policy and threat-model checks, but schema design should not work against them.)
