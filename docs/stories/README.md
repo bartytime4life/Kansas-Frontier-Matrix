@@ -154,35 +154,59 @@ In `story.sidecar.json`:
 Create `story.md`:
 
 ```md
+<!--
 [KFM_META_BLOCK_V2]
-doc_id: kfm://story/<uuid>@v1
+doc_id: kfm://story/<uuid-or-slug>
 title: <Story title>
-type: story
+type: story_node
 version: v3
 status: draft
-owners: <names/teams>
+owners: <team or person>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related:
-  - kfm://dataset/<slug>@<dataset_version_id>
+tags:
+  - story-node
+  - <topic>
 [/KFM_META_BLOCK_V2]
+-->
 
 # <Story title>
+<One-line purpose.>
 
-## Summary
-<Short summary of the story, including scope and time window.>
+## Scope and location
+- Area: <place name(s)>
+- Geometry: <bbox/centroid/generalized polygon>
+- Map notes: <optional>
+
+## Time
+- Event time: <YYYY-MM-DD or range>
+- Valid time: <optional>
+- Transaction time: <optional>
 
 ## Claims
-1. <Claim text.> [CITATION: dcat://...]
-2. <Claim text.> [CITATION: stac://...]
-
-## Narrative
-<Full narrative with inline citations.>
+- C1: <claim>
+- C2: <claim>
 
 ## Evidence
-- [CITATION: dcat://...]
-- [CITATION: prov://...]
+- For C1:
+  - DatasetRef: <...>
+  - Source: <...>
+- For C2:
+  - Source: <...>
+- AuditRef: <kfm://audit/...> (pending ok)
+
+## Uncertainty
+- <what we don’t know>
+- <competing interpretations>
+
+## Policy and redaction
+- policy_label: <public/restricted/...>
+- Redactions: <what is generalized/withheld>
+
+## Links
+- Related Story Nodes: <...>
+- Related datasets/layers: <...>
 ```
 
 ### Story Node v3 sidecar skeleton
