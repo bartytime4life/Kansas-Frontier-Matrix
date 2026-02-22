@@ -112,15 +112,16 @@ Quarantine is used when any of the following are true:
 
 ```mermaid
 flowchart LR
-  U[Upstream sources] --> C[Connectors / snapshot runner]
-  C --> RAW[data/raw (RAW: immutable)]
-  RAW --> WORK[data/work (WORK: transforms + QA)]
-  WORK --> PROC[data/processed (publishable)]
-  PROC --> CAT[Catalog triplet: DCAT + STAC + PROV]
-  CAT --> PUB[Published surfaces: API + UI]
+  U["Upstream sources"] --> C["Connectors &#47; snapshot runner"]
 
-  WORK --> QUAR[data/work/quarantine (fail-closed sink)]
-  QUAR -. not promoted .-> PUB
+  C --> RAW["data&#47;raw<br/>RAW - immutable"]
+  RAW --> WORK["data&#47;work<br/>WORK - transforms + QA"]
+  WORK --> PROC["data&#47;processed<br/>publishable"]
+  PROC --> CAT["Catalog triplet<br/>DCAT + STAC + PROV"]
+  CAT --> PUB["Published surfaces<br/>API + UI"]
+
+  WORK --> QUAR["data&#47;work&#47;quarantine<br/>fail-closed sink"]
+  QUAR -. "not promoted" .-> PUB
 ```
 
 **Back to top:** [Quick navigation](#quick-navigation)
