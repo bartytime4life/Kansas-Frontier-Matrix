@@ -1,1 +1,96 @@
+# .github/dependabot.yml
+# Kansas Frontier Matrix (KFM) — Dependency automation (governance-aware)
+#
+# This is a minimal, “won’t error if ecosystems aren’t present” baseline:
+# - Always keeps GitHub Actions workflow/action versions current.
+# - Provides ready-to-enable stubs for npm/pip/docker once those manifests exist in-repo.
+#
+# NOTE: Dependabot version updates must be enabled in repo settings, and this file must live at:
+#       .github/dependabot.yml
 
+version: 2
+
+updates:
+  # --- Core: keep GitHub Actions up to date (safe baseline; .github/workflows is always present) ---
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:10"
+      timezone: "America/Chicago"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      gha_minor_patch:
+        # Group only non-breaking updates; majors remain separate PRs for review.
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # --- Optional: enable once the repo has npm manifests (package.json + lock files) ---
+  # - package-ecosystem: "npm"
+  #   # Use ONE of:
+  #   # directory: "/"
+  #   # directory: "/web"
+  #   # directories: ["/", "/web"]  # only if both locations actually contain npm manifests
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "06:20"
+  #     timezone: "America/Chicago"
+  #   open-pull-requests-limit: 5
+  #   commit-message:
+  #     prefix: "chore"
+  #     include: "scope"
+  #   groups:
+  #     npm_prod_minor_patch:
+  #       applies-to: "version-updates"
+  #       dependency-type: "production"
+  #       patterns: ["*"]
+  #       update-types: ["minor", "patch"]
+  #     npm_dev_minor_patch:
+  #       applies-to: "version-updates"
+  #       dependency-type: "development"
+  #       patterns: ["*"]
+  #       update-types: ["minor", "patch"]
+
+  # --- Optional: enable once the repo has Python manifests (requirements.txt / pyproject.toml) ---
+  # - package-ecosystem: "pip"
+  #   # Use ONE of:
+  #   # directory: "/"
+  #   # directory: "/src"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "06:30"
+  #     timezone: "America/Chicago"
+  #   open-pull-requests-limit: 5
+  #   commit-message:
+  #     prefix: "chore"
+  #     include: "scope"
+  #   groups:
+  #     pip_minor_patch:
+  #       applies-to: "version-updates"
+  #       patterns: ["*"]
+  #       update-types: ["minor", "patch"]
+
+  # --- Optional: enable once the repo has Dockerfiles (or container definitions) ---
+  # - package-ecosystem: "docker"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "06:40"
+  #     timezone: "America/Chicago"
+  #   open-pull-requests-limit: 5
+  #   commit-message:
+  #     prefix: "chore"
+  #     include: "scope"
