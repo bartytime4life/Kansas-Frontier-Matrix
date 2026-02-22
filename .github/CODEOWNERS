@@ -1,1 +1,59 @@
+# Kansas Frontier Matrix (KFM) — CODEOWNERS
+#
+# IMPORTANT
+# - Replace the placeholder @kfm-* owners below with your real GitHub usernames and/or org teams.
+# - CODEOWNERS works best paired with branch protection that requires CODEOWNER reviews.
+#
+# Role mapping (from KFM baseline governance roles):
+# - @kfm-stewards: Reviewer/Steward (policy labels, redaction rules, promotion + publish approvals)
+# - @kfm-operators: Operator (pipelines + deployments; cannot override policy gates)
+#
+# Quick-start option:
+# - If you don’t have teams yet, temporarily replace every @kfm-* with a single trusted team/user,
+#   then refine path-by-path.
 
+# Default owners (everything not matched below)
+* @kfm-maintainers
+
+# --- High-risk automation / CI / supply chain ---
+/.github/ @kfm-ops @kfm-security
+/.github/workflows/** @kfm-ops @kfm-security
+
+# --- Policy-as-code (governed) ---
+/policy/** @kfm-stewards @kfm-policy-engineers
+
+# --- Contracts are production artifacts (governed API + schemas) ---
+/contracts/** @kfm-api @kfm-stewards
+
+# --- Data zones (changes require governance + run receipts/promotion manifests) ---
+/data/** @kfm-data-stewards @kfm-operators
+/data/catalog/** @kfm-data-stewards @kfm-stewards
+/data/processed/** @kfm-data-engineering @kfm-data-stewards
+/data/raw/** @kfm-operators @kfm-data-stewards
+/data/work/** @kfm-operators @kfm-data-stewards
+
+# --- Source code (service boundaries) ---
+/src/api/** @kfm-api
+/src/evidence/** @kfm-api @kfm-stewards
+/src/catalog/** @kfm-api @kfm-data-stewards
+/src/ingest/** @kfm-data-engineering
+/src/indexers/** @kfm-search
+/src/domain/** @kfm-api
+
+# --- Tooling + validators (gates) ---
+/tools/** @kfm-platform
+/tools/validators/** @kfm-platform @kfm-quality
+/tools/linkcheck/** @kfm-platform
+/tools/hash/** @kfm-platform
+
+# --- Tests ---
+/tests/** @kfm-quality
+
+# --- Docs / narrative surfaces ---
+/docs/** @kfm-docs
+/docs/standards/** @kfm-docs @kfm-stewards
+/docs/adr/** @kfm-architecture
+/docs/story/** @kfm-story-editors @kfm-stewards
+
+# --- Repo entrypoints / governance docs ---
+/README.md @kfm-maintainers @kfm-stewards
