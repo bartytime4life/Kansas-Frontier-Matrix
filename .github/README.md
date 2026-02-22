@@ -1,384 +1,256 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/7d8e0c8d-7c61-4b2a-8f9b-7f0a8c0a8e55
-title: .github Governance and Automation Hub for Kansas Frontier Matrix
+doc_id: kfm://doc/f8375fd0-0f12-4ad4-bb38-f3048c11cfad
+title: .github Automation & Governance
 type: standard
 version: v1
-status: review
-owners: kfm-governance,kfm-security,kfm-platform
+status: draft
+owners: KFM Maintainers (see CODEOWNERS)
 created: 2026-02-22
 updated: 2026-02-22
 policy_label: public
 related:
-  - ../README.md
-  - ../CONTRIBUTING.md
-  - ../SECURITY.md
-  - ../docs/
-  - ../policy/
-  - ../contracts/
+  - .github/
 tags:
   - kfm
-  - governance
   - github
   - ci
+  - governance
+  - devsecops
 notes:
-  - This document describes target posture and recommended structure; reconcile filenames and required check names to repo reality.
+  - This file documents intended responsibilities and guardrails for repository automation.
 [/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
+# .github Automation & Governance
 
-# .github — Governance and Automation Hub for Kansas Frontier Matrix
+How this repo uses GitHub community health files + Actions workflows to **enforce KFM governance invariants** (fail-closed, evidence-first).
 
-**Purpose:** Turn governance intent into enforceable behavior at merge-time: **CI gates**, **CODEOWNERS**, **templates**, and **workflow security**.  
-**Operating rule:** *If it can merge, it can ship. If it can ship, it must be governed.*
-
-**Acronym:** Kansas Frontier Matrix = **KFM**  
-**Status:** vNext (target conventions; align to repo reality)  
-**Posture:** default-deny • fail-closed • reproducible by digest • policy enforced in CI + runtime  
-**Scope:** This directory governs how changes enter KFM — treat changes here as **production**.  
-**Owners:** enforced via **CODEOWNERS** (see below)
-
-**Signal row:** `status:vNext` • `governance:fail-closed` • `policy:default-deny` • `evidence:cite-or-abstain` • `security:least-privilege`
-
-**Jump links:**  
-[Main README](../README.md) • [Contributing](../CONTRIBUTING.md) • [Security](../SECURITY.md) • [Docs](../docs/) • [Policy](../policy/) • [Contracts](../contracts/)
+**Status:** Draft • **Owners:** see `CODEOWNERS` • **Badges:** `ci:merge-blocking` `policy:default-deny` `docs:link-checked` `security:actions-hardened`
 
 ---
 
-## Quick navigation
+## Navigate
 
-- [Why this folder matters](#why-this-folder-matters)
-- [What lives in `.github/`](#what-lives-in-github)
-- [PR to CI to merge governance flow](#pr-to-ci-to-merge-governance-flow)
-- [CI gates mapped to the Promotion Contract](#ci-gates-mapped-to-the-promotion-contract)
-- [Required check naming contract](#required-check-naming-contract)
-- [Workflow catalog](#workflow-catalog)
-- [Branch protection and rulesets posture](#branch-protection-and-rulesets-posture)
-- [CODEOWNERS required reviewers](#codeowners-required-reviewers)
-- [Issue templates](#issue-templates)
-- [PR template](#pr-template)
-- [Workflow security guardrails](#workflow-security-guardrails)
-- [Adding or changing a gate](#adding-or-changing-a-gate)
-- [Definition of Done for `.github/` changes](#definition-of-done-for-github-changes)
+- [Scope](#scope)
+- [Directory layout](#directory-layout)
+- [What belongs in workflows](#what-belongs-in-workflows)
+- [Merge-blocking gates](#merge-blocking-gates)
+- [Promotion Contract alignment](#promotion-contract-alignment)
+- [Security and secrets](#security-and-secrets)
+- [Changing this folder](#changing-this-folder)
+- [Troubleshooting](#troubleshooting)
+- [Appendix: terms](#appendix-terms)
 
 ---
 
-## Why this folder matters
+## Scope
 
-KFM’s trust membrane starts **before runtime** — in the merge process.  
-If CI allows a change that violates policy, evidence resolvability, or deterministic identity, the platform can no longer claim *map-first + evidence-first + cite-or-abstain* integrity.
+This README is the **operational index** for the `.github/` folder.
 
-> **Governance-critical rule:** anything that changes enforcement (**workflows**, **CODEOWNERS**, **contracts**, **policy**, **validators**, **CI-required check names**) is production configuration.  
-> Treat `.github/` edits as high-risk changes.
+It should answer:
 
-[↑ Back to top](#top)
+- What “governance-by-construction” means for CI in this repo.
+- Where workflows live and what they MUST check.
+- How to safely modify CI/CD without breaking policy, provenance, or security.
+
+Non-goals:
+
+- It is **not** a full repo overview (see the root `README.md`).
+- It is **not** a substitute for the actual workflow YAML (YAML is the source of truth for automation behavior).
+
+> **WARNING:** Do not put credentials, private URLs, or sensitive infrastructure details in this folder’s docs. Assume `.github/` is highly visible.
 
 ---
 
-## What lives in `.github/`
+## Directory layout
 
-> **NOTE**  
-> The exact files present may vary by branch. This README describes **target structure + expectations**.  
-> If any item below is missing, treat it as an **integration gap** rather than silently relaxing enforcement.
-
-### Target directory tree
+The exact contents of `.github/` will vary by repo maturity. The table below describes the *intended* responsibilities.
 
 ~~~text
 .github/
-  README.md                         # This file (governance map)
-  CODEOWNERS                        # Required reviewers for protected paths
-  PULL_REQUEST_TEMPLATE.md          # PR checklist and governance prompts
-  ISSUE_TEMPLATE/                   # Issue forms/templates (intake that is governance-aware)
-  workflows/                        # CI gates and automation (privileged code)
-  actions/                          # Composite actions (optional; treat as critical code)
-  dependabot.yml                    # Dependency automation (optional; controlled cadence)
-  labeler.yml                       # PR auto-labeling (optional; routing + dashboards)
-  release-drafter.yml               # Draft release notes (optional)
+  README.md                   # this document (responsibilities + guardrails)
+  workflows/                  # GitHub Actions workflows (CI lanes, release, policy gates)
+  actions/                    # optional: composite actions pinned + reviewed like code
+  ISSUE_TEMPLATE/             # optional: issue templates
+  PULL_REQUEST_TEMPLATE.md    # optional: PR template (checklists + governance prompts)
+  SECURITY.md                 # optional: security policy + vulnerability reporting
+  dependabot.yml              # optional: dependency update configuration
+  CODEOWNERS                  # optional: required reviewers for sensitive paths
 ~~~
 
-### Core contents
+### “Sensitive paths” we usually treat as governance-critical
 
-| Path | Purpose | Governance risk | Expected controls |
-|---|---|---:|---|
-| `.github/workflows/` | CI gates and automation | **High** | Required reviews + required status checks |
-| `.github/actions/` | Composite actions | **High** | Same review rigor as application code; pin dependencies |
-| `.github/CODEOWNERS` | Mandatory reviewers for protected paths | **High** | Steward/operator ownership + least-privilege |
-| `.github/ISSUE_TEMPLATE/` | Structured intake | Medium | Template owners + required fields |
-| `.github/PULL_REQUEST_TEMPLATE.md` | PR checklist | Medium | Codeowner review recommended |
-| `.github/README.md` | This file | Low | Keep current; treat as governed documentation |
+- `.github/workflows/**`
+- `.github/actions/**`
+- `policy/**` (if policy-as-code is present)
+- `schemas/**` (if contract schemas are present)
+- `docs/reports/story_nodes/**` (if Story Nodes are in-repo)
 
-### Recommended additions
-
-| File/Dir | Why it helps | Notes |
-|---|---|---|
-| `.github/dependabot.yml` | Automated dependency PRs with controlled cadence | Pair with CODEOWNERS + required checks |
-| `.github/actions/` | Composite Actions to reduce workflow drift | Version/pin dependencies; add tests where feasible |
-| `.github/labeler.yml` | Auto-label PRs (policy/contracts/data/UI) | Enables routing + dashboards |
-| `.github/release-drafter.yml` | Draft release notes from merged PRs | Optional early; valuable later |
-| `.github/FUNDING.yml` | Sponsorship links | Optional |
-
-[↑ Back to top](#top)
+If you add new sensitive paths, update `CODEOWNERS` accordingly.
 
 ---
 
-## PR to CI to merge governance flow
+## What belongs in workflows
+
+Workflows are not “developer convenience.” In KFM posture they are **promotion gates**: they decide what is allowed to ship.
+
+### CI flow in one picture
 
 ~~~mermaid
 flowchart LR
-  A[Contributor opens PR] --> B[CI: lint typecheck unit tests]
-  B --> C[CI: policy tests catalog validators linkcheck]
-  C --> D[CI: evidence contract and resolvability tests]
-  D --> E[CI: supply chain and security checks]
-  E --> F[CODEOWNERS reviews required]
-  F --> G[Merge allowed only if all required checks pass]
-  G --> H[Optional: release and publish automation]
+  pr[Pull Request] --> lanes[CI lanes (merge gates)]
+  lanes -->|pass| reviews[Required reviews / CODEOWNERS]
+  reviews --> merge[Merge]
+  merge --> promote[Promotion / Release jobs]
+  promote --> published[Published artifacts + catalogs]
+  published --> surfaces[Map • Story • Focus trust surfaces]
+  lanes -->|fail| blocked[Fail closed (nothing ships)]
 ~~~
 
-**KFM posture:** failures **block**.  
-**Waivers:** if waivers are allowed at all, they are governed artifacts: explicit, time-bounded, and recorded.
+### Recommended workflow “lanes”
 
-[↑ Back to top](#top)
+Use separate jobs or reusable workflows so failures are easy to interpret.
+
+- **Quality lane**: lint, typecheck, unit tests.
+- **Contract lane**: schema validation for catalogs + contracts.
+- **Policy lane**: policy-as-code checks (deny-by-default).
+- **Evidence lane**: link checking / citation resolution (no broken citations).
+- **Security lane**: dependency scanning, SBOM/provenance attestations (as adopted).
+- **UX lane**: accessibility smoke checks for UI trust surfaces.
 
 ---
 
-## CI gates mapped to the Promotion Contract
+## Merge-blocking gates
 
-KFM’s Promotion Contract defines what must be true before anything becomes user-visible. GitHub workflows enforce the **merge-time** portion of those gates.
+These are the *minimum* merge-blocking checks this repo should enforce when the corresponding surfaces exist.
 
-### Gate mapping
+### Minimum required gates (baseline)
 
-| Promotion gate | What must be true | CI check concept |
+- **lint + typecheck** (frontend + backend)
+- **schema validation** for any changed catalog artifacts (DCAT/STAC/PROV)
+- **Story Node template validation** (if Story Nodes exist)
+- **policy tests** must pass (deny-by-default with explainable failures)
+- **spec_hash tests** must pass (deterministic identity)
+- **link checker** must pass (no broken citations / cross-links)
+- **security scanning** (dependency vulnerabilities); SBOM generation where adopted
+- **accessibility smoke checks** for UI changes (at least keyboard navigation for evidence drawer)
+
+> **NOTE:** If your repo does not yet include a given surface (e.g., Story Nodes), gate it when that surface is introduced—not before. But once introduced, gates are not optional.
+
+---
+
+## Promotion Contract alignment
+
+KFM uses a “Promotion Contract” concept: a dataset/version (or governed story) is only promotable when the evidence, policy inputs, and integrity signals are present.
+
+Map CI checks to Promotion gates so people know *why* something failed.
+
+| Promotion gate | What it typically asserts | Where it usually runs |
 |---|---|---|
-| **A — Identity and versioning** | deterministic `spec_hash`; drift prevented | spec-hash job + golden tests |
-| **B — Licensing and rights** | rights metadata required; “metadata-only” allowed when mirroring is prohibited | schema validation + rights lint |
-| **C — Sensitivity and redaction plan** | `policy_label` assigned; obligations testable; leakage prevented | policy tests + leakage scans |
-| **D — Catalog triplet validation** | DCAT/STAC/PROV validate under profiles | validators per profile |
-| **E — Run receipts and checksums** | digests + environment capture | receipt schema validation + artifact digest checks |
-| **F — Policy and contract tests** | policy fixtures pass; API/evidence contracts pass | policy tests + OpenAPI tests + evidence tests |
-| **G — Operational readiness** | SBOM/provenance + smoke checks | security scans + optional e2e smoke |
+| A — Identity & versioning | Deterministic IDs, version increments, `spec_hash` invariants | CI (PR + main) |
+| B — Licensing & rights | License + rights holder present for every distribution | CI (PR) + publish gate |
+| C — Sensitivity & redaction | Policy label set; obligations recorded (generalize/redact) | CI (PR) + runtime |
+| D — Catalog triplet validation | DCAT/STAC/PROV schema-valid + cross-linked | CI (PR) |
+| E — Run receipt & checksums | Run receipts emitted; artifact digests match | CI (main) + release |
+| F — Policy + contract tests | OPA/Conftest fixtures pass; API contracts stable | CI (PR) |
+| G — Recommended extras | SBOMs, attestations, e2e tests, perf smoke | CI (PR/main) |
 
-> **Fail-closed behavior:** if any required check fails, the PR must not merge.
-
-[↑ Back to top](#top)
+> **TIP:** Keep gate failures explainable. A denial message should point to the missing field, violated constraint, and remediation.
 
 ---
 
-## Required check naming contract
+## Security and secrets
 
-Branch protection and rulesets rely on **stable check names**. Accidental renames are a common “governance break” because GitHub treats renamed checks as “missing” required checks.
+The `.github/` folder is a high-impact supply-chain surface. Treat it as sensitive code.
 
-### Rules
+### GitHub Actions hardening checklist
 
-- **Do not rename** workflow names or job names that are required checks without a coordinated protection update.
-- Prefer **always-on workflows** that “no-op quickly” over `paths-ignore` that prevents a required check from appearing.
-- Keep required checks **few, stable, and meaningful**; expand coverage within those checks via matrix jobs if needed.
+- [ ] Workflows use **least privilege** permissions (don’t default to broad write permissions).
+- [ ] Secrets are stored only in GitHub Secrets / Environments (never committed).
+- [ ] Avoid `pull_request_target` for untrusted PRs (or lock it down so it never checks out PR code).
+- [ ] Third-party Actions are pinned to a **commit SHA** (not a mutable tag).
+- [ ] Critical workflow changes require review via `CODEOWNERS`.
+- [ ] Branch protection requires PR review + passing checks; no force-push to protected branches.
 
-### Recommended check name registry
+### Secret and token guidance
 
-> **NOTE**  
-> Replace names below with your repo’s actual workflow/job names. The point is to keep them stable once protected.
-
-| Required check name | What it covers | Owned by |
-|---|---|---|
-| `CI / lint` | formatting + lint | platform |
-| `CI / test` | unit tests | platform |
-| `Policy / tests` | policy fixtures + allow/deny outcomes | policy + stewards |
-| `Contracts / validate` | schema + API lint/validate | platform |
-| `Catalog / validate` | DCAT/STAC/PROV profile validation | data stewards |
-| `Evidence / resolvability` | linkcheck + evidence bundle tests | platform + stewards |
-| `Security / baseline` | dependency audit + SAST baseline | security |
-
-[↑ Back to top](#top)
+- Prefer short-lived credentials (OIDC / keyless flows) over long-lived PATs.
+- Never echo secrets to logs, even if they are “masked.”
+- Keep environment variables policy-safe (no leaking restricted identifiers into job summaries).
 
 ---
 
-## Workflow catalog
+## Changing this folder
 
-> **NOTE**  
-> Filenames below are **recommended**. If your repo uses different names, keep the semantics but update names and links.
+Treat modifications under `.github/` as a governed change.
 
-### Recommended workflow set
+### When you change workflows/actions/templates
 
-| Workflow | Trigger | Minimum jobs | Why it exists |
-|---|---|---|---|
-| `ci.yml` | `pull_request` | lint, typecheck, unit tests | fast feedback, blocks broken merges |
-| `policy.yml` | `pull_request` (paths: `policy/**`) | policy tests + fixtures | policy semantics must match CI + runtime |
-| `contracts.yml` | `pull_request` (paths: `contracts/**`) | schema validation + API lint | contracts are runtime boundaries |
-| `catalog-validate.yml` | `pull_request` (paths: `data/catalog/**`) | DCAT/STAC/PROV validators | prevents metadata drift |
-| `evidence.yml` | `pull_request` | linkcheck + evidence resolvability | makes citations resolvable |
-| `security.yml` | scheduled + `pull_request` | dependency audit + SAST baseline | shift-left security posture |
-| `focus-eval.yml` | scheduled + `workflow_dispatch` | golden queries + abstention tests | prevents Focus regressions |
+1. **Describe intent** in the PR: what risk it reduces, what gate it affects.
+2. **Classify impact**:
+   - Low: formatting, comments, non-executing docs.
+   - Medium: workflow logic changes without new privileges.
+   - High: permissions, secrets handling, deployment/promotion logic, policy gates.
+3. **Run/observe**: confirm the workflow run shows the intended checks and no secrets leak.
+4. **Require review**: if `CODEOWNERS` is present, don’t bypass it.
 
-### Reusable workflows
+### Definition of Done for governance-critical workflow changes
 
-If you anticipate multiple pipelines or repos, prefer reusable workflow patterns:
-
-- `.github/workflows/_reusable/validate-contracts.yml`
-- `.github/workflows/_reusable/policy-tests.yml`
-
-Then call them from thin “entry” workflows. This keeps governance logic centralized and reviewable.
-
-[↑ Back to top](#top)
+- [ ] Required checks still merge-block.
+- [ ] Permissions are explicitly set (least privilege).
+- [ ] Any new third-party Actions are pinned + reviewed.
+- [ ] Policy/contract checks remain fail-closed.
+- [ ] Documentation in this README is updated if responsibilities changed.
 
 ---
 
-## Branch protection and rulesets posture
+## Troubleshooting
 
-> **PROPOSED**  
-> Align to your organization’s GitHub branch protection or rulesets. Treat these as governance policy.
+### “Link checker” fails
 
-Minimum recommended protection for `main` (and any `release/*` branches):
+Common causes:
 
-- Require **status checks** (required checks above) to pass before merging
-- Require **CODEOWNERS review**
-- Require PRs (no direct pushes)
-- Require conversation resolution
-- Restrict who can dismiss reviews
-- Protect high-risk paths (`.github/**`, `policy/**`, `contracts/**`, `infra/**`) with stricter review requirements
-- Stabilize required check names (branch protection depends on them)
-- Choose and document merge method (squash or merge commit) to preserve auditability
+- A Story Node references a missing citation.
+- DCAT/STAC/PROV cross-links aren’t reciprocal.
+- An EvidenceRef points to an object that no longer exists after a refactor.
 
-[↑ Back to top](#top)
+Fix by:
 
----
+- Validating citations locally (if a local tool exists), then updating the references at the source.
 
-## CODEOWNERS required reviewers
+### “Policy gate” fails (deny-by-default)
 
-`CODEOWNERS` is how KFM enforces “the right eyes on the right files.”
+Common causes:
 
-> **PROPOSED intent**  
-> Replace `<TEAM>` placeholders with real GitHub teams.
+- Missing license/rightsholder fields.
+- Missing or invalid policy label.
+- Required obligations not declared for sensitive data.
 
-| Path pattern | Why it’s protected | Typical owners |
-|---|---|---|
-| `.github/workflows/**` | CI gate logic = governance | `@<DEVOPS_TEAM>` + `@<SECURITY_TEAM>` |
-| `.github/actions/**` | privileged automation building blocks | `@<DEVOPS_TEAM>` + `@<SECURITY_TEAM>` |
-| `policy/**` | default-deny semantics + obligations | `@<POLICY_TEAM>` + `@<STEWARD_TEAM>` |
-| `contracts/**` | API + schema boundaries | `@<PLATFORM_TEAM>` |
-| `data/registry/**` | registries affect promotion eligibility | `@<DATA_STEWARDS>` |
-| `infra/**` | deployment + runtime posture | `@<DEVOPS_TEAM>` |
-| `apps/api/**` | enforcement point | `@<PLATFORM_TEAM>` |
-| `apps/ui/**` | evidence-first UX trust surface | `@<UI_TEAM>` + `@<STEWARD_TEAM>` |
+Fix by:
 
-[↑ Back to top](#top)
+- Adding explicit metadata rather than weakening the policy.
+
+### “spec_hash mismatch”
+
+Common causes:
+
+- Non-canonical JSON ordering / whitespace changes.
+- Inputs changed without bumping version or updating manifests.
+
+Fix by:
+
+- Canonicalizing inputs and ensuring versioning rules are followed.
 
 ---
 
-## Issue templates
+## Appendix: terms
 
-Issue templates are how KFM avoids “governance by tribal memory.”
-
-Recommended templates (names may vary):
-
-- **Dataset onboarding**: requires source registry entry, rights snapshot, sensitivity classification, intended cadence.
-- **Policy change**: requires rationale, fixture updates, and expected allow/deny outcomes.
-- **Story publish request**: requires Story Node ID, citations resolvable, rights for embedded media, review triggers.
-- **Bug report**: requires reproduction steps + environment + dataset_version_id (if relevant).
-- **Security report**: points to `SECURITY.md` process.
-
-> **Rule:** if an issue changes what becomes user-visible, it must reference evidence and versions (or explicitly state why it cannot yet).
-
-[↑ Back to top](#top)
+- **Promotion Contract:** The minimum conditions required before publishing/promoting a dataset version or governed story.
+- **Fail closed:** If a gate can’t prove safety/compliance, the default outcome is “no.”
+- **Policy-as-code:** Governance rules expressed as executable policy (deny-by-default + tests) used in CI and runtime.
+- **Catalog triplet:** DCAT (dataset), STAC (assets), PROV (lineage) — cross-linked so evidence resolution is deterministic.
+- **Run receipt:** Per-run record capturing inputs/outputs/digests/timestamps/policy decisions for auditability.
+- **EvidenceRef:** A stable reference scheme used to resolve citations into evidence bundles.
 
 ---
 
-## PR template
-
-The PR template should make governance “the default path,” not a special burden.
-
-Minimum checklist concepts:
-
-- no secrets
-- contracts updated when shapes change
-- policy tests updated when enforcement changes
-- catalogs validated when publishing or metadata changes
-- evidence resolvability tests present for new citations
-- Focus eval run for model or prompt changes when applicable
-
-If the current PR template doesn’t cover these, update it.
-
-[↑ Back to top](#top)
-
----
-
-## Workflow security guardrails
-
-Workflows are privileged code. Treat them accordingly.
-
-### Baseline hygiene
-
-- Prefer `pull_request` workflows for untrusted contributions.
-- Avoid `pull_request_target` unless you deeply understand the risk model and restrict what the workflow does.
-- Pin third-party actions to a **commit SHA** when practical.
-- Scope workflow permissions to least privilege:
-
-~~~yaml
-# In a workflow file (example)
-permissions:
-  contents: read
-  pull-requests: read
-  # add write scopes only if needed
-~~~
-
-- Prefer ephemeral auth (OIDC) over long-lived cloud secrets when available.
-- Keep secrets out of PR contexts, especially forks.
-- Treat artifact uploads as official build outputs; caches are for speed, not provenance.
-- Use `timeout-minutes` and `concurrency` to limit resource abuse and runaway jobs.
-- Prefer pinned runner images (e.g., `ubuntu-24.04`) over floating labels when determinism matters.
-
-### Common foot-guns to avoid
-
-- Checking out PR code in a job with write permissions or secrets.
-- Using `pull_request_target` to run arbitrary PR code.
-- Running untrusted code in composite actions that have elevated permissions by default.
-- Renaming required checks without updating branch protections or rulesets.
-
-[↑ Back to top](#top)
-
----
-
-## Adding or changing a gate
-
-When you add a new CI gate, you’re changing KFM’s enforcement behavior.
-
-Procedure:
-
-1. Document the intent (link to an ADR if architectural).
-2. Add the deterministic tool or validator (prefer `tools/`).
-3. Add fixtures + golden tests.
-4. Add a workflow job that runs the validator.
-5. Update the **required check naming contract** and branch protections or rulesets.
-6. Update this `.github/README.md` and the main `README.md` if contributor behavior changes.
-
-Fail-closed principle: if the gate cannot run reliably, it should block (or be explicitly waived with governance approval).
-
-[↑ Back to top](#top)
-
----
-
-## Definition of Done for `.github/` changes
-
-Use this checklist when changing workflows, templates, owners, or required checks.
-
-- [ ] Change is reversible (rollback plan or simple revert)
-- [ ] Workflow permissions are least-privileged
-- [ ] No secrets added or exposed in logs
-- [ ] No unsafe trigger patterns introduced (fork safety preserved)
-- [ ] Third-party actions are pinned where practical
-- [ ] Required checks list is updated and check names remain stable
-- [ ] CODEOWNERS coverage is correct for protected paths
-- [ ] Templates enforce KFM evidence and version requirements where applicable
-- [ ] Documentation updated (this file + any referenced runbooks)
-- [ ] Changes tested via PR (expected checks appear and are required)
-
----
-
-## Where to learn more
-
-- Main system contract: `../README.md`
-- Governance docs: `../docs/governance/`
-- Policy-as-code: `../policy/`
-- Contracts: `../contracts/`
-
-> Reminder: In KFM, documentation that changes enforcement is production.
-
-[↑ Back to top](#top)
+_This file is intentionally “boring.” If it’s hard to read, it will not be followed._
