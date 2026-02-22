@@ -1,45 +1,65 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/0e0c7f0b-57c5-4d8e-9b26-1d0b0e6a6a2f
+doc_id: kfm://doc/7ef3dbf9-1c55-4d62-9d72-6295b00a8b3a
 title: KFM Governed API
 type: standard
-version: vNext
+version: v1
 status: draft
-owners: See CODEOWNERS (API + Policy + Stewardship)
+owners: API + Policy + Stewardship
 created: 2026-02-22
 updated: 2026-02-22
-policy_label: restricted
+policy_label: public
 related:
   - apps/api/
+  - packages/policy/
+  - packages/evidence/
+  - packages/catalog/
 tags:
   - kfm
   - api
   - governance
-  - contracts
-  - policy
+  - openapi
 notes:
-  - Contract-first enforcement boundary for KFM runtime surfaces (Map, Story, Focus).
+  - Contract-first enforcement boundary for runtime surfaces (Map, Story, Focus).
+  - This README contains normative requirements (MUST/SHOULD) for governed runtime access.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Governed API
 
-Contract-first enforcement boundary for KFM runtime surfaces (Map, Story, Focus).
+Contract-first enforcement boundary for KFM runtime surfaces: Map, Story, Focus.
 
-**Status:** vNext • Draft  
-**Owners:** See `CODEOWNERS` (API + Policy + Stewardship)  
-**Principles:** `Map-first` • `Time-aware` • `Governed` • `Evidence-first` • `Cite-or-abstain`
+**Status:** vNext Draft  
+**Owners:** See `CODEOWNERS` (API + Policy + Stewardship)
 
-**Quick navigation:**  
-[What this service is](#what-this-service-is) • [Repo layout](#where-it-sits-in-the-repo) • [Architecture](#architecture) • [V1 endpoint surface](#v1-endpoint-surface) • [Contracts](#contracts) • [Policy enforcement](#policy-enforcement) • [Evidence resolution](#evidence-resolution) • [Audit and observability](#audit-and-observability) • [Compatibility and versioning](#compatibility-and-versioning) • [Testing and CI gates](#testing-and-ci-gates) • [Definition of done](#definition-of-done)
+![Status](https://img.shields.io/badge/status-vNext%20draft-yellow)
+![API](https://img.shields.io/badge/api-v1-blue)
+![Governance](https://img.shields.io/badge/governed-yes-blue)
+![Trust membrane](https://img.shields.io/badge/trust%20membrane-enforced-blue)
+![Evidence](https://img.shields.io/badge/evidence-first-blue)
+![Focus](https://img.shields.io/badge/focus-cite--or--abstain-blue)
+![Time](https://img.shields.io/badge/time-aware-blue)
+![Default deny](https://img.shields.io/badge/policy-default%20deny-important)
 
----
+<!--
+Optional repo-integrated badges (REPLACE placeholders):
+- CI:        https://github.com/<ORG>/<REPO>/actions/workflows/ci.yml/badge.svg
+- Coverage:  https://img.shields.io/codecov/c/github/<ORG>/<REPO>
+- License:   https://img.shields.io/github/license/<ORG>/<REPO>
+- OpenAPI:   https://img.shields.io/badge/openapi-%3Cversion%3E-informational
+-->
 
-## Normative language
-
-This document uses **RFC 2119-style** keywords:
-
-- **MUST / MUST NOT**: non-negotiable invariants for correctness, safety, and governance.
-- **SHOULD / SHOULD NOT**: strong defaults; deviations require an explicit rationale.
-- **MAY**: optional, context-dependent.
+- Jump to:
+  - [What this service is](#what-this-service-is)
+  - [Where it sits in the repo](#where-it-sits-in-the-repo)
+  - [Architecture](#architecture)
+  - [API conventions](#api-conventions)
+  - [V1 endpoint surface](#v1-endpoint-surface)
+  - [Contracts](#contracts)
+  - [Policy enforcement](#policy-enforcement)
+  - [Evidence resolution](#evidence-resolution)
+  - [Audit and observability](#audit-and-observability)
+  - [Compatibility and versioning](#compatibility-and-versioning)
+  - [Testing and CI gates](#testing-and-ci-gates)
+  - [Definition of done](#definition-of-done)
 
 ---
 
@@ -47,21 +67,18 @@ This document uses **RFC 2119-style** keywords:
 
 This API is the **trust membrane** for Kansas Frontier Matrix.
 
-Clients (UI, scripts, tools) **MUST NOT** talk directly to storage or databases. All runtime access flows through this service so that:
+Clients (UI, scripts, tools) **never** talk directly to storage or databases. All runtime access flows through this service so that:
 
-- **Policy is enforced server-side** (allow/deny + obligations like redaction/generalization).
-- **Evidence is resolvable** (everything returned can be traced to EvidenceRefs and bundles).
+- **Policy is enforced server-side** (allow/deny + obligations such as redaction/generalization).
+- **Evidence is resolvable** (everything returned can be traced to `EvidenceRef` and `EvidenceBundle` objects).
 - **Versioning is explicit** (`dataset_version_id` and artifact digests appear consistently).
 - **Auditability is guaranteed** (governed operations emit audit records and return `audit_ref`).
-
-> **WARNING**
-> If any runtime surface bypasses this API, governance guarantees are void.
 
 ### What this service is not
 
 - Not a general “open query” gateway to underlying databases.
 - Not an ungoverned chatbot (Focus Mode is governed and must cite-or-abstain).
-- Not a place to “patch” data: runtime surfaces only serve **promoted** dataset versions.
+- Not a place to “patch” data: published runtime surfaces only serve **promoted** dataset versions.
 
 ---
 
@@ -114,20 +131,57 @@ flowchart LR
 
 ### Clean layering rule
 
-- Domain logic **MUST NOT** reach into infrastructure directly; it operates through interfaces/contracts.
-- Runtime access **MUST** be governed at the API boundary.
+Domain logic must not reach into infrastructure directly; it operates through interfaces/contracts. Keep runtime access governed at the API boundary.
 
-### Truth path lifecycle
+---
 
-Runtime surfaces **MUST** only serve datasets that have cleared the “truth path” lifecycle.
+## API conventions
 
-```mermaid
-flowchart LR
-  RAW[RAW] --> WQ[WORK / QUARANTINE]
-  WQ --> PROC[PROCESSED]
-  PROC --> CATS[CATALOG TRIPLET]
-  CATS --> PUB[PUBLISHED]
+This section standardizes the “shape” of the API so clients and tests can be consistent.
+
+### Transport
+
+- **Base path:** `/api/v1`
+- **Content types:**
+  - Requests: `application/json` (unless explicitly documented otherwise)
+  - Responses: `application/json` (except tiles/assets)
+- **Time format:** ISO 8601
+  - Use explicit offsets or `Z`
+  - Never interpret ambiguous local time without a timezone
+
+### Standard headers
+
+These headers SHOULD be supported across endpoints (especially governed ones):
+
+| Header | Required | Purpose |
+|---|---:|---|
+| `X-Request-Id` | SHOULD | Idempotency + trace correlation across logs |
+| `X-KFM-Timezone` | SHOULD | Client timezone hint for UI rendering; never changes event-time semantics |
+| `X-KFM-Purpose` | MAY | Declared purpose for audit (e.g., `research`, `public_story`, `internal_review`) |
+
+**Security note:** header presence MUST NOT be used to bypass policy.
+
+### Pagination
+
+Where list responses can be large:
+
+- MUST support `limit` with a server-enforced maximum.
+- SHOULD support cursor-based pagination (`cursor` token) over offset pagination to avoid inconsistencies.
+
+Recommended pattern:
+
+```json
+{
+  "data": [ { "…": "…" } ],
+  "page": { "limit": 50, "next_cursor": "opaque…" },
+  "meta": { "policy_label": "public", "audit_ref": "kfm://audit/entry/<id>" }
+}
 ```
+
+### Caching
+
+- Public resources MAY use caching headers.
+- Restricted / role-variant resources SHOULD be `Cache-Control: private` and must avoid shared-cache leakage.
 
 ---
 
@@ -135,35 +189,48 @@ flowchart LR
 
 This README documents the **minimal buildable v1 surface**.
 
-All endpoints below are **governed**: policy filters and obligations are applied **before** returning data, links, or assets.
+Endpoints are **governed**: policy filter applied before returning data or links.
 
-| Method | Path | Purpose | Governance notes |
+| Method | Path | Purpose | Notes |
 |---|---|---|---|
-| GET | `/api/v1/datasets` | Dataset discovery + versions | DCAT-backed; supports search/facets; server-side policy filtering |
+| GET | `/api/v1/datasets` | Dataset discovery + versions | DCAT-backed, supports search/facets, server-side policy filtering |
 | GET | `/api/v1/stac/collections` | STAC collections | Policy filter applied before returning assets |
 | GET | `/api/v1/stac/items` | STAC item search | Query by bbox/time/collection; policy filter before returning assets |
-| POST | `/api/v1/evidence/resolve` | Resolve EvidenceRefs → EvidenceBundles | **Fail closed** if unresolvable/unauthorized |
+| POST | `/api/v1/evidence/resolve` | Resolve EvidenceRefs → EvidenceBundles | Fail closed if unresolvable/unauthorized |
 | GET, POST | `/api/v1/story` | Story nodes list/create | Versioned; publishing requires resolvable citations + review state |
 | GET, PUT | `/api/v1/story/{id}` | Read/update story node | Versioned; policy label and review workflow apply |
-| POST | `/api/v1/focus/ask` | Focus Mode Q&A | Cite-or-abstain; always returns `audit_ref` |
+| POST | `/api/v1/focus/ask` | Focus Mode Q&A | Cite-or-abstain; returns `audit_ref` |
 | GET | `/api/v1/lineage/status` | Pipeline freshness/health | Drives UI trust badges |
 | GET | `/api/v1/lineage/stream` | Lineage stream | Optional SSE/WebSocket feed for live updates |
 | GET | `/api/v1/tiles/{layer}/{z}/{x}/{y}.pbf` | Vector tiles | Only if tiles are served dynamically |
-| GET | `/assets/pmtiles/{dataset_version_id}/{layer}.pmtiles` | PMTiles bundles | Only for policy-safe layers (often public-only) |
+| GET | `/assets/pmtiles/{dataset_version_id}/{layer}.pmtiles` | PMTiles bundles | Only for policy-safe layers (often public only) |
 
 ---
 
 ## Contracts
 
-API contracts are **production artifacts**. Contract changes **MUST** be versioned and tested.
+Treat API contracts as **production artifacts**. Contract changes must be versioned and tested.
 
-### Response envelope
+### Contract sources of truth
 
-For governed surfaces, responses **SHOULD** use a consistent envelope:
+At minimum, the repo SHOULD include:
 
-- `data`: payload
-- `meta`: governance-critical metadata
-- `links`: policy-safe links (optional; only if authorized)
+- OpenAPI: `apps/api/openapi/openapi.yaml` (or equivalent)
+- JSON Schemas: `packages/shared/schemas/`
+- Fixtures: `apps/api/test/fixtures/`
+
+If these paths differ, document the actual locations here.
+
+### Required response fields
+
+Every response MUST include, when applicable:
+
+- `dataset_version_id`
+- artifact digests (when applicable)
+- a **public-safe** `policy_label`
+- `audit_ref` for governed operations (Focus, Story publish, Evidence resolution)
+
+A recommended pattern is to standardize these into a `meta` block:
 
 ```json
 {
@@ -173,45 +240,31 @@ For governed surfaces, responses **SHOULD** use a consistent envelope:
     "artifact_digests": { "primary": "sha256:…" },
     "policy_label": "public",
     "audit_ref": "kfm://audit/entry/<id>"
-  },
-  "links": []
+  }
 }
 ```
 
-### Required metadata fields
-
-Every response **MUST** include, when applicable:
-
-- `dataset_version_id` (if the response depends on a dataset version)
-- artifact digests (when returning or linking artifacts)
-- a public-safe `policy_label`
-- `audit_ref` for governed operations (Focus, Story publish, Evidence resolution)
-
-> **NOTE**
-> If a response is truly not dataset-backed (e.g., `/lineage/status`), omit `dataset_version_id`, but still include a policy-safe `policy_label` and `audit_ref` if it is governed.
-
 ### Error model
 
-Errors **MUST** use a stable error model:
+Errors MUST use a stable error model:
 
 - `error_code`
 - `message` (policy-safe)
 - `audit_ref`
-- optional remediation hints (policy-safe)
+- optional remediation hints
 
-Avoid leaking restricted existence through error differences. Align 403/404 behavior with policy posture.
+Avoid leaking restricted existence through error differences. Align 403/404 behavior with policy.
 
 ```json
 {
   "error_code": "POLICY_DENY",
   "message": "Not available to your role.",
   "audit_ref": "kfm://audit/entry/<id>",
-  "remediation": [
-    "Try a broader time range",
-    "Use a public layer or generalized view"
-  ]
+  "remediation": ["Try a broader time range", "Use a public layer or generalized view"]
 }
 ```
+
+**Non-leak rule:** for restricted objects, behavior SHOULD be indistinguishable between “does not exist” and “exists but denied” unless policy explicitly allows existence disclosure.
 
 ---
 
@@ -221,16 +274,20 @@ Avoid leaking restricted existence through error differences. Align 403/404 beha
 
 - **Default deny** for restricted/sensitive-location content.
 - If any public representation is allowed, publish a separate generalized dataset version.
-- Story Nodes and Focus outputs **MUST NOT** include precise coordinates unless policy explicitly allows.
-- Redaction and generalization are first-class transforms **recorded in provenance**.
+- Do not embed precise coordinates in Story Nodes or Focus outputs unless policy explicitly allows.
+- Redaction and generalization are first-class transforms recorded in provenance.
 
-### Obligation handling
+### Policy labels
 
-Policy decisions may carry **obligations** (e.g., redact fields, generalize geometry, degrade precision, remove links).
+KFM uses a small, stable set of labels. At minimum:
 
-- The API **MUST** apply obligations server-side.
-- The API **MUST** record obligations in audit/provenance where applicable.
-- The UI **MAY** display policy badges/notices but **MUST NOT** be the decision-maker.
+| Label | Meaning | Default handling |
+|---|---|---|
+| `public` | Safe for broad distribution | Cacheable where appropriate |
+| `restricted` | Requires role and obligations | No shared caching; redact/aggregate as required |
+| `sensitive` | High-risk / special handling | Default deny unless explicitly allowed |
+
+If your policy taxonomy is richer, document the complete matrix in `packages/policy/` and link it here.
 
 ### Policy-as-code integration
 
@@ -242,14 +299,6 @@ Recommended shape:
   - Runtime API (checks before serving data)
   - Evidence resolver (checks before resolving bundles)
   - UI shows badges/notices but does not decide policy
-
-### Non-leak behavior
-
-The API **MUST** prevent “existence leakage” for restricted content:
-
-- Prefer consistent error shapes and timing for deny vs not-found when policy requires.
-- Avoid error messages that imply restricted resources exist.
-- Avoid differential response payload sizes that reveal restricted counts.
 
 ---
 
@@ -306,26 +355,28 @@ Example (illustrative):
 }
 ```
 
-Evidence resolution **MUST fail closed** if the reference is unresolvable or unauthorized.
+Fail closed if the reference is unresolvable or unauthorized.
 
 ---
 
 ## Data access rules
 
-Published runtime surfaces (API + UI) **MAY ONLY** serve **promoted** dataset versions that have:
+Published runtime surfaces (API + UI) may only serve **promoted** dataset versions that have:
 
 - processed artifacts
 - validated catalogs
 - run receipts
 - policy label assignment
 
-The API **MUST NOT** serve RAW/WORK/QUARANTINE artifacts directly unless explicitly required and governed.
+The API should never serve RAW/WORK/QUARANTINE artifacts directly unless explicitly required and governed.
 
 ---
 
 ## Audit and observability
 
-Every governed operation **MUST** emit an audit record containing:
+### Audit
+
+Every governed operation MUST emit an audit record containing:
 
 - who (principal, role)
 - what (endpoint, parameters)
@@ -335,6 +386,17 @@ Every governed operation **MUST** emit an audit record containing:
 - policy decisions (allow/deny, obligations, reason codes)
 
 Audit logs are sensitive; apply redaction and retention policy.
+
+### Observability
+
+Minimum runtime signals:
+
+- structured logs with `request_id`, `audit_ref`, `policy_label`, `dataset_version_id` (when applicable)
+- metrics for:
+  - request volume and latency by endpoint
+  - policy decisions by label/decision
+  - evidence resolution success/fail-closed rates
+- traces (recommended) linking `X-Request-Id` to downstream calls
 
 ---
 
@@ -358,6 +420,16 @@ Minimum expectations for merge safety:
   - evidence resolution fail-closed
   - `audit_ref` emission
 
+Recommended gates matrix:
+
+| Gate | Blocks merge | Evidence |
+|---|---:|---|
+| OpenAPI lint + diff check | ✅ | schema is valid; breaking changes flagged |
+| Policy fixture tests | ✅ | deny-by-default and obligations tests pass |
+| Integration smoke tests | ✅ | critical endpoints are exercised |
+| Dependency audit | ✅ | known critical vulnerabilities blocked |
+| Documentation link check | SHOULD | prevents broken internal refs |
+
 ---
 
 ## Definition of done
@@ -366,34 +438,11 @@ A change to this API is “done” only when:
 
 - [ ] Contract updated (OpenAPI + schemas) and validated in CI
 - [ ] New/changed endpoints apply policy server-side
-- [ ] Responses include required `meta` fields (policy label, dataset_version_id when applicable, audit_ref when required)
+- [ ] Responses include required `meta` fields (`policy_label`, `dataset_version_id` when applicable, `audit_ref` when required)
 - [ ] Error behavior does not leak restricted existence (403/404 aligned)
-- [ ] EvidenceRefs used by Story/Focus resolve or fail closed with audit_ref
+- [ ] EvidenceRefs used by Story/Focus resolve or fail closed with `audit_ref`
 - [ ] Governed operations emit audit records with inputs/outputs by digest
 - [ ] Any redaction/generalization is recorded as provenance and surfaced in evidence
-
----
-
-<details>
-<summary><strong>Appendix: Conventions (recommended)</strong></summary>
-
-### Identifiers
-
-- Prefer deterministic, namespaced identifiers (e.g., `kfm://dataset/...`, `kfm://audit/...`).
-- Prefer content-addressed integrity for artifacts (e.g., `sha256:<digest>`).
-
-### Policy labels
-
-Keep policy labels **stable and enumerable**, and treat them as part of governance:
-
-- `public`
-- `restricted`
-- `sensitive`
-- `internal`
-
-> Adjust to your policy vocabulary; do not invent “one-off” labels per dataset.
-
-</details>
 
 ---
 
