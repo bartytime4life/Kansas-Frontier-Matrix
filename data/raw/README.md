@@ -1,138 +1,237 @@
-# `data/raw/`
-Immutable acquisition zone for KFM (original artifacts + manifest + checksums).
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/9a5e3b0b-1e65-4a5f-8f7c-3e4c0a8d0d5b
+title: data/raw — Immutable acquisition zone
+type: standard
+version: v1
+status: draft
+owners: TBD
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - kfm://concept/truth-path
+  - kfm://policy/promotion-contract
+tags:
+  - kfm
+  - data
+  - raw
+notes:
+  - Defines the repository contract for RAW (immutable acquisition).
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Canonical • Append-only • No edits  
-**Owners:** Data Stewards (policy/rights) + Pipeline Operators (ingest runs)  
-**Badges:** `zone:raw` `append-only` `evidence` `checksums-required` `license-snapshot-required`
+# data/raw — Immutable acquisition zone
 
-**Quick nav**
+Source snapshots and acquisition manifests. **Append-only. No transforms.**
+
+![status](https://img.shields.io/badge/status-draft-orange)
+![zone](https://img.shields.io/badge/zone-RAW-blue)
+![immutability](https://img.shields.io/badge/immutability-append--only-important)
+![governance](https://img.shields.io/badge/governance-promotion%20contract-lightgrey)
+
+## Navigation
+
 - [Purpose](#purpose)
-- [Non-negotiable rules](#non-negotiable-rules)
+- [Scope](#scope)
+- [Truth path context](#truth-path-context)
+- [Rules](#rules)
 - [What belongs here](#what-belongs-here)
 - [What does not belong here](#what-does-not-belong-here)
-- [Recommended layout](#recommended-layout)
-- [Acquisition manifest](#acquisition-manifest)
+- [Directory layout](#directory-layout)
+- [Required records](#required-records)
+- [Acquisition manifest template](#acquisition-manifest-template)
 - [Checksums](#checksums)
-- [Governance and safety](#governance-and-safety)
-- [Promotion and next zones](#promotion-and-next-zones)
-- [Checklist](#checklist)
+- [License and terms snapshot](#license-and-terms-snapshot)
+- [Add a new acquisition](#add-a-new-acquisition)
+- [Governance and sensitivity](#governance-and-sensitivity)
+- [Promotion out of RAW](#promotion-out-of-raw)
+- [Definition of done](#definition-of-done)
 
 ---
 
 ## Purpose
 
-`data/raw/` is the **RAW zone (immutable acquisition)** in the KFM “truth path” lifecycle: upstream sources → RAW → WORK/QUARANTINE → PROCESSED → catalogs/provenance → governed surfaces. [oai_citation:1‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2) [oai_citation:2‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+The `data/raw/` area is the **immutable acquisition zone** for Kansas Frontier Matrix.
 
-RAW exists to preserve **verbatim evidence** so all downstream outputs (maps, stories, Focus Mode answers, exports) can be traced back to what was actually acquired.
+It exists to:
+
+- Preserve **exact upstream artifacts** (files, API responses, scrape snapshots).
+- Provide **reproducible inputs** for pipelines.
+- Make provenance and governance enforceable by requiring:
+  - an acquisition manifest,
+  - per-artifact checksums,
+  - a license/terms snapshot,
+  - minimal acquisition metadata.
+
+---
+
+## Scope
+
+This README defines **what RAW is** and **how to add to it safely**.
+
+It does not define:
+
+- Transformation logic (belongs in WORK / QUARANTINE pipelines).
+- Published formats (belongs in PROCESSED).
+- Runtime access, policy enforcement details, or API routes (belongs at the governed boundary).
+
+---
+
+## Truth path context
+
+RAW is one stage in KFM’s end-to-end “truth path”.
 
 ```mermaid
 flowchart LR
-  U[Upstream sources] --> R[data/raw]
-  R --> W[data/work or quarantine]
-  W --> P[data/processed]
-  P --> T[Catalog triplet and provenance]
-  T --> X[Indexes and tiles]
-  X --> A[Governed API]
-  A --> UI[Map, Story, Focus]
+  A[Upstream sources] --> B[RAW]
+  B --> C[WORK]
+  C --> D[QUARANTINE]
+  C --> E[PROCESSED]
+  E --> F[CATALOG]
+  F --> G[Index builders]
+  G --> H[Governed API]
+  H --> I[UI surfaces]
 ```
 
 ---
 
-## Non-negotiable rules
+## Rules
 
-### 1) Append-only, never edit
-- RAW is **append-only**.
-- You **do not edit** raw artifacts in-place; you **supersede** them by adding a new acquisition (new snapshot + new manifest). [oai_citation:3‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+**1) RAW is append-only**  
+Do not edit or rewrite RAW artifacts in place. If something changes upstream, **create a new acquisition** (new folder) and keep the prior snapshot intact.
 
-### 2) No direct client access
-RAW is a canonical store, but **clients must never access storage directly**. All access must flow through governed interfaces that apply policy, redaction obligations, and logging (the “trust membrane”). [oai_citation:4‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+**2) No transforms in RAW**  
+RAW is for original materials only. Any parsing, normalization, OCR, reprojection, deduplication, or redaction work happens later.
 
-### 3) Evidence needs checksums and terms captured at ingest
-Every acquisition must include:
-- **checksums for every raw artifact**
-- a **license/terms snapshot** (or a clear note that reuse is restricted/unknown)
-- minimal “what/where/when” metadata for repeatability [oai_citation:5‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+**3) Every artifact has a checksum**  
+If an artifact is in RAW, it must be covered by `checksums.sha256` (or equivalent).
+
+**4) Every acquisition has minimal metadata**  
+At minimum: when fetched, where from, and the terms under which it was fetched.
+
+> **WARNING**
+> If you cannot capture license/terms or the source is unstable/unreproducible, treat the dataset as **not promotable** until resolved.
 
 ---
 
 ## What belongs here
 
-RAW contains (minimum):
-- **Acquisition manifest**: what was fetched, from where, and under what terms
-- **Raw artifacts**: original files, API responses, scrape snapshots
-- **Checksums** for every raw artifact
-- **Minimal metadata**: time fetched, source, license/terms snapshot [oai_citation:6‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+RAW should contain:
 
-Practical examples include ZIPs, PDFs, shapefiles, CSVs, and captured responses; organization may be by **source** or **topic** (e.g., `data/raw/usgs_water/`, `data/raw/historical_maps/`). [oai_citation:7‡Kansas Frontier Matrix (KFM) – Comprehensive Technical Blueprint.pdf](sediment://file_000000006dbc71f89a5094ce310a452d)
+- **Acquisition manifest**  
+  What was fetched, from where, when, and under what terms.
+
+- **Raw artifacts**  
+  Original files, API payloads, scrape snapshots, exports, emails-as-source (if governed), etc.
+
+- **Checksums**  
+  A digest for every raw artifact.
+
+- **Minimal metadata**  
+  Time fetched, source identity, and license/terms snapshot.
 
 ---
 
 ## What does not belong here
 
-- Any “cleaned”, “normalized”, “joined”, “geocoded”, “tiling”, “reprojected”, “generalized”, or otherwise **transformed** outputs  
-  → those belong in `data/work/` or `data/processed/`.
-- Any hand-edited values in raw artifacts (even “small fixes”)  
-  → if a correction is needed, add a new acquisition + document it in the manifest.
-- Secrets, credentials, private keys, or access tokens (ever).
+Do not place any of the following in RAW:
+
+- Cleaned or normalized copies of source data
+- Converted formats (CSV→Parquet, GeoJSON→GeoParquet, SHP→GeoPackage, etc.)
+- Derived spatial products (tiles, COGs, PMTiles)
+- Feature engineering outputs, indexes, caches
+- Redacted or generalized public representations
+- Anything produced by a pipeline “step” after acquisition
+
+Those belong in WORK / QUARANTINE or PROCESSED.
 
 ---
 
-## Recommended layout
+## Directory layout
 
-RAW may be organized by **source** or **domain**, but it should always be obvious:
-1) what the source is
-2) which acquisition (snapshot) you are looking at
-3) where the manifest + checksums are
+KFM commonly uses a domain-first layout such as:
 
-A pragmatic default:
+- `data/<domain>/raw/`
+- `data/<domain>/work/`
+- `data/<domain>/processed/`
 
-```
+If this repository uses a **central** `data/raw/`, organize by domain and dataset.
+
+Recommended structure for this folder:
+
+```text
 data/raw/
-  <source_or_domain>/
-    <acquisition_id>/               # e.g., 2026-02-22T031500Z, or source-release tag
-      manifest.json                 # acquisition manifest (required)
-      artifacts/                    # raw files (verbatim)
-      checksums.sha256              # sha256 per artifact (required)
-      terms/                        # license/terms snapshot (html/pdf/txt) (recommended)
-      notes.md                      # optional: human notes, not a substitute for manifest
+  <domain>/
+    <dataset_slug>/
+      <acquisition_id>/
+        acquisition.manifest.json
+        checksums.sha256
+        license.snapshot.txt
+        artifacts/
+          <original files>
+        notes.md
 ```
 
-> TIP: If you must extract an archive (e.g., unzip shapefiles), keep the **original archive** in `artifacts/` and record the extraction step in the manifest as a “verbatim extract” convenience. The archive remains the primary evidence.
+### Naming rules
+
+- `<domain>`: a stable domain folder name (kebab-case), e.g. `historical`, `hydrology`, `air-quality`
+- `<dataset_slug>`: stable dataset identifier (kebab-case)
+- `<acquisition_id>`: a sortable acquisition identifier:
+  - preferred: `YYYY-MM-DDTHHMMSSZ`
+  - acceptable: `YYYY-MM-DD` when time precision is not available
 
 ---
 
-## Acquisition manifest
+## Required records
 
-The manifest is a **required** RAW artifact.
+Every `<acquisition_id>/` folder must include:
 
-It must answer (minimum):
-- *what was fetched*
-- *from where*
-- *under what terms*
-- *when it was fetched* [oai_citation:8‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+1. `acquisition.manifest.json`  
+2. `checksums.sha256`  
+3. `license.snapshot.txt`  
+4. `artifacts/` directory with the referenced files
 
-### Template (recommended, may evolve)
+Optional but strongly recommended:
+
+- `notes.md` with human context and known issues
+- `robots.txt` or request headers snapshot if scraping was required
+- a `README.md` under dataset folder for dataset-specific runbook
+
+---
+
+## Acquisition manifest template
+
+Use JSON for machine readability and future schema validation.
+
 ```json
 {
-  "source_name": "USGS WaterData NWIS",
-  "source_authority": "USGS",
-  "fetched_at": "2026-02-22T03:15:00Z",
-  "acquisition_id": "2026-02-22T031500Z",
-  "access_method": "bulk|api|scrape|manual",
-  "upstream_refs": [
-    { "type": "url", "value": "…" }
-  ],
-  "license_terms_snapshot": {
-    "captured_at": "2026-02-22T03:15:00Z",
-    "artifact_path": "terms/terms.html",
-    "notes": "…"
+  "kfm_acquisition_manifest_version": "v1",
+  "domain": "<domain>",
+  "dataset_slug": "<dataset_slug>",
+  "acquisition_id": "<YYYY-MM-DDTHHMMSSZ>",
+  "fetched_at": "YYYY-MM-DDTHHMMSSZ",
+  "source": {
+    "name": "<source system or publisher>",
+    "type": "download|api|scrape|manual",
+    "uri": "<source URL or stable identifier>",
+    "retrieval_method": "<tool + parameters summary>"
+  },
+  "terms": {
+    "license": "<spdx or textual>",
+    "rights_holder": "<if known>",
+    "terms_uri": "<terms page URL if applicable>",
+    "snapshot_file": "license.snapshot.txt"
   },
   "artifacts": [
-    { "path": "artifacts/data.zip", "sha256": "…" }
+    {
+      "path": "artifacts/<filename>",
+      "media_type": "<mime type if known>",
+      "sha256": "<hex or sha256:...>",
+      "size_bytes": 0
+    }
   ],
-  "policy": {
-    "policy_label": "public|public_generalized|restricted|restricted_sensitive_location|internal|embargoed|quarantine",
-    "notes": "If restricted, include the reason and any obligations."
+  "notes": {
+    "known_issues": [],
+    "sensitivity_notes": ""
   }
 }
 ```
@@ -141,55 +240,102 @@ It must answer (minimum):
 
 ## Checksums
 
-Every raw artifact must have a checksum recorded in a stable format (default: **sha256**). [oai_citation:9‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+Use `sha256` and store checksums relative to the acquisition directory.
 
-Recommended file format:
-- `checksums.sha256` (one line per file): `<sha256>  <relative_path>`
+Example:
 
----
+```text
+# checksums.sha256
+<sha256-hex>  artifacts/source.csv
+<sha256-hex>  artifacts/source.zip
+<sha256-hex>  license.snapshot.txt
+<sha256-hex>  acquisition.manifest.json
+```
 
-## Governance and safety
+Rules:
 
-### Licensing and rights
-- Capture license/rights signals at ingest; **promotion blocks when license is unknown/forbidden**. [oai_citation:10‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
-- “Online availability does not equal permission to reuse.” Treat rights metadata as a **policy input**, not paperwork.
-
-### Sensitive locations and restricted datasets
-Defaults aligned to KFM posture include:
-- default deny for sensitive-location/restricted datasets
-- if any public representation is allowed, publish a **public_generalized** derivative
-- never leak restricted metadata through error responses
-- treat redaction/generalization as a first-class transform recorded in provenance [oai_citation:11‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
-
-RAW may contain restricted artifacts, but they must be handled as **restricted from the moment of acquisition** (policy label + access controls), and they must **not** be promoted or served without meeting policy + promotion gates.
+- Checksums must match the current file bytes exactly.
+- If any artifact changes, create a new acquisition folder. Do not rewrite past checksums.
 
 ---
 
-## Promotion and next zones
+## License and terms snapshot
 
-From RAW, work proceeds to:
-- `data/work/` for normalization and QA (and `quarantine/` for failures, unclear licensing, sensitivity concerns, etc.)
-- `data/processed/` for publishable artifacts
-- catalogs/provenance outputs (DCAT/STAC/PROV + run receipts) before anything reaches governed runtime surfaces [oai_citation:12‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2) [oai_citation:13‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+`license.snapshot.txt` is a “frozen” copy of the terms that applied at acquisition time.
 
-Promotion is **fail-closed**: a dataset version promotion must be blocked unless required artifacts exist and validate. [oai_citation:14‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)
+Include:
 
----
+- The license or terms text (or an excerpt plus link when copying is not permitted)
+- The terms page URI
+- The date/time captured
+- Any required attribution statements
 
-## Checklist
-
-When adding a new acquisition under `data/raw/`:
-
-- [ ] Store the **original artifacts** exactly as acquired (no edits)
-- [ ] Add an **acquisition manifest** (what/where/when/terms)
-- [ ] Generate and commit **sha256 checksums** for each artifact
-- [ ] Capture a **license/terms snapshot** (or mark for quarantine if unclear)
-- [ ] Assign a **policy label** (public/restricted/etc.); default to restrictive when uncertain
-- [ ] Ensure downstream workflows treat RAW as **read-only**
-- [ ] If the source is sensitive or rights-restricted, document the intended public representation (e.g., public_generalized) before any promotion
+Do not assume that a public URL implies reuse permission.
 
 ---
 
-## Notes
+## Add a new acquisition
 
-- RAW is canonical evidence. If an artifact can be cited by Story Nodes or Focus Mode, it must remain reproducible and traceable through manifests, checksums, and downstream provenance.
+1. Choose domain and dataset slug
+   - Confirm you are not duplicating an existing dataset slug.
+2. Create a new acquisition folder
+   - `data/raw/<domain>/<dataset_slug>/<acquisition_id>/`
+3. Add raw artifacts to `artifacts/`
+   - Keep originals as-is.
+4. Capture license/terms
+   - Write `license.snapshot.txt` with date/time and source URI.
+5. Write `acquisition.manifest.json`
+   - List every artifact and how it was obtained.
+6. Generate `checksums.sha256`
+   - Include the manifest and license snapshot too.
+7. Add minimal human notes
+   - `notes.md` with known issues, coverage, and any sensitivities.
+8. Open a PR
+   - Treat the PR description as part of the audit trail.
+
+---
+
+## Governance and sensitivity
+
+RAW may contain sensitive materials.
+
+Hard rules:
+
+- Do not publish or mirror restricted materials outside governed controls.
+- Do not add secrets or credentials to RAW.
+- If content includes sensitive locations, private individuals, or culturally restricted sites:
+  - mark it for restricted handling in manifest notes,
+  - avoid “easy-to-copy” coordinate lists in human notes,
+  - plan for a generalized/redacted derivative later as a separate promoted dataset version.
+
+---
+
+## Promotion out of RAW
+
+Promotion is governed and fail-closed.
+
+RAW acquisitions move to WORK / QUARANTINE for:
+
+- normalization,
+- QA and validation reports,
+- candidate redactions/generalizations.
+
+Only after passing gates do artifacts become PROCESSED and receive catalog/provenance outputs.
+
+---
+
+## Definition of done
+
+A RAW acquisition is acceptable when:
+
+- [ ] `acquisition.manifest.json` exists and lists all artifacts
+- [ ] `license.snapshot.txt` exists and contains capture date/time + source reference
+- [ ] `checksums.sha256` exists and covers all artifacts + manifest + license snapshot
+- [ ] RAW artifacts are original and unmodified
+- [ ] No derived/processed files are present
+- [ ] Notes identify any sensitivity or licensing uncertainty
+- [ ] The acquisition is append-only and does not overwrite prior acquisitions
+
+---
+
+<sub><a href="#dataraw--immutable-acquisition-zone">Back to top</a></sub>
