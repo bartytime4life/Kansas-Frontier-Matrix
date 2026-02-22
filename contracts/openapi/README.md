@@ -1,25 +1,3 @@
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/9c12cbb8-8d83-4d1a-9e26-8f89a9bf4b25
-title: OpenAPI Contracts (Governed API Boundary)
-type: guide
-version: v1
-status: draft
-owners: API team
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: public
-related:
-  - kfm://doc/<add-related-doc-ids-as-they-exist>
-tags:
-  - kfm
-  - contracts
-  - openapi
-  - governance
-notes:
-  - OpenAPI specs in this folder are treated as production artifacts and must be CI-validated.
-  - No YAML frontmatter; MetaBlock v2 used instead.
-[/KFM_META_BLOCK_V2]
-
 # OpenAPI contracts
 Contract-first REST boundary for KFM’s governed API surfaces (Map • Story • Focus).
 
