@@ -1,13 +1,3 @@
-## SECTION 2 — OUTSIDE-THE-BOX NOTES
-
-- Place this file at: `SECURITY.md` (repo root).  
-- Placeholder handles (`@<SECURITY_TEAM>`, `<SECURITY_EMAIL>`) are intentionally non-committal so you can wire them to your real org/teams without changing semantics.
-- If you want, I can also generate a matching **security issue template** under `.github/ISSUE_TEMPLATE/` that redirects reporters to this policy (without collecting sensitive details).
-- Internal reference that this policy aligns to the project’s “default-deny / fail-closed / cite-or-abstain” posture:  [oai_citation:0‡KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf](sediment://file_00000000510071fda62c8325d7097fa2)  
-- (Tooling/library surfaced)  [oai_citation:1‡Podman in Action - podman-action.pdf](sediment://file_0000000075e871f5ae50b4de5eb1ee59)
-
----
-
 ## SECTION 1 — LICENSE TEXT
 
 ```text
