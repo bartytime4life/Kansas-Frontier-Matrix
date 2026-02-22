@@ -1,88 +1,93 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/8b6f3d7c-2d93-4c0e-9a3e-0b7c7731a4f3
+title: CONTRIBUTING
+type: standard
+version: v1
+status: draft
+owners: KFM Maintainers
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related: []
+tags:
+  - kfm
+  - contributing
+  - governance
+  - map-first
+  - time-aware
+notes:
+  - Contributing guide aligned to KFM invariants (truth path, trust membrane, evidence-first UX, cite-or-abstain).
+[/KFM_META_BLOCK_V2] -->
+
 # Contributing to Kansas Frontier Matrix (KFM)
+_Map-first • Time-aware • Governed • Evidence-first • Cite-or-abstain_
 
-How to contribute **code, data, catalogs, policies, stories, and Focus Mode** changes to KFM while preserving provenance, licensing, sensitivity controls, and reproducibility.
+**Status:** Draft • **Owners:** KFM Maintainers  
+This guide explains how to contribute code, data, documentation, and governance artifacts **safely, reproducibly, and reversibly**.
 
-**Status:** Draft  
-**Owners:** Maintainers (update `CODEOWNERS` / repo settings)  
-🧭 Map-first · ⏱ Time-aware · 🔒 Governed · 🧾 Evidence-first · 📎 Cite-or-abstain
-
-## Quick navigation
-- [Non-negotiables](#non-negotiables)
-- [Truth path and Promotion Contract](#truth-path-and-promotion-contract)
-- [Contribution workflow](#contribution-workflow)
-- [Choose the right lane](#choose-the-right-lane)
-- [Pull request requirements](#pull-request-requirements)
-- [Data and pipeline contributions](#data-and-pipeline-contributions)
-- [Catalog, provenance, and evidence contributions](#catalog-provenance-and-evidence-contributions)
-- [Documentation and Story Node contributions](#documentation-and-story-node-contributions)
-- [Policy contributions](#policy-contributions)
-- [Focus Mode contributions](#focus-mode-contributions)
-- [Security and sensitive data](#security-and-sensitive-data)
-- [Definition of Done](#definition-of-done)
-- [Appendix: templates](#appendix-templates)
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Governance](https://img.shields.io/badge/governance-evidence--first-blue)
+![Safety](https://img.shields.io/badge/default--deny-policy-critical)
+![Architecture](https://img.shields.io/badge/trust--membrane-enforced-informational)
+![Data](https://img.shields.io/badge/truth--path-RAW%E2%86%92WORK%E2%86%92PROCESSED%E2%86%92PUBLISHED-brightgreen)
 
 ---
 
-## Non-negotiables
+## Quick navigation
+- [Code of conduct](#code-of-conduct)
+- [How KFM contributions work](#how-kfm-contributions-work)
+- [Contribution workflow](#contribution-workflow)
+- [What you can contribute](#what-you-can-contribute)
+  - [Docs and narratives](#docs-and-narratives)
+  - [Code](#code)
+  - [Data, datasets, and sources](#data-datasets-and-sources)
+  - [Pipelines and transforms](#pipelines-and-transforms)
+  - [APIs and contracts](#apis-and-contracts)
+  - [UI and UX](#ui-and-ux)
+  - [Governance and policy](#governance-and-policy)
+- [Pull request requirements](#pull-request-requirements)
+- [Security and sensitive information](#security-and-sensitive-information)
+- [Review process](#review-process)
+- [License](#license)
 
-KFM is a **governed system**. If a change bypasses governance, it is treated as a defect—not a feature.
+---
 
-### Trust membrane
-- **Clients MUST NOT access storage/DB directly.** All access flows through governed APIs + policy enforcement.
-- The UI may **display** policy outcomes and notices; it must **not make** policy decisions.
+## Code of conduct
+Be kind, precise, and constructive. Assume good intent, but **prioritize user safety, community constraints, and evidence integrity**.
 
-### Evidence-first + cite-or-abstain
-- If you add or modify a factual claim (docs, Story Nodes, Focus Mode behaviors), it must be backed by **EvidenceRefs** that resolve through the evidence resolver.
-- If citations cannot be verified for the allowed user context, the correct behavior is **reduce scope or abstain**.
-
-### Policy-as-code (fail-closed)
-- Policies are treated as production code: versioned, tested, reviewed, and enforced consistently in CI and runtime.
-- CI policy checks must be **merge-blocking**, and runtime policy checks must be **request-blocking**.
-
-### Licensing and rights
-- Licenses/rights are operational inputs. If rights are unclear, promotion/publishing is blocked.
-- “Metadata-only reference” is acceptable when redistribution is not.
-
-### Sensitive locations and redaction
-- Default to **protecting** sensitive locations and private individuals.
-- Do not publish precise coordinates unless policy explicitly allows; use generalized derivatives when required.
-- Redaction/generalization is a first-class transform and must be recorded in provenance.
-
-### Minimal, reversible increments
-- Prefer additive “glue artifacts” (schemas, validators, registries, contracts, ADRs) over intrusive rewrites.
-- Every change should be testable, reviewable, and reversible (rollback plan when high risk).
+If the repository includes a `CODE_OF_CONDUCT.md`, it takes precedence. Otherwise, these rules apply:
+- No harassment or hate.
+- Respect community/Indigenous constraints and culturally restricted knowledge.
+- Don’t publish sensitive locations, private personal data, or operationally dangerous details.
+- Disagree with ideas, not people.
 
 [Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
 ---
 
-## Truth path and Promotion Contract
+## How KFM contributions work
+KFM is governed by **non-negotiable invariants**. Contributions MUST preserve these:
 
-Data and governed artifacts move through zones (“truth path”). Promotion is blocked unless the Promotion Contract gates pass.
+1. **Truth path lifecycle**  
+   Everything served in runtime surfaces must trace back to versioned sources via the lifecycle: upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG (DCAT/STAC/PROV + run receipts) → projections → governed API → UI surfaces.
 
-~~~mermaid
-flowchart LR
-  RAW[RAW\nappend-only] --> WORK[WORK\nnormalize + QA]
-  WORK --> PROCESSED[PROCESSED\npublishable artifacts]
-  PROCESSED --> CATALOG[CATALOG/TRIPLET\nDCAT + STAC + PROV]
-  CATALOG --> PUBLISHED[PUBLISHED\nAPIs + UI read here]
-  RAW --> QUARANTINE[QUARANTINE\nblocked]
-  WORK --> QUARANTINE
-  QUARANTINE -->|fix issues| WORK
-~~~
+2. **Trust membrane**  
+   External clients never access storage/DB directly. All access flows through **governed APIs** that apply policy, redaction, and logging. Core logic uses repository interfaces—no bypasses.
 
-### Promotion Contract gates (minimum)
-You should expect contributions that affect data publication to satisfy:
+3. **Evidence-first UX**  
+   Every claim/layer/story must open to evidence: dataset version, license/rights, policy label, provenance chain, checksums, artifact links.
 
-- **Gate A — Identity & versioning:** deterministic dataset version IDs; immutable once promoted.
-- **Gate B — Licensing & rights:** license, rights holder, attribution text, and terms snapshot captured.
-- **Gate C — Sensitivity & redaction plan:** policy label assigned; obligations specified and testable.
-- **Gate D — Catalog triplet validation:** DCAT/STAC/PROV exist, validate, cross-link; EvidenceRefs resolve.
-- **Gate E — Run receipts & checksums:** inputs/outputs digested; environment captured; QA recorded.
-- **Gate F — Policy + contract tests:** policy fixtures pass; API/evidence-resolver contract tests pass.
-- **Gate G — Operational readiness (recommended):** SBOM/provenance; perf + a11y smoke tests; monitoring.
+4. **Cite-or-abstain Focus Mode**  
+   If citations cannot be verified and policy-allowed, the system MUST abstain or reduce scope. Citation verification is a hard gate.
 
-If a gate fails, the correct posture is **fail-closed**: keep artifacts in WORK/QUARANTINE and fix the gate failure (no “manual promotion”).
+5. **Canonical vs rebuildable stores**  
+   Canonical: object store + catalogs + provenance.  
+   Rebuildable: DB/search/graph/tiles and other projections.
+
+6. **Deterministic identity and hashing**  
+   Dataset and DatasetVersion identifiers should be stable and reproducible (e.g., canonical JSON hashing) so builds are auditable and caching/signing are reliable.
+
+If you propose a change that affects these invariants, treat it as a **governance change**, include a risk analysis, and expect stricter review.
 
 [Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
@@ -90,356 +95,274 @@ If a gate fails, the correct posture is **fail-closed**: keep artifacts in WORK/
 
 ## Contribution workflow
 
-### High-level flow
-~~~mermaid
+```mermaid
 flowchart TD
-  A[Open Issue or Proposal] --> B[Decide lane + governance impact]
-  B --> C[Branch and implement]
-  C --> D[Add tests + receipts + catalogs as needed]
-  D --> E[Open Pull Request]
-  E --> F[CI gates: schemas + policy + contracts]
-  F --> G[Review: CODEOWNERS + stewards]
+  A[Idea, bug, or dataset candidate] --> B[Open issue or discussion]
+  B --> C[Choose contribution type]
+  C --> D[Design + implement in small PR]
+  D --> E[Tests + evidence + policy checks]
+  E --> F[Open pull request]
+  F --> G[Maintainer review]
   G --> H[Merge]
-  H --> I[Promotion lane: publish governed versions]
-~~~
+  H --> I[Release and deployment gates]
+  H --> J[Data promotion gates if applicable]
+```
 
-### When to open an Issue first
-Open an Issue before a PR if you are proposing any of:
-- New dataset onboarding or a new data source
-- New policy label/obligation or changes to policy semantics
-- New export/download pathway
-- Authn/authz changes
-- Story publishing rules, evidence resolver changes, or Focus Mode behavior changes
-- Any change with likely governance implications (rights, sensitive locations, CARE/consent constraints)
+### Step-by-step (default)
+1. **Open an issue first** for any non-trivial change (new dataset, new pipeline, new API surface, major UI change, policy changes).
+2. **Keep PRs small** and reversible.
+3. **Add tests** and validation artifacts appropriate to the change type.
+4. **Document** the change and its governance implications (license, sensitivity, provenance, auditability).
+5. **Fail closed**: if licensing or sensitivity is unclear, do not “ship anyway.”
 
 [Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
 ---
 
-## Choose the right lane
+## What you can contribute
 
-This project may use a repository layout similar to the recommended reference layout. If paths differ, follow the actual repo tree.
+> **Important:** Do not guess the repository layout. If you need to reference paths, include them in the PR by adding/adjusting a lightweight “registry” or README near the changed area.
 
-| Lane | Typical artifacts | Common gotchas |
-|---|---|---|
-| Data onboarding | dataset spec, terms snapshot, sensitivity rubric, validation rules | rights ambiguity; missing terms snapshot |
-| Pipelines | transforms, container digests, run receipts, QA reports | non-deterministic outputs; missing digests |
-| Catalogs | DCAT/STAC/PROV profiles + validators | broken cross-links; incomplete required fields |
-| Evidence resolver | EvidenceRef contracts, bundles, policy filtering | leaking restricted metadata; unverifiable citations |
-| Stories | Story Node markdown + sidecar map state + citations | missing time window; citations not resolvable |
-| Policy | OPA/Rego rules + fixtures + tests | “allow by default”; missing tests |
-| UI | map layers config, policy badges/notices, receipt viewer | UI making policy decisions; exposing restricted hints |
-| Focus Mode | prompt/versioned configs, evaluation harness, run receipts | citations not verified; prompt injection exposure |
+### Docs and narratives
+Contributions include:
+- Developer docs, runbooks, architecture notes
+- Story Nodes / narrative content
+- Glossary, controlled vocabulary proposals
+- Governance documentation updates
+
+**Doc requirements**
+- Use the **KFM MetaBlock v2** header (no YAML frontmatter).
+- Separate **Confirmed** facts from **Proposed** ideas.
+- For claims: cite sources or abstain; avoid “it seems” statements without evidence.
+
+**Suggested doc skeleton**
+```markdown
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<uuid>
+title: <Title>
+type: standard
+version: v1
+status: draft
+owners: <team>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public|restricted|...
+related: []
+tags:
+  - kfm
+notes:
+  - <short>
+[/KFM_META_BLOCK_V2] -->
+```
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+
+---
+
+### Code
+Code contributions must preserve:
+- **Layering:** Domain → Use cases → Interfaces (contracts/policy/adapters) → Infrastructure
+- **Trust membrane:** no direct client-to-DB paths; no “shortcut” reads bypassing policy
+- **Auditability:** key actions emit receipts/logs where required
+
+**Minimum expectations**
+- A clear PR description: what, why, risk, rollback.
+- Tests for changed behavior.
+- No breaking API/contract changes without a migration plan.
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+
+---
+
+### Data, datasets, and sources
+Data contributions are first-class and governed.
+
+#### Before proposing a dataset
+You MUST provide (or be prepared to add) the minimum onboarding metadata:
+- Source and method of acquisition
+- License/terms snapshot (and attribution requirements)
+- Sensitivity classification (policy label) and redaction/generalization plan if needed
+- Spatial/temporal extent and intended map/story use
+- Schema + sample + QA rules
+- Provenance plan (inputs → transforms → outputs)
+- Checksums strategy (what is hashed, when, and how)
+
+#### Truth path zones (required posture)
+- **RAW:** immutable acquisition (manifest, artifacts, checksums, terms snapshot)
+- **WORK / QUARANTINE:** normalization, QA reports, candidate redactions; quarantine blocks promotion
+- **PROCESSED:** publishable artifacts + checksums + derived runtime metadata
+- **CATALOG/TRIPLET:** DCAT + STAC + PROV + run receipts (validated & cross-linked)
+- **PUBLISHED:** runtime surfaces serve only promoted dataset versions
+
+#### Promotion Contract mindset (fail closed)
+If licensing is unclear or sensitivity is unresolved, the dataset stays in **QUARANTINE** until addressed.
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+
+---
+
+### Pipelines and transforms
+Pipeline contributions MUST be reproducible and produce an audit trail.
+
+Include:
+- Pipeline definition/config (inputs, outputs, parameters)
+- Validation gates (schema/spatial/temporal checks)
+- Checksums for input/output artifacts
+- A **run receipt** format (who/what/when/why + inputs/outputs + environment digest)
+- Re-run instructions (how to reproduce the same outputs)
+
+If a pipeline changes outputs, you MUST treat it as a new dataset version (or new artifact version) and document migration/compatibility.
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+
+---
+
+### APIs and contracts
+APIs are governed surfaces. Contributions MUST include:
+- A contract (OpenAPI/GraphQL schema) update when behavior changes
+- Clear auth/policy enforcement expectations (default-deny when uncertain)
+- Error model changes documented
+- Logging/audit expectations
+
+**No silent breaking changes.** If you deprecate, document the timeline and provide compatibility shims when feasible.
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+
+---
+
+### UI and UX
+KFM UX is evidence-first. UI contributions MUST:
+- Preserve the ability to open any layer/claim into its evidence
+- Respect policy labels and redaction obligations
+- Maintain accessibility basics (keyboard navigation, focus states, readable labels)
+- Remain time-aware (avoid presenting time-dependent claims without explicit time context)
+
+If UI changes affect “abstention” behavior, ensure abstention is clear:
+- What is missing (policy-safe)
+- What is allowed
+- How to request access (steward workflow)
+- How to reference an audit/run id when available
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+
+---
+
+### Governance and policy
+Policy contributions MUST:
+- Default to **deny** when access/sensitivity is unclear
+- Include policy tests (fixtures-driven)
+- Document redaction/generalization obligations
+- Define steward escalation paths where appropriate
+
+If the repo includes OPA/Rego policy bundles, add tests alongside rule changes.
+
+[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
 ---
 
 ## Pull request requirements
 
-### PR basics
-- Keep PRs small and focused (one lane / one concern).
-- Include a clear “why” and describe governance impact.
-- Update docs/contracts/tests in the same PR when behavior changes.
+### Pull request template (copy/paste)
+<details>
+<summary><strong>PR description template</strong></summary>
 
-### PR checklist (copy/paste)
-- [ ] Scope is minimal and reversible; no unrelated refactors.
-- [ ] Tests added/updated (unit/integration/e2e as applicable).
-- [ ] Contracts/schemas updated (if any structured data shape changed).
-- [ ] Policy changes include fixtures + tests and are reviewed by owners.
-- [ ] If data/pipelines changed: run receipts included, digests recorded, QA results attached.
-- [ ] If catalogs changed: DCAT/STAC/PROV validate and cross-links resolve.
-- [ ] If Story Node changed: sidecar map state updated; all citations resolve.
-- [ ] If Focus Mode changed: evaluation harness updated and passing; prompt/version recorded.
-- [ ] Rights/licensing implications documented; attribution text included where relevant.
-- [ ] Sensitive locations/PII reviewed; outputs generalized/redacted if required.
+```markdown
+## What
+- 
 
-### Commit hygiene (recommended)
-- Use descriptive commit messages (e.g., `policy: default deny for restricted exports`).
-- Avoid committing secrets, private keys, tokens, or restricted datasets.
+## Why
+- 
 
-[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+## Scope
+- In-scope:
+- Out-of-scope:
 
----
+## Evidence & Governance
+- License/rights impact:
+- Sensitivity/policy impact:
+- Provenance/run receipts impacted:
 
-## Data and pipeline contributions
+## Tests
+- Unit:
+- Integration/contract:
+- Policy/fixtures:
 
-If you add or update a dataset, you typically need all of:
-1. **Dataset onboarding spec** (canonical input for deterministic versioning)
-2. **Terms snapshot** (license/terms captured at retrieval time)
-3. **Sensitivity assessment** + policy label intent + obligations
-4. **Transform(s)** with digest-pinned container images
-5. **Validation checks** (schema + domain checks)
-6. **Run receipt(s)** for the run(s) producing artifacts
-7. **Promotion artifacts** (manifests, catalogs, provenance)
+## Risks & Rollback
+- Risk:
+- Rollback plan:
+```
+</details>
 
-### Key rules
-- Do not modify promoted artifacts in place; create a new version with new digests.
-- Prefer content-addressed artifacts by digest.
-- Never embed credentials in dataset specs.
+### Required checklist (all PRs)
+- [ ] PR is small and focused (or split into logical commits/PRs)
+- [ ] Change is reversible (rollback described)
+- [ ] Tests updated/added (or explicit rationale why not)
+- [ ] Docs updated (where behavior or process changes)
+- [ ] No new sensitive data is exposed (especially exact coordinates for restricted sites)
+- [ ] Any new/changed public claim is evidence-backed (or removed/rewritten to abstain)
 
-[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
+### Additional checklist (data/pipeline PRs)
+- [ ] Acquisition manifest and terms snapshot included/updated
+- [ ] Checksums recorded for raw and processed artifacts
+- [ ] QA report(s) included (schema/spatial/temporal/completeness as applicable)
+- [ ] Policy label assigned; redaction/generalization plan documented if needed
+- [ ] Catalog triplet updated/validated (DCAT/STAC/PROV where applicable)
+- [ ] Run receipts created for producing runs
 
----
-
-## Catalog, provenance, and evidence contributions
-
-KFM treats catalogs and provenance as **contract surfaces**:
-- **DCAT:** dataset identity, publisher, license, distributions
-- **STAC:** assets, spatiotemporal extents, file locations
-- **PROV:** lineage: inputs, tools, parameters, agents
-
-### Minimum CI expectations (common)
-- JSON schema validation for DCAT/STAC/PROV profiles
-- Link checking: cross-links exist and resolve
-- Evidence resolver contract tests:
-  - public evidence resolves to allowed bundles
-  - restricted evidence denies without leaking metadata
-- spec_hash stability / deterministic output tests
-
-If your change affects evidence resolution, add or update contract tests accordingly.
+### Additional checklist (API PRs)
+- [ ] Contract updated (OpenAPI/GraphQL) and validated
+- [ ] Policy enforcement documented (default deny when uncertain)
+- [ ] Error model and backward compatibility considered
+- [ ] Audit/logging expectations met
 
 [Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
 ---
 
-## Documentation and Story Node contributions
-
-### Docs are production
-If a doc changes behavior, governance, or public narrative, treat it as production:
-- it must be reviewable,
-- testable where possible (lint/linkcheck/schema),
-- and policy-labeled when served through governed APIs.
-
-### MetaBlock v2 (no YAML frontmatter)
-Use MetaBlock v2 for governed docs, Story Nodes, dataset specs, ADRs, runbooks.
-
-### Story Nodes (v3)
-A Story Node is:
-- markdown (human narrative)
-- sidecar JSON (map state, time window, citations, policy, review state)
-
-Publishing gate: all citations must resolve via the evidence resolver endpoint.
-
-[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
-
----
-
-## Policy contributions
-
-### Required posture
-- Default deny unless explicitly allowed.
-- Keep policies small and composable.
-- Add unit tests (golden pass/fail fixtures) to prevent silent drift.
-- Version policy packs and reference the active policy version in receipts/manifests.
-
-### Reviews
-Policy changes typically require CODEOWNER/steward review because they directly change what can be published or shown.
-
-[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
-
----
-
-## Focus Mode contributions
-
-Treat every Focus Mode request like a governed run:
-- inputs: user query + optional map view_state + user role/policy context
-- outputs: answer text + EvidenceRefs + audit run id
-
-### Hard requirements
-- Citations must be verified and policy-filtered before synthesis completes.
-- If citations cannot be verified, Focus Mode must abstain or reduce scope.
-- Record model identifier, prompt version, retrieval config version, and policy engine version in Focus run receipts.
-- Maintain red-team regression scenarios (prompt injection, exfiltration, citation forgery).
-
-[Back to top](#contributing-to-kansas-frontier-matrix-kfm)
-
----
-
-## Security and sensitive data
-
-### Threat modeling (minimum)
-Before merging changes that affect auth, exports, evidence resolution, or Focus Mode:
-- Confirm clients cannot bypass the trust membrane.
-- Ensure restricted existence cannot be inferred via error differences.
-- Ensure downloads/exports are checked against rights + policy labels.
-- Ensure citations are verified and policy-filtered.
-- Ensure logs/receipts do not leak restricted data.
+## Security and sensitive information
 
 ### Reporting vulnerabilities
-Do not file public issues for security vulnerabilities. Use the project’s private disclosure channel (maintainers will provide contact in repo settings / SECURITY.md if present).
+Do **not** open a public issue for security problems. Use GitHub Security Advisories if enabled, or contact the maintainers through the project’s documented security channel (see `SECURITY.md` if present).
+
+### Sensitive locations and restricted knowledge
+If a contribution includes:
+- precise coordinates of culturally restricted sites,
+- private individuals’ home locations,
+- critical infrastructure details,
+- any non-public dataset metadata,
+
+…you MUST:
+- generalize locations (e.g., bounding boxes or coarse regions),
+- apply redaction before publication surfaces,
+- label the data as restricted,
+- request governance review before merge.
+
+**Default rule:** when uncertain, do not publish; quarantine and escalate.
 
 [Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
 ---
 
-## Definition of Done
+## Review process
+Maintainers review PRs for:
+- correctness,
+- tests and reproducibility,
+- governance alignment (license/sensitivity/provenance),
+- security and safety,
+- clarity of documentation.
 
-A change is “done” when:
-- [ ] It is minimal, reversible, and aligns with KFM’s trust membrane + truth path.
-- [ ] All relevant CI checks pass (schemas, policy, tests, linkcheck).
-- [ ] Governance-sensitive surfaces are reviewed by appropriate owners.
-- [ ] Data-related changes include run receipts, digests, and required catalogs/provenance.
-- [ ] Story/Focus changes include resolvable citations and policy-safe outputs.
-- [ ] Rights/licensing/sensitivity implications are explicit and enforced (not just documented).
+Expect request-for-changes when any of these are missing. This is normal for a governed system.
 
 [Back to top](#contributing-to-kansas-frontier-matrix-kfm)
 
 ---
 
-## Appendix: templates
+## License
+By contributing, you agree that your contribution is licensed under the repository’s license (see `LICENSE` if present). If your contribution includes third-party data or text, you MUST include:
+- the license/terms,
+- required attribution,
+- any redistribution constraints.
 
-<details>
-<summary>Recommended reference repository layout (adjust to match the real repo)</summary>
+---
 
-~~~text
-repo/
-  README.md
-  docs/
-    guides/
-    standards/
-    adr/
-    story/
-  data/
-    raw/
-    work/
-    processed/
-    catalog/
-  policy/
-    rego/
-    fixtures/
-    tests/
-  contracts/
-    openapi/
-    schemas/
-    graphql/            (optional)
-  src/
-    api/
-    evidence/
-    catalog/
-    ingest/
-    indexers/
-    domain/
-  tools/
-    validators/
-    linkcheck/
-    hash/
-  tests/
-    unit/
-    integration/
-    e2e/
-  .github/
-    workflows/
-~~~
-</details>
-
-<details>
-<summary>KFM MetaBlock v2 (no YAML frontmatter)</summary>
-
-~~~text
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
-title: <Title>
-type: <guide|standard|story|dataset_spec|adr|run_receipt>
-version: v1
-status: draft|review|published
-owners: <team or names>
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public|restricted|...
-related:
-  - kfm://dataset/<slug>@<version>
-  - kfm://story/<id>@<version>
-tags:
-  - kfm
-notes:
-  - <short notes>
-[/KFM_META_BLOCK_V2]
-~~~
-</details>
-
-<details>
-<summary>Dataset onboarding spec (canonical input for spec_hash)</summary>
-
-~~~json
-{
-  "kfm_spec_version": "v1",
-  "dataset_slug": "example_dataset",
-  "title": "Example Dataset",
-  "upstream": {
-    "authority": "Example Authority",
-    "access_method": "bulk_csv",
-    "endpoints": [
-      { "name": "primary", "url": "https://example.invalid/data", "parameters": {} }
-    ],
-    "cadence": "monthly",
-    "terms_snapshot": { "license": "TBD", "retrieved_at": "YYYY-MM-DD" }
-  },
-  "sensitivity": {
-    "policy_label_intent": "public",
-    "pii_risk": "low|medium|high",
-    "sensitive_location_risk": "low|medium|high",
-    "obligations": []
-  },
-  "normalization": { "canonical_fields": {}, "units": {}, "crs": "EPSG:4326" },
-  "validation": { "schema": "contracts/schemas/example.schema.json", "checks": [] },
-  "outputs": [
-    { "artifact_type": "geoparquet", "path": "data/processed/example/<dataset_version_id>/data.parquet" }
-  ]
-}
-~~~
-</details>
-
-<details>
-<summary>Run receipt (run_record) template</summary>
-
-~~~json
-{
-  "kfm_run_receipt_version": "v1",
-  "run_id": "kfm://run/<timestamp>.<dataset_slug>.<spec_hash_short>",
-  "run_type": "pipeline|focus",
-  "dataset_slug": "<dataset_slug>",
-  "dataset_version_id": "<dataset_version_id>",
-  "spec_hash": "sha256:<...>",
-  "inputs": [
-    { "artifact_id": "kfm://artifact/sha256:<...>", "zone": "raw", "uri": "s3://...", "digest": "sha256:<...>" }
-  ],
-  "outputs": [
-    { "artifact_id": "kfm://artifact/sha256:<...>", "zone": "processed", "path": "data/processed/...", "digest": "sha256:<...>", "media_type": "..." }
-  ],
-  "validation": { "status": "pass|fail", "reports": [] },
-  "policy": { "policy_label": "public|restricted|...", "decision_id": "kfm://policy_decision/<...>", "obligations": [] },
-  "environment": { "git_commit": "<commit>", "container_image": "sha256:<image_digest>", "runtime": "kubernetes", "parameters": {} },
-  "timestamps": { "started_at": "RFC3339", "ended_at": "RFC3339" }
-}
-~~~
-</details>
-
-<details>
-<summary>OPA/Rego policy skeleton (default deny + tests)</summary>
-
-~~~text
-# policy/kfm.rego
-package kfm.policy
-
-default allow = false
-
-allow {
-  input.role == "steward"
-}
-
-# Example obligation
-obligations["show_notice"] {
-  input.policy_label == "public_generalized"
-}
-
-# tests/kfm_test.rego
-package kfm.policy
-
-test_default_deny {
-  not allow with input as {"role": "public"}
-}
-
-test_steward_allow {
-  allow with input as {"role": "steward"}
-}
-~~~
-</details>
+_Thank you for helping keep KFM trustworthy, auditable, and safe._
