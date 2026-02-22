@@ -1,14 +1,70 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/0cfa3f47-8dd5-4e4f-9d05-6b7a3dc1b7e7
+title: configs/env
+type: standard
+version: v1
+status: draft
+owners: Operator (platform) + Steward (governance)
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: restricted
+related:
+  - configs/env/README.md
+  - configs/env/.env.example
+  - configs/env/templates/
+  - configs/env/k8s/
+  - configs/env/scripts/
+tags:
+  - kfm
+  - config
+  - secrets
+  - env
+  - docker-compose
+  - kubernetes
+  - openshift
+  - gitops
+notes:
+  - Templates and key names only; never commit secret values.
+[/KFM_META_BLOCK_V2] -->
+
+<a id="configsenv"></a>
+
 # configs/env
 
 Central place for **environment configuration templates** and **deployment-safe configuration artifacts** for Kansas Frontier Matrix (KFM) services.
 
-**Status:** Draft  
-**Owners:** Operator (platform) + Steward (governance)  
-**Last updated:** 2026-02-22
+**Status:** Draft · **Owners:** Operator (platform) + Steward (governance) · **Last updated:** 2026-02-22
 
-`scope:config` `scope:secrets` `docker-compose` `kubernetes` `openshift` `gitops`
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![scope](https://img.shields.io/badge/scope-config%20%7C%20secrets-informational)
+![runtime](https://img.shields.io/badge/runtime-docker--compose%20%7C%20k8s%20%7C%20openshift-informational)
+![delivery](https://img.shields.io/badge/delivery-gitops-informational)
 
-- Jump to: [What belongs here](#what-belongs-here) · [Directory layout](#directory-layout) · [Local development](#local-development) · [Kubernetes and OpenShift](#kubernetes-and-openshift) · [Configuration contract](#configuration-contract) · [Security and governance guardrails](#security-and-governance-guardrails) · [Troubleshooting](#troubleshooting) · [Definition of Done](#definition-of-done)
+**Quick nav:**  
+[What belongs here](#what-belongs-here) ·
+[Directory layout](#directory-layout) ·
+[Local development](#local-development) ·
+[Kubernetes and OpenShift](#kubernetes-and-openshift) ·
+[Configuration contract](#configuration-contract) ·
+[Security and governance guardrails](#security-and-governance-guardrails) ·
+[Troubleshooting](#troubleshooting) ·
+[Definition of Done](#definition-of-done)
+
+---
+
+## Purpose and non-negotiables
+
+This directory exists to make configuration **repeatable**, **reviewable**, and **deployment-safe** across KFM environments.
+
+**Non-negotiables:**
+
+- **MUST NOT** commit plaintext secrets (tokens, passwords, private keys, certs, OAuth client secrets).
+- **MUST** keep config key names stable or provide a deprecation plan.
+- **MUST** preserve the **trust membrane**: clients never receive storage/database credentials.
+- **SHOULD** validate configuration early (CI + startup fail-fast).
+
+> **WARNING**  
+> This directory may contain *templates* and *key names*, but **never secret values**.
 
 ---
 
@@ -16,8 +72,7 @@ Central place for **environment configuration templates** and **deployment-safe 
 
 ```mermaid
 flowchart LR
-  Template[configs/env templates] --> LocalEnv[Local .env file
-(gitignored)]
+  Template[configs/env templates] --> LocalEnv[Local .env file<br/>(gitignored)]
   LocalEnv --> Compose[Docker Compose]
   Compose --> API[API]
   Compose --> UI[Web UI]
@@ -34,13 +89,9 @@ flowchart LR
   K8s --> API
   K8s --> UI
 
-  UI --> GovAPI[Governed API
-(policy + evidence)]
+  UI --> GovAPI[Governed API<br/>(policy + evidence)]
   API --> GovAPI
 ```
-
-> **WARNING**  
-> Do **not** commit plaintext secrets (API keys, passwords, private keys) to Git. This directory may contain *templates* and *key names*, but **never secret values**.
 
 ---
 
@@ -61,11 +112,14 @@ flowchart LR
 - Production connection strings.
 - Any “temporary” secret you plan to remove later.
 
+> **TIP**  
+> If a value would be damaging if copied into a GitHub issue, Slack, or a build log, it’s a secret. Don’t commit it.
+
 ---
 
 ## Directory layout
 
-This repository may evolve, but the intended organization under `configs/env/` is:
+The intended organization under `configs/env/` is:
 
 ```text
 configs/
@@ -87,31 +141,48 @@ configs/
 ```
 
 > **NOTE**  
-> If your repo already has a different layout, keep this README accurate and treat the **actual runtime entrypoints** (`docker-compose.yml`, Helm/Kustomize, deployment manifests) as the source of truth.
+> If your repo already uses a different layout, keep this README accurate and treat the **actual runtime entrypoints**
+> (`docker-compose.yml`, Helm/Kustomize, deployment manifests) as the source of truth.
 
 ---
 
 ## Local development
 
-Most KFM setups use Docker Compose to run a consistent dev stack (API + UI + databases). Typical flow:
+Most KFM setups use Docker Compose to run a consistent dev stack (API + UI + databases).
 
-1) **Create your local env file**
+### 1) Create your local env file
 
-- If the repo provides a template such as `.env.example`, copy it to a gitignored `.env`:
+If the repo provides a template such as `.env.example`, copy it to a gitignored `.env`:
 
 ```bash
 cp configs/env/.env.example .env
 ```
 
-- Fill in only what you need for local development.
+Fill in only what you need for local development.
 
-2) **Start the stack**
+> **TIP**  
+> Ensure `.env` is ignored by Git. A typical pattern:
+>
+> ```gitignore
+> .env
+> .env.*
+> !.env.example
+> ```
+
+### 2) Start the stack
 
 ```bash
 docker-compose up --build
 ```
 
-3) **Apply env changes**
+> **NOTE**  
+> If you’re using Docker Compose v2, the equivalent is:
+>
+> ```bash
+> docker compose up --build
+> ```
+
+### 3) Apply env changes
 
 Environment variables are usually read at container start. If you change `.env`, restart:
 
@@ -176,7 +247,7 @@ Recommended constraints:
 
 ## Configuration contract
 
-### Naming + documentation
+### Naming and documentation
 
 - Every configuration key must be documented (what it controls, which component reads it).
 - Keys should be **stable**; renames require a compatibility plan (defaults, deprecation window).
@@ -199,7 +270,11 @@ The following are **common** groups (not exhaustive). Verify the exact names in:
 | Policy | `ENABLE_OPA` | Should be **on** in any shared environment. |
 | Focus Mode AI | `OLLAMA_MODEL`, `OPENAI_API_KEY` | Treat keys as secrets; document data-handling expectations. |
 
-### Validation (fail fast)
+> **WARNING**  
+> Frontend environment variables are typically baked into the build output and are **not secret** by definition.
+> Never place secrets in variables that the frontend can read.
+
+### Validation
 
 - Services should fail at startup if required configuration is missing.
 - CI should validate that:
@@ -211,7 +286,7 @@ The following are **common** groups (not exhaustive). Verify the exact names in:
 
 ## Security and governance guardrails
 
-These guardrails exist to preserve KFM’s core invariants (policy enforcement, provenance, auditability):
+These guardrails preserve KFM’s core invariants (policy enforcement, provenance, auditability):
 
 - **Trust membrane:** frontend and external clients should never receive storage/DB credentials.
 - **Policy enforcement is not optional in shared environments:** configuration must not allow bypassing policy checks at runtime.
@@ -219,7 +294,8 @@ These guardrails exist to preserve KFM’s core invariants (policy enforcement, 
 - **Canonical IDs:** avoid embedding environment-specific hostnames in canonical identifiers; hostnames belong in deployment URLs.
 
 > **TIP**  
-> If you add a new env var that influences access control, redaction, licensing enforcement, or evidence resolution, treat it as a **governance change**, not “just config.”
+> If you add a new env var that influences access control, redaction, licensing enforcement, or evidence resolution,
+> treat it as a **governance change**, not “just config.”
 
 ---
 
@@ -234,7 +310,7 @@ These guardrails exist to preserve KFM’s core invariants (policy enforcement, 
 docker-compose logs --tail=200
 ```
 
-### API/UI not reflecting changes
+### API or UI not reflecting changes
 
 - Code hot reload depends on volume mounts.
 - If you changed environment variables, restart containers (`down` then `up`).
