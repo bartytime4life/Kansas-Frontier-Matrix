@@ -1,59 +1,97 @@
-# Kansas Frontier Matrix (KFM) — CODEOWNERS
+# .github/CODEOWNERS
 #
-# IMPORTANT
-# - Replace the placeholder @kfm-* owners below with your real GitHub usernames and/or org teams.
-# - CODEOWNERS works best paired with branch protection that requires CODEOWNER reviews.
-#
-# Role mapping (from KFM baseline governance roles):
-# - @kfm-stewards: Reviewer/Steward (policy labels, redaction rules, promotion + publish approvals)
-# - @kfm-operators: Operator (pipelines + deployments; cannot override policy gates)
-#
-# Quick-start option:
-# - If you don’t have teams yet, temporarily replace every @kfm-* with a single trusted team/user,
-#   then refine path-by-path.
+# Replace @kfm-* with real GitHub users and/or org teams (e.g. @your-org/kfm-docs).
+# Order matters: the LAST matching pattern wins.
 
-# Default owners (everything not matched below)
-* @kfm-maintainers
+########################################
+# Default (whole repo)
+########################################
+* @kfm-core-maintainers
 
-# --- High-risk automation / CI / supply chain ---
-/.github/ @kfm-ops @kfm-security
-/.github/workflows/** @kfm-ops @kfm-security
+########################################
+# High-risk: CI / automation
+########################################
+/.github/ @kfm-devops @kfm-security
+/.github/CODEOWNERS @kfm-devops @kfm-security
+/.github/workflows/ @kfm-devops @kfm-security
+/.github/actions/ @kfm-devops @kfm-security
 
-# --- Policy-as-code (governed) ---
-/policy/** @kfm-stewards @kfm-policy-engineers
+########################################
+# Repo governance / meta docs
+########################################
+/SECURITY.md @kfm-security @kfm-core-maintainers
+/CONTRIBUTING.md @kfm-governance @kfm-docs-team
+/LICENSE @kfm-core-maintainers
+/CITATION.cff @kfm-docs-team
+/CHANGELOG.md @kfm-release-managers
 
-# --- Contracts are production artifacts (governed API + schemas) ---
-/contracts/** @kfm-api @kfm-stewards
+########################################
+# Documentation (governed)
+########################################
+/docs/ @kfm-docs-team
+/docs/architecture/ @kfm-architecture
+/docs/standards/ @kfm-standards
+/docs/templates/ @kfm-docs-team
+/docs/governance/ @kfm-governance
 
-# --- Data zones (changes require governance + run receipts/promotion manifests) ---
-/data/** @kfm-data-stewards @kfm-operators
-/data/catalog/** @kfm-data-stewards @kfm-stewards
-/data/processed/** @kfm-data-engineering @kfm-data-stewards
-/data/raw/** @kfm-operators @kfm-data-stewards
-/data/work/** @kfm-operators @kfm-data-stewards
+# Domain module docs are owned by domain stewards (not the general docs team).
+/docs/data/ @kfm-domain-stewards
 
-# --- Source code (service boundaries) ---
-/src/api/** @kfm-api
-/src/evidence/** @kfm-api @kfm-stewards
-/src/catalog/** @kfm-api @kfm-data-stewards
-/src/ingest/** @kfm-data-engineering
-/src/indexers/** @kfm-search
-/src/domain/** @kfm-api
+# Story Nodes (narratives) are governed content.
+/docs/reports/story_nodes/ @kfm-story-editors @kfm-governance
 
-# --- Tooling + validators (gates) ---
-/tools/** @kfm-platform
-/tools/validators/** @kfm-platform @kfm-quality
-/tools/linkcheck/** @kfm-platform
-/tools/hash/** @kfm-platform
+########################################
+# Data (raw/work/processed + catalogs)
+########################################
+/data/ @kfm-domain-stewards @kfm-governance
+/data/**/raw/ @kfm-domain-stewards @kfm-governance
+/data/**/work/ @kfm-domain-stewards
+/data/**/processed/ @kfm-domain-stewards
 
-# --- Tests ---
-/tests/** @kfm-quality
+# Catalog outputs (triplet: STAC/DCAT/PROV) — pipeline + standards (and governance if desired).
+/data/stac/ @kfm-pipelines @kfm-standards @kfm-governance
+/data/catalog/dcat/ @kfm-pipelines @kfm-standards @kfm-governance
+/data/prov/ @kfm-pipelines @kfm-standards @kfm-governance
 
-# --- Docs / narrative surfaces ---
-/docs/** @kfm-docs
-/docs/standards/** @kfm-docs @kfm-stewards
-/docs/adr/** @kfm-architecture
-/docs/story/** @kfm-story-editors @kfm-stewards
+# Graph import/export artifacts.
+/data/graph/ @kfm-graph
 
-# --- Repo entrypoints / governance docs ---
-/README.md @kfm-maintainers @kfm-stewards
+########################################
+# Schemas (contract-first boundary)
+########################################
+/schemas/ @kfm-standards
+/schemas/stac/ @kfm-standards
+/schemas/dcat/ @kfm-standards
+/schemas/prov/ @kfm-standards
+/schemas/storynodes/ @kfm-story-editors @kfm-standards
+/schemas/ui/ @kfm-frontend @kfm-standards
+/schemas/telemetry/ @kfm-platform @kfm-standards
+
+########################################
+# Runtime code
+########################################
+/src/pipelines/ @kfm-pipelines
+/src/graph/ @kfm-graph
+/src/server/ @kfm-api-team
+/src/server/contracts/ @kfm-api-team @kfm-standards
+/web/ @kfm-frontend
+
+########################################
+# Tooling / tests / experiments / releases
+########################################
+/tools/ @kfm-platform
+/tests/ @kfm-platform
+
+# Methods & computational experiments (runs, notebooks, model cards).
+/mcp/ @kfm-ml @kfm-governance
+
+# Packaged release artifacts (data bundles, manifests, SBOM, etc).
+/releases/ @kfm-release-managers @kfm-governance @kfm-security
+
+########################################
+# Platform / dev config files (if present)
+########################################
+/.pre-commit-config.yaml @kfm-platform
+/.editorconfig @kfm-platform
+/docker-compose.yml @kfm-platform
+/.env.example @kfm-platform
