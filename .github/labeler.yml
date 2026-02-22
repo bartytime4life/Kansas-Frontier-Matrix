@@ -1,1 +1,109 @@
+# .github/labeler.yml
+# Config for GitHub Action: actions/labeler (v6+ syntax)
 
+"area: api":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "api/**"
+
+"area: web":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "web/**"
+
+"area: pipelines":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "pipelines/**"
+
+"area: data":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/**"
+
+"data: raw":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/raw/**"
+
+"data: processed":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/processed/**"
+
+"data: catalog":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/catalog/**"
+
+"data: provenance":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/provenance/**"
+
+"area: docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "**/*.md"
+          - "**/*.mdx"
+
+"area: github":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+"type: ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/actions/**"
+
+"type: dependencies":
+  - changed-files:
+      - any-glob-to-any-file:
+          # Node / web deps (repo-root OR web/)
+          - "package.json"
+          - "package-lock.json"
+          - "pnpm-lock.yaml"
+          - "yarn.lock"
+          - "web/package.json"
+          - "web/package-lock.json"
+          - "web/pnpm-lock.yaml"
+          - "web/yarn.lock"
+
+          # Python deps (repo-root OR api/ OR pipelines/)
+          - "requirements*.txt"
+          - "pyproject.toml"
+          - "poetry.lock"
+          - "Pipfile"
+          - "Pipfile.lock"
+          - "api/requirements*.txt"
+          - "api/pyproject.toml"
+          - "api/poetry.lock"
+          - "api/Pipfile"
+          - "api/Pipfile.lock"
+          - "pipelines/requirements*.txt"
+          - "pipelines/pyproject.toml"
+          - "pipelines/poetry.lock"
+          - "pipelines/Pipfile"
+          - "pipelines/Pipfile.lock"
+
+"type: tests":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/tests/**"
+          - "**/__tests__/**"
+          - "**/*.spec.*"
+          - "**/*.test.*"
+
+"type: security":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "SECURITY.md"
+          - ".github/dependabot.yml"
+          - ".github/dependabot.yaml"
+          - ".github/codeql.yml"
+          - ".github/codeql.yaml"
+          - ".github/workflows/*security*"
+          - ".github/workflows/*codeql*"
