@@ -134,6 +134,7 @@ These paths change enforcement behavior. Treat changes here as production config
 | `contracts/` | runtime boundaries + schemas | schema/profile validation in CI |
 | `tools/` | validators and hash/link tooling | deterministic tests + golden fixtures |
 | `data/registry/` | what can be promoted and shown | lint + validation + steward review |
+| `data/specs/` | canonical dataset specs that drive `spec_hash` and pipeline behavior | schema validation + drift tests + steward review |
 | `apps/api/` | the trust membrane enforcement point | security review + integration tests |
 | `infra/` | runtime posture | operator review + policy alignment |
 
@@ -264,6 +265,7 @@ KFM’s safest path is to build trust primitives first, UI last.
 - [ ] **Contracts**: schemas/profiles/vocab exist and validate in CI (`contracts/`)
 - [ ] **Policy**: default-deny rules + fixtures-driven tests (`policy/`)
 - [ ] **Deterministic identity**: canonical `spec_hash` + drift tests (`tools/hash/`)
+- [ ] **Anchor register**: machine-readable anchor list validated against source registry + dataset specs (`data/registry/anchors/`)
 - [ ] **Catalog triplet**: DCAT/STAC/PROV generation + validators + cross-link checks
 - [ ] **Evidence resolver**: EvidenceRef → EvidenceBundle; policy applied; fail-closed
 - [ ] **Run receipts + audit**: immutable receipts emitted for pipeline + Focus answers
@@ -1030,19 +1032,91 @@ Avoid early sources that:
 - contain high-risk PII or sensitive coordinates without a generalization pathway
 - require heavy scraping without clear permission
 
-### Anchor dataset shortlist
+### Anchor dataset list
 
 These are anchor datasets because they support many story arcs and can be integrated with strong provenance.
 
-- Demographics: IPUMS NHGIS (verify terms and attribution)
-- Land: BLM GLO land patents (names may be sensitive; governance review for narratives)
-- Hydrology: USGS WaterData/NWIS
-- Hazards: NOAA Storm Events
-- Disasters: FEMA disaster declarations
-- Basemap: USGS National Map base layers
-- Kansas GIS framework: Kansas DASC Geoportal authoritative layers
+> [!IMPORTANT]
+> This README section is a **human-facing summary**. The **canonical** anchor set MUST live in:
+> - `data/registry/sources/` (source registry entries, including rights + terms snapshots + sensitivity intent)
+> - `data/specs/` (dataset onboarding specs that drive `spec_hash` + pipelines)
+>
+> Promotion tooling SHOULD validate that every dataset listed here has a registry entry + spec (fail-closed).
+
+#### Tiering
+
+- **Tier 0 (build-first):** must-have anchors that unblock Map Explorer + core story arcs.
+- **Tier 1 (expand safely):** high-leverage enrichers once Tier 0 trust primitives are solid.
+- **Tier R (restricted/sensitive):** valuable but **policy-first**; require consultation, redaction, and/or public-generalized derivatives before public surfaces.
+
+#### Full anchor set summary (vNext)
+
+| Tier | Domain | Dataset / Source | Suggested `source_id` | Primary value | Access posture / obligations |
+|---:|---|---|---|---|---|
+| 0 | Demographics | IPUMS NHGIS (National Historical GIS) | `ipums_nhgis` | Historical census aggregates + boundary products for long-range change | Public, **terms snapshot required** |
+| 0 | Admin boundaries | US Census TIGER/Line (counties/tracts/roads) | `us_census_tiger` | Canonical geometries for joins, boundaries, and many derived layers | Public, **terms snapshot required** |
+| 0 | Kansas framework | Kansas DASC Geoportal authoritative layers | `kansas_dasc_geoportal` | Kansas clearinghouse for authoritative base layers + agency sources | Public, attribution obligations likely |
+| 0 | Basemap/reference | USGS National Map base layers | `usgs_national_map` | Base layers, hydrography/elevation reference; stable national backbone | Public, public-domain-ish **must still snapshot terms** |
+| 0 | Land tenure/history | BLM GLO land patents | `blm_glo_land_patents` | Settlement/land patent history; supports land tenure narratives | Public, **governance review** for person names in narratives |
+| 0 | Hydrology/time series | USGS WaterData / NWIS | `usgs_waterdata_nwis` | Streamflow, groundwater, water quality time series; event correlation | Public |
+| 0 | Hazards/events | NOAA Storm Events | `noaa_storm_events` | Standard severe weather events dataset (time + place + type) | Public; verify coordinate handling + exports |
+| 0 | Disasters/admin | FEMA Disaster Declarations (OpenFEMA) | `fema_disaster_declarations` | Administrative disaster declarations (county + dates + program) | Public |
+| 1 | Climate grids | PRISM or NLDAS climate products | `nldas_or_prism_climate` | Gridded climate baseline for trend analysis + modeling | Public; snapshot terms + citations |
+| 1 | Weather observations | Kansas Mesonet | `kansas_mesonet` | Fine-grained station observations (precip, temp, soil moisture) | Public w/ attribution; treat as preliminary QC |
+| 1 | Climate archives | NOAA climate archives (NCEI, etc.) | `noaa_climate_archives` | Long-run climate normals/records for context and baselines | Public |
+| 1 | Soils | USDA NRCS SSURGO / gSSURGO | `usda_nrcs_ssurgo` | Soil survey backbone for agriculture + environment + hydrology | Public; capture distribution/version info |
+| 1 | Land cover | National Land Cover Database (NLCD) | `nlcd_mrlc` | Consistent land cover time series / change products | Public; large rasters → tiling strategy |
+| 1 | Agriculture land use | USDA NASS Cropland Data Layer (CDL) | `usda_nass_cdl` | Annual crop type raster for land use/ag transitions | Public; yearly versions important |
+| 1 | Agriculture stats | USDA NASS QuickStats | `usda_nass_quickstats` | County/state ag stats (yields, acreage, livestock) | Public/API-keyed; snapshot metadata/terms |
+| 1 | Biodiversity | GBIF occurrences | `gbif_occurrences` | Broad biodiversity occurrence records; cross-source aggregator | Public (license varies per record) |
+| 1 | Biodiversity | iNaturalist observations | `inaturalist_observations` | Community science occurrences for ecology narratives | Public; **sensitivity filters** may apply |
+| 1 | Biodiversity | eBird (Cornell Lab) | `ebird_ebd` | Rich bird observation time series for ecosystem change | Rights-restricted: **no raw redistribution**; use derived products |
+| 1 | Biodiversity | Kansas GAP species distribution maps | `kansas_gap_species` | Predicted habitat/range baselines; conservation context | Public; often static baseline |
+| 2 | Heritage (public) | National Register of Historic Places (NRHP) GIS | `nps_nrhp` | Historic places inventory; place-based story hooks | Public; verify location precision policies |
+| 2 | Heritage (mixed) | Kansas Historic Resources Inventory (KHRI) | `kansas_khri` | State historic inventory; some sensitive sites generalized | Public/generalized; restricted handling for sensitive classes |
+| 2 | Archives/metadata | Kansas Memory (KHS digital archives metadata) | `kansas_memory_metadata` | Primary docs/media metadata; tie narratives to sources | Metadata-first; media rights vary (snapshot rights) |
+| 2 | Oral histories | Kansas Oral History Project (KOHP) | `kansas_oral_history` | CC-labeled oral histories; qualitative evidence layer | Rights obligations (e.g., NC/ND) → export/story rules |
+| R | Sensitive location | State archaeology sites | `state_archaeology_sites` | Archaeology sensitivity; important but high-risk | **Default deny** + consult; publish **public-generalized** derivative only |
+| 2 | Social context (optional) | FBI Crime API | `fbi_crime_api` | Contextual social indicators for timelines & narratives | Public; narrative risk review recommended |
 
 Rule: do not assert “public domain” or “free to reuse” without capturing and snapshotting source terms.
+
+#### Anchor dataset register (machine-readable)
+
+> [!PROPOSED]
+> Keep the anchor set enforceable by storing it in a small versioned register that CI can validate against
+> `data/registry/sources/` and `data/specs/`.
+
+Recommended path:
+
+- `data/registry/anchors/anchors.v1.json`
+
+Template:
+
+```json
+{
+  "kfm_anchor_register_version": "v1",
+  "updated": "2026-02-22",
+  "anchors": [
+    {
+      "tier": 0,
+      "source_id": "us_census_tiger",
+      "dataset_slug": "us_census_tiger",
+      "domain": "boundaries",
+      "access_posture": "public",
+      "required_artifacts": ["geoparquet", "pmtiles"],
+      "notes": "County/tract/city boundaries; optional roads as separate layer group."
+    }
+  ]
+}
+```
+
+Validation gates (CI + promotion tooling):
+
+- Every `anchors[].source_id` has a matching `data/registry/sources/<source_id>.json`
+- Every `anchors[].dataset_slug` has a matching `data/specs/<dataset_slug>.json`
+- Every anchor has a terms snapshot pointer recorded in RAW acquisition manifest(s)
+- If `access_posture` indicates restricted/sensitive, a public-generalized derivative spec MUST exist (or the anchor is non-public by design)
 
 ### Source registry entry
 
@@ -1235,6 +1309,7 @@ Starter CI gate list:
 - linkcheck citations
 - policy tests (default deny + fixtures)
 - spec_hash drift check
+- **anchor register consistency check (anchors → registry → specs)**
 - evidence resolver contract tests
 - Focus Mode eval suite
 
