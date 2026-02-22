@@ -1,10 +1,33 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/3c2d9af7-c7b5-4c4e-9c1c-4e3ef0d0c72e
+title: apps — Deployable runtime applications
+type: standard
+version: v1
+status: draft
+owners: see CODEOWNERS
+created: 2026-02-22
+updated: 2026-02-22
+policy_label: public
+related:
+  - apps/README.md
+  - packages/README.md
+  - ops/ (if present)
+tags:
+  - kfm
+  - apps
+  - runtime
+  - governance
+  - trust-membrane
+  - truth-path
+notes:
+  - Aligns apps responsibilities with KFM trust membrane + truth path invariants.
+[/KFM_META_BLOCK_V2] -->
+
 # apps
 
 Deployable runtime applications for Kansas Frontier Matrix (KFM): the **governed API**, the **map/story/focus UI**, and the **pipeline + indexing worker**.
 
-**Status:** draft  
-**Owners:** see `CODEOWNERS` (or add owners here)  
-**Last updated:** 2026-02-22
+**Status:** draft • **Owners:** see `CODEOWNERS` • **Last updated:** 2026-02-22
 
 <!-- Badges (add once workflow names/paths are known):
 [![CI](...)](...)
@@ -12,11 +35,15 @@ Deployable runtime applications for Kansas Frontier Matrix (KFM): the **governed
 [![Docs](...)](...)
 -->
 
+---
+
 ## Quick navigation
 
 - [What lives in `apps/`](#what-lives-in-apps)
+- [Scope and non-goals](#scope-and-non-goals)
 - [Directory layout](#directory-layout)
-- [Runtime contract](#runtime-contract)
+- [Runtime invariants](#runtime-invariants)
+- [Cross-app contracts](#cross-app-contracts)
 - [App responsibilities](#app-responsibilities)
   - [`apps/api`](#appsapi)
   - [`apps/ui`](#appsui)
@@ -40,6 +67,35 @@ This directory is for **deployable runtime surfaces**:
 
 Shared, reusable logic should live in `../packages/` (domain, use cases, policy engine, evidence, catalog, shared DTOs/schemas). Applications should mostly be **composition + adapters**, not the home of core domain logic.
 
+[Back to top](#apps)
+
+---
+
+## Scope and non-goals
+
+### In scope
+
+- Runtime composition and adapters for:
+  - policy enforcement + audited access (`apps/api`)
+  - governed experiences + trust surfaces (`apps/ui`)
+  - deterministic pipelines + rebuildable projections (`apps/worker`)
+- App-level operational concerns:
+  - configuration boundaries
+  - health/readiness
+  - observability hooks
+  - CI gates relevant to runtime behavior
+
+### Non-goals
+
+- Defining domain logic, core policy rules, or canonical schemas **inside** apps (those live in `../packages/` and governed contracts).
+- Treating projection stores (DB/search/tiles) as the source of truth.
+- “Convenience” shortcuts that bypass the trust membrane.
+
+> **WARNING**
+> If a change makes it possible for a client to reach storage without the API policy boundary, treat it as a **security + governance incident** and fail closed.
+
+[Back to top](#apps)
+
 ---
 
 ## Directory layout
@@ -55,11 +111,11 @@ repo/
     README.md             # (this file)
 ~~~
 
+[Back to top](#apps)
+
 ---
 
-## Runtime contract
-
-### Trust membrane and truth path (conceptual)
+## Runtime invariants
 
 `apps/` exists to make two system invariants easy to enforce:
 
@@ -68,6 +124,8 @@ repo/
 
 2) **Truth path**  
    Data and evidence flow through lifecycle zones (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → runtime surfaces). Projections (DB/search/tiles) must be rebuildable from canonical artifacts.
+
+### Trust membrane + truth path (conceptual)
 
 ~~~mermaid
 flowchart LR
@@ -90,17 +148,24 @@ flowchart LR
   API --> AUD
 ~~~
 
-### Cross-app contract surfaces (owned elsewhere)
+[Back to top](#apps)
 
-These are shared contracts that apps should consume rather than redefine:
+---
+
+## Cross-app contracts
+
+Apps should **consume** shared contracts rather than redefine them. Typical contract surfaces:
 
 - **OpenAPI / DTO schemas** (API contract-first)
-- **Policy labels + obligations**
+- **Policy labels + obligations** (default-deny; redaction requirements)
 - **EvidenceRef → EvidenceBundle resolution**
 - **Catalog triplet validation (DCAT/STAC/PROV)**
 - **Promotion manifests + run receipts**
 
-Look for these under `../packages/` and `../data/` (exact locations may vary by repo).
+> **NOTE**
+> The exact paths vary by repo; prefer links maintained under `../packages/` and/or a top-level `contracts/` directory if present.
+
+[Back to top](#apps)
 
 ---
 
@@ -108,11 +173,13 @@ Look for these under `../packages/` and `../data/` (exact locations may vary by 
 
 ### Summary table
 
-| App | Primary purpose | Must | Must not |
+| App | Primary purpose | MUST | MUST NOT |
 |---|---|---|---|
 | `apps/api` | Governed API boundary | Enforce policy consistently; return policy-safe metadata for reproducibility; provide evidence resolution + audit references | Leak restricted existence; bypass policy pack; embed domain logic that belongs in `packages/` |
 | `apps/ui` | Governed client UI | Never embed privileged credentials; make trust visible (evidence drawer, dataset version, policy notices); block publishing when citations don’t resolve | Read from storage directly; hide governance; publish stories without resolvable evidence |
 | `apps/worker` | Pipelines + index builders | Treat canonical artifacts as immutable; quarantine on failure; emit run receipts/manifests; rebuild projections from canonical sources | Treat projection stores as source of truth; “patch” published data without promotion gates |
+
+[Back to top](#apps)
 
 ---
 
@@ -120,21 +187,22 @@ Look for these under `../packages/` and `../data/` (exact locations may vary by 
 
 The API is the **policy boundary** and the place where policy + evidence + auditing converge.
 
-Typical API responsibilities:
+### Typical responsibilities
 
 - Dataset discovery (catalog-backed; role/policy filtered)
 - Spatial/temporal querying (bbox/time/filter), returning policy-safe results
 - Tile delivery (policy-safe tiles; cache varies by role/policy)
-- Evidence resolution: EvidenceRef → EvidenceBundle
+- Evidence resolution: `EvidenceRef → EvidenceBundle`
 - Lineage/status endpoints for UI trust surfaces
 - Focus Mode request handling with cite-or-abstain + audit receipts
 
-Implementation guidance:
+### Implementation guidance
 
 - Keep core business logic in `../packages/…` and use the API as a thin orchestration layer.
 - Treat the OpenAPI contract as a **first-class governed artifact** (versioned, reviewed, and tested).
+- Prefer “policy envelopes” that make policy decisions visible to callers (without leaking restricted existence).
 
-Suggested docs inside `apps/api/` (create if missing):
+### Suggested contents (create if missing)
 
 - `apps/api/README.md` — local run, env vars, endpoints, contract links
 - `apps/api/openapi/` (or `../contracts/openapi/`) — spec source-of-truth
@@ -148,7 +216,7 @@ Suggested docs inside `apps/api/` (create if missing):
 
 The UI is a **governed client**, not a privileged operator.
 
-Core surfaces typically include:
+### Core surfaces typically include
 
 - **Map Explorer** (primary)
 - **Story Mode** (narratives with citations + map-state replay)
@@ -156,13 +224,18 @@ Core surfaces typically include:
 - **Focus Mode** (evidence-led Q&A with cite-or-abstain + audit refs)
 - **Admin/Steward** (restricted governance tools)
 
-UI hard requirements:
+### UI hard requirements
 
 - No privileged credentials in the client.
-- Trust surfaces are visible: evidence/provenance drawer accessible from map layers and story claims; dataset version labels; explicit policy notices; “what changed?” diffs; automation status badges.
-- Publishing should be blocked if citations fail to resolve.
+- Trust surfaces are visible:
+  - evidence/provenance drawer accessible from map layers and story claims
+  - dataset version labels
+  - explicit policy notices
+  - “what changed?” diffs
+  - automation status badges
+- Publishing MUST be blocked if citations fail to resolve.
 
-Suggested docs inside `apps/ui/` (create if missing):
+### Suggested contents (create if missing)
 
 - `apps/ui/README.md` — dev server, build, routes, a11y, trust surfaces checklist
 - `apps/ui/docs/` — UX contracts for evidence drawer, policy notices, story publishing gates
@@ -176,18 +249,18 @@ Suggested docs inside `apps/ui/` (create if missing):
 The worker is responsible for:
 
 - Running ingestion/normalization pipelines
-- Writing artifacts into the lifecycle zones (RAW/WORK/PROCESSED)
+- Writing artifacts into lifecycle zones (RAW/WORK/PROCESSED)
 - Generating catalogs (DCAT/STAC/PROV) and run receipts
 - Building rebuildable projections (PostGIS/search/graph/tiles) from promoted artifacts
 - Producing promotion manifests and driving promotion gates
 
-Design principles:
+### Design principles
 
-- Canonical stores (object storage + catalogs + audit ledger) must be sufficient to rebuild everything else.
+- Canonical stores (object storage + catalogs + audit ledger) MUST be sufficient to rebuild everything else.
 - Projection stores are rebuildable; they never become the source of truth.
-- Failures should route to quarantine with actionable QA artifacts; no partial promotion.
+- Failures route to quarantine with actionable QA artifacts; no partial promotion.
 
-Suggested docs inside `apps/worker/` (create if missing):
+### Suggested contents (create if missing)
 
 - `apps/worker/README.md` — how to run pipelines, where artifacts land, how to rebuild indexes
 - `apps/worker/runbooks/` — incident procedures (rebuild, rollback, quarantine triage)
@@ -220,6 +293,8 @@ cd ../worker
 # run pipeline / index rebuild tasks
 ~~~
 
+[Back to top](#apps)
+
 ---
 
 ## CI gates
@@ -237,6 +312,8 @@ CI should fail closed and enforce governance invariants. Typical gates include:
 
 If your repo does not yet implement these gates, treat this as a target checklist to encode in CI.
 
+[Back to top](#apps)
+
 ---
 
 ## Security and governance
@@ -248,21 +325,25 @@ Non-negotiable rules for `apps/`:
 - **Worker promotes deterministically**: immutable artifacts + digests + run receipts + approvals where required.
 - **Sensitive locations / vulnerable infrastructure**: default to generalized outputs + explicit policy notices; do not ship precise geometry to public surfaces.
 
+[Back to top](#apps)
+
 ---
 
 ## Release and deployment
 
-`apps/` are deployable units and should have:
+`apps/` are deployable units and SHOULD have:
 
 - Versioned artifacts (images/bundles) with reproducible builds
 - GitOps-managed environment manifests (see `../ops/` if present)
 - Rollback strategy (especially for API/UI) and rebuild strategy (especially for worker/indexers)
 
+[Back to top](#apps)
+
 ---
 
 ## Definition of Done
 
-### Any change under `apps/` is “done” when:
+### Any change under `apps/` is “done” when
 
 - [ ] Does not violate trust membrane (no client-to-storage shortcuts)
 - [ ] Does not introduce policy bypass paths
@@ -289,12 +370,19 @@ Non-negotiable rules for `apps/`:
 - [ ] Run receipts/manifests emitted for new/changed outputs
 - [ ] Projection rebuild still possible from canonical artifacts
 
+[Back to top](#apps)
+
 ---
 
 ## Appendix: Glossary
 
+<details>
+<summary><strong>Glossary terms</strong> (expand)</summary>
+
 - **Truth path:** Ordered lifecycle from acquisition through RAW/WORK/PROCESSED/CATALOG to published surfaces.
 - **Trust membrane:** Boundary preventing clients from direct storage access and enforcing policy/provenance in governed APIs.
 - **Run receipt:** Immutable record of a run (inputs/outputs by digest, environment capture, validation results, policy decisions).
+
+</details>
 
 [Back to top](#apps)
