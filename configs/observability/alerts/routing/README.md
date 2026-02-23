@@ -55,18 +55,21 @@ notes:
 > This repo snapshot wasn’t available when this README was generated — treat this as a **recommended** layout, and adapt to the files present in this directory.
 
 ```text
-configs/observability/alerts/routing/
-  README.md                      # This file (human contract)
-  policy/                        # Human-authored routing policy (source of truth)
-    routes.yaml                  # Route tree and matchers
-    receivers.yaml               # Receiver registry (names + metadata only)
-    inhibition.yaml              # Noise reduction / inhibition rules
-  rendered/                      # Tool-specific output (generated; do not hand-edit)
-    alertmanager.yaml            # Example: Prometheus Alertmanager config
-    grafana-notifications.json   # Example: Grafana Unified Alerting policies/contact points
-  schemas/                       # JSONSchema / CUE / other validation artifacts
-  tests/                         # Unit tests / golden tests for routing decisions
-  tools/                         # Render + validate helpers (scripts, jsonnet, cue, etc.)
+configs/observability/alerts/routing/                 # Alert routing governance (policy → render → verify)
+├─ README.md                                          # This file: human contract + ownership + change rules
+│
+├─ policy/                                            # Human-authored routing policy (source of truth)
+│  ├─ routes.yaml                                     # Route tree + matchers (severity/service/env/team → receiver)
+│  ├─ receivers.yaml                                  # Receiver registry (names + metadata only; no secrets)
+│  └─ inhibition.yaml                                 # Inhibition/noise-reduction rules (suppresses redundant alerts)
+│
+├─ rendered/                                          # Generated tool-specific outputs (DO NOT hand-edit)
+│  ├─ alertmanager.yaml                               # Example output: Prometheus Alertmanager config
+│  └─ grafana-notifications.json                      # Example output: Grafana Unified Alerting policies/contact points
+│
+├─ schemas/                                           # Validation artifacts (JSONSchema/CUE/etc.) for policy/rendered shapes
+├─ tests/                                             # Unit + golden tests for routing decisions (fail-closed)
+└─ tools/                                             # Render + validate helpers (scripts, jsonnet, cue, etc.)
 ```
 
 ---
