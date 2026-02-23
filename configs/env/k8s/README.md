@@ -107,30 +107,32 @@ governed APIs and policy boundaries (authn/z, audit, rate limits).
 > this README to reflect the real contract.
 
 ```text
-configs/env/k8s/
-  base/                       # shared, environment-agnostic resources
-    namespaces/               # namespace manifests + baseline labels
-    platform/                 # ingress/controller, cert-manager, external-dns, etc. (if owned here)
-    apps/                     # application workloads (deployment/service/ingress)
-    kustomization.yaml        # or Chart.yaml if Helm-first
-
-  overlays/                   # per-environment deltas only
-    dev/
-      kustomization.yaml
-      patches/
-      values.yaml             # optional; only if Helm is used
-    stage/
-    prod/
-
-  policies/                   # policy-as-code enforced by CI (and optionally admission)
-    kyverno/                  # or gatekeeper/
-    conftest/
-
-  scripts/                    # optional: helper scripts (must be safe + reviewed)
-    validate.sh
-    diff.sh
-
-  README.md                   # you are here
+configs/env/k8s/                                   # Kubernetes/OpenShift config templates (non-secret; deploy-safe)
+├─ README.md                                        # You are here: how base/overlays/policies fit together + CI gates
+│
+├─ base/                                            # Shared, environment-agnostic resources (common defaults)
+│  ├─ namespaces/                                   # Namespace manifests + baseline labels/quotas (if used)
+│  ├─ platform/                                     # Platform components (ingress, cert-manager, external-dns, etc.)
+│  ├─ apps/                                         # Application workloads (Deployment/Service/Ingress/Route)
+│  └─ kustomization.yaml                            # Kustomize entry (or Chart.yaml if Helm-first)
+│
+├─ overlays/                                        # Per-environment deltas ONLY (keep minimal + explicit)
+│  ├─ dev/
+│  │  ├─ kustomization.yaml                         # Dev overlay entry
+│  │  ├─ patches/                                   # Patch files (strategic merge / json6902)
+│  │  └─ values.yaml                                # Optional (Helm only): dev values overrides
+│  ├─ stage/
+│  │  └─ …                                          # Stage overlay (prod-like where possible)
+│  └─ prod/
+│     └─ …                                          # Prod overlay (HA, strict network/egress, audited settings)
+│
+├─ policies/                                        # Policy-as-code (CI enforced; optionally admission-enforced)
+│  ├─ kyverno/                                      # Kyverno policies (or gatekeeper/ if that’s the chosen tool)
+│  └─ conftest/                                     # Conftest policies/tests for manifest validation (fail-closed)
+│
+└─ scripts/                                         # Optional helper scripts (safe + reviewed; CI-parity)
+   ├─ validate.sh                                   # Preflight validation (kustomize build, schema checks, policy checks)
+   └─ diff.sh                                       # Rendered diff helper (base vs overlays; change review aid)
 ```
 
 ---
