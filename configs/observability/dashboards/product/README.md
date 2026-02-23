@@ -70,14 +70,16 @@ This README documents the intended structure. Your repo may have fewer or differ
 
 ```text
 configs/
-  observability/
-    dashboards/
-      product/
-        README.md
-        dashboards/            # dashboard definitions (JSON/YAML) (recommended)
-        panels/               # reusable panel snippets (optional)
-        assets/               # screenshots/thumbnails (optional)
-        registry.yaml         # dashboard registry for CI + discovery (recommended)
+└─ observability/
+   └─ dashboards/
+      └─ product/                                    # Product-facing dashboards (usage + UX + performance)
+         ├─ README.md                                 # Purpose, ownership, and how dashboards are validated/deployed
+         │
+         ├─ dashboards/                               # Dashboard definitions (JSON/YAML) — preferred source of truth
+         ├─ panels/                                   # Optional reusable panel snippets (shared queries/visuals)
+         ├─ assets/                                   # Optional screenshots/thumbnails for docs/PR review
+         │
+         └─ registry.yaml                             # Recommended: dashboard registry (CI discovery + deploy wiring)
 ```
 
 ### Acceptable inputs
