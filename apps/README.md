@@ -9,6 +9,7 @@ created: 2026-02-22
 updated: 2026-02-22
 policy_label: public
 related:
+  - kfm://doc/kfm-definitive-design-governance-guide-vnext
   - kfm://doc/UNKNOWN_SYSTEM_OVERVIEW
   - ../docs/
 tags: [kfm, apps, ui, trust-membrane, contracts, evidence-first]
@@ -17,8 +18,10 @@ notes:
   - Fill the App Registry section from the actual directory tree as the first follow-up.
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
 # apps/ — KFM runnable applications
-**Purpose:** Home for user-facing and operator-facing application surfaces (Map / Story / Focus / Admin) that consume **governed APIs** and expose **evidence-first** UX.
+**Purpose:** Home for user-facing and operator-facing application surfaces (Map / Story / Focus / Admin / CLI) that consume **governed APIs** and expose **evidence-first** UX.
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 ![layer](https://img.shields.io/badge/layer-UI%20surfaces-blue)
@@ -31,6 +34,7 @@ notes:
 ## Navigation
 - [What belongs here](#what-belongs-here)
 - [Non-negotiable invariants](#non-negotiable-invariants)
+- [Trust surfaces](#trust-surfaces-required)
 - [App registry](#app-registry)
 - [Directory layout](#directory-layout)
 - [App manifest contract](#app-manifest-contract)
@@ -44,13 +48,14 @@ notes:
 
 ## What belongs here
 
-This folder is for **runnable applications**—anything a human launches (browser UI, operator console, desktop wrapper) or any standalone “surface” whose primary job is **presenting governed KFM knowledge**.
+This folder is for **runnable applications**—anything a human launches (browser UI, operator console, desktop wrapper, CLI) or any standalone “surface” whose primary job is **presenting governed KFM knowledge**.
 
 Typical app categories (examples; *verify actual apps in this repo*):
 - **Map UI** (2D/3D): interactive layer rendering, time slider, evidence drawer
 - **Story UI**: narrative browsing, citations/evidence linkage, timelines
 - **Focus Mode UI**: governed Q&A workflow (policy pre-check → evidence retrieval → cite-or-abstain)
 - **Admin / Ops UI**: dataset intake review, promotion gate dashboards, policy fixtures review
+- **CLI**: operator workflows (promotion, validation, evidence resolution) via governed API / tooling
 
 > **Non-goal:** placing shared libraries here. Shared code should live under a `packages/` (or equivalent) workspace to avoid copy/paste drift.
 
@@ -73,10 +78,11 @@ Apps sit at the end of the KFM “truth path”:
 ### 3) Evidence-first UX (map-first, time-aware)
 - Every layer, claim, chart, or AI output **MUST** be openable into an **evidence view**:
   - dataset version (immutable ID)
-  - license/rights holder
+  - license/rights holder + attribution
   - policy label + redactions/generalizations applied
   - provenance chain (run receipt / activity)
-  - artifact links + checksums
+  - artifact links + checksums (only if policy allows)
+  - freshness + validation status
 
 ### 4) Focus Mode is not general chat
 - If this repo contains a Focus Mode surface, it **MUST** implement **cite-or-abstain** behavior.
@@ -84,6 +90,31 @@ Apps sit at the end of the KFM “truth path”:
 
 ### 5) Contract-first changes
 - API and schema contracts are first-class artifacts. UI work that depends on new/changed data **MUST** start from a contract change (OpenAPI/GraphQL/JSONSchema), not ad-hoc UI parsing.
+
+---
+
+## Trust surfaces (required)
+
+These are not optional polish. They are the user-visible governance contract.
+
+Minimum trust surfaces expected across apps:
+- **Automation status badges** (healthy/degraded/failing) on layers or features
+- **Evidence / provenance drawer** accessible from every layer and story claim
+- **Data Version** label per layer linking to DatasetVersion catalogs
+- **Policy notices** explicit at time of interaction (e.g., “geometry generalized due to policy”)
+- **“What changed?”** panel comparing DatasetVersion diffs (counts, checksums, QA metrics)
+
+### Evidence drawer minimum fields
+The evidence drawer should show, at minimum:
+- Evidence bundle ID + digest
+- DatasetVersion ID + dataset name
+- License and rights holder (with attribution text)
+- Freshness (last run timestamp) and validation status
+- Provenance chain (run receipt link)
+- Artifact links (only if policy allows)
+- Redactions applied (obligations)
+
+> **Fail-closed publishing expectation:** if citations fail to resolve, publishing should be blocked (enforceable via an evidence resolver check during publish flows).
 
 ---
 
@@ -96,6 +127,7 @@ flowchart LR
     Story["Story UI"]
     Focus["Focus Mode UI"]
     Admin["Admin / Ops UI"]
+    CLI["Operator CLI"]
   end
 
   Apps -->|HTTPS| API["Governed API<br/>(Policy + Evidence Resolver)"]
@@ -112,7 +144,7 @@ flowchart LR
 
 | App | Type | Primary surface | Policy label | Primary API contract(s) | Owner | Status |
 |---|---|---|---|---|---|---|
-| `TBD` | `web` / `desktop` / `other` | map / story / focus / admin | public / restricted | `TBD` | `TBD` | draft |
+| `TBD` | `web` / `desktop` / `cli` / `other` | map / story / focus / admin / ops | public / restricted | `TBD` | `TBD` | draft |
 | `TBD` |  |  |  |  |  |  |
 
 **Registry DoD:**
@@ -151,7 +183,11 @@ apps/
 │  ├─ README.md
 │  ├─ kfm.app.json
 │  └─ (src/ …)
-└─ admin/                # Governance/operator surface
+├─ admin/                # Governance/operator surface
+│  ├─ README.md
+│  ├─ kfm.app.json
+│  └─ (src/ …)
+└─ cli/                  # Operator CLI (if present)
    ├─ README.md
    ├─ kfm.app.json
    └─ (src/ …)
@@ -223,6 +259,7 @@ Apps should be tested like safety-critical surfaces because they control what ge
 ### CI gates (minimum credible set)
 - [ ] **Unit tests**: components + adapters (map/globe adapters, data transforms)
 - [ ] **Contract checks**: API contract compatibility + schema validation of fixtures
+- [ ] **Citation resolution checks**: evidence resolver can resolve refs in a test environment; block publish if it fails
 - [ ] **E2E tests**: critical user flows (layer toggle → evidence drawer → citation click-through)
 - [ ] **Accessibility checks**: keyboard navigation, ARIA labels, safe color semantics
 - [ ] **“No direct storage access”**: enforce via code ownership boundaries + dependency allowlists + static checks
@@ -230,6 +267,7 @@ Apps should be tested like safety-critical surfaces because they control what ge
 ### Recommended E2E flows (map-first)
 - Open app → load basemap → toggle a layer → open evidence view → confirm policy label shown
 - Change time (timeline) → verify layers update → evidence remains consistent with selected dataset version
+- Story publish flow (if present): citation verification → evidence resolver check → publish allowed/denied with reasons
 - If Focus Mode present: policy pre-check → evidence bundle → answer with citations → citation verification
 
 ---
@@ -241,6 +279,13 @@ Apps should be tested like safety-critical surfaces because they control what ge
 - Prefer short-lived auth tokens to the governed API, scoped to the least privilege.
 - Treat all external links as untrusted; validate/route through governed API where policy requires.
 
+### Evidence UI guardrails (fail-closed)
+If your UI renders receipts/manifests/evidence bundles:
+- Validate against schema **before** computing derived views.
+- Verify signatures where applicable; if verification fails, render as **untrusted** (fail closed).
+- Never use `dangerouslySetInnerHTML`; sanitize any unavoidable rich text.
+- External links must use `target="_blank"` and `rel="noopener noreferrer"`.
+
 ### Sensitive locations & culturally restricted material
 - For precise, private, culturally restricted, or vulnerable sites: **do not render exact coordinates** in public UIs.
 - Prefer generalization (e.g., bounding boxes, coarse centroids) and add an on-screen governance note explaining why.
@@ -249,6 +294,13 @@ Apps should be tested like safety-critical surfaces because they control what ge
 - Evidence UX must never become a “data exfiltration” path:
   - links to attestations/logs/manifests must be mediated by policy and authorization
   - the UI must gracefully handle “evidence exists but you can’t access it”
+
+### Abstention and restriction UX
+Abstention is a feature. The UI must make abstention understandable without leaking restricted info:
+- show “why” in policy-safe terms (e.g., “restricted evidence not available to your role”)
+- suggest safe alternatives (broader time range, public datasets)
+- provide `audit_ref` so stewards can review
+- never show “ghost metadata” that reveals restricted existence unless policy allows
 
 ---
 
@@ -265,7 +317,7 @@ Apps should be tested like safety-critical surfaces because they control what ge
    - no direct storage/DB access
    - evidence UX wired for every public layer/claim
 4. **Add tests**
-   - unit + contract + e2e + a11y
+   - unit + contract + e2e + a11y + citation resolution checks
 5. **Register**
    - add row to [App registry](#app-registry)
 
@@ -294,4 +346,4 @@ Apps should be tested like safety-critical surfaces because they control what ge
 </details>
 
 <!-- Back to top -->
-<p align="right"><a href="#apps--kfm-runnable-applications">Back to top ↑</a></p>
+<p align="right"><a href="#top">Back to top ↑</a></p>
