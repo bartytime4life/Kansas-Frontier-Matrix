@@ -1,1 +1,147 @@
+name: Bug report
+description: Report something that isn't working as expected.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report.
+        Please fill out the sections below so we can reproduce and fix it quickly.
 
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      description: Confirm the following before submitting.
+      options:
+        - label: I searched existing issues and didn't find a duplicate.
+          required: true
+        - label: I can reproduce this issue reliably (or I explain why I can’t).
+          required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      description: Which part of the system is impacted?
+      options:
+        - UI / Map / Story
+        - Focus Mode AI
+        - API / Backend
+        - Data pipeline / ETL
+        - Catalog / Provenance
+        - Storage / Indexing
+        - CI/CD
+        - Docs
+        - Other / Not sure
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How badly does this impact users or operations?
+      options:
+        - S0 - Blocker (system unusable / data loss / security issue)
+        - S1 - High (major feature broken, no workaround)
+        - S2 - Medium (feature partially broken, workaround exists)
+        - S3 - Low (minor issue / cosmetic / edge case)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: reproducibility
+    attributes:
+      label: Reproducibility
+      options:
+        - Always
+        - Often
+        - Sometimes
+        - Rarely
+        - Only once
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: A clear and concise description of the bug.
+      placeholder: "When I click X, Y happens instead of Z..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide a minimal, numbered reproduction path.
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: What you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: What actually happened (include exact error text if available).
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence / logs / screenshots
+      description: |
+        Paste logs, stack traces, screenshots, or links to runs here.
+        Tip: include timestamps, request IDs, run IDs, dataset versions, or commit hashes when relevant.
+      placeholder: |
+        - Log / stack trace:
+        - Screenshot:
+        - Request ID / Run ID:
+        - Dataset/version:
+        - Commit SHA:
+      render: shell
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Provide details that help reproduce the issue.
+      placeholder: |
+        - App/version (or commit SHA):
+        - Browser (if UI): Chrome/Firefox/Safari + version
+        - OS: Windows/macOS/Linux + version
+        - Deployment: local/dev/staging/prod
+        - Feature flags/config:
+        - Anything else relevant:
+    validations:
+      required: true
+
+  - type: textarea
+    id: workaround
+    attributes:
+      label: Workaround
+      description: If you found a workaround, describe it here.
+      placeholder: "I can avoid the bug by ..."
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else that might help (related issues/PRs, suspected cause, etc.).
