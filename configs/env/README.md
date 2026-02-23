@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: Operator (platform) + Steward (governance)
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: restricted
 related:
   - configs/env/README.md
@@ -33,7 +33,7 @@ notes:
 
 Central place for **environment configuration templates** and **deployment-safe configuration artifacts** for Kansas Frontier Matrix (KFM) services.
 
-**Status:** Draft · **Owners:** Operator (platform) + Steward (governance) · **Last updated:** 2026-02-22
+**Status:** Draft · **Owners:** Operator (platform) + Steward (governance) · **Last updated:** 2026-02-23
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 ![scope](https://img.shields.io/badge/scope-config%20%7C%20secrets-informational)
@@ -161,13 +161,13 @@ cp configs/env/.env.example .env
 Fill in only what you need for local development.
 
 > **TIP**  
-> Ensure `.env` is ignored by Git. A typical pattern:
->
-> ```gitignore
-> .env
-> .env.*
-> !.env.example
-> ```
+> Ensure `.env` is ignored by Git. A typical pattern (copy/paste):
+
+```gitignore
+.env
+.env.*
+!.env.example
+```
 
 ### 2) Start the stack
 
@@ -191,17 +191,16 @@ docker-compose down
 docker-compose up --build
 ```
 
-<details>
-<summary>Example local <code>.env</code> (placeholders only)</summary>
+### Example local `.env` (placeholders only)
 
-```dotenv
+```ini
 # Database (PostGIS)
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD=changeme
+POSTGRES_PASSWORD=__REPLACE_ME__
 POSTGRES_DB=kfm
 
 # Graph
-NEO4J_AUTH=neo4j/changeme
+NEO4J_AUTH=neo4j/__REPLACE_ME__
 
 # Service ports
 FASTAPI_PORT=8000
@@ -214,13 +213,13 @@ REACT_APP_API_URL=http://localhost:8000
 ENABLE_OPA=true
 
 # Focus Mode AI (choose one approach)
+
 # Local model via Ollama (example)
-OLLAMA_MODEL=llama2:7b
+OLLAMA_MODEL=<MODEL_NAME>
+
 # Hosted model (example)
 OPENAI_API_KEY=
 ```
-
-</details>
 
 ### Common local pitfalls
 
