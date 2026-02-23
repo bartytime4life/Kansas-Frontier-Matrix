@@ -123,21 +123,20 @@ The intended organization under `configs/env/` is:
 
 ```text
 configs/
-  env/
-    README.md                  # this file
-
-    .env.example               # local dev template (no secrets)
-
-    templates/
-      api.env.example          # service-scoped template (optional)
-      web.env.example          # service-scoped template (optional)
-
-    k8s/
-      configmap.yaml.tmpl      # non-secret config for K8s/OpenShift
-      secret.keys.yaml.tmpl    # key names only (NO VALUES)
-
-    scripts/
-      validate_env.*           # optional: fail-fast checks (CI + local)
+└─ env/                                         # Environment config templates (keys only; never commit secret values)
+   ├─ README.md                                  # This file: how env keys are managed + validation rules
+   ├─ .env.example                               # Local dev template (NO secrets; safe defaults only)
+   │
+   ├─ templates/                                 # Optional service-scoped templates (namespaced keys)
+   │  ├─ api.env.example                         # API template (ports, base URLs, feature flags; no secrets)
+   │  └─ web.env.example                         # Web template (public runtime flags; no secrets)
+   │
+   ├─ k8s/                                       # Kubernetes/OpenShift templates (non-secret config + key lists)
+   │  ├─ configmap.yaml.tmpl                     # ConfigMap template (non-secret runtime config)
+   │  └─ secret.keys.yaml.tmpl                   # Secret *key names only* (NO VALUES committed)
+   │
+   └─ scripts/                                   # Optional validation helpers (local parity with CI)
+      └─ validate_env.*                          # Fail-fast checks (missing keys, invalid values, forbidden secrets)
 ```
 
 > **NOTE**  
