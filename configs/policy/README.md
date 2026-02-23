@@ -183,26 +183,34 @@ These are the most common policy surfaces that should be handled here (names are
 
 ### Directory tree (illustrative)
 ```text
-configs/policy/
-  README.md
-  _index.yaml
-  classification/
-    labels.yaml
-  access/
-    roles.yaml
-    permissions.yaml
-  redaction/
-    rules.yaml
-  promotion/
-    gates.yaml
-  evidence/
-    requirements.yaml
-  schemas/
-    # JSON Schema files that validate the configs above
-  examples/
-    # synthetic fixtures used by policy tests
-  decisions/
-    # policy decision records (why a rule exists, risks, tradeoffs)
+configs/policy/                                   # Policy configuration (human-editable inputs that drive enforcement)
+├─ README.md                                      # How policy config works, review rules, and CI validation (fail-closed)
+├─ _index.yaml                                    # Registry/index of config files + versions + ownership (source of truth)
+│
+├─ classification/                                # Classification taxonomy (labels + meanings)
+│  └─ labels.yaml                                 # Policy labels (public/restricted/etc.) + handling flags
+│
+├─ access/                                        # Access model (roles → permissions)
+│  ├─ roles.yaml                                  # Role definitions (human names + scopes)
+│  └─ permissions.yaml                            # Permission registry (actions/resources; used by policy mapping)
+│
+├─ redaction/                                     # Redaction defaults (what must be masked/removed/generalized)
+│  └─ rules.yaml                                  # Field/precision rules + transforms + deny conditions
+│
+├─ promotion/                                     # Promotion gates (what “publishable” must prove)
+│  └─ gates.yaml                                  # Required artifacts + thresholds + failure modes
+│
+├─ evidence/                                      # Evidence requirements (cite-or-abstain constraints)
+│  └─ requirements.yaml                           # Citation rules, resolver constraints, bundle limits
+│
+├─ schemas/                                       # JSON Schemas validating the configs above (CI-enforced)
+│  └─ *.schema.json                               # One schema per config family (labels/roles/rules/gates/requirements)
+│
+├─ examples/                                      # Synthetic fixtures used by policy tests (allow/deny/regression)
+│  └─ …                                           # Minimal good/bad examples for each config family
+│
+└─ decisions/                                     # Decision records: why rules exist (risks, tradeoffs, incident links)
+   └─ …                                           # ADR-style notes for policy changes (human-auditable context)
 ```
 
 [Back to top](#navigate)
