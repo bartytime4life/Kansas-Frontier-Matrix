@@ -1,1 +1,754 @@
+#!/usr/bin/env python3
+"""KFM Environment Validator
 
+Purpose
+-------
+Fail-closed (by default) validation of environment configuration for local dev/CI.
+
+This script tries hard to avoid "inventing" what variables are required:
+- It infers variables from repo artifacts (docker compose files, .env.example, etc.).
+- It validates whichever variables are declared/used by those artifacts.
+
+It never prints secret values.
+
+Exit codes
+----------
+0  OK
+2  Missing required variables
+3  Invalid variable values
+4  Unable to infer any variables (configuration incomplete)
+
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Set, Tuple
+from urllib.parse import urlparse
+
+
+# --- heuristics -------------------------------------------------------------
+
+SENTINEL_FILES = [
+    ".git",
+    "pyproject.toml",
+    "package.json",
+    "docker-compose.yml",
+    "docker-compose.yaml",
+    "compose.yml",
+    "compose.yaml",
+]
+
+ENV_TEMPLATE_NAMES = [
+    ".env.example",
+    ".env.sample",
+    ".env.template",
+    ".env.dist",
+    "env.example",
+    "env.sample",
+    "env.template",
+    "dotenv.example",
+]
+
+COMPOSE_NAMES = [
+    "docker-compose.yml",
+    "docker-compose.yaml",
+    "compose.yml",
+    "compose.yaml",
+]
+
+SKIP_DIR_NAMES = {
+    ".git",
+    ".venv",
+    "venv",
+    "node_modules",
+    "dist",
+    "build",
+    "out",
+    "target",
+    "__pycache__",
+    "data",  # often huge; environment vars should be in configs/templates
+}
+
+SECRET_HINTS = (
+    "PASSWORD",
+    "PASSWD",
+    "SECRET",
+    "TOKEN",
+    "API_KEY",
+    "KEY",
+)
+
+PLACEHOLDER_VALUES = {
+    "changeme",
+    "change_me",
+    "change-me",
+    "todo",
+    "tbd",
+    "example",
+    "sample",
+    "password",
+    "postgres",
+    "admin",
+    "letmein",
+}
+
+BOOL_TRUE = {"1", "true", "t", "yes", "y", "on"}
+BOOL_FALSE = {"0", "false", "f", "no", "n", "off"}
+
+
+@dataclass
+class VarSpec:
+    name: str
+    required: bool
+    sources: Set[str]
+
+
+@dataclass
+class ValidationMessage:
+    level: str  # "error" | "warning" | "info"
+    var: Optional[str]
+    message: str
+
+
+@dataclass
+class ValidationResult:
+    repo_root: str
+    env_file: Optional[str]
+    inferred: Dict[str, VarSpec]
+    resolved: Dict[str, str]
+    messages: List[ValidationMessage]
+
+    @property
+    def has_errors(self) -> bool:
+        return any(m.level == "error" for m in self.messages)
+
+    @property
+    def has_warnings(self) -> bool:
+        return any(m.level == "warning" for m in self.messages)
+
+
+# --- parsing ----------------------------------------------------------------
+
+_ENV_LINE_RE = re.compile(r"^\s*(?:export\s+)?(?P<key>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*(?P<val>.*)\s*$")
+
+
+def parse_dotenv(text: str) -> Dict[str, str]:
+    """Parse a dotenv file (minimal, dependency-free).
+
+    Supports:
+      KEY=value
+      export KEY=value
+      quoted values (single/double)
+      inline comments for unquoted values
+
+    Does not support multi-line values.
+    """
+
+    out: Dict[str, str] = {}
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        m = _ENV_LINE_RE.match(raw_line)
+        if not m:
+            # ignore non-assignment lines
+            continue
+
+        key = m.group("key")
+        val = m.group("val").strip()
+
+        # Remove inline comments for unquoted values
+        if val and not (val.startswith("'") or val.startswith('"')):
+            # split on first unescaped # that has whitespace before it
+            parts = re.split(r"(?<!\\)\s+#", val, maxsplit=1)
+            val = parts[0].strip()
+
+        # Strip quotes
+        if len(val) >= 2 and ((val[0] == val[-1]) and val[0] in ("'", '"')):
+            q = val[0]
+            inner = val[1:-1]
+            if q == '"':
+                inner = inner.encode("utf-8").decode("unicode_escape")
+            out[key] = inner
+        else:
+            out[key] = val
+
+    return out
+
+
+_INTERP_RE = re.compile(r"\$\{([^}]+)\}")
+
+
+def extract_interpolated_vars(text: str) -> List[Tuple[str, bool]]:
+    """Return (VAR_NAME, required) tuples based on ${...} interpolation.
+
+    Compose/YAML-style patterns we recognize:
+      ${VAR}            -> required
+      ${VAR:-default}   -> optional
+      ${VAR-default}    -> optional
+      ${VAR?err}        -> required
+      ${VAR:?err}       -> required
+
+    Anything else is treated as required by default.
+    """
+
+    found: List[Tuple[str, bool]] = []
+
+    for inner in _INTERP_RE.findall(text):
+        inner = inner.strip()
+        if not inner:
+            continue
+
+        m = re.match(r"^([A-Za-z_][A-Za-z0-9_]*)", inner)
+        if not m:
+            continue
+
+        name = m.group(1)
+        rest = inner[len(name) :]
+
+        required = True
+        if rest.startswith(":-") or rest.startswith("-"):
+            required = False
+        elif rest.startswith(":?") or rest.startswith("?"):
+            required = True
+        else:
+            required = True
+
+        found.append((name, required))
+
+    return found
+
+
+# --- repo discovery ---------------------------------------------------------
+
+
+def find_repo_root(start: Path) -> Optional[Path]:
+    cur = start.resolve()
+    if cur.is_file():
+        cur = cur.parent
+
+    for _ in range(50):
+        for sentinel in SENTINEL_FILES:
+            if (cur / sentinel).exists():
+                return cur
+        if cur.parent == cur:
+            break
+        cur = cur.parent
+    return None
+
+
+def iter_candidate_files(repo_root: Path, include_workflows: bool) -> List[Path]:
+    """Return a small, targeted list of files to scan."""
+
+    candidates: List[Path] = []
+
+    # Root-level expected files
+    for name in COMPOSE_NAMES + ENV_TEMPLATE_NAMES + [".env"]:
+        p = repo_root / name
+        if p.exists() and p.is_file():
+            candidates.append(p)
+
+    # Typical config dirs
+    for rel in [
+        "configs",
+        "config",
+        "ops",
+        "docker",
+        "deployment",
+        "deploy",
+        "infra",
+        "infrastructure",
+        "services",
+    ]:
+        d = repo_root / rel
+        if d.exists() and d.is_dir():
+            for name in COMPOSE_NAMES + ENV_TEMPLATE_NAMES:
+                p = d / name
+                if p.exists() and p.is_file():
+                    candidates.append(p)
+
+            # also grab any *.env.example files in these dirs (non-recursive)
+            for p in d.glob("*.env*"):
+                if p.is_file() and p.name.endswith((".example", ".sample", ".template", ".dist")):
+                    candidates.append(p)
+
+    if include_workflows:
+        workflows = repo_root / ".github" / "workflows"
+        if workflows.exists() and workflows.is_dir():
+            for p in workflows.glob("*.yml"):
+                candidates.append(p)
+            for p in workflows.glob("*.yaml"):
+                candidates.append(p)
+
+    # De-dup while preserving order
+    seen: Set[Path] = set()
+    uniq: List[Path] = []
+    for p in candidates:
+        rp = p.resolve()
+        if rp not in seen:
+            uniq.append(p)
+            seen.add(rp)
+
+    return uniq
+
+
+# --- validation -------------------------------------------------------------
+
+
+def mask_value(name: str, value: str) -> str:
+    if any(hint in name.upper() for hint in SECRET_HINTS):
+        if not value:
+            return ""
+        # reveal only length
+        return f"<redacted:{len(value)} chars>"
+    return value
+
+
+def looks_placeholder(value: str) -> bool:
+    v = value.strip().lower()
+    if not v:
+        return False
+    if v in PLACEHOLDER_VALUES:
+        return True
+    if v.startswith("changeme"):
+        return True
+    if v.startswith("todo"):
+        return True
+    return False
+
+
+def validate_port(name: str, value: str) -> Optional[str]:
+    try:
+        p = int(value)
+    except Exception:
+        return f"{name} must be an integer TCP port (1-65535)."
+    if p < 1 or p > 65535:
+        return f"{name} must be in range 1-65535."
+    return None
+
+
+def validate_bool(name: str, value: str) -> Optional[str]:
+    v = value.strip().lower()
+    if v in BOOL_TRUE or v in BOOL_FALSE:
+        return None
+    return f"{name} must be a boolean (one of: {sorted(BOOL_TRUE | BOOL_FALSE)})."
+
+
+def validate_url(name: str, value: str) -> Optional[str]:
+    parsed = urlparse(value)
+    if not parsed.scheme:
+        return f"{name} looks like a URL/URI but has no scheme (e.g., http://, https://, bolt://)."
+    return None
+
+
+def is_boolish_name(name: str) -> bool:
+    up = name.upper()
+    return (
+        up.startswith("ENABLE_")
+        or up.endswith("_ENABLED")
+        or up.endswith("_ENABLE")
+        or up.endswith("_FLAG")
+        or up.endswith("_BOOL")
+        or up.startswith("USE_")
+    )
+
+
+def is_urlish_name(name: str) -> bool:
+    up = name.upper()
+    return "URL" in up or "URI" in up
+
+
+def is_portish_name(name: str) -> bool:
+    up = name.upper()
+    return up.endswith("_PORT") or up == "PORT"
+
+
+def is_pathish_name(name: str) -> bool:
+    up = name.upper()
+    return up.endswith("_PATH") or up.endswith("_FILE")
+
+
+def check_gitignore(repo_root: Path, messages: List[ValidationMessage]) -> None:
+    gitignore = repo_root / ".gitignore"
+    env_file = repo_root / ".env"
+    if not gitignore.exists() or not env_file.exists():
+        return
+
+    try:
+        gi = gitignore.read_text(encoding="utf-8", errors="replace")
+    except Exception:
+        return
+
+    if re.search(r"(?m)^\s*\.env\s*$", gi) is None:
+        messages.append(
+            ValidationMessage(
+                level="warning",
+                var=None,
+                message=".env exists but .gitignore does not contain a plain '.env' ignore rule. "
+                "Avoid committing secrets; consider adding '.env' to .gitignore.",
+            )
+        )
+
+    # If git is available and repo looks like a git repo, warn if .env is tracked
+    if (repo_root / ".git").exists():
+        try:
+            r = subprocess.run(
+                ["git", "-C", str(repo_root), "ls-files", "--error-unmatch", ".env"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            if r.returncode == 0:
+                messages.append(
+                    ValidationMessage(
+                        level="warning",
+                        var=None,
+                        message=".env appears to be tracked by git (git ls-files matched). "
+                        "If it contains secrets, rotate them and remove .env from history.",
+                    )
+                )
+        except Exception:
+            pass
+
+
+def infer_vars(repo_root: Path, include_workflows: bool) -> Dict[str, VarSpec]:
+    inferred: Dict[str, VarSpec] = {}
+
+    for p in iter_candidate_files(repo_root, include_workflows=include_workflows):
+        try:
+            txt = p.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            continue
+
+        # 1) dotenv templates: treat listed keys as required unless comment says optional
+        if p.name in ENV_TEMPLATE_NAMES or p.name.endswith((".env.example", ".env.sample", ".env.template", ".env.dist")):
+            for raw_line in txt.splitlines():
+                m = _ENV_LINE_RE.match(raw_line)
+                if not m:
+                    continue
+                key = m.group("key")
+                val = (m.group("val") or "").strip()
+                comment = ""
+                if "#" in raw_line:
+                    comment = raw_line.split("#", 1)[1].strip().lower()
+
+                required = True
+                if "optional" in comment:
+                    required = False
+                elif val == "":
+                    required = True
+
+                spec = inferred.get(key)
+                if spec is None:
+                    inferred[key] = VarSpec(name=key, required=required, sources={str(p.relative_to(repo_root))})
+                else:
+                    spec.required = spec.required or required
+                    spec.sources.add(str(p.relative_to(repo_root)))
+
+        # 2) compose/yaml interpolation: use ${VAR} patterns
+        for (name, required) in extract_interpolated_vars(txt):
+            spec = inferred.get(name)
+            if spec is None:
+                inferred[name] = VarSpec(name=name, required=required, sources={str(p.relative_to(repo_root))})
+            else:
+                spec.required = spec.required or required
+                spec.sources.add(str(p.relative_to(repo_root)))
+
+    return inferred
+
+
+def resolve_values(env_from_os: Dict[str, str], env_from_file: Dict[str, str]) -> Dict[str, str]:
+    resolved = dict(env_from_file)
+    resolved.update(env_from_os)  # OS takes precedence
+    return resolved
+
+
+def validate(
+    repo_root: Path,
+    inferred: Dict[str, VarSpec],
+    resolved: Dict[str, str],
+    env_file: Optional[Path],
+    mode: str,
+) -> List[ValidationMessage]:
+    msgs: List[ValidationMessage] = []
+
+    # If we can't infer anything, fail closed — but with an actionable message.
+    if not inferred:
+        msgs.append(
+            ValidationMessage(
+                level="error",
+                var=None,
+                message=(
+                    "Unable to infer environment variables to validate. "
+                    "Add at least one of: docker-compose.yml/compose.yml or a dotenv template (.env.example). "
+                    "(This validator intentionally avoids hard-coding project-specific vars.)"
+                ),
+            )
+        )
+        return msgs
+
+    # Required var presence
+    for name, spec in sorted(inferred.items(), key=lambda kv: kv[0]):
+        if not spec.required:
+            continue
+
+        v = resolved.get(name, "")
+        if v is None or str(v).strip() == "":
+            srcs = ", ".join(sorted(spec.sources))
+            msgs.append(
+                ValidationMessage(
+                    level="error",
+                    var=name,
+                    message=f"Missing required env var '{name}' (referenced by: {srcs}).",
+                )
+            )
+
+    # Value validation heuristics
+    for name, spec in sorted(inferred.items(), key=lambda kv: kv[0]):
+        raw = resolved.get(name)
+        if raw is None or str(raw).strip() == "":
+            continue
+
+        value = str(raw).strip()
+
+        if is_portish_name(name):
+            err = validate_port(name, value)
+            if err:
+                msgs.append(ValidationMessage(level="error", var=name, message=err))
+
+        if is_boolish_name(name):
+            err = validate_bool(name, value)
+            if err:
+                msgs.append(ValidationMessage(level="error", var=name, message=err))
+
+        if is_urlish_name(name):
+            err = validate_url(name, value)
+            if err:
+                msgs.append(ValidationMessage(level="warning", var=name, message=err))
+
+        if any(hint in name.upper() for hint in SECRET_HINTS):
+            if looks_placeholder(value):
+                if mode == "prod":
+                    msgs.append(
+                        ValidationMessage(
+                            level="error",
+                            var=name,
+                            message=f"{name} looks like a placeholder value; production mode requires a real secret.",
+                        )
+                    )
+                else:
+                    msgs.append(
+                        ValidationMessage(
+                            level="warning",
+                            var=name,
+                            message=f"{name} looks like a placeholder value. Replace before production.",
+                        )
+                    )
+
+        if is_pathish_name(name):
+            # Best-effort: validate paths relative to repo root if they look relative.
+            p = Path(value)
+            if not p.is_absolute():
+                p = (repo_root / p).resolve()
+            if not p.exists():
+                msgs.append(
+                    ValidationMessage(
+                        level="warning",
+                        var=name,
+                        message=f"{name} points to a path that does not exist on this machine: {p}",
+                    )
+                )
+
+    # KFM-specific soft guidance (only warnings, derived from blueprint language)
+    # - Avoid printing secrets
+    # - Provide hint about AI backend variables
+    # This is intentionally minimal and non-blocking.
+    if "OPENAI_API_KEY" in inferred and "OLLAMA_MODEL" in inferred:
+        openai = resolved.get("OPENAI_API_KEY", "").strip()
+        ollama = resolved.get("OLLAMA_MODEL", "").strip()
+        ai_url = resolved.get("AI_BACKEND_URL", "").strip()
+        if not openai and not ollama:
+            msgs.append(
+                ValidationMessage(
+                    level="warning",
+                    var=None,
+                    message=(
+                        "AI configuration: neither OPENAI_API_KEY nor OLLAMA_MODEL is set. "
+                        "If Focus Mode depends on AI, set one (and AI_BACKEND_URL for local Ollama if needed)."
+                    ),
+                )
+            )
+        if ollama and not ai_url:
+            msgs.append(
+                ValidationMessage(
+                    level="warning",
+                    var=None,
+                    message=(
+                        "AI configuration: OLLAMA_MODEL is set but AI_BACKEND_URL is not. "
+                        "If using Ollama, ensure the backend URL is configured (e.g., http://host.docker.internal:11434)."
+                    ),
+                )
+            )
+
+    # .env hygiene checks
+    check_gitignore(repo_root, msgs)
+
+    # If env_file was explicitly provided and missing, error.
+    if env_file is not None and not env_file.exists():
+        msgs.append(
+            ValidationMessage(
+                level="error",
+                var=None,
+                message=f"Specified env file does not exist: {env_file}",
+            )
+        )
+
+    return msgs
+
+
+# --- CLI --------------------------------------------------------------------
+
+
+def pick_default_env_file(repo_root: Path) -> Optional[Path]:
+    # Common locations
+    for rel in [
+        ".env",
+        "configs/env/.env",
+        "config/.env",
+        "ops/.env",
+    ]:
+        p = repo_root / rel
+        if p.exists() and p.is_file():
+            return p
+    return None
+
+
+def main(argv: Optional[List[str]] = None) -> int:
+    parser = argparse.ArgumentParser(prog="validate_env", description="Validate repo environment configuration")
+    parser.add_argument("--repo-root", help="Path to repo root (auto-detected if omitted)")
+    parser.add_argument("--env-file", help="Path to .env file to load (defaults to repo-root/.env if present)")
+    parser.add_argument(
+        "--mode",
+        choices=["dev", "prod"],
+        default="dev",
+        help="Validation mode: dev (warnings allowed) vs prod (stricter secrets)",
+    )
+    parser.add_argument(
+        "--include-workflows",
+        action="store_true",
+        help="Also scan .github/workflows for ${VAR} references (often CI-only)",
+    )
+    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON result")
+    parser.add_argument("--quiet", action="store_true", help="Only print errors")
+
+    args = parser.parse_args(argv)
+
+    script_path = Path(__file__).resolve()
+    start = Path(args.repo_root).resolve() if args.repo_root else script_path
+    repo_root = find_repo_root(start)
+    if repo_root is None:
+        # fall back: assume repo root is four levels up from configs/env/scripts/validate_env.py
+        repo_root = script_path
+        for _ in range(4):
+            repo_root = repo_root.parent
+
+    env_file: Optional[Path] = None
+    if args.env_file:
+        env_file = Path(args.env_file).expanduser().resolve()
+        env_from_file = parse_dotenv(env_file.read_text(encoding="utf-8", errors="replace")) if env_file.exists() else {}
+    else:
+        env_file = pick_default_env_file(repo_root)
+        env_from_file = parse_dotenv(env_file.read_text(encoding="utf-8", errors="replace")) if env_file else {}
+
+    env_from_os = dict(os.environ)
+
+    inferred = infer_vars(repo_root, include_workflows=args.include_workflows)
+    resolved = resolve_values(env_from_os, env_from_file)
+    messages = validate(
+        repo_root=repo_root,
+        inferred=inferred,
+        resolved=resolved,
+        env_file=env_file if args.env_file else None,
+        mode=args.mode,
+    )
+
+    result = ValidationResult(
+        repo_root=str(repo_root),
+        env_file=str(env_file) if env_file else None,
+        inferred=inferred,
+        resolved={k: mask_value(k, str(v)) for k, v in resolved.items() if k in inferred},
+        messages=messages,
+    )
+
+    if args.json:
+        print(
+            json.dumps(
+                {
+                    "repo_root": result.repo_root,
+                    "env_file": result.env_file,
+                    "inferred": {
+                        name: {
+                            "required": spec.required,
+                            "sources": sorted(spec.sources),
+                        }
+                        for name, spec in sorted(result.inferred.items(), key=lambda kv: kv[0])
+                    },
+                    "resolved": {k: result.resolved[k] for k in sorted(result.resolved.keys())},
+                    "messages": [m.__dict__ for m in result.messages],
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
+    else:
+        # human output
+        print(f"repo_root: {result.repo_root}")
+        if result.env_file:
+            print(f"env_file:  {result.env_file}")
+        print(f"vars:      {len(result.inferred)} inferred")
+
+        def _print(m: ValidationMessage) -> None:
+            prefix = "ERROR" if m.level == "error" else "WARN" if m.level == "warning" else "INFO"
+            if m.var:
+                print(f"{prefix}: {m.var}: {m.message}")
+            else:
+                print(f"{prefix}: {m.message}")
+
+        for m in result.messages:
+            if args.quiet and m.level != "error":
+                continue
+            _print(m)
+
+        # small helpful hint
+        if any(m.level == "error" for m in result.messages):
+            print("\nHint: generate or copy a .env from .env.example, then re-run validate_env.")
+
+    # exit code selection
+    if not inferred:
+        return 4
+
+    missing_required = any(
+        (m.level == "error")
+        and (m.message.startswith("Missing required env var") or "Missing required env var" in m.message)
+        for m in messages
+    )
+
+    if missing_required:
+        return 2
+    if any(m.level == "error" for m in messages):
+        return 3
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
