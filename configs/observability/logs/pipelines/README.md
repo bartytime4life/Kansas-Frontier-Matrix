@@ -192,19 +192,19 @@ configs/observability/logs/pipelines/
 
 ### Recommended layout (proposed)
 ```
-configs/observability/logs/pipelines/
-  README.md
-
-  pipelines/                       # deployable pipeline configs
-    <pipeline>.yaml                # one pipeline per file OR tool-approved modular scheme
-
-  fixtures/                        # synthetic samples for regression tests
-    <pipeline>.sample.jsonl
-
-  tests/                           # lightweight validation (config-only)
-    README.md
-    <tool>_validate.sh             # runs tool's built-in config validation
-    redact_assertions.py           # asserts known secrets do not survive the pipeline
+configs/observability/logs/pipelines/                 # Log pipeline configs (parse → enrich → redact → route)
+├─ README.md                                          # What pipelines do, naming rules, and how CI validates/redaction
+│
+├─ pipelines/                                         # Deployable pipeline configs (runtime artifacts)
+│  └─ <pipeline>.yaml                                 # One pipeline per file (or approved modular scheme)
+│
+├─ fixtures/                                          # Synthetic samples for regression tests (JSONL log lines)
+│  └─ <pipeline>.sample.jsonl                         # Sample input lines used by tests (no secrets; deterministic)
+│
+└─ tests/                                             # Lightweight validation (config-only; fail-fast)
+   ├─ README.md                                       # How tests run + expected failure modes
+   ├─ <tool>_validate.sh                              # Runs tool’s built-in config validation (syntax + wiring)
+   └─ redact_assertions.py                            # Asserts known secret patterns never survive the pipeline
 ```
 
 [Back to top](#quick-navigation)
