@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: restricted
 related:
   - apps/studio/
@@ -18,27 +18,27 @@ tags:
   - story-nodes
 notes:
   - Scaffold doc for the governed authoring + review UI.
+  - Aligned to KFM MetaBlock v2 + Story Node v3 templates in the vNext governance guide.
   - Keep TBD items fail-closed until repo reality is confirmed.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Studio
 
-Governed authoring and review UI for **Story Nodes v3** — evidence-first narratives that can only be published when **citations resolve**.
+Governed authoring and review UI for **Story Nodes v3** — narrative artifacts that bind **map state** to **citations**, and can only be published when **citations resolve** through the governed Evidence Resolver.
 
 **Status:** 🚧 Scaffold · Wiring in progress  
 **Owners:** _TBD_ — add a `CODEOWNERS` entry for `apps/studio/`  
-**Scope:** Story authoring and review workflow (draft → validate → review → publish)
+**Scope:** Story authoring + review workflow (draft → validate → review → publish)
 
-![status](https://img.shields.io/badge/status-scaffold-lightgrey)
-![governance](https://img.shields.io/badge/governance-fail--closed-blue)
-![citations](https://img.shields.io/badge/citations-must%20resolve-critical)
-![a11y](https://img.shields.io/badge/accessibility-required-informational)
+**Badges (text-only):** `status=scaffold` · `governance=fail-closed` · `citations=must-resolve` · `accessibility=required`
 
 **Jump to:**  
 [Overview](#overview) •
+[Directory boundaries](#directory-boundaries) •
 [Non-negotiables](#non-negotiables) •
 [Workflows](#workflows) •
-[Story Node contracts](#story-node-contracts) •
+[Story Node v3 contracts](#story-node-v3-contracts) •
+[Trust surfaces and evidence drawer](#trust-surfaces-and-evidence-drawer) •
 [Architecture](#architecture) •
 [Local development](#local-development) •
 [Testing and CI gates](#testing-and-ci-gates) •
@@ -51,33 +51,61 @@ Governed authoring and review UI for **Story Nodes v3** — evidence-first narra
 
 ## Overview
 
-KFM Studio is where contributors create and revise **Story Nodes** — narrative artifacts intended to be published under KFM governance rules.
+KFM Studio is where contributors create and revise **Story Nodes** — governed publications that must remain evidence-led and policy-safe.
 
 Studio exists to make **governance by construction** practical in daily authoring:
 
 - Write stories as **structured, reviewable artifacts**
-- Attach **evidence** to every claim
-- Run the same **validation gates** locally that CI will enforce
-- Move content through a **review workflow**
-- **Fail closed** at publish time if citations or evidence cannot be resolved
+- Attach **EvidenceRefs** to every claim
+- Resolve citations in-editor via the governed Evidence Resolver
+- Move content through a **review workflow** with explicit governance triggers
+- **Fail closed** at publish time if citations, rights, or policy checks cannot be satisfied
 
 > **Note**  
-> If you are looking for map browsing, layer toggles, or feature inspection, that is **Map Explorer**. Studio is for making and reviewing Story content.
+> If you are looking for map browsing, layer toggles, or feature inspection, that is **Map Explorer**. Studio is for authoring and reviewing Story content.
 
-### Repo location
+---
 
-Expected app path:
+## Directory boundaries
+
+This README is intended to document the `apps/studio/` directory.
+
+### Where it fits in the repo
+
+Expected path (verify against repo reality):
 
 ```text
 repo-root/
 └─ apps/
    └─ studio/
-      ├─ README.md                # this file (recommended)
-      ├─ package.json             # tooling + scripts (TBD until confirmed)
+      ├─ README.md
       ├─ src/
       ├─ public/
+      ├─ tests/            # unit/e2e (if present)
+      ├─ .env.example      # recommended
       └─ ...
 ```
+
+### Acceptable inputs
+
+Artifacts that belong in `apps/studio/`:
+
+- Studio UI code (pages/routes, components, state, styling)
+- Story Node authoring and review UX (draft, review queue, publish flow)
+- Client-side Story Node v3 validators (schema + link checks) and fixtures for tests
+- Policy-aware UI primitives: evidence drawer panels, denial/abstention UX, redaction/generalization UI
+- Test suites that cover: keyboard navigation, publish gating, policy denial scenarios
+
+### Exclusions
+
+Artifacts that must **not** live in `apps/studio/`:
+
+- Any direct database access logic or object-store reads (trust membrane violation)
+- Pipeline code, dataset promotion mechanics, or catalog production (belongs server-side / pipeline modules)
+- Raw/processed datasets or sensitive source material (use governed stores and references)
+- Secrets or long-lived credentials (only `.env.example` with placeholders belongs here)
+
+[Back to top](#kfm-studio)
 
 ---
 
@@ -85,13 +113,13 @@ repo-root/
 
 These are system invariants Studio must enforce, or make impossible to bypass:
 
-1. **Publish is gated:** a Story Node cannot be published unless its citations and evidence resolve.
+1. **Publish is gated:** a Story Node cannot be published unless all citations resolve through the governed Evidence Resolver.
 2. **Trust membrane:** Studio is a client. It must never talk directly to databases or storage. All reads and writes go through governed interfaces (API + policy boundary).
-3. **Policy-aware rendering:** if the user lacks access (or the content is restricted), Studio must show safe alternatives (redaction, generalization, abstention UX) rather than best-effort leakage.
-4. **Auditability:** editing, review decisions, and publish actions must be attributable and reconstructable (who, what, when, why).
+3. **Policy-aware rendering:** if the user lacks access (or content is restricted), Studio must show safe alternatives (deny/redact/generalize/abstain UX) rather than best-effort leakage.
+4. **Auditability:** edits, review decisions, and publish actions must be attributable and reconstructable (who, what, when, why).
 
 > **Warning**  
-> Any “helpful fallback” that reveals restricted details is a security and governance defect.
+> Any “helpful fallback” that reveals restricted details (or “ghost metadata” about restricted artifacts) is a security + governance defect.
 
 [Back to top](#kfm-studio)
 
@@ -99,69 +127,106 @@ These are system invariants Studio must enforce, or make impossible to bypass:
 
 ## Workflows
 
-### Draft to publish workflow
+The vNext governance guide proposes a four-step workflow with governance review triggers.
+
+### Draft → review → publish
 
 ```mermaid
 flowchart LR
-  A[Draft in Studio] --> B[Validate locally<br/>schema + links + evidence refs]
-  B --> C[Submit for review]
-  C -->|Changes requested| A
-  C --> D[Citations and evidence resolve gate]
-  D -->|Pass| E[Publish]
-  D -->|Fail closed| A
+  A[Draft: author in Studio<br/>citations resolve in-editor] --> B[Review: steward/editor review<br/>claims + citations + sensitivity]
+  B --> C{Governance review trigger?}
+  C -->|No| D[Publish: immutable version]
+  C -->|Yes| E[Governance review<br/>rights + sensitivity approval]
+  E --> D
+  B -->|Changes requested| A
 ```
 
-### Roles and expectations
+### Publish is blocked when
 
-> This table is a default starting point. Adjust once the repo has a formal roles or RACI document.
+Publishing should be blocked if **any** of the following are true:
 
-| Role | Draft | Request review | Approve | Publish |
-|---|---:|---:|---:|---:|
-| Contributor | ✅ | ✅ | ❌ | ❌ |
-| Steward or Reviewer | ✅ (edits) | ✅ | ✅ | ✅ or ❌ (policy-dependent) |
-| Operator | ❌ | ❌ | ❌ | ✅ (release and promotion mechanics) |
-| Council | ❌ | ❌ | ✅ (high-sensitivity decisions) | ✅ (exception pathways) |
+- citations do not resolve
+- rights are unclear for included media
+- sensitive locations are included without policy approval
 
 [Back to top](#kfm-studio)
 
 ---
 
-## Story Node contracts
+## Story Node v3 contracts
 
-Studio should treat Story Nodes as **schema-backed** content with required metadata and explicit evidence references.
+Story Nodes bind narrative to map state and citations using two on-disk artifacts:
 
-### KFM MetaBlock v2
+- a **markdown file** (human-readable narrative + inline citations)
+- a **sidecar JSON** file (machine metadata: map state, citations, policy, review)
 
-At minimum, Studio should be able to create, edit, and validate these metadata fields (exact on-disk format is repo-defined):
+### MetaBlock v2
 
-- `story_id`
-- `title`, `summary`
-- `authors`
-- `created_at`, `updated_at`
-- `time_coverage`, `geography_coverage`
-- `dataset_refs`, `evidence_refs`
-- `policy_label`
-- `review_status`
-- `revision_history`
+Story Nodes (and this README) use **KFM MetaBlock v2** for structured metadata. Keep these invariants:
 
-### Evidence model expectations
+- `doc_id` is stable (do not regenerate on edits)
+- `updated` changes on meaningful edits
+- `policy_label` influences who can see the artifact if served through governed APIs
 
-Studio UX should make it hard to hand-wave evidence:
+### Story Node markdown shape
 
-- Every claim (or claim group) links to at least one **EvidenceRef**
-- Studio offers resolve now and shows the resolved **EvidenceBundle** (when accessible)
-- Broken links or missing evidence are **blocking errors** for publish
+A Story Node markdown file is expected to include:
 
-#### Minimum contract surfaces
+- MetaBlock v2 with `doc_id` in the `kfm://story/<uuid>@<version>` form
+- sections for `Summary`, `Claims`, `Narrative`, and `Evidence`
+- inline citation markers that point to resolvable EvidenceRefs (e.g., `dcat://…`, `stac://…`, `prov://…`, `doc://…`)
 
-Studio should rely on contract-first, governed services, including:
+### Story Node sidecar shape
 
-- **Story service:** CRUD drafts, revisions, review status, and publish action
-- **Evidence resolver:** `EvidenceRef → EvidenceBundle` (policy-aware)
-- **Policy service:** decision + reason codes (deny, redact, generalize, allow)
-- **Audit service:** append-only receipts for authoring, review, publish
+The Story Node sidecar JSON is expected to capture:
 
-> If a service is unavailable, Studio must degrade safely: show actionable errors and block publish.
+- Story identity + versioning (`story_id`, `version_id`, `kfm_story_node_version`)
+- governance state (`status`, `policy_label`, `review_state`)
+- reproducible `map_state` (bbox/zoom/layers/time window)
+- a `citations[]` array of EvidenceRefs (protocol-prefixed refs + kind)
+
+### Publishing gate
+
+Publishing must fail closed unless **all citations resolve** via the Evidence Resolver endpoint:
+
+- `POST /api/v1/evidence/resolve`
+
+[Back to top](#kfm-studio)
+
+---
+
+## Trust surfaces and evidence drawer
+
+Trust surfaces are user-visible governance contracts — not optional polish. They should be present in Studio flows where evidence is attached, reviewed, or validated.
+
+### Required trust surfaces
+
+Recommended trust surfaces include:
+
+- provenance / evidence drawer accessible from every story claim
+- data version labels and policy badges
+- explicit policy notices at the point of interaction (e.g., “geometry generalized due to policy”)
+- “what changed?” diffs for story versions (where supported)
+
+### Evidence drawer minimum contents
+
+When Studio renders an EvidenceBundle, the evidence drawer should show at minimum:
+
+- evidence bundle ID + digest
+- dataset version ID + dataset name
+- license + rights holder (including required attribution text)
+- freshness (last run timestamp) and validation status
+- provenance chain (run receipt link)
+- artifact links **only** if policy allows
+- redactions/generalizations applied (obligations)
+
+### Abstention and restriction UX
+
+Abstention is a feature. When evidence is not available, Studio should:
+
+- show “why” in policy-safe terms (no restricted leakage)
+- suggest safe alternatives (broader time range, public datasets)
+- surface an `audit_ref` (so stewards can review)
 
 [Back to top](#kfm-studio)
 
@@ -181,26 +246,34 @@ flowchart TB
     API[Governed API<br/>contract-first boundary]
     POL[Policy engine<br/>default deny]
     EVD[Evidence resolver<br/>EvidenceRef to EvidenceBundle]
+    AUD[Audit receipts<br/>append-only]
   end
 
   subgraph DataPlane
     CAT[Catalogs<br/>DCAT / STAC / PROV]
     IDX[Search index<br/>projections]
-    AUD[Audit ledger and receipts]
   end
 
   S --> API
   API --> POL
   API --> EVD
+  API --> AUD
   EVD --> CAT
   API --> IDX
-  API --> AUD
 ```
+
+### Governed API surfaces Studio should expect
+
+The vNext guide calls out a buildable v1 endpoint set; Studio most directly depends on:
+
+- `POST /api/v1/evidence/resolve` (citations → EvidenceBundles)
+- `GET/PUT /api/v1/story/{id}` (draft CRUD + versioning)
+- publish action that enforces `review_state` + resolvable citations
 
 ### What Studio must never do
 
-- Direct S3 or object-store reads of restricted content
-- Direct DB queries (Neo4j, Postgres, and similar)
+- Direct object-store reads of restricted content
+- Direct DB queries
 - Helpful fallbacks that display restricted details when resolver or policy says deny
 - Publishing that bypasses validation and citation resolution gates
 
@@ -216,12 +289,12 @@ flowchart TB
 
 - Node.js runtime (version pinned by repo conventions — **TBD**)
 - Repo-standard package manager (**TBD**: npm, pnpm, or yarn)
-- A running **Governed API** (or a mocked API mode for local development)
+- A running **Governed API** (or mocked API mode for local development)
 
 ### Typical workflow checklist
 
 1. Install dependencies (repo root)
-2. Configure Studio to point at the Governed API
+2. Configure Studio to point at the governed API gateway
 3. Start the dev server
 4. Run validation and tests before opening a PR
 
@@ -239,22 +312,29 @@ Prefer an `apps/studio/.env.example` checked into the repo (if missing, add one)
 
 ## Testing and CI gates
 
-Studio changes should expect merge-blocking gates aligned with KFM governance:
+Studio changes should expect merge-blocking gates aligned with KFM governance.
 
-- ✅ lint and typecheck
-- ✅ Story Node template and schema validation
-- ✅ policy tests where Studio touches policy-aware UI
-- ✅ link checking (no broken citations or evidence refs)
-- ✅ security scanning (dependencies)
-- ✅ accessibility smoke checks (keyboard navigation + core flows)
+### Minimum merge gates
 
-### What to test
+PROPOSED minimum merge gates include:
 
-- Draft save and restore, including MetaBlock fields
-- Evidence linking UX: add, remove, resolve EvidenceRefs
-- Publish blocked when citations do not resolve, with clear and actionable UX
-- Restricted content handling: deny, generalize, abstain flows are correct
-- Review transitions: draft → in review → approved → published are auditable
+- lint + typecheck (frontend + backend)
+- schema validation for any changed catalog artifacts
+- Story Node template validation
+- policy tests must pass
+- spec_hash tests must pass
+- link checker must pass (no broken citations)
+- security scanning (dependency vulnerabilities) and optional SBOM generation
+- accessibility smoke checks for UI changes (at least keyboard navigation for the evidence drawer)
+
+### What to test in Studio
+
+- Draft save/restore, including MetaBlock v2 fields
+- Story Node v3 validation: schema + link checks + citation resolution checks
+- Evidence linking UX: add/remove citations and resolve to EvidenceBundles
+- Publish is blocked when citations fail to resolve, with actionable errors
+- Restricted content handling: deny/generalize/abstain flows are correct
+- Keyboard navigation for authoring form and evidence drawer (a11y gate)
 
 [Back to top](#kfm-studio)
 
@@ -266,17 +346,17 @@ Studio changes should expect merge-blocking gates aligned with KFM governance:
 
 Studio must assume some locations and datasets are sensitive. UI patterns should:
 
-- Avoid displaying exact coordinates for restricted or sensitive items
-- Prefer generalized geometry, aggregation, or withheld summaries
-- Require explicit governance review for exceptions
+- avoid displaying exact coordinates for restricted or sensitive items
+- prefer generalized geometry, aggregation, or withheld summaries
+- require explicit governance review for exceptions
 
-### Trust surfaces
+### Threat-model prompts
 
-Studio should make trust legible:
+Use these prompts when reviewing Studio changes:
 
-- Show why I can or cannot show this for restricted items
-- Show license and provenance pointers where available
-- Surface validation failures as actionable items, not hidden logs
+- Does the frontend ever fetch data directly from object storage or databases? (expected: **no**)
+- Can a public user infer restricted dataset existence via error behavior? (expected: **no**)
+- Are all downloads/exports checked against policy labels and rights? (expected: **yes**)
 
 [Back to top](#kfm-studio)
 
@@ -293,9 +373,9 @@ Studio should make trust legible:
 - [ ] UI respects policy boundaries (no bypass paths)
 - [ ] Story Nodes validate locally and in CI
 - [ ] Citation resolution gate is enforced for publish
-- [ ] Accessibility smoke checks pass for authoring and review flows
-- [ ] Tests cover at least one deny or generalize restricted scenario
-- [ ] Any new metadata fields are documented and schema-backed
+- [ ] Evidence drawer is policy-safe and keyboard accessible
+- [ ] Tests cover at least one deny/generalize scenario
+- [ ] New metadata fields are documented and schema-backed
 
 [Back to top](#kfm-studio)
 
@@ -306,18 +386,19 @@ Studio should make trust legible:
 ### Publish is blocked because citations will not resolve
 
 - Confirm the EvidenceRefs are valid and reachable
-- Confirm the Governed API evidence resolver is running and reachable
-- Confirm your access level and policy label permits resolution
+- Confirm the Evidence Resolver (`POST /api/v1/evidence/resolve`) is reachable
+- Confirm your access level and policy label permit resolution
 
 ### I can view the story but cannot see sources
 
 - Likely a policy denial or resolver error
-- Studio should show a denial reason code and a next step
+- Studio should show a denial reason code and a next step (policy-safe)
 
 ### Accessibility gate failed
 
-- Verify keyboard navigation for the authoring form and evidence panels
+- Verify keyboard navigation for the authoring form and evidence drawer
 - Ensure focus order is logical; check ARIA labeling on controls
+- Confirm that policy badges and status indicators have text equivalents (no color-only meaning)
 
 [Back to top](#kfm-studio)
 
@@ -325,8 +406,8 @@ Studio should make trust legible:
 
 ## Glossary
 
-- **Story Node v3:** Governed narrative artifact with metadata, claims, and evidence references.
-- **EvidenceRef:** Pointer to an authoritative source such as a dataset version, document, or archive item.
-- **EvidenceBundle:** Resolver output that packages evidence plus provenance, license, and policy context.
+- **Story Node v3:** Governed narrative artifact: markdown narrative + sidecar JSON (map state, citations, policy, review).
+- **EvidenceRef:** Protocol-prefixed pointer to authoritative sources (DCAT/STAC/PROV/docs).
+- **EvidenceBundle:** Resolver output that packages evidence plus provenance, license, and policy obligations (includes a digest).
 - **policy_label:** Classification used to decide what can be shown and to whom.
 - **Fail closed:** If validation, policy, or evidence checks fail, nothing publishes.
