@@ -1,430 +1,359 @@
-<!--
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/f0802457-59de-47ed-a47e-e4285cbee09b
-title: configs/pipelines
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/0a5afa60-4763-4640-9edf-e11f1ce18705
+title: Pipeline Configuration
 type: standard
 version: v1
 status: draft
-owners: kfm-platform (assign CODEOWNERS)
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: internal
-tags:
-  - kfm
-  - pipelines
-  - promotion-contract
-  - provenance
+owners: KFM Maintainers
+created: 2026-02-23
+updated: 2026-02-23
+policy_label: restricted
+related:
+  - ../../src/pipelines/
+  - ../../docs/MASTER_GUIDE_v13.md
+tags: [kfm, pipelines, configs, governance]
 notes:
-  - Contract-first configuration for dataset-family pipelines. Code lives elsewhere.
-[/KFM_META_BLOCK_V2]
--->
+  - This README is a contract-first description of what belongs in configs/pipelines/.
+  - Update the "Current layout" section once actual files settle.
+[/KFM_META_BLOCK_V2] -->
 
-# configs/pipelines
+<a id="top"></a>
 
-Contract-first pipeline configuration for **KFM dataset ingestion → validation → promotion → publication**.
+# configs/pipelines — Pipeline configuration (governed)
 
-**Status:** `draft` · **Owners:** `kfm-platform` (TBD) · **Policy:** `internal` · **Last updated:** `2026-02-22`  
-**Badges:** `config-as-code` · `fail-closed` · `promotion-contract` · `evidence-first`
+**One-line purpose:** Central, schema-validated configuration for discovering, scheduling, and governing pipeline runs (without embedding pipeline code).
 
----
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Governance](https://img.shields.io/badge/governance-fail--closed-red)
+![Configs](https://img.shields.io/badge/configs-schema--validated-blue)
+![Secrets](https://img.shields.io/badge/secrets-not--in--repo-lightgrey)
 
-## Navigation
-
-- [What lives here](#what-lives-here)
-- [Conceptual data flow](#conceptual-data-flow)
-- [Recommended layout](#recommended-layout)
-- [Minimal pipeline blueprint](#minimal-pipeline-blueprint)
-- [Data lifecycle zones](#data-lifecycle-zones)
-- [Promotion Contract gates](#promotion-contract-gates)
-- [Controlled vocabularies](#controlled-vocabularies)
-- [Hash drift prevention](#hash-drift-prevention)
-- [How to add or change a pipeline](#how-to-add-or-change-a-pipeline)
-- [CI expectations](#ci-expectations)
-- [Security and governance defaults](#security-and-governance-defaults)
-- [Glossary](#glossary)
-- [Appendix templates](#appendix-templates)
+> **TODO (repo wiring):** Replace placeholder workflow badges once actual workflow file names + repo slug are known.
 
 ---
 
-## What lives here
+## Quick navigation
 
-This folder is the **configuration boundary** for ingestion + promotion pipelines.
-
-### Purpose
-
-- Provide a **predictable, reviewable contract** per dataset family (pipeline specs, schemas, QA rules, catalog templates).
-- Make governance enforceable by CI: **license-first, sensitivity-aware, fail-closed promotion**.
-- Enable reproducible evidence: every promoted dataset version is backed by **artifacts + catalogs + provenance**.
-
-### Non-goals
-
-- Pipeline code typically lives under `src/pipelines/` (reference layout) or `tools/` — **not** here.
-- This directory is **not** a place to store large raw or processed datasets.
-
-> NOTE  
-> Treat pipeline configs as governed artifacts: changes can affect what becomes citable in Map/Story/Focus surfaces.
-
-[Back to top](#configspipelines)
+- [Purpose and scope](#purpose-and-scope)
+- [Where this fits](#where-this-fits)
+- [How configs are used](#how-configs-are-used)
+- [Directory layout](#directory-layout)
+- [Adding or changing a pipeline](#adding-or-changing-a-pipeline)
+- [Validation and promotion gates](#validation-and-promotion-gates)
+- [Secrets and credentials](#secrets-and-credentials)
+- [CI integration](#ci-integration)
+- [Appendix: templates](#appendix-templates)
 
 ---
 
-## Conceptual data flow
+## Purpose and scope
+
+This directory exists to keep **pipeline behavior governed and reviewable**:
+
+- **Discovery:** which pipeline plugins exist and are enabled.
+- **Scheduling:** when pipelines run (cron/interval/event trigger).
+- **Environment overlays:** dev/test/prod knobs *without modifying code*.
+- **Governance knobs:** policy labels, required artifacts, and fail-closed checks.
+
+> **WARNING**
+> Pipeline **code** does **not** live here. Config changes are treated as governed changes because they can alter what data is produced and what surfaces it reaches.
+
+[Back to top](#top)
+
+---
+
+## Where this fits
+
+A common KFM separation of concerns:
+
+| Concern | Lives in | Why |
+|---|---|---|
+| Pipeline plugin code (ETL, transforms, publishing) | `src/pipelines/<pipeline>/` | Infrastructure-layer jobs; testable in isolation |
+| Pipeline “contract” (typed config per pipeline) | Usually `src/pipelines/<pipeline>/pipeline.yaml` | Co-located with plugin; schema-validated interface |
+| **Global pipeline registry & env overlays** | **`configs/pipelines/`** | One place to enable/disable/schedule safely |
+| Run receipts (per execution) | `data/prov/` / `prov/` (or configured location) | Auditability + provenance |
+| Catalog triplet outputs (STAC/DCAT/PROV) | `data/stac/`, `data/catalog/dcat/`, `data/prov/` | Governed runtime inputs |
+
+> **NOTE**
+> KFM’s design intent is **plugin-based pipelines**: contributors can “drop in” a new pipeline following conventions, and an orchestrator discovers it via a registry/manifest or directory scan (no central engine edits required).  
+
+[Back to top](#top)
+
+---
+
+## How configs are used
+
+High-level flow:
 
 ```mermaid
 flowchart LR
-  A[Upstream sources] --> B[Connectors: fetch/snapshot]
-  B --> C[RAW zone<br/>immutable + checksums]
-  C --> D[WORK / QUARANTINE<br/>normalize + QA + redaction candidates]
-  D --> E[PROCESSED zone<br/>publishable artifacts + checksums]
-  E --> F[CATALOG/TRIPLET<br/>DCAT + STAC + PROV + run receipts]
-  F --> G[Index builders<br/>db/search/graph/tiles]
-  G --> H[Governed API<br/>policy + evidence resolver]
-  H --> I[UI surfaces<br/>Map + Story + Focus]
+  subgraph CFG[configs/pipelines]
+    REG[Registry or manifest]
+    ENV[Environment overlays]
+    SCHEMA[Schema and policy knobs]
+  end
+
+  subgraph CODE[src/pipelines]
+    PLUG[Pipeline plugin code]
+    PDEF[pipeline.yaml contract]
+  end
+
+  RUN[Runner or orchestrator]
+  REC[Run receipt and provenance]
+  VAL[Validators and policy gate]
+  CAT[Catalog triplet outputs]
+  PUB[PUBLISHED runtime surfaces]
+
+  REG --> RUN
+  ENV --> RUN
+  SCHEMA --> RUN
+  PLUG --> RUN
+  PDEF --> RUN
+
+  RUN --> REC
+  RUN --> VAL
+  VAL --> CAT
+  REC --> CAT
+  CAT --> PUB
 ```
 
-**Key rule:** promotion is evidence-producing, not “just ETL”.
+**Design invariants (non-negotiable):**
+- Pipelines are **modular** (failure isolation; independent tests).
+- **No ad-hoc edits** to processed outputs—fix the pipeline and rerun.
+- Promotion to publishable/runtime surfaces is **fail-closed** on missing/invalid governance artifacts.
 
-[Back to top](#configspipelines)
+[Back to top](#top)
 
 ---
 
-## Recommended layout
+## Directory layout
 
-Recommended directory structure (one subfolder per dataset family / pipeline):
+### Current layout
+
+> **TODO:** Replace this section with the real tree once files exist.  
+> Suggested command: `tree configs/pipelines -a -L 4`
+
+### Recommended layout (template)
 
 ```text
 configs/pipelines/
   README.md
-  <dataset_slug>/                     # e.g., noaa_ncei_storm_events
-    pipeline.yaml                     # orchestration + I/O plan
-    spec.json                         # canonical spec input for spec_hash (recommended)
-    schemas/                          # normalized schema contracts
-    qa/                               # validation rules + drift thresholds
-    dcat/                             # DCAT dataset + distribution templates (JSON-LD)
-    stac/                             # STAC collection + item templates (JSON)
-    prov/                             # PROV templates + emitted run outputs
-    graph/                            # optional: graph mapping rules
-    fixtures/                         # tiny sample inputs for CI
-    expected/                         # golden outputs for CI (catalog snippets, QA reports)
+
+  # 1) Discovery / enablement (registry of pipeline plugins)
+  registry.yml                # signed allowlist / registry (preferred)
+  manifest.yml                # alternative registry (if used)
+
+  # 2) Shared schemas / contracts (validated in CI)
+  schemas/
+    pipeline.v1.schema.json
+    registry.v1.schema.json
+    run_receipt.v1.schema.json
+
+  # 3) Environment overlays (non-secret knobs only)
+  env/
+    dev.yml
+    test.yml
+    prod.yml
+
+  # 4) Scheduling / dispatch config (if not encoded in pipeline.yaml)
+  schedules/
+    schedules.yml
+
+  # 5) Policy knobs (deny-by-default posture)
+  policy/
+    promotion_requirements.yml
+    redaction_defaults.yml
+
+  # 6) Examples / fixtures for CI gates
+  fixtures/
+    sample_pipeline.yml
+    sample_registry.yml
 ```
 
-> WARNING  
-> Keep fixtures small. Anything large belongs in object storage (RAW/WORK/PROCESSED), not git.
+> **TIP**
+> Prefer **“registry + schema validation”** over “implicit conventions only.” A registry makes review and enable/disable decisions explicit.
 
-[Back to top](#configspipelines)
-
----
-
-## Minimal pipeline blueprint
-
-Every dataset family should ship a predictable “blueprint” so review and automation are uniform.
-
-| File/folder | Required | What it does |
-|---|:---:|---|
-| `pipeline.yaml` | ✅ | Declares inputs, outputs, schedule/cadence, resources, and the promotion plan. |
-| `spec.json` | ✅ (recommended) | Canonical spec used to compute `spec_hash` and derive a stable `dataset_version_id`. |
-| `schemas/` | ✅ | Normalized table/asset schemas (machine-validated). |
-| `qa/` | ✅ | QA checks + drift thresholds; defines what fails promotion. |
-| `dcat/` | ✅ | Dataset-level metadata + distribution inventory. |
-| `stac/` | ✅ (if spatial/temporal assets) | Asset-level metadata for spatiotemporal artifacts. |
-| `prov/` | ✅ | Lineage/provenance templates + run outputs; includes environment capture. |
-| `graph/` | ⭕ | Mapping rules for graph ingest (if used). |
-| `fixtures/` + `expected/` | ✅ | CI fixtures to validate schema, policy, catalogs, and EvidenceRef resolution. |
-
-[Back to top](#configspipelines)
+[Back to top](#top)
 
 ---
 
-## Data lifecycle zones
+## Adding or changing a pipeline
 
-KFM treats **object storage + catalogs + provenance** as canonical truth. Databases and indexes are rebuildable projections.
+### Add a new pipeline (checklist)
 
-| Zone | What it contains | Mutability | Promotion notes |
-|---|---|---|---|
-| `RAW` | Acquisition manifests, raw artifacts, checksums, license/terms snapshot | Append-only | Never edit; supersede with a new acquisition. |
-| `WORK / QUARANTINE` | Normalized intermediate representations, QA reports, candidate redactions, entity resolution outputs | Mutable (work) / blocked (quarantine) | Anything with failed validation, unclear rights, or sensitivity concerns stays quarantined. |
-| `PROCESSED` | Publishable artifacts (e.g., GeoParquet, COG, PMTiles), checksums, derived metadata | Versioned | Only publish artifacts approved for runtime surfaces. |
-| `CATALOG/TRIPLET` | DCAT + STAC + PROV + run receipts and cross-links | Versioned | Must validate and cross-link deterministically. |
-| `PUBLISHED` | Governed API bundles / runtime views | Versioned | Only promoted dataset versions may be served. |
+1. **Create plugin code**  
+   `src/pipelines/<pipeline_slug>/...`
 
-[Back to top](#configspipelines)
+2. **Define the pipeline contract**  
+   `src/pipelines/<pipeline_slug>/pipeline.yaml` (or equivalent), including:
+   - schedule/trigger (cron or event)
+   - inputs + rights metadata
+   - outputs (zones + paths)
+   - resources (cpu/mem/timeouts)
+   - policy label + obligations (if applicable)
 
----
+3. **Register it here**  
+   Add to `configs/pipelines/registry.yml` (or `manifest.yml`), including enablement + schedule overrides if used.
 
-## Promotion Contract gates
+4. **Add test fixtures**  
+   Add minimal fixtures and validation tests so CI can fail closed.
 
-A dataset version MUST NOT be promoted unless these gates pass (minimum credible set).
+5. **Prove governance artifacts**  
+   Ensure the pipeline emits:
+   - run receipt (with inputs/outputs/environment + policy decision ref)
+   - catalog triplet updates (STAC/DCAT/PROV)
+   - validation report references/digests
 
-| Gate | Fail-closed checks (minimum) |
-|---|---|
-| **A — Identity and versioning** | Stable `dataset_slug`; immutable `dataset_version_id` derived from stable `spec_hash`. |
-| **B — Licensing and rights** | Explicit license + rights holder + attribution captured. Unknown/unclear → QUARANTINE. |
-| **C — Sensitivity + redaction plan** | `policy_label` assigned; obligations recorded; sensitive locations generalized or denied by default. |
-| **D — Catalog triplet validation** | DCAT/STAC/PROV validate against profiles; cross-links resolve. |
-| **E — Run receipt + checksums** | Run receipt exists; inputs/outputs enumerated with digests; environment recorded. |
-| **F — Policy + contract tests** | Policy tests pass (fixtures); EvidenceRefs resolve; schemas/contracts validate. |
-| **G — Optional (production posture)** | SBOM/provenance for images; perf smoke tests; a11y smoke tests (UI evidence drawer). |
+6. **Open a PR**  
+   Config and pipeline changes are reviewed together.
 
-> TIP  
-> Think of Gate A–F as “non-negotiable”. Gate G becomes mandatory as you approach public release.
+### Change an existing pipeline’s behavior (rules)
 
-[Back to top](#configspipelines)
+- **Never** edit processed artifacts “by hand.”
+- Prefer:
+  - config changes in `configs/pipelines/` for scheduling/enablement/env knobs
+  - code changes in `src/pipelines/` for logic changes
+- Any change that affects output schema, extents, licensing, or sensitivity must update:
+  - the pipeline contract
+  - validators/fixtures
+  - catalog/provenance mapping
 
----
-
-## Controlled vocabularies
-
-Pipelines and catalogs should use a **small, controlled vocabulary** for cross-system interoperability and policy enforcement.
-
-### `policy_label` (starter set)
-
-| Value | Intended meaning |
-|---|---|
-| `public` | Safe to show publicly. |
-| `public_generalized` | Public *derived* version of sensitive data (geometry generalized). |
-| `restricted` | Requires authorization; not public. |
-| `restricted_sensitive_location` | Precise locations protected; default deny. |
-| `internal` | Visible to operators/stewards only. |
-| `embargoed` | Time-limited restriction pending release. |
-| `quarantine` | Not promoted (validation/rights unresolved). |
-
-### `artifact.zone` (data lifecycle)
-
-`raw` · `work` · `processed` · `catalog` · `published`
-
-### `citation.kind` (evidence types)
-
-`dcat` · `stac` · `prov` · `doc` · `graph` · `oci` (optional) · `url` (discouraged; prefer resolvable schemes)
-
-### `geometry.generalization_method` (when applicable)
-
-`centroid_only` · `grid_aggregation_<meters>` · `random_offset_<meters>` · `dissolve_to_admin_unit` · `bounding_box_only` · `none`
-
-> NOTE  
-> Prefer explicit generalization methods over ad hoc “fuzzing” so review and downstream interpretation are consistent.
-
-[Back to top](#configspipelines)
+[Back to top](#top)
 
 ---
 
-## Hash drift prevention
+## Validation and promotion gates
 
-When a canonical spec drives identity (`spec_hash` → `dataset_version_id`), **hash drift is a breaking change**.
+Pipelines must produce enough evidence to move data across lifecycle zones:
 
-Checklist:
+- RAW → WORK/QUARANTINE → PROCESSED → CATALOG (DCAT+STAC+PROV) → PUBLISHED
 
-- Store the **canonical spec** used for hashing next to the computed `spec_hash`.
-- Unit-test that recomputing `spec_hash` from the stored spec yields the same value.
-- Treat `spec_hash` changes as “why did the spec change?” events that require review.
-- Never compute `spec_hash` from values that depend on clocks, random seeds, or nondeterministic ordering.
+**Minimum gate categories (starter):**
+- **Identity & versioning** (deterministic version ID / spec hash)
+- **Licensing & rights**
+- **Sensitivity classification + redaction plan**
+- **Catalog triplet validation** (STAC/DCAT/PROV consistency + cross-links)
 
-[Back to top](#configspipelines)
+### Definition of Done for “pipeline is promotable”
 
----
+- [ ] Pipeline contract validates against schema
+- [ ] Registry entry validates (and is signed if required)
+- [ ] Run receipt emitted per run
+- [ ] Validation status is **pass** (or explicitly quarantined with reason)
+- [ ] Promotion manifest exists (or equivalent rollup)
+- [ ] Catalog triplet updated and link-checked
+- [ ] Policy decision recorded and obligations applied (if any)
+- [ ] CI gates pass (deny-by-default)
 
-## How to add or change a pipeline
+> **WARNING**
+> If any required artifact is missing or invalid, **promotion must be blocked** (fail closed).
 
-### For a new dataset family
-
-1. Create `configs/pipelines/<dataset_slug>/`.
-2. Add:
-   - `pipeline.yaml`
-   - `spec.json` (recommended canonical spec)
-   - schemas, QA rules, and catalog templates (DCAT/STAC/PROV)
-   - CI fixtures (`fixtures/`) and expected outputs (`expected/`)
-3. Ensure the pipeline can:
-   - fetch into `RAW` with checksums and license snapshot
-   - normalize into `WORK`
-   - validate + quarantine failures
-   - publish `PROCESSED` artifacts
-   - emit catalog triplet + run receipts
-4. Open a PR and ensure CI validates:
-   - schema validation
-   - policy tests
-   - spec_hash stability (recompute and compare)
-   - catalog link checks
-
-### For an update
-
-- If `spec.json` changes, expect a **new dataset version** (new `spec_hash` → new `dataset_version_id`).
-- Prefer additive changes over in-place edits to promoted artifacts.
-
-[Back to top](#configspipelines)
+[Back to top](#top)
 
 ---
 
-## CI expectations
+## Secrets and credentials
 
-This folder is designed to be validated automatically.
+**Hard rule:** **No secrets** in `configs/pipelines/` (or anywhere in git).
 
-### Minimum validations CI should run
+Allowed:
+- Non-secret env overlays (timeouts, feature flags, batch sizes)
+- References to secret *keys* (names/identifiers), not values
+- Templates like `.env.example` (no real values)
 
-- **YAML schema validation** for `pipeline.yaml` (and JSON schema validation for `spec.json`).
-- **QA checks** on fixtures (schema + geometry/raster checks + completeness thresholds).
-- **Catalog validation + cross-link checks** for DCAT/STAC/PROV.
-- **Policy tests** (default deny, fixture-driven) and **EvidenceRef resolution smoke test**.
-- **Digest checks**: ensure all referenced artifacts/cat outputs include `sha256:` digests.
+Preferred patterns:
+- OIDC-based short-lived credentials in CI
+- Secret manager / Kubernetes secrets / GitHub Actions secrets (depending on runtime)
 
-### Suggested PR checklist (copy/paste)
+> **TIP**
+> If a pipeline needs a credential, treat it as part of the pipeline’s *deployment* configuration, not its versioned *behavior* configuration.
 
-- [ ] `pipeline.yaml` validates against pipeline schema
-- [ ] `spec.json` is canonical and stable (spec_hash test included)
-- [ ] `schemas/` cover all normalized outputs
-- [ ] `qa/` includes thresholds + produces a report
-- [ ] `dcat/`, `stac/`, `prov/` templates exist and validate
-- [ ] Cross-links between DCAT ⇄ STAC ⇄ PROV resolve
-- [ ] `policy_label` assigned; obligations documented (if any)
-- [ ] Fixtures are small and expected outputs updated
-- [ ] Changelog entry explains what changed and why
-
-[Back to top](#configspipelines)
+[Back to top](#top)
 
 ---
 
-## Security and governance defaults
+## CI integration
 
-- **Trust membrane:** external clients never access storage directly; access is via governed APIs applying policy, redaction, and logging consistently.
-- **Zero-trust ingest:** treat external acquisition as untrusted—use ephemeral auth, signed logs, content-addressed staging, and attestations; block promotion on missing/forbidden rights.
-- **License-first:** capture rights at ingest and block promotion if rights are unknown/forbidden.
-- **Determinism:** identical inputs + spec should produce identical outputs (or the run receipt must explain why not).
-- **Provenance by default:** every run emits a run receipt with environment capture (image digest, git commit, params digest).
-- **Sensitivity handling:** default-deny for precise sensitive locations; publish generalized alternatives when obligations require it.
-- **Authority boundaries:** don’t overwrite “golden sources” with derived fusion; keep derived products explicitly labeled as derived.
+This directory is intended to be CI-enforced:
 
-[Back to top](#configspipelines)
+- Schema validation for pipeline contracts and registries
+- Policy gate checks (deny promotion if required fields missing)
+- (Optional) signature verification for registry allow-lists
 
----
+> **TODO**
+> Link to the actual workflows under `.github/workflows/` once names exist.
 
-## Glossary
-
-- **Dataset**: Logical identity (e.g., “NOAA Storm Events (KS)”).
-- **DatasetVersion**: Immutable promoted version backed by a stable `spec_hash`.
-- **Artifact**: A concrete file/object produced by a run (e.g., GeoParquet, PMTiles, COG, JSONL).
-- **spec_hash**: sha256 over a canonical spec (stable across platforms); drives DatasetVersion identity.
-- **Run receipt**: Per-run record of inputs, outputs, environment, validation, and policy decisions.
-- **Promotion manifest**: Release record enumerating artifacts + catalogs + approvals for a DatasetVersion.
-- **Policy label**: Primary classification input (public/restricted/quarantine/etc.) determining access and obligations.
-- **EvidenceRef**: Stable reference scheme (`dcat://`, `stac://`, `prov://`, `doc://`, `graph://`) resolvable by the evidence service.
-
-[Back to top](#configspipelines)
+[Back to top](#top)
 
 ---
 
-## Appendix templates
+## Appendix: templates
 
 <details>
-<summary><strong>Illustrative pipeline.yaml skeleton</strong></summary>
+<summary><strong>Example: pipeline registry entry (illustrative)</strong></summary>
 
 ```yaml
-# NOTE: This is illustrative. Align field names to the pipeline schema used by the runner.
-kfm_pipeline_version: v1
-dataset_slug: example_dataset
-title: "Example Dataset Family"
+# configs/pipelines/registry.yml
+pipelines:
+  - id: example_pipeline
+    enabled: true
+    plugin_path: src/pipelines/example_pipeline
+    schedule: "0 3 * * *"  # cron
+    environment_overrides:
+      dev:
+        enabled: false
+```
 
-schedule:
-  cadence: monthly  # daily|weekly|monthly|on_demand
-  watcher: optional
+</details>
+
+<details>
+<summary><strong>Example: pipeline contract (illustrative)</strong></summary>
+
+```yaml
+# src/pipelines/example_pipeline/pipeline.yaml
+id: example_pipeline
+description: "Example pipeline contract (template)"
+schedule: "0 3 * * *"
 
 inputs:
-  - name: primary_source
-    kind: http
-    uri: https://example.invalid/source
-    params: {}
+  - id: source_a
+    uri: "https://example.invalid/source"
+    license: "UNKNOWN"   # fail-closed unless resolved
 
-resources:
-  cpu: "2"
-  memory: "4Gi"
-
-steps:
-  - id: fetch
-    runner: kfm.fetch
-    outputs:
-      - zone: raw
-        artifact_type: blob
-        path: raw/example_dataset/{acquired_at}/source.bin
-
-  - id: normalize
-    runner: kfm.normalize
-    inputs:
-      - zone: raw
-        path: raw/example_dataset/{acquired_at}/source.bin
-    outputs:
-      - zone: work
-        artifact_type: parquet
-        path: work/example_dataset/{run_id}/normalized.parquet
-
-  - id: validate
-    runner: kfm.qa
-    profile: qa/default.yml
-
-  - id: publish
-    runner: kfm.publish
-    outputs:
-      - zone: processed
-        artifact_type: geoparquet
-        media_type: application/x-parquet
-        path: processed/example_dataset/{dataset_version_id}/normalized.parquet
-
-catalog:
-  dcat_template: dcat/dataset.jsonld
-  stac_template: stac/collection.json
-  prov_template: prov/activity.jsonld
+outputs:
+  - zone: raw
+    path: "data/<domain>/<dataset>/raw/"
+  - zone: processed
+    path: "data/<domain>/<dataset>/processed/"
 
 policy:
-  policy_label_intent: public
+  label: restricted
   obligations: []
+
+resources:
+  cpu: "1"
+  memory: "2Gi"
+  timeout_seconds: 3600
 ```
 
 </details>
 
 <details>
-<summary><strong>Run receipt (shape)</strong></summary>
+<summary><strong>Example: run receipt shape (illustrative)</strong></summary>
 
 ```json
 {
-  "run_id": "kfm://run/<timestamp>.<nonce>",
-  "actor": {"principal": "svc:pipeline", "role": "pipeline"},
+  "run_id": "kfm://run/2026-02-23T00:00:00Z.example",
   "operation": "ingest+publish",
-  "dataset_version_id": "<immutable id>",
-  "inputs": [{"uri": "<raw uri>", "digest": "sha256:<...>"}],
-  "outputs": [{"uri": "<processed uri>", "digest": "sha256:<...>"}],
-  "environment": {
-    "container_digest": "sha256:<...>",
-    "git_commit": "<sha>",
-    "params_digest": "sha256:<...>"
-  },
-  "validation": {"status": "pass|fail", "report_digest": "sha256:<...>"},
-  "policy": {"decision_id": "kfm://policy_decision/<id>"},
-  "created_at": "<rfc3339>"
+  "inputs": [{"uri": "raw/source", "digest": "sha256:..."}],
+  "outputs": [{"uri": "processed/output", "digest": "sha256:..."}],
+  "environment": {"git_commit": "…", "container_digest": "sha256:…"},
+  "validation": {"status": "pass"},
+  "policy": {"decision_id": "kfm://policy_decision/…"},
+  "created_at": "2026-02-23T00:05:00Z"
 }
 ```
 
 </details>
 
-<details>
-<summary><strong>Promotion manifest (shape)</strong></summary>
-
-```json
-{
-  "kfm_promotion_manifest_version": "v1",
-  "dataset_slug": "example_dataset",
-  "dataset_version_id": "<immutable id>",
-  "spec_hash": "sha256:<...>",
-  "released_at": "<rfc3339>",
-  "artifacts": [
-    {"path": "normalized.parquet", "digest": "sha256:<...>", "media_type": "application/x-parquet"}
-  ],
-  "catalogs": [
-    {"path": "dcat.jsonld", "digest": "sha256:<...>"},
-    {"path": "stac/collection.json", "digest": "sha256:<...>"},
-    {"path": "prov/activity.jsonld", "digest": "sha256:<...>"}
-  ],
-  "qa": {"status": "pass|fail", "report_digest": "sha256:<...>"},
-  "policy": {"policy_label": "public|restricted|...", "decision_id": "kfm://policy_decision/<id>"},
-  "approvals": [
-    {"role": "steward", "principal": "<id>", "approved_at": "<rfc3339>"}
-  ]
-}
-```
-
-</details>
+[Back to top](#top)
