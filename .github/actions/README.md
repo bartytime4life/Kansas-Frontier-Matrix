@@ -120,14 +120,16 @@ Recommended (adjust as needed):
 
 ```text
 .github/
-  actions/
-    README.md  # <— you are here
-    setup-conftest/
-      action.yml
-      README.md  # optional per-action doc
-    <action-name>/
-      action.yml
-      README.md  # optional
+└─ actions/                                   # Reusable GitHub Actions (composite/custom) used by workflows
+   ├─ README.md                               # ← You are here: index of actions + usage + versioning notes
+   │
+   ├─ setup-conftest/                         # Action: install/configure Conftest for policy checks
+   │  ├─ action.yml                           # Action definition (inputs/outputs/runs)
+   │  └─ README.md                            # Optional: per-action docs (examples, inputs, troubleshooting)
+   │
+   └─ <action-name>/                          # One folder per reusable action
+      ├─ action.yml                           # Action definition
+      └─ README.md                            # Optional: per-action docs (examples, inputs, troubleshooting)
 ```
 
 ---
