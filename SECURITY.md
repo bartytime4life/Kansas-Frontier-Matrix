@@ -1,250 +1,182 @@
-# SECURITY — Vulnerability Reporting & Coordinated Disclosure for Kansas Frontier Matrix (KFM)
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/8b3e793b-3d2f-4a21-9a4d-3c38f6f26b87
+title: SECURITY — Vulnerability Disclosure Policy
+type: standard
+version: v1
+status: draft
+owners: Security Working Group (SWG) <security@YOURDOMAIN.example>
+created: 2026-02-23
+updated: 2026-02-23
+policy_label: public
+related:
+  - docs/governance/ROOT_GOVERNANCE.md
+  - docs/governance/REVIEW_GATES.md
+  - docs/governance/ETHICS.md
+  - docs/governance/SOVEREIGNTY.md
+tags: [kfm, security, disclosure, governance]
+notes:
+  - Replace placeholder contacts, keys, and SLAs before publishing.
+  - Mirror this file into .github/SECURITY.md if you want GitHub’s “Security policy” UI to show it.
+[/KFM_META_BLOCK_V2] -->
 
-> **Purpose:** Provide a safe, private, and governed path to report security issues affecting KFM (code, pipelines, policy, evidence, and data controls).  
-> **Posture:** default-deny • fail-closed • evidence-first • policy enforced in CI + runtime
+# SECURITY — Vulnerability Disclosure Policy
 
-**Status:** vNext (process target; align to repo reality)  
-**Owners:** Maintainers / Security Stewards (see CODEOWNERS)  
-**Scope:** Anything that can affect **confidentiality, integrity, availability, provenance, or policy enforcement**.
+This document explains how to report security issues in this repository and what to expect from us.
 
-[![Status](https://img.shields.io/badge/status-vNext-blue)](#)
-[![Reporting](https://img.shields.io/badge/reporting-private--first-critical)](#)
-[![Disclosure](https://img.shields.io/badge/disclosure-coordinated-important)](#)
-[![Governance](https://img.shields.io/badge/governance-fail--closed-critical)](#)
-[![Policy](https://img.shields.io/badge/policy-default--deny-critical)](#)
-
-**Jump links:**  
-[Main README](./README.md) • [Contributing](./CONTRIBUTING.md) • [GitHub governance](./.github/README.md) • [Policy](./policy/) • [Contracts](./contracts/)
-
----
-
-## Quick navigation
-- [How to report a vulnerability](#how-to-report-a-vulnerability)
-- [What to include in a report](#what-to-include-in-a-report)
-- [Scope: what is and is not covered](#scope-what-is-and-is-not-covered)
-- [KFM-specific “high priority” vulnerability classes](#kfm-specific-high-priority-vulnerability-classes)
-- [Triage, severity, and coordinated disclosure](#triage-severity-and-coordinated-disclosure)
-- [Safe harbor for good-faith research](#safe-harbor-for-good-faith-research)
-- [Security expectations for contributors](#security-expectations-for-contributors)
-- [Maintainer playbook (fail-closed)](#maintainer-playbook-fail-closed)
-
----
-
-## How to report a vulnerability
-
-**Do not open a public GitHub issue** for security problems.
-
-### Preferred channel: GitHub Security Advisories (private report)
-Use GitHub’s **“Report a vulnerability”** / Security Advisory feature for this repository (private by default).
-
-- This keeps discussion private while maintainers reproduce, patch, and prepare a coordinated disclosure.
-- Attach minimal reproduction steps and logs **without** secrets.
-
-### Alternate channel: security email (if configured)
-If the repo maintainers publish a security email address, use it.
-
-- **Email:** `TBD` (repo maintainer: set this to a real address)
-- **PGP:** `TBD` (optional; publish fingerprint + key location if you require encryption)
-
-### If the issue involves imminent harm or sensitive locations
-If your report involves:
-- **restricted data leakage**
-- **culturally sensitive site location exposure**
-- **private individual location inference**
-- **vulnerable infrastructure targeting**
-treat it as **Critical** and report via **private channels only**.
-
-> **Rule:** If a finding includes precise coordinates or re-identification risk, do **not** include the raw coordinates in the initial report. Provide a generalized description first; we will request details privately if needed.
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
+## Quick rules
+- **Do not** open public issues or PRs for security vulnerabilities.
+- **Do** report privately using the channels below.
+- **Do not** include sensitive data (keys, tokens, personal data, exact vulnerable site locations, etc.).
+- If in doubt about sensitivity/permissions, **default to private + minimal disclosure**.
 
 ---
 
-## What to include in a report
+## Reporting a vulnerability
 
+### Preferred channel
+Email: **security@YOURDOMAIN.example**  
+Subject: **[SECURITY] <short summary>**
+
+If you have a CVE request, include: **“CVE Request”** in the subject.
+
+### Alternative channels (if configured)
+- GitHub Security Advisories: **https://github.com/<org>/<repo>/security/advisories/new**
+- Encrypted reporting (PGP): see “Encryption” below.
+
+### What to include
 Please include:
+- A concise summary of the issue and **impact** (what an attacker can do).
+- **Affected component(s)** (e.g., API boundary, pipelines, graph build, UI, Story Nodes, releases).
+- **Reproduction steps** or a proof-of-concept (PoC) that is safe and minimal.
+- Any relevant logs, stack traces, request/response samples (redacted).
+- Your suggested severity (if you have one) and reasoning.
+- Your contact info and preferred attribution name (or “anonymous”).
 
-- **Summary:** what is broken and why it matters (confidentiality/integrity/availability/policy).
-- **Affected surface:** API endpoint(s), UI route(s), workflow file(s), policy rule(s), dataset/pipeline component(s).
-- **Impact:** what an attacker/user can gain or do.
-- **Reproduction:** minimal steps (PoC), requests, inputs, and expected vs actual outcomes.
-- **Versions/IDs:** relevant git commit, container image digest, dataset_version_id, run_id, or build artifact digest (if known).
-- **Evidence:** screenshots, logs, stack traces (redact secrets), and example requests/responses.
-- **Constraints:** any timing or coordination constraints (e.g., embargoed data, partner obligations).
-
-Please **do not** include:
-
-- live credentials, tokens, API keys, cookies
-- private user data, restricted documents, or raw sensitive coordinates
-- exploit code that enables harm at scale (we can coordinate details privately)
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
+### What *not* to include
+Please avoid:
+- Secrets: API keys, tokens, passwords, private certificates.
+- Private/personal data.
+- Exact coordinates or identifying details for sensitive/culturally restricted/vulnerable locations.
+- Exploit chains that enable broad compromise unless requested by the SWG.
 
 ---
 
-## Scope: what is and is not covered
+## Scope
 
 ### In scope
-Security issues in:
+- **Governed APIs and policy boundary** (authz/authn, rate limiting, abuse controls, audit logging).
+- **Data pipelines** (integrity, provenance, promotion gates, quarantining, validation bypasses).
+- **Metadata + catalogs** (STAC/DCAT/PROV correctness, tamper resistance, injection risks).
+- **Graph build/indexing** (injection, privilege escalation, data poisoning, unauthorized traversal).
+- **Map/Story UI** (XSS/CSRF, SSRF, unsafe file upload, token leakage, privacy leaks).
+- **Focus Mode AI / automation** (policy bypass, prompt injection leading to restricted data exposure).
+- **Supply chain** (dependency compromise, CI secrets exposure, build provenance/SBOM integrity).
 
-- **Governed API** and authn/authz logic (including policy-safe error behavior)
-- **Policy engine** rules, evaluation, and alignment between CI + runtime
-- **Evidence resolver** and citation verification gates (Cite-or-abstain enforcement)
-- **Catalog validators** and promotion gates (DCAT/STAC/PROV, checksums, linkcheck)
-- **Exports** and packaging (license/attribution insertion, data suppression, generalization)
-- **Workflows / CI / CODEOWNERS** (supply-chain, secret exposure, permission misuse)
-- **Containers / images / deployment configs** that can cause privilege escalation or data exposure
-- **UI** issues that can leak restricted existence or allow exfiltration (XSS, SSRF via config, etc.)
-
-### Out of scope (typical)
-- social engineering attacks on individuals
-- physical attacks, denial-of-service testing without permission
-- issues requiring stolen credentials
-- vulnerabilities in third-party services you do not control (unless misconfiguration in KFM is the root cause)
-
-> **Important:** KFM treats “governance failures” as security failures when they enable leakage, bypass policy, or break provenance and auditability.
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
-
----
-
-## KFM-specific “high priority” vulnerability classes
-
-These are especially important in a map-first, governed system:
-
-1. **Policy bypass**
-   - Any path where restricted artifacts, metadata, or existence can be inferred without authorization.
-
-2. **Policy-unsafe error behavior**
-   - Different errors for “doesn’t exist” vs “exists but restricted” that leak information.
-
-3. **Evidence resolver weaknesses**
-   - EvidenceRef resolution that can be tricked into:
-     - returning restricted bundles
-     - fetching arbitrary URLs
-     - skipping checksum/provenance checks
-     - accepting untrusted citations as “verified”
-
-4. **Sensitive location leakage**
-   - Exposure of precise coordinates or geometry when policy requires generalization/suppression.
-
-5. **Export control failures**
-   - Ability to export or download restricted content, or to reconstruct restricted geometry from exports.
-
-6. **Promotion gate bypass**
-   - Ability to “publish” a DatasetVersion without required catalogs, checksums, rights metadata, or audit receipts.
-
-7. **Supply-chain / CI compromise**
-   - GitHub Actions permission overreach, unpinned third-party actions, secret exposure in fork contexts,
-     or workflow injection via `pull_request_target`.
-
-8. **Prompt injection / data exfiltration in Focus Mode**
-   - Retrieved content influencing the system to reveal restricted material, bypass policy, or fabricate citations.
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
-
----
-
-## Triage, severity, and coordinated disclosure
-
-### Response flow
-
-~~~mermaid
-flowchart LR
-  R[Reporter submits private report] --> A[Acknowledge receipt]
-  A --> T[Triage and reproduce]
-  T --> P[Patch + tests + policy fixtures]
-  P --> V[Verify gates: CI + runtime parity]
-  V --> D[Draft advisory + release notes]
-  D --> F[Fix released / deployed]
-  F --> C[Coordinated disclosure]
-~~~
-
-### Severity guide (starter)
-
-| Severity | Typical impact | KFM examples |
-|---|---|---|
-| **Critical** | Unauthorized access to restricted data; remote code execution; privilege escalation; irreversible data/provenance harm | policy bypass; evidence resolver returns restricted bundles; workflow secret exfiltration; export bypass |
-| **High** | Significant data exposure or auth bypass with constraints; integrity compromise; persistent XSS | policy-unsafe error leaks; injection on governed surfaces; catalog checksum bypass |
-| **Medium** | Limited exposure; denial of service of a subsystem; non-persistent XSS; defense-in-depth failures | missing rate limits; mis-scoped permissions; minor disclosure |
-| **Low** | Minimal security impact; hard-to-exploit; informational | headers, minor config hardening |
-
-### Coordinated disclosure expectations
-
-- We coordinate fixes and disclosure to reduce harm.
-- We may request that public disclosure waits until a patch is released (or mitigations are available).
-- If a vulnerability affects governed datasets or sensitive locations, disclosure may be **more restricted** than typical software issues.
-
-> **Fail-closed principle:** When in doubt, KFM mitigations prioritize **blocking** over partial service.
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
+### Out of scope (unless explicitly stated otherwise)
+- Security of your own fork, local environment, or third-party services you configure independently.
+- Denial-of-service tests that degrade availability (unless pre-approved).
+- Social engineering, phishing, physical attacks.
 
 ---
 
 ## Safe harbor for good-faith research
 
-We support good-faith security research that helps protect users and governed materials.
+We support good-faith security research that:
+- Avoids privacy violations and service disruption.
+- Uses **only** the minimum data needed to demonstrate impact.
+- Respects data sovereignty and culturally restricted knowledge constraints.
+- Gives us a reasonable window to remediate before public disclosure.
 
-You are welcome to:
-- investigate issues using **your own accounts/data**
-- use **minimal traffic** needed to demonstrate the problem
-- report privately and work with maintainers on coordinated disclosure
+We do **not** consider the following to be authorized:
+- Accessing or exfiltrating data you don’t own or have explicit permission to access.
+- Attempting to identify individuals from data, even if technically possible.
+- Attempting lateral movement beyond the smallest necessary proof of impact.
 
-Please do not:
-- access or exfiltrate data you are not authorized to access
-- test denial-of-service or disruptive behavior
-- attempt persistence, lateral movement, or credential harvesting
-
-If you follow this policy, we will treat your report as a good-faith effort and prioritize responsible handling.
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
+If you’re uncertain whether a test is safe, **ask first** via the reporting channel.
 
 ---
 
-## Security expectations for contributors
+## Severity and response targets (editable)
 
-Security is not a separate phase in KFM. It is an enforcement property.
+We use a practical severity model aligned with industry norms (Critical/High/Medium/Low).
+Targets below are goals, not guarantees.
 
-### Required practices (starter)
-- **No secrets in git.** Ever.
-- **Least privilege** for workflows and runtime permissions.
-- **Pin dependencies and actions** where practical (avoid floating tags).
-- **Policy-safe errors:** do not introduce “existence leaks.”
-- **Cite-or-abstain**: do not weaken citation verification gates.
-- **Provenance and digests:** do not ship artifacts without checksums and run receipts.
-- **Sensitive location handling:** do not publish precise coordinates unless explicitly permitted by policy.
-
-### Security review triggers (recommended)
-Changes touching:
-- `.github/**`, `policy/**`, `contracts/**`, `infra/**`
-- any authn/authz, evidence resolution, export logic, dataset promotion, or Focus Mode orchestration  
-should be treated as **high-risk** and require the right reviewers (CODEOWNERS).
-
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
+| Severity | Examples (non-exhaustive) | Acknowledge | Triage | Fix target |
+|---|---|---:|---:|---:|
+| Critical | RCE, auth bypass, mass data exposure, signing key compromise | 2 business days | 5 business days | 14–30 days |
+| High | privilege escalation, significant injection, sensitive data leak | 3 business days | 10 business days | 30–60 days |
+| Medium | limited-scope leaks, non-exploitable-by-default issues | 5 business days | 15 business days | 60–90 days |
+| Low | hardening, best-practice gaps | 10 business days | 20 business days | as scheduled |
 
 ---
 
-## Maintainer playbook (fail-closed)
+## Coordinated disclosure
 
-When a report is received:
+We prefer coordinated disclosure.
+- We’ll confirm receipt, assess impact, and work with you on a disclosure timeline.
+- We may request additional details or a safer PoC.
+- If we publish a security advisory, we’ll credit you if you want attribution.
 
-1. **Acknowledge privately** and confirm the intake channel.
-2. **Reproduce** with minimal scope.
-3. **Classify severity** (include “policy leakage” and “sensitive location” impacts).
-4. **Mitigate quickly**:
-   - block or gate the surface if uncertain
-   - add policy-safe error handling
-5. **Patch with tests**:
-   - add regression tests
-   - add policy fixtures + denial tests
-   - add citation verification tests (if evidence-related)
-6. **Verify CI + runtime parity**:
-   - ensure the same policy semantics apply in both places
-7. **Record governance artifacts**:
-   - link patch to advisory
-   - ensure audit/run receipt implications are considered
-8. **Coordinate disclosure** and publish release notes/advisory (as appropriate).
+**Please do not publish** details before we confirm remediation or agree on an embargo date.
 
-> **Reminder:** A vulnerability that undermines policy enforcement or evidence integrity is a platform integrity issue, not just a bug.
+---
 
-[↑ Back to top](#security--vulnerability-reporting--coordinated-disclosure-for-kansas-frontier-matrix-kfm)
+## Data governance & sensitive content handling
+
+This project may contain (or derive) sensitive information, including:
+- Locations of vulnerable sites
+- Culturally restricted knowledge
+- Proprietary or licensed datasets
+- Personal or community-linked data
+
+If your report involves any of the above:
+- Provide a **generalized description** (e.g., “within 10–25 km of X region”) rather than exact coordinates.
+- Prefer screenshots with identifying details blurred, or textual descriptions.
+- Flag the report as **“SENSITIVE: governance review needed”**.
+
+---
+
+## Security incident: what we may do
+
+Depending on severity, we may:
+- Quarantine affected data artifacts and block promotions (Raw → Work/Quarantine → Processed → Published).
+- Rotate secrets, revoke tokens, and invalidate caches.
+- Publish a security advisory and release notes.
+- Add regression tests and policy checks so the class of issue fails closed.
+
+---
+
+## Encryption (optional but recommended)
+
+If you need encrypted comms:
+- PGP public key: **(add link here)**
+- Fingerprint: **(add fingerprint here)**
+
+---
+
+## Supported versions (fill in)
+
+| Version / branch | Supported | Notes |
+|---|---|---|
+| main | ✅ / ❌ | |
+| latest release (vX.Y.Z) | ✅ / ❌ | |
+| previous release (vX.Y.Z-1) | ✅ / ❌ | |
+
+---
+
+## Security best practices for contributors (short)
+
+- Never commit secrets. Use `.env.example` and secret managers in CI.
+- Treat the **policy boundary** as a security boundary: clients must not bypass governed APIs.
+- Add tests for security invariants (authz, validation, provenance checks, redaction).
+- Prefer dependency pinning and add SBOM/signing where supported.
+- Log safely: no secrets, no personal data, no precise sensitive locations.
+
+---
+
+## Contact
+
+Security Working Group (SWG): **security@YOURDOMAIN.example**  
+Backup contact: **(add backup contact/rotation)**
+
+If you believe the issue is actively exploited, write **“URGENT”** in the subject line.
