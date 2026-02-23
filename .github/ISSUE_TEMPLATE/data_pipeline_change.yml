@@ -1,0 +1,193 @@
+# data_pipeline_change.yml
+# KFM governed change manifest for data pipeline modifications.
+# Fill in all "TBD" fields before requesting promotion beyond dev.
+
+kfm_spec: "kfm://spec/data-pipeline-change/v1"
+change:
+  change_id: "kfm://change/af55e2e7-804a-458f-82a7-86bba0831327"
+  title: "TBD - short human-readable title"
+  change_type: "pipeline"  # pipeline|dataset|infra|policy|docs
+  status: "draft"          # draft|review|approved|implemented|rolled_back
+  created: "2026-02-23"
+  updated: "2026-02-23"
+
+  requested_by:
+    name: "TBD"
+    team: "TBD"
+    contact: "TBD"  # email/handle
+
+  approvals:
+    required:
+      - role: "Data Owner"
+        approver: "TBD"
+        status: "pending"   # pending|approved|rejected
+        decided_at: null
+      - role: "Governance/Policy"
+        approver: "TBD"
+        status: "pending"
+        decided_at: null
+      - role: "Security"
+        approver: "TBD"
+        status: "pending"
+        decided_at: null
+    optional: []
+
+  tags: ["kfm", "data-pipeline-change"]
+
+  links:
+    pr: "TBD"               # PR/merge request URL
+    design_doc: "TBD"       # ADR, doc, or ticket URL
+    runbook: "TBD"          # ops/runbook URL
+    incident_postmortem: null
+
+scope:
+  environments:
+    - "dev"
+    - "staging"
+    - "prod"
+
+  affected_pipelines:
+    - pipeline_id: "TBD"    # stable identifier (prefer kfm:// ids)
+      name: "TBD"
+      orchestrator: "TBD"   # airflow|dagster|prefect|argo|other
+      schedule: "TBD"       # cron, event, or manual
+      owner: "TBD"
+
+  affected_datasets:
+    - dataset_id: "TBD"     # prefer kfm://data/<uuid>
+      name: "TBD"
+      zone: "work"          # raw|work|processed|published
+      sensitivity: "TBD"    # public|restricted|confidential|cultural-restricted
+      license: "TBD"
+      consumers:
+        - "TBD"
+
+rationale:
+  problem_statement: "TBD"
+  goals:
+    - "TBD"
+  non_goals:
+    - "TBD"
+  success_metrics:
+    - metric: "TBD"
+      target: "TBD"
+
+change_details:
+  summary: "TBD - what is changing, in one paragraph"
+
+  backwards_compatibility:
+    breaking_change: false
+    mitigation: "TBD"       # required when breaking_change=true
+
+  schema_changes:
+    - dataset_id: "TBD"
+      change: "none"        # none|add_columns|remove_columns|rename|type_change|other
+      before_schema_ref: "TBD"  # path/URI to schema
+      after_schema_ref: "TBD"   # path/URI to schema
+
+  transforms:
+    description: "TBD"
+    code_paths:
+      - "TBD"               # repo paths (e.g., pipelines/foo, dbt/models/bar)
+    container_images:
+      - name: "TBD"
+        digest: "TBD"       # sha256:...
+    dependencies:
+      - "TBD"
+
+data_lineage:
+  inputs:
+    - name: "TBD"
+      uri: "TBD"
+      classification: "TBD"
+      checksum: "TBD"       # checksum of the input snapshot (if applicable)
+      time_extent: "TBD"    # e.g., 2024-01-01..2024-12-31
+      spatial_extent: "TBD" # coarse geography if sensitive
+  outputs:
+    - name: "TBD"
+      uri: "TBD"
+      zone: "TBD"
+      checksum: "TBD"
+
+quality_gates:
+  required_checks:
+    - name: "schema_validation"
+      tool: "TBD"
+      threshold: "TBD"
+      status: "pending"
+      evidence_uri: null
+    - name: "row_count_sanity"
+      tool: "TBD"
+      threshold: "TBD"
+      status: "pending"
+      evidence_uri: null
+    - name: "null_rate"
+      tool: "TBD"
+      threshold: "TBD"
+      status: "pending"
+      evidence_uri: null
+
+  promotion:
+    raw_to_work: []
+    work_to_processed: []
+    processed_to_published: []
+
+security_and_policy:
+  access_control:
+    authz_model: "TBD"      # RBAC/ABAC/policy-engine name
+    roles:
+      - role: "TBD"
+        permissions: ["TBD"]
+
+  pii_or_sensitive_fields:
+    present: false
+    fields: []
+    handling: "TBD"         # redaction, hashing, tokenization, etc.
+
+  redaction_rules: []
+  community_constraints:
+    present: false
+    notes: null
+
+  retention:
+    raw_days: "TBD"
+    published_days: "TBD"
+
+deployment_plan:
+  rollout:
+    strategy: "canary"      # canary|blue_green|full
+    steps:
+      - "TBD"
+  rollback:
+    steps:
+      - "TBD"
+    max_rollback_time_minutes: 30
+
+  monitoring:
+    dashboards:
+      - "TBD"
+    alerts:
+      - name: "TBD"
+        condition: "TBD"
+        paging: false
+
+audit:
+  repo:
+    git_remote: "TBD"
+    base_ref: "TBD"         # branch/commit before change
+    head_ref: "TBD"         # branch/commit with change
+
+  execution:
+    ci_run_id: "TBD"
+    pipeline_run_id: "TBD"
+    executed_by: "TBD"
+    executed_at: null
+
+  artifacts:
+    - type: "validation_report"
+      uri: "TBD"
+    - type: "data_profile"
+      uri: "TBD"
+
+  notes:
+    - "TBD"
