@@ -2,7 +2,7 @@
 doc_id: kfm://doc/7ef3dbf9-1c55-4d62-9d72-6295b00a8b3a
 title: KFM Governed API
 type: standard
-version: v2
+version: v2.1
 status: draft
 owners: API + Policy + Stewardship
 created: 2026-02-22
@@ -13,6 +13,7 @@ related:
   - packages/policy/
   - packages/evidence/
   - packages/catalog/
+  - docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md
 tags:
   - kfm
   - api
@@ -22,6 +23,7 @@ notes:
   - Contract-first enforcement boundary for runtime surfaces (Map, Story, Focus).
   - This README contains normative requirements (MUST/SHOULD/MAY) for governed runtime access.
   - This document is normative; do not weaken the trust membrane.
+  - v2.1: added deterministic identity, policy reason codes, threat model checklist, and contract-extension workflow.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Governed API
@@ -38,6 +40,7 @@ Contract-first enforcement boundary for KFM runtime surfaces: Map, Story, Focus.
 ![Evidence](https://img.shields.io/badge/evidence-first-blue)
 ![Focus](https://img.shields.io/badge/focus-cite--or--abstain-blue)
 ![Time](https://img.shields.io/badge/time-aware-blue)
+![Deterministic IDs](https://img.shields.io/badge/identity-deterministic-blue)
 ![Default deny](https://img.shields.io/badge/policy-default%20deny-important)
 
 <!--
@@ -50,6 +53,7 @@ Optional repo-integrated badges (REPLACE placeholders):
 
 - Jump to:
   - [Normative language](#normative-language)
+  - [Status vocabulary](#status-vocabulary)
   - [What this service is](#what-this-service-is)
   - [Glossary](#glossary)
   - [Where it sits in the repo](#where-it-sits-in-the-repo)
@@ -59,8 +63,11 @@ Optional repo-integrated badges (REPLACE placeholders):
   - [Contracts](#contracts)
   - [Policy enforcement](#policy-enforcement)
   - [Evidence resolution](#evidence-resolution)
+  - [Deterministic identity and hashing](#deterministic-identity-and-hashing)
+  - [Data access and exports](#data-access-and-exports)
   - [Audit and observability](#audit-and-observability)
   - [Compatibility and versioning](#compatibility-and-versioning)
+  - [Security review checklist](#security-review-checklist)
   - [Testing and CI gates](#testing-and-ci-gates)
   - [Definition of done](#definition-of-done)
 
@@ -75,6 +82,18 @@ This README uses the following terms as requirements keywords:
 - **MAY**: optional; implement when it improves safety, performance, or usability.
 
 If you add new normative requirements, add corresponding tests or CI gates wherever feasible.
+
+---
+
+## Status vocabulary
+
+KFM docs often distinguish between:
+
+- **CONFIRMED**: required invariant (must not regress).
+- **PROPOSED**: recommended default that becomes CONFIRMED only after adoption + tests.
+- **UNKNOWN**: repo/infrastructure reality not verified yet; requires a minimal verification step before shipping.
+
+This README is normative about the *trust membrane* and governed behaviors, but it may still contain PROPOSED defaults for implementation details (for example, choice of PDP engine or storage backends). When in doubt: **fail closed** and add a verification step.
 
 ---
 
@@ -94,6 +113,7 @@ Clients (UI, scripts, tools) **never** talk directly to storage or databases. Al
 - Not a general “open query” gateway to underlying databases.
 - Not an ungoverned chatbot (Focus Mode is governed and must cite-or-abstain).
 - Not a place to “patch” data: published runtime surfaces only serve **promoted** dataset versions.
+- Not a redistribution channel for unclear rights: if licensing/rights are uncertain, treat outputs as metadata-only and keep them quarantined until cleared.
 
 ---
 
@@ -108,6 +128,8 @@ Clients (UI, scripts, tools) **never** talk directly to storage or databases. Al
 | EvidenceBundle | The resolved, policy-filtered bundle returned from `EvidenceRef` resolution, including provenance + digests. |
 | Obligation | A required transformation or constraint applied to an allowed response (redaction, generalization, attribution, etc.). |
 | Dataset version | An immutable, addressable snapshot of a dataset suitable for runtime serving (`kfm://dataset/<slug>@<hash>`). |
+| spec_hash | Deterministic hash derived from canonicalized inputs/config that defines a dataset version (see [Deterministic identity and hashing](#deterministic-identity-and-hashing)). |
+| Run receipt | A first-class artifact emitted for every pipeline run and every Focus query (inputs/outputs, environment, validation, policy decision). |
 
 ---
 
@@ -222,6 +244,16 @@ This section standardizes the “shape” of the API so clients and tests can be
   - Use explicit offsets or `Z`
   - Never interpret ambiguous local time without a timezone
 
+### Time semantics (KFM time-aware)
+
+KFM distinguishes multiple “time axes”:
+
+- **Event time:** when something happened.
+- **Transaction time:** when KFM acquired/published a record.
+- **Valid time (optional):** when a statement is considered true (useful for boundary changes and administrative history).
+
+Endpoints MUST document which time axis their filters refer to. If an endpoint supports multiple axes, the API MUST require explicit parameter names (do not overload `time=` ambiguously).
+
 ### Authentication and authorization
 
 This README does not assume a specific identity provider. Regardless of implementation:
@@ -311,6 +343,8 @@ Endpoints are **governed**: policy filter applied before returning data or links
 | GET | `/api/v1/tiles/{layer}/{z}/{x}/{y}.pbf` | Vector tiles | Only if tiles are served dynamically |
 | GET | `/assets/pmtiles/{dataset_version_id}/{layer}.pmtiles` | PMTiles bundles | Only for policy-safe layers (often public only) |
 
+> NOTE: “Nice to have” endpoints (health, readiness, metrics) are allowed, but MUST be contract-documented and MUST NOT leak sensitive info via differential behavior.
+
 ---
 
 ## Contracts
@@ -332,6 +366,20 @@ If these paths differ, document the actual locations here.
 - Every endpoint MUST be represented in OpenAPI (including error models).
 - CI MUST block merges that introduce undocumented endpoints.
 - Breaking changes MUST trigger a new API version (`/api/v2`) or an explicit deprecation plan.
+
+### API Contract Extension workflow (required for change)
+
+Any PR that adds/changes a governed endpoint MUST include an **API Contract Extension** artifact describing:
+
+- The new/changed endpoint(s) and contract diff
+- Policy resources/actions evaluated
+- Evidence behavior (what EvidenceRefs resolve, what bundles return)
+- Audit and observability impact
+- Threat model checklist review (see [Security review checklist](#security-review-checklist))
+
+Recommended: use `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` and attach it to the PR.
+
+> CI SHOULD block merges that change OpenAPI without a corresponding Contract Extension file (enforced by a simple repo check).
 
 ### Required response fields
 
@@ -389,6 +437,31 @@ Reserve a stable, documented set of `error_code` values so clients can handle fa
 - Do not embed precise coordinates in Story Nodes or Focus outputs unless policy explicitly allows.
 - Redaction and generalization are first-class transforms recorded in provenance.
 
+### Policy decision shape (decision_id + reason_codes + obligations)
+
+Policy evaluation SHOULD produce a machine-serializable decision object that is safe to store and reference by ID:
+
+```json
+{
+  "decision_id": "kfm://policy_decision/<id>",
+  "policy_label": "restricted",
+  "decision": "deny",
+  "reason_codes": ["SENSITIVE_SITE", "RIGHTS_UNCLEAR"],
+  "obligations": [
+    { "type": "generalize_geometry", "min_cell_size_m": 5000 },
+    { "type": "remove_attributes", "fields": ["exact_location", "owner_name"] }
+  ],
+  "evaluated_at": "2026-02-20T12:00:00Z",
+  "rule_id": "deny.restricted_dataset.default"
+}
+```
+
+**Rules:**
+
+- The API MUST NOT return non-policy-safe explanations to unauthorized clients.
+- `reason_codes` SHOULD drive UX messages and stewards’ review workflows, not public disclosures.
+- `decision_id` SHOULD be referenced from run receipts, promotion manifests, and audit records.
+
 ### Policy labels
 
 KFM uses a small, stable set of labels. At minimum:
@@ -417,7 +490,7 @@ When policy allows access, it may still require obligations. Obligations MUST be
 
 Recommended shape:
 
-- Policy Decision Point: OPA in-process or sidecar
+- Policy Decision Point: OPA in-process or sidecar (PROPOSED implementation)
 - Policy Enforcement Points:
   - CI (schema + policy tests block merges)
   - Runtime API (checks before serving data)
@@ -481,25 +554,72 @@ Example (illustrative):
 
 Fail closed if the reference is unresolvable or unauthorized.
 
+### Cross-linking and link checks (merge-blocking)
+
+Catalogs (DCAT/STAC/PROV) are **contract surfaces**. For any promoted dataset version, CI SHOULD verify:
+
+- DCAT ↔ STAC ↔ PROV cross-links exist and resolve
+- Asset `href`s exist (or are policy-redacted)
+- EvidenceRefs can be resolved without guessing
+
 ### Cite-or-abstain requirement
 
 For Focus and Story publishing workflows:
 
 - If a claim cannot be backed by resolvable EvidenceRefs, the system MUST abstain (or downgrade the claim to “unknown”).
 - Returned citations MUST be stable references (EvidenceRefs) that can be re-resolved later.
+- Abstention UX MUST be understandable without leaking restricted info:
+  - show “why” in policy-safe terms
+  - suggest safe alternatives (broader time range, public datasets)
+  - provide `audit_ref` so stewards can review
+  - never show “ghost metadata” unless policy allows
 
 ---
 
-## Data access rules
+## Deterministic identity and hashing
+
+Deterministic identity keeps dataset versions stable and reproducible.
+
+### Requirements
+
+- Dataset version identity MUST be deterministic for a given spec + inputs.
+- `spec_hash` SHOULD be computed from a canonicalized representation of:
+  - the dataset spec/config
+  - declared upstream source identifiers
+  - transform parameters (or a digest of them)
+
+### Canonicalization
+
+Recommended (PROPOSED) default: use a JSON canonicalization scheme (e.g., RFC 8785 JCS) so hashing is stable across runtimes.
+
+### Where hashes appear
+
+`spec_hash` and derived IDs should flow through the system:
+
+- Promotion manifest (release record for a dataset version)
+- Run receipts (pipeline runs and Focus queries)
+- Evidence bundles (bundle_id, dataset_version_id, artifact digests)
+
+If hashes drift between CI and runtime, treat it as a **hard failure**: do not publish, do not serve.
+
+---
+
+## Data access and exports
 
 Published runtime surfaces (API + UI) may only serve **promoted** dataset versions that have:
 
-- processed artifacts
-- validated catalogs
+- processed artifacts (each with digest + media type)
+- validated catalogs (DCAT/STAC/PROV)
 - run receipts
 - policy label assignment
 
 The API should never serve RAW/WORK/QUARANTINE artifacts directly unless explicitly required and governed.
+
+### Exports and downloads (rights are a policy input)
+
+- Download/export endpoints MUST check both policy label and licensing/rights.
+- Exports MUST include required attribution/license text automatically.
+- Story publishing MUST block if rights are unclear for included media.
 
 ---
 
@@ -544,6 +664,7 @@ Minimum runtime signals:
   - policy decisions by label/decision
   - evidence resolution success/fail-closed rates
 - traces (recommended) linking `X-Request-Id` to downstream calls
+- (optional) UX telemetry for governance events (e.g., “redaction notice shown”) — must remain policy-safe
 
 ---
 
@@ -561,12 +682,28 @@ Minimum runtime signals:
 
 ---
 
+## Security review checklist
+
+Use this checklist when reviewing new governed API features (especially new endpoints).
+
+- TM-001 Does the frontend ever fetch data directly from object storage or databases? **Expected: NO** (trust membrane)
+- TM-002 Can a public user infer restricted dataset existence via error behavior? **Expected: NO** (policy-safe errors)
+- TM-003 Are all downloads and exports checked against policy labels and rights? **Expected: YES**
+- TM-004 Can Focus Mode be prompt-injected by retrieved documents? **Expected: mitigations in place** (tool allowlist, citation verifier, policy filters)
+- TM-005 Are audit logs redacted and access-controlled? **Expected: YES**
+- TM-006 Are pipeline credentials scoped per source and rotated? **Expected: YES**
+- TM-007 Are processed artifacts immutable by digest? **Expected: YES**
+- TM-008 Are policy rules tested in CI with fixtures? **Expected: YES**
+
+---
+
 ## Testing and CI gates
 
 Minimum expectations for merge safety:
 
 - Contract validation in CI (OpenAPI + JSON Schemas + fixtures).
 - Policy fixtures-driven tests (deny-by-default is tested).
+- Link-checker for promoted dataset versions (DCAT/STAC/PROV cross-links + EvidenceRef resolvability).
 - Integration tests for:
   - policy filtering
   - 403/404 non-leak behavior
@@ -578,7 +715,9 @@ Recommended gates matrix:
 | Gate | Blocks merge | Evidence |
 |---|---:|---|
 | OpenAPI lint + diff check | ✅ | schema is valid; breaking changes flagged |
+| API Contract Extension check | ✅ | OpenAPI change is paired with extension artifact |
 | Policy fixture tests | ✅ | deny-by-default and obligations tests pass |
+| Catalog link-check + EvidenceRef resolvability | ✅ | promoted versions are self-consistent |
 | Integration smoke tests | ✅ | critical endpoints are exercised |
 | Dependency audit | ✅ | known critical vulnerabilities blocked |
 | Documentation link check | SHOULD | prevents broken internal refs |
@@ -590,12 +729,16 @@ Recommended gates matrix:
 A change to this API is “done” only when:
 
 - [ ] Contract updated (OpenAPI + schemas) and validated in CI
+- [ ] API Contract Extension included for governed endpoint changes (see [Contracts](#contracts))
 - [ ] New/changed endpoints apply policy server-side
 - [ ] Responses include required `meta` fields (`policy_label`, `dataset_version_id` when applicable, `audit_ref` when required)
 - [ ] Error behavior does not leak restricted existence (403/404 aligned)
 - [ ] EvidenceRefs used by Story/Focus resolve or fail closed with `audit_ref`
 - [ ] Governed operations emit audit records with inputs/outputs by digest
 - [ ] Any redaction/generalization is recorded as provenance and surfaced in evidence
+- [ ] Link-checker passes for promoted dataset versions (DCAT/STAC/PROV cross-links)
+- [ ] Exports/downloads checked against policy + rights and include attribution
+- [ ] Threat model checklist reviewed (see [Security review checklist](#security-review-checklist))
 - [ ] New normative requirements include tests or CI gates (fail closed)
 
 ---
