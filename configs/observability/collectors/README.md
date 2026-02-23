@@ -104,20 +104,24 @@ Files that **must not** be added here:
 Because the current repo tree is not available in the prompt, treat the following as an **example layout** to align on structure. Update it to match reality.
 
 ```text
-configs/observability/collectors/
-  README.md
-  _shared/                          # shared snippets/allowlists/processors (optional)
-    processors/
-    allowlists/
-    denylists/
-  <collector_id>/                   # one directory per collector "bundle"
-    README.md                       # bundle-specific notes/runbook
-    config.<ext>                    # primary collector config (yaml/toml/json)
-    deploy/                         # deployment glue (optional)
-      k8s/
-      systemd/
-    test/                           # validation fixtures (optional)
-      golden/                       # expected outputs or config render outputs
+configs/observability/collectors/                     # Collector bundles (OTel/Vector/etc.) for logs/metrics/traces
+├─ README.md                                          # Index of collectors + conventions (naming, validation, deploy)
+│
+├─ _shared/                                           # Optional shared building blocks (reused across collectors)
+│  ├─ processors/                                     # Common processor snippets (redaction, batching, attrs)
+│  ├─ allowlists/                                     # Allowlist snippets (destinations, headers, attributes)
+│  └─ denylists/                                      # Denylist snippets (blocked attrs, secret patterns, endpoints)
+│
+└─ <collector_id>/                                    # One directory per collector “bundle” (stable ID)
+   ├─ README.md                                       # Bundle notes/runbook (what it collects, where it exports, owners)
+   ├─ config.<ext>                                    # Primary collector config (yaml/toml/json)
+   │
+   ├─ deploy/                                         # Optional deployment glue for this collector
+   │  ├─ k8s/                                          # K8s/OpenShift manifests or Helm values/patches
+   │  └─ systemd/                                      # systemd unit templates (edge/node installs)
+   │
+   └─ test/                                           # Optional validation fixtures for this bundle
+      └─ golden/                                       # Expected outputs or rendered config baselines (diff-friendly)
 ```
 
 ### Naming conventions (proposed)
