@@ -76,19 +76,25 @@ This directory is the **policy-to-implementation bridge** for log retention. It 
 > The exact subfolders below are a **recommended** layout. If this repo already has a different convention, prefer the repo convention and adjust this README accordingly.
 
 ```text
-configs/observability/logs/retention/
-  README.md                         # this file (contract for the directory)
-  policy/                           # human-reviewable retention declarations (source of truth)
-    retention.policy.v1.yaml
-    retention.policy.v1.schema.json
-  backends/                         # backend-specific enforcement configs
-    <backend-name>/                 # e.g., loki/, opensearch/, elasticsearch/, cloudwatch/, etc.
-  env/                              # environment overlays (dev/stage/prod)
-    dev/
-    stage/
-    prod/
-  tests/                            # schema + policy gate tests (fail closed)
-    README.md
+configs/observability/logs/retention/                 # Log retention governance (declare → enforce → verify)
+├─ README.md                                          # (This file) directory contract + how retention is validated (fail-closed)
+│
+├─ policy/                                            # Source-of-truth retention declarations (human-reviewable)
+│  ├─ retention.policy.v1.yaml                        # Retention policy rules (classes, durations, exemptions, owners)
+│  └─ retention.policy.v1.schema.json                 # Schema for retention.policy.v1.yaml (CI-validated)
+│
+├─ backends/                                          # Backend-specific enforcement configs (generated or hand-maintained)
+│  └─ <backend-name>/                                 # e.g., loki/, opensearch/, elasticsearch/, cloudwatch/
+│     └─ …                                            # Backend configs mapping policy → actual retention settings
+│
+├─ env/                                               # Environment overlays (dev/stage/prod) for non-secret deltas
+│  ├─ dev/                                            # Dev overrides (shorter retention, lower cost)
+│  ├─ stage/                                          # Stage overrides (prod-like where possible)
+│  └─ prod/                                           # Prod overrides (approved retention + compliance posture)
+│
+└─ tests/                                             # Schema + policy gate tests (fail-closed)
+   ├─ README.md                                       # How tests run + what constitutes a blocking failure
+   └─ …                                               # Lint/schema validation + drift checks against backends (if applicable)
 ```
 
 [Back to top](#quick-navigation)
