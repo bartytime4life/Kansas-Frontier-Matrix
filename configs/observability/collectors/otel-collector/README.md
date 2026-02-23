@@ -69,15 +69,18 @@ This directory contains the configuration(s) for the **OpenTelemetry Collector**
 Expected patterns (choose one; don’t mix styles without a migration note):
 
 ```text
-configs/observability/collectors/otel-collector/
-  README.md                      # you are here
-  collector.yaml                 # primary collector config (recommended name)
-  collector.local.yaml           # optional: local/dev overrides
-  collector.prod.yaml            # optional: prod overrides
-  exporters/                      # optional: split exporter blocks (file: provider)
-  processors/                     # optional: split processor blocks (file: provider)
-  receivers/                      # optional: split receiver blocks (file: provider)
-  env.example                     # optional: documented env vars (NO secrets)
+configs/observability/collectors/otel-collector/        # OpenTelemetry Collector config (ingest → process → export)
+├─ README.md                                           # You are here: how this collector is used + validation workflow
+│
+├─ collector.yaml                                      # Primary collector config (recommended canonical name)
+├─ collector.local.yaml                                # Optional: local/dev overrides (non-secret deltas)
+├─ collector.prod.yaml                                 # Optional: prod overrides (strict posture; audited changes)
+│
+├─ exporters/                                          # Optional: split exporter blocks (one file per provider/target)
+├─ processors/                                         # Optional: split processor blocks (batching, redaction, transforms)
+├─ receivers/                                          # Optional: split receiver blocks (otlp, prometheus, filelog, etc.)
+│
+└─ env.example                                         # Optional: documented env vars (NO secrets; keys + descriptions)
 ```
 
 **Acceptable inputs**
