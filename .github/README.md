@@ -89,27 +89,30 @@ Map-first • time-aware • governed delivery — **community files + CI/policy
 Recommended (minimum) structure for `.github/`:
 
 ```text
-.github/
-├─ README.md                      # This file
-├─ CODEOWNERS                     # Ownership + review routing (REQUIRED)
-├─ CODE_OF_CONDUCT.md             # Community standards (REQUIRED for public repos)
-├─ CONTRIBUTING.md                # How to contribute (REQUIRED)
-├─ SECURITY.md                    # Vulnerability reporting (REQUIRED)
-├─ PULL_REQUEST_TEMPLATE.md       # PR checklist (RECOMMENDED)
-├─ ISSUE_TEMPLATE/                # Issue forms (RECOMMENDED)
-│  ├─ bug_report.yml
-│  ├─ feature_request.yml
-│  ├─ governance_request.yml
-│  ├─ data_pipeline_change.yml
-│  └─ story_node.yml
-├─ SUPPORT.md                     # Where/how to get help (OPTIONAL but useful)
-├─ FUNDING.yml                    # GitHub Sponsors/other funding links (OPTIONAL)
-├─ dependabot.yml                 # Dependency update policy (OPTIONAL; if used, keep minimal + governed)
-└─ workflows/                     # CI, policy gates, release gates (REQUIRED)
-   ├─ ci.yml
-   ├─ policy-gates.yml
-   ├─ provenance-audit.yml
-   └─ release.yml
+.github/                                           # Repo governance + CI (gatehouse)
+├─ README.md                                       # This file: how governance/CI is organized + where to start
+├─ CODEOWNERS                                      # REQUIRED: ownership + review routing (policy/, contracts/, data/, docs/)
+├─ CODE_OF_CONDUCT.md                              # REQUIRED (public): community standards + enforcement scope
+├─ CONTRIBUTING.md                                 # REQUIRED: contribution workflow (branches, reviews, checks, style)
+├─ SECURITY.md                                     # REQUIRED: vuln reporting process + disclosure policy
+├─ PULL_REQUEST_TEMPLATE.md                        # Recommended: PR checklist (tests, policy, catalogs, receipts)
+│
+├─ ISSUE_TEMPLATE/                                 # Recommended: issue forms (triage + governance discipline)
+│  ├─ bug_report.yml                               # Bug report intake (repro, logs, expected/actual)
+│  ├─ feature_request.yml                          # Feature request intake (scope, rationale, acceptance criteria)
+│  ├─ governance_request.yml                       # Governance changes (policy labels, standards, review gates)
+│  ├─ data_pipeline_change.yml                     # Pipeline changes (inputs/outputs, validation, promotion impact)
+│  └─ story_node.yml                               # Story Node intake (citations, assets, review requirements)
+│
+├─ SUPPORT.md                                      # Optional: where/how to get help (channels, office hours, links)
+├─ FUNDING.yml                                     # Optional: Sponsors/funding links (if applicable)
+├─ dependabot.yml                                  # Optional: dependency update policy (minimal + governed if enabled)
+│
+└─ workflows/                                      # REQUIRED: CI + policy gates + release gates
+   ├─ ci.yml                                       # Core CI (lint, unit tests, build, linkcheck)
+   ├─ policy-gates.yml                             # OPA/Conftest policy checks (fail-closed)
+   ├─ provenance-audit.yml                          # Provenance/receipts/audit verification (promotion contract checks)
+   └─ release.yml                                  # Release pipeline (versioning, checksums, catalogs, attestations)
 ```
 
 ### What belongs here vs elsewhere
