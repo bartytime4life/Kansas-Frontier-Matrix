@@ -252,26 +252,30 @@ apps/
 Use only if the repo does not already enforce a different convention.
 
 ```text
-apps/
-├─ map/
+apps/                                             # Runnable app surfaces (each app ships independently)
+├─ map/                                           # Map Explorer (layers + timeline + inspect)
+│  ├─ README.md                                   # App purpose, routes, dev/run instructions
+│  ├─ kfm.app.json                                # App manifest (id, owner, policy surface, capabilities)
+│  └─ src/                                        # App source (UI + app-specific logic)
+│
+├─ story/                                         # Story Mode (narrative reader + map choreography)
 │  ├─ README.md
-│  ├─ kfm.app.json
+│  ├─ kfm.app.json                                # App manifest (story features, evidence requirements)
 │  └─ src/
-├─ story/
+│
+├─ focus/                                         # Focus Mode (Q&A + citations + audit/explain)
 │  ├─ README.md
-│  ├─ kfm.app.json
+│  ├─ kfm.app.json                                # App manifest (AI boundary + cite-or-abstain expectations)
 │  └─ src/
-├─ focus/
+│
+├─ admin/                                         # Admin Console (ops tooling: approvals, reindex, governance views)
 │  ├─ README.md
-│  ├─ kfm.app.json
+│  ├─ kfm.app.json                                # App manifest (restricted surfaces + audit-heavy workflows)
 │  └─ src/
-├─ admin/
-│  ├─ README.md
-│  ├─ kfm.app.json
-│  └─ src/
-└─ cli/
+│
+└─ cli/                                           # CLI tools (operators/devs; automation entrypoints)
    ├─ README.md
-   ├─ kfm.app.json
+   ├─ kfm.app.json                                # App manifest (commands, required permissions, environments)
    └─ src/
 ```
 
