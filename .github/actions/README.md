@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: public
 related:
   - .github/actions/
@@ -23,18 +23,33 @@ notes:
 
 Reusable **composite actions** for KFM’s GitHub Actions workflows (CI lanes, policy gates, provenance packaging).
 
-**Status:** draft • **Owners:** TBD (set in CODEOWNERS)  
+**Status:** draft • **Owners:** TBD (set in `CODEOWNERS`)  
 ![status](https://img.shields.io/badge/status-draft-lightgrey) ![scope](https://img.shields.io/badge/scope-ci%2Fgitops-blue) ![policy](https://img.shields.io/badge/policy-public-brightgreen)
 
+- [Where this fits in the repo](#where-this-fits-in-the-repo)
 - [What lives here](#what-lives-here)
+- [What does not live here](#what-does-not-live-here)
 - [How this relates to workflows](#how-this-relates-to-workflows)
 - [Directory layout](#directory-layout)
 - [Action registry](#action-registry)
 - [Conventions](#conventions)
 - [Security and governance](#security-and-governance)
+- [Governance triggers](#governance-triggers)
 - [Add a new action](#add-a-new-action)
 - [Testing and validation](#testing-and-validation)
 - [Definition of done](#definition-of-done)
+
+---
+
+## Where this fits in the repo
+
+- **Workflows** under `.github/workflows/` are the entrypoints (PR checks, scheduled jobs, release automation).
+- **This directory** (`.github/actions/`) contains **repo-owned** reusable actions that workflows call via local paths:
+  - `uses: ./.github/actions/<action-dir>`
+
+> **NOTE**
+> This folder is part of the **trust membrane**: actions here can affect gates, promotion, provenance, and attestations.
+> Treat changes as production changes (reviewable, testable, reversible).
 
 ---
 
@@ -51,11 +66,27 @@ This directory is for **reusable, repo-owned** GitHub Actions that:
 
 ---
 
+## What does not live here
+
+Do **not** put the following directly in `.github/actions/`:
+
+- Large, complex business logic that can’t be unit tested (put it in `scripts/`, `tools/`, or a versioned package/module).
+- Unpinned “install from the internet” pipelines that do not verify integrity (checksums/signatures).
+- Long-lived secrets, credentials, or embedded tokens.
+- One-off workflow glue that only a single workflow will ever use (keep it in the workflow file unless it will be reused).
+
+> **WARNING**
+> If an action needs elevated permissions or interacts with releases/signing/publishing, it MUST be explicitly documented and reviewed as governance-relevant.
+
+---
+
 ## How this relates to workflows
 
 - **Workflows** live under `.github/workflows/` (entrypoints, PR gates, scheduled automation).
-- **Reusable workflows** (if used) typically live under `.github/workflows/reusables/` and are invoked via `uses: ./.github/workflows/reusables/<name>.yml`.
-- **Composite actions** (this folder) are invoked via `uses: ./.github/actions/<action-dir>`.
+- **Reusable workflows** (if used) typically live under `.github/workflows/reusables/` and are invoked via:
+  - `uses: ./.github/workflows/reusables/<name>.yml`
+- **Composite actions** (this folder) are invoked via:
+  - `uses: ./.github/actions/<action-dir>`
 
 ### End-to-end (conceptual) CI/GitOps loop
 
@@ -105,10 +136,24 @@ Recommended (adjust as needed):
 
 Keep this table current. Each action should be **discoverable** and **reviewable**.
 
-| Action (dir) | Type | Purpose | Inputs | Outputs | Notes |
-|---|---|---|---|---|---|
-| `setup-conftest/` | composite | Install a pinned Conftest version for policy gates | `version` (optional), `arch` (optional) | `conftest-path` (optional) | Treat version bumps as **governed** changes (review + tests). |
-| *(add here)* | *(composite/js/docker)* | *(what it does)* | *(inputs)* | *(outputs)* | *(security + governance notes)* |
+**Lifecycle legend**
+- `active`: used by at least one workflow path
+- `planned`: placeholder (not yet implemented/used)
+- `deprecated`: still present but scheduled for removal (include migration note)
+
+| Action (dir) | Lifecycle | Type | Owner | Purpose | Inputs | Outputs | Notes |
+|---|---|---|---|---|---|---|---|
+| `setup-conftest/` | `active` *(or `planned`)* | composite | `CODEOWNERS` | Install a pinned Conftest version for policy gates | `version` (optional), `arch` (optional) | `conftest-path` (optional) | Treat version bumps as **governed** changes (review + tests). If this dir does not exist yet, mark as `planned` or remove until implemented. |
+| *(add here)* | *(active/planned/deprecated)* | *(composite/js/docker)* | *(CODEOWNERS)* | *(what it does)* | *(inputs)* | *(outputs)* | *(security + governance notes)* |
+
+> **TIP**
+> Keep “Owner” aligned with `CODEOWNERS` for the directory. Example:
+>
+> ```text
+> # CODEOWNERS (example; update to match your org/team structure)
+> .github/actions/ @ORG/ci-owners
+> .github/actions/setup-conftest/ @ORG/security-owners
+> ```
 
 ---
 
@@ -154,6 +199,7 @@ These are defaults; tighten further when operating on restricted data.
 
 - Pin third-party actions (prefer commit SHA pinning where feasible).
 - Prefer keyless, short-lived credentials (OIDC) over long-lived tokens when the workflow supports it.
+- Avoid unverified “download and execute” steps; if downloading binaries, verify **checksum/signature**.
 
 ### Fail-closed behavior
 
@@ -161,6 +207,20 @@ Actions used in “gate” positions MUST:
 
 - Exit non-zero on any validation/policy failure.
 - Produce explicit, actionable remediation messages.
+
+---
+
+## Governance triggers
+
+Treat the following as **promotion-gate relevant** (requires extra review + explicit testing evidence in the PR):
+
+| Trigger | Why it’s sensitive | Minimum expectation |
+|---|---|---|
+| Tool version bump (e.g., Conftest/OPA) | Can change allow/deny outcomes | Pin version, run at least one gate workflow path, record before/after behavior or rationale |
+| Expanding permissions / writing `contents:` | Increases blast radius | Justify, keep least-privilege, document required permissions in action README |
+| New network downloads | Supply chain risk | Pin version + verify checksum/signature; prefer vendor release artifacts |
+| Changes to receipt/provenance packaging | Affects traceability | Validate schema + ensure downstream consumers still parse outputs |
+| Any change that affects “deny/allow” decisions | Trust membrane | Fail-closed tests, remediation messaging, documented decision path |
 
 ---
 
@@ -172,6 +232,7 @@ Actions used in “gate” positions MUST:
    - inputs/outputs
    - required permissions
    - example usage snippet
+   - failure modes (what fails and how to remediate)
 4. Add (or extend) a workflow that calls the action so it’s exercised in CI.
 5. Register it in the [Action registry](#action-registry).
 
