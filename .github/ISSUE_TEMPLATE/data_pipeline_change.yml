@@ -1,193 +1,306 @@
-# data_pipeline_change.yml
-# KFM governed change manifest for data pipeline modifications.
-# Fill in all "TBD" fields before requesting promotion beyond dev.
+# GitHub Issue Form: Data Pipeline Change (KFM)
+# Place this file under .github/ISSUE_TEMPLATE/data_pipeline_change.yml
+#
+# NOTE: GitHub Issue Forms only allow specific top-level keys (name/description/title/labels/assignees/projects/body).
+# Any KFM-specific structure must live inside `body` fields.
 
-kfm_spec: "kfm://spec/data-pipeline-change/v1"
-change:
-  change_id: "kfm://change/af55e2e7-804a-458f-82a7-86bba0831327"
-  title: "TBD - short human-readable title"
-  change_type: "pipeline"  # pipeline|dataset|infra|policy|docs
-  status: "draft"          # draft|review|approved|implemented|rolled_back
-  created: "2026-02-23"
-  updated: "2026-02-23"
+name: "Data pipeline change"
+description: "Governed request to change a data pipeline (schema/transforms/orchestration). Captures provenance, QA gates, and policy considerations."
+title: "[Data pipeline change]: "
+labels:
+  - "data-pipeline"
+  - "change-request"
+  - "governance"
 
-  requested_by:
-    name: "TBD"
-    team: "TBD"
-    contact: "TBD"  # email/handle
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## KFM Data Pipeline Change (Governed)
 
-  approvals:
-    required:
-      - role: "Data Owner"
-        approver: "TBD"
-        status: "pending"   # pending|approved|rejected
-        decided_at: null
-      - role: "Governance/Policy"
-        approver: "TBD"
-        status: "pending"
-        decided_at: null
-      - role: "Security"
-        approver: "TBD"
-        status: "pending"
-        decided_at: null
-    optional: []
+        Use this form to request or record a change that affects one or more of:
+        - data pipelines / orchestration,
+        - dataset schemas,
+        - promotion between **Raw → Work → Processed → Published**,
+        - governed APIs or user-facing claims.
 
-  tags: ["kfm", "data-pipeline-change"]
+        Wherever possible, **link to evidence** (PRs, design docs/ADRs, run logs, validation reports, dashboards).
 
-  links:
-    pr: "TBD"               # PR/merge request URL
-    design_doc: "TBD"       # ADR, doc, or ticket URL
-    runbook: "TBD"          # ops/runbook URL
-    incident_postmortem: null
+  - type: input
+    id: change_id
+    attributes:
+      label: Change ID
+      description: Optional if you don't have one yet. Prefer a UUID (or a kfm://change/<uuid> identifier).
+      placeholder: "kfm://change/<uuid>  (or just <uuid>)"
+    validations:
+      required: false
 
-scope:
-  environments:
-    - "dev"
-    - "staging"
-    - "prod"
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Change type
+      options:
+        - pipeline
+        - dataset
+        - infra
+        - policy
+        - docs
+    validations:
+      required: true
 
-  affected_pipelines:
-    - pipeline_id: "TBD"    # stable identifier (prefer kfm:// ids)
-      name: "TBD"
-      orchestrator: "TBD"   # airflow|dagster|prefect|argo|other
-      schedule: "TBD"       # cron, event, or manual
-      owner: "TBD"
+  - type: dropdown
+    id: target_envs
+    attributes:
+      label: Target environments
+      multiple: true
+      options:
+        - dev
+        - staging
+        - prod
+    validations:
+      required: true
 
-  affected_datasets:
-    - dataset_id: "TBD"     # prefer kfm://data/<uuid>
-      name: "TBD"
-      zone: "work"          # raw|work|processed|published
-      sensitivity: "TBD"    # public|restricted|confidential|cultural-restricted
-      license: "TBD"
-      consumers:
-        - "TBD"
+  - type: input
+    id: requested_by
+    attributes:
+      label: Requested by
+      description: Name / team / contact handle.
+      placeholder: "Jane Doe — Data Platform — @jdoe"
+    validations:
+      required: true
 
-rationale:
-  problem_statement: "TBD"
-  goals:
-    - "TBD"
-  non_goals:
-    - "TBD"
-  success_metrics:
-    - metric: "TBD"
-      target: "TBD"
+  - type: textarea
+    id: problem_statement
+    attributes:
+      label: Problem statement
+      description: What is broken/missing/risky today? Include symptoms, incidents, examples, and impacted users/systems.
+      placeholder: |
+        - What is happening?
+        - Impact and blast radius
+        - When it started / how often
+        - Links to incidents/tickets (if any)
+    validations:
+      required: true
 
-change_details:
-  summary: "TBD - what is changing, in one paragraph"
+  - type: textarea
+    id: goals_metrics
+    attributes:
+      label: Goals, non-goals, and success metrics
+      description: Define what "done" looks like and what is explicitly out of scope.
+      placeholder: |
+        Goals:
+        - ...
 
-  backwards_compatibility:
-    breaking_change: false
-    mitigation: "TBD"       # required when breaking_change=true
+        Non-goals:
+        - ...
 
-  schema_changes:
-    - dataset_id: "TBD"
-      change: "none"        # none|add_columns|remove_columns|rename|type_change|other
-      before_schema_ref: "TBD"  # path/URI to schema
-      after_schema_ref: "TBD"   # path/URI to schema
+        Success metrics:
+        - metric: ...
+          target: ...
+    validations:
+      required: true
 
-  transforms:
-    description: "TBD"
-    code_paths:
-      - "TBD"               # repo paths (e.g., pipelines/foo, dbt/models/bar)
-    container_images:
-      - name: "TBD"
-        digest: "TBD"       # sha256:...
-    dependencies:
-      - "TBD"
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope (affected pipelines & datasets)
+      description: List pipelines/datasets affected. Include zone/sensitivity/license where known.
+      placeholder: |
+        Affected pipelines:
+        - pipeline_id: 
+          name: 
+          orchestrator: airflow|dagster|prefect|argo|other
+          schedule: "cron/event/manual"
+          owner: 
 
-data_lineage:
-  inputs:
-    - name: "TBD"
-      uri: "TBD"
-      classification: "TBD"
-      checksum: "TBD"       # checksum of the input snapshot (if applicable)
-      time_extent: "TBD"    # e.g., 2024-01-01..2024-12-31
-      spatial_extent: "TBD" # coarse geography if sensitive
-  outputs:
-    - name: "TBD"
-      uri: "TBD"
-      zone: "TBD"
-      checksum: "TBD"
+        Affected datasets:
+        - dataset_id: 
+          name: 
+          zone: raw|work|processed|published
+          sensitivity: public|restricted|confidential|cultural-restricted
+          license: 
+          consumers:
+            - ...
+    validations:
+      required: true
 
-quality_gates:
-  required_checks:
-    - name: "schema_validation"
-      tool: "TBD"
-      threshold: "TBD"
-      status: "pending"
-      evidence_uri: null
-    - name: "row_count_sanity"
-      tool: "TBD"
-      threshold: "TBD"
-      status: "pending"
-      evidence_uri: null
-    - name: "null_rate"
-      tool: "TBD"
-      threshold: "TBD"
-      status: "pending"
-      evidence_uri: null
+  - type: textarea
+    id: change_summary
+    attributes:
+      label: Proposed change summary
+      description: One paragraph summary + compatibility expectations.
+      placeholder: |
+        Summary:
+        
+        Backwards compatibility:
+        - breaking_change: false
+        - mitigation (if breaking): ...
+    validations:
+      required: true
 
-  promotion:
-    raw_to_work: []
-    work_to_processed: []
-    processed_to_published: []
+  - type: textarea
+    id: schema_changes
+    attributes:
+      label: Schema changes
+      description: Provide before/after schema references (paths/URIs) and a brief diff.
+      placeholder: |
+        - dataset_id: 
+          change: none|add_columns|remove_columns|rename|type_change|other
+          before_schema_ref: 
+          after_schema_ref: 
+          notes: 
+    validations:
+      required: false
 
-security_and_policy:
-  access_control:
-    authz_model: "TBD"      # RBAC/ABAC/policy-engine name
-    roles:
-      - role: "TBD"
-        permissions: ["TBD"]
+  - type: textarea
+    id: transforms
+    attributes:
+      label: Transforms, code paths, and dependencies
+      description: Where is the change implemented? Include container image digests when applicable.
+      placeholder: |
+        Code paths:
+        - pipelines/...
+        - dbt/models/...
 
-  pii_or_sensitive_fields:
-    present: false
-    fields: []
-    handling: "TBD"         # redaction, hashing, tokenization, etc.
+        Container images:
+        - name: 
+          digest: "sha256:..."
 
-  redaction_rules: []
-  community_constraints:
-    present: false
-    notes: null
+        Dependencies / integrations:
+        - ...
+    validations:
+      required: true
 
-  retention:
-    raw_days: "TBD"
-    published_days: "TBD"
+  - type: textarea
+    id: data_lineage
+    attributes:
+      label: Data lineage (inputs → outputs)
+      description: Provide URIs and checksums/snapshots when available. Avoid exact coordinates for sensitive sites.
+      placeholder: |
+        Inputs:
+        - name: 
+          uri: 
+          classification: 
+          checksum: 
+          time_extent: "YYYY-MM-DD..YYYY-MM-DD"
+          spatial_extent: "coarse geography only if sensitive"
 
-deployment_plan:
-  rollout:
-    strategy: "canary"      # canary|blue_green|full
-    steps:
-      - "TBD"
-  rollback:
-    steps:
-      - "TBD"
-    max_rollback_time_minutes: 30
+        Outputs:
+        - name: 
+          uri: 
+          zone: raw|work|processed|published
+          checksum: 
+    validations:
+      required: true
 
-  monitoring:
-    dashboards:
-      - "TBD"
-    alerts:
-      - name: "TBD"
-        condition: "TBD"
-        paging: false
+  - type: textarea
+    id: quality_gates
+    attributes:
+      label: Quality gates and evidence
+      description: List required checks, thresholds, and links to evidence (CI logs, reports, dashboards).
+      placeholder: |
+        Required checks:
+        - name: schema_validation
+          tool: 
+          threshold: 
+          evidence_uri: 
+        - name: row_count_sanity
+          tool: 
+          threshold: 
+          evidence_uri: 
+        - name: null_rate
+          tool: 
+          threshold: 
+          evidence_uri: 
 
-audit:
-  repo:
-    git_remote: "TBD"
-    base_ref: "TBD"         # branch/commit before change
-    head_ref: "TBD"         # branch/commit with change
+        Promotion gate notes (Raw→Work / Work→Processed / Processed→Published):
+        - ...
+    validations:
+      required: true
 
-  execution:
-    ci_run_id: "TBD"
-    pipeline_run_id: "TBD"
-    executed_by: "TBD"
-    executed_at: null
+  - type: textarea
+    id: security_policy
+    attributes:
+      label: Security and policy review
+      description: Access control model, sensitive fields, redaction/retention, and any community constraints.
+      placeholder: |
+        Access control:
+        - authz_model: RBAC|ABAC|policy-engine
+        - roles/permissions: 
 
-  artifacts:
-    - type: "validation_report"
-      uri: "TBD"
-    - type: "data_profile"
-      uri: "TBD"
+        PII/sensitive fields:
+        - present: false
+        - fields: []
+        - handling: redaction|hashing|tokenization|...
 
-  notes:
-    - "TBD"
+        Retention:
+        - raw_days: 
+        - published_days: 
+
+        Community constraints:
+        - present: false
+        - notes: 
+    validations:
+      required: true
+
+  - type: textarea
+    id: deployment
+    attributes:
+      label: Deployment, monitoring, and rollback plan
+      description: How will this roll out? What will you watch? How do you roll back quickly?
+      placeholder: |
+        Rollout strategy: canary|blue_green|full
+
+        Steps:
+        - ...
+
+        Monitoring:
+        - dashboards:
+          - ...
+        - alerts:
+          - name: ...
+            condition: ...
+            paging: false
+
+        Rollback:
+        - steps:
+          - ...
+        - max_rollback_time_minutes: 30
+    validations:
+      required: true
+
+  - type: textarea
+    id: audit
+    attributes:
+      label: Audit / traceability
+      description: Link PR, design doc/ADR, runbook; include git refs and run IDs.
+      placeholder: |
+        Links:
+        - pr: 
+        - design_doc: 
+        - runbook: 
+        - incident_postmortem: 
+
+        Repo refs:
+        - git_remote: 
+        - base_ref: 
+        - head_ref: 
+
+        Execution:
+        - ci_run_id: 
+        - pipeline_run_id: 
+        - executed_by: 
+        - executed_at: 
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      description: Confirm baseline governance requirements.
+      options:
+        - label: "I linked or attached evidence for required quality checks (or explained what is pending)."
+        - label: "I verified license and sensitivity classification for affected datasets."
+        - label: "I included a rollout + rollback plan and monitoring/alerting plan."
+        - label: "If culturally restricted or sensitive locations are involved, I did not include exact coordinates."
