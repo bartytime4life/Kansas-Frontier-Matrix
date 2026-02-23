@@ -1,182 +1,185 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/8b3e793b-3d2f-4a21-9a4d-3c38f6f26b87
-title: SECURITY — Vulnerability Disclosure Policy
+doc_id: kfm://doc/7e2f2d2e-5c28-4ed5-8f8b-0dfb2d3356ae
+title: SECURITY.md
 type: standard
 version: v1
 status: draft
-owners: Security Working Group (SWG) <security@YOURDOMAIN.example>
+owners: TBD
 created: 2026-02-23
 updated: 2026-02-23
 policy_label: public
 related:
-  - docs/governance/ROOT_GOVERNANCE.md
-  - docs/governance/REVIEW_GATES.md
-  - docs/governance/ETHICS.md
-  - docs/governance/SOVEREIGNTY.md
-tags: [kfm, security, disclosure, governance]
+  - ./README.md
+  - ./.github/ISSUE_TEMPLATE/bug_report.yml
+  - ./.github/ISSUE_TEMPLATE/feature_request.yml
+tags: [kfm, security, vulnerability-disclosure]
 notes:
-  - Replace placeholder contacts, keys, and SLAs before publishing.
-  - Mirror this file into .github/SECURITY.md if you want GitHub’s “Security policy” UI to show it.
+  - Replace all "TBD" and placeholder contact info before publishing.
+  - Keep this file in the repo root (or .github/) so GitHub can discover it.
 [/KFM_META_BLOCK_V2] -->
 
-# SECURITY — Vulnerability Disclosure Policy
+# Security Policy
 
-This document explains how to report security issues in this repository and what to expect from us.
+This document explains how to report security vulnerabilities in this repository and what you can expect from us during triage and remediation.
 
-## Quick rules
-- **Do not** open public issues or PRs for security vulnerabilities.
-- **Do** report privately using the channels below.
-- **Do not** include sensitive data (keys, tokens, personal data, exact vulnerable site locations, etc.).
-- If in doubt about sensitivity/permissions, **default to private + minimal disclosure**.
+- **Do not** report security issues in public GitHub issues.
+- **Do** use a private channel (GitHub Security Advisory or email) so we can protect users while we fix the issue.
+
+## Quick navigation
+
+- [Supported versions](#supported-versions)
+- [Reporting a vulnerability](#reporting-a-vulnerability)
+- [What to include](#what-to-include)
+- [Response and remediation process](#response-and-remediation-process)
+- [Scope](#scope)
+- [Safe harbor](#safe-harbor)
+- [Security posture notes for data and maps](#security-posture-notes-for-data-and-maps)
+
+---
+
+## Supported versions
+
+Security fixes are typically applied to the **latest released** version and/or the **default branch**.
+
+| Version / Branch | Supported |
+|---|---|
+| `main` (default branch) | ✅ |
+| Latest release | ✅ |
+| Older releases | ⚠️ Best-effort |
+| Unreleased forks | ❌ |
+
+> **NOTE:** If you are unsure which version you are running, include commit hash, tag, or container/image digest in your report.
 
 ---
 
 ## Reporting a vulnerability
 
-### Preferred channel
-Email: **security@YOURDOMAIN.example**  
-Subject: **[SECURITY] <short summary>**
+### Preferred: GitHub Security Advisories (private)
 
-If you have a CVE request, include: **“CVE Request”** in the subject.
+If this repository has GitHub Security Advisories enabled, use the **“Report a vulnerability”** button on the repo’s *Security* tab. This keeps the report private and supports coordinated disclosure.
 
-### Alternative channels (if configured)
-- GitHub Security Advisories: **https://github.com/<org>/<repo>/security/advisories/new**
-- Encrypted reporting (PGP): see “Encryption” below.
+### Alternative: Email (private)
 
-### What to include
-Please include:
-- A concise summary of the issue and **impact** (what an attacker can do).
-- **Affected component(s)** (e.g., API boundary, pipelines, graph build, UI, Story Nodes, releases).
-- **Reproduction steps** or a proof-of-concept (PoC) that is safe and minimal.
-- Any relevant logs, stack traces, request/response samples (redacted).
-- Your suggested severity (if you have one) and reasoning.
-- Your contact info and preferred attribution name (or “anonymous”).
+Email: **TBD (e.g., `security@your-org.example`)**  
+Subject: **`[SECURITY] <short summary>`**
 
-### What *not* to include
-Please avoid:
-- Secrets: API keys, tokens, passwords, private certificates.
-- Private/personal data.
-- Exact coordinates or identifying details for sensitive/culturally restricted/vulnerable locations.
-- Exploit chains that enable broad compromise unless requested by the SWG.
+If you can, encrypt sensitive details (proofs, logs, reproduction datasets) using our PGP key:
+
+- PGP key: **TBD**
+- Fingerprint: **TBD**
+
+Example (ASCII-armored) usage:
+
+```bash
+# Example: encrypt report.txt for the security team key
+gpg --encrypt --armor --recipient "TBD_SECURITY_TEAM_KEY_ID" report.txt
+```
+
+### If you believe there is active exploitation
+
+If you believe an issue is being actively exploited in the wild:
+- Mark your report as **URGENT** in the subject/title.
+- Include *only the minimum necessary* details for us to confirm impact.
+- Avoid publishing any indicators-of-compromise (IoCs) that would enable copycat attacks.
+
+---
+
+## What to include
+
+Please include as much of the following as you can:
+
+- A clear description of the issue and **why it is a security problem**
+- Affected component(s) (e.g., API, pipeline, UI, storage adapter, auth)
+- Exact version / commit hash and deployment context
+- Steps to reproduce (PoC, minimal repro repo, request/response samples)
+- Impact assessment:
+  - What an attacker can do
+  - Preconditions (auth required? network access? specific role?)
+  - Worst-case outcome
+- Any known mitigations or workarounds
+- If relevant: logs, stack traces, screenshots, or traces (**redact secrets**)
+
+### Please do NOT include
+
+- Secrets (API keys, tokens, passwords), even if “already leaked”
+- Exact coordinates or culturally restricted locations if your report involves sensitive sites  
+  (see [Security posture notes for data and maps](#security-posture-notes-for-data-and-maps))
+
+---
+
+## Response and remediation process
+
+We aim to follow a coordinated vulnerability disclosure flow:
+
+1. **Acknowledgement**: We confirm receipt.
+2. **Triage**: We validate, assess severity, and identify affected versions/components.
+3. **Remediation plan**: We determine fix strategy and release vehicle.
+4. **Fix & test**: We implement remediation with regression tests and security checks.
+5. **Release**: We publish patches and advisories as appropriate.
+6. **Disclosure**: We coordinate timing and credit (if requested).
+
+### Target timelines (best-effort)
+
+These are targets, not guarantees (severity and complexity vary):
+
+- Acknowledge within: **TBD (e.g., 2 business days)**
+- Initial triage within: **TBD (e.g., 5 business days)**
+- Patch for critical issues within: **TBD (e.g., 7–30 days)**
 
 ---
 
 ## Scope
 
 ### In scope
-- **Governed APIs and policy boundary** (authz/authn, rate limiting, abuse controls, audit logging).
-- **Data pipelines** (integrity, provenance, promotion gates, quarantining, validation bypasses).
-- **Metadata + catalogs** (STAC/DCAT/PROV correctness, tamper resistance, injection risks).
-- **Graph build/indexing** (injection, privilege escalation, data poisoning, unauthorized traversal).
-- **Map/Story UI** (XSS/CSRF, SSRF, unsafe file upload, token leakage, privacy leaks).
-- **Focus Mode AI / automation** (policy bypass, prompt injection leading to restricted data exposure).
-- **Supply chain** (dependency compromise, CI secrets exposure, build provenance/SBOM integrity).
 
-### Out of scope (unless explicitly stated otherwise)
-- Security of your own fork, local environment, or third-party services you configure independently.
-- Denial-of-service tests that degrade availability (unless pre-approved).
-- Social engineering, phishing, physical attacks.
+- Vulnerabilities in code in this repository
+- CI/CD or build workflows that could enable supply-chain compromise
+- Authentication/authorization flaws
+- Data exposure issues (private datasets, restricted content, secrets)
+- Map/Story UI security issues (XSS, CSRF, injection, unsafe rendering)
+- API issues (injection, IDOR, auth bypass, broken access control)
+- Storage/indexing misconfigurations caused by this repo’s code/config
+
+### Out of scope
+
+- Social engineering attacks against maintainers/users
+- Denial-of-service requiring excessive traffic (unless a clear algorithmic amplification exists)
+- Issues in unsupported versions (see [Supported versions](#supported-versions))
+- Vulnerabilities solely in third-party services not managed by this repo
 
 ---
 
-## Safe harbor for good-faith research
+## Safe harbor
 
 We support good-faith security research that:
-- Avoids privacy violations and service disruption.
-- Uses **only** the minimum data needed to demonstrate impact.
-- Respects data sovereignty and culturally restricted knowledge constraints.
-- Gives us a reasonable window to remediate before public disclosure.
 
-We do **not** consider the following to be authorized:
-- Accessing or exfiltrating data you don’t own or have explicit permission to access.
-- Attempting to identify individuals from data, even if technically possible.
-- Attempting lateral movement beyond the smallest necessary proof of impact.
+- Avoids privacy violations and data destruction
+- Uses the minimum amount of data access needed to demonstrate impact
+- Does not intentionally degrade service for others
+- Does not publicly disclose before we have a reasonable chance to remediate
 
-If you’re uncertain whether a test is safe, **ask first** via the reporting channel.
+> **NOTE:** If you are unsure whether a test is safe, stop and contact us first via a private channel.
 
 ---
 
-## Severity and response targets (editable)
+## Security posture notes for data and maps
 
-We use a practical severity model aligned with industry norms (Critical/High/Medium/Low).
-Targets below are goals, not guarantees.
+This project may involve **sensitive locations, vulnerable sites, or culturally restricted knowledge**. Security reporting must preserve the trust membrane:
 
-| Severity | Examples (non-exhaustive) | Acknowledge | Triage | Fix target |
-|---|---|---:|---:|---:|
-| Critical | RCE, auth bypass, mass data exposure, signing key compromise | 2 business days | 5 business days | 14–30 days |
-| High | privilege escalation, significant injection, sensitive data leak | 3 business days | 10 business days | 30–60 days |
-| Medium | limited-scope leaks, non-exploitable-by-default issues | 5 business days | 15 business days | 60–90 days |
-| Low | hardening, best-practice gaps | 10 business days | 20 business days | as scheduled |
+- Do not include exact coordinates for sensitive/restricted sites in reports.
+- If location detail is required for reproduction, share it **only via encrypted channels** and consider sharing:
+  - generalized bounding boxes,
+  - hashed identifiers,
+  - redacted exemplars,
+  - or synthetic test data.
 
----
-
-## Coordinated disclosure
-
-We prefer coordinated disclosure.
-- We’ll confirm receipt, assess impact, and work with you on a disclosure timeline.
-- We may request additional details or a safer PoC.
-- If we publish a security advisory, we’ll credit you if you want attribution.
-
-**Please do not publish** details before we confirm remediation or agree on an embargo date.
+If your report involves potential harm to communities or sensitive sites, explicitly flag it as:
+- **“Sensitive / governance review needed”**
 
 ---
 
-## Data governance & sensitive content handling
+## Credit
 
-This project may contain (or derive) sensitive information, including:
-- Locations of vulnerable sites
-- Culturally restricted knowledge
-- Proprietary or licensed datasets
-- Personal or community-linked data
+If you want public credit, include the name/handle and a preferred link in your report. If you prefer to remain anonymous, we will respect that.
 
-If your report involves any of the above:
-- Provide a **generalized description** (e.g., “within 10–25 km of X region”) rather than exact coordinates.
-- Prefer screenshots with identifying details blurred, or textual descriptions.
-- Flag the report as **“SENSITIVE: governance review needed”**.
-
----
-
-## Security incident: what we may do
-
-Depending on severity, we may:
-- Quarantine affected data artifacts and block promotions (Raw → Work/Quarantine → Processed → Published).
-- Rotate secrets, revoke tokens, and invalidate caches.
-- Publish a security advisory and release notes.
-- Add regression tests and policy checks so the class of issue fails closed.
-
----
-
-## Encryption (optional but recommended)
-
-If you need encrypted comms:
-- PGP public key: **(add link here)**
-- Fingerprint: **(add fingerprint here)**
-
----
-
-## Supported versions (fill in)
-
-| Version / branch | Supported | Notes |
-|---|---|---|
-| main | ✅ / ❌ | |
-| latest release (vX.Y.Z) | ✅ / ❌ | |
-| previous release (vX.Y.Z-1) | ✅ / ❌ | |
-
----
-
-## Security best practices for contributors (short)
-
-- Never commit secrets. Use `.env.example` and secret managers in CI.
-- Treat the **policy boundary** as a security boundary: clients must not bypass governed APIs.
-- Add tests for security invariants (authz, validation, provenance checks, redaction).
-- Prefer dependency pinning and add SBOM/signing where supported.
-- Log safely: no secrets, no personal data, no precise sensitive locations.
-
----
-
-## Contact
-
-Security Working Group (SWG): **security@YOURDOMAIN.example**  
-Backup contact: **(add backup contact/rotation)**
-
-If you believe the issue is actively exploited, write **“URGENT”** in the subject line.
+Thank you for helping keep the project and its users safe.
