@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD (set via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: restricted
 related:
   - configs/README.md
@@ -27,6 +27,7 @@ Governed, version-controlled configuration that drives **policy enforcement**, *
 **Principles:** map-first • time-aware • governed • evidence-first • cite-or-abstain
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
+![policy](https://img.shields.io/badge/policy-restricted-red)
 ![governance](https://img.shields.io/badge/governance-fail--closed-blue)
 ![contracts](https://img.shields.io/badge/contracts-contract--first-blue)
 ![auditable](https://img.shields.io/badge/audit-reproducible-blue)
@@ -36,16 +37,28 @@ Governed, version-controlled configuration that drives **policy enforcement**, *
 ## Navigation
 
 - [Quick start](#quick-start)
+- [Where this fits in the repo](#where-this-fits-in-the-repo)
+- [Repo reality check](#repo-reality-check)
 - [Scope](#scope)
   - [What lives here](#what-lives-here)
   - [What does not live here](#what-does-not-live-here)
 - [KFM invariants this directory must support](#kfm-invariants-this-directory-must-support)
 - [Recommended layout](#recommended-layout)
   - [Config registry](#config-registry)
+- [Conventions](#conventions)
+  - [Formats](#formats)
+  - [Identifiers and versioning](#identifiers-and-versioning)
+  - [Secret references](#secret-references)
 - [Config precedence and resolution](#config-precedence-and-resolution)
 - [Validation and CI gates](#validation-and-ci-gates)
+  - [Required checks matrix](#required-checks-matrix)
+  - [Suggested local commands](#suggested-local-commands)
 - [Secrets and sensitive values](#secrets-and-sensitive-values)
+- [Ownership and review routing](#ownership-and-review-routing)
 - [Change management](#change-management)
+  - [Change classes](#change-classes)
+  - [Versioning guidance](#versioning-guidance)
+  - [Deprecation and migrations](#deprecation-and-migrations)
 - [Definition of Done](#definition-of-done)
 - [Appendix](#appendix)
 
@@ -65,6 +78,53 @@ Governed, version-controlled configuration that drives **policy enforcement**, *
 
 > **TIP**
 > Treat every config change as a behavior change. If you can’t describe how the system’s decisions change, you probably can’t test it.
+
+---
+
+## Where this fits in the repo
+
+This directory sits on the policy boundary between **code** and **operations**:
+
+- **Code** implements enforcement (policy engines, validators, resolvers, gates).
+- **Configs** decide *what gets enforced* (labels, obligations, thresholds, profiles, flags).
+
+### Directory contract
+
+| Contract item | Requirement |
+|---|---|
+| Purpose | Governed configuration that can change system behavior without changing core code |
+| Acceptable inputs | Small, reviewable, machine-validated files (YAML/JSON/TOML/etc.) that drive policy, contracts, gates, and safe runtime wiring |
+| Exclusions | Secrets, private keys, raw restricted coordinates, PII, large datasets, ad-hoc scripts without tests |
+| Review posture | **Fail closed** for policy-bearing changes; steward review required for governance-critical changes |
+| Promotion posture | Config changes that affect publishability or access MUST be promotion-gated and auditable |
+
+> **NOTE**
+> If the real repo structure differs from this README, treat the README as *out of date* and update the **Config registry** table first.
+
+### Repo reality check
+
+This README intentionally describes a *target posture*. Before treating any statement here as **Confirmed**, verify the repo actually contains the artifacts that make it true:
+
+- [ ] A `CODEOWNERS` file that routes reviews for `configs/policy/**`, `configs/promotion/**`, and `configs/contracts/**`
+- [ ] CI checks that run (at least): schema validation, policy parity tests, linkcheck, and secret scanning
+- [ ] A deterministic config resolver that **fails on conflicts** (no silent precedence)
+- [ ] Runtime components that apply the same policy semantics as CI (parity)
+
+Minimum verification steps (copy/paste):
+
+```bash
+# 1) Inspect actual layout
+find configs -maxdepth 3 -type d -print
+
+# 2) Find ownership rules (GitHub/GitLab)
+ls -la .github/CODEOWNERS 2>/dev/null || ls -la CODEOWNERS 2>/dev/null
+
+# 3) Locate CI workflows/pipelines that validate configs
+ls -la .github/workflows 2>/dev/null || true
+
+# 4) Run local validations (replace with real commands once wired)
+make validate-schemas && make test-policy && make linkcheck-catalogs && make scan-secrets
+```
 
 ---
 
@@ -192,20 +252,49 @@ configs/
 
 Update this table whenever you add, move, or deprecate config files.
 
-| Area | Path (relative) | Format | Used by | CI validation | Default owner |
-|---|---|---|---|---|---|
-| Policy labels | `policy/labels/` | YAML / JSON | API + evidence resolver | **Required** | Steward |
-| Obligations | `policy/obligations/` | YAML / JSON | API + pipelines | **Required** | Steward |
-| Policy fixtures | `policy/fixtures/` | JSON | CI + runtime parity tests | **Required** | Steward + Eng |
-| Schemas | `contracts/schemas/` | JSON Schema | CI + runtime validators | **Required** | API/Standards |
-| Profiles | `contracts/profiles/` | MD + machine file | Catalog validators | **Required** | Standards |
-| Linkcheck rules | `contracts/linkcheck/` | Config | CI link-checker | **Required** | Platform |
-| Gate definitions | `promotion/gates/` | YAML / JSON | Promotion step | **Required** | Steward + Eng |
-| Feature flags | `runtime/feature_flags/` | YAML / JSON | API + UI | **Required (lint)** | Platform |
-| Env examples | `env/*.example.env` | dotenv | Local dev | **Required (secret scan)** | Platform |
+| Area | Path (relative) | Format | Used by | CI validation | Default owner | Change class |
+|---|---|---|---|---|---|---|
+| Policy labels | `policy/labels/` | YAML / JSON | API + evidence resolver | **Required** | Steward | Governance-critical |
+| Obligations | `policy/obligations/` | YAML / JSON | API + pipelines | **Required** | Steward | Governance-critical |
+| Policy fixtures | `policy/fixtures/` | JSON | CI + runtime parity tests | **Required** | Steward + Eng | Governance-critical |
+| Schemas | `contracts/schemas/` | JSON Schema | CI + runtime validators | **Required** | API/Standards | Contract-breaking (sometimes) |
+| Profiles | `contracts/profiles/` | MD + machine file | Catalog validators | **Required** | Standards | Contract-breaking (sometimes) |
+| Linkcheck rules | `contracts/linkcheck/` | Config | CI link-checker | **Required** | Platform | Contract-breaking (sometimes) |
+| Gate definitions | `promotion/gates/` | YAML / JSON | Promotion step | **Required** | Steward + Eng | Governance-critical |
+| Feature flags | `runtime/feature_flags/` | YAML / JSON | API + UI | **Required (lint)** | Platform | Runtime behavior |
+| Env examples | `env/*.example.env` | dotenv | Local dev | **Required (secret scan)** | Platform | Docs-only |
 
 > **NOTE**
 > Ownership is enforced via `CODEOWNERS`. The “Default owner” column is guidance; the repo is the source of truth once CODEOWNERS is configured.
+
+---
+
+## Conventions
+
+### Formats
+
+- Prefer **YAML** for human-authored config; prefer **JSON** for fixtures and machine-to-machine artifacts.
+- Keep files **small and composable**. If a file needs scrolling, it probably needs splitting.
+- Avoid YAML features that can create ambiguity in reviews (anchors/aliases) unless the repo explicitly standardizes them.
+- Every config SHOULD have a stable **schema** (even if that schema is “lightweight” via lint rules).
+
+> **TIP**
+> If a config has no validator, it is *code without tests*.
+
+### Identifiers and versioning
+
+- Files that define a **contract surface** SHOULD include an explicit version (e.g., `v1`, `2026-02`, or semver), and be stored as immutable once published.
+- Policy labels SHOULD be treated as **controlled vocabulary**. Changing meaning is breaking behavior.
+- Any identifier that flows into **dataset identity hashing** MUST be stable and tested.
+
+### Secret references
+
+If you must reference a secret from a config file, store only an identifier such as:
+
+- `secret_ref: MY_SERVICE_TOKEN`
+- `secret_ref: kfm/namespace/service/token`
+
+Never store the secret value.
 
 ---
 
@@ -282,6 +371,16 @@ This directory is only safe if it is continuously validated. At minimum CI shoul
 - Rights and sensitivity metadata required by gates are present
 - Gate failures block merge and block promotion
 
+### Required checks matrix
+
+| Check | Why it exists | Gate |
+|---|---|---|
+| Schema validation | Prevent contract drift and publish invalid artifacts | Required |
+| Policy parity tests | Ensure CI and runtime semantics match | Required |
+| Linkcheck (cross-refs) | Ensure evidence links resolve deterministically | Required |
+| Secret scanning | Prevent credential leakage | Required |
+| Formatting/lint | Reduce review ambiguity and enforce conventions | Required |
+
 ### Suggested local commands
 
 > Replace these placeholders with real repo commands when available.
@@ -298,6 +397,9 @@ make linkcheck-catalogs
 
 # Secret scanning (should already run in CI)
 make scan-secrets
+
+# Optional: formatting/lint (YAML/JSON)
+make lint-configs
 ```
 
 ---
@@ -316,6 +418,26 @@ Also: do not store exact coordinates or restricted site details in config. Use p
 
 > **NOTE**
 > If sensitivity handling is unclear, default to deny and mark the change *needs governance review*.
+
+---
+
+## Ownership and review routing
+
+`CODEOWNERS` SHOULD enforce required reviews for policy-bearing configuration. Example:
+
+```text
+# Policy-as-code
+configs/policy/**     @kfm-stewards
+
+# Promotion gates
+configs/promotion/**  @kfm-stewards @kfm-platform
+
+# Contract artifacts
+configs/contracts/**  @kfm-standards @kfm-platform
+```
+
+> **NOTE**
+> The teams above are placeholders. Replace with real GitHub teams / groups.
 
 ---
 
@@ -340,11 +462,30 @@ Some changes are governance-critical and require steward review:
 - required status checks for all validators listed above
 - merge queue / protected branch for mainline
 
+### Change classes
+
+Use these labels in PR titles (or PR labels) when changing `configs/`:
+
+| Class | Meaning | Extra requirements |
+|---|---|---|
+| Docs-only | Comments/README/examples; no behavior change | Lint + secret scan |
+| Runtime behavior | Feature flags, caches, indexing knobs | Tests or smoke checks for affected components |
+| Contract-breaking | Schemas/profiles/link rules | Version bump + migration notes |
+| Governance-critical | Allow/deny, obligations, gate thresholds, sensitivity defaults | Steward review + fixtures proving behavior |
+
 ### Versioning guidance
 
 - Schemas and profiles MUST be versioned.
 - Breaking changes require explicit version bumps and a migration strategy.
 - Keep old versions readable long enough to support reproducibility and audit.
+
+### Deprecation and migrations
+
+- Deprecations MUST be explicit (documented in-file and/or in a changelog/ADR).
+- Provide a migration window where both old and new versions validate (when feasible).
+- Remove deprecated configs only after:
+  - no active published artifacts depend on them, and
+  - receipts prove successful migration.
 
 ---
 
@@ -355,10 +496,10 @@ Use this checklist in PRs that touch `configs/`.
 - [ ] Change is scoped and reversible (rollback path described)
 - [ ] Config registry table updated (paths/owners/validation)
 - [ ] Fixtures/tests updated or added to prove new behavior
-- [ ] CI validations pass (schemas, policy tests, linkcheck, secret scan)
+- [ ] CI validations pass (schemas, policy tests, linkcheck, secret scan, lint)
 - [ ] No secrets committed (confirmed by scan)
 - [ ] If change affects governance outcomes, steward review completed
-- [ ] Any behavior change is documented in the relevant standard or ADR
+- [ ] Any behavior change is documented in the relevant standard, ADR, or changelog
 
 ---
 
