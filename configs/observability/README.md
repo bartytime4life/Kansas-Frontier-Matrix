@@ -374,47 +374,47 @@ Preferred operational posture is GitOps:
 Add only what you actually use.
 
 ```text
-configs/observability/
-  README.md
-
-  contracts/
-    # telemetry-contract.md      # optional: tighter field-level contract doc
-    # schemas/                  # JSON schema for dashboards, etc
-
-  collectors/
-    # otel-collector/           # collector configs by env/role
-
-  metrics/
-    # scrape/                   # scrape configs (if not operator-managed)
-    rules/                      # recording + alert rules
-
-  alerts/
-    routing/                    # alert routing (severity, destinations)
-
-  logs/
-    pipelines/                  # parsing + redaction rules
-    retention/                  # retention configs/policies (if not centralized)
-
-  traces/
-    sampling/                   # sampling strategies
-    processors/                 # attribute redaction, batching, etc.
-
-  dashboards/
-    steward/
-    operator/
-    product/
-
-  runbooks/
-    # p0-api-unavailable.md
-    # p0-audit-ingestion-down.md
-    # p1-slo-burn-latency.md
-
-  deploy/
-    base/                       # baseline manifests / helm values
-    overlays/
-      dev/
-      staging/
-      prod/
+configs/observability/                               # Governed observability config (logs/metrics/traces/dashboards/alerts)
+├─ README.md                                         # What’s governed here, ownership, and how CI/runtime consumes it
+│
+├─ contracts/                                        # Optional: contracts/schemas for telemetry consistency
+│  ├─ telemetry-contract.md                          # (Optional) Field-level contract: required attrs, redaction, naming
+│  └─ schemas/                                       # (Optional) JSON Schemas for dashboards/rules/config objects
+│
+├─ collectors/                                       # Telemetry collectors configuration (by env/role)
+│  └─ otel-collector/                                # (Optional) OTel Collector configs (ingest/export pipelines)
+│
+├─ metrics/                                          # Metrics configuration (scrape + rules)
+│  ├─ scrape/                                        # (Optional) Scrape configs (if not operator-managed)
+│  └─ rules/                                         # Recording rules + alert rules (Prometheus-style)
+│
+├─ alerts/                                           # Alerting configuration
+│  └─ routing/                                       # Routing rules (severity → destinations, grouping, silences)
+│
+├─ logs/                                             # Log pipelines + governance (parse/redact/retain)
+│  ├─ pipelines/                                     # Parsing + redaction rules (PII/sensitive-field handling)
+│  └─ retention/                                     # Retention policies (if not centralized elsewhere)
+│
+├─ traces/                                           # Distributed tracing governance
+│  ├─ sampling/                                      # Sampling strategies (head/tail, per-route/service policies)
+│  └─ processors/                                    # Processors (attribute redaction, batching, enrichment)
+│
+├─ dashboards/                                       # Dashboards organized by audience
+│  ├─ steward/                                       # Steward-facing (data quality, policy denies, promotion health)
+│  ├─ operator/                                      # Operator-facing (infra/runtime health, saturation, errors)
+│  └─ product/                                       # Product-facing (usage, UX funnels, performance)
+│
+├─ runbooks/                                         # Alert-linked runbooks (P0/P1 response guides)
+│  ├─ p0-api-unavailable.md                          # (Optional) P0: API down
+│  ├─ p0-audit-ingestion-down.md                     # (Optional) P0: audit pipeline down
+│  └─ p1-slo-burn-latency.md                         # (Optional) P1: latency burn
+│
+└─ deploy/                                           # Deployment wiring (helm/kustomize manifests)
+   ├─ base/                                          # Baseline manifests / values
+   └─ overlays/                                      # Per-environment deltas
+      ├─ dev/
+      ├─ staging/
+      └─ prod/
 ```
 
 ---
