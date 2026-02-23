@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: public
 related:
   - ../docs/
@@ -22,18 +22,21 @@ notes:
 # `contracts/` — Contract surfaces for KFM
 Contract-first • fail-closed • governed-by-default • evidence-first • time-aware
 
-**Status:** draft • **Owners:** TBD (Eng + Governance)  
+**Status:** draft • **Owners:** TBD (Engineering + Governance)  
 **Purpose:** Make KFM interfaces *explicit, versioned, and machine-validated* so that promotion + runtime behavior can’t drift.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
+![owners](https://img.shields.io/badge/owners-TBD-lightgrey)
+![contract-version](https://img.shields.io/badge/contract_version-v1-informational)
+![policy_label](https://img.shields.io/badge/policy_label-public-informational)
 ![principle](https://img.shields.io/badge/principle-contract--first-blue)
 ![gates](https://img.shields.io/badge/gates-fail--closed-critical)
-![policy](https://img.shields.io/badge/policy-shared%20CI%20%2B%20runtime-informational)
 
 ---
 
 ## Navigation
 - [Purpose](#purpose)
+- [Directory contract](#directory-contract)
 - [What is a contract artifact](#what-is-a-contract-artifact)
 - [Non-negotiable invariants](#non-negotiable-invariants)
 - [Contract surfaces in KFM](#contract-surfaces-in-kfm)
@@ -50,13 +53,53 @@ Contract-first • fail-closed • governed-by-default • evidence-first • ti
 KFM treats “contracts” as **governance intent turned into enforceable behavior**.
 
 This directory is intended to be the canonical home for **interface-defining artifacts** that MUST remain stable and testable across:
-- ingestion → promotion (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET)
+- ingestion → promotion (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED)
 - catalogs and provenance (DCAT + STAC + PROV) as runtime interfaces
 - governed API surfaces (including stable error models + versioning rules)
 - evidence resolution (EvidenceRef → EvidenceBundle)
 - policy-as-code semantics shared between CI and runtime
 
 > **Fail-closed posture:** if a required contract is missing, invalid, or ambiguous, the system MUST block promotion and/or refuse to serve affected data.
+
+[Back to top](#navigation)
+
+---
+
+## Directory contract
+This section exists to satisfy the **Directory Documentation Standard**: what this folder is for, where it fits, what belongs here, and what must not.  
+
+### Where this fits in the repo
+`contracts/` is the **trust membrane boundary in file form**: it is where KFM stores the *machine-validated* definitions that CI and runtime enforcement are obligated to follow.
+
+Typical dependency directions:
+- **Upstream (inputs):** governance standards, templates, and policy definitions (usually under `docs/`, `docs/standards/`, `docs/governance/`).
+- **Downstream (consumers):** pipeline runners (promotion), catalog builders, API servers/gateways, and Focus Mode evidence resolution.
+- **Peers (optional):** `schemas/` may hold low-level/third-party schemas; `contracts/` holds the governed profiles, registries, fixtures, and gates that make them enforceable.
+
+> **Rule of thumb:** implementations may change quickly; contracts change slowly and with explicit versioning.
+
+### Acceptable inputs
+What belongs in `contracts/`:
+
+| Category | Examples | Why it belongs here |
+|---|---|---|
+| Interface schemas/specs | JSON Schema, OpenAPI, GraphQL SDL, YAML rule files | Defines externally visible shapes |
+| Profiles + constraints | DCAT/STAC/PROV profiles, cross-link rules | Makes catalogs enforceable |
+| Policy-as-code artifacts | Rego policies, decision fixtures | Shared CI/runtime semantics |
+| Fixtures | known-good / known-bad examples | Prevents “it validates but breaks” |
+| Contract tests | schema validation + link checks | Enforces fail-closed behavior |
+| Versioning metadata | manifest/lock/changelog (if used) | Prevents drift + enables rollback |
+
+### Exclusions
+What must **not** go in `contracts/`:
+
+| Excluded | Put it elsewhere | Reason |
+|---|---|---|
+| Runtime code / business logic | service/pipeline modules | Contracts are *interfaces*, not implementations |
+| Secrets / tokens / credentials | secret manager | Contracts are public-ish by default |
+| Large datasets or derived data | data zones (RAW/WORK/PROCESSED) | Keep contracts reviewable + diff-friendly |
+| Binary artifacts | build outputs/releases | Contracts must be text + reviewable |
+| “Docs only” explanations with no enforcement | `docs/` | Contracts must be testable, not aspirational |
 
 [Back to top](#navigation)
 
@@ -94,6 +137,10 @@ Contracts that depend on policy (promotion gates, evidence resolution, download/
 
 ### Deterministic identity and hashing
 Contract specs that are referenced by hash (e.g., `spec_hash`) should be **deterministically serialized** (canonical JSON) to prevent “hash drift”.
+
+### No “silent looseness”
+- Removing a required gate or weakening validation **must** be treated as a breaking change.
+- If validation logic is ambiguous, **default deny** (fail closed), then tighten the contract.
 
 [Back to top](#navigation)
 
@@ -138,6 +185,7 @@ flowchart LR
 ```text
 contracts/
 ├── README.md
+├── CHANGELOG.md                      # (OPTIONAL) notable contract changes + migrations
 ├── _registry/                         # (PROPOSED) contract index + version map
 │   ├── contracts.manifest.json        # list of contract packages + versions
 │   └── contracts.lock.json            # digests/spec_hashes for reproducibility
@@ -202,11 +250,17 @@ At minimum:
 - policy fixture checks (allow/deny + obligations)
 - stable error model checks (policy-safe messages; no “ghost metadata” leaks)
 
-### 5) Document the change
+### 5) Update the registry/lock (if used)
+If your repo maintains a contract registry (recommended for reproducibility):
+- add the new contract/version to `contracts/_registry/contracts.manifest.json`
+- update `contracts/_registry/contracts.lock.json` with deterministic digests (`spec_hash`)
+
+### 6) Document the change
 - What changed?
 - Why?
 - What breaks?
-- Required follow-up changes (pipeline/API/UI)
+- Required follow-up changes (pipeline/API/UI/Focus)
+- Migration steps (if any)
 
 > **Tip:** If your repo uses an “API contract extension” template, use it for endpoint changes so reviewers can reason about compatibility and policy impact.
 
