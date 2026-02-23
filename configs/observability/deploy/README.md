@@ -205,24 +205,31 @@ Use these keys consistently in:
 > The layout below is a **recommended shape**. Replace/trim to match what actually exists in your repo.
 
 ```text
-configs/observability/deploy/
-  README.md                      # (this file)
-  base/                          # Kustomize base (PROPOSED)
-  overlays/
-    dev/                         # env-specific patches (PROPOSED)
-    staging/
-    prod/
-  helm/                          # Helm values / chart wrappers (PROPOSED)
-  otel/
-    collector.yaml               # OTel Collector pipelines (PROPOSED)
-  dashboards/
-    grafana/                     # dashboards-as-code (PROPOSED)
-  rules/
-    prometheus/                  # alerting + recording rules (PROPOSED)
-  alerts/
-    routes.yaml                  # alert routing policy (PROPOSED)
-  scripts/
-    validate.sh                  # local preflight checks (PROPOSED)
+configs/observability/deploy/                        # Deployment wiring for observability stack (PROPOSED)
+├─ README.md                                         # (This file) deploy model, environments, and validation steps
+│
+├─ base/                                             # (PROPOSED) Kustomize base: shared manifests/values
+├─ overlays/                                         # (PROPOSED) Environment overlays (small, explicit deltas)
+│  ├─ dev/                                           # Dev patches (lighter footprint; faster iteration)
+│  ├─ staging/                                       # Staging patches (prod-like where possible)
+│  └─ prod/                                          # Prod patches (HA, strict policies, audited changes)
+│
+├─ helm/                                             # (PROPOSED) Helm values / chart wrappers (if Helm is used)
+│
+├─ otel/                                             # (PROPOSED) OpenTelemetry wiring used by deploy
+│  └─ collector.yaml                                 # Collector pipelines (ingest → process → export)
+│
+├─ dashboards/                                       # (PROPOSED) Dashboards-as-code wiring
+│  └─ grafana/                                       # Grafana dashboards provisioning (folders/datasources/dashboards)
+│
+├─ rules/                                            # (PROPOSED) Rules-as-code wiring
+│  └─ prometheus/                                    # Prometheus recording + alert rules
+│
+├─ alerts/                                           # (PROPOSED) Alerting wiring
+│  └─ routes.yaml                                    # Alert routing policy (severity → destinations, grouping)
+│
+└─ scripts/                                          # (PROPOSED) Validation + preflight helpers
+   └─ validate.sh                                    # Local checks (lint, schema, render, dry-run apply)
 ```
 
 [Back to top](#observability-deploy)
