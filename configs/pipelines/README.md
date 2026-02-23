@@ -136,38 +136,32 @@ flowchart LR
 ### Recommended layout (template)
 
 ```text
-configs/pipelines/
-  README.md
-
-  # 1) Discovery / enablement (registry of pipeline plugins)
-  registry.yml                # signed allowlist / registry (preferred)
-  manifest.yml                # alternative registry (if used)
-
-  # 2) Shared schemas / contracts (validated in CI)
-  schemas/
-    pipeline.v1.schema.json
-    registry.v1.schema.json
-    run_receipt.v1.schema.json
-
-  # 3) Environment overlays (non-secret knobs only)
-  env/
-    dev.yml
-    test.yml
-    prod.yml
-
-  # 4) Scheduling / dispatch config (if not encoded in pipeline.yaml)
-  schedules/
-    schedules.yml
-
-  # 5) Policy knobs (deny-by-default posture)
-  policy/
-    promotion_requirements.yml
-    redaction_defaults.yml
-
-  # 6) Examples / fixtures for CI gates
-  fixtures/
-    sample_pipeline.yml
-    sample_registry.yml
+configs/pipelines/                                 # Pipeline configuration (registry + schemas + env overlays + policy knobs)
+├─ README.md                                       # How pipeline configs are validated + used by runners/CI (fail-closed)
+│
+├─ registry.yml                                    # Preferred: signed allowlist of enabled pipelines/plugins
+├─ manifest.yml                                    # Optional alternative registry format (only if used)
+│
+├─ schemas/                                        # Contracts validated in CI (what configs MUST conform to)
+│  ├─ pipeline.v1.schema.json                      # Pipeline definition schema (inputs/steps/outputs/catalog refs)
+│  ├─ registry.v1.schema.json                      # Registry schema (enabled IDs, versions, policy labels, owners)
+│  └─ run_receipt.v1.schema.json                   # Run receipt schema (required promotion evidence)
+│
+├─ env/                                            # Environment overlays (non-secret knobs only)
+│  ├─ dev.yml                                      # Dev defaults (lighter resources, more logging)
+│  ├─ test.yml                                     # Test defaults (deterministic settings; stable timeouts)
+│  └─ prod.yml                                     # Prod defaults (strict posture; audited settings)
+│
+├─ schedules/                                      # Scheduling/dispatch config (if not encoded in pipeline entries)
+│  └─ schedules.yml                                # Cron/workflow schedules + concurrency/blackout windows
+│
+├─ policy/                                         # Policy knobs (deny-by-default posture)
+│  ├─ promotion_requirements.yml                   # Required artifacts/gates (STAC/DCAT/PROV, digests, receipts)
+│  └─ redaction_defaults.yml                       # Default redaction posture (precision/field rules; safe defaults)
+│
+└─ fixtures/                                       # Examples/fixtures used by CI gates (synthetic; deterministic)
+   ├─ sample_pipeline.yml                          # Minimal valid pipeline config example
+   └─ sample_registry.yml                          # Minimal valid registry config example
 ```
 
 > **TIP**
