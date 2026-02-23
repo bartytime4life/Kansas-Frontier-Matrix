@@ -117,20 +117,22 @@ A buildable target layout places this API in a monorepo alongside shared package
 
 ```text
 repo/
-  apps/
-    api/                  # governed API (interfaces + adapters)  <-- you are here
-    ui/                   # map/story/focus frontend
-    worker/               # pipeline runner + index builders
-  packages/
-    domain/               # pure domain model + invariants
-    usecases/             # workflows: ingest/promote/resolve/publish
-    policy/               # policy engine + fixtures + tests
-    evidence/             # EvidenceRef parsing + bundle assembly
-    catalog/              # DCAT/STAC/PROV generation + validators
-    shared/               # DTOs, schemas, utils
-  data/                   # specs, fixtures, governed policy artifacts
-  ops/                    # gitops and runbooks
-  docs/                   # stories, ADRs, standards
+├─ apps/
+│  ├─ api/                                   # ← YOU ARE HERE: governed API (boundary wiring + adapters)
+│  ├─ ui/                                    # Map/Story/Focus frontend
+│  └─ worker/                                # Pipeline runner + index builders (background jobs)
+│
+├─ packages/                                 # Shared libraries (clean architecture layers)
+│  ├─ domain/                                # Pure domain model + invariants (no I/O)
+│  ├─ usecases/                              # Workflows: ingest/promote/resolve/publish (ports in/out)
+│  ├─ policy/                                # Policy engine + fixtures + tests (default-deny, explicit allow)
+│  ├─ evidence/                              # EvidenceRef parsing + evidence bundle assembly helpers
+│  ├─ catalog/                               # DCAT/STAC/PROV generation + validators
+│  └─ shared/                                # DTOs/schemas/utils (cross-cutting primitives)
+│
+├─ data/                                     # Specs + fixtures + governed policy artifacts (small, deterministic)
+├─ ops/                                      # GitOps + runbooks (deployment + operations)
+└─ docs/                                     # Stories, ADRs, standards (governed docs hub)
 ```
 
 If your repository differs, update this README to match reality—**but do not weaken the trust membrane**.
