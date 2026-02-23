@@ -369,17 +369,20 @@ apps/                                             # Runnable app surfaces (each 
 If your repo uses a `web/` workspace root, the equivalent pattern is:
 
 ```text
-web/
-├─ apps/
-│  ├─ map/
-│  ├─ globe/
-│  ├─ story/
-│  ├─ catalog/
-│  ├─ focus/
-│  └─ admin/
+web/                                               # Frontend workspace (multiple apps + shared UI packages)
+├─ apps/                                           # App entrypoints (route shells + app-specific composition)
+│  ├─ map/                                         # 2D map explorer (layers, timeline, inspect)
+│  ├─ globe/                                       # 3D globe explorer (Cesium; optional)
+│  ├─ story/                                       # Story reader + map choreography
+│  ├─ catalog/                                     # Catalog browser (datasets/layers; policy badges)
+│  ├─ focus/                                       # Focus Mode UI (Q&A + citations + audit/explain)
+│  └─ admin/                                       # Admin console (governance, ops, approvals; restricted)
 │
-├─ packages/                                      # Shared UI packages (do not duplicate per-app)
-└─ src/components/                                # Shared components (EvidenceDrawer, ReceiptViewer, etc.)
+├─ packages/                                       # Shared UI packages (do not duplicate per-app)
+│  └─ …                                            # e.g., ui-kit, contracts, services, map-adapters, telemetry
+│
+└─ src/components/                                 # Shared components (legacy/global shared)
+   └─ …                                            # EvidenceDrawer, ReceiptViewer, CitationList, AuditDrawer, etc.
 ```
 
 ---
