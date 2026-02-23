@@ -151,32 +151,32 @@ flowchart TD
 **Proposed skeleton** (adjust to repo conventions):
 
 ```
-configs/promotion/
-  README.md
-
-  contract/
-    promotion_contract.v1.yaml
-    policy_labels.yaml
-    controlled_vocab.yaml
-
-  schemas/
-    promotion_manifest.v1.schema.json
-    run_receipt.v1.schema.json
-
-  policy/
-    opa/
-      receipt.rego
-      promotion.rego
-    fixtures/
-      public_example.json
-      restricted_example.json
-
-  profiles/
-    dev.yaml
-    prod.yaml
-
-  thresholds/
-    qa_thresholds.yaml
+configs/promotion/                                 # Promotion configuration (contract + schemas + gates)
+├─ README.md                                       # What “promotion” means, required artifacts, and CI wiring (fail-closed)
+│
+├─ contract/                                       # Human-readable contract inputs (normative declarations)
+│  ├─ promotion_contract.v1.yaml                   # Promotion requirements (artifacts, checks, failure modes)
+│  ├─ policy_labels.yaml                          # Policy labels taxonomy used during promotion (public/restricted/etc.)
+│  └─ controlled_vocab.yaml                       # Controlled vocabulary (licenses, roles, sensitivity flags, etc.)
+│
+├─ schemas/                                        # Machine-validated schemas used by promotion gates
+│  ├─ promotion_manifest.v1.schema.json            # Manifest schema for a promotion request/run
+│  └─ run_receipt.v1.schema.json                   # Run receipt schema (required evidence of what was produced)
+│
+├─ policy/                                         # Policy logic + fixtures used by promotion gates
+│  ├─ opa/                                         # OPA/Rego policy modules invoked by CI/runtime during promotion
+│  │  ├─ receipt.rego                              # Validates receipt presence/shape + required fields
+│  │  └─ promotion.rego                            # Promotion gate rules (deny-by-default; explicit allow)
+│  └─ fixtures/                                    # Example inputs (synthetic; deterministic)
+│     ├─ public_example.json                       # Example that should pass under public policy label
+│     └─ restricted_example.json                   # Example that should gate/redact/deny under restricted label
+│
+├─ profiles/                                       # Environment profiles (non-secret knobs; dev vs prod strictness)
+│  ├─ dev.yaml                                     # Dev profile (faster iteration; still fail-closed on essentials)
+│  └─ prod.yaml                                    # Prod profile (strict gates, audited thresholds)
+│
+└─ thresholds/                                     # QA thresholds used by validators (bounded + reviewable)
+   └─ qa_thresholds.yaml                           # Drift/error tolerances, coverage minimums, quality bars
 ```
 
 ### Responsibilities
