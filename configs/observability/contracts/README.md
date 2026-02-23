@@ -92,23 +92,28 @@ flowchart LR
 > **NOTE:** This is a *recommended* layout. If the repo already uses different names, align this README to the existing structure (don’t fork conventions).
 
 ```
-configs/observability/contracts/
-  README.md                       # You are here (normative spec + how-to)
-  otel/                           # OpenTelemetry-facing contracts (attributes, resources)
-    kfm_attributes.v1.yaml         # Canonical attribute keys + allowed values
-    kfm_resource.v1.yaml           # Required resource attributes for all signals
-  prometheus/                     # Prometheus/Mimir-facing contracts (labels, metric registry)
-    labels.v1.yaml                 # Canonical label mapping (OTel -> Prom)
-    metrics.v1.yaml                # Metric registry (names, type, unit, labels)
-    alerts.v1.yaml                 # Alert label/annotation contract (optional)
-  schemas/                        # Machine-validated schemas (JSON Schema recommended)
-    log_event.v1.schema.json       # Log envelope schema (JSON logs)
-    focus_trace_link.v1.schema.json# Optional: schema for run->evidence linkage events
-  fixtures/                       # Golden examples used by CI contract tests
-    good/                          # Must validate
-    bad/                           # Must fail (negative tests)
-  tools/                          # Contract tooling (lint, validate, compat checks)
-    README.md                      # How to run locally
+configs/observability/contracts/                      # Observability contracts (names, labels, schemas, fixtures)
+├─ README.md                                          # You are here: normative spec + how-to + CI expectations
+│
+├─ otel/                                              # OpenTelemetry-facing contracts (attributes + resources)
+│  ├─ kfm_attributes.v1.yaml                          # Canonical attribute keys + allowed values/enums
+│  └─ kfm_resource.v1.yaml                            # Required resource attributes for all signals (service/env/build)
+│
+├─ prometheus/                                        # Prometheus/Mimir-facing contracts (labels + metric registry)
+│  ├─ labels.v1.yaml                                  # Canonical label mapping (OTel attributes → Prom labels)
+│  ├─ metrics.v1.yaml                                 # Metric registry (name, type, unit, required labels)
+│  └─ alerts.v1.yaml                                  # Optional alert label/annotation contract (consistency)
+│
+├─ schemas/                                           # Machine-validated schemas (JSON Schema recommended)
+│  ├─ log_event.v1.schema.json                        # Log envelope schema (structured JSON logs)
+│  └─ focus_trace_link.v1.schema.json                 # Optional: run→evidence linkage event schema (traceability)
+│
+├─ fixtures/                                          # Golden examples used by CI contract tests
+│  ├─ good/                                           # Must validate (positive tests)
+│  └─ bad/                                            # Must fail (negative tests; error quality matters)
+│
+└─ tools/                                             # Contract tooling (lint, validate, compat checks)
+   └─ README.md                                       # How to run locally + exact CI-parity commands
 ```
 
 ### Acceptable inputs
