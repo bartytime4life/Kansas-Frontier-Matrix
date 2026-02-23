@@ -133,37 +133,37 @@ flowchart TB
 
 ### Reference layout (proposed default)
 ```text
-configs/runtime/
-  README.md
-
-  defaults/
-    app.yaml                 # non-secret defaults shared across all envs
-    logging.yaml
-
-  env/
-    local/
-      app.yaml               # local overrides (no secrets)
-      .env.example           # copy to .env outside git
-    dev/
-      app.yaml
-    stage/
-      app.yaml
-    prod/
-      app.yaml
-
-  k8s/                       # only if using Kubernetes
-    base/
-      configmap.yaml
-    overlays/
-      dev/
-      stage/
-      prod/
-
-  schema/
-    runtime-config.schema.json
-
-  checksums/
-    runtime-config.sha256    # optional: canonicalized + hashed bundle
+configs/runtime/                                  # Runtime configuration (non-secret): defaults → env overlays → deploy wiring
+├─ README.md                                      # How runtime config is loaded, validated, and promoted (fail-closed)
+│
+├─ defaults/                                      # Environment-agnostic defaults (safe; non-secret)
+│  ├─ app.yaml                                    # Shared app defaults (feature flags, limits, URLs, timeouts)
+│  └─ logging.yaml                                # Logging defaults (levels, formats, redaction toggles)
+│
+├─ env/                                           # Environment overlays (non-secret deltas only)
+│  ├─ local/
+│  │  ├─ app.yaml                                 # Local overrides (developer machine; no secrets)
+│  │  └─ .env.example                             # Copy to .env outside git (keys only)
+│  ├─ dev/
+│  │  └─ app.yaml                                 # Dev overrides (debug knobs; safe defaults)
+│  ├─ stage/
+│  │  └─ app.yaml                                 # Stage overrides (prod-like where possible)
+│  └─ prod/
+│     └─ app.yaml                                 # Prod overrides (strict posture; audited changes)
+│
+├─ k8s/                                           # Kubernetes wiring (only if K8s is used)
+│  ├─ base/
+│  │  └─ configmap.yaml                            # ConfigMap template (non-secret runtime config)
+│  └─ overlays/
+│     ├─ dev/
+│     ├─ stage/
+│     └─ prod/
+│
+├─ schema/                                        # Validation contract for runtime config
+│  └─ runtime-config.schema.json                  # JSON Schema for merged runtime config bundle
+│
+└─ checksums/                                     # Optional integrity hooks for the merged config bundle
+   └─ runtime-config.sha256                       # Canonicalized + hashed config bundle (detect drift/tampering)
 ```
 
 ### Directory documentation standard
