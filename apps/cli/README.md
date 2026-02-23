@@ -1,292 +1,501 @@
-# KFM CLI
-Governed command-line interface for Kansas Frontier Matrix (KFM) operations: ingest, validate, promote, rebuild projections, and inspect evidence.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/7bb15efa-6c26-436c-bef7-0c165457d121
+title: apps/cli — KFM Command Line Interface
+type: standard
+version: v1
+status: draft
+owners: KFM Engineering (see .github/CODEOWNERS)
+created: 2026-02-23
+updated: 2026-02-23
+policy_label: public
+related:
+  - ../../README.md
+  - ../../CONTRIBUTING.md
+  - ../../.github/README.md
+  - ../api/README.md
+  - ../ui/README.md
+  - ../../tools/README.md
+tags: [kfm, cli]
+notes:
+  - Contract-first README; implementation wiring TBD.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Draft • **Owners:** TBD  
-`policy: fail-closed` · `audit: run receipts` · `zones: RAW→WORK→PROCESSED→CATALOG→PUBLISHED` · `outputs: table|json`
+<a id="top"></a>
 
-**Navigation**
-- [Quick start](#quick-start)
-- [What the CLI is for](#what-the-cli-is-for)
-- [Key concepts](#key-concepts)
-- [Architecture at a glance](#architecture-at-a-glance)
-- [Command surface](#command-surface)
-- [Workflows](#workflows)
-- [Output and exit-code conventions](#output-and-exit-code-conventions)
-- [Governance and safety rules](#governance-and-safety-rules)
-- [Development notes](#development-notes)
-- [Troubleshooting](#troubleshooting)
+# apps/cli — KFM Command Line Interface
+
+**Purpose:** a **governed**, **policy-aware**, **fail-closed** CLI for Kansas Frontier Matrix (KFM) that helps humans and automation:
+- interact with the **Governed API** (datasets, catalogs, evidence, story workflows)
+- run **local preflight checks** (hashing, validation, linkcheck) without bypassing the trust membrane
+- produce **deterministic, auditable outputs** suitable for CI and stewardship review
+
+**Status:** `DRAFT` (vNext) • **Owners:** see [`/.github/CODEOWNERS`](../../.github/CODEOWNERS) • **Audience:** engineers, data/policy stewards, CI
+
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![surface](https://img.shields.io/badge/surface-CLI-blue)
+![governed](https://img.shields.io/badge/governed-yes-2ea44f)
+![policy](https://img.shields.io/badge/policy-default--deny-critical)
+![evidence](https://img.shields.io/badge/evidence-cite--or--abstain-important)
+![audit](https://img.shields.io/badge/audit-audit__ref_required-orange)
+![nonleak](https://img.shields.io/badge/errors-non--leak-orange)
 
 ---
 
-## Quick start
+## Quick navigation
 
-> This README is intentionally **contract-first**: the authoritative command list is whatever `kfm --help` prints in your build.
-> If a section here conflicts with reality, fix one of them—either update the docs or align the code.
+- **Foundations**
+  - [Overview](#overview)
+  - [Directory boundaries](#directory-boundaries)
+  - [Non-negotiables](#non-negotiables)
+  - [Architecture](#architecture)
+- **Using the CLI**
+  - [Install and run](#install-and-run)
+  - [Configuration](#configuration)
+  - [Command registry](#command-registry)
+  - [Output formats](#output-formats)
+  - [Exit codes](#exit-codes)
+- **Engineering + governance**
+  - [Security and governance notes](#security-and-governance-notes)
+  - [Testing](#testing)
+  - [Definition of Done](#definition-of-done)
+- **Appendix**
+  - [Appendix: Proposed directory layout](#appendix-proposed-directory-layout)
+  - [References](#references)
 
-```bash
-# 1) Verify the CLI is reachable
-kfm --help
+> [!NOTE]
+> This README is written as a **contract**. It may describe **PROPOSED** command surfaces until implementation lands.
+> Treat any section marked **PROPOSED** as a design option that must be reconciled with the actual repo state.
 
-# 2) Confirm it can talk to your environment (API, policy bundle, etc.)
-kfm doctor
+[Back to top](#top)
 
-# 3) List datasets (example subcommand; see Command Surface)
-kfm datasets list
+---
 
-# 4) Run a promotion preflight for a dataset spec (example)
-kfm promote preflight data/specs/<dataset>.json --format table
+## Overview
+
+`apps/cli` is the canonical place for a **single “front door” CLI** for KFM operations.
+
+### What this CLI is
+
+- A **policy-aware client** of the governed API (and its evidence resolver), intended for:
+  - maintainers and stewards operating promotion/review workflows
+  - power users doing repeatable research workflows (exporting citations, generating reports)
+  - CI steps that need stable, deterministic tooling (when a pure tool under `tools/` is not enough)
+
+- A **coordinator**, not a new source of truth:
+  - it can *run validators* and *generate reports*
+  - it can *request* governed operations from the API
+  - it must **not** create “shadow publish paths” that bypass promotion gates
+
+### What this CLI is not
+
+- **Not a backdoor** to databases, object stores, tile buckets, or “raw” artifacts.
+- **Not an ETL pipeline runner** (those belong in pipelines/workers, with receipts and promotion gates).
+- **Not an ungoverned scraper**. If the CLI fetches remote sources, it must do so explicitly and record provenance.
+
+[Back to top](#top)
+
+---
+
+## Directory boundaries
+
+### Where it fits in the repo
+
+Expected location (confirm against repo reality):
+
+```text
+repo-root/
+└─ apps/
+   ├─ api/      # governed API boundary (policy + evidence + audit)
+   ├─ ui/       # governed map/story/focus client
+   ├─ studio/   # governed story authoring/review
+   └─ cli/      # ← YOU ARE HERE
 ```
 
+### Acceptable inputs
+
+What belongs in `apps/cli/`:
+
+- CLI entrypoint + subcommands for interacting with **governed surfaces**
+- Thin orchestration over **repo-local tools** (hash/validators/linkcheck) where it improves ergonomics
+- Deterministic, testable output format definitions (JSON schemas, fixtures)
+- Documentation and examples for steward-safe operations (promotion planning, evidence linting)
+
+### Exclusions
+
+What must **not** live in `apps/cli/`:
+
+- Direct DB queries or object-store reads that bypass the governed API (**trust membrane violation**)
+- Secrets (API tokens, private keys, credentials). Only `.env.example` with placeholders is allowed.
+- “Publish now” shortcuts that skip promotion manifests, catalogs, validation, and policy review
+- Long-lived datasets or large artifacts (those belong in the data lifecycle zones)
+
+[Back to top](#top)
+
 ---
 
-## What the CLI is for
+## Non-negotiables
 
-The CLI is the operator/developer interface for KFM’s governed workflow:
-
-- **Data lifecycle operations**: move artifacts through the truth path zones (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED).
-- **Promotion gates**: run the Promotion Contract checks (identity, license, sensitivity, catalogs, receipts, policy tests) before anything reaches runtime surfaces.
-- **Rebuildable projections**: rebuild search/graph/tiles/DB projections from canonical truth (object store + catalogs + audit).
-- **Evidence inspection**: resolve EvidenceRefs to policy-filtered EvidenceBundles used by UI and Focus Mode.
-- **Governed “runs”**: emit receipts/audit references for pipeline and Focus Mode runs.
-
----
-
-## Key concepts
-
-### Truth path zones
-KFM organizes data into zones with strict promotion rules:
-
-- **RAW**: immutable acquisition artifacts + checksums + terms snapshot.
-- **WORK / QUARANTINE**: normalized intermediates + QA reports + redaction candidates; quarantine blocks promotion.
-- **PROCESSED**: publishable artifacts in approved formats + checksums + derived runtime metadata.
-- **CATALOG/TRIPLET**: DCAT + STAC + PROV (and run receipts) as the canonical contract surface.
-- **PUBLISHED**: governed runtime (API + UI) may serve **only promoted** dataset versions.
-
-### Promotion Contract (minimum gates)
-Promotion to runtime **MUST** fail-closed unless all gates pass:
-
-- Gate A: Identity + deterministic versioning
-- Gate B: Licensing/rights explicitness
-- Gate C: Sensitivity classification + redaction/generalization plan
-- Gate D: DCAT/STAC/PROV validation + cross-link integrity
-- Gate E: Run receipts + checksums + environment capture
-- Gate F: Policy tests + evidence resolver + API/schema contract tests
-- Gate G: Optional production posture checks (SBOM, perf smoke, a11y smoke)
+These requirements are inherited from KFM’s repo-wide posture and apply **strictly** to the CLI.
 
 ### Trust membrane
-Clients—including this CLI when acting as a client—**do not** bypass the governed boundary. The policy/provenance boundary must be enforceable in CI and at runtime.
+
+- The CLI **MUST NOT** read from storage/DB/search/tiles directly.
+- The CLI **MUST** use governed APIs (or deterministic, repo-local artifacts) so policy and audit are applied consistently.
+
+### Default-deny and policy-safe behavior
+
+- The CLI **MUST** fail closed when:
+  - auth context is missing or unclear
+  - policy label/sensitivity is unclear
+  - evidence cannot be resolved
+  - validation/linkcheck fails
+- The CLI **MUST** preserve the **non-leak rule**:
+  - do not reveal restricted existence through different error messages, different exit codes, or timing side-channels
+
+### Evidence-first
+
+- Any command that prints or exports “answers” **MUST** include (or be able to emit) resolvable evidence references:
+  - `dataset_version_id` (when applicable)
+  - `EvidenceRef` values or `EvidenceBundle` summaries (policy-filtered)
+  - `audit_ref` for governed operations
+
+### Determinism
+
+- For automation and CI, output must be stable:
+  - stable key ordering for JSON
+  - stable sorting for lists
+  - stable timestamps handling (UTC, explicit)
+  - a `--json` / `--ndjson` mode that is deterministic across platforms
+
+[Back to top](#top)
 
 ---
 
-## Architecture at a glance
+## Architecture
+
+### Boundary diagram
 
 ```mermaid
 flowchart LR
-  subgraph TruthPath[Truth Path Zones]
-    U[Upstream] --> R[RAW]
-    R --> W[WORK / QUARANTINE]
-    W --> P[PROCESSED]
-    P --> C[CATALOG TRIPLET<br/>DCAT + STAC + PROV + receipts]
+  U[Operator or CI] --> C[apps/cli kfm command]
+  C -->|governed requests| API[apps/api Governed API]
+  API --> POL[Policy engine]
+  API --> EV[Evidence resolver]
+  API --> AUD[Audit ledger]
+  EV --> CAT[Catalogs DCAT STAC PROV]
+  C -->|local preflight| TOOLS[tools validators hash linkcheck]
+  TOOLS --> RPT[reports exit codes]
+```
+
+### Typical governed request flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant O as Operator
+  participant CLI as KFM CLI
+  participant API as Governed API
+  participant PDP as Policy
+  participant ER as Evidence resolver
+
+  O->>CLI: kfm evidence resolve <EvidenceRef>
+  CLI->>API: POST /api/v1/evidence/resolve (EvidenceRef)
+  API->>PDP: evaluate (principal, purpose, resource)
+  PDP-->>API: allow/deny + obligations
+  alt deny
+    API-->>CLI: policy-safe error + audit_ref
+    CLI-->>O: non-leak message + exit 1
+  else allow
+    API->>ER: resolve EvidenceRef(s)
+    ER-->>API: EvidenceBundle(s) + digests
+    API-->>CLI: bundles + audit_ref
+    CLI-->>O: bundles (table/json) + audit_ref
   end
-
-  C --> X[Indexes / Projections<br/>DB + search + graph + tiles]
-  X --> A[Governed API<br/>Policy + Evidence resolver]
-  A --> UI[UI surfaces<br/>Map + Story + Focus]
-
-  CLI[KFM CLI] -->|orchestrates runs| R
-  CLI -->|runs validation gates| W
-  CLI -->|promotes versions| P
-  CLI -->|builds/validates catalogs| C
-  CLI -->|rebuilds projections| X
-  CLI -->|calls governed endpoints| A
 ```
 
----
-
-## Command surface
-
-> **Naming is a contract suggestion.** If your implementation uses different names, keep the intent and governance semantics, and update this section.
-
-### Global flags (recommended)
-All commands SHOULD support:
-
-- `--format table|json` (default: table for humans)
-- `--output <path>` (write machine output to a file)
-- `--quiet` / `--verbose`
-- `--no-color`
-- `--audit` (print audit_ref / run_id prominently)
-
-### High-level commands (proposed)
-
-| Area | Command | Purpose |
-|---|---|---|
-| Environment | `kfm doctor` | Connectivity + policy + storage sanity checks; prints remediation hints |
-| Datasets | `kfm datasets list` | Discover dataset families/versions (from catalogs or API) |
-|  | `kfm datasets show <dataset_version_id>` | Show metadata, policy label, artifacts, and catalog links |
-| Specs | `kfm spec init <dataset_slug>` | Create a dataset onboarding spec template |
-|  | `kfm spec hash <spec.json>` | Compute deterministic `spec_hash` (input to DatasetVersion ID) |
-| Ingest | `kfm ingest run --spec <spec.json>` | Execute a deterministic ingest run (or trigger worker) |
-|  | `kfm ingest status <run_id>` | Check status and summarize outputs by digest |
-| Validate | `kfm validate --spec <spec.json>` | Run all promotion gates in “preflight” mode (no promotion) |
-| Promote | `kfm promote preflight <spec.json>` | Explicit promotion pre-check (Gate A–F) |
-|  | `kfm promote apply <spec.json>` | Promote: write processed artifacts + catalogs + receipts; fail closed |
-| Catalogs | `kfm catalog validate <path>` | Validate DCAT/STAC/PROV profiles + cross-links |
-| Policy | `kfm policy test` | Run fixtures-driven policy tests (OPA/Rego or equivalent) |
-| Evidence | `kfm evidence resolve <evidence_ref>` | Resolve an EvidenceRef into a policy-filtered EvidenceBundle |
-| Indexes | `kfm index rebuild [--dataset-version <id>]` | Rebuild projections from canonical sources (safe + repeatable) |
-| Stories | `kfm story lint <path>` | Lint Story Node citations + policy label + sidecar integrity |
-|  | `kfm story publish <path>` | Publish a Story Node (governed run; emits audit_ref) |
-| Focus | `kfm focus run "<query>" [--view-state <json>]` | Run a governed Focus Mode request; returns citations + audit_ref |
-| Audit | `kfm audit show <audit_ref>` | Show (policy-safe) audit record / run receipt summary |
+[Back to top](#top)
 
 ---
 
-## Workflows
+## Install and run
 
-### Workflow 1 — Dataset onboarding (PR-first, promotion-gated)
-This is the expected “safe default” flow:
+> [!NOTE]
+> Packaging and runtime are **not yet standardized** for this CLI on every branch.
+> This section provides a **PROPOSED** shape—update it once `apps/cli` has a manifest (`package.json`, `pyproject.toml`, etc.).
 
-1. Create or update a **dataset onboarding spec** (canonical input to `spec_hash`)
-2. Open a PR including:
-   - source registry entry (if applicable)
-   - the spec + pipeline configuration
-   - small fixtures and expected outputs (for CI)
-3. CI runs:
-   - schema + catalog validation
-   - policy tests
-   - spec_hash stability checks
-   - catalog cross-link checks
-4. Steward review:
-   - licensing/rights
-   - sensitivity classification + redaction obligations
-   - approve policy label
-5. Merge and run in controlled environment
-6. Outputs written to PROCESSED + CATALOG/TRIPLET, with receipts
-7. Release manifest/tag created
+### PROPOSED install patterns
 
-**CLI support (suggested mapping):**
-```bash
-kfm spec init noaa_ncei_storm_events
-kfm validate --spec data/specs/noaa_ncei_storm_events.json --format table
-kfm promote preflight data/specs/noaa_ncei_storm_events.json
-# Promotion itself may be restricted to operators/stewards:
-kfm promote apply data/specs/noaa_ncei_storm_events.json --format json --output out/run.json
-```
+Pick one, once the repo standard is chosen:
 
-### Workflow 2 — Rebuild projections (safe, reversible)
-Because projections are rebuildable, you should be able to reindex without mutating canonical truth.
-
-```bash
-# Rebuild everything
-kfm index rebuild
-
-# Or rebuild for a specific promoted dataset version
-kfm index rebuild --dataset-version <dataset_version_id>
-```
-
-### Workflow 3 — Resolve evidence for a claim or UI bug report
-```bash
-kfm evidence resolve "doc://sha256:<digest>#page=12&span=10:200" --format json
-```
-
-### Workflow 4 — Run a Focus Mode query with map context
-```bash
-kfm focus run "What tornado events occurred in this county in May 2019?" \
-  --view-state ops/view_state.json \
-  --format json
-```
-
----
-
-## Output and exit-code conventions
-
-### JSON output (recommended contract)
-When `--format json` is used, command output SHOULD be a single JSON object with stable top-level fields, including:
-
-- `status`: `ok|error`
-- `audit_ref` or `run_id` (when applicable)
-- `policy_label` (policy-safe)
-- `dataset_version_id` (when applicable)
-- `digests[]` (when applicable)
-- `errors[]` (stable error model with `error_code` + policy-safe `message` + `audit_ref`)
-
-### Exit codes (recommended)
-- `0` success
-- `2` validation failed (promotion gates did not pass)
-- `3` policy denied (default deny / restricted by role)
-- `4` dependency unavailable (API/evidence resolver/storage)
-- `1` other error
-
----
-
-## Governance and safety rules
-
-### Fail closed (default deny)
-- If licensing/rights are unclear, quarantine the dataset; do not promote.
-- If sensitivity is unclear, quarantine; require steward review.
-- If the CLI cannot validate catalogs/receipts, promotion MUST fail.
-
-### Do not leak restricted existence
-When policy denies a resource, CLI output must be policy-safe:
-- Avoid revealing “this exists but you can’t see it.”
-- Align behavior for deny/not-found pathways as appropriate to prevent inference.
-
-### Treat audit artifacts as sensitive
-Run receipts and audit logs can contain sensitive metadata and must follow retention/redaction policy.
-
-### Sensitive locations
-If a dataset is labeled restricted or has a sensitive-location risk, the CLI MUST:
-- avoid printing precise coordinates by default
-- prefer generalized geometry summaries (bbox, region, admin area) unless explicitly allowed by policy
-
----
-
-## Development notes
-
-### Layering rule of thumb
-New commands should:
-1. parse CLI args (thin)
-2. call a **use case** (workflow)
-3. use **interfaces/repositories** for storage/API/policy
-4. return structured results (for JSON output + audit refs)
-
-Avoid writing commands that talk directly to databases or object storage without going through policy-aware interfaces.
-
-### Tests that must exist for new commands
-- unit tests for argument parsing and use case behavior
-- policy fixture tests for allow/deny behavior
-- contract tests for JSON output stability
-- smoke test that emits (or references) a run receipt for governed runs
-
----
-
-## Troubleshooting
-
-### “Promotion failed” but I don’t know why
-1. Re-run with JSON output and verbose logging:
-   ```bash
-   kfm promote preflight data/specs/<dataset>.json --format json --verbose
-   ```
-2. Look for:
-   - Gate failures (A–F)
-   - missing checksums or receipts
-   - policy deny and obligations
-3. Use `audit_ref` / `run_id`:
-   ```bash
-   kfm audit show <audit_ref>
-   ```
-
-### EvidenceRef does not resolve
-- Confirm the dataset version is promoted and catalogs are validated.
-- Run catalog link checks:
+- **Node/TypeScript (PROPOSED)**
   ```bash
-  kfm catalog validate data/catalog/<dataset_version_id>/
-  ```
-- Rebuild indexes only after canonical artifacts + catalogs validate:
-  ```bash
-  kfm index rebuild --dataset-version <dataset_version_id>
+  # from repo root
+  npm install
+  npm run -w apps/cli build
+  npm run -w apps/cli kfm -- --help
   ```
 
+- **Python (PROPOSED)**
+  ```bash
+  # from repo root
+  python -m venv .venv
+  source .venv/bin/activate
+  pip install -e apps/cli
+  kfm --help
+  ```
+
+### PROPOSED: fast local smoke check
+
+```bash
+kfm doctor
+```
+
+[Back to top](#top)
+
 ---
 
-*Back to top:* [KFM CLI](#kfm-cli)
+## Configuration
+
+### Environment variables
+
+These names align with other vNext docs and are **PROPOSED** until confirmed:
+
+- `KFM_API_BASE_URL` — base URL for the governed API
+- `KFM_AUTH_MODE` — auth mode (e.g., `oidc`, `token`, `none` for local mocks)
+- `KFM_AUTH_TOKEN` — bearer token **(do not commit; do not log)**
+- `KFM_PURPOSE` — optional declared purpose for audit context (e.g., `research`, `steward_review`)
+
+### Config file
+
+**PROPOSED**: `~/.config/kfm/config.json` (or OS-appropriate path)
+
+Minimal shape (illustrative):
+
+```json
+{
+  "apiBaseUrl": "http://localhost:8080",
+  "authMode": "token",
+  "purpose": "steward_review",
+  "output": { "format": "table", "color": "auto" }
+}
+```
+
+### Secret handling
+
+- Never store secrets in repo files.
+- Prefer OS keychain integration or environment injection (CI secret store).
+
+[Back to top](#top)
+
+---
+
+## Command registry
+
+> The registry below is intentionally written as **PROPOSED** until commands exist in code.
+> Once implemented, keep this table accurate and stable: it becomes a contract for CI and operators.
+
+### Core commands
+
+| Category | Command | Primary job | Talks to API | Writes files | Status |
+|---|---|---|:---:|:---:|---|
+| Core | `kfm --help` | show help |  |  | PROPOSED |
+| Core | `kfm --version` | print version + git commit (if available) |  |  | PROPOSED |
+| Core | `kfm doctor` | environment + connectivity checks | ✅ |  | PROPOSED |
+| Identity | `kfm whoami` | show auth principal + role (policy-safe) | ✅ |  | PROPOSED |
+
+### Data + catalog discovery
+
+| Category | Command | Primary job | Talks to API | Writes files | Status |
+|---|---|---|:---:|:---:|---|
+| Catalog | `kfm datasets list` | list datasets and latest versions | ✅ |  | PROPOSED |
+| Catalog | `kfm datasets show <dataset_id>` | show dataset + version metadata | ✅ |  | PROPOSED |
+| STAC | `kfm stac search --bbox ... --time ...` | search STAC items | ✅ |  | PROPOSED |
+
+### Evidence and citations
+
+| Category | Command | Primary job | Talks to API | Writes files | Status |
+|---|---|---|:---:|:---:|---|
+| Evidence | `kfm evidence resolve <EvidenceRef...>` | resolve EvidenceRefs into EvidenceBundles | ✅ |  | PROPOSED |
+| Evidence | `kfm evidence lint <path>` | lint citation references in a doc/story |  | ✅ | PROPOSED |
+| Stories | `kfm story lint <story.md>` | validate Story Node citations and sidecar | ✅ | ✅ | PROPOSED |
+
+### Local preflight (wrapping repo-local tools)
+
+| Category | Command | Primary job | Talks to API | Writes files | Status |
+|---|---|---|:---:|:---:|---|
+| Hash | `kfm hash spec <spec.json>` | compute spec_hash (canonical JSON) |  |  | PROPOSED |
+| Validate | `kfm validate dcat <path>` | validate DCAT profile (fail closed) |  |  | PROPOSED |
+| Validate | `kfm validate stac <path>` | validate STAC profile (fail closed) |  |  | PROPOSED |
+| Validate | `kfm validate prov <path>` | validate PROV profile (fail closed) |  |  | PROPOSED |
+| Linkcheck | `kfm linkcheck catalogs <path>` | verify cross-links and EvidenceRefs resolve |  | ✅ | PROPOSED |
+
+### Promotion helpers (no bypass)
+
+| Category | Command | Primary job | Talks to API | Writes files | Status |
+|---|---|---|:---:|:---:|---|
+| Promote | `kfm promote plan <dataset_slug>` | produce a promotion plan + checklist | ✅ | ✅ | PROPOSED |
+| Promote | `kfm promote manifest --dry-run` | generate a promotion manifest draft |  | ✅ | PROPOSED |
+
+<details>
+<summary><strong>Example: machine output mode (PROPOSED)</strong></summary>
+
+```bash
+# JSON output for CI parsing (deterministic)
+kfm evidence resolve dcat://kfm.example/dataset/noaa_storm_events --json
+
+# NDJSON for streaming large results
+kfm stac search --bbox "-101,36.8,-94.6,40" --time "1934-01-01/1936-12-31" --ndjson
+```
+
+</details>
+
+[Back to top](#top)
+
+---
+
+## Output formats
+
+### Human mode
+
+- default format should be readable and policy-safe (no restricted leaks)
+- tables should be stable-sorted
+- errors should be actionable without revealing restricted existence
+
+### Machine mode
+
+Provide a stable machine-readable mode:
+
+- `--json` — single JSON object (deterministic key ordering)
+- `--ndjson` — newline-delimited JSON (streaming)
+- `--quiet` — suppress non-essential logs
+
+**PROPOSED response envelope** (align with API envelopes):
+
+```json
+{
+  "data": { "…": "…" },
+  "meta": {
+    "policy_label": "public",
+    "dataset_version_id": "kfm://dataset/@…",
+    "audit_ref": "kfm://audit/entry/…",
+    "request_id": "…"
+  }
+}
+```
+
+[Back to top](#top)
+
+---
+
+## Exit codes
+
+To be CI-safe and predictable:
+
+- `0` — success
+- `1` — expected failure condition (validation failed, policy denied, evidence unresolved)
+- `2` — CLI misuse (bad args/config)
+- `>=3` — unexpected runtime error (treated as failure)
+
+> [!IMPORTANT]
+> Exit codes must not become a side-channel that leaks restricted existence. Keep deny/unresolved behavior stable.
+
+[Back to top](#top)
+
+---
+
+## Security and governance notes
+
+### Sensitive locations and restricted knowledge
+
+If a command might handle sensitive locations (archaeology, culturally restricted sites, vulnerable infrastructure):
+
+- default to **deny** unless policy allows
+- prefer generalized geometries and aggregated outputs
+- never print precise coordinates in logs by default
+- ensure exports include policy notices and obligations where applicable
+
+### Logging rules
+
+- Never log auth tokens or secrets.
+- Avoid printing restricted values in errors.
+- Prefer stable error codes (`POLICY_DENY`, `EVIDENCE_UNRESOLVABLE`, `VALIDATION_FAILED`) with policy-safe messages.
+
+### Network access
+
+- CLI should talk to the governed API by design.
+- Any additional network access (fetching external URLs for linkcheck) should be:
+  - **off by default**
+  - allowlist-only
+  - recorded in a run record / receipt
+
+[Back to top](#top)
+
+---
+
+## Testing
+
+Recommended test layers (once implementation exists):
+
+- **Unit tests**
+  - command parsing, output formatting determinism
+  - stable sorting and canonicalization helpers
+- **Contract tests**
+  - governed API response envelopes (`audit_ref`, `policy_label`, `dataset_version_id`)
+  - non-leak error behavior (deny vs not-found indistinguishable where required)
+- **Golden fixtures**
+  - expected JSON outputs (byte-for-byte)
+  - expected exit codes for known scenarios
+
+[Back to top](#top)
+
+---
+
+## Definition of Done
+
+A CLI change is “done” only if:
+
+- [ ] `--help` and `--version` work (non-interactive)
+- [ ] commands have stable, documented exit codes
+- [ ] machine output mode exists (`--json` or `--ndjson`) and is deterministic
+- [ ] no trust-membrane bypass paths were introduced
+- [ ] policy deny and evidence unresolved cases **fail closed**
+- [ ] logs are policy-safe and do not leak secrets/restricted values
+- [ ] tests exist proportional to risk (unit + contract + at least one golden fixture)
+- [ ] docs updated (this README + examples), and links are maintained
+
+[Back to top](#top)
+
+---
+
+## Appendix: Proposed directory layout
+
+> This is **PROPOSED** until code lands.
+
+```text
+apps/cli/
+├─ README.md
+├─ src/
+│  ├─ main.*              # CLI entrypoint
+│  ├─ commands/           # subcommands (datasets, evidence, validate, story, ...)
+│  ├─ api/                # client for governed API (no direct DB/storage)
+│  ├─ output/             # table/json formatting; deterministic ordering
+│  └─ policy_safe_errors/ # error code registry + messaging
+├─ tests/
+│  ├─ unit/
+│  ├─ contract/
+│  └─ fixtures/
+├─ schemas/               # output schemas for CI parsing (optional)
+└─ .env.example           # placeholders only (no secrets)
+```
+
+[Back to top](#top)
+
+---
+
+## References
+
+- Repo root operating model: [`README.md`](../../README.md)
+- Contribution workflow + doc requirements: [`CONTRIBUTING.md`](../../CONTRIBUTING.md)
+- Governed API boundary contract: [`apps/api/README.md`](../api/README.md)
+- Governed UI contract: [`apps/ui/README.md`](../ui/README.md)
+- Tooling contracts (validators/hash/linkcheck): [`tools/README.md`](../../tools/README.md)
