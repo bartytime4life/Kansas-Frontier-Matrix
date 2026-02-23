@@ -1,509 +1,371 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/9f05a9a1-9b2d-4df3-8a0b-6ed3d00a9e3c
-title: apps/workers
+doc_id: kfm://doc/8e74d0c0-5e9d-4d6e-8b05-18a1b8c35c17
+title: KFM Workers
 type: standard
-version: v2
+version: v1
 status: draft
-owners: KFM Platform (TBD)
-created: 2026-02-22
+owners: TODO
+created: 2026-02-23
 updated: 2026-02-23
-policy_label: internal
+policy_label: public
 related:
-  - apps/workers/
-  - packages/domain/
-  - packages/usecases/
-  - packages/policy/
-  - packages/evidence/
-  - contracts/
-  - policy/
-tags:
-  - kfm
-  - workers
-  - ingestion
-  - provenance
-  - governance
+  - TODO
+tags: [kfm, workers]
 notes:
-  - Update created/updated dates to match repo history if this file pre-existed.
-  - Keep this README aligned with the actual repo layout and worker inventory.
-  - Replace placeholder badges once CI/workflow names exist.
+  - Drafted without a confirmed repo tree; replace TODO placeholders after verifying actual implementation.
 [/KFM_META_BLOCK_V2] -->
 
-# apps/workers
+# KFM Workers
 
-Background and edge workers that run KFM ingestion, validation, indexing, and governance automation — **producing governed artifacts** (run receipts, catalogs, provenance) and **never bypassing policy**.
+Background job runners for long-running, scheduled, and batch work (pipelines, indexing, validations, and maintenance) while preserving KFM’s **trust membrane**.
 
-**Status:** draft • **Owners:** KFM Platform (TBD) • **Policy:** internal
-
-![CI](https://img.shields.io/badge/CI-expected-lightgrey)
-![policy-tests](https://img.shields.io/badge/policy--tests-expected-lightgrey)
-![contract-tests](https://img.shields.io/badge/contract--tests-expected-lightgrey)
-![linkcheck](https://img.shields.io/badge/linkcheck-expected-lightgrey)
-![security](https://img.shields.io/badge/security-expected-lightgrey)
-![run-receipts](https://img.shields.io/badge/run--receipts-required-lightgrey)
-
-> [!NOTE]
-> **TODO:** Replace the placeholder badges above with real workflow badges (once this repo’s CI names/paths are known).
+![Status](https://img.shields.io/badge/status-draft-lightgrey)
+![Owners](https://img.shields.io/badge/owners-TODO-blue)
+![CI](https://img.shields.io/github/actions/workflow/status/%3CORG%3E/%3CREPO%3E/workers.yml?branch=main)
+![Container](https://img.shields.io/badge/container-TODO-lightgrey)
+![Policy](https://img.shields.io/badge/policy-traceable_claims-important)
 
 ---
 
-## Navigate
+## Quick links
 
-- [What belongs here](#what-belongs-here)
-- [Repo context reference](#repo-context-reference)
-- [How workers fit into KFM](#how-workers-fit-into-kfm)
-- [Layering and policy boundary](#layering-and-policy-boundary)
-- [Worker types](#worker-types)
-- [Hard requirements](#hard-requirements)
-- [Gates and evidence](#gates-and-evidence)
-- [Contracts emitted by workers](#contracts-emitted-by-workers)
-- [Worker registry](#worker-registry)
-- [Local development](#local-development)
-- [Deployment](#deployment)
+- [What this directory is](#what-this-directory-is)
+- [Where it fits in the repo](#where-it-fits-in-the-repo)
+- [Architecture](#architecture)
+- [Execution modes](#execution-modes)
+- [Job contract](#job-contract)
+- [Promotion gates](#promotion-gates)
 - [Observability](#observability)
-- [Security and governance](#security-and-governance)
-- [Add a new worker](#add-a-new-worker)
-- [Definition of done](#definition-of-done)
+- [Local development](#local-development)
+- [Directory layout](#directory-layout)
+- [Contributing](#contributing)
 
 ---
 
-## What belongs here
+## What this directory is
 
-This folder is for **non-interactive compute** that:
+This folder is the home for **worker services** that run work which is unsafe or impractical to perform inside interactive API requests, such as:
 
-- **Acquires** upstream data (connectors, snapshotters).
-- **Transforms** and validates data (normalization, QA, redaction candidates).
-- **Builds projections** from promoted artifacts (PostGIS/search/graph/tiles indexes).
-- **Automates governance workflows** (e.g., create a *draft PR* when a material change is detected).
+- **Re-indexing** search / embeddings stores
+- **Scheduled ingest** (nightly pulls, periodic refreshes)
+- **Data QA/validation** and promotion-gate checks
+- **Batch transforms** (tiling, enrichment, denormalization)
+- **Async side-effects** (notifications, cache warming)
+- **Backfills** and “repair” jobs
 
-### What must not go here
+> **Trust membrane rule:** Workers must produce outputs that are **traceable** (inputs → transforms → outputs) and respect **policy enforcement / sanitization** the same way the governed APIs do.
 
-- Anything that serves end-user requests → belongs in the **governed API**.
-- Anything that renders UI → belongs in the **frontend**.
-- One-off scripts without receipts, tests, and docs → belongs in a sandbox until promoted.
+### What does *not* belong here
 
-> [!NOTE]
-> Some KFM blueprints refer to this area as `apps/worker/` (singular). This repo uses `apps/workers/` (plural). Treat them as the same conceptual boundary.
+- UI code (React, Map components)
+- Interactive API route handlers (belongs in the API app)
+- One-off scripts with no tests, no audit output, and no provenance (use `scripts/` elsewhere, or promote them into a real job with a receipt)
 
-[Back to top](#appsworkers)
-
----
-
-## Repo context reference
-
-The KFM blueprint recommends separating API/UI/worker apps from shared packages, and keeping governed artifacts (contracts, policy, data specs, stories) alongside code. This folder is the **worker** slice of that layout.
-
-```text
-repo/
-├─ apps/                                      # Runnable application surfaces (deployable entrypoints)
-│  ├─ api/                                    # API service (routes/controllers; wires packages/* into runtime)
-│  ├─ ui/                                     # Web UI app (map/story/focus surfaces)
-│  └─ workers/                                # Background/edge workers (ingest, validate, index, automation)
-│
-├─ packages/                                  # Shared libraries (clean architecture layers; reusable across apps)
-│  ├─ domain/                                 # Pure domain model (entities/value objects; invariants; no I/O)
-│  ├─ usecases/                               # Orchestration layer (ports in/out; policy/evidence via interfaces)
-│  ├─ policy/                                 # Policy client + input builders + decision normalization (no OPA runtime here)
-│  ├─ evidence/                               # Evidence primitives + resolvers/helpers (refs, bundles, citation shapes)
-│  ├─ catalog/                                # Catalog builders/validators (STAC/DCAT/PROV helpers)
-│  └─ shared/                                 # Cross-cutting utilities (ids/time/geo/errors/result/logging)
-│
-├─ data/                                      # Test/dev data inputs (small) + specs for governed artifacts
-│  ├─ specs/                                  # Data/product specs (schemas, manifests, mapping profiles)
-│  └─ fixtures/                               # Deterministic fixtures (synthetic; gold/snapshots as needed)
-│
-├─ policy/                                    # Policy-as-code (OPA/Rego) + fixtures + tests (default-deny)
-│  ├─ rego/                                   # Source-of-truth policy modules
-│  ├─ fixtures/                               # Policy input vectors (allow/deny/redaction; synthetic)
-│  └─ tests/                                  # OPA unit/regression tests (opa test …)
-│
-├─ contracts/                                 # Machine-enforced contracts (CI gates + runtime boundaries)
-│  ├─ schemas/                                # JSON Schemas (DTOs, receipts, manifests, policy inputs)
-│  └─ openapi/                                # OpenAPI boundary (REST contract + snapshots/overlays)
-│
-└─ docs/                                      # Human-facing docs (governed)
-   ├─ stories/                                # Story Nodes / narrative docs (templates, drafts, published)
-   ├─ adr/                                    # Architecture Decision Records
-   └─ standards/                              # Non-negotiable repo/pipeline/policy standards (CI-enforced if configured)
-```
-
-> [!NOTE]
-> Treat this as a **reference layout**. If the repo differs, keep this README accurate to what exists.
-
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
-## How workers fit into KFM
+## Where it fits in the repo
 
-Workers operate on the **truth path** (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED) and/or on **rebuildable projections** (PostGIS/search/graph/tiles). They should be designed so the system can always rebuild projections from canonical artifacts.
+- **Location:** `apps/workers/`
+- **Role:** “offline compute” for the platform — runs outside request/response time limits.
+- **Interfaces:** SHOULD call **governed APIs** (or approved internal service interfaces) rather than bypassing policy for any user-facing or Published outputs.
+- **Data lifecycle:** Jobs often move data through **Raw → Work/Quarantine → Processed → Published** and must enforce promotion gates (see below).
+
+> **TODO:** Replace this section with confirmed module boundaries once the repo tree is verified.
+
+[Back to top](#kfm-workers)
+
+---
+
+## Architecture
 
 ```mermaid
 flowchart LR
-  A[Upstream sources] --> B[Connectors and watchers]
-  B --> C[RAW zone<br/>immutable artifacts and checksums]
-  C --> D[WORK or QUARANTINE<br/>normalize, QA, redaction candidates]
-  D --> E[PROCESSED<br/>publishable artifacts]
-  E --> F[CATALOG/TRIPLET<br/>DCAT + STAC + PROV + run receipts]
-  F --> G[Index builders<br/>PostGIS, search, graph, tiles]
-  F --> H[Governed API<br/>policy enforcement + evidence resolver]
-  G --> H
-  H --> I[UI surfaces<br/>Map + Story + Focus]
+  subgraph ControlPlane
+    S[Scheduler]
+    Q[Queue]
+  end
+
+  subgraph Workers
+    W[Worker Runner]
+    J[Job Implementations]
+  end
+
+  subgraph PolicyAndAPI
+    P[Policy Boundary]
+    A[Governed API]
+  end
+
+  subgraph Storage
+    DB[(Metadata DB)]
+    OBJ[(Object Storage)]
+    IDX[(Search or Embeddings Index)]
+  end
+
+  S --> Q
+  Q --> W
+  W --> J
+  J --> P
+  P --> A
+  A --> DB
+  A --> OBJ
+  A --> IDX
 ```
 
-**Key idea:** workers are **producers** of governed evidence and rebuildable projections; they are **not** the policy boundary themselves.
+**Design intent:**
 
-[Back to top](#appsworkers)
+- Workers are **durable** (retry-safe), **idempotent**, and **audited**.
+- Policy checks happen **before** writing to any Published zone or returning any user-facing artifact.
+- Every job run emits a **receipt** (machine-readable audit record) to support reproducibility and rollback.
 
----
-
-## Layering and policy boundary
-
-Workers are allowed to **apply** policy obligations (e.g., produce a generalized public artifact), but they must not become an alternate policy boundary.
-
-Workers must reach storage, queues, and external systems via **ports/adapters** (or equivalent interface patterns) so that provenance and policy checks can’t be bypassed.
-
-```mermaid
-flowchart TB
-  W[Worker entrypoint<br/>apps/workers/*] --> UC[Use cases<br/>packages/usecases]
-  UC --> D[Domain<br/>packages/domain]
-  UC --> P[Policy evaluation<br/>packages/policy]
-  UC --> E[Evidence and receipts<br/>packages/evidence]
-  UC --> Ports[Ports and contracts<br/>contracts/*]
-  Ports --> S[Storage<br/>raw work processed published]
-  Ports --> Q[Queues and schedulers]
-  Ports --> X[External systems<br/>upstream apis]
-```
-
-> [!WARNING]
-> **Default deny:** if a worker cannot prove (via contracts + policy + receipts) that an action is allowed, it must not write or promote.
-
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
-## Worker types
+## Execution modes
 
-Use these buckets when naming workers and deciding runtime characteristics:
+KFM workers can be deployed in one (or both) of these patterns:
 
-1. **Connectors / snapshotters**
-   - Fetch upstream files/APIs, snapshot terms, write to RAW.
-2. **Pipeline runners**
-   - Normalize in WORK, produce QA + redaction candidates, write PROCESSED.
-3. **Catalog builders**
-   - Generate/validate DCAT + STAC + PROV; enforce cross-links; emit run receipts.
-4. **Index builders**
-   - Build projections (DB/search/graph/tiles) from promoted artifacts.
-5. **Automation / governance bots**
-   - Detect changes, create draft PRs, open review tickets, or re-run validations.
-
-Each worker should be explicit about:
-
-- **Trigger**: schedule, queue event, webhook, manual run.
-- **Inputs/outputs**: zones touched and artifact types produced.
-- **Policy posture**: labels/obligations it must apply or enforce.
-- **Idempotency strategy**: retries safe, duplicates safe, deterministic identifiers.
-- **Materiality rules** (when applicable): what counts as a “material change” that requires review.
-
-> [!TIP]
-> If you can’t describe a worker’s inputs/outputs and idempotency strategy in 5–10 lines, it’s probably too big. Split it.
-
-[Back to top](#appsworkers)
-
----
-
-## Hard requirements
-
-### Trust membrane and layering
-
-Workers must respect KFM’s clean layering:
-
-- Domain logic remains pure and must not talk to infrastructure directly.
-- Storage and external systems must be reached through **interfaces/contracts** so policy and provenance checks cannot be bypassed.
-
-### Truth path discipline
-
-- **RAW is append-only**: do not mutate; supersede with a new acquisition.
-- **QUARANTINE means “do not promote”** until validation/rights/sensitivity issues are resolved.
-- Promotion must be **fail-closed**: if required gates/receipts/catalogs don’t exist or don’t validate, nothing moves forward.
-
-### Run receipts for everything that matters
-
-Every worker that performs a governed action must emit a **run receipt** capturing (at minimum):
-
-- `run_id`, `run_type`, dataset identifiers (if applicable)
-- inputs and outputs with digests
-- validation status and report references
-- policy decision (label + obligations)
-- environment (commit, container digest, runtime, parameters)
-- timestamps
-
-(See [Contracts emitted by workers](#contracts-emitted-by-workers).)
-
-[Back to top](#appsworkers)
-
----
-
-## Gates and evidence
-
-Workers participate in promotion gates, but they do not “bless” promotion on their own. Promotion is **evidence-driven** and should be reviewable.
-
-### Gate checklist
-
-| Gate | Minimum expectation | Evidence produced/linked | Fail-closed |
+| Mode | When to use | Typical components | Notes |
 |---|---|---|---|
-| Identity and schema | Dataset/spec identity is known; schema validates | schema validation report + receipt links | ✅ |
-| Integrity | Inputs/outputs are digest-addressed | checksums in receipt | ✅ |
-| QA | Required QA rules executed | QA report + receipt links | ✅ |
-| Policy | Policy label + obligations evaluated | policy decision record + receipt links | ✅ |
-| License/rights | License checks passed (when required) | license report + receipt links | ✅ |
-| Catalog/provenance | DCAT/STAC/PROV cross-links validate | catalog validation report | ✅ |
+| Queue workers | High volume async tasks; fan-out; variable workloads | Worker runner + broker/backend (e.g., Redis) | Requires idempotency and retry discipline |
+| Scheduled jobs | Periodic refresh, maintenance, nightly ingest | Cron-like scheduler (e.g., Kubernetes CronJob) | Prefer for predictable, time-based tasks |
 
-> [!NOTE]
-> The exact report and schema locations are repo-specific. Prefer **adding** an index/registry file (and contract tests) rather than hardcoding paths in worker code.
+> **TODO:** Confirm which mode(s) are implemented in this repo and update this section accordingly.
 
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
-## Contracts emitted by workers
+## Job contract
 
-Workers are required to emit (or update) governed artifacts. The exact schemas live in the repo’s `contracts/` area (or equivalent); the conceptual outputs are listed below.
+Every worker job SHOULD follow a consistent contract so that we can:
 
-### Run receipt
+- trace claims to evidence
+- enforce promotion gates
+- rerun/rollback safely
+- monitor + alert reliably
 
-An immutable record of **what ran**, **with what inputs**, **producing which outputs**, **under which policy**.
+### Required properties
 
-Minimum conventions:
+**Idempotency**
+- A job MUST be safe to retry (“at least once” execution).
+- Use deterministic `job_id`/`run_id` and write-once receipts.
 
-- **Digest-addressed artifacts** (`sha256:...`) for inputs/outputs.
-- **Deterministic IDs** where possible (e.g., dataset_version derived from canonical spec hash).
-- **Policy-safe logging**: do not leak restricted metadata in receipts or logs.
+**Inputs**
+- Inputs must be referenced by stable identifiers (dataset ids, content hashes, URIs), not ad-hoc local paths.
 
-<details>
-  <summary><strong>Suggested receipt fields (conceptual)</strong></summary>
+**Outputs**
+- Outputs must include checksums/hashes and their target lifecycle zone (Raw / Work / Processed / Published).
+
+**Receipt**
+- Every run must emit an audit record sufficient to reproduce the run and justify promotion.
+
+### Example job envelope (suggested)
 
 ```json
 {
-  "run_id": "uuid-or-deterministic-id",
-  "run_type": "connector|pipeline|catalog|index|bot",
-  "started_at": "ISO-8601",
-  "finished_at": "ISO-8601",
-  "actor": { "kind": "service", "name": "kfm-worker-xyz" },
-  "environment": {
-    "git_commit": "abcdef...",
-    "container_image_digest": "sha256:...",
-    "runtime": "k8s-job|edge-worker|ci",
-    "parameters": { "dry_run": false }
+  "job_id": "uuid",
+  "job_type": "index.build_embeddings",
+  "requested_by": "system|user:<id>",
+  "requested_at": "2026-02-23T00:00:00Z",
+  "inputs": [
+    { "kind": "dataset", "id": "kfm://dataset/<id>", "checksum": "sha256:..." }
+  ],
+  "parameters": {
+    "target_zone": "Processed",
+    "policy_label": "public"
   },
-  "inputs": [{ "ref": "sha256:...", "media_type": "application/..." }],
-  "outputs": [{ "ref": "sha256:...", "media_type": "application/..." }],
-  "validations": [{ "name": "schema", "status": "pass|fail", "report_ref": "sha256:..." }],
-  "policy": { "label": "internal|public|restricted", "obligations": ["..."] },
-  "status": "success|failure|quarantine",
-  "notes": "policy-safe free text"
+  "trace": {
+    "parent_run_id": "uuid-or-null",
+    "correlation_id": "uuid"
+  }
 }
 ```
 
-</details>
-
-### Discovery envelope
-
-If you build a watcher/connector that detects new upstream material, emit a discovery envelope that includes:
-
-- `source_id` and `observed_at`
-- `kfm_idempotency_key` (for safe retries and dedupe)
-- `spec_ref` (what onboarding spec this maps to)
-- `artifact_ref` (what was observed/fetched)
-
-### Promotion manifest
-
-Workers should never silently promote data. A promotion manifest plus receipts and validations are the evidence needed for review and release gates.
-
-> [!NOTE]
-> “Promotion manifest” is a *governed proposal artifact* — it may be generated automatically, but it must be reviewable and traceable.
-
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
-## Worker registry
+## Promotion gates
 
-Maintain an inventory of workers so that governance and ops can answer “what runs?” without grepping the repo.
+Workers are the primary place we **enforce promotion** from:
 
-> [!TIP]
-> Keep this registry **small** and link out to per-worker READMEs for details.
+**Raw → Work/Quarantine → Processed → Published**
 
-| Worker | Type | Trigger | Reads | Writes | Primary outputs | Owner | Status |
-|---|---|---|---|---|---|---|---|
-| *(add me)* | connector\|pipeline\|catalog\|index\|bot | schedule\|queue\|manual | raw\|work\|processed | work\|processed\|published | receipts + reports | team | draft |
+A job that writes to a “higher” zone MUST fail closed unless the required artifacts exist.
 
-[Back to top](#appsworkers)
+### Minimum promotion checklist
 
----
+- [ ] Metadata present (identity, schema, extents, license, sensitivity)
+- [ ] Validation results attached (QA checks + thresholds)
+- [ ] License checks recorded
+- [ ] Provenance links recorded (inputs, transforms, tool versions)
+- [ ] Checksums/content integrity recorded
+- [ ] Audit receipt written (who/what/when/why + inputs/outputs + sensitivity + policy decisions)
 
-## Local development
+> **NOTE:** This checklist is non-negotiable for anything that affects user-visible maps, stories, or AI responses.
 
-This repo does not assume a single runtime for all workers (some may be containerized jobs, some may be edge workers, some may be queue consumers).
-
-Minimum expectation for each worker subfolder:
-
-- A **worker README** with:
-  - prerequisites
-  - local run command(s)
-  - how to run tests
-  - how to generate/validate receipts locally
-- A **config reference**:
-  - environment variables
-  - required secrets (names only; no values)
-  - safe defaults for dev
-
-Suggested conventions (PROPOSED):
-
-- Provide `make dev`, `make test`, and `make lint` (or `npm run ...` equivalents).
-- Provide a **dry-run** mode that emits receipts without writing outputs.
-
-```bash
-# PROPOSED: consistent CLI contract across workers (adapt as needed)
-./run --dry-run --input <artifact-ref> --out ./out/
-
-# PROPOSED: validate produced artifacts locally
-./validate --receipts ./out/ --contracts ../../contracts/
-```
-
-> [!TIP]
-> A good dry-run still performs schema + policy checks and produces a receipt marked `"dry_run": true`.
-
-[Back to top](#appsworkers)
-
----
-
-## Deployment
-
-Workers may deploy as one of:
-
-- **Kubernetes Jobs / CronJobs** for scheduled pipeline runs.
-- **Queue consumers** for event-driven ingestion or index rebuilds.
-- **Edge workers** (e.g., Cloudflare Worker style) for lightweight discovery hooks.
-- **CI-triggered automations** for draft PR creation and validation reporting.
-
-Whatever the runtime:
-
-- pin container images by **digest**
-- record the digest in the run receipt
-- keep an explicit rollback path (re-run previous promoted version; rebuild projections)
-
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
 ## Observability
 
-Workers must be observable without leaking sensitive data.
+Workers must be observable in the same way we expect from the API.
 
-Minimum signals:
+### Logging (minimum fields)
 
-- structured logs with `run_id` correlation
-- metrics: success/fail counts, duration, input/output sizes, queue lag (if applicable)
-- validation metrics: pass rate, failure categories, materiality decisions
+- `timestamp`
+- `service` = `workers`
+- `job_type`
+- `job_id`
+- `run_id`
+- `correlation_id`
+- `dataset_ids` (if applicable)
+- `zone_in` / `zone_out`
+- `policy_label`
+- `status` = `started|succeeded|failed|skipped`
+- `duration_ms`
+- `error` (message + stack) on failure
 
-Operational rules:
+### Metrics (minimum set)
 
-- QUARANTINE is a first-class outcome; do not treat it as “success”.
-- retries must be bounded; DLQs must exist for queue-based workers.
+- Jobs started/succeeded/failed by `job_type`
+- Duration histogram by `job_type`
+- Retry count by `job_type`
+- Queue depth / lag (if using a queue)
 
-[Back to top](#appsworkers)
+### Tracing
 
----
+- Propagate `correlation_id` into API calls so that a single run is traceable across workers + API.
 
-## Security and governance
-
-### Policy-as-code
-
-- The **same policy semantics** must apply in CI and runtime (or policy guarantees are meaningless).
-- UI may display policy badges/notices but **never makes policy decisions**.
-
-### Sensitivity defaults
-
-- Default deny for sensitive-location / restricted materials unless explicitly allowed.
-- Prefer producing a separate `public_generalized` representation when public output is allowed but precise locations are not.
-- Never embed precise coordinates in narratives or outputs unless policy allows and obligations are satisfied.
-
-### Credentials and secrets
-
-- Do not embed credentials in dataset specs or config committed to the repo.
-- Prefer short-lived credentials and workload identity where possible.
-- Make secrets discoverable by **name**, not value.
-
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
-## Add a new worker
+## Local development
 
-### 1) Define scope and contract surfaces
+> **TODO:** Replace the commands below with the repo’s real tooling once verified.
 
-- What zone(s) does it touch?
-- What artifacts does it read/write?
-- What receipts/manifests does it emit?
-- What policy labels and obligations can apply?
+### Option A: Queue-based worker (example)
 
-### 2) Implement idempotency and determinism
+```bash
+# 1) Start broker/backend (example: Redis)
+docker compose up -d redis
 
-- stable IDs for datasets/artifacts
-- dedupe keys for watcher events
-- safe retries (no double-writes; append-only where required)
+# 2) Run workers
+# (Replace with actual entrypoint/module)
+python -m workers run --concurrency=4
+```
 
-### 3) Wire policy and validation gates
+### Option B: Scheduled job (example)
 
-- schema validation for inputs/outputs
-- policy fixtures and contract tests
-- fail-closed behavior
+```bash
+# Run a job once, locally
+python -m workers run-job index.build_embeddings --dataset kfm://dataset/<id>
+```
 
-### 4) Ship with documentation
+### Test
 
-Each worker subfolder must include:
+```bash
+# Unit tests
+pytest apps/workers
+```
 
-- `README.md` (run/test/deploy)
-- a minimal architecture diagram
-- example receipts (valid + invalid) for CI tests (redacted)
-- an entry in the [Worker registry](#worker-registry)
-
-### 5) Add operational safety
-
-- bounded retries and DLQ
-- kill switch support (repo flag and/or secret) for emergency stop
-- runbook pointer (incident + rollback)
-
-[Back to top](#appsworkers)
+[Back to top](#kfm-workers)
 
 ---
 
-## Definition of done
+## Directory layout
 
-A worker is “done” when all are true:
-
-- [ ] Runs are deterministic enough to reproduce outputs from the same inputs.
-- [ ] Emits run receipts for every governed run (and stores them in the expected ledger location).
-- [ ] Produces or references validation reports; failures are actionable.
-- [ ] Policy checks are enforced (CI + runtime); default deny is supported.
-- [ ] No secrets are committed; logs/receipts are policy-safe.
-- [ ] Idempotency is implemented; retries do not corrupt truth path zones.
-- [ ] Has tests: unit + contract (schemas/policy) + at least one integration happy path.
-- [ ] Has docs: per-worker README + config reference + operational notes.
-
-<details>
-  <summary><strong>Appendix: suggested per-worker folder template (PROPOSED)</strong></summary>
+> **NOTE:** This layout is a **proposal** until verified against the actual repo tree.
 
 ```text
-apps/workers/<worker-name>/
-  README.md                # run/test/deploy + I/O contract + idempotency notes
-  src/                     # implementation
-  tests/                   # unit + contract + integration (happy path)
-  fixtures/                # redacted sample inputs/outputs for CI
-  receipts/                # redacted example receipts (valid + invalid)
-  config.example.env       # names only; no secrets
+apps/workers/
+  README.md              # This file
+  src/                   # Worker implementation (jobs, runners, adapters)
+  deploy/                # Deployment manifests (k8s, Helm, etc.)
+  tests/                 # Unit/integration tests
+  scripts/               # Dev helpers (must not be the only way to run jobs)
+```
+
+### Acceptable inputs
+
+- Worker job code (idempotent, audited)
+- Shared job utilities (receipts, hashing, provenance helpers)
+- Deployment configuration for worker runtime (if applicable)
+- Tests + fixtures for worker behavior
+
+### Exclusions
+
+- Production secrets
+- Large datasets or derived artifacts (store in governed storage zones instead)
+- UI assets
+- Direct-to-database hacks that bypass the governed API / repositories
+
+[Back to top](#kfm-workers)
+
+---
+
+## Contributing
+
+### Adding a new job
+
+1. Create a new job module under `src/` (or the repo’s equivalent).
+2. Define:
+   - inputs + parameters (typed)
+   - idempotency strategy
+   - validation rules + thresholds
+   - receipt output (audit record)
+3. Add tests:
+   - happy path
+   - retry path (simulate duplicate execution)
+   - policy-deny path (fails closed)
+4. Register the job in the job catalog/registry.
+5. Document the job in this README’s **Job catalog** (below).
+
+### Job catalog
+
+| Job type | Purpose | Triggers | Inputs | Outputs | Notes |
+|---|---|---|---|---|---|
+| `ingest.pull_source` | Pull raw source data into Raw zone | schedule/manual | source config | raw artifacts + receipt | TODO |
+| `validate.qa_dataset` | Run QA checks in Work/Quarantine | ingest completion | dataset id | validation report | TODO |
+| `transform.build_tiles` | Build map tiles or derived products | promotion pipeline | processed dataset | tiles + metadata | TODO |
+| `index.build_embeddings` | Update embeddings/full-text index | content changes | docs/features | index updates | TODO |
+
+[Back to top](#kfm-workers)
+
+---
+
+## Appendix
+
+<details>
+<summary><strong>Receipt schema (suggested)</strong></summary>
+
+A receipt is a machine-readable artifact written for every run.
+
+- **Storage:** Object storage or an append-only log (preferred).
+- **Naming:** `receipts/{job_type}/{yyyy}/{mm}/{dd}/{run_id}.json`
+
+```json
+{
+  "run_id": "uuid",
+  "job_id": "uuid",
+  "job_type": "string",
+  "started_at": "iso8601",
+  "finished_at": "iso8601",
+  "status": "succeeded|failed|skipped",
+  "inputs": [{ "kind": "dataset|file|uri", "id": "string", "checksum": "sha256:..." }],
+  "outputs": [{ "kind": "dataset|file|uri", "id": "string", "checksum": "sha256:...", "zone": "Raw|Work|Processed|Published" }],
+  "provenance": {
+    "tool_versions": { "python": "3.x", "worker_image": "sha256:..." },
+    "transforms": ["string identifiers"],
+    "policy_decisions": ["allow|deny|sanitize + reason refs"]
+  },
+  "errors": [{ "message": "string", "stack": "string" }]
+}
 ```
 
 </details>
-
-[Back to top](#appsworkers)
