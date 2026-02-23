@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: kfm-engineering; kfm-governance
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: restricted
 related:
   - kfm://doc/kfm-definitive-design-governance-guide-vnext
@@ -41,11 +41,13 @@ Map-first • time-aware • governed delivery — **community files + CI/policy
 
 [Quick start](#quick-start) •
 [Folder map](#folder-map) •
+[Workflow inventory](#workflow-inventory) •
 [CI and promotion gates](#ci-and-promotion-gates) •
 [Issue and PR templates](#issue-and-pr-templates) •
 [Governance and policy](#governance-and-policy) •
 [Security](#security-and-responsible-disclosure) •
-[Contacts](#contacts-and-owners)
+[Contacts](#contacts-and-owners) •
+[Definition of Done](#definition-of-done)
 
 ---
 
@@ -55,7 +57,7 @@ Map-first • time-aware • governed delivery — **community files + CI/policy
 - **Opening a PR:** follow `CONTRIBUTING.md`, keep changes small, and include evidence (links, citations, or artifact hashes).
 - **Changing data or policy behavior:** expect CI to **fail-closed** until promotion/metadata/policy gates pass.
 
-> NOTE  
+> [!NOTE]
 > This README is an **index + contract** for the GitHub-side “trust membrane” (workflows, templates, and guardrails).  
 > If a link 404s, it means the file hasn’t been created in this repo yet.
 
@@ -79,6 +81,9 @@ Recommended (minimum) structure for `.github/`:
 │  ├─ governance_request.yml
 │  ├─ data_pipeline_change.yml
 │  └─ story_node.yml
+├─ SUPPORT.md                     # Where/how to get help (OPTIONAL but useful)
+├─ FUNDING.yml                    # GitHub Sponsors/other funding links (OPTIONAL)
+├─ dependabot.yml                 # Dependency update policy (OPTIONAL; if used, keep minimal + governed)
 └─ workflows/                     # CI, policy gates, release gates (REQUIRED)
    ├─ ci.yml
    ├─ policy-gates.yml
@@ -94,6 +99,23 @@ Recommended (minimum) structure for `.github/`:
 
 ---
 
+## Workflow inventory
+
+This section documents the *intended* responsibilities of each workflow file listed above.
+
+> [!WARNING]
+> Workflow names, paths, and required checks must be kept consistent with branch protection rules.
+> If protection rules require a check that no longer exists, merges can become permanently blocked.
+
+| Workflow file | Purpose | Fail-closed expectation | Typical outputs (examples) |
+|---|---|---|---|
+| `.github/workflows/ci.yml` | Build/test/lint/typecheck for code and docs | PR cannot merge if checks fail or do not run | test reports, build artifacts, lint summaries |
+| `.github/workflows/policy-gates.yml` | Policy label checks, redaction checks, Story Node claim hygiene | PR blocked if policy/sensitivity is unclear | policy decision log, redaction scan report |
+| `.github/workflows/provenance-audit.yml` | Provenance + checksums + promotion eligibility verification | Promotion blocked if audit is incomplete | audit record (who/what/when/why), checksums |
+| `.github/workflows/release.yml` | Release/promotion orchestration (tagging, packaging, publish) | No RAW→Published jumps; gates must pass | release manifest, SBOM (if applicable), publish logs |
+
+---
+
 ## CI and promotion gates
 
 KFM uses “fail closed” gates to protect integrity, provenance, and policy obligations.
@@ -103,9 +125,11 @@ flowchart LR
   dev[Contributor] --> pr[Pull Request]
   pr --> ci[CI Workflows]
   ci --> quality[Quality Gates]
+  ci --> security[Security Gates]
   ci --> policy[Policy Gates]
   ci --> prov[Provenance Gates]
   quality --> decision{All gates pass?}
+  security --> decision
   policy --> decision
   prov --> decision
   decision -->|No| block[Block merge + report]
@@ -119,6 +143,7 @@ flowchart LR
 - formatting/lint
 - unit/integration tests
 - typed builds (TypeScript) where applicable
+- docs build / link checks where applicable
 
 **Security**
 - dependency scanning (and lockfile integrity)
@@ -137,8 +162,22 @@ flowchart LR
   published --> runtime[Governed APIs + Map/Story UI + Focus Mode]
 ```
 
-> WARNING  
+> [!WARNING]
 > If permissions/sensitivity are unclear, default is **deny** (generalize/redact; require governance review).
+
+### Trust membrane reminder
+
+```mermaid
+flowchart LR
+  ui[UI / Clients] --> api[Governed APIs]
+  api --> policy[Policy Boundary]
+  policy --> storage[(Storage / Index)]
+  ui -. never direct .-> storage
+```
+
+- UI/clients **must not** talk to storage directly.
+- Core/domain logic **must not** bypass repositories to reach storage.
+- Policy boundary decisions should be **auditable**.
 
 ---
 
@@ -163,6 +202,9 @@ A PR should include:
 - tests: added/updated, or justification if not possible
 - rollback: how to revert safely
 - governance: policy labels, redaction notes, approval path
+
+> [!TIP]
+> For governance-sensitive PRs, ensure `CODEOWNERS` routes review to both engineering and governance owners.
 
 ---
 
@@ -194,7 +236,7 @@ org/repo identifiers and workflow filenames are finalized.
 When ready, swap in dynamic badges (examples):
 
 ```md
-![CI](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/ci.yml?branch=main)
+![CI](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/ci.yml?branch=<DEFAULT_BRANCH>)
 ![License](https://img.shields.io/github/license/<ORG>/<REPO>)
 ![Last commit](https://img.shields.io/github/last-commit/<ORG>/<REPO>)
 ```
@@ -218,6 +260,7 @@ When ready, swap in dynamic badges (examples):
 - [ ] CI workflows enforce fail-closed promotion/policy gates
 - [ ] Links are relative and lintable (no broken internal links)
 - [ ] Policy labels + redaction defaults are stated (default-deny if unclear)
+- [ ] Workflow inventory is kept current when workflows change
 
 ---
 
