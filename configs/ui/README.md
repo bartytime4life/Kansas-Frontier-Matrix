@@ -1,282 +1,259 @@
-<!--
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/7c0f1a53-1f2e-4a72-a3d9-4c593b7ad8a9
-title: configs/ui/README
-type: guide
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/6c1bd5de-2058-4968-878e-2c2a9db6ef02
+title: configs/ui — UI Configuration
+type: standard
 version: v1
 status: draft
-owners: TBD
-created: 2026-02-22
-updated: 2026-02-22
+owners: KFM UI
+created: 2026-02-23
+updated: 2026-02-23
 policy_label: public
-tags:
-  - kfm
-  - ui
-  - config
+related:
+  - schemas/ui/
+  - contracts/schemas/          # if the repo uses the blueprint layout
+  - web/
+tags: [kfm, ui, config]
 notes:
-  - Defines governance + contract expectations for UI runtime configuration.
-[/KFM_META_BLOCK_V2]
--->
+  - This directory holds governed configuration for KFM UI surfaces (Map, Story, Focus).
+  - Treat configs as contract artifacts: versioned, schema-validated, review-gated.
+[/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
+# `configs/ui`
 
-# configs/ui
-UI runtime configuration for **Map Explorer**, **Story Mode**, and **Focus Mode** — defaults, registries, and “trust surface” settings that must remain **governed**, **evidence-led**, and **accessible**.
+> **Purpose:** governed, schema-validated configuration for KFM UI surfaces (Map Explorer, Story Mode, Focus Mode).
 
-**Status:** `draft` • **Owners:** `TBD` • **Policy label:** `public`
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![owners](https://img.shields.io/badge/owners-KFM%20UI-blue)
+![policy](https://img.shields.io/badge/policy_label-public-2ea44f)
+![ci](https://img.shields.io/badge/CI-TODO-inactive)
+<!-- TODO: replace badges with real workflow/status links once known. -->
 
-**Quick nav:**  
-[Purpose](#purpose) • [Directory layout](#directory-layout) • [Non-negotiables](#non-negotiables) • [Config conventions](#config-conventions) • [Map state](#map-state) • [Evidence and trust surfaces](#evidence-and-trust-surfaces) • [Accessibility](#accessibility) • [Abstention and restriction UX](#abstention-and-restriction-ux) • [Change management](#change-management) • [Definition of Done](#definition-of-done) • [Appendix](#appendix-example-json-snippets)
+## Quick links
+
+- [Why this exists](#why-this-exists)
+- [Where it fits in the repo](#where-it-fits-in-the-repo)
+- [Directory layout](#directory-layout)
+- [Config registry](#config-registry)
+- [Hard rules](#hard-rules)
+- [Loading and override model](#loading-and-override-model)
+- [Validation and promotion gates](#validation-and-promotion-gates)
+- [Change checklist](#change-checklist)
+- [Appendix](#appendix)
 
 ---
 
-## Purpose
+## Why this exists
 
-This folder holds **UI configuration** that the frontend consumes at runtime. In KFM terms, UI configuration is a **contract surface**: changes here can affect what users see, how evidence is explained, and how governance is made visible.
+KFM’s UI is a **trust surface**: it must expose dataset version, freshness, license, and policy badges; provide one-click evidence/provenance; and behave safely under policy denials and redactions.
 
-The UI is a **governed client**:
-- it must **not embed privileged credentials**
-- it must **render governance visibly** (policy notices, provenance/evidence, data versions, “what changed,” etc.)
-- it must support **reproducible map state** (stories replay the same view; focus mode answers in context)
+This directory exists so those UI behaviors are **driven by governed configuration** (not hard-coded ad hoc), and so config changes can be reviewed, validated, and rolled back like any other production contract artifact.
 
-> **WARNING**  
-> If a config change could alter layer visibility, redaction notices, export behavior, or story publish gating, treat it like a production change and route it through the normal governance review path. (If your repo has CODEOWNERS or required reviewers for UI/policy, they should apply here too.)
+### Where it fits in the system
 
-[(back to top)](#top)
+```mermaid
+flowchart LR
+  A[configs/ui] --> B[Schema validation]
+  B --> C[Build and deploy]
+  C --> D[Web UI]
+  D --> E[Governed API]
+  E --> F[Evidence resolver]
+  F --> D
+```
+
+- **UI must not bypass policy enforcement** (no direct reads from object storage or databases).
+- **Config must not introduce bypass paths** (e.g., direct tile URLs pointing to raw or processed buckets).
+
+[Back to top](#quick-links)
+
+---
+
+## Where it fits in the repo
+
+> The exact wiring may vary; these are the intended touchpoints.
+
+- **Primary consumer:** `web/` (the Map/Story UI and Focus Mode UI).
+- **Primary validators:** UI config schemas under **either**:
+  - `schemas/ui/` (repo structure guide), **or**
+  - `contracts/schemas/` (blueprint-style “contracts/” layout)
+
+If you find your repo uses different paths, update this section and the registry table below.
+
+[Back to top](#quick-links)
 
 ---
 
 ## Directory layout
 
-> **NOTE**  
-> The exact file list in this folder is repo-specific. Keep this section updated as files are added.
-
-Recommended pattern (example):
+> **Recommended default layout** (update as real files land).  
+> This README is written to be valid even if only a subset of files exist initially.
 
 ```text
-repo/
-  configs/
-    ui/
-      README.md                 # this file
-      *.json                    # UI runtime configs (defaults, registries, feature flags)
-      *.schema.json (optional)  # local schemas ONLY if repo conventions place UI schemas here
+configs/ui/
+  README.md
+
+  defaults/
+    ui.defaults.json          # Baseline UI config (safe defaults)
+    map.defaults.json         # Baseline map behavior (zoom bounds, time defaults)
+
+  env/
+    ui.dev.json               # Dev overrides (local-only)
+    ui.stage.json             # Staging overrides
+    ui.prod.json              # Production overrides
+
+  theme/
+    tokens.json               # Design tokens (colors, typography, spacing)
+    branding.json             # Logos, wordmarks, naming (no copyrighted assets embedded)
+
+  map/
+    layers.registry.json      # Layer registry (id, label, datasets, policy display rules)
+    basemap.style.json        # Basemap style reference (no credentials)
+
+  story/
+    rendering.json            # Story rendering toggles, citation UI rules
+
+  focus/
+    focus-ui.json             # Focus Mode UI options (abstention UX, citation density)
 ```
 
-If your repo follows a “single home for schemas” approach, prefer:
-- `contracts/schemas/ui/…` (or `schemas/ui/…`) for JSON Schemas
-- `configs/ui/…` for environment-agnostic runtime config values
+### Acceptable inputs
 
-[(back to top)](#top)
+- **JSON / JSONC / YAML** (if the repo supports it) that is:
+  - versioned in git,
+  - validated against a schema (see [Validation and promotion gates](#validation-and-promotion-gates)),
+  - safe to ship to clients (no secrets),
+  - documented in this README when adding new keys.
 
----
+### Exclusions
 
-## Non-negotiables
+- **Secrets**: API keys, tokens, client secrets, signed URLs, private endpoints.
+- **Direct data endpoints** that bypass governed APIs (raw/processed buckets, database hosts).
+- **Binary assets** (images/fonts) unless the repo has an explicit assets policy and license tracking.
+- **One-off local settings** (put these in ignored local dev config, not in git).
 
-These requirements should be treated as hard constraints for anything configured here:
-
-1. **No secrets / no privileged credentials**
-   - configs in this folder must be safe to commit and ship to the browser.
-
-2. **Governed, evidence-led UX**
-   - configs must not encourage UI behaviors that bypass policy enforcement (no “direct data fetch” URLs that skip governed APIs; no hardcoded asset links that ignore redaction).
-
-3. **Citations must resolve**
-   - any configuration that participates in Story publishing or export must ensure citations/evidence references are resolvable at publish time.
-
-4. **Trust surfaces are not optional**
-   - policy notices, data versions, provenance access, and automation status are part of the user-visible governance contract.
-
-5. **Abstention is a feature**
-   - the UI must explain withholding in policy-safe terms, suggest safe alternatives, and avoid leaking restricted existence via “ghost metadata.”
-
-[(back to top)](#top)
+[Back to top](#quick-links)
 
 ---
 
-## Config conventions
+## Config registry
 
-### File formats
-- Prefer **JSON** for runtime config (easy to validate, diff, and canonicalize).
-- Avoid comments inside JSON (use adjacent `*.md` notes if needed).
+This registry is the “map” of config surfaces in this directory. Keep it current.
 
-### Versioning
-- If a config is consumed by code or by downstream tools, include an explicit version field, e.g.:
-  - `kfm_ui_config_version: "v1"`
-- Breaking changes require:
-  - a version bump
-  - compatibility notes
-  - a safe migration path (or dual-read strategy in UI code)
+> **Important:** Schema file names below are **placeholders** until the actual schema inventory exists.  
+> Replace `schemas/ui/<…>` with real paths and keep them versioned.
 
-### Determinism
-- Keep configs **deterministic**:
-  - stable key ordering (where feasible)
-  - avoid implicit defaults that differ across environments/builds
-  - prefer explicit values for map defaults (bbox, zoom, time window, filters)
+| Config surface | File(s) | Schema (TBD) | Consumed by | Notes |
+|---|---|---|---|---|
+| UI defaults | `defaults/ui.defaults.json` | `schemas/ui/<ui-defaults>.v1.schema.json` | `web/` | Baseline safe behavior |
+| Feature flags | `defaults/ui.defaults.json` (section) | `schemas/ui/<feature-flags>.v1.schema.json` | `web/` | Prefer additive flags |
+| Theme tokens | `theme/tokens.json` | `schemas/ui/<theme-tokens>.v1.schema.json` | `web/` | No brand assets embedded |
+| Map defaults | `defaults/map.defaults.json` | `schemas/ui/<map-defaults>.v1.schema.json` | `web/` | Zoom/time bounds |
+| Layer registry | `map/layers.registry.json` | `schemas/ui/<layers-registry>.v1.schema.json` | `web/` | Must reference dataset/version IDs, not raw URLs |
+| Basemap style ref | `map/basemap.style.json` | `schemas/ui/<basemap-style>.v1.schema.json` | `web/` | Use placeholder URLs in examples |
+| Story rendering | `story/rendering.json` | `schemas/ui/<story-rendering>.v1.schema.json` | `web/` | Citation UI + evidence drawer rules |
+| Focus Mode UI | `focus/focus-ui.json` | `schemas/ui/<focus-ui>.v1.schema.json` | `web/` | Abstention UX + citation density |
 
-[(back to top)](#top)
+[Back to top](#quick-links)
 
 ---
 
-## How this config fits into the governed system
+## Hard rules
 
-```mermaid
-flowchart LR
-  Cfg[configs/ui] --> UI[Frontend UI]
-  UI --> API[Governed API]
-  API --> Ev[Evidence Resolver]
-  Ev --> Cat[Catalogs\nDCAT STAC]
-  Ev --> Prov[Provenance\nPROV run receipts]
-  Cat --> Assets[Artifacts\nTiles COG GeoParquet]
-  Prov --> Assets
-```
+### 1) Trust membrane stays intact
 
-**Principle:** UI config defines defaults and presentation rules, but **policy + evidence resolution happen at the API boundary**.
+- UI config **must not** cause the frontend to fetch data directly from object storage or databases.
+- All data access must be routed through governed APIs so policy, provenance, and auditing are enforced.
 
-[(back to top)](#top)
+### 2) No credentials in config
 
----
+- Do not embed credentials in config/specs (including basemap styles, tile URLs, or service endpoints).
+- If an endpoint requires authentication, the UI should call the governed API which performs auth and policy checks.
 
-## Map state
+### 3) Policy-aware by design
 
-Map state is a first-class, reproducible concept in KFM. UI configuration typically defines:
-- default camera position (bbox/zoom)
-- default active layers (and their presentation defaults)
-- default time window
-- default filters
+When config influences display of datasets/layers/stories, it must support policy outcomes:
 
-This should align with Story Node “map state” so:
-- stories replay the same view reliably
-- focus mode can answer *in context* of the current view
+- allow (normal display)
+- deny (hide / safe error)
+- obligations (generalize geometry, suppress exports, show notice)
 
-### Practical guidance
-- Keep default views broad enough to avoid accidental sensitive pinpointing.
-- If a default layer has policy obligations (e.g., generalized geometry), ensure the config enables the correct UI notice surface.
-
-[(back to top)](#top)
+[Back to top](#quick-links)
 
 ---
 
-## Evidence and trust surfaces
+## Loading and override model
 
-### Trust surfaces
-Config in this folder may control whether these surfaces are enabled/required:
+Because repo wiring can vary, **treat this as the recommended model** and adjust once the actual loader is confirmed:
 
-- automation status badges (healthy/degraded/failing) on layers or features
-- evidence/provenance drawer reachable from:
-  - every layer
-  - every story claim
-- data version label per layer linking to DatasetVersion catalogs
-- policy notices at interaction time (example: “geometry generalized due to policy”)
-- “what changed?” comparisons between dataset versions (counts/checksums/QA metrics)
+1. Load `defaults/*.json`
+2. Merge `env/ui.<environment>.json` (if present)
+3. Apply runtime overrides (if any) from a governed endpoint (optional)
 
-### Evidence drawer minimum fields
-Whether the evidence drawer is configured via code or config, it must be able to show at least:
-- evidence bundle ID and digest
-- dataset version ID and dataset name
-- license and rights holder (including attribution text)
-- freshness (last run timestamp) and validation status
-- provenance chain (run receipt link)
-- artifact links (only if allowed)
-- redactions applied (obligations)
+### Merge semantics (recommended)
 
-### Evidence reference shape
-When configs need to store or reference evidence, prefer structured, resolvable identifiers (schemed references), for example:
-- `dcat://…`
-- `stac://…`
-- `prov://…`
+- Objects: deep merge
+- Arrays: replace (unless a schema defines merge-by-id)
+- Unknown keys: fail validation (default-deny for config drift)
 
-Avoid bare URLs to raw artifacts unless those URLs are themselves governed and policy-filtered.
-
-[(back to top)](#top)
+[Back to top](#quick-links)
 
 ---
 
-## Accessibility
+## Validation and promotion gates
 
-Any UI behavior influenced by this configuration must preserve at least:
-- keyboard navigability for layer controls and evidence drawer
-- visible focus states
-- text labels for policy badges and status indicators (no color-only meaning)
-- ARIA labels for map controls
-- safe markdown rendering for narratives (CSP + sanitization to prevent XSS)
-- exports that include citations and `audit_ref` in a readable format
+Config is a **contract artifact**. It should be validated in CI before merge.
 
-> **TIP**  
-> If a config adds a new UI control, treat “keyboard + screen reader + focus order” as part of the config change’s acceptance criteria.
+### Minimum gates (recommended)
 
-[(back to top)](#top)
+- [ ] JSON schema validation for every config file in this directory
+- [ ] Cross-link checks (e.g., layer ids refer to known datasets and API layer ids)
+- [ ] Secret scanning (fail if tokens/keys are detected)
+- [ ] E2E smoke: UI boots + renders evidence drawer for at least one public dataset
 
----
+> **Repo reality check:** before wiring loaders or CI gates, confirm the repo’s actual module layout, build system, and workflow names.
 
-## Abstention and restriction UX
-
-Abstention must be understandable **without leaking restricted info**.
-
-When the governed API returns deny/abstain:
-- show “why” in policy-safe terms (e.g., “restricted evidence not available to your role”)
-- suggest safe alternatives (broader time range, public datasets, different aggregation)
-- provide `audit_ref` so stewards can review
-- never show “ghost metadata” that reveals restricted existence unless policy allows
-
-[(back to top)](#top)
+[Back to top](#quick-links)
 
 ---
 
-## Change management
+## Change checklist
 
-When changing anything under `configs/ui/`:
+Use this checklist for any PR touching `configs/ui/`.
 
-1. **Describe the user-visible effect**
-   - What changes on screen? Which surfaces are impacted (layers, evidence drawer, exports, story publishing, focus mode)?
+### Required
 
-2. **Update or add the contract**
-   - Add/modify JSON Schema for the config (where your repo keeps schemas).
-   - If your UI consumes typed config, update TypeScript types accordingly.
+- [ ] Schema exists (or is added) for any new/changed config surface
+- [ ] Config passes validation gates locally/CI
+- [ ] README updated: registry row + notes for new keys
+- [ ] No secrets / no direct data endpoints introduced
+- [ ] UI behavior verified for: allow, deny, obligations
 
-3. **Run validation**
-   - Schema validation for the changed config(s)
-   - Link/citation checks if the config introduces evidence refs or impacts story publish rules
-   - UI accessibility checks if controls change or new surfaces appear
+### Nice-to-have
 
-4. **Governance review triggers**
-   - Any changes that could impact policy notices, redactions/obligations messaging, export behavior, or story publishing should trigger governance/steward review.
+- [ ] Add/expand fixtures for policy-driven UI states
+- [ ] Add screenshot(s) to PR description for significant UI changes
+- [ ] Add migration note if a schema version changes
 
-[(back to top)](#top)
-
----
-
-## Definition of Done
-
-A config change in this folder is “done” when:
-
-- [ ] The change is described in human terms (what users will see).
-- [ ] Config is valid JSON and matches a schema (or the schema is updated/added).
-- [ ] No secrets or privileged credentials were added.
-- [ ] Any evidence refs introduced are resolvable (or the feature is gated so publishing/export cannot proceed without resolution).
-- [ ] Trust surfaces remain enabled (policy notice, evidence drawer, data version label).
-- [ ] Abstention UX remains policy-safe (no ghost metadata).
-- [ ] Accessibility requirements remain satisfied (keyboard, labels, ARIA, safe markdown).
-- [ ] Rollback plan exists (revert commit or config version pin).
-
-[(back to top)](#top)
+[Back to top](#quick-links)
 
 ---
 
-## Appendix: Example JSON snippets
+## Appendix
 
 <details>
-<summary><strong>Example: Map state shape</strong></summary>
+<summary>Example: layer registry entry (illustrative)</summary>
 
 ```json
 {
-  "bbox": [-102.0, 36.9, -94.6, 40.0],
-  "zoom": 6,
-  "layers": [
-    { "layer_id": "example_layer", "dataset_version_id": "YYYY-MM.somehash" }
-  ],
-  "time_window": { "start": "1950-01-01", "end": "2024-12-31" },
-  "filters": {
-    "category": ["example"]
+  "layer_id": "noaa_storm_events",
+  "title": "Storm Events",
+  "dataset": {
+    "dataset_slug": "noaa_ncei_storm_events",
+    "dataset_version_id": "2026-02.abcd1234"
+  },
+  "ui": {
+    "default_visible": false,
+    "legend": { "type": "categorical", "field": "event_type" },
+    "badges": ["license", "policy_label", "freshness"]
   }
 }
 ```
@@ -284,28 +261,14 @@ A config change in this folder is “done” when:
 </details>
 
 <details>
-<summary><strong>Example: Story Node sidecar (map state + citations)</strong></summary>
+<summary>Example: feature flag block (illustrative)</summary>
 
 ```json
 {
-  "kfm_story_node_version": "v3",
-  "story_id": "kfm://story/<uuid>",
-  "version_id": "v1",
-  "status": "draft",
-  "policy_label": "public",
-  "review_state": "needs_review",
-  "map_state": {
-    "bbox": [-102.0, 36.9, -94.6, 40.0],
-    "zoom": 6,
-    "layers": [
-      { "layer_id": "noaa_storm_events", "dataset_version_id": "2026-02.abcd1234" }
-    ],
-    "time_window": { "start": "1950-01-01", "end": "2024-12-31" }
-  },
-  "citations": [
-    { "ref": "dcat://noaa_ncei_storm_events@2026-02.abcd1234", "kind": "dcat" },
-    { "ref": "prov://run/2026-02-20T12:34Z...", "kind": "prov" }
-  ]
+  "feature_flags": {
+    "enable_focus_mode": true,
+    "enable_story_publishing_ui": false
+  }
 }
 ```
 
