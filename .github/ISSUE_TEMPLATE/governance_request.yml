@@ -1,0 +1,150 @@
+# governance_request.yml
+# Kansas Frontier Matrix (KFM) governance request (template)
+# Notes:
+# - policy_label values are controlled vocabulary (see KFM guide Appendix H).
+# - Story publishing requires the QA publish gate checks to pass.
+# - Sensitive-topic uncertainty should fail closed: default to restricted and request review.
+
+kfm_governance_request_version: "v1"
+
+request:
+  request_id: "kfm://governance_request/<uuid>"
+  created_at: "YYYY-MM-DDTHH:MM:SSZ"
+  created_by:
+    principal: "<user_or_service_id>"
+    # Baseline roles (PROPOSED in KFM guide): public | contributor | steward | operator | governance_council
+    role: "contributor"
+  # Review workflow definition includes Promotion Queue + Story Review Queue (see KFM guide).
+  queue: "story_review_queue"   # story_review_queue | promotion_queue
+  request_type: "story_publish" # story_publish | dataset_promotion | policy_change | incident
+  summary: "<one-line summary>"
+  description: |-
+    <Why this request is needed, what is changing, and what decision is requested.>
+
+target:
+  # What this request applies to:
+  # - story: kfm://story/<uuid>@<version>
+  # - dataset: kfm://dataset/<slug>@<dataset_version_id>
+  # - policy_bundle: e.g., a policy repo change set
+  # - incident: a governance incident (see incident section below)
+  kind: "story"
+  id: "kfm://story/<uuid>@v1"
+
+  current:
+    status: "draft"
+    policy_label: "restricted"
+    review_state: "needs_review"
+
+  proposed:
+    # NOTE: keep review_state as needs_review until approvals/decision are recorded.
+    status: "review"
+    policy_label: "public_generalized"
+    requested_actions:
+      - action: "approve_publish"
+        notes: "<Any constraints: e.g., publish only generalized geometry; add UI notice obligation.>"
+
+review_triggers:
+  # Sensitive topics and review triggers (see KFM guide §25.4).
+  sensitive_topic_flags:
+    - flag: "indigenous_communities_or_restricted_cultural_knowledge"
+      present: false
+      details: ""
+    - flag: "archaeological_site_locations_or_sensitive_ecological_locations"
+      present: false
+      details: ""
+    - flag: "could_enable_harm"
+      present: false
+      details: ""
+
+  # Operational rule (KFM guide): if uncertain, default to restricted draft and request review (fail closed).
+  fail_closed:
+    if_uncertain_default_policy_label: "restricted"
+
+risk_assessment:
+  # Use low|medium|high|unknown (proposed rubric; tune to your policy tests).
+  pii_risk: "unknown"
+  sensitive_location_risk: "unknown"
+  rights_risk: "unknown"
+  security_risk: "unknown"
+  notes: |-
+    <Summarize risks and mitigations (e.g., coordinate generalization, redaction transforms recorded in PROV).>
+
+evidence:
+  # Publishing gate requires citations to resolve through the evidence resolver.
+  # Keep these refs aligned with the Story Node sidecar "citations" list.
+  refs:
+    - kind: "dcat"
+      ref: "dcat://<dataset_id>@<dataset_version_id>"
+    - kind: "stac"
+      ref: "stac://<collection_or_item_id>"
+    - kind: "prov"
+      ref: "prov://run/<run_id>"
+    - kind: "doc"
+      ref: "doc://<doc_id>"
+
+  # Optional: repo paths for convenience.
+  artifacts:
+    - path: "<relative/path/to/story.md>"
+      note: "Story Node markdown"
+    - path: "<relative/path/to/story.sidecar.json>"
+      note: "Story Node sidecar (map_state + citations + policy_label + review_state)"
+
+gates:
+  # Story Node QA checklist (publish gate) from KFM guide §25.5.
+  story_publish_gate:
+    citations_resolve_through_evidence_resolver: "unknown"
+    story_contains_no_restricted_coordinates_or_identifiers: "unknown"
+    rights_metadata_exists_for_all_embedded_media: "unknown"
+    map_state_references_promoted_dataset_versions_only: "unknown"
+    policy_label_and_review_state_set_correctly: "unknown"
+    changelog_entry_exists_since_last_version: "unknown"
+
+approvals:
+  # Approvals model aligns with promotion manifest "approvals" entries (role, principal, approved_at).
+  required:
+    - role: "steward"
+      principal: "<steward_user_or_group>"
+    - role: "governance_council"
+      principal: "<council_user_or_group>"
+      condition: "required_if_any_sensitive_topic_flag_present"
+
+  received: []
+  # Example entry:
+  # received:
+  #   - role: "steward"
+  #     principal: "user:alice"
+  #     approved_at: "YYYY-MM-DDTHH:MM:SSZ"
+  #     notes: "Approved with obligation: show_notice"
+
+decision:
+  status: "pending"   # pending | approved | rejected
+  decision_id: ""     # e.g., kfm://policy_decision/<id>
+  decided_at: ""
+  obligations: []     # e.g., [{type: show_notice, message: "..."}]
+  notes: ""
+
+audit:
+  # Use audit_ref/correlation_ids to tie this request to logs/run receipts.
+  audit_ref: "kfm://audit/entry/<id>"
+  correlation_ids: []
+  related_run_ids: []
+  related_manifest: ""  # e.g., path to promotion_manifest.json
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Optional section: Governance incident (fill only if request.request_type == "incident")
+incident:
+  incident_type: ""  # restricted_data_leakage | licensing_violation_risk | corrupted_catalogs_or_broken_citations | nondeterministic_pipeline_outputs
+  detected_at: ""
+  detection_signals: []
+  escalation_contacts:
+    - role: "steward"
+      contact: "<name_or_oncall>"
+    - role: "operator"
+      contact: "<name_or_oncall>"
+    - role: "governance_council"
+      contact: "<name_or_oncall>"
+  containment_steps: []
+  remediation_steps: []
+  post_incident_review:
+    adr_ref: ""
+    policy_updates: []
