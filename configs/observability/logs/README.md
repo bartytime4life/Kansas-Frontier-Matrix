@@ -70,25 +70,30 @@ The repo’s exact contents may vary, but this directory should stay organized a
 
 ### Expected layout
 ```text
-configs/observability/logs/
-  README.md
-
-  pipelines/                 # end-to-end log pipelines (shipper -> processors -> sinks)
-    TODO-tool-name/          # e.g., otelcol/, vector/, fluentbit/, promtail/, filebeat/, etc.
-
-  processors/                # reusable processing steps
-    parsing/                 # JSON/grok/regex parsing rules
-    redaction/               # secret/PII filters, allow/deny lists, hashing rules
-    enrichment/              # env, region, service, build, host metadata mapping
-
-  sinks/                     # backend routing targets (storage/query systems)
-    TODO-sink-name/          # e.g., loki/, elastic/, cloudwatch/, s3/, etc.
-
-  schemas/                   # structured log schemas (when applicable)
-    events/                  # JSONSchema (or similar) for log event shapes
-
-  examples/                  # sample configs + sample log lines
-  tests/                     # lightweight validation fixtures (lint, schema checks, sample replays)
+configs/observability/logs/                           # Log observability: pipelines + processors + sinks + schemas
+├─ README.md                                          # Scope, supported tools, redaction rules, and validation workflow
+│
+├─ pipelines/                                         # End-to-end pipelines (shipper → processors → sinks)
+│  └─ <tool-name>/                                    # e.g., otelcol/, vector/, fluentbit/, promtail/, filebeat/
+│     └─ …                                            # Tool-specific pipeline configs + deploy wiring
+│
+├─ processors/                                        # Reusable processing steps (shared across pipelines)
+│  ├─ parsing/                                        # Parsing rules (JSON/grok/regex), field extraction, normalization
+│  ├─ redaction/                                      # Secret/PII filters, allow/deny lists, hashing/tokenization rules
+│  └─ enrichment/                                     # Metadata enrichment (env/region/service/build/host mapping)
+│
+├─ sinks/                                             # Backend routing targets (storage/query systems)
+│  └─ <sink-name>/                                    # e.g., loki/, elastic/, cloudwatch/, s3/
+│     └─ …                                            # Sink configs (routing, retention hints, index/labels mapping)
+│
+├─ schemas/                                           # Structured log schemas (when applicable)
+│  └─ events/                                         # Event schemas (JSONSchema or equivalent) for log envelope shapes
+│
+├─ examples/                                          # Sample configs + sample log lines (synthetic; safe)
+│  └─ …                                               # Minimal “known-good” examples used by docs/tests
+│
+└─ tests/                                             # Lightweight validation (lint, schema checks, sample replays)
+   └─ …                                               # Tool validate scripts + redaction assertions + fixtures
 ```
 
 ### Acceptable inputs (what belongs here)
