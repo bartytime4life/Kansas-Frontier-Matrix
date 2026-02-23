@@ -1,0 +1,132 @@
+name: Feature request
+description: Suggest an improvement or a new capability
+title: "[Feature]: "
+labels:
+  - enhancement
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to propose an improvement.
+
+        Please include enough context for us to evaluate scope, risk, and fit.
+        **Do not include secrets, credentials, tokens, or sensitive data.**
+
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: One sentence describing the feature.
+      placeholder: "Add policy-aware provenance links to Story Nodes"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / use case
+      description: What problem are you trying to solve? Who is impacted, and how?
+      placeholder: |
+        What is happening today?
+        Who is affected?
+        Why is this a problem now?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe what you want to happen. Include API/UX ideas if relevant.
+      placeholder: |
+        Proposed change:
+        - UI:
+        - API/Contract:
+        - Data/Pipeline:
+        - Governance/Policy:
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Bullet list of what “done” looks like (make it testable).
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: impact_area
+    attributes:
+      label: Impact area
+      description: Where does this change primarily land?
+      options:
+        - Data sources / ingestion
+        - Pipelines / CI gates
+        - Catalog / metadata / provenance
+        - Storage / indexing
+        - Governed APIs / policy boundary
+        - Map/Story UI
+        - Focus Mode AI
+        - Docs / governance
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 - urgent / blocking
+        - P1 - high
+        - P2 - medium
+        - P3 - low / nice-to-have
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What other approaches did you consider? Why not those?
+      placeholder: |
+        Option A:
+        Option B:
+        Decision rationale:
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / tradeoffs
+      description: Performance, security, data quality, migration, or maintenance concerns.
+      placeholder: |
+        Risks:
+        Mitigations:
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies / related work
+      description: Link related issues/PRs/docs, or list teams/systems to coordinate with.
+      placeholder: |
+        Related issues:
+        Related PRs:
+        Docs/specs:
+        Dependencies:
+
+  - type: checkboxes
+    id: governance
+    attributes:
+      label: Governance checklist
+      description: Help preserve traceability and the trust membrane.
+      options:
+        - label: I confirm this request does not require exposing restricted/sensitive data publicly.
+          required: true
+        - label: I included links/evidence (screenshots, logs, dataset IDs, etc.) where possible.
+        - label: I considered impacts on provenance, policy enforcement, and promotion gates.
