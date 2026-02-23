@@ -217,35 +217,35 @@ Configuration in this directory exists to make KFM’s posture enforceable. At m
 This is a **buildable target** layout for `configs/`. Adjust to match the repo, but keep the separation between policy, contracts, promotion gates, and runtime wiring.
 
 ```text
-configs/
-  README.md
-
-  policy/                       # policy-as-code inputs (governed)
-    labels/                     # policy labels + meanings
-    obligations/                # obligation definitions (generalize geometry, suppress export, etc.)
-    fixtures/                   # allow/deny + obligations test cases
-    tests/                      # policy unit tests (engine-specific)
-    rubrics/                    # licensing + sensitivity rubrics (human-readable + machine-usable)
-
-  contracts/                    # machine-validated contract artifacts
-    schemas/                    # JSON Schema (or equivalent) for DCAT/STAC/PROV + API DTOs
-    profiles/                   # profile constraints (required fields, controlled vocab, etc.)
-    linkcheck/                  # cross-link rules for DCAT/STAC/PROV + EvidenceRefs
-
-  promotion/                    # promotion contract wiring
-    gates/                      # gate definitions, thresholds, required artifacts
-    templates/                  # promotion manifests, run receipt templates (if stored here)
-    ci/                         # CI config for promotion gating (optional)
-
-  runtime/                      # runtime wiring (non-secret)
-    feature_flags/
-    indexing/
-    caching/
-
-  env/                          # example overlays (no secrets)
-    dev.example.env
-    staging.example.env
-    prod.example.env
+configs/                                         # Governed configuration registry (non-secret; CI-validated where possible)
+├─ README.md                                      # How configs are structured, validated, and promoted
+│
+├─ policy/                                        # Policy-as-code inputs (governed configuration, not Rego itself)
+│  ├─ labels/                                     # Policy labels + meanings (classification, redistribution flags, etc.)
+│  ├─ obligations/                                # Obligation definitions (generalize geometry, suppress export, watermark…)
+│  ├─ fixtures/                                   # Allow/deny + obligation test cases (synthetic; deterministic)
+│  ├─ tests/                                      # Policy unit tests for these configs (engine-specific harness)
+│  └─ rubrics/                                    # Licensing + sensitivity rubrics (human + machine usable)
+│
+├─ contracts/                                     # Machine-validated contract artifacts (shared across services/pipelines)
+│  ├─ schemas/                                    # JSON Schema (or equivalent) for DCAT/STAC/PROV + API DTOs
+│  ├─ profiles/                                   # Profile constraints (required fields, controlled vocab, rules)
+│  └─ linkcheck/                                  # Cross-link rules (DCAT↔STAC↔PROV + EvidenceRefs resolve)
+│
+├─ promotion/                                     # Promotion Contract wiring (what “processed/published” must prove)
+│  ├─ gates/                                      # Gate definitions, thresholds, required artifacts, failure modes
+│  ├─ templates/                                  # Promotion manifests / run receipt templates (if stored here)
+│  └─ ci/                                         # Optional CI config for promotion gating (parity with workflows)
+│
+├─ runtime/                                       # Runtime wiring (non-secret; deployment-safe defaults)
+│  ├─ feature_flags/                              # Feature toggles (safe defaults; no secrets)
+│  ├─ indexing/                                   # Indexing configs (search/vector/graph projections)
+│  └─ caching/                                    # Cache configs (TTL, keying, invalidation rules)
+│
+└─ env/                                           # Example env overlays (NO secrets; names/keys only)
+   ├─ dev.example.env                             # Dev example environment variables (keys only)
+   ├─ staging.example.env                         # Staging example environment variables (keys only)
+   └─ prod.example.env                            # Prod example environment variables (keys only)
 ```
 
 ### Config registry
