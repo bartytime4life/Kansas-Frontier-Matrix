@@ -1,1 +1,62 @@
+# configs/env/k8s/configmap.yaml.tmpl
+# Template vars use ${VARNAME}. Render this template before applying it to a cluster.
+# NOTE: Do NOT put secrets (passwords, API keys, private certs) in a ConfigMap. Use a Secret instead.
 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "${KFM_APP_NAME}-config"
+  namespace: "${KFM_NAMESPACE}"
+  labels:
+    app.kubernetes.io/name: "${KFM_APP_NAME}"
+    app.kubernetes.io/part-of: "kfm"
+    app.kubernetes.io/component: "${KFM_COMPONENT}"
+    app.kubernetes.io/environment: "${KFM_ENV}"
+    app.kubernetes.io/managed-by: "${KFM_MANAGED_BY}"
+  annotations:
+    kfm.dev/git-sha: "${GIT_SHA}"
+    kfm.dev/build-id: "${BUILD_ID}"
+    kfm.dev/policy-pack-ref: "${KFM_POLICY_PACK_REF}"
+
+data:
+  # -------- Runtime --------
+  KFM_ENV: "${KFM_ENV}"
+  KFM_LOG_LEVEL: "${KFM_LOG_LEVEL}"
+  KFM_HTTP_PORT: "${KFM_HTTP_PORT}"
+
+  # -------- Public URLs / CORS --------
+  KFM_PUBLIC_BASE_URL: "${KFM_PUBLIC_BASE_URL}"
+  KFM_API_BASE_URL: "${KFM_API_BASE_URL}"
+  KFM_CORS_ALLOWED_ORIGINS: "${KFM_CORS_ALLOWED_ORIGINS}"
+
+  # -------- Governance / Policy --------
+  # Reference (git sha/tag) to the policy-pack used by the governed API boundary.
+  KFM_POLICY_PACK_REF: "${KFM_POLICY_PACK_REF}"
+  # Suggested values: deny | allow (prefer deny for fail-closed environments)
+  KFM_POLICY_DEFAULT_DECISION: "${KFM_POLICY_DEFAULT_DECISION}"
+
+  # -------- Catalog / Storage / Index (non-secret endpoints only) --------
+  KFM_CATALOG_ROOT_URI: "${KFM_CATALOG_ROOT_URI}"
+
+  KFM_OBJECT_STORE_DRIVER: "${KFM_OBJECT_STORE_DRIVER}"          # e.g. s3 | gcs | filesystem
+  KFM_OBJECT_STORE_ENDPOINT: "${KFM_OBJECT_STORE_ENDPOINT}"      # e.g. https://s3.example.com
+  KFM_OBJECT_STORE_REGION: "${KFM_OBJECT_STORE_REGION}"
+  KFM_OBJECT_STORE_BUCKET: "${KFM_OBJECT_STORE_BUCKET}"
+  KFM_OBJECT_STORE_PREFIX: "${KFM_OBJECT_STORE_PREFIX}"
+
+  KFM_SEARCH_INDEX_DRIVER: "${KFM_SEARCH_INDEX_DRIVER}"          # e.g. opensearch | elasticsearch
+  KFM_SEARCH_INDEX_ENDPOINT: "${KFM_SEARCH_INDEX_ENDPOINT}"
+
+  # -------- Datastores (no credentials here) --------
+  KFM_DB_HOST: "${KFM_DB_HOST}"
+  KFM_DB_PORT: "${KFM_DB_PORT}"
+  KFM_DB_NAME: "${KFM_DB_NAME}"
+  KFM_DB_SSLMODE: "${KFM_DB_SSLMODE}"
+
+  KFM_REDIS_HOST: "${KFM_REDIS_HOST}"
+  KFM_REDIS_PORT: "${KFM_REDIS_PORT}"
+
+  # -------- Observability --------
+  OTEL_SERVICE_NAME: "${OTEL_SERVICE_NAME}"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "${OTEL_EXPORTER_OTLP_ENDPOINT}"
+  OTEL_RESOURCE_ATTRIBUTES: "${OTEL_RESOURCE_ATTRIBUTES}"
