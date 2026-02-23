@@ -2,11 +2,11 @@
 doc_id: kfm://doc/7ef3dbf9-1c55-4d62-9d72-6295b00a8b3a
 title: KFM Governed API
 type: standard
-version: v1
+version: v2
 status: draft
 owners: API + Policy + Stewardship
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: public
 related:
   - apps/api/
@@ -20,7 +20,8 @@ tags:
   - openapi
 notes:
   - Contract-first enforcement boundary for runtime surfaces (Map, Story, Focus).
-  - This README contains normative requirements (MUST/SHOULD) for governed runtime access.
+  - This README contains normative requirements (MUST/SHOULD/MAY) for governed runtime access.
+  - This document is normative; do not weaken the trust membrane.
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Governed API
@@ -48,7 +49,9 @@ Optional repo-integrated badges (REPLACE placeholders):
 -->
 
 - Jump to:
+  - [Normative language](#normative-language)
   - [What this service is](#what-this-service-is)
+  - [Glossary](#glossary)
   - [Where it sits in the repo](#where-it-sits-in-the-repo)
   - [Architecture](#architecture)
   - [API conventions](#api-conventions)
@@ -60,6 +63,18 @@ Optional repo-integrated badges (REPLACE placeholders):
   - [Compatibility and versioning](#compatibility-and-versioning)
   - [Testing and CI gates](#testing-and-ci-gates)
   - [Definition of done](#definition-of-done)
+
+---
+
+## Normative language
+
+This README uses the following terms as requirements keywords:
+
+- **MUST**: required for compliance with the governed API boundary.
+- **SHOULD**: strongly recommended; deviations require an explicit rationale and tests.
+- **MAY**: optional; implement when it improves safety, performance, or usability.
+
+If you add new normative requirements, add corresponding tests or CI gates wherever feasible.
 
 ---
 
@@ -79,6 +94,20 @@ Clients (UI, scripts, tools) **never** talk directly to storage or databases. Al
 - Not a general “open query” gateway to underlying databases.
 - Not an ungoverned chatbot (Focus Mode is governed and must cite-or-abstain).
 - Not a place to “patch” data: published runtime surfaces only serve **promoted** dataset versions.
+
+---
+
+## Glossary
+
+| Term | Meaning |
+|---|---|
+| Trust membrane | The policy + evidence + audit enforcement boundary between clients and all runtime data surfaces. |
+| PDP | Policy decision point: computes allow/deny + obligations for a request. |
+| PEP | Policy enforcement point: the component that blocks/filters/redacts using PDP decisions. |
+| EvidenceRef | A stable reference to governed evidence (dataset, item, run, doc) used for traceability and citations. |
+| EvidenceBundle | The resolved, policy-filtered bundle returned from `EvidenceRef` resolution, including provenance + digests. |
+| Obligation | A required transformation or constraint applied to an allowed response (redaction, generalization, attribution, etc.). |
+| Dataset version | An immutable, addressable snapshot of a dataset suitable for runtime serving (`kfm://dataset/<slug>@<hash>`). |
 
 ---
 
@@ -106,6 +135,23 @@ repo/
 
 If your repository differs, update this README to match reality—**but do not weaken the trust membrane**.
 
+### Acceptable inputs
+
+What belongs in `apps/api/`:
+
+- OpenAPI + schema artifacts (or links to their canonical locations).
+- Interface adapters for storage/index/projections behind a governed boundary.
+- Policy enforcement middleware and request context assembly.
+- Integration tests exercising policy + evidence + audit invariants.
+
+### Exclusions
+
+What must not be introduced into `apps/api/`:
+
+- Direct client access paths to databases/object storage that bypass policy.
+- “Admin backdoors” that skip audit logging or evidence capture.
+- Ad-hoc query endpoints that return raw records without contract + policy review.
+
 ---
 
 ## Architecture
@@ -129,6 +175,31 @@ flowchart LR
   API --> AUD[Audit ledger]
 ```
 
+### Request flow
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant C as Client
+  participant A as Governed API
+  participant P as Policy PDP
+  participant E as Evidence resolver
+  participant S as Storage/Index
+
+  C->>A: Request + identity + purpose
+  A->>P: Policy query (resource + action + context)
+  P-->>A: decision allow/deny + obligations
+  alt deny
+    A-->>C: 404/403 (non-leak) + audit_ref
+  else allow
+    A->>E: Resolve EvidenceRefs (policy-scoped)
+    E->>S: Fetch metadata/artifacts (as allowed)
+    S-->>E: results
+    E-->>A: EvidenceBundle(s) + digests + provenance
+    A-->>C: Response (data + meta + audit_ref)
+  end
+```
+
 ### Clean layering rule
 
 Domain logic must not reach into infrastructure directly; it operates through interfaces/contracts. Keep runtime access governed at the API boundary.
@@ -149,6 +220,15 @@ This section standardizes the “shape” of the API so clients and tests can be
   - Use explicit offsets or `Z`
   - Never interpret ambiguous local time without a timezone
 
+### Authentication and authorization
+
+This README does not assume a specific identity provider. Regardless of implementation:
+
+- Requests that can vary by role MUST be authenticated.
+- The server MUST derive roles/claims from the authenticated principal, not from client-provided headers.
+- Authorization MUST happen before any data fetch that could leak existence.
+- The API MUST implement the **non-leak rule** consistently for restricted objects (see [Error model](#error-model)).
+
 ### Standard headers
 
 These headers SHOULD be supported across endpoints (especially governed ones):
@@ -160,6 +240,24 @@ These headers SHOULD be supported across endpoints (especially governed ones):
 | `X-KFM-Purpose` | MAY | Declared purpose for audit (e.g., `research`, `public_story`, `internal_review`) |
 
 **Security note:** header presence MUST NOT be used to bypass policy.
+
+### Standard response envelope
+
+Responses SHOULD use a consistent envelope so that clients can reliably surface governance metadata:
+
+```json
+{
+  "data": { "…": "…" },
+  "meta": {
+    "policy_label": "public",
+    "dataset_version_id": "kfm://dataset/<slug>@<hash>",
+    "artifact_digests": { "primary": "sha256:…" },
+    "audit_ref": "kfm://audit/entry/<id>"
+  }
+}
+```
+
+If `dataset_version_id` is not applicable (for example, service health endpoints), omit it rather than inventing a placeholder.
 
 ### Pagination
 
@@ -182,6 +280,12 @@ Recommended pattern:
 
 - Public resources MAY use caching headers.
 - Restricted / role-variant resources SHOULD be `Cache-Control: private` and must avoid shared-cache leakage.
+
+### Rate limiting and abuse protection
+
+- The service SHOULD rate-limit governed endpoints (`/focus/ask`, `/evidence/resolve`, Story writes).
+- Rate limiting MUST be policy-safe (do not reveal restricted existence through different limit behavior).
+- If the API is public-facing, add bot/abuse protections appropriate to your deployment posture.
 
 ---
 
@@ -221,6 +325,12 @@ At minimum, the repo SHOULD include:
 
 If these paths differ, document the actual locations here.
 
+### Contract change rules
+
+- Every endpoint MUST be represented in OpenAPI (including error models).
+- CI MUST block merges that introduce undocumented endpoints.
+- Breaking changes MUST trigger a new API version (`/api/v2`) or an explicit deprecation plan.
+
 ### Required response fields
 
 Every response MUST include, when applicable:
@@ -230,19 +340,7 @@ Every response MUST include, when applicable:
 - a **public-safe** `policy_label`
 - `audit_ref` for governed operations (Focus, Story publish, Evidence resolution)
 
-A recommended pattern is to standardize these into a `meta` block:
-
-```json
-{
-  "data": { "…": "…" },
-  "meta": {
-    "dataset_version_id": "kfm://dataset/<slug>@<hash>",
-    "artifact_digests": { "primary": "sha256:…" },
-    "policy_label": "public",
-    "audit_ref": "kfm://audit/entry/<id>"
-  }
-}
-```
+A recommended pattern is to standardize these into a `meta` block (see [Standard response envelope](#standard-response-envelope)).
 
 ### Error model
 
@@ -266,6 +364,18 @@ Avoid leaking restricted existence through error differences. Align 403/404 beha
 
 **Non-leak rule:** for restricted objects, behavior SHOULD be indistinguishable between “does not exist” and “exists but denied” unless policy explicitly allows existence disclosure.
 
+### Error code registry
+
+Reserve a stable, documented set of `error_code` values so clients can handle failures safely:
+
+| error_code | When it is used | Notes |
+|---|---|---|
+| `POLICY_DENY` | Policy decision denies the request | Prefer non-leak behavior (403/404 alignment) |
+| `EVIDENCE_UNRESOLVABLE` | EvidenceRef cannot be resolved (or not disclosed) | Must be policy-safe |
+| `CONTRACT_INVALID` | Request violates OpenAPI/schema constraints | 400 |
+| `RATE_LIMITED` | Client exceeded server limits | 429, avoid existence leakage |
+| `INTERNAL` | Unexpected server error | Must not reveal restricted details |
+
 ---
 
 ## Policy enforcement
@@ -288,6 +398,18 @@ KFM uses a small, stable set of labels. At minimum:
 | `sensitive` | High-risk / special handling | Default deny unless explicitly allowed |
 
 If your policy taxonomy is richer, document the complete matrix in `packages/policy/` and link it here.
+
+### Obligations
+
+When policy allows access, it may still require obligations. Obligations MUST be applied server-side and surfaced in audit:
+
+| Obligation | Effect | Example |
+|---|---|---|
+| `redact` | Remove prohibited fields | Remove exact coordinates |
+| `generalize` | Replace with coarser representation | Bounding box → centroid at coarse precision |
+| `aggregate` | Return only aggregated statistics | Counts by county instead of point features |
+| `attribution` | Require attribution strings in UI/output | License attribution in Story |
+| `no_cache` | Force private/no-store caching | `Cache-Control: private, no-store` |
 
 ### Policy-as-code integration
 
@@ -357,6 +479,13 @@ Example (illustrative):
 
 Fail closed if the reference is unresolvable or unauthorized.
 
+### Cite-or-abstain requirement
+
+For Focus and Story publishing workflows:
+
+- If a claim cannot be backed by resolvable EvidenceRefs, the system MUST abstain (or downgrade the claim to “unknown”).
+- Returned citations MUST be stable references (EvidenceRefs) that can be re-resolved later.
+
 ---
 
 ## Data access rules
@@ -387,6 +516,22 @@ Every governed operation MUST emit an audit record containing:
 
 Audit logs are sensitive; apply redaction and retention policy.
 
+#### Recommended audit event shape
+
+```json
+{
+  "audit_ref": "kfm://audit/entry/<id>",
+  "request_id": "uuid-or-similar",
+  "time": "2026-02-23T19:14:33Z",
+  "principal": { "subject": "user|service", "roles": ["…"] },
+  "purpose": "public_story",
+  "action": { "method": "POST", "path": "/api/v1/evidence/resolve" },
+  "decision": { "result": "allow|deny", "policy_label": "restricted", "obligations": ["redact"] },
+  "inputs": [{ "ref": "stac://…", "digest": "sha256:…" }],
+  "outputs": [{ "ref": "kfm://artifact/processed/…", "digest": "sha256:…" }]
+}
+```
+
 ### Observability
 
 Minimum runtime signals:
@@ -405,6 +550,12 @@ Minimum runtime signals:
 - Freeze `/api/v1` semantics; only add backwards-compatible fields.
 - Introduce `/api/v2` only for breaking changes.
 - Schema versioning exists alongside API versioning (DCAT/STAC/PROV profiles; Story template versions).
+
+### Deprecation
+
+- Deprecations MUST be documented in OpenAPI and in release notes.
+- Deprecated fields SHOULD remain for at least one minor release unless there is a security/policy reason to remove sooner.
+- Clients SHOULD treat unknown fields as ignorable to preserve forwards compatibility.
 
 ---
 
@@ -443,6 +594,7 @@ A change to this API is “done” only when:
 - [ ] EvidenceRefs used by Story/Focus resolve or fail closed with `audit_ref`
 - [ ] Governed operations emit audit records with inputs/outputs by digest
 - [ ] Any redaction/generalization is recorded as provenance and surfaced in evidence
+- [ ] New normative requirements include tests or CI gates (fail closed)
 
 ---
 
