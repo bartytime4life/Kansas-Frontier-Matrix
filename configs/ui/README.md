@@ -88,31 +88,31 @@ If you find your repo uses different paths, update this section and the registry
 > This README is written to be valid even if only a subset of files exist initially.
 
 ```text
-configs/ui/
-  README.md
-
-  defaults/
-    ui.defaults.json          # Baseline UI config (safe defaults)
-    map.defaults.json         # Baseline map behavior (zoom bounds, time defaults)
-
-  env/
-    ui.dev.json               # Dev overrides (local-only)
-    ui.stage.json             # Staging overrides
-    ui.prod.json              # Production overrides
-
-  theme/
-    tokens.json               # Design tokens (colors, typography, spacing)
-    branding.json             # Logos, wordmarks, naming (no copyrighted assets embedded)
-
-  map/
-    layers.registry.json      # Layer registry (id, label, datasets, policy display rules)
-    basemap.style.json        # Basemap style reference (no credentials)
-
-  story/
-    rendering.json            # Story rendering toggles, citation UI rules
-
-  focus/
-    focus-ui.json             # Focus Mode UI options (abstention UX, citation density)
+configs/ui/                                        # UI configuration (governed, non-secret): defaults → env → theme/features
+├─ README.md                                       # How UI configs load/merge, validation rules, and change review notes
+│
+├─ defaults/                                       # Baseline UI defaults (safe, environment-agnostic)
+│  ├─ ui.defaults.json                             # Core UI defaults (feature flags, panels, limits, copy)
+│  └─ map.defaults.json                            # Baseline map behavior (zoom bounds, time defaults, interactions)
+│
+├─ env/                                            # Environment overrides (non-secret deltas only)
+│  ├─ ui.dev.json                                  # Dev overrides (local-only; debugging toggles)
+│  ├─ ui.stage.json                                # Staging overrides (prod-like where possible)
+│  └─ ui.prod.json                                 # Production overrides (strict, audited changes)
+│
+├─ theme/                                          # Visual identity + tokens (no embedded copyrighted assets)
+│  ├─ tokens.json                                  # Design tokens (color, typography, spacing, radii, shadows)
+│  └─ branding.json                                # Branding metadata (names, logo refs/paths, wordmarks; no secrets)
+│
+├─ map/                                            # Map UI configuration
+│  ├─ layers.registry.json                         # Layer registry (id/label/datasets + policy-driven display rules)
+│  └─ basemap.style.json                           # Basemap style reference (no credentials; no private URLs)
+│
+├─ story/                                          # Story Mode configuration
+│  └─ rendering.json                               # Rendering toggles + citation UI rules (panels, layout, limits)
+│
+└─ focus/                                          # Focus Mode UI configuration
+   └─ focus-ui.json                                # Focus UI options (abstention UX, citation density, explain toggles)
 ```
 
 ### Acceptable inputs
