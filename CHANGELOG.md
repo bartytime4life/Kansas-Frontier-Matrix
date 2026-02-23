@@ -1,129 +1,124 @@
-# Kansas Frontier Matrix (KFM) — CHANGELOG
-One place to track *what changed*, *why it changed*, and *what it impacts* across code, data, governance, and UX.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/9795ba1c-b246-401c-b9f9-25a8a0d799a1
+title: Changelog
+type: standard
+version: v1
+status: draft
+owners: <team or names>
+created: 2026-02-23
+updated: 2026-02-23
+policy_label: public
+related:
+  - <path or kfm:// ids>
+tags: [kfm, changelog, releases]
+notes:
+  - This file records governed releases for the Kansas-Matrix-System.
+  - Replace placeholders (owners/related links) during first release.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Template (fill in as releases land) • **Owners:** @<team-or-handle> • **Last updated:** 2026-02-22
+# Changelog
 
-Quick links: [Unreleased](#unreleased) · [Versioning Policy](#versioning-policy) · [Entry Template](#entry-template) · [Release Checklist](#release-checklist)
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![format](https://img.shields.io/badge/changelog-Keep_a_Changelog-blue)
+![versioning](https://img.shields.io/badge/versioning-SemVer-brightgreen)
+![governance](https://img.shields.io/badge/governance-KFM-orange)
 
----
+Governed release notes for the Kansas-Matrix-System. Every entry must be traceable to evidence (PRs, commit SHAs, run receipts, QA reports, policy decisions) and must include rollback notes.
 
-## How to Use This Changelog
-- Add changes to **[Unreleased]** as you merge work.
-- On release, move items from **[Unreleased]** into a new version section (with an ISO date).
-- Prefer entries that answer: **what changed**, **who is affected**, **migration/rollback**, and **evidence/provenance impact** (when relevant).
+## Navigation
 
-Change type keywords:
-- **Added** · **Changed** · **Deprecated** · **Removed** · **Fixed** · **Security**
+- [Unreleased](#unreleased)
+- [Release process](#release-process)
+- [Entry template](#entry-template)
+- [Conventions](#conventions)
+- [Glossary](#glossary)
 
----
+## Conventions
 
-## Versioning Policy
-> Keep this section accurate; update it if the project’s versioning conventions change.
+### Formatting
 
-**(PROPOSED) Code & APIs — SemVer:** `MAJOR.MINOR.PATCH`
-- **MAJOR**: breaking API/contract changes
-- **MINOR**: backward-compatible additions
-- **PATCH**: backward-compatible fixes
+This changelog follows the spirit of **Keep a Changelog**:
+- **Added**: net-new features/capabilities
+- **Changed**: modifications to existing behavior
+- **Deprecated**: still available, but slated for removal
+- **Removed**: removed features/paths/data
+- **Fixed**: bug fixes
+- **Security**: security/privacy hardening or incident-related work
 
-**(PROPOSED) Data artifacts — DatasetVersion IDs:** use deterministic IDs, and record:
-- dataset name + version identifier
-- temporal extent (event/valid time when applicable)
-- checksums/hashes + provenance pointers
-- promotion zone movement (RAW → WORK/QUARANTINE → PROCESSED → PUBLISHED)
+### Versioning
 
-**(PROPOSED) Governance/policy schema:** version policy labels & redaction rules independently when they change behavior.
+Use **Semantic Versioning** (`MAJOR.MINOR.PATCH`):
 
----
+- **MAJOR**: breaking changes (API contracts, data schemas, governance behavior) or irreversible data migrations without a supported downgrade
+- **MINOR**: backwards-compatible features
+- **PATCH**: backwards-compatible fixes and small improvements
 
-## Release Flow (Conceptual)
-~~~mermaid
-flowchart LR
-  A[Dev changes merged] --> B[Unreleased updated]
-  B --> C[Release candidate]
-  C --> D{Promotion gates pass?}
-  D -- no --> E[Fix / rollback / quarantine]
-  D -- yes --> F[Tag + publish release]
-  F --> G[Post-release verification]
-~~~
+### Evidence requirements
 
----
+Every bullet must include an evidence trail.
 
-## Unreleased
-> Changes staged for the next release. Keep entries small and link to PRs/issues.
+| Change area | Minimum evidence | Include when relevant |
+|---|---|---|
+| Code / services | PR/commit SHA + CI run link | benchmarks, screenshots |
+| Data promotion (Raw→Work→Processed→Published) | dataset ID(s) + run receipt + QA results | checksums, schema diff, license check |
+| API contract | contract version + diff + compatibility note | migration guide, deprecation window |
+| UI / Map / Story | route/component + screenshots | UX notes, accessibility checks |
+| Focus Mode AI | prompt/config diff + evaluation notes | retrieval index/version changes |
+| Governance / policy | policy doc diff + decision record | risk assessment, approval list |
+| Security | issue ID + mitigation + verification | CVE refs, threat model updates |
+
+> NOTE: If something is **Unknown**, write it down as **Unknown** and link the verification step you still need.
+
+## Release process
+
+### Release checklist
+
+- [ ] Collect changes since last release (PRs merged, datasets promoted, policies updated)
+- [ ] Confirm promotion gates pass (CI, QA, license/sensitivity checks)
+- [ ] Confirm API compatibility or document breaking change + migration path
+- [ ] Confirm rollback plan exists (code + data + config)
+- [ ] Tag release (`vX.Y.Z`) and publish release notes
+- [ ] Update this file and set `updated: YYYY-MM-DD` in the meta block
+
+### Rollback expectations
+
+Every release must include at least one rollback option:
+
+- **Code rollback**: revert PR(s) or deploy previous tag
+- **Config rollback**: restore prior config snapshots
+- **Data rollback**: either revert promoted dataset version or pin consumers to last-known-good artifact
+- **Policy rollback**: restore prior policy doc with an audit note explaining why
+
+## Entry template
+
+Copy/paste for each release:
+
+```markdown
+## [X.Y.Z] - YYYY-MM-DD
 
 ### Added
-- _TBD_
+- [Area] <What changed> (Evidence: <PR/commit/run receipt>)
 
 ### Changed
-- _TBD_
+- [Area] <What changed> (Evidence: <...>) (Upgrade notes: <...>)
 
 ### Deprecated
-- _TBD_
+- [Area] <What is deprecated> (Evidence: <...>) (Removal target: vX.Y+1)
 
 ### Removed
-- _TBD_
+- [Area] <What was removed> (Evidence: <...>) (Replacement: <...>)
 
 ### Fixed
-- _TBD_
+- [Area] <What was fixed> (Evidence: <...>)
 
 ### Security
-- _TBD_
+- [Area] <What was secured> (Evidence: <...>) (Verification: <...>)
 
----
+### Breaking changes
+- <If any, list explicitly. Include migration steps and rollback notes.>
 
-## [0.1.0] — TBD (First Release)
-> Reserve for the first tagged release. Move finalized items here.
-
-### Added
-- _TBD_
-
-### Changed
-- _TBD_
-
-### Fixed
-- _TBD_
-
----
-
-## Entry Template
-Copy/paste for each notable change (especially anything that alters behavior, governance, or public narratives):
-
-### <Change Type>: <Short title>
-- **What:** <1–2 sentences>
-- **Why:** <reason / user value / risk addressed>
-- **Impact:** <who/what breaks or benefits>
-- **Migration:** <steps, if needed>
-- **Rollback:** <how to revert safely>
-- **Evidence/Provenance:** <new/changed EvidenceRefs, datasets, receipts, or citations>
-- **Links:** <PR/issue/docs>
-
----
-
-## Release Checklist
-Use this when cutting a release (fail-closed if any required gate is unknown).
-
-- [ ] Changelog updated; **[Unreleased]** emptied into version section
-- [ ] Version tagged and traceable to commit SHA
-- [ ] CI green: unit/integration/e2e (as applicable)
-- [ ] Security checks run (deps, secrets scanning, code scanning)
-- [ ] Data changes (if any) include:
-  - [ ] schema + sample validated
-  - [ ] checksums recorded
-  - [ ] provenance captured
-  - [ ] promotion zone transitions logged
-- [ ] Governance changes (if any) include:
-  - [ ] policy label deltas documented
-  - [ ] redaction obligations reviewed
-  - [ ] access/permissions matrix updated (if impacted)
-- [ ] UX/Story changes (if any) include:
-  - [ ] citations/evidence links verified
-  - [ ] time semantics (event/valid/transaction time) not broken
-- [ ] Post-release smoke test complete
-
----
-
-## Notes
-- Prefer concrete dates (`YYYY-MM-DD`) over “today/yesterday”.
-- Don’t record secrets, private locations, or sensitive operational details here—summarize and link to controlled artifacts instead.
-
-[Back to top](#kansas-frontier-matrix-kfm--changelog)
+### Rollback
+- Code:
+- Data:
+- Config:
+- Policy:
