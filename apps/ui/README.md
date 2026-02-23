@@ -2,15 +2,17 @@
 doc_id: kfm://doc/6e2b37b6-31e0-4c9a-a0b7-6f52f20c0f5e
 title: apps/ui — Kansas Frontier Matrix UI
 type: standard
-version: v1
+version: v2
 status: draft
 owners: TBD (UI), TBD (Gov steward)
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-23
 policy_label: restricted
 related:
   - apps/ui/
   - kfm://doc/<definitive-design-governance-guide-vnext>
+  - kfm://doc/<governed-api-contract-v1>              # TODO: replace with real doc_id/path
+  - kfm://doc/<policy-engine-contract-v1>             # TODO: replace with real doc_id/path
 tags:
   - kfm
   - ui
@@ -20,7 +22,7 @@ tags:
   - evidence-first
   - cite-or-abstain
 notes:
-  - Upgraded formatting and alignment from a vNext draft; semantics preserved where possible.
+  - v2 upgrade: added Directory Contract, Observability/Audit, Performance & cache safety guidance, and an Open Decisions matrix. Semantics preserved; placeholders remain TODO where repo truth is unknown.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -35,12 +37,15 @@ notes:
 ![evidence](https://img.shields.io/badge/evidence-drawer_required-orange)
 ![time](https://img.shields.io/badge/time-aware-required-orange)
 ![focus](https://img.shields.io/badge/focus_mode-cite_or_abstain-orange)
+![policy](https://img.shields.io/badge/policy_label-restricted-red)
+![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
 
 ---
 
 ## Navigation
 - **Foundations**
   - [Overview](#overview)
+  - [Directory contract](#directory-contract)
   - [Non-negotiables](#non-negotiables)
   - [UI surfaces](#ui-surfaces)
 - **Core contracts**
@@ -55,11 +60,14 @@ notes:
 - **Build and operate**
   - [Accessibility](#accessibility)
   - [Security](#security)
+  - [Observability and audit](#observability-and-audit)
+  - [Performance and reliability](#performance-and-reliability)
   - [Local development](#local-development)
   - [Testing](#testing)
   - [Definition of Done](#definition-of-done)
 - **Appendix**
   - [Appendix: Proposed directory layout](#appendix-proposed-directory-layout)
+  - [Appendix: Open decisions and minimum verification steps](#appendix-open-decisions-and-minimum-verification-steps)
   - [References](#references)
 
 ---
@@ -77,6 +85,33 @@ This UI is not “just a map viewer.” It is the **user-visible governance cont
 
 > [!NOTE]
 > **Normative language:** This document uses **MUST / SHOULD / MAY** as normative requirements. When unsure, default to **fail closed** and request governance review.
+
+[Back to top](#top)
+
+---
+
+## Directory contract
+This section is the **directory-level contract** for `apps/ui/` (what belongs here, what does not, and what invariants must hold).
+
+### Where this fits in the repo
+- `apps/ui/` is the **client application boundary**: routing + presentation + client-side state + *policy-safe* UX.
+- All data access **MUST** cross the governed API boundary (and inherit its policy outcomes).
+- Shared UI logic **MAY** live in shared packages if the repo has them (not confirmed in repo).
+
+### Acceptable inputs
+- UI source: routes, feature modules, components, styles, assets.
+- Typed API clients and schema validators that implement the governed API contract.
+- Test suites (unit/contract/e2e/a11y) for the UI surfaces and their governance behaviors.
+- Documentation specific to UI operation, governance UX, and client-level security posture.
+
+### Exclusions
+- **No** server-side policy logic, evidence resolution, or access control rules (belongs behind the API).
+- **No** direct database/object store/search index connections or credentials.
+- **No** dataset transformation/pipeline code (belongs in pipeline packages/services).
+- **No** “shadow policy” implemented in UI to make the experience nicer.
+
+> [!WARNING]
+> If you add a new outbound network origin in the UI (a new host), you must treat it as a **trust membrane change** and route it through a governed adapter (or reject it).
 
 [Back to top](#top)
 
@@ -150,6 +185,27 @@ flowchart LR
   - The UI never decides policy; it only displays policy outcomes and obligations.
   - The UI never “fills in” restricted details to improve UX.
 
+### Evidence resolution sequence (policy-safe)
+```mermaid
+sequenceDiagram
+  participant U as User
+  participant UI as apps/ui
+  participant API as Governed API
+  participant PE as Policy engine
+  participant ER as Evidence resolver
+  participant AUD as Audit ledger
+
+  U->>UI: Open Evidence Drawer (layer/feature/story/focus)
+  UI->>API: POST /api/v1/evidence/resolve (EvidenceRefs + context)
+  API->>PE: evaluate access + redaction obligations
+  PE-->>API: allow/deny + obligations
+  API->>ER: resolve bundles/links (policy-filtered)
+  ER-->>API: EvidenceBundles (filtered)
+  API->>AUD: write audit record
+  API-->>UI: bundles + obligations + audit_ref
+  UI-->>U: Render drawer (policy-safe)
+```
+
 [Back to top](#top)
 
 ---
@@ -163,9 +219,10 @@ Map state is treated as a reproducible artifact that can be stored in Story Node
 - time window
 - filters
 
-### Illustrative `view_state` shape
+### Illustrative `view_state` shape (versioned)
 ```json
 {
+  "view_state_version": "v1",
   "camera": { "bbox": [-101.0, 36.8, -94.6, 40.0], "zoom": 6.5 },
   "layers": [
     { "layer_id": "kfm://layer/roads", "opacity": 0.7, "style": { "variant": "default" } }
@@ -178,6 +235,13 @@ Map state is treated as a reproducible artifact that can be stored in Story Node
 ### Rules
 - Story playback **SHOULD** reproduce the same view (best-effort; fail closed if layer is unavailable).
 - Focus Mode requests **MAY** include `view_state` so answers stay scoped to what the user is looking at, while still enforcing policy.
+- `view_state` **SHOULD** be serialized deterministically for hashing/diffing (stable key order, normalized numeric precision).
+- If a `view_state` is stored in Story Nodes, the story authoring UI **SHOULD** persist both:
+  - the raw `view_state`, and
+  - a content digest (e.g., `view_state_sha256`) produced by the governed API (preferred) or by a deterministic client routine (fallback).
+
+> [!NOTE]
+> Hashing on the server is preferred because the API can canonicalize and audit the artifact without leaking restricted existence through client-side heuristics.
 
 [Back to top](#top)
 
@@ -242,6 +306,7 @@ The Evidence Drawer **MUST** show, at minimum:
 - Provenance chain (run receipt link)
 - Artifact links (only if policy allows)
 - Redactions applied (obligations)
+- `audit_ref` for this resolution action (so stewards can reproduce/trace)
 
 ### Resolution behavior
 - Use the evidence resolver endpoint to resolve **EvidenceRefs → EvidenceBundles**.
@@ -252,6 +317,7 @@ The Evidence Drawer **MUST** show, at minimum:
 - Present errors in a policy-safe manner.
 - Prefer “here is what you can do next” over silent failure.
 - Never provide UI hints that reveal restricted existence.
+- Provide copyable citation snippets (stable identifier + digest) when policy allows.
 
 [Back to top](#top)
 
@@ -283,6 +349,7 @@ Abstention is a feature, not an error. The UI must make abstention understandabl
 - Align 403/404 behavior with policy guidance (avoid existence leaks).
 - Keep error messages stable and policy-safe.
 - Avoid timing or UI behavior differences tied to restricted data.
+- Prefer response-shape stability over “friendly” UI branching that depends on restricted conditions.
 
 [Back to top](#top)
 
@@ -305,7 +372,8 @@ This UI assumes a governed API with a minimal v1 endpoint set similar to:
 - `dataset_version_id` (when applicable)
 - artifact digests (when applicable)
 - public-safe policy label
-- `audit_ref` for governed operations (focus, publish, etc.)
+- `audit_ref` for governed operations (focus, publish, resolve, etc.)
+- stable error model (see below)
 
 ### Error model
 Error responses **SHOULD** be stable and include:
@@ -313,6 +381,9 @@ Error responses **SHOULD** be stable and include:
 - policy-safe `message`
 - `audit_ref`
 - optional remediation hints
+
+> [!NOTE]
+> If the API uses request correlation IDs (e.g., `request_id` header), the UI **SHOULD** propagate them into error reports and bug tickets.
 
 [Back to top](#top)
 
@@ -325,6 +396,12 @@ Error responses **SHOULD** be stable and include:
 - Tiles **MUST NOT** bypass policy enforcement.
 - Cache behavior **MUST NOT** leak restricted existence (cache keys must vary appropriately by policy/auth).
 - If PMTiles are used, policy gating **MUST** ensure only policy-safe bundles are served (or only public layers use static bundles).
+
+### Decision matrix (starter)
+| Option | Upside | Risk | Governance guardrail |
+|---|---|---|---|
+| Dynamic vector tiles (API served) | per-request policy enforcement | higher server load; caching complexity | vary cache by auth/policy; normalize errors |
+| PMTiles bundles | cheap distribution; fast rendering | harder per-user policy gating | only publish policy-safe bundles; keep restricted layers dynamic |
 
 > [!TIP]
 > Capture the outcome as an ADR in-repo once the serving model and caching strategy are chosen.
@@ -354,6 +431,64 @@ Security posture for the UI:
   - error differences that reveal restricted existence
   - differing empty states that reveal “something is there but hidden”
   - timing/UI behavior differences tied to restricted data
+
+### Client-side supply chain posture (baseline)
+- Lock dependencies with a lockfile (repo-defined tooling).
+- Pin and review any markdown/HTML rendering libraries (XSS risk).
+- Prefer a strict Content Security Policy; avoid `unsafe-inline` where feasible.
+
+[Back to top](#top)
+
+---
+
+## Observability and audit
+Observability is part of governance: if a steward can’t trace what happened, we can’t defend or reproduce it.
+
+### Required surfaces
+- Every governed operation **MUST** surface the `audit_ref` (or equivalent) returned by the API:
+  - Focus Mode ask/export
+  - Story publish/review transitions
+  - Evidence resolution (drawer opens and citation lint)
+- Error UIs **SHOULD** include a copyable correlation identifier (`audit_ref`, and/or `request_id`) in a policy-safe way.
+
+### UI telemetry (policy-safe)
+- UI telemetry **MAY** capture interaction events (for quality) **only** if:
+  - it is privacy-reviewed and policy-safe, and
+  - it does not encode restricted existence (e.g., “user clicked restricted layer X”).
+
+**Recommended event shape (illustrative):**
+- `event_name` (e.g., `evidence_drawer_opened`)
+- `surface` (`map|stories|focus|catalog|admin`)
+- `timestamp`
+- `audit_ref` (when available)
+- `dataset_version_id` (only if policy allows exposure)
+- `result` (`success|abstain|denied|error`)
+- `error_code` (policy-safe)
+
+> [!WARNING]
+> Avoid recording free-form query text, feature attributes, geometries, or raw EvidenceRefs in client analytics. Prefer server-side audit records.
+
+[Back to top](#top)
+
+---
+
+## Performance and reliability
+Performance work must not compromise governance or leak restricted existence.
+
+### Map performance basics
+- Prefer incremental rendering updates (avoid re-rendering the whole map on minor UI state changes).
+- Debounce expensive bbox/time queries; show loading states that do not reveal restricted existence.
+- Virtualize long lists (layers, features, story lists) and keep keyboard accessibility intact.
+
+### Cache safety
+- The UI **MUST NOT** persist restricted responses into long-lived storage (e.g., LocalStorage) unless explicitly approved.
+- If adding a Service Worker, treat it as a governance-impacting change:
+  - cache keys must vary by auth/policy where relevant,
+  - cached error responses must not reveal existence.
+
+### Bundle safety
+- Large UI bundles degrade time-to-first-trust (time until Evidence Drawer is reachable).
+- **SHOULD:** set a bundle-size budget and gate in CI (repo-defined thresholds).
 
 [Back to top](#top)
 
@@ -407,6 +542,7 @@ Recommended test layers:
 Hard gate candidates:
 - Story publish fails if any EvidenceRef is unresolvable.
 - Focus Mode UX rejects “allow” answers that have no citations and no explicit abstention structure.
+- Side-channel regression test: consistent empty/error states for denied vs not-found where policy requires.
 
 [Back to top](#top)
 
@@ -422,6 +558,7 @@ A UI change is “done” only if:
 - [ ] Handles abstention/restriction with policy-safe messaging + `audit_ref`
 - [ ] Does not leak restricted existence via error or empty-state differences
 - [ ] Meets accessibility minimums (keyboard, focus, ARIA, non-color semantics)
+- [ ] Adds/updates observability hooks for governed actions (surface `audit_ref`)
 - [ ] Includes tests proportional to risk (unit/contract/e2e as needed)
 
 [Back to top](#top)
@@ -460,6 +597,7 @@ apps/ui/
       evidence/                # EvidenceRef resolution + caching
       policy/                  # policy-safe formatting helpers
       time/                    # time window utilities
+      telemetry/               # policy-safe UI events (if allowed)
     styles/
   tests/
     e2e/
@@ -467,6 +605,25 @@ apps/ui/
 ```
 
 </details>
+
+[Back to top](#top)
+
+---
+
+## Appendix: Open decisions and minimum verification steps
+This document intentionally includes placeholders. These are the **minimum verification steps** to convert unknowns into repo-truth.
+
+| Unknown | Why it matters | Minimum verification step |
+|---|---|---|
+| UI framework (React/Vite/Next/etc.) | determines routing, SSR, CSP, build and testing | inspect `apps/ui/package.json` + build scripts |
+| Auth model (cookie/OIDC/token) | impacts cache keys, error posture, login UX | inspect API auth docs + existing middleware |
+| Tile serving model | impacts policy enforcement & caching safety | locate tile endpoints + caching layer config |
+| Story Node schema/version | impacts story rendering + publish preflight | open Story Node contract doc / OpenAPI |
+| Evidence resolver response shape | defines Evidence Drawer UI contract | inspect OpenAPI + sample responses |
+| CI gates (lint/typecheck/e2e/a11y) | enforces trust membrane invariants | inspect CI workflow files and `package.json` scripts |
+
+> [!TIP]
+> Treat any change that touches auth, caching, error posture, or evidence resolution as a “governance-impacting change” and require steward review.
 
 [Back to top](#top)
 
