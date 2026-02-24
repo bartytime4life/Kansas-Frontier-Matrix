@@ -78,35 +78,44 @@ Use a runbook when **any** of the following is true:
 Additive structure that keeps runbooks discoverable without forcing a huge taxonomy:
 
 ```
-docs/runbooks/
-  README.md
-  templates/
-    runbook-template.md
-    evidence-bundle-template.md
-  incidents/
-    rb-incident-triage.md
-    rb-incident-sev1.md
-  pipelines/
-    rb-pipeline-rerun.md
-    rb-pipeline-backfill.md
-    rb-pipeline-promote-zone.md
-  data/
-    rb-data-qa-failures.md
-    rb-data-redaction-review.md
-  indexing/
-    rb-index-rebuild.md
-    rb-index-backfill.md
-  api/
-    rb-api-deploy.md
-    rb-api-rollback.md
-  ui/
-    rb-ui-deploy.md
-    rb-ui-feature-flag.md
-  governance/
-    rb-policy-label-change.md
-    rb-access-review.md
-  _assets/
-    diagrams/
+docs/runbooks/                                    # Operational runbooks (production-grade, step-by-step)
+├─ README.md                                      # Index + how runbooks are written/maintained + link to oncall flow
+│
+├─ templates/                                     # Authoring templates (copy/paste starters)
+│  ├─ runbook-template.md                         # Standard runbook format (scope → steps → verify → rollback)
+│  └─ evidence-bundle-template.md                 # Template for packaging evidence during incidents/changes
+│
+├─ incidents/                                     # Incident response procedures
+│  ├─ rb-incident-triage.md                       # Triage checklist (identify, contain, communicate)
+│  └─ rb-incident-sev1.md                         # SEV1 playbook (roles, comms, mitigation, postmortem)
+│
+├─ pipelines/                                     # Pipeline operations (reruns, backfills, promotions)
+│  ├─ rb-pipeline-rerun.md                        # Safe rerun procedure (idempotency + receipts)
+│  ├─ rb-pipeline-backfill.md                     # Backfill procedure (scope, scheduling, rollback)
+│  └─ rb-pipeline-promote-zone.md                 # Promote Raw→Work→Processed (gates + fail-closed behavior)
+│
+├─ data/                                          # Data quality + redaction operations
+│  ├─ rb-data-qa-failures.md                      # QA failure triage (thresholds, diffs, quarantine workflow)
+│  └─ rb-data-redaction-review.md                 # Redaction review/approval (obligations, evidence, sign-off)
+│
+├─ indexing/                                      # Index/projection operations (search/graph/tiles)
+│  ├─ rb-index-rebuild.md                         # Full rebuild (prereqs, timing, verification)
+│  └─ rb-index-backfill.md                        # Backfill new fields/projections (scope, safety, rollback)
+│
+├─ api/                                           # API deploy operations
+│  ├─ rb-api-deploy.md                            # Deploy procedure (health checks, canary, rollback hooks)
+│  └─ rb-api-rollback.md                          # Rollback procedure (version pin, migrations, verification)
+│
+├─ ui/                                            # UI deploy + runtime toggles
+│  ├─ rb-ui-deploy.md                             # UI deploy (cache busting, smoke tests, monitoring)
+│  └─ rb-ui-feature-flag.md                       # Feature flag changes (approval + audit + revert steps)
+│
+├─ governance/                                    # Governance operations
+│  ├─ rb-policy-label-change.md                   # Policy label change workflow (review gates, downstream impact)
+│  └─ rb-access-review.md                         # Access review (least privilege, audit evidence, rotation)
+│
+└─ _assets/                                       # Shared runbook assets (diagrams, screenshots; keep bounded)
+   └─ diagrams/                                   # Diagram assets used by runbooks
 ```
 
 > **TIP**
