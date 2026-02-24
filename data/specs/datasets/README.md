@@ -101,12 +101,13 @@ These terms describe the **data lifecycle zones** used by KFM. They help reviewe
 > This is a *directory documentation standard* view of what we expect here. If the repo uses a different layout, update this README to match reality.
 
 ```text
-data/specs/datasets/
-  README.md
-  <dataset_slug>.spec.json          # Dataset onboarding spec (canonical input to spec_hash)
-  <dataset_slug>.notes.md           # Optional: human context, caveats, limitations (NO secrets)
-  _templates/
-    dataset_onboarding_spec.v1.json # Optional: local copy of template to start from
+data/specs/datasets/                              # Dataset onboarding specs (canonical inputs → spec_hash)
+├─ README.md                                       # How specs are authored, validated, and promoted (fail-closed)
+├─ <dataset_slug>.spec.json                        # Canonical onboarding spec (primary input to spec_hash)
+├─ <dataset_slug>.notes.md                         # Optional human context (caveats/limits/assumptions; NO secrets)
+│
+└─ _templates/                                     # Optional starter templates (copy/paste helpers)
+   └─ dataset_onboarding_spec.v1.json              # Template for new dataset specs (fill then validate)
 ```
 
 ### Acceptable inputs
