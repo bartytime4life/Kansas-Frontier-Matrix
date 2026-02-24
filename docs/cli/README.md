@@ -176,16 +176,17 @@ Fill this table by discovering the real commands, then replace placeholders.
 Proposed structure (create files as commands are confirmed):
 
 ```text
-docs/cli/
-  README.md
-  commands/
-    doctor.md
-    auth.md
-    catalog.md
-    evidence.md
-    pipeline.md
-    reindex.md
-    focus.md
+docs/cli/                                         # CLI documentation (commands + usage contracts)
+├─ README.md                                      # CLI overview, install/run, config, and governance notes
+│
+└─ commands/                                      # One page per command (flags, examples, exit codes)
+   ├─ doctor.md                                   # Environment checks (deps, connectivity, config validity)
+   ├─ auth.md                                     # Auth flows (tokens, scopes, least-privilege guidance)
+   ├─ catalog.md                                  # Catalog operations (validate, build, diff, export)
+   ├─ evidence.md                                 # Evidence ops (resolve, bundle, verify, list)
+   ├─ pipeline.md                                 # Pipeline ops (run, validate, promote, backfill)
+   ├─ reindex.md                                  # Rebuild projections (search/graph/tiles; safety checks)
+   └─ focus.md                                    # Focus Mode ops (query, explain, audit_ref lookup; policy-safe)
 ```
 
 ---
