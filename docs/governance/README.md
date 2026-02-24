@@ -68,15 +68,15 @@ If you are:
 
 ### Directory layout (required)
 ```text
-docs/governance/
-  README.md              # You are here (entrypoint + directory contract)
-  ROOT_GOVERNANCE.md     # Governance charter: roles, decision process, definitions
-  ETHICS.md              # Ethical commitments + “what we will not do”
-  SOVEREIGNTY.md         # CARE-aligned sovereignty rules for sensitive/community data
-  REVIEW_GATES.md        # Human review triggers + promotion checklist + sign-off rules
-
-  policy/                # OPTIONAL: policy-as-code docs + fixtures (repo location may vary)
-                          # If policy-as-code lives elsewhere, link it from ROOT_GOVERNANCE.md.
+docs/governance/                                  # Governance hub (charter + ethics + sovereignty + review gates)
+├─ README.md                                      # You are here: entrypoint + directory contract + navigation
+├─ ROOT_GOVERNANCE.md                             # Governance charter (roles, decision process, definitions)
+├─ ETHICS.md                                      # Ethical commitments + “what we will not do”
+├─ SOVEREIGNTY.md                                 # CARE-aligned sovereignty rules (sensitive/community data)
+├─ REVIEW_GATES.md                                # Review triggers + promotion checklist + sign-off rules
+│
+└─ policy/                                        # OPTIONAL: policy-as-code docs + fixtures (location may vary)
+                                                   # If policy lives elsewhere, link it from ROOT_GOVERNANCE.md
 ```
 
 ### Acceptable inputs
