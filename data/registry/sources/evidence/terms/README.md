@@ -271,11 +271,11 @@ Recommended automated checks for this directory:
 ### Example folder (illustrative)
 
 ```
-ipums_nhgis/
-  2026-02-24/
-    terms.pdf
-    capture.json
-    summary.md
+ipums_nhgis/                                  # Source evidence snapshots (IPUMS NHGIS)
+└─ 2026-02-24/                                # Capture date (YYYY-MM-DD; immutable snapshot)
+   ├─ terms.pdf                               # Terms-of-use / licensing snapshot (as retrieved on capture date)
+   ├─ capture.json                            # Capture metadata (who/when/how, URL(s), hashes, tool versions)
+   └─ summary.md                              # Human summary (key restrictions, attribution, redistribution notes)
 ```
 
 ### Example `summary.md` template (optional)
