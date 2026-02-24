@@ -27,10 +27,10 @@ A LayerConfig is the contract between the **catalog world** (DCAT/STAC/PROV) and
 
 ```mermaid
 flowchart LR
-  DV[Promoted DatasetVersion<br/>DCAT + STAC + PROV] --> LC[LayerConfig<br/>(this registry)]
-  LC --> API[Governed APIs<br/>catalog + tiles]
-  API --> UI[Map Explorer / Stories / Focus Mode]
-  UI --> ER[Evidence Resolver<br/>resolve EvidenceRef]
+  DV["Promoted DatasetVersion<br/>DCAT + STAC + PROV"] --> LC["LayerConfig<br/>this registry"]
+  LC --> API["Governed APIs<br/>catalog + tiles"]
+  API --> UI["Map Explorer &#47; Stories &#47; Focus Mode"]
+  UI --> ER["Evidence Resolver<br/>resolve EvidenceRef"]
   ER --> UI
 ```
 
