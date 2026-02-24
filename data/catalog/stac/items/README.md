@@ -109,12 +109,13 @@ Do **not** commit any of the following here:
 > The exact layout is repo-specific. This is a **recommended** convention that keeps Items browsable and versioned.
 
 ```
-data/catalog/stac/items/
-  README.md
-  <dataset_slug>/
-    <dataset_version_id>/
-      <item_id>.json
-      <item_id>.json
+data/catalog/stac/items/                             # STAC Items (asset-level discovery records; served by API)
+├─ README.md                                         # Naming rules, required fields, and link conventions
+│
+└─ <dataset_slug>/                                   # Dataset family
+   └─ <dataset_version_id>/                          # Published version (stable/content-addressed preferred)
+      ├─ <item_id>.json                              # STAC Item record (unique item_id; geometry/time/assets)
+      └─ …                                           # Additional items (one file per item_id)
 ```
 
 **Naming recommendations**
