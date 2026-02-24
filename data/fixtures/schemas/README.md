@@ -92,12 +92,13 @@ This folder (`data/fixtures/schemas/`) is specifically for **schemas that valida
 > This is an example of a scalable layout. Adjust to match the actual repo structure.
 
 ```text
-data/fixtures/schemas/
-  README.md
-  <domain>/
-    <dataset>/
-      <artifact>__v1.schema.json
-      <artifact>__v2.schema.json
+data/fixtures/schemas/                              # Schema fixtures (pinned copies used by tests/tools)
+├─ README.md                                        # Why schemas are mirrored here + update rules + provenance
+│
+└─ <domain>/                                        # Domain grouping (e.g., hydrology, parcels, railroads)
+   └─ <dataset>/                                    # Dataset or schema family
+      ├─ <artifact>__v1.schema.json                 # Versioned schema snapshot (v1)
+      └─ <artifact>__v2.schema.json                 # Versioned schema snapshot (v2)
 ```
 
 [Back to top](#datafixturesschemas)
