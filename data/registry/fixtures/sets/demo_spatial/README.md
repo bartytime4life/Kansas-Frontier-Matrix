@@ -138,34 +138,33 @@ This folder must **not** contain:
 > If your repo already has a fixture-set schema/layout, prefer that. Use this structure only as a baseline.
 
 ```text
-data/registry/fixtures/sets/demo_spatial/
-  README.md
-
-  # Recommended: set-level manifest that enumerates what’s in this fixture set
-  manifest.yml
-
-  # Recommended: datasets grouped by stable dataset_id
-  datasets/
-    <dataset_id>/
-      dataset.yml                # dataset metadata (id, version, policy_label, license, extents)
-      data/
-        ...                      # fixture data assets (vector/raster), ideally small and deterministic
-      catalogs/
-        dcat.jsonld              # or .ttl/.jsonld (repo convention)
-        stac.collection.json
-        stac.items/              # optional, if itemized assets are used
-      prov/
-        prov.bundle.jsonld       # provenance bundle for the fixture
-        run_receipt.json         # optional: receipt fixture for CI/runtime parity tests
-      qa/
-        checks.yml               # optional: validation expectations and thresholds
-
-  # Optional: explicit policy test vectors
-  policy_fixtures/
-    allow/
-      ...
-    deny/
-      ...
+data/registry/fixtures/sets/demo_spatial/            # Spatial demo fixture set (end-to-end: data + catalogs + prov + policy)
+├─ README.md                                        # What this set demonstrates + how CI validates it
+├─ manifest.yml                                     # Recommended: set-level manifest (inventory + digests + references)
+│
+├─ datasets/                                        # Fixture datasets grouped by stable dataset_id
+│  └─ <dataset_id>/
+│     ├─ dataset.yml                                # Dataset metadata (id, version, policy_label, license, extents)
+│     │
+│     ├─ data/                                      # Fixture assets (vector/raster; small, deterministic)
+│     │  └─ …                                       # e.g., GeoJSON/GeoParquet/COG/PMTiles (bounded; safe)
+│     │
+│     ├─ catalogs/                                  # Catalog artifacts for this fixture dataset
+│     │  ├─ dcat.jsonld                              # DCAT dataset/distribution record (repo convention)
+│     │  ├─ stac.collection.json                     # STAC Collection
+│     │  └─ stac.items/                              # Optional STAC Items (if itemized assets are used)
+│     │     └─ …                                     # One file per item
+│     │
+│     ├─ prov/                                      # Provenance artifacts for the fixture
+│     │  ├─ prov.bundle.jsonld                       # PROV bundle (raw → work → processed lineage)
+│     │  └─ run_receipt.json                         # Optional receipt fixture (CI/runtime parity checks)
+│     │
+│     └─ qa/                                        # Optional QA expectations/thresholds (validation gates)
+│        └─ checks.yml                               # Expectations (ranges, nulls, geometry validity, etc.)
+│
+└─ policy_fixtures/                                 # Optional explicit policy vectors (allow/deny)
+   ├─ allow/                                        # Inputs expected to pass policy gates
+   └─ deny/                                         # Inputs expected to fail (fail-closed proofs)
 ```
 
 ### Minimal set manifest fields
