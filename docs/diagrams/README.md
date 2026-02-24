@@ -1,144 +1,268 @@
-# Diagrams
-_Map-first, time-aware, governed diagrams for Kansas Frontier Matrix (KFM)._
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/d0120576-9857-4ab1-9619-d122fdae834b
+title: docs/diagrams
+type: standard
+version: v1
+status: draft
+owners: KFM Maintainers
+created: 2026-02-24
+updated: 2026-02-24
+policy_label: restricted
+related:
+  - docs/README.md
+  - docs/architecture/README.md
+tags: [kfm, diagrams]
+notes:
+  - Purpose: diagram sources + exports for KFM architecture, pipelines, and UI flows.
+  - Update the related paths if your repo structure differs.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Draft · **Owners:** Docs + Architecture (TBD)  
-`docs` `diagrams` `contract-first` `evidence-first` `map-first` `time-aware` `governed`
+# docs/diagrams
+Diagram sources + rendered exports for KFM architecture, data flows, and governed interfaces.
 
-- **Why this exists:** keep KFM’s “truth path” and trust boundaries visible, reviewable, and hard to accidentally break.
-- **What this is not:** an image dump. Anything here should either (a) explain a contract/boundary, or (b) support a governed narrative/UX flow.
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![policy](https://img.shields.io/badge/policy-restricted-blue)
+![diagrams](https://img.shields.io/badge/diagrams-mermaid%20%7C%20drawio%20%7C%20plantuml-informational)
+
+**Owners:** KFM Maintainers  
+**Update cadence:** As architecture/pipeline/API/UI changes ship
+
+---
 
 ## Navigation
 - [What belongs here](#what-belongs-here)
 - [Directory layout](#directory-layout)
-- [Diagram catalog](#diagram-catalog)
 - [Diagram standards](#diagram-standards)
-- [Security and sensitivity](#security-and-sensitivity)
-- [Definition of done](#definition-of-done)
-- [Notes](#notes)
+- [How to add a diagram](#how-to-add-a-diagram)
+- [Rendering](#rendering)
+- [Governance and safety](#governance-and-safety)
+- [Diagram registry](#diagram-registry)
 
 ---
 
 ## What belongs here
 
-This directory contains **diagrams that describe**:
+This directory is the **single home** for diagrams that explain or support the KFM system, including:
 
-1) **System boundaries** (what talks to what) and **trust boundaries** (what is allowed to access what).  
-2) **Data lifecycle + promotion gates** (how data becomes publishable / queryable).  
-3) **Catalog + provenance surfaces** (how STAC/DCAT/PROV connect to runtime features).  
-4) **Map/Story/Focus UX flows** where evidence and policy are user-visible trust surfaces.
+- **Architecture**: domain boundaries, trust membrane, interfaces/contracts, deployment views
+- **Data lifecycle**: Raw → Work/Quarantine → Processed → Published promotion gates
+- **Pipelines**: ingestion, validation, QA, provenance/audit, publishing
+- **APIs**: request/response flows, authz/authn, policy boundary, error model
+- **UI**: route maps, interaction flows, Story/Map UI nodes, Focus Mode reasoning boundaries
+- **Governance**: approval flows, redaction rules, sensitivity classifications
 
-If a diagram would change how someone implements KFM, treat it as **a governed artifact**: keep it precise, keep it current, and tie it to the contracts/docs it represents.
+**Primary goal:** every diagram should be **traceable** to (a) a source artifact and (b) a policy decision, when applicable.
+
+> [!NOTE]
+> If you’re unsure where a diagram belongs, default to placing the *source* here and linking it from the most relevant doc (e.g., `docs/architecture/*`, `docs/pipelines/*`, `docs/ui/*`).
 
 ---
 
 ## Directory layout
 
-This is a **recommended** layout. Create subfolders when you add the first diagram in that category.
+> [!TIP]
+> Prefer text-based, diff-friendly formats (Mermaid/PlantUML) for architecture and flow diagrams.
+> Use binary formats (Draw.io/Excalidraw) when you truly need freeform layout.
+
+Expected structure (adjust to match your repo):
 
 ```text
-docs/diagrams/
-  README.md                 # this file
-  architecture/             # subsystem boundaries, trust membrane diagrams
-  data/                     # raw→work→processed, catalogs, promotion gates
-  governance/               # policy labels, obligations, review flows
-  ui/                       # map/timeline/story/evidence drawer flows
-  focus-mode/               # retrieval + evidence + citation verification flows
-  security/                 # threat models, abuse cases, mitigations
-  adr/                      # decision diagrams paired with ADRs (if used)
+docs/diagrams/                                   # Diagram system (sources + optional rendered exports)
+├─ README.md                                     # This file: rules, naming, alt text, and render workflow
+│
+├─ registry/                                     # Optional registries/manifests for discovery + CI checks
+│  └─ diagrams.csv                               # Optional machine-readable diagram registry (id, title, src, output)
+│
+├─ src/                                          # Diagram sources (preferred; treat as canonical)
+│  ├─ mermaid/                                   # Mermaid sources (.mmd or .md w/ Mermaid blocks)
+│  ├─ plantuml/                                  # PlantUML sources (.puml)
+│  ├─ drawio/                                    # Draw.io sources (.drawio)
+│  └─ excalidraw/                                # Excalidraw sources (.excalidraw)
+│
+└─ out/                                          # Optional rendered exports (recommended for docs consumption)
+   ├─ svg/                                       # Vector exports (preferred for docs)
+   ├─ png/                                       # Raster exports (previews/thumbnails)
+   └─ pdf/                                       # PDF exports (print/share)
 ```
 
----
+### Acceptable inputs
+- `*.md` containing Mermaid diagrams (recommended for GitHub rendering)
+- `*.mmd` Mermaid source (if your renderer supports it)
+- `*.puml` PlantUML source
+- `*.drawio` / `*.drawio.svg` for Draw.io (diagrams.net)
+- `*.excalidraw` / `*.excalidraw.svg` for Excalidraw
+- Rendered exports: `*.svg`, `*.png`, `*.pdf` **when** needed for downstream docs, PDFs, or slide decks
 
-## Diagram catalog
-
-Add every diagram to this table so people can find “the one true picture” quickly.
-
-| ID | Diagram | Primary file | Owner | Status | Notes |
-|---:|---|---|---|---|---|
-| KFM-DIAG-ARCH-01 | Canonical pipeline boundaries | `architecture/pipeline-boundaries.md` | TBD | Proposed | Should match Master Guide + blueprint docs |
-| KFM-DIAG-DATA-01 | Data lifecycle + promotion gates | `data/lifecycle-and-promotion.md` | TBD | Proposed | Raw/work/quarantine/processed + catalogs |
-| KFM-DIAG-GOV-01 | Policy decisions + obligations | `governance/policy-decision-flow.md` | TBD | Proposed | “default-deny” posture and redaction steps |
-| KFM-DIAG-UI-01 | Map Explorer trust surface | `ui/map-explorer-trust-surface.md` | TBD | Proposed | Where version/license/policy badges appear |
-| KFM-DIAG-FOCUS-01 | Focus Mode control loop | `focus-mode/control-loop.md` | TBD | Proposed | Must include citation verification hard gate |
-| KFM-DIAG-SEC-01 | Trust membrane threat model | `security/trust-membrane-checklist.md` | TBD | Proposed | Frontend must not bypass policy surfaces |
-
-> Tip: prefer **one diagram = one file** (plus optional export), so ownership + review are clear.
+### Exclusions
+- No generated artifacts **without** a corresponding source in `src/`
+- No screenshots of diagrams when the source can be committed instead
+- No sensitive details that increase risk (see [Governance and safety](#governance-and-safety))
 
 ---
 
 ## Diagram standards
 
-### Preferred formats
-- **Mermaid in Markdown** for most diagrams (diffable, reviewable in PRs).
-- For tools like draw.io / Figma / Illustrator:
-  - Commit the **source** file (editable) and an exported **SVG** (preferred) or PNG.
-  - Keep exports “derived”; treat the source as canonical.
+### 1) Every diagram must have a header block
 
-### Naming
-Use stable, readable names:
-- `kebab-case` files and folders
-- include scope in the name when helpful:
-  - `pipeline-boundaries.md`
-  - `data-lifecycle.md`
-  - `focus-mode-control-loop.md`
+Put a short, consistent header at the top of each diagram source file (or directly above a Mermaid block):
 
-### Content rules
-- Labels should be **verbs** on arrows when it helps (“promotes”, “validates”, “resolves evidence”).
-- Keep node text short and unambiguous.
-- Avoid “magic” arrows that skip policy/provenance steps.
-
-### Mermaid conventions
-- Prefer `flowchart LR` or `flowchart TD` (simple + readable).
-- Avoid very long node strings.
-- If diagram meaning is critical, include a short **plain-language summary** below it.
-
-#### Example: canonical boundary flow (starter)
-```mermaid
-flowchart LR
-  RAW[Raw inputs] --> WORK[Work or Quarantine]
-  WORK --> PROC[Processed artifacts]
-  PROC --> CAT[Catalogs: STAC DCAT PROV]
-  CAT --> GRAPH[Graph projection]
-  GRAPH --> API[Governed API layer]
-  API --> UI[Map and Timeline UI]
-  UI --> STORY[Story Nodes]
-  STORY --> FOCUS[Focus Mode]
+```yaml
+diagram_id: kfm://diagram/<uuid>
+title: <human name>
+status: draft|review|published
+owners: <team or names>
+updated: YYYY-MM-DD
+source_of_truth:
+  - <path to spec, ADR, OpenAPI, schema, pipeline config>
+policy:
+  label: public|restricted|...
+  notes: <why>
 ```
 
-Summary: data must become **processed + cataloged + policy-checked** before it is allowed into runtime surfaces (graph, API, UI, story, focus).
+### 2) Prefer “source-first” storage
+
+- Commit the **editable** source (`.md`, `.mmd`, `.puml`, `.drawio`, `.excalidraw`)
+- Optionally commit rendered outputs in `out/` when:
+  - a consumer cannot render the source format, or
+  - you need stable assets for PDFs, slide decks, or external publishing
+
+### 3) Naming convention
+
+Recommended filename pattern:
+
+```text
+<domain>--<topic>--v<major>.<minor>--YYYY-MM-DD.<ext>
+```
+
+Examples:
+- `governance--data-promotion-gates--v1.0--2026-02-24.md`
+- `api--policy-boundary--v0.3--2026-02-24.puml`
+- `ui--story-node-flow--v2.1--2026-02-24.drawio`
+
+### 4) Mermaid conventions
+
+- Keep node labels short and readable.
+- Avoid special characters that break renderers.
+- **Do not use the pipe character in node text**.
+
+Example: Data lifecycle (promotion zones)
+
+```mermaid
+flowchart LR
+  raw[Raw zone]
+  work[Work or Quarantine zone]
+  processed[Processed zone]
+  published[Published zone]
+
+  raw -->|validate| work
+  work -->|transform and QA| processed
+  processed -->|approve and publish| published
+```
+
+### 5) Diagrams are governed artifacts
+
+Diagrams are treated as production documentation:
+
+- They should **not bypass** the system’s governed interfaces (e.g., “UI calls DB directly” diagrams are invalid unless explicitly describing an anti-pattern).
+- They must reflect the current architecture on the default branch.
+- They should be reviewed when they impact:
+  - access control assumptions
+  - data sensitivity handling
+  - public-facing narratives
+  - Focus Mode reasoning or evidence claims
 
 ---
 
-## Security and sensitivity
+## How to add a diagram
 
-Diagrams can leak sensitive details even when the code is private.
+1. **Choose a source format**
+   - Flow/architecture: Mermaid or PlantUML
+   - Freeform UI flows: Draw.io or Excalidraw (include an SVG export when helpful)
 
-Do **not** put the following in diagrams unless the diagram is explicitly restricted and reviewed:
-- secrets, tokens, internal credentials
-- private hostnames, bucket names, or network topology that increases attack surface
-- precise locations for sensitive sites or vulnerable infrastructure
-- anything that would allow inference of restricted datasets through “existence hints”
+2. **Create the source file under `src/`**
+   - Add the header block (diagram_id, owners, policy label, sources)
 
-When in doubt: generalize, remove specifics, and add a note like **“details intentionally omitted; see restricted design doc”**.
+3. **Link it from the consuming doc**
+   - Use a *relative link* to the source (preferred) or to a rendered export if needed
 
----
+4. **Register it**
+   - Add an entry in the [Diagram registry](#diagram-registry)
 
-## Definition of done
-
-When adding or changing a diagram, the PR should satisfy:
-
-- [ ] Diagram is listed in the [Diagram catalog](#diagram-catalog)
-- [ ] Diagram has an owner (team or steward)
-- [ ] Diagram has a short summary and states key assumptions
-- [ ] If the diagram represents a contract/boundary: it links to the governing doc/ADR/contract
-- [ ] If an export exists (SVG/PNG), the editable source is also committed
-- [ ] No sensitive details are included (or the diagram is correctly restricted + reviewed)
-- [ ] Diagram renders on GitHub (Mermaid) or has a usable exported artifact
-- [ ] Links are valid (or explicitly marked as “expected path”)
+5. **Review checklist**
+   - [ ] The diagram matches current code/config/contracts
+   - [ ] No sensitive details are exposed (locations, credentials, private endpoints)
+   - [ ] Sources are linked (ADR/spec/OpenAPI/schema/pipeline config)
+   - [ ] If exported assets exist, they are reproducible from the source
 
 ---
 
-## Notes
+## Rendering
 
-- Treat diagrams as “living contracts”: when code or policy changes, update the diagram in the same PR (or create a follow-up PR immediately).
-- If multiple diagrams disagree, the “owner + governing doc” decides; fix the drift, don’t let it linger.
+> [!WARNING]
+> Rendering steps are repo-specific. If your build system provides diagram tooling, document the exact commands here.
+
+Suggested options (pick one and standardize):
+
+- **Mermaid**: rendered natively by GitHub in Markdown
+- **PlantUML**: render `.puml` → `.svg` (local jar, container, or CI job)
+- **Draw.io**: maintain `.drawio` and export `.svg` alongside it
+
+### CI recommendation (proposed)
+- Lint Mermaid blocks (fail on syntax errors)
+- Ensure every committed `out/` export has a matching `src/` input
+- Optionally regenerate exports in CI and compare diffs (fail if out-of-date)
+
+---
+
+## Governance and safety
+
+### Sensitivity rules
+- If a diagram touches **sensitive or restricted** information, either:
+  - generalize it (coarse geography, redacted identifiers), or
+  - place it behind appropriate access controls (repo permissions), and label it clearly.
+
+### Avoid enabling harm
+Do not include:
+- precise coordinates for vulnerable sites
+- instructions that enable targeting, exploitation, or bypassing controls
+- credentials, secrets, tokens, or internal-only endpoints
+
+---
+
+## Diagram registry
+
+Maintain a lightweight registry so diagrams are discoverable.
+
+| diagram_id | File | Purpose | Status | Owner | Updated |
+|---|---|---|---|---|---|
+| kfm://diagram/TODO | `src/mermaid/governance--data-promotion-gates--v1.0--2026-02-24.md` | Data lifecycle zones and promotion gates | draft | KFM Maintainers | 2026-02-24 |
+
+> [!TIP]
+> If you prefer machine-readable indexes, add `docs/diagrams/registry/diagrams.csv` and keep it in sync.
+
+---
+
+### Appendix: Minimal diagram header template
+
+<details>
+<summary>Copy/paste template</summary>
+
+```yaml
+diagram_id: kfm://diagram/<uuid>
+title: <title>
+status: draft
+owners: <owners>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+source_of_truth:
+  - <path>
+policy:
+  label: restricted
+  notes:
+    - <note>
+```
+</details>
+
+---
+
+[Back to top](#docsdiagrams)
