@@ -105,21 +105,19 @@ flowchart LR
 > The exact on-disk layout under this folder is **not confirmed** in repo. The structure below is a **recommended** convention optimized for auditability + machine parsing.
 
 ```text
-data/policies/decisions/datasets/
-  README.md
-
-  # Recommended (one folder per dataset)
-  <dataset_slug>/
-    decision.md                 # human-readable rationale + scope + links to evidence
-    policy_decision.json        # machine-readable: policy_label + obligations + reasons
-    approvals.yml               # optional: explicit approvals (if required by governance)
-
-    # Optional (if decisions vary per version)
-    versions/
-      <dataset_version_id>/
-        decision.md
-        policy_decision.json
-        approvals.yml
+data/policies/decisions/datasets/                   # Dataset-specific policy decisions (human rationale + machine record)
+├─ README.md                                       # How dataset decisions are authored, reviewed, and referenced
+│
+└─ <dataset_slug>/                                 # One folder per dataset (stable slug)
+   ├─ decision.md                                  # Human-readable rationale (scope, risks, tradeoffs, evidence links)
+   ├─ policy_decision.json                         # Machine-readable decision (policy_label, obligations, reason codes)
+   ├─ approvals.yml                                # Optional explicit approvals (if governance requires sign-off)
+   │
+   └─ versions/                                    # Optional: version-scoped decisions (only if policy varies by version)
+      └─ <dataset_version_id>/
+         ├─ decision.md                            # Version-specific rationale (what changed and why)
+         ├─ policy_decision.json                   # Version-specific machine decision (labels/obligations/reasons)
+         └─ approvals.yml                          # Optional approvals for this version
 ```
 
 If you prefer “one file per decision,” keep the same three artifacts but encode the dataset_slug/dataset_version_id in filenames.
