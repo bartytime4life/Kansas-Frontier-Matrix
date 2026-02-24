@@ -71,21 +71,19 @@ flowchart LR
 Recommended layout:
 
 ```text
-data/registry/schemas/
-  README.md
-
-  # Canonical contracts (versioned)
-  run_receipt.v1.schema.json
-  run_manifest.v1.schema.json
-  watcher.v1.schema.json
-
-  # Test fixtures (recommended)
-  examples/
-    run_receipt.valid.json
-    run_receipt.invalid.missing_spec_hash.json
-    run_manifest.valid.json
-    watcher.valid.json
-    watcher.invalid.unsigned.json
+data/registry/schemas/                              # Registry schemas (canonical contracts + examples for CI)
+├─ README.md                                       # How schemas are versioned, validated, and referenced by tools
+│
+├─ run_receipt.v1.schema.json                      # Run receipt contract (promotion evidence; required fields incl. spec_hash)
+├─ run_manifest.v1.schema.json                     # Run manifest contract (run envelope; inputs/outputs + digests + refs)
+├─ watcher.v1.schema.json                          # Watcher contract (schedule/triggers/scope + signing requirements)
+│
+└─ examples/                                       # Recommended: schema examples (must pass/fail deterministically)
+   ├─ run_receipt.valid.json                       # Valid example (minimal)
+   ├─ run_receipt.invalid.missing_spec_hash.json   # Invalid example (must fail)
+   ├─ run_manifest.valid.json                      # Valid example (minimal)
+   ├─ watcher.valid.json                           # Valid watcher example
+   └─ watcher.invalid.unsigned.json                # Invalid: missing/invalid signature (must fail)
 ```
 
 ---
