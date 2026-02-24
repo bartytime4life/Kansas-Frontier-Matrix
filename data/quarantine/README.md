@@ -100,18 +100,22 @@ We keep quarantine organized by **dataset identity** and **blocked version** so 
 Recommended layout (adapt if the repo uses a different convention):
 
 ```text
-data/quarantine/
-  README.md
-  <dataset_id>/
-    <dataset_version_id>/          # derived from spec_hash or equivalent
-      quarantine.json              # required (reason + remediation plan)
-      qa/
-        validation.json
-        drift.json
-      work/
-        <intermediate artifacts...>
-      notes/
-        README.md                  # optional human notes (no secrets)
+data/quarantine/                                   # Quarantined artifacts (failed gates; never promoted/served)
+├─ README.md                                       # What quarantine means, entry/exit criteria, and retention rules
+│
+└─ <dataset_id>/                                   # Dataset family under quarantine
+   └─ <dataset_version_id>/                        # Version identifier (from spec_hash or equivalent; stable)
+      ├─ quarantine.json                            # REQUIRED: reason, scope, detection time, remediation plan, owner
+      │
+      ├─ qa/                                        # Machine-readable diagnostics (why it failed)
+      │  ├─ validation.json                         # Validation failures (schemas/geo/time/license/policy)
+      │  └─ drift.json                              # Drift/quality deltas (if computed; thresholds breached)
+      │
+      ├─ work/                                      # Intermediate artifacts captured for debugging (bounded; reproducible)
+      │  └─ …                                       # Logs, partial outputs, repro inputs (no secrets; keep small)
+      │
+      └─ notes/                                     # Optional human notes (no secrets; reviewer-friendly)
+         └─ README.md                               # Context + links to issues/PRs + remediation checklist
 ```
 
 Naming rules:
