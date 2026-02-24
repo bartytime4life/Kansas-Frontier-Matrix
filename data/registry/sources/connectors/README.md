@@ -222,24 +222,27 @@ governance:
 > This is a recommended convention to keep connector work reviewable and consistent.
 
 ```text
-data/registry/sources/connectors/
-  README.md
-
-  _template/                          # optional scaffolding for new connectors
-    connector.yaml
-    acquisition_manifest.example.json
-    terms_snapshot.template.md
-
-  <source_id>/                         # one folder per source connector
-    connector.yaml                     # declarative connector descriptor
-    fixtures/                          # CI fixtures: valid/invalid examples
-      valid/
-      invalid/
-    scripts/                           # optional helpers (no secrets)
-      fetch.py
-      parse.py
-    notes/                             # optional human docs (risk notes, quirks)
-      decisions.md
+data/registry/sources/connectors/                  # Connector registry (declarative descriptors + fixtures + notes)
+├─ README.md                                       # How connectors are registered, validated, and referenced by datasets
+│
+├─ _template/                                      # Optional scaffolding for new connectors (copy/paste starter kit)
+│  ├─ connector.yaml                               # Template connector descriptor (fields + placeholders)
+│  ├─ acquisition_manifest.example.json            # Example acquisition manifest (capture metadata + checksums)
+│  └─ terms_snapshot.template.md                   # Terms snapshot template (human-readable; date-stamped)
+│
+└─ <source_id>/                                    # One folder per source connector (stable id; kebab/snake-case)
+   ├─ connector.yaml                               # Declarative connector descriptor (endpoints, paging, formats, limits)
+   │
+   ├─ fixtures/                                    # CI fixtures (synthetic; deterministic)
+   │  ├─ valid/                                    # Must pass schema/contract validation
+   │  └─ invalid/                                  # Must fail (negative tests; error quality matters)
+   │
+   ├─ scripts/                                     # Optional helpers (NO secrets; safe by default)
+   │  ├─ fetch.py                                  # Fetch helper (dev/test parity; rate-limit aware)
+   │  └─ parse.py                                  # Parse helper (normalize raw → canonical intermediate)
+   │
+   └─ notes/                                       # Optional human docs (quirks, risk notes, governance decisions)
+      └─ decisions.md                              # Rationale/decisions (licensing, sensitivity, mappings, tradeoffs)
 ```
 
 ---
