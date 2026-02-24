@@ -1,399 +1,295 @@
-# Governance
-Operational governance for Kansas Frontier Matrix (KFM): roles, policy, gates, and review workflows.  
-`status:draft` `policy:fail-closed` `posture:default-deny` `focus-mode:cite-or-abstain` `scope:platform-wide`
-
-- **Owners:** `TBD (steward + governance council)`
-- **Last reviewed:** 2026-02-22
-- **Next review:** 2026-05-22
-
-Quick nav:
-- [What this folder contains](#what-this-folder-contains)
-- [Non-negotiable invariants](#non-negotiable-invariants)
-- [Roles and responsibilities](#roles-and-responsibilities)
-- [Governance artifacts](#governance-artifacts)
-- [Policy-as-code](#policy-as-code)
-- [Sensitivity and rights](#sensitivity-and-rights)
-- [Truth path lifecycle and zones](#truth-path-lifecycle-and-zones)
-- [Promotion contract](#promotion-contract)
-- [Catalogs and provenance](#catalogs-and-provenance)
-- [Story publishing governance](#story-publishing-governance)
-- [Focus Mode governance](#focus-mode-governance)
-- [Threat model checklist](#threat-model-checklist)
-- [Change management workflow](#change-management-workflow)
-- [Glossary](#glossary)
-- [Appendix: templates](#appendix-templates)
-
-<details>
-<summary>Document metadata (KFM MetaBlock v2)</summary>
-
-```text
-[KFM_META_BLOCK_V2]
-doc_kind: governance
-doc_id: kfm://doc/governance/README@v1
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<uuid>
+title: Governance
+type: standard
+version: v1
 status: draft
 owners: TBD
-reviewed_on: 2026-02-22
-next_review_on: 2026-05-22
-created_on: 2026-02-22
-updated_on: 2026-02-22
-applies_to:
-  - policy/
-  - pipelines/
-  - api/
-  - ui/
-  - focus-mode/
-sensitivity: public
-[/KFM_META_BLOCK_V2]
-```
-</details>
+created: 2026-02-24
+updated: 2026-02-24
+policy_label: public
+related:
+  - docs/governance/ROOT_GOVERNANCE.md
+  - docs/governance/ETHICS.md
+  - docs/governance/SOVEREIGNTY.md
+  - docs/governance/REVIEW_GATES.md
+tags: [kfm, governance]
+notes:
+  - Directory-level entrypoint for KFM governance policies, policy-as-code posture, and review gates.
+[/KFM_META_BLOCK_V2] -->
+
+# Governance
+Policies, gates, and policy-as-code contracts that keep KFM evidence-bound, safe-by-default, and auditable.
+
+![Status](https://img.shields.io/badge/status-draft-lightgrey)
+![Posture](https://img.shields.io/badge/posture-fail--closed-critical)
+![Principles](https://img.shields.io/badge/principles-FAIR%2BCARE-blue)
+![Policy as Code](https://img.shields.io/badge/policy-as--code-expected-blueviolet)
+<!-- TODO: replace with real repo badges (CI, policy tests, release attestations) -->
+
+**Owners:** TBD (define in `ROOT_GOVERNANCE.md`)  
+**Last reviewed:** 2026-02-24 <!-- TODO: update on each governance sign-off -->
 
 ---
 
-## What this folder contains
-
-This `docs/governance/` area is the operational entrypoint for **enforceable** governance: policy labels, review gates, and workflows that must be implemented in CI and runtime (not “guidelines”). Governance is treated as part of the system contract.
-
-**Expected companion docs (create if missing):**
-
-| Path | Purpose | Notes |
-|---|---|---|
-| `docs/governance/README.md` | Start here | Overview + pointers + checklists |
-| `docs/governance/ROOT_GOVERNANCE.md` | Canonical governance policy | The “source of truth” policy narrative |
-| `docs/governance/ETHICS.md` | Ethical review triggers and narrative safety | CARE-aligned constraints |
-| `docs/governance/SOVEREIGNTY.md` | Authority-to-control + community stewardship workflow | For culturally sensitive materials |
-| `docs/governance/REVIEW_GATES.md` | Promotion + publishing gates | CI + runtime requirements |
-| `docs/governance/THREAT_MODEL.md` | Threat model checklist + mitigations | Trust membrane + policy safety |
-
-> NOTE  
-> KFM uses **status vocabulary** in design/governance docs: `CONFIRMED`, `PROPOSED`, `UNKNOWN`. Use those words explicitly when you’re unsure.
+## Quick navigation
+- [Scope](#scope)
+- [What lives here](#what-lives-here)
+- [Core principles](#core-principles)
+- [Governance workflow](#governance-workflow)
+- [Policy-as-code boundary](#policy-as-code-boundary)
+- [Promotion gates](#promotion-gates)
+- [Sensitivity and sovereignty](#sensitivity-and-sovereignty)
+- [Licensing and rights](#licensing-and-rights)
+- [Audit and telemetry](#audit-and-telemetry)
+- [Templates](#templates)
+- [Appendix](#appendix)
 
 ---
 
-## Non-negotiable invariants
-
-These invariants exist so that KFM can be trusted as a **governed, evidence-first, map-first, time-aware** system. Breaking them breaks enforceability.
-
-### Invariant map (platform contract)
-
-| Invariant | Meaning in practice | Why it matters |
-|---|---|---|
-| Truth path lifecycle | Upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG (DCAT+STAC+PROV + run receipts) → governed API → UI | Reproducibility and auditability |
-| Trust membrane | Clients never access storage/DB directly; backend logic uses repository interfaces; access goes through governed APIs applying policy/redaction/logging | Without it, policy and provenance are unenforceable |
-| Evidence-first UX | Every layer/story claim opens to an evidence view: dataset version, license/rights holder, policy label + redactions, provenance chain, artifact links + checksums | Trust is a UI feature, not a footer |
-| Cite-or-abstain Focus Mode | Focus Mode selects admissible evidence, constructs an evidence bundle, answers with citations or abstains, emits an audit record (run receipt) | Prevents ungrounded claims and policy leaks |
-| Canonical vs rebuildable stores | Object storage + catalogs + provenance are canonical; DB/search indexes are projections | Safer ops, easier rollback, better provenance |
-| Deterministic identity and hashing | Stable dataset IDs + version IDs; sha256 digests; canonical JSON hashing to avoid “hash drift” | Enables immutability, caching, signature verification |
-
-### System boundary diagram
-
-```mermaid
-flowchart TD
-  Upstream[Upstream sources] --> RAW[RAW zone]
-  RAW --> WORK[WORK QUARANTINE zone]
-  WORK --> PROCESSED[PROCESSED zone]
-  PROCESSED --> CATALOG[Catalog DCAT STAC PROV]
-  CATALOG --> API[Governed API]
-  API --> UI[Map Story UI]
-  API --> FOCUS[Focus Mode]
-
-  POLICY[Policy PDP OPA] --> API
-  POLICY --> CI[CI gates]
-
-  RECEIPTS[Run receipts Audit ledger] --> CATALOG
-```
-
----
-
-## Roles and responsibilities
-
-### PROPOSED baseline roles (starter model)
-
-- **Public user**: reads public layers/stories; Focus Mode limited to public evidence.
-- **Contributor**: proposes datasets/stories; drafts content; cannot publish.
-- **Reviewer/Steward**: approves promotions + story publishing; owns policy labels and redaction rules.
-- **Operator**: runs pipelines and deployments; cannot override policy gates.
-- **Governance council / community stewards**: authority to control culturally sensitive materials; sets rules for restricted collections and public representations.
-
-### RACI (minimum)
-
-| Work item | Responsible | Accountable | Consulted | Informed |
-|---|---|---|---|---|
-| Dataset onboarding | Contributor (spec + docs), Data engineer (pipeline), GIS engineer (spatial QA) | Steward | Governance council (if culturally sensitive), Legal/compliance (if rights unclear) | Operator |
-| Dataset promotion | Operator (run), Data engineer (validate outputs) | Steward | Governance council (sensitive), Security (restricted infrastructure) | Contributor |
-| Story publishing | Contributor (draft), Historian/editor (review) | Steward | Governance council (Indigenous/cultural), Legal (image reuse) | Public |
-| Policy changes | Steward + Policy engineer | Governance council or designated owner | Operators (runtime impact), Contributors (workflow impact) | Users |
-
----
-
-## Governance artifacts
-
-To operate governance, KFM must maintain (minimum set):
-
-- **Policy bundle repository** (OPA/Rego or equivalent)
-- **Policy test fixtures** (allow/deny + obligations)
-- **Licensing classification rubric**
-- **Sensitivity rubric + generalization guidelines**
-- **Review workflow definition** (Promotion Queue + Story Review Queue)
-- **Audit ledger retention + access policy**
-
-**Practical implication:** if any of the above is missing, KFM cannot “fail closed” reliably, and promotion/publishing must remain blocked.
-
----
-
-## Policy-as-code
-
-KFM requires the **same policy semantics in CI and runtime** (or at minimum: the same fixtures and outcomes). Otherwise CI guarantees are meaningless.
-
-### Recommended architecture (PDP + PEP)
-
-- **Policy Decision Point (PDP):** OPA running in-process or as a sidecar
-- **Policy Enforcement Points (PEP):**
-  - **CI:** schema validation + policy tests block merges
-  - **Runtime API:** policy checks before serving data
-  - **Evidence resolver:** policy checks before resolving evidence and rendering bundles
-  - **UI:** shows policy badges + notices; **UI never makes policy decisions**
-
-### Outputs must include obligations
-
-Policy is not just allow/deny. Policy must also emit **obligations** (ex: “show_notice: geometry generalized”) so UI and exports can behave correctly.
-
----
-
-## Sensitivity and rights
-
-### Sensitivity defaults
-
-- **Default deny** for sensitive-location and restricted datasets.
-- If any public representation is allowed, produce a separate **public_generalized** dataset version.
-- Never leak restricted metadata in 403/404 responses.
-- Do not embed precise coordinates in Story Nodes or Focus Mode outputs unless policy explicitly allows.
-- Treat redaction/generalization as a **first-class transform** recorded in provenance (PROV).
-
-### Licensing and rights enforcement
-
-Key principle: **online availability does not equal permission to reuse.**
-
-Operational rules:
-
-- Promotion gate requires **license + rights holder** for every distribution.
-- “Metadata-only reference” is allowed: catalog an item without mirroring it if rights do not allow reuse.
-- Export functions must include **attribution and license text** automatically.
-- Story publishing gate blocks if rights are unclear for included media.
-
-> WARNING  
-> Licensing is not paperwork. It is a **policy input** and must be enforced in CI/runtime.
-
----
-
-## Truth path lifecycle and zones
-
-### Zones
-
-| Zone | Purpose | Governance posture |
-|---|---|---|
-| **Upstream** | External sources and partners | Record source + rights; don’t assume reuse |
-| **RAW** | Immutable capture of upstream materials | Keep originals; record checksums |
-| **WORK/QUARANTINE** | Staging, QA, validation failures | Not served to public; used for review |
-| **PROCESSED** | Derived artifacts ready for serving | Must be immutable by digest |
-| **PUBLISHED** | Public-safe products and narratives | Must pass policy + rights + citation gates |
-
-**Rule of thumb:** nothing reaches runtime surfaces until it’s in **PROCESSED + CATALOG + receipts** and has passed promotion gates.
-
----
-
-## Promotion contract
-
-Promotion moves a dataset version into runtime surfaces and **MUST fail closed** unless required artifacts exist and validate.
-
-### Minimal gates (starter)
-
-| Gate | Fail-closed check |
-|---|---|
-| Identity and versioning | DatasetVersion ID + deterministic `spec_hash`; promotion manifest exists |
-| Artifacts | Processed artifacts exist; each has digest; predictable paths; media types recorded |
-| Catalogs | DCAT/STAC/PROV schema-valid under profile |
-| Cross-links | All links resolve; asset hrefs exist; EvidenceRefs resolve |
-| Policy | `policy_label` assigned; obligations applied; default-deny tests pass |
-| QA | Validation reports present; failures quarantined |
-| Audit | Run receipt emitted; audit ledger append; approvals captured where required |
-
-### Determinism and hashing requirements
-
-- `sha256` is mandatory for artifacts and bundles
-- include algorithm in IDs (`sha256:...`)
-- never hash “pretty printed” JSON — canonicalize first
-- store canonical spec next to computed `spec_hash`
-- unit-test recomputation (prevent “hash drift”)
-
----
-
-## Catalogs and provenance
-
-KFM treats catalogs not as “nice metadata,” but as **canonical contract surfaces** between pipeline outputs and runtime.
-
-### Catalog triplet responsibilities
-
-- **DCAT** answers: what is this dataset, who published it, what is the license/rights, what are the distributions
-- **STAC** answers: what assets exist, spatiotemporal extents, where the files are
-- **PROV** answers: how outputs were created, which inputs, tools, parameters
-
-KFM should define strict profiles for each so validation is predictable.
-
-### PROPOSED minimum DCAT profile fields
-
-- `dct:title`
-- `dct:description`
-- `dct:publisher`
-- `dct:license` (or `dct:rights`)
-- `dcat:theme` (controlled vocabulary)
-- `dct:spatial` and `dct:temporal` coverage
-- `dcat:distribution` (one per artifact class)
-- `prov:wasGeneratedBy` link to PROV activity bundle
-- `kfm:policy_label`
-- `kfm:dataset_id` and `kfm:dataset_version_id`
-
----
-
-## Story publishing governance
-
-Story Nodes are versioned narratives bound to map state and citations.
-
-### Publishing gate (hard requirement)
-
-All citations must resolve through the evidence resolver endpoint (governed) before publishing.
-
-### Map state governance rules
-
-- map state must reference **promoted dataset versions only**
-- filters must be policy-safe (no hidden restricted fields)
-- map state should be small enough to embed in Story Node sidecar
-
----
-
-## Focus Mode governance
-
-Focus Mode is not a general chatbot. It is a governed workflow that:
-
-1. selects admissible evidence based on policy
-2. constructs an evidence bundle
-3. produces an answer that cites that bundle or abstains
-
-Every query produces an audit record (run receipt) that is reproducible.
-
-**Before broad release:** Focus Mode requires an evaluation harness that tests citation resolvability and policy safety (golden queries).
-
----
-
-## Threat model checklist
-
-Use this checklist when reviewing new features:
-
-- TM-001 Does the frontend ever fetch data directly from object storage or databases? Expected: **NO**
-- TM-002 Can a public user infer restricted dataset existence via error behavior? Expected: **NO**
-- TM-003 Are all downloads and exports checked against policy labels and rights? Expected: **YES**
-- TM-004 Can Focus Mode be prompt-injected by retrieved documents? Expected: mitigations in place (tool allowlist, citation verifier, policy filters)
-- TM-005 Are audit logs redacted and access-controlled? Expected: **YES**
-- TM-006 Are pipeline credentials scoped per source and rotated? Expected: **YES**
-- TM-007 Are processed artifacts immutable by digest? Expected: **YES**
-- TM-008 Are policy rules tested in CI with fixtures? Expected: **YES**
-
----
-
-## Change management workflow
-
-All governance-relevant changes are **PR-first** and **fail-closed by default**.
-
-### Dataset onboarding (minimum)
-
-- Add dataset spec + metadata
-- Add/extend pipeline lane
-- Produce RAW capture with digests
-- Validate into WORK/QUARANTINE (QA report)
-- Promote into PROCESSED with promotion manifest + catalogs + receipts
-- Steward approval required if policy label is not purely public
-
-### Policy changes (minimum)
-
-- Change policy bundle (rego)
-- Add fixtures for both allow/deny and obligations
-- Run CI policy tests
-- Steward + governance council review for any impact on public outputs
-
-### Story publishing (minimum)
-
-- Draft Story Node + sidecar map state + citations
-- Validate citations resolve
-- Validate map state references promoted dataset versions only
-- Rights check for included media
-- Steward approval for publish
-
----
-
-## Glossary
-
-- **Dataset:** a logical dataset identity (ex: “NOAA Storm Events”)
-- **DatasetVersion:** an immutable version of a dataset corresponding to a specific promoted output set
-- **Artifact:** a concrete file/object produced by a run (GeoParquet, PMTiles, COG, JSONL, PDF) referenced by catalogs
-- **EvidenceRef:** stable reference to evidence using explicit schemes (ex: dcat://, stac://, prov://, doc://)
-- **EvidenceBundle:** resolved evidence view returned by the evidence resolver, including policy results
-
----
-
-## Appendix: templates
-
-<details>
-<summary>Run receipt template (example)</summary>
-
-```json
-{
-  "run_id": "kfm://run/2026-02-20T12:00:00Z.abcd",
-  "actor": {"principal": "svc:pipeline", "role": "pipeline"},
-  "operation": "ingest+publish",
-  "dataset_version_id": "2026-02.abcd1234",
-  "inputs": [{"uri": "raw/source.csv", "digest": "sha256:1111"}],
-  "outputs": [{"uri": "processed/events.parquet", "digest": "sha256:2222"}],
-  "environment": {
-    "container_digest": "sha256:img...",
-    "git_commit": "deadbeef",
-    "params_digest": "sha256:3333"
-  },
-  "validation": {"status": "pass", "report_digest": "sha256:7777"},
-  "policy": {"decision_id": "kfm://policy_decision/xyz"},
-  "created_at": "2026-02-20T12:05:00Z"
-}
-```
-</details>
-
-<details>
-<summary>Promotion manifest template (example)</summary>
-
-```json
-{
-  "kfm_promotion_manifest_version": "v1",
-  "dataset_slug": "example_dataset",
-  "dataset_version_id": "2026-02.abcd1234",
-  "spec_hash": "sha256:abcd1234",
-  "released_at": "2026-02-20T13:00:00Z",
-  "artifacts": [
-    {
-      "path": "events.parquet",
-      "digest": "sha256:2222",
-      "media_type": "application/x-parquet"
-    }
-  ],
-  "catalogs": [
-    {"path": "dcat.jsonld", "digest": "sha256:4444"},
-    {"path": "stac/collection.json", "digest": "sha256:5555"}
-  ],
-  "qa": {"status": "pass", "report_digest": "sha256:7777"},
-  "policy": {"policy_label": "public", "decision_id": "kfm://policy_decision/xyz"},
-  "approvals": [
-    {"role": "steward", "principal": "<id>", "approved_at": "2026-02-20T12:59:00Z"}
-  ]
-}
-```
-</details>
-
----
+## Scope
+This directory defines **KFM governance**: ethics + sovereignty posture, review gates for contributions, and the policy semantics that must hold consistently in **CI** and **runtime**.
+
+If you are:
+- adding a dataset,
+- changing a promotion/pipeline,
+- changing public API/UI behavior,
+- introducing AI narrative features,
+- changing licensing/rights posture,
+- or touching sensitivity / sovereignty constraints,
+
+…start here.
 
 [Back to top](#governance)
+
+---
+
+## What lives here
+
+### Directory layout (required)
+```text
+docs/governance/
+  README.md              # You are here (entrypoint + directory contract)
+  ROOT_GOVERNANCE.md     # Governance charter: roles, decision process, definitions
+  ETHICS.md              # Ethical commitments + “what we will not do”
+  SOVEREIGNTY.md         # CARE-aligned sovereignty rules for sensitive/community data
+  REVIEW_GATES.md        # Human review triggers + promotion checklist + sign-off rules
+
+  policy/                # OPTIONAL: policy-as-code docs + fixtures (repo location may vary)
+                          # If policy-as-code lives elsewhere, link it from ROOT_GOVERNANCE.md.
+```
+
+### Acceptable inputs
+This directory accepts:
+- Policy documents, rubrics, and checklists.
+- Governance decision records and review sign-offs (human layer).
+- Policy-as-code documentation (PDP/PEP semantics, fixtures, obligations).
+- Templates used by governance processes (review records, manifests, evaluation cases).
+
+### Exclusions
+Do **not** put these here:
+- Raw or processed datasets (belongs in `data/...`).
+- Pipeline code (belongs in `pipelines/` and/or `src/...`).
+- Secrets, API keys, tokens, or private coordinates.
+- Unreviewed public narratives intended for publication (belongs in story draft areas).
+
+[Back to top](#governance)
+
+---
+
+## Core principles
+These are **platform invariants**: treat them as CI-enforceable rules, not suggestions.
+
+### Fail closed
+If policy, metadata, license, schema, or QA checks fail, KFM must block the action (merge, promotion, export, or response).
+
+### FAIR + CARE by design
+KFM encodes reuse and interoperability requirements (metadata, standard formats, provenance), while respecting CARE sovereignty constraints and access controls.
+
+### License-first
+License + rights are required policy inputs. Promotion and publication are blocked if they’re missing or unclear.
+
+### Determinism + provenance by default
+Pipelines should be idempotent and reproducible. Every run should emit provenance; where applicable, add release-time attestations.
+
+### Catalogs are contract surfaces
+Catalogs are not “nice metadata”—they are the canonical interface between pipeline outputs and runtime (for evidence resolution and safe serving).
+
+[Back to top](#governance)
+
+---
+
+## Governance workflow
+
+### 1) Automated gates (CI)
+Minimum expectation (extend in `REVIEW_GATES.md`):
+- Schema validation (data + catalog schemas)
+- Metadata completeness
+- License/rights checks
+- QA thresholds (geometry/raster integrity, drift thresholds)
+- Policy tests (allow/deny + obligations)
+
+### 2) Manual governance review (when required)
+Some changes require human review in addition to CI (see `REVIEW_GATES.md`), including:
+- Introducing sensitive / sovereignty-governed datasets or layers.
+- Adding AI-driven narrative features or auto-summaries that could be perceived as factual.
+- Adding a new external data source (license + provenance scrutiny).
+- Adding new public-facing outputs that could expose sensitive information (API endpoints, downloads, exports).
+- Reclassifying sensitivity / policy labels (public ↔ restricted, etc.).
+
+### 3) Decision recording
+Governance decisions should be:
+- small, reversible increments,
+- linked to evidence (what changed, why, and what check enforces it),
+- encoded in policy fixtures/tests where possible.
+
+[Back to top](#governance)
+
+---
+
+## Policy-as-code boundary
+KFM governance requires **the same policy semantics in CI and runtime**, or CI guarantees are meaningless.
+
+Recommended architecture:
+- **PDP**: a Policy Decision Point (e.g., OPA sidecar/in-process).
+- **PEPs** (Policy Enforcement Points):
+  - CI: schema validation + policy tests block merges.
+  - Runtime API: policy checks before serving data.
+  - Evidence resolver: policy checks before resolving evidence and rendering bundles.
+  - UI: displays badges/notices, but **never decides policy**.
+
+```mermaid
+flowchart LR
+  PR[Pull request] --> CI[CI validation gates]
+  CI --> PDP[Policy Decision Point]
+
+  UI[Map and Story UI] --> API[Governed API]
+  FM[Focus Mode AI] --> ER[Evidence resolver]
+
+  API --> PDP
+  ER --> PDP
+
+  API --> Data[(Data zones)]
+  Data --> Catalog[Catalogs STAC DCAT PROV]
+  Catalog --> ER
+```
+
+[Back to top](#governance)
+
+---
+
+## Promotion gates
+“Promotion” is the act of moving artifacts into a published / served state. It must be evidence-producing and auditable.
+
+### Minimum promotion checklist (starter)
+- [ ] Raw inputs are immutable / content-addressed (or verifiably snapshotted).
+- [ ] Processed artifacts are versioned and reproducible.
+- [ ] Catalogs validate and cross-link (DCAT + STAC + PROV).
+- [ ] License + rights holder recorded for each distribution.
+- [ ] QA thresholds pass (schema + geometry/raster checks + drift thresholds).
+- [ ] Policy label applied and enforced (CI + runtime).
+- [ ] “What changed?” diff is produced for version updates.
+- [ ] Focus Mode evaluation passes for public roles (citations resolve; no restricted leaks; abstentions provide audit references).
+
+[Back to top](#governance)
+
+---
+
+## Sensitivity and sovereignty
+Default posture: **fail closed**.
+
+Recommended defaults:
+- Default deny for sensitive-location and restricted datasets.
+- If public representation is allowed, produce a separate **public_generalized** dataset version.
+- Never leak restricted metadata in 403/404 responses.
+- Do not embed precise coordinates in Story Nodes or Focus Mode outputs unless explicitly allowed.
+- Treat redaction/generalization as a first-class transform recorded in provenance.
+
+> TIP: Redaction must be applied end-to-end: processed data, catalog metadata, API serving, and UI behavior.
+
+[Back to top](#governance)
+
+---
+
+## Licensing and rights
+Key principle: **online availability does not equal permission to reuse**.
+
+Operational rules (starter):
+- Promotion gate requires license + rights holder for every distribution.
+- “Metadata-only reference” is allowed when mirroring is not permitted.
+- Export functions must include attribution and license text automatically.
+- Story publishing must block if rights are unclear for included media.
+
+[Back to top](#governance)
+
+---
+
+## Audit and telemetry
+Governance requires auditability:
+- Track access to sensitive data and transformations.
+- Emit telemetry when redaction/generalization is applied (e.g., when Focus Mode withholds or generalizes).
+- Ensure audit records can answer “who saw what and why” **without** leaking restricted content.
+
+[Back to top](#governance)
+
+---
+
+## Templates
+
+<details>
+<summary><strong>Governance Review Record (starter template)</strong></summary>
+
+```markdown
+# Governance Review Record
+
+- PR / Commit:
+- Date:
+- Reviewers:
+- Change type: (new dataset | sensitivity change | new public output | new AI feature | policy change)
+- Affected datasets / layers:
+- Policy labels (before → after):
+- Licensing status: (confirmed | unclear | blocked)
+- Sensitivity/sovereignty notes:
+- Automated gates status: (pass | fail | waived-with-justification)
+- Decision: (approve | approve with conditions | block)
+- Conditions / required follow-ups:
+- Audit implications:
+- Links to evidence (diff report, validation report, provenance bundle):
+```
+
+</details>
+
+<details>
+<summary><strong>Focus Mode “golden query” case (starter)</strong></summary>
+
+```json
+{
+  "case_id": "focus_public_001",
+  "role": "public",
+  "query": "Describe what is visible in the current view.",
+  "expectations": {
+    "must_cite": true,
+    "must_not_include": ["restricted_fields_or_locations"]
+  }
+}
+```
+
+</details>
+
+[Back to top](#governance)
+
+---
+
+## Appendix
+
+### Related docs (canonical in this directory)
+- `docs/governance/ROOT_GOVERNANCE.md` — charter, roles, decision process
+- `docs/governance/ETHICS.md` — ethics commitments
+- `docs/governance/SOVEREIGNTY.md` — CARE-aligned sovereignty rules
+- `docs/governance/REVIEW_GATES.md` — human review triggers + sign-offs
+
+### TODOs (repo integration)
+- [ ] Confirm final policy label taxonomy and role model (document in `ROOT_GOVERNANCE.md`).
+- [ ] Add policy decision fixtures (allow/deny + obligations) and wire into CI.
+- [ ] Add or link the promotion manifest + diff report formats and schemas.
+- [ ] Document audit retention policy and access controls.
