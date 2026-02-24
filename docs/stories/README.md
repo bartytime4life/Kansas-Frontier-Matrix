@@ -1,369 +1,343 @@
-<!--
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/docs-stories-readme
-title: Stories (Story Nodes)
-type: guide
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/d32015ca-3079-4341-9cee-697c744ac4fd
+title: Story Nodes Directory Guide
+type: standard
 version: v1
 status: draft
-owners: KFM Docs & Story Stewards
-created: 2026-02-22
-updated: 2026-02-22
+owners: TBD
+created: 2026-02-24
+updated: 2026-02-24
 policy_label: public
-tags:
-  - kfm
-  - stories
-  - story-nodes
-  - narrative
+related:
+  - docs/stories/
+tags: [kfm, stories, story-nodes, narrative]
 notes:
-  - Canonical authoring + governance guide for Story Nodes stored under docs/stories/.
-[/KFM_META_BLOCK_V2]
--->
-# Stories
-Governed **Story Nodes (v3)**: narrative + map state + citations, designed to render in the Map/Story UI and power Focus Mode.
+  - Directory-level contract for Story Node v3 content and workflow.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** draft · **Spec:** Story Node v3 · **Policy:** governed (policy_label enforced) · **Owners:** KFM Docs & Story Stewards
+![Status](https://img.shields.io/badge/status-draft-lightgrey) <!-- TODO: wire to releases/gates -->
+![Story%20Node](https://img.shields.io/badge/story_node-v3-informational)
+![Evidence](https://img.shields.io/badge/evidence-resolver_required-blueviolet)
+![Policy](https://img.shields.io/badge/policy-cite_or_abstain-important)
+![Owners](https://img.shields.io/badge/owners-TBD-orange)
 
-- Jump to: [What lives here](#what-lives-here) · [Story Node anatomy](#story-node-anatomy) · [Directory layout](#directory-layout) · [How to add a story](#how-to-add-a-story) · [Templates](#templates) · [Evidence and citations](#evidence-and-citations) · [Governance and review gates](#governance-and-review-gates) · [Story index](#story-index) · [Definition of done](#definition-of-done)
+# Story Nodes
+
+Governed narrative units that bind **human-readable markdown** to **map state** and **resolvable evidence**.
+
+> [!NOTE]
+> This folder is the canonical home for Story Nodes in this repo *if* you are using `docs/stories/`.
+> Some legacy documentation may refer to other locations (for example `docs/reports/story_nodes/`). If your repo differs, update this README to match the actual canonical path.
+
+## Navigation
+- [Purpose](#purpose)
+- [How this fits in KFM](#how-this-fits-in-kfm)
+- [Directory layout](#directory-layout)
+- [Story Node v3 format](#story-node-v3-format)
+- [Citations and evidence](#citations-and-evidence)
+- [Governance and safety](#governance-and-safety)
+- [Workflow](#workflow)
+- [Definition of done](#definition-of-done)
+- [Story registry](#story-registry)
+- [Appendix](#appendix)
 
 ---
 
-## What lives here
+## Purpose
 
-This folder holds **governed narrative content** (“Story Nodes”) that bind:
+This directory exists to store **Story Nodes** as governed publications:
 
-- **Text** (Markdown) written for humans, and
-- **Map state + metadata** (sidecar JSON) written for machines (UI, APIs, Focus Mode)
+- **Narrative**: written in Markdown for humans
+- **Map choreography**: encoded in a sidecar JSON file for machines
+- **Evidence**: every claim is traceable and must be resolvable via the evidence resolver
 
-A Story Node is treated as a **first-class, versioned artifact**: it is reviewed, policy-labeled, and must be evidence-linked.
-
-> [!IMPORTANT]
-> If a story makes a claim, it must be backed by a resolvable evidence reference. If it can’t be supported, it does not ship.
+Back to top: [Navigation](#navigation)
 
 ---
 
-## Story Node anatomy
+## How this fits in KFM
 
-A Story Node consists of two files:
-
-1. **Markdown story**
-   - Human-readable narrative
-   - Structured sections (Summary, Claims, Narrative, Evidence)
-   - Inline citation tokens
-
-2. **Sidecar JSON**
-   - Machine-readable metadata:
-     - status + review state
-     - policy label
-     - *map_state* (bbox, zoom, layers, time window, filters)
-     - citations list
+Story Nodes sit downstream of the trust membrane. A Story Node must not “skip the line” ahead of provenance, catalogs, and policy.
 
 ```mermaid
 flowchart LR
-  A[Draft story markdown] --> B[Draft sidecar JSON]
-  B --> C[Validation gates]
-  C --> D[Steward review]
-  D --> E[Published story]
-  E --> F[API serving layer]
-  F --> G[Map and Story UI]
-  F --> H[Focus Mode]
+  Raw[Raw] --> ETL[ETL and transforms]
+  ETL --> Catalogs[STAC DCAT PROV]
+  Catalogs --> Graph[Graph]
+  Graph --> API[Governed API]
+  API --> UI[Map and Story UI]
+  UI --> Stories[Story Nodes]
+  Stories --> Focus[Focus Mode]
 ```
+
+Back to top: [Navigation](#navigation)
 
 ---
 
 ## Directory layout
 
-Because stories are “content + assets”, the most maintainable pattern is **one folder per story** (so images and attachments stay with their story).
-
-Recommended structure:
+This README documents **what belongs here** and **what must not**. The exact subfolders are a repo choice; below is a recommended structure that keeps drafts and published stories separate.
 
 ```text
 docs/stories/
-  README.md                      # you are here
-  templates/                     # copy-paste templates
-    TEMPLATE__STORY_NODE_V3.md
-    TEMPLATE__STORY_NODE_V3.sidecar.json
-  draft/                         # work-in-progress stories (not published)
+  README.md
+
+  draft/                       # proposed: story nodes not yet published
+    <story_slug>/
+      story.md                 # Story Node markdown
+      story.json               # Story Node sidecar (map state + citations + policy)
+      media/                   # optional images/media used by the story
+        ...
+      media_attribution.md     # recommended: license + attribution notes for story media
+
+  published/                   # proposed: story nodes that have passed publish gates
     <story_slug>/
       story.md
-      story.sidecar.json
-      assets/
-  published/                     # approved stories (public or restricted)
-    <story_slug>/
-      story.md
-      story.sidecar.json
-      assets/
+      story.json
+      media/
+        ...
+      media_attribution.md
+
+  _templates/                  # optional helpers
+    story_node_v3/
+      story.md                 # starter template (keep aligned to v3)
+      story.json
 ```
 
-> [!NOTE]
-> If your repo uses a different canonical home (e.g., `docs/reports/story_nodes/`), keep the same **draft vs published** separation and folder-per-story rule.
+### Acceptable inputs
+
+- Story Node v3 artifacts:
+  - `story.md` (markdown narrative)
+  - `story.json` (sidecar metadata: map state + citations + policy + review)
+- Supporting media **only when** rights are clear and attribution is captured
+- Directory-level documentation and templates that support Story Node authoring
+
+### Exclusions
+
+Do **not** put these in `docs/stories/`:
+
+- Raw or processed datasets (those belong in the data lifecycle zones)
+- Pipeline code, ETL scripts, or schema contracts (those belong in code/contracts areas)
+- Media with unclear rights or missing attribution
+- Uncited narrative claims
+- Sensitive location specifics that violate policy or sovereignty requirements
+
+Back to top: [Navigation](#navigation)
 
 ---
 
-## How to add a story
+## Story Node v3 format
 
-### 1) Create a draft story folder
+A Story Node is a **pair** of files:
 
-- Pick a **slug** (kebab-case): `dust-bowl-black-sunday`, `kansas-river-floods-1951`, etc.
-- Create: `docs/stories/draft/<story_slug>/`
+| Artifact | Required | Purpose |
+|---|---:|---|
+| `story.md` | ✅ | Human-readable narrative with explicit claims and inline citations |
+| `story.json` | ✅ | Machine-readable story metadata: map state, citations list, policy label, review state |
 
-### 2) Copy templates
+### story.md expectations
 
-Create two files in the story folder:
+- Must include a **MetaBlock v2** (as an HTML comment) so it can be treated as a governed document.
+- Must include:
+  - `Summary` section: scope + time window
+  - `Claims` section: numbered claims with citations
+  - `Narrative` section: prose with inline citations
+  - `Evidence` section: a list of evidence references used
 
-- `story.md` (Markdown)
-- `story.sidecar.json` (sidecar JSON)
+Minimal example:
 
-Use the templates in [Templates](#templates) below.
-
-### 3) Fill the MetaBlock and narrative sections
-
-In `story.md`:
-
-- Set `doc_id` to a stable `kfm://story/<uuid>@v1` identifier (do not change it on edits)
-- Set `policy_label` appropriately (public vs restricted, etc.)
-- Add **scope** in Summary (time window + geography)
-- Write **Claims** as a numbered list, each with a citation token
-- Write **Narrative** with inline citations
-- List the Evidence refs again in the Evidence section
-
-### 4) Define map state
-
-In `story.sidecar.json`:
-
-- Set `map_state.time_window` to match the story scope
-- Set `bbox` and `zoom` for the initial view
-- Reference **promoted dataset versions only** in layers
-- Keep filters policy-safe and minimal
-
-### 5) Add citations and ensure they resolve
-
-- Every citation in Markdown should correspond to a resolvable evidence reference.
-- The sidecar `citations[]` list is the machine-checkable set of evidence roots.
-
-### 6) Open a PR and get review
-
-- Drafts can be merged as drafts, but **publishing** requires steward review + policy sign-off.
-- Publishing is the act of moving a story from `draft/` to `published/` (or flipping status + review state, depending on your workflow).
-
----
-
-## Templates
-
-### Story Node v3 Markdown skeleton
-
-Create `story.md`:
-
-```md
-<!--
-[KFM_META_BLOCK_V2]
-doc_id: kfm://story/<uuid-or-slug>
+```markdown
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://story/<uuid>@v1
 title: <Story title>
-type: story_node
+type: story
 version: v3
 status: draft
-owners: <team or person>
+owners: <names or teams>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-tags:
-  - story-node
-  - <topic>
-[/KFM_META_BLOCK_V2]
--->
+related:
+  - kfm://dataset/<slug>@<dataset_version_id>
+tags: [kfm, story]
+notes:
+  - Short note about scope or constraints
+[/KFM_META_BLOCK_V2] -->
 
 # <Story title>
-<One-line purpose.>
 
-## Scope and location
-- Area: <place name(s)>
-- Geometry: <bbox/centroid/generalized polygon>
-- Map notes: <optional>
-
-## Time
-- Event time: <YYYY-MM-DD or range>
-- Valid time: <optional>
-- Transaction time: <optional>
+## Summary
+<What this story covers and the relevant time window.>
 
 ## Claims
-- C1: <claim>
-- C2: <claim>
+1. <Claim text.> [CITATION: dcat://...]
+2. <Claim text.> [CITATION: prov://...]
+
+## Narrative
+<Prose with inline citations.>
 
 ## Evidence
-- For C1:
-  - DatasetRef: <...>
-  - Source: <...>
-- For C2:
-  - Source: <...>
-- AuditRef: <kfm://audit/...> (pending ok)
-
-## Uncertainty
-- <what we don’t know>
-- <competing interpretations>
-
-## Policy and redaction
-- policy_label: <public/restricted/...>
-- Redactions: <what is generalized/withheld>
-
-## Links
-- Related Story Nodes: <...>
-- Related datasets/layers: <...>
+- [CITATION: dcat://...]
+- [CITATION: stac://...]
+- [CITATION: prov://...]
 ```
 
-### Story Node v3 sidecar skeleton
+### story.json expectations
 
-Create `story.sidecar.json`:
+The sidecar JSON must declare Story Node v3 and include, at minimum:
+
+- `kfm_story_node_version: "v3"`
+- stable story identity (`story_id`) and story version (`version_id`)
+- `status`, `policy_label`, and `review_state`
+- `map_state` (bbox/zoom/layers/time window or equivalent)
+- `citations[]` (scheme refs that can be resolved)
+
+Minimal example:
 
 ```json
 {
   "kfm_story_node_version": "v3",
   "story_id": "kfm://story/<uuid>",
   "version_id": "v1",
-
   "status": "draft",
   "policy_label": "public",
   "review_state": "needs_review",
-
   "map_state": {
     "bbox": [-102.0, 36.9, -94.6, 40.0],
     "zoom": 6,
-    "layers": [
-      { "layer_id": "example_layer_id", "dataset_version_id": "YYYY-MM.hash" }
-    ],
+    "layers": [],
     "time_window": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" }
   },
-
   "citations": [
-    { "ref": "dcat://dataset_slug@dataset_version_id", "kind": "dcat" },
-    { "ref": "prov://run/<run_id>", "kind": "prov" }
+    { "ref": "dcat://<dataset>@<version>", "kind": "dcat" }
   ]
 }
 ```
 
-### Map state schema (minimum shape)
-
-Map state must stay compact and policy-safe. A typical shape:
-
-```json
-{
-  "kfm_map_state_version": "v1",
-  "bbox": [-102.0, 36.9, -94.6, 40.0],
-  "zoom": 6,
-  "bearing": 0,
-  "pitch": 0,
-  "time_window": { "start": "1950-01-01", "end": "2024-12-31" },
-  "layers": [
-    {
-      "layer_id": "noaa_storm_events",
-      "dataset_version_id": "2026-02.abcd1234",
-      "opacity": 0.8,
-      "filters": [
-        { "field": "event_type", "op": "in", "value": ["Tornado", "Hail"] }
-      ]
-    }
-  ]
-}
-```
+Back to top: [Navigation](#navigation)
 
 ---
 
-## Evidence and citations
+## Citations and evidence
 
-### What “citation” means in KFM
+### Non-negotiable rules
 
-In Story Nodes, citations are **not decorative**; they are part of the system’s trust membrane:
-
-- They must resolve through the evidence resolver endpoint (**publishing gate**).
-- They must not leak restricted metadata when policy denies access.
-- They must be stable across time (prefer dataset version URIs over raw URLs).
-
-### Citation token conventions
-
-In Markdown, citations appear as inline tokens:
-
-- `[CITATION: dcat://...]` for dataset/distribution discovery refs
-- `[CITATION: stac://...]` for asset/item refs
-- `[CITATION: prov://...]` for lineage/run refs
-- `[CITATION: doc://...]` for governed internal docs (if allowed by policy)
-
-In sidecar JSON, citations are normalized into an array:
-
-- `ref`: the URI
-- `kind`: the scheme/category (dcat, stac, prov, doc)
+- **Every claim must cite evidence.**
+- Citations must use resolvable evidence references (examples):
+  - `dcat://...` for dataset identity + licensing + distribution metadata
+  - `stac://...` for spatial/temporal assets
+  - `prov://...` for run receipts / lineage
+  - `doc://...` for governed documents and extracts
 
 > [!IMPORTANT]
-> Publishing gate: **all citations must resolve** via `/api/v1/evidence/resolve` before a story can be published.
+> Publishing is blocked unless **all citations resolve through the evidence resolver**.
+> Do not publish Story Nodes that rely on “dead links”, private URLs, or evidence that can’t be resolved.
+
+### Practical authoring guidance
+
+- Prefer **primary sources** and **cataloged** evidence.
+- Inline citations close to the sentence they support.
+- If a claim is uncertain or contested, state uncertainty and cite sources for the competing viewpoints.
+
+Back to top: [Navigation](#navigation)
 
 ---
 
-## Governance and review gates
+## Governance and safety
 
-### Roles (baseline)
+Story Nodes are not “just content”; they are governed outputs.
 
-Story publishing is a governed act:
-
-- **Contributor**: drafts stories; cannot publish
-- **Reviewer / Steward**: approves story publishing; owns policy labels + redaction rules
-- **Governance council / community stewards**: controls culturally sensitive material rules (especially Indigenous/cultural constraints)
-- **Operator**: runs pipelines + deployments; cannot override policy gates
-
-### Safety defaults
-
-Unless policy explicitly allows:
-
-- Do **not** embed precise coordinates for sensitive locations
-- Default-deny restricted collections
-- If public representation is allowed, prefer a **public generalized** representation instead of raw precision
-- Treat redaction/generalization as a first-class transform recorded in provenance
+### Rights and licensing for media
 
 > [!WARNING]
-> “Online availability does not equal permission to reuse.” If you include media (images, scans, audio), ensure rights/license metadata exists and is honored.
+> Publishing must be blocked if rights are unclear for included media.
+
+When adding images or other media:
+
+- Ensure the license/rights are recorded
+- Ensure attribution is included (recommended: `media_attribution.md`)
+- Ensure policy labels match the sensitivity of the content
+
+### Sensitive locations and sovereignty
+
+If a story touches sensitive locations or culturally restricted knowledge:
+
+- Default to generalization/redaction
+- Use a restrictive policy label when required
+- Do not embed precise coordinates unless policy explicitly allows it
+
+Back to top: [Navigation](#navigation)
 
 ---
 
-## Story index
+## Workflow
 
-This README can act as a curated, human-scannable index of Story Nodes.
+### Create a new Story Node
 
-### Published stories
+1. Create a folder under `draft/<story_slug>/`.
+2. Add `story.md` and `story.json` as a pair.
+3. Add any media under `media/` and include attribution notes.
+4. Ensure:
+   - MetaBlock v2 is present and complete
+   - `doc_id` is stable (do not regenerate on edits)
+   - `policy_label` is correct for the content
+   - every claim has at least one resolvable citation
 
-| Story | Status | Time window | Geography | Policy | Notes |
-|---|---|---:|---|---|---|
-| _(add published stories here)_ | published |  |  |  |  |
+### Update an existing Story Node
 
-### Draft stories
+- Bump `updated` date in MetaBlock on meaningful edits.
+- Preserve `doc_id` stability.
+- If policy label changes, treat it as a governance event and ensure review gates are applied.
 
-| Story | Status | Time window | Geography | Policy | Needs review |
-|---|---|---:|---|---|---|
-| _(add drafts here)_ | draft |  |  |  |  |
-
-> [!TIP]
-> Keep the index “curated”: small, high-signal, and ordered for discovery (not a raw dump).
+Back to top: [Navigation](#navigation)
 
 ---
 
 ## Definition of done
 
-A Story Node is publish-ready when:
+A Story Node is ready to move from `draft/` to `published/` when:
 
-- [ ] **MetaBlock v2** present and complete (stable `doc_id`, correct `policy_label`, updated date changed)
-- [ ] **Scope stated** in Summary (time window + geography)
-- [ ] **Claims section** present and each claim includes at least one citation token
-- [ ] **All citations resolve** through the evidence resolver
-- [ ] **Sidecar JSON** validates against the Story Node schema and map state schema
-- [ ] `map_state.layers[].dataset_version_id` references **promoted versions only**
-- [ ] No sensitive-location leakage (coordinates generalized or omitted unless explicitly allowed)
-- [ ] Media/asset rights verified and recorded (no “unknown license” assets in published stories)
-- [ ] Steward review completed; review_state indicates approval (per workflow)
+- [ ] `story.md` contains MetaBlock v2 and required sections
+- [ ] `story.json` declares `kfm_story_node_version: "v3"` and includes required keys
+- [ ] Every claim has at least one citation
+- [ ] All citations resolve through the evidence resolver
+- [ ] Policy label is correct and consistent with evidence sensitivity
+- [ ] Media rights are clear and attribution is recorded
+- [ ] Sensitive content is handled according to governance playbooks
+- [ ] Review state indicates approval for publishing
 
----
-
-### Appendix: Common pitfalls
-
-- **Unversioned evidence**: citing “latest” URLs instead of versioned dataset refs
-- **Map/story mismatch**: narrative describes one time window, map_state uses another
-- **Policy drift**: story is “public” but cites restricted evidence; or vice versa
-- **Hidden precision**: sensitive locations accidentally included in screenshots, captions, or “example” coordinates
+Back to top: [Navigation](#navigation)
 
 ---
 
-[↑ Back to top](#stories)
+## Story registry
+
+> [!TIP]
+> Keep this table updated so reviewers and UI builders can discover story nodes quickly.
+
+| Story | Status | Policy | Time window | Notes |
+|---|---|---|---|---|
+| _(add stories here)_ | draft | public | YYYY–YYYY | |
+
+Back to top: [Navigation](#navigation)
+
+---
+
+## Appendix
+
+<details>
+<summary>Recommended conventions and open questions</summary>
+
+### Proposed conventions
+
+- Keep drafts and published stories separate (`draft/` vs `published/`) to make “what ships” explicit.
+- Store story media adjacent to the story and require explicit attribution notes.
+- Consider adding a machine-readable registry file if the UI needs quick discovery.
+
+### Unknown until repo verification
+
+- Exact story discovery mechanism for the UI (directory scan vs registry file)
+- Exact schema validation tooling and CI checks for Story Nodes
+- Canonical location if the repo uses a different path than `docs/stories/`
+
+</details>
