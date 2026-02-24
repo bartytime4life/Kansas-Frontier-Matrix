@@ -99,13 +99,13 @@ flowchart LR
 
 ## Directory layout
 ```text
-docs/standards/
-├── README.md
-├── KFM_MARKDOWN_WORK_PROTOCOL.md
-├── KFM_REPO_STRUCTURE_STANDARD.md
-├── KFM_STAC_PROFILE.md
-├── KFM_DCAT_PROFILE.md
-└── KFM_PROV_PROFILE.md
+docs/standards/                                   # Non-negotiable standards (CI-enforced where configured)
+├─ README.md                                      # Index + how standards are reviewed/updated (high bar)
+├─ KFM_MARKDOWN_WORK_PROTOCOL.md                  # Markdown authoring protocol (formatting, lint, doc hygiene)
+├─ KFM_REPO_STRUCTURE_STANDARD.md                 # Canonical repo layout + invariants (what must exist, where)
+├─ KFM_STAC_PROFILE.md                            # STAC profile constraints (required fields, links, assets rules)
+├─ KFM_DCAT_PROFILE.md                            # DCAT profile constraints (dataset/distribution, licensing, vocab)
+└─ KFM_PROV_PROFILE.md                            # PROV profile constraints (lineage prerequisites, run linkage, IDs)
 ```
 
 ### Acceptable inputs
