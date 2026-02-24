@@ -91,27 +91,38 @@ Every statement in docs should be tagged mentally (and sometimes explicitly) as 
 > ⚠️ **Scaffold:** adjust to match the actual repo tree.
 
 ```text
-docs/
-  README.md                 # you are here
-  adr/                      # architecture decision records
-    README.md               # ADR index (TODO)
-  architecture/             # system architecture + invariants
-    overview.md             # layered architecture, trust membrane (TODO)
-  governance/               # policies, roles, promotion gates
-    policy_labels.md        # public/restricted/etc. (TODO)
-    promotion_gates.md      # Raw→Work→Processed→Published (TODO)
-  data/                     # catalogs, schemas, provenance
-    catalog/                # dataset identity + schema + extents + license
-    receipts/               # validation + QA outputs (redacted)
-  api/                      # governed interface contracts
-    openapi/                # OpenAPI specs (if applicable)
-    graphql/                # GraphQL schema + conventions (if applicable)
-  ui/                       # map/story + focus-mode interaction docs
-    story-node-v3.md        # spec (TODO, if used)
-  runbooks/                 # operational procedures
-    incident_response.md    # (TODO)
-  contributing/             # doc standards + style guides
-    writing_standards.md    # (TODO)
+docs/                                           # Docs hub (governed): architecture + governance + contracts + runbooks
+├─ README.md                                    # You are here: docs index + editing rules + “what goes where”
+│
+├─ adr/                                         # Architecture Decision Records (ADRs)
+│  ├─ README.md                                 # ADR index (TODO)
+│  └─ …                                         # Individual ADRs (date-stamped, decision + rationale)
+│
+├─ architecture/                                # System architecture + invariants
+│  ├─ overview.md                               # Layered architecture + trust membrane (TODO)
+│  └─ …                                         # Diagrams, flows, boundary contracts
+│
+├─ governance/                                  # Policies, roles, promotion gates
+│  ├─ policy_labels.md                          # Policy labels taxonomy (public/restricted/etc.) (TODO)
+│  ├─ promotion_gates.md                        # Raw → Work → Processed → Published gates (TODO)
+│  └─ …                                         # Review workflows, obligations, rubrics
+│
+├─ data/                                        # Data-facing docs (catalogs, schemas, provenance concepts)
+│  ├─ catalog/                                  # Dataset identity + schema + extents + license (documentation)
+│  └─ receipts/                                 # Validation + QA outputs (redacted docs/examples)
+│
+├─ api/                                         # Governed interface contracts (human-facing)
+│  ├─ openapi/                                  # OpenAPI specs/docs (if applicable)
+│  └─ graphql/                                  # GraphQL schema/docs (if applicable)
+│
+├─ ui/                                          # UI behavior docs (map/story/focus interactions)
+│  └─ story-node-v3.md                           # Story Node v3 spec (TODO, if used)
+│
+├─ runbooks/                                    # Operational procedures (production-grade)
+│  └─ incident_response.md                      # Incident response runbook (TODO)
+│
+└─ contributing/                                # Doc standards + style guides
+   └─ writing_standards.md                      # Writing standards (TODO)
 ```
 
 ---
