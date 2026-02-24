@@ -1,1 +1,17 @@
+# GitHub Issue Template chooser configuration
+# Docs: https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-issue-templates-for-your-repository
 
+blank_issues_enabled: false
+
+contact_links:
+  - name: "❓ Questions / Discussion"
+    url: "https://github.com/<ORG>/<REPO>/discussions"
+    about: "Use Discussions for questions, troubleshooting, and open-ended ideas."
+
+  - name: "📖 Documentation / README"
+    url: "https://github.com/<ORG>/<REPO>#readme"
+    about: "Check the README and docs before filing an issue."
+
+  - name: "🔐 Report a security vulnerability"
+    url: "https://github.com/<ORG>/<REPO>/security/policy"
+    about: "Please do not open public issues for security reports—use the security policy instead."
