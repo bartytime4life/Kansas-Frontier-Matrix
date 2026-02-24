@@ -97,33 +97,33 @@ flowchart LR
 > The layout below is the *recommended* structure for this directory. If you don’t see these folders yet, create them incrementally as your catalog pipeline is introduced.
 
 ```text
-data/catalog/dcat/
-  README.md                      # This document
-
-  catalogs/                       # Catalog-level records
-    catalog.ttl                   # Canonical (review-friendly) RDF serialization
-    catalog.jsonld                # Optional: JSON-LD form for web delivery
-
-  datasets/                       # Dataset records (one logical dataset per id)
-    <dataset_id>.ttl
-    <dataset_id>.jsonld
-
-  distributions/                  # Distribution/access records (download/API endpoints)
-    <distribution_id>.ttl
-
-  services/                       # DataService records (APIs, map services)
-    <service_id>.ttl
-
-  shapes/                         # SHACL shapes used for validation (recommended)
-    dcat.shacl.ttl
-    dcat-ap.shacl.ttl
-
-  contexts/                       # JSON-LD contexts (optional)
-    dcat.context.json
-
-  reports/                        # Machine outputs for auditing + CI artifacts
-    validation/
-      <timestamp>__<commit>.json
+data/catalog/dcat/                                # DCAT catalog (RDF): datasets + distributions + services + validation
+├─ README.md                                      # This document: conventions, required fields, and validation workflow
+│
+├─ catalogs/                                      # Catalog-level records (the top entrypoint)
+│  ├─ catalog.ttl                                 # Canonical RDF serialization (review-friendly)
+│  └─ catalog.jsonld                              # Optional JSON-LD form (web delivery / tooling)
+│
+├─ datasets/                                      # Dataset records (one logical dataset per dataset_id)
+│  ├─ <dataset_id>.ttl                            # Dataset record (canonical)
+│  └─ <dataset_id>.jsonld                         # Optional JSON-LD mirror (if maintained)
+│
+├─ distributions/                                 # Distribution/access records (download/API endpoints)
+│  └─ <distribution_id>.ttl                       # Distribution record (canonical)
+│
+├─ services/                                      # DataService records (APIs, tiles, map services)
+│  └─ <service_id>.ttl                            # Service record (canonical)
+│
+├─ shapes/                                        # SHACL shapes for validation (recommended)
+│  ├─ dcat.shacl.ttl                              # Base DCAT shape constraints
+│  └─ dcat-ap.shacl.ttl                           # DCAT-AP constraints (if applicable)
+│
+├─ contexts/                                      # Optional JSON-LD contexts (namespace mappings)
+│  └─ dcat.context.json                           # JSON-LD context used by catalog.jsonld (if used)
+│
+└─ reports/                                       # Machine outputs (CI artifacts + audit trails)
+   └─ validation/
+      └─ <timestamp>__<commit>.json               # Validation report (findings, counts, failing nodes)
 ```
 
 [Back to top](#navigation)
