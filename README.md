@@ -585,30 +585,44 @@ PROPOSED: include a human-friendly time component in `dataset_version_id` if it 
 Reference layout for the truth path:
 
 ```text
-data/
-  raw/<dataset_slug>/<dataset_version_id>/
-    acquisition_manifest.json
-    terms_snapshot.txt
-    source_files/...
-  work/<dataset_slug>/<dataset_version_id>/
-    qa/...
-    redaction_candidates/...
-  quarantine/<dataset_slug>/<dataset_version_id>/
-    reason.json
-    artifacts/...
-  processed/<dataset_slug>/<dataset_version_id>/
-    artifacts/...
-    runtime_metadata.json
-  catalog/<dataset_slug>/<dataset_version_id>/
-    dcat.jsonld
-    stac/collection.json
-    stac/items/*.json
-    prov/prov.jsonld
-    run_receipts/*.json
-  published/<dataset_slug>/<dataset_version_id>/
-    exports/...
-  audit/
-    ledger/<year>/<month>/append-only.log
+data/                                                # Governed data lifecycle (raw → work → quarantine? → processed → catalog → published)
+├─ raw/
+│  └─ <dataset_slug>/<dataset_version_id>/           # Immutable capture for a specific dataset version
+│     ├─ acquisition_manifest.json                   # Capture manifest (source, method, license/sensitivity, pointers)
+│     ├─ terms_snapshot.txt                          # Terms/license snapshot at capture time (audit + provenance)
+│     └─ source_files/…                              # Original source payload (or pointers; never modified)
+│
+├─ work/
+│  └─ <dataset_slug>/<dataset_version_id>/           # Regeneratable intermediates (never served)
+│     ├─ qa/…                                        # Validation/QC artifacts (schema/geo/time/license checks)
+│     └─ redaction_candidates/…                      # Candidate fields/geometry needing redaction/generalization
+│
+├─ quarantine/
+│  └─ <dataset_slug>/<dataset_version_id>/           # Failed gates (never promoted/served until remediated)
+│     ├─ reason.json                                 # REQUIRED: failure reason + remediation plan + owner
+│     └─ artifacts/…                                 # Debug artifacts (bounded; synthetic where possible)
+│
+├─ processed/
+│  └─ <dataset_slug>/<dataset_version_id>/           # Publishable artifacts (servable; immutable per version)
+│     ├─ artifacts/…                                 # Data products (parquet/geoparquet/tiles/media; checksummed elsewhere)
+│     └─ runtime_metadata.json                       # Runtime metadata (bounds, schema refs, policy labels, evidence refs)
+│
+├─ catalog/
+│  └─ <dataset_slug>/<dataset_version_id>/           # Served metadata + lineage (cross-linked; validation-gated)
+│     ├─ dcat.jsonld                                 # DCAT record(s) (dataset/distribution)
+│     ├─ stac/
+│     │  ├─ collection.json                          # STAC Collection
+│     │  └─ items/*.json                             # STAC Items for assets in this version
+│     ├─ prov/
+│     │  └─ prov.jsonld                              # PROV bundle (raw → work → processed lineage)
+│     └─ run_receipts/*.json                         # Run receipts/manifests (promotion evidence for this version)
+│
+├─ published/
+│  └─ <dataset_slug>/<dataset_version_id>/           # Exported/publication-ready outputs (optional; often externalized)
+│     └─ exports/…                                   # Exports (CSV/GeoJSON/tilesets/packages) as allowed by policy
+│
+└─ audit/
+   └─ ledger/<year>/<month>/append-only.log          # Append-only audit ledger segments (often stored outside repo in prod)
 ```
 
 > [!IMPORTANT]
