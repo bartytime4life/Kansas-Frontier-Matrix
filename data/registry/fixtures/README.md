@@ -130,17 +130,20 @@ If you need realism:
 This is a **template** (illustrative). Adjust to match your repo conventions.
 
 ```
-data/registry/fixtures/
-  README.md
-  manifest/
-    fixtures.manifest.yaml
-  sets/
-    minimal/
-      registry.sources.json
-      registry.datasets.json
-    demo_spatial/
-      registry.datasets.geojson
-      registry.provenance.json
+data/registry/fixtures/                            # Registry fixtures (deterministic test sets for CI + local dev)
+├─ README.md                                       # How fixture sets are used, naming rules, and update workflow
+│
+├─ manifest/                                       # Fixture manifest (authoritative index + digests)
+│  └─ fixtures.manifest.yaml                       # Lists fixture files/sets + expected digests/metadata
+│
+└─ sets/                                           # Curated fixture sets (each set is a self-contained scenario)
+   ├─ minimal/                                     # Minimal registry set (fast smoke validation)
+   │  ├─ registry.sources.json                     # Minimal sources registry fixture
+   │  └─ registry.datasets.json                    # Minimal datasets registry fixture
+   │
+   └─ demo_spatial/                                # Demo spatial set (adds geometry + provenance linkage)
+      ├─ registry.datasets.geojson                 # Dataset registry with spatial extents (demo)
+      └─ registry.provenance.json                  # Provenance registry fixture (links datasets ↔ runs ↔ artifacts)
 ```
 
 Suggested structure conventions:
