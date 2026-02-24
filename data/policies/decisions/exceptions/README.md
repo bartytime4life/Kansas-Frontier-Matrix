@@ -106,15 +106,17 @@ Related docs (paths may vary by repo layout):
 Recommended layout:
 
 ```text
-data/policies/decisions/exceptions/
-  README.md
-  ex-<exception_id>--<slug>.md
-  ex-<exception_id>--<slug>.yml
-  _attachments/
-    ex-<exception_id>/
-      supporting-evidence.pdf
-      screenshots/
-      redaction-notes.md
+data/policies/decisions/exceptions/                 # Policy exceptions (time-bounded, reviewed, fully evidenced)
+├─ README.md                                       # How exceptions work (scope, TTL, approvals, revocation)
+│
+├─ ex-<exception_id>--<slug>.md                    # Human-readable exception record (why, scope, TTL, compensating controls)
+├─ ex-<exception_id>--<slug>.yml                   # Machine-readable exception (targets, obligations, expiry, approvals)
+│
+└─ _attachments/                                   # Supporting evidence (never secrets; keep bounded)
+   └─ ex-<exception_id>/                           # Attachment folder for this exception ID
+      ├─ supporting-evidence.pdf                   # Evidence snapshot(s) backing the exception
+      ├─ screenshots/                              # Optional screenshots (UI/log excerpts; redact if needed)
+      └─ redaction-notes.md                        # Redaction/handling notes (what was removed and why)
 ```
 
 **Naming convention**
