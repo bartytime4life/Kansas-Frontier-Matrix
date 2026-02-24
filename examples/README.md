@@ -1,189 +1,370 @@
-# Examples — Kansas Frontier Matrix (KFM)
-Runnable, **governed** examples that demonstrate KFM’s end-to-end flow: **data → catalogs/provenance → governed APIs → Map/Story/Focus UI**.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/677a9d0c-ca5d-4a30-be1e-f4bec92d976f
+title: Examples
+type: standard
+version: v1
+status: draft
+owners: KFM Maintainers (TODO: set owning team)
+created: 2026-02-24
+updated: 2026-02-24
+policy_label: public
+related:
+  - TODO: ../README.md
+  - TODO: ../docs/ (governance + architecture)
+tags: [kfm, examples]
+notes:
+  - This file defines the contract for content under /examples.
+  - It is intentionally conservative: examples must be reproducible and policy-safe by default.
+[/KFM_META_BLOCK_V2] -->
 
-**Status:** Draft (vNext)  
-**Owners:** _TODO: add GitHub handles / CODEOWNERS path_  
-**Last reviewed:** _TODO: YYYY-MM-DD_
+# Examples
 
-<!-- Replace ORG/REPO + workflow filenames with real values if/when you add badges. -->
-<!-- Badges are intentionally optional here; keep them accurate if you enable them. -->
-[![CI](https://img.shields.io/github/actions/workflow/status/ORG/REPO/ci.yml?branch=main)](#)
-[![Policy Gate](https://img.shields.io/github/actions/workflow/status/ORG/REPO/policy-gate.yml?branch=main)](#)
-[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](#)
+**Purpose:** Minimal, reproducible, *governed* examples that demonstrate end-to-end KFM workflows  
+**Status:** Draft · **Owners:** KFM Maintainers (TODO) · **Policy:** Public (this README)
 
-**Quick nav:**  
-- [What belongs in `examples/`](#what-belongs-in-examples)  
-- [How to run an example](#how-to-run-an-example)  
-- [Example contract](#example-contract)  
-- [Governance invariants](#governance-invariants)  
-- [Adding a new example](#adding-a-new-example)  
-- [Definition of Done](#definition-of-done)  
-- [Troubleshooting](#troubleshooting)
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Policy](https://img.shields.io/badge/policy-public-blue)
+![CI](https://img.shields.io/badge/ci-TODO-lightgrey)
+![Examples](https://img.shields.io/badge/examples-governed-brightgreen)
 
 ---
 
-## What belongs in `examples/`
+## Quick navigation
 
-This folder is the **canonical place for runnable demonstrations** that:
-- prove a **thin slice** works end-to-end (contracts → validation → provenance → policy → UI), and
-- are safe to run locally or in CI using **fixtures** by default.
+- [What this directory is](#what-this-directory-is)
+- [Directory contract](#directory-contract)
+- [Quickstart](#quickstart)
+- [Example package standard](#example-package-standard)
+- [Evidence and provenance](#evidence-and-provenance)
+- [Data and safety rules](#data-and-safety-rules)
+- [Promotion gates for example outputs](#promotion-gates-for-example-outputs)
+- [Recommended layout](#recommended-layout)
+- [Contributing](#contributing)
+- [Further reading](#further-reading)
 
-Examples may cover (non-exhaustive):
-- **Pipelines:** fetch/snapshot → normalize/QA → publishable artifacts
-- **Catalog triplet:** DCAT + STAC + PROV generation and validation
-- **Policy gates:** default-deny behaviors, license allow/deny, sensitivity/redaction checks
-- **Governed API:** dataset discovery, evidence resolution, story/focus endpoints
-- **UI primitives:** map layer rendering, time filters, story nodes, evidence drawer
-- **Focus Mode harnesses:** cite-or-abstain behaviors, regression tests, golden queries
+---
+
+## What this directory is
+
+This directory is the **sandbox of truth**: every example is expected to be small enough to run locally, but strict enough to:
+- demonstrate the **policy boundary** (no direct DB hits; go through governed APIs),
+- emit **traceable evidence** (inputs → transforms → outputs),
+- survive review and CI (deterministic, reversible, and auditable).
 
 > NOTE  
-> If an “example” needs access to restricted data, private services, or credentials, it is **not** an example by default. It should live under a controlled path and be treated as a governed integration test.
+> If an example can’t be made safe to publish, it doesn’t belong here. Put it in a restricted area (path TBD) and link to it from governance docs instead.
 
----
-
-## How to run an example
-
-Because repo tooling evolves, **each example MUST be self-documenting**:
-1. `cd examples/<example-id>/`
-2. Read `examples/<example-id>/README.md`
-3. Run the exact commands listed there.
-
-Recommended structure for example READMEs:
-- **Prereqs** (runtime, container tools, env vars)
-- **Inputs** (fixtures vs real data; licenses)
-- **Commands** (copy-paste)
-- **Outputs** (where artifacts end up; expected checksums if relevant)
-- **Verification** (tests or validators to run)
-
----
-
-## Example contract
-
-Every example folder MUST include:
-
-- `README.md` — how to run it + what success looks like
-- `LICENSES/` or `LICENSE.md` notes for any bundled fixtures (when applicable)
-- `fixtures/` — synthetic or public-safe test inputs (default)
-- `expected/` — expected outputs or checks (when stable)
-- `tests/` (or a documented validation command) — so CI can verify behavior
-
-Strongly recommended:
-- `run.sh` (or `Makefile`) — one-command entrypoint
-- `manifest.json` or `example.yml` — machine-readable metadata (for future listing/automation)
-- `prov/` — example run receipt output (or a pointer to the repo-wide run receipt location)
-
-### Suggested example folder layout
-
-```text
-examples/
-  README.md                  # (this file)
-  <example-id>/
-    README.md
-    fixtures/
-    src/                      # scripts/notebooks/code for the example
-    expected/                 # stable expected outputs (optional)
-    tests/                    # unit/contract tests (recommended)
-```
-
----
-
-## Architecture map for examples
+### How examples fit the system
 
 ```mermaid
 flowchart LR
-  A[Example code or notebook] --> B[Artifacts produced]
-  B --> C[Catalog triplet<br/>DCAT + STAC + PROV]
-  C --> D[Governed API<br/>policy + evidence resolver]
-  D --> E[UI surfaces<br/>Map / Story / Focus]
-  D --> F[Audit + run receipts<br/>by digest]
+  A[Example inputs] --> B[Pipeline run]
+  B --> C[Run receipt and checksums]
+  C --> D[Catalog and provenance]
+  D --> E[Storage and indexing]
+  E --> F[Governed API]
+  F --> G[Map and Story UI]
+  G --> H[Focus Mode AI]
 ```
 
+[Back to top](#examples)
+
 ---
 
-## Governance invariants
+## Directory contract
 
-Examples are not “toy code” — they are **reference implementations** of KFM’s governance posture.
+### What belongs here
 
-### 1) Truth path zones (lifecycle)
+✅ **Runnable, minimal** examples that demonstrate one or more of:
+- **Data → pipeline → catalog/provenance → storage/index → governed API → UI**
+- API usage patterns (requests + responses) *without secrets*
+- Validation patterns (schema checks, QA thresholds, redaction behavior)
+- UI “Story Node” examples (small, self-contained)
 
-Examples SHOULD demonstrate (or at least respect) KFM’s lifecycle zones:
+✅ **Synthetic or policy-approved** sample data, *small* enough to commit.
 
-- **RAW**: immutable acquisition (what was fetched, from where, under what terms) + checksums  
-- **WORK / QUARANTINE**: normalization, QA, candidate redactions; quarantine for failed validation/unclear licensing/sensitivity concerns  
-- **PROCESSED**: publishable artifacts + checksums + derived runtime metadata  
-- **CATALOG/TRIPLET**: DCAT + STAC + PROV cross-links (the interoperability/evidence surface)  
-- **PUBLISHED**: runtime surfaces may only serve promoted versions with processed artifacts, validated catalogs, run receipts, and policy labels
+✅ **Documentation-first** examples: someone should be able to understand the goal by reading `examples/<example>/README.md`.
+
+### What must not go here
+
+🚫 Anything that breaks the trust membrane:
+- secrets, tokens, private keys, credentials, `.env` with real values
+- direct DB access snippets that bypass the governed API boundary
+- “works on my machine” examples with undocumented prerequisites
+
+🚫 Anything that violates governance:
+- unlicensed datasets or unclear provenance
+- personal data, sensitive locations, culturally restricted knowledge
+- exact coordinates for vulnerable sites (use coarse geography instead)
+
+🚫 Large artifacts:
+- raw data dumps, large rasters, huge model weights, etc.  
+  (Use pointers + reproducible download scripts in a governed way, if allowed.)
+
+[Back to top](#examples)
+
+---
+
+## Quickstart
+
+> This section intentionally uses placeholders. Replace the commands once the repo’s actual tooling is confirmed.
+
+1) **List examples**
+```bash
+ls -1 examples
+```
+
+2) **Pick one and read its README**
+```bash
+cat examples/<example-id>/README.md
+```
+
+3) **Run**
+```bash
+# TODO: replace with actual runner (make, task, npm, uv, poetry, etc.)
+./examples/<example-id>/run.sh
+```
+
+4) **Verify**
+```bash
+# TODO: example should define a deterministic verify step
+./examples/<example-id>/verify.sh
+```
+
+If an example cannot provide a `verify` step, it **must** clearly document:
+- what outputs to expect,
+- how to validate them,
+- what constitutes failure.
+
+[Back to top](#examples)
+
+---
+
+## Example package standard
+
+Every example lives under its own directory:
+
+- `examples/<example-id>/README.md` (human intent + steps)
+- `examples/<example-id>/kfm.example.yaml` (machine-readable metadata)
+- `examples/<example-id>/src/` (code, configs, notebooks)
+- `examples/<example-id>/data/` (small inputs; synthetic or approved)
+- `examples/<example-id>/outputs/` (small, checked-in expected outputs when feasible)
+- `examples/<example-id>/evidence/` (run receipts, checksums, screenshots)
+
+### Naming convention
+
+Use **kebab-case** and scope to the primary domain:
+
+- `api-...` (API request/response examples)
+- `pipe-...` (pipeline execution examples)
+- `ui-...` (UI / story examples)
+- `gov-...` (policy + governance behavior examples)
+- `data-...` (dataset packaging / validation examples)
+
+Examples:
+- `api-feature-query`
+- `pipe-validate-and-publish`
+- `ui-story-node-minimal`
+
+### `kfm.example.yaml` template
+
+```yaml
+# examples/<example-id>/kfm.example.yaml
+example_id: "<example-id>"
+title: "<Short human title>"
+summary: "<One paragraph describing the goal and the claim this example demonstrates>"
+
+owners:
+  - "<team-or-person>"
+status: "draft"   # draft | review | published
+policy_label: "public"  # public | restricted | ...
+
+inputs:
+  - name: "<input-name>"
+    path: "data/<file>"
+    license: "<SPDX identifier or reference>"
+    sensitivity: "<public|restricted|...>"
+    checksum: "<sha256:...>"
+
+outputs:
+  - name: "<output-name>"
+    path: "outputs/<file>"
+    checksum: "<sha256:...>"
+
+repro:
+  # One command that runs end-to-end.
+  run: "./run.sh"
+  verify: "./verify.sh"
+
+evidence:
+  receipt: "evidence/run-receipt.json"
+  notes: "evidence/notes.md"
+
+claims:
+  - id: "claim-1"
+    text: "<What a user can conclude if the example passes verify>"
+    evidence_paths:
+      - "evidence/run-receipt.json"
+      - "outputs/<file>"
+
+depends_on:
+  - "<optional: other examples or shared fixtures>"
+
+notes:
+  - "TODO: anything reviewers should know"
+```
+
+> TIP  
+> Keep `kfm.example.yaml` **diff-friendly**: stable ordering, explicit checksums, no generated timestamps unless required.
+
+[Back to top](#examples)
+
+---
+
+## Evidence and provenance
+
+Every example must be able to answer:
+
+1) **What did we run?** (command, tool versions, environment)
+2) **What did we use?** (inputs + licenses + sensitivity)
+3) **What changed?** (outputs + checksums)
+4) **Why should we trust it?** (validation results + policy decisions)
+
+### Minimum “run receipt” fields
+
+A good `evidence/run-receipt.json` includes:
+
+- `example_id`
+- `git_commit` (or “not available” for local-only runs)
+- `runner` (script/CLI invoked)
+- `started_at`, `finished_at` (optional for determinism; keep out of golden files)
+- `inputs[]` with checksums
+- `outputs[]` with checksums
+- `validation[]` results (pass/fail + thresholds)
+- `policy_decisions[]` (redactions, access rules applied)
 
 > WARNING  
-> Do not write examples that “skip the truth path” by editing RAW or bypassing promotion/validation steps.
+> Do not record secrets, access tokens, internal URLs, or user identifiers in receipts.
 
-### 2) Promotion Contract mindset (fail-closed)
-
-If an example claims something is “publishable”, it MUST show (or simulate) minimum gates:
-- identity/versioning
-- licensing/rights metadata
-- sensitivity classification + redaction plan
-- catalog triplet validation
-- run receipts + checksums
-- policy + contract tests
-
-### 3) Trust membrane (no direct DB/storage access)
-
-Examples that touch the UI or API MUST respect the trust membrane:
-- clients/UI do **not** talk directly to storage/DB
-- access flows through the **governed API** where policy/evidence/versioning are enforced consistently
-
-### 4) Cite-or-abstain behaviors (Focus Mode & narrative)
-
-If an example includes Focus Mode behavior, it MUST:
-- provide **resolvable citations**, or
-- **abstain** (and explain why in policy-safe terms)
+[Back to top](#examples)
 
 ---
 
-## Example registry
+## Data and safety rules
 
-Fill this table in as you add examples (it’s intentionally empty to avoid inventing repo state):
+Examples **default-deny** when unclear:
 
-| Example ID | Demonstrates | Default inputs | Outputs | Owner |
-|---|---|---|---|---|
-| _TBD_ | _TBD_ | fixtures | _TBD_ | _TBD_ |
+- **License unknown?** Don’t include the data. Use synthetic data or an approved dataset with explicit license terms.
+- **Sensitivity unknown?** Treat as restricted and exclude from public examples until reviewed.
+- **Vulnerable locations?** No precise coordinates. Use generalized areas.
 
----
+### Allowed data patterns
 
-## Adding a new example
+✅ Synthetic fixtures (recommended)  
+✅ Public-domain / permissively licensed samples with attribution  
+✅ “Toy” extracts that can’t be re-identified and have explicit approval
 
-1. Create a new folder: `examples/<example-id>/`
-2. Add `README.md` with:
-   - prerequisites
-   - commands
-   - expected outputs + validation steps
-3. Prefer **fixtures/synthetic data**. If you must reference real sources:
-   - do **not** vendor restricted data into git
-   - document licensing/terms + sensitivity posture
-4. Add validations/tests so CI can run it.
-5. If the example produces artifacts, emit (or mock) a **run receipt** and checksums.
+### Disallowed data patterns
 
----
+🚫 PII / PHI / student records / customer records  
+🚫 Anything that enables targeting or harm  
+🚫 Scraped data with unclear permission
 
-## Definition of Done
-
-- [ ] Example is runnable from a clean checkout using the documented steps
-- [ ] Default path uses fixtures/synthetic or public-safe data
-- [ ] Licenses/terms are recorded for any fixture content
-- [ ] Outputs are deterministic enough to validate (or explicitly non-deterministic with a safe check)
-- [ ] Catalog/provenance validation is included when relevant (DCAT/STAC/PROV)
-- [ ] No policy bypasses (no direct storage/DB calls from “client” code)
-- [ ] If Focus Mode is involved: cite-or-abstain is demonstrated + tested
+[Back to top](#examples)
 
 ---
 
-## Troubleshooting
+## Promotion gates for example outputs
 
-- **Example fails in CI but works locally:** check pinned tool versions and environment parity.
-- **Catalog validation fails:** ensure DCAT/STAC/PROV cross-links are correct and artifacts have digests.
-- **Policy blocks publication:** treat this as success; update metadata/labels/redaction plan rather than weakening the gate.
+Examples may demonstrate the KFM data lifecycle. When they do, examples **must** show the required artifacts for promotion:
+
+Raw → Work or Quarantine → Processed → Published
+
+### Minimum artifacts before “Published”
+
+| Artifact | Why it matters | Where to put it |
+|---|---|---|
+| Metadata (identity, schema, extents) | discovery + interoperability | `kfm.example.yaml` + `evidence/` |
+| License + attribution | legal + ethical use | `kfm.example.yaml` |
+| Sensitivity label + redaction notes | trust + harm reduction | `kfm.example.yaml` + `evidence/notes.md` |
+| Validation results + thresholds | correctness gate | `evidence/run-receipt.json` |
+| Provenance links | traceable claims | `evidence/run-receipt.json` |
+| Checksums | integrity and rollback | `kfm.example.yaml` + receipt |
+
+### Definition of Done checklist
+
+- [ ] Runs end-to-end from a clean checkout (documented prerequisites)
+- [ ] Has deterministic verify step (or a clearly documented manual validation)
+- [ ] Includes `kfm.example.yaml` with license + sensitivity for every input
+- [ ] Emits a run receipt with checksums for inputs + outputs
+- [ ] Does not include secrets or restricted data
+- [ ] Does not bypass governed APIs or policy boundaries
+- [ ] Includes enough narrative for a reviewer to understand the claim
+
+[Back to top](#examples)
 
 ---
 
-<sub>Back to top: <a href="#examples--kansas-frontier-matrix-kfm">↑</a></sub>
+## Recommended layout
+
+> Not confirmed in repo: this is the **recommended** structure for scaling examples.
+
+```text
+examples/
+  README.md
+  api-feature-query/
+    README.md
+    kfm.example.yaml
+    src/
+    data/
+    outputs/
+    evidence/
+  pipe-validate-and-publish/
+    README.md
+    kfm.example.yaml
+    src/
+    data/
+    outputs/
+    evidence/
+  ui-story-node-minimal/
+    README.md
+    kfm.example.yaml
+    src/
+    outputs/
+    evidence/
+```
+
+If you add new top-level categories, update this README and keep them **few and obvious**.
+
+[Back to top](#examples)
+
+---
+
+## Contributing
+
+1. Copy the template structure above.
+2. Keep inputs small; prefer synthetic fixtures.
+3. Add a `verify` step that can run in CI.
+4. Add or update evidence outputs.
+5. Make sure the example demonstrates exactly one primary claim.
+
+### Review expectations
+
+- Examples that touch policy boundaries (redaction, access) should be reviewed by governance owners.
+- Examples that introduce new dependencies should justify them and include lockfiles.
+
+[Back to top](#examples)
+
+---
+
+## Further reading
+
+This repo ships with a bundled reference library (path TBD). If you’re looking for background material:
+- Git workflows and collaboration
+- Webpack/React build patterns
+- Data analytics lifecycles and validation
+- Data acquisition and signal/noise concepts (useful for QA/measurement thinking)
+
+See the **Project Library Index** for a navigable list of PDFs.
+
+[Back to top](#examples)
