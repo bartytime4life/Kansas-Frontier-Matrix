@@ -245,17 +245,21 @@ The connector **MUST**:
 > Proposed layout (adapt to repo conventions):
 
 ```
-data/raw/usgs_waterdata_nwis/
-  receipts/
-    YYYY/MM/DD/<run_id>.json
-  ogcapi/
-    <collection_id>/
-      <partition_key>/
-        <time_chunk>/response.json
-  waterservices/
-    <service>/
-      <partition_key>/
-        <time_chunk>/response.json
+data/raw/usgs_waterdata_nwis/                        # Raw capture for USGS NWIS (append-only; never served)
+├─ receipts/                                        # Capture receipts (who/when/how; traceability for each run)
+│  └─ YYYY/MM/DD/<run_id>.json                       # One receipt per acquisition run (inputs, paging, checksums/pointers)
+│
+├─ ogcapi/                                          # OGC API responses captured verbatim (or normalized raw)
+│  └─ <collection_id>/                              # Upstream collection identifier
+│     └─ <partition_key>/                           # Partitioning key (e.g., state, HUC, site group)
+│        └─ <time_chunk>/                           # Time bucket (e.g., 2026-02, 2026-W08, 2026-02-01_2026-02-07)
+│           └─ response.json                        # Raw response payload (immutable; may be pointer if large)
+│
+└─ waterservices/                                   # USGS Water Services API captures (REST endpoints)
+   └─ <service>/                                    # Endpoint/service name (e.g., iv, dv, site, statistics)
+      └─ <partition_key>/                           # Partition key (site list, region, query hash)
+         └─ <time_chunk>/                           # Time bucket for paging/rate-limit control
+            └─ response.json                        # Raw response payload (immutable; may be pointer if large)
 ```
 
 ---
