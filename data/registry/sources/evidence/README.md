@@ -87,37 +87,37 @@ flowchart LR
 Proposed layout (per-source folders):
 
 ```text
-data/registry/sources/evidence/
-  README.md
-
-  _templates/                         # OPTIONAL (recommended)
-    evidence.manifest.example.yaml
-    sensitivity.review.example.md
-    license.snapshot.example.txt
-
-  <source_slug>/                      # one folder per upstream source
-    evidence.manifest.yaml            # the index of evidence items for this source (required)
-    README.md                         # optional: source-specific notes + rationale
-
-    terms/                            # terms of use snapshots, API docs snapshots
-      2026-02-20_terms.pdf
-      2026-02-20_terms.sha256
-
-    license/                          # license texts / SPDX identifiers / attribution language
-      2026-02-20_license.txt
-      2026-02-20_attribution.txt
-
-    sensitivity/                      # sensitivity assessment + redaction/generalization plan
-      review.md
-      obligations.yaml                # optional: machine-readable obligations
-
-    contacts/                         # stewardship + escalation (NO secrets)
-      owner.md
-      steward.md
-
-    attachments/                      # supporting materials (data dictionary, schemas, etc.)
-      data_dictionary.pdf
-      api_reference.html
+data/registry/sources/evidence/                    # Source evidence registry (terms, licenses, sensitivity, contacts)
+├─ README.md                                       # What counts as evidence + required structure + review workflow
+│
+├─ _templates/                                     # OPTIONAL (recommended) starter templates
+│  ├─ evidence.manifest.example.yaml               # Example evidence.manifest.yaml (fields + placeholders)
+│  ├─ sensitivity.review.example.md                # Example sensitivity review (rubric + obligations)
+│  └─ license.snapshot.example.txt                 # Example license snapshot text (date-stamped)
+│
+└─ <source_slug>/                                  # One folder per upstream source (stable slug)
+   ├─ evidence.manifest.yaml                       # REQUIRED: index of evidence items for this source (paths + hashes)
+   ├─ README.md                                    # Optional notes/rationale (quirks, constraints, review history)
+   │
+   ├─ terms/                                       # Terms-of-use + API docs snapshots (immutable, dated)
+   │  ├─ 2026-02-20_terms.pdf                       # Terms snapshot (as captured on date)
+   │  └─ 2026-02-20_terms.sha256                    # Integrity hash (tamper detection)
+   │
+   ├─ license/                                     # License texts + attribution language (immutable, dated)
+   │  ├─ 2026-02-20_license.txt                     # License snapshot text (or SPDX reference)
+   │  └─ 2026-02-20_attribution.txt                 # Required attribution wording (if any)
+   │
+   ├─ sensitivity/                                 # Sensitivity assessment + handling plan
+   │  ├─ review.md                                  # Human review (risks, restrictions, required redactions)
+   │  └─ obligations.yaml                          # Optional machine-readable obligations (generalize/suppress/export rules)
+   │
+   ├─ contacts/                                    # Stewardship + escalation (NO secrets)
+   │  ├─ owner.md                                   # Owning org/team contact (public-safe)
+   │  └─ steward.md                                 # Data steward contact + escalation notes (public-safe)
+   │
+   └─ attachments/                                 # Supporting materials (bounded; licensed)
+      ├─ data_dictionary.pdf                        # Data dictionary snapshot (if available)
+      └─ api_reference.html                         # API reference snapshot (if captured)
 ```
 
 ### Naming conventions
