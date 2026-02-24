@@ -91,15 +91,17 @@ flowchart LR
 
 **Proposed/expected layout (update to match actual repo):**
 ```text
-data/registry/datasets/entries/
-  README.md                      # this file
-  <dataset_id>.yaml              # one entry per dataset (preferred for human edit)
-  <dataset_id>.json              # (optional) if JSON is your canonical format
-  templates/
-    dataset_entry.template.yaml  # optional helper templates
-  examples/
-    valid/                       # optional fixtures used by CI
-    invalid/
+data/registry/datasets/entries/                      # Dataset entry files (authoritative per-dataset metadata)
+├─ README.md                                        # This file: naming rules, required fields, and validation workflow
+├─ <dataset_id>.yaml                                # One entry per dataset (preferred; human-edited)
+├─ <dataset_id>.json                                # Optional: JSON form (only if JSON is canonical in your repo)
+│
+├─ templates/                                       # Optional helper templates (copy/paste starters)
+│  └─ dataset_entry.template.yaml                   # Dataset entry template (fill then validate)
+│
+└─ examples/                                        # Optional fixtures used by CI validators
+   ├─ valid/                                        # Must validate successfully
+   └─ invalid/                                      # Must fail validation (negative tests)
 ```
 
 ---
