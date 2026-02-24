@@ -82,35 +82,39 @@ It is designed so every user-facing claim can be traced to:
 This README does **not** assume your current tree matches this layout. Treat this as a *target contract* and adjust to your repo realities.
 
 ```text
-docs/data/
-  README.md                        # You are here
-
-  datasets/                        # One folder per dataset_id (recommended)
-    <dataset_id>/
-      manifest.yaml                # Required: identity, license, sensitivity, extents, owners
-      schema/                      # Required: schema artifacts
-        schema.json                # e.g., JSON Schema / Arrow schema / DDL
-        dictionary.md              # optional: human-friendly data dictionary
-      qa/                          # Required before promotion beyond Work
-        checks.yaml                # validation rules + thresholds
-        reports/
-          2026-02-24.json          # machine-readable QA report
-          2026-02-24.md            # human-readable QA summary (optional)
-      provenance/                  # Required: lineage + sources
-        sources.yaml               # where/how acquired; checksums; retrieval timestamps
-        lineage.mmd                # mermaid or other graph format
-      receipts/                    # Required for Published
-        publish_2026-02-24.json    # audit record + checksums + policy decisions
-
-  registries/
-    datasets.csv                   # optional: master dataset registry (index)
-    licenses.md                    # optional: license policy notes
-    sensitivity.md                 # optional: classification policy notes
-
-  samples/
-    README.md                      # rules for samples
-    <dataset_id>/
-      sample.csv                   # tiny, policy-compliant sample
+docs/data/                                         # Data documentation (dataset manifests, schemas, QA, provenance)
+├─ README.md                                       # You are here: how data docs map to registry + promotion gates
+│
+├─ datasets/                                       # Recommended: one folder per dataset_id (human-facing docs)
+│  └─ <dataset_id>/
+│     ├─ manifest.yaml                             # REQUIRED: identity, license, sensitivity, extents, owners
+│     │
+│     ├─ schema/                                   # REQUIRED: schema artifacts (what the data looks like)
+│     │  ├─ schema.json                            # JSON Schema / Arrow schema / DDL (repo convention)
+│     │  └─ dictionary.md                          # Optional: human-friendly data dictionary
+│     │
+│     ├─ qa/                                       # REQUIRED before promotion beyond Work
+│     │  ├─ checks.yaml                            # Validation rules + thresholds (what “good” means)
+│     │  └─ reports/
+│     │     ├─ 2026-02-24.json                      # Machine-readable QA report (inputs/outputs, metrics, pass/fail)
+│     │     └─ 2026-02-24.md                        # Optional human QA summary (high-signal findings)
+│     │
+│     ├─ provenance/                               # REQUIRED: lineage + sources (traceability)
+│     │  ├─ sources.yaml                           # Acquisition details (where/how, checksums, retrieval timestamps)
+│     │  └─ lineage.mmd                            # Lineage diagram (Mermaid or other graph format)
+│     │
+│     └─ receipts/                                 # REQUIRED for Published (what was shipped and why)
+│        └─ publish_2026-02-24.json                 # Audit record + checksums + policy decisions (promotion evidence)
+│
+├─ registries/                                     # Optional global references (human-readable policy notes)
+│  ├─ datasets.csv                                 # Optional: master dataset registry index
+│  ├─ licenses.md                                  # Optional: license policy notes (how to interpret license fields)
+│  └─ sensitivity.md                               # Optional: classification policy notes (labels + handling)
+│
+└─ samples/                                        # Tiny, policy-compliant samples for docs/tests (never sensitive)
+   ├─ README.md                                    # Sample rules (size cap, redaction/generalization requirements)
+   └─ <dataset_id>/
+      └─ sample.csv                                # Tiny sample (must comply with manifest license + sensitivity rules)
 ```
 
 [Back to top](#docsdata)
