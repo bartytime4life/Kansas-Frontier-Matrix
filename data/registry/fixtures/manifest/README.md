@@ -95,21 +95,20 @@ Fixtures in this folder are part of the **trust membrane**:
 > This is the **recommended** layout. Your repo may vary — adjust to match your test harness.
 
 ```text
-data/registry/fixtures/manifest/
-  README.md
-
-  v1/
-    pass/
-      # Valid manifests that should pass schema + policy gates
-      minimal.valid.json
-      with_attestations.valid.json
-
-    fail/
-      # Manifests that must fail (schema or policy), with filename explaining why
-      missing_spec_hash.invalid.json
-      missing_rights.invalid.json
-      missing_rekor_uuid.invalid.json
-      empty_signatures.invalid.json
+data/registry/fixtures/manifest/                     # Manifest fixtures (schema + policy gate test vectors)
+├─ README.md                                        # How fixtures are used, naming rules, and CI expectations
+│
+└─ v1/                                              # Fixture set for manifest v1 (keep stable)
+   ├─ pass/                                         # Must pass schema + policy gates
+   │  ├─ minimal.valid.json                         # Minimal valid manifest
+   │  └─ with_attestations.valid.json               # Valid manifest including attestations/signatures
+   │
+   └─ fail/                                         # Must fail (schema or policy); filename states the reason
+      ├─ missing_spec_hash.invalid.json             # Invalid: missing spec_hash
+      ├─ missing_rights.invalid.json                # Invalid: missing rights/license terms
+      ├─ missing_rekor_uuid.invalid.json            # Invalid: missing Rekor UUID (if required)
+      ├─ empty_signatures.invalid.json              # Invalid: signatures present but empty/invalid
+      └─ …                                          # Add more failures as new incident regressions appear
 ```
 
 ---
