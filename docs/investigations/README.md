@@ -109,14 +109,16 @@ Exclusions (default-deny):
 This is a suggested layout. Create only what you need.
 
 ```text
-docs/investigations/
-  README.md                      # This file
-  _templates/
-    investigation.md             # Copy-paste starter (optional but recommended)
-  YYYY-MM-DD_short-slug/
-    README.md                    # The investigation record (preferred)
-    artifacts/                   # Small outputs (charts, logs, csv excerpts)
-    code/                        # Minimal scripts/notebooks to reproduce results
+docs/investigations/                              # Investigation records (time-boxed, reproducible, auditable)
+├─ README.md                                      # This file: purpose, governance rules, and how to add a new record
+│
+├─ _templates/                                    # Optional starters (kept aligned with current practice)
+│  └─ investigation.md                            # Copy/paste template (scope → method → findings → next steps)
+│
+└─ YYYY-MM-DD_short-slug/                         # One investigation per folder (date + kebab slug)
+   ├─ README.md                                   # Preferred record (problem, hypotheses, evidence, conclusions)
+   ├─ artifacts/                                  # Small outputs (charts, logs, CSV excerpts; no secrets)
+   └─ code/                                       # Minimal repro code (scripts/notebooks; deterministic where possible)
 ```
 
 ### Naming
