@@ -43,14 +43,14 @@ Key idea: **map state is reproducible**. Stories store map state (camera, layers
 Suggested (version-preserving) layout:
 
 ```text
-data/registry/layers/
-  README.md
-
-  # One config per (layer_id, dataset_version_id):
-  <layer_id>__<dataset_version_id>.layer.json
-
-  # Optional: generated index for UI discovery (if used by your stack)
-  index.layers.json
+data/registry/layers/                               # Layer registry (map-ready layer configs; governed + versioned)
+├─ README.md                                        # How layers are defined, validated, and discovered by the UI/API
+│
+├─ <layer_id>__<dataset_version_id>.layer.json      # One config per (layer_id, dataset_version_id)
+│                                                   # (style/source refs, attribution, time/zoom bounds, policy display)
+│
+└─ index.layers.json                                # Optional generated index for UI discovery (if used by your stack)
+                                                   # (CI-owned output; do not hand-edit if generated)
 ```
 
 Naming guidance:
