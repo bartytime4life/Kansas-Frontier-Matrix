@@ -142,14 +142,15 @@ These artifacts should be **append-only**. If something changes, write a new ver
 ### Proposed layout
 
 ```text
-data/catalog/prov/
-  README.md
-  schemas/               # JSON Schema / YAML schema for receipts and manifests
-  templates/             # minimal templates for new receipts
-  receipts/              # optional: centralized receipts instead of dataset_id folders
-  examples/              # small, synthetic examples (no sensitive data)
-  tools/                 # helpers (validators, normalizers) used by CI
-  ADRs/                  # provenance-related ADRs (format, hashing, signing)
+data/catalog/prov/                               # Provenance hub (receipts, schemas, tooling, and provenance ADRs)
+├─ README.md                                     # Scope, conventions, and how PROV artifacts are validated/served
+│
+├─ schemas/                                      # Schemas for provenance artifacts (receipts, manifests, bundles)
+├─ templates/                                    # Minimal templates for authoring new receipts/manifests
+├─ receipts/                                     # Optional centralized receipts store (vs per-dataset folders)
+├─ examples/                                     # Small synthetic examples (NO sensitive data; deterministic)
+├─ tools/                                        # Helpers used by CI (validators, normalizers, hashing utilities)
+└─ ADRs/                                         # Provenance-related ADRs (format, hashing, signing decisions)
 ```
 
 ### Directory documentation standard
