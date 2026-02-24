@@ -71,22 +71,22 @@ KFM uses policy-as-code with the same semantics in CI and runtime. The system sh
 This is the **recommended** layout. Adjust it as the repo’s actual module boundaries and CI wiring are finalized.
 
 ```text
-data/policies/decisions/
-  README.md
-
-  records/               # Canonical, versioned decision records for audit + traceability
-    2026-02-20_kfm__policy_decision__xyz.json
-
-  fixtures/              # Inputs and expected outputs used by policy tests
-    inputs/              # request context samples: user, action, resource, environment
-    expected/            # expected allow/deny, obligations, and reason codes
-
-  schemas/               # JSON Schemas to validate records and fixtures
-    policy_decision.schema.json
-
-  rubrics/               # Human-readable guidance used to justify decisions
-    sensitivity.md
-    licensing.md
+data/policies/decisions/                           # Policy decision evidence (why rules exist + how decisions are tested)
+├─ README.md                                       # Purpose, governance rules, and how to add/update decision records
+│
+├─ records/                                        # Canonical, versioned decision records (audit + traceability)
+│  └─ 2026-02-20_kfm__policy_decision__xyz.json     # Example decision record (date-stamped; stable id)
+│
+├─ fixtures/                                       # Test vectors tied to decision logic (synthetic; deterministic)
+│  ├─ inputs/                                      # Request context samples (user/action/resource/environment)
+│  └─ expected/                                    # Expected allow/deny + obligations + reason codes
+│
+├─ schemas/                                        # Schemas validating records + fixtures (CI-enforced)
+│  └─ policy_decision.schema.json                  # Schema for decision records and/or fixture envelopes
+│
+└─ rubrics/                                        # Human guidance used to justify decisions (reviewer-facing)
+   ├─ sensitivity.md                               # Sensitivity rubric (classification + handling expectations)
+   └─ licensing.md                                 # Licensing rubric (allowed terms, attribution, redistribution rules)
 ```
 
 ### What belongs here
