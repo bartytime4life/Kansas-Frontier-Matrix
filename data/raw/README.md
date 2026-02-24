@@ -159,16 +159,16 @@ If this repository uses a **central** `data/raw/`, organize by domain and datase
 Recommended structure for this folder:
 
 ```text
-data/raw/
-  <domain>/
-    <dataset_slug>/
-      <acquisition_id>/
-        acquisition.manifest.json
-        checksums.sha256
-        license.snapshot.txt
-        artifacts/
-          <original files>
-        notes.md
+data/raw/                                           # Raw zone: immutable captures (never served; append-only)
+└─ <domain>/                                        # Domain grouping (e.g., hydrology, parcels, railroads)
+   └─ <dataset_slug>/                                # Dataset family (stable slug)
+      └─ <acquisition_id>/                           # One acquisition/capture event (timestamp/uuid/provider run id)
+         ├─ acquisition.manifest.json                # Capture manifest (source, method, license, sensitivity, pointers)
+         ├─ checksums.sha256                         # REQUIRED: sha256 for every file under artifacts/
+         ├─ license.snapshot.txt                     # License snapshot at time of capture (for audit + provenance)
+         ├─ artifacts/                               # Original files (as received; never modified)
+         │  └─ <original files>                      # Raw payload (or small samples; large blobs may be pointer-based)
+         └─ notes.md                                 # Optional capture notes (who/when/why; no secrets)
 ```
 
 ### Naming rules
