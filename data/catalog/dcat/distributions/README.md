@@ -94,23 +94,22 @@ flowchart LR
 > The exact structure may be refined by repo conventions. Treat the tree below as the **target** layout unless the repo already defines a different one.
 
 ```text
-data/catalog/dcat/distributions/
-  README.md
-
-  templates/
-    distribution.template.jsonld
-    distribution.template.ttl
-
-  # One of these patterns is expected:
-  #
-  # Pattern A (group by dataset):
-  #   <dataset_id>/
-  #     <distribution_id>.jsonld
-  #     <distribution_id>.ttl
-  #
-  # Pattern B (flat):
-  #   <distribution_id>.jsonld
-  #   <distribution_id>.ttl
+data/catalog/dcat/distributions/                    # DCAT Distributions (versioned access artifacts for datasets)
+├─ README.md                                        # Naming rules, required fields, and which directory pattern is used
+│
+├─ templates/                                       # Copy/paste templates for new distributions
+│  ├─ distribution.template.jsonld                  # JSON-LD template (recommended default)
+│  └─ distribution.template.ttl                     # Turtle template (optional alternative)
+│
+└─ (choose one storage pattern)                     # Keep ONE pattern repo-wide to avoid drift
+   ├─ Pattern A — by dataset                         # Recommended when many distributions per dataset
+   │  └─ <dataset_id>/
+   │     ├─ <distribution_id>.jsonld                 # One distribution record (JSON-LD)
+   │     └─ <distribution_id>.ttl                    # Optional: same record in Turtle
+   │
+   └─ Pattern B — flat                               # Useful when distribution IDs are globally unique + few files
+      ├─ <distribution_id>.jsonld                    # One distribution record (JSON-LD)
+      └─ <distribution_id>.ttl                       # Optional: same record in Turtle
 ```
 
 **File formats (recommended):**
