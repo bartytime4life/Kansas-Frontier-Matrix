@@ -1,335 +1,260 @@
-<!--
-[KFM_META_BLOCK_V2]
-doc_id: kfm://doc/3955ec11-5a21-4b52-8e88-217cec6041ac
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/656e8d6e-0e66-4802-99b8-ee963673cd08
 title: docs/investigations/README.md
-type: guide
+type: standard
 version: v1
 status: draft
-owners: KFM Maintainers
-created: 2026-02-22
-updated: 2026-02-22
+owners: TBD
+created: 2026-02-24
+updated: 2026-02-24
 policy_label: public
-related:
-  - kfm://doc/docs/adr/<id>@v1
-  - kfm://doc/docs/story/<id>@v1
-tags:
-  - kfm
-  - investigations
-  - reproducibility
-  - governance
+related: []
+tags: [kfm, investigations]
 notes:
-  - Directory contract for investigations (question → evidence → method → result → next-step).
-[/KFM_META_BLOCK_V2]
--->
+  - Directory contract for investigation artifacts (spikes, research notes, experiments).
+  - This folder is *not* a decision record; promote outcomes to an ADR/policy when needed.
+[/KFM_META_BLOCK_V2] -->
 
-# Investigations
-Working notes + reproducible analysis artifacts that feed governed decisions (ADRs), datasets, and Story Nodes.
+# docs/investigations
+Short-lived research notes and reproducible experiments that reduce uncertainty *before* we change governed interfaces, pipelines, or narratives.
 
-`status: draft` `policy: public` `owners: KFM Maintainers`
-
-**Jump to:** [What goes here](#what-goes-here) · [Start a new investigation](#start-a-new-investigation) · [Recommended layout](#recommended-layout) · [Rules](#rules-of-the-road) · [Promotion paths](#promotion-paths) · [Definition of Done](#definition-of-done) · [Templates](#templates)
-
----
-
-## What goes here
-
-Use `docs/investigations/` for **exploratory, evidence-led work** that is not yet an ADR or Story Node:
-
-- **Questions/hypotheses** (what we’re trying to learn; what decision this informs)
-- **Inputs pinned to versions** (dataset_version IDs + EvidenceRefs)
-- **Methods that can be rerun** (notebooks/scripts, ideally referenced by digest)
-- **Outputs with traceability** (maps/charts/tables + digests + run receipts)
-- **Findings + uncertainty** (what’s true vs what’s inferred; gaps; competing explanations)
-- **Next steps** (convert to ADR, dataset spec update, Story Node draft, PR link)
-
-Do **not** use this folder for:
-
-- Final decisions → put those in `docs/adr/`
-- Publishable narratives bound to map state → put those in `docs/story/`
-- Large raw/processed data blobs → keep those in the governed data zones; reference by `dataset_version_id` / digest
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Policy](https://img.shields.io/badge/policy-public-brightgreen)
+![Scope](https://img.shields.io/badge/scope-investigations-blue)
+![Traceability](https://img.shields.io/badge/traceability-required-orange)
 
 > **NOTE**
-> If an investigation touches sensitive locations, private individuals, culturally restricted sites, or protected infrastructure: default to **generalized geometry**, minimal exposure, and mark the work for governance review.
+> This directory is for *learning + de-risking* work. Anything that changes behavior (data promotion, APIs, UI narratives, access rules) must be **promoted** to the appropriate governed artifact (ADR/policy/spec) before shipping.
+
+## Quick navigation
+- [What belongs here](#what-belongs-here)
+- [What must NOT go here](#what-must-not-go-here)
+- [Directory conventions](#directory-conventions)
+- [Investigation template](#investigation-template)
+- [Promotion path](#promotion-path)
+- [Safety and governance](#safety-and-governance)
+- [FAQ](#faq)
 
 ---
 
-## Investigation artifact contract
-
-An investigation is treated as a **first-class artifact** with a minimal set of traceable fields.
-
-**Minimum fields (conceptual):**
-- `investigation_id`
-- `title` / `description`
-- `inputs`: dataset_version IDs + EvidenceRefs
-- `methods`: scripts/notebooks (prefer “by digest”)
-- `outputs`: tables/maps/charts (with digests)
-- `run_receipts` + environment info
-- `policy_label` + `review_state`
-
-### Minimal sidecar (recommended)
-
-Create a small sidecar file next to the investigation README:
-
-- `investigation.json` (or `investigation.sidecar.json`)
-
-```json
-{
-  "kfm_investigation_version": "v1",
-  "investigation_id": "kfm://investigation/<uuid>",
-  "title": "<short title>",
-  "description": "<what question and why>",
-  "inputs": {
-    "datasets": [
-      "kfm://dataset/<slug>@<dataset_version_id>"
-    ],
-    "evidence_refs": [
-      "<EvidenceRef>",
-      "<EvidenceRef>"
-    ]
-  },
-  "methods": [
-    { "path": "03_methods/<notebook_or_script>", "digest": "sha256:<...>" }
-  ],
-  "outputs": [
-    { "path": "04_results/<artifact>", "digest": "sha256:<...>", "media_type": "image/png" }
-  ],
-  "run_receipts": [
-    { "path": "run_receipt.json", "digest": "sha256:<...>" }
-  ],
-  "policy": {
-    "policy_label": "public",
-    "review_state": "needs_review",
-    "obligations": []
-  }
-}
-```
-
----
-
-## Start a new investigation
-
-1) Create a new folder:
-
-- `docs/investigations/YYYY-MM-DD__short-slug/`
-
-2) Add:
-- `README.md` (use the template below)
-- `investigation.json` (optional but recommended)
-- `sources.md` (or a `02_sources/` folder)
-
-3) Pin inputs:
-- Always record dataset inputs as `dataset_version_id` (not “latest”)
-- Always include EvidenceRefs (or a stable evidence pointer) for claims
-
-4) Export results:
-- Prefer small, reviewable artifacts (PNG/SVG/CSV summary tables)
-- Reference any larger artifacts by digest/path in governed storage
-
----
-
-## Recommended layout
-
-### Folder naming
-- Use `YYYY-MM-DD__short-slug` to make investigations **time-aware** and easily sortable.
-- Keep slugs short and stable (lowercase, hyphenated).
-
-### Layout map (one investigation)
-
-```text
-┌─ docs/investigations/YYYY-MM-DD__short-slug/ ───────────────────────────────────────────┐
-│                                                                                        │
-│  README.md                       ← one-screen overview + decision question             │
-│  investigation.json              ← sidecar (inputs/methods/outputs/policy), optional   │
-│                                                                                        │
-│  00_context.md                   ← background + constraints + scope                     │
-│  01_questions.md                 ← hypotheses + success criteria                        │
-│                                                                                        │
-│  02_sources/                     ← sources + citations                                 │
-│  │  sources.md                   ← annotated bibliography / EvidenceRefs               │
-│  │  terms_snapshot/              ← license/terms snapshots (when needed)               │
-│                                                                                        │
-│  03_methods/                     ← how the work was done                               │
-│  │  notebook.ipynb               ← reproducible notebook (pin dataset_version_id)      │
-│  │  scripts/                     ← small scripts (include run commands)                │
-│                                                                                        │
-│  04_results/                     ← what came out                                       │
-│  │  figures/                     ← charts/maps (exported)                              │
-│  │  tables/                      ← summary tables (small, reviewable)                  │
-│                                                                                        │
-│  05_findings.md                  ← findings + uncertainty + alternatives               │
-│  06_next_steps.md                ← ADR links / PR links / Story Node draft links       │
-│                                                                                        │
-│  _attachments/                   ← last resort for small files only (keep tidy)        │
-│                                                                                        │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Minimal layout (if you’re moving fast)
-
-```text
-docs/investigations/YYYY-MM-DD__short-slug/
-├── README.md
-├── sources.md
-├── methods.md
-└── results/
-    ├── figures/
-    └── tables/
-```
-
----
-
-## Rules of the road
-
-### 1) Pin “what you used”
-- Every dataset input must be referenced by **dataset slug + dataset_version_id**
-- Every external source should be recorded as an EvidenceRef or stable reference
-
-### 2) Make reruns possible
-- If you used a notebook or script, include:
-  - exact command line
-  - parameters
-  - expected outputs
-  - runtime environment notes (container image/digest when available)
-
-### 3) Keep artifacts reviewable
-- Prefer:
-  - small figures (PNG/SVG)
-  - small tables (CSV)
-  - short summaries
-- Avoid committing giant binaries. If needed:
-  - store them in governed storage
-  - reference them by digest/path in the sidecar
-
-### 4) Label uncertainty
-- Separate:
-  - **observations** (what evidence directly supports)
-  - **inferences** (what you conclude from evidence)
-  - **unknowns** (what you can’t verify yet)
-
----
-
-## Promotion paths
-
-Investigations are *work-in-progress* by default; they become “production” when promoted into other governed artifacts.
+## Where this fits in the repo
+`docs/investigations/` sits **upstream** of decisions and implementations:
 
 ```mermaid
 flowchart LR
-  Q[Question] --> I[Investigation notes]
-  I --> R[Run receipt]
-  R --> O[Outputs]
-  O --> ADR[ADR decision]
-  O --> DS[Dataset spec update]
-  O --> SN[Story Node draft]
-  ADR --> PR[Pull request]
-  DS --> PR
-  SN --> PR
+  Q[Question or risk] --> I[Investigation note]
+  I --> E[Evidence and experiments]
+  E --> F[Findings]
+  F --> D[Decision needed]
+  D --> P[Promote outcome]
+  P --> ADR[ADR or policy spec]
+  P --> PR[Implementation PR and tests]
 ```
 
-**Common outcomes:**
-- **Decision needed** → write an ADR in `docs/adr/` and link it from the investigation.
-- **Dataset change needed** → update dataset specs/contracts/pipeline + include receipts/QA.
-- **Publishable story** → draft a Story Node and ensure citations + map state + review gates.
+### Primary outcomes
+An investigation should produce at least one of:
+- A **reproducible** experiment (commands, inputs, outputs)
+- A **bounded** recommendation with assumptions/risks/tradeoffs
+- A **decision request** (what decision is needed, by whom, by when)
+- A **promotion target** (where this result must land if acted upon)
 
 ---
 
-## Definition of Done
+## What belongs here
+Acceptable inputs for `docs/investigations/` include:
 
-An investigation is “done enough” when:
+- **Spikes / feasibility checks**  
+  “Can we do X with our constraints?” “What breaks if we do Y?”
 
-- [ ] The decision/question is written in the first screen of `README.md`
-- [ ] Inputs are pinned (dataset_version IDs + EvidenceRefs)
-- [ ] Methods are reproducible (commands, parameters, environment notes)
-- [ ] Outputs are present and traceable (with digests if applicable)
-- [ ] Findings include uncertainty and alternatives
-- [ ] Policy label + review state are declared
-- [ ] Next step is explicit (ADR link / PR link / Story Node link / “stop here” rationale)
+- **Comparative evaluations**  
+  e.g., library/tool options, schema approaches, indexing strategies, map rendering approaches.
+
+- **Reproduction notes**  
+  How to reproduce a bug, perf regression, validation failure, or data anomaly.
+
+- **Evidence-bound explorations**  
+  Small studies that support or refute a claim *without* asserting it as a shipped truth.
+
+- **Prototypes with clear scope**  
+  Proof-of-concepts that are explicitly labeled as non-production.
+
+- **Threat modeling / risk discovery**  
+  What could go wrong; what controls/gates we need; what to test.
 
 ---
 
-## Templates
+## What must NOT go here
+Exclusions (default-deny):
+
+- **Final decisions**  
+  Use an ADR / decision log / policy doc (path varies by repo — link it here once known).
+
+- **Production-facing user narratives**  
+  Anything that will be shown in UI/story mode must be promoted to a governed story/spec.
+
+- **Secrets or sensitive credentials**  
+  No API keys, tokens, internal URLs with credentials, private keys, or customer data.
+
+- **Vulnerable location targeting**  
+  No precise coordinates or step-by-step instructions that could increase harm. Use coarse geography and mark “needs governance review”.
+
+- **Unlicensed datasets / unclear provenance**  
+  If the source/license is unknown, do not promote beyond this folder; flag for governance review.
+
+---
+
+## Directory conventions
+
+### Recommended structure
+This is a suggested layout. Create only what you need.
+
+```text
+docs/investigations/
+  README.md                      # This file
+  _templates/
+    investigation.md             # Copy-paste starter (optional but recommended)
+  YYYY-MM-DD_short-slug/
+    README.md                    # The investigation record (preferred)
+    artifacts/                   # Small outputs (charts, logs, csv excerpts)
+    code/                        # Minimal scripts/notebooks to reproduce results
+```
+
+### Naming
+- Prefer folder-per-investigation: `YYYY-MM-DD_short-slug/`
+- Keep slugs lowercase and hyphenated.
+- If a folder is too heavy, you may use a single file:
+  - `YYYY-MM-DD_short-slug.md`
+
+### Reproducibility contract
+Every investigation should include:
+- **Inputs:** links/paths, versions, hashes when available
+- **Environment:** tool versions (runtime, OS/container, library versions)
+- **Steps:** commands or pseudocode sufficient to reproduce
+- **Outputs:** expected outputs + where to find them
+- **Conclusion:** what we learned + what we still don’t know
+
+> **TIP**
+> If you can’t make it reproducible, make it *auditable*: record enough detail that someone else can re-run it later.
+
+---
+
+## Investigation template
 
 <details>
-<summary><strong>Template: Investigation README.md</strong></summary>
+<summary><strong>Click to expand: Investigation README template</strong></summary>
 
 ```markdown
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<uuid>
+title: docs/investigations/YYYY-MM-DD_short-slug/README.md
+type: standard
+version: v1
+status: draft
+owners: <name/team>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public|restricted|...
+related:
+  - <link to issue/ticket>
+  - <link to relevant ADR/policy/spec if it exists>
+tags: [kfm, investigation]
+notes:
+  - One-line: what uncertainty this reduces
+[/KFM_META_BLOCK_V2] -->
+
 # <Investigation title>
+One sentence: what we are trying to learn and why it matters.
 
-## Decision question
-What decision will this inform?
+## Question
+- What is the exact question?
+- What decision will this inform?
 
-## Scope
-- Geography:
-- Time window:
-- Out of scope:
+## Context
+- Background, constraints, and why now.
 
-## Inputs
-- Datasets:
-  - kfm://dataset/<slug>@<dataset_version_id>
-- EvidenceRefs:
-  - <EvidenceRef>
+## Assumptions
+- List assumptions explicitly.
+- Mark anything that needs verification.
 
 ## Method
-- Steps to reproduce:
-- Parameters:
-- Environment:
+- Steps taken, tools used, and what was measured.
+- Include commands or pseudocode.
 
-## Results
-- Key figures/tables:
-- Links to artifacts (with digests if available):
+## Evidence ledger
+| Artifact | Source | Version / hash | Sensitivity | Notes |
+|---|---|---|---|---|
+| <file/link> | <origin> | <sha/version> | public|restricted|... | <why it matters> |
 
 ## Findings
-- Observations:
-- Inferences:
-- Uncertainty / conflicts:
+- Bullet findings with supporting evidence links.
+- Be explicit about uncertainty.
 
-## Risks + governance notes
-- Sensitivity:
-- Policy label:
-- Review triggers:
+## Risks and tradeoffs
+- What could go wrong if we act on this?
+- What do we lose by not acting?
 
-## Next steps
-- ADR:
-- Dataset spec change:
-- Story Node:
-```
+## Recommendation
+- Proposed next step(s)
+- Minimum verification steps to convert Unknown → Confirmed
 
-</details>
+## Promotion target
+If we act on this investigation, where does it land?
+- [ ] ADR / decision record: <path/link>
+- [ ] Spec / contract: <path/link>
+- [ ] Policy / governance: <path/link>
+- [ ] Implementation PR: <link>
+- [ ] Test plan / gate update: <link>
 
-<details>
-<summary><strong>Template: sources.md</strong></summary>
+## Open questions
+- What remains unknown?
+- What would change our mind?
 
-```markdown
-# Sources
-
-| Ref | Type | Why it matters | EvidenceRef / Location | Notes |
-|---:|------|-----------------|------------------------|-------|
-| 1 | Dataset | <reason> | kfm://dataset/<slug>@<dataset_version_id> | |
-| 2 | Document | <reason> | <EvidenceRef> | |
-| 3 | Map | <reason> | <EvidenceRef> | |
-```
-
-</details>
-
-<details>
-<summary><strong>Template: investigation.json (sidecar)</strong></summary>
-
-```json
-{
-  "kfm_investigation_version": "v1",
-  "investigation_id": "kfm://investigation/<uuid>",
-  "title": "<title>",
-  "description": "<description>",
-  "inputs": { "datasets": [], "evidence_refs": [] },
-  "methods": [],
-  "outputs": [],
-  "run_receipts": [],
-  "policy": { "policy_label": "public", "review_state": "needs_review", "obligations": [] }
-}
+## Appendix
+- Extra charts, logs, scratch notes.
 ```
 
 </details>
 
 ---
 
-<a id="back-to-top"></a>
-**Back to top:** [Investigations](#investigations)
+## Promotion path
+
+### Promote when…
+Promote an investigation outcome when it:
+- Changes a **governed interface** (API, schema, contract)
+- Changes **promotion gates** (Raw → Work → Processed → Published)
+- Changes a **user-facing claim** (maps/stories/reporting)
+- Changes **access control / redaction rules**
+- Commits the team to a **new dependency** or architectural invariant
+
+### Minimal promotion checklist
+- [ ] Clear decision statement (“We will … because …”)
+- [ ] Evidence links preserved (inputs/outputs/hashes if available)
+- [ ] Risks/tradeoffs captured
+- [ ] Tests or validation gates defined (or updated)
+- [ ] Rollback plan is possible (or explicit exception documented)
+
+---
+
+## Safety and governance
+- Treat investigations as **default-deny** for sensitive content.
+- If sensitivity is unclear: **redact/generalize** and mark “needs governance review”.
+- Don’t bypass the trust membrane (clients → governed API → policy boundary → storage).
+- Prefer **additive glue** (registries, indexes, ADRs, small diffs) over sweeping rewrites.
+
+---
+
+## FAQ
+
+### Can investigations be messy?
+Yes—*but bounded*. Put scratch notes in an Appendix, and keep the top sections readable.
+
+### Where do big artifacts go?
+Prefer links to durable storage and record hashes/versions here. Avoid committing huge binaries unless the repo explicitly allows it.
+
+### Do I have to use the template?
+No, but every investigation must still meet the reproducibility contract.
+
+---
+
+**Back to top:** [docs/investigations](#docsinvestigations)
