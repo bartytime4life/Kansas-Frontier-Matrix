@@ -113,28 +113,42 @@ Recommended (minimum) structure for `.github/`:
 
 ```text
 .github/                                           # Repo governance + CI (gatehouse)
-├─ README.md                                       # This file: how governance/CI is organized + where to start
+├─ README.md                                       # This file: governance/CI index + where to start
 ├─ CODEOWNERS                                      # REQUIRED: ownership + review routing (policy/, contracts/, data/, docs/)
 ├─ CODE_OF_CONDUCT.md                              # REQUIRED (public): community standards + enforcement scope
 ├─ CONTRIBUTING.md                                 # REQUIRED: contribution workflow (branches, reviews, checks, style)
 ├─ SECURITY.md                                     # REQUIRED: vuln reporting process + disclosure policy
-├─ PULL_REQUEST_TEMPLATE.md                        # Recommended: PR checklist (tests, policy, catalogs, receipts)
+│
+├─ SUPPORT.md                                      # Optional: where/how to get help (channels, office hours, links)
+├─ FUNDING.yml                                     # Optional: Sponsors/funding links (if applicable)
+├─ dependabot.yml                                  # Optional: dependency update policy (minimal + governed if enabled)
+│
+├─ PULL_REQUEST_TEMPLATE.md                        # Optional: single default PR template
+├─ PULL_REQUEST_TEMPLATE/                          # Optional: multiple PR templates (selected via ?template=... URL param)
+│  ├─ default.md                                   # General PR checklist
+│  ├─ governance.md                                # Governance/policy-impact PR checklist
+│  └─ data-pipeline.md                             # Data/pipeline promotion PR checklist
 │
 ├─ ISSUE_TEMPLATE/                                 # Recommended: issue forms (triage + governance discipline)
+│  ├─ config.yml                                   # Template chooser (contact_links + blank_issues_enabled)  :contentReference[oaicite:0]{index=0}
 │  ├─ bug_report.yml                               # Bug report intake (repro, logs, expected/actual)
 │  ├─ feature_request.yml                          # Feature request intake (scope, rationale, acceptance criteria)
 │  ├─ governance_request.yml                       # Governance changes (policy labels, standards, review gates)
 │  ├─ data_pipeline_change.yml                     # Pipeline changes (inputs/outputs, validation, promotion impact)
 │  └─ story_node.yml                               # Story Node intake (citations, assets, review requirements)
 │
-├─ SUPPORT.md                                      # Optional: where/how to get help (channels, office hours, links)
-├─ FUNDING.yml                                     # Optional: Sponsors/funding links (if applicable)
-├─ dependabot.yml                                  # Optional: dependency update policy (minimal + governed if enabled)
+├─ DISCUSSION_TEMPLATE/                            # Optional: discussion category forms (YAML)  :contentReference[oaicite:1]{index=1}
+│  └─ <category-slug>.yml                          # Filename must match discussion category slug
 │
-└─ workflows/                                      # REQUIRED: CI + policy gates + release gates
+├─ actions/                                        # Optional: shared composite actions used by workflows
+│  └─ <action-name>/action.yml
+│
+└─ workflows/                                      # REQUIRED: CI + policy gates + release/promotion gates
    ├─ ci.yml                                       # Core CI (lint, unit tests, build, linkcheck)
    ├─ policy-gates.yml                             # OPA/Conftest policy checks (fail-closed)
    ├─ provenance-audit.yml                         # Provenance/receipts/audit verification (promotion contract checks)
+   ├─ codeql.yml                                   # Optional: code scanning / SAST (if enabled)
+   ├─ dependency-review.yml                        # Optional: dependency diff gate (if enabled)
    └─ release.yml                                  # Release pipeline (versioning, checksums, catalogs, attestations)
 ```
 
