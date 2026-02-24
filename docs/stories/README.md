@@ -79,29 +79,29 @@ Back to top: [Navigation](#navigation)
 This README documents **what belongs here** and **what must not**. The exact subfolders are a repo choice; below is a recommended structure that keeps drafts and published stories separate.
 
 ```text
-docs/stories/
-  README.md
-
-  draft/                       # proposed: story nodes not yet published
-    <story_slug>/
-      story.md                 # Story Node markdown
-      story.json               # Story Node sidecar (map state + citations + policy)
-      media/                   # optional images/media used by the story
-        ...
-      media_attribution.md     # recommended: license + attribution notes for story media
-
-  published/                   # proposed: story nodes that have passed publish gates
-    <story_slug>/
-      story.md
-      story.json
-      media/
-        ...
-      media_attribution.md
-
-  _templates/                  # optional helpers
-    story_node_v3/
-      story.md                 # starter template (keep aligned to v3)
-      story.json
+docs/stories/                                    # Story Nodes (narratives + map state + citations; governed publish flow)
+├─ README.md                                      # How stories are authored, reviewed, and published (gates + rules)
+│
+├─ draft/                                         # Proposed stories (not authoritative; subject to change)
+│  └─ <story_slug>/                               # Story slug (kebab-case; stable once published)
+│     ├─ story.md                                 # Story Node markdown (claims must be cited)
+│     ├─ story.json                               # Sidecar: map state + citations + policy labels/obligations
+│     ├─ media/                                   # Optional media assets used by the story (bounded; licensed)
+│     │  └─ …                                     # Images/figures/exports (no sensitive detail)
+│     └─ media_attribution.md                     # Recommended: license + attribution notes for story media
+│
+├─ published/                                     # Published stories (reviewed + gate-passing; authoritative)
+│  └─ <story_slug>/
+│     ├─ story.md                                 # Final story markdown (frozen; changes require republish/versioning)
+│     ├─ story.json                               # Final sidecar (frozen; must match story.md references)
+│     ├─ media/
+│     │  └─ …                                     # Published media (frozen; no sensitive detail)
+│     └─ media_attribution.md                     # Required when media licenses/attribution apply
+│
+└─ _templates/                                    # Optional helpers (copy/paste starters; keep aligned to v3)
+   └─ story_node_v3/
+      ├─ story.md                                 # Starter markdown template (sections + citation pattern)
+      └─ story.json                               # Starter sidecar template (map state + refs placeholders)
 ```
 
 ### Acceptable inputs
