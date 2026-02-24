@@ -310,28 +310,31 @@ Raw → Work or Quarantine → Processed → Published
 > Not confirmed in repo: this is the **recommended** structure for scaling examples.
 
 ```text
-examples/
-  README.md
-  api-feature-query/
-    README.md
-    kfm.example.yaml
-    src/
-    data/
-    outputs/
-    evidence/
-  pipe-validate-and-publish/
-    README.md
-    kfm.example.yaml
-    src/
-    data/
-    outputs/
-    evidence/
-  ui-story-node-minimal/
-    README.md
-    kfm.example.yaml
-    src/
-    outputs/
-    evidence/
+examples/                                         # End-to-end examples (small, reproducible, policy-safe)
+├─ README.md                                      # Index + how to run examples + safety rules (no secrets/sensitive data)
+│
+├─ api-feature-query/                              # Example: query map features via governed API
+│  ├─ README.md                                   # What it demonstrates + prerequisites + expected outputs
+│  ├─ kfm.example.yaml                             # Example manifest (steps, env keys, inputs/outputs)
+│  ├─ src/                                         # Minimal runnable code (client, helpers)
+│  ├─ data/                                        # Tiny inputs (synthetic; deterministic)
+│  ├─ outputs/                                     # Expected/recorded outputs (normalized; diff-friendly)
+│  └─ evidence/                                    # Evidence bundle used/produced by the example (refs + notes)
+│
+├─ pipe-validate-and-publish/                      # Example: validate → gate → publish a tiny dataset
+│  ├─ README.md
+│  ├─ kfm.example.yaml                             # Example pipeline manifest (validation + promotion flow)
+│  ├─ src/
+│  ├─ data/
+│  ├─ outputs/
+│  └─ evidence/
+│
+└─ ui-story-node-minimal/                          # Example: minimal Story Node + assets + citations
+   ├─ README.md
+   ├─ kfm.example.yaml                             # Example manifest (render/build steps + expected artifacts)
+   ├─ src/                                         # Minimal renderer/glue (if needed)
+   ├─ outputs/                                     # Rendered outputs (md/pdf/png; if applicable)
+   └─ evidence/                                    # Evidence refs/bundle for the story node example
 ```
 
 If you add new top-level categories, update this README and keep them **few and obvious**.
