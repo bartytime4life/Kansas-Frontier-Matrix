@@ -210,23 +210,20 @@ This directory exists to support **fail-closed** governance:
 > This is a **recommended** structure. Adjust to your repo’s actual layout and delete what you don’t use.
 
 ```
-data/catalog/schemas/
-  README.md
-
-  # Catalog profiles
-  stac/          # STAC Item/Collection schemas (and KFM profile constraints)
-  dcat/          # DCAT dataset/catalog schemas (and KFM profile constraints)
-  prov/          # PROV bundle schemas
-
-  # Operational governance records
-  receipts/      # run_receipt / audit record schemas
-  watchers/      # watchers registry allow-list schemas
-
-  # Dataset “data product” schemas
-  datasets/
-    <dataset_slug>/
-      <dataset_slug>.v1.schema.json
-      notes.md     # rationale + compatibility notes (optional)
+data/catalog/schemas/                              # Catalog + governance schema registry (validators + CI gates)
+├─ README.md                                       # How schemas are organized, versioned, and referenced by validators
+│
+├─ stac/                                           # STAC Item/Collection schemas + KFM profile constraints
+├─ dcat/                                           # DCAT dataset/catalog schemas + KFM profile constraints
+├─ prov/                                           # PROV bundle schemas (lineage prerequisites)
+│
+├─ receipts/                                       # Operational governance schemas (run_receipt, audit record, etc.)
+├─ watchers/                                       # Watcher registry allow-list schemas (signed/validated objects)
+│
+└─ datasets/                                       # Dataset “data product” schemas (domain-specific contracts)
+   └─ <dataset_slug>/                              # One folder per dataset product family
+      ├─ <dataset_slug>.v1.schema.json             # Dataset product schema (v1; versioned, backward-compat notes)
+      └─ notes.md                                  # Optional: rationale + compatibility notes + migration guidance
 ```
 
 [Back to top](#datacatalogschemas)
