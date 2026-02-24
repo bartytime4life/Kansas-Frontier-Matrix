@@ -66,25 +66,29 @@ One place for canonical **terms/codes/enums** used by KFM datasets, schemas, API
 > **NOTE:** This layout is **Proposed** until confirmed against the repo tree. Update to match reality.
 
 ```text
-data/specs/vocab/
-  README.md
-  _registry/
-    vocabs.csv              # (Proposed) master list of vocab sets
-  draft/
-    <vocab_name>/
-      v0/                   # (Proposed) draft-only versions
-        vocab.yaml
-        CHANGELOG.md
-  published/
-    <vocab_name>/
-      v1/
-        vocab.yaml
-        CHANGELOG.md
-      v2/
-        ...
-  _meta/
-    vocab.schema.json       # (Optional) JSON Schema for vocab files
-    validation.md           # (Optional) how validation runs in CI
+data/specs/vocab/                                 # Vocabulary specs (draft → published; versioned + governed)
+├─ README.md                                      # What vocabs are, how they’re versioned, and promotion rules
+│
+├─ _registry/                                     # (Proposed) registry/index of vocab sets
+│  └─ vocabs.csv                                  # Master list of vocab names, status, owners, current version
+│
+├─ draft/                                         # Draft vocabs (not authoritative; subject to change)
+│  └─ <vocab_name>/
+│     └─ v0/                                      # (Proposed) draft-only versions
+│        ├─ vocab.yaml                            # Draft vocab content (terms, ids, descriptions)
+│        └─ CHANGELOG.md                          # Draft changelog (what changed + why)
+│
+├─ published/                                     # Published vocabs (authoritative; referenced by schemas/policy)
+│  └─ <vocab_name>/
+│     ├─ v1/
+│     │  ├─ vocab.yaml                            # Published vocab (stable IDs; backward-compat rules)
+│     │  └─ CHANGELOG.md                          # Release notes for v1
+│     └─ v2/
+│        └─ …                                     # Subsequent published versions
+│
+└─ _meta/                                         # Optional validation tooling/contracts for vocab files
+   ├─ vocab.schema.json                           # Optional JSON Schema for vocab.yaml structure
+   └─ validation.md                               # Optional: how CI validates vocabs + promotion gate wiring
 ```
 
 [Back to top](#dataspecsvocab--controlled-vocabularies)
