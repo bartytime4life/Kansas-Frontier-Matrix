@@ -94,14 +94,16 @@ Provide a clear, governed “front door” for anyone who needs to **read**, **a
 
 ```text
 docs/
-└── schemas/
-    ├── README.md
-    ├── fixtures/                 # optional
-    │   ├── valid/
-    │   └── invalid/
-    └── registry/                 # optional
-        ├── index.md
-        └── mappings.csv
+└─ schemas/                                      # Human-facing schema docs (not the canonical machine schemas)
+   ├─ README.md                                  # How to navigate schema docs + where the real schemas live
+   │
+   ├─ fixtures/                                  # Optional: example payloads used for documentation/tests
+   │  ├─ valid/                                  # Valid examples (should pass validation)
+   │  └─ invalid/                                # Invalid examples (should fail; illustrates common mistakes)
+   │
+   └─ registry/                                  # Optional: human index/mapping helpers
+      ├─ index.md                                # Schema catalog (links to families/versions + brief notes)
+      └─ mappings.csv                            # Crosswalks/mappings (e.g., old → new fields, schema family map)
 ```
 
 The canonical machine-readable schema files are expected at repo root under `schemas/`:
