@@ -134,26 +134,33 @@ A bundle is typically a **directory named by `bundle_id`**.
 > This is a *recommended* structure. Your pipeline may generate a subset, but the **manifest + checksums + receipt + validation** are the usual minimum.
 
 ```text
-data/catalog/prov/bundles/
-  README.md
-  _index.json                       # optional: machine-friendly list of bundles
-  <bundle_id>/
-    manifest.yaml                   # REQUIRED
-    checksums/
-      sha256.txt                    # REQUIRED (or equivalent)
-    receipts/
-      pipeline-run.json             # REQUIRED (or equivalent)
-    lineage/
-      lineage.json                  # recommended
-    qa/
-      qa-summary.json               # REQUIRED for promotion
-      qa-details/                   # optional
-    policy/
-      decision.yaml                 # REQUIRED when policy decisions were made
-      redaction-notes.md            # recommended when redaction is applied
-    artifacts/
-      README.md                     # optional: explain artifacts
-      preview.png                   # optional
+data/catalog/prov/bundles/                           # PROV bundles (promotion evidence + lineage + QA + policy)
+├─ README.md                                        # How bundles are structured, validated, and referenced by catalogs
+├─ _index.json                                      # Optional: machine-friendly index of bundle_id → key metadata
+│
+└─ <bundle_id>/                                     # One bundle per promotion/run (stable ID)
+   ├─ manifest.yaml                                 # REQUIRED: bundle manifest (what’s inside + refs + versions)
+   │
+   ├─ checksums/                                    # REQUIRED integrity proofs for bundle contents
+   │  └─ sha256.txt                                 # REQUIRED: sha256 sums (or equivalent) for files in this bundle
+   │
+   ├─ receipts/                                     # REQUIRED run receipts for the work that produced this bundle
+   │  └─ pipeline-run.json                          # REQUIRED: pipeline run receipt/manifest (or equivalent)
+   │
+   ├─ lineage/                                      # Recommended lineage summaries (human + machine friendly)
+   │  └─ lineage.json                               # Recommended: derived lineage summary (links raw→work→processed)
+   │
+   ├─ qa/                                           # QA artifacts (required for promotion gates)
+   │  ├─ qa-summary.json                            # REQUIRED: machine-readable QA summary (thresholds + pass/fail)
+   │  └─ qa-details/                                # Optional: detailed reports, samples, charts (bounded)
+   │
+   ├─ policy/                                       # Policy outcomes tied to this bundle (when decisions/redactions apply)
+   │  ├─ decision.yaml                              # REQUIRED when policy decisions were made (allow/deny/obligations)
+   │  └─ redaction-notes.md                         # Recommended when redaction is applied (what/why/how)
+   │
+   └─ artifacts/                                    # Optional reviewer-friendly artifacts (small, safe)
+      ├─ README.md                                  # Optional: explains artifacts and how they were generated
+      └─ preview.png                                # Optional: preview image (small; no sensitive detail)
 ```
 
 ### Minimal manifest schema
