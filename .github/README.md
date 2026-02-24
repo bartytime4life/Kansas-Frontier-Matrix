@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: kfm-engineering; kfm-governance
 created: 2026-02-22
-updated: 2026-02-23
+updated: 2026-02-24
 policy_label: restricted
 related:
   - kfm://doc/kfm-definitive-design-governance-guide-vnext
@@ -21,6 +21,8 @@ tags:
 notes:
   - Badge row uses Shields.io (static) until repo identifiers are wired for dynamic badges.
   - This README is the GitHub-side “trust membrane”: templates + workflows + required checks registry.
+  - Added a wiring checklist (ORG/REPO/DEFAULT_BRANCH + status check names) to reduce “blocked-by-renames”.
+  - Clarified required status check naming + common pitfalls (skipped jobs, dependency chains).
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -28,7 +30,7 @@ notes:
 # KFM GitHub Operations
 Map-first • time-aware • governed delivery — **community files + CI/policy gate index**
 
-**Status:** Draft (vNext) • **Owners:** KFM Engineering + Governance
+**Status:** Draft (v2) • **Owners:** KFM Engineering + Governance
 
 ![status](https://img.shields.io/badge/status-draft-blue)
 ![policy](https://img.shields.io/badge/policy-restricted-orange)
@@ -43,6 +45,7 @@ Map-first • time-aware • governed delivery — **community files + CI/policy
 
 [Quick start](#quick-start) •
 [Scope](#scope) •
+[Wiring checklist](#wiring-checklist) •
 [Folder map](#folder-map) •
 [Required GitHub settings](#required-github-settings) •
 [Workflow inventory](#workflow-inventory) •
@@ -73,7 +76,7 @@ Map-first • time-aware • governed delivery — **community files + CI/policy
 **This README *is*:**
 - an index of the repo’s **community health files** (CONTRIBUTING, CODE_OF_CONDUCT, SECURITY, templates)
 - an index of **governance & promotion gates** enforced by CI
-- a **registry of required status checks** that branch protection should enforce
+- a **registry of required status checks** that branch protection / rulesets should enforce
 
 **This README is *not*:**
 - product documentation (see the repo root `README.md` and `/docs`)
@@ -81,6 +84,26 @@ Map-first • time-aware • governed delivery — **community files + CI/policy
 
 > [!WARNING]
 > Do not “fix” failing gates by weakening them. Fix the underlying metadata, provenance, tests, or redaction.
+
+---
+
+## Wiring checklist
+
+This file intentionally contains **placeholders** until the repo is wired (org/repo names, default branch, and *actual* emitted check names).
+
+Fill these in **once**, then convert badges + branch protection from placeholders → reality.
+
+| Wiring item | Where it is used | Current value | Target value |
+|---|---|---|---|
+| Org | Dynamic badges, links | `<ORG>` | TODO |
+| Repo | Dynamic badges, links | `<REPO>` | TODO |
+| Default branch | Dynamic badges | `<DEFAULT_BRANCH>` | TODO |
+| Workflow names | Required check naming conventions | `ci`, `policy-gates`, `provenance-audit`, `release` | TODO |
+| Required check names | Branch protection / rulesets | placeholders in this README | TODO |
+
+> [!TIP]
+> The safest way to fill in **Required check names** is to open a PR and copy exact names from the PR **Checks** UI.
+> Don’t guess—GitHub check names vary with workflow/job names and reusable workflows.
 
 ---
 
@@ -111,9 +134,25 @@ Recommended (minimum) structure for `.github/`:
 └─ workflows/                                      # REQUIRED: CI + policy gates + release gates
    ├─ ci.yml                                       # Core CI (lint, unit tests, build, linkcheck)
    ├─ policy-gates.yml                             # OPA/Conftest policy checks (fail-closed)
-   ├─ provenance-audit.yml                          # Provenance/receipts/audit verification (promotion contract checks)
+   ├─ provenance-audit.yml                         # Provenance/receipts/audit verification (promotion contract checks)
    └─ release.yml                                  # Release pipeline (versioning, checksums, catalogs, attestations)
 ```
+
+### Required files checklist
+
+This is a quick “do we have the basics?” scan. Exact file locations can vary by repo type (repo-local `.github/` folder vs an org-wide `.github` repository).
+
+| File | Why it exists | Minimum expectation |
+|---|---|---|
+| `CODEOWNERS` | Routes required reviews (governance, data, policy) | Patterns cover governance + data promotion paths |
+| `CONTRIBUTING.md` | Contributor workflow + guardrails | Explains PR expectations + how gates work |
+| `CODE_OF_CONDUCT.md` | Community standards | Publicly readable; includes enforcement scope |
+| `SECURITY.md` | Responsible disclosure | Private reporting path; “don’t post exploits in issues” |
+| `.github/workflows/*` | Automated gates | Emits stable, required check names |
+
+> [!NOTE]
+> GitHub also supports org-wide **default community health files** using a dedicated `.github` repository.
+> If your org uses defaults, per-repo files should either override intentionally or defer to the defaults.
 
 ### What belongs here vs elsewhere
 
@@ -156,7 +195,7 @@ These settings must align with the workflows and required checks below.
 
 ### Branch protection baseline
 
-Recommended for the default branch:
+Recommended for the default branch (classic branch protection or rulesets):
 
 - Require PRs (no direct pushes)
 - Require approvals (at least 1; increase for sensitive repos)
@@ -167,7 +206,7 @@ Recommended for the default branch:
 
 > [!WARNING]
 > If branch protection requires a check that no longer exists, merges can become permanently blocked.
-> If a workflow is renamed, update branch protection *in the same PR*.
+> If a workflow/job is renamed, update branch protection / rulesets *in the same PR*.
 
 ### Security feature baseline
 
@@ -176,6 +215,10 @@ Enable (where available for the repo visibility/tier):
 - secret scanning (and push protection, if available)
 - dependency alerts and (optionally) dependency updates (Dependabot)
 - code scanning / SAST (or a documented substitute)
+
+> [!IMPORTANT]
+> These settings are repo-tier dependent (private/public, GitHub plan, org policies). If a feature isn’t available,
+> document the substitute in `/docs/governance/` and enforce it via CI where possible.
 
 ---
 
@@ -191,16 +234,24 @@ This section documents the *intended* responsibilities of each workflow file.
 | `.github/workflows/release.yml` | Release/promotion orchestration (tagging, packaging, publish) | No RAW→Published jumps; gates must pass | release manifest, SBOM (if applicable), publish logs |
 
 > [!NOTE]
-> The table above is a **contract**. If you add a workflow, add it here. If you remove/rename a workflow, update this table and branch protection in the same PR.
+> The table above is a **contract**. If you add a workflow, add it here. If you remove/rename a workflow, update this table and branch protection / rulesets in the same PR.
 
 ---
 
 ## Required checks registry
 
-Branch protection should require a stable set of status checks that correspond to the gate categories below.
+Branch protection / rulesets should require a stable set of status checks that correspond to the gate categories below.
 
 > [!IMPORTANT]
-> **Check names are repo-specific.** Replace the placeholders with the *actual* status check names emitted by your workflows (as shown in a PR “Checks” tab).
+> **Check names are repo-specific.** Replace the placeholders with the *actual* status check names emitted by your workflows (copy from a PR “Checks” tab).
+
+### Status check naming pitfalls
+
+- **Skipped jobs can look “green.”** If a required gate can be skipped, it can undermine fail-closed behavior.
+- **Jobs that depend on other jobs may be skipped** when an upstream job fails; be careful which job you mark “required”.
+- **Reusable workflows can change name formats.** Copy the exact name from the UI—don’t infer.
+
+### Registry table
 
 | Gate category | Required check name (placeholder) | Source workflow | Notes |
 |---|---|---|---|
@@ -215,6 +266,15 @@ Branch protection should require a stable set of status checks that correspond t
 | Governance | `policy / story-node` | `policy-gates.yml` | claim hygiene + evidence bundle refs |
 | Provenance | `provenance / audit` | `provenance-audit.yml` | audit record + checksums |
 | Release | `release / manifest` | `release.yml` | only required on release branches/tags |
+
+### When a required check goes missing
+
+If merges become blocked because a required check “doesn’t exist”:
+
+1. Confirm the workflow still exists at the referenced path under `.github/workflows/`.
+2. Confirm the workflow/job name in YAML didn’t change.
+3. Open a PR and confirm the check name in the PR Checks list.
+4. Update branch protection / rulesets in the same PR that changes the workflow name.
 
 ---
 
@@ -272,6 +332,7 @@ flowchart LR
 Promotion to **Published** must have, at minimum:
 
 - [ ] metadata (identity, schema, extents, license, sensitivity)
+- [ ] license checks (source + allowed use + attribution requirements)
 - [ ] validation results (QA checks + thresholds)
 - [ ] provenance links (inputs, transforms, tool versions)
 - [ ] checksums/content integrity
@@ -341,6 +402,9 @@ If a change touches governance-sensitive areas, tag the PR/issue appropriately a
 - Never post secrets or exploit details in public issues.
 - Security fixes should land with tests and clear rollback notes.
 
+> [!NOTE]
+> If secret scanning / push protection is enabled, treat its alerts as **merge-blocking** for protected branches.
+
 ---
 
 ## Badge maintenance
@@ -355,6 +419,9 @@ When ready, swap in dynamic badges (examples):
 ![License](https://img.shields.io/github/license/<ORG>/<REPO>)
 ![Last commit](https://img.shields.io/github/last-commit/<ORG>/<REPO>)
 ```
+
+> [!TIP]
+> Once wired, delete the “repo-wiring pending” badge and replace it with one or more workflow badges.
 
 ---
 
@@ -375,14 +442,15 @@ When ready, swap in dynamic badges (examples):
 - [ ] Directory tree is present and matches current structure
 - [ ] Templates exist for the main work types (bug/feature/governance/data/story)
 - [ ] Links are relative and lintable (no broken internal links)
+- [ ] Wiring checklist is complete (no `<ORG>`, `<REPO>`, `<DEFAULT_BRANCH>` left behind)
 
 ### Governance & enforcement
 
 - [ ] CI workflows enforce fail-closed promotion/policy gates
-- [ ] Required checks registry matches actual check names used by branch protection
+- [ ] Required checks registry matches actual check names used by branch protection / rulesets
 - [ ] Policy labels + redaction defaults are stated (default-deny if unclear)
 - [ ] Workflow inventory is kept current when workflows change
-- [ ] Branch protection updated whenever workflow/check names change
+- [ ] Branch protection / rulesets updated whenever workflow/check names change
 
 ---
 
