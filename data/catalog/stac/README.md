@@ -84,18 +84,20 @@ flowchart LR
 Because the repo tree is not yet confirmed in this chat, the layout below is a **recommended** structure.
 
 ```text
-data/catalog/stac/
-  README.md
-  catalog.json                        # Root STAC Catalog (recommended)
-  collections/
-    <collection-id>/
-      collection.json                 # STAC Collection
-      items/
-        <item-id>.json                # STAC Item(s)
-      assets/                         # Optional: small derived artifacts ONLY (e.g., thumbnails)
-  catalogs/                           # Optional: sub-catalogs to partition large holdings
-    <topic-or-area>/
-      catalog.json
+data/catalog/stac/                                 # STAC discovery catalog (Collections + Items + optional sub-catalogs)
+├─ README.md                                       # STAC profile notes, required links, and validation expectations
+├─ catalog.json                                    # Recommended root STAC Catalog (entrypoint for discovery)
+│
+├─ collections/                                   # STAC Collections (groupings by dataset/topic/region)
+│  └─ <collection-id>/                             # Stable collection identifier (kebab/snake-case)
+│     ├─ collection.json                           # STAC Collection (extent, license, providers, links)
+│     ├─ items/                                    # STAC Items for this collection
+│     │  └─ <item-id>.json                         # One item per file (assets, geometry, datetime)
+│     └─ assets/                                   # Optional: tiny derived artifacts only (e.g., thumbnails)
+│
+└─ catalogs/                                       # Optional sub-catalogs (partition large holdings)
+   └─ <topic-or-area>/                             # Partition key (topic/area/time bucket)
+      └─ catalog.json                              # Sub-catalog entrypoint (links to collections/items beneath)
 ```
 
 ### Naming conventions
