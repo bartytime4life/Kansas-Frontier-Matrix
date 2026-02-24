@@ -73,22 +73,26 @@ This folder is the **schema layer** of the dataset registry:
 Recommended structure (example):
 
 ```text
-data/registry/datasets/schemas/
-  README.md
-  _templates/
-    schema.contract.yml
-    jsonschema.table.schema.json
-  <dataset_id>/
-    README.md
-    v1/
-      schema.meta.yml
-      table.schema.json
-      geospatial.schema.yml
-      checks/
-        expectations.yml
-    v2/
-      schema.meta.yml
-      table.schema.json
+data/registry/datasets/schemas/                      # Dataset schema registry (per-dataset, versioned contracts)
+├─ README.md                                        # How dataset schemas are versioned, validated, and referenced by pipelines
+│
+├─ _templates/                                      # Starter templates for new schema versions
+│  ├─ schema.contract.yml                           # Meta contract template (ownership, compatibility, refs)
+│  └─ jsonschema.table.schema.json                  # Baseline JSON Schema template for tabular data products
+│
+└─ <dataset_id>/                                    # One folder per dataset_id
+   ├─ README.md                                     # Dataset schema index + compatibility notes
+   │
+   ├─ v1/                                           # Version 1 contract (immutable once published)
+   │  ├─ schema.meta.yml                            # Schema metadata (version, spec_hash, owners, change notes)
+   │  ├─ table.schema.json                          # Tabular/record schema (JSON Schema; canonical column defs)
+   │  ├─ geospatial.schema.yml                      # Optional geo schema (CRS, geometry type, precision rules)
+   │  └─ checks/                                    # Optional validation expectations (QA gates)
+   │     └─ expectations.yml                        # Expectations/thresholds (null rates, ranges, uniqueness, etc.)
+   │
+   └─ v2/                                           # Version 2 contract (backward-compat notes required)
+      ├─ schema.meta.yml                            # Metadata + migration notes
+      └─ table.schema.json                          # Updated table schema (new fields/types; versioned)
 ```
 
 ### Minimal required files (per dataset schema version)
