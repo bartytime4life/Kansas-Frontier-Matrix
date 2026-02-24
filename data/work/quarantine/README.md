@@ -159,22 +159,25 @@ If you believe something in quarantine should be exposed, the correct fix is to 
 > If the repo already has a different convention, follow the repo convention and update this README.
 
 ```text
-data/work/quarantine/
-  README.md
-
-  <dataset_slug>/
-    <candidate_id>/                    # dataset_version_id or spec_hash prefix (preferred)
-      quarantine.json                  # reason code + policy default + ownership
-      remediation.md                   # plan (who/what/when) to resolve quarantine
-      run_receipt.json                 # the run that produced this entry
-      checksums.txt                    # digests for artifacts in this folder
-      qa/
-        validation.json                # machine-readable validation outputs
-        validation_summary.md          # human summary (optional)
-      artifacts/
-        ... intermediate outputs ...
-      notes/
-        ... supporting context ...
+data/work/quarantine/                              # Work-zone quarantine (failed checks; never promoted; debug-only)
+├─ README.md                                       # Entry/exit criteria, retention, and escalation rules
+│
+└─ <dataset_slug>/                                 # Dataset family
+   └─ <candidate_id>/                              # Candidate id (dataset_version_id or spec_hash prefix preferred)
+      ├─ quarantine.json                            # REQUIRED: reason code, policy defaults, owner/assignee, timestamps
+      ├─ remediation.md                             # Remediation plan (who/what/when + verification checklist)
+      ├─ run_receipt.json                            # Run receipt that produced this candidate (traceability)
+      ├─ checksums.txt                               # Digests for artifacts in this folder (tamper detection)
+      │
+      ├─ qa/                                         # QA/validation evidence explaining the failure
+      │  ├─ validation.json                          # Machine-readable validation outputs (errors/warnings)
+      │  └─ validation_summary.md                    # Optional human summary (high-signal findings)
+      │
+      ├─ artifacts/                                  # Intermediate outputs captured for debugging (bounded; no secrets)
+      │  └─ …                                        # Partial transforms, logs, samples, rendered reports
+      │
+      └─ notes/                                      # Supporting context (reviewer-friendly; no secrets)
+         └─ …                                        # Links, screenshots, triage notes, incident refs
 ```
 
 Naming guidance (recommended):
