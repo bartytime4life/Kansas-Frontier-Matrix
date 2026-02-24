@@ -95,18 +95,18 @@ This directory is the **dataset “control plane”** for KFM:
 ## Directory structure
 
 ```
-data/registry/datasets/
-  README.md                      # this document
-  index.yaml                     # registry index (list of datasets + file paths)
-
-  entries/                       # one YAML file per dataset (authoritative metadata)
-    .gitkeep
-
-  templates/
-    dataset_entry.template.yaml  # copy/paste template for new datasets
-
-  schemas/
-    dataset_entry.schema.json    # JSON Schema for entries/*.yaml
+data/registry/datasets/                             # Dataset registry (authoritative dataset inventory + metadata)
+├─ README.md                                        # This document: how datasets are registered + reviewed + validated
+├─ index.yaml                                       # Registry index (dataset list + entry file paths; CI discovery)
+│
+├─ entries/                                         # One YAML file per dataset (authoritative metadata)
+│  └─ .gitkeep                                      # Placeholder until entries exist (remove once populated)
+│
+├─ templates/                                       # Copy/paste scaffolding for new datasets
+│  └─ dataset_entry.template.yaml                   # Starter template (fill then validate against schema)
+│
+└─ schemas/                                         # Validation contracts (CI-enforced)
+   └─ dataset_entry.schema.json                     # JSON Schema for entries/*.yaml (required fields + vocab refs)
 ```
 
 [Back to top](#dataset-registry)
