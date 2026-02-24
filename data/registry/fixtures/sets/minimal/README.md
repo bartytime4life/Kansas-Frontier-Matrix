@@ -84,29 +84,26 @@ KFM treats catalogs as **contract surfaces**, not “nice-to-have metadata”. T
 > **IMPORTANT:** The exact filenames may vary by repo conventions. This is a *recommended* shape so tools can target a predictable structure.
 
 ```text
-data/registry/fixtures/sets/minimal/
-  README.md
-
-  registry/
-    # Minimal registry entries used by loaders/indexers/tests
-    # (JSON/YAML allowed; keep tiny)
-    dataset.json          # (example) one dataset record
-    source.json           # (example) one upstream source record
-
-  catalogs/
-    dcat/
-      dataset.jsonld      # (example) DCAT Dataset + Distribution(s)
-    stac/
-      collection.json     # (example) STAC Collection
-      items/
-        item-001.json     # (example) STAC Item
-    prov/
-      bundle.jsonld       # (example) PROV bundle
-
-  negative/
-    # Intentionally invalid examples to prove gates fail closed
-    dcat.missing_license.jsonld
-    stac.bad_extent.json
+data/registry/fixtures/sets/minimal/                 # Minimal fixture set (fast CI smoke + loader/indexer sanity)
+├─ README.md                                        # What this set covers + how to run validation against it
+│
+├─ registry/                                        # Minimal registry entries (tiny; JSON/YAML allowed)
+│  ├─ dataset.json                                  # Example dataset registry record (single dataset)
+│  └─ source.json                                   # Example upstream source registry record (single source)
+│
+├─ catalogs/                                        # Minimal catalogs (valid “golden” examples)
+│  ├─ dcat/
+│  │  └─ dataset.jsonld                             # Example DCAT Dataset + Distribution(s)
+│  ├─ stac/
+│  │  ├─ collection.json                            # Example STAC Collection
+│  │  └─ items/
+│  │     └─ item-001.json                           # Example STAC Item
+│  └─ prov/
+│     └─ bundle.jsonld                              # Example PROV bundle (minimal lineage)
+│
+└─ negative/                                        # Intentionally invalid examples (prove gates fail-closed)
+   ├─ dcat.missing_license.jsonld                   # Invalid: missing/unknown license
+   └─ stac.bad_extent.json                          # Invalid: malformed extent/bounds
 ```
 
 [Back to top](#minimal-registry-fixture-set-dataregistry-fixture-set-dataregistryfixturessetsminimal)
