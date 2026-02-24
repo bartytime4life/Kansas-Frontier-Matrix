@@ -106,50 +106,51 @@ This directory is the canonical home for **machine-verifiable** contract artifac
 
 ```text
 configs/
-  contracts/
-    README.md
-
-    schemas/
-      run_receipt/
-        v1.schema.json
-        examples/
-          run_receipt.valid.json
-          run_receipt.invalid.missing_spec_hash.json
-
-      run_manifest/
-        v1.schema.json
-        examples/
-
-      watcher_registry/
-        v1.schema.json
-        examples/
-        signatures/
-          README.md
-
-      catalogs/
-        dcat/
-        stac/
-        prov/
-
-      api/
-        openapi/
-          v1.openapi.yaml
-        graphql/
-          schema.graphql
-
-    policy/
-      opa/
-        receipt.rego
-        catalogs.rego
-        api.rego
-        _test.rego
-      fixtures/
-        allow/
-        deny/
-
-    tests/
-      contract_smoke/
-        README.md
+└─ contracts/                                       # Contract surfaces (schemas + policy + smoke tests)
+   ├─ README.md                                     # What contracts exist, versioning, and CI enforcement (fail-closed)
+   │
+   ├─ schemas/                                      # Machine-validated schemas (inputs/outputs/registries/catalogs/api)
+   │  ├─ run_receipt/                               # Run receipt schema family (promotion evidence)
+   │  │  ├─ v1.schema.json                          # Run receipt v1 JSON Schema
+   │  │  └─ examples/
+   │  │     ├─ run_receipt.valid.json               # Minimal valid example (must pass)
+   │  │     └─ run_receipt.invalid.missing_spec_hash.json # Invalid example (must fail)
+   │  │
+   │  ├─ run_manifest/                              # Run manifest schema family (run envelope / promotion receipt)
+   │  │  ├─ v1.schema.json
+   │  │  └─ examples/
+   │  │     └─ …                                    # Valid/invalid examples (must pass/fail accordingly)
+   │  │
+   │  ├─ watcher_registry/                          # Watcher registry schema family (signed registry objects)
+   │  │  ├─ v1.schema.json
+   │  │  ├─ examples/
+   │  │  └─ signatures/
+   │  │     └─ README.md                            # Signature format + verification expectations (keys not stored here)
+   │  │
+   │  ├─ catalogs/                                  # Catalog schemas/profiles (minimums + constraints)
+   │  │  ├─ dcat/                                   # DCAT constraints/schemas (as used by KFM)
+   │  │  ├─ stac/                                   # STAC constraints/schemas (as used by KFM)
+   │  │  └─ prov/                                   # PROV constraints/schemas (as used by KFM)
+   │  │
+   │  └─ api/                                       # API boundary contracts
+   │     ├─ openapi/
+   │     │  └─ v1.openapi.yaml                      # REST contract snapshot (OpenAPI 3.1)
+   │     └─ graphql/
+   │        └─ schema.graphql                       # Optional GraphQL SDL snapshot
+   │
+   ├─ policy/                                       # Contract-gate policy used by CI (OPA/Rego)
+   │  ├─ opa/
+   │  │  ├─ receipt.rego                            # Receipt policy checks (required fields, invariants)
+   │  │  ├─ catalogs.rego                           # Catalog minimums checks (STAC/DCAT/PROV cross-links)
+   │  │  ├─ api.rego                                # API contract policy checks (required headers/error envelopes, etc.)
+   │  │  └─ _test.rego                              # OPA unit tests for these policies (opa test …)
+   │  └─ fixtures/
+   │     ├─ allow/                                  # Inputs expected to pass (allow=true)
+   │     └─ deny/                                   # Inputs expected to fail (deny=true)
+   │
+   └─ tests/                                        # Smoke/contract harnesses (CI-friendly, fail-closed)
+      └─ contract_smoke/
+         └─ README.md                               # How smoke tests run + what constitutes a blocking failure
 ```
 
 [Back to top](#contracts)
