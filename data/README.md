@@ -90,44 +90,49 @@ flowchart LR
 This repo’s **recommended** layout keeps the “truth path” zones adjacent and validator-friendly:
 
 ```text
-data/
-├─ README.md
-├─ registry/
+data/                                                # Governed data lifecycle: registry → raw → work → processed → catalog
+├─ README.md                                         # How this tree works + invariants + what is/never is served
+│
+├─ registry/                                         # Canonical metadata about upstream sources/datasets (governed)
 │  └─ sources/
-│     ├─ <source_id>.yml
-│     └─ <source_id>.json
-├─ raw/
+│     ├─ <source_id>.yml                             # Source descriptor (preferred human-editable form)
+│     └─ <source_id>.json                            # Optional machine-export/normalized copy (if generated)
+│
+├─ raw/                                              # Immutable captures (never served; append-only)
 │  └─ <dataset_slug>/
-│     └─ <acquisition_id>/
-│        ├─ manifest.json
-│        ├─ artifacts/
-│        └─ checksums.json
-├─ work/
+│     └─ <acquisition_id>/                           # One acquisition event (timestamp/uuid/provider run id)
+│        ├─ manifest.json                            # Capture manifest (license/sensitivity required)
+│        ├─ artifacts/                               # Original payload (as received; never modified)
+│        └─ checksums.json                           # Digests for raw artifacts (tamper detection)
+│
+├─ work/                                             # Regeneratable intermediates (never served; run-scoped)
 │  └─ <dataset_slug>/
-│     └─ <work_run_id>/
-│        ├─ artifacts/
-│        ├─ qa/
-│        ├─ checksums.json
-│        └─ status.json          # optional: quarantine reasons, remediation plan
-├─ processed/
+│     └─ <work_run_id>/                              # One pipeline/work run (append-only; do not overwrite)
+│        ├─ artifacts/                               # Intermediate outputs (bounded; reproducible)
+│        ├─ qa/                                      # Validation/QC outputs (schema/geo/time/license/policy checks)
+│        ├─ checksums.json                           # Digests for work artifacts (supports reproducibility)
+│        └─ status.json                              # Optional: quarantine reasons + remediation plan + owner
+│
+├─ processed/                                        # Publishable artifacts (servable) — immutable per version
 │  └─ <dataset_slug>/
-│     └─ <dataset_version_id>/
-│        ├─ artifacts/
-│        ├─ checksums.json
+│     └─ <dataset_version_id>/                       # Stable/content-addressed preferred
+│        ├─ artifacts/                               # Data products (parquet/geoparquet/tiles/media)
+│        ├─ checksums.json                           # Digests for processed artifacts (required)
 │        └─ qa/
-│           └─ validation_report.json
-└─ catalog/
+│           └─ validation_report.json                # Validation report required for promotion gates
+│
+└─ catalog/                                          # Served metadata + lineage (validated + cross-linked)
    └─ <dataset_slug>/
       └─ <dataset_version_id>/
-         ├─ dcat.jsonld
+         ├─ dcat.jsonld                              # DCAT dataset/distribution record(s)
          ├─ stac/
-         │  ├─ collection.json
-         │  └─ items/
+         │  ├─ collection.json                       # STAC Collection for the dataset
+         │  └─ items/                                # STAC Items for this version (one file per item)
          ├─ prov/
-         │  └─ prov.jsonld
+         │  └─ prov.jsonld                           # PROV bundle linking raw → work → processed
          ├─ receipts/
-         │  └─ <run_id>.json
-         └─ promotion_manifest.json
+         │  └─ <run_id>.json                         # Run receipt(s) / run manifests used as promotion evidence
+         └─ promotion_manifest.json                  # Promotion manifest tying catalogs/receipts/checksums together
 ```
 
 > **TIP**  
