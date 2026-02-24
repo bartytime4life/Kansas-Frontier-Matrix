@@ -87,30 +87,34 @@ data/fixtures/
   README.md
 
   # Fixture bundles (recommended)
-  bundles/
-    <dataset_slug>/
-      <dataset_version_id>/
-        fixture.manifest.json        # REQUIRED
-        artifacts/                   # REQUIRED (tiny, representative)
-          ...                        # GeoParquet, PMTiles, JSON, etc.
-        catalogs/                    # RECOMMENDED
-          dcat.jsonld
-          stac/
-            collection.json
-            items/
-              *.json
-          prov/
-            bundle.jsonld
-        qa/
-          report.json                # OPTIONAL (but encouraged)
-
-  # Schema examples (valid/invalid) used by CI validators (optional pattern)
-  schemas/
-    <schema_name>/
-      valid/
-        *.json
-      invalid/
-        *.json
+ data/fixtures/                                     # Deterministic test data (tiny, representative, synthetic/safe)
+├─ README.md                                       # Rules: size caps, licensing, sensitivity, update workflow
+│
+├─ bundles/                                        # Recommended: fixture bundles (dataset-scoped, versioned)
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/                     # Stable fixture version (matches contract expectations)
+│        ├─ fixture.manifest.json                  # REQUIRED: bundle index (files, digests, schema refs, labels)
+│        ├─ artifacts/                             # REQUIRED: tiny representative artifacts (safe to store in git)
+│        │  └─ …                                   # GeoParquet, PMTiles, JSON, etc. (bounded; reproducible)
+│        │
+│        ├─ catalogs/                              # RECOMMENDED: catalogs for this fixture bundle
+│        │  ├─ dcat.jsonld                         # DCAT dataset/distribution record
+│        │  ├─ stac/
+│        │  │  ├─ collection.json                  # STAC Collection
+│        │  │  └─ items/
+│        │  │     └─ *.json                        # STAC Items (assets point to artifacts/ or immutable refs)
+│        │  └─ prov/
+│        │     └─ bundle.jsonld                    # PROV bundle (raw → work → processed lineage)
+│        │
+│        └─ qa/                                    # Optional quality artifacts (machine-readable)
+│           └─ report.json                         # OPTIONAL: QA/validation summary (coverage, errors, thresholds)
+│
+└─ schemas/                                        # Optional: schema examples for CI validators (valid/invalid)
+   └─ <schema_name>/
+      ├─ valid/                                    # Must validate successfully
+      │  └─ *.json
+      └─ invalid/                                  # Must fail validation (negative tests)
+         └─ *.json
 ```
 
 > [!NOTE]
