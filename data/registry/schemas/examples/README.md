@@ -59,17 +59,22 @@ notes:
 This folder is intentionally boring. A common (recommended) shape:
 
 ```text
-data/registry/schemas/examples/
-  run_receipt/v1/
-    valid.min.json
-    invalid.missing_spec_hash.json
-    invalid.bad_subject_digest.json
-  run_manifest/v1/
-    valid.min.json
-    invalid.missing_rights.json
-  watcher/v1/
-    valid.min.json
-    invalid.missing_signature_ref.json
+data/registry/schemas/examples/                      # Schema examples (golden inputs for CI validation)
+├─ run_receipt/
+│  └─ v1/
+│     ├─ valid.min.json                             # Minimal valid run_receipt v1 (must pass)
+│     ├─ invalid.missing_spec_hash.json             # Invalid: missing spec_hash (must fail)
+│     └─ invalid.bad_subject_digest.json            # Invalid: malformed/incorrect subject digest (must fail)
+│
+├─ run_manifest/
+│  └─ v1/
+│     ├─ valid.min.json                             # Minimal valid run_manifest v1 (must pass)
+│     └─ invalid.missing_rights.json                # Invalid: missing rights/license terms (must fail)
+│
+└─ watcher/
+   └─ v1/
+      ├─ valid.min.json                             # Minimal valid watcher v1 (must pass)
+      └─ invalid.missing_signature_ref.json         # Invalid: missing signature reference (must fail)
 ```
 
 > [!TIP]
