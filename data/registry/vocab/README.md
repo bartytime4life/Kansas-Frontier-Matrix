@@ -165,12 +165,12 @@ No authoritative on-disk format is defined here (it is repo-local). The goal is 
 One file per vocabulary, stored in this directory:
 
 ```text
-data/registry/vocab/
-  README.md
-  policy_label.json
-  artifact.zone.json
-  citation.kind.json
-  geometry.generalization_method.json
+data/registry/vocab/                                # Controlled vocabularies (canonical enums used across KFM)
+├─ README.md                                        # What these vocabs govern + versioning/change rules
+├─ policy_label.json                                # Policy labels (public/restricted/etc.) + handling flags/obligations
+├─ artifact.zone.json                               # Artifact zones (raw/work/processed/catalog/quarantine/release)
+├─ citation.kind.json                               # Citation kinds (dataset, document, run_receipt, url, etc.)
+└─ geometry.generalization_method.json              # Allowed geometry generalization methods (buffer, snap, grid, centroid…)
 ```
 
 Example schema:
