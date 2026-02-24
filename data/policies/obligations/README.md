@@ -221,17 +221,20 @@ Obligations are one mechanism to enforce these rules and to communicate them to 
 > This is a **recommended** layout. Adjust filenames to match this repo once confirmed.
 
 ```
-data/policies/obligations/
-  README.md                 # this file
-  registry.yaml             # machine registry of obligation types (TODO)
-  examples/
-    policy_decision_deny.json
-    policy_decision_public_generalized.json
-  schemas/
-    obligation.schema.json
-    policy_decision.schema.json
-  tests/
-    obligations_test.rego
+data/policies/obligations/                          # Obligation system (what must happen when policy allows/denies)
+├─ README.md                                       # This file: obligation model, semantics, and how to add new obligations
+├─ registry.yaml                                   # (TODO) Machine registry of obligation types + parameters + defaults
+│
+├─ examples/                                       # Synthetic examples (how obligations appear in decisions)
+│  ├─ policy_decision_deny.json                     # Deny decision example (reasons + required actions)
+│  └─ policy_decision_public_generalized.json       # Allow w/ obligations (e.g., geometry generalization)
+│
+├─ schemas/                                        # Validation contracts (CI-enforced)
+│  ├─ obligation.schema.json                        # Obligation object schema (type, params, severity, rationale)
+│  └─ policy_decision.schema.json                   # Policy decision schema (allow/deny + obligations + reason codes)
+│
+└─ tests/                                          # Policy tests for obligation behavior
+   └─ obligations_test.rego                         # OPA tests: obligation generation + parameter correctness
 ```
 
 [Back to top](#policy-obligations)
