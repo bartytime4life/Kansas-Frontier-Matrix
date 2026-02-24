@@ -187,17 +187,19 @@ This folder should contain:
 
 Example (recommended) layout:
 ~~~
-data/registry/sources/
-  README.md
-  sources.yaml
-  connectors/
-    noaa_ncei_storm_events.md
-    usgs_waterdata_nwis.md
-  evidence/
-    terms/
-      noaa_ncei_storm_events/
-        2026-01-15.pdf
-        2026-01-15.pdf.sha256
+data/registry/sources/                              # Source registry: upstream metadata + connector notes + evidence
+├─ README.md                                        # How sources are registered, reviewed, and referenced by datasets
+├─ sources.yaml                                     # Canonical source list (ids, owners, URLs, capabilities, licenses refs)
+│
+├─ connectors/                                      # Connector-facing docs (how to ingest from each source)
+│  ├─ noaa_ncei_storm_events.md                     # Notes: endpoints, paging, formats, rate limits, mappings
+│  └─ usgs_waterdata_nwis.md                        # Notes: auth, quotas, schema quirks, failure modes
+│
+└─ evidence/                                        # Evidence supporting source claims (terms, licenses, policies)
+   └─ terms/                                        # Terms-of-use snapshots (immutable; dated)
+      └─ noaa_ncei_storm_events/
+         ├─ 2026-01-15.pdf                          # Snapshot of terms/usage policy (date-stamped)
+         └─ 2026-01-15.pdf.sha256                   # Integrity hash for the snapshot (tamper detection)
 ~~~
 
 > [!NOTE]
