@@ -1,1 +1,291 @@
+name: "Story Node"
+description: "Create or update a governed Story Node (claims + evidence + policy + gates)."
+title: "Story Node: <short, user-facing title>"
+labels:
+  - "story-node"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Story Node (Governed)
+        Use this form to propose, update, or retire a **Story Node** in the Kansas-Matrix-System.
 
+        **Rule of the road:** every user-facing claim must be traceable to **evidence** (datasets, pipeline receipts, docs, links) and **policy decisions**.
+
+        **Tip:** If something isn’t known yet, write **UNKNOWN** and add the smallest verification step needed to confirm it.
+
+  - type: dropdown
+    id: change_type
+    attributes:
+      label: Change type
+      description: What kind of Story Node work is this?
+      options:
+        - New Story Node
+        - Update existing Story Node
+        - Fix / correction
+        - Deprecate / retire
+    validations:
+      required: true
+
+  - type: input
+    id: story_node_id
+    attributes:
+      label: Story Node ID (if known)
+      description: Optional. Use your canonical ID if you already have one (e.g., kfm://doc/<uuid>).
+      placeholder: "kfm://doc/<uuid> (or leave blank)"
+    validations:
+      required: false
+
+  - type: input
+    id: owners
+    attributes:
+      label: Owners
+      description: Who is responsible for delivery + governance review (team or individuals)?
+      placeholder: "e.g., @kfm-platform @data-governance @map-ui"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: One-line purpose
+      description: What is this Story Node for, in one sentence?
+      placeholder: "e.g., Explain neighborhood heat-risk patterns with evidence-backed, policy-safe cartography."
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User story
+      description: Who is the audience and what do they need?
+      placeholder: |
+        As a <user/audience>,
+        I want <capability>,
+        so that <outcome>.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Primary audience
+      options:
+        - Public
+        - Internal (staff)
+        - Partners
+        - Researchers
+        - Mixed / other
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_facing_claims
+    attributes:
+      label: User-facing claims
+      description: Bullet list of the exact claims that the UI/story will present (keep them crisp).
+      placeholder: |
+        - Claim 1 ...
+        - Claim 2 ...
+        - Claim 3 ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence & traceability links
+      description: Link each claim to evidence. Prefer repo paths, dataset IDs, pipeline receipts, published sources, or stable URLs.
+      placeholder: |
+        - Claim 1 evidence: <dataset id / receipt / doc link>
+        - Claim 2 evidence: <dataset id / receipt / doc link>
+        - Claim 3 evidence: <dataset id / receipt / doc link>
+    validations:
+      required: true
+
+  - type: dropdown
+    id: policy_label
+    attributes:
+      label: Policy label
+      description: If uncertain, choose "Unknown" and describe the minimum governance step in the next field.
+      options:
+        - public
+        - restricted
+        - confidential
+        - community-restricted
+        - unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: policy_decisions
+    attributes:
+      label: Policy decisions & constraints
+      description: What policy rules apply (redactions, aggregation, access controls, CARE/FAIR constraints, etc.)?
+      placeholder: |
+        - Constraints:
+        - Redactions/aggregation rules:
+        - Access rules (if any):
+        - Approvals needed (if any):
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: sensitive_location_handling
+    attributes:
+      label: Sensitive locations & safety handling
+      description: Check what applies. If uncertain, default to generalization/redaction.
+      options:
+        - label: "This node involves vulnerable/private/culturally restricted locations (no exact coordinates in UI)."
+        - label: "This node only uses coarse geography (e.g., neighborhood/county) or explicitly redacted geometry."
+        - label: "No sensitive location considerations identified."
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope touched
+      description: Select all that apply.
+      options:
+        - label: Data (new/updated dataset)
+        - label: Pipeline / ETL
+        - label: Catalog / metadata / provenance
+        - label: Storage / indexing
+        - label: Governed API
+        - label: Map / Story UI
+        - label: Focus Mode AI / reasoning layer
+        - label: Documentation / narrative copy
+
+  - type: dropdown
+    id: data_zone_movement
+    attributes:
+      label: Data lifecycle zone movement
+      description: If the work promotes data between zones, choose the primary movement.
+      options:
+        - None / N/A
+        - Raw → Work/Quarantine
+        - Work/Quarantine → Processed
+        - Processed → Published
+    validations:
+      required: true
+
+  - type: textarea
+    id: data_details
+    attributes:
+      label: Data details (if applicable)
+      description: Provide dataset identity, license, sensitivity/classification, spatial+temporal extents, schema, and sample rows/fields if possible.
+      placeholder: |
+        - Source + license:
+        - Sensitivity/classification:
+        - Spatial extent:
+        - Temporal extent:
+        - Schema summary:
+        - Sample rows/fields:
+        - QA rules + thresholds:
+    validations:
+      required: false
+
+  - type: textarea
+    id: pipeline_details
+    attributes:
+      label: Pipeline details (if applicable)
+      description: Pipeline config paths, inputs/outputs, tool versions, and expected run receipts/audit logs.
+      placeholder: |
+        - Pipeline config path(s):
+        - Inputs:
+        - Outputs:
+        - Tool versions:
+        - Expected audit/receipt artifact:
+    validations:
+      required: false
+
+  - type: textarea
+    id: api_details
+    attributes:
+      label: Governed API changes (if applicable)
+      description: Contract changes (OpenAPI/GraphQL), auth/rate limits, error model, audit needs.
+      placeholder: |
+        - Contract path/link:
+        - New/changed endpoints:
+        - Auth & rate:
+        - Error model:
+        - Audit requirements:
+    validations:
+      required: false
+
+  - type: textarea
+    id: ui_details
+    attributes:
+      label: Map / Story UI details (if applicable)
+      description: Routes/IA, interaction model, accessibility targets, key screens.
+      placeholder: |
+        - Routes / navigation:
+        - Interaction model:
+        - Accessibility (a11y) targets:
+        - Key screens:
+    validations:
+      required: false
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: Concrete “done” conditions that can be tested/verified.
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test & verification plan
+      description: Minimum verification steps to convert Unknown → Confirmed, plus any automated checks.
+      placeholder: |
+        - Unit/integration tests:
+        - Data validation checks:
+        - UI checks:
+        - Security/privacy checks:
+        - Manual review steps:
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks_tradeoffs
+    attributes:
+      label: Risks & tradeoffs
+      description: List key risks, mitigations, and tradeoffs (especially around safety, policy, and data quality).
+      placeholder: |
+        - Risk:
+          Mitigation:
+          Tradeoff:
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback_plan
+    attributes:
+      label: Rollback / reversibility plan
+      description: If this ships and needs to be reverted, what is the simplest rollback?
+      placeholder: |
+        - Feature flag / toggle:
+        - Rollback steps:
+        - Data rollback considerations:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: submission_gates
+    attributes:
+      label: Submission gates (must be true to ship)
+      description: These are the “trust membrane” commitments for Story Nodes.
+      options:
+        - label: "Every user-facing claim above has explicit evidence links (or is marked UNKNOWN with a verification step)."
+          required: true
+        - label: "Policy label is set; if uncertain, default-deny/redact/generalize is documented."
+          required: true
+        - label: "If data is promoted between zones, required promotion artifacts are identified (metadata, QA, license, provenance, checksums, audit record)."
+          required: true
+        - label: "Reversibility: rollback plan is included and practical."
+          required: true
