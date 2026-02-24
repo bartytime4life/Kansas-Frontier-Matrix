@@ -350,25 +350,30 @@ This directory is the top of the documentation tree for architecture. More detai
 The rest is a suggested layout; create folders as the repo matures.
 
 ```text
-docs/architecture/
-  README.md
-  overview/
-    system-context.md
-    trust-membrane.md
-    lifecycle.md
-  decisions/
-    adr-0000-template.md
-    adr-0001-example.md
-  diagrams/
-    system-context.mmd
-    layering.mmd
-    lifecycle.mmd
-  contracts/
-    api-contract.md
-    policy-contract.md
-    run-receipt.schema.json
-  threat-model/
-    README.md
+docs/architecture/                                  # Architecture docs (invariants, decisions, diagrams, contracts)
+├─ README.md                                        # Index + how to navigate architecture docs
+│
+├─ overview/                                        # High-level architecture narrative (what/why/how)
+│  ├─ system-context.md                             # System context + external actors/dependencies
+│  ├─ trust-membrane.md                             # Trust membrane definition (boundary rules + enforcement points)
+│  └─ lifecycle.md                                  # Data lifecycle (raw → work → processed → catalog → published)
+│
+├─ decisions/                                       # Architecture Decision Records (ADRs)
+│  ├─ adr-0000-template.md                          # ADR template (problem → options → decision → consequences)
+│  └─ adr-0001-example.md                           # Example ADR (format reference)
+│
+├─ diagrams/                                        # Diagram sources (Mermaid .mmd; export images if desired)
+│  ├─ system-context.mmd                            # Context diagram source
+│  ├─ layering.mmd                                  # Layered architecture diagram source
+│  └─ lifecycle.mmd                                 # Lifecycle flow diagram source
+│
+├─ contracts/                                       # Architecture-level contracts (human + machine)
+│  ├─ api-contract.md                               # API boundary invariants (error shapes, auth, versioning)
+│  ├─ policy-contract.md                            # Policy boundary invariants (default-deny, inputs/outputs)
+│  └─ run-receipt.schema.json                       # Run receipt schema (machine contract referenced by CI/policy)
+│
+└─ threat-model/                                    # Threat modeling (risks + mitigations + assumptions)
+   └─ README.md                                     # Threat model overview (assets, threats, controls, residual risk)
 ```
 
 | Path | Purpose |
