@@ -106,23 +106,26 @@ Typical layout we expect for this package:
 
 ```text
 packages/
-  adapters/
-    README.md
-    package.json            # if this is an npm workspace package
-    src/
-      index.ts              # public exports (or equivalent)
-      shared/               # common utilities: retries, timeouts, redaction helpers
-      postgis/              # PostGIS repository implementations
-      graph/                # Neo4j / graph store adapters
-      search/               # OpenSearch/Elastic/vector index adapters
-      object-store/         # S3/MinIO adapters
-      tiles/                # PMTiles / tile cache writers/readers
-      policy/               # policy-eval client + obligation application helpers
-      audit/                # audit ledger / run receipt sinks
-    tests/
-      contract/
-      integration/
-      fixtures/
+└─ adapters/                                     # Infrastructure adapters (implement ports; talk to real systems)
+   ├─ README.md                                   # What belongs here, boundaries, and testing expectations
+   ├─ package.json                                # Workspace package manifest (if using npm/pnpm/yarn workspaces)
+   │
+   ├─ src/
+   │  ├─ index.ts                                 # Public exports (barrel) for adapter package
+   │  │
+   │  ├─ shared/                                  # Cross-adapter utilities (retries, timeouts, logging helpers, redaction utils)
+   │  ├─ postgis/                                 # PostGIS repository implementations (SQL + migrations where applicable)
+   │  ├─ graph/                                   # Graph store adapters (Neo4j drivers, Cypher runners, projections)
+   │  ├─ search/                                  # Search/vector adapters (OpenSearch/Elasticsearch/vector services)
+   │  ├─ object-store/                            # Object storage adapters (S3/MinIO; digest addressing; metadata)
+   │  ├─ tiles/                                   # Tile adapters (PMTiles writers/readers, tile cache interfaces)
+   │  ├─ policy/                                  # Policy client adapters (OPA eval, decision normalization, obligations apply)
+   │  └─ audit/                                   # Audit sinks (append-only ledger, run receipts, export hooks)
+   │
+   └─ tests/                                      # Adapter tests (mostly contract/integration; minimal unit)
+      ├─ contract/                                # Contract tests (port expectations + error shapes)
+      ├─ integration/                             # Service-backed tests (DB/OPA/S3/search/neo4j)
+      └─ fixtures/                                # Deterministic fixtures (synthetic; no secrets)
 ```
 
 ---
