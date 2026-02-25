@@ -156,19 +156,16 @@ Fixtures are part of the **trust membrane**.
 > **Proposed (not confirmed in repo):** adopt a small set of subfolders to keep fixtures discoverable.
 
 ```text
-data/audit/fixtures/                               # Audit + gate fixtures (synthetic vectors for CI/tests)
-├─ README.md                                       # How fixtures are used (schema/policy tests) + naming rules
-│
-├─ audit_record/                                   # AuditRecord schema examples (valid/invalid)
-│  ├─ audit_record.minimal.valid.json              # Minimal valid AuditRecord (must pass)
-│  └─ audit_record.missing_required_fields.invalid.json # Invalid: missing required fields (must fail)
-│
-├─ gate/                                           # Gate decision fixtures (promotion/publish allow/deny)
-│  ├─ gate.publish.allow.minimal.json              # Minimal allow decision for publish gate
-│  └─ gate.publish.deny.policy_restricted.json     # Deny decision when policy label is restricted (fail-closed)
-│
-└─ redaction/                                      # Redaction fixtures (transform expectations)
-   └─ redaction.coordinates.coarsen.json           # Coordinate coarsening example (precision/generalization rule)
+data/audit/fixtures/
+  README.md
+  audit_record/
+    audit_record.minimal.valid.json
+    audit_record.missing_required_fields.invalid.json
+  gate/
+    gate.publish.allow.minimal.json
+    gate.publish.deny.policy_restricted.json
+  redaction/
+    redaction.coordinates.coarsen.json
 ```
 
 ---
