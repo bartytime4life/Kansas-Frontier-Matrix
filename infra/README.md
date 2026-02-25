@@ -235,21 +235,30 @@ At minimum, infra changes should be observable at three levels:
 > This section is intentionally written as a **pattern**. Update it to match actual folders present in `infra/`.
 
 ```text
-infra/
-  README.md
-  env/                 # per-environment configuration (no secrets)
-    dev/
-    stage/
-    prod/
-  iac/                 # infra-as-code root (terraform/pulumi/etc.)
-    modules/
-    stacks/
-  k8s/                 # kubernetes manifests or rendered outputs
-    base/
-    overlays/
-  policies/            # policy-as-code guardrails (admission, scanning config)
-  scripts/             # deterministic helper scripts used by CI + operators
-  docs/                # infra-specific ADRs + runbooks (optional)
+infra/                                           # Infrastructure root (IaC + K8s + guardrails + ops tooling)
+├─ README.md                                      # Overview, environments, and how infra changes are reviewed/deployed
+│
+├─ env/                                           # Per-environment configuration (NO secrets)
+│  ├─ dev/                                        # Dev env settings (names, sizes, domains)
+│  ├─ stage/                                      # Stage env settings (prod-like where possible)
+│  └─ prod/                                       # Prod env settings (strict posture; audited)
+│
+├─ iac/                                           # Infra-as-code root (Terraform/Pulumi/etc.)
+│  ├─ modules/                                    # Reusable IaC modules (network, compute, storage, identity)
+│  └─ stacks/                                     # Environment stacks (compose modules per env/account)
+│
+├─ k8s/                                           # Kubernetes manifests (or rendered outputs)
+│  ├─ base/                                       # Base manifests (shared defaults)
+│  └─ overlays/                                   # Env overlays (dev/stage/prod deltas only)
+│
+├─ policies/                                      # Policy-as-code guardrails (admission + scanning configs)
+│  └─ …                                           # Kyverno/Gatekeeper, Conftest rules, scanners, allow/deny lists
+│
+├─ scripts/                                       # Deterministic helper scripts (CI + operator parity)
+│  └─ …                                           # validate, render, diff, apply, smoke-check helpers
+│
+└─ docs/                                          # Optional infra docs (ADRs + runbooks specific to infra)
+   └─ …                                           # Architecture notes, upgrade procedures, incident playbooks
 ```
 
 **If your structure differs**, keep this README updated—this is the “front door” to infra.
