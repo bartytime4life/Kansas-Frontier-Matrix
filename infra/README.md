@@ -1,4 +1,273 @@
-# Infrastructure (infra/)
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/5d0d8d5a-6b3a-4a6e-bde4-7b8d7b8f9d0a
+title: infra/README
+type: standard
+version: v1
+status: draft
+owners: platform-infra
+created: 2026-02-25
+updated: 2026-02-25
+policy_label: restricted
+related:
+  - ../README.md
+  - ../docs/
+tags: [kfm, infra, iac, ops]
+notes:
+  - Template README. Replace TODOs with repo-specific details.
+  - Do not commit secrets. Prefer references to secret managers.
+[/KFM_META_BLOCK_V2] -->
+
+# infra/
+> Infrastructure-as-Code (IaC), deployment assets, and operational controls for this repo’s environments.
+
+![status](https://img.shields.io/badge/status-draft-lightgrey) <!-- TODO: set to review/published -->
+![policy](https://img.shields.io/badge/policy-restricted-orange) <!-- TODO: confirm label -->
+![change-management](https://img.shields.io/badge/changes-PR%20only-blue)
+![secrets](https://img.shields.io/badge/secrets-never%20commit-red)
+
+**Owners:** `platform-infra` (TODO: update)  
+**Support:** open an issue with label `area/infra` (TODO: confirm labels)  
+
+---
+
+## Quick navigation
+- [Purpose](#purpose)
+- [Where this fits in the repo](#where-this-fits-in-the-repo)
+- [What belongs here](#what-belongs-here)
+- [What does not belong here](#what-does-not-belong-here)
+- [Architecture overview](#architecture-overview)
+- [Environments and promotion](#environments-and-promotion)
+- [Change workflow and gates](#change-workflow-and-gates)
+- [Security and secrets](#security-and-secrets)
+- [Observability](#observability)
+- [Directory layout](#directory-layout)
+- [Runbooks](#runbooks)
+
+---
+
+## Purpose
+
+This directory exists to store **buildable, reviewable, reversible** infrastructure and deployment artifacts that support the system.
+
+Design goals:
+- **Reproducible**: infra changes are codified (no “click-ops” as the source of truth).
+- **Governed**: changes go through review and policy gates.
+- **Auditable**: changes can be traced to commits, PRs, and environment promotions.
+- **Safe by default**: no secrets committed; least privilege; controlled rollout.
+
+> NOTE: This README is a **template**. Replace TODOs with the actual toolchain used in this repository (Terraform/Pulumi, Helm/Kustomize, Argo/Flux, etc.).
+
+[Back to top](#infra)
+
+---
+
+## Where this fits in the repo
+
+This directory is part of the project’s “trust membrane”:
+- Application and data layers should **not** reach directly into cloud accounts/clusters.
+- All provisioning and platform-level changes must cross a **policy boundary** (PR review + checks).
+- Any environment promotion should be **explicit**, **recorded**, and **reversible**.
+
+Typical relationships (update to match reality):
+- `infra/` provisions or configures runtime substrates (clusters, networks, storage, identity).
+- `services/` (or similar) contains deployable workloads that reference infra outputs.
+- `docs/` contains architecture decisions, runbooks, and operational policies.
+
+[Back to top](#infra)
+
+---
+
+## What belongs here
+
+**Acceptable inputs (examples):**
+- IaC modules/stacks (e.g., Terraform modules, Pulumi stacks) for:
+  - network, IAM/RBAC, compute, storage, secrets plumbing (not secrets themselves)
+  - managed services provisioning (databases, queues, object stores)
+- Kubernetes manifests / Helm charts / Kustomize overlays (if applicable)
+- GitOps configuration (if applicable)
+- Platform-level policy and guardrails:
+  - admission policies (OPA/Gatekeeper, Kyverno, etc.)
+  - baseline security configs
+- Environment configuration (dev/stage/prod) that is safe to commit:
+  - non-secret config
+  - references/IDs to secret managers
+- Scripts that are **deterministic** and **documented**:
+  - `./scripts/plan.sh`, `./scripts/apply.sh`, `./scripts/drift.sh` (examples)
+
+**Outputs produced by this directory (examples):**
+- “Plan” artifacts (CI output)
+- “Apply” audit records (who/what/when/why)
+- Rendered manifests (if using templating), as CI artifacts (not committed)
+
+[Back to top](#infra)
+
+---
+
+## What does not belong here
+
+**Exclusions (fail closed):**
+- ❌ Plaintext secrets, tokens, kubeconfigs, `.env` files with credentials
+- ❌ Private keys / certificates / database dumps
+- ❌ One-off, undocumented “fix scripts”
+- ❌ Screenshots of cloud consoles as the only “documentation of record”
+- ❌ Large binaries or vendor blobs (unless explicitly governed and necessary)
+
+If you need to store sensitive material, store **only references** (ARNs, secret paths, IDs), not the secret values.
+
+[Back to top](#infra)
+
+---
+
+## Architecture overview
+
+```mermaid
+flowchart TB
+  dev[Developer] --> pr[Pull Request]
+  pr --> ci[CI Checks]
+  ci --> plan[Plan Preview]
+  plan --> approve[Human Review]
+  approve --> apply[Apply]
+  apply --> env[Environment]
+  env --> obs[Observability]
+  obs --> dev
+```
+
+Key principle: **No direct production mutation** without passing through PR + gates.
+
+[Back to top](#infra)
+
+---
+
+## Environments and promotion
+
+> TODO: Replace with the actual environments and rules.
+
+| Environment | Purpose | Promotion in | Promotion out | Notes |
+|---|---|---|---|---|
+| `dev` | fast iteration | PR merge to `main` (or `dev`) | manual promote to `stage` | allow feature flags |
+| `stage` | release rehearsal | signed tag / release branch | manual promote to `prod` | mirrors prod where possible |
+| `prod` | user-facing | controlled change window | n/a | rollback required |
+
+**Minimum promotion artifacts (recommended):**
+- Plan output (linked to commit SHA)
+- Policy checks result
+- Drift status (optional but recommended)
+- Apply receipt (timestamp, actor, tool versions)
+
+[Back to top](#infra)
+
+---
+
+## Change workflow and gates
+
+> IMPORTANT: If any step is missing, treat it as **not approved**.
+
+### Standard workflow
+1. Create branch
+2. Make infra change
+3. Run local checks (fmt/validate)
+4. Open PR
+5. CI produces a plan/diff artifact
+6. Human review approves
+7. Apply via CI runner or controlled operator workflow
+8. Verify + record outcome
+
+### Recommended gates (CI-enforced)
+- [ ] Formatting (`fmt`)
+- [ ] Static validation (`validate`)
+- [ ] “Plan” must succeed and be attached to PR
+- [ ] Secrets scan (block known credential patterns)
+- [ ] Policy-as-code checks (org guardrails)
+- [ ] Drift detection (scheduled; alerts on drift)
+- [ ] Change log / release note entry (for `stage`/`prod`)
+
+[Back to top](#infra)
+
+---
+
+## Security and secrets
+
+### Secrets handling rules
+- **Never commit secrets.**
+- Store secrets in a secret manager (cloud secret manager, Vault, etc.).
+- Commit only:
+  - secret *names*
+  - secret *paths*
+  - secret *version references* (if appropriate)
+
+### Identity and access
+- Prefer least privilege and scoped roles per environment.
+- Separate “plan” permissions from “apply” permissions.
+- Use short-lived credentials for CI where possible.
+
+### Container and cluster hygiene (if applicable)
+- Scan images pre-deploy
+- Constrain workloads (security contexts, restricted capabilities)
+- Enable audit logs and review them
+
+> TODO: Document where to find:
+> - security policies
+> - RBAC manifests
+> - audit log destinations
+> - incident response contacts
+
+[Back to top](#infra)
+
+---
+
+## Observability
+
+At minimum, infra changes should be observable at three levels:
+- **Change visibility**: what changed (diff), where, and by whom
+- **Runtime health**: did the change degrade SLOs (latency/errors), did pods/services churn
+- **Security signals**: auth failures, policy denials, unusual network flows
+
+> TODO: Link dashboards and alerts:
+> - `docs/runbooks/observability.md`
+> - `docs/runbooks/alerts.md`
+
+[Back to top](#infra)
+
+---
+
+## Directory layout
+
+> This section is intentionally written as a **pattern**. Update it to match actual folders present in `infra/`.
+
+```text
+infra/
+  README.md
+  env/                 # per-environment configuration (no secrets)
+    dev/
+    stage/
+    prod/
+  iac/                 # infra-as-code root (terraform/pulumi/etc.)
+    modules/
+    stacks/
+  k8s/                 # kubernetes manifests or rendered outputs
+    base/
+    overlays/
+  policies/            # policy-as-code guardrails (admission, scanning config)
+  scripts/             # deterministic helper scripts used by CI + operators
+  docs/                # infra-specific ADRs + runbooks (optional)
+```
+
+**If your structure differs**, keep this README updated—this is the “front door” to infra.
+
+[Back to top](#infra)
+
+---
+
+## Runbooks
+
+> TODO: Create these files (or update links to where they already live).
+
+- `infra/docs/runbooks/apply.md` — how to apply changes safely
+- `infra/docs/runbooks/rollback.md` — rollback / restore procedure
+- `infra/docs/runbooks/drift.md` — drift detection + remediation
+- `infra/docs/runbooks/incident.md` — infra incident escalation
+
+[Back to top](#infra)# Infrastructure (infra/)
 
 Infrastructure-as-code, GitOps environment manifests, and operational runbooks for **KFM’s governed perimeter** (deploy → observe → recover) while enforcing the **trust membrane** and **fail-closed promotion**.
 
