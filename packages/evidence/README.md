@@ -214,40 +214,48 @@ Minimum behaviors:
 > This is a **recommended** (PROPOSED) structure. Adjust to the repo’s actual tooling.
 
 ```text
-packages/evidence/
-├─ README.md
+packages/evidence/                                  # Evidence system: resolve refs → apply policy → render evidence views
+├─ README.md                                        # Concepts (EvidenceRef/CitationRef), guarantees, and how to use
+│
 ├─ src/
-│  ├─ index.(ts|py|go)
-│  ├─ resolve/
-│  │  ├─ resolveEvidenceRef.(ts|py|go)
-│  │  ├─ schemes/
-│  │  │  ├─ dcat.(ts|py|go)
-│  │  │  ├─ stac.(ts|py|go)
-│  │  │  ├─ prov.(ts|py|go)
-│  │  │  ├─ doc.(ts|py|go)
-│  │  │  └─ graph.(ts|py|go)
-│  │  └─ obligations/
-│  │     ├─ applyObligations.(ts|py|go)
-│  │     └─ redactGeneralize.(ts|py|go)
-│  ├─ render/
-│  │  ├─ renderCard.(ts|py|go)
-│  │  └─ markdown.(ts|py|go)
-│  └─ ports/
-│     ├─ PolicyClient.(ts|py|go)
-│     ├─ CatalogRepo.(ts|py|go)
-│     ├─ ObjectStoreRepo.(ts|py|go)
-│     └─ AuditLedgerRepo.(ts|py|go)
-├─ schemas/
-│  ├─ evidence_ref.schema.json
-│  └─ evidence_bundle.schema.json
-├─ fixtures/
-│  ├─ public.example.json
-│  ├─ restricted.example.json
-│  └─ invalid.example.json
-└─ test/
-   ├─ contract/
-   ├─ policy/
-   └─ unit/
+│  ├─ index.(ts|py|go)                              # Public exports (resolver API + types + render helpers)
+│  │
+│  ├─ resolve/                                      # Resolution pipeline (refs → records/bundles)
+│  │  ├─ resolveEvidenceRef.(ts|py|go)              # Main resolver entry (dispatch by scheme; bounded fanout)
+│  │  ├─ schemes/                                   # Scheme handlers (how each ref type resolves)
+│  │  │  ├─ dcat.(ts|py|go)                         # Resolve DCAT refs (dataset/distribution/service → record)
+│  │  │  ├─ stac.(ts|py|go)                         # Resolve STAC refs (collection/item/asset → record)
+│  │  │  ├─ prov.(ts|py|go)                         # Resolve PROV refs (bundle/run → lineage evidence)
+│  │  │  ├─ doc.(ts|py|go)                          # Resolve doc refs (pdf/md/html snapshots; safe rendering)
+│  │  │  └─ graph.(ts|py|go)                        # Resolve graph refs (node/edge evidence; policy-filtered)
+│  │  │
+│  │  └─ obligations/                               # Obligation application (policy outcomes → transformations)
+│  │     ├─ applyObligations.(ts|py|go)             # Apply obligations (deny/redact/generalize/watermark)
+│  │     └─ redactGeneralize.(ts|py|go)             # Redaction/generalization transforms (precision/field rules)
+│  │
+│  ├─ render/                                       # Evidence presentation layer (cards + markdown summaries)
+│  │  ├─ renderCard.(ts|py|go)                      # Render “evidence card” view models (UI-friendly)
+│  │  └─ markdown.(ts|py|go)                        # Markdown rendering helpers (safe, deterministic)
+│  │
+│  └─ ports/                                        # Ports/interfaces (resolver depends on abstractions)
+│     ├─ PolicyClient.(ts|py|go)                    # Policy decisions + obligations lookup (default-deny)
+│     ├─ CatalogRepo.(ts|py|go)                     # Access DCAT/STAC/PROV records (validated sources)
+│     ├─ ObjectStoreRepo.(ts|py|go)                 # Fetch artifacts/bundles by immutable refs/digests
+│     └─ AuditLedgerRepo.(ts|py|go)                 # Read/append audit context (audit_ref lookups)
+│
+├─ schemas/                                         # JSON Schemas (contracts used by CI and validators)
+│  ├─ evidence_ref.schema.json                      # EvidenceRef/CitationRef schema (scheme + id + locator)
+│  └─ evidence_bundle.schema.json                   # EvidenceBundle schema (records + digests + provenance)
+│
+├─ fixtures/                                        # Deterministic examples for tests/docs (synthetic; safe)
+│  ├─ public.example.json                           # Public example (should resolve/allow)
+│  ├─ restricted.example.json                       # Restricted example (should redact/deny as configured)
+│  └─ invalid.example.json                          # Invalid example (must fail schema/validation)
+│
+└─ test/                                            # Test suites (unit + contract + policy wiring)
+   ├─ contract/                                     # Contract tests (schemas + resolver interface + stable outputs)
+   ├─ policy/                                       # Policy integration tests (obligations applied correctly)
+   └─ unit/                                         # Hermetic unit tests (parsers, formatters, dispatch)
 ```
 
 [Back to top](#packagesevidence)
