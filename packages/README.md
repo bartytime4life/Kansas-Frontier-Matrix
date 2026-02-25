@@ -1,265 +1,280 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/5d4a9d9c-2b42-4e3b-b4da-60e1fd5ce03b
-title: packages/ — Monorepo package registry
+doc_id: kfm://doc/795bfcc7-71af-4d02-a69b-19a97007d799
+title: packages/
 type: standard
 version: v1
 status: draft
-owners: TBD
-created: 2026-02-22
-updated: 2026-02-22
-policy_label: public
+owners: KFM Maintainers (TODO)
+created: 2026-02-25
+updated: 2026-02-25
+policy_label: public (TODO)
 related:
-  - ../README.md
-  - ../docs/architecture/
+  - ../README.md (TODO)
 tags: [kfm, monorepo, packages]
 notes:
-  - This is a repository-facing guide for what belongs in /packages and how to keep boundaries enforceable.
-  - Update placeholders once workspace tooling and the concrete package list are confirmed.
+  - Directory-level documentation scaffold; replace TODOs once repo conventions are confirmed.
 [/KFM_META_BLOCK_V2] -->
 
-# `packages/` — KFM Packages
-Buildable, reusable code units for Kansas Frontier Matrix (KFM): libraries, services, jobs, and UI modules.
+# packages/
+Versioned, testable modules for the Kansas‑Matrix‑System monorepo.
 
-![status: draft](https://img.shields.io/badge/status-draft-orange)
-![scope: monorepo](https://img.shields.io/badge/scope-monorepo-blue)
-![governance: trust membrane](https://img.shields.io/badge/governance-trust--membrane-6f42c1)
-![ux: evidence-first](https://img.shields.io/badge/ux-evidence--first-2ea44f)
-![focus: cite-or-abstain](https://img.shields.io/badge/focus-cite--or--abstain-444)
+**Status:** draft · **Owners:** KFM Maintainers (TODO) · **Policy:** public (TODO)
 
-## Quick navigation
-- [Purpose](#purpose)
-- [What belongs here](#what-belongs-here)
-- [Directory layout](#directory-layout)
+![status](https://img.shields.io/badge/status-draft-yellow)
+![scope](https://img.shields.io/badge/scope-monorepo_packages-blue)
+![trust](https://img.shields.io/badge/trust-governed-important)
+![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
+![license](https://img.shields.io/badge/license-TODO-lightgrey)
+
+---
+
+## Navigation
+- [What belongs in `packages/`](#what-belongs-in-packages)
+- [What must NOT go in `packages/`](#what-must-not-go-in-packages)
+- [How packages map to the KFM architecture](#how-packages-map-to-the-kfm-architecture)
+- [Packages registry](#packages-registry)
+- [Adding a new package](#adding-a-new-package)
 - [Dependency rules](#dependency-rules)
-- [Trust membrane rules](#trust-membrane-rules)
-- [Package quality gates](#package-quality-gates)
-- [Add a new package](#add-a-new-package)
-- [Proposed baseline package set](#proposed-baseline-package-set)
-- [Fill-in repo specifics](#fill-in-repo-specifics)
+- [Testing, builds, and CI expectations](#testing-builds-and-ci-expectations)
+- [Security and compliance](#security-and-compliance)
+- [Appendix: package template](#appendix-package-template)
 
 ---
 
-## Purpose
-`/packages` is where **reusable, testable units** live.
+## What belongs in `packages/`
 
-A “package” is any module we expect to:
-- reuse from multiple places, **or**
-- deploy/build independently, **or**
-- treat as a contract surface (schemas, OpenAPI, policy adapters, etc.).
+This folder holds **independently buildable** (or at least independently testable), **versioned**
+modules that make up the Kansas‑Matrix‑System:
 
-> **NOTE**
-> Packages are part of the *trust membrane*: if a package bypasses policy enforcement, repository interfaces, or provenance, it weakens the entire system. See [Trust membrane rules](#trust-membrane-rules).
+- **Domain packages**: core concepts, types, invariants (no I/O).
+- **Use‑case packages**: orchestration and business workflows (policy-aware).
+- **Interface packages**: API contracts, DTOs, policy boundary adapters.
+- **Infrastructure packages**: storage, indexing, queueing, external integrations (behind interfaces).
+- **Shared tooling packages**: linting, test helpers, codegen, internal CLIs.
 
----
+A “package” here should have a **clear public surface area** (API), tests, and a README that
+makes it safe to depend on.
 
-## What belongs here
-Typical package types (mix-and-match based on the repo’s actual language/tooling):
+> NOTE  
+> This README is a scaffold. Replace all **TODO** markers after confirming the repo’s actual tooling
+> (pnpm/yarn/npm, build system, release process, etc.).
 
-### 1) Libraries
-- domain models (entities, invariants)
-- schema registries (DTOs, JSON Schema, STAC/DCAT/PROV profiles)
-- shared utilities (logging, hashing, time utilities, geo utilities)
-
-### 2) Services
-- governed API service(s)
-- evidence resolver service/library
-- policy engine adapter + fixtures
-- catalog validator/generator
-
-### 3) Jobs & pipelines
-- ingestion connectors, snapshotters
-- validators and QA reporters
-- index builders (search, graph, tile bundles)
-
-### 4) UI modules and SDKs
-- UI components used across surfaces (Map / Story / Focus)
-- client SDKs generated from API contracts (when used)
+[Back to top](#packages)
 
 ---
 
-## Directory layout
-Minimum recommended structure (adjust to match repo reality):
+## What must NOT go in `packages/`
 
-```text
-packages/
-├─ <package-name>/
-│  ├─ README.md
-│  ├─ src/
-│  ├─ test/                # or tests/
-│  ├─ contracts/           # OPTIONAL: OpenAPI / GraphQL / JSON Schema / profiles
-│  ├─ fixtures/            # OPTIONAL: policy fixtures, golden files
-│  └─ CHANGELOG.md         # OPTIONAL
-└─ README.md               # you are here
+Keep `packages/` production-minded and reviewable. Do **not** put the following here:
+
+- ❌ Raw or published datasets (use the governed data lifecycle zones instead)
+- ❌ Secrets (keys, tokens, `.env` files, kubeconfigs)
+- ❌ One-off scripts / “misc” utilities without tests and ownership
+- ❌ Build artifacts (`dist/`, `build/`, `target/`, coverage outputs)
+- ❌ Personal notebooks or ad-hoc experiments (unless they are promoted into a maintained package)
+
+If it can’t be tested, reviewed, and reverted cheaply, it doesn’t belong here.
+
+[Back to top](#packages)
+
+---
+
+## How packages map to the KFM architecture
+
+The system is intentionally layered so every user-facing claim stays traceable to evidence and policy.
+Packages should reflect that layering.
+
+```mermaid
+flowchart LR
+  A[Data sources] --> B[Pipelines]
+  B --> C[Catalog and provenance]
+  C --> D[Storage and indexing]
+  D --> E[Governed APIs]
+  E --> F[Map and Story UI]
+  F --> G[Focus Mode AI]
+
+  subgraph packages/
+    B
+    C
+    D
+    E
+    F
+    G
+  end
 ```
 
-### Package README expectations
-Each package README should answer:
-- **What** it does (1–2 sentences)
-- **Where** it sits in the architecture (Domain / Use Cases / Interfaces / Infra)
-- **Contracts** it owns (schemas, endpoints)
-- **How** to test it locally
-- **How** it is used (imports and/or runtime integration)
+**Rule of thumb:** dependency direction flows **toward** the core (domain), while runtime calls flow
+outward (infra) behind interfaces.
+
+[Back to top](#packages)
+
+---
+
+## Packages registry
+
+> WARNING  
+> The registry below is intentionally **incomplete** until the real package list is confirmed.
+> Treat it as the required shape for governance, not as an inventory.
+
+| Package | Layer | Responsibility | Public API | Data access | Owner | Status |
+|---|---|---|---|---|---|---|
+| `@kfm/domain-*` (TODO) | Domain | Core types + invariants | Type exports | None | TODO | TODO |
+| `@kfm/usecase-*` (TODO) | Use cases | Orchestration + policy-aware workflows | Functions/services | Via repositories only | TODO | TODO |
+| `@kfm/api-*` (TODO) | Interfaces | Governed API contracts + adapters | OpenAPI/GraphQL (TODO) | No direct DB | TODO | TODO |
+| `@kfm/infra-*` (TODO) | Infra | Storage/index/queues/integrations | Providers | Yes (behind adapters) | TODO | TODO |
+| `@kfm/tooling-*` (TODO) | Tooling | Lint/test/codegen helpers | CLI/Lib | None | TODO | TODO |
+
+**Registry rule:** if a package exists, it must be listed here with an owner and status.
+
+[Back to top](#packages)
+
+---
+
+## Adding a new package
+
+### 1) Choose the correct layer
+Use this decision tree:
+
+- If it contains **business meaning / invariants** → **Domain**
+- If it coordinates workflows and applies policy → **Use cases**
+- If it defines or adapts external boundaries (HTTP, queue messages) → **Interfaces**
+- If it talks to databases, object stores, indexes, or vendors → **Infrastructure**
+- If it helps developers (lint, codegen, test helpers) → **Tooling**
+
+### 2) Create the smallest package that can be owned
+A new package must include:
+
+- [ ] A clear **name** and **owner**
+- [ ] A `README.md` describing purpose, inputs/outputs, and non-goals
+- [ ] A **public API surface** (what other packages can import)
+- [ ] Automated tests (unit at minimum; integration if it does I/O)
+- [ ] License and policy labeling (inherit repo defaults unless specified)
+
+### 3) Wire it into the repo
+Because workspace tooling is not yet confirmed, treat the commands below as examples:
+
+```bash
+# TODO: replace with the repo's actual workspace manager commands
+# e.g., pnpm -r test   /   yarn workspaces foreach -pt run test
+<workspace-cli> install
+<workspace-cli> test --filter <package>
+```
+
+### 4) Add it to the registry
+Update the [Packages registry](#packages-registry) row(s) with:
+
+- package name
+- layer
+- owner
+- maturity/status (draft/review/published)
+- whether it has direct data access (and through what adapter)
+
+[Back to top](#packages)
 
 ---
 
 ## Dependency rules
-We use a layered architecture to keep packages composable and auditable.
 
-### Allowed dependency direction
-- **Domain** → depends on nothing (pure models + rules)
-- **Use cases** → may depend on Domain
-- **Interfaces** → may depend on Domain + Use cases (contracts, repositories, adapters)
-- **Infrastructure** → may depend on everything (DB, storage, network clients)
+These rules are part of the “trust membrane” and should be enforceable in CI.
 
-```mermaid
-graph TD
-  Domain --> UseCases
-  Domain --> Interfaces
-  UseCases --> Interfaces
-  Interfaces --> Infrastructure
+### Allowed dependency directions
 
-  %% Runtime surfaces
-  Infrastructure --> GovernedAPI
-  GovernedAPI --> UI
-```
+- ✅ Domain → (nothing “below” it)
+- ✅ Use cases → Domain
+- ✅ Interfaces → Use cases and Domain (contracts + orchestration)
+- ✅ Infrastructure → Interfaces, Use cases, Domain (implements adapters)
+- ✅ UI/apps → Governed API clients + Interface contracts (never DB)
 
-### Practical rules of thumb
-- Domain packages **must not** import DB clients, HTTP clients, filesystem, or cloud SDKs.
-- Infrastructure packages **must not** be imported by Domain packages.
-- Contracts (OpenAPI/JSON schemas/etc.) belong close to Interfaces (or in a dedicated `contracts/` package).
+### Forbidden dependencies (examples)
 
-> **WARNING**
-> If a package makes it “easy” to access storage directly from UI or client code, it is probably breaking the trust membrane.
+- ❌ Domain importing Infrastructure (no DB clients in domain)
+- ❌ UI importing database drivers
+- ❌ Use cases bypassing repositories to call storage directly
+- ❌ Cross-cutting “god” packages that become dependency magnets
+
+> TIP  
+> Prefer **additive glue** (adapters, contracts, small utilities) over “big rewrites”.
+> Keep increments buildable and reversible.
+
+[Back to top](#packages)
 
 ---
 
-## Trust membrane rules
-Packages must preserve the trust membrane boundary:
+## Testing, builds, and CI expectations
 
-```mermaid
-graph LR
-  UI[UI / External clients] --> API[Governed API boundary]
-  API --> Policy[Policy decisions]
-  API --> Evidence[Evidence resolver]
-  Evidence --> Catalogs[Catalogs: DCAT / STAC / PROV]
-  Evidence --> Storage[(Object storage)]
-  Evidence --> Indexes[(Rebuildable projections)]
-```
+Every package should be safe to change in isolation.
 
-**Non-negotiables (apply across packages):**
-- UI and external clients must not talk to databases or object storage directly.
-- Core logic should not bypass repository interfaces to talk directly to storage.
-- Access should flow through governed APIs that apply policy decisions, redactions, and audit logging consistently.
+Minimum expectations:
 
----
+- **Fast checks** (always on): formatting, lint, typecheck, unit tests
+- **Gated checks** (merge/publish): integration tests, contract tests, security scans
+- **Receipts** (for governed outputs): version, inputs, transforms, checksums, policy decisions
 
-## Package quality gates
-“Quality gates” here are the *minimum checks* a package must pass before it can be depended on by runtime surfaces.
+Suggested package-level scripts (tooling TBD):
 
-### Required for all packages
-- ✅ Deterministic build (same input → same output)
-- ✅ Unit tests for core behavior
-- ✅ Lint/format (whatever the repo standard is)
-- ✅ Clear public API boundary (what is “exported” vs internal)
-- ✅ Minimal docs (package README)
+- `lint`
+- `test`
+- `typecheck`
+- `build`
+- `check:deps` (enforce dependency rules)
+- `check:licenses` (license allow/deny)
 
-### Additional gates for governance-critical packages
-If a package impacts **policy**, **evidence resolution**, **catalogs/lineage**, or **runtime serving**, it must also include:
-- ✅ Contract tests (OpenAPI/DTO/schema validation, backward compatible changes)
-- ✅ Policy fixtures + tests (fail-closed behavior)
-- ✅ Audit event / run-receipt emission (where applicable)
-- ✅ Redaction/generalization obligations captured at the interface boundary
-
-> **NOTE**
-> If your package produces artifacts that may be promoted into runtime surfaces, it must respect the data lifecycle zones (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED) and must fail closed when required artifacts/metadata are missing.
+[Back to top](#packages)
 
 ---
 
-## Add a new package
-1) **Create the folder**
-- `packages/<package-name>/`
+## Security and compliance
 
-2) **Add minimal structure**
-- `README.md`
-- `src/`
-- `test/` (or `tests/`)
-- optional: `contracts/`, `fixtures/`
+- No secrets in source control (ever).
+- Treat any package that touches **data promotion** as governed:
+  - require metadata, validation results, provenance links, and audit records
+- Prefer dependency minimization; pin versions where appropriate.
+- Any package that exposes an API must document:
+  - authentication and authorization expectations
+  - rate limits (if applicable)
+  - error model and logging/audit requirements
 
-3) **Pick the layer**
-- Domain / Use cases / Interfaces / Infrastructure  
-…and write it at the top of the package README.
-
-4) **Define the public surface**
-- Export a small, intentional API from a single entrypoint (e.g., `src/index.*`).
-
-5) **Add tests**
-- Unit tests for behavior
-- If it’s an interface boundary: contract tests
-- If it’s governance-critical: policy fixtures + fail-closed tests
-
-6) **Wire it into the repo build**
-- Add the package to the repo workspace configuration (tooling-specific).
-- Ensure CI runs its tests.
+[Back to top](#packages)
 
 ---
 
-## Proposed baseline package set
-This is a *suggested* decomposition based on the vNext build plan. Adjust names and grouping based on what actually exists in-repo.
-
-| Package slot | Role | Layer bias |
-|---|---|---|
-| `api` | Governed API endpoints (dataset discovery, queries, tile/feature serving) | Infrastructure |
-| `policy` | Policy engine adapter + fixtures | Interfaces / Infrastructure |
-| `evidence` | Evidence resolver: EvidenceRef → EvidenceBundle (+ redaction) | Interfaces / Infrastructure |
-| `catalog` | Catalog parsers, validators, triplet generation | Interfaces |
-| `ingest` | Connectors + runner (RAW/WORK production) | Infrastructure |
-| `indexers` | Rebuildable projections (search/graph/tiles) | Infrastructure |
-| `ui` | Map/Story/Focus surfaces (client modules) | UI |
-
----
-
-## Fill-in repo specifics
-Replace the placeholders below once confirmed:
-
-- Workspace tool: **TBD** (pnpm / yarn / npm / poetry / uv / …)
-- Package naming convention: **TBD**
-- Standard test command: **TBD**
-- Standard lint command: **TBD**
-- Where contracts live: **TBD** (`packages/contracts`, per-package `contracts/`, or `docs/contracts/`)
-- Where policy fixtures live: **TBD** (`packages/policy/fixtures`, etc.)
-
----
+## Appendix: package template
 
 <details>
-<summary>Appendix: Suggested package README template</summary>
+<summary><strong>Minimal package skeleton (example)</strong></summary>
 
-```markdown
-# <package-name>
-
-**Layer:** Domain | Use cases | Interfaces | Infrastructure  
-**Owners:** TBD  
-**Policy label:** public | restricted | ...
-
-## What this does
-One paragraph.
-
-## Public API
-- `foo()`: …
-- `bar`: …
-
-## Contracts (if any)
-- OpenAPI: `contracts/openapi.yaml`
-- Schemas: `contracts/*.schema.json`
-
-## How to test
-- `...`
-
-## Notes
-- Trust membrane considerations
-- Promotion / provenance considerations
+```text
+packages/
+  <package-name>/
+    README.md
+    src/
+    test/
+    package.json (or pyproject.toml / go.mod)  # TODO: match repo language/tooling
+    CHANGELOG.md (optional but recommended)
+    LICENSE (optional if inherited from repo)
 ```
+
+</details>
+
+<details>
+<summary><strong>Package README checklist</strong></summary>
+
+- Purpose (one sentence)
+- Where it sits in the architecture (Domain / Use case / Interface / Infra)
+- Public API (imports, exported symbols, contract files)
+- Inputs/outputs (including data sensitivity classification if relevant)
+- Non-goals and exclusions
+- How to test locally
+- Ownership + escalation path
+
 </details>
 
 ---
 
-[Back to top](#packages--kfm-packages)
+### TODOs for maintainers
+- [ ] Replace workspace commands with the repo standard (pnpm/yarn/npm/bazel/etc.)
+- [ ] Replace the registry placeholders with the actual package list
+- [ ] Add CI badge links once pipeline names are confirmed
+- [ ] Add automated dependency-boundary checks in CI
+
+[Back to top](#packages)
