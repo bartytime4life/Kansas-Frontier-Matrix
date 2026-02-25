@@ -2,11 +2,11 @@
 doc_id: kfm://doc/8a4a8e59-7a6f-4d60-9c56-9f6d5f8b1f3d
 title: apps/ — Runnable application surfaces
 type: standard
-version: v3
+version: v3.1
 status: draft
 owners: TBD (resolve via CODEOWNERS / repo maintainers)
 created: 2026-02-22
-updated: 2026-02-23
+updated: 2026-02-25
 policy_label: public
 related:
   - kfm://doc/kfm-definitive-design-governance-guide-vnext
@@ -16,13 +16,19 @@ tags: [kfm, apps, ui, trust-membrane, contracts, evidence-first, receiptviewer, 
 notes:
   - This README is intentionally fail-closed: it does not assume a specific tech stack or app list until confirmed in-repo.
   - First follow-up: populate the App Registry + Current layout blocks from the actual apps tree (either `apps/` or `web/apps/`, depending on repo convention).
-  - v3 upgrades: add a repo-layout crosswalk (`apps/` vs `web/apps/`), incorporate ReceiptViewer + trust badges expectations, and enumerate adjacent “drop-in” governance directories (schemas/policy/ops/.github) without claiming they exist.
+  - v3→v3.1 upgrades: keep the doc fail-closed; add a repo-layout crosswalk (`apps/` vs `web/apps/`); incorporate ReceiptViewer + trust badges expectations; enumerate adjacent “drop-in” governance directories (schemas/policy/ops/.github) without claiming they exist; and tighten truth-status labeling + invariant numbering.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # apps/ — Runnable application surfaces
 **Purpose:** Home for user-facing and operator-facing application surfaces (Map / Globe / Story / Catalog / Focus / Admin / CLI) that consume **governed APIs** and expose **evidence-first** UX.
+
+**Owners:** TBD (resolve via CODEOWNERS / repo maintainers)  
+**Status:** draft (fail-closed; repo-specific facts remain **Unknown** until verified)  
+**Policy label:** public (documentation only; individual apps may be `restricted|internal|secret`)  
+
+<!-- TODO(kfm): replace placeholder badges with real workflow badges once the repo’s workflows and paths are confirmed. -->
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 ![layer](https://img.shields.io/badge/layer-UI%20surfaces-blue)
@@ -38,6 +44,7 @@ notes:
 ---
 
 ## Navigation
+- [Truth status legend](#truth-status-legend)
 - [First follow-up checklist](#first-follow-up-checklist)
 - [Where this fits in the repo](#where-this-fits-in-the-repo)
 - [Repo layout crosswalk](#repo-layout-crosswalk)
@@ -52,9 +59,22 @@ notes:
 - [Per-app README minimum](#per-app-readme-minimum)
 - [Local development](#local-development)
 - [Testing and gates](#testing-and-gates)
-- [Security privacy and sensitivity](#security-privacy-and-sensitivity)
+- [Security, privacy, and sensitivity](#security-privacy-and-sensitivity)
 - [Add a new app](#add-a-new-app)
 - [Glossary](#glossary)
+
+---
+
+## Truth status legend
+
+This README uses explicit claim labels so it stays **evidence-first** and **fail-closed**:
+
+- **Confirmed**: verified in-repo (path + snippet)  
+- **Unknown**: not yet verified; treat as a TODO and do not assume  
+- **Proposed**: a pattern/template you can adopt; validate before standardizing  
+
+> [!NOTE]
+> The fastest way to convert **Unknown → Confirmed** is the [First follow-up checklist](#first-follow-up-checklist).
 
 ---
 
@@ -171,7 +191,7 @@ These are requirements. Apps are the most visible trust surface; breaking invari
 
 ### 2) Truth path awareness
 Apps sit at the end of the KFM “truth path”:
-- Upstream → RAW → WORK or QUARANTINE → PROCESSED → CATALOG and LINEAGE → projections → **governed API** → **apps**
+- Upstream → RAW → WORK / QUARANTINE → PROCESSED → PUBLISHED (catalog + lineage) → projections → **governed API** → **apps**
 - Apps **MUST** assume only *promoted* dataset versions are admissible for public surfaces.
 
 ### 3) Evidence-first UX
@@ -183,7 +203,7 @@ Every layer, claim, chart, or AI output **MUST** open into an **evidence view**:
 - Validation and freshness indicators
 - Evidence bundle digest or checksum when policy allows
 
-### 3b) Map view state is a reproducible artifact
+### 4) Reproducible view state (map/story/focus)
 If the system supports “share links”, Story Nodes, or Focus Mode answers tied to a map view, the **view state** must be durable and reproducible:
 - camera position (2D/3D)
 - active layers with DatasetVersion IDs (not floating “latest”)
@@ -191,12 +211,12 @@ If the system supports “share links”, Story Nodes, or Focus Mode answers tie
 - filters and selections (policy-safe)
 - evidence references (ids/digests), not embedded restricted payloads
 
-### 4) Focus Mode is not general chat
+### 5) Focus Mode is not general chat
 If this repo contains a Focus Mode surface, it **MUST** implement **cite-or-abstain**:
 - If citations can’t be verified, the UI **MUST** abstain or reduce scope and show why
 - If policy denies, the UI **MUST** deny and explain in policy-safe terms
 
-### 5) Contract-first changes
+### 6) Contract-first changes
 - API and schema contracts are first-class artifacts.
 - UI changes that rely on new or changed data **MUST** start from a contract change (OpenAPI/GraphQL/JSON Schema), not ad-hoc parsing.
 
@@ -293,6 +313,23 @@ sequenceDiagram
 - [ ] Every app lists governed API dependencies.
 - [ ] Every app declares a `policy_label` and constraints.
 - [ ] Every app links to its evidence UX entry points (drawer, ReceiptViewer, badges, what-changed).
+
+### Populate the registry (proposed helper)
+
+If app manifests exist (for example `kfm.app.json`), you can generate a **starting** app list without guessing:
+
+```bash
+# From repo root (works whether you use apps/ or web/apps/)
+find apps web/apps -maxdepth 2 -name 'kfm.app.json' -print 2>/dev/null
+```
+
+Then, for each app, fill the registry row from:
+- manifest fields (`app_id`, `surface`, `policy_label`)
+- the app README (one-line purpose, owner)
+- contract references (OpenAPI/GraphQL/schema paths)
+
+> [!NOTE]
+> If your repo uses a different manifest name, update the command accordingly.
 
 ---
 
@@ -395,6 +432,10 @@ Each app directory **SHOULD** include an app manifest file (example: `kfm.app.js
 > If the repo already has a standard manifest, use that instead. This is a proposed contract.
 
 ### Example kfm.app.json
+
+> [!NOTE]
+> Contract references below are placeholders; replace them with real repo paths/URIs once confirmed.
+
 ```json
 {
   "app_id": "kfm.app.map",
@@ -548,6 +589,16 @@ Apps should be treated as safety-critical surfaces.
 - [ ] Dependency and supply chain checks
 - [ ] Static guardrail: no direct storage access
 
+#### Static guardrail examples (proposed)
+
+Because tech stacks vary, the implementation varies. The intent is invariant: **apps cannot bypass governed APIs**.
+
+Possible approaches (pick one that matches your stack):
+- **Dependency allow/deny list** in CI (fail if an app depends on DB/object-storage/index client SDKs)
+- **Linter rule** to block direct calls to non-governed origins (where applicable)
+- **Egress policy** in dev/stage to prevent direct access to internal stores from UI origins
+- **Targeted grep checks** for known bypass libraries (use sparingly; tune to avoid false positives)
+
 ### Recommended E2E trust flows
 - Load app → toggle a layer → open evidence drawer → verify policy label shown
 - Change time → verify data changes → evidence remains consistent
@@ -558,7 +609,7 @@ Apps should be treated as safety-critical surfaces.
 
 ---
 
-## Security privacy and sensitivity
+## Security, privacy, and sensitivity
 
 ### Secrets and credentials
 - Never ship secrets in the client.
@@ -611,7 +662,7 @@ Abstention is a feature. The UI must:
 ## Glossary
 
 - **Trust membrane:** enforced boundary where policy and provenance are applied; clients never access storage directly.
-- **Truth path:** upstream → RAW → WORK or QUARANTINE → PROCESSED → catalogs and lineage → projections → governed API → UI.
+- **Truth path:** upstream → RAW → WORK / QUARANTINE → PROCESSED → PUBLISHED (catalog + lineage) → projections → governed API → UI.
 - **Evidence-first UX:** every visible claim opens into provenance, rights, and validation details.
 - **ReceiptViewer:** safe read-only receipt UI component; validates schema and surfaces verification status without executing untrusted content.
 - **Trust badges:** compact UI affordances (e.g., automation status) that summarize provenance/quality without leaking restricted details.
