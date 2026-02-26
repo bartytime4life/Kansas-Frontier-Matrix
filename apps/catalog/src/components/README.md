@@ -119,18 +119,18 @@ apps/catalog/src/components/
 If you are adding new components and there is no established pattern yet, prefer:
 
 ```text
-apps/catalog/src/components/
-├── README.md
-├── index.ts
-├── _shared/
-│   ├── types.ts
-│   └── testUtils.tsx
-└── <ComponentName>/
-    ├── <ComponentName>.tsx
-    ├── <ComponentName>.module.css
-    ├── <ComponentName>.test.tsx
-    ├── <ComponentName>.stories.tsx
-    └── README.md
+apps/catalog/src/components/                           # UI component library for Catalog app (governed, reusable)
+├── README.md                                          # Component conventions, patterns, and governance notes
+├── index.ts                                           # Public exports barrel (stable API surface)
+├── _shared/                                           # Shared types + helpers for components
+│   ├── types.ts                                       # Shared component/DTO/view-model typings
+│   └── testUtils.tsx                                  # Shared test helpers (render wrappers, providers, mocks)
+└── <ComponentName>/                                   # Single component folder (one responsibility)
+    ├── <ComponentName>.tsx                             # Component implementation (typed props, accessible by default)
+    ├── <ComponentName>.module.css                      # Scoped styles (CSS modules)
+    ├── <ComponentName>.test.tsx                        # Component tests (behavior + a11y + edge cases)
+    ├── <ComponentName>.stories.tsx                     # Storybook stories (states, variants, fixtures)
+    └── README.md                                       # Usage, props, examples, and governance/evidence expectations
 ```
 
 > **TIP**
