@@ -247,16 +247,16 @@ npm test
 > UNKNOWN until verified in this repo. Replace the tree below with the actual one.
 
 ```text
-apps/catalog/
-  README.md               # this file
-  src/                    # Catalog UI source
-    pages/                # routes (dataset list, dataset details)
-    components/           # Catalog cards, filters, tables
-    evidence/             # Evidence Drawer integration
-    api/                  # typed API client + DTOs
-    styles/               # styling
-  tests/                  # unit/integration tests
-  package.json            # build + scripts
+apps/catalog/                                        # Catalog UI app (browse datasets + evidence-backed details)
+├── README.md                                         # This file (setup, dev scripts, build, env, governance notes)
+├── package.json                                      # Build tooling + scripts + dependencies
+├── src/                                              # Catalog UI source
+│   ├── pages/                                        # Routes (dataset list, dataset details, search/filter views)
+│   ├── components/                                   # Catalog cards, filters, tables, shared UI primitives
+│   ├── evidence/                                     # Evidence Drawer integration (citations, bundles, receipts)
+│   ├── api/                                          # Typed API client + DTOs (governed endpoints only)
+│   └── styles/                                       # Styling (tokens, globals, component styles)
+└── tests/                                            # Unit + integration tests (UI + API client behaviors)
 ```
 
 ---
