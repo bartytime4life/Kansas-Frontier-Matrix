@@ -4,176 +4,221 @@ title: tools/hash — Spec hashing + digest tooling
 type: standard
 version: v1
 status: draft
-owners: kfm-maintainers (TODO: set real owners)
+owners: kfm-platform (TODO)
 created: 2026-02-26
 updated: 2026-02-26
 policy_label: public
 related:
-  - kfm://concept/spec_hash
-  - kfm://contract/promotion-gates
-tags: [kfm]
+  - (not confirmed in repo) docs/governance/promotion-contract.md
+  - (not confirmed in repo) packages/catalog
+  - (not confirmed in repo) packages/ingest
+  - (not confirmed in repo) packages/evidence
+tags: [kfm, hash, spec_hash, sha256, rfc8785, canonical-json, determinism, promotion-gates]
 notes:
-  - This README documents the hashing invariants used for DatasetVersion identity and artifact digests.
+  - Contract-first doc for deterministic IDs + artifact digests. Update paths once repo wiring is verified.
 [/KFM_META_BLOCK_V2] -->
 
-# tools/hash — spec_hash + digest tooling
-Governed hashing utilities for **deterministic identity** (DatasetVersion `spec_hash`) and **content digests** (artifacts/bundles).
+<a id="top"></a>
 
-**Status:** `draft` • **Owners:** `kfm-maintainers (TODO)` • **Policy:** `public`  
-**Badges (TODO):** `CI: required` · `SpecHash: RFC8785+sha256` · `PromotionGate: A`
+# tools/hash — spec_hash + digest tooling
+Deterministic hashing primitives used by KFM to compute **stable identities** (`spec_hash`) and **content digests** (artifacts/manifests/bundles).
+
+![status](https://img.shields.io/badge/status-draft-orange)
+![policy](https://img.shields.io/badge/policy-public-brightgreen)
+![hash](https://img.shields.io/badge/hash-sha256-blue)
+![canonical-json](https://img.shields.io/badge/canonical-json-RFC8785-blueviolet)
+![posture](https://img.shields.io/badge/posture-fail--closed-red)
 
 ---
 
 ## Quick nav
-- [What this is](#what-this-is)
-- [Contracts (non-negotiable)](#contracts-non-negotiable)
-- [How spec_hash works](#how-spec_hash-works)
-- [Directory layout](#directory-layout)
-- [Usage](#usage)
+- [Purpose](#purpose)
+- [Contracts](#contracts)
+- [Hash surfaces](#hash-surfaces)
+- [spec_hash algorithm](#spec_hash-algorithm)
+- [Digest conventions](#digest-conventions)
 - [Hash drift prevention](#hash-drift-prevention)
+- [CI gate](#ci-gate)
+- [Directory layout](#directory-layout)
+- [What belongs here](#what-belongs-here)
 - [What must NOT go here](#what-must-not-go-here)
-- [Repo reality checks (unknowns)](#repo-reality-checks-unknowns)
+- [Definition of Done](#definition-of-done)
+- [Repo reality checks](#repo-reality-checks)
 
 ---
 
-## What this is
-KFM treats identity as infrastructure: **without stable identity, you cannot cache, cite, or reproduce**.
+## Purpose
+KFM’s trust membrane depends on **stable, reproducible identifiers**. Without them you can’t reliably:
+- cite evidence across time,
+- reproduce pipelines,
+- cache/index safely,
+- detect tampering or drift.
 
-This folder provides tooling to:
-- Compute a stable `spec_hash` from a canonical dataset spec.
-- Verify that stored `spec_hash` values **do not drift** (CI gate).
-- Enforce/standardize digest conventions (sha256) for artifacts and bundles.
+This folder defines the **hashing contract** and supporting tools for:
+- `spec_hash`: deterministic identity for a DatasetVersion derived from a canonical dataset spec.
+- `sha256` digests: deterministic content hashing for artifacts, manifests, and bundles.
+
+> [!IMPORTANT]
+> This is governed infrastructure. If hashing behavior changes, it must be reviewed like an API change.
 
 ---
 
-## Contracts (non-negotiable)
-These are the behaviors CI should enforce. If any are broken, promotion should fail closed.
+## Contracts
+### Non-negotiable
+1) **Determinism**
+- Same input spec → same `spec_hash` on any machine.
+- Same bytes → same content digest.
 
-1) **Promotion Gate A (Identity + Versioning)**
-- Dataset ID is stable.
-- DatasetVersion ID is **immutable** and derived from a stable `spec_hash`.
+2) **Canonicalization**
+- `spec_hash` MUST be derived from canonical JSON (RFC 8785 / JCS).
+- Never hash pretty-printed JSON or language-specific object dumps.
 
-2) **Canonical spec is the source of truth for spec_hash**
-A DatasetVersion is derived from a canonical specification document that includes:
-- upstream source config (endpoints, parameters)
+3) **Fail-closed posture**
+- If the canonicalization step fails, hashing fails.
+- If drift is detected, CI fails.
+- If an algorithm label is missing, CI fails.
+
+4) **Algorithm transparency**
+- Always include algorithm name in the identifier string (e.g., `sha256:<hex>`).
+
+---
+
+## Hash surfaces
+| Surface | Input | Output | Purpose | Notes |
+|---|---|---:|---|---|
+| `spec_hash` | Canonical dataset spec (JSON) | `sha256:<hex>` | DatasetVersion identity | Canonicalize with RFC 8785 first |
+| artifact digest | Artifact bytes | `sha256:<hex>` | Integrity + content addressing | Compute over raw bytes, not decoded text |
+| manifest digest fields | Manifest JSON + referenced digests | `sha256:<hex>` | Tamper-evident receipts | Manifest itself should be canonicalized before hashing (if hashed) |
+
+---
+
+## spec_hash algorithm
+### Canonical inputs
+A dataset spec SHOULD include (at minimum):
+- upstream source configuration (endpoints, params)
 - normalization rules
-- validation rules
+- validation rules + thresholds
 - output artifact plan
 - policy label intent
-- cadence
+- cadence/refresh intent
 
-3) **sha256 everywhere**
-- `sha256` is mandatory for artifacts and bundles.
-- `spec_hash` uses sha256 too.
-- Algorithm name stays embedded in IDs (e.g., `sha256:<hex>`) to support future migrations.
-
----
-
-## How spec_hash works
-### Definition
-`spec_hash` is a deterministic hash derived from the canonical dataset spec; it identifies DatasetVersions.
-
-### Required algorithm
-```
+### Algorithm (normative)
+```text
 spec_hash = sha256( RFC8785_canonical_json(spec) )
 ```
 
-Key rule: **do not hash “pretty printed” JSON**. Always canonicalize first.
+### Required rules
+- Canonicalize first. Always.
+- Treat number formatting deterministically (handled by RFC 8785).
+- Reject NaN/Infinity and non-JSON types.
+- Reject non-UTF8 input.
 
-### Why RFC 8785?
-RFC 8785 canonical JSON removes variability in whitespace, key order, and number formatting so the same spec produces the same hash across platforms.
-
----
-
-## Diagram (identity + gates)
-```mermaid
-flowchart LR
-  A[Dataset onboarding spec JSON] --> B[RFC8785 canonicalize]
-  B --> C[sha256]
-  C --> D[spec_hash]
-  D --> E[dataset_version_id]
-  E --> F[Catalog triplet DCAT STAC PROV]
-  F --> G[Governed API and Evidence Resolver]
-  D --> H[CI Gate A check]
-  H --> I[Promotion allowed]
-  H --> J[Promotion blocked]
-```
+> [!WARNING]
+> If you skip canonicalization, you will get hash drift across runtimes and break citations.
 
 ---
 
-## Directory layout
-> This is the **recommended** shape. Verify against the actual repo and update this list.
+## Digest conventions
+### Required format
+All digests MUST be formatted as:
 
 ```text
-tools/hash/
-  README.md              # this document
-  check_spec_hash.js      # CI gate: recompute spec_hash and fail if drift
-  # (optional) lib/       # shared canonicalization + hashing helpers
-  # (optional) fixtures/  # golden test vectors for canonicalization + hashing
+sha256:<64-hex>
 ```
 
----
+### Why prefix the algorithm?
+It makes IDs self-describing and supports future migrations without ambiguity.
 
-## Usage
-### CI (required)
-The pipeline should run a spec-hash drift check as part of promotion gates:
-
-```bash
-node tools/hash/check_spec_hash.js
-```
-
-### Local workflows (typical)
-> Interface below is **PROPOSED** (adjust to match actual script flags).
-
-1) Recompute a hash from a spec file:
-```bash
-node tools/hash/check_spec_hash.js --spec data/catalog/<dataset>/spec.json
-```
-
-2) Assert an expected hash (useful for PR review):
-```bash
-node tools/hash/check_spec_hash.js --spec data/catalog/<dataset>/spec.json --expect sha256:<hex>
-```
-
-3) Print canonical JSON (debugging canonicalization issues):
-```bash
-node tools/hash/check_spec_hash.js --spec data/catalog/<dataset>/spec.json --print-canonical
-```
+> [!NOTE]
+> If KFM ever adds another algorithm, the ID scheme stays unbroken because the algorithm is already part of the string.
 
 ---
 
 ## Hash drift prevention
-Drift is a governance failure: it breaks caching, citations, and reproducibility.
+Drift is a governance failure (it breaks reproducibility and evidence traceability).
 
-**Checklist (must enforce):**
-- Store the canonical spec used for hashing next to the computed `spec_hash`.
-- Unit-test that recomputing `spec_hash` from the stored spec yields the same value.
-- Treat `spec_hash` changes as **breaking changes that require review** (“what changed in the spec?”).
-- Never compute `spec_hash` from data that depends on system clocks, random seeds, or nondeterministic ordering.
+**Checklist**
+- Store the exact spec used to compute `spec_hash` next to the computed value.
+- Maintain golden test vectors for canonicalization + hashing.
+- Unit-test that recomputing from stored spec yields the same `spec_hash`.
+- Treat `spec_hash` changes as **breaking**: require a human-readable diff of the spec and a rationale.
+- Never compute `spec_hash` from nondeterministic inputs:
+  - timestamps / clocks
+  - random seeds
+  - unstable key ordering (without RFC 8785)
+  - environment-dependent defaults
 
-> Determinism is a feature, not overhead.
+---
+
+## CI gate
+A CI step SHOULD run a “hash drift check” that:
+- recomputes `spec_hash` from canonical specs,
+- compares to stored/declared `spec_hash`,
+- fails if any mismatch is found.
+
+### Expected command (verify in-repo)
+```bash
+node tools/hash/check_spec_hash.js
+```
+
+> [!TIP]
+> Keep this check cheap and deterministic so it can be required on every PR.
+
+---
+
+## Directory layout
+> Minimal expected layout. Update once repo wiring is confirmed.
+
+```text
+tools/hash/
+├─ README.md
+├─ check_spec_hash.js            # (expected) recompute & compare; fail on drift
+└─ fixtures/                     # (recommended) golden vectors
+   ├─ spec_minimal.json
+   ├─ spec_ordering_variants.json
+   └─ expected_hashes.json
+```
+
+---
+
+## What belongs here
+**Acceptable inputs**
+- RFC 8785 canonicalization helpers
+- sha256 digest helpers
+- spec_hash drift checker(s) used by CI
+- golden fixtures + test vectors
+- minimal docs explaining invariants and failure modes
 
 ---
 
 ## What must NOT go here
-This folder is narrowly scoped.
-
-**Out of scope / exclusions**
-- Password hashing, credential storage, key derivation, or auth-related hashing.
-- “Fast” hashes for performance tricks (ad-hoc caching keys, etc.) that aren’t part of the governed identity/digest contracts.
-- Hashing of nondeterministic inputs (timestamps, unordered maps without canonicalization, randomized transforms).
-- Introducing new algorithms without an explicit migration plan and ID-scheme support.
+**Exclusions**
+- Password hashing, auth token derivation, credential storage, key derivation
+- Encryption utilities / key management
+- Ad-hoc “fast hashes” for convenience that aren’t part of governed identity/digest contracts
+- Hashes over nondeterministic or user-environment-dependent inputs
 
 ---
 
-## Repo reality checks (unknowns)
-Because this README can be generated before code lands, **verify**:
-- That `tools/hash/check_spec_hash.js` exists and its CLI flags match the examples above.
-- Where canonical dataset specs live (paths and naming).
-- How `dataset_version_id` is formatted from `spec_hash` in your implementation.
-
-If any mismatch is found, update this README to reflect the repo truth.
+## Definition of Done
+- [ ] `spec_hash` computation is canonicalized (RFC 8785) and uses sha256
+- [ ] All digests are `sha256:<hex>`
+- [ ] Golden fixtures exist and pass on all supported runtimes
+- [ ] CI drift check is wired and required
+- [ ] Drift failure messages are actionable (point to spec file + expected vs actual)
+- [ ] README updated to match actual repo paths/flags once tooling lands
 
 ---
 
-[Back to top](#tools-hash--spec_hash--digest-tooling)
+## Repo reality checks
+Because this is contract-first documentation, verify and update:
+- Does `check_spec_hash.js` exist and match the command above?
+- Where do canonical dataset specs live (path + naming)?
+- Where is `spec_hash` stored (spec file, registry, manifest)?
+- Are fixtures required by CI?
+
+If any mismatch is found: **update this README to match repo truth** (fail-closed posture).
+
+---
+
+[Back to top](#top)
