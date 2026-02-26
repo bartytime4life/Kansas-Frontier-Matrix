@@ -73,18 +73,18 @@ This folder is reserved for **utility scripts, validators, and DevOps tooling** 
 ## Directory layout
 
 ```text
-tools/
-  README.md                  # this file
-  validators/                # metadata + schema validators (fail-closed)
-    validate_dcat.js
-    validate_stac.js
-    validate_prov.js
-  linkcheck/                 # cross-link integrity checks
-    catalog_linkcheck.js
-  hash/                      # spec-hash helpers + drift checks
-    check_spec_hash.js
-    # (optional) spec_hash_cli
-  # ... add new tooling in a clearly named subfolder
+tools/                                                # Tooling entrypoint (CLI scripts + checks)
+├── README.md                                         # This file (how to run + add new tools)
+├── validators/                                       # Metadata + schema validators (fail-closed)
+│   ├── validate_dcat.js                               # Validate DCAT records against KFM profile + required fields
+│   ├── validate_stac.js                               # Validate STAC Items/Collections + KFM constraints
+│   └── validate_prov.js                               # Validate PROV lineage (agents/activities/entities) + required links
+├── linkcheck/                                        # Cross-link integrity checks (no broken refs)
+│   └── catalog_linkcheck.js                           # Crawl catalogs/manifests and verify internal/external references
+├── hash/                                             # Spec-hash helpers + drift checks (determinism guardrails)
+│   └── check_spec_hash.js                              # Recompute + compare spec_hash; fail on drift or non-canonical inputs
+│   # (optional) spec_hash_cli                          # Standalone CLI wrapper for hashing/checking (if/when added)
+└── ...                                               # Add new tooling in a clearly named subfolder (single responsibility)
 ```
 
 ### How `tools/` fits in the KFM promotion flow
