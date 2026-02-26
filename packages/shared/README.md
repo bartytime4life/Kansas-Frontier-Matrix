@@ -6,169 +6,238 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-26
 policy_label: public
 related:
   - packages/shared
+  - TBD: link to KFM Design & Governance Guide (vNext, 2026-02-20)
 tags: [kfm, shared, contracts]
 notes:
   - Repo/tooling specifics intentionally marked TBD until confirmed in-repo.
+  - This README is normative for *behavior* (fail-closed, determinism) even if code layout differs.
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
 # `packages/shared`
-Shared contracts (schemas + vocabularies + IDs) and **pure** utilities used across KFM components to keep policy/provenance semantics consistent.
+**Shared contracts + controlled vocabularies + deterministic helpers** used across KFM so policy, provenance, and evidence semantics are consistent everywhere (CI + runtime + UI).
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Scope](https://img.shields.io/badge/scope-contracts%20%26%20pure%20utils-blue)
 ![Posture](https://img.shields.io/badge/posture-fail--closed-red)
 ![Determinism](https://img.shields.io/badge/ids-deterministic-important)
+![Contracts](https://img.shields.io/badge/contracts-v1-informational)
 
-> **Why this exists:** KFM’s trust membrane and governance gates only hold if every component speaks the same “contract language” for IDs, catalogs, evidence, policy decisions, and audit receipts.
+> **Why this exists:** KFM’s governance only works if every component speaks the same contract language for **IDs**, **catalogs**, **evidence**, **policy decisions**, **promotion gates**, and **audit receipts**.
 
 ---
 
 ## Navigate
-- [Overview](#overview)
+- [Scope](#scope)
+- [Non-negotiable invariants](#non-negotiable-invariants)
 - [Truth status](#truth-status)
-- [What belongs here](#what-belongs-here)
-- [What must not belong here](#what-must-not-belong-here)
-- [Key contracts](#key-contracts)
+- [Directory standard](#directory-standard)
+  - [What belongs here](#what-belongs-here)
+  - [What must not belong here](#what-must-not-belong-here)
+- [Contract registry](#contract-registry)
+- [Key contract families](#key-contract-families)
   - [Identifiers and digests](#identifiers-and-digests)
+  - [Catalog triplet profiles](#catalog-triplet-profiles)
   - [EvidenceRef and EvidenceBundle](#evidenceref-and-evidencebundle)
-  - [PolicyDecision](#policydecision)
+  - [PolicyDecision and obligations](#policydecision-and-obligations)
+  - [RunReceipt and AuditLedger](#runreceipt-and-auditledger)
+  - [Promotion artifacts](#promotion-artifacts)
+  - [Focus Mode contracts](#focus-mode-contracts)
   - [Controlled vocabularies](#controlled-vocabularies)
   - [Time axes](#time-axes)
 - [Determinism and hash drift](#determinism-and-hash-drift)
-- [Testing](#testing)
+- [Testing and CI gates](#testing-and-ci-gates)
 - [Contribution checklist](#contribution-checklist)
 - [Appendix: recommended structure](#appendix-recommended-structure)
 
 ---
 
-## Overview
-This package is the **single source of truth** for:
-- **Contract surfaces** used across pipelines, catalogs, APIs, UI, and Focus Mode (schemas + stable IDs).
-- **Controlled vocabularies** (policy labels, lifecycle zones, evidence kinds).
-- **Deterministic helpers** (canonicalization + hashing) so “the same spec” hashes the same everywhere.
-- **Small pure utilities** that must behave identically in CI and runtime.
+## Scope
+This package is **intended** to be the *contract spine* of the system:
 
-> ⚠️ **Fail-closed posture:** if a contract is ambiguous or a required field is missing, validation should fail (no best-effort guessing inside shared).
+- **Schemas** (JSON Schema / OpenAPI fragments / equivalent) that define the governed surfaces:
+  - dataset identity + dataset versions
+  - DCAT/STAC/PROV profile shapes and cross-link requirements
+  - EvidenceRef/EvidenceBundle
+  - PolicyDecision (decision + reasons + obligations)
+  - RunReceipt/AuditLedger entries
+  - Promotion manifests and gate reports
+  - Focus Mode request/response envelopes (incl. citations + audit_ref)
+- **Controlled vocabularies** that must not drift between components.
+- **Deterministic helpers** (canonicalization + hashing) so the same spec hashes the same everywhere.
+- **Pure utilities only**: shared code must behave identically in CI and runtime.
+
+> ⚠️ **Fail-closed posture:** if a required field is missing, a vocabulary value is unknown, or a reference cannot be verified, validation **must fail** (no best-effort guessing inside shared).
+
+---
+
+## Non-negotiable invariants
+These are KFM posture requirements. This package exists to make them **testable**.
+
+1) **Truth path lifecycle**  
+Data must flow through the defined lifecycle zones and promotion gates (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → projections → governed API → UI/Focus).  
+**Shared responsibility:** define zone vocab + promotion artifacts + validators.
+
+2) **Trust membrane**  
+Clients never access storage/DB directly; all governed access goes through policy + evidence boundaries.  
+**Shared responsibility:** contracts must not offer helpers that bypass the membrane.
+
+3) **Evidence-first UX and cite-or-abstain Focus Mode**  
+Answers and UI claims must cite EvidenceRefs that resolve to EvidenceBundles, or abstain. Citation verification is a hard gate.  
+**Shared responsibility:** define citation objects + evidence resolver request/response contracts + fixtures.
+
+4) **Deterministic identity/hashing**  
+Stable dataset/version IDs and `spec_hash` must be derived from canonical inputs.  
+**Shared responsibility:** canonical JSON + hashing utilities and golden tests.
+
+5) **Policy semantics shared between CI and runtime**  
+Policy outcomes must be consistent across CI and runtime (fixtures-driven).  
+**Shared responsibility:** PolicyDecision shape + obligation schema + reason codes + fixtures.
 
 ---
 
 ## Truth status
-This README is intentionally explicit about what is known vs assumed.
+This README is explicit about what is known vs assumed.
 
 | Topic | Status | Notes |
 |---|---|---|
-| KFM uses governed contracts: EvidenceRef → EvidenceBundle, policy decisions, audit receipts | **Confirmed** | Encoded in KFM design/blueprint documents. |
-| Policy evaluation should be fixtures-driven and share semantics between CI and runtime | **Confirmed** | Shared semantics are required for meaningful CI gates. |
-| Exact package name, build tool, export paths, and directory layout | **Unknown** | Must be verified from the repo (`package.json`, workspace config, etc.). |
-| Proposed vocab sets (policy labels, artifact zones, evidence kinds, generalization methods) | **Proposed** | Treat as a baseline; adjust only via governance review. |
+| KFM requires truth path + trust membrane + cite-or-abstain with receipts + deterministic hashing | **Confirmed** | Confirmed in KFM design/governance guide; this README aligns to those invariants. |
+| Controlled vocabularies exist and must be versioned | **Confirmed** | `policy_label`, `artifact.zone`, `citation.kind` are explicitly called out as maintained vocab. |
+| Exact package name, build tool, export paths, and directory layout | **Unknown** | Must be verified from repo workspace config. |
+| Exact schema dialects (JSON Schema version), codegen strategy, and language targets | **Proposed** | Choose what fits repo/toolchain; keep fixtures portable. |
 
 ---
 
-## What belongs here
+## Directory standard
+
+### Where this fits in the repo
+`packages/shared` is imported by:
+- pipelines and validators (promotion gates)
+- governed API (DTOs + policy/evidence enforcement)
+- UI (policy badges, evidence drawers, citation rendering)
+- Focus Mode orchestrator (request/response envelope + citation schema + receipts)
+
+> **No reverse dependencies:** shared must not import from pipelines/api/ui.
+
+### What belongs here
 ✅ Good fits:
-- **Schema definitions** (JSON Schema, OpenAPI fragments, Zod/Pydantic equivalents) for:
-  - run receipts / audit records
-  - dataset and dataset-version identity specs
-  - DCAT/STAC/PROV profile validation shapes
-  - EvidenceRef / EvidenceBundle / PolicyDecision
-- **Controlled vocabularies** and their validators.
-- **Deterministic hashing** helpers and canonicalization logic (plus tests).
-- **Typed “contract adapters”** that are still pure (e.g., parse/format EvidenceRef URIs).
+- **Schema definitions** + validators for governed artifacts.
+- **Controlled vocabularies** and validators.
+- **Deterministic helpers** (canonicalization + hashing) and golden tests.
+- **Pure “contract adapters”** (e.g., parse/format `kfm://…` identifiers; parse EvidenceRef URIs).
 
----
-
-## What must not belong here
+### What must not belong here
 🚫 Keep out of `packages/shared`:
-- Any **network** / **filesystem** / **database** access.
-- Any code that requires **secrets** or environment-specific configuration.
-- Framework glue (React hooks, FastAPI routing, CLI wiring, container runtime logic).
-- Logging or telemetry backends (interfaces/types ok; implementations elsewhere).
-- Anything that would tempt callers to bypass the **trust membrane** (e.g., “direct S3 fetch” helpers).
+- Network / filesystem / database access
+- Secrets, env-dependent config, runtime toggles
+- Framework glue (React hooks, API routing, CLIs)
+- Telemetry backends (interfaces ok; implementations elsewhere)
+- “Helpful” direct storage access helpers that undermine governance
 
-> Rule of thumb: if it can cause side effects or depends on runtime environment state, it does **not** belong in shared.
+> Rule of thumb: if it can cause side effects, it does **not** belong in shared.
 
 ---
 
-## Key contracts
+## Contract registry
+> This is a **normative inventory** (names/paths TBD). The important part is the *surfaces*.
+
+| Family | Purpose | Consumers | Breaking change? |
+|---|---|---|---|
+| `DatasetId`, `DatasetVersionId`, `ArtifactDigest` | Identity + reproducibility | pipelines, catalogs, API, UI, Focus | Yes (major bump) |
+| `artifact.zone` vocab | Truth-path promotion state | pipelines, CI, UI | Yes |
+| DCAT profile | Dataset-level metadata + rights + distributions | CI validators, API, UI | Yes |
+| STAC profile | Asset-level spatiotemporal metadata | CI validators, API, tiles | Yes |
+| PROV profile + run receipts | Lineage, who/what/why/how | pipelines, API, UI | Yes |
+| `EvidenceRef`, `EvidenceBundle` | Evidence resolution + trust UI | API, UI, Focus | Yes |
+| `PolicyDecision` + obligations | Allow/deny + required redactions/UX notices | CI, API, evidence resolver, UI | Yes |
+| `PromotionManifest` + `GateReport` | Fail-closed promotion gating | pipelines, CI | Yes |
+| Focus Mode envelopes | Request/response + citations + audit_ref | Focus orchestrator, API, UI | Yes |
+
+---
+
+## Key contract families
 
 ### Identifiers and digests
-**Stable identifiers** enable reproducibility, caching, and auditable governance.
+Stable identifiers enable reproducibility, caching, signing, and audits.
 
-Common patterns used in KFM contracts:
-- **Digest-addressed IDs**: `sha256:<hex>` (include algorithm name in the identifier).
-- **URI-like IDs** for governance artifacts:
-  - `kfm://dataset/<id>`
-  - `kfm://dataset_version/<id>`
-  - `kfm://run/<id>`
-  - `kfm://policy_decision/<id>`
-  - `kfm://audit/entry/<id>`
+**Recommended ID families (illustrative):**
+- `sha256:<hex>` digests for content-addressed objects
+- `kfm://dataset/<id>`
+- `kfm://dataset_version/<id>`
+- `kfm://run/<id>`
+- `kfm://policy_decision/<id>`
+- `kfm://audit/entry/<id>`
 
-#### Recommended rules
-- IDs must be **purely derived** from canonical inputs (no clocks, no random, no unordered maps).
-- If an ID changes, treat it as a **breaking change** and require review.
+**Rules**
+- IDs must be derived from **canonical inputs** (no clocks, no random, no unordered maps).
+- If an ID derivation changes, treat as a **breaking change** + add migration notes.
+
+---
+
+### Catalog triplet profiles
+KFM treats catalogs and provenance as contract surfaces, not optional documentation.
+
+**Triplet responsibilities (conceptual):**
+- **DCAT:** dataset identity, publisher, license/rights, distributions, coverage
+- **STAC:** assets, extents, items/collections, file links
+- **PROV:** lineage (activities, agents, entities) + run receipts
+
+> Shared should provide strict validators + cross-link checks (DCAT ↔ STAC ↔ PROV) and fixtures.
 
 ---
 
 ### EvidenceRef and EvidenceBundle
-Evidence resolution is central: callers should hold **references**, not raw file paths or undocumented URLs.
+Evidence resolution is central: callers should hold **references**, not raw file paths.
 
 #### EvidenceRef
-EvidenceRef is a stable reference with an explicit scheme, for example:
-- `dcat://...`
-- `stac://...`
-- `prov://...`
-- `doc://...`
-- `graph://...`
+EvidenceRef is a stable, typed reference, e.g.:
+- `dcat://…`
+- `stac://…`
+- `prov://…`
+- `doc://…`
+- `graph://…`
+- `oci://…@sha256:…` (digest-pinned bundles)
 
-> Shared should provide: parsers/formatters + schema validation for EvidenceRef.
+**Shared should provide**
+- parser/formatter (pure)
+- schema validation
+- fixtures (valid + invalid)
 
 #### EvidenceBundle
-An EvidenceBundle is what the resolver returns: a human-readable card + machine metadata + digests + audit references.
+EvidenceBundle is what an evidence resolver returns: human-readable cards + machine metadata + digests + audit references.
 
 Illustrative shape (field names may differ):
 ```json
 {
   "bundle_id": "sha256:…",
-  "dataset_version_id": "…",
+  "dataset_version_id": "kfm://dataset_version/…",
   "title": "…",
   "policy": {
     "decision": "allow|deny",
     "policy_label": "public|restricted|…",
     "obligations_applied": []
   },
-  "license": {
-    "spdx": "…",
-    "attribution": "…"
-  },
-  "provenance": {
-    "run_id": "kfm://run/…"
-  },
+  "license": { "spdx": "…", "attribution": "…" },
+  "provenance": { "run_id": "kfm://run/…" },
   "artifacts": [
-    {
-      "href": "…",
-      "digest": "sha256:…",
-      "media_type": "…"
-    }
+    { "href": "…", "digest": "sha256:…", "media_type": "…" }
   ],
-  "checks": {
-    "catalog_valid": true,
-    "links_ok": true
-  },
+  "checks": { "catalog_valid": true, "links_ok": true },
   "audit_ref": "kfm://audit/entry/…"
 }
 ```
 
+> **Fail closed:** if the resolver can’t verify policy, links, or digests, it must return a denial (or an explicit “unresolvable” error) — never “best guess.”
+
 ---
 
-### PolicyDecision
-Shared should define a canonical PolicyDecision shape so:
-- CI can test it with fixtures.
-- runtime can enforce it consistently.
-- UI can display reason codes and obligations *without re-implementing policy logic*.
+### PolicyDecision and obligations
+Shared defines a canonical PolicyDecision so CI, runtime, and UI can share semantics.
 
 Illustrative shape (field names may differ):
 ```json
@@ -186,29 +255,69 @@ Illustrative shape (field names may differ):
 }
 ```
 
+**Invariants**
+- “Unknown policy label” must not silently degrade to allow.
+- Obligations are **first-class**: the UI can *render* them, but must not *decide* them.
+
+---
+
+### RunReceipt and AuditLedger
+Every governed operation (pipeline run, story publish, Focus Mode request) emits a receipt.
+
+Shared should define:
+- `RunReceipt` (per-run)
+- `AuditLedgerEntry` (append-only index)
+
+Minimum expectations (conceptual):
+- inputs + evidence bundle digests
+- tool versions + parameters (or spec hash)
+- policy decisions applied
+- output digests
+- output hash and timestamps
+
+---
+
+### Promotion artifacts
+Promotion is the act of moving a dataset version into governed runtime surfaces and must be fail-closed.
+
+Shared should define:
+- `PromotionManifest` (what is being promoted, from where, and why)
+- `GateReport` (Gate A..F results, machine-readable + human summary)
+
+> Promotion should be blocked unless all required artifacts exist and validate.
+
+---
+
+### Focus Mode contracts
+A Focus Mode request is treated as a governed run with a receipt.
+
+**Required response envelope (conceptual):**
+- `answer_text`
+- `citations[]` (EvidenceRefs or resolved bundle references)
+- `audit_ref` (run id)
+
+**Hard gate:** a response must not ship unless all citations are verifiable and policy-allowed. If not, abstain or narrow scope.
+
 ---
 
 ### Controlled vocabularies
-**Controlled vocabularies** prevent drift and make governance enforceable.
-
-> Keep these in one place, and validate them strictly at boundaries (CI + runtime).
+Controlled vocabularies prevent drift and make governance enforceable.
 
 Baseline sets (adjust only via governance review):
 
-| Vocabulary | Examples | Notes |
+| Vocabulary | Starter values | Notes |
 |---|---|---|
 | `policy_label` | `public`, `public_generalized`, `restricted`, `restricted_sensitive_location`, `internal`, `embargoed`, `quarantine` | Primary classification input to policy. |
-| `artifact.zone` | `raw`, `work`, `processed`, `catalog`, `published` | Supports truth-path promotion gates. |
-| `citation.kind` | `dcat`, `stac`, `prov`, `doc`, `graph`, `oci`, `url` | Prefer resolvable schemes over raw URLs. |
-| `geometry.generalization_method` | `centroid_only`, `grid_aggregation_*`, `random_offset_*`, `dissolve_to_admin_unit`, `bounding_box_only`, `none` | Must be recorded when applied. |
+| `artifact.zone` | `raw`, `work`, `processed`, `catalog`, `published` | Truth-path lifecycle zones. |
+| `citation.kind` | `dcat`, `stac`, `prov`, `doc`, `graph`, `oci`, `url` | Prefer resolvable schemes; `url` is discouraged. |
 
 ---
 
 ### Time axes
-If we encode temporal semantics in contracts, use a consistent vocabulary:
-- **Event time**: when something happened.
-- **Transaction time**: when KFM acquired/published the record.
-- **Valid time** (optional): when a statement is considered true.
+If we encode temporal semantics in contracts, use consistent vocabulary:
+- **Event time**: when something happened
+- **Transaction time**: when KFM acquired/published it
+- **Valid time** (optional): when a statement is considered true
 
 ---
 
@@ -220,26 +329,32 @@ When a dataset version is derived from a spec document (source config + normaliz
 
 - `spec_hash = sha256( canonical_json(spec) )`
 
-Where canonical JSON means **RFC 8785** JSON Canonicalization Scheme (JCS), not “pretty printed JSON”.
+Where canonical JSON is **RFC 8785 JSON Canonicalization Scheme (JCS)** (not pretty-printed JSON).
 
 ### Hash drift checklist
-- Store the exact canonical spec used for hashing next to the computed `spec_hash`.
-- Unit-test recomputation: `recompute(spec) == stored_spec_hash`.
-- Treat spec_hash changes as breaking changes that require review.
-- Never hash data that depends on clocks, random seeds, or nondeterministic ordering.
+- Store the exact canonical spec used for hashing alongside `spec_hash`.
+- Golden test: `recompute(spec) == stored_spec_hash`.
+- Treat `spec_hash` changes as breaking changes requiring review.
+- Never hash values that depend on clocks, random seeds, or nondeterministic ordering.
 
 ---
 
-## Testing
+## Testing and CI gates
 Minimum expectations for changes in this package:
-- ✅ Schema tests:
-  - at least one **valid** fixture
-  - at least one **invalid** fixture (prove fail-closed)
-- ✅ Determinism tests (where applicable):
-  - canonicalization round-trip tests
-  - stable hash across platforms/runtimes
-- ✅ Compatibility tests:
-  - ensure older consumers don’t break (or bump major if they must)
+
+### Contract fixtures
+- ✅ at least one **valid** fixture
+- ✅ at least one **invalid** fixture (prove fail-closed)
+
+### Determinism tests
+- ✅ canonicalization round-trip tests
+- ✅ stable hash across platforms/runtimes (goldens)
+
+### Compatibility expectations
+- ✅ consumers do not break silently
+- ✅ major bump when breaking is unavoidable
+
+> TIP: Keep fixtures as JSON so multiple runtimes (TS/Python/etc.) can validate the same artifacts.
 
 ---
 
@@ -252,7 +367,7 @@ Use this when adding/changing a contract.
 - [ ] Did you add/update fixtures (valid + invalid) and ensure CI fails on invalid?
 - [ ] Did you update controlled vocab (if needed) **with governance rationale**?
 - [ ] If any identifier behavior changed, did you treat it as **breaking**?
-- [ ] Did you update this README (or an adjacent contract README) with:
+- [ ] Did you document:
   - invariants
   - examples
   - migration notes (if applicable)
@@ -260,41 +375,42 @@ Use this when adding/changing a contract.
 ---
 
 ## Appendix: recommended structure
-> This is a **recommended** (not confirmed) layout to keep boundaries clean.
+> **Recommended** (not confirmed) layout to keep boundaries clean.
 
 ```text
 packages/shared/
 ├─ README.md
 ├─ src/
-│  ├─ index.(ts|js|py)              # public exports only
+│  ├─ index.(ts|js|py)                 # public exports only (TBD)
 │  ├─ contracts/
-│  │  ├─ evidence/                 # EvidenceRef/EvidenceBundle schemas + helpers
-│  │  ├─ policy/                   # PolicyDecision + obligations + reason codes
-│  │  ├─ catalogs/                 # DCAT/STAC/PROV profile shapes
-│  │  └─ receipts/                 # run_receipt / audit record shapes
+│  │  ├─ ids/                          # DatasetId, VersionId, digests, URI helpers
+│  │  ├─ catalogs/                     # DCAT/STAC/PROV profile schemas + validators
+│  │  ├─ evidence/                     # EvidenceRef/EvidenceBundle schemas + helpers
+│  │  ├─ policy/                       # PolicyDecision + obligations + reason codes
+│  │  ├─ receipts/                     # RunReceipt / AuditLedger shapes
+│  │  ├─ promotion/                    # PromotionManifest + GateReport
+│  │  └─ focus/                        # Focus request/response + citation schema
 │  ├─ vocab/
-│  │  ├─ policy_label.*
-│  │  ├─ artifact_zone.*
-│  │  └─ citation_kind.*
+│  │  ├─ policy_label.*                # versioned vocab + validator
+│  │  ├─ artifact_zone.*               # versioned vocab + validator
+│  │  └─ citation_kind.*               # versioned vocab + validator
 │  ├─ determinism/
-│  │  ├─ canonical_json.*          # RFC 8785 JCS utilities
-│  │  └─ hashing.*                 # sha256 helpers + golden tests
+│  │  ├─ canonical_json.*              # RFC 8785 JCS utilities
+│  │  └─ hashing.*                     # sha256 helpers + golden tests
 │  └─ __fixtures__/
 │     ├─ valid/
 │     └─ invalid/
 └─ test/ (or equivalent)
 ```
 
----
-
 ### Dependency direction (intended)
 ```mermaid
 flowchart LR
-  Shared[packages/shared\ncontracts + vocab + determinism]
-  Pipelines[pipelines]
-  API[governed API]
-  UI[map/story UI]
-  CI[CI gates]
+  Shared["packages/shared\ncontracts + vocab + determinism"]
+  Pipelines["pipelines\npromotion + QA"]
+  API["governed API\npolicy + evidence"]
+  UI["map/story UI\ntrust surfaces"]
+  CI["CI gates\nschemas + policy tests"]
 
   Shared --> Pipelines
   Shared --> API
@@ -302,20 +418,19 @@ flowchart LR
   Shared --> CI
 ```
 
-> **No reverse dependencies**: shared must not import from pipelines/api/ui.
-
 ---
 
 <details>
 <summary>Notes for maintainers</summary>
 
-- If this package is consumed by multiple languages (e.g., Python + TypeScript), prefer:
-  - JSON Schema / OpenAPI-first contracts
-  - generated types (where practical)
-  - fixtures stored as JSON to validate in multiple runtimes
+- If multiple languages consume these contracts, prefer:
+  - JSON Schema / OpenAPI-first shapes
+  - generated types where practical
+  - fixtures as JSON to validate in multiple runtimes
 
-- If a contract is “core to governance” (policy labels, obligations, audit receipts), changes should require:
-  - reviewer/steward sign-off
+- If a contract is “core to governance” (policy labels, obligations, receipts, promotion manifests),
+  changes should require:
+  - steward review/sign-off
   - migration note
   - explicit version bump policy
 
@@ -323,4 +438,4 @@ flowchart LR
 
 ---
 
-↑ Back to top
+↑ [Back to top](#top)
