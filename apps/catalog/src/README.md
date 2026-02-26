@@ -125,15 +125,15 @@ Every published dataset/evidence artifact should have **all three**:
 > This is a **recommended** layout aligned with the KFM layering model (Domain → Use cases → Interfaces → Infrastructure). Update to match the actual directory tree.
 
 ```text
-apps/catalog/src/
-  domain/                # pure rules: profile semantics, linkage invariants
-  usecases/              # orchestrations: buildTriplet(), validateTriplet(), publish()
-  interfaces/            # ports: CatalogStore, EvidenceResolver, PolicyDecider
-  infra/                 # adapters: filesystem/S3/GCS stores, jsonschema validator, logging
-  cli/                   # CLI entrypoints (if this app exposes commands)
-  server/                # HTTP/service entrypoints (if this app is a service)
-  __tests__/             # fast unit tests + small fixtures only
-  index.ts               # package entry (if TS)
+apps/catalog/src/                                     # Catalog app core (clean architecture boundaries inside UI/service)
+├── index.ts                                          # Package entry (exports wiring, app bootstrap, or public API)
+├── domain/                                           # Pure rules (profile semantics, linkage invariants, no IO)
+├── usecases/                                         # Orchestrations (buildTriplet(), validateTriplet(), publish(), receipts)
+├── interfaces/                                       # Ports (CatalogStore, EvidenceResolver, PolicyDecider, Logger)
+├── infra/                                            # Adapters (fs/S3/GCS stores, jsonschema, observability, policy client)
+├── cli/                                              # CLI entrypoints (only if app exposes commands)
+├── server/                                           # HTTP/service entrypoints (only if app is a service)
+└── __tests__/                                        # Fast unit tests + tiny fixtures only (no network, deterministic)
 ```
 
 **Hard rule:** domain + usecases must be testable without network, filesystem, or databases.
