@@ -1,277 +1,314 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/177c31af-7599-479e-bdcf-a04b349b7235
-title: tools/generators/README.md
+doc_id: kfm://doc/bd63e4ac-ca4a-463b-9fce-ba5bc602c5c0
+title: tools/generators — governed artifact generators
 type: standard
 version: v1
 status: draft
 owners: TBD
-created: 2026-02-22
-updated: 2026-02-22
+created: 2026-02-26
+updated: 2026-02-26
 policy_label: public
 related:
-  - "Kansas Frontier Matrix (KFM) — Definitive Design & Governance Guide (vNext) (2026-02-20)"
-tags: [kfm, generators, pipelines, governance]
+  - kfm://doc/TBD
+tags: [kfm, generators, governance, provenance, catalogs]
 notes:
-  - "This README is intentionally fail-closed: it documents contracts and invariants without assuming repo-specific implementation details."
+  - Directory contract for deterministic, fail-closed generators that emit promotion-grade artifacts.
 [/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
-
 # tools/generators
-_Map-first, time-aware generators that produce governed artifacts (catalogs, lineage, receipts)_
 
-[![Status](https://img.shields.io/badge/status-draft-yellow.svg)](#)
-[![Trust](https://img.shields.io/badge/posture-fail--closed-critical.svg)](#)
-[![Governance](https://img.shields.io/badge/governed-yes-blue.svg)](#)
+Deterministic, **fail-closed** generators for Kansas Frontier Matrix (KFM) *promotion-grade* artifacts:  
+**catalog triplet (DCAT + STAC + PROV)**, **run receipts + checksums**, **promotion manifests**, and **evidence bundles**.
+
+![KFM](https://img.shields.io/badge/KFM-governed-blue)
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![CI](https://img.shields.io/badge/ci-TODO-lightgrey)
+![License](https://img.shields.io/badge/license-TODO-lightgrey)
+
+> **NOTE**
+> This README defines *directory-level requirements* (what generators **must** do).  
+> It does **not** assert which generators already exist in the repo.
 
 ## Navigation
-- [What lives in this directory](#what-lives-in-this-directory)
-- [Core invariants](#core-invariants)
+
+- [What this directory is](#what-this-directory-is)
+- [What belongs here](#what-belongs-here)
+- [What must not go here](#what-must-not-go-here)
 - [Generator contract](#generator-contract)
-- [Promotion gates](#promotion-gates)
-- [How generators fit the system](#how-generators-fit-the-system)
-- [Adding a new generator](#adding-a-new-generator)
-- [Testing](#testing)
-- [Security and sensitivity](#security-and-sensitivity)
-- [Directory layout](#directory-layout)
+- [How this maps to KFM promotion gates](#how-this-maps-to-kfm-promotion-gates)
+- [Proposed structure](#proposed-structure)
+- [Generator registry](#generator-registry)
+- [How to run](#how-to-run)
+- [Add a new generator](#add-a-new-generator)
+- [Testing and CI gates](#testing-and-ci-gates)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## What lives in this directory
-This directory is for **deterministic generators** that convert upstream pipeline outputs into **governed, promotable artifacts**.
+## What this directory is
 
-Typical generator responsibilities include:
+Generators are **build tools** that turn *canonical inputs* (dataset specs, pipeline params, policy decisions, and produced artifacts) into **governed, evidence-bearing outputs** that KFM can safely publish through API/UI surfaces.
 
-- **Catalog generation**: produce the **catalog triplet** (DCAT + STAC + PROV) and ensure cross-links validate.
-- **Lineage production**: generate PROV activities/entities/agents that explain how an artifact was created.
-- **Run receipts**: emit a receipt for every run so results are reproducible and auditable.
-- **Contract validation**: fail closed if required inputs are missing, ambiguous, or policy-disallowed.
-- **Scaffolding**: generate repeatable boilerplate (schemas, fixture templates, index manifests) when it reduces human error.
+In KFM terms, generators are responsible for creating/validating the artifacts that make the **catalog + provenance surfaces** and the **promotion contract** enforceable.
 
-> NOTE  
-> This README describes **requirements and contracts**. It does **not** assume which language, framework, or exact CLI exists in this repository.
+### Typical inputs
 
-[Back to top](#top)
+- Dataset spec (identity, semantics, licensing, sensitivity)
+- Pipeline parameters (canonicalized for hashing)
+- Produced artifacts (raw/work/processed)
+- Policy decisions (labels + obligations like redaction/generalization)
+- Environment identity (container digest, git commit)
+
+### Typical outputs
+
+- **Catalog triplet**: DCAT (dataset-level), STAC (asset-level), PROV (lineage)
+- **Run receipt** for each producing run (inputs/outputs/environment/validation/policy)
+- **Checksums** for every artifact (raw + processed)
+- **Promotion manifest** (the “receipt bundle” used to promote + publish)
+- **Evidence bundle** payloads (human card + machine metadata + digests + audit refs)
+
+[Back to top](#tools-generators)
 
 ---
 
-## Core invariants
-Generators are part of KFM’s **trust membrane** and **promotion contract**. They MUST uphold the following invariants:
+## What belongs here
 
-### Determinism and reproducibility
-- **Same inputs → same outputs** (byte-for-byte where feasible).
-- Outputs must be tied to a **dataset version identity** derived from a stable spec hash.
-- Every produced artifact must have a **checksum/digest**.
+✅ **Accepted inputs/artifacts in this directory**
 
-### Fail-closed posture
-Generators MUST refuse to produce promotable outputs when any of the following are true:
+- Generator code (CLI + libraries)
+- JSON Schemas / profiles for generator outputs (DCAT/STAC/PROV, receipts, manifests)
+- Small fixtures for tests (tiny datasets, mock catalogs, policy fixtures)
+- Determinism tooling (canonical JSON/YAML, stable sorting, hashing utilities)
+- Link-checkers + validators for cross-link rules (DCAT↔STAC↔PROV)
 
-- upstream artifacts are missing or don’t validate
-- licensing/rights are unclear
-- sensitivity classification is missing or obligations cannot be satisfied
-- catalogs don’t validate or cross-links don’t resolve
+## What must not go here
 
-### Auditability
-Every generator run MUST emit a **run receipt** containing (at minimum):
+🚫 **Explicit exclusions**
 
-- inputs (by digest and/or upstream version)
-- outputs (artifact digests)
-- environment (container image digest and parameters)
-- validation results
-- policy decisions
+- Runtime services (APIs, UI apps, workers) — keep those in their own runtime modules
+- One-off notebooks or ad-hoc scripts that are not reproducible/tested
+- Secrets, credentials, tokens, or private keys (even for local dev)
+- Bulk data dumps / large binaries (use the truth-path zones, not git)
+- Direct “publish” actions that bypass policy or promotion gates
 
-### Separation of concerns
-- Generators should be **pure transformation + validation**.
-- Side effects (writes) should be limited to **declared output locations** with a clear manifest.
-- No silent reads/writes to “mystery paths”.
+> **WARNING**
+> Generators are part of the trust membrane: they must never create an output that would let
+> downstream runtime surfaces serve ungoverned or untraceable data.
 
-[Back to top](#top)
+[Back to top](#tools-generators)
 
 ---
 
 ## Generator contract
-All generators in this folder SHOULD conform to the same contract so they are:
 
-- composable in CI and pipeline runner environments
-- observable (standard logs + receipts)
-- reversible (outputs can be rebuilt from inputs)
+These requirements are written to be testable. If a generator cannot meet them, it should **fail closed**.
 
-### Required inputs
-A generator run should declare its inputs explicitly, typically:
+### Determinism and identity
 
-- **dataset identifier** and **dataset version identifier**
-- **input artifact manifest** (paths + digests) from RAW/WORK/PROCESSED zones
-- **policy context** (policy label, allowed outputs, redaction obligations)
-- **run context** (who/what/when/why: pipeline id, git sha, container digest)
+- A generator **MUST** be deterministic: same inputs → same outputs → same digests.
+- A generator **MUST** derive/record a stable `spec_hash` (or equivalent) for DatasetVersion identity.
+- Outputs **SHOULD** be digest-addressed (e.g., `sha256:`) so they can be referenced immutably.
 
-### Required outputs
-A generator run must produce:
+### Fail-closed posture
 
-- outputs to a predictable location (or return paths)  
-- an output manifest listing artifact paths and digests
-- a run receipt (see below)
-- validation reports (machine-readable preferred)
+- If **licensing is unclear**, the generator **MUST** refuse to produce promotion-grade outputs.
+- If **sensitivity is unclear** or redaction requirements are missing, the generator **MUST** refuse.
+- If **catalog validation** or **cross-link checks** fail, the generator **MUST** refuse.
 
-### Exit behavior
-- Exit code `0` only when **all required outputs** are produced and validate.
-- Non-zero on any failure; **do not** emit “promoted-looking” artifacts on failure.
+### Receipts, checksums, and provenance
 
-### Minimal run receipt schema (conceptual)
-This is the minimum information content; field names are implementation-defined.
+- Every producing run **MUST** emit a **run receipt** enumerating:
+  - inputs + output URIs
+  - digests for each
+  - environment identity (container digest, git commit, params digest)
+  - validation status/report digest
+  - policy decision reference
+- Every artifact referenced in catalogs **MUST** have a checksum recorded and resolvable.
+- PROV **MUST** link activities, entities, and agents so lineage navigation is deterministic.
 
-```yaml
-run_id: <uuid or ulid>
-run_type: <catalog|lineage|schema|index-manifest|...>
-started_at: <timestamp>
-ended_at: <timestamp>
-actor:
-  kind: <ci|developer|scheduler>
-  id: <user or service id>
-environment:
-  repo_revision: <git sha>
-  container_image_digest: <sha256:...>
-  parameters: { ... }
-policy:
-  policy_label: <public|restricted|...>
-  decisions:
-    - decision: <allow|deny>
-      obligations: [ ... ]
-      reason_codes: [ ... ]
-inputs:
-  - path: <...>
-    digest: <...>
-    zone: <raw|work|processed>
-outputs:
-  - path: <...>
-    digest: <...>
-    kind: <dcat|stac|prov|report|...>
-validations:
-  - name: <...>
-    status: <pass|fail>
-    details_ref: <path or id>
-```
+### Policy awareness
 
-[Back to top](#top)
+- Generators **MUST** carry through `policy_label` and any obligations (redaction/generalization), and
+  record them in provenance outputs (and/or linked policy decision objects).
+
+### Usability
+
+- A generator **MUST** expose a CLI with:
+  - `--help`
+  - `--dry-run` or `--plan`
+  - `--validate` (schema + links)
+- A generator **SHOULD** support `--json` output for machine consumption.
+
+[Back to top](#tools-generators)
 
 ---
 
-## Promotion gates
-Generators are frequently used to satisfy the **Promotion Contract** gates.
+## How this maps to KFM promotion gates
 
-When you add or modify a generator, verify it can support these minimum gates:
+KFM promotion is **blocked** unless minimum gates pass. Generators are expected to produce the
+artifacts that make these gates testable.
 
-- **Gate A: Identity and versioning**  
-  Stable dataset ID, immutable dataset version identity derived from a stable spec hash.
+| Gate | Fail-closed check (summary) | Artifacts generators must produce/validate |
+|---|---|---|
+| A. Identity & versioning | Stable dataset ID + immutable DatasetVersion ID derived from stable hash | spec hash + version id; promotion manifest stub |
+| B. Licensing & rights | Explicit license + attribution; unclear → quarantine | DCAT license/rights, attribution text |
+| C. Sensitivity + redaction | policy label assigned; redaction/generalization plan recorded | policy decision ref; PROV links to obligations |
+| D. Catalog triplet | DCAT + STAC + PROV exist, validate, cross-link | profiles + link-checks + resolvable references |
+| E. Run receipt + checksums | receipts exist; inputs/outputs have digests; env recorded | run receipts; digests for all artifacts |
+| F. Policy + contract tests | OPA tests pass; EvidenceRef resolves in CI; API schemas valid | policy fixtures; resolver smoke; schema validation |
+| G. Recommended | SBOM/provenance, perf + accessibility smokes | (optional) attestations; smoke-test harness |
 
-- **Gate B: Licensing and rights metadata**  
-  Explicit license and captured attribution/rights holder. Unclear license → quarantine.
+> **TIP**
+> Treat each gate as a **unit-testable contract**: if we can’t test it automatically, we can’t trust it.
 
-- **Gate C: Sensitivity classification and redaction plan**  
-  Policy label assigned; redaction/generalization plan recorded when needed.
-
-- **Gate D: Catalog triplet validation**  
-  DCAT, STAC, and PROV artifacts exist, validate, and cross-link.
-
-- **Gate E: Run receipts and checksums**  
-  Each producing run has a receipt; inputs/outputs enumerated with digests; environment recorded.
-
-- **Gate F: Policy tests and contract tests**  
-  Policy tests pass; evidence resolver can resolve at least one EvidenceRef for the dataset version in CI; API schemas validate.
-
-> TIP  
-> Treat promotion gates as **tests**. If your generator makes a gate possible, add (or extend) a test that proves it.
-
-[Back to top](#top)
+[Back to top](#tools-generators)
 
 ---
 
-## How generators fit the system
-Conceptually, generators sit between **PROCESSED artifacts** and **PUBLISHED runtime surfaces**.
+## Proposed structure
 
-```mermaid
-flowchart LR
-  Upstream[Upstream sources] --> Conn[Connectors]
-  Conn --> Raw[RAW zone]
-  Raw --> Work[WORK and QUARANTINE]
-  Work --> Proc[PROCESSED]
-  Proc --> Gen[Generators]
-  Gen --> Cat[CATALOG triplet]
-  Cat --> Index[Index builders]
-  Index --> API[Governed API]
-  API --> UI[Map Story Focus]
-```
-
-**Key rule:** A generator should never make something “look published” unless the dataset version is promotable.
-
-[Back to top](#top)
-
----
-
-## Adding a new generator
-1. **Write a one-page spec** (inputs, outputs, failure modes, and which promotion gates it supports).
-2. **Define the contract**:
-   - required inputs and their zones
-   - output locations and naming
-   - receipt fields
-3. **Implement** as a pure function first, then wrap with I/O.
-4. **Add validations**:
-   - schema validation for generated artifacts
-   - cross-link validation (where applicable)
-5. **Add tests**:
-   - golden tests (same input → same output)
-   - fail-closed tests (missing license/sensitivity → non-zero)
-6. **Register the generator** (if a registry exists in this repo) so CI and the pipeline runner can discover it.
-
-> WARNING  
-> If you can’t name the inputs and outputs, you can’t audit the run. Don’t merge generators with implicit dependencies.
-
-[Back to top](#top)
-
----
-
-## Testing
-Minimum expectations for generators:
-
-- **Unit tests** for pure transformations (no filesystem, no network).
-- **Contract tests** for receipts and manifests (required keys exist).
-- **Validation tests** for produced artifacts (schemas + cross-links).
-- **Determinism tests** (repeat runs produce identical digests).
-- **Negative tests** for quarantine conditions (unclear license, missing policy label, failed validation).
-
-[Back to top](#top)
-
----
-
-## Security and sensitivity
-Generators often touch sensitive datasets and must be safe by design:
-
-- Apply **redaction/generalization obligations** before producing any artifact used by runtime surfaces.
-- Never log sensitive payloads; log **digests + counts + high-level stats** instead.
-- Treat the **audit ledger** and receipts as governed artifacts; redact if needed.
-- If unsure whether an output is publish-safe, **quarantine** it.
-
-[Back to top](#top)
-
----
-
-## Directory layout
-A realistic directory tree depends on the repository, but the following structure is a **recommended** starting point (not confirmed in repo):
+This directory’s exact contents are repo-dependent. The structure below is a **proposed** baseline
+that keeps generators discoverable and testable.
 
 ```text
-tools/
-└─ generators/
-   ├─ README.md
-   ├─ registry/                 # generator discovery (optional)
-   │  └─ generators.yaml
-   ├─ contracts/                # schemas for receipts/manifests
-   │  ├─ run-receipt.schema.json
-   │  └─ artifact-manifest.schema.json
-   ├─ catalog/                  # catalog triplet generators
-   ├─ lineage/                  # PROV / lineage utilities
-   ├─ fixtures/                 # small, versioned test fixtures
-   └─ _shared/                  # shared libs used by generators
+tools/generators/
+  README.md                 # (this file)
+  registry.yaml             # generator registry (recommended)
+  _lib/                     # shared helpers (canonicalization, hashing, IO)
+  catalog_triplet/          # DCAT/STAC/PROV generation + validation
+    README.md
+    cli                     # entrypoint (recommended)
+    src/                    # implementation
+    tests/
+  run_receipt/              # run receipts + audit ledger helpers
+    ...
+  promotion_manifest/       # promotion bundle / release manifest generation
+    ...
+  evidence_bundle/          # EvidenceBundle materialization helpers
+    ...
 ```
 
-If your repo already has conventions (language, build system, CI), update this section to match reality.
+[Back to top](#tools-generators)
 
-[Back to top](#top)
+---
+
+## Generator registry
+
+Maintain a single registry so CI and humans can discover what exists and what it emits.
+
+**Recommended** fields (expand as needed):
+
+```yaml
+# tools/generators/registry.yaml
+generators:
+  - id: catalog_triplet
+    description: Generate + validate DCAT/STAC/PROV for a dataset version
+    entrypoint: tools/generators/catalog_triplet/cli
+    inputs:
+      - dataset_spec
+      - processed_artifacts
+      - policy_decision
+    outputs:
+      - dcat
+      - stac
+      - prov
+    gates_supported: [D, C, B]
+    owners: [TBD]
+```
+
+[Back to top](#tools-generators)
+
+---
+
+## How to run
+
+Because repo entrypoints vary, we standardize the **behavior**, not the language runtime.
+
+### Expected CLI behavior (required)
+
+```bash
+# from repo root
+tools/generators/<generator_id>/cli --help
+tools/generators/<generator_id>/cli --dry-run --dataset-version <id> --out <dir>
+tools/generators/<generator_id>/cli --validate --dataset-version <id> --out <dir>
+```
+
+### Minimal exit codes (recommended)
+
+- `0` success (artifacts generated and validated)
+- `2` validation failure (schema/links/policy)
+- `3` missing/unclear rights or sensitivity (quarantine)
+- `4` unexpected error (bug)
+
+[Back to top](#tools-generators)
+
+---
+
+## Add a new generator
+
+1. Create `tools/generators/<generator_id>/` with:
+   - `README.md` (what it generates, inputs/outputs, examples)
+   - `cli` entrypoint
+   - `tests/` (determinism + validation)
+2. Register it in `tools/generators/registry.yaml`.
+3. Add **fixtures** that cover:
+   - at least one policy-allowed case
+   - at least one policy-denied/quarantine case
+4. Ensure outputs include:
+   - digests/checksums
+   - policy label + obligations
+   - cross-links (if producing catalogs)
+5. Add CI job(s) to run:
+   - determinism test
+   - schema/profile validation
+   - link-checks
+
+[Back to top](#tools-generators)
+
+---
+
+## Testing and CI gates
+
+Minimum recommended test suite per generator:
+
+- **Determinism test**: run twice → identical digests
+- **Schema validation**: DCAT/STAC/PROV/receipt manifests validate against profiles
+- **Cross-link validation**: every link between DCAT ↔ STAC ↔ PROV resolves
+- **Policy tests**: fixtures-driven allow/deny + obligations
+- **Evidence resolution smoke** (where applicable): at least one EvidenceRef resolves in CI
+
+> **NOTE**
+> KFM treats catalogs and provenance as contract surfaces — tests are not optional “nice to have”.
+
+[Back to top](#tools-generators)
+
+---
+
+## Troubleshooting
+
+### “Spec hash changed but nothing else did”
+
+- Canonicalize your config before hashing:
+  - stable key ordering
+  - normalized whitespace
+  - explicit defaults
+
+### “Catalog validation passes, but links fail”
+
+- Enforce a single link builder and a single base URI strategy.
+- Validate relative vs absolute paths consistently.
+
+### “Run receipt exists, but downstream can’t reproduce”
+
+- Ensure the receipt includes:
+  - container image digest
+  - git commit SHA
+  - params digest
+  - validation report digest
+
+### “Policy says allow, but data still leaks sensitive geometry”
+
+- Treat redaction/generalization obligations as *part of generation*, not an afterthought.
+- Ensure STAC geometry/bbox is policy-consistent (generalize if required).
+
+[Back to top](#tools-generators)
