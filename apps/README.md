@@ -1,4 +1,4 @@
-update/upgrade/align.  <!-- [KFM_META_BLOCK_V2]
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/8a4a8e59-7a6f-4d60-9c56-9f6d5f8b1f3d
 title: apps/ — Runnable application surfaces
 type: standard
