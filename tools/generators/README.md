@@ -171,21 +171,21 @@ This directory’s exact contents are repo-dependent. The structure below is a *
 that keeps generators discoverable and testable.
 
 ```text
-tools/generators/
-  README.md                 # (this file)
-  registry.yaml             # generator registry (recommended)
-  _lib/                     # shared helpers (canonicalization, hashing, IO)
-  catalog_triplet/          # DCAT/STAC/PROV generation + validation
-    README.md
-    cli                     # entrypoint (recommended)
-    src/                    # implementation
-    tests/
-  run_receipt/              # run receipts + audit ledger helpers
-    ...
-  promotion_manifest/       # promotion bundle / release manifest generation
-    ...
-  evidence_bundle/          # EvidenceBundle materialization helpers
-    ...
+tools/generators/                                      # Artifact generators (deterministic, policy-aware, registry-driven)
+├── README.md                                          # (this file)
+├── registry.yaml                                      # Generator registry (recommended: name, inputs, outputs, policy_label, version)
+├── _lib/                                              # Shared helpers (canonicalization, hashing, IO, fs safety)
+├── catalog_triplet/                                   # DCAT/STAC/PROV generation + validation (profile-aware)
+│   ├── README.md                                       # Usage, inputs/outputs, examples, and validation gates
+│   ├── cli                                             # Entrypoint (recommended)
+│   ├── src/                                            # Implementation
+│   └── tests/                                          # Unit/schema tests for generator determinism + correctness
+├── run_receipt/                                       # Run receipts + audit ledger helpers (run_record/run_manifest/validation_report)
+│   └── ...                                             # Add cli/src/tests as needed (keep structure consistent)
+├── promotion_manifest/                                # Promotion bundle / release manifest generation (promotion contract emitter)
+│   └── ...                                             # Add cli/src/tests as needed (versioned, backward compatible)
+└── evidence_bundle/                                   # EvidenceBundle materialization helpers (digest-addressed bundles)
+    └── ...                                             # Add cli/src/tests as needed (strict IO + integrity checks)
 ```
 
 [Back to top](#tools-generators)
