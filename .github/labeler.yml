@@ -1,30 +1,127 @@
 # .github/labeler.yml
+# Kansas Frontier Matrix (KFM) — PR label automation (governance-aware)
 # Config for GitHub Action: actions/labeler (v6+ syntax)
+#
+# NOTES
+# - Label names must exist in the repo (or be created by your label-management process).
+# - Patterns are intentionally tolerant: globs that match nothing are harmless.
+# - Keep label names stable; if you rename labels, update this file + branch protection/rulesets in the same PR.
 
 "area: api":
   - changed-files:
       - any-glob-to-any-file:
           - "api/**"
+          - "apps/api/**"
+          - "packages/api/**"
+          - "services/api/**"
 
 "area: web":
   - changed-files:
       - any-glob-to-any-file:
           - "web/**"
+          - "apps/ui/**"
+          - "apps/web/**"
+          - "packages/ui/**"
+          - "packages/ui-components/**"
+
+"area: apps":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "apps/**"
+
+"area: packages":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "packages/**"
 
 "area: pipelines":
   - changed-files:
       - any-glob-to-any-file:
           - "pipelines/**"
+          - "configs/pipelines/**"
+          - "apps/workers/**"
+          - "packages/ingest/**"
+          - "packages/indexers/**"
+          - "scripts/promote/**"
+          - "scripts/rebuild/**"
+
+"area: tools":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tools/**"
+          - "scripts/**"
+          - "make/**"
+          - "Makefile"
+
+"area: infra":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "infra/**"
+          - "deploy/**"
+          - "k8s/**"
+          - "helm/**"
+          - "terraform/**"
+          - "configs/env/**"
+          - "configs/observability/**"
+          - "infra/dashboards/**"
+
+"area: contracts":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "contracts/**"
+
+"area: policy":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "policy/**"
+
+"area: docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "**/*.md"
+          - "**/*.mdx"
+          - "!.github/**"
+
+"area: github":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
 
 "area: data":
   - changed-files:
       - any-glob-to-any-file:
           - "data/**"
 
+"data: registry":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/registry/**"
+
+"data: specs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/specs/**"
+
+"data: fixtures":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/fixtures/**"
+
 "data: raw":
   - changed-files:
       - any-glob-to-any-file:
           - "data/raw/**"
+
+"data: work":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/work/**"
+
+"data: quarantine":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/quarantine/**"
 
 "data: processed":
   - changed-files:
@@ -36,62 +133,58 @@
       - any-glob-to-any-file:
           - "data/catalog/**"
 
+"data: published":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/published/**"
+
+"data: audit":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "data/audit/**"
+
 "data: provenance":
   - changed-files:
       - any-glob-to-any-file:
           - "data/provenance/**"
-
-"area: docs":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "docs/**"
-          - "**/*.md"
-          - "**/*.mdx"
-
-"area: github":
-  - changed-files:
-      - any-glob-to-any-file:
-          - ".github/**"
+          - "data/catalog/**/prov/**"
+          - "data/catalog/**/run_receipts/**"
+          - "data/catalog/**/receipts/**"
 
 "type: ci":
   - changed-files:
       - any-glob-to-any-file:
           - ".github/workflows/**"
           - ".github/actions/**"
+          - ".github/labeler.yml"
+          - ".github/labeler.yaml"
 
 "type: dependencies":
   - changed-files:
       - any-glob-to-any-file:
-          # Node / web deps (repo-root OR web/)
-          - "package.json"
-          - "package-lock.json"
-          - "pnpm-lock.yaml"
-          - "yarn.lock"
-          - "web/package.json"
-          - "web/package-lock.json"
-          - "web/pnpm-lock.yaml"
-          - "web/yarn.lock"
+          # Node / JS
+          - "**/package.json"
+          - "**/package-lock.json"
+          - "**/pnpm-lock.yaml"
+          - "**/yarn.lock"
+          - "**/npm-shrinkwrap.json"
 
-          # Python deps (repo-root OR api/ OR pipelines/)
-          - "requirements*.txt"
-          - "pyproject.toml"
-          - "poetry.lock"
-          - "Pipfile"
-          - "Pipfile.lock"
-          - "api/requirements*.txt"
-          - "api/pyproject.toml"
-          - "api/poetry.lock"
-          - "api/Pipfile"
-          - "api/Pipfile.lock"
-          - "pipelines/requirements*.txt"
-          - "pipelines/pyproject.toml"
-          - "pipelines/poetry.lock"
-          - "pipelines/Pipfile"
-          - "pipelines/Pipfile.lock"
+          # Python
+          - "**/requirements*.txt"
+          - "**/pyproject.toml"
+          - "**/poetry.lock"
+          - "**/Pipfile"
+          - "**/Pipfile.lock"
+
+          # Containers
+          - "**/Dockerfile"
+          - "**/docker-compose.yml"
+          - "**/docker-compose.yaml"
 
 "type: tests":
   - changed-files:
       - any-glob-to-any-file:
+          - "tests/**"
           - "**/tests/**"
           - "**/__tests__/**"
           - "**/*.spec.*"
@@ -101,9 +194,40 @@
   - changed-files:
       - any-glob-to-any-file:
           - "SECURITY.md"
+          - ".github/SECURITY.md"
           - ".github/dependabot.yml"
           - ".github/dependabot.yaml"
           - ".github/codeql.yml"
           - ".github/codeql.yaml"
           - ".github/workflows/*security*"
           - ".github/workflows/*codeql*"
+          - ".github/workflows/*sast*"
+          - ".github/workflows/*secret*"
+          - "policy/**"
+
+"type: governance":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/README.md"
+          - ".github/CODEOWNERS"
+          - ".github/CONTRIBUTING.md"
+          - ".github/CODE_OF_CONDUCT.md"
+          - ".github/PULL_REQUEST_TEMPLATE.md"
+          - ".github/PULL_REQUEST_TEMPLATE/**"
+          - ".github/ISSUE_TEMPLATE/**"
+          - ".github/DISCUSSION_TEMPLATE/**"
+          - "contracts/**"
+          - "data/registry/**"
+          - "data/specs/**"
+          - "docs/governance/**"
+
+"type: release":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/*release*"
+          - ".github/workflows/*promot*"
+          - "scripts/release/**"
+          - "scripts/promote/**"
+          - "tools/generators/**"
+          - "tools/hash/**"
+          - "tools/validators/**"
