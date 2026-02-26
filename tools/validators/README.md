@@ -229,27 +229,27 @@ jobs:
 > This is the **expected** structure. Adjust to match actual implementation, but keep the “one validator per folder” convention.
 
 ```text
-tools/validators/
-├── README.md
-├── run_catalog_gate*                 # optional umbrella runner
-├── dcat_validator/
-│   ├── README.md
-│   ├── run*
-│   ├── fixtures/
-│   └── tests/
-├── stac_validator/
-│   ├── README.md
-│   ├── run*
-│   ├── fixtures/
-│   └── tests/
-├── prov_validator/
-│   ├── README.md
-│   ├── run*
-│   ├── fixtures/
-│   └── tests/
-└── _shared/
-    ├── schemas/                      # shared profiles, if used
-    └── reporting/                    # shared JSON report helpers
+tools/validators/                                      # Validation toolchain (fail-closed gates for catalogs + lineage)
+├── README.md                                          # How to run validators, expected inputs/outputs, CI wiring
+├── run_catalog_gate*                                  # Optional umbrella runner (DCAT+STAC+PROV in one gate)
+├── dcat_validator/                                    # DCAT profile validator (KFM constraints + required fields)
+│   ├── README.md                                       # Rules, profile references, examples, exit codes
+│   ├── run*                                            # Runner script/CLI entrypoint (platform-specific ok)
+│   ├── fixtures/                                       # Minimal, synthetic samples (public + sanitized as needed)
+│   └── tests/                                          # Unit + schema tests for validator behavior (fail-closed)
+├── stac_validator/                                    # STAC Item/Collection validator (KFM STAC profile + link rules)
+│   ├── README.md                                       # Supported object types, extensions, constraints, examples
+│   ├── run*                                            # Runner script/CLI entrypoint
+│   ├── fixtures/                                       # Sample Items/Collections (safe + deterministic)
+│   └── tests/                                          # Tests (schema conformance, link integrity, edge cases)
+├── prov_validator/                                    # PROV validator (lineage completeness + required relationships)
+│   ├── README.md                                       # Expected PROV shape, required edges, error taxonomy
+│   ├── run*                                            # Runner script/CLI entrypoint
+│   ├── fixtures/                                       # Sample PROV graphs (sanitized; no restricted identifiers)
+│   └── tests/                                          # Tests (graph rules, missing edges, redaction obligations)
+└── _shared/                                           # Shared assets/helpers (used by multiple validators)
+    ├── schemas/                                        # Shared profiles/schemas (if reused across validators)
+    └── reporting/                                      # Shared JSON report helpers (stable format + canonical ordering)
 ```
 
 ---
