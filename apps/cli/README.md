@@ -2,11 +2,11 @@
 doc_id: kfm://doc/7bb15efa-6c26-436c-bef7-0c165457d121
 title: apps/cli — KFM Command Line Interface
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: KFM Engineering (see .github/CODEOWNERS)
 created: 2026-02-23
-updated: 2026-02-23
+updated: 2026-02-26
 policy_label: public
 related:
   - ../../README.md
@@ -18,6 +18,7 @@ related:
 tags: [kfm, cli]
 notes:
   - Contract-first README; implementation wiring TBD.
+  - Aligned to vNext invariants: trust membrane, evidence-first, promotion contract, run receipts.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -38,6 +39,13 @@ notes:
 ![evidence](https://img.shields.io/badge/evidence-cite--or--abstain-important)
 ![audit](https://img.shields.io/badge/audit-audit__ref_required-orange)
 ![nonleak](https://img.shields.io/badge/errors-non--leak-orange)
+![determinism](https://img.shields.io/badge/output-deterministic-brightgreen)
+
+> [!IMPORTANT]
+> **Status legend used in this README**
+> - **CONFIRMED (posture):** repo-wide invariants the CLI must uphold (trust membrane, evidence-first, fail-closed).
+> - **PROPOSED:** command surfaces / packaging shapes that may not exist yet.
+> - **UNKNOWN:** repo state not verified here; see **Verification checklist** at the end.
 
 ---
 
@@ -52,12 +60,14 @@ notes:
   - [Install and run](#install-and-run)
   - [Configuration](#configuration)
   - [Command registry](#command-registry)
+  - [Receipts and manifests](#receipts-and-manifests)
   - [Output formats](#output-formats)
   - [Exit codes](#exit-codes)
 - **Engineering + governance**
   - [Security and governance notes](#security-and-governance-notes)
   - [Testing](#testing)
   - [Definition of Done](#definition-of-done)
+  - [Verification checklist](#verification-checklist)
 - **Appendix**
   - [Appendix: Proposed directory layout](#appendix-proposed-directory-layout)
   - [References](#references)
@@ -84,6 +94,7 @@ notes:
 - A **coordinator**, not a new source of truth:
   - it can *run validators* and *generate reports*
   - it can *request* governed operations from the API
+  - it can *generate drafts* (promotion manifests, receipts) **only** as inputs to governed promotion
   - it must **not** create “shadow publish paths” that bypass promotion gates
 
 ### What this CLI is not
@@ -100,7 +111,7 @@ notes:
 
 ### Where it fits in the repo
 
-Expected location (confirm against repo reality):
+Expected location (**UNKNOWN until repo verified**):
 
 ```text
 repo-root/
@@ -119,6 +130,7 @@ What belongs in `apps/cli/`:
 - Thin orchestration over **repo-local tools** (hash/validators/linkcheck) where it improves ergonomics
 - Deterministic, testable output format definitions (JSON schemas, fixtures)
 - Documentation and examples for steward-safe operations (promotion planning, evidence linting)
+- **Draft artifacts** intended for review (e.g., promotion manifest *templates*, not live publishes)
 
 ### Exclusions
 
@@ -150,7 +162,7 @@ These requirements are inherited from KFM’s repo-wide posture and apply **stri
   - evidence cannot be resolved
   - validation/linkcheck fails
 - The CLI **MUST** preserve the **non-leak rule**:
-  - do not reveal restricted existence through different error messages, different exit codes, or timing side-channels
+  - do not reveal restricted existence through different error messages, different exit codes, or “helpful” timing differences
 
 ### Evidence-first
 
@@ -158,6 +170,19 @@ These requirements are inherited from KFM’s repo-wide posture and apply **stri
   - `dataset_version_id` (when applicable)
   - `EvidenceRef` values or `EvidenceBundle` summaries (policy-filtered)
   - `audit_ref` for governed operations
+
+### Promotion Contract alignment
+
+The CLI may **assist** promotion, but must never bypass it.
+
+- The CLI **MUST NOT** promote by directly copying bytes into published locations.
+- Promotion helpers **MUST** produce artifacts compatible with the Promotion Contract posture:
+  - deterministic IDs/hashes
+  - validated catalogs (DCAT/STAC/PROV)
+  - cross-links that resolve (including EvidenceRefs)
+  - explicit policy label + obligations
+  - run receipt / audit linkage
+- Promotion commands should default to **`--dry-run` / “plan”** mode and generate checklists suitable for PR review.
 
 ### Determinism
 
@@ -220,8 +245,8 @@ sequenceDiagram
 ## Install and run
 
 > [!NOTE]
-> Packaging and runtime are **not yet standardized** for this CLI on every branch.
-> This section provides a **PROPOSED** shape—update it once `apps/cli` has a manifest (`package.json`, `pyproject.toml`, etc.).
+> Packaging and runtime are **UNKNOWN** until the repo’s `apps/cli` manifest exists.
+> This section provides **PROPOSED** patterns—update once `apps/cli` has a real manifest (`package.json`, `pyproject.toml`, etc.).
 
 ### PROPOSED install patterns
 
@@ -256,6 +281,15 @@ kfm doctor
 
 ## Configuration
 
+### Configuration precedence (PROPOSED, but recommended)
+
+To keep behavior predictable, configuration should resolve in this order:
+
+1. CLI flags (highest priority)
+2. Environment variables
+3. User config file
+4. Built-in defaults (lowest priority)
+
 ### Environment variables
 
 These names align with other vNext docs and are **PROPOSED** until confirmed:
@@ -284,6 +318,7 @@ Minimal shape (illustrative):
 
 - Never store secrets in repo files.
 - Prefer OS keychain integration or environment injection (CI secret store).
+- Provide a `kfm config show --redact` (PROPOSED) for troubleshooting without leaking secrets.
 
 [Back to top](#top)
 
@@ -318,6 +353,7 @@ Minimal shape (illustrative):
 | Evidence | `kfm evidence resolve <EvidenceRef...>` | resolve EvidenceRefs into EvidenceBundles | ✅ |  | PROPOSED |
 | Evidence | `kfm evidence lint <path>` | lint citation references in a doc/story |  | ✅ | PROPOSED |
 | Stories | `kfm story lint <story.md>` | validate Story Node citations and sidecar | ✅ | ✅ | PROPOSED |
+| Focus | `kfm focus ask "<question>" --scope ...` | ask Focus Mode; returns citations or abstains | ✅ | ✅ | PROPOSED |
 
 ### Local preflight (wrapping repo-local tools)
 
@@ -335,6 +371,7 @@ Minimal shape (illustrative):
 |---|---|---|:---:|:---:|---|
 | Promote | `kfm promote plan <dataset_slug>` | produce a promotion plan + checklist | ✅ | ✅ | PROPOSED |
 | Promote | `kfm promote manifest --dry-run` | generate a promotion manifest draft |  | ✅ | PROPOSED |
+| Promote | `kfm promote validate <manifest.json>` | validate manifest + catalogs + links (fail closed) |  |  | PROPOSED |
 
 <details>
 <summary><strong>Example: machine output mode (PROPOSED)</strong></summary>
@@ -348,6 +385,33 @@ kfm stac search --bbox "-101,36.8,-94.6,40" --time "1934-01-01/1936-12-31" --ndj
 ```
 
 </details>
+
+[Back to top](#top)
+
+---
+
+## Receipts and manifests
+
+The CLI should treat “promotion artifacts” as **reviewable, deterministic inputs** to governed promotion.
+
+### Run receipts (PROPOSED helper behavior)
+
+- CLI commands that invoke governed operations should surface `audit_ref` returned by the API.
+- CLI commands that produce local, reviewable artifacts (plans/manifests) should also support writing a **run note** that records:
+  - inputs (paths/ids) + digests (when applicable)
+  - CLI version + git commit (if available)
+  - timestamp (UTC)
+  - and the resulting artifact digests
+
+> [!NOTE]
+> If the repo already defines a run receipt schema under `tools/` or `apps/api/`, this section should be updated to match that contract exactly.
+
+### Promotion manifest draft (PROPOSED)
+
+A generated manifest should be:
+- **deterministic** (stable ordering; explicit timestamps; explicit digests)
+- **complete enough** for stewards to review without “guessing”
+- safe to generate with `--dry-run` by default
 
 [Back to top](#top)
 
@@ -374,6 +438,7 @@ Provide a stable machine-readable mode:
 ```json
 {
   "data": { "…": "…" },
+  "error": null,
   "meta": {
     "policy_label": "public",
     "dataset_version_id": "kfm://dataset/@…",
@@ -413,6 +478,11 @@ If a command might handle sensitive locations (archaeology, culturally restricte
 - prefer generalized geometries and aggregated outputs
 - never print precise coordinates in logs by default
 - ensure exports include policy notices and obligations where applicable
+
+### CARE flags and obligations (PROPOSED posture)
+
+- If the API returns obligations (redaction/generalization/attribution), the CLI should surface them clearly in output metadata.
+- Prefer “safe by default” formatting: omit sensitive attributes unless explicitly requested and allowed.
 
 ### Logging rules
 
@@ -457,11 +527,28 @@ A CLI change is “done” only if:
 - [ ] `--help` and `--version` work (non-interactive)
 - [ ] commands have stable, documented exit codes
 - [ ] machine output mode exists (`--json` or `--ndjson`) and is deterministic
+- [ ] any API-touching command surfaces `audit_ref` (or an explicit “no audit_ref available” only for offline/local tools)
 - [ ] no trust-membrane bypass paths were introduced
 - [ ] policy deny and evidence unresolved cases **fail closed**
 - [ ] logs are policy-safe and do not leak secrets/restricted values
 - [ ] tests exist proportional to risk (unit + contract + at least one golden fixture)
 - [ ] docs updated (this README + examples), and links are maintained
+
+[Back to top](#top)
+
+---
+
+## Verification checklist
+
+Use this checklist to convert **UNKNOWN/PROPOSED → CONFIRMED** without guessing:
+
+- [ ] Does `apps/cli/` contain a package manifest (`package.json` / `pyproject.toml` / etc.)?
+- [ ] What is the **actual** binary name (`kfm` vs something else)?
+- [ ] Is there a defined **API client contract** (OpenAPI, generated client, or hand-written)?
+- [ ] Do API responses include `audit_ref`, `policy_label`, and `dataset_version_id` in a stable envelope?
+- [ ] Is there a canonical **spec_hash** / hashing rule already implemented under `tools/`?
+- [ ] Where are the schemas for EvidenceBundle / Promotion manifests stored (if they exist)?
+- [ ] What is the repo-standard package manager (`npm`, `pnpm`, `yarn`, `pip`, etc.)?
 
 [Back to top](#top)
 
@@ -476,7 +563,7 @@ apps/cli/
 ├─ README.md
 ├─ src/
 │  ├─ main.*              # CLI entrypoint
-│  ├─ commands/           # subcommands (datasets, evidence, validate, story, ...)
+│  ├─ commands/           # subcommands (datasets, evidence, validate, story, promote, ...)
 │  ├─ api/                # client for governed API (no direct DB/storage)
 │  ├─ output/             # table/json formatting; deterministic ordering
 │  └─ policy_safe_errors/ # error code registry + messaging
