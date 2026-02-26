@@ -238,14 +238,14 @@ This directory is expected to contribute to **hard merge gates**.
 > PROPOSED: update this tree to match the real folder layout.
 
 ```text
-apps/admin/tests/
-  README.md
-  fixtures/                 # synthetic users/resources/obligations
-  authz/                    # route gating + role-based UI visibility
-  contracts/                # admin API schema/contract tests
-  obligations/              # badges/notices/redaction UX tests
-  audit/                    # audit trail / run receipt UI expectations
-  e2e/                      # end-to-end flows (optional)
+apps/admin/tests/                                      # Admin app tests (authz, contracts, obligations, audit UX)
+├── README.md                                          # This file (scope, commands, fixtures policy, CI mapping)
+├── fixtures/                                          # Synthetic users/resources/obligations (safe + deterministic)
+├── authz/                                             # Route gating + role-based UI visibility tests
+├── contracts/                                         # Admin API schema/contract tests (DTOs, OpenAPI, compat checks)
+├── obligations/                                       # Badges/notices/redaction UX tests (policy-driven UI behavior)
+├── audit/                                             # Audit trail + run receipt UI expectations (rendering + linking)
+└── e2e/                                               # Optional end-to-end flows (UI + API) for critical admin journeys
 ```
 
 ---
