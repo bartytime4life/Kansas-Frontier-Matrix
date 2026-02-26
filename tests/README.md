@@ -169,35 +169,18 @@ Minimum categories expected in KFM:
 > This is the **recommended** layout. If the repo differs, update this README to match reality.
 
 ```text
-tests/
-  README.md
-
-  unit/
-    # Domain logic tests, spec hashing, controlled vocab checks
-
-  schema/
-    # STAC/DCAT/PROV profile validation, cross-link checks
-
-  policy/
-    # OPA fixture-driven allow/deny/obligation tests
-
-  contract/
-    # OpenAPI diffs, DTO validation, backward compatibility checks
-
-  integration/
-    # Evidence resolver and governed API integration tests
-
-  e2e/
-    # End-to-end tests (UI + API) for evidence drawer and citations
-
-  fixtures/
-    public/
-      # Safe, synthetic fixtures intended for public scenarios
-    restricted_sanitized/
-      # Sanitized fixtures that never contain restricted geometries or identifiers
-
-  utils/
-    # Shared test helpers (builders, fake stores, snapshot utilities)
+tests/                                                # Test entrypoint for KFM (unit → schema → policy → contract → integration → e2e)
+├── README.md                                         # This file (test philosophy, commands, and conventions)
+├── unit/                                             # Domain logic tests (pure rules), spec hashing, controlled vocab checks
+├── schema/                                           # STAC/DCAT/PROV profile validation + cross-link integrity checks
+├── policy/                                           # OPA fixture-driven allow/deny/obligation tests (fail-closed)
+├── contract/                                         # OpenAPI diffs, DTO validation, backward compatibility gates
+├── integration/                                      # Evidence resolver + governed API integration tests (real adapters or harnessed)
+├── e2e/                                              # End-to-end UI+API flows (evidence drawer, citations, Focus Mode behaviors)
+├── fixtures/                                         # Test data (MUST follow policy labels; no secrets; deterministic)
+│   ├── public/                                       # Safe, synthetic fixtures intended for public scenarios
+│   └── restricted_sanitized/                         # Sanitized fixtures (no restricted geometries or identifiers)
+└── utils/                                            # Shared test helpers (builders, fake stores, snapshot utilities)
 ```
 
 ---
