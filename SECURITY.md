@@ -1,185 +1,271 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/7e2f2d2e-5c28-4ed5-8f8b-0dfb2d3356ae
-title: SECURITY.md
+doc_id: kfm://doc/7d7a9c1e-8a22-4c26-89c2-2a6c7b0a6a6d
+title: SECURITY
 type: standard
 version: v1
 status: draft
-owners: TBD
-created: 2026-02-23
-updated: 2026-02-23
+owners: KFM Security & Governance Stewards (TBD)
+created: 2026-02-26
+updated: 2026-02-26
 policy_label: public
 related:
-  - ./README.md
-  - ./.github/ISSUE_TEMPLATE/bug_report.yml
-  - ./.github/ISSUE_TEMPLATE/feature_request.yml
-tags: [kfm, security, vulnerability-disclosure]
+  - kfm://doc/kfm-gdg-vnext-2026-02-20
+tags: [kfm, security, governance, policy-as-code]
 notes:
-  - Replace all "TBD" and placeholder contact info before publishing.
-  - Keep this file in the repo root (or .github/) so GitHub can discover it.
+  - Draft SECURITY.md aligned to governance-first, default-deny KFM posture.
+  - Replace TODO contact + support-policy fields before publishing.
 [/KFM_META_BLOCK_V2] -->
 
-# Security Policy
+# Kansas Frontier Matrix (KFM) — Security Policy
 
-This document explains how to report security vulnerabilities in this repository and what you can expect from us during triage and remediation.
+![Status](https://img.shields.io/badge/status-draft-yellow)
+![Security posture](https://img.shields.io/badge/posture-default--deny-important)
+![Policy](https://img.shields.io/badge/policy-policy--as--code-blue)
+![Evidence](https://img.shields.io/badge/ux-evidence--first-0aa)
 
-- **Do not** report security issues in public GitHub issues.
-- **Do** use a private channel (GitHub Security Advisory or email) so we can protect users while we fix the issue.
+> **TL;DR:** For KFM, **security is governance**: policy labels, default‑deny, and auditability are enforced in CI and at runtime.
 
 ## Quick navigation
-
 - [Supported versions](#supported-versions)
 - [Reporting a vulnerability](#reporting-a-vulnerability)
-- [What to include](#what-to-include)
-- [Response and remediation process](#response-and-remediation-process)
-- [Scope](#scope)
-- [Safe harbor](#safe-harbor)
-- [Security posture notes for data and maps](#security-posture-notes-for-data-and-maps)
+- [What counts as a security issue](#what-counts-as-a-security-issue)
+- [KFM security model](#kfm-security-model)
+- [Data sensitivity and privacy](#data-sensitivity-and-privacy)
+- [Authentication and authorization](#authentication-and-authorization)
+- [Secrets and credentials](#secrets-and-credentials)
+- [Supply chain integrity](#supply-chain-integrity)
+- [Audit logs](#audit-logs)
+- [Security testing](#security-testing)
+- [Coordinated disclosure](#coordinated-disclosure)
+- [References](#references)
 
 ---
 
 ## Supported versions
 
-Security fixes are typically applied to the **latest released** version and/or the **default branch**.
+> **NOTE:** This repository’s release/support policy is **TBD**. Until it is defined, treat **only `main` and the latest release** as supported.
 
-| Version / Branch | Supported |
-|---|---|
-| `main` (default branch) | ✅ |
-| Latest release | ✅ |
-| Older releases | ⚠️ Best-effort |
-| Unreleased forks | ❌ |
-
-> **NOTE:** If you are unsure which version you are running, include commit hash, tag, or container/image digest in your report.
+| Version / branch | Supported | Notes |
+|---|---:|---|
+| `main` | ✅ | Active development branch |
+| Latest release tag | ✅ | Security fixes apply here first (when releases exist) |
+| Older tags/releases | ❌ | Upgrade to latest |
 
 ---
 
 ## Reporting a vulnerability
 
-### Preferred: GitHub Security Advisories (private)
+**Please do not open public issues for security reports.**
 
-If this repository has GitHub Security Advisories enabled, use the **“Report a vulnerability”** button on the repo’s *Security* tab. This keeps the report private and supports coordinated disclosure.
+Preferred reporting paths (in order):
 
-### Alternative: Email (private)
+1) **GitHub private vulnerability reporting** (if enabled for this repo)  
+   Repository **Security** tab → **Report a vulnerability**.
 
-Email: **TBD (e.g., `security@your-org.example`)**  
-Subject: **`[SECURITY] <short summary>`**
+2) **Private email to the security contact**  
+   - **Email:** `TODO: security-contact@example.org`  
+   - **Backup:** `TODO: maintainer-contact@example.org`
 
-If you can, encrypt sensitive details (proofs, logs, reproduction datasets) using our PGP key:
+### What to include
 
-- PGP key: **TBD**
-- Fingerprint: **TBD**
+- A clear description of the issue and potential impact
+- Minimal reproduction steps (or proof-of-concept)
+- Affected component(s): API, pipeline, UI, policy bundle, evidence resolver, etc.
+- Whether the issue involves **restricted data exposure**, **sensitive locations**, or **PII**
 
-Example (ASCII-armored) usage:
+### Data exposure reports (special handling)
 
-```bash
-# Example: encrypt report.txt for the security team key
-gpg --encrypt --armor --recipient "TBD_SECURITY_TEAM_KEY_ID" report.txt
+If you believe you found any of the following, treat it as a **security incident**:
+
+- `restricted` / `restricted_sensitive_location` data exposure
+- PII or reidentifiable records
+- “policy bypass” behavior (e.g., access without appropriate policy checks)
+
+**Do not** attach bulk data, precise coordinates, or personal information in the report. Prefer:
+- redacted screenshots
+- hashes/IDs (dataset_version_id, run_id, artifact digests)
+- minimal request/response metadata
+
+### What you can expect (targets)
+
+- Acknowledgement: **within 3 business days** *(target; may vary)*
+- Triage + severity assignment: **within 10 business days** *(target; may vary)*
+- Fix and advisory: coordinated with reporter, depending on impact and release cadence
+
+---
+
+## What counts as a security issue
+
+KFM security issues include (non-exhaustive):
+
+- **Policy bypass:** gaining access to data/evidence without satisfying policy checks
+- **Sensitive-location leakage:** exposing precise coordinates/geometries that must remain restricted
+- **PII leakage:** exposing individual-level records or enabling reidentification
+- **Rights/licensing bypass:** distributing media/artifacts without enforced rights metadata
+- **Secret leakage:** committing credentials/tokens/keys to the repo or logs
+- **Supply chain compromise:** tampered dependencies, unverified build artifacts, missing attestations
+- **Auditability break:** disabling, deleting, or spoofing run receipts / audit entries
+
+---
+
+## KFM security model
+
+### Trust membrane (conceptual)
+
+```mermaid
+flowchart LR
+  User[User] --> UI[Map and Story UI]
+  UI --> API[Governed API]
+  API --> PDP[Policy Decision Point]
+  API --> ER[Evidence Resolver]
+  PDP --> Store[(Data and Artifact Stores)]
+  ER --> Store
+  API --> Audit[(Audit Ledger)]
+  Dev[Contributor or Operator] --> CI[CI Policy Gates]
+  CI --> API
 ```
 
-### If you believe there is active exploitation
+**Key invariants**
+- Policy decisions are enforced at **runtime** (API + evidence resolver) and in **CI** (policy gates).
+- The UI may display policy status, but **does not make policy decisions**.
 
-If you believe an issue is being actively exploited in the wild:
-- Mark your report as **URGENT** in the subject/title.
-- Include *only the minimum necessary* details for us to confirm impact.
-- Avoid publishing any indicators-of-compromise (IoCs) that would enable copycat attacks.
+### Policy-as-code
 
----
+KFM uses a policy bundle (OPA/Rego or equivalent) as a shared source of truth across:
+- CI merge gates
+- runtime API enforcement
+- evidence resolution enforcement
 
-## What to include
+Example (illustrative) pattern:
 
-Please include as much of the following as you can:
+```rego
+package kfm.authz
 
-- A clear description of the issue and **why it is a security problem**
-- Affected component(s) (e.g., API, pipeline, UI, storage adapter, auth)
-- Exact version / commit hash and deployment context
-- Steps to reproduce (PoC, minimal repro repo, request/response samples)
-- Impact assessment:
-  - What an attacker can do
-  - Preconditions (auth required? network access? specific role?)
-  - Worst-case outcome
-- Any known mitigations or workarounds
-- If relevant: logs, stack traces, screenshots, or traces (**redact secrets**)
+default allow = false
 
-### Please do NOT include
+allow {
+  input.user.role == "steward"
+}
 
-- Secrets (API keys, tokens, passwords), even if “already leaked”
-- Exact coordinates or culturally restricted locations if your report involves sensitive sites  
-  (see [Security posture notes for data and maps](#security-posture-notes-for-data-and-maps))
+allow {
+  input.user.role == "public"
+  input.action == "read"
+  input.resource.policy_label == "public"
+}
 
----
-
-## Response and remediation process
-
-We aim to follow a coordinated vulnerability disclosure flow:
-
-1. **Acknowledgement**: We confirm receipt.
-2. **Triage**: We validate, assess severity, and identify affected versions/components.
-3. **Remediation plan**: We determine fix strategy and release vehicle.
-4. **Fix & test**: We implement remediation with regression tests and security checks.
-5. **Release**: We publish patches and advisories as appropriate.
-6. **Disclosure**: We coordinate timing and credit (if requested).
-
-### Target timelines (best-effort)
-
-These are targets, not guarantees (severity and complexity vary):
-
-- Acknowledge within: **TBD (e.g., 2 business days)**
-- Initial triage within: **TBD (e.g., 5 business days)**
-- Patch for critical issues within: **TBD (e.g., 7–30 days)**
+# Obligations example: UI notice for generalized geometry
+obligations[o] {
+  input.resource.policy_label == "public_generalized"
+  o := {"type": "show_notice", "message": "Geometry generalized due to policy."}
+}
+```
 
 ---
 
-## Scope
+## Data sensitivity and privacy
 
-### In scope
+### Policy labels
 
-- Vulnerabilities in code in this repository
-- CI/CD or build workflows that could enable supply-chain compromise
-- Authentication/authorization flaws
-- Data exposure issues (private datasets, restricted content, secrets)
-- Map/Story UI security issues (XSS, CSRF, injection, unsafe rendering)
-- API issues (injection, IDOR, auth bypass, broken access control)
-- Storage/indexing misconfigurations caused by this repo’s code/config
+KFM uses policy labels to drive access decisions and redaction/generalization obligations.
 
-### Out of scope
+Starter labels (extend as needed):
+- `public`
+- `public_generalized`
+- `internal`
+- `restricted`
+- `restricted_sensitive_location`
+- `embargoed`
+- `quarantine`
 
-- Social engineering attacks against maintainers/users
-- Denial-of-service requiring excessive traffic (unless a clear algorithmic amplification exists)
-- Issues in unsupported versions (see [Supported versions](#supported-versions))
-- Vulnerabilities solely in third-party services not managed by this repo
+### Default-deny expectations
 
----
+- If a dataset is `restricted` or `restricted_sensitive_location`, access is **deny by default**.
+- If a public representation is permitted, create a **separate** `public_generalized` derivative.
+- Error responses must not leak restricted metadata (including “does this exist?” signals).
 
-## Safe harbor
+### Sensitive location protection
 
-We support good-faith security research that:
+For culturally sensitive or at-risk locations:
+- Store **precise** geometry only in restricted datasets.
+- Publish only generalized derivatives, or metadata-only records.
+- Enforce policy at the serving layer (no bypass via static tile hosting).
+- Include automated tests (e.g., “no restricted bbox leakage”, “no coordinate fields in public exports”).
 
-- Avoids privacy violations and data destruction
-- Uses the minimum amount of data access needed to demonstrate impact
-- Does not intentionally degrade service for others
-- Does not publicly disclose before we have a reasonable chance to remediate
+### PII risk and aggregation thresholds
 
-> **NOTE:** If you are unsure whether a test is safe, stop and contact us first via a private channel.
-
----
-
-## Security posture notes for data and maps
-
-This project may involve **sensitive locations, vulnerable sites, or culturally restricted knowledge**. Security reporting must preserve the trust membrane:
-
-- Do not include exact coordinates for sensitive/restricted sites in reports.
-- If location detail is required for reproduction, share it **only via encrypted channels** and consider sharing:
-  - generalized bounding boxes,
-  - hashed identifiers,
-  - redacted exemplars,
-  - or synthetic test data.
-
-If your report involves potential harm to communities or sensitive sites, explicitly flag it as:
-- **“Sensitive / governance review needed”**
+Some sources have reidentification risk (e.g., property, health, crime).
+- Do not publish individual-level records publicly.
+- Aggregate to safe geographies and enforce minimum-count thresholds.
+- Document thresholds as policy obligations.
+- Keep raw data restricted even when aggregated outputs are public.
 
 ---
 
-## Credit
+## Authentication and authorization
 
-If you want public credit, include the name/handle and a preferred link in your report. If you prefer to remain anonymous, we will respect that.
+**DECISION NEEDED:** choose identity provider and access model.
 
-Thank you for helping keep the project and its users safe.
+Recommended baseline:
+- OIDC for authentication
+- RBAC + policy labels for authorization
+- Add ABAC only when required for partner data
+
+---
+
+## Secrets and credentials
+
+- Never store secrets in the repository.
+- Use a secrets manager for production credentials.
+- Use scoped credentials per source integration / pipeline runner.
+- Rotate secrets regularly and record rotation events in audit logs.
+
+---
+
+## Supply chain integrity
+
+Recommended before broad public release:
+- Generate SBOMs (SPDX) for build artifacts
+- Generate build provenance attestations (SLSA/in-toto)
+- Verify attestations server-side
+- Pin dependencies and verify checksums
+
+---
+
+## Audit logs
+
+Audit logs and run receipts may contain sensitive operational details.
+
+Minimum protections:
+- Append-only storage
+- Redaction for PII and restricted information
+- Access restricted to authorized stewards/operators
+- Defined retention and deletion policies
+
+---
+
+## Security testing
+
+Security-related checks should be treated as **required gates**:
+
+- Policy tests: fixture-driven allow/deny/obligation outcomes
+- Schema tests: strict validation of DCAT/STAC/PROV profiles
+- Contract tests: OpenAPI / DTO compatibility checks
+- Integration tests: evidence resolver resolves sample refs without policy bypass
+- E2E tests: UI shows policy notices; citations resolve through the evidence resolver
+
+---
+
+## Coordinated disclosure
+
+We aim to follow coordinated disclosure:
+- Report privately
+- Allow maintainers reasonable time to investigate and patch
+- Public disclosure should be coordinated once fixes are available
+
+> **Proposed safe harbor (pending legal review):** We welcome good-faith security research that avoids privacy violations, data exfiltration, social engineering, or service disruption.
+
+---
+
+## References
+
+- Kansas Frontier Matrix (KFM) — Definitive Design & Governance Guide (vNext), 2026-02-20
