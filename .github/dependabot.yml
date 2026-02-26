@@ -5,6 +5,10 @@
 # - Always keeps GitHub Actions workflow/action versions current.
 # - Provides ready-to-enable stubs for npm/pip/docker once those manifests exist in-repo.
 #
+# GOVERNANCE
+# - This file is governance-critical: it affects supply-chain posture and PR volume.
+# - Changes here MUST NOT weaken fail-closed gates; require CODEOWNERS review.
+#
 # NOTE: Dependabot version updates must be enabled in repo settings, and this file must live at:
 #       .github/dependabot.yml
 
