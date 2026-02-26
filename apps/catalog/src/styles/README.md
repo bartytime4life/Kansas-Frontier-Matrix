@@ -160,28 +160,28 @@ body.theme-dark {
 > This is a **suggested** layout. If this directory already has a structure, update this README to match reality.
 
 ```text
-src/styles/
-  README.md               # this file
-  index.(css|ts)          # style entry point imported by the app
-  tokens/                 # design tokens (single source of truth)
-    tokens.(css|json|ts)
-    tokens.generated.*    # optional (if generated from a build step)
-  themes/
-    theme-light.*
-    theme-dark.*
-    theme-high-contrast.* # optional
-  base/
-    reset.*
-    typography.*
-    layout.*
-  components/
-    badge.*
-    panel.*
-    focus-ring.*
-  utilities/
-    visually-hidden.*
-    sr-only.*
-    z-index.*
+src/styles/                                         # Styling system (tokens → themes → base → components → utilities)
+├── README.md                                        # This file (style architecture, conventions, and build notes)
+├── index.(css|ts)                                   # Style entry point imported by the app (globals + theme hookup)
+├── tokens/                                          # Design tokens (single source of truth)
+│   ├── tokens.(css|json|ts)                          # Canonical tokens definition (colors, spacing, radii, type scales)
+│   └── tokens.generated.*                            # Optional: build-generated tokens (DO NOT hand-edit)
+├── themes/                                          # Theme layers (token overrides / semantic mappings)
+│   ├── theme-light.*                                 # Light theme definitions (semantic → token mapping)
+│   ├── theme-dark.*                                  # Dark theme definitions
+│   └── theme-high-contrast.*                          # Optional: high-contrast accessibility theme
+├── base/                                            # Global foundations (applied once)
+│   ├── reset.*                                       # Reset/normalize rules
+│   ├── typography.*                                  # Default typography + font loading rules
+│   └── layout.*                                      # Global layout primitives (containers, grids, spacing defaults)
+├── components/                                      # Reusable style modules for common UI pieces
+│   ├── badge.*                                       # Badge styles (variants, sizes)
+│   ├── panel.*                                       # Panel/card styles (elevation, borders, padding)
+│   └── focus-ring.*                                  # Focus ring styles (a11y, consistent outlines)
+└── utilities/                                       # Small, single-purpose utilities
+    ├── visually-hidden.*                              # Visually hidden (screen-reader accessible)
+    ├── sr-only.*                                      # SR-only utility (alias/pattern)
+    └── z-index.*                                      # Z-index scale (documented + tokenized)
 ```
 
 [Back to top](#catalog-ui-styles)
