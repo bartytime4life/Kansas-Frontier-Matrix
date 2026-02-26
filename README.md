@@ -6,7 +6,7 @@ version: vNext
 status: draft
 owners: TBD
 created: 2026-02-22
-updated: 2026-02-23
+updated: 2026-02-26
 policy_label: public
 related:
   - README.md
@@ -14,6 +14,7 @@ tags:
   - kfm
 notes:
   - Repository README describing the vNext operating model and governance posture.
+  - Alignment pass to vNext Definitive Design & Governance Guide (2026-02-20).
 [/KFM_META_BLOCK_V2] -->
 
 # Kansas Frontier Matrix
@@ -23,6 +24,7 @@ notes:
 
 **Status:** vNext (blueprint-driven build)  
 **Owners:** _TBD_ (add repo teams / stewards; required for CODEOWNERS + review routing)  
+**Primary spec:** _KFM — Definitive Design & Governance Guide (vNext, 2026-02-20)_ (treat as authoritative)  
 **Core promise:** anything you can see, cite, export, or ask KFM to explain is traceable to an immutable **DatasetVersion** + resolvable **EvidenceBundle**, with policy enforced consistently in CI and at runtime.  
 **Primary experiences:** **Map Explorer** + **Timeline** + **Stories** + **Catalog** + **Focus Mode**.
 
@@ -30,6 +32,8 @@ notes:
 [![Governance](https://img.shields.io/badge/governance-fail--closed-critical)](#governance)
 [![Evidence](https://img.shields.io/badge/evidence-cite--or--abstain-important)](#evidence-and-citations)
 [![Policy](https://img.shields.io/badge/policy-default--deny-critical)](#core-invariants)
+[![Promotion](https://img.shields.io/badge/promotion-contract%20v1-critical)](#truth-path-and-promotion-contract)
+[![Docs](https://img.shields.io/badge/docs-metablock%20v2-informational)](#contributing)
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)](#)
 
 ---
@@ -39,7 +43,7 @@ notes:
 Pick the path that matches what you’re doing:
 
 - **Contributing code/docs/data**
-  - Read: [`CONTRIBUTING.md`](CONTRIBUTING.md) (workflow), [`.github/README.md`](.github/README.md) (CI gates + CODEOWNERS), [`SECURITY.md`](SECURITY.md) (reporting)
+  - Read: [`CONTRIBUTING.md`](CONTRIBUTING.md) (workflow, if present), [`.github/README.md`](.github/README.md) (CI gates + CODEOWNERS, if present), [`SECURITY.md`](SECURITY.md) (reporting, if present)
   - Know: changes to `.github/`, `policy/`, `contracts/`, and promotion tooling are **governance-critical**
 
 - **Stewardship and governance**
@@ -49,8 +53,14 @@ Pick the path that matches what you’re doing:
   - Read: `docs/runbooks/` and `infra/`
   - Know: DB/search/tiles are rebuildable projections; **canonical truth is processed artifacts + catalogs + receipts + audit**
 
+> [!IMPORTANT]
+> **Tagging discipline:**  
+> - **CONFIRMED** = invariants/contracts that must hold (truth path, trust membrane, promotion gates, cite-or-abstain).  
+> - **PROPOSED** = recommended defaults/templates/build plan.  
+> - **UNKNOWN** = requires branch verification; fail-closed until verified.
+
 > [!NOTE]
-> This README describes the **target operating model** for vNext. If some files/directories are not present on your branch, treat those sections as **PROPOSED** and reconcile with repo reality before enforcing gates.
+> This README describes the **target operating model** for vNext. If some files/directories are not present on your branch, treat those references as **PROPOSED** and reconcile with repo reality before enforcing gates.
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -117,8 +127,8 @@ KFM is also a **system of governed artifacts**:
 If you only read three things first:
 
 1. `README.md` — this operating model and where to find things.
-2. `.github/README.md` — governance and automation (CI gates, CODEOWNERS posture).
-3. `contracts/` + `policy/` — the machine-enforced truth: schemas/profiles/vocab + policy tests.
+2. `.github/README.md` — governance and automation (CI gates, CODEOWNERS posture) (if present).
+3. `contracts/` + `policy/` — the machine-enforced truth: schemas/profiles/vocab + policy tests (if present).
 
 ### Governance-critical surfaces
 
@@ -166,7 +176,7 @@ Before implementing or “fixing” anything, verify what exists **on your branc
 - Confirm how secrets are managed (must not live in repo; injected via CI/runtime secret stores).
 
 > [!IMPORTANT]
-> **Fail-closed rule:** if any of the above is unclear, default-deny and treat the feature as **PROPOSED** until verified.
+> **Fail-closed rule:** if any of the above is unclear, default-deny and treat the feature as **UNKNOWN** until verified.
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -375,6 +385,9 @@ Core components:
 6. UI (Map Explorer + Story Mode + Focus Mode; evidence drawer; policy notices; version badges)
 7. Index builders (rebuildable projections: DB/search/graph/tiles)
 
+> [!NOTE]
+> UI map engine is **PROPOSED** as MapLibre GL; treat as a replaceable implementation detail.
+
 ### Architecture diagram
 
 ```mermaid
@@ -431,34 +444,23 @@ The governed API is the only supported way for clients to access data, evidence,
   - `dataset_version_id` (where relevant)
   - `audit_ref` (for governed operations)
   - policy decision summary where appropriate
+- Errors must be policy-safe and consistent so users cannot infer restricted existence.
 
-### Illustrative endpoint surfaces
+### Illustrative endpoint surfaces (contract targets)
 
-Actual routes may differ; treat these as contract targets:
+> [!NOTE]
+> Endpoint naming is **PROPOSED** and may vary by branch. Preserve the behaviors (policy, evidence, audit) even if routes differ.
 
-- Catalog discovery
-  - `GET /api/v1/datasets`
-  - `GET /api/v1/datasets/{dataset_id}/versions`
-  - `GET /api/v1/catalog/{dataset_version_id}`
-
-- Evidence
-  - `POST /api/v1/evidence/resolve` → EvidenceBundle(s)
-
-- Map projections
-  - `GET /api/v1/tiles/{layer_id}/{z}/{x}/{y}` (vector/raster)
-  - `GET /api/v1/features/{layer_id}?bbox=...&time=...`
-
-- Stories
-  - `GET /api/v1/stories`
-  - `GET /api/v1/stories/{story_id}`
-  - `POST /api/v1/stories/{story_id}/publish` (steward-gated)
-
-- Focus Mode
-  - `POST /api/v1/focus/query` (policy + cite-or-abstain)
+| Endpoint | Purpose | Policy posture |
+|---|---|---|
+| `GET /api/v1/catalog/datasets` | Dataset discovery (DCAT + policy labels) | Hide restricted by default; filter by role |
+| `GET /api/v1/datasets/{dataset_version_id}/query` | Query slice by bbox/time/filters | Enforce policy; generalized outputs if required |
+| `GET /api/v1/tiles/{layer_id}/{z}/{x}/{y}` | Tile delivery | Only policy-safe tiles; cache varies by policy/auth |
+| `POST /api/v1/evidence/resolve` | Resolve EvidenceRef → EvidenceBundle | Fail closed if unresolvable/unauthorized |
+| `GET /api/v1/lineage/{dataset_id}` | Lineage graph + run receipts | May redact sensitive fields; include commit SHAs where available |
+| `POST /api/v1/focus/ask` | Focus Mode Q&A with citations | Must cite or abstain; log retrieval context |
 
 ### Error model
-
-Errors must be policy-safe and consistent so users cannot infer restricted existence.
 
 Starter error shape:
 
@@ -492,20 +494,19 @@ KFM is map-first, but the map is only as trustworthy as the data lifecycle behin
 | **CATALOG** | Canonical metadata + lineage | DCAT + STAC + PROV + run receipts + link validation | Indirectly |
 | **PUBLISHED** | Governed runtime | Only policy-safe promoted versions reach UI/export | Yes |
 
-### Promotion contract
+### Promotion Contract v1 (minimum gates)
 
-Promotion is moving from Raw/Work into Processed + Catalog and therefore into runtime surfaces.
+Promotion is the act of moving from Raw/Work into Processed + Catalog/Lineage, and therefore into runtime surfaces. It MUST fail-closed.
 
-Minimal fail-closed gates:
-
-- Identity & versioning: deterministic DatasetVersion derived from canonical spec_hash; promotion manifest exists; spec_hash drift check passes
-- Artifacts: processed artifacts exist; each has digest; stable paths; media types recorded
-- Catalogs: DCAT/STAC/PROV schema-valid under profiles
-- Cross-links: all links resolve; EvidenceRefs resolve
-- Policy: policy_label assigned; obligations applied; default-deny tests pass
-- QA: validation reports present; failures quarantined
-- Audit: run receipt emitted; append-only audit entry; approvals captured if required
-- Rights: license + rights holder present for every distribution; “metadata-only” allowed where mirroring is prohibited
+| Gate | Fail-closed requirement (minimum) |
+|---|---|
+| **Gate A: Identity and versioning** | Dataset ID stable; DatasetVersion derived from stable `spec_hash`; promotion manifest exists |
+| **Gate B: Licensing and rights metadata** | License explicit + compatible; rights holder + attribution captured; unclear → QUARANTINE |
+| **Gate C: Sensitivity classification and redaction plan** | `policy_label` assigned; restricted/sensitive-location has redaction/generalization plan recorded in PROV |
+| **Gate D: Catalog triplet validation** | DCAT/STAC/PROV exist and validate against KFM profiles; cross-links present + resolvable |
+| **Gate E: Run receipt and checksums** | run_receipt exists; inputs/outputs enumerated with checksums; environment captured |
+| **Gate F: Policy tests and contract tests** | policy tests pass (fixtures-driven); evidence resolver resolves at least one EvidenceRef in CI; schemas/contracts validate |
+| **Gate G: Optional but recommended** | SBOM/build provenance; performance/accessibility smoke checks |
 
 ### Promotion manifest template
 
@@ -660,9 +661,11 @@ DCAT minimum fields:
 STAC minimum:
 
 - Collection: `id`, `title`, `description`, `extent`, `license`, links to DCAT, `kfm:dataset_version_id`, policy label
-- Item: `id`, `geometry`/`bbox` (policy-consistent), `datetime` or start/end, assets with `href` + checksum + media_type, links to PROV/run receipt and DCAT distribution
+- Item: `id`, **geometry or bbox consistent with policy label (generalized if needed)**, `datetime` or start/end,
+  - assets with `href` + checksum + media_type
+  - links to **PROV run receipt** and **DCAT distribution**
 
-PROV minimum:
+PROV minimum (PROPOSED minimum):
 
 - `prov:Activity` per pipeline run
 - `prov:Entity` per artifact (raw/work/processed)
@@ -671,7 +674,7 @@ PROV minimum:
 - policy decision references (decision_id + obligations)
 - environment capture: container digest, git commit, parameters
 
-### Cross-linking rules
+### Cross-linking rules (must be testable)
 
 - DCAT dataset → distributions → artifact digests
 - DCAT dataset → `prov:wasGeneratedBy` → PROV bundle
@@ -708,18 +711,28 @@ Prefer explicit schemes that can be resolved deterministically:
 - `prov://...`
 - `doc://...`
 - `graph://...`
-- `url://...` (discouraged; use snapshots / governed docs when possible)
+- `url://...` (discouraged; prefer snapshots / governed docs when possible)
 
-### Evidence resolver contract
+### Evidence resolver contract (refined)
 
-The evidence resolver accepts EvidenceRefs, applies policy, and returns an EvidenceBundle:
+The evidence resolver accepts EvidenceRefs (scheme://...) **or** a structured reference (dataset_version + record id + span), applies policy, and returns allow/deny + obligations as an EvidenceBundle.
 
-- a human-readable card view (what the UI shows)
-- machine-readable metadata (what code/tests validate)
-- digests, dataset_version_id, audit references
-- policy decision results (allow/deny + obligations + reason codes)
+**Hard requirements:**
 
-UI goal: evidence resolution should be usable in ≤ 2 calls.
+- apply policy and return **allow/deny + obligations**
+- return an EvidenceBundle with:
+  - human view (renderable card)
+  - machine metadata (JSON)
+  - artifact links (only if allowed)
+  - digests and dataset_version IDs
+  - audit references
+- be usable in **≤ 2 calls** from the UI:
+  - click feature → resolve evidence → view bundle
+  - click citation → resolve evidence → view same bundle
+- fail-closed on:
+  - unresolvable references
+  - unauthorized references
+  - policy engine errors
 
 ### EvidenceBundle template
 
@@ -805,14 +818,14 @@ Story Nodes store map state so stories replay the same view, and Focus Mode can 
 }
 ```
 
-### Story Nodes
+### Story Nodes (v3)
 
 Story Nodes bind narrative to map state and citations. A Story Node has:
 
 - a markdown file (human narrative)
 - a sidecar JSON (machine metadata: map state, citations, policy, review)
 
-Publishing gate: all citations must resolve through the evidence resolver endpoint.
+Publishing gate: all citations must resolve through `POST /api/v1/evidence/resolve`.
 
 Story Node markdown skeleton:
 
@@ -821,7 +834,7 @@ Story Node markdown skeleton:
 doc_id: kfm://story/<uuid>@v1
 title: <Story title>
 type: story
-version: v1
+version: v3
 status: draft
 owners: <names/teams>
 created: YYYY-MM-DD
@@ -881,48 +894,91 @@ Story Node sidecar skeleton:
 
 Focus Mode is not a general chatbot. It is a governed workflow.
 
-### Control loop
+### Focus Mode operating model
+
+A Focus Mode request is treated as a **governed run** with a receipt.
+
+**Inputs:**
+
+- user query
+- optional `view_state` (map bbox, time window, active layers)
+- user role + policy context
+
+**Outputs:**
+
+- answer text
+- citations (EvidenceRefs) that resolve to EvidenceBundles
+- `audit_ref` (run id) that can be reviewed
+
+### Control loop (implementation guidance)
 
 ```mermaid
 flowchart LR
-  P[Policy pre-check] --> R[Plan retrieval]
-  R --> Q[Retrieve policy-filtered evidence]
+  P[Policy pre-check] --> R[Retrieval plan]
+  R --> Q[Retrieve admissible evidence]
   Q --> B[Resolve EvidenceBundles]
   B --> S[Synthesize answer grounded in bundles]
-  S --> V[Verify citations hard gate]
+  S --> V[Citation verification hard gate]
   V -->|pass| E[Emit run receipt + audit ref]
-  V -->|fail| A[Abstain with policy-safe reason]
+  V -->|fail| A[Abstain or reduce scope]
 ```
 
-### Expectations
+Recommended control loop:
 
-- Citations are mandatory. If citations cannot be verified, the correct behavior is to abstain or reduce scope.
-- Every query emits a run receipt capturing:
-  - model identifier
-  - prompt version
-  - retrieval config version
-  - policy engine version
-  - input bundles by digest
-  - output hash
-- Prompt/model changes are treated like code changes and require review + evaluation harness pass.
+1. Policy pre-check — determine if query is allowed (topic restrictions, role limitations)
+2. Retrieval plan — select candidate datasets and indexes based on view_state + query intent
+3. Retrieve evidence — query catalogs, search index, graph, or database for admissible evidence
+4. Build evidence bundles — call evidence resolver per EvidenceRef; apply redaction obligations
+5. Synthesize answer — answer references evidence bundle IDs/digests
+6. **Citation verification (hard gate)** — verify every citation resolves + is policy-allowed; if not, revise or abstain
+7. Produce audit receipt — store query, bundle digests, policy decisions, model/prompt version, latency, output hash
+
+> [!IMPORTANT]
+> The hard gate is step 6. If citations cannot be verified, the response must abstain or reduce scope.
+
+### Retrieval indexes and projections (buildable)
+
+Focus Mode may use multiple projections:
+
+- Catalog search (DCAT/STAC) to find datasets by theme and coverage
+- Text search index for OCR corpora and documents
+- Graph edges for entity resolution and relationship traversal
+- PostGIS for spatial filtering (bbox/time)
+- Vector index (optional) for semantic retrieval
+
+Rule: retrieval results must always map back to EvidenceRefs that resolve to bundles. There is no “raw text from index” allowed without evidence linking.
 
 ### Prompt injection and data exfiltration defenses
 
-Retrieved text is untrusted:
+Retrieved text is untrusted. Defenses:
 
-- Tool allowlist: the model cannot call arbitrary tools or fetch arbitrary URLs.
-- Evidence resolver boundary: the model receives only policy-filtered evidence cards; restricted material is never passed through.
-- Policy-safe refusal templates: deny or abstain without revealing restricted existence.
-- Output scanning: block disallowed leakage patterns (coords/PII-like strings) where policy prohibits.
+- tool allowlist (the model cannot call arbitrary tools)
+- explicit system policy about refusing to reveal restricted sources
+- evidence resolver as the only source of “truth” for citations
+- content filtering + redaction obligations applied before model sees restricted text
 
-### Evaluation harness
+### UX for abstention and partial answers
+
+Abstention UX must be clear:
+
+- what is missing (policy-safe)
+- what is allowed (public alternatives)
+- how to request access (steward workflow)
+- include `audit_ref` for follow-up
+
+Partial answers are acceptable when only part of the question is supported by evidence.
+
+### Evaluation harness (must exist before broad release)
 
 At minimum:
 
-- citation coverage and resolvability
-- correct abstention/refusal behavior (policy-safe)
-- sensitivity leakage checks (coords/PII-like strings where prohibited)
-- golden query regression suite pinned to DatasetVersions
+- citation coverage: % of factual claims supported by citations
+- citation resolvability: 100% citations resolve for allowed users
+- refusal correctness: restricted questions receive policy-safe refusals
+- sensitivity leakage: no restricted coordinates/metadata in outputs
+- regression tests: golden queries across dataset versions
+
+Run this in CI for Focus Mode code changes and before each release.
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -1071,7 +1127,7 @@ These are anchor datasets because they support many story arcs and can be integr
 | 0 | Demographics | IPUMS NHGIS (National Historical GIS) | `ipums_nhgis` | Historical census aggregates + boundary products for long-range change | Public, **terms snapshot required** |
 | 0 | Admin boundaries | US Census TIGER/Line (counties/tracts/roads) | `us_census_tiger` | Canonical geometries for joins, boundaries, and many derived layers | Public, **terms snapshot required** |
 | 0 | Kansas framework | Kansas DASC Geoportal authoritative layers | `kansas_dasc_geoportal` | Kansas clearinghouse for authoritative base layers + agency sources | Public, attribution obligations likely |
-| 0 | Basemap/reference | USGS National Map base layers | `usgs_national_map` | Base layers, hydrography/elevation reference; stable national backbone | Public, public-domain-ish **must still snapshot terms** |
+| 0 | Basemap/reference | USGS National Map base layers | `usgs_national_map` | Base layers, hydrography/elevation reference; stable national backbone | Public, **still snapshot terms** |
 | 0 | Land tenure/history | BLM GLO land patents | `blm_glo_land_patents` | Settlement/land patent history; supports land tenure narratives | Public, **governance review** for person names in narratives |
 | 0 | Hydrology/time series | USGS WaterData / NWIS | `usgs_waterdata_nwis` | Streamflow, groundwater, water quality time series; event correlation | Public |
 | 0 | Hazards/events | NOAA Storm Events | `noaa_storm_events` | Standard severe weather events dataset (time + place + type) | Public; verify coordinate handling + exports |
@@ -1320,11 +1376,11 @@ Starter CI gate list:
 
 - lint + typecheck
 - unit tests
-- validate DCAT/STAC/PROV
-- linkcheck citations
+- validate DCAT/STAC/PROV profiles
+- linkcheck citations + catalog cross-links
 - policy tests (default deny + fixtures)
 - spec_hash drift check
-- **anchor register consistency check (anchors → registry → specs)**
+- anchor register consistency check (anchors → registry → specs)
 - evidence resolver contract tests
 - Focus Mode eval suite
 
@@ -1334,6 +1390,38 @@ Starter CI gate list:
 
 ## Contributing
 
+### Docs are production (MetaBlock v2)
+
+Use MetaBlock v2 (no YAML frontmatter) for docs, Story Nodes, and dataset specs.
+
+Template reminder:
+
+```text
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<uuid>
+title: <Title>
+type: <guide|standard|story|dataset_spec|adr|run_receipt>
+version: v1
+status: draft|review|published
+owners: <team or names>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public|restricted|...
+related:
+  - kfm://dataset/<slug>@<version>
+tags:
+  - kfm
+notes:
+  - <short notes>
+[/KFM_META_BLOCK_V2] -->
+```
+
+Rules:
+
+- `doc_id` must be stable; do not regenerate on edits.
+- `updated` should change on meaningful edits.
+- `policy_label` determines who can see the document if docs are served through governed APIs.
+
 ### What good looks like in KFM
 
 - Every change is reversible, testable, and governed.
@@ -1342,28 +1430,6 @@ Starter CI gate list:
   - resolvable citations
   - run receipts + audit refs
   - rights metadata
-
-### Contribution paths
-
-1) Dataset onboarding
-- Add/update source registry entry
-- Add dataset spec (`data/specs/<dataset_slug>.json`)
-- Implement/adjust connector + normalization + validation
-- Produce processed artifacts + catalogs
-- Pass Promotion Contract gates
-- Add layer config + evidence click behavior
-
-2) Story authoring
-- Use EvidenceRefs (not “trust me” claims)
-- Verify citations resolve through the evidence resolver
-- Respect policy labels + rights constraints
-- Keep map state reproducible (saved view state)
-
-3) Policy changes
-- Default deny remains intact
-- Update fixtures + tests
-- Document rationale in an ADR
-- Validate CI + runtime semantics remain aligned
 
 ### PR checklist
 
@@ -1448,16 +1514,16 @@ Keep roadmaps small, reviewable, and reversible. Prefer glue artifacts (contract
 
 ### Primary KFM specs
 
-- KFM — Definitive Design and Governance Guide vNext (source-of-truth consolidation)
-- KFM — Most Expansive Compendium vNext
-- KFM — Grand Master Blueprint vNext
+- KFM — Definitive Design & Governance Guide (vNext, 2026-02-20)
+- KFM — Ultimate Blueprint (Draft) (Generated 2026-02-20)
+- KFM — Unified Technical Blueprint (historical)
 
 ### Secondary reference library
 
 - GIS + mapping: Mapping Urban Spaces; A Primer of GIS; Geostatistical Mapping; GIS in Sustainable Urban Planning
 - Web + UI: Research-Based Web Design and Usability Guidelines; Using SVG with CSS3 and HTML5
 - DevOps + pipelines: Docker GitOps OpenShift; Open Source Data Pipelines
-- Security: Software Security Guide for Developers 2026 Edition
+- Security: Software Security Guide for Developers (TBD)
 
 Reminder: KFM is evidence-first. Don’t add user-visible content that cannot be traced to catalogs + evidence bundles.
 
