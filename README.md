@@ -6,7 +6,7 @@ version: vNext
 status: draft
 owners: TBD
 created: 2026-02-22
-updated: 2026-02-26
+updated: 2026-02-27
 policy_label: public
 related:
   - README.md
@@ -15,7 +15,10 @@ tags:
 notes:
   - Repository README describing the vNext operating model and governance posture.
   - Alignment pass to vNext Definitive Design & Governance Guide (2026-02-20).
+  - Alignment pass to Architecture, Governance, and Delivery Plan briefing (2026-02-27).
 [/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
 
 # Kansas Frontier Matrix
 
@@ -57,7 +60,7 @@ Pick the path that matches what you’re doing:
 > **Tagging discipline:**  
 > - **CONFIRMED** = invariants/contracts that must hold (truth path, trust membrane, promotion gates, cite-or-abstain).  
 > - **PROPOSED** = recommended defaults/templates/build plan.  
-> - **UNKNOWN** = requires branch verification; fail-closed until verified.
+> - **UNKNOWN / DECISION NEEDED** = unverified; treat as fail-closed until verified. Every **UNKNOWN** MUST include: (a) the recommended default path, and (b) the minimum verification step to convert UNKNOWN → CONFIRMED.
 
 > [!NOTE]
 > This README describes the **target operating model** for vNext. If some files/directories are not present on your branch, treat those references as **PROPOSED** and reconcile with repo reality before enforcing gates.
@@ -118,6 +121,13 @@ KFM is also a **system of governed artifacts**:
 - Not a general chatbot (Focus Mode is a governed workflow that must cite-or-abstain).
 - Not “whatever the database says” (DB/search/tiles are projections; catalogs + processed artifacts are canonical).
 
+### Non-goals (keep vNext buildable)
+
+- **Do not** try to model every historical interpretation as “fact.” Stories must separate **evidence** from **interpretation** and keep uncertainty explicit.
+- **Do not** mirror/redistribute content (especially media) when licensing is unclear. Prefer **metadata-only references** until rights are cleared.
+- **Do not** make a full 3D globe the primary surface for vNext. Map-first for vNext can remain **2D + time**, with 3D reserved for later, scoped use cases.
+- **Do not** ship “general chatbot” behavior. Focus Mode remains a **governed run** that must cite-or-abstain.
+
 [↑ Back to top](#kansas-frontier-matrix)
 
 ---
@@ -176,7 +186,16 @@ Before implementing or “fixing” anything, verify what exists **on your branc
 - Confirm how secrets are managed (must not live in repo; injected via CI/runtime secret stores).
 
 > [!IMPORTANT]
-> **Fail-closed rule:** if any of the above is unclear, default-deny and treat the feature as **UNKNOWN** until verified.
+> **Fail-closed rule:** if any of the above is unclear, default-deny and treat the feature as **UNKNOWN / DECISION NEEDED** until verified.
+
+### Verification checklist (minimum steps; attach outputs to the next revision)
+
+- [ ] Capture repo commit hash and root directory tree: `git rev-parse HEAD` and `tree -L 3`.
+- [ ] Confirm which work packages already exist: locate `spec_hash`, policy tests (OPA/Conftest), catalog validators/link-check, evidence resolver route, and dataset registry schema.
+- [ ] Extract CI gate list from `.github/workflows/` and document which checks are **merge-blocking**.
+- [ ] Choose **one** MVP dataset (e.g., NLCD land cover or NOAA storm events) and verify it can be promoted through all gates with receipts + catalogs.
+- [ ] Validate UI cannot bypass the PEP (static analysis + network policy) and EvidenceRefs resolve end-to-end in Map Explorer + Story publishing.
+- [ ] For Focus Mode: run the evaluation harness and store golden outputs + diffs as artifacts.
 
 [↑ Back to top](#kansas-frontier-matrix)
 
@@ -286,6 +305,19 @@ KFM’s safest path is to build trust primitives first, UI last.
 > [!NOTE]
 > **Reasoning:** if EvidenceRef cannot resolve deterministically, “map-first” becomes “trust me.”
 
+### Work packages (WP-01…WP-08) (PROPOSED build plan; keeps increments reversible)
+
+| WP | Ships (what you commit) | Merge-gate “done when…” |
+|---:|---|---|
+| **WP-01** | `spec_hash` + dataset spec schema + controlled-vocab validation | Hash stable across OS/JSON emitters; CI blocks drift; vocab validation blocks unknown labels |
+| **WP-02** | DCAT/STAC/PROV validators + cross-link checker | CI fails if catalogs invalid or links don’t resolve; “no ghost links” invariant |
+| **WP-03** | Policy pack (OPA/Rego) + Conftest + fixtures-driven tests | Same semantics in CI and runtime; default-deny proven by fixtures |
+| **WP-04** | Evidence resolver service + EvidenceBundle contract | `POST /api/v1/evidence/resolve` fails closed; bundles include digests + policy decision + obligations |
+| **WP-05** | Dataset registry + discovery endpoints (`/datasets` + `/stac`) | Policy-filtered discovery; responses include `dataset_version_id` + digests; contract tests pass |
+| **WP-06** | Map Explorer baseline UI + Evidence Drawer | Evidence drawer shows license + version; keyboard navigation works; E2E tests cover evidence open/resolve |
+| **WP-07** | Story Node v3 publish workflow | Publishing requires review state + resolvable citations; citations open Evidence Drawer |
+| **WP-08** | Focus Mode MVP + evaluation harness | Cite-or-abstain; golden queries; merges blocked on regressions/leakage failures |
+
 [↑ Back to top](#kansas-frontier-matrix)
 
 ---
@@ -309,7 +341,7 @@ These are KFM’s non-negotiables. Violating these breaks governance, not “jus
 
 > [!NOTE]
 > **Norms used in docs:** MUST / MUST NOT / SHOULD / MAY (RFC-style).  
-> **Section tags:** CONFIRMED / PROPOSED / UNKNOWN.  
+> **Section tags:** CONFIRMED / PROPOSED / UNKNOWN / DECISION NEEDED.  
 > Use **CONFIRMED** only when backed by in-repo artifacts; otherwise use **PROPOSED**.
 
 [↑ Back to top](#kansas-frontier-matrix)
@@ -333,6 +365,7 @@ Use these terms consistently in code, schemas, tests, and documentation.
 | **Run receipt** | Immutable record of an operation (pipeline run / Focus query / publish event) with environment capture |
 | **Audit ledger** | Append-only governed record of operations and approvals |
 | **Quarantine** | Zone/state for artifacts that cannot be promoted (validation, rights, sensitivity issues) |
+| **Event time** | The time a real-world event occurred or was observed (often the primary “timeline” axis) |
 | **Valid time** | The time period when an assertion is true (e.g., a boundary exists) |
 | **Transaction time** | The time when KFM recorded/published data (system time) |
 | **Story Node** | Versioned narrative bound to map state + citations + policy label + review state |
@@ -342,7 +375,10 @@ Use these terms consistently in code, schemas, tests, and documentation.
 KFM uses resolvable, stable identifiers. Examples:
 
 ```text
-kfm://dataset/<slug>@<dataset_version_id>
+kfm://dataset/<dataset_slug>
+kfm://dataset/<dataset_slug>@<dataset_version_id>
+kfm://artifact/sha256:<digest>
+kfm://evidence/<bundle_id>
 kfm://run/<timestamp>.<slug>.<hash>
 kfm://audit/entry/<id>
 dcat://...
@@ -453,12 +489,15 @@ The governed API is the only supported way for clients to access data, evidence,
 
 | Endpoint | Purpose | Policy posture |
 |---|---|---|
-| `GET /api/v1/catalog/datasets` | Dataset discovery (DCAT + policy labels) | Hide restricted by default; filter by role |
-| `GET /api/v1/datasets/{dataset_version_id}/query` | Query slice by bbox/time/filters | Enforce policy; generalized outputs if required |
-| `GET /api/v1/tiles/{layer_id}/{z}/{x}/{y}` | Tile delivery | Only policy-safe tiles; cache varies by policy/auth |
-| `POST /api/v1/evidence/resolve` | Resolve EvidenceRef → EvidenceBundle | Fail closed if unresolvable/unauthorized |
-| `GET /api/v1/lineage/{dataset_id}` | Lineage graph + run receipts | May redact sensitive fields; include commit SHAs where available |
-| `POST /api/v1/focus/ask` | Focus Mode Q&A with citations | Must cite or abstain; log retrieval context |
+| `GET /api/v1/datasets` | Dataset discovery (DCAT summary + policy labels) | Hide restricted by default; filter by role |
+| `GET /api/v1/stac/collections` | STAC browse (collections) | Policy-filtered; redact/omit restricted |
+| `GET /api/v1/stac/collections/{collection_id}/items` | STAC browse (items/assets) | Apply obligations (generalize geometry, suppress exports) |
+| `POST /api/v1/evidence/resolve` | Resolve EvidenceRef → EvidenceBundle | **Fail closed** if unresolvable/unauthorized/policy error |
+| `GET /api/v1/tiles/{layer_id}/{z}/{x}/{y}` | (Optional) tile delivery | Only policy-safe tiles; cache varies by policy/auth |
+| `GET /api/v1/story/{story_id}` | Read Story Node | Must enforce story `policy_label` + citation resolvability |
+| `POST /api/v1/story/publish` | Publish Story Node | Block publish if citations/rights/policy checks fail |
+| `POST /api/v1/focus/ask` | Focus Mode Q&A with citations | Must cite or abstain; emit run receipt + audit ref |
+| `GET /api/v1/lineage/{dataset_id}` | (Optional) lineage graph + receipts | Redact sensitive fields; policy-safe errors |
 
 ### Error model
 
@@ -507,6 +546,15 @@ Promotion is the act of moving from Raw/Work into Processed + Catalog/Lineage, a
 | **Gate E: Run receipt and checksums** | run_receipt exists; inputs/outputs enumerated with checksums; environment captured |
 | **Gate F: Policy tests and contract tests** | policy tests pass (fixtures-driven); evidence resolver resolves at least one EvidenceRef in CI; schemas/contracts validate |
 | **Gate G: Optional but recommended** | SBOM/build provenance; performance/accessibility smoke checks |
+
+### Practical promotion workflow (PR-based) (PROPOSED)
+
+1. Contributor opens PR adding: source registry entry + pipeline spec + small fixture sample + expected outputs.
+2. CI runs: schema validation + policy tests + `spec_hash` stability + catalog link checks.
+3. Steward review: licensing + sensitivity; approve the proposed `policy_label`.
+4. Operator merges and triggers the controlled pipeline run.
+5. Outputs are written to **processed** + **catalog** (DCAT/STAC/PROV + receipts).
+6. A release/promotion manifest is created and tagged.
 
 ### Promotion manifest template
 
@@ -577,9 +625,24 @@ KFM treats identity as a contract.
 
 ### Deterministic identifiers
 
-Baseline rule: DatasetVersion identity is derived deterministically from the canonical dataset spec (`data/specs/<dataset_slug>.json`), producing a `spec_hash`.
+Baseline rule: DatasetVersion identity is derived deterministically from a canonical dataset spec (`data/specs/<dataset_slug>.json`), producing a `spec_hash`.
 
 PROPOSED: include a human-friendly time component in `dataset_version_id` if it helps operators, but treat it as derived metadata — the `spec_hash` is the immutability anchor.
+
+PROPOSED identity anchor (make it stable across platforms):
+
+- `spec_hash = sha256( canonical_json(spec) )`
+- CI MUST enforce “hash drift” checks (same spec must hash the same everywhere)
+
+PROPOSED dataset slug conventions (keep IDs stable and legible):
+
+- lowercase
+- words separated by underscore
+- include upstream authority when helpful
+- do not include date in dataset slug (date belongs to version)
+
+> [!IMPORTANT]
+> Avoid embedding environment-specific hostnames in canonical IDs. Hostnames belong in distribution URLs.
 
 ### Canonical object storage layout
 
@@ -1052,7 +1115,17 @@ Citation kinds starter:
 - `prov`
 - `doc`
 - `graph`
+- `oci` (optional future)
 - `url` (discouraged)
+
+Geometry generalization methods starter (record which was applied):
+
+- `centroid_only`
+- `grid_aggregation_<cell_size>`
+- `random_offset_<radius>`
+- `dissolve_to_admin_unit`
+- `bounding_box_only`
+- `none`
 
 ### Policy defaults aligned to KFM posture
 
@@ -1546,6 +1619,7 @@ Reminder: KFM is evidence-first. Don’t add user-visible content that cannot be
 - [ ] Policy label assigned; obligations documented
 - [ ] QA report present; thresholds defined; pass/degraded/fail states supported
 - [ ] Promotion manifest created; approvals captured
+- [ ] Changelog entry explains what changed and why (policy-safe)
 - [ ] Layer config created; evidence click behavior mapped to EvidenceRefs
 - [ ] Rebuild scripts exist for projections from canonical artifacts
 
