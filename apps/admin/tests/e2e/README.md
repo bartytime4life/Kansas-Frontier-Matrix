@@ -264,20 +264,21 @@ Example commands (Playwright-style):
 This README documents the intended structure; adjust if the repo differs.
 
 ```text
-apps/admin/tests/e2e/
-  README.md                 # you are here
-  config/                   # runner config, projects, timeouts
-  specs/                    # test specs organized by suite
-    smoke/
-    auth/
-    policy/
-    promotion/
-    evidence/
-    exports/
-  fixtures/                 # synthetic/public seed data
-  helpers/                  # page objects, API helpers, selectors
-  snapshots/                # approved baselines (if used)
-  artifacts/                # local-only outputs (gitignored)
+apps/admin/tests/e2e/                                  # Admin E2E suite (critical journeys across UI + governed APIs)
+├── README.md                                          # You are here (how to run locally/CI, env vars, debugging)
+├── config/                                            # Runner config (projects, browsers, timeouts, retries)
+├── specs/                                             # Test specs organized by suite (keep suites small + focused)
+│   ├── smoke/                                         # Fast “is it alive” checks (login, nav, basic reads)
+│   ├── auth/                                          # Authentication flows + session handling
+│   ├── policy/                                        # Policy-driven behaviors (allow/deny/obligation surfaced in UI)
+│   ├── promotion/                                     # Promotion workflows (gates, manifests, approvals, receipts)
+│   ├── evidence/                                      # Evidence UX (drawer, citations, bundle links, resolver states)
+│   ├── exports/                                       # Export flows (downloads, redaction rules, audit events)
+│   └── ...                                            # Add new suites as named folders (one domain per suite)
+├── fixtures/                                          # Synthetic/public seed data (safe, deterministic, versioned)
+├── helpers/                                           # Page objects + API helpers + selectors (shared across specs)
+├── snapshots/                                         # Approved baselines (only if snapshot testing is used)
+└── artifacts/                                         # Local-only outputs (traces/videos/screenshots) — gitignored
 ```
 
 ---
