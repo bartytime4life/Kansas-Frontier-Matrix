@@ -423,50 +423,220 @@ Registry Definition of Done:
 > This layout is **PROPOSED**. Adopt it if the repo doesn’t already standardize a different pattern.
 
 ```text
-examples/                                         # End-to-end examples (small, reproducible, policy-safe)
-├─ README.md                                      # This file
+examples/                                         # End-to-end examples (small, reproducible, policy-safe)  (PROPOSED)
+├─ README.md                                      # Directory contract + safety rules + how to run/verify
+├─ .gitignore                                     # Ignore generated outputs + local logs (no secrets) (recommended)
+├─ LICENSES/                                      # (Optional) example-level third-party notices (tiny, text-only)
+│  └─ README.md                                   # How attribution is tracked for example inputs
 │
 ├─ registry/                                      # Machine-readable registries + schemas + fixtures (small)
-│  ├─ examples.v1.json                            # Example registry (paths, owners, tags, run/verify)
-│  ├─ schemas/                                    # Schemas for kfm.example.yaml / receipt/checksums shapes (optional)
-│  └─ fixtures/                                   # Valid/invalid example manifests for CI validation
+│  ├─ examples.v1.json                            # Canonical example registry (paths, owners, tags, run/verify)
+│  ├─ examples.v1.schema.json                     # Schema for the registry itself (optional but recommended)
+│  │
+│  ├─ schemas/                                    # Schemas for example manifests + evidence artifacts
+│  │  ├─ kfm.example.manifest.v1.schema.json      # Schema for kfm.example.yaml (manifest)
+│  │  ├─ kfm.run_receipt.v1.schema.json           # Schema for evidence/run-receipt.json
+│  │  ├─ kfm.checksums.v1.schema.json             # Schema for evidence/checksums.json
+│  │  ├─ kfm.policy_summary.v1.schema.json        # (Optional) schema for evidence/policy-summary.json
+│  │  └─ README.md                                # How schema versioning works for examples
+│  │
+│  └─ fixtures/                                   # CI validation fixtures (valid/invalid)
+│     ├─ manifests/
+│     │  ├─ valid/
+│     │  │  ├─ minimal_public.yaml
+│     │  │  ├─ with_outputs_and_claims.yaml
+│     │  │  └─ with_dependencies.yaml
+│     │  └─ invalid/
+│     │     ├─ missing_license.yaml
+│     │     ├─ missing_sensitivity.yaml
+│     │     ├─ missing_verify.yaml
+│     │     └─ non_deterministic_timestamps.yaml
+│     ├─ receipts/
+│     │  ├─ valid/
+│     │  │  ├─ receipt_minimal.json
+│     │  │  └─ receipt_with_policy_obligations.json
+│     │  └─ invalid/
+│     │     ├─ receipt_missing_digests.json
+│     │     └─ receipt_contains_secret_like_value.json
+│     ├─ checksums/
+│     │  ├─ valid/
+│     │  │  └─ checksums_minimal.json
+│     │  └─ invalid/
+│     │     └─ checksums_path_escape.json
+│     └─ README.md                                # What fixtures prove + how CI uses them
 │
-├─ _shared/                                       # Shared tiny fixtures and helpers (optional)
-│  ├─ data/                                       # Tiny synthetic datasets (safe-by-default)
-│  ├─ scripts/                                    # Shared helper scripts (lint, normalize outputs)
-│  └─ README.md
+├─ _shared/                                       # Shared tiny fixtures and helpers (optional, but high leverage)
+│  ├─ README.md                                   # What shared assets exist + safety constraints
+│  │
+│  ├─ data/                                       # Tiny synthetic datasets (safe-by-default; NO sensitive coords)
+│  │  ├─ toy_events.csv                           # Example time+place table (synthetic)
+│  │  ├─ toy_points.geojson                       # Tiny GeoJSON points (synthetic; coarse extents)
+│  │  ├─ toy_polygons.geojson                     # Tiny polygons (synthetic; no vulnerable sites)
+│  │  ├─ toy_story/
+│  │  │  ├─ story_text.md                         # Small narrative text (no claims without citations)
+│  │  │  └─ citations.json                        # Example citations referencing toy evidence refs
+│  │  └─ README.md                                # Data provenance + why it’s safe to publish
+│  │
+│  └─ scripts/                                    # Shared helper scripts (portable, policy-safe)
+│     ├─ require_tools.sh                         # Checks required CLIs exist (jq, curl, etc.) (optional)
+│     ├─ hash_tree.sh                             # Computes sha256 digests for a folder (deterministic ordering)
+│     ├─ normalize_json.sh                        # Canonicalizes JSON for diffs (sort keys, strip volatile fields)
+│     ├─ normalize_geojson.sh                     # Normalizes GeoJSON (ordering, precision) for diffs
+│     ├─ redact_logs.sh                           # Scrubs obvious secrets/PII patterns from logs (best-effort)
+│     ├─ assert_no_secrets.sh                     # Fails if secrets-like patterns found in tracked files
+│     ├─ assert_no_sensitive_coords.sh            # Fails if restricted coord patterns appear in public examples
+│     └─ README.md                                # Script contracts + expected outputs
 │
-├─ api-feature-query/
+├─ api-feature-query/                              # Example: use governed API + evidence resolver (NO bypass)
+│  ├─ README.md                                   # Purpose, prerequisites, policy posture, expected outputs
+│  ├─ kfm.example.yaml                             # Example manifest (inputs/outputs/licenses/sensitivity)
+│  ├─ run.sh                                       # Runs API calls and writes normalized outputs
+│  ├─ verify.sh                                    # Deterministic verification (schemas + digests + invariants)
+│  │
+│  ├─ src/
+│  │  ├─ lib/
+│  │  │  ├─ env.sh                                 # Env parsing (KFM_API_BASE_URL, auth placeholder)
+│  │  │  ├─ http.sh                                # Curl wrapper (policy-safe logging)
+│  │  │  └─ assert.sh                              # Assertions (exit codes, json fields, etc.)
+│  │  ├─ requests/
+│  │  │  ├─ 00_health.curl.sh                      # GET /health (or equivalent) (policy-safe)
+│  │  │  ├─ 10_catalog_datasets.curl.sh            # GET /catalog/datasets (example)
+│  │  │  ├─ 20_feature_query.curl.sh               # Query with bbox/time/filter (example)
+│  │  │  └─ 30_evidence_resolve.curl.sh            # Resolve EvidenceRef → EvidenceBundle (example)
+│  │  └─ normalize/
+│  │     ├─ strip_volatile_fields.jq               # Removes request_id/timestamps for stable diffs
+│  │     └─ normalize_outputs.sh                   # Produces outputs/expected-style JSON
+│  │
+│  ├─ data/
+│  │  ├─ request_templates/
+│  │  │  ├─ bbox_small.json                        # Small bbox template (synthetic)
+│  │  │  ├─ time_window.json                       # Time range template
+│  │  │  └─ filters.json                           # Example attribute filters
+│  │  └─ README.md                                 # No real secrets; what templates are used for
+│  │
+│  ├─ outputs/
+│  │  ├─ expected/                                 # Committed expected results (tiny; normalized)
+│  │  │  ├─ datasets.json
+│  │  │  ├─ features.json
+│  │  │  └─ evidence_bundle.json
+│  │  └─ generated/                                # Generated outputs (gitignored)
+│  │
+│  └─ evidence/
+│     ├─ run-receipt.json                          # Run receipt (policy-safe; no secrets)
+│     ├─ checksums.json                            # Digests for outputs + evidence artifacts
+│     ├─ policy-summary.json                       # Allow/deny + obligations applied (display-only)
+│     ├─ audit-ref.txt                             # Opaque audit ref (if returned)
+│     └─ notes.md                                  # What was proven + how it maps to KFM invariants
+│
+├─ pipe-validate-and-promote-toy/                  # Example: toy pipeline → QA → promotion artifacts (no prod publish)
 │  ├─ README.md
 │  ├─ kfm.example.yaml
-│  ├─ run.sh
-│  ├─ verify.sh
+│  ├─ run.sh                                       # Runs toy pipeline (local) and writes toy zone artifacts
+│  ├─ verify.sh                                    # Verifies gates A–F at toy scale (schemas + linkcheck + digests)
+│  │
 │  ├─ src/
+│  │  ├─ dataset/
+│  │  │  ├─ source_registry_entry.yml              # Toy source registry entry (synthetic)
+│  │  │  ├─ dataset_spec.v1.json                   # Toy dataset spec used for spec_hash demonstration
+│  │  │  └─ terms_snapshot.txt                     # Explicit terms snapshot (synthetic/permissive)
+│  │  ├─ pipeline/
+│  │  │  ├─ steps.yml                              # Normalize → validate → package (toy)
+│  │  │  ├─ qa_rules.yml                           # Schema/time/geo checks (toy thresholds)
+│  │  │  ├─ redaction_plan.yml                     # Demonstrates obligations (generalize/suppress export)
+│  │  │  └─ promotion_gates.yml                    # Gate definitions (toy) aligned to Promotion Contract A–F
+│  │  ├─ generators/
+│  │  │  ├─ make_checksums.sh                      # Writes checksums.json
+│  │  │  ├─ make_run_receipt.sh                    # Writes run-receipt.json
+│  │  │  ├─ make_promotion_manifest.sh             # Writes promotion_manifest.json
+│  │  │  ├─ make_dcat.sh                           # Writes toy dcat.jsonld
+│  │  │  ├─ make_stac.sh                           # Writes toy STAC collection/items
+│  │  │  └─ make_prov.sh                           # Writes toy prov.jsonld
+│  │  └─ validators/
+│  │     ├─ validate_schemas.sh                    # Validates manifests/receipts/catalogs against schemas
+│  │     ├─ validate_cross_links.sh                # Validates DCAT↔STAC↔PROV link expectations (toy)
+│  │     ├─ validate_policy_posture.sh             # Ensures deny-by-default states are handled
+│  │     └─ validate_hash_drift.sh                 # Ensures spec_hash stable for the toy spec
+│  │
 │  ├─ data/
-│  ├─ outputs/
+│  │  ├─ inputs/
+│  │  │  ├─ toy_events.csv                         # Toy input
+│  │  │  └─ README.md
+│  │  └─ README.md
+│  │
+│  ├─ outputs/                                     # Toy “zones” (example-local; not canonical data/)
+│  │  ├─ raw/
+│  │  │  └─ toy_dataset/<acq_id>/
+│  │  │     ├─ manifest.json
+│  │  │     ├─ artifacts/
+│  │  │     └─ checksums.json
+│  │  ├─ work/
+│  │  │  └─ toy_dataset/<work_run_id>/
+│  │  │     ├─ artifacts/
+│  │  │     ├─ qa/
+│  │  │     ├─ checksums.json
+│  │  │     └─ status.json                         # Optional: quarantine-style status (toy)
+│  │  ├─ processed/
+│  │  │  └─ toy_dataset/<dataset_version_id>/
+│  │  │     ├─ artifacts/
+│  │  │     ├─ checksums.json
+│  │  │     └─ qa/validation_report.json
+│  │  └─ catalog/
+│  │     └─ toy_dataset/<dataset_version_id>/
+│  │        ├─ dcat.jsonld
+│  │        ├─ stac/collection.json
+│  │        ├─ stac/items/
+│  │        ├─ prov/prov.jsonld
+│  │        ├─ receipts/<run_id>.json
+│  │        └─ promotion_manifest.json
+│  │
 │  └─ evidence/
 │     ├─ run-receipt.json
 │     ├─ checksums.json
+│     ├─ qa_report.json
+│     ├─ linkcheck_report.json
+│     ├─ policy-summary.json
 │     └─ notes.md
 │
-├─ pipe-validate-and-promote-toy/
-│  ├─ README.md
-│  ├─ kfm.example.yaml
-│  ├─ run.sh
-│  ├─ verify.sh
-│  ├─ src/
-│  ├─ data/
-│  ├─ outputs/
-│  └─ evidence/
-│
-└─ ui-story-node-minimal/
+└─ ui-story-node-minimal/                          # Example: minimal Story Node + view_state + citations
    ├─ README.md
    ├─ kfm.example.yaml
-   ├─ run.sh
-   ├─ verify.sh
+   ├─ run.sh                                       # Assembles a minimal story package (toy) + renders preview
+   ├─ verify.sh                                    # Verifies citations resolve (or deny safely) + policy rules
+   │
    ├─ src/
+   │  ├─ story/
+   │  │  ├─ story.md                               # Story Node markdown (with MetaBlock)
+   │  │  ├─ story.sidecar.v3.json                  # Machine sidecar (map state, citations)
+   │  │  ├─ citations.json                         # Citation list (EvidenceRefs)
+   │  │  └─ assets/                                # Tiny assets (optional; rights clear)
+   │  │     ├─ placeholder.png
+   │  │     └─ attribution.txt
+   │  ├─ view_state/
+   │  │  ├─ view_state.json                        # Reproducible view state token/body
+   │  │  └─ view_state.compat.json                 # (Optional) compatibility expectations by version
+   │  ├─ render/
+   │  │  ├─ render_story.sh                        # Renders markdown → preview artifact (toy)
+   │  │  └─ preview_template.html                  # Minimal local preview (no JS injection)
+   │  └─ validate/
+   │     ├─ validate_meta_block.sh                 # Ensures MetaBlock present + stable doc_id
+   │     ├─ validate_citations.sh                  # Ensures EvidenceRefs present for claims
+   │     ├─ validate_citation_resolution.sh        # Calls resolver (or mocks) and enforces cite-or-abstain
+   │     ├─ validate_policy_label.sh               # Ensures story policy label rules are met
+   │     └─ validate_no_sensitive_coords.sh        # Prevents leaking restricted coordinates
+   │
    ├─ outputs/
+   │  ├─ expected/
+   │  │  ├─ story_render.md                        # Normalized render output
+   │  │  └─ story_package.json                     # Small packaging manifest (toy)
+   │  └─ generated/                                # Generated preview (gitignored)
+   │
    └─ evidence/
+      ├─ run-receipt.json
+      ├─ checksums.json
+      ├─ citation_resolution_report.json
+      ├─ audit-ref.txt
+      ├─ screenshots/                              # Optional, tiny (PNG) for UI trust flow demo
+      └─ notes.md
 ```
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
