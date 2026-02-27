@@ -183,39 +183,40 @@ The API should treat these as contract surfaces: validate, version, and rely on 
 Actual layout may differ; this is a recommended, reviewable structure that keeps governance explicit.
 
 ```text
-apps/api/src/
-  README.md                       # you are here
-  api/
-    routes/                       # HTTP routing boundary
-      datasets.*                  # /api/v1/datasets
-      stac.*                      # /api/v1/stac/*
-      evidence.*                  # /api/v1/evidence/resolve
-      story.*                     # /api/v1/story*
-      focus.*                     # /api/v1/focus/ask
-      lineage.*                   # /api/v1/lineage/*
-  contracts/
-    openapi/                      # OpenAPI (or equivalent) specs
-    schemas/                      # JSON Schemas for request/response payloads
-  policy/
-    pdp/                          # OPA adapter / PDP client
-    fixtures/                     # allow/deny fixtures + obligations
-  domain/
-    models/                       # Dataset, DatasetVersion, EvidenceBundle, StoryNode, etc.
-    rules/                        # pure rules; no IO
-  usecases/
-    resolveEvidence.*             # EvidenceRef -> EvidenceBundle
-    publishStory.*                # publish flow w/ citation resolution
-    focusAsk.*                    # focus orchestration + citation handshake
-  interfaces/
-    repos/                        # repository interfaces
-    adapters/                     # catalog loaders, policy interfaces
-  infra/
-    catalogs/                     # DCAT/STAC/PROV readers/writers (if colocated here)
-    stores/                       # PostGIS/search/graph adapters (never called by UI)
-  observability/
-    audit/                        # audit record builder + sink
-    metrics/                      # counters, histograms, etc.
-    logging/                      # structured logs w/ redaction hooks
+apps/api/src/                                         # Governed API service (policy-enforced, evidence-first)
+├── README.md                                          # You are here (run, env, contracts, policy, receipts, CI)
+├── api/                                               # HTTP boundary (routing/controllers only)
+│   └── routes/                                        # Versioned route modules (thin, no business logic)
+│       ├── datasets.*                                  # /api/v1/datasets (catalog browsing + dataset details)
+│       ├── stac.*                                      # /api/v1/stac/* (STAC access, profile constrained)
+│       ├── evidence.*                                  # /api/v1/evidence/resolve (EvidenceRef → bundle)
+│       ├── story.*                                     # /api/v1/story* (story nodes, publish/read, citation wiring)
+│       ├── focus.*                                     # /api/v1/focus/ask (cite-or-abstain orchestration boundary)
+│       └── lineage.*                                   # /api/v1/lineage/* (PROV/lineage queries, policy-gated)
+├── contracts/                                         # Contract surface (spec-first + validation)
+│   ├── openapi/                                        # OpenAPI (or equivalent) specifications (versioned)
+│   └── schemas/                                        # JSON Schemas for request/response payloads (shared contracts)
+├── policy/                                            # Policy integration (PDP + fixtures)
+│   ├── pdp/                                            # OPA adapter / PDP client (decision + obligations)
+│   └── fixtures/                                       # Allow/deny fixtures + obligations cases (tests + regression)
+├── domain/                                            # Pure domain layer (no IO)
+│   ├── models/                                         # Dataset, DatasetVersion, EvidenceBundle, StoryNode, etc.
+│   └── rules/                                          # Pure rules (invariants, validation helpers, semantics)
+├── usecases/                                          # Application workflows (policy-aware orchestration)
+│   ├── resolveEvidence.*                               # EvidenceRef -> EvidenceBundle (receipts + obligations)
+│   ├── publishStory.*                                  # Publish flow with citation resolution + audit events
+│   └── focusAsk.*                                      # Focus orchestration + citation handshake (fail-closed)
+├── interfaces/                                        # Ports (dependency inversion)
+│   ├── repos/                                          # Repository interfaces (datasets, bundles, stories, lineage)
+│   └── adapters/                                       # External interfaces (catalog loaders, policy, clock, id gen)
+├── infra/                                             # Adapters/implementations (IO lives here)
+│   ├── catalogs/                                       # DCAT/STAC/PROV readers/writers (if colocated here)
+│   └── stores/                                         # PostGIS/search/graph adapters (never called by UI directly)
+└── observability/                                     # Governed telemetry (redaction-aware)
+    ├── audit/                                          # Audit record builder + sink (immutable events)
+    ├── metrics/                                        # Counters/histograms/timers (policy-safe labels)
+    ├── logging/                                        # Structured logs with redaction hooks
+    └── ...                                             # Add tracing/propagation helpers if/when used
 ```
 
 > **TIP**
