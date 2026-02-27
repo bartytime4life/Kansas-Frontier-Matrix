@@ -256,17 +256,17 @@ KFM is governed end-to-end:
 
 ```mermaid
 flowchart LR
-  S[Upstream sources] --> R[RAW zone]
-  R --> W[WORK zone]
-  W --> Q[QUARANTINE zone]
-  W --> P[PROCESSED zone]
-  Q -. blocks promotion .-> P
-  P --> C[CATALOG triplet + receipts]
-  C --> IDX[Rebuildable projections]
-  C --> PUB[PUBLISHED exports (policy/rights filtered)]
-  IDX --> API[Governed API]
-  API --> UI[Map Explorer / Stories / Catalog / Focus]
-  API --> AUD[Append-only audit ledger]
+  S["Upstream sources"] --> R["RAW zone"]
+  R --> W["WORK zone"]
+  W --> Q["QUARANTINE zone"]
+  W --> P["PROCESSED zone"]
+  Q -.->|blocks promotion| P
+  P --> C["CATALOG triplet + receipts"]
+  C --> IDX["Rebuildable projections"]
+  C --> PUB["PUBLISHED exports<br/>(policy & rights filtered)"]
+  IDX --> API["Governed API"]
+  API --> UI["Map Explorer • Stories • Catalog • Focus"]
+  API --> AUD["Append-only audit ledger"]
   C --> AUD
 ```
 
