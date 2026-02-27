@@ -1,200 +1,315 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/2e7a0e0b-5c0a-4cb0-9fd6-7b3f4bbf67b1
-title: docs/ — Kansas-Matrix-System Documentation
+title: docs/ — Governed Documentation Hub
 type: standard
-version: v1
+version: v2
 status: draft
-owners: ["KFM Maintainers"]
+owners: KFM Maintainers (resolve via CODEOWNERS)
 created: 2026-02-24
-updated: 2026-02-24
+updated: 2026-02-27
 policy_label: public
 related:
-  - "../README.md"          # TODO: confirm root README path
-  - "./adr/README.md"       # TODO: create if missing
-  - "./policies/README.md"  # TODO: create if missing
-tags: [kfm, docs]
+  - ../README.md
+  - ../.github/README.md
+  - ../CONTRIBUTING.md
+  - ../SECURITY.md
+  - ../configs/README.md
+  - ../contracts/README.md
+  - ./adr/README.md
+  - ./governance/README.md
+  - ./runbooks/README.md
+  - ./standards/README.md
+tags:
+  - kfm
+  - docs
+  - governance
+  - evidence-first
+  - cite-or-abstain
 notes:
-  - "Scaffold README. Replace TODOs after confirming repo tree + CI gates."
+  - Upgraded from scaffold to governed doc index aligned to KFM vNext invariants.
+  - Corrected folder references (governance vs policies) and aligned system map to truth path + catalog triplet.
+  - Treat repo-specific structure as UNKNOWN until verified; fail-closed on missing referenced files.
 [/KFM_META_BLOCK_V2] -->
 
-# docs/
+<a id="top"></a>
 
-**Purpose:** governed, evidence-bound documentation for the Kansas‑Matrix‑System (KFM).
+# `docs/` — Governed Documentation Hub
+**Map-first • time-aware • governed • evidence-first • cite-or-abstain**
+
+This directory is **documentation-as-production** for Kansas Frontier Matrix (KFM). Anything here is expected to be:
+- **reviewable** (small diffs, stable IDs, clear owners),
+- **testable where applicable** (linkcheck, schema examples, policy fixtures),
+- **safe under policy** (default-deny posture; no sensitive leakage),
+- **traceable** (claims link back to resolvable evidence or are marked Unknown).
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
 ![Docs](https://img.shields.io/badge/docs-governed-blue)
-![Traceability](https://img.shields.io/badge/traceability-required-brightgreen)
+![Evidence](https://img.shields.io/badge/evidence-required-brightgreen)
 ![Policy](https://img.shields.io/badge/policy-default--deny-critical)
+![MetaBlock](https://img.shields.io/badge/metadata-KFM__META__BLOCK__V2-informational)
 
-> **Trust membrane rule:** every user-facing claim should be traceable to evidence *and* to the policy decisions that allowed it.
-
-## Quick navigation
-
-- [What belongs in docs/](#what-belongs-in-docs)
-- [Documentation stance](#documentation-stance)
-- [Directory layout](#directory-layout)
-- [System map](#system-map)
-- [Doc templates](#doc-templates)
-- [Definition of done](#definition-of-done)
-- [Contribution workflow](#contribution-workflow)
-- [Glossary](#glossary)
+> [!IMPORTANT]
+> **Trust membrane rule:** docs must never become a bypass.  
+> Do not include secrets, restricted coordinates, or “just trust me” claims.  
+> If a claim can’t be supported by evidence, **abstain** or mark it **UNKNOWN** with verification steps.
 
 ---
 
-## What belongs in docs/
+## Quick navigation
 
-This directory is **documentation-as-production**: everything here should be reviewable, testable (where applicable), and safe to publish under its **policy label**.
+- [Truth status legend](#truth-status-legend)
+- [Directory contract](#directory-contract)
+- [Documentation stance](#documentation-stance)
+- [Where docs fit in KFM](#where-docs-fit-in-kfm)
+- [Directory layout](#directory-layout)
+- [System map](#system-map)
+- [Doc templates](#doc-templates)
+- [CI gates for docs](#ci-gates-for-docs)
+- [Definition of Done](#definition-of-done)
+- [Contribution workflow](#contribution-workflow)
+- [Glossary](#glossary)
+- [Reference library](#reference-library)
 
-### Fits in the repo
+---
 
-- `docs/` is the **canonical home** for architecture, governance, runbooks, and contracts.
-- `docs/` is **not** the canonical home for executable code, datasets, or large binaries.
+## Truth status legend
 
-### Acceptable inputs
+Use explicit truth labels to keep docs evidence-first and fail-closed:
 
-- **System docs**: architecture overviews, diagrams, decision records (ADRs), runbooks, onboarding.
-- **Contracts**: API specs (OpenAPI/GraphQL), event schemas, error models.
-- **Data governance**: catalog entries, provenance/provenance rules, sensitivity classification, release criteria.
-- **Evidence**: validation receipts, promotion gate checklists, reproducible run manifests.
-- **UI narrative**: Story node specs, map/story content guidelines, accessibility guidance.
+- **CONFIRMED (repo):** backed by artifacts in this repository (paths, schemas, tests, receipts)
+- **CONFIRMED (design):** a KFM invariant/contract (must hold regardless of implementation)
+- **PROPOSED:** a recommended template/pattern (adopt only after review)
+- **UNKNOWN (repo):** not verified on this branch; include verification steps
 
-### Exclusions
+> [!NOTE]
+> If you reference a file that doesn’t exist, treat that as **missing and merge-blocking** if the reference is required by contract.
 
-- **Secrets** (tokens, keys, credentials), even in examples.
-- **Raw or sensitive data** (default-deny): use *redacted* samples and reference governed storage.
-- **Generated artifacts** (build outputs) unless explicitly required and size-controlled.
-- **Unverifiable claims**: if it can’t be cited or reproduced, label it **Unknown** and add verification steps.
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Directory contract
+
+### Purpose
+`docs/` is the canonical home for:
+- architecture and boundary contracts
+- governance standards and review workflows
+- operational runbooks
+- narrative standards (Story Nodes)
+- specs and examples that support enforcement (schemas, fixtures, checklists)
+
+### What belongs in `docs/`
+- **Architecture docs:** system overview, layering, trust membrane, canonical vs rebuildable
+- **Governance docs:** policy labels, obligations, promotion gates, review triggers, roles
+- **Runbooks:** incident response, pipeline operations, promotion procedures, rollback
+- **Standards:** doc standards, schema/profile standards, catalog profile references
+- **Narrative specs:** Story Node spec(s), citation conventions, evidence drawer expectations
+- **Evidence artifacts (bounded):** example receipts/manifests, redacted QA reports, validation examples
+
+### What must not go in `docs/`
+- **Secrets** (tokens, keys, credentials), even in examples
+- **Raw or sensitive data** (default-deny): use redacted samples + digests + EvidenceRefs
+- **Large binaries/build outputs** unless explicitly required and size-controlled
+- **Unverifiable assertions**: if it can’t be cited, label it **UNKNOWN** and add verification steps
+- **Policy enforcement logic** (belongs in `policy/` and runtime services), except for human-facing documentation of policy behavior
+
+> [!WARNING]
+> If it would be unsafe to paste into a public issue, it does not belong in public-labeled docs.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Documentation stance
 
 ### Truth discipline
+Every statement should be treated as one of:
+- **Confirmed:** backed by repo artifacts or resolvable evidence
+- **Proposed:** a design option with rationale + tradeoffs
+- **Unknown:** not verified; must include **minimum verification steps**
 
-Every statement in docs should be tagged mentally (and sometimes explicitly) as one of:
-
-- **Confirmed**: backed by repo artifacts or linked evidence.
-- **Proposed**: a design option with rationale + tradeoffs.
-- **Unknown**: needs verification; must include *minimum verification steps*.
-
-> **Rule:** do not “fill gaps” with invented repo state. Prefer TODOs, explicit Unknowns, and small verification checklists.
+> [!IMPORTANT]
+> Do not “fill gaps” by inventing repo state. Prefer TODOs, explicit Unknowns, and small verification checklists.
 
 ### Safety posture
-
 - **Default-deny** when sensitivity/permissions are unclear.
-- If content could enable harm (e.g., targeting vulnerable sites), publish only generalized detail.
+- If content could enable harm (e.g., vulnerable sites), publish only generalized detail.
+- If a doc is governance-sensitive (e.g., security operations, internal escalation), label it `restricted|internal` and ensure review routing via CODEOWNERS.
+
+### Cite-or-abstain applies to docs too
+If a document makes factual claims that would influence decisions (policy, security, promotion eligibility), it should:
+- cite in-repo artifacts (contracts, receipts, manifests, validators) **or**
+- cite governed evidence references **or**
+- mark the claim as **UNKNOWN**.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Where docs fit in KFM
+
+Docs sit alongside the enforceable artifacts and should point to them:
+
+- **Contracts:** `contracts/` defines enforceable interfaces (OpenAPI, schemas, profiles, gates)
+- **Configs:** `configs/` defines governed configuration inputs (labels, obligations, gate thresholds)
+- **Data truth path:** `data/` holds canonical specs/registries/manifests/catalogs/receipts/digests
+- **Governance:** `.github/` + `docs/governance/` define merge-time + human review posture
+
+> [!NOTE]
+> If this repo serves docs via governed APIs, the `policy_label` in the MetaBlock determines who can see the doc.
+> If docs are “git-only,” still keep the label—it is a governance signal and can be enforced later.
 
 ---
 
 ## Directory layout
 
-> ⚠️ **Scaffold:** adjust to match the actual repo tree.
+> [!NOTE]
+> This is a **target structure** aligned to the KFM vNext operating model.  
+> If your branch differs, update this README and any linkcheck/validators together.
 
 ```text
-docs/                                           # Docs hub (governed): architecture + governance + contracts + runbooks
-├─ README.md                                    # You are here: docs index + editing rules + “what goes where”
+docs/                                              # Governed docs hub (production docs)
+├─ README.md                                       # You are here: index + rules + “what goes where”
 │
-├─ adr/                                         # Architecture Decision Records (ADRs)
-│  ├─ README.md                                 # ADR index (TODO)
-│  └─ …                                         # Individual ADRs (date-stamped, decision + rationale)
+├─ adr/                                            # Architecture Decision Records
+│  ├─ README.md                                    # ADR index + naming conventions
+│  ├─ ADR-0001-<slug>.md
+│  └─ ADR-0002-<slug>.md
 │
-├─ architecture/                                # System architecture + invariants
-│  ├─ overview.md                               # Layered architecture + trust membrane (TODO)
-│  └─ …                                         # Diagrams, flows, boundary contracts
+├─ architecture/                                   # System architecture + invariants + diagrams
+│  ├─ README.md                                    # Overview + layering + trust membrane
+│  ├─ system_overview.md
+│  ├─ trust_membrane.md
+│  ├─ canonical_vs_rebuildable.md
+│  └─ diagrams/
+│     ├─ flow_truth_path.mmd
+│     └─ flow_evidence_resolution.mmd
 │
-├─ governance/                                  # Policies, roles, promotion gates
-│  ├─ policy_labels.md                          # Policy labels taxonomy (public/restricted/etc.) (TODO)
-│  ├─ promotion_gates.md                        # Raw → Work → Processed → Published gates (TODO)
-│  └─ …                                         # Review workflows, obligations, rubrics
+├─ governance/                                     # Policy + roles + obligations + promotion review workflows
+│  ├─ README.md
+│  ├─ policy_labels.md                             # Controlled vocabulary + semantics
+│  ├─ obligations.md                               # Obligation catalog (human-facing)
+│  ├─ promotion_contract.md                        # Gates A–F mapping + review triggers
+│  ├─ review_workflows.md                          # Steward review rules + escalation
+│  └─ sensitive_location_handling.md               # Default-deny + generalization posture
 │
-├─ data/                                        # Data-facing docs (catalogs, schemas, provenance concepts)
-│  ├─ catalog/                                  # Dataset identity + schema + extents + license (documentation)
-│  └─ receipts/                                 # Validation + QA outputs (redacted docs/examples)
+├─ standards/                                      # Writing and engineering standards (doc-as-prod)
+│  ├─ README.md
+│  ├─ doc_meta_block_v2.md                         # MetaBlock v2 rules (no YAML frontmatter)
+│  ├─ citations_and_evidence.md                    # EvidenceRef conventions + cite-or-abstain
+│  ├─ catalog_profiles.md                          # DCAT/STAC/PROV profile expectations (human view)
+│  └─ api_versioning.md                            # Contract changes + compatibility posture
 │
-├─ api/                                         # Governed interface contracts (human-facing)
-│  ├─ openapi/                                  # OpenAPI specs/docs (if applicable)
-│  └─ graphql/                                  # GraphQL schema/docs (if applicable)
+├─ runbooks/                                       # Operational procedures (production-grade)
+│  ├─ README.md
+│  ├─ incident_response.md
+│  ├─ pipeline_operations.md
+│  ├─ promotion_runbook.md
+│  └─ rollback_runbook.md
 │
-├─ ui/                                          # UI behavior docs (map/story/focus interactions)
-│  └─ story-node-v3.md                           # Story Node v3 spec (TODO, if used)
+├─ guides/                                         # Onboarding + how-to (developer, steward, operator)
+│  ├─ README.md
+│  ├─ onboarding.md
+│  ├─ add_a_dataset.md
+│  ├─ publish_a_story.md
+│  └─ focus_mode_eval.md
 │
-├─ runbooks/                                    # Operational procedures (production-grade)
-│  └─ incident_response.md                      # Incident response runbook (TODO)
+├─ stories/                                        # Story Nodes and narrative standards (policy-labeled, review-gated)
+│  ├─ README.md
+│  ├─ story_node_spec.md                           # Story Node format (markdown + sidecar + citations)
+│  ├─ templates/
+│  │  ├─ story_node.md
+│  │  └─ story_node.sidecar.json
+│  └─ published/                                   # OPTIONAL: curated, promoted story nodes (if stored in docs/)
 │
-└─ contributing/                                # Doc standards + style guides
-   └─ writing_standards.md                      # Writing standards (TODO)
+├─ investigations/                                 # Discover-mode notes (not user-visible until promoted)
+│  ├─ README.md
+│  └─ <investigation-slug>/
+│     ├─ README.md
+│     └─ notes.md
+│
+├─ schemas/                                        # Human-facing schema docs/examples (not canonical schemas)
+│  ├─ README.md
+│  ├─ run_receipt.md
+│  ├─ promotion_manifest.md
+│  ├─ evidence_bundle.md
+│  └─ examples/
+│
+└─ diagrams/                                       # Shared diagrams (mermaid/mmd/svg) referenced across docs
+   ├─ README.md
+   └─ <diagram-files>
 ```
+
+> [!TIP]
+> Keep “canonical schemas” and validators under `contracts/` and `tools/`.  
+> Keep `docs/schemas/` as **human-readable explanations + examples**, not the enforcement source of truth.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## System map
 
-The system is governed end-to-end:
+KFM is governed end-to-end:
 
-**data → pipelines → catalogs/provenance → storage/indexing → governed APIs → map/story UI → focus-mode AI**
+**Upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG (DCAT/STAC/PROV + receipts) → projections → governed API → Map/Story/Focus → audit**
 
 ```mermaid
-graph TD
-  A[Data Sources] --> B[Raw Zone]
-  B --> C[Work or Quarantine]
-  C --> D[Processed]
-  D --> E[Published]
-  E --> F[Catalog and Provenance]
-  F --> G[Governed APIs]
-  G --> H[Map and Story UI]
-  H --> I[Focus Mode AI]
-
-  subgraph Gates
-    G1[License check]
-    G2[QA validation]
-    G3[Policy decision]
-    G4[Audit record]
-  end
-
-  C --> G2
-  D --> G2
-  E --> G1
-  E --> G3
-  E --> G4
+flowchart LR
+  S[Upstream sources] --> R[RAW zone]
+  R --> W[WORK zone]
+  W --> Q[QUARANTINE zone]
+  W --> P[PROCESSED zone]
+  Q -. blocks promotion .-> P
+  P --> C[CATALOG triplet + receipts]
+  C --> IDX[Rebuildable projections]
+  C --> PUB[PUBLISHED exports (policy/rights filtered)]
+  IDX --> API[Governed API]
+  API --> UI[Map Explorer / Stories / Catalog / Focus]
+  API --> AUD[Append-only audit ledger]
+  C --> AUD
 ```
 
-### Architecture invariants
-
-These should be enforced by tests and CI gates (not memory):
-
-- UI/clients never access databases directly; **all access goes through governed APIs + policy boundary**.
+### Architecture invariants (CONFIRMED — design)
+- UI/clients never access storage/DB directly; **all access goes through governed APIs + policy boundary**.
 - Core logic never bypasses repositories to reach storage.
-- Gates fail closed.
+- Catalogs/provenance are canonical; projections are rebuildable.
+- Promotion gates fail closed.
+- Focus Mode answers cite-or-abstain; citation verification is a hard gate.
 
 ---
 
 ## Doc templates
 
-### MetaBlock header
-
-All “standard” docs should start with the MetaBlock header (copy/paste):
+### MetaBlock v2 header (required)
+All governed docs should start with MetaBlock v2 (no YAML frontmatter):
 
 ```md
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<uuid>
 title: <Title>
-type: standard
+type: standard|guide|adr|runbook|story|dataset_spec
 version: v1
 status: draft|review|published
 owners: <team or names>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: public|restricted|...
+policy_label: public|restricted|internal|embargoed|...
 related:
   - <paths or kfm:// ids>
-tags: [kfm]
+tags:
+  - kfm
 notes:
   - <short notes>
 [/KFM_META_BLOCK_V2] -->
 ```
 
-### ADR template
+**Rules:**
+- `doc_id` must be stable (do not regenerate on edits).
+- `updated` must change on meaningful edits.
+- `policy_label` must reflect the most restrictive content in the doc (default-deny if unsure).
 
+### ADR template
 ```md
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<uuid>
@@ -229,49 +344,83 @@ notes:
 - [ ] Security/policy review completed (if applicable)
 ```
 
+### Story Node template note
+Story Nodes are governed narratives:
+- markdown body (human)
+- sidecar metadata JSON (map state, citations, policy label, review state)
+
+Publishing gate: all citations must resolve through the evidence resolver.
+
 ---
 
-## Definition of done
+## CI gates for docs
+
+Docs are only safe at scale if they’re continuously validated.
+
+Recommended doc CI gates (PROPOSED):
+- **MetaBlock lint:** required fields present; `doc_id` stable; dates parse
+- **Internal linkcheck:** relative links resolve; no broken anchors
+- **Policy label lint:** policy_label must exist; forbidden content patterns flagged for public docs
+- **Secret scan:** prevent tokens/keys from landing in docs
+- **Diagram render checks:** mermaid blocks parse (at least basic lint)
+- **Story citation checks (when applicable):** citations resolve (or are marked UNKNOWN with verification)
+
+> [!IMPORTANT]
+> Fail-closed posture: if a doc is required by contract (e.g., runbook referenced in release workflow) and linkcheck fails, merging should be blocked.
+
+---
+
+## Definition of Done
 
 A doc change is ready to merge when:
 
-- [ ] **Policy label** is present and appropriate.
-- [ ] **Owners** are listed.
-- [ ] Any user-facing claim is **traceable** (links to evidence, configs, outputs, or receipts).
-- [ ] Unknowns are explicitly labeled and include **minimum verification steps**.
-- [ ] No secrets, credentials, or sensitive coordinates are present.
-- [ ] Diagrams render (Mermaid) and links are valid.
+- [ ] MetaBlock v2 is present and correct (including `policy_label` and `owners`)
+- [ ] Any user-facing or decision-driving claim is traceable (links to contracts/configs/receipts/manifests)
+- [ ] Unknowns are explicitly labeled and include **minimum verification steps**
+- [ ] No secrets, credentials, or sensitive coordinates are present
+- [ ] Links are valid (or intentionally marked TODO with an owner and plan)
+- [ ] Diagrams render (Mermaid) and are readable
+- [ ] If governance/policy behavior changed, related gates/tests/docs are updated together
 
 ---
 
 ## Contribution workflow
 
 1. Create or update a doc in the appropriate subfolder.
-2. Add/refresh the **MetaBlock** header.
-3. If you introduce a new requirement, add a **gate** or **test** reference.
-4. Keep changes **small and reversible** (prefer additive glue over rewrites).
+2. Add/refresh the MetaBlock v2 header.
+3. Keep changes small and reversible (prefer additive glue over sweeping rewrites).
+4. If you introduce a new requirement, point to (or add) the validator/test/gate that makes it enforceable.
+5. Route review via CODEOWNERS (especially for governance, security, and promotion-related docs).
 
-> TIP: For large documents, use `<details>` sections for appendices to keep the main narrative scannable.
+> [!TIP]
+> For long docs, use `<details>` appendices so the main narrative stays scannable.
 
 ---
 
 ## Glossary
 
-- **Trust membrane**: the enforced boundary where governed policy + evidence controls what can be claimed or served.
-- **Promotion gate**: a required checklist + evidence bundle before data/docs move to a more public/consumable zone.
-- **Policy label**: sensitivity classification that controls exposure and detail.
+- **Trust membrane:** enforced boundary where governed policy + evidence controls what can be claimed or served.
+- **Promotion gate:** required checklist + evidence bundle before a DatasetVersion can be surfaced.
+- **Policy label:** sensitivity classification that drives allow/deny + obligations.
+- **EvidenceRef:** stable scheme reference (dcat://, stac://, prov://, doc://, …) resolvable without guessing.
+- **EvidenceBundle:** resolved evidence package (policy decision + license + provenance + digests + audit ref).
+- **Canonical vs rebuildable:** catalogs/provenance/artifacts are canonical; DB/search/tiles/graph are rebuildable.
+- **Cite-or-abstain:** if citations can’t be verified and policy-allowed, abstain or reduce scope.
 
 ---
 
 ## Reference library
 
-Some KFM workstreams use a bundled PDF reference library for fast lookup while designing pipelines, APIs, UI, GIS/cartography, and governance.
+Some KFM workstreams maintain a reference library (GIS/cartography, pipelines, security, standards).
 
-- If present, start with **`KFM_Project_Library_Index.pdf`** (a navigable index of the bundled PDFs).
-- Treat large PDFs as **external inputs** (or use an approved large-file strategy). Do not accidentally publish copyrighted materials.
+**Policy-safe posture:**
+- Prefer a **bibliography/index** (titles + notes + pointers) over committing copyrighted PDFs.
+- If a PDF must be included, ensure rights allow redistribution, and label it appropriately.
+
+> [!NOTE]
+> If a “project library index” exists, treat it as a helper, not a contract.
+> Do not accidentally publish copyrighted materials by bundling them into a public repo.
 
 ---
 
-### Back to top
-
-[Back to top](#docs)
+<p align="right"><a href="#top">Back to top ↑</a></p>
