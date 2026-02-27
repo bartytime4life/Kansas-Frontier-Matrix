@@ -238,49 +238,218 @@ Config must support deterministic, fail-closed gates:
 configs/
 ├─ README.md
 │
-├─ registry/                                    # Machine-readable registries + schemas + fixtures (small)
-│  ├─ configs.v1.json                            # Canonical registry of governed configs (paths, owners, validators)
-│  ├─ schemas/                                   # JSON Schemas for registries and config shapes (if stored here)
-│  └─ fixtures/                                  # Valid/invalid examples for CI validation
+├─ registry/                                     # Machine-readable registries + schemas + fixtures (small)
+│  ├─ README.md                                  # Registry contract: what MUST be listed + how CI validates it
+│  ├─ configs.v1.json                            # Canonical registry (entries for every governed config area/file)
+│  ├─ schemas/                                   # Schemas for registries + config shapes (or pointers to contracts/)
+│  │  ├─ kfm.config_registry.v1.schema.json      # Validates configs.v1.json (paths, owners, validators, class)
+│  │  ├─ kfm.policy_labels.v1.schema.json        # Validates policy label documents
+│  │  ├─ kfm.obligations_catalog.v1.schema.json  # Validates obligations catalog documents
+│  │  ├─ kfm.promotion_gates.v1.schema.json      # Validates gate definition documents
+│  │  ├─ kfm.linkcheck_rules.v1.schema.json      # Validates linkcheck rule documents
+│  │  ├─ kfm.feature_flags.v1.schema.json        # Validates runtime feature flag docs
+│  │  ├─ kfm.rate_limits.v1.schema.json          # Validates rate limit configs
+│  │  ├─ kfm.ui_layer_registry.v1.schema.json    # Validates UI layer registry configs
+│  │  ├─ kfm.view_state_schema.v1.schema.json    # Validates view_state schema + migrations metadata
+│  │  └─ kfm.redaction_rules.v1.schema.json      # Validates observability redaction rules
+│  ├─ fixtures/                                  # Fixtures for CI validation (valid/invalid; deterministic)
+│  │  ├─ valid/
+│  │  │  ├─ configs.v1.valid.min.json
+│  │  │  ├─ policy.labels.v1.valid.yaml
+│  │  │  ├─ policy.obligations.v1.valid.yaml
+│  │  │  ├─ promotion.gates.v1.valid.yaml
+│  │  │  └─ ui.layers.v1.valid.yaml
+│  │  ├─ invalid/
+│  │  │  ├─ configs.v1.invalid.missing_owner.json
+│  │  │  ├─ configs.v1.invalid.bad_path.json
+│  │  │  ├─ policy.labels.v1.invalid.unknown_label.yaml
+│  │  │  ├─ promotion.gates.v1.invalid.missing_gate.yaml
+│  │  │  └─ ui.layers.v1.invalid.missing_dataset_version.yaml
+│  │  └─ README.md                               # How fixtures are used (what each one is asserting)
+│  └─ _generated/                                # OPTIONAL: generated indexes used by CI/tools (policy decides commit vs ignore)
+│     ├─ configs.index.v1.json                    # Flattened index (resolved paths + digests)
+│     └─ checksums.v1.json                        # Digest list for configs artifacts (audit-friendly)
 │
 ├─ policy/                                       # Policy-bearing configuration (NOT secrets; NOT policy engine code)
+│  ├─ README.md                                  # Policy inputs contract: labels + obligations + rubrics + fixtures
 │  ├─ labels/                                    # Policy labels + semantics + display hints
+│  │  ├─ README.md
+│  │  ├─ labels.v1.yaml                          # Canonical label definitions (public/restricted/etc)
+│  │  ├─ labels.display.v1.yaml                  # UI display hints (policy-safe names, colors as tokens, tooltips)
+│  │  ├─ labels.export_rules.v1.yaml             # Export posture per label (allowed/denied + obligations)
+│  │  └─ labels.compat.v1.yaml                   # Compatibility/migration notes (v1→v2 mapping when needed)
 │  ├─ obligations/                               # Obligation catalog (generalize, suppress export, show notice, etc.)
+│  │  ├─ README.md
+│  │  ├─ obligations.v1.yaml                     # Obligation definitions (kind, params, default UX messaging)
+│  │  ├─ obligations.transforms.v1.yaml          # Transform obligations (generalize, jitter, aggregate, redact fields)
+│  │  ├─ obligations.notices.v1.yaml             # Notice obligations (required banners, attribution, disclaimers)
+│  │  ├─ obligations.exports.v1.yaml             # Export obligations (watermark, suppress, attribution bundle)
+│  │  └─ obligations.compat.v1.yaml              # Version mapping for obligations (if you evolve them)
 │  ├─ rubrics/                                   # Licensing + sensitivity rubrics (machine-readable + human-readable)
+│  │  ├─ README.md
+│  │  ├─ licensing_rubric.v1.md                  # Human rubric (what counts as “clear rights”, “metadata-only”, etc.)
+│  │  ├─ licensing_rubric.v1.yaml                # Machine rubric (flags, required fields, block conditions)
+│  │  ├─ sensitivity_rubric.v1.md                # Human rubric (sensitive location, PII risk, aggregation thresholds)
+│  │  ├─ sensitivity_rubric.v1.yaml              # Machine rubric (labels, default obligations, deny rules)
+│  │  ├─ pii_risk_rubric.v1.md                   # Human rubric for reidentification risk + minimum counts
+│  │  └─ pii_risk_rubric.v1.yaml                 # Machine thresholds + rules (if applicable)
 │  └─ fixtures/                                  # Policy parity fixtures (synthetic allow/deny/obligation expectations)
+│     ├─ README.md                               # Fixture rules: deterministic, synthetic, no sensitive coords
+│     ├─ inputs/
+│     │  ├─ fixture_inputs.v1.json               # Structured inputs: user roles, resource labels, action types
+│     │  ├─ resource_samples.v1.json             # Sample resources (datasets/stories/evidence) policy-labeled
+│     │  └─ obligations_samples.v1.json          # Sample obligation requests
+│     ├─ expected/
+│     │  ├─ fixture_expected.v1.json             # Expected allow/deny + obligations results
+│     │  ├─ fixture_expected.public.v1.json
+│     │  ├─ fixture_expected.restricted.v1.json
+│     │  └─ fixture_expected.sensitive_location.v1.json
+│     └─ golden/
+│        └─ parity_golden.v1.json                # Golden outputs for parity tests (CI vs runtime)
 │
 ├─ contracts/                                    # Contract wiring (version selection + validator knobs)
-│  ├─ profiles/                                  # Which DCAT/STAC/PROV profiles are active per environment/class
+│  ├─ README.md                                  # “Wiring not definitions”: selects/targets contract versions
+│  ├─ profiles/                                  # Which DCAT/STAC/PROV profiles are active per env/class
+│  │  ├─ README.md
+│  │  ├─ dcat.profile_set.v1.yaml                # Active DCAT profile set + required fields per dataset class
+│  │  ├─ stac.profile_set.v1.yaml                # Active STAC profile set + required assets/fields
+│  │  ├─ prov.profile_set.v1.yaml                # Active PROV profile set + required lineage/agents
+│  │  ├─ profiles.by_class.v1.yaml               # Map: dataset_class → profile set (vector/raster/docs)
+│  │  └─ profiles.by_env.v1.yaml                 # Map: env → profile overrides (dev/stage/prod), non-secret
 │  ├─ vocab/                                     # Controlled vocab selection and validation toggles
+│  │  ├─ README.md
+│  │  ├─ vocab.sources.v1.yaml                   # Allowed source domains/authority list (for registry hygiene)
+│  │  ├─ vocab.themes.v1.yaml                    # Themes/tags vocabulary (DCAT theme, story tags)
+│  │  ├─ vocab.policy_labels.v1.yaml             # Mirror/lock policy labels as vocab (optional)
+│  │  ├─ vocab.artifact_types.v1.yaml            # Artifact type vocab (geoparquet, pmtiles, cog, pdf, jsonl…)
+│  │  └─ vocab.compat.v1.yaml                    # Vocab migrations when terms change
 │  └─ linkcheck/                                 # Cross-link/lint rules (EvidenceRef resolvability expectations)
+│     ├─ README.md
+│     ├─ evidence_ref_schemes.v1.yaml            # Allowed schemes: dcat:// stac:// prov:// doc:// graph:// url://
+│     ├─ evidence_ref_resolution.v1.yaml         # Resolver expectations: required fields per scheme, fail-closed rules
+│     ├─ catalog_crosslinks.v1.yaml              # DCAT↔STAC↔PROV link rules + required rels
+│     ├─ artifact_digest_rules.v1.yaml           # “Every artifact referenced MUST have digest” rules
+│     ├─ url_allowlist.v1.yaml                   # If url:// allowed at all, constrain domains / snapshot rules
+│     └─ lint_rules.v1.yaml                      # General lint rules (no quarantine links, no missing license, etc.)
 │
 ├─ promotion/                                    # Promotion Contract wiring
+│  ├─ README.md                                  # Gate taxonomy + how CI maps A–F to checks
 │  ├─ gates/                                     # Gate definitions + thresholds + required artifacts
+│  │  ├─ README.md
+│  │  ├─ gates.v1.yaml                           # Canonical gate set (A–F) + required checks + failure codes
+│  │  ├─ gate_a_identity.v1.yaml                 # Spec-hash inputs/expectations + drift guardrails
+│  │  ├─ gate_b_rights.v1.yaml                   # Rights fields required; metadata-only allowance rules
+│  │  ├─ gate_c_sensitivity.v1.yaml              # Label requirements + public_generalized derivative rules
+│  │  ├─ gate_d_catalogs.v1.yaml                 # Triplet requirements + profile selection hooks + linkcheck rules
+│  │  ├─ gate_e_receipts.v1.yaml                 # Receipt fields required + checksum requirements
+│  │  ├─ gate_f_policy_contracts.v1.yaml         # Policy parity + schema/contract validation requirements
+│  │  └─ gate_codes.v1.yaml                      # Canonical failure codes + policy-safe messages
 │  ├─ templates/                                 # Manifest/receipt templates (if not stored elsewhere)
+│  │  ├─ README.md
+│  │  ├─ promotion_manifest.v1.json              # Template for Promotion Manifest (fields + structure)
+│  │  ├─ run_receipt.v1.json                     # Template for Run Receipt (pipeline/index/story/focus)
+│  │  ├─ audit_entry.v1.json                     # Optional template for audit ledger entries
+│  │  ├─ qa_report.v1.json                       # Optional template for QA summary objects referenced by receipts
+│  │  └─ story_publish_receipt.v1.json           # Optional specialized receipt for story publishing
 │  └─ classes/                                   # Dataset class defaults (raster/vector/docs) and required checks
+│     ├─ README.md
+│     ├─ classes.v1.yaml                         # Master map: class → defaults + artifact expectations
+│     ├─ vector.v1.yaml                          # Vector defaults (geoparquet + pmtiles, bbox rules, etc.)
+│     ├─ raster.v1.yaml                          # Raster defaults (cog + stac items, tiling strategy, etc.)
+│     ├─ documents.v1.yaml                       # Docs defaults (pdf/jsonl; OCR caution; citation policy)
+│     ├─ timeseries.v1.yaml                      # Time series defaults (station/county, bitemporal requirements)
+│     └─ sensitive_location.v1.yaml              # Special class defaults (deny public; generalized derivative required)
 │
 ├─ runtime/                                      # Runtime wiring (non-secret defaults)
+│  ├─ README.md
 │  ├─ feature_flags/
+│  │  ├─ README.md
+│  │  ├─ flags.v1.yaml                           # Canonical feature flags + safe defaults
+│  │  ├─ flags.by_env.v1.yaml                    # Allowed env overrides (non-secret)
+│  │  └─ flags.compat.v1.yaml                    # Deprecated flags + migrations
 │  ├─ caching/
+│  │  ├─ README.md
+│  │  ├─ cache_policy.v1.yaml                    # TTLs, invalidation, vary-by-auth/policy label
+│  │  ├─ tile_cache_keys.v1.yaml                 # Tile cache keying rules (must include policy/auth context)
+│  │  ├─ http_cache_headers.v1.yaml              # Response header policy (Cache-Control/Vary)
+│  │  └─ cdn_rules.v1.yaml                       # Optional CDN constraints (no cross-role leakage)
 │  ├─ indexing/
+│  │  ├─ README.md
+│  │  ├─ postgis_projection.v1.yaml              # Projection build knobs (table naming, required columns)
+│  │  ├─ search_index.v1.yaml                    # Text search index knobs (fields allowed, analyzers)
+│  │  ├─ graph_index.v1.yaml                     # Graph projection knobs (edge types, redaction)
+│  │  ├─ vector_index.v1.yaml                    # Optional semantic index knobs (policy-filtered ingestion)
+│  │  └─ tiles_build.v1.yaml                     # Tile generation knobs (zoom ranges, generalization)
 │  └─ rate_limits/
+│     ├─ README.md
+│     ├─ public_api_limits.v1.yaml               # Public limits (policy-safe; deny does not reveal existence)
+│     ├─ authenticated_limits.v1.yaml            # Auth limits by role/tenant
+│     └─ burst_controls.v1.yaml                  # DoS protection knobs (non-secret)
 │
 ├─ pipelines/                                    # Pipeline runner wiring (non-secret)
+│  ├─ README.md
 │  ├─ schedules/
+│  │  ├─ README.md
+│  │  ├─ schedules.v1.yaml                       # Master schedule config (cron refs by dataset class)
+│  │  ├─ tier0_anchors.v1.yaml                   # Tier 0 anchor schedules (safe defaults)
+│  │  ├─ tier1_enrichers.v1.yaml                 # Tier 1 schedules
+│  │  └─ on_demand_only.v1.yaml                  # Datasets that must not auto-run (rights/sensitivity)
 │  ├─ runners/
+│  │  ├─ README.md
+│  │  ├─ runner_defaults.v1.yaml                 # Default runner settings (timeouts/retries; non-secret)
+│  │  ├─ container_images.v1.yaml                # Allowed/pinned images (digests), tool versions
+│  │  ├─ resource_classes.v1.yaml                # CPU/mem/storage classes by job type
+│  │  └─ network_policies.v1.yaml                # Egress allowlist (no direct exfil; policy-safe)
 │  └─ dataset_defaults/
+│     ├─ README.md
+│     ├─ defaults.v1.yaml                        # Global defaults referenced by dataset specs
+│     ├─ vector_defaults.v1.yaml                 # CRS, geometry rules, tiling defaults
+│     ├─ raster_defaults.v1.yaml                 # COG/STAC defaults, nodata policies
+│     ├─ documents_defaults.v1.yaml              # OCR defaults, citation constraints
+│     └─ qa_thresholds.v1.yaml                   # Default QA thresholds by dataset class
 │
 ├─ ui/                                           # UI wiring (non-secret)
+│  ├─ README.md
 │  ├─ layers/                                    # Layer registry defaults, layer groups, display metadata
+│  │  ├─ README.md
+│  │  ├─ layer_groups.v1.yaml                    # Groups: basemap, hazards, hydrology, demographics, etc.
+│  │  ├─ layers.v1.yaml                          # Layer definitions (id, title, dataset refs, render types)
+│  │  ├─ basemaps.v1.yaml                        # Basemap selection (sources are public; no keys)
+│  │  ├─ styling_tokens.v1.yaml                  # Style tokens (no secret URLs)
+│  │  └─ layer_filters.v1.yaml                   # UI filter definitions (display-only)
 │  ├─ view_state/                                # View-state schema versions + compatibility rules
+│  │  ├─ README.md
+│  │  ├─ view_state.schema.v1.json               # Canonical view_state schema (bbox, time, layers, filters)
+│  │  ├─ view_state.migrations.v1.yaml           # Migration rules (v1→v2) deterministic transforms
+│  │  ├─ share_links.v1.yaml                     # Share link policies (TTL, max size, redact sensitive params)
+│  │  └─ view_state.compat.v1.yaml               # Backward compatibility policy and sunset plan
 │  └─ policy_badges/                             # UI rendering rules for policy/validation badges (display-only)
+│     ├─ README.md
+│     ├─ badges.v1.yaml                          # Badge mapping (label → icon/text tokens)
+│     ├─ validation_badges.v1.yaml               # QA pass/degraded/fail display rules
+│     └─ notice_text.v1.yaml                     # Canonical policy-safe notice strings
 │
 ├─ observability/                                # Observability wiring (policy-safe)
+│  ├─ README.md
 │  ├─ logging/
+│  │  ├─ README.md
+│  │  ├─ field_allowlist.v1.yaml                 # Allowed log fields (policy-safe)
+│  │  ├─ field_denylist.v1.yaml                  # Fields that must never be logged (tokens, coords, PII)
+│  │  ├─ sampling.v1.yaml                        # Sampling rules per component
+│  │  └─ retention_guidance.v1.md                # Human guidance (real retention handled by infra)
 │  ├─ metrics/
+│  │  ├─ README.md
+│  │  ├─ metrics_catalog.v1.yaml                 # Metric names + meaning + label constraints
+│  │  ├─ slo_targets.v1.yaml                     # SLOs (availability, latency, citation-resolve rate)
+│  │  └─ dashboards_map.v1.yaml                  # Maps metrics → dashboards (no URLs required)
 │  └─ redaction/
+│     ├─ README.md
+│     ├─ redaction_rules.v1.yaml                 # Redact patterns (tokens, emails, coords) defense-in-depth
+│     ├─ pii_patterns.v1.yaml                    # PII patterns (emails, phone, SSN-like) for scrubbers
+│     └─ coordinate_patterns.v1.yaml             # Coordinate/geometry field scrubbers for public logs
 │
 └─ env/                                          # Example overlays (NO secrets; keys only)
+   ├─ README.md                                  # Explains: examples only; secrets live elsewhere
    ├─ dev.example.env
    ├─ staging.example.env
    └─ prod.example.env
