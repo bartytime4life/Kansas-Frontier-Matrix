@@ -72,16 +72,17 @@ flowchart TD
 > NOTE: The exact subfolders may evolve. Prefer **adding** new fixture categories over renaming existing ones (reduces churn).
 
 ```text
-apps/admin/tests/fixtures/
-  README.md                         # you are here
-  policy_cases/                     # allow/deny + obligations “truth table”
-    (case_slug).json
-  api/                              # mock API responses (governed)
-    (endpoint_slug).json
-  ui/                               # view-state or component fixtures
-    (component_slug).json
-  schemas/                          # JSON Schemas for fixture validation (recommended)
-    (fixture_kind).schema.json
+apps/admin/tests/fixtures/                             # Admin test fixtures (safe, synthetic, policy-labeled)
+├── README.md                                          # You are here (fixture rules, naming, validation, provenance)
+├── policy_cases/                                      # Allow/deny + obligations “truth table” cases (source of expectations)
+│   └── (case_slug).json                               # Single policy case fixture (inputs → expected decision/obligations)
+├── api/                                               # Mock governed API responses (stable shapes, versioned)
+│   └── (endpoint_slug).json                           # Mock response per endpoint/variant (use deterministic IDs)
+├── ui/                                                # View-state or component fixtures (render states + edge cases)
+│   └── (component_slug).json                          # Component/view fixture (props/state payloads)
+├── schemas/                                           # JSON Schemas for fixture validation (recommended)
+│   └── (fixture_kind).schema.json                     # Schema per fixture kind (policy_case/api/ui) + required fields
+└── ...                                                # Add new fixture kinds as folders (must include schema + README updates)
 ```
 
 ---
