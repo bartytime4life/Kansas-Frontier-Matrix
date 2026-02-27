@@ -649,44 +649,203 @@ PROPOSED dataset slug conventions (keep IDs stable and legible):
 Reference layout for the truth path:
 
 ```text
-data/                                                # Governed data lifecycle (raw → work → quarantine? → processed → catalog → published)
-├─ raw/
-│  └─ <dataset_slug>/<dataset_version_id>/           # Immutable capture for a specific dataset version
-│     ├─ acquisition_manifest.json                   # Capture manifest (source, method, license/sensitivity, pointers)
-│     ├─ terms_snapshot.txt                          # Terms/license snapshot at capture time (audit + provenance)
-│     └─ source_files/…                              # Original source payload (or pointers; never modified)
+data/
+├─ raw/                                                         # Immutable acquisition snapshots (per DatasetVersion)
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/
+│        ├─ acquisition_manifest.v1.json                        # REQUIRED (Gate B/C/E): source, method, pointers, capture time, rights snapshot refs
+│        ├─ acquisition_manifest.v1.json.sha256                 # REQUIRED: digest of manifest
+│        ├─ terms/                                               # REQUIRED (Gate B): terms captured at acquisition time
+│        │  ├─ terms_snapshot.txt                                # REQUIRED: human-readable terms/license snapshot
+│        │  ├─ terms_snapshot.url                                # OPTIONAL: original URL(s) captured at the time
+│        │  ├─ terms_snapshot.html                               # OPTIONAL: if web terms are HTML
+│        │  └─ terms_snapshot.sha256                             # REQUIRED: digest(s) for terms snapshots
+│        ├─ rights/                                              # OPTIONAL but recommended: structured rights fields
+│        │  ├─ rights_summary.v1.json                            # license id (if known), attribution text, restrictions, share conditions
+│        │  └─ rights_summary.v1.json.sha256
+│        ├─ checksums/                                           # REQUIRED (Gate E): integrity of captured payload
+│        │  ├─ source_files.sha256                               # sha256sum file for all captured objects
+│        │  ├─ source_files.manifest.v1.json                     # structured digest list + media types + sizes
+│        │  └─ source_files.manifest.v1.json.sha256
+│        ├─ pointers/                                            # OPTIONAL: when not mirroring payload (metadata-only)
+│        │  ├─ upstream_pointers.v1.json                          # URLs/IDs + retrieval method + auth constraints (NO secrets)
+│        │  └─ upstream_pointers.v1.json.sha256
+│        ├─ source_files/                                        # ORIGINAL payload (never modified)
+│        │  ├─ <as_downloaded>                                    # e.g., .csv, .zip, .tif, .shp.zip, .json, etc.
+│        │  └─ ...
+│        └─ capture/                                             # OPTIONAL: capture-time diagnostics (bounded, policy-safe)
+│           ├─ capture_log.txt
+│           ├─ http_headers.json                                 # if allowed; redact tokens
+│           └─ capture_receipt.v1.json                            # optional pre-receipt (full receipt lives under catalog/run_receipts)
 │
-├─ work/
-│  └─ <dataset_slug>/<dataset_version_id>/           # Regeneratable intermediates (never served)
-│     ├─ qa/…                                        # Validation/QC artifacts (schema/geo/time/license checks)
-│     └─ redaction_candidates/…                      # Candidate fields/geometry needing redaction/generalization
+├─ work/                                                        # Regeneratable intermediates (never served; may be overwritten)
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/
+│        ├─ latest_run.json                                      # OPTIONAL: pointer to most recent run_id in runs/
+│        └─ runs/
+│           └─ <run_id>/                                         # e.g., 2026-02-20T1234Z.<slug>.<hash>
+│              ├─ inputs/                                        # materialized inputs used for this run (pointers or small extracts)
+│              │  ├─ input_manifest.v1.json
+│              │  └─ input_manifest.v1.json.sha256
+│              ├─ intermediate/                                  # transforms, joins, cleaning (NOT canonical)
+│              │  ├─ stage_00_unpack/
+│              │  ├─ stage_10_normalize/
+│              │  ├─ stage_20_enrich/
+│              │  └─ stage_30_prepare_outputs/
+│              ├─ qa/                                             # REQUIRED for promotion attempts (Gate F, plus QA evidence)
+│              │  ├─ qa_summary.v1.json                           # REQUIRED: pass/degraded/fail + key metrics
+│              │  ├─ qa_summary.v1.json.sha256
+│              │  ├─ reports/
+│              │  │  ├─ schema_check.json
+│              │  │  ├─ spatial_check.json
+│              │  │  ├─ temporal_check.json
+│              │  │  ├─ license_check.json
+│              │  │  ├─ pii_check.json                            # if applicable
+│              │  │  └─ sensitivity_check.json                    # if applicable
+│              │  └─ artifacts/                                   # optional QA artifacts (plots, sample extracts; policy-safe)
+│              ├─ redaction/                                      # Gate C: sensitivity/redaction planning + candidates
+│              │  ├─ redaction_candidates/                        # flagged columns/rows/geoms needing review
+│              │  ├─ redaction_plan.v1.json                       # REQUIRED when policy_label implies generalization
+│              │  ├─ generalization_method.txt                    # e.g., centroid_only / dissolve_to_admin_unit / grid_aggregation
+│              │  └─ redaction_plan.v1.json.sha256
+│              ├─ policy_eval/                                    # OPTIONAL but recommended: policy engine evaluation results for this run
+│              │  ├─ policy_input.json                            # role, policy_label, context
+│              │  ├─ policy_decision.json                         # allow/deny + obligations (for this run attempt)
+│              │  └─ policy_decision.json.sha256
+│              ├─ logs/
+│              │  ├─ runner.log
+│              │  ├─ stderr.log
+│              │  └─ metrics.json
+│              └─ outputs_preview/                                # OPTIONAL: pre-promotion previews (NOT canonical)
+│                 ├─ preview_artifact_manifest.json
+│                 └─ samples/
 │
-├─ quarantine/
-│  └─ <dataset_slug>/<dataset_version_id>/           # Failed gates (never promoted/served until remediated)
-│     ├─ reason.json                                 # REQUIRED: failure reason + remediation plan + owner
-│     └─ artifacts/…                                 # Debug artifacts (bounded; synthetic where possible)
+├─ quarantine/                                                  # Failed gates (never served) + remediation docs
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/
+│        ├─ latest_blocked_run.json                              # OPTIONAL pointer
+│        └─ runs/
+│           └─ <run_id>/
+│              ├─ reason.v1.json                                 # REQUIRED: gate(s) failed + remediation plan + owner + timestamp
+│              ├─ reason.v1.json.sha256
+│              ├─ owner.txt                                      # REQUIRED: steward/operator responsible
+│              ├─ tickets.md                                     # OPTIONAL: links to issues/PRs
+│              ├─ artifacts/                                     # bounded debug artifacts (prefer synthetic)
+│              │  ├─ failing_rows_sample.parquet                 # optional; ensure policy-safe
+│              │  └─ logs/
+│              └─ qa/                                            # copy of QA summary/report from work for audit convenience
+│                 └─ qa_summary.v1.json
 │
-├─ processed/
-│  └─ <dataset_slug>/<dataset_version_id>/           # Publishable artifacts (servable; immutable per version)
-│     ├─ artifacts/…                                 # Data products (parquet/geoparquet/tiles/media; checksummed elsewhere)
-│     └─ runtime_metadata.json                       # Runtime metadata (bounds, schema refs, policy labels, evidence refs)
+├─ processed/                                                   # Canonical publishable artifacts (immutable per DatasetVersion)
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/
+│        ├─ artifact_manifest.v1.json                            # REQUIRED (Gate E): list of artifacts + digests + media_types
+│        ├─ artifact_manifest.v1.json.sha256
+│        ├─ runtime_metadata.v1.json                             # REQUIRED: bbox/time extent, schema refs, policy_label, evidence templates
+│        ├─ runtime_metadata.v1.json.sha256
+│        ├─ qa/                                                  # REQUIRED (or strongly recommended): promoted QA summary (policy-safe)
+│        │  ├─ qa_summary.v1.json
+│        │  └─ qa_summary.v1.json.sha256
+│        ├─ schemas/                                             # OPTIONAL: frozen schema snapshots or references
+│        │  ├─ schema.json                                       # or schema_ref.json pointing to contracts version
+│        │  └─ schema.json.sha256
+│        ├─ evidence/                                            # OPTIONAL but high-leverage: stable lookup aids for EvidenceBundles
+│        │  ├─ evidence_index.v1.jsonl.zst                       # feature_id -> EvidenceRef, minimal display fields, digests
+│        │  ├─ evidence_index.v1.jsonl.zst.sha256
+│        │  └─ templates.v1.json                                 # EvidenceRef templates used by UI/api
+│        └─ artifacts/                                           # Canonical data products
+│           ├─ tables/                                           # GeoParquet/Parquet tables
+│           │  ├─ <name>.geoparquet
+│           │  └─ ...
+│           ├─ vectors/                                          # vector deliverables (if needed)
+│           │  ├─ <name>.geojsonl.zst                            # policy-safe extracts only
+│           │  └─ ...
+│           ├─ rasters/                                          # raster deliverables (COG)
+│           │  ├─ <name>.tif                                     # cloud-optimized geotiff
+│           │  └─ ...
+│           ├─ tiles/                                            # tile bundles (PMTiles/MVT)
+│           │  ├─ <layer_id>.pmtiles
+│           │  └─ ...
+│           ├─ docs/                                             # documents captured as artifacts (if part of dataset)
+│           │  ├─ <doc_id>.pdf
+│           │  └─ ...
+│           └─ media/                                            # images/audio used as evidence (only if rights allow)
+│              ├─ <asset_id>.<ext>
+│              └─ ...
 │
-├─ catalog/
-│  └─ <dataset_slug>/<dataset_version_id>/           # Served metadata + lineage (cross-linked; validation-gated)
-│     ├─ dcat.jsonld                                 # DCAT record(s) (dataset/distribution)
-│     ├─ stac/
-│     │  ├─ collection.json                          # STAC Collection
-│     │  └─ items/*.json                             # STAC Items for assets in this version
-│     ├─ prov/
-│     │  └─ prov.jsonld                              # PROV bundle (raw → work → processed lineage)
-│     └─ run_receipts/*.json                         # Run receipts/manifests (promotion evidence for this version)
+├─ catalog/                                                     # Canonical metadata + lineage (cross-linked; validation-gated)
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/
+│        ├─ dcat.jsonld                                          # REQUIRED (Gate D): dataset + distributions + license + policy label
+│        ├─ dcat.jsonld.sha256
+│        ├─ stac/
+│        │  ├─ collection.json                                   # REQUIRED (Gate D): extent/license/links/policy label
+│        │  ├─ collection.json.sha256
+│        │  └─ items/
+│        │     ├─ <item_id>.json                                 # REQUIRED set: items for promoted assets
+│        │     ├─ <item_id>.json.sha256
+│        │     └─ ...
+│        ├─ prov/
+│        │  ├─ prov.jsonld                                       # REQUIRED (Gate D): lineage raw->work->processed + redaction transforms
+│        │  ├─ prov.jsonld.sha256
+│        │  └─ entities/                                         # OPTIONAL: split PROV for large graphs
+│        │     └─ ...
+│        ├─ run_receipts/                                        # REQUIRED (Gate E/F): immutable receipts for runs
+│        │  ├─ <run_id>.run_receipt.v1.json
+│        │  ├─ <run_id>.run_receipt.v1.json.sha256
+│        │  ├─ <run_id>.focus_receipt.v1.json                    # if focus answers pinned to this dataset version
+│        │  └─ ...
+│        ├─ promotion/                                           # REQUIRED (Gate A/E): promotion manifest + approvals
+│        │  ├─ promotion_manifest.v1.json
+│        │  ├─ promotion_manifest.v1.json.sha256
+│        │  ├─ approvals.v1.json                                 # steward approvals + timestamps (or refs to audit ledger entries)
+│        │  └─ approvals.v1.json.sha256
+│        ├─ validation/                                          # REQUIRED (Gate D/F): validators/linkcheck outputs
+│        │  ├─ catalog_profile_validation.json                   # DCAT/STAC/PROV profile checks
+│        │  ├─ catalog_linkcheck.json                            # cross-link + href resolution checks
+│        │  ├─ checksum_verification.json                        # verifies digests match processed artifacts
+│        │  └─ policy_gate_results.json                          # policy fixtures/tests confirmation for this promotion
+│        └─ signatures/                                          # OPTIONAL but recommended: tamper-evidence
+│           ├─ dcat.sig
+│           ├─ stac.sig
+│           ├─ prov.sig
+│           ├─ promotion_manifest.sig
+│           └─ run_receipts.sigbundle
 │
-├─ published/
-│  └─ <dataset_slug>/<dataset_version_id>/           # Exported/publication-ready outputs (optional; often externalized)
-│     └─ exports/…                                   # Exports (CSV/GeoJSON/tilesets/packages) as allowed by policy
+├─ published/                                                   # Runtime/publication-ready outputs (optional; policy-gated)
+│  └─ <dataset_slug>/
+│     └─ <dataset_version_id>/
+│        ├─ export_manifest.v1.json                              # REQUIRED if published outputs exist: what was exported + policy basis
+│        ├─ export_manifest.v1.json.sha256
+│        ├─ notices/                                             # required UX notices / obligations text
+│        │  ├─ attribution.txt                                   # copyable attribution
+│        │  ├─ license.txt                                       # license text or pointer
+│        │  └─ policy_notice.md                                  # e.g., “generalized geometry” / “export suppressed”
+│        ├─ exports/
+│        │  ├─ geojson/                                          # policy-safe GeoJSON exports (if allowed)
+│        │  ├─ csv/                                              # policy-safe tabular exports (if allowed)
+│        │  ├─ packages/                                         # zipped bundles, if allowed
+│        │  └─ tilesets/                                         # publishable tilesets (if separate from processed artifacts)
+│        └─ public_generalized/                                  # optional: explicit public derivative for restricted/sensitive inputs
+│           └─ <derivative_dataset_version_id>/                  # treated like its own DatasetVersion; can point back via PROV
 │
-└─ audit/
-   └─ ledger/<year>/<month>/append-only.log          # Append-only audit ledger segments (often stored outside repo in prod)
+└─ audit/                                                       # Append-only governance record (often external in production)
+   ├─ ledger/
+   │  └─ <year>/
+   │     └─ <month>/
+   │        ├─ append-only.<yyyy-mm-dd>.ndjson                   # append-only event stream
+   │        ├─ append-only.<yyyy-mm-dd>.ndjson.sha256            # digest for integrity
+   │        ├─ chain_state.json                                  # OPTIONAL: previous digest pointer for hash-chaining
+   │        └─ index.json                                        # OPTIONAL: offsets + quick lookup
+   ├─ entries/                                                   # OPTIONAL: materialized entries (if you want addressable objects)
+   │  └─ <entry_id>.json
+   ├─ approvals/                                                 # OPTIONAL: steward approvals (or keep in ledger only)
+   │  └─ <approval_id>.json
+   ├─ policy_decisions/                                          # OPTIONAL: policy decision objects referenced by receipts
+   │  └─ <decision_id>.json
+   └─ signatures/                                                # OPTIONAL: signatures for ledger segments/entries
+      └─ <year>/<month>/
+         └─ ledger.sigbundle
 ```
 
 > [!IMPORTANT]
@@ -1324,119 +1483,378 @@ This layout aligns KFM features with governance boundaries and the truth path zo
 
 ```text
 Kansas-Frontier-Matrix/
-├─ README.md
-├─ LICENSE
-├─ CONTRIBUTING.md
-├─ SECURITY.md
-├─ CODE_OF_CONDUCT.md
-├─ CHANGELOG.md
+├─ README.md                                  # [CONFIRMED root] Product/operating model (map-first, governed, cite-or-abstain)
+├─ LICENSE                                    # [CONFIRMED root] SPDX-friendly license
+├─ CONTRIBUTING.md                            # [CONFIRMED root] contributor workflow + gates
+├─ SECURITY.md                                # [CONFIRMED root] vuln reporting + disclosure posture
+├─ CODE_OF_CONDUCT.md                         # [PROPOSED root] community standard (recommended)
+├─ CHANGELOG.md                               # [CONFIRMED root] release notes / promotion notes
+├─ .editorconfig                              # [PROPOSED] formatting baseline
+├─ .gitignore                                 # [PROPOSED] keep big artifacts out of Git; allow fixtures only
+├─ .gitattributes                             # [PROPOSED] LFS rules (if needed), linguist hints
+├─ Makefile                                   # [PROPOSED] “one front door” commands (make help, make dev, make test)
+├─ compose.yaml                               # [PROPOSED] local stack (postgis, minio, search) for dev + tests
 │
-├─ .github/
-│  ├─ workflows/
-│  ├─ ISSUE_TEMPLATE/
-│  ├─ PULL_REQUEST_TEMPLATE.md
-│  └─ CODEOWNERS
+├─ .github/                                   # [CONFIRMED root] merge-time trust membrane (CI + CODEOWNERS + templates)
+│  ├─ README.md                               # [PROPOSED] GitHub operations index (recommended structure is documented)
+│  ├─ CODEOWNERS                              # [PROPOSED] REQUIRED: review routing for governance-critical paths
+│  ├─ PULL_REQUEST_TEMPLATE.md                # [PROPOSED] default PR checklist (small diffs + evidence)
+│  ├─ PULL_REQUEST_TEMPLATE/                  # [PROPOSED] multi-template PRs
+│  │  ├─ default.md
+│  │  ├─ governance.md
+│  │  └─ data-pipeline.md
+│  ├─ ISSUE_TEMPLATE/                         # [PROPOSED] triage discipline
+│  │  ├─ config.yml
+│  │  ├─ bug_report.yml
+│  │  ├─ feature_request.yml
+│  │  ├─ governance_change.yml
+│  │  ├─ data_pipeline.yml
+│  │  └─ story_node.yml
+│  ├─ actions/                                # [PROPOSED] composite actions reused by workflows
+│  │  ├─ setup-node/
+│  │  ├─ setup-python/
+│  │  ├─ kfm-validate-contracts/
+│  │  ├─ kfm-policy-test/
+│  │  ├─ kfm-linkcheck/
+│  │  └─ kfm-eval-focus/
+│  └─ workflows/                              # [PROPOSED] required checks registry should point at these
+│     ├─ ci.yml                               # lint/typecheck/unit
+│     ├─ policy-gates.yml                     # policy fixtures + deny-by-default verification
+│     ├─ provenance-audit.yml                 # receipts emitted + validated + linked
+│     ├─ release.yml                          # promotion + publish (guarded)
+│     ├─ kfm__provenance-policy-gate.yml       # (optional) unified provenance+policy gate
+│     ├─ pr-verify-receipts.yml                # (optional) PR verifies run receipts / manifests
+│     ├─ kfm__watchers.yml                     # (optional) scheduled watchers to detect upstream drift
+│     └─ kfm__ops-acceptance.yml               # (optional) ops acceptance / smoke gates
 │
-├─ docs/
-│  ├─ adr/
-│  ├─ governance/
-│  ├─ runbooks/
-│  ├─ guides/
-│  ├─ stories/
-│  ├─ investigations/
-│  ├─ schemas/
-│  ├─ standards/
-│  └─ diagrams/
+├─ docs/                                      # [CONFIRMED root] governed documentation
+│  ├─ README.md                               # [PROPOSED] docs index + navigation map
+│  ├─ adr/                                    # Architecture Decision Records (small, reversible increments)
+│  │  ├─ 0001-adr-template.md
+│  │  └─ 0002-trust-membrane-boundaries.md
+│  ├─ governance/                             # labels, roles, obligations, review triggers
+│  │  ├─ policy-labels.md
+│  │  ├─ roles-and-stewardship.md
+│  │  ├─ sensitive-location-handling.md
+│  │  ├─ rights-and-licensing.md
+│  │  └─ promotion-contract.md                # human-readable explanation of Contract v1 gates
+│  ├─ runbooks/                               # operators: pipelines, backfills, incident playbooks
+│  │  ├─ local-dev.md
+│  │  ├─ pipeline-ops.md
+│  │  ├─ rebuild-projections.md
+│  │  ├─ evidence-resolver-ops.md
+│  │  ├─ focus-mode-ops.md
+│  │  └─ audit-ledger-ops.md
+│  ├─ guides/                                 # contributor-facing guides
+│  │  ├─ dataset-onboarding.md
+│  │  ├─ writing-story-nodes.md
+│  │  ├─ evidence-and-citations.md
+│  │  ├─ policy-authoring.md
+│  │  └─ testing-and-evals.md
+│  ├─ standards/                              # enforceable doc/data standards
+│  │  ├─ metablock-v2.md
+│  │  ├─ story-node-v3.md
+│  │  ├─ evidence-ref-schemes.md
+│  │  ├─ catalog-profiles.md
+│  │  └─ error-model.md
+│  ├─ schemas/                                # docs about schemas (not the schemas themselves)
+│  ├─ diagrams/                               # exported diagrams + sources
+│  │  ├─ architecture.mmd
+│  │  ├─ truth-path.mmd
+│  │  └─ focus-control-loop.mmd
+│  ├─ investigations/                         # governed “working notes” (not user-visible until promoted)
+│  └─ stories/                                # story nodes (draft/review/published)
+│     ├─ drafts/
+│     ├─ review/
+│     └─ published/
 │
-├─ contracts/
-│  ├─ openapi/
-│  ├─ schemas/
-│  ├─ profiles/
-│  └─ vocab/
+├─ contracts/                                 # [CONFIRMED root] machine-enforced boundaries + schemas
+│  ├─ README.md                               # [PROPOSED] contract index + validation rules
+│  ├─ openapi/                                # Governed API contracts
+│  │  ├─ kfm.api.v1.yaml
+│  │  └─ components/
+│  │     ├─ errors.yaml
+│  │     ├─ evidence.yaml
+│  │     ├─ catalog.yaml
+│  │     ├─ stories.yaml
+│  │     └─ focus.yaml
+│  ├─ schemas/                                # JSON Schemas used in CI + runtime validation
+│  │  ├─ dataset_spec.v1.schema.json          # WP-01
+│  │  ├─ promotion_manifest.v1.schema.json    # Promotion Contract v1
+│  │  ├─ run_receipt.v1.schema.json           # provenance receipts (pipeline/focus/story/index)
+│  │  ├─ run_manifest.v1.schema.json          # batch run manifests / bundles
+│  │  ├─ evidence_bundle.v1.schema.json       # EvidenceBundle shape
+│  │  ├─ story_node.v3.schema.json            # Story Node v3 sidecar schema
+│  │  ├─ watcher.v1.schema.json               # upstream watcher registry entries
+│  │  └─ controlled_vocab.v1.schema.json      # vocab format
+│  ├─ profiles/                               # profile constraints for catalogs
+│  │  ├─ dcat/
+│  │  │  ├─ profile.v1.json
+│  │  │  └─ tests/
+│  │  ├─ stac/
+│  │  │  ├─ profile.v1.json
+│  │  │  └─ tests/
+│  │  └─ prov/
+│  │     ├─ profile.v1.json
+│  │     └─ tests/
+│  ├─ vocab/                                  # controlled vocabularies (versioned)
+│  │  ├─ policy_labels.v1.json
+│  │  ├─ zones.v1.json
+│  │  ├─ citation_kinds.v1.json
+│  │  ├─ themes.v1.json
+│  │  └─ obligations.v1.json
+│  └─ templates/                              # canonical templates for generated artifacts
+│     ├─ prov/
+│     │  └─ run.v1.jsonld.template
+│     └─ receipts/
+│        └─ run_receipt.v1.json.template
 │
-├─ policy/
-│  ├─ rego/
-│  ├─ tests/
-│  ├─ fixtures/
-│  └─ bundles/
+├─ policy/                                    # [CONFIRMED root] policy-as-code (default deny) + fixtures-driven tests
+│  ├─ README.md                               # [PROPOSED] policy module contract
+│  ├─ rego/                                   # OPA/Rego policies
+│  │  ├─ kfm.rego
+│  │  ├─ access.rego
+│  │  ├─ obligations.rego
+│  │  ├─ export_controls.rego
+│  │  └─ errors.rego                          # policy-safe error shaping
+│  ├─ tests/                                  # policy tests (conftest/opa test)
+│  │  ├─ kfm_test.rego
+│  │  └─ fixtures_test.rego
+│  ├─ fixtures/                               # deterministic fixtures (allow/deny + obligations)
+│  │  ├─ public_allow.json
+│  │  ├─ restricted_deny.json
+│  │  ├─ sensitive_location_generalize.json
+│  │  └─ export_denied.json
+│  ├─ bundles/                                # packaged policy bundle(s) for runtime distribution
+│  └─ license/                                # (optional) license allow/deny rules used by promotion gates
+│     ├─ allowlist.json
+│     └─ denylist.json
 │
-├─ data/
-│  ├─ specs/
-│  ├─ registry/
-│  ├─ fixtures/
-│  ├─ raw/
-│  ├─ work/
-│  ├─ quarantine/
-│  ├─ processed/
-│  ├─ catalog/
-│  ├─ published/
-│  └─ audit/
+├─ data/                                      # [CONFIRMED root] governed data lifecycle (truth path zones)
+│  ├─ README.md                               # [PROPOSED] zone rules + what belongs here (fixtures vs real artifacts)
+│  ├─ specs/                                  # canonical dataset onboarding specs (inputs to spec_hash)
+│  │  ├─ <dataset_slug>.v1.json
+│  │  └─ _templates/
+│  │     ├─ dataset_spec.template.json
+│  │     └─ transforms.template.json
+│  ├─ registry/                               # registries: sources + anchors + watchers
+│  │  ├─ sources/
+│  │  │  ├─ <source_id>.json
+│  │  │  └─ _templates/source_registry.template.json
+│  │  ├─ anchors/
+│  │  │  └─ anchors.v1.json
+│  │  └─ watchers/
+│  │     └─ watchers.v1.json
+│  ├─ fixtures/                               # small, committed test datasets + catalogs + receipts
+│  │  ├─ sample_dataset/
+│  │  ├─ sample_catalog/
+│  │  └─ sample_receipts/
+│  ├─ raw/                                    # immutable acquisition snapshots (prefer object storage in prod)
+│  ├─ work/                                   # intermediate transforms, QC, redaction candidates
+│  ├─ quarantine/                              # failed gates (must include reason.json + owner)
+│  ├─ processed/                               # publishable artifacts (immutable per DatasetVersion)
+│  ├─ catalog/                                 # DCAT/STAC/PROV + receipts for each DatasetVersion
+│  ├─ published/                               # policy-safe exports (optional; may be externalized)
+│  └─ audit/                                   # append-only audit ledger segments (often external in prod)
 │
-├─ apps/
-│  ├─ api/
-│  ├─ ui/
-│  ├─ workers/
-│  ├─ studio/
-│  └─ cli/
+├─ apps/                                      # [CONFIRMED root] runnable services/apps
+│  ├─ api/                                    # Governed API (the runtime trust membrane)
+│  │  ├─ README.md
+│  │  ├─ src/
+│  │  │  ├─ server.ts
+│  │  │  ├─ api/
+│  │  │  │  ├─ routes/
+│  │  │  │  │  ├─ catalog.ts                  # dataset discovery + registry endpoints (WP-05)
+│  │  │  │  │  ├─ evidence.ts                 # resolve EvidenceRef -> EvidenceBundle (WP-04)
+│  │  │  │  │  ├─ stories.ts                  # story publish/read (WP-07)
+│  │  │  │  │  ├─ tiles.ts                    # policy-safe tiles
+│  │  │  │  │  └─ focus.ts                    # Focus Mode ask (WP-08)
+│  │  │  │  └─ middleware/
+│  │  │  │     ├─ auth.ts
+│  │  │  │     ├─ policy.ts
+│  │  │  │     ├─ audit.ts
+│  │  │  │     └─ errors.ts
+│  │  │  ├─ services/
+│  │  │  │  ├─ evidence_resolver.ts
+│  │  │  │  ├─ catalog_registry.ts
+│  │  │  │  ├─ story_publisher.ts
+│  │  │  │  └─ focus_orchestrator.ts
+│  │  │  └─ adapters/
+│  │  │     ├─ object_store.ts
+│  │  │     ├─ postgis.ts
+│  │  │     ├─ search.ts
+│  │  │     ├─ graph.ts
+│  │  │     └─ opa.ts
+│  │  └─ tests/
+│  │     ├─ integration/
+│  │     └─ contract/
+│  │
+│  ├─ ui/                                     # Map Explorer + Timeline + Stories + Focus Mode (policy-aware)
+│  │  ├─ README.md
+│  │  ├─ src/
+│  │  │  ├─ components/
+│  │  │  │  ├─ MapCanvas/
+│  │  │  │  ├─ LayerPanel/
+│  │  │  │  ├─ TimeControl/
+│  │  │  │  ├─ EvidenceDrawer/
+│  │  │  │  ├─ ReceiptViewer/                 # provenance receipt viewer (optional)
+│  │  │  │  └─ TrustBadges/
+│  │  │  ├─ pages/
+│  │  │  │  ├─ Explorer.tsx
+│  │  │  │  ├─ Story.tsx
+│  │  │  │  └─ Focus.tsx
+│  │  │  ├─ state/
+│  │  │  │  ├─ view_state.ts                  # reproducible map state (bbox/layers/time/filters)
+│  │  │  │  └─ query_params.ts
+│  │  │  ├─ api/
+│  │  │  │  ├─ client.ts
+│  │  │  │  └─ contracts.ts                   # generated from OpenAPI
+│  │  │  └─ styles/
+│  │  └─ tests/
+│  │     └─ e2e/
+│  │
+│  ├─ workers/                                # pipeline runner + index builders + scheduled jobs
+│  │  ├─ README.md
+│  │  ├─ src/
+│  │  │  ├─ runner.ts
+│  │  │  ├─ pipelines/
+│  │  │  │  ├─ ingest/
+│  │  │  │  ├─ validate/
+│  │  │  │  ├─ promote/
+│  │  │  │  └─ rebuild_projections/
+│  │  │  ├─ receipts/
+│  │  │  │  └─ emit_run_receipt.ts
+│  │  │  └─ audit/
+│  │  │     └─ append_ledger.ts
+│  │  └─ tests/
+│  │
+│  ├─ studio/                                 # optional steward UI for review/publish workflows
+│  │  └─ README.md
+│  │
+│  └─ cli/                                    # operator/developer CLI (hash, validate, promote, rebuild)
+│     ├─ README.md
+│     └─ src/
+│        ├─ kfm.ts
+│        ├─ commands/
+│        │  ├─ spec-hash.ts
+│        │  ├─ validate-catalog.ts
+│        │  ├─ resolve-evidence.ts
+│        │  ├─ promote.ts
+│        │  └─ rebuild.ts
+│        └─ output/
+│           └─ formatters.ts
 │
-├─ packages/
-│  ├─ domain/
-│  ├─ usecases/
-│  ├─ adapters/
-│  ├─ ingest/
-│  ├─ indexers/
-│  ├─ exports/
-│  ├─ stories/
-│  ├─ focus/
-│  ├─ evidence/
-│  ├─ catalog/
-│  ├─ policy/
-│  ├─ geo/
-│  ├─ observability/
-│  ├─ ui-components/
-│  └─ shared/
+├─ packages/                                  # [CONFIRMED root] clean layering + shared libraries
+│  ├─ domain/                                 # domain models + deterministic identity (WP-01)
+│  │  ├─ README.md
+│  │  └─ src/
+│  │     ├─ dataset.ts
+│  │     ├─ dataset_version.ts
+│  │     ├─ spec_hash.ts
+│  │     ├─ evidence_ref.ts
+│  │     ├─ policy_label.ts
+│  │     └─ time/
+│  │        ├─ valid_time.ts
+│  │        └─ transaction_time.ts
+│  ├─ usecases/                               # workflows: ingest, promote, publish story, focus ask
+│  ├─ adapters/                               # ports/adapters for storage/db/search/opa
+│  ├─ ingest/                                 # connectors + acquisition manifests
+│  ├─ catalog/                                # DCAT/STAC/PROV generation + profiles (WP-02)
+│  ├─ evidence/                               # evidence resolver core + bundle shaping (WP-04)
+│  ├─ policy/                                 # policy client + obligation application (WP-03)
+│  ├─ stories/                                # story node v3 parsing + publish gate (WP-07)
+│  ├─ focus/                                  # orchestrator + citation gate + eval harness hooks (WP-08)
+│  ├─ indexers/                               # rebuildable projections: DB/search/graph/tiles
+│  ├─ exports/                                # policy-aware exports (csv/geojson/packages)
+│  ├─ geo/                                    # spatial helpers (bbox, crs, tiling, generalization)
+│  ├─ observability/                          # logging, tracing, metrics, audit hooks
+│  ├─ ui-components/                          # shared UI building blocks (EvidenceDrawer, badges, etc.)
+│  └─ shared/                                 # shared utilities (hashing, io, config, errors)
 │
-├─ infra/
+├─ infra/                                     # [CONFIRMED root] deployment + runtime posture
 │  ├─ k8s/
+│  │  ├─ api/
+│  │  ├─ ui/
+│  │  ├─ workers/
+│  │  └─ dependencies/                        # postgis, search, object store (dev/prod split)
 │  ├─ helm/
 │  ├─ terraform/
 │  ├─ gitops/
 │  └─ dashboards/
 │
-├─ tools/
-│  ├─ validators/
-│  ├─ linkcheck/
-│  ├─ hash/
-│  └─ generators/
+├─ tools/                                     # [CONFIRMED root] deterministic tooling used in CI and locally
+│  ├─ hash/                                   # WP-01 deterministic spec hashing utilities
+│  │  ├─ spec_hash_cli.ts
+│  │  └─ canonicalize_spec.ts
+│  ├─ validators/                             # WP-02 validators (catalog profiles + schemas)
+│  │  ├─ validate_dcat.ts
+│  │  ├─ validate_stac.ts
+│  │  ├─ validate_prov.ts
+│  │  └─ validate_schemas.ts
+│  ├─ linkcheck/                              # WP-02 cross-link + checksum verification
+│  │  ├─ catalog_linkcheck.ts
+│  │  └─ evidence_ref_check.ts
+│  └─ generators/                             # catalog + receipt generators (fixtures + pipeline)
+│     ├─ generate_catalog_triplet.ts
+│     └─ generate_run_receipt.ts
 │
-├─ scripts/
-│  ├─ promote/
-│  ├─ lint/
-│  ├─ rebuild/
+├─ scripts/                                   # [CONFIRMED root] convenience wrappers (thin glue)
 │  ├─ dev/
-│  └─ release/
+│  │  ├─ up.sh
+│  │  ├─ down.sh
+│  │  └─ seed_fixtures.sh
+│  ├─ lint/
+│  ├─ promote/                                # promotion contract runner + approvals capture
+│  ├─ rebuild/                                # rebuild projections from canonical artifacts
+│  └─ release/                                # release/publish automation (guarded)
 │
-├─ configs/
+├─ configs/                                   # [CONFIRMED root] configuration (non-secret) for pipelines/runtime/ui
 │  ├─ env/
+│  │  ├─ local.env.example
+│  │  ├─ staging.env.example
+│  │  └─ prod.env.example
 │  ├─ pipelines/
+│  │  ├─ datasets/                            # dataset pipeline configs keyed by dataset_slug
+│  │  ├─ watchers/                            # upstream drift watchers (cadence + checks)
+│  │  └─ profiles/                            # pipeline profiles (small/medium/large)
 │  ├─ ui/
+│  │  ├─ layers/                              # layer configs (EvidenceRef templates, tiles endpoints)
+│  │  └─ themes/
 │  └─ observability/
+│     ├─ logging.yaml
+│     ├─ metrics.yaml
+│     └─ tracing.yaml
 │
-├─ migrations/
+├─ migrations/                                # [CONFIRMED root] schema changes for projections
 │  ├─ postgis/
-│  └─ search/
+│  ├─ search/
+│  └─ graph/                                  # (optional) graph schema / indices
 │
-├─ examples/
+├─ examples/                                  # [CONFIRMED root] copy/paste starters
 │  ├─ sample_dataset/
+│  │  ├─ data/specs/sample.v1.json
+│  │  ├─ data/registry/sources/sample_source.json
+│  │  └─ data/registry/anchors/anchors.v1.json (snippet)
 │  ├─ sample_story/
+│  │  ├─ story.md                             # with MetaBlock v2
+│  │  └─ story.sidecar.json                   # Story Node v3
 │  ├─ sample_policy/
+│  │  ├─ fixtures/
+│  │  └─ rego/
 │  └─ sample_focus/
+│     ├─ queries.jsonl
+│     └─ expected_outputs.jsonl
 │
-└─ tests/
-   ├─ unit/
-   ├─ integration/
-   ├─ e2e/
-   └─ eval/
+└─ tests/                                     # [CONFIRMED root] test pyramid + eval harness
+   ├─ unit/                                   # spec_hash, parsers, validators
+   ├─ integration/                             # api<->policy<->evidence resolver, promotion gates
+   ├─ e2e/                                     # UI workflows (EvidenceDrawer + Story + Focus)
+   └─ eval/                                    # Focus Mode golden queries + regression gates (WP-08)
+      ├─ focus/
+      │  ├─ golden_queries.jsonl
+      │  ├─ expected_citations.jsonl
+      │  └─ harness.ts
+      └─ reports/
 ```
 
 ### Where CI gates live
