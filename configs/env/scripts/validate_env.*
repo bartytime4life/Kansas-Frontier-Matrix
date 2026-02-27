@@ -258,6 +258,8 @@ def iter_candidate_files(repo_root: Path, include_workflows: bool) -> List[Path]
         if p.exists() and p.is_file():
             candidates.append(p)
 
+    env_template_suffixes = (".example", ".sample", ".template", ".dist")
+
     # Typical config dirs
     for rel in [
         "configs",
@@ -272,14 +274,24 @@ def iter_candidate_files(repo_root: Path, include_workflows: bool) -> List[Path]
     ]:
         d = repo_root / rel
         if d.exists() and d.is_dir():
+            # Direct children first
             for name in COMPOSE_NAMES + ENV_TEMPLATE_NAMES:
                 p = d / name
                 if p.exists() and p.is_file():
                     candidates.append(p)
 
-            # also grab any *.env.example files in these dirs (non-recursive)
-            for p in d.glob("*.env*"):
-                if p.is_file() and p.name.endswith((".example", ".sample", ".template", ".dist")):
+            # Recursively pick up compose files and env templates in nested config dirs.
+            # Many repos store these under paths like configs/env/templates/*.env.example.
+            for p in d.rglob("*"):
+                if not p.is_file():
+                    continue
+
+                lower_name = p.name.lower()
+                if lower_name in COMPOSE_NAMES:
+                    candidates.append(p)
+                    continue
+
+                if "env" in lower_name and lower_name.endswith(env_template_suffixes):
                     candidates.append(p)
 
     if include_workflows:
