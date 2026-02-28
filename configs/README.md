@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: TBD (set via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-02-27
+updated: 2026-02-28
 policy_label: restricted
 related:
   - ../README.md
@@ -22,6 +22,7 @@ notes:
   - Policy-bearing configuration MUST be reviewed, tested, and promotion-gated.
   - This README is fail-closed: repo-specific wiring is UNKNOWN until validated in CI and confirmed via tree/paths.
   - Prefer machine-readable registries + schema validation over tribal knowledge.
+  - Alignment: Promotion Contract gate labels follow KFM vNext governance snapshots; implementations may add extra QA steps, but must not weaken fail-closed behavior.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -37,7 +38,8 @@ notes:
 ![policy](https://img.shields.io/badge/policy-restricted-red)
 ![governance](https://img.shields.io/badge/governance-fail--closed-blue)
 ![contracts](https://img.shields.io/badge/contracts-contract--first-blue)
-![promotion](https://img.shields.io/badge/promotion%20contract-gates%20A--F-critical)
+![promotion](https://img.shields.io/badge/promotion%20contract-gates%20A--F%20required-critical)
+![release](https://img.shields.io/badge/release%20manifest-gate%20G%20recommended-blue)
 ![audit](https://img.shields.io/badge/audit-reproducible%20by%20digest-blue)
 ![anti-skip](https://img.shields.io/badge/CI-anti--skip%20required-important)
 
@@ -50,6 +52,7 @@ notes:
 ## Navigation
 
 - [Directory contract](#directory-contract)
+- [Where this fits in the repo](#where-this-fits-in-the-repo)
 - [Truth status legend](#truth-status-legend)
 - [Quick start](#quick-start)
 - [Repo reality check](#repo-reality-check)
@@ -73,7 +76,7 @@ notes:
 | Contract item | Requirement |
 |---|---|
 | Purpose | Governed configuration that can change system behavior without changing core code |
-| Acceptable inputs | Small, reviewable, machine-validated config files (YAML/JSON/TOML/etc.) that drive policy, contracts, promotion gates, pipeline wiring, UI wiring, observability |
+| Acceptable inputs | Small, reviewable, machine-validated config files (YAML/JSON/TOML/etc.) that drive policy, contracts, promotion gates, pipeline wiring, UI wiring, observability, deployment config **templates** |
 | Exclusions | **Secrets**, private keys, raw restricted coordinates, PII, large datasets, opaque binaries, ad-hoc scripts without tests |
 | Review posture | **Fail closed** for governance-critical changes; steward/owner review required |
 | Promotion posture | Config changes that affect publishability, access, or identity MUST be promotion-gated and auditable |
@@ -81,6 +84,23 @@ notes:
 
 > [!NOTE]
 > If the real repo structure differs from this README, update the **Config registry** first. Don’t “fix” drift by weakening gates.
+
+---
+
+## Where this fits in the repo
+
+`configs/` is the **wiring layer**: it selects, constrains, and parameterizes behavior across the system.
+
+**Keep boundaries clean (fail closed):**
+- **`contracts/`**: definitions of schemas and API contracts (OpenAPI, JSON Schema, controlled vocabs).
+- **`policy/`**: policy engine code + fixtures/tests (allow/deny + obligations).
+- **`data/`**: dataset registry, dataset specs, truth-path artifacts (raw/work/processed/catalogs), and promotion receipts.
+- **`configs/`**: non-secret, reviewable configuration that *selects* contract/policy versions, defines gate thresholds, and wires runtime defaults.
+
+> [!IMPORTANT]
+> If a rule changes **enforcement**, it belongs in `policy/` (and must have fixtures).
+> If a rule changes **shape/compatibility**, it belongs in `contracts/` (and must be versioned).
+> If a file changes **wiring/thresholds/defaults**, it may belong in `configs/` — but MUST be validated and ownership-routed.
 
 ---
 
@@ -124,6 +144,10 @@ This README describes a **target posture**. Before treating any statement here a
 Minimum verification steps (copy/paste):
 
 ```bash
+# 0) Capture commit hash and root tree (so doc statements can cite repo reality)
+git rev-parse HEAD
+tree -L 3 || find . -maxdepth 3 -type d -print
+
 # 1) Inspect actual layout
 find configs -maxdepth 3 -type d -print
 
@@ -135,6 +159,9 @@ ls -la .github/workflows 2>/dev/null || true
 
 # 4) Search for config resolver / loader
 rg -n "config resolver|loadConfig|resolveConfig|CONFIG_" -S . || true
+
+# 5) Find promotion-gate checks (naming varies; verify A–F and any release manifest logic)
+rg -n "promotion|gate|spec_hash|policy parity|linkcheck|receipt|evidence resolver" .github/workflows -S || true
 ```
 
 > [!IMPORTANT]
@@ -170,6 +197,7 @@ Common categories:
   - caching rules (including auth/policy-aware cache keying)
   - indexing configuration (search/vector/graph projections)
   - rate limits / safety knobs for public endpoints (as references; enforcement is in runtime)
+  - **ConfigMap templates** (non-secret): e.g., K8s configmaps or env templates that influence runtime wiring
 
 - **Pipeline wiring** (non-secret)
   - schedules, dataset class defaults, allowed transforms
@@ -210,14 +238,19 @@ Configuration exists to make KFM’s posture enforceable:
 - Policy semantics MUST match between CI and runtime (fixture outcomes match).
 - If CI and runtime disagree, CI guarantees are meaningless → release blocker.
 
-### Promotion Contract gates A–F (CONFIRMED design)
-Config must support deterministic, fail-closed gates:
-- **A Identity/versioning:** spec-hash stability inputs and drift detection
-- **B Rights/licensing:** license/attribution requirements and enforcement switches
-- **C Sensitivity:** policy labels and obligation defaults (generalization, suppression)
-- **D Catalog triplet:** profile selection + cross-link rules (DCAT/STAC/PROV)
-- **E Receipts/checksums:** required receipt fields + digest requirements
-- **F Policy/contracts:** fixture expectations + contract validation knobs
+### Promotion Contract gates (A–F required, G recommended) (CONFIRMED design)
+Config must support deterministic, fail-closed promotion gates:
+
+- **Gate A — Identity & versioning:** deterministic dataset/version identity inputs and drift detection
+- **Gate B — Licensing & rights metadata:** license/attribution completeness + export posture consistency
+- **Gate C — Sensitivity classification & redaction plan:** policy labels + obligations/generalization requirements
+- **Gate D — Catalog triplet validation:** DCAT/STAC/PROV schema validation + required cross-links
+- **Gate E — Run receipts & checksums:** required receipt fields + input/output digests (and links to validation reports)
+- **Gate F — Policy tests & contract tests:** policy parity fixtures + evidence resolver + API/schema contract validation
+- **Gate G — Release manifest (optional but recommended):** immutable manifest pinning what is served/deployed
+
+> [!NOTE]
+> Some implementations treat “QA & thresholds” as a distinct step; regardless of labeling, QA outcomes must be versioned, referenced, and fail-closed when thresholds are not met.
 
 ### Evidence-first + cite-or-abstain (CONFIRMED design)
 - Any surfaced layer/story/answer MUST map back to resolvable evidence bundles and policy decisions.
@@ -225,6 +258,7 @@ Config must support deterministic, fail-closed gates:
 
 ### Deterministic identity/hashing (CONFIRMED design)
 - Inputs to identity/hashing MUST be stable and versioned.
+- Identity hashing SHOULD use canonicalization to avoid nondeterministic drift (e.g., canonical JSON) and must be recomputed in CI for drift detection.
 - Any change that affects identity inputs MUST have tests proving intended behavior.
 
 ---
@@ -333,16 +367,17 @@ configs/
 │     └─ lint_rules.v1.yaml                      # General lint rules (no quarantine links, no missing license, etc.)
 │
 ├─ promotion/                                    # Promotion Contract wiring
-│  ├─ README.md                                  # Gate taxonomy + how CI maps A–F to checks
+│  ├─ README.md                                  # Gate taxonomy + how CI maps A–F (+G) to checks
 │  ├─ gates/                                     # Gate definitions + thresholds + required artifacts
 │  │  ├─ README.md
-│  │  ├─ gates.v1.yaml                           # Canonical gate set (A–F) + required checks + failure codes
+│  │  ├─ gates.v1.yaml                           # Canonical gate set (A–F) + required checks + failure codes (+G optional)
 │  │  ├─ gate_a_identity.v1.yaml                 # Spec-hash inputs/expectations + drift guardrails
 │  │  ├─ gate_b_rights.v1.yaml                   # Rights fields required; metadata-only allowance rules
 │  │  ├─ gate_c_sensitivity.v1.yaml              # Label requirements + public_generalized derivative rules
 │  │  ├─ gate_d_catalogs.v1.yaml                 # Triplet requirements + profile selection hooks + linkcheck rules
 │  │  ├─ gate_e_receipts.v1.yaml                 # Receipt fields required + checksum requirements
 │  │  ├─ gate_f_policy_contracts.v1.yaml         # Policy parity + schema/contract validation requirements
+│  │  ├─ gate_g_release_manifest.v1.yaml         # OPTIONAL: release manifest schema + deployment rules
 │  │  └─ gate_codes.v1.yaml                      # Canonical failure codes + policy-safe messages
 │  ├─ templates/                                 # Manifest/receipt templates (if not stored elsewhere)
 │  │  ├─ README.md
@@ -350,7 +385,8 @@ configs/
 │  │  ├─ run_receipt.v1.json                     # Template for Run Receipt (pipeline/index/story/focus)
 │  │  ├─ audit_entry.v1.json                     # Optional template for audit ledger entries
 │  │  ├─ qa_report.v1.json                       # Optional template for QA summary objects referenced by receipts
-│  │  └─ story_publish_receipt.v1.json           # Optional specialized receipt for story publishing
+│  │  ├─ story_publish_receipt.v1.json           # Optional specialized receipt for story publishing
+│  │  └─ release_manifest.v1.json                # OPTIONAL: release manifest template
 │  └─ classes/                                   # Dataset class defaults (raster/vector/docs) and required checks
 │     ├─ README.md
 │     ├─ classes.v1.yaml                         # Master map: class → defaults + artifact expectations
@@ -477,7 +513,7 @@ Template:
 ```json
 {
   "kfm_config_registry_version": "v1",
-  "updated": "2026-02-27",
+  "updated": "2026-02-28",
   "entries": [
     {
       "id": "policy.labels",
@@ -513,7 +549,7 @@ Keep this table consistent with the machine registry if you adopt it.
 - [ ] Every config area has an owner via `CODEOWNERS`.
 - [ ] Every config area has at least one validator running in CI.
 - [ ] Governance-critical entries have fixtures proving allow/deny/obligation outcomes.
-- [ ] Any config that affects publishability maps to Promotion Contract gates A–F.
+- [ ] Any config that affects publishability maps to Promotion Contract gates A–F (+ optional G).
 - [ ] The registry is updated in the same PR that adds/moves/deprecates config.
 
 ---
@@ -600,6 +636,7 @@ This directory is only safe if it is continuously validated.
 - **Schema/lint:** configs validate against schemas or strict lint rules
 - **Policy parity:** fixtures prove expected allow/deny/obligations
 - **Linkcheck:** cross-link rules ensure EvidenceRef and catalog links are resolvable deterministically
+- **QA thresholds (where applicable):** QA report format is validated and thresholds are versioned; failures quarantine/promotion-block
 - **Secret scanning:** blocks committed credentials
 - **Anti-skip summary:** a final always-runs job fails if any required config gate did not run
 
@@ -607,7 +644,7 @@ This directory is only safe if it is continuously validated.
 > Required checks MUST NOT be skippable via `paths:` filters or `if:` conditions.
 > Prefer a single “gate-summary” status check as the merge requirement (see `.github/README.md` if present).
 
-### Promotion Contract mapping (A–F)
+### Promotion Contract mapping (A–F required, G recommended)
 
 | Gate | What configs influence | What CI should verify (examples) |
 |---|---|---|
@@ -615,8 +652,9 @@ This directory is only safe if it is continuously validated.
 | B Rights/licensing | license rules, attribution requirements | rights rubrics validated; export rules consistent |
 | C Sensitivity | policy labels, obligations defaults | deny-by-default preserved; generalization obligations tested |
 | D Catalog triplet | profile selection, link rules | profiles validate; linkcheck passes |
-| E Receipts/checksums | required receipt fields | receipt schema validation; required digests present |
-| F Policy/contracts | parity fixtures + contract knobs | parity tests pass; contract checks pass |
+| E Run receipts & checksums | receipt required fields; digest rules; validation report linkage | receipt schema validation; required digests present; QA report referenced (if required) |
+| F Policy tests & contract tests | parity fixtures; EvidenceRef resolver rules; API/schema contracts | parity tests pass; evidence refs resolvable; contract checks pass |
+| G Release manifest (optional) | manifest schema; rules for what gets served/deployed | manifest schema valid; pinned dataset versions; deploy consumes manifest |
 
 ### Suggested local commands (PROPOSED)
 
@@ -707,7 +745,7 @@ Use this checklist in PRs touching `configs/`.
 
 - [ ] Change is scoped and reversible (rollback described)
 - [ ] Config registry updated (table + machine registry if adopted)
-- [ ] Validators updated/added (schemas/lint/parity/linkcheck as applicable)
+- [ ] Validators updated/added (schemas/lint/parity/linkcheck/QA as applicable)
 - [ ] Governance-critical changes include parity fixtures proving new behavior
 - [ ] CI validations pass (and anti-skip summary passes)
 - [ ] No secrets committed (scan passes)
