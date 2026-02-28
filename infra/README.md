@@ -266,13 +266,13 @@ For any stage/prod promotion, capture:
 
 ```mermaid
 flowchart TB
-  author[Change author] --> pr[Pull request]
-  pr --> ci[CI checks\nfmt + validate + policy + plan]
-  ci --> review[Required reviewers\n(CODEOWNERS)]
-  review --> merge[Merge]
-  merge --> cd[GitOps reconcile\nor controlled apply]
-  cd --> verify[Post-deploy verification]
-  verify --> receipt[Apply receipt + audit refs]
+  author["Change author"] --> pr["Pull request"]
+  pr --> ci["CI checks<br/>fmt + validate + policy + plan"]
+  ci --> review["Required reviewers<br/>(CODEOWNERS)"]
+  review --> merge["Merge"]
+  merge --> cd["GitOps reconcile<br/>or controlled apply"]
+  cd --> verify["Post-deploy verification"]
+  verify --> receipt["Apply receipt + audit refs"]
 ```
 
 ### Minimum required gates (CI-enforced)
