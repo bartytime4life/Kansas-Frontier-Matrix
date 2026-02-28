@@ -1,0 +1,6 @@
+{
+  "decision_id": "pd-2026-02-20-api-feature-query",
+  "result": "allow",
+  "policy_label": "public",
+  "obligations": ["cite_source", "include_license_notice"]
+}

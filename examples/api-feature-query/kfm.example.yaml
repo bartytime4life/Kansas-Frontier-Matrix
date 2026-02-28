@@ -1,1 +1,21 @@
+example_id: api-feature-query
+name: API feature query (minimal)
+status: runnable-fixture
+owner: kfm-platform
+policy_label: public
 
+request:
+  method: POST
+  endpoint: /v1/query/features
+  content_type: application/json
+  payload_file: src/request.json
+
+expected_output:
+  format: application/geo+json
+  path: outputs/response.geojson
+  min_features: 2
+
+dataset:
+  dataset_slug: ks_parcels_demo
+  dataset_version_id: 2026-02.f1a29c4d
+  license: CC-BY-4.0

@@ -1,0 +1,6 @@
+{
+  "decision_id": "pd-2026-02-20-ui-story-node-minimal",
+  "result": "allow",
+  "policy_label": "public",
+  "obligations": ["preserve_citation_links"]
+}

@@ -1,0 +1,5 @@
+{
+  "run_id": "kfm://run/2026-02-20T13:15:00Z.pipe-validate-and-publish",
+  "status": "succeeded",
+  "checks": ["schema", "policy", "integrity"]
+}

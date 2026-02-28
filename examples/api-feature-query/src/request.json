@@ -1,0 +1,6 @@
+{
+  "layer_id": "ks_parcels_demo",
+  "bbox": [-95.8200, 38.9300, -95.7800, 38.9700],
+  "limit": 2,
+  "fields": ["parcel_id", "zoning", "acres"]
+}

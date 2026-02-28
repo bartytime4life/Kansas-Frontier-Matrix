@@ -1,0 +1,4 @@
+event_id,event_type,county,event_date
+EVT-1,wind,Shawnee,2026-02-17
+EVT-2,hail,Douglas,2026-02-18
+EVT-3,flood,Riley,2026-02-19

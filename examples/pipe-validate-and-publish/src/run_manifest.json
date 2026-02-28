@@ -1,0 +1,6 @@
+{
+  "dataset_slug": "ks_storm_events_demo",
+  "dataset_version_id": "2026-02.b7c8e9f0",
+  "spec_hash": "sha256:b7c8e9f0894245de2fd8ef3f27acb27860a0f7f430cf35be1e4f7a8d2f227704",
+  "requested_by": "kfm-ci"
+}

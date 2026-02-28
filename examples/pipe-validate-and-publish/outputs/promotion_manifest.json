@@ -1,0 +1,11 @@
+{
+  "dataset_slug": "ks_storm_events_demo",
+  "dataset_version_id": "2026-02.b7c8e9f0",
+  "artifacts": [
+    {
+      "path": "data/events.csv",
+      "sha256": "b72c2f12f371dd29f662a4a6f14f4f86ba65d3ff9f7f4adf6f2d8ac33f2f5e07"
+    }
+  ],
+  "target": "data/published/ks_storm_events_demo/2026-02.b7c8e9f0"
+}

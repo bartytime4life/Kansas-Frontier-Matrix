@@ -1,0 +1,10 @@
+{
+  "node_id": "story-node-001",
+  "title": "Storm events concentrated in northeast Kansas",
+  "claim": "Three monitored storm events were recorded across Shawnee, Douglas, and Riley counties during the sample window.",
+  "citations": [
+    {"ref": "dcat://ks_storm_events_demo@2026-02.b7c8e9f0", "kind": "dcat"},
+    {"ref": "prov://run/2026-02-20T13:15:00Z.pipe-validate-and-publish", "kind": "prov"}
+  ],
+  "policy_label": "public"
+}
