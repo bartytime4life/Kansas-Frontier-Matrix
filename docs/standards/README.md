@@ -132,13 +132,98 @@ flowchart LR
 
 ## Directory layout
 ```text
-docs/standards/                                   # Non-negotiable standards (CI-enforced where configured)
-├─ README.md                                      # Index + how standards are reviewed/updated (high bar)
-├─ KFM_MARKDOWN_WORK_PROTOCOL.md                  # Markdown authoring protocol (formatting, lint, doc hygiene)
-├─ KFM_REPO_STRUCTURE_STANDARD.md                 # Canonical repo layout + invariants (what must exist, where)
-├─ KFM_STAC_PROFILE.md                            # STAC profile constraints (required fields, links, assets rules)
-├─ KFM_DCAT_PROFILE.md                            # DCAT profile constraints (dataset/distribution, licensing, vocab)
-└─ KFM_PROV_PROFILE.md                            # PROV profile constraints (lineage prerequisites, run linkage, IDs)
+docs/standards/                                         # Non-negotiable standards (CI-enforced where configured)
+├─ README.md                                            # Index + how standards are reviewed/updated (high bar)
+│
+│  # Root entrypoints (keep these stable for discoverability + existing links)
+├─ KFM_MARKDOWN_WORK_PROTOCOL.md                        # Markdown authoring protocol (formatting, lint, doc hygiene)
+├─ KFM_REPO_STRUCTURE_STANDARD.md                       # Canonical repo layout + invariants (what must exist, where)
+├─ KFM_STAC_PROFILE.md                                  # STAC profile constraints (required fields, links, assets rules)
+├─ KFM_DCAT_PROFILE.md                                  # DCAT profile constraints (dataset/distribution, licensing, vocab)
+├─ KFM_PROV_PROFILE.md                                  # PROV profile constraints (lineage prerequisites, run linkage, IDs)
+│
+│  # Machine-readable registry (lets CI validate links/status/owners; README can mirror it)
+├─ registry/
+│  ├─ README.md                                         # What the registry is + how it’s updated
+│  ├─ standards.registry.yaml                            # Canonical inventory: id/title/path/status/owners/consumers
+│  └─ deprecations.yaml                                  # What’s deprecated, why, and replacement pointers
+│
+│  # Authoring standards beyond “Markdown protocol”
+├─ authoring/
+│  ├─ README.md                                         # Scope + exclusions for authoring standards
+│  ├─ KFM_META_BLOCK_V2_STANDARD.md                     # MetaBlock v2 field rules + required keys + examples
+│  ├─ KFM_NORMATIVE_LANGUAGE_STANDARD.md                # MUST/SHOULD/MAY + CONFIRMED/PROPOSED/UNKNOWN tagging rules
+│  ├─ KFM_CITATION_PROTOCOL.md                          # Evidence citation format + link hygiene + “cite-or-abstain”
+│  ├─ KFM_DIAGRAM_MERMAID_STANDARD.md                   # Mermaid style constraints (naming, layout, allowed constructs)
+│  └─ examples/
+│     ├─ good/                                          # Example docs that conform (golden fixtures)
+│     └─ bad/                                           # Example docs that violate (used by linters/tests)
+│
+│  # Repo mechanics standards (layout is entrypoint; this holds “how we change the repo safely”)
+├─ repo/
+│  ├─ README.md                                         # Scope + exclusions for repo standards
+│  ├─ KFM_BRANCHING_RELEASE_STANDARD.md                 # Branching, release tagging, doc promotion cadence
+│  ├─ KFM_VERSIONING_DEPRECATION_STANDARD.md            # Breaking change policy, deprecation windows, migration guidance
+│  └─ examples/
+│     └─ repo_trees/                                    # Sample trees used by validation tooling/docs
+│
+│  # Catalog + triplet standards (STAC/DCAT/PROV are entrypoints; this is the “system glue”)
+├─ catalog/
+│  ├─ README.md                                         # How catalog standards relate to schemas/ and tooling
+│  ├─ triplet/
+│  │  ├─ KFM_TRIPLET_LINKING_STANDARD.md                # DCAT↔STAC↔PROV cross-linking invariants + IDs + receipts linkage
+│  │  └─ examples/
+│  │     ├─ minimal_triplet/                            # Minimal passing set (good for tests)
+│  │     └─ complex_triplet/                            # Multi-collection / multi-distribution examples
+│  ├─ stac/
+│  │  ├─ README.md                                      # STAC addenda: mapping notes, local conventions
+│  │  ├─ CONFORMANCE.md                                 # What checks exist, what “fail closed” means, where they run
+│  │  └─ examples/
+│  ├─ dcat/
+│  │  ├─ README.md                                      # DCAT addenda: mapping notes, local conventions
+│  │  ├─ CONFORMANCE.md
+│  │  └─ examples/
+│  └─ prov/
+│     ├─ README.md                                      # PROV addenda: run receipts, lineage, transform tracing rules
+│     ├─ CONFORMANCE.md
+│     └─ examples/
+│
+│  # Policy-facing standards that must remain stable across APIs/UI/Focus Mode
+├─ policy/
+│  ├─ README.md                                         # Scope: policy labels + obligations interface (not Rego itself)
+│  ├─ KFM_POLICY_LABEL_STANDARD.md                      # policy_label taxonomy + propagation rules
+│  ├─ KFM_REDACTION_OBLIGATIONS_STANDARD.md             # obligation types + UI/API enforcement requirements
+│  └─ examples/
+│     ├─ public/                                        # public-safe examples
+│     └─ restricted/                                    # redaction obligation examples (no sensitive specifics)
+│
+│  # Evidence standards (ties provenance + citations + “show your work” UX)
+├─ evidence/
+│  ├─ README.md                                         # Scope: EvidenceRef/EvidenceBundle rules
+│  ├─ KFM_EVIDENCE_REF_STANDARD.md                      # EvidenceRef shape, required fields, resolvable targets
+│  ├─ KFM_EVIDENCE_BUNDLE_STANDARD.md                   # Bundle assembly, redaction rules, citation binding
+│  ├─ KFM_RUN_RECEIPT_STANDARD.md                       # Run receipts minimum fields + linkage to triplet/catalog
+│  └─ examples/
+│
+│  # Governed API contract conventions (how contracts express policy + evidence)
+├─ api/
+│  ├─ README.md                                         # How to author API-facing standards (links to contracts/)
+│  ├─ KFM_API_CONTRACT_EXTENSION.md                     # Common fields: policy/evidence/timestamps/error envelope
+│  ├─ KFM_ERROR_MODEL_STANDARD.md                       # Error codes, “safe details”, trace IDs, user-facing messages
+│  ├─ KFM_PAGINATION_FILTERING_STANDARD.md              # Paging + filtering semantics (time-aware + map queries)
+│  └─ examples/
+│
+│  # UI-facing standards (normative UX constraints; not design proposals)
+├─ ui/
+│  ├─ README.md                                         # Scope: evidence-first UX requirements + exclusions
+│  ├─ KFM_STORY_NODE_STANDARD.md                        # Story node schema rules (where it lives + how it’s validated)
+│  ├─ KFM_EVIDENCE_FIRST_UX_STANDARD.md                 # UI requirements for traceability + “why” panes
+│  └─ accessibility/
+│     └─ KFM_A11Y_MINIMUM_STANDARD.md                   # Minimum a11y constraints for governed UI
+│
+└─ _archive/                                            # Deprecated/old versions (never referenced by CI)
+   ├─ README.md                                         # How/when to archive; linking rules
+   └─ 2026-02-xx/                                       # Date- or version-bucketed snapshots
 ```
 
 ### Acceptable inputs
