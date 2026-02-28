@@ -45,13 +45,16 @@ notes:
 ## Quick navigation
 
 - [What lives here](#what-lives-here)
+- [Repository alignment](#repository-alignment)
 - [Non-negotiable invariants](#non-negotiable-invariants)
 - [Directory layout](#directory-layout)
 - [How tools fit the promotion flow](#how-tools-fit-the-promotion-flow)
+- [Promotion Contract gate mapping](#promotion-contract-gate-mapping)
 - [Quick start](#quick-start)
 - [Tool registry and inventory](#tool-registry-and-inventory)
 - [Conventions](#conventions)
 - [Adding a new tool](#adding-a-new-tool)
+- [Verification checklist](#verification-checklist)
 - [Troubleshooting](#troubleshooting)
 - [Appendix: recommended CLI contract](#appendix-recommended-cli-contract)
 
@@ -87,6 +90,24 @@ This folder is reserved for **utility scripts, validators, and DevOps tooling** 
 > 1) write into the correct truth-path zone (usually `data/work/…`),  
 > 2) emit a receipt and checksums, and  
 > 3) never mutate canonical artifacts in place.
+
+[Back to top](#top)
+
+---
+
+## Repository alignment
+
+> [!IMPORTANT]
+> **Do not claim repo-specific implementation details unless verified.** This README is allowed to describe the target posture, but any statement like “this script exists at X” must be marked TODO until confirmed.
+
+### Confirmed (repo root)
+
+- `tools/` exists as a top-level directory intended for **validators, link checkers, and CLI utilities**. *(Deeper tool paths still require in-repo verification.)*  
+
+### TODO to verify in-repo
+
+- Actual subfolders (`validators/`, `linkcheck/`, `hash/`, etc.) and the tool entrypoints actually used by CI.
+- The precise CI wiring and which checks are *merge-blocking* vs *promotion-blocking*.
 
 [Back to top](#top)
 
@@ -159,40 +180,7 @@ tools/                                                # Tooling entrypoint (vali
 │   ├── validate_catalog_bundle.{sh,py,ts,js}         # One-shot: validate DCAT+STAC+PROV+receipts as a set
 │   ├── validate_contract_versions.{sh,py,ts,js}      # Ensure artifacts declare supported schema/profile versions
 │   └── fixtures/                                     # Tiny valid/invalid examples (synthetic/sanitized)
-│       ├── dcat/
-│       │   ├── valid/
-│       │   │   ├── minimal_dcat.jsonld
-│       │   │   └── FIXTURE_NOTES.md
-│       │   └── invalid/
-│       │       ├── missing_license.jsonld
-│       │       ├── bad_distribution_href.jsonld
-│       │       └── FIXTURE_NOTES.md
-│       ├── stac/
-│       │   ├── valid/
-│       │   │   ├── collection.json
-│       │   │   ├── item.json
-│       │   │   └── FIXTURE_NOTES.md
-│       │   └── invalid/
-│       │       ├── missing_datetime.json
-│       │       ├── invalid_bbox.json
-│       │       └── FIXTURE_NOTES.md
-│       ├── prov/
-│       │   ├── valid/
-│       │   │   ├── prov.jsonld
-│       │   │   └── FIXTURE_NOTES.md
-│       │   └── invalid/
-│       │       ├── missing_activity.jsonld
-│       │       ├── orphan_entity.jsonld
-│       │       └── FIXTURE_NOTES.md
-│       └── receipts/
-│           ├── valid/
-│           │   ├── run_receipt.json
-│           │   ├── promotion_manifest.json
-│           │   └── FIXTURE_NOTES.md
-│           └── invalid/
-│               ├── missing_checksums.json
-│               ├── missing_policy_fields.json
-│               └── FIXTURE_NOTES.md
+│       └── ...
 │
 ├── linkcheck/                                        # Cross-link integrity checks (no broken refs)
 │   ├── README.md                                     # Cross-link rules + what is considered "required"
@@ -201,85 +189,44 @@ tools/                                                # Tooling entrypoint (vali
 │   ├── receipt_artifact_linkcheck.{sh,py,ts,js}      # Receipts ↔ checksums ↔ artifacts paths resolve
 │   ├── no_restricted_existence_leaks.{sh,py,ts,js}   # Ensure error envelopes do not leak restricted existence (static)
 │   └── fixtures/
-│       ├── valid/
-│       │   ├── triplet_ok/                           # Minimal DCAT+STAC+PROV bundle with consistent links
-│       │   │   ├── dcat.jsonld
-│       │   │   ├── stac/collection.json
-│       │   │   ├── stac/items/item-001.json
-│       │   │   ├── prov/prov.jsonld
-│       │   │   └── receipts/run_receipt.json
-│       │   └── evidence_refs_ok.json
-│       └── invalid/
-│           ├── triplet_broken_link/
-│           │   ├── dcat.jsonld                       # points to missing stac item
-│           │   └── stac/collection.json
-│           ├── evidence_ref_bad_scheme.json
-│           └── receipt_missing_artifact.json
+│       └── ...
 │
 ├── hash/                                             # Spec-hash helpers + drift checks (determinism guardrails)
-│   ├── README.md                                     # Canonicalization rules + hashing invariants
-│   ├── compute_spec_hash.{sh,py,ts,js}               # Deterministic hash computation (canonical JSON rules)
-│   ├── canonicalize_json.{sh,py,ts,js}               # Canonical JSON serializer (stable ordering/whitespace)
-│   ├── check_spec_hash_drift.{sh,py,ts,js}           # Recompute + compare; fail on drift
-│   ├── check_hash_inputs.{sh,py,ts,js}               # Fail if spec includes non-deterministic fields (timestamps, etc.)
-│   └── fixtures/                                     # Golden vectors (inputs → expected digests)
-│       ├── vectors.v1.json                            # canonical test vector list
-│       ├── inputs/
-│       │   ├── dataset_spec_minimal.json
-│       │   ├── dataset_spec_with_ordering_noise.json  # should canonicalize to same digest as minimal
-│       │   └── dataset_spec_invalid_nondeterminism.json
-│       └── expected/
-│           ├── vectors.v1.expected.json               # expected sha256 outputs
-│           └── FIXTURE_NOTES.md
+│   ├── README.md
+│   ├── compute_spec_hash.{sh,py,ts,js}
+│   ├── canonicalize_json.{sh,py,ts,js}
+│   ├── check_spec_hash_drift.{sh,py,ts,js}
+│   ├── check_hash_inputs.{sh,py,ts,js}
+│   └── fixtures/
+│       └── ...
 │
 ├── lint/                                             # Static guardrails (trust membrane + hygiene)
-│   ├── README.md                                     # What lint checks exist + why
-│   ├── check_no_secrets.{sh,py,ts,js}                # Secret scanning helpers (if not handled elsewhere)
-│   ├── check_no_direct_store_access.{sh,py,ts,js}    # Block direct DB/object-store/index clients in forbidden layers
-│   ├── check_policy_safe_errors.{sh,py,ts,js}        # Enforce safe error envelope conventions
-│   ├── check_license_headers.{sh,py,ts,js}           # Optional: enforce license header posture in tooling/code
+│   ├── README.md
+│   ├── check_no_secrets.{sh,py,ts,js}
+│   ├── check_no_direct_store_access.{sh,py,ts,js}
+│   ├── check_policy_safe_errors.{sh,py,ts,js}
 │   └── fixtures/
-│       ├── valid/
-│       └── invalid/
+│       └── ...
 │
 ├── release/                                          # Optional: release tooling (must be deterministic)
-│   ├── README.md                                     # How releases are assembled + verified
-│   ├── build_sbom.{sh,py,ts,js}                      # SBOM build (if used)
-│   ├── build_release_manifest.{sh,py,ts,js}          # Assemble release metadata + digests
-│   ├── verify_release_artifacts.{sh,py,ts,js}        # Verify digests/signatures/attestations (if used)
-│   ├── sign_release.{sh,py,ts,js}                    # Optional: signing wrapper (NEVER stores keys in repo)
+│   ├── README.md
+│   ├── build_sbom.{sh,py,ts,js}
+│   ├── build_release_manifest.{sh,py,ts,js}
+│   ├── verify_release_artifacts.{sh,py,ts,js}
 │   └── fixtures/
-│       ├── valid/
-│       └── invalid/
+│       └── ...
 │
 ├── _shared/                                          # Shared helper libs (small; minimal side effects)
-│   ├── README.md                                     # Shared helpers contract (keep pure where possible)
-│   ├── fs.{py,ts,js}                                 # Safe file IO helpers (path traversal defense)
-│   ├── json.{py,ts,js}                               # Canonical JSON + strict parsing helpers
-│   ├── log.{py,ts,js}                                # Structured logging helpers (policy-safe)
-│   ├── errors.{py,ts,js}                             # Standardized error/finding helpers (codes, severities)
-│   ├── exit_codes.{py,ts,js}                         # Exit code constants + mapping
-│   └── time.{py,ts,js}                               # Time helpers (avoid non-determinism in hashes)
+│   ├── README.md
+│   ├── fs.{py,ts,js}
+│   ├── json.{py,ts,js}
+│   ├── log.{py,ts,js}
+│   ├── errors.{py,ts,js}
+│   ├── exit_codes.{py,ts,js}
+│   └── time.{py,ts,js}
 │
 └── fixtures/                                         # Shared fixtures (synthetic/sanitized; tiny; documented)
-    ├── public/
-    │   ├── FIXTURE_NOTES.md                          # license + sensitivity + intended use
-    │   ├── minimal_catalog_bundle/                   # a tiny end-to-end bundle used across validators/linkcheck
-    │   │   ├── dcat.jsonld
-    │   │   ├── stac/collection.json
-    │   │   ├── stac/items/item-001.json
-    │   │   ├── prov/prov.jsonld
-    │   │   └── receipts/run_receipt.json
-    │   └── minimal_openapi/                          # optional: contract tool fixtures
-    │       └── openapi.v1.yaml
-    └── restricted_sanitized/
-        ├── FIXTURE_NOTES.md                          # describes sanitization (no precise coords/identifiers)
-        ├── generalized_geometry_bundle/              # coarse geometry used to test “no leakage” behavior
-        │   ├── dcat.jsonld
-        │   └── stac/items/item-001.json
-        └── policy_safe_error_cases/
-            ├── forbidden.json                        # safe error envelope example
-            └── not_found.json                        # indistinguishable or policy-safe variant
+    └── ...
 ```
 
 [Back to top](#top)
@@ -294,7 +241,7 @@ flowchart LR
   CI --> V[tools/validators]
   V --> L[tools/linkcheck]
   L --> H[tools/hash]
-  H --> P[policy tests + contracts/tests]
+  H --> P[policy + contracts + tests]
   P --> OK[Merge allowed]
 
   V --> BLOCK[Fail closed]
@@ -305,6 +252,29 @@ flowchart LR
 
 > [!WARNING]
 > Tools should not “paper over” missing artifacts. If a catalog or receipt is missing, the correct output is a **blocking failure** (deny-by-default posture).
+
+[Back to top](#top)
+
+---
+
+## Promotion Contract gate mapping
+
+Tools are not “nice-to-have QA.” They are how the **Promotion Contract** becomes enforceable behavior in CI and during operator-driven promotion.
+
+### Gates → tool categories (starter mapping)
+
+| Promotion Contract gate | What must be true | Typical tool category | Typical artifacts validated |
+|---|---|---|---|
+| **Gate A — Identity & versioning** | Stable `dataset_id`/`dataset_version_id`; deterministic `spec_hash`; content digests | `hash/` + registry/schema checks | dataset spec, registry entry, digests |
+| **Gate B — Licensing & rights metadata** | License/rights fields present + upstream terms snapshot | validators + policy tests | DCAT, registry entry, license snapshot |
+| **Gate C — Sensitivity & redaction plan** | `policy_label` present; obligations defined + honored | policy tests + lint | OPA fixtures, redaction rules |
+| **Gate D — Catalog triplet validation** | DCAT/STAC/PROV validate + cross-link; EvidenceRefs resolve | `validators/` + `linkcheck/` | DCAT/STAC/PROV + EvidenceRefs |
+| **Gate E — QA & thresholds** | Dataset QA checks exist + pass thresholds | validators + QA runners | QA reports, thresholds in spec |
+| **Gate F — Run receipt & audit record** | Run receipt exists; captures inputs/tooling/hashes/policy decisions | receipt validators + policy tests | run_receipt, checksums, attestations |
+| **Gate G — Release manifest (recommended)** | Promotion recorded as a manifest referencing digests | `release/` + verification | promotion manifest, release notes |
+
+> [!NOTE]
+> Keep the mapping **explicit** in the tool registry (which gates each tool enforces). CI should be able to answer: “Which tool proves Gate D?” without tribal knowledge.
 
 [Back to top](#top)
 
@@ -321,16 +291,16 @@ flowchart LR
 # From repo root (replace with your repo's actual bootstrap)
 make bootstrap
 
-# Validate catalogs/provenance/receipts
+# Validate catalogs/provenance/receipts (Gate D + F)
 make tools-validate
 
-# Cross-link check (DCAT ↔ STAC ↔ PROV ↔ receipts ↔ artifacts)
+# Cross-link check (Gate D)
 make tools-linkcheck
 
-# Spec-hash drift checks
+# Spec-hash drift checks (Gate A)
 make tools-hash-check
 
-# Optional: lint guardrails (trust membrane / secrets)
+# Policy + lint guardrails (Gate C + general hygiene)
 make tools-lint
 ```
 
@@ -362,7 +332,8 @@ KFM prefers a **machine-readable registry** so CI can run tools consistently and
 At minimum:
 - tool id + path
 - owner
-- gate type (merge gate vs promotion gate)
+- gate type (merge vs promotion)
+- **promotion gates enforced** (A–G)
 - inputs/outputs (read-only vs writes)
 - required fixtures/tests
 - timeout expectations
@@ -379,6 +350,7 @@ Example shape (illustrative):
       "path": "tools/validators/validate_dcat.sh",
       "owner": "KFM Platform",
       "gate": "merge",
+      "enforces_promotion_gates": ["B", "D"],
       "reads": ["data/catalog/**"],
       "writes": [],
       "requires_fixtures": true,
@@ -393,14 +365,15 @@ Example shape (illustrative):
 
 Keep this table up-to-date (it should match the registry):
 
-| Tool | Type | What it checks | Gate | Owner |
-|---|---|---|---|---|
-| `tools/validators/validate_dcat.*` | validator | DCAT conforms to KFM profile; required rights/license fields present | merge/promotion | TODO |
-| `tools/validators/validate_stac.*` | validator | STAC Items/Collections/Assets conform to KFM profile | merge/promotion | TODO |
-| `tools/validators/validate_prov.*` | validator | PROV bundle shape + required lineage links present | merge/promotion | TODO |
-| `tools/linkcheck/catalog_triplet_linkcheck.*` | linkcheck | DCAT ↔ STAC ↔ PROV cross-links resolve deterministically | merge/promotion | TODO |
-| `tools/hash/check_spec_hash_drift.*` | drift check | Deterministic spec-hash stability; blocks unintended drift | merge | TODO |
-| `tools/lint/check_no_direct_store_access.*` | lint | Trust membrane guardrail: forbid forbidden deps/egress patterns | merge | TODO |
+| Tool | Type | What it checks | Gate type | Promotion gates | Owner |
+|---|---|---|---|---|---|
+| `tools/validators/validate_dcat.*` | validator | DCAT conforms to KFM profile; rights/license fields present | merge/promotion | B, D | TODO |
+| `tools/validators/validate_stac.*` | validator | STAC Items/Collections/Assets conform to KFM profile | merge/promotion | D | TODO |
+| `tools/validators/validate_prov.*` | validator | PROV bundle shape + required lineage links present | merge/promotion | D | TODO |
+| `tools/validators/validate_receipts.*` | validator | run_receipt + checksums + promotion_manifest schema validity | promotion | F, G | TODO |
+| `tools/linkcheck/catalog_triplet_linkcheck.*` | linkcheck | DCAT ↔ STAC ↔ PROV cross-links resolve deterministically | merge/promotion | D | TODO |
+| `tools/hash/check_spec_hash_drift.*` | drift check | Deterministic spec-hash stability; blocks unintended drift | merge | A | TODO |
+| `tools/lint/check_no_direct_store_access.*` | lint | Trust membrane guardrail: forbid forbidden deps/egress patterns | merge | (Trust membrane) | TODO |
 
 [Back to top](#top)
 
@@ -443,13 +416,28 @@ Every new tool must ship with:
 - [ ] Deterministic behavior (same inputs ⇒ same decision)
 - [ ] Fixtures: **known-good** + **known-bad**
 - [ ] Tests (unit tests minimum; integration tests if it is a gate)
-- [ ] Entry in `tools/registry/tools.v1.json`
+- [ ] Entry in `tools/registry/tools.v1.json` including **which Promotion Contract gates it enforces**
 - [ ] Entry in the [Tool inventory](#tool-registry-and-inventory)
 - [ ] CI wiring (if the tool is a gate)
 - [ ] Policy-safe logging (no restricted details; no secrets)
 
 > [!TIP]
 > If the tool enforces a Promotion Contract gate, treat it like a contract change: update fixtures, schema validators, and documentation together.
+
+[Back to top](#top)
+
+---
+
+## Verification checklist
+
+Use this checklist to turn “target posture” into **confirmed repo facts** (attach outputs to the next README revision):
+
+- [ ] Capture repo commit hash and root directory tree: `git rev-parse HEAD` and `tree -L 3`.
+- [ ] Confirm which work packages already exist: search for `spec_hash`, OPA policies, validators, evidence resolver route, and dataset registry schema.
+- [ ] Extract CI gate list from `.github/workflows` and document which checks are blocking merges.
+- [ ] Choose a single MVP dataset and verify it can be promoted through all gates with receipts and catalogs.
+- [ ] Validate that UI cannot bypass the PEP (static analysis + network policies) and that EvidenceRefs resolve end-to-end in Map Explorer and Story publishing.
+- [ ] For Focus Mode: run the evaluation harness and store golden query outputs and diffs as artifacts.
 
 [Back to top](#top)
 
