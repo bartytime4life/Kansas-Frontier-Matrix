@@ -87,15 +87,90 @@ To avoid accidental overreach, governance docs should be explicit about what is 
 
 ### Directory layout
 ```text
-docs/governance/                                  # Governance hub (charter + ethics + sovereignty + review gates)
-├─ README.md                                      # You are here: entrypoint + directory contract + navigation
-├─ ROOT_GOVERNANCE.md                             # Governance charter (roles, decision process, definitions)
-├─ ETHICS.md                                      # Ethical commitments + “what we will not do”
-├─ SOVEREIGNTY.md                                 # CARE-aligned sovereignty rules (sensitive/community data)
-├─ REVIEW_GATES.md                                # Review triggers + promotion checklist + sign-off rules
+docs/governance/                                      # Governance hub (human + policy-as-code docs, fixtures, gates)
+├─ README.md                                          # Entrypoint + directory contract + navigation
+├─ ROOT_GOVERNANCE.md                                 # Charter: roles, decision process, definitions, escalation
+├─ ETHICS.md                                          # Ethical commitments + “we will not do”
+├─ SOVEREIGNTY.md                                     # CARE-aligned sovereignty rules + restricted knowledge handling
+├─ REVIEW_GATES.md                                    # Review triggers + sign-off rules + promotion checklist (human layer)
 │
-└─ policy/                                        # OPTIONAL: policy-as-code docs + fixtures (location may vary)
-                                                   # If policy lives elsewhere, link it from ROOT_GOVERNANCE.md
+├─ GLOSSARY.md                                        # Canonical governance terms (policy label, obligation, EvidenceRef, etc.)
+├─ CHANGELOG.md                                       # Governance policy changes (human-readable, time-aware)
+│
+├─ roles/                                             # Governance ownership + roles + responsibilities (human)
+│  ├─ OWNERSHIP.md                                    # Who owns what (datasets, services, policies, catalogs)
+│  ├─ ROLE_MODEL.md                                   # Role taxonomy (public, staff, researcher, admin, etc.)
+│  ├─ RBAC_MATRIX.md                                  # Role → permissions matrix (high-level; runtime enforced elsewhere)
+│  └─ REVIEWERS.md                                    # Required reviewers / quorum rules (per change type)
+│
+├─ labels/                                            # Policy label taxonomy + how to apply it (human)
+│  ├─ POLICY_LABEL_TAXONOMY.md                         # Definitions + required fields + defaults (fail-closed)
+│  ├─ SENSITIVITY_GUIDE.md                             # How to classify layers, fields, locations, media
+│  ├─ REDACTION_GENERALIZATION.md                      # Rules for redaction/generalization as first-class transforms
+│  └─ examples/                                       # Worked examples (help reviewers + contributors be consistent)
+│     ├─ public_generalized_example.md
+│     ├─ restricted_location_example.md
+│     └─ mixed_sensitivity_story_example.md
+│
+├─ gates/                                             # CI + human gates + release/promotion gates (human docs + checklists)
+│  ├─ PROMOTION_CONTRACT.md                            # Minimum promotion requirements (zones, artifacts, receipts)
+│  ├─ CI_GATES.md                                      # What CI must enforce (schemas, licenses, QA, policy tests)
+│  ├─ RUNTIME_GATES.md                                 # What runtime must enforce (PDP/PEP checks, redaction, audit)
+│  ├─ FOCUS_MODE_EVALUATION.md                         # “Cite-or-abstain” eval cases + regression expectations
+│  └─ waivers/                                        # Controlled escape hatches (explicit, logged, time-bounded)
+│     ├─ WAIVER_POLICY.md                              # When waivers are allowed (rare) + required approvals
+│     └─ WAIVER_RECORD_TEMPLATE.md                     # Waiver record format (who/why/expiry/mitigations)
+│
+├─ records/                                           # Durable governance decisions + sign-offs (auditable)
+│  ├─ decisions/                                      # Governance Decision Records (GDRs): reversible, evidence-linked
+│  │  ├─ README.md                                    # Naming convention + lifecycle (draft→approved→superseded)
+│  │  └─ GDR_TEMPLATE.md
+│  ├─ reviews/                                        # Completed governance reviews (PR-linked)
+│  │  └─ (YYYY)/                                      # Year partitioning
+│  │     └─ (PR-or-change-id).md
+│  └─ incidents/                                      # Governance incidents/postmortems (leaks, bad labels, broken gates)
+│     ├─ INCIDENT_TEMPLATE.md
+│     └─ (YYYY)/...
+│
+├─ templates/                                         # Copy/paste templates used across governance workflows
+│  ├─ GOVERNANCE_REVIEW_RECORD.md                      # Same as in README (canonical template location)
+│  ├─ DATASET_INTAKE_CHECKLIST.md                      # New dataset onboarding (license, provenance, sensitivity)
+│  ├─ SOVEREIGNTY_ASSESSMENT.md                        # CARE-specific assessment + community constraints
+│  ├─ AI_FEATURE_RISK_REVIEW.md                        # Focus Mode / narrative risk review (factuality + leakage)
+│  └─ PUBLICATION_SIGNOFF.md                           # Publishing checklist (rights, citations, restricted leaks)
+│
+└─ policy/                                            # Policy-as-code *documentation + fixtures* (code may live elsewhere)
+   ├─ README.md                                       # Policy boundary: CI == runtime semantics; where code lives
+   ├─ POLICY_MODEL.md                                  # PDP/PEP model + decision inputs/outputs + failure modes
+   ├─ OBLIGATIONS.md                                   # Obligation types (redact, generalize, cite, deny, log, warn)
+   ├─ INPUT_CONTEXT.md                                 # What context is evaluated (role, purpose, dataset label, fields)
+   │
+   ├─ schemas/                                        # Schemas for policy I/O + obligations (contract surfaces)
+   │  ├─ policy_context.schema.json
+   │  ├─ policy_decision.schema.json
+   │  └─ obligation.schema.json
+   │
+   ├─ fixtures/                                       # Test vectors for policy (allow/deny + obligations + redaction)
+   │  ├─ allow_deny/
+   │  │  ├─ public_role_cases.json
+   │  │  ├─ staff_role_cases.json
+   │  │  └─ researcher_role_cases.json
+   │  ├─ redaction_generalization/
+   │  │  ├─ redact_coordinates_cases.json
+   │  │  ├─ generalize_geometry_cases.json
+   │  │  └─ suppress_metadata_cases.json
+   │  └─ focus_mode/
+   │     ├─ golden_queries.json                         # Regression set for “must cite / must abstain”
+   │     └─ jailbreak_leakage_tests.json                # “must not leak restricted” stress tests
+   │
+   ├─ testplan/                                       # How fixtures run in CI + how runtime parity is validated
+   │  ├─ ci_policy_tests.md
+   │  ├─ runtime_policy_parity.md
+   │  └─ coverage_expectations.md
+   │
+   └─ mappings/                                       # Links from docs → code locations (avoid duplication)
+      ├─ policy_code_locations.md                      # Where Rego/rules live (repo-relative links)
+      └─ enforcement_points.md                         # Where PEPs live (API, evidence resolver, exporters)
 ```
 
 ### Acceptable inputs
