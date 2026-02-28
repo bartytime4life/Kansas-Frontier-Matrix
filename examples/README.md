@@ -2,11 +2,11 @@
 doc_id: kfm://doc/677a9d0c-ca5d-4a30-be1e-f4bec92d976f
 title: examples/ — Governed, Reproducible End-to-End Examples
 type: standard
-version: v2
+version: v3
 status: draft
 owners: KFM Maintainers (resolve via CODEOWNERS)
 created: 2026-02-24
-updated: 2026-02-27
+updated: 2026-02-28
 policy_label: public
 related:
   - ../README.md
@@ -26,6 +26,7 @@ notes:
   - Defines the directory contract for /examples with a default-deny posture.
   - Examples are small, policy-safe, and reproducible; they demonstrate trust surfaces and gates.
   - Adds a machine-readable Example Registry pattern and CI expectations (anti-skip gates).
+  - Clarifies EvidenceRef-based citations and aligns toy promotion gates to Promotion Contract language.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -41,6 +42,7 @@ notes:
 ![Trust membrane](https://img.shields.io/badge/trust%20membrane-no%20bypass-critical)
 ![Evidence-first](https://img.shields.io/badge/evidence-first-required-6f42c1)
 ![Promotion Contract](https://img.shields.io/badge/promotion%20contract-demonstrated-important)
+![Citations](https://img.shields.io/badge/citations-EvidenceRef%20only-important)
 
 > [!IMPORTANT]
 > `examples/` is the **sandbox of truth** — small enough to run locally, strict enough to survive CI.
@@ -62,7 +64,9 @@ notes:
 - [Quickstart](#quickstart)
 - [Example package standard](#example-package-standard)
 - [Evidence and provenance](#evidence-and-provenance)
+- [Citations are EvidenceRefs](#citations-are-evidencerefs)
 - [Data and safety rules](#data-and-safety-rules)
+- [Policy labels and obligations](#policy-labels-and-obligations)
 - [Promotion gates for example outputs](#promotion-gates-for-example-outputs)
 - [Example registry](#example-registry)
 - [Recommended layout](#recommended-layout)
@@ -76,12 +80,12 @@ notes:
 
 This README uses explicit truth tags so it stays evidence-first and fail-closed:
 
-- **CONFIRMED (design):** KFM invariants (truth path, trust membrane, cite-or-abstain)
+- **CONFIRMED (docs):** invariants documented in KFM design/governance docs (truth path, trust membrane, cite-or-abstain)
 - **PROPOSED:** a recommended template/pattern for this repo
 - **UNKNOWN (repo):** not yet verified on this branch (include verification steps)
 
 > [!NOTE]
-> Treat all “runner commands” as **PROPOSED** until your repo’s tooling is confirmed and linked.
+> Treat all “runner commands” and “expected paths” as **PROPOSED** until your repo’s tooling is confirmed and linked.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -269,7 +273,9 @@ summary: "<One paragraph describing the goal and the single primary claim this e
 owners:
   - "<team-or-person>"
 status: "draft"   # draft | review | published
-policy_label: "public"  # public | restricted | internal | ...
+
+# NOTE: policy_label values are a controlled vocabulary. If you don't know the correct label, fail closed.
+policy_label: "public"  # public | public_generalized | restricted | restricted_sensitive_location | internal | embargoed | quarantine
 
 # Optional: declare what the example demonstrates (helps indexing & CI selection)
 tags:
@@ -335,6 +341,22 @@ A policy-safe `evidence/run-receipt.json` SHOULD include:
 
 ---
 
+## Citations are EvidenceRefs
+
+In KFM, a “citation” is **not** a URL pasted into text. It is an **EvidenceRef** that must resolve—via the evidence resolver—into an **EvidenceBundle** that contains sufficient metadata, artifacts, and provenance to inspect the claim.
+
+Requirements for `examples/`:
+- Examples that make user-facing claims MUST emit EvidenceRefs (or equivalent IDs) and demonstrate how they resolve.
+- “Verify” MUST fail if citations cannot be resolved or are policy-denied.
+- When policy denies evidence, examples MUST fail closed (abstain, narrow scope, or show deny UX) without leaking restricted details.
+
+> [!TIP]
+> If you can’t call a real evidence resolver in CI, use a policy-safe local mock that preserves the same *deny/allow + obligation* semantics.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
 ## Data and safety rules
 
 Examples are **default-deny** when unclear:
@@ -356,24 +378,43 @@ Examples are **default-deny** when unclear:
 🚫 Scraped data with unclear permission  
 🚫 Precise coordinates for restricted-sensitive-location topics
 
+### Policy labels and obligations
+
+Policy labeling is a **gate input**. Examples MUST declare `policy_label` and MUST treat unknown classification as restricted.
+
+Starter policy labels (controlled vocabulary):
+- `public`
+- `public_generalized`
+- `restricted`
+- `restricted_sensitive_location`
+- `internal`
+- `embargoed`
+- `quarantine`
+
+Rules of thumb (fail closed):
+- Default-deny for `restricted` and `restricted_sensitive_location`.
+- If any public representation is allowed, produce a separate `public_generalized` output (toy examples can demonstrate this by writing a generalized geometry artifact).
+- Never leak restricted metadata in “not found” / “forbidden” UX or errors.
+- Treat redaction/generalization as a first-class transform (record it in receipts and provenance outputs where applicable).
+
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Promotion gates for example outputs
 
-Some examples demonstrate the Promotion Contract. When they do, examples must show the **same artifacts**, at toy scale.
+Some examples demonstrate the Promotion Contract. When they do, examples must show the **same gates**, at toy scale.
 
-### Minimum artifacts before calling something “publishable” (toy)
+### Minimum gates before calling something “publishable” (toy)
 
-| Artifact | Why it matters | Where in the example |
+| Gate | What must be present (toy) | Where in the example |
 |---|---|---|
-| Identity + version pin | prevents “floating latest” | `kfm.example.yaml` + receipt |
-| License + attribution | rights-aware publishing | `kfm.example.yaml` |
-| Sensitivity + obligations | default-deny; generalize | `kfm.example.yaml` + `evidence/notes.md` |
-| Validation results | correctness gate | receipt `checks[]` |
-| Checksums | integrity + rollback | `evidence/checksums.json` |
-| Evidence linkability | cite-or-abstain posture | receipt `policy[]` + output references |
+| A — Identity & versioning | stable identity, deterministic version pin, content digests | `kfm.example.yaml` + receipt + checksums |
+| B — Licensing & rights | license + attribution; (optional) upstream terms snapshot | `kfm.example.yaml` (+ `terms_snapshot.*` if used) |
+| C — Sensitivity & obligations | `policy_label` + recorded obligations (e.g., generalization notice) | manifest + receipt `policy[]` + `evidence/notes.md` |
+| D — Catalog triplet | DCAT/STAC/PROV validate and cross-link (if the example includes catalogs) | `outputs/catalog/` + validators |
+| E — QA & thresholds | explicit checks + thresholds, recorded as evidence | receipt `checks[]` (+ `evidence/qa_report.*` if used) |
+| F — Run receipt & audit record | run receipt ties outputs to inputs and policy decisions | `evidence/run-receipt.json` (+ `audit-ref.*` if used) |
 
 > [!NOTE]
 > Examples may include “toy catalogs” (DCAT/STAC/PROV) for demonstration, but canonical catalog enforcement lives in `contracts/` + `data/`.
@@ -394,7 +435,7 @@ Example registry shape (illustrative):
 ```json
 {
   "kfm_example_registry_version": "v1",
-  "updated": "2026-02-27",
+  "updated": "2026-02-28",
   "examples": [
     {
       "example_id": "api-feature-query",
@@ -649,6 +690,7 @@ Examples are only valuable if they don’t rot. Treat example validation as merg
 
 Recommended CI checks (PROPOSED):
 - **Example manifest lint:** validate `kfm.example.yaml` shape and required fields
+- **Policy fixture tests:** validate allow/deny + obligations using the same policy semantics as runtime
 - **Secret scan:** block secrets in examples (scripts, docs, receipts)
 - **Size limits:** block large files and accidental binaries
 - **License/sensitivity lint:** require license + sensitivity for all inputs
