@@ -414,49 +414,222 @@ infra/
 ├─ README.md
 │
 ├─ k8s/                                          # K8s manifests (base + overlays) or rendered outputs
-│  ├─ base/
-│  ├─ overlays/
+│  ├─ README.md                                  # K8s conventions: kustomize/helm usage, policy posture, verify steps
+│  │
+│  ├─ base/                                      # Shared, environment-agnostic primitives (default-deny by design)
+│  │  ├─ kustomization.yaml                      # Base composition entrypoint
+│  │  │
+│  │  ├─ namespaces/                             # Namespaces (separate trust domains)
+│  │  │  ├─ kfm-system.namespace.yaml            # Controllers/add-ons (restricted)
+│  │  │  ├─ kfm-apps.namespace.yaml              # KFM runtime workloads (api/workers)
+│  │  │  └─ kfm-observability.namespace.yaml     # Metrics/logs/traces tooling
+│  │  │
+│  │  ├─ rbac/                                   # Service accounts + least-privilege roles (no cluster-admin by default)
+│  │  │  ├─ serviceaccounts/
+│  │  │  │  ├─ kfm-api.sa.yaml
+│  │  │  │  ├─ kfm-workers.sa.yaml
+│  │  │  │  └─ kfm-ops.sa.yaml
+│  │  │  ├─ roles/
+│  │  │  ├─ rolebindings/
+│  │  │  └─ clusterroles/                        # Only when unavoidable; document why
+│  │  │
+│  │  ├─ network/                                # Trust membrane enforcement at the network layer
+│  │  │  ├─ networkpolicies/
+│  │  │  │  ├─ default-deny.ingress.yaml         # Deny by default (ingress)
+│  │  │  │  ├─ default-deny.egress.yaml          # Deny by default (egress)
+│  │  │  │  ├─ allow-dns.egress.yaml             # Allow DNS egress
+│  │  │  │  ├─ allow-api-to-stores.egress.yaml   # Only governed API can reach DB/object store
+│  │  │  │  └─ allow-observability.egress.yaml   # Allow OTLP/metrics/log sinks as needed
+│  │  │  └─ ingress/                             # Ingress primitives (no app-specific hosts here)
+│  │  │     ├─ ingressclass.yaml
+│  │  │     └─ tls/                              # Issuer refs only (no private keys)
+│  │  │
+│  │  ├─ config/                                 # Non-secret runtime wiring (ConfigMaps; secret refs elsewhere)
+│  │  │  ├─ configmaps/
+│  │  │  │  ├─ kfm-runtime.configmap.yaml        # Safe defaults; env overlays patch specifics
+│  │  │  │  ├─ kfm-feature-flags.configmap.yaml  # Non-secret feature flags (also mirrored in configs/runtime/)
+│  │  │  │  └─ kfm-otel.configmap.yaml           # OTEL endpoints + sampling (policy-safe)
+│  │  │  └─ externalsecrets/                     # Secret references (ExternalSecrets/CSI/etc.) — NO secret values
+│  │  │     ├─ kfm-api.externalsecret.yaml
+│  │  │     └─ kfm-workers.externalsecret.yaml
+│  │  │
+│  │  ├─ platform/                               # Cluster add-ons (optional; depends on your platform choices)
+│  │  │  ├─ ingress-nginx/                       # Or other ingress controller
+│  │  │  ├─ cert-manager/                        # Or platform TLS automation
+│  │  │  ├─ external-dns/                        # If managing DNS records
+│  │  │  ├─ external-secrets/                    # If pulling secrets from a secret manager
+│  │  │  └─ policy/                              # Admission policy controller install (Kyverno/Gatekeeper/etc.)
+│  │  │
+│  │  ├─ apps/                                   # Workloads (governed services only; UI should not bypass APIs)
+│  │  │  ├─ api/                                 # Governed API (policy enforcement point)
+│  │  │  │  ├─ deployment.yaml
+│  │  │  │  ├─ service.yaml
+│  │  │  │  ├─ hpa.yaml
+│  │  │  │  ├─ pdb.yaml
+│  │  │  │  ├─ networkpolicy.yaml                # Explicit allow rules (do not rely on implicit)
+│  │  │  │  └─ kustomization.yaml
+│  │  │  ├─ workers/                             # Pipelines/indexers/background jobs (no direct UI access)
+│  │  │  │  ├─ deployment.yaml
+│  │  │  │  ├─ service.yaml                      # Optional; many workers are headless
+│  │  │  │  ├─ cronjobs/                         # Scheduled maintenance/indexing runs (if used)
+│  │  │  │  └─ kustomization.yaml
+│  │  │  ├─ ui-map/                              # Optional: UI deployments (must call governed API only)
+│  │  │  ├─ ui-story/
+│  │  │  ├─ ui-catalog/
+│  │  │  ├─ focus/                               # Focus surface (must be cite-or-abstain + audited)
+│  │  │  └─ admin/                               # Restricted steward/admin surface (stronger controls)
+│  │  │
+│  │  ├─ jobs/                                   # One-shot jobs (manual or CI-triggered)
+│  │  │  ├─ migrations/                          # DB/search migrations (idempotent; gated)
+│  │  │  ├─ projection-rebuild/                  # Rebuild rebuildable projections (safe by design)
+│  │  │  └─ smoke/                               # Smoke tests (policy-safe; no restricted leakage)
+│  │  │
+│  │  └─ observability/                           # Observability wiring (policy-safe)
+│  │     ├─ otel-collector/                       # OTLP ingest + export config (no secrets)
+│  │     ├─ metrics/                              # Prometheus/agent configs (optional)
+│  │     ├─ logs/                                 # Log pipeline configs (optional)
+│  │     ├─ traces/                               # Tracing configs (optional)
+│  │     └─ grafana/                              # Grafana sidecars/provisioning (optional)
+│  │
+│  ├─ overlays/                                   # Environment overlays (dev/stage/prod deltas only)
 │  │  ├─ dev/
+│  │  │  ├─ kustomization.yaml                    # Includes base + dev patches
+│  │  │  ├─ patches/
+│  │  │  │  ├─ api.resources.patch.yaml           # Lower limits/replicas in dev
+│  │  │  │  ├─ ui.ingress.patch.yaml              # Dev hosts
+│  │  │  │  └─ observability.patch.yaml           # Dev sampling / retention tweaks
+│  │  │  └─ config/
+│  │  │     └─ env.configmap.yaml                 # Dev-only non-secret wiring
 │  │  ├─ stage/
+│  │  │  ├─ kustomization.yaml
+│  │  │  ├─ patches/
+│  │  │  └─ config/
 │  │  └─ prod/
-│  ├─ policies/                                  # admission policies / baseline security (optional)
-│  └─ scripts/                                   # render/validate helpers (optional)
+│  │     ├─ kustomization.yaml
+│  │     ├─ patches/
+│  │     │  ├─ api.hpa.patch.yaml                 # Prod autoscaling posture
+│  │     │  ├─ network.strict.patch.yaml          # Tighten egress/ingress
+│  │     │  └─ observability.retention.patch.yaml # Prod retention/SLO posture
+│  │     └─ config/
+│  │
+│  ├─ policies/                                   # Admission + baseline security policies (optional)
+│  │  ├─ README.md                                # Policy controller choice + test strategy + parity notes
+│  │  ├─ kyverno/                                 # If Kyverno is used
+│  │  ├─ gatekeeper/                              # If Gatekeeper/OPA is used
+│  │  ├─ conftest/                                # Policy-as-code tests for manifests (lint/deny rules)
+│  │  └─ network/                                 # Additional network guardrails, if separated
+│  │
+│  └─ scripts/                                    # Render/validate helpers (optional)
+│     ├─ render.sh                                # Render kustomize/helm outputs deterministically
+│     ├─ diff.sh                                  # Diff rendered output vs cluster (read-only)
+│     ├─ validate.sh                              # kubeconform/kubeval + policy checks
+│     ├─ kind-up.sh                               # Optional local cluster bootstrap
+│     └─ kind-down.sh
 │
 ├─ helm/                                         # Helm charts and values (optional)
+│  ├─ README.md                                  # How charts map to k8s base/overlays (single source-of-truth rules)
 │  ├─ charts/
+│  │  ├─ kfm/                                    # Umbrella chart (optional)
+│  │  │  ├─ Chart.yaml
+│  │  │  ├─ values.yaml
+│  │  │  └─ templates/
+│  │  ├─ kfm-api/
+│  │  │  ├─ Chart.yaml
+│  │  │  ├─ values.yaml
+│  │  │  └─ templates/
+│  │  ├─ kfm-workers/
+│  │  └─ kfm-ui/
 │  └─ values/
+│     ├─ common.values.yaml                      # Shared knobs (safe defaults)
 │     ├─ dev.values.yaml
 │     ├─ stage.values.yaml
 │     └─ prod.values.yaml
 │
 ├─ terraform/                                    # Terraform (optional)
+│  ├─ README.md                                  # Backends/state, workspaces, apply controls, receipts, rollback
 │  ├─ modules/
+│  │  ├─ iam/                                    # Least-privilege roles for workloads/CI
+│  │  ├─ network/                                # VPC/VNet, subnets, routing, firewall rules
+│  │  ├─ kubernetes-cluster/                     # Cluster provisioning (managed k8s or self-managed)
+│  │  ├─ object-store-zones/                     # Buckets/prefixes for truth path zones (raw/work/processed/catalog/audit)
+│  │  ├─ kms/                                    # Key management for encryption at rest
+│  │  ├─ dns/                                    # DNS zones/records (if managed here)
+│  │  └─ observability/                          # Managed metrics/logs/traces wiring (if applicable)
 │  ├─ stacks/
 │  │  ├─ dev/
+│  │  │  ├─ main.tf
+│  │  │  ├─ providers.tf
+│  │  │  ├─ versions.tf
+│  │  │  ├─ backend.tf
+│  │  │  ├─ variables.tf
+│  │  │  ├─ outputs.tf
+│  │  │  └─ terraform.tfvars.example             # Keys only; no secrets
 │  │  ├─ stage/
+│  │  │  └─ (same file set as dev)
 │  │  └─ prod/
-│  └─ README.md
+│  │     └─ (same file set as dev; stricter defaults)
+│  └─ policies/                                  # Optional: IaC policy checks (OPA/Sentinel/etc.)
+│     ├─ conftest/
+│     └─ sentinel/
 │
 ├─ gitops/                                       # GitOps controller configs + env apps (optional)
+│  ├─ README.md                                  # Controller choice + promotion flow + rollback rules
 │  ├─ controllers/
-│  ├─ env/
+│  │  ├─ argocd/                                 # If Argo CD is used
+│  │  │  ├─ install/
+│  │  │  ├─ projects/
+│  │  │  └─ rbac/
+│  │  └─ flux/                                   # If Flux is used
+│  │     ├─ install/
+│  │     └─ rbac/
+│  ├─ bootstrap/                                 # Bootstrap manifests per env (first install)
 │  │  ├─ dev/
 │  │  ├─ stage/
 │  │  └─ prod/
-│  └─ README.md
+│  └─ env/                                       # Per-environment “apps of apps” / kustomizations
+│     ├─ dev/
+│     │  ├─ apps/                                # Application/Kustomization objects (pin versions by digest)
+│     │  ├─ policies/                            # Env policy pins (controller config, guardrails)
+│     │  └─ README.md
+│     ├─ stage/
+│     └─ prod/
 │
 ├─ dashboards/                                   # dashboards-as-code + alert rules (policy-safe)
+│  ├─ README.md                                  # What is tracked; policy-safe logging rules; SLOs
 │  ├─ grafana/
-│  ├─ alerts/
-│  └─ README.md
+│  │  ├─ dashboards/                             # JSON dashboards (exported/provisioned)
+│  │  │  ├─ kfm-api.json
+│  │  │  ├─ kfm-policy-decisions.json
+│  │  │  ├─ kfm-evidence-resolver.json
+│  │  │  ├─ kfm-pipeline-runs.json
+│  │  │  └─ kfm-promotion-gates.json
+│  │  ├─ datasources/                            # Datasource provisioning (no creds)
+│  │  └─ provisioning/                           # Folder structure, providers, etc.
+│  └─ alerts/
+│     ├─ prometheus/                             # PrometheusRule / alerting rules (optional)
+│     │  ├─ slo.rules.yaml
+│     │  ├─ api.rules.yaml
+│     │  ├─ evidence.rules.yaml
+│     │  └─ pipeline.rules.yaml
+│     ├─ loki/                                   # Log-based alerts (optional)
+│     └─ README.md
 │
 └─ scripts/                                      # deterministic helpers (plan/validate/drift/smoke)
-   ├─ fmt.sh
-   ├─ validate.sh
-   ├─ plan.sh
-   ├─ apply.sh
-   ├─ drift.sh
-   └─ smoke.sh
+   ├─ README.md                                  # One entrypoint per action; no hidden mutations
+   ├─ lib/
+   │  ├─ common.sh                               # Shared helpers (safe defaults)
+   │  ├─ env.sh                                  # Env selection + guardrails (dev/stage/prod)
+   │  └─ ci.sh                                   # CI-safe wrappers (non-interactive)
+   ├─ fmt.sh                                     # Format IaC/manifests
+   ├─ validate.sh                                # Validate manifests/IaC + policy checks
+   ├─ plan.sh                                    # Produce plan/diff artifact (PR attachment)
+   ├─ apply.sh                                   # Controlled apply (CI runner or authorized operator)
+   ├─ drift.sh                                   # Detect drift (scheduled; read-only)
+   ├─ smoke.sh                                   # Smoke checks (policy-safe)
+   ├─ render-k8s.sh                              # Render kustomize (deterministic)
+   ├─ render-helm.sh                             # Render helm templates (deterministic)
+   ├─ terraform-init.sh                          # Init with backend safety rails
+   └─ terraform-select-workspace.sh              # Workspace/env selection guardrails
 ```
 
 > [!TIP]
