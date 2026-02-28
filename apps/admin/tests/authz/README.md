@@ -114,10 +114,10 @@ Treat AuthZ as a **contract** with three complementary test layers:
 
 ```mermaid
 flowchart TB
-  F[Policy decision fixtures] --> U[PDP unit tests]
-  F --> I[API integration tests (PEP enforcement)]
-  F --> E[UI e2e tests (consumer behavior)]
-  U --> Gate[Merge gate: fail closed]
+  F["Policy decision fixtures"] --> U["PDP unit tests"]
+  F --> I["API integration tests - PEP enforcement"]
+  F --> E["UI E2E tests - consumer behavior"]
+  U --> Gate["Merge gate: fail closed"]
   I --> Gate
   E --> Gate
 ```
