@@ -235,242 +235,215 @@ Minimum categories expected for KFM:
 This is the **recommended** layout. If the repo differs, update this section to match reality.
 
 ```text
-tests/                                               # KFM test entrypoint (unit → schema → policy → contract → integration → e2e)
-├─ README.md                                         # Test strategy + how to run + CI gate mapping
+tests/                                                        # KFM test entrypoint (unit → schema → policy → contract → integration → e2e)
+├─ README.md                                                  # Test strategy + how to run + CI gate mapping
 │
-├─ registry/                                         # Machine-readable registry + schemas + fixtures (small)
-│  ├─ README.md                                      # How the registry is used + how to add suites
-│  ├─ tests.v1.json                                  # Suites, owners, required gates, commands, timeouts, flake policy
-│  │
-│  ├─ schemas/                                       # Optional but recommended (or link to contracts/)
-│  │  ├─ tests_registry.v1.schema.json               # Schema for tests.v1.json
-│  │  ├─ test_suite_manifest.v1.schema.json          # Optional: per-suite manifest shape
-│  │  ├─ run_receipt.v1.schema.json                  # Receipt schema (or link to contracts/)
-│  │  ├─ run_manifest.v1.schema.json                 # Optional: promotion-oriented manifest (or link to contracts/)
-│  │  ├─ promotion_manifest.v1.schema.json           # Optional: if promotion manifests are validated here
-│  │  ├─ evidence_ref.v1.schema.json                 # Optional: EvidenceRef contract (or link to contracts/)
-│  │  ├─ evidence_bundle.v1.schema.json              # Optional: EvidenceBundle contract (or link to contracts/)
-│  │  ├─ policy_decision.v1.schema.json              # Optional: decision envelope (allow/deny/obligations)
-│  │  └─ error_envelope.v1.schema.json               # Optional: policy-safe error model
-│  │
-│  └─ fixtures/                                      # Registry fixtures (valid/invalid) for CI schema validation
-│     ├─ valid/
-│     │  ├─ tests.v1.min.json                        # Minimal valid registry example
-│     │  └─ tests.v1.full.json                       # Full-feature valid registry example
-│     └─ invalid/
-│        ├─ missing_owner.json
-│        ├─ unknown_gate.json
-│        └─ bad_command_shape.json
+├─ registry/                                                  # Machine-readable registry + schemas + fixtures (small, CI-friendly)
+│  ├─ README.md                                               # How the registry is used + how to add suites
+│  ├─ tests.v1.json                                           # Suites, owners, required gates, commands, timeouts, flake policy
+│  ├─ schemas/                                                # Optional but recommended (or link to contracts/)
+│  │  ├─ tests_registry.v1.schema.json                        # Schema for tests.v1.json
+│  │  ├─ test_suite_manifest.v1.schema.json                   # Optional: per-suite manifest shape
+│  │  ├─ run_receipt.v1.schema.json                           # Receipt schema (or link to contracts/)
+│  │  ├─ run_manifest.v1.schema.json                          # Optional: promotion-oriented manifest (or link to contracts/)
+│  │  ├─ promotion_manifest.v1.schema.json                    # Optional: if promotion manifests are validated here
+│  │  ├─ evidence_ref.v1.schema.json                          # Optional: EvidenceRef contract (or link to contracts/)
+│  │  ├─ evidence_bundle.v1.schema.json                       # Optional: EvidenceBundle contract (or link to contracts/)
+│  │  ├─ policy_decision.v1.schema.json                       # Optional: decision envelope (allow/deny/obligations)
+│  │  └─ error_envelope.v1.schema.json                        # Optional: policy-safe error model
+│  └─ fixtures/                                               # Registry fixtures (valid/invalid) for CI schema validation
+│     ├─ valid/                                               # Valid registry examples (should pass)
+│     │  ├─ tests.v1.min.json                                 # Minimal valid registry example
+│     │  └─ tests.v1.full.json                                # Full-feature valid registry example
+│     └─ invalid/                                             # Invalid registry examples (must fail)
+│        ├─ missing_owner.json                                # Invalid: missing owners
+│        ├─ unknown_gate.json                                 # Invalid: unknown gate name
+│        └─ bad_command_shape.json                            # Invalid: malformed command definition
 │
-├─ unit/                                             # Pure tests (no I/O): hashing, vocab, invariants, time logic
-│  ├─ README.md
-│  │
-│  ├─ hashing/                                       # Deterministic identity + canonicalization tests
-│  │  ├─ test_spec_hash_vectors.*                    # Golden vectors for spec_hash / dataset_version_id inputs
-│  │  ├─ test_canonical_json.*                       # Canonical JSON ordering/normalization rules
-│  │  └─ fixtures/
-│  │     ├─ vectors.v1.json
-│  │     └─ FIXTURE_NOTES.md
-│  │
-│  ├─ vocab/                                         # Controlled vocabulary + enum drift tests
-│  │  ├─ test_policy_labels_vocab.*
-│  │  ├─ test_obligations_vocab.*
-│  │  ├─ test_reason_codes_vocab.*
-│  │  └─ fixtures/
-│  │     ├─ vocab_inputs.json
-│  │     └─ FIXTURE_NOTES.md
-│  │
-│  ├─ time/                                          # Time-aware logic tests (windows, sorting, freshness)
-│  │  ├─ test_time_window_normalization.*
-│  │  ├─ test_timeline_sorting.*
-│  │  └─ fixtures/
-│  │     └─ time_cases.v1.json
-│  │
-│  ├─ invariants/                                    # Trust membrane guardrails (static/unit-level)
-│  │  ├─ test_no_direct_store_imports.*              # E.g., UI code must not import DB/object-store SDKs
-│  │  ├─ test_repository_interface_only.*            # Core logic accesses storage only via repo interfaces
-│  │  └─ test_fail_closed_defaults.*                 # Missing config/metadata ⇒ deny/abstain
-│  │
-│  └─ snapshots/                                     # Optional golden snapshots (diff-friendly)
+├─ unit/                                                      # Pure tests (no I/O): hashing, vocab, invariants, time logic
+│  ├─ README.md                                               # Unit suite overview + how to run
+│  ├─ hashing/                                                # Deterministic identity + canonicalization tests
+│  │  ├─ test_spec_hash_vectors.*                             # Golden vectors for spec_hash / dataset_version_id inputs
+│  │  ├─ test_canonical_json.*                                # Canonical JSON ordering/normalization rules
+│  │  └─ fixtures/                                            # Hashing fixtures (tiny, deterministic)
+│  │     ├─ vectors.v1.json                                   # Vector inputs/expected digests
+│  │     └─ FIXTURE_NOTES.md                                  # Fixture provenance + constraints
+│  ├─ vocab/                                                  # Controlled vocabulary + enum drift tests
+│  │  ├─ test_policy_labels_vocab.*                           # Policy labels vocab drift test
+│  │  ├─ test_obligations_vocab.*                             # Obligations vocab drift test
+│  │  ├─ test_reason_codes_vocab.*                            # Reason codes vocab drift test
+│  │  └─ fixtures/                                            # Vocab fixtures
+│  │     ├─ vocab_inputs.json                                 # Inputs to vocab checks
+│  │     └─ FIXTURE_NOTES.md                                  # Fixture provenance + constraints
+│  ├─ time/                                                   # Time-aware logic tests (windows, sorting, freshness)
+│  │  ├─ test_time_window_normalization.*                     # Window normalization tests
+│  │  ├─ test_timeline_sorting.*                              # Timeline sorting tests
+│  │  └─ fixtures/                                            # Time fixtures
+│  │     └─ time_cases.v1.json                                # Time cases fixture
+│  ├─ invariants/                                             # Trust membrane guardrails (static/unit-level)
+│  │  ├─ test_no_direct_store_imports.*                       # UI code must not import DB/object-store SDKs
+│  │  ├─ test_repository_interface_only.*                     # Core logic uses storage only via repo interfaces
+│  │  └─ test_fail_closed_defaults.*                          # Missing config/metadata ⇒ deny/abstain
+│  └─ snapshots/                                              # Optional golden snapshots (diff-friendly)
 │     └─ (golden outputs live here if your runner uses snapshot testing)
 │
-├─ schema/                                           # Schema/profile validation (DCAT/STAC/PROV + receipts/manifests)
-│  ├─ README.md
-│  │
-│  ├─ dcat/
-│  │  ├─ test_dcat_profile.*
-│  │  ├─ fixtures/
-│  │  │  ├─ valid/
-│  │  │  └─ invalid/
-│  │  └─ golden/                                     # Optional: canonicalized/normalized DCAT examples
-│  │
-│  ├─ stac/
-│  │  ├─ test_stac_profile.*
-│  │  ├─ fixtures/
-│  │  │  ├─ valid/
-│  │  │  └─ invalid/
-│  │  └─ golden/
-│  │
-│  ├─ prov/
-│  │  ├─ test_prov_profile.*
-│  │  ├─ fixtures/
-│  │  │  ├─ valid/
-│  │  │  └─ invalid/
-│  │  └─ golden/
-│  │
-│  ├─ triplet/                                       # Cross-link + integrity checks across DCAT/STAC/PROV
-│  │  ├─ test_triplet_crosslinks.*
-│  │  ├─ test_triplet_required_fields.*
-│  │  └─ fixtures/
-│  │     ├─ valid/
-│  │     └─ invalid/
-│  │
-│  ├─ receipts/                                      # Run receipts + promotion manifests schema validation
-│  │  ├─ test_run_receipt_schema.*
-│  │  ├─ test_run_manifest_schema.*
-│  │  ├─ test_promotion_manifest_schema.*
-│  │  └─ fixtures/
-│  │     ├─ valid/
-│  │     └─ invalid/
-│  │
-│  └─ linkcheck/                                     # EvidenceRef resolvability + URL/URI lint rules (policy-safe)
-│     ├─ test_evidence_ref_resolvability_rules.*
-│     └─ fixtures/
-│        ├─ valid/
-│        └─ invalid/
+├─ schema/                                                    # Schema/profile validation (DCAT/STAC/PROV + receipts/manifests)
+│  ├─ README.md                                               # Schema suite overview + how to run
+│  ├─ dcat/                                                   # DCAT profile tests
+│  │  ├─ test_dcat_profile.*                                  # DCAT profile validation tests
+│  │  ├─ fixtures/                                            # DCAT fixtures
+│  │  │  ├─ valid/                                            # Valid DCAT fixtures
+│  │  │  └─ invalid/                                          # Invalid DCAT fixtures
+│  │  └─ golden/                                              # Optional: canonicalized/normalized DCAT examples
+│  ├─ stac/                                                   # STAC profile tests
+│  │  ├─ test_stac_profile.*                                  # STAC profile validation tests
+│  │  ├─ fixtures/                                            # STAC fixtures
+│  │  │  ├─ valid/                                            # Valid STAC fixtures
+│  │  │  └─ invalid/                                          # Invalid STAC fixtures
+│  │  └─ golden/                                              # Optional: canonicalized/normalized STAC examples
+│  ├─ prov/                                                   # PROV profile tests
+│  │  ├─ test_prov_profile.*                                  # PROV profile validation tests
+│  │  ├─ fixtures/                                            # PROV fixtures
+│  │  │  ├─ valid/                                            # Valid PROV fixtures
+│  │  │  └─ invalid/                                          # Invalid PROV fixtures
+│  │  └─ golden/                                              # Optional: canonicalized/normalized PROV examples
+│  ├─ triplet/                                                # Cross-link + integrity checks across DCAT/STAC/PROV
+│  │  ├─ test_triplet_crosslinks.*                            # Cross-link integrity tests (DCAT↔STAC↔PROV)
+│  │  ├─ test_triplet_required_fields.*                       # Required-field tests across triplet
+│  │  └─ fixtures/                                            # Triplet fixtures
+│  │     ├─ valid/                                            # Valid triplet fixtures
+│  │     └─ invalid/                                          # Invalid triplet fixtures
+│  ├─ receipts/                                               # Run receipts + promotion manifests schema validation
+│  │  ├─ test_run_receipt_schema.*                            # Run receipt schema tests
+│  │  ├─ test_run_manifest_schema.*                           # Run manifest schema tests
+│  │  ├─ test_promotion_manifest_schema.*                     # Promotion manifest schema tests
+│  │  └─ fixtures/                                            # Receipt/manifests fixtures
+│  │     ├─ valid/                                            # Valid receipts/manifests
+│  │     └─ invalid/                                          # Invalid receipts/manifests
+│  └─ linkcheck/                                              # EvidenceRef resolvability + URL/URI lint rules (policy-safe)
+│     ├─ test_evidence_ref_resolvability_rules.*              # EvidenceRef resolvability rules tests
+│     └─ fixtures/                                            # Linkcheck fixtures
+│        ├─ valid/                                            # Valid EvidenceRefs/URLs
+│        └─ invalid/                                          # Invalid EvidenceRefs/URLs
 │
-├─ policy/                                           # Fixture-driven OPA/Rego tests (allow/deny/obligations)
-│  ├─ README.md
-│  │
-│  ├─ fixtures/                                      # Deterministic policy fixtures used by tests
-│  │  ├─ inputs/                                     # Inputs to policy evaluation (user/action/resource/context)
-│  │  │  ├─ public_read_public_dataset.json
-│  │  │  ├─ public_read_restricted_dataset.json
-│  │  │  ├─ steward_read_restricted_dataset.json
-│  │  │  ├─ public_export_public_dataset.json
-│  │  │  └─ focus_public_query_restricted_context.json
-│  │  └─ expected/                                   # Expected decision envelopes (allow/deny + obligations + reason_codes)
-│  │     ├─ public_read_public_dataset.decision.json
-│  │     ├─ public_read_restricted_dataset.decision.json
-│  │     ├─ steward_read_restricted_dataset.decision.json
-│  │     ├─ public_export_public_dataset.decision.json
-│  │     └─ focus_public_query_restricted_context.decision.json
-│  │
-│  ├─ test_authz.*
-│  ├─ test_obligations.*
-│  ├─ test_rights.*
-│  ├─ test_sensitivity.*
-│  ├─ test_promotion_policy.*                        # Policy participation in promotion gates (deny if missing requirements)
-│  └─ test_policy_safe_errors.*                      # No restricted-existence inference; stable envelopes
+├─ policy/                                                    # Fixture-driven OPA/Rego tests (allow/deny/obligations)
+│  ├─ README.md                                               # Policy test overview + runner notes
+│  ├─ fixtures/                                               # Deterministic policy fixtures used by tests
+│  │  ├─ inputs/                                              # Inputs to policy evaluation (user/action/resource/context)
+│  │  │  ├─ public_read_public_dataset.json                   # Public reads public dataset
+│  │  │  ├─ public_read_restricted_dataset.json               # Public reads restricted dataset (deny)
+│  │  │  ├─ steward_read_restricted_dataset.json              # Steward reads restricted dataset (allow with obligations)
+│  │  │  ├─ public_export_public_dataset.json                 # Public export public dataset (rights/policy checks)
+│  │  │  └─ focus_public_query_restricted_context.json        # Focus query touches restricted context (abstain/deny)
+│  │  └─ expected/                                            # Expected decision envelopes (allow/deny + obligations + reason_codes)
+│  │     ├─ public_read_public_dataset.decision.json          # Expected decision
+│  │     ├─ public_read_restricted_dataset.decision.json      # Expected decision
+│  │     ├─ steward_read_restricted_dataset.decision.json     # Expected decision
+│  │     ├─ public_export_public_dataset.decision.json        # Expected decision
+│  │     └─ focus_public_query_restricted_context.decision.json # Expected decision
+│  ├─ test_authz.*                                            # AuthZ allow/deny tests
+│  ├─ test_obligations.*                                      # Obligation computation tests
+│  ├─ test_rights.*                                           # Rights/licensing policy tests
+│  ├─ test_sensitivity.*                                      # Sensitivity + generalization tests
+│  ├─ test_promotion_policy.*                                 # Policy participation in promotion gates
+│  └─ test_policy_safe_errors.*                               # No restricted-existence inference; stable envelopes
 │
-├─ contract/                                         # API + DTO contracts, compatibility, error envelopes
-│  ├─ README.md
-│  │
-│  ├─ api/
-│  │  ├─ test_openapi_diff.*                         # Prevent breaking changes without version bump/migration notes
-│  │  ├─ test_openapi_lint.*                         # Required tags, responses, auth, pagination conventions
-│  │  └─ fixtures/
-│  │     ├─ baselines/                               # Last-known-good specs for diffing (if your approach uses baselines)
-│  │     └─ samples/                                 # Minimal request/response examples (sanitized)
-│  │
-│  ├─ dto/
-│  │  ├─ test_dto_validation.*                       # Request/response DTO schema validation (jsonschema/zod/etc.)
-│  │  └─ fixtures/
-│  │     ├─ valid/
-│  │     └─ invalid/
-│  │
-│  ├─ errors/
-│  │  ├─ test_error_model.*                          # Policy-safe error envelope invariants
-│  │  └─ fixtures/
-│  │     ├─ public_role/
-│  │     └─ steward_role/
-│  │
-│  └─ compatibility/
-│     ├─ test_backward_compat.*                      # Optional: backward compatibility matrix tests
-│     └─ baselines/                                  # Optional: compatibility baseline snapshots
+├─ contract/                                                  # API + DTO contracts, compatibility, error envelopes
+│  ├─ README.md                                               # Contract suite overview + how to run
+│  ├─ api/                                                    # OpenAPI contract tests
+│  │  ├─ test_openapi_diff.*                                  # Prevent breaking changes without version bump/notes
+│  │  ├─ test_openapi_lint.*                                  # Tags/responses/auth/pagination conventions
+│  │  └─ fixtures/                                            # OpenAPI fixtures/baselines
+│  │     ├─ baselines/                                        # Last-known-good specs for diffing (if used)
+│  │     └─ samples/                                          # Minimal request/response examples (sanitized)
+│  ├─ dto/                                                    # DTO validation tests
+│  │  ├─ test_dto_validation.*                                # Request/response DTO schema validation (jsonschema/zod/etc.)
+│  │  └─ fixtures/                                            # DTO fixtures
+│  │     ├─ valid/                                            # Valid DTO fixtures
+│  │     └─ invalid/                                          # Invalid DTO fixtures
+│  ├─ errors/                                                 # Error model tests
+│  │  ├─ test_error_model.*                                   # Policy-safe error envelope invariants
+│  │  └─ fixtures/                                            # Error fixtures (role-specific if needed)
+│  │     ├─ public_role/                                      # Public-role error cases
+│  │     └─ steward_role/                                     # Steward-role error cases
+│  └─ compatibility/                                          # Optional compatibility tests/baselines
+│     ├─ test_backward_compat.*                               # Backward compatibility matrix tests
+│     └─ baselines/                                           # Compatibility baseline snapshots (optional)
 │
-├─ integration/                                      # Evidence resolver + governed API integration harness
-│  ├─ README.md
-│  │
-│  ├─ harness/                                       # Local harness (fake stores or seeded canonical artifacts)
-│  │  ├─ README.md
-│  │  ├─ config/
-│  │  │  ├─ test.env.example                         # Keys only; NO secrets
-│  │  │  └─ overrides.yaml                           # Harness knobs (ports, feature flags; safe defaults)
-│  │  ├─ seed/                                       # Seeded canonical artifacts for deterministic runs
-│  │  │  ├─ catalog_triplet/                         # Minimal DCAT/STAC/PROV set for tests
-│  │  │  ├─ processed_artifacts/                     # Tiny synthetic artifacts (or pointers)
-│  │  │  ├─ evidence/                                # Evidence bundles/refs used in integration tests
-│  │  │  └─ receipts/                                # Run receipts/promotion manifests used for gating tests
-│  │  ├─ scripts/
-│  │  │  ├─ up.sh                                    # Start harness
-│  │  │  ├─ down.sh                                  # Stop harness
-│  │  │  ├─ seed.sh                                  # Load deterministic seed
-│  │  │  └─ reset.sh                                 # Reset harness state
-│  │  └─ docker-compose.yml                          # Optional: if used to stand up local services
-│  │
-│  ├─ test_evidence_resolution.*                     # EvidenceRef → EvidenceBundle end-to-end
-│  ├─ test_audit_receipts.*                          # audit_ref present; receipts emitted; policy logged (no secrets)
-│  ├─ test_no_policy_bypass.*                        # Requests must not bypass policy enforcement points
-│  └─ test_policy_safe_errors_runtime.*              # Runtime error behavior matches policy-safe contract
+├─ integration/                                               # Evidence resolver + governed API integration harness
+│  ├─ README.md                                               # Integration suite overview + how to run
+│  ├─ harness/                                                # Local harness (fake stores or seeded canonical artifacts)
+│  │  ├─ README.md                                            # Harness docs (startup/teardown/seed/reset)
+│  │  ├─ config/                                              # Harness config (keys only; NO secrets)
+│  │  │  ├─ test.env.example                                  # Env example (keys only)
+│  │  │  └─ overrides.yaml                                    # Harness knobs (ports/flags; safe defaults)
+│  │  ├─ seed/                                                # Seeded canonical artifacts for deterministic runs
+│  │  │  ├─ catalog_triplet/                                  # Minimal DCAT/STAC/PROV set
+│  │  │  ├─ processed_artifacts/                              # Tiny synthetic artifacts (or pointers)
+│  │  │  ├─ evidence/                                         # Evidence bundles/refs used in tests
+│  │  │  └─ receipts/                                         # Receipts/manifests used for gating tests
+│  │  ├─ scripts/                                             # Harness scripts
+│  │  │  ├─ up.sh                                             # Start harness
+│  │  │  ├─ down.sh                                           # Stop harness
+│  │  │  ├─ seed.sh                                           # Load deterministic seed
+│  │  │  └─ reset.sh                                          # Reset harness state
+│  │  └─ docker-compose.yml                                   # Optional: local services composition
+│  ├─ test_evidence_resolution.*                              # EvidenceRef → EvidenceBundle end-to-end
+│  ├─ test_audit_receipts.*                                   # audit_ref present; receipts emitted; policy logged (no secrets)
+│  ├─ test_no_policy_bypass.*                                 # Requests must not bypass policy enforcement points
+│  └─ test_policy_safe_errors_runtime.*                       # Runtime behavior matches policy-safe contract
 │
-├─ e2e/                                              # End-to-end tests (UI ↔ API) for trust flows
-│  ├─ README.md
-│  │
-│  ├─ playwright/                                    # Or cypress/selenium/etc. (choose one)
-│  │  ├─ playwright.config.*
-│  │  ├─ global-setup.*
-│  │  └─ global-teardown.*
-│  │
-│  ├─ specs/
-│  │  ├─ evidence_drawer.spec.*                      # Evidence drawer exists + required fields render
-│  │  ├─ citations_resolve.spec.*                    # UI citations resolve (or abstain) end-to-end
-│  │  ├─ focus_cite_or_abstain.spec.*                # Hard-gate citation verification behavior
-│  │  ├─ policy_safe_denial.spec.*                   # No restricted existence inference UX
-│  │  ├─ exports_rights_enforced.spec.*              # Exports gated by rights + policy labels
-│  │  └─ time_slider_version_pinning.spec.*          # Time-aware UI pins DatasetVersion IDs in view_state
-│  │
-│  ├─ a11y/
-│  │  ├─ smoke.spec.*                                # Keyboard navigation + basic a11y checks for trust surfaces
-│  │  └─ rules/                                      # Optional: custom rules or allowlists
-│  │
-│  ├─ fixtures/                                      # E2E-only fixtures (NO secrets)
-│  │  ├─ users.json                                  # Synthetic users/roles/groups
-│  │  ├─ sessions.json                               # Synthetic session data (no tokens)
-│  │  └─ view_states/                                # Deterministic view_state objects used by tests
-│  │
-│  └─ artifacts/                                     # CI artifacts (should be gitignored)
-│     ├─ screenshots/
-│     ├─ traces/
-│     └─ videos/
+├─ e2e/                                                       # End-to-end tests (UI ↔ API) for trust flows
+│  ├─ README.md                                               # E2E suite overview + how to run + CI artifacts
+│  ├─ playwright/                                             # Runner (or cypress/selenium/etc.; choose one)
+│  │  ├─ playwright.config.*                                  # Runner config
+│  │  ├─ global-setup.*                                       # Global setup
+│  │  └─ global-teardown.*                                    # Global teardown
+│  ├─ specs/                                                  # E2E specs
+│  │  ├─ evidence_drawer.spec.*                               # Evidence drawer exists + required fields render
+│  │  ├─ citations_resolve.spec.*                             # UI citations resolve (or abstain) end-to-end
+│  │  ├─ focus_cite_or_abstain.spec.*                         # Hard-gate citation verification behavior
+│  │  ├─ policy_safe_denial.spec.*                            # No restricted-existence inference UX
+│  │  ├─ exports_rights_enforced.spec.*                       # Exports gated by rights + policy labels
+│  │  └─ time_slider_version_pinning.spec.*                   # UI pins DatasetVersion IDs in view_state
+│  ├─ a11y/                                                   # Accessibility checks for trust surfaces
+│  │  ├─ smoke.spec.*                                         # Keyboard navigation + basic a11y checks
+│  │  └─ rules/                                               # Optional: custom rules/allowlists
+│  ├─ fixtures/                                               # E2E fixtures (NO secrets)
+│  │  ├─ users.json                                           # Synthetic users/roles/groups
+│  │  ├─ sessions.json                                        # Synthetic session data (no tokens)
+│  │  └─ view_states/                                         # Deterministic view_state objects
+│  └─ artifacts/                                              # CI artifacts (should be gitignored)
+│     ├─ screenshots/                                         # Screenshots
+│     ├─ traces/                                              # Traces
+│     └─ videos/                                              # Videos
 │
-├─ fixtures/                                         # Shared test fixtures (synthetic/sanitized; small; documented)
-│  ├─ public/                                        # Safe synthetic fixtures for public role
-│  │  ├─ FIXTURE_NOTES.md
-│  │  ├─ datasets/                                   # Tiny synthetic datasets (safe-by-default)
-│  │  ├─ catalogs/                                   # Matching tiny DCAT/STAC/PROV
-│  │  ├─ evidence/                                   # Evidence bundles/refs safe for public scenario tests
-│  │  └─ view_states/                                # Share-link/view_state fixtures
-│  │
-│  └─ restricted_sanitized/                          # Sanitized fixtures (no precise coords, no identifiers)
-│     ├─ FIXTURE_NOTES.md
-│     ├─ datasets/                                   # Generalized/aggregated representations only
-│     ├─ catalogs/
-│     ├─ evidence/
-│     └─ view_states/
+├─ fixtures/                                                  # Shared test fixtures (synthetic/sanitized; small; documented)
+│  ├─ public/                                                 # Safe synthetic fixtures for public role scenarios
+│  │  ├─ FIXTURE_NOTES.md                                     # Fixture provenance + constraints
+│  │  ├─ datasets/                                            # Tiny synthetic datasets (safe-by-default)
+│  │  ├─ catalogs/                                            # Matching tiny DCAT/STAC/PROV fixtures
+│  │  ├─ evidence/                                            # Evidence bundles/refs safe for public tests
+│  │  └─ view_states/                                         # Share-link/view_state fixtures
+│  └─ restricted_sanitized/                                   # Sanitized fixtures (no precise coords, no identifiers)
+│     ├─ FIXTURE_NOTES.md                                     # Fixture provenance + constraints
+│     ├─ datasets/                                            # Generalized/aggregated representations only
+│     ├─ catalogs/                                            # Matching sanitized catalogs
+│     ├─ evidence/                                            # Sanitized evidence bundles/refs
+│     └─ view_states/                                         # Sanitized view_state fixtures
 │
-└─ utils/                                            # Shared test helpers (builders, fake stores, snapshot utilities)
-   ├─ README.md
-   ├─ builders.*                                     # Builders for fixtures/inputs (policy-safe defaults)
-   ├─ snapshots.*                                    # Snapshot helpers (stable normalization)
-   ├─ tempdirs.*                                     # Tempdir management helpers
-   ├─ http_client.*                                  # Optional: common client wrapper for integration/e2e
-   ├─ fake_clock.*                                   # Time-freezing utilities for deterministic tests
-   ├─ canonical_json.*                               # Canonical serialization helpers (hashing parity)
-   └─ assertions/
-      ├─ policy_safe_errors.*                        # Assertions for indistinguishable deny/not-found behavior
-      ├─ evidence_bundle_assertions.*                # Assertions for EvidenceBundle required fields
-      └─ catalog_link_assertions.*                   # Assertions for DCAT↔STAC↔PROV link integrity
+└─ utils/                                                     # Shared test helpers (builders, fake stores, snapshot utilities)
+   ├─ README.md                                               # Test utils overview + stability guarantees
+   ├─ builders.*                                              # Builders for fixtures/inputs (policy-safe defaults)
+   ├─ snapshots.*                                             # Snapshot helpers (stable normalization)
+   ├─ tempdirs.*                                              # Tempdir management helpers
+   ├─ http_client.*                                           # Optional: common client wrapper for integration/e2e
+   ├─ fake_clock.*                                            # Time-freezing utilities for deterministic tests
+   ├─ canonical_json.*                                        # Canonical serialization helpers (hashing parity)
+   └─ assertions/                                             # Higher-level assertions (readable failures)
+      ├─ policy_safe_errors.*                                 # Assertions for indistinguishable deny/not-found behavior
+      ├─ evidence_bundle_assertions.*                         # Assertions for EvidenceBundle required fields
+      └─ catalog_link_assertions.*                            # Assertions for DCAT↔STAC↔PROV link integrity
 ```
 
 > [!TIP]
