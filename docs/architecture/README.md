@@ -515,33 +515,33 @@ This directory is the top of the documentation tree for architecture. Detailed d
 **Suggested layout (PROPOSED)**
 
 ```text
-docs/architecture/                                  # Architecture docs (invariants, decisions, diagrams, contracts)
-├─ README.md                                        # Index + invariants + truth path + promotion contract
+docs/architecture/                                      # Architecture docs (invariants, decisions, diagrams, contracts)
+├─ README.md                                            # Index + invariants (trust membrane) + truth path + promotion contract
 │
-├─ overview/                                        # High-level architecture narrative (what/why/how)
-│  ├─ system-context.md                             # System context + external actors/dependencies
-│  ├─ trust-membrane.md                             # Boundary rules + enforcement points
-│  ├─ truth-path.md                                 # Lifecycle zones + promotion contract explanation
-│  └─ time-model.md                                 # Event/transaction/valid time conventions
+├─ overview/                                            # High-level architecture narrative (what/why/how)
+│  ├─ system-context.md                                 # System context + external actors/dependencies
+│  ├─ trust-membrane.md                                 # Boundary rules + enforcement points (PEP/PDP + UI trust surfaces)
+│  ├─ truth-path.md                                     # Lifecycle zones + promotion contract explanation
+│  └─ time-model.md                                     # Event/transaction/valid time conventions
 │
-├─ decisions/                                       # ADRs
-│  ├─ adr-0000-template.md
-│  └─ adr-0001-example.md
+├─ decisions/                                           # ADRs (small, reversible, versioned decisions)
+│  ├─ adr-0000-template.md                               # ADR template (decision record format)
+│  └─ adr-0001-example.md                                # Example ADR (illustrative)
 │
-├─ diagrams/                                        # Mermaid sources
-│  ├─ truth-path.mmd
-│  ├─ layering.mmd
-│  └─ contracts.mmd
+├─ diagrams/                                            # Mermaid sources (kept close to narrative)
+│  ├─ truth-path.mmd                                     # Truth path + promotion gates diagram
+│  ├─ layering.mmd                                       # Layering/trust membrane boundaries diagram
+│  └─ contracts.mmd                                      # Contract surfaces + validation flow diagram
 │
-├─ contracts/                                       # Stable contracts (human + machine)
-│  ├─ api-contract.md
-│  ├─ evidence-resolver-contract.md
-│  ├─ policy-contract.md
-│  ├─ run-receipt.schema.json
-│  └─ promotion-manifest.schema.json
+├─ contracts/                                           # Stable contracts (human + machine; link to /contracts when canonical)
+│  ├─ api-contract.md                                    # Human-readable API contract summary (normative behavior)
+│  ├─ evidence-resolver-contract.md                      # Evidence resolution contract (inputs/outputs + obligations)
+│  ├─ policy-contract.md                                 # Policy contract (labels, decisions, obligations, fail-closed)
+│  ├─ run-receipt.schema.json                             # Machine schema (mirror/link to canonical contracts/)
+│  └─ promotion-manifest.schema.json                      # Machine schema (mirror/link to canonical contracts/)
 │
-└─ threat-model/                                    # Threat modeling
-   └─ README.md
+└─ threat-model/                                        # Threat modeling (assets, actors, risks, mitigations)
+   └─ README.md                                          # Threat model overview + review cadence + acceptance criteria
 ```
 
 [(back to top)](#top)
