@@ -29,7 +29,7 @@ notes:
 
 <a id="top"></a>
 
-# Migrations
+# migrations/
 Governed, reversible changes to **rebuildable stores** (schemas, constraints, indexes, projections, graph shape) with **scope control**, **baselines**, **diffs**, **run receipts**, and **rollback artifacts**.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
@@ -37,14 +37,22 @@ Governed, reversible changes to **rebuildable stores** (schemas, constraints, in
 ![change-control](https://img.shields.io/badge/change_control-fail--closed-critical)
 ![reversible](https://img.shields.io/badge/reversible-required-success)
 ![audit](https://img.shields.io/badge/audit-run_receipt%20%2B%20PROV-informational)
+![ci](https://img.shields.io/badge/ci-contract_tests-TODO-lightgrey)
+![owners](https://img.shields.io/badge/owners-CODEOWNERS-TODO-lightgrey)
 
 **Owners:** TBD (enforced by `CODEOWNERS`)  
+**Status:** Draft (this doc is a contract—tighten as the repo hardens)  
 **Principles:** map-first • time-aware • governed • evidence-first • cite-or-abstain
+
+> [!IMPORTANT]
+> This directory exists to make “high-impact mutations” **reviewable, auditable, and reversible**.
+> If any required contract artifact is missing or invalid → **fail closed**.
 
 ---
 
 ## Quick navigation
 - [Directory contract](#directory-contract)
+- [Where migrations fit in KFM](#where-migrations-fit-in-kfm)
 - [When to use a migration](#when-to-use-a-migration)
 - [Non-negotiables](#non-negotiables)
 - [Directory layout](#directory-layout)
@@ -61,19 +69,28 @@ Governed, reversible changes to **rebuildable stores** (schemas, constraints, in
 - [PR checklist](#pr-checklist)
 - [Troubleshooting](#troubleshooting)
 - [Glossary](#glossary)
+- [Appendix](#appendix)
 
 ---
 
 ## Directory contract
 
 ### Purpose
-`migrations/` exists to make “high-impact mutations” **reviewable, auditable, and reversible**.
+`migrations/` defines how we perform **governed mutations** to rebuildable stores—especially when:
+- sequencing matters,
+- rollback must be possible,
+- blast radius must be bounded,
+- policy or invariants must be enforced.
 
 A migration is any controlled change that intentionally mutates:
 - schemas/constraints/indexes in a relational store (e.g., PostGIS)
 - search/index structures (mappings, analyzers, vector schema, reindex flows)
 - graph shape (labels, relationships, constraints, ontology) **when a graph is used**
 - backfills that are not simply “re-run the deterministic pipeline”
+
+### Where this fits in the repo
+- This directory **does not** define canonical truth. Canonical truth is produced through governed pipelines and promotion gates.
+- This directory defines controlled mutations to **projections** and **runtime-facing rebuildable stores**.
 
 ### What belongs here
 ✅ Machine-declared migrations with:
@@ -90,10 +107,38 @@ A migration is any controlled change that intentionally mutates:
 ❌ Secrets, credentials, tokens, kubeconfigs  
 ❌ Raw or sensitive dataset payloads  
 ❌ One-off “operator scripts” without declarations, receipts, and rollback  
-❌ Mutations to **canonical truth** (RAW/PROCESSED/CATALOG) — those must be done by governed pipelines and promotion gates
+❌ Mutations to **canonical truth** zones (RAW/WORK/PROCESSED/CATALOG) — those must be done by governed pipelines and promotion gates
 
 > [!IMPORTANT]
-> In KFM, PostGIS/search/graph/tiles are **rebuildable projections**. Migrations must preserve the ability to reconstruct from canonical artifacts.
+> In KFM, PostGIS/search/graph/tiles are **rebuildable projections**.
+> Migrations must preserve the ability to reconstruct from canonical artifacts.
+
+[Back to top](#top)
+
+---
+
+## Where migrations fit in KFM
+
+Migrations exist inside the “trust membrane” posture: clients never talk directly to storage/indexes; access goes through governed APIs and policy enforcement.
+
+```mermaid
+flowchart LR
+  U[Clients and UIs] --> PEP[Governed API PEP]
+  PEP --> POL[Policy Engine]
+  PEP --> PROJ[Rebuildable stores]
+  PROJ --> IDX[Indexes and tiles]
+  PROJ --> G[Graph store]
+  PROJ --> PG[PostGIS]
+  CAN[Canonical artifacts] --> PIPE[Governed pipelines]
+  PIPE --> PROJ
+```
+
+**Practical implications**
+- Migrations are allowed to mutate **rebuildable stores** only.
+- Migrations MUST NOT:
+  - bypass policy boundaries,
+  - mutate protected governance domains without explicit approval,
+  - break deterministic rebuildability from canonical artifacts.
 
 [Back to top](#top)
 
@@ -114,7 +159,8 @@ Do **not** use a migration when:
 - you can roll out a new versioned projection side-by-side and flip consumers safely
 
 > [!RULE]
-> If you can re-run deterministically from immutable inputs, **do that**. Migrations are for what cannot be safely re-derived without an explicit change plan.
+> If you can re-run deterministically from immutable inputs, **do that**.
+> Migrations are for what cannot be safely re-derived without an explicit change plan.
 
 [Back to top](#top)
 
@@ -129,6 +175,7 @@ Do **not** use a migration when:
 5. **Receipts always.** Every execution emits a run receipt (and optionally PROV) for attribution and auditability.
 6. **Protected domains are hard stop.** Governance-protected schemas/namespaces/labels must not change without explicit approval.
 7. **Policy-safe outputs.** Diffs/receipts/logs must not leak secrets, PII, or restricted location details.
+8. **Deterministic identity.** Artifacts MUST be content-addressed (digests) so receipts can be independently verified.
 
 [Back to top](#top)
 
@@ -137,7 +184,8 @@ Do **not** use a migration when:
 ## Directory layout
 
 > [!NOTE]
-> This is the **recommended contract layout** aligned to the repo-wide “registry + schemas + fixtures” pattern used elsewhere (configs/examples/apps). If your repo already differs, update this section to match reality while preserving the guarantees.
+> This is a **recommended contract layout** aligned to the repo-wide “registry + schemas + fixtures” pattern.
+> If your repo differs, update this section to match reality **while preserving the guarantees**.
 
 ```text
 migrations/
@@ -147,7 +195,10 @@ migrations/
 │  ├─ migrations.v1.json                          # Canonical migration registry (ids, types, owners, status)
 │  ├─ schemas/
 │  │  ├─ migration_declaration.v1.schema.json     # Schema for migration.yml
-│  │  └─ receipt_refs.v1.schema.json              # (Optional) schema for receipt pointer records
+│  │  ├─ run_receipt.v1.schema.json               # Schema for receipts/run_receipt.json
+│  │  ├─ baseline.v1.schema.json                  # Schema for baselines/*.json
+│  │  ├─ diff_summary.v1.schema.json              # Schema for diffs/summary.json
+│  │  └─ receipt_ref.v1.schema.json               # Pointer record if receipts stored outside git
 │  └─ fixtures/
 │     ├─ valid/                                   # Valid declaration examples
 │     └─ invalid/                                 # Invalid declaration examples (must fail CI)
@@ -166,7 +217,8 @@ migrations/
 │  │  │  └─ touched.csv                           # Optional reviewer-friendly list of touched objects
 │  │  ├─ receipts/
 │  │  │  ├─ run_receipt.json                      # Execution receipt (who/what/when + validation)
-│  │  │  └─ prov.jsonld                           # Optional PROV bundle
+│  │  │  ├─ prov.jsonld                           # Optional PROV bundle
+│  │  │  └─ receipt_ref.json                      # Optional pointer record (preferred for prod)
 │  │  └─ notes.md                                 # Human context + risks + review notes
 │  └─ ...
 │
@@ -195,6 +247,9 @@ migrations/
    └─ ...
 ```
 
+> [!TIP]
+> Keep git-committed artifacts small and policy-safe. For production runs, prefer storing receipts and baseline blobs in an immutable artifact store and committing only `receipt_ref.json` pointers.
+
 [Back to top](#top)
 
 ---
@@ -203,7 +258,12 @@ migrations/
 
 Each migration directory **must** include a machine-readable `migration.yml`.
 
-Minimum fields (v1; extend as needed):
+### Normative language
+- **MUST** = required to merge/run
+- **SHOULD** = strongly recommended; requires justification if not followed
+- **MAY** = optional
+
+### Minimum fields (v1; extend as needed)
 - `migration_id` (stable, unique, never reused)
 - `type` (`postgis` | `search` | `graph` | `other`)
 - `intent` (plain-language)
@@ -246,10 +306,10 @@ approvals:
   change_class: governance-critical
 
 runner:
-  tool: "psql"                 # or alembic/flyway/etc.
-  command: "scripts/migrate.sh" # repo-standard wrapper, if present
+  tool: "psql"                   # or alembic/flyway/etc.
+  command: "scripts/migrate.sh"  # repo-standard wrapper, if present
   environment:
-    - KFM_DB_DSN_REF            # secret reference name; not the secret value
+    - KFM_DB_DSN_REF             # secret reference name; not the secret value
 
 artifacts:
   forward:
@@ -264,7 +324,8 @@ artifacts:
 ```
 
 > [!IMPORTANT]
-> “Scope” is not documentation — it is a **limit** enforced by CI and/or the migration runner. If scope can’t be enforced, treat it as incomplete and fail closed.
+> “Scope” is not documentation — it is a **limit** enforced by CI and/or the migration runner.
+> If scope can’t be enforced, treat it as incomplete and fail closed.
 
 [Back to top](#top)
 
@@ -278,12 +339,13 @@ Baseline goals:
 - detect unintended mutations even when “it seems fine”
 - provide reviewers a predictable blast-radius summary
 - make rollback verification possible
+- enable receipts to be independently verified via digests
 
 ### Minimum baseline fields (recommended)
 - object counts (tables/indexes/constraints OR nodes/rels)
 - schema fingerprint (constraints/index definitions digest)
 - “protected domain” fingerprint (hash of protected objects)
-- performance-relevant stats where safe (optional)
+- policy-safe performance-relevant stats where safe (optional)
 
 ### Diff outputs (required)
 - `diffs/summary.json` (machine-readable, CI-enforced)
@@ -304,17 +366,19 @@ Migrations must not violate KFM invariants. CI (and preflight locally) should en
 - no secret leakage in artifacts/receipts
 - no policy bypass (trust membrane intact)
 - no mutation of protected domains without explicit approval
+- artifacts are deterministic and content-addressable (digests match)
 
 ### Store-specific invariants (examples)
 **PostGIS**
 - required constraints exist
 - spatial indexes present where required
 - migrations are ordered and idempotent (where possible)
+- backfills are bounded and observable (rows affected must be within declared limits)
 
 **Search**
 - mapping changes are versioned
-- reindex plan is explicit
-- index alias flips are audited
+- reindex plan is explicit (source index, destination index, alias plan)
+- alias flips are audited
 - rollback strategy exists (old index retained) unless explicitly approved
 
 **Graph**
@@ -323,7 +387,7 @@ Migrations must not violate KFM invariants. CI (and preflight locally) should en
 - protected/authority nodes unchanged unless explicitly approved
 
 > [!TIP]
-> Treat “invariant checks” as contract tests: they must be deterministic and run in CI.
+> Treat invariant checks as contract tests: deterministic, CI-enforced, and fail-closed.
 
 [Back to top](#top)
 
@@ -342,7 +406,7 @@ If a migration is **not** reversible:
 - set `requires_rollback: false`
 - document why in `notes.md`
 - include the governance approval reference (issue/ADR/decision record)
-- include an alternative safety strategy (e.g., dual-write, shadow index, alias flip)
+- include an alternative safety strategy (e.g., dual-write, shadow index, alias flip, blue/green)
 
 > [!WARNING]
 > “We can’t roll this back” is a governance event, not a casual decision.
@@ -354,7 +418,7 @@ If a migration is **not** reversible:
 ## Run receipts and PROV
 
 Every migration execution must emit:
-- a **run receipt** (`receipts/run_receipt.json`)
+- a **run receipt** (`receipts/run_receipt.json` OR `receipts/receipt_ref.json`)
 - optionally a **PROV bundle** (`receipts/prov.jsonld`) for richer lineage
 
 ### Receipt minimum fields
@@ -380,11 +444,11 @@ flowchart TD
   C --> D[Apply forward change]
   D --> E[Capture baseline post]
   E --> F[Compute diff]
-  F --> G{Scope + invariants pass?}
-  G -->|Yes| H[Emit run_receipt (+ PROV)]
+  F --> G{Scope and invariants pass?}
+  G -->|Yes| H[Emit run_receipt and optional PROV]
   G -->|No| I[Rollback if required]
-  I --> J[Emit failed receipt + evidence]
-  H --> K[Review + governance gate]
+  I --> J[Emit failed receipt and evidence]
+  H --> K[Review and governance gate]
 ```
 
 [Back to top](#top)
@@ -400,8 +464,8 @@ Use for:
 - controlled backfills
 
 Recommended safety posture:
-- prefer additive changes
-- large backfills must be explicitly bounded and staged
+- prefer additive changes (add column, backfill, then enforce constraints)
+- large backfills MUST be explicitly bounded and staged
 - never run ad hoc in prod; always through the governed runner
 
 ### Search/index migrations
@@ -446,9 +510,10 @@ Recommended safety posture:
 5. Ensure CI coverage:
    - declaration schema validation
    - invariant checks
+   - scope enforcement
    - secrets scan
 6. Run in a safe environment and emit a receipt:
-   - store under `receipts/`
+   - store under `receipts/` (or commit a `receipt_ref.json` pointer)
 7. Open PR with declared scope + blast radius summary.
 
 > [!NOTE]
@@ -468,7 +533,7 @@ Recommended safety posture:
 - [ ] Baseline capture defined (pre + post)
 - [ ] Diff output defined and reviewable
 - [ ] Invariant checks pass locally and in CI
-- [ ] Run receipt + (optional) PROV generation is wired
+- [ ] Run receipt + (optional) PROV generation is wired (or receipt pointer is wired)
 - [ ] Governance review requested if protected domains may be touched
 - [ ] No secrets, PII, or restricted coordinates in any artifacts
 
@@ -489,6 +554,7 @@ Recommended safety posture:
 **Review-required (manual approval needed):**
 - Performance-impacting index rebuilds beyond typical thresholds
 - Large but declared backfills (must include staged plan and monitoring)
+- Any change that would reduce policy enforcement posture
 
 **Informational (expected changes):**
 - New indexes/constraints exactly as declared
@@ -506,17 +572,37 @@ Recommended safety posture:
 - **Run receipt:** Audit record of who/what/when/why + inputs/outputs + validation results.
 - **PROV:** W3C provenance model representation (optional but recommended for deep lineage).
 - **Protected domain:** Governance-sensitive schemas/labels/namespaces that require explicit approval to mutate.
+- **Rebuildable store:** A projection that can be reconstructed from canonical artifacts (e.g., PostGIS indexes, search indexes, graph projections).
 
 ---
 
+## Appendix
+
 <details>
-<summary>Appendix: “Do not do this” guardrails</summary>
+<summary>Appendix A: “Do not do this” guardrails</summary>
 
 - Do not delete or rewrite already-merged migrations.
 - Do not run migrations manually against production.
 - Do not weaken scope limits “to get CI green.”
 - Do not log secrets, raw DSNs, PII, or restricted coordinates into baselines/diffs/receipts.
-- Do not mutate canonical truth zones (RAW/PROCESSED/CATALOG) via migrations.
+- Do not mutate canonical truth zones (RAW/WORK/PROCESSED/CATALOG) via migrations.
+
+</details>
+
+<details>
+<summary>Appendix B: Suggested migration status model (registry field)</summary>
+
+Suggested `status` values for `registry/migrations.v1.json`:
+- `draft` — proposed, not approved
+- `approved` — governance/owners approved for merge
+- `merged` — code merged
+- `executed_dev` — executed in dev with receipt
+- `executed_stage` — executed in stage with receipt
+- `executed_prod` — executed in prod with receipt
+- `rolled_back` — rollback executed (with receipt)
+- `superseded` — replaced by later migration (never delete original)
+
+> Keep status updates auditable; prefer appending receipts and pointer records rather than rewriting history.
 
 </details>
 
