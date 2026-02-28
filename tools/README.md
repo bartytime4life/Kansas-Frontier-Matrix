@@ -153,13 +153,40 @@ Tools exist to *enforce* these invariants (not merely document them):
 tools/                                                # Tooling entrypoint (validators + checks + CI helpers)
 ├── README.md                                         # This file (how to run + add new tools)
 │
+├── bin/                                              # OPTIONAL: unified entrypoints/wrappers for CI + devs
+│   ├── kfm-tools.{sh,ps1,js,ts,py}                   # "one CLI": dispatch by tool_id from registry
+│   ├── kfm-tools.env.example                         # Example env vars (NO real secrets)
+│   └── README.md                                     # CLI contract + examples + exit codes
+│
+├── ci/                                               # CI glue that is NOT specific to a single tool
+│   ├── README.md                                     # how CI calls tools; required status checks
+│   ├── changed_files.{sh,py,ts,js}                   # compute "what changed" → scoped tool runs
+│   ├── annotate_findings.{sh,py,ts,js}               # emit GitHub annotations from --json outputs
+│   ├── upload_artifacts.{sh,py,ts,js}                # upload tool reports to CI artifacts
+│   ├── gate_runner.{sh,py,ts,js}                     # runs "merge gate" / "promotion gate" sets
+│   └── fixtures/
+│       ├── valid/
+│       │   └── changed_files.sample.json
+│       └── invalid/
+│           └── changed_files.bad_paths.json
+│
 ├── registry/                                         # Machine-readable registry + schemas + fixtures (small)
 │   ├── tools.v1.json                                 # Canonical tool registry: owners, commands, gates, inputs, outputs
-│   ├── schemas/                                      # Schemas for registry + common tool I/O (optional but recommended)
+│   ├── tools.v1.lock.json                            # OPTIONAL: resolved commands + digests/pins for determinism
+│   ├── owners.v1.yml                                 # OPTIONAL: owner aliases → CODEOWNERS mapping inputs
+│   ├── schemas/                                      # Schemas for registry + common tool I/O
 │   │   ├── tools_registry.v1.schema.json             # Schema for tools.v1.json
 │   │   ├── tool_result.v1.schema.json                # Standard machine output envelope (--json)
 │   │   ├── finding.v1.schema.json                    # Standard finding (code, severity, location, message)
-│   │   └── exit_codes.v1.schema.json                 # Allowed exit codes and meanings
+│   │   ├── exit_codes.v1.schema.json                 # Allowed exit codes and meanings
+│   │   ├── io_manifest.v1.schema.json                # OPTIONAL: reads/writes contract (paths + zones)
+│   │   ├── policy_safe_log.v1.schema.json            # OPTIONAL: enforce redaction/verbosity policy
+│   │   └── README.md                                 # how schemas evolve + versioning rules
+│   ├── scripts/                                      # Registry maintenance utilities
+│   │   ├── validate_registry.{sh,py,ts,js}           # schema-validate tools.v1.json
+│   │   ├── render_inventory.{sh,py,ts,js}            # generate README table from registry (no drift)
+│   │   ├── diff_registry.{sh,py,ts,js}               # compare registry changes across branches
+│   │   └── check_registry_drift.{sh,py,ts,js}        # blocks merge if table != registry (fail closed)
 │   └── fixtures/                                     # Valid/invalid registry examples for CI schema validation
 │       ├── valid/
 │       │   ├── tools.v1.minimal.json
@@ -169,6 +196,7 @@ tools/                                                # Tooling entrypoint (vali
 │           ├── tools.v1.missing_owner.json
 │           ├── tools.v1.bad_gate.json
 │           ├── tools.v1.bad_paths.json
+│           ├── tools.v1.bad_exit_codes.json
 │           └── README.md
 │
 ├── validators/                                       # Metadata + schema validators (fail-closed; read-only)
@@ -176,57 +204,291 @@ tools/                                                # Tooling entrypoint (vali
 │   ├── validate_dcat.{sh,py,ts,js}                   # Validate DCAT against KFM profile (+ required fields)
 │   ├── validate_stac.{sh,py,ts,js}                   # Validate STAC Collections/Items/Assets (+ KFM constraints)
 │   ├── validate_prov.{sh,py,ts,js}                   # Validate PROV bundles (+ required links/agents/activities)
-│   ├── validate_receipts.{sh,py,ts,js}               # Validate run_receipt + promotion_manifest schemas
+│   ├── validate_receipts.{sh,py,ts,js}               # Validate run_receipt + run_manifest/promote_manifest schemas
+│   ├── validate_pipeline_yaml.{sh,py,ts,js}          # OPTIONAL: validate pipeline.yaml contract if present
+│   ├── validate_watchers_registry.{sh,py,ts,js}      # OPTIONAL: validate watchers registry schema/signature
 │   ├── validate_catalog_bundle.{sh,py,ts,js}         # One-shot: validate DCAT+STAC+PROV+receipts as a set
 │   ├── validate_contract_versions.{sh,py,ts,js}      # Ensure artifacts declare supported schema/profile versions
+│   ├── profiles/                                     # OPTIONAL: local copies of KFM profiles/extensions (read-only)
+│   │   ├── dcat/                                     # profile rules (SHACL/JSON schema/etc; repo-specific)
+│   │   ├── stac/                                     # extension constraints (e.g., CARE extension)
+│   │   └── prov/
 │   └── fixtures/                                     # Tiny valid/invalid examples (synthetic/sanitized)
-│       └── ...
+│       ├── dcat/
+│       │   ├── valid/
+│       │   │   ├── minimal_dcat.jsonld
+│       │   │   ├── full_dcat.jsonld
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_license.jsonld
+│       │       ├── missing_publisher.jsonld
+│       │       ├── bad_distribution_href.jsonld
+│       │       └── FIXTURE_NOTES.md
+│       ├── stac/
+│       │   ├── valid/
+│       │   │   ├── collection.json
+│       │   │   ├── item.json
+│       │   │   ├── item-assets.json
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_datetime.json
+│       │       ├── invalid_bbox.json
+│       │       ├── missing_license.json
+│       │       └── FIXTURE_NOTES.md
+│       ├── prov/
+│       │   ├── valid/
+│       │   │   ├── prov.jsonld
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_activity.jsonld
+│       │       ├── missing_agent.jsonld
+│       │       ├── orphan_entity.jsonld
+│       │       └── FIXTURE_NOTES.md
+│       ├── receipts/
+│       │   ├── valid/
+│       │   │   ├── run_receipt.json
+│       │   │   ├── run_manifest.json
+│       │   │   ├── promotion_manifest.json
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_checksums.json
+│       │       ├── missing_policy_fields.json
+│       │       ├── nondeterministic_fields.json
+│       │       └── FIXTURE_NOTES.md
+│       ├── pipeline/
+│       │   ├── valid/
+│       │   │   ├── pipeline.yaml
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_inputs.yaml
+│       │       ├── bad_schedule.yaml
+│       │       └── FIXTURE_NOTES.md
+│       └── watchers/
+│           ├── valid/
+│           │   ├── registry.yml
+│           │   └── FIXTURE_NOTES.md
+│           └── invalid/
+│               ├── missing_signature.yml
+│               ├── bad_owner.yml
+│               └── FIXTURE_NOTES.md
 │
 ├── linkcheck/                                        # Cross-link integrity checks (no broken refs)
 │   ├── README.md                                     # Cross-link rules + what is considered "required"
 │   ├── catalog_triplet_linkcheck.{sh,py,ts,js}       # DCAT ↔ STAC ↔ PROV required cross-links
 │   ├── evidence_ref_linkcheck.{sh,py,ts,js}          # EvidenceRef resolvability expectations (format + target exists)
 │   ├── receipt_artifact_linkcheck.{sh,py,ts,js}      # Receipts ↔ checksums ↔ artifacts paths resolve
-│   ├── no_restricted_existence_leaks.{sh,py,ts,js}   # Ensure error envelopes do not leak restricted existence (static)
+│   ├── citation_linkcheck.{sh,py,ts,js}              # OPTIONAL: story/docs citations resolve via EvidenceRefs
+│   ├── docs_linkcheck.{sh,py,ts,js}                  # OPTIONAL: markdown link checker (repo-internal)
+│   ├── no_restricted_existence_leaks.{sh,py,ts,js}   # Ensure errors don't distinguish forbidden vs missing
 │   └── fixtures/
-│       └── ...
+│       ├── valid/
+│       │   ├── triplet_ok/
+│       │   │   ├── dcat.jsonld
+│       │   │   ├── stac/collection.json
+│       │   │   ├── stac/items/item-001.json
+│       │   │   ├── prov/prov.jsonld
+│       │   │   └── receipts/run_receipt.json
+│       │   ├── evidence_refs_ok.json
+│       │   └── docs_ok/
+│       │       ├── README.md
+│       │       └── linked.md
+│       └── invalid/
+│           ├── triplet_broken_link/
+│           │   ├── dcat.jsonld                       # points to missing stac item
+│           │   └── stac/collection.json
+│           ├── evidence_ref_bad_scheme.json
+│           ├── receipt_missing_artifact.json
+│           └── docs_broken_link/
+│               ├── README.md                         # contains missing relative link
+│               └── linked.md
 │
 ├── hash/                                             # Spec-hash helpers + drift checks (determinism guardrails)
 │   ├── README.md
-│   ├── compute_spec_hash.{sh,py,ts,js}
-│   ├── canonicalize_json.{sh,py,ts,js}
-│   ├── check_spec_hash_drift.{sh,py,ts,js}
-│   ├── check_hash_inputs.{sh,py,ts,js}
+│   ├── compute_spec_hash.{sh,py,ts,js}               # Deterministic spec hash computation
+│   ├── canonicalize_json.{sh,py,ts,js}               # Canonical JSON serializer (stable ordering/whitespace)
+│   ├── check_spec_hash_drift.{sh,py,ts,js}           # Recompute + compare; fail on drift
+│   ├── check_hash_inputs.{sh,py,ts,js}               # Fail if spec includes non-deterministic fields
+│   ├── compute_artifact_checksums.{sh,py,ts,js}      # OPTIONAL: create checksums.json for artifacts
+│   ├── verify_artifact_checksums.{sh,py,ts,js}       # OPTIONAL: verify checksums.json matches artifacts
 │   └── fixtures/
-│       └── ...
+│       ├── vectors.v1.json                           # canonical test vector list
+│       ├── inputs/
+│       │   ├── dataset_spec_minimal.json
+│       │   ├── dataset_spec_with_ordering_noise.json
+│       │   ├── dataset_spec_invalid_nondeterminism.json
+│       │   └── receipts_with_nondeterminism.json
+│       └── expected/
+│           ├── vectors.v1.expected.json              # expected sha256 outputs
+│           ├── checksums.expected.json
+│           └── FIXTURE_NOTES.md
 │
 ├── lint/                                             # Static guardrails (trust membrane + hygiene)
 │   ├── README.md
-│   ├── check_no_secrets.{sh,py,ts,js}
-│   ├── check_no_direct_store_access.{sh,py,ts,js}
-│   ├── check_policy_safe_errors.{sh,py,ts,js}
+│   ├── check_no_secrets.{sh,py,ts,js}                # Secret scanning helpers (if not handled elsewhere)
+│   ├── check_no_direct_store_access.{sh,py,ts,js}    # Forbid forbidden deps/egress patterns in forbidden layers
+│   ├── check_policy_safe_errors.{sh,py,ts,js}        # Enforce safe error envelope conventions
+│   ├── check_license_headers.{sh,py,ts,js}           # Optional: enforce license header posture
+│   ├── check_large_files.{sh,py,ts,js}               # Optional: block huge binaries in repo
 │   └── fixtures/
-│       └── ...
+│       ├── valid/
+│       │   ├── ok_codebase/
+│       │   └── ok_errors/
+│       └── invalid/
+│           ├── contains_secret/
+│           ├── direct_s3_access_in_ui/
+│           ├── error_leaks_restricted_existence/
+│           └── missing_license_headers/
 │
-├── release/                                          # Optional: release tooling (must be deterministic)
+├── policycheck/                                      # OPTIONAL: wrappers for policy-as-code gates
+│   ├── README.md                                     # how CI runs OPA/Conftest + pinned versions
+│   ├── opa_test.{sh,py,ts,js}                        # runs `opa test ...` consistently
+│   ├── conftest_gate.{sh,py,ts,js}                   # runs conftest on schemas/receipts/watchers (deny-by-default)
+│   ├── bundle_policy.{sh,py,ts,js}                   # optional: build/publish policy bundles
+│   └── fixtures/
+│       ├── allow/
+│       ├── deny/
+│       └── obligations/
+│
+├── packaging/                                        # OPTIONAL: deterministic artifact packaging + validation
+│   ├── README.md                                     # formats supported + determinism rules
+│   ├── validate_geoparquet.{sh,py,ts,js}
+│   ├── validate_pmtiles.{sh,py,ts,js}
+│   ├── validate_cog.{sh,py,ts,js}
+│   ├── validate_zarr.{sh,py,ts,js}
+│   └── fixtures/
+│       ├── valid/
+│       │   ├── geoparquet/
+│       │   ├── pmtiles/
+│       │   ├── cog/
+│       │   └── zarr/
+│       └── invalid/
+│           ├── geoparquet/
+│           ├── pmtiles/
+│           ├── cog/
+│           └── zarr/
+│
+├── oci/                                              # OPTIONAL: OCI distribution helpers (ORAS/Cosign plumbing)
+│   ├── README.md                                     # push/pull by digest; referrers; “no tags as identity”
+│   ├── publish_artifact.{sh,py,ts,js}                # publish blob/artifact by digest
+│   ├── attach_referrers.{sh,py,ts,js}                # attach receipt/prov/sbom as referrers
+│   ├── list_referrers.{sh,py,ts,js}                  # list referrers to verify evidence “travels”
+│   ├── verify_referrers.{sh,py,ts,js}                # verify signatures/attestations
+│   └── fixtures/
+│       ├── valid/
+│       │   ├── minimal_oci_artifact/
+│       │   └── minimal_referrers/
+│       └── invalid/
+│           ├── unsigned_referrer/
+│           └── wrong_digest/
+│
+├── supply_chain/                                     # OPTIONAL: SBOMs + attestations (release hardening)
 │   ├── README.md
 │   ├── build_sbom.{sh,py,ts,js}
-│   ├── build_release_manifest.{sh,py,ts,js}
-│   ├── verify_release_artifacts.{sh,py,ts,js}
+│   ├── sign_attest.{sh,py,ts,js}                     # wrapper (NEVER stores keys in repo)
+│   ├── verify_attest.{sh,py,ts,js}
 │   └── fixtures/
-│       └── ...
+│       ├── valid/
+│       └── invalid/
+│
+├── watchers/                                         # OPTIONAL: watcher tooling support (usually lives in src/, but tools validate)
+│   ├── README.md                                     # how watchers registry is validated + run in dry-run
+│   ├── validate_watchers_registry.{sh,py,ts,js}      # duplicate entrypoint (kept for discoverability)
+│   ├── run_watcher_dry_run.{sh,py,ts,js}             # optional: executes a watcher without side effects
+│   └── fixtures/
+│       ├── valid/
+│       └── invalid/
+│
+├── graph/                                            # OPTIONAL: graph mapping + invariants checks
+│   ├── README.md
+│   ├── validate_graph_mappings.{sh,py,ts,js}          # validates graph/mappings/<domain>/*.yml shape
+│   ├── run_graph_invariants.{sh,py,ts,js}             # runs invariants (Cypher) against a test graph
+│   ├── schemas/
+│   │   └── graph_mapping.v1.schema.json
+│   ├── mappings/                                     # (source lives elsewhere; tools validate it)
+│   │   └── _examples/
+│   │       └── example_domain.yml
+│   ├── invariants/
+│   │   ├── invariants.cypher                          # example invariants
+│   │   └── README.md
+│   └── fixtures/
+│       ├── valid/
+│       └── invalid/
+│
+├── eval/                                             # OPTIONAL: “trust membrane” evaluation harness runners
+│   ├── README.md
+│   ├── focus_eval.{sh,py,ts,js}                       # optional: run Focus Mode golden evals
+│   ├── evidence_resolver_contract.{sh,py,ts,js}       # optional: evidence resolver contract checks
+│   └── fixtures/
+│       ├── golden_queries/
+│       └── expected_outputs/
+│
+├── domains/                                          # OPTIONAL: domain-specific tooling modules (keep isolated)
+│   ├── README.md                                     # how to add domain tools; naming + ownership
+│   ├── wzdx/                                          # example from the integration kit pattern
+│   │   ├── normalize.{sh,py,ts,js}
+│   │   ├── validate_wzdx.{sh,py,ts,js}
+│   │   └── fixtures/
+│   │       ├── valid/
+│   │       │   └── wzdx_sample.json
+│   │       └── invalid/
+│   │           └── missing_required_field.json
+│   ├── gtfs/                                          # optional placeholder
+│   └── soils/                                         # optional placeholder
+│
+├── release/                                          # Optional: release tooling (must be deterministic)
+│   ├── README.md                                     # How releases are assembled + verified
+│   ├── build_sbom.{sh,py,ts,js}                      # SBOM build (if used)
+│   ├── build_release_manifest.{sh,py,ts,js}          # Assemble release metadata + digests
+│   ├── verify_release_artifacts.{sh,py,ts,js}        # Verify digests/signatures/attestations (if used)
+│   ├── sign_release.{sh,py,ts,js}                    # Optional: signing wrapper (NEVER stores keys in repo)
+│   └── fixtures/
+│       ├── valid/
+│       │   ├── release_manifest.json
+│       │   └── SBOM.spdx.json
+│       └── invalid/
+│           ├── missing_digest.json
+│           └── tampered_manifest.json
 │
 ├── _shared/                                          # Shared helper libs (small; minimal side effects)
-│   ├── README.md
-│   ├── fs.{py,ts,js}
-│   ├── json.{py,ts,js}
-│   ├── log.{py,ts,js}
-│   ├── errors.{py,ts,js}
-│   ├── exit_codes.{py,ts,js}
-│   └── time.{py,ts,js}
+│   ├── README.md                                     # Shared helpers contract (keep pure where possible)
+│   ├── fs.{py,ts,js}                                 # Safe file IO helpers (path traversal defense)
+│   ├── json.{py,ts,js}                               # Canonical JSON + strict parsing helpers
+│   ├── log.{py,ts,js}                                # Structured logging helpers (policy-safe)
+│   ├── errors.{py,ts,js}                             # Standardized error/finding helpers (codes, severities)
+│   ├── exit_codes.{py,ts,js}                         # Exit code constants + mapping
+│   ├── time.{py,ts,js}                               # Time helpers (avoid non-determinism in hashes)
+│   ├── cli.{py,ts,js}                                # Optional: shared CLI parsing + --json plumbing
+│   └── redact.{py,ts,js}                             # Optional: redaction helpers for logs/errors
 │
 └── fixtures/                                         # Shared fixtures (synthetic/sanitized; tiny; documented)
-    └── ...
+    ├── public/
+    │   ├── FIXTURE_NOTES.md                          # license + sensitivity + intended use
+    │   ├── minimal_catalog_bundle/                   # tiny end-to-end bundle used across validators/linkcheck
+    │   │   ├── dcat.jsonld
+    │   │   ├── stac/collection.json
+    │   │   ├── stac/items/item-001.json
+    │   │   ├── prov/prov.jsonld
+    │   │   └── receipts/run_receipt.json
+    │   ├── minimal_policy_bundle/                    # optional: conftest fixtures
+    │   │   ├── input.json
+    │   │   └── expected.json
+    │   ├── minimal_oci_referrers/                    # optional: stub manifests used by oci tools
+    │   │   ├── artifact.json
+    │   │   ├── receipt.referrer.json
+    │   │   └── prov.referrer.json
+    │   └── minimal_openapi/                          # optional: contract tool fixtures
+    │       └── openapi.v1.yaml
+    └── restricted_sanitized/
+        ├── FIXTURE_NOTES.md                          # describes sanitization (no precise coords/identifiers)
+        ├── generalized_geometry_bundle/              # coarse geometry used to test “no leakage” behavior
+        │   ├── dcat.jsonld
+        │   └── stac/items/item-001.json
+        ├── policy_safe_error_cases/
+        │   ├── forbidden.json                        # safe error envelope example
+        │   └── not_found.json                        # indistinguishable or policy-safe variant
+        └── restricted_receipts_sanitized/
+            ├── run_receipt.redacted.json
+            └── README.md
 ```
 
 [Back to top](#top)
