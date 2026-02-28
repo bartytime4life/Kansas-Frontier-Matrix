@@ -188,63 +188,63 @@ Do **not** use a migration when:
 > If your repo differs, update this section to match reality **while preserving the guarantees**.
 
 ```text
-migrations/
-├─ README.md
+migrations/                                                   # Governed migrations (schema, projections, graph) + receipts
+├─ README.md                                                  # This file (rules, ordering, rollback posture, CI gates)
 │
-├─ registry/                                      # Machine-readable registries + schemas + fixtures (small)
-│  ├─ migrations.v1.json                          # Canonical migration registry (ids, types, owners, status)
-│  ├─ schemas/
-│  │  ├─ migration_declaration.v1.schema.json     # Schema for migration.yml
-│  │  ├─ run_receipt.v1.schema.json               # Schema for receipts/run_receipt.json
-│  │  ├─ baseline.v1.schema.json                  # Schema for baselines/*.json
-│  │  ├─ diff_summary.v1.schema.json              # Schema for diffs/summary.json
-│  │  └─ receipt_ref.v1.schema.json               # Pointer record if receipts stored outside git
-│  └─ fixtures/
-│     ├─ valid/                                   # Valid declaration examples
-│     └─ invalid/                                 # Invalid declaration examples (must fail CI)
+├─ registry/                                                  # Machine-readable registries + schemas + fixtures (small, CI-friendly)
+│  ├─ migrations.v1.json                                      # Canonical migration registry (ids, types, owners, status)
+│  ├─ schemas/                                                # Schemas that validate declarations + artifacts
+│  │  ├─ migration_declaration.v1.schema.json                 # Schema for migration.yml (scope, owners, risk, rollback)
+│  │  ├─ run_receipt.v1.schema.json                           # Schema for receipts/run_receipt.json (execution receipt)
+│  │  ├─ baseline.v1.schema.json                              # Schema for baselines/*.json (before/after snapshots)
+│  │  ├─ diff_summary.v1.schema.json                          # Schema for diffs/summary.json (declared-vs-observed deltas)
+│  │  └─ receipt_ref.v1.schema.json                           # Pointer record if receipts stored outside git (prod preference)
+│  └─ fixtures/                                               # Fixture declarations for CI (valid/invalid; deterministic)
+│     ├─ valid/                                               # Valid declaration examples (should pass)
+│     └─ invalid/                                             # Invalid declaration examples (must fail CI)
 │
-├─ postgis/                                       # Relational schema migrations (optional; if PostGIS is used)
-│  ├─ README.md                                   # Tooling + ordering rules + rollback posture
-│  ├─ PG-MIG-YYYY-MM-DD-01/
-│  │  ├─ migration.yml                            # Declaration (scope + limits)
-│  │  ├─ forward.sql                              # Forward change (idempotent preferred)
-│  │  ├─ rollback.sql                             # Rollback plan (required if requires_rollback=true)
-│  │  ├─ baselines/
-│  │  │  ├─ pre.json                              # Baseline snapshot BEFORE
-│  │  │  └─ post.json                             # Baseline snapshot AFTER
-│  │  ├─ diffs/
-│  │  │  ├─ summary.json                          # Declared-vs-observed delta summary
-│  │  │  └─ touched.csv                           # Optional reviewer-friendly list of touched objects
-│  │  ├─ receipts/
-│  │  │  ├─ run_receipt.json                      # Execution receipt (who/what/when + validation)
-│  │  │  ├─ prov.jsonld                           # Optional PROV bundle
-│  │  │  └─ receipt_ref.json                      # Optional pointer record (preferred for prod)
-│  │  └─ notes.md                                 # Human context + risks + review notes
-│  └─ ...
+├─ postgis/                                                   # Relational schema migrations (optional; if PostGIS is used)
+│  ├─ README.md                                               # Tooling + ordering rules + rollback posture
+│  ├─ PG-MIG-YYYY-MM-DD-01/                                   # Single migration bundle (ID is canonical)
+│  │  ├─ migration.yml                                        # Declaration (scope, owners, limits, approvals)
+│  │  ├─ forward.sql                                          # Forward change (idempotent preferred)
+│  │  ├─ rollback.sql                                         # Rollback plan (required if requires_rollback=true)
+│  │  ├─ baselines/                                           # Baseline snapshots (before/after)
+│  │  │  ├─ pre.json                                          # Baseline BEFORE
+│  │  │  └─ post.json                                         # Baseline AFTER
+│  │  ├─ diffs/                                               # Observed changes vs declared scope
+│  │  │  ├─ summary.json                                      # Declared-vs-observed delta summary
+│  │  │  └─ touched.csv                                       # Optional reviewer-friendly list of touched objects
+│  │  ├─ receipts/                                            # Execution receipts (audit/prov; may be pointers in prod)
+│  │  │  ├─ run_receipt.json                                  # Execution receipt (who/what/when + validation)
+│  │  │  ├─ prov.jsonld                                       # Optional PROV bundle for migration run
+│  │  │  └─ receipt_ref.json                                  # Optional pointer record (preferred for prod)
+│  │  └─ notes.md                                             # Human context (risks, rollout/rollback notes, review guidance)
+│  └─ ...                                                     # More PostGIS migration bundles
 │
-├─ search/                                        # Search/index migrations (optional)
-│  ├─ README.md
-│  ├─ SEARCH-MIG-YYYY-MM-DD-01/
-│  │  ├─ migration.yml
-│  │  ├─ forward.json                             # Example: mapping/settings update OR reindex plan
-│  │  ├─ rollback.json                            # Rollback/restore plan OR “not possible” w/ approval
-│  │  ├─ baselines/
-│  │  ├─ diffs/
-│  │  ├─ receipts/
-│  │  └─ notes.md
-│  └─ ...
+├─ search/                                                    # Search/index migrations (optional; if search is used)
+│  ├─ README.md                                               # Tooling + ordering rules + rollback posture
+│  ├─ SEARCH-MIG-YYYY-MM-DD-01/                                # Single migration bundle (ID is canonical)
+│  │  ├─ migration.yml                                        # Declaration (scope, owners, risk, approvals)
+│  │  ├─ forward.json                                         # Mapping/settings update OR reindex plan
+│  │  ├─ rollback.json                                        # Rollback/restore plan OR “not possible” + approval
+│  │  ├─ baselines/                                           # Baseline snapshots (before/after)
+│  │  ├─ diffs/                                               # Observed vs declared deltas
+│  │  ├─ receipts/                                            # Execution receipts (or pointers)
+│  │  └─ notes.md                                             # Human context + risks + review notes
+│  └─ ...                                                     # More search migration bundles
 │
-└─ graph/                                         # Graph migrations (optional)
-   ├─ README.md
-   ├─ GRAPH-MIG-YYYY-MM-DD-01/
-   │  ├─ migration.yml
-   │  ├─ forward.cypher
-   │  ├─ rollback.cypher
-   │  ├─ baselines/
-   │  ├─ diffs/
-   │  ├─ receipts/
-   │  └─ notes.md
-   └─ ...
+└─ graph/                                                     # Graph migrations (optional; if graph DB is used)
+   ├─ README.md                                               # Tooling + ordering rules + rollback posture
+   ├─ GRAPH-MIG-YYYY-MM-DD-01/                                 # Single migration bundle (ID is canonical)
+   │  ├─ migration.yml                                        # Declaration (scope, owners, risk, approvals)
+   │  ├─ forward.cypher                                       # Forward change (idempotent preferred)
+   │  ├─ rollback.cypher                                      # Rollback plan (or “not possible” + approval)
+   │  ├─ baselines/                                           # Baseline snapshots (before/after)
+   │  ├─ diffs/                                               # Observed vs declared deltas
+   │  ├─ receipts/                                            # Execution receipts (or pointers)
+   │  └─ notes.md                                             # Human context + risks + review notes
+   └─ ...                                                     # More graph migration bundles
 ```
 
 > [!TIP]
