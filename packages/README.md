@@ -245,538 +245,541 @@ KFM’s repo layout (design intent) typically includes these package groups:
 Recommended structure that matches the “registry + fixtures” pattern used elsewhere:
 
 ```text
-packages/
-├─ README.md
+```text id="packages-registry-tidy"
+packages/                                                      | # Versioned, testable modules (clean layering) + package registry
+├─ README.md                                                   | # Packages directory contract + navigation
 │
-├─ registry/                                      # Machine-readable registry + schemas + fixtures (small)
-│  ├─ README.md                                   # How the registry works + validation rules
-│  ├─ packages.v1.json                            # Canonical packages registry (paths, layers, owners, constraints)
-│  ├─ schemas/
-│  │  ├─ packages_registry.v1.schema.json         # Schema for packages.v1.json
-│  │  ├─ kfm_package_manifest.v1.schema.json      # Schema for per-package kfm.package.json (recommended)
-│  │  └─ dependency_rules.v1.schema.json          # Schema for boundary/dependency rules (optional)
-│  └─ fixtures/
-│     ├─ valid/
-│     │  ├─ packages.v1.min.json                  # Small valid registry fixture
-│     │  ├─ packages.v1.full.json                 # Full valid registry fixture (covers all fields)
-│     │  └─ kfm.package.valid.json                # Valid per-package manifest fixture
-│     └─ invalid/
-│        ├─ packages.v1.missing_owner.json         # Invalid: no owners
-│        ├─ packages.v1.bad_layer.json             # Invalid: unknown layer
-│        ├─ packages.v1.cycle.json                 # Invalid: dependency cycle
-│        └─ kfm.package.invalid.json               # Invalid: bad policy_label / missing required fields
+├─ registry/                                                   | # Machine-readable registry + schemas + fixtures (small, CI-friendly)
+│  ├─ README.md                                                | # How the registry works + validation rules (fail-closed)
+│  ├─ packages.v1.json                                         | # Canonical packages registry (paths, layers, owners, constraints)
+│  ├─ schemas/                                                 | # Schemas that validate registry + per-package manifests
+│  │  ├─ packages_registry.v1.schema.json                      | # Schema for packages.v1.json
+│  │  ├─ kfm_package_manifest.v1.schema.json                   | # Schema for per-package kfm.package.json (recommended)
+│  │  └─ dependency_rules.v1.schema.json                       | # Schema for boundary/dependency rules (optional)
+│  └─ fixtures/                                                | # Registry fixtures for CI (valid/invalid; synthetic)
+│     ├─ valid/                                                | # Valid examples that should pass schema + rules
+│     │  ├─ packages.v1.min.json                               | # Small valid registry fixture
+│     │  ├─ packages.v1.full.json                              | # Full valid registry fixture (covers all fields)
+│     │  └─ kfm.package.valid.json                             | # Valid per-package manifest fixture
+│     └─ invalid/                                              | # Invalid examples that MUST fail (prove gates)
+│        ├─ packages.v1.missing_owner.json                     | # Invalid: no owners
+│        ├─ packages.v1.bad_layer.json                         | # Invalid: unknown layer
+│        ├─ packages.v1.cycle.json                             | # Invalid: dependency cycle
+│        └─ kfm.package.invalid.json                           | # Invalid: bad policy_label / missing required fields
 │
-├─ domain/                                        # Core concepts + invariants (NO I/O)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md                                # Optional but recommended
-│  ├─ src/
-│  │  ├─ index.*                                  # Public exports (language-specific)
-│  │  ├─ ids/
-│  │  │  ├─ dataset_id.*
-│  │  │  ├─ dataset_version_id.*
-│  │  │  ├─ source_id.*
-│  │  │  ├─ run_id.*
-│  │  │  └─ audit_ref.*
-│  │  ├─ hashing/
-│  │  │  ├─ canonical_json.*
-│  │  │  ├─ digest.*
-│  │  │  └─ spec_hash.*
-│  │  ├─ policy/
-│  │  │  ├─ policy_label.*
-│  │  │  ├─ obligations.*
-│  │  │  └─ policy_safe_error.*
-│  │  ├─ rights/
-│  │  │  ├─ license.*
-│  │  │  ├─ spdx.*
-│  │  │  └─ attribution.*
-│  │  ├─ time/
-│  │  │  ├─ time_bounds.*
-│  │  │  ├─ temporal_extent.*
-│  │  │  └─ time_normalization.*
-│  │  ├─ geo/
-│  │  │  ├─ bbox.*
-│  │  │  ├─ geometry_types.*
-│  │  │  └─ generalization_levels.*
-│  │  ├─ provenance/
-│  │  │  ├─ provenance_types.*
-│  │  │  └─ receipt_types.*
-│  │  └─ errors/
-│  │     ├─ error_codes.*
-│  │     └─ error_envelopes.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ property/                                # Optional: fuzz/property tests for hashing/IDs
-│  │  └─ fixtures_smoke/
-│  └─ fixtures/
-│     ├─ ids/
-│     ├─ canonical_json/
-│     ├─ policy_labels/
-│     └─ rights/
+├─ domain/                                                     | # Core concepts + invariants (NO I/O)
+│  ├─ README.md                                                | # Package overview + invariants + usage
+│  ├─ kfm.package.json                                         | # Package manifest (policy_label, owners, deps, contracts)
+│  ├─ CHANGELOG.md                                             | # Optional but recommended (governed changes log)
+│  ├─ src/                                                     | # Implementation (pure domain)
+│  │  ├─ index.*                                               | # Public exports (language-specific)
+│  │  ├─ ids/                                                  | # Deterministic identifiers
+│  │  │  ├─ dataset_id.*                                       | # DatasetId type + parsing/formatting
+│  │  │  ├─ dataset_version_id.*                               | # DatasetVersionId type + parsing/formatting
+│  │  │  ├─ source_id.*                                        | # SourceId type + parsing/formatting
+│  │  │  ├─ run_id.*                                           | # RunId type + parsing/formatting
+│  │  │  └─ audit_ref.*                                        | # AuditRef type + parsing/formatting
+│  │  ├─ hashing/                                              | # Canonicalization + digest utilities
+│  │  │  ├─ canonical_json.*                                   | # Canonical JSON rules (stable ordering)
+│  │  │  ├─ digest.*                                           | # Digest helpers (sha256, etc.)
+│  │  │  └─ spec_hash.*                                        | # Deterministic spec_hash implementation
+│  │  ├─ policy/                                               | # Policy label + obligations primitives
+│  │  │  ├─ policy_label.*                                     | # PolicyLabel model + validation
+│  │  │  ├─ obligations.*                                      | # Obligation models
+│  │  │  └─ policy_safe_error.*                                | # Policy-safe error envelope primitives
+│  │  ├─ rights/                                               | # Rights + licensing primitives
+│  │  │  ├─ license.*                                          | # License model + parsing/validation
+│  │  │  ├─ spdx.*                                             | # SPDX helpers
+│  │  │  └─ attribution.*                                     | # Attribution model + rendering hints
+│  │  ├─ time/                                                 | # Time primitives (valid/transaction semantics)
+│  │  │  ├─ time_bounds.*                                      | # Time bounds + normalization helpers
+│  │  │  ├─ temporal_extent.*                                  | # Temporal extent model
+│  │  │  └─ time_normalization.*                               | # Canonical time normalization rules
+│  │  ├─ geo/                                                  | # Geometry primitives (types/levels only; no IO)
+│  │  │  ├─ bbox.*                                             | # Bounding box model + validation
+│  │  │  ├─ geometry_types.*                                   | # Allowed geometry types
+│  │  │  └─ generalization_levels.*                            | # Generalization levels taxonomy
+│  │  ├─ provenance/                                           | # Provenance primitives (types/envelopes)
+│  │  │  ├─ provenance_types.*                                 | # PROV-ish type models
+│  │  │  └─ receipt_types.*                                    | # Receipt/envelope type models
+│  │  └─ errors/                                               | # Error taxonomy + envelopes (policy-safe)
+│  │     ├─ error_codes.*                                      | # Stable error codes
+│  │     └─ error_envelopes.*                                  | # Error envelope shapes
+│  ├─ test/                                                    | # Tests for domain invariants
+│  │  ├─ unit/                                                 | # Unit tests (fast)
+│  │  ├─ property/                                             | # Optional: fuzz/property tests for hashing/IDs
+│  │  └─ fixtures_smoke/                                       | # Fixture smoke tests (tiny, deterministic)
+│  └─ fixtures/                                                | # Small fixtures used by tests (safe + deterministic)
+│     ├─ ids/                                                  | # ID fixtures
+│     ├─ canonical_json/                                       | # Canonical JSON fixtures
+│     ├─ policy_labels/                                        | # Policy label fixtures
+│     └─ rights/                                               | # Rights/licensing fixtures
 │
-├─ usecases/                                      # Orchestration (policy-aware; uses ports/repositories)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ ports/                                   # Interfaces used by usecases (implemented by adapters)
-│  │  │  ├─ repositories.*
-│  │  │  ├─ policy_client.*
-│  │  │  ├─ evidence_resolver.*
-│  │  │  └─ clock.*
-│  │  ├─ promotion/
-│  │  │  ├─ gates_a_g.*                            # A–G: Identity..Release manifest (names illustrative)
-│  │  │  ├─ promotion_plan.*
-│  │  │  └─ promotion_manifest_builder.*
-│  │  ├─ catalog/
-│  │  │  ├─ build_triplet.*
-│  │  │  ├─ linkcheck.*
-│  │  │  └─ profile_validation.*
-│  │  ├─ evidence/
-│  │  │  ├─ resolve_evidence_refs.*
-│  │  │  └─ build_evidence_bundles.*
-│  │  ├─ exports/
-│  │  │  ├─ export_request.*
-│  │  │  └─ enforce_rights_and_policy.*
-│  │  ├─ stories/
-│  │  │  ├─ story_node_publish.*
-│  │  │  └─ story_claim_validation.*
-│  │  └─ audits/
-│  │     ├─ emit_run_receipt.*
-│  │     └─ emit_audit_events.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ contract/                                # Optional: uses stub adapters + fixtures
-│  └─ fixtures/
-│     ├─ policy/
-│     ├─ promotion/
-│     └─ evidence/
+├─ usecases/                                                   | # Orchestration (policy-aware; uses ports/repositories)
+│  ├─ README.md                                                | # Package overview + boundaries + patterns
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Changes to orchestration behavior (governed)
+│  ├─ src/                                                     | # Usecase implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ ports/                                                | # Interfaces used by usecases (implemented by adapters)
+│  │  │  ├─ repositories.*                                     | # Repo interfaces (datasets/bundles/stories/etc.)
+│  │  │  ├─ policy_client.*                                    | # Policy decision interface (PDP)
+│  │  │  ├─ evidence_resolver.*                                | # Evidence resolver interface
+│  │  │  └─ clock.*                                            | # Clock/time source interface
+│  │  ├─ promotion/                                            | # Promotion orchestration (gates + manifests)
+│  │  │  ├─ gates_a_g.*                                        | # A–G gates (illustrative names; keep deterministic)
+│  │  │  ├─ promotion_plan.*                                   | # Promotion plan orchestration
+│  │  │  └─ promotion_manifest_builder.*                       | # Promotion manifest builder
+│  │  ├─ catalog/                                              | # Catalog triplet orchestration
+│  │  │  ├─ build_triplet.*                                    | # Build DCAT/STAC/PROV triplet
+│  │  │  ├─ linkcheck.*                                        | # Cross-link checking orchestration
+│  │  │  └─ profile_validation.*                               | # Profile validation orchestration
+│  │  ├─ evidence/                                             | # Evidence orchestration
+│  │  │  ├─ resolve_evidence_refs.*                            | # Resolve EvidenceRef -> bundle(s)
+│  │  │  └─ build_evidence_bundles.*                           | # Materialize EvidenceBundle(s)
+│  │  ├─ exports/                                              | # Exports orchestration (rights + policy)
+│  │  │  ├─ export_request.*                                   | # Export request orchestration
+│  │  │  └─ enforce_rights_and_policy.*                        | # Rights/policy enforcement orchestration
+│  │  ├─ stories/                                              | # Story orchestration
+│  │  │  ├─ story_node_publish.*                               | # Publish story node flow
+│  │  │  └─ story_claim_validation.*                           | # Claim validation + citation gating
+│  │  └─ audits/                                               | # Audit/receipt orchestration
+│  │     ├─ emit_run_receipt.*                                 | # Emit run receipts
+│  │     └─ emit_audit_events.*                                | # Emit audit events
+│  ├─ test/                                                    | # Usecase tests
+│  │  ├─ unit/                                                 | # Unit tests (mock ports)
+│  │  ├─ integration/                                          | # Integration tests (stub adapters + fixtures)
+│  │  └─ contract/                                             | # Optional: contract tests for ports/DTOs
+│  └─ fixtures/                                                | # Fixtures for usecase tests
+│     ├─ policy/                                               | # Policy cases (allow/deny/obligations)
+│     ├─ promotion/                                            | # Promotion scenarios
+│     └─ evidence/                                             | # Evidence scenarios
 │
-├─ adapters/                                      # I/O implementations behind ports (storage/index/policy clients)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ object_store/
-│  │  │  ├─ truth_path_layout.*                   # Helpers for RAW/WORK/PROCESSED/CATALOG paths
-│  │  │  ├─ reader.*
-│  │  │  ├─ writer.*
-│  │  │  └─ signing_and_digests.*
-│  │  ├─ catalogs/
-│  │  │  ├─ dcat_store.*
-│  │  │  ├─ stac_store.*
-│  │  │  └─ prov_store.*
-│  │  ├─ db/
-│  │  │  ├─ postgis_repository.*
-│  │  │  └─ migrations_client.*
-│  │  ├─ search/
-│  │  │  ├─ search_index_client.*
-│  │  │  └─ query_adapter.*
-│  │  ├─ graph/
-│  │  │  ├─ graph_client.*
-│  │  │  └─ cypher_runner.*
-│  │  ├─ policy/
-│  │  │  ├─ opa_client.*
-│  │  │  └─ decision_cache.*
-│  │  ├─ evidence/
-│  │  │  ├─ resolver_client.*
-│  │  │  └─ bundle_cache.*
-│  │  └─ telemetry/
-│  │     ├─ logging_sink.*
-│  │     ├─ metrics_sink.*
-│  │     └─ tracing_sink.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/                             # Optional: uses localstack/minio/testcontainers/etc (repo-specific)
-│  │  └─ contract/
-│  └─ fixtures/
-│     ├─ object_store/
-│     ├─ catalogs/
-│     ├─ policy/
-│     └─ evidence/
+├─ adapters/                                                   | # I/O implementations behind ports (storage/index/policy clients)
+│  ├─ README.md                                                | # Adapter overview + supported backends
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Governed adapter changes (IO behavior)
+│  ├─ src/                                                     | # Adapter implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ object_store/                                         | # Object store adapters + truth path helpers
+│  │  │  ├─ truth_path_layout.*                                | # Helpers for RAW/WORK/PROCESSED/CATALOG paths
+│  │  │  ├─ reader.*                                           | # Read adapter
+│  │  │  ├─ writer.*                                           | # Write adapter
+│  │  │  └─ signing_and_digests.*                              | # Optional signing/digest addressing hooks
+│  │  ├─ catalogs/                                             | # Catalog storage adapters
+│  │  │  ├─ dcat_store.*                                       | # DCAT store adapter
+│  │  │  ├─ stac_store.*                                       | # STAC store adapter
+│  │  │  └─ prov_store.*                                       | # PROV store adapter
+│  │  ├─ db/                                                   | # Database adapters
+│  │  │  ├─ postgis_repository.*                               | # PostGIS repository adapter
+│  │  │  └─ migrations_client.*                                | # Migrations client adapter
+│  │  ├─ search/                                               | # Search adapters
+│  │  │  ├─ search_index_client.*                              | # Index client adapter
+│  │  │  └─ query_adapter.*                                    | # Query adapter
+│  │  ├─ graph/                                                | # Graph adapters
+│  │  │  ├─ graph_client.*                                     | # Graph client adapter
+│  │  │  └─ cypher_runner.*                                    | # Cypher runner (if used)
+│  │  ├─ policy/                                               | # Policy adapters (PDP client + caching)
+│  │  │  ├─ opa_client.*                                       | # OPA client adapter
+│  │  │  └─ decision_cache.*                                   | # Decision cache adapter
+│  │  ├─ evidence/                                             | # Evidence adapters (resolver client + caching)
+│  │  │  ├─ resolver_client.*                                  | # Resolver client adapter
+│  │  │  └─ bundle_cache.*                                     | # Bundle cache adapter
+│  │  └─ telemetry/                                            | # Telemetry sinks
+│  │     ├─ logging_sink.*                                     | # Logging sink adapter
+│  │     ├─ metrics_sink.*                                     | # Metrics sink adapter
+│  │     └─ tracing_sink.*                                     | # Tracing sink adapter
+│  ├─ test/                                                    | # Adapter tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ integration/                                          | # Optional: localstack/minio/testcontainers/etc (repo-specific)
+│  │  └─ contract/                                             | # Contract tests against ports
+│  └─ fixtures/                                                | # Adapter fixtures (safe + deterministic)
+│     ├─ object_store/                                         | # Object store fixtures
+│     ├─ catalogs/                                             | # Catalog fixtures
+│     ├─ policy/                                               | # Policy fixtures
+│     └─ evidence/                                             | # Evidence fixtures
 │
-├─ ingest/                                        # Acquisition + normalization helpers (rights/sensitivity-aware)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ connectors/
-│  │  │  ├─ http_api.*
-│  │  │  ├─ bulk_download.*
-│  │  │  ├─ portal_manual.*                       # “human-in-the-loop” descriptors (no secrets)
-│  │  │  └─ scrape_rules.*                        # If used: governed + legally reviewed
-│  │  ├─ acquisition/
-│  │  │  ├─ acquisition_manifest.*
-│  │  │  ├─ terms_snapshot.*
-│  │  │  └─ raw_capture_writer.*
-│  │  ├─ normalization/
-│  │  │  ├─ parse.*
-│  │  │  ├─ normalize_schema.*
-│  │  │  └─ normalize_geo_time.*
-│  │  ├─ qa/
-│  │  │  ├─ validators.*
-│  │  │  ├─ reports.*
-│  │  │  └─ thresholds.*
-│  │  ├─ quarantine/
-│  │  │  ├─ quarantine_reason.*
-│  │  │  └─ remediation_plan.*
-│  │  └─ redaction_candidates/
-│  │     ├─ detectors.*
-│  │     └─ reports.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ fixtures_smoke/
-│  └─ fixtures/
-│     ├─ manifests/
-│     ├─ terms/
-│     ├─ qa/
-│     └─ synthetic_inputs/
+├─ ingest/                                                     | # Acquisition + normalization helpers (rights/sensitivity-aware)
+│  ├─ README.md                                                | # Package overview + safety constraints
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Governed ingest changes
+│  ├─ src/                                                     | # Ingest implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ connectors/                                           | # Acquisition connectors (governed)
+│  │  │  ├─ http_api.*                                         | # HTTP API connector
+│  │  │  ├─ bulk_download.*                                    | # Bulk download connector
+│  │  │  ├─ portal_manual.*                                    | # Human-in-the-loop descriptors (no secrets)
+│  │  │  └─ scrape_rules.*                                     | # If used: governed + legally reviewed
+│  │  ├─ acquisition/                                          | # Acquisition manifests + capture writers
+│  │  │  ├─ acquisition_manifest.*                             | # Manifest model
+│  │  │  ├─ terms_snapshot.*                                   | # Terms snapshot capture
+│  │  │  └─ raw_capture_writer.*                               | # Raw capture writer (truth path)
+│  │  ├─ normalization/                                        | # Parsing + normalization (schema/geo/time)
+│  │  │  ├─ parse.*                                            | # Parsers
+│  │  │  ├─ normalize_schema.*                                 | # Schema normalization
+│  │  │  └─ normalize_geo_time.*                               | # Geo/time normalization
+│  │  ├─ qa/                                                   | # QA validators + reports + thresholds
+│  │  │  ├─ validators.*                                       | # QA validators
+│  │  │  ├─ reports.*                                          | # QA reports
+│  │  │  └─ thresholds.*                                       | # Threshold policies
+│  │  ├─ quarantine/                                           | # Quarantine reasons + remediation planning
+│  │  │  ├─ quarantine_reason.*                                | # Quarantine reason model
+│  │  │  └─ remediation_plan.*                                 | # Remediation plan model
+│  │  └─ redaction_candidates/                                 | # Candidate detection (policy-aware)
+│  │     ├─ detectors.*                                        | # Detectors
+│  │     └─ reports.*                                          | # Detector reports
+│  ├─ test/                                                    | # Ingest tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ integration/                                          | # Integration tests (harnessed)
+│  │  └─ fixtures_smoke/                                       | # Smoke tests for fixtures
+│  └─ fixtures/                                                | # Ingest fixtures (safe + synthetic)
+│     ├─ manifests/                                            | # Acquisition manifests
+│     ├─ terms/                                                | # Terms snapshots
+│     ├─ qa/                                                   | # QA cases
+│     └─ synthetic_inputs/                                     | # Synthetic raw inputs
 │
-├─ indexers/                                      # Rebuildable projections (search/graph/tiles); never canonical truth
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ search/
-│  │  │  ├─ build_index.*
-│  │  │  ├─ mappings.*
-│  │  │  └─ reindex_job.*
-│  │  ├─ graph/
-│  │  │  ├─ build_edges.*
-│  │  │  ├─ constraints.*
-│  │  │  └─ rebuild_job.*
-│  │  ├─ tiles/
-│  │  │  ├─ tile_manifest.*
-│  │  │  ├─ tile_builder.*
-│  │  │  └─ cache_invalidation.*
-│  │  ├─ schedulers/
-│  │  │  ├─ cron_specs.*
-│  │  │  └─ backfill_plans.*
-│  │  └─ invariants/
-│  │     ├─ projection_parity_checks.*            # projection ↔ canonical checks (policy-safe)
-│  │     └─ drift_detection.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ e2e/
-│  └─ fixtures/
-│     ├─ mappings/
-│     ├─ projection_inputs/
-│     └─ golden/
+├─ indexers/                                                   | # Rebuildable projections (search/graph/tiles); never canonical truth
+│  ├─ README.md                                                | # Package overview + rebuild posture
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Indexer changes log
+│  ├─ src/                                                     | # Indexer implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ search/                                               | # Search projection builders
+│  │  │  ├─ build_index.*                                      | # Build index job
+│  │  │  ├─ mappings.*                                         | # Search mappings
+│  │  │  └─ reindex_job.*                                      | # Reindex orchestration
+│  │  ├─ graph/                                                | # Graph projection builders
+│  │  │  ├─ build_edges.*                                      | # Edge builder
+│  │  │  ├─ constraints.*                                      | # Graph constraints
+│  │  │  └─ rebuild_job.*                                      | # Rebuild orchestration
+│  │  ├─ tiles/                                                | # Tile projection builders
+│  │  │  ├─ tile_manifest.*                                    | # Tile manifest
+│  │  │  ├─ tile_builder.*                                     | # Tile builder
+│  │  │  └─ cache_invalidation.*                               | # Cache invalidation hooks
+│  │  ├─ schedulers/                                           | # Schedulers/backfills (if used)
+│  │  │  ├─ cron_specs.*                                       | # Cron spec definitions
+│  │  │  └─ backfill_plans.*                                   | # Backfill plans
+│  │  └─ invariants/                                           | # Projection parity + drift detection (policy-safe)
+│  │     ├─ projection_parity_checks.*                         | # Projection ↔ canonical checks
+│  │     └─ drift_detection.*                                  | # Drift detection logic
+│  ├─ test/                                                    | # Indexer tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ integration/                                          | # Integration tests
+│  │  └─ e2e/                                                  | # End-to-end projection tests (optional)
+│  └─ fixtures/                                                | # Indexer fixtures
+│     ├─ mappings/                                             | # Mapping fixtures
+│     ├─ projection_inputs/                                    | # Canonical inputs to build projections
+│     └─ golden/                                               | # Golden expected outputs
 │
-├─ exports/                                       # Governed exports packaging (rights + policy enforced)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ formats/
-│  │  │  ├─ csv_export.*
-│  │  │  ├─ geojson_export.*
-│  │  │  ├─ geoparquet_export.*
-│  │  │  ├─ pmtiles_export.*
-│  │  │  └─ bundle_export.*
-│  │  ├─ rights/
-│  │  │  ├─ attribution_writer.*
-│  │  │  └─ license_inclusion.*
-│  │  ├─ policy/
-│  │  │  ├─ enforce_export_obligations.*
-│  │  │  └─ suppress_or_generalize.*
-│  │  ├─ packaging/
-│  │  │  ├─ manifest_builder.*
-│  │  │  └─ checksums_writer.*
-│  │  └─ watermarking/
-│  │     └─ notices.*                             # Optional: “generalized due to policy” notices
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ contract/
-│  └─ fixtures/
-│     ├─ inputs/
-│     ├─ expected_outputs/
-│     └─ rights_and_policy_cases/
+├─ exports/                                                    | # Governed exports packaging (rights + policy enforced)
+│  ├─ README.md                                                | # Package overview + export rules
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Export behavior changes log
+│  ├─ src/                                                     | # Export implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ formats/                                              | # Export formats
+│  │  │  ├─ csv_export.*                                       | # CSV export
+│  │  │  ├─ geojson_export.*                                   | # GeoJSON export
+│  │  │  ├─ geoparquet_export.*                                | # GeoParquet export
+│  │  │  ├─ pmtiles_export.*                                   | # PMTiles export
+│  │  │  └─ bundle_export.*                                    | # Bundle export (EvidenceBundle / dataset bundle)
+│  │  ├─ rights/                                               | # Rights enforcement helpers
+│  │  │  ├─ attribution_writer.*                               | # Attribution writer
+│  │  │  └─ license_inclusion.*                                | # License inclusion rules
+│  │  ├─ policy/                                               | # Policy enforcement for exports
+│  │  │  ├─ enforce_export_obligations.*                       | # Apply export obligations
+│  │  │  └─ suppress_or_generalize.*                           | # Suppress/generalize sensitive fields
+│  │  ├─ packaging/                                            | # Packaging manifests + checksums
+│  │  │  ├─ manifest_builder.*                                 | # Manifest builder
+│  │  │  └─ checksums_writer.*                                 | # Checksums writer
+│  │  └─ watermarking/                                         | # Optional watermarking/notices
+│  │     └─ notices.*                                          | # “generalized due to policy” notices
+│  ├─ test/                                                    | # Export tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ integration/                                          | # Integration tests
+│  │  └─ contract/                                             | # Contract tests for export DTOs/manifests
+│  └─ fixtures/                                                | # Export fixtures
+│     ├─ inputs/                                               | # Input fixtures
+│     ├─ expected_outputs/                                     | # Expected output fixtures
+│     └─ rights_and_policy_cases/                              | # Rights/policy scenario fixtures
 │
-├─ stories/                                       # Story Node schema/helpers/renderers (evidence-first)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ story_node/
-│  │  │  ├─ schema.*
-│  │  │  ├─ validator.*
-│  │  │  └─ normalizer.*
-│  │  ├─ citations/
-│  │  │  ├─ evidence_ref_parser.*
-│  │  │  └─ cite_or_abstain_rules.*
-│  │  ├─ view_state/
-│  │  │  ├─ schema_versions.*
-│  │  │  ├─ compatibility.*
-│  │  │  └─ canonicalizer.*
-│  │  ├─ choreography/
-│  │  │  ├─ map_steps.*
-│  │  │  └─ time_steps.*
-│  │  └─ rendering/
-│  │     ├─ markdown_renderer.*
-│  │     └─ safe_html_rules.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ fixtures_smoke/
-│  └─ fixtures/
-│     ├─ story_nodes_valid/
-│     ├─ story_nodes_invalid/
-│     └─ view_state/
+├─ stories/                                                    | # Story Node schema/helpers/renderers (evidence-first)
+│  ├─ README.md                                                | # Package overview + story invariants
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Story behavior changes log
+│  ├─ src/                                                     | # Story implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ story_node/                                           | # Story node core
+│  │  │  ├─ schema.*                                           | # Schema helpers
+│  │  │  ├─ validator.*                                        | # Validator
+│  │  │  └─ normalizer.*                                       | # Normalizer/canonicalizer
+│  │  ├─ citations/                                            | # Citations helpers
+│  │  │  ├─ evidence_ref_parser.*                              | # EvidenceRef parsing
+│  │  │  └─ cite_or_abstain_rules.*                            | # Cite-or-abstain rules
+│  │  ├─ view_state/                                           | # View state versions + compatibility
+│  │  │  ├─ schema_versions.*                                  | # Schema versions
+│  │  │  ├─ compatibility.*                                    | # Compatibility rules
+│  │  │  └─ canonicalizer.*                                    | # Canonicalizer
+│  │  ├─ choreography/                                         | # Story choreography (map/time steps)
+│  │  │  ├─ map_steps.*                                        | # Map steps
+│  │  │  └─ time_steps.*                                       | # Time steps
+│  │  └─ rendering/                                            | # Rendering (safe mode)
+│  │     ├─ markdown_renderer.*                                | # Markdown renderer
+│  │     └─ safe_html_rules.*                                  | # Safe HTML rules
+│  ├─ test/                                                    | # Story tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ integration/                                          | # Integration tests
+│  │  └─ fixtures_smoke/                                       | # Fixture smoke tests
+│  └─ fixtures/                                                | # Story fixtures
+│     ├─ story_nodes_valid/                                    | # Valid story nodes
+│     ├─ story_nodes_invalid/                                  | # Invalid story nodes
+│     └─ view_state/                                           | # View state fixtures
 │
-├─ focus/                                         # Focus Mode planner/retrieval/cite-verify + eval harness hooks
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ dto/
-│  │  │  ├─ focus_request.*
-│  │  │  ├─ focus_response.*
-│  │  │  └─ citation_models.*
-│  │  ├─ policy_precheck/
-│  │  │  └─ allow_deny_abstain.*
-│  │  ├─ planning/
-│  │  │  ├─ retrieval_plan.*
-│  │  │  └─ tool_allowlist.*
-│  │  ├─ retrieval/
-│  │  │  ├─ query_builder.*
-│  │  │  ├─ evidence_selection.*
-│  │  │  └─ ranking.*
-│  │  ├─ cite_verify/
-│  │  │  ├─ resolve_and_verify.*
-│  │  │  └─ hard_gate.*
-│  │  ├─ abstention/
-│  │  │  ├─ abstain_reasons.*
-│  │  │  └─ safe_alternatives.*
-│  │  └─ eval/
-│  │     ├─ golden_queries.*
-│  │     ├─ leakage_tests.*
-│  │     └─ citation_coverage.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ integration/
-│  │  └─ eval/
-│  └─ fixtures/
-│     ├─ golden_queries/
-│     ├─ policy_cases/
-│     └─ expected_citations/
+├─ focus/                                                      | # Focus Mode planner/retrieval/cite-verify + eval hooks
+│  ├─ README.md                                                | # Package overview + safety posture
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Focus behavior changes log
+│  ├─ src/                                                     | # Focus implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ dto/                                                  | # Request/response + citation models
+│  │  │  ├─ focus_request.*                                    | # Focus request DTO
+│  │  │  ├─ focus_response.*                                   | # Focus response DTO
+│  │  │  └─ citation_models.*                                  | # Citation models
+│  │  ├─ policy_precheck/                                      | # Precheck gate (allow/deny/abstain)
+│  │  │  └─ allow_deny_abstain.*                               | # Precheck logic
+│  │  ├─ planning/                                             | # Retrieval planning
+│  │  │  ├─ retrieval_plan.*                                   | # Plan structure
+│  │  │  └─ tool_allowlist.*                                   | # Tool allowlist
+│  │  ├─ retrieval/                                            | # Retrieval mechanics
+│  │  │  ├─ query_builder.*                                    | # Query building
+│  │  │  ├─ evidence_selection.*                               | # Evidence selection
+│  │  │  └─ ranking.*                                          | # Ranking
+│  │  ├─ cite_verify/                                          | # Resolve + verify citations (hard gate)
+│  │  │  ├─ resolve_and_verify.*                               | # Resolve and verify
+│  │  │  └─ hard_gate.*                                        | # Hard gate (fail-closed)
+│  │  ├─ abstention/                                           | # Abstention logic + safe alternatives
+│  │  │  ├─ abstain_reasons.*                                  | # Abstain reasons
+│  │  │  └─ safe_alternatives.*                                | # Safe alternatives
+│  │  └─ eval/                                                 | # Eval harness hooks (coverage/leakage)
+│  │     ├─ golden_queries.*                                   | # Golden queries
+│  │     ├─ leakage_tests.*                                    | # Leakage tests
+│  │     └─ citation_coverage.*                                | # Citation coverage scoring
+│  ├─ test/                                                    | # Focus tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ integration/                                          | # Integration tests
+│  │  └─ eval/                                                 | # Eval tests
+│  └─ fixtures/                                                | # Focus fixtures
+│     ├─ golden_queries/                                       | # Golden queries fixtures
+│     ├─ policy_cases/                                         | # Policy precheck cases
+│     └─ expected_citations/                                   | # Expected citation fixtures
 │
-├─ evidence/                                      # EvidenceRef/EvidenceBundle contracts + resolver helpers (client-side)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ refs/
-│  │  │  ├─ evidence_ref.*
-│  │  │  ├─ schemes.*
-│  │  │  └─ parsing_and_formatting.*
-│  │  ├─ bundles/
-│  │  │  ├─ evidence_bundle.*
-│  │  │  ├─ bundle_validation.*
-│  │  │  └─ safe_render_fields.*
-│  │  ├─ receipts/
-│  │  │  ├─ run_receipt.*
-│  │  │  └─ promotion_manifest.*
-│  │  ├─ resolver/
-│  │  │  ├─ resolver_client.*
-│  │  │  └─ resolver_errors.*
-│  │  └─ verification/
-│  │     ├─ digest_checks.*
-│  │     └─ attestation_hooks.*                    # Optional if using signatures/attestations
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ contract/
-│  │  └─ integration/
-│  └─ fixtures/
-│     ├─ bundles_valid/
-│     ├─ bundles_invalid/
-│     ├─ refs_valid/
-│     └─ receipts/
+├─ evidence/                                                   | # EvidenceRef/EvidenceBundle contracts + resolver helpers (client-side)
+│  ├─ README.md                                                | # Package overview + evidence invariants
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Evidence behavior changes log
+│  ├─ src/                                                     | # Evidence implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ refs/                                                 | # EvidenceRef parsing/formatting + schemes
+│  │  │  ├─ evidence_ref.*                                     | # EvidenceRef model
+│  │  │  ├─ schemes.*                                          | # Supported schemes
+│  │  │  └─ parsing_and_formatting.*                           | # Parsing/formatting helpers
+│  │  ├─ bundles/                                              | # EvidenceBundle models + validation
+│  │  │  ├─ evidence_bundle.*                                  | # EvidenceBundle model
+│  │  │  ├─ bundle_validation.*                                | # Bundle validation
+│  │  │  └─ safe_render_fields.*                               | # Safe rendering whitelist
+│  │  ├─ receipts/                                             | # Receipt/manifests models
+│  │  │  ├─ run_receipt.*                                      | # Run receipt model
+│  │  │  └─ promotion_manifest.*                               | # Promotion manifest model
+│  │  ├─ resolver/                                             | # Resolver client shapes + errors
+│  │  │  ├─ resolver_client.*                                  | # Resolver client interface/models
+│  │  │  └─ resolver_errors.*                                  | # Resolver error mapping
+│  │  └─ verification/                                         | # Verification hooks (digests/attestations)
+│  │     ├─ digest_checks.*                                    | # Digest checks
+│  │     └─ attestation_hooks.*                                | # Optional: signatures/attestations hooks
+│  ├─ test/                                                    | # Evidence tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ contract/                                             | # Contract tests for schemas/DTOs
+│  │  └─ integration/                                          | # Integration tests
+│  └─ fixtures/                                                | # Evidence fixtures
+│     ├─ bundles_valid/                                        | # Valid bundles
+│     ├─ bundles_invalid/                                      | # Invalid bundles
+│     ├─ refs_valid/                                           | # Valid refs
+│     └─ receipts/                                             | # Receipt fixtures
 │
-├─ catalog/                                       # DCAT/STAC/PROV builders + validators + linkcheck
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ dcat/
-│  │  │  ├─ builder.*
-│  │  │  ├─ validator.*
-│  │  │  └─ distributions.*
-│  │  ├─ stac/
-│  │  │  ├─ collection_builder.*
-│  │  │  ├─ item_builder.*
-│  │  │  └─ validator.*
-│  │  ├─ prov/
-│  │  │  ├─ prov_builder.*
-│  │  │  └─ validator.*
-│  │  ├─ profiles/
-│  │  │  ├─ active_profiles.*
-│  │  │  └─ profile_resolution.*
-│  │  ├─ linkcheck/
-│  │  │  ├─ cross_links.*
-│  │  │  └─ evidence_ref_resolvability.*
-│  │  └─ diff/
-│  │     ├─ what_changed.*
-│  │     └─ policy_safe_diff.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ contract/
-│  │  └─ integration/
-│  └─ fixtures/
-│     ├─ dcat_valid/
-│     ├─ stac_valid/
-│     ├─ prov_valid/
-│     ├─ cross_links_valid/
-│     └─ cross_links_invalid/
+├─ catalog/                                                    | # DCAT/STAC/PROV builders + validators + linkcheck
+│  ├─ README.md                                                | # Package overview + profiles + link invariants
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Catalog behavior changes log
+│  ├─ src/                                                     | # Catalog implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ dcat/                                                 | # DCAT builder/validator/distributions
+│  │  │  ├─ builder.*                                          | # DCAT builder
+│  │  │  ├─ validator.*                                        | # DCAT validator
+│  │  │  └─ distributions.*                                    | # DCAT distributions helpers
+│  │  ├─ stac/                                                 | # STAC builders + validator
+│  │  │  ├─ collection_builder.*                               | # STAC Collection builder
+│  │  │  ├─ item_builder.*                                     | # STAC Item builder
+│  │  │  └─ validator.*                                        | # STAC validator
+│  │  ├─ prov/                                                 | # PROV builder + validator
+│  │  │  ├─ prov_builder.*                                     | # PROV builder
+│  │  │  └─ validator.*                                        | # PROV validator
+│  │  ├─ profiles/                                             | # Profile selection/resolution
+│  │  │  ├─ active_profiles.*                                  | # Active profiles list
+│  │  │  └─ profile_resolution.*                               | # Profile resolution logic
+│  │  ├─ linkcheck/                                            | # Link checks (cross-links + evidence ref resolvability)
+│  │  │  ├─ cross_links.*                                      | # Cross-link checks
+│  │  │  └─ evidence_ref_resolvability.*                       | # EvidenceRef resolvability checks
+│  │  └─ diff/                                                 | # Diffing (policy-safe)
+│  │     ├─ what_changed.*                                     | # What changed computation
+│  │     └─ policy_safe_diff.*                                 | # Policy-safe diff formatting
+│  ├─ test/                                                    | # Catalog tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ contract/                                             | # Contract tests
+│  │  └─ integration/                                          | # Integration tests
+│  └─ fixtures/                                                | # Catalog fixtures
+│     ├─ dcat_valid/                                           | # Valid DCAT fixtures
+│     ├─ stac_valid/                                           | # Valid STAC fixtures
+│     ├─ prov_valid/                                           | # Valid PROV fixtures
+│     ├─ cross_links_valid/                                    | # Valid cross-link fixtures
+│     └─ cross_links_invalid/                                  | # Invalid cross-link fixtures
 │
-├─ policy/                                        # Policy models + fixtures harness + obligation semantics
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ labels/
-│  │  │  ├─ label_models.*
-│  │  │  └─ label_validation.*
-│  │  ├─ obligations/
-│  │  │  ├─ obligation_models.*
-│  │  │  ├─ obligation_validation.*
-│  │  │  └─ obligation_application_rules.*        # semantics (not the engine)
-│  │  ├─ decisions/
-│  │  │  ├─ decision_models.*
-│  │  │  └─ policy_safe_errors.*
-│  │  ├─ fixtures/
-│  │  │  ├─ fixtures_loader.*
-│  │  │  └─ parity_runner.*                       # CI/runtime parity harness hook
-│  │  ├─ rights/
-│  │  │  ├─ rights_checks.*
-│  │  │  └─ redistribution_rules.*
-│  │  └─ sensitive_locations/
-│  │     ├─ generalization_rules.*
-│  │     └─ leakage_tests.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ contract/
-│  │  └─ integration/
-│  └─ fixtures/
-│     ├─ allow_deny_cases/
-│     ├─ obligation_cases/
-│     └─ rights_cases/
+├─ policy/                                                     | # Policy models + fixtures harness + obligation semantics
+│  ├─ README.md                                                | # Package overview + policy semantics (not engine)
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Policy semantics changes log
+│  ├─ src/                                                     | # Policy semantics implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ labels/                                               | # Policy label models + validation
+│  │  │  ├─ label_models.*                                     | # Label models
+│  │  │  └─ label_validation.*                                 | # Label validation rules
+│  │  ├─ obligations/                                          | # Obligation models + validation + application semantics
+│  │  │  ├─ obligation_models.*                                | # Obligation models
+│  │  │  ├─ obligation_validation.*                            | # Obligation validation
+│  │  │  └─ obligation_application_rules.*                     | # Semantics (not the engine)
+│  │  ├─ decisions/                                            | # Decision models + policy-safe errors
+│  │  │  ├─ decision_models.*                                  | # Decision models
+│  │  │  └─ policy_safe_errors.*                               | # Policy-safe error shapes
+│  │  ├─ fixtures/                                             | # Fixtures loader + parity harness hooks
+│  │  │  ├─ fixtures_loader.*                                  | # Fixture loader
+│  │  │  └─ parity_runner.*                                    | # CI/runtime parity harness hook
+│  │  ├─ rights/                                               | # Rights checks + redistribution rules
+│  │  │  ├─ rights_checks.*                                    | # Rights checks
+│  │  │  └─ redistribution_rules.*                             | # Redistribution rules
+│  │  └─ sensitive_locations/                                  | # Sensitive location semantics + leakage tests
+│  │     ├─ generalization_rules.*                             | # Generalization rules
+│  │     └─ leakage_tests.*                                    | # Leakage tests
+│  ├─ test/                                                    | # Policy semantics tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ contract/                                             | # Contract tests
+│  │  └─ integration/                                          | # Integration tests
+│  └─ fixtures/                                                | # Policy fixtures
+│     ├─ allow_deny_cases/                                     | # Allow/deny cases
+│     ├─ obligation_cases/                                     | # Obligation cases
+│     └─ rights_cases/                                         | # Rights cases
 │
-├─ geo/                                           # Geo math + validation + safe generalization utilities
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ bounds/
-│  │  │  ├─ bbox_ops.*
-│  │  │  └─ extent_union.*
-│  │  ├─ geometry/
-│  │  │  ├─ parsers.*
-│  │  │  └─ validators.*
-│  │  ├─ generalize/
-│  │  │  ├─ grid_snap.*
-│  │  │  ├─ simplify.*
-│  │  │  └─ coarsen_to_admin.*
-│  │  ├─ tiling/
-│  │  │  ├─ tile_math.*
-│  │  │  └─ tile_bounds.*
-│  │  └─ safety/
-│  │     ├─ sensitive_bbox_checks.*
-│  │     └─ coordinate_field_scans.*
-│  ├─ test/
-│  │  ├─ unit/
-│  │  ├─ property/
-│  │  └─ integration/
-│  └─ fixtures/
-│     ├─ geometries_valid/
-│     ├─ geometries_invalid/
-│     └─ generalization_cases/
+├─ geo/                                                        | # Geo math + validation + safe generalization utilities
+│  ├─ README.md                                                | # Package overview + safety posture
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Geo behavior changes log
+│  ├─ src/                                                     | # Geo implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ bounds/                                               | # Bounds operations
+│  │  │  ├─ bbox_ops.*                                         | # BBox operations
+│  │  │  └─ extent_union.*                                     | # Extent union helpers
+│  │  ├─ geometry/                                             | # Geometry parsing + validation
+│  │  │  ├─ parsers.*                                          | # Parsers
+│  │  │  └─ validators.*                                       | # Validators
+│  │  ├─ generalize/                                           | # Generalization algorithms
+│  │  │  ├─ grid_snap.*                                        | # Grid snapping
+│  │  │  ├─ simplify.*                                         | # Simplification
+│  │  │  └─ coarsen_to_admin.*                                 | # Coarsen to admin boundaries
+│  │  ├─ tiling/                                               | # Tile math + bounds
+│  │  │  ├─ tile_math.*                                        | # Tile math
+│  │  │  └─ tile_bounds.*                                      | # Tile bounds
+│  │  └─ safety/                                               | # Safety checks (sensitive bbox/field scans)
+│  │     ├─ sensitive_bbox_checks.*                            | # Sensitive bbox checks
+│  │     └─ coordinate_field_scans.*                           | # Coordinate field scans
+│  ├─ test/                                                    | # Geo tests
+│  │  ├─ unit/                                                 | # Unit tests
+│  │  ├─ property/                                             | # Property tests
+│  │  └─ integration/                                          | # Integration tests
+│  └─ fixtures/                                                | # Geo fixtures
+│     ├─ geometries_valid/                                     | # Valid geometry fixtures
+│     ├─ geometries_invalid/                                   | # Invalid geometry fixtures
+│     └─ generalization_cases/                                 | # Generalization cases
 │
-├─ observability/                                 # Logging/metrics/tracing helpers (policy-safe defaults)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ logging/
-│  │  │  ├─ logger.*
-│  │  │  ├─ structured_fields.*                   # run_id, audit_ref, dataset_version_id, etc.
-│  │  │  └─ redaction.*                           # remove secrets/PII from logs
-│  │  ├─ metrics/
-│  │  │  ├─ counters.*
-│  │  │  ├─ histograms.*
-│  │  │  └─ policy_safe_dimensions.*
-│  │  ├─ tracing/
-│  │  │  ├─ tracer.*
-│  │  │  └─ propagation.*
-│  │  └─ audit/
-│  │     ├─ audit_events.*
-│  │     └─ audit_emitters.*
-│  └─ test/
-│     ├─ unit/
-│     └─ integration/
+├─ observability/                                              | # Logging/metrics/tracing helpers (policy-safe defaults)
+│  ├─ README.md                                                | # Package overview + conventions
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # Observability behavior changes log
+│  ├─ src/                                                     | # Observability implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ logging/                                              | # Logging helpers
+│  │  │  ├─ logger.*                                           | # Logger
+│  │  │  ├─ structured_fields.*                                | # Structured fields (run_id, audit_ref, dataset_version_id, etc.)
+│  │  │  └─ redaction.*                                        | # Redaction (remove secrets/PII)
+│  │  ├─ metrics/                                              | # Metrics helpers
+│  │  │  ├─ counters.*                                         | # Counters
+│  │  │  ├─ histograms.*                                       | # Histograms
+│  │  │  └─ policy_safe_dimensions.*                           | # Policy-safe dimensions
+│  │  ├─ tracing/                                              | # Tracing helpers
+│  │  │  ├─ tracer.*                                           | # Tracer
+│  │  │  └─ propagation.*                                      | # Context propagation
+│  │  └─ audit/                                                | # Audit helpers
+│  │     ├─ audit_events.*                                     | # Audit event models
+│  │     └─ audit_emitters.*                                   | # Audit emitters
+│  └─ test/                                                    | # Observability tests
+│     ├─ unit/                                                 | # Unit tests
+│     └─ integration/                                          | # Integration tests
 │
-├─ ui-components/                                 # Optional (only if shared UI lives in packages)
-│  ├─ README.md
-│  ├─ kfm.package.json
-│  ├─ CHANGELOG.md
-│  ├─ src/
-│  │  ├─ index.*
-│  │  ├─ components/
-│  │  │  ├─ EvidenceDrawer/
-│  │  │  ├─ ReceiptViewer/
-│  │  │  ├─ PolicyBadge/
-│  │  │  ├─ ProvenancePanel/
-│  │  │  └─ WhatChangedPanel/
-│  │  ├─ hooks/
-│  │  ├─ state/
-│  │  └─ safe_rendering/                          # sanitize/guardrails for rendering evidence fields
-│  └─ test/
-│     ├─ unit/
-│     └─ e2e/                                     # Optional: component-level E2E
+├─ ui-components/                                              | # Optional: shared UI building blocks (if shared UI lives in packages)
+│  ├─ README.md                                                | # Package overview + rendering rules
+│  ├─ kfm.package.json                                         | # Package manifest
+│  ├─ CHANGELOG.md                                             | # UI components changes log
+│  ├─ src/                                                     | # UI components implementation
+│  │  ├─ index.*                                               | # Public exports
+│  │  ├─ components/                                           | # Components
+│  │  │  ├─ EvidenceDrawer/                                    | # Evidence Drawer component set
+│  │  │  ├─ ReceiptViewer/                                     | # Receipt viewer component set
+│  │  │  ├─ PolicyBadge/                                       | # Policy badge component set
+│  │  │  ├─ ProvenancePanel/                                   | # Provenance panel component set
+│  │  │  └─ WhatChangedPanel/                                  | # Diff/what-changed panel component set
+│  │  ├─ hooks/                                                | # Shared hooks
+│  │  ├─ state/                                                | # UI state helpers
+│  │  └─ safe_rendering/                                       | # Sanitizers/guardrails for rendering evidence fields
+│  └─ test/                                                    | # UI component tests
+│     ├─ unit/                                                 | # Unit tests
+│     └─ e2e/                                                  | # Optional: component-level E2E tests
 │
-└─ shared/                                        # Small shared utilities (keep small; avoid "god package")
-   ├─ README.md
-   ├─ kfm.package.json
-   ├─ CHANGELOG.md
-   ├─ src/
-   │  ├─ index.*
-   │  ├─ config/
-   │  │  ├─ config_loader.*
-   │  │  └─ config_schema.*
-   │  ├─ http/
-   │  │  ├─ client.*
-   │  │  └─ retries_timeouts.*
-   │  ├─ io/
-   │  │  ├─ file_ops.*
-   │  │  └─ path_utils.*
-   │  ├─ crypto/
-   │  │  ├─ sha256.*
-   │  │  └─ signatures_hooks.*
-   │  ├─ schema/
-   │  │  ├─ json_schema_validate.*
-   │  │  └─ error_formatting.*
-   │  └─ text/
-   │     ├─ normalize.*
-   │     └─ slugify.*
-   └─ test/
-      ├─ unit/
-      └─ integration/
+└─ shared/                                                     | # Small shared utilities (keep small; avoid "god package")
+   ├─ README.md                                                | # Package overview + constraints (what belongs here)
+   ├─ kfm.package.json                                         | # Package manifest
+   ├─ CHANGELOG.md                                             | # Shared utilities changes log
+   ├─ src/                                                     | # Shared implementation
+   │  ├─ index.*                                               | # Public exports
+   │  ├─ config/                                               | # Config loading + schema
+   │  │  ├─ config_loader.*                                    | # Config loader
+   │  │  └─ config_schema.*                                    | # Config schema helpers
+   │  ├─ http/                                                 | # HTTP helpers
+   │  │  ├─ client.*                                           | # HTTP client
+   │  │  └─ retries_timeouts.*                                 | # Retry/timeout policy helpers
+   │  ├─ io/                                                   | # File/path IO helpers
+   │  │  ├─ file_ops.*                                         | # File operations
+   │  │  └─ path_utils.*                                       | # Path utilities
+   │  ├─ crypto/                                               | # Crypto helpers
+   │  │  ├─ sha256.*                                           | # SHA-256 helpers
+   │  │  └─ signatures_hooks.*                                 | # Signature hooks (optional)
+   │  ├─ schema/                                               | # Schema validation + error formatting
+   │  │  ├─ json_schema_validate.*                             | # JSON schema validation helper
+   │  │  └─ error_formatting.*                                 | # Error formatting helpers
+   │  └─ text/                                                 | # Text normalization helpers
+   │     ├─ normalize.*                                        | # Normalize helpers
+   │     └─ slugify.*                                          | # Slugify helpers
+   └─ test/                                                    | # Shared utilities tests
+      ├─ unit/                                                 | # Unit tests
+      └─ integration/                                          | # Integration tests
+```
+
 ```
 
 > [!TIP]
