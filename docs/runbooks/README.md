@@ -114,44 +114,150 @@ Use a runbook when **any** of the following is true:
 <summary><strong>Proposed directory layout</strong></summary>
 
 ```
-docs/runbooks/                                    # Operational runbooks (production-grade, step-by-step)
-├─ README.md                                      # Index + standards + incident flow + promotion gates
+docs/runbooks/                                          # Operational runbooks (production-grade, step-by-step)
+├─ README.md                                            # Index + standards + incident flow + promotion gates
 │
-├─ templates/                                     # Authoring templates (copy/paste starters)
-│  ├─ runbook-template.md                         # Standard runbook format
-│  └─ evidence-bundle-template.md                 # Packaging evidence during incidents/changes
+├─ _registry/                                           # Machine-checkable registry for completeness (optional but recommended)
+│  ├─ runbooks.yml                                      # Single source of truth for runbook index rows
+│  ├─ runbooks.schema.json                              # JSON Schema to validate runbooks.yml (CI-friendly)
+│  └─ owners.yml                                        # Canonical owner aliases/teams (avoid "TBD" drift)
 │
-├─ incidents/                                     # Incident response procedures
-│  ├─ rb-incident-triage.md                       # Triage checklist (identify, contain, communicate)
-│  └─ rb-incident-sev1.md                         # SEV1 playbook (roles, comms, mitigation, postmortem)
+├─ templates/                                           # Authoring templates (copy/paste starters)
+│  ├─ runbook-template.md                               # Standard runbook format (scope → steps → verify → rollback)
+│  ├─ evidence-bundle-template.md                       # Packaging evidence during incidents/changes
+│  ├─ incident-notes-template.md                        # Live incident notes capture (timeline + hypotheses + actions)
+│  ├─ comms-update-template.md                          # Slack/email/statuspage update format
+│  ├─ postmortem-template.md                            # PIR template (what/why/fix/guardrail/tests)
+│  └─ change-record-template.md                         # “Change ticket” / decision record (risk + rollback + approvals)
 │
-├─ pipelines/                                     # Pipeline operations (reruns, backfills, promotions)
-│  ├─ rb-pipeline-rerun.md                        # Safe rerun procedure (idempotency + receipts)
-│  ├─ rb-pipeline-backfill.md                     # Backfill procedure (scope, scheduling, rollback)
-│  └─ rb-pipeline-promote-zone.md                 # Promote through truth path (gates + fail-closed)
+├─ incidents/                                           # Incident response procedures
+│  ├─ rb-incident-triage.md                             # Triage checklist (identify, contain, communicate)
+│  ├─ rb-incident-sev1.md                               # SEV1 playbook (roles, comms, mitigation, postmortem)
+│  ├─ rb-incident-comms.md                              # Comms cadence + channels + update templates
+│  ├─ rb-incident-evidence-capture.md                   # Evidence bundle capture rules during response
+│  ├─ rb-incident-escalation.md                         # Escalation ladder + “stop-the-line” criteria
+│  ├─ rb-incident-postmortem.md                         # PIR workflow + follow-up gates
+│  │
+│  ├─ playbooks/                                        # Symptom-driven, fast lookup (use during triage)
+│  │  ├─ rb-incident-api-5xx-spike.md                    # API error spike: contain → verify → rollback
+│  │  ├─ rb-incident-auth-failure.md                     # Auth/RBAC failures: contain + policy checks
+│  │  ├─ rb-incident-policy-regression.md               # Policy deny/allow regression: bundle rollback
+│  │  ├─ rb-incident-pipeline-stuck.md                  # Pipeline stuck: pause scheduler, inspect receipts
+│  │  ├─ rb-incident-data-integrity.md                  # Suspected corruption: quarantine + checksums
+│  │  ├─ rb-incident-index-lag.md                       # Search/tiles lag: rebuild/warmup checklist
+│  │  ├─ rb-incident-ui-outage.md                       # UI outage: feature-flag disable + rollback
+│  │  └─ rb-incident-storage-quota.md                   # Storage saturation: contain + expand + cleanup
+│  │
+│  └─ drills/                                           # Game day / tabletop exercises
+│     ├─ rb-drill-sev1-sim.md                            # SEV1 simulation procedure + scoring
+│     └─ rb-drill-data-promotion-fail.md                # Promotion gate failure simulation
 │
-├─ data/                                          # Data quality + redaction operations
-│  ├─ rb-data-qa-failures.md                      # QA failure triage (thresholds, diffs, quarantine)
-│  └─ rb-data-redaction-review.md                 # Redaction review/approval (obligations, sign-off)
+├─ change/                                              # Controlled change workflow (non-incident)
+│  ├─ rb-change-intake.md                               # Intake checklist (scope, env, approvals, evidence plan)
+│  ├─ rb-change-execute.md                              # Execute safely (dry run → canary → validate)
+│  ├─ rb-change-rollback.md                             # Rollback decision + steps + verification
+│  └─ rb-change-closeout.md                             # Closeout (evidence, notes, follow-ups, index update)
 │
-├─ indexing/                                      # Index/projection operations (search/graph/tiles)
-│  ├─ rb-index-rebuild.md                         # Full rebuild (prereqs, timing, verification)
-│  └─ rb-index-backfill.md                        # Backfill new projections (scope, safety, rollback)
+├─ pipelines/                                           # Pipeline operations (reruns, backfills, promotions)
+│  ├─ rb-pipeline-rerun.md                              # Safe rerun procedure (idempotency + receipts)
+│  ├─ rb-pipeline-backfill.md                           # Backfill procedure (scope, scheduling, rollback)
+│  ├─ rb-pipeline-promote-zone.md                       # Promote through truth path (gates + fail-closed)
+│  ├─ rb-pipeline-quarantine.md                         # Quarantine workflow (why, duration, unblock criteria)
+│  ├─ rb-pipeline-receipt-verify.md                     # Receipt verification checklist (inputs/outputs/tool versions)
+│  ├─ rb-pipeline-scheduler-pause.md                    # Pause scheduled runs (containment and safety)
+│  ├─ rb-pipeline-scheduler-resume.md                   # Resume + verify no backlog hazards
+│  └─ rb-pipeline-hotfix.md                             # Emergency pipeline patch w/ explicit approvals + rollback
 │
-├─ api/                                           # API deploy operations
-│  ├─ rb-api-deploy.md                            # Deploy (health checks, canary, rollback hooks)
-│  └─ rb-api-rollback.md                          # Rollback (version pin, migrations, verification)
+├─ data/                                                # Data quality + redaction operations
+│  ├─ rb-data-qa-failures.md                            # QA failure triage (thresholds, diffs, quarantine)
+│  ├─ rb-data-redaction-review.md                       # Redaction review/approval (obligations, sign-off)
+│  ├─ rb-data-sensitivity-assess.md                     # Sensitivity classification + policy label recommendation
+│  ├─ rb-data-schema-change.md                          # Schema evolution (compat rules, versioning, migrations)
+│  ├─ rb-data-diff-compare.md                           # DatasetVersion diff workflow (what changed + why)
+│  ├─ rb-data-restore-from-raw.md                       # Restore procedure (RAW as immutable source of truth)
+│  └─ rb-data-tombstone.md                              # Tombstone/deprecate dataset artifacts safely
 │
-├─ ui/                                            # UI deploy + runtime toggles
-│  ├─ rb-ui-deploy.md                             # UI deploy (smoke tests, monitoring)
-│  └─ rb-ui-feature-flag.md                       # Feature flag changes (approval + audit + revert)
+├─ catalog/                                             # DCAT/STAC/PROV catalog operations (often cross-cutting)
+│  ├─ rb-catalog-build.md                               # Build catalogs from processed artifacts
+│  ├─ rb-catalog-validate.md                            # Validate catalog integrity (schemas + links)
+│  ├─ rb-catalog-publish.md                             # Publish catalog bundle through governed boundary
+│  ├─ rb-catalog-rebuild-all.md                         # Full rebuild (when + safety + verification)
+│  └─ rb-catalog-deprecate-dataset.md                   # Deprecation workflow (catalog + UI + API coherence)
 │
-├─ governance/                                    # Governance operations
-│  ├─ rb-policy-label-change.md                   # Policy label change workflow (review, downstream impact)
-│  └─ rb-access-review.md                         # Access review (least privilege, audit evidence)
+├─ evidence/                                            # Evidence-first operations (bundles, refs, redaction)
+│  ├─ rb-evidence-bundle-create.md                      # Bundle creation (what must be captured)
+│  ├─ rb-evidence-ref-resolve.md                        # EvidenceRef → EvidenceBundle resolution checks
+│  ├─ rb-evidence-redaction-apply.md                    # Redaction obligations workflow + verification
+│  ├─ rb-evidence-retention.md                          # Retention policy + secure disposal process
+│  └─ rb-audit-ledger-append.md                         # Append/verify audit ledger entries (who/what/when/why)
 │
-└─ _assets/                                       # Shared runbook assets (diagrams, bounded screenshots)
-   └─ diagrams/                                   # Diagram assets used by runbooks
+├─ indexing/                                            # Index/projection ops (search/graph/tiles)
+│  ├─ rb-index-rebuild.md                               # Full rebuild (prereqs, timing, verification)
+│  ├─ rb-index-backfill.md                              # Backfill new projections (scope, safety, rollback)
+│  ├─ rb-index-search-rebuild.md                        # Search index rebuild (freshness + consistency checks)
+│  ├─ rb-index-tiles-rebuild.md                         # Vector/raster tile rebuild (cache + warmup steps)
+│  ├─ rb-index-graph-rebuild.md                         # Graph/relationships rebuild (if applicable)
+│  ├─ rb-index-warmup.md                                # Warm caches after rebuild/deploy
+│  └─ rb-index-verify-freshness.md                      # “Is the index stale?” checklist (SLAs, timestamps)
+│
+├─ api/                                                 # API deploy operations
+│  ├─ rb-api-deploy.md                                  # Deploy (health checks, canary, rollback hooks)
+│  ├─ rb-api-rollback.md                                # Rollback (version pin, migrations, verification)
+│  ├─ rb-api-migrations.md                              # DB migrations (safe order, locks, rollback constraints)
+│  ├─ rb-api-rate-limit-change.md                       # Rate limit/SLA tier changes (audit + revert)
+│  ├─ rb-api-cache-invalidate.md                        # Cache invalidation (blast radius + verification)
+│  ├─ rb-api-schema-contract-change.md                  # OpenAPI/schema changes (compat + versioning)
+│  └─ rb-api-emergency-readonly.md                      # Read-only mode (containment + recovery)
+│
+├─ ui/                                                  # UI deploy + runtime toggles
+│  ├─ rb-ui-deploy.md                                   # UI deploy (smoke tests, monitoring)
+│  ├─ rb-ui-feature-flag.md                             # Feature flag changes (approval + audit + revert)
+│  ├─ rb-ui-cache-purge.md                              # CDN/browser cache issues (safe busting)
+│  ├─ rb-ui-emergency-banner.md                         # Emergency banner messaging + removal criteria
+│  ├─ rb-ui-map-style-update.md                         # Map style update workflow (verify legends + scale)
+│  └─ rb-ui-story-node-publish.md                       # Story content publish (evidence refs + policy label)
+│
+├─ policy/                                              # Policy engine operations (OPA/Rego or equivalent)
+│  ├─ rb-policy-bundle-build.md                         # Build policy bundles (tests required)
+│  ├─ rb-policy-bundle-publish.md                       # Publish policy bundles (canary + rollback)
+│  ├─ rb-policy-regression-triage.md                    # Identify deny/allow deltas + root cause workflow
+│  ├─ rb-policy-obligation-change.md                    # Obligation changes (downstream impact analysis)
+│  └─ rb-policy-emergency-deny-all.md                   # Emergency containment (explicit approval required)
+│
+├─ governance/                                          # Governance operations (reviews, access, labels, approvals)
+│  ├─ rb-policy-label-change.md                         # Policy label change workflow (review, downstream impact)
+│  ├─ rb-access-review.md                               # Access review (least privilege, audit evidence)
+│  ├─ rb-access-grant.md                                # Grant workflow (who approves + evidence)
+│  ├─ rb-access-revoke.md                               # Revoke workflow (timing + verification)
+│  ├─ rb-release-promotion-approve.md                   # Promotion approval ceremony (gates + sign-off)
+│  └─ rb-data-release-notes.md                          # Release notes (what changed + evidence links)
+│
+├─ platform/                                            # Infra/cluster/storage runbooks (if you operate your own platform)
+│  ├─ rb-platform-backup.md                             # Backups (scope + schedules + verification)
+│  ├─ rb-platform-restore.md                            # Restore procedure (tabletop tested)
+│  ├─ rb-platform-dr-failover.md                        # DR failover + fallback plan
+│  ├─ rb-platform-k8s-upgrade.md                        # Cluster upgrade (compat checks + rollback)
+│  ├─ rb-platform-cert-rotate.md                        # TLS cert rotation (avoid downtime)
+│  ├─ rb-platform-storage-expand.md                     # Storage expansion (quotas + alarms)
+│  └─ rb-platform-secrets-rotation.md                   # Secrets rotation (no secrets in docs; only process)
+│
+├─ observability/                                       # Monitoring/alerting/SLO runbooks
+│  ├─ rb-observability-alert-triage.md                  # Alert triage (ack → scope → mitigate → verify)
+│  ├─ rb-observability-dashboard-create.md              # Dashboard creation standards (what must exist)
+│  ├─ rb-observability-log-retention.md                 # Log retention (policy + access)
+│  ├─ rb-observability-slo-review.md                    # SLO/SLA review cadence + evidence
+│  ├─ rb-observability-trace-sampling.md                # Trace sampling changes (impact + rollback)
+│  └─ rb-observability-metrics-gap.md                   # “We’re blind” procedure (restore visibility)
+│
+└─ _assets/                                             # Shared runbook assets (diagrams, bounded screenshots)
+   ├─ diagrams/                                         # Diagram sources (prefer mermaid source over screenshots)
+   │  ├─ incident-flow.mmd
+   │  ├─ promotion-flow.mmd
+   │  └─ trust-membrane.mmd
+   ├─ screenshots/                                      # Bounded, redacted screenshots only
+   └─ samples/                                          # Redacted example bundles/receipts (NEVER real secrets/data)
+      ├─ evidence-bundle-example/
+      └─ receipt-example/
 ```
 
 </details>
