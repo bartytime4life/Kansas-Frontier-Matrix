@@ -1,0 +1,12 @@
+[
+  {
+    "name": "staff can read internal",
+    "context": {
+      "role": "staff",
+      "dataset_label": "internal"
+    },
+    "expect": {
+      "effect": "allow"
+    }
+  }
+]

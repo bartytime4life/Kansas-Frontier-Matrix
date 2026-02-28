@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PolicyContext",
+  "type": "object",
+  "required": [
+    "role",
+    "purpose",
+    "dataset_label"
+  ],
+  "properties": {
+    "role": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "dataset_label": {
+      "type": "string"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

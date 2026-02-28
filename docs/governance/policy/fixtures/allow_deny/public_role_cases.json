@@ -1,0 +1,22 @@
+[
+  {
+    "name": "public can read public",
+    "context": {
+      "role": "public",
+      "dataset_label": "public"
+    },
+    "expect": {
+      "effect": "allow"
+    }
+  },
+  {
+    "name": "public denied restricted",
+    "context": {
+      "role": "public",
+      "dataset_label": "restricted"
+    },
+    "expect": {
+      "effect": "deny"
+    }
+  }
+]
