@@ -120,14 +120,214 @@ Every guide MUST include:
 
 ```text
 docs/guides/
-├── README.md                     # You are here
-├── onboarding/                   # Dataset onboarding + domain bootstrap
-├── pipelines/                    # ETL/build pipelines and run receipts
-├── catalogs/                     # STAC/DCAT/PROV publishing + link checks
-├── apis/                         # Contract-first API patterns + policy boundary
-├── ui/                           # Map/Story/Focus UI usage + evidence surfaces
-├── governance/                   # Review workflows, policy labels, obligations
-└── runbooks/                     # Operational procedures (deploy, rollback, incidents)
+├── README.md
+│   # Index: what lives here, how guides are structured, how to contribute
+
+├── _shared/                             # Cross-cutting reference used by all guides
+│   ├── README.md
+│   ├── conventions.md                   # Filenames, numbering, linking, “Confirmed/Proposed/Unknown”
+│   ├── glossary.md                      # Canonical definitions + synonyms (domain + platform)
+│   ├── decision-log.md                  # Lightweight ADR index (links only)
+│   ├── evidence-model.md                # EvidenceRef/EvidenceBundle patterns (how to cite in UI)
+│   ├── policy-labels.md                 # Policy label taxonomy + redaction expectations
+│   ├── promotion-contract.md            # Minimum gates per zone + required receipts
+│   └── diagrams/
+│       ├── truth-path.mmd               # Mermaid source
+│       └── system-boundaries.mmd
+
+├── _templates/                          # Copy/paste starters (kept tiny, referenced everywhere)
+│   ├── README.md
+│   ├── meta-block-v2.md                 # HTML comment template + examples
+│   ├── guide-template.md                # Standard guide skeleton (purpose, scope, exclusions)
+│   ├── checklist-template.md            # Yes/No + evidence link fields
+│   ├── runbook-template.md              # Preconditions, steps, rollback, verification
+│   ├── adr-template.md                  # Short ADR template (problem, decision, tradeoffs)
+│   └── receipts/
+│       ├── run-receipt.schema.json      # Doc copy of receipt shape (source of truth may live elsewhere)
+│       ├── receipt.example.json
+│       └── receipt.fields.md
+
+├── onboarding/                          # Dataset onboarding + domain bootstrap
+│   ├── README.md
+│   ├── 00-overview.md                   # What “onboarding” means in KFM, who does what
+│   ├── 10-intake-triage.md              # Fast screen: license, sensitivity, viability, owner
+│   ├── 20-dataset-identity.md           # IDs, versioning, hashing, naming rules
+│   ├── 30-schema-and-samples.md         # Schema capture, sample rows, spatial/temporal extents
+│   ├── 40-sensitivity-and-redaction.md  # Default-deny, what to redact/generalize
+│   ├── 50-qa-rules.md                   # QA checks + thresholds + acceptance criteria
+│   ├── 60-promotion-readiness.md        # “Ready to promote” checklist + required artifacts
+│   ├── checklists/
+│   │   ├── dataset-intake-checklist.md
+│   │   ├── license-attribution-checklist.md
+│   │   ├── sensitivity-review-checklist.md
+│   │   └── publish-readiness-checklist.md
+│   ├── templates/
+│   │   ├── dataset-entry.yaml.example
+│   │   ├── dataset-spec.md.example
+│   │   ├── qa-spec.yaml.example
+│   │   └── provenance-notes.md.example
+│   └── examples/
+│       ├── example-public-dataset/
+│       │   ├── dataset-entry.yaml
+│       │   ├── dataset-spec.md
+│       │   ├── qa-spec.yaml
+│       │   └── receipt.example.json
+│       └── example-restricted-dataset/
+│           ├── dataset-entry.yaml
+│           ├── redaction-notes.md
+│           └── receipt.example.json
+
+├── pipelines/                           # ETL/build pipelines and run receipts
+│   ├── README.md
+│   ├── 00-overview.md                   # Pipeline concepts + where configs live
+│   ├── 10-pipeline-design-patterns.md   # Ingest/transform/index/catalog patterns
+│   ├── 20-run-receipts.md               # What is a receipt, required fields, storage
+│   ├── 30-validation-and-gates.md       # QA gates, fail-closed behavior, thresholds
+│   ├── 40-reproducibility.md            # Determinism, pinning versions, checksums
+│   ├── 50-observability.md              # Logs/metrics/traces, what’s required
+│   ├── 60-troubleshooting.md            # Common failures + “what to look at”
+│   ├── patterns/
+│   │   ├── ingestion/
+│   │   │   ├── pull-based.md
+│   │   │   ├── push-based.md
+│   │   │   └── incremental-refresh.md
+│   │   ├── transforms/
+│   │   │   ├── raster-pipeline.md
+│   │   │   ├── vector-pipeline.md
+│   │   │   └── time-series-pipeline.md
+│   │   └── publishing/
+│   │       ├── stac-build.md
+│   │       ├── dcat-build.md
+│   │       └── prov-build.md
+│   ├── receipts/
+│   │   ├── receipt-spec.md              # Human-readable receipt spec
+│   │   ├── examples/
+│   │   │   ├── success.json
+│   │   │   ├── failed-validation.json
+│   │   │   └── partial-run.json
+│   │   └── queries.md                   # “How to find the receipt for X”
+│   └── ci/
+│       ├── required-checks.md           # What CI must run for pipeline PRs
+│       └── local-dev.md                 # How to run pipelines locally (dev-only)
+
+├── catalogs/                            # STAC/DCAT/PROV publishing + link checks
+│   ├── README.md
+│   ├── 00-overview.md                   # Why catalogs exist + consumer expectations
+│   ├── 10-stac.md                       # Collections/items/assets conventions
+│   ├── 20-dcat.md                       # Dataset-level metadata + distribution links
+│   ├── 30-prov.md                       # Provenance chains + run-to-asset linkage
+│   ├── 40-link-checks.md                # Link integrity + CI gates
+│   ├── 50-versioning.md                 # How catalog versions map to dataset versions
+│   ├── schemas/
+│   │   ├── stac-profile.md              # House rules/profile
+│   │   ├── dcat-profile.md
+│   │   └── prov-profile.md
+│   ├── checklists/
+│   │   ├── stac-validation-checklist.md
+│   │   ├── dcat-validation-checklist.md
+│   │   └── prov-validation-checklist.md
+│   └── examples/
+│       ├── minimal-stac/
+│       ├── full-stac/
+│       └── dcat-plus-stac-plus-prov/
+
+├── apis/                                # Contract-first API patterns + policy boundary
+│   ├── README.md
+│   ├── 00-overview.md                   # What “governed API” means; PEP boundary rules
+│   ├── 10-contract-first.md             # OpenAPI-first workflow, review gates
+│   ├── 20-authn-authz.md                # Identity, roles, RBAC/ABAC mapping
+│   ├── 30-obligations.md                # Redaction/transform obligations (policy outputs)
+│   ├── 40-error-model.md                # Stable error codes + client behavior
+│   ├── 50-pagination-filtering.md       # Time-aware queries, bbox, search params
+│   ├── 60-audit-and-logging.md          # What gets logged, correlation IDs, receipts
+│   ├── patterns/
+│   │   ├── dataset-apis.md              # /datasets, /versions, /assets patterns
+│   │   ├── stac-apis.md                 # /stac collections/items/search patterns
+│   │   ├── evidence-apis.md             # /evidence resolve patterns
+│   │   └── focus-mode-apis.md           # /focus/ask contract + cite-or-abstain behavior
+│   ├── checklists/
+│   │   ├── api-review-checklist.md
+│   │   ├── policy-boundary-checklist.md
+│   │   └── breaking-change-checklist.md
+│   └── examples/
+│       ├── openapi-snippets/
+│       └── policy-test-fixtures/
+
+├── ui/                                  # Map/Story/Focus UI usage + evidence surfaces
+│   ├── README.md
+│   ├── 00-overview.md                   # UI surfaces + how they map to governed APIs
+│   ├── 10-evidence-first-ux.md           # Evidence panels, “why am I seeing this?”
+│   ├── 20-map-patterns.md               # Layers, legends, filters, time slider patterns
+│   ├── 30-story-nodes.md                # Story Node v3 usage, linking evidence
+│   ├── 40-focus-mode.md                 # Cite-or-abstain UI contract; citations UX
+│   ├── 50-accessibility.md              # A11y requirements for maps and stories
+│   ├── 60-performance.md                # Tile strategy, caching, progressive loading
+│   ├── design/
+│   │   ├── component-inventory.md       # Reusable components + props expectations
+│   │   ├── interaction-model.md         # Map interactions, keyboard, mobile
+│   │   └── visual-style.md              # Cartographic + UI style rules
+│   ├── checklists/
+│   │   ├── evidence-surface-checklist.md
+│   │   ├── story-publish-checklist.md
+│   │   └── a11y-checklist.md
+│   └── examples/
+│       ├── map-recipes/
+│       ├── story-recipes/
+│       └── focus-mode-recipes/
+
+├── governance/                          # Review workflows, policy labels, obligations
+│   ├── README.md
+│   ├── 00-overview.md                   # Governance model, roles, escalation
+│   ├── 10-policy-labels.md              # Label taxonomy + required handling
+│   ├── 20-review-workflows.md           # Intake review → promotion review → publish review
+│   ├── 30-obligations-catalog.md        # Obligation types and examples
+│   ├── 40-exceptions.md                 # When/how exceptions happen; time-boxing
+│   ├── 50-audit-ledger.md               # Required audit fields and retention guidance
+│   ├── checklists/
+│   │   ├── promotion-gate-checklist.md
+│   │   ├── redaction-approval-checklist.md
+│   │   └── release-approval-checklist.md
+│   ├── templates/
+│   │   ├── review-request.md
+│   │   ├── policy-decision-record.md
+│   │   └── incident-postmortem.md
+│   └── examples/
+│       ├── sample-policy-decision/
+│       └── sample-redaction-review/
+
+└── runbooks/                            # Operational procedures (deploy, rollback, incidents)
+    ├── README.md
+    ├── 00-index.md                      # “If X happens, go here”
+    ├── deploy/
+    │   ├── README.md
+    │   ├── api-deploy.md
+    │   ├── ui-deploy.md
+    │   ├── catalog-deploy.md
+    │   └── pipeline-scheduled-run.md
+    ├── rollback/
+    │   ├── README.md
+    │   ├── api-rollback.md
+    │   ├── ui-rollback.md
+    │   └── data-rollback.md             # If applicable; otherwise “no rollback, supersede”
+    ├── incidents/
+    │   ├── README.md
+    │   ├── severity-levels.md
+    │   ├── incident-response.md
+    │   ├── data-leak-response.md
+    │   ├── corrupted-index-response.md
+    │   └── degraded-performance.md
+    ├── operations/
+    │   ├── backups-and-restore.md
+    │   ├── key-rotation.md
+    │   ├── secret-management.md
+    │   ├── cost-controls.md
+    │   └── routine-health-checks.md
+    └── troubleshooting/
+        ├── README.md
+        ├── pipeline-failures.md
+        ├── stac-validation-failures.md
+        ├── api-authz-failures.md
+        └── ui-data-mismatch.md
 ```
 
 <!-- TODO: Update the tree to match the actual repo once the folder structure is finalized. -->
