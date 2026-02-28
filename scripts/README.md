@@ -9,11 +9,16 @@ created: 2026-02-26
 updated: 2026-02-28
 policy_label: public
 related:
-  - kfm://doc/???  # TODO: link to KFM governance/design guide in-repo
-tags: [kfm, scripts, ops, governance]
+  - kfm://doc/<TBD>  # TODO: link to in-repo KFM governance/design guide
+  - kfm://doc/<TBD>  # TODO: link to in-repo pipeline/tooling guide
+tags:
+  - kfm
+  - scripts
+  - ops
+  - governance
 notes:
   - This README documents conventions and governance expectations for scripts.
-  - Update the directory tree and registry to match the actual repo.
+  - This README describes the target contract; update the directory tree + registry to match the repo.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -24,19 +29,23 @@ Operational scripts for KFM ingestion, validation, cataloging, indexing, and mai
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![policy](https://img.shields.io/badge/policy-default--deny-critical)
-![governance](https://img.shields.io/badge/governance-receipts_required-orange)
+![gates](https://img.shields.io/badge/promotion-gates_required-orange)
+![receipts](https://img.shields.io/badge/receipts-required-orange)
 ![safety](https://img.shields.io/badge/safety-no_secrets-red)
+![posture](https://img.shields.io/badge/posture-fail--closed-critical)
 
 > [!IMPORTANT]
-> In KFM, “scripts” are **governed operations**. If a script can change what users see (directly or indirectly), it must be:
-> **scope-controlled**, **receipt-emitting**, and **fail-closed**.
+> In KFM, “scripts” are **governed operations**. If a script can change what users see (directly or indirectly),
+> it must be: **scope-controlled**, **receipt-emitting**, and **fail-closed**.
 
 ---
 
 ## Quick navigation
 
 - [Purpose](#purpose)
+- [Non-negotiables](#non-negotiables)
 - [Where this fits in the system](#where-this-fits-in-the-system)
+- [Promotion Contract gates](#promotion-contract-gates)
 - [Directory contract](#directory-contract)
 - [Directory layout](#directory-layout)
 - [Truth path IO discipline](#truth-path-io-discipline)
@@ -52,7 +61,7 @@ Operational scripts for KFM ingestion, validation, cataloging, indexing, and mai
 
 This directory exists for **operational scripts** that:
 
-- snapshot upstream sources into the **Truth Path** (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET),
+- snapshot upstream sources into the **Truth Path** (Upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED),
 - normalize and validate datasets (QA + schema + geo/time checks),
 - generate/validate catalogs (DCAT/STAC/PROV) and cross-links,
 - build **rebuildable projections** (search/graph/tiles/indexes) from canonical artifacts,
@@ -66,31 +75,87 @@ This directory exists for **operational scripts** that:
 
 ---
 
+## Non-negotiables
+
+These are KFM invariants that scripts must **preserve**:
+
+- **Truth Path** is enforced with lifecycle zones and promotion gates (no silent drift, reproducible runs).
+- **Promotion Contract** blocks publishing unless minimum gates are satisfied (fail closed).
+- **Trust membrane**: clients/UI never access stores directly; policy is enforced at the PEP/API boundary.
+- **Catalog triplet** (DCAT + STAC + PROV) is the evidence surface; links must resolve deterministically.
+- **Cite-or-abstain**: if citations/evidence cannot be verified, the system must abstain or reduce scope.
+
+> [!WARNING]
+> Scripts that mutate canonical storage without receipts, checksums, or provenance break auditability and must
+> be treated as a governance incident.
+
+[Back to top](#top)
+
+---
+
 ## Where this fits in the system
 
-Scripts typically execute *inside* the KFM Truth Path, and must not bypass enforcement boundaries.
+Scripts execute *inside* the KFM Truth Path. They must not bypass enforcement boundaries.
 
 ```mermaid
 flowchart LR
-  A[Upstream sources] --> B[scripts/acquire]
-  B --> C[data/raw]
-  C --> D[data/work or QUARANTINE]
-  D --> E[data/processed]
-  E --> F[data/catalog triplet]
-  F --> G[scripts/index]
-  G --> H[Rebuildable projections]
-  H --> I[Governed API]
-  I --> J[Map / Story / Focus UI]
+  U[Upstream sources] --> A[scripts acquire]
+  A --> R[RAW zone]
+  R --> T[scripts transform]
+  T --> W[WORK and QUARANTINE zone]
+  W --> P[PROCESSED zone]
+  P --> C[scripts catalog]
+  C --> K[CATALOG TRIPLET]
+  K --> I[scripts index]
+  I --> X[projections]
+  X --> S[PUBLISHED runtime]
+  S --> API[Governed API PEP]
+  API --> UI[Map Story Focus UI]
 ```
 
 ### Trust membrane reminder
 
 - UI/external clients **must not** access DB/object storage directly.
-- Scripts must not create “secret side channels” (e.g., copying restricted artifacts into public outputs).
+- Scripts must not create “side channels” (e.g., copying restricted artifacts into public outputs).
 - Enforcement is owned by **governed APIs** and promotion gates; scripts must **invoke** those mechanisms, not replace them.
 
-> [!WARNING]
-> Scripts that mutate canonical storage **without** receipts/checksums/provenance break auditability and must be treated as a governance incident.
+```mermaid
+flowchart LR
+  Client[UI and external clients] --> PEP[Governed API PEP]
+  PEP --> Policy[Policy engine]
+  PEP --> Evidence[Evidence resolver]
+  PEP --> Stores[Stores and projections]
+  Stores --> PEP
+```
+
+[Back to top](#top)
+
+---
+
+## Promotion Contract gates
+
+The **Promotion Contract** is the fail-closed mechanism that blocks a dataset version from reaching **PUBLISHED**
+unless minimum gates are satisfied.
+
+> [!IMPORTANT]
+> Promotion gates apply at each transition. The CATALOG/TRIPLET must cross-link identifiers so **EvidenceRefs resolve**
+> without guessing.
+
+### Minimum gates (v1)
+
+| Gate | What must be present | Script implications (examples) |
+|---|---|---|
+| **A — Identity & versioning** | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, content digests | Scripts must compute/verify hashes and record them in receipts/manifests. |
+| **B — Licensing & rights metadata** | License/rights fields + snapshot of upstream terms | Acquisition scripts must snapshot terms and fail closed if rights are unclear. |
+| **C — Sensitivity classification & redaction plan** | `policy_label` + obligations (generalize geometry, remove fields, etc.) | Scripts must apply obligations and avoid leaking restricted details in logs/receipts. |
+| **D — Catalog triplet validation** | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve | Catalog/validate scripts must schema-validate and link-check deterministically. |
+| **E — QA & thresholds** | Dataset-specific QA checks + documented thresholds | Transform scripts must emit QA reports; failures go to QUARANTINE. |
+| **F — Run receipt & audit record** | Run receipt capturing inputs, tooling, hashes, policy decisions; append-only audit record | All artifact-writing scripts must emit receipts; treat audit outputs as append-only. |
+| **G — Release manifest** | Promotion recorded in a release manifest referencing artifacts + digests | Promotion scripts must write a manifest that ties together IDs, digests, catalogs, QA, and approvals. |
+
+> [!NOTE]
+> These gates should be automatable in CI (schema validation, link-check, policy fixture tests, spec_hash golden tests).
+> If a gate cannot be evaluated, **fail closed**.
 
 [Back to top](#top)
 
@@ -116,7 +181,7 @@ flowchart LR
 - secrets (API keys, tokens, service-account JSON, kubeconfigs),
 - raw datasets or large artifacts (store in governed zones; don’t commit to git),
 - “one-off” scripts that aren’t reproducible or reviewed,
-- scripts that bypass policy enforcement (e.g., “just copy the restricted tiles to public”),
+- scripts that bypass policy enforcement (e.g., “just copy restricted tiles to public”),
 - scripts that print restricted coordinates/PII into logs or receipts.
 
 > [!TIP]
@@ -129,7 +194,8 @@ flowchart LR
 ## Directory layout
 
 > [!IMPORTANT]
-> Keep this tree accurate. If the repo structure differs, update this section **and** the Script Registry.
+> This section describes the **target contract**.
+> Keep it accurate: after changes, run `tree -L 2 scripts/` and update this README **and** the Script Registry.
 
 ```text
 scripts/
@@ -141,159 +207,20 @@ scripts/
 │  ├─ schemas/                                    # Schemas for registry + receipt shapes (optional but recommended)
 │  │  ├─ scripts_registry.v1.schema.json          # Validates scripts.v1.json
 │  │  ├─ run_receipt.v1.schema.json               # Validates run receipts emitted by scripts
-│  │  ├─ checksums.v1.schema.json                 # Validates checksums.json (if standardized)
-│  │  ├─ acquisition_manifest.v1.schema.json      # Validates RAW acquisition manifest.json (if standardized here)
-│  │  └─ qa_report.v1.schema.json                 # Validates QA report shape (if standardized)
+│  │  └─ promotion_manifest.v1.schema.json        # Validates promotion/release manifests (if standardized)
 │  ├─ fixtures/                                   # Fixtures for CI validation of schemas + registry correctness
 │  │  ├─ valid/
-│  │  │  ├─ scripts.v1.valid.json                 # Minimal valid registry example
-│  │  │  ├─ run_receipt.v1.valid.json
-│  │  │  └─ acquisition_manifest.v1.valid.json
-│  │  ├─ invalid/
-│  │  │  ├─ scripts.v1.invalid.json               # Intentionally broken examples (must fail validation)
-│  │  │  ├─ run_receipt.v1.missing_checksums.json
-│  │  │  └─ acquisition_manifest.v1.missing_terms.json
-│  │  └─ README.md                                # How fixtures are used in CI (what should fail, and why)
+│  │  └─ invalid/
 │  └─ README.md                                   # Registry contract + how to add a script entry (fail-closed rules)
 │
 ├─ acquire/                                       # Upstream snapshot → RAW (append-only; never served)
-│  ├─ README.md                                   # Acquisition rules: terms snapshot, checksums, append-only posture
-│  ├─ sources/                                    # (Optional) per-source configs used by acquire scripts (NO secrets)
-│  │  ├─ README.md
-│  │  └─ <source_id>.yaml                         # e.g., endpoints, cadence, parsing hints, zone paths (no creds)
-│  ├─ acquire_<source_or_dataset>.sh              # Shell entrypoint wrappers (optional)
-│  ├─ acquire_<source_or_dataset>.py              # Python entrypoint (optional)
-│  ├─ acquire_<source_or_dataset>.ts              # TS/Node entrypoint (optional)
-│  ├─ _templates/                                 # (Optional) boilerplates for new acquisition scripts
-│  │  ├─ manifest.template.json
-│  │  └─ terms_snapshot.template.md
-│  ├─ tests/                                      # (Optional) tiny smoke tests (use synthetic fixtures)
-│  │  └─ test_acquire_smoke.sh
-│  └─ fixtures/                                   # (Optional) tiny synthetic upstream payloads for test runs
-│     └─ upstream_sample.json
-│
 ├─ transform/                                     # RAW/WORK → WORK/PROCESSED (deterministic transforms)
-│  ├─ README.md                                   # Determinism rules + QA requirements + zone discipline
-│  ├─ transforms/                                 # (Optional) transform definitions/configs (NO secrets)
-│  │  ├─ README.md
-│  │  └─ <dataset_slug>.yaml                      # transform spec: inputs, outputs, params, validators
-│  ├─ transform_<dataset>.sh                      # Wrapper entrypoint (optional)
-│  ├─ transform_<dataset>.py                      # Transform runner (optional)
-│  ├─ transform_<dataset>.ts                      # Transform runner (optional)
-│  ├─ qa/                                         # (Optional) shared QA helpers invoked by transforms
-│  │  ├─ README.md
-│  │  ├─ schema_checks.py
-│  │  ├─ geo_checks.py
-│  │  └─ time_checks.py
-│  ├─ tests/                                      # Unit/smoke tests for transform logic
-│  │  ├─ test_transform_smoke.sh
-│  │  └─ test_qa_rules.py
-│  └─ fixtures/                                   # Tiny synthetic datasets for deterministic tests
-│     ├─ input/
-│     └─ expected/
-│
 ├─ validate/                                      # Validators + promotion-gate checks (fail-closed)
-│  ├─ README.md                                   # What validators exist + how they gate merges/promotions
-│  ├─ validate_catalog_triplet.sh                 # DCAT/STAC/PROV schema validation + cross-link lint
-│  ├─ validate_catalog_triplet.py                 # (Optional) richer validator implementation
-│  ├─ validate_policy_fixtures.sh                 # Policy parity tests (CI/runtime semantics)
-│  ├─ validate_policy_fixtures.py
-│  ├─ validate_promotion_gates.sh                 # Gate checklist + reason codes (must block on failure)
-│  ├─ validate_promotion_gates.py
-│  ├─ rules/                                      # (Optional) validation rules/config toggles
-│  │  ├─ README.md
-│  │  ├─ linkcheck.rules.yaml
-│  │  └─ gates.rules.yaml
-│  ├─ reports/                                    # (Optional) normalized report writers (JSON outputs)
-│  │  ├─ README.md
-│  │  └─ write_validation_report.py
-│  ├─ tests/                                      # Validation unit tests (fixtures-driven)
-│  │  ├─ test_linkcheck_rules.py
-│  │  └─ test_gate_rules.py
-│  └─ fixtures/                                   # Known-good / known-bad catalog + manifest fixtures
-│     ├─ triplet_valid/
-│     └─ triplet_invalid/
-│
 ├─ catalog/                                       # Catalog generation + normalization (DCAT/STAC/PROV)
-│  ├─ README.md                                   # Contract: how catalogs are built + cross-linked + validated
-│  ├─ build_dcat.sh
-│  ├─ build_dcat.py
-│  ├─ build_stac.sh
-│  ├─ build_stac.py
-│  ├─ build_prov.sh
-│  ├─ build_prov.py
-│  ├─ crosslink_triplet.sh                        # Ensures DCAT↔STAC↔PROV pointers resolve deterministically
-│  ├─ normalize_catalogs.py                       # Stable formatting (key order, newline, etc.) for clean diffs
-│  ├─ templates/                                  # (Optional) templates for catalog records
-│  │  ├─ dcat.template.jsonld
-│  │  ├─ stac.collection.template.json
-│  │  └─ prov.template.jsonld
-│  ├─ tests/
-│  │  ├─ test_catalog_build_smoke.sh
-│  │  └─ test_crosslinks.py
-│  └─ fixtures/
-│     ├─ input_minimal/
-│     └─ expected_minimal/
-│
 ├─ index/                                         # Rebuildable projections (never canonical truth)
-│  ├─ README.md                                   # Indexing posture + rebuild-from-canonical rule
-│  ├─ build_search_index.sh                       # Builds search/vector indexes from canonical artifacts
-│  ├─ build_search_index.py
-│  ├─ build_graph_projection.sh                   # Builds graph projections/edges from catalogs/prov
-│  ├─ build_graph_projection.py
-│  ├─ build_tiles.sh                              # Builds tiles/pmtiles/caches from processed artifacts
-│  ├─ build_tiles.py
-│  ├─ configs/                                    # (Optional) index configs (NO secrets)
-│  │  ├─ search_index.yaml
-│  │  ├─ graph_projection.yaml
-│  │  └─ tiles.yaml
-│  ├─ tests/                                      # Smoke tests (offline where possible)
-│  │  └─ test_index_smoke.sh
-│  └─ fixtures/
-│     └─ tiny_processed_inputs/
-│
 ├─ maintenance/                                   # One-off ops (migrations/backfills) — reversible + receipted
-│  ├─ README.md                                   # Rules: scope control, rollback required, receipts always
-│  ├─ migrate_<thing>.sh
-│  ├─ migrate_<thing>.py
-│  ├─ backfill_<thing>.sh
-│  ├─ backfill_<thing>.py
-│  ├─ plans/                                      # (Optional) machine-readable migration/backfill declarations
-│  │  ├─ README.md
-│  │  └─ <MIGRATION_ID>.yaml
-│  ├─ rollback/                                   # (Optional) rollback helpers/scripts (required when declared)
-│  │  ├─ README.md
-│  │  └─ rollback_<thing>.py
-│  ├─ tests/
-│  │  └─ test_rollback_smoke.sh
-│  └─ fixtures/
-│     └─ tiny_state/
-│
-├─ lib/                                           # Shared helpers (pure helpers preferred; minimal side effects)
-│  ├─ README.md                                   # Library rules + stable interfaces
-│  ├─ receipt.py                                  # Helper to write run receipts consistently
-│  ├─ receipt.sh
-│  ├─ checksums.py                                # Helper to compute/write checksums.json
-│  ├─ checksums.sh
-│  ├─ paths.py                                    # Canonical path helpers for truth-path zones
-│  ├─ paths.sh
-│  ├─ log.py                                      # Structured logging helpers (policy-safe)
-│  ├─ log.sh
-│  ├─ json_canon.py                               # Canonical JSON writer (stable ordering) for hashing/diffing
-│  ├─ env.py                                      # Env var parsing + validation (no secrets printed)
-│  └─ policy_safe_errors.py                       # Helpers for policy-safe error shaping in scripts
-│
-└─ _shared/                                       # Optional: tiny safe fixtures and test helpers
-   ├─ README.md
-   ├─ data/                                       # Synthetic fixtures only (policy-safe; tiny; versioned)
-   │  ├─ toy_points.geojson
-   │  ├─ toy_table.csv
-   │  └─ toy_story.md
-   └─ scripts/                                    # Helper scripts used across scripts/ (fmt, lint, normalize)
-      ├─ fmt.sh
-      ├─ lint.sh
-      ├─ normalize_outputs.sh
-      └─ smoke_all.sh
+├─ lib/                                           # Shared helpers (prefer pure helpers; minimal side effects)
+└─ _shared/                                       # Optional: tiny policy-safe fixtures and test helpers
 ```
 
 [Back to top](#top)
@@ -311,9 +238,11 @@ Scripts must respect KFM’s lifecycle zones and mutability rules.
 | PROCESSED | Publishable outputs (immutable per version) | Deterministic; digest-addressed; no “hand fixes” without provenance. |
 | CATALOG/TRIPLET | DCAT + STAC + PROV + receipts + promotion manifest | Must validate + cross-link; this is the evidence surface. |
 | PROJECTIONS | Search/graph/tiles/db indexes | Rebuildable only; never treated as source truth. |
+| PUBLISHED | Governed runtime surfaces (API + UI) | Nothing reaches runtime without passing gates; logs/errors must remain policy-safe. |
 
 > [!WARNING]
-> A script that writes “public outputs” must never read from restricted artifacts unless policy explicitly allows and obligations are applied.
+> A script that writes “public outputs” must never read from restricted artifacts unless policy explicitly allows and
+> obligations are applied.
 
 [Back to top](#top)
 
@@ -325,47 +254,47 @@ Every script that produces artifacts **must** emit a run receipt that makes the 
 
 ### Receipt rules (non-negotiable)
 
-- Enumerate **inputs and outputs** with checksums.
+- Enumerate **inputs and outputs** with digests/checksums.
 - Record enough environment detail to reproduce the run (prefer container image digests).
 - Include policy outcomes (decision + obligations + reason codes) when relevant.
 - Never store secrets, raw restricted coordinates, or PII in receipts.
+- Treat the audit trail as **append-only**.
 
 ### Recommended receipt placement
 
-- Promotion-affecting runs: under the dataset’s catalog receipts, e.g.:
+- Promotion-affecting runs (catalog/prov/publish): near the dataset version’s catalog artifacts, e.g.:
   - `data/catalog/<dataset_slug>/<dataset_version_id>/receipts/<run_id>.json`
 - Work-stage runs: under the work run, e.g.:
   - `data/work/<dataset_slug>/<work_run_id>/receipts/<run_id>.json`
 
 > [!NOTE]
-> Exact paths are repo-specific. The invariant is: **discoverable, deterministic location** and **cross-linked to catalogs/provenance** when promotion is involved.
+> Exact paths are repo-specific. The invariant is: **discoverable, deterministic location** and cross-linked from catalogs/provenance when promotion is involved.
 
-### Minimal receipt shape (template)
+<details>
+<summary><strong>Minimal receipt shape (template)</strong></summary>
 
 ```json
 {
   "run_id": "kfm://run/2026-02-28T12:00:00Z.abcd",
-  "run_kind": "acquire|transform|validate|catalog|index|maintenance",
-  "started_at": "2026-02-28T12:00:00Z",
-  "ended_at": "2026-02-28T12:05:00Z",
   "actor": { "principal": "svc:pipeline", "role": "pipeline" },
-  "git": { "commit": "deadbeef", "dirty": false },
+  "operation": "acquire|transform|validate|catalog|index|maintenance",
 
-  "command": "scripts/transform/transform_example_dataset.py --dataset example_dataset --spec configs/...",
-
-  "parameters": {
-    "dataset_slug": "example_dataset",
-    "spec_hash": "sha256:...",
-    "dry_run": false
-  },
+  "dataset_version_id": "2026-02.abcd1234",
+  "created_at": "2026-02-28T12:05:00Z",
 
   "inputs": [
-    { "uri": "data/raw/example_dataset/2026-02-28T11:00:00Z.abcd/artifacts/source.csv", "sha256": "sha256:..." }
+    { "uri": "data/raw/example_dataset/<acq_id>/artifacts/source.csv", "digest": "sha256:..." }
   ],
   "outputs": [
-    { "uri": "data/processed/example_dataset/2026-02.abcd1234/artifacts/events.parquet", "sha256": "sha256:..." },
-    { "uri": "data/processed/example_dataset/2026-02.abcd1234/qa/validation_report.json", "sha256": "sha256:..." }
+    { "uri": "data/processed/example_dataset/<dataset_version_id>/events.parquet", "digest": "sha256:..." },
+    { "uri": "data/processed/example_dataset/<dataset_version_id>/qa/report.json", "digest": "sha256:..." }
   ],
+
+  "environment": {
+    "container_digest": "sha256:img...",
+    "git_commit": "deadbeef",
+    "params_digest": "sha256:..."
+  },
 
   "validation": {
     "status": "pass",
@@ -376,15 +305,17 @@ Every script that produces artifacts **must** emit a run receipt that makes the 
   },
 
   "policy": {
-    "decision": "allow",
+    "decision_id": "kfm://policy_decision/xyz",
     "policy_label": "public",
-    "obligations_applied": ["require_attribution"],
+    "obligations_applied": [],
     "reason_codes": ["POLICY.ALLOW.PUBLIC.READ"]
   },
 
   "notes": "Optional human context. Must be policy-safe."
 }
 ```
+
+</details>
 
 [Back to top](#top)
 
@@ -425,7 +356,7 @@ Use names that describe intent:
 
 - Default-deny when licensing/sensitivity is unclear.
 - Never print restricted coordinates/attributes into logs or receipts.
-- If a required gate cannot be evaluated, **fail closed** and write the remediation path.
+- If a required gate cannot be evaluated, **fail closed** and emit a remediation path.
 
 [Back to top](#top)
 
@@ -438,12 +369,13 @@ Use this checklist to keep changes small, reviewable, and governed:
 - [ ] Script has a clear purpose statement and a stable name.
 - [ ] Inputs and outputs are explicit (paths/URIs + formats).
 - [ ] Script writes only to the correct zone(s).
-- [ ] Script emits a run receipt and checksums for outputs.
+- [ ] Script emits a run receipt and output digests.
 - [ ] Script is idempotent **or** documents non-idempotence + rollback.
 - [ ] Script does not embed or print secrets.
-- [ ] Script does not leak restricted information (incl. “restricted existence” inference).
-- [ ] If script affects promotion/publishing, it runs required Promotion Contract gates (or is run by the promotion runner).
+- [ ] Script does not leak restricted information (including “restricted existence” inference).
+- [ ] If script affects promotion/publishing, it runs required Promotion Contract gates (or is run by a promotion runner).
 - [ ] Add an entry to the Script Registry (`scripts/registry/scripts.v1.json`).
+- [ ] Add/adjust CODEOWNERS so scripts are reviewed by the right stewards.
 
 ### Script header (copy/paste)
 
@@ -452,8 +384,10 @@ Purpose:
 Inputs:
 Outputs:
 Zones touched:
+Promotion gates impacted:
 Policy considerations:
 Receipt path:
+Rollback (if non-idempotent):
 Owner:
 ```
 
@@ -465,7 +399,7 @@ Owner:
 
 To keep scripts discoverable and reviewable, maintain a machine-readable registry.
 
-- **Registry file:** `scripts/registry/scripts.v1.json`
+- **Registry file (target):** `scripts/registry/scripts.v1.json`
 - **Rule:** if a script exists, it must be registered with an owner and declared zones.
 
 ### Recommended registry fields
@@ -490,7 +424,7 @@ To keep scripts discoverable and reviewable, maintain a machine-readable registr
 ## Troubleshooting
 
 ### “It ran, but I can’t reproduce the output”
-- Confirm a run receipt exists and includes exact inputs/outputs + checksums.
+- Confirm a run receipt exists and includes exact inputs/outputs + digests.
 - Confirm environment pinning (container digest / tool versions) is present.
 - Confirm the same spec/config inputs (and `spec_hash`) were used.
 
@@ -498,8 +432,9 @@ To keep scripts discoverable and reviewable, maintain a machine-readable registr
 Common causes:
 - missing or unclear license/rights metadata,
 - missing policy label or unresolved sensitivity classification,
-- schema/linkcheck failures (DCAT/STAC/PROV),
-- missing checksums or receipts required by promotion gates.
+- catalog triplet schema/linkcheck failures,
+- missing digests, receipts, or release manifest required by promotion gates,
+- QA thresholds not met → quarantine.
 
 ### “How do I know it’s safe to run?”
 - It should be receipt-emitting, deterministic, and scoped to specific zones.
