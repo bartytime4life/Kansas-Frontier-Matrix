@@ -485,277 +485,300 @@ apps/ or web/apps/
 Use only if the repo does not already enforce a different convention.
 
 ```text
-apps/
-├─ README.md                                  # Directory contract + app registry index (you already drafted this)
+apps/                                                            | # App surfaces (UI + services) + governed registry
+├─ README.md                                                     | # Directory contract + App Registry index (human-readable)
 │
-├─ registry/
-│  ├─ README.md                               # Explains registry purpose + DoD + how CI validates it
-│  ├─ apps.v1.json                            # Machine-readable App Registry (canonical list of app surfaces)
-│  ├─ fixtures/                               # Small fixtures for CI validation (no secrets; policy-safe)
-│  │  ├─ apps.v1.minimal.json
-│  │  └─ apps.v1.invalid.examples.json
-│  └─ _generated/                             # ⚠️ Generated snapshots (gitignored or committed by policy)
-│     └─ manifests.index.json                 # Flattened index from per-app kfm.app.json (optional)
+├─ registry/                                                     | # Machine-readable app inventory + CI validation fixtures
+│  ├─ README.md                                                  | # Registry purpose + DoD + CI validation rules
+│  ├─ apps.v1.json                                               | # Canonical App Registry (names, owners, policy labels, capabilities)
+│  ├─ fixtures/                                                  | # CI fixtures (no secrets; policy-safe)
+│  │  ├─ apps.v1.minimal.json                                    | # Smallest valid registry example
+│  │  └─ apps.v1.invalid.examples.json                           | # Intentionally invalid cases for fail-closed validation
+│  └─ _generated/                                                | # ⚠️ Generated snapshots (gitignored or policy-committed)
+│     └─ manifests.index.json                                    | # Optional flattened index from per-app manifests
 │
-├─ map/
-│  ├─ README.md                               # ✅ App README (purpose, contracts, trust surfaces, run, tests)
-│  ├─ kfm.app.json                            # ✅ App manifest (policy_label, contracts, trust surfaces, view_state)
-│  ├─ Dockerfile                              # ⚠️ If deploying this app as a container
-│  ├─ public/                                 # ⚠️ Static assets (icons, fonts). No secrets.
-│  │  ├─ icons/
-│  │  └─ branding/
-│  └─ src/
-│     ├─ main.*                               # ✅ App entrypoint (framework-specific)
-│     ├─ app.*                                # ✅ Root app shell (routing/layout)
-│     ├─ routes/                               # ✅ Route definitions + loaders (contract-consumer only)
-│     │  ├─ index.*
-│     │  ├─ layer.*
-│     │  ├─ dataset.*
-│     │  └─ error.*                           # Policy-safe error boundary (no restricted inference)
-│     │
-│     ├─ config/                               # ✅ Runtime configuration (env parsing, feature flags)
-│     │  ├─ env.*                              # Reads KFM_API_BASE_URL, KFM_ENV, etc.
-│     │  ├─ featureFlags.*                     # No policy logic—UI toggles only
-│     │  └─ buildInfo.*                        # Version/build metadata for trust badges (policy-safe)
-│     │
-│     ├─ adapters/                             # ✅ Governed API clients + DTO mapping (no direct DB/storage)
-│     │  ├─ apiClient.*                        # Base client: auth headers, retries, request_id handling
-│     │  ├─ catalogApi.*                       # Uses governed catalog endpoints
-│     │  ├─ tilesApi.*                         # Tiles endpoint client (policy-aware caching headers)
-│     │  ├─ queryApi.*                         # Spatial/temporal query endpoints (bbox/time)
-│     │  ├─ evidenceApi.*                      # Evidence resolver client
-│     │  └─ auditApi.*                         # Audit receipt lookup (policy-safe display)
-│     │
-│     ├─ trust/                                # ✅ Trust membrane UX components (render only what API returns)
-│     │  ├─ EvidenceDrawer/                    # ✅ EvidenceBundle UI (bundle digest, rights, obligations, receipts)
-│     │  │  ├─ EvidenceDrawer.*
-│     │  │  ├─ EvidenceBundleCard.*
-│     │  │  ├─ LicenseAttribution.*
-│     │  │  ├─ PolicyBadge.*
-│     │  │  └─ UntrustedEvidence.*
-│     │  ├─ ReceiptViewer/                     # ✅ Safe viewer for run_receipts/promotion manifests
-│     │  │  ├─ ReceiptViewer.*
-│     │  │  ├─ ReceiptSchemaValidate.*
-│     │  │  └─ UnverifiedReceipt.*
-│     │  ├─ TrustBadges/                       # ✅ DatasetVersion / policy label / validation status (policy-safe)
-│     │  │  ├─ DatasetVersionBadge.*
-│     │  │  ├─ ValidationBadge.*
-│     │  │  └─ FreshnessBadge.*
-│     │  └─ DenyAbstain/                       # ✅ Policy-safe deny/abstain patterns
-│     │     ├─ PolicyDenyPanel.*
-│     │     ├─ AbstainPanel.*
-│     │     └─ RequestAccessPanel.*            # Points to steward workflow (no leakage)
-│     │
-│     ├─ map/                                  # 🧩 Map-specific modules
-│     │  ├─ engine/                            # Map engine wrapper (implementation detail)
-│     │  │  ├─ MapCanvas.*
-│     │  │  ├─ CameraState.*
-│     │  │  └─ Interaction.*
-│     │  ├─ layers/                            # Layer registry + rendering configuration
-│     │  │  ├─ layerRegistry.*                 # Layer list from governed API/catalog
-│     │  │  ├─ styleAdapters.*                 # Styling inputs (no secrets)
-│     │  │  └─ layerState.*                    # Visible/hidden, opacity, etc.
-│     │  ├─ timeline/                          # Time-aware UI controls
-│     │  │  ├─ TimeSlider.*
-│     │  │  ├─ ValidVsTransactionTime.*        # Bitemporal UI (if needed)
-│     │  │  └─ TimeWindowState.*
-│     │  ├─ inspect/                           # Feature inspect → EvidenceRef → EvidenceBundle
-│     │  │  ├─ FeatureInspectPanel.*
-│     │  │  ├─ OnClickEvidenceRef.*
-│     │  │  └─ InspectToEvidenceFlow.*
-│     │  └─ exports/                           # Export UI (server-side permission check required)
-│     │     ├─ ExportPanel.*
-│     │     ├─ ExportPolicyNotice.*
-│     │     └─ ExportRequests.*                # Calls governed export endpoints (if available)
-│     │
-│     ├─ view_state/                            # ✅ Reproducible view state for share links / story replay
-│     │  ├─ ViewStateSchema.*                  # Stable schema for serialization
-│     │  ├─ encodeViewState.*                  # Tokenize/encode (no secrets)
-│     │  ├─ decodeViewState.*                  # Validate + fail closed if invalid
-│     │  └─ normalizeViewState.*               # Canonicalization for deterministic shares
-│     │
-│     ├─ components/                            # ✅ App-specific UI components (avoid duplicating shared components)
-│     │  ├─ Layout.*
-│     │  ├─ TopNav.*
-│     │  ├─ SidePanel.*
-│     │  └─ LoadingErrorStates.*
-│     │
-│     ├─ state/                                 # ✅ State management (framework-agnostic naming)
-│     │  ├─ store.*
-│     │  ├─ selectors.*
-│     │  └─ persistence.*                      # Only for view_state; never store secrets
-│     │
-│     ├─ telemetry/                             # ✅ Observability hooks (policy-safe)
-│     │  ├─ otel.*
-│     │  ├─ analytics.*                        # No PII; policy label may restrict event fields
-│     │  └─ redaction.*                        # Redact client logs (defense-in-depth)
-│     │
-│     └─ tests/
-│        ├─ unit/                               # ✅ Component + adapter tests
-│        ├─ integration/                        # ✅ Evidence resolve flow, policy-safe errors, view_state roundtrip
-│        └─ e2e/                                # ⚠️ End-to-end flows (map → inspect → evidence drawer)
+├─ api/                                                          | # ✅ Governed API (runtime trust membrane / PEP)
+│  ├─ README.md                                                  | # Service overview, run/dev, contracts, policy, observability
+│  ├─ kfm.app.json                                               | # ✅ App manifest (policy_label, contracts, capabilities)
+│  ├─ Dockerfile                                                 | # ⚠️ If deploying as a container
+│  ├─ src/                                                       | # API source
+│  │  ├─ server.ts                                               | # Service bootstrap (HTTP server wiring)
+│  │  ├─ api/                                                    | # HTTP boundary (routes + middleware)
+│  │  │  ├─ routes/                                              | # Route modules (thin handlers)
+│  │  │  │  ├─ catalog.ts                                        | # /api/v1/datasets + registry endpoints (WP-05)
+│  │  │  │  ├─ evidence.ts                                       | # EvidenceRef -> EvidenceBundle (WP-04)
+│  │  │  │  ├─ stories.ts                                        | # Story publish/read (WP-07)
+│  │  │  │  ├─ tiles.ts                                          | # Policy-safe tiles (rendering-safe map tiles)
+│  │  │  │  └─ focus.ts                                          | # Focus Mode ask orchestration boundary (WP-08)
+│  │  │  └─ middleware/                                          | # Cross-cutting HTTP concerns (auth/policy/audit/errors)
+│  │  │     ├─ auth.ts                                           | # Authentication + session extraction
+│  │  │     ├─ policy.ts                                         | # PEP policy checks (allow/deny + obligations)
+│  │  │     ├─ audit.ts                                          | # Audit event emission hooks (request/decision receipts)
+│  │  │     └─ errors.ts                                         | # Policy-safe error mapping (no leakage)
+│  │  ├─ services/                                               | # Usecase implementations (business logic; policy-aware)
+│  │  │  ├─ evidence_resolver.ts                                 | # Evidence resolution + bundle assembly
+│  │  │  ├─ catalog_registry.ts                                  | # Dataset discovery + registry-backed listings
+│  │  │  ├─ story_publisher.ts                                   | # Story publish flow with citation resolution
+│  │  │  └─ focus_orchestrator.ts                                | # Focus ask flow (cite-or-abstain handshake)
+│  │  └─ adapters/                                               | # IO + external systems (stores, databases, PDP)
+│  │     ├─ object_store.ts                                      | # Object storage adapter (S3/GCS/FS; policy-safe paths)
+│  │     ├─ postgis.ts                                           | # PostGIS adapter (spatial storage/query)
+│  │     ├─ search.ts                                            | # Search adapter (index/query)
+│  │     ├─ graph.ts                                             | # Graph adapter (lineage/provenance queries)
+│  │     └─ opa.ts                                               | # OPA/PDP adapter (decision + obligations)
+│  └─ tests/                                                     | # Service tests (policy + contracts + integration)
+│     ├─ integration/                                            | # API/service integration tests (adapters + policy)
+│     └─ contract/                                               | # OpenAPI/DTO compatibility tests (backward-compat gates)
 │
-├─ story/
-│  ├─ README.md
-│  ├─ kfm.app.json
-│  ├─ Dockerfile                                # ⚠️
-│  ├─ public/                                   # ⚠️
-│  └─ src/
-│     ├─ main.*
-│     ├─ app.*
-│     ├─ routes/
-│     │  ├─ index.*
-│     │  ├─ story.*                             # Story Node view
-│     │  ├─ claim.*                             # Claim-level deep links (citations)
-│     │  └─ error.*                             # Policy-safe error boundary
-│     ├─ adapters/                              # Same pattern: governed API only
-│     │  ├─ apiClient.*
-│     │  ├─ storiesApi.*                        # Fetch story nodes/sidecars via governed API
-│     │  ├─ evidenceApi.*
-│     │  └─ auditApi.*
-│     ├─ trust/                                 # ✅ EvidenceDrawer + ReceiptViewer + badges + deny/abstain
-│     │  └─ (same structure as map, reused via shared packages if available)
-│     ├─ stories/                               # 🧩 Story features
-│     │  ├─ renderer/                           # Markdown rendering (safe mode; no raw HTML by default)
-│     │  ├─ citations/                          # CITATION parsing → EvidenceRef resolve
-│     │  ├─ sidecar/                            # Story sidecar JSON (map state, citations, review state)
-│     │  ├─ playback/                           # View_state replay into map (via Map surface or embedded map)
-│     │  └─ review/                             # 🔒 Review state banners (draft/review/published)
-│     ├─ view_state/                            # ✅ Must be compatible with Map view_state schema
-│     └─ tests/
-│        ├─ unit/
-│        ├─ integration/                        # Claim → citation → evidence resolve hard gate
-│        └─ e2e/                                # ⚠️ Story playback + evidence drawer
+├─ map/                                                          | # Map Explorer UI (map-first browse + inspect + export)
+│  ├─ README.md                                                  | # ✅ App README (purpose, contracts, trust surfaces, run, tests)
+│  ├─ kfm.app.json                                               | # ✅ App manifest (policy_label, contracts, capabilities)
+│  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  ├─ public/                                                    | # ⚠️ Static assets (icons, fonts). No secrets.
+│  │  ├─ icons/                                                  | # App icons (safe to publish)
+│  │  └─ branding/                                               | # Brand assets (safe to publish)
+│  └─ src/                                                       | # UI source
+│     ├─ main.*                                                  | # ✅ App entrypoint (framework-specific)
+│     ├─ app.*                                                   | # ✅ Root shell (routing/layout)
+│     ├─ routes/                                                 | # Route-level screens + error boundaries
+│     │  ├─ index.*                                              | # Landing / default map view
+│     │  ├─ layer.*                                              | # Layer browsing/config routes
+│     │  ├─ dataset.*                                            | # Dataset details / open-in-map routes
+│     │  └─ error.*                                              | # Policy-safe error boundary (no leakage)
+│     ├─ config/                                                 | # Runtime config (read-only env + build metadata)
+│     │  ├─ env.*                                                | # Reads KFM_API_BASE_URL, KFM_ENV, etc.
+│     │  ├─ featureFlags.*                                       | # UI toggles only (no policy bypass)
+│     │  └─ buildInfo.*                                          | # Version/build metadata for trust badges
+│     ├─ adapters/                                               | # ✅ Governed API clients + DTO mapping (no direct DB)
+│     │  ├─ apiClient.*                                          | # Base HTTP client (headers, retries, tracing)
+│     │  ├─ catalogApi.*                                         | # Catalog endpoints client
+│     │  ├─ tilesApi.*                                           | # Tiles endpoints client
+│     │  ├─ queryApi.*                                           | # Query/search endpoints client
+│     │  ├─ evidenceApi.*                                        | # Evidence resolve endpoints client
+│     │  └─ auditApi.*                                           | # Audit endpoints client (write-only where appropriate)
+│     ├─ trust/                                                  | # ✅ Trust membrane UX components (evidence, receipts, deny/abstain)
+│     │  ├─ EvidenceDrawer/                                      | # Evidence Drawer UI + bundle presentation
+│     │  │  ├─ EvidenceDrawer.*                                  | # Drawer container + state orchestration
+│     │  │  ├─ EvidenceBundleCard.*                              | # Bundle summary card (hashes, sources, completeness)
+│     │  │  ├─ LicenseAttribution.*                              | # License + attribution rendering (policy-safe)
+│     │  │  ├─ PolicyBadge.*                                     | # Policy label + obligations badge rendering
+│     │  │  └─ UntrustedEvidence.*                               | # Untrusted/missing evidence UX (abstain posture)
+│     │  ├─ ReceiptViewer/                                       | # Run receipt + audit receipt viewing
+│     │  │  ├─ ReceiptViewer.*                                   | # Receipt renderer
+│     │  │  ├─ ReceiptSchemaValidate.*                           | # Client-side validation of receipt shape (defensive)
+│     │  │  └─ UnverifiedReceipt.*                               | # UX for invalid/unverified receipts
+│     │  ├─ TrustBadges/                                         | # Inline trust signals (freshness/validation/version)
+│     │  │  ├─ DatasetVersionBadge.*                             | # Dataset/version identifiers
+│     │  │  ├─ ValidationBadge.*                                 | # Validation status (schema/profile)
+│     │  │  └─ FreshnessBadge.*                                  | # Freshness/updated-at surfaces
+│     │  └─ DenyAbstain/                                         | # Allow/deny/abstain UX flows + access requests
+│     │     ├─ PolicyDenyPanel.*                                 | # Deny reason + obligations display
+│     │     ├─ AbstainPanel.*                                    | # Abstain reason + next steps
+│     │     └─ RequestAccessPanel.*                              | # Access request UX (policy-compliant)
+│     ├─ map/                                                    | # 🧩 Map-specific modules (engine/layers/timeline/inspect/exports)
+│     │  ├─ engine/                                              | # Map engine primitives (canvas, camera, interaction)
+│     │  │  ├─ MapCanvas.*                                       | # Map rendering surface
+│     │  │  ├─ CameraState.*                                     | # Camera state + transitions
+│     │  │  └─ Interaction.*                                     | # Input handling (click/drag/hover)
+│     │  ├─ layers/                                              | # Layer registry + styling + state
+│     │  │  ├─ layerRegistry.*                                   | # Catalog → layer mapping (governed)
+│     │  │  ├─ styleAdapters.*                                   | # Style mapping (tokenized, policy-safe)
+│     │  │  └─ layerState.*                                      | # Layer visibility/opacity/order state
+│     │  ├─ timeline/                                            | # Time-aware exploration (valid vs transaction time)
+│     │  │  ├─ TimeSlider.*                                      | # Timeline UI control
+│     │  │  ├─ ValidVsTransactionTime.*                          | # Semantics + UI toggles
+│     │  │  └─ TimeWindowState.*                                 | # State model for time windows
+│     │  ├─ inspect/                                             | # Inspect flows → evidence flows
+│     │  │  ├─ FeatureInspectPanel.*                             | # Inspect UI for selected features
+│     │  │  ├─ OnClickEvidenceRef.*                              | # Click → EvidenceRef creation
+│     │  │  └─ InspectToEvidenceFlow.*                           | # Inspect → drawer orchestration
+│     │  └─ exports/                                             | # Export workflows (policy notices + requests)
+│     │     ├─ ExportPanel.*                                     | # Export UI (format/extent options)
+│     │     ├─ ExportPolicyNotice.*                              | # Policy + obligations notice for exports
+│     │     └─ ExportRequests.*                                  | # Export request submission + status
+│     ├─ view_state/                                             | # Shareable view state (encode/decode/normalize)
+│     │  ├─ ViewStateSchema.*                                    | # View state schema/typing
+│     │  ├─ encodeViewState.*                                    | # State → URL/token
+│     │  ├─ decodeViewState.*                                    | # URL/token → state
+│     │  └─ normalizeViewState.*                                 | # Canonicalization + drift protection
+│     ├─ components/                                             | # App-shell components (layout + nav + panels)
+│     │  ├─ Layout.*                                             | # Global layout container
+│     │  ├─ TopNav.*                                             | # Top navigation bar
+│     │  ├─ SidePanel.*                                          | # Side panel scaffolding
+│     │  └─ LoadingErrorStates.*                                 | # Standard loading/error surfaces (policy-safe)
+│     ├─ state/                                                  | # Client state management (store/selectors/persistence)
+│     │  ├─ store.*                                              | # Store setup
+│     │  ├─ selectors.*                                          | # Derived selectors (stable, tested)
+│     │  └─ persistence.*                                        | # Persisted state (policy-safe keys only)
+│     ├─ telemetry/                                              | # Client telemetry (otel + analytics + redaction)
+│     │  ├─ otel.*                                               | # OpenTelemetry wiring (if used)
+│     │  ├─ analytics.*                                          | # Product analytics (policy-safe)
+│     │  └─ redaction.*                                          | # Client-side redaction hooks/guards
+│     └─ tests/                                                  | # App tests (fast + integration + e2e)
+│        ├─ unit/                                                | # Pure UI/unit tests (deterministic)
+│        ├─ integration/                                         | # UI+API client integration tests (mocked boundaries)
+│        └─ e2e/                                                 | # End-to-end tests (runner-dependent)
 │
-├─ catalog/
-│  ├─ README.md
-│  ├─ kfm.app.json
-│  ├─ Dockerfile                                # ⚠️
-│  ├─ public/                                   # ⚠️
-│  └─ src/
-│     ├─ main.*
-│     ├─ app.*
-│     ├─ routes/
-│     │  ├─ index.*                             # Browse datasets
-│     │  ├─ dataset.*                           # Dataset detail (DCAT)
-│     │  ├─ version.*                           # DatasetVersion detail
-│     │  ├─ lineage.*                           # PROV/receipts (policy-safe)
-│     │  └─ error.*                             # Policy-safe errors
-│     ├─ adapters/
-│     │  ├─ apiClient.*
-│     │  ├─ catalogApi.*                        # DCAT/STAC discovery + facets
-│     │  ├─ evidenceApi.*
-│     │  └─ auditApi.*
-│     ├─ trust/                                 # ✅ EvidenceDrawer + ReceiptViewer + badges
-│     ├─ catalog_ui/                            # 🧩 Catalog UX features
-│     │  ├─ search/                             # Facets, query, pagination
-│     │  ├─ datasetCards/                       # Dataset summaries (policy-safe)
-│     │  ├─ versionCompare/                     # What changed (policy-safe)
-│     │  └─ licenseRights/                      # Rights/attribution presentation (copyable)
-│     └─ tests/
-│        ├─ unit/
-│        ├─ integration/                        # Catalog triplet cross-links (UI expects API already validated)
-│        └─ e2e/                                # ⚠️ Dataset browse → version detail → receipt viewer
+├─ story/                                                        | # Story Mode UI (publish/read narratives with citations)
+│  ├─ README.md                                                  | # App overview + run + trust surfaces
+│  ├─ kfm.app.json                                               | # App manifest (policy label, capabilities)
+│  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  └─ src/                                                       | # UI source
+│     ├─ main.*                                                  | # App entrypoint
+│     ├─ app.*                                                   | # Root shell (routing/layout)
+│     ├─ routes/                                                 | # Pages/routes (policy-safe errors)
+│     │  ├─ index.*                                              | # Landing / story list
+│     │  ├─ story.*                                              | # Story reader
+│     │  ├─ claim.*                                              | # Claim view / citation drilldown
+│     │  └─ error.*                                              | # Error boundary (no leakage)
+│     ├─ adapters/                                               | # Governed API clients
+│     │  ├─ apiClient.*                                          | # Base client
+│     │  ├─ storiesApi.*                                         | # Story endpoints client
+│     │  ├─ evidenceApi.*                                        | # Evidence resolve client
+│     │  └─ auditApi.*                                           | # Audit events client
+│     ├─ trust/                                                  | # Trust membrane UX (same structure as map)
+│     ├─ stories/                                                | # Story rendering + review tooling
+│     │  ├─ renderer/                                            | # Markdown rendering (safe mode)
+│     │  ├─ citations/                                           | # Citation components + linking
+│     │  ├─ sidecar/                                             | # Sidecar metadata + evidence refs
+│     │  ├─ playback/                                            | # Playback controls (timeline/steps)
+│     │  └─ review/                                              | # Review UI (policy, citation completeness)
+│     ├─ view_state/                                             | # View state encoding/decoding (shareable)
+│     └─ tests/                                                  | # Tests
+│        ├─ unit/                                                | # Unit tests
+│        ├─ integration/                                         | # Integration tests
+│        └─ e2e/                                                 | # End-to-end tests
 │
-├─ focus/
-│  ├─ README.md
-│  ├─ kfm.app.json
-│  ├─ Dockerfile                                # ⚠️
-│  ├─ public/                                   # ⚠️
-│  └─ src/
-│     ├─ main.*
-│     ├─ app.*
-│     ├─ routes/
-│     │  ├─ index.*                             # Focus landing + query history (policy-safe)
-│     │  ├─ session.*                           # One governed “run” session
-│     │  └─ error.*                             # Policy-safe errors
-│     ├─ adapters/
-│     │  ├─ apiClient.*
-│     │  ├─ focusApi.*                          # POST /focus/ask (or repo route)
-│     │  ├─ evidenceApi.*                       # Resolve EvidenceRefs from answers
-│     │  └─ auditApi.*                          # Receipt lookup by audit_ref
-│     ├─ trust/                                 # ✅ EvidenceDrawer + ReceiptViewer + deny/abstain
-│     ├─ focus_ui/                              # 🧩 Focus features
-│     │  ├─ composer/                           # Query input + view_state attachments
-│     │  ├─ answer/                             # Render answer + citations + bundle digests
-│     │  ├─ citations/                          # Citation list must resolve or trigger abstain UX
-│     │  ├─ abstain/                            # HARD GATE UX: missing/denied citations → abstain
-│     │  ├─ audit/                              # audit_ref viewer + receipt linkout
-│     │  └─ safety/                             # Display-only safety cues (no enforcement)
-│     ├─ view_state/                            # ✅ Optional attachment to focus query (map bbox/time/layers)
-│     └─ tests/
-│        ├─ unit/
-│        ├─ integration/                        # Citation verification behavior (UI gate)
-│        └─ e2e/                                # ⚠️ Ask → verify citations → view evidence drawer
+├─ catalog/                                                      | # Catalog UI (browse datasets, versions, lineage; evidence-backed)
+│  ├─ README.md                                                  | # App overview + run + contracts + evidence UX
+│  ├─ kfm.app.json                                               | # App manifest
+│  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  └─ src/                                                       | # UI source
+│     ├─ main.*                                                  | # App entrypoint
+│     ├─ app.*                                                   | # Root shell
+│     ├─ routes/                                                 | # Pages/routes
+│     │  ├─ index.*                                              | # Dataset list/search
+│     │  ├─ dataset.*                                            | # Dataset details
+│     │  ├─ version.*                                            | # Dataset version view/compare
+│     │  ├─ lineage.*                                            | # Lineage view (policy-gated)
+│     │  └─ error.*                                              | # Error boundary (no leakage)
+│     ├─ adapters/                                               | # Governed API clients + DTO mapping
+│     │  ├─ apiClient.*                                          | # Base client
+│     │  ├─ catalogApi.*                                         | # Catalog endpoints
+│     │  ├─ evidenceApi.*                                        | # Evidence endpoints
+│     │  └─ auditApi.*                                           | # Audit endpoints
+│     ├─ trust/                                                  | # Trust membrane UX components
+│     ├─ catalog_ui/                                             | # Catalog-specific UI modules
+│     │  ├─ search/                                              | # Search UI + filters
+│     │  ├─ datasetCards/                                        | # Dataset cards/listing tiles
+│     │  ├─ versionCompare/                                      | # Version diff/compare UI
+│     │  └─ licenseRights/                                       | # License/rights display modules
+│     └─ tests/                                                  | # Tests
+│        ├─ unit/                                                | # Unit tests
+│        ├─ integration/                                         | # Integration tests
+│        └─ e2e/                                                 | # End-to-end tests
 │
-├─ admin/
-│  ├─ README.md                                 # 🔒 Typically restricted app; README can be public and policy-safe
-│  ├─ kfm.app.json                              # policy_label likely restricted/internal
-│  ├─ Dockerfile                                # ⚠️
-│  ├─ public/                                   # ⚠️
-│  └─ src/
-│     ├─ main.*
-│     ├─ app.*
-│     ├─ routes/
-│     │  ├─ index.*
-│     │  ├─ reviewQueue.*                       # 🔒 Promotion/stories review queue
-│     │  ├─ promotion.*                         # 🔒 Promotion dashboards (Gate A–F status)
-│     │  ├─ policyFixtures.*                    # 🔒 Run/inspect policy fixture outcomes
-│     │  ├─ receipts.*                          # 🔒 Receipt viewer + audit ledger browsing
-│     │  └─ error.*                             # Policy-safe errors (even for restricted UI)
-│     ├─ adapters/
-│     │  ├─ apiClient.*
-│     │  ├─ adminApi.*                          # Steward/admin endpoints (role gated)
-│     │  ├─ policyApi.*                         # Policy bundle status/versions (display only)
-│     │  ├─ auditApi.*
-│     │  └─ evidenceApi.*
-│     ├─ trust/                                 # ✅ EvidenceDrawer + ReceiptViewer + trust badges
-│     ├─ admin_ui/                              # 🧩 Steward/operator features
-│     │  ├─ approvals/                          # Approval workflows (role-gated)
-│     │  ├─ gateStatus/                         # Promotion Contract dashboards
-│     │  ├─ quarantine/                         # Quarantine reasons + remediation plans (policy-safe)
-│     │  ├─ lineage/                            # PROV graph viewer (policy-aware redaction)
-│     │  └─ audit/                              # Audit ledger browsing + filters
-│     └─ tests/
-│        ├─ unit/
-│        ├─ integration/
-│        └─ e2e/                                # ⚠️ Role-gated flows
+├─ focus/                                                        | # Focus Mode UI (ask → cite-or-abstain answers + audit)
+│  ├─ README.md                                                  | # App overview + run + safety + citations
+│  ├─ kfm.app.json                                               | # App manifest
+│  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  └─ src/                                                       | # UI source
+│     ├─ main.*                                                  | # App entrypoint
+│     ├─ app.*                                                   | # Root shell
+│     ├─ routes/                                                 | # Pages/routes
+│     │  ├─ index.*                                              | # Composer landing
+│     │  ├─ session.*                                            | # Session view (question/answer/citations)
+│     │  └─ error.*                                              | # Error boundary (no leakage)
+│     ├─ adapters/                                               | # Governed API clients
+│     │  ├─ apiClient.*                                          | # Base client
+│     │  ├─ focusApi.*                                           | # Focus ask endpoints
+│     │  ├─ evidenceApi.*                                        | # Evidence resolve endpoints
+│     │  └─ auditApi.*                                           | # Audit endpoints
+│     ├─ trust/                                                  | # Trust membrane UX components
+│     ├─ focus_ui/                                               | # Focus-specific UI modules
+│     │  ├─ composer/                                            | # Prompt composer
+│     │  ├─ answer/                                              | # Answer view (abstain/allow)
+│     │  ├─ citations/                                           | # Citation list + drilldowns
+│     │  ├─ abstain/                                             | # Abstain UX + next steps
+│     │  ├─ audit/                                               | # Audit/receipt surfaces
+│     │  └─ safety/                                              | # Safety notices + policy badge surfaces
+│     ├─ view_state/                                             | # Shareable state for sessions
+│     └─ tests/                                                  | # Tests
+│        ├─ unit/                                                | # Unit tests
+│        ├─ integration/                                         | # Integration tests
+│        └─ e2e/                                                 | # End-to-end tests
 │
-└─ cli/
-   ├─ README.md                                 # CLI contract + safe usage patterns
-   ├─ kfm.app.json                              # (still useful: policy_label, contracts, capabilities)
-   ├─ bin/                                      # ✅ Executable entry points
-   │  └─ kfm                                    # Wrapper script/binary launcher (implementation-specific)
-   ├─ completions/                              # ⚠️ Shell completions
-   │  ├─ kfm.bash
-   │  └─ _kfm
-   └─ src/
-      ├─ main.*                                 # CLI entrypoint
-      ├─ config/
-      │  ├─ env.*                               # Reads KFM_API_BASE_URL, auth token path, etc.
-      │  └─ profiles.*                          # Local profile switching (dev/stage/prod)
-      ├─ adapters/
-      │  ├─ apiClient.*                         # Same governed API client pattern
-      │  ├─ evidenceApi.*                       # evidence resolve (read-only)
-      │  ├─ catalogApi.*
-      │  ├─ promoteApi.*                        # promotion endpoints (role gated)
-      │  ├─ auditApi.*
-      │  └─ exportApi.*                         # export requests (server-side enforcement)
-      ├─ commands/                              # ✅ Subcommands
-      │  ├─ catalog/                            # dataset/version discovery
-      │  ├─ evidence/                           # resolve EvidenceRefs → bundles
-      │  ├─ receipts/                           # fetch + render receipts
-      │  ├─ promote/                            # request promotions / validate manifests (role gated)
-      │  ├─ validate/                           # validate specs/manifests locally (no promotion)
-      │  └─ focus/                              # run focus ask (policy + audit enforced server-side)
-      ├─ output/                                # Rendering helpers (json/table/text)
-      │  ├─ json.*
-      │  ├─ table.*
-      │  └─ redact.*                            # Defense-in-depth redaction for logs/output
-      ├─ telemetry/                             # ⚠️ CLI telemetry (default off)
-      └─ tests/
-         ├─ unit/
-         └─ integration/
+├─ admin/                                                        | # Admin/Steward UI (review, promote, audit, policy fixtures)
+│  ├─ README.md                                                  | # App overview + governance + run + tests
+│  ├─ kfm.app.json                                               | # App manifest
+│  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  └─ src/                                                       | # UI source
+│     ├─ main.*                                                  | # App entrypoint
+│     ├─ app.*                                                   | # Root shell
+│     ├─ routes/                                                 | # Admin screens
+│     │  ├─ index.*                                              | # Admin landing/dashboard
+│     │  ├─ reviewQueue.*                                        | # Review queue workflows
+│     │  ├─ promotion.*                                          | # Promotion workflows + gates
+│     │  ├─ policyFixtures.*                                     | # Policy fixture views/tools (governed)
+│     │  ├─ receipts.*                                           | # Receipt browsing/validation
+│     │  └─ error.*                                              | # Error boundary (no leakage)
+│     ├─ adapters/                                               | # Governed API clients
+│     │  ├─ apiClient.*                                          | # Base client
+│     │  ├─ adminApi.*                                           | # Admin endpoints
+│     │  ├─ policyApi.*                                          | # Policy/PDP endpoints (fixtures/decisions)
+│     │  ├─ auditApi.*                                           | # Audit endpoints
+│     │  └─ evidenceApi.*                                        | # Evidence endpoints
+│     ├─ trust/                                                  | # Trust membrane UX components
+│     ├─ admin_ui/                                               | # Admin-specific UI modules
+│     │  ├─ approvals/                                           | # Approval UX + reviewers
+│     │  ├─ gateStatus/                                          | # Gate status dashboards
+│     │  ├─ quarantine/                                          | # Quarantine workflows
+│     │  ├─ lineage/                                             | # Lineage tools/surfaces
+│     │  └─ audit/                                               | # Audit views (events/receipts)
+│     └─ tests/                                                  | # Tests
+│        ├─ unit/                                                | # Unit tests
+│        ├─ integration/                                         | # Integration tests
+│        └─ e2e/                                                 | # End-to-end tests
+│
+└─ cli/                                                          | # CLI surface (operator tooling; policy-aware)
+   ├─ README.md                                                  | # CLI usage + commands + examples
+   ├─ kfm.app.json                                               | # CLI manifest (capabilities, contracts)
+   ├─ bin/                                                       | # Launchers/wrappers
+   │  └─ kfm                                                     | # Wrapper script/binary launcher
+   ├─ completions/                                               | # Shell completions
+   │  ├─ kfm.bash                                                | # Bash completion
+   │  └─ _kfm                                                    | # Zsh completion
+   └─ src/                                                       | # CLI source
+      ├─ main.*                                                  | # CLI entrypoint
+      ├─ config/                                                 | # Config + profiles
+      │  ├─ env.*                                                | # Env parsing (KFM_API_BASE_URL, auth, etc.)
+      │  └─ profiles.*                                           | # Named profiles (safe defaults; no secrets committed)
+      ├─ adapters/                                               | # Governed API clients (no direct DB)
+      │  ├─ apiClient.*                                          | # Base client
+      │  ├─ evidenceApi.*                                        | # Evidence endpoints
+      │  ├─ catalogApi.*                                         | # Catalog endpoints
+      │  ├─ promoteApi.*                                         | # Promotion endpoints
+      │  ├─ auditApi.*                                           | # Audit endpoints
+      │  └─ exportApi.*                                          | # Export endpoints
+      ├─ commands/                                               | # Command groups (subcommands)
+      │  ├─ catalog/                                             | # Catalog-related commands
+      │  ├─ evidence/                                            | # Evidence-related commands
+      │  ├─ receipts/                                            | # Receipt/audit commands
+      │  ├─ promote/                                             | # Promotion commands
+      │  ├─ validate/                                            | # Validation commands (schemas/profiles)
+      │  └─ focus/                                               | # Focus ask commands
+      ├─ output/                                                 | # Output formats + redaction helpers
+      │  ├─ json.*                                               | # JSON output
+      │  ├─ table.*                                              | # Table output
+      │  └─ redact.*                                             | # Redaction helpers (policy-safe)
+      ├─ telemetry/                                              | # CLI telemetry (optional; policy-safe)
+      └─ tests/                                                  | # CLI tests
+         ├─ unit/                                                | # Unit tests
+         └─ integration/                                         | # Integration tests (mocked boundaries)
 ```
 
 ### Recommended layout template (web/apps)
