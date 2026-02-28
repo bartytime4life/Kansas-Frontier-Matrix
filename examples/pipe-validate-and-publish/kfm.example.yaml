@@ -1,1 +1,18 @@
+example_id: pipe-validate-and-publish
+name: Validate + publish (minimal)
+status: runnable-fixture
+owner: kfm-platform
 
+input:
+  manifest: src/run_manifest.json
+  data_path: data/events.csv
+
+steps:
+  - validate_schema
+  - validate_policy
+  - generate_receipt
+  - build_promotion_manifest
+
+outputs:
+  run_receipt: evidence/run_receipt.json
+  promotion_manifest: outputs/promotion_manifest.json

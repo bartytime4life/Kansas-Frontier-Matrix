@@ -1,1 +1,14 @@
+example_id: ui-story-node-minimal
+name: UI story node minimal
+status: runnable-fixture
+owner: kfm-ui
 
+input:
+  story_node: src/story_node.json
+
+expected_output:
+  rendered_card: outputs/story_node.rendered.json
+
+policy:
+  required_citations: true
+  allowed_labels: [public, public_generalized]
