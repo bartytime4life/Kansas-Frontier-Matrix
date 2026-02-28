@@ -1482,379 +1482,339 @@ This layout aligns KFM features with governance boundaries and the truth path zo
 ### Expanded layout
 
 ```text
-Kansas-Frontier-Matrix/
-├─ README.md                                  # [CONFIRMED root] Product/operating model (map-first, governed, cite-or-abstain)
-├─ LICENSE                                    # [CONFIRMED root] SPDX-friendly license
-├─ CONTRIBUTING.md                            # [CONFIRMED root] contributor workflow + gates
-├─ SECURITY.md                                # [CONFIRMED root] vuln reporting + disclosure posture
-├─ CODE_OF_CONDUCT.md                         # [PROPOSED root] community standard (recommended)
-├─ CHANGELOG.md                               # [CONFIRMED root] release notes / promotion notes
-├─ .editorconfig                              # [PROPOSED] formatting baseline
-├─ .gitignore                                 # [PROPOSED] keep big artifacts out of Git; allow fixtures only
-├─ .gitattributes                             # [PROPOSED] LFS rules (if needed), linguist hints
-├─ Makefile                                   # [PROPOSED] “one front door” commands (make help, make dev, make test)
-├─ compose.yaml                               # [PROPOSED] local stack (postgis, minio, search) for dev + tests
+Kansas-Frontier-Matrix/                                             | # Repo root (map-first, governed, cite-or-abstain)
+├─ README.md                                                        | # [CONFIRMED root] Product/operating model (map-first, governed, cite-or-abstain)
+├─ LICENSE                                                          | # [CONFIRMED root] SPDX-friendly license
+├─ CONTRIBUTING.md                                                  | # [CONFIRMED root] Contributor workflow + gates
+├─ SECURITY.md                                                      | # [CONFIRMED root] Vulnerability reporting + disclosure posture
+├─ CODE_OF_CONDUCT.md                                               | # [PROPOSED root] Community standard (recommended)
+├─ CHANGELOG.md                                                     | # [CONFIRMED root] Release notes / promotion notes
+├─ .editorconfig                                                    | # [PROPOSED] Formatting baseline
+├─ .gitignore                                                       | # [PROPOSED] Keep big artifacts out of Git; allow fixtures only
+├─ .gitattributes                                                   | # [PROPOSED] LFS rules (if needed), linguist hints
+├─ Makefile                                                         | # [PROPOSED] “One front door” commands (make help/dev/test)
+├─ compose.yaml                                                     | # [PROPOSED] Local stack (postgis, minio, search) for dev + tests
 │
-├─ .github/                                   # [CONFIRMED root] merge-time trust membrane (CI + CODEOWNERS + templates)
-│  ├─ README.md                               # [PROPOSED] GitHub operations index (recommended structure is documented)
-│  ├─ CODEOWNERS                              # [PROPOSED] REQUIRED: review routing for governance-critical paths
-│  ├─ PULL_REQUEST_TEMPLATE.md                # [PROPOSED] default PR checklist (small diffs + evidence)
-│  ├─ PULL_REQUEST_TEMPLATE/                  # [PROPOSED] multi-template PRs
-│  │  ├─ default.md
-│  │  ├─ governance.md
-│  │  └─ data-pipeline.md
-│  ├─ ISSUE_TEMPLATE/                         # [PROPOSED] triage discipline
-│  │  ├─ config.yml
-│  │  ├─ bug_report.yml
-│  │  ├─ feature_request.yml
-│  │  ├─ governance_change.yml
-│  │  ├─ data_pipeline.yml
-│  │  └─ story_node.yml
-│  ├─ actions/                                # [PROPOSED] composite actions reused by workflows
-│  │  ├─ setup-node/
-│  │  ├─ setup-python/
-│  │  ├─ kfm-validate-contracts/
-│  │  ├─ kfm-policy-test/
-│  │  ├─ kfm-linkcheck/
-│  │  └─ kfm-eval-focus/
-│  └─ workflows/                              # [PROPOSED] required checks registry should point at these
-│     ├─ ci.yml                               # lint/typecheck/unit
-│     ├─ policy-gates.yml                     # policy fixtures + deny-by-default verification
-│     ├─ provenance-audit.yml                 # receipts emitted + validated + linked
-│     ├─ release.yml                          # promotion + publish (guarded)
-│     ├─ kfm__provenance-policy-gate.yml       # (optional) unified provenance+policy gate
-│     ├─ pr-verify-receipts.yml                # (optional) PR verifies run receipts / manifests
-│     ├─ kfm__watchers.yml                     # (optional) scheduled watchers to detect upstream drift
-│     └─ kfm__ops-acceptance.yml               # (optional) ops acceptance / smoke gates
+├─ .github/                                                         | # [CONFIRMED root] Merge-time trust membrane (CI + templates + routing)
+│  ├─ README.md                                                     | # [PROPOSED] GitHub operations index (recommended)
+│  ├─ CODEOWNERS                                                    | # [PROPOSED] REQUIRED: review routing for governance-critical paths
+│  ├─ PULL_REQUEST_TEMPLATE.md                                      | # [PROPOSED] Default PR checklist (small diffs + evidence)
+│  ├─ PULL_REQUEST_TEMPLATE/                                        | # [PROPOSED] Multi-template PRs
+│  │  ├─ default.md                                                 | # Default PR template
+│  │  ├─ governance.md                                              | # Governance/policy/contract change template
+│  │  └─ data-pipeline.md                                           | # Data pipeline / promotion template
+│  ├─ ISSUE_TEMPLATE/                                               | # [PROPOSED] Triage discipline
+│  │  ├─ config.yml                                                 | # Template config
+│  │  ├─ bug_report.yml                                             | # Bug report
+│  │  ├─ feature_request.yml                                        | # Feature request
+│  │  ├─ governance_change.yml                                      | # Governance change request
+│  │  ├─ data_pipeline.yml                                          | # Data pipeline request
+│  │  └─ story_node.yml                                             | # Story node request
+│  ├─ actions/                                                      | # [PROPOSED] Composite actions reused by workflows
+│  │  ├─ setup-node/                                                | # Node toolchain setup (pinned)
+│  │  ├─ setup-python/                                              | # Python toolchain setup (pinned)
+│  │  ├─ kfm-validate-contracts/                                    | # Contract validation gate (OpenAPI/JSON Schema)
+│  │  ├─ kfm-policy-test/                                           | # Policy fixtures + deny-by-default verification
+│  │  ├─ kfm-linkcheck/                                             | # Cross-link integrity checks
+│  │  └─ kfm-eval-focus/                                            | # Focus eval harness gate (goldens + citations)
+│  └─ workflows/                                                    | # [PROPOSED] Required checks registry should point at these
+│     ├─ ci.yml                                                     | # Lint/typecheck/unit
+│     ├─ policy-gates.yml                                           | # Policy fixtures + fail-closed posture
+│     ├─ provenance-audit.yml                                       | # Receipts emitted + validated + linked
+│     ├─ release.yml                                                | # Promotion + publish (guarded)
+│     ├─ kfm__provenance-policy-gate.yml                             | # (optional) Unified provenance+policy gate
+│     ├─ pr-verify-receipts.yml                                     | # (optional) PR verifies run receipts / manifests
+│     ├─ kfm__watchers.yml                                          | # (optional) Scheduled watchers to detect upstream drift
+│     └─ kfm__ops-acceptance.yml                                    | # (optional) Ops acceptance / smoke gates
 │
-├─ docs/                                      # [CONFIRMED root] governed documentation
-│  ├─ README.md                               # [PROPOSED] docs index + navigation map
-│  ├─ adr/                                    # Architecture Decision Records (small, reversible increments)
-│  │  ├─ 0001-adr-template.md
-│  │  └─ 0002-trust-membrane-boundaries.md
-│  ├─ governance/                             # labels, roles, obligations, review triggers
-│  │  ├─ policy-labels.md
-│  │  ├─ roles-and-stewardship.md
-│  │  ├─ sensitive-location-handling.md
-│  │  ├─ rights-and-licensing.md
-│  │  └─ promotion-contract.md                # human-readable explanation of Contract v1 gates
-│  ├─ runbooks/                               # operators: pipelines, backfills, incident playbooks
-│  │  ├─ local-dev.md
-│  │  ├─ pipeline-ops.md
-│  │  ├─ rebuild-projections.md
-│  │  ├─ evidence-resolver-ops.md
-│  │  ├─ focus-mode-ops.md
-│  │  └─ audit-ledger-ops.md
-│  ├─ guides/                                 # contributor-facing guides
-│  │  ├─ dataset-onboarding.md
-│  │  ├─ writing-story-nodes.md
-│  │  ├─ evidence-and-citations.md
-│  │  ├─ policy-authoring.md
-│  │  └─ testing-and-evals.md
-│  ├─ standards/                              # enforceable doc/data standards
-│  │  ├─ metablock-v2.md
-│  │  ├─ story-node-v3.md
-│  │  ├─ evidence-ref-schemes.md
-│  │  ├─ catalog-profiles.md
-│  │  └─ error-model.md
-│  ├─ schemas/                                # docs about schemas (not the schemas themselves)
-│  ├─ diagrams/                               # exported diagrams + sources
-│  │  ├─ architecture.mmd
-│  │  ├─ truth-path.mmd
-│  │  └─ focus-control-loop.mmd
-│  ├─ investigations/                         # governed “working notes” (not user-visible until promoted)
-│  └─ stories/                                # story nodes (draft/review/published)
-│     ├─ drafts/
-│     ├─ review/
-│     └─ published/
+├─ docs/                                                            | # [CONFIRMED root] Governed documentation hub
+│  ├─ README.md                                                     | # [PROPOSED] Docs index + navigation map
+│  ├─ adr/                                                          | # Architecture Decision Records (small, reversible increments)
+│  │  ├─ 0001-adr-template.md                                       | # ADR template
+│  │  └─ 0002-trust-membrane-boundaries.md                          | # Trust membrane boundaries decision
+│  ├─ governance/                                                   | # Labels, roles, obligations, review triggers
+│  │  ├─ policy-labels.md                                           | # Policy label taxonomy
+│  │  ├─ roles-and-stewardship.md                                   | # Stewardship roles + duties
+│  │  ├─ sensitive-location-handling.md                             | # Sensitive location handling + redaction rules
+│  │  ├─ rights-and-licensing.md                                    | # Rights, licensing, attribution requirements
+│  │  └─ promotion-contract.md                                      | # Human-readable Contract v1 gates
+│  ├─ runbooks/                                                     | # Operators: pipelines, backfills, incident playbooks
+│  │  ├─ local-dev.md                                               | # Local dev runbook
+│  │  ├─ pipeline-ops.md                                            | # Pipeline operations
+│  │  ├─ rebuild-projections.md                                     | # Rebuild projections runbook
+│  │  ├─ evidence-resolver-ops.md                                   | # Evidence resolver ops
+│  │  ├─ focus-mode-ops.md                                          | # Focus Mode ops
+│  │  └─ audit-ledger-ops.md                                        | # Audit ledger ops
+│  ├─ guides/                                                       | # Contributor-facing guides
+│  │  ├─ dataset-onboarding.md                                      | # Dataset onboarding guide
+│  │  ├─ writing-story-nodes.md                                     | # Story authoring guide
+│  │  ├─ evidence-and-citations.md                                  | # Evidence + citations guide
+│  │  ├─ policy-authoring.md                                        | # Policy authoring guide
+│  │  └─ testing-and-evals.md                                       | # Testing + eval harness guide
+│  ├─ standards/                                                    | # Enforceable doc/data standards
+│  │  ├─ metablock-v2.md                                            | # MetaBlock v2 standard
+│  │  ├─ story-node-v3.md                                           | # Story Node v3 standard
+│  │  ├─ evidence-ref-schemes.md                                    | # EvidenceRef schemes + semantics
+│  │  ├─ catalog-profiles.md                                        | # Catalog profile constraints (DCAT/STAC/PROV)
+│  │  └─ error-model.md                                             | # Policy-safe error model
+│  ├─ schemas/                                                      | # Docs ABOUT schemas (not the schemas themselves)
+│  ├─ diagrams/                                                     | # Exported diagrams + sources
+│  │  ├─ architecture.mmd                                           | # Architecture diagram source
+│  │  ├─ truth-path.mmd                                             | # Truth path diagram source
+│  │  └─ focus-control-loop.mmd                                     | # Focus control loop diagram source
+│  ├─ investigations/                                               | # Governed working notes (not user-visible until promoted)
+│  └─ stories/                                                      | # Story nodes (draft/review/published)
+│     ├─ drafts/                                                    | # Draft stories
+│     ├─ review/                                                    | # In-review stories
+│     └─ published/                                                 | # Published stories
 │
-├─ contracts/                                 # [CONFIRMED root] machine-enforced boundaries + schemas
-│  ├─ README.md                               # [PROPOSED] contract index + validation rules
-│  ├─ openapi/                                # Governed API contracts
-│  │  ├─ kfm.api.v1.yaml
-│  │  └─ components/
-│  │     ├─ errors.yaml
-│  │     ├─ evidence.yaml
-│  │     ├─ catalog.yaml
-│  │     ├─ stories.yaml
-│  │     └─ focus.yaml
-│  ├─ schemas/                                # JSON Schemas used in CI + runtime validation
-│  │  ├─ dataset_spec.v1.schema.json          # WP-01
-│  │  ├─ promotion_manifest.v1.schema.json    # Promotion Contract v1
-│  │  ├─ run_receipt.v1.schema.json           # provenance receipts (pipeline/focus/story/index)
-│  │  ├─ run_manifest.v1.schema.json          # batch run manifests / bundles
-│  │  ├─ evidence_bundle.v1.schema.json       # EvidenceBundle shape
-│  │  ├─ story_node.v3.schema.json            # Story Node v3 sidecar schema
-│  │  ├─ watcher.v1.schema.json               # upstream watcher registry entries
-│  │  └─ controlled_vocab.v1.schema.json      # vocab format
-│  ├─ profiles/                               # profile constraints for catalogs
-│  │  ├─ dcat/
-│  │  │  ├─ profile.v1.json
-│  │  │  └─ tests/
-│  │  ├─ stac/
-│  │  │  ├─ profile.v1.json
-│  │  │  └─ tests/
-│  │  └─ prov/
-│  │     ├─ profile.v1.json
-│  │     └─ tests/
-│  ├─ vocab/                                  # controlled vocabularies (versioned)
-│  │  ├─ policy_labels.v1.json
-│  │  ├─ zones.v1.json
-│  │  ├─ citation_kinds.v1.json
-│  │  ├─ themes.v1.json
-│  │  └─ obligations.v1.json
-│  └─ templates/                              # canonical templates for generated artifacts
-│     ├─ prov/
-│     │  └─ run.v1.jsonld.template
-│     └─ receipts/
-│        └─ run_receipt.v1.json.template
+├─ contracts/                                                       | # [CONFIRMED root] Machine-enforced boundaries + schemas
+│  ├─ README.md                                                     | # [PROPOSED] Contract index + validation rules
+│  ├─ openapi/                                                      | # Governed API contracts
+│  │  ├─ kfm.api.v1.yaml                                            | # API contract v1
+│  │  └─ components/                                                | # Shared OpenAPI components
+│  │     ├─ errors.yaml                                             | # Error model
+│  │     ├─ evidence.yaml                                           | # Evidence types
+│  │     ├─ catalog.yaml                                            | # Catalog endpoints/types
+│  │     ├─ stories.yaml                                            | # Story endpoints/types
+│  │     └─ focus.yaml                                              | # Focus endpoints/types
+│  ├─ schemas/                                                      | # JSON Schemas used in CI + runtime validation
+│  │  ├─ dataset_spec.v1.schema.json                                | # WP-01 dataset spec schema
+│  │  ├─ promotion_manifest.v1.schema.json                          | # Promotion Contract v1 schema
+│  │  ├─ run_receipt.v1.schema.json                                 | # Provenance receipts schema
+│  │  ├─ run_manifest.v1.schema.json                                | # Batch run manifest schema
+│  │  ├─ evidence_bundle.v1.schema.json                             | # EvidenceBundle schema
+│  │  ├─ story_node.v3.schema.json                                  | # Story Node v3 sidecar schema
+│  │  ├─ watcher.v1.schema.json                                     | # Watcher registry schema
+│  │  └─ controlled_vocab.v1.schema.json                            | # Controlled vocab schema
+│  ├─ profiles/                                                     | # Profile constraints for catalogs
+│  │  ├─ dcat/                                                      | # DCAT profile
+│  │  │  ├─ profile.v1.json                                         | # DCAT constraints (KFM)
+│  │  │  └─ tests/                                                  | # Profile tests/fixtures
+│  │  ├─ stac/                                                      | # STAC profile
+│  │  │  ├─ profile.v1.json                                         | # STAC constraints (KFM)
+│  │  │  └─ tests/                                                  | # Profile tests/fixtures
+│  │  └─ prov/                                                      | # PROV profile
+│  │     ├─ profile.v1.json                                         | # PROV constraints (KFM)
+│  │     └─ tests/                                                  | # Profile tests/fixtures
+│  ├─ vocab/                                                        | # Controlled vocabularies (versioned)
+│  │  ├─ policy_labels.v1.json                                      | # Allowed policy labels
+│  │  ├─ zones.v1.json                                              | # Truth path zones
+│  │  ├─ citation_kinds.v1.json                                     | # Citation kinds
+│  │  ├─ themes.v1.json                                             | # Themes/taxonomy
+│  │  └─ obligations.v1.json                                        | # Obligation types
+│  └─ templates/                                                    | # Canonical templates for generated artifacts
+│     ├─ prov/                                                      | # PROV templates
+│     │  └─ run.v1.jsonld.template                                  | # PROV run template
+│     └─ receipts/                                                  | # Receipt templates
+│        └─ run_receipt.v1.json.template                            | # Run receipt template
 │
-├─ policy/                                    # [CONFIRMED root] policy-as-code (default deny) + fixtures-driven tests
-│  ├─ README.md                               # [PROPOSED] policy module contract
-│  ├─ rego/                                   # OPA/Rego policies
-│  │  ├─ kfm.rego
-│  │  ├─ access.rego
-│  │  ├─ obligations.rego
-│  │  ├─ export_controls.rego
-│  │  └─ errors.rego                          # policy-safe error shaping
-│  ├─ tests/                                  # policy tests (conftest/opa test)
-│  │  ├─ kfm_test.rego
-│  │  └─ fixtures_test.rego
-│  ├─ fixtures/                               # deterministic fixtures (allow/deny + obligations)
-│  │  ├─ public_allow.json
-│  │  ├─ restricted_deny.json
-│  │  ├─ sensitive_location_generalize.json
-│  │  └─ export_denied.json
-│  ├─ bundles/                                # packaged policy bundle(s) for runtime distribution
-│  └─ license/                                # (optional) license allow/deny rules used by promotion gates
-│     ├─ allowlist.json
-│     └─ denylist.json
+├─ policy/                                                          | # [CONFIRMED root] Policy-as-code (default deny) + fixture-driven tests
+│  ├─ README.md                                                     | # [PROPOSED] Policy module contract
+│  ├─ rego/                                                         | # OPA/Rego policies
+│  │  ├─ kfm.rego                                                   | # Root policy entrypoint
+│  │  ├─ access.rego                                                | # Access decisions
+│  │  ├─ obligations.rego                                           | # Obligation computation
+│  │  ├─ export_controls.rego                                       | # Export controls
+│  │  └─ errors.rego                                                | # Policy-safe error shaping
+│  ├─ tests/                                                        | # Policy tests (conftest/opa test)
+│  │  ├─ kfm_test.rego                                              | # Core policy tests
+│  │  └─ fixtures_test.rego                                         | # Fixture conformance tests
+│  ├─ fixtures/                                                     | # Deterministic fixtures (allow/deny + obligations)
+│  │  ├─ public_allow.json                                          | # Public allow case
+│  │  ├─ restricted_deny.json                                       | # Restricted deny case
+│  │  ├─ sensitive_location_generalize.json                         | # Generalize obligation case
+│  │  └─ export_denied.json                                         | # Export denied case
+│  ├─ bundles/                                                      | # Packaged policy bundle(s) for runtime distribution
+│  └─ license/                                                      | # (optional) License allow/deny used by promotion gates
+│     ├─ allowlist.json                                             | # Allowed licenses
+│     └─ denylist.json                                              | # Denied licenses
 │
-├─ data/                                      # [CONFIRMED root] governed data lifecycle (truth path zones)
-│  ├─ README.md                               # [PROPOSED] zone rules + what belongs here (fixtures vs real artifacts)
-│  ├─ specs/                                  # canonical dataset onboarding specs (inputs to spec_hash)
-│  │  ├─ <dataset_slug>.v1.json
-│  │  └─ _templates/
-│  │     ├─ dataset_spec.template.json
-│  │     └─ transforms.template.json
-│  ├─ registry/                               # registries: sources + anchors + watchers
-│  │  ├─ sources/
-│  │  │  ├─ <source_id>.json
-│  │  │  └─ _templates/source_registry.template.json
-│  │  ├─ anchors/
-│  │  │  └─ anchors.v1.json
-│  │  └─ watchers/
-│  │     └─ watchers.v1.json
-│  ├─ fixtures/                               # small, committed test datasets + catalogs + receipts
-│  │  ├─ sample_dataset/
-│  │  ├─ sample_catalog/
-│  │  └─ sample_receipts/
-│  ├─ raw/                                    # immutable acquisition snapshots (prefer object storage in prod)
-│  ├─ work/                                   # intermediate transforms, QC, redaction candidates
-│  ├─ quarantine/                              # failed gates (must include reason.json + owner)
-│  ├─ processed/                               # publishable artifacts (immutable per DatasetVersion)
-│  ├─ catalog/                                 # DCAT/STAC/PROV + receipts for each DatasetVersion
-│  ├─ published/                               # policy-safe exports (optional; may be externalized)
-│  └─ audit/                                   # append-only audit ledger segments (often external in prod)
+├─ data/                                                            | # [CONFIRMED root] Governed data lifecycle (truth path zones)
+│  ├─ README.md                                                     | # [PROPOSED] Zone rules + what belongs here
+│  ├─ specs/                                                        | # Canonical dataset onboarding specs (inputs to spec_hash)
+│  │  ├─ <dataset_slug>.v1.json                                     | # Dataset spec (versioned)
+│  │  └─ _templates/                                                | # Spec templates
+│  │     ├─ dataset_spec.template.json                              | # Dataset spec template
+│  │     └─ transforms.template.json                                | # Transform spec template
+│  ├─ registry/                                                     | # Registries: sources + anchors + watchers
+│  │  ├─ sources/                                                   | # Source registry entries
+│  │  │  ├─ <source_id>.json                                        | # Source record
+│  │  │  └─ _templates/source_registry.template.json                | # Source template
+│  │  ├─ anchors/                                                   | # Anchors registry
+│  │  │  └─ anchors.v1.json                                         | # Anchors registry v1
+│  │  └─ watchers/                                                  | # Upstream drift watchers
+│  │     └─ watchers.v1.json                                        | # Watchers registry v1
+│  ├─ fixtures/                                                     | # Small committed test datasets + catalogs + receipts
+│  │  ├─ sample_dataset/                                            | # Sample dataset fixture
+│  │  ├─ sample_catalog/                                            | # Sample catalog fixture
+│  │  └─ sample_receipts/                                           | # Sample receipts fixture
+│  ├─ raw/                                                          | # Immutable acquisition snapshots (prod often external)
+│  ├─ work/                                                         | # Intermediate transforms, QC, redaction candidates
+│  ├─ quarantine/                                                   | # Failed gates (must include reason.json + owner)
+│  ├─ processed/                                                    | # Publishable artifacts (immutable per DatasetVersion)
+│  ├─ catalog/                                                      | # DCAT/STAC/PROV + receipts per DatasetVersion
+│  ├─ published/                                                    | # Policy-safe exports (optional; may be externalized)
+│  └─ audit/                                                        | # Append-only audit ledger segments (often external in prod)
 │
-├─ apps/                                      # [CONFIRMED root] runnable services/apps
-│  ├─ api/                                    # Governed API (the runtime trust membrane)
-│  │  ├─ README.md
-│  │  ├─ src/
-│  │  │  ├─ server.ts
-│  │  │  ├─ api/
-│  │  │  │  ├─ routes/
-│  │  │  │  │  ├─ catalog.ts                  # dataset discovery + registry endpoints (WP-05)
-│  │  │  │  │  ├─ evidence.ts                 # resolve EvidenceRef -> EvidenceBundle (WP-04)
-│  │  │  │  │  ├─ stories.ts                  # story publish/read (WP-07)
-│  │  │  │  │  ├─ tiles.ts                    # policy-safe tiles
-│  │  │  │  │  └─ focus.ts                    # Focus Mode ask (WP-08)
-│  │  │  │  └─ middleware/
-│  │  │  │     ├─ auth.ts
-│  │  │  │     ├─ policy.ts
-│  │  │  │     ├─ audit.ts
-│  │  │  │     └─ errors.ts
-│  │  │  ├─ services/
-│  │  │  │  ├─ evidence_resolver.ts
-│  │  │  │  ├─ catalog_registry.ts
-│  │  │  │  ├─ story_publisher.ts
-│  │  │  │  └─ focus_orchestrator.ts
-│  │  │  └─ adapters/
-│  │  │     ├─ object_store.ts
-│  │  │     ├─ postgis.ts
-│  │  │     ├─ search.ts
-│  │  │     ├─ graph.ts
-│  │  │     └─ opa.ts
-│  │  └─ tests/
-│  │     ├─ integration/
-│  │     └─ contract/
-│  │
-│  ├─ ui/                                     # Map Explorer + Timeline + Stories + Focus Mode (policy-aware)
-│  │  ├─ README.md
-│  │  ├─ src/
-│  │  │  ├─ components/
-│  │  │  │  ├─ MapCanvas/
-│  │  │  │  ├─ LayerPanel/
-│  │  │  │  ├─ TimeControl/
-│  │  │  │  ├─ EvidenceDrawer/
-│  │  │  │  ├─ ReceiptViewer/                 # provenance receipt viewer (optional)
-│  │  │  │  └─ TrustBadges/
-│  │  │  ├─ pages/
-│  │  │  │  ├─ Explorer.tsx
-│  │  │  │  ├─ Story.tsx
-│  │  │  │  └─ Focus.tsx
-│  │  │  ├─ state/
-│  │  │  │  ├─ view_state.ts                  # reproducible map state (bbox/layers/time/filters)
-│  │  │  │  └─ query_params.ts
-│  │  │  ├─ api/
-│  │  │  │  ├─ client.ts
-│  │  │  │  └─ contracts.ts                   # generated from OpenAPI
-│  │  │  └─ styles/
-│  │  └─ tests/
-│  │     └─ e2e/
-│  │
-│  ├─ workers/                                # pipeline runner + index builders + scheduled jobs
-│  │  ├─ README.md
-│  │  ├─ src/
-│  │  │  ├─ runner.ts
-│  │  │  ├─ pipelines/
-│  │  │  │  ├─ ingest/
-│  │  │  │  ├─ validate/
-│  │  │  │  ├─ promote/
-│  │  │  │  └─ rebuild_projections/
-│  │  │  ├─ receipts/
-│  │  │  │  └─ emit_run_receipt.ts
-│  │  │  └─ audit/
-│  │  │     └─ append_ledger.ts
-│  │  └─ tests/
-│  │
-│  ├─ studio/                                 # optional steward UI for review/publish workflows
-│  │  └─ README.md
-│  │
-│  └─ cli/                                    # operator/developer CLI (hash, validate, promote, rebuild)
-│     ├─ README.md
-│     └─ src/
-│        ├─ kfm.ts
-│        ├─ commands/
-│        │  ├─ spec-hash.ts
-│        │  ├─ validate-catalog.ts
-│        │  ├─ resolve-evidence.ts
-│        │  ├─ promote.ts
-│        │  └─ rebuild.ts
-│        └─ output/
-│           └─ formatters.ts
+├─ apps/                                                            | # App surfaces (UI + services) + governed registry
+│  ├─ README.md                                                     | # Directory contract + App Registry index (human-readable)
+│  ├─ registry/                                                     | # Machine-readable app inventory + CI validation fixtures
+│  │  ├─ README.md                                                  | # Registry purpose + DoD + CI validation rules
+│  │  ├─ apps.v1.json                                               | # Canonical App Registry (names/owners/policy labels/capabilities)
+│  │  ├─ fixtures/                                                  | # CI fixtures (no secrets; policy-safe)
+│  │  │  ├─ apps.v1.minimal.json                                    | # Smallest valid registry example
+│  │  │  └─ apps.v1.invalid.examples.json                           | # Intentionally invalid cases (fail-closed)
+│  │  └─ _generated/                                                | # ⚠️ Generated snapshots (gitignored or policy-committed)
+│  │     └─ manifests.index.json                                    | # Optional flattened index from per-app manifests
+│  ├─ api/                                                          | # ✅ Governed API (runtime trust membrane / PEP)
+│  │  ├─ README.md                                                  | # Service overview, run/dev, contracts, policy, observability
+│  │  ├─ kfm.app.json                                               | # ✅ App manifest (policy_label, contracts, capabilities)
+│  │  ├─ Dockerfile                                                 | # ⚠️ If deploying as a container
+│  │  ├─ src/                                                       | # API source (routes/middleware/services/adapters)
+│  │  └─ tests/                                                     | # Integration + contract tests
+│  ├─ map/                                                          | # Map Explorer UI (map-first browse + inspect + export)
+│  │  ├─ README.md                                                  | # App overview + run + trust surfaces
+│  │  ├─ kfm.app.json                                               | # App manifest
+│  │  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  │  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  │  └─ src/                                                       | # UI source (routes/adapters/trust/map modules/tests)
+│  ├─ story/                                                        | # Story Mode UI (publish/read narratives with citations)
+│  │  ├─ README.md                                                  | # App overview + run + trust surfaces
+│  │  ├─ kfm.app.json                                               | # App manifest
+│  │  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  │  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  │  └─ src/                                                       | # UI source (routes/adapters/trust/stories/tests)
+│  ├─ catalog/                                                      | # Catalog UI (browse datasets/versions/lineage; evidence-backed)
+│  │  ├─ README.md                                                  | # App overview + run + contracts + evidence UX
+│  │  ├─ kfm.app.json                                               | # App manifest
+│  │  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  │  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  │  └─ src/                                                       | # UI source (routes/adapters/trust/catalog_ui/tests)
+│  ├─ focus/                                                        | # Focus Mode UI (ask → cite-or-abstain answers + audit)
+│  │  ├─ README.md                                                  | # App overview + run + safety + citations
+│  │  ├─ kfm.app.json                                               | # App manifest
+│  │  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  │  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  │  └─ src/                                                       | # UI source (routes/adapters/trust/focus_ui/tests)
+│  ├─ admin/                                                        | # Admin/Steward UI (review, promote, audit, policy fixtures)
+│  │  ├─ README.md                                                  | # App overview + governance + run + tests
+│  │  ├─ kfm.app.json                                               | # App manifest
+│  │  ├─ Dockerfile                                                 | # ⚠️ If containerized
+│  │  ├─ public/                                                    | # ⚠️ Static assets (safe)
+│  │  └─ src/                                                       | # UI source (routes/adapters/trust/admin_ui/tests)
+│  └─ cli/                                                          | # CLI surface (operator tooling; policy-aware)
+│     ├─ README.md                                                  | # CLI usage + commands + examples
+│     ├─ kfm.app.json                                               | # CLI manifest (capabilities, contracts)
+│     ├─ bin/                                                       | # Launchers/wrappers
+│     │  └─ kfm                                                     | # Wrapper script/binary launcher
+│     ├─ completions/                                               | # Shell completions
+│     │  ├─ kfm.bash                                                | # Bash completion
+│     │  └─ _kfm                                                    | # Zsh completion
+│     └─ src/                                                       | # CLI source (config/adapters/commands/output/tests)
 │
-├─ packages/                                  # [CONFIRMED root] clean layering + shared libraries
-│  ├─ domain/                                 # domain models + deterministic identity (WP-01)
-│  │  ├─ README.md
-│  │  └─ src/
-│  │     ├─ dataset.ts
-│  │     ├─ dataset_version.ts
-│  │     ├─ spec_hash.ts
-│  │     ├─ evidence_ref.ts
-│  │     ├─ policy_label.ts
-│  │     └─ time/
-│  │        ├─ valid_time.ts
-│  │        └─ transaction_time.ts
-│  ├─ usecases/                               # workflows: ingest, promote, publish story, focus ask
-│  ├─ adapters/                               # ports/adapters for storage/db/search/opa
-│  ├─ ingest/                                 # connectors + acquisition manifests
-│  ├─ catalog/                                # DCAT/STAC/PROV generation + profiles (WP-02)
-│  ├─ evidence/                               # evidence resolver core + bundle shaping (WP-04)
-│  ├─ policy/                                 # policy client + obligation application (WP-03)
-│  ├─ stories/                                # story node v3 parsing + publish gate (WP-07)
-│  ├─ focus/                                  # orchestrator + citation gate + eval harness hooks (WP-08)
-│  ├─ indexers/                               # rebuildable projections: DB/search/graph/tiles
-│  ├─ exports/                                # policy-aware exports (csv/geojson/packages)
-│  ├─ geo/                                    # spatial helpers (bbox, crs, tiling, generalization)
-│  ├─ observability/                          # logging, tracing, metrics, audit hooks
-│  ├─ ui-components/                          # shared UI building blocks (EvidenceDrawer, badges, etc.)
-│  └─ shared/                                 # shared utilities (hashing, io, config, errors)
+├─ packages/                                                        | # [CONFIRMED root] Clean layering + shared libraries
+│  ├─ domain/                                                       | # Domain models + deterministic identity (WP-01)
+│  │  ├─ README.md                                                  | # Domain package overview
+│  │  └─ src/                                                       | # Domain source
+│  │     ├─ dataset.ts                                              | # Dataset model
+│  │     ├─ dataset_version.ts                                      | # DatasetVersion model
+│  │     ├─ spec_hash.ts                                            | # Deterministic spec hashing
+│  │     ├─ evidence_ref.ts                                         | # EvidenceRef model
+│  │     ├─ policy_label.ts                                         | # Policy label model
+│  │     └─ time/                                                   | # Time primitives
+│  │        ├─ valid_time.ts                                        | # Valid-time semantics
+│  │        └─ transaction_time.ts                                  | # Transaction-time semantics
+│  ├─ usecases/                                                     | # Workflows: ingest, promote, publish story, focus ask
+│  ├─ adapters/                                                     | # Ports/adapters for storage/db/search/opa
+│  ├─ ingest/                                                       | # Connectors + acquisition manifests
+│  ├─ catalog/                                                      | # DCAT/STAC/PROV generation + profiles (WP-02)
+│  ├─ evidence/                                                     | # Evidence resolver core + bundle shaping (WP-04)
+│  ├─ policy/                                                       | # Policy client + obligation application (WP-03)
+│  ├─ stories/                                                      | # Story Node v3 parsing + publish gate (WP-07)
+│  ├─ focus/                                                        | # Orchestrator + citation gate + eval hooks (WP-08)
+│  ├─ indexers/                                                     | # Rebuildable projections: DB/search/graph/tiles
+│  ├─ exports/                                                      | # Policy-aware exports (csv/geojson/packages)
+│  ├─ geo/                                                          | # Spatial helpers (bbox, crs, tiling, generalization)
+│  ├─ observability/                                                | # Logging, tracing, metrics, audit hooks
+│  ├─ ui-components/                                                | # Shared UI building blocks (EvidenceDrawer, badges, etc.)
+│  └─ shared/                                                       | # Shared utilities (hashing, io, config, errors)
 │
-├─ infra/                                     # [CONFIRMED root] deployment + runtime posture
-│  ├─ k8s/
-│  │  ├─ api/
-│  │  ├─ ui/
-│  │  ├─ workers/
-│  │  └─ dependencies/                        # postgis, search, object store (dev/prod split)
-│  ├─ helm/
-│  ├─ terraform/
-│  ├─ gitops/
-│  └─ dashboards/
+├─ infra/                                                           | # [CONFIRMED root] Deployment + runtime posture
+│  ├─ k8s/                                                          | # Kubernetes manifests (env overlays as needed)
+│  │  ├─ api/                                                       | # API manifests
+│  │  ├─ ui/                                                        | # UI manifests
+│  │  ├─ workers/                                                   | # Worker manifests
+│  │  └─ dependencies/                                              | # PostGIS/search/object store (dev/prod split)
+│  ├─ helm/                                                         | # Helm charts (if used)
+│  ├─ terraform/                                                    | # Terraform IaC (if used)
+│  ├─ gitops/                                                       | # Argo/Flux/etc (if used)
+│  └─ dashboards/                                                   | # Observability dashboards
 │
-├─ tools/                                     # [CONFIRMED root] deterministic tooling used in CI and locally
-│  ├─ hash/                                   # WP-01 deterministic spec hashing utilities
-│  │  ├─ spec_hash_cli.ts
-│  │  └─ canonicalize_spec.ts
-│  ├─ validators/                             # WP-02 validators (catalog profiles + schemas)
-│  │  ├─ validate_dcat.ts
-│  │  ├─ validate_stac.ts
-│  │  ├─ validate_prov.ts
-│  │  └─ validate_schemas.ts
-│  ├─ linkcheck/                              # WP-02 cross-link + checksum verification
-│  │  ├─ catalog_linkcheck.ts
-│  │  └─ evidence_ref_check.ts
-│  └─ generators/                             # catalog + receipt generators (fixtures + pipeline)
-│     ├─ generate_catalog_triplet.ts
-│     └─ generate_run_receipt.ts
+├─ tools/                                                           | # [CONFIRMED root] Deterministic tooling (CI + local)
+│  ├─ hash/                                                         | # WP-01 deterministic spec hashing utilities
+│  │  ├─ spec_hash_cli.ts                                           | # CLI wrapper for hashing/checking
+│  │  └─ canonicalize_spec.ts                                       | # Canonicalization helper (stable ordering)
+│  ├─ validators/                                                   | # WP-02 validators (catalog profiles + schemas)
+│  │  ├─ validate_dcat.ts                                           | # DCAT validator
+│  │  ├─ validate_stac.ts                                           | # STAC validator
+│  │  ├─ validate_prov.ts                                           | # PROV validator
+│  │  └─ validate_schemas.ts                                        | # JSON Schema validation runner
+│  ├─ linkcheck/                                                    | # WP-02 cross-link + checksum verification
+│  │  ├─ catalog_linkcheck.ts                                       | # Catalog link checker
+│  │  └─ evidence_ref_check.ts                                      | # EvidenceRef integrity checker
+│  └─ generators/                                                   | # Catalog + receipt generators (fixtures + pipelines)
+│     ├─ generate_catalog_triplet.ts                                | # Generate DCAT/STAC/PROV triplet
+│     └─ generate_run_receipt.ts                                    | # Generate run receipts (pipeline/focus/story/index)
 │
-├─ scripts/                                   # [CONFIRMED root] convenience wrappers (thin glue)
-│  ├─ dev/
-│  │  ├─ up.sh
-│  │  ├─ down.sh
-│  │  └─ seed_fixtures.sh
-│  ├─ lint/
-│  ├─ promote/                                # promotion contract runner + approvals capture
-│  ├─ rebuild/                                # rebuild projections from canonical artifacts
-│  └─ release/                                # release/publish automation (guarded)
+├─ scripts/                                                         | # [CONFIRMED root] Convenience wrappers (thin glue)
+│  ├─ dev/                                                          | # Local dev lifecycle scripts
+│  │  ├─ up.sh                                                      | # Bring up dev stack
+│  │  ├─ down.sh                                                    | # Tear down dev stack
+│  │  └─ seed_fixtures.sh                                           | # Seed synthetic fixtures
+│  ├─ lint/                                                         | # Lint wrappers
+│  ├─ promote/                                                      | # Promotion contract runner + approvals capture
+│  ├─ rebuild/                                                      | # Rebuild projections from canonical artifacts
+│  └─ release/                                                      | # Release/publish automation (guarded)
 │
-├─ configs/                                   # [CONFIRMED root] configuration (non-secret) for pipelines/runtime/ui
-│  ├─ env/
-│  │  ├─ local.env.example
-│  │  ├─ staging.env.example
-│  │  └─ prod.env.example
-│  ├─ pipelines/
-│  │  ├─ datasets/                            # dataset pipeline configs keyed by dataset_slug
-│  │  ├─ watchers/                            # upstream drift watchers (cadence + checks)
-│  │  └─ profiles/                            # pipeline profiles (small/medium/large)
-│  ├─ ui/
-│  │  ├─ layers/                              # layer configs (EvidenceRef templates, tiles endpoints)
-│  │  └─ themes/
-│  └─ observability/
-│     ├─ logging.yaml
-│     ├─ metrics.yaml
-│     └─ tracing.yaml
+├─ configs/                                                         | # [CONFIRMED root] Non-secret configuration for pipelines/runtime/ui
+│  ├─ env/                                                          | # Environment examples (never secrets)
+│  │  ├─ local.env.example                                          | # Local env example
+│  │  ├─ staging.env.example                                        | # Staging env example
+│  │  └─ prod.env.example                                           | # Prod env example
+│  ├─ pipelines/                                                    | # Pipeline configuration
+│  │  ├─ datasets/                                                  | # Dataset pipeline configs keyed by dataset_slug
+│  │  ├─ watchers/                                                  | # Upstream drift watchers (cadence + checks)
+│  │  └─ profiles/                                                  | # Pipeline profiles (small/medium/large)
+│  ├─ ui/                                                           | # UI configuration
+│  │  ├─ layers/                                                    | # Layer configs (EvidenceRef templates, tiles endpoints)
+│  │  └─ themes/                                                    | # Theme configs (if separated from CSS tokens)
+│  └─ observability/                                                | # Observability configuration
+│     ├─ logging.yaml                                               | # Log config (redaction-aware)
+│     ├─ metrics.yaml                                               | # Metrics config
+│     └─ tracing.yaml                                               | # Tracing config
 │
-├─ migrations/                                # [CONFIRMED root] schema changes for projections
-│  ├─ postgis/
-│  ├─ search/
-│  └─ graph/                                  # (optional) graph schema / indices
+├─ migrations/                                                      | # [CONFIRMED root] Schema changes for projections
+│  ├─ postgis/                                                      | # PostGIS migrations
+│  ├─ search/                                                       | # Search index migrations
+│  └─ graph/                                                        | # (optional) Graph schema/indices
 │
-├─ examples/                                  # [CONFIRMED root] copy/paste starters
-│  ├─ sample_dataset/
-│  │  ├─ data/specs/sample.v1.json
-│  │  ├─ data/registry/sources/sample_source.json
-│  │  └─ data/registry/anchors/anchors.v1.json (snippet)
-│  ├─ sample_story/
-│  │  ├─ story.md                             # with MetaBlock v2
-│  │  └─ story.sidecar.json                   # Story Node v3
-│  ├─ sample_policy/
-│  │  ├─ fixtures/
-│  │  └─ rego/
-│  └─ sample_focus/
-│     ├─ queries.jsonl
-│     └─ expected_outputs.jsonl
+├─ examples/                                                        | # [CONFIRMED root] Copy/paste starters
+│  ├─ sample_dataset/                                               | # Dataset onboarding example
+│  ├─ sample_story/                                                 | # Story Node v3 example (md + sidecar)
+│  ├─ sample_policy/                                                | # Policy fixture + rego example
+│  └─ sample_focus/                                                 | # Focus eval example (queries + expected outputs)
 │
-└─ tests/                                     # [CONFIRMED root] test pyramid + eval harness
-   ├─ unit/                                   # spec_hash, parsers, validators
-   ├─ integration/                             # api<->policy<->evidence resolver, promotion gates
-   ├─ e2e/                                     # UI workflows (EvidenceDrawer + Story + Focus)
-   └─ eval/                                    # Focus Mode golden queries + regression gates (WP-08)
-      ├─ focus/
-      │  ├─ golden_queries.jsonl
-      │  ├─ expected_citations.jsonl
-      │  └─ harness.ts
-      └─ reports/
+└─ tests/                                                           | # [CONFIRMED root] Test pyramid + eval harness
+   ├─ unit/                                                         | # Spec_hash, parsers, validators (fast)
+   ├─ integration/                                                  | # API<->policy<->evidence resolver, promotion gates
+   ├─ e2e/                                                          | # UI workflows (EvidenceDrawer + Story + Focus)
+   └─ eval/                                                         | # Focus Mode golden queries + regression gates (WP-08)
+      ├─ focus/                                                     | # Focus eval data + harness
+      │  ├─ golden_queries.jsonl                                    | # Golden prompts/questions
+      │  ├─ expected_citations.jsonl                                 | # Expected citation sets
+      │  └─ harness.ts                                              | # Harness runner
+      └─ reports/                                                   | # Generated reports (gitignored or policy-committed)
 ```
 
 ### Where CI gates live
