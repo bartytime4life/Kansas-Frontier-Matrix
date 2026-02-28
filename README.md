@@ -46,7 +46,7 @@ notes:
 Pick the path that matches what you’re doing:
 
 - **Contributing code/docs/data**
-  - Read: [`CONTRIBUTING.md`](CONTRIBUTING.md) (workflow, if present), [`.github/README.md`](.github/README.md) (CI gates + CODEOWNERS, if present), [`SECURITY.md`](SECURITY.md) (reporting, if present)
+  - Read: [`CONTRIBUTING.md`](CONTRIBUTING.md) (workflow, if present), [`.github/README.md`](.github/README.md) (CI gates + CODEOWNERS, if present), [`SECURITY.md`](SECURITY.md) (reporting, if present), [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) (community standards)
   - Know: changes to `.github/`, `policy/`, `contracts/`, and promotion tooling are **governance-critical**
 
 - **Stewardship and governance**
