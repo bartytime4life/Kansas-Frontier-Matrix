@@ -130,60 +130,156 @@ Tools exist to *enforce* these invariants (not merely document them):
 
 ```text
 tools/                                                # Tooling entrypoint (validators + checks + CI helpers)
-├── README.md                                         # This file
+├── README.md                                         # This file (how to run + add new tools)
 │
 ├── registry/                                         # Machine-readable registry + schemas + fixtures (small)
 │   ├── tools.v1.json                                 # Canonical tool registry: owners, commands, gates, inputs, outputs
-│   ├── schemas/                                      # Optional but recommended (or link to contracts/)
-│   │   └── tools_registry.v1.schema.json
+│   ├── schemas/                                      # Schemas for registry + common tool I/O (optional but recommended)
+│   │   ├── tools_registry.v1.schema.json             # Schema for tools.v1.json
+│   │   ├── tool_result.v1.schema.json                # Standard machine output envelope (--json)
+│   │   ├── finding.v1.schema.json                    # Standard finding (code, severity, location, message)
+│   │   └── exit_codes.v1.schema.json                 # Allowed exit codes and meanings
 │   └── fixtures/                                     # Valid/invalid registry examples for CI schema validation
+│       ├── valid/
+│       │   ├── tools.v1.minimal.json
+│       │   ├── tools.v1.full.json
+│       │   └── README.md                             # How fixtures are used in CI
+│       └── invalid/
+│           ├── tools.v1.missing_owner.json
+│           ├── tools.v1.bad_gate.json
+│           ├── tools.v1.bad_paths.json
+│           └── README.md
+│
+├── validators/                                       # Metadata + schema validators (fail-closed; read-only)
+│   ├── README.md                                     # What validators check + expected inputs
+│   ├── validate_dcat.{sh,py,ts,js}                   # Validate DCAT against KFM profile (+ required fields)
+│   ├── validate_stac.{sh,py,ts,js}                   # Validate STAC Collections/Items/Assets (+ KFM constraints)
+│   ├── validate_prov.{sh,py,ts,js}                   # Validate PROV bundles (+ required links/agents/activities)
+│   ├── validate_receipts.{sh,py,ts,js}               # Validate run_receipt + promotion_manifest schemas
+│   ├── validate_catalog_bundle.{sh,py,ts,js}         # One-shot: validate DCAT+STAC+PROV+receipts as a set
+│   ├── validate_contract_versions.{sh,py,ts,js}      # Ensure artifacts declare supported schema/profile versions
+│   └── fixtures/                                     # Tiny valid/invalid examples (synthetic/sanitized)
+│       ├── dcat/
+│       │   ├── valid/
+│       │   │   ├── minimal_dcat.jsonld
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_license.jsonld
+│       │       ├── bad_distribution_href.jsonld
+│       │       └── FIXTURE_NOTES.md
+│       ├── stac/
+│       │   ├── valid/
+│       │   │   ├── collection.json
+│       │   │   ├── item.json
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_datetime.json
+│       │       ├── invalid_bbox.json
+│       │       └── FIXTURE_NOTES.md
+│       ├── prov/
+│       │   ├── valid/
+│       │   │   ├── prov.jsonld
+│       │   │   └── FIXTURE_NOTES.md
+│       │   └── invalid/
+│       │       ├── missing_activity.jsonld
+│       │       ├── orphan_entity.jsonld
+│       │       └── FIXTURE_NOTES.md
+│       └── receipts/
+│           ├── valid/
+│           │   ├── run_receipt.json
+│           │   ├── promotion_manifest.json
+│           │   └── FIXTURE_NOTES.md
+│           └── invalid/
+│               ├── missing_checksums.json
+│               ├── missing_policy_fields.json
+│               └── FIXTURE_NOTES.md
+│
+├── linkcheck/                                        # Cross-link integrity checks (no broken refs)
+│   ├── README.md                                     # Cross-link rules + what is considered "required"
+│   ├── catalog_triplet_linkcheck.{sh,py,ts,js}       # DCAT ↔ STAC ↔ PROV required cross-links
+│   ├── evidence_ref_linkcheck.{sh,py,ts,js}          # EvidenceRef resolvability expectations (format + target exists)
+│   ├── receipt_artifact_linkcheck.{sh,py,ts,js}      # Receipts ↔ checksums ↔ artifacts paths resolve
+│   ├── no_restricted_existence_leaks.{sh,py,ts,js}   # Ensure error envelopes do not leak restricted existence (static)
+│   └── fixtures/
+│       ├── valid/
+│       │   ├── triplet_ok/                           # Minimal DCAT+STAC+PROV bundle with consistent links
+│       │   │   ├── dcat.jsonld
+│       │   │   ├── stac/collection.json
+│       │   │   ├── stac/items/item-001.json
+│       │   │   ├── prov/prov.jsonld
+│       │   │   └── receipts/run_receipt.json
+│       │   └── evidence_refs_ok.json
+│       └── invalid/
+│           ├── triplet_broken_link/
+│           │   ├── dcat.jsonld                       # points to missing stac item
+│           │   └── stac/collection.json
+│           ├── evidence_ref_bad_scheme.json
+│           └── receipt_missing_artifact.json
+│
+├── hash/                                             # Spec-hash helpers + drift checks (determinism guardrails)
+│   ├── README.md                                     # Canonicalization rules + hashing invariants
+│   ├── compute_spec_hash.{sh,py,ts,js}               # Deterministic hash computation (canonical JSON rules)
+│   ├── canonicalize_json.{sh,py,ts,js}               # Canonical JSON serializer (stable ordering/whitespace)
+│   ├── check_spec_hash_drift.{sh,py,ts,js}           # Recompute + compare; fail on drift
+│   ├── check_hash_inputs.{sh,py,ts,js}               # Fail if spec includes non-deterministic fields (timestamps, etc.)
+│   └── fixtures/                                     # Golden vectors (inputs → expected digests)
+│       ├── vectors.v1.json                            # canonical test vector list
+│       ├── inputs/
+│       │   ├── dataset_spec_minimal.json
+│       │   ├── dataset_spec_with_ordering_noise.json  # should canonicalize to same digest as minimal
+│       │   └── dataset_spec_invalid_nondeterminism.json
+│       └── expected/
+│           ├── vectors.v1.expected.json               # expected sha256 outputs
+│           └── FIXTURE_NOTES.md
+│
+├── lint/                                             # Static guardrails (trust membrane + hygiene)
+│   ├── README.md                                     # What lint checks exist + why
+│   ├── check_no_secrets.{sh,py,ts,js}                # Secret scanning helpers (if not handled elsewhere)
+│   ├── check_no_direct_store_access.{sh,py,ts,js}    # Block direct DB/object-store/index clients in forbidden layers
+│   ├── check_policy_safe_errors.{sh,py,ts,js}        # Enforce safe error envelope conventions
+│   ├── check_license_headers.{sh,py,ts,js}           # Optional: enforce license header posture in tooling/code
+│   └── fixtures/
 │       ├── valid/
 │       └── invalid/
 │
-├── validators/                                       # Metadata + schema validators (fail-closed; read-only)
-│   ├── README.md
-│   ├── validate_dcat.*                               # DCAT records against KFM profile + required fields
-│   ├── validate_stac.*                               # STAC Collections/Items/Assets + KFM constraints
-│   ├── validate_prov.*                               # PROV lineage + required links/agents/activities
-│   ├── validate_receipts.*                           # run_receipt + promotion_manifest schemas (if applicable)
-│   └── fixtures/                                     # Tiny valid/invalid examples (synthetic/sanitized)
-│
-├── linkcheck/                                        # Cross-link integrity checks (no broken refs)
-│   ├── README.md
-│   ├── catalog_triplet_linkcheck.*                   # DCAT ↔ STAC ↔ PROV required cross-links
-│   ├── evidence_ref_linkcheck.*                      # EvidenceRef resolvability expectations
-│   └── fixtures/
-│
-├── hash/                                             # Spec-hash helpers + drift checks (determinism guardrails)
-│   ├── README.md
-│   ├── compute_spec_hash.*                           # Deterministic hash computation (canonical JSON rules)
-│   ├── check_spec_hash_drift.*                       # Recompute + compare; fail on drift
-│   └── fixtures/                                     # Golden vectors (inputs → expected digests)
-│
-├── lint/                                             # Static guardrails (trust membrane + hygiene)
-│   ├── README.md
-│   ├── check_no_secrets.*                            # Secret scanning helpers (if not handled elsewhere)
-│   ├── check_no_direct_store_access.*                # Block direct DB/object-store/index clients in forbidden layers
-│   └── check_policy_safe_errors.*                    # Optional: enforce safe error envelope conventions
-│
 ├── release/                                          # Optional: release tooling (must be deterministic)
-│   ├── README.md
-│   ├── build_sbom.*                                  # SBOM build (if used)
-│   ├── build_release_manifest.*                      # Assemble release metadata and digests
-│   └── verify_release_artifacts.*                    # Verify digests/signatures/attestations (if used)
+│   ├── README.md                                     # How releases are assembled + verified
+│   ├── build_sbom.{sh,py,ts,js}                      # SBOM build (if used)
+│   ├── build_release_manifest.{sh,py,ts,js}          # Assemble release metadata + digests
+│   ├── verify_release_artifacts.{sh,py,ts,js}        # Verify digests/signatures/attestations (if used)
+│   ├── sign_release.{sh,py,ts,js}                    # Optional: signing wrapper (NEVER stores keys in repo)
+│   └── fixtures/
+│       ├── valid/
+│       └── invalid/
 │
 ├── _shared/                                          # Shared helper libs (small; minimal side effects)
-│   ├── README.md
-│   ├── fs.*                                          # Safe file IO helpers
-│   ├── json.*                                        # Canonical JSON + strict parsing helpers
-│   ├── log.*                                         # Structured logging helpers (policy-safe)
-│   └── exit_codes.*                                  # Shared exit code constants
+│   ├── README.md                                     # Shared helpers contract (keep pure where possible)
+│   ├── fs.{py,ts,js}                                 # Safe file IO helpers (path traversal defense)
+│   ├── json.{py,ts,js}                               # Canonical JSON + strict parsing helpers
+│   ├── log.{py,ts,js}                                # Structured logging helpers (policy-safe)
+│   ├── errors.{py,ts,js}                             # Standardized error/finding helpers (codes, severities)
+│   ├── exit_codes.{py,ts,js}                         # Exit code constants + mapping
+│   └── time.{py,ts,js}                               # Time helpers (avoid non-determinism in hashes)
 │
 └── fixtures/                                         # Shared fixtures (synthetic/sanitized; tiny; documented)
     ├── public/
-    │   └── FIXTURE_NOTES.md
+    │   ├── FIXTURE_NOTES.md                          # license + sensitivity + intended use
+    │   ├── minimal_catalog_bundle/                   # a tiny end-to-end bundle used across validators/linkcheck
+    │   │   ├── dcat.jsonld
+    │   │   ├── stac/collection.json
+    │   │   ├── stac/items/item-001.json
+    │   │   ├── prov/prov.jsonld
+    │   │   └── receipts/run_receipt.json
+    │   └── minimal_openapi/                          # optional: contract tool fixtures
+    │       └── openapi.v1.yaml
     └── restricted_sanitized/
-        └── FIXTURE_NOTES.md
+        ├── FIXTURE_NOTES.md                          # describes sanitization (no precise coords/identifiers)
+        ├── generalized_geometry_bundle/              # coarse geometry used to test “no leakage” behavior
+        │   ├── dcat.jsonld
+        │   └── stac/items/item-001.json
+        └── policy_safe_error_cases/
+            ├── forbidden.json                        # safe error envelope example
+            └── not_found.json                        # indistinguishable or policy-safe variant
 ```
 
 [Back to top](#top)
