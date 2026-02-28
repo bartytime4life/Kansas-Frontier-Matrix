@@ -1,265 +1,523 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/46a7276e-762c-48b6-9731-f13d3f0db4fb
-title: Migrations
+title: migrations/README — Governed migrations (schema, projections, graph)
 type: standard
-version: v1
+version: v2
 status: draft
-owners: TBD
+owners: TBD (set via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-02-22
+updated: 2026-02-28
 policy_label: public
 related:
   - ../README.md
-tags: [kfm, migrations, governance, prov, rollback]
+  - ../docs/
+  - ../contracts/
+  - ../configs/
+  - ../data/
+tags:
+  - kfm
+  - migrations
+  - governance
+  - rollback
+  - receipts
+  - prov
 notes:
-  - This README defines how migrations are declared, reviewed, executed, validated, and rolled back.
-  - When in doubt: fail closed, emit receipts, and require governance review.
+  - Defines how migrations are declared, reviewed, executed, validated, and rolled back.
+  - Aligns migrations to KFM invariants: trust membrane, fail-closed promotion, canonical vs rebuildable, deterministic receipts.
+  - If uncertain: fail closed, emit receipts, and require governance review.
 [/KFM_META_BLOCK_V2] -->
 
-# Migrations
-**Purpose:** Governed, reversible changes to KFM storage + graph shape (schema, ontology, constraints, and backfills) with **scope control**, **baseline snapshots**, **receipts**, and **rollback artifacts**.
+<a id="top"></a>
 
-![Status](https://img.shields.io/badge/status-draft-yellow)
-![Policy](https://img.shields.io/badge/policy-public-blue)
-![Change Control](https://img.shields.io/badge/change_control-fail--closed-critical)
-![Reversible](https://img.shields.io/badge/reversible-required-success)
-![Audit](https://img.shields.io/badge/audit-run_receipt%20%2B%20PROV-informational)
+# Migrations
+Governed, reversible changes to **rebuildable stores** (schemas, constraints, indexes, projections, graph shape) with **scope control**, **baselines**, **diffs**, **run receipts**, and **rollback artifacts**.
+
+![status](https://img.shields.io/badge/status-draft-yellow)
+![policy](https://img.shields.io/badge/policy-public-blue)
+![change-control](https://img.shields.io/badge/change_control-fail--closed-critical)
+![reversible](https://img.shields.io/badge/reversible-required-success)
+![audit](https://img.shields.io/badge/audit-run_receipt%20%2B%20PROV-informational)
+
+**Owners:** TBD (enforced by `CODEOWNERS`)  
+**Principles:** map-first • time-aware • governed • evidence-first • cite-or-abstain
 
 ---
 
 ## Quick navigation
-- [What belongs here](#what-belongs-here)
-- [Directory layout](#directory-layout)
+- [Directory contract](#directory-contract)
+- [When to use a migration](#when-to-use-a-migration)
 - [Non-negotiables](#non-negotiables)
-- [Graph migrations](#graph-migrations)
-  - [Migration declaration contract](#migration-declaration-contract)
-  - [Baselines](#baselines)
-  - [Invariant checks](#invariant-checks)
-  - [Diffs and blast-radius control](#diffs-and-blast-radius-control)
-  - [Rollback artifacts](#rollback-artifacts)
-  - [PROV + run receipts](#prov--run-receipts)
-- [Relational or service migrations](#relational-or-service-migrations)
+- [Directory layout](#directory-layout)
+- [Migration declaration contract](#migration-declaration-contract)
+- [Baselines, diffs, and blast radius](#baselines-diffs-and-blast-radius)
+- [Invariant checks](#invariant-checks)
+- [Rollback artifacts](#rollback-artifacts)
+- [Run receipts and PROV](#run-receipts-and-prov)
+- [Migration types](#migration-types)
+  - [PostGIS migrations](#postgis-migrations)
+  - [Search/index migrations](#searchindex-migrations)
+  - [Graph migrations](#graph-migrations)
 - [How to add a migration](#how-to-add-a-migration)
 - [PR checklist](#pr-checklist)
 - [Troubleshooting](#troubleshooting)
+- [Glossary](#glossary)
 
 ---
 
-## What belongs here
-A **migration** is any change that intentionally mutates:
-- **Graph shape** (labels, relationships, constraints, ontology / semantics).
-- **Schema / constraints** in a relational store (tables, indexes, constraints).
-- **Derived caches / indexes** when they are considered “runtime surfaces” and must be rebuilt in a controlled way.
-- **Data backfills** that must be recorded and are not simply re-running a deterministic pipeline.
+## Directory contract
 
-If the change can be achieved by re-running deterministic ingestion/normalization from immutable inputs, prefer pipelines over migrations.
+### Purpose
+`migrations/` exists to make “high-impact mutations” **reviewable, auditable, and reversible**.
+
+A migration is any controlled change that intentionally mutates:
+- schemas/constraints/indexes in a relational store (e.g., PostGIS)
+- search/index structures (mappings, analyzers, vector schema, reindex flows)
+- graph shape (labels, relationships, constraints, ontology) **when a graph is used**
+- backfills that are not simply “re-run the deterministic pipeline”
+
+### What belongs here
+✅ Machine-declared migrations with:
+- **declared scope**
+- **pre/post baselines**
+- **diff outputs**
+- **validation + invariant checks**
+- **rollback artifacts** (or explicit, approved irreversibility)
+- **run receipts** and optional **PROV** bundles
+
+✅ Deterministic helpers that support migration safety (render/plan/diff/check), if repo-standard.
+
+### What must not go here
+❌ Secrets, credentials, tokens, kubeconfigs  
+❌ Raw or sensitive dataset payloads  
+❌ One-off “operator scripts” without declarations, receipts, and rollback  
+❌ Mutations to **canonical truth** (RAW/PROCESSED/CATALOG) — those must be done by governed pipelines and promotion gates
+
+> [!IMPORTANT]
+> In KFM, PostGIS/search/graph/tiles are **rebuildable projections**. Migrations must preserve the ability to reconstruct from canonical artifacts.
+
+[Back to top](#top)
 
 ---
 
-## Directory layout
-> This repo’s exact tools/commands may differ. The layout below is the **recommended contract**. If the repo already uses a different structure, update this tree to match reality and keep the contract guarantees.
+## When to use a migration
 
-```text
-migrations/
-├─ README.md
-├─ graph/
-│  ├─ GRAPH-MIG-YYYY-MM-DD-01/
-│  │  ├─ migration.yml              # machine-readable declaration (scope + limits)
-│  │  ├─ forward.cypher             # forward change (idempotent preferred)
-│  │  ├─ rollback.cypher            # rollback plan (required if requires_rollback=true)
-│  │  ├─ baselines/
-│  │  │  ├─ pre.json                # baseline snapshot BEFORE
-│  │  │  └─ post.json               # baseline snapshot AFTER
-│  │  ├─ diffs/
-│  │  │  ├─ summary.json            # declared-vs-observed delta summary
-│  │  │  └─ touched.csv             # optional: labels/rel-types/actors touched
-│  │  ├─ receipts/
-│  │  │  ├─ run_receipt.json        # run receipt for this execution
-│  │  │  └─ prov.jsonld             # PROV activity/entity/agent bundle
-│  │  └─ notes.md                   # human context, risks, review notes
-│  └─ _schemas/
-│     └─ migration_declaration.schema.json
-├─ db/                               # optional (if this repo uses DB schema migrations)
-│  └─ ...
-└─ _fixtures/
-   ├─ valid/
-   └─ invalid/
-```
+Prefer pipelines over migrations when possible.
+
+Use a migration when:
+- the change must mutate a rebuildable store in-place (schema/index/constraint)
+- the change requires controlled sequencing and rollback
+- the change has non-trivial blast radius that must be declared and reviewed
+- the change is needed to restore invariant correctness
+
+Do **not** use a migration when:
+- you can re-derive the projection by replaying canonical artifacts (recommended)
+- you can roll out a new versioned projection side-by-side and flip consumers safely
+
+> [!RULE]
+> If you can re-run deterministically from immutable inputs, **do that**. Migrations are for what cannot be safely re-derived without an explicit change plan.
+
+[Back to top](#top)
 
 ---
 
 ## Non-negotiables
-These rules exist to protect the **trust membrane** and keep changes reversible.
 
-1. **Fail closed:** if validation, policy, or invariant checks fail → do not proceed; rollback if needed.
-2. **Scope declared upfront:** every migration declares what it is allowed to touch.
-3. **Baseline + diff required:** capture pre/post state and compute deltas; reviewers must see blast radius.
-4. **Rollback artifacts required:** migrations must be reversible unless explicitly documented and approved.
-5. **Receipts always:** each run emits a **run receipt** and a **PROV record** so changes are attributable and auditable.
-6. **Governance-sensitive nodes are “hard stop”:** protected nodes / authority nodes must not change without explicit governance approval.
+1. **Fail closed.** If validation, policy, invariant checks, or receipts fail → do not proceed; rollback if needed.
+2. **Scope is declared upfront.** Every migration declares what it is allowed to touch and what is forbidden.
+3. **Baseline + diff required.** Capture pre/post state and compute deltas; reviewers must see blast radius.
+4. **Rollback artifacts required.** Reversible by default. Irreversible changes require explicit governance approval.
+5. **Receipts always.** Every execution emits a run receipt (and optionally PROV) for attribution and auditability.
+6. **Protected domains are hard stop.** Governance-protected schemas/namespaces/labels must not change without explicit approval.
+7. **Policy-safe outputs.** Diffs/receipts/logs must not leak secrets, PII, or restricted location details.
+
+[Back to top](#top)
 
 ---
 
-## Graph migrations
-Graph migrations are the default “high-risk / high-governance” migration type because graph shape drift can silently break downstream analytics and narratives.
+## Directory layout
 
-### Migration declaration contract
-Each graph migration must include a machine-readable `migration.yml` with:
-- Stable `migration_id`
-- A plain-language `intent`
-- Explicit scope constraints (allowed/forbidden labels, deltas, etc.)
-- Governance review routing
+> [!NOTE]
+> This is the **recommended contract layout** aligned to the repo-wide “registry + schemas + fixtures” pattern used elsewhere (configs/examples/apps). If your repo already differs, update this section to match reality while preserving the guarantees.
 
-Example:
-
-```yaml
-migration_id: GRAPH-MIG-YYYY-MM-DD-##
-intent: "Short natural-language statement of what should change"
-allowed_labels:
-  - Feature
-  - Provenance
-forbidden_labels:
-  - Authority
-  - Treaty
-max_node_delta: 12000
-max_rel_delta: 30000
-requires_rollback: true
-governance_review: "FAIR+CARE Council"
+```text
+migrations/
+├─ README.md
+│
+├─ registry/                                      # Machine-readable registries + schemas + fixtures (small)
+│  ├─ migrations.v1.json                          # Canonical migration registry (ids, types, owners, status)
+│  ├─ schemas/
+│  │  ├─ migration_declaration.v1.schema.json     # Schema for migration.yml
+│  │  └─ receipt_refs.v1.schema.json              # (Optional) schema for receipt pointer records
+│  └─ fixtures/
+│     ├─ valid/                                   # Valid declaration examples
+│     └─ invalid/                                 # Invalid declaration examples (must fail CI)
+│
+├─ postgis/                                       # Relational schema migrations (optional; if PostGIS is used)
+│  ├─ README.md                                   # Tooling + ordering rules + rollback posture
+│  ├─ PG-MIG-YYYY-MM-DD-01/
+│  │  ├─ migration.yml                            # Declaration (scope + limits)
+│  │  ├─ forward.sql                              # Forward change (idempotent preferred)
+│  │  ├─ rollback.sql                             # Rollback plan (required if requires_rollback=true)
+│  │  ├─ baselines/
+│  │  │  ├─ pre.json                              # Baseline snapshot BEFORE
+│  │  │  └─ post.json                             # Baseline snapshot AFTER
+│  │  ├─ diffs/
+│  │  │  ├─ summary.json                          # Declared-vs-observed delta summary
+│  │  │  └─ touched.csv                           # Optional reviewer-friendly list of touched objects
+│  │  ├─ receipts/
+│  │  │  ├─ run_receipt.json                      # Execution receipt (who/what/when + validation)
+│  │  │  └─ prov.jsonld                           # Optional PROV bundle
+│  │  └─ notes.md                                 # Human context + risks + review notes
+│  └─ ...
+│
+├─ search/                                        # Search/index migrations (optional)
+│  ├─ README.md
+│  ├─ SEARCH-MIG-YYYY-MM-DD-01/
+│  │  ├─ migration.yml
+│  │  ├─ forward.json                             # Example: mapping/settings update OR reindex plan
+│  │  ├─ rollback.json                            # Rollback/restore plan OR “not possible” w/ approval
+│  │  ├─ baselines/
+│  │  ├─ diffs/
+│  │  ├─ receipts/
+│  │  └─ notes.md
+│  └─ ...
+│
+└─ graph/                                         # Graph migrations (optional)
+   ├─ README.md
+   ├─ GRAPH-MIG-YYYY-MM-DD-01/
+   │  ├─ migration.yml
+   │  ├─ forward.cypher
+   │  ├─ rollback.cypher
+   │  ├─ baselines/
+   │  ├─ diffs/
+   │  ├─ receipts/
+   │  └─ notes.md
+   └─ ...
 ```
 
-> **Naming:** use `GRAPH-MIG-YYYY-MM-DD-##` and keep it stable. Never reuse a migration_id.
+[Back to top](#top)
 
-### Baselines
-Each migration must capture a **pre-migration baseline** and **post-migration baseline**. At minimum, baseline capture should detect graph-shape damage even when raw counts are stable.
+---
 
-Recommended baseline fields:
-- Node count and relationship count (coarse drift)
-- Schema/constraint fingerprint (constraint/index drift)
-- Label entropy (ontology reshaping)
-- Degree distribution fingerprints (fan-out explosions)
-- Protected/authority node hash (“sacred node” mutation detection)
+## Migration declaration contract
 
-Store baselines under `baselines/pre.json` and `baselines/post.json`.
+Each migration directory **must** include a machine-readable `migration.yml`.
 
-### Invariant checks
-CI (and local preflight) must enforce invariant classes such as:
-- **Structural:** no unlabeled nodes; no relationship without type; no orphaned provenance
-- **Ontological:** mutually exclusive labels remain exclusive; required acyclicity constraints hold
-- **Cardinality:** required relationships exist; min/max fan-out constraints hold where defined
-- **Governance hard stop:** protected nodes must never change
+Minimum fields (v1; extend as needed):
+- `migration_id` (stable, unique, never reused)
+- `type` (`postgis` | `search` | `graph` | `other`)
+- `intent` (plain-language)
+- `scope` (allowed + forbidden)
+- `limits` (blast-radius caps)
+- `requires_rollback` (boolean)
+- `approvals` (routing rules or labels)
+- `runner` (how it is executed; command or tool reference)
+- `artifacts` (forward/rollback script names, baseline/diff expectations)
 
-### Diffs and blast-radius control
-Every migration run must compute declared-vs-observed deltas:
-- Label-scoped and relationship-scoped diffs
-- Temporal diffing (stamp changes with `updatedAt` and report actors/labels touched during the window)
-- CI must fail if unexpected labels or relationship types appear outside the declared plan
+### Example `migration.yml`
 
-Suggested outputs:
-- `diffs/summary.json` (machine-readable)
-- `diffs/touched.csv` (reviewer-friendly)
+```yaml
+migration_id: PG-MIG-2026-02-28-01
+type: postgis
+intent: "Add spatial index to parcels table to improve map query performance"
 
-### Rollback artifacts
-If `requires_rollback: true`, every migration must produce:
-- Pre-state checksum
-- Mutation log (what was mutated)
-- Deterministic ID map (so rollback is correct)
-- Tested rollback Cypher (`rollback.cypher`)
+scope:
+  allowed_schemas:
+    - public
+  allowed_tables:
+    - parcels
+  forbidden_schemas:
+    - governance
+    - audit
+  forbidden_tables:
+    - authority_sites
 
-Store immutable mutation captures under a stable path (recommended pattern):
-- `data/work/logs/graph/migrations/<migration_id>/<run_id>/...` *(path may vary by repo; the key requirement is “immutable + stable”)*
+limits:
+  max_table_count_touched: 1
+  max_index_count_delta: 2
+  max_row_backfill: 0
 
-### PROV + run receipts
-Each migration run must emit:
-- A **run receipt** capturing who/what/when, inputs/outputs, environment, validation status, and policy decisions
-- A **PROV record** representing the migration as a PROV Activity with pre/post Entities and a Runner/commit Agent
+requires_rollback: true
 
-Store under `receipts/` next to the migration.
+approvals:
+  required_reviewers:
+    - kfm-platform
+    - kfm-governance
+  change_class: governance-critical
 
-Mermaid view of the expected lifecycle:
+runner:
+  tool: "psql"                 # or alembic/flyway/etc.
+  command: "scripts/migrate.sh" # repo-standard wrapper, if present
+  environment:
+    - KFM_DB_DSN_REF            # secret reference name; not the secret value
+
+artifacts:
+  forward:
+    - forward.sql
+  rollback:
+    - rollback.sql
+  baselines:
+    pre: baselines/pre.json
+    post: baselines/post.json
+  diffs:
+    summary: diffs/summary.json
+```
+
+> [!IMPORTANT]
+> “Scope” is not documentation — it is a **limit** enforced by CI and/or the migration runner. If scope can’t be enforced, treat it as incomplete and fail closed.
+
+[Back to top](#top)
+
+---
+
+## Baselines, diffs, and blast radius
+
+Every migration must capture **pre** and **post** baselines and produce a diff.
+
+Baseline goals:
+- detect unintended mutations even when “it seems fine”
+- provide reviewers a predictable blast-radius summary
+- make rollback verification possible
+
+### Minimum baseline fields (recommended)
+- object counts (tables/indexes/constraints OR nodes/rels)
+- schema fingerprint (constraints/index definitions digest)
+- “protected domain” fingerprint (hash of protected objects)
+- performance-relevant stats where safe (optional)
+
+### Diff outputs (required)
+- `diffs/summary.json` (machine-readable, CI-enforced)
+- `diffs/touched.csv` (optional reviewer-friendly list)
+
+> [!RULE]
+> If observed diffs exceed declared limits → **fail** and require rollback or explicit approved exception.
+
+[Back to top](#top)
+
+---
+
+## Invariant checks
+
+Migrations must not violate KFM invariants. CI (and preflight locally) should enforce:
+
+### Global invariants
+- no secret leakage in artifacts/receipts
+- no policy bypass (trust membrane intact)
+- no mutation of protected domains without explicit approval
+
+### Store-specific invariants (examples)
+**PostGIS**
+- required constraints exist
+- spatial indexes present where required
+- migrations are ordered and idempotent (where possible)
+
+**Search**
+- mapping changes are versioned
+- reindex plan is explicit
+- index alias flips are audited
+- rollback strategy exists (old index retained) unless explicitly approved
+
+**Graph**
+- no orphaned provenance nodes
+- ontology constraints preserved (exclusive labels, required relationships)
+- protected/authority nodes unchanged unless explicitly approved
+
+> [!TIP]
+> Treat “invariant checks” as contract tests: they must be deterministic and run in CI.
+
+[Back to top](#top)
+
+---
+
+## Rollback artifacts
+
+Reversible by default.
+
+If `requires_rollback: true`, the migration directory must include:
+- rollback script (`rollback.sql`, `rollback.json`, `rollback.cypher`, etc.)
+- rollback verification notes (what to check after rollback)
+- baseline/diff artifacts sufficient to confirm rollback correctness
+
+If a migration is **not** reversible:
+- set `requires_rollback: false`
+- document why in `notes.md`
+- include the governance approval reference (issue/ADR/decision record)
+- include an alternative safety strategy (e.g., dual-write, shadow index, alias flip)
+
+> [!WARNING]
+> “We can’t roll this back” is a governance event, not a casual decision.
+
+[Back to top](#top)
+
+---
+
+## Run receipts and PROV
+
+Every migration execution must emit:
+- a **run receipt** (`receipts/run_receipt.json`)
+- optionally a **PROV bundle** (`receipts/prov.jsonld`) for richer lineage
+
+### Receipt minimum fields
+- `run_id` (stable id for the execution)
+- `migration_id`
+- `actor` (service principal or operator identity; no personal secrets)
+- `started_at`, `finished_at`
+- `environment` (dev/stage/prod)
+- `inputs` (scripts/config versions; digests)
+- `outputs` (baseline/diff digests; any created artifacts)
+- `validation` results (pass/fail + invariant check outputs)
+- `policy` notes (policy-safe; avoid restricted detail)
+
+> [!IMPORTANT]
+> Receipts must be **policy-safe**. Never store credentials, raw DSNs, or restricted coordinates in receipts.
+
+### Lifecycle sketch
 
 ```mermaid
 flowchart TD
-  A[Declare migration.yml] --> B[Capture baseline pre]
-  B --> C[Apply forward change]
-  C --> D[Capture baseline post]
-  D --> E[Compute diff]
-  E --> F{Scope + invariants pass?}
-  F -->|yes| G[Emit run_receipt + PROV]
-  F -->|no| H[Rollback + fail closed]
-  G --> I[Review + governance gate]
-  I --> J[Promote / deploy]
+  A[Declare migration.yml] --> B[Preflight checks]
+  B --> C[Capture baseline pre]
+  C --> D[Apply forward change]
+  D --> E[Capture baseline post]
+  E --> F[Compute diff]
+  F --> G{Scope + invariants pass?}
+  G -->|Yes| H[Emit run_receipt (+ PROV)]
+  G -->|No| I[Rollback if required]
+  I --> J[Emit failed receipt + evidence]
+  H --> K[Review + governance gate]
 ```
+
+[Back to top](#top)
 
 ---
 
-## Relational or service migrations
-If this repo has DB schema migrations (SQL migrations, ORM migrations, index rebuild scripts, etc.), place them under `migrations/db/` and apply the same governance posture:
+## Migration types
 
-- Every migration is immutable once merged.
-- Every migration has a declared intent and a rollback strategy.
-- Every run emits receipts and attaches validation evidence.
-- Do not apply directly to production without the governed pipeline/runner.
+### PostGIS migrations
+Use for:
+- schema changes (tables/columns/types)
+- index/constraint changes
+- controlled backfills
 
-If you introduce a DB-migration tool (e.g., Alembic/Flyway/etc.), add:
-- A `migrations/db/README.md` describing the exact commands and environment variables
-- CI checks ensuring migrations are ordered, reproducible, and reversible
+Recommended safety posture:
+- prefer additive changes
+- large backfills must be explicitly bounded and staged
+- never run ad hoc in prod; always through the governed runner
+
+### Search/index migrations
+Use for:
+- mapping/settings changes
+- analyzer changes
+- vector field changes
+- reindex flows, alias swaps, shard strategy
+
+Recommended safety posture:
+- plan for dual-index + alias flip where possible
+- keep old index around for rollback window (time-bounded)
+- treat “index rebuild” as a controlled operation with receipts
+
+### Graph migrations
+Use for:
+- ontology changes (labels/rel-types)
+- constraints and indexes in a graph store
+- controlled rewrites/backfills that cannot be safely rederived
+
+Recommended safety posture:
+- declare protected labels/namespaces and fail on mutation
+- compute structural fingerprints (counts + constraint digests + protected-node hashes)
+- prefer idempotent forward scripts
+
+[Back to top](#top)
 
 ---
 
 ## How to add a migration
-1. **Pick the migration type** (`graph/` vs `db/`).
-2. **Create a new folder**:
-   - `migrations/graph/GRAPH-MIG-YYYY-MM-DD-01/`
-3. **Write `migration.yml`** (scope + limits + governance routing).
-4. **Implement forward and rollback scripts** (idempotent forward preferred).
-5. **Add fixtures**:
-   - Valid/invalid declaration fixtures under `migrations/_fixtures/` (for schema validator tests).
-6. **Run locally in a safe environment**:
-   - Capture baselines, apply forward, compute diff, validate invariants, test rollback.
-7. **Commit artifacts required for review**:
-   - `migration.yml`, scripts, and any validator/schema changes
-   - (Optionally) a small, non-sensitive sample diff output if it helps reviewers
+
+1. Pick a type: `postgis/`, `search/`, or `graph/`.
+2. Create a new folder:
+   - `migrations/<type>/<TYPE>-MIG-YYYY-MM-DD-01/`
+3. Add:
+   - `migration.yml`
+   - forward script
+   - rollback script (or approved irreversibility notes)
+4. Wire baselines/diffs:
+   - `baselines/pre.json`, `baselines/post.json`
+   - `diffs/summary.json`
+5. Ensure CI coverage:
+   - declaration schema validation
+   - invariant checks
+   - secrets scan
+6. Run in a safe environment and emit a receipt:
+   - store under `receipts/`
+7. Open PR with declared scope + blast radius summary.
+
+> [!NOTE]
+> If your repo has a migration runner (CLI/workflow), link it from each `migrations/<type>/README.md` and keep commands consistent.
+
+[Back to top](#top)
 
 ---
 
 ## PR checklist
-- [ ] `migration.yml` present and validated
-- [ ] Allowed/forbidden scope is explicit and tight
-- [ ] Baseline capture implemented (pre + post)
-- [ ] Diff output is produced and reviewable
+
+- [ ] `migration.yml` present and passes schema validation
+- [ ] Scope (allowed/forbidden) is explicit and tight
+- [ ] Limits are realistic and enforceable
+- [ ] Forward script present (idempotent preferred)
+- [ ] Rollback script present **or** approved irreversibility documented
+- [ ] Baseline capture defined (pre + post)
+- [ ] Diff output defined and reviewable
 - [ ] Invariant checks pass locally and in CI
-- [ ] Rollback strategy exists and is tested (or governance-approved exception)
-- [ ] Run receipt + PROV generation is wired (or the runner tooling is updated accordingly)
-- [ ] Governance review requested if the migration could touch protected/authority nodes or sensitive domains
+- [ ] Run receipt + (optional) PROV generation is wired
+- [ ] Governance review requested if protected domains may be touched
+- [ ] No secrets, PII, or restricted coordinates in any artifacts
+
+[Back to top](#top)
 
 ---
 
 ## Troubleshooting
-**CI hard fails** (must fix; do not merge):
-- Protected node mutation detected
-- Schema fingerprint mismatch (unexpected constraint/index drift)
-- Orphaned provenance detected
-- Unexpected labels/relationship types outside declared scope
 
-**Soft fails** (manual review required):
-- Bounded cardinality drift
-- Performance index rebuild
+**Hard fail (must fix; do not merge/run):**
+- Scope violation (touched forbidden schema/table/label)
+- Observed diffs exceed declared limits
+- Protected domain fingerprint changed
+- Missing rollback when `requires_rollback: true`
+- Receipt generation missing or invalid
+- Secrets scan failure
 
-**Informational**:
-- New labels introduced *and declared*
+**Review-required (manual approval needed):**
+- Performance-impacting index rebuilds beyond typical thresholds
+- Large but declared backfills (must include staged plan and monitoring)
+
+**Informational (expected changes):**
+- New indexes/constraints exactly as declared
+- Schema fingerprint change consistent with forward script
+
+[Back to top](#top)
+
+---
+
+## Glossary
+
+- **Migration:** Controlled mutation of a rebuildable store (schema/index/graph shape) with receipts + rollback.
+- **Baseline:** Pre/post snapshot used to detect and summarize blast radius.
+- **Diff:** Declared-vs-observed change summary; must be bounded and reviewable.
+- **Run receipt:** Audit record of who/what/when/why + inputs/outputs + validation results.
+- **PROV:** W3C provenance model representation (optional but recommended for deep lineage).
+- **Protected domain:** Governance-sensitive schemas/labels/namespaces that require explicit approval to mutate.
 
 ---
 
 <details>
-<summary>Appendix: Guardrails for “do not do this”</summary>
+<summary>Appendix: “Do not do this” guardrails</summary>
 
 - Do not delete or rewrite already-merged migrations.
 - Do not run migrations manually against production.
 - Do not weaken scope limits “to get CI green.”
-- Do not log sensitive fields into receipts/baselines/diffs without redaction/generalization.
+- Do not log secrets, raw DSNs, PII, or restricted coordinates into baselines/diffs/receipts.
+- Do not mutate canonical truth zones (RAW/PROCESSED/CATALOG) via migrations.
 
 </details>
 
----
-
-_“Documentation is production.” If you add a new migration type or runner, update this README and include validator tests to enforce the new contract._
+<p align="right"><a href="#top">Back to top ↑</a></p>
