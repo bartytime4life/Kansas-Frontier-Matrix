@@ -6,15 +6,16 @@ version: v1
 status: draft
 owners: KFM Admin Team (TBD)
 created: 2026-02-26
-updated: 2026-02-26
+updated: 2026-02-28
 policy_label: restricted
 related:
-  - apps/admin/tests/README.md  # TODO: confirm path
-  - policy/fixtures/            # TODO: confirm if shared policy fixtures exist
+  - apps/admin/tests/README.md  # TODO: confirm path (not confirmed in repo)
+  - policy/fixtures/            # TODO: confirm if shared policy fixtures exist (not confirmed in repo)
 tags: [kfm, tests, fixtures, admin]
 notes:
   - This directory is a governed boundary: fixtures must be synthetic, deterministic, and safe to commit.
-  - Update this README when new fixture categories or schemas are introduced.
+  - Fixtures model policy labels and sensitive scenarios, but must never contain real sensitive content.
+  - Update this README when new fixture categories, schemas, or gates are introduced.
 [/KFM_META_BLOCK_V2] -->
 
 # Admin Test Fixtures
@@ -23,9 +24,12 @@ notes:
 ![scope](https://img.shields.io/badge/scope-admin%20tests-informational)
 ![data](https://img.shields.io/badge/data-synthetic%20only-important)
 ![policy](https://img.shields.io/badge/policy-default--deny-critical)
+![label](https://img.shields.io/badge/policy_label-restricted-critical)
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 
-**Status:** draft • **Owners:** KFM Admin Team (TBD)
+**Status:** draft • **Owners:** KFM Admin Team (TBD) • **Policy label:** restricted
+
+> WARNING: Treat every fixture as if it could become publicly visible by mistake. If you are unsure a fixture is safe, do not commit it—escalate for governance review.
 
 ---
 
@@ -35,6 +39,7 @@ notes:
 - [Directory layout](#directory-layout)
 - [What belongs here](#what-belongs-here)
 - [What must NOT go here](#what-must-not-go-here)
+- [Fixture contract](#fixture-contract)
 - [Fixture conventions](#fixture-conventions)
 - [Adding or changing fixtures](#adding-or-changing-fixtures)
 - [Validation gates](#validation-gates)
@@ -45,10 +50,12 @@ notes:
 
 ## Purpose
 This folder contains **fixtures** used by `apps/admin` tests (unit, integration, and/or E2E). Fixtures are the “known-good” inputs that let tests:
-- create deterministic UI state,
-- mock governed API responses,
-- verify policy-driven behavior (allow/deny + obligations),
-- reproduce edge cases reliably.
+
+- create deterministic UI state
+- mock governed API responses
+- verify policy-driven behavior (allow/deny + obligations)
+- reproduce edge cases reliably
+- prove the Admin UI honors the **trust membrane** (policy decisions + obligations surfaced in UI)
 
 ---
 
@@ -57,10 +64,12 @@ Fixtures are part of the **trust membrane**: tests should demonstrate that *poli
 
 ```mermaid
 flowchart TD
-  Dev[Developer changes code] --> CI[CI runs tests]
-  CI --> Fixtures[Uses fixtures from this folder]
-  Fixtures --> Tests[Admin tests: unit, integration, E2E]
-  Tests --> Result{Pass?}
+  Dev[Developer change] --> CI[CI test run]
+  CI --> Fixtures[Uses fixtures]
+  Fixtures --> Tests[Admin tests]
+  Tests --> PEP[Governed API boundary]
+  PEP --> Policy[Policy decision + obligations]
+  Policy --> Result{Pass?}
   Result -->|Yes| Merge[Merge allowed]
   Result -->|No| Block[Merge blocked]
 ```
@@ -73,7 +82,7 @@ flowchart TD
 
 ```text
 apps/admin/tests/fixtures/                             # Admin test fixtures (safe, synthetic, policy-labeled)
-├── README.md                                          # You are here (fixture rules, naming, validation, provenance)
+├── README.md                                          # You are here (rules, naming, validation, provenance)
 ├── policy_cases/                                      # Allow/deny + obligations “truth table” cases (source of expectations)
 │   └── (case_slug).json                               # Single policy case fixture (inputs → expected decision/obligations)
 ├── api/                                               # Mock governed API responses (stable shapes, versioned)
@@ -81,8 +90,8 @@ apps/admin/tests/fixtures/                             # Admin test fixtures (sa
 ├── ui/                                                # View-state or component fixtures (render states + edge cases)
 │   └── (component_slug).json                          # Component/view fixture (props/state payloads)
 ├── schemas/                                           # JSON Schemas for fixture validation (recommended)
-│   └── (fixture_kind).schema.json                     # Schema per fixture kind (policy_case/api/ui) + required fields
-└── ...                                                # Add new fixture kinds as folders (must include schema + README updates)
+│   └── (fixture_kind).schema.json                     # Schema per fixture kind + required fields
+└── ...                                                # New fixture kinds MUST include schema + README update
 ```
 
 ---
@@ -107,7 +116,25 @@ apps/admin/tests/fixtures/                             # Admin test fixtures (sa
 - Large binary artifacts (use generated test data or small text fixtures).
 - Any fixture that depends on system time, randomness, or network availability.
 
-> WARNING: If you are unsure whether a fixture is safe to commit, treat it as **restricted** and escalate for governance review.
+> If you are unsure whether a fixture is safe to commit, treat it as **restricted** and escalate for governance review.
+
+---
+
+## Fixture contract
+
+Fixtures SHOULD be self-describing. Prefer an explicit `meta` block so fixtures remain understandable outside the immediate test context.
+
+Minimum recommended contract (all fixture kinds):
+
+- `meta.id` (string, stable): unique within this folder
+- `meta.kind` (string): `policy_case` | `api_mock` | `ui_state` | `...`
+- `meta.schema_version` (string): e.g. `"v1"`
+- `meta.description` (string): one line describing what the fixture proves
+- `meta.policy_label` (string): label being modeled (not the sensitivity of the *fixture file*)
+- `meta.determinism` (string): `"static"` or `"generated_seeded"`
+- `meta.generated_by` (optional): script path + version if generated
+
+> NOTE: Existing fixtures MAY omit `meta` if tests already rely on a legacy shape. New fixtures SHOULD include `meta` unless there is a strong reason not to.
 
 ---
 
@@ -115,24 +142,30 @@ apps/admin/tests/fixtures/                             # Admin test fixtures (sa
 
 ### Naming
 Use names that are stable and descriptive:
+
 - `snake_case` filenames
 - include the **scenario** in the name: `public_user_cannot_publish.json`, `steward_can_approve_promotion.json`
 - avoid embedding dates unless they are part of the scenario
+- if you must introduce a breaking contract change, suffix with `_v2` (or add a folder) rather than rewriting in place
 
 ### Determinism
 Fixtures must be deterministic:
+
 - use stable IDs (UUIDs are fine, but keep them constant once committed)
 - avoid “now”, timestamps generated at runtime, random salts, or order-dependent arrays
+- if time is required, use a fixed timestamp (example: `"2026-01-01T00:00:00Z"`)
 - keep numeric values small and interpretable
 
 ### Minimal-but-complete
 Prefer small fixtures that still exercise the real rules:
-- include only fields required by the contract/test
-- but include enough context to prevent tests from “passing by accident”
 
-### “Golden” fixtures
+- include only fields required by the contract/test
+- include enough context to prevent tests from “passing by accident”
+
+### Golden fixtures
 If a fixture is used as a **golden** baseline:
-- it should be stable across time and OS
+
+- it must be stable across time, OS, and JSON serializer differences
 - changing it should require updating expected snapshots and explaining the change in the PR
 
 ---
@@ -154,8 +187,14 @@ If a fixture is used as a **golden** baseline:
 4. **Add a test that uses the fixture**
    - fixtures without tests become stale quickly
 
-5. **Document noteworthy fixtures**
+5. **Register noteworthy fixtures**
    - add a one-line description in the [Fixture registry](#fixture-registry) table below
+
+6. **PR checklist**
+   - [ ] Fixture is synthetic + deterministic
+   - [ ] Fixture validates against schema (or schema added)
+   - [ ] Tests cover the fixture
+   - [ ] README + registry updated (if new category or notable scenario)
 
 ---
 
@@ -176,11 +215,11 @@ If a fixture is used as a **golden** baseline:
 
 Minimum gates for fixtures (fail closed):
 
-- [ ] **Schema validation**: fixtures validate against schemas (if present)
-- [ ] **No secrets**: automated secret scanning passes
-- [ ] **Size check**: fixtures stay small (avoid megabyte+ JSON)
-- [ ] **Determinism check**: fixtures do not depend on wall-clock time or randomness
-- [ ] **Policy regression**: policy fixtures exercise allow/deny + obligations and block merge on change
+- [ ] **TF-01 Schema validation**: fixtures validate against schemas (if present)
+- [ ] **TF-02 No secrets**: automated secret scanning passes
+- [ ] **TF-03 Size check**: fixtures stay small (avoid megabyte+ JSON)
+- [ ] **TF-04 Determinism**: fixtures do not depend on wall-clock time, randomness, or network
+- [ ] **TF-05 Policy regression**: policy fixtures exercise allow/deny + obligations and block merge on unexpected change
 
 > NOTE: If your repo uses a specific test runner (Jest/Vitest/Playwright/etc.), add the exact command(s) here.
 
@@ -197,30 +236,41 @@ pnpm -C apps/admin test
 
 ### Safe data only
 Fixtures must be safe to commit and safe to share with anyone who can read the repo:
+
 - use fake names like `Example User`, `Test Steward`
 - use reserved domains like `example.com`
 - use synthetic coordinates (or omit geometry entirely) unless the test requires it
+- if geometry is required for UI rendering, prefer coarse/fake shapes (squares, simple polygons) over realistic ones
 
 ### Default-deny mindset
 Admin fixtures often model governance flows (promotion review, rights checks, redaction obligations). When in doubt:
+
 - **deny by default**
 - include an explicit “steward override” scenario **only if** policy supports it
 
 ### Obligations are first-class
 If your policy returns obligations (like “generalize geometry” or “remove attributes”):
+
 - fixtures must encode the obligations expected
-- UI tests should verify that the Admin app surfaces the obligation to the user (badge, notice, or banner)
+- UI tests should verify the Admin app surfaces the obligation to the user (badge, notice, banner, or required ack)
 
 ---
 
 ## Appendix: fixture templates
 
 <details>
-<summary><strong>Policy case fixture template (JSON)</strong></summary>
+<summary><strong>Policy case fixture template</strong></summary>
 
 ```json
 {
-  "case_id": "public_user_cannot_read_restricted",
+  "meta": {
+    "id": "public_user_cannot_read_restricted",
+    "kind": "policy_case",
+    "schema_version": "v1",
+    "description": "Public user cannot read a restricted resource.",
+    "policy_label": "restricted",
+    "determinism": "static"
+  },
   "input": {
     "user": { "role": "public" },
     "action": "read",
@@ -237,11 +287,18 @@ If your policy returns obligations (like “generalize geometry” or “remove 
 </details>
 
 <details>
-<summary><strong>Policy case with obligations template (JSON)</strong></summary>
+<summary><strong>Policy case with obligations template</strong></summary>
 
 ```json
 {
-  "case_id": "public_user_reads_public_generalized",
+  "meta": {
+    "id": "public_user_reads_public_generalized",
+    "kind": "policy_case",
+    "schema_version": "v1",
+    "description": "Public user can read generalized output with a notice obligation.",
+    "policy_label": "public_generalized",
+    "determinism": "static"
+  },
   "input": {
     "user": { "role": "public" },
     "action": "read",
@@ -260,10 +317,18 @@ If your policy returns obligations (like “generalize geometry” or “remove 
 </details>
 
 <details>
-<summary><strong>Mock API response template (JSON)</strong></summary>
+<summary><strong>Mock API response template</strong></summary>
 
 ```json
 {
+  "meta": {
+    "id": "dataset_version_public_example",
+    "kind": "api_mock",
+    "schema_version": "v1",
+    "description": "DatasetVersion response used by Admin dataset detail view.",
+    "policy_label": "public",
+    "determinism": "static"
+  },
   "dataset_version_id": "2026-02.example1234",
   "title": "Example dataset (synthetic)",
   "policy_label": "public",
