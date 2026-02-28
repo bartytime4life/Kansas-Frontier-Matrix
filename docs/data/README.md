@@ -82,39 +82,127 @@ It is designed so every user-facing claim can be traced to:
 This README does **not** assume your current tree matches this layout. Treat this as a *target contract* and adjust to your repo realities.
 
 ```text
-docs/data/                                         # Data documentation (dataset manifests, schemas, QA, provenance)
-├─ README.md                                       # You are here: how data docs map to registry + promotion gates
+docs/data/                                         # Data documentation (manifests, schemas, QA, provenance, promotion evidence)
+├─ README.md                                       # How data docs map to registry + promotion gates + where “truth” lives
+├─ CONTRIBUTING.md                                 # How to add/update a dataset_id folder (PR checklist, naming rules)
+├─ GLOSSARY.md                                     # Shared terms: dataset_id, dataset_version, run_id, extents, etc.
 │
-├─ datasets/                                       # Recommended: one folder per dataset_id (human-facing docs)
+├─ _templates/                                     # Copy/paste starters (kept in sync with _schemas)
+│  ├─ manifest.yaml                                # Template: identity/license/sensitivity/extents/owners
+│  ├─ sources.yaml                                 # Template: upstream acquisition metadata + checksums
+│  ├─ checks.yaml                                  # Template: QA rules + thresholds
+│  ├─ publish_receipt.json                         # Template: audit record + checksums + policy decisions
+│  ├─ data_dictionary.md                            # Template: human-friendly dictionary starter
+│  └─ lineage.mmd                                  # Template: Mermaid lineage diagram starter
+│
+├─ _schemas/                                       # Machine-validation for docs in this folder (CI uses these)
+│  ├─ manifest.schema.json                         # JSON Schema for datasets/*/manifest.yaml
+│  ├─ sources.schema.json                          # JSON Schema for datasets/*/provenance/sources.yaml
+│  ├─ checks.schema.json                           # JSON Schema for datasets/*/qa/checks.yaml
+│  ├─ receipt.schema.json                          # JSON Schema for datasets/*/receipts/*.json
+│  └─ naming.schema.md                             # Human rules: dataset_id format, dates, run_id format, etc.
+│
+├─ governance/                                     # Human-readable policy guidance (not dataset-specific)
+│  ├─ licenses.md                                  # How to interpret license fields + compatibility notes
+│  ├─ sensitivity.md                               # Labels + handling requirements + “no exact coords” rules if applicable
+│  ├─ redaction.md                                 # Redaction/obligation patterns and examples
+│  ├─ retention.md                                 # Retention expectations by zone (docs-only; actual enforcement elsewhere)
+│  └─ access.md                                    # How to request access / escalation path for restricted datasets
+│
+├─ promotion/                                      # Promotion Contract helpers (what must exist to move zones)
+│  ├─ gates.md                                     # Gate overview (Identity → Schema → QA → Provenance → Receipt)
+│  ├─ checklists/
+│  │  ├─ gate-a-identity.md                        # “Minimum artifacts” and review checklist
+│  │  ├─ gate-b-schema.md
+│  │  ├─ gate-c-qa.md
+│  │  ├─ gate-d-provenance.md
+│  │  └─ gate-e-publish-receipt.md
+│  └─ examples/
+│     ├─ example_dataset/                          # A tiny “golden path” dataset folder showing best practice
+│     └─ example_receipts/
+│        └─ publish_YYYY-MM-DD.json
+│
+├─ registries/                                     # Optional global reference indices (human-readable)
+│  ├─ datasets.csv                                 # Master index (or link to canonical registry elsewhere)
+│  ├─ sources.csv                                  # Optional upstream sources index (APIs, agencies, partners)
+│  ├─ owners.yaml                                  # Optional: owner/team directory for routing reviews
+│  ├─ tags.yaml                                    # Optional: controlled tags vocabulary
+│  └─ vocabulary/                                  # Optional: shared controlled vocabularies
+│     ├─ geometry_types.md
+│     ├─ measurement_units.md
+│     └─ place_names.md
+│
+├─ datasets/                                       # Recommended: one folder per dataset_id (human-facing docs + evidence pointers)
 │  └─ <dataset_id>/
+│     ├─ README.md                                 # Dataset overview (purpose, intended use, caveats, how to cite)
 │     ├─ manifest.yaml                             # REQUIRED: identity, license, sensitivity, extents, owners
+│     ├─ CHANGELOG.md                              # Human changelog for schema/meaning changes
+│     ├─ access.md                                 # OPTIONAL: dataset-specific access notes (if restricted/sensitive)
+│     │
+│     ├─ extents/                                  # OPTIONAL but recommended: explicit extents artifacts
+│     │  ├─ bbox.json                              # Machine-friendly bounding box / CRS note
+│     │  └─ footprint.geojson                      # Coarse footprint if sensitive (avoid precise geometry if needed)
 │     │
 │     ├─ schema/                                   # REQUIRED: schema artifacts (what the data looks like)
-│     │  ├─ schema.json                            # JSON Schema / Arrow schema / DDL (repo convention)
-│     │  └─ dictionary.md                          # Optional: human-friendly data dictionary
+│     │  ├─ schema.json                            # JSON Schema / Arrow schema / etc. (repo convention)
+│     │  ├─ ddl.sql                                # Optional: PostGIS/Postgres DDL if relevant
+│     │  ├─ dictionary.md                          # Optional: human-friendly data dictionary
+│     │  └─ mappings/                              # Optional: mappings from upstream → canonical
+│     │     ├─ source_to_canonical.csv             # Field mapping table
+│     │     └─ codebooks/                          # Value mappings for coded domains
+│     │        └─ <field>.md
+│     │
+│     ├─ pipeline/                                 # OPTIONAL but strongly recommended: “how it is produced”
+│     │  ├─ ingest.yaml                            # Inputs, fetch method, cadence, auth notes (no secrets)
+│     │  ├─ transform.yaml                         # Transform steps, tool versions, parameters (high level)
+│     │  ├─ publish.yaml                           # Publishing rules: tiling/indexing/catalog actions
+│     │  └─ runbook.md                             # Human steps for incident response / refresh / backfill
 │     │
 │     ├─ qa/                                       # REQUIRED before promotion beyond Work
 │     │  ├─ checks.yaml                            # Validation rules + thresholds (what “good” means)
+│     │  ├─ expectations.md                        # Optional: narrative explanation of checks + rationale
+│     │  ├─ baselines/                             # Optional: “known good” metric baselines for drift detection
+│     │  │  └─ 2026-02-01.json
 │     │  └─ reports/
-│     │     ├─ 2026-02-24.json                      # Machine-readable QA report (inputs/outputs, metrics, pass/fail)
-│     │     └─ 2026-02-24.md                        # Optional human QA summary (high-signal findings)
+│     │     └─ 2026-02-24/                         # Prefer folder-per-run for multi-file reports
+│     │        ├─ report.json                       # Machine QA report (metrics, pass/fail, inputs/outputs)
+│     │        ├─ report.md                         # Optional: human QA summary (high-signal findings)
+│     │        └─ artifacts/                        # Optional: plots, small extracts, histograms (policy-compliant)
 │     │
 │     ├─ provenance/                               # REQUIRED: lineage + sources (traceability)
-│     │  ├─ sources.yaml                           # Acquisition details (where/how, checksums, retrieval timestamps)
-│     │  └─ lineage.mmd                            # Lineage diagram (Mermaid or other graph format)
+│     │  ├─ sources.yaml                           # Acquisition details (where/how, checksums, timestamps)
+│     │  ├─ retrieval/                             # Optional: per-run retrieval metadata (HTTP headers, etags, etc.)
+│     │  │  └─ 2026-02-24.json
+│     │  ├─ lineage.mmd                            # Lineage diagram (Mermaid)
+│     │  └─ citations.bib                          # Optional: scholarly citations if used in narratives
 │     │
-│     └─ receipts/                                 # REQUIRED for Published (what was shipped and why)
-│        └─ publish_2026-02-24.json                 # Audit record + checksums + policy decisions (promotion evidence)
-│
-├─ registries/                                     # Optional global references (human-readable policy notes)
-│  ├─ datasets.csv                                 # Optional: master dataset registry index
-│  ├─ licenses.md                                  # Optional: license policy notes (how to interpret license fields)
-│  └─ sensitivity.md                               # Optional: classification policy notes (labels + handling)
+│     ├─ receipts/                                 # REQUIRED for Published: “what shipped and why”
+│     │  ├─ ingest_2026-02-24.json                  # Audit record for acquisition → RAW
+│     │  ├─ promote_work_2026-02-24.json            # Optional: RAW → WORK promotion receipt
+│     │  ├─ promote_processed_2026-02-24.json       # Optional: WORK → PROCESSED receipt
+│     │  └─ publish_2026-02-24.json                 # REQUIRED: checksums + policy decisions + artifact list
+│     │
+│     ├─ versions/                                 # OPTIONAL: dataset_version history (schema/meaning evolution)
+│     │  └─ <dataset_version>/                      # e.g. v2026-02-24 or semver-like v1.3.0
+│     │     ├─ manifest.lock.json                   # Resolved/locked manifest snapshot used by the run
+│     │     ├─ schema.lock.json                     # Locked schema snapshot (what was validated)
+│     │     ├─ qa/                                  # Pointers or copies of QA reports for that version
+│     │     ├─ provenance/                          # Pointers or copies of provenance artifacts for that version
+│     │     └─ receipts/                            # Receipts that produced/published this version
+│     │
+│     └─ examples/                                 # OPTIONAL: how to consume it safely
+│        ├─ queries.sql                             # Example PostGIS queries (no sensitive filters)
+│        ├─ api.http                                # Example API calls (HTTP file for VSCode/Insomnia-style)
+│        ├─ notebook.md                             # “Safe notebook” instructions (no data exfil)
+│        └─ viz.md                                  # Cartography notes / symbology defaults
 │
 └─ samples/                                        # Tiny, policy-compliant samples for docs/tests (never sensitive)
    ├─ README.md                                    # Sample rules (size cap, redaction/generalization requirements)
+   ├─ _generated/                                  # Optional: CI-generated samples (kept tiny, scrubbed)
    └─ <dataset_id>/
-      └─ sample.csv                                # Tiny sample (must comply with manifest license + sensitivity rules)
+      ├─ sample.csv
+      ├─ sample.geojson                            # Only if permitted by sensitivity/licensing
+      └─ sample.md                                 # What was redacted/generalized and why
 ```
 
 [Back to top](#docsdata)
