@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: platform-infra
 created: 2026-02-25
-updated: 2026-02-27
+updated: 2026-02-28
 policy_label: restricted
 related:
   - ../README.md
@@ -16,7 +16,7 @@ related:
   - ../configs/
   - ../contracts/
   - ../data/
-tags: [kfm, infra, iac, ops, gitops, kubernetes, terraform, security, observability, promotion-contract]
+tags: [kfm, infra, iac, ops, gitops, kubernetes, terraform, security, observability, promotion-contract, audit-receipts]
 notes:
   - KFM-aligned infra contract: trust membrane + truth path zone controls + fail-closed promotion + auditability.
   - Intentionally stack-agnostic until repo reality is confirmed (Terraform/Pulumi, Helm/Kustomize, Argo/Flux).
@@ -39,7 +39,8 @@ Infrastructure-as-Code (IaC), deployment assets, and operational controls for Ka
 ![secrets](https://img.shields.io/badge/secrets-never%20commit-red)
 ![trust-membrane](https://img.shields.io/badge/trust%20membrane-enforced-critical)
 ![promotion](https://img.shields.io/badge/promotion%20contract-fail--closed-critical)
-![audit](https://img.shields.io/badge/audit-plan%20%2B%20apply%20receipts-informational)
+![receipts](https://img.shields.io/badge/receipts-plan%20%2B%20apply%20%2B%20drift-informational)
+![rollback](https://img.shields.io/badge/rollback-git%20revert%20%2B%20reconcile-informational)
 
 ---
 
@@ -49,10 +50,12 @@ Infrastructure-as-Code (IaC), deployment assets, and operational controls for Ka
 - [Purpose](#purpose)
 - [Directory contract](#directory-contract)
 - [Where this fits in the repo](#where-this-fits-in-the-repo)
+- [Infra responsibilities for KFM invariants](#infra-responsibilities-for-kfm-invariants)
 - [First follow-up checklist](#first-follow-up-checklist)
 - [Non-negotiable invariants](#non-negotiable-invariants)
 - [Environments and promotion](#environments-and-promotion)
 - [Change workflow and gates](#change-workflow-and-gates)
+- [Receipts and auditability](#receipts-and-auditability)
 - [Storage and truth path zones](#storage-and-truth-path-zones)
 - [Policy, promotion gates, and runtime parity](#policy-promotion-gates-and-runtime-parity)
 - [Security and secrets](#security-and-secrets)
@@ -136,17 +139,36 @@ Design goals:
 
 `infra/` is the **operational perimeter** around the governed system:
 
-- Canonical data lifecycle: `data/` (RAW → WORK/QUARANTINE → PROCESSED → CATALOG → PUBLISHED + AUDIT)
+- Canonical data lifecycle: `data/` (UPSTREAM → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED + AUDIT)
 - Enforceable interfaces: `contracts/`
 - Governed configuration wiring: `configs/`
 - Policy-as-code source: `policy/`
-- Runtime surfaces: `apps/` (UI/CLI) and `apps/api/` (governed API)
+- Runtime surfaces: `apps/` (UI/CLI) and `apps/api/` (governed API / PEP)
 
 > [!IMPORTANT]
 > Infra must never become a bypass around governance:
 > - no direct public access to object storage zones
 > - no public tile/export hosting that bypasses policy and obligations
 > - no “admin tokens embedded in UI” patterns
+
+[↑ Back to top](#top)
+
+---
+
+## Infra responsibilities for KFM invariants
+
+This section is an **alignment matrix**: the KFM invariants are system-level; infra’s job is to **make them mechanically hard to violate**.
+
+| KFM invariant (CONFIRMED design) | Infra controls (what we enforce) | Evidence (what we emit) |
+|---|---|---|
+| Trust membrane (no direct DB/storage from clients) | network policies / security groups; private endpoints; deny public buckets; egress allowlists; UI has no store credentials | network policy manifests; IaC plan diff; “no-public” checks; runtime connectivity smoke test results |
+| Fail-closed promotion | branch protection + required checks; promotion pipeline cannot “skip” gates; enforce environment pinning | CI gate summary; promotion manifest; plan/apply receipts; release artifact list |
+| Canonical vs rebuildable stores | stronger protection on canonical stores; rebuildables can be recreated from receipts | infra state outputs; backup/retention config; restore verification checklist |
+| Policy parity (CI == runtime semantics) | pin policy bundle versions per env; surface versions in deployment metadata; block mismatches | environment manifest includes policy bundle digest; parity check output |
+| Auditability + rollback | PR trail required; apply restricted; drift detection; rollback procedures documented | apply receipt; drift report; rollback runbook link + test |
+
+> [!NOTE]
+> If any row above is **UNKNOWN (repo)** right now, treat this as a **PROPOSED** enforcement target and add the missing verification steps to the next infra PR.
 
 [↑ Back to top](#top)
 
@@ -169,6 +191,10 @@ These steps convert **UNKNOWN (repo)** assumptions into repo-confirmed facts.
 ### Minimum verification commands (read-only)
 
 ```bash
+# Capture commit + tree (attach to PR)
+git rev-parse HEAD
+tree -L 3
+
 # Confirm infra subtrees
 find infra -maxdepth 2 -type d -print
 
@@ -292,6 +318,42 @@ flowchart TB
 
 ---
 
+## Receipts and auditability
+
+Infra changes are part of KFM’s evidence chain. Treat them as governed runs.
+
+### Receipt types (PROPOSED)
+
+| Receipt | When | What it must include (minimum) | Stored where |
+|---|---|---|---|
+| **Plan diff** | every PR touching infra | commit SHA; tool versions; rendered diff/plan output; target env(s) | PR artifacts (CI) + durable store (optional) |
+| **Apply receipt** | every stage/prod apply | commit SHA; actor principal; timestamps; tool versions; change summary; output hash/digest | audit ledger / restricted store |
+| **Drift report** | scheduled | drift summary; affected resources; timestamp; last known good commit | alert channel + restricted store |
+
+> [!WARNING]
+> If apply receipts are missing or not durable, treat it as a **release blocker** for any environment that serves users.
+
+### Receipt schema sketch (PROPOSED)
+
+This is a suggested shape to standardize receipts across IaC tools (Terraform/Pulumi/K8s/GitOps):
+
+```json
+{
+  "kind": "kfm.infra.ApplyReceipt",
+  "env": "prod",
+  "repo": { "commit": "SHA", "branch": "main" },
+  "actor": { "principal": "…", "method": "gitops|ci|manual" },
+  "tooling": [{ "name": "terraform|pulumi|kubectl|argocd", "version": "…" }],
+  "inputs": [{ "ref": "plan-artifact", "digest": "…" }],
+  "outputs": [{ "ref": "resource-state-summary", "digest": "…" }],
+  "timestamps": { "started": "…", "finished": "…" }
+}
+```
+
+[↑ Back to top](#top)
+
+---
+
 ## Storage and truth path zones
 
 Infra must encode truth path zones as **real controls**, not just folder names.
@@ -366,6 +428,9 @@ Infra should support:
 - network policies (deny by default, explicit egress)
 - audit logging enabled and routed to a controlled sink
 
+> [!NOTE]
+> A default-deny network posture helps ensure new workloads cannot “accidentally work” without explicit allow rules, which supports the trust membrane.
+
 [↑ Back to top](#top)
 
 ---
@@ -407,7 +472,10 @@ Minimum DR documentation (PROPOSED):
 
 > [!NOTE]
 > **UNKNOWN (repo):** the exact infra tree may differ.  
-> The block below matches the repo layout pattern you’ve been using: `k8s/`, `helm/`, `terraform/`, `gitops/`, `dashboards/`.
+> The structure below is a **PROPOSED** pattern intended to keep apply paths boring, centralized, and governable.
+
+<details>
+<summary><strong>Proposed infra tree (expand)</strong></summary>
 
 ```text
 infra/
@@ -420,217 +488,27 @@ infra/
 │  │  ├─ kustomization.yaml                      # Base composition entrypoint
 │  │  │
 │  │  ├─ namespaces/                             # Namespaces (separate trust domains)
-│  │  │  ├─ kfm-system.namespace.yaml            # Controllers/add-ons (restricted)
-│  │  │  ├─ kfm-apps.namespace.yaml              # KFM runtime workloads (api/workers)
-│  │  │  └─ kfm-observability.namespace.yaml     # Metrics/logs/traces tooling
-│  │  │
 │  │  ├─ rbac/                                   # Service accounts + least-privilege roles (no cluster-admin by default)
-│  │  │  ├─ serviceaccounts/
-│  │  │  │  ├─ kfm-api.sa.yaml
-│  │  │  │  ├─ kfm-workers.sa.yaml
-│  │  │  │  └─ kfm-ops.sa.yaml
-│  │  │  ├─ roles/
-│  │  │  ├─ rolebindings/
-│  │  │  └─ clusterroles/                        # Only when unavoidable; document why
-│  │  │
 │  │  ├─ network/                                # Trust membrane enforcement at the network layer
-│  │  │  ├─ networkpolicies/
-│  │  │  │  ├─ default-deny.ingress.yaml         # Deny by default (ingress)
-│  │  │  │  ├─ default-deny.egress.yaml          # Deny by default (egress)
-│  │  │  │  ├─ allow-dns.egress.yaml             # Allow DNS egress
-│  │  │  │  ├─ allow-api-to-stores.egress.yaml   # Only governed API can reach DB/object store
-│  │  │  │  └─ allow-observability.egress.yaml   # Allow OTLP/metrics/log sinks as needed
-│  │  │  └─ ingress/                             # Ingress primitives (no app-specific hosts here)
-│  │  │     ├─ ingressclass.yaml
-│  │  │     └─ tls/                              # Issuer refs only (no private keys)
-│  │  │
 │  │  ├─ config/                                 # Non-secret runtime wiring (ConfigMaps; secret refs elsewhere)
-│  │  │  ├─ configmaps/
-│  │  │  │  ├─ kfm-runtime.configmap.yaml        # Safe defaults; env overlays patch specifics
-│  │  │  │  ├─ kfm-feature-flags.configmap.yaml  # Non-secret feature flags (also mirrored in configs/runtime/)
-│  │  │  │  └─ kfm-otel.configmap.yaml           # OTEL endpoints + sampling (policy-safe)
-│  │  │  └─ externalsecrets/                     # Secret references (ExternalSecrets/CSI/etc.) — NO secret values
-│  │  │     ├─ kfm-api.externalsecret.yaml
-│  │  │     └─ kfm-workers.externalsecret.yaml
-│  │  │
-│  │  ├─ platform/                               # Cluster add-ons (optional; depends on your platform choices)
-│  │  │  ├─ ingress-nginx/                       # Or other ingress controller
-│  │  │  ├─ cert-manager/                        # Or platform TLS automation
-│  │  │  ├─ external-dns/                        # If managing DNS records
-│  │  │  ├─ external-secrets/                    # If pulling secrets from a secret manager
-│  │  │  └─ policy/                              # Admission policy controller install (Kyverno/Gatekeeper/etc.)
-│  │  │
-│  │  ├─ apps/                                   # Workloads (governed services only; UI should not bypass APIs)
-│  │  │  ├─ api/                                 # Governed API (policy enforcement point)
-│  │  │  │  ├─ deployment.yaml
-│  │  │  │  ├─ service.yaml
-│  │  │  │  ├─ hpa.yaml
-│  │  │  │  ├─ pdb.yaml
-│  │  │  │  ├─ networkpolicy.yaml                # Explicit allow rules (do not rely on implicit)
-│  │  │  │  └─ kustomization.yaml
-│  │  │  ├─ workers/                             # Pipelines/indexers/background jobs (no direct UI access)
-│  │  │  │  ├─ deployment.yaml
-│  │  │  │  ├─ service.yaml                      # Optional; many workers are headless
-│  │  │  │  ├─ cronjobs/                         # Scheduled maintenance/indexing runs (if used)
-│  │  │  │  └─ kustomization.yaml
-│  │  │  ├─ ui-map/                              # Optional: UI deployments (must call governed API only)
-│  │  │  ├─ ui-story/
-│  │  │  ├─ ui-catalog/
-│  │  │  ├─ focus/                               # Focus surface (must be cite-or-abstain + audited)
-│  │  │  └─ admin/                               # Restricted steward/admin surface (stronger controls)
-│  │  │
+│  │  ├─ platform/                               # Cluster add-ons (optional; depends on platform choices)
+│  │  ├─ apps/                                   # Workloads (governed services only; UI must call governed API only)
 │  │  ├─ jobs/                                   # One-shot jobs (manual or CI-triggered)
-│  │  │  ├─ migrations/                          # DB/search migrations (idempotent; gated)
-│  │  │  ├─ projection-rebuild/                  # Rebuild rebuildable projections (safe by design)
-│  │  │  └─ smoke/                               # Smoke tests (policy-safe; no restricted leakage)
-│  │  │
-│  │  └─ observability/                           # Observability wiring (policy-safe)
-│  │     ├─ otel-collector/                       # OTLP ingest + export config (no secrets)
-│  │     ├─ metrics/                              # Prometheus/agent configs (optional)
-│  │     ├─ logs/                                 # Log pipeline configs (optional)
-│  │     ├─ traces/                               # Tracing configs (optional)
-│  │     └─ grafana/                              # Grafana sidecars/provisioning (optional)
+│  │  └─ observability/                          # Observability wiring (policy-safe)
 │  │
-│  ├─ overlays/                                   # Environment overlays (dev/stage/prod deltas only)
-│  │  ├─ dev/
-│  │  │  ├─ kustomization.yaml                    # Includes base + dev patches
-│  │  │  ├─ patches/
-│  │  │  │  ├─ api.resources.patch.yaml           # Lower limits/replicas in dev
-│  │  │  │  ├─ ui.ingress.patch.yaml              # Dev hosts
-│  │  │  │  └─ observability.patch.yaml           # Dev sampling / retention tweaks
-│  │  │  └─ config/
-│  │  │     └─ env.configmap.yaml                 # Dev-only non-secret wiring
-│  │  ├─ stage/
-│  │  │  ├─ kustomization.yaml
-│  │  │  ├─ patches/
-│  │  │  └─ config/
-│  │  └─ prod/
-│  │     ├─ kustomization.yaml
-│  │     ├─ patches/
-│  │     │  ├─ api.hpa.patch.yaml                 # Prod autoscaling posture
-│  │     │  ├─ network.strict.patch.yaml          # Tighten egress/ingress
-│  │     │  └─ observability.retention.patch.yaml # Prod retention/SLO posture
-│  │     └─ config/
-│  │
-│  ├─ policies/                                   # Admission + baseline security policies (optional)
-│  │  ├─ README.md                                # Policy controller choice + test strategy + parity notes
-│  │  ├─ kyverno/                                 # If Kyverno is used
-│  │  ├─ gatekeeper/                              # If Gatekeeper/OPA is used
-│  │  ├─ conftest/                                # Policy-as-code tests for manifests (lint/deny rules)
-│  │  └─ network/                                 # Additional network guardrails, if separated
-│  │
-│  └─ scripts/                                    # Render/validate helpers (optional)
-│     ├─ render.sh                                # Render kustomize/helm outputs deterministically
-│     ├─ diff.sh                                  # Diff rendered output vs cluster (read-only)
-│     ├─ validate.sh                              # kubeconform/kubeval + policy checks
-│     ├─ kind-up.sh                               # Optional local cluster bootstrap
-│     └─ kind-down.sh
+│  ├─ overlays/                                  # Environment overlays (dev/stage/prod deltas only)
+│  ├─ policies/                                  # Admission + baseline security policies (optional)
+│  └─ scripts/                                   # Render/validate helpers (optional)
 │
 ├─ helm/                                         # Helm charts and values (optional)
-│  ├─ README.md                                  # How charts map to k8s base/overlays (single source-of-truth rules)
-│  ├─ charts/
-│  │  ├─ kfm/                                    # Umbrella chart (optional)
-│  │  │  ├─ Chart.yaml
-│  │  │  ├─ values.yaml
-│  │  │  └─ templates/
-│  │  ├─ kfm-api/
-│  │  │  ├─ Chart.yaml
-│  │  │  ├─ values.yaml
-│  │  │  └─ templates/
-│  │  ├─ kfm-workers/
-│  │  └─ kfm-ui/
-│  └─ values/
-│     ├─ common.values.yaml                      # Shared knobs (safe defaults)
-│     ├─ dev.values.yaml
-│     ├─ stage.values.yaml
-│     └─ prod.values.yaml
-│
 ├─ terraform/                                    # Terraform (optional)
-│  ├─ README.md                                  # Backends/state, workspaces, apply controls, receipts, rollback
-│  ├─ modules/
-│  │  ├─ iam/                                    # Least-privilege roles for workloads/CI
-│  │  ├─ network/                                # VPC/VNet, subnets, routing, firewall rules
-│  │  ├─ kubernetes-cluster/                     # Cluster provisioning (managed k8s or self-managed)
-│  │  ├─ object-store-zones/                     # Buckets/prefixes for truth path zones (raw/work/processed/catalog/audit)
-│  │  ├─ kms/                                    # Key management for encryption at rest
-│  │  ├─ dns/                                    # DNS zones/records (if managed here)
-│  │  └─ observability/                          # Managed metrics/logs/traces wiring (if applicable)
-│  ├─ stacks/
-│  │  ├─ dev/
-│  │  │  ├─ main.tf
-│  │  │  ├─ providers.tf
-│  │  │  ├─ versions.tf
-│  │  │  ├─ backend.tf
-│  │  │  ├─ variables.tf
-│  │  │  ├─ outputs.tf
-│  │  │  └─ terraform.tfvars.example             # Keys only; no secrets
-│  │  ├─ stage/
-│  │  │  └─ (same file set as dev)
-│  │  └─ prod/
-│  │     └─ (same file set as dev; stricter defaults)
-│  └─ policies/                                  # Optional: IaC policy checks (OPA/Sentinel/etc.)
-│     ├─ conftest/
-│     └─ sentinel/
-│
 ├─ gitops/                                       # GitOps controller configs + env apps (optional)
-│  ├─ README.md                                  # Controller choice + promotion flow + rollback rules
-│  ├─ controllers/
-│  │  ├─ argocd/                                 # If Argo CD is used
-│  │  │  ├─ install/
-│  │  │  ├─ projects/
-│  │  │  └─ rbac/
-│  │  └─ flux/                                   # If Flux is used
-│  │     ├─ install/
-│  │     └─ rbac/
-│  ├─ bootstrap/                                 # Bootstrap manifests per env (first install)
-│  │  ├─ dev/
-│  │  ├─ stage/
-│  │  └─ prod/
-│  └─ env/                                       # Per-environment “apps of apps” / kustomizations
-│     ├─ dev/
-│     │  ├─ apps/                                # Application/Kustomization objects (pin versions by digest)
-│     │  ├─ policies/                            # Env policy pins (controller config, guardrails)
-│     │  └─ README.md
-│     ├─ stage/
-│     └─ prod/
-│
 ├─ dashboards/                                   # dashboards-as-code + alert rules (policy-safe)
-│  ├─ README.md                                  # What is tracked; policy-safe logging rules; SLOs
-│  ├─ grafana/
-│  │  ├─ dashboards/                             # JSON dashboards (exported/provisioned)
-│  │  │  ├─ kfm-api.json
-│  │  │  ├─ kfm-policy-decisions.json
-│  │  │  ├─ kfm-evidence-resolver.json
-│  │  │  ├─ kfm-pipeline-runs.json
-│  │  │  └─ kfm-promotion-gates.json
-│  │  ├─ datasources/                            # Datasource provisioning (no creds)
-│  │  └─ provisioning/                           # Folder structure, providers, etc.
-│  └─ alerts/
-│     ├─ prometheus/                             # PrometheusRule / alerting rules (optional)
-│     │  ├─ slo.rules.yaml
-│     │  ├─ api.rules.yaml
-│     │  ├─ evidence.rules.yaml
-│     │  └─ pipeline.rules.yaml
-│     ├─ loki/                                   # Log-based alerts (optional)
-│     └─ README.md
 │
 └─ scripts/                                      # deterministic helpers (plan/validate/drift/smoke)
-   ├─ README.md                                  # One entrypoint per action; no hidden mutations
-   ├─ lib/
-   │  ├─ common.sh                               # Shared helpers (safe defaults)
-   │  ├─ env.sh                                  # Env selection + guardrails (dev/stage/prod)
-   │  └─ ci.sh                                   # CI-safe wrappers (non-interactive)
-   ├─ fmt.sh                                     # Format IaC/manifests
-   ├─ validate.sh                                # Validate manifests/IaC + policy checks
-   ├─ plan.sh                                    # Produce plan/diff artifact (PR attachment)
-   ├─ apply.sh                                   # Controlled apply (CI runner or authorized operator)
-   ├─ drift.sh                                   # Detect drift (scheduled; read-only)
-   ├─ smoke.sh                                   # Smoke checks (policy-safe)
-   ├─ render-k8s.sh                              # Render kustomize (deterministic)
-   ├─ render-helm.sh                             # Render helm templates (deterministic)
-   ├─ terraform-init.sh                          # Init with backend safety rails
-   └─ terraform-select-workspace.sh              # Workspace/env selection guardrails
 ```
+
+</details>
 
 > [!TIP]
 > Keep apply paths boring and centralized. The fewer ways there are to mutate prod, the more governable the system is.
@@ -681,4 +559,3 @@ Use this checklist for PRs that touch `infra/`.
 - [ ] DR implications assessed if storage/identity/network changes
 
 [↑ Back to top](#top)
-```
