@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-24
-updated: 2026-02-24
+updated: 2026-02-28
 policy_label: public
 related:
   - docs/governance/ROOT_GOVERNANCE.md
@@ -16,6 +16,7 @@ related:
 tags: [kfm, governance]
 notes:
   - Directory-level entrypoint for KFM governance policies, policy-as-code posture, and review gates.
+  - Aligned to vNext governance invariants: truth path, trust membrane, promotion contract, and cite-or-abstain Focus Mode.
 [/KFM_META_BLOCK_V2] -->
 
 # Governance
@@ -23,24 +24,28 @@ Policies, gates, and policy-as-code contracts that keep KFM evidence-bound, safe
 
 ![Status](https://img.shields.io/badge/status-draft-lightgrey)
 ![Posture](https://img.shields.io/badge/posture-fail--closed-critical)
-![Principles](https://img.shields.io/badge/principles-FAIR%2BCARE-blue)
-![Policy as Code](https://img.shields.io/badge/policy-as--code-expected-blueviolet)
+![Invariants](https://img.shields.io/badge/invariants-truth%20path%20%2B%20trust%20membrane-blue)
+![Focus Mode](https://img.shields.io/badge/focus-cite--or--abstain-blue)
+![Policy as Code](https://img.shields.io/badge/policy--as--code-PDP%2FPEP-blueviolet)
 <!-- TODO: replace with real repo badges (CI, policy tests, release attestations) -->
 
 **Owners:** TBD (define in `ROOT_GOVERNANCE.md`)  
-**Last reviewed:** 2026-02-24 <!-- TODO: update on each governance sign-off -->
+**Last reviewed:** 2026-02-28 <!-- update on each governance sign-off -->
 
 ---
 
 ## Quick navigation
 - [Scope](#scope)
+- [Normative language and claim tags](#normative-language-and-claim-tags)
 - [What lives here](#what-lives-here)
-- [Core principles](#core-principles)
+- [Non-negotiable invariants](#non-negotiable-invariants)
 - [Governance workflow](#governance-workflow)
 - [Policy-as-code boundary](#policy-as-code-boundary)
-- [Promotion gates](#promotion-gates)
+- [Promotion contract](#promotion-contract)
+- [Evidence and citations](#evidence-and-citations)
 - [Sensitivity and sovereignty](#sensitivity-and-sovereignty)
 - [Licensing and rights](#licensing-and-rights)
+- [Focus Mode governance](#focus-mode-governance)
 - [Audit and telemetry](#audit-and-telemetry)
 - [Templates](#templates)
 - [Appendix](#appendix)
@@ -51,10 +56,10 @@ Policies, gates, and policy-as-code contracts that keep KFM evidence-bound, safe
 This directory defines **KFM governance**: ethics + sovereignty posture, review gates for contributions, and the policy semantics that must hold consistently in **CI** and **runtime**.
 
 If you are:
-- adding a dataset,
+- adding a dataset or upstream source,
 - changing a promotion/pipeline,
 - changing public API/UI behavior,
-- introducing AI narrative features,
+- introducing AI narrative or auto-summary features,
 - changing licensing/rights posture,
 - or touching sensitivity / sovereignty constraints,
 
@@ -64,9 +69,23 @@ If you are:
 
 ---
 
+## Normative language and claim tags
+To avoid accidental overreach, governance docs should be explicit about what is **required** vs **recommended** vs **unknown**.
+
+- **MUST / MUST NOT / SHOULD / MAY** use common RFC-style meaning for enforceable requirements.
+- **CONFIRMED / PROPOSED / UNKNOWN** tags are used when a document mixes:
+  - *invariants and contracts* (safe to treat as requirements), and
+  - *implementation details* (should be treated as replaceable until verified).
+
+> NOTE: Every **UNKNOWN** item should include (1) a recommended default path, and (2) the minimum verification step to convert it to CONFIRMED.
+
+[Back to top](#governance)
+
+---
+
 ## What lives here
 
-### Directory layout (required)
+### Directory layout
 ```text
 docs/governance/                                  # Governance hub (charter + ethics + sovereignty + review gates)
 ├─ README.md                                      # You are here: entrypoint + directory contract + navigation
@@ -97,23 +116,33 @@ Do **not** put these here:
 
 ---
 
-## Core principles
+## Non-negotiable invariants
 These are **platform invariants**: treat them as CI-enforceable rules, not suggestions.
 
-### Fail closed
-If policy, metadata, license, schema, or QA checks fail, KFM must block the action (merge, promotion, export, or response).
+| Invariant | Meaning in practice | Why it matters |
+|---|---|---|
+| **Truth path lifecycle** | Upstream → **RAW** → **WORK/QUARANTINE** → **PROCESSED** → **CATALOG/TRIPLET** (DCAT+STAC+PROV+run receipts) → projections → governed API → UI | Reproducibility and auditability |
+| **Trust membrane** | Clients never access storage/DB directly; all access goes through governed APIs applying policy + evidence + logging | Without it, policy and provenance are unenforceable |
+| **Evidence-first UX** | Every layer/claim opens into evidence: dataset version, license/rights, policy label, provenance chain, checksums | Trust is a first-class surface |
+| **Cite-or-abstain Focus Mode** | Answers cite resolvable evidence bundles or abstain; citation verification is a hard gate; every query emits a run receipt | Mitigates hallucinations and leakage |
+| **Canonical vs rebuildable stores** | Object store + catalogs + provenance are canonical; DB/search/graph/tiles are rebuildable projections | Safe re-indexing and migration |
+| **Deterministic identity / hashing** | Stable dataset and version IDs based on canonical JSON hashing (e.g., RFC 8785 JCS) | Reliable caching, signing, and version clarity |
 
-### FAIR + CARE by design
-KFM encodes reuse and interoperability requirements (metadata, standard formats, provenance), while respecting CARE sovereignty constraints and access controls.
+### Reference model diagram (truth path + trust membrane)
+```mermaid
+flowchart TB
+  Up[Upstream sources] --> RAW[RAW: immutable acquisition]
+  RAW --> WQ[WORK/QUARANTINE: normalize + QA + redaction candidates]
+  WQ --> PR[PROCESSED: publishable artifacts + checksums]
+  PR --> CAT[CATALOG/TRIPLET: DCAT + STAC + PROV + run receipts]
+  CAT --> IDX[Rebuildable projections: DB / search / graph / tiles]
+  IDX --> API[Governed API + Policy + Evidence]
+  API --> UI[UI surfaces: Map / Story / Focus]
 
-### License-first
-License + rights are required policy inputs. Promotion and publication are blocked if they’re missing or unclear.
-
-### Determinism + provenance by default
-Pipelines should be idempotent and reproducible. Every run should emit provenance; where applicable, add release-time attestations.
-
-### Catalogs are contract surfaces
-Catalogs are not “nice metadata”—they are the canonical interface between pipeline outputs and runtime (for evidence resolution and safe serving).
+  subgraph TrustMembrane[Trust membrane]
+    API
+  end
+```
 
 [Back to top](#governance)
 
@@ -122,12 +151,13 @@ Catalogs are not “nice metadata”—they are the canonical interface between 
 ## Governance workflow
 
 ### 1) Automated gates (CI)
-Minimum expectation (extend in `REVIEW_GATES.md`):
+Recommended minimum set (extend/override in `REVIEW_GATES.md`):
 - Schema validation (data + catalog schemas)
 - Metadata completeness
 - License/rights checks
 - QA thresholds (geometry/raster integrity, drift thresholds)
 - Policy tests (allow/deny + obligations)
+- Evidence resolution checks (EvidenceRefs resolve; broken links fail)
 
 ### 2) Manual governance review (when required)
 Some changes require human review in addition to CI (see `REVIEW_GATES.md`), including:
@@ -141,7 +171,8 @@ Some changes require human review in addition to CI (see `REVIEW_GATES.md`), inc
 Governance decisions should be:
 - small, reversible increments,
 - linked to evidence (what changed, why, and what check enforces it),
-- encoded in policy fixtures/tests where possible.
+- encoded in policy fixtures/tests where possible,
+- recorded as a review record that is easy to audit later.
 
 [Back to top](#governance)
 
@@ -164,32 +195,43 @@ flowchart LR
   CI --> PDP[Policy Decision Point]
 
   UI[Map and Story UI] --> API[Governed API]
-  FM[Focus Mode AI] --> ER[Evidence resolver]
+  FM[Focus Mode] --> ER[Evidence resolver]
 
   API --> PDP
   ER --> PDP
-
-  API --> Data[(Data zones)]
-  Data --> Catalog[Catalogs STAC DCAT PROV]
-  Catalog --> ER
 ```
 
 [Back to top](#governance)
 
 ---
 
-## Promotion gates
-“Promotion” is the act of moving artifacts into a published / served state. It must be evidence-producing and auditable.
+## Promotion contract
+“Promotion” is the act of moving a dataset version into a **published / served** state. Promotion MUST be evidence-producing and auditable.
 
-### Minimum promotion checklist (starter)
-- [ ] Raw inputs are immutable / content-addressed (or verifiably snapshotted).
-- [ ] Processed artifacts are versioned and reproducible.
-- [ ] Catalogs validate and cross-link (DCAT + STAC + PROV).
-- [ ] License + rights holder recorded for each distribution.
-- [ ] QA thresholds pass (schema + geometry/raster checks + drift thresholds).
-- [ ] Policy label applied and enforced (CI + runtime).
-- [ ] “What changed?” diff is produced for version updates.
-- [ ] Focus Mode evaluation passes for public roles (citations resolve; no restricted leaks; abstentions provide audit references).
+### Promotion Contract v1 gates (minimum credible set)
+| Gate | MUST be present | Example CI enforcement |
+|---|---|---|
+| A — Identity & versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, content digests | Spec-hash golden tests; digest verification |
+| B — Licensing & rights | License + rights holder + snapshot of upstream terms | Block if license missing/unknown |
+| C — Sensitivity & redaction plan | `policy_label` + obligations (generalize geometry, remove fields, etc.) | Default-deny tests + obligation checks |
+| D — Catalog triplet validation | DCAT/STAC/PROV validate + cross-link; EvidenceRefs resolve | Validators + linkcheck; fail on broken links |
+| E — QA & thresholds | QA checks + thresholds documented and passing | QA report exists + thresholds met |
+| F — Run receipt & audit record | Receipt captures inputs, tooling, hashes, policy decisions | Receipt schema validation; append-only audit |
+| G — Release manifest | Promotion recorded as a manifest referencing artifact digests | Manifest exists; digests match |
+
+> TIP: Treat the Promotion Contract as the “governance compiler”: it turns intent into merge-blocking and promotion-blocking behavior.
+
+[Back to top](#governance)
+
+---
+
+## Evidence and citations
+In KFM, a “citation” is not a URL pasted into text. It is an **EvidenceRef** that resolves (via the evidence resolver) into an **EvidenceBundle** containing metadata, artifacts, and provenance needed to inspect and reproduce the claim.
+
+### Contract rules (starter)
+- Every user-facing claim that is presented as factual **MUST** be backed by a resolvable EvidenceRef.
+- Evidence resolution **MUST** be policy-checked; if resolution is denied or fails, the system **MUST** narrow scope or abstain.
+- The UI may display evidence and policy badges, but **MUST NOT** make authorization decisions.
 
 [Back to top](#governance)
 
@@ -200,10 +242,10 @@ Default posture: **fail closed**.
 
 Recommended defaults:
 - Default deny for sensitive-location and restricted datasets.
-- If public representation is allowed, produce a separate **public_generalized** dataset version.
+- If any public representation is allowed, produce a separate **public_generalized** dataset version.
 - Never leak restricted metadata in 403/404 responses.
 - Do not embed precise coordinates in Story Nodes or Focus Mode outputs unless explicitly allowed.
-- Treat redaction/generalization as a first-class transform recorded in provenance.
+- Treat redaction/generalization as a first-class transform recorded in PROV and run receipts.
 
 > TIP: Redaction must be applied end-to-end: processed data, catalog metadata, API serving, and UI behavior.
 
@@ -224,10 +266,35 @@ Operational rules (starter):
 
 ---
 
+## Focus Mode governance
+Focus Mode is a **governed workflow** (not open-ended chat). A Focus Mode request is treated as a governed run with a receipt.
+
+Recommended control loop:
+1. Policy pre-check
+2. Retrieval plan
+3. Retrieve admissible evidence
+4. Build evidence bundles (apply redaction obligations)
+5. Synthesize answer
+6. **Citation verification hard gate**
+7. Produce audit receipt
+
+If citations cannot be verified or policy denies, the response must abstain or reduce scope.
+
+### Minimum evaluation harness (must exist before broad release)
+- Citation coverage: % of factual claims supported by citations
+- Citation resolvability: 100% citations resolve for allowed users
+- Refusal correctness: restricted questions receive policy-safe refusals
+- Sensitivity leakage: no restricted coordinates/metadata in outputs
+- Regression tests: golden queries across dataset versions
+
+[Back to top](#governance)
+
+---
+
 ## Audit and telemetry
 Governance requires auditability:
 - Track access to sensitive data and transformations.
-- Emit telemetry when redaction/generalization is applied (e.g., when Focus Mode withholds or generalizes).
+- Emit telemetry when redaction/generalization is applied (including when Focus Mode withholds or generalizes).
 - Ensure audit records can answer “who saw what and why” **without** leaking restricted content.
 
 [Back to top](#governance)
@@ -254,7 +321,36 @@ Governance requires auditability:
 - Decision: (approve | approve with conditions | block)
 - Conditions / required follow-ups:
 - Audit implications:
-- Links to evidence (diff report, validation report, provenance bundle):
+- Links to evidence (diff report, validation report, provenance bundle, run receipt):
+```
+
+</details>
+
+<details>
+<summary><strong>Promotion manifest (starter template)</strong></summary>
+
+```json
+{
+  "promotion_manifest_version": "v1",
+  "dataset_id": "kfm://dataset/<slug>",
+  "dataset_version_id": "<version>",
+  "spec_hash": "sha256:<hash>",
+  "artifacts": [
+    { "href": "processed/<artifact>", "digest": "sha256:<digest>", "media_type": "<type>" }
+  ],
+  "catalog_triplet": {
+    "dcat": "dcat://<ref>",
+    "stac": "stac://<ref>",
+    "prov": "prov://<ref>"
+  },
+  "policy": {
+    "policy_label": "public",
+    "decision_id": "kfm://policy_decision/<id>",
+    "obligations": []
+  },
+  "run": { "run_id": "kfm://run/<id>", "audit_ref": "kfm://audit/<id>" },
+  "timestamps": { "promoted_at": "YYYY-MM-DDThh:mm:ssZ" }
+}
 ```
 
 </details>
@@ -269,7 +365,9 @@ Governance requires auditability:
   "query": "Describe what is visible in the current view.",
   "expectations": {
     "must_cite": true,
-    "must_not_include": ["restricted_fields_or_locations"]
+    "citations_must_resolve": true,
+    "must_not_include": ["restricted_fields_or_locations"],
+    "ok_to_abstain": true
   }
 }
 ```
@@ -290,6 +388,7 @@ Governance requires auditability:
 
 ### TODOs (repo integration)
 - [ ] Confirm final policy label taxonomy and role model (document in `ROOT_GOVERNANCE.md`).
-- [ ] Add policy decision fixtures (allow/deny + obligations) and wire into CI.
-- [ ] Add or link the promotion manifest + diff report formats and schemas.
-- [ ] Document audit retention policy and access controls.
+- [ ] Add policy decision fixtures (allow/deny + obligations) and wire into CI + runtime.
+- [ ] Add or link the promotion manifest + “what changed?” diff report formats and schemas.
+- [ ] Document audit ledger retention policy and access controls.
+- [ ] Add Focus Mode evaluation harness to CI (golden queries + leak tests).
