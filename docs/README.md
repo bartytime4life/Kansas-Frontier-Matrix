@@ -196,93 +196,226 @@ Minimum verification steps (example):
 > If your branch differs, update this README and any linkcheck/validators together.
 
 ```text
-docs/                                              # Governed docs hub (production docs)
-├─ README.md                                       # You are here: index + rules + “what goes where”
+docs/                                                      # Governed docs hub (production docs)
+├─ README.md                                               # Index + rules + “what goes where”
 │
-├─ adr/                                            # Architecture Decision Records
-│  ├─ README.md                                    # ADR index + naming conventions
+├─ _meta/                                                  # Docs tooling inputs (lint/linkcheck/citation)
+│  ├─ README.md                                             # What belongs here + how CI uses it
+│  ├─ doc_inventory.yml                                     # OPTIONAL: inventory/index to help CI/site-gen
+│  ├─ linkcheck_allowlist.txt                               # OPTIONAL: external link exceptions
+│  ├─ policy_label_rules.yml                                # OPTIONAL: patterns forbidden in public docs
+│  ├─ diagram_lint.yml                                      # OPTIONAL: mermaid/mmd lint settings (if used)
+│  └─ owners_map.md                                         # OPTIONAL: human-readable mapping of CODEOWNERS
+│
+├─ adr/                                                    # Architecture Decision Records
+│  ├─ README.md                                             # ADR index + naming conventions + lifecycle
+│  ├─ TEMPLATE__ADR.md                                      # ADR template (MetaBlock v2 + sections)
 │  ├─ ADR-0001-<slug>.md
-│  └─ ADR-0002-<slug>.md
+│  ├─ ADR-0002-<slug>.md
+│  └─ ADR-XXXX-<slug>.md
 │
-├─ architecture/                                   # System architecture + invariants + diagrams
-│  ├─ README.md                                    # Overview + layering + trust membrane
-│  ├─ system_overview.md
-│  ├─ trust_membrane.md
-│  ├─ canonical_vs_rebuildable.md
+├─ architecture/                                           # System architecture + invariants + diagrams
+│  ├─ README.md                                             # Overview + layering + trust membrane + canon vs rebuild
+│  ├─ system_overview.md                                    # “what is KFM” high-level decomposition
+│  ├─ layering_and_boundaries.md                            # Domain → Use cases → Interfaces → Infrastructure
+│  ├─ trust_membrane.md                                     # Policy boundary rules + “no bypass” invariants
+│  ├─ truth_path_lifecycle.md                               # Upstream→RAW→WORK→PROCESSED→CATALOG→PUBLISHED
+│  ├─ canonical_vs_rebuildable.md                           # What is canonical + what is rebuildable + why
+│  ├─ identity_and_hashing.md                               # Deterministic IDs + digests + integrity posture
+│  ├─ evidence_resolution.md                                # EvidenceRef → EvidenceBundle resolution model
+│  ├─ time_model.md                                         # Event time / valid time / transaction time (if adopted)
+│  ├─ deployment_topology.md                                # Default deployment + trust boundary placement
+│  ├─ threat_model_summary.md                               # High-level threats (deep detail lives in /quality)
+│  ├─ interfaces/                                           # Human-facing interface docs (NOT contracts)
+│  │  ├─ README.md
+│  │  ├─ api_boundary.md                                    # Governed API boundary (PEP) semantics
+│  │  ├─ storage_boundary.md                                # Storage access rules (“no direct DB from UI”)
+│  │  ├─ policy_boundary.md                                 # Policy engine integration posture + obligations
+│  │  └─ ui_boundary.md                                     # Evidence-first UX + focus-mode constraints
 │  └─ diagrams/
-│     ├─ flow_truth_path.mmd
-│     └─ flow_evidence_resolution.mmd
+│     ├─ README.md
+│     ├─ flow_truth_path.mmd                                # Truth path lifecycle diagram
+│     ├─ flow_evidence_resolution.mmd                       # EvidenceRef → resolver → EvidenceBundle
+│     ├─ flow_promotion_contract.mmd                        # Gates A–G + promotion sequence
+│     ├─ component_map.mmd                                  # Component decomposition (conceptual)
+│     └─ data_lineage_example.mmd                            # Example lineage from upstream to published
 │
-├─ governance/                                     # Policy + roles + obligations + promotion review workflows
+├─ governance/                                             # Policy + roles + obligations + promotion workflows
 │  ├─ README.md
-│  ├─ policy_labels.md                             # Controlled vocabulary + semantics
-│  ├─ obligations.md                               # Obligation catalog (human-facing)
-│  ├─ promotion_contract.md                        # Gates A–G mapping + review triggers (profiled)
-│  ├─ review_workflows.md                          # Steward review rules + escalation
-│  └─ sensitive_location_handling.md               # Default-deny + generalization posture
+│  ├─ policy_labels.md                                      # Controlled vocabulary + semantics + examples
+│  ├─ obligations.md                                        # Obligation catalog (human-facing)
+│  ├─ redaction_and_deidentification.md                     # Redaction patterns + “default-deny” rules
+│  ├─ sensitive_location_handling.md                        # No exact coords for vulnerable sites; generalize + review
+│  ├─ roles_and_ownership.md                                # Roles, responsibilities, and review authority
+│  ├─ codeowners_and_review_routing.md                      # “who must review what” + escalation
+│  ├─ review_workflows.md                                   # Steward review rules + escalation paths
+│  ├─ change_management.md                                  # What changes require ADR, policy review, or release note
+│  ├─ audit_and_retention.md                                # Audit ledger requirements + retention posture
+│  ├─ incident_severity.md                                  # Governance incidents: severity + comms triggers
+│  ├─ licensing_and_rights.md                               # License checks + redistribution posture
+│  ├─ promotion_contract.md                                 # High-level contract (links to per-gate docs)
+│  └─ promotion_gates/                                      # Gate-by-gate DoD + evidence requirements
+│     ├─ README.md                                          # Gate map + shared definitions
+│     ├─ gate_A_identity_and_integrity.md                   # Checksums, deterministic IDs, immutability
+│     ├─ gate_B_schema_and_metadata.md                      # Registry + schema + extents + classification
+│     ├─ gate_C_quality_validation.md                       # QA rules + thresholds + validation reports
+│     ├─ gate_D_license_and_rights.md                       # License verification + rights + redistribution
+│     ├─ gate_E_provenance_and_repro.md                     # Provenance links + tool versions + reproducibility
+│     ├─ gate_F_policy_and_redaction.md                     # Policy label + obligations + redaction correctness
+│     └─ gate_G_release_and_communications.md               # Release notes + user-facing changes + rollback notes
 │
-├─ standards/                                      # Writing and engineering standards (doc-as-prod)
+├─ standards/                                              # Writing + engineering standards (doc-as-prod)
 │  ├─ README.md
-│  ├─ doc_meta_block_v2.md                         # MetaBlock v2 rules (no YAML frontmatter)
-│  ├─ citations_and_evidence.md                    # EvidenceRef conventions + cite-or-abstain
-│  ├─ catalog_profiles.md                          # DCAT/STAC/PROV profile expectations (human view)
-│  └─ api_versioning.md                            # Contract changes + compatibility posture
+│  ├─ doc_meta_block_v2.md                                  # MetaBlock v2 rules (no YAML frontmatter)
+│  ├─ citations_and_evidence.md                             # Cite-or-abstain + EvidenceRef conventions
+│  ├─ evidence_ref_scheme.md                                # EvidenceRef URI scheme(s) + resolution rules
+│  ├─ catalog_profiles.md                                   # DCAT/STAC/PROV profile expectations (human view)
+│  ├─ api_versioning.md                                     # Compatibility posture + deprecation rules
+│  ├─ naming_conventions.md                                 # File naming + slugs + IDs + stable anchors
+│  ├─ markdown_style.md                                     # Headings, callouts, tables, code blocks, etc.
+│  ├─ diagram_style.md                                      # Mermaid conventions + diagram review rules
+│  ├─ security_writing_standard.md                          # “safe to paste in public issue” bar
+│  └─ glossary.md                                           # Canonical terms (or link to /guides/reference)
 │
-├─ templates/                                      # Governed templates (docs-as-prod)
+├─ templates/                                              # Governed templates (docs-as-prod)
 │  ├─ README.md
 │  ├─ TEMPLATE__KFM_UNIVERSAL_DOC.md
+│  ├─ TEMPLATE__ADR.md
+│  ├─ TEMPLATE__RUNBOOK.md
+│  ├─ TEMPLATE__GUIDE.md
+│  ├─ TEMPLATE__CHECKLIST.md
+│  ├─ TEMPLATE__INCIDENT_REPORT.md
+│  ├─ TEMPLATE__RISK_RECORD.md
 │  ├─ TEMPLATE__STORY_NODE_V3.md
-│  └─ TEMPLATE__API_CONTRACT_EXTENSION.md
+│  ├─ TEMPLATE__STORY_NODE.sidecar.json
+│  ├─ TEMPLATE__API_CONTRACT_EXTENSION.md
+│  └─ snippets/
+│     ├─ callouts.md                                       # NOTE/TIP/WARNING patterns
+│     ├─ mermaid_examples.md                                # Known-good diagram snippets
+│     └─ evidence_ref_examples.md                           # Example EvidenceRefs + EvidenceBundles
 │
-├─ runbooks/                                       # Operational procedures (production-grade)
+├─ runbooks/                                               # Operational procedures (production-grade)
 │  ├─ README.md
-│  ├─ incident_response.md
-│  ├─ pipeline_operations.md
-│  ├─ promotion_runbook.md
-│  └─ rollback_runbook.md
+│  ├─ oncall_playbook.md                                    # Paging, triage, comms, handoffs
+│  ├─ incident_response.md                                  # IR steps + evidence capture + postmortem
+│  ├─ security_incident_runbook.md                           # Security-specific response (policy-labeled)
+│  ├─ pipeline_operations.md                                 # Routine operations + dashboards + common fixes
+│  ├─ data_validation_runbook.md                             # Re-run validators, interpret failures, quarantine moves
+│  ├─ promotion_runbook.md                                   # Promote DatasetVersion → Published, gate-by-gate
+│  ├─ quarantine_runbook.md                                  # Quarantine workflows + exit criteria
+│  ├─ rollback_runbook.md                                    # Rollback mechanics + how to verify
+│  ├─ rebuild_projections_runbook.md                          # Rebuild tiles/search/graph from canonical catalogs
+│  ├─ catalog_rebuild_runbook.md                              # Rebuild DCAT/STAC/PROV + receipts
+│  ├─ policy_change_runbook.md                                # How to change policy safely + tests + audit
+│  ├─ release_runbook.md                                     # Versioning, notes, comms, cutover, smoke tests
+│  ├─ backup_restore_runbook.md                               # Backup/restore + disaster recovery exercises
+│  └─ postmortems/
+│     ├─ README.md
+│     └─ 2026-02-<incident-slug>.md
 │
-├─ guides/                                         # Onboarding + how-to (developer, steward, operator)
+├─ guides/                                                 # Onboarding + how-to (developer, steward, operator)
 │  ├─ README.md
-│  ├─ onboarding.md
-│  ├─ add_a_dataset.md
-│  ├─ publish_a_story.md
-│  └─ focus_mode_eval.md
+│  ├─ onboarding/
+│  │  ├─ README.md
+│  │  ├─ developer.md                                       # dev onboarding: repo, conventions, gates
+│  │  ├─ steward.md                                         # steward onboarding: review responsibilities
+│  │  ├─ operator.md                                        # operator onboarding: runbooks + ops posture
+│  │  └─ reviewer.md                                        # governance/security reviewer onboarding
+│  ├─ howto/
+│  │  ├─ add_a_dataset.md
+│  │  ├─ add_a_source.md
+│  │  ├─ promote_a_dataset_version.md
+│  │  ├─ publish_a_story.md
+│  │  ├─ authoring_citations.md
+│  │  ├─ run_linkcheck_locally.md
+│  │  └─ focus_mode_eval.md
+│  └─ reference/
+│     ├─ glossary.md
+│     ├─ faq.md
+│     └─ troubleshooting.md
 │
-├─ data/                                           # Domain docs (NOT the data truth-path zone)
-│  ├─ README.md                                    # Domain map + “what belongs here”
-│  └─ <domain-slug>/
-│     ├─ README.md                                 # Domain overview + governance posture
-│     └─ ...
+├─ data/                                                   # Domain docs (NOT the data truth-path zone)
+│  ├─ README.md                                             # Domain map + “what belongs here”
+│  ├─ domains/
+│  │  └─ <domain-slug>/
+│  │     ├─ README.md                                       # Domain overview + governance posture
+│  │     ├─ datasets/
+│  │     │  ├─ README.md
+│  │     │  └─ <dataset-slug>.md                             # Human-facing dataset narrative (not registry)
+│  │     ├─ stories/
+│  │     │  ├─ README.md
+│  │     │  └─ <story-slug>.md                               # Story catalog for the domain
+│  │     └─ governance_notes.md                              # Domain-specific sensitivity + obligations
+│  └─ crosscutting/
+│     ├─ README.md
+│     ├─ time_and_temporality.md                             # Time semantics applied across domains
+│     └─ coordinate_reference_systems.md                     # CRS guidance (human-facing)
 │
-├─ stories/                                        # Story Nodes and narrative standards (policy-labeled, review-gated)
+├─ stories/                                                # Story Nodes + narrative standards (policy-labeled)
 │  ├─ README.md
-│  ├─ story_node_spec.md                           # Story Node format (markdown + sidecar + citations)
+│  ├─ story_node_spec.md                                     # Story Node format + evidence drawer expectations
+│  ├─ style_guide.md                                         # Narrative style + map-first conventions
 │  ├─ templates/
 │  │  ├─ story_node.md
-│  │  └─ story_node.sidecar.json
-│  └─ published/                                   # OPTIONAL: curated, promoted story nodes (if stored in docs/)
-│
-├─ investigations/                                 # Discover-mode notes (not user-visible until promoted)
-│  ├─ README.md
-│  └─ <investigation-slug>/
+│  │  ├─ story_node.sidecar.json
+│  │  └─ story_node.citations.yml
+│  └─ published/                                             # OPTIONAL: curated promoted stories stored in-repo
 │     ├─ README.md
-│     └─ notes.md
+│     └─ <story-slug>/
+│        ├─ story.md
+│        ├─ sidecar.json
+│        └─ assets/
 │
-├─ quality/                                        # Human-facing QA checklists + threat models + explainers
+├─ investigations/                                         # Discover-mode notes (not user-visible until promoted)
 │  ├─ README.md
-│  ├─ threat_model_checklist.md
-│  └─ ...
+│  ├─ TEMPLATE__INVESTIGATION.md
+│  └─ <investigation-slug>/
+│     ├─ README.md                                           # Scope + question + policy label
+│     ├─ notes.md
+│     ├─ evidence_refs.md                                    # Candidate EvidenceRefs (may be incomplete)
+│     └─ decision_log.md                                     # “what we tried” + outcomes + next steps
 │
-├─ schemas/                                        # Human-facing schema docs/examples (not canonical schemas)
+├─ quality/                                                # Human-facing QA checklists + threat models + explainers
+│  ├─ README.md
+│  ├─ gates_overview.md                                      # How CI gates map to docs/data/policy
+│  ├─ threat_model_checklist.md
+│  ├─ privacy_review_checklist.md
+│  ├─ security_review_checklist.md
+│  ├─ accessibility_checklist.md
+│  ├─ performance_checklist.md
+│  ├─ citation_resolution_tests.md                            # How to validate citations resolve + are allowed
+│  └─ risk_register.md                                       # Optional: recorded risks + mitigations + owners
+│
+├─ schemas/                                                # Human-facing schema docs/examples (not canonical)
 │  ├─ README.md
 │  ├─ run_receipt.md
 │  ├─ promotion_manifest.md
 │  ├─ evidence_bundle.md
-│  └─ examples/
+│  ├─ story_sidecar.md
+│  ├─ examples/
+│  │  ├─ run_receipt.example.json
+│  │  ├─ promotion_manifest.example.json
+│  │  ├─ evidence_bundle.example.json
+│  │  ├─ story_node.sidecar.example.json
+│  │  └─ evidence_refs.example.md
+│  └─ fixtures/
+│     ├─ README.md
+│     └─ minimal_valid_bundle/                               # Minimal valid example set for CI tests
 │
-└─ diagrams/                                       # Shared diagrams (mermaid/mmd/svg) referenced across docs
+├─ diagrams/                                               # Shared diagrams referenced across docs
+│  ├─ README.md
+│  ├─ system/                                                # high-level architecture visuals
+│  ├─ data/                                                  # truth path + catalog triplet visuals
+│  ├─ api/                                                   # request/response/policy boundary visuals
+│  ├─ ux/                                                    # map/story/focus evidence-first flows
+│  ├─ governance/                                            # review + promotion workflows
+│  └─ pipeline/                                              # ingestion/build/rebuild flows
+│
+└─ assets/                                                 # Static assets for docs (if needed)
    ├─ README.md
-   └─ <diagram-files>
+   ├─ images/
+   ├─ icons/
+   └─ svg/
 ```
 
 > [!TIP]
