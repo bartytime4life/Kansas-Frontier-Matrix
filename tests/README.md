@@ -2,11 +2,11 @@
 doc_id: kfm://doc/7f06c93b-7c88-4f2b-bba2-4f3d935d3f89
 title: tests — Test Strategy, QA, and CI Gates
 type: standard
-version: v1
+version: v2
 status: draft
 owners: TODO
 created: 2026-02-26
-updated: 2026-02-26
+updated: 2026-02-28
 policy_label: restricted
 related:
   - docs/MASTER_GUIDE_v13.md
@@ -24,7 +24,7 @@ notes:
 
 **Purpose:** Make governance enforceable. Tests are not “nice to have”; they are the mechanism that keeps the **trust membrane** intact and prevents unsafe or untraceable outputs from shipping.
 
-**Status:** DRAFT • **Owners:** `TODO` • **Last updated:** `2026-02-26` • **Policy label:** `restricted`
+**Status:** DRAFT • **Owners:** `TODO` • **Last updated:** `2026-02-28` • **Policy label:** `restricted`
 
 ![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
 ![Coverage](https://img.shields.io/badge/coverage-TODO-lightgrey)
@@ -32,6 +32,8 @@ notes:
 ![Catalog](https://img.shields.io/badge/catalog-DCAT%20%7C%20STAC%20%7C%20PROV-informational)
 ![Evidence](https://img.shields.io/badge/evidence-resolvable%20citations-success)
 ![A11y](https://img.shields.io/badge/a11y-smoke%20checks-informational)
+![SBOM](https://img.shields.io/badge/SBOM-TODO-lightgrey)
+![Attestations](https://img.shields.io/badge/attestations-TODO-lightgrey)
 
 > [!WARNING]
 > This directory is part of the **trust membrane**. If a test is flaky, non-deterministic, or bypassable, it is a governance risk.
@@ -48,7 +50,9 @@ notes:
 - [Running tests](#running-tests)
 - [Fixtures and data safety](#fixtures-and-data-safety)
 - [Writing and adding tests](#writing-and-adding-tests)
+- [Promotion Contract v1 gate mapping](#promotion-contract-v1-gate-mapping)
 - [CI gates](#ci-gates)
+- [Governance quality metrics](#governance-quality-metrics)
 - [Release definition of done](#release-definition-of-done)
 - [Troubleshooting](#troubleshooting)
 - [Appendices](#appendices)
@@ -62,6 +66,10 @@ This README describes the **required posture**. Before treating it as “Confirm
 Minimum verification steps (copy/paste):
 
 ```bash
+# 0) Capture repo identity (so this doc revision is traceable)
+git rev-parse HEAD || true
+git status --porcelain || true
+
 # 1) Inspect tests tree
 find tests -maxdepth 3 -type d -print
 
@@ -76,6 +84,12 @@ ls -la Makefile Taskfile.yml scripts tools 2>/dev/null || true
 # 4) If policy exists, confirm policy tests are merge-blocking
 # (Adjust paths to match repo)
 ls -la policy 2>/dev/null || true
+
+# 5) Confirm contract validation exists for governed publishing surfaces
+# Story Node publish gate, Focus eval harness, and receipt schema validation are expected.
+grep -R "story" -n .github/workflows 2>/dev/null || true
+grep -R "focus" -n .github/workflows 2>/dev/null || true
+grep -R "run_receipt\|receipt" -n .github/workflows 2>/dev/null || true
 ```
 
 If CI does not run the gates described here, treat that as a **release blocker** and update `.github/workflows/` to match this contract.
@@ -94,15 +108,17 @@ This `tests/` directory holds automated tests that verify:
 4. **Cite-or-abstain** (Focus Mode or equivalent must not answer without verified citations).
 5. **Contract stability** (catalog schemas, API contracts, error models).
 6. **Safety** for sensitive locations and restricted data (no leakage; no restricted existence inference).
+7. **Provenance artifacts** (run receipts/manifests and—if enabled—supply-chain attestations) remain verifiable and policy-safe.
 
 ### What belongs here
 
 - Unit tests for domain logic and deterministic identity rules.
-- Schema validation tests for catalog artifacts (DCAT/STAC/PROV profiles).
+- Schema validation tests for catalog artifacts (DCAT/STAC/PROV profiles) **and run receipts/manifests**.
 - Policy tests driven by fixtures (allow/deny/obligations).
 - API contract tests (OpenAPI diffs, DTO validation, compatibility checks).
 - Integration tests for evidence resolution (EvidenceRef → EvidenceBundle).
 - E2E UI tests for evidence drawer / citations / policy-safe denial UX.
+- Supply-chain integrity checks (dependency scanning; SBOM/attestation verification if enabled).
 - Test fixtures that are **synthetic** or **sanitized**, **small**, and clearly documented.
 
 ### What must not go here
@@ -179,6 +195,16 @@ Public users must not learn restricted existence via error shape, timing, or mes
 - Contract tests enforce policy-safe error envelopes.
 - E2E tests verify indistinguishable behaviors for “not found” vs “not allowed” where required.
 
+### 8) Receipts, manifests, and attestations are verifiable (provenance-first)
+
+Every governed run emits a receipt (and optionally a promotion-oriented manifest). If attestations/SBOMs exist,
+they must be verifiable **server-side** and must never be fetched directly by the browser.
+
+**Test expectations**
+- Receipt/manifest schema validation: required fields present; timestamps bounded; checks interpreted fail-closed.
+- If signatures/attestations are enabled, verification tests pass in CI for fixtures (no network required for verification).
+- UI guardrail tests: the UI does not attempt to fetch attestation artifacts directly.
+
 [Back to top](#top)
 
 ---
@@ -190,12 +216,12 @@ Minimum categories expected for KFM:
 | Category | Purpose | Typical failures caught | Must be deterministic? | Merge gate? |
 |---|---|---|---:|---:|
 | Unit | Domain logic, hashing, vocab | hash drift, time logic bugs, invariant regressions | ✅ | ✅ |
-| Schema | DCAT/STAC/PROV + receipts | invalid JSON, missing fields, broken links | ✅ | ✅ |
+| Schema | DCAT/STAC/PROV + receipts/manifests | invalid JSON, missing fields, broken links | ✅ | ✅ |
 | Policy | allow/deny + obligations | leakage regressions, wrong obligations, default-deny broken | ✅ | ✅ |
 | Contract | API specs + error model + DTOs | breaking OpenAPI diffs, incompatible DTOs, unsafe errors | ✅ | ✅ |
 | Integration | Evidence resolver + governed API | EvidenceRef breakage, policy bypass, audit_ref missing | ✅ | ✅ |
 | E2E | UI trust flows | missing evidence drawer, citations not resolvable, a11y regressions | ✅ (as much as possible) | ✅ (smoke) |
-| Security | dependency/supply-chain checks | vulnerable deps, leaked secrets | ✅ | ✅ |
+| Security | dependency + supply-chain checks | vulnerable deps, leaked secrets, missing SBOM/attestation rules | ✅ | ✅ |
 
 > [!NOTE]
 > If a test cannot be made deterministic, it must be isolated and treated as **non-blocking** until fixed.
@@ -220,6 +246,7 @@ tests/                                               # KFM test entrypoint (unit
 │  │  ├─ tests_registry.v1.schema.json               # Schema for tests.v1.json
 │  │  ├─ test_suite_manifest.v1.schema.json          # Optional: per-suite manifest shape
 │  │  ├─ run_receipt.v1.schema.json                  # Receipt schema (or link to contracts/)
+│  │  ├─ run_manifest.v1.schema.json                 # Optional: promotion-oriented manifest (or link to contracts/)
 │  │  ├─ promotion_manifest.v1.schema.json           # Optional: if promotion manifests are validated here
 │  │  ├─ evidence_ref.v1.schema.json                 # Optional: EvidenceRef contract (or link to contracts/)
 │  │  ├─ evidence_bundle.v1.schema.json              # Optional: EvidenceBundle contract (or link to contracts/)
@@ -300,6 +327,7 @@ tests/                                               # KFM test entrypoint (unit
 │  │
 │  ├─ receipts/                                      # Run receipts + promotion manifests schema validation
 │  │  ├─ test_run_receipt_schema.*
+│  │  ├─ test_run_manifest_schema.*
 │  │  ├─ test_promotion_manifest_schema.*
 │  │  └─ fixtures/
 │  │     ├─ valid/
@@ -566,6 +594,7 @@ Each fixture directory must include `FIXTURE_NOTES.md`:
 - [ ] “No leakage” tests added if sensitive locations or restricted data touched.
 - [ ] Link checking passes (no broken citations).
 - [ ] Accessibility smoke checks pass for UI changes.
+- [ ] If attestations/SBOMs are enabled: verification tests updated (no browser fetch).
 
 ### Flakiness policy
 
@@ -574,6 +603,72 @@ Each fixture directory must include `FIXTURE_NOTES.md`:
   - restore it to blocking once stabilized
 - Prefer deterministic seeds and time-freezing utilities.
 - Avoid sleep-based tests; prefer explicit waits and stable readiness checks.
+
+[Back to top](#top)
+
+---
+
+## Promotion Contract v1 gate mapping
+
+Promotion to **PUBLISHED** is blocked unless the minimum gates are met. These gates are intentionally framed so they can be automated in CI and reviewed during steward sign‑off. (If a gate is not enforced, treat it as governance debt.)
+
+### Gate ↔ test suite ↔ CI check mapping (recommended)
+
+| Gate | Blocks promotion unless… | Primary test coverage | Suggested merge gate / lane (names are **recommended**) |
+|---|---|---|---|
+| A — Identity & versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, and content digests exist and match | `tests/unit/hashing` + `tests/schema/receipts` | `unit` + `schema_catalog` |
+| B — Licensing & rights metadata | License/rights fields are present + upstream terms snapshot exists | `tests/policy` + `tests/schema/*` | `policy` |
+| C — Sensitivity & redaction plan | `policy_label` exists; obligations apply; defaults fail‑closed | `tests/policy` + `tests/integration` + `tests/e2e` smoke | `policy` + `integration_evidence` |
+| D — Catalog triplet validation | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve | `tests/schema/triplet` + `tests/schema/linkcheck` | `schema_catalog` + `link_check` |
+| E — QA & thresholds | Dataset QA report exists and thresholds met, else quarantined | `tests/schema/receipts` + dataset QA suites | `schema_catalog` |
+| F — Run receipt & audit record | Receipt is emitted + schema-valid + policy logged; (optional) attestation verified | `tests/schema/receipts` + `tests/integration/test_audit_receipts.*` | `integration_evidence` |
+| G — Release manifest | Promotion recorded as a release manifest referencing digests | `tests/schema/receipts` | `release_manifest` (often required only for releases) |
+
+> [!IMPORTANT]
+> The exact job names and enforcement points must match `.github/workflows/`. If your workflow uses different names, update this table so “documentation == enforcement.”
+
+### CI enforcement flow (conceptual)
+
+```mermaid
+flowchart TD
+  Dev[Dev change] --> PR[Pull request]
+  PR --> CI[CI required checks]
+
+  CI --> Unit[Unit and hashing]
+  CI --> Schema[Schema and triplet validation]
+  CI --> Policy[Policy and obligations]
+  CI --> Contract[API and error contracts]
+  CI --> Integration[Evidence integration]
+  CI --> E2E[E2E smoke and a11y]
+  CI --> Security[Security and supply chain]
+
+  Unit --> Green[All checks green]
+  Schema --> Green
+  Policy --> Green
+  Contract --> Green
+  Integration --> Green
+  E2E --> Green
+  Security --> Green
+
+  Green --> Merge[Merge allowed]
+  Merge --> Promote[Promotion workflow]
+
+  Promote --> GateA[Gate A identity]
+  Promote --> GateB[Gate B rights]
+  Promote --> GateC[Gate C sensitivity]
+  Promote --> GateD[Gate D triplet]
+  Promote --> GateE[Gate E QA]
+  Promote --> GateF[Gate F receipt]
+  Promote --> GateG[Gate G release]
+
+  GateA --> Publish[Publish surfaces]
+  GateB --> Publish
+  GateC --> Publish
+  GateD --> Publish
+  GateE --> Publish
+  GateF --> Publish
+  GateG --> Publish
+```
 
 [Back to top](#top)
 
@@ -593,7 +688,10 @@ CI gates make this README real. If a gate isn’t enforced in CI, it’s not gov
 - Integration tests (evidence resolution; no policy bypass)
 - Link checks (citations/evidence refs resolve deterministically)
 - Secret scanning + dependency security scanning
+- Story Node template/schema validation **and** publish-gate checks (citations resolvable)
+- Focus Mode evaluation harness (golden queries) **if Focus exists in the repo**
 - E2E UI smoke tests + accessibility smoke checks (for UI changes)
+- (If enabled) SBOM + attestation verification gates
 
 ### Recommended job naming (CI)
 
@@ -604,9 +702,12 @@ CI gates make this README real. If a gate isn’t enforced in CI, it’s not gov
 - `contract_api`
 - `integration_evidence`
 - `e2e_ui_smoke`
+- `a11y_smoke`
 - `link_check`
 - `security_scan`
-- `a11y_smoke`
+- `story_validate`
+- `focus_eval` (only if Focus exists)
+- `sbom_attest` (only if enabled)
 
 ### Gate selection by change area (recommended)
 
@@ -626,6 +727,27 @@ CI gates make this README real. If a gate isn’t enforced in CI, it’s not gov
 
 ---
 
+## Governance quality metrics
+
+Track governance and reliability metrics so drift is visible (without incentivizing unsafe behavior).
+
+| Metric | Why it matters | Where to compute (examples) |
+|---|---|---|
+| % promoted artifacts with explicit license metadata | Detect rights/attribution drift | receipts + catalog triplet |
+| % Story Nodes with 100% resolvable citations | Enforces evidence-first narratives | story publish gate + linkcheck |
+| Evidence resolver latency (P95) | UX integrity; bottleneck signal | integration harness + runtime telemetry |
+| Tile serving latency (P95) for public layers | Map-first performance | e2e + runtime telemetry |
+| Reindex time from processed artifacts | Rebuildability & recovery | indexer job receipts |
+| # quarantined datasets by reason code | QA + governance health | promotion manifests + policy denials |
+| # policy denials by reason code | Detect leakage attempts + policy regressions | policy logs (redacted) |
+
+> [!NOTE]
+> Metrics must not encourage perverse incentives. Use them to detect drift and risk.
+
+[Back to top](#top)
+
+---
+
 ## Release definition of done
 
 A release is “done” only when:
@@ -638,6 +760,7 @@ A release is “done” only when:
 - Focus Mode evaluation harness passes golden queries (if Focus exists).
 - UI regression smoke tests pass and accessibility checks show no major regressions.
 - Release notes include policy/contract/data changes and rollback notes.
+- Audit ledger retention and monitoring are configured (no silent “best effort” logging).
 
 [Back to top](#top)
 
@@ -673,6 +796,19 @@ Treat as potential leakage first:
 
 Fix artifact generation to meet the profile:
 - don’t weaken schemas to “fit the bug” unless it’s an intentional contract change
+
+### Receipt / attestation verification failing
+
+Likely causes:
+- receipt schema drift (missing required fields, wrong timestamp format)
+- digests changed without version bump
+- signatures/attestations produced by unapproved workflow identity
+- CI attempted network verification (should be fixture-based where possible)
+
+Fix:
+- validate receipt/manifest schemas locally on fixtures first
+- ensure “subject” is a digest, not a mutable tag, in verification code paths
+- pin tool versions used to generate/verify attestations and treat updates as governed changes
 
 ### E2E flakiness
 
