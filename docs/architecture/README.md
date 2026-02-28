@@ -515,33 +515,129 @@ This directory is the top of the documentation tree for architecture. Detailed d
 **Suggested layout (PROPOSED)**
 
 ```text
-docs/architecture/                                      # Architecture docs (invariants, decisions, diagrams, contracts)
-├─ README.md                                            # Index + invariants (trust membrane) + truth path + promotion contract
+docs/architecture/                                          # Architecture docs (invariants, decisions, diagrams, contracts)
+├─ README.md                                                # Index + invariants (trust membrane) + truth path + promotion contract
 │
-├─ overview/                                            # High-level architecture narrative (what/why/how)
-│  ├─ system-context.md                                 # System context + external actors/dependencies
-│  ├─ trust-membrane.md                                 # Boundary rules + enforcement points (PEP/PDP + UI trust surfaces)
-│  ├─ truth-path.md                                     # Lifecycle zones + promotion contract explanation
-│  └─ time-model.md                                     # Event/transaction/valid time conventions
+├─ overview/                                                # High-level architecture narrative (what/why/how)
+│  ├─ README.md                                             # How to read the architecture set + link map + glossary pointer
+│  │
+│  ├─ system-context.md                                     # System context + external actors/dependencies (C4-ish, map-first)
+│  ├─ actors-and-trust-surfaces.md                          # Humans/services + UI trust surfaces + “what can touch what”
+│  ├─ layering.md                                           # Layering model (Domain → Use cases → Interfaces → Infra) w/ examples
+│  ├─ component-decomposition.md                            # Components/services/modules + responsibility boundaries
+│  ├─ deployment-topology.md                                # Proposed deployment topology (envs, networks, gateways, secrets)
+│  │
+│  ├─ trust-membrane.md                                     # Boundary rules + enforcement points (PEP/PDP + UI trust surfaces)
+│  ├─ policy-boundary.md                                    # PEP/PDP/obligations/redaction: where decisions happen + what they emit
+│  ├─ evidence-and-claims.md                                # Claims/EvidenceRef/EvidenceBundle: meaning, linking rules, UX obligations
+│  ├─ focus-mode-constraints.md                             # Cite-or-abstain behavior, failure modes, “no evidence → no claim”
+│  │
+│  ├─ truth-path.md                                         # Lifecycle zones + promotion contract explanation (Upstream→…→Published)
+│  ├─ promotion-contract.md                                 # Promotion gates as an executable contract + audit receipt requirements
+│  ├─ provenance-and-audit.md                               # Run receipts, audit ledger, provenance link graph, reproducibility
+│  ├─ canonical-vs-rebuildable.md                           # Canonical vs rebuildable stores + rebuild guarantees and triggers
+│  ├─ identity-and-hashing.md                               # Deterministic IDs, content hashing, stable references, collision posture
+│  │
+│  ├─ time-model.md                                         # Event/transaction/valid time conventions
+│  ├─ time-queries-and-snapshots.md                         # “As-of” queries, temporal snapshots, time slicing, UI implications
+│  │
+│  ├─ security-and-privacy.md                               # Cross-cutting security posture + secrets handling (no creds in docs)
+│  ├─ sensitive-locations.md                                # No exact coords for vulnerable sites; coarse geography + obligations
+│  ├─ observability.md                                      # Logs/metrics/traces + audit correlation IDs across pipelines/APIs/UI
+│  └─ glossary.md                                           # Architecture glossary (terms used consistently across docs/contracts)
 │
-├─ decisions/                                           # ADRs (small, reversible, versioned decisions)
-│  ├─ adr-0000-template.md                               # ADR template (decision record format)
-│  └─ adr-0001-example.md                                # Example ADR (illustrative)
+├─ decisions/                                               # ADRs (small, reversible, versioned decisions)
+│  ├─ README.md                                             # ADR process + review gates + how ADRs link to code/tests/contracts
+│  ├─ adr-0000-template.md                                  # ADR template (decision record format)
+│  ├─ adr-0001-example.md                                   # Example ADR (illustrative)
+│  │
+│  ├─ adr-0002-trust-membrane-enforcement.md                # Where/how invariants are enforced (tests, CI, runtime)
+│  ├─ adr-0003-policy-engine-integration.md                 # PDP choice/integration + obligations model
+│  ├─ adr-0004-evidence-resolution.md                       # Evidence resolver design + redaction guarantees
+│  ├─ adr-0005-canonical-vs-rebuildable-stores.md            # Storage/index split + rebuild receipts
+│  ├─ adr-0006-time-model.md                                # Why this time model + implications for schemas/APIs/UI
+│  └─ adr-index.yml                                         # Optional: machine-readable ADR registry (id, title, status, links)
 │
-├─ diagrams/                                            # Mermaid sources (kept close to narrative)
-│  ├─ truth-path.mmd                                     # Truth path + promotion gates diagram
-│  ├─ layering.mmd                                       # Layering/trust membrane boundaries diagram
-│  └─ contracts.mmd                                      # Contract surfaces + validation flow diagram
+├─ diagrams/                                                # Mermaid sources (kept close to narrative)
+│  ├─ README.md                                             # Diagram conventions (Mermaid style rules, naming, export policy)
+│  │
+│  ├─ system-context.mmd                                    # External actors + system boundary diagram
+│  ├─ layering.mmd                                          # Layering/trust membrane boundaries diagram
+│  ├─ truth-path.mmd                                        # Truth path + promotion gates diagram
+│  ├─ contracts.mmd                                         # Contract surfaces + validation flow diagram
+│  ├─ pep-pdp-obligations.mmd                               # PEP/PDP + obligations emission/consumption diagram
+│  ├─ evidence-flow.mmd                                     # Evidence resolution flow (EvidenceRef → Bundle → redaction → cite UI)
+│  ├─ time-model.mmd                                        # Event/valid/transaction time relationships + “as-of” query flow
+│  ├─ deployment.mmd                                        # Deployment topology diagram (conceptual, no secrets)
+│  │
+│  └─ exports/                                              # OPTIONAL: rendered SVG/PNG exports (generated, not hand-edited)
+│     ├─ .gitkeep                                            # Keep folder if your repo needs it
+│     └─ README.md                                          # If exports are committed, define how they’re generated/verified
 │
-├─ contracts/                                           # Stable contracts (human + machine; link to /contracts when canonical)
-│  ├─ api-contract.md                                    # Human-readable API contract summary (normative behavior)
-│  ├─ evidence-resolver-contract.md                      # Evidence resolution contract (inputs/outputs + obligations)
-│  ├─ policy-contract.md                                 # Policy contract (labels, decisions, obligations, fail-closed)
-│  ├─ run-receipt.schema.json                             # Machine schema (mirror/link to canonical contracts/)
-│  └─ promotion-manifest.schema.json                      # Machine schema (mirror/link to canonical contracts/)
+├─ contracts/                                               # Stable contracts (human + machine; link to /contracts when canonical)
+│  ├─ README.md                                             # Contract set overview + versioning + “normative vs informative”
+│  │
+│  ├─ api-contract.md                                       # Human-readable API contract summary (normative behavior)
+│  ├─ api-versioning-and-compat.md                          # Versioning rules, deprecation, compatibility gates
+│  ├─ api-error-model.md                                    # Error shapes, trace IDs, policy-deny semantics, retry posture
+│  ├─ authn-authz-contract.md                               # AuthN/Z expectations (scopes/roles), audit requirements
+│  │
+│  ├─ policy-contract.md                                    # Policy contract (labels, decisions, obligations, fail-closed)
+│  ├─ policy-labels.vocab.json                              # Machine vocab for labels (public/restricted/…)
+│  ├─ obligations.vocab.yml                                 # Machine vocab for obligations (redact/generalize/log/deny)
+│  │
+│  ├─ evidence-resolver-contract.md                         # Evidence resolution contract (inputs/outputs + obligations)
+│  ├─ evidence-ref.schema.json                              # Machine schema for EvidenceRef
+│  ├─ evidence-bundle.schema.json                           # Machine schema for EvidenceBundle (resolved + redaction notes)
+│  │
+│  ├─ run-receipt.schema.json                               # Machine schema (mirror/link to canonical contracts/)
+│  ├─ run-receipt.example.json                              # Example receipt (golden fixture used in CI)
+│  ├─ promotion-manifest.schema.json                        # Machine schema (mirror/link to canonical contracts/)
+│  ├─ promotion-manifest.example.json                       # Example manifest (golden fixture used in CI)
+│  │
+│  ├─ story-node.schema.json                                # StoryNode schema (or pointer to canonical)
+│  ├─ claim.schema.json                                     # Claim schema (statement + evidence links + policy decision refs)
+│  └─ fixtures/                                             # Small canonical examples used by doc/tests
+│     ├─ example-evidence-ref.json
+│     ├─ example-evidence-bundle.json
+│     ├─ example-claim.json
+│     └─ example-story-node.json
 │
-└─ threat-model/                                        # Threat modeling (assets, actors, risks, mitigations)
-   └─ README.md                                          # Threat model overview + review cadence + acceptance criteria
+├─ enforcement/                                             # “Make it testable”: how invariants become CI/runtime gates
+│  ├─ README.md                                             # How enforcement works end-to-end (where to add checks)
+│  ├─ invariants.md                                         # The invariant list (normative, test-linked)
+│  ├─ policy-enforcement-points.md                          # Enumerate PEPs; required context; expected decisions/obligations
+│  ├─ contract-testing.md                                   # Contract tests strategy (OpenAPI/schema validation; fixtures)
+│  ├─ data-promotion-gates.md                               # Promotion gate mapping → checks → failing behavior (fail closed)
+│  ├─ redaction-and-generalization-tests.md                  # How to test “no sensitive coords leak” etc.
+│  └─ ci-checks.md                                          # Which CI jobs enforce what + required artifacts for pass
+│
+├─ registries/                                              # Small, machine-readable indexes that keep docs honest
+│  ├─ README.md                                             # What registries are + how they’re validated
+│  ├─ boundary-surface-registry.yml                          # All trust surfaces: UI, API, batch, Focus Mode, admin tools
+│  ├─ service-catalog.yml                                   # Services/modules + owners + contracts + data touched
+│  ├─ contract-index.yml                                    # Contract → canonical source → version → tests
+│  ├─ pep-registry.yml                                      # List of PEP locations + endpoints + auth requirements
+│  └─ policy-label-registry.yml                              # Human-friendly label registry mirroring machine vocab
+│
+├─ templates/                                               # Copy/paste templates to keep docs consistent + cheap to extend
+│  ├─ README.md                                             # Template usage + Do/Don’t
+│  ├─ kfm-meta-block-v2.txt                                 # MetaBlock v2 snippet (authoritative copy)
+│  ├─ standard-doc.template.md                              # Standard doc skeleton (Context → Contract → Verification)
+│  ├─ adr.template.md                                       # ADR skeleton (mirrors adr-0000-template.md)
+│  ├─ contract-doc.template.md                              # “Normative behavior” contract skeleton
+│  ├─ diagram.template.mmd                                  # Mermaid boilerplate + style rules
+│  └─ review-checklist.md                                   # Architecture review checklist (link to enforcement/ gates)
+│
+└─ threat-model/                                            # Threat modeling (assets, actors, risks, mitigations)
+   ├─ README.md                                             # Threat model overview + review cadence + acceptance criteria
+   ├─ scope-and-assets.md                                   # What we protect + what we explicitly do NOT cover
+   ├─ actors-and-entrypoints.md                             # Threat actors + entry points (UI/API/pipelines/admin)
+   ├─ data-classification-and-handling.md                    # Sensitivity classes + handling + “default deny”
+   ├─ abuse-cases.md                                        # Concrete misuse/abuse scenarios + expected system response
+   ├─ control-mapping.md                                    # Controls mapped to threats (policy, gates, audit, auth, etc.)
+   ├─ risk-register.md                                      # Risk table (likelihood/impact/mitigation/owner/status)
+   └─ residual-risk.md                                      # What remains risky + why accepted + monitoring plan
 ```
 
 [(back to top)](#top)
