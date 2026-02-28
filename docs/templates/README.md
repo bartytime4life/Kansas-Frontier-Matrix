@@ -96,10 +96,73 @@ Within the repository documentation tree:
 
 ```text
 docs/templates/
-├── README.md                          # This directory guide
-├── TEMPLATE__KFM_UNIVERSAL_DOC.md      # Universal governed doc template
-├── TEMPLATE__STORY_NODE_V3.md          # Story Node v3 markdown skeleton
-└── TEMPLATE__API_CONTRACT_EXTENSION.md # API contract extension notes
+├── README.md                          # This directory guide (how to use templates, naming rules)
+├── TEMPLATE__KFM_UNIVERSAL_DOC.md      # Universal governed doc template (existing)
+├── TEMPLATE__STORY_NODE_V3.md          # Story Node v3 markdown skeleton (existing)
+├── TEMPLATE__API_CONTRACT_EXTENSION.md # API contract extension notes (existing)
+│
+├── _partials/                          # Reusable snippets to keep templates consistent
+│   ├── PARTIAL__KFM_META_BLOCK_V2.md    # Copy/paste HTML comment MetaBlock v2
+│   ├── PARTIAL__BADGES_ROW.md           # Shields/badges row (status, policy, owners, etc.)
+│   ├── PARTIAL__QUICK_NAV.md            # “Jump to…” anchors block
+│   ├── PARTIAL__NORMATIVE_LANGUAGE.md   # MUST/SHOULD/MAY legend + tagging pattern
+│   ├── PARTIAL__GOVERNANCE_CALLOUTS.md  # NOTE/TIP/WARNING callouts for policy/evidence
+│   ├── PARTIAL__MERMAID_TRUTH_PATH.mmd  # Raw→Work→Processed→Catalog→Published diagram
+│   └── PARTIAL__MERMAID_TRUST_MEMBRANE.mmd # Clients→Governed API→Policy→Stores diagram
+│
+├── standard/                           # General “house” docs that recur everywhere
+│   ├── TEMPLATE__DIRECTORY_README.md    # Directory documentation standard (purpose/inputs/exclusions)
+│   ├── TEMPLATE__RUNBOOK.md             # Operational runbook (SLOs, alerts, rollback, contacts)
+│   ├── TEMPLATE__ADR.md                 # Architecture Decision Record (decision, context, consequences)
+│   ├── TEMPLATE__CHANGELOG_ENTRY.md     # Changelog fragment format (traceable + reversible)
+│   ├── TEMPLATE__RELEASE_NOTES.md       # Release notes (what changed + evidence + gates)
+│   └── TEMPLATE__CHECKLIST.md           # Generic checklist skeleton (DoD / gates / signoffs)
+│
+├── data/                               # Dataset-facing templates (registry/specs/QA/catalog/prov)
+│   ├── TEMPLATE__DATASET_REGISTRY_ENTRY.yml # YAML skeleton: id, license, cadence, sensitivity, links
+│   ├── TEMPLATE__DATASET_SPEC.md        # Dataset spec: schema, extents, QA rules, lifecycle zone
+│   ├── TEMPLATE__SOURCE_SNAPSHOT.md     # Upstream snapshot record: fetch method, checksum, timestamp
+│   ├── TEMPLATE__QA_REPORT.md           # Validation results + thresholds + exceptions
+│   ├── TEMPLATE__PROMOTION_REQUEST.md   # “Promote WORK→PROCESSED/PUBLISHED” request + evidence refs
+│   ├── TEMPLATE__PROMOTION_RECEIPT.md   # Promotion receipt: who/what/when/why + hashes + policy label
+│   ├── TEMPLATE__STAC_COLLECTION.json   # Minimal STAC Collection skeleton (placeholders)
+│   ├── TEMPLATE__STAC_ITEM.json         # Minimal STAC Item skeleton (placeholders)
+│   ├── TEMPLATE__DCAT_DATASET.ttl       # DCAT Dataset stub (if you store RDF/Turtle)
+│   └── TEMPLATE__PROV_ACTIVITY.jsonld   # PROV Activity skeleton (inputs/outputs/agents/tools)
+│
+├── evidence/                            # Evidence binding + resolution artifacts
+│   ├── TEMPLATE__EVIDENCE_REF.md         # EvidenceRef authoring guide + canonical fields
+│   ├── TEMPLATE__EVIDENCE_BUNDLE.json    # EvidenceBundle skeleton (resolved + redacted + provenance)
+│   ├── TEMPLATE__CITATION_BLOCK.md       # “Cite-or-abstain” block for docs/UI answers
+│   └── TEMPLATE__REDACTION_LOG.md        # What was redacted, why, by which rule, when
+│
+├── api/                                 # API governance + contract supporting docs
+│   ├── TEMPLATE__OPENAPI_MODULE.yml      # OpenAPI stub per service/module (tags, servers, security)
+│   ├── TEMPLATE__API_ERROR_MODEL.md      # Error taxonomy + examples + mapping to HTTP codes
+│   ├── TEMPLATE__AUTH_MATRIX.md          # AuthN/AuthZ matrix (roles×endpoints×obligations)
+│   ├── TEMPLATE__DEPRECATION_POLICY.md   # Versioning + deprecation windows + migration guidance
+│   └── TEMPLATE__ENDPOINT_REVIEW.md      # Endpoint review checklist (policy hooks, evidence, caching)
+│
+├── policy/                               # Policy-as-code and decision records
+│   ├── TEMPLATE__POLICY_LABELS.yml        # Policy label catalog (public/restricted/etc.) + meanings
+│   ├── TEMPLATE__OPA_POLICY.rego          # Rego policy skeleton (inputs, decisions, obligations)
+│   ├── TEMPLATE__OPA_TEST.rego            # Rego test skeleton (deny-by-default checks)
+│   ├── TEMPLATE__POLICY_DECISION_RECORD.md # PDR: why a rule exists + threat model + scope
+│   └── TEMPLATE__OBLIGATION_HANDLING.md   # How to implement obligations in APIs/UI (redact, degrade)
+│
+├── ux/                                   # UI/Story/Map copy + accessibility patterns
+│   ├── TEMPLATE__DATASET_PAGE_COPY.md     # Dataset landing page structure (what/where/limits/evidence)
+│   ├── TEMPLATE__LAYER_METADATA_PANEL.md  # Map layer panel (source, time, scale, confidence)
+│   ├── TEMPLATE__FOCUS_MODE_ANSWER_CARD.md# Answer structure (claim → evidence → caveats → links)
+│   └── TEMPLATE__A11Y_CHECKLIST.md        # Accessibility checklist (keyboard, contrast, ARIA, etc.)
+│
+└── examples/                             # Filled-in examples for fast adoption + testing
+    ├── EXAMPLE__UNIVERSAL_DOC__PUBLISHED.md
+    ├── EXAMPLE__STORY_NODE_V3__PUBLISHED.md
+    ├── EXAMPLE__DATASET_REGISTRY_ENTRY.yml
+    ├── EXAMPLE__STAC_COLLECTION.json
+    ├── EXAMPLE__RUN_RECEIPT.json
+    └── EXAMPLE__POLICY_DECISION_RECORD.md
 ```
 
 If your local tree differs, treat the table above as the **minimum expected set** and update this README when adding/removing templates.
