@@ -138,10 +138,42 @@ Write an ADR when a change affects **system shape**, **governance boundaries**, 
 ### Suggested directory layout
 
 ```text
-docs/adr/
-  README.md
-  0001-example-decision.md
-  0002-another-decision.md
+docs/adr/                                                 # Architecture Decision Records (ADRs) for KFM (governed, fail-closed)
+├─ README.md                                              # ADR process + rules + status definitions + index (human entrypoint)
+├─ TEMPLATE.md                                            # Single-source ADR template (copy/paste; optionally includes KFM_META_BLOCK_V2)
+├─ ADR-REVIEW-CHECKLIST.md                                # PR checklist (evidence links, rollback, verification gates, policy label)
+├─ ADR-STYLE-GUIDE.md                                     # Optional: style rules (tense, headings, decision statement format)
+├─ INDEX.md                                               # Optional: canonical ADR index (recommended if auto-generating)
+│
+├─ _generated/                                            # Optional: generated artifacts (never hand-edited)
+│  ├─ adr-index.json                                      # Machine-readable index (for UI/search tooling)
+│  └─ adr-index.md                                        # Generated markdown index (if automated)
+│
+├─ tools/                                                 # Optional: glue scripts to enforce ADR invariants
+│  ├─ adr-next-number.sh                                  # Print next available NNNN (fail if collision)
+│  ├─ adr-lint.js                                         # Lint ADRs (required sections, links present, status valid)
+│  └─ adr-indexer.js                                      # Regenerate INDEX.md and/or _generated/* from filesystem scan
+│
+├─ assets/                                                # Optional: rare binaries (prefer Mermaid in ADRs)
+│  ├─ diagrams/                                           # Exported diagrams when Mermaid is insufficient
+│  └─ screenshots/                                        # Use sparingly; ensure no sensitive info
+│
+├─ archive/                                               # Optional: legacy/imported ADRs (kept for history)
+│  └─ 20xx-legacy/                                        # Imported ADRs (keep original names; add notes instead of rewriting)
+│
+├─ 0001-example-decision.md                               # Example ADR (placeholder)
+├─ 0002-another-decision.md                               # Example ADR (placeholder)
+│
+├─ 0003-data-zones-and-promotion-contract.md              # Data zones + promotion contract (planned decision)
+├─ 0004-dataset-identity-versioning-and-hashing.md        # Dataset identity + versioning + hashing (planned decision)
+├─ 0005-catalog-triplet-dcat-stac-prov-strategy.md        # Catalog triplet strategy (DCAT/STAC/PROV) (planned decision)
+├─ 0006-evidence-ref-and-bundle-resolution.md             # EvidenceRef + EvidenceBundle resolution (planned decision)
+├─ 0007-policy-labels-redaction-and-obligations.md        # Policy labels + redaction + obligations (planned decision)
+├─ 0008-governed-api-boundary-and-pep-enforcement.md      # Governed API boundary + PEP enforcement (planned decision)
+├─ 0009-search-index-tiles-and-rebuildability.md          # Search/index/tiles + rebuildability (planned decision)
+├─ 0010-focus-mode-cite-or-abstain-guardrails.md          # Focus Mode cite-or-abstain guardrails (planned decision)
+├─ 0011-run-receipts-and-audit-ledger-minimums.md         # Run receipts + audit ledger minimums (planned decision)
+└─ 0012-secrets-management-and-rotation.md                # Secrets management + rotation (planned decision)
 ```
 
 ---
