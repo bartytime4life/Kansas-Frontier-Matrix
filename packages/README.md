@@ -42,12 +42,13 @@ Versioned, testable modules for the Kansas Frontier Matrix (KFM) monorepo.
 ![scope](https://img.shields.io/badge/scope-monorepo_packages-blue)
 ![governance](https://img.shields.io/badge/governance-fail--closed-critical)
 ![trust-membrane](https://img.shields.io/badge/trust_membrane-enforced-important)
-![promotion-contract](https://img.shields.io/badge/promotion_contract-gates_A--F-critical)
+![promotion-contract](https://img.shields.io/badge/promotion_contract-gates_A--G-critical)
 ![evidence-first](https://img.shields.io/badge/evidence_first-required-6f42c1)
 
 ---
 
 ## Navigation
+- [Stance and labeling](#stance-and-labeling)
 - [Directory contract](#directory-contract)
 - [Repo reality check](#repo-reality-check)
 - [How packages map to KFM architecture](#how-packages-map-to-kfm-architecture)
@@ -61,6 +62,21 @@ Versioned, testable modules for the Kansas Frontier Matrix (KFM) monorepo.
 - [Adding a new package](#adding-a-new-package)
 - [Definition of Done](#definition-of-done)
 - [Glossary](#glossary)
+
+---
+
+## Stance and labeling
+
+To preserve the trust membrane and avoid “doc hallucinations,” this README uses three labels:
+
+- **CONFIRMED**: invariants/contracts KFM must enforce (safe to treat as requirements).
+- **PROPOSED**: recommended defaults/patterns (adopt, adapt, or replace—document your mapping).
+- **UNKNOWN**: anything about current repo state, deployments, or existing modules until verified.
+
+> [!NOTE]
+> This README contains **CONFIRMED posture** plus **PROPOSED structure**. Do not treat any specific directory tree below as “present in repo” unless verified via the [Repo reality check](#repo-reality-check).
+
+[Back to top](#top)
 
 ---
 
@@ -95,7 +111,7 @@ Examples of acceptable package categories:
 - **UI components**: shared evidence drawer/receipt viewer components (if your repo shares UI as packages)
 
 ### What must NOT go in `packages/`
-❌ Raw datasets, processed artifacts, catalogs, or audit ledgers (those belong under `data/` truth-path zones)  
+❌ Raw datasets, processed artifacts, catalogs, or audit ledgers (those belong under `data/` truth-path zones: **RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED**)  
 ❌ Secrets, tokens, `.env` files, kubeconfigs, private keys  
 ❌ Build artifacts (`dist/`, `build/`, `target/`, coverage outputs)  
 ❌ “Misc” scripts without tests and ownership (put in `tools/` or `scripts/`)  
@@ -110,16 +126,23 @@ Examples of acceptable package categories:
 
 ## Repo reality check
 
-This README describes a **target posture**. Before treating any statement as “Confirmed (repo)”, verify in-repo:
+This README describes a **target posture** (**CONFIRMED**) plus **recommended patterns** (**PROPOSED**). Before treating any statement as “repo-present,” verify in-repo.
 
-- [ ] The actual list of packages under `packages/`
-- [ ] The workspace/toolchain boundary (pnpm/yarn/npm/bazel/poetry/uv/go workspaces/etc.)
-- [ ] Which packages are published (if any) vs internal-only
-- [ ] Which packages are policy-bearing and require steward review
+Minimum checks (recommended):
 
-Suggested verification steps:
+- [ ] Capture repo commit hash + root directory tree (`git rev-parse HEAD` and `tree -L 3`).
+- [ ] Confirm the actual list of packages under `packages/`.
+- [ ] Confirm the workspace/toolchain boundary (pnpm/yarn/npm/bazel/poetry/uv/go workspaces/etc.).
+- [ ] Extract CI gate list from `.github/workflows` and document which checks are merge-blocking.
+- [ ] Confirm which policy-bearing packages require steward review (policy/evidence/catalog/export surfaces).
+
+Suggested commands:
 
 ```bash
+# Capture repo identity + tree snapshot (recommended baseline)
+git rev-parse HEAD
+tree -L 3
+
 # Inspect package top-level directories
 find packages -maxdepth 2 -type d -print
 
@@ -143,21 +166,21 @@ Packages should reflect KFM’s layered model so governance is enforceable.
 
 ```mermaid
 flowchart LR
-  subgraph Core["Core (no I/O)"]
+  subgraph Domain["Domain (no I/O)"]
     domain[packages/domain]
   end
 
-  subgraph Orchestration["Orchestration (policy-aware)"]
+  subgraph UseCases["Use cases (policy-aware workflows)"]
     usecases[packages/usecases]
   end
 
-  subgraph Boundaries["Boundaries (contracts + policy)"]
+  subgraph Interfaces["Interfaces (contracts + policy + ports)"]
     contracts[contracts/ + packages/* contract helpers]
     policyPkg[packages/policy]
     evidencePkg[packages/evidence]
   end
 
-  subgraph Infra["Infrastructure (I/O behind interfaces)"]
+  subgraph Infrastructure["Infrastructure (I/O behind interfaces)"]
     adapters[packages/adapters]
     ingest[packages/ingest]
     indexers[packages/indexers]
@@ -174,16 +197,20 @@ flowchart LR
   exports --> adapters
 ```
 
-**Rule of thumb:**
+**Rule of thumb (CONFIRMED posture):**
 - Dependency direction flows **inward** (toward domain).
 - I/O and vendor SDKs live **only** behind adapters.
 - Apps and external clients consume **governed APIs**, not storage clients.
+- Domain logic does not talk directly to infrastructure—only through interfaces.
 
 [Back to top](#top)
 
 ---
 
 ## Canonical package taxonomy
+
+> [!NOTE]
+> The taxonomy below is **PROPOSED** as a boundary strategy. If your repo uses different names, map them explicitly and enforce the same dependency rules.
 
 KFM’s repo layout (design intent) typically includes these package groups:
 
@@ -204,13 +231,16 @@ KFM’s repo layout (design intent) typically includes these package groups:
 - `packages/shared/` — small shared utilities (keep it small; avoid “god package”)
 
 > [!IMPORTANT]
-> This taxonomy is a **boundary strategy**. If your repo uses different names, map them explicitly and enforce the same dependency rules.
+> Taxonomy is about enforceable boundaries. If boundaries are “social only” (not machine-enforced), they will be violated under deadline pressure.
 
 [Back to top](#top)
 
 ---
 
 ## Directory layout
+
+> [!NOTE]
+> This structure is **PROPOSED**. Use it as a template; confirm/adjust based on repo reality.
 
 Recommended structure that matches the “registry + fixtures” pattern used elsewhere:
 
@@ -296,7 +326,7 @@ packages/
 │  │  │  ├─ evidence_resolver.*
 │  │  │  └─ clock.*
 │  │  ├─ promotion/
-│  │  │  ├─ gates_a_f.*
+│  │  │  ├─ gates_a_g.*                            # A–G: Identity..Release manifest (names illustrative)
 │  │  │  ├─ promotion_plan.*
 │  │  │  └─ promotion_manifest_builder.*
 │  │  ├─ catalog/
@@ -807,6 +837,9 @@ Example (illustrative):
 > [!IMPORTANT]
 > The registry should be treated as **governance-bearing**. Changes that alter `data_access`, `policy_label`, or dependency rules require stricter review.
 
+> [!TIP]
+> Optional hardening (PROPOSED): add a `registry_digest` (canonical JSON → sha256) and/or a `signature_ref` so CI can detect unauthorized drift in governance-bearing registries.
+
 [Back to top](#top)
 
 ---
@@ -899,7 +932,14 @@ Packages are only safe if they are continuously validated.
   - dependency scanning (where supported)
   - license allow/deny checks (especially for export/ingest tooling)
 
-### Promotion Contract awareness (A–F)
+### Evidence resolution & citation gates (CONFIRMED posture)
+- In KFM, a “citation” is not a pasted URL; it is an **EvidenceRef** that must resolve into an **EvidenceBundle** via the evidence resolver.
+- **Hard gate:** Story publishing and Focus Mode must **fail closed**: if citations cannot be verified and are not policy-allowed, the system must abstain or reduce scope.
+- CI should include:
+  - citation linting/linkcheck for any package that publishes Story Nodes or answers Focus queries
+  - fixtures + golden tests for resolver behaviors and policy outcomes
+
+### Promotion Contract awareness (A–G)
 Packages often implement gate logic even if gates run elsewhere:
 
 | Gate | Typical package responsibilities |
@@ -908,8 +948,9 @@ Packages often implement gate logic even if gates run elsewhere:
 | B: Rights/licensing | SPDX handling, attribution wiring (`catalog`, `exports`, `policy`) |
 | C: Sensitivity/redaction | generalization helpers, obligation models (`policy`, `geo`, `exports`) |
 | D: Catalog triplet | profile validators/builders (`catalog`, `contracts` helpers) |
-| E: Receipts/checksums | receipt writers/readers, digest utilities (`evidence`, `catalog`) |
-| F: Policy/contract tests | fixtures + contract test harnesses (`policy`, `evidence`, `catalog`) |
+| E: QA/thresholds | dataset QA validators + reports + threshold evaluation (`ingest`, `usecases`) |
+| F: Receipts/audit | receipt writers/readers, digest utilities (`evidence`, `catalog`, `observability`) |
+| G: Release manifest | promotion manifest builders/validators; integrity cross-checks (`usecases`, `catalog`, `evidence`) |
 
 > [!NOTE]
 > Apps “display” trust. Packages often “compute” trust. Both must be consistent and fail closed.
@@ -979,8 +1020,8 @@ A package is “done” when:
 
 ## Glossary
 - **Trust membrane:** enforced boundary where policy + provenance controls access; clients never access storage directly.
-- **Truth path:** lifecycle of governed data: RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → runtime surfaces.
-- **Promotion Contract:** fail-closed gate set (A–F) that controls what becomes runtime-visible.
+- **Truth path:** lifecycle of governed data: **RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED**.
+- **Promotion Contract:** fail-closed gate set (A–G) that controls what becomes runtime-visible.
 - **Contract surface:** schema/spec/profile that is versioned and machine-validated (OpenAPI, JSON Schema, DCAT/STAC/PROV).
 - **Evidence-first:** every claim/layer/answer can open into rights, provenance, and validation evidence.
 - **Cite-or-abstain:** if citations cannot be verified and policy-allowed, abstain or reduce scope.
