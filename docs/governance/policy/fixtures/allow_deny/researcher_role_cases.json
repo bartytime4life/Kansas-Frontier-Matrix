@@ -1,0 +1,15 @@
+[
+  {
+    "name": "researcher reviewed restricted",
+    "context": {
+      "role": "researcher",
+      "dataset_label": "restricted"
+    },
+    "expect": {
+      "effect": "allow",
+      "obligations": [
+        "cite"
+      ]
+    }
+  }
+]

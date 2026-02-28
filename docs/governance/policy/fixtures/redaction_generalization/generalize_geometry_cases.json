@@ -1,0 +1,11 @@
+[
+  {
+    "name": "geometry generalized to bbox",
+    "input": {
+      "geometry": "POINT(...)"
+    },
+    "expect": {
+      "geometry": "BBOX(...)"
+    }
+  }
+]

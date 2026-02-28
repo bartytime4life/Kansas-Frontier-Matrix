@@ -1,0 +1,13 @@
+[
+  {
+    "name": "redact exact coordinates",
+    "input": {
+      "lat": 39.1,
+      "lon": -94.6
+    },
+    "expect": {
+      "lat": null,
+      "lon": null
+    }
+  }
+]

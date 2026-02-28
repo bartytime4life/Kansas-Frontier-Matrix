@@ -1,0 +1,11 @@
+[
+  {
+    "name": "suppress sensitive note",
+    "input": {
+      "note": "burial location"
+    },
+    "expect": {
+      "note": "[SUPPRESSED]"
+    }
+  }
+]
