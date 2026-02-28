@@ -337,48 +337,153 @@ This is a recommended, validator-friendly starting structure. Adjust if your rep
 ```text
 policy/
 ├─ README.md
+├─ conftest.toml                                 # Optional: conftest config (namespaces, output, ignore rules)
 │
-├─ rego/                                          # Policy packages (OPA/Rego)
-│  ├─ kfm/                                        # Namespace root (recommended)
-│  │  ├─ authz.rego                               # allow/deny rules + decision envelope
-│  │  ├─ labels.rego                              # label semantics helpers
-│  │  ├─ obligations.rego                         # obligation derivation rules
-│  │  ├─ rights.rego                              # license/rights enforcement
-│  │  ├─ sensitivity.rego                         # sensitive location + redaction/generalization rules
-│  │  ├─ promotion.rego                           # promotion gate participation (deny if missing requirements)
-│  │  └─ errors.rego                              # policy-safe error shaping
-│  └─ _shared/                                    # Common helpers (canonicalization, set ops, etc.)
+├─ registry/                                     # Machine-readable registry + schemas + fixtures (small)
+│  ├─ policy_bundle.v1.json                      # Policy bundle manifest (packages, versions, entrypoints, required tests)
+│  ├─ schemas/                                   # Schemas for registries + decision/fixture shapes (optional, recommended)
+│  │  ├─ policy_bundle.v1.schema.json
+│  │  ├─ decision_envelope.v1.schema.json        # {decision, policy_label, obligations[], reason_codes[]}
+│  │  ├─ fixture_input.v1.schema.json            # {user, action, resource, context}
+│  │  ├─ obligation.v1.schema.json               # obligation object shape(s)
+│  │  ├─ reason_codes.v1.schema.json             # reason code enumerations / structure
+│  │  └─ vocab_list.v1.schema.json               # schema for YAML vocab lists (if validated)
+│  └─ fixtures/
+│     ├─ valid/
+│     │  ├─ policy_bundle.minimal.json
+│     │  └─ decision_envelope.minimal.json
+│     └─ invalid/
+│        ├─ decision_envelope.missing_reason_codes.json
+│        └─ fixture_input.missing_policy_label.json
 │
-├─ fixtures/                                      # Deterministic decision fixtures (synthetic; safe-by-default)
-│  ├─ inputs/                                     # Inputs to policy evaluation (user/action/resource/context)
-│  │  ├─ public_read_public_dataset.json
-│  │  ├─ public_read_restricted_dataset.json
-│  │  ├─ steward_read_restricted_dataset.json
-│  │  ├─ public_export_public_dataset.json
-│  │  └─ focus_public_query_restricted_context.json
-│  └─ expected/                                   # Expected decision envelopes
-│     ├─ public_read_public_dataset.decision.json
-│     ├─ public_read_restricted_dataset.decision.json
-│     ├─ steward_read_restricted_dataset.decision.json
-│     ├─ public_export_public_dataset.decision.json
-│     └─ focus_public_query_restricted_context.decision.json
+├─ rego/                                         # Policy packages (OPA/Rego)
+│  ├─ kfm/                                       # Namespace root (recommended)
+│  │  ├─ decision.rego                           # Canonical decision envelope builder (default deny)
+│  │  ├─ authz.rego                              # allow/deny rules (role/action/resource)
+│  │  ├─ labels.rego                             # label semantics helpers (public vs restricted, etc.)
+│  │  ├─ obligations.rego                        # obligation derivation (show_notice, redact_fields, suppress_export…)
+│  │  ├─ rights.rego                             # license/rights enforcement rules (export, attribution, redistribution)
+│  │  ├─ sensitivity.rego                        # sensitive-location + PII posture + generalization requirements
+│  │  ├─ promotion.rego                          # promotion gate participation (deny if missing required artifacts)
+│  │  ├─ evidence.rego                           # EvidenceRef/EvidenceBundle rules (resolvability requirements, obligations)
+│  │  ├─ exports.rego                            # download/export policy (policy_label + rights + obligations)
+│  │  ├─ focus.rego                              # cite-or-abstain rules (citation verification hard gate outcomes)
+│  │  ├─ audit.rego                              # audit/logging obligations + required fields (audit_ref, run_id, reason_codes)
+│  │  ├─ errors.rego                             # policy-safe error shaping (no restricted inference)
+│  │  └─ versioning.rego                         # bundle/version pins + compatibility checks (optional)
+│  │
+│  ├─ _shared/                                   # Common helpers (pure functions; no policy decisions)
+│  │  ├─ canonical_json.rego                     # deterministic/canonical JSON helpers (avoid hash drift)
+│  │  ├─ strings.rego                            # string helpers (normalize, trim, safe messages)
+│  │  ├─ sets.rego                               # set helpers (union/intersect/diff)
+│  │  ├─ time.rego                               # time-window helpers (inclusive/exclusive, parsing guards)
+│  │  ├─ geo.rego                                # bbox/geometry guards (policy-safe bounding, no precise leakage)
+│  │  ├─ uri.rego                                # URI/EvidenceRef scheme parsing helpers
+│  │  ├─ spdx.rego                               # SPDX/license normalization helpers (if used)
+│  │  └─ hashing.rego                            # digest/spec_hash helpers (inputs only; no secret material)
+│  │
+│  └─ vendor/                                    # Optional: vendored rego libs (pin versions; keep tiny)
+│     └─ README.md
 │
-├─ tests/                                         # Rego unit tests (or conftest rules)
+├─ fixtures/                                     # Deterministic decision fixtures (synthetic; safe-by-default)
+│  ├─ README.md                                  # How fixtures are structured + naming conventions
+│  ├─ inputs/                                    # Inputs to policy evaluation (user/action/resource/context)
+│  │  ├─ authz/
+│  │  │  ├─ public_read_public_dataset.json
+│  │  │  ├─ public_read_restricted_dataset.json
+│  │  │  └─ steward_read_restricted_dataset.json
+│  │  ├─ rights/
+│  │  │  ├─ public_export_public_dataset.json
+│  │  │  ├─ public_export_public_dataset_missing_attribution.json
+│  │  │  └─ steward_export_restricted_dataset.json
+│  │  ├─ sensitivity/
+│  │  │  ├─ public_read_public_generalized_dataset.json
+│  │  │  ├─ public_read_sensitive_location_dataset.json
+│  │  │  └─ steward_read_sensitive_location_dataset.json
+│  │  ├─ promotion/
+│  │  │  ├─ promote_dataset_missing_license.json
+│  │  │  ├─ promote_dataset_missing_receipt.json
+│  │  │  └─ promote_dataset_all_gates_present.json
+│  │  ├─ evidence/
+│  │  │  ├─ resolve_evidence_allowed.json
+│  │  │  ├─ resolve_evidence_denied.json
+│  │  │  └─ resolve_evidence_unresolvable.json
+│  │  ├─ focus/
+│  │  │  ├─ focus_public_query_public_context.json
+│  │  │  ├─ focus_public_query_restricted_context.json
+│  │  │  └─ focus_steward_query_restricted_context.json
+│  │  └─ errors/
+│  │     ├─ public_request_unknown_resource.json
+│  │     └─ public_request_restricted_resource.json
+│  │
+│  └─ expected/                                  # Expected decision envelopes (goldens)
+│     ├─ authz/
+│     │  ├─ public_read_public_dataset.decision.json
+│     │  ├─ public_read_restricted_dataset.decision.json
+│     │  └─ steward_read_restricted_dataset.decision.json
+│     ├─ rights/
+│     │  ├─ public_export_public_dataset.decision.json
+│     │  ├─ public_export_public_dataset_missing_attribution.decision.json
+│     │  └─ steward_export_restricted_dataset.decision.json
+│     ├─ sensitivity/
+│     │  ├─ public_read_public_generalized_dataset.decision.json
+│     │  ├─ public_read_sensitive_location_dataset.decision.json
+│     │  └─ steward_read_sensitive_location_dataset.decision.json
+│     ├─ promotion/
+│     │  ├─ promote_dataset_missing_license.decision.json
+│     │  ├─ promote_dataset_missing_receipt.decision.json
+│     │  └─ promote_dataset_all_gates_present.decision.json
+│     ├─ evidence/
+│     │  ├─ resolve_evidence_allowed.decision.json
+│     │  ├─ resolve_evidence_denied.decision.json
+│     │  └─ resolve_evidence_unresolvable.decision.json
+│     ├─ focus/
+│     │  ├─ focus_public_query_public_context.decision.json
+│     │  ├─ focus_public_query_restricted_context.decision.json
+│     │  └─ focus_steward_query_restricted_context.decision.json
+│     └─ errors/
+│        ├─ public_request_unknown_resource.decision.json
+│        └─ public_request_restricted_resource.decision.json
+│
+├─ tests/                                        # Rego unit tests (or conftest rules)
+│  ├─ README.md                                  # How to run tests; what must be covered
+│  ├─ decision_envelope_test.rego                # decision shape invariants (reason_codes required, obligations well-formed)
 │  ├─ authz_test.rego
 │  ├─ obligations_test.rego
 │  ├─ rights_test.rego
 │  ├─ sensitivity_test.rego
 │  ├─ promotion_test.rego
-│  └─ policy_safe_errors_test.rego
+│  ├─ evidence_test.rego
+│  ├─ exports_test.rego
+│  ├─ focus_test.rego
+│  ├─ audit_test.rego
+│  ├─ policy_safe_errors_test.rego               # indistinguishable errors for restricted vs missing (public role)
+│  ├─ vocab_test.rego                            # ensure labels/obligations/reason codes match vocab files
+│  └─ fixtures_roundtrip_test.rego               # optional: verify fixtures inputs → decision matches expected goldens
 │
-├─ vocab/                                         # Controlled vocabulary lists (versioned; referenced by policy + CI)
-│  ├─ policy_labels.v1.yml
-│  ├─ obligations.v1.yml
-│  └─ reason_codes.v1.yml
+├─ vocab/                                        # Controlled vocabulary lists (versioned; referenced by policy + CI)
+│  ├─ README.md
+│  ├─ policy_labels.v1.yml                       # allowed policy labels + semantics hints
+│  ├─ obligations.v1.yml                         # allowed obligation types + required fields
+│  ├─ reason_codes.v1.yml                        # stable reason codes used by policy + receipts
+│  ├─ roles.v1.yml                               # roles (public, internal, steward, operator, service)
+│  ├─ actions.v1.yml                             # actions (read, search, export, promote, resolve_evidence, administer)
+│  ├─ resource_types.v1.yml                      # dataset, dataset_version, story_node, evidence_bundle, export_job, …
+│  └─ media_types.v1.yml                         # optional: whitelisted export media types
 │
-└─ rubrics/                                       # Human-readable + machine-referenced policy inputs
-   ├─ licensing.md                                # SPDX handling + attribution requirements
-   └─ sensitivity.md                              # sensitivity rubric + generalization guidance
+├─ rubrics/                                      # Human-readable + machine-referenced policy inputs
+│  ├─ README.md
+│  ├─ licensing.md                               # SPDX handling + attribution requirements (human)
+│  ├─ licensing.v1.yml                           # machine-readable licensing rubric (optional)
+│  ├─ sensitivity.md                             # sensitivity rubric + generalization guidance (human)
+│  ├─ sensitivity.v1.yml                         # machine-readable sensitivity rubric (optional)
+│  └─ generalization_guidance.md                 # how to generalize safely (no precise coords in public)
+│
+└─ scripts/                                      # Optional: deterministic helpers (CI + local parity)
+   ├─ fmt.sh                                     # opa fmt (and any policy file formatting)
+   ├─ test.sh                                    # opa test runner wrapper
+   ├─ conftest.sh                                # conftest wrapper (if used)
+   └─ validate_fixtures.sh                       # optional: schema-check fixtures + ensure goldens exist
 ```
 
 > [!NOTE]
