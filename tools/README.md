@@ -6,38 +6,50 @@ version: v1
 status: draft
 owners: KFM Platform (TODO)
 created: 2026-02-26
-updated: 2026-02-26
+updated: 2026-02-28
 policy_label: public
 related:
+  - ../contracts/
+  - ../configs/
+  - ../policy/
+  - ../scripts/
+  - ../tests/
   - docs/MASTER_GUIDE_v13.md
   - docs/standards/KFM_DCAT_PROFILE.md
   - docs/standards/KFM_STAC_PROFILE.md
   - docs/standards/KFM_PROV_PROFILE.md
-  - policy/rego/
-tags: [kfm, tools, ci, validators]
+tags: [kfm, tools, ci, validators, promotion-contract, evidence-first, trust-membrane, spec-hash]
 notes:
-  - This directory holds utility scripts used by CI and maintainers to enforce the Promotion Contract (fail-closed gates).
-  - Update the “Tool inventory” table when adding, renaming, or retiring tools.
-  - policy_label assumes public; confirm with governance if tooling contains restricted logic or fixtures.
+  - tools/ contains maintainers’ tooling used by CI and operators to enforce the Promotion Contract (fail-closed gates).
+  - Keep tools deterministic, policy-safe, and fixture-driven. Update the tool registry when adding/renaming/retiring tools.
+  - This doc describes a target posture. Mark repo-specific facts as TODO until verified in-repo.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # `tools/` — Utility scripts, validators, and DevOps helpers
 
-**Purpose:** keep KFM *buildable, reversible, and evidence-backed* by running **fail-closed** checks in CI and locally (catalog validation, link checking, spec-hash drift detection, and other guardrails).
+**Purpose:** Keep KFM *buildable, reversible, and evidence-backed* by running **fail-closed** checks in CI and locally (catalog validation, link checking, spec-hash drift detection, and other guardrails).
 
-![Status](https://img.shields.io/badge/status-draft-lightgrey) <!-- TODO: set to review/published -->
+![Status](https://img.shields.io/badge/status-draft-lightgrey)
 ![Scope](https://img.shields.io/badge/scope-repo%20tooling-lightgrey)
-![CI](https://img.shields.io/badge/CI-kfm--ci-lightgrey) <!-- TODO: point to real workflow badge -->
-![Policy](https://img.shields.io/badge/policy-default--deny-lightgrey)
+![Governance](https://img.shields.io/badge/governance-fail--closed-critical)
+![Promotion](https://img.shields.io/badge/promotion%20contract-enforced-critical)
+![Trust membrane](https://img.shields.io/badge/trust%20membrane-preserved-important)
+
+> [!IMPORTANT]
+> `tools/` is part of KFM’s **trust membrane**. If a tool can be bypassed, is non-deterministic, or leaks restricted details in logs, it is a governance risk.
+
+---
 
 ## Quick navigation
 
 - [What lives here](#what-lives-here)
+- [Non-negotiable invariants](#non-negotiable-invariants)
 - [Directory layout](#directory-layout)
+- [How tools fit the promotion flow](#how-tools-fit-the-promotion-flow)
 - [Quick start](#quick-start)
-- [Tool inventory](#tool-inventory)
+- [Tool registry and inventory](#tool-registry-and-inventory)
 - [Conventions](#conventions)
 - [Adding a new tool](#adding-a-new-tool)
 - [Troubleshooting](#troubleshooting)
@@ -48,119 +60,253 @@ notes:
 ## What lives here
 
 This folder is reserved for **utility scripts, validators, and DevOps tooling** that:
-- run in CI as promotion gates, or
-- are used by maintainers during ingest/publish/release workflows.
+
+- run in CI as **merge gates** or **promotion gates**, and/or
+- are used by maintainers/operators during ingest/publish/release workflows.
 
 ### ✅ Acceptable contents
 
 | Category | Examples | Typical outcome |
 |---|---|---|
-| Catalog validators | DCAT/STAC/PROV schema validation | CI blocks invalid metadata |
-| Cross-link checkers | Ensure DCAT ↔ STAC ↔ PROV references resolve | CI blocks broken evidence paths |
-| Spec-hash & drift checks | Detect incompatible contract/schema changes | CI blocks “silent” contract drift |
-| Release helpers | Build manifests/SBOM, package versioned artifacts | Reproducible release outputs |
-| Developer utilities | Lint helpers, formatting, fixture generation | Faster local iteration (no policy bypass) |
+| Catalog validators | DCAT/STAC/PROV schema/profile validation | CI blocks invalid metadata |
+| Cross-link checkers | Ensure DCAT ↔ STAC ↔ PROV ↔ receipts ↔ artifacts resolve | CI blocks broken evidence paths |
+| Spec-hash & drift checks | Detect contract drift / canonicalization regressions | CI blocks “silent” version drift |
+| Policy-safe lint checks | Disallow direct-store access, forbid secrets-in-repo patterns | CI blocks trust-membrane bypass |
+| Release helpers (optional) | Build SBOMs, assemble release manifests, verify signatures | Reproducible release outputs |
 
 ### ❌ Not allowed in `tools/`
 
-- One-off notebooks or experiments → put them in `mcp/` (Methods & Computational Experiments).
-- Domain pipelines → belong in `src/pipelines/`.
-- Production runtime code → belongs in `src/` (behind interfaces/contracts), not in `tools/`.
-- Raw or processed datasets → belong in `data/` (RAW/WORK/PROCESSED), not in `tools/`.
+- One-off experiments or notebooks → put them in a dedicated experiments area (e.g., `mcp/`) or a PR sandbox.
+- Production runtime code → belongs in `src/` / services, behind contracts/interfaces.
+- Data pipelines → belong in pipeline modules/runners; tools can validate pipeline outputs.
+- Raw/processed datasets → belong in `data/` truth-path zones.
+- Secrets, tokens, credentials, kubeconfigs, or `.env` with real values → never commit.
+
+> [!NOTE]
+> Tools **prefer read-only validation**. If a tool *must write outputs*, it must:
+> 1) write into the correct truth-path zone (usually `data/work/…`),  
+> 2) emit a receipt and checksums, and  
+> 3) never mutate canonical artifacts in place.
+
+[Back to top](#top)
+
+---
+
+## Non-negotiable invariants
+
+Tools exist to *enforce* these invariants (not merely document them):
+
+1. **Fail closed**  
+   If a tool cannot prove a requirement, it must exit non-zero and block the gate.
+
+2. **Truth path discipline**  
+   Tools must never “fix” canonical artifacts in place. Canonical artifacts are versioned and immutable by digest.
+
+3. **Trust membrane preserved**  
+   Tools must not introduce or normalize bypass patterns (e.g., direct DB/object-store reads from UI code).
+
+4. **Evidence-first / cite-or-abstain support**  
+   Tools must help ensure that:
+   - EvidenceRefs resolve to EvidenceBundles (or the system abstains/denies),
+   - catalogs and receipts are present and cross-linked.
+
+5. **Canonical vs rebuildable**  
+   Tools may rebuild projections, but projections are never treated as canonical truth. Tools must validate canonical sources.
+
+6. **Deterministic identity and hashing**  
+   Spec hashing must be canonicalized and stable. Any drift is a blocking failure unless explicitly versioned.
+
+7. **Policy-safe output**  
+   Tools must not leak restricted details (including “restricted existence”) via logs, timing hints, or error messages.
+
+[Back to top](#top)
 
 ---
 
 ## Directory layout
 
+> [!IMPORTANT]
+> This layout is a recommended baseline. If your repo differs, update this README and keep the **Tool registry** accurate.
+
 ```text
-tools/                                                # Tooling entrypoint (CLI scripts + checks)
-├── README.md                                         # This file (how to run + add new tools)
-├── validators/                                       # Metadata + schema validators (fail-closed)
-│   ├── validate_dcat.js                               # Validate DCAT records against KFM profile + required fields
-│   ├── validate_stac.js                               # Validate STAC Items/Collections + KFM constraints
-│   └── validate_prov.js                               # Validate PROV lineage (agents/activities/entities) + required links
+tools/                                                # Tooling entrypoint (validators + checks + CI helpers)
+├── README.md                                         # This file
+│
+├── registry/                                         # Machine-readable registry + schemas + fixtures (small)
+│   ├── tools.v1.json                                 # Canonical tool registry: owners, commands, gates, inputs, outputs
+│   ├── schemas/                                      # Optional but recommended (or link to contracts/)
+│   │   └── tools_registry.v1.schema.json
+│   └── fixtures/                                     # Valid/invalid registry examples for CI schema validation
+│       ├── valid/
+│       └── invalid/
+│
+├── validators/                                       # Metadata + schema validators (fail-closed; read-only)
+│   ├── README.md
+│   ├── validate_dcat.*                               # DCAT records against KFM profile + required fields
+│   ├── validate_stac.*                               # STAC Collections/Items/Assets + KFM constraints
+│   ├── validate_prov.*                               # PROV lineage + required links/agents/activities
+│   ├── validate_receipts.*                           # run_receipt + promotion_manifest schemas (if applicable)
+│   └── fixtures/                                     # Tiny valid/invalid examples (synthetic/sanitized)
+│
 ├── linkcheck/                                        # Cross-link integrity checks (no broken refs)
-│   └── catalog_linkcheck.js                           # Crawl catalogs/manifests and verify internal/external references
+│   ├── README.md
+│   ├── catalog_triplet_linkcheck.*                   # DCAT ↔ STAC ↔ PROV required cross-links
+│   ├── evidence_ref_linkcheck.*                      # EvidenceRef resolvability expectations
+│   └── fixtures/
+│
 ├── hash/                                             # Spec-hash helpers + drift checks (determinism guardrails)
-│   └── check_spec_hash.js                              # Recompute + compare spec_hash; fail on drift or non-canonical inputs
-│   # (optional) spec_hash_cli                          # Standalone CLI wrapper for hashing/checking (if/when added)
-└── ...                                               # Add new tooling in a clearly named subfolder (single responsibility)
+│   ├── README.md
+│   ├── compute_spec_hash.*                           # Deterministic hash computation (canonical JSON rules)
+│   ├── check_spec_hash_drift.*                       # Recompute + compare; fail on drift
+│   └── fixtures/                                     # Golden vectors (inputs → expected digests)
+│
+├── lint/                                             # Static guardrails (trust membrane + hygiene)
+│   ├── README.md
+│   ├── check_no_secrets.*                            # Secret scanning helpers (if not handled elsewhere)
+│   ├── check_no_direct_store_access.*                # Block direct DB/object-store/index clients in forbidden layers
+│   └── check_policy_safe_errors.*                    # Optional: enforce safe error envelope conventions
+│
+├── release/                                          # Optional: release tooling (must be deterministic)
+│   ├── README.md
+│   ├── build_sbom.*                                  # SBOM build (if used)
+│   ├── build_release_manifest.*                      # Assemble release metadata and digests
+│   └── verify_release_artifacts.*                    # Verify digests/signatures/attestations (if used)
+│
+├── _shared/                                          # Shared helper libs (small; minimal side effects)
+│   ├── README.md
+│   ├── fs.*                                          # Safe file IO helpers
+│   ├── json.*                                        # Canonical JSON + strict parsing helpers
+│   ├── log.*                                         # Structured logging helpers (policy-safe)
+│   └── exit_codes.*                                  # Shared exit code constants
+│
+└── fixtures/                                         # Shared fixtures (synthetic/sanitized; tiny; documented)
+    ├── public/
+    │   └── FIXTURE_NOTES.md
+    └── restricted_sanitized/
+        └── FIXTURE_NOTES.md
 ```
 
-### How `tools/` fits in the KFM promotion flow
+[Back to top](#top)
+
+---
+
+## How tools fit the promotion flow
 
 ```mermaid
 flowchart LR
-  PR[Pull request] --> CI[CI validate job]
+  PR[Pull request] --> CI[CI gates]
   CI --> V[tools/validators]
   V --> L[tools/linkcheck]
   L --> H[tools/hash]
-  H --> OK[Merge allowed]
+  H --> P[policy tests + contracts/tests]
+  P --> OK[Merge allowed]
 
-  V --> BLOCK[Merge blocked]
+  V --> BLOCK[Fail closed]
   L --> BLOCK
   H --> BLOCK
+  P --> BLOCK
 ```
 
-> **Note:** Validators should be *read-only* over versioned artifacts. If a tool writes files, its outputs should land in the correct lifecycle zone (`data/work/…`, `data/processed/…`, or `releases/…`) and be explicitly reviewed.
+> [!WARNING]
+> Tools should not “paper over” missing artifacts. If a catalog or receipt is missing, the correct output is a **blocking failure** (deny-by-default posture).
+
+[Back to top](#top)
 
 ---
 
 ## Quick start
 
-### Local prerequisites
+> [!NOTE]
+> Commands here are examples. Wire the repo’s real entry points (Makefile/Taskfile/npm scripts) and update this section accordingly.
 
-- Node.js (required for Node-based tools invoked via `node …`)
-- Repo dependencies installed (typically via `npm ci`)
-
-### Run the core gates locally
+### Run the core gates locally (example)
 
 ```bash
-# from repo root
-npm ci
+# From repo root (replace with your repo's actual bootstrap)
+make bootstrap
 
-# catalog validators
-node tools/validators/validate_dcat.js
-node tools/validators/validate_stac.js
-node tools/validators/validate_prov.js
+# Validate catalogs/provenance/receipts
+make tools-validate
 
-# cross-link validation (citations + catalog references)
-node tools/linkcheck/catalog_linkcheck.js
+# Cross-link check (DCAT ↔ STAC ↔ PROV ↔ receipts ↔ artifacts)
+make tools-linkcheck
 
-# contract drift detection
-node tools/hash/check_spec_hash.js
+# Spec-hash drift checks
+make tools-hash-check
+
+# Optional: lint guardrails (trust membrane / secrets)
+make tools-lint
 ```
 
-If your CI also runs policy tests, run them locally too:
+### Minimal “direct invocation” pattern (example)
 
 ```bash
-opa test policy/rego -v
+# Validators
+./tools/validators/validate_dcat.sh
+./tools/validators/validate_stac.sh
+./tools/validators/validate_prov.sh
+
+# Linkcheck
+./tools/linkcheck/catalog_triplet_linkcheck.sh
+
+# Hash/drift
+./tools/hash/check_spec_hash_drift.sh
 ```
+
+[Back to top](#top)
 
 ---
 
-## Tool inventory
+## Tool registry and inventory
 
-Keep this table up-to-date. CI should invoke tools from this inventory (directly or through `npm` scripts).
+KFM prefers a **machine-readable registry** so CI can run tools consistently and owners can be routed via CODEOWNERS.
 
-| Tool | Type | What it checks | CI stage |
-|---|---|---|---|
-| `tools/validators/validate_dcat.js` | validator | DCAT JSON-LD conforms to KFM DCAT profile; required fields present | “Validate catalogs” |
-| `tools/validators/validate_stac.js` | validator | STAC Collections/Items/Assets conform to KFM STAC profile | “Validate catalogs” |
-| `tools/validators/validate_prov.js` | validator | PROV bundles conform to KFM PROV profile; minimal lineage fields present | “Validate catalogs” |
-| `tools/linkcheck/catalog_linkcheck.js` | linkcheck | Required cross-links among DCAT ↔ STAC ↔ PROV resolve | “Linkcheck citations” |
-| `tools/hash/check_spec_hash.js` | drift check | Contract/spec hash stability; blocks unintended schema drift | “Spec hash drift check” |
+### `tools/registry/tools.v1.json` (recommended fields)
 
-<details>
-<summary><strong>What “fail-closed” means for tools</strong></summary>
+At minimum:
+- tool id + path
+- owner
+- gate type (merge gate vs promotion gate)
+- inputs/outputs (read-only vs writes)
+- required fixtures/tests
+- timeout expectations
+- policy-safe logging flag
 
-A tool should exit non-zero when:
-- it cannot prove a required condition (e.g., missing license, missing provenance link), or
-- an invariant is violated (e.g., a public artifact references a restricted policy label).
+Example shape (illustrative):
 
-“Warnings” should be explicit and reviewed; avoid silently passing on partial validation.
+```json
+{
+  "version": "v1",
+  "tools": [
+    {
+      "tool_id": "kfm.tools.validate_dcat",
+      "path": "tools/validators/validate_dcat.sh",
+      "owner": "KFM Platform",
+      "gate": "merge",
+      "reads": ["data/catalog/**"],
+      "writes": [],
+      "requires_fixtures": true,
+      "timeout_seconds": 120,
+      "policy_safe_logs": true
+    }
+  ]
+}
+```
 
-</details>
+### Tool inventory (human-readable)
+
+Keep this table up-to-date (it should match the registry):
+
+| Tool | Type | What it checks | Gate | Owner |
+|---|---|---|---|---|
+| `tools/validators/validate_dcat.*` | validator | DCAT conforms to KFM profile; required rights/license fields present | merge/promotion | TODO |
+| `tools/validators/validate_stac.*` | validator | STAC Items/Collections/Assets conform to KFM profile | merge/promotion | TODO |
+| `tools/validators/validate_prov.*` | validator | PROV bundle shape + required lineage links present | merge/promotion | TODO |
+| `tools/linkcheck/catalog_triplet_linkcheck.*` | linkcheck | DCAT ↔ STAC ↔ PROV cross-links resolve deterministically | merge/promotion | TODO |
+| `tools/hash/check_spec_hash_drift.*` | drift check | Deterministic spec-hash stability; blocks unintended drift | merge | TODO |
+| `tools/lint/check_no_direct_store_access.*` | lint | Trust membrane guardrail: forbid forbidden deps/egress patterns | merge | TODO |
+
+[Back to top](#top)
 
 ---
 
@@ -168,73 +314,97 @@ A tool should exit non-zero when:
 
 ### Deterministic and auditable
 
-- **Deterministic:** same inputs → same outputs (or same pass/fail decision).
-- **Offline-first:** avoid network calls during validation. If network access is unavoidable, it must be pinned, logged, and testable with fixtures.
-- **Auditable errors:** emit actionable failures (what failed, where, how to reproduce locally).
+- **Deterministic**: same inputs ⇒ same pass/fail decision.
+- **Fixture-driven**: every rule has fixtures (valid + invalid).
+- **Offline-first**: avoid network calls. If unavoidable, pin versions and record what was accessed.
 
 ### Safe by default
 
-- Treat all files as untrusted input (no `eval`, safe JSON parsing, strict path handling).
-- Never emit restricted data into stdout logs when running in public CI contexts.
-- Prefer *checking* over *mutating*. If mutation is required (e.g., codegen), keep it in a dedicated command and PR the output.
+- Treat files as untrusted input (strict parsing, safe path handling).
+- Never print secrets or restricted data.
+- Prefer **policy-safe error outputs**:
+  - do not distinguish “not found” vs “forbidden” in ways that leak restricted existence
+  - keep error messages actionable for maintainers but safe for CI logs
+
+### Read-only posture (preferred)
+
+- Validators/linkcheck/hash tools should not mutate artifacts.
+- If a tool must write outputs:
+  - write into the correct truth-path zone (usually `data/work/…`)
+  - emit `checksums.json` and a run receipt
+  - never overwrite canonical artifacts in place
+
+[Back to top](#top)
 
 ---
 
 ## Adding a new tool
 
-**Every new tool must ship with:**
+Every new tool must ship with:
 
-- [ ] A clear location: `tools/<area>/<tool_name>.(js|ts|py|sh)`
-- [ ] A short help text (`--help` or header comment) describing purpose + inputs + outputs
-- [ ] Tests (unit tests at minimum; integration tests if the tool enforces a gate)
-- [ ] A fixture set (small, versioned examples) so CI can verify behavior deterministically
-- [ ] An entry in [Tool inventory](#tool-inventory)
-- [ ] CI wiring (if the tool is a gate): update the workflow to run it on relevant diffs
+- [ ] A clear location: `tools/<area>/<tool_name>.(sh|py|js|ts|go)`
+- [ ] A help/usage entry point (`--help` or header comment)
+- [ ] Deterministic behavior (same inputs ⇒ same decision)
+- [ ] Fixtures: **known-good** + **known-bad**
+- [ ] Tests (unit tests minimum; integration tests if it is a gate)
+- [ ] Entry in `tools/registry/tools.v1.json`
+- [ ] Entry in the [Tool inventory](#tool-registry-and-inventory)
+- [ ] CI wiring (if the tool is a gate)
+- [ ] Policy-safe logging (no restricted details; no secrets)
 
-**Naming guidance**
-- `validate_*` for schema/profile validation
-- `check_*` for invariant checks and drift detection
-- `build_*` for artifact builders (must write into lifecycle zones)
+> [!TIP]
+> If the tool enforces a Promotion Contract gate, treat it like a contract change: update fixtures, schema validators, and documentation together.
+
+[Back to top](#top)
 
 ---
 
 ## Troubleshooting
 
-### Catalog validation failures
+### “Validator passes locally but fails in CI”
+- Confirm CI and local are using the same tool version/runtime.
+- Confirm fixtures are checked in and paths match CI working directory.
+- Confirm the tool is deterministic (no timestamps or environment-dependent ordering).
 
-- Run the failing validator locally (see [Quick start](#quick-start)).
-- Confirm that the artifact matches the corresponding profile (DCAT/STAC/PROV).
-- If the failure is *about a missing cross-link*, check `tools/linkcheck/catalog_linkcheck.js` output too.
-
-### Linkcheck failures
-
+### “Linkcheck failures”
 Common causes:
-- A DCAT Distribution points to a missing STAC Item.
-- A STAC Item references an asset that moved without updating metadata.
-- A PROV activity references a non-existent run id / entity id.
+- DCAT distribution points to missing STAC Item
+- STAC asset href changed but catalogs not updated
+- PROV references missing run receipt or entity id
 
-Fix by updating the *metadata* (not the tool) unless the tool is wrong and you can prove it with fixtures.
+Fix the *metadata* and receipts—do not weaken linkcheck rules “to get CI green”.
 
-### Spec-hash drift failures
+### “Spec-hash drift failures”
+- If drift is expected (intentional contract change): bump the relevant contract/version and update golden vectors.
+- If drift is not expected: verify canonicalization rules and field normalization.
 
-- If you intentionally changed a contract/schema, follow the repo’s contract versioning rules and update golden hashes/tests.
-- If you did **not** intend to change a contract: look for formatting/ordering differences and ensure canonicalization rules are applied before hashing.
+### “Tool logs might leak restricted details”
+- Treat as a P0 governance bug.
+- Redact/aggregate outputs, and enforce policy-safe error shaping.
+
+[Back to top](#top)
 
 ---
 
 ## Appendix: recommended CLI contract
 
-<a id="appendix-recommended-cli-contract"></a>
+Tools should follow a consistent CLI contract so CI can interpret results reliably.
 
-These conventions are **recommended** to keep tooling consistent:
-
-- `--help` prints usage + exits 0
+### Flags (recommended)
+- `--help` prints usage and exits `0`
 - `--json` prints machine-readable output (for CI annotations)
-- Exit codes:
-  - `0` = pass
-  - `1` = validation failed
-  - `2` = tool error (misconfiguration, missing dependency, etc.)
-- No hidden defaults that reduce safety (prefer explicit inputs or repository scanning with strict rules)
+- `--input <path>` optional explicit input root
+- `--strict` fails on warnings (default for CI)
+
+### Exit codes (recommended)
+- `0` = pass
+- `1` = validation failed (expected gate failure)
+- `2` = tool error (misconfiguration, missing dependency, unexpected exception)
+
+### Output contract (recommended)
+- Progress logs → stderr
+- Machine output → stdout (when `--json`)
+- Never print secrets or restricted details
 
 ---
 
