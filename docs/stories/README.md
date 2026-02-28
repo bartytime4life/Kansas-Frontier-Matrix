@@ -79,29 +79,112 @@ Back to top: [Navigation](#navigation)
 This README documents **what belongs here** and **what must not**. The exact subfolders are a repo choice; below is a recommended structure that keeps drafts and published stories separate.
 
 ```text
-docs/stories/                                    # Story Nodes (narratives + map state + citations; governed publish flow)
-├─ README.md                                      # How stories are authored, reviewed, and published (gates + rules)
+docs/stories/                                    # Story Nodes: narratives + map state + citations
+├─ README.md                                      # Authoring + review + publish rules (gates + invariants)
 │
-├─ draft/                                         # Proposed stories (not authoritative; subject to change)
-│  └─ <story_slug>/                               # Story slug (kebab-case; stable once published)
-│     ├─ story.md                                 # Story Node markdown (claims must be cited)
-│     ├─ story.json                               # Sidecar: map state + citations + policy labels/obligations
-│     ├─ media/                                   # Optional media assets used by the story (bounded; licensed)
-│     │  └─ …                                     # Images/figures/exports (no sensitive detail)
-│     └─ media_attribution.md                     # Recommended: license + attribution notes for story media
+├─ _schemas/                                      # JSON Schemas (CI validates story packs + sidecars)
+│  ├─ story_node.schema.json                      # story.md structural expectations (if you lint markdown)
+│  ├─ story_sidecar.schema.json                   # story.json: map state + citations + policy labels
+│  ├─ media_attribution.schema.json               # optional structured media attribution (if you adopt it)
+│  └─ story_index.schema.json                     # schema for aggregated story indexes
 │
-├─ published/                                     # Published stories (reviewed + gate-passing; authoritative)
+├─ _registry/                                     # Lightweight catalog/index of stories for UI + discovery
+│  ├─ stories.index.json                           # derived or hand-curated index (slug → title/status/tags)
+│  ├─ tags.vocab.json                              # controlled tags (optional; helps filter/search UX)
+│  └─ policy_labels.vocab.json                     # allowed labels + obligations vocab (optional)
+│
+├─ _lint/                                         # Repo-local lint config for story QA
+│  ├─ linkcheck.allowlist.txt                     # allowlist for stable external domains (optional)
+│  ├─ markdownlint.json                           # style rules (optional)
+│  └─ story_rules.yaml                            # house rules: required sections, prohibited patterns, etc.
+│
+├─ _shared/                                       # Shared, non-story-specific assets (optional)
+│  ├─ media/                                      # icons, logos, generic diagrams used across stories
+│  └─ snippets/                                   # reusable markdown fragments (disclaimers, boilerplates)
+│
+├─ _templates/                                    # Copy/paste starters (keep aligned to Story Node v3)
+│  └─ story_node_v3/
+│     ├─ story.md                                 # template markdown (sections + citation pattern)
+│     ├─ story.json                               # template sidecar (map state + refs placeholders)
+│     ├─ media_attribution.md                     # template attribution notes (license + credits)
+│     └─ review_checklist.md                      # reviewer checklist template
+│
+├─ draft/                                         # Proposed stories (NOT authoritative)
+│  └─ <story_slug>/                               # kebab-case slug; stable once published
+│     ├─ story.md                                 # narrative w/ claim anchors (claims must be cited)
+│     ├─ story.json                               # sidecar: map state + citations + policy labels/obligations
+│     ├─ story.lock.json                          # optional: frozen hashes of evidence/media for reproducibility
+│     │
+│     ├─ evidence/                                # optional: structured citation plumbing (still “draft”)
+│     │  ├─ evidence_refs.json                    # EvidenceRef list (ids, sources, scope, policy label)
+│     │  ├─ claim_map.json                        # claim_id → evidence_ref_id(s)
+│     │  └─ notes.md                              # analyst notes; assumptions; “unknowns to verify”
+│     │
+│     ├─ map/                                     # optional split to reduce JSON diff noise
+│     │  ├─ map_state.json                        # viewport, layers, filters, time slider defaults
+│     │  ├─ layer_overrides.json                  # per-story layer styling/symbolization overrides
+│     │  └─ bookmarks.json                        # named extents/steps used by scrollytelling
+│     │
+│     ├─ media/                                   # bounded story assets (licensed; no sensitive detail)
+│     │  ├─ src/                                  # originals (as received)
+│     │  ├─ derived/                              # resized/cropped/annotated derivatives
+│     │  └─ thumbnails/                           # small preview images for UI listing cards
+│     ├─ media_attribution.md                     # recommended in draft; required if licenses apply
+│     │
+│     ├─ review/                                  # WIP review artifacts (draft stage)
+│     │  ├─ checklist.md                          # reviewer checklist instance
+│     │  ├─ signoff.yaml                          # approvals + timestamps (optional)
+│     │  └─ discussion.md                         # review notes + decisions
+│     │
+│     └─ exports/                                 # optional (usually generated; may be gitignored)
+│        ├─ preview.html                          # rendered HTML preview
+│        └─ figures/                              # exported charts/maps for PR review
+│
+├─ review/                                        # Stories in formal review (pre-publish freeze)
 │  └─ <story_slug>/
-│     ├─ story.md                                 # Final story markdown (frozen; changes require republish/versioning)
-│     ├─ story.json                               # Final sidecar (frozen; must match story.md references)
-│     ├─ media/
-│     │  └─ …                                     # Published media (frozen; no sensitive detail)
-│     └─ media_attribution.md                     # Required when media licenses/attribution apply
+│     ├─ story.md                                 # candidate content (RC)
+│     ├─ story.json                               # candidate sidecar (RC)
+│     ├─ story.lock.json                          # REQUIRED if you enforce reproducibility gates
+│     ├─ review/                                  # REQUIRED: signoffs + checklist + decision record
+│     │  ├─ checklist.md
+│     │  ├─ signoff.yaml
+│     │  └─ decision_log.md                       # what changed + why
+│     └─ receipts/                                # REQUIRED: CI outputs proving gates passed
+│        ├─ lint_report.json
+│        ├─ linkcheck_report.json
+│        ├─ schema_validation.json
+│        └─ policy_check.json
 │
-└─ _templates/                                    # Optional helpers (copy/paste starters; keep aligned to v3)
-   └─ story_node_v3/
-      ├─ story.md                                 # Starter markdown template (sections + citation pattern)
-      └─ story.json                               # Starter sidecar template (map state + refs placeholders)
+├─ published/                                     # Published stories (authoritative)
+│  └─ <story_slug>/
+│     ├─ story.md                                 # latest published version (frozen)
+│     ├─ story.json                               # latest sidecar (frozen; must match story.md refs)
+│     ├─ story.manifest.json                      # REQUIRED: hashes of story.md/json + media set
+│     ├─ story.receipt.json                       # REQUIRED: publish receipt (who/what/when/inputs/outputs)
+│     ├─ media/
+│     │  └─ …                                     # frozen published media (no sensitive detail)
+│     ├─ media_attribution.md                     # REQUIRED when media licenses/attribution apply
+│     │
+│     ├─ versions/                                # REQUIRED if edits after publish are allowed at all
+│     │  ├─ v1/                                   # immutable snapshot (first publish)
+│     │  │  ├─ story.md
+│     │  │  ├─ story.json
+│     │  │  ├─ story.manifest.json
+│     │  │  ├─ story.receipt.json
+│     │  │  └─ media/…
+│     │  └─ v2/                                   # immutable snapshot (republish)
+│     │     └─ …
+│     │
+│     └─ CHANGELOG.md                             # human-readable summary of republish diffs (optional)
+│
+├─ withdrawn/                                     # Removed from publication (policy/quality/rights reasons)
+│  └─ <story_slug>/
+│     ├─ tombstone.md                             # why withdrawn + what users should do instead
+│     ├─ withdrawal_receipt.json                  # who/when/why/policy decision record
+│     └─ references/                              # optional: pointers to replacement story or redacted version
+│
+└─ _archive/                                      # Deprecated structures or retired templates (keep minimal)
+   └─ …
 ```
 
 ### Acceptable inputs
