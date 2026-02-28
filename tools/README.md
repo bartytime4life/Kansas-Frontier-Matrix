@@ -150,7 +150,6 @@ Tools exist to *enforce* these invariants (not merely document them):
 > This layout is a recommended baseline. If your repo differs, update this README and keep the **Tool registry** accurate.
 
 ```text
-```text id="tools-mega-tidy"
 tools/                                                         # Tooling entrypoint (validators + checks + CI helpers)
 ├── README.md                                                  # This file (how to run + add new tools)
 │
