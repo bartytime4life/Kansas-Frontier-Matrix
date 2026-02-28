@@ -1,0 +1,34 @@
+kfm_example_manifest_version: "v1"
+
+example_id: "sample_dataset"
+title: "sample_dataset example"
+summary: "Minimal governed example scaffold for sample_dataset."
+
+owners:
+  - "TBD"
+status: "draft"
+policy_label: "public"
+
+tags:
+  - "example"
+
+inputs: []
+outputs: []
+
+repro:
+  run: "./run.sh"
+  verify: "./verify.sh"
+
+evidence:
+  run_receipt: "evidence/run-receipt.json"
+  checksums: "evidence/checksums.json"
+  notes: "evidence/notes.md"
+
+claims:
+  - id: "claim-1"
+    text: "Scaffold exists and verification passes."
+    evidence_paths:
+      - "evidence/run-receipt.json"
+      - "evidence/checksums.json"
+
+depends_on: []
