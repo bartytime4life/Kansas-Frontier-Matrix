@@ -27,12 +27,21 @@ notes:
 ![Posture](https://img.shields.io/badge/posture-default--deny-critical)
 ![Policy-as-code](https://img.shields.io/badge/policy--as--code-Rego-blue)
 ![Tests](https://img.shields.io/badge/tests-required-informational)
+![CI/Runtime](https://img.shields.io/badge/ci%2Fruntime-semantics%20match-important)
+![Audit](https://img.shields.io/badge/audit-reconstructable-success)
 
 <!-- TODO(repo): Replace <ORG>/<REPO> and workflow filenames -->
 <!-- ![Policy Tests](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/policy-tests.yml?branch=main) -->
 <!-- ![Conftest Gate](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/conftest.yml?branch=main) -->
 
 > **TL;DR:** In KFM, **security is governance**. Policy is the shared source of truth for what is allowed to be served, exported, or claimed — and it must be **deterministic**, **test-covered**, and **fail-closed**.
+
+## Key references (normative intent)
+
+- **KFM Governance Guide**: `kfm://doc/KFM-GDG-2026` *(TODO: add in-repo path link)*  
+  Source of truth for: CI/runtime parity, policy labels + obligations, promotion contract gates, and safety defaults.
+- **Tooling / Delivery Plan** *(TODO: link in-repo)*  
+  Source of truth for: evidence resolver contract, cite-or-abstain gates, and how CI gates block promotion/merge.
 
 ---
 
@@ -42,6 +51,7 @@ notes:
 - [Non-negotiable invariants](#non-negotiable-invariants)
 - [Where policy sits in KFM](#where-policy-sits-in-kfm)
 - [Policy decision model](#policy-decision-model)
+- [Versioning and toolchain pins](#versioning-and-toolchain-pins)
 - [Policy labels](#policy-labels)
 - [Promotion Contract alignment](#promotion-contract-alignment)
 - [Making changes](#making-changes)
@@ -59,7 +69,7 @@ What belongs in `policy/`:
 
 - **Policy code** (e.g., Rego packages) for:
   - authorization (role/label/action rules)
-  - rights/licensing enforcement
+  - rights/licensing enforcement *(“online availability” ≠ permission to reuse)*
   - sensitivity + redaction/generalization obligations
   - promotion gating decisions (fail closed)
   - policy-safe error shaping (no restricted inference)
@@ -148,6 +158,13 @@ These invariants align to KFM north stars. Policy must **enforce** them, not mer
   - “helpful” metadata in errors
 - Policy should support an indistinguishable, safe error posture for restricted objects.
 
+### 9) Versioned policy pack (audit reconstructability)
+
+- Every governed run (pipeline run, story publish, Focus Mode request) must be able to record:
+  - **which policy pack** was used (bundle digest / version identifier)
+  - **what decision** was returned (decision + obligations + reason codes)
+- If a run receipt/promotion manifest cannot answer “which policy rules were applied?”, treat it as **non-auditable** and **deny/quarantine**.
+
 [Back to top](#top)
 
 ---
@@ -195,8 +212,14 @@ A policy evaluation should return a **decision envelope** that is stable, audita
 - `obligations[]`: required follow-up actions (redaction, notices, export constraints)
 - `reason_codes[]`: stable identifiers (for audit + debugging without leaking sensitive info)
 
+### Recommended decision fields (strongly encouraged)
+
+- `decision_id`: stable identifier for correlation in receipts/PROV (may be derived)
+- `policy_pack_id`: policy bundle version/digest used for evaluation
+- `audit_ref`: correlation ID for policy-safe error responses and steward debugging
+
 > [!NOTE]
-> Obligations are part of the decision and must be captured in run receipts/audit logs.
+> Obligations are part of the decision and must be captured in run receipts/audit logs (and referenced from PROV where applicable).
 
 ### Obligations (examples)
 
@@ -219,6 +242,40 @@ Policy should support a safe error model that avoids restricted inference. A com
 
 > [!WARNING]
 > Do not include restricted labels, precise coordinates, or rights-holder details in public error responses.
+
+[Back to top](#top)
+
+---
+
+## Versioning and toolchain pins
+
+This directory is not just “policy source”; it is an **auditable contract**.
+
+### Policy pack versioning
+
+- Treat the **policy pack** as a versioned artifact.
+- Record `policy_pack_id` (bundle digest/version) in:
+  - pipeline run receipts
+  - promotion manifests
+  - Story publish receipts
+  - Focus Mode receipts
+
+This is what makes governance **reconstructable** during audits and incident response.
+
+### Toolchain drift (pin versions)
+
+Toolchain drift can silently invalidate CI gates. To keep CI and runtime outcomes aligned:
+
+- Pin **OPA** and **Conftest** versions in CI.
+- Treat toolchain upgrades as governed changes:
+  - add/refresh fixtures
+  - run policy regression suite
+  - steward review
+
+### Maintainability guidelines
+
+- Keep policies small and composable (one file per concern).
+- Always add `_test.rego` coverage for new rules to prevent silent drift.
 
 [Back to top](#top)
 
@@ -250,17 +307,17 @@ Policy labels are controlled vocabulary values attached to datasets, stories, an
 
 Policy is a hard dependency of the KFM Promotion Contract. Promotion must be **blocked** unless required artifacts exist and validate.
 
-### Gate map (how policy participates)
+### Gate map (Promotion Contract v1)
 
-| Promotion gate | Policy participation (examples) |
-|---|---|
-| Identity & versioning | deny if required IDs/spec-hash inputs missing or invalid |
-| Licensing & rights | deny if license/rights/attribution missing or incompatible with intended distribution |
-| Sensitivity & redaction plan | deny if restricted/sensitive lacks a recorded generalization/redaction plan |
-| Catalog triplet validation | policy can deny serving/promotion if required catalog fields missing (even if schema-valid) |
-| Run receipt & checksums | deny if receipts lack required policy fields or checksums are incomplete |
-| Policy tests & contract tests | deny merge/promotion if fixtures-driven tests fail; deny if evidence cannot resolve in CI for allowed roles |
-| Exports & redistribution | deny export if rights/policy forbid, or if obligations require suppression/generalization |
+| Gate | Promotion gate | Policy participation (examples) |
+|---:|---|---|
+| A | Identity & versioning | deny if required IDs/spec-hash inputs missing or invalid |
+| B | Licensing & rights metadata | deny if license/rights/attribution missing or incompatible with intended distribution |
+| C | Sensitivity classification & redaction plan | deny if restricted/sensitive lacks a recorded generalization/redaction plan (and dual-output policy where required) |
+| D | Catalog triplet validation | policy can deny serving/promotion if required catalog fields/cross-links are missing (even if schema-valid) |
+| E | QA & thresholds | deny (or quarantine) if required QA report is missing or thresholds failed |
+| F | Run receipt & audit record | deny if receipts lack required policy decision fields (decision + obligations + policy_pack_id) |
+| G | Release manifest | deny if promotion is not recorded as a release manifest referencing artifact digests |
 
 ### Promotion-critical rule of thumb
 
@@ -307,14 +364,14 @@ Wire these into `make test-policy` (or equivalent) so local + CI runs are identi
 ### Option A — OPA unit tests (Rego)
 
 ```bash
-# Run all rego tests (adjust paths to your repo conventions)
+opa version
 opa test -v policy/rego policy/tests
 ```
 
 ### Option B — Conftest gate (PR gate)
 
 ```bash
-# Validate a directory of fixtures/manifests against rego policies
+conftest --version
 conftest test -p policy/rego policy/fixtures
 ```
 
@@ -324,6 +381,7 @@ conftest test -p policy/rego policy/fixtures
 - Denies must emit actionable output:
   - stable `reason_code`
   - policy-safe remediation hint (no leaks)
+- CI should log (and ideally assert) policy tool versions so regressions are diagnosable.
 
 [Back to top](#top)
 
@@ -343,7 +401,7 @@ policy/
 │  ├─ policy_bundle.v1.json                      # Policy bundle manifest (packages, versions, entrypoints, required tests)
 │  ├─ schemas/                                   # Schemas for registries + decision/fixture shapes (optional, recommended)
 │  │  ├─ policy_bundle.v1.schema.json
-│  │  ├─ decision_envelope.v1.schema.json        # {decision, policy_label, obligations[], reason_codes[]}
+│  │  ├─ decision_envelope.v1.schema.json        # {decision, policy_label, obligations[], reason_codes[], policy_pack_id?}
 │  │  ├─ fixture_input.v1.schema.json            # {user, action, resource, context}
 │  │  ├─ obligation.v1.schema.json               # obligation object shape(s)
 │  │  ├─ reason_codes.v1.schema.json             # reason code enumerations / structure
