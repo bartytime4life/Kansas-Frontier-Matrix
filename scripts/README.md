@@ -135,57 +135,165 @@ flowchart LR
 scripts/
 ├─ README.md
 │
-├─ registry/                                     # Machine-readable registry + schemas + fixtures (small)
-│  ├─ scripts.v1.json                            # Canonical registry: scripts, owners, scope, receipts, zones touched
-│  ├─ schemas/                                   # Optional but recommended schemas for registry + receipts
-│  │  ├─ scripts_registry.v1.schema.json
-│  │  └─ run_receipt.v1.schema.json              # If the repo stores receipt schema here (or link to contracts/)
+├─ registry/                                      # Machine-readable registry + schemas + fixtures (small, diff-friendly)
+│  ├─ scripts.v1.json                             # Canonical registry: scripts, owners, scope, receipts, zones touched
+│  ├─ scripts.lock.json                           # (Optional) digests/spec_hashes for registry + schemas (repro/audit)
+│  ├─ schemas/                                    # Schemas for registry + receipt shapes (optional but recommended)
+│  │  ├─ scripts_registry.v1.schema.json          # Validates scripts.v1.json
+│  │  ├─ run_receipt.v1.schema.json               # Validates run receipts emitted by scripts
+│  │  ├─ checksums.v1.schema.json                 # Validates checksums.json (if standardized)
+│  │  ├─ acquisition_manifest.v1.schema.json      # Validates RAW acquisition manifest.json (if standardized here)
+│  │  └─ qa_report.v1.schema.json                 # Validates QA report shape (if standardized)
+│  ├─ fixtures/                                   # Fixtures for CI validation of schemas + registry correctness
+│  │  ├─ valid/
+│  │  │  ├─ scripts.v1.valid.json                 # Minimal valid registry example
+│  │  │  ├─ run_receipt.v1.valid.json
+│  │  │  └─ acquisition_manifest.v1.valid.json
+│  │  ├─ invalid/
+│  │  │  ├─ scripts.v1.invalid.json               # Intentionally broken examples (must fail validation)
+│  │  │  ├─ run_receipt.v1.missing_checksums.json
+│  │  │  └─ acquisition_manifest.v1.missing_terms.json
+│  │  └─ README.md                                # How fixtures are used in CI (what should fail, and why)
+│  └─ README.md                                   # Registry contract + how to add a script entry (fail-closed rules)
+│
+├─ acquire/                                       # Upstream snapshot → RAW (append-only; never served)
+│  ├─ README.md                                   # Acquisition rules: terms snapshot, checksums, append-only posture
+│  ├─ sources/                                    # (Optional) per-source configs used by acquire scripts (NO secrets)
+│  │  ├─ README.md
+│  │  └─ <source_id>.yaml                         # e.g., endpoints, cadence, parsing hints, zone paths (no creds)
+│  ├─ acquire_<source_or_dataset>.sh              # Shell entrypoint wrappers (optional)
+│  ├─ acquire_<source_or_dataset>.py              # Python entrypoint (optional)
+│  ├─ acquire_<source_or_dataset>.ts              # TS/Node entrypoint (optional)
+│  ├─ _templates/                                 # (Optional) boilerplates for new acquisition scripts
+│  │  ├─ manifest.template.json
+│  │  └─ terms_snapshot.template.md
+│  ├─ tests/                                      # (Optional) tiny smoke tests (use synthetic fixtures)
+│  │  └─ test_acquire_smoke.sh
+│  └─ fixtures/                                   # (Optional) tiny synthetic upstream payloads for test runs
+│     └─ upstream_sample.json
+│
+├─ transform/                                     # RAW/WORK → WORK/PROCESSED (deterministic transforms)
+│  ├─ README.md                                   # Determinism rules + QA requirements + zone discipline
+│  ├─ transforms/                                 # (Optional) transform definitions/configs (NO secrets)
+│  │  ├─ README.md
+│  │  └─ <dataset_slug>.yaml                      # transform spec: inputs, outputs, params, validators
+│  ├─ transform_<dataset>.sh                      # Wrapper entrypoint (optional)
+│  ├─ transform_<dataset>.py                      # Transform runner (optional)
+│  ├─ transform_<dataset>.ts                      # Transform runner (optional)
+│  ├─ qa/                                         # (Optional) shared QA helpers invoked by transforms
+│  │  ├─ README.md
+│  │  ├─ schema_checks.py
+│  │  ├─ geo_checks.py
+│  │  └─ time_checks.py
+│  ├─ tests/                                      # Unit/smoke tests for transform logic
+│  │  ├─ test_transform_smoke.sh
+│  │  └─ test_qa_rules.py
+│  └─ fixtures/                                   # Tiny synthetic datasets for deterministic tests
+│     ├─ input/
+│     └─ expected/
+│
+├─ validate/                                      # Validators + promotion-gate checks (fail-closed)
+│  ├─ README.md                                   # What validators exist + how they gate merges/promotions
+│  ├─ validate_catalog_triplet.sh                 # DCAT/STAC/PROV schema validation + cross-link lint
+│  ├─ validate_catalog_triplet.py                 # (Optional) richer validator implementation
+│  ├─ validate_policy_fixtures.sh                 # Policy parity tests (CI/runtime semantics)
+│  ├─ validate_policy_fixtures.py
+│  ├─ validate_promotion_gates.sh                 # Gate checklist + reason codes (must block on failure)
+│  ├─ validate_promotion_gates.py
+│  ├─ rules/                                      # (Optional) validation rules/config toggles
+│  │  ├─ README.md
+│  │  ├─ linkcheck.rules.yaml
+│  │  └─ gates.rules.yaml
+│  ├─ reports/                                    # (Optional) normalized report writers (JSON outputs)
+│  │  ├─ README.md
+│  │  └─ write_validation_report.py
+│  ├─ tests/                                      # Validation unit tests (fixtures-driven)
+│  │  ├─ test_linkcheck_rules.py
+│  │  └─ test_gate_rules.py
+│  └─ fixtures/                                   # Known-good / known-bad catalog + manifest fixtures
+│     ├─ triplet_valid/
+│     └─ triplet_invalid/
+│
+├─ catalog/                                       # Catalog generation + normalization (DCAT/STAC/PROV)
+│  ├─ README.md                                   # Contract: how catalogs are built + cross-linked + validated
+│  ├─ build_dcat.sh
+│  ├─ build_dcat.py
+│  ├─ build_stac.sh
+│  ├─ build_stac.py
+│  ├─ build_prov.sh
+│  ├─ build_prov.py
+│  ├─ crosslink_triplet.sh                        # Ensures DCAT↔STAC↔PROV pointers resolve deterministically
+│  ├─ normalize_catalogs.py                       # Stable formatting (key order, newline, etc.) for clean diffs
+│  ├─ templates/                                  # (Optional) templates for catalog records
+│  │  ├─ dcat.template.jsonld
+│  │  ├─ stac.collection.template.json
+│  │  └─ prov.template.jsonld
+│  ├─ tests/
+│  │  ├─ test_catalog_build_smoke.sh
+│  │  └─ test_crosslinks.py
 │  └─ fixtures/
-│     ├─ valid/
-│     └─ invalid/
+│     ├─ input_minimal/
+│     └─ expected_minimal/
 │
-├─ acquire/                                      # Upstream snapshot → RAW (append-only)
-│  ├─ README.md
-│  └─ acquire_<source_or_dataset>.{sh,py,ts}     # Emit terms snapshot + manifest + checksums + receipt
+├─ index/                                         # Rebuildable projections (never canonical truth)
+│  ├─ README.md                                   # Indexing posture + rebuild-from-canonical rule
+│  ├─ build_search_index.sh                       # Builds search/vector indexes from canonical artifacts
+│  ├─ build_search_index.py
+│  ├─ build_graph_projection.sh                   # Builds graph projections/edges from catalogs/prov
+│  ├─ build_graph_projection.py
+│  ├─ build_tiles.sh                              # Builds tiles/pmtiles/caches from processed artifacts
+│  ├─ build_tiles.py
+│  ├─ configs/                                    # (Optional) index configs (NO secrets)
+│  │  ├─ search_index.yaml
+│  │  ├─ graph_projection.yaml
+│  │  └─ tiles.yaml
+│  ├─ tests/                                      # Smoke tests (offline where possible)
+│  │  └─ test_index_smoke.sh
+│  └─ fixtures/
+│     └─ tiny_processed_inputs/
 │
-├─ transform/                                    # RAW/WORK → WORK/PROCESSED (deterministic)
-│  ├─ README.md
-│  └─ transform_<dataset>.{sh,py,ts}             # Emit QA + checksums + receipt
+├─ maintenance/                                   # One-off ops (migrations/backfills) — reversible + receipted
+│  ├─ README.md                                   # Rules: scope control, rollback required, receipts always
+│  ├─ migrate_<thing>.sh
+│  ├─ migrate_<thing>.py
+│  ├─ backfill_<thing>.sh
+│  ├─ backfill_<thing>.py
+│  ├─ plans/                                      # (Optional) machine-readable migration/backfill declarations
+│  │  ├─ README.md
+│  │  └─ <MIGRATION_ID>.yaml
+│  ├─ rollback/                                   # (Optional) rollback helpers/scripts (required when declared)
+│  │  ├─ README.md
+│  │  └─ rollback_<thing>.py
+│  ├─ tests/
+│  │  └─ test_rollback_smoke.sh
+│  └─ fixtures/
+│     └─ tiny_state/
 │
-├─ validate/                                     # Validators + promotion-gate checks (fail-closed)
-│  ├─ README.md
-│  ├─ validate_catalog_triplet.{sh,py}           # DCAT/STAC/PROV + linkcheck
-│  ├─ validate_policy_fixtures.{sh,py}           # parity tests (CI/runtime semantics)
-│  └─ validate_promotion_gates.{sh,py}           # gates checklist + reason codes
+├─ lib/                                           # Shared helpers (pure helpers preferred; minimal side effects)
+│  ├─ README.md                                   # Library rules + stable interfaces
+│  ├─ receipt.py                                  # Helper to write run receipts consistently
+│  ├─ receipt.sh
+│  ├─ checksums.py                                # Helper to compute/write checksums.json
+│  ├─ checksums.sh
+│  ├─ paths.py                                    # Canonical path helpers for truth-path zones
+│  ├─ paths.sh
+│  ├─ log.py                                      # Structured logging helpers (policy-safe)
+│  ├─ log.sh
+│  ├─ json_canon.py                               # Canonical JSON writer (stable ordering) for hashing/diffing
+│  ├─ env.py                                      # Env var parsing + validation (no secrets printed)
+│  └─ policy_safe_errors.py                       # Helpers for policy-safe error shaping in scripts
 │
-├─ catalog/                                      # Catalog generation + normalization
-│  ├─ README.md
-│  ├─ build_dcat.{sh,py}
-│  ├─ build_stac.{sh,py}
-│  ├─ build_prov.{sh,py}
-│  └─ crosslink_triplet.{sh,py}
-│
-├─ index/                                        # Rebuildable projections (never canonical)
-│  ├─ README.md
-│  ├─ build_search_index.{sh,py}
-│  ├─ build_graph_projection.{sh,py}
-│  └─ build_tiles.{sh,py}
-│
-├─ maintenance/                                  # One-off ops (migrations/backfills) — must be reversible + receipted
-│  ├─ README.md
-│  ├─ migrate_<thing>.{sh,py}
-│  └─ backfill_<thing>.{sh,py}
-│
-├─ lib/                                          # Shared helpers (pure helpers preferred; minimal side effects)
-│  ├─ README.md
-│  ├─ receipt.{sh,py}                            # helper to write run receipts consistently
-│  ├─ checksums.{sh,py}                          # helper to compute/write checksums.json
-│  ├─ paths.{sh,py}                              # canonical path helpers for truth-path zones
-│  └─ log.{sh,py}                                # structured logging helpers (policy-safe)
-│
-└─ _shared/                                      # Optional: tiny safe fixtures and test helpers
-   ├─ data/                                      # synthetic fixtures only (policy-safe; tiny)
-   └─ scripts/                                   # helper scripts used across scripts/ (fmt, lint, normalize)
+└─ _shared/                                       # Optional: tiny safe fixtures and test helpers
+   ├─ README.md
+   ├─ data/                                       # Synthetic fixtures only (policy-safe; tiny; versioned)
+   │  ├─ toy_points.geojson
+   │  ├─ toy_table.csv
+   │  └─ toy_story.md
+   └─ scripts/                                    # Helper scripts used across scripts/ (fmt, lint, normalize)
+      ├─ fmt.sh
+      ├─ lint.sh
+      ├─ normalize_outputs.sh
+      └─ smoke_all.sh
 ```
 
 [Back to top](#top)
