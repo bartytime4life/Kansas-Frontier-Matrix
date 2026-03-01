@@ -32,34 +32,34 @@ flowchart LR
   %% GitOps control plane
   %% ==============================
   subgraph GitOps[GitOps control plane]
-    Repo[Git repository\n(declarative manifests and configs)]
-    CI[CI validation gates\n(tests and policy checks)]
-    Registry[Container registry\n(images)]
+    Repo["Git repository<br/>(declarative manifests and configs)"]
+    CI["CI validation gates<br/>(tests and policy checks)"]
+    Registry["Container registry<br/>(images)"]
 
     Repo --> CI --> Registry
   end
 
-  Secrets[Secrets manager\n(outside Git)]
+  Secrets["Secrets manager<br/>(outside Git)"]
 
-  GitOpsCtl[GitOps controller\n(sync desired state)]
+  GitOpsCtl["GitOps controller<br/>(sync desired state)"]
 
   %% ==============================
   %% Runtime platform
   %% ==============================
-  subgraph Cluster[Kubernetes or OpenShift\n(dev, staging, prod)]
-    Ingress[Ingress or Router\n(TLS)]
+  subgraph Cluster["Kubernetes or OpenShift<br/>(dev, staging, prod)"]
+    Ingress["Ingress or Router<br/>(TLS)"]
 
     subgraph RuntimeNS[Runtime services]
-      UI[Map and Story UI\nplus Focus Mode UI]
-      API[Governed API\nPEP and evidence resolver]
-      OPA[Policy engine\nOPA Rego\n(sidecar or embedded)]
+      UI["Map and Story UI<br/>plus Focus Mode UI"]
+      API["Governed API<br/>PEP and evidence resolver"]
+      OPA["Policy engine<br/>OPA Rego<br/>(sidecar or embedded)"]
 
       UI --> API
       API --> OPA
     end
 
     subgraph BatchNS[Pipeline runner]
-      Runner[Batch jobs\n(ingest, QA, promote, rebuild)]
+      Runner["Batch jobs<br/>(ingest, QA, promote, rebuild)"]
     end
   end
 
@@ -67,18 +67,18 @@ flowchart LR
   %% Canonical stores and managed services
   %% ==============================
   subgraph Stores[Canonical stores and managed services]
-    Obj[Object storage\nRAW, WORK, PROCESSED, CATALOG]
-    DB[Database\n(PostGIS)]
-    Search[Search service\n(managed where possible)]
-    Audit[Audit ledger\n(run receipts)]
+    Obj["Object storage<br/>RAW, WORK, PROCESSED, CATALOG"]
+    DB["Database<br/>(PostGIS)"]
+    Search["Search service<br/>(managed where possible)"]
+    Audit["Audit ledger<br/>(run receipts)"]
   end
 
   %% ==============================
   %% Observability
   %% ==============================
   subgraph Obs[Observability]
-    Logs[Structured logs\n(correlation id, audit_ref)]
-    Metrics[Metrics\n(latency, failures, durations)]
+    Logs["Structured logs<br/>(correlation id, audit_ref)"]
+    Metrics["Metrics<br/>(latency, failures, durations)"]
   end
 
   %% ==============================
@@ -117,6 +117,6 @@ flowchart LR
   %% ==============================
   %% Backup and restore
   %% ==============================
-  Backup[Backup and restore\n(canonical stores)]
+  Backup["Backup and restore<br/>(canonical stores)"]
   Backup --> Obj
   Backup --> Audit
