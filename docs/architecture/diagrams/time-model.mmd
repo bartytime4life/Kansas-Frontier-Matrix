@@ -1,80 +1,57 @@
-%% KFM Time Model (tri-temporal)
-%%
-%% Source: Kansas Frontier Matrix (KFM) — Definitive Design & Governance Guide (vNext),
-%%         §3.6 "Time: event time, valid time, and transaction time" (PROPOSED).
-%%
-%% Purpose:
-%%   Make KFM "time-aware" in a way that supports both scientific history (event/valid time)
-%%   and reproducibility/auditing (transaction time).
-%%
-%% Notes:
-%%   - Recommended default: Event time + Transaction time.
-%%   - Add Valid time when administrative truth changes (e.g., boundary history).
-%%   - This diagram is conceptual; field names and storage implementations live in contracts/ + schemas.
-%%
-flowchart TB
-  %% Styles (kept minimal; adjust via Mermaid theme if desired)
-  classDef axis fill:#f7f7f7,stroke:#333,stroke-width:1px;
-  classDef obj fill:#ffffff,stroke:#333,stroke-width:1px;
-  classDef zone fill:#eef6ff,stroke:#1c3d5a,stroke-width:1px;
-  classDef query fill:#fff7e6,stroke:#7a4b00,stroke-width:1px;
+graph TB
 
   subgraph Axes[Time axes]
-    ET[Event time]:::axis
-    VT[Valid time]:::axis
-    TT[Transaction time]:::axis
+    ET[Event time]
+    VT[Valid time]
+    TT[Transaction time]
   end
 
   subgraph Objects[KFM domain objects]
-    Obs[Observation or event]:::obj
-    State[Feature state or statement]:::obj
-    Artifact[Artifact]:::obj
-    Run[Run receipt]:::obj
-    Bundle[Evidence bundle]:::obj
-    Story[Story node version]:::obj
+    Obs[Observation or event]
+    State[Feature state or statement]
+    Artifact[Artifact]
+    Run[Run receipt]
+    Bundle[Evidence bundle]
+    Story[Story node version]
   end
 
-  %% Time attachment
   Obs --> ET
   State --> VT
-  Run --> TT
   Artifact --> TT
+  Run --> TT
   Bundle --> TT
   Story --> TT
 
-  %% Provenance & evidence flow
-  Obs -->|captured as| Artifact
-  State -->|represented in| Artifact
+  Obs -->|captured_as| Artifact
+  State -->|represented_in| Artifact
   Run -->|produces| Artifact
-  Artifact -->|resolves to| Bundle
+  Artifact -->|resolves_to| Bundle
   Story -->|cites| Bundle
 
-  %% Truth path zones (transaction-time progression of KFM artifacts)
   subgraph TruthPath[Truth path zones]
-    RAW[RAW]:::zone --> WORK[WORK or Quarantine]:::zone --> PROCESSED[PROCESSED]:::zone --> CATALOG[CATALOG]:::zone --> PUBLISHED[PUBLISHED]:::zone
+    RAW[RAW] --> WORK[WORK or Quarantine] --> PROCESSED[PROCESSED] --> CATALOG[CATALOG] --> PUBLISHED[PUBLISHED]
   end
 
-  RAW -->|acquired at| TT
-  PROCESSED -->|promoted at| TT
-  PUBLISHED -->|served as-of| TT
-  CATALOG -->|cross-links| Bundle
+  RAW -->|acquired_at| TT
+  PROCESSED -->|promoted_at| TT
+  PUBLISHED -->|served_as_of| TT
+  CATALOG -->|cross_links| Bundle
 
-  %% Query modes
   subgraph Queries[Common query modes]
-    QEvent[Map and analytics: filter by event-time window]:::query
-    QValid[Admin history: query by valid-time interval]:::query
-    QAsOf[Reproducibility and audit: as-of transaction time]:::query
+    QEvent[Filter by event-time window]
+    QValid[Query by valid-time interval]
+    QAsOf[Reproduce: as-of transaction time]
   end
 
   QEvent --> ET
   QValid --> VT
   QAsOf --> TT
 
-  %% Modeling guidance
   subgraph Guidance[Recommended default]
-    Default[Default: model Event time + Transaction time]:::query
-    Optional[Add Valid time where boundaries or legal-administrative truth changes]:::query
+    Default[Default: Event time + Transaction time]
+    Optional[Add Valid time for administrative truth changes]
   end
+
   Default --> ET
   Default --> TT
   Optional --> VT
