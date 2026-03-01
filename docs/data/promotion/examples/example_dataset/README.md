@@ -78,23 +78,23 @@ This README documents the intended structure under:
 ### Recommended layout (example)
 
 ```text
-docs/data/promotion/examples/example_dataset/
-  README.md
-
-  spec/
-    dataset.spec.yaml                # Dataset intent + QA thresholds + license/sensitivity metadata
-
-  fixtures/
-    raw/                             # Small “raw” fixtures (tiny CSV/GeoJSON) for validators (NOT real data)
-    work/                            # Normalized fixtures + QA reports
-    processed/                       # Publishable-format fixtures (GeoParquet/COG/PMTiles), kept tiny
-    checksums/                       # sha256 manifests for fixtures (raw + processed)
-    catalog/
-      dcat/                          # Example DCAT dataset/distributions
-      stac/                          # Example STAC collection/items/assets
-      prov/                          # Example PROV bundle (run provenance)
-    receipts/                        # Example run_receipt(s) and (optionally) release manifests
-    policy/                          # Example policy fixtures (allowed/denied cases) for Gate F
+docs/data/promotion/examples/example_dataset/                 # Golden-path example dataset (docs + fixtures to teach/validate gates)
+├─ README.md                                                  # Example overview: what it demonstrates, how to run checks, expected outcomes
+│
+├─ spec/                                                      # Example “dataset spec” inputs (intent + rules)
+│  └─ dataset.spec.yaml                                       # Dataset intent + QA thresholds + license/sensitivity metadata (example)
+│
+└─ fixtures/                                                  # Tiny, synthetic fixtures for validators (NOT real data; policy-safe)
+   ├─ raw/                                                    # Small “raw” fixtures (tiny CSV/GeoJSON) for validators
+   ├─ work/                                                   # Normalized fixtures + QA reports (intermediate stage examples)
+   ├─ processed/                                              # Publishable-format fixtures (GeoParquet/COG/PMTiles), kept tiny
+   ├─ checksums/                                              # sha256 manifests for fixtures (raw + processed; determinism examples)
+   ├─ catalog/                                                # Example catalog triplet artifacts (DCAT/STAC/PROV)
+   │  ├─ dcat/                                                # Example DCAT dataset/distributions (policy-safe links)
+   │  ├─ stac/                                                # Example STAC collection/items/assets (cross-linked)
+   │  └─ prov/                                                # Example PROV bundle (run provenance; agent/activity/entity links)
+   ├─ receipts/                                               # Example run_receipt(s) and optional release/promotion manifests
+   └─ policy/                                                 # Example policy fixtures (allowed/denied cases) used for Gate F scenarios
 ```
 
 ### What belongs here
