@@ -1,3 +1,4 @@
+```python
 from pathlib import Path
 
 content = """%% [KFM_META_BLOCK_V2]
@@ -127,4 +128,4 @@ graph LR
 out_path = Path("/mnt/data/kfm-diagram-template.mmd")
 out_path.write_text(content, encoding="utf-8")
 
-out_path
+str(out_path)
