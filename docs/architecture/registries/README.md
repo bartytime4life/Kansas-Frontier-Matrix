@@ -240,13 +240,13 @@ This directory is intentionally small: it’s the **index** of registry document
 ### Proposed tree (update after confirming repo)
 
 ```text
-docs/architecture/registries/
-  README.md
-  dataset-registry.md        # TODO: document dataset entry schema + examples
-  source-registry.md         # TODO: document source entry schema + examples
-  watchers-registry.md       # TODO: document watcher allow-list schema + signing
-  vocabularies.md            # TODO: controlled vocab rules (themes, domains, etc.)
-  policy-labels.md           # TODO: policy_label meanings + common obligations
+docs/architecture/registries/                               # Architecture registries docs (how machine registries work + how validated)
+├─ README.md                                                # Index + registry philosophy (small, machine-checkable) + validation rules
+├─ dataset-registry.md                                      # TODO: dataset registry entry schema + required fields + examples + CI checks
+├─ source-registry.md                                       # TODO: source registry entry schema + provenance/rights fields + examples
+├─ watchers-registry.md                                     # TODO: watcher registry schema + allow-listing + signing/verification + drift rules
+├─ vocabularies.md                                          # TODO: controlled vocab rules (themes/domains/units) + versioning + drift tests
+└─ policy-labels.md                                         # TODO: policy_label meanings + defaults + common obligations + leak-safe handling
 ```
 
 [Back to top](#architecture-registries)
