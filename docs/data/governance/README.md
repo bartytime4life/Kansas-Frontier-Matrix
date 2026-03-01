@@ -276,20 +276,22 @@ Use this when onboarding a source or preparing a dataset version for promotion.
 This README is required. Everything else is recommended and can be added incrementally.
 
 ```text
-docs/data/governance/
-  README.md                         # you are here
-  promotion-contract.md             # normative explanation of gates (recommended)
-  policy-labels.md                  # definitions + examples (recommended)
-  licensing.md                      # rights rubric + decision notes (recommended)
-  sensitivity.md                    # generalization guidelines + thresholds (recommended)
-  catalogs.md                       # DCAT/STAC/PROV requirements + cross-linking rules (recommended)
-  checklists/
-    dataset-integration-dod.md      # steward checklist (recommended)
-    sensitive-layer-release.md      # extra gates for high-risk layers (recommended)
-  templates/
-    run_receipt.v1.json             # example + field notes (recommended)
-    promotion_manifest.v1.json      # example + field notes (recommended)
-    policy_decision.v1.json         # example + field notes (recommended)
+docs/data/governance/                                     # Data governance docs (normative rules for datasets + promotion + safety)
+├─ README.md                                              # You are here: index + scope (data governance) + link map to gates/schemas/tests
+├─ promotion-contract.md                                  # Normative explanation of promotion gates (what must exist to move zones)
+├─ policy-labels.md                                       # Policy label definitions + examples + default obligations (fail-closed)
+├─ licensing.md                                           # Rights/licensing rubric + decision notes + attribution expectations
+├─ sensitivity.md                                         # Sensitivity handling + generalization guidelines + thresholds + “no exact coords” rules
+├─ catalogs.md                                            # DCAT/STAC/PROV requirements + required cross-linking rules + validation expectations
+│
+├─ checklists/                                            # Human checklists (reviewer-friendly; map to CI gates)
+│  ├─ dataset-integration-dod.md                          # Steward DoD checklist (artifacts, QA, provenance, receipts, links)
+│  └─ sensitive-layer-release.md                          # Extra gates for high-risk layers (redaction review, leakage tests, approvals)
+│
+└─ templates/                                             # Governed examples/templates (policy-safe; kept in sync with canonical contracts)
+   ├─ run_receipt.v1.json                                 # Example run receipt + field notes (policy-safe; deterministic)
+   ├─ promotion_manifest.v1.json                          # Example promotion manifest + field notes (digests, approvals, artifact list)
+   └─ policy_decision.v1.json                             # Example policy decision envelope + field notes (allow/deny/obligations)
 ```
 
 ---
