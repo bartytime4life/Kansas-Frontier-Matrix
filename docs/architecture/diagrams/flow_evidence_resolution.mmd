@@ -1,1 +1,112 @@
+%% KFM Diagram
+%% File: docs/architecture/diagrams/flow_evidence_resolution.mmd
+%% Purpose: EvidenceRef -> EvidenceBundle resolution flow across Map, Story, and Focus Mode.
+%% Updated: 2026-03-01
+%% Notes:
+%% - Fail closed if evidence is unresolvable or policy-denied.
+%% - Evidence bundles are immutable by digest to support caching and reproducibility.
 
+flowchart LR
+
+  %% ------------------------------------------------------------
+  %% Callers
+  %% ------------------------------------------------------------
+  subgraph CALLERS[Callers]
+    MAP_UI[Map Explorer UI\nFeature click, layer inspect\nOpens Evidence Drawer]
+    STORY_UI[Story Node UI\nCompose citations\nPublish requires resolvable evidence]
+    FOCUS_UI[Focus Mode UI\nAsk question\nAnswer must cite or abstain]
+  end
+
+  %% ------------------------------------------------------------
+  %% Trust membrane: governed surfaces
+  %% ------------------------------------------------------------
+  subgraph TRUST_MEMBRANE[Trust membrane\nGoverned API and evidence service]
+
+    REQ[POST /api/v1/evidence/resolve\nInput EvidenceRef and request context]
+
+    PARSE[Parse and normalize EvidenceRef\nSchemes: dcat, stac, prov, doc, graph]
+
+    LOOKUP[Resolve to canonical IDs\nDatasetVersion, artifact digests, provenance links]
+
+    RESOLVABLE{Resolvable}
+
+    POLICY[Policy decision point\nOPA Rego evaluates allow deny obligations]
+
+    DECISION{Decision}
+
+    OBLIGATIONS[Apply obligations\nRedact or generalize\nRecord as provenance transform]
+
+    BUILD[Build EvidenceBundle\nHuman card plus machine metadata\nbundle_id is sha256 digest]
+
+    CACHE[Content addressed cache\nKeyed by bundle_id digest]
+
+    AUDIT[Append only audit ledger entry\nInclude decision reason codes\nLink to run receipt if present]
+
+    FAIL[Fail closed\n403 or 404 without leaking restricted metadata]
+
+    REQ --> PARSE --> LOOKUP --> RESOLVABLE
+
+    RESOLVABLE -- No --> FAIL --> AUDIT
+    RESOLVABLE -- Yes --> POLICY --> DECISION
+
+    DECISION -- Deny --> FAIL
+    DECISION -- Allow with obligations --> OBLIGATIONS --> BUILD
+    DECISION -- Allow --> BUILD
+
+    BUILD --> CACHE
+    BUILD --> AUDIT
+
+  end
+
+  %% ------------------------------------------------------------
+  %% Evidence sources: canonical interfaces
+  %% ------------------------------------------------------------
+  subgraph EVIDENCE_SOURCES[Evidence sources\nCanonical interfaces]
+    DCAT[DCAT dataset record\nLicense rights publisher\nPolicy label dataset version]
+    STAC[STAC collection item\nAssets href plus digests\nSpatial temporal extents]
+    PROV[PROV activity and run receipt\nInputs outputs parameters\nTooling commit and image digests]
+    DOCS[Docs and attachments\nSpecs PDFs guidance]
+    GRAPH[Lineage graph\nProvenance timeline]
+  end
+
+  %% LOOKUP fetches canonical sources needed for policy inputs and bundling
+  LOOKUP --> DCAT
+  LOOKUP --> STAC
+  LOOKUP --> PROV
+  LOOKUP --> DOCS
+  LOOKUP --> GRAPH
+
+  %% BUILD composes what it needs into a single inspectable bundle
+  DCAT --> BUILD
+  STAC --> BUILD
+  PROV --> BUILD
+  DOCS --> BUILD
+  GRAPH --> BUILD
+
+  %% ------------------------------------------------------------
+  %% Return paths + hard gates
+  %% ------------------------------------------------------------
+  subgraph CONSUMERS[Consumers\nEvidence first UX and cite gates]
+    DRAWER[Evidence Drawer\nShows version license policy provenance digests]
+
+    STORY_GATE[Story publish gate\nAll citations must resolve and be policy allowed]
+    STORY_PUBLISH[Publish Story Node version\nMarkdown plus map state plus citations]
+
+    FOCUS_GATE[Focus cite gate\nVerify EvidenceBundles before answering]
+    FOCUS_ANSWER[Answer or abstain\nEmit Focus run receipt]
+  end
+
+  CACHE --> DRAWER
+
+  CACHE --> STORY_GATE --> STORY_PUBLISH
+  FAIL --> STORY_GATE
+
+  CACHE --> FOCUS_GATE --> FOCUS_ANSWER
+  FAIL --> FOCUS_GATE
+
+  %% ------------------------------------------------------------
+  %% Callers -> governed surface
+  %% ------------------------------------------------------------
+  MAP_UI --> REQ
+  STORY_UI --> REQ
+  FOCUS_UI --> REQ
