@@ -1,26 +1,23 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/0a7a6015-ed76-4687-b00a-4b8f326d0b2b
-title: Diagram Template - Mermaid
-type: template
-version: v1
-status: draft
-owners: TBD
-created: 2026-03-01
-updated: 2026-03-01
-policy_label: public
-related:
-  - TBD
-tags: [kfm, architecture, template, mermaid]
-notes:
-  - Copy this file, rename it, and replace placeholders.
-  - Keep node labels short; avoid pipes and parentheses in node text.
-[/KFM_META_BLOCK_V2] -->
+from pathlib import Path
 
-# Diagram Template - Mermaid
+content = """%% [KFM_META_BLOCK_V2]
+%% doc_id: kfm://doc/0a7a6015-ed76-4687-b00a-4b8f326d0b2b
+%% title: Diagram Template - Mermaid
+%% type: template
+%% version: v1
+%% status: draft
+%% owners: TBD
+%% created: 2026-03-01
+%% updated: 2026-03-01
+%% policy_label: public
+%% related:
+%%   - TBD
+%% tags: [kfm, architecture, template, mermaid]
+%% notes:
+%%   - Copy this file, rename it, and replace placeholders.
+%%   - Keep node labels short; avoid pipes and parentheses in node text.
+%% [/KFM_META_BLOCK_V2]
 
-Reference flow for KFM: truth path zones and governed runtime.
-
-```mermaid
 graph LR
 
   subgraph Upstream["Upstream sources"]
@@ -111,7 +108,7 @@ graph LR
   story -.->|forbidden direct access| search
   focus -.->|forbidden direct access| triplet
 
-  %% Optional Focus loop (kept commented; safe)
+  %% Optional Focus loop (keep commented; safe)
   %% subgraph FocusLoop["Focus Mode control loop"]
   %%   direction LR
   %%   f1["Policy precheck"]
@@ -125,3 +122,9 @@ graph LR
   %% focus --> f1 --> f2 --> f3 --> f4 --> f5 --> f6 --> f7
   %% f3 --> resolver
   %% f7 --> audit
+"""
+
+out_path = Path("/mnt/data/kfm-diagram-template.mmd")
+out_path.write_text(content, encoding="utf-8")
+
+out_path
