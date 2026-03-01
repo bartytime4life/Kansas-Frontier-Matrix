@@ -75,17 +75,18 @@ This folder is intended to live at:
 > These are recommended artifacts. Add them as needed; do not assume they exist yet.
 
 ```text
-docs/adr/dossiers/0012-secrets-management-and-rotation/
-  README.md                       # This file (dossier entrypoint)
-  ADR.md                          # TODO: decision record (or link to canonical ADR file)
-  threat-model.md                 # TODO: threat model + attack surfaces + mitigations
-  rotation-runbook.md             # TODO: operational rotation runbook (step-by-step)
-  leak-response-runbook.md        # TODO: what to do when secrets leak
-  diagrams/                       # optional
-    secrets-lifecycle.mmd         # optional mermaid source
-  fixtures/                       # optional (sanitized)
-    secret-rotation-event.example.json
-    secret-inventory.example.csv
+docs/adr/dossiers/0012-secrets-management-and-rotation/      # ADR dossier: deep evidence pack for ADR-0012 (secrets posture)
+├─ README.md                                                 # Dossier entrypoint (scope, owners, status, links, how to review)
+├─ ADR.md                                                    # Decision record content OR pointer to canonical ADR (docs/adr/0012-*.md)
+├─ threat-model.md                                           # Threat model for secrets (assets, actors, entrypoints, mitigations, residual risk)
+├─ rotation-runbook.md                                       # Step-by-step rotation procedure (prechecks → rotate → verify → rollback)
+├─ leak-response-runbook.md                                  # Leak response playbook (contain → rotate → audit → notify → prevent)
+├─ diagrams/                                                 # OPTIONAL: supporting diagrams (prefer Mermaid)
+│  └─ secrets-lifecycle.mmd                                  # OPTIONAL: secrets lifecycle Mermaid source (creation→use→rotate→revoke)
+└─ fixtures/                                                 # OPTIONAL: sanitized examples for docs/tests (NO real secrets)
+   ├─ secret-rotation-event.example.json                     # Example rotation event payload (synthetic; policy-safe fields only)
+   ├─ secret-inventory.example.csv                           # Example inventory export (redacted; identifiers sanitized)
+   └─ FIXTURE_NOTES.md                                       # Fixture rules (sanitization proof, allowed fields, intended use)
 ```
 
 ### Acceptable inputs for this folder
