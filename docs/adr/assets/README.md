@@ -89,19 +89,22 @@ Common, acceptable file types:
 Keep assets grouped by ADR so references stay obvious and avoid name collisions.
 
 ```text
-docs/adr/assets/
-  README.md
-  adr-0001/
-    adr-0001--context--flow.mmd
-    adr-0001--context--flow.svg
-    adr-0001--context--flow.asset.yml
-  adr-0042/
-    adr-0042--trust-membrane--sequence.mmd
-    adr-0042--trust-membrane--sequence.svg
-    adr-0042--trust-membrane--sequence.asset.yml
-  shared/
-    icons/
-    legend/
+docs/adr/assets/                                              | # ADR assets (diagrams/media) with provenance + licensing + policy posture
+├─ README.md                                                  | # Asset rules: naming, generation, licensing, sensitivity checks, commit policy
+│
+├─ adr-0001/                                                  | # Assets for ADR-0001 (keep scoped; no cross-ADR reuse here)
+│  ├─ adr-0001--context--flow.mmd                             | # Mermaid source (authoritative) for ADR-0001 context flow diagram
+│  ├─ adr-0001--context--flow.svg                             | # Rendered export (generated from .mmd; commit only if policy allows)
+│  └─ adr-0001--context--flow.asset.yml                       | # Asset manifest (source hash, generator/tool versions, license, policy_label, notes)
+│
+├─ adr-0042/                                                  | # Assets for ADR-0042 (keep scoped; no cross-ADR reuse here)
+│  ├─ adr-0042--trust-membrane--sequence.mmd                  | # Mermaid source for ADR-0042 trust membrane sequence diagram
+│  ├─ adr-0042--trust-membrane--sequence.svg                  | # Rendered export (generated from .mmd; commit only if policy allows)
+│  └─ adr-0042--trust-membrane--sequence.asset.yml            | # Asset manifest (provenance, license, sensitivity notes, generation recipe)
+│
+└─ shared/                                                    | # Shared ADR assets (reusable across multiple ADRs)
+   ├─ icons/                                                  | # Shared icons (prefer SVG; must be licensed + policy-safe)
+   └─ legend/                                                 | # Shared legend components (symbols/colors explained; keep consistent)
 ```
 
 > [!TIP]
