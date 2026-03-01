@@ -1,9 +1,6 @@
-```python
-from pathlib import Path
-
-content = """%% [KFM_META_BLOCK_V2]
+%% [KFM_META_BLOCK_V2]
 %% doc_id: kfm://doc/0a7a6015-ed76-4687-b00a-4b8f326d0b2b
-%% title: Diagram Template - Mermaid
+%% title: Diagram Template (Mermaid)
 %% type: template
 %% version: v1
 %% status: draft
@@ -16,11 +13,21 @@ content = """%% [KFM_META_BLOCK_V2]
 %% tags: [kfm, architecture, template, mermaid]
 %% notes:
 %%   - Copy this file, rename it, and replace placeholders.
-%%   - Keep node labels short; avoid pipes and parentheses in node text.
+%%   - Keep node labels short; avoid the pipe character in node text.
 %% [/KFM_META_BLOCK_V2]
 
-graph LR
+%% Diagram purpose
+%%   Reference flow for KFM: truth path zones and trust membrane runtime.
+%%
+%% Conceptual reference flow (from KFM sources)
+%%   Upstream sources -> connectors -> RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET
+%%   -> index builders -> governed API -> UI surfaces
 
+flowchart LR
+
+  %% ---------------------------------------------------------------------------
+  %% Upstream and acquisition
+  %% ---------------------------------------------------------------------------
   subgraph Upstream["Upstream sources"]
     direction TB
     src1["Source A"]
@@ -34,6 +41,9 @@ graph LR
     manifest["Acquisition manifest"]
   end
 
+  %% ---------------------------------------------------------------------------
+  %% Truth path zones
+  %% ---------------------------------------------------------------------------
   subgraph TruthPath["Truth path zones"]
     direction LR
     raw["RAW zone"]
@@ -42,16 +52,22 @@ graph LR
     triplet["CATALOG TRIPLET"]
   end
 
-  promote["Promotion contract gates"]
+  promote{Promotion contract gates}
 
+  %% ---------------------------------------------------------------------------
+  %% Projections (rebuildable indexes)
+  %% ---------------------------------------------------------------------------
   subgraph Indexers["Index builders"]
     direction TB
     postgis["PostGIS projection"]
     search["Search index projection"]
-    lineage["Lineage graph projection"]
+    graph["Lineage graph projection"]
     tiles["Tile and vector cache"]
   end
 
+  %% ---------------------------------------------------------------------------
+  %% Governed runtime (trust membrane)
+  %% ---------------------------------------------------------------------------
   subgraph Runtime["Governed runtime"]
     direction TB
     pep["PEP and governed API"]
@@ -59,7 +75,10 @@ graph LR
     audit["Audit ledger and run receipts"]
   end
 
-  subgraph UISurfaces["UI surfaces"]
+  %% ---------------------------------------------------------------------------
+  %% UI surfaces (evidence-first)
+  %% ---------------------------------------------------------------------------
+  subgraph UI["UI surfaces"]
     direction TB
     map["Map Explorer"]
     story["Story Mode"]
@@ -67,31 +86,32 @@ graph LR
     drawer["Evidence drawer"]
   end
 
+  %% ---------------------------------------------------------------------------
+  %% Main flow (left-to-right)
+  %% ---------------------------------------------------------------------------
   src1 --> fetch
   src2 --> fetch
   srcN --> fetch
-
   fetch --> manifest
   manifest --> raw
   raw --> work
   work --> processed
   processed --> triplet
   triplet --> promote
-
   promote --> postgis
   promote --> search
-  promote --> lineage
+  promote --> graph
   promote --> tiles
-
   postgis --> pep
   search --> pep
-  lineage --> pep
+  graph --> pep
   tiles --> pep
 
   pep --> map
   pep --> story
   pep --> focus
 
+  %% Evidence resolution path
   map --> drawer
   story --> drawer
   focus --> drawer
@@ -99,20 +119,28 @@ graph LR
   resolver --> triplet
   resolver --> audit
 
+  %% Audit trail
   fetch --> audit
   processed --> audit
   promote --> audit
   pep --> audit
 
-  map -.->|forbidden direct access| postgis
-  map -.->|forbidden direct access| raw
-  story -.->|forbidden direct access| search
-  focus -.->|forbidden direct access| triplet
+  %% ---------------------------------------------------------------------------
+  %% Trust membrane guard rails
+  %% UI must not reach projections or storage directly.
+  %% ---------------------------------------------------------------------------
+  map -. forbidden direct access .-> postgis
+  map -. forbidden direct access .-> raw
+  story -. forbidden direct access .-> search
+  focus -. forbidden direct access .-> triplet
 
-  %% Optional Focus loop (keep commented; safe)
+  %% ---------------------------------------------------------------------------
+  %% Optional Focus Mode control loop
+  %% Uncomment if you want the internal steps visible.
+  %% ---------------------------------------------------------------------------
   %% subgraph FocusLoop["Focus Mode control loop"]
   %%   direction LR
-  %%   f1["Policy precheck"]
+  %%   f1["Policy pre-check"]
   %%   f2["Plan"]
   %%   f3["Retrieve"]
   %%   f4["Bundle"]
@@ -123,9 +151,3 @@ graph LR
   %% focus --> f1 --> f2 --> f3 --> f4 --> f5 --> f6 --> f7
   %% f3 --> resolver
   %% f7 --> audit
-"""
-
-out_path = Path("/mnt/data/kfm-diagram-template.mmd")
-out_path.write_text(content, encoding="utf-8")
-
-str(out_path)
