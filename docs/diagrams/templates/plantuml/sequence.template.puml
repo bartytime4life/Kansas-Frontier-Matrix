@@ -1,0 +1,6 @@
+@startuml
+actor Caller
+participant Service
+Caller -> Service : Request
+Service --> Caller : Response
+@enduml
