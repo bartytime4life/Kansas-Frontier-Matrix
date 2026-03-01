@@ -239,12 +239,12 @@ If you are reviewing a change that touches *any* of these, the trust membrane di
 
 ### Expected tree (update once files exist)
 ```text
-docs/diagrams/src/truth-path/
-  README.md
-  truth-path.mmd            # preferred: lifecycle + gates + runtime flow
-  trust-membrane.mmd        # preferred: boundary + policy/evidence
-  (optional) *.drawio       # only if text format is insufficient
-  (optional) assets/        # tiny icons used by diagrams
+docs/diagrams/src/truth-path/                          # Diagram sources: truth path + trust membrane (preferred Mermaid)
+├─ README.md                                           # Diagram index + conventions + how to render/validate + export policy
+├─ truth-path.mmd                                      # Preferred: lifecycle zones + promotion gates + runtime flow (Mermaid source)
+├─ trust-membrane.mmd                                  # Preferred: trust boundary + policy/evidence enforcement flow (Mermaid source)
+├─ *.drawio                                            # OPTIONAL: Draw.io sources (only when text diagrams are insufficient; keep minimal)
+└─ assets/                                             # OPTIONAL: tiny icons used by diagrams (licensed + policy-safe)
 ```
 
 [Back to top](#top)
