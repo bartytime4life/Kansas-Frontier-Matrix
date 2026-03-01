@@ -105,20 +105,23 @@ Exclusions (default-deny):
 
 ### Minimal dossier skeleton
 ```text
-docs/adr/dossiers/
-  README.md                       # you are here
-  NNNN-short-slug/
-    README.md                     # dossier index + links back to ADR
-    context.md                    # what problem, why now, constraints
-    evidence_refs.md              # EvidenceRefs, citations, links
-    evaluation.md                 # criteria + comparison matrix
-    options/
-      option-a.md
-      option-b.md
-    risks.md                      # risks, mitigations, rollback notes (optional)
-    experiments/                  # prototypes, benchmarks, run receipts (optional)
-    notes/                        # scratch notes, meeting notes (optional)
-    assets/                       # small images/diagrams only (optional)
+docs/adr/dossiers/                                         | # ADR dossiers (deep evidence packs that complement the canonical ADR files)
+├─ README.md                                                | # You are here: dossier conventions, naming rules, DoD, and review expectations
+│
+├─ NNNN-short-slug/                                         | # One dossier per ADR (NNNN matches ADR number; slug is stable/kebab-case)
+│  ├─ README.md                                             | # Dossier index + links back to ADR + status/owners + “what’s inside”
+│  ├─ context.md                                            | # Problem statement, why now, constraints, assumptions, non-goals
+│  ├─ evidence_refs.md                                      | # EvidenceRefs/citations/links used to justify claims (policy-safe; cite-or-abstain)
+│  ├─ evaluation.md                                         | # Decision criteria + comparison matrix + rationale for recommendation
+│  ├─ options/                                              | # Option writeups (comparable structure for fair evaluation)
+│  │  ├─ option-a.md                                        | # Option A details (approach, impacts, tradeoffs, compatibility)
+│  │  └─ option-b.md                                        | # Option B details (approach, impacts, tradeoffs, compatibility)
+│  ├─ risks.md                                              | # OPTIONAL: risks, mitigations, rollback notes, residual risk
+│  ├─ experiments/                                          | # OPTIONAL: prototypes, benchmarks, run receipts, reproducibility notes
+│  ├─ notes/                                                | # OPTIONAL: scratch notes / meeting notes (non-normative; promote key info upward)
+│  └─ assets/                                               | # OPTIONAL: small images/diagrams only (policy-safe; prefer source + manifest)
+│
+└─ ...                                                      | # Additional dossiers (repeat the NNNN-short-slug pattern)
 ```
 
 #### Dossier parts
