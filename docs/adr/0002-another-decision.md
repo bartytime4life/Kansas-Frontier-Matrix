@@ -57,12 +57,12 @@ _What forced this decision now? Link to an issue, incident, gap register item, o
 
 ```mermaid
 flowchart LR
-  A[Trigger / Gap] --> B[Draft ADR]
-  B --> C{Review Gate}
-  C -->|Accept| D[Publish ADR]
-  C -->|Reject| E[Close as "Rejected"]
-  D --> F[Implementation PRs]
-  F --> G[Receipts / Evidence]
+  A["Trigger - gap"] --> B["Draft ADR"]
+  B --> C{"Review gate"}
+  C -->|accept| D["Publish ADR"]
+  C -->|reject| E["Close as rejected"]
+  D --> F["Implementation PRs"]
+  F --> G["Receipts - evidence"]
 ```
 
 [Back to top](#adr-0002-another-decision)
