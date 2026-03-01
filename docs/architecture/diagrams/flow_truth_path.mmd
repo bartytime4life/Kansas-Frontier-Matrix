@@ -1,1 +1,90 @@
+%% [KFM] Truth Path Flow (vNext)
+%% Source refs:
+%% - Kansas Frontier Matrix (KFM) — Definitive Design & Governance Guide (vNext) (2026-02-20)
+%% - Tooling the KFM pipeline — Architecture, Governance, and Delivery Plan (2026-02-27)
+%% NOTE: Conceptual reference diagram; names reflect the vNext zone + gate vocabulary.
 
+flowchart LR
+
+  %% --- Data lifecycle zones (truth path) ---
+  U[Upstream sources<br/>APIs, files, sensors, imagery] --> F[Connectors<br/>fetch and snapshot]
+
+  subgraph ZONES[Truth path zones]
+    direction LR
+
+    RAW[RAW<br/>Immutable acquisition<br/>manifest, artifacts, checksums,<br/>license or terms snapshot]
+    WORK[WORK<br/>Normalize, QA, redaction candidates]
+    QUAR[QUARANTINE<br/>Fail closed<br/>validation or licensing or sensitivity]
+    PROC[PROCESSED<br/>Publishable artifacts<br/>approved formats plus checksums<br/>derived runtime metadata]
+    CAT[CATALOG or TRIPLET<br/>DCAT plus STAC plus PROV<br/>cross-linked IDs plus run receipts]
+    PUB[PUBLISHED<br/>Governed runtime surfaces]
+  end
+
+  F --> RAW --> WORK --> PROC --> CAT --> PUB
+  WORK -->|block promotion| QUAR
+  QUAR -->|resolve issues then rerun| WORK
+
+  %% --- Promotion Contract (fail-closed gates) ---
+  subgraph PC[Promotion Contract gates<br/>Promotion is blocked unless gates pass]
+    direction TB
+
+    GA[Gate A<br/>Identity and versioning]
+    GB[Gate B<br/>Licensing and rights metadata]
+    GC[Gate C<br/>Sensitivity label plus redaction plan]
+    GD[Gate D<br/>Catalog triplet validation<br/>DCAT STAC PROV cross-links]
+    GE[Gate E<br/>QA checks plus thresholds]
+    GF[Gate F<br/>Run receipt plus audit record]
+    GG[Gate G<br/>Release manifest]
+  end
+
+  RAW -.requires.-> GA
+  RAW -.requires.-> GB
+  WORK -.requires.-> GC
+  PROC -.requires.-> GE
+  CAT -.requires.-> GD
+  CAT -.requires.-> GF
+  PUB -.records.-> GG
+
+  %% --- Published runtime (trust membrane) ---
+  subgraph RUNTIME[Trust membrane<br/>No direct client access to storage]
+    direction LR
+
+    Clients[Clients<br/>browser and external] --> UI[Map Explorer<br/>Story Nodes<br/>Focus Mode] --> API[Governed API<br/>Policy Enforcement Point]
+
+    API --> Policy[Policy engine<br/>OPA Rego]
+    API --> Evidence[Evidence resolver<br/>EvidenceRef to EvidenceBundle]
+
+    API --> Proj[Rebuildable projections<br/>DB, search, tiles, graph]
+    API --> Canon[Canonical stores<br/>object artifacts plus catalogs plus provenance<br/>append-only audit ledger]
+
+    Clients -.deny.-> Canon
+    Clients -.deny.-> Proj
+  end
+
+  %% Canonical and rebuildable materialization sources
+  RAW --> Canon
+  WORK --> Canon
+  PROC --> Canon
+  CAT --> Canon
+
+  PROC --> Proj
+  CAT --> Proj
+
+  %% --- Focus Mode control loop (cite-or-abstain) ---
+  subgraph FOCUS[Focus Mode governed run<br/>cite-or-abstain]
+    direction LR
+
+    FM1[1 Policy pre-check]
+    FM2[2 Retrieve admissible evidence]
+    FM3[3 Bundle evidence]
+    FM4[4 Synthesize answer]
+    FM5[5 Verify citations<br/>hard gate]
+    FM6[6 Emit run receipt]
+    Abstain[Abstain or reduce scope]
+
+    FM1 --> FM2 --> FM3 --> FM4 --> FM5 --> FM6
+    FM5 -->|fails| Abstain
+  end
+
+  UI --> FM1
+  FM6 --> API
