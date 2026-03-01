@@ -203,24 +203,33 @@ Recommended (minimum) structure for `.github/`:
 
 ```text
 .github/                                           # Repo governance + CI (gatehouse)
-├─ README.md                                       # This file: governance/CI index + where to start
-├─ CODEOWNERS                                      # REQUIRED: ownership + review routing
+├─ README.md                                       # (You already have) .github index: gates, owners, how PRs flow
+├─ CODEOWNERS                                      # REQUIRED: review routing + ownership boundaries
 │
 ├─ CODE_OF_CONDUCT.md                              # Recommended: community standards
 ├─ CONTRIBUTING.md                                 # Recommended: contribution workflow + gates
-├─ SECURITY.md                                     # Recommended: vuln reporting and disclosure
+├─ SECURITY.md                                     # Recommended: vuln reporting and disclosure (avoid filing public issues)
+├─ SUPPORT.md                                      # Optional: how to get help (channels, office hours, links)
 │
-├─ SUPPORT.md                                      # Optional: where/how to get help (channels, office hours, links)
 ├─ dependabot.yml                                  # Optional: dependency update policy (governed if enabled)
 ├─ FUNDING.yml                                     # Optional
 │
 ├─ required-checks.v1.json                         # PROPOSED: machine-readable required checks registry
+├─ required-labels.v1.json                         # PROPOSED: machine-readable label policy (e.g., policy_label required)
+├─ labels.v1.yml                                   # PROPOSED: canonical label taxonomy (triage + governance)
+├─ release-drafter.yml                             # Optional: auto-generate release notes from PR labels
+├─ stale.yml                                       # Optional: stale issue/PR automation config (if used)
+├─ lock.yml                                        # Optional: lock closed issues/PRs automation config (if used)
+├─ auto-merge.yml                                  # Optional: guardrails for auto-merge (if enabled org-wide)
 │
 ├─ PULL_REQUEST_TEMPLATE.md                        # Optional: single default PR template
 ├─ PULL_REQUEST_TEMPLATE/                          # Optional: multiple PR templates (?template=... URL param)
 │  ├─ default.md                                   # General PR checklist
 │  ├─ governance.md                                # Governance/policy-impact PR checklist
-│  └─ data-pipeline.md                             # Data/pipeline promotion PR checklist
+│  ├─ data-pipeline.md                             # Data/pipeline promotion PR checklist
+│  ├─ security.md                                  # Security-impact PR checklist (threat model + rollout/rollback)
+│  ├─ api-contract.md                              # OpenAPI/contract change checklist (compat + versioning)
+│  └─ release.md                                   # Release/promotion PR checklist (artifacts + attestations)
 │
 ├─ ISSUE_TEMPLATE/                                 # Recommended: issue forms (triage + governance discipline)
 │  ├─ config.yml                                   # Template chooser (contact_links + blank_issues_enabled)
@@ -228,23 +237,51 @@ Recommended (minimum) structure for `.github/`:
 │  ├─ feature_request.yml
 │  ├─ governance_request.yml
 │  ├─ data_pipeline_change.yml
-│  └─ story_node.yml
+│  ├─ story_node.yml
+│  ├─ data_quality_issue.yml                       # PROPOSED: QA regression/threshold failure tracking
+│  ├─ incident_report.yml                          # PROPOSED: operational incident template (postmortem ready)
+│  └─ security_report.yml                          # PROPOSED: (Usually redirect to SECURITY.md, keep private)
 │
 ├─ actions/                                        # Optional: shared composite actions used by workflows
-│  ├─ setup-conftest/action.yml                    # PROPOSED: install Conftest for policy gates
 │  ├─ setup-opa/action.yml                         # PROPOSED: install OPA for policy evaluation
-│  ├─ setup-node/action.yml                        # Optional: standardize Node toolchain
-│  └─ setup-python/action.yml                      # Optional: standardize Python toolchain
+│  ├─ setup-conftest/action.yml                    # PROPOSED: install Conftest for policy gates
+│  ├─ setup-node/action.yml                        # Optional: standardize Node toolchain (pnpm/npm cache, etc.)
+│  ├─ setup-python/action.yml                      # Optional: standardize Python toolchain (pip cache, etc.)
+│  ├─ changed-files/action.yml                     # PROPOSED: compute change-scope for selective gating
+│  ├─ gate-summary/action.yml                      # PROPOSED: aggregate job statuses + emit “anti-skip” summary
+│  ├─ upload-receipts/action.yml                   # PROPOSED: standard artifact upload (receipts/manifests/checksums)
+│  ├─ verify-contracts/action.yml                  # PROPOSED: OpenAPI/JSONSchema backward-compat checks
+│  └─ sbom-attest/action.yml                       # PROPOSED: generate SBOM + provenance attestations
 │
 └─ workflows/                                      # REQUIRED: CI + policy gates + release/promotion
-   ├─ ci.yml                                       # Core CI (lint, unit tests, build, docs linkcheck)
-   ├─ policy-gates.yml                             # Policy checks (labels, redaction, story claim hygiene)
-   ├─ provenance-audit.yml                         # Promotion eligibility: receipts/manifests/checksums
+   ├─ ci.yml                                       # Core CI orchestrator (lint, unit tests, build, docs linkcheck)
    ├─ gates.yml                                    # PROPOSED: always-runs gate summary job (anti-skip)
+   │
+   ├─ lint.yml                                     # PROPOSED: formatting, lint, static analysis, commit/PR title checks
+   ├─ test-unit.yml                                # PROPOSED: unit tests (fast)
+   ├─ test-integration.yml                         # PROPOSED: integration tests (db, api, policy engine)
+   ├─ test-e2e.yml                                 # PROPOSED: UI/API e2e (optional/PR-gated by changed-files)
+   │
+   ├─ docs.yml                                     # PROPOSED: build docs site, validate markdown, diagrams, spellcheck (opt)
+   ├─ linkcheck.yml                                # PROPOSED: link checker for docs + story nodes
+   │
+   ├─ policy-gates.yml                             # Policy checks (labels, redaction, story claim hygiene)
+   ├─ contract-gates.yml                           # PROPOSED: OpenAPI/schema breaking-change detection
+   ├─ provenance-audit.yml                         # Promotion eligibility: receipts/manifests/checksums
+   ├─ data-qa.yml                                  # PROPOSED: dataset QA thresholds, schema checks, STAC/DCAT validation
+   │
    ├─ supply-chain.yml                             # Optional: SBOM + signing/attestations
    ├─ codeql.yml                                   # Optional: code scanning / SAST
    ├─ dependency-review.yml                        # Optional: dependency diff gate
-   └─ release.yml                                  # Release/promotion orchestration (tags, packaging, publish)
+   ├─ secret-scanning.yml                          # PROPOSED: secret scan (or rely on GitHub Advanced Security)
+   ├─ scorecard.yml                                # PROPOSED: OpenSSF Scorecard (optional)
+   │
+   ├─ release.yml                                  # Release/promotion orchestration (tags, packaging, publish)
+   ├─ promote.yml                                  # PROPOSED: manual/approved promotion workflow (environments + approvals)
+   ├─ rollback.yml                                 # PROPOSED: “break glass” rollback workflow (controlled + auditable)
+   │
+   ├─ nightly.yml                                  # PROPOSED: scheduled full matrix (slow checks, rebuilds, drift detection)
+   └─ triage.yml                                   # Optional: auto-label/route new issues + PRs (lightweight)
 ```
 
 > [!NOTE]
