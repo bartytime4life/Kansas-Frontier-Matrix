@@ -1,3 +1,173 @@
-%% Placeholder Mermaid diagram
-flowchart TD
-  A[Placeholder] --> B[To be defined]
+%% [KFM_META_BLOCK_V2]
+%% doc_id: kfm://doc/a8aa963f-dd39-4bc0-ad8b-8226b2ca8a21
+%% title: KFM System Context
+%% type: diagram
+%% version: v1
+%% status: draft
+%% owners: TODO
+%% created: 2026-03-01
+%% updated: 2026-03-01
+%% policy_label: public
+%% related:
+%%   - kfm://doc/architecture
+%% tags: [kfm, architecture, diagram, system-context]
+%% notes:
+%%   - Diagram reflects the documented target architecture and invariants (truth path + trust membrane).
+%% [/KFM_META_BLOCK_V2]
+
+flowchart LR
+
+  %% =========================
+  %% External actors + systems
+  %% =========================
+  subgraph EXT["External actors and systems"]
+    direction TB
+    Upstream["Upstream data providers<br/>open data, sensors, remote sensing"]
+    Public["Public user"]
+    Analyst["Researcher analyst"]
+    Steward["Data steward admin"]
+    ExtClient["External client apps"]
+    CI["Repo and CI<br/>PR gates, validators, policy tests"]
+  end
+
+  %% =========================
+  %% KFM platform boundary
+  %% =========================
+  subgraph KFM["Kansas Frontier Matrix platform"]
+    direction LR
+
+    %% -------------------------
+    %% Client surfaces (no store access)
+    %% -------------------------
+    subgraph CLIENTS["Clients and UX surfaces"]
+      direction TB
+      MapUI["Map Explorer UI"]
+      StoryUI["Story UI<br/>Story Nodes"]
+      FocusUI["Focus Mode UI"]
+      AdminUI["Steward and Admin UI"]
+    end
+
+    %% -------------------------
+    %% Trust membrane boundary
+    %% -------------------------
+    subgraph TRUST["Trust membrane<br/>policy and provenance boundary"]
+      direction TB
+      PEP["Governed API (PEP)<br/>datasets, query, tiles, story, focus"]
+      Evidence["Evidence resolver<br/>EvidenceRef to EvidenceBundle"]
+      Policy["Policy engine (PDP)<br/>OPA Rego"]
+      Repos["Repository interfaces<br/>adapters to stores"]
+      FocusSvc["Focus Mode service<br/>cite or abstain + receipt"]
+      StorySvc["Story publish gate<br/>review + citations resolve"]
+    end
+
+    %% -------------------------
+    %% Truth path lifecycle zones
+    %% -------------------------
+    subgraph TRUTHPATH["Truth path lifecycle zones"]
+      direction LR
+      Ingest["Ingestion pipelines<br/>fetch, normalize, validate"]
+      RAW["RAW zone<br/>immutable acquisition"]
+      WORK["WORK and Quarantine<br/>QA, transforms, redaction"]
+      PROCESSED["PROCESSED zone<br/>publishable artifacts"]
+      CATALOG["CATALOG triplet<br/>DCAT, STAC, PROV"]
+      PROJ["Rebuildable projections<br/>indexes, tiles, search"]
+    end
+
+    %% -------------------------
+    %% Storage (canonical + projections)
+    %% -------------------------
+    subgraph STORES["Stores"]
+      direction TB
+      ObjStore["Canonical object store<br/>artifacts by digest"]
+      CatStore["Canonical catalogs store<br/>DCAT, STAC, PROV bundles"]
+      Audit["Audit ledger<br/>run receipts and decisions"]
+
+      PostGIS["PostGIS projection store<br/>rebuildable"]
+      TileStore["Tile and render cache<br/>rebuildable"]
+      SearchIdx["Search index<br/>rebuildable"]
+    end
+  end
+
+  %% =========================
+  %% External -> client entry points
+  %% =========================
+  Public --> MapUI
+  Analyst --> MapUI
+  Public --> StoryUI
+  Analyst --> StoryUI
+  Public --> FocusUI
+  Analyst --> FocusUI
+  Steward --> AdminUI
+  ExtClient --> PEP
+
+  %% =========================
+  %% Trust membrane: clients only talk to governed APIs
+  %% =========================
+  MapUI --> PEP
+  StoryUI --> PEP
+  FocusUI --> PEP
+  AdminUI --> PEP
+
+  %% =========================
+  %% Policy + evidence services
+  %% =========================
+  PEP --> Policy
+  PEP --> Evidence
+  Evidence --> Policy
+
+  %% =========================
+  %% Runtime orchestration (governed)
+  %% =========================
+  PEP --> FocusSvc
+  PEP --> StorySvc
+
+  %% =========================
+  %% Truth path: upstream -> zones -> catalogs -> projections -> governed API
+  %% =========================
+  Upstream --> Ingest --> RAW --> WORK --> PROCESSED --> CATALOG --> PROJ --> PEP
+
+  %% CI enforces gates (conceptual trigger/approval path)
+  CI --> Ingest
+
+  %% =========================
+  %% Writes to canonical stores
+  %% =========================
+  RAW --> ObjStore
+  WORK --> ObjStore
+  PROCESSED --> ObjStore
+  CATALOG --> CatStore
+
+  %% Receipts + decisions (pipeline + runtime)
+  Ingest --> Audit
+  FocusSvc --> Audit
+  StorySvc --> Audit
+  PEP --> Audit
+
+  %% =========================
+  %% Projections are rebuildable outputs from canonical data
+  %% =========================
+  PROJ --> PostGIS
+  PROJ --> TileStore
+  PROJ --> SearchIdx
+
+  %% =========================
+  %% Governed access to stores via repositories
+  %% =========================
+  PEP --> Repos
+  Repos --> ObjStore
+  Repos --> CatStore
+  Repos --> Audit
+  Repos --> PostGIS
+  Repos --> TileStore
+  Repos --> SearchIdx
+
+  %% =========================
+  %% Styles (no colors; just semantic emphasis)
+  %% =========================
+  classDef canonical stroke-width:2px;
+  classDef rebuildable stroke-dasharray: 5 5;
+
+  class ObjStore,CatStore,Audit canonical;
+  class PostGIS,TileStore,SearchIdx rebuildable;
+
+  style TRUST stroke-dasharray: 5 5,stroke-width:2px
