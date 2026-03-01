@@ -200,22 +200,22 @@ find data/catalog -maxdepth 8 -type f \( -name 'bundle.jsonld' -o -name 'prov.js
 
 ```mermaid
 flowchart LR
-  U[Upstream sources] --> R[RAW]
-  R --> W[WORK]
-  W --> P[PROCESSED]
-  P --> C[CATALOG triplet + run receipts]
+  U["Upstream sources"] --> R["RAW"]
+  R --> W["WORK"]
+  W --> P["PROCESSED"]
+  P --> C["CATALOG triplet + run receipts"]
 
-  W --> Q[QUARANTINE]
-  Q -. blocks promotion .-> P
+  W --> Q["QUARANTINE"]
+  Q -.->|blocks promotion| P
 
-  C --> IDX[Rebuildable projections]
-  C --> PB[Published bundles or exports (optional)]
+  C --> IDX["Rebuildable projections"]
+  C --> PB["Published bundles or exports - optional"]
 
-  IDX --> API[Governed API / PEP]
+  IDX --> API["Governed API - PEP"]
   PB --> API
-  API --> UI[Map Story Focus]
+  API --> UI["Map • Story • Focus"]
 
-  C --> AUD[Audit ledger]
+  C --> AUD["Audit ledger"]
   API --> AUD
 ```
 
