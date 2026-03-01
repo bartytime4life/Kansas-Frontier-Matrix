@@ -74,16 +74,18 @@ This directory contains **editable diagram source files** that are:
 Actual repo structure is **not confirmed in this workspace**. The layout below is the **recommended** (and common) pattern:
 
 ```text
-docs/diagrams/
-  src/                       # (this directory) diagram sources
-    README.md
-    mermaid/                 # *.mmd, *.md (```mermaid)
-    plantuml/                # *.puml
-    graphviz/                # *.dot
-    drawio/                  # *.drawio (source)
-    assets/                  # small supporting assets (icons, legends) if needed
-  out/                       # rendered exports (svg/png/pdf) (OPTIONAL, but recommended)
-  index.md                   # diagram registry / catalog (OPTIONAL)
+docs/diagrams/                                         | # Diagram hub (sources + optional rendered outputs) with registry-friendly conventions
+├─ src/                                                | # Diagram sources (editable; reviewed like code; prefer text formats)
+│  ├─ README.md                                        | # Source conventions (naming, folders, lint/render rules, “no secrets”)
+│  ├─ mermaid/                                         | # Mermaid sources (*.mmd and/or *.md containing ```mermaid blocks)
+│  ├─ plantuml/                                        | # PlantUML sources (*.puml) for diagrams Mermaid can’t express well
+│  ├─ graphviz/                                        | # Graphviz sources (*.dot) for graph-heavy/constraint diagrams
+│  ├─ drawio/                                          | # Draw.io sources (*.drawio) ONLY when text formats are insufficient
+│  └─ assets/                                          | # Small shared assets (icons/legends) if needed; must be licensed + policy-safe
+│
+├─ out/                                                | # OPTIONAL: rendered exports (svg/png/pdf); generated deterministically when possible
+│
+└─ index.md                                            | # OPTIONAL: diagram catalog/registry (human-friendly index; may be generated)
 ```
 
 If your repo uses a different structure, **update this README** so the directory contract remains accurate.
