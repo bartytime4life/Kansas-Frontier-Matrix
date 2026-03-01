@@ -188,14 +188,14 @@ This folder is documentation output. Keep it clean.
 > **Example layout** (actual contents are generator-dependent):
 
 ```text
-docs/diagrams/out/pipelines/
-├── README.md
-├── _index.md                       # optional
-├── truth_path.mmd                  # optional: shared reference diagram
-├── trust_membrane.mmd              # optional: shared reference diagram
-├── <pipeline_id>.mmd
-├── <pipeline_id>.svg
-└── <pipeline_id>__gates.svg
+docs/diagrams/out/pipelines/                              # Rendered pipeline diagrams (exports for PRs/docs; generated if possible)
+├── README.md                                             # How pipeline exports are produced, naming rules, and commit policy
+├── _index.md                                             # OPTIONAL: human-friendly index of pipeline diagrams (can be generated)
+├── truth_path.mmd                                        # OPTIONAL: shared reference Mermaid (truth path context for pipelines)
+├── trust_membrane.mmd                                    # OPTIONAL: shared reference Mermaid (trust membrane context for pipelines)
+├── <pipeline_id>.mmd                                     # Pipeline diagram source (Mermaid) used to render exports
+├── <pipeline_id>.svg                                     # Rendered pipeline diagram export (SVG; generated; policy-safe)
+└── <pipeline_id>__gates.svg                               # Rendered gates overlay/export (shows gate checkpoints; generated; policy-safe)
 ```
 
 ---
