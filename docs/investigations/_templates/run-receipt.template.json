@@ -1,0 +1,24 @@
+{
+  "run_id": "YYYY-MM-DDThhmmssZ_<id>",
+  "started_at": "YYYY-MM-DDThh:mm:ssZ",
+  "finished_at": "YYYY-MM-DDThh:mm:ssZ",
+  "command": "<exact command>",
+  "workdir": "<relative path>",
+  "inputs": [
+    {
+      "path": "<input file or URI>",
+      "hash": "<sha256 or null>"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "<output file>",
+      "hash": "<sha256 or null>"
+    }
+  ],
+  "environment": {
+    "os": "<os>",
+    "runtime": "<runtime version>"
+  },
+  "notes": ""
+}

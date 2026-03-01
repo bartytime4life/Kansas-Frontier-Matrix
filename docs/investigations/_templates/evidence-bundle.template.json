@@ -1,0 +1,18 @@
+{
+  "bundle_id": "<uuid>",
+  "created_at": "YYYY-MM-DDThh:mm:ssZ",
+  "investigation": "docs/investigations/YYYY/YYYY-MM-DD_short-slug/",
+  "artifacts": [
+    {
+      "ref": "<artifact ref>",
+      "path": "<relative path>",
+      "hash": "<sha256>",
+      "rights": "<license/rights note>",
+      "sensitivity": "public"
+    }
+  ],
+  "provenance": {
+    "source": "<where artifacts came from>",
+    "receipt": "<receipt file path>"
+  }
+}
