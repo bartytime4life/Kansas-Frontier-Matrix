@@ -268,18 +268,19 @@ A practical PR-based workflow makes promotion both *social* (review) and *techni
 
 ```mermaid
 sequenceDiagram
-  participant Dev as Contributor
-  participant CI as CI Gates
-  participant Steward as Data Steward
-  participant Ops as Operator
-  Dev->>CI: Open PR (registry + spec + fixtures + expected outputs)
-  CI-->>Dev: Validate schemas, policy tests, spec_hash stability, link checks
-  Dev->>Steward: Request review (license + sensitivity + policy_label)
-  Steward-->>Dev: Approve / request changes
-  Ops->>Ops: Merge + run pipeline in controlled env
-  Ops-->>CI: Write processed + catalogs + receipts
-  CI-->>Ops: Validate triplet + receipts; generate promotion manifest
-  Ops-->>Dev: Tag/release (promotion recorded)
+  participant Dev
+  participant CI
+  participant Steward
+  participant Ops
+
+  Dev->>CI: Open PR - registry spec fixtures expected outputs
+  CI-->>Dev: Validate schemas policy tests spec hash stability link checks
+  Dev->>Steward: Request review - license sensitivity policy label
+  Steward-->>Dev: Approve or request changes
+  Ops->>Ops: Merge and run pipeline in controlled env
+  Ops-->>CI: Write processed catalogs receipts
+  CI-->>Ops: Validate triplet receipts and generate promotion manifest
+  Ops-->>Dev: Tag release - promotion recorded
 ```
 
 [Back to top](#promotion-gates)
