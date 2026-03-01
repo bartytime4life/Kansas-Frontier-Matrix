@@ -2,11 +2,11 @@
 doc_id: kfm://doc/b5e9f8c2-1e25-4f09-8a55-9201a05f9b2d
 title: contracts/ — KFM contract surfaces (schemas, APIs, profiles, gates)
 type: standard
-version: v3
+version: v4
 status: draft
 owners: TBD (set via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: public
 related:
   - ../README.md
@@ -16,7 +16,8 @@ related:
   - ../policy/
 tags: [kfm, contracts, governance, schema, api, evidence, promotion-contract]
 notes:
-  - Aligned to vNext: truth-path zones + Promotion Contract gates A–G + triplet profiles + evidence resolver/API contract requirements.
+  - Aligned to vNext: truth-path zones + Promotion Contract gates A-G + triplet profiles + evidence resolver/API contract requirements.
+  - Explicitly models PROJECTIONS as rebuildable (non-canonical) outputs between catalogs and governed runtime.
   - Fail-closed: repo-specific wiring (exact filenames, generators, emitted CI check names) remains UNKNOWN until verified in-repo.
   - Prefer versioned artifacts + fixtures + CI validation over “tribal knowledge.”
 [/KFM_META_BLOCK_V2] -->
@@ -49,13 +50,16 @@ notes:
 
 - [Truth status legend](#truth-status-legend)
 - [Directory contract](#directory-contract)
+- [Contract surfaces at a glance](#contract-surfaces-at-a-glance)
 - [What is a contract artifact](#what-is-a-contract-artifact)
+- [Naming and versioning conventions](#naming-and-versioning-conventions)
 - [Non-negotiable invariants](#non-negotiable-invariants)
-- [Promotion Contract gates A–G](#promotion-contract-gates-a–g)
+- [Promotion Contract gates A-G](#promotion-contract-gates-a-g)
 - [Catalog triplet and EvidenceRef](#catalog-triplet-and-evidenceref)
 - [Governed API contract](#governed-api-contract)
 - [Relationship to configs/ and policy/](#relationship-to-configs-and-policy)
 - [Directory layout](#directory-layout)
+- [Contract registry and lock files](#contract-registry-and-lock-files)
 - [How to add or change a contract](#how-to-add-or-change-a-contract)
 - [Validation and gates](#validation-and-gates)
 - [Governance and safety](#governance-and-safety)
@@ -69,8 +73,9 @@ notes:
 This README uses explicit labels so we don’t “invent repo state”:
 
 - **CONFIRMED (design):** required KFM posture (must hold regardless of stack)
-- **UNKNOWN (repo):** not verified in this repository yet (treat as TODO; fail-closed)
 - **PROPOSED:** recommended template/pattern (adopt only after verification)
+- **UNKNOWN (repo):** not verified in this repository yet (treat as TODO; fail-closed)
+- **CONFIRMED (repo):** verified in this repository (link to exact path + snippet + CI job name)
 
 > [!NOTE]
 > Repo facts should graduate from **UNKNOWN → CONFIRMED (repo)** by attaching paths/snippets in PRs.
@@ -91,6 +96,32 @@ This section satisfies the **Directory Documentation Standard** (purpose, where 
 Dependency direction (ideal):
 - **Upstream inputs:** governance standards in `docs/` and policy posture in `policy/`
 - **Downstream consumers:** pipelines, validators, catalog builders, governed API, evidence resolver, Focus Mode, UI SDKs
+
+Architecture (conceptual)
+
+```mermaid
+flowchart LR
+  subgraph TP["Truth path zones"]
+    U[Upstream sources] --> R[RAW immutable]
+    R --> W[WORK and QUARANTINE]
+    W --> P[PROCESSED artifacts]
+    P --> C[CATALOG triplet]
+    C --> X[Projections rebuildable]
+    X --> G[Governed API PEP]
+    G --> UI[Map Story Focus]
+  end
+
+  subgraph CM["Contracts and policy"]
+    K[Contracts schemas profiles vocab] --> CI[CI gates]
+    K --> RT[Runtime enforcement]
+    CI --> G
+    RT --> G
+  end
+```
+
+> [!NOTE]
+> The **Projections** stage is intentionally rebuildable (tiles, DB indexes, search, graph). Canonical truth is
+> the object store artifacts + catalogs + provenance + receipts.
 
 ### Acceptable inputs
 
@@ -119,6 +150,24 @@ Dependency direction (ideal):
 
 ---
 
+## Contract surfaces at a glance
+
+> [!NOTE]
+> This is a **design-level matrix**. Exact file locations and CI job names remain **UNKNOWN (repo)** until verified.
+
+| Surface | What it defines | Primary consumers | Minimum enforcement |
+|---|---|---|---|
+| Promotion Contract (A-G) | What qualifies for promotion and serving | CI, stewards, runtime services | schema + fixtures + gate summary (anti-skip) |
+| Catalog triplet (DCAT, STAC, PROV) | Canonical metadata, assets, lineage | CI, API, UI, Focus Mode | profiles + cross-link linkcheck |
+| Evidence resolution | EvidenceRef grammar + EvidenceBundle shape | Evidence resolver, UI, Focus Mode | scheme parsing + policy checks + fixtures |
+| Governed API | What clients can call and how errors behave | UI, external clients, Focus Mode | OpenAPI validation + error model invariants |
+| Policy decisions + obligations | allow/deny, obligations, reason codes | CI and runtime PEP/PDP | parity fixtures (CI == runtime) |
+| UI state (optional) | Map/Story/Focus inputs and serialization | UI, Focus Mode, story renderer | schema + golden fixtures |
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
 ## What is a contract artifact
 
 A **contract artifact** is a *machine-validated schema/spec/profile* that defines an interface plus its enforcement scaffolding.
@@ -131,6 +180,39 @@ A contract change is incomplete unless it includes:
 
 > [!IMPORTANT]
 > A contract change without fixtures is **code without tests**. Treat as merge-blocking.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Naming and versioning conventions
+
+These conventions keep contracts diff-friendly, reviewable, and enforceable.
+
+### File naming patterns (PROPOSED)
+
+| Artifact kind | Pattern | Example |
+|---|---|---|
+| JSON Schema | `<name>.v{major}.schema.json` | `promotion_manifest.v1.schema.json` |
+| Profile | `<name>.v{major}.yaml` | `stac.profile.v1.yaml` |
+| Vocab | `<name>.v{major}.yaml` | `policy_labels.v1.yaml` |
+| OpenAPI | `openapi/v{major}/openapi.yaml` | `openapi/v1/openapi.yaml` |
+
+### Versioning rules (CONFIRMED design)
+
+- **Breaking change → bump major** (`v1` → `v2`).
+  - Removing required fields
+  - Renaming fields
+  - Weakening gates or validation rules
+  - Changing error-code semantics relied on by clients
+- **Additive change → stay in major**
+  - Add optional fields
+  - Add new values to vocab where “unknown” is handled safely
+  - Add new endpoints or response fields with backwards-compatible defaults
+- **No silent looseness:** a “more permissive” validator is a breaking governance change even if code still runs.
+
+> [!NOTE]
+> Repo-specific versioning mechanics (SemVer vs `v1/` folders, etc.) are **UNKNOWN (repo)** until verified.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -153,6 +235,7 @@ Contracts must reinforce the storage zones and promotion boundaries:
 - **QUARANTINE**: failed validation, unclear licensing, sensitivity concerns; **not promotable**.
 - **PROCESSED**: publishable artifacts in KFM-approved formats + checksums.
 - **CATALOG/TRIPLET**: cross-linked DCAT + STAC + PROV describing metadata/assets/lineage.
+- **PROJECTIONS** *(rebuildable)*: tiles, DB/search indexes, graphs; derived from canonical artifacts + catalogs.
 - **PUBLISHED**: governed runtime surfaces (API + UI) served via policy enforcement.
 
 **Invariant:** Published surfaces may only serve promoted dataset versions that have processed artifacts, validated catalogs, run receipts, and policy label assignment.
@@ -171,6 +254,9 @@ Anything used in dataset identity (`dataset_version_id`, `spec_hash`, locks) mus
 - stable under benign ordering/whitespace differences
 - versioned and regression-tested (golden tests)
 
+> [!NOTE]
+> Canonical JSON hashing (e.g., RFC 8785 JCS) is a good default, but the exact algorithm is **UNKNOWN (repo)** until confirmed.
+
 ### 5) No silent looseness
 - Removing a required field/gate or weakening validation is a breaking change.
 - Ambiguity defaults to **deny** (fail-closed), then tighten the contract.
@@ -181,11 +267,15 @@ Evidence resolution must be usable in **≤ 2 calls** from UI interactions; othe
 ### 7) Policy-safe errors (no “ghost metadata”)
 Errors and abstentions must not leak restricted existence through response differences or “helpful” metadata.
 
+### 8) Canonical vs rebuildable stores (what must be recoverable)
+- Canonical truth should live in immutable artifacts + catalogs + provenance + receipts.
+- DB/search/tiles/graph are projections and must be rebuildable from canonical sources.
+
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Promotion Contract gates A–G
+## Promotion Contract gates A-G
 
 These are the minimum fail-closed gates that must be enforceable by CI and reviewable during steward sign-off.
 
@@ -214,6 +304,25 @@ KFM treats catalogs not as “nice metadata,” but as the canonical interface b
 - **DCAT** answers: “What is this dataset? Who published it? What is the license? What are the distributions?”
 - **STAC** answers: “What assets exist? What are their spatiotemporal extents? Where are the files?”
 - **PROV** answers: “How were these outputs created? Which inputs/tools/parameters?”
+
+### Minimum profile expectations (PROPOSED)
+This is intentionally short; keep full profiles in `contracts/profiles/`.
+
+**DCAT dataset MUST include (minimum):**
+- title, description, publisher
+- license and/or rights
+- themes (controlled vocabulary)
+- spatial and temporal coverage
+- distributions (one per artifact class)
+- link to PROV activity/bundle
+- KFM extension fields: `dataset_id`, `dataset_version_id`, `policy_label`
+
+**STAC collection MUST include (minimum):**
+- id, title, description
+- extent (spatial bbox and temporal interval)
+- license
+- link to DCAT dataset record
+- KFM extension fields: `dataset_version_id`, `policy_label`
 
 ### EvidenceRef schemes (minimum)
 > [!NOTE]
@@ -345,7 +454,7 @@ contracts/
 │  │  ├─ prov.profile.v1.yaml
 │  │  └─ crosslinks.profile.v1.yaml               # DCAT↔STAC↔PROV link rules
 │  ├─ promotion/
-│  │  └─ promotion_contract.v1.yaml               # gates A–G (high-level) + required checks mapping
+│  │  └─ promotion_contract.v1.yaml               # gates A-G (high-level) + required checks mapping
 │  ├─ evidence/
 │  │  └─ evidence_resolver.profile.v1.yaml        # resolution rules + fail-closed requirements
 │  └─ time/
@@ -353,7 +462,7 @@ contracts/
 │
 ├─ vocab/                                 # Controlled vocabularies (versioned)
 │  ├─ policy_labels.v1.yaml               # e.g., public | restricted | internal (repo-defined)
-│  ├─ artifact_zones.v1.yaml              # raw | work | quarantine | processed | published
+│  ├─ artifact_zones.v1.yaml              # raw | work | quarantine | processed | projections | published
 │  ├─ citation_kinds.v1.yaml              # map_feature | story_claim | focus_answer | doc_quote ...
 │  └─ themes.v1.yaml
 │
@@ -386,6 +495,33 @@ contracts/
 
 ---
 
+## Contract registry and lock files
+
+A registry/lock makes contracts reproducible and reviewable in audits.
+
+> [!NOTE]
+> This is **PROPOSED** until the repo confirms a manifest/lock format and validator.
+
+### Manifest contents (recommended)
+- contract identifier (stable ID)
+- kind (`schema`, `profile`, `vocab`, `openapi`)
+- semantic version (`v1`, `v2`, …)
+- canonical path
+- digest (e.g., `sha256`)
+- owners and review group
+- required validators and required CI checks
+
+### Lock file contents (recommended)
+- deterministic digests for every contract artifact
+- optional “bundle digest” for the whole contracts set (useful for release manifests)
+
+> [!WARNING]
+> If you adopt a lock file, you MUST define how it is updated (tooling + CI) and how drift is detected.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
 ## How to add or change a contract
 
 ### Step 1 — Choose the contract surface
@@ -409,8 +545,8 @@ At minimum:
 - spec_hash stability + deterministic output tests (goldens)
 
 ### Step 5 — Update registry/lock (if used)
-- add contract/version entry to `contracts.manifest.v1.json`
-- update `contracts.lock.v1.json` digests deterministically
+- add contract/version entry to `registry/contracts.manifest.v1.json`
+- update `registry/contracts.lock.v1.json` digests deterministically
 
 ### Step 6 — Document the change
 - what changed and why
@@ -470,8 +606,9 @@ Contracts are only valuable if they’re **enforced continuously**.
 - Exports must be rights-aware by default and policy-safe.
 
 ### Sensitive locations and restricted data
+- Default deny for sensitive-location and restricted datasets unless policy explicitly allows.
 - Store precise geometries in restricted datasets only.
-- Publish generalized public derivatives when allowed.
+- Publish generalized public derivatives when allowed (separate dataset version).
 - Never leak restricted existence via subtle error behavior.
 
 ### Audit is required (and itself sensitive)
@@ -491,7 +628,7 @@ Contracts are only valuable if they’re **enforced continuously**.
 
 - **Contract artifact:** machine-validated interface definition with versioning + fixtures + tests.
 - **Profile:** additional constraints that define “valid” for KFM (beyond base schemas).
-- **Promotion Contract:** fail-closed gates A–G controlling what can reach runtime surfaces.
+- **Promotion Contract:** fail-closed gates A-G controlling what can reach runtime surfaces.
 - **Triplet:** DCAT (dataset), STAC (assets), PROV (lineage).
 - **EvidenceRef:** stable reference (scheme-based) resolvable to an EvidenceBundle.
 - **EvidenceBundle:** resolved evidence record including policy, license, provenance, digests, and audit reference.
