@@ -1,3 +1,122 @@
-%% Placeholder Mermaid diagram
-flowchart TD
-  A[Placeholder] --> B[To be defined]
+%% [KFM_META_BLOCK_V2]
+%% doc_id: kfm://doc/abbc0b4f-b377-4674-a29c-70da1555cd06
+%% title: Deployment topology
+%% type: standard
+%% version: v1
+%% status: draft
+%% owners: KFM Maintainers
+%% created: 2026-03-01
+%% updated: 2026-03-01
+%% policy_label: public
+%% related:
+%%   - Tooling the KFM pipeline.pdf
+%%   - KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf
+%% tags:
+%%   - kfm
+%% notes:
+%%   - GitOps-first deployment model with dev, staging, and prod environments.
+%%   - Trust membrane: clients do not access storage directly; access is mediated by the governed API (PEP) with policy evaluation.
+%% [/KFM_META_BLOCK_V2]
+
+flowchart LR
+
+  %% ==============================
+  %% External actors
+  %% ==============================
+  subgraph Clients[Clients]
+    Public[Public user browser]
+    Steward[Steward and operator tools]
+  end
+
+  %% ==============================
+  %% GitOps control plane
+  %% ==============================
+  subgraph GitOps[GitOps control plane]
+    Repo[Git repository\n(declarative manifests and configs)]
+    CI[CI validation gates\n(tests and policy checks)]
+    Registry[Container registry\n(images)]
+
+    Repo --> CI --> Registry
+  end
+
+  Secrets[Secrets manager\n(outside Git)]
+
+  GitOpsCtl[GitOps controller\n(sync desired state)]
+
+  %% ==============================
+  %% Runtime platform
+  %% ==============================
+  subgraph Cluster[Kubernetes or OpenShift\n(dev, staging, prod)]
+    Ingress[Ingress or Router\n(TLS)]
+
+    subgraph RuntimeNS[Runtime services]
+      UI[Map and Story UI\nplus Focus Mode UI]
+      API[Governed API\nPEP and evidence resolver]
+      OPA[Policy engine\nOPA Rego\n(sidecar or embedded)]
+
+      UI --> API
+      API --> OPA
+    end
+
+    subgraph BatchNS[Pipeline runner]
+      Runner[Batch jobs\n(ingest, QA, promote, rebuild)]
+    end
+  end
+
+  %% ==============================
+  %% Canonical stores and managed services
+  %% ==============================
+  subgraph Stores[Canonical stores and managed services]
+    Obj[Object storage\nRAW, WORK, PROCESSED, CATALOG]
+    DB[Database\n(PostGIS)]
+    Search[Search service\n(managed where possible)]
+    Audit[Audit ledger\n(run receipts)]
+  end
+
+  %% ==============================
+  %% Observability
+  %% ==============================
+  subgraph Obs[Observability]
+    Logs[Structured logs\n(correlation id, audit_ref)]
+    Metrics[Metrics\n(latency, failures, durations)]
+  end
+
+  %% ==============================
+  %% Access paths (trust membrane)
+  %% ==============================
+  Public --> Ingress --> UI
+  Public --> Ingress --> API
+  Steward --> Ingress
+
+  %% ==============================
+  %% Deploy paths
+  %% ==============================
+  Repo --> GitOpsCtl --> Cluster
+  Registry --> Cluster
+  Secrets --> Cluster
+
+  %% ==============================
+  %% Data paths
+  %% ==============================
+  API --> DB
+  API --> Search
+  API --> Obj
+  API --> Audit
+
+  Runner --> Obj
+  Runner --> DB
+  Runner --> Search
+  Runner --> Audit
+
+  %% ==============================
+  %% Telemetry
+  %% ==============================
+  Cluster --> Logs
+  Cluster --> Metrics
+
+  %% ==============================
+  %% Backup and restore
+  %% ==============================
+  Backup[Backup and restore\n(canonical stores)]
+  Backup --> Obj
+  Backup --> Audit
