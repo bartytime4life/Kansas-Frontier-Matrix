@@ -261,10 +261,10 @@ Use this checklist in the ADR body (copy/paste):
 > Replace with the real output of `tree docs/adr/tools` once available.
 
 ```text
-docs/adr/tools/
-  README.md
-  TODO-0001-example-tool-adr.md
-  TODO-0002-example-tool-adr.md
+docs/adr/tools/                                            # ADR helper tooling (optional scripts + tool-specific ADR stubs)
+├─ README.md                                               # Tooling overview (what exists, how to run, invariants enforced, exit codes)
+├─ TODO-0001-example-tool-adr.md                           # Placeholder tool ADR (example: add adr-lint + required sections/links)
+└─ TODO-0002-example-tool-adr.md                           # Placeholder tool ADR (example: add adr-indexer + generated index contract)
 ```
 
 ---
