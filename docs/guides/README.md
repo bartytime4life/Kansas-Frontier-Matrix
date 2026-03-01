@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: KFM Maintainers
 created: 2026-02-24
-updated: 2026-02-24
+updated: 2026-03-01
 policy_label: public
 related:
   - docs/README.md
@@ -27,7 +27,7 @@ notes:
 ![Status](https://img.shields.io/badge/status-draft-lightgrey)
 ![Policy](https://img.shields.io/badge/policy-public-blue)
 ![Docs](https://img.shields.io/badge/docs-guides-informational)
-![Updated](https://img.shields.io/badge/updated-2026--02--24-orange)
+![Updated](https://img.shields.io/badge/updated-2026--03--01-orange)
 <!-- TODO: Replace/extend badges with real repo CI + release badges -->
 
 ## Quick navigation
@@ -73,6 +73,9 @@ This directory is the **how-to layer** of the documentation system:
 > **TIP**
 > If you’re deciding between a guide and a spec: write a **spec** when the system must validate it; write a **guide** when a human must follow it.
 
+> **ALIGNMENT NOTE (docs/)**
+> Many repos separate *procedural guides* (`docs/guides/`) from *operational runbooks* (`docs/runbooks/`), while keeping design/ADRs under `docs/architecture/` and templates under `docs/templates/`. Use **one canonical home per doc type** to prevent drift.
+
 [Back to top](#guides)
 
 ---
@@ -116,7 +119,9 @@ Every guide MUST include:
 
 ## Directory layout
 
-> This is the *recommended* structure for this folder. Keep it shallow, predictable, and easy to scan.
+> **TARGET structure (PROPOSED):** This is the *expanded* layout we recommend for `docs/guides/`.
+> If the live repo differs, treat this tree as a **design target** and update it via a small PR after verifying with:
+> `tree docs/guides -a -L 4` (or equivalent).
 
 ```text
 docs/guides/
@@ -126,14 +131,18 @@ docs/guides/
 ├── _shared/                             # Cross-cutting reference used by all guides
 │   ├── README.md
 │   ├── conventions.md                   # Filenames, numbering, linking, “Confirmed/Proposed/Unknown”
-│   ├── glossary.md                      # Canonical definitions + synonyms (domain + platform)
-│   ├── decision-log.md                  # Lightweight ADR index (links only)
+│   ├── writing-style.md                 # Tone, headings, code blocks, diagrams, accessibility basics
+│   ├── linking-and-citations.md         # How to cite EvidenceRefs + repo-relative linking rules
+│   ├── glossary.link.md                 # Link-only shim -> docs/glossary.md (avoid duplicating canon)
 │   ├── evidence-model.md                # EvidenceRef/EvidenceBundle patterns (how to cite in UI)
 │   ├── policy-labels.md                 # Policy label taxonomy + redaction expectations
+│   ├── safety-and-sensitivity.md        # Default-deny guidance; vulnerable sites; “no exact coords”
 │   ├── promotion-contract.md            # Minimum gates per zone + required receipts
 │   └── diagrams/
 │       ├── truth-path.mmd               # Mermaid source
-│       └── system-boundaries.mmd
+│       ├── trust-membrane.mmd
+│       ├── evidence-first-ux.mmd
+│       └── focus-mode-cite-or-abstain.mmd
 
 ├── _templates/                          # Copy/paste starters (kept tiny, referenced everywhere)
 │   ├── README.md
@@ -141,11 +150,13 @@ docs/guides/
 │   ├── guide-template.md                # Standard guide skeleton (purpose, scope, exclusions)
 │   ├── checklist-template.md            # Yes/No + evidence link fields
 │   ├── runbook-template.md              # Preconditions, steps, rollback, verification
-│   ├── adr-template.md                  # Short ADR template (problem, decision, tradeoffs)
+│   ├── playbook-template.md             # Decision tree template + tradeoffs
+│   ├── migration-note-template.md       # Small, reversible changes + rollback
 │   └── receipts/
 │       ├── run-receipt.schema.json      # Doc copy of receipt shape (source of truth may live elsewhere)
 │       ├── receipt.example.json
-│       └── receipt.fields.md
+│       ├── receipt.fields.md
+│       └── attestation.example.md       # Optional: signature/attestation snippet (if enabled)
 
 ├── onboarding/                          # Dataset onboarding + domain bootstrap
 │   ├── README.md
@@ -176,6 +187,18 @@ docs/guides/
 │           ├── dataset-entry.yaml
 │           ├── redaction-notes.md
 │           └── receipt.example.json
+
+├── acquisition/                         # Getting data INTO RAW (immutable capture)
+│   ├── README.md
+│   ├── 00-overview.md                   # “RAW is immutable” + what must be captured
+│   ├── 10-upstream-snapshots.md         # Fetch logs, checksums, license snapshot artifacts
+│   ├── 20-freshness-and-cadence.md      # Cadence, staleness budgets, update windows
+│   ├── 30-etag-last-modified.md         # Conditional GET patterns to avoid unnecessary recompute
+│   ├── 40-rate-limits-and-robots.md     # Safe scraping/polling; backoff; politeness policies
+│   └── examples/
+│       ├── http-pull-with-etag.md
+│       ├── api-pagination.md
+│       └── upstream-terms-snapshot.md
 
 ├── pipelines/                           # ETL/build pipelines and run receipts
 │   ├── README.md
@@ -231,6 +254,33 @@ docs/guides/
 │       ├── full-stac/
 │       └── dcat-plus-stac-plus-prov/
 
+├── evidence/                            # Evidence resolution, redaction, citation UX
+│   ├── README.md
+│   ├── 00-overview.md                   # Why evidence exists; “no claim without a trail”
+│   ├── 10-evidence-ref.md               # EvidenceRef fields + stability rules
+│   ├── 20-evidence-bundle.md            # EvidenceBundle payload + redaction behavior
+│   ├── 30-obligations-and-redaction.md  # How obligations shape evidence output
+│   ├── 40-citation-rendering.md         # How UI renders citations; link hygiene
+│   ├── 50-evidence-resolution.md        # Resolver behavior; “fail closed” expectations
+│   ├── checklists/
+│   │   ├── evidence-review-checklist.md
+│   │   └── citation-integrity-checklist.md
+│   └── examples/
+│       ├── evidence-bundle-public.json
+│       ├── evidence-bundle-restricted.json
+│       └── redaction-obligation-examples.md
+
+├── policy/                              # Machine-enforced policy patterns (OPA/Rego, obligations)
+│   ├── README.md
+│   ├── 00-overview.md                   # Default-deny posture; policy boundary concept
+│   ├── 10-labels-and-obligations.md     # Mapping policy_label -> obligations
+│   ├── 20-writing-rego.md               # How to write policy rules safely
+│   ├── 30-policy-test-fixtures.md       # Golden tests + fixtures; what CI must run
+│   ├── 40-breaking-policy-changes.md    # How to change policy without surprise regressions
+│   └── checklists/
+│       ├── policy-change-checklist.md
+│       └── obligation-coverage-checklist.md
+
 ├── apis/                                # Contract-first API patterns + policy boundary
 │   ├── README.md
 │   ├── 00-overview.md                   # What “governed API” means; PEP boundary rules
@@ -275,7 +325,73 @@ docs/guides/
 │       ├── story-recipes/
 │       └── focus-mode-recipes/
 
-├── governance/                          # Review workflows, policy labels, obligations
+├── indexing/                             # Rebuildable stores: search + tiles + caches
+│   ├── README.md
+│   ├── 00-overview.md                    # Canonical vs rebuildable; rebuild triggers
+│   ├── 10-search-indexes.md              # Spatial/text index patterns; rebuild strategy
+│   ├── 20-tiles-and-caching.md           # PMTiles/MBTiles/vector tiles; cache keys
+│   ├── 30-rebuild-backfill.md            # Backfills, incremental rebuilds, verification
+│   ├── 40-debugging.md                   # “Index says X but UI says Y”
+│   └── troubleshooting/
+│       ├── README.md
+│       ├── corrupted-index.md
+│       └── tile-gaps.md
+
+├── graph/                                # Knowledge graph build patterns (if applicable)
+│   ├── README.md
+│   ├── 00-overview.md                    # What goes into graph vs catalog vs evidence
+│   ├── 10-ontology-and-vocab.md          # Terms, IDs, controlled vocab strategy
+│   ├── 20-import-pipeline.md             # CSV exports, import steps, receipts
+│   ├── 30-constraints.md                 # Guardrails + validation
+│   ├── 40-query-recipes.md               # Helpful queries for debugging/research
+│   └── examples/
+│       ├── import-csv.md
+│       └── cypher-snippets.md
+
+├── storage/                              # Persistence + migrations (object store, PostGIS, etc.)
+│   ├── README.md
+│   ├── 00-overview.md                    # Storage layers; lifecycle; retention
+│   ├── 10-canonical-vs-rebuildable.md    # What is authoritative vs derived cache
+│   ├── 20-object-store-layout.md         # Prefix conventions; immutability; digests
+│   ├── 30-postgis-layout.md              # Schemas, extensions, spatial indexes, SRIDs
+│   ├── 40-migrations.md                  # Migration discipline; rollbacks; dry runs
+│   └── checklists/
+│       ├── backup-restore-checklist.md
+│       └── migration-checklist.md
+
+├── ci/                                   # Build/PR gates for docs/data/contracts/policy
+│   ├── README.md
+│   ├── 00-overview.md                    # What must pass to merge
+│   ├── 10-required-checks.md             # Minimum CI checks list
+│   ├── 20-schema-validation.md           # JSON/YAML schema validation patterns
+│   ├── 30-link-checks.md                 # STAC/DCAT/PROV links + citations integrity
+│   ├── 40-policy-tests.md                # Default-deny tests; obligation coverage
+│   ├── 50-promotion-gates.md             # Receipt + digest + spec_hash drift
+│   └── local-dev.md                      # How to run CI checks locally
+
+├── observability/                        # Logs/metrics/traces + operational visibility
+│   ├── README.md
+│   ├── 00-overview.md
+│   ├── 10-metrics.md                     # What we measure + why (freshness, latency, backlog)
+│   ├── 20-logging.md                     # Correlation IDs; receipt references; redaction-safe logs
+│   ├── 30-tracing.md                     # Distributed tracing guidance
+│   ├── 40-dashboards-and-alerts.md       # SLOs + alert routing
+│   └── runbooks/
+│       ├── README.md
+│       ├── api-latency-spike.md
+│       └── pipeline-backlog.md
+
+├── security/                             # Security playbooks (non-secret) + hardening checklists
+│   ├── README.md
+│   ├── 00-threat-model.md                # Attack surfaces; trust membrane threats
+│   ├── 10-secrets-and-keys.md            # How to rotate keys (no secrets in docs)
+│   ├── 20-supply-chain.md                # SBOM, pinning, attestations
+│   ├── 30-runtime-hardening.md           # Containers, network policies, least privilege
+│   └── checklists/
+│       ├── secret-rotation-checklist.md
+│       └── vulnerability-response-checklist.md
+
+├── governance/                           # Review workflows, policy labels, obligations (people/process)
 │   ├── README.md
 │   ├── 00-overview.md                   # Governance model, roles, escalation
 │   ├── 10-policy-labels.md              # Label taxonomy + required handling
@@ -295,7 +411,18 @@ docs/guides/
 │       ├── sample-policy-decision/
 │       └── sample-redaction-review/
 
-└── runbooks/                            # Operational procedures (deploy, rollback, incidents)
+├── releases/                             # Publishing/versioning guidance (data + catalogs + runtime)
+│   ├── README.md
+│   ├── 00-overview.md                   # What a “release” means in KFM
+│   ├── 10-versioning.md                 # Tags, dataset versioning, compatibility notes
+│   ├── 20-release-manifests.md          # Manifests, digests, provenance linkages
+│   ├── 30-dataset-release-procedure.md  # End-to-end dataset release steps
+│   ├── 40-sbom-and-attestation.md       # Optional: SBOM + signing/attestation
+│   └── checklists/
+│       ├── dataset-release-checklist.md
+│       └── release-approval-checklist.md
+
+└── runbooks/                             # Operational procedures (deploy, rollback, incidents)
     ├── README.md
     ├── 00-index.md                      # “If X happens, go here”
     ├── deploy/
@@ -330,7 +457,7 @@ docs/guides/
         └── ui-data-mismatch.md
 ```
 
-<!-- TODO: Update the tree to match the actual repo once the folder structure is finalized. -->
+<!-- TODO: Replace the tree with the actual repo output once the folder structure is finalized. -->
 
 [Back to top](#guides)
 
@@ -406,15 +533,15 @@ flowchart TD
 
 ## Reference shelf
 
-Use these bundled references when you need deeper background (API design, Git, CI/CD, GIS, etc.).  
-Prefer the **project library index** to find the right PDF quickly.
+Use these bundled references when you need deeper background (governance, pipeline design, catalogs, evidence, etc.).
 
-- `KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf` (design/governance patterns)
-- `KFM_Project_Library_Index.pdf` (navigation index for the bundled PDFs)
-- `Beej_s Guide to Git.pdf` (Git usage + collaboration)
-- `CICD-Podman-Kubernetes-Docker.pdf` (CI/CD + Kubernetes fundamentals)
+- `KFM Blueprint & Data Guide.pdf` (system invariants, truth path, governance posture)
+- `Tooling the KFM pipeline.pdf` (repo inventory, CI gates, runbooks/monitoring patterns)
+- `KFM_Source_Snapshots_Bundle_from_vNext1_tables_fixed.pdf` (drop-in tool/pipeline patterns and pasteable layouts)
 
-<!-- TODO: Replace filenames with repo-relative links once the library location is standardized. -->
+<!-- Optional / repo-dependent:
+- `KFM_Project_Library_Index.pdf` *(not confirmed in repo; add if/when standardized)*
+-->
 
 [Back to top](#guides)
 
