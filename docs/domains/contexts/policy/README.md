@@ -237,17 +237,19 @@ This directory **must not** contain:
 
 ### Recommended local layout (create as needed)
 ```text
-docs/domains/contexts/policy/
-  README.md                # you are here
-  policy-labels.md         # definitions + rationale + change history
-  obligations.md           # obligation catalog + examples
-  pdp-pep.md               # enforcement points + integration notes
-  decision-shapes.md       # input/output schemas for PDP decisions
-  examples/
-    policy-decision.json   # example allow/deny + obligations
-    ui-notices.md          # standard notice text + triggers
-  adr/
-    ADR-xxxx-policy-*.md   # policy-related architecture decisions
+docs/domains/contexts/policy/                          | # Domain “context pack” for policy (shared reference docs + examples + related ADRs)
+├─ README.md                                           | # You are here: scope, how to use these docs, links to canonical governance/policy-as-code
+├─ policy-labels.md                                    | # Policy label definitions + rationale + change history (why labels exist, how to evolve safely)
+├─ obligations.md                                      | # Obligation catalog + examples (redaction/generalization/suppression; how to apply/verify)
+├─ pdp-pep.md                                          | # PDP/PEP model: enforcement points, request context, integration notes, audit hooks
+├─ decision-shapes.md                                  | # Decision I/O shapes (inputs evaluated, decision envelope fields, reason codes, obligations payloads)
+│
+├─ examples/                                           | # Policy-safe examples (teaching/testing; synthetic; deterministic)
+│  ├─ policy-decision.json                             | # Example allow/deny decision + obligations (policy-safe; no leakage)
+│  └─ ui-notices.md                                    | # Standard notice text + triggers (deny/abstain, generalized, access-required, etc.)
+│
+└─ adr/                                                | # Policy-related architecture decisions (links/notes; keep aligned with docs/adr/)
+   └─ ADR-xxxx-policy-*.md                             | # Policy ADRs (naming pattern placeholder; each records a specific policy design decision)
 ```
 
 [⬆️ Back to top](#policy-context)
