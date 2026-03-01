@@ -172,52 +172,55 @@ Each example pack should be a **single folder** representing a single scenario.
 ### Recommended structure
 
 ```text
-docs/data/promotion/examples/
-  00_templates/
-    README.md
-    promotion_manifest.template.json
-    run_receipt.template.json
-    policy_decision.template.json
-  01_minimal_public_vector/
-    README.md
-    promotion_manifest.json
-    run_receipts/
-      001_fetch.json
-      002_transform.json
-      003_catalog.json
-    catalogs/
-      dcat.dataset.jsonld
-      stac.collection.json
-      stac.items/
-        item_0001.json
-    prov/
-      bundle.jsonld
-    policy/
-      decision.json
-    qa/
-      qa_report.json
-    checksums/
-      sha256sums.txt
-  02_quarantine_unclear_license/
-    README.md
-    promotion_manifest.json
-    catalogs/
-      dcat.dataset.jsonld
-    qa/
-      qa_report.json
-    expected_failure.md
-  03_sensitive_location_generalized/
-    README.md
-    promotion_manifest.json
-    policy/
-      decision.json
-    prov/
-      bundle.jsonld
-    catalogs/
-      stac.collection.json
-      stac.items/
-        item_0001_generalized_geom.json
-    expected_failure.md  # if this is a negative example
+docs/data/promotion/examples/                              # Promotion/gate examples (golden paths + negative cases; policy-safe)
+├─ 00_templates/                                           # Copy/paste templates used by example bundles
+│  ├─ README.md                                            # How templates map to schemas + how to use in new examples
+│  ├─ promotion_manifest.template.json                     # Template promotion manifest (digests, approvals, artifact list)
+│  ├─ run_receipt.template.json                            # Template run receipt (inputs/outputs/checks/policy decision refs)
+│  └─ policy_decision.template.json                        # Template policy decision (allow/deny/obligations + reason codes)
+│
+├─ 01_minimal_public_vector/                               # Golden-path example (public, low-risk vector dataset; should pass all gates)
+│  ├─ README.md                                            # What this example demonstrates + how to validate end-to-end
+│  ├─ promotion_manifest.json                              # Example promotion manifest (complete + consistent digests)
+│  ├─ run_receipts/                                        # Receipts for each stage (fetch→transform→catalog)
+│  │  ├─ 001_fetch.json                                    # Acquisition receipt (source snapshot → RAW)
+│  │  ├─ 002_transform.json                                # Transform receipt (RAW → PROCESSED; QA referenced)
+│  │  └─ 003_catalog.json                                  # Catalog/validation receipt (triplet built + linkchecked)
+│  ├─ catalogs/                                            # Example catalog triplet artifacts (policy-safe)
+│  │  ├─ dcat.dataset.jsonld                               # DCAT dataset/distribution metadata (links + license)
+│  │  ├─ stac.collection.json                              # STAC Collection for the dataset version
+│  │  └─ stac.items/                                       # STAC Items (granular assets/partitions)
+│  │     └─ item_0001.json                                 # One STAC Item (assets + required fields)
+│  ├─ prov/                                                # Provenance bundle(s) for the example run
+│  │  └─ bundle.jsonld                                     # PROV bundle (agents/activities/entities + links)
+│  ├─ policy/                                              # Policy decision fixtures referenced by receipts
+│  │  └─ decision.json                                     # Allow decision (with obligations if any)
+│  ├─ qa/                                                  # QA artifacts referenced by receipts
+│  │  └─ qa_report.json                                    # QA report (metrics, thresholds, pass/fail)
+│  └─ checksums/                                           # Deterministic integrity artifacts for the example bundle
+│     └─ sha256sums.txt                                    # Checksums for example artifacts (end-to-end verification)
+│
+├─ 02_quarantine_unclear_license/                          # Negative example (license unclear → quarantine/deny; should fail promotion)
+│  ├─ README.md                                            # Scenario summary + what gate is expected to fail and why
+│  ├─ promotion_manifest.json                              # Example manifest (may be incomplete/blocked by gate)
+│  ├─ catalogs/                                            # Partial catalog artifacts (if generated before failure)
+│  │  └─ dcat.dataset.jsonld                               # DCAT metadata showing unclear/missing license fields (illustrative)
+│  ├─ qa/                                                  # QA outputs (if any) produced before failure
+│  │  └─ qa_report.json                                    # QA report (may pass while license fails)
+│  └─ expected_failure.md                                  # Expected failure notes (which checks fail; required remediation)
+│
+└─ 03_sensitive_location_generalized/                      # Example: sensitive location handling (generalization obligations)
+   ├─ README.md                                            # Scenario summary + whether this is pass-with-obligations or expected-fail
+   ├─ promotion_manifest.json                              # Example manifest (must reflect obligations/generalization status)
+   ├─ policy/                                              # Policy decision for the scenario
+   │  └─ decision.json                                     # Decision with generalize_geometry / suppress fields obligations
+   ├─ prov/                                                # Provenance for generalization/redaction steps
+   │  └─ bundle.jsonld                                     # PROV showing generalization activity + inputs/outputs
+   ├─ catalogs/                                            # Catalog artifacts reflecting generalized geometry (policy-safe)
+   │  ├─ stac.collection.json                              # STAC Collection for generalized dataset version
+   │  └─ stac.items/                                       # STAC Items with generalized geometry
+   │     └─ item_0001_generalized_geom.json                # Item containing generalized geometry (no precise coords)
+   └─ expected_failure.md                                  # OPTIONAL: only if this example is a negative case (document why it fails)
 ```
 
 > [!TIP]
