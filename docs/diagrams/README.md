@@ -2,11 +2,11 @@
 doc_id: kfm://doc/d0120576-9857-4ab1-9619-d122fdae834b
 title: docs/diagrams
 type: standard
-version: v1
+version: v2
 status: draft
 owners: KFM Maintainers
 created: 2026-02-24
-updated: 2026-02-24
+updated: 2026-03-01
 policy_label: restricted
 related:
   - docs/README.md
@@ -22,10 +22,28 @@ Diagram sources + rendered exports for KFM architecture, data flows, and governe
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 ![policy](https://img.shields.io/badge/policy-restricted-blue)
-![diagrams](https://img.shields.io/badge/diagrams-mermaid%20%7C%20drawio%20%7C%20plantuml-informational)
+![formats](https://img.shields.io/badge/diagrams-mermaid%20%7C%20drawio%20%7C%20plantuml%20%7C%20excalidraw-informational)
+![exports](https://img.shields.io/badge/exports-svg%20%7C%20png%20%7C%20pdf-informational)
 
 **Owners:** KFM Maintainers  
 **Update cadence:** As architecture/pipeline/API/UI changes ship
+
+> [!NOTE]
+> **Single source of truth rule:** every committed rendered export in `out/` must have a matching editable source in `src/`.
+
+---
+
+## Where this fits in the repo
+
+`docs/diagrams/` is the cross-cutting **diagram store** for the entire KFM system, referenced by:
+- `docs/architecture/*` (system design + trust membrane views)
+- `docs/pipelines/*` (ingestion/validation/promotion flows)
+- `docs/ui/*` (Map/Story/Focus Mode routes + interaction flows)
+- `docs/governance/*` (review gates, sensitivity rules, redaction patterns)
+
+> [!TIP]
+> If your repo already has `docs/architecture/diagrams/`, treat that as a *view* (links/shortcuts) and keep **canonical sources** here in `docs/diagrams/`.
+> A simple pattern is a “redirect README” in `docs/architecture/diagrams/README.md` that links to this folder.
 
 ---
 
@@ -37,6 +55,7 @@ Diagram sources + rendered exports for KFM architecture, data flows, and governe
 - [Rendering](#rendering)
 - [Governance and safety](#governance-and-safety)
 - [Diagram registry](#diagram-registry)
+- [Appendix: Minimal diagram header template](#appendix-minimal-diagram-header-template)
 
 ---
 
@@ -44,10 +63,10 @@ Diagram sources + rendered exports for KFM architecture, data flows, and governe
 
 This directory is the **single home** for diagrams that explain or support the KFM system, including:
 
-- **Architecture**: domain boundaries, trust membrane, interfaces/contracts, deployment views
-- **Data lifecycle**: Raw → Work/Quarantine → Processed → Published promotion gates
-- **Pipelines**: ingestion, validation, QA, provenance/audit, publishing
-- **APIs**: request/response flows, authz/authn, policy boundary, error model
+- **Architecture**: boundaries, trust membrane, interfaces/contracts, deployment views
+- **Truth path lifecycle**: Upstream → Raw → Work/Quarantine → Processed → Catalog → Governed API → UI
+- **Pipelines**: ingestion, validation, QA, provenance/audit, publishing, index/tiles rebuilds
+- **APIs**: request/response flows, authn/authz, policy boundary, error model
 - **UI**: route maps, interaction flows, Story/Map UI nodes, Focus Mode reasoning boundaries
 - **Governance**: approval flows, redaction rules, sensitivity classifications
 
@@ -62,27 +81,133 @@ This directory is the **single home** for diagrams that explain or support the K
 
 > [!TIP]
 > Prefer text-based, diff-friendly formats (Mermaid/PlantUML) for architecture and flow diagrams.
-> Use binary formats (Draw.io/Excalidraw) when you truly need freeform layout.
+> Use binary formats (Draw.io/Excalidraw) only when you truly need freeform layout.
 
-Expected structure (adjust to match your repo):
+### Recommended full structure (sources + registry + optional exports)
 
 ```text
-docs/diagrams/                                   # Diagram system (sources + optional rendered exports)
-├─ README.md                                     # This file: rules, naming, alt text, and render workflow
+docs/diagrams/                                                     # Diagram system (canonical sources + optional rendered exports)
+├─ README.md                                                       # This file: rules, naming, alt text, and render workflow
+├─ STYLE_GUIDE.md                                                  # Optional: global diagram style rules (fonts, labels, icons)
+├─ NAMING.md                                                       # Optional: filename + versioning rules (if you want more than README)
 │
-├─ registry/                                     # Optional registries/manifests for discovery + CI checks
-│  └─ diagrams.csv                               # Optional machine-readable diagram registry (id, title, src, output)
+├─ registry/                                                       # Discovery + CI validation inputs
+│  ├─ README.md                                                    # Registry format + how to validate
+│  ├─ diagrams.yaml                                                # Canonical registry (recommended)
+│  ├─ diagrams.csv                                                 # Optional export (spreadsheets)
+│  ├─ diagrams.schema.json                                         # Optional schema for registry validation (if you enforce it)
+│  ├─ tags.yaml                                                    # Optional controlled vocabulary (domains, view-types, sensitivity)
+│  └─ checks/                                                      # Optional: lint/validation configs
+│     ├─ mermaid-lint.yml
+│     ├─ plantuml-lint.yml
+│     └─ export-sync.rules.yml                                     # "every out/* must map to a src/*"
 │
-├─ src/                                          # Diagram sources (preferred; treat as canonical)
-│  ├─ mermaid/                                   # Mermaid sources (.mmd or .md w/ Mermaid blocks)
-│  ├─ plantuml/                                  # PlantUML sources (.puml)
-│  ├─ drawio/                                    # Draw.io sources (.drawio)
-│  └─ excalidraw/                                # Excalidraw sources (.excalidraw)
+├─ templates/                                                      # Copy/paste starters (reduce drift)
+│  ├─ README.md
+│  ├─ DIAGRAM_HEADER.template.yml                                  # Header block template for diagram sources
+│  ├─ mermaid/
+│  │  ├─ flowchart.template.md
+│  │  ├─ sequence.template.md
+│  │  ├─ c4-context.template.md
+│  │  └─ state-machine.template.md
+│  ├─ plantuml/
+│  │  ├─ sequence.template.puml
+│  │  ├─ component.template.puml
+│  │  └─ deployment.template.puml
+│  ├─ drawio/
+│  │  └─ template.drawio
+│  └─ excalidraw/
+│     └─ template.excalidraw
 │
-└─ out/                                          # Optional rendered exports (recommended for docs consumption)
-   ├─ svg/                                       # Vector exports (preferred for docs)
-   ├─ png/                                       # Raster exports (previews/thumbnails)
-   └─ pdf/                                       # PDF exports (print/share)
+├─ src/                                                            # Diagram sources (canonical; always preferred)
+│  ├─ _shared/                                                     # Reusable fragments + assets (avoid copy/paste drift)
+│  │  ├─ README.md
+│  │  ├─ assets/                                                   # Icons, logos, stencils, palettes
+│  │  ├─ snippets/                                                 # Mermaid/PlantUML includes or fragments (if your tooling supports it)
+│  │  └─ libraries/                                                # Draw.io / Excalidraw libraries (shapes, UI components)
+│  │
+│  ├─ architecture/                                                # System structure views (C4-style is encouraged)
+│  │  ├─ README.md
+│  │  ├─ c4/                                                       # Context/Container/Component-level views
+│  │  │  ├─ context/
+│  │  │  ├─ container/
+│  │  │  └─ component/
+│  │  ├─ trust-membrane/                                           # Policy boundary views (PEP/PDP, repo interfaces)
+│  │  ├─ deployment/                                               # Environments, networking, K8s/Terraform conceptual layouts
+│  │  └─ data-architecture/                                        # Canonical vs projections, index rebuilds, storage tiers
+│  │
+│  ├─ truth-path/                                                  # Upstream → zones → catalogs → governed surfaces
+│  │  ├─ README.md
+│  │  ├─ zones/                                                    # Raw / Work-Quarantine / Processed / Published gating
+│  │  ├─ receipts/                                                 # Run receipts, audit trail, provenance bundle views
+│  │  └─ catalog-linkage/                                          # DCAT/STAC/PROV cross-link diagrams
+│  │
+│  ├─ pipelines/                                                   # Pipeline & workflow diagrams
+│  │  ├─ README.md
+│  │  ├─ ingest/                                                   # Acquisition patterns, connectors, normalization
+│  │  ├─ validate/                                                 # Schema checks, QA thresholds, quarantine triggers
+│  │  ├─ promote/                                                  # Promotion contract and review gates
+│  │  ├─ index-and-tiles/                                          # Search index rebuilds, PMTiles/vector tile pipelines
+│  │  └─ monitoring/                                               # Observability + alerting flows tied to pipeline stages
+│  │
+│  ├─ interfaces/                                                  # Governed interfaces and boundary diagrams
+│  │  ├─ README.md
+│  │  ├─ api/                                                      # API boundary (routes, auth, error model, evidence resolver)
+│  │  ├─ policy/                                                   # OPA/Rego policy flows + obligations
+│  │  └─ evidence/                                                 # EvidenceRef → EvidenceBundle resolution + redaction
+│  │
+│  ├─ ui/                                                          # Map/Story/Focus Mode views
+│  │  ├─ README.md
+│  │  ├─ routes/                                                   # Route maps and page-level flows
+│  │  ├─ interaction-flows/                                        # User flows (layer add, time scrub, evidence drawer)
+│  │  ├─ story-nodes/                                              # Story Node v3 rendering + publish review flow
+│  │  └─ focus-mode/                                               # Focus Mode orchestration boundaries (cite-or-abstain)
+│  │
+│  ├─ governance/                                                  # Governance, review gates, safety/redaction patterns
+│  │  ├─ README.md
+│  │  ├─ review-gates/                                             # Approvals, promotion checklists, steward roles
+│  │  ├─ sensitivity/                                              # Policy labels, generalization, no-harm patterns
+│  │  └─ audit/                                                    # Audit records, provenance, traceability surfaces
+│  │
+│  └─ operations/                                                  # Operational diagrams (runbooks, incident flows)
+│     ├─ README.md
+│     ├─ incident-response/
+│     ├─ access-management/
+│     └─ backup-and-recovery/
+│
+├─ out/                                                            # Optional rendered exports (only when needed by consumers)
+│  ├─ README.md
+│  ├─ architecture/
+│  │  ├─ svg/
+│  │  ├─ png/
+│  │  └─ pdf/
+│  ├─ truth-path/
+│  │  ├─ svg/
+│  │  ├─ png/
+│  │  └─ pdf/
+│  ├─ pipelines/
+│  │  ├─ svg/
+│  │  ├─ png/
+│  │  └─ pdf/
+│  ├─ interfaces/
+│  │  ├─ svg/
+│  │  ├─ png/
+│  │  └─ pdf/
+│  ├─ ui/
+│  │  ├─ svg/
+│  │  ├─ png/
+│  │  └─ pdf/
+│  ├─ governance/
+│  │  ├─ svg/
+│  │  ├─ png/
+│  │  └─ pdf/
+│  └─ thumbnails/                                                  # Optional small previews (registry/table rendering)
+│
+└─ tools/                                                          # Optional local helpers (keep here OR at repo root; pick one)
+   ├─ README.md
+   ├─ render/                                                      # Rendering entrypoints (repo-specific)
+   ├─ lint/                                                        # Linting + registry validation helpers
+   └─ ci/                                                          # Workflow templates/snippets (if you keep diagram CI isolated)
 ```
 
 ### Acceptable inputs
@@ -94,7 +219,7 @@ docs/diagrams/                                   # Diagram system (sources + opt
 - Rendered exports: `*.svg`, `*.png`, `*.pdf` **when** needed for downstream docs, PDFs, or slide decks
 
 ### Exclusions
-- No generated artifacts **without** a corresponding source in `src/`
+- No rendered/exported artifacts **without** a corresponding source in `src/`
 - No screenshots of diagrams when the source can be committed instead
 - No sensitive details that increase risk (see [Governance and safety](#governance-and-safety))
 
@@ -111,12 +236,14 @@ diagram_id: kfm://diagram/<uuid>
 title: <human name>
 status: draft|review|published
 owners: <team or names>
+created: YYYY-MM-DD
 updated: YYYY-MM-DD
 source_of_truth:
   - <path to spec, ADR, OpenAPI, schema, pipeline config>
 policy:
   label: public|restricted|...
-  notes: <why>
+  notes:
+    - <why>
 ```
 
 ### 2) Prefer “source-first” storage
@@ -135,9 +262,9 @@ Recommended filename pattern:
 ```
 
 Examples:
-- `governance--data-promotion-gates--v1.0--2026-02-24.md`
-- `api--policy-boundary--v0.3--2026-02-24.puml`
-- `ui--story-node-flow--v2.1--2026-02-24.drawio`
+- `governance--data-promotion-gates--v1.0--2026-03-01.md`
+- `interfaces--policy-boundary--v0.3--2026-03-01.puml`
+- `ui--story-node-flow--v2.1--2026-03-01.drawio`
 
 ### 4) Mermaid conventions
 
@@ -233,16 +360,18 @@ Do not include:
 
 Maintain a lightweight registry so diagrams are discoverable.
 
-| diagram_id | File | Purpose | Status | Owner | Updated |
-|---|---|---|---|---|---|
-| kfm://diagram/TODO | `src/mermaid/governance--data-promotion-gates--v1.0--2026-02-24.md` | Data lifecycle zones and promotion gates | draft | KFM Maintainers | 2026-02-24 |
-
 > [!TIP]
-> If you prefer machine-readable indexes, add `docs/diagrams/registry/diagrams.csv` and keep it in sync.
+> Prefer `registry/diagrams.yaml` as the canonical registry, and generate `diagrams.csv` from it if you want a spreadsheet view.
+
+### Registry table (human-facing view)
+
+| diagram_id | Domain | File | Purpose | Status | Policy | Owner | Updated |
+|---|---|---|---|---|---|---|---|
+| kfm://diagram/TODO | governance | `src/governance/review-gates/governance--promotion-gates--v1.0--2026-03-01.md` | Promotion contract + review gate overview | draft | restricted | KFM Maintainers | 2026-03-01 |
 
 ---
 
-### Appendix: Minimal diagram header template
+## Appendix: Minimal diagram header template
 
 <details>
 <summary>Copy/paste template</summary>
