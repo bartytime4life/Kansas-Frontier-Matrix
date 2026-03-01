@@ -163,20 +163,115 @@ Not exhaustive — treat as a typed contract that grows carefully.
   - **UI:** displays policy badges and notices; does not decide.
 
 ```mermaid
-flowchart LR
-  subgraph CI
-    A[Repo change] --> B[Policy tests and fixtures]
-    B --> C[Merge allowed]
-    B --> D[Merge blocked]
+graph LR
+
+  subgraph IDENT["Dataset identity"]
+    DOM["domain: {{DOMAIN}}"]
+    DS["dataset_id: {{DATASET_ID}}"]
+    DV["dataset_version_id: {{DATASET_VERSION_ID}}"]
+
+    DOM --> DS --> DV
   end
 
-  subgraph Runtime
-    E[Request] --> F[PEP API]
-    F --> G[PDP Policy Engine]
-    G --> H[Enforce obligations]
-    H --> I[Evidence resolver]
-    I --> J[Policy safe response]
+  subgraph ZONES["Truth path zones"]
+    RAW["RAW zone<br/>path: data/raw/{{DOMAIN}}/<br/>inputs: immutable snapshots + checksums"]
+    WORK["WORK zone<br/>path: data/work/{{DOMAIN}}/<br/>steps: normalize + QA + redaction candidates"]
+    PROC["PROCESSED zone<br/>path: data/processed/{{DOMAIN}}/<br/>outputs: publishable artifacts"]
+
+    RAW --> WORK --> PROC
   end
+
+  DV --- PROC
+
+  subgraph PROVB["PROV bundle (logical view)"]
+    A1["prov:Activity<br/>run_id: {{RUN_ID}}<br/>commit: {{COMMIT_SHA}}<br/>config: {{PIPELINE_CONFIG_REF}}"]
+    AG1["prov:Agent<br/>{{AGENT_NAME_OR_SERVICE}}"]
+
+    E_RAW1["prov:Entity<br/>raw input: {{RAW_ARTIFACT_1}}"]
+    E_WORK1["prov:Entity<br/>work artifact: {{WORK_ARTIFACT_1}}"]
+    E_OUT1["prov:Entity<br/>processed output: {{PROCESSED_ARTIFACT_1}}"]
+
+    E_RAW1 -->|prov:used| A1
+    E_WORK1 -->|prov:used| A1
+    AG1 -->|prov:wasAssociatedWith| A1
+    A1 -->|prov:generated| E_OUT1
+  end
+
+  RAW -. "example" .-> E_RAW1
+  WORK -. "example" .-> E_WORK1
+  PROC -. "example" .-> E_OUT1
+
+  subgraph BOUNDARY["Required boundary artifacts"]
+    STAC["STAC<br/>Collection: data/stac/collections/{{STAC_COLLECTION_ID}}.json<br/>Item(s): data/stac/items/{{STAC_ITEM_ID}}.json"]
+    DCAT["DCAT<br/>Dataset entry: data/catalog/dcat/{{DCAT_DATASET_ID}}.jsonld"]
+    PROVFILE["PROV<br/>Bundle: data/prov/{{PROV_BUNDLE_ID}}.jsonld"]
+    RECEIPT["Run receipt<br/>{{RUN_RECEIPT_REF}}"]
+  end
+
+  PROC -->|promote| STAC
+  PROC -->|promote| DCAT
+  PROC -->|promote| PROVFILE
+
+  E_OUT1 -->|cataloged as| STAC
+  E_OUT1 -->|described by| DCAT
+  A1 -->|serialized as| PROVFILE
+  A1 -->|emits| RECEIPT
+
+  subgraph PROJ["Rebuildable projections"]
+    GRAPH["Graph (Neo4j)<br/>references catalogs, no duplication"]
+    POSTGIS["PostGIS<br/>derived from processed artifacts"]
+    SEARCH["Search or vector index<br/>derived from processed + metadata"]
+    TILES["Tile bundles<br/>derived from processed features"]
+  end
+
+  STAC --> GRAPH
+  STAC --> POSTGIS
+  STAC --> SEARCH
+  STAC --> TILES
+
+  subgraph API["Governed API boundary"]
+    API_CAT["GET /api/v1/catalog/datasets"]
+    API_LINEAGE["GET /api/v1/lineage/{{DATASET_ID}}"]
+    API_EVID["POST /api/v1/evidence/resolve"]
+    API_QUERY["GET /api/v1/datasets/{{DATASET_VERSION_ID}}/query"]
+    API_TILES["GET /api/v1/tiles/{{LAYER_ID}}/{z}/{x}/{y}"]
+    API_FOCUS["POST /api/v1/focus/ask"]
+  end
+
+  GRAPH --> API_CAT
+  GRAPH --> API_LINEAGE
+  PROVFILE --> API_LINEAGE
+  POSTGIS --> API_QUERY
+  TILES --> API_TILES
+
+  subgraph EVIDENCE["Evidence resolver (policy applied)"]
+    EVREF["EvidenceRef<br/>{{EVIDENCE_REF}}"]
+    EVBUNDLE["EvidenceBundle<br/>bundle_id: {{BUNDLE_ID}}<br/>policy_label: {{POLICY_LABEL}}<br/>license: {{SPDX_LICENSE}}<br/>audit_ref: {{AUDIT_REF}}"]
+
+    EVREF -->|resolve| EVBUNDLE
+  end
+
+  API_EVID --> EVREF
+
+  subgraph UI["UI surfaces"]
+    MAP["Map Explorer"]
+    STORY["Story Mode"]
+    FOCUS["Focus Mode"]
+  end
+
+  API_CAT --> MAP
+  API_TILES --> MAP
+  API_QUERY --> MAP
+  API_LINEAGE --> MAP
+  API_LINEAGE --> STORY
+  API_FOCUS --> FOCUS
+
+  EVBUNDLE --> MAP
+  EVBUNDLE --> STORY
+  EVBUNDLE --> FOCUS
+
+  PREV["previous dataset_version_id: {{PREV_DATASET_VERSION_ID}}"]
+  PREV -->|prov:wasRevisionOf| DV
 ```
 
 **Non-negotiable invariants**
