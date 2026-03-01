@@ -1,12 +1,12 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<uuid>
+doc_id: kfm://doc/8c818b49-fd8a-4a94-afb0-a5e46c5bb149
 title: Governance
 type: standard
 version: v1
 status: draft
 owners: TBD
 created: 2026-02-24
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: public
 related:
   - docs/governance/ROOT_GOVERNANCE.md
@@ -25,8 +25,12 @@ Policies, gates, and policy-as-code contracts that keep KFM evidence-bound, safe
 ![Status](https://img.shields.io/badge/status-draft-lightgrey)
 ![Posture](https://img.shields.io/badge/posture-fail--closed-critical)
 ![Invariants](https://img.shields.io/badge/invariants-truth%20path%20%2B%20trust%20membrane-blue)
+![Policy Parity](https://img.shields.io/badge/policy-CI%20%3D%3D%20runtime-blue)
+![Promotion Contract](https://img.shields.io/badge/promotion-contract%20v1-blue)
 ![Focus Mode](https://img.shields.io/badge/focus-cite--or--abstain-blue)
 ![Policy as Code](https://img.shields.io/badge/policy--as--code-PDP%2FPEP-blueviolet)
+![Receipts](https://img.shields.io/badge/audit-run%20receipts-informational)
+![Sovereignty](https://img.shields.io/badge/sovereignty-CARE%20aligned-orange)
 <!-- TODO: replace with real repo badges (CI, policy tests, release attestations) -->
 
 **Owners:** TBD (define in `ROOT_GOVERNANCE.md`)  
@@ -38,6 +42,8 @@ Policies, gates, and policy-as-code contracts that keep KFM evidence-bound, safe
 - [Scope](#scope)
 - [Normative language and claim tags](#normative-language-and-claim-tags)
 - [What lives here](#what-lives-here)
+  - [Directory layout](#directory-layout)
+  - [Cross-repo governance surfaces](#cross-repo-governance-surfaces)
 - [Non-negotiable invariants](#non-negotiable-invariants)
 - [Governance workflow](#governance-workflow)
 - [Policy-as-code boundary](#policy-as-code-boundary)
@@ -65,6 +71,10 @@ If you are:
 
 …start here.
 
+> NOTE: Governance review is operationalized as two queues:
+> - **Promotion Queue**: dataset/version promotion to published runtime surfaces.
+> - **Story Review Queue**: narrative publishing (Story Nodes) with citation + rights + sensitivity gates.
+
 [Back to top](#governance)
 
 ---
@@ -75,7 +85,7 @@ To avoid accidental overreach, governance docs should be explicit about what is 
 - **MUST / MUST NOT / SHOULD / MAY** use common RFC-style meaning for enforceable requirements.
 - **CONFIRMED / PROPOSED / UNKNOWN** tags are used when a document mixes:
   - *invariants and contracts* (safe to treat as requirements), and
-  - *implementation details* (should be treated as replaceable until verified).
+  - *implementation details* (replaceable until verified).
 
 > NOTE: Every **UNKNOWN** item should include (1) a recommended default path, and (2) the minimum verification step to convert it to CONFIRMED.
 
@@ -86,23 +96,33 @@ To avoid accidental overreach, governance docs should be explicit about what is 
 ## What lives here
 
 ### Directory layout
+This tree is the **normative governance layout**. If your repo diverges, update this tree (or add `README.md` notes in subfolders) so reviewers can find policy-critical materials quickly.
+
 ```text
 docs/governance/                                      # Governance hub (human + policy-as-code docs, fixtures, gates)
+
 ├─ README.md                                          # Entrypoint + directory contract + navigation
 ├─ ROOT_GOVERNANCE.md                                 # Charter: roles, decision process, definitions, escalation
 ├─ ETHICS.md                                          # Ethical commitments + “we will not do”
 ├─ SOVEREIGNTY.md                                     # CARE-aligned sovereignty rules + restricted knowledge handling
 ├─ REVIEW_GATES.md                                    # Review triggers + sign-off rules + promotion checklist (human layer)
-│
-├─ GLOSSARY.md                                        # Canonical governance terms (policy label, obligation, EvidenceRef, etc.)
+
+├─ GLOSSARY.md                                        # Canonical governance terms (policy_label, obligation, EvidenceRef, etc.)
 ├─ CHANGELOG.md                                       # Governance policy changes (human-readable, time-aware)
-│
+├─ safety_checks.md                                   # Sensitive narratives checklist (non-sensational + redaction-first)
+
+├─ workflows/                                         # Review workflow definitions (state machine + queue semantics)
+│  ├─ PROMOTION_QUEUE.md                              # How datasets move through review → promote → publish
+│  ├─ STORY_REVIEW_QUEUE.md                           # How Story Nodes move draft → review → publish
+│  ├─ REVIEW_STATE_MODEL.md                           # Canonical review states + transitions (shared vocabulary)
+│  └─ WORKFLOW_DIAGRAMS.md                            # Mermaid diagrams used by both queues
+
 ├─ roles/                                             # Governance ownership + roles + responsibilities (human)
 │  ├─ OWNERSHIP.md                                    # Who owns what (datasets, services, policies, catalogs)
 │  ├─ ROLE_MODEL.md                                   # Role taxonomy (public, staff, researcher, admin, etc.)
 │  ├─ RBAC_MATRIX.md                                  # Role → permissions matrix (high-level; runtime enforced elsewhere)
 │  └─ REVIEWERS.md                                    # Required reviewers / quorum rules (per change type)
-│
+
 ├─ labels/                                            # Policy label taxonomy + how to apply it (human)
 │  ├─ POLICY_LABEL_TAXONOMY.md                         # Definitions + required fields + defaults (fail-closed)
 │  ├─ SENSITIVITY_GUIDE.md                             # How to classify layers, fields, locations, media
@@ -111,16 +131,40 @@ docs/governance/                                      # Governance hub (human + 
 │     ├─ public_generalized_example.md
 │     ├─ restricted_location_example.md
 │     └─ mixed_sensitivity_story_example.md
-│
-├─ gates/                                             # CI + human gates + release/promotion gates (human docs + checklists)
+
+├─ licensing/                                         # Licensing + rights governance (human + checklists + rubrics)
+│  ├─ LICENSE_CLASSIFICATION_RUBRIC.md                 # Allowed/blocked/metadata-only guidance; “online ≠ reusable”
+│  ├─ RIGHTS_FIELDS_REQUIREMENTS.md                    # Required fields in catalogs/specs for rights + attribution
+│  ├─ ATTRIBUTION_TEMPLATES.md                         # Copy/paste attribution snippets for exports + stories
+│  └─ examples/
+│     ├─ metadata_only_reference_example.md
+│     └─ third_party_media_rights_example.md
+
+├─ audit/                                             # Audit ledger rules (non-leaky, append-only, time-aware)
+│  ├─ AUDIT_LEDGER_POLICY.md                           # What must be logged for runs/access; what must never be logged
+│  ├─ RETENTION_POLICY.md                              # Retention + deletion posture (who can purge, when, how)
+│  ├─ ACCESS_CONTROL.md                                # Who can read audit records; redaction rules for audit views
+│  ├─ EVENT_SCHEMA.md                                  # Audit event schema (high-level; contract surfaces live elsewhere)
+│  └─ examples/
+│     ├─ focus_mode_run_receipt_example.json
+│     └─ dataset_promotion_audit_example.json
+
+├─ vocab/                                             # Controlled vocabularies used by governance + catalogs (docs + fixtures)
+│  ├─ policy_label.vocab.json                          # e.g., public / restricted / staff / embargoed / …
+│  ├─ artifact_zone.vocab.json                         # e.g., raw / work / quarantine / processed / catalog / published
+│  ├─ citation_kind.vocab.json                         # e.g., dcat / stac / prov / doc / story / …
+│  └─ theme.vocab.json                                 # Dataset themes (domain taxonomy; extend as needed)
+
+├─ gates/                                             # CI + human gates + release/promotion gates (docs + checklists)
 │  ├─ PROMOTION_CONTRACT.md                            # Minimum promotion requirements (zones, artifacts, receipts)
 │  ├─ CI_GATES.md                                      # What CI must enforce (schemas, licenses, QA, policy tests)
 │  ├─ RUNTIME_GATES.md                                 # What runtime must enforce (PDP/PEP checks, redaction, audit)
 │  ├─ FOCUS_MODE_EVALUATION.md                         # “Cite-or-abstain” eval cases + regression expectations
+│  ├─ DOD_DATASET_INTEGRATION.md                       # Definition of Done for dataset onboarding (ticket-level gate)
 │  └─ waivers/                                        # Controlled escape hatches (explicit, logged, time-bounded)
 │     ├─ WAIVER_POLICY.md                              # When waivers are allowed (rare) + required approvals
 │     └─ WAIVER_RECORD_TEMPLATE.md                     # Waiver record format (who/why/expiry/mitigations)
-│
+
 ├─ records/                                           # Durable governance decisions + sign-offs (auditable)
 │  ├─ decisions/                                      # Governance Decision Records (GDRs): reversible, evidence-linked
 │  │  ├─ README.md                                    # Naming convention + lifecycle (draft→approved→superseded)
@@ -131,25 +175,25 @@ docs/governance/                                      # Governance hub (human + 
 │  └─ incidents/                                      # Governance incidents/postmortems (leaks, bad labels, broken gates)
 │     ├─ INCIDENT_TEMPLATE.md
 │     └─ (YYYY)/...
-│
+
 ├─ templates/                                         # Copy/paste templates used across governance workflows
-│  ├─ GOVERNANCE_REVIEW_RECORD.md                      # Same as in README (canonical template location)
+│  ├─ GOVERNANCE_REVIEW_RECORD.md                      # Canonical review record template
 │  ├─ DATASET_INTAKE_CHECKLIST.md                      # New dataset onboarding (license, provenance, sensitivity)
 │  ├─ SOVEREIGNTY_ASSESSMENT.md                        # CARE-specific assessment + community constraints
 │  ├─ AI_FEATURE_RISK_REVIEW.md                        # Focus Mode / narrative risk review (factuality + leakage)
 │  └─ PUBLICATION_SIGNOFF.md                           # Publishing checklist (rights, citations, restricted leaks)
-│
+
 └─ policy/                                            # Policy-as-code *documentation + fixtures* (code may live elsewhere)
    ├─ README.md                                       # Policy boundary: CI == runtime semantics; where code lives
    ├─ POLICY_MODEL.md                                  # PDP/PEP model + decision inputs/outputs + failure modes
    ├─ OBLIGATIONS.md                                   # Obligation types (redact, generalize, cite, deny, log, warn)
    ├─ INPUT_CONTEXT.md                                 # What context is evaluated (role, purpose, dataset label, fields)
-   │
+
    ├─ schemas/                                        # Schemas for policy I/O + obligations (contract surfaces)
    │  ├─ policy_context.schema.json
    │  ├─ policy_decision.schema.json
    │  └─ obligation.schema.json
-   │
+
    ├─ fixtures/                                       # Test vectors for policy (allow/deny + obligations + redaction)
    │  ├─ allow_deny/
    │  │  ├─ public_role_cases.json
@@ -160,32 +204,52 @@ docs/governance/                                      # Governance hub (human + 
    │  │  ├─ generalize_geometry_cases.json
    │  │  └─ suppress_metadata_cases.json
    │  └─ focus_mode/
-   │     ├─ golden_queries.json                         # Regression set for “must cite / must abstain”
-   │     └─ jailbreak_leakage_tests.json                # “must not leak restricted” stress tests
-   │
+   │     ├─ golden_queries.json                        # Regression set for “must cite / must abstain”
+   │     └─ jailbreak_leakage_tests.json               # “must not leak restricted” stress tests
+
    ├─ testplan/                                       # How fixtures run in CI + how runtime parity is validated
    │  ├─ ci_policy_tests.md
    │  ├─ runtime_policy_parity.md
    │  └─ coverage_expectations.md
-   │
+
    └─ mappings/                                       # Links from docs → code locations (avoid duplication)
       ├─ policy_code_locations.md                      # Where Rego/rules live (repo-relative links)
       └─ enforcement_points.md                         # Where PEPs live (API, evidence resolver, exporters)
 ```
 
-### Acceptable inputs
+#### Acceptable inputs
 This directory accepts:
 - Policy documents, rubrics, and checklists.
 - Governance decision records and review sign-offs (human layer).
 - Policy-as-code documentation (PDP/PEP semantics, fixtures, obligations).
 - Templates used by governance processes (review records, manifests, evaluation cases).
 
-### Exclusions
+#### Exclusions
 Do **not** put these here:
 - Raw or processed datasets (belongs in `data/...`).
 - Pipeline code (belongs in `pipelines/` and/or `src/...`).
 - Secrets, API keys, tokens, or private coordinates.
 - Unreviewed public narratives intended for publication (belongs in story draft areas).
+
+[Back to top](#governance)
+
+---
+
+### Cross-repo governance surfaces
+This folder is the **human + documentation hub**, but governance also depends on code and contract surfaces elsewhere in the repo.
+
+Use this list as a reviewer “jump table” (and keep it in sync with the real repo):
+
+| Surface | Why it matters | Typical repo locations (verify) |
+|---|---|---|
+| Policy bundles + tests | Enforce default-deny + obligations; prevent regressions | `policy/**` (rego + tests), `tests/**` |
+| Catalog validators + linkcheck | Block invalid DCAT/STAC/PROV or broken evidence links | `tools/validation/**`, `tests/**` |
+| Run receipts + provenance templates | Reproduce runs; bind outputs to inputs/configs/images | `prov/templates/**`, `data/**/receipts/**` |
+| Controlled vocabularies | Prevent taxonomy drift; keep IDs stable | `contracts/vocab/**`, `docs/governance/vocab/**` |
+| Review automation | Promotion/stories as PR workflow with receipts | `.github/workflows/**`, `scripts/**` |
+| Evidence resolver contract | EvidenceRef → EvidenceBundle, policy-checked | `contracts/openapi/**`, `apps/**`, `packages/evidence/**` |
+
+> WARNING: Do not claim a path exists unless you can point to it in the repo tree. If this list drifts, update it to match reality.
 
 [Back to top](#governance)
 
@@ -198,6 +262,7 @@ These are **platform invariants**: treat them as CI-enforceable rules, not sugge
 |---|---|---|
 | **Truth path lifecycle** | Upstream → **RAW** → **WORK/QUARANTINE** → **PROCESSED** → **CATALOG/TRIPLET** (DCAT+STAC+PROV+run receipts) → projections → governed API → UI | Reproducibility and auditability |
 | **Trust membrane** | Clients never access storage/DB directly; all access goes through governed APIs applying policy + evidence + logging | Without it, policy and provenance are unenforceable |
+| **Policy parity (CI == runtime)** | The same policy semantics (or at minimum the same fixtures and outcomes) are enforced in CI gates and runtime enforcement points | Without parity, CI “green” can still leak data in production |
 | **Evidence-first UX** | Every layer/claim opens into evidence: dataset version, license/rights, policy label, provenance chain, checksums | Trust is a first-class surface |
 | **Cite-or-abstain Focus Mode** | Answers cite resolvable evidence bundles or abstain; citation verification is a hard gate; every query emits a run receipt | Mitigates hallucinations and leakage |
 | **Canonical vs rebuildable stores** | Object store + catalogs + provenance are canonical; DB/search/graph/tiles are rebuildable projections | Safe re-indexing and migration |
@@ -229,10 +294,11 @@ flowchart TB
 Recommended minimum set (extend/override in `REVIEW_GATES.md`):
 - Schema validation (data + catalog schemas)
 - Metadata completeness
-- License/rights checks
+- License/rights checks (fail closed)
 - QA thresholds (geometry/raster integrity, drift thresholds)
 - Policy tests (allow/deny + obligations)
 - Evidence resolution checks (EvidenceRefs resolve; broken links fail)
+- Contract tests (API schemas and response shapes)
 
 ### 2) Manual governance review (when required)
 Some changes require human review in addition to CI (see `REVIEW_GATES.md`), including:
@@ -242,7 +308,20 @@ Some changes require human review in addition to CI (see `REVIEW_GATES.md`), inc
 - Adding new public-facing outputs that could expose sensitive information (API endpoints, downloads, exports).
 - Reclassifying sensitivity / policy labels (public ↔ restricted, etc.).
 
-### 3) Decision recording
+Manual reviews should be recorded in:
+- `records/reviews/YYYY/(PR-or-change-id).md`
+
+### 3) Queue semantics (Promotion + Story)
+**Promotion Queue** is about *data*: moving dataset versions into the served surfaces after all promotion gates pass.
+
+**Story Review Queue** is about *claims*: publishing narratives only when citations resolve, rights are clear, and sensitivity constraints are honored.
+
+Both queues MUST be:
+- fail-closed by default,
+- auditable (review record + decision),
+- reversible (small increments; clear rollback story).
+
+### 4) Decision recording
 Governance decisions should be:
 - small, reversible increments,
 - linked to evidence (what changed, why, and what check enforces it),
@@ -257,7 +336,7 @@ Governance decisions should be:
 KFM governance requires **the same policy semantics in CI and runtime**, or CI guarantees are meaningless.
 
 Recommended architecture:
-- **PDP**: a Policy Decision Point (e.g., OPA sidecar/in-process).
+- **PDP**: a Policy Decision Point (e.g., OPA running in-process or as a sidecar).
 - **PEPs** (Policy Enforcement Points):
   - CI: schema validation + policy tests block merges.
   - Runtime API: policy checks before serving data.
@@ -286,13 +365,13 @@ flowchart LR
 ### Promotion Contract v1 gates (minimum credible set)
 | Gate | MUST be present | Example CI enforcement |
 |---|---|---|
-| A — Identity & versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, content digests | Spec-hash golden tests; digest verification |
-| B — Licensing & rights | License + rights holder + snapshot of upstream terms | Block if license missing/unknown |
-| C — Sensitivity & redaction plan | `policy_label` + obligations (generalize geometry, remove fields, etc.) | Default-deny tests + obligation checks |
-| D — Catalog triplet validation | DCAT/STAC/PROV validate + cross-link; EvidenceRefs resolve | Validators + linkcheck; fail on broken links |
-| E — QA & thresholds | QA checks + thresholds documented and passing | QA report exists + thresholds met |
-| F — Run receipt & audit record | Receipt captures inputs, tooling, hashes, policy decisions | Receipt schema validation; append-only audit |
-| G — Release manifest | Promotion recorded as a manifest referencing artifact digests | Manifest exists; digests match |
+| A — Identity & versioning | Stable `dataset_id`; immutable `dataset_version_id` derived from stable `spec_hash`; content digests | Spec-hash golden tests; digest verification |
+| B — Licensing & rights metadata | License + rights holder + attribution requirements + snapshot of upstream terms | Block if license missing/unknown |
+| C — Sensitivity & redaction plan | `policy_label` + obligations (generalize geometry, remove fields, suppress metadata, etc.) recorded in PROV | Default-deny tests + obligation checks |
+| D — Catalog triplet validation | DCAT/STAC/PROV validate + cross-link; EvidenceRefs resolve without guessing | Validators + linkcheck; fail on broken links |
+| E — Run receipts & checksums | `run_receipt` exists; inputs/outputs enumerated with checksums; environment recorded (container digest, parameters) | Receipt schema validation; checksum verification |
+| F — Policy + contract tests | Policy fixtures pass for this dataset version; evidence resolver can resolve at least one EvidenceRef in CI; API contracts/schemas validate | Policy test harness + “resolve smoke” + OpenAPI/schema checks |
+| G — Optional but recommended | SBOM + build provenance; performance smoke checks; accessibility smoke checks (e.g., evidence drawer keyboard navigation) | Attestation verification + perf/a11y smoke workflows |
 
 > TIP: Treat the Promotion Contract as the “governance compiler”: it turns intent into merge-blocking and promotion-blocking behavior.
 
@@ -306,6 +385,7 @@ In KFM, a “citation” is not a URL pasted into text. It is an **EvidenceRef**
 ### Contract rules (starter)
 - Every user-facing claim that is presented as factual **MUST** be backed by a resolvable EvidenceRef.
 - Evidence resolution **MUST** be policy-checked; if resolution is denied or fails, the system **MUST** narrow scope or abstain.
+- Story publishing and Focus Mode responses have a hard gate: **citation verification must pass**.
 - The UI may display evidence and policy badges, but **MUST NOT** make authorization decisions.
 
 [Back to top](#governance)
@@ -371,6 +451,7 @@ Governance requires auditability:
 - Track access to sensitive data and transformations.
 - Emit telemetry when redaction/generalization is applied (including when Focus Mode withholds or generalizes).
 - Ensure audit records can answer “who saw what and why” **without** leaking restricted content.
+- Audit retention and access are governed: **log enough to reproduce and explain; never log secrets or restricted payloads**.
 
 [Back to top](#governance)
 
@@ -463,7 +544,9 @@ Governance requires auditability:
 
 ### TODOs (repo integration)
 - [ ] Confirm final policy label taxonomy and role model (document in `ROOT_GOVERNANCE.md`).
-- [ ] Add policy decision fixtures (allow/deny + obligations) and wire into CI + runtime.
-- [ ] Add or link the promotion manifest + “what changed?” diff report formats and schemas.
+- [ ] Add Promotion Queue + Story Review Queue definitions (state machine + required artifacts).
+- [ ] Add or link controlled vocabularies (policy_label, artifact_zone, citation_kind) and validate in CI.
+- [ ] Add policy decision fixtures (allow/deny + obligations) and wire into CI + runtime parity tests.
+- [ ] Add/link promotion manifest + “what changed?” diff report formats and schemas.
 - [ ] Document audit ledger retention policy and access controls.
 - [ ] Add Focus Mode evaluation harness to CI (golden queries + leak tests).
