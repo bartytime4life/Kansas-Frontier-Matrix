@@ -1,0 +1,1 @@
+# Geometry types vocabulary
