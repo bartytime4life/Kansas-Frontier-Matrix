@@ -91,15 +91,16 @@ This README documents the **notes** subdirectory for ADR dossier **0006**:
 > This is a suggested structure. If these files don’t exist yet, create them incrementally.
 
 ```text
-notes/
-  README.md                     # (this file)
-  evidence-ref-schemes.md        # scheme list + examples
-  bundle-contract.md             # required fields + rules
-  resolver-error-matrix.md       # fail-closed error model
-  ci-contract-tests.md           # test plan + fixtures list
-  examples/
-    evidence_refs.json           # example refs (safe/public)
-    expected_bundles.json        # expected resolver outputs (policy-safe)
+notes/                                                   # Working notes (governed drafts; promote into docs/ when ready)
+├─ README.md                                              # This file (scope, status, owners, promotion path, “not canonical” warning)
+├─ evidence-ref-schemes.md                                # EvidenceRef scheme list + examples + parsing/normalization rules
+├─ bundle-contract.md                                     # EvidenceBundle required fields + invariants + safe-render field rules
+├─ resolver-error-matrix.md                               # Fail-closed error model (deny/abstain), reason codes, indistinguishability rules
+├─ ci-contract-tests.md                                   # Contract test plan + fixtures inventory + CI gate mapping
+└─ examples/                                               # Small, policy-safe examples (no secrets; no restricted geometry)
+   ├─ evidence_refs.json                                   # Example EvidenceRefs (safe/public only)
+   ├─ expected_bundles.json                                # Expected resolver outputs (policy-safe; redacted where needed)
+   └─ README.md                                            # Example usage notes + how to run validations/tests
 ```
 
 ---
