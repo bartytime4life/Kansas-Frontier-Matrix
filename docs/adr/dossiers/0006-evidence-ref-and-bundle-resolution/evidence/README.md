@@ -227,35 +227,35 @@ Use this table as the checklist for what evidence fixtures should cover.
 > This is a **target layout** for this dossier. Create folders/files as needed; do not assume they already exist.
 
 ```text
-evidence/
-  README.md
-
-  examples/
-    evidenceref/
-      public.dcat.json
-      restricted.dcat.json
-      public.stac.json
-      restricted.stac.json
-      public.prov.json
-      public.doc.json
-      restricted.doc.json
-      optional.graph.json
-
-    bundles/
-      allow.bundle.json
-      deny.bundle.json
-      allow.with_obligations.bundle.json
-
-    policy/
-      decision.allow.json
-      decision.deny.json
-      obligations.generalize_geometry.json
-      obligations.remove_attributes.json
-
-  golden/
-    resolver_response.allow.json
-    resolver_response.deny.json
-    resolver_error.invalid_syntax.json
+evidence/                                                 # Evidence contracts + examples (EvidenceRef/EvidenceBundle) + golden resolver outputs
+├─ README.md                                              # This file (purpose, formats, safety rules, how examples/golden are used)
+│
+├─ examples/                                              # Policy-safe examples used for docs/tests (synthetic; deterministic)
+│  ├─ evidenceref/                                        # Example EvidenceRef payloads by source kind + policy label
+│  │  ├─ public.dcat.json                                 # EvidenceRef example (DCAT; public)
+│  │  ├─ restricted.dcat.json                             # EvidenceRef example (DCAT; restricted)
+│  │  ├─ public.stac.json                                 # EvidenceRef example (STAC; public)
+│  │  ├─ restricted.stac.json                             # EvidenceRef example (STAC; restricted)
+│  │  ├─ public.prov.json                                 # EvidenceRef example (PROV; public)
+│  │  ├─ public.doc.json                                  # EvidenceRef example (document/web; public)
+│  │  ├─ restricted.doc.json                              # EvidenceRef example (document/web; restricted)
+│  │  └─ optional.graph.json                              # OPTIONAL EvidenceRef example (graph/lineage pointer; policy-gated)
+│  │
+│  ├─ bundles/                                            # Example EvidenceBundle payloads (what resolver returns)
+│  │  ├─ allow.bundle.json                                # Bundle example for allow scenario (complete + policy-safe fields)
+│  │  ├─ deny.bundle.json                                 # Bundle example for deny/abstain scenario (minimal safe envelope)
+│  │  └─ allow.with_obligations.bundle.json               # Bundle example with obligations applied/declared
+│  │
+│  └─ policy/                                             # Example policy decision + obligation payloads (fixtures)
+│     ├─ decision.allow.json                              # Example allow decision envelope (with reason codes/metadata)
+│     ├─ decision.deny.json                               # Example deny decision envelope (policy-safe; indistinguishable vs not-found as required)
+│     ├─ obligations.generalize_geometry.json             # Example obligation: generalize geometry (coarsen/snap)
+│     └─ obligations.remove_attributes.json               # Example obligation: remove/suppress attributes (field-level redaction)
+│
+└─ golden/                                                # Golden files for resolver regression tests (expected outputs/errors)
+   ├─ resolver_response.allow.json                        # Golden resolver response for allow case (stable, diff-friendly)
+   ├─ resolver_response.deny.json                         # Golden resolver response for deny/abstain case (safe envelope)
+   └─ resolver_error.invalid_syntax.json                  # Golden error envelope for invalid EvidenceRef syntax (fail-closed; no leakage)
 ```
 
 [Back to top](#adr-0006-evidence--evidenceref--evidencebundle-resolution)
