@@ -99,23 +99,22 @@ Typical contents:
 We do **not** assume specific filenames exist yet (repo reality may vary). A recommended structure is:
 
 ```text
-docs/data/promotion/examples/example_receipts/
-  README.md
-
-  # Recommended (add as needed):
-  run_receipt/
-    run_receipt.v1.valid.min.json
-    run_receipt.v1.invalid.missing_spec_hash.json
-    run_receipt.v1.invalid.unapproved_provider.json
-    run_receipt.v1.redacted.public.json
-
-  run_manifest/
-    run_manifest.v1.valid.min.json
-    run_manifest.v1.invalid.missing_rights.json
-
-  promotion_manifest/
-    promotion_manifest.v1.valid.min.json
-    promotion_manifest.v1.invalid.missing_artifact_digest.json
+docs/data/promotion/examples/example_receipts/                 # Receipt examples (valid/invalid) for CI gates + reviewer training
+├─ README.md                                                   # Index + how these examples map to schemas/tests + update rules
+│
+├─ run_receipt/                                                # Run receipt examples (pipeline/story/focus/index runs)
+│  ├─ run_receipt.v1.valid.min.json                             # Minimal valid run_receipt v1 (golden pass case)
+│  ├─ run_receipt.v1.invalid.missing_spec_hash.json             # Invalid: missing spec_hash (must fail gate)
+│  ├─ run_receipt.v1.invalid.unapproved_provider.json           # Invalid: provider not approved/allowlisted (must fail gate)
+│  └─ run_receipt.v1.redacted.public.json                       # Redacted public-safe receipt (no sensitive fields; policy-safe)
+│
+├─ run_manifest/                                               # Run manifest examples (batch run bundles, optional)
+│  ├─ run_manifest.v1.valid.min.json                             # Minimal valid run_manifest v1 (pass case)
+│  └─ run_manifest.v1.invalid.missing_rights.json                # Invalid: missing rights/licensing fields (must fail gate)
+│
+└─ promotion_manifest/                                         # Promotion manifest examples (release bundle + digests + approvals)
+   ├─ promotion_manifest.v1.valid.min.json                       # Minimal valid promotion_manifest v1 (pass case)
+   └─ promotion_manifest.v1.invalid.missing_artifact_digest.json  # Invalid: missing artifact digest/checksum (must fail gate)
 ```
 
 ---
