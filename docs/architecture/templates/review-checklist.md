@@ -292,5 +292,3 @@ flowchart TD
 </details>
 
 <p align="right"><a href="#architecture-review-checklist">Back to top ↑</a></p># Review Checklist
-
-Placeholder for architecture documentation.
