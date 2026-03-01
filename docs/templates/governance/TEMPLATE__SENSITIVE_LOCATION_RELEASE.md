@@ -1,0 +1,3 @@
+# TEMPLATE__SENSITIVE_LOCATION_RELEASE.md
+
+Template placeholder.
