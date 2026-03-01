@@ -1,0 +1,17 @@
+status: active
+owners:
+  - <name/team>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public
+links:
+  issue: <link-or-none>
+  investigation_readme: README.md
+  promotion_target: <path-or-link>
+tags:
+  - kfm
+  - investigation
+next_decision:
+  by: <name/team>
+  due: YYYY-MM-DD
+  prompt: <decision-question>
