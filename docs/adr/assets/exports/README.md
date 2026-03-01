@@ -113,12 +113,12 @@ Examples:
 ## Export workflow
 
 ```mermaid
-flowchart LR
-  A[Editable Source\n(drawio/excalidraw/etc.)] --> B[Export\n(svg/png/pdf)]
-  B --> C[Optimize\n(size + clarity)]
-  C --> D[Commit to exports/\nunder ADR folder]
-  D --> E[Reference from ADR\n(relative link)]
-  E --> F[Review in PR\n(no broken links)]
+graph LR
+  A["Editable source - drawio, excalidraw, etc"] --> B["Export - svg, png, pdf"]
+  B --> C["Optimize - size + clarity"]
+  C --> D["Commit to exports folder under ADR"]
+  D --> E["Reference from ADR - relative link"]
+  E --> F["Review in PR - no broken links"]
 ```
 
 ### Practical rules
