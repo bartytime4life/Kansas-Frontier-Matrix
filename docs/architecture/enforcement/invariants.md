@@ -78,10 +78,10 @@ flowchart LR
 
 ### Layering rule (architecture posture)
 ```mermaid
-flowchart TB
-  Domain[Domain models + rules] --> UseCases[Use cases / workflows]
-  UseCases --> Interfaces[Interfaces / contracts]
-  Interfaces --> Infra[Infrastructure adapters<br/>(storage, DB, search, policy engine)]
+graph TB
+  Domain["Domain models + rules"] --> UseCases["Use cases - workflows"]
+  UseCases --> Interfaces["Interfaces - contracts"]
+  Interfaces --> Infra["Infrastructure adapters - storage, DB, search, policy engine"]
 ```
 
 **Key rule:** domain logic does not talk directly to infrastructure. It talks through interfaces.
