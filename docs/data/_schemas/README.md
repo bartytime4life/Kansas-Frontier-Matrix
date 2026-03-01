@@ -105,16 +105,19 @@ flowchart LR
 > Update it to match the live repository.
 
 ```text
-docs/data/_schemas/
-  README.md                         # you are here
-  _template/
-    SCHEMA_README_TEMPLATE.md       # optional: per-schema README template
-    example.json                    # optional: example fixture style
-  registries/
-    schema-registry.md              # optional: richer registry than the table below
-  notes/
-    compatibility.md                # optional: breaking-change rules + migration notes
-    naming.md                       # optional: naming + $id conventions
+docs/data/_schemas/                                     # Data-doc schema hub (CI-validated schemas + conventions + compatibility notes)
+├─ README.md                                            # You are here: index/table of schemas, how CI validates, versioning rules, $id conventions
+│
+├─ _template/                                           # OPTIONAL: copy/paste helpers for adding new schemas consistently
+│  ├─ SCHEMA_README_TEMPLATE.md                         # Optional per-schema README template (purpose, $id, examples, changelog)
+│  └─ example.json                                      # Optional example fixture style guide (how examples should look)
+│
+├─ registries/                                          # OPTIONAL: schema registries (if you want more than README table)
+│  └─ schema-registry.md                                # Optional richer registry (schema list, owners, status, consumers, tests)
+│
+└─ notes/                                               # OPTIONAL: guidance notes for schema authors/reviewers
+   ├─ compatibility.md                                  # Optional breaking-change rules + migration notes + deprecation windows
+   └─ naming.md                                         # Optional naming rules + $id conventions + file layout expectations
 ```
 
 ---
