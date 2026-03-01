@@ -127,7 +127,6 @@ graph LR
   %% ---------------------------------------------------------------------------
   %% Trust membrane guard rails
   %% UI must not reach projections or storage directly.
-  %% ---------------------------------------------------------------------------
   map -.->|forbidden direct access| postgis
   map -.->|forbidden direct access| raw
   story -.->|forbidden direct access| search
