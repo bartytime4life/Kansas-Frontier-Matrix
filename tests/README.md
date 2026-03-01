@@ -2,11 +2,11 @@
 doc_id: kfm://doc/7f06c93b-7c88-4f2b-bba2-4f3d935d3f89
 title: tests — Test Strategy, QA, and CI Gates
 type: standard
-version: v2
+version: v3
 status: draft
 owners: TODO
 created: 2026-02-26
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: restricted
 related:
   - docs/MASTER_GUIDE_v13.md
@@ -24,7 +24,7 @@ notes:
 
 **Purpose:** Make governance enforceable. Tests are not “nice to have”; they are the mechanism that keeps the **trust membrane** intact and prevents unsafe or untraceable outputs from shipping.
 
-**Status:** DRAFT • **Owners:** `TODO` • **Last updated:** `2026-02-28` • **Policy label:** `restricted`
+**Status:** DRAFT • **Owners:** `TODO` • **Last updated:** `2026-03-01` • **Policy label:** `restricted`
 
 ![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
 ![Coverage](https://img.shields.io/badge/coverage-TODO-lightgrey)
@@ -32,17 +32,24 @@ notes:
 ![Catalog](https://img.shields.io/badge/catalog-DCAT%20%7C%20STAC%20%7C%20PROV-informational)
 ![Evidence](https://img.shields.io/badge/evidence-resolvable%20citations-success)
 ![A11y](https://img.shields.io/badge/a11y-smoke%20checks-informational)
-![SBOM](https://img.shields.io/badge/SBOM-TODO-lightgrey)
-![Attestations](https://img.shields.io/badge/attestations-TODO-lightgrey)
+![SBOM](https://img.shields.io/badge/SBOM-optional-lightgrey)
+![Attestations](https://img.shields.io/badge/attestations-optional-lightgrey)
 
 > [!WARNING]
 > This directory is part of the **trust membrane**. If a test is flaky, non-deterministic, or bypassable, it is a governance risk.
+
+> [!NOTE]
+> **Truth discipline (read this first):**
+> - **Confirmed (design intent):** KFM governance invariants, Promotion Contract language, and minimum CI gate posture are defined in the KFM vNext Governance Guide and must be treated as non-negotiable design intent.
+> - **Repo-specific (Unknown until verified):** exact job names, runner commands, suite locations, and folder layout must match *this repo’s* implementation.
+> - **Proposed:** where the repo lacks an enforcement mechanism, this README proposes a safe default that is small, testable, and reversible.
 
 ---
 
 ## Quick navigation
 
 - [Repo reality check](#repo-reality-check)
+- [Where this fits in the repo](#where-this-fits-in-the-repo)
 - [Purpose and scope](#purpose-and-scope)
 - [Non-negotiable invariants enforced by tests](#non-negotiable-invariants-enforced-by-tests)
 - [Test categories](#test-categories)
@@ -98,6 +105,24 @@ If CI does not run the gates described here, treat that as a **release blocker**
 
 ---
 
+## Where this fits in the repo
+
+**Design intent:** Keep the repo legible by separating “validation tools” from “tests that enforce validation.”
+
+Typical high-level placement (adapt to the actual repo):
+
+- `docs/` — architecture docs, runbooks, ADRs, templates
+- `tools/` — validators, link checkers, CLI utilities
+- `tests/` — unit/integration/e2e tests + fixtures
+- `configs/`, `scripts/`, `migrations/`, `examples/` — configuration, automation scripts, migrations, examples
+
+> [!IMPORTANT]
+> Do not claim a sub-package exists until verified in the live repo. Prefer “documented target modules + verification steps” over guessy path assertions.
+
+[Back to top](#top)
+
+---
+
 ## Purpose and scope
 
 This `tests/` directory holds automated tests that verify:
@@ -109,6 +134,8 @@ This `tests/` directory holds automated tests that verify:
 5. **Contract stability** (catalog schemas, API contracts, error models).
 6. **Safety** for sensitive locations and restricted data (no leakage; no restricted existence inference).
 7. **Provenance artifacts** (run receipts/manifests and—if enabled—supply-chain attestations) remain verifiable and policy-safe.
+
+**Alignment anchor:** KFM vNext Governance Guide §5.2 (Promotion Contract) + §19 (Testing/CI gates).
 
 ### What belongs here
 
@@ -139,7 +166,7 @@ KFM governance is only real if it is testable. These invariants must be backed b
 
 ### 1) Truth path lifecycle
 
-- Runtime-visible outputs must trace to: RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET.
+- Runtime-visible outputs must trace to: **Upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → governed API → UI**.
 - Tests must prevent “floating latest” from replacing versioned IDs in share links, Story Nodes, exports, and receipts.
 
 **Test expectations**
@@ -195,15 +222,22 @@ Public users must not learn restricted existence via error shape, timing, or mes
 - Contract tests enforce policy-safe error envelopes.
 - E2E tests verify indistinguishable behaviors for “not found” vs “not allowed” where required.
 
-### 8) Receipts, manifests, and attestations are verifiable (provenance-first)
+### 8) Receipts, manifests, attestations are verifiable (provenance-first)
 
-Every governed run emits a receipt (and optionally a promotion-oriented manifest). If attestations/SBOMs exist,
-they must be verifiable **server-side** and must never be fetched directly by the browser.
+Every governed run emits a receipt. If attestations/SBOMs exist, they must be verifiable **server-side** and must never be fetched directly by the browser.
 
 **Test expectations**
-- Receipt/manifest schema validation: required fields present; timestamps bounded; checks interpreted fail-closed.
+- Receipt schema validation: required fields present; checks interpreted fail-closed.
 - If signatures/attestations are enabled, verification tests pass in CI for fixtures (no network required for verification).
 - UI guardrail tests: the UI does not attempt to fetch attestation artifacts directly.
+
+### 9) Audit log protections (security is governance)
+
+Audit and CI logs must avoid leaking PII, secrets, or restricted operational details.
+
+**Test expectations**
+- Redaction tests: logs are safe by default (no secrets; no restricted coords/identifiers).
+- Retention/format invariants: append-only log shape is stable and parsable.
 
 [Back to top](#top)
 
@@ -583,22 +617,32 @@ Each fixture directory must include `FIXTURE_NOTES.md`:
 
 ## Promotion Contract v1 gate mapping
 
-Promotion to **PUBLISHED** is blocked unless the minimum gates are met. These gates are intentionally framed so they can be automated in CI and reviewed during steward sign‑off. (If a gate is not enforced, treat it as governance debt.)
-
-### Gate ↔ test suite ↔ CI check mapping (recommended)
-
-| Gate | Blocks promotion unless… | Primary test coverage | Suggested merge gate / lane (names are **recommended**) |
-|---|---|---|---|
-| A — Identity & versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, and content digests exist and match | `tests/unit/hashing` + `tests/schema/receipts` | `unit` + `schema_catalog` |
-| B — Licensing & rights metadata | License/rights fields are present + upstream terms snapshot exists | `tests/policy` + `tests/schema/*` | `policy` |
-| C — Sensitivity & redaction plan | `policy_label` exists; obligations apply; defaults fail‑closed | `tests/policy` + `tests/integration` + `tests/e2e` smoke | `policy` + `integration_evidence` |
-| D — Catalog triplet validation | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve | `tests/schema/triplet` + `tests/schema/linkcheck` | `schema_catalog` + `link_check` |
-| E — QA & thresholds | Dataset QA report exists and thresholds met, else quarantined | `tests/schema/receipts` + dataset QA suites | `schema_catalog` |
-| F — Run receipt & audit record | Receipt is emitted + schema-valid + policy logged; (optional) attestation verified | `tests/schema/receipts` + `tests/integration/test_audit_receipts.*` | `integration_evidence` |
-| G — Release manifest | Promotion recorded as a release manifest referencing digests | `tests/schema/receipts` | `release_manifest` (often required only for releases) |
+Promotion to **PUBLISHED** is blocked unless the minimum gates are met. These gates are intentionally framed so they can be automated in CI and reviewed during steward sign‑off.
 
 > [!IMPORTANT]
-> The exact job names and enforcement points must match `.github/workflows/`. If your workflow uses different names, update this table so “documentation == enforcement.”
+> “Documentation == enforcement.” The exact job names and enforcement points must match `.github/workflows/`.
+> If your workflow uses different names, update this table so the mapping is 1:1.
+
+### Gate ↔ test suite ↔ CI check mapping (aligned to vNext guide)
+
+| Gate | Blocks promotion unless… | Primary test coverage | Suggested merge gate / lane (names are recommended) |
+|---|---|---|---|
+| A — Identity & versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, and content digests exist and match | `tests/unit/hashing` + `tests/schema/receipts` | `unit` + `schema_catalog` |
+| B — Licensing & rights metadata | License/rights fields are present; upstream terms snapshot exists; unclear license ⇒ fail closed (quarantine) | `tests/policy` + `tests/schema/dcat` | `policy` |
+| C — Sensitivity classification & redaction plan | `policy_label` exists; obligations apply; defaults fail‑closed | `tests/policy` + `tests/integration` + `tests/e2e` smoke | `policy` + `integration_evidence` |
+| D — Catalog triplet validation | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve without guessing | `tests/schema/triplet` + `tests/schema/linkcheck` | `schema_catalog` + `link_check` |
+| E — Run receipt & checksums | `run_receipt` exists; inputs/outputs enumerated with checksums; environment recorded | `tests/schema/receipts` + `tests/integration/test_audit_receipts.*` | `schema_catalog` + `integration_evidence` |
+| F — Policy tests & contract tests | OPA fixtures pass; evidence resolver resolves sample refs in CI; API/DTO/error contracts validate | `tests/policy` + `tests/contract` + `tests/integration/test_evidence_resolution.*` | `policy` + `contract_api` + `integration_evidence` |
+| G — Optional but recommended (production posture) | SBOM + build provenance; performance smoke checks; accessibility smoke checks | `tests/security` + perf/a11y suites | `security_scan` + `sbom_attest` + `a11y_smoke` |
+
+### QA & thresholds (required WORK/QUARANTINE exit condition)
+
+Quality checks and thresholds are still required to move a dataset out of WORK/QUARANTINE and into PROCESSED. Some docs treat this as an explicit Promotion Contract gate; others treat it as WORK/QUARANTINE invariants that block promotion when unmet. Either way: make it merge/promotion blocking for dataset integrations.
+
+Suggested placement:
+- dataset-specific suites under `tests/schema/` or `tests/integration/`
+- fixtures under `tests/fixtures/`
+- results recorded in receipts/manifests
 
 ### CI enforcement flow (conceptual)
 
@@ -630,9 +674,9 @@ flowchart TD
   Promote --> GateB[Gate B rights]
   Promote --> GateC[Gate C sensitivity]
   Promote --> GateD[Gate D triplet]
-  Promote --> GateE[Gate E QA]
-  Promote --> GateF[Gate F receipt]
-  Promote --> GateG[Gate G release]
+  Promote --> GateE[Gate E receipts + checksums]
+  Promote --> GateF[Gate F policy + contracts]
+  Promote --> GateG[Gate G optional production posture]
 
   GateA --> Publish[Publish surfaces]
   GateB --> Publish
@@ -651,22 +695,24 @@ flowchart TD
 
 CI gates make this README real. If a gate isn’t enforced in CI, it’s not governance.
 
-### Required merge gates (baseline)
+### Minimum merge gates (design intent; adjust names to match repo)
 
-- Formatting + lint + typecheck
-- Unit tests
-- Schema/profile validation (DCAT/STAC/PROV + receipts/manifests)
-- Policy tests (fixtures-driven; default deny)
-- Contract tests (API/DTO/error envelope)
-- Integration tests (evidence resolution; no policy bypass)
-- Link checks (citations/evidence refs resolve deterministically)
-- Secret scanning + dependency security scanning
-- Story Node template/schema validation **and** publish-gate checks (citations resolvable)
+- lint + typecheck (frontend + backend)
+- spec_hash / deterministic ID drift tests
+- schema validation for changed catalog artifacts (DCAT/STAC/PROV) and receipts
+- Story Node template/schema validation and publish-gate checks (citations resolvable)
+- policy tests (fixtures-driven; default deny)
+- link checker (no broken citations / EvidenceRefs)
+- contract tests (API/DTO/error envelope)
+- evidence integration tests (resolver resolves sample refs; no policy bypass)
+- security scanning (dependency vulnerabilities); optional SBOM generation
+- accessibility smoke checks for UI changes (at least evidence drawer keyboard nav)
 - Focus Mode evaluation harness (golden queries) **if Focus exists in the repo**
-- E2E UI smoke tests + accessibility smoke checks (for UI changes)
-- (If enabled) SBOM + attestation verification gates
+- E2E UI smoke tests (for UI changes)
 
 ### Recommended job naming (CI)
+
+These are **recommended** names for clarity; rename to match your workflows.
 
 - `lint_typecheck`
 - `unit`
@@ -686,12 +732,12 @@ CI gates make this README real. If a gate isn’t enforced in CI, it’s not gov
 
 | Change touches… | Must run… | Why |
 |---|---|---|
-| `policy/` or `configs/policy/` | policy + integration_evidence | policy parity + prevent leakage |
-| `contracts/` or `schemas/` | schema_catalog + contract_api | prevent contract drift |
-| `data/catalog/` | schema_catalog + link_check | triplet must validate + cross-link |
-| `apps/` UI | e2e_ui_smoke + a11y_smoke + integration_evidence | trust surfaces must work |
-| `scripts/` pipelines | unit + schema_catalog + integration_evidence | receipts + catalogs must remain valid |
-| `infra/` | (infra-specific checks) + security_scan | runtime safety and least privilege |
+| `policy/` or `configs/policy/` | `policy` + `integration_evidence` | policy parity + prevent leakage |
+| `contracts/` or `schemas/` | `schema_catalog` + `contract_api` | prevent contract drift |
+| `data/catalog/` | `schema_catalog` + `link_check` | triplet must validate + cross-link |
+| UI app code | `e2e_ui_smoke` + `a11y_smoke` + `integration_evidence` | trust surfaces must work |
+| pipeline scripts | `unit` + `schema_catalog` + `integration_evidence` | receipts + catalogs must remain valid |
+| infra | infra-specific checks + `security_scan` | runtime safety and least privilege |
 
 > [!NOTE]
 > If the repo uses a merge queue/protected branches, ensure these jobs are **required**.
@@ -726,7 +772,7 @@ Track governance and reliability metrics so drift is visible (without incentiviz
 A release is “done” only when:
 
 - All merge gates pass on the release branch/tag.
-- Promotion gates pass for any new dataset versions (manifests + receipts + catalogs).
+- Promotion gates pass for any new dataset versions (receipts + catalogs + policy checks).
 - Evidence resolver contract tests pass for:
   - allowed scenarios (100% resolvable citations)
   - denied scenarios (policy-safe denial; no inference)
