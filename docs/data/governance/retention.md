@@ -154,20 +154,26 @@ Obligations must be **machine-readable** (policy engine output) and **auditable*
 ## Redaction workflow
 
 ```mermaid
-flowchart TD
-  U[Upstream source] --> R[RAW zone<br>immutable snapshot]
-  R --> W[WORK zone<br>normalize + validate]
-  W -->|restricted outputs| PR[PROCESSED (restricted)]
-  W -->|generalization transform| PG[PROCESSED (public_generalized)]
-  PR --> C1[CATALOG<br>DCAT/STAC/PROV]
-  PG --> C2[CATALOG<br>DCAT/STAC/PROV]
-  C1 --> P1[PUBLISHED (restricted surfaces)]
-  C2 --> P2[PUBLISHED (public surfaces)]
+graph TD
+  U["Upstream source"] --> R["RAW zone - immutable snapshot"]
+  R --> W["WORK zone - normalize + validate"]
 
-  subgraph TrustMembrane[Trust membrane enforcement]
-    API[Governed API / PEP]
-    EV[Evidence Resolver]
-    TILES[Tile serving]
+  W --> RO["restricted outputs"]
+  RO --> PR["PROCESSED - restricted"]
+
+  W --> GT["generalization transform"]
+  GT --> PG["PROCESSED - public generalized"]
+
+  PR --> C1["CATALOG - DCAT STAC PROV"]
+  PG --> C2["CATALOG - DCAT STAC PROV"]
+
+  C1 --> P1["PUBLISHED - restricted surfaces"]
+  C2 --> P2["PUBLISHED - public surfaces"]
+
+  subgraph TME["Trust membrane enforcement"]
+    API["Governed API - PEP"]
+    EV["Evidence resolver"]
+    TILES["Tile serving"]
   end
 
   P1 --> API
