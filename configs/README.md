@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: TBD (set via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: restricted
 related:
   - ../README.md
@@ -22,7 +22,7 @@ notes:
   - Policy-bearing configuration MUST be reviewed, tested, and promotion-gated.
   - This README is fail-closed: repo-specific wiring is UNKNOWN until validated in CI and confirmed via tree/paths.
   - Prefer machine-readable registries + schema validation over tribal knowledge.
-  - Alignment: Promotion Contract gate labels follow KFM vNext governance snapshots; implementations may add extra QA steps, but must not weaken fail-closed behavior.
+  - Alignment: Promotion Contract v1 gate labels (A–F required, G optional-but-recommended) follow KFM governance snapshots (GDG vNext). Implementations may add extra QA checks, but must not weaken fail-closed behavior.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -38,14 +38,14 @@ notes:
 ![policy](https://img.shields.io/badge/policy-restricted-red)
 ![governance](https://img.shields.io/badge/governance-fail--closed-blue)
 ![contracts](https://img.shields.io/badge/contracts-contract--first-blue)
-![promotion](https://img.shields.io/badge/promotion%20contract-gates%20A--F%20required-critical)
-![release](https://img.shields.io/badge/release%20manifest-gate%20G%20recommended-blue)
+![promotion](https://img.shields.io/badge/promotion%20contract-v1%20gates%20A--F%20required-critical)
+![gate-g](https://img.shields.io/badge/gate%20G-production%20posture%20recommended-blue)
 ![audit](https://img.shields.io/badge/audit-reproducible%20by%20digest-blue)
 ![anti-skip](https://img.shields.io/badge/CI-anti--skip%20required-important)
 
 > [!WARNING]
 > `configs/` is **behavioral surface area**.
-> If a config change can alter **allow/deny**, **obligations**, **rights**, **sensitivity**, **promotion gates**, or **contract validation**, it is governance-critical and MUST be validated + reviewed as production configuration.
+> If a config change can alter **allow/deny**, **obligations**, **rights**, **sensitivity**, **promotion gates**, **evidence resolution**, or **contract validation**, it is governance-critical and MUST be validated + reviewed as production configuration.
 
 ---
 
@@ -54,6 +54,7 @@ notes:
 - [Directory contract](#directory-contract)
 - [Where this fits in the repo](#where-this-fits-in-the-repo)
 - [Truth status legend](#truth-status-legend)
+- [Alignment anchors](#alignment-anchors)
 - [Quick start](#quick-start)
 - [Repo reality check](#repo-reality-check)
 - [Scope](#scope)
@@ -68,6 +69,7 @@ notes:
 - [Change management](#change-management)
 - [Definition of Done](#definition-of-done)
 - [Appendix](#appendix)
+- [Source references](#source-references)
 
 ---
 
@@ -79,7 +81,7 @@ notes:
 | Acceptable inputs | Small, reviewable, machine-validated config files (YAML/JSON/TOML/etc.) that drive policy, contracts, promotion gates, pipeline wiring, UI wiring, observability, deployment config **templates** |
 | Exclusions | **Secrets**, private keys, raw restricted coordinates, PII, large datasets, opaque binaries, ad-hoc scripts without tests |
 | Review posture | **Fail closed** for governance-critical changes; steward/owner review required |
-| Promotion posture | Config changes that affect publishability, access, or identity MUST be promotion-gated and auditable |
+| Promotion posture | Config changes that affect publishability, access, identity, evidence resolution, or citation verification MUST be promotion-gated and auditable |
 | Audit posture | Resolved config set SHOULD be captured (by digest) in run receipts and/or deployment receipts |
 
 > [!NOTE]
@@ -94,11 +96,11 @@ notes:
 **Keep boundaries clean (fail closed):**
 - **`contracts/`**: definitions of schemas and API contracts (OpenAPI, JSON Schema, controlled vocabs).
 - **`policy/`**: policy engine code + fixtures/tests (allow/deny + obligations).
-- **`data/`**: dataset registry, dataset specs, truth-path artifacts (raw/work/processed/catalogs), and promotion receipts.
+- **`data/`**: dataset registry, dataset specs, truth-path artifacts (raw/work/processed/catalogs), and promotion receipts/manifests.
 - **`configs/`**: non-secret, reviewable configuration that *selects* contract/policy versions, defines gate thresholds, and wires runtime defaults.
 
 > [!IMPORTANT]
-> If a rule changes **enforcement**, it belongs in `policy/` (and must have fixtures).
+> If a rule changes **enforcement semantics**, it belongs in `policy/` (and must have fixtures).
 > If a rule changes **shape/compatibility**, it belongs in `contracts/` (and must be versioned).
 > If a file changes **wiring/thresholds/defaults**, it may belong in `configs/` — but MUST be validated and ownership-routed.
 
@@ -114,6 +116,19 @@ This README intentionally includes **PROPOSED** structure to support bootstrappi
 
 ---
 
+## Alignment anchors
+
+These anchors are the “don’t drift” constraints that `configs/` must support:
+
+- **Promotion Contract v1 gate labels:** A–F required; G optional-but-recommended. (See: KFM governance snapshots / GDG vNext.)
+- **Policy-as-code parity:** CI and runtime must share the same semantics (or at least the same fixtures+outcomes).
+- **Evidence resolver contract:** EvidenceRefs must resolve without guessing; policy must be applied; result must be usable in a bounded call budget from UI (and must not leak restricted existence).
+
+> [!NOTE]
+> `configs/` is where “alignment drift” usually sneaks in: different envs, different validators, different policy semantics. Treat drift as a release blocker.
+
+---
+
 ## Quick start
 
 1. Identify which **contract surface** your change touches:
@@ -122,10 +137,11 @@ This README intentionally includes **PROPOSED** structure to support bootstrappi
    - promotion gates / thresholds
    - runtime wiring (flags, caching, indexing)
    - UI wiring (layer registries, view-state schema versions)
+   - evidence resolution / citation verification knobs
 2. Make the smallest change that is **testable** and **reversible**.
 3. Add or update **fixtures/tests** that prove the new behavior.
 4. Ensure validation passes locally and in CI.
-5. If the change alters **allow/deny**, **obligations**, **rights enforcement**, **sensitivity behavior**, or **promotion gates**, route for **steward review** and fail closed until approved.
+5. If the change alters **allow/deny**, **obligations**, **rights enforcement**, **sensitivity behavior**, **evidence resolver behavior**, **citation verification**, or **promotion gates**, route for **steward review** and fail closed until approved.
 
 > [!TIP]
 > Treat every config change as a behavior change. If you can’t explain how decisions change, you likely can’t validate it.
@@ -140,6 +156,7 @@ This README describes a **target posture**. Before treating any statement here a
 - [ ] CI checks validate configs (schemas + policy parity + linkcheck + secret scanning)
 - [ ] a deterministic config resolver that **fails on conflicts** (no silent precedence)
 - [ ] runtime components apply the **same policy semantics** as CI (parity)
+- [ ] story publish + Focus Mode workflows enforce **resolvable citations** (no “trust me” links)
 
 Minimum verification steps (copy/paste):
 
@@ -158,14 +175,14 @@ ls -la .github/CODEOWNERS 2>/dev/null || ls -la CODEOWNERS 2>/dev/null
 ls -la .github/workflows 2>/dev/null || true
 
 # 4) Search for config resolver / loader
-rg -n "config resolver|loadConfig|resolveConfig|CONFIG_" -S . || true
+rg -n "config resolver|loadConfig|resolveConfig|CONFIG_|feature_flag|policy_label" -S . || true
 
-# 5) Find promotion-gate checks (naming varies; verify A–F and any release manifest logic)
-rg -n "promotion|gate|spec_hash|policy parity|linkcheck|receipt|evidence resolver" .github/workflows -S || true
+# 5) Find promotion-gate checks (verify gate labels + mapping to checks)
+rg -n "Promotion Contract|gate_[a-g]|Gate [A-G]|spec_hash|policy parity|linkcheck|receipt|manifest|evidence resolve|citation" .github/workflows -S || true
 ```
 
 > [!IMPORTANT]
-> If validation, ownership routing, or deterministic resolution is missing, treat `configs/` as **unsafe** until those controls exist.
+> If validation, ownership routing, deterministic resolution, or citation-resolvability gates are missing, treat `configs/` as **unsafe** until those controls exist.
 
 ---
 
@@ -189,7 +206,7 @@ Common categories:
   - controlled vocabulary selection and enforcement switches
 
 - **Promotion Contract wiring**
-  - gate definitions, thresholds, required artifacts, failure modes
+  - gate definitions, required artifacts, failure modes
   - “what must be true to promote” per dataset class and per policy label
 
 - **Runtime wiring** (non-secret defaults)
@@ -202,9 +219,11 @@ Common categories:
 - **Pipeline wiring** (non-secret)
   - schedules, dataset class defaults, allowed transforms
   - resource classes and safe defaults (timeouts, retries)
+  - QA threshold defaults (where the pipeline/spec expects them)
 
 - **UI wiring** (non-secret)
   - layer registry defaults, UI policy badge rules, view-state schema versions
+  - citation scheme allowlists (display-only; enforcement is server-side)
   - *NOTE:* UI must never become the enforcement point; it renders what the governed API returns.
 
 - **Observability wiring**
@@ -232,25 +251,33 @@ Configuration exists to make KFM’s posture enforceable:
 ### Trust membrane (CONFIRMED design)
 - Apps/clients MUST NOT access DB/object storage directly.
 - Enforcement MUST happen behind governed APIs (policy + evidence + audit).
-- Config MUST NOT enable bypass routes.
+- Config MUST NOT enable bypass routes (including caching or error behaviors that leak restricted existence).
 
 ### Policy-as-code parity (CONFIRMED design)
 - Policy semantics MUST match between CI and runtime (fixture outcomes match).
 - If CI and runtime disagree, CI guarantees are meaningless → release blocker.
 
-### Promotion Contract gates (A–F required, G recommended) (CONFIRMED design)
+### Evidence resolution contract surface (CONFIRMED design)
+- Evidence resolution MUST be deterministic and policy-aware.
+- EvidenceRefs MUST resolve without guessing (catalog cross-links + resolvers must be strict).
+- The resolver MUST return allow/deny + obligations, and only include artifact links if allowed.
+- The resolver MUST be usable from UI in a bounded number of calls (avoid chatty UI→API loops).
+
+### Promotion Contract v1 gates (A–F required; G optional-but-recommended) (CONFIRMED design)
+
 Config must support deterministic, fail-closed promotion gates:
 
-- **Gate A — Identity & versioning:** deterministic dataset/version identity inputs and drift detection
-- **Gate B — Licensing & rights metadata:** license/attribution completeness + export posture consistency
-- **Gate C — Sensitivity classification & redaction plan:** policy labels + obligations/generalization requirements
-- **Gate D — Catalog triplet validation:** DCAT/STAC/PROV schema validation + required cross-links
-- **Gate E — Run receipts & checksums:** required receipt fields + input/output digests (and links to validation reports)
-- **Gate F — Policy tests & contract tests:** policy parity fixtures + evidence resolver + API/schema contract validation
-- **Gate G — Release manifest (optional but recommended):** immutable manifest pinning what is served/deployed
+- **Gate A — Identity & versioning:** dataset_id + dataset_version_id; deterministic spec_hash inputs; content digests; drift detection
+- **Gate B — Licensing & rights metadata:** license/rights completeness + upstream terms snapshot + export posture consistency
+- **Gate C — Sensitivity classification & redaction plan:** policy_label + obligations; default-deny preserved; generalized derivative strategy where required
+- **Gate D — Catalog triplet validation:** DCAT/STAC/PROV schema validation + required cross-links + EvidenceRefs resolve without guessing
+- **Gate E — Run receipt and checksums:** run receipt exists, is schema-valid, contains checksums/digests, and references validation outputs; failures block promotion
+- **Gate F — Policy tests and contract tests:** policy fixtures (allow/deny/obligations) pass; schema/profile contract tests pass; evidence resolver contract tests pass
+- **Gate G — Production posture (optional but recommended):** promotion manifest/release record, supply-chain attestations (SBOM/provenance), plus smoke checks (perf/accessibility) as required by environment policy
 
 > [!NOTE]
-> Some implementations treat “QA & thresholds” as a distinct step; regardless of labeling, QA outcomes must be versioned, referenced, and fail-closed when thresholds are not met.
+> Many implementations treat “QA & thresholds” as a distinct lane/check (often stored in WORK/Quarantine).
+> Regardless of labeling: QA outcomes MUST be versioned, referenced by receipts/manifests, and fail-closed when thresholds are not met.
 
 ### Evidence-first + cite-or-abstain (CONFIRMED design)
 - Any surfaced layer/story/answer MUST map back to resolvable evidence bundles and policy decisions.
@@ -276,216 +303,94 @@ configs/
 │  ├─ README.md                                  # Registry contract: what MUST be listed + how CI validates it
 │  ├─ configs.v1.json                            # Canonical registry (entries for every governed config area/file)
 │  ├─ schemas/                                   # Schemas for registries + config shapes (or pointers to contracts/)
-│  │  ├─ kfm.config_registry.v1.schema.json      # Validates configs.v1.json (paths, owners, validators, class)
-│  │  ├─ kfm.policy_labels.v1.schema.json        # Validates policy label documents
-│  │  ├─ kfm.obligations_catalog.v1.schema.json  # Validates obligations catalog documents
-│  │  ├─ kfm.promotion_gates.v1.schema.json      # Validates gate definition documents
-│  │  ├─ kfm.linkcheck_rules.v1.schema.json      # Validates linkcheck rule documents
-│  │  ├─ kfm.feature_flags.v1.schema.json        # Validates runtime feature flag docs
-│  │  ├─ kfm.rate_limits.v1.schema.json          # Validates rate limit configs
-│  │  ├─ kfm.ui_layer_registry.v1.schema.json    # Validates UI layer registry configs
-│  │  ├─ kfm.view_state_schema.v1.schema.json    # Validates view_state schema + migrations metadata
-│  │  └─ kfm.redaction_rules.v1.schema.json      # Validates observability redaction rules
+│  │  ├─ kfm.config_registry.v1.schema.json
+│  │  ├─ kfm.policy_labels.v1.schema.json
+│  │  ├─ kfm.obligations_catalog.v1.schema.json
+│  │  ├─ kfm.promotion_gates.v1.schema.json
+│  │  ├─ kfm.linkcheck_rules.v1.schema.json
+│  │  ├─ kfm.feature_flags.v1.schema.json
+│  │  ├─ kfm.rate_limits.v1.schema.json
+│  │  ├─ kfm.ui_layer_registry.v1.schema.json
+│  │  ├─ kfm.view_state_schema.v1.schema.json
+│  │  └─ kfm.redaction_rules.v1.schema.json
 │  ├─ fixtures/                                  # Fixtures for CI validation (valid/invalid; deterministic)
 │  │  ├─ valid/
-│  │  │  ├─ configs.v1.valid.min.json
-│  │  │  ├─ policy.labels.v1.valid.yaml
-│  │  │  ├─ policy.obligations.v1.valid.yaml
-│  │  │  ├─ promotion.gates.v1.valid.yaml
-│  │  │  └─ ui.layers.v1.valid.yaml
 │  │  ├─ invalid/
-│  │  │  ├─ configs.v1.invalid.missing_owner.json
-│  │  │  ├─ configs.v1.invalid.bad_path.json
-│  │  │  ├─ policy.labels.v1.invalid.unknown_label.yaml
-│  │  │  ├─ promotion.gates.v1.invalid.missing_gate.yaml
-│  │  │  └─ ui.layers.v1.invalid.missing_dataset_version.yaml
-│  │  └─ README.md                               # How fixtures are used (what each one is asserting)
+│  │  └─ README.md
 │  └─ _generated/                                # OPTIONAL: generated indexes used by CI/tools (policy decides commit vs ignore)
-│     ├─ configs.index.v1.json                    # Flattened index (resolved paths + digests)
-│     └─ checksums.v1.json                        # Digest list for configs artifacts (audit-friendly)
+│     ├─ configs.index.v1.json
+│     └─ checksums.v1.json
 │
 ├─ policy/                                       # Policy-bearing configuration (NOT secrets; NOT policy engine code)
-│  ├─ README.md                                  # Policy inputs contract: labels + obligations + rubrics + fixtures
-│  ├─ labels/                                    # Policy labels + semantics + display hints
-│  │  ├─ README.md
-│  │  ├─ labels.v1.yaml                          # Canonical label definitions (public/restricted/etc)
-│  │  ├─ labels.display.v1.yaml                  # UI display hints (policy-safe names, colors as tokens, tooltips)
-│  │  ├─ labels.export_rules.v1.yaml             # Export posture per label (allowed/denied + obligations)
-│  │  └─ labels.compat.v1.yaml                   # Compatibility/migration notes (v1→v2 mapping when needed)
-│  ├─ obligations/                               # Obligation catalog (generalize, suppress export, show notice, etc.)
-│  │  ├─ README.md
-│  │  ├─ obligations.v1.yaml                     # Obligation definitions (kind, params, default UX messaging)
-│  │  ├─ obligations.transforms.v1.yaml          # Transform obligations (generalize, jitter, aggregate, redact fields)
-│  │  ├─ obligations.notices.v1.yaml             # Notice obligations (required banners, attribution, disclaimers)
-│  │  ├─ obligations.exports.v1.yaml             # Export obligations (watermark, suppress, attribution bundle)
-│  │  └─ obligations.compat.v1.yaml              # Version mapping for obligations (if you evolve them)
-│  ├─ rubrics/                                   # Licensing + sensitivity rubrics (machine-readable + human-readable)
-│  │  ├─ README.md
-│  │  ├─ licensing_rubric.v1.md                  # Human rubric (what counts as “clear rights”, “metadata-only”, etc.)
-│  │  ├─ licensing_rubric.v1.yaml                # Machine rubric (flags, required fields, block conditions)
-│  │  ├─ sensitivity_rubric.v1.md                # Human rubric (sensitive location, PII risk, aggregation thresholds)
-│  │  ├─ sensitivity_rubric.v1.yaml              # Machine rubric (labels, default obligations, deny rules)
-│  │  ├─ pii_risk_rubric.v1.md                   # Human rubric for reidentification risk + minimum counts
-│  │  └─ pii_risk_rubric.v1.yaml                 # Machine thresholds + rules (if applicable)
+│  ├─ README.md
+│  ├─ labels/
+│  ├─ obligations/
+│  ├─ rubrics/
 │  └─ fixtures/                                  # Policy parity fixtures (synthetic allow/deny/obligation expectations)
-│     ├─ README.md                               # Fixture rules: deterministic, synthetic, no sensitive coords
-│     ├─ inputs/
-│     │  ├─ fixture_inputs.v1.json               # Structured inputs: user roles, resource labels, action types
-│     │  ├─ resource_samples.v1.json             # Sample resources (datasets/stories/evidence) policy-labeled
-│     │  └─ obligations_samples.v1.json          # Sample obligation requests
-│     ├─ expected/
-│     │  ├─ fixture_expected.v1.json             # Expected allow/deny + obligations results
-│     │  ├─ fixture_expected.public.v1.json
-│     │  ├─ fixture_expected.restricted.v1.json
-│     │  └─ fixture_expected.sensitive_location.v1.json
-│     └─ golden/
-│        └─ parity_golden.v1.json                # Golden outputs for parity tests (CI vs runtime)
 │
 ├─ contracts/                                    # Contract wiring (version selection + validator knobs)
-│  ├─ README.md                                  # “Wiring not definitions”: selects/targets contract versions
-│  ├─ profiles/                                  # Which DCAT/STAC/PROV profiles are active per env/class
-│  │  ├─ README.md
-│  │  ├─ dcat.profile_set.v1.yaml                # Active DCAT profile set + required fields per dataset class
-│  │  ├─ stac.profile_set.v1.yaml                # Active STAC profile set + required assets/fields
-│  │  ├─ prov.profile_set.v1.yaml                # Active PROV profile set + required lineage/agents
-│  │  ├─ profiles.by_class.v1.yaml               # Map: dataset_class → profile set (vector/raster/docs)
-│  │  └─ profiles.by_env.v1.yaml                 # Map: env → profile overrides (dev/stage/prod), non-secret
-│  ├─ vocab/                                     # Controlled vocab selection and validation toggles
-│  │  ├─ README.md
-│  │  ├─ vocab.sources.v1.yaml                   # Allowed source domains/authority list (for registry hygiene)
-│  │  ├─ vocab.themes.v1.yaml                    # Themes/tags vocabulary (DCAT theme, story tags)
-│  │  ├─ vocab.policy_labels.v1.yaml             # Mirror/lock policy labels as vocab (optional)
-│  │  ├─ vocab.artifact_types.v1.yaml            # Artifact type vocab (geoparquet, pmtiles, cog, pdf, jsonl…)
-│  │  └─ vocab.compat.v1.yaml                    # Vocab migrations when terms change
-│  └─ linkcheck/                                 # Cross-link/lint rules (EvidenceRef resolvability expectations)
-│     ├─ README.md
-│     ├─ evidence_ref_schemes.v1.yaml            # Allowed schemes: dcat:// stac:// prov:// doc:// graph:// url://
-│     ├─ evidence_ref_resolution.v1.yaml         # Resolver expectations: required fields per scheme, fail-closed rules
-│     ├─ catalog_crosslinks.v1.yaml              # DCAT↔STAC↔PROV link rules + required rels
-│     ├─ artifact_digest_rules.v1.yaml           # “Every artifact referenced MUST have digest” rules
-│     ├─ url_allowlist.v1.yaml                   # If url:// allowed at all, constrain domains / snapshot rules
-│     └─ lint_rules.v1.yaml                      # General lint rules (no quarantine links, no missing license, etc.)
+│  ├─ README.md
+│  ├─ profiles/
+│  ├─ vocab/
+│  └─ linkcheck/
 │
 ├─ promotion/                                    # Promotion Contract wiring
-│  ├─ README.md                                  # Gate taxonomy + how CI maps A–F (+G) to checks
-│  ├─ gates/                                     # Gate definitions + thresholds + required artifacts
+│  ├─ README.md
+│  ├─ gates/                                     # Gate definitions + required artifacts + failure codes
 │  │  ├─ README.md
-│  │  ├─ gates.v1.yaml                           # Canonical gate set (A–F) + required checks + failure codes (+G optional)
-│  │  ├─ gate_a_identity.v1.yaml                 # Spec-hash inputs/expectations + drift guardrails
-│  │  ├─ gate_b_rights.v1.yaml                   # Rights fields required; metadata-only allowance rules
-│  │  ├─ gate_c_sensitivity.v1.yaml              # Label requirements + public_generalized derivative rules
-│  │  ├─ gate_d_catalogs.v1.yaml                 # Triplet requirements + profile selection hooks + linkcheck rules
-│  │  ├─ gate_e_receipts.v1.yaml                 # Receipt fields required + checksum requirements
-│  │  ├─ gate_f_policy_contracts.v1.yaml         # Policy parity + schema/contract validation requirements
-│  │  ├─ gate_g_release_manifest.v1.yaml         # OPTIONAL: release manifest schema + deployment rules
-│  │  └─ gate_codes.v1.yaml                      # Canonical failure codes + policy-safe messages
+│  │  ├─ gates.v1.yaml                           # Canonical gate set (A–F) + required checks (+ optional G)
+│  │  ├─ gate_a_identity.v1.yaml
+│  │  ├─ gate_b_rights.v1.yaml
+│  │  ├─ gate_c_sensitivity.v1.yaml
+│  │  ├─ gate_d_catalogs.v1.yaml
+│  │  ├─ gate_e_receipts_checksums.v1.yaml
+│  │  ├─ gate_f_policy_contract_tests.v1.yaml
+│  │  ├─ gate_g_production_posture.v1.yaml       # OPTIONAL: promotion manifest + attestations + smoke checks
+│  │  └─ gate_codes.v1.yaml
 │  ├─ templates/                                 # Manifest/receipt templates (if not stored elsewhere)
 │  │  ├─ README.md
-│  │  ├─ promotion_manifest.v1.json              # Template for Promotion Manifest (fields + structure)
+│  │  ├─ promotion_manifest.v1.json              # OPTIONAL: release record referencing artifacts+digests+approvals
 │  │  ├─ run_receipt.v1.json                     # Template for Run Receipt (pipeline/index/story/focus)
+│  │  ├─ run_manifest.v1.json                    # OPTIONAL: promotion-focused rollup (if adopted)
 │  │  ├─ audit_entry.v1.json                     # Optional template for audit ledger entries
 │  │  ├─ qa_report.v1.json                       # Optional template for QA summary objects referenced by receipts
-│  │  ├─ story_publish_receipt.v1.json           # Optional specialized receipt for story publishing
-│  │  └─ release_manifest.v1.json                # OPTIONAL: release manifest template
-│  └─ classes/                                   # Dataset class defaults (raster/vector/docs) and required checks
+│  │  └─ story_publish_receipt.v1.json           # Optional specialized receipt for story publishing
+│  └─ classes/
 │     ├─ README.md
-│     ├─ classes.v1.yaml                         # Master map: class → defaults + artifact expectations
-│     ├─ vector.v1.yaml                          # Vector defaults (geoparquet + pmtiles, bbox rules, etc.)
-│     ├─ raster.v1.yaml                          # Raster defaults (cog + stac items, tiling strategy, etc.)
-│     ├─ documents.v1.yaml                       # Docs defaults (pdf/jsonl; OCR caution; citation policy)
-│     ├─ timeseries.v1.yaml                      # Time series defaults (station/county, bitemporal requirements)
-│     └─ sensitive_location.v1.yaml              # Special class defaults (deny public; generalized derivative required)
+│     ├─ classes.v1.yaml
+│     ├─ vector.v1.yaml
+│     ├─ raster.v1.yaml
+│     ├─ documents.v1.yaml
+│     ├─ timeseries.v1.yaml
+│     └─ sensitive_location.v1.yaml
 │
-├─ runtime/                                      # Runtime wiring (non-secret defaults)
+├─ runtime/
 │  ├─ README.md
 │  ├─ feature_flags/
-│  │  ├─ README.md
-│  │  ├─ flags.v1.yaml                           # Canonical feature flags + safe defaults
-│  │  ├─ flags.by_env.v1.yaml                    # Allowed env overrides (non-secret)
-│  │  └─ flags.compat.v1.yaml                    # Deprecated flags + migrations
 │  ├─ caching/
-│  │  ├─ README.md
-│  │  ├─ cache_policy.v1.yaml                    # TTLs, invalidation, vary-by-auth/policy label
-│  │  ├─ tile_cache_keys.v1.yaml                 # Tile cache keying rules (must include policy/auth context)
-│  │  ├─ http_cache_headers.v1.yaml              # Response header policy (Cache-Control/Vary)
-│  │  └─ cdn_rules.v1.yaml                       # Optional CDN constraints (no cross-role leakage)
 │  ├─ indexing/
-│  │  ├─ README.md
-│  │  ├─ postgis_projection.v1.yaml              # Projection build knobs (table naming, required columns)
-│  │  ├─ search_index.v1.yaml                    # Text search index knobs (fields allowed, analyzers)
-│  │  ├─ graph_index.v1.yaml                     # Graph projection knobs (edge types, redaction)
-│  │  ├─ vector_index.v1.yaml                    # Optional semantic index knobs (policy-filtered ingestion)
-│  │  └─ tiles_build.v1.yaml                     # Tile generation knobs (zoom ranges, generalization)
 │  └─ rate_limits/
-│     ├─ README.md
-│     ├─ public_api_limits.v1.yaml               # Public limits (policy-safe; deny does not reveal existence)
-│     ├─ authenticated_limits.v1.yaml            # Auth limits by role/tenant
-│     └─ burst_controls.v1.yaml                  # DoS protection knobs (non-secret)
 │
-├─ pipelines/                                    # Pipeline runner wiring (non-secret)
+├─ pipelines/
 │  ├─ README.md
 │  ├─ schedules/
-│  │  ├─ README.md
-│  │  ├─ schedules.v1.yaml                       # Master schedule config (cron refs by dataset class)
-│  │  ├─ tier0_anchors.v1.yaml                   # Tier 0 anchor schedules (safe defaults)
-│  │  ├─ tier1_enrichers.v1.yaml                 # Tier 1 schedules
-│  │  └─ on_demand_only.v1.yaml                  # Datasets that must not auto-run (rights/sensitivity)
 │  ├─ runners/
-│  │  ├─ README.md
-│  │  ├─ runner_defaults.v1.yaml                 # Default runner settings (timeouts/retries; non-secret)
-│  │  ├─ container_images.v1.yaml                # Allowed/pinned images (digests), tool versions
-│  │  ├─ resource_classes.v1.yaml                # CPU/mem/storage classes by job type
-│  │  └─ network_policies.v1.yaml                # Egress allowlist (no direct exfil; policy-safe)
 │  └─ dataset_defaults/
-│     ├─ README.md
-│     ├─ defaults.v1.yaml                        # Global defaults referenced by dataset specs
-│     ├─ vector_defaults.v1.yaml                 # CRS, geometry rules, tiling defaults
-│     ├─ raster_defaults.v1.yaml                 # COG/STAC defaults, nodata policies
-│     ├─ documents_defaults.v1.yaml              # OCR defaults, citation constraints
-│     └─ qa_thresholds.v1.yaml                   # Default QA thresholds by dataset class
 │
-├─ ui/                                           # UI wiring (non-secret)
+├─ ui/
 │  ├─ README.md
-│  ├─ layers/                                    # Layer registry defaults, layer groups, display metadata
-│  │  ├─ README.md
-│  │  ├─ layer_groups.v1.yaml                    # Groups: basemap, hazards, hydrology, demographics, etc.
-│  │  ├─ layers.v1.yaml                          # Layer definitions (id, title, dataset refs, render types)
-│  │  ├─ basemaps.v1.yaml                        # Basemap selection (sources are public; no keys)
-│  │  ├─ styling_tokens.v1.yaml                  # Style tokens (no secret URLs)
-│  │  └─ layer_filters.v1.yaml                   # UI filter definitions (display-only)
-│  ├─ view_state/                                # View-state schema versions + compatibility rules
-│  │  ├─ README.md
-│  │  ├─ view_state.schema.v1.json               # Canonical view_state schema (bbox, time, layers, filters)
-│  │  ├─ view_state.migrations.v1.yaml           # Migration rules (v1→v2) deterministic transforms
-│  │  ├─ share_links.v1.yaml                     # Share link policies (TTL, max size, redact sensitive params)
-│  │  └─ view_state.compat.v1.yaml               # Backward compatibility policy and sunset plan
-│  └─ policy_badges/                             # UI rendering rules for policy/validation badges (display-only)
-│     ├─ README.md
-│     ├─ badges.v1.yaml                          # Badge mapping (label → icon/text tokens)
-│     ├─ validation_badges.v1.yaml               # QA pass/degraded/fail display rules
-│     └─ notice_text.v1.yaml                     # Canonical policy-safe notice strings
+│  ├─ layers/
+│  ├─ view_state/
+│  └─ policy_badges/
 │
-├─ observability/                                # Observability wiring (policy-safe)
+├─ observability/
 │  ├─ README.md
 │  ├─ logging/
-│  │  ├─ README.md
-│  │  ├─ field_allowlist.v1.yaml                 # Allowed log fields (policy-safe)
-│  │  ├─ field_denylist.v1.yaml                  # Fields that must never be logged (tokens, coords, PII)
-│  │  ├─ sampling.v1.yaml                        # Sampling rules per component
-│  │  └─ retention_guidance.v1.md                # Human guidance (real retention handled by infra)
 │  ├─ metrics/
-│  │  ├─ README.md
-│  │  ├─ metrics_catalog.v1.yaml                 # Metric names + meaning + label constraints
-│  │  ├─ slo_targets.v1.yaml                     # SLOs (availability, latency, citation-resolve rate)
-│  │  └─ dashboards_map.v1.yaml                  # Maps metrics → dashboards (no URLs required)
 │  └─ redaction/
-│     ├─ README.md
-│     ├─ redaction_rules.v1.yaml                 # Redact patterns (tokens, emails, coords) defense-in-depth
-│     ├─ pii_patterns.v1.yaml                    # PII patterns (emails, phone, SSN-like) for scrubbers
-│     └─ coordinate_patterns.v1.yaml             # Coordinate/geometry field scrubbers for public logs
 │
-└─ env/                                          # Example overlays (NO secrets; keys only)
-   ├─ README.md                                  # Explains: examples only; secrets live elsewhere
+└─ env/
+   ├─ README.md                                  # Examples only; secrets live elsewhere
    ├─ dev.example.env
    ├─ staging.example.env
    └─ prod.example.env
@@ -513,7 +418,7 @@ Template:
 ```json
 {
   "kfm_config_registry_version": "v1",
-  "updated": "2026-02-28",
+  "updated": "2026-03-01",
   "entries": [
     {
       "id": "policy.labels",
@@ -522,7 +427,7 @@ Template:
       "behavior_class": "governance-critical",
       "validators": ["configs-lint", "policy-parity"],
       "owners": ["@kfm-governance"],
-      "notes": "Defines policy labels and semantics used by API + UI badges."
+      "notes": "Defines policy labels and semantics used by API + evidence resolver + UI badges."
     }
   ]
 }
@@ -538,8 +443,9 @@ Keep this table consistent with the machine registry if you adopt it.
 | Obligations | `policy/obligations/` | YAML/JSON | API + pipelines + exports | **Required** | Governance-critical |
 | Policy fixtures | `policy/fixtures/` | JSON | CI + runtime parity | **Required** | Governance-critical |
 | Profiles wiring | `contracts/profiles/` | YAML/JSON | catalog validators | **Required** | Contract-breaking (sometimes) |
-| Linkcheck rules | `contracts/linkcheck/` | YAML/JSON | CI linkcheck | **Required** | Contract-breaking (sometimes) |
-| Gate definitions | `promotion/gates/` | YAML/JSON | promotion step | **Required** | Governance-critical |
+| Linkcheck rules | `contracts/linkcheck/` | YAML/JSON | CI linkcheck + EvidenceRef resolver tests | **Required** | Contract-breaking (sometimes) |
+| Gate definitions | `promotion/gates/` | YAML/JSON | promotion lanes | **Required** | Governance-critical |
+| Receipts/manifests templates | `promotion/templates/` | JSON | promotion + audit tooling | **Required (schema)** | Governance-critical |
 | Feature flags | `runtime/feature_flags/` | YAML/JSON | API + UI | **Required (lint)** | Runtime behavior |
 | UI layers | `ui/layers/` | YAML/JSON | UI + API (display metadata) | **Required (lint)** | UX behavior |
 | Env examples | `env/*.example.env` | dotenv | local dev | **Required (secret scan)** | Docs-only |
@@ -549,7 +455,7 @@ Keep this table consistent with the machine registry if you adopt it.
 - [ ] Every config area has an owner via `CODEOWNERS`.
 - [ ] Every config area has at least one validator running in CI.
 - [ ] Governance-critical entries have fixtures proving allow/deny/obligation outcomes.
-- [ ] Any config that affects publishability maps to Promotion Contract gates A–F (+ optional G).
+- [ ] Any config that affects publishability maps to Promotion Contract v1 gates (A–F required; optional G as adopted).
 - [ ] The registry is updated in the same PR that adds/moves/deprecates config.
 
 ---
@@ -572,6 +478,11 @@ Keep this table consistent with the machine registry if you adopt it.
 - Policy labels are controlled vocabulary; changing meaning is breaking behavior.
 - Any identifier that flows into dataset identity/spec hashing MUST be stable and tested.
 
+### Canonicalization and hashing
+
+- When hashing config inputs (for spec_hash or drift detection), canonicalize first (stable key ordering, consistent whitespace).
+- Prefer a standardized canonical JSON scheme when applicable (e.g., JCS-style canonicalization) and recompute in CI.
+
 ### Secret references
 
 If a config must reference a secret, store only a **secret identifier**, never the secret value:
@@ -591,7 +502,7 @@ Config resolution MUST be deterministic and reproducible for audits.
 2. Environment overlay (dev/stage/prod) **if used** (examples unless explicitly promoted)
 3. Runtime environment variables (non-secret)
 4. Secret manager injection (outside git)
-5. Per-run parameters (pipeline/focus) captured in run receipts
+5. Per-run parameters (pipeline/story/focus) captured in run receipts
 
 If two sources conflict, resolution MUST be explicit and documented. If required config is missing, **fail closed**.
 
@@ -615,7 +526,7 @@ flowchart LR
   D --> R
   E --> R
 
-  R --> V["Validators<br/>(schemas, parity tests, linkcheck)"]
+  R --> V["Validators<br/>(schemas, parity tests, linkcheck, citation checks)"]
   V --> CI["CI gates<br/>(merge blocked if fail)"]
   V --> RT["Runtime wiring<br/>(API / pipelines / indexers)"]
 
@@ -634,8 +545,9 @@ This directory is only safe if it is continuously validated.
 ### Required validations (minimum)
 
 - **Schema/lint:** configs validate against schemas or strict lint rules
-- **Policy parity:** fixtures prove expected allow/deny/obligations
+- **Policy parity:** fixtures prove expected allow/deny/obligations (CI + runtime parity)
 - **Linkcheck:** cross-link rules ensure EvidenceRef and catalog links are resolvable deterministically
+- **Citation resolvability:** story citations and Focus Mode citations must resolve via the evidence resolver contract (no guessing)
 - **QA thresholds (where applicable):** QA report format is validated and thresholds are versioned; failures quarantine/promotion-block
 - **Secret scanning:** blocks committed credentials
 - **Anti-skip summary:** a final always-runs job fails if any required config gate did not run
@@ -644,17 +556,17 @@ This directory is only safe if it is continuously validated.
 > Required checks MUST NOT be skippable via `paths:` filters or `if:` conditions.
 > Prefer a single “gate-summary” status check as the merge requirement (see `.github/README.md` if present).
 
-### Promotion Contract mapping (A–F required, G recommended)
+### Promotion Contract v1 mapping (A–F required; G optional-but-recommended)
 
 | Gate | What configs influence | What CI should verify (examples) |
 |---|---|---|
 | A Identity/versioning | spec-hash inputs, version naming rules | hash drift tests; naming lint |
 | B Rights/licensing | license rules, attribution requirements | rights rubrics validated; export rules consistent |
-| C Sensitivity | policy labels, obligations defaults | deny-by-default preserved; generalization obligations tested |
-| D Catalog triplet | profile selection, link rules | profiles validate; linkcheck passes |
-| E Run receipts & checksums | receipt required fields; digest rules; validation report linkage | receipt schema validation; required digests present; QA report referenced (if required) |
-| F Policy tests & contract tests | parity fixtures; EvidenceRef resolver rules; API/schema contracts | parity tests pass; evidence refs resolvable; contract checks pass |
-| G Release manifest (optional) | manifest schema; rules for what gets served/deployed | manifest schema valid; pinned dataset versions; deploy consumes manifest |
+| C Sensitivity | policy labels, default obligations | deny-by-default preserved; generalization plan tested; policy-safe errors enforced |
+| D Catalog triplet | profile selection, link rules, EvidenceRef schemes | profiles validate; linkcheck passes; EvidenceRefs resolve without guessing |
+| E Run receipt + checksums | receipt required fields; digest rules; QA/report linkage | receipt schema validation; required digests present; checks interpreted fail-closed |
+| F Policy + contract tests | parity fixtures; contract/profile tests; evidence resolver contract tests | policy fixtures pass; schema/profile tests pass; resolver tests pass |
+| G Production posture (optional) | promotion manifest schema; attestations/supply-chain; smoke checks | manifest schema valid; attestation verification (if enabled); perf/a11y smoke checks |
 
 ### Suggested local commands (PROPOSED)
 
@@ -665,6 +577,7 @@ make lint-configs
 make validate-config-schemas
 make test-policy-parity
 make linkcheck-catalogs
+make test-citation-resolve
 make scan-secrets
 ```
 
@@ -690,7 +603,7 @@ If sensitivity handling is unclear, default to deny and route for governance rev
 # Governance-critical policy inputs
 configs/policy/**        @kfm-governance
 
-# Promotion gates
+# Promotion gates + manifests
 configs/promotion/**     @kfm-governance @kfm-platform
 
 # Contract wiring
@@ -722,7 +635,7 @@ Use PR labels or title prefixes for `configs/` changes:
 | Docs-only | README/examples; no behavior change | lint + secret scan |
 | Runtime behavior | flags/caches/index knobs | smoke checks for affected components |
 | Contract-breaking | profile/schema selection rules | version bump + migration notes |
-| Governance-critical | allow/deny, obligations, sensitivity defaults, gate thresholds | steward review + parity fixtures |
+| Governance-critical | allow/deny, obligations, sensitivity defaults, gate thresholds, citation resolver rules | steward review + parity fixtures |
 
 ### Rollback expectations
 
@@ -745,8 +658,8 @@ Use this checklist in PRs touching `configs/`.
 
 - [ ] Change is scoped and reversible (rollback described)
 - [ ] Config registry updated (table + machine registry if adopted)
-- [ ] Validators updated/added (schemas/lint/parity/linkcheck/QA as applicable)
-- [ ] Governance-critical changes include parity fixtures proving new behavior
+- [ ] Validators updated/added (schemas/lint/parity/linkcheck/citation/QA as applicable)
+- [ ] Governance-critical changes include fixtures proving new behavior
 - [ ] CI validations pass (and anti-skip summary passes)
 - [ ] No secrets committed (scan passes)
 - [ ] Required owners reviewed (CODEOWNERS)
@@ -805,5 +718,20 @@ obligations:
 ```
 
 </details>
+
+<details>
+<summary><strong>PROPOSED: Promotion manifest shape (v1)</strong></summary>
+
+A promotion manifest (sometimes called “release manifest”) is an immutable record of what was promoted
+(artifact paths + digests + catalogs + QA + policy decision + approvals). Keep it policy-safe and digest-addressed.
+
+</details>
+
+---
+
+## Source references
+
+This README is aligned to KFM governance snapshots and delivery briefings (internal). When discrepancies arise,
+prefer the governance snapshots for **gate labels and invariants**, and treat briefings as implementation guidance.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
