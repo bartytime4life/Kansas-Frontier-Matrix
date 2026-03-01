@@ -265,12 +265,12 @@ These are the smallest checks a maintainer can run to confirm this linkage contr
 Update this once the folder is populated in-repo.
 
 ```text
-docs/diagrams/src/truth-path/catalog-linkage/
-  README.md
-  catalog-triplet-linkage.mmd              # optional: diagram source
-  evidence-ref-resolution.mmd              # optional: diagram source
-  linkage-matrix.md                        # optional: deeper matrix + examples
-  assets/                                  # optional: exported images if committed by policy
+docs/diagrams/src/truth-path/catalog-linkage/              # Catalog linkage diagrams (triplet cross-links + evidence resolution)
+├─ README.md                                                # Index + conventions + how to render + links to related standards/tests
+├─ catalog-triplet-linkage.mmd                              # OPTIONAL: DCAT↔STAC↔PROV required cross-links (Mermaid source)
+├─ evidence-ref-resolution.mmd                              # OPTIONAL: EvidenceRef → resolver → EvidenceBundle flow (Mermaid source)
+├─ linkage-matrix.md                                        # OPTIONAL: detailed linkage matrix + examples (field-level expectations)
+└─ assets/                                                  # OPTIONAL: exported images if committed by policy (prefer generated)
 ```
 
 ### Non-normative example snippets
