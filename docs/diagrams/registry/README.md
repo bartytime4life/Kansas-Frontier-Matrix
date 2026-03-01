@@ -204,15 +204,15 @@ This folder defines a **small contract**: what every diagram must declare so it 
 > The tree below is the **recommended** shape for this directory. If the repo differs, update this README to match reality.
 
 ```text
-docs/diagrams/registry/
-  README.md                         # You are here
-  diagram-registry.yaml             # Canonical registry (suggested name)
-  schema/
-    diagram-registry.schema.json    # Schema for registry validation (suggested)
-  templates/
-    diagram-entry.template.yaml     # Copy/paste starter entry (suggested)
-  generated/
-    index.md                        # Optional: generated human-friendly index
+docs/diagrams/registry/                               # Diagram registry (machine-checkable inventory + generated index)
+├─ README.md                                          # You are here: purpose, how registry is used, DoD, and CI validation rules
+├─ diagram-registry.yaml                              # Canonical diagram registry (ids, titles, owners, sources, exports, policy labels)
+├─ schema/                                            # Registry validation schemas
+│  └─ diagram-registry.schema.json                    # Schema for diagram-registry.yaml (fail-closed validation)
+├─ templates/                                         # Copy/paste starters for consistent entries
+│  └─ diagram-entry.template.yaml                     # Diagram registry entry template (required fields + examples)
+└─ generated/                                         # OPTIONAL: generated artifacts (never hand-edited)
+   └─ index.md                                        # Optional generated human-friendly index (from registry scan)
 ```
 
 ---
