@@ -1,3 +1,117 @@
-%% Placeholder Mermaid diagram
-flowchart TD
-  A[Placeholder] --> B[To be defined]
+%% [KFM_META_BLOCK_V2]
+%% doc_id: kfm://doc/5eddf145-5e38-4a21-9e04-9bc1e1406800
+%% title: PEP-PDP obligations (policy decision + enforcement flow)
+%% type: diagram
+%% version: v1
+%% status: draft
+%% owners: TODO
+%% created: 2026-03-01
+%% updated: 2026-03-01
+%% policy_label: public
+%% related:
+%%   - docs/architecture/README.md  # TODO: link once present
+%%   - docs/architecture/policy.md  # TODO: link once present
+%% tags: [kfm, architecture, policy, pep, pdp, obligations]
+%% notes:
+%%   - Derived from KFM vNext guidance on policy-as-code, evidence resolver, and audit requirements.
+%% [/KFM_META_BLOCK_V2]
+
+flowchart LR
+  %% ---------------------------------------------------------------------------
+  %% PEP–PDP–Obligations reference diagram (KFM vNext posture)
+  %%
+  %% Goal:
+  %% - Make the "decision + obligations" contract explicit.
+  %% - Show where obligations are enforced (PEPs) vs merely displayed (UI).
+  %% ---------------------------------------------------------------------------
+
+  %% === Clients ===============================================================
+  subgraph CLIENTS[Clients]
+    UI[Map Explorer / Story UI<br/>Policy badges + notices<br/>No policy decisions]
+    CLI[CLI / automation]
+    EXT[External API consumers]
+  end
+
+  %% === CI Gate (PEP) =========================================================
+  subgraph CI[CI policy gate PEP]
+    PR[Pull request<br/>Policy + schema changes]
+    CONFT[Conftest / policy tests<br/>Deny-by-default fixtures]
+    PR --> CONFT
+  end
+
+  %% === Runtime PEPs ==========================================================
+  subgraph RUNTIME[Runtime enforcement points]
+    API[Governed API gateway<br/>Dataset query, tiles, story, focus]
+    EV[Evidence resolver<br/>POST /api/v1/evidence/resolve]
+    FM[Focus Mode orchestration<br/>Policy pre-check + retrieval<br/>Hard citation verification]
+  end
+
+  %% === PDP ==================================================================
+  subgraph POLICY[PDP and decision contract]
+    PDP[Policy Decision Point<br/>OPA / Rego]
+    DEC[Decision result<br/>allow or deny<br/>policy_label<br/>reason_codes<br/>obligations]
+    OBL[Obligations examples<br/>generalize_geometry<br/>remove_attributes<br/>show_notice]
+    PDP --> DEC
+    DEC --> OBL
+  end
+
+  %% === Enforcement utilities =================================================
+  subgraph ENFORCEMENT[Obligation enforcement utilities]
+    ENF[Obligation enforcer<br/>Redaction + generalization<br/>Attribution injection<br/>Export guards]
+    ERR[Policy-safe error model<br/>Avoid leaking existence via 403 vs 404]
+    AUD[Audit logger<br/>who what when why<br/>inputs outputs by digest<br/>policy decision + obligations]
+  end
+
+  %% === Canonical + rebuildable stores =======================================
+  subgraph STORES[Canonical stores and rebuildable projections]
+    CAT[(Catalog triplet<br/>DCAT STAC PROV)]
+    OBJ[(Artifact store<br/>RAW WORK PROCESSED)]
+    IDX[(Rebuildable projections<br/>PostGIS search graph tile caches)]
+    LEDGER[(Audit ledger<br/>append-only)]
+  end
+
+  %% === Primary request paths =================================================
+  UI --> API
+  CLI --> API
+  EXT --> API
+
+  %% Trust membrane: clients do not access stores directly
+  UI -. blocked by trust membrane .-> CAT
+  UI -. blocked by trust membrane .-> OBJ
+  UI -. blocked by trust membrane .-> IDX
+
+  %% Runtime policy checks
+  API -- policy input: user action resource --> PDP
+  EV  -- policy input: user action EvidenceRef --> PDP
+  FM  -- policy pre-check --> PDP
+  CONFT -- policy fixtures --> PDP
+
+  %% Decision fan-out
+  DEC --> ERR
+  DEC --> AUD
+  OBL --> ENF
+
+  %% Enforcement placement (PEPs call enforcement utilities)
+  API --> ENF
+  EV  --> ENF
+  FM  --> EV
+
+  %% Data access remains behind PEPs
+  ENF --> CAT
+  ENF --> OBJ
+  ENF --> IDX
+  AUD --> LEDGER
+
+  %% Results returned to clients (policy-filtered, obligation-applied)
+  CAT --> API
+  OBJ --> API
+  IDX --> API
+  EV --> API
+
+  API --> UI
+  API --> CLI
+  API --> EXT
+
+  %% CI outcome (merge allowed/blocked)
+  CONFT -- pass --> MERGE_OK[Merge allowed]
+  CONFT -- deny --> MERGE_BLOCK[Merge blocked]
