@@ -1,0 +1,2 @@
+resolver_required: true
+allowed_ref_prefixes: [dcat, stac, prov, doc, graph]
