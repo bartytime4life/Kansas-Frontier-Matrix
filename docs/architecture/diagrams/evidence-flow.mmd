@@ -1,3 +1,139 @@
-%% Placeholder Mermaid diagram
+%% KFM Evidence Flow
+%% Purpose: show how evidence and citations move from the Truth Path into governed runtime surfaces.
+%% Notes:
+%% - Citations in KFM are EvidenceRefs that MUST resolve to EvidenceBundles.
+%% - The trust membrane ensures clients never access storage/DB directly.
+
 flowchart TD
-  A[Placeholder] --> B[To be defined]
+
+  %% ----------------------------
+  %% Styling
+  %% ----------------------------
+  classDef zone fill:#f7f7f7,stroke:#333,stroke-width:1px;
+  classDef pipeline fill:#eef7ff,stroke:#1a73e8,stroke-width:1px;
+  classDef canonical fill:#e6f3ff,stroke:#1a73e8,stroke-width:1px;
+  classDef projection fill:#e8f5e9,stroke:#34a853,stroke-width:1px;
+  classDef runtime fill:#fff4e6,stroke:#f29900,stroke-width:1px;
+  classDef gate fill:#ffe6e6,stroke:#d93025,stroke-width:1px;
+  classDef client fill:#f3e5f5,stroke:#8e24aa,stroke-width:1px;
+  classDef note fill:#ffffff,stroke:#777,stroke-dasharray:5 5;
+
+  %% ----------------------------
+  %% Truth Path (canonical artifacts)
+  %% ----------------------------
+  subgraph TP[Truth Path]
+    direction LR
+
+    Upstream[Upstream sources]:::zone
+    Connector[Connectors<br/>fetch and snapshot]:::pipeline
+
+    RAW[RAW zone<br/>immutable artifacts + checksums<br/>license or terms snapshot]:::canonical
+    WORK[WORK or QUARANTINE<br/>normalize + QA<br/>redaction candidates]:::zone
+    PROCESSED[PROCESSED zone<br/>publishable artifacts<br/>stable IDs + digests]:::canonical
+
+    CATALOG[CATALOG triplet<br/>DCAT + STAC + PROV]:::canonical
+    Receipts[Run receipts<br/>pipeline runs and Focus queries]:::canonical
+    Audit[Audit ledger<br/>append-only log]:::canonical
+
+    Upstream --> Connector --> RAW --> WORK --> PROCESSED
+    PROCESSED --> GatePromotion --> CATALOG
+    CATALOG --> Receipts --> Audit
+  end
+
+  GatePromotion[Promotion Contract gates<br/>block promotion if missing: identity, license,<br/>sensitivity, QA, catalogs, receipts]:::gate
+
+  %% ----------------------------
+  %% Rebuildable projections
+  %% ----------------------------
+  subgraph Proj[Rebuildable projections]
+    direction LR
+
+    PostGIS[PostGIS<br/>spatial filters]:::projection
+    Search[Search index<br/>text + metadata]:::projection
+    Graph[Graph edges<br/>entity resolution + lineage]:::projection
+    Tiles[Tile bundles<br/>PMTiles or vector tiles]:::projection
+
+  end
+
+  CATALOG --> PostGIS
+  CATALOG --> Search
+  CATALOG --> Graph
+  CATALOG --> Tiles
+
+  %% ----------------------------
+  %% Governed runtime (trust membrane)
+  %% ----------------------------
+  subgraph Runtime[Governed runtime]
+    direction TD
+
+    API[Governed API<br/>Policy Enforcement Point]:::runtime
+    PDP[Policy engine<br/>OPA or equivalent]:::runtime
+    EvidenceResolver[Evidence resolver<br/>resolve EvidenceRef to EvidenceBundle]:::runtime
+
+    ObjectStore[Object store<br/>canonical artifacts]:::canonical
+
+    API --> PDP
+    API --> EvidenceResolver
+
+    EvidenceResolver --> CATALOG
+    EvidenceResolver --> Receipts
+    EvidenceResolver --> ObjectStore
+  end
+
+  %% ----------------------------
+  %% Clients (no direct storage access)
+  %% ----------------------------
+  subgraph Clients[Clients]
+    direction LR
+
+    MapUI[Map Explorer UI]:::client
+    StoryUI[Story Mode UI]:::client
+    FocusUI[Focus Mode UI]:::client
+    EvidenceDrawer[Evidence drawer<br/>license, version, provenance,<br/>obligations, validation status]:::client
+  end
+
+  MapUI --> API
+  StoryUI --> API
+  FocusUI --> API
+
+  TrustNote[Trust membrane<br/>clients never access storage or DB directly<br/>all access is policy evaluated at the PEP]:::note
+  Clients -.-> TrustNote -.-> Runtime
+
+  %% ----------------------------
+  %% Evidence objects
+  %% ----------------------------
+  EvidenceRef[EvidenceRef<br/>dcat, stac, prov, doc, graph schemes]:::runtime
+  EvidenceBundle[EvidenceBundle<br/>policy decision + metadata<br/>digests + audit reference]:::runtime
+
+  API --> EvidenceRef --> EvidenceResolver --> EvidenceBundle --> EvidenceDrawer
+
+  %% ----------------------------
+  %% Story publishing: resolvable citations required
+  %% ----------------------------
+  StoryDraft[Story node draft<br/>markdown + map state + citations]:::client
+  GateStoryCites[Citation resolution gate<br/>publishing blocked if any citation fails]:::gate
+  StoryPublished[Published story node]:::runtime
+
+  StoryUI --> StoryDraft --> GateStoryCites --> API
+  GateStoryCites --> StoryPublished --> Audit
+
+  %% ----------------------------
+  %% Focus Mode: governed run with a receipt
+  %% ----------------------------
+  FocusRequest[Focus request<br/>query + view_state + role context]:::client
+  FocusOrchestrator[Focus orchestrator<br/>retrieval and synthesis]:::runtime
+  Retrieve[Retrieve candidates<br/>from projections and catalogs]:::runtime
+  GateFocusCites[Citation verification gate<br/>if any citation fails: revise or abstain]:::gate
+  FocusAnswer[Answer output<br/>text + citations + audit reference]:::runtime
+
+  FocusUI --> FocusRequest --> FocusOrchestrator
+  FocusOrchestrator --> PDP
+  FocusOrchestrator --> Retrieve
+
+  Retrieve --> PostGIS
+  Retrieve --> Search
+  Retrieve --> Graph
+  Retrieve --> EvidenceRef
+
+  FocusOrchestrator --> EvidenceResolver
+  FocusOrchestrator --> GateFocusCites --> FocusAnswer --> Audit
