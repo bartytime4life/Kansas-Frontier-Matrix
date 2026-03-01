@@ -13,4 +13,4 @@ related:
 tags: [kfm]
 notes:
   - <short notes>
-[/KFM_META_BLOCK_V2] -->[KFM_META_BLOCK_V2 template placeholder]
+[/KFM_META_BLOCK_V2] -->
