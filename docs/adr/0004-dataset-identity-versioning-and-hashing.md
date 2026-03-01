@@ -190,20 +190,35 @@ Truth-path rule: **the truth path is navigable without a database**.
 Example layout (illustrative; actual repo/object store may differ):
 
 ~~~text
-data/
-  raw/<dataset_slug>/<acquisition_id>/
-    manifest.json
-    artifacts/...
-  processed/<dataset_slug>/<dataset_version_id>/
-    artifacts/<artifact_name>.<ext>
-    checksums.json
-    qa/validation_report.json
-  catalog/<dataset_slug>/<dataset_version_id>/
-    dcat.jsonld
-    stac/collection.json
-    stac/items/<item_id>.json
-    prov/bundle.jsonld
-    receipts/run_receipt.json
+data/                                                      | # Governed data lifecycle zones (Truth Path) + catalogs + receipts (policy-aware)
+├─ raw/                                                     | # Immutable acquisition snapshots (inputs as captured; may be externalized in prod)
+│  └─ <dataset_slug>/                                       | # Dataset bucket (stable slug)
+│     └─ <acquisition_id>/                                  | # One acquisition event (source snapshot ID; not a DatasetVersion yet)
+│        ├─ manifest.json                                   | # REQUIRED: acquisition metadata (source, license snapshot, timestamps, checksums, policy label)
+│        └─ artifacts/                                      | # Raw captured artifacts (as received; no normalization guarantees)
+│           └─ ...                                          | # Files/blobs from source (format varies; may include compressed bundles)
+│
+├─ processed/                                               | # Publishable, normalized artifacts for each DatasetVersion (immutable once promoted)
+│  └─ <dataset_slug>/                                       | # Dataset bucket (stable slug; matches raw/<dataset_slug>/)
+│     └─ <dataset_version_id>/                              | # Version snapshot ID (deterministic; stable reference for consumers)
+│        ├─ artifacts/                                      | # Materialized outputs for this version (formats per dataset contract)
+│        │  └─ <artifact_name>.<ext>                        | # One output artifact (e.g., geoparquet/cog/pmtiles/json)
+│        ├─ checksums.json                                  | # REQUIRED: digests for artifacts (integrity + deterministic verification)
+│        └─ qa/                                             | # QA evidence for this version
+│           └─ validation_report.json                       | # Machine QA report (checks, metrics, pass/fail, inputs/outputs refs)
+│
+└─ catalog/                                                 | # Catalog triplet (DCAT/STAC/PROV) + receipts for each DatasetVersion
+   └─ <dataset_slug>/                                       | # Dataset bucket (must match processed/<dataset_slug>/)
+      └─ <dataset_version_id>/                              | # Catalog snapshot for the same DatasetVersion (must match processed version)
+         ├─ dcat.jsonld                                     | # DCAT dataset metadata + distribution links (policy-aware)
+         ├─ stac/                                           | # STAC catalog for assets/tiles/partitions
+         │  ├─ collection.json                              | # STAC Collection for this DatasetVersion
+         │  └─ items/                                       | # STAC Items (granular asset descriptors)
+         │     └─ <item_id>.json                            | # One STAC Item (links to assets, checksums, and required fields)
+         ├─ prov/                                           | # Provenance bundle(s) describing lineage
+         │  └─ bundle.jsonld                                | # PROV JSON-LD bundle (agents/activities/entities + links)
+         └─ receipts/                                       | # REQUIRED: execution receipts proving gates passed
+            └─ run_receipt.json                             | # Run receipt (who/what/when, inputs/outputs, checks, policy decisions)
 ~~~
 
 ---
