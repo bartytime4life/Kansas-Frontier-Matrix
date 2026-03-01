@@ -170,27 +170,28 @@ The evidence resolver returns an `EvidenceBundle` that includes:
 **Decision:** Adopt the object store layout below as the canonical layout for promoted artifacts and catalogs.
 
 ```text
-data/
-  processed/
-    <dataset_slug>/
-      <dataset_version_id>/
-        artifacts/
-          <artifact_name>.<ext>
-        checksums.json
-        qa/
-          validation_report.json
-  catalog/
-    <dataset_slug>/
-      <dataset_version_id>/
-        dcat.jsonld
-        stac/
-          collection.json
-          items/
-            <item_id>.json
-        prov/
-          bundle.jsonld
-        receipts/
-          run_receipt.json
+data/                                                      | # Governed data lifecycle zones (Truth Path) + catalog triplet outputs
+├─ processed/                                               | # Publishable artifacts for each DatasetVersion (immutable once promoted)
+│  └─ <dataset_slug>/                                       | # Dataset bucket (stable slug)
+│     └─ <dataset_version_id>/                              | # Specific DatasetVersion snapshot (stable ID)
+│        ├─ artifacts/                                      | # Materialized artifacts (formats per dataset contract)
+│        │  └─ <artifact_name>.<ext>                        | # One output artifact (e.g., geoparquet/cog/pmtiles/json)
+│        ├─ checksums.json                                  | # REQUIRED: digests for artifacts (determinism + integrity verification)
+│        └─ qa/                                             | # QA outputs for this DatasetVersion
+│           └─ validation_report.json                       | # Machine QA report (checks, metrics, pass/fail, inputs/outputs refs)
+│
+└─ catalog/                                                 | # Catalog triplet + provenance + receipts for each DatasetVersion
+   └─ <dataset_slug>/                                       | # Dataset bucket (matches processed/<dataset_slug>/)
+      └─ <dataset_version_id>/                              | # DatasetVersion catalog snapshot (must match processed version)
+         ├─ dcat.jsonld                                     | # DCAT record (dataset-level metadata + distributions)
+         ├─ stac/                                           | # STAC catalog (collections/items/assets)
+         │  ├─ collection.json                              | # STAC Collection for this DatasetVersion
+         │  └─ items/                                       | # STAC Items (granular assets/tiles/partitions)
+         │     └─ <item_id>.json                            | # One STAC Item (must link to assets + checksums as required)
+         ├─ prov/                                           | # PROV bundle(s) describing lineage for this version
+         │  └─ bundle.jsonld                                | # PROV JSON-LD bundle (activities/agents/entities + links)
+         └─ receipts/                                       | # REQUIRED: run receipts proving gates passed for this version
+            └─ run_receipt.json                             | # Execution receipt (who/what/when, inputs/outputs, checks, policy decisions)
 ```
 
 Rules:
