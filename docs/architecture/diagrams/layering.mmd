@@ -1,41 +1,41 @@
 graph TB
 
-  subgraph L0[Clients (untrusted)]
-    UI_Map[UI: Map Explorer]
-    UI_Story[UI: Story Mode]
-    UI_Focus[UI: Focus Mode]
-    UI_Ext[External clients]
+  subgraph "Clients - untrusted"
+    UI_Map["UI - Map Explorer"]
+    UI_Story["UI - Story Mode"]
+    UI_Focus["UI - Focus Mode"]
+    UI_Ext["External clients"]
   end
 
-  subgraph L1[Interfaces (governed boundary + ports)]
-    API[Governed API (policy enforcement boundary)]
-    Policy[Policy engine (PDP: allow/deny + obligations)]
-    Evidence[Evidence resolver (EvidenceRef to EvidenceBundle)]
-    Ports[Ports (repository + service interfaces)]
+  subgraph "Interfaces - governed boundary and ports"
+    API["Governed API - policy enforcement boundary"]
+    Policy["Policy engine - PDP allow/deny and obligations"]
+    Evidence["Evidence resolver - EvidenceRef to EvidenceBundle"]
+    Ports["Ports - repository and service interfaces"]
   end
 
-  subgraph L2[Use cases (application orchestration)]
-    UC_Query[Query / Browse / Tiles]
-    UC_Story[Story read + publish]
-    UC_Focus[Focus ask + answer]
-    UC_Promote[Promotion workflow]
-    UC_Catalog[Catalog build + validate]
+  subgraph "Use cases - application orchestration"
+    UC_Query["Query, browse, tiles"]
+    UC_Story["Story read and publish"]
+    UC_Focus["Focus ask and answer"]
+    UC_Promote["Promotion workflow"]
+    UC_Catalog["Catalog build and validate"]
   end
 
-  subgraph L3[Domain (core rules + models)]
-    Domain_Models[Domain models: Dataset, DatasetVersion, Artifact, EvidenceRef, EvidenceBundle, ...]
-    Domain_Rules[Domain invariants: truth path, promotion gates, deterministic identity]
+  subgraph "Domain - core rules and models"
+    Domain_Models["Domain models - Dataset, DatasetVersion, Artifact, EvidenceRef, EvidenceBundle"]
+    Domain_Rules["Domain invariants - truth path, promotion gates, deterministic identity"]
   end
 
-  subgraph L4[Infrastructure (adapters + storage + compute)]
-    Infra_Connectors[Connectors / runners (fetch + snapshot upstream)]
-    Infra_Upstream[Upstream sources]
+  subgraph "Infrastructure - adapters, storage, compute"
+    Infra_Connectors["Connectors and runners - fetch and snapshot upstream"]
+    Infra_Upstream["Upstream sources"]
 
-    Infra_Object[Canonical object storage (RAW/WORK/PROCESSED artifacts)]
-    Infra_Catalogs[Canonical catalogs (DCAT / STAC / PROV)]
-    Infra_Receipts[Run receipts / audit ledger]
+    Infra_Object["Canonical object storage - RAW, WORK, PROCESSED artifacts"]
+    Infra_Catalogs["Canonical catalogs - DCAT, STAC, PROV"]
+    Infra_Receipts["Run receipts and audit ledger"]
 
-    Infra_Projections[Rebuildable projections (DB / search / graph / tiles)]
+    Infra_Projections["Rebuildable projections - DB, search, graph, tiles"]
   end
 
   UI_Map --> API
@@ -69,10 +69,11 @@ graph TB
   Ports --> Infra_Receipts
   Ports --> Infra_Projections
   Ports --> Infra_Connectors
+
   Infra_Connectors --> Infra_Upstream
 
-  UI_Map -.->|FORBIDDEN: bypass governed API| Infra_Object
-  UI_Map -.->|FORBIDDEN: bypass governed API| Infra_Projections
-  UI_Ext -.->|FORBIDDEN: bypass governed API| Infra_Object
+  UI_Map -.->|FORBIDDEN - bypass governed API| Infra_Object
+  UI_Map -.->|FORBIDDEN - bypass governed API| Infra_Projections
+  UI_Ext -.->|FORBIDDEN - bypass governed API| Infra_Object
 
-  Domain_Models -.->|FORBIDDEN: domain talks to storage| Infra_Object
+  Domain_Models -.->|FORBIDDEN - domain talks to storage| Infra_Object
