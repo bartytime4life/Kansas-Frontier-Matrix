@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-24
-updated: 2026-02-24
+updated: 2026-03-01
 policy_label: public
 related:
   - docs/stories/
@@ -23,16 +23,17 @@ notes:
 
 # Story Nodes
 
-Governed narrative units that bind **human-readable markdown** to **map state** and **resolvable evidence**.
+Governed narrative units that bind **human-readable markdown** to **replayable map state** and **resolvable evidence**.
 
 > [!NOTE]
-> This folder is the canonical home for Story Nodes in this repo *if* you are using `docs/stories/`.
-> Some legacy documentation may refer to other locations (for example `docs/reports/story_nodes/`). If your repo differs, update this README to match the actual canonical path.
+> This folder is the canonical home for Story Nodes in this repo **if** you are using `docs/stories/`.
+> Some repo layouts place story nodes under `docs/reports/story_nodes/` (or similar). If both exist, choose **exactly one** canonical location and make the other a stub/redirect README that links here.
 
 ## Navigation
 - [Purpose](#purpose)
 - [How this fits in KFM](#how-this-fits-in-kfm)
 - [Directory layout](#directory-layout)
+- [Directory invariants](#directory-invariants)
 - [Story Node v3 format](#story-node-v3-format)
 - [Citations and evidence](#citations-and-evidence)
 - [Governance and safety](#governance-and-safety)
@@ -76,134 +77,201 @@ Back to top: [Navigation](#navigation)
 
 ## Directory layout
 
-This README documents **what belongs here** and **what must not**. The exact subfolders are a repo choice; below is a recommended structure that keeps drafts and published stories separate.
+This README documents **what belongs here** and **what must not**.
+
+The structure below is intentionally verbose so that:
+- reviewers can tell **what is authoritative** vs **what is WIP**
+- CI can validate Story Packs deterministically
+- published stories can be treated as immutable, reproducible artifacts
+
+> [!IMPORTANT]
+> The names below are **recommended defaults**. If your repo uses different names, keep the contracts but update paths here.
+
+### Expanded tree
 
 ```text
-docs/stories/                                    # Story Nodes: narratives + map state + citations
-├─ README.md                                      # Authoring + review + publish rules (gates + invariants)
+docs/stories/                                               # Story Nodes: narratives + map state + citations
+├─ README.md                                                # This directory contract (gates + invariants)
+├─ CODEOWNERS                                               # Optional: route story reviews to approvers
 │
-├─ _schemas/                                      # JSON Schemas (CI validates story packs + sidecars)
-│  ├─ story_node.schema.json                      # story.md structural expectations (if you lint markdown)
-│  ├─ story_sidecar.schema.json                   # story.json: map state + citations + policy labels
-│  ├─ media_attribution.schema.json               # optional structured media attribution (if you adopt it)
-│  └─ story_index.schema.json                     # schema for aggregated story indexes
+├─ _schemas/                                                # Local schemas for story packs (CI validates)
+│  ├─ story_node_v3.schema.json                             # Story Node v3 (story.json) contract
+│  ├─ story_markdown_v3.schema.json                         # Optional: structural lint for story.md sections
+│  ├─ story_steps_v1.schema.json                            # Optional: step-by-step scrollytelling choreography
+│  ├─ story_lock_v1.schema.json                             # Optional: frozen hashes/pins for reproducibility
+│  ├─ story_manifest_v1.schema.json                         # Published manifest contract (hashes + inventory)
+│  ├─ story_receipt_v1.schema.json                          # Publish receipt contract (who/what/when/inputs)
+│  ├─ evidence_ref_v1.schema.json                           # EvidenceRef syntax (dcat/stac/prov/doc/graph)
+│  ├─ claim_map_v1.schema.json                              # claim_id -> evidence_ref_id(s)
+│  ├─ media_attribution_v1.schema.json                      # Structured media rights/attribution (optional)
+│  └─ story_index_v1.schema.json                            # Aggregated story index schema for UI discovery
 │
-├─ _registry/                                     # Lightweight catalog/index of stories for UI + discovery
-│  ├─ stories.index.json                           # derived or hand-curated index (slug → title/status/tags)
-│  ├─ tags.vocab.json                              # controlled tags (optional; helps filter/search UX)
-│  └─ policy_labels.vocab.json                     # allowed labels + obligations vocab (optional)
+├─ _registry/                                               # Lightweight catalog/index of stories for UI + discovery
+│  ├─ stories.index.json                                    # slug -> title/status/policy/tags/time_window
+│  ├─ tags.vocab.json                                       # Optional controlled tags for filtering/search UX
+│  ├─ policy_labels.vocab.json                              # Allowed labels + obligations vocab (optional)
+│  ├─ statuses.vocab.json                                   # draft/review/published/withdrawn definitions (optional)
+│  └─ reviewers.vocab.json                                  # Optional: reviewer roles/teams (optional)
 │
-├─ _lint/                                         # Repo-local lint config for story QA
-│  ├─ linkcheck.allowlist.txt                     # allowlist for stable external domains (optional)
-│  ├─ markdownlint.json                           # style rules (optional)
-│  └─ story_rules.yaml                            # house rules: required sections, prohibited patterns, etc.
+├─ _governance/                                             # Local governance helpers (optional; link to canonical)
+│  ├─ README.md                                             # How story governance works in this repo
+│  ├─ review_policy.md                                      # Who can approve what; what requires steward review
+│  ├─ media_rights_policy.md                                # Media licensing rules + “metadata-only” fallback
+│  ├─ sensitive_locations_playbook.md                       # Redaction/generalization rules for sensitive sites
+│  ├─ redaction_guidelines.md                               # How to write safely without leaking sensitive detail
+│  └─ decision_templates/                                   # Small, reversible governance artifacts
+│     ├─ ADR_story_policy_change.md                         # Template: story policy change rationale + impacts
+│     └─ waiver_template.md                                 # Template: explicit override + audit requirements
 │
-├─ _shared/                                       # Shared, non-story-specific assets (optional)
-│  ├─ media/                                      # icons, logos, generic diagrams used across stories
-│  └─ snippets/                                   # reusable markdown fragments (disclaimers, boilerplates)
+├─ _lint/                                                   # Repo-local lint config for story QA
+│  ├─ markdownlint.json                                     # Style rules (optional)
+│  ├─ linkcheck.allowlist.txt                               # Allowlist for stable external domains (optional)
+│  ├─ linkcheck.denylist.txt                                # Explicitly disallowed domains (optional)
+│  ├─ story_rules.yaml                                      # Required sections; prohibited patterns; etc.
+│  └─ citation_rules.yaml                                   # Enforce EvidenceRef syntax + resolver checks
 │
-├─ _templates/                                    # Copy/paste starters (keep aligned to Story Node v3)
+├─ _shared/                                                 # Shared, non-story-specific assets (optional)
+│  ├─ media/                                                # Icons/logos/diagrams used across stories
+│  ├─ snippets/                                             # Reusable markdown fragments (disclaimers, boilerplates)
+│  └─ diagrams/                                             # Reusable mermaid diagrams (optional)
+│
+├─ _templates/                                              # Copy/paste starters (keep aligned to Story Node v3)
 │  └─ story_node_v3/
-│     ├─ story.md                                 # template markdown (sections + citation pattern)
-│     ├─ story.json                               # template sidecar (map state + refs placeholders)
-│     ├─ media_attribution.md                     # template attribution notes (license + credits)
-│     └─ review_checklist.md                      # reviewer checklist template
+│     ├─ story.md                                           # Template narrative (sections + citation pattern)
+│     ├─ story.json                                         # Template sidecar (map state + refs placeholders)
+│     ├─ story.steps.json                                   # Optional: template step choreography
+│     ├─ story.lock.json                                    # Optional: template lockfile structure
+│     ├─ story.manifest.json                                # Template manifest
+│     ├─ story.receipt.json                                 # Template publish receipt
+│     ├─ media_attribution.md                               # Template attribution notes (license + credits)
+│     ├─ review_checklist.md                                # Reviewer checklist template
+│     ├─ decision_log.md                                    # Template decision log
+│     └─ tombstone.md                                       # Template for withdrawn story notice
 │
-├─ draft/                                         # Proposed stories (NOT authoritative)
-│  └─ <story_slug>/                               # kebab-case slug; stable once published
-│     ├─ story.md                                 # narrative w/ claim anchors (claims must be cited)
-│     ├─ story.json                               # sidecar: map state + citations + policy labels/obligations
-│     ├─ story.lock.json                          # optional: frozen hashes of evidence/media for reproducibility
+├─ draft/                                                   # Proposed stories (NOT authoritative)
+│  └─ <story_slug>/                                         # kebab-case slug; stable once published
+│     ├─ story.md                                           # Narrative w/ claim anchors (claims must be cited)
+│     ├─ story.json                                         # Sidecar: map_state + citations + policy + review_state
+│     ├─ story.steps.json                                   # Optional: scrollytelling steps (if used)
+│     ├─ story.lock.json                                    # Optional: pins/hashes for evidence/media (recommended)
 │     │
-│     ├─ evidence/                                # optional: structured citation plumbing (still “draft”)
-│     │  ├─ evidence_refs.json                    # EvidenceRef list (ids, sources, scope, policy label)
-│     │  ├─ claim_map.json                        # claim_id → evidence_ref_id(s)
-│     │  └─ notes.md                              # analyst notes; assumptions; “unknowns to verify”
+│     ├─ evidence/                                          # Optional: structured citation plumbing
+│     │  ├─ evidence_refs.json                              # EvidenceRef list (ids, sources, scope, policy)
+│     │  ├─ claim_map.json                                  # claim_id -> evidence_ref_id(s)
+│     │  ├─ unresolved.md                                   # Unknowns to verify; blocked claims list
+│     │  └─ notes.md                                        # Analyst notes; assumptions; data limitations
 │     │
-│     ├─ map/                                     # optional split to reduce JSON diff noise
-│     │  ├─ map_state.json                        # viewport, layers, filters, time slider defaults
-│     │  ├─ layer_overrides.json                  # per-story layer styling/symbolization overrides
-│     │  └─ bookmarks.json                        # named extents/steps used by scrollytelling
+│     ├─ map/                                               # Optional split to reduce JSON diff noise
+│     │  ├─ map_state.json                                  # viewport, layers, filters, time window defaults
+│     │  ├─ layer_overrides.json                            # per-story style/symbolization overrides
+│     │  └─ bookmarks.json                                  # named extents/steps used by scrollytelling
 │     │
-│     ├─ media/                                   # bounded story assets (licensed; no sensitive detail)
-│     │  ├─ src/                                  # originals (as received)
-│     │  ├─ derived/                              # resized/cropped/annotated derivatives
-│     │  └─ thumbnails/                           # small preview images for UI listing cards
-│     ├─ media_attribution.md                     # recommended in draft; required if licenses apply
+│     ├─ media/                                             # Bounded story assets (licensed; no sensitive detail)
+│     │  ├─ src/                                            # Originals (as received)
+│     │  ├─ derived/                                        # resized/cropped/annotated derivatives
+│     │  └─ thumbnails/                                     # preview images for listing cards
+│     ├─ media_attribution.md                               # Recommended in draft; required when media used
 │     │
-│     ├─ review/                                  # WIP review artifacts (draft stage)
-│     │  ├─ checklist.md                          # reviewer checklist instance
-│     │  ├─ signoff.yaml                          # approvals + timestamps (optional)
-│     │  └─ discussion.md                         # review notes + decisions
+│     ├─ review/                                            # WIP review artifacts (draft stage)
+│     │  ├─ checklist.md                                    # reviewer checklist instance
+│     │  ├─ signoff.yaml                                    # approvals + timestamps (optional)
+│     │  └─ discussion.md                                   # review notes + decisions
 │     │
-│     └─ exports/                                 # optional (usually generated; may be gitignored)
-│        ├─ preview.html                          # rendered HTML preview
-│        └─ figures/                              # exported charts/maps for PR review
+│     ├─ receipts/                                          # Optional: saved local/CI outputs for the draft
+│     │  ├─ schema_validation.json
+│     │  ├─ citation_resolve.json
+│     │  ├─ policy_check.json
+│     │  ├─ rights_check.json
+│     │  ├─ linkcheck_report.json
+│     │  └─ lint_report.json
+│     │
+│     └─ exports/                                           # Optional (usually generated; may be gitignored)
+│        ├─ preview.html                                    # rendered HTML preview
+│        └─ figures/                                        # exported charts/maps for PR review
 │
-├─ review/                                        # Stories in formal review (pre-publish freeze)
+├─ review/                                                  # Stories in formal review (pre-publish freeze)
 │  └─ <story_slug>/
-│     ├─ story.md                                 # candidate content (RC)
-│     ├─ story.json                               # candidate sidecar (RC)
-│     ├─ story.lock.json                          # REQUIRED if you enforce reproducibility gates
-│     ├─ review/                                  # REQUIRED: signoffs + checklist + decision record
+│     ├─ story.md                                           # Release candidate narrative (RC)
+│     ├─ story.json                                         # Release candidate sidecar (RC)
+│     ├─ story.steps.json                                   # Optional: if used, must match story.json references
+│     ├─ story.lock.json                                    # REQUIRED if enforcing reproducibility gates
+│     │
+│     ├─ review/                                            # REQUIRED: signoffs + checklist + decision record
 │     │  ├─ checklist.md
 │     │  ├─ signoff.yaml
-│     │  └─ decision_log.md                       # what changed + why
-│     └─ receipts/                                # REQUIRED: CI outputs proving gates passed
-│        ├─ lint_report.json
-│        ├─ linkcheck_report.json
-│        ├─ schema_validation.json
-│        └─ policy_check.json
-│
-├─ published/                                     # Published stories (authoritative)
-│  └─ <story_slug>/
-│     ├─ story.md                                 # latest published version (frozen)
-│     ├─ story.json                               # latest sidecar (frozen; must match story.md refs)
-│     ├─ story.manifest.json                      # REQUIRED: hashes of story.md/json + media set
-│     ├─ story.receipt.json                       # REQUIRED: publish receipt (who/what/when/inputs/outputs)
-│     ├─ media/
-│     │  └─ …                                     # frozen published media (no sensitive detail)
-│     ├─ media_attribution.md                     # REQUIRED when media licenses/attribution apply
+│     │  └─ decision_log.md                                 # what changed + why
 │     │
-│     ├─ versions/                                # REQUIRED if edits after publish are allowed at all
-│     │  ├─ v1/                                   # immutable snapshot (first publish)
+│     ├─ receipts/                                          # REQUIRED: CI outputs proving gates passed
+│     │  ├─ lint_report.json
+│     │  ├─ linkcheck_report.json
+│     │  ├─ schema_validation.json
+│     │  ├─ citation_resolve.json
+│     │  ├─ policy_check.json
+│     │  └─ rights_check.json
+│     │
+│     └─ exports/                                           # Optional: review preview artifacts
+│        └─ preview.html
+│
+├─ published/                                               # Published stories (authoritative)
+│  └─ <story_slug>/
+│     ├─ story.md                                           # latest published version (frozen)
+│     ├─ story.json                                         # latest sidecar (frozen; must match story.md refs)
+│     ├─ story.steps.json                                   # Optional: published steps (if used)
+│     ├─ story.manifest.json                                # REQUIRED: hashes of story files + media inventory
+│     ├─ story.receipt.json                                 # REQUIRED: publish receipt (who/what/when/inputs)
+│     ├─ media/
+│     │  └─ …                                               # frozen published media (no sensitive detail)
+│     ├─ media_attribution.md                               # REQUIRED when media licenses/attribution apply
+│     │
+│     ├─ versions/                                          # REQUIRED if any post-publish edits are allowed
+│     │  ├─ v1/                                             # immutable snapshot
 │     │  │  ├─ story.md
 │     │  │  ├─ story.json
+│     │  │  ├─ story.steps.json
 │     │  │  ├─ story.manifest.json
 │     │  │  ├─ story.receipt.json
 │     │  │  └─ media/…
-│     │  └─ v2/                                   # immutable snapshot (republish)
+│     │  └─ v2/                                             # immutable snapshot (republish)
 │     │     └─ …
 │     │
-│     └─ CHANGELOG.md                             # human-readable summary of republish diffs (optional)
+│     ├─ CHANGELOG.md                                       # optional: human-readable republish diffs
+│     └─ redirects.json                                     # optional: slug redirects / replaced-by pointers
 │
-├─ withdrawn/                                     # Removed from publication (policy/quality/rights reasons)
+├─ withdrawn/                                               # Removed from publication (policy/quality/rights reasons)
 │  └─ <story_slug>/
-│     ├─ tombstone.md                             # why withdrawn + what users should do instead
-│     ├─ withdrawal_receipt.json                  # who/when/why/policy decision record
-│     └─ references/                              # optional: pointers to replacement story or redacted version
+│     ├─ tombstone.md                                       # why withdrawn + safe alternatives
+│     ├─ withdrawal_receipt.json                            # who/when/why/policy decision record
+│     └─ references/                                        # optional: pointers to replacement story/redacted version
 │
-└─ _archive/                                      # Deprecated structures or retired templates (keep minimal)
+└─ _archive/                                                # Deprecated structures or retired templates (keep minimal)
    └─ …
 ```
 
-### Acceptable inputs
+### Folder contracts (quick reference)
 
-- Story Node v3 artifacts:
-  - `story.md` (markdown narrative)
-  - `story.json` (sidecar metadata: map state + citations + policy + review)
-- Supporting media **only when** rights are clear and attribution is captured
-- Directory-level documentation and templates that support Story Node authoring
+| Folder | What it is | Authority | Mutability | Typical gate expectation |
+|---|---|---:|---:|---|
+| `draft/` | authoring workspace | ❌ | mutable | lint + schema + citation resolution recommended |
+| `review/` | frozen release candidate | 🚧 | mostly immutable | **must** pass publish gates + signoff artifacts |
+| `published/` | shipped story packs | ✅ | immutable (append-only versions) | manifest + receipt required |
+| `withdrawn/` | tombstoned stories | ✅ | immutable | withdrawal receipt required |
+| `_templates/`, `_schemas/`, `_lint/` | enabling infrastructure | ✅ | controlled | changes reviewed like code |
 
-### Exclusions
+Back to top: [Navigation](#navigation)
 
-Do **not** put these in `docs/stories/`:
+---
 
-- Raw or processed datasets (those belong in the data lifecycle zones)
-- Pipeline code, ETL scripts, or schema contracts (those belong in code/contracts areas)
-- Media with unclear rights or missing attribution
-- Uncited narrative claims
-- Sensitive location specifics that violate policy or sovereignty requirements
+## Directory invariants
+
+These are hard rules that should be enforced in CI where possible.
+
+- **Pair rule**: `story.md` and `story.json` must exist as a pair for every story.
+- **Stable slug**: `<story_slug>` is kebab-case and **stable once published** (use `redirects.json` if you must rename).
+- **No raw data**: `docs/stories/` must never contain raw/processed datasets or pipeline outputs.
+- **No uncited claims**: factual claims in `story.md` require at least one resolvable citation.
+- **Policy alignment**: story `policy_label` must be compatible with its citations and media rights.
+- **Published is immutable**: edits after publish must create a new version snapshot (e.g., `versions/v2/`).
+- **Receipts are evidence**: review/publish decisions must leave artifacts (`signoff.yaml`, `decision_log.md`, `story.receipt.json`).
 
 Back to top: [Navigation](#navigation)
 
@@ -211,12 +279,16 @@ Back to top: [Navigation](#navigation)
 
 ## Story Node v3 format
 
-A Story Node is a **pair** of files:
+A Story Node is a **pack**: a markdown narrative plus machine-readable state and evidence references.
 
 | Artifact | Required | Purpose |
 |---|---:|---|
 | `story.md` | ✅ | Human-readable narrative with explicit claims and inline citations |
-| `story.json` | ✅ | Machine-readable story metadata: map state, citations list, policy label, review state |
+| `story.json` | ✅ | Machine-readable metadata: map state, citations list, policy label, review state |
+| `story.steps.json` | ⬜ | Optional step choreography for scrollytelling (if used) |
+| `story.lock.json` | ⬜ | Optional pins/hashes to stabilize reproducibility and review |
+| `story.manifest.json` | ✅ (published) | Inventory + hashes for story artifacts and media |
+| `story.receipt.json` | ✅ (published) | Publish receipt: who/what/when/inputs/outputs/policy decision refs |
 
 ### story.md expectations
 
@@ -226,6 +298,7 @@ A Story Node is a **pair** of files:
   - `Claims` section: numbered claims with citations
   - `Narrative` section: prose with inline citations
   - `Evidence` section: a list of evidence references used
+- Must clearly distinguish **fact** vs **interpretation** when relevant.
 
 Minimal example:
 
@@ -272,8 +345,9 @@ The sidecar JSON must declare Story Node v3 and include, at minimum:
 - `kfm_story_node_version: "v3"`
 - stable story identity (`story_id`) and story version (`version_id`)
 - `status`, `policy_label`, and `review_state`
-- `map_state` (bbox/zoom/layers/time window or equivalent)
-- `citations[]` (scheme refs that can be resolved)
+- `map_state` (bbox/zoom/layers/style parameters/time window/filters or equivalent)
+- `citations[]` (EvidenceRefs that can be resolved)
+- optional: `entities[]` (graph IDs or stable identifiers for key entities mentioned)
 
 Minimal example:
 
@@ -289,7 +363,8 @@ Minimal example:
     "bbox": [-102.0, 36.9, -94.6, 40.0],
     "zoom": 6,
     "layers": [],
-    "time_window": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" }
+    "time_window": { "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" },
+    "filters": {}
   },
   "citations": [
     { "ref": "dcat://<dataset>@<version>", "kind": "dcat" }
@@ -306,21 +381,18 @@ Back to top: [Navigation](#navigation)
 ### Non-negotiable rules
 
 - **Every claim must cite evidence.**
-- Citations must use resolvable evidence references (examples):
-  - `dcat://...` for dataset identity + licensing + distribution metadata
-  - `stac://...` for spatial/temporal assets
-  - `prov://...` for run receipts / lineage
-  - `doc://...` for governed documents and extracts
+- Citations must use **EvidenceRefs** that resolve via the evidence resolver.
+- Publishing is blocked unless **all citations resolve and are policy-allowed**.
 
 > [!IMPORTANT]
-> Publishing is blocked unless **all citations resolve through the evidence resolver**.
 > Do not publish Story Nodes that rely on “dead links”, private URLs, or evidence that can’t be resolved.
 
 ### Practical authoring guidance
 
 - Prefer **primary sources** and **cataloged** evidence.
-- Inline citations close to the sentence they support.
-- If a claim is uncertain or contested, state uncertainty and cite sources for the competing viewpoints.
+- Put inline citations close to the sentence they support.
+- If a claim is uncertain or contested, state uncertainty and cite competing viewpoints.
+- When referencing documents, cite stable page anchors/spans if your resolver supports it.
 
 Back to top: [Navigation](#navigation)
 
@@ -355,6 +427,19 @@ Back to top: [Navigation](#navigation)
 
 ## Workflow
 
+### Lifecycle
+
+```mermaid
+stateDiagram-v2
+  [*] --> Draft
+  Draft --> Review : request formal review
+  Review --> Draft : changes requested
+  Review --> Published : gates pass and approvals recorded
+  Published --> Published : republish as new version snapshot
+  Published --> Withdrawn : policy or rights issue
+  Withdrawn --> [*]
+```
+
 ### Create a new Story Node
 
 1. Create a folder under `draft/<story_slug>/`.
@@ -366,11 +451,26 @@ Back to top: [Navigation](#navigation)
    - `policy_label` is correct for the content
    - every claim has at least one resolvable citation
 
-### Update an existing Story Node
+### Move a Story Node into review
 
-- Bump `updated` date in MetaBlock on meaningful edits.
-- Preserve `doc_id` stability.
-- If policy label changes, treat it as a governance event and ensure review gates are applied.
+1. Copy or move `draft/<story_slug>/` -> `review/<story_slug>/`.
+2. Freeze scope: avoid adding new claims late unless necessary.
+3. Generate/attach receipts under `review/<story_slug>/receipts/` proving gates passed.
+4. Complete review artifacts under `review/<story_slug>/review/`.
+
+### Publish a Story Node
+
+1. Move `review/<story_slug>/` -> `published/<story_slug>/`.
+2. Create:
+   - `story.manifest.json` (hashes + inventory)
+   - `story.receipt.json` (publish receipt)
+3. If republishing, create a new immutable snapshot under `published/<story_slug>/versions/vN/`.
+
+### Withdraw a Story Node
+
+1. Move or mirror a tombstone into `withdrawn/<story_slug>/`.
+2. Add `withdrawal_receipt.json`.
+3. If replacing, add references to a safe alternative.
 
 Back to top: [Navigation](#navigation)
 
@@ -388,6 +488,8 @@ A Story Node is ready to move from `draft/` to `published/` when:
 - [ ] Media rights are clear and attribution is recorded
 - [ ] Sensitive content is handled according to governance playbooks
 - [ ] Review state indicates approval for publishing
+- [ ] `review/<story_slug>/receipts/` contains gate outputs (schema, citation, policy, rights, linkcheck)
+- [ ] `published/<story_slug>/` contains `story.manifest.json` + `story.receipt.json`
 
 Back to top: [Navigation](#navigation)
 
@@ -396,7 +498,11 @@ Back to top: [Navigation](#navigation)
 ## Story registry
 
 > [!TIP]
-> Keep this table updated so reviewers and UI builders can discover story nodes quickly.
+> Keep the story registry updated so reviewers and UI builders can discover story nodes quickly.
+
+Primary options:
+- **File registry**: `_registry/stories.index.json`
+- **Directory scan**: UI enumerates `published/*/` and reads story metadata
 
 | Story | Status | Policy | Time window | Notes |
 |---|---|---|---|---|
@@ -414,13 +520,15 @@ Back to top: [Navigation](#navigation)
 ### Proposed conventions
 
 - Keep drafts and published stories separate (`draft/` vs `published/`) to make “what ships” explicit.
+- Treat published story packs as immutable; republish via version snapshots.
 - Store story media adjacent to the story and require explicit attribution notes.
-- Consider adding a machine-readable registry file if the UI needs quick discovery.
+- Keep `_schemas/` and `_templates/` aligned to the runtime Story Node v3 contract.
 
 ### Unknown until repo verification
 
 - Exact story discovery mechanism for the UI (directory scan vs registry file)
 - Exact schema validation tooling and CI checks for Story Nodes
-- Canonical location if the repo uses a different path than `docs/stories/`
+- Canonical location in *this* repo if it differs from `docs/stories/` (e.g., `docs/reports/story_nodes/`)
+- Whether `contracts/schemas/story_node_v3.schema.json` exists and is the canonical schema source
 
 </details>
