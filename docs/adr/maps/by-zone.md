@@ -135,22 +135,23 @@ Preview is permitted to support QA, cartographic iteration, and steward review, 
 
 ~~~mermaid
 flowchart LR
-  subgraph Zones[Truth path zones]
-    RAW[RAW\n(immutable acquisition)] --> WORK[WORK\n(normalize + QA)]
-    WORK --> PROC[PROCESSED\n(publishable artifacts)]
-    PROC --> CAT[CATALOG\n(DCAT + STAC + PROV)]
-    CAT --> PUB[PUBLISHED\n(governed runtime)]
+
+  subgraph Z["Truth path zones"]
+    RAW["RAW - immutable acquisition"] --> WORK["WORK - normalize + QA"]
+    WORK --> PROC["PROCESSED - publishable artifacts"]
+    PROC --> CAT["CATALOG - DCAT + STAC + PROV"]
+    CAT --> PUB["PUBLISHED - governed runtime"]
   end
 
-  subgraph Serving[Map surfaces]
-    UI[Map Explorer / Story / Focus] -->|only| API[Governed API (PEP)]
-    API -->|policy-checked| Tiles[Tiles]
-    API -->|policy-checked| Features[Feature queries]
-    API -->|policy-checked| Evidence[Evidence resolve]
+  subgraph S["Map surfaces"]
+    UI["Map Explorer - Story - Focus"] --> API["Governed API - PEP"]
+    API --> Tiles["Tiles"]
+    API --> Features["Feature queries"]
+    API --> Evidence["Evidence resolve"]
   end
 
-  RAW -. not served .-> Serving
-  WORK -. steward preview only .-> API
+  RAW -.->|not served| UI
+  WORK -.->|steward preview only| API
   PROC --> API
   CAT --> API
   PUB --> API
