@@ -1,3 +1,182 @@
-%% Placeholder Mermaid diagram
-flowchart TD
-  A[Placeholder] --> B[To be defined]
+%% [KFM_META_BLOCK_V2]
+%% doc_id: kfm://doc/7c3f0a7a-2c3f-4b90-8f41-2c1e6b12d3f8
+%% title: Contract Surfaces Overview (Promotion, Policy, Catalogs, Evidence, API)
+%% type: diagram
+%% version: v1
+%% status: draft
+%% owners: TBD
+%% created: 2026-03-01
+%% updated: 2026-03-01
+%% policy_label: internal
+%% related:
+%%   - docs/architecture/
+%%   - contracts/
+%%   - policy/
+%% tags: [kfm, architecture, contracts, governance, trust-membrane]
+%% notes:
+%%   - This diagram expresses documented contract intent; rename modules/paths only after repo verification.
+%% [/KFM_META_BLOCK_V2]
+
+flowchart TB
+  %% KFM contract surfaces: repo contracts -> CI PEP -> promotion truth path -> runtime trust membrane.
+  %% Key invariant: clients never access stores directly; all access is policy-evaluated at the PEP.
+
+  classDef contract stroke-dasharray: 6 4,stroke-width: 2px;
+  classDef zone stroke-width: 1.5px;
+  classDef component stroke-width: 1.5px;
+
+  %% ---------------------------------------------------------------------------
+  %% Versioned contract sources (repo)
+  %% ---------------------------------------------------------------------------
+  subgraph repo["Versioned contract sources"]
+    direction TB
+    openapi[[OpenAPI specs]]
+    schemas[[JSON Schemas]]
+    vocab[[Controlled vocabularies]]
+    policy_bundle[[Policy bundle OPA Rego]]
+    policy_fixtures[[Policy fixtures allow deny obligations]]
+    catalog_profiles[[Catalog profiles DCAT STAC PROV]]
+  end
+  class openapi,schemas,vocab,policy_bundle,policy_fixtures,catalog_profiles contract;
+
+  %% ---------------------------------------------------------------------------
+  %% CI as a Policy Enforcement Point (fail-closed)
+  %% ---------------------------------------------------------------------------
+  subgraph ci["CI PEP fail closed"]
+    direction TB
+    ci_schema[Schema validation]
+    ci_policy[Policy tests]
+    ci_catalog[Catalog validators]
+    ci_links[Link checker]
+    ci_contract[Contract tests API and evidence]
+  end
+  class ci_schema,ci_policy,ci_catalog,ci_links,ci_contract component;
+
+  schemas --> ci_schema
+  vocab --> ci_schema
+  policy_bundle --> ci_policy
+  policy_fixtures --> ci_policy
+  catalog_profiles --> ci_catalog
+  openapi --> ci_contract
+
+  %% ---------------------------------------------------------------------------
+  %% Promotion Contract v1 (gates)
+  %% ---------------------------------------------------------------------------
+  subgraph promotion["Promotion Contract v1 gates"]
+    direction TB
+    promoter[Promotion tool]
+    promotion_contract[[Promotion Contract v1 gates A through G]]
+
+    gateA[Gate A identity versioning spec_hash digests]
+    gateB[Gate B license rights terms snapshot]
+    gateC[Gate C policy_label obligations redaction plan]
+    gateD[Gate D triplet validation cross links]
+    gateE[Gate E QA thresholds]
+    gateF[Gate F run receipt audit record]
+    gateG[Gate G release manifest]
+
+    promoter --> promotion_contract
+    promotion_contract --> gateA
+    promotion_contract --> gateB
+    promotion_contract --> gateC
+    promotion_contract --> gateD
+    promotion_contract --> gateE
+    promotion_contract --> gateF
+    promotion_contract --> gateG
+  end
+  class promotion_contract contract;
+
+  ci_schema --> promoter
+  ci_policy --> promoter
+  ci_catalog --> promoter
+  ci_links --> promoter
+  ci_contract --> promoter
+
+  %% ---------------------------------------------------------------------------
+  %% Truth path zones (data lifecycle)
+  %% ---------------------------------------------------------------------------
+  subgraph lifecycle["Truth path zones"]
+    direction LR
+    upstream[Upstream sources]
+    raw[(RAW immutable)]
+    work[(WORK and Quarantine)]
+    processed[(PROCESSED publishable)]
+    triplet[(CATALOG triplet DCAT STAC PROV)]
+    published[(PUBLISHED governed runtime)]
+
+    upstream --> raw --> work --> processed --> triplet --> published
+  end
+  class raw,work,processed,triplet,published zone;
+
+  promoter -.promote when gates pass.-> processed
+  promoter -.publish catalogs when gates pass.-> triplet
+  promoter -.enable runtime surface when gates pass.-> published
+
+  %% ---------------------------------------------------------------------------
+  %% Runtime trust membrane (PEP + Evidence Resolver + PDP)
+  %% ---------------------------------------------------------------------------
+  subgraph runtime["Runtime trust membrane"]
+    direction TB
+    api[Governed API PEP]
+    evidence[Evidence resolver]
+    pdp[Policy Engine PDP OPA Rego]
+
+    catalogs[(Catalog store DCAT STAC PROV)]
+    indexers[Index builders search tiles]
+    stores[(Runtime stores PostGIS Object)]
+
+    api --> evidence
+    api --> pdp
+    evidence --> pdp
+
+    catalogs --> api
+    stores --> api
+    catalogs --> evidence
+    stores --> evidence
+  end
+  class api,evidence,pdp,catalogs,indexers,stores component;
+
+  %% Catalog triplet is the canonical contract surface between pipeline outputs and runtime.
+  triplet --> catalogs
+
+  %% Indexers build runtime projections from processed artifacts and catalogs.
+  processed --> indexers
+  triplet --> indexers
+  indexers --> stores
+
+  %% ---------------------------------------------------------------------------
+  %% Client surfaces (must cross the trust membrane)
+  %% ---------------------------------------------------------------------------
+  subgraph clients["Client surfaces"]
+    direction TB
+    mapui[Map Explorer UI]
+    storyui[Story UI]
+    focusui[Focus Mode UI]
+    stewardui[Steward admin tools]
+  end
+  class mapui,storyui,focusui,stewardui component;
+
+  mapui --> api
+  storyui --> api
+  focusui --> api
+  stewardui --> api
+
+  %% ---------------------------------------------------------------------------
+  %% Contract labels and invariants
+  %% ---------------------------------------------------------------------------
+  api_contract[[API contract OpenAPI]]
+  evidence_contract[[EvidenceRef to EvidenceBundle contract]]
+  triplet_contract[[Catalog triplet contract profiles and cross links]]
+  policy_contract[[Policy as code semantics shared CI and runtime]]
+  trust_invariant[[Invariant clients never access stores directly]]
+
+  class api_contract,evidence_contract,triplet_contract,policy_contract,trust_invariant contract;
+
+  openapi --> api_contract --> api
+  schemas --> evidence_contract --> evidence
+  catalog_profiles --> triplet_contract --> catalogs
+  policy_bundle --> policy_contract --> pdp
+  policy_contract --> ci_policy
+  policy_contract --> api
+  policy_contract --> evidence
+  trust_invariant --> api
