@@ -119,18 +119,21 @@ If a dataset is sensitive-location or otherwise restricted:
 **Proposed** default layout for each dataset module:
 
 ```
-docs/data/datasets/
-  README.md                      # (this file) contract for dataset docs
-  <dataset_id>/
-    README.md                    # dataset datasheet (required)
-    decisions/                   # ADR-like notes specific to this dataset
-      0001-initial-onboarding.md
-    dictionaries/
-      fields.md                  # human-readable data dictionary
-    examples/
-      queries.md                 # example API queries (no direct storage access)
-      screenshots/               # optional; must be policy-safe / generalized
-    links.md                     # pointers to registry/spec/catalogs/receipts
+docs/data/datasets/                                      # Dataset documentation packs (datasheets; human-facing; policy-aware)
+├─ README.md                                              # Directory contract: required files, naming rules, review gates, link expectations
+│
+├─ <dataset_id>/                                          # One folder per dataset_id (stable identifier)
+│  ├─ README.md                                           # REQUIRED datasheet (purpose, sources, coverage, limitations, how to cite)
+│  ├─ decisions/                                          # Dataset-specific ADR-like notes (why choices were made; non-global)
+│  │  └─ 0001-initial-onboarding.md                       # Example: onboarding decisions (license, sensitivity, schema choices)
+│  ├─ dictionaries/                                       # Human-readable dictionaries (fields, units, coded values)
+│  │  └─ fields.md                                        # Data dictionary (field meanings, types, units, codebooks pointers)
+│  ├─ examples/                                           # Safe usage examples (no direct storage access; policy-safe)
+│  │  ├─ queries.md                                       # Example API queries + expected behaviors (redaction/obligations)
+│  │  └─ screenshots/                                     # OPTIONAL screenshots (must be policy-safe/generalized; no sensitive details)
+│  └─ links.md                                            # Pointers to canonical registries/specs/catalog triplet/receipts for this dataset_id
+│
+└─ ...                                                    # Additional dataset_id folders
 ```
 
 > **NOTE:** Folder names, dataset IDs, and the existence of any referenced repo paths must be verified in the live repo before treating them as “Confirmed.”
