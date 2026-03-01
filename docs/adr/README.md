@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-24
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: public
 related:
   - docs/README.md
@@ -26,6 +26,8 @@ notes:
 ![Format](https://img.shields.io/badge/format-markdown-lightgrey)
 ![Policy](https://img.shields.io/badge/policy-public-brightgreen)
 ![Governance](https://img.shields.io/badge/governance-evidence--first-6f42c1)
+![ADR Index](https://img.shields.io/badge/index-TODO-lightgrey) <!-- TODO: wire to generated index job -->
+![ADR Lint](https://img.shields.io/badge/lint-TODO-lightgrey)   <!-- TODO: wire to CI gate -->
 
 **Owners:** `TBD` (set this to the team responsible for architecture/governance)  
 **Scope:** Data → pipelines → catalogs/provenance → storage/indexing → governed APIs → Map/Story UI → Focus Mode  
@@ -39,6 +41,9 @@ notes:
 - [Decision language and claim tagging](#decision-language-and-claim-tagging)
 - [When an ADR is required](#when-an-adr-is-required)
 - [Directory rules](#directory-rules)
+  - [Directory invariants](#directory-invariants)
+  - [Expanded directory layout](#expanded-directory-layout)
+  - [Placement rules](#placement-rules)
 - [ADR lifecycle](#adr-lifecycle)
 - [ADR to PR to gates](#adr-to-pr-to-gates)
 - [ADR file naming](#adr-file-naming)
@@ -122,11 +127,15 @@ Write an ADR when a change affects **system shape**, **governance boundaries**, 
 
 `docs/adr/` holds architecture decision records that justify **governed changes** across the end-to-end system.
 
+> **NOTE**
+> Some KFM layouts place ADRs under `docs/architecture/adr/`. This repo uses `docs/adr/` for shorter, stable links.
+> If you relocate ADRs, update `docs/README.md` and any indexer tooling accordingly.
+
 ### Acceptable inputs
 
 - One Markdown file per decision: `NNNN-short-slug.md`
 - Mermaid diagrams (preferred) when a diagram adds clarity
-- Minimal attachments (only when necessary; prefer text + links)
+- Optional “dossier” folders for supporting material **linked** from the ADR (see layout below)
 
 ### Exclusions
 
@@ -135,46 +144,124 @@ Write an ADR when a change affects **system shape**, **governance boundaries**, 
 - Secrets, credentials, restricted operational details
 - Exact coordinates or targeting information for vulnerable/private/culturally restricted sites
 
-### Suggested directory layout
+---
+
+### Directory invariants
+
+These are **non-negotiable** rules for keeping ADRs usable as governed artifacts:
+
+1. **Stable identity**
+   - ADR numbers **MUST NOT** be reused.
+   - `doc_id` in the MetaBlock **MUST** be stable (do not regenerate on edits).
+
+2. **Small + link-first**
+   - ADRs are decision records; supporting detail belongs in linked docs, PRs, or run receipts.
+   - Do not embed large binaries or datasets here.
+
+3. **Generated stays generated**
+   - Anything under `_generated/` is **never** hand-edited.
+
+4. **No secrets**
+   - Never commit credentials, tokens, or restricted operational steps into `docs/adr/`.
+
+5. **Reversible by design**
+   - Every accepted ADR MUST have rollback triggers + mechanics, not just “we can revert”.
+
+---
+
+### Expanded directory layout
+
+This is the **fully expanded** (but still lightweight) layout for `docs/adr/`.
 
 ```text
-docs/adr/                                                 # Architecture Decision Records (ADRs) for KFM (governed, fail-closed)
-├─ README.md                                              # ADR process + rules + status definitions + index (human entrypoint)
-├─ TEMPLATE.md                                            # Single-source ADR template (copy/paste; optionally includes KFM_META_BLOCK_V2)
-├─ ADR-REVIEW-CHECKLIST.md                                # PR checklist (evidence links, rollback, verification gates, policy label)
-├─ ADR-STYLE-GUIDE.md                                     # Optional: style rules (tense, headings, decision statement format)
-├─ INDEX.md                                               # Optional: canonical ADR index (recommended if auto-generating)
+docs/adr/                                                     # Architecture Decision Records (governed, fail-closed)
+├─ README.md                                                  # This file (entrypoint + rules + lifecycle + index)
+├─ INDEX.md                                                   # Canonical index (human-maintained or generated; see _generated/)
+├─ TEMPLATE.md                                                # Single-source ADR template (copy/paste)
+├─ ADR-REVIEW-CHECKLIST.md                                    # Review checklist (evidence links, rollback, verification, policy label)
+├─ ADR-STYLE-GUIDE.md                                         # Writing conventions (tense, headings, decision statement format)
+├─ ADR-TAXONOMY.md                                            # Controlled tags: areas/components/zones/gates (to standardize indexing)
+├─ ADR-GOVERNANCE.md                                          # Policy label guidance, redaction rules, “default-deny” reminders
 │
-├─ _generated/                                            # Optional: generated artifacts (never hand-edited)
-│  ├─ adr-index.json                                      # Machine-readable index (for UI/search tooling)
-│  └─ adr-index.md                                        # Generated markdown index (if automated)
+├─ _generated/                                                # Generated artifacts (NEVER hand-edit; CI regenerates)
+│  ├─ adr-index.json                                          # Machine-readable ADR registry (for UI/search)
+│  ├─ adr-index.md                                            # Generated Markdown index (if automated)
+│  ├─ adr-graph.csv                                           # Optional: dependency graph edges (ADR → ADR, ADR → contract)
+│  ├─ adr-matrix.csv                                          # Optional: matrix view (area × status × gates)
+│  └─ adr-stats.json                                          # Optional: counts by status/area/policy_label
 │
-├─ tools/                                                 # Optional: glue scripts to enforce ADR invariants
-│  ├─ adr-next-number.sh                                  # Print next available NNNN (fail if collision)
-│  ├─ adr-lint.js                                         # Lint ADRs (required sections, links present, status valid)
-│  └─ adr-indexer.js                                      # Regenerate INDEX.md and/or _generated/* from filesystem scan
+├─ tools/                                                     # Optional: glue scripts to enforce ADR invariants
+│  ├─ README.md                                               # How to run adr tools locally + in CI
+│  ├─ adr-next-number.sh                                      # Print next available NNNN (fail if collision)
+│  ├─ adr-lint.js                                             # Lint ADRs (required sections, status valid, MetaBlock present)
+│  ├─ adr-indexer.js                                          # Regenerate INDEX.md and/or _generated/* from filesystem scan
+│  ├─ adr-linkcheck.js                                        # Verify internal links (PRs/issues/docs) are well-formed
+│  └─ adr-evidence-check.js                                   # Verify referenced EvidenceRefs are resolvable (optional gate)
 │
-├─ assets/                                                # Optional: rare binaries (prefer Mermaid in ADRs)
-│  ├─ diagrams/                                           # Exported diagrams when Mermaid is insufficient
-│  └─ screenshots/                                        # Use sparingly; ensure no sensitive info
+├─ assets/                                                    # Optional: rare binaries (prefer Mermaid in ADRs)
+│  ├─ diagrams/                                               # Exported diagrams when Mermaid is insufficient
+│  ├─ screenshots/                                            # Use sparingly; ensure no sensitive info
+│  └─ exports/                                                # Optional: PDF exports for external review (if policy permits)
 │
-├─ archive/                                               # Optional: legacy/imported ADRs (kept for history)
-│  └─ 20xx-legacy/                                        # Imported ADRs (keep original names; add notes instead of rewriting)
+├─ dossiers/                                                  # Optional: supporting material per ADR (do NOT duplicate ADR content)
+│  ├─ README.md                                               # Rules for dossiers (what’s allowed, what’s prohibited)
+│  ├─ 0006-evidence-ref-and-bundle-resolution/                # Example dossier folder for ADR 0006
+│  │  ├─ README.md                                            # What’s in this dossier + how it maps to the ADR
+│  │  ├─ diagrams/                                            # Extra diagrams
+│  │  ├─ notes/                                               # Additional context notes
+│  │  └─ evidence/                                            # Pointers (links) to receipts/bundles elsewhere (no large data)
+│  └─ 0012-secrets-management-and-rotation/
+│     └─ ...
 │
-├─ 0001-example-decision.md                               # Example ADR (placeholder)
-├─ 0002-another-decision.md                               # Example ADR (placeholder)
+├─ maps/                                                      # Optional: curated “views” (link lists; no duplication)
+│  ├─ README.md                                               # How to maintain these views
+│  ├─ by-area.md                                              # Links grouped by domain area (data/catalog/policy/ui/infra/security)
+│  ├─ by-status.md                                            # Links grouped by status (proposed/accepted/etc.)
+│  ├─ by-promotion-gate.md                                    # Links grouped by impacted gate (A–G)
+│  ├─ by-zone.md                                              # Links grouped by impacted zone (RAW/WORK/PROCESSED/TRIPLET/PUBLISHED)
+│  └─ by-policy-label.md                                      # Links grouped by policy_label (public/restricted)
 │
-├─ 0003-data-zones-and-promotion-contract.md              # Data zones + promotion contract (planned decision)
-├─ 0004-dataset-identity-versioning-and-hashing.md        # Dataset identity + versioning + hashing (planned decision)
-├─ 0005-catalog-triplet-dcat-stac-prov-strategy.md        # Catalog triplet strategy (DCAT/STAC/PROV) (planned decision)
-├─ 0006-evidence-ref-and-bundle-resolution.md             # EvidenceRef + EvidenceBundle resolution (planned decision)
-├─ 0007-policy-labels-redaction-and-obligations.md        # Policy labels + redaction + obligations (planned decision)
-├─ 0008-governed-api-boundary-and-pep-enforcement.md      # Governed API boundary + PEP enforcement (planned decision)
-├─ 0009-search-index-tiles-and-rebuildability.md          # Search/index/tiles + rebuildability (planned decision)
-├─ 0010-focus-mode-cite-or-abstain-guardrails.md          # Focus Mode cite-or-abstain guardrails (planned decision)
-├─ 0011-run-receipts-and-audit-ledger-minimums.md         # Run receipts + audit ledger minimums (planned decision)
-└─ 0012-secrets-management-and-rotation.md                # Secrets management + rotation (planned decision)
+├─ archive/                                                   # Legacy/imported ADRs (kept for history)
+│  ├─ README.md                                               # Archive rules (no edits except notes/status pointers)
+│  └─ imported/
+│     └─ 20xx-legacy/                                         # Imported ADRs (keep original names; add notes instead of rewriting)
+│
+├─ 0001-example-decision.md                                   # Example ADR (placeholder)
+├─ 0002-another-decision.md                                   # Example ADR (placeholder)
+│
+├─ 0003-data-zones-and-promotion-contract.md                  # Planned: data zones + promotion contract
+├─ 0004-dataset-identity-versioning-and-hashing.md            # Planned: deterministic identity/versioning/hashing
+├─ 0005-catalog-triplet-dcat-stac-prov-strategy.md            # Planned: DCAT/STAC/PROV triplet strategy
+├─ 0006-evidence-ref-and-bundle-resolution.md                 # Planned: EvidenceRef + EvidenceBundle resolution
+├─ 0007-policy-labels-redaction-and-obligations.md            # Planned: policy labels + redaction + obligations
+├─ 0008-governed-api-boundary-and-pep-enforcement.md          # Planned: governed API boundary + PEP enforcement
+├─ 0009-search-index-tiles-and-rebuildability.md              # Planned: indexes/tiles + rebuildability
+├─ 0010-focus-mode-cite-or-abstain-guardrails.md              # Planned: Focus Mode cite-or-abstain guardrails
+├─ 0011-run-receipts-and-audit-ledger-minimums.md             # Planned: run receipts + audit ledger minimums
+└─ 0012-secrets-management-and-rotation.md                    # Planned: secrets management + rotation
 ```
+
+---
+
+### Placement rules
+
+These rules prevent drift and keep indexing automation simple.
+
+#### Where ADR files live
+
+- ADR markdown files live at: `docs/adr/NNNN-short-slug.md`
+- Optional supporting material lives at: `docs/adr/dossiers/NNNN-short-slug/*`
+- Generated indexes and machine outputs live at: `docs/adr/_generated/*`
+
+#### What goes in a dossier vs the ADR
+
+Use a **dossier** when any of the following is true:
+
+- the decision needs more than one diagram
+- you need a longer rationale or analysis than fits in the ADR
+- you want to attach a threat model, benchmark plan, or migration plan
+
+**Dossiers MUST NOT** include secrets or large data. If you must reference restricted material, store it in the restricted system and link to it from the ADR at an abstraction-safe level.
 
 ---
 
