@@ -2,15 +2,17 @@
 doc_id: kfm://doc/8f4c5db9-1cc2-4a2f-b5b3-fb8c6a9a8e7d
 title: policy/README.md
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: KFM Governance + Policy Stewards (TODO: set via CODEOWNERS)
 created: 2026-02-26
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: public
 related:
-  - kfm://doc/KFM-GDG-2026  # TODO: link to in-repo copy of the Governance Guide
-tags: [kfm, policy, governance, opa, rego, ci, promotion-contract]
+  - kfm://doc/KFM-GDG-2026                 # TODO: link to in-repo copy of the Governance Guide
+  - kfm://doc/KFM-AGDP-2026-02-27          # TODO: Architecture, Governance, and Delivery Plan (2026-02-27)
+  - kfm://doc/KFM-DDGG-vNext-2026-02-20    # TODO: Definitive Design & Governance Guide (vNext)
+tags: [kfm, policy, governance, opa, rego, ci, promotion-contract, evidence-resolver, rights, sensitivity, audit]
 notes:
   - Directory README for the policy bundle (CI + runtime semantics).
   - Replace <ORG>/<REPO> badge placeholders once repo metadata is known.
@@ -25,7 +27,8 @@ notes:
 
 ![Status](https://img.shields.io/badge/status-draft-lightgrey)
 ![Posture](https://img.shields.io/badge/posture-default--deny-critical)
-![Policy-as-code](https://img.shields.io/badge/policy--as--code-Rego-blue)
+![Policy-as-code](https://img.shields.io/badge/policy--as--code-OPA%20%2F%20Rego-blue)
+![Fixtures](https://img.shields.io/badge/fixtures-required-informational)
 ![Tests](https://img.shields.io/badge/tests-required-informational)
 ![CI/Runtime](https://img.shields.io/badge/ci%2Fruntime-semantics%20match-important)
 ![Audit](https://img.shields.io/badge/audit-reconstructable-success)
@@ -34,14 +37,26 @@ notes:
 <!-- ![Policy Tests](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/policy-tests.yml?branch=main) -->
 <!-- ![Conftest Gate](https://img.shields.io/github/actions/workflow/status/<ORG>/<REPO>/conftest.yml?branch=main) -->
 
-> **TL;DR:** In KFM, **security is governance**. Policy is the shared source of truth for what is allowed to be served, exported, or claimed — and it must be **deterministic**, **test-covered**, and **fail-closed**.
+> **TL;DR:** In KFM, **security is governance**. Policy is the shared source of truth for what is allowed to be served, exported, or claimed — and it must be **deterministic**, **fixture-backed**, **test-covered**, and **fail-closed**.
 
-## Key references (normative intent)
+> [!NOTE]
+> **Normative keywords used here**
+> - **MUST** = required for compliance with the trust membrane / promotion contract.
+> - **SHOULD** = strongly recommended to preserve auditability and prevent drift.
+> - **MAY** = optional; adopt when useful.
 
+---
+
+## Key references
+
+These are the intent sources this README aligns to (add in-repo links once paths exist):
+
+- **KFM — Architecture, Governance, and Delivery Plan (2026-02-27)** *(TODO: in-repo path)*  
+  Source of truth for: truth path zones, minimum Promotion Contract gates, and fail-closed posture.
+- **KFM — Definitive Design & Governance Guide (vNext, 2026-02-20)** *(TODO: in-repo path)*  
+  Source of truth for: policy-as-code parity, sensitivity defaults, licensing rules, controlled vocab starters.
 - **KFM Governance Guide**: `kfm://doc/KFM-GDG-2026` *(TODO: add in-repo path link)*  
-  Source of truth for: CI/runtime parity, policy labels + obligations, promotion contract gates, and safety defaults.
-- **Tooling / Delivery Plan** *(TODO: link in-repo)*  
-  Source of truth for: evidence resolver contract, cite-or-abstain gates, and how CI gates block promotion/merge.
+  Source of truth for: policy labels + obligations, steward workflows, and governance roles.
 
 ---
 
@@ -49,11 +64,14 @@ notes:
 
 - [What lives here](#what-lives-here)
 - [Non-negotiable invariants](#non-negotiable-invariants)
-- [Where policy sits in KFM](#where-policy-sits-in-kfm)
-- [Policy decision model](#policy-decision-model)
-- [Versioning and toolchain pins](#versioning-and-toolchain-pins)
+- [Policy architecture in KFM](#policy-architecture-in-kfm)
+- [Truth path and promotion gates](#truth-path-and-promotion-gates)
+- [Policy decision envelope](#policy-decision-envelope)
+- [Sensitivity and rights defaults](#sensitivity-and-rights-defaults)
+- [Evidence resolver and citations](#evidence-resolver-and-citations)
 - [Policy labels](#policy-labels)
 - [Promotion Contract alignment](#promotion-contract-alignment)
+- [Versioning and toolchain pins](#versioning-and-toolchain-pins)
 - [Making changes](#making-changes)
 - [Testing](#testing)
 - [Directory layout](#directory-layout)
@@ -97,7 +115,7 @@ What must **not** go in `policy/`:
 - **One-off exceptions** without fixtures + tests (exceptions must become governed, testable policy).
 
 > [!WARNING]
-> If a rule cannot be tested (fixtures + tests), it is not policy — it’s a suggestion. Policy must be deterministic and CI-enforced.
+> If a rule cannot be tested (fixtures + tests), it is not policy — it’s a suggestion. Policy MUST be deterministic and CI-enforced.
 
 [Back to top](#top)
 
@@ -105,35 +123,36 @@ What must **not** go in `policy/`:
 
 ## Non-negotiable invariants
 
-These invariants align to KFM north stars. Policy must **enforce** them, not merely describe them.
+These invariants align to KFM north stars. Policy MUST **enforce** them, not merely describe them.
 
 ### 1) Default deny
 
 - Unknown = **deny**.
 - Missing metadata = **deny** (or quarantine).
 - Unhandled `policy_label` = **deny**.
+- Unrecognized action/resource type = **deny**.
 
 ### 2) Trust membrane
 
-- Clients/UI must never gain access to storage/DB/indexes by policy loophole.
-- Policy must assume access happens only through governed surfaces (API, evidence resolver, pipeline runner).
-- “Allowed” must not imply “bypass”: obligations must still apply.
+- Clients/UI MUST NOT gain access to storage/DB/indexes by policy loophole.
+- Policy MUST assume access happens only through governed surfaces (API, evidence resolver, pipeline runner).
+- “Allowed” MUST NOT imply “bypass”: obligations still apply.
 
 ### 3) Evidence-first
 
-- Any “allowed to claim/serve” decision must be compatible with evidence-first UX:
+- Any “allowed to claim/serve” decision MUST be compatible with evidence-first UX:
   - evidence must be resolvable (or UI must degrade/abstain)
   - license/rights must be present where required
   - provenance/receipts must be linkable where policy allows
 
 ### 4) Cite-or-abstain
 
-- If citations cannot be verified and policy-allowed, Focus Mode must **abstain** or reduce scope.
-- Policy must support (and tests must cover) abstention reasons and safe alternatives.
+- If citations cannot be verified and policy-allowed, Focus Mode MUST **abstain** or reduce scope.
+- Policy SHOULD return stable reason codes + safe alternatives to support abstention UX.
 
 ### 5) Promotion Contract support
 
-- Policy participates in promotion gates and must be able to deny promotion for:
+- Policy participates in promotion gates and MUST be able to deny promotion for:
   - missing license/rights
   - missing/unclear sensitivity handling
   - missing receipts/checksums policy fields
@@ -141,103 +160,115 @@ These invariants align to KFM north stars. Policy must **enforce** them, not mer
 
 ### 6) Canonical vs rebuildable
 
-- Policy must treat projections/caches as rebuildable and never as authoritative truth.
-- If a projection contradicts canonical catalogs/receipts, policy should bias toward **deny** or **degrade** until resolved.
+- Policy MUST treat projections/caches as rebuildable and never as authoritative truth.
+- If a projection contradicts canonical catalogs/receipts, policy SHOULD bias toward **deny** or **degrade** until resolved.
 
 ### 7) Deterministic identity and hashing
 
-- Policy cannot depend on unstable, non-deterministic fields as decision inputs.
-- Policy rules that touch identity/versioning must operate on stable identifiers (`dataset_version_id`, `spec_hash`) and be test-covered.
+- Policy MUST NOT depend on unstable, non-deterministic fields as decision inputs.
+- Identity/versioning rules SHOULD operate on stable identifiers (`dataset_version_id`, `spec_hash`) and be fixture-tested.
 
-### 8) Policy-safe errors (no restricted inference)
+### 8) Policy-safe errors
 
-- A public caller must not infer the existence of restricted resources through:
+- A public caller MUST NOT infer restricted resources through:
   - 403 vs 404 differences
   - different error messages
   - different payload shapes
   - “helpful” metadata in errors
-- Policy should support an indistinguishable, safe error posture for restricted objects.
-
-### 9) Versioned policy pack (audit reconstructability)
-
-- Every governed run (pipeline run, story publish, Focus Mode request) must be able to record:
-  - **which policy pack** was used (bundle digest / version identifier)
-  - **what decision** was returned (decision + obligations + reason codes)
-- If a run receipt/promotion manifest cannot answer “which policy rules were applied?”, treat it as **non-auditable** and **deny/quarantine**.
+- Policy SHOULD support an indistinguishable, safe error posture for restricted objects.
 
 [Back to top](#top)
 
 ---
 
-## Where policy sits in KFM
+## Policy architecture in KFM
 
-Policy is part of the **trust membrane**. It is enforced in CI (PR gates) and at runtime (API + evidence resolver).
+KFM requires the same policy semantics in CI and runtime — otherwise CI guarantees are meaningless.
 
 ```mermaid
 flowchart LR
-  subgraph CI["CI / PR Gate (Policy Enforcement Point)"]
-    PR["Pull Request"] --> Gate["Policy gate (Conftest or OPA)"]
-    Gate --> CIResult["Pass or Fail (closed)"]
+  subgraph CI["CI and PR gates"]
+    PR["Pull Request"] --> Gate["Conftest or OPA policy gate"]
+    Gate --> CIResult["Pass or Fail closed"]
   end
 
-  subgraph Runtime["Runtime (Policy Enforcement Points)"]
-    API["Governed API (PEP)"] --> PDP["Policy Decision Point (OPA/Rego PDP)"]
-    ER["Evidence Resolver (PEP)"] --> PDP
-    Pipe["Pipeline Runner / Promotion (PEP)"] --> PDP
+  subgraph Runtime["Runtime enforcement"]
+    API["Governed API PEP"] --> PDP["Policy Decision Point"]
+    ER["Evidence Resolver PEP"] --> PDP
+    Pipe["Pipeline and Promotion PEP"] --> PDP
   end
 
-  UI["Map / Story / Focus UI"] --> API
+  UI["Map, Story, Focus UI"] --> API
   UI --> ER
 
   CIResult --> Merge["Merge allowed only if gates pass"]
 ```
 
 **Key posture**
-- CI must **block merges** when policy denies.
-- Runtime must **fail closed** when policy cannot evaluate or evidence cannot be resolved.
-- UI must **display** policy outcomes (labels/obligations) but **never** decide authorization.
+- CI MUST **block merges** when policy denies.
+- Runtime MUST **fail closed** when policy cannot evaluate or evidence cannot be resolved.
+- UI MUST **display** policy outcomes (labels/obligations) but MUST NOT decide authorization.
 
 [Back to top](#top)
 
 ---
 
-## Policy decision model
+## Truth path and promotion gates
 
-A policy evaluation should return a **decision envelope** that is stable, auditable, and easy to test.
+KFM’s lifecycle is an auditable “truth path” with storage zones + validation gates. Policy participates in gates, and promotion to governed runtime surfaces is blocked unless the minimum gates are met.
+
+```mermaid
+flowchart LR
+  RAW["RAW"] --> WORK["WORK or Quarantine"] --> PROCESSED["PROCESSED"] --> CATALOG["CATALOG Triplet"] --> PUBLISHED["PUBLISHED"]
+  Gate["Policy plus Contract Gates"] -.enforce.-> WORK
+  Gate -.enforce.-> PROCESSED
+  Gate -.enforce.-> CATALOG
+  Gate -.enforce.-> PUBLISHED
+```
+
+> [!IMPORTANT]
+> “Publish” is not a UI action; it is a governed promotion event. If the system cannot answer **“Is it safe and permitted to publish?”** deterministically, the correct result is **deny/quarantine**.
+
+[Back to top](#top)
+
+---
+
+## Policy decision envelope
+
+Policy evaluation MUST return a decision envelope that is stable, auditable, and easy to test.
 
 ### Required decision fields
 
 - `decision`: `allow | deny` *(default deny)*
 - `policy_label`: controlled vocabulary string for the resource
 - `obligations[]`: required follow-up actions (redaction, notices, export constraints)
-- `reason_codes[]`: stable identifiers (for audit + debugging without leaking sensitive info)
+- `reason_codes[]`: stable identifiers for audit + debugging without leaking sensitive info
 
-### Recommended decision fields (strongly encouraged)
+### Strongly recommended fields
 
-- `decision_id`: stable identifier for correlation in receipts/PROV (may be derived)
-- `policy_pack_id`: policy bundle version/digest used for evaluation
+- `decision_id`: stable identifier for correlation in receipts/PROV
+- `policy_pack_id`: bundle digest or version identifier used for evaluation
 - `audit_ref`: correlation ID for policy-safe error responses and steward debugging
 
 > [!NOTE]
-> Obligations are part of the decision and must be captured in run receipts/audit logs (and referenced from PROV where applicable).
+> **Receipts and manifests SHOULD reference policy decisions.** A run receipt is emitted for every pipeline run and Focus Mode query, and promotion manifests include policy fields (e.g., `policy_label`, `decision_id`). Treat missing policy references as **non-auditable** and deny/quarantine.
 
-### Obligations (examples)
+### Obligations
 
-Obligations make “allowed” safe:
+Obligations make “allowed” safe, and MUST be enforceable by downstream systems:
 
 - `show_notice`: UI must show a banner (e.g., “generalized due to policy”).
 - `redact_fields`: evidence resolver must redact before returning.
 - `force_generalization`: serve a `public_generalized` derivative only.
 - `suppress_export`: block downloads/exports for the caller/action.
 - `require_attribution`: exports must include license + attribution text.
-- `rate_limit_class`: apply stricter limits for public endpoints.
 - `log_audit`: require audit emission for this action.
 
 ### Policy-safe error shaping
 
-Policy should support a safe error model that avoids restricted inference. A common approach:
+Policy SHOULD support a safe error model that avoids restricted inference.
 
-- **Public caller:** return a “not found or not permitted” generic error for restricted targets.
+- **Public caller:** return a generic “not found or not permitted” response for restricted targets.
 - **Authorized steward/operator:** return explicit deny with reason codes and remediation hints.
 
 > [!WARNING]
@@ -247,35 +278,43 @@ Policy should support a safe error model that avoids restricted inference. A com
 
 ---
 
-## Versioning and toolchain pins
+## Sensitivity and rights defaults
 
-This directory is not just “policy source”; it is an **auditable contract**.
+These defaults are aligned to KFM posture and should be encoded as policy rules + fixtures.
 
-### Policy pack versioning
+### Sensitivity defaults
 
-- Treat the **policy pack** as a versioned artifact.
-- Record `policy_pack_id` (bundle digest/version) in:
-  - pipeline run receipts
-  - promotion manifests
-  - Story publish receipts
-  - Focus Mode receipts
+- Default deny for **sensitive-location** and **restricted** datasets.
+- If any public representation is allowed, produce a separate `public_generalized` dataset version.
+- Never leak restricted metadata through error behavior.
+- Do not embed precise coordinates in Story Nodes or Focus Mode outputs unless policy explicitly allows.
+- Treat redaction/generalization as a first-class transform recorded in PROV.
 
-This is what makes governance **reconstructable** during audits and incident response.
+### Licensing and rights enforcement
 
-### Toolchain drift (pin versions)
+- Principle: **online availability does not equal permission to reuse**.
+- Promotion gate SHOULD require license + rights metadata for every distribution.
+- “Metadata-only reference” mode SHOULD be allowed: catalog without mirroring if rights do not allow.
+- Export functions SHOULD include attribution and license text automatically.
+- Story publishing gate SHOULD block if rights are unclear for included media.
 
-Toolchain drift can silently invalidate CI gates. To keep CI and runtime outcomes aligned:
+> [!IMPORTANT]
+> Licensing is not paperwork. It is a policy input.
 
-- Pin **OPA** and **Conftest** versions in CI.
-- Treat toolchain upgrades as governed changes:
-  - add/refresh fixtures
-  - run policy regression suite
-  - steward review
+[Back to top](#top)
 
-### Maintainability guidelines
+---
 
-- Keep policies small and composable (one file per concern).
-- Always add `_test.rego` coverage for new rules to prevent silent drift.
+## Evidence resolver and citations
+
+In KFM, a “citation” is not a pasted URL. It is an **EvidenceRef** that resolves — via the evidence resolver — into an **EvidenceBundle** containing the metadata, artifacts, and provenance needed to inspect and reproduce the claim.
+
+**Hard gate behavior**
+- Focus Mode and Story publishing MUST require: every citation resolves and is policy-allowed.
+- If not, the system MUST narrow scope or abstain.
+
+> [!TIP]
+> Treat citation verification as the primary anti-hallucination mechanism for narrative surfaces.
 
 [Back to top](#top)
 
@@ -305,23 +344,39 @@ Policy labels are controlled vocabulary values attached to datasets, stories, an
 
 ## Promotion Contract alignment
 
-Policy is a hard dependency of the KFM Promotion Contract. Promotion must be **blocked** unless required artifacts exist and validate.
+Policy is a hard dependency of the KFM Promotion Contract. Promotion MUST be blocked unless required artifacts exist and validate.
 
-### Gate map (Promotion Contract v1)
+### Gate map
 
-| Gate | Promotion gate | Policy participation (examples) |
+| Gate | Promotion gate | Policy participation examples |
 |---:|---|---|
 | A | Identity & versioning | deny if required IDs/spec-hash inputs missing or invalid |
 | B | Licensing & rights metadata | deny if license/rights/attribution missing or incompatible with intended distribution |
 | C | Sensitivity classification & redaction plan | deny if restricted/sensitive lacks a recorded generalization/redaction plan (and dual-output policy where required) |
-| D | Catalog triplet validation | policy can deny serving/promotion if required catalog fields/cross-links are missing (even if schema-valid) |
-| E | QA & thresholds | deny (or quarantine) if required QA report is missing or thresholds failed |
-| F | Run receipt & audit record | deny if receipts lack required policy decision fields (decision + obligations + policy_pack_id) |
+| D | Catalog triplet validation | deny if required catalog fields/cross-links are missing; deny if EvidenceRefs cannot resolve |
+| E | QA & thresholds | deny (or quarantine) if QA report missing or thresholds failed |
+| F | Run receipt & audit record | deny if receipts lack required decision fields or omit policy references |
 | G | Release manifest | deny if promotion is not recorded as a release manifest referencing artifact digests |
 
-### Promotion-critical rule of thumb
+[Back to top](#top)
 
-If the system cannot answer **“Is it safe and permitted to publish?”** deterministically, the correct result is **deny/quarantine**.
+---
+
+## Versioning and toolchain pins
+
+This directory is not just “policy source”; it is an **auditable contract**.
+
+### Policy pack versioning
+
+- Treat the **policy pack** as a versioned artifact.
+- Receipts/manifests SHOULD record which policy pack version was used so audits can reconstruct the rule set.
+- Toolchain drift can invalidate gates; pin versions and regression-test fixtures on upgrades.
+
+### Maintainability guidelines
+
+- Keep policies small and composable (one file per concern).
+- Always add `_test.rego` coverage for new rules to prevent silent drift.
+- Prefer stable, enumerated `reason_codes` and versioned vocab files.
 
 [Back to top](#top)
 
@@ -331,14 +386,14 @@ If the system cannot answer **“Is it safe and permitted to publish?”** deter
 
 Policy changes are governance changes. Treat them with the same discipline as schema/API changes.
 
-### Change rules (non-negotiable)
+### Change rules
 
-- **No silent changes:** every change must add/modify **fixtures** and **tests**.
-- **Fail closed:** unhandled labels/actions default to **deny**.
-- **CI/runtime parity:** outcomes must match between CI evaluation and runtime PDP evaluation.
+- **No silent changes:** every change MUST add/modify fixtures and tests.
+- **Fail closed:** unhandled labels/actions default to deny.
+- **CI/runtime parity:** outcomes MUST match between CI evaluation and runtime PDP evaluation.
 - **Policy-safe outputs:** no restricted inference through error models or payload differences.
 
-### PR checklist (policy)
+### PR checklist
 
 - [ ] Rego change includes stable `reason_codes` (or documented rationale).
 - [ ] Fixtures cover decision **and obligations** (not just allow/deny).
@@ -347,7 +402,7 @@ Policy changes are governance changes. Treat them with the same discipline as sc
   - steward role (explicit allows where intended)
   - restricted existence inference protections
   - export/download constraints (rights + obligations)
-- [ ] If vocab changed: update vocab files + downstream fixtures.
+- [ ] If vocab changed: update vocab files + downstream fixtures/tests.
 - [ ] Steward review requested and recorded (via CODEOWNERS / reviewers).
 
 > [!TIP]
@@ -361,14 +416,15 @@ Policy changes are governance changes. Treat them with the same discipline as sc
 
 Wire these into `make test-policy` (or equivalent) so local + CI runs are identical.
 
-### Option A — OPA unit tests (Rego)
+### Option A — OPA unit tests in Rego
 
 ```bash
 opa version
+opa fmt -w policy/rego
 opa test -v policy/rego policy/tests
 ```
 
-### Option B — Conftest gate (PR gate)
+### Option B — Conftest PR gate
 
 ```bash
 conftest --version
@@ -377,11 +433,11 @@ conftest test -p policy/rego policy/fixtures
 
 ### Required CI behavior
 
-- Policy tests **must run in CI** and **block merges** on failure.
-- Denies must emit actionable output:
+- Policy tests MUST run in CI and MUST block merges on failure.
+- Denies MUST emit actionable output:
   - stable `reason_code`
   - policy-safe remediation hint (no leaks)
-- CI should log (and ideally assert) policy tool versions so regressions are diagnosable.
+- CI SHOULD log and/or assert policy tool versions so regressions are diagnosable.
 
 [Back to top](#top)
 
@@ -389,8 +445,11 @@ conftest test -p policy/rego policy/fixtures
 
 ## Directory layout
 
-This is a recommended, validator-friendly starting structure. Adjust if your repo differs, but preserve:
+This is a **recommended** starting structure. Adjust if your repo differs, but preserve:
 **rego + fixtures + tests + vocab + rubrics**.
+
+> [!NOTE]
+> Do not claim specific modules or paths exist until verified in the live repo. Treat this layout as an adoption target and evolve it in small, reversible steps.
 
 ```text
 policy/
@@ -431,83 +490,25 @@ policy/
 │  │  └─ versioning.rego                         # bundle/version pins + compatibility checks (optional)
 │  │
 │  ├─ _shared/                                   # Common helpers (pure functions; no policy decisions)
-│  │  ├─ canonical_json.rego                     # deterministic/canonical JSON helpers (avoid hash drift)
-│  │  ├─ strings.rego                            # string helpers (normalize, trim, safe messages)
-│  │  ├─ sets.rego                               # set helpers (union/intersect/diff)
-│  │  ├─ time.rego                               # time-window helpers (inclusive/exclusive, parsing guards)
-│  │  ├─ geo.rego                                # bbox/geometry guards (policy-safe bounding, no precise leakage)
-│  │  ├─ uri.rego                                # URI/EvidenceRef scheme parsing helpers
-│  │  ├─ spdx.rego                               # SPDX/license normalization helpers (if used)
+│  │  ├─ canonical_json.rego                     # deterministic JSON helpers (avoid hash drift)
+│  │  ├─ strings.rego
+│  │  ├─ sets.rego
+│  │  ├─ time.rego
+│  │  ├─ geo.rego                                # bbox/geometry guards (no precise leakage)
 │  │  └─ hashing.rego                            # digest/spec_hash helpers (inputs only; no secret material)
 │  │
 │  └─ vendor/                                    # Optional: vendored rego libs (pin versions; keep tiny)
 │     └─ README.md
 │
 ├─ fixtures/                                     # Deterministic decision fixtures (synthetic; safe-by-default)
-│  ├─ README.md                                  # How fixtures are structured + naming conventions
-│  ├─ inputs/                                    # Inputs to policy evaluation (user/action/resource/context)
-│  │  ├─ authz/
-│  │  │  ├─ public_read_public_dataset.json
-│  │  │  ├─ public_read_restricted_dataset.json
-│  │  │  └─ steward_read_restricted_dataset.json
-│  │  ├─ rights/
-│  │  │  ├─ public_export_public_dataset.json
-│  │  │  ├─ public_export_public_dataset_missing_attribution.json
-│  │  │  └─ steward_export_restricted_dataset.json
-│  │  ├─ sensitivity/
-│  │  │  ├─ public_read_public_generalized_dataset.json
-│  │  │  ├─ public_read_sensitive_location_dataset.json
-│  │  │  └─ steward_read_sensitive_location_dataset.json
-│  │  ├─ promotion/
-│  │  │  ├─ promote_dataset_missing_license.json
-│  │  │  ├─ promote_dataset_missing_receipt.json
-│  │  │  └─ promote_dataset_all_gates_present.json
-│  │  ├─ evidence/
-│  │  │  ├─ resolve_evidence_allowed.json
-│  │  │  ├─ resolve_evidence_denied.json
-│  │  │  └─ resolve_evidence_unresolvable.json
-│  │  ├─ focus/
-│  │  │  ├─ focus_public_query_public_context.json
-│  │  │  ├─ focus_public_query_restricted_context.json
-│  │  │  └─ focus_steward_query_restricted_context.json
-│  │  └─ errors/
-│  │     ├─ public_request_unknown_resource.json
-│  │     └─ public_request_restricted_resource.json
-│  │
-│  └─ expected/                                  # Expected decision envelopes (goldens)
-│     ├─ authz/
-│     │  ├─ public_read_public_dataset.decision.json
-│     │  ├─ public_read_restricted_dataset.decision.json
-│     │  └─ steward_read_restricted_dataset.decision.json
-│     ├─ rights/
-│     │  ├─ public_export_public_dataset.decision.json
-│     │  ├─ public_export_public_dataset_missing_attribution.decision.json
-│     │  └─ steward_export_restricted_dataset.decision.json
-│     ├─ sensitivity/
-│     │  ├─ public_read_public_generalized_dataset.decision.json
-│     │  ├─ public_read_sensitive_location_dataset.decision.json
-│     │  └─ steward_read_sensitive_location_dataset.decision.json
-│     ├─ promotion/
-│     │  ├─ promote_dataset_missing_license.decision.json
-│     │  ├─ promote_dataset_missing_receipt.decision.json
-│     │  └─ promote_dataset_all_gates_present.decision.json
-│     ├─ evidence/
-│     │  ├─ resolve_evidence_allowed.decision.json
-│     │  ├─ resolve_evidence_denied.decision.json
-│     │  └─ resolve_evidence_unresolvable.decision.json
-│     ├─ focus/
-│     │  ├─ focus_public_query_public_context.decision.json
-│     │  ├─ focus_public_query_restricted_context.decision.json
-│     │  └─ focus_steward_query_restricted_context.decision.json
-│     └─ errors/
-│        ├─ public_request_unknown_resource.decision.json
-│        └─ public_request_restricted_resource.decision.json
+│  ├─ README.md
+│  ├─ inputs/
+│  └─ expected/
 │
 ├─ tests/                                        # Rego unit tests (or conftest rules)
-│  ├─ README.md                                  # How to run tests; what must be covered
-│  ├─ decision_envelope_test.rego                # decision shape invariants (reason_codes required, obligations well-formed)
+│  ├─ README.md
+│  ├─ decision_envelope_test.rego
 │  ├─ authz_test.rego
-│  ├─ obligations_test.rego
 │  ├─ rights_test.rego
 │  ├─ sensitivity_test.rego
 │  ├─ promotion_test.rego
@@ -515,37 +516,24 @@ policy/
 │  ├─ exports_test.rego
 │  ├─ focus_test.rego
 │  ├─ audit_test.rego
-│  ├─ policy_safe_errors_test.rego               # indistinguishable errors for restricted vs missing (public role)
-│  ├─ vocab_test.rego                            # ensure labels/obligations/reason codes match vocab files
-│  └─ fixtures_roundtrip_test.rego               # optional: verify fixtures inputs → decision matches expected goldens
+│  ├─ policy_safe_errors_test.rego
+│  └─ vocab_test.rego
 │
 ├─ vocab/                                        # Controlled vocabulary lists (versioned; referenced by policy + CI)
 │  ├─ README.md
-│  ├─ policy_labels.v1.yml                       # allowed policy labels + semantics hints
-│  ├─ obligations.v1.yml                         # allowed obligation types + required fields
-│  ├─ reason_codes.v1.yml                        # stable reason codes used by policy + receipts
-│  ├─ roles.v1.yml                               # roles (public, internal, steward, operator, service)
-│  ├─ actions.v1.yml                             # actions (read, search, export, promote, resolve_evidence, administer)
-│  ├─ resource_types.v1.yml                      # dataset, dataset_version, story_node, evidence_bundle, export_job, …
-│  └─ media_types.v1.yml                         # optional: whitelisted export media types
+│  ├─ policy_labels.v1.yml
+│  ├─ obligations.v1.yml
+│  ├─ reason_codes.v1.yml
+│  ├─ roles.v1.yml
+│  ├─ actions.v1.yml
+│  └─ resource_types.v1.yml
 │
-├─ rubrics/                                      # Human-readable + machine-referenced policy inputs
-│  ├─ README.md
-│  ├─ licensing.md                               # SPDX handling + attribution requirements (human)
-│  ├─ licensing.v1.yml                           # machine-readable licensing rubric (optional)
-│  ├─ sensitivity.md                             # sensitivity rubric + generalization guidance (human)
-│  ├─ sensitivity.v1.yml                         # machine-readable sensitivity rubric (optional)
-│  └─ generalization_guidance.md                 # how to generalize safely (no precise coords in public)
-│
-└─ scripts/                                      # Optional: deterministic helpers (CI + local parity)
-   ├─ fmt.sh                                     # opa fmt (and any policy file formatting)
-   ├─ test.sh                                    # opa test runner wrapper
-   ├─ conftest.sh                                # conftest wrapper (if used)
-   └─ validate_fixtures.sh                       # optional: schema-check fixtures + ensure goldens exist
+└─ rubrics/                                      # Human-readable + machine-referenced policy inputs
+   ├─ README.md
+   ├─ licensing.md
+   ├─ sensitivity.md
+   └─ generalization_guidance.md
 ```
-
-> [!NOTE]
-> If your repo keeps label/obligation definitions under `configs/policy/**`, keep this directory as **enforcement logic** and treat `configs/` as **inputs** (still validated + versioned).
 
 [Back to top](#top)
 
@@ -553,7 +541,7 @@ policy/
 
 ## FAQ
 
-### Why “default deny”?
+### Why default deny?
 
 Because “unknown” is not the same as “allowed.” Default deny prevents accidental leakage and forces explicit governance decisions.
 
@@ -573,7 +561,7 @@ For Focus Mode and other citation-bearing surfaces: **abstain or reduce scope**.
 
 ---
 
-## Appendix (optional reference)
+## Appendix
 
 <details>
 <summary><strong>Suggested policy input shape (illustrative)</strong></summary>
