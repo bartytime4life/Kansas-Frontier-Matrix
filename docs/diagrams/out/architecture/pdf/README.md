@@ -94,12 +94,12 @@ Related (expected) neighbors:
 ## Source → PDF workflow
 
 ```mermaid
-flowchart LR
-  src[Source diagrams<br/>docs/diagrams/src/architecture<br/>(expected)] --> render[Render pipeline<br/>local or CI]
-  render --> pdf[PDF exports<br/>docs/diagrams/out/architecture/pdf]
-  pdf --> review[Reviewers<br/>offline and print]
-  pdf --> docs[Linked from docs<br/>docs/architecture]
-  pdf --> rel[Bundled in releases<br/>and tickets]
+graph LR
+  src["Source diagrams - docs diagrams src architecture - expected"] --> render["Render pipeline - local or CI"]
+  render --> pdf["PDF exports - docs diagrams out architecture pdf"]
+  pdf --> review["Reviewers - offline and print"]
+  pdf --> docs["Linked from docs - docs architecture"]
+  pdf --> rel["Bundled in releases and tickets"]
 ```
 
 ### Regenerating PDFs
