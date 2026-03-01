@@ -190,15 +190,16 @@ Promotion MUST be blocked unless the minimum gates are satisfied (fail-closed).
 > The list below is a **recommended** structure (not a claim about what is already present in the repo).
 
 ```text
-docs/diagrams/src/truth-path/zones/
-  README.md                  # you are here
-  _templates/                # zone “cards” and diagram scaffolds (recommended)
-  zone-raw.*                 # diagram source for RAW semantics (recommended)
-  zone-work-quarantine.*     # diagram source for WORK/QUARANTINE semantics (recommended)
-  zone-processed.*           # diagram source for PROCESSED semantics (recommended)
-  zone-catalog-triplet.*     # diagram source for CATALOG/TRIPLET semantics (recommended)
-  zone-published.*           # diagram source for PUBLISHED semantics (recommended)
-  gates-promotion-contract.* # diagram source for gates overview (recommended)
+docs/diagrams/src/truth-path/zones/                     # Truth Path zones diagrams (RAW→WORK/QUARANTINE→PROCESSED→CATALOG→PUBLISHED)
+├─ README.md                                            # You are here: zone diagram index + conventions + how to render/validate + export policy
+├─ _templates/                                          # Recommended: zone “cards” + diagram scaffolds (keep consistent)
+│  └─ (zone templates live here)                        # Template sources for zone diagrams (Mermaid/DrawIO/etc. as chosen)
+├─ zone-raw.*                                           # Diagram source for RAW semantics (immutability, acquisition IDs, allowed ops)
+├─ zone-work-quarantine.*                               # Diagram source for WORK/QUARANTINE semantics (QC, remediation loops, fail reasons)
+├─ zone-processed.*                                     # Diagram source for PROCESSED semantics (versioned artifacts, checksums, QA evidence)
+├─ zone-catalog-triplet.*                               # Diagram source for CATALOG/TRIPLET semantics (DCAT/STAC/PROV + linkage rules)
+├─ zone-published.*                                     # Diagram source for PUBLISHED semantics (policy-safe exports, distribution posture)
+└─ gates-promotion-contract.*                           # Diagram source for promotion gates overview (A–G, receipts, fail-closed)
 ```
 
 ---
