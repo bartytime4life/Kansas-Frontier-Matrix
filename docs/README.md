@@ -266,21 +266,238 @@ repo/
 
 ```text
 docs/
-  README.md                 # This file (hub + rules + navigation)
-  guides/                   # How-to workflows (opinionated, practical)
-  standards/                # Non-negotiable standards (enforced where configured)
-  adr/                      # Architecture Decision Records (governed, indexed)
-  stories/                  # Story Nodes authoring + rules (or story/; verify)
-  data/                     # Dataset documentation helpers (schemas, templates, explainers)
-  governance/               # Charter, ethics, sovereignty, gates, review workflows
-  runbooks/                 # Operational runbooks (incident/pipeline/promotion/etc)
-  architecture/             # System architecture docs + diagrams + invariants
-  templates/                # Governed templates (copy/paste starters)
-  diagrams/                 # Shared diagrams used across docs (Mermaid sources/exports)
-  domains/                  # Domain/topic docs (not datasets; policy-safe)
-  investigations/           # Draft working notes (promotion path required)
-  quality/                  # Human-facing QA checklists + explainers (maps to CI gates)
-  schemas/                  # Human-readable schema explainers + examples (not canonical machine schemas)
+├─ README.md                          # Hub + rules + navigation (this file)
+│
+├─ architecture/                      # System architecture docs + diagrams + invariants
+│  ├─ README.md                       # "Start here" + reading order + invariants index
+│  ├─ overview/                       # Human narrative (C4-ish context → components → flows)
+│  │  ├─ README.md
+│  │  ├─ system-context.md
+│  │  ├─ layering.md
+│  │  ├─ trust-membrane.md
+│  │  ├─ truth-path.md
+│  │  ├─ canonical-vs-rebuildable.md
+│  │  ├─ evidence-and-claims.md
+│  │  ├─ focus-mode-constraints.md
+│  │  └─ time-model.md
+│  ├─ enforcement/                    # "Make it testable"—mapping invariants → gates/tools/tests
+│  │  ├─ README.md
+│  │  ├─ invariants.md                # Normative list (each links to a validator/test)
+│  │  ├─ ci-checks.md                 # CI job mapping (workflow → checks → artifacts)
+│  │  ├─ policy-enforcement-points.md # PEP inventory (where policy is enforced)
+│  │  └─ redaction-tests.md           # How to test “no sensitive coords leak”
+│  ├─ registries/                     # Machine-readable indexes to keep docs honest (lintable)
+│  │  ├─ README.md
+│  │  ├─ service-catalog.yml
+│  │  ├─ pep-registry.yml
+│  │  ├─ contract-index.yml
+│  │  └─ boundary-surface-registry.yml
+│  ├─ diagrams/                       # Mermaid sources (linted); exports are generated
+│  │  ├─ README.md
+│  │  ├─ system-context.mmd
+│  │  ├─ truth-path.mmd
+│  │  ├─ trust-membrane.mmd
+│  │  └─ exports/                     # OPTIONAL: generated artifacts (never hand-edit)
+│  │     ├─ .gitkeep
+│  │     └─ README.md
+│  ├─ threat-model/                   # Threat modeling docs + risk register
+│  │  ├─ README.md
+│  │  ├─ scope-and-assets.md
+│  │  ├─ actors-and-entrypoints.md
+│  │  ├─ abuse-cases.md
+│  │  ├─ control-mapping.md
+│  │  └─ risk-register.md
+│  └─ templates/                      # Architecture templates (reviewed, versioned)
+│     ├─ README.md
+│     ├─ standard-doc.template.md
+│     ├─ contract-doc.template.md
+│     ├─ diagram.template.mmd
+│     └─ review-checklist.md
+│
+├─ standards/                         # Non-negotiable standards (CI-enforced where configured)
+│  ├─ README.md                       # Index + versioning/deprecation rules
+│  ├─ authoring/                      # MetaBlock, citations, diagrams, normative language
+│  │  ├─ README.md
+│  │  ├─ KFM_META_BLOCK_V2_STANDARD.md
+│  │  ├─ KFM_NORMATIVE_LANGUAGE_STANDARD.md
+│  │  ├─ KFM_CITATION_PROTOCOL.md
+│  │  └─ KFM_DIAGRAM_MERMAID_STANDARD.md
+│  ├─ evidence/                       # EvidenceRef/EvidenceBundle/run receipt standards
+│  │  ├─ README.md
+│  │  ├─ KFM_EVIDENCE_REF_STANDARD.md
+│  │  ├─ KFM_EVIDENCE_BUNDLE_STANDARD.md
+│  │  └─ KFM_RUN_RECEIPT_STANDARD.md
+│  ├─ api/                            # API contract extension + error model + pagination
+│  │  ├─ README.md
+│  │  ├─ KFM_API_CONTRACT_EXTENSION.md
+│  │  ├─ KFM_ERROR_MODEL_STANDARD.md
+│  │  └─ KFM_PAGINATION_FILTERING_STANDARD.md
+│  ├─ ui/                             # Story Node standard + evidence-first UX + a11y minimums
+│  │  ├─ README.md
+│  │  ├─ KFM_STORY_NODE_STANDARD.md
+│  │  ├─ KFM_EVIDENCE_FIRST_UX_STANDARD.md
+│  │  └─ accessibility/
+│  │     └─ KFM_A11Y_MINIMUM_STANDARD.md
+│  └─ registry/                       # Machine-readable standards registry (lintable)
+│     ├─ README.md
+│     ├─ standards.registry.yaml
+│     └─ deprecations.yaml
+│
+├─ adr/                               # Architecture Decision Records (governed, indexed)
+│  ├─ README.md                       # ADR process + statuses + index entrypoint
+│  ├─ TEMPLATE.md                     # Single-source ADR template
+│  ├─ ADR-REVIEW-CHECKLIST.md         # Reviewer checklist (evidence, rollback, gates)
+│  ├─ INDEX.md                        # Optional canonical index (or generated)
+│  ├─ _generated/                     # Generated artifacts (never hand-edit)
+│  │  ├─ adr-index.json
+│  │  └─ adr-index.md
+│  └─ tools/                          # Optional: lints/index builders for ADRs
+│     ├─ adr-lint.js
+│     └─ adr-indexer.js
+│
+├─ governance/                        # Charter, ethics, sovereignty, gates, review workflows
+│  ├─ README.md
+│  ├─ ROOT_GOVERNANCE.md
+│  ├─ ETHICS.md
+│  ├─ SOVEREIGNTY.md
+│  ├─ REVIEW_GATES.md
+│  ├─ roles/
+│  │  ├─ ROLE_MODEL.md
+│  │  └─ RBAC_MATRIX.md
+│  ├─ labels/
+│  │  ├─ POLICY_LABEL_TAXONOMY.md
+│  │  ├─ SENSITIVITY_GUIDE.md
+│  │  └─ REDACTION_GENERALIZATION.md
+│  ├─ gates/
+│  │  ├─ CI_GATES.md
+│  │  ├─ RUNTIME_GATES.md
+│  │  └─ PROMOTION_CONTRACT.md
+│  ├─ records/                        # Durable sign-offs + decisions + incidents
+│  │  ├─ decisions/
+│  │  ├─ reviews/
+│  │  └─ incidents/
+│  └─ templates/                      # Governance templates (review records, waivers, etc.)
+│     ├─ DATASET_INTAKE_CHECKLIST.md
+│     ├─ AI_FEATURE_RISK_REVIEW.md
+│     └─ WAIVER_RECORD_TEMPLATE.md
+│
+├─ runbooks/                          # Operational runbooks (incident/pipeline/promotion/etc)
+│  ├─ README.md
+│  ├─ _registry/                      # Optional: machine-checkable runbook registry
+│  │  ├─ runbooks.yml
+│  │  └─ runbooks.schema.json
+│  ├─ templates/
+│  │  ├─ runbook-template.md
+│  │  └─ postmortem-template.md
+│  ├─ incidents/
+│  │  ├─ rb-incident-triage.md
+│  │  ├─ rb-incident-comms.md
+│  │  └─ playbooks/
+│  ├─ pipelines/
+│  │  ├─ rb-pipeline-rerun.md
+│  │  ├─ rb-pipeline-backfill.md
+│  │  └─ rb-pipeline-receipt-verify.md
+│  └─ governance/
+│     ├─ rb-access-review.md
+│     └─ rb-release-promotion-approve.md
+│
+├─ guides/                            # How-to workflows (opinionated, practical)
+│  ├─ README.md
+│  ├─ _shared/                        # Shared guide-level references (keep consistent)
+│  │  ├─ glossary.md
+│  │  ├─ conventions.md
+│  │  └─ promotion-contract.md
+│  ├─ _templates/                     # Small copy/paste starters for guides
+│  │  ├─ guide-template.md
+│  │  └─ checklist-template.md
+│  ├─ onboarding/
+│  │  ├─ README.md
+│  │  ├─ 00-overview.md
+│  │  ├─ 10-intake-triage.md
+│  │  ├─ 20-dataset-identity.md
+│  │  └─ checklists/
+│  ├─ pipelines/
+│  │  ├─ README.md
+│  │  ├─ 00-overview.md
+│  │  └─ receipts/
+│  ├─ catalogs/
+│  │  ├─ README.md
+│  │  ├─ 10-stac.md
+│  │  ├─ 20-dcat.md
+│  │  └─ 30-prov.md
+│  ├─ apis/
+│  │  ├─ README.md
+│  │  ├─ 10-contract-first.md
+│  │  └─ checklists/
+│  └─ ui/
+│     ├─ README.md
+│     ├─ 10-evidence-first-ux.md
+│     └─ 40-focus-mode.md
+│
+├─ data/                              # Dataset documentation helpers (schemas, templates, explainers)
+│  ├─ README.md
+│  ├─ CONTRIBUTING.md
+│  ├─ GLOSSARY.md
+│  ├─ _templates/                     # Copy/paste starters
+│  ├─ _schemas/                       # CI-validated shapes for docs/data/*
+│  ├─ governance/                     # Human policy guidance (licenses, sensitivity, retention)
+│  ├─ promotion/                      # Gate checklists + examples
+│  ├─ registries/                     # Optional human-readable indices
+│  ├─ datasets/                       # One folder per dataset_id (docs + evidence pointers)
+│  └─ samples/                        # Policy-safe sample extracts
+│
+├─ stories/                           # Story Nodes authoring + rules (verify story/ vs stories/)
+│  ├─ README.md
+│  ├─ _schemas/                       # CI validation for story packs + sidecars
+│  ├─ _registry/                      # Story index for UI discovery
+│  ├─ _lint/                          # Markdown/story lint configs
+│  ├─ _templates/                     # Story Node v3 starters
+│  ├─ draft/                          # Not authoritative
+│  ├─ review/                          # Pre-publish freeze + receipts
+│  └─ published/                      # Authoritative published stories + versions
+│
+├─ templates/                         # Governed templates (copy/paste starters)
+│  ├─ README.md
+│  ├─ TEMPLATE__KFM_UNIVERSAL_DOC.md
+│  ├─ TEMPLATE__STORY_NODE_V3.md
+│  ├─ TEMPLATE__API_CONTRACT_EXTENSION.md
+│  ├─ _partials/                      # Snippets to avoid drift (MetaBlock, badges, quick nav)
+│  ├─ standard/                       # Directory README/runbook/ADR/release templates
+│  ├─ data/                           # Dataset + catalog templates
+│  ├─ evidence/                       # EvidenceRef/Bundles/citations templates
+│  ├─ api/                            # OpenAPI module/error model templates
+│  ├─ policy/                         # Policy-as-code + decision record templates
+│  └─ ux/                             # UI copy + evidence surface templates
+│
+├─ diagrams/                          # Shared diagrams used across docs
+│  ├─ README.md
+│  ├─ truth-path.mmd
+│  └─ trust-membrane.mmd
+│
+├─ domains/                           # Domain/topic docs (not datasets; policy-safe)
+│  ├─ README.md
+│  └─ <domain-slug>/
+│     ├─ README.md
+│     └─ glossary.md
+│
+├─ investigations/                    # Draft working notes (promotion path required)
+│  ├─ README.md
+│  └─ <investigation-slug>/
+│     ├─ README.md
+│     └─ notes.md
+│
+├─ quality/                           # Human-facing QA checklists + explainers (maps to CI gates)
+│  ├─ README.md
+│  ├─ doc-quality-checklist.md
+│  ├─ promotion-readiness-checklist.md
+│  └─ threat-model-checklist.md
+│
+└─ schemas/                           # Human-readable schema explainers + examples (not canonical machine schemas)
+   ├─ README.md
+   ├─ run_receipt.md
+   ├─ promotion_manifest.md
+   ├─ evidence_bundle.md
+   └─ examples/
 ```
 
 > [!TIP]
