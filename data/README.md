@@ -6,7 +6,7 @@ version: v2
 status: draft
 owners: KFM Data Stewardship (resolve via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-02-28
+updated: 2026-03-01
 policy_label: public
 related:
   - ../README.md
@@ -33,21 +33,25 @@ notes:
 # `data/` — Governed dataset artifacts + catalogs
 Governed dataset artifacts + catalogs for the KFM Truth Path (canonical lifecycle):
 
-**UPSTREAM → RAW → WORK/QUARANTINE → PROCESSED → CATALOG (DCAT+STAC+PROV + run receipts) → projections → governed API → UI**  
-…with an optional **PUBLISHED** bundle/export stage (policy/rights filtered, cacheable), and an append-only **AUDIT** trail that makes every promotion and user-visible claim reviewable.
+**UPSTREAM → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET (DCAT+STAC+PROV + receipts) → PUBLISHED (governed runtime via PEP/API + UI)**  
+…with an optional **PUBLISHED BUNDLES/EXPORTS** materialization stage (policy/rights filtered; cacheable), and an append-only **AUDIT** trail that makes every promotion and user-visible claim reviewable.
 
-**Status:** draft • **Owners:** KFM Data Stewardship • **Last updated:** 2026-02-28
+**Status:** draft • **Owners:** KFM Data Stewardship • **Last updated:** 2026-03-01
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
 ![governance](https://img.shields.io/badge/governance-fail--closed-critical)
 ![policy](https://img.shields.io/badge/policy-default--deny-critical)
-![truth-path](https://img.shields.io/badge/truth%20path-UPSTREAM→RAW→WORK%2FQUARANTINE→PROCESSED→CATALOG→API→UI-blue)
+![truth-path](https://img.shields.io/badge/truth%20path-UPSTREAM→RAW→WORK%2FQUARANTINE→PROCESSED→CATALOG%2FTRIPLET→PUBLISHED-blue)
 ![catalogs](https://img.shields.io/badge/catalogs-DCAT%20%7C%20STAC%20%7C%20PROV-informational)
 ![identity](https://img.shields.io/badge/identity-spec__hash%20%7C%20RFC8785%20JCS-important)
 
 > [!IMPORTANT]
 > **This directory is canonical truth (when used as the truth store).**  
 > Databases/search/tiles are rebuildable projections. If a projection disagrees with `data/processed` + `data/catalog`, the **catalog + processed artifacts win**.
+
+> [!IMPORTANT]
+> **Terminology alignment (KFM):** **PUBLISHED** refers to the *policy-enforced runtime surfaces* (PEP/API + UI).  
+> `data/published/` (this directory) is an **optional** materialization area for *published bundles/exports* (e.g., tilesets, offline packages) that runtime may serve.
 
 > [!NOTE]
 > **Normative keywords:** this README uses **MUST / SHOULD / MAY** to indicate enforcement strength.  
@@ -65,6 +69,8 @@ Governed dataset artifacts + catalogs for the KFM Truth Path (canonical lifecycl
 - [Directory layout](#directory-layout)
 - [Canonical path convention](#canonical-path-convention)
 - [Identifiers and naming](#identifiers-and-naming)
+- [Deterministic hashing guardrails](#deterministic-hashing-guardrails)
+- [Controlled vocabularies](#controlled-vocabularies)
 - [Zone contracts](#zone-contracts)
 - [Dataset specs](#dataset-specs)
 - [Source registry](#source-registry)
@@ -72,6 +78,9 @@ Governed dataset artifacts + catalogs for the KFM Truth Path (canonical lifecycl
 - [Quarantine workflow](#quarantine-workflow)
 - [Promotion Contract gates](#promotion-contract-gates)
 - [Catalog triplet](#catalog-triplet)
+- [Catalog profiles](#catalog-profiles)
+- [Cross-linking rules](#cross-linking-rules)
+- [Evidence resolver touchpoints](#evidence-resolver-touchpoints)
 - [Checksums and digests](#checksums-and-digests)
 - [Policy labels and sensitive data](#policy-labels-and-sensitive-data)
 - [Definition of Done](#definition-of-done)
@@ -101,8 +110,8 @@ Governed dataset artifacts + catalogs for the KFM Truth Path (canonical lifecycl
 - intermediate transforms and QA outputs (WORK)
 - blocked artifacts with remediation (QUARANTINE)
 - publishable, immutable artifacts (PROCESSED)
-- canonical metadata + lineage (CATALOG: DCAT + STAC + PROV + receipts)
-- optional distribution-ready outputs (PUBLISHED, policy/rights filtered; cacheable)
+- canonical metadata + lineage (CATALOG/TRIPLET: DCAT + STAC + PROV + receipts)
+- optional publishable bundles/exports (PUBLISHED bundles; policy/rights filtered; cacheable)
 - append-only audit ledger segments (AUDIT)
 
 ### Where this fits
@@ -172,16 +181,16 @@ find data/catalog -maxdepth 8 -type f \( -name 'bundle.jsonld' -o -name 'prov.js
 | `data/registry/anchors/` | Anchor dataset register (Tier 0/1/…) | editable (versioned) | anchors list + CI validation against sources/specs |
 | `data/fixtures/` | Small fixtures for tests/eval | editable | bounded samples + expected outputs |
 | `data/raw/` | Immutable acquisitions (append-only) | append-only | acquisition manifest, terms snapshot(s), raw artifacts **or** metadata-only pointer(s), checksums |
-| `data/work/` | Intermediate transforms + QA outputs | append-only per run | artifacts, QA outputs, checksums, run receipt pointer (or copy) |
+| `data/work/` | Intermediate transforms + QA outputs (run-scoped) | per-run; keep runs append-only | artifacts, QA outputs, checksums, run receipt pointer (or copy) |
 | `data/quarantine/` | Failed gates (blocked from promotion) | append-only | reason + remediation plan + owner, diagnostics (bounded), checksums |
 | `data/processed/` | Publishable artifacts (immutable per DatasetVersion) | immutable per version | artifacts, checksums, runtime metadata, QA report |
 | `data/catalog/` | Canonical metadata + lineage (triplet + receipts + promotion manifest) | immutable per version | DCAT + STAC + PROV, run receipts, promotion manifest, link validation |
-| `data/published/` | **Optional**: policy/rights-filtered exports (cacheable) | immutable per version | exports + attribution bundle (if allowed), checksums |
+| `data/published/` | **Optional**: publishable bundles/exports used by runtime (policy/rights filtered; cacheable) | immutable per version | exports/bundles + attribution (if allowed), checksums, publish run receipt |
 | `data/audit/` | Append-only audit ledger segments | append-only | ledger segments, references to approvals/decisions (policy-safe) |
 
 > [!WARNING]
 > **RAW is append-only.** Never “fix” a RAW acquisition in place.  
-> If upstream content is wrong, create a new DatasetVersion/acquisition, quarantine the bad one, and supersede it via catalog/provenance.
+> If upstream content is wrong, create a new acquisition / DatasetVersion, quarantine the bad one, and supersede it via catalog/provenance.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -200,14 +209,19 @@ flowchart LR
   Q -. blocks promotion .-> P
 
   C --> IDX[Rebuildable projections]
-  C --> PUB[PUBLISHED bundles or exports]
-  IDX --> API[Governed API]
-  PUB --> API
+  C --> PB[Published bundles or exports (optional)]
+
+  IDX --> API[Governed API / PEP]
+  PB --> API
   API --> UI[Map Story Focus]
 
   C --> AUD[Audit ledger]
   API --> AUD
 ```
+
+> [!NOTE]
+> In KFM terms, **PUBLISHED** is the governed runtime surface (**API/PEP + UI**).  
+> `PB` above is an optional *materialization* of publishable bundles/exports that runtime may serve.
 
 > [!NOTE]
 > Only **promoted DatasetVersions** (processed + validated catalogs + receipts + pass gates) are eligible to appear in runtime surfaces.
@@ -248,7 +262,7 @@ data/                                                   # Governed truth path + 
 │
 ├─ raw/                                                  # Immutable acquisitions (append-only; never served)
 │  └─ <dataset_slug>/
-│     └─ <dataset_version_id>/                           # Stable version identity (spec_hash anchored)
+│     └─ <dataset_version_id>/                           # NOTE: some deployments prefer <acquisition_id>; see Canonical path convention
 │        ├─ acquisition_manifest.v1.json                 # Capture manifest (license/sensitivity required)
 │        ├─ terms_snapshot/                              # Terms/license snapshot(s) captured at acquisition time
 │        │  └─ <captured_at>.txt|html|pdf
@@ -302,11 +316,12 @@ data/                                                   # Governed truth path + 
 │        ├─ linkcheck_report.v1.json                     # OPTIONAL: generated linkcheck outputs (CI artifact)
 │        └─ checksums.v1.json                            # OPTIONAL: digest roll-up for catalog artifacts
 │
-├─ published/                                            # OPTIONAL: distribution-ready outputs (policy/rights filtered, cacheable)
+├─ published/                                            # OPTIONAL: publishable bundles/exports used by runtime (policy/rights filtered)
 │  └─ <dataset_slug>/
 │     └─ <dataset_version_id>/
 │        ├─ exports/                                     # Allowed exports (CSV/GeoJSON/packages/tilesets)
 │        ├─ attribution/                                 # Auto-generated attribution bundle (license + notices)
+│        ├─ publish_run_receipt.json                     # OPTIONAL: run receipt for publish/export step
 │        └─ checksums.v1.json
 │
 └─ audit/                                                # Append-only audit records (often stored outside git in prod)
@@ -356,6 +371,11 @@ KFM uses predictable paths so CI, policy, and evidence resolution can be determi
 - `catalog/<dataset_slug>/<dataset_version_id>/promotion_manifest.v1.json`
 
 - `published/<dataset_slug>/<dataset_version_id>/exports/*` (if used)
+- `published/<dataset_slug>/<dataset_version_id>/publish_run_receipt.json` (if used)
+
+> [!NOTE]
+> **PROPOSED option:** some deployments key `raw/` by `<acquisition_id>` and `work/` by `<work_run_id>`.  
+> If you adopt that posture, update all validators and receipts to reference the chosen canonical keys. Do **not** mix keying schemes inside one dataset.
 
 ### Canonical rules (enforced by validators / promotion gates)
 - `raw/`, `work/`, `quarantine/`, `processed/`, `catalog/`, `published/`, `audit/` are **reserved** zone names.
@@ -398,16 +418,61 @@ Rules (recommended):
 
 ---
 
+## Deterministic hashing guardrails
+
+Deterministic identity is only useful if it is **re-computable in CI** and **stable across platforms**.
+
+### Hash drift prevention checklist (MUST for any “spec_hash posture”)
+- **Do not** compute `spec_hash` from data that depends on:
+  - system clocks (e.g., `retrieved_at`, `fetched_at`, “now()”)
+  - random seeds / UUIDs generated at runtime
+  - unstable serialization (unordered maps, locale-dependent floats)
+- **Do**:
+  - canonicalize JSON (RFC 8785 posture recommended)
+  - pin any referenced schema/profile versions
+  - keep any acquisition timestamps in **manifests and run receipts**, not in the hashed spec
+  - include a CI “golden spec_hash” test for at least one fixture spec
+
+### PROPOSED: stable `dataset_version_id` composition
+Examples in KFM docs often look like `2026-02.abcd1234`.  
+To preserve determinism while keeping a human-friendly prefix:
+- include a stable `version_ref` (e.g., `2026-02`) in the dataset spec (not derived from wall-clock), and
+- compute `dataset_version_id` as `<version_ref>.<spec_hash_prefix>`.
+
+If you adopt this, bake it into validators and keep the algorithm documented and tested.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Controlled vocabularies
+
+Controlled vocabularies reduce “mystery states” in receipts, catalogs, and policy evaluation.
+
+Recommended starter controlled vocabularies:
+- `citation.kind`: `dcat | stac | prov | doc | graph`
+- `artifact.zone`: `raw | work | quarantine | processed | catalog | published | external`
+- `policy_label`: `public | public_generalized | restricted | restricted_sensitive_location | internal | embargoed | quarantine`
+
+> [!NOTE]
+> Expand vocabularies only via governed change (ADR + schema update + tests).  
+> New terms MUST be supported by validators.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
 ## Zone contracts
 
 | Zone | Primary goal | Allowed contents | Not allowed | “Serve/publish eligible?” |
 |---|---|---|---|---|
 | RAW | Preserve upstream truth | as-received payload + manifest + terms snapshot + digests **or** metadata-only references | edits-in-place | ❌ |
-| WORK | Normalize + validate + draft redactions | intermediate transforms + QA + candidates | skipping QA, “manual fixes” without provenance | ❌ |
+| WORK | Normalize + validate + draft redactions | intermediate transforms + QA + candidates (run-scoped) | skipping QA, “manual fixes” without provenance | ❌ |
 | QUARANTINE | Fail closed safely | reason + remediation + diagnostics (bounded) | promotion shortcuts | ❌ |
 | PROCESSED | Publishable outputs | KFM-approved formats + digests + runtime metadata | missing digests/metadata | ✅ (only with catalogs + receipts + pass gates) |
-| CATALOG | Canonical evidence surface | DCAT + STAC + PROV + receipts + promotion manifest | unvalidated catalogs, broken links | ✅ |
-| PUBLISHED | Optional distribution bundles | policy/rights-filtered exports + attribution | leaking restricted details | ✅ (policy-limited) |
+| CATALOG/TRIPLET | Canonical evidence surface | DCAT + STAC + PROV + receipts + promotion manifest | unvalidated catalogs, broken links | ✅ |
+| PUBLISHED | Governed runtime surface | policy-enforced API/UI outputs; may be backed by immutable bundles | bypassing PEP/policy | ✅ (policy-limited) |
+| PUBLISHED bundles (dir) | Optional publish artifacts | tilesets/offline packages/exports + attribution + receipts | leaking restricted details | ✅ (policy-limited) |
 | AUDIT | Reviewability | append-only ledger segments | deletion/rewrites | N/A |
 
 ---
@@ -485,7 +550,10 @@ Quarantine requires:
 
 ## Promotion Contract gates
 
-Promotion MUST be blocked unless required artifacts exist **and validate**. These gates are the basis of CI checks and steward review.
+Promotion to **PUBLISHED runtime** MUST be blocked unless required artifacts exist **and validate**. These gates are the basis of CI checks and steward review.
+
+> [!TIP]
+> Treat the gate set as **non-skippable**. Use a single always-runs “gate summary” check as the branch protection requirement.
 
 ### Gate A — Identity and versioning
 - Dataset identity (`dataset_id` / slug) is stable.
@@ -498,36 +566,33 @@ Promotion MUST be blocked unless required artifacts exist **and validate**. Thes
 - Mirroring mode is compatible with rights (metadata-only reference is allowed when mirroring is disallowed).
 - If unclear: quarantine (fail closed).
 
-### Gate C — Sensitivity classification and redaction obligations
+### Gate C — Sensitivity classification and redaction plan
 - `policy_label` assigned.
 - Policy evaluation returns allow/deny plus obligations (e.g., generalize geometry, remove attributes) and reason codes.
 - For restricted/sensitive-location: a generalization/redaction plan exists and is recorded in PROV.
 
-### Gate D — Catalog triplet + receipt cross-link validation
+### Gate D — Catalog triplet validation + cross-links
 - DCAT record exists and validates under profile.
 - STAC collection/items exist (if applicable) and validate.
 - PROV bundle exists and validates.
 - Run receipt(s) exist and cross-link the triplet.
-- Cross-links are present and resolvable deterministically (no guessing).
+- EvidenceRefs resolve without guessing (link-check + resolver smoke test).
 
-### Gate E — Run receipts + checksums
-- Run receipts exist for producing runs (pipeline runs and any publication/export runs).
+### Gate E — QA thresholds
+- Dataset-specific quality checks and thresholds are documented in spec.
+- Validation report exists with a pass/degraded/fail summary.
+- Failures are quarantined and blocked from promotion.
+
+### Gate F — Run receipt + audit record
+- Run receipts exist for producing runs (pipeline runs and any publish/export runs).
 - Inputs and outputs are enumerated with digests (prefer sha256).
 - Environment recorded (container image digest, params digest, git ref).
-- Zone-adjacent `checksums.v1.json` match receipt digests (no drift).
+- Append-only audit record exists (policy-safe).
 
-### Gate F — Policy tests + contract tests
-- Policy tests pass (fixtures-driven; deny-by-default).
-- Evidence resolver can resolve at least one EvidenceRef in CI (smoke test).
-- Schemas and contracts validate; link-check passes.
-
-### Gate G — Optional (recommended for production): signed release manifest + attestations
+### Gate G — Release manifest (promotion manifest)
 - `promotion_manifest.v1.json` exists and is digest-addressable.
 - Optional signatures/attestations are present (where your supply chain posture requires them).
 - Release tagging/changelog is produced for promoted versions.
-
-> [!TIP]
-> Treat the gate set as **non-skippable**. Use a single always-runs “gate summary” check as the branch protection requirement.
 
 ---
 
@@ -540,13 +605,6 @@ The triplet is KFM’s interoperability + evidence surface:
 - **PROV**: lineage (raw → work → processed), agents, activities, parameters, approvals
 - **Run receipts**: per-run evidence (inputs/outputs/checks/timestamps) used by CI and the evidence resolver
 
-EvidenceRef schemes (minimum):
-- `dcat://...` resolves to dataset/distribution metadata
-- `stac://...` resolves to collection/item/asset metadata
-- `prov://...` resolves to run lineage (activities/entities/agents)
-- `doc://...` resolves to governed docs and story citations
-- `graph://...` resolves to entity relations (if enabled)
-
 Minimum expectations:
 - All components exist where applicable and validate under KFM profiles.
 - All include:
@@ -558,6 +616,75 @@ Minimum expectations:
 
 ---
 
+## Catalog profiles
+
+KFM should define strict, testable profiles for each catalog type so validation is predictable.
+
+**PROPOSED minima** (extend in `contracts/`):
+
+### DCAT (minimum)
+- `dct:title`, `dct:description`, `dct:publisher`
+- `dct:license` (or `dct:rights`)
+- `dct:spatial` and `dct:temporal` coverage
+- `dcat:distribution` (one per artifact class)
+- `prov:wasGeneratedBy` link to PROV activity/bundle
+- `kfm:policy_label`, `kfm:dataset_id`, `kfm:dataset_version_id`
+
+### STAC (minimum)
+Collection:
+- `id`, `title`, `description`, `extent` (spatial bbox + temporal interval), `license`
+- links to DCAT dataset record
+- `kfm:dataset_version_id` and policy label
+
+Item:
+- `id`, `geometry` or `bbox` (policy-consistent/generalized), `datetime` (or start/end)
+- assets with `href` + `checksum`/digest + `media_type`
+- links to PROV activity and/or run receipt and DCAT distribution
+
+### PROV (minimum)
+- `prov:Activity` per pipeline run
+- `prov:Entity` per artifact (raw, work, processed)
+- `prov:Agent` for pipeline and steward approval events
+- `prov:used` and `prov:wasGeneratedBy` edges
+- policy decision references (decision_id + obligations)
+- environment capture: container image digest, git commit, parameters
+
+---
+
+## Cross-linking rules
+
+Cross-links MUST be explicit so navigation and evidence resolution are deterministic:
+
+- DCAT dataset → distributions → artifact digests
+- DCAT dataset → `prov:wasGeneratedBy` → PROV bundle
+- STAC collection → link rel=`describedby` → DCAT dataset
+- STAC item → link to PROV activity and/or run receipt
+- EvidenceRef schemes resolve into these objects without guessing
+
+CI SHOULD include a link-checker that verifies cross-links for every promoted dataset version.
+
+---
+
+## Evidence resolver touchpoints
+
+EvidenceRef schemes (minimum starter set):
+- `dcat://...` resolves to dataset/distribution metadata
+- `stac://...` resolves to collection/item/asset metadata
+- `prov://...` resolves to run lineage (activities/entities/agents)
+- `doc://...` resolves to governed docs and story citations
+- `graph://...` resolves to entity relations (if enabled)
+
+Minimum expectations:
+- Resolver applies policy and returns allow/deny plus obligations.
+- EvidenceBundle returned includes:
+  - human view (renderable card)
+  - machine metadata (JSON)
+  - artifact links (only if policy allows)
+  - digests + dataset_version IDs
+  - audit references
+
+---
+
 ## Checksums and digests
 
 Rules:
@@ -566,6 +693,7 @@ Rules:
   - zone-adjacent `checksums.v1.json`
   - run receipts (`catalog/.../run_receipts/<run_id>.json`)
   - promotion manifest roll-up (`promotion_manifest.v1.json`)
+- Catalogs SHOULD surface digests in artifact metadata (e.g., DCAT distributions and STAC assets).
 
 Recommended `checksums.v1.json` structure:
 
@@ -623,7 +751,7 @@ A dataset integration (or new DatasetVersion) is DONE only when:
 - [ ] Promotion manifest exists and ties everything together.
 - [ ] At least one EvidenceRef resolves successfully in CI (smoke test).
 - [ ] Policy label reviewed where required (steward workflow).
-- [ ] (If used) PUBLISHED exports exist and pass policy/rights filters.
+- [ ] (If used) PUBLISHED exports/bundles exist and pass policy/rights filters.
 - [ ] Changelog entry exists if this is a governed release/promotion.
 
 ---
@@ -637,7 +765,9 @@ A dataset integration (or new DatasetVersion) is DONE only when:
 {
   "kfm_spec_version": "v1",
   "dataset_slug": "example_dataset",
+
   "title": "Example Dataset",
+
   "upstream": {
     "authority": "Example Authority",
     "access_method": "bulk",
@@ -645,18 +775,19 @@ A dataset integration (or new DatasetVersion) is DONE only when:
       {
         "name": "example_zip",
         "url": "https://example.invalid/data.zip",
-        "parameters": { "region": "KS" }
+        "parameters": { "region": "KS", "as_of": "2026-02" }
       }
     ],
-    "cadence": "monthly",
-    "terms_snapshot": { "license": "unknown", "retrieved_at": "2026-02-28" }
+    "cadence": "monthly"
   },
+
   "sensitivity": {
     "policy_label_intent": "public",
     "pii_risk": "low",
     "sensitive_location_risk": "low",
     "obligations": []
   },
+
   "validation": {
     "schema": "contracts/schemas/example.schema.json",
     "checks": [
@@ -664,6 +795,7 @@ A dataset integration (or new DatasetVersion) is DONE only when:
       { "name": "required_fields_present", "threshold": 0.99 }
     ]
   },
+
   "transforms": [
     {
       "name": "normalize",
@@ -671,6 +803,7 @@ A dataset integration (or new DatasetVersion) is DONE only when:
       "params": { "crs": "EPSG:4326", "schema_version": "v1" }
     }
   ],
+
   "outputs": [
     {
       "artifact_type": "geoparquet",
@@ -681,6 +814,10 @@ A dataset integration (or new DatasetVersion) is DONE only when:
   ]
 }
 ```
+
+> [!NOTE]
+> Keep acquisition timestamps (fetched_at/retrieved_at) in **acquisition manifests** and **run receipts**, not in the hashed spec.
+
 </details>
 
 <details>
@@ -731,7 +868,7 @@ qa_checks:
   "artifacts": [
     { "path": "artifacts/source.csv", "media_type": "text/csv" }
   ],
-  "notes": "RAW is append-only; supersede with a new DatasetVersion if needed."
+  "notes": "RAW is append-only; supersede with a new acquisition/DatasetVersion if needed."
 }
 ```
 </details>
