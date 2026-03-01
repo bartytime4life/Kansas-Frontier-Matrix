@@ -72,13 +72,13 @@ This folder exists so reviewers and implementers can quickly answer:
 **Recommended** (adjust if your repo uses a different convention):
 
 ```text
-diagrams/
-  README.md                 # this file (registry + conventions)
-  src/                      # (optional) editable diagram sources
-    D0006-*.mmd
-    D0006-*.puml
-  rendered/                 # (optional) deterministic exports for non-Mermaid renderers
-    D0006-*.svg
+diagrams/                                              # Shared diagram hub (sources + exports; policy-safe; linted where possible)
+├─ README.md                                           # This file (diagram registry + naming conventions + export rules)
+├─ src/                                                # OPTIONAL: editable diagram sources (preferred over binaries)
+│  ├─ D0006-*.mmd                                      # Mermaid sources (lint-friendly; preferred)
+│  └─ D0006-*.puml                                     # PlantUML sources (if Mermaid is insufficient)
+└─ rendered/                                           # OPTIONAL: deterministic exports (for tooling/viewers that need SVG/PNG)
+   └─ D0006-*.svg                                      # Rendered SVG exports (generated; commit only if policy allows)
 ```
 
 ### Acceptable inputs
