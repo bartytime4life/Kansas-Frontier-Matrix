@@ -1,41 +1,5 @@
-%% [KFM_META_BLOCK_V2]
-%% doc_id: kfm://doc/0c2fb3b0-2ea3-4c4e-9f41-2f615dc0c7b7
-%% title: Lineage Diagram Template
-%% type: template
-%% version: v1
-%% status: draft
-%% owners: kfm-docs
-%% created: 2026-03-01
-%% updated: 2026-03-01
-%% policy_label: public
-%% related:
-%%   - docs/data/_templates/lineage.mmd
-%% tags: [kfm, lineage, prov, stac, dcat, mermaid]
-%% notes:
-%%   - Replace all {{PLACEHOLDERS}} before using this diagram in a dataset-specific doc.
-%%   - Keep identifiers deterministic where possible (dataset_version_id, run_id, commit SHA).
-%% [/KFM_META_BLOCK_V2]
+graph LR
 
-%% KFM Lineage diagram template (Mermaid)
-%%
-%% Intent
-%%   A single, reusable diagram that can be copied into a dataset README, Story Node appendix,
-%%   or provenance report to show:
-%%     - Truth path zones (RAW -> WORK -> PROCESSED)
-%%     - Required boundary artifacts (STAC + DCAT + PROV + run receipts)
-%%     - Rebuildable projections (graph, search, tiles, DB)
-%%     - Governed API boundary + evidence resolver (EvidenceRef -> EvidenceBundle)
-%%
-%% How to use
-%%   1) Replace every {{PLACEHOLDER}}.
-%%   2) Duplicate the raw/work/processed entity nodes if there are multiple inputs/outputs.
-%%   3) If this dataset is a reprocessing of a prior version, fill PREV_DATASET_VERSION_ID.
-
-flowchart LR
-
-  %% ------------------------------
-  %% Dataset identity
-  %% ------------------------------
   subgraph IDENT["Dataset identity"]
     DOM["domain: {{DOMAIN}}"]
     DS["dataset_id: {{DATASET_ID}}"]
@@ -44,9 +8,6 @@ flowchart LR
     DOM --> DS --> DV
   end
 
-  %% ------------------------------
-  %% Truth path zones (canonical ordering)
-  %% ------------------------------
   subgraph ZONES["Truth path zones"]
     RAW["RAW zone<br/>path: data/raw/{{DOMAIN}}/<br/>inputs: immutable snapshots + checksums"]
     WORK["WORK zone<br/>path: data/work/{{DOMAIN}}/<br/>steps: normalize + QA + redaction candidates"]
@@ -55,12 +16,8 @@ flowchart LR
     RAW --> WORK --> PROC
   end
 
-  %% Dataset version is realized as publishable processed artifacts
   DV --- PROC
 
-  %% ------------------------------
-  %% PROV-O bundle (logical view)
-  %% ------------------------------
   subgraph PROVB["PROV bundle (logical view)"]
     A1["prov:Activity<br/>run_id: {{RUN_ID}}<br/>commit: {{COMMIT_SHA}}<br/>config: {{PIPELINE_CONFIG_REF}}"]
     AG1["prov:Agent<br/>{{AGENT_NAME_OR_SERVICE}}"]
@@ -75,14 +32,10 @@ flowchart LR
     A1 -->|prov:generated| E_OUT1
   end
 
-  %% Tie entities back to lifecycle zones (illustrative; keep or remove as desired)
   RAW -. "example" .-> E_RAW1
   WORK -. "example" .-> E_WORK1
   PROC -. "example" .-> E_OUT1
 
-  %% ------------------------------
-  %% Required boundary artifacts (a.k.a. catalog triplet + receipts)
-  %% ------------------------------
   subgraph BOUNDARY["Required boundary artifacts"]
     STAC["STAC<br/>Collection: data/stac/collections/{{STAC_COLLECTION_ID}}.json<br/>Item(s): data/stac/items/{{STAC_ITEM_ID}}.json"]
     DCAT["DCAT<br/>Dataset entry: data/catalog/dcat/{{DCAT_DATASET_ID}}.jsonld"]
@@ -90,7 +43,6 @@ flowchart LR
     RECEIPT["Run receipt<br/>{{RUN_RECEIPT_REF}}"]
   end
 
-  %% Promotion requires the boundary artifacts before anything downstream can consume
   PROC -->|promote| STAC
   PROC -->|promote| DCAT
   PROC -->|promote| PROVFILE
@@ -100,9 +52,6 @@ flowchart LR
   A1 -->|serialized as| PROVFILE
   A1 -->|emits| RECEIPT
 
-  %% ------------------------------
-  %% Rebuildable projections (derived, not canonical)
-  %% ------------------------------
   subgraph PROJ["Rebuildable projections"]
     GRAPH["Graph (Neo4j)<br/>references catalogs, no duplication"]
     POSTGIS["PostGIS<br/>derived from processed artifacts"]
@@ -110,15 +59,11 @@ flowchart LR
     TILES["Tile bundles<br/>derived from processed features"]
   end
 
-  %% Projections should hang off catalogs / processed artifacts
   STAC --> GRAPH
   STAC --> POSTGIS
   STAC --> SEARCH
   STAC --> TILES
 
-  %% ------------------------------
-  %% Governed runtime surfaces (API boundary)
-  %% ------------------------------
   subgraph API["Governed API boundary"]
     API_CAT["GET /api/v1/catalog/datasets"]
     API_LINEAGE["GET /api/v1/lineage/{{DATASET_ID}}"]
@@ -128,16 +73,12 @@ flowchart LR
     API_FOCUS["POST /api/v1/focus/ask"]
   end
 
-  %% API reads projections and provenance (never the UI directly)
   GRAPH --> API_CAT
   GRAPH --> API_LINEAGE
   PROVFILE --> API_LINEAGE
   POSTGIS --> API_QUERY
   TILES --> API_TILES
 
-  %% ------------------------------
-  %% Evidence resolver (policy applied)
-  %% ------------------------------
   subgraph EVIDENCE["Evidence resolver (policy applied)"]
     EVREF["EvidenceRef<br/>{{EVIDENCE_REF}}"]
     EVBUNDLE["EvidenceBundle<br/>bundle_id: {{BUNDLE_ID}}<br/>policy_label: {{POLICY_LABEL}}<br/>license: {{SPDX_LICENSE}}<br/>audit_ref: {{AUDIT_REF}}"]
@@ -147,9 +88,6 @@ flowchart LR
 
   API_EVID --> EVREF
 
-  %% ------------------------------
-  %% UI surfaces (read-only via API)
-  %% ------------------------------
   subgraph UI["UI surfaces"]
     MAP["Map Explorer"]
     STORY["Story Mode"]
@@ -163,13 +101,9 @@ flowchart LR
   API_LINEAGE --> STORY
   API_FOCUS --> FOCUS
 
-  %% Evidence bundles are the user-facing trust primitive
   EVBUNDLE --> MAP
   EVBUNDLE --> STORY
   EVBUNDLE --> FOCUS
 
-  %% ------------------------------
-  %% Optional: dataset revision chain
-  %% ------------------------------
   PREV["previous dataset_version_id: {{PREV_DATASET_VERSION_ID}}"]
   PREV -->|prov:wasRevisionOf| DV
