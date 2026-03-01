@@ -1,0 +1,1 @@
+# Gate B: Schema checklist
