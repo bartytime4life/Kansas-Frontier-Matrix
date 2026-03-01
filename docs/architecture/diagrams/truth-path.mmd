@@ -1,3 +1,92 @@
-%% Placeholder Mermaid diagram
-flowchart TD
-  A[Placeholder] --> B[To be defined]
+%% KFM Truth Path lifecycle and Promotion Contract v1 (conceptual)
+%% Source anchors:
+%% - Truth path lifecycle + trust membrane invariants (KFM vNext docs)
+%% - Promotion Contract v1 fail-closed gates (KFM vNext docs)
+
+flowchart LR
+
+  %% -----------------------------
+  %% Truth Path (data → catalogs → governed surfaces)
+  %% -----------------------------
+  subgraph DataPlane[Truth Path lifecycle]
+    direction LR
+
+    upstream[Upstream sources]
+    connectors[Connectors<br/>fetch and snapshot]
+
+    raw[RAW zone<br/>immutable artifacts and checksums<br/>license and terms snapshot]
+    work[WORK and QUARANTINE<br/>normalize and QA reports<br/>redaction and generalization candidates<br/>quarantine blocks promotion]
+    processed[PROCESSED zone<br/>publishable artifacts in approved formats<br/>stable IDs and checksums<br/>derived runtime metadata]
+    triplet[CATALOG and TRIPLET<br/>DCAT plus STAC plus PROV<br/>run receipts and lineage links]
+
+    indexes[Index builders<br/>PostGIS plus search plus graph plus tiles]
+
+    pep[Governed API PEP<br/>policy enforcement plus evidence resolver]
+    ui[UI surfaces<br/>Map plus Story plus Focus Mode]
+
+    upstream --> connectors --> raw --> work --> processed --> triplet --> indexes --> pep --> ui
+  end
+
+  %% -----------------------------
+  %% Trust membrane (no bypass)
+  %% -----------------------------
+  clients[Clients<br/>frontend and external callers]
+
+  clients --> pep
+  clients -. no direct access .-> raw
+  clients -. no direct access .-> indexes
+
+  %% -----------------------------
+  %% Promotion Contract v1 (fail closed)
+  %% -----------------------------
+  subgraph PromotionContract[Promotion Contract v1 fail closed gates]
+    direction TB
+
+    gate_runner[Gate runner<br/>CI checks plus steward sign off]
+
+    gA[A Identity and versioning]
+    gB[B Licensing and rights metadata]
+    gC[C Sensitivity classification and redaction plan]
+    gD[D Catalog triplet validation<br/>DCAT STAC PROV cross links]
+    gE[E QA and thresholds]
+    gF[F Run receipt and audit record]
+    gG[G Release manifest]
+
+    gA --> gate_runner
+    gB --> gate_runner
+    gC --> gate_runner
+    gD --> gate_runner
+    gE --> gate_runner
+    gF --> gate_runner
+    gG --> gate_runner
+  end
+
+  %% Gate enforcement at promotion boundaries (conceptual)
+  gate_runner -. enforce gates .-> raw
+  gate_runner -. enforce gates .-> work
+  gate_runner -. enforce gates .-> processed
+  gate_runner -. enforce gates .-> triplet
+  gate_runner -. enforce gates .-> pep
+
+  %% -----------------------------
+  %% Audit and receipts
+  %% -----------------------------
+  audit[Append only audit ledger]
+
+  raw -. emit receipts .-> audit
+  work -. emit receipts .-> audit
+  processed -. emit receipts .-> audit
+  triplet -. emit receipts .-> audit
+  pep -. emit governed run receipts .-> audit
+
+  %% -----------------------------
+  %% Canonical vs rebuildable (design posture)
+  %% -----------------------------
+  canonical[Canonical truth<br/>object store plus catalogs plus provenance]
+  rebuildable[Rebuildable projections<br/>indexes and tiles]
+
+  canonical -.-> raw
+  canonical -.-> processed
+  canonical -.-> triplet
+
+  rebuildable -.-> indexes
