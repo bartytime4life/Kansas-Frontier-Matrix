@@ -1,5 +1,156 @@
 %% [KFM_META_BLOCK_V2]
 %% doc_id: kfm://doc/0a7a6015-ed76-4687-b00a-4b8f326d0b2b
+%% title: Diagram Template - Mermaid
+%% type: template
+%% version: v1
+%% status: draft
+%% owners: TBD
+%% created: 2026-03-01
+%% updated: 2026-03-01
+%% policy_label: public
+%% related:
+%%   - TBD
+%% tags: [kfm, architecture, template, mermaid]
+%% notes:
+%%   - Copy this file, rename it, and replace placeholders.
+%%   - Keep node labels short; avoid pipes and parentheses in node text.
+%% [/KFM_META_BLOCK_V2]
+
+%% Diagram purpose
+%%   Reference flow for KFM: truth path zones and trust membrane runtime.
+
+graph LR
+
+  %% ---------------------------------------------------------------------------
+  %% Upstream and acquisition
+  %% ---------------------------------------------------------------------------
+  subgraph Upstream["Upstream sources"]
+    direction TB
+    src1["Source A"]
+    src2["Source B"]
+    srcN["Source N"]
+  end
+
+  subgraph Connectors["Connectors"]
+    direction TB
+    fetch["Fetch and snapshot"]
+    manifest["Acquisition manifest"]
+  end
+
+  %% ---------------------------------------------------------------------------
+  %% Truth path zones
+  %% ---------------------------------------------------------------------------
+  subgraph TruthPath["Truth path zones"]
+    direction LR
+    raw["RAW zone"]
+    work["WORK or QUARANTINE"]
+    processed["PROCESSED zone"]
+    triplet["CATALOG TRIPLET"]
+  end
+
+  promote["Promotion contract gates"]
+
+  %% ---------------------------------------------------------------------------
+  %% Projections
+  %% ---------------------------------------------------------------------------
+  subgraph Indexers["Index builders"]
+    direction TB
+    postgis["PostGIS projection"]
+    search["Search index projection"]
+    lineage["Lineage graph projection"]
+    tiles["Tile and vector cache"]
+  end
+
+  %% ---------------------------------------------------------------------------
+  %% Governed runtime
+  %% ---------------------------------------------------------------------------
+  subgraph Runtime["Governed runtime"]
+    direction TB
+    pep["PEP and governed API"]
+    resolver["Evidence resolver"]
+    audit["Audit ledger and run receipts"]
+  end
+
+  %% ---------------------------------------------------------------------------
+  %% UI surfaces
+  %% ---------------------------------------------------------------------------
+  subgraph UISurfaces["UI surfaces"]
+    direction TB
+    map["Map Explorer"]
+    story["Story Mode"]
+    focus["Focus Mode"]
+    drawer["Evidence drawer"]
+  end
+
+  %% ---------------------------------------------------------------------------
+  %% Main flow
+  %% ---------------------------------------------------------------------------
+  src1 --> fetch
+  src2 --> fetch
+  srcN --> fetch
+
+  fetch --> manifest
+  manifest --> raw
+  raw --> work
+  work --> processed
+  processed --> triplet
+  triplet --> promote
+
+  promote --> postgis
+  promote --> search
+  promote --> lineage
+  promote --> tiles
+
+  postgis --> pep
+  search --> pep
+  lineage --> pep
+  tiles --> pep
+
+  pep --> map
+  pep --> story
+  pep --> focus
+
+  %% Evidence resolution path
+  map --> drawer
+  story --> drawer
+  focus --> drawer
+  drawer --> resolver
+  resolver --> triplet
+  resolver --> audit
+
+  %% Audit trail
+  fetch --> audit
+  processed --> audit
+  promote --> audit
+  pep --> audit
+
+  %% ---------------------------------------------------------------------------
+  %% Trust membrane guard rails
+  %% UI must not reach projections or storage directly.
+  %% ---------------------------------------------------------------------------
+  map -.->|forbidden direct access| postgis
+  map -.->|forbidden direct access| raw
+  story -.->|forbidden direct access| search
+  focus -.->|forbidden direct access| triplet
+
+  %% ---------------------------------------------------------------------------
+  %% Optional Focus Mode control loop
+  %% Uncomment if you want the internal steps visible.
+  %% ---------------------------------------------------------------------------
+  %% subgraph FocusLoop["Focus Mode control loop"]
+  %%   direction LR
+  %%   f1["Policy precheck"]
+  %%   f2["Plan"]
+  %%   f3["Retrieve"]
+  %%   f4["Bundle"]
+  %%   f5["Answer"]
+  %%   f6["Verify citations"]
+  %%   f7["Receipt"]
+  %% end
+  %% focus --> f1 --> f2 --> f3 --> f4 --> f5 --> f6 --> f7
+  %% f3 --> resolver
+  %% f7 --> audit%% [KFM_META_BLOCK_V2]
+%% doc_id: kfm://doc/0a7a6015-ed76-4687-b00a-4b8f326d0b2b
 %% title: Diagram Template (Mermaid)
 %% type: template
 %% version: v1
