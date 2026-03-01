@@ -1,3 +1,109 @@
-%% Placeholder Mermaid diagram
-flowchart TD
-  A[Placeholder] --> B[To be defined]
+%% KFM layering model (Domain → Use cases → Interfaces → Infrastructure)
+%% Source doc (vNext): 2026-02-20
+%%
+%% Key rules:
+%% - Domain logic never talks directly to infrastructure.
+%% - Trust membrane: clients never access databases/object storage directly;
+%%   core backend logic never bypasses ports/repository interfaces to talk directly to storage.
+
+flowchart TB
+
+  %% =====================
+  %% L0 — Clients (untrusted)
+  %% =====================
+  subgraph L0["Clients (untrusted)"]
+    UI_Map(["UI: Map Explorer"])
+    UI_Story(["UI: Story Mode"])
+    UI_Focus(["UI: Focus Mode"])
+    UI_Ext(["External clients"])
+  end
+
+  %% ======================================
+  %% L1 — Interfaces (governed boundary)
+  %% ======================================
+  subgraph L1["Interfaces (governed boundary + ports)"]
+    API[["Governed API\n(policy enforcement boundary)"]]
+    Policy[["Policy engine\n(PDP; allow/deny + obligations)"]]
+    Evidence[["Evidence resolver\n(EvidenceRef → EvidenceBundle)"]]
+    Ports[["Ports\n(repository + service interfaces)"]]
+  end
+
+  %% ==================================
+  %% L2 — Use cases (application layer)
+  %% ==================================
+  subgraph L2["Use cases (application orchestration)"]
+    UC_Query["Query / Browse / Tiles"]
+    UC_Story["Story read + publish"]
+    UC_Focus["Focus ask + answer"]
+    UC_Promote["Promotion workflow"]
+    UC_Catalog["Catalog build + validate"]
+  end
+
+  %% =========================
+  %% L3 — Domain (core layer)
+  %% =========================
+  subgraph L3["Domain (core rules + models)"]
+    Domain_Models["Domain models\nDataset, DatasetVersion, Artifact, EvidenceRef, EvidenceBundle, …"]
+    Domain_Rules["Domain invariants\ntruth path, promotion gates, deterministic identity"]
+  end
+
+  %% =========================================
+  %% L4 — Infrastructure (adapters + storage)
+  %% =========================================
+  subgraph L4["Infrastructure (adapters + storage + compute)"]
+    Infra_Connectors["Connectors / runners\n(fetch + snapshot upstream)"]
+    Infra_Upstream["Upstream sources"]
+
+    Infra_Object["Canonical object storage\n(RAW/WORK/PROCESSED artifacts)"]
+    Infra_Catalogs["Canonical catalogs\n(DCAT / STAC / PROV)"]
+    Infra_Receipts["Run receipts / audit ledger"]
+
+    Infra_Projections["Rebuildable projections\n(DB/search/graph/tiles)"]
+  end
+
+  %% =================
+  %% Allowed access
+  %% =================
+  UI_Map --> API
+  UI_Story --> API
+  UI_Focus --> API
+  UI_Ext --> API
+
+  API --> Policy
+  API --> Evidence
+
+  API --> UC_Query
+  API --> UC_Story
+  API --> UC_Focus
+
+  %% Use cases consume domain
+  UC_Query --> Domain_Models
+  UC_Story --> Domain_Models
+  UC_Focus --> Domain_Models
+
+  UC_Promote --> Domain_Rules
+  UC_Catalog --> Domain_Rules
+
+  %% Use cases depend on ports (not infra)
+  UC_Query --> Ports
+  UC_Story --> Ports
+  UC_Focus --> Ports
+  UC_Promote --> Ports
+  UC_Catalog --> Ports
+
+  %% Infrastructure implements ports
+  Ports --> Infra_Object
+  Ports --> Infra_Catalogs
+  Ports --> Infra_Receipts
+  Ports --> Infra_Projections
+  Ports --> Infra_Connectors
+  Infra_Connectors --> Infra_Upstream
+
+  %% =============================
+  %% Trust membrane (forbidden)
+  %% =============================
+  UI_Map -. "FORBIDDEN: bypass governed API" .-> Infra_Object
+  UI_Map -. "FORBIDDEN: bypass governed API" .-> Infra_Projections
+  UI_Ext -. "FORBIDDEN: bypass governed API" .-> Infra_Object
+
+  Domain_Models -. "FORBIDDEN: domain talks to storage" .-> Infra_Object
