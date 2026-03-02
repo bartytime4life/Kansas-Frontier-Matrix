@@ -126,7 +126,10 @@ Put a small comment header at the top of each `.mmd` template so reviewers can u
 %% owners: TBD
 %% updated: 2026-03-02
 %% assumptions:
-%%   - This diagram is conceptual (Proposed) unless linked to a specific ADR / implementation.
+%%   - Conceptual unless linked to a specific ADR or implementation.
+
+graph LR
+  A["Start"] --> B["End"]
 ```
 
 ### Default init snippet (optional)
