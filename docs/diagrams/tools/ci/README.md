@@ -219,11 +219,11 @@ Do **not** put the following here:
 
 ## Directory tree (expected)
 ```text
-docs/diagrams/tools/ci/
-  README.md
-  ci-pr-required-checks.mmd            # TODO
-  ci-policy-as-code-parity.mmd         # TODO
-  ci-promotion-contract-gates.mmd      # TODO
-  ci-catalog-linkcheck.mmd             # TODO
-  ci-receipts-and-attestations.mmd     # TODO
+docs/diagrams/tools/ci/                               # CI diagrams (how checks/gates enforce the trust membrane)
+├─ README.md                                          # Index + naming conventions + how to render/validate + links to workflows/tests
+├─ ci-pr-required-checks.mmd                          # TODO: PR required checks flow (lint/typecheck/unit/policy/linkcheck)
+├─ ci-policy-as-code-parity.mmd                       # TODO: CI↔runtime policy parity flow (fixtures, bundles, conftest/opa test)
+├─ ci-promotion-contract-gates.mmd                    # TODO: Promotion contract gates (A–G) + required artifacts/receipts
+├─ ci-catalog-linkcheck.mmd                           # TODO: Catalog triplet linkcheck (DCAT↔STAC↔PROV + EvidenceRef resolvability)
+└─ ci-receipts-and-attestations.mmd                   # TODO: Receipts/provenance/attestations emission + verification + storage
 ```
