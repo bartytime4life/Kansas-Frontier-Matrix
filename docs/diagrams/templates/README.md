@@ -79,13 +79,13 @@ Do **not** put these in `docs/diagrams/templates/`:
 This README defines a recommended layout. If the repo already uses a different structure, update this section to match reality.
 
 ```text
-docs/diagrams/templates/
-  README.md                 # You are here
-  mermaid/                  # Mermaid templates (preferred)
-  drawio/                   # draw.io templates
-  excalidraw/               # Excalidraw templates
-  exports/                  # Optional: rendered outputs used by docs (SVG/PNG)
-  snippets/                 # Optional: reusable subgraphs, legends, icon sets
+docs/diagrams/templates/                                | # Diagram templates hub (copy/paste starters + reusable snippets; kept policy-safe)
+├─ README.md                                            | # You are here: template index, when to use which format, and “no secrets” rules
+├─ mermaid/                                             | # Mermaid templates (preferred; lintable, diff-friendly)
+├─ drawio/                                              | # Draw.io templates (only when text diagrams are insufficient; keep minimal)
+├─ excalidraw/                                          | # Excalidraw templates (hand-drawn style; keep sources small and reviewed)
+├─ exports/                                             | # OPTIONAL: rendered outputs used by docs (SVG/PNG; generated when possible)
+└─ snippets/                                            | # OPTIONAL: reusable subgraphs, legends, and icon sets (shared building blocks)
 ```
 
 ---
