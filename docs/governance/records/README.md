@@ -194,17 +194,18 @@ Keep the structure **simple**. A flat directory is acceptable at small scale.
 Proposed scaling layout (optional):
 
 ```
-docs/governance/records/
-  README.md
-  INDEX.md                 # optional: curated index
-  _templates/
-    TEMPLATE__GOV_RECORD.md
-  review-gates/
-  policy-decisions/
-  classification/
-  waivers/
-  incidents/
-  meetings/
+docs/governance/records/                                   | # Governance records hub (auditable, sanitized, policy-safe)
+├─ README.md                                               | # This file: scope, record taxonomy, naming rules, approvals, and retention posture
+├─ INDEX.md                                                | # OPTIONAL: curated human index (high-signal links; may be generated)
+├─ _templates/                                             | # Copy/paste templates for consistent governance record authoring
+│  └─ TEMPLATE__GOV_RECORD.md                              | # Generic governance record template (context → decision → evidence → verification → signoff)
+│
+├─ review-gates/                                           | # Review-gate records (promotion/release/major changes) with checklists + signoffs
+├─ policy-decisions/                                       | # Policy decision records (why rules/labels exist; changes, rationale, impacts)
+├─ classification/                                         | # Classification records (sensitivity/rights assessments + outcomes + required handling)
+├─ waivers/                                                | # Waiver records (time-boxed exceptions; mitigations; approvals; expiry)
+├─ incidents/                                              | # Incident records (sanitized summaries, timelines, action items, evidence refs)
+└─ meetings/                                               | # Meeting notes/minutes (policy-safe; promote durable outcomes into decisions/waivers/incidents)
 ```
 
 [Back to top](#navigation)
