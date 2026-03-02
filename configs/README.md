@@ -367,100 +367,104 @@ This README treats that as a **labeling difference**, not a behavior difference:
 > This is a **PROPOSED** buildable layout. Align it to repo reality and keep the Config registry current.
 
 ```text
-configs/
-├─ README.md
+configs/                                              # Governed configuration: machine-validated registries + policy-bearing knobs (NO secrets) for consistent CI/runtime behavior
+├─ README.md                                           # Entry guide: what lives here, what must NOT live here (secrets), validation/gates, and how configs map to policy/contracts/apps
 │
-├─ registry/                                     # Machine-readable registries + schemas + fixtures (small)
-│  ├─ README.md                                  # Registry contract: what MUST be listed + how CI validates it
-│  ├─ configs.v1.json                            # Canonical registry (entries for every governed config area/file)
-│  ├─ schemas/                                   # Schemas for registries + config shapes (or pointers to contracts/)
-│  │  ├─ kfm.config_registry.v1.schema.json
-│  │  ├─ kfm.policy_labels.v1.schema.json
-│  │  ├─ kfm.obligations_catalog.v1.schema.json
-│  │  ├─ kfm.promotion_gates.v1.schema.json
-│  │  ├─ kfm.qa_thresholds.v1.schema.json
-│  │  ├─ kfm.linkcheck_rules.v1.schema.json
-│  │  ├─ kfm.feature_flags.v1.schema.json
-│  │  ├─ kfm.rate_limits.v1.schema.json
-│  │  ├─ kfm.ui_layer_registry.v1.schema.json
-│  │  ├─ kfm.view_state_schema.v1.schema.json
-│  │  └─ kfm.redaction_rules.v1.schema.json
-│  ├─ fixtures/                                  # Fixtures for CI validation (valid/invalid; deterministic)
-│  │  ├─ valid/
-│  │  ├─ invalid/
-│  │  └─ README.md
-│  └─ _generated/                                # OPTIONAL: generated indexes used by CI/tools (policy decides commit vs ignore)
-│     ├─ configs.index.v1.json
-│     └─ checksums.v1.json
+├─ registry/                                           # Machine-readable registries + schemas + fixtures (small, canonical, CI-validated)
+│  ├─ README.md                                        # Registry contract: required fields, naming/versioning rules, how CI validates (schema + checksums), and update workflow
+│  ├─ configs.v1.json                                  # Canonical config registry (every governed config file/area listed with owner, version, schema, policy_label, and consumers)
+│  ├─ schemas/                                         # JSON Schemas for registries + config shapes (or pointers to contracts/ equivalents)
+│  │  ├─ kfm.config_registry.v1.schema.json             # Schema: validates configs.v1.json structure (entries, ownership, references, checksums expectations)
+│  │  ├─ kfm.policy_labels.v1.schema.json               # Schema: validates policy label vocabulary/definitions (allowed values + metadata)
+│  │  ├─ kfm.obligations_catalog.v1.schema.json         # Schema: validates obligation types + parameters + handling requirements (UI/API logging)
+│  │  ├─ kfm.promotion_gates.v1.schema.json             # Schema: validates gate definitions (IDs, required artifacts, pass/fail codes)
+│  │  ├─ kfm.linkcheck_rules.v1.schema.json             # Schema: validates linkcheck allow/deny rules (domains, paths, docs scope)
+│  │  ├─ kfm.feature_flags.v1.schema.json               # Schema: validates feature flag definitions (default, rollout, owners, safety notes)
+│  │  ├─ kfm.rate_limits.v1.schema.json                 # Schema: validates rate limit configuration (tiers, burst, backoff, policy label)
+│  │  ├─ kfm.ui_layer_registry.v1.schema.json           # Schema: validates UI layer registry entries (source, time bounds, sensitivity, rendering policy)
+│  │  ├─ kfm.view_state_schema.v1.schema.json           # Schema: validates view-state serialization contract (map/story/focus state shape + versioning)
+│  │  └─ kfm.redaction_rules.v1.schema.json             # Schema: validates redaction/generalization rules (triggers, transforms, obligations emitted)
+│  ├─ fixtures/                                        # Deterministic fixtures for CI validation (known-good and known-bad examples)
+│  │  ├─ valid/                                        # Fixtures expected to pass schema + policy checks (used to prevent false negatives)
+│  │  ├─ invalid/                                      # Fixtures expected to fail (used to prevent policy regressions / ensure fail-closed)
+│  │  └─ README.md                                     # Fixture usage: how tests load fixtures, naming rules, and how to add new cases
+│  └─ _generated/                                      # OPTIONAL generated outputs (indexes/checksums); repo policy decides commit vs ignore
+│     ├─ configs.index.v1.json                          # Generated index for tools/CI (fast lookup: config → schema/owner/consumers)
+│     └─ checksums.v1.json                              # Generated checksums/digests for governed config files (tamper detection + reproducibility)
 │
-├─ policy/                                       # Policy-bearing configuration (NOT secrets; NOT policy engine code)
-│  ├─ README.md
-│  ├─ labels/
-│  ├─ obligations/
-│  ├─ rubrics/
-│  └─ fixtures/                                  # Policy parity fixtures (synthetic allow/deny/obligation expectations)
+├─ policy/                                             # Policy-bearing configuration (NOT secrets; NOT policy engine code) consumed by policy/ + apps/
+│  ├─ README.md                                        # What belongs here vs policy/rego/, how changes are reviewed, and how parity fixtures are maintained
+│  ├─ labels/                                          # Label vocab/materialization (e.g., label definitions, default handling, mapping to obligations)
+│  ├─ obligations/                                     # Obligation catalog + parameters (notice text, UI behaviors, logging requirements)
+│  ├─ rubrics/                                         # Governance rubrics (licensing/sensitivity/quality scoring guides used by stewards and CI hints)
+│  └─ fixtures/                                        # Policy parity fixtures (synthetic allow/deny/obligation expectations for CI/runtime consistency)
 │
-├─ contracts/                                    # Contract wiring (version selection + validator knobs)
-│  ├─ README.md
-│  ├─ profiles/
-│  ├─ vocab/
-│  └─ linkcheck/
+├─ contracts/                                          # Contract wiring knobs (which versions are active) + validation profiles (not the contracts themselves)
+│  ├─ README.md                                        # How contract versions are selected, compatibility rules, and how validators are configured
+│  ├─ profiles/                                        # Validation profiles (e.g., “strict”, “dev”, “publish”) selecting schema sets and severity thresholds
+│  ├─ vocab/                                           # Contract vocabulary selections/overrides (e.g., allowed enums for this deployment)
+│  └─ linkcheck/                                       # Linkcheck configuration (allowed domains, local doc rules, CI behavior)
 │
-├─ promotion/                                    # Promotion Contract wiring
-│  ├─ README.md
-│  ├─ gates/
-│  │  ├─ README.md
-│  │  ├─ gates.v1.yaml
-│  │  ├─ gate_a_identity.v1.yaml
-│  │  ├─ gate_b_rights.v1.yaml
-│  │  ├─ gate_c_sensitivity.v1.yaml
-│  │  ├─ gate_d_catalogs.v1.yaml
-│  │  ├─ gate_e_receipts_checksums.v1.yaml
-│  │  ├─ gate_f_policy_contract_tests.v1.yaml
-│  │  ├─ gate_g_production_posture.v1.yaml       # OPTIONAL
-│  │  └─ gate_codes.v1.yaml
-│  ├─ qa/                                        # OPTIONAL but recommended: shared QA threshold policies
-│  │  ├─ README.md
-│  │  ├─ thresholds.v1.yaml
-│  │  └─ dataset_class_overrides/
-│  └─ templates/
-│     ├─ README.md
-│     ├─ promotion_manifest.v1.json              # release record referencing artifacts+digests+approvals
-│     ├─ run_receipt.v1.json                     # governed run receipt (pipeline/index/story/focus)
-│     ├─ qa_report.v1.json                       # machine-readable QA summary referenced by receipts/manifests
-│     └─ story_publish_receipt.v1.json
+├─ promotion/                                          # Promotion Contract wiring (gate definitions, templates, and promotion classes)
+│  ├─ README.md                                        # How promotion works, where gate artifacts live, and how CI/runtime enforce A–F (+ optional G)
+│  ├─ gates/                                           # Gate definitions + required artifacts + standardized failure codes
+│  │  ├─ README.md                                     # Gate authoring rules, test expectations, and how gates map to CI jobs/status checks
+│  │  ├─ gates.v1.yaml                                 # Canonical gate set (A–F required, G optional) with gate IDs, requirements, and enforcement mode
+│  │  ├─ gate_a_identity.v1.yaml                       # Gate A: identity/deterministic IDs/spec_hash rules (naming, hashing, stable references)
+│  │  ├─ gate_b_rights.v1.yaml                         # Gate B: rights/licensing constraints (permissions, attribution, redistribution, embargo)
+│  │  ├─ gate_c_sensitivity.v1.yaml                    # Gate C: sensitivity/policy_label correctness + redaction/generalization requirements
+│  │  ├─ gate_d_catalogs.v1.yaml                       # Gate D: catalog completeness (DCAT/STAC/PROV + required links/fields)
+│  │  ├─ gate_e_receipts_checksums.v1.yaml             # Gate E: receipts/checksums integrity (run receipts, digests, reproducibility)
+│  │  ├─ gate_f_policy_contract_tests.v1.yaml          # Gate F: policy + contract tests (OPA parity + schema validation) must pass
+│  │  ├─ gate_g_production_posture.v1.yaml             # OPTIONAL Gate G: production posture (attestations, smoke checks, deploy readiness)
+│  │  └─ gate_codes.v1.yaml                            # Standard failure/pass codes (machine-readable) used in receipts, CI summaries, and dashboards
+│  ├─ templates/                                       # Templates for promotion artifacts (copy/fill) if not stored elsewhere in repo
+│  │  ├─ README.md                                     # Template usage rules + where to place completed artifacts + versioning guidance
+│  │  ├─ promotion_manifest.v1.json                    # OPTIONAL: promotion record referencing artifacts + digests + approvals + gate results
+│  │  ├─ run_receipt.v1.json                           # Run Receipt template (pipelines/index/story/focus): inputs/outputs/digests/tools/versions
+│  │  ├─ run_manifest.v1.json                          # OPTIONAL: rollup manifest oriented around promotion (multi-receipt aggregation)
+│  │  ├─ audit_entry.v1.json                           # OPTIONAL: audit ledger entry template (decision refs, event type, actor, timestamps)
+│  │  ├─ qa_report.v1.json                             # OPTIONAL: QA summary template referenced by receipts (tests, thresholds, anomalies)
+│  │  └─ story_publish_receipt.v1.json                 # OPTIONAL: story publish receipt template (claims/citations, layers, obligations, approvals)
+│  └─ classes/                                         # Dataset classes (type-specific rules/constraints) used by gates, validators, and UI defaults
+│     ├─ README.md                                     # What “class” means, how to add one, and which gates/validators consume classes
+│     ├─ classes.v1.yaml                               # Canonical class registry (IDs, descriptions, required metadata, validators)
+│     ├─ vector.v1.yaml                                # Class: vector data (features/CRS/geometry rules; tiling/validation expectations)
+│     ├─ raster.v1.yaml                                # Class: raster data (bands/CRS/resolution rules; nodata/tiling expectations)
+│     ├─ documents.v1.yaml                             # Class: documents (OCR/text extraction rules; citation/provenance requirements)
+│     ├─ timeseries.v1.yaml                            # Class: time series (time semantics, aggregation rules, missingness, units)
+│     └─ sensitive_location.v1.yaml                    # Class: sensitive location (mandatory redaction/generalization + restricted handling)
 │
-├─ runtime/
-│  ├─ README.md
-│  ├─ feature_flags/
-│  ├─ caching/
-│  ├─ indexing/
-│  └─ rate_limits/
+├─ runtime/                                            # Runtime tuning knobs (safe, governed) for deployed services and apps
+│  ├─ README.md                                        # What can be tuned at runtime, how rollouts occur, and how changes are audited
+│  ├─ feature_flags/                                   # Feature flags (defaults, rollout plans, owners, safety notes; no secrets)
+│  ├─ caching/                                         # Cache policies (TTLs, invalidation strategy, cache keys policy interactions)
+│  ├─ indexing/                                        # Indexing knobs (batch sizes, schedules, backpressure; must not violate policy)
+│  └─ rate_limits/                                     # Rate limit configs (tiers, burst limits, per-route/per-actor policy)
 │
-├─ pipelines/
-│  ├─ README.md
-│  ├─ schedules/
-│  ├─ runners/
-│  └─ dataset_defaults/
+├─ pipelines/                                          # Pipeline configuration (schedules, runners, and dataset-default knobs)
+│  ├─ README.md                                        # Pipeline config model, how schedules/runners are selected, and how configs map to receipts
+│  ├─ schedules/                                       # Schedules for recurring pipelines (cron-like definitions + blackout windows)
+│  ├─ runners/                                         # Runner definitions (local/compose/k8s) and resource profiles (CPU/mem/timeouts)
+│  └─ dataset_defaults/                                # Default config per dataset class/source (timeouts, QA thresholds, output formats)
 │
-├─ ui/
-│  ├─ README.md
-│  ├─ layers/
-│  ├─ view_state/
-│  ├─ policy_badges/
-│  └─ citation_ui/                               # display-only rules (enforcement is API/evidence resolver)
+├─ ui/                                                 # UI configuration (layer registry, view-state schemas, and trust badges/policy signals)
+│  ├─ README.md                                        # How UI consumes configs, versioning strategy, and policy-aware rendering rules
+│  ├─ layers/                                          # Layer registry and layer defaults (sources, styling hints, time bounds, label-aware display)
+│  ├─ view_state/                                      # View state schemas + defaults (map/story/focus serialization and compatibility)
+│  └─ policy_badges/                                   # Trust/policy badge configuration (labels → icons/text; obligation surfacing rules)
 │
-├─ observability/
-│  ├─ README.md
-│  ├─ logging/
-│  ├─ metrics/
-│  └─ redaction/
+├─ observability/                                      # Logging/metrics configuration (redaction-aware, policy-safe) for auditability and ops
+│  ├─ README.md                                        # Observability goals, data minimization, redaction rules, and audit expectations
+│  ├─ logging/                                         # Log routing/levels/fields (must avoid PII/leaks; enforce redaction/generalization)
+│  ├─ metrics/                                         # Metrics definitions + labels (cardinality rules; policy-safe dimensions)
+│  └─ redaction/                                       # Log/trace redaction rules (fields to drop/hash/generalize; obligations for ops views)
 │
-└─ env/
-   ├─ README.md                                  # Examples only; secrets live elsewhere
-   ├─ dev.example.env
-   ├─ staging.example.env
-   └─ prod.example.env
+└─ env/                                                # Environment examples (NO secrets): documentation for required variables + safe defaults
+   ├─ README.md                                        # Variable reference (what each var does) + where secrets must be stored/managed instead
+   ├─ dev.example.env                                  # Example dev env file (safe placeholders; no credentials)
+   ├─ staging.example.env                              # Example staging env file (safe placeholders; no credentials)
+   └─ prod.example.env                                 # Example production env file (safe placeholders; no credentials)
 ```
 
 > [!IMPORTANT]
