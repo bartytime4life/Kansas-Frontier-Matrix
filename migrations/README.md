@@ -231,64 +231,63 @@ This is the “trust membrane” for migrations: the guarantees we promise, how 
 > If your repo differs, update this section to match reality **while preserving guarantees**.
 
 ```text
-migrations/                                                   # Governed migrations + receipts
-├─ README.md                                                  # This file
+migrations/                                              # Governed migrations + receipts: versioned change sets for schemas/indexes/graphs with rollback + auditable execution
+├─ README.md                                             # Migration doctrine: when to migrate vs rebuild, approval gates, naming rules, required artifacts, and receipt expectations
 │
-├─ registry/                                                  # Machine-readable registries + schemas + fixtures (CI-friendly)
-│  ├─ migrations.v1.json                                      # Canonical registry (ids, types, owners, status)
-│  ├─ protected_domains.v1.yml                                # Protected namespaces/labels (deny by default)
-│  ├─ schemas/                                                # Schemas that validate declarations + artifacts
-│  │  ├─ migration_declaration.v1.schema.json                 # Schema for migration.yml
-│  │  ├─ run_receipt.v1.schema.json                           # Schema for receipts/run_receipt.json
-│  │  ├─ baseline.v1.schema.json                              # Schema for baselines/*.json
-│  │  ├─ diff_summary.v1.schema.json                          # Schema for diffs/summary.json
-│  │  └─ receipt_ref.v1.schema.json                           # Pointer record if receipts stored outside git
-│  └─ fixtures/                                               # CI fixtures (valid/invalid; deterministic)
-│     ├─ valid/
-│     └─ invalid/
+├─ registry/                                             # Machine-readable registries + schemas + fixtures (CI-friendly; fail-closed)
+│  ├─ migrations.v1.json                                 # Canonical migration registry (migration_id, domain, type, owner, status, created/updated, links to receipts)
+│  ├─ protected_domains.v1.yml                           # Protected namespaces/labels (deny-by-default): domains requiring elevated review/waiver to touch
+│  ├─ schemas/                                           # Schemas validating declarations and generated artifacts (keeps migrations deterministic and reviewable)
+│  │  ├─ migration_declaration.v1.schema.json            # Schema for per-migration migration.yml (metadata, scope, prechecks, forward/rollback refs)
+│  │  ├─ run_receipt.v1.schema.json                      # Schema for receipts/run_receipt.json (tools/versions, inputs/outputs, digests, outcome, timings)
+│  │  ├─ baseline.v1.schema.json                         # Schema for baselines/*.json (captured pre/post state snapshots for diffing and audit)
+│  │  ├─ diff_summary.v1.schema.json                     # Schema for diffs/summary.json (what changed, counts, risk flags, compatibility notes)
+│  │  └─ receipt_ref.v1.schema.json                      # Schema for receipts/receipt_ref.json (pointer record when receipts are stored outside git)
+│  └─ fixtures/                                          # Deterministic fixtures proving validators are fail-closed (valid must pass; invalid must fail)
+│     ├─ valid/                                          # Known-good minimal examples (prevents accidental over-rejection)
+│     └─ invalid/                                        # Known-bad examples (prevents accidental under-rejection)
 │
-├─ postgis/                                                   # PostGIS migrations (if PostGIS is used)
-│  ├─ README.md
-│  ├─ PG-MIG-YYYY-MM-DD-01/
-│  │  ├─ migration.yml
-│  │  ├─ forward.sql
-│  │  ├─ rollback.sql
-│  │  ├─ baselines/
-│  │  │  ├─ pre.json
-│  │  │  └─ post.json
-│  │  ├─ diffs/
-│  │  │  ├─ summary.json
-│  │  │  └─ touched.csv
-│  │  ├─ receipts/
-│  │  │  ├─ run_receipt.json
-│  │  │  ├─ prov.jsonld
-│  │  │  └─ receipt_ref.json
-│  │  └─ notes.md
-│  └─ ...
+├─ postgis/                                              # PostGIS migrations (only if PostGIS is in use) — DDL/DML changes with rollback + baselines + receipts
+│  ├─ README.md                                          # PostGIS migration rules (naming, transaction boundaries, lock strategy, safety checks, rollback expectations)
+│  ├─ PG-MIG-YYYY-MM-DD-01/                              # One migration package (chronological + sequence number; immutable once executed)
+│  │  ├─ migration.yml                                   # Migration declaration (id, scope, risk, approvals, prechecks, forward/rollback refs, compatibility notes)
+│  │  ├─ forward.sql                                     # Forward migration SQL (idempotence rules stated; guarded operations; explicit constraints/indexes)
+│  │  ├─ rollback.sql                                    # Rollback SQL (best-effort; must document irreversible steps; include compensating actions if needed)
+│  │  ├─ baselines/                                      # Captured state snapshots for audit + regression comparison
+│  │  │  ├─ pre.json                                     # Pre-migration baseline snapshot (schema objects, versions, counts as applicable)
+│  │  │  └─ post.json                                    # Post-migration baseline snapshot (same shape as pre; enables deterministic diff)
+│  │  ├─ diffs/                                          # Deterministic diffs produced by tooling (review-friendly)
+│  │  │  ├─ summary.json                                 # Diff summary (what changed + risk flags + compatibility notes; schema-validated)
+│  │  │  └─ touched.csv                                  # Optional touched objects list (tables/indexes/functions) for quick review and impact assessment
+│  │  ├─ receipts/                                       # Execution receipts (immutable audit trail for when/how migration ran)
+│  │  │  ├─ run_receipt.json                             # Run receipt (tooling versions, inputs/outputs, digests, outcome, operator/runner, timestamps)
+│  │  │  ├─ prov.jsonld                                  # Optional PROV record for migration activity (agents, entities, activities, derivations)
+│  │  │  └─ receipt_ref.json                             # Optional pointer to external receipt storage (if run_receipt.json is not committed)
+│  │  └─ notes.md                                        # Human notes: rationale, caveats, performance impact, rollout/rollback playbook, links to PDR/waiver
+│  └─ ...                                                # Additional PostGIS migrations
 │
-├─ search/                                                    # Search/index migrations (if search is used)
-│  ├─ README.md
-│  ├─ SEARCH-MIG-YYYY-MM-DD-01/
-│  │  ├─ migration.yml
-│  │  ├─ forward.json
-│  │  ├─ rollback.json
-│  │  ├─ baselines/
-│  │  ├─ diffs/
-│  │  ├─ receipts/
-│  │  └─ notes.md
-│  └─ ...
+├─ search/                                               # Search/index migrations (only if search engine/index is used) — index mappings/settings with rollback + receipts
+│  ├─ README.md                                          # Search migration rules (compat strategy, aliasing, rebuild-vs-migrate guidance, rollback semantics)
+│  ├─ SEARCH-MIG-YYYY-MM-DD-01/                          # One migration package for search/index changes
+│  │  ├─ migration.yml                                   # Declaration (scope, prechecks, forward/rollback, compatibility constraints)
+│  │  ├─ forward.json                                    # Forward change (mapping/settings/template) in canonical JSON form (deterministic)
+│  │  ├─ rollback.json                                   # Rollback change (previous mapping/settings/template) or alias swap strategy
+│  │  ├─ baselines/                                      # Pre/post snapshots (index templates, mappings, settings) for audit
+│  │  ├─ diffs/                                          # Summary + touched resources (indices/templates/aliases)
+│  │  ├─ receipts/                                       # Run receipts + optional PROV/pointers
+│  │  └─ notes.md                                        # Notes: expected impact, reindex needs, downtime strategy, verification steps
+│  └─ ...                                                # Additional search migrations
 │
-└─ graph/                                                     # Graph migrations (if graph DB is used)
-   ├─ README.md
-   ├─ GRAPH-MIG-YYYY-MM-DD-01/
-   │  ├─ migration.yml
-   │  ├─ forward.cypher
-   │  ├─ rollback.cypher
-   │  ├─ baselines/
-   │  ├─ diffs/
-   │  ├─ receipts/
-   │  └─ notes.md
-   └─ ...
+└─ graph/                                                # Graph migrations (only if graph DB is used) — schema/constraints/queries with rollback + receipts
+   ├─ README.md                                          # Graph migration rules (constraints/indexes, compatibility, rollback strategy, verification queries)
+   ├─ GRAPH-MIG-YYYY-MM-DD-01/                           # One migration package for graph changes
+   │  ├─ migration.yml                                   # Declaration (scope, risk, approvals, forward/rollback refs, verification queries)
+   │  ├─ forward.cypher                                  # Forward migration Cypher (constraints, indexes, transformations; guarded operations)
+   │  ├─ rollback.cypher                                 # Rollback Cypher (or compensating changes; document irreversibles)
+   │  ├─ baselines/                                      # Pre/post snapshots (constraints/indexes counts) for audit/diff
+   │  ├─ diffs/                                          # Summary + touched entities/constraints
+   │  ├─ receipts/                                       # Run receipts + optional PROV/pointers
+   │  └─ notes.md                                        # Notes: rationale, performance impacts, verification steps, links to approvals/waivers
 ```
 
 > [!TIP]
