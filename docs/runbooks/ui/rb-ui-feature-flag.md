@@ -114,19 +114,24 @@ Use a consistent taxonomy so everyone understands the risk and intended lifetime
 
 ## Decision tree
 ```mermaid
-flowchart TD
-  A[Change requested] --> B{Is this a trust-critical change?}
-  B -->|Yes| C[Prefer backend gate + UI must preserve trust surfaces]
-  B -->|No| D[UI feature flag is acceptable]
-  C --> E{Need progressive rollout?}
+graph TD
+  A["Change requested"] --> B{"Trust critical change"}
+
+  B --> Y1["Yes"] --> C["Prefer backend gate - UI must preserve trust surfaces"]
+  B --> N1["No"] --> D["UI feature flag is acceptable"]
+
+  C --> E{"Need progressive rollout"}
   D --> E
-  E -->|Yes| F[Create Release Flag + rollout plan + monitoring]
-  E -->|No| G[Ship without flag OR use short-lived release flag]
-  F --> H[Enable in staging]
-  H --> I[Canary enable]
-  I --> J[General enable]
-  J --> K[Decommission flag (remove code)]
-  C --> L[Steward review required]
+
+  E --> Y2["Yes"] --> F["Create release flag - rollout plan - monitoring"]
+  E --> N2["No"] --> G["Ship without flag or use short lived release flag"]
+
+  F --> H["Enable in staging"]
+  H --> I["Canary enable"]
+  I --> J["General enable"]
+  J --> K["Decommission flag - remove code"]
+
+  C --> L["Steward review required"]
 ```
 
 ---
