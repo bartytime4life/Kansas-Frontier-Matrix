@@ -276,15 +276,15 @@ This directory is designed to support **fail-closed** enforcement.
 > If some files/folders don’t exist yet on your branch, treat them as **PROPOSED** and add them as you wire the gates.
 
 ```text
-data/registry/anchors/
-├─ README.md                  # (this file) contract + workflow for anchor allow-list
-├─ anchors.v1.json             # PROPOSED: canonical machine-readable anchor register
-├─ anchors_register.v1.schema.json  # PROPOSED: schema for anchors.v1.json
-├─ fixtures/                   # PROPOSED: tiny valid/invalid examples for CI
-│  ├─ anchors.v1.valid.json
-│  └─ anchors.v1.invalid.missing_source_id.json
-└─ templates/                  # PROPOSED: copy/paste scaffolds
-   └─ anchor_record.template.json
+data/registry/anchors/                                     | # Anchor allow-list (stable reference points) + CI-validated registry
+├─ README.md                                                | # (this file) Contract + workflow for proposing/reviewing anchors + promotion rules
+├─ anchors.v1.json                                          | # PROPOSED: Canonical machine-readable anchor registry (records: anchor_id, source_id, scope, policy_label, notes)
+├─ anchors_register.v1.schema.json                          | # PROPOSED: JSON Schema for anchors.v1.json (fail-closed validation in CI)
+├─ fixtures/                                                | # PROPOSED: Tiny valid/invalid fixtures for CI (synthetic; policy-safe)
+│  ├─ anchors.v1.valid.json                                 | # Valid minimal/full-ish example that MUST pass schema + invariants
+│  └─ anchors.v1.invalid.missing_source_id.json             | # Invalid example (missing required source_id) that MUST fail CI
+└─ templates/                                               | # PROPOSED: Copy/paste scaffolds for consistent new records
+   └─ anchor_record.template.json                           | # Anchor record starter (required fields + placeholders + comments)
 ```
 
 [Back to top](#anchors-registry)
