@@ -57,24 +57,24 @@ Templates here should make it easy to:
 These templates are used across the KFM “truth path” lifecycle and trust membrane.
 
 ```mermaid
-flowchart LR
-  U[Upstream Sources] --> R[RAW zone]
-  R --> W[WORK / Quarantine]
-  W --> P[PROCESSED]
-  P --> C[CATALOG]
-  C --> Pub[PUBLISHED]
+graph LR
+  U["Upstream sources"] --> R["RAW zone"]
+  R --> W["WORK and quarantine"]
+  W --> P["PROCESSED"]
+  P --> C["CATALOG"]
+  C --> Pub["PUBLISHED"]
 
-  subgraph GOV[Governance artifacts (from templates)]
-    PD[Policy Decision Record]
-    PA[Promotion Approval / Gate Checklist]
-    RO[Redaction & Obligations Record]
-    IR[Incident / Exception Record]
+  subgraph GOV["Governance artifacts - from templates"]
+    PD["Policy decision record"]
+    PA["Promotion approval - gate checklist"]
+    RO["Redaction and obligations record"]
+    IR["Incident or exception record"]
   end
 
-  PD -.applies policy.-> R
-  PA -.permits promotion.-> P
-  RO -.controls disclosure.-> Pub
-  IR -.feeds remediation.-> W
+  PD -.-> L1["applies policy"] -.-> R
+  PA -.-> L2["permits promotion"] -.-> P
+  RO -.-> L3["controls disclosure"] -.-> Pub
+  IR -.-> L4["feeds remediation"] -.-> W
 ```
 
 ---
@@ -179,14 +179,12 @@ A template is “done” when:
 This is an example layout. Update it to match the repo’s real structure.
 
 ```text
-docs/
-  governance/
-    templates/
-      README.md
-      template__policy-decision-record.md
-      template__promotion-gate-checklist.md
-      template__redaction-obligations-record.md
-      template__exception-request.md
+docs/governance/templates/                               # Governance templates (copy → fill) for auditable decisions, gates, obligations, and exceptions
+├─ README.md                                             # Index + selection guidance (which template when) + naming/evidence/approval conventions
+├─ template__policy-decision-record.md                   # Policy Decision Record (PDR): records a governance/policy decision with rationale, risk, enforcement points, and rollback
+├─ template__promotion-gate-checklist.md                 # Promotion Gate Checklist: structured gate-by-gate verification/sign-off prior to promoting artifacts across zones
+├─ template__redaction-obligations-record.md             # Redaction & Obligations Record: documents redaction/generalization requirements + ongoing usage obligations and monitoring
+└─ template__exception-request.md                        # Exception Request: time-bounded waiver with compensating controls, explicit expiry, and reversion plan
 ```
 
 ---
