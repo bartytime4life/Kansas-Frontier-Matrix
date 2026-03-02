@@ -113,18 +113,18 @@ If a diagram truly needs sensitive detail, it should be:
 > This is a recommended structure. Actual files may differ.
 
 ```text
-docs/diagrams/src/operations/
-├── README.md
-├── deployment/
-│   ├── ops__deployment__gitops_model__v1.mmd
-│   └── ops__deployment__service_topology__v1.mmd
-├── observability/
-│   ├── ops__observability__signals__v1.mmd
-│   └── ops__observability__dashboards__v1.mmd
-├── backup_restore/
-│   └── ops__backup_restore__canonical_stores__v1.mmd
-└── incident_response/
-    └── ops__incident_response__governance_incidents__v1.mmd
+docs/diagrams/src/operations/                               # Operations diagram sources (deploy/obs/backup/incident response)
+├── README.md                                               # Index + naming conventions + how to render/validate + export policy
+├── deployment/                                             # Deployment/ops topology diagrams (GitOps + runtime)
+│   ├── ops__deployment__gitops_model__v1.mmd               # GitOps model (repos, envs, promotion flow; policy-safe)
+│   └── ops__deployment__service_topology__v1.mmd           # Service topology (gateways/services/deps; no secrets)
+├── observability/                                          # Observability diagrams (signals + dashboards)
+│   ├── ops__observability__signals__v1.mmd                 # Signals model (logs/metrics/traces) + correlation IDs + redaction posture
+│   └── ops__observability__dashboards__v1.mmd              # Dashboard map (SLOs, alerts, drilldowns; links to runbooks)
+├── backup_restore/                                         # Backup/restore diagrams (canonical stores posture)
+│   └── ops__backup_restore__canonical_stores__v1.mmd       # Canonical stores backup/restore flow + verification steps
+└── incident_response/                                     # Incident response diagrams (governance + technical flows)
+    └── ops__incident_response__governance_incidents__v1.mmd # Governance incident flow (triage→contain→audit→remediate→postmortem)
 ```
 
 [Back to top](#operations-diagrams-source)
