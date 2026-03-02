@@ -727,68 +727,68 @@ Extra review required when:
 <summary><strong>Target layout (PROPOSED)</strong></summary>
 
 ```text
-Kansas-Frontier-Matrix/
-├─ README.md
-├─ LICENSE
-├─ CONTRIBUTING.md
-├─ SECURITY.md
-├─ CODE_OF_CONDUCT.md
-├─ CHANGELOG.md
-├─ Makefile
-├─ compose.yaml
+Kansas-Frontier-Matrix/                                 # KFM monorepo: map-first, time-aware, governed, evidence-first geospatial + historical knowledge system
+├─ README.md                                             # Project overview, operating model, quickstart, architecture map, and “how to contribute safely”
+├─ LICENSE                                               # Repository license and usage terms (governs code + any bundled artifacts as specified)
+├─ CONTRIBUTING.md                                       # Contributor workflow, branching/PR rules, required checks, and doc/data submission expectations
+├─ SECURITY.md                                           # Security policy: reporting, vulnerability handling, secret management expectations, and disclosure process
+├─ CODE_OF_CONDUCT.md                                    # Community behavior expectations and enforcement process
+├─ CHANGELOG.md                                          # Human-readable change history (releases, breaking changes, notable governance/policy shifts)
+├─ Makefile                                              # Task entrypoints (build/test/lint/policy checks/data validation/docs tooling)
+├─ compose.yaml                                          # Local development stack (services, dependencies, ports) for Linux-first workflows
 │
-├─ .github/
-│  ├─ CODEOWNERS
-│  └─ workflows/
+├─ .github/                                              # GitHub governance + automation (ownership, CI gates, policy enforcement)
+│  ├─ CODEOWNERS                                          # Ownership map: who must review which paths (governance “decision rights” wiring)
+│  └─ workflows/                                          # CI pipelines enforcing promotion gates, policy tests, link checks, builds, and release checks
 │
-├─ docs/
-│  ├─ governance/
-│  ├─ runbooks/
-│  ├─ standards/
-│  └─ adr/
+├─ docs/                                                 # Canonical documentation hub (architecture, governance, standards, runbooks, ADRs)
+│  ├─ governance/                                        # Governance model: labels, gates, waivers, roles, decision records, policy doctrine
+│  ├─ runbooks/                                          # Operational playbooks (pipelines, incidents, releases, reruns, promotions, steward actions)
+│  ├─ standards/                                         # Repo standards (schemas, metadata profiles, evidence rules, naming, formatting, interoperability)
+│  └─ adr/                                               # Architecture Decision Records (why key design choices were made, with dates and consequences)
 │
-├─ contracts/
-│  ├─ openapi/
-│  ├─ schemas/
-│  └─ vocab/
+├─ contracts/                                            # Interface contracts (API and data): “what the system promises” to producers/consumers
+│  ├─ openapi/                                           # OpenAPI specs for services (versioned endpoints, auth, errors, obligations, response shapes)
+│  ├─ schemas/                                           # JSON Schema (or equivalent) for artifacts (datasets, receipts, bundles, story sidecars, manifests)
+│  └─ vocab/                                             # Controlled vocabularies (policy labels, obligations, roles, geometry types, units, etc.)
 │
-├─ policy/
-│  ├─ rego/
-│  ├─ tests/
-│  └─ fixtures/
+├─ policy/                                               # Policy-as-code: the trust membrane (deny-by-default rules + parity tests + fixtures)
+│  ├─ rego/                                              # Rego policies (PDP logic): authorization, obligations, label enforcement, promotion gating rules
+│  ├─ tests/                                             # Policy tests (OPA/conftest): CI/runtime parity, regression coverage, invariants, edge cases
+│  └─ fixtures/                                          # Test inputs/expected decisions (subjects/actions/resources/context) supporting repeatable evaluation
 │
-├─ data/
-│  ├─ specs/
-│  ├─ registry/
-│  ├─ raw/
-│  ├─ work/
-│  ├─ quarantine/
-│  ├─ processed/
-│  ├─ catalog/
-│  ├─ published/
-│  └─ audit/
+├─ data/                                                 # Data truth-path zones + governance metadata (immutable → curated → published) with auditability
+│  ├─ specs/                                             # Dataset specs (schemas, lineage expectations, transforms, QA rules, promotion contracts)
+│  ├─ registry/                                          # Dataset registry (sources, licensing, sensitivity, stewardship, update cadence, provenance anchors)
+│  ├─ raw/                                               # RAW zone: immutable acquisitions (source snapshots, checksums, ingest receipts)
+│  ├─ work/                                              # WORK zone: staging for transforms/QA (not publishable; experimental and reviewable)
+│  ├─ quarantine/                                        # QUARANTINE: blocked artifacts awaiting remediation (policy/quality/licensing failures)
+│  ├─ processed/                                         # PROCESSED: curated, validated artifacts eligible for cataloging and release
+│  ├─ catalog/                                           # CATALOG: searchable metadata (DCAT/STAC/PROV + receipts) backing discovery + traceability
+│  ├─ published/                                         # PUBLISHED: governed exports surfaced to apps/APIs (policy labels + obligations applied)
+│  └─ audit/                                             # AUDIT: immutable logs, decisions, run receipts, promotion records, waiver references
 │
-├─ stories/
-│  ├─ draft/
-│  ├─ review/
-│  └─ published/
+├─ stories/                                              # Narrative layer (claims + evidence + maps) with review gates and publish controls
+│  ├─ draft/                                             # In-progress story nodes (editable; not externally trusted)
+│  ├─ review/                                            # Stories under formal review (steward/security/publish checklists + required citations)
+│  └─ published/                                         # Approved stories (immutable versions, citations locked, obligations enforced on surfaces)
 │
-├─ apps/
-│  ├─ api/
-│  ├─ map/
-│  ├─ story/
-│  ├─ catalog/
-│  └─ focus/
+├─ apps/                                                 # User-facing and service applications (each integrates policy/labels/obligations consistently)
+│  ├─ api/                                               # Public/internal APIs (PEP enforcement, authn/authz, obligations in responses, audit logging)
+│  ├─ map/                                               # Map explorer UI (layers, time controls, label-aware rendering, redaction/generalization)
+│  ├─ story/                                             # Story UI (narrative reader/editor, claim→citation UX, publish workflow integration)
+│  ├─ catalog/                                           # Catalog UI (search/discovery, provenance views, dataset/story metadata, receipts browsing)
+│  └─ focus/                                             # Focus Mode (AI-assisted synthesis within policy bounds; cite-or-abstain, evaluation gates)
 │
-├─ packages/
-│  ├─ domain/
-│  ├─ usecases/
-│  ├─ adapters/
-│  └─ shared/
+├─ packages/                                             # Shared libraries implementing clean architecture boundaries (domain/usecases/adapters/shared)
+│  ├─ domain/                                            # Core types + invariants (policy labels, evidence refs, IDs, time model, geometry contracts)
+│  ├─ usecases/                                          # Application logic (promotion, ingest, export, search, obligation emission/handling)
+│  ├─ adapters/                                          # Integrations (DBs, file stores, OPA/PDP, GIS libs, external sources, message queues)
+│  └─ shared/                                            # Cross-cutting utilities (logging, config, hashing, error types, validation helpers)
 │
-├─ infra/
-├─ tools/
-└─ tests/
+├─ infra/                                                # Infrastructure-as-code + deployment manifests (local → cloud scaling path, policy wiring)
+├─ tools/                                                # Developer tools (generators, validators, link checkers, schema builders, fixtures tooling)
+└─ tests/                                                # Repo-level tests (integration/e2e/smoke) spanning apps, packages, policy, and data workflows
 ```
 
 </details>
