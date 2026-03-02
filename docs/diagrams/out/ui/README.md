@@ -133,17 +133,19 @@ Diagrams in this folder should be consistent with KFM’s non-negotiable UX/arch
 ### Reference diagram: UI trust membrane + evidence resolution
 
 ```mermaid
-flowchart LR
-  U[User] --> UI[Web UI: Map Explorer / Story / Focus]
-  UI -->|HTTPS| API[Governed API Boundary (PEP)]
-  API --> POL[Policy Engine]
-  API --> CAT[Catalog Triplet: DCAT + STAC + PROV]
-  API --> EVD[Evidence Resolver]
-  EVD --> ART[Artifact Stores (RAW/WORK/PROCESSED)]
-  API -->|policy-filtered response| UI
+graph LR
+  U["User"] --> UI["Web UI - Map Explorer - Story - Focus"]
 
-  %% Non-goal: direct client-to-storage access
-  UI -. "NO: direct DB/object store access" .-> ART
+  UI --> H1["HTTPS"] --> API["Governed API boundary - PEP"]
+  API --> POL["Policy engine"]
+  API --> CAT["Catalog triplet - DCAT + STAC + PROV"]
+  API --> EVD["Evidence resolver"]
+
+  EVD --> ART["Artifact stores - RAW WORK PROCESSED"]
+
+  API --> R1["Policy filtered response"] --> UI
+
+  UI -.-> N1["No direct client to storage access"] -.-> ART
 ```
 
 ---
