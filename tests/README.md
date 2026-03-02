@@ -383,17 +383,16 @@ This is the **recommended** layout. If the repo differs, update this section to 
 
 ### Minimum required structure
 
-```text
-tests/
-├─ README.md
-├─ unit/
-├─ schema/
-├─ policy/
-├─ contract/
-├─ integration/
-├─ e2e/
-├─ fixtures/
-└─ utils/
+tests/                                                 # Quality + governance enforcement: layered tests that protect the trust membrane (fail-closed, reproducible)
+├─ README.md                                            # Test strategy index: what runs when (local/CI), required gates, naming conventions, and how to add tests safely
+├─ unit/                                                # Fast, isolated tests for packages/apps (pure logic, deterministic; minimal I/O; high signal)
+├─ schema/                                              # Schema validation tests (JSON Schema / profiles): artifacts, registries, receipts, manifests, catalogs
+├─ policy/                                              # Policy-as-code tests (OPA/conftest): allow/deny/obligations fixtures + invariants + regression protection
+├─ contract/                                            # Contract tests for APIs and interfaces (OpenAPI, versioning, compatibility, consumer-driven checks)
+├─ integration/                                         # Cross-module tests (DB/filesystems/OPA/services) validating wiring + end-to-end flows at small scale
+├─ e2e/                                                 # End-to-end scenarios (compose/k8s runners): ingest→validate→catalog→publish→surface checks (slow, gated)
+├─ fixtures/                                            # Shared deterministic fixtures (data, policy inputs/decisions, schemas, golden files); versioned and small
+└─ utils/                                               # Test helpers (builders, harnesses, snapshot utilities, temp FS helpers, local service wrappers)
 ```
 
 ### Extended recommended structure (reference)
