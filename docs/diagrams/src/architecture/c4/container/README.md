@@ -171,24 +171,22 @@ This is a **proposed** baseline inventory to help keep diagrams consistent. Repl
 Use this as a *starting point* (edit to match repo reality).
 
 ```mermaid
-flowchart LR
-  %% Outside the trust membrane
+graph LR
   subgraph ClientSpace["Client space"]
-    ui["Map/Story UI (React)"]
-    cli["Steward CLI or Automation"]
+    ui["Map and Story UI - React"]
+    cli["Steward CLI or automation"]
   end
 
-  %% Inside the trust membrane
-  subgraph KFM["KFM platform (trust membrane boundary)"]
-    api["Governed API (REST/GraphQL)"]
-    policy["Policy engine (OPA/Rego)"]
+  subgraph KFM["KFM platform - trust membrane boundary"]
+    api["Governed API - REST and GraphQL"]
+    policy["Policy engine - OPA Rego"]
     evidence["Evidence resolver"]
-    catalogs["Catalogs (DCAT + STAC + PROV)"]
+    catalogs["Catalogs - DCAT + STAC + PROV"]
     pipeline["Pipelines and orchestrator"]
-    obj["Object storage (canonical artifacts)"]
-    postgis["PostGIS (projection)"]
-    graph["Graph DB (projection)"]
-    search["Search index (projection)"]
+    obj["Object storage - canonical artifacts"]
+    postgis["PostGIS - projection"]
+    gdb["Graph DB - projection"]
+    search["Search index - projection"]
     audit["Audit log and run receipts"]
   end
 
@@ -203,7 +201,7 @@ flowchart LR
   pipeline --> catalogs
 
   api --> postgis
-  api --> graph
+  api --> gdb
   api --> search
 
   api --> audit
