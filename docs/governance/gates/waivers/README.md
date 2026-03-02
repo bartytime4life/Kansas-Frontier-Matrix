@@ -282,15 +282,15 @@ This README does not assume a specific implementation, but governance expectatio
 > This is the intended structure for this directory. Keep it small and auditable.
 
 ```text
-docs/governance/gates/waivers/
-  README.md
-  active/
-    wvr-YYYY-MM-DD-<slug>.yaml
-  archive/
-    2026/
-      wvr-YYYY-MM-DD-<slug>.yaml
-  templates/
-    waiver.template.yaml
+docs/governance/gates/waivers/                           # Gate waivers: controlled, time-bounded exceptions to promotion/readiness gates (with compensating controls + expiry)
+├─ README.md                                             # How waivers work (when allowed), required fields, approval flow, storage rules, and move-to-archive procedure
+├─ active/                                               # Currently valid waivers (unexpired) used by CI/runtime policy checks
+│  └─ wvr-YYYY-MM-DD-<slug>.yaml                          # An approved waiver instance (scope, gate(s), justification, compensating controls, owner, expiry, audit refs)
+├─ archive/                                              # Historical waivers kept for auditability (never edited; superseded/expired only)
+│  └─ 2026/                                              # Year partition for archived waivers
+│     └─ wvr-YYYY-MM-DD-<slug>.yaml                       # Archived waiver (expired/revoked/superseded) with final status + closure notes/reference
+└─ templates/                                            # Authoring templates for consistent, machine-validated waiver records
+   └─ waiver.template.yaml                                # Canonical waiver schema/template (copy to active/ then fill; kept aligned with policy-as-code validators)
 ```
 
 ---
