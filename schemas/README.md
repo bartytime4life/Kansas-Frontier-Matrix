@@ -134,16 +134,16 @@ schemas/
 
 ### Recommended (high leverage)
 ```text
-schemas/
-  registry.v1.json               # machine-readable registry (recommended)
-  _fixtures/                     # small fixtures used by contract tests
-    run_receipt/
-      minimal.pass.json
-      missing_spec_hash.fail.json
-    run_manifest/
-      minimal.pass.json
-  _shared/                       # shared $defs ONLY when truly reused
-    kfm_core.v1.schema.json
+schemas/                                               # Schema hub: reusable JSON Schemas + a small registry/fixtures for deterministic contract testing
+├─ registry.v1.json                                     # Machine-readable schema registry (recommended): schema_id, version, path, owners, status, and what artifacts each schema validates
+├─ _fixtures/                                           # Small, deterministic fixtures used by contract tests (pass/fail cases; synthetic only)
+│  ├─ run_receipt/                                      # Fixtures for run receipt schema validation
+│  │  ├─ minimal.pass.json                              # Fixture: minimal valid run receipt (must pass schema + any required invariants)
+│  │  └─ missing_spec_hash.fail.json                    # Fixture: invalid run receipt missing spec_hash (must fail; guards fail-closed enforcement)
+│  └─ run_manifest/                                     # Fixtures for run manifest schema validation (if run manifests are adopted)
+│     └─ minimal.pass.json                              # Fixture: minimal valid run manifest (must pass; prevents accidental over-tightening)
+├─ _shared/                                             # Shared $defs only when truly reused across multiple schemas (avoid over-coupling)
+│  └─ kfm_core.v1.schema.json                           # Core shared definitions (ids, timestamps, digests, policy_label, reason_codes) used across schema families
 ```
 
 > TIP: Generated artifacts (TypeScript types, Python models) are **rebuildable** and should live in the owning module/package, not here (see [Exclusions](#exclusions)).
