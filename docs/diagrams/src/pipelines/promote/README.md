@@ -75,20 +75,19 @@ This folder is part of `docs/diagrams/src/…` and is intended to hold **diagram
 The “truth path” is a **governed lifecycle**. Promotion is the act of moving a dataset version into the publishable + governed surfaces, and it MUST be blocked unless required artifacts and validations exist (fail closed).
 
 ```mermaid
-flowchart LR
-  subgraph Z[Truth path zones]
-    U[Upstream] --> R[RAW\n(immutable acquisition)]
-    R --> W[WORK / QUARANTINE\n(normalize + QA + redaction candidates)]
-    W --> P[PROCESSED\n(publishable artifacts + checksums)]
-    P --> C[CATALOG / TRIPLET\n(DCAT + STAC + PROV + receipts)]
-    C --> PUB[PUBLISHED\n(governed runtime via PEP/API)]
+graph LR
+  subgraph Z["Truth path zones"]
+    U["Upstream"] --> R["RAW - immutable acquisition"]
+    R --> W["WORK and QUARANTINE - normalize QA redaction candidates"]
+    W --> P["PROCESSED - publishable artifacts and checksums"]
+    P --> C["CATALOG TRIPLET - DCAT + STAC + PROV + receipts"]
+    C --> PUB["PUBLISHED - governed runtime via PEP API"]
   end
 
-  %% Gates (conceptual)
-  R -->|Gate A: Identity| W
-  W -->|Gate E: QA thresholds| P
-  P -->|Gate D: Triplet validation| C
-  C -->|Gate F: Receipts + audit| PUB
+  R --> GA["Gate A - identity"] --> W
+  W --> GE["Gate E - QA thresholds"] --> P
+  P --> GD["Gate D - triplet validation"] --> C
+  C --> GF["Gate F - receipts and audit"] --> PUB
 ```
 
 ### Conceptual sequence of a promotion run
