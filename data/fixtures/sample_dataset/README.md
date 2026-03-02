@@ -83,18 +83,19 @@ Even though it is “just fixtures”, it is still within the repo’s governed 
 Recommended shape (adjust to match reality):
 
 ```text
-sample_dataset/
-  README.md
-  manifest.json                # Optional: authoritative file list + checksums
-  spec/                         # Dataset spec (canonical inputs for hashing/versioning)
-  registry/                      # Optional: local registry entry mirror used in tests
-  upstream/                      # Optional: small upstream “seed” assets (download-free)
-  raw/                           # Raw zone fixture artifacts
-  work/                          # Work zone intermediate outputs
-  processed/                     # Processed outputs (publishable format)
-  catalog/                       # Generated catalogs (STAC/DCAT/PROV) for tests
-  receipts/                      # Run receipts / audit artifacts for reproducibility
-  notes/                         # Human notes, diagrams, or provenance references
+sample_dataset/                                           # Sample dataset fixture (end-to-end truth-path miniature; policy-safe; tiny)
+├─ README.md                                              # Fixture overview + what it demonstrates + how tests use it
+├─ manifest.json                                          # OPTIONAL: authoritative file list + checksums (drift detection; determinism)
+│
+├─ spec/                                                  # Dataset spec inputs (canonical for hashing/versioning)
+├─ registry/                                              # OPTIONAL: local mirror of registry entries used in tests (dataset/source/watchers)
+├─ upstream/                                              # OPTIONAL: small upstream “seed” assets (download-free; synthetic)
+├─ raw/                                                   # RAW zone fixture artifacts (as-acquired; immutable snapshot)
+├─ work/                                                  # WORK zone intermediate outputs (normalized/QC candidates)
+├─ processed/                                             # PROCESSED outputs (publishable formats; versioned)
+├─ catalog/                                               # Generated catalogs (DCAT/STAC/PROV) for tests (cross-linked)
+├─ receipts/                                              # Run receipts / audit artifacts (who/what/when + checks + policy decisions)
+└─ notes/                                                 # Human notes/diagrams/provenance references (non-normative; keep small)
 ```
 
 If your repo uses a different convention (e.g., one fixture folder containing only the minimal seeds, while other zones are generated elsewhere), document that here.
