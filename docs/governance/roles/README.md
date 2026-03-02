@@ -197,12 +197,12 @@ Proposed (add as governance becomes enforceable):
 - `docs/governance/roles/onboarding/` — role onboarding checklists (TBD)
 
 ```text
-docs/governance/roles/
-  README.md
-  roles.yaml                # TODO
-  raci.md                   # TODO
-  decision-rights.md        # TODO
-  onboarding/               # TODO
+docs/governance/roles/                                  # Governance roles (ownership, responsibilities, decision rights)
+├─ README.md                                            # Index + role philosophy + how roles map to CODEOWNERS/policy
+├─ roles.yaml                                           # TODO: machine-readable role definitions (names, responsibilities, escalation)
+├─ raci.md                                              # TODO: RACI matrix (workstreams → responsible/accountable/consulted/informed)
+├─ decision-rights.md                                   # TODO: decision rights matrix (who can approve labels/gates/waivers/releases)
+└─ onboarding/                                          # TODO: role onboarding materials (checklists, expectations, access requests)
 ```
 
 ---
