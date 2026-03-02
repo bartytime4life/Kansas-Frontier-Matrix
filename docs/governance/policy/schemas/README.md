@@ -211,18 +211,20 @@ Fail closed: do not ship, do not publish, do not promote. Add the schema + fixtu
 <summary>Appendix: Target directory layout (PROPOSED)</summary>
 
 ```text
-docs/governance/policy/schemas/
-  README.md
-  v1/
-    policy_block.schema.json
-    obligation.schema.json
-    policy_decision.schema.json
-    pdp_input.schema.json
-  examples/
-    policy_block.valid.json
-    policy_block.invalid.json
-    obligation.valid.json
-    obligation.invalid.json
+docs/governance/policy/schemas/                          # Policy schemas (versioned) + examples for validation and docs
+├─ README.md                                             # Index, versioning rules, $id conventions, and how CI validates schemas/examples
+│
+├─ v1/                                                   # Schema version v1 (stable; referenced by fixtures/tools/contracts)
+│  ├─ policy_block.schema.json                           # Schema for embedded policy blocks (labels/rights/obligations metadata)
+│  ├─ obligation.schema.json                             # Schema for one obligation (type + params + applicability + enforcement notes)
+│  ├─ policy_decision.schema.json                        # Schema for decision envelope (allow/deny/obligations/reason codes; policy-safe)
+│  └─ pdp_input.schema.json                              # Schema for PDP input context (user/action/resource + request context)
+│
+└─ examples/                                             # Example instances (policy-safe; used in docs/tests)
+   ├─ policy_block.valid.json                            # Valid policy_block example (should pass schema)
+   ├─ policy_block.invalid.json                          # Invalid policy_block example (should fail; demonstrates enforcement)
+   ├─ obligation.valid.json                              # Valid obligation example (should pass)
+   └─ obligation.invalid.json                            # Invalid obligation example (should fail)
 ```
 
 </details>
