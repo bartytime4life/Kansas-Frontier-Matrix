@@ -119,15 +119,16 @@ flowchart TD
 
 ### Recommended structure
 ```
-docs/governance/records/incidents/
-  README.md
-  index.yml                       # optional: machine-readable incident index
-  INC-YYYY-MM-DD-###/             # one folder per incident (recommended)
-    incident.md                   # main record (sanitized)
-    timeline.md                   # timestamped actions + decisions
-    action_items.md               # owners + due dates + completion evidence
-    attachments/                  # pointers/digests only (no secrets)
-      evidence_refs.md
+docs/governance/records/incidents/                       # Governance incident records (auditable, sanitized, policy-safe)
+├─ README.md                                             # Record rules (sanitization, required sections, review/approval, retention pointers)
+├─ index.yml                                             # OPTIONAL: machine-readable incident index (id/date/severity/owners/status/links)
+│
+└─ INC-YYYY-MM-DD-###/                                   # One folder per incident (stable incident id)
+   ├─ incident.md                                        # Main incident record (sanitized summary, impact, root cause, mitigations)
+   ├─ timeline.md                                        # Timestamped timeline (actions, decisions, comms, verification points)
+   ├─ action_items.md                                    # Action items (owners, due dates, completion evidence links)
+   └─ attachments/                                       # Pointers/digests only (NO secrets; no raw artifacts)
+      └─ evidence_refs.md                                # EvidenceRefs/digests/links that support claims in the record
 ```
 
 ### Naming conventions
