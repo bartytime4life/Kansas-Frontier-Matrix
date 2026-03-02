@@ -175,28 +175,28 @@ A practical minimum schema (recommended) is:
 > **PROPOSED** layout. Adjust to match the repo’s actual implementation.
 
 ```text
-data/audit/ledger/
-  README.md
-
-  schemas/
-    run_record.schema.json
-    promotion_event.schema.json
-    focus_query_record.schema.json
-
-  records/
-    2026/
-      2026-03/
-        2026-03-02/
-          run_record_<digest>.json
-          promotion_event_<digest>.json
-
-  heads/
-    ledger_head.json          # pointer to latest record digest(s)
-    ledger_head.sig           # optional signature/attestation
-
-  indexes/
-    by_day/
-    by_dataset/
+data/audit/ledger/                                         # Append-only audit ledger (records + schemas + heads + indexes)
+├─ README.md                                                # Ledger purpose, append-only rules, retention/posture, and verification steps
+│
+├─ schemas/                                                 # Schemas for ledger record types (CI + tooling validation)
+│  ├─ run_record.schema.json                                # Schema: pipeline/index/catalog run record (who/what/when + inputs/outputs)
+│  ├─ promotion_event.schema.json                           # Schema: promotion event (zone change + approvals + artifact digests)
+│  └─ focus_query_record.schema.json                        # Schema: Focus query/audit record (policy-safe; citations/abstain metadata)
+│
+├─ records/                                                 # Append-only ledger records (partitioned by date for auditability)
+│  └─ 2026/                                                 # Year partition
+│     └─ 2026-03/                                           # Month partition (YYYY-MM)
+│        └─ 2026-03-02/                                     # Day partition (YYYY-MM-DD)
+│           ├─ run_record_<digest>.json                     # One run record (filename keyed by digest for immutability)
+│           └─ promotion_event_<digest>.json                # One promotion event record (digest-keyed)
+│
+├─ heads/                                                   # Pointers to latest known good ledger state (for consumers)
+│  ├─ ledger_head.json                                      # Pointer to latest record digest(s) + time range + optional checkpoints
+│  └─ ledger_head.sig                                       # OPTIONAL: signature/attestation for ledger_head.json (integrity)
+│
+└─ indexes/                                                 # Derived indexes for fast lookup (rebuildable from records/)
+   ├─ by_day/                                               # Day-based index (enumerate records by date)
+   └─ by_dataset/                                           # Dataset-based index (dataset_id/version → record digests)
 ```
 
 **Naming guidance**
