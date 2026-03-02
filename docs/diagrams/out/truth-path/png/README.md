@@ -46,17 +46,16 @@ notes:
 The **Truth Path** is KFM’s governed lifecycle from upstream acquisition through publication.
 
 ```mermaid
-flowchart LR
-  U[Upstream sources] -->|Acquire (immutable)| R[RAW zone]
-  R -->|Validate & quarantine| W[WORK / QUARANTINE]
-  W -->|Transform & QA| P[PROCESSED]
-  P -->|Describe & link| C[CATALOG<br/>DCAT + STAC + PROV]
-  C -->|Serve via policy| Pub[PUBLISHED<br/>Governed APIs/UI]
+graph LR
+  U["Upstream sources"] --> A1["Acquire - immutable"] --> R["RAW zone"]
+  R --> A2["Validate and quarantine"] --> W["WORK and QUARANTINE"]
+  W --> A3["Transform and QA"] --> P["PROCESSED"]
+  P --> A4["Describe and link"] --> C["CATALOG - DCAT + STAC + PROV"]
+  C --> A5["Serve via policy"] --> Pub["PUBLISHED - governed APIs and UI"]
 
-  %% Governance/controls
-  R -.->|Run receipt & audit| A[Audit ledger]
-  W -.->|Evidence refs| E[Evidence bundles]
-  Pub -.->|Trust membrane| T[Policy enforcement point]
+  R -.-> G1["Run receipt and audit"] -.-> AUD["Audit ledger"]
+  W -.-> G2["Evidence refs"] -.-> E["Evidence bundles"]
+  Pub -.-> G3["Trust membrane"] -.-> T["Policy enforcement point"]
 ```
 
 ### Invariants the diagram is expected to communicate
