@@ -360,25 +360,28 @@ Links to logs, receipts, dashboards, commits, and any redacted artifacts.
 **PROPOSED** structure (add files as you mature the incident program):
 
 ```text
-docs/runbooks/incidents/
-  README.md                        # this file (index + standards)
-  triage.md                        # general triage steps (TODO)
-  severity.md                      # org-aligned severity policy (TODO)
-  communication.md                 # comms templates + cadence (TODO)
-  templates/
-    incident-log.template.md       # copy/paste templates
-    postmortem.template.md
-  subsystems/
-    api.md                         # governed API outages (TODO)
-    policy.md                      # OPA/policy incidents (TODO)
-    ingest.md                      # pipeline incidents (TODO)
-    catalog.md                     # catalog build/validation incidents (TODO)
-    indexers.md                    # search/tiles index incidents (TODO)
-    ui.md                          # UI incidents (TODO)
-    data-integrity.md              # correctness/promotion incidents (TODO)
-  checklists/
-    first-15-minutes.md            # decomposed version of quick start (TODO)
-    closeout-dod.md                # decomposed closeout DoD (TODO)
+docs/runbooks/incidents/                                 # Incident runbooks (triage, severity, comms, subsystem playbooks)
+├─ README.md                                             # This file: index + standards + “how to use during an incident”
+├─ triage.md                                             # TODO: general triage steps (detect → scope → mitigate → verify → document)
+├─ severity.md                                           # TODO: org-aligned severity policy (definitions, escalation, time targets)
+├─ communication.md                                      # TODO: comms templates + cadence (internal/external, update intervals)
+│
+├─ templates/                                            # Copy/paste templates used during/after incidents
+│  ├─ incident-log.template.md                           # Incident log template (timeline, actions, decisions, evidence links)
+│  └─ postmortem.template.md                             # Postmortem template (root cause, contributing factors, follow-ups)
+│
+├─ subsystems/                                           # Subsystem-specific incident playbooks (what to check + how to mitigate)
+│  ├─ api.md                                             # TODO: governed API outages (health, dependencies, rollback, safe errors)
+│  ├─ policy.md                                          # TODO: OPA/policy incidents (parity, bundle deploys, deny-all posture)
+│  ├─ ingest.md                                          # TODO: pipeline incidents (stuck runs, retries, backfills, receipts)
+│  ├─ catalog.md                                         # TODO: catalog build/validation incidents (triplet integrity, linkcheck, regen)
+│  ├─ indexers.md                                        # TODO: search/tiles index incidents (drift, rebuilds, freshness checks)
+│  ├─ ui.md                                              # TODO: UI incidents (deploy regressions, caching, feature flags)
+│  └─ data-integrity.md                                  # TODO: correctness/promotion incidents (bad publish, quarantine, rollback/supersede)
+│
+└─ checklists/                                           # Short checklists to keep response consistent under pressure
+   ├─ first-15-minutes.md                                # TODO: quick-start breakdown (stabilize, assess, escalate, start log)
+   └─ closeout-dod.md                                    # TODO: closeout DoD (verification, comms, receipts, postmortem scheduling)
 ```
 
 [Back to top](#incident-runbooks)
