@@ -2,11 +2,11 @@
 doc_id: kfm://doc/7d7a9c1e-8a22-4c26-89c2-2a6c7b0a6a6d
 title: SECURITY
 type: standard
-version: v2
+version: v3
 status: draft
 owners: KFM Security & Governance Stewards (TBD)
 created: 2026-02-26
-updated: 2026-02-27
+updated: 2026-03-02
 policy_label: public
 related:
   - kfm://doc/kfm-gdg-vnext-2026-02-20
@@ -15,9 +15,9 @@ related:
   - ./CONTRIBUTING.md
 tags: [kfm, security, governance, policy-as-code]
 notes:
-  - Draft SECURITY.md aligned to governance-first, default-deny KFM posture.
-  - Replace TODO contact + encryption fields before publishing.
-  - Adds explicit threat-model invariants and “security gates” mapping to CI/rulesets.
+  - SECURITY policy aligned to governance-first, default-deny KFM posture.
+  - Adds: truth-path security mapping, Promotion Contract gate mapping, security control matrix, and policy-safe error contract.
+  - TODOs to resolve before publishing: contacts, encryption key/process, supported-version window, audit retention policy.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -30,29 +30,79 @@ notes:
 ![Policy](https://img.shields.io/badge/policy-policy--as--code-blue)
 ![Evidence](https://img.shields.io/badge/ux-evidence--first-0aa)
 ![Supply chain](https://img.shields.io/badge/supply%20chain-attest%20or%20block-important)
+![Citations](https://img.shields.io/badge/focus-cite--or--abstain-critical)
+![Audit](https://img.shields.io/badge/audit-append--only-informational)
 
-> **TL;DR:** In KFM, **security is governance**: policy labels, default‑deny, evidence resolution, and auditability are enforced in CI and at runtime.  
+> **TL;DR:** In KFM, **security is governance**: policy labels, default‑deny, evidence resolution, and auditability are enforced in **CI** and at **runtime**.  
 > If a control is uncertain, KFM **fails closed**.
+
+> [!IMPORTANT]
+> This document is **public**. Do not add secrets, internal endpoints, or restricted dataset identifiers here.
 
 ---
 
 ## Quick navigation
 
+- [Scope and non-goals](#scope-and-non-goals)
+- [Open TODOs before publishing](#open-todos-before-publishing)
 - [Supported versions](#supported-versions)
 - [Reporting a vulnerability](#reporting-a-vulnerability)
 - [What counts as a security issue](#what-counts-as-a-security-issue)
-- [Security objectives](#security-objectives)
+- [Security principles](#security-principles)
 - [KFM security model](#kfm-security-model)
+- [Security across the truth path](#security-across-the-truth-path)
 - [Threat-model invariants](#threat-model-invariants)
-- [Data sensitivity and privacy](#data-sensitivity-and-privacy)
+- [Policy labels, sensitive locations, and privacy](#policy-labels-sensitive-locations-and-privacy)
 - [Authentication and authorization](#authentication-and-authorization)
+- [Policy-safe errors](#policy-safe-errors)
 - [Secrets and credentials](#secrets-and-credentials)
 - [Supply chain integrity](#supply-chain-integrity)
 - [Audit logs and run receipts](#audit-logs-and-run-receipts)
-- [Security testing and required gates](#security-testing-and-required-gates)
+- [Security gates and required checks](#security-gates-and-required-checks)
 - [Incident response](#incident-response)
 - [Coordinated disclosure](#coordinated-disclosure)
 - [References](#references)
+
+---
+
+## Scope and non-goals
+
+### In scope
+
+This policy covers security controls for:
+
+- **Repo**: contributions, CI/CD gates, dependency integrity, secret hygiene
+- **Pipelines**: source intake, processing, cataloging, promotions, exports
+- **Runtime**: governed APIs, evidence resolver, policy enforcement, caching behavior
+- **UI**: evidence-first UX, policy notices, anti-leak affordances
+- **Focus Mode**: cite-or-abstain, prompt-injection resistance, restricted-data protection
+- **Operational security**: audit logging, incident response, rollback-first mitigations
+
+### Non-goals
+
+- Physical security, employee device security, and other organizational policies (covered elsewhere)
+- Bug bounty terms (unless explicitly added)
+- SLA/SLO guarantees (separate doc)
+
+> [!NOTE]
+> This document may refer to **recommended** repo paths (e.g., `policy/`, `contracts/`, `tools/`).  
+> If your repo uses different paths, update accordingly. Do not assume a path exists unless verified.
+
+[Back to top](#top)
+
+---
+
+## Open TODOs before publishing
+
+This policy **must not** be promoted to `published` until the following are resolved:
+
+- [ ] **Security contact** is real (email and/or GH private reporting enabled)
+- [ ] **Encryption** path is published (PGP or secure intake portal)
+- [ ] **Supported-version window** is defined (release cadence + backport expectations)
+- [ ] **Audit retention** policy exists (duration, access rules, deletion policy)
+- [ ] **Incident runbooks** exist (or are linked) for SEV-1/2
+
+[Back to top](#top)
 
 ---
 
@@ -71,7 +121,7 @@ notes:
 | Older tags/releases | ❌ | Upgrade to latest |
 
 > [!PROPOSED]
-> Once releases exist, define an explicit window (e.g., N-1 releases or a time window) and publish it here.
+> Once releases exist, define an explicit window (e.g., **N-1 releases** or **90 days**) and publish it here.
 
 [Back to top](#top)
 
@@ -135,7 +185,7 @@ If you believe you found any of the following, treat it as a **security incident
 - Fix and advisory: coordinated with reporter, depending on impact and release cadence
 
 > [!NOTE]
-> KFM may ship a fail-closed mitigation (e.g., deny access or suppress exports) before a full fix.
+> KFM may ship a **fail-closed mitigation** (e.g., deny access or suppress exports) before a full fix.
 
 [Back to top](#top)
 
@@ -157,7 +207,7 @@ KFM security issues include (non-exhaustive):
 
 ### Evidence, catalogs, and provenance integrity
 - **EvidenceRef tampering:** citations resolve to incorrect evidence (mismatched digest / wrong dataset_version_id)
-- **Catalog/link integrity failure:** DCAT/STAC/PROV cross-links are wrong or point to non-canonical artifacts
+- **Catalog/link integrity failure:** DCAT/STAC/PROV cross-links wrong or point to non-canonical artifacts
 - **Receipt/audit spoofing:** run receipts or audit entries can be deleted/rewritten/spoofed
 
 ### Supply chain & secrets
@@ -167,22 +217,23 @@ KFM security issues include (non-exhaustive):
 
 ### Focus Mode & retrieval security
 - **Prompt-injection leading to policy bypass** (retrieved content causes unauthorized tool use or leakage)
-- **Cite-or-abstain failure:** Focus returns claims without resolvable citations for the requester’s role
+- **Cite-or-abstain failure:** Focus returns claims without resolvable citations for requester’s role
 - **Restricted evidence in “reasoning context”** that later leaks into output
 
 [Back to top](#top)
 
 ---
 
-## Security objectives
+## Security principles
 
-KFM’s security posture is defined by these objectives:
+KFM’s security posture is defined by these non-negotiable principles:
 
-1. **Confidentiality:** restricted datasets, sensitive locations, and PII do not leak.
-2. **Integrity:** DatasetVersions, catalogs, receipts, and evidence bundles are tamper-evident and consistent by digest.
-3. **Availability (governed):** the system remains usable without relaxing policy gates.
-4. **Non-repudiation / auditability:** governed actions emit receipts and audit references that can be reviewed.
-5. **Least privilege:** operators, pipelines, and runtime services have only the access they need.
+1. **Default deny**: if policy is uncertain or evaluation fails → deny.
+2. **Fail closed**: missing artifacts, missing receipts, missing rights → block promotion and/or block runtime.
+3. **Trust membrane**: clients never access storage/DB directly; governed API + policy boundary only.
+4. **Cite-or-abstain**: user-facing claims require resolvable, policy-allowed evidence.
+5. **Tamper-evident truth**: processed artifacts + catalogs + receipts are immutable by digest.
+6. **Least privilege**: services/pipelines have only the access they need; rotate + audit.
 
 [Back to top](#top)
 
@@ -190,25 +241,27 @@ KFM’s security posture is defined by these objectives:
 
 ## KFM security model
 
-### Trust membrane (conceptual)
+### Trust membrane
 
 ```mermaid
 flowchart LR
-  U[User] --> UI[Map & Story UI]
+  U[User] --> UI[Map and Story UI]
   UI --> API[Governed API]
   API --> PDP[Policy Decision Point]
   API --> ER[Evidence Resolver]
-  PDP --> Store[(Artifact + Catalog Stores)]
+  PDP --> Store[(Artifact and Catalog Stores)]
   ER --> Store
-  API --> Audit[(Audit Ledger)]
-  Dev[Contributor/Operator] --> CI[CI Policy + Provenance Gates]
-  CI --> API
+  API --> Audit[(Audit ledger)]
+
+  Dev[Contributor and Operator] --> CI[CI policy and provenance gates]
+  CI --> Store
+  CI --> Audit
 ```
 
 **Key points**
 - Policy decisions are enforced at **runtime** (API + evidence resolver) and in **CI** (policy/provenance gates).
 - The UI may display policy status, but **does not make policy decisions**.
-- Canonical truth is **processed artifacts + catalogs + receipts + audit**, not projections.
+- “Citations” are **EvidenceRefs** that resolve to inspectable **EvidenceBundles**, not pasted URLs.
 
 ### Policy-as-code (concept)
 
@@ -249,33 +302,76 @@ obligations[o] {
 
 ---
 
-## Threat-model invariants
+## Security across the truth path
 
-These invariants must remain true. If any becomes uncertain, fail closed and escalate.
+KFM’s lifecycle zones are security boundaries. Promotion is **blocked** unless gates are satisfied.
 
-| ID | Invariant | MUST be true |
+```mermaid
+flowchart LR
+  Up[Upstream source] --> Raw[RAW zone]
+  Raw --> Work[WORK and Quarantine]
+  Work --> Proc[PROCESSED]
+  Proc --> Cat[CATALOG triplet]
+  Cat --> Pub[PUBLISHED surfaces]
+  Pub --> UX[Map UI and Focus Mode]
+```
+
+### Zone expectations (security view)
+
+| Zone | What lives here | Security posture |
+|---|---|---|
+| **RAW** | Immutable acquisition copies + license snapshot + checksums | Restricted by default; append-only; never public |
+| **WORK / Quarantine** | Transforms, QA, redactions/generalizations | Failures isolated; may be rewritten; **no serving** |
+| **PROCESSED** | Publishable artifacts with digests (COG, GeoParquet, PMTiles, etc.) | Immutable by digest; promoted only when gates pass |
+| **CATALOG / Triplet** | Cross-linked DCAT + STAC + PROV | Must validate and cross-link; EvidenceRefs resolve |
+| **PUBLISHED** | Governed runtime surfaces (API, tiles, stories, Focus answers) | Policy enforced; logging/audit on governed actions |
+
+### Promotion Contract mapping (security relevance)
+
+> [!IMPORTANT]
+> Treat these gates as **merge-required** checks (CI) and **promotion-required** checks (release lane).
+
+| Gate | What must be present | Security meaning |
 |---:|---|---|
-| TM-001 | No direct client-to-storage/DB | UI/clients access data only via governed APIs |
-| TM-002 | Policy-safe errors | Public users cannot infer restricted dataset existence by 403/404 differences |
-| TM-003 | Export controls enforced | Downloads/exports checked against policy labels + rights |
-| TM-004 | Prompt-injection defenses | Retrieved text cannot override policy, tools, or disclosure rules |
-| TM-005 | Cite-or-abstain hard gate | Focus Mode returns only claims supported by resolvable citations |
-| TM-006 | Restricted leakage scanning | Outputs are scanned for restricted patterns when required |
-| TM-007 | Least-privileged credentials | Pipeline/runtime credentials are scoped, rotated, and non-reusable |
-| TM-008 | Immutability by digest | Processed artifacts + catalogs for a DatasetVersion are immutable by digest |
-| TM-009 | Supply-chain provenance | Builds have pinned inputs and (when enabled) attestations |
-| TM-010 | Append-only audit ledger | Audit records cannot be rewritten; access-controlled |
-| TM-011 | Audit redaction | Audit logs do not leak restricted data/PII |
+| A | Identity & versioning (dataset_id, dataset_version_id, spec_hash, digests) | Prevents spoofing and “mystery data” |
+| B | Licensing & rights metadata | Prevents rights violations + unsafe mirroring |
+| C | Sensitivity classification & redaction plan | Prevents sensitive-location/PII leakage |
+| D | Catalog triplet validation (DCAT/STAC/PROV + cross-links) | Prevents broken citations and “ghost evidence” |
+| E | QA checks & thresholds | Prevents unsafe/low-quality outputs from publication |
+| F | Run receipt & audit record | Ensures traceability; blocks unverifiable outputs |
+| G | Release manifest | Makes promotion auditable and reversible |
 
 [Back to top](#top)
 
 ---
 
-## Data sensitivity and privacy
+## Threat-model invariants
+
+These invariants must remain true. If any becomes uncertain, fail closed and escalate.
+
+| ID | Invariant | Enforcement hints |
+|---:|---|---|
+| TM-001 | No direct client-to-storage/DB | Network policy + code review + tests |
+| TM-002 | Policy-safe errors | Uniform error model; anti-enumeration |
+| TM-003 | Export controls enforced | Policy checks + obligation transforms |
+| TM-004 | Prompt-injection defenses | Tool allowlist + evidence-only citations |
+| TM-005 | Cite-or-abstain hard gate | Citation verification step blocks output |
+| TM-006 | Restricted leakage scanning (when required) | Output scanning + fixtures + redaction tests |
+| TM-007 | Least-privileged credentials | Scoped creds, rotation, audit |
+| TM-008 | Immutability by digest | Content-addressable artifacts; no mutation |
+| TM-009 | Supply-chain provenance | SBOM + provenance attestations (when enabled) |
+| TM-010 | Append-only audit ledger | Write-once semantics; access-controlled |
+| TM-011 | Audit redaction | Logs do not leak restricted data/PII |
+
+[Back to top](#top)
+
+---
+
+## Policy labels, sensitive locations, and privacy
 
 ### Policy labels
 
-KFM uses policy labels to drive access decisions and redaction/generalization obligations.
+Policy labels drive access decisions and redaction/generalization obligations.
 
 Starter labels (extend as needed):
 - `public`
@@ -299,6 +395,10 @@ For culturally sensitive or at-risk locations:
 - Publish only generalized derivatives, or metadata-only records.
 - Enforce policy at the serving layer (no bypass via static tile hosting or public object URLs).
 - Include automated tests (e.g., “no restricted bbox leakage”, “no coordinate fields in public exports”).
+
+> [!WARNING]
+> Do **not** randomize coordinates for “privacy” unless you can prove it is reproducible and non-leaky.
+> Prefer deterministic, documented generalization methods with versioned rules.
 
 ### PII risk and aggregation thresholds
 
@@ -335,6 +435,31 @@ Recommended baseline:
 
 ---
 
+## Policy-safe errors
+
+A policy-safe error prevents public users from inferring restricted data existence.
+
+**Principles**
+- Prefer **uniform** 404/403 behavior for restricted resources (anti-enumeration).
+- Error responses MUST include an **audit_ref** (or equivalent) for follow-up.
+- Never include restricted dataset IDs, titles, bboxes, or coordinate hints in error messages.
+
+Example error DTO (illustrative):
+
+```yaml
+ErrorResponse:
+  type: object
+  required: [error_code, message, audit_ref]
+  properties:
+    error_code: { type: string }
+    message: { type: string }
+    audit_ref: { type: string }
+```
+
+[Back to top](#top)
+
+---
+
 ## Secrets and credentials
 
 - Never store secrets in the repository.
@@ -366,6 +491,10 @@ Recommended before broad public release:
 > Adopt keyless signing via OIDC-based identity for releases (organization policy permitting).  
 > If attestations are required, the release lane should **block** when missing.
 
+> [!IMPORTANT]
+> Do **not** fetch remote attestations directly from untrusted origins in the browser.  
+> Proxy through a server that verifies signatures and strips secrets.
+
 [Back to top](#top)
 
 ---
@@ -394,11 +523,11 @@ Run receipts should be treated as security-critical because they prove:
 
 ---
 
-## Security testing and required gates
+## Security gates and required checks
 
 Security-related checks should be treated as **merge-required gates** (fail closed).
 
-### CI security gate categories (recommended)
+### CI security gate categories (minimum)
 
 - **Policy tests:** fixtures-driven allow/deny/obligation outcomes
 - **Schema/profile validation:** strict validation of DCAT/STAC/PROV and internal schemas
@@ -414,7 +543,18 @@ Security-related checks should be treated as **merge-required gates** (fail clos
 > A required security gate must not be skippable via `paths:` filters, `if:` conditions, or job fanout.
 > Prefer a single always-runs gate-summary job marked as required in rulesets/branch protection.
 
-See: `.github/README.md` for the governance-side “trust membrane” index (if present).
+### Security control matrix (recommended)
+
+| Control | Statement | Enforced in | Evidence artifact |
+|---|---|---|---|
+| SC-01 | Default deny on policy evaluation error | Runtime + CI | Policy test fixtures |
+| SC-02 | EvidenceRefs resolve to EvidenceBundles | Runtime + CI | Resolver integration tests |
+| SC-03 | Catalog triplet cross-links are valid | CI | Validator + link-check report |
+| SC-04 | Public exports contain no restricted fields | CI + Runtime | Export scan + obligation record |
+| SC-05 | Focus Mode citation verification is a hard gate | Runtime + CI | Golden queries + citation coverage |
+| SC-06 | Release artifacts are signed/attested (when required) | CI + Release | SBOM + attestation verification logs |
+
+See: `.github/README.md` for the governance-side “required checks registry” (if present).
 
 [Back to top](#top)
 
@@ -465,8 +605,37 @@ We aim to follow coordinated disclosure:
 
 ## References
 
-- Kansas Frontier Matrix (KFM) — Definitive Design & Governance Guide (vNext), 2026-02-20
-- Repo root `README.md` (trust membrane + Promotion Contract)
+- `kfm://doc/kfm-gdg-vnext-2026-02-20` — KFM Definitive Design & Governance Guide (vNext)
+- Repo root `README.md` (trust membrane + Promotion Contract), if present
 - `.github/README.md` (required checks registry + CI gate index), if present
+- `CONTRIBUTING.md` (security expectations for contributors), if present
 
 [Back to top](#top)
+
+---
+
+<details>
+<summary><strong>Appendix A — PR Security Checklist</strong></summary>
+
+- [ ] No secrets committed (including in docs/examples)
+- [ ] Policy changes include fixtures + tests (allow/deny/obligations)
+- [ ] Catalog changes validate (DCAT/STAC/PROV) and links resolve
+- [ ] Runtime changes preserve cite-or-abstain hard gate
+- [ ] Any sensitive-location logic includes “no coordinate leakage” tests
+- [ ] Any export change is policy-gated and scanned
+- [ ] Any auth/cache change is reviewed for cross-role leakage
+
+</details>
+
+<details>
+<summary><strong>Appendix B — Minimal Verification Steps (convert Unknown → Confirmed)</strong></summary>
+
+Run these checks and attach outputs to the next revision of this file:
+
+- [ ] Confirm repo paths: capture `git rev-parse HEAD` and `tree -L 3`
+- [ ] Extract required checks from `.github/workflows/*` and list which block merges
+- [ ] Verify policy pack exists and tests run in CI (default deny enforced)
+- [ ] Verify evidence resolver exists and resolves sample EvidenceRefs end-to-end
+- [ ] Verify Focus Mode evaluation harness exists (golden queries + citation gate)
+
+</details>
