@@ -108,15 +108,15 @@ Use these terms precisely when describing impact and recovery:
 ### Architecture sketch
 
 ```mermaid
-flowchart TD
-  U[Upstream sources] --> RAW[RAW zone: immutable acquisition]
-  RAW --> WORK[WORK/QUARANTINE: transforms + QA]
-  WORK --> PROC[PROCESSED: publishable assets]
-  PROC --> CAT[CATALOG: DCAT + STAC + PROV]
-  CAT --> PUB[PUBLISHED: governed runtime]
-  PUB --> API[Governed API (PEP)]
-  API --> UI[Map/Story UI + Focus Mode]
-  API --> CLI[Ops/CLI tools]
+graph TD
+  U["Upstream sources"] --> RAW["RAW zone - immutable acquisition"]
+  RAW --> WORK["WORK and QUARANTINE - transforms + QA"]
+  WORK --> PROC["PROCESSED - publishable assets"]
+  PROC --> CAT["CATALOG - DCAT + STAC + PROV"]
+  CAT --> PUB["PUBLISHED - governed runtime"]
+  PUB --> API["Governed API - PEP"]
+  API --> UI["Map and Story UI - Focus mode"]
+  API --> CLI["Ops and CLI tools"]
 ```
 
 > [!NOTE]
