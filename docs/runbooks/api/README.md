@@ -258,16 +258,16 @@ Minimum recommended signals (add concrete thresholds once SLOs exist):
 > This is the **recommended** layout for this folder. Replace with the actual contents as you add runbooks.
 
 ```text
-docs/runbooks/api/
-  README.md
-  deploy.md
-  rollback.md
-  smoke-tests.md
-  incident-5xx.md
-  incident-policy-deny.md
-  incident-evidence-resolve.md
-  incident-catalog-drift.md
-  incident-lineage-stale.md
+docs/runbooks/api/                                      # API runbooks (deploy, rollback, incidents, and verification)
+├─ README.md                                            # Index + scope + oncall expectations + links to dashboards/alerts
+├─ deploy.md                                            # API deploy procedure (prechecks → rollout → verify → document)
+├─ rollback.md                                          # API rollback procedure (when allowed, steps, verification, post-rollback notes)
+├─ smoke-tests.md                                       # Smoke tests checklist (health, auth, policy, evidence, key endpoints)
+├─ incident-5xx.md                                      # Incident playbook: elevated 5xx errors (triage → mitigate → verify → postmortem)
+├─ incident-policy-deny.md                              # Incident playbook: unexpected policy denies (fixtures parity, PDP health, safe errors)
+├─ incident-evidence-resolve.md                         # Incident playbook: evidence resolver failures (timeouts, bad refs, cache, upstream)
+├─ incident-catalog-drift.md                            # Incident playbook: catalog drift/link breakage (triplet integrity, re-gen, rollback)
+└─ incident-lineage-stale.md                            # Incident playbook: lineage/provenance stale (rebuild graph, verify receipts, audit)
 ```
 
 ---
