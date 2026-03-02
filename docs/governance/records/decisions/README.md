@@ -106,13 +106,15 @@ If the repo already uses a different convention (date-based, ADR numbering, etc.
 
 **Directory layout (expected):**
 ```
-docs/governance/records/decisions/
-  README.md                      # this file
-  DEC-0001-*.md                  # decision records (markdown)
-  DEC-0001-*.attachments/        # optional: diagrams, exports, supporting artifacts
-  templates/
-    decision-record.template.md
-  index.yml                      # optional: machine-readable registry (if adopted)
+docs/governance/records/decisions/                       # Governance decision records (non-ADR; auditable; policy-safe)
+├─ README.md                                             # This file: scope, numbering, required sections, review/approval rules
+├─ DEC-0001-*.md                                         # Decision records (markdown; one per decision id)
+├─ DEC-0001-*.attachments/                               # OPTIONAL: supporting artifacts (diagrams/exports; policy-safe; no secrets)
+│
+├─ templates/                                            # Templates for consistent new decision records
+│  └─ decision-record.template.md                        # Decision record template (context, decision, rationale, impacts, verification)
+│
+└─ index.yml                                             # OPTIONAL: machine-readable registry (id/title/status/owners/links) for tooling/search
 ```
 
 ---
