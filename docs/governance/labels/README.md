@@ -213,17 +213,17 @@ The repo should keep the label vocabulary and its policy fixtures close to each 
 > The exact filenames may differ in your repo. The structure below is **recommended** for maintainability.
 
 ```text
-docs/governance/labels/
-├── README.md                         # this file (policy_label overview + workflows)
-├── policy_label.vocab.yaml           # controlled vocabulary + descriptions (recommended)
-├── obligations.vocab.yaml            # controlled vocabulary for obligation types (recommended)
-└── examples/
-    ├── policy_input.example.json     # minimal PDP input examples
-    ├── policy_decision.example.json  # decision + obligations examples
-    └── fixtures/
-        ├── allow_public_read_public.json
-        ├── deny_public_read_restricted.json
-        └── allow_public_read_public_generalized_with_notice.json
+docs/governance/labels/                                # Policy labels + obligations: controlled vocabularies and reference examples for consistent enforcement
+├── README.md                                          # Overview of policy_label + obligations, workflows (assign/evaluate/review), and where enforcement happens (PEP/PDP/CI)
+├── policy_label.vocab.yaml                            # Controlled vocabulary for policy_label values (meaning, defaults, allowed actions, review requirements, escalation)
+├── obligations.vocab.yaml                             # Controlled vocabulary for obligation types (e.g., redact/generalize/notice/log) with parameters and UI/API handling notes
+└── examples/                                          # Worked examples for understanding/testing label and obligation semantics (non-production reference)
+    ├── policy_input.example.json                      # Minimal PDP input examples (subject, action, resource, context) for local testing and documentation
+    ├── policy_decision.example.json                   # Example PDP decision outputs (allow/deny + emitted obligations + reasons) for consumers (UI/API/CLI)
+    └── fixtures/                                      # Fixture cases used by tests/docs to validate expected outcomes
+        ├── allow_public_read_public.json              # Fixture: allow when subject/action/resource all align to PUBLIC access constraints
+        ├── deny_public_read_restricted.json           # Fixture: deny when subject is public but resource label is RESTRICTED (fail-closed)
+        └── allow_public_read_public_generalized_with_notice.json  # Fixture: allow with obligations (generalize + notice) for conditional release scenarios
 ```
 
 ### Acceptable inputs
