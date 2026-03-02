@@ -77,20 +77,20 @@ flowchart LR
 This README documents a **recommended** (fixtures-first) layout. If your repo uses a different layout, keep the **intent** the same and update this README.
 
 ```
-docs/governance/policy/fixtures/allow_deny/
-  README.md
-
-  allow/                       # allow cases (expected allow=true)
-    <case_name>/               # one directory per fixture case
-      input.json               # policy input document
-      expected.json            # expected decision + obligations
-
-  deny/                        # deny cases (expected allow=false)
-    <case_name>/
-      input.json
-      expected.json
-
-  _shared/                     # optional: shared snippets, schema helpers (no secrets)
+docs/governance/policy/fixtures/allow_deny/                 | # Policy fixture suites (allow/deny) for CI parity + regression (deterministic; no secrets)
+├─ README.md                                                | # Fixture contract: directory layout, naming rules, required fields, how CI executes, expected exit semantics
+│
+├─ allow/                                                   | # Allow cases (expected allow=true) — MUST pass and remain stable
+│  └─ <case_name>/                                          | # One fixture case directory (kebab/snake-case; stable once referenced)
+│     ├─ input.json                                         | # Policy input document (user/action/resource/context; policy-safe)
+│     └─ expected.json                                      | # Expected decision envelope (allow=true + obligations + reason_codes as applicable)
+│
+├─ deny/                                                    | # Deny cases (expected allow=false) — MUST fail-closed with policy-safe errors
+│  └─ <case_name>/                                          | # One fixture case directory (stable; referenced by tests)
+│     ├─ input.json                                         | # Policy input document that should be denied (no leakage; no secrets)
+│     └─ expected.json                                      | # Expected decision envelope (allow=false + obligations/reason_codes; indistinguishable where required)
+│
+└─ _shared/                                                 | # OPTIONAL: shared snippets/helpers/schemas (no secrets; reused across cases)
 ```
 
 **Naming conventions (recommended):**
