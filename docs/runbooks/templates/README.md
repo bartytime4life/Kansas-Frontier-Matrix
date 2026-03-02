@@ -199,18 +199,18 @@ If a runbook results in any dataset being (re)published, the runbook must collec
 > **PROPOSED** layout (update to match the real repo).
 
 ```text
-docs/runbooks/templates/
-  README.md
-  incident.runbook.template.md
-  promotion.runbook.template.md
-  pipeline.runbook.template.md
-  policy-change.runbook.template.md
-  release.runbook.template.md
-  verification.checklist.md
-  _snippets/
-    evidence-section.md
-    rollback-section.md
-    validation-section.md
+docs/runbooks/templates/                                 # Runbook templates (copy/paste starters; consistent structure)
+├─ README.md                                             # Template index + how to use + required customization checklist
+├─ incident.runbook.template.md                          # Incident runbook template (triage, comms, evidence capture, closeout)
+├─ promotion.runbook.template.md                         # Promotion runbook template (gates, approvals, receipts, rollback/supersede)
+├─ pipeline.runbook.template.md                          # Pipeline runbook template (prechecks, run, verify, troubleshoot, receipts)
+├─ policy-change.runbook.template.md                     # Policy change runbook template (fixtures, parity, rollout, verification)
+├─ release.runbook.template.md                           # Release runbook template (what ships, checks, artifacts, rollback)
+├─ verification.checklist.md                             # Generic verification checklist (DoD, links to receipts, signoff)
+└─ _snippets/                                            # Reusable sections to keep runbooks consistent
+   ├─ evidence-section.md                                # Evidence capture section (EvidenceRefs, receipts, screenshots policy)
+   ├─ rollback-section.md                                # Rollback/supersede section (when allowed, steps, verification)
+   └─ validation-section.md                              # Validation section (checks to run, expected outputs, failure handling)
 ```
 
 [Back to top](#runbook-templates)
