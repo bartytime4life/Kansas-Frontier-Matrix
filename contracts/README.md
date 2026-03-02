@@ -2,11 +2,11 @@
 doc_id: kfm://doc/b5e9f8c2-1e25-4f09-8a55-9201a05f9b2d
 title: contracts/ — KFM contract surfaces (schemas, APIs, profiles, gates)
 type: standard
-version: v4
+version: v5
 status: draft
 owners: TBD (set via CODEOWNERS)
 created: 2026-02-22
-updated: 2026-03-01
+updated: 2026-03-02
 policy_label: public
 related:
   - ../README.md
@@ -16,10 +16,10 @@ related:
   - ../policy/
 tags: [kfm, contracts, governance, schema, api, evidence, promotion-contract]
 notes:
-  - Aligned to vNext: truth-path zones + Promotion Contract gates A-G + triplet profiles + evidence resolver/API contract requirements.
-  - Explicitly models PROJECTIONS as rebuildable (non-canonical) outputs between catalogs and governed runtime.
+  - Upgraded to align with KFM vNext: truth-path zones + Promotion Contract gates A–G + triplet cross-link requirements + evidence resolver and governed API posture.
+  - Explicitly models PROJECTIONS as rebuildable outputs between canonical catalogs and governed runtime.
   - Fail-closed: repo-specific wiring (exact filenames, generators, emitted CI check names) remains UNKNOWN until verified in-repo.
-  - Prefer versioned artifacts + fixtures + CI validation over “tribal knowledge.”
+  - Prefer versioned artifacts + fixtures + CI validation over tribal knowledge.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -27,41 +27,60 @@ notes:
 # `contracts/` — KFM contract surfaces
 **Contract-first • fail-closed • governed-by-default • evidence-first • time-aware**
 
-**Status:** draft • **Owners:** TBD via `CODEOWNERS`  
-**Purpose:** Make KFM interfaces **explicit, versioned, and machine-validated** so promotion + runtime behavior can’t drift.
+**Status:** draft • **Owners:** TBD via `CODEOWNERS` • **Policy label:** public  
+**Purpose:** Make KFM interfaces **explicit, versioned, and machine-validated** so promotion and runtime behavior can’t drift.
 
 ![status](https://img.shields.io/badge/status-draft-yellow)
+![owners](https://img.shields.io/badge/owners-CODEOWNERS-informational)
 ![principle](https://img.shields.io/badge/principle-contract--first-blue)
-![gates](https://img.shields.io/badge/gates-fail--closed-critical)
+![enforcement](https://img.shields.io/badge/enforcement-fail--closed-critical)
 ![promotion](https://img.shields.io/badge/promotion%20contract-A--G-critical)
 ![triplet](https://img.shields.io/badge/catalog-triplet%20(DCAT%20%7C%20STAC%20%7C%20PROV)-informational)
 ![evidence](https://img.shields.io/badge/evidence-resolvable-important)
-![policy](https://img.shields.io/badge/policy-CI%20%3D%3D%20runtime-critical)
-<!-- TODO: replace placeholder checks with real workflow/status badges once repo workflows exist -->
+![parity](https://img.shields.io/badge/policy-parity%20(CI%20%3D%3D%20runtime)-critical)
+<!-- TODO: replace placeholders with real workflow/status badges once repo workflows exist -->
 <!-- e.g., https://img.shields.io/github/actions/workflow/status/<org>/<repo>/contracts-gate-summary.yml?branch=main -->
 
 > [!IMPORTANT]
-> **A contract is not documentation.**  
-> A contract is a **machine-validated interface** with fixtures + tests. If a contract is missing/invalid/ambiguous, KFM must **block promotion** and/or **refuse to serve** affected data (policy-safe).
+> **A contract is not documentation.**
+> A contract is a **machine-validated interface** (schema/spec/profile) plus fixtures and tests.
+> If a required contract is missing, invalid, or ambiguous, KFM must **block promotion** and/or **refuse to serve** affected data (policy-safe).
+
+---
+
+## Quickstart
+
+If you only do three things:
+
+1) **Start here:** `contracts/registry/` (what contracts exist) and `contracts/openapi/` (what clients can call).  
+2) **Validate locally (PROPOSED command names):**
+```bash
+# (repo-specific tooling UNKNOWN)
+make contracts-validate
+# or
+python -m tools.contracts.validate --fail-closed
+```
+3) **Never merge a contract change without fixtures** (known-good + known-bad).
 
 ---
 
 ## Navigation
 
 - [Truth status legend](#truth-status-legend)
+- [Normative keywords](#normative-keywords)
 - [Directory contract](#directory-contract)
-- [Contract surfaces at a glance](#contract-surfaces-at-a-glance)
-- [What is a contract artifact](#what-is-a-contract-artifact)
-- [Naming and versioning conventions](#naming-and-versioning-conventions)
+- [Contracts in the truth path](#contracts-in-the-truth-path)
+- [Contract surfaces](#contract-surfaces)
 - [Non-negotiable invariants](#non-negotiable-invariants)
-- [Promotion Contract gates A-G](#promotion-contract-gates-a-g)
+- [Promotion Contract gates A–G](#promotion-contract-gates-a-g)
 - [Catalog triplet and EvidenceRef](#catalog-triplet-and-evidenceref)
+- [Evidence bundle contract](#evidence-bundle-contract)
 - [Governed API contract](#governed-api-contract)
-- [Relationship to configs/ and policy/](#relationship-to-configs-and-policy)
+- [Policy contract parity](#policy-contract-parity)
+- [Registry and lock files](#registry-and-lock-files)
 - [Directory layout](#directory-layout)
-- [Contract registry and lock files](#contract-registry-and-lock-files)
 - [How to add or change a contract](#how-to-add-or-change-a-contract)
-- [Validation and gates](#validation-and-gates)
+- [Validation and CI gates](#validation-and-ci-gates)
 - [Governance and safety](#governance-and-safety)
 - [Glossary](#glossary)
 - [Appendix](#appendix)
@@ -72,147 +91,123 @@ notes:
 
 This README uses explicit labels so we don’t “invent repo state”:
 
-- **CONFIRMED (design):** required KFM posture (must hold regardless of stack)
-- **PROPOSED:** recommended template/pattern (adopt only after verification)
-- **UNKNOWN (repo):** not verified in this repository yet (treat as TODO; fail-closed)
-- **CONFIRMED (repo):** verified in this repository (link to exact path + snippet + CI job name)
+- **CONFIRMED design:** required KFM posture (must hold regardless of stack)
+- **PROPOSED:** recommended template/pattern (adopt after verification)
+- **UNKNOWN repo:** not verified in this repository yet (treat as TODO; fail-closed)
+- **CONFIRMED repo:** verified here (link exact path + snippet + CI check name)
 
 > [!NOTE]
-> Repo facts should graduate from **UNKNOWN → CONFIRMED (repo)** by attaching paths/snippets in PRs.
+> Repo facts graduate from **UNKNOWN → CONFIRMED repo** only by attaching paths/snippets in PRs.
+
+---
+
+## Normative keywords
+
+This document uses these keywords intentionally:
+
+- **MUST / MUST NOT:** merge-blocking requirements
+- **SHOULD / SHOULD NOT:** strong defaults; exceptions require explicit justification
+- **MAY:** optional; do not rely on it for safety
+
+> [!TIP]
+> When you add a new MUST, add the **test** in the same PR.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## Directory contract
 
-This section satisfies the **Directory Documentation Standard** (purpose, where it fits, acceptable inputs, exclusions).
+This section satisfies the **Directory Documentation Standard**.
 
 ### Where this fits in the repo
 
 `contracts/` is the system’s **trust membrane in file form**:
+
 - CI uses `contracts/` to decide what’s promotable.
 - Runtime services use `contracts/` to decide what’s servable.
 - UIs and tools treat contracts as **authoritative interface definitions**, not suggestions.
 
 Dependency direction (ideal):
+
 - **Upstream inputs:** governance standards in `docs/` and policy posture in `policy/`
-- **Downstream consumers:** pipelines, validators, catalog builders, governed API, evidence resolver, Focus Mode, UI SDKs
-
-Architecture (conceptual)
-
-```mermaid
-flowchart LR
-  subgraph TP["Truth path zones"]
-    U[Upstream sources] --> R[RAW immutable]
-    R --> W[WORK and QUARANTINE]
-    W --> P[PROCESSED artifacts]
-    P --> C[CATALOG triplet]
-    C --> X[Projections rebuildable]
-    X --> G[Governed API PEP]
-    G --> UI[Map Story Focus]
-  end
-
-  subgraph CM["Contracts and policy"]
-    K[Contracts schemas profiles vocab] --> CI[CI gates]
-    K --> RT[Runtime enforcement]
-    CI --> G
-    RT --> G
-  end
-```
-
-> [!NOTE]
-> The **Projections** stage is intentionally rebuildable (tiles, DB indexes, search, graph). Canonical truth is
-> the object store artifacts + catalogs + provenance + receipts.
+- **Downstream consumers:** pipelines, validators, catalog builders, governed API + evidence resolver, Focus Mode, UI SDKs
 
 ### Acceptable inputs
 
 | Category | Examples | Why it belongs here |
 |---|---|---|
 | Interface schemas/specs | JSON Schema, OpenAPI, GraphQL SDL, protobuf | Defines externally visible shapes |
-| Profiles + constraints | DCAT/STAC/PROV profiles, required fields, cross-link rules | Makes catalogs enforceable |
-| Evidence contracts | EvidenceRef rules + schemes, EvidenceBundle schema | Enables cite-or-abstain guarantees |
-| Promotion contracts | promotion manifest schema, run receipt schema, release manifest schema, gate codes | Blocks unsafe promotion/serving |
+| Profiles + constraints | DCAT/STAC/PROV profiles; cross-link rules | Makes catalogs enforceable |
+| Promotion contracts | promotion manifest schema; gate vocab; release record schema | Blocks unsafe promotion/serving |
+| Evidence contracts | EvidenceRef grammar; EvidenceBundle schema | Enables cite-or-abstain guarantees |
+| Policy decision envelopes | allow/deny; obligations; reason codes | Enables CI/runtime parity + audit |
 | Fixtures | known-good / known-bad examples | Prevent “it validates but breaks” |
-| Contract tests | schema validation, linkcheck, parity checks | Turns intent into enforcement |
-| Controlled vocab | policy labels, artifact zones, citation kinds | Prevents taxonomy drift |
+| Contract tests | schema validation; linkcheck; parity tests | Turns intent into enforcement |
+| Controlled vocab | policy labels; artifact zones; reason codes | Prevent taxonomy drift |
 | Version metadata | registries/locks/changelogs | Prevent drift + enable rollback |
 
-### Exclusions (must not go here)
+### Exclusions
 
 | Excluded | Put it elsewhere | Reason |
 |---|---|---|
 | Runtime code / business logic | `apps/`, `packages/`, `infra/` | Contracts define interfaces, not implementations |
 | Secrets / tokens / credentials | secret manager / CI secrets | Contracts are reviewable and often public-ish |
-| Large datasets or derived data | `data/` truth path zones | Keep contracts diff-friendly and small |
-| Binary artifacts | release/build outputs | Contracts must be text + reviewable |
+| Large datasets or derived data | `data/` truth-path zones | Keep contracts diff-friendly and small |
+| Binary artifacts | release/build outputs | Contracts MUST be text + reviewable |
 | “Docs only” explanations | `docs/` | If it can’t be tested/validated, it isn’t a contract |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Contract surfaces at a glance
+## Contracts in the truth path
+
+KFM’s lifecycle is not a metaphor; it is a set of zones + gates that create an auditable truth path.
+
+```mermaid
+flowchart LR
+  subgraph Z["Truth path zones"]
+    U[Upstream sources] --> R[RAW immutable]
+    R --> W[WORK and QUARANTINE]
+    W --> P[PROCESSED]
+    P --> C[CATALOG triplet]
+    C --> X[PROJECTIONS rebuildable]
+    X --> G[Governed API PEP]
+    G --> UI[Map Story Focus]
+  end
+
+  subgraph K["Contracts and policy enforcement"]
+    CON[Contracts schemas profiles vocab] --> CI[CI gates]
+    CON --> RT[Runtime enforcement]
+    POL[Policy bundles] --> CI
+    POL --> RT
+    CI --> G
+    RT --> G
+  end
+```
 
 > [!NOTE]
-> This is a **design-level matrix**. Exact file locations and CI job names remain **UNKNOWN (repo)** until verified.
+> **PROJECTIONS are rebuildable.** Canonical truth is immutable artifacts + catalogs + provenance + receipts.
+> Projections include tiles, DB/search indexes, and graphs.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Contract surfaces
+
+This matrix is **design-level**. Exact filenames and CI job names are **UNKNOWN repo** until verified.
 
 | Surface | What it defines | Primary consumers | Minimum enforcement |
 |---|---|---|---|
-| Promotion Contract (A-G) | What qualifies for promotion and serving | CI, stewards, runtime services | schema + fixtures + gate summary (anti-skip) |
-| Catalog triplet (DCAT, STAC, PROV) | Canonical metadata, assets, lineage | CI, API, UI, Focus Mode | profiles + cross-link linkcheck |
-| Evidence resolution | EvidenceRef grammar + EvidenceBundle shape | Evidence resolver, UI, Focus Mode | scheme parsing + policy checks + fixtures |
-| Governed API | What clients can call and how errors behave | UI, external clients, Focus Mode | OpenAPI validation + error model invariants |
-| Policy decisions + obligations | allow/deny, obligations, reason codes | CI and runtime PEP/PDP | parity fixtures (CI == runtime) |
-| UI state (optional) | Map/Story/Focus inputs and serialization | UI, Focus Mode, story renderer | schema + golden fixtures |
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## What is a contract artifact
-
-A **contract artifact** is a *machine-validated schema/spec/profile* that defines an interface plus its enforcement scaffolding.
-
-A contract change is incomplete unless it includes:
-- updated validation/tests
-- fixtures (known-good + known-bad)
-- compatibility notes + migration/rollback plan
-- downstream updates (pipeline/API/UI/Focus) if impacted
-
-> [!IMPORTANT]
-> A contract change without fixtures is **code without tests**. Treat as merge-blocking.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Naming and versioning conventions
-
-These conventions keep contracts diff-friendly, reviewable, and enforceable.
-
-### File naming patterns (PROPOSED)
-
-| Artifact kind | Pattern | Example |
-|---|---|---|
-| JSON Schema | `<name>.v{major}.schema.json` | `promotion_manifest.v1.schema.json` |
-| Profile | `<name>.v{major}.yaml` | `stac.profile.v1.yaml` |
-| Vocab | `<name>.v{major}.yaml` | `policy_labels.v1.yaml` |
-| OpenAPI | `openapi/v{major}/openapi.yaml` | `openapi/v1/openapi.yaml` |
-
-### Versioning rules (CONFIRMED design)
-
-- **Breaking change → bump major** (`v1` → `v2`).
-  - Removing required fields
-  - Renaming fields
-  - Weakening gates or validation rules
-  - Changing error-code semantics relied on by clients
-- **Additive change → stay in major**
-  - Add optional fields
-  - Add new values to vocab where “unknown” is handled safely
-  - Add new endpoints or response fields with backwards-compatible defaults
-- **No silent looseness:** a “more permissive” validator is a breaking governance change even if code still runs.
-
-> [!NOTE]
-> Repo-specific versioning mechanics (SemVer vs `v1/` folders, etc.) are **UNKNOWN (repo)** until verified.
+| Promotion Contract | What qualifies for promotion and serving | CI, stewards, runtime | schema + fixtures + anti-skip summary |
+| Catalog triplet | Canonical metadata, assets, lineage | CI, API, UI, Focus | profiles + cross-link linkcheck |
+| Evidence resolution | EvidenceRef grammar + EvidenceBundle shape | evidence resolver, UI, Focus | parse + policy checks + fixtures |
+| Governed API | Client-callable endpoints and error behavior | UI, external clients, Focus | OpenAPI validation + error invariants |
+| Policy decisions | allow/deny, obligations, reason codes | CI and runtime PEP/PDP | parity fixtures CI == runtime |
+| Diff reports | What changed between versions | stewards, UI | schema + golden fixtures |
+| Focus eval harness | cite-or-abstain regression suite | CI, Focus | fixtures + deterministic checks |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -220,77 +215,85 @@ These conventions keep contracts diff-friendly, reviewable, and enforceable.
 
 ## Non-negotiable invariants
 
-These are **CONFIRMED (design)** and apply to all contract surfaces.
+These are **CONFIRMED design** across all stacks.
 
-### 1) Trust membrane (no bypasses)
-- Clients/UI **never** access databases/object storage directly.
-- Backend logic **never** bypasses repository interfaces to reach storage.
+### 1) Trust membrane
+
+- UI/clients **MUST NOT** access databases/object storage directly.
+- Backend logic **MUST NOT** bypass repository interfaces to reach storage.
 - All access flows through governed APIs that apply **policy + obligations + audit** consistently.
 
-### 2) Truth path zones are real (not a metaphor)
-Contracts must reinforce the storage zones and promotion boundaries:
+### 2) Truth path zones are enforceable boundaries
 
-- **RAW**: immutable, append-only acquisition + checksums.
-- **WORK**: intermediate transforms + QA + candidate redactions/generalizations (rewritable).
-- **QUARANTINE**: failed validation, unclear licensing, sensitivity concerns; **not promotable**.
-- **PROCESSED**: publishable artifacts in KFM-approved formats + checksums.
-- **CATALOG/TRIPLET**: cross-linked DCAT + STAC + PROV describing metadata/assets/lineage.
-- **PROJECTIONS** *(rebuildable)*: tiles, DB/search indexes, graphs; derived from canonical artifacts + catalogs.
-- **PUBLISHED**: governed runtime surfaces (API + UI) served via policy enforcement.
+- **RAW:** immutable, append-only acquisition + checksums.
+- **WORK:** intermediate transforms + QA + candidate redactions/generalizations.
+- **QUARANTINE:** failed validation, unclear licensing, sensitivity concerns; **not promotable**.
+- **PROCESSED:** publishable artifacts in approved formats + checksums.
+- **CATALOG triplet:** DCAT + STAC + PROV cross-linked.
+- **PROJECTIONS:** rebuildable runtime indexes (tiles, DB, search, graph).
+- **PUBLISHED:** governed API + UI surfaces (policy enforced).
 
 **Invariant:** Published surfaces may only serve promoted dataset versions that have processed artifacts, validated catalogs, run receipts, and policy label assignment.
 
-### 3) Policy semantics parity (CI == runtime)
-Contracts that depend on policy (promotion gates, evidence resolution, exports) must produce the **same outcomes** in:
+### 3) Policy semantics parity
+
+Contracts that depend on policy (promotion, evidence, exports) **MUST** produce the same outcomes in:
+
 - CI policy tests (merge gates)
-- runtime enforcement (governed API + evidence resolver)
+- runtime enforcement (API + evidence resolver)
 - Focus Mode citation verification
 
 If CI and runtime disagree, CI guarantees are meaningless → **release blocker**.
 
 ### 4) Deterministic identity and hashing
-Anything used in dataset identity (`dataset_version_id`, `spec_hash`, locks) must be:
+
+Anything used in identity (`dataset_version_id`, `spec_hash`, lock digests) MUST be:
+
 - deterministically serialized
 - stable under benign ordering/whitespace differences
-- versioned and regression-tested (golden tests)
+- regression-tested (goldens)
 
-> [!NOTE]
-> Canonical JSON hashing (e.g., RFC 8785 JCS) is a good default, but the exact algorithm is **UNKNOWN (repo)** until confirmed.
+### 5) Evidence is a UX hard requirement
 
-### 5) No silent looseness
-- Removing a required field/gate or weakening validation is a breaking change.
-- Ambiguity defaults to **deny** (fail-closed), then tighten the contract.
+Evidence resolution MUST be usable in **≤ 2 calls** from UI interactions; otherwise provenance will not be used.
 
-### 6) Evidence is a UX hard requirement (≤ 2 calls)
-Evidence resolution must be usable in **≤ 2 calls** from UI interactions; otherwise users ignore provenance and trust collapses.
+### 6) Policy-safe errors
 
-### 7) Policy-safe errors (no “ghost metadata”)
-Errors and abstentions must not leak restricted existence through response differences or “helpful” metadata.
-
-### 8) Canonical vs rebuildable stores (what must be recoverable)
-- Canonical truth should live in immutable artifacts + catalogs + provenance + receipts.
-- DB/search/tiles/graph are projections and must be rebuildable from canonical sources.
+Errors and abstentions MUST NOT leak restricted existence via different shapes, timing, or “helpful” metadata.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Promotion Contract gates A-G
+## Promotion Contract gates A–G
 
-These are the minimum fail-closed gates that must be enforceable by CI and reviewable during steward sign-off.
-
-| Gate | What it protects | Typical contract artifacts |
-|---|---|---|
-| **A — Identity & versioning** | Immutable DatasetVersion identity | promotion manifest schema, `spec_hash` rules, deterministic serialization tests |
-| **B — Licensing & rights** | Legal permission + obligations | license fields in schemas, attribution requirements, rights-holder fields |
-| **C — Sensitivity & redaction plan** | Safety + cultural/community constraints | `policy_label` vocab, obligations schema, redaction/generalization transforms recorded in PROV |
-| **D — Catalog triplet validation** | Interop + evidence surface | DCAT/STAC/PROV profiles + cross-link rules; EvidenceRef schemes |
-| **E — QA & thresholds** | Data quality + fitness | QA report schema, thresholds declared in spec/profile; quarantine on failure |
-| **F — Run receipt & audit record** | Repro + traceability | run receipt schema, audit entry schema, policy decision references |
-| **G — Release manifest** *(optional but recommended)* | Production posture + rollback | release manifest schema; references to digests; supply chain attestations (if enabled) |
+These are the minimum fail-closed gates that MUST be automatable in CI and reviewable during steward sign-off.
 
 > [!WARNING]
-> Weakening a gate is a **breaking governance change**. Treat as high-risk and require explicit review + migration plan.
+> Weakening a gate is a **breaking governance change**.
+> Treat as high-risk: require explicit review, migration notes, and rollback plan.
+
+### Gate summary table
+
+| Gate | What it protects | Contract artifacts typically involved |
+|---|---|---|
+| **A — Identity and versioning** | Immutable DatasetVersion identity | dataset id rules; `spec_hash` rules; promotion manifest schema |
+| **B — Licensing and rights metadata** | Legal permission + obligations | license fields; rights holder + attribution requirements |
+| **C — Sensitivity classification and redaction plan** | Safety + community constraints | `policy_label` vocab; obligations schema; redaction recorded in PROV |
+| **D — Catalog triplet validation** | Interop + evidence surface | DCAT/STAC/PROV profiles; cross-link rules; EvidenceRef schemes |
+| **E — Run receipt and checksums** | Reproducibility + supply chain | run receipt schema; artifact digests; environment capture |
+| **F — Policy tests and contract tests** | CI/runtime parity + resolvability | OPA tests; evidence resolver fixtures; OpenAPI/schema validation |
+| **G — Optional but recommended** | Production posture | SBOM/provenance; performance and accessibility smoke checks |
+
+### Compatibility note
+
+Some older gate breakdowns treat **QA thresholds** and a **release manifest** as separate gates.
+KFM vNext posture is:
+
+- QA evidence SHOULD exist and failures MUST be quarantined (often produced in WORK/PROCESSED).
+- A release record MAY exist; if present, it MUST be digest-addressed and consistent with promotion artifacts.
+
+Keep your implementation strict; keep your naming consistent.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -300,33 +303,15 @@ These are the minimum fail-closed gates that must be enforceable by CI and revie
 
 KFM treats catalogs not as “nice metadata,” but as the canonical interface between pipeline outputs and runtime.
 
-### Triplet responsibilities (conceptual)
+### Triplet responsibilities
+
 - **DCAT** answers: “What is this dataset? Who published it? What is the license? What are the distributions?”
 - **STAC** answers: “What assets exist? What are their spatiotemporal extents? Where are the files?”
-- **PROV** answers: “How were these outputs created? Which inputs/tools/parameters?”
+- **PROV** answers: “How were these outputs created? Which inputs/tools/parameters produced which outputs?”
 
-### Minimum profile expectations (PROPOSED)
-This is intentionally short; keep full profiles in `contracts/profiles/`.
+### EvidenceRef schemes
 
-**DCAT dataset MUST include (minimum):**
-- title, description, publisher
-- license and/or rights
-- themes (controlled vocabulary)
-- spatial and temporal coverage
-- distributions (one per artifact class)
-- link to PROV activity/bundle
-- KFM extension fields: `dataset_id`, `dataset_version_id`, `policy_label`
-
-**STAC collection MUST include (minimum):**
-- id, title, description
-- extent (spatial bbox and temporal interval)
-- license
-- link to DCAT dataset record
-- KFM extension fields: `dataset_version_id`, `policy_label`
-
-### EvidenceRef schemes (minimum)
-> [!NOTE]
-> Schemes are **interfaces**. Keep them stable and parseable.
+Schemes are interfaces. Keep them stable and parseable:
 
 - `dcat://...` resolves to dataset/distribution metadata
 - `stac://...` resolves to collection/item/asset metadata
@@ -334,15 +319,67 @@ This is intentionally short; keep full profiles in `contracts/profiles/`.
 - `doc://...` resolves to governed docs and story citations
 - `graph://...` resolves to entity relations (if graph is enabled)
 
-### Cross-link rules (must be testable)
-Define explicit cross-links so navigation is deterministic:
-- DCAT dataset → distributions → artifact digests
-- DCAT dataset → `prov:wasGeneratedBy` → PROV bundle
-- STAC collection → `rel="describedby"` → DCAT dataset
-- STAC item → link to PROV activity and/or run receipt
-- EvidenceRef schemes resolve into these objects **without guessing**
+### Cross-link rules
 
-**CI must include link-checkers** verifying cross-links for every promoted dataset version.
+Cross-links MUST be deterministic so EvidenceRefs resolve without guessing:
+
+- DCAT dataset → distributions → artifact digests
+- DCAT dataset → PROV bundle or activity references
+- STAC collection → link to DCAT dataset
+- STAC items/assets → link to digests + media types + producing run receipt
+- EvidenceRef schemes resolve into these objects without heuristics
+
+**CI MUST include link-checkers** verifying cross-links for every promoted dataset version.
+
+### Time axes
+
+KFM is time-aware by default:
+
+- **Event time:** when something happened
+- **Transaction time:** when KFM acquired or published the record
+- **Valid time (optional):** when a statement is considered true
+
+If time axes are present, they MUST be explicit and consistent across catalogs and query surfaces.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Evidence bundle contract
+
+Evidence resolution is central: the evidence resolver accepts an EvidenceRef (or structured ref),
+applies policy, and returns an EvidenceBundle suitable for both humans and machines.
+
+### EvidenceBundle shape
+
+**PROPOSED minimal shape** (exact schema path UNKNOWN repo):
+
+```json
+{
+  "bundle_id": "sha256:bundle...",
+  "dataset_version_id": "YYYY-MM.abcd1234",
+  "title": "Human-friendly title",
+  "policy": {
+    "decision": "allow",
+    "policy_label": "public",
+    "obligations_applied": []
+  },
+  "license": { "spdx": "CC-BY-4.0", "attribution": "Source org" },
+  "provenance": { "run_id": "kfm://run/..." },
+  "artifacts": [
+    { "href": "processed/example.parquet", "digest": "sha256:...", "media_type": "application/x-parquet" }
+  ],
+  "checks": { "catalog_valid": true, "links_ok": true },
+  "audit_ref": "kfm://audit/entry/..."
+}
+```
+
+### Evidence resolver requirements
+
+- MUST fail closed on unresolvable references.
+- MUST apply policy and return allow/deny + obligations.
+- MUST be usable by UI in ≤ 2 calls.
+- MUST NOT leak restricted existence via error differences.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -351,48 +388,81 @@ Define explicit cross-links so navigation is deterministic:
 ## Governed API contract
 
 The governed API is the enforcement boundary:
+
 - applies policy decisions + obligations
 - enforces versioning + audit
-- provides evidence resolution for UI/Focus Mode
+- provides evidence resolution for UI and Focus Mode
 
-### API contract requirements (minimum)
-- Responses include `dataset_version_id` (when applicable), artifact digests (when applicable), and policy label (public-safe).
-- Errors follow a stable error model (e.g., `error_code`, policy-safe `message`, `audit_ref`, optional remediation hints).
-- Avoid leaking sensitive existence via error differences (align 403/404 behavior with policy).
-- Versioning policy: freeze `/api/v1` semantics; introduce `/api/v2` only for breaking changes.
+### API contract requirements
 
-### Evidence resolver endpoint posture
-- Accepts EvidenceRef (scheme-based) or a structured reference.
-- Applies policy and returns allow/deny + obligations.
-- Returns an EvidenceBundle with: human view (renderable card), machine metadata, allowed artifact links, digests, dataset_version IDs, and audit references.
-- Must be usable from UI in ≤ 2 calls.
+- Responses SHOULD include `dataset_version_id` (when applicable) and digests (when applicable).
+- Errors MUST follow a stable error model (e.g., `error_code`, policy-safe message, `audit_ref`).
+- Versioning MUST freeze `/api/v1` semantics; introduce `/api/v2` only for breaking changes.
+
+### Illustrative endpoints
+
+Exact routes are repo-specific; these represent required capability surfaces:
+
+- `GET /api/v1/catalog/datasets` — dataset discovery
+- `GET /api/v1/datasets/{dataset_version_id}/query` — bbox/time/filters query
+- `GET /api/v1/tiles/{layer_id}/{z}/{x}/{y}` — tile delivery (policy-safe)
+- `POST /api/v1/evidence/resolve` — EvidenceRef → EvidenceBundle
+- `GET /api/v1/lineage/{dataset_id}` — lineage graph + run receipts (policy-safe)
+- `POST /api/v1/focus/ask` — Focus Mode Q&A (MUST cite or abstain)
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Relationship to configs/ and policy/
+## Policy contract parity
 
-To avoid duplicate “sources of truth,” use this division of labor:
+Policy is not “config.” It is part of the trust membrane.
 
-- `contracts/` = **canonical interface definitions**
-  - schemas, profiles, OpenAPI, cross-link rules, controlled vocab
-  - fixtures + contract tests that enforce interfaces
+### Required posture
 
-- `configs/` = **governed wiring / selection / knobs**
-  - which profile sets are active
-  - gate thresholds and environment-safe defaults
-  - validator selection and lane configuration
-  - (No secrets; no raw restricted data)
+- Default behavior MUST be deny when uncertain.
+- Policy evaluation MUST return:
+  - decision allow/deny
+  - reason codes (normalized)
+  - obligations (e.g., generalize geometry, remove fields)
+- CI and runtime MUST share the same semantics and fixtures.
 
-- `policy/` = **policy engine source** (rules and bundles)
-  - policy code (e.g., Rego) + tests + bundles
-  - shared semantics across CI and runtime
-  - parity fixtures may live in `configs/` or `contracts/` depending on repo convention, but outcomes MUST match
+### Recommended contract artifacts
 
-> [!IMPORTANT]
-> If a contract is required for promotion or serving, do **not** duplicate it across directories.
-> Choose one canonical location and reference it.
+- `policy_labels.vN.yaml` — controlled vocabulary for policy labels
+- `policy_decision.vN.schema.json` — allow/deny + obligations envelope
+- parity fixtures — golden cases where CI == runtime decisions
+
+> [!WARNING]
+> Policy and provenance artifacts MUST NOT contain raw protected coordinates, secrets, or “how to locate” instructions.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Registry and lock files
+
+A registry/lock makes contract sets reproducible and reviewable in audits.
+
+> [!NOTE]
+> Registry/lock formats are **PROPOSED** until confirmed in this repo.
+
+### Manifest should include
+
+- contract identifier (stable ID)
+- kind (`schema`, `profile`, `vocab`, `openapi`)
+- semantic version
+- canonical path
+- digest (e.g., sha256)
+- owners/review group
+- required validators and CI checks
+
+### Lock should include
+
+- deterministic digests for every contract artifact
+- optional bundle digest for the entire contracts set
+
+If you adopt a lock file, you MUST define how it is updated and how drift is detected.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -400,86 +470,73 @@ To avoid duplicate “sources of truth,” use this division of labor:
 
 ## Directory layout
 
-> [!NOTE]
-> This is a **PROPOSED** layout aligned to KFM vNext. Keep repo-specific filenames **UNKNOWN (repo)** until verified on-branch.
+This is a **PROPOSED** layout aligned to KFM vNext. Keep repo-specific filenames **UNKNOWN repo** until verified.
 
 ```text
 contracts/
 ├─ README.md
-├─ CHANGELOG.md                           # OPTIONAL: contract changes + migration notes
+├─ CHANGELOG.md                                # OPTIONAL: contract changes + migration notes
 │
-├─ registry/                              # PROPOSED: contract index + locks (audit + reproducibility)
-│  ├─ contracts.manifest.v1.json          # what exists + versions + owners + validators
-│  ├─ contracts.lock.v1.json              # deterministic digests of contract artifacts (spec_hash posture)
+├─ registry/                                   # PROPOSED: contract index + locks
+│  ├─ contracts.manifest.v1.json
+│  ├─ contracts.lock.v1.json
 │  └─ schemas/
 │     ├─ kfm.contract_manifest.v1.schema.json
 │     └─ kfm.contract_lock.v1.schema.json
 │
-├─ openapi/                               # Governed API contracts (versioned)
-│  ├─ v1/
-│  │  ├─ openapi.yaml
-│  │  ├─ error_model.schema.json
-│  │  └─ response_envelopes.schema.json
-│  └─ v2/                                 # ONLY when breaking changes require it
-│     └─ openapi.yaml
+├─ openapi/                                    # Governed API contracts
+│  ├─ v1/openapi.yaml
+│  └─ v2/openapi.yaml                           # ONLY for breaking changes
 │
-├─ schemas/                               # JSON Schemas (or equivalent) for contract surfaces
+├─ schemas/
 │  ├─ promotion/
 │  │  ├─ promotion_manifest.v1.schema.json
-│  │  ├─ release_manifest.v1.schema.json          # Gate G
-│  │  └─ promotion_gate_codes.v1.schema.json      # stable, enumerable codes
+│  │  └─ release_record.v1.schema.json          # OPTIONAL: digest-addressed release record
 │  ├─ run/
-│  │  ├─ run_receipt.v1.schema.json               # Gate F
-│  │  └─ run_manifest.v1.schema.json              # OPTIONAL: typed inputs/outputs envelope
+│  │  └─ run_receipt.v1.schema.json
 │  ├─ audit/
-│  │  └─ audit_entry.v1.schema.json               # Gate F
+│  │  └─ audit_entry.v1.schema.json
 │  ├─ policy/
-│  │  ├─ policy_decision.v1.schema.json           # allow/deny + obligations + reason codes
-│  │  └─ obligation_types.v1.schema.json
+│  │  ├─ policy_decision.v1.schema.json
+│  │  └─ obligations.v1.schema.json
 │  ├─ evidence/
 │  │  ├─ evidence_ref.v1.schema.json
 │  │  └─ evidence_bundle.v1.schema.json
 │  ├─ catalogs/
-│  │  ├─ dcat.profile.v1.schema.json              # KFM-required DCAT shape constraints
-│  │  ├─ stac.profile.v1.schema.json              # KFM-required STAC constraints
-│  │  └─ prov.profile.v1.schema.json              # KFM-required PROV constraints
+│  │  ├─ dcat.profile.v1.schema.json
+│  │  ├─ stac.profile.v1.schema.json
+│  │  └─ prov.profile.v1.schema.json
 │  └─ ui/
-│     ├─ view_state.v1.schema.json                # bbox/time/layers; used by Focus Mode + Story Nodes
-│     └─ story_node.v1.schema.json                # governed narrative contract (if stored here)
+│     ├─ view_state.v1.schema.json              # bbox/time/layers
+│     ├─ story_node.v3.schema.json              # governed narrative contract
+│     └─ focus_eval.v1.schema.json              # golden queries harness
 │
-├─ profiles/                              # Governed profiles/constraints (what “valid” means in KFM)
+├─ profiles/
 │  ├─ catalogs/
 │  │  ├─ dcat.profile.v1.yaml
 │  │  ├─ stac.profile.v1.yaml
 │  │  ├─ prov.profile.v1.yaml
-│  │  └─ crosslinks.profile.v1.yaml               # DCAT↔STAC↔PROV link rules
+│  │  └─ crosslinks.profile.v1.yaml
 │  ├─ promotion/
-│  │  └─ promotion_contract.v1.yaml               # gates A-G (high-level) + required checks mapping
-│  ├─ evidence/
-│  │  └─ evidence_resolver.profile.v1.yaml        # resolution rules + fail-closed requirements
+│  │  └─ promotion_contract.v1.yaml
 │  └─ time/
-│     └─ time_axes.profile.v1.yaml                # event/transaction/valid time expectations
+│     └─ time_axes.profile.v1.yaml
 │
-├─ vocab/                                 # Controlled vocabularies (versioned)
-│  ├─ policy_labels.v1.yaml               # e.g., public | restricted | internal (repo-defined)
-│  ├─ artifact_zones.v1.yaml              # raw | work | quarantine | processed | projections | published
-│  ├─ citation_kinds.v1.yaml              # map_feature | story_claim | focus_answer | doc_quote ...
+├─ vocab/
+│  ├─ policy_labels.v1.yaml
+│  ├─ artifact_zones.v1.yaml
+│  ├─ reason_codes.v1.yaml
 │  └─ themes.v1.yaml
 │
-├─ linkcheck/                             # Cross-link and resolvability rules (may also live under profiles/)
-│  ├─ evidence_ref_schemes.v1.yaml
-│  ├─ catalog_crosslinks.v1.yaml
-│  ├─ artifact_digest_rules.v1.yaml
-│  └─ url_allowlist.v1.yaml               # if url:// is allowed at all
-│
-├─ fixtures/                              # Known-good / known-bad artifacts (required for contract changes)
+├─ fixtures/
 │  ├─ promotion/
 │  ├─ run/
 │  ├─ evidence/
 │  ├─ catalogs/
+│  ├─ policy/
 │  └─ api/
 │
-└─ tests/                                 # Contract tests (schema validate + linkcheck + parity checks)
+└─ tests/
    ├─ contract_test_plan.md
    ├─ validate_schemas.testplan.md
    ├─ validate_crosslinks.testplan.md
@@ -487,112 +544,91 @@ contracts/
    └─ validate_evidence_resolver.testplan.md
 ```
 
-> [!TIP]
-> If your repo prefers executable tests elsewhere, keep the *plans* here and put implementations under
-> `tools/validators/` (or repo-standard tooling), but ensure CI runs them as required checks.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Contract registry and lock files
-
-A registry/lock makes contracts reproducible and reviewable in audits.
-
-> [!NOTE]
-> This is **PROPOSED** until the repo confirms a manifest/lock format and validator.
-
-### Manifest contents (recommended)
-- contract identifier (stable ID)
-- kind (`schema`, `profile`, `vocab`, `openapi`)
-- semantic version (`v1`, `v2`, …)
-- canonical path
-- digest (e.g., `sha256`)
-- owners and review group
-- required validators and required CI checks
-
-### Lock file contents (recommended)
-- deterministic digests for every contract artifact
-- optional “bundle digest” for the whole contracts set (useful for release manifests)
-
-> [!WARNING]
-> If you adopt a lock file, you MUST define how it is updated (tooling + CI) and how drift is detected.
-
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
 ## How to add or change a contract
 
-### Step 1 — Choose the contract surface
-Promotion? Catalog? Evidence? API? UI state? Audit?
+### Step 1 — Choose the surface
 
-### Step 2 — Decide whether this is breaking
-- **Backwards-compatible:** add optional fields; preserve defaults
-- **Breaking:** bump major version (or add `openapi/v2/`) and document a migration plan
+Promotion? Catalog? Evidence? API? Policy? UI state? Eval harness?
 
-### Step 3 — Add fixtures (required)
+### Step 2 — Determine if breaking
+
+- Breaking: remove/rename required fields, change gate semantics, change error behavior relied on by clients → bump major.
+- Additive: new optional fields or new vocab values handled safely → no major bump.
+
+### Step 3 — Add fixtures
+
 Every contract change MUST include:
+
 - at least one **known-good** example
 - at least one **known-bad** example that fails for the correct reason
 
-### Step 4 — Add/extend contract tests (required)
+### Step 4 — Add tests
+
 At minimum:
+
 - schema validation
-- cross-link validation (DCAT↔STAC↔PROV; EvidenceRef resolvability)
-- policy parity outcomes (CI == runtime) for any allow/deny behavior the contract touches
-- policy-safe error model invariants (no restricted inference)
-- spec_hash stability + deterministic output tests (goldens)
+- cross-link validation (DCAT↔STAC↔PROV and EvidenceRef resolvability)
+- policy parity fixtures (CI == runtime)
+- policy-safe error invariants
+- hashing determinism tests for any identity-affecting change
 
-### Step 5 — Update registry/lock (if used)
-- add contract/version entry to `registry/contracts.manifest.v1.json`
-- update `registry/contracts.lock.v1.json` digests deterministically
+### Step 5 — Update registry and lock
 
-### Step 6 — Document the change
+If used:
+
+- add/update manifest entry
+- update lock digests deterministically
+
+### Step 6 — Document compatibility
+
 - what changed and why
-- what breaks (if anything)
-- required downstream updates (pipeline/API/UI/Focus)
-- rollback plan (how to revert safely)
+- who must update (pipeline/API/UI/Focus)
+- migration notes and rollback plan
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
 ---
 
-## Validation and gates
+## Validation and CI gates
 
-Contracts are only valuable if they’re **enforced continuously**.
+Contracts only matter if they are enforced continuously.
 
-### Minimum CI gates (required posture)
+### Minimum required CI posture
 
-- Validate all schemas in `contracts/schemas/**`
-- Validate all profiles in `contracts/profiles/**`
-- Validate all fixtures (known-good must pass; known-bad must fail)
-- Validate link rules (DCAT↔STAC↔PROV; EvidenceRef resolvability)
-- Validate evidence resolver contract behavior:
-  - “public” evidence resolves to bundle with allowed artifacts
-  - “restricted” evidence returns 403 with **no sensitive metadata leakage**
-- Validate spec_hash determinism:
-  - stability tests across runs
-  - golden tests for canonicalization + deterministic outputs
-- Validate policy parity fixtures (CI == runtime decisions)
-- Validate API contract invariants (envelopes + error model)
-- **Anti-skip:** a single always-runs “gate summary” job fails if any required validator didn’t run
+- validate all schemas in `contracts/schemas/**`
+- validate all profiles in `contracts/profiles/**`
+- validate fixtures (good passes; bad fails)
+- validate cross-links (catalog triplet + EvidenceRef resolvability)
+- validate evidence resolver behavior (policy-safe allow/deny)
+- validate policy parity (CI == runtime semantics)
+- validate API invariants (OpenAPI + envelopes + error model)
+- validate deterministic hashing for identity-affecting artifacts
 
-> [!WARNING]
-> Required gates MUST NOT be bypassable by `paths:` filters or conditional workflow logic.
-> Prefer one required status check (`contracts / gate-summary`) for branch protection/rulesets.
+### Anti-skip requirement
 
-### Promotion Contract mapping (contracts’ responsibility)
+Required gates MUST NOT be bypassable via conditional workflow logic.
 
-| Gate | Contract artifacts typically involved |
-|---|---|
-| A Identity/versioning | promotion manifest schema; deterministic `spec_hash` rules + golden tests |
-| B Rights/licensing | required license/rights fields; vocab where needed |
-| C Sensitivity | policy labels + obligations schema; generalization/redaction requirements recorded in PROV |
-| D Catalog triplet | DCAT/STAC/PROV profile sets + cross-link rules |
-| E QA thresholds | QA report schema + thresholds declaration in spec/profile |
-| F Run receipt/audit | run_receipt + audit_entry schemas; policy decision refs |
-| G Release manifest | release manifest schema; digest link rules; optional attestations |
+Prefer one always-runs required check such as:
+
+- `contracts / gate-summary`
+
+This job MUST fail if any required validator did not run.
+
+```mermaid
+flowchart TD
+  A[Schema validate] --> S[Gate summary]
+  B[Fixtures validate] --> S
+  C[Cross-link check] --> S
+  D[Policy parity tests] --> S
+  E[Evidence resolver tests] --> S
+  F[OpenAPI validate] --> S
+  S -->|pass| M[Merge allowed]
+  S -->|fail| X[Merge blocked]
+```
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -600,25 +636,28 @@ Contracts are only valuable if they’re **enforced continuously**.
 
 ## Governance and safety
 
-### Rights and licensing are enforceable
-- Promotion requires explicit license + rights holder + attribution requirements per distribution.
-- “Metadata-only reference” is allowed when assets cannot be mirrored.
-- Exports must be rights-aware by default and policy-safe.
+### Rights and licensing
+
+- Promotion MUST capture license and rights holder details.
+- If license is unclear, dataset stays in QUARANTINE (fail closed).
+- Exports MUST be rights-aware and policy-safe by default.
 
 ### Sensitive locations and restricted data
+
 - Default deny for sensitive-location and restricted datasets unless policy explicitly allows.
-- Store precise geometries in restricted datasets only.
 - Publish generalized public derivatives when allowed (separate dataset version).
 - Never leak restricted existence via subtle error behavior.
 
-### Audit is required (and itself sensitive)
-- Governed operations must emit an audit record capturing who/what/when/why plus inputs/outputs by digest and policy decisions.
-- Audit logs require retention + access policy + redaction.
+### Audit is required and sensitive
 
-### Focus Mode: cite-or-abstain depends on contracts
-- EvidenceRefs must be resolvable without guessing.
-- EvidenceBundles must carry policy decision + obligations + provenance references.
-- Citation verification is a hard gate; contracts enable that verification.
+- Governed operations MUST emit audit records capturing who/what/when/why plus inputs/outputs by digest and policy decisions.
+- Audit logs require retention and access policy.
+
+### Focus Mode depends on contracts
+
+- EvidenceRefs MUST be resolvable without guessing.
+- EvidenceBundles MUST carry policy, license, provenance, digests, and `audit_ref`.
+- Focus Mode MUST cite or abstain; citation verification is a hard gate.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -627,36 +666,36 @@ Contracts are only valuable if they’re **enforced continuously**.
 ## Glossary
 
 - **Contract artifact:** machine-validated interface definition with versioning + fixtures + tests.
-- **Profile:** additional constraints that define “valid” for KFM (beyond base schemas).
-- **Promotion Contract:** fail-closed gates A-G controlling what can reach runtime surfaces.
+- **Profile:** constraints that define “valid” for KFM (beyond base schemas).
+- **Promotion Contract:** fail-closed gates A–G controlling what can reach runtime surfaces.
 - **Triplet:** DCAT (dataset), STAC (assets), PROV (lineage).
 - **EvidenceRef:** stable reference (scheme-based) resolvable to an EvidenceBundle.
 - **EvidenceBundle:** resolved evidence record including policy, license, provenance, digests, and audit reference.
 - **Policy decision:** allow/deny + obligations + reason codes with an audit trail.
-- **Policy-safe errors:** error behavior that prevents inferring restricted existence.
+- **Policy-safe errors:** prevent inferring restricted existence.
 
 ---
 
 ## Appendix
 
-### Contract change checklist (copy/paste)
+### Contract change checklist
 
-- [ ] Contract version bumped appropriately (or `openapi/v2` introduced if breaking)
+- [ ] Version bumped appropriately (breaking vs additive)
 - [ ] Schema/spec validates
 - [ ] Fixtures updated (known-good + known-bad)
-- [ ] Cross-link rules updated (DCAT↔STAC↔PROV↔artifacts; EvidenceRef resolvability)
+- [ ] Cross-link rules updated (DCAT↔STAC↔PROV; EvidenceRef)
 - [ ] Policy parity outcomes preserved (or explicitly changed with fixtures + review)
 - [ ] Error model remains policy-safe (no restricted inference)
-- [ ] spec_hash stability + deterministic output tests updated
-- [ ] Dependent implementations updated (pipeline/API/UI/Focus)
+- [ ] Deterministic hashing tests updated (if identity-affecting)
+- [ ] Downstream implementations updated (pipeline/API/UI/Focus)
 - [ ] Migration notes + rollback plan included
 
-### Repo verification checklist (to graduate UNKNOWN → CONFIRMED (repo))
+### Repo verification checklist
 
-- [ ] Confirm actual contract storage locations (`contracts/` vs root `schemas/`, etc.)
-- [ ] List CI jobs that validate contracts and identify the required status check name(s)
-- [ ] Identify canonical policy bundle location and how CI/runtimes load it
-- [ ] Identify the evidence resolver interface (service/tool) and its contract test harness
-- [ ] Confirm whether release manifests and/or attestations are used in practice (Gate G)
+To graduate UNKNOWN repo → CONFIRMED repo:
 
-<p align="right"><a href="#top">Back to top ↑</a></p>
+- [ ] Confirm actual contract storage locations and substructure.
+- [ ] List CI jobs that validate contracts and identify required status check names.
+- [ ] Identify canonical policy bundle location and how CI/runtime load it.
+- [ ] Identify evidence resolver interface and its contract test harness.
+- [ ] Confirm which release/production posture artifacts are used in practice (Gate G).
