@@ -473,75 +473,75 @@ If you adopt a lock file, you MUST define how it is updated and how drift is det
 This is a **PROPOSED** layout aligned to KFM vNext. Keep repo-specific filenames **UNKNOWN repo** until verified.
 
 ```text
-contracts/
-├─ README.md
-├─ CHANGELOG.md                                # OPTIONAL: contract changes + migration notes
+contracts/                                              # Governed contract surfaces: schemas, profiles, vocabularies, and API specs that define KFM’s stable interfaces
+├─ README.md                                             # Contract overview: what “contract” means, versioning rules, review gates, and how contracts map to CI + promotion
+├─ CHANGELOG.md                                          # OPTIONAL: contract change history (breaking vs non-breaking), migration notes, and deprecation timelines
 │
-├─ registry/                                   # PROPOSED: contract index + locks
-│  ├─ contracts.manifest.v1.json
-│  ├─ contracts.lock.v1.json
-│  └─ schemas/
-│     ├─ kfm.contract_manifest.v1.schema.json
-│     └─ kfm.contract_lock.v1.schema.json
+├─ registry/                                             # PROPOSED: contract index + locks for reproducible builds and validator pinning
+│  ├─ contracts.manifest.v1.json                          # Manifest of contract artifacts (paths, versions, owners, schemas, compatibility class, consumers)
+│  ├─ contracts.lock.v1.json                              # Lockfile pinning exact contract versions/digests used by CI and runtimes (prevents drift)
+│  └─ schemas/                                            # Schemas validating the manifest/lock shapes (fail-closed)
+│     ├─ kfm.contract_manifest.v1.schema.json             # Schema: validates manifest entries (IDs, paths, versions, ownership, dependencies)
+│     └─ kfm.contract_lock.v1.schema.json                 # Schema: validates lock content (digests, pinned versions, integrity fields)
 │
-├─ openapi/                                    # Governed API contracts
-│  ├─ v1/openapi.yaml
-│  └─ v2/openapi.yaml                           # ONLY for breaking changes
+├─ openapi/                                              # Governed API contracts (versioned; changes reviewed like code; used for contract tests)
+│  ├─ v1/openapi.yaml                                     # API v1: additive-compatible evolution within v1 (no breaking changes)
+│  └─ v2/openapi.yaml                                     # API v2: breaking changes only (major version bump; migration required)
 │
-├─ schemas/
-│  ├─ promotion/
-│  │  ├─ promotion_manifest.v1.schema.json
-│  │  └─ release_record.v1.schema.json          # OPTIONAL: digest-addressed release record
-│  ├─ run/
-│  │  └─ run_receipt.v1.schema.json
-│  ├─ audit/
-│  │  └─ audit_entry.v1.schema.json
-│  ├─ policy/
-│  │  ├─ policy_decision.v1.schema.json
-│  │  └─ obligations.v1.schema.json
-│  ├─ evidence/
-│  │  ├─ evidence_ref.v1.schema.json
-│  │  └─ evidence_bundle.v1.schema.json
-│  ├─ catalogs/
-│  │  ├─ dcat.profile.v1.schema.json
-│  │  ├─ stac.profile.v1.schema.json
-│  │  └─ prov.profile.v1.schema.json
-│  └─ ui/
-│     ├─ view_state.v1.schema.json              # bbox/time/layers
-│     ├─ story_node.v3.schema.json              # governed narrative contract
-│     └─ focus_eval.v1.schema.json              # golden queries harness
+├─ schemas/                                              # JSON Schemas (or equivalents) for KFM artifacts and envelopes consumed across the repo
+│  ├─ promotion/                                         # Promotion + release record contracts
+│  │  ├─ promotion_manifest.v1.schema.json               # Schema: what gets promoted (inputs/outputs/digests/gate results/approvals)
+│  │  └─ release_record.v1.schema.json                   # OPTIONAL: digest-addressed release record (immutable reference for published drops)
+│  ├─ run/                                               # Pipeline run contracts
+│  │  └─ run_receipt.v1.schema.json                      # Schema: deterministic run receipt (inputs, transforms, tools, outputs, digests, timings)
+│  ├─ audit/                                             # Audit ledger contracts
+│  │  └─ audit_entry.v1.schema.json                      # Schema: audit entry (event type, actor, refs, timestamps, reason codes; policy-safe fields)
+│  ├─ policy/                                            # Policy decision + obligation contracts
+│  │  ├─ policy_decision.v1.schema.json                  # Schema: PDP decision envelope (allow/deny + policy_label + obligations + reason codes)
+│  │  └─ obligations.v1.schema.json                      # Schema: obligation objects (types + params) consumable by UI/API enforcement layers
+│  ├─ evidence/                                          # Evidence primitives (cite-or-abstain enforcement depends on these shapes)
+│  │  ├─ evidence_ref.v1.schema.json                     # Schema: EvidenceRef (stable pointer to a source/claim support; resolvable + hashable)
+│  │  └─ evidence_bundle.v1.schema.json                  # Schema: EvidenceBundle (collection + provenance; supports auditable citation graphs)
+│  ├─ catalogs/                                          # Catalog profile schemas (discovery + traceability surfaces)
+│  │  ├─ dcat.profile.v1.schema.json                     # Schema: DCAT profile constraints for dataset metadata (fields, types, required links)
+│  │  ├─ stac.profile.v1.schema.json                     # Schema: STAC profile constraints for geospatial assets/items/collections
+│  │  └─ prov.profile.v1.schema.json                     # Schema: PROV profile constraints for lineage/provenance (agents/activities/entities)
+│  └─ ui/                                                # UI-facing contracts (trust surfaces consume these shapes)
+│     ├─ view_state.v1.schema.json                       # Schema: view-state serialization (bbox/time/layers/query; versioned for compatibility)
+│     ├─ story_node.v3.schema.json                       # Schema: governed story node (claims, citations, layers, time anchors, policy labels)
+│     └─ focus_eval.v1.schema.json                       # Schema: Focus evaluation harness (golden queries, expected citations, score thresholds)
 │
-├─ profiles/
-│  ├─ catalogs/
-│  │  ├─ dcat.profile.v1.yaml
-│  │  ├─ stac.profile.v1.yaml
-│  │  ├─ prov.profile.v1.yaml
-│  │  └─ crosslinks.profile.v1.yaml
-│  ├─ promotion/
-│  │  └─ promotion_contract.v1.yaml
-│  └─ time/
-│     └─ time_axes.profile.v1.yaml
+├─ profiles/                                             # Profile YAMLs: “how to validate” a family of artifacts beyond bare schema
+│  ├─ catalogs/                                          # Catalog validation profiles (rulesets + cross-link expectations)
+│  │  ├─ dcat.profile.v1.yaml                            # Profile: DCAT required fields, controlled vocab usage, and link integrity rules
+│  │  ├─ stac.profile.v1.yaml                            # Profile: STAC constraints (asset roles, spatial/temporal fields, extension requirements)
+│  │  ├─ prov.profile.v1.yaml                            # Profile: PROV constraints (required relations, identifiers, audit-friendly fields)
+│  │  └─ crosslinks.profile.v1.yaml                      # Profile: cross-link rules (DCAT↔STAC↔PROV↔receipts↔evidence; no dangling references)
+│  ├─ promotion/                                         # Promotion eligibility rules beyond per-file schema
+│  │  └─ promotion_contract.v1.yaml                      # Profile: promotion contract requirements (gate mapping, required artifacts by class/zone)
+│  └─ time/                                              # Time model profiles (axes + precision + semantics)
+│     └─ time_axes.profile.v1.yaml                       # Profile: time axes semantics (instant/interval, precision, uncertainty bounds, calendar rules)
 │
-├─ vocab/
-│  ├─ policy_labels.v1.yaml
-│  ├─ artifact_zones.v1.yaml
-│  ├─ reason_codes.v1.yaml
-│  └─ themes.v1.yaml
+├─ vocab/                                                # Controlled vocabularies used across contracts/policy/catalogs (versioned; machine-validated where possible)
+│  ├─ policy_labels.v1.yaml                              # Allowed policy labels + meanings + ordering (shared by policy + docs + tooling)
+│  ├─ artifact_zones.v1.yaml                             # Truth-path zones vocabulary (raw/work/quarantine/processed/catalog/published/audit)
+│  ├─ reason_codes.v1.yaml                               # Reason code vocabulary (why allow/deny/obligation; supports UX + audit + analytics)
+│  └─ themes.v1.yaml                                     # Theme vocabulary (topic tags/categories) used by catalog/story discovery and filtering
 │
-├─ fixtures/
-│  ├─ promotion/
-│  ├─ run/
-│  ├─ evidence/
-│  ├─ catalogs/
-│  ├─ policy/
-│  └─ api/
+├─ fixtures/                                             # Contract fixtures (small, synthetic) used by tests and documentation to prove validators
+│  ├─ promotion/                                         # Example manifests/records (valid/invalid) for promotion validators
+│  ├─ run/                                               # Example run receipts (valid/invalid) for run receipt validators
+│  ├─ evidence/                                          # Example EvidenceRef/Bundles for resolver and schema tests
+│  ├─ catalogs/                                          # Example DCAT/STAC/PROV artifacts + cross-link cases
+│  ├─ policy/                                            # Example decision envelopes + obligation objects + reason codes
+│  └─ api/                                               # Example API requests/responses for contract tests (golden snapshots)
 │
-└─ tests/
-   ├─ contract_test_plan.md
-   ├─ validate_schemas.testplan.md
-   ├─ validate_crosslinks.testplan.md
-   ├─ validate_policy_parity.testplan.md
-   └─ validate_evidence_resolver.testplan.md
+└─ tests/                                                # Contract test plans (what to validate, how to validate, and what “pass” means)
+   ├─ contract_test_plan.md                              # Master plan: suites, gating level, CI jobs, and artifact/report expectations
+   ├─ validate_schemas.testplan.md                       # Test plan: schema validation scope + tooling + severity rules (fail-closed defaults)
+   ├─ validate_crosslinks.testplan.md                    # Test plan: cross-link integrity (no dangling refs; profile compliance)
+   ├─ validate_policy_parity.testplan.md                 # Test plan: policy decision envelope compatibility with contracts + fixtures parity
+   └─ validate_evidence_resolver.testplan.md             # Test plan: EvidenceRef/Bundles resolvability + hash/digest correctness + failure shaping
 ```
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
