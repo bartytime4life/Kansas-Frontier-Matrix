@@ -62,18 +62,18 @@ This directory is the **human-readable index** for KFM gate semantics and review
 
 ### Proposed directory layout (verify before adding files)
 ```text
-docs/governance/gates/
-├── README.md
-├── checklists/
-│   ├── steward_review.md
-│   ├── security_review.md
-│   └── story_publish_review.md
-├── templates/
-│   ├── gate_waiver.md
-│   ├── policy_decision.md
-│   └── promotion_manifest.md
-└── adr/
-    └── ADR-0001-gate-numbering.md
+docs/governance/gates/                                   # Governance gates: definitions, required reviews, and artifacts that prove readiness to promote/publish
+├── README.md                                            # Gate philosophy + overview, how to run gates, where artifacts live, and how CI/policy enforces outcomes
+├── checklists/                                          # Human review checklists used by stewards/security/publishers during gate execution
+│   ├── steward_review.md                                # Steward checklist: provenance, licensing, sensitivity, schema correctness, evidence completeness, and acceptance criteria
+│   ├── security_review.md                               # Security checklist: access controls, threat considerations, secrets/PII handling, logging/audit, and fail-closed posture
+│   └── story_publish_review.md                          # Story publish checklist: narrative claims→citations, map layers/UX obligations, redactions, and release notes
+├── templates/                                           # Reusable artifacts (copy → fill) that record gate outcomes, decisions, waivers, and promotion intent
+│   ├── gate_waiver.md                                   # Gate Waiver template: time-bounded exception with scope, compensating controls, approvals, and expiry/closure plan
+│   ├── policy_decision.md                               # Policy Decision template: records label/gate/policy decisions with rationale, risks, enforcement points, and rollback
+│   └── promotion_manifest.md                            # Promotion Manifest template: machine-/human-readable manifest for what is being promoted (inputs, outputs, hashes, receipts)
+└── adr/                                                 # Architecture Decision Records specific to gate design and governance mechanics
+    └── ADR-0001-gate-numbering.md                        # ADR defining gate numbering scheme (stable IDs), how gates evolve, and compatibility/migration rules
 ```
 
 ---
