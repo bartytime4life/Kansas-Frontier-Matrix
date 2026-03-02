@@ -216,17 +216,17 @@ The governance guide recommends a conservative posture for sensitive-location da
 > This is a **suggested** layout for this folder. Add or remove files as your policy pack evolves.
 
 ```text
-docs/governance/labels/examples/
-  README.md
-  policy_label.vocab.yml                  # controlled vocabulary example
-  fixtures/
-    allow_public_read_public.json
-    deny_public_read_restricted.json
-    allow_public_generalized_with_notice.json
-  rego/
-    policy_label_example.rego             # small illustrative rules (not production policy)
-  notes/
-    obligations_catalog.md                # obligation patterns and UI handling notes
+docs/governance/labels/examples/                          # Policy-label examples: reference materials (vocab + fixtures + toy rego) for learning/testing label semantics
+├─ README.md                                              # How to use examples (learning + tests), disclaimer (non-production), and where real policy lives
+├─ policy_label.vocab.yml                                 # Example controlled vocabulary for policy labels (allowed values, meanings, default handling)
+├─ fixtures/                                               # Example decision fixtures (inputs/outputs) to validate label behavior in tests
+│  ├─ allow_public_read_public.json                        # Fixture: allow access when requester/action/data are PUBLIC-aligned (baseline allow case)
+│  ├─ deny_public_read_restricted.json                     # Fixture: deny access when requester is PUBLIC but data is RESTRICTED (baseline deny case)
+│  └─ allow_public_generalized_with_notice.json            # Fixture: allow with obligation (generalize + notice) when policy permits conditional release
+├─ rego/                                                   # Illustrative Rego snippets showing label evaluation patterns (toy policy only)
+│  └─ policy_label_example.rego                            # Example label rules demonstrating allow/deny + obligation emission (not production policy)
+└─ notes/                                                  # Supporting notes and patterns for stewards and UI implementers
+   └─ obligations_catalog.md                               # Common obligation patterns (redaction/generalization/notice/logging) and suggested UI handling
 ```
 
 ---
