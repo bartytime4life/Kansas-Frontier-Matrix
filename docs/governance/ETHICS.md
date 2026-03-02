@@ -139,7 +139,7 @@ flowchart LR
   PR --> CAT[CATALOG: DCAT + STAC + PROV + receipts]
   CAT --> PUB[PUBLISHED: governed runtime surfaces]
 
-  WQ -. ethics & policy gates .->|block| QUAR[QUARANTINED]
+  WQ -. "ethics & policy gates (block)" .-> QUAR[QUARANTINED]
   QUAR --> WQ
 ```
 
