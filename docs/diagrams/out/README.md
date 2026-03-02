@@ -80,15 +80,16 @@ If you see a diagram referenced from markdown, it should point to **this** direc
 Expected shape:
 
 ```text
-docs/
-  diagrams/
-    src/                # diagram sources (expected)
-    out/                # rendered outputs (this folder)
-      README.md
-      manifest.json     # optional: index of outputs + digests (recommended)
-      svg/              # optional: vector outputs
-      png/              # optional: raster outputs
-      pdf/              # optional: printable bundles
+docs/diagrams/                                         # Diagram hub (sources + rendered outputs)
+├─ src/                                                # Diagram sources (expected; editable; reviewed)
+│  └─ ...                                              # Mermaid/PlantUML/Graphviz/Draw.io sources + small assets
+│
+└─ out/                                                # Rendered outputs (this folder; generated if possible)
+   ├─ README.md                                        # Output policy: what gets committed, how generated, determinism rules
+   ├─ manifest.json                                    # OPTIONAL (recommended): index of outputs + digests/provenance (no drift)
+   ├─ svg/                                             # OPTIONAL: vector exports (preferred for docs)
+   ├─ png/                                             # OPTIONAL: raster exports (screenshots/previews)
+   └─ pdf/                                             # OPTIONAL: printable bundles (reports/decks; policy-safe)
 ```
 
 > NOTE  
