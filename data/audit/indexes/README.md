@@ -121,26 +121,24 @@ A rebuild must produce identical output digests (or a documented, versioned migr
 > This is the **recommended** layout. If your repo already has a different structure, keep the existing structure and adapt this README (do not rename blindly).
 
 ```text
-data/
-  audit/
-    indexes/
-      README.md
-
-      v1/                       # Schema / layout version for index outputs
-        manifest.json           # Inputs, outputs, builder version, digests
-
-        by_audit_ref/           # Fast lookup: audit_ref -> receipt pointer
-          shard-0000.jsonl.zst
-          shard-0001.jsonl.zst
-
-        by_dataset_version_id/  # dataset_version_id -> audit_ref list
-          shard-0000.parquet
-
-        by_artifact_digest/     # sha256 -> audit_ref list
-          shard-0000.parquet
-
-        by_time/                # time shard -> audit_ref list
-          2026-03.parquet
+data/audit/indexes/                                       # Audit indexes (derived; rebuildable) for fast lookup across receipts/ledger
+├─ README.md                                               # Index purpose, invariants (append-only inputs), rebuild rules, and query patterns
+│
+└─ v1/                                                     # Index layout/schema version (allows evolvable formats without breaking tooling)
+   ├─ manifest.json                                         # Build manifest (inputs, outputs, builder version, digests, time range, provenance)
+   │
+   ├─ by_audit_ref/                                         # Fast lookup: audit_ref → receipt pointer/location
+   │  ├─ shard-0000.jsonl.zst                                # Sharded compressed JSONL (record-per-audit_ref; deterministic ordering)
+   │  └─ shard-0001.jsonl.zst
+   │
+   ├─ by_dataset_version_id/                                # Lookup: dataset_version_id → audit_ref list (supports “what receipts produced this version?”)
+   │  └─ shard-0000.parquet                                 # Parquet shard (columnar; efficient for scans/filters)
+   │
+   ├─ by_artifact_digest/                                   # Lookup: artifact sha256 → audit_ref list (supports integrity + provenance tracing)
+   │  └─ shard-0000.parquet
+   │
+   └─ by_time/                                              # Lookup: time shard → audit_ref list (supports “what happened in month X?”)
+      └─ 2026-03.parquet                                    # Monthly shard (example; naming is YYYY-MM)
 ```
 
 ### Naming conventions
