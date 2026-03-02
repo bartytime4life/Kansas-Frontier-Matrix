@@ -147,19 +147,20 @@ Use **only** the controlled vocabulary below unless governance explicitly adds a
 
 ### Expected directory structure (PROPOSED)
 ```text
-docs/governance/policy/mappings/
-  README.md                       # you are here
-  policy_label_semantics.md        # human definitions + UI-safe copy
-  policy_label_semantics.yml       # machine mapping: label -> defaults/obligations
-  role_action_matrix.yml           # roles x actions x resources -> expected allow/deny
-  obligations_catalog.yml          # obligation types -> contract/UI behavior
-  api_resource_map.yml             # endpoint -> resource_type + action + policy hooks
-  catalog_policy_fields.md         # how policy_label appears in DCAT/STAC and why
-  sensitivity_generalization.yml   # sensitivity class -> required generalization transform
-  license_rights_map.yml           # rights class -> allowed distributions + required attribution
-  examples/
-    minimal_public_example.yml
-    restricted_sensitive_location_example.yml
+docs/governance/policy/mappings/                           # Policy mappings (human+machine) that keep governance, UI, and CI in sync
+├─ README.md                                               # You are here: how mappings are used, validation rules, owners, and CI gates
+├─ policy_label_semantics.md                               # Human definitions + UI-safe copy for labels (what users see + rationale)
+├─ policy_label_semantics.yml                              # Machine mapping: label → defaults/obligations (source for tests/tools)
+├─ role_action_matrix.yml                                  # Role × action × resource expectations (high-level allow/deny truth table)
+├─ obligations_catalog.yml                                 # Obligation types → parameters + required contract/UI behavior
+├─ api_resource_map.yml                                    # API endpoint → resource_type + action + policy hook locations (PEPs)
+├─ catalog_policy_fields.md                                # How policy_label appears in DCAT/STAC (where, why, and validation expectations)
+├─ sensitivity_generalization.yml                          # Sensitivity class → required generalization/redaction transforms (fail-closed)
+├─ license_rights_map.yml                                  # Rights class → allowed distributions + required attribution/constraints
+│
+└─ examples/                                               # Small examples (policy-safe) showing how mappings apply
+   ├─ minimal_public_example.yml                           # Minimal public scenario (label, rights, obligations = none)
+   └─ restricted_sensitive_location_example.yml            # Restricted + sensitive location scenario (generalize obligation + notices)
 ```
 
 ### Recommended mapping types
