@@ -112,20 +112,18 @@ Recommended subtypes of diagrams:
 This Mermaid diagram encodes the **conceptual contract** pipeline diagrams SHOULD reflect.
 
 ```mermaid
-flowchart LR
-  %% Truth path (storage + governance lifecycle)
-  U[Upstream] --> R[RAW (immutable)]
-  R --> W[WORK / Quarantine]
-  W --> P[PROCESSED (publishable)]
-  P --> C[CATALOG (DCAT+STAC+PROV)]
-  C --> Pub[PUBLISHED (governed)]
+graph LR
+  U["Upstream"] --> R["RAW - immutable"]
+  R --> W["WORK - quarantine"]
+  W --> P["PROCESSED - publishable"]
+  P --> C["CATALOG - DCAT + STAC + PROV"]
+  C --> Pub["PUBLISHED - governed"]
 
-  %% Trust membrane (runtime access path)
-  UI[Map/Story/Focus UI] --> PEP[Governed API (PEP)]
-  PEP --> OPA[Policy Engine (OPA/Rego)]
-  PEP --> ST[(Stores)]
-  PEP --> CT[(Catalog triplet)]
-  PEP --> EV[Evidence resolver]
+  UI["Map Story Focus UI"] --> PEP["Governed API - PEP"]
+  PEP --> OPA["Policy engine - OPA Rego"]
+  PEP --> ST["Stores"]
+  PEP --> CT["Catalog triplet"]
+  PEP --> EV["Evidence resolver"]
 ```
 
 [Back to top](#docsdiagramsoutpipelinespng--pipeline-diagrams-png)
