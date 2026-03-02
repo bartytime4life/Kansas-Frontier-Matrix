@@ -304,28 +304,28 @@ Common groups:
 > This is a **PROPOSED** structure. Use it as a template and adjust based on repo reality.
 
 ```text
-packages/
-├─ README.md
-├─ registry/
-│  ├─ README.md
-│  ├─ packages.v1.json
-│  ├─ schemas/
-│  └─ fixtures/
-├─ domain/
-├─ usecases/
-├─ adapters/
-├─ ingest/
-├─ indexers/
-├─ exports/
-├─ stories/
-├─ focus/
-├─ evidence/
-├─ catalog/
-├─ policy/
-├─ geo/
-├─ observability/
-├─ ui-components/
-└─ shared/
+packages/                                                # Versioned, testable modules: clean-architecture libraries powering KFM (domain → usecases → adapters) + shared governance primitives
+├─ README.md                                             # Package philosophy, layering rules, dependency direction, and how packages map to apps/contracts/policy/tests
+├─ registry/                                             # Machine-readable package registry (recommended): ownership, stability, and dependency constraints
+│  ├─ README.md                                          # Registry contract: required fields (owner, policy_label, stability), how CI validates, and how to add/rename packages
+│  ├─ packages.v1.json                                   # Canonical package registry (package IDs, paths, owners, public APIs, deps, maturity, test expectations)
+│  ├─ schemas/                                           # Schemas for the registry + package metadata (or pointers to contracts/schemas)
+│  └─ fixtures/                                          # Registry fixtures for CI (valid/invalid), ensuring fail-closed validation stays deterministic
+├─ domain/                                               # Core types + invariants (time model, IDs/spec_hash, geometry contracts, label/obligation primitives) — NO I/O
+├─ usecases/                                             # Application logic orchestration (ingest/promote/publish/search) — pure-ish; depends on domain + ports
+├─ adapters/                                             # Integrations implementing ports (DB, object store, OPA/PDP, queues, GIS libs, external APIs) — all I/O lives here
+├─ ingest/                                               # Ingestion connectors + normalization utilities (pull/snapshot/parse; emits receipts + raw artifacts)
+├─ indexers/                                             # Index builders (catalog indexes, search/vector indexes) with deterministic run receipts + rebuild rules
+├─ exports/                                              # Governed export builders (tiles, vector dumps, APIs feeds) applying policy labels + obligations at release time
+├─ stories/                                              # Story node model + tooling (claims→citations, sidecar schema helpers, publish workflows, validation)
+├─ focus/                                                # Focus Mode engine components (retrieval, synthesis constraints, cite-or-abstain guards, evaluation hooks)
+├─ evidence/                                             # Evidence primitives + resolvers (EvidenceRef/Bundles, citation formats, provenance links, receipt integration)
+├─ catalog/                                              # Catalog generation/validation (DCAT/STAC/PROV emitters, cross-linking, linkcheck, catalog query helpers)
+├─ policy/                                               # Policy integration helpers (PEP middleware, obligation handling, decision caching, policy evaluation client)
+├─ geo/                                                  # Geospatial primitives/utilities (CRS handling, tiling, geometry validation, spatial indexing helpers)
+├─ observability/                                        # Logging/metrics/tracing helpers (redaction-aware, audit-friendly, low-cardinality conventions)
+├─ ui-components/                                        # Reusable UI components for trust surfaces (evidence drawer, policy badges, denial UX, receipt viewers)
+└─ shared/                                               # Cross-cutting utilities (config loaders, canonical JSON, error types, file helpers, test utilities)
 ```
 
 > [!TIP]
