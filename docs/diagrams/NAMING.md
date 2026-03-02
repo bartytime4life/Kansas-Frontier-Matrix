@@ -57,15 +57,15 @@ Diagram names should make the following **cheap and reliable**:
 Recommended layout (add folders only when it improves navigation; avoid deep trees):
 
 ```text
-docs/diagrams/
-  NAMING.md
-  architecture/
-  data/
-  policy/
-  api/
-  ui/
-  infra/
-  assets/          # exported images (svg/png) that are referenced by docs
+docs/diagrams/                                      | # Diagram hub (by topic) + naming rules + shared exported assets
+├─ NAMING.md                                        | # Naming standard (IDs, prefixes, version suffixes, allowed extensions, export rules)
+├─ architecture/                                    | # Architecture diagrams (trust membrane, layering, contracts, system context)
+├─ data/                                            | # Data lifecycle diagrams (truth path zones, promotion gates, catalog linkage)
+├─ policy/                                          | # Policy diagrams (PDP/PEP flows, decision/obligation plumbing, no-leakage posture)
+├─ api/                                             | # API diagrams (route boundaries, contracts, auth flows, error model interactions)
+├─ ui/                                              | # UI diagrams (evidence drawer, story flows, focus mode cite-or-abstain UX)
+├─ infra/                                           | # Infrastructure/ops diagrams (deployment topology, environments, backup/restore, incident flows)
+└─ assets/                                          | # Exported images (svg/png) referenced by docs (policy-safe; generated when possible)
 ```
 
 Mermaid view of the same structure:
