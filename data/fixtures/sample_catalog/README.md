@@ -103,23 +103,28 @@ Because this is a fixture folder, exact filenames may evolve, but keep a predict
 This is a recommended structure for fixture clarity (adjust to repo conventions as needed):
 
 ```text
-data/fixtures/sample_catalog/
-  README.md
-  dcat/
-    catalog.jsonld            # or .ttl / .json depending on your DCAT flavor
-    datasets/                 # optional
-  stac/
-    catalog.json
-    collections/
-      sample.collection.json
-    items/
-      sample.item.json
-  prov/
-    sample.prov.json          # prov-json (or another PROV representation)
-  linkmap/
-    sample.linkmap.json       # optional: explicit crosswalk table for tests
-  assets/
-    placeholder.txt           # optional: tiny placeholder assets only (no large binaries)
+data/fixtures/sample_catalog/                               # Sample catalog fixture (DCAT/STAC/PROV) for tests/docs (policy-safe; tiny)
+├─ README.md                                                 # Fixture purpose, constraints, and how tests use it (must remain small/deterministic)
+│
+├─ dcat/                                                     # DCAT fixtures (catalog + optional dataset records)
+│  ├─ catalog.jsonld                                          # DCAT catalog (JSON-LD) OR alternate flavor (.ttl/.json as chosen)
+│  └─ datasets/                                               # OPTIONAL: per-dataset DCAT records (if your profile splits them)
+│
+├─ stac/                                                     # STAC fixtures (catalog + collections + items)
+│  ├─ catalog.json                                            # STAC root catalog
+│  ├─ collections/                                            # STAC Collections
+│  │  └─ sample.collection.json                               # Example STAC Collection (profile-compliant)
+│  └─ items/                                                  # STAC Items (assets/partitions)
+│     └─ sample.item.json                                     # Example STAC Item (links/fields present; policy-safe)
+│
+├─ prov/                                                     # PROV fixtures (lineage/provenance for the sample)
+│  └─ sample.prov.json                                        # PROV-JSON (or another PROV representation) describing the run/entity links
+│
+├─ linkmap/                                                  # OPTIONAL: explicit linkage crosswalk for tests
+│  └─ sample.linkmap.json                                     # Optional crosswalk table (DCAT↔STAC↔PROV expected links)
+│
+└─ assets/                                                   # OPTIONAL: tiny placeholder assets (no large binaries)
+   └─ placeholder.txt                                         # Placeholder file used to satisfy link checks (kept tiny)
 ```
 
 > WARNING  
