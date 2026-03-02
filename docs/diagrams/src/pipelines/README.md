@@ -91,18 +91,19 @@ These diagrams support:
 > This repo may choose a different layout; treat the following as **recommended** until verified.
 
 ```text
-docs/diagrams/
-  src/
-    pipelines/
-      README.md
-      pipe__truth-path__v1.md
-      pipe__promotion-contract__v1.md
-      pipe__trust-membrane__v1.md
-      pipe__ingest__template__v1.md
-  dist/                      # optional; generated exports
-    pipelines/
-      pipe__truth-path__v1.svg
-      pipe__promotion-contract__v1.svg
+docs/diagrams/                                         # Diagram hub (sources + optional generated exports)
+├─ src/                                                # Text-defined diagram sources (reviewed; diff-friendly)
+│  └─ pipelines/                                       # Pipeline diagrams (truth path, promotion, trust membrane, templates)
+│     ├─ README.md                                     # Pipeline diagrams index + naming/version rules + render instructions
+│     ├─ pipe__truth-path__v1.md                       # Truth path diagram (Markdown w/ mermaid block; v1)
+│     ├─ pipe__promotion-contract__v1.md               # Promotion contract gates diagram (Markdown w/ mermaid block; v1)
+│     ├─ pipe__trust-membrane__v1.md                   # Trust membrane diagram (Markdown w/ mermaid block; v1)
+│     └─ pipe__ingest__template__v1.md                 # Ingest pipeline template diagram (starter; copy/paste; v1)
+│
+└─ dist/                                               # OPTIONAL: generated exports (never hand-edit; commit policy applies)
+   └─ pipelines/                                       # Rendered pipeline diagrams (SVG exports)
+      ├─ pipe__truth-path__v1.svg                      # Rendered export for pipe__truth-path__v1 (generated)
+      └─ pipe__promotion-contract__v1.svg              # Rendered export for pipe__promotion-contract__v1 (generated)
 ```
 
 If your repo uses a single location for all diagram exports, update this README to point to it.
