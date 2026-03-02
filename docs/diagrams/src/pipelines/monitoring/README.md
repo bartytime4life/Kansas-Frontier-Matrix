@@ -243,19 +243,19 @@ This table is meant to keep monitoring tightly coupled to governance gates.
 **Proposed** local layout (adjust to match repo reality):
 
 ```text
-docs/diagrams/src/pipelines/monitoring/
-├─ README.md
-├─ diagrams/
-│  ├─ monitoring-signal-flow.mmd
-│  └─ promotion-gates-observability.mmd
-├─ dashboards/
-│  ├─ steward/        # dashboard inventory docs or exported definitions (if policy allows)
-│  ├─ operator/
-│  └─ product/
-└─ runbooks/
-   ├─ RB-01-gate-failures.md
-   ├─ RB-02-catalog-validation.md
-   └─ RB-04-leakage-response.md
+docs/diagrams/src/pipelines/monitoring/                        # Pipeline monitoring diagrams + dashboards inventory + linked runbooks
+├─ README.md                                                   # Index + scope (monitoring) + naming rules + where dashboards/runbooks live
+├─ diagrams/                                                   # Mermaid sources for monitoring concepts
+│  ├─ monitoring-signal-flow.mmd                               # Signals flow (pipeline → logs/metrics/traces → alerts → runbooks)
+│  └─ promotion-gates-observability.mmd                        # Gate checkpoints ↔ observability signals ↔ receipts/audit correlation
+├─ dashboards/                                                 # Dashboard inventory/docs (or exported definitions if policy allows)
+│  ├─ steward/                                                 # Steward dashboards (promotion status, QA trends, approval queues)
+│  ├─ operator/                                                # Operator dashboards (SLOs, error rates, queue depth, infra health)
+│  └─ product/                                                 # Product dashboards (usage, engagement; policy-safe metrics only)
+└─ runbooks/                                                   # Runbooks referenced by monitoring alerts (fast “what to do next”)
+   ├─ RB-01-gate-failures.md                                   # Gate failure triage + remediation checklist
+   ├─ RB-02-catalog-validation.md                              # Catalog validation failure triage (DCAT/STAC/PROV + linkcheck)
+   └─ RB-04-leakage-response.md                                # Leakage response (containment, redaction, audit, notification)
 ```
 
 ---
