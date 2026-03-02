@@ -83,20 +83,20 @@ They are a governance artifact used by:
 > **NOTE:** This is a *recommended* layout. Adjust filenames/extensions to match your repo conventions.
 
 ```text
-docs/governance/policy/fixtures/focus_mode/
-  README.md
-
-  cases/                     # individual test cases (YAML/JSON)
-    fm_allow_public_001.yml
-    fm_deny_exfiltration_001.yml
-    fm_obligation_generalize_001.yml
-    fm_abstain_unverifiable_citation_001.yml
-
-  expected/                  # expected decision envelopes (optional)
-    fm_allow_public_001.expected.json
-
-  corpora/                   # tiny synthetic “documents” for injection testing (optional)
-    injection_snippet_001.txt
+docs/governance/policy/fixtures/focus_mode/                 # Focus Mode policy fixtures (goldens for allow/deny/abstain/obligations)
+├─ README.md                                                 # Fixture contract (format, required fields, naming, how CI runs them)
+│
+├─ cases/                                                    # Individual test cases (YAML/JSON inputs)
+│  ├─ fm_allow_public_001.yml                                 # Allow: public-safe query with sufficient evidence context
+│  ├─ fm_deny_exfiltration_001.yml                            # Deny: exfiltration attempt / disallowed data access pattern
+│  ├─ fm_obligation_generalize_001.yml                        # Allow-with-obligations: generalize geometry / suppress sensitive fields
+│  └─ fm_abstain_unverifiable_citation_001.yml                # Abstain: cannot verify citation/evidence (cite-or-abstain gate)
+│
+├─ expected/                                                 # OPTIONAL: expected decision envelopes (goldens for exact-match tests)
+│  └─ fm_allow_public_001.expected.json                       # Expected decision envelope for fm_allow_public_001
+│
+└─ corpora/                                                  # OPTIONAL: tiny synthetic corpora for injection/leakage testing
+   └─ injection_snippet_001.txt                               # Synthetic injection snippet (no real secrets; used to test defenses)
 ```
 
 ---
