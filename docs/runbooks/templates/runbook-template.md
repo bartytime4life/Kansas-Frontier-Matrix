@@ -147,16 +147,15 @@ flowchart TD
 ## Decision flow
 
 ```mermaid
-flowchart TD
-  A[Alert or report] --> B{User impact?}
-  B -->|Yes| C[Confirm scope + declare incident]
-  B -->|No| D[Investigate as non-incident]
-  C --> E{Data correctness risk?}
-  E -->|Yes| F[Fail closed: disable publish/serving path]
-  E -->|No| G[Proceed with mitigation]
-  F --> H[Capture evidence + escalate]
-  G --> I[Run procedure steps]
-  I --> J[Validate + restore]
+graph TD
+  U["Upstream sources"] --> RAW["RAW zone - immutable acquisition"]
+  RAW --> WORK["WORK and QUARANTINE - transforms + QA"]
+  WORK --> PROC["PROCESSED - publishable assets"]
+  PROC --> CAT["CATALOG - DCAT + STAC + PROV"]
+  CAT --> PUB["PUBLISHED - governed runtime"]
+  PUB --> API["Governed API - PEP"]
+  API --> UI["Map and Story UI - Focus mode"]
+  API --> CLI["Ops and CLI tools"]
 ```
 
 ---
