@@ -73,19 +73,18 @@ This directory defines (or will define) the **rendering workflow** that converts
 > If your repo differs, update this section to match reality and keep the invariants.
 
 ```text
-docs/
-  diagrams/
-    README.md                     # Top-level docs/diagrams overview (recommended)
-    src/                          # Text-defined sources (e.g., .mmd/.puml/.dot)
-    rendered/                     # Generated assets (e.g., .svg/.png) — do not hand-edit
-    tools/
-      render/
-        README.md                 # (this file)
-        manifest.yaml             # Render manifest (recommended; optional)
-        render.sh                 # Single entrypoint (recommended)
-        docker/                   # Optional pinned toolchain image(s)
-          Dockerfile
-          README.md
+docs/diagrams/                                            # Diagram hub (sources + rendered assets + rendering toolchain)
+├─ README.md                                               # Top-level docs/diagrams overview (purpose, conventions, registry pointers)
+├─ src/                                                    # Text-defined sources (Mermaid/PlantUML/Graphviz; diff-friendly)
+├─ rendered/                                               # Generated assets (SVG/PNG/etc.); do not hand-edit; commit policy applies
+└─ tools/                                                  # Tooling to render/validate diagrams deterministically
+   └─ render/                                              # Rendering toolchain (single “front door”)
+      ├─ README.md                                         # You are here: how rendering works, prerequisites, CI integration, exit codes
+      ├─ manifest.yaml                                     # OPTIONAL (recommended): render manifest (inputs→outputs, digests, tool versions)
+      ├─ render.sh                                         # Recommended single entrypoint (renders per manifest; fail-closed on drift)
+      └─ docker/                                           # OPTIONAL: pinned rendering toolchain image(s) for reproducibility
+         ├─ Dockerfile                                     # Toolchain image (pinned versions; no network at runtime if possible)
+         └─ README.md                                      # How to build/use image locally + in CI; update policy + verification steps
 ```
 
 ---
@@ -202,11 +201,11 @@ Use explicit labels in diagram text (or captions):
 ### Example: Mermaid diagram (pipeline view)
 
 ```mermaid
-flowchart LR
-  A[Text-defined diagram source\n.mmd/.puml/.dot] --> B[Renderer toolchain\n(local or container)]
-  B --> C[Rendered assets\n.svg/.png]
-  C --> D[Docs pages\nREADME / architecture / runbooks]
-  B --> E[CI gate\nfail on drift or syntax error]
+graph LR
+  A["Text defined diagram source - mmd puml dot"] --> B["Renderer toolchain - local or container"]
+  B --> C["Rendered assets - svg png"]
+  C --> D["Docs pages - README architecture runbooks"]
+  B --> E["CI gate - fail on drift or syntax error"]
   E --> C
 ```
 
