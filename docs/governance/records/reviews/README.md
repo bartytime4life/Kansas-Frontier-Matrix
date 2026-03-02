@@ -77,16 +77,18 @@ This directory is part of the governance record system:
 ### Recommended sub-structure (optional, but encouraged)
 
 ```text
-docs/governance/records/reviews/
-  README.md
-  templates/
-    review_record.template.md
-    dataset_promotion_review.template.md
-    story_publish_review.template.md
-    policy_change_review.template.md
-  YYYY/
-    YYYY-MM/
-      YYYY-MM-DD__<review_type>__<short_slug>.md
+docs/governance/records/reviews/                          # Governance review records (auditable signoffs; policy-safe)
+├─ README.md                                              # Review record purpose, naming rules, required sections, and approval posture
+│
+├─ templates/                                             # Templates for consistent review documentation
+│  ├─ review_record.template.md                           # Generic review record template (scope, checklist, evidence, decision, signoff)
+│  ├─ dataset_promotion_review.template.md                # Dataset promotion review template (gates, artifacts, receipts, risks)
+│  ├─ story_publish_review.template.md                    # Story publish review template (claims, citations, policy labels, media rights)
+│  └─ policy_change_review.template.md                    # Policy change review template (fixtures parity, rollout plan, monitoring)
+│
+└─ YYYY/                                                  # Year partition (e.g., 2026)
+   └─ YYYY-MM/                                            # Month partition (e.g., 2026-03)
+      └─ YYYY-MM-DD__<review_type>__<short_slug>.md        # One review record (date + type + slug; stable link target)
 ```
 
 > TIP: If you don’t want nested folders, keep files flat and rely on a strict filename convention.
