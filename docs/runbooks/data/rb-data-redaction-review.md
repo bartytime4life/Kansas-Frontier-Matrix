@@ -111,21 +111,25 @@ This runbook is **fail-closed**: if an artifact is missing, the review outcome i
 ## Redaction review workflow
 
 ```mermaid
-flowchart TD
-  A[Intake: dataset or story change] --> B[Classify sensitivity + rights]
-  B --> C{Sensitive location or PII risk?}
-  C -- No --> D[Policy label candidate: public]
-  C -- Yes --> E[Default deny or restricted label]
-  E --> F{Is a public representation allowed?}
-  F -- No --> G[Restricted only: precise artifacts remain restricted]
-  F -- Yes --> H[Design public_generalized derivative + obligations]
-  D --> I[Specify obligations (if any) + acceptance tests]
+graph TD
+  A["Intake - dataset or story change"] --> B["Classify sensitivity + rights"]
+  B --> C{"Sensitive location or PII risk"}
+
+  C --> N1["No"] --> D["Policy label candidate - public"]
+  C --> Y1["Yes"] --> E["Default deny or restricted label"]
+
+  E --> F{"Public representation allowed"}
+  F --> N2["No"] --> G["Restricted only - precise artifacts remain restricted"]
+  F --> Y2["Yes"] --> H["Design public generalized derivative + obligations"]
+
+  D --> I["Specify obligations + acceptance tests"]
   G --> I
   H --> I
-  I --> J[Implement transforms in WORK/Quarantine]
-  J --> K[Validate: policy tests + leakage tests + evidence resolution]
-  K --> L[Steward sign-off + audit/receipt update]
-  L --> M[Promotion / publish event]
+
+  I --> J["Implement transforms in WORK and quarantine"]
+  J --> K["Validate - policy tests + leakage tests + evidence resolution"]
+  K --> L["Steward signoff + audit and receipt update"]
+  L --> M["Promotion and publish event"]
 ```
 
 ### Step 1 — Intake and triage (Contributor → Steward)
