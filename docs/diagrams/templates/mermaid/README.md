@@ -137,6 +137,8 @@ If you need consistent rendering defaults, use an init block. Keep it conservati
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "linear"}}}%%
+graph LR
+  A["Start"] --> B["End"]
 ```
 
 ---
