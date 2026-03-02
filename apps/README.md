@@ -2,11 +2,11 @@
 doc_id: kfm://doc/8a4a8e59-7a6f-4d60-9c56-9f6d5f8b1f3d
 title: apps/ — Runnable application surfaces
 type: standard
-version: v3.4
+version: v3.5
 status: draft
 owners: TBD (resolve via CODEOWNERS / repo maintainers)
 created: 2026-02-22
-updated: 2026-03-01
+updated: 2026-03-02
 policy_label: public
 related:
   - kfm://doc/kfm-definitive-design-governance-guide-vnext
@@ -17,14 +17,13 @@ related:
   - ../CHANGELOG.md
   - ../.github/README.md
   - ../docs/
-tags: [kfm, apps, ui, trust-membrane, contracts, evidence-first, receiptviewer, trust-badges, promotion-contract, threat-model, app-registry, view-state]
+tags: [kfm, apps, ui, trust-membrane, contracts, evidence-first, receiptviewer, trust-badges, promotion-contract, threat-model, app-registry, view-state, policy-as-code, controlled-vocab]
 notes:
-  - This README is intentionally fail-closed: it does not assume a specific tech stack or app list until confirmed in-repo.
-  - First follow-up: populate the App Registry + Current layout blocks from the actual apps tree (either `apps/` or `web/apps/`, depending on repo convention).
-  - v3.4 upgrade: align tag definitions (CONFIRMED/PROPOSED/UNKNOWN/DECISION NEEDED) with the KFM vNext guide; require “UNKNOWN → default + minimum verification step.”
-  - v3.4 upgrade: align “Testing and gates” baseline with KFM catalog/evidence contract CI checks (schema + linkcheck + resolver contract tests + spec_hash stability + golden determinism).
-  - v3.4 upgrade: refine Evidence Resolver expectations to match contract posture (allow/deny + obligations, EvidenceBundle contents, <=2-call UX).
-  - v3.4 upgrade: add explicit “catalogs are contract surfaces” implications for apps (DCAT/STAC/PROV cross-links; provenance navigation must be deterministic).
+  - v3.5: aligned tagging + normative language with KFM vNext; every UNKNOWN carries a default + minimum verification step.
+  - v3.5: mapped Promotion Contract gates (A–G) to app responsibilities and CI gates; clarified “published surfaces serve only promoted versions.”
+  - v3.5: tightened Evidence Resolver contract (EvidenceRef schemes, EvidenceBundle shape, deny/abstain UX, ≤2-call expectation).
+  - v3.5: added controlled vocabulary section (policy_label, artifact.zone, citation.kind) and tied it to UI expectations.
+  - This README remains intentionally fail-closed about repo-specific facts (actual app list, layout, tooling) until verified in-repo.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -38,36 +37,35 @@ notes:
 **Policy label:** public (documentation only; individual apps may be `restricted|internal|secret`)
 
 <!-- TODO(kfm): replace placeholder badges with real workflow badges once repo wiring is confirmed. -->
-
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
-![version](https://img.shields.io/badge/version-v3.4-informational)
+![version](https://img.shields.io/badge/version-v3.5-informational)
 ![layer](https://img.shields.io/badge/layer-application%20surfaces-blue)
-![northstars](https://img.shields.io/badge/north%20stars-map--first%20%7C%20time--aware%20%7C%20governed-informational)
-![trust-membrane](https://img.shields.io/badge/governance-trust%20membrane-critical)
-![promotion](https://img.shields.io/badge/promotion%20contract-fail--closed-critical)
-![ux](https://img.shields.io/badge/UX-evidence--first-success)
+![governance](https://img.shields.io/badge/governance-trust%20membrane-critical)
+![evidence](https://img.shields.io/badge/UX-evidence--first-success)
+![focus](https://img.shields.io/badge/AI-cite--or--abstain-informational)
+![gates](https://img.shields.io/badge/promotion%20contract-fail--closed-critical)
 ![contracts](https://img.shields.io/badge/contracts-contract--first-important)
-![ai](https://img.shields.io/badge/AI-focus%20mode%20cite--or--abstain-informational)
-![anti-skip](https://img.shields.io/badge/gates-anti--skip%20summary-important)
 
 > [!WARNING]
-> This document is **fail-closed**. Anything repo-specific (actual app list, tooling, owners, contract paths, whether apps live in `apps/` or `web/apps/`) is **UNKNOWN** until verified in-repo.
+> **Fail-closed guarantee:** Anything repo-specific (actual app list, owners, toolchain, contract paths, whether apps live in `apps/` or `web/apps/`) is **UNKNOWN** until verified in-repo.
 > Do not “fill in the blanks” from memory.
 
 ---
 
 ## Navigation
 
-- [Directory contract](#directory-contract)
 - [Truth status legend](#truth-status-legend)
+- [Directory contract](#directory-contract)
 - [First follow-up checklist](#first-follow-up-checklist)
 - [Where this fits in the repo](#where-this-fits-in-the-repo)
 - [Repo layout crosswalk](#repo-layout-crosswalk)
 - [Non-negotiable invariants](#non-negotiable-invariants)
+- [Controlled vocabularies](#controlled-vocabularies)
 - [Promotion Contract awareness](#promotion-contract-awareness)
 - [Catalogs and provenance as contract surfaces](#catalogs-and-provenance-as-contract-surfaces)
 - [Trust surfaces required](#trust-surfaces-required)
-- [Evidence resolver expectations](#evidence-resolver-expectations)
+- [Evidence resolver and citation contract](#evidence-resolver-and-citation-contract)
+- [Story Nodes and publish gates](#story-nodes-and-publish-gates)
 - [Focus Mode UX contract](#focus-mode-ux-contract)
 - [Threat model checklist](#threat-model-checklist)
 - [Architecture sketch](#architecture-sketch)
@@ -80,6 +78,22 @@ notes:
 - [Security, privacy, and sensitivity](#security-privacy-and-sensitivity)
 - [Add a new app](#add-a-new-app)
 - [Glossary](#glossary)
+
+---
+
+## Truth status legend
+
+This README uses explicit claim labels so it stays **evidence-first** and **fail-closed**:
+
+- **CONFIRMED:** Verified requirement or behavior. If **CONFIRMED**, it should be testable and link to evidence (doc ID, repo path+commit, or run receipt).
+- **PROPOSED:** Implementable recommendation / default path (requires adoption).
+- **UNKNOWN / DECISION NEEDED:** Not verified yet (in this repo and/or in governing docs). Must include:
+  1) a recommended default, and  
+  2) the **minimum verification step** to convert UNKNOWN → CONFIRMED.
+
+> [!NOTE]
+> This legend is intentionally strict: “CONFIRMED” is not “sounds right.”
+> If we can’t point to evidence, we label it UNKNOWN and provide the smallest verification step.
 
 ---
 
@@ -106,15 +120,15 @@ Typical app categories (examples; verify actual apps in this repo):
 - Globe UI (optional 3D; same evidence constraints)
 - Story UI (narrative + claim citations + view-state replay)
 - Catalog UI (dataset discovery + version browsing)
-- Focus Mode UI (governed Q&A with cite-or-abstain)
-- Admin/Steward UI (intake review, promotion dashboards, policy fixtures review; usually restricted)
+- Focus Mode UI (governed Q&A with cite-or-abstain + audit receipts)
+- Admin/Steward UI (intake review, promotion dashboards, policy fixture review; usually restricted)
 - CLI (operator workflows via governed APIs)
 
 ### Exclusions
 
 The following do **not** belong in `apps/`:
 
-- shared domain libraries used by multiple apps (move to the workspace’s shared packages area)
+- shared domain libraries used by multiple apps (move to shared packages workspace)
 - shared UI components used by multiple apps (move to shared UI component space)
 - data pipelines or long-running jobs (move to pipeline/workflow area)
 - any direct storage/index access adapters
@@ -122,7 +136,7 @@ The following do **not** belong in `apps/`:
   - no object-store clients in browser code
   - no “search index client in the UI” patterns
 - policy engines or redaction logic
-  - policy enforcement belongs in governed APIs and CI, not in clients
+  - policy enforcement belongs in governed APIs and CI, not clients
 - receipt/attestation verification logic
   - clients may *display* verification results; verification occurs behind the trust membrane
 - long-lived secrets or embedded credentials
@@ -132,27 +146,15 @@ The following do **not** belong in `apps/`:
 
 ---
 
-## Truth status legend
-
-This README uses explicit claim labels so it stays **evidence-first** and **fail-closed**:
-
-- **CONFIRMED (design):** required system posture / invariant (safe to state as a requirement)
-- **PROPOSED:** implementable recommendation (requires adoption)
-- **UNKNOWN / DECISION NEEDED (repo):** not verified in this repository yet
-
-> [!NOTE]
-> Every **UNKNOWN** in this README is expected to ship with:
-> 1) a recommended default path, and  
-> 2) the **minimum verification step** needed to convert UNKNOWN → CONFIRMED (repo).
-
----
-
 ## First follow-up checklist
 
 These steps convert this README from **UNKNOWN-heavy** to **repo-confirmed** without guessing.
 
-### Repo facts to confirm
+### Repo facts to confirm (minimum)
 
+- [ ] Capture evidence for this README revision:
+  - `git rev-parse HEAD`
+  - `tree -L 3` (repo root)
 - [ ] Confirm where runnable UI surfaces live:
   - `ls -la apps/` **and** `ls -la web/apps/` (one may not exist)
 - [ ] Capture at-a-glance trees:
@@ -161,18 +163,17 @@ These steps convert this README from **UNKNOWN-heavy** to **repo-confirmed** wit
 - [ ] Identify the workspace/tooling boundary:
   - look for `package.json`, `pnpm-workspace.yaml`, `yarn.lock`, `turbo.json`, `nx.json`, `Cargo.toml`, `go.work`, etc.
 - [ ] Resolve ownership:
-  - inspect `CODEOWNERS` and any governance owners registry (if present)
+  - inspect `CODEOWNERS` and any owners registry (if present)
 - [ ] Locate contract surfaces consumed by apps:
   - search for `openapi`, `graphql`, `schema`, `contracts`, `sdk`, `client`, `generated`, `proto`
-  - search for DCAT/STAC/PROV profile artifacts if stored in-repo (`dcat`, `stac`, `prov`)
 - [ ] Locate trust UX components and their contract sources:
   - search for `EvidenceDrawer`, `ReceiptViewer`, `EvidenceRef`, `EvidenceBundle`, `run_receipt`, `promotion_manifest`
-- [ ] Confirm policy labels and deny/abstain patterns in UI:
-  - search for `policy_label`, `obligations`, `classification`, `redaction`, `abstain`, `deny`, `policy_safe`
-- [ ] Confirm “policy-safe errors” posture:
+- [ ] Confirm policy-safe error posture:
   - search for `hide_restricted`, `not_found_forbidden`, `indistinguishable`, `policy_safe_error`
-- [ ] Confirm catalog link-check posture exists somewhere in CI/tooling:
+- [ ] Confirm catalog link-check posture exists in CI/tooling:
   - search for `linkcheck`, `cross-link`, `stac link`, `dcat link`, `prov link`
+- [ ] Confirm “apps cannot bypass PEP” enforcement exists (static + runtime):
+  - CI guardrails + network egress restrictions in dev/stage
 
 > [!TIP]
 > Once verified, update only two sections first:
@@ -182,13 +183,14 @@ These steps convert this README from **UNKNOWN-heavy** to **repo-confirmed** wit
 
 ## Where this fits in the repo
 
-Some KFM repo layouts place runnable apps under `web/apps/` (with `web/` as the frontend workspace). If that’s true in your repo, treat this README as describing that subtree and consider either:
+Some KFM repo layouts place runnable apps under `web/apps/` (with `web/` as the frontend workspace). If that’s true in your repo:
 
-- moving this README to `web/apps/README.md` and leaving a short stub here, or
-- keeping both copies with a single source-of-truth generator (preferred).
+- **DEFAULT (recommended):** treat this README as describing the **effective apps root** (either `apps/` or `web/apps/`) and keep a single source of truth.
+- **Minimum verification step:** run the directory checks in [First follow-up checklist](#first-follow-up-checklist).
 
 > [!PROPOSED]
-> If you adopt “single source of truth,” store the canonical markdown in `docs/standards/apps.README.md` and generate `apps/README.md` and/or `web/apps/README.md` in CI.
+> If you adopt “single source of truth,” store canonical markdown in `docs/standards/apps.README.md`
+> and generate `apps/README.md` and/or `web/apps/README.md` in CI.
 
 ---
 
@@ -199,15 +201,14 @@ This prevents “directory drift” when the repo uses `web/` as the frontend ro
 > [!IMPORTANT]
 > These are *layout patterns* (PROPOSED), not confirmations of your current repo state.
 
-| Concept | Common location (root apps layout) | Common location (web layout) | What this means for this README |
+| Concept | Common location (root apps layout) | Common location (web layout) | Notes |
 |---|---|---|---|
-| Runnable UI surfaces | `apps/<app>/` | `web/apps/<app>/` | Update “Current layout” + App Registry from whichever exists. |
+| Runnable UI surfaces | `apps/<app>/` | `web/apps/<app>/` | Pick the one that exists; don’t maintain two divergent truths. |
 | Shared UI packages | `packages/` | `web/packages/` | Keep shared code out of app folders. |
-| Shared UI components | `packages/ui*/` | `web/src/components/` | Trust components should not be duplicated per app. |
-| Contract schemas | `contracts/` or `schemas/` | `contracts/` or `schemas/` | Apps are contract consumers. |
-| Governed API | `apps/api/` or `services/api/` | `apps/api/` or `services/api/` | Apps must not implement policy enforcement. |
-| Governance policy | `policy/` | `policy/` | Policy is enforced by API + CI; apps display results. |
-| CI gates | `.github/workflows/` | `.github/workflows/` | Apps are safety-critical: trust flows should be required checks. |
+| Contract schemas | `contracts/` or `schemas/` | `contracts/` or `schemas/` | Apps are **contract consumers**. |
+| Governed API (PEP + Evidence) | `apps/api/` or `services/api/` | `apps/api/` or `services/api/` | Apps must not implement policy enforcement. |
+| Governance policy pack | `policy/` | `policy/` | Same semantics in CI and runtime. |
+| CI gates | `.github/workflows/` | `.github/workflows/` | App trust flows should be required checks. |
 
 ---
 
@@ -215,31 +216,31 @@ This prevents “directory drift” when the repo uses `web/` as the frontend ro
 
 Apps are the most visible trust surface; breaking invariants breaks credibility. These invariants are **system-level** and apply to every app.
 
-### 1) Truth path lifecycle (KFM north star)
+### 1) Truth path lifecycle (KFM north star) — CONFIRMED (design)
 
 - Apps sit at the end of the truth path:
   - upstream → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / LINEAGE (DCAT + STAC + PROV + run receipts) → projections → governed API → apps
 - Apps **MUST** assume only *promoted* DatasetVersions are admissible for public surfaces.
 - Apps **MUST NOT** use “floating latest” as a substitute for versioned IDs in share links, exports, or Story Nodes.
 
-### 2) Trust membrane (KFM north star)
+### 2) Trust membrane (KFM north star) — CONFIRMED (design)
 
 - Apps **MUST NOT** access object storage, databases, or internal indexes directly.
 - Apps **MUST** consume data only through **governed APIs** that enforce policy, obligations/redactions, and logging.
 - Apps **MUST NOT** embed credentials that could bypass governance.
 
-### 3) Evidence-first UX (KFM north star)
+### 3) Evidence-first UX (KFM north star) — CONFIRMED (design)
 
-Every layer, story claim, chart, or AI output **MUST** open into an **evidence view**:
+Every layer, story claim, chart, or AI output **MUST** open into an **evidence view** that includes (policy-safe):
 
 - DatasetVersion ID and human name
 - License and rights holder attribution (copyable)
 - Policy label and obligations/redactions applied
 - Provenance chain and run receipt reference
-- Validation and freshness indicators (policy-safe)
+- Validation and freshness indicators
 - Evidence bundle digest/checksum (when policy allows)
 
-### 4) Cite-or-abstain Focus Mode (KFM north star)
+### 4) Cite-or-abstain Focus Mode (KFM north star) — CONFIRMED (design)
 
 If Focus Mode exists, it **MUST** implement cite-or-abstain:
 
@@ -247,13 +248,13 @@ If Focus Mode exists, it **MUST** implement cite-or-abstain:
 - If policy denies, the UI **MUST** deny and explain in policy-safe terms.
 - Every Focus response **MUST** link to an `audit_ref` (run id) for review.
 
-### 5) Canonical vs rebuildable stores (KFM north star)
+### 5) Canonical vs rebuildable stores (KFM north star) — CONFIRMED (design)
 
 - Canonical truth lives in: artifacts + catalogs + run receipts + audit ledger.
 - Apps **MUST** treat DB/search/tiles/graph as rebuildable projections, not source-of-truth.
 - Apps **MUST** display DatasetVersion identity and evidence links that tie projections back to canonical artifacts.
 
-### 6) Deterministic identity and hashing (KFM north star)
+### 6) Deterministic identity and hashing (KFM north star) — CONFIRMED (design)
 
 - DatasetVersion identity is stable and derived deterministically (spec-hash posture).
 - Apps **MUST** use stable IDs in URLs/share links/view_state and avoid “version drift.”
@@ -261,15 +262,65 @@ If Focus Mode exists, it **MUST** implement cite-or-abstain:
 
 ---
 
-## Promotion Contract awareness
+## Controlled vocabularies
+
+Controlled vocabularies are a governance tool, not a naming preference. Apps must treat them as **contract inputs**.
+
+### policy_label (access + sensitivity)
+
+**DEFAULT (recommended):** use the starter vocabulary below unless your repo defines a different registry.  
+**Minimum verification step:** locate the repo’s policy pack / vocabulary registry; confirm labels and obligations.
+
+Starter vocabulary (CONFIRMED in vNext docs):
+- `public`
+- `public_generalized` (public-safe derivative of restricted/sensitive source)
+- `restricted`
+- `internal`
+- `secret`
+
+### artifact.zone (data lifecycle)
+
+Apps will *see* these zones via catalogs/receipts and must not “promote by UI.”
+
+Starter vocabulary:
+- `raw`
+- `work`
+- `quarantine`
+- `processed`
+- `published`
+
+### citation.kind (evidence types)
+
+Apps should render these consistently (icons/badges) and route clicks to the Evidence Resolver.
+
+Starter vocabulary:
+- `dataset_version`
+- `stac_item`
+- `stac_collection`
+- `prov_activity`
+- `prov_entity`
+- `document_section`
+- `code_symbol`
+- `tile`
+- `graph_node`
 
 > [!IMPORTANT]
-> Promotion gates are enforced in pipelines/CI and the governed API — but apps must not become a bypass.
+> If your repo uses different terms, **do not** invent a new vocabulary in the UI.
+> Map to the canonical list at the contract boundary (API/policy pack), not in each app.
 
-UI implications:
+---
+
+## Promotion Contract awareness
+
+Promotion gates are enforced in pipelines/CI and the governed API — but apps must not become a bypass.
+
+### Published surface rule — CONFIRMED (design)
 
 - Apps **MUST** show only promoted DatasetVersions on public surfaces.
-- Apps **MUST** assume “PUBLISHED surfaces serve only promoted dataset versions” (i.e., versions with processed artifacts + validated catalogs + run receipts + policy label assignment).
+- Public UIs **MUST** assume “PUBLISHED surfaces serve only promoted dataset versions.”
+
+### UI implications (fail-closed behavior)
+
 - Apps **MUST** render “untrusted / not promotable” states safely:
   - missing receipt
   - missing catalogs
@@ -278,13 +329,28 @@ UI implications:
 - Apps **MUST** treat missing/invalid evidence as a reason to **degrade**, not as permission to render anyway.
 - Any export/download UX **MUST** be checked against policy label + license/rights, and must be policy-safe (no restricted existence inference).
 
+### Promotion gates ↔ app responsibilities matrix (spec-aligned)
+
+> [!NOTE]
+> Gates A–G are a pipeline/CI concept, but apps must respect the consequences at runtime.
+
+| Gate | What it protects | Apps must do (runtime) | Apps must test (E2E / contract) |
+|---|---|---|---|
+| A — Identity & versioning | Stable dataset & dataset-version IDs | Show dataset_version_id; pin share links/view_state to version | Share link replay produces same dataset_version_id |
+| B — Licensing & rights | Legal reuse + attribution | Display license + rights holder; exports auto-include attribution; publish blocks if unclear | Export includes attribution/license; publish blocked when rights missing |
+| C — Sensitivity & redaction plan | Prevent sensitive leakage | Display policy_label + obligations; generalized derivatives for public | Restricted layers denied / generalized; no coordinate leaks |
+| D — Catalog triplet validation | Deterministic metadata + cross-links | Navigate DCAT↔STAC↔PROV without client inference; degrade if broken | Link-check failures degrade to “untrusted” |
+| E — Run receipt & checksums | Reproducibility + integrity | ReceiptViewer available; show digests when allowed | Receipt renders schema-valid; “untrusted” fallback safe |
+| F — Policy tests & contract tests | Same semantics CI/runtime; evidence resolvable | Treat policy as authoritative; require resolvable citations | CI-like fixtures: allow + deny/no-leak evidence resolution |
+| G — Optional production posture | Supply-chain + perf + a11y | Display trust badges (policy-safe); keep UX accessible | a11y smoke tests for EvidenceDrawer; perf smoke for resolve |
+
 ---
 
 ## Catalogs and provenance as contract surfaces
 
 Catalogs are not “nice metadata.” They are the canonical interface between pipeline outputs and runtime surfaces.
 
-### What this means for apps
+### What this means for apps — CONFIRMED (design)
 
 - Apps should treat the **catalog triplet** (DCAT + STAC + PROV) as the authoritative source for:
   - dataset identity + DatasetVersion identity
@@ -306,10 +372,7 @@ Catalogs are not “nice metadata.” They are the canonical interface between p
 
 These are not optional polish. They are the user-visible governance contract.
 
-### Trust-surface requirements by app type
-
-> [!NOTE]
-> This is **CONFIRMED (design)** as a target posture. Confirm exact implementations in-repo.
+### Trust-surface requirements by app type (design target)
 
 | App type | Evidence Drawer | DatasetVersion + Policy badges | ReceiptViewer | Provenance panel | What-changed (versions) | Exports gated by policy/rights |
 |---|---:|---:|---:|---:|---:|---:|
@@ -320,48 +383,94 @@ These are not optional polish. They are the user-visible governance contract.
 | Admin/Steward | ✅ MUST | ✅ MUST | ✅ MUST | ✅ MUST | ✅ SHOULD | ✅ MUST |
 | CLI | N/A | N/A | ✅ SHOULD (read) | ✅ SHOULD | ✅ MAY | ✅ MUST (server-side) |
 
-### Evidence drawer minimum fields
+### Evidence drawer minimum fields (spec-aligned)
 
-- Evidence bundle ID and digest
-- DatasetVersion ID and dataset name
-- License and rights holder attribution
-- Validation status + QA summary (policy-safe)
-- Provenance chain link to run receipt
-- Obligations/redactions applied
-- Policy-safe access messaging (deny/abstain states)
+At minimum (policy-safe):
+
+- Evidence bundle ID + digest
+- DatasetVersion ID + dataset name
+- License + rights holder (with attribution text)
+- Freshness (last run timestamp) + validation status
+- Provenance chain (run receipt link)
+- Artifact links (only if policy allows)
+- Redactions applied (obligations), with user-facing explanation
 
 > [!WARNING]
 > Evidence UX must never become a data exfiltration path. “Evidence exists” must not leak restricted existence unless policy allows acknowledging existence.
 
 ---
 
-## Evidence resolver expectations
+## Evidence resolver and citation contract
 
-Evidence resolution is a **contract surface** (not a best-effort UI feature).
+Evidence resolution is a **contract surface** (not a best-effort UI feature). Apps must treat it as authoritative.
 
-### Required posture
+### EvidenceRef schemes (minimum set)
 
-- Apps **MUST** treat the evidence resolver as authoritative for citations/evidence bundles.
-- Evidence resolver **MUST**:
-  - accept EvidenceRef (`scheme://...`) *or* a structured reference (e.g., dataset_version + record id + span)
-  - apply policy and return allow/deny + obligations
-  - return an EvidenceBundle with:
-    - human view (renderable card)
-    - machine metadata (JSON)
-    - artifact links (**only if allowed**)
-    - digests + dataset_version ids
-    - audit references
-- Apps **SHOULD** be able to fetch/render an EvidenceBundle in **≤ 2 calls** (e.g., resolve → fetch bundle), otherwise degrade safely.
+**CONFIRMED (design expectation):** EvidenceRefs are scheme-based identifiers that resolve deterministically.  
+**DEFAULT (recommended):** support the starter schemes below unless your repo defines otherwise.  
+**Minimum verification step:** find the repo’s EvidenceRef scheme registry (or evidence resolver docs) and update.
+
+Starter schemes:
+- `dcat://…`
+- `stac://…`
+- `prov://…`
+- `doc://…`
+- `graph://…`
+- `tile://…`
+
+### EvidenceBundle shape (minimum expectations)
+
+Apps should assume Evidence Resolver returns an **EvidenceBundle** that is:
+
+- policy-evaluated (allow/deny + obligations)
+- version-pinned (dataset_version_id present)
+- inspectable (human summary + machine metadata)
+- reproducible (digests/checksums and/or stable artifact identifiers)
+- auditable (audit reference / run id)
+
+> [!PROPOSED] Example (shape only; values illustrative)
+```json
+{
+  "bundle_id": "kfm://evidence/…",
+  "dataset_version_id": "kfm://dataset/@…",
+  "policy": { "decision": "allow", "label": "public", "obligations": [] },
+  "citations": [{ "kind": "stac_item", "ref": "stac://…" }],
+  "digests": [{ "alg": "sha256", "value": "…" }],
+  "provenance": { "run_receipt_ref": "kfm://run/…" },
+  "human": { "title": "…", "summary": "…", "attribution": "…" },
+  "links": [{ "rel": "artifact", "href": "…", "policy_allowed": true }]
+}
+```
+
+### Fail-closed UI behavior (required)
+
+- If evidence is unresolvable → show “untrusted” / abstain.
+- If policy denies → show deny UX (policy-safe; no restricted inference).
+- Do not assemble DIY citations in clients; EvidenceRefs must resolve to EvidenceBundles.
+
+### Performance and UX expectation
+
+- Apps **SHOULD** fetch/render an EvidenceBundle in **≤ 2 calls**, otherwise degrade safely.
   - click feature → resolve evidence → view bundle
-  - click citation → resolve evidence → view same bundle
+  - click citation → resolve evidence → view bundle
 
-### Fail-closed UI behavior
+---
 
-- if evidence is unresolvable → show “untrusted” / abstain
-- if policy denies → show deny UX (policy-safe)
+## Story Nodes and publish gates
+
+If Story Mode exists, publishing is a governed event — not just “saving markdown.”
+
+**Required posture (design):**
+- A Story Node includes narrative + a sidecar capturing:
+  - view_state (map bbox, time window, layers)
+  - dataset_version pins
+  - citations (EvidenceRefs)
+- Publishing is blocked unless:
+  - review state is recorded, and
+  - every citation resolves (and is policy-allowed) through the Evidence Resolver.
 
 > [!NOTE]
-> Do not build DIY citations in clients. EvidenceRefs must resolve to EvidenceBundles.
+> Publishing gates belong server-side (governed API). Apps display publish readiness and failures in policy-safe terms.
 
 ---
 
@@ -405,14 +514,14 @@ For broad release, Focus Mode **SHOULD** be gated by an evaluation harness:
 
 Use this checklist when reviewing new app features (especially exports, sharing, search, and AI).
 
-- TM-001 **Trust membrane:** Does the frontend ever fetch directly from object storage or databases? **Expected: NO**
-- TM-002 **Restricted inference:** Can a public user infer restricted dataset existence via errors, timing, caching, or empty states? **Expected: NO**
-- TM-003 **Exports:** Are downloads/exports checked against policy labels and rights, and do exports include required attribution/license text when applicable? **Expected: YES**
-- TM-004 **Caching:** Can tiles/search results leak across roles due to shared caches? **Expected: NO**
-- TM-005 **Focus injection:** Can retrieved content prompt-inject the system into policy bypass? **Expected: mitigated**
-- TM-006 **Audit data safety:** Are audit logs redacted and access-controlled (PII safety)? **Expected: YES**
-- TM-007 **Credential scope:** Are tokens short-lived and least-privilege? **Expected: YES**
-- TM-008 **Artifact immutability:** Are rendered artifacts immutable-by-digest where applicable? **Expected: YES**
+- TM-001 **Trust membrane:** Does the frontend ever fetch directly from storage/DB? **Expected: NO**
+- TM-002 **Backend layering:** Does the backend bypass repository interfaces? **Expected: NO**
+- TM-003 **Restricted inference:** Can a public user infer restricted dataset existence via errors/timing/caching? **Expected: mitigated (policy-safe errors)**
+- TM-004 **Exports:** Do downloads/exports include license + attribution automatically? **Expected: YES**
+- TM-005 **Publishing:** Does Story publishing block if rights/citations are unclear? **Expected: YES**
+- TM-006 **Focus injection:** Is prompt-injection / tool-bypass mitigated (tool allowlist, citation gate, policy filters)? **Expected: YES**
+- TM-007 **Audit safety:** Are audit logs redacted + access-controlled? **Expected: YES**
+- TM-008 **Determinism:** Is deterministic hashing recomputable in CI? **Expected: YES**
 - TM-009 **UI trust flows tested:** Are evidence/deny/abstain flows covered by E2E tests? **Expected: YES**
 
 ---
@@ -421,7 +530,7 @@ Use this checklist when reviewing new app features (especially exports, sharing,
 
 ```mermaid
 flowchart LR
-  subgraph Apps["apps/ or web/apps/"]
+  subgraph Apps["apps/ or web/apps/ (runnable surfaces)"]
     Map["Map UI"]
     Globe["Globe UI"]
     Story["Story UI"]
@@ -431,12 +540,13 @@ flowchart LR
     CLI["Operator CLI"]
   end
 
-  Apps --> API["Governed API"]
-  API --> Policy["Policy engine"]
+  Apps --> API["Governed API (PEP)"]
+  API --> Policy["Policy pack (policy-as-code)"]
   API --> Evidence["Evidence resolver"]
   API --> CatalogLineage["Catalog/Lineage (DCAT + STAC + PROV + run receipts)"]
   API --> Projections["Rebuildable projections (DB/search/tiles/graph)"]
-  CatalogLineage --> Canonical["Canonical artifacts + receipts + audit"]
+
+  CatalogLineage --> Canonical["Canonical artifacts + receipts + audit ledger"]
   Projections --> Canonical
 ```
 
@@ -470,9 +580,9 @@ sequenceDiagram
 
 ### App registry table (human)
 
-| App path | Type | Primary surface | Policy label | Primary contract references | Owner | Status |
+| App path | Type | Primary surface | policy_label | Contract references | Owner | Status |
 |---|---|---|---|---|---|---|
-| `TBD` | web / desktop / cli / other | map / globe / story / catalog / focus / admin / ops | public / restricted / internal | `TBD` | `TBD` | draft |
+| `TBD` | web / desktop / cli / other | map / globe / story / catalog / focus / admin / ops | public / public_generalized / restricted / internal / secret | `TBD` | `TBD` | draft |
 | `TBD` |  |  |  |  |  |  |
 
 ### Machine-readable App Registry (PROPOSED)
@@ -486,7 +596,7 @@ Template:
 ```json
 {
   "kfm_app_registry_version": "v1",
-  "updated": "2026-03-01",
+  "updated": "2026-03-02",
   "apps": [
     {
       "app_id": "kfm.app.map",
@@ -494,7 +604,10 @@ Template:
       "surface": "map",
       "policy_label": "public",
       "owners": ["@kfm-engineering"],
-      "contracts": ["contracts/openapi/api.yaml#tag=tiles", "contracts/openapi/api.yaml#tag=evidence"],
+      "contracts": [
+        "openapi://contracts/openapi/api.yaml#tag=tiles",
+        "openapi://contracts/openapi/api.yaml#tag=evidence"
+      ],
       "trust_surfaces": ["evidence_drawer", "receipt_viewer", "provenance_panel"],
       "capabilities": { "view_state": true, "exports": ["png"], "focus_mode": false }
     }
@@ -510,6 +623,7 @@ Template:
 - [ ] Every public surface declares its trust surfaces (EvidenceDrawer/ReceiptViewer/provenance/what-changed).
 - [ ] Every map/story/focus surface declares whether it supports reproducible `view_state`.
 - [ ] Owners resolved via `CODEOWNERS` and/or registry.
+- [ ] CI validates registry format + controlled vocab usage; failures block merges.
 
 ---
 
@@ -530,30 +644,24 @@ apps/ or web/apps/
 Use only if the repo does not already enforce a different convention.
 
 ```text
-apps/                                                            | # App surfaces (UI + services) + governed registry
-├─ README.md                                                     | # Directory contract + App Registry index (human-readable)
+apps/                                                            | # App surfaces + registry (human + machine)
+├─ README.md                                                     | # This doc: directory contract + App Registry index
 │
 ├─ registry/                                                     | # Machine-readable app inventory + CI validation fixtures
 │  ├─ README.md                                                  | # Registry purpose + DoD + CI validation rules
-│  ├─ apps.v1.json                                               | # Canonical App Registry (names, owners, policy labels, capabilities)
+│  ├─ apps.v1.json                                               | # Canonical App Registry
 │  ├─ fixtures/                                                  | # CI fixtures (no secrets; policy-safe)
-│  │  ├─ apps.v1.minimal.json                                    | # Smallest valid registry example
-│  │  └─ apps.v1.invalid.examples.json                           | # Intentionally invalid cases for fail-closed validation
+│  │  ├─ apps.v1.minimal.json
+│  │  └─ apps.v1.invalid.examples.json
 │  └─ _generated/                                                | # ⚠️ Generated snapshots (gitignored or policy-committed)
-│     └─ manifests.index.json                                    | # Optional flattened index from per-app manifests
+│     └─ manifests.index.json
 │
-├─ api/                                                          | # ✅ Governed API (runtime trust membrane / PEP)
-│  ├─ README.md                                                  | # Service overview, run/dev, contracts, policy, observability
-│  ├─ kfm.app.json                                               | # ✅ App manifest (policy_label, contracts, capabilities)
-│  ├─ Dockerfile                                                 | # ⚠️ If deploying as a container
-│  └─ ...                                                        | # (see API directory docs; do not assume tech stack)
-│
-├─ map/                                                          | # Map Explorer UI (map-first browse + inspect + export)
-├─ story/                                                        | # Story Mode UI (publish/read narratives with citations)
-├─ catalog/                                                      | # Catalog UI (browse datasets, versions, lineage; evidence-backed)
-├─ focus/                                                        | # Focus Mode UI (ask → cite-or-abstain answers + audit)
-├─ admin/                                                        | # Admin/Steward UI (review, promote, audit, policy fixtures)
-└─ cli/                                                          | # CLI surface (operator tooling; policy-aware)
+├─ map/                                                          | # Map Explorer UI
+├─ story/                                                        | # Story UI
+├─ catalog/                                                      | # Catalog UI
+├─ focus/                                                        | # Focus Mode UI
+├─ admin/                                                        | # Admin/Steward UI
+└─ cli/                                                          | # Operator CLI surface
 ```
 
 ### Recommended layout template (web/apps)
@@ -614,7 +722,7 @@ Each app directory **SHOULD** include an app manifest file (example: `kfm.app.js
 
 ### Minimal manifest rules (PROPOSED)
 
-- `policy_label` is mandatory.
+- `policy_label` is mandatory and must be from the controlled vocabulary.
 - `governed_api.contracts` is mandatory for any app that makes API calls.
 - `trust_surfaces` is mandatory for any public-facing surface that renders layers or claims.
 - `capabilities.view_state = true` SHOULD be set for Map/Story/Focus surfaces that emit share links.
@@ -648,7 +756,7 @@ status: draft|review|published
 owners: <team or names>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: public|restricted|...
+policy_label: public|public_generalized|restricted|internal|secret
 related:
   - ../README.md
 tags: [kfm, apps]
@@ -664,14 +772,18 @@ notes:
 > [!IMPORTANT]
 > This section is intentionally generic until the repo’s tooling is verified.
 
-### Quick start pattern
+### Quick start pattern (fail-closed)
 
 1. Identify the workspace toolchain from repo root (and whether frontend is rooted at `web/`).
 2. Install dependencies using the repo’s chosen package manager.
 3. Run the app’s dev target from its directory.
 4. Confirm it points to a **governed API** instance (not direct storage/DB).
+5. Exercise trust flows:
+   - open EvidenceDrawer
+   - simulate deny/abstain
+   - verify no direct store access occurs
 
-### Proposed environment variables
+### Proposed environment variables (PROPOSED)
 
 - `KFM_API_BASE_URL` — base URL for the governed API gateway
 - `KFM_ENV` — `local|dev|stage|prod`
@@ -704,13 +816,13 @@ Apps are safety-critical surfaces. Treat app changes like production changes.
   - [ ] “public” evidence resolves to bundle with allowed artifacts
   - [ ] “restricted” evidence returns deny/403 with **no sensitive metadata leakage**
 - [ ] spec_hash stability tests (no identity drift)
-- [ ] golden tests for canonicalization and deterministic outputs (reproducibility)
+- [ ] golden tests for deterministic outputs (reproducibility)
 
 ### Anti-skip requirement (merge posture)
 
 > [!WARNING]
 > A required app gate must not be skippable via `paths:` filters, `if:` conditions, or job fanout.
-> Prefer a single always-runs **gate-summary** job as the required check (see `../.github/README.md` if present).
+> Prefer a single always-runs **gate-summary** job as the required check.
 
 ### Recommended E2E trust flows
 
@@ -721,26 +833,25 @@ Apps are safety-critical surfaces. Treat app changes like production changes.
 - ask a Focus question → citations present or abstain with reasons + audit_ref
 - attempt export → policy + rights enforced; policy-safe errors; no restricted inference
 
-### Static guardrail examples (PROPOSED)
-
-Because tech stacks vary, the implementation varies. The invariant does not: **apps cannot bypass governed APIs**.
-
-Possible approaches:
-- dependency allow/deny list in CI (fail if an app depends on DB/object-store/index client SDKs)
-- linter rules blocking direct calls to non-governed origins (where applicable)
-- egress policy in dev/stage to prevent direct access to internal stores from UI origins
-- targeted grep checks for known bypass libraries (tune to avoid false positives)
-
 ---
 
 ## Security, privacy, and sensitivity
 
-### Secrets and credentials
-- Never ship secrets in clients.
-- Prefer short-lived tokens scoped to least privilege.
-- Do not log tokens or sensitive request payloads.
+### Policy-as-code posture
 
-### Rights and licensing (policy input)
+Apps **display** policy decisions; they do not invent them.
+
+- Do not implement “shadow policy” logic in clients.
+- If policy decisions are missing or ambiguous, degrade to deny/abstain (policy-safe).
+
+### Sensitive locations and culturally restricted material
+
+- do not render exact coordinates in public UIs for vulnerable/restricted sites
+- prefer generalization and show a governance note explaining why
+- never allow share links to “accidentally” encode restricted geometry
+
+### Rights and licensing
+
 - Export functions should include attribution and license text automatically (when exports exist).
 - Story publishing flows should block if rights are unclear for included media.
 - If rights/terms are unclear, degrade to **metadata-only** and route to steward review.
@@ -754,12 +865,6 @@ Possible approaches:
   - treat external links as hostile by default
 - if evidence cannot be verified or resolved, render as **untrusted** and block publish flows
 
-### Sensitive locations and culturally restricted material
-
-- do not render exact coordinates in public UIs for vulnerable/restricted sites
-- prefer generalization and show a governance note explaining why
-- never allow share links to “accidentally” encode restricted geometry
-
 ### Abstention and restriction UX
 
 Abstention is a feature. The UI must:
@@ -772,7 +877,7 @@ Abstention is a feature. The UI must:
 
 ## Add a new app
 
-### Checklist
+### Checklist (fail-closed)
 
 1. Create app directory (choose the repo convention):
    - `apps/<new-app>/README.md` **or** `web/apps/<new-app>/README.md`
@@ -786,25 +891,25 @@ Abstention is a feature. The UI must:
 4. Add tests:
    - unit, contract, E2E, accessibility
    - evidence resolver contract tests (allow + deny/no-leak)
-   - spec_hash stability + golden determinism tests where applicable
+   - deterministic identity tests (no “latest drift”)
 5. Threat-model the change:
    - run [Threat model checklist](#threat-model-checklist)
 6. Register the app:
    - add to [App registry](#app-registry) (human + machine registry if used)
 7. Update this README:
    - regenerate “Current layout”
-   - ensure the crosswalk reflects the chosen convention
+   - ensure UNKNOWNs have defaults + minimum verification steps
 
 ---
 
 ## Glossary
 
-- **Truth path lifecycle:** upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/LINEAGE (DCAT/STAC/PROV + run receipts) → projections → governed API → apps
+- **Truth path lifecycle:** upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET (DCAT + STAC + PROV + run receipts) → projections → governed API → apps
 - **Trust membrane:** enforced boundary where policy and provenance are applied; clients never access storage directly
-- **Promotion Contract:** fail-closed gates that block serving any dataset version until identity, rights, sensitivity, catalogs, receipts, and policy tests validate
+- **Promotion Contract:** fail-closed gates blocking any dataset version from being served until identity, rights, sensitivity, catalogs, receipts, and policy/contract tests validate
 - **Evidence-first UX:** every visible claim opens into provenance, rights, and validation details
-- **EvidenceRef:** resolvable reference used as a citation pointer
-- **EvidenceBundle:** resolved evidence card (human + machine fields, digests, policy decision, audit refs)
+- **EvidenceRef:** resolvable reference used as a citation pointer (scheme-based)
+- **EvidenceBundle:** resolved evidence payload (human + machine fields, digests, policy decision, audit refs)
 - **ReceiptViewer:** safe read-only viewer for run receipts / promotion manifests; schema-validates and surfaces verification status
 - **Trust badges:** compact UI indicators summarizing provenance/quality without leaking restricted details
 - **Cite-or-abstain:** answer only when citations can be verified; otherwise abstain or reduce scope
