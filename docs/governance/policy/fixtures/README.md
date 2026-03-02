@@ -110,30 +110,21 @@ It exists to support:
 This is a **recommended** layout (keep it simple and predictable):
 
 ```
-docs/governance/policy/fixtures/
-  README.md
-
-  cases/
-    <case_id>/
-      input.json
-      expected.json
-      notes.md
-
-  schemas/
-    policy_fixture_input.schema.json
-    policy_fixture_expected.schema.json
-
-  catalogs/
-    policy_fixture_index.yaml
-```
-
-**Notes**
-- `case_id` should be stable and descriptive:
-  - `public_read_dataset_allow`
-  - `restricted_read_dataset_deny_no_leak`
-  - `public_read_sensitive_location_allow_with_generalize`
-  - `evidence_resolve_restricted_deny`
-
+docs/governance/policy/fixtures/                         # Policy fixture root (CI parity + regression; deterministic; no secrets)
+├─ README.md                                              # Fixture philosophy, naming, required fields, how CI runs suites, and update rules
+│
+├─ cases/                                                 # Fixture cases (one folder per case_id)
+│  └─ <case_id>/                                          # Stable case id (kebab/snake-case; referenced by tests)
+│     ├─ input.json                                       # Policy input document (user/action/resource/context; policy-safe)
+│     ├─ expected.json                                    # Expected decision envelope (allow/deny/obligations/reason codes)
+│     └─ notes.md                                         # Human notes (why this case exists, edge conditions, links to issues/ADRs)
+│
+├─ schemas/                                               # Schemas that validate fixtures themselves (fail-closed)
+│  ├─ policy_fixture_input.schema.json                    # Schema for cases/*/input.json
+│  └─ policy_fixture_expected.schema.json                 # Schema for cases/*/expected.json
+│
+└─ catalogs/                                              # OPTIONAL: machine-readable indexes for CI/reporting
+   └─ policy_fixture_index.yaml                           # Fixture catalog (case_id, labels, tags, owners, suite membership)
 ---
 
 ## Fixture contract
