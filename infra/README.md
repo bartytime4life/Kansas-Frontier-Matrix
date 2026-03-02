@@ -2,11 +2,11 @@
 doc_id: kfm://doc/5d0d8d5a-6b3a-4a6e-bde4-7b8d7b8f9d0a
 title: infra/README
 type: standard
-version: v2
+version: v3
 status: draft
 owners: platform-infra
 created: 2026-02-25
-updated: 2026-03-01
+updated: 2026-03-02
 policy_label: restricted
 related:
   - ../README.md
@@ -19,6 +19,7 @@ related:
 tags: [kfm, infra, iac, ops, gitops, kubernetes, terraform, security, observability, trust-membrane, truth-path, promotion-contract, audit-ledger, receipts, parity]
 notes:
   - KFM-aligned infra contract: trust membrane + truth path zone controls + fail-closed promotion + auditability.
+  - Aligned to Promotion Contract v1 + refined zone definitions (RAW / WORK+QUARANTINE / PROCESSED / CATALOG-TRIPLET / PUBLISHED).
   - TODO (repo): add cross-links to `../policy/` and `../tools/` once confirmed on this branch.
   - Intentionally stack-agnostic until repo reality is confirmed (Terraform/Pulumi, Helm/Kustomize, Argo/Flux).
   - Never commit secrets. Store only references to secret managers.
@@ -42,28 +43,27 @@ Infrastructure-as-Code (IaC), deployment assets, and operational controls for Ka
 ![truth-path](https://img.shields.io/badge/truth%20path-zones%20enforced-critical)
 ![promotion](https://img.shields.io/badge/promotion%20contract-fail--closed-critical)
 ![receipts](https://img.shields.io/badge/receipts-plan%20%2B%20apply%20%2B%20drift-informational)
+![parity](https://img.shields.io/badge/policy%20parity-CI%20%3D%3D%20runtime-critical)
 ![rollback](https://img.shields.io/badge/rollback-git%20revert%20%2B%20reconcile-informational)
 
 ---
 
-## Navigation
+## Quick navigation
 
 - [Truth status legend](#truth-status-legend)
 - [Purpose](#purpose)
+- [Infra contract surfaces](#infra-contract-surfaces)
 - [Directory contract](#directory-contract)
 - [Where this fits in the repo](#where-this-fits-in-the-repo)
-- [Truth path and promotion contract](#truth-path-and-promotion-contract)
-- [Infra responsibilities for KFM invariants](#infra-responsibilities-for-kfm-invariants)
-- [First follow-up checklist](#first-follow-up-checklist)
+- [Truth path zones](#truth-path-zones)
+- [Promotion Contract v1](#promotion-contract-v1)
+- [Policy parity architecture](#policy-parity-architecture)
+- [Receipts, attestations, and audit](#receipts-attestations-and-audit)
 - [Non-negotiable invariants](#non-negotiable-invariants)
-- [Environments and promotion](#environments-and-promotion)
+- [Environments and promotion lanes](#environments-and-promotion-lanes)
 - [Change workflow and gates](#change-workflow-and-gates)
-- [Receipts and auditability](#receipts-and-auditability)
-- [Storage and zone controls](#storage-and-zone-controls)
-- [Policy parity and enforcement points](#policy-parity-and-enforcement-points)
 - [Security and secrets](#security-and-secrets)
 - [Observability](#observability)
-- [Risk register](#risk-register)
 - [Disaster recovery](#disaster-recovery)
 - [Directory layout](#directory-layout)
 - [Runbooks](#runbooks)
@@ -76,6 +76,7 @@ Infrastructure-as-Code (IaC), deployment assets, and operational controls for Ka
 ### Evidence tags (truth discipline)
 
 - **CONFIRMED (design):** required KFM invariants (non-negotiable)
+- **CONFIRMED (docs):** explicitly stated in KFM governance/design documents (but still verify repo implementation)
 - **UNKNOWN (repo):** toolchain/details not verified on this branch yet
 - **PROPOSED:** recommended patterns to adopt once verified
 
@@ -86,7 +87,7 @@ Infrastructure-as-Code (IaC), deployment assets, and operational controls for Ka
 - **MAY** = optional; use when it reduces risk or complexity
 
 > [!IMPORTANT]
-> If this README contradicts repo reality (paths, tools, emitted CI checks), treat the repo as the source of truth and update this README in the same PR.
+> If this README contradicts repo reality (paths, tools, CI check names), treat the repo as the source of truth and update this README in the same PR.
 
 [↑ Back to top](#top)
 
@@ -100,11 +101,37 @@ Design goals:
 
 - **Reproducible:** infra derives from git + deterministic tooling (no click-ops as the source of truth)
 - **Governed:** changes cross a policy boundary (PR review + required checks)
-- **Auditable:** plan/apply receipts trace environment mutations to commit SHAs
-- **Safe by default:** no secrets committed; least privilege; controlled rollout
+- **Auditable:** plan/apply receipts trace environment mutations to commit SHAs + actor principals
+- **Safe by default:** no secrets committed; least privilege; controlled rollout; policy parity (CI == runtime)
 
 > [!NOTE]
 > The goal is governed operations that preserve KFM’s credibility, not “move fast and hope.”
+
+[↑ Back to top](#top)
+
+---
+
+## Infra contract surfaces
+
+Infra is not “just deployment.” In KFM, infra is part of the **evidence chain** and must make it mechanically hard to violate governance.
+
+### Contract surfaces owned or enabled by infra
+
+- **Storage zones + IAM** for truth path artifacts (RAW/WORK/PROCESSED/CATALOG/PUBLISHED)
+- **Policy engine deployment** (PDP) and enforcement wiring (PEPs)
+- **Catalog + evidence services availability** (catalog reader, evidence resolver, policy gate service)
+- **Receipt and audit sinks** (apply receipts, drift reports, run receipts and attestations storage)
+- **Runtime perimeter** (network policies, private endpoints, ingress rules, egress allowlists)
+- **Supply chain hooks** (image pinning, provenance attestations, signature verification, SBOM wiring)
+
+### What infra must not do
+
+Infra MUST NOT introduce a bypass around governance (examples):
+
+- public buckets as a “shortcut CDN” for restricted artifacts
+- UI directly reading PostGIS, object storage, indexes, or graph stores
+- tile/export hosting that bypasses policy and obligations
+- embedding admin/service credentials in clients
 
 [↑ Back to top](#top)
 
@@ -120,7 +147,7 @@ Design goals:
 
 ✅ Kubernetes manifests / Helm charts / Kustomize overlays (if applicable)
 
-✅ GitOps controller configuration (Argo CD/Flux/etc.), environment overlays, and reconciliation policy
+✅ GitOps controller configuration (Argo CD/Flux/etc.), environment overlays, reconciliation policy
 
 ✅ Platform guardrails:
 - admission policies (OPA Gatekeeper/Kyverno/etc.)
@@ -132,16 +159,17 @@ Design goals:
 ✅ Deterministic helper scripts:
 - `fmt`, `validate`, `plan`, `apply`, `drift`, `smoke` (documented, no hidden mutations)
 
-✅ Receipt *schemas/templates* (optional):
-- JSON Schema for infra apply receipts (but **not** real receipts)
+✅ Receipt *schemas/templates* and validation configs (optional):
+- JSON Schemas for infra apply receipts and drift reports
+- policy fixtures for “no-public-access” invariants
 
 ### What must not go here (fail closed)
 
-- ❌ Plaintext secrets, tokens, kubeconfigs, `.env` files with real values  
-- ❌ Private keys/certificates, database dumps  
-- ❌ Raw/work/processed artifacts, catalogs, or *runtime* receipts (those belong under `data/` and/or canonical stores)  
-- ❌ One-off “fix prod” scripts without PR trail + audit  
-- ❌ Anything that creates a bypass around governed APIs (public buckets, direct DB access from clients)
+- ❌ plaintext secrets, tokens, kubeconfigs, `.env` with real values  
+- ❌ private keys/certificates, database dumps  
+- ❌ dataset artifacts from truth-path zones (those belong under `data/` or canonical stores)  
+- ❌ one-off “fix prod” scripts without PR trail + audit receipts  
+- ❌ anything that creates a bypass around governed APIs
 
 > [!WARNING]
 > If it would be unsafe to paste into a public issue, it should not be committed here unless strictly necessary and access-controlled—and even then, prefer references.
@@ -152,126 +180,163 @@ Design goals:
 
 ## Where this fits in the repo
 
-`infra/` is the **operational perimeter** around the governed system:
+`infra/` is the **operational perimeter** around the governed system.
 
 > [!NOTE]
-> **UNKNOWN (repo):** the paths below reflect the documented target topology; confirm on this branch (see [First follow-up checklist](#first-follow-up-checklist)) and update links if different.
+> **UNKNOWN (repo):** exact module names/paths.  
+> Treat the list below as a documented target topology; verify on this branch and update.
 
-- Canonical data lifecycle (truth path): `UPSTREAM → RAW → WORK/Quarantine → PROCESSED → CATALOG/TRIPLET → PUBLISHED`
-- Enforceable interfaces: `contracts/` (OpenAPI + JSON schemas)
-- Governed configuration wiring: `configs/`
-- Policy-as-code source: `policy/`
-- Validators and link checkers (recommended): `tools/`
-- Runtime surfaces: `apps/` (UI/CLI) and `apps/api/` (governed API / PEP)
+- `contracts/` — OpenAPI + JSON Schemas + controlled vocabularies
+- `policy/` — policy-as-code bundle(s) + fixtures/tests
+- `data/` — truth path zones (RAW/WORK/PROCESSED/CATALOG/PUBLISHED) and registries
+- `tools/` — validators + linkcheckers + gate runners
+- `apps/` — UI + API + workers (runnable services)
+- `docs/` — runbooks + ADRs + architecture docs
 
 > [!IMPORTANT]
-> Infra must never become a bypass around governance:
+> Infra must never become a governance bypass:
 > - no direct public access to storage zones
-> - no public tile/export hosting that bypasses policy and obligations
-> - no “admin tokens embedded in UI” patterns
+> - no public catalog hosting for restricted content
+> - no unmanaged exports/tiles that avoid policy evaluation
 
 [↑ Back to top](#top)
 
 ---
 
-## Truth path and promotion contract
+## Truth path zones
 
-KFM’s truth path is not a metaphor — infra must make it **mechanically enforceable**.
+KFM’s lifecycle is not a metaphor — infra must make it mechanically enforceable.
 
 ```mermaid
 flowchart LR
   upstream["UPSTREAM"] --> raw["RAW"]
-  raw --> work["WORK / Quarantine"]
+  raw --> work["WORK"]
+  work --> quarantine["QUARANTINE"]
   work --> processed["PROCESSED"]
-  processed --> triplet["CATALOG / Triplet"]
-  triplet --> published["PUBLISHED"]
+  processed --> catalog["CATALOG TRIPLET"]
+  catalog --> published["PUBLISHED"]
 ```
 
-### Zone vocabulary (recommended)
+### Zone meanings (CONFIRMED docs)
 
-> [!NOTE]
-> **PROPOSED** until confirmed in repo: treat `policy_label` and `artifact.zone` as controlled vocabularies,
-> validated in CI, and used in storage/IAM rules.
+- **RAW**: immutable acquisition copies + checksums (append-only; supersede with new acquisition)
+- **WORK**: intermediate transforms, QA reports, candidate redactions/generalizations; may be rewritten
+- **QUARANTINE**: failed validation, unclear licensing, sensitivity concerns; **not promoted**
+- **PROCESSED**: publishable artifacts in approved formats + checksums + derived metadata for runtime
+- **CATALOG TRIPLET**: cross-linked **DCAT + STAC + PROV** describing metadata, assets, and lineage
+- **PUBLISHED**: governed runtime surfaces; may only serve promoted dataset versions
 
-- `policy_label` (starter): `public`, `public_generalized`, `restricted`, `restricted_sensitive_location`, `internal`, `embargoed`, `quarantine`
-- `artifact.zone` (starter): `raw`, `work`, `processed`, `catalog`, `published`
+### Canonical vs rebuildable (CONFIRMED docs)
 
-### Promotion Contract gates (minimum, fail-closed)
+Infra MUST protect canonical stores (harder to mutate) and allow safe rebuild of projections.
 
-Infra must enable the system to **block promotion** when any gate is missing or cannot be evaluated.
-
-| Gate | What must be present | Infra support (what we enforce/provide) |
-|---|---|---|
-| **A — Identity & versioning** | dataset IDs + deterministic hashes + content digests | immutable object paths; digest capture in receipts; runtime surfaces pinned to dataset_version_id |
-| **B — Licensing & rights** | license/rights metadata and terms snapshot | block “unknown license” artifacts from export surfaces; ensure attribution is deliverable at runtime |
-| **C — Sensitivity & redaction plan** | policy_label + obligations/generalization recorded | default-deny routing; prevent leaks via 403/404; enforce separate `public_generalized` outputs when needed |
-| **D — Catalog triplet validation** | DCAT + STAC + PROV validate and cross-link | validators in CI; catalogs accessible only via governed services; prevent direct public catalog hosting if restricted |
-| **E — QA thresholds** | dataset-specific QA checks and pass/fail thresholds | compute + storage for QA reports; quarantine routing; prevent “failed QA” from reaching PUBLISHED |
-| **F — Run receipt & audit record** | receipts include inputs, tooling, hashes, policy decisions | durable, access-controlled receipt store; time sync; retention rules; structured logs |
-| **G — Release manifest** | promotion recorded as a manifest that references artifact digests | release manifest storage; immutability; signature/attestation hooks (optional) |
+- **Canonical** (protect strongly):
+  - object storage artifacts (raw/work/processed)
+  - catalogs (DCAT/STAC/PROV profiles)
+  - audit ledger (append-only log)
+- **Rebuildable** (may be recreated from canonical + receipts):
+  - PostGIS tables derived from processed GeoParquet
+  - search index derived from processed texts/metadata
+  - graph edges derived from catalogs + entity resolution
+  - tile bundles derived from processed features
 
 [↑ Back to top](#top)
 
 ---
 
-## Infra responsibilities for KFM invariants
+## Promotion Contract v1
 
-This section is an **alignment matrix**: the KFM invariants are system-level; infra’s job is to **make them mechanically hard to violate**.
+Promotion is the act of moving a dataset version into the runtime surfaces. KFM requires promotion to **fail closed**: if a gate cannot be evaluated or fails, the dataset version must not be served.
 
-| KFM invariant (CONFIRMED design) | Infra controls (what we enforce) | Evidence (what we emit) |
+### Minimum gates (CONFIRMED docs)
+
+| Gate | What must be true (minimum credible set) | Infra support (what we enforce/provide) |
 |---|---|---|
-| Trust membrane (no direct DB/storage from clients) | network policies / security groups; private endpoints; deny public buckets; egress allowlists; UI has no store credentials | network policy manifests; IaC plan diff; “no-public” checks; runtime connectivity smoke test results |
-| Fail-closed promotion | branch protection + required checks; promotion pipeline cannot “skip” gates; enforce environment pinning | CI gate summary; promotion manifest; plan/apply receipts; release artifact list |
-| Canonical vs rebuildable stores | stronger protection on canonical stores; rebuildables can be recreated from receipts | infra state outputs; backup/retention config; restore verification checklist |
-| Policy parity (CI == runtime semantics) | pin policy bundle versions per env; surface versions in deployment metadata; block mismatches | environment manifest includes policy bundle digest; parity check output |
-| Auditability + rollback | PR trail required; apply restricted; drift detection; rollback procedures documented | apply receipt; drift report; rollback runbook link + test |
+| **A — Identity and versioning** | stable `dataset_id`; immutable `dataset_version_id` derived from deterministic `spec_hash` | immutable-by-version object paths; prevent “mutable latest” references on public surfaces |
+| **B — Licensing and rights metadata** | license is explicit; rights holder + attribution captured; unclear license stays in QUARANTINE | block distribution of “unknown license” artifacts; ensure license text/attribution can be delivered at runtime |
+| **C — Sensitivity classification and redaction plan** | `policy_label` assigned; redaction/generalization plan exists and is recorded in PROV for sensitive/restricted | default-deny routing; prevent leaks via 403/404; require separate `public_generalized` derivatives when needed |
+| **D — Catalog triplet validation** | DCAT exists; STAC exists where applicable; PROV exists; cross-links resolvable | validators + linkcheck in CI; runtime catalog read surfaces are policy-aware |
+| **E — Run receipt and checksums** | `run_receipt` exists for each producing run; inputs/outputs enumerated with checksums; environment recorded | durable receipt store; integrity verification tools; time sync; retention rules |
+| **F — Policy tests and contract tests** | OPA policy tests pass; evidence resolver resolves at least one EvidenceRef in CI; API schemas/contracts validate | policy bundle pinning by digest; CI parity gate; service contract tests; block promotion if “cannot evaluate” |
+| **G — Optional but recommended** | SBOM + build provenance; performance smoke checks; accessibility smoke checks | supply chain attestation hooks; perf smoke environment; e2e UI smoke checks (policy-safe) |
 
-> [!NOTE]
-> If any row above is **UNKNOWN (repo)** right now, treat this as a **PROPOSED** enforcement target and add the missing verification steps to the next infra PR.
+> [!IMPORTANT]
+> Gate evaluation MUST be monotonic and fail-closed:
+> - “unknown” is treated as “deny”
+> - missing artifacts are treated as “deny”
+> - unverifiable signatures/digests are treated as “deny”
 
 [↑ Back to top](#top)
 
 ---
 
-## First follow-up checklist
+## Policy parity architecture
 
-These steps convert **UNKNOWN (repo)** assumptions into repo-confirmed facts.
+KFM requires the same policy semantics in CI and runtime (or at minimum identical fixtures and outcomes). Otherwise, CI guarantees are meaningless.
 
-### Repo facts to confirm (fill in once)
+### Shared policy semantics (PDP/PEP model)
 
-- [ ] IaC tool: Terraform / Pulumi / other
-- [ ] Deployment model: GitOps / CI-driven apply / both
-- [ ] Kubernetes usage: yes/no; where add-ons live
-- [ ] Where overlays live: `infra/k8s/overlays/*`, `infra/gitops/env/*`, or elsewhere
-- [ ] Secrets manager: Secret Manager / Vault / ExternalSecrets / SealedSecrets / other
-- [ ] Required checks: actual emitted check names from PR checks UI
-- [ ] Environments: actual environment identifiers (`dev/stage/prod` or equivalent)
-- [ ] Runbooks: `docs/runbooks/` vs `infra/**`
+- **PDP (Policy Decision Point):** evaluates policy and returns allow or deny plus obligations
+- **PEPs (Policy Enforcement Points):**
+  - **CI**: schema validation + policy tests block merges
+  - **Runtime API**: policy checks before serving data
+  - **Evidence resolver**: policy checks before resolving evidence and rendering bundles
+  - **UI**: shows policy badges/notices; **UI never decides policy**
 
-### Minimum verification commands (read-only)
-
-```bash
-# Capture commit + tree (attach to PR)
-git rev-parse HEAD
-tree -L 3
-
-# Confirm infra subtrees
-find infra -maxdepth 2 -type d -print
-
-# Confirm workflows + CODEOWNERS routing
-ls -la .github/workflows .github/CODEOWNERS 2>/dev/null || true
-
-# Look for IaC/tools (examples)
-find infra -maxdepth 3 \
-  \( -name '*.tf' -o -name 'Pulumi.yaml' -o -name 'Chart.yaml' -o -name 'kustomization.yaml' \) \
-  | head
+```mermaid
+flowchart TB
+  ui["UI clients"] --> api["Governed API PEP"]
+  api --> pdp["Policy engine PDP"]
+  api --> resolver["Evidence resolver PEP"]
+  resolver --> catalogs["Catalog triplet"]
+  api --> stores["Stores and zones"]
 ```
 
-> [!TIP]
-> Once confirmed, update:
-> 1) [Directory layout](#directory-layout)  
-> 2) [Change workflow and gates](#change-workflow-and-gates) with real check names  
-> 3) [Runbooks](#runbooks) with real paths
+### Sensitivity defaults (PROPOSED baseline; align to KFM posture)
+
+- default deny for sensitive-location and restricted datasets
+- if any public representation is allowed, produce `public_generalized` derivatives
+- never leak restricted metadata in 403/404 responses
+- do not embed precise coordinates in Story Nodes or Focus Mode outputs unless policy explicitly allows
+- treat redaction/generalization as a first-class transform recorded in PROV
+
+[↑ Back to top](#top)
+
+---
+
+## Receipts, attestations, and audit
+
+Infra changes are part of KFM’s evidence chain. Treat them like governed runs.
+
+### Receipt types (baseline)
+
+| Receipt | When | Minimum content | Storage |
+|---|---|---|---|
+| **Plan diff** | every PR touching infra | commit SHA; tool versions; rendered diff/plan output; target env(s) | PR artifacts; optional durable store |
+| **Apply receipt** | every stage/prod mutation | commit SHA; actor principal; timestamps; tool versions; change summary; output digests | restricted audit sink; retention enforced |
+| **Drift report** | scheduled | drift summary; impacted resources; timestamp; last known good commit | restricted store + alert channel |
+| **Policy bundle digest** | every deploy | policy bundle digest pinned; fixture suite version | deployment metadata + logs |
+
+### Receipt fail-closed rules
+
+- If apply receipts are missing or not durable, treat as a **release blocker** for any environment that serves users.
+- If signatures are used, unverifiable signatures MUST be treated as **untrusted** and MUST NOT be promoted as “green”.
+- Receipts/logs MUST be classified and sanitized (no secrets; no restricted coordinates).
+
+### Suggested typed receipt shape (PROPOSED)
+
+```json
+{
+  "kind": "kfm.infra.ApplyReceipt",
+  "env": "prod",
+  "repo": { "commit": "SHA", "branch": "main" },
+  "actor": { "principal": "…", "method": "gitops|ci|manual" },
+  "tooling": [{ "name": "terraform|pulumi|kubectl|argocd", "version": "…" }],
+  "inputs": [{ "ref": "plan-artifact", "digest": "sha256:…" }],
+  "outputs": [{ "ref": "resource-state-summary", "digest": "sha256:…" }],
+  "timestamps": { "started": "RFC3339", "finished": "RFC3339" }
+}
+```
 
 [↑ Back to top](#top)
 
@@ -279,7 +344,7 @@ find infra -maxdepth 3 \
 
 ## Non-negotiable invariants
 
-These are **CONFIRMED (design)**. Infra changes must preserve them.
+These are **CONFIRMED (design)**. Infra changes MUST preserve them.
 
 ### 1) Trust membrane
 
@@ -292,14 +357,14 @@ These are **CONFIRMED (design)**. Infra changes must preserve them.
 
 ### 2) Fail-closed promotion
 
-Promotion gates MUST block any RAW → served jump.
+Promotion gates MUST block any RAW or WORK to served jump.
 
 If a required gate cannot be evaluated (missing catalogs, unclear license, missing policy label), the correct behavior is to **block promotion** and **deny serving**.
 
 ### 3) Canonical vs rebuildable
 
-- **Canonical:** object storage zones + catalog triplet + audit ledger
-- **Rebuildable:** PostGIS/search/graph/tiles/caches
+- Canonical: object storage zones + catalog triplet + audit ledger
+- Rebuildable: PostGIS, search, graph, tiles, caches
 
 Infra MUST protect canonical stores and MUST enable projections to be rebuilt safely.
 
@@ -314,18 +379,18 @@ Policy semantics MUST match between:
 Every production mutation MUST have:
 - PR trail
 - plan/diff artifact
-- apply receipt (who/what/when/tool versions)
+- apply receipt (who, what, when, tool versions)
 - rollback path (git revert + reconcile, or documented alternative)
 
 [↑ Back to top](#top)
 
 ---
 
-## Environments and promotion
+## Environments and promotion lanes
 
 > [!NOTE]
 > **UNKNOWN (repo):** exact environment names and promotion rules.  
-> This is a **PROPOSED** baseline until verified.
+> The table below is a **PROPOSED** baseline until verified.
 
 | Environment | Purpose | Change velocity | Promotion in | Promotion out |
 |---|---|---:|---|---|
@@ -335,10 +400,11 @@ Every production mutation MUST have:
 
 ### Promotion artifacts (minimum expectation)
 
-For any stage/prod promotion, capture:
+For any `stage` or `prod` promotion, capture:
+
 - commit SHA (and tag if used)
 - plan/diff artifact
-- policy gate results (promotion contract)
+- promotion gate results (Promotion Contract v1)
 - apply receipt (tool versions, actor principal, timestamps)
 - post-deploy verification (health + key policy flows)
 
@@ -353,12 +419,12 @@ For any stage/prod promotion, capture:
 ```mermaid
 flowchart TB
   author["Change author"] --> pr["Pull request"]
-  pr --> ci["CI checks<br/>fmt + validate + policy + plan"]
-  ci --> review["Required reviewers<br/>(CODEOWNERS)"]
+  pr --> ci["CI checks"]
+  ci --> review["Required reviewers"]
   review --> merge["Merge"]
-  merge --> cd["GitOps reconcile<br/>or controlled apply"]
-  cd --> verify["Post-deploy verification"]
-  verify --> receipt["Apply receipt + audit refs"]
+  merge --> reconcile["GitOps reconcile or controlled apply"]
+  reconcile --> verify["Post-deploy verification"]
+  verify --> receipt["Apply receipt and audit refs"]
 ```
 
 ### Minimum required gates (CI-enforced)
@@ -366,113 +432,14 @@ flowchart TB
 - Formatting/lint (IaC + YAML)
 - Static validation (terraform validate / helm template / kustomize build)
 - Secrets scan (block credential patterns)
+- “No-public-access” guardrails (deny public buckets, deny public DB endpoints)
 - Policy pack tests (default-deny; fixtures for allow/deny + obligations)
 - Plan/render diff attached to PR
 - Drift detection (scheduled; alerts on drift) — recommended
-- **Anti-skip:** required gates must not be bypassable via path filters or `if:` conditions
+- **Anti-skip:** required gates MUST NOT be bypassable via path filters or conditional `if:` logic
 
 > [!IMPORTANT]
 > Prefer a single always-runs **gate-summary** job as the required status check for branch protection.
-
-[↑ Back to top](#top)
-
----
-
-## Receipts and auditability
-
-Infra changes are part of KFM’s evidence chain. Treat them as governed runs.
-
-### Receipt types (PROPOSED)
-
-| Receipt | When | What it must include (minimum) | Stored where |
-|---|---|---|---|
-| **Plan diff** | every PR touching infra | commit SHA; tool versions; rendered diff/plan output; target env(s) | PR artifacts (CI) + durable store (optional) |
-| **Apply receipt** | every stage/prod apply | commit SHA; actor principal; timestamps; tool versions; change summary; output hash/digest | audit ledger / restricted store |
-| **Drift report** | scheduled | drift summary; affected resources; timestamp; last known good commit | alert channel + restricted store |
-
-> [!WARNING]
-> If apply receipts are missing or not durable, treat it as a **release blocker** for any environment that serves users.
-
-### Receipt schema sketch (PROPOSED)
-
-This is a suggested shape to standardize receipts across IaC tools (Terraform/Pulumi/K8s/GitOps):
-
-```json
-{
-  "kind": "kfm.infra.ApplyReceipt",
-  "env": "prod",
-  "repo": { "commit": "SHA", "branch": "main" },
-  "actor": { "principal": "…", "method": "gitops|ci|manual" },
-  "tooling": [{ "name": "terraform|pulumi|kubectl|argocd", "version": "…" }],
-  "inputs": [{ "ref": "plan-artifact", "digest": "…" }],
-  "outputs": [{ "ref": "resource-state-summary", "digest": "…" }],
-  "timestamps": { "started": "…", "finished": "…" }
-}
-```
-
-[↑ Back to top](#top)
-
----
-
-## Storage and zone controls
-
-Infra must encode truth path zones as **real controls**, not just folder names.
-
-### Zones (conceptual)
-
-- `raw/` — immutable acquisitions (append-only, strict access)
-- `work/` — intermediates and QA (restricted; may be rewritten)
-- `processed/` — publishable artifacts (immutable per version, policy-labeled)
-- `catalog/` — DCAT/STAC/PROV + run receipts (validated, cross-linked)
-- `published/` — governed runtime surfaces (served via PEP/API; policy enforced)
-- `audit/` — append-only ledger segments (restricted)
-
-> [!NOTE]
-> The KFM docs treat **WORK and Quarantine** as the same lifecycle zone; Quarantine is where failed gates live
-> until remediated.
-
-### Controls to encode (PROPOSED)
-
-- encryption at rest + TLS in transit
-- deny-by-default bucket policies
-- least-privilege IAM by zone and workload
-- lifecycle retention rules (especially RAW and AUDIT)
-- prevent direct public distribution bypassing governed APIs (tiles/exports)
-
-> [!WARNING]
-> Do not make tile hosting a loophole. Policy must apply to tiles/exports as strictly as to feature queries.
-
-[↑ Back to top](#top)
-
----
-
-## Policy parity and enforcement points
-
-Infra MUST support the same policy semantics in CI and runtime (parity).
-
-### Policy decision architecture (shared semantics)
-
-- **PDP (Policy Decision Point):** evaluates policy and returns allow/deny + obligations
-- **PEPs (Policy Enforcement Points):**
-  - CI gates (schema validation + policy tests block merges)
-  - Runtime API (policy checks before serving data)
-  - Evidence resolver (policy checks before resolving evidence and rendering bundles)
-  - UI (shows policy badges/notices; UI does not decide policy)
-
-### Sensitivity default rules (PROPOSED)
-
-- default deny for sensitive-location and restricted datasets
-- if any public representation is allowed, produce a separate `public_generalized` dataset version
-- never leak restricted metadata in 403/404 responses
-- do not embed precise coordinates in Stories or Focus Mode outputs unless policy explicitly allows
-- treat redaction/generalization as a first-class transform recorded in PROV
-
-### Licensing and rights (operational guardrails)
-
-- promotion gate requires license + rights holder for every distribution
-- “metadata-only reference” mode is allowed (catalog without mirroring content if rights do not allow)
-- export functions MUST include attribution and license text automatically
-- story publishing SHOULD block if rights are unclear for included media
 
 [↑ Back to top](#top)
 
@@ -490,10 +457,10 @@ Infra MUST support the same policy semantics in CI and runtime (parity).
 
 - least privilege per workload and environment
 - separate plan permissions from apply permissions
-- prefer short-lived credentials for CI runners
+- prefer short-lived credentials for CI runners (OIDC where possible)
 - define explicit break-glass procedures (documented; access-controlled)
 
-### Cluster/runtime hygiene (if applicable)
+### Runtime hygiene (if applicable)
 
 - image provenance/scanning before deploy (or documented substitute)
 - baseline pod security posture (restricted by default)
@@ -515,26 +482,8 @@ Infra changes must be observable across:
 2) **Runtime health** — latency, errors, capacity, SLOs, pod churn, pipeline throughput  
 3) **Governance signals (policy-safe)** — allow/deny counts by class, resolver success rates, export denials, promotion gate summaries
 
-> [!NOTE]
-> Observability must be policy-safe: do not log restricted coordinates, PII, or sensitive dataset identifiers into public dashboards.
-
-[↑ Back to top](#top)
-
----
-
-## Risk register
-
-This README is not a full risk register, but infra work should explicitly track at least these risks (starter list).
-
-| Risk | Likelihood | Impact | Minimum infra mitigation |
-|---|---:|---:|---|
-| Policy bypass via direct DB/storage access | Medium | High | enforce trust membrane with private endpoints + default-deny network policies + CI checks |
-| Licensing violation (unlicensed media mirrored) | Medium | High | promotion gates require rights metadata; support metadata-only reference mode |
-| Sensitive location leakage (archaeology/species) | Medium | High | default deny; `public_generalized` derivatives; redaction obligations tested and logged |
-| Audit logs contain PII or restricted identifiers | Medium | High | classify and redact logs; restrict access; retention policies |
-
-> [!NOTE]
-> Treat the risk register as a governed artifact linked to ADRs and mitigation work items.
+> [!WARNING]
+> Observability MUST be policy-safe: do not log restricted coordinates, PII, or sensitive dataset identifiers into public dashboards.
 
 [↑ Back to top](#top)
 
@@ -544,9 +493,9 @@ This README is not a full risk register, but infra work should explicitly track 
 
 DR follows canonical vs rebuildable:
 
-1. Restore canonical stores (object storage zones + catalogs + audit ledger).  
-2. Rebuild projections (PostGIS/search/graph/tiles) from canonical artifacts and receipts.  
-3. Verify policy parity and evidence resolution before reopening public surfaces.
+1) Restore canonical stores (object storage zones + catalogs + audit ledger).  
+2) Rebuild projections (PostGIS/search/graph/tiles) from canonical artifacts and receipts.  
+3) Verify policy parity and evidence resolution before reopening public surfaces.
 
 Minimum DR documentation (PROPOSED):
 - RPO/RTO targets per environment
@@ -572,27 +521,13 @@ infra/
 ├─ README.md
 │
 ├─ k8s/                                          # K8s manifests (base + overlays) or rendered outputs
-│  ├─ README.md                                  # K8s conventions: kustomize/helm usage, policy posture, verify steps
-│  │
-│  ├─ base/                                      # Shared, environment-agnostic primitives (default-deny by design)
-│  │  ├─ kustomization.yaml                      # Base composition entrypoint
-│  │  │
-│  │  ├─ namespaces/                             # Namespaces (separate trust domains)
-│  │  ├─ rbac/                                   # Service accounts + least-privilege roles (no cluster-admin by default)
-│  │  ├─ network/                                # Trust membrane enforcement at the network layer
-│  │  ├─ config/                                 # Non-secret runtime wiring (ConfigMaps; secret refs elsewhere)
-│  │  ├─ platform/                               # Cluster add-ons (optional; depends on platform choices)
-│  │  ├─ apps/                                   # Workloads (governed services only; UI must call governed API only)
-│  │  ├─ jobs/                                   # One-shot jobs (manual or CI-triggered)
-│  │  └─ observability/                          # Observability wiring (policy-safe)
-│  │
-│  ├─ overlays/                                  # Environment overlays (dev/stage/prod deltas only)
-│  ├─ policies/                                  # Admission + baseline security policies (optional)
-│  └─ scripts/                                   # Render/validate helpers (optional)
+│  ├─ README.md                                  # K8s conventions + verify steps
+│  ├─ base/                                      # Shared primitives (default-deny by design)
+│  └─ overlays/                                  # Environment deltas (dev/stage/prod)
 │
-├─ helm/                                         # Helm charts and values (optional)
-├─ terraform/                                    # Terraform (optional)
-├─ gitops/                                       # GitOps controller configs + env apps (optional)
+├─ terraform/                                    # IaC stacks/modules (optional)
+├─ helm/                                         # Helm charts (optional)
+├─ gitops/                                       # GitOps controller configs (optional)
 ├─ dashboards/                                   # dashboards-as-code + alert rules (policy-safe)
 │
 └─ scripts/                                      # deterministic helpers (plan/validate/drift/smoke)
@@ -633,6 +568,7 @@ Use this checklist for PRs that touch `infra/`.
 - [ ] No secrets committed (scan passes)
 - [ ] Default-deny posture preserved (no accidental public access paths)
 - [ ] Trust membrane preserved (no direct storage/DB access from public clients)
+- [ ] Policy parity preserved (CI fixtures/outcomes match runtime policy bundle)
 - [ ] Change is reversible (rollback steps documented)
 
 ### Validation + evidence
