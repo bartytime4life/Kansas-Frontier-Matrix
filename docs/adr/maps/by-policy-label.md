@@ -108,7 +108,7 @@ This map assumes `policy_label` is a **controlled vocabulary**. Starter labels u
 
 Use this entry format:
 
-- **[ADR-####: <title>](../<adr-file>.md)** — <one-line summary> _(status: draft|accepted|superseded; updated: YYYY-MM-DD)_
+- **`ADR-####: <title>`** at `../<adr-file>.md` — <one-line summary> _(status: draft|accepted|superseded; updated: YYYY-MM-DD)_
 
 If you don’t have an ADR number convention yet, use `ADR-UNNUMBERED` temporarily and fix it once numbering is adopted.
 

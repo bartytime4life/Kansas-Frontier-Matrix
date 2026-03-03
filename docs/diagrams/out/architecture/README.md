@@ -227,7 +227,7 @@ Prefer linking to SVG from markdown so GitHub renders crisply.
 Example:
 
 ```md
-![KFM truth path lifecycle](kfm-truth-path-lifecycle.svg)
+`![KFM truth path lifecycle](kfm-truth-path-lifecycle.svg)`
 ```
 
 ---

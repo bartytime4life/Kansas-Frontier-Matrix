@@ -130,7 +130,7 @@ Examples:
 From an ADR markdown file located at `docs/adr/adr-012-...md`, reference diagrams with a **relative path**:
 
 ```md
-![ADR-012 trust membrane context diagram](./assets/diagrams/adr-012__trust-membrane__context.svg)
+`![ADR-012 trust membrane context diagram](./assets/diagrams/adr-012__trust-membrane__context.svg)`
 
 _Figure: Trust membrane boundaries and allowed calls for ADR-012._
 ```
@@ -195,7 +195,7 @@ flowchart TD
 <summary><strong>Caption template</strong> (recommended)</summary>
 
 ```md
-![ADR-XXX short description](./assets/diagrams/adr-xxx__slug__kind.svg)
+`![ADR-XXX short description](./assets/diagrams/adr-xxx__slug__kind.svg)`
 
 _Figure: One sentence describing what decision boundary or flow this diagram clarifies._
 ```

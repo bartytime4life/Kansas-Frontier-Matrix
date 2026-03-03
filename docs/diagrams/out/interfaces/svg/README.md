@@ -158,7 +158,7 @@ Even though these are “just diagrams,” they can leak sensitive details or mi
 ### Markdown
 
 ```md
-![STAC items read flow](./api__stac-items-read__v1.0.svg)
+`![STAC items read flow](./api__stac-items-read__v1.0.svg)`
 ```
 
 ### HTML (when you need sizing control)

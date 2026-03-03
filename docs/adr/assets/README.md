@@ -175,12 +175,12 @@ notes:
 From an ADR located at `docs/adr/adr-0042-*.md`, use a relative link:
 
 ```markdown
-![Trust membrane request flow](./assets/adr-0042/adr-0042--trust-membrane--sequence.svg)
+`![Trust membrane request flow](./assets/adr-0042/adr-0042--trust-membrane--sequence.svg)`
 ```
 
 ### Linking to the source (encouraged)
 ```markdown
-Source: [`adr-0042--trust-membrane--sequence.mmd`](./assets/adr-0042/adr-0042--trust-membrane--sequence.mmd)
+Source: `adr-0042--trust-membrane--sequence.mmd` (`./assets/adr-0042/adr-0042--trust-membrane--sequence.mmd`)
 ```
 
 ### Accessibility expectations

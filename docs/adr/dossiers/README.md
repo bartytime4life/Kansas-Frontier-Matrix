@@ -248,11 +248,11 @@ notes:
 - **Owners:** <names>
 
 ## Contents
-- [Context](./context.md)
-- [Options](./options/)
-- [Evaluation](./evaluation.md)
-- [Evidence refs](./evidence_refs.md)
-- [Risks](./risks.md)
+- `Context` (`./context.md`)
+- `Options` (`./options/`)
+- `Evaluation` (`./evaluation.md`)
+- `Evidence refs` (`./evidence_refs.md`)
+- `Risks` (`./risks.md`)
 ```
 
 </details>

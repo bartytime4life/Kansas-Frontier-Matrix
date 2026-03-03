@@ -297,4 +297,4 @@ A registry change is ready to merge when:
 - Dataset documentation packages: [`../datasets/README.md`](../datasets/README.md)
 - Machine onboarding registry: [`../../../data/registry/README.md`](../../../data/registry/README.md)
 - Controlled vocabularies: [`./vocabulary/README.md`](./vocabulary/README.md)
-- Validation toolkit: [`../../../tools/validation/README.md`](../../../tools/validation/README.md)
+- Validation toolkit: [`../../../tools/validators/README.md`](../../../tools/validators/README.md)

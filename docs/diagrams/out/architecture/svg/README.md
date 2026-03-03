@@ -152,7 +152,7 @@ or
 Use relative links from the doc that consumes the diagram:
 
 ```md
-![Architecture overview](../out/architecture/svg/kfm-architecture--reference-model.svg)
+`![Architecture overview](../out/architecture/svg/kfm-architecture--reference-model.svg)`
 ```
 
 If the diagram is key to understanding, add one sentence of **textual summary** below it for accessibility.
