@@ -1,749 +1,277 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/7f06c93b-7c88-4f2b-bba2-4f3d935d3f89
-title: tests — Test Strategy, QA, and CI Gates
+doc_id: kfm://doc/209b3e45-0223-4c7c-a0ee-aff3a8482f2c
+title: tests/README.md
 type: standard
-version: v3
+version: v1
 status: draft
-owners: TODO
-created: 2026-02-26
-updated: 2026-03-02
-policy_label: restricted
+owners: kfm-platform
+created: 2026-03-03
+updated: 2026-03-03
+policy_label: public
 related:
-  - docs/MASTER_GUIDE_v13.md
-  - docs/architecture/
-  - .github/workflows/
-tags: [kfm, tests, ci, governance]
+  - ../README.md
+  - ../docs/
+  - ../policy/
+  - ../contracts/
+tags: [kfm, tests]
 notes:
-  - This README is a governed artifact. Keep it aligned with merge gates and the Promotion Contract.
-  - Do not include secrets, restricted datasets, or sensitive location details in this doc or fixtures.
+  - Defines the governed testing taxonomy and how test suites map to Promotion Contract gates.
+  - Written to be fail-closed: unknown repo specifics are explicitly flagged as Unknown with verification steps.
 [/KFM_META_BLOCK_V2] -->
 
-<a id="top"></a>
+# tests/ — governed test suites and fixtures
 
-# `tests/` — Test Strategy, QA, and CI Gates
-
-**Purpose:** Make governance enforceable. Tests are not “nice to have”; they are the mechanism that keeps the **trust membrane** intact and prevents unsafe or untraceable outputs from shipping.
-
-**Status:** DRAFT • **Owners:** `TODO` • **Last updated:** `2026-03-02` • **Policy label:** `restricted`
+> **Purpose (Proposed):** Make KFM trust enforceable by automating **policy**, **contracts**, and **end-to-end evidence resolution** checks in CI and locally, so merges and promotions are blocked when governance invariants regress.
 
 ![CI](https://img.shields.io/badge/CI-required%20checks-TODO-lightgrey)
-![Promotion Contract](https://img.shields.io/badge/Promotion%20Contract-v1-blue)
-![Policy](https://img.shields.io/badge/policy-default--deny-important)
-![Evidence](https://img.shields.io/badge/evidence-cite--or--abstain-success)
-![Catalog](https://img.shields.io/badge/catalog-DCAT%20%7C%20STAC%20%7C%20PROV-informational)
-![Security](https://img.shields.io/badge/security-merge--blocking-critical)
-![A11y](https://img.shields.io/badge/a11y-smoke%20checks-informational)
-![SBOM](https://img.shields.io/badge/SBOM-recommended-lightgrey)
-![Attestations](https://img.shields.io/badge/attestations-recommended-lightgrey)
-
-> [!WARNING]
-> This directory is part of the **trust membrane**. If a test is flaky, non-deterministic, bypassable, or silently skipped, it is a governance risk.
-
-> [!IMPORTANT]
-> **Truth discipline (non‑negotiable)**
-> - **Confirmed (design intent):** Promotion Contract v1, merge-gate posture, and “fail closed” behavior must be enforced by CI.
-> - **Repo-specific (Unknown until verified):** exact job names, test runner commands, suite locations, and folder layout must match *this repo’s* implementation.
-> - **Proposed:** where the repo lacks enforcement, this README proposes a safe default that is small, testable, and reversible.
-
----
+![Coverage](https://img.shields.io/badge/coverage-TODO-lightgrey)
+![Policy](https://img.shields.io/badge/OPA%20policy-fail--closed-TODO-lightgrey)
+![Contracts](https://img.shields.io/badge/contracts-DCAT%20STAC%20PROV-TODO-lightgrey)
+![Status](https://img.shields.io/badge/status-draft-orange)
 
 ## Quick navigation
 
-- [Repo reality check](#repo-reality-check)
-- [Where `tests/` fits](#where-tests-fits)
-- [What tests must enforce](#what-tests-must-enforce)
-- [Two lanes: merge gates vs promotion gates](#two-lanes-merge-gates-vs-promotion-gates)
-- [Non-negotiable invariants](#non-negotiable-invariants)
+- [Evidence status legend](#evidence-status-legend)
+- [Confirmed anchors from KFM design docs](#confirmed-anchors-from-kfm-design-docs)
+- [Quickstart](#quickstart)
 - [Test taxonomy](#test-taxonomy)
-- [CI: required merge gates](#ci-required-merge-gates)
-- [Promotion Contract v1 mapping](#promotion-contract-v1-mapping)
-- [Operational requirements: QA thresholds + promotion manifests](#operational-requirements-qa-thresholds--promotion-manifests)
-- [Folder layout](#folder-layout)
-- [Running tests](#running-tests)
-- [Fixtures and data safety](#fixtures-and-data-safety)
-- [Writing and adding tests](#writing-and-adding-tests)
-- [Governance quality metrics](#governance-quality-metrics)
-- [Release definition of done](#release-definition-of-done)
-- [Troubleshooting](#troubleshooting)
-- [Appendices](#appendices)
+- [Promotion Contract mapping](#promotion-contract-mapping)
+- [Directory layout](#directory-layout)
+- [Fixtures and test data rules](#fixtures-and-test-data-rules)
+- [Adding a new test](#adding-a-new-test)
+- [Unknowns and smallest verification steps](#unknowns-and-smallest-verification-steps)
 
 ---
 
-## Repo reality check
+## Evidence status legend
 
-This README describes the **required posture**. Before treating it as “Confirmed (repo)”, verify the repo actually wires these checks into CI and branch protections.
+- **Confirmed:** Supported by existing KFM design documentation (cited in the PR / change description when used).
+- **Proposed:** Recommended convention for this repo; adopt or adjust via small PRs.
+- **Unknown:** Not verified in the live repo; the smallest verification steps are listed.
 
-Minimum verification steps (copy/paste):
+> **Proposed:** If you add new behavior to tests or CI, update this README and mark new statements Confirmed/Proposed/Unknown.
 
-```bash
-# 0) Capture repo identity (so this doc revision is traceable)
-git rev-parse HEAD || true
-git status --porcelain || true
-
-# 1) Inspect tests tree (and confirm suite categories exist)
-find tests -maxdepth 3 -type d -print
-
-# 2) Find CI workflows that reference tests and promotion gates
-ls -la .github/workflows 2>/dev/null || true
-grep -R "tests/" -n .github/workflows 2>/dev/null || true
-grep -R "promotion\|manifest\|receipt\|spec_hash" -n .github/workflows 2>/dev/null || true
-
-# 3) Identify the canonical test entrypoint (prefer exactly one merge-blocking command)
-# Examples: make test, task test, ./scripts/ci.sh, pnpm -r test, pytest, go test, dotnet test
-ls -la Makefile Taskfile.yml scripts tools 2>/dev/null || true
-
-# 4) If policy exists, confirm policy tests are merge-blocking
-ls -la policy 2>/dev/null || true
-grep -R "opa\|rego\|conftest" -n .github/workflows 2>/dev/null || true
-
-# 5) Confirm publish surfaces have schema + link checks (Story Node, EvidenceRef resolution)
-grep -R "story" -n .github/workflows 2>/dev/null || true
-grep -R "evidence" -n .github/workflows 2>/dev/null || true
-grep -R "linkcheck\|link_check" -n .github/workflows 2>/dev/null || true
-```
-
-> [!NOTE]
-> **Do not claim** repo sub-packages or module paths exist until verified. Prefer “documented target modules + verification steps” over guessy path assertions.
-
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
-## Where `tests/` fits
+## Confirmed anchors from KFM design docs
 
-**Design intent:** Keep the repo legible by separating “validation tools” from “tests that enforce validation.”
+- **Confirmed (design intent):** `tests/` is the home for **unit**, **integration**, **e2e**, and **fixtures**.  
+- **Confirmed (design intent):** Promotion to **PUBLISHED** is blocked unless **Promotion Contract gates A–G** are satisfied (identity/versioning, licensing, sensitivity/redaction, catalog triplet, QA thresholds, run receipt/audit record, release manifest).  
+- **Confirmed (design intent):** “Citations” are **EvidenceRefs** that must resolve to an **EvidenceBundle** and be policy-allowed; otherwise the system narrows scope or abstains.  
+- **Confirmed (design intent):** Policy-as-code must have **shared semantics** in CI and runtime (or at minimum shared fixtures and outcomes), otherwise CI guarantees are meaningless.  
+- **Confirmed (design intent):** Focus Mode includes an **evaluation harness** with **golden queries** and should **block merges** on regressions.  
+- **Confirmed (design intent):** Trust-membrane failures (policy bypass via direct DB/storage access) are mitigated via **network policies, reviews, and tests**.
 
-Typical placement (adapt to the actual repo):
-
-- `docs/` — architecture docs, runbooks, ADRs, templates
-- `tools/` — validators, link checkers, CLI utilities
-- `tests/` — unit/integration/e2e tests + fixtures
-- `configs/`, `scripts/`, `migrations/`, `examples/` — configuration, automation, migrations, examples
-
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
-## What tests must enforce
+## Quickstart
 
-Tests in this directory exist to enforce:
+- **Unknown:** The repo’s actual test runner(s) and commands.
+  - **Smallest verification steps (to make Confirmed):**
+    1. Run `ls -la tests/` and `tree -L 3 tests/` to confirm structure.
+    2. Inspect `.github/workflows/*` for required checks and exact commands.
+    3. Inspect root build tooling (`Makefile`, `package.json`, `pyproject.toml`) to confirm runners.
 
-1. **Correctness** of domain logic (including deterministic identity/hashing).
-2. **Governance invariants** (default-deny, fail closed, no bypass).
-3. **Truth path lifecycle** (zones + artifacts are real and validated).
-4. **Evidence-first UX contract** (every claim opens to resolvable evidence).
-5. **Cite-or-abstain** (no verified citations ⇒ abstain / safe reduction in scope).
-6. **Contract stability** (catalog schemas, API contracts, error envelopes).
-7. **Safety** for sensitive locations & restricted data (no leakage; no restricted existence inference).
-8. **Provenance artifacts** (run receipts, promotion manifests; verifiable and policy-safe).
-9. **Security as governance** (supply-chain checks; audit log protections).
+- **Proposed:** Prefer a single “one-command” local entrypoint that matches CI.
+  - Examples (pick what the repo actually uses):
+    ```bash
+    # Proposed: canonical local command
+    make ci.test
+    ```
+    ```bash
+    # Proposed: policy tests
+    conftest test <some-json-or-yaml> -p policy/
+    ```
+    ```bash
+    # Proposed: JS/TS tests
+    pnpm test
+    ```
+    ```bash
+    # Proposed: Python tests
+    pytest
+    ```
 
-[Back to top](#top)
+> **Proposed (fail-closed):** If local runs cannot faithfully reproduce CI (tooling drift), treat changes as **not promotable** until parity is restored.
 
----
-
-## Two lanes: merge gates vs promotion gates
-
-KFM has **two kinds of “blocking checks”**:
-
-- **Merge gates (PR lane):** protect mainline code + governed schemas/templates from regressions.
-- **Promotion gates (Promotion lane):** protect *published runtime surfaces* (API/UI/Story/Focus) from ungoverned artifacts.
-
-```mermaid
-flowchart TD
-  Dev[Dev change] --> PR[Pull request]
-  PR --> MergeCI[Merge CI required checks]
-
-  MergeCI --> Lint[lint + typecheck]
-  MergeCI --> Unit[unit + spec_hash]
-  MergeCI --> Schema[schema validate catalogs]
-  MergeCI --> Story[Story Node validate]
-  MergeCI --> Policy[policy tests]
-  MergeCI --> Link[link checker]
-  MergeCI --> Sec[security scan]
-  MergeCI --> A11y[a11y smoke for UI trust surfaces]
-
-  Lint --> MergeOK[Merge allowed]
-  Unit --> MergeOK
-  Schema --> MergeOK
-  Story --> MergeOK
-  Policy --> MergeOK
-  Link --> MergeOK
-  Sec --> MergeOK
-  A11y --> MergeOK
-
-  MergeOK --> Promote[Promotion workflow]
-  Promote --> GateA[Gate A identity]
-  Promote --> GateB[Gate B rights]
-  Promote --> GateC[Gate C sensitivity]
-  Promote --> GateD[Gate D triplet]
-  Promote --> GateE[Gate E receipts + checksums]
-  Promote --> GateF[Gate F policy + contracts]
-  Promote --> GateG[Gate G production posture]
-
-  GateA --> Publish[PUBLISHED surfaces]
-  GateB --> Publish
-  GateC --> Publish
-  GateD --> Publish
-  GateE --> Publish
-  GateF --> Publish
-  GateG --> Publish
-```
-
-> [!IMPORTANT]
-> If a “gate” is not enforced in CI, it is not governance.
-
-[Back to top](#top)
-
----
-
-## Non-negotiable invariants
-
-### 1) Truth path lifecycle zones are real (not metaphor)
-
-A promoted dataset version must move through zones with the right artifacts and validations.
-
-| Zone | Rule (fail closed) | Typical artifacts | Tests that enforce |
-|---|---|---|---|
-| RAW | Append-only; never edit—supersede with new acquisition | upstream payloads, checksums, license snapshot, fetch logs | schema for RAW manifests; integrity checks; no mutation tests |
-| WORK / QUARANTINE | Transform + QA; failures isolated; unclear license/sensitivity ⇒ quarantine | normalization outputs, QA reports, candidate redactions | QA threshold tests; quarantine reason-code tests |
-| PROCESSED | Publishable standardized artifacts w/ stable IDs + checksums | GeoParquet, PMTiles, COG, derived metadata | artifact digest tests; format/schema checks |
-| CATALOG / TRIPLET | DCAT + STAC + PROV validate + cross-link | catalog JSON(-LD), PROV bundles, link maps | triplet schema tests + link checker |
-| PUBLISHED | Only serve promoted versions via governed API/PEP + UI | API responses, tiles, story pages, Focus answers | contract tests; e2e trust flows; policy-safe errors |
-
-### 2) Trust membrane boundaries are enforced
-
-- Frontend must **never** fetch directly from object storage or databases.
-- Core logic must not bypass repository/policy enforcement boundaries.
-
-**Enforcement pattern:** static boundary tests + integration tests.
-
-### 3) Evidence resolver is a contract surface
-
-Evidence resolution must be policy-aware and deterministic:
-
-- Accept EvidenceRef (scheme-based) or structured reference.
-- Apply policy and return allow/deny + obligations.
-- Return an EvidenceBundle that includes human view + machine metadata + digests + audit refs.
-
-**Enforcement pattern:** integration tests + contract tests + UI smoke tests.
-
-### 4) Cite-or-abstain is a hard gate for Focus / story publishing
-
-If citations cannot be verified or are denied:
-
-- The system must abstain or safely reduce scope.
-- The UI must use policy-safe denial patterns (no existence inference).
-
-**Enforcement pattern:** golden tests + e2e + link checker.
-
-### 5) Deterministic identity and hashing
-
-- `spec_hash` must be computed from canonicalized content.
-- Identical inputs should yield identical outputs (or the run receipt records why).
-
-**Enforcement pattern:** golden vectors + drift tests.
-
-### 6) Policy-safe errors: no restricted existence inference
-
-Public users must not infer restricted existence by:
-
-- error message shape/content
-- status codes (where policy requires indistinguishability)
-- timing differences (where feasible)
-
-**Enforcement pattern:** contract tests + e2e denial UX tests + runtime behavior tests.
-
-### 7) Receipts + audit logs are governance artifacts
-
-- Every governed run emits a typed `run_receipt`.
-- Promotion emits a typed `promotion_manifest`.
-- Logs must be redacted; no secrets.
-
-**Enforcement pattern:** schema tests + redaction tests.
-
-### 8) Security and supply chain integrity are merge-blocking (when enabled)
-
-- Dependency scanning blocks known critical issues.
-- SBOM/attestations (if enabled) verified server-side; never fetched directly by browser.
-
-**Enforcement pattern:** security scans + policy tests + UI guardrail tests.
-
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
 ## Test taxonomy
 
-Minimum categories expected for KFM:
+### 1) Unit tests
 
-| Category | Purpose | Typical failures caught | Must be deterministic? | Merge gate? |
-|---|---|---|---:|---:|
-| Unit | Domain logic, hashing, vocab, time logic | hash drift, time bugs, invariant regressions | ✅ | ✅ |
-| Schema | DCAT/STAC/PROV + receipts/manifests + Story Node templates | invalid JSON, missing fields, broken links | ✅ | ✅ |
-| Policy | allow/deny + obligations + rights | leakage regressions, wrong obligations, default-deny broken | ✅ | ✅ |
-| Contract | API specs + DTOs + error envelopes | breaking changes, unsafe errors, incompatible DTOs | ✅ | ✅ |
-| Integration | Evidence resolver + governed API | policy bypass, EvidenceRef breakage, audit_ref missing | ✅ | ✅ |
-| E2E (smoke) | UI trust flows | missing evidence drawer, citations not resolvable, denial UX regressions | ✅ (as much as possible) | ✅ (smoke) |
-| Security | dependency + supply-chain checks | vulnerable deps, leaked secrets, missing SBOM rules | ✅ | ✅ |
+- **Proposed:** Fast, deterministic tests for pure functions, schema helpers, parsers, and “spec_hash” canonicalization.
+- **Proposed:** No network. No filesystem writes outside temp dirs.
 
-> [!NOTE]
-> If a test cannot be made deterministic, it must be isolated and treated as **non-blocking** until fixed.
+### 2) Contract tests
 
-[Back to top](#top)
+- **Confirmed (design intent):** Contracts include catalog surfaces (DCAT/STAC/PROV) and evidence resolution behaviors.  
+- **Proposed:** Validate:
+  - Schema conformance (DCAT, STAC, PROV, receipts).
+  - Cross-link integrity (IDs, hrefs, EvidenceRefs resolvable).
+  - Stable `spec_hash` behavior (golden tests).
 
----
+### 3) Policy tests
 
-## CI: required merge gates
+- **Confirmed (design intent):** CI and runtime should share policy semantics (fixtures/outcomes).  
+- **Proposed:** Use OPA/Rego policies with fixture-driven tests:
+  - **allow/deny** outcomes
+  - **obligations** (e.g., redaction required for non-public)
+  - **default-deny** posture
 
-This repo should enforce (at minimum) the following merge gates as required checks.
+### 4) Integration tests
 
-### Baseline merge gates (minimum)
+- **Confirmed (design intent):** Evidence resolver requires integration tests (resolves refs; enforces policy; prevents restricted leakage).  
+- **Proposed:** Spin minimal local services (or use in-process adapters) to validate:
+  - EvidenceRef → EvidenceBundle resolution
+  - Policy enforcement paths
+  - “Fail-closed” behavior when citations cannot be verified
 
-- `lint + typecheck` (frontend + backend)
-- `spec_hash` (deterministic identity) tests
-- `schema validation` for any changed catalog artifacts (DCAT/STAC/PROV) and run receipts/manifests
-- `Story Node template validation` (publish gate: citations must resolve)
-- `policy tests` (fixtures-driven; default deny)
-- `link checker` (no broken citations / EvidenceRefs)
-- `security scanning` (dependency vulnerabilities) and optional SBOM generation
-- `accessibility smoke checks` for UI changes (at least keyboard nav for evidence drawer)
+### 5) End-to-end (E2E) tests
 
-> [!IMPORTANT]
-> If your workflow uses different names, keep the **mapping 1:1** with `.github/workflows/`.
+- **Confirmed (design intent):** Map Explorer baseline includes E2E tests for UI behaviors around evidence and trust presentation.  
+- **Proposed:** E2E scope:
+  - Evidence Drawer opens from map interactions
+  - License/version visibility
+  - Keyboard navigation accessibility paths
 
-### Recommended job naming (rename to match your workflows)
+### 6) Evaluation harness tests
 
-- `lint_typecheck`
-- `unit_spec_hash`
-- `schema_catalog`
-- `story_validate`
-- `policy`
-- `link_check`
-- `contract_api`
-- `integration_evidence`
-- `e2e_ui_smoke`
-- `a11y_smoke`
-- `security_scan`
-- `sbom_attest` (only if enabled)
-- `focus_eval` (only if Focus exists in the repo)
+- **Confirmed (design intent):** Focus Mode uses an evaluation harness with golden queries and blocks merge on regressions.  
+- **Proposed:** Harness outputs should be treated as governed artifacts:
+  - Store diffs and summaries in CI artifacts
+  - Define regression budgets (string diff + citation resolution + policy outcomes)
 
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
-## Promotion Contract v1 mapping
+## Promotion Contract mapping
 
-Promotion to **PUBLISHED** is blocked unless minimum gates are met.
+> **Confirmed (design intent):** Promotion gates are automatable in CI and reviewed during steward sign-off; promotion is blocked unless minimum gates are met.
 
-> [!IMPORTANT]
-> “Documentation == enforcement.” Update this table to match `.github/workflows/` exactly once verified.
+```mermaid
+flowchart TB
+  PR[Change or promotion request] --> A[Gate A identity and versioning]
+  A --> B[Gate B licensing and rights]
+  B --> C[Gate C sensitivity and redaction plan]
+  C --> D[Gate D catalog triplet validation]
+  D --> E[Gate E QA thresholds]
+  E --> F[Gate F run receipt and audit record]
+  F --> G[Gate G release manifest]
+  G --> OK[Merge or promote]
 
-### Gate ↔ required artifacts ↔ test suite ↔ CI check mapping
-
-| Gate | Blocks promotion unless… | Primary test coverage | Suggested CI check (recommended names) |
-|---|---|---|---|
-| **A — Identity & versioning** | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, content digests exist and match | `unit/hashing` + `schema/receipts` | `unit_spec_hash` + `schema_catalog` |
-| **B — Licensing & rights metadata** | License/rights present; unknown license ⇒ QUARANTINE (fail closed) | `policy/rights` + `schema/dcat` | `policy` + `schema_catalog` |
-| **C — Sensitivity classification & redaction plan** | `policy_label` assigned; redaction/generalization recorded; obligations computed | `policy/*` + `integration/*` + `e2e` smoke | `policy` + `integration_evidence` + `e2e_ui_smoke` |
-| **D — Catalog triplet validation** | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve without guessing | `schema/triplet` + `schema/linkcheck` | `schema_catalog` + `link_check` |
-| **E — Run receipt & checksums** | `run_receipt` exists; inputs/outputs enumerated w/ checksums; environment captured | `schema/receipts` + `integration/audit` | `schema_catalog` + `integration_evidence` |
-| **F — Policy tests & contract tests** | OPA policy tests pass; evidence resolve works in CI; API contracts/schemas validate | `policy/*` + `contract/*` + `integration/*` | `policy` + `contract_api` + `integration_evidence` |
-| **G — Optional but recommended (production posture)** | SBOM/build provenance; perf smoke; a11y smoke | `security/*` + perf/a11y suites | `security_scan` + `sbom_attest` + `a11y_smoke` |
-
-[Back to top](#top)
-
----
-
-## Operational requirements: QA thresholds + promotion manifests
-
-Some documents treat these as separate “gates,” others treat them as zone-exit invariants and release artifacts. Either way, **treat them as blocking for dataset promotions**.
-
-### QA thresholds (WORK/QUARANTINE exit)
-
-- Dataset-specific quality checks must exist and be evaluated.
-- Failures must quarantine the dataset version (no promotion).
-
-**Where to enforce:** `tests/schema/` or `tests/integration/` for dataset-specific suites; results recorded in receipts/manifests.
-
-### Promotion manifests (release artifact)
-
-- Every newly promoted dataset version should produce a typed `promotion_manifest`.
-- Promotion manifests support reproducibility and steward sign-off.
-
-**Where to enforce:** `tests/schema/receipts` (or `tests/schema/manifests`) + promotion workflow validation.
-
-[Back to top](#top)
-
----
-
-## Folder layout
-
-This is the **recommended** layout. If the repo differs, update this section to match reality.
-
-### Minimum required structure
-
-tests/                                                 # Quality + governance enforcement: layered tests that protect the trust membrane (fail-closed, reproducible)
-├─ README.md                                            # Test strategy index: what runs when (local/CI), required gates, naming conventions, and how to add tests safely
-├─ unit/                                                # Fast, isolated tests for packages/apps (pure logic, deterministic; minimal I/O; high signal)
-├─ schema/                                              # Schema validation tests (JSON Schema / profiles): artifacts, registries, receipts, manifests, catalogs
-├─ policy/                                              # Policy-as-code tests (OPA/conftest): allow/deny/obligations fixtures + invariants + regression protection
-├─ contract/                                            # Contract tests for APIs and interfaces (OpenAPI, versioning, compatibility, consumer-driven checks)
-├─ integration/                                         # Cross-module tests (DB/filesystems/OPA/services) validating wiring + end-to-end flows at small scale
-├─ e2e/                                                 # End-to-end scenarios (compose/k8s runners): ingest→validate→catalog→publish→surface checks (slow, gated)
-├─ fixtures/                                            # Shared deterministic fixtures (data, policy inputs/decisions, schemas, golden files); versioned and small
-└─ utils/                                               # Test helpers (builders, harnesses, snapshot utilities, temp FS helpers, local service wrappers)
+  D -->|broken links or invalid schema| BLOCK1[Fail-closed block]
+  C -->|missing policy label or obligations| BLOCK2[Fail-closed block]
+  F -->|missing receipt fields| BLOCK3[Fail-closed block]
 ```
 
-### Extended recommended structure (reference)
+### Test matrix
 
-<details>
-<summary><strong>Show full recommended tree</strong></summary>
+| Status | Surface | What it proves | Typical location (Proposed) |
+|---|---|---|---|
+| **Confirmed** | Gate A — identity/versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, artifact digests | `tests/contract/` |
+| **Confirmed** | Gate D — catalogs | DCAT/STAC/PROV validate + cross-link; EvidenceRefs resolve | `tests/contract/` + `tests/integration/` |
+| **Confirmed** | Gate C — sensitivity | Policy label present; redaction/generalization obligations enforced | `tests/policy/` + fixtures |
+| **Confirmed** | Gate F — run receipts | Receipt completeness, hashes, and (if enabled) signature verification | `tests/contract/` + `tests/policy/` |
+| **Proposed** | Gate E — QA thresholds | Domain-specific QA reports exist and thresholds met | `tests/integration/` |
+| **Proposed** | Focus Mode eval harness | Golden queries stable; regressions block merge | `tests/eval/` |
+| **Proposed** | Trust membrane invariant | UI cannot bypass PEP/API to DB/storage | `tests/integration/` + `tests/e2e/` |
+
+[Back to top](#tests--governed-test-suites-and-fixtures)
+
+---
+
+## Directory layout
+
+### Confirmed minimal intent
+
+- **Confirmed (design intent):** `tests/` contains unit/integration/e2e tests and fixtures.
+
+### Proposed concrete layout for this repo
 
 ```text
 tests/
-├─ README.md
-│
-├─ registry/                          # Machine-readable suite registry + schemas (optional but recommended)
-│  ├─ tests.v1.json                   # Suites, owners, required gates, commands, timeouts, flake policy
-│  └─ schemas/                        # JSON Schemas for registry + receipts/manifests (or link to contracts/)
-│
-├─ unit/                              # Deterministic pure tests: hashing, vocab, time logic, invariants
-├─ schema/                            # Catalog/receipt/story schemas + triplet cross-link + linkcheck
-├─ policy/                            # Fixture-driven allow/deny/obligation tests
-├─ contract/                          # API/DTO/error envelopes + compatibility
-├─ integration/                       # Evidence resolver + governed API harness tests
-├─ e2e/                               # UI smoke + a11y for trust surfaces (evidence drawer, denial UX)
-├─ fixtures/                          # Synthetic/sanitized fixtures ONLY
-└─ utils/                             # Shared helpers: fake clock, canonical JSON, assertions
+  README.md
+  unit/                 # Proposed: pure unit tests
+  contract/             # Proposed: schema + linkcheck + spec_hash golden tests
+  policy/               # Proposed: Rego unit tests (Conftest) + fixtures
+  integration/          # Proposed: evidence resolver + API integration tests
+  e2e/                  # Proposed: UI E2E (Map Explorer, Story publish gate)
+  eval/                 # Proposed: Focus Mode eval harness (golden queries)
+  fixtures/             # Proposed: small synthetic inputs + golden outputs
 ```
 
-</details>
+> **Proposed:** Keep this layout stable so test paths become “retrieval anchors” for humans and automation.
 
-> [!TIP]
-> Keep top-level categories **few and obvious**. If you add a new category, update this README and wire it into CI.
-
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
-## Running tests
+## Fixtures and test data rules
 
-> [!IMPORTANT]
-> The repo should expose **one** canonical “run everything that’s merge-blocking” entrypoint.
-> If it doesn’t exist, add it (Makefile/Taskfile/script) and wire CI to use it.
+- **Confirmed (design posture):** Default-deny and sensitive-data leakage prevention must be enforced.
+- **Proposed (allowed in `tests/fixtures/`):**
+  - Tiny, synthetic datasets
+  - Redacted/generalized examples (where policy requires)
+  - Golden JSON for schema validation (valid + invalid)
+  - Golden EvidenceRefs and expected EvidenceBundle shapes (no restricted data)
 
-### Canonical entrypoint (choose one per repo)
+- **Proposed (explicitly disallowed in `tests/`):**
+  - Secrets, tokens, private keys
+  - Large binaries or production datasets
+  - Restricted/precise sensitive locations (unless explicitly approved and protected)
+  - “Mystery fixtures” without provenance notes
 
-Examples (pick the one your repo uses, then delete the rest):
+- **Proposed:** Every fixture directory contains a small `README.md` describing:
+  - what the fixture represents,
+  - policy label expectations,
+  - and the expected allow/deny outcome.
 
-```bash
-# Option A
-make test
-
-# Option B
-task test
-
-# Option C
-./scripts/ci/required_checks.sh
-
-# Option D (JS monorepo)
-pnpm -r test
-
-# Option E (Python)
-pytest -q
-
-# Option F (Go)
-go test ./...
-
-# Option G (.NET)
-dotnet test
-```
-
-### Run by category (examples; adjust to reality)
-
-```bash
-# Unit
-pytest -q tests/unit
-
-# Schema
-pytest -q tests/schema
-
-# Policy
-pytest -q tests/policy
-
-# Contract
-pytest -q tests/contract
-
-# Integration
-pytest -q tests/integration
-
-# E2E UI smoke (example)
-npx playwright test --project=chromium --grep @smoke
-```
-
-### Suggested local workflow
-
-1. Run `unit + schema + policy` before pushing.
-2. Run `integration` before requesting review on governance-impacting work.
-3. Run `e2e` smoke suite before merging UI trust-surface changes.
-
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
-## Fixtures and data safety
+## Adding a new test
 
-Fixtures are governed artifacts. Treat them like publishable documentation.
+### Minimal, safe, additive workflow
 
-### Fixture requirements
+1. **Proposed:** Add or update a fixture (smallest possible).
+2. **Proposed:** Add the test alongside the fixture.
+3. **Proposed:** Make the failure message actionable (what failed, where, how to reproduce).
+4. **Proposed:** If a test encodes a governance rule, add/update the corresponding **policy fixture** so CI and runtime semantics stay aligned.
 
-- **Synthetic by default** (preferred).
-- **Small** (reviewable; diff-friendly).
-- **Licensed / attributable** (even for synthetic, note generator and intent).
-- **Sanitized** (no sensitive coordinates; no re-identification risk).
-- **Deterministic** (no timestamps/randomness unless seeded and explained).
+### Definition of done checklist
 
-### Prohibited fixture content
+- [ ] **Proposed:** Test is deterministic (no network unless explicitly stubbed/recorded).
+- [ ] **Proposed:** Test runs in CI and locally with the same command(s).
+- [ ] **Proposed:** If policy-related, includes allow + deny fixtures.
+- [ ] **Proposed:** No sensitive or restricted data added.
+- [ ] **Proposed:** Update this README if it changes taxonomy, commands, or directory layout.
 
-- Secrets, tokens, credentials, private keys.
-- Real restricted geometries or precise sensitive locations.
-- PII or re-identifiable records.
-- Anything that would be unsafe to paste into a public issue.
-
-### Fixture documentation standard
-
-Each fixture directory must include `FIXTURE_NOTES.md` documenting:
-
-- Source or generator
-- License (or “synthetic”)
-- Sensitivity classification
-- Redactions/generalizations applied
-- Which tests depend on it (paths)
-
-[Back to top](#top)
+[Back to top](#tests--governed-test-suites-and-fixtures)
 
 ---
 
-## Writing and adding tests
+## Unknowns and smallest verification steps
 
-### Golden rules
+- **Unknown:** Which runners exist (pytest, vitest/jest, playwright/cypress, etc.).
+  - **Verify:** inspect root configs (`pyproject.toml`, `package.json`) and CI workflows.
 
-- **Fail closed:** missing citation, policy label, rights metadata, receipt fields, or schema links must fail the test.
-- **No hidden dependencies:** tests must not require internet access or external credentials.
-- **Stable, policy-safe outputs:** avoid logging secrets; avoid printing restricted content.
+- **Unknown:** Whether Conftest/OPA is already wired as a required status check.
+  - **Verify:** search CI workflow definitions for `conftest` and policy directories.
 
-### Adding a new feature test checklist
+- **Unknown:** The exact contract schemas present (run_receipt schema versions, DCAT/STAC profiles).
+  - **Verify:** list `contracts/` and run schema validators against example fixtures.
 
-- [ ] Unit test covers domain logic changes (including hashing/identity if affected).
-- [ ] Schema tests cover any catalog/receipt/manifest changes.
-- [ ] Policy fixtures + tests updated for any new access pattern.
-- [ ] Contract tests updated for any OpenAPI/DTO/error model change.
-- [ ] Integration tests cover at least one representative EvidenceRef flow.
-- [ ] E2E smoke test covers evidence drawer / denial UX if UI is affected.
-- [ ] “No leakage” tests added if sensitive locations or restricted data touched.
-- [ ] Link checking passes (no broken citations).
-- [ ] Accessibility smoke checks pass for UI changes.
-- [ ] If SBOM/attestations are enabled: verification tests updated (no browser fetch).
+- **Unknown:** Where Focus Mode harness lives in the repo.
+  - **Verify:** search for `tests/eval/` and “golden queries” strings.
 
-### Flakiness policy (governance incident posture)
+> **Proposed:** Once verified, convert Unknown → Confirmed and add exact commands/paths (small PR, no rewrites).
 
-- A flaky merge-blocking test is a governance incident.
-- Quarantine a flaky test **only** with:
-  - an issue + owner + fix plan
-  - a time-bounded follow-up
-  - an explicit downgrade to non-blocking in CI
-- Restore it to blocking once stabilized.
-
-### Determinism tools (recommended)
-
-- Seeded randomness (document seed).
-- Time-freezing utilities (fake clock).
-- Snapshot normalization (canonical JSON; stable ordering).
-- Explicit readiness checks (avoid sleeps).
-
-[Back to top](#top)
-
----
-
-## Governance quality metrics
-
-Track governance and reliability metrics so drift is visible (without incentivizing unsafe behavior).
-
-| Metric | Why it matters | Where to compute |
-|---|---|---|
-| % promoted artifacts with explicit license metadata | Detect rights/attribution drift | receipts + catalog triplet |
-| % Story Nodes with 100% resolvable citations | Enforces evidence-first narratives | story publish gate + linkcheck |
-| Evidence resolver latency (P95) | UX integrity; bottleneck signal | integration harness + runtime telemetry |
-| Tile serving latency (P95) for public layers | Map-first performance | e2e + runtime telemetry |
-| Reindex time from processed artifacts | Rebuildability & recovery | indexer job receipts |
-| # quarantined datasets by reason code | QA + governance health | promotion manifests + policy denials |
-| # policy denials by reason code | Detect leakage attempts + regressions | policy logs (redacted) |
-
-> [!NOTE]
-> Metrics must not encourage perverse incentives. Use them to detect drift and risk.
-
-[Back to top](#top)
-
----
-
-## Release definition of done
-
-A release is “done” only when:
-
-- All merge gates pass on the release branch/tag.
-- Promotion manifests exist for any new dataset versions.
-- Evidence resolver contract tests pass for:
-  - allowed scenarios (resolvable citations)
-  - denied scenarios (policy-safe denial; no existence inference)
-- Focus Mode evaluation harness passes golden queries (if Focus exists).
-- UI regression smoke tests pass and accessibility checks show no major regressions.
-- Release notes include policy/contract/data changes and rollback notes.
-- Audit ledger retention and monitoring are configured (no silent “best effort” logging).
-
-[Back to top](#top)
-
----
-
-## Troubleshooting
-
-### Spec hash mismatch
-
-Likely causes:
-- canonicalization rules changed (ordering/normalization)
-- a new field entered the identity inputs without being versioned
-
-Fix:
-- update canonicalization code and golden vectors intentionally
-- version bump or migration notes if behavior is breaking
-
-### Broken citations or unresolved EvidenceRefs
-
-Fix:
-- update evidence resolver mappings or fixtures
-- ensure catalog triplet links exist and validate
-- do not “skip” citation verification
-
-### Policy tests failing unexpectedly
-
-Treat as potential leakage first:
-- confirm default-deny posture remains intact
-- verify obligations are applied and logged
-- only relax policy with explicit governance decision + fixtures proving intent
-
-### Schema tests failing
-
-Fix artifact generation to meet the profile:
-- don’t weaken schemas to “fit the bug” unless it’s an intentional contract change
-
-### Receipt / attestation verification failing
-
-Likely causes:
-- receipt schema drift (missing required fields, wrong timestamp format)
-- digests changed without version bump
-- signatures/attestations produced by unapproved workflow identity
-- CI attempted network verification (should be fixture-based where possible)
-
-Fix:
-- validate receipt/manifest schemas locally on fixtures first
-- ensure “subject” is a digest, not a mutable tag, in verification paths
-- pin tool versions used to generate/verify attestations and treat updates as governed changes
-
-### E2E flakiness
-
-Stabilize by:
-- removing timing assumptions
-- using seeded deterministic data
-- using explicit readiness checks (not sleeps)
-
-[Back to top](#top)
-
----
-
-## Appendices
-
-<details>
-<summary><strong>Appendix A — Fixture governance template</strong></summary>
-
-Create `FIXTURE_NOTES.md` in every fixture directory:
-
-```md
-# Fixture Notes
-
-- Fixture name:
-- Source / generator:
-- License:
-- Policy label / sensitivity:
-- Redactions / generalizations applied:
-- Intended coverage (tests that depend on it):
-- Safety notes (why it is safe to include in repo):
-```
-</details>
-
-<details>
-<summary><strong>Appendix B — Minimal run_receipt invariants (template)</strong></summary>
-
-> This is a minimal shape; the repo’s canonical schema may live elsewhere.
-> Core idea: spec_hash computed from canonicalized inputs; subject is a digest; checks fail-closed.
-
-```json
-{
-  "$schema": "TODO:link-to-run_receipt-schema",
-  "kfm_run_receipt_version": "v1",
-  "kfm_run_id": "2026-03-02T00:00Z-abc123",
-  "dataset": "TODO:dataset_slug_or_id",
-  "dataset_version_id": "TODO:immutable-version-id",
-  "subject": "sha256:TODO",
-  "spec_hash": "sha256:TODO",
-  "pipeline": "raw->processed->catalog->prov",
-  "runner": "TODO:workflow-or-image-digest",
-  "inputs": ["uri://..."],
-  "outputs": ["stac://...", "prov://..."],
-  "checks": { "stac": "ok", "prov": "ok", "policy": "ok" },
-  "timestamps": { "start": "2026-03-02T00:00:00Z", "end": "2026-03-02T00:10:00Z" }
-}
-```
-</details>
-
-<details>
-<summary><strong>Appendix C — Minimal promotion manifest (template)</strong></summary>
-
-```json
-{
-  "$schema": "TODO:link-to-promotion_manifest-schema",
-  "kfm_promotion_manifest_version": "v1",
-  "dataset_slug": "TODO",
-  "dataset_version_id": "TODO",
-  "spec_hash": "sha256:TODO",
-  "released_at": "2026-03-02T00:00:00Z",
-  "artifacts": [
-    { "path": "TODO", "digest": "sha256:TODO", "media_type": "TODO" }
-  ],
-  "catalogs": [
-    { "path": "dcat.jsonld", "digest": "sha256:TODO" },
-    { "path": "stac/collection.json", "digest": "sha256:TODO" },
-    { "path": "prov/bundle.jsonld", "digest": "sha256:TODO" }
-  ],
-  "qa": { "status": "pass|fail", "report_digest": "sha256:TODO" },
-  "policy": { "policy_label": "public|restricted", "decision_id": "kfm://policy_decision/TODO" },
-  "approvals": [
-    { "role": "steward", "principal": "TODO", "approved_at": "2026-03-02T00:00:00Z" }
-  ]
-}
-```
-</details>
-
-<details>
-<summary><strong>Appendix D — Minimal “policy-safe error” assertions</strong></summary>
-
-Recommended assertions for public-role tests:
-
-- Error envelope shape is stable (same fields regardless of restricted existence).
-- Message does not confirm existence of restricted resources.
-- Status codes do not create inference (use repo’s policy-safe standard).
-- Response times are within a narrow band for deny vs not-found paths (where feasible).
-</details>
-
----
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
+[Back to top](#tests--governed-test-suites-and-fixtures)
