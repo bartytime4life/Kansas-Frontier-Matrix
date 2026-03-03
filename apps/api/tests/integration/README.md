@@ -291,13 +291,13 @@ Minimum expectations:
 > Replace this with real output after you run: `tree -a -L 3 apps/api/tests/integration`
 
 ```text
-apps/api/tests/integration/
-  README.md
-  fixtures/                # seed data + minimal public fixtures (recommended)
-  helpers/                 # shared helpers for integration suite (recommended)
-  test_health_smoke.*      # smoke tests (recommended)
-  test_evidence_*.*
-  test_focus_*.*
+apps/api/tests/integration/                               # API integration tests: exercise real wiring (storage + policy + evidence + focus) with policy-safe fixtures
+├─ README.md                                             # How to run integration tests (local/CI), required services, seed strategy, and failure → gate mapping
+├─ fixtures/                                             # Seed data + minimal PUBLIC fixtures (recommended; synthetic/sanitized only; deterministic)
+├─ helpers/                                              # Shared helpers for the integration suite (recommended: bootstrapping, clients, assertions, fake clock)
+├─ test_health_smoke.*                                   # Smoke tests: service health/ready endpoints, basic auth/policy wiring, and “deny-by-default” sanity
+├─ test_evidence_*.*                                     # Evidence integration tests: resolver wiring, citation paths, obligation emission, and policy-safe failures
+└─ test_focus_*.*                                        # Focus integration tests: policy-bounded retrieval/synthesis harness, cite-or-abstain enforcement, eval hooks
 ```
 
 ---
