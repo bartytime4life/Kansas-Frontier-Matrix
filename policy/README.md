@@ -21,98 +21,97 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 # policy
+Deny-by-default governance rules enforced in CI and at runtime via OPA (Rego) and Conftest.
 
-Deny-by-default governance rules enforced in CI and at runtime via OPA Rego and Conftest.
+---
 
+## Impact
 **Status:** draft  
-**Owners:** `kfm:team:governance`, `kfm:team:devsecops`
+**Owners:** `kfm:team:governance`, `kfm:team:devsecops`  
+**Policy posture:** deny-by-default, fail-closed
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Policy](https://img.shields.io/badge/policy-OPA%20Rego-blue)
+![Conftest](https://img.shields.io/badge/tests-Conftest-lightgrey)
 ![CI](https://img.shields.io/badge/CI-required-lightgrey)
-![Tests](https://img.shields.io/badge/tests-Conftest-lightgrey)
 ![Rego](https://img.shields.io/badge/rego-v1%20migration%20ready-lightgrey)
+![Fail-Closed](https://img.shields.io/badge/posture-fail--closed-critical)
 
-> NOTE  
-> **Confirmed:** The KFM architecture uses a “trust membrane” where the governed API is the enforcement boundary and policy is evaluated consistently (no direct store bypass).  
-> **Proposed:** This directory houses the policy bundle(s) used by both CI and runtime, plus fixtures/tests to prevent regressions.  
-> **Unknown:** The exact folder layout in *your* clone. See “Verify your local layout” below.
+**Quick links:**  
+- [`../docs/governance/README.md`](../docs/governance/README.md) (governance model)  
+- [`../docs/standards/`](../docs/standards/) (schemas, standards)  
+- [`../.github/workflows/`](../.github/workflows/) (CI gates)
+
+> IMPORTANT  
+> **CONFIRMED:** KFM treats policy as a **trust membrane**: clients never access storage directly; governed APIs are the enforcement boundary.  
+> **PROPOSED:** This directory is the **single source of truth** for policy bundles + fixtures used by both CI and runtime.  
+> **UNKNOWN:** Your local directory layout and exact tool versions (OPA/Conftest) are not verified here—see “Minimum verification steps.”
+
+---
 
 ## Navigation
-
-- [Overview](#overview)
+- [Scope](#scope)
 - [Where this fits](#where-this-fits)
-- [What belongs here](#what-belongs-here)
+- [Inputs](#inputs)
+- [Exclusions](#exclusions)
 - [Directory layout](#directory-layout)
-- [Decision surfaces](#decision-surfaces)
-- [Run locally](#run-locally)
+- [Quickstart](#quickstart)
+- [Usage](#usage)
+- [Diagrams](#diagrams)
+- [Tables](#tables)
 - [CI gates](#ci-gates)
 - [Authoring conventions](#authoring-conventions)
 - [Rego v1 migration](#rego-v1-migration)
 - [Governance and review](#governance-and-review)
 - [Troubleshooting](#troubleshooting)
+- [FAQ](#faq)
 - [Appendix](#appendix)
+- [Version history](#version-history)
 
 ---
 
-## Overview
+## Scope
 
-- **Confirmed:** Policy is evaluated **deny-by-default** and must **fail closed** when requirements are missing or a rule denies.  
-- **Confirmed:** CI uses **Conftest** to evaluate Rego policies against structured artifacts (stories, receipts, catalogs, etc.).  
-- **Confirmed:** Policy decisions should return **allow/deny** plus **obligations** (redaction/generalization) and **reason codes** for UX + auditing.  
-- **Proposed:** Runtime services use the same bundle(s) as CI to avoid “works in CI, bypasses at runtime.”
-
-### Evidence tags used in this repository
-
-This project uses three tags for meaningful governance claims:
-
-- **Confirmed:** backed by evidence (tests, contracts, or cited design docs)
-- **Proposed:** recommended default (may change as implementation lands)
-- **Unknown:** not yet verified; includes minimum steps to confirm
-
----
-
-## Where this fits
-
-- **Confirmed:** The “trust membrane” is: **Client UI → Governed API (policy enforcement) → Policy engine + evidence resolver → Stores**.  
-- **Confirmed:** A key risk is policy bypass via direct DB/storage access; mitigations include tests and network/code rules that prevent bypass.  
-- **Proposed:** This directory is the “single source of truth” for the Rego rules used across CI and runtime.
-
-~~~mermaid
-flowchart LR
-  UI[Map Story Focus UI] --> API[Governed API]
-  API --> PEP[Policy enforcement]
-  PEP --> OPA[Policy engine]
-  API --> ER[Evidence resolver]
-  ER --> OPA
-  ER --> CAT[Catalogs]
-  API --> STO[Stores]
-
-  CAT[DCAT STAC PROV] --> ER
-  STO[PostGIS Object Graph Search] --> API
-~~~
+- **CONFIRMED:** Policies are evaluated **deny-by-default** and must **fail closed** when evidence/requirements are missing.
+- **CONFIRMED:** Policies return **allow/deny** plus **reason codes** and **obligations** (e.g., redaction/generalization requirements).
+- **PROPOSED:** CI and runtime must consume the same bundle(s) (or the same fixtures and expected outcomes), so “passes CI” implies “passes runtime.”
+- **UNKNOWN:** The specific set of policy decisions KFM currently enforces in your clone (promotion, story publish, focus answers, exports, etc.). Verify by searching for `package kfm.` rules.
 
 ([Back to top](#policy))
 
 ---
 
-## What belongs here
+## Where this fits
+
+- **CONFIRMED:** KFM’s enforcement boundary (“trust membrane”) is: **Client UI → Governed API (PEP) → Policy Engine (PDP) + Evidence Resolver → Stores**.
+- **CONFIRMED:** A critical risk is bypass: direct reads/writes to DB/object storage that skip policy evaluation.
+- **PROPOSED:** This directory hosts policies and tests that (a) prevent bypass by contract and (b) enforce promotion and publish rules consistently.
+
+([Back to top](#policy))
+
+---
+
+## Inputs
 
 ### Acceptable inputs
 
-- **Confirmed:** Rego policy files (`.rego`) used by CI and runtime.
-- **Confirmed:** Policy test files (OPA unit tests) and Conftest fixture tests.
-- **Proposed:** Small JSON/YAML “facts” files (approved licenses, sensitivity label maps, controlled vocab lists).
-- **Proposed:** Example inputs (“fixtures”) that demonstrate PASS and DENY behavior.
+- **CONFIRMED:** Rego policy modules (`.rego`) used by CI and runtime evaluation.
+- **CONFIRMED:** OPA unit tests (`*_test.rego`) and Conftest fixture tests.
+- **PROPOSED:** Small, reviewed “facts” files (e.g., SPDX allowlists, sensitivity label maps, controlled vocabulary lists).
+- **PROPOSED:** Example inputs (“fixtures”) that demonstrate PASS and DENY behavior for each decision surface.
 
-### Exclusions
+([Back to top](#policy))
 
-- **Confirmed:** Secrets, credentials, tokens, private keys.
-- **Confirmed:** Raw restricted datasets, precise sensitive-location point sets, or anything that increases targeting risk.
-- **Proposed:** Large binaries; policy packs should remain auditable diffs.
+---
+
+## Exclusions
+
+- **CONFIRMED:** Secrets, credentials, tokens, private keys, or embedded auth headers.
+- **CONFIRMED:** Raw restricted datasets, precise sensitive-location point sets, or anything that increases targeting risk.
+- **PROPOSED:** Large binaries—policy packs should remain auditable, diff-friendly text.
 
 > WARNING  
-> **Confirmed:** If permissions/sensitivity are unclear, default-deny and require stewardship review; prefer generalized derivatives and redaction obligations over raw exposure.
+> **CONFIRMED:** If permissions/sensitivity are unclear, default-deny and route to stewardship review. Prefer obligations (redaction/generalization) over raw exposure.
 
 ([Back to top](#policy))
 
@@ -120,8 +119,11 @@ flowchart LR
 
 ## Directory layout
 
-- **Unknown:** Your repository’s exact directory layout.
-- **Proposed:** Recommended structure (adjust to match the repo):
+> NOTE  
+> **UNKNOWN:** Your repo’s exact policy folder structure.  
+> **Minimum verification step:** run `tree -L 4 policy || ls -R policy` and align this README to what exists.
+
+**PROPOSED structure (adjust to match your repo):**
 
 ~~~text
 policy/
@@ -135,99 +137,178 @@ policy/
         gate.rego
         emergency_deny.rego
       story/
-        audit.rego
-      manifest/
-        gate.rego
+        publish.rego
+      focus/
+        answer.rego
+      evidence/
+        resolve.rego
 
   data/
-    licenses.json
-    sensitivity.json
+    licenses_spdx_allowlist.json
+    sensitivity_labels.json
     vocab.json
 
   tests/
     fixtures/
-      story_nodes/
-        story_node.ok.json
-        story_node.fail.missing_evidence.json
       receipts/
         run_receipt.ok.json
         run_receipt.fail.missing_spdx.json
+      story_nodes/
+        story_node.ok.json
+        story_node.fail.missing_evidence_ref.json
 ~~~
 
-### Verify your local layout
+### Minimum verification steps (fail-closed docs posture)
 
-- **Unknown:** Whether your repo uses `policy/rego`, `policy/opa`, or `policies/`.
-- **Minimum verification step:** Run:
-
-~~~bash
-tree -L 4 policy || ls -R policy
-~~~
-
-…and update the examples in this README to match.
+- **UNKNOWN → CONFIRMED:** Is the policy source under `policy/rego/` or `policy/opa/`?
+  - Run: `find policy -maxdepth 3 -name '*.rego' -print`
+- **UNKNOWN → CONFIRMED:** What are the entrypoint packages?
+  - Run: `grep -R --line-number '^package ' policy | sort`
+- **UNKNOWN → CONFIRMED:** Which artifacts are tested in CI (receipts, catalogs, story nodes, etc.)?
+  - Run: `grep -R --line-number 'conftest test' .github/workflows || true`
 
 ([Back to top](#policy))
 
 ---
 
-## Decision surfaces
-
-- **Confirmed:** Policy should be consumable in **CI** (Conftest, `opa test`) and **runtime** (OPA server or embedded evaluation).
-- **Proposed:** Standardize entrypoints so callers don’t depend on internal file paths.
-
-### Suggested entrypoints
-
-| Entry point | Tag | Purpose | Typical input |
-|---|---|---|---|
-| `data.kfm.merge.allow` / `deny` | **Proposed** | Block merges/promotions if licensing/redaction requirements fail | PR receipt, dependency list, target zone |
-| `data.kfm.promotion.allow` / `deny` | **Proposed** | Gate RAW→WORK→PROCESSED→PUBLISHED promotion | run_receipt, validation summary, policy_label |
-| `data.kfm.story.audit.allow` / `deny` | **Proposed** | Gate Story Node publish on evidence + redaction consistency | story-node JSON |
-| `data.kfm.manifest.allow` / `deny` | **Proposed** | Require required fields (SPDX, digests, receipts) | incoming manifest bundle |
-
-### Decision outputs
-
-- **Confirmed:** Every decision should be machine-readable, at minimum:
-
-  - `decision`: `"allow"` or `"deny"`
-  - `reasons`: stable reason codes/messages for audit + UX
-  - `obligations`: required redaction/generalization steps if publishable with transformations
-
-([Back to top](#policy))
-
----
-
-## Run locally
+## Quickstart
 
 ### Prerequisites
 
-- **Proposed:** Install tools:
-  - OPA CLI (`opa`)
-  - Conftest (`conftest`)
-- **Unknown:** Your pinned versions. (Pin for deterministic CI.)
+- **PROPOSED:** Install:
+  - `opa` (OPA CLI)
+  - `conftest` (policy tests against JSON/YAML)
 
-### Common commands
+> NOTE  
+> **UNKNOWN:** Your pinned versions. Pin tool versions in CI for deterministic results.
 
-**Format and typecheck policies (Rego v1 compatible checks):**
+### Local commands (typical)
 
+**Format policy (keep diffs clean):**
 ~~~bash
-opa fmt --write --v0-v1 ./policy
-opa check --v0-v1 --strict ./policy
+opa fmt --write ./policy
+~~~
+
+**Strict compile checks (recommended):**
+~~~bash
+opa check --strict ./policy
 ~~~
 
 **Run OPA unit tests:**
-
 ~~~bash
 opa test ./policy -v
 ~~~
 
-**Run Conftest on Story Nodes (example path):**
-
+**Run Conftest against a receipt (example path):**
 ~~~bash
-conftest test "stories/**/story-node.json" -p "policy/rego"
+conftest test receipts/run_receipt.json -p policy/rego -o table
 ~~~
 
+([Back to top](#policy))
+
+---
+
+## Usage
+
+### Decision surfaces
+
+- **CONFIRMED:** Policy must be consumable in **CI** (Conftest, `opa test`) and **runtime** (OPA server/sidecar or embedded evaluation).
+- **PROPOSED:** Standardize entrypoints so callers don’t depend on internal file paths.
+
+### Suggested entrypoints (names are PROPOSED)
+
+| Entry point | Tag | Purpose | Typical input |
+|---|---|---|---|
+| `data.kfm.merge.allow` / `deny` | **PROPOSED** | Block merges when receipts/licenses/obligations fail | PR receipt, dependency/license list |
+| `data.kfm.promotion.allow` / `deny` | **PROPOSED** | Gate RAW→WORK→PROCESSED→CATALOG→PUBLISHED promotion | promotion manifest, run receipt, validation summary |
+| `data.kfm.story.publish.allow` / `deny` | **PROPOSED** | Gate Story Node publish on evidence + rights + sensitivity | story-node JSON |
+| `data.kfm.focus.answer.allow` / `deny` | **PROPOSED** | Enforce cite-or-abstain + safe output constraints | question + evidence bundle refs + draft answer |
+| `data.kfm.evidence.resolve.allow` / `deny` | **PROPOSED** | Ensure evidence resolution respects policy | EvidenceRef + principal context |
+
+### Decision output contract (PROPOSED minimum)
+
+Policies should return machine-readable objects:
+
+- `decision`: `"allow"` or `"deny"`
+- `reasons[]`: stable codes/messages for audit + UX
+- `obligations[]`: required transformations (redaction/generalization/attribution)
+
+Example shape:
+
+~~~json
+{
+  "decision": "deny",
+  "reasons": [
+    {"code": "MISSING_LICENSE", "severity": "deny", "message": "DCAT license missing"}
+  ],
+  "obligations": [
+    {"type": "redact", "target": "geometry", "method": "generalize_to_grid_1km"}
+  ]
+}
+~~~
+
+([Back to top](#policy))
+
+---
+
+## Diagrams
+
+### Trust membrane (policy enforcement boundary)
+
+~~~mermaid
+flowchart LR
+  UI[Client UI] --> API[Governed API PEP]
+  API --> PDP[Policy Decision Point OPA]
+  API --> ER[Evidence Resolver]
+  ER --> PDP
+  API --> STO[Stores]
+  ER --> CAT[Catalog triplet]
+
+  CAT[DCAT STAC PROV] --> ER
+  STO[Canonical plus projections] --> API
+~~~
+
+### Truth path and promotion gates
+
+~~~mermaid
+flowchart LR
+  U[Upstream] --> RAW[RAW immutable]
+  RAW --> WORK[WORK or QUARANTINE]
+  WORK --> PROCESSED[PROCESSED publishable]
+  PROCESSED --> CATALOG[CATALOG triplet]
+  CATALOG --> PUBLISHED[PUBLISHED governed]
+
+  PUBLISHED --> API[Governed API]
+  API --> UI2[Map Story Focus UI]
+
+  G[Promotion Contract gates] -. applies at transitions .-> RAW
+  G -.-> WORK
+  G -.-> PROCESSED
+  G -.-> CATALOG
+  G -.-> PUBLISHED
+~~~
+
+([Back to top](#policy))
+
+---
+
+## Tables
+
+### Promotion Contract gates (policy relevance)
+
 > NOTE  
-> **Unknown:** Whether your Story Nodes live under `stories/`.  
-> **Minimum verification step:** locate them (e.g., `git ls-files | grep -i story-node.json`).
+> **CONFIRMED intent:** Promotion to PUBLISHED is blocked unless minimum gates are met.  
+> **PROPOSED implementation:** Gate each requirement via Rego + validators + fixture tests.
+
+| Gate | What must be present | Policy example check |
+|---|---|---|
+| A — Identity & versioning | dataset IDs + deterministic spec_hash + artifact digests | deny if `dataset_version_id` missing or digests don’t verify |
+| B — Licensing & rights | SPDX/license fields + terms snapshot | deny if license unknown or missing |
+| C — Sensitivity + plan | policy_label + obligations when needed | deny if PUBLISHED requires redaction but obligations not applied |
+| D — Catalog triplet | DCAT/STAC/PROV validate + cross-link | deny if links broken or evidence refs unresolvable |
+| E — QA thresholds | dataset QA outputs exist and meet thresholds | deny if QA missing/failed (or quarantine) |
+| F — Run receipt & audit | run receipt present + append-only audit | deny if receipt absent or malformed |
+| G — Release manifest | manifest references digests and artifacts | deny if manifest missing or inconsistent |
 
 ([Back to top](#policy))
 
@@ -235,10 +316,10 @@ conftest test "stories/**/story-node.json" -p "policy/rego"
 
 ## CI gates
 
-- **Confirmed:** CI must fail closed on policy deny.
-- **Proposed:** Treat policy checks as **required** status checks on protected branches.
+- **CONFIRMED:** CI must fail closed on policy deny.
+- **PROPOSED:** Treat policy checks as **required** status checks on protected branches.
 
-### Minimal GitHub Actions gate
+### Minimal GitHub Actions gate (illustrative)
 
 ~~~yaml
 name: policy-gate
@@ -246,9 +327,11 @@ on:
   pull_request:
     paths:
       - "policy/**"
+      - "contracts/**"
       - "data/**"
       - "catalog/**"
       - "stories/**"
+      - "receipts/**"
 
 jobs:
   policy:
@@ -256,22 +339,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Rego compile check
+      - name: OPA strict compile
         run: |
-          opa check --v0-v1 --strict ./policy
+          opa check --strict ./policy
 
-      - name: Conftest policy tests
+      - name: OPA unit tests
         run: |
-          conftest test ./receipts/run_receipt.json -p ./policy/rego
+          opa test ./policy -v
 
-      - name: Fail closed on deny
+      - name: Conftest on a run receipt (example)
         run: |
-          echo "If conftest denied, this job should already be failing. Fail closed anyway."
+          conftest test receipts/run_receipt.json -p ./policy/rego -o table
+
+      - name: Fail closed
+        run: |
+          echo "If any prior step denied, this job must fail."
 ~~~
 
-### Policy kill switch pattern
+### Kill switch pattern (PROPOSED)
 
-- **Proposed:** Add a synthetic “emergency deny” rule and a CI job that flips it on to prove the stack fails closed end-to-end.
+- Add `policy/rego/kfm/promotion/emergency_deny.rego` that can deny promotion globally behind a single, explicit feature flag.
+- Add an integration test that flips the flag on and proves the entire promotion path fails closed end-to-end.
 
 ([Back to top](#policy))
 
@@ -279,17 +367,19 @@ jobs:
 
 ## Authoring conventions
 
-### Deny by default
-
-- **Confirmed:** Start with an explicit deny-by-default posture:
+### Deny-by-default
 
 ~~~rego
 package kfm.example
 
 default allow := false
 
-deny[msg] {
-  msg := {"code": "EXAMPLE_DENY", "severity": "deny", "msg": "example deny"}
+deny[violation] {
+  violation := {
+    "code": "EXAMPLE_DENY",
+    "severity": "deny",
+    "message": "example deny"
+  }
 }
 
 allow {
@@ -297,13 +387,13 @@ allow {
 }
 ~~~
 
-### Prefer structured violations
+- **CONFIRMED:** Prefer structured `violation` objects over free-form strings (stable for CI logs and machine parsing).
+- **PROPOSED:** Use stable `code` values (reason codes) and treat them as API surface.
 
-- **Confirmed:** Prefer `violation[]` objects (machine-parsable) over free-form strings so CI logs and JSON artifacts stay stable.
+### Sensitive metadata leakage rule of thumb
 
-### Common gates
-
-- **Confirmed:** Licensing checks (SPDX allowlist), provenance receipt presence, and redaction obligations for publish targets are standard examples of gates.
+- **CONFIRMED:** Do not leak restricted existence via error details (e.g., avoid 403/404 “oracle” behavior).
+- **PROPOSED:** Standardize “not authorized / not found” responses to reduce inference risk.
 
 ([Back to top](#policy))
 
@@ -311,26 +401,26 @@ allow {
 
 ## Rego v1 migration
 
-- **Confirmed:** Rego v1 migration is supported via `opa fmt/check` in v1 compatibility modes, and CI should gate on strict compile.
-- **Confirmed:** Conftest behavior can change when its defaults change; pin versions or pass `--rego-version` during transition.
+- **CONFIRMED:** Rego v1 introduces compatibility requirements; authors can adopt `import rego.v1` for v1 semantics.
+- **PROPOSED:** Gate policy code with strict compilation and a documented migration path.
 
-### Practical migration steps
+### Practical migration steps (typical)
 
-1) **Check:** strict compile in v1 mode
-
+1) **Check strict compilation**
 ~~~bash
-opa check --v0-v1 --strict ./policy
+opa check --strict ./policy
 ~~~
 
-2) **Rewrite:** apply formatter in v1 mode
-
+2) **Format consistently**
 ~~~bash
-opa fmt --write --v0-v1 ./policy
+opa fmt --write ./policy
 ~~~
 
-3) **During migration:** add `import rego.v1` to packages you are actively editing (until all downstreams are v1-clean).
+3) **During migration**
+- Add `import rego.v1` to packages you are actively editing (and do not mix with `future.keywords` in the same module).
 
-4) **Bundles:** if you ship OPA bundles, set `rego_version: 1` in the bundle manifest (and optionally per-file overrides while migrating).
+4) **Conftest compatibility**
+- If you must keep v0 syntax temporarily, run Conftest with a v0 setting (exact flag depends on your Conftest version).
 
 ([Back to top](#policy))
 
@@ -338,20 +428,21 @@ opa fmt --write --v0-v1 ./policy
 
 ## Governance and review
 
-- **Confirmed:** Policy changes are governance changes; treat them as PR-reviewed, auditable artifacts.
-- **Proposed:** Require:
-  - code review from owners
-  - tests proving PASS and DENY cases
-  - an audit trail for any overrides (no silent bypass)
-  - a rollback plan for impactful policy shifts
+- **CONFIRMED:** Policy changes are governance changes; treat them as reviewed, auditable artifacts.
+- **PROPOSED:** Require:
+  - CODEOWNER review from `kfm:team:governance` and `kfm:team:devsecops`
+  - PASS + DENY fixture coverage for each changed decision
+  - reason-code stability (no renames without migration note)
+  - rollback plan for impactful shifts
 
-### Definition of done for policy changes
+### Definition of done (policy PRs)
 
-- [ ] **Confirmed:** deny-by-default remains true
-- [ ] **Confirmed:** at least one PASS fixture and one DENY fixture exist
-- [ ] **Confirmed:** reason codes are stable and documented
-- [ ] **Confirmed:** no sensitive data or secrets added
-- [ ] **Proposed:** CI gates updated to run on touched paths
+- [ ] **CONFIRMED:** deny-by-default remains true
+- [ ] **CONFIRMED:** at least one PASS fixture and one DENY fixture exist per decision touched
+- [ ] **CONFIRMED:** reason codes are stable and documented
+- [ ] **CONFIRMED:** no sensitive data or secrets added
+- [ ] **PROPOSED:** CI gates updated to run on touched paths
+- [ ] **PROPOSED:** integration test proves CI/runtime parity for the changed behavior
 
 ([Back to top](#policy))
 
@@ -359,20 +450,33 @@ opa fmt --write --v0-v1 ./policy
 
 ## Troubleshooting
 
-- **Proposed:** Print denies as a table for readability:
-
+- **PROPOSED:** Print denies as a table for readability:
 ~~~bash
 conftest test path/to/input.json -p policy/rego -o table
 ~~~
 
-- **Proposed:** Use OPA server mode for interactive debugging (local only):
-
+- **PROPOSED:** Debug via OPA server mode (local only):
 ~~~bash
 opa run --server --addr :8181 ./policy/rego
 # then POST inputs to /v1/data/<package>/<rule>
 ~~~
 
-- **Confirmed:** Avoid “ghost metadata” leaks: error behavior should not reveal restricted existence unless policy allows.
+- **PROPOSED:** If a fixture denies unexpectedly:
+  - confirm you’re testing the intended policy root (`-p policy/rego` vs `-p policy/opa`)
+  - confirm the entrypoint path (package + rule)
+  - confirm tool versions match CI
+
+([Back to top](#policy))
+
+---
+
+## FAQ
+
+**Why both OPA tests and Conftest?**  
+- **PROPOSED:** Use `opa test` for fast, module-level unit tests; use Conftest for contract/fixture validation against real artifacts (receipts, manifests, story nodes).
+
+**Can the UI enforce policy?**  
+- **CONFIRMED:** The UI can display policy badges and notices, but it must not make policy decisions.
 
 ([Back to top](#policy))
 
@@ -381,12 +485,9 @@ opa run --server --addr :8181 ./policy/rego
 ## Appendix
 
 <details>
-<summary>Example Story Node inputs and a simple audit policy</summary>
+<summary>Example fixture input and a simple Story publish gate</summary>
 
-- **Proposed:** Use a Story Node contract that carries:
-  - claims with `evidence_ref`
-  - datasets with `spec_hash`
-  - `sensitivity` plus `redaction_profile`
+**PROPOSED:** A Story Node contract carries claims that reference resolvable evidence and declares a policy label and redaction profile.
 
 ~~~json
 {
@@ -395,27 +496,28 @@ opa run --server --addr :8181 ./policy/rego
   "title": "Example Story",
   "status": "pending",
   "owners": ["kfm:team:stories"],
-  "sensitivity": "public",
+  "policy_label": "public",
   "redaction_profile": "public_default",
-  "claims": [{"id": "claim.001", "text": "Example claim", "evidence_ref": "oci:..."}],
-  "datasets": [{"ref": "catalog:stac/items/example.json", "spec_hash": "sha256-..."}]
+  "claims": [
+    {"id": "claim.001", "text": "Example claim", "evidence_ref": "doc://sha256:...#page=1&span=10:200"}
+  ]
 }
 ~~~
 
 ~~~rego
-package kfm.story.audit
+package kfm.story.publish
 
 default allow := false
 
-deny[msg] {
+deny[violation] {
   input.doc_kind != "story_node"
-  msg := {"code": "NOT_STORY_NODE", "severity": "deny", "msg": "doc_kind must be story_node"}
+  violation := {"code": "NOT_STORY_NODE", "severity": "deny", "message": "doc_kind must be story_node"}
 }
 
-deny[msg] {
+deny[violation] {
   some c in input.claims
-  not startswith(c.evidence_ref, "oci:")
-  msg := {"code": "MISSING_EVIDENCE_REF", "severity": "deny", "msg": "claim missing evidence_ref"}
+  not startswith(c.evidence_ref, "doc://")
+  violation := {"code": "MISSING_EVIDENCE_REF", "severity": "deny", "message": "claim missing evidence_ref"}
 }
 
 allow {
@@ -424,3 +526,13 @@ allow {
 ~~~
 
 </details>
+
+([Back to top](#policy))
+
+---
+
+## Version history
+
+- **v1 (2026-03-03):** Initial KFM-aligned policy directory README (deny-by-default, CI/runtime parity posture, promotion gates, and fixtures-first testing).
+
+([Back to top](#policy))
