@@ -20,91 +20,193 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 # packages
-Shared libraries and core modules for Kansas Frontier Matrix. [Confirmed]
+Shared libraries and core modules for Kansas Frontier Matrix (KFM).
 
-**Status:** draft [Proposed]  
-**Owners:** `kfm-core-maintainers-TBD` [Unknown]
+> **Purpose:** Keep reusable logic **governed and composable** so `apps/` can ship features **without bypassing policy, evidence, or lifecycle gates**.
 
-![CI](https://img.shields.io/badge/CI-TODO-lightgrey)  
-![Policy](https://img.shields.io/badge/Policy-default--deny-lightgrey)  
-![Docs](https://img.shields.io/badge/Docs-KFM--MDP-lightgrey)  
+---
+
+## IMPACT
+**Status:** draft (docs surface; ready for repo wiring)  
+**Owners:** `kfm-core-maintainers-TBD` (**UNKNOWN**; see verification steps)
+
+![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
+![Policy](https://img.shields.io/badge/Policy-default--deny-lightgrey)
+![Docs](https://img.shields.io/badge/Docs-KFM--MDP-lightgrey)
 ![License](https://img.shields.io/badge/License-TODO-lightgrey)
 
-## Navigation
-- [Purpose](#purpose)
-- [Where this fits](#where-this-fits)
-- [What belongs here](#what-belongs-here)
-- [What must not go here](#what-must-not-go-here)
-- [Architecture invariants](#architecture-invariants)
-- [Dependency rules](#dependency-rules)
-- [Reference package map](#reference-package-map)
-- [Standard package layout](#standard-package-layout)
-- [Creating a new package](#creating-a-new-package)
-- [Testing and release](#testing-and-release)
-- [Unknowns and verification steps](#unknowns-and-verification-steps)
+**Quick links:**  
+[Scope](#scope) ·
+[Where it fits](#where-it-fits) ·
+[Inputs](#inputs) ·
+[Exclusions](#exclusions) ·
+[Directory tree](#directory-tree) ·
+[Quickstart](#quickstart) ·
+[Usage](#usage) ·
+[Architecture invariants](#architecture-invariants) ·
+[Dependency rules](#dependency-rules) ·
+[Package taxonomy](#package-taxonomy) ·
+[DoD and gates](#definition-of-done-and-gates) ·
+[Unknowns](#unknowns-and-verification-steps)
 
 ---
 
-## Claim tags
-This repo’s documentation is evidence-disciplined. [Proposed]
+## Conventions
+This repo’s docs are evidence-disciplined.
 
-- **[Confirmed]** backed by the referenced KFM architecture/governance docs. [Proposed]
-- **[Proposed]** a recommended convention or target design, not yet verified in repo state. [Proposed]
-- **[Unknown]** not verified; includes the *minimum steps* required to confirm. [Proposed]
+### Claim labels
+Every meaningful statement is tagged:
 
----
+- **CONFIRMED** — backed by KFM source-of-truth docs (or repo evidence explicitly cited in those docs).
+- **PROPOSED** — recommended convention / target architecture; not verified in current checkout.
+- **UNKNOWN** — not verified; includes *minimal steps* to make it CONFIRMED.
 
-## Purpose
-- `packages/` contains **core modules and shared libraries** (domain logic, use cases). [Confirmed]
-- The goal is to make **reusable, governed behavior** available to `apps/` without letting apps bypass policy or evidence requirements. [Proposed]
+### Normative words
+- **MUST / MUST NOT**: invariant required for governance + safety.
+- **SHOULD / SHOULD NOT**: strong default; deviation requires justification (ADR or doc note).
+- **MAY**: optional.
 
 [Back to top](#packages)
 
 ---
 
-## Where this fits
-- `apps/` contains runnable services (API, UI, workers, CLI). [Confirmed]
-- `packages/` contains shared libraries and core modules used by `apps/`. [Confirmed]
-- `contracts/` holds API contracts and schemas consumed by both apps and packages. [Confirmed]
-- `policy/` holds policy code and tests (e.g., OPA/Rego). [Confirmed]
-- `data/` contains registry entries, lifecycle zones, and catalogs (RAW/WORK/PROCESSED/CATALOG/PUBLISHED). [Confirmed]
+## Scope
+- **CONFIRMED:** `packages/` is for **shared libraries and core modules** reused by `apps/`.
+- **CONFIRMED:** `packages/` exists to reduce duplication while preserving the **policy boundary** and **cite-or-abstain** behavior.
+- **PROPOSED:** `packages/` is where we put “governed primitives” (identity, evidence references, policy checks, deterministic transforms) that are safe to reuse across services.
 
 [Back to top](#packages)
 
 ---
 
-## What belongs here
-Acceptable inputs for `packages/` include: [Proposed]
+## Where it fits
+- **CONFIRMED:** `apps/` contains runnable services (API/PEP, UI, workers, CLI).
+- **PROPOSED:** `contracts/` is the canonical home for shared schemas/contract surfaces (OpenAPI, JSON Schema, controlled vocabularies).
+- **CONFIRMED:** `policy/` contains policy code + tests (OPA/Rego or equivalent).
+- **CONFIRMED:** `data/` holds the truth-path lifecycle zones and the publishable catalog surfaces.
 
-- Domain entities/value objects and invariants (e.g., dataset identity, evidence references). [Proposed]
-- Deterministic transforms and validators used by pipelines and the API. [Proposed]
-- Evidence resolution helpers (EvidenceRef → EvidenceBundle). [Proposed]
-- Policy integration helpers (policy checks, obligation handling, redaction contracts). [Proposed]
-- Catalog builders and validators for DCAT/STAC/PROV outputs. [Proposed]
-- Indexer builders (tile generation helpers, search indexing helpers) behind adapter interfaces. [Proposed]
-- Shared utilities that do not violate the policy boundary. [Proposed]
+**PROPOSED flow:** `apps/*` depend on `packages/*` (never the reverse); apps expose governed APIs; packages provide reusable logic, validators, and adapters.
 
 [Back to top](#packages)
 
 ---
 
-## What must not go here
-Exclusions for `packages/` include: [Proposed]
+## Inputs
+Acceptable contents inside `packages/` (what belongs here):
 
-- Direct UI code and UI-only state management (belongs in `apps/ui/`). [Proposed]
-- Direct database/storage access from client-facing code paths (must cross the governed API / PEP). [Confirmed]
-- Secrets, tokens, or credentials (secrets must never enter the repo). [Confirmed]
-- Long-lived environment-specific deployment artifacts (belongs in `infra/` and `configs/`). [Proposed]
-- Published artifacts (tiles, catalogs, processed outputs) except as test fixtures (belongs in `data/` zones). [Proposed]
+- **PROPOSED:** **Domain models** (dataset identity, versioning, EvidenceRef/EvidenceBundle, StoryNode).
+- **PROPOSED:** **Deterministic transforms** and validators used by pipelines and API (pure functions where possible).
+- **PROPOSED:** **Evidence resolution helpers** (EvidenceRef → EvidenceBundle), including redaction/generalization *contracts* (not hard-coded “policy decisions”).
+- **PROPOSED:** **Policy integration libraries** (policy client, obligation data structures, evaluation result types).
+- **PROPOSED:** **Catalog builders/validators** for DCAT/STAC/PROV surfaces (behind contracts).
+- **PROPOSED:** **Indexer builders** (tile/search index build helpers) behind adapter interfaces.
+- **PROPOSED:** Shared utilities that do **not** create an IO/policy bypass.
+
+[Back to top](#packages)
+
+---
+
+## Exclusions
+What must **not** go in `packages/`:
+
+- **CONFIRMED:** UI-only code (belongs in `apps/ui/`).
+- **CONFIRMED:** Any client-facing code path that reaches storage directly (must cross governed API / policy boundary).
+- **CONFIRMED:** Secrets, tokens, credentials (never commit secrets).
+- **PROPOSED:** Environment-specific deployment artifacts (belongs in `infra/` and `configs/`).
+- **PROPOSED:** Published artifacts (tiles, catalogs, processed outputs) except as test fixtures (belongs in `data/` zones).
+
+[Back to top](#packages)
+
+---
+
+## Directory tree
+**UNKNOWN:** Actual `packages/` tree in the current checkout (must be verified).
+
+**PROPOSED target tree (illustrative):**
+```text
+packages/
+├─ domain/
+│  ├─ README.md
+│  ├─ src/
+│  └─ tests/
+├─ ingest/
+│  ├─ README.md
+│  ├─ src/
+│  └─ tests/
+├─ catalog/
+│  ├─ README.md
+│  ├─ src/
+│  └─ tests/
+├─ indexers/
+│  ├─ README.md
+│  ├─ src/
+│  └─ tests/
+├─ evidence/
+│  ├─ README.md
+│  ├─ src/
+│  └─ tests/
+└─ policy/
+   ├─ README.md
+   ├─ src/
+   └─ tests/
+```
+
+[Back to top](#packages)
+
+---
+
+## Quickstart
+**UNKNOWN:** Exact monorepo toolchain (pnpm/yarn/npm, nx/turborepo/bazel, python/uv/poetry, etc.).
+
+**PROPOSED minimal checks you should be able to run once the toolchain is confirmed:**
+```bash
+# list packages (exact command depends on tooling)
+ls -la packages/
+
+# run unit tests (replace with repo’s actual runner)
+# e.g., pnpm -w test
+# e.g., pytest -q
+# e.g., nx test
+echo "TODO: wire to repo test runner"
+```
+
+[Back to top](#packages)
+
+---
+
+## Usage
+### How apps should consume packages
+- **PROPOSED:** `apps/*` import package public APIs only (no deep imports into private paths).
+- **PROPOSED:** Apps use packages to:
+  - validate inputs (schemas + invariants),
+  - plan retrieval and transforms deterministically,
+  - resolve evidence bundles,
+  - enforce obligations returned by policy evaluation,
+  - build catalogs / index artifacts as part of pipelines (not UI runtime).
+
+### How packages should expose APIs
+- **PROPOSED:** Each package exports a small, stable “public surface” (index file / module exports).
+- **PROPOSED:** Each package README declares:
+  - what the package does,
+  - allowed inputs,
+  - exclusions,
+  - external dependencies,
+  - any policy/evidence obligations it expects.
 
 [Back to top](#packages)
 
 ---
 
 ## Architecture invariants
-KFM’s architecture is governed by a strict truth path and trust membrane. [Confirmed]
+KFM’s “truth path” + “trust membrane” posture drives package boundaries.
 
-### Truth path and trust membrane diagram
+### Invariants (enforced posture)
+- **CONFIRMED:** Clients/UI **MUST NOT** access storage directly; all access crosses a governed API/policy boundary (PEP).
+- **CONFIRMED:** KFM’s lifecycle is a strict promotion path: **Upstream → RAW → WORK → PROCESSED → CATALOG → PUBLISHED**.
+- **CONFIRMED:** The **catalog triplet** (DCAT + STAC + PROV) is treated as a contract surface for published data.
+- **PROPOSED:** Core logic **MUST NOT** bypass the repository/adapter boundary to reach storage (encode this as tests/lint rules).
+
+### Trust membrane diagram (conceptual)
 ```mermaid
 flowchart TB
   subgraph Clients
@@ -112,132 +214,181 @@ flowchart TB
     CLI[apps cli]
   end
 
-  API[apps api pep]
+  PEP[apps api policy enforcement point]
 
   subgraph Packages
     Domain[packages domain]
-    Ingest[packages ingest]
-    Catalog[packages catalog]
     Evidence[packages evidence]
     Policy[packages policy]
+    Catalog[packages catalog]
     Indexers[packages indexers]
+    Ingest[packages ingest]
   end
 
-  Zones[(Upstream RAW WORK PROCESSED CATALOG PUBLISHED)]
-  Stores[(Stores postgis object search)]
+  Zones[(Truth path zones RAW WORK PROCESSED CATALOG PUBLISHED)]
+  Stores[(Stores postgis graph search object)]
 
-  UI --> API
-  CLI --> API
+  UI --> PEP
+  CLI --> PEP
 
-  API --> Policy
-  API --> Evidence
-  API --> Domain
-  API --> Catalog
-  API --> Indexers
+  PEP --> Policy
+  PEP --> Evidence
+  PEP --> Domain
+  PEP --> Catalog
+  PEP --> Indexers
 
   Ingest --> Zones
   Catalog --> Zones
   Indexers --> Stores
-  API --> Stores
+  PEP --> Stores
 
   UI -. blocked .-> Stores
 ```
-
-- Clients and UI **must not** access storage directly; access is policy-evaluated at the PEP (governed API). [Confirmed]
-- Lifecycle zones exist as a real promotion path (Upstream → RAW → WORK → PROCESSED → CATALOG → PUBLISHED). [Confirmed]
-- The catalog triplet (DCAT + STAC + PROV) is treated as a contract surface. [Confirmed]
 
 [Back to top](#packages)
 
 ---
 
 ## Dependency rules
-These rules exist to prevent policy bypass and to keep packages composable. [Proposed]
+These rules prevent policy bypass and keep packages composable.
 
-- `apps/*` **may depend on** `packages/*`. [Proposed]
-- `packages/*` **must not depend on** `apps/*`. [Proposed]
-- `packages/*` **may depend on** `contracts/*` for schemas, OpenAPI, and controlled vocabularies. [Proposed]
-- `packages/*` **must not embed** authoritative schemas as ad-hoc copies when a canonical contract exists. [Proposed]
-- Any IO boundary must be behind an adapter interface so policy, logging, and testing can gate it. [Proposed]
-- Anything exposed to end users must enable cite-or-abstain behavior by preserving resolvable evidence IDs. [Confirmed]
+### Hard rules
+- **PROPOSED:** `apps/*` **MAY** depend on `packages/*`.
+- **PROPOSED:** `packages/*` **MUST NOT** depend on `apps/*`.
+- **PROPOSED:** `packages/*` **MAY** depend on `contracts/*` (canonical schemas/contracts).
+- **PROPOSED:** `packages/*` **MUST NOT** vendor-copy canonical schemas when a contract exists.
+- **PROPOSED:** Any IO boundary **MUST** sit behind an adapter interface so policy, logging, and tests can gate it.
+- **CONFIRMED:** Anything user-visible **MUST** preserve resolvable evidence IDs to enable cite-or-abstain.
+
+### How to enforce (CI-amenable)
+- **PROPOSED:** Add import boundary lint rules (TS eslint restricted imports, Python import-linter, etc.).
+- **PROPOSED:** Add contract tests proving apps cannot bypass PEP by calling storage adapters directly.
+- **PROPOSED:** Fail closed: violations block PRs.
 
 [Back to top](#packages)
 
 ---
 
-## Reference package map
-The modules below are the **documented target modules** for KFM. [Confirmed]  
-Their *presence in the current repo checkout* is **not guaranteed** without verification. [Confirmed]
+## Package taxonomy
+Use a consistent “kind” model so dependency rules are clear.
 
-| Package | Intended responsibility | Repo presence |
-|---|---|---|
-| `packages/domain` | Core domain models (e.g., Dataset, EvidenceBundle, StoryNode). [Confirmed] | [Unknown] |
-| `packages/ingest` | Ingestion pipelines and connectors (fetch, normalize, validate, emit receipts). [Confirmed] | [Unknown] |
-| `packages/catalog` | Build and validate DCAT/STAC/PROV catalogs from processed artifacts. [Confirmed] | [Unknown] |
-| `packages/indexers` | Rebuild indexes/tiles/search artifacts (e.g., spatial indexes, vector tiles). [Confirmed] | [Unknown] |
-| `packages/evidence` | Evidence resolver (EvidenceRefs → EvidenceBundles) + redaction/generalization support. [Confirmed] | [Unknown] |
-| `packages/policy` | Policy engine integration (OPA/Rego), obligation enforcement, context extraction. [Confirmed] | [Unknown] |
+| Package kind | What it contains | IO allowed? | May depend on | Must not depend on |
+|---|---|---:|---|---|
+| `domain` | entities, value objects, invariants, IDs, hashing | No | `contracts` | storage, network |
+| `evidence` | EvidenceRef resolution, bundle building, redaction *contracts* | Limited (via adapters) | `domain`, `contracts`, `policy` (types) | direct DB clients |
+| `policy` | policy client, evaluation result types, obligation modeling | Limited (policy engine adapter) | `contracts` | UI / storage |
+| `catalog` | DCAT/STAC/PROV builders + validators | Limited (write artifacts via adapters) | `domain`, `contracts` | UI |
+| `indexers` | tile/search index build helpers (behind adapters) | Yes (via adapters) | `domain`, `contracts` | UI |
+| `ingest` | connectors + normalization + receipts (deterministic where possible) | Yes (via adapters) | `domain`, `contracts` | UI |
+
+> **PROPOSED:** When you’re unsure where something belongs, default to `domain` (pure) or `contracts` (schema) and add adapters only when required.
 
 [Back to top](#packages)
 
 ---
 
 ## Standard package layout
-Use this as the default skeleton unless a package’s language/tooling requires a different layout. [Proposed]
+Use as default unless language tooling requires different structure.
 
 ```text
 packages/<package-name>/
 ├─ README.md
-├─ src/                          # library code
-├─ tests/                        # unit tests (and fixtures if needed)
-├─ contracts/                    # optional: package-specific contracts (if canonical)
-├─ adapters/                     # optional: IO boundaries behind interfaces
-└─ package-config-TODO           # e.g., package.json, pyproject.toml, Cargo.toml
+├─ src/                         # library code
+├─ tests/                       # unit tests + fixtures
+├─ adapters/                    # IO boundaries behind interfaces (optional)
+├─ contracts/                   # package-specific schemas ONLY if canonical here (optional)
+└─ <tooling files>              # package.json, pyproject.toml, Cargo.toml, etc.
 ```
 
-- Every package must have a README describing purpose, allowed inputs, exclusions, and public API surface. [Proposed]
-- Tests must cover invariants and failure modes (fail-closed behavior where applicable). [Proposed]
+- **PROPOSED:** Every package README documents: purpose, inputs, exclusions, public API surface, and “what this package must never do”.
+- **PROPOSED:** Tests must cover invariants and failure modes (fail-closed where applicable).
 
 [Back to top](#packages)
 
 ---
 
 ## Creating a new package
-### Minimal checklist
-- [ ] Create `packages/<name>/README.md` with claim tags and clear scope. [Proposed]
-- [ ] Define exported API surface and keep it small. [Proposed]
-- [ ] Add unit tests and fixtures for edge cases. [Proposed]
-- [ ] If the package touches policy or evidence, add contract tests that prove no bypass is possible. [Proposed]
-- [ ] Update any registry/index of packages if one exists. [Unknown]
+### Minimal checklist (PR-ready)
+- [ ] **PROPOSED:** Create `packages/<name>/README.md` (this doc format, claim labels, scope).
+- [ ] **PROPOSED:** Define a small exported surface; avoid deep imports.
+- [ ] **PROPOSED:** Add unit tests and fixtures for edge cases.
+- [ ] **PROPOSED:** If the package touches policy/evidence/lifecycle, add contract tests proving no bypass is possible.
+- [ ] **UNKNOWN:** Update package registry/index if one exists (verify).
 
-### Definition of done
-- [ ] Lint/typecheck passes. [Proposed]
-- [ ] Unit tests pass. [Proposed]
-- [ ] Contract tests pass (schemas/policy where applicable). [Proposed]
-- [ ] No secrets added. [Confirmed]
-- [ ] Documentation updated if behavior changes affect other layers. [Proposed]
+### Naming and ownership
+- **PROPOSED:** Prefer names that reflect responsibility (`evidence`, `catalog`, `indexers`) over tech (`utils`, `common`).
+- **UNKNOWN:** How CODEOWNERS is configured for packages (verify).
 
 [Back to top](#packages)
 
 ---
 
-## Testing and release
-- Treat packages as the unit of reuse: tests should run fast and deterministically. [Proposed]
-- If the repo uses CI promotion gates, package changes that affect promotion, policy, or evidence must be gated (fail-closed). [Confirmed]
-- Versioning and publishing strategy depends on monorepo tooling (workspace manager, language mix). [Unknown]
+## Definition of Done and gates
+Packages are a reuse boundary; “done” means safe to import from multiple apps.
+
+### Engineering baseline
+- [ ] **PROPOSED:** Formatting/lint/typecheck passes.
+- [ ] **PROPOSED:** Unit tests pass.
+- [ ] **PROPOSED:** Contract tests pass (schema + policy where applicable).
+- [ ] **CONFIRMED:** No secrets added.
+- [ ] **PROPOSED:** Docs updated if behavior changes affect other layers.
+
+### Governance baseline (when relevant)
+- [ ] **PROPOSED:** Inputs/outputs are traceable (evidence IDs preserved).
+- [ ] **PROPOSED:** Any artifact-producing code emits checksums + run receipt structures.
+- [ ] **PROPOSED:** Any policy-touching code fails closed on missing policy decision/obligations.
+
+[Back to top](#packages)
+
+---
+
+## FAQ
+### “Can packages talk to PostGIS/Neo4j/object storage?”
+- **PROPOSED:** Only through **adapters** and only when invoked from governed contexts (pipelines or API service).
+- **CONFIRMED posture:** UI/clients never connect directly.
+
+### “Where do schemas go?”
+- **PROPOSED:** Put canonical schemas in `contracts/`. Packages can include package-local schemas only when they are the canonical source.
+
+### “Where do we enforce ‘no bypass’?”
+- **PROPOSED:** In CI: import boundary lint + integration tests that exercise the PEP boundary and fail if direct storage calls occur.
 
 [Back to top](#packages)
 
 ---
 
 ## Unknowns and verification steps
-Some details cannot be asserted without inspecting the live repository checkout. [Confirmed]
+Some details cannot be asserted without inspecting the live repository checkout.
 
-Minimum steps to upgrade “Unknown” → “Confirmed”: [Proposed]
+### Unknowns
+- **UNKNOWN:** Which `packages/*` directories exist right now.
+- **UNKNOWN:** Monorepo toolchain (workspace manager, build system, test runner).
+- **UNKNOWN:** Which dependency rules are already enforced by CI (boundary lint, policy tests).
+- **UNKNOWN:** Release/versioning strategy for packages (if any).
 
-- [ ] Capture commit hash and root tree (e.g., `git rev-parse HEAD` and a shallow `tree` of `packages/`). [Confirmed]
-- [ ] Confirm which `packages/*` directories exist and whether they match the documented target modules. [Confirmed]
-- [ ] Confirm the monorepo toolchain (workspace manager, build system, test runner). [Unknown]
-- [ ] Identify which dependency rules are enforced by CI today (imports, lint rules, policy tests). [Confirmed]
+### Smallest steps to make these CONFIRMED
+- [ ] Run `git rev-parse HEAD` and record commit hash in a PR note.
+- [ ] Run `ls -la packages/` (or `tree -L 2 packages/`) and paste into the PR description.
+- [ ] Identify workspace + test runner from root config files (`package.json`, `pnpm-workspace.yaml`, `nx.json`, `pyproject.toml`, etc.).
+- [ ] Locate CI rules enforcing boundaries (search workflows for lint/import rules; search for policy/contract tests).
+- [ ] Add/confirm an automated boundary test (fail-closed) for “apps cannot access storage except via PEP”.
 
 [Back to top](#packages)
+
+---
+
+<details>
+<summary>Appendix: Adapter boundary pattern (PROPOSED)</summary>
+
+### Goal
+Keep IO replaceable and policy-testable.
+
+### Pattern
+- Define an interface in a package (e.g., `packages/indexers/src/ports/SearchIndexPort`).
+- Implement it in an adapter module (e.g., `packages/indexers/adapters/opensearch`).
+- Allow apps/pipelines to inject the adapter, but keep the package core dependent only on the interface.
+
+### Why
+- Enables hermetic tests for domain logic.
+- Makes it possible to prove “no bypass” by constraining where adapters are instantiated.
+</details>
