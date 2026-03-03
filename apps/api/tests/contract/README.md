@@ -226,18 +226,18 @@ It complements, but does not replace:
 This is a suggested structure; align with existing repo conventions:
 
 ```text
-apps/api/tests/contract/
-├── README.md
-├── openapi/
-│   └── *.test.*
-├── evidence/
-│   └── *.test.*
-├── policy/
-│   └── *.test.*
-└── fixtures/
-    ├── policy/
-    ├── evidence/
-    └── catalogs/
+apps/api/tests/contract/                                  # API contract tests: prove implementation matches governed contracts (OpenAPI + policy decisions + evidence semantics)
+├── README.md                                              # What is tested, how to run, required fixtures, and how failures map to contract/policy gates
+├── openapi/                                               # OpenAPI conformance tests (routes, request/response shapes, status codes, versioning)
+│   └── *.test.*                                           # Tests validating spec vs implementation (and/or generated clients) including error envelope stability
+├── evidence/                                              # Evidence contract tests (EvidenceRef/Bundles shapes, resolver behaviors, citation fields, obligations surfaced)
+│   └── *.test.*                                           # Tests ensuring evidence endpoints adhere to schemas and fail safely when unresolved/unauthorized
+├── policy/                                                # Policy contract tests (decision envelope schema, reason codes, obligations, default-deny baseline)
+│   └── *.test.*                                           # Tests verifying policy outputs match contracts and do not leak restricted inference
+└── fixtures/                                              # Synthetic fixtures supporting contract tests (small, deterministic, policy-safe)
+    ├── policy/                                            # Policy inputs + expected decisions (allow/deny + obligations + reason codes)
+    ├── evidence/                                          # Evidence fixtures (refs/bundles; resolvable/unresolvable scenarios; hash stability)
+    └── catalogs/                                          # Minimal catalog artifacts (DCAT/STAC/PROV) used for response-shape and cross-link tests
 ```
 
 [Back to top](#navigation)
