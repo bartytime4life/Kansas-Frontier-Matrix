@@ -1,285 +1,294 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/e6d8d5de-ac1a-4f3c-985e-3c7aa5aaa358
-title: apps/focus — Focus Mode UI (cite-or-abstain)
+doc_id: kfm://doc/9f0cd322-a6a1-4d63-9fef-cdc4b06ea2d2
+title: Focus Mode App
 type: standard
 version: v1
 status: draft
-owners: KFM UI Team (TBD)
-created: 2026-02-23
-updated: 2026-02-23
-policy_label: restricted
+owners: TODO:assign-owners
+created: 2026-03-03
+updated: 2026-03-03
+policy_label: public
 related:
-  - kfm://doc/KFM-GDG-2026-02-20
-  - ../.. (repo root)
-tags: [kfm, focus, ui, governance, cite-or-abstain]
+  - TODO:link-to-focus-spec
+  - TODO:link-to-evidence-resolver-spec
+  - TODO:link-to-telemetry-schema
+tags: [kfm, focus, app, trust-membrane, governance]
 notes:
-  - Governed client: renders policy-filtered outputs; never bypasses API.
-  - Every user-facing claim must be traceable to evidence or must abstain.
+  - This README is a contract + runbook for the Focus Mode app surface.
+  - Replace TODOs after confirming repo wiring (scripts, routes, schemas).
 [/KFM_META_BLOCK_V2] -->
 
-# KFM Focus Mode
-_Governed, evidence-led Q&A UI (cite-or-abstain) for the Kansas Frontier Matrix._
+<div align="center">
 
-![status](https://img.shields.io/badge/status-draft-lightgrey)
-![app](https://img.shields.io/badge/app-focus-blue)
-![trust](https://img.shields.io/badge/trust-evidence--first-brightgreen)
-![policy](https://img.shields.io/badge/policy-restricted-blueviolet)
-![contract](https://img.shields.io/badge/contract-governed%20api-orange)
+# 🧠 Focus Mode App (`apps/focus`)
 
-> TODO: add real CI badges once workflows exist  
-> `![ci](https://img.shields.io/badge/ci-TODO-inactive)`  
-> `![e2e](https://img.shields.io/badge/e2e-TODO-inactive)`
+**Purpose:** A **Focus Mode** surface that turns user questions into **evidence-led answers** by calling only **governed APIs** and rendering **citations, license, provenance, and abstentions** as first-class UI.
+
+![status](https://img.shields.io/badge/status-draft-orange)
+![policy](https://img.shields.io/badge/policy-default--deny%20%7C%20fail--closed-critical)
+![mdp](https://img.shields.io/badge/KFM--MDP-v11.2.6-blue)
+![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
+
+</div>
 
 ---
 
-## Quick nav
-- [Overview](#overview)
-- [Non-negotiable invariants](#non-negotiable-invariants)
+## Quick links
+
+- [What this app is](#what-this-app-is)
 - [Architecture](#architecture)
-- [API dependencies](#api-dependencies)
-- [Run locally](#run-locally)
-- [Configuration](#configuration)
-- [Governance and safety](#governance-and-safety)
-- [Testing](#testing)
-- [Contributing](#contributing)
-- [Troubleshooting](#troubleshooting)
-- [Glossary](#glossary)
+- [Trust membrane invariants](#trust-membrane-invariants)
+- [API contracts](#api-contracts)
+- [Local development](#local-development)
+- [Testing & evaluation](#testing--evaluation)
+- [Governance & safety](#governance--safety)
+- [Telemetry](#telemetry)
+- [Directory layout](#directory-layout)
+- [Definition of done](#definition-of-done)
 
 ---
 
-## Overview
-Focus Mode is KFM’s **governed AI-assisted interface** for asking questions and receiving:
-- **Answers with inline citations** (EvidenceRefs), **or**
-- A **policy-safe abstention** that explains _why_ the system cannot answer, plus an **audit_ref** for steward review.
+## What this app is
 
-The user loop is designed to be:
-**Explore (map/time) → Focus Mode → Evidence/Provenance inspection → Story Nodes**.
+Focus Mode is the **evidence-led Q&A** surface of KFM:
 
-This app is a **governed client**: it **renders what the governed API returns** and must not contain privileged credentials or bypass backend policy enforcement.
+- user asks a question
+- backend retrieves admissible evidence (graph + spatial + docs)
+- LLM drafts an answer **grounded in that evidence**
+- a **hard governance/citation gate** is applied
+- UI renders **answer + citations** (or **abstention**) and makes trust visible
 
----
-
-## Non-negotiable invariants
-1. **Cite-or-abstain**
-   - If a factual claim is shown, it must have a resolvable citation.
-   - Otherwise, the UI must show an abstention state and an `audit_ref`.
-
-2. **No ghost metadata**
-   - The UI must not reveal the existence of restricted entities/records through empty placeholders, different error messages, or UI affordances.
-
-3. **Policy is visible**
-   - Users must see policy and trust surfaces (policy labels, freshness, validation status, license/attribution, redactions).
-
-4. **UI never hits databases directly**
-   - All data access is via the governed API boundary.
+> **Non-goal:** This app does **not** query databases directly and does **not** call the LLM directly. It is a UI surface on top of governed APIs.
 
 ---
 
 ## Architecture
 
-### System view
+### End-to-end Focus Mode control loop
+
 ```mermaid
 flowchart LR
-  user[User] --> focus[Focus UI]
-  focus --> api[Governed API]
-  api --> policy[Policy Engine]
-  api --> resolver[Evidence Resolver]
-  resolver --> catalogs[Catalogs DCAT STAC PROV]
-  resolver --> artifacts[Artifact links policy gated]
-  api --> audit[Audit log]
-
-  focus --> export[Export answer]
-  export --> api
+  U[User question] --> UI[apps/focus UI]
+  UI --> FAPI[POST focus ask]
+  FAPI --> PLAN[Parse intent and plan]
+  PLAN --> R[Retrieve admissible evidence]
+  R --> EV[Resolve EvidenceBundle]
+  EV --> LLM[LLM generate draft]
+  LLM --> GATE[Governance gate]
+  GATE -->|pass| OUT[Answer with citations]
+  GATE -->|fail closed| ABS[Abstain or reduce scope]
+  OUT --> UI
+  ABS --> UI
 ```
 
-### Request flow
-**Happy path**
-1. User asks a question (optionally with context like a map view or time window).
-2. Focus UI calls the governed endpoint for Focus Q&A.
-3. Response includes:
-   - answer text,
-   - citations (EvidenceRefs),
-   - `audit_ref`,
-   - policy decision summary.
-4. UI renders answer + inline citations.
-5. When the user opens Evidence Drawer, the UI resolves EvidenceRefs (server-side) and renders Evidence Bundles.
+### UI trust surfaces (what users must be able to see)
 
-**Abstention path**
-- If policy denies or evidence cannot be resolved:
-  - UI shows Policy Notice (policy-safe),
-  - suggests safe alternatives (broader time window, public datasets),
-  - always includes `audit_ref`.
+Focus Mode UI should be able to render and/or link to:
+
+- **dataset version** (and “what changed” when available)
+- **freshness** (last run timestamp)
+- **license + attribution**
+- **policy badge / label**
+- **evidence bundles** (click-to-open evidence drawer)
+- **audit reference** for steward review (especially on abstentions)
 
 ---
 
-## API dependencies
-This UI depends on the governed API surface. The following endpoints are expected to exist in **/api/v1** (names may differ in your repo—verify against the actual OpenAPI):
+## Trust membrane invariants
 
-| Endpoint | Purpose | UI expectation |
+These are **hard rules** (tests should enforce them):
+
+| Invariant | Why it exists | How we enforce |
 |---|---|---|
-| `POST /api/v1/focus/ask` | Focus Mode Q&A | Returns citations **or** abstain + `audit_ref` |
-| `POST /api/v1/evidence/resolve` | Resolve EvidenceRefs into EvidenceBundles | Fail closed if unauthorized/unresolvable |
-| `GET /api/v1/datasets` | Dataset discovery | Policy-filtered, faceted list |
-| `GET /api/v1/lineage/status` | Pipeline freshness/health | Drives “healthy/degraded/failing” badges |
-| `GET/POST /api/v1/story` | Story Nodes (optional integration) | Publishing must be blocked if citations fail |
-
-### Response contract expectations (UI-side checks)
-- Successful governed operations include `audit_ref`.
-- When applicable: `dataset_version_id`, artifact digests, and a public-safe `policy_label`.
-- Errors follow a stable error model (e.g., `error_code`, policy-safe message, `audit_ref`) and must avoid leaking sensitive existence.
+| UI never calls DB/storage directly | prevents policy bypass | network boundary + code review + client-only API allowlist |
+| UI never calls the LLM directly | keeps governance centralized | only call the governed Focus endpoint |
+| Every answer must **cite or abstain** | primary anti-hallucination control | server-side citation verification gate + UI renders abstention clearly |
+| Evidence links must be resolvable | “dead citations” break trust | evidence resolver contract + CI link checks |
+| Errors are policy-safe | prevents restricted inference via error timing/messages | standardized error model + deny-by-default |
 
 ---
 
-## Run locally
+## API contracts
 
-> This repo may be npm/yarn/pnpm/bun-based. **Verify by checking** `apps/focus/package.json` and the repo root tooling docs.
+> **Note:** Endpoint names and payloads are intentionally “contract-first.” If the actual repo contracts differ, update this section to match the real OpenAPI/GraphQL schema.
+
+### Required endpoints (minimum surface)
+
+| Endpoint | Used by | Purpose | Fail posture |
+|---|---|---|---|
+| `POST /api/v1/focus/ask` | Focus UI | ask a question, get an answer with citations | must cite or abstain |
+| `POST /api/v1/evidence/resolve` | Evidence drawer | turn an `EvidenceRef` into an `EvidenceBundle` | fail closed if unauthorized/unresolvable |
+| `GET /api/v1/catalog/datasets` | “Add evidence” UI | discover datasets (policy-filtered) | hide restricted by default |
+| `GET /api/v1/lineage/{dataset_id}` | provenance panel | show lineage + run receipts | redact as required |
+
+### EvidenceBundle (shape expectations)
+
+The UI expects an `EvidenceBundle` to contain enough information to render:
+
+- title and dataset version identifiers
+- policy decision + applied obligations/redactions
+- license (SPDX id + attribution text)
+- provenance (run_id) and an `audit_ref`
+- artifact links **only if policy allows**
+
+---
+
+## Local development
+
+### Prereqs
+
+- Node.js (version per repo standard)
+- Access to the governed API (local or remote)
+- A running backend stack for end-to-end tests:
+  - API service
+  - Postgres/PostGIS, Neo4j, search index (if used)
+  - Ollama (backend-side) for LLM calls
+
+### Environment variables (proposed)
+
+Create `apps/focus/.env.local` (or your repo’s standard):
 
 ```bash
-# from repo root
+# Base URL to the governed API layer (NOT to databases, NOT to Ollama)
+FOCUS_API_BASE_URL=http://localhost:8000
+
+# Optional: enable local mocks for UI-only work
+FOCUS_ENABLE_MOCKS=false
+```
+
+### Run
+
+Because build tooling differs across repos, prefer these patterns:
+
+```bash
+# Option A: monorepo workspace run (preferred if using pnpm/turborepo)
+pnpm -w dev --filter focus
+
+# Option B: run directly in the folder
 cd apps/focus
-
-# one of:
 npm install
-# yarn install
-# pnpm install
-# bun install
-
-# run dev server
 npm run dev
-# yarn dev
-# pnpm dev
-# bun dev
 ```
 
-If the app is wired into a monorepo task runner, also try:
-```bash
-# examples (update to match repo)
-pnpm -C apps/focus dev
-# turbo run dev --filter=focus
-# nx serve focus
+> If neither option matches your repo, update this section with the real commands from `apps/focus/package.json`.
+
+---
+
+## Testing & evaluation
+
+Focus Mode quality is a **merge gate**, not an aspiration.
+
+### Test layers (recommended)
+
+- **Unit tests (UI):** components, rendering states, keyboard navigation, evidence drawer interactions.
+- **Contract tests:** typed client checks against OpenAPI/GraphQL stubs.
+- **E2E tests:** run the full Q&A loop against a small seeded dataset.
+- **Golden-query evaluation harness (must-have):** a stable set of questions with expected citations and regression diffs.
+
+### Minimum “golden query” assertions
+
+For each golden question:
+
+- answer contains at least one citation marker (or returns abstention with policy-safe reason)
+- citations resolve to EvidenceBundles
+- EvidenceBundle shows license + dataset version + audit_ref
+- UI renders abstention and suggests safe alternatives (no leakage)
+
+---
+
+## Governance & safety
+
+### Cite-or-abstain
+
+If citations cannot be verified or resolved, Focus Mode must:
+
+1) **abstain** or **reduce scope**
+2) explain “why” in **policy-safe terms**
+3) provide an `audit_ref` for steward review
+4) suggest safe alternatives (broaden time window, use public datasets)
+
+### Sensitive data & redaction
+
+- If evidence is restricted (CARE/sovereignty/sensitive locations), Focus UI must not display raw restricted detail.
+- Prefer generalized views (aggregation, masking) and show redaction badges explaining what was applied.
+
+---
+
+## Telemetry
+
+Focus Mode is a governed surface; telemetry should be PII-minimized and audit-aligned.
+
+Recommended events (minimum):
+
+- `version_navigated`
+- `version_diffed`
+- `version_locked`
+- `lineage_inspected`
+- `deprecated_warning_shown`
+
+> Store/emit under the repo’s Focus telemetry schema (TODO: link schema).
+
+---
+
+## Directory layout
+
+> **Directory Documentation Standard:** This section must reflect what belongs here, not what we hope exists.
+> Update after running: `tree apps/focus -L 3`.
+
+### Expected contents (proposed)
+
+```text
+apps/focus/
+├─ README.md
+├─ src/
+│  ├─ components/           # chat UI, evidence drawer, provenance panel
+│  ├─ api/                  # typed API client for /focus/ask + /evidence/resolve
+│  ├─ state/                # UI state (chat sessions, selected evidence)
+│  ├─ routes/               # Focus mode route(s)
+│  └─ telemetry/            # event emitters + schema adapters
+├─ public/
+├─ tests/
+│  ├─ unit/
+│  └─ e2e/
+└─ package.json
 ```
 
----
+### Acceptable inputs
 
-## Configuration
+- UI code for Focus Mode
+- typed API client wrappers for the governed endpoints
+- test fixtures that do **not** embed restricted data
+- telemetry emitters (PII-minimized)
 
-### Environment variables
-Create `apps/focus/.env.local` (or equivalent) and set:
+### Exclusions
 
-| Variable | Example | Notes |
-|---|---|---|
-| `KFM_API_BASE_URL` | `http://localhost:8080` | Base URL for governed API |
-| `KFM_AUTH_MODE` | `anonymous` \| `oidc` \| `dev` | Must not embed privileged creds |
-| `KFM_ENABLE_MOCKS` | `true` | Enables mock API for UI development |
-| `KFM_DEFAULT_TIME_WINDOW` | `P30D` | Default time window (ISO-8601 duration) |
-| `KFM_EXPORT_FORMATS` | `pdf,json` | Export formats allowed by policy |
-
-> WARNING: Do not store long-lived tokens in repo files. Prefer local dev auth and short-lived credentials.
+- direct DB credentials or DB client code
+- direct Ollama / model calls from the browser
+- raw restricted datasets or coordinates
+- “magic” citation strings without resolvers (no dead links)
 
 ---
 
-## Governance and safety
+## Definition of done
 
-### Required trust surfaces
-- **Evidence Drawer** accessible from every claim:
-  - evidence bundle id + digest
-  - dataset version and dataset name
-  - license and attribution
-  - freshness and validation status
-  - provenance chain (run receipt link)
-  - redactions and obligations applied
-- **Policy notices** at time of interaction (not hidden in tooltips)
-- **What changed** panel (optional) comparing dataset versions by diffs, checksums, QA metrics
+### MVP (Focus Mode app ready for governed demos)
 
-### Abstention UX (must be human-friendly)
-When the system abstains, the UI must:
-- state that it is abstaining,
-- explain “why” in policy-safe terms,
-- suggest safe alternatives,
-- provide `audit_ref` for steward review,
-- avoid hinting at restricted existence.
-
-### Accessibility baseline
-- Keyboard navigable chat + evidence drawer
-- Visible focus states
-- Text labels for badges (no color-only meaning)
-- ARIA labels for controls
-- Safe markdown rendering (sanitization + CSP)
+- [ ] Chat UI renders answer + citations
+- [ ] Evidence drawer resolves citations to EvidenceBundles
+- [ ] Provenance panel can show run receipts / lineage links
+- [ ] Abstention UX is clear and policy-safe
+- [ ] Golden-query harness exists and blocks regressions
+- [ ] CI contains a merge-blocking gate for Focus Mode eval
 
 ---
 
-## Testing
+## References
 
-> Update commands to match the repo’s test runner.
-
-```bash
-# unit tests
-npm test
-
-# typecheck
-npm run typecheck
-
-# lint
-npm run lint
-
-# e2e (if present)
-npm run e2e
-```
-
-### Minimum test gates for Focus features
-- [ ] Cite-or-abstain behavior covered (citations render OR abstention card renders)
-- [ ] Evidence resolution failure is fail-closed (no partial leaking)
-- [ ] Error handling does not reveal restricted existence through UI differences
-- [ ] Export includes citations + audit_ref and policy-safe metadata
-- [ ] Keyboard navigation and focus management checks
+- **Focus Mode pipeline (parse → retrieve → generate → governance check → citations)**: see KFM AI integration docs (TODO: link to repo copy).
+- **Evidence resolver + EvidenceBundle contract + `/api/v1/focus/ask`**: see the KFM blueprint snapshot (TODO: link to repo copy).
+- **Work package expectations (Focus MVP + evaluation harness)**: see KFM delivery plan (TODO: link to repo copy).
 
 ---
 
-## Contributing
-
-### Pull request checklist (Focus UI)
-- [ ] Includes screenshots or short recording for UI changes
-- [ ] Includes tests for cite-or-abstain paths
-- [ ] No new direct network calls that bypass governed API client
-- [ ] No secrets or privileged credentials added
-- [ ] Evidence Drawer fields present (or explicitly stubbed with TODO + issue link)
-- [ ] Accessibility checks completed (keyboard, focus, labels)
-
----
-
-## Troubleshooting
-
-### “I get 403/404 and can’t tell what happened”
-This is often intended: policy may align 403/404 to avoid leaking existence. Use the returned `audit_ref` and check server logs (steward/operator path).
-
-### “Answer has no citations”
-This should not ship. Either:
-- the API must abstain, or
-- the UI must refuse to render the answer as factual.
-
-### “Export missing attribution/license”
-Exports must include license and attribution automatically. If missing, treat as a governance bug and block release.
-
----
-
-## Glossary
-- **EvidenceRef**: A resolvable citation reference (scheme-based) that can be turned into an EvidenceBundle by the evidence resolver.
-- **EvidenceBundle**: A policy-filtered object containing a human-readable evidence card plus machine metadata, digests, license, and provenance links.
-- **audit_ref**: A stable reference used for audit/review of governed operations (Focus ask, story publish, exports).
-- **policy_label**: A public-safe label indicating access/sensitivity posture.
-- **dataset_version_id**: Version identifier for reproducible datasets.
-
----
-
-<details>
-<summary>Appendix: “Repo reality check” TODOs</summary>
-
-- [ ] Confirm framework (Next.js vs Vite vs other) and update Run locally commands
-- [ ] Add real CI badges (build, lint, test, e2e)
-- [ ] Link to OpenAPI contract location and update API table with canonical routes
-- [ ] Confirm export formats and policy posture
-- [ ] Fill in owners/team + escalation path for audit_ref review
-
-</details>
-
-_Back to top: [Quick nav](#quick-nav)_
+<a id="back-to-top"></a>
+[Back to top](#quick-links)
