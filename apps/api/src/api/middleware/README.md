@@ -250,20 +250,20 @@ If anything in this README doesn’t match your branch:
 
 ### Expected structure (PROPOSED)
 ```text
-apps/api/src/api/middleware/
-  README.md
-  index.ts                  # re-export middleware in one place (optional)
-  requestId.ts              # request correlation id
-  requestLimits.ts          # body/header limits
-  normalize.ts              # parsing + canonicalization helpers
-  authContext.ts            # principal extraction
-  policyContext.ts          # build PDP input
-  rateLimit.ts              # throttling
-  cors.ts                   # CORS config (if needed)
-  errorMapper.ts            # stable policy-safe errors
-  telemetry.ts              # structured logs + spans
-  __tests__/
-    *.test.ts
+apps/api/src/api/middleware/                             # API middleware stack: request hygiene, identity/context, policy enforcement inputs, and policy-safe telemetry/errors
+├─ README.md                                             # Middleware overview: ordering, responsibilities, invariants (default-deny), and testing notes
+├─ index.ts                                              # Optional barrel export: re-exports middleware in a single import surface
+├─ requestId.ts                                          # Request correlation ID: generate/propagate request_id for logs, spans, and audit linkage
+├─ requestLimits.ts                                      # Request limits: body/header size caps + early rejection (DoS hardening; policy-safe errors)
+├─ normalize.ts                                          # Normalization: parsing + canonicalization helpers (stable inputs for hashing/receipts/policy decisions)
+├─ authContext.ts                                        # Auth context: extract principal/claims (who) from headers/session; attach to request context
+├─ policyContext.ts                                      # Policy context: build PDP input (subject/action/resource/context) for downstream enforcement
+├─ rateLimit.ts                                          # Rate limiting: throttling by principal/route/tier (policy-aware where applicable)
+├─ cors.ts                                               # CORS: configured allowed origins/methods/headers (only if needed; keep restrictive defaults)
+├─ errorMapper.ts                                        # Error shaping: stable, policy-safe errors (no restricted inference; consistent reason codes)
+├─ telemetry.ts                                          # Telemetry: structured logs + spans (redaction-aware fields; low-cardinality; request_id propagation)
+└─ __tests__/                                            # Middleware tests: ordering, defaults, deny-by-default behavior, and error-shape regression coverage
+   └─ *.test.ts                                          # Unit tests for each middleware (synthetic inputs; deterministic assertions)
 ```
 
 ---
