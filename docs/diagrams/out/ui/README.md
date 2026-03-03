@@ -47,8 +47,8 @@ Generated **SVG/PNG/PDF** exports for **KFM UI** diagrams (Map Explorer, Story N
 
 This directory is the **published, embeddable diagram output** surface for UI documentation:
 
-- use in markdown docs via relative links like:
-  - `![alt text](./map-explorer__evidence-drawer__flow.svg)`
+- use in markdown docs via relative links (example shown as plain text):
+  - `image syntax with relative SVG path`
 - use in PRs / code reviews as stable artifacts
 - keep diagrams consistent across Map Explorer, Story Node v3, and Focus Mode UX docs
 

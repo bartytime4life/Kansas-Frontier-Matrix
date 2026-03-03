@@ -109,7 +109,7 @@ flowchart LR
 Use a relative link so Markdown renders correctly in GitHub and in local builds.
 
 ```md
-![Policy enforcement boundary diagram](./pep-trust-membrane.png "Trust membrane at the PEP boundary")
+`![Policy enforcement boundary diagram](./pep-trust-membrane.png "Trust membrane at the PEP boundary")`
 ```
 
 Optional caption convention (recommended):

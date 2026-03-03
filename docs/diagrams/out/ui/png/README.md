@@ -165,7 +165,7 @@ Where:
 Use **relative links** so they work in forks and local preview:
 
 ```md
-![Alt text that states what the diagram proves](./ui--focus-mode--sequence--2026-03-01--a1b2c3d4.png)
+`![Alt text that states what the diagram proves](./ui--focus-mode--sequence--2026-03-01--a1b2c3d4.png)`
 ```
 
 ### In Story Nodes or governed UI content

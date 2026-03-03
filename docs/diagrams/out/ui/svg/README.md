@@ -123,7 +123,7 @@ Examples:
 
 ### Markdown (preferred)
 ```md
-![Focus Mode evidence drilldown](./kfm-ui--focus--evidence-bundle-drilldown--v1.svg)
+`![Focus Mode evidence drilldown](./kfm-ui--focus--evidence-bundle-drilldown--v1.svg)`
 ```
 
 ### HTML (useful for sizing on some renderers)

@@ -125,7 +125,7 @@ Rule of thumb:
 Example:
 
 ```md
-![KFM truth path diagram](../../exports/kfm-truth-path.svg)
+`![KFM truth path diagram](../../exports/kfm-truth-path.svg)`
 ```
 
 ---

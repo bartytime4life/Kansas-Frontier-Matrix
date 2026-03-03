@@ -92,7 +92,7 @@ Do **not** place source diagrams or binary editing formats here:
 In docs elsewhere in the repo, embed SVGs with clear alt text:
 
 ```md
-![Truth path lifecycle diagram](./docs/diagrams/out/truth-path/svg/<diagram-name>.svg)
+`![Truth path lifecycle diagram](./docs/diagrams/out/truth-path/svg/<diagram-name>.svg)`
 ```
 
 Tips:

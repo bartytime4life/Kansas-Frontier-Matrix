@@ -176,7 +176,7 @@ Before committing, confirm:
 Typical relative reference (from `docs/adr/<adr-file>.md`):
 
 ```md
-![Request flow showing policy enforcement boundary](assets/screenshots/adr-0012/adr-0012--policy-enforcement-boundary--2026-03-01--v1.png)
+`![Request flow showing policy enforcement boundary](assets/screenshots/adr-0012/adr-0012--policy-enforcement-boundary--2026-03-01--v1.png)`
 ```
 
 ### Captioning pattern
