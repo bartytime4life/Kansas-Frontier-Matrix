@@ -406,57 +406,57 @@ Minimum (illustrative) JSON:
 ### Target layout (PROPOSED)
 
 ```text
-Kansas-Frontier-Matrix/                                 # KFM monorepo: governed, evidence-first geospatial + historical knowledge system (map-first, time-aware, default-deny)
-├─ README.md                                             # Project overview + architecture map + trust model + quickstart + contribution/gate entrypoints
-├─ LICENSE                                               # Repository license and usage terms (code + bundled artifacts as specified)
-├─ CONTRIBUTING.md                                       # Contribution workflow (PR rules, required checks, evidence discipline, data submission gates)
-├─ SECURITY.md                                           # Security policy (reporting, disclosure, secret handling, dependency posture)
-├─ CODE_OF_CONDUCT.md                                    # Community behavior expectations and enforcement process
-├─ CHANGELOG.md                                          # Release notes + notable changes (including breaking contract/policy changes)
-├─ Makefile                                              # Standard task entrypoints (build/test/lint/policy/docs/validate/publish helpers)
-├─ compose.yaml                                          # Local dev stack definition (services + ports) for Linux-first workflows
+Kansas-Frontier-Matrix/
+├─ README.md
+├─ LICENSE
+├─ CONTRIBUTING.md
+├─ SECURITY.md
+├─ CODE_OF_CONDUCT.md
+├─ CHANGELOG.md
+├─ Makefile
+├─ compose.yaml
 │
-├─ .github/                                              # GitHub governance + CI automation (owners, templates, required checks, gate enforcement)
-│  ├─ CODEOWNERS                                          # Ownership/review map (decision rights wiring for policy/docs/data/contracts/apps)
-│  └─ workflows/                                          # CI workflows enforcing tests, policy gates, provenance receipts, and optional supply-chain checks
+├─ .github/
+│  ├─ CODEOWNERS
+│  └─ workflows/
 │
-├─ docs/                                                 # Documentation hub (human-readable): governance + runbooks + standards + ADRs (source of truth for process)
-│  ├─ governance/                                        # Governance model (labels, obligations, gates, waivers, roles, decision records, templates)
-│  ├─ runbooks/                                          # Operational playbooks (pipelines, incidents, promotions, reruns, steward/security procedures)
-│  ├─ standards/                                         # Standards/profiles (metadata, naming, schemas usage, evidence rules, interoperability guidance)
-│  └─ adr/                                               # Architecture Decision Records (why key decisions were made; consequences and alternatives)
+├─ docs/
+│  ├─ governance/
+│  ├─ runbooks/
+│  ├─ standards/
+│  └─ adr/
 │
-├─ contracts/                                            # Canonical interface contracts: OpenAPI + schemas + vocab (what producers/consumers can rely on)
-│  ├─ openapi/                                           # Versioned API specs (v1 additive; v2 for breaking changes only)
-│  ├─ schemas/                                           # JSON Schemas for artifacts/envelopes (receipts, manifests, evidence, catalogs, UI state)
-│  └─ vocab/                                             # Controlled vocabularies (labels, obligations, reason codes, zones, themes, etc.)
+├─ contracts/
+│  ├─ openapi/
+│  ├─ schemas/
+│  └─ vocab/
 │
-├─ policy/                                               # Policy-as-code: OPA/Rego packages + vocab + fixtures + tests (default-deny; obligation-aware; parity enforced)
-│  ├─ rego/                                              # Rego policy modules (authz, labels, obligations, rights, sensitivity, promotion gating, errors)
-│  ├─ tests/                                             # Policy unit tests (rego tests/conftest): regression guardrails + invariants
-│  └─ fixtures/                                          # Deterministic synthetic fixtures (inputs/expected decisions; safe-by-default)
+├─ policy/
+│  ├─ rego/
+│  ├─ tests/
+│  └─ fixtures/
 │
-├─ data/                                                 # Data truth-path zones + governance metadata (immutable → curated → cataloged → published) with audit trail
-│  ├─ specs/                                             # Dataset specs (schemas, transforms, QA thresholds, promotion requirements, class-specific rules)
-│  ├─ registry/                                          # Dataset registry (sources, licensing, sensitivity, stewards, cadence, provenance anchors)
-│  ├─ raw/                                               # RAW zone: immutable acquisitions + checksums + ingest receipts
-│  ├─ work/                                              # WORK zone: staging/transforms/QA (not publishable; iterative)
-│  ├─ quarantine/                                        # QUARANTINE: blocked artifacts awaiting remediation (policy/quality/rights failures)
-│  ├─ processed/                                         # PROCESSED: validated artifacts eligible for cataloging/publishing
-│  ├─ catalog/                                           # CATALOG: DCAT/STAC/PROV + crosslinks + receipts (discovery + traceability surface)
-│  ├─ published/                                         # PUBLISHED: governed exports surfaced to apps/APIs (labels + obligations applied)
-│  └─ audit/                                             # AUDIT: immutable logs/receipts/decisions/promotions/waivers references (tamper-evident goals)
+├─ data/
+│  ├─ specs/
+│  ├─ registry/
+│  ├─ raw/
+│  ├─ work/
+│  ├─ quarantine/
+│  ├─ processed/
+│  ├─ catalog/
+│  ├─ published/
+│  └─ audit/
 │
-├─ stories/                                              # Governed narratives (claims + evidence + map layers) with review gates and publication control
-│  ├─ draft/                                             # Draft story nodes (editable; not externally trusted)
-│  ├─ review/                                            # Stories under formal review (checklists, required citations, obligation review)
-│  └─ published/                                         # Published stories (versioned, immutable; citations locked; obligations enforced)
+├─ stories/
+│  ├─ draft/
+│  ├─ review/
+│  └─ published/
 │
-├─ apps/                                                 # Applications (API + UIs + workers) consuming contracts/policy consistently (no direct DB access from UIs)
-├─ packages/                                             # Shared libraries (domain/usecases/adapters + evidence/catalog/policy/geo) enforcing clean architecture boundaries
-├─ infra/                                                # Infrastructure and deployment manifests (IaC, k8s/helm/compose wiring, environments, policy attachment points)
-├─ tools/                                                # Repo tooling (validators, generators, linters, linkcheckers, promotion helpers, receipt/crosslink tools)
-└─ tests/                                                # Repo-level tests (unit/schema/policy/contract/integration/e2e) and suite registry mapping to gates
+├─ apps/
+├─ packages/
+├─ infra/
+├─ tools/
+└─ tests/
 ```
 
 [↑ Back to top](#top)
