@@ -275,29 +275,29 @@ If another doc defines Gate E as “run receipt + checksums” and Gate F as “
 > After changes, run `tree -L 2 scripts/` and update this README and the Script Registry.
 
 ```text
-scripts/
-├─ README.md
+scripts/                                               # Operational scripts: governed, deterministic CLI entrypoints for acquiring/transforming/validating/cataloging/indexing (emit receipts; policy-safe)
+├─ README.md                                             # Script doctrine: when to use scripts vs apps/tools, required receipts, fail-closed rules, and safety constraints (no secrets/PII)
 │
-├─ registry/
-│  ├─ scripts.v1.json
-│  ├─ scripts.lock.json                      # optional (digests/spec hashes for registry + schemas)
-│  ├─ schemas/
-│  │  ├─ scripts_registry.v1.schema.json
-│  │  ├─ run_receipt.v1.schema.json
-│  │  └─ promotion_manifest.v1.schema.json
-│  ├─ fixtures/
-│  │  ├─ valid/
-│  │  └─ invalid/
-│  └─ README.md
+├─ registry/                                             # Machine-readable script registry + schemas + fixtures (CI-friendly; recommended)
+│  ├─ scripts.v1.json                                    # Canonical script registry (script_id, path, purpose, owners, inputs/outputs, required receipts, gates impacted)
+│  ├─ scripts.lock.json                                  # OPTIONAL: registry lock/digests (pins script registry + schema versions; detects drift/tampering)
+│  ├─ schemas/                                           # Schemas validating registry + emitted artifacts (keeps automation deterministic)
+│  │  ├─ scripts_registry.v1.schema.json                 # Schema for scripts.v1.json (required fields, allowed categories, owners, receipt expectations)
+│  │  ├─ run_receipt.v1.schema.json                      # Schema for receipts emitted by scripts (inputs/outputs/digests/tool versions/outcome)
+│  │  └─ promotion_manifest.v1.schema.json               # Schema for promotion manifests produced/updated by scripts (if scripts participate in promotion)
+│  ├─ fixtures/                                          # Deterministic fixtures proving validators are fail-closed (valid must pass; invalid must fail)
+│  │  ├─ valid/                                          # Known-good minimal registry/artifact examples (guards against accidental over-rejection)
+│  │  └─ invalid/                                        # Known-bad examples (guards against accidental under-validation)
+│  └─ README.md                                          # Registry usage: how to add scripts, versioning rules, schema validation commands, and CI wiring notes
 │
-├─ acquire/
-├─ transform/
-├─ validate/
-├─ catalog/
-├─ index/
-├─ maintenance/
-├─ lib/
-└─ _shared/
+├─ acquire/                                              # Acquisition scripts (fetch/snapshot sources) writing to RAW with checksums + ingest/run receipts
+├─ transform/                                            # Transformation scripts (RAW/WORK → PROCESSED) with deterministic params and reproducible outputs
+├─ validate/                                             # Validation scripts (schemas/profiles/policy) producing pass/fail reports and gating promotion eligibility
+├─ catalog/                                              # Catalog build scripts (DCAT/STAC/PROV emitters, crosslinks, linkcheck) producing catalog artifacts + receipts
+├─ index/                                                # Index build scripts (search/vector/spatial indexes) producing rebuildable indexes + receipts
+├─ maintenance/                                          # Maintenance/ops scripts (cleanup, backfills, migrations helpers) with explicit safeguards + audit notes
+├─ lib/                                                  # Shared script libraries (argument parsing, config loading, canonical JSON, logging/redaction helpers)
+└─ _shared/                                              # Shared assets for scripts (templates, common configs) kept small and deterministic (no environment secrets)
 ```
 
 [Back to top](#top)
