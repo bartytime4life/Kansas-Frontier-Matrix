@@ -1,0 +1,6 @@
+{
+  "layers": [
+    {"id": "published-boundaries", "label": "Published Boundaries", "datasetId": "kfm.boundaries.v1", "policyLabel": "public", "defaultVisible": true},
+    {"id": "restricted-sites", "label": "Restricted Sites (Generalized)", "datasetId": "kfm.restricted_sites.v1", "policyLabel": "restricted", "defaultVisible": false}
+  ]
+}

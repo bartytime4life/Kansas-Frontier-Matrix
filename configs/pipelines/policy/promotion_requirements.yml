@@ -1,0 +1,4 @@
+required_artifacts:
+  - run_receipt
+  - stac_collection
+  - dcat_catalog

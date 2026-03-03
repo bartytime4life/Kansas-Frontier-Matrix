@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/ui-defaults.v1.schema.json",
+  "featureFlags": {
+    "evidenceDrawer": true,
+    "focusMode": true,
+    "storyMode": true,
+    "downloadRestrictedExports": false
+  },
+  "panels": {
+    "layerPanelOpen": true,
+    "trustBadgesVisible": true
+  },
+  "limits": {
+    "maxEvidenceItems": 25,
+    "maxVisibleLayers": 12
+  }
+}
