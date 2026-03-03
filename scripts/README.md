@@ -2,7 +2,7 @@
 doc_id: kfm://doc/7c5b2f20-1f6a-4b6a-9f0e-4ddf6dc1f1aa
 title: scripts
 type: standard
-version: v1
+version: v2
 status: draft
 owners: kfm-platform (TODO)
 created: 2026-03-03
@@ -16,23 +16,32 @@ related:
   - ./release/README.md
 tags: [kfm, scripts, ci, release, promotion, governance]
 notes:
-  - Evidence discipline: every meaningful claim in this README is tagged as Confirmed, Proposed, or Unknown.
+  - Evidence discipline: every meaningful claim in this README is tagged as CONFIRMED / PROPOSED / UNKNOWN.
   - This file is a directory README: it defines purpose, allowed inputs, and explicit exclusions.
 [/KFM_META_BLOCK_V2] -->
 
 <div align="center">
 
-# `scripts/` — Build, lint, promotion, and release automation
+# `scripts/` — Governed automation for build, lint, validation, promotion, and release
 
-**Purpose:** governed automation scripts used by local dev and CI/CD to enforce the KFM promotion contract.  
+**Purpose:** automation entrypoints used by local dev and CI/CD to enforce KFM governance invariants and the Promotion Contract (fail-closed).  
 **Status:** `draft` • **Owners:** `kfm-platform` (TODO)
 
 [![CI](https://img.shields.io/badge/CI-TODO-lightgrey)](../.github/workflows/)
 [![Policy](https://img.shields.io/badge/Policy-default--deny%20fail--closed-blue)](../policy/)
-[![Provenance](https://img.shields.io/badge/Provenance-receipts%20%2B%20attestations-informational)](../provenance/)
+[![Data](https://img.shields.io/badge/Data-zones%20RAW%2FWORK%2FPROCESSED-informational)](../data/)
 [![Docs](https://img.shields.io/badge/Docs-directory%20README-brightgreen)](./README.md)
 
 </div>
+
+---
+
+> **IMPACT (required)**
+>
+> - **Primary role:** provide *reproducible, auditable* automation that runs the same governance semantics in CI and in governed environments.  
+> - **Fail-closed stance:** if evidence is missing or cannot be verified, scripts must stop (non‑zero exit).  
+> - **Invariant boundary:** scripts must not introduce any path that bypasses the **trust membrane** (no “client/UI → storage/DB” shortcuts; no bypassing repository/adapter layers).  
+> - **Promotion alignment:** scripts are the “gate runners” for Promotion Contract v1 (Gates A–G).
 
 ---
 
@@ -43,32 +52,42 @@ notes:
 - [What belongs here](#what-belongs-here)
 - [What must not go here](#what-must-not-go-here)
 - [Directory layout](#directory-layout)
-- [Conventions](#conventions)
-- [Promotion contract alignment](#promotion-contract-alignment)
+- [Script interface contract](#script-interface-contract)
+- [Promotion Contract v1 coverage](#promotion-contract-v1-coverage)
 - [How to run scripts](#how-to-run-scripts)
 - [Adding a new script](#adding-a-new-script)
 - [Verification steps](#verification-steps)
+- [FAQ](#faq)
 - [Version history](#version-history)
 
 ---
 
 ## Evidence tags
 
-[Confirmed] A claim backed by cited KFM documents (see “Notes & Citations” in the PR / change request).  
-[Proposed] A recommended pattern that is consistent with KFM governance goals but may not yet exist in the repo.  
-[Unknown] A claim that cannot be verified from available evidence; the smallest verification step is stated.
+**KFM status vocabulary:** `CONFIRMED`, `PROPOSED`, `UNKNOWN`.
+
+- **CONFIRMED** — backed by KFM design/governance sources; treated as a non‑negotiable requirement for GOVERNED mode.
+- **PROPOSED** — consistent with KFM posture and recommended to implement; may not exist in the current repo.
+- **UNKNOWN** — not verified in the current checkout; list the smallest verification step(s) needed.
+
+> **Note:** This README intentionally avoids claiming which exact scripts exist until verified against the live repo tree.
+
+[Back to top](#quick-navigation)
 
 ---
 
 ## Where this directory fits
 
-[Confirmed] `scripts/` is part of the repo’s “ops glue” layer, alongside `configs/`, `migrations/`, and `tools/`, used for automation rather than core domain logic.
+**CONFIRMED** `scripts/` is part of the repo’s automation layer (alongside workflows and tooling). It exists to *run* gates and standardize developer/CI execution, not to define core business logic.  
 
-[Proposed] Scripts are invoked in two primary contexts:
-- local developer workflows (pre-commit, lint, smoke tests, release dry-runs)
-- CI/CD workflows (required gates for merges/promotion)
+**CONFIRMED** KFM governance is enforced by a “truth path” of zones and gates; automation should treat those gates as first‑class CI checks and release checks.
 
-[Unknown] Which scripts are currently present in this repo checkout (verify with `tree -L 3 scripts/`).
+**PROPOSED** Two operating contexts for scripts:
+- **Local developer workflows**: lint, typecheck, policy tests, validation, dry‑run promotion checks.
+- **CI/CD workflows**: merge-blocking gates and promotion/release orchestration.
+
+**UNKNOWN** What scripts are present in *this* checkout.  
+Smallest verification step: `tree -L 3 scripts/` and record the output in the PR.
 
 [Back to top](#quick-navigation)
 
@@ -76,17 +95,21 @@ notes:
 
 ## What belongs here
 
-[Confirmed] Build/release and related automation scripts belong here (e.g., promotion, lint, rebuild tasks).
+**CONFIRMED** Automation for validation/promotion/release belongs here, particularly when it:
+- executes Promotion Contract gates (A–G),
+- produces audit artifacts (run receipts / manifests),
+- verifies catalogs/provenance/policy decisions.
 
-[Proposed] Acceptable inputs for `scripts/`:
-- small, composable automation steps that call *existing* tooling (`tools/validators`, policy tests, dataset builders)
-- wrappers that standardize environment setup (paths, env vars, container targets)
-- release/promotion helpers that *enforce* “fail-closed” checks and emit machine-verifiable artifacts
+**PROPOSED** Acceptable inputs for `scripts/`:
+- thin orchestration around **existing** toolchain entrypoints (validators, policy tests, schema checks)
+- wrappers that standardize environment setup (paths, env vars, container targets, consistent error model)
+- release/promotion helpers that **fail closed** and emit machine‑verifiable artifacts (digests, manifests)
 
-[Proposed] Preferred script traits:
-- deterministic, idempotent, and safe-by-default (`--dry-run` first)
-- emits structured logs (JSON lines preferred when feasible)
-- returns non-zero exit codes on any failed gate
+**PROPOSED** Preferred traits:
+- deterministic + idempotent (re-run safe)
+- safe-by-default: default to `--dry-run` and require explicit “write/publish/promote” flags
+- structured logs (JSON lines preferred when feasible)
+- non-zero exit codes on any failed gate
 
 [Back to top](#quick-navigation)
 
@@ -94,11 +117,18 @@ notes:
 
 ## What must not go here
 
-[Proposed] Do **not** place these in `scripts/`:
-- core ingestion/transformation logic (belongs in pipeline/package modules, not wrappers)
-- “one-off” manual fixes that can’t be reproduced or audited
-- secrets, tokens, private keys, or credential material (scripts may *read* secrets from environment/injected runners, but must never commit them)
-- any code path that bypasses the policy boundary for published surfaces (no “UI → DB” shortcuts)
+**CONFIRMED** Do **not** place code here that breaks the trust membrane:
+- no direct UI/client access to DB/object storage
+- no core backend logic bypassing repository/adapter layers to talk directly to storage
+
+**PROPOSED** Do **not** place these in `scripts/` (and where instead):
+- core ingestion/transformation logic → **pipeline packages/modules** (not wrappers)
+- schema/profile definitions → **contracts/** or **schemas/** (repo-specific)
+- policy logic (Rego) → **policy/** (so CI and runtime share semantics)
+- one-off manual fixes that can’t be reproduced/audited → **avoid** (or convert to a deterministic tool + test)
+- secrets/tokens/private keys → **never commit**; use env vars or runner-injected credentials
+
+**PROPOSED** No “best-effort” governance: scripts must not silently continue past missing license/sensitivity/policy inputs.
 
 [Back to top](#quick-navigation)
 
@@ -106,74 +136,103 @@ notes:
 
 ## Directory layout
 
-[Unknown] The exact layout depends on what is currently in the repo. The following is a *recommended* shape.
+**UNKNOWN** The exact layout in this checkout.  
+Smallest verification step: `tree -L 3 scripts/`.
 
-[Proposed] Example structure:
+**PROPOSED** Recommended shape (example names only):
 
 ~~~text
 scripts/
 ├── README.md                  # This file
-├── release/                   # Release & promotion helpers (may have its own README)
-│   └── README.md
-├── ci/                        # Local replicas of CI gates (lint/validate/policy)
-├── dev/                       # Developer convenience scripts (safe, non-promoting)
-├── watch_and_pr.py            # Example: watcher that opens PRs (if adopted)
-└── compute_digests.py         # Example: canonical hash + digest helper (if adopted)
+├── ci/                        # Local replicas of CI gates (lint/validate/policy/contract)
+├── release/                   # Promotion + release helpers (see scripts/release/README.md)
+├── dev/                       # Developer convenience scripts (non-promoting, safe defaults)
+└── lib/                        # Shared helpers for scripts (argument parsing, logging, exit codes)
 ~~~
 
-[Unknown] Whether `scripts/release/README.md` exists in *this* checkout (verify with `ls scripts/release/`).
+[Back to top](#quick-navigation)
+
+---
+
+## Script interface contract
+
+**PROPOSED** All scripts in this directory should follow a consistent CLI contract:
+
+- `--help` always available
+- `--dry-run` does not write to storage or mutate outputs
+- `--json` emits structured output (when practical)
+- `--fail-closed` (default: enabled): if unsure, stop
+
+**PROPOSED** Standard exit codes:
+- `0` success
+- `2` invalid usage / missing required args
+- `10` validation failure (schema/catalog/prov)
+- `11` policy denial (OPA/rego deny or missing policy inputs)
+- `12` integrity failure (digest mismatch, non-determinism detected)
+- `20` operational error (I/O, network, tool crash)
+
+**PROPOSED** Standard output conventions:
+- human-readable summary to stderr (for dev ergonomics)
+- machine-readable JSON lines to stdout (for CI parsing), e.g. `{ "event": "gate_result", "gate": "A", ... }`
+
+<details>
+<summary><strong>PROPOSED: Environment variables (house conventions)</strong></summary>
+
+- `KFM_MODE` = `sandbox` | `governed`  
+  - `sandbox`: exploration allowed, **no promotion**  
+  - `governed`: all gates enforced; promotion allowed only with explicit flags
+- `KFM_DATA_ROOT` = absolute or repo-relative path to data workspace
+- `KFM_POLICY_ROOT` = policy bundle location (Rego + fixtures)
+- `KFM_ARTIFACT_STORE` = location/URL for object storage/registry (if applicable)
+
+</details>
 
 [Back to top](#quick-navigation)
 
 ---
 
-## Conventions
+## Promotion Contract v1 coverage
 
-[Proposed] **Language & portability**
-- Use **Python** for non-trivial orchestration/JSON handling.
-- Use **bash** only for thin wrappers; if bash, include `set -euo pipefail`.
-- Avoid platform-specific assumptions unless documented (macOS vs Linux differences).
+**CONFIRMED** Promotion to runtime surfaces is blocked unless minimum gates are met (A–F required; G recommended “production posture”).  
+**CONFIRMED** The catalog “triplet” (DCAT + STAC + PROV) is the interoperability + evidence surface; cross-links must resolve.
 
-[Proposed] **CLI contract**
-- Every script must support:
-  - `--help`
-  - `--dry-run` (no writes)
-  - `--json` (structured output) when practical
-  - `--fail-closed` (default: enabled) meaning “if unsure, stop”
-- Scripts must never silently “best-effort” past a governance gate.
+### Gate coverage matrix (definitions are CONFIRMED; script responsibilities are PROPOSED)
 
-[Proposed] **Outputs**
-- For any action that writes or promotes artifacts, the script must either:
-  - emit (or point to) a **run receipt** / audit record, or
-  - fail closed with a clear message describing missing prerequisites.
+| Gate | Minimum requirement (CONFIRMED) | What scripts typically do (PROPOSED) |
+|------|----------------------------------|--------------------------------------|
+| A — Identity and versioning | Stable `dataset_id`; immutable `dataset_version_id`; deterministic `spec_hash` | Compute/verify `spec_hash`; enforce naming rules; prevent “hash drift” via golden tests |
+| B — Licensing and rights metadata | Explicit license + rights holder/attribution; unclear license → quarantine (fail closed) | Fail CI if license/rights missing; snapshot upstream terms; enforce “metadata-only” mode when mirroring is disallowed |
+| C — Sensitivity classification and redaction plan | `policy_label` assigned; redaction/generalization plan recorded in PROV when needed | Enforce default-deny fixtures; verify obligations applied; block promotion when sensitivity is unresolved |
+| D — Catalog triplet validation | DCAT/STAC/PROV validate and cross-link; links resolvable | Run validators + link checks; fail if broken EvidenceRefs or missing IDs |
+| E — Run receipt and checksums | `run_receipt` exists; inputs/outputs enumerated with checksums; environment recorded | Emit receipt templates; verify digests; ensure deterministic outputs for same spec |
+| F — Policy tests and contract tests | OPA policy tests pass; evidence resolver resolves at least one ref in CI; API/schema contracts validate | Run conftest fixtures; run evidence-resolve integration test; run OpenAPI/schema contract checks |
+| G — Optional but recommended | SBOM + build provenance; perf + accessibility smoke checks | Generate/verify SBOM/attestations; run perf smoke; run accessibility checks (e.g., evidence drawer keyboard nav) |
 
-[Back to top](#quick-navigation)
-
----
-
-## Promotion contract alignment
-
-[Confirmed] KFM promotion is gate-driven: promotion to “published” is blocked unless minimum gates are met, and the gates are designed to be automated in CI.
-
-[Confirmed] The data lifecycle is zoned (RAW → WORK → PROCESSED → CATALOG triplet → PUBLISHED), and promotion is not allowed without the required artifacts and validations.
-
-[Proposed] **What scripts in this directory typically do** (examples):
-- run metadata validators (DCAT/STAC/PROV) and link checks
-- compute deterministic `spec_hash` values for dataset specs/manifests
-- compute digests for produced artifacts and inject/verify integrity fields
-- create or verify run receipts and (where configured) signature/attestation artifacts
-- open PRs for “watcher” workflows that pin updates by digest
-
-[Proposed] **Process diagram (scripts as gate runners)**
+### Process diagram (scripts as gate runners)
 
 ~~~mermaid
 flowchart LR
-  Dev[Developer or CI] --> Run[Run scripts]
-  Run --> V[Validators and link checks]
-  Run --> P[Policy tests]
-  Run --> R[Run receipt and digests]
-  R --> C[Catalog triplet]
-  C --> Pub[Published surfaces]
+  U[Upstream sources] --> R[RAW zone]
+  R --> W[WORK or QUARANTINE]
+  W --> P[PROCESSED zone]
+  P --> C[CATALOG triplet]
+  C --> S[PUBLISHED surfaces]
+
+  P --> GA[Gate A Identity]
+  P --> GB[Gate B Licensing]
+  P --> GC[Gate C Sensitivity]
+  P --> GD[Gate D Triplet]
+  P --> GE[Gate E Receipts]
+  P --> GF[Gate F Policy and contracts]
+  P --> GG[Gate G Recommended]
+
+  GA --> S
+  GB --> S
+  GC --> S
+  GD --> S
+  GE --> S
+  GF --> S
+  GG --> S
 ~~~
 
 [Back to top](#quick-navigation)
@@ -182,29 +241,30 @@ flowchart LR
 
 ## How to run scripts
 
-[Unknown] Exact commands depend on which scripts exist. The patterns below are safe defaults.
+**UNKNOWN** Exact commands depend on which scripts exist.
 
-[Proposed] List available scripts:
+**PROPOSED** Safe discovery commands (always runnable):
 
 ~~~bash
 ls -la scripts/
+tree -L 3 scripts/
 ~~~
 
-[Proposed] Run a Python script:
+**PROPOSED** Run a Python script (pattern):
 
 ~~~bash
 python scripts/<script_name>.py --help
 python scripts/<script_name>.py --dry-run
 ~~~
 
-[Proposed] Run a shell script:
+**PROPOSED** Run a shell script (pattern):
 
 ~~~bash
 bash scripts/<script_name>.sh --help
 bash scripts/<script_name>.sh --dry-run
 ~~~
 
-[Proposed] CI parity goal: if a workflow runs in `.github/workflows/*`, a local-friendly equivalent should exist either here or in `tools/`, so contributors can reproduce failures quickly.
+**PROPOSED** CI parity goal: if a workflow in `.github/workflows/*` runs a gate, a local-friendly equivalent should exist in `scripts/` or `tools/` so contributors can reproduce failures quickly.
 
 [Back to top](#quick-navigation)
 
@@ -212,13 +272,14 @@ bash scripts/<script_name>.sh --dry-run
 
 ## Adding a new script
 
-[Proposed] Minimum definition-of-done (DoD) for any new script:
-- [ ] Script has `--help` and documents purpose, inputs, outputs, and failure modes.
-- [ ] Script defaults to **fail-closed** and supports `--dry-run`.
-- [ ] Script does not embed secrets; uses env vars or runner-injected credentials.
-- [ ] Script writes *only* to the appropriate lifecycle zone (RAW/WORK/PROCESSED), or to release/publish surfaces when explicitly authorized.
-- [ ] Script includes tests where practical (unit tests for parsing/hashing logic; integration tests for end-to-end gates).
-- [ ] If the script impacts promotion, add/adjust CI checks so the invariant is test-enforced (not tribal knowledge).
+**PROPOSED** Definition of Done (DoD) for any new script:
+- [ ] Has `--help` documenting purpose, inputs, outputs, and failure modes.
+- [ ] Defaults to **fail-closed** and supports `--dry-run`.
+- [ ] Does not embed secrets; reads env vars or runner-injected credentials.
+- [ ] Writes only to the correct lifecycle zone (RAW/WORK/PROCESSED) unless explicitly promoting.
+- [ ] Produces machine-verifiable outputs where relevant (digests, receipts, manifests).
+- [ ] Includes tests where practical (unit tests for hashing/parsing; integration tests for gate runners).
+- [ ] If it impacts promotion, CI enforces it (merge/promotion blocked on failure).
 
 [Back to top](#quick-navigation)
 
@@ -226,13 +287,29 @@ bash scripts/<script_name>.sh --dry-run
 
 ## Verification steps
 
-[Confirmed] We should not assert the existence of specific modules/scripts without verifying against the live repo.
+**CONFIRMED** Do not assert repo state without verifying the current checkout.
 
-[Unknown] Minimal verification steps for this directory:
+**UNKNOWN** Minimal verification steps for this directory in the current repo:
 1. `git rev-parse HEAD` (record commit)
 2. `tree -L 3 scripts/` (capture layout)
-3. Identify which CI workflows call scripts: search `.github/workflows/` for `scripts/`
-4. Run `--help` for each discovered script and confirm CLI contracts match this README
+3. Search which workflows call scripts: `rg -n "scripts/" .github/workflows/`
+4. For each discovered script, run `--help` and confirm it matches the CLI contract above
+5. Map each script to Promotion Contract gates A–G (update this README if needed)
+
+[Back to top](#quick-navigation)
+
+---
+
+## FAQ
+
+**Why are these scripts “governed”?**  
+**CONFIRMED** Because KFM’s user-facing trust depends on fail-closed validation, policy enforcement, and auditable provenance; automation is how those requirements become test-enforced rather than tribal knowledge.
+
+**Where do validators/policy logic live?**  
+**PROPOSED** Put reusable validators in `tools/` and policy packs in `policy/`. Keep `scripts/` as orchestration entrypoints that call them.
+
+**Can scripts directly edit published data?**  
+**PROPOSED** Only via explicit “promote/release” paths that enforce Promotion Contract gates and record manifests/receipts. Otherwise, default to dry-run and quarantine.
 
 [Back to top](#quick-navigation)
 
@@ -240,8 +317,7 @@ bash scripts/<script_name>.sh --dry-run
 
 ## Version history
 
-[Proposed] Track changes to this directory README as operational policy surface.
-
 | Version | Date       | Notes |
 |--------:|------------|-------|
-| v1      | 2026-03-03 | Initial `scripts/` directory README (governed automation + promotion gates alignment). |
+| v2      | 2026-03-03 | Upgrade: align to trust membrane + Promotion Contract v1 (Gates A–G); add IMPACT block; add gate coverage matrix; tighten fail-closed CLI contract. |
+| v1      | 2026-03-03 | Initial `scripts/` directory README. |
