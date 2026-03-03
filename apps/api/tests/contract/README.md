@@ -226,18 +226,18 @@ It complements, but does not replace:
 This is a suggested structure; align with existing repo conventions:
 
 ```text
-apps/api/tests/contract/                                 # API contract tests: prove the API matches governed contracts (OpenAPI, policy decisions, evidence behavior)
-├── README.md                                             # How contract tests run, required fixtures, and how failures map to gates (schema/policy/evidence)
-├── openapi/                                              # OpenAPI conformance tests (routes, request/response shapes, versioning, error envelopes)
-│   └── *.test.*                                          # Tests validating OpenAPI docs vs implementation (and/or generated clients) for compatibility
-├── evidence/                                             # Evidence contract tests (EvidenceRef/EvidenceBundle resolution, citation expectations, obligation emission)
-│   └── *.test.*                                          # Tests ensuring evidence endpoints/fields follow contracts and fail safely when unresolved
-├── policy/                                               # Policy contract tests (decision envelope shape, reason codes, obligations, default-deny semantics)
-│   └── *.test.*                                          # Tests verifying policy responses match decision schema + do not leak restricted inference
-└── fixtures/                                             # Synthetic fixtures supporting contract tests (small, deterministic, policy-safe)
-    ├── policy/                                           # Policy inputs + expected decision envelopes (allow/deny + obligations + reason codes)
-    ├── evidence/                                         # EvidenceRefs/Bundles + resolver scenarios (resolvable/unresolvable; hash stability cases)
-    └── catalogs/                                         # Minimal catalog artifacts (DCAT/STAC/PROV) used for cross-link and API response tests
+apps/api/tests/contract/
+├── README.md
+├── openapi/
+│   └── *.test.*
+├── evidence/
+│   └── *.test.*
+├── policy/
+│   └── *.test.*
+└── fixtures/
+    ├── policy/
+    ├── evidence/
+    └── catalogs/
 ```
 
 [Back to top](#navigation)
