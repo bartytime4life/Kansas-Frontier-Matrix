@@ -15,230 +15,352 @@ related:
   - .github/workflows/
 tags: [kfm, schemas, json-schema, contracts, governance]
 notes:
-  - This README documents intended contracts and guardrails. Treat any "Proposed" or "Unknown" items as design defaults until confirmed in-repo.
+  - This README documents intended contracts and guardrails. Treat any "PROPOSED" or "UNKNOWN" items as design defaults until confirmed in-repo.
 [/KFM_META_BLOCK_V2] -->
 
 # schemas
-Governed JSON Schema contracts for KFM artifacts (catalogs, receipts, telemetry, and other machine-validated interfaces).
+Governed JSON Schema contracts for KFM artifacts (catalog triplet, receipts, telemetry, and other machine-validated interfaces).
+
+<div align="center">
+
+**Status:** Draft · **Owners:** TBD (Schema Stewards) · **Posture:** default-deny / fail-closed  
+**Mode:** GOVERNED (contracts boundary)
+
+[Purpose](#purpose) · [Where it fits](#where-this-fits-in-kfm) · [Directory](#directory-layout) · [Registry](#schema-registry) · [Quickstart](#quickstart) · [Change workflow](#change-workflow) · [Unknowns](#unknowns-to-verify)
 
 ![status](https://img.shields.io/badge/status-draft-lightgrey)
 ![contracts](https://img.shields.io/badge/contracts-governed-blue)
-![json-schema](https://img.shields.io/badge/JSON%20Schema-draft%202020--12-blue)
-![ci](https://img.shields.io/badge/CI-schema--lint%20%7C%20compat%20diff-blue)
-<!-- TODO: Replace badges/targets once CI paths are finalized -->
+![json-schema](https://img.shields.io/badge/JSON%20Schema-2020--12%20(TBD)-blue)
+![ci](https://img.shields.io/badge/CI-schema--lint%20%7C%20compat--diff%20(TODO)-blue)
 
-## Navigation
-- [Purpose](#purpose)
-- [Evidence labels](#evidence-labels)
-- [Where this fits in KFM](#where-this-fits-in-kfm)
-- [Directory layout](#directory-layout)
-- [What belongs here](#what-belongs-here)
-- [Schema registry](#schema-registry)
-- [Versioning and compatibility](#versioning-and-compatibility)
-- [Validation](#validation)
-- [Change workflow](#change-workflow)
-- [Unknowns to verify](#unknowns-to-verify)
+<!-- TODO: Replace badges with real workflow targets once CI paths are finalized -->
+
+</div>
 
 ---
 
-## Purpose
+## Scope
 
-- **Confirmed:** Provide a single, reviewable place to define the **machine-validated contracts** that CI and promotion gates depend on (schemas are a hard “truth boundary,” not optional documentation).
-- **Confirmed:** Support **fail-closed** validation: if an artifact (catalog, receipt, telemetry event) does not validate, it must not be promoted/published.
-- **Proposed:** Make schemas easy to discover and reference via a single registry file (`schemas/registry.yaml`).
-- **Proposed:** Run a PR-time **schema compatibility diff** for any schema changes, and block merges on breaking changes unless a major version bump is declared.
+- **CONFIRMED:** This directory defines **machine-validated contracts** that gate promotion and publishing.
+- **CONFIRMED:** Schemas are a **hard truth boundary**: if artifacts do not validate, they must not be promoted/published.
+- **PROPOSED:** `schemas/` is the canonical “contracts surface” for JSON Schemas even if the repo also has a higher-level `contracts/` directory (i.e., `contracts/schemas/` may be an alternative placement).
+- **UNKNOWN:** Exact placement (`schemas/` vs `contracts/schemas/`) in your current repo checkout.
+  - **Verify:** `ls -la` at repo root; search for `contracts/` and `schemas/`.
 
 ---
 
-## Evidence labels
+## Conventions
 
-This repo treats documentation as a production surface. To avoid “hand-wavy contracts,” statements in this README use:
+### Evidence labels (CITE-OR-ABSTAIN)
+Every meaningful statement in this README is labeled:
 
-- **Confirmed** — supported by KFM design/governance docs or CI contract snippets.
-- **Proposed** — recommended repo conventions (safe defaults) that can be implemented incrementally.
-- **Unknown** — not verifiable from the currently available evidence; includes the smallest steps to confirm.
+- **CONFIRMED** — documented as KFM intent/contract in governance/architecture materials.
+- **PROPOSED** — recommended default convention (safe and incremental).
+- **UNKNOWN** — not verifiable from repo evidence in this checkout; includes minimal verification steps.
 
-> NOTE: “Confirmed” here means “confirmed as a documented contract/intent.” It does **not** automatically mean the exact file paths already exist in this checkout.
+> IMPORTANT: “CONFIRMED” means “confirmed as documented intent/contract,” not necessarily “already implemented in this branch.”
+
+### Normative keywords
+This README uses RFC-style keywords:
+
+- **MUST** = required for promotion/publishing
+- **SHOULD** = strongly recommended default
+- **MAY** = optional / context-dependent
 
 ---
 
 ## Where this fits in KFM
 
-- **Confirmed:** KFM’s promotion model relies on automated gates (identity/versioning, licensing, sensitivity, catalog-triplet validation, QA thresholds, and run receipts). Schemas are the concrete, testable surface behind those gates.
-- **Confirmed:** Catalog validation in CI is expected to run as discrete steps (DCAT/STAC/PROV validation, link checking, and spec-hash drift checks).
-- **Proposed:** Treat `schemas/` as a **core contract boundary**: changes here require review by CODEOWNERS and must be accompanied by fixtures/tests.
+- **CONFIRMED:** KFM operates a **truth path** with explicit zones and gated promotion: `RAW → WORK → PROCESSED → CATALOG (DCAT+STAC+PROV) → PUBLISHED`. Schemas are part of what makes those gates automatable and auditable.  
+- **CONFIRMED:** KFM enforces a **trust membrane**: clients do not access storage directly; access is evaluated at the governed API / PEP boundary. Schemas provide a concrete contract surface for what may cross boundaries and what must be validated before it does.
+
+### Architecture sketch
+
+```mermaid
+flowchart TB
+  subgraph TruthPath
+    Z1[RAW]
+    Z2[WORK]
+    Z3[PROCESSED]
+    Z4[CATALOG Triplet]
+    Z5[PUBLISHED]
+  end
+
+  subgraph Contracts
+    S1[Schemas]
+    S2[Registry]
+  end
+
+  subgraph Enforcement
+    V1[Validators]
+    V2[Policy engine]
+    G1[Promotion gates]
+  end
+
+  subgraph Runtime
+    A1[Governed API]
+    U1[UI and Focus Mode]
+  end
+
+  Z1 --> Z2 --> Z3 --> Z4 --> Z5
+  S1 --> V1 --> G1
+  S2 --> V1
+  V2 --> G1
+  G1 --> A1 --> U1
+```
+
+---
+
+## Acceptable inputs
+
+- **CONFIRMED:** JSON Schema files that validate CI-critical artifacts such as:
+  - **catalog triplet** records (DCAT, STAC, PROV profiles)
+  - **run receipts** / promotion manifests / attestations
+  - **telemetry events** used by governance/ops checks
+- **PROPOSED:** Shared `$defs` for cross-cutting fields:
+  - `dataset_id`, `dataset_version_id`
+  - `spec_hash`
+  - content digests (`sha256:` or `multihash:`)
+  - time fields (`date-time`)
+  - `policy_label` / sensitivity classification
+  - SPDX license identifiers
+
+---
+
+## Exclusions
+
+- **CONFIRMED:** No raw/processed data belongs here.
+- **CONFIRMED:** No secrets, tokens, or environment-specific configuration belongs here.
+- **PROPOSED:** Do not store generated bundles here (compiled schema packs, reports). Emit to `artifacts/` or CI artifacts instead.
+- **PROPOSED:** Do not store Rego policy here; keep **schemas** and **policy** separate to preserve a clear policy boundary.
 
 ---
 
 ## Directory layout
 
-**Proposed default layout** (adapt to your repo once confirmed):
+### Target layout (PROPOSED)
+Adapt names as needed; keep the intent: stable “families,” shared `$defs`, and versioned schemas.
 
-~~~text
+```text
 schemas/
 ├── README.md
-├── registry.yaml                  # canonical index of schemas (ids, paths, semver, compat mode)
-├── common/                        # shared $defs (ids, timestamps, digests, SPDX, policy labels)
+├── registry.yaml                # canonical schema index (id, path, semver, compat mode, owners)
+├── common/                      # shared $defs (ids, timestamps, digests, SPDX, policy labels)
 ├── catalogs/
-│   ├── dcat/                      # DCAT profile schemas (JSON-LD shape constraints)
-│   ├── stac/                      # STAC profile schemas / extension pinning
-│   └── prov/                      # PROV(-O) / run lineage bundles
-├── telemetry/                     # telemetry event schemas (audit, drift, energy, carbon, etc.)
-├── receipts/                      # run receipts / attestations / promotion manifests
-└── api/                           # optional: request/response DTO schemas (if not kept in OpenAPI)
-~~~
+│   ├── dcat/                    # DCAT profile schemas / constraints
+│   ├── stac/                    # STAC profile schemas / extension pinning
+│   └── prov/                    # PROV profiles / lineage bundles
+├── telemetry/                   # telemetry event schemas
+├── receipts/                    # run receipts / promotion manifests / attestations
+└── api/                         # optional: DTO schemas if not expressed in OpenAPI
+```
 
-- **Unknown:** Whether the above subfolders already exist in your working tree.
-  - **Verify:** `ls -R schemas/` and compare with this layout; update this README to reflect reality.
-
----
-
-## What belongs here
-
-### Acceptable inputs
-
-- **Confirmed:** JSON Schema files used to validate CI-critical artifacts such as:
-  - catalog records (DCAT, STAC, PROV)
-  - run receipts (and receipt-like audit records)
-  - telemetry events used by governance/ops checks
-- **Proposed:** Shared `$defs` for cross-cutting fields:
-  - `dataset_id`, `dataset_version_id`
-  - `spec_hash`
-  - content digests (`sha256:`)
-  - time fields (`date-time`)
-  - policy labels / sensitivity classifications
-  - SPDX license identifiers
-
-### Exclusions
-
-- **Confirmed:** No raw/processed data belongs here.
-- **Confirmed:** No secrets, tokens, or environment-specific configuration belongs here.
-- **Proposed:** Don’t store generated artifacts here (compiled bundles, minified outputs). Prefer generating to `artifacts/` or CI artifacts.
-- **Proposed:** Don’t store policy (Rego) here; keep schemas and policy separate to preserve a clean policy boundary.
+### Repo reality (UNKNOWN until verified)
+- **UNKNOWN:** Which of the above folders exist today.
+  - **Verify:** `ls -R schemas/` and replace this section with the actual tree.
+  - **Verify:** `rg -n "schemas/" .github/workflows docs tools` to find live references.
 
 ---
 
 ## Schema registry
 
-- **Proposed:** Maintain a single registry file to support:
-  - schema discovery
-  - compatibility checks
-  - enforcement of ownership and policy labels
-  - deterministic references in receipts/manifests
+- **PROPOSED:** Maintain a single registry file (`schemas/registry.yaml`) so:
+  - schemas are discoverable and referenceable by stable IDs
+  - compatibility checks can be automated
+  - ownership + policy labels are explicit
+  - receipts/manifests can reference a deterministic schema id/version
 
 ### Proposed `schemas/registry.yaml` shape
 
-~~~yaml
+```yaml
 # schemas/registry.yaml
 version: 1
 schemas:
-  - id: kfm.schema.telemetry.drift_search.v11
-    path: schemas/telemetry/drift-search-v11.json
-    semver: 11.0.0
-    mode: backward   # backward|forward|full (compat expectations)
+  - id: kfm.schema.receipts.run_receipt.v1
+    path: schemas/receipts/run-receipt/v1/schema.json
+    semver: 1.0.0
+    mode: backward        # backward|forward|full
     owners: [tbd-schema-stewards]
-    policy_label: public
+    policy_label: restricted
+    gates: ["F"]          # Promotion Contract gate(s) this schema supports
 
-  - id: kfm.schema.receipt.run.v1
-    path: schemas/receipts/run-receipt-v1.schema.json
+  - id: kfm.schema.telemetry.pipeline_run.v1
+    path: schemas/telemetry/pipeline-run/v1/schema.json
     semver: 1.0.0
     mode: backward
     owners: [tbd-schema-stewards]
-    policy_label: restricted
-~~~
+    policy_label: public
+```
 
-- **Unknown:** Whether your repo already uses `schemas/registry.yaml`.
-  - **Verify:** search CI/workflows for `schemas/registry.yaml` references; if none, add registry + wire checks.
+> NOTE: If the canonical receipt schema currently lives at `governance/run_receipt.schema.json`, treat that as authoritative until a governed migration plan exists.
+
+---
+
+## Promotion Contract alignment
+
+- **CONFIRMED:** Promotion to `PUBLISHED` is blocked unless the **Promotion Contract gates** are satisfied.
+- **PROPOSED:** Each gate maps to one or more schema families below (so enforcement is testable).
+
+### Gates to schema families (mapping)
+
+| Gate | What the gate checks | Schema family (target) | Notes |
+|------|-----------------------|------------------------|------|
+| A | Identity + versioning | `schemas/common/` | dataset ids, spec_hash, digests |
+| B | Licensing + rights | `schemas/common/` + catalogs | SPDX IDs and rights blocks |
+| C | Sensitivity + redaction plan | `schemas/common/` + receipts | policy labels + obligations |
+| D | Catalog triplet validation | `schemas/catalogs/` | DCAT/STAC/PROV cross-links |
+| E | QA thresholds | receipts + dataset specs | schema captures thresholds + results |
+| F | Run receipt + audit record | `schemas/receipts/` | append-only, signed if required |
+| G | Release manifest | receipts/manifests | ties promotion to artifacts/digests |
+
+> PROPOSED: keep this table generated from `schemas/registry.yaml` to prevent doc drift.
 
 ---
 
 ## Versioning and compatibility
 
-- **Confirmed:** Use SemVer rules for schema evolution:
+- **CONFIRMED:** Use SemVer rules for schema evolution:
   - **PATCH**: descriptions/examples/annotations only
-  - **MINOR**: additive, backward-compatible changes (e.g., optional fields)
-  - **MAJOR**: breaking changes (e.g., new required properties, type changes)
+  - **MINOR**: additive, backward-compatible (new optional fields, new enum values that don’t break existing)
+  - **MAJOR**: breaking changes (new required fields, type changes, removals, tighter constraints)
 
-- **Proposed:** Enforce compatibility in CI:
-  1. detect changed schemas under `schemas/**/schema.json` (or your naming convention)
-  2. run a JSON Schema diff tool in the declared direction/mode
-  3. produce a PR artifact report and fail the job on breaking changes without major bump
+- **PROPOSED:** Store multiple versions side-by-side (`.../v1/`, `.../v2/`) and never rewrite old versions after publish.
+- **PROPOSED:** Run a PR-time compatibility diff for changed schemas and block merges on breaking changes unless a major bump is declared.
 
 ---
 
 ## Validation
 
-### Local validation
+### Quickstart
 
-- **Proposed:** Provide a minimal local workflow:
-  - validate a schema is itself well-formed
-  - validate representative fixtures against the schema
-  - validate cross-schema references resolve (no broken `$ref`)
+> These commands are **PROPOSED defaults** — adjust paths and tooling to match your repo.
 
-Example commands (adjust to your tooling):
+```bash
+# 0) Inspect schema surface (verify what exists)
+ls -R schemas/ || true
 
-~~~bash
-# Validate a schema file is syntactically valid JSON
-jq -e . schemas/telemetry/drift-search-v11.json >/dev/null
+# 1) Basic JSON well-formedness
+find schemas -name "*.json" -print0 | xargs -0 -n1 jq -e . >/dev/null
 
-# Validate fixtures against a schema (example)
+# 2) Validate local fixtures against a schema (example)
 python -m jsonschema \
-  --schema schemas/telemetry/drift-search-v11.json \
-  examples/telemetry/drift-search.sample.json
-~~~
+  --schema schemas/receipts/run-receipt/v1/schema.json \
+  tests/fixtures/receipts/run-receipt.sample.json
 
-### CI validation
+# 3) (Optional) Validate registry YAML if you use it
+yq -e '.version == 1 and (.schemas | type == "!!seq")' schemas/registry.yaml
+```
 
-- **Confirmed (documented CI intent):** Run catalog validators + link checks + spec-hash drift checks in CI.
-- **Proposed:** Add schema-lint + schema-compat-diff jobs that trigger only when `schemas/**` changes.
+### CI validation (PROPOSED)
 
-~~~mermaid
-flowchart LR
-  A[Change proposed in PR] --> B[Schema lint]
-  B --> C[Schema compatibility diff]
-  C --> D[Artifact validators]
-  D --> E[Promotion gates]
-  E --> F[Merge or fail closed]
-~~~
+- Schema lint (well-formed JSON + `$ref` resolution)
+- Schema compat diff (direction from registry `mode`)
+- Fixture validation (sample payloads must validate)
+- Catalog validators + link checkers + spec-hash drift checks (as part of broader promotion gates)
+
+Example workflow sketch:
+
+```yaml
+name: schemas
+on:
+  pull_request:
+    paths:
+      - "schemas/**"
+      - "tools/schema/**"
+      - "tests/fixtures/**"
+jobs:
+  schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint JSON
+        run: |
+          find schemas -name "*.json" -print0 | xargs -0 -n1 jq -e . >/dev/null
+
+      - name: Validate fixtures (example)
+        run: |
+          python -m jsonschema \
+            --schema schemas/receipts/run-receipt/v1/schema.json \
+            tests/fixtures/receipts/run-receipt.sample.json
+```
 
 ---
 
 ## Change workflow
 
-### Definition of Done for a schema change (PR checklist)
+### Definition of Done (schema PR checklist)
 
-- [ ] **Confirmed:** schema validates (no broken refs)
-- [ ] **Proposed:** registry entry exists/updated (`schemas/registry.yaml`)
-- [ ] **Proposed:** SemVer bump matches the change type (patch/minor/major)
-- [ ] **Proposed:** compatibility diff report is green (or major bump justified)
-- [ ] **Confirmed:** fixtures/examples updated (or added) to cover new/changed fields
-- [ ] **Confirmed:** CI gates pass (catalog validation, linkcheck, spec-hash drift, policy tests where applicable)
-- [ ] **Proposed:** changelog note added (or PR description includes rationale + rollback plan)
+- [ ] **CONFIRMED:** Schema(s) validate; `$ref` resolution is clean (no broken refs)
+- [ ] **PROPOSED:** Registry entry created/updated (`schemas/registry.yaml`)
+- [ ] **PROPOSED:** SemVer bump matches change type (patch/minor/major)
+- [ ] **PROPOSED:** Compatibility diff report is green **or** major bump + migration note included
+- [ ] **CONFIRMED:** Fixtures/examples updated (or added) to cover the change
+- [ ] **CONFIRMED:** CI gates pass (schema lint, fixture validation, catalog validators where applicable)
+- [ ] **PROPOSED:** Changelog note added (or PR includes rationale + rollback plan)
 
 ### Guardrails
 
-- **Confirmed:** Avoid schema designs that enable targeting or exposure of sensitive locations.
-- **Proposed:** If a schema includes location fields, require an explicit `policy_label` and document redaction/generalization obligations in the consuming pipeline spec.
+- **CONFIRMED:** Avoid schema designs that enable targeting/exposure of sensitive locations.
+- **PROPOSED:** If location fields exist, require:
+  - explicit `policy_label`
+  - explicit precision/aggregation rules (e.g., H3 resolution caps)
+  - documented redaction/generalization obligations in the producing pipeline spec
+
+---
+
+## Schema registry table
+
+> **PROPOSED:** Keep this table auto-generated from `schemas/registry.yaml`.
+
+| schema id | path | semver | compat | policy_label | owners | gates |
+|----------|------|--------|--------|--------------|--------|-------|
+| *(TBD)*  | *(TBD)* | *(TBD)* | *(TBD)* | *(TBD)* | *(TBD)* | *(TBD)* |
+
+---
+
+## FAQ
+
+### Why are schemas a “hard boundary”?
+Because KFM is intended to be fail-closed: promotion/publishing must not proceed if identity, licensing, sensitivity, catalog triplet integrity, receipts, or release manifests can’t be validated.
+
+### Where do API DTO schemas live?
+- **PROPOSED default:** In OpenAPI (preferred) unless you have a strong reason to mirror DTOs as JSON Schemas under `schemas/api/`.
+
+### Should we allow remote `$ref`?
+- **PROPOSED:** Prefer local refs for determinism. If remote refs are used (e.g., STAC extension URIs), pin exact versions and record them in the registry.
 
 ---
 
 ## Unknowns to verify
 
-These items are intentionally **fail-closed** until confirmed:
+Fail-closed until verified:
 
 1) **Does `schemas/registry.yaml` exist today?**  
    - Verify: list `schemas/` and search CI for registry usage.
 
-2) **Which schema families are currently in use (catalogs, telemetry, receipts)?**  
-   - Verify: grep for `schemas/` references in docs, pipelines, and CI workflows.
+2) **Which schema families are currently enforced (catalogs, telemetry, receipts)?**  
+   - Verify: grep for schema refs in validators and workflows.
 
 3) **Where is the canonical run receipt schema stored (`governance/` vs `schemas/receipts/`)?**  
    - Verify: locate `run_receipt.schema.json` and identify the consuming validators.
 
-4) **Which JSON Schema draft is enforced (2020-12 vs older drafts)?**  
-   - Verify: inspect `$schema` fields and validator tool versions/pins.
+4) **Which JSON Schema draft is enforced (2020-12 vs older)?**  
+   - Verify: inspect `$schema` fields and pin validator versions in CI.
 
-> TIP: Once verified, replace “Proposed” layouts and placeholders with the repo’s actual structure and wire the checks in CI so the README stays true automatically.
+---
+
+<details>
+<summary><strong>Appendix: Recommended tools (swap-friendly)</strong></summary>
+
+- **JSON validation:** `jq`
+- **Schema validation:** Python `jsonschema` or Node `ajv` (pin versions in CI)
+- **Compatibility diff:** `@atlassian/json-schema-diff` or equivalent
+- **YAML tooling:** `yq`
+
+> PROPOSED: keep tools in `tools/schema/` with a single wrapper so you can replace underlying validators without changing CI contracts.
+
+</details>
 
 ---
 
