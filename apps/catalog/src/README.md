@@ -1,257 +1,361 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/6736c4b1-162d-48fc-a4e1-778b75e6e1b9
-title: Catalog subsystem source
+doc_id: kfm://doc/0b957b54-102d-4e30-861c-61694d75a2dd
+title: apps/catalog/src — Catalog UI source
 type: standard
 version: v1
 status: draft
-owners: TBD
-created: 2026-02-26
-updated: 2026-02-26
-policy_label: restricted
+owners: TBD (UI) / TBD (Gov steward)
+created: 2026-03-03
+updated: 2026-03-03
+policy_label: public
 related:
-  - ../../../docs/MASTER_GUIDE_v13.md
-  - ../../../docs/standards/KFM_STAC_PROFILE.md
-  - ../../../docs/standards/KFM_DCAT_PROFILE.md
-  - ../../../docs/standards/KFM_PROV_PROFILE.md
-  - ../../../docs/governance/ROOT_GOVERNANCE.md
-tags: [kfm, catalog, stac, dcat, prov, evidence, governance]
+  - apps/catalog/README.md
+  - apps/ui/README.md
+  - apps/api/src/api/README.md
+  - packages/catalog/README.md
+  - packages/ingest/README.md
+tags: [kfm, catalog, ui]
 notes:
-  - Directory-level runbook for the Catalog subsystem’s source code.
-  - Keep governed narrative/architecture docs in /docs; this file links out.
+  - Directory-level contract for Catalog UI source code.
+  - Update directory tree + commands once scaffolding exists in-repo.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Catalog · `apps/catalog/src`
+# `apps/catalog/src` — Catalog UI source
 
-**Purpose:** Source code for producing and validating KFM’s *catalog boundary artifacts* (STAC + DCAT + PROV) and the run receipts / evidence bundles that downstream systems (Graph → API → UI → Story → Focus Mode) must rely on.
+**Purpose:** Source code for the **Catalog UI**: dataset discovery + dataset-version transparency + evidence/provenance inspection as a **governed client**.
 
-![Status](https://img.shields.io/badge/status-draft-lightgrey) ![Subsystem](https://img.shields.io/badge/subsystem-catalog-lightgrey) ![Artifacts](https://img.shields.io/badge/artifacts-STAC%20%2B%20DCAT%20%2B%20PROV-lightgrey) ![CI](https://img.shields.io/badge/ci-TODO-lightgrey) ![Policy](https://img.shields.io/badge/policy-restricted-lightgrey)
+**Status:** draft • **Owners:** TBD • **Policy label:** `public` (this README)
+
+![status](https://img.shields.io/badge/status-draft-lightgrey)
+![scope](https://img.shields.io/badge/scope-catalog_ui-blue)
+![governed](https://img.shields.io/badge/client-governed-blue)
+![evidence](https://img.shields.io/badge/evidence-drawer_required-orange)
+![policy](https://img.shields.io/badge/policy-default--deny-critical)
+![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
 
 > [!IMPORTANT]
-> This directory should contain **executable source code only**. Keep design docs, governance policies, Story Nodes, and dataset runbooks in `docs/` (and link to them from here).
-
-## Quick links
-
-- [How this fits in the pipeline](#how-this-fits-in-the-pipeline)
-- [What belongs here (and what must not)](#what-belongs-here-and-what-must-not)
-- [Artifacts & contracts](#artifacts--contracts)
-- [Promotion gates (Definition of Done)](#promotion-gates-definition-of-done)
-- [Local dev](#local-dev)
-- [Testing & CI](#testing--ci)
-- [Troubleshooting](#troubleshooting)
-- [Verification steps](#verification-steps)
+> **This directory is UI source only.**
+> - Catalog **generation/validation** belongs upstream (e.g., ingest + catalog tooling), not in the UI.
+> - The UI must not bypass the governed API boundary (no direct DB/object storage access).
 
 ---
 
-## How this fits in the pipeline
+## Quick navigation
 
-KFM’s ordering is non‑negotiable: **ETL → Catalogs (STAC/DCAT/PROV) → Graph → API → UI → Story Nodes → Focus Mode**.
+- [Purpose](#purpose)
+- [Where this fits](#where-this-fits)
+- [Directory contract](#directory-contract)
+- [Non-negotiable invariants](#non-negotiable-invariants)
+- [Architecture](#architecture)
+- [Module responsibilities](#module-responsibilities)
+- [Evidence Drawer integration](#evidence-drawer-integration)
+- [Policy-safe UX rules](#policy-safe-ux-rules)
+- [Directory layout](#directory-layout)
+- [Testing and quality gates](#testing-and-quality-gates)
+- [Local development](#local-development)
+- [Minimum verification steps](#minimum-verification-steps)
+- [Glossary](#glossary)
+
+---
+
+## Purpose
+
+`apps/catalog/src/` holds the implementation for Catalog UI behaviors such as:
+
+- dataset and version browsing (search, filter, sort)
+- viewing DCAT/STAC/PROV-backed metadata (through the governed API)
+- a consistent **Evidence Drawer** experience for “what is this layer/claim based on?”
+- policy-aware rendering (labels, notices, and obligation explanations)
+
+**Non-goal:** building catalogs, applying transformations, or enforcing policy decisions in the client.
+The UI **displays** policy outcomes; the API **enforces** them.
+
+[Back to top](#top)
+
+---
+
+## Where this fits
+
+The Catalog UI is a **governed client surface**. Its data access posture is constrained by the **trust membrane**: all access crosses the governed API boundary.
 
 ```mermaid
 flowchart LR
-  ETL[ETL + Normalization] --> CAT[Catalog boundary artifacts<br/>STAC + DCAT + PROV]
-  CAT --> GRAPH[Graph sync / constraints]
-  GRAPH --> API[Governed API boundary]
-  API --> UI[Map & Catalog UI]
-  UI --> STORY[Story Nodes]
-  STORY --> FOCUS[Focus Mode]
-
-  CAT --> RECEIPT[Run receipts / EvidenceBundles]
-  RECEIPT --> FOCUS
+U[User] --> CUI[Catalog UI]
+CUI --> API[Governed API]
+API --> PE[Policy engine]
+API --> ER[Evidence resolver]
+API --> CAT[Catalog triplet]
+CAT --> CAN[Canonical stores]
+API --> IDX[Rebuildable projections]
 ```
 
-**What this directory is responsible for (conceptually):**
-
-- Generating the **catalog triplet** (STAC, DCAT, PROV) as the *interface* between processed data and everything downstream.
-- Validating that metadata conforms to KFM profiles and that cross-links are intact (e.g., DCAT distributions point to STAC and/or stable assets; PROV links input→activity→output chains).
-- Emitting **run receipts** that bind outputs to inputs, tool versions, configs, checksums, and governance decisions.
-
-<a href="#top">Back to top</a>
+[Back to top](#top)
 
 ---
 
-## What belongs here and what must not
+## Directory contract
 
-| Category | ✅ OK in `apps/catalog/src` | ❌ Not OK in `apps/catalog/src` |
-|---|---|---|
-| Source code | Catalog generation, validation, resolvers/adapters, CLI/service entrypoints, domain-neutral utilities | Copy-pasted docs, long design narratives, Story Node content |
-| Data | **None** (only references, fixtures for tests) | Raw/work/processed datasets; large binaries; “sample data” without license/sensitivity metadata |
-| Access patterns | Read/write through governed storage abstractions; calls through *contracts* | UI reaching into DB/graph directly; “just read the file from data/processed” shortcuts |
-| Safety/governance | Redaction hooks, policy checks, classification labels | Hard-coded sensitive coordinates; bypassing policy boundary; leaking secrets in configs |
+### Acceptable inputs
+
+✅ OK in `apps/catalog/src/`:
+
+- routes/pages, UI components, styling, client-side state
+- typed API client code that implements the **governed API contract**
+- evidence UI (drawer, citation chips, provenance panels)
+- a11y and governance UX tests (policy notices, evidence resolution flows)
+
+### Exclusions
+
+❌ Not OK in `apps/catalog/src/`:
+
+- ingestion, normalization, promotion, or catalog generation logic
+- direct connections to storage/DB/search/tiles that bypass the governed API
+- secrets, long-lived credentials, private keys, partner-restricted configs
+- “shadow policy” logic meant to “improve UX” by inferring restricted details
 
 > [!WARNING]
-> If you’re tempted to add a convenience shortcut that bypasses profile validation, cross-link checks, or redaction — **don’t**. Those are the trust membrane.
+> If you add a new outbound network origin in the UI, treat it as a **trust membrane change**:
+> route it through a governed adapter/API or reject it.
 
-<a href="#top">Back to top</a>
+[Back to top](#top)
 
 ---
 
-## Artifacts & contracts
+## Non-negotiable invariants
 
-### The “catalog triplet” (required)
+These must be enforceable by tests (fail closed):
 
-Every published dataset/evidence artifact should have **all three**:
+1. **Governed client**
+   - UI renders what the API returns.
+   - UI never embeds privileged credentials.
+   - UI never reads from canonical stores directly.
 
-1. **STAC Collection + Item(s)** — spatial/temporal metadata and asset links  
-2. **DCAT dataset entry** — discovery metadata, license, distributions  
-3. **PROV bundle** — lineage: inputs → processing activity → outputs (agents, timestamps, parameters)
+2. **Evidence-first UX**
+   - Evidence Drawer is reachable from every dataset version view.
+   - No “claim panels” without resolvable EvidenceRefs (or a fail-closed explanation).
+
+3. **Policy-safe behavior**
+   - Errors and empty states must not leak restricted existence via messaging or timing.
+   - Redactions/generalizations are made visible via notices (no “silent restriction”).
+
+4. **Contract stability**
+   - API DTOs are schema-driven (don’t “guess” fields).
+   - Breaking changes require versioned contracts and migration paths.
+
+[Back to top](#top)
+
+---
+
+## Architecture
+
+### Evidence resolution loop (UI view)
+
+```mermaid
+sequenceDiagram
+autonumber
+participant U as User
+participant UI as Catalog UI
+participant API as Governed API
+participant PE as Policy engine
+participant ER as Evidence resolver
+
+U->>UI: Open Evidence Drawer
+UI->>API: POST evidence resolve (EvidenceRefs + context)
+API->>PE: evaluate access and obligations
+PE-->>API: allow deny and obligations
+API->>ER: resolve bundles (policy filtered)
+ER-->>API: EvidenceBundles
+API-->>UI: bundles + obligations + audit_ref
+UI-->>U: Render drawer (policy safe)
+```
+
+### Design rule
+
+The Catalog UI must be usable with **≤ 2 calls** to render evidence for a dataset/version view:
+- 1 call to get page data (datasets / details)
+- 1 call to resolve evidence references for the drawer
+
+If more calls are required, treat it as a contract smell and push logic behind the governed API.
+
+[Back to top](#top)
+
+---
+
+## Module responsibilities
+
+A pragmatic module boundary map (update to match your actual structure):
+
+| Module | Responsibility | Must NOT do |
+|---|---|---|
+| `api/` | typed client, DTO validation, stable error mapping | embed secrets; bypass API |
+| `evidence/` | Evidence Drawer UI + EvidenceRef formatting/parsing helpers | enforce policy; fetch storage directly |
+| `pages/` or `routes/` | route-level composition + loading states | implement business logic that belongs in API |
+| `components/` | reusable UI primitives (cards, filters, tables) | leak restricted existence via “helpful hints” |
+| `state/` | query state, URL state, caching | invent data; cache restricted data across roles |
+| `policy/` | policy notice rendering + obligation explanation copy | decide policy outcomes |
+| `styles/` | tokens, layout, theming | N/A |
+| `__tests__/` | unit + integration + a11y smoke tests | rely on live network by default |
+
+[Back to top](#top)
+
+---
+
+## Evidence Drawer integration
+
+### EvidenceRef conventions
+
+The UI should treat EvidenceRefs as **opaque identifiers** unless the contract explicitly defines a parseable structure.
+
+Recommended behavior:
+- display stable short forms (e.g., scheme + id)
+- copy-to-clipboard citation snippets when allowed
+- always resolve through `POST /api/v1/evidence/resolve` (or equivalent)
+
+### Evidence Drawer minimum display contract
+
+The drawer should display at minimum:
+
+- bundle identifier + digest
+- dataset version identifier
+- license + rights holder + attribution text
+- freshness/validation status (as returned by API)
+- provenance chain links (run receipt/prov)
+- artifacts (only if policy allows)
+- obligations applied (generalization/redaction), with user-facing explanation
+- `audit_ref` (for steward review and reproducibility)
+
+[Back to top](#top)
+
+---
+
+## Policy-safe UX rules
+
+1. **Fail closed, explain safely**
+   - If evidence cannot be resolved: show a policy-safe explanation and offer next steps.
+2. **No existence leaks**
+   - Avoid UI branching that reveals restricted dataset presence (status codes, copy, timing).
+3. **Make governance visible**
+   - Always show license/attribution and policy label (public-safe form) if provided.
+4. **Exports inherit policy**
+   - Exports must include attribution + license and must be blocked if disallowed.
+5. **Accessibility is part of governance**
+   - Evidence Drawer must be keyboard navigable and screen-reader friendly.
+
+[Back to top](#top)
+
+---
+
+## Directory layout
 
 > [!NOTE]
-> If you need custom metadata beyond the base profiles, extend the profiles — don’t invent ad‑hoc fields.
-
-### Canonical output locations (expected)
-
-> These locations are part of the v13 layout contract. If this monorepo differs, you must document the mapping from *this app* to the canonical home.
-
-- `data/stac/collections/` — STAC Collections  
-- `data/stac/items/` — STAC Items  
-- `data/catalog/dcat/` — DCAT JSON‑LD outputs  
-- `data/prov/` — PROV bundles / lineage files  
-- (Optional) `releases/` — versioned bundles + manifests
-
-### Contracts this code must respect
-
-- **Schema/profile contracts:** KFM STAC/DCAT/PROV profiles (see `docs/standards/`)
-- **Promotion contract:** “no publish” unless required artifacts + validations are present
-- **API boundary rule:** anything consumed by UI must be exposed via governed API (not direct graph/db reads)
-
-<a href="#top">Back to top</a>
-
----
-
-## Suggested internal architecture
-
-> This is a **recommended** layout aligned with the KFM layering model (Domain → Use cases → Interfaces → Infrastructure). Update to match the actual directory tree.
+> Replace this with the actual output of:
+> `tree apps/catalog/src -L 3` (or equivalent) once scaffolding exists.
 
 ```text
-apps/catalog/src/                                     # Catalog app core (clean architecture boundaries inside UI/service)
-├── index.ts                                          # Package entry (exports wiring, app bootstrap, or public API)
-├── domain/                                           # Pure rules (profile semantics, linkage invariants, no IO)
-├── usecases/                                         # Orchestrations (buildTriplet(), validateTriplet(), publish(), receipts)
-├── interfaces/                                       # Ports (CatalogStore, EvidenceResolver, PolicyDecider, Logger)
-├── infra/                                            # Adapters (fs/S3/GCS stores, jsonschema, observability, policy client)
-├── cli/                                              # CLI entrypoints (only if app exposes commands)
-├── server/                                           # HTTP/service entrypoints (only if app is a service)
-└── __tests__/                                        # Fast unit tests + tiny fixtures only (no network, deterministic)
+apps/catalog/src/
+  README.md            # this file: directory contract + invariants
+  pages/               # or routes/ (TBD)
+    catalog/           # dataset discovery views
+    datasets/          # dataset + version details
+  components/
+    catalog/           # dataset cards, filter controls, tables
+    shared/            # buttons, layout primitives, typography, etc.
+  evidence/
+    EvidenceDrawer/    # evidence UI + renderers
+    refs/              # EvidenceRef formatting helpers
+  api/
+    client.ts          # API client wrapper (fetcher + headers)
+    dtos/              # DTO types and validators (schema-driven)
+    errors.ts          # stable error mapping (policy-safe)
+  policy/
+    PolicyNotice.tsx   # obligation explanation rendering
+  state/
+    queryState.ts      # filters, URL state, caching rules
+  styles/
+    tokens.css         # design tokens (TBD)
+    globals.css        # app-wide styles (TBD)
+  __tests__/
+    evidenceDrawer.test.tsx
+    policySafeErrors.test.ts
 ```
 
-**Hard rule:** domain + usecases must be testable without network, filesystem, or databases.
-
-<a href="#top">Back to top</a>
+[Back to top](#top)
 
 ---
 
-## Promotion gates (Definition of Done)
+## Testing and quality gates
 
-A change that affects catalog outputs should satisfy *at least*:
+### Must-pass checks for Catalog UI changes
 
-- [ ] **Metadata identity** present (dataset id, title/description, ownership)
-- [ ] **Validation results** recorded (schema/profile validation)
-- [ ] **License check** recorded
-- [ ] **Sensitivity / classification** recorded (and redaction applied where required)
-- [ ] **Provenance links** complete (inputs, transforms, tool versions, parameters)
-- [ ] **Checksums / integrity** recorded for referenced assets
-- [ ] **Run receipt** emitted (who/what/when/why + inputs/outputs + policy decisions)
-- [ ] **Catalog triplet validates** (STAC, DCAT, PROV + cross-link checks)
-
-> [!TIP]
-> If you add a new validator or profile constraint, add a “known bad” fixture to prove the gate fails closed.
-
-<a href="#top">Back to top</a>
-
----
-
-## Local dev
-
-> Tooling is repo-specific. These commands are intentionally conservative placeholders.
-
-```bash
-# From repo root
-cd apps/catalog
-
-# Install dependencies (use the repo's package manager)
-pnpm install   # or: npm ci | yarn install
-
-# Run in watch/dev mode (if supported)
-pnpm dev       # or: npm run dev
-
-# Validate catalogs / run tests
-pnpm test      # or: npm test
-```
-
-### Common workflows
-
-#### 1) Add a new dataset / evidence artifact to the catalog
-
-1. Ensure processed outputs exist in `data/processed/...`
-2. Create/extend metadata mapping to produce STAC/DCAT/PROV
-3. Run validators locally
-4. Confirm cross-links:
-   - STAC assets resolve to stable locations
-   - DCAT distributions reference STAC or stable downloads
-   - PROV chain is complete (inputs→activity→outputs)
-5. Ensure run receipt includes:
-   - inputs (with hashes/IDs)
-   - outputs (with hashes/IDs)
-   - tool versions + config refs
-   - policy classification + any redactions applied
-
-#### 2) Change/extend a profile field (STAC/DCAT/PROV)
-
-- Update the relevant profile in `docs/standards/`
-- Update schema/validator code (and tests)
-- Add migration notes if the change impacts existing published records
-
-<a href="#top">Back to top</a>
-
----
-
-## Testing & CI
-
-### What CI should enforce (minimum)
-
-- Schema/profile validation for STAC/DCAT/PROV
-- Link integrity checks (no broken references between catalogs and assets)
-- Secrets scanning
-- Lint/format checks
-- Unit tests for domain invariants (fail closed)
+- [ ] DTO/schema validation tests pass (no “guessing” fields)
+- [ ] Evidence resolver integration test passes (representative EvidenceRef resolves)
+- [ ] Policy-safe error model test passes (no existence leaks via copy/status branching)
+- [ ] Accessibility smoke test: Evidence Drawer keyboard navigation works
+- [ ] Export (if present) includes attribution + license automatically, and blocks when disallowed
+- [ ] Link checks (if implemented) verify DCAT ↔ STAC ↔ PROV navigation surfaces are consistent (as returned by API)
 
 ### Test data rules
 
-- Keep fixtures tiny, synthetic, and license-safe
-- Never commit real sensitive coordinates or restricted data
-- Prefer “golden” snapshots of metadata outputs over large binary assets
+- fixtures must be tiny and synthetic
+- do not commit restricted/sensitive coordinates
+- do not commit “sample datasets” without explicit license/sensitivity metadata
 
-<a href="#top">Back to top</a>
-
----
-
-## Troubleshooting
-
-### “DCAT validates but UI can’t find the dataset”
-- Check DCAT distribution links: do they point to the right STAC record or stable asset URL/path?
-- Check that the STAC record’s asset hrefs resolve and that the referenced files exist where expected.
-
-### “PROV exists but lineage looks incomplete”
-- Verify that the run receipt references the same run id / commit id used in the PROV activity.
-- Ensure raw → work → processed transitions are represented, not just the last step.
-
-### “Catalog triplet validation fails in CI but passes locally”
-- Confirm you’re running the same schema/profile versions as CI.
-- CI may include additional link checking (e.g., verifying assets exist and have checksums).
-
-<a href="#top">Back to top</a>
+[Back to top](#top)
 
 ---
 
-## Verification steps
+## Local development
 
-Because this README is placed under `apps/catalog/src/`, you should verify the repo-specific wiring and update placeholders:
+> [!IMPORTANT]
+> Commands are placeholders until verified against this repo’s tooling.
 
-1. Confirm the *actual* entrypoints for this app (CLI vs service vs library).
-2. Replace the “Suggested internal architecture” tree with the real tree (or remove it if misleading).
-3. Replace the CI badge and commands with the repo’s actual workflows/scripts.
-4. Confirm canonical output locations or document the mapping if the repo diverges from the v13 layout contract.
+```bash
+# from repo root (TBD)
+cd apps/catalog
 
-<a href="#top">Back to top</a>
+# install (choose repo standard)
+pnpm install   # or: npm ci | yarn install
+
+# dev server (if this app exists as a runnable UI)
+pnpm dev
+
+# tests
+pnpm test
+```
+
+Environment variables (placeholder names; confirm in code once implemented):
+
+- `KFM_API_BASE_URL` — governed API base URL
+- `KFM_BUILD_SHA` — optional build identity surfaced in “About”
+
+[Back to top](#top)
+
+---
+
+## Minimum verification steps
+
+If any part of this README is wrong, do these smallest checks and update it:
+
+1. Confirm whether `apps/catalog` is a standalone UI app or folded into `apps/ui`.
+2. Confirm the actual routing framework (`pages/` vs `routes/` vs `src/app/`) and update the tree.
+3. Confirm the governed API endpoints used for catalog discovery and evidence resolution.
+4. Confirm error mapping rules for policy-safe behavior (especially 403/404 alignment).
+5. Replace placeholder commands/badges with real scripts and CI workflow links.
+
+[Back to top](#top)
+
+---
+
+## Glossary
+
+- **Governed client:** a UI that never bypasses the governed API and never decides policy.
+- **EvidenceRef:** a resolvable reference used for citations and evidence drawer lookups.
+- **EvidenceBundle:** policy-aware evidence payload returned by the resolver (renderable card + metadata).
+- **Catalog triplet:** DCAT + STAC + PROV, treated as a contract surface between pipelines and runtime.
+- **Trust membrane:** the boundary rule that forces all runtime access through governed APIs + policy enforcement.
+
+---
+
+Back to top ↑
