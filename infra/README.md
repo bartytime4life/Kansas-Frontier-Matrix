@@ -11,226 +11,316 @@ policy_label: restricted
 related:
   - ../README.md
   - ../docs/ (UNKNOWN — verify paths)
+  - ../policy/ (CONFIRMED concept; verify path)
+  - ../contracts/ (CONFIRMED concept; verify path)
 tags: [kfm, infra, iac, deployment, governance]
 notes:
-  - This README is written evidence-first: every meaningful claim is tagged CONFIRMED, PROPOSED, or UNKNOWN.
+  - Evidence-first: every meaningful claim is tagged CONFIRMED / PROPOSED / UNKNOWN.
   - Treat UNKNOWN as “do not rely on” until verified in-repo.
+  - Infra is a policy surface: network, identity, secrets, and exposure controls must fail-closed.
 [/KFM_META_BLOCK_V2] -->
 
 # `infra/` — Infrastructure & Deployment
+One home for **Infrastructure-as-Code**, **deployment plumbing**, and **ops guardrails** that make KFM reproducible, governed, and fail-closed.
 
-**Purpose (CONFIRMED):** This directory is the home for deployment infrastructure (e.g., Kubernetes / Terraform / GitOps artifacts), including items like Helm charts, Terraform modules, and operational dashboards.  
-**Status:** draft • **Policy posture (CONFIRMED):** default-deny / fail-closed • **Owners:** see MetaBlock
+> **IMPACT**
+> - **Status:** experimental (doc: draft)
+> - **Owners:** KFM Platform Team *(UNKNOWN — verify `CODEOWNERS`)*
+> - **Policy label:** `restricted`
+> - **Non-negotiables:** trust membrane, truth path lifecycle zones, promotion gates, policy parity in CI + runtime
+> - **Quick links:** [Scope](#scope) • [Where it fits](#where-it-fits-in-kfm) • [Hard invariants](#hard-invariants-test-enforced) • [Directory contract](#directory-contract) • [Quickstart](#quickstart) • [Topology](#reference-topology-trust-membrane) • [PR gates](#how-infra-changes-ship) • [Ops](#ops--reliability)
 
-![Status](https://img.shields.io/badge/status-draft-orange)
+![Status](https://img.shields.io/badge/status-experimental-orange)
 ![Policy](https://img.shields.io/badge/policy-default--deny%20%7C%20fail--closed-red)
-![Infra](https://img.shields.io/badge/infra-IaC%20%26%20Deployment-informational)
+![Domain](https://img.shields.io/badge/domain-infra%20%2F%20deployment-informational)
 ![TODO](https://img.shields.io/badge/TODO-wire%20real%20CI%20badges-lightgrey)
+
+<!-- TODO: replace with real workflow badge paths once known -->
+<!-- ![CI](https://img.shields.io/badge/ci-TODO-lightgrey) -->
 
 ---
 
 ## Quick navigation
 
-- [Evidence tags](#evidence-tags)
-- [What belongs in `infra/`](#what-belongs-in-infra)
-- [Hard invariants](#hard-invariants)
-- [Reference deployment topology](#reference-deployment-topology)
+- [Conventions](#conventions)
+- [Scope](#scope)
+- [Where it fits in KFM](#where-it-fits-in-kfm)
+- [Hard invariants](#hard-invariants-test-enforced)
 - [Directory contract](#directory-contract)
+- [Quickstart](#quickstart)
+- [Reference topology](#reference-topology-trust-membrane)
 - [How infra changes ship](#how-infra-changes-ship)
 - [Environment matrix](#environment-matrix)
 - [Secrets and configuration](#secrets-and-configuration)
-- [Ops and reliability](#ops-and-reliability)
+- [Supply chain and artifact trust](#supply-chain-and-artifact-trust)
+- [Ops and reliability](#ops--reliability)
+- [FAQ](#faq)
 - [Appendix](#appendix)
 
 ---
 
-## Evidence tags
+## Conventions
 
-This repo uses three tags for every meaningful claim:
+### Evidence tags (required)
 
-- **CONFIRMED** — anchored in KFM source docs (or verified in-repo).
-- **PROPOSED** — recommended contract/pattern; may not be implemented yet.
-- **UNKNOWN** — not validated here; includes smallest verification steps.
+- **CONFIRMED** — stated as a requirement in KFM design/governance docs *or* verified in-repo.
+- **PROPOSED** — recommended pattern; may not be implemented yet.
+- **UNKNOWN** — not validated; includes smallest verification steps.
 
-> **Rule (CONFIRMED):** When in doubt, fail closed: do not assume infra exists, is configured, or is safe until verified.
+> **Rule (CONFIRMED):** When policy/rights/citations are unclear, **block promotion/publishing** (fail-closed posture).  
+> Implementation details can vary, but the posture does not.  
 
----
+### Terms (KFM-specific)
 
-## What belongs in `infra/`
-
-### In-scope inputs
-
-- **Infrastructure-as-Code** (PROPOSED): Terraform, Pulumi, Crossplane, etc.
-- **Cluster manifests** (PROPOSED): Kubernetes YAML, Kustomize overlays, Helm charts.
-- **GitOps configuration** (PROPOSED): Argo CD / Flux / similar.
-- **Runtime platform config** (PROPOSED): ingress, cert-manager, DNS, IAM bindings, network policies.
-- **Observability plumbing** (PROPOSED): dashboards, alerts-as-code, scrape configs.
-- **Deployment/runbooks** (PROPOSED): environment bring-up, rollback, backup/restore, incident response.
-
-### Explicitly out of scope
-
-- **Secrets** (CONFIRMED): no private keys, tokens, kubeconfigs, `.tfvars` with credentials, or `.env` with secrets.
-- **Application logic** (CONFIRMED): no API/UI domain code here (keep in `apps/` / `packages/`).
-- **Raw datasets / governed artifacts** (CONFIRMED): data belongs in lifecycle zones (`RAW → WORK → PROCESSED → CATALOG → PUBLISHED`), not in infra.
-- **Direct client-to-database wiring** (CONFIRMED): UI/clients must never talk to stores directly (see invariants).
+- **Truth path** (CONFIRMED): lifecycle zones that make datasets reproducible and auditable:  
+  `Upstream → RAW → WORK/Quarantine → PROCESSED → CATALOG/TRIPLET → PUBLISHED`
+- **Trust membrane** (CONFIRMED): clients never reach storage directly; all access is policy-evaluated at enforcement points.
+- **Catalog triplet** (CONFIRMED concept): **DCAT + STAC + PROV** used as contract surfaces between pipelines and runtime.
+- **Promotion Contract** (CONFIRMED concept): minimum gates required to move data between zones.
 
 ---
 
-## Hard invariants
+## Scope
 
-These are non-negotiable constraints that infra must enforce.
+### What belongs here (in-scope)
 
-1) **Policy boundary is mandatory (CONFIRMED)**  
-All access to data crosses a governed API layer and policy enforcement; clients do not connect to storage/databases directly.
+- **Infrastructure-as-Code** (PROPOSED): Terraform/Pulumi/Crossplane, cloud primitives, identity/IAM bindings.
+- **Runtime orchestration** (PROPOSED): Kubernetes manifests, Helm charts, Kustomize overlays, GitOps config.
+- **Policy plumbing** (PROPOSED): admission controls, network policies, ingress exposure rules, OPA wiring.
+- **Observability plumbing** (PROPOSED): dashboards, alert rules, scrape configs, trace exporters.
+- **Operations docs** (PROPOSED): bring-up, rollback, backup/restore, incident runbooks.
+- **Deployment automation** (PROPOSED): scripts or Make targets that render/validate/apply infra safely.
 
-2) **Truth path lifecycle exists (CONFIRMED)**  
-Data promotion is gated and auditable across: `RAW → WORK → PROCESSED → CATALOG → PUBLISHED`.
+### What must NOT be here (explicit exclusions)
 
-3) **Default-deny / fail-closed (CONFIRMED)**  
-If policy checks, validation, or provenance checks fail, infra should block promotion and/or block exposure.
-
-4) **No secrets in repo (CONFIRMED)**  
-Infrastructure must assume secrets live in an external secret manager or sealed mechanism.
-
-> **Implementation note (PROPOSED):** encode these invariants as CI checks and policy tests (do not rely on tribal knowledge).
+- **Secrets** (CONFIRMED): no private keys, tokens, kubeconfigs, `.tfvars` with credentials, or real `.env` files.
+- **Application/domain logic** (CONFIRMED): no API/UI business logic; keep it in `apps/` and `packages/`.
+- **Raw datasets or publishable artifacts** (CONFIRMED): data belongs in lifecycle zones, not in `infra/`.
+- **Direct client-to-store wiring** (CONFIRMED): UI/clients must never talk directly to PostGIS/Neo4j/object storage/search indexes.
 
 ---
 
-## Reference deployment topology
+## Where it fits in KFM
 
-This is a conceptual map of the system boundary and trust membrane.  
-It is a **reference** topology (CONFIRMED concept; PROPOSED specifics).
+### Repo-level context (CONFIRMED concept; implementation may vary)
+
+KFM is organized into modular layers; `infra/` is the **deployment + operations** layer, alongside:
+- `apps/` (services), `packages/` (shared libraries), `contracts/` (schemas/OpenAPI), `policy/` (Rego + fixtures), `data/` (registry + zones + catalogs). (CONFIRMED concept)
+
+> **Implementation state (UNKNOWN):** the exact contents under `infra/` vary by stack. Verify current tree before relying on any layout.
+
+### Upstream / downstream connections (PROPOSED)
+
+- **Upstream:** `.github/workflows/` for CI gates; `policy/` for Rego bundles; `contracts/` for schemas; `data/` for promotion inputs.
+- **Downstream:** clusters, registries, secret stores, and monitoring backends.
+
+---
+
+## Hard invariants (test-enforced)
+
+These are infra-enforced constraints. If infra can’t enforce them automatically, it must fail-closed until it can.
+
+1) **Truth path lifecycle zones exist (CONFIRMED)**  
+`Upstream → RAW → WORK/Quarantine → PROCESSED → CATALOG/TRIPLET → PUBLISHED`.  
+Infra must ensure transitions happen only via gated jobs and auditable events.
+
+2) **Promotion Contract gates exist (CONFIRMED concept)**  
+Promotion gates include at least: identity/versioning, licensing/rights, sensitivity/redaction plan, and catalog triplet validation.  
+Infra must make “missing gate evidence” block merges/promotions.
+
+3) **Trust membrane is mandatory (CONFIRMED)**  
+Network + code rules must prevent direct client → store access; all reads/writes go through governed interfaces.
+
+4) **Policy parity across CI and runtime (CONFIRMED)**  
+The same policy semantics (or at minimum the same fixtures/outcomes) must be enforced in CI and at runtime.
+
+5) **Catalog triplet is a contract surface (CONFIRMED concept)**  
+Catalogs (DCAT/STAC/PROV) are not “nice metadata”; they are the canonical interface between pipeline outputs and runtime, enabling deterministic evidence resolution.
+
+> **Implementation note (PROPOSED):** encode invariants as CI checks + policy tests + network policies. Do not rely on tribal memory.
+
+---
+
+## Directory contract
+
+### What we can say confidently
+
+- `infra/` is reserved for **deployment and operations** work (Kubernetes/Terraform/GitOps, dashboards). (CONFIRMED concept)
+
+### What is UNKNOWN (and must be verified)
+
+- Which IaC tools are in use (Terraform vs Pulumi vs Crossplane).
+- Whether GitOps is Argo CD, Flux, or something else.
+- Whether Kubernetes is used in all environments or only cloud.
+- Current runbooks / disaster recovery maturity.
+
+**Smallest verification steps (to convert UNKNOWN → CONFIRMED):**
+1. Capture tree: `tree -L 3 infra/`
+2. Identify toolchains: search for `*.tf`, `Chart.yaml`, `kustomization.yaml`, `argocd*`, `flux*`
+3. Inspect CI: search `.github/workflows/` for `infra/` jobs and required checks
+4. Confirm owners: read `CODEOWNERS` and `.github/`
+
+### Recommended baseline layout (PROPOSED)
+
+```text
+infra/
+  README.md
+
+  terraform/
+    modules/
+    envs/
+
+  helm/
+    charts/
+    values/
+
+  k8s/
+    base/
+    overlays/
+
+  gitops/
+    apps/
+    clusters/
+
+  policy-runtime/
+    admission/
+    network/
+
+  monitoring/
+    dashboards/
+    alerts/
+
+  runbooks/
+    bringup.md
+    rollback.md
+    backup_restore.md
+
+  scripts/
+    validate.sh
+    render.sh
+```
+
+---
+
+## Quickstart
+
+> These commands are **PROPOSED** until you wire them to real tooling in this repo.
+
+### Local validation (safe, read-only)
+
+```bash
+# From repo root
+# 1) static checks
+terraform fmt -recursive -check 2>/dev/null || true
+helm lint infra/helm/charts/* 2>/dev/null || true
+
+# 2) render manifests (no apply)
+helm template kfm infra/helm/charts/kfm 2>/dev/null || true
+kustomize build infra/k8s/overlays/dev 2>/dev/null || true
+
+# 3) schema & policy checks (examples)
+kubeconform -strict -summary <(kustomize build infra/k8s/overlays/dev) 2>/dev/null || true
+conftest test receipts/run_receipt.json -p policy/opa 2>/dev/null || true
+```
+
+### “Show me what will change” (PROPOSED)
+
+```bash
+# Terraform plan (never apply from an unreviewed local state)
+terraform -chdir=infra/terraform/envs/dev init
+terraform -chdir=infra/terraform/envs/dev plan -out tfplan
+```
+
+---
+
+## Reference topology (trust membrane)
+
+This is a **reference** architecture: requirements are CONFIRMED, concrete components are PROPOSED.
 
 ```mermaid
 flowchart TB
-  subgraph Client["Clients"]
+  subgraph Clients["Clients"]
     UI["Web UI"]
-    CLI["CLI or automation runners"]
+    CLI["CLI and automation"]
   end
 
-  subgraph API["Governed API layer"]
+  subgraph API["Governed API"]
     APISVC["API service"]
     PEP["Policy enforcement point"]
+    EVID["Evidence resolver"]
   end
 
-  subgraph Policy["Policy"]
-    OPA["OPA policy engine"]
-    REGO["Policy bundles"]
+  subgraph Policy["Policy-as-code"]
+    PDP["Policy decision point"]
+    BUNDLE["Policy bundles and fixtures"]
   end
 
-  subgraph Stores["Knowledge stores"]
-    PG["PostGIS"]
-    N4J["Neo4j"]
-    IDX["Search index"]
+  subgraph Catalogs["Catalog triplet"]
+    DCAT["DCAT"]
+    STAC["STAC"]
+    PROV["PROV"]
+  end
+
+  subgraph Stores["Stores"]
+    DB["PostGIS or relational store"]
+    GRAPH["Neo4j or graph store"]
     OBJ["Object storage"]
-  end
-
-  subgraph Ops["Ops"]
-    OBS["Metrics logs traces"]
-    CI["CI CD"]
+    IDX["Search index"]
   end
 
   UI --> APISVC
   CLI --> APISVC
 
   APISVC --> PEP
-  PEP --> OPA
-  OPA --> REGO
+  APISVC --> EVID
+  PEP --> PDP
+  PDP --> BUNDLE
 
-  APISVC --> PG
-  APISVC --> N4J
-  APISVC --> IDX
-  APISVC --> OBJ
+  EVID --> DCAT
+  EVID --> STAC
+  EVID --> PROV
 
-  APISVC --> OBS
-  CI --> OBS
-  CI --> APISVC
-```
+  APISVC --> Stores
 
----
-
-## Directory contract
-
-### What we know
-
-- `infra/` is intended for deployment infrastructure (K8s, Terraform, GitOps) and artifacts like Helm charts, Terraform modules, and dashboards. (CONFIRMED)
-
-### What we don’t know (yet)
-
-Because this README is being created without a live directory listing, **the exact layout under `infra/` is UNKNOWN**.
-
-**Smallest verification steps (for UNKNOWN items):**
-1. List current contents: `ls -la infra/`
-2. Identify tooling: look for `*.tf`, `Chart.yaml`, `kustomization.yaml`, `argocd*`, `flux*`
-3. Check CI paths: search workflows for `infra/` references
-4. Confirm owners: inspect `CODEOWNERS` and `.github/`
-
-### Recommended baseline layout
-
-> This layout is a **PROPOSED** contract. Adopt it if it matches your stack; otherwise keep the section but update statuses to CONFIRMED/UNKNOWN.
-
-```text
-infra/
-  README.md                    # This file
-
-  terraform/                   # PROPOSED: IaC modules, env roots, remote state wiring
-    modules/
-    envs/
-
-  helm/                        # PROPOSED: service charts + shared chart library
-    charts/
-    values/
-
-  k8s/                         # PROPOSED: raw manifests or Kustomize overlays
-    base/
-    overlays/
-
-  gitops/                      # PROPOSED: Argo/Flux apps, app-of-apps, sync policies
-    apps/
-    clusters/
-
-  monitoring/                  # PROPOSED: dashboards + alerts-as-code
-    dashboards/
-    alerts/
-
-  scripts/                     # PROPOSED: thin wrappers (lint/plan/apply/validate)
+  %% Trust membrane statement as edges
+  Clients -. no direct access .- Stores
 ```
 
 ---
 
 ## How infra changes ship
 
-### Branch + PR workflow
+### Branch + PR workflow (PROPOSED)
 
-- All infra changes go through PRs. (PROPOSED; set to CONFIRMED once enforced)
-- The PR must attach machine-readable evidence (plans, diffs, rendered manifests). (PROPOSED)
-- Protected branches must require passing checks (policy + contracts). (PROPOSED)
+- All infra changes ship via PRs.
+- Infra PRs include machine-readable evidence:
+  - Terraform plan output
+  - Rendered manifests (Helm template / Kustomize build)
+  - Policy test outputs (Conftest/OPA)
+- Protected branches require required checks (policy + contracts).
 
-### Minimum “Definition of Done” for infra PRs
+### Definition of Done (infra PR) — fail-closed checklist (PROPOSED)
 
-Checklist (PROPOSED):
-
-- [ ] **No secrets added** (scan passes; no `.env`, no kubeconfig, no private keys)
-- [ ] **Deterministic outputs** where applicable (e.g., pinned provider/chart versions)
-- [ ] **Plan artifacts attached** (Terraform plan, Helm template render, Kustomize build output)
-- [ ] **Policy tests pass** (OPA/Rego, admission policies, governance rules)
-- [ ] **Rollback documented** (what to revert, how to restore previous state)
-- [ ] **Runbook updated** if behavior changed
+- [ ] **No secrets added** (secret scan passes; no kubeconfig, no real `.env`, no credential `.tfvars`)
+- [ ] **Deterministic toolchain** (pinned provider/chart versions; lockfiles committed where applicable)
+- [ ] **Plan artifacts attached** (terraform plan, helm template, kustomize output)
+- [ ] **Policy checks pass** (OPA/Rego fixtures and Conftest gate)
+- [ ] **Exposure reviewed** (no new public ingress without approval trail)
+- [ ] **Rollback documented** (explicit revert path and restore notes)
+- [ ] **Runbooks updated** if behavior changed
 
 ---
 
 ## Environment matrix
 
-This is a **PROPOSED** view until you confirm actual supported envs.
+> This matrix is **PROPOSED** until confirmed against repo + deployed state.
 
-| Environment | Goal | Allowed data | Exposure | Status |
+| Environment | Goal | Allowed data | Exposure | Notes |
 |---|---|---|---|---|
-| local | developer iteration | synthetic or public only | localhost | PROPOSED |
-| dev | integration testing | least-sensitive subsets | private | PROPOSED |
-| staging | pre-prod rehearsal | prod-like (masked) | private | PROPOSED |
+| local | dev iteration | synthetic or public only | localhost | PROPOSED |
+| dev | integration | least-sensitive subsets | private | PROPOSED |
+| staging | rehearsal | prod-like masked | private | PROPOSED |
 | prod | governed runtime | per policy label | controlled | PROPOSED |
-
-> **Reminder (CONFIRMED):** “latest/current” infra behavior must be verified per environment and date; do not assume parity.
 
 ---
 
@@ -239,51 +329,106 @@ This is a **PROPOSED** view until you confirm actual supported envs.
 ### Non-negotiables
 
 - **No secrets in git** (CONFIRMED).
-- **Least privilege** for any credentials used by CI/CD (PROPOSED; make CONFIRMED once implemented).
-- **Short-lived tokens** preferred (PROPOSED).
+- **Least privilege** for CI/CD identities (PROPOSED, become CONFIRMED once enforced).
+- **Short-lived credentials** preferred (PROPOSED).
 
-### Recommended patterns
+### Recommended patterns (pick one; enforce it) (PROPOSED)
 
-Pick one, document it, and enforce it (PROPOSED):
-
-- Cloud secret manager (AWS Secrets Manager, GCP Secret Manager, Azure Key Vault)
-- Kubernetes External Secrets operator
-- Sealed secrets (only if your governance model accepts it)
+- Cloud secret manager (AWS/GCP/Azure)
+- External Secrets operator (Kubernetes)
 - SOPS + KMS (GitOps-friendly)
+- Sealed secrets *(only with explicit governance acceptance)*
 
 ---
 
-## Ops and reliability
+## Supply chain and artifact trust
+
+> Goal (CONFIRMED concept): what runs and what gets published must be **verifiable by digest**, not trusted by convention.
+
+### Required artifacts (PROPOSED baseline)
+
+- **SBOM** for built images and runnable components
+- **Provenance attestation** (SLSA-style or equivalent)
+- **Policy decision record** (what policy version decided allow/deny, with reasons)
+- **Receipts** for promotion/publishing events (run receipt, manifests, digests)
+
+### Policy gate (PROPOSED)
+
+In CI:
+1. Build artifact → compute digest
+2. Attach SBOM + attest provenance
+3. Verify signatures/attestations
+4. Run Conftest policy checks over SBOM + provenance
+5. Block merge/promotion on any deny
+
+> **Fail-closed rule (PROPOSED):** if verification can’t run (tooling missing), the check fails.
+
+---
+
+## Ops & reliability
 
 ### Required operational surfaces (PROPOSED)
 
-- **Logs**: structured, centralized
-- **Metrics**: SLO-aligned dashboards for API + pipelines
-- **Traces**: end-to-end tracing across API → stores
-- **Backups**: PostGIS/Neo4j backups + object store lifecycle rules
-- **Runbooks**: restore procedures tested periodically
+- **Structured logs** centralized
+- **Metrics** aligned to SLOs (API + pipeline + policy)
+- **Traces** across API → evidence resolver → stores
+- **Backups** (PostGIS/Neo4j/object storage) with restore drills
+- **Runbooks** for bring-up, rollback, incident response
 
 ### Rollback posture (PROPOSED)
 
-- IaC changes must have a rollback path (previous state / chart version / manifest revert).
-- Data promotions must be reversible or superseded with an auditable corrective version.
+- Infra changes must have an explicit rollback path (pin + revert).
+- Publishing/promotion events must be auditable and reversible via superseding versions (never “erase history”).
+
+---
+
+## FAQ
+
+**Why is this doc so strict about “UNKNOWN”?**  
+Because statements about concrete deployed infra are unsafe unless evidenced; KFM’s posture is to fail closed.
+
+**Can the UI ever connect directly to PostGIS/Neo4j/object storage?**  
+No. That violates the trust membrane.
+
+**Where do policy rules live?**  
+In `policy/` (expected) and enforced both in CI and runtime (policy parity requirement).
 
 ---
 
 ## Appendix
 
-### A. Common pitfalls
+<details>
+<summary><strong>A. Suggested infra validation jobs (PROPOSED)</strong></summary>
 
-- (CONFIRMED) If clients can reach PostGIS/Neo4j directly, you have violated the trust membrane.
-- (PROPOSED) If a chart upgrades without pinned versions, you will eventually break reproducibility.
-- (PROPOSED) If policy bundles are not tested in CI, “default deny” becomes “default surprise.”
+- `infra:terraform`  
+  - `terraform fmt -check`
+  - `terraform validate`
+  - `terraform plan` (attach artifact)
 
-### B. TODOs for maintainers
+- `infra:k8s-render`  
+  - `helm lint`
+  - `helm template`
+  - `kustomize build`
+  - `kubeconform` or similar schema checks
 
-- [ ] Replace UNKNOWN owner placeholder with real CODEOWNERS mapping.
-- [ ] Confirm actual subdirectories under `infra/` and update the directory tree table.
-- [ ] Add CI jobs for infra validation (terraform fmt/validate/plan, helm lint/template, kustomize build).
-- [ ] Add policy checks for exposure boundaries (no public ingress without approval).
-- [ ] Add a disaster recovery runbook link.
+- `infra:policy`  
+  - `conftest test ... -p policy/opa`
+  - fixture-driven allow/deny tests
+
+- `infra:exposure`  
+  - deny public ingress by default unless explicitly approved (policy-based)
+
+</details>
+
+<details>
+<summary><strong>B. Verification checklist (convert UNKNOWN → CONFIRMED)</strong></summary>
+
+- [ ] Capture repo commit hash and root tree (attach to next doc revision)
+- [ ] Identify which infra tools are in use (Terraform/Helm/Kustomize/GitOps)
+- [ ] Extract required checks list from `.github/workflows/`
+- [ ] Confirm network policy posture prevents policy bypass
+- [ ] Confirm backups + restore drill exist for stores used by your deployment
+
+</details>
 
 _Back to top:_ [↑](#infra--infrastructure--deployment)
