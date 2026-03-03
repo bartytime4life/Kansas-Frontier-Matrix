@@ -1,349 +1,274 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/640156a4-dc2e-4cf4-8cb2-fe36ad9051ec
-title: API Routes (Governed API Boundary)
+doc_id: kfm://doc/2c1f7397-2c5f-4e20-9a75-9de83b2dc66c
+title: KFM API Routes — apps/api/src/api/routes
 type: standard
 version: v1
 status: draft
-owners: TODO(kfm): add owning team / oncall
-created: 2026-02-27
-updated: 2026-02-27
-policy_label: public
+owners: KFM API Team (TBD)
+created: 2026-03-03
+updated: 2026-03-03
+policy_label: restricted
 related:
-  - TODO(kfm): ../../README.md
-  - TODO(kfm): ../../contracts/README.md
-  - TODO(kfm): ../../../policy/README.md
-tags: [kfm, api, routes, trust-membrane]
+  - ../README.md
+  - ../../../../../contracts/openapi/        # verify path from this directory
+  - ../../../../../policy/                  # verify path from this directory
+  - ../../../../../packages/policy/         # verify path from this directory
+  - ../../../../../packages/evidence/       # verify path from this directory
+tags: [kfm, api, routes, pep, governance]
 notes:
-  - This README is intentionally “governance-first”: routes are part of the trust membrane.
-  - Replace TODOs once repo conventions (router framework, contract tooling) are confirmed.
+  - Directory-level contract for HTTP route handlers (PEP implementations).
+  - Update the route registry + directory tree when the actual layout changes.
 [/KFM_META_BLOCK_V2] -->
 
-# `apps/api/src/api/routes/` — API Routes (Governed Boundary)
+# KFM API Routes — `src/api/routes`
+HTTP route handlers that implement the **governed API boundary** (PEP) for runtime surfaces (Map / Story / Focus).
 
-> **Purpose:** Define and register HTTP routes that form the **governed API boundary** for KFM.
-
+**Status:** draft • **Policy posture:** fail-closed • **Owners:** TBD  
 ![status](https://img.shields.io/badge/status-draft-yellow)
-![layer](https://img.shields.io/badge/layer-api%20routes-blue)
-![governance](https://img.shields.io/badge/governed-yes-brightgreen)
-![policy](https://img.shields.io/badge/policy-required-red)
+![module](https://img.shields.io/badge/module-api%20routes-blue)
+![policy](https://img.shields.io/badge/policy-fail--closed-critical)
+![api](https://img.shields.io/badge/api%20surface-v1-informational)
+![ci](https://img.shields.io/badge/ci-TODO-lightgrey)
+![coverage](https://img.shields.io/badge/coverage-TODO-lightgrey)
+
+> **TODO (repo wiring):** Replace CI/coverage badges with real pipeline links once known.
 
 ---
 
 ## Navigation
-
-- [What lives here](#what-lives-here)
-- [Where this fits in the architecture](#where-this-fits-in-the-architecture)
+- [Purpose](#purpose)
+- [Where this directory fits](#where-this-directory-fits)
 - [Non-negotiable invariants](#non-negotiable-invariants)
-- [Conventions](#conventions)
-- [Adding a new route](#adding-a-new-route)
-- [Response shape](#response-shape)
-- [Error handling](#error-handling)
+- [Route handler contract](#route-handler-contract)
+- [Route registry](#route-registry)
+- [Templates](#templates)
 - [Testing and gates](#testing-and-gates)
-- [Directory tree](#directory-tree)
-- [Glossary](#glossary)
+- [Directory guide](#directory-guide)
+- [Minimum verification steps](#minimum-verification-steps)
 
 ---
 
-## What lives here
+## Purpose
+This directory contains the **HTTP routes** for the governed API. Each route is part of the platform’s **trust membrane**: it must enforce policy, produce auditability, and return contract-stable responses for clients.
 
-**This folder contains route modules** (and only route modules) that:
+A route handler’s job is to orchestrate (not “invent”):
+- request validation (schema + types)
+- policy evaluation (allow/deny + obligations)
+- retrieval via repositories/use-cases (never direct infrastructure calls from this layer)
+- evidence linking / evidence resolution (EvidenceRef → EvidenceBundle)
+- error shaping into a policy-safe model (avoid existence leaks)
+- audit emission (where required)
 
-- Register paths + HTTP methods
-- Perform **request parsing + validation** (shape, types, limits)
-- Invoke **policy enforcement** (directly or via a shared middleware)
-- Call into **use-cases / services** (business logic)
-- Return **evidence-first responses** (or references to evidence resolution)
-
-### Acceptable inputs
-
-✅ Good fits:
-
-- Route registration (e.g., `router.get('/…', handler)`)
-- Pure request validation + normalization (no business logic)
-- Calling a policy check / attaching policy decision metadata to the response
-- Response mapping (DTO shaping) and HTTP status decisions
-- Minimal per-route observability glue (request ID, timing, structured log fields)
-
-### Exclusions
-
-🚫 Do **not** put these here:
-
-- Business logic (belongs in use-cases/services)
-- Direct database / object-store access (must go through repositories)
-- Policy logic definitions (belongs in policy bundle repo; routes only *invoke* policy)
-- Data transforms / ETL / indexing
-- “Convenient” bypasses (no hidden admin shortcuts in route handlers)
-
-> **WARNING:** If a route talks directly to storage, policy can’t be enforced consistently and provenance becomes untrustworthy.
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
+> **NOTE:** If your repo uses a different routing framework (Express / Fastify / Hono / FastAPI, etc.), keep these *roles* the same and adjust the wiring.
 
 ---
 
-## Where this fits in the architecture
-
-Routes are part of the **trust membrane**: the point where untrusted inputs (clients) become governed, policy-checked, evidence-bound outputs.
+## Where this directory fits
+Routes are an **interface-layer surface**: they expose stable HTTP contracts and enforce governance.
 
 ```mermaid
 flowchart LR
-  client[Clients] --> api[Governed API]
-  api --> routes[Routes and handlers]
-  routes --> policy[Policy enforcement]
-  routes --> evidence[Evidence resolver]
-  routes --> usecases[Use cases]
-  usecases --> repos[Repositories]
-  repos --> stores[Canonical stores and projections]
-  routes --> audit[Audit logging]
+  UI[Clients and UI] --> R[Routes and handlers]
+  R --> P[Policy engine adapter]
+  R --> U[Use cases and domain workflows]
+  U --> I[Repository interfaces]
+  I --> S[Stores and projections]
 ```
 
-### Layering intent
-
-- **Routes**: HTTP boundary + validation + policy checks + DTO mapping  
-- **Use-cases/services**: domain logic and orchestration  
-- **Repositories**: storage abstraction + query shaping + caching boundaries  
-- **Stores**: canonical object store + catalogs/provenance; rebuildable projections (DB/search/tiles)
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
+**Practical implications:**
+- Route handlers should be thin. “If it’s business logic, it probably belongs in a use case.”
+- Do not embed direct PostGIS / Neo4j / search / object-store clients here unless they are behind a repository interface or adapter with testable boundaries.
 
 ---
 
 ## Non-negotiable invariants
+If an implementation detail conflicts with these, the implementation is wrong.
 
-These are **hard rules** (encode as tests / lint where possible):
-
-1. **Clients never access DB/object storage directly.** All access flows through governed APIs.
-2. **Core logic never bypasses repository interfaces** to talk directly to storage.
-3. **Policy is evaluated before serving data or resolving evidence.**
-4. **Fail closed:** if policy denies, evidence is unresolvable, or licensing/sensitivity is unclear → deny or reduce scope.
-5. **No metadata leakage** for restricted resources (avoid “confirming existence” in 403/404 messaging).
-6. **Auditability:** every route that returns governed content must emit enough telemetry to reconstruct “who asked what” and “under which policy”.
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
+| Invariant | Meaning in practice | How we enforce it (expected) |
+|---|---|---|
+| Truth path lifecycle | Only promoted dataset versions appear in runtime surfaces | CI promotion gates + runtime checks |
+| Trust membrane | Clients never touch storage/DB directly; routes enforce policy/redaction/logging | Network boundaries + tests + review |
+| Evidence-first UX | Responses include dataset version, rights/license, and evidence links | Required fields + evidence resolver |
+| Cite-or-abstain | If citations cannot be verified as resolvable + allowed, **abstain or reduce scope** | Hard citation verification gate |
+| Canonical vs rebuildable | Catalogs/object store/audit are canonical; DB/search/graph/tiles are projections | No “projection-as-truth” shortcuts |
 
 ---
 
-## Conventions
+## Route handler contract
+### 1) Inputs
+Each route must define (or reference) a **request contract**:
+- query/path/body schema
+- auth context shape (principal + role + claims)
+- request metadata (request id / trace id)
+- optional view state (bbox/time/layers) when relevant to Map/Focus
 
-> **NOTE:** Repo-specific details (router framework, folder naming, OpenAPI tooling) are **TODO** until confirmed.
+### 2) Policy check timing
+**Policy must be evaluated before returning any data** and (where feasible) before expensive retrieval.
 
-### Route module naming
+Policy outcomes should include:
+- `allow: boolean`
+- `reason_code`
+- `obligations[]` (e.g., generalize geometry, drop fields, show notice)
 
-- Prefer **one route module per bounded API surface**, not per tiny endpoint.
-- Name modules by **resource**, not implementation:
-  - `catalog.*`
-  - `datasets.*`
-  - `tiles.*`
-  - `evidence.*`
-  - `lineage.*`
-  - `focus.*`
+> **WARNING:** Do not leak restricted existence. Align `403` vs `404` behavior to your policy posture.
 
-### Versioning
+### 3) Retrieval
+Routes must retrieve data via:
+- **use cases** (preferred for workflows like focus/story publish), or
+- **repositories** (preferred for read surfaces like datasets/stac)
 
-- Prefer URL versioning: `/api/v1/...`
-- Breaking changes require new major: `/api/v2/...`
-- Additive fields are OK (backward compatible).
+No direct DB/search/object-store calls from routes *unless* they are behind a governed adapter with:
+- policy-safe error mapping
+- tests
+- stable contracts
 
-### Policy labels
+### 4) Evidence linking
+If a response makes a claim a user can act on (feature geometry, story claim, Focus Mode assertion), it must:
+- carry `dataset_version_id` (when applicable)
+- provide EvidenceRefs and/or allow the UI to resolve evidence in ≤ 2 calls
+- include digests/checksums where applicable
 
-KFM uses **policy labels + obligations** to control outputs. At the route layer:
+### 5) Errors
+Errors must follow a stable model:
+- `error_code`
+- `message` (policy-safe)
+- `audit_ref` or `request_id` (for debugging)
+- optional remediation hints
 
-- Always request a **policy decision** for the request context + target resource.
-- Apply obligations consistently (redaction/generalization, field suppression, etc.).
-- Attach policy metadata (at least `policy_label` and `decision`) to the response envelope where appropriate.
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
-
----
-
-## Adding a new route
-
-### Checklist (Definition of Done)
-
-- [ ] Define the endpoint purpose + audience (public vs internal vs steward tools).
-- [ ] Define **inputs** (params/body) and **output DTO** (what fields are allowed).
-- [ ] Add or update **API contract** (OpenAPI/GraphQL/JSON Schema) — *if used in this repo*.
-- [ ] Add route handler with:
-  - [ ] request validation
-  - [ ] policy check (deny-by-default on uncertainty)
-  - [ ] call to use-case/service
-  - [ ] evidence-first response mapping
-- [ ] Ensure **no direct storage access** (must go through repositories).
-- [ ] Add tests:
-  - [ ] handler unit tests
-  - [ ] contract tests (if applicable)
-  - [ ] policy fixture tests for allow/deny + obligations (CI must match runtime)
-- [ ] Add observability:
-  - [ ] request id / correlation id
-  - [ ] structured logs
-  - [ ] latency + status metrics
-  - [ ] audit log hook (where required)
-- [ ] Update docs:
-  - [ ] add module to the routes registry table (below)
-  - [ ] add examples to this README (or module README if large)
-
-### Minimal handler skeleton (pseudo)
-
-```ts
-// PSEUDO-CODE — adapt to your router framework
-export async function handler(req, res) {
-  // 1) Parse & validate
-  const input = validate(req);
-
-  // 2) Policy check (fail closed)
-  const decision = await policy.check({
-    actor: req.auth,
-    action: "read",
-    resource: input.resourceRef,
-    context: { ip: req.ip, route: req.path }
-  });
-  if (decision.decision !== "allow") {
-    return res.status(404).json({ error: "Not found" }); // avoid leakage
-  }
-
-  // 3) Run use-case
-  const result = await useCase.execute(input, { policy: decision });
-
-  // 4) Shape response (evidence-first)
-  return res.status(200).json({
-    data: result.data,
-    evidence: result.evidenceRefs, // or include a resolved bundle if allowed
-    policy: { label: decision.policy_label, obligations: decision.obligations_applied }
-  });
+Example:
+```json
+{
+  "error_code": "POLICY_DENY",
+  "message": "This resource is not available for your role.",
+  "audit_ref": "kfm://audit/entry/123",
+  "remediation": { "hint": "Try a public dataset or request steward review." }
 }
 ```
 
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
-
----
-
-## Response shape
-
-Routes should aim for **evidence-first UX compatibility**:
-
-- Return stable identifiers (`dataset_id`, `dataset_version_id`, etc.) when relevant.
-- Provide **EvidenceRef** values when the UI needs “one-click evidence”.
-- When returning downloadable artifacts, include **license + attribution** metadata (or a link to it).
-- Prefer responses that can be verified: digests, version IDs, policy label.
-
-### Evidence resolution (recommended pattern)
-
-Instead of embedding large evidence blobs everywhere:
-
-1. Return **EvidenceRef(s)** in the primary response
-2. UI calls `evidence/resolve` to render a bundle card (policy-checked)
-
-This keeps response bodies smaller and makes the evidence drawer consistent.
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
-
----
-
-## Error handling
-
-### General rules
-
-- **Fail closed** on uncertainty.
-- Avoid “helpful” errors that leak restricted data (existence, titles, IDs).
-- Prefer consistent error shapes.
-
-### Recommended HTTP codes (guidance)
-
-| Scenario | Preferred status | Notes |
-|---|---:|---|
-| Invalid input | 400 | Provide validation details; do not echo sensitive fields |
-| Unauthenticated | 401 | Do not reveal resource existence |
-| Unauthorized / restricted | 404 (or 403) | Use patterns that minimize existence leakage |
-| Not found (public) | 404 | Normal |
-| Policy obligation requires reduction | 200 | Return generalized output + policy notice |
-| Internal error | 500 | Include request id; log details server-side |
-
-> **TIP:** Use a shared error helper so routes don’t drift in behavior.
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
-
----
-
-## Testing and gates
-
-Routes are a high-risk surface. Prefer “guardrails by CI”:
-
-### Required (baseline)
-
-- Unit tests for handlers (validation + status codes + DTO mapping)
-- Policy fixture tests (allow/deny + obligations)
-- Contract tests (if the repo uses an API contract artifact)
-- Lint rules to prevent direct imports of low-level storage clients in routes
-
-### Recommended (production posture)
-
-- Integration tests that run against a real policy engine configuration
-- Snapshot tests for error payload shapes
-- Link-checker tests for evidence/cross-links when applicable
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
-
----
-
-## Directory tree
-
-> **UNKNOWN:** The exact contents of this folder are not enumerated here (not yet generated from the repo).
-
-### Generate the current tree
-
-Run from repo root:
-
-```bash
-tree apps/api/src/api/routes -a -I "node_modules|dist|build"
-```
-
-### Example layout (PROPOSED)
-
-<details>
-<summary>Click to expand proposed structure</summary>
-
-```text
-apps/api/src/api/routes/
-  README.md
-  index.ts                # route registry (mounts all route modules)
-  health.ts               # liveness/readiness endpoints (no sensitive info)
-  v1/
-    catalog.ts            # dataset discovery
-    datasets.ts           # dataset query endpoints
-    tiles.ts              # tile delivery
-    evidence.ts           # evidence resolution
-    lineage.ts            # provenance/lineage APIs
-    focus.ts              # cite-or-abstain Q&A
-```
-
-</details>
-
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
+### 6) Audit
+Any **governed operation** (Focus Mode runs, Story publishing, Evidence resolution) must emit an audit record with enough information to reproduce and justify the action:
+- principal + role
+- endpoint + parameters (policy-safe)
+- input/output digests
+- policy decision + obligations applied
+- timestamps
 
 ---
 
 ## Route registry
+This table is the **living index** of route modules in this directory.
 
-> Update this table whenever you add/remove a route module.
+> Keep it up to date as you add or rename routes.
 
-| Module | Audience | Policy posture | Notes |
-|---|---|---|---|
-| `health` | public | no data access | Must not leak config/secrets |
-| `catalog` | public+internal | filter/hide restricted | Drives discovery |
-| `datasets` | public+internal | enforce obligations | Query slicing by bbox/time/filters |
-| `tiles` | public+internal | policy-safe tiles only | Cache varies by auth/policy |
-| `evidence` | public+internal | fail closed | Resolve EvidenceRef → EvidenceBundle |
-| `lineage` | internal+steward | redact sensitive | Show run receipts, policy versions |
-| `focus` | public+internal | must cite or abstain | Always produces an audit record |
+| Route group | Base path | Purpose | Contract source | Policy pack inputs | Notes |
+|---|---|---|---|---|---|
+| datasets | `/api/v1/datasets` | Dataset discovery + versions | `contracts/openapi/*` (verify) | user.role + dataset.policy_label | Must include license/rights + dataset_version_id |
+| stac | `/api/v1/stac/*` | STAC collections/items query | `contracts/openapi/*` (verify) | user.role + asset.policy_label | Must not return disallowed assets |
+| evidence | `/api/v1/evidence/resolve` | EvidenceRef → EvidenceBundle | `contracts/openapi/*` (verify) | user.role + resource.policy_label | Fail closed if unresolvable/unauthorized |
+| story | `/api/v1/story*` | Read/publish Story Nodes | `contracts/openapi/*` (verify) | user.role + story.policy_label | Publish gate requires resolvable citations + review state |
+| focus | `/api/v1/focus/ask` | Focus Mode Q&A | `contracts/openapi/*` (verify) | user.role + evidence.allow | Must cite or abstain; emits run receipt/audit_ref |
+| tiles | `/api/v1/tiles/*` | Vector tile delivery (optional) | `contracts/openapi/*` (verify) | user.role + layer.policy_label | Cache must vary by policy/auth |
 
 ---
 
-## Glossary
+## Templates
+### Route module skeleton (framework-agnostic pseudocode)
+```text
+handle(request):
+  ctx = build_context(request)                  # auth + request_id + trace_id
+  input = validate(request)                     # schema validation
+  decision = policy.check(ctx, action, resource, input)
 
-- **Trust membrane:** the boundary that ensures all access flows through governed APIs and repository interfaces.
-- **PDP (Policy Decision Point):** component that evaluates policy (e.g., OPA).
-- **PEP (Policy Enforcement Point):** component that calls PDP and enforces allow/deny + obligations.
-- **EvidenceRef:** stable reference to evidence (scheme-based).
-- **EvidenceBundle:** resolved evidence card + machine metadata + digests + audit refs.
-- **Obligations:** required transforms or restrictions applied to outputs (redaction/generalization, field suppression, etc.).
+  if not decision.allow:
+    return policy_safe_not_found_or_deny(ctx)   # avoid existence leaks
 
-[Back to top](#appsapisrcapiroutes--api-routes-governed-boundary)
+  data = usecase_or_repo.fetch(input)           # no direct infra here
+  data2 = apply_obligations(data, decision)     # redact/generalize/drop fields
+  body = shape_response_contract(data2)         # include trust fields + digests
+  maybe_emit_audit(ctx, input, body, decision)
+
+  return 200 body
+```
+
+### “What file should I add?”
+**Proposed** convention (update if repo differs):
+- one route module per route group
+- one `index` file that registers all routers under `/api/v1`
+
+```text
+routes/
+  README.md
+  index.*                # register route modules into the app/router
+  datasets.*             # /api/v1/datasets
+  stac.*                 # /api/v1/stac/collections + /items
+  evidence.*             # /api/v1/evidence/resolve
+  story.*                # /api/v1/story...
+  focus.*                # /api/v1/focus/ask
+  tiles.*                # /api/v1/tiles...
+  health.*               # /healthz, /readyz (if used)
+```
+
+---
+
+## Testing and gates
+A new or modified route is not “done” until it passes these gates.
+
+### Definition of Done
+- [ ] Request/response schema exists and validates (contract tests)
+- [ ] Policy check is performed before returning data
+- [ ] Obligations are applied (redaction/generalization) when required
+- [ ] Response includes required trust fields (e.g., `dataset_version_id` when applicable)
+- [ ] Errors follow policy-safe model (no restricted existence leaks)
+- [ ] Audit emitted for governed operations
+- [ ] Policy fixtures updated (deny-by-default posture remains)
+- [ ] Linkcheck/citation resolution tests pass when EvidenceRefs are introduced
+- [ ] Route registry table updated
+
+### Suggested test types
+- **Contract tests:** validate request/response shapes against OpenAPI/JSON Schema
+- **Policy tests:** fixture-driven allow/deny and obligation coverage
+- **Integration tests:** end-to-end call to route + evidence resolution (for at least one golden fixture)
+- **Negative tests:** ensure restricted data is not returned under public role
+
+---
+
+## Directory guide
+**One-line purpose:** Route handlers only. No domain logic, no direct infrastructure bypass.
+
+### What belongs here ✅
+- Router/handler modules for versioned API endpoints
+- Thin request validation and response shaping
+- Calls into policy engine adapters, evidence resolver adapter, and use-cases/repositories
+- Route-level error mapping and request-id propagation
+
+### What must NOT go here ❌
+- Domain rules and core workflows (belongs in domain/use-cases)
+- Direct DB/search/object-store access that bypasses policy
+- Returning raw document text without resolvable evidence links
+- Unversioned contracts (breaking changes must bump API version)
+
+### Expected surrounding directories (verify in repo)
+```text
+apps/api/src/api/
+  README.md                 # boundary intent + invariants
+  routes/                   # this directory
+  middleware/               # auth, request ids, error mapping, policy-context extraction
+  adapters/                 # policy/evidence/repo adapters
+  telemetry/                # audit + metrics/tracing emitters
+  contracts/                # DTOs + validators generated from OpenAPI (if used)
+```
+
+---
+
+## Minimum verification steps
+If anything in this README doesn’t match the current codebase, do these checks and update the doc (fail closed, don’t guess):
+
+1. Find the API entrypoint and confirm how routers are registered.
+2. Locate the policy adapter (OPA/Rego or equivalent) and confirm fixture tests run in CI.
+3. Locate evidence resolution wiring (route + service + bundle schema).
+4. Confirm error model + 403/404 posture and ensure it doesn’t leak restricted existence.
+5. Confirm audit storage, redaction, and retention rules for governed operations.
+
+---
+
+**Back to top:** [Navigation](#navigation)
