@@ -1,33 +1,31 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/0c6f7a9b-0f6b-4d7d-8d6d-8d70f5c85d20
-title: Kansas Frontier Matrix
+doc_id: kfm://doc/3b5a5d0c-7d8a-4b3f-b9a0-8d2c6d3e8f1a
+title: Kansas Frontier Matrix (KFM) — README
 type: standard
-version: vNext
+version: v1
 status: draft
 owners: TBD
-created: 2026-02-22
-updated: 2026-03-02
+created: 2026-03-03
+updated: 2026-03-03
 policy_label: public
 related:
-  - README.md
-tags:
-  - kfm
+  - kfm://doc/TBD-kfm-prime
+  - kfm://doc/TBD-kfm-exec-summary
+tags: [kfm]
 notes:
-  - Repository README describing the vNext operating model and governance posture.
-  - Root “trust membrane” + promotion contract + evidence model; UI/infra specifics are branch-dependent.
-  - This README is designed to be enforceable: anything that can’t be validated must be labeled PROPOSED/UNKNOWN.
+  - Root README for the vNext operating model; treat as PROPOSED unless explicitly CONFIRMED on your branch.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Kansas Frontier Matrix
+# Kansas Frontier Matrix (KFM)
 
 > **Map-first • Time-aware • Governed • Evidence-first • Cite-or-abstain**  
-> **Core posture:** **default-deny** • **fail-closed** • reproducible by digest • policy enforced in CI + runtime
+> **Core posture:** **default-deny** • **fail-closed** • reproducible by digest • policy enforced in CI + runtime  
+> **Status:** vNext (blueprint-driven build)  
+> **Owners:** _TBD_ (required for CODEOWNERS + review routing)  
+> **Primary promise:** anything you can see, cite, export, or ask KFM to explain is traceable to an immutable **DatasetVersion** + resolvable **EvidenceBundle**, with policy enforced consistently in CI and at runtime.
 
-**Status:** vNext (blueprint-driven build)  
-**Owners:** _TBD_ (required for CODEOWNERS + review routing)  
-**Primary promise:** anything you can see, cite, export, or ask KFM to explain is traceable to an immutable **DatasetVersion** + resolvable **EvidenceBundle**, with policy enforced consistently in CI and at runtime.  
 **Primary experiences:** **Map Explorer** + **Timeline** + **Stories** + **Catalog** + **Focus Mode**.
 
 [![Status](https://img.shields.io/badge/status-vNext-blue)](#roadmap)
@@ -47,27 +45,30 @@ Pick the path that matches what you’re doing:
 - **I’m contributing code/docs/data**
   - Read: `CONTRIBUTING.md` (workflow), `.github/README.md` (CI + CODEOWNERS), `SECURITY.md` (reporting), `CODE_OF_CONDUCT.md` (community standards) — *if present*
   - Know: changes to `.github/`, `policy/`, `contracts/`, promotion tooling, and any “Published” surfaces are **governance-critical**
-
 - **I’m stewarding governance**
   - Read: `docs/governance/` (labels, obligations, review triggers), `policy/` (policy-as-code), `contracts/` (schemas/profiles/vocab) — *if present*
   - Know: if sensitivity/permissions are unclear → **default deny** until reviewed
-
 - **I’m operating pipelines / runtime**
   - Read: `docs/runbooks/` and `infra/` — *if present*
   - Know: DB/search/tiles are rebuildable projections; **canonical truth is processed artifacts + catalogs + receipts + audit**
 
 > [!IMPORTANT]
 > **Truth discipline in this repo**
-> - **CONFIRMED** = backed by in-repo artifacts on your branch (code, schemas, tests, CI gates).
+>
+> - **CONFIRMED** = backed by in-repo artifacts on *your branch* (code, schemas, tests, CI gates).
 > - **PROPOSED** = recommended defaults / target design (safe to discuss, not safe to enforce).
 > - **UNKNOWN / DECISION NEEDED** = unverified; treat as fail-closed until verified.
+>
+> **Default rule for this README:** unless a statement is explicitly labeled **CONFIRMED**, treat it as **PROPOSED**.
 >
 > Every **UNKNOWN** must include:
 > 1) the recommended default behavior, and  
 > 2) the minimum verification step to convert UNKNOWN → CONFIRMED.
 
 > [!NOTE]
-> This README defines the **target vNext operating model**. If a directory/file referenced here is missing on your branch, treat that reference as **PROPOSED** and reconcile with repo reality before enforcing gates.
+> This README defines the **target vNext operating model**.
+
+If a directory/file referenced here is missing on your branch, treat that reference as **PROPOSED** and reconcile with repo reality before enforcing gates.
 
 [↑ Back to top](#top)
 
@@ -139,7 +140,9 @@ KFM is also a system of governed artifacts:
 
 ## Reality check first
 
-Before implementing or “fixing” anything, verify what exists **on your branch**. This prevents governance failures caused by assumptions.
+Before implementing or “fixing” anything, verify what exists **on your branch**.
+
+This prevents governance failures caused by assumptions.
 
 ### Minimum verification steps (do these once per branch)
 
@@ -405,9 +408,10 @@ Violating these breaks governance, not “just code.”
 kfm://dataset/<dataset_slug>
 kfm://dataset/<dataset_slug>@<dataset_version_id>
 kfm://artifact/sha256:<digest>
-kfm://evidence/<bundle_id>
-kfm://run/<timestamp>.<slug>.<hash>
-kfm://audit/entry/<id>
+kfm://evidence/<evidence_id>
+kfm://run/<run_id>
+kfm://audit/entry/<entry_id>
+
 dcat://...
 stac://...
 prov://...
@@ -455,7 +459,7 @@ The governed API is the only supported way for clients to access data, evidence,
   "error": {
     "code": "NOT_FOUND|FORBIDDEN|VALIDATION_FAILED|POLICY_DENY",
     "message": "Policy-safe message",
-    "request_id": "<trace id>",
+    "request_id": "",
     "audit_ref": "kfm://audit/entry/..."
   }
 }
@@ -507,7 +511,11 @@ Promotion MUST fail-closed.
   "spec_hash": "sha256:abcd1234",
   "released_at": "2026-03-02T00:00:00Z",
   "artifacts": [
-    { "path": "events.parquet", "digest": "sha256:2222", "media_type": "application/x-parquet" }
+    {
+      "path": "events.parquet",
+      "digest": "sha256:2222",
+      "media_type": "application/x-parquet"
+    }
   ],
   "catalogs": [
     { "path": "dcat.jsonld", "digest": "sha256:4444" },
@@ -517,7 +525,7 @@ Promotion MUST fail-closed.
   "qa": { "status": "pass", "report_digest": "sha256:7777" },
   "policy": { "policy_label": "public", "decision_id": "kfm://policy_decision/xyz" },
   "approvals": [
-    { "role": "steward", "principal": "<id>", "approved_at": "2026-03-02T00:00:00Z" }
+    { "role": "steward", "principal": "", "approved_at": "2026-03-02T00:00:00Z" }
   ]
 }
 ```
@@ -528,7 +536,7 @@ Promotion MUST fail-closed.
 
 ## Deterministic identity and versioning
 
-Baseline rule: DatasetVersion identity is derived deterministically from a canonical dataset spec (e.g., `data/specs/<dataset_slug>.json`) producing a stable `spec_hash`.
+Baseline rule: DatasetVersion identity is derived deterministically from a canonical dataset spec (e.g., `data/specs/<dataset>.json`) producing a stable `spec_hash`.
 
 **PROPOSED rule:**
 
@@ -698,7 +706,7 @@ Policy labels:
 Geometry generalization methods (record what was applied):
 
 - `centroid_only`
-- `grid_aggregation_<cell_size>`
+- `grid_aggregation_<size>`
 - `random_offset_<radius>`
 - `dissolve_to_admin_unit`
 - `bounding_box_only`
@@ -723,75 +731,72 @@ Extra review required when:
 > **UNKNOWN until verified:** the exact current repo structure on your branch.  
 > Treat this as a target layout and reconcile with reality.
 
-<details>
-<summary><strong>Target layout (PROPOSED)</strong></summary>
+Target layout (PROPOSED)
 
 ```text
-Kansas-Frontier-Matrix/                                 # KFM monorepo: map-first, time-aware, governed, evidence-first geospatial + historical knowledge system
-├─ README.md                                             # Project overview, operating model, quickstart, architecture map, and “how to contribute safely”
-├─ LICENSE                                               # Repository license and usage terms (governs code + any bundled artifacts as specified)
-├─ CONTRIBUTING.md                                       # Contributor workflow, branching/PR rules, required checks, and doc/data submission expectations
-├─ SECURITY.md                                           # Security policy: reporting, vulnerability handling, secret management expectations, and disclosure process
-├─ CODE_OF_CONDUCT.md                                    # Community behavior expectations and enforcement process
-├─ CHANGELOG.md                                          # Human-readable change history (releases, breaking changes, notable governance/policy shifts)
-├─ Makefile                                              # Task entrypoints (build/test/lint/policy checks/data validation/docs tooling)
-├─ compose.yaml                                          # Local development stack (services, dependencies, ports) for Linux-first workflows
+Kansas-Frontier-Matrix/                       # KFM monorepo: map-first, time-aware, governed, evidence-first geospatial + historical knowledge system
+├─ README.md                                  # Project overview, operating model, quickstart, architecture map, and “how to contribute safely”
+├─ LICENSE                                    # Repository license and usage terms (governs code + any bundled artifacts as specified)
+├─ CONTRIBUTING.md                             # Contributor workflow, branching/PR rules, required checks, and doc/data submission expectations
+├─ SECURITY.md                                 # Security policy: reporting, vulnerability handling, secret management expectations, and disclosure process
+├─ CODE_OF_CONDUCT.md                          # Community behavior expectations and enforcement process
+├─ CHANGELOG.md                                # Human-readable change history (releases, breaking changes, notable governance/policy shifts)
+├─ Makefile                                    # Task entrypoints (build/test/lint/policy checks/data validation/docs tooling)
+├─ compose.yaml                                # Local development stack (services, dependencies, ports) for Linux-first workflows
 │
-├─ .github/                                              # GitHub governance + automation (ownership, CI gates, policy enforcement)
-│  ├─ CODEOWNERS                                          # Ownership map: who must review which paths (governance “decision rights” wiring)
-│  └─ workflows/                                          # CI pipelines enforcing promotion gates, policy tests, link checks, builds, and release checks
+├─ .github/                                    # GitHub governance + automation (ownership, CI gates, policy enforcement)
+│  ├─ CODEOWNERS                               # Ownership map: who must review which paths (governance “decision rights” wiring)
+│  └─ workflows/                               # CI pipelines enforcing promotion gates, policy tests, link checks, builds, and release checks
 │
-├─ docs/                                                 # Canonical documentation hub (architecture, governance, standards, runbooks, ADRs)
-│  ├─ governance/                                        # Governance model: labels, gates, waivers, roles, decision records, policy doctrine
-│  ├─ runbooks/                                          # Operational playbooks (pipelines, incidents, releases, reruns, promotions, steward actions)
-│  ├─ standards/                                         # Repo standards (schemas, metadata profiles, evidence rules, naming, formatting, interoperability)
-│  └─ adr/                                               # Architecture Decision Records (why key design choices were made, with dates and consequences)
+├─ docs/                                       # Canonical documentation hub (architecture, governance, standards, runbooks, ADRs)
+│  ├─ governance/                              # Governance model: labels, gates, waivers, roles, decision records, policy doctrine
+│  ├─ runbooks/                                # Operational playbooks (pipelines, incidents, releases, reruns, promotions, steward actions)
+│  ├─ standards/                               # Repo standards (schemas, metadata profiles, evidence rules, naming, formatting, interoperability)
+│  └─ adr/                                     # Architecture Decision Records (why key design choices were made, with dates and consequences)
 │
-├─ contracts/                                            # Interface contracts (API and data): “what the system promises” to producers/consumers
-│  ├─ openapi/                                           # OpenAPI specs for services (versioned endpoints, auth, errors, obligations, response shapes)
-│  ├─ schemas/                                           # JSON Schema (or equivalent) for artifacts (datasets, receipts, bundles, story sidecars, manifests)
-│  └─ vocab/                                             # Controlled vocabularies (policy labels, obligations, roles, geometry types, units, etc.)
+├─ contracts/                                  # Interface contracts (API and data): “what the system promises” to producers/consumers
+│  ├─ openapi/                                 # OpenAPI specs for services (versioned endpoints, auth, errors, obligations, response shapes)
+│  ├─ schemas/                                 # JSON Schema (or equivalent) for artifacts (datasets, receipts, bundles, story sidecars, manifests)
+│  └─ vocab/                                   # Controlled vocabularies (policy labels, obligations, roles, geometry types, units, etc.)
 │
-├─ policy/                                               # Policy-as-code: the trust membrane (deny-by-default rules + parity tests + fixtures)
-│  ├─ rego/                                              # Rego policies (PDP logic): authorization, obligations, label enforcement, promotion gating rules
-│  ├─ tests/                                             # Policy tests (OPA/conftest): CI/runtime parity, regression coverage, invariants, edge cases
-│  └─ fixtures/                                          # Test inputs/expected decisions (subjects/actions/resources/context) supporting repeatable evaluation
+├─ policy/                                     # Policy-as-code: the trust membrane (deny-by-default rules + parity tests + fixtures)
+│  ├─ rego/                                    # Rego policies (PDP logic): authz, obligations, label enforcement, promotion gating rules
+│  ├─ tests/                                   # Policy tests (OPA/conftest): CI/runtime parity, regression coverage, invariants
+│  └─ fixtures/                                # Test inputs/expected decisions supporting repeatable evaluation
 │
-├─ data/                                                 # Data truth-path zones + governance metadata (immutable → curated → published) with auditability
-│  ├─ specs/                                             # Dataset specs (schemas, lineage expectations, transforms, QA rules, promotion contracts)
-│  ├─ registry/                                          # Dataset registry (sources, licensing, sensitivity, stewardship, update cadence, provenance anchors)
-│  ├─ raw/                                               # RAW zone: immutable acquisitions (source snapshots, checksums, ingest receipts)
-│  ├─ work/                                              # WORK zone: staging for transforms/QA (not publishable; experimental and reviewable)
-│  ├─ quarantine/                                        # QUARANTINE: blocked artifacts awaiting remediation (policy/quality/licensing failures)
-│  ├─ processed/                                         # PROCESSED: curated, validated artifacts eligible for cataloging and release
-│  ├─ catalog/                                           # CATALOG: searchable metadata (DCAT/STAC/PROV + receipts) backing discovery + traceability
-│  ├─ published/                                         # PUBLISHED: governed exports surfaced to apps/APIs (policy labels + obligations applied)
-│  └─ audit/                                             # AUDIT: immutable logs, decisions, run receipts, promotion records, waiver references
+├─ data/                                       # Data truth-path zones + governance metadata (immutable → curated → published) with auditability
+│  ├─ specs/                                   # Dataset specs (schemas, lineage expectations, transforms, QA rules, promotion contracts)
+│  ├─ registry/                                # Dataset registry (sources, licensing, sensitivity, stewardship, update cadence, provenance anchors)
+│  ├─ raw/                                     # RAW zone: immutable acquisitions (source snapshots, checksums, ingest receipts)
+│  ├─ work/                                    # WORK zone: staging for transforms/QA (not publishable)
+│  ├─ quarantine/                              # QUARANTINE: blocked artifacts awaiting remediation (policy/quality/licensing failures)
+│  ├─ processed/                               # PROCESSED: curated, validated artifacts eligible for cataloging and release
+│  ├─ catalog/                                 # CATALOG: DCAT/STAC/PROV + receipts backing discovery + traceability
+│  ├─ published/                               # PUBLISHED: governed exports surfaced to apps/APIs (policy labels + obligations applied)
+│  └─ audit/                                   # AUDIT: immutable logs, decisions, run receipts, promotion records, waiver references
 │
-├─ stories/                                              # Narrative layer (claims + evidence + maps) with review gates and publish controls
-│  ├─ draft/                                             # In-progress story nodes (editable; not externally trusted)
-│  ├─ review/                                            # Stories under formal review (steward/security/publish checklists + required citations)
-│  └─ published/                                         # Approved stories (immutable versions, citations locked, obligations enforced on surfaces)
+├─ stories/                                    # Narrative layer (claims + evidence + maps) with review gates and publish controls
+│  ├─ draft/                                   # In-progress story nodes (editable; not externally trusted)
+│  ├─ review/                                  # Stories under formal review (steward/security/publish checklists + required citations)
+│  └─ published/                               # Approved stories (immutable versions, citations locked, obligations enforced)
 │
-├─ apps/                                                 # User-facing and service applications (each integrates policy/labels/obligations consistently)
-│  ├─ api/                                               # Public/internal APIs (PEP enforcement, authn/authz, obligations in responses, audit logging)
-│  ├─ map/                                               # Map explorer UI (layers, time controls, label-aware rendering, redaction/generalization)
-│  ├─ story/                                             # Story UI (narrative reader/editor, claim→citation UX, publish workflow integration)
-│  ├─ catalog/                                           # Catalog UI (search/discovery, provenance views, dataset/story metadata, receipts browsing)
-│  └─ focus/                                             # Focus Mode (AI-assisted synthesis within policy bounds; cite-or-abstain, evaluation gates)
+├─ apps/                                       # User-facing and service applications (each integrates policy/labels/obligations consistently)
+│  ├─ api/                                     # Public/internal APIs (PEP enforcement, authn/authz, obligations, audit logging)
+│  ├─ map/                                     # Map explorer UI (layers, time controls, label-aware rendering, redaction/generalization)
+│  ├─ story/                                   # Story UI (reader/editor, claim→citation UX, publish workflow integration)
+│  ├─ catalog/                                 # Catalog UI (search/discovery, provenance views, receipts browsing)
+│  └─ focus/                                   # Focus Mode (AI-assisted synthesis within policy bounds; cite-or-abstain, eval gates)
 │
-├─ packages/                                             # Shared libraries implementing clean architecture boundaries (domain/usecases/adapters/shared)
-│  ├─ domain/                                            # Core types + invariants (policy labels, evidence refs, IDs, time model, geometry contracts)
-│  ├─ usecases/                                          # Application logic (promotion, ingest, export, search, obligation emission/handling)
-│  ├─ adapters/                                          # Integrations (DBs, file stores, OPA/PDP, GIS libs, external sources, message queues)
-│  └─ shared/                                            # Cross-cutting utilities (logging, config, hashing, error types, validation helpers)
+├─ packages/                                   # Shared libraries implementing clean architecture boundaries (domain/usecases/adapters/shared)
+│  ├─ domain/                                  # Core types + invariants (policy labels, evidence refs, IDs, time model, geometry contracts)
+│  ├─ usecases/                                # Application logic (promotion, ingest, export, search, obligation emission)
+│  ├─ adapters/                                # Integrations (DBs, file stores, OPA/PDP, GIS libs, external sources, queues)
+│  └─ shared/                                  # Cross-cutting utilities (logging, config, hashing, error types, validation helpers)
 │
-├─ infra/                                                # Infrastructure-as-code + deployment manifests (local → cloud scaling path, policy wiring)
-├─ tools/                                                # Developer tools (generators, validators, link checkers, schema builders, fixtures tooling)
-└─ tests/                                                # Repo-level tests (integration/e2e/smoke) spanning apps, packages, policy, and data workflows
+├─ infra/                                      # Infrastructure-as-code + deployment manifests (local → cloud scaling path, policy wiring)
+├─ tools/                                      # Developer tools (generators, validators, link checkers, schema builders, fixtures tooling)
+└─ tests/                                      # Repo-level tests (integration/e2e/smoke) spanning apps, packages, policy, and data workflows
 ```
-
-</details>
 
 ### Where CI gates live (expected)
 
@@ -809,21 +814,20 @@ Kansas-Frontier-Matrix/                                 # KFM monorepo: map-firs
 
 Use MetaBlock v2 (no YAML frontmatter) for docs, Story Nodes, and dataset specs.
 
-```text
+```html
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<uuid>
 title: <Title>
-type: <guide|standard|story|dataset_spec|adr|run_receipt>
+type: standard
 version: v1
 status: draft|review|published
 owners: <team or names>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: public|restricted|...
+policy_label: public|restricted|internal|...
 related:
-  - kfm://dataset/<slug>@<version>
-tags:
-  - kfm
+  - <paths or kfm:// ids>
+tags: [kfm]
 notes:
   - <short notes>
 [/KFM_META_BLOCK_V2] -->
@@ -913,14 +917,15 @@ Keep increments small, reversible, and trust-first.
 
 ## License
 
-**TBD.** Add `LICENSE` early. Prefer SPDX-friendly licensing and ensure data licensing is captured per-source.
+**TBD.** Add `LICENSE` early.
+
+Prefer SPDX-friendly licensing and ensure data licensing is captured per-source.
 
 [↑ Back to top](#top)
 
 ---
 
-<details>
-<summary><strong>Appendix: Operational Definition of Done</strong></summary>
+## Appendix: Operational Definition of Done
 
 ### Dataset onboarding DoD
 
@@ -955,5 +960,3 @@ Keep increments small, reversible, and trust-first.
 - [ ] output scanning blocks restricted leakage patterns
 - [ ] receipt emitted with model + prompt + bundle digests + output hash
 - [ ] eval harness exists with golden queries pinned to DatasetVersions
-
-</details>
