@@ -254,31 +254,31 @@ The drawer should display at minimum:
 > `tree apps/catalog/src -L 3` (or equivalent) once scaffolding exists.
 
 ```text
-apps/catalog/src/
-  README.md            # this file: directory contract + invariants
-  pages/               # or routes/ (TBD)
-    catalog/           # dataset discovery views
-    datasets/          # dataset + version details
-  components/
-    catalog/           # dataset cards, filter controls, tables
-    shared/            # buttons, layout primitives, typography, etc.
-  evidence/
-    EvidenceDrawer/    # evidence UI + renderers
-    refs/              # EvidenceRef formatting helpers
-  api/
-    client.ts          # API client wrapper (fetcher + headers)
-    dtos/              # DTO types and validators (schema-driven)
-    errors.ts          # stable error mapping (policy-safe)
-  policy/
-    PolicyNotice.tsx   # obligation explanation rendering
-  state/
-    queryState.ts      # filters, URL state, caching rules
-  styles/
-    tokens.css         # design tokens (TBD)
-    globals.css        # app-wide styles (TBD)
-  __tests__/
-    evidenceDrawer.test.tsx
-    policySafeErrors.test.ts
+apps/catalog/src/                                      # Catalog UI source: dataset discovery + provenance views with evidence-first trust surfaces and policy/obligation-aware UX
+├─ README.md                                            # Directory contract + invariants (policy-safe rendering, cite-or-abstain UX, denial behavior, test expectations)
+├─ pages/                                               # Page routing layer (or routes/ — TBD) defining navigable views and URL structure
+│  ├─ catalog/                                          # Dataset discovery views (search, filters, facets, result lists; policy-aware visibility)
+│  └─ datasets/                                         # Dataset + version detail views (metadata, provenance, receipts, obligations, export affordances)
+├─ components/                                          # Reusable UI components (compose pages; keep business logic out)
+│  ├─ catalog/                                          # Catalog-specific components (dataset cards, filter controls, tables, facets, sort/paging)
+│  └─ shared/                                           # Shared primitives (buttons, layout, typography, forms, empty/error states, spinners)
+├─ evidence/                                            # Evidence UX: user-facing proof paths for claims/metadata (trust surface)
+│  ├─ EvidenceDrawer/                                   # Evidence drawer UI + renderers (bundles, citations, source previews, resolver status)
+│  └─ refs/                                             # EvidenceRef formatting helpers (stable display strings, badges, link builders, safe truncation)
+├─ api/                                                 # Client boundary: typed API access + schema-driven validation + policy-safe error handling
+│  ├─ client.ts                                         # API client wrapper (fetcher, base URL, auth headers, request_id propagation, retries/backoff)
+│  ├─ dtos/                                             # DTO types + validators (schema-driven decoding; reject unknown/unsafe shapes; fail-closed)
+│  └─ errors.ts                                         # Stable error mapping (policy-safe messages, reason codes, denial UX helpers; no restricted inference)
+├─ policy/                                              # Obligation/label UX: render policy notices and required user-facing obligations consistently
+│  └─ PolicyNotice.tsx                                  # Obligation explanation component (show_notice, generalized, restricted, export blocked, etc.)
+├─ state/                                               # State model for discovery (URL-driven queries, caching, and deterministic view-state)
+│  └─ queryState.ts                                     # Filters + URL state + caching rules (canonical serialization; avoids hash drift; debounced fetch)
+├─ styles/                                              # Styling primitives (tokens + globals) for consistent theming across trust surfaces
+│  ├─ tokens.css                                        # Design tokens (TBD): colors/spacing/typography scales; keep stable for consistent UX
+│  └─ globals.css                                       # App-wide styles (TBD): base resets, typography defaults, utility classes as needed
+└─ __tests__/                                           # UI tests focused on trust surfaces and safe failure behavior (synthetic fixtures)
+   ├─ evidenceDrawer.test.tsx                           # Tests evidence drawer behavior (rendering, resolver states, citation formatting, safe fallbacks)
+   └─ policySafeErrors.test.ts                          # Tests policy-safe errors/denials (no restricted inference; consistent reason codes/messages)
 ```
 
 [Back to top](#top)
