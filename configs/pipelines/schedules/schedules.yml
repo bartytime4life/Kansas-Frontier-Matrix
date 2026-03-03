@@ -1,0 +1,3 @@
+schedules:
+  - pipeline: ingest_storm_events
+    cron: "0 */6 * * *"

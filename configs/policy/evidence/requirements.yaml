@@ -1,1 +1,3 @@
-
+requirements:
+  min_citations_per_claim: 1
+  require_resolvable_evidence_refs: true

@@ -73,6 +73,7 @@ Example: https://img.shields.io/github/actions/workflow/status/<org>/<repo>/<wor
 - [Definition of Done](#definition-of-done)
 - [Appendix](#appendix)
 - [Source references](#source-references)
+- [README comparison audit](README_CONFIG_AUDIT.md)
 
 ---
 
