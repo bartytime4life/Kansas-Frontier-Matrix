@@ -371,13 +371,13 @@ Example (shape):
 This is **directory documentation**. Update it if the layout changes.
 
 ```text
-apps/api/src/api/
-  README.md        # this file (intent + invariants)
-  routes/          # expected: HTTP route handlers (datasets, stac, evidence, story, focus, lineage, tiles)
-  middleware/      # expected: auth, policy context, request IDs, error mapper
-  contracts/       # expected: validators, DTO bindings, schema registry helpers
-  adapters/        # expected: policy engine / evidence resolver / repo adapters
-  telemetry/       # expected: audit + metrics emitters (policy-safe)
+apps/api/src/api/                                       # API surface: HTTP routes + middleware + contract bindings with policy-enforced, evidence-first behavior
+├─ README.md                                             # Intent + invariants (default-deny, policy-safe errors, evidence requirements, versioning/compat rules)
+├─ routes/                                               # HTTP route handlers (datasets, STAC, evidence, story, focus, lineage, tiles) — thin controllers calling services/usecases
+├─ middleware/                                           # Request pipeline middleware (request IDs, auth context, policy context, rate limits, error shaping, telemetry)
+├─ contracts/                                            # Contract bindings (DTO validators, schema registry helpers, OpenAPI alignment utilities, error/decision envelopes)
+├─ adapters/                                             # API-layer adapters (policy engine client, evidence resolver client, repo/storage adapters; implements ports)
+└─ telemetry/                                            # Telemetry emitters (audit + metrics) that are policy-safe (redaction-aware, low-cardinality, reason codes)
 ```
 
 ### Repo-fit checklist
