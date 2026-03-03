@@ -164,14 +164,14 @@ so Evidence resolution can be performed centrally.
 
 ### Example skeleton (language-agnostic)
 ```text
-adapters/                                              # Integration adapters: external systems wrapped behind ports (I/O lives here; domain/usecases stay pure)
-├─ README.md                                            # Adapter doctrine: port/adapter pattern, dependency rules, error mapping, retries/timeouts, and testing expectations
-├─ <system>/                                            # One adapter package per external system (db/object-store/search/opa/http/etc.)
-│  ├─ client.*                                          # System client wrapper (SDK/driver wrapper; config, retries, timeouts, tracing hooks)
-│  ├─ adapter.*                                         # Adapter implementation of the Port interface (translates domain calls ↔ system operations)
-│  ├─ types.*                                           # Adapter-local types only (DTOs/configs/errors; keep domain types out of here)
-│  └─ __tests__/                                        # Unit tests for the adapter (mock system boundary; deterministic; no network by default)
-└─ index.*                                              # Optional export/wiring surface (barrel exports; DI registration; adapter selection helpers)
+adapters/
+  README.md
+  <system>/
+    client.*            # wraps SDK/driver
+    adapter.*           # implements Port interface
+    types.*             # adapter-local types only
+    __tests__/          # unit tests for adapter
+  index.*               # export/wiring surface (optional)
 ```
 
 ---
