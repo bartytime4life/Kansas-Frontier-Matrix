@@ -429,16 +429,16 @@ echo "TODO: add test command (pytest/jest/vitest/go test/etc)"
 > Layout below is **PROPOSED** until verified against the actual repo tree.
 
 ```text
-apps/workers/
-  README.md              # This file
-  src/                   # Worker implementation (jobs, runner, adapters)
-    runner/              # queue/schedule integration, job dispatch
-    jobs/                # job implementations grouped by domain
-    receipts/            # receipt + manifest writers (schema validated)
-    policy/              # policy client helpers (no policy logic here)
-  deploy/                # k8s/helm manifests for worker runtime (optional)
-  tests/                 # unit/integration tests
-  scripts/               # dev helpers (must not be the only way to run jobs)
+apps/workers/                                          # Worker runtime: background jobs for ingest/index/catalog/publish with receipts + policy-aware execution
+├─ README.md                                            # Worker intent, supported job classes, invariants (deterministic receipts, default-deny, safe logging), and how to run locally/CI
+├─ src/                                                 # Worker implementation (job definitions, runner, adapters, receipt emitters)
+│  ├─ runner/                                           # Queue/scheduler integration + job dispatch (retries/backoff, concurrency, timeouts, cancellation)
+│  ├─ jobs/                                             # Job implementations grouped by domain (ingest, validate, catalog, index, export, story publish, focus eval)
+│  ├─ receipts/                                         # Receipt + manifest writers (schema-validated; digests/spec_hash; links to evidence/catalogs where relevant)
+│  └─ policy/                                           # Policy client helpers (PDP calls, decision caching, obligation application hooks; NO policy logic here)
+├─ deploy/                                              # Optional deployment manifests (k8s/helm): resources, secrets references, scaling, probes, and policy wiring
+├─ tests/                                               # Worker tests (unit + integration): job logic, runner behavior, receipt validity, policy-safe failure shaping
+└─ scripts/                                             # Dev helpers (local run wrappers, seed/cleanup); must not be the only way to run jobs (CI uses runner directly)
 ```
 
 ### Acceptable inputs
