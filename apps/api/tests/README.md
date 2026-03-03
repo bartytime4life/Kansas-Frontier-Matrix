@@ -311,16 +311,16 @@ This is the “anti-hallucination” gate for the API’s AI surface.
 > Replace this section with the actual `tree -a -L 3 apps/api/tests` output once verified.
 
 ```text
-apps/api/tests/
-  README.md                  # (this file) test intent + governance + how to run
-  unit/                      # fast tests; no network; no containers
-  contract/                  # OpenAPI + response shape + error model tests
-  policy/                    # fixtures for allow/deny/obligations (if API-specific)
-  integration/               # API boundary end-to-end tests (evidence resolver, etc.)
-  eval/                      # Focus Mode harness: golden queries + regressions
-  fixtures/                  # tiny, policy-safe test inputs (catalog snippets, evidence refs)
-  helpers/                   # test utilities (clients, clock freeze, builders)
-  snapshots/                 # optional snapshot outputs (keep small; reviewable diffs)
+apps/api/tests/                                        # API test suites: enforce correctness + contract compatibility + policy-safe behavior across trust surfaces
+├─ README.md                                            # Test intent + governance expectations, how to run locally/CI, and how failures map to gates/checks
+├─ unit/                                                # Fast unit tests (no network/containers): handlers, middleware, pure helpers, error shaping, DTO validation
+├─ contract/                                             # Contract tests: OpenAPI conformance + response shapes + stable error/decision envelope model
+├─ policy/                                               # API-specific policy fixtures/tests (allow/deny/obligations) when behavior is tighter than global policy suite
+├─ integration/                                          # Integration tests: API boundary end-to-end (policy wiring, evidence resolver, storage/index stubs, auth context)
+├─ eval/                                                 # Focus Mode evaluation harness: golden queries + regression checks for cite-or-abstain and safe synthesis bounds
+├─ fixtures/                                             # Tiny policy-safe fixtures (catalog snippets, evidence refs/bundles, policy inputs, expected decisions)
+├─ helpers/                                              # Test utilities (API clients, fake clock/time travel, builders, seeded IDs, cleanup hooks)
+└─ snapshots/                                            # Optional snapshots (keep small + reviewable): stable outputs for contract/e2e assertions and diff-based reviews
 ```
 
 ---
