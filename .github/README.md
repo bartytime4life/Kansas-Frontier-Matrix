@@ -1,308 +1,307 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/4150adce-f3ea-497e-8aed-704db50fd615
-title: ".github — GitHub Automation, Governance, and CI/CD"
+doc_id: kfm://doc/4f0a4c1a-4f7e-4f5b-86d4-9b3b1c5c5c7a
+title: .github README
 type: standard
 version: v1
 status: draft
-owners: TBD
+owners: KFM Platform Engineering (TODO: set CODEOWNERS)
 created: 2026-03-03
 updated: 2026-03-03
 policy_label: public
-related:
-  - ../README.md
-  - ../docs/
-  - ../policy/
-tags: [kfm, github, ci, governance, supply-chain]
-notes:
-  - "This README documents the contract for repo automation under .github/."
-  - "Every meaningful claim is tagged Confirmed, Proposed, or Unknown."
+related: [".github/", ".github/workflows/", ".github/ISSUE_TEMPLATE/", ".github/PULL_REQUEST_TEMPLATE.md"]
+tags: [kfm, github, cicd, governance]
+notes: ["Docs are a production surface. Keep this file current with CI policy + workflow changes."]
 [/KFM_META_BLOCK_V2] -->
 
-# .github — GitHub Automation, Governance, and CI/CD
+# `.github/` — GitHub governance, CI/CD, and contribution automation
 
-**Purpose:** define and govern all GitHub-side automation (Actions workflows, reusable Actions, templates, and CODEOWNERS) for KFM.  
-**Status:** `draft` · **Owners:** `TBD` · **Policy posture:** `default-deny, fail-closed`
+One place for the **governance boundary** on GitHub: workflows, templates, and repository policies that keep KFM **evidence-first** and **fail-closed**.
 
-![CI](https://img.shields.io/badge/CI-TODO-lightgrey) <!-- TODO: wire to workflow badge -->
-![Policy Gate](https://img.shields.io/badge/Policy%20Gate-TODO-lightgrey) <!-- TODO -->
-![Release](https://img.shields.io/badge/Release-TODO-lightgrey) <!-- TODO -->
-![SBOM](https://img.shields.io/badge/SBOM-TODO-lightgrey) <!-- TODO -->
-![SLSA](https://img.shields.io/badge/SLSA-TODO-lightgrey) <!-- TODO -->
-
-## Quick navigation
-
-- [Directory contract](#directory-contract)
-- [Claim status tags](#claim-status-tags)
-- [Governance model](#governance-model)
-- [Workflow inventory](#workflow-inventory)
-- [Templates and ownership](#templates-and-ownership)
-- [Branch protection baseline](#branch-protection-baseline)
-- [How to add or change automation](#how-to-add-or-change-automation)
-- [Appendix](#appendix)
+> **Status:** **active** (governed surface) • **Owners:** **TODO** (`CODEOWNERS`) • **Change posture:** **small, reversible, additive**
+>
+> ![CI](https://img.shields.io/badge/CI-TODO-lightgrey) ![Policy](https://img.shields.io/badge/Policy-OPA%20Conftest%20TODO-lightgrey) ![Security](https://img.shields.io/badge/Security-Default%20deny-lightgrey) ![Docs](https://img.shields.io/badge/Docs-production%20surface-lightgrey)
+>
+> **Jump to:** [Scope](#scope) • [Where it fits](#where-it-fits) • [Inputs](#acceptable-inputs) • [Exclusions](#exclusions) • [Directory tree](#directory-tree) • [Workflow registry](#workflow-registry) • [Change checklist](#change-checklist) • [FAQ](#faq)
 
 ---
 
-## Directory contract
+## Scope
 
-### Where this fits in the repo
+**CONFIRMED:** This repo uses `.github/` for **CI/CD workflows, templates, and CODEOWNERS**-style governance scaffolding.  
+**PROPOSED:** This directory is the **single source of truth** for GitHub enforcement: “what checks run,” “who must review,” and “what fails closed.”
 
-- **Confirmed:** `.github/` is reserved for **CI/CD workflows, templates, and CODEOWNERS**.  
-- **Proposed:** `.github/` is treated as a *policy-critical surface* because it can change what gets merged, released, or promoted.
+### Evidence status ledger (read this before editing)
+- **CONFIRMED:** KFM operates with a strict “truth path” lifecycle and governance gates (promotion is not casual).  
+- **CONFIRMED:** `.github/` is intended for CI/CD workflows and contribution governance artifacts.  
+- **UNKNOWN:** The exact set of workflows already present in *your* branch (verify with `ls .github/workflows`).  
+- **PROPOSED:** A baseline workflow suite is documented below (names/paths may need to be adapted).
 
-### Acceptable inputs
-
-- **Confirmed:** GitHub Actions workflows under `.github/workflows/`.
-- **Proposed:** Reusable composite actions under `.github/actions/`.
-- **Proposed:** Issue and PR templates under `.github/ISSUE_TEMPLATE/` and `.github/PULL_REQUEST_TEMPLATE.md`.
-- **Proposed:** Repository metadata files that GitHub recognizes (example: `CODEOWNERS`, `dependabot.yml`, `SECURITY.md`).
-
-### Exclusions
-
-- **Confirmed:** **No secrets** in this directory (or anywhere in the repo).  
-- **Proposed:** No generated build artifacts (binaries, large archives, model weights, dataset snapshots).  
-- **Proposed:** No long-lived credentials (PATs) embedded in workflow YAML.
-
-[Back to top](#github--github-automation-governance-and-cicd)
+**Smallest verification steps to turn UNKNOWN → CONFIRMED**
+1. Run `ls -la .github/` and `ls -la .github/workflows/`.
+2. Open each workflow file and confirm:
+   - triggers (`on:`) and affected paths,
+   - required secrets (if any),
+   - which checks are branch-protection required.
+3. Update the [Workflow registry](#workflow-registry) table to match reality.
 
 ---
 
-## Claim status tags
+## Where it fits
 
-Every meaningful statement in this file is tagged:
+**CONFIRMED (concept):** KFM separates “clients/UI” from storage and treats governance as a first-class membrane.  
+**PROPOSED (GitHub mapping):** `.github/` is the **GitHub-side enforcement layer** that helps ensure:
+- No change reaches protected branches without required checks + reviews.
+- Policy gates (OPA/Rego), contract tests, and provenance checks block promotion PRs by default.
 
-- ✅ **Confirmed** — supported by KFM documents or repo inventory evidence.
-- 🧪 **Proposed** — recommended contract / intended implementation.
-- ❓ **Unknown** — not verified in the repo yet.
-
-### Minimal verification steps for Unknown items
-
-When a row/statement is **Unknown**, the smallest steps to make it **Confirmed** are:
-
-1. `ls -R .github/` and record the directory tree (commit it into the PR description).
-2. Inspect repository settings:
-   - branch protection rules,
-   - required checks,
-   - CODEOWNERS enforcement,
-   - Actions permissions and runner settings.
-3. Confirm any referenced workflow exists and matches the documented intent.
-
-[Back to top](#github--github-automation-governance-and-cicd)
+### Upstream/downstream connections
+- **Upstream:** contributor actions (PRs, issues, discussions), automation (scheduled workflows), dependency updates.
+- **Downstream:** merge decisions, release and promotion pipelines, provenance receipts attached to PRs, and any publish step.
 
 ---
 
-## Governance model
+## Acceptable inputs
 
-### Non-negotiable posture
+Put only GitHub governance artifacts here.
 
-- 🧪 **Proposed:** **Fail-closed** — missing policy inputs, receipts, attestations, or validation outputs must block merge/publish.
-- 🧪 **Proposed:** **Default-deny** — promotion is denied unless explicitly allowed by policy.
-- 🧪 **Proposed:** **PR-first promotion** — changes to catalogs, provenance, and publishable outputs land via PRs and are re-validated in CI.
+**CONFIRMED/EXPECTED inputs**
+- GitHub Actions workflows: `.github/workflows/*.yml`
+- Templates:
+  - `.github/ISSUE_TEMPLATE/*`
+  - `.github/PULL_REQUEST_TEMPLATE.md`
+- Ownership + review rules:
+  - `.github/CODEOWNERS` (if used)
+- Repo automation configs (optional, only if used):
+  - `.github/dependabot.yml`
+  - `.github/labeler.yml`
+  - `.github/release.yml`
 
-### Process diagram
+---
+
+## Exclusions
+
+Do **not** place these in `.github/`:
+
+- **Secrets or credentials** (ever) — **PROPOSED rule**: use GitHub Encrypted Secrets / OIDC only.
+- Application code (belongs in `apps/` / `packages/` or equivalent).
+- Data artifacts (RAW/WORK/PROCESSED/PUBLISHED) or catalogs.
+- Large binaries (screenshots, datasets) — keep `.github/` lightweight and auditable.
+- Policy bundles or schemas themselves (belong in `policy/`, `contracts/`, `schemas/`, etc.).
+
+---
+
+## Directory tree
+
+**UNKNOWN:** Your repository’s exact `.github/` contents.  
+**PROPOSED (recommended layout):**
+
+```text
+.github/
+├── README.md
+├── CODEOWNERS                         # optional but strongly recommended
+├── PULL_REQUEST_TEMPLATE.md           # PR template (governance prompts)
+├── ISSUE_TEMPLATE/
+│   ├── bug_report.yml
+│   ├── feature_request.yml
+│   └── dataset_intake.yml
+├── workflows/
+│   ├── ci.yml                         # unit + integration + lint
+│   ├── policy-gate.yml                # OPA/Rego Conftest gates (fail-closed)
+│   ├── catalog-qa.yml                 # STAC/DCAT quick checks (fast fail)
+│   ├── contracts.yml                  # schema + OpenAPI contract validation
+│   ├── security.yml                   # SBOM + dependency scanning (if enabled)
+│   └── release.yml                    # release/publish orchestration (if enabled)
+└── dependabot.yml                     # optional
+```
+
+---
+
+## Quickstart
+
+### Local sanity checks (developer workstation)
+
+**PROPOSED:** Run these before opening a PR that touches governance-relevant code or data.
+
+```bash
+# YAML lint (if you use yamllint)
+yamllint .github/workflows
+
+# Repo search: ensure no secrets accidentally landed
+git grep -nE "(AKIA|-----BEGIN|ghp_|ghs_|xoxb-|PRIVATE KEY)" -- .
+
+# If you use OPA/Conftest locally
+opa version
+conftest --version
+```
+
+### What must pass on PR
+
+**CONFIRMED (posture):** Fail closed by default for governance gates.  
+**PROPOSED (minimum):**
+- Workflow lints + schema checks
+- Policy checks (OPA/Rego)
+- Contract tests (OpenAPI, JSON Schema, STAC/DCAT/PROV validators as applicable)
+- Determinism/repro checks for produced artifacts (where applicable)
+
+---
+
+## How CI enforces the KFM “truth path”
+
+**CONFIRMED (concept):** KFM promotes data through lifecycle zones with explicit gates.  
+**PROPOSED (GitHub enforcement):** Workflows implement those gates as merge-blocking checks.
+
+### Conceptual flow
 
 ```mermaid
 flowchart TD
-  A[Pull request opened] --> B[Run CI tests]
-  B --> C[Run schema checks]
-  C --> D[Run policy gate]
-  D --> E[Verify attestations]
-  E --> F{All checks pass}
-  F -->|Yes| G[Allow merge]
-  F -->|No| H[Block merge]
-  G --> I[Promote artifacts]
+  PR[Pull request opened] --> Checks[GitHub checks run]
+  Checks --> Policy[Policy gate]
+  Checks --> Contracts[Contract and schema validation]
+  Checks --> Tests[Unit and integration tests]
+  Policy --> Ready[Merge eligible]
+  Contracts --> Ready
+  Tests --> Ready
+  Ready --> Merge[Protected branch merge]
+  Merge --> Promote[Promotion workflow]
+  Promote --> Publish[Publish to governed runtime]
 ```
-
-- 🧪 **Proposed:** “Promote artifacts” is only allowed for the PROCESSED or PUBLISHED lanes when policy says it is allowed.
-
-[Back to top](#github--github-automation-governance-and-cicd)
 
 ---
 
-## Workflow inventory
+## Workflow registry
 
-> [!NOTE]
-> This section documents the *intended* workflow catalog. If a workflow is not present in the repo, mark it **Unknown** until created.
+**UNKNOWN:** Your exact workflow set today.  
+**PROPOSED:** Keep this table updated so contributors know what will block a merge.
 
-### Workflows
+| Workflow (path) | Primary purpose | Typical triggers | Fail-closed gates | Evidence status |
+|---|---|---|---|---|
+| `.github/workflows/ci.yml` | Lint, unit tests, integration tests | `pull_request`, `push` | tests must pass | **PROPOSED** |
+| `.github/workflows/policy-gate.yml` | OPA/Rego policy checks (Conftest) | `pull_request` on policy/data/contracts paths | deny by default on missing provenance/rights | **PROPOSED** |
+| `.github/workflows/catalog-qa.yml` | Fast STAC/DCAT “quick gate” | `pull_request` on `data/**` | missing required metadata fails | **PROPOSED** |
+| `.github/workflows/contracts.yml` | Validate OpenAPI + JSON schemas | `pull_request` on `contracts/**` | schema/contract drift fails | **PROPOSED** |
+| `.github/workflows/security.yml` | SBOM + dependency scanning | schedule + PR | critical findings fail | **PROPOSED** |
+| `.github/workflows/release.yml` | Build/release + attestations | tags/manual | unsigned artifacts fail | **PROPOSED** |
 
-| Path | Purpose | Triggers | Evidence outputs | Minimum permissions | Status |
+> **IMPORTANT:** If a workflow exists but is not listed here, add it (or delete it). `.github/` is a governed surface.
+
+---
+
+## Governance expectations for workflow changes
+
+### Review and ownership
+
+**PROPOSED hard rule (recommended):**
+- Any change under `.github/workflows/**` requires:
+  - CODEOWNER review (platform/governance),
+  - at least 1 additional engineer review,
+  - passing workflow validation/lints.
+
+### Secrets and credentials
+
+**PROPOSED baseline:**
+- Prefer **OIDC + short-lived tokens** over long-lived secrets.
+- Workflows must not print secrets; sanitize logs.
+- No personal access tokens (PATs) unless explicitly approved and scoped.
+
+---
+
+## Policy gate surface
+
+**CONFIRMED (concept):** KFM governance includes policy enforcement that should be automated and merge-blocking.  
+**PROPOSED (implementation posture):**
+- Run Conftest/OPA on:
+  - dataset manifests / receipts
+  - catalog triplets (STAC/DCAT/PROV)
+  - provenance attestation references
+  - licensing and sensitivity classification fields
+
+### Policy toolchain (recommended)
+- **OPA** for compilation and v1 compatibility checks.
+- **Conftest** for CI-friendly assertions over incoming artifacts/manifests.
+
+---
+
+## CI gates matrix
+
+Use this matrix to keep enforcement explicit and auditable.
+
+| Gate | What it protects | Inputs | Output | Pass criteria | Evidence status |
 |---|---|---|---|---|---|
-| `.github/workflows/kfm-ci.yml` | Main entry workflow that calls reusable lane workflows | `pull_request`, `workflow_dispatch` | test reports, artifacts | `contents: read` | 🧪 Proposed |
-| `.github/workflows/reusables/kfm-reusable-ci.yml` | Shared lane runner with guardrails and packaging | `workflow_call` | lane artifacts | `contents: read` | 🧪 Proposed |
-| `.github/workflows/kfm-policy-gate.yml` | Merge-blocking policy checks via Conftest | `pull_request` | deny messages, receipts bundle | `contents: read` | 🧪 Proposed |
-| `.github/workflows/kfm-attest.yml` | Produce/verify keyless attestations | `pull_request`, `push` | cosign bundles, provenance | `id-token: write` | 🧪 Proposed |
-| `.github/workflows/kfm-release.yml` | Release and publish workflow | `workflow_dispatch`, `release/*` | SBOM, release manifest | `contents: write` | 🧪 Proposed |
-| `.github/workflows/watch-and-pr.yml` | Watch external sources and open PRs on material change | `workflow_call`, `schedule` | run manifest, diff | `pull-requests: write` | 🧪 Proposed |
-| `.github/workflows/merge-gate.yml` | Final merge gate checks | `pull_request` | final decision record | `contents: read` | 🧪 Proposed |
-
-### Required guardrails
-
-- 🧪 **Proposed:** Concurrency uses cancel-in-progress on PR workflows.
-- 🧪 **Proposed:** A repo-level or environment kill-switch can disable promotion lanes.
-- 🧪 **Proposed:** Artifact retention defaults short unless an exception is documented.
-
-[Back to top](#github--github-automation-governance-and-cicd)
+| Policy gate | Licensing, sensitivity, provenance completeness | manifests, receipts, policy bundles | conftest report | no denies | **PROPOSED** |
+| Schema gate | Contract drift + invalid metadata | OpenAPI/JSON schema/STAC/DCAT | validator output | 0 errors | **PROPOSED** |
+| Test gate | correctness + regressions | unit/integration suites | test reports | green tests | **PROPOSED** |
+| Repro gate | deterministic artifacts | run receipts + checksums | compare hashes | identical outputs | **PROPOSED** |
+| Security gate | supply chain trust | SBOM + scans + attestations | scan results | within thresholds | **PROPOSED** |
 
 ---
 
-## Templates and ownership
+## Change checklist
 
-### CODEOWNERS
+Use this before merging any `.github/**` change.
 
-- 🧪 **Proposed:** `CODEOWNERS` exists and requires review for:
-  - `.github/**`
-  - `policy/**`
-  - `contracts/**`
-  - `tools/validators/**`
-  - `scripts/release/**`
-
-**Recommended pattern**
-
-```text
-# Critical surfaces
-/.github/            @kfm-platform
-/policy/             @kfm-governance
-/contracts/          @kfm-platform
-/tools/validators/   @kfm-platform
-/scripts/release/    @kfm-release-engineering
-```
-
-### Pull request template
-
-- 🧪 **Proposed:** PR template forces “evidence-first” summaries and links to receipts.
-
-Suggested minimum fields:
-
-- spec_hash
-- artifacts produced (paths + digests)
-- policy decision summary (allow or deny + reason)
-- rollback plan
-
-### Issue templates
-
-- 🧪 **Proposed:** issue templates distinguish:
-  - data pipeline change,
-  - policy change,
-  - workflow/CI change,
-  - UI/API change.
-
-[Back to top](#github--github-automation-governance-and-cicd)
+- [ ] **PROPOSED:** Workflows remain **fail-closed** (no “allow on error” for gates that protect governance).
+- [ ] **PROPOSED:** Branch protection still requires the intended checks.
+- [ ] **PROPOSED:** No secrets or tokens added to repo (including examples).
+- [ ] **PROPOSED:** Any new workflow has:
+  - clear `on:` triggers
+  - minimal permissions (`permissions:` block)
+  - pinned actions versions (`@v4`, commit SHA if required)
+  - timeouts and concurrency where needed
+- [ ] **PROPOSED:** Documentation updated:
+  - this file’s [Workflow registry](#workflow-registry)
+  - any runbooks that describe CI behavior
+- [ ] **PROPOSED:** Rollback path exists (revert commit restores last known good gating).
 
 ---
 
-## Branch protection baseline
+## FAQ
 
-- ❓ **Unknown:** Which branches are protected and what checks are required.
+### Why is `.github/` treated as “governed”?
+**CONFIRMED (principle):** CI and policy are part of the system’s trust membrane.  
+**PROPOSED:** A one-line YAML change can silently weaken enforcement; we treat this as production-critical.
 
-### Minimal baseline
+### I added a workflow—how do I make sure it actually blocks merges?
+**PROPOSED steps:**
+1. Ensure the workflow runs on `pull_request` for the relevant paths.
+2. Require the workflow check in branch protection rules.
+3. Add it to the [Workflow registry](#workflow-registry).
+4. Add a failing test PR to verify it blocks.
 
-- 🧪 **Proposed:** Require these checks to pass before merge:
-  - unit tests,
-  - schema validators,
-  - policy gate,
-  - attestation verification (when promotion is in scope).
-
-### Minimal verification steps
-
-- ❓ **Unknown → Confirmed:** open repo settings and record:
-  - required status checks list,
-  - whether “Require review from Code Owners” is enabled,
-  - whether admins are subject to restrictions.
-
-[Back to top](#github--github-automation-governance-and-cicd)
-
----
-
-## How to add or change automation
-
-### Definition of done
-
-A workflow or composite action change is done only if:
-
-- 🧪 **Proposed:** Permissions are least-privilege and documented.
-- 🧪 **Proposed:** The workflow is deterministic (pinned versions for critical tools).
-- 🧪 **Proposed:** The workflow emits machine-readable evidence artifacts (receipts, reports).
-- 🧪 **Proposed:** Policy gates are updated alongside behavior changes.
-- 🧪 **Proposed:** Rollback path is documented (revert PR, disable workflow, kill-switch).
-
-### Checklist for new workflows
-
-- [ ] 🧪 Proposed: choose the narrowest trigger possible (`pull_request` over broad schedules).
-- [ ] 🧪 Proposed: pin action versions (e.g., `actions/checkout@v4`).
-- [ ] 🧪 Proposed: add `permissions:` explicitly and minimize it.
-- [ ] 🧪 Proposed: add concurrency rules.
-- [ ] 🧪 Proposed: add artifact upload for receipts and reports.
-- [ ] 🧪 Proposed: add policy evaluation (OPA/Conftest) before any “promote” step.
-- [ ] 🧪 Proposed: document “what changed” and “how to verify” in this README.
-
-[Back to top](#github--github-automation-governance-and-cicd)
+### Where do I put documentation for a new gate?
+**PROPOSED:** Put operator details in `docs/runbooks/` and link it from this README.
 
 ---
 
 ## Appendix
 
 <details>
-<summary>Example skeleton workflow</summary>
+<summary>Suggested PR template prompts (governance-aware)</summary>
 
-```yaml
-name: PR Gates
+**PROPOSED content** for `.github/PULL_REQUEST_TEMPLATE.md`:
 
-on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-
-permissions:
-  contents: read
-  id-token: write
-
-concurrency:
-  group: pr-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
-jobs:
-  gate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Run tests
-        run: make ci.test
-
-      - name: Policy gate
-        run: conftest test receipts/run_receipt.json -p policy/
-
-      - name: Upload receipts
-        uses: actions/upload-artifact@v4
-        with:
-          name: receipts
-          path: receipts/
-```
+- What does this change affect?
+- Does it change governance, policy, or promotion behavior?
+- What evidence/receipts are attached (or why not)?
+- What is the rollback plan?
+- Which datasets or catalogs are touched?
+- Any sensitivity classification changes?
 
 </details>
 
 <details>
-<summary>Example watcher workflow idea</summary>
+<summary>Recommended GitHub Actions permissions baseline</summary>
 
-```yaml
-name: Watch and PR
-
-on:
-  workflow_call:
-    inputs:
-      source_url:
-        required: true
-        type: string
-
-jobs:
-  watch:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          echo "Probe source, compute spec hash, write run manifest"
-          # Then open PR if changed
-```
+**PROPOSED:**
+- Default: `contents: read`
+- Add only what is needed:
+  - `pull-requests: write` for PR comments/labels
+  - `checks: write` for check runs
+  - `id-token: write` for OIDC
+  - Avoid broad `contents: write` unless the workflow commits (and then restrict to bot branches)
 
 </details>
 
-[Back to top](#github--github-automation-governance-and-cicd)
+---
+
+## Back to top
+
+[↑ Back to top](#github--github-governance-cicd-and-contribution-automation)
