@@ -249,13 +249,13 @@ A new or modified route is not “done” until it passes these gates.
 
 ### Expected surrounding directories (verify in repo)
 ```text
-apps/api/src/api/
-  README.md                 # boundary intent + invariants
-  routes/                   # this directory
-  middleware/               # auth, request ids, error mapping, policy-context extraction
-  adapters/                 # policy/evidence/repo adapters
-  telemetry/                # audit + metrics/tracing emitters
-  contracts/                # DTOs + validators generated from OpenAPI (if used)
+apps/api/src/api/                                       # API boundary layer: routes + middleware + contract bindings with policy-enforced, evidence-first semantics
+├─ README.md                                            # Boundary intent + invariants (default-deny, policy-safe errors, obligation surfacing, versioning expectations)
+├─ routes/                                              # Route handlers (HTTP controllers): map requests → usecases/services; keep thin; no direct I/O beyond adapters
+├─ middleware/                                          # Request middleware: auth, request_id, normalization, policy-context extraction, rate limits, CORS, error mapping
+├─ adapters/                                            # Boundary adapters: policy/evidence/repo integrations (clients + port implementations + error mapping)
+├─ telemetry/                                           # Audit + metrics/tracing emitters (redaction-aware, low-cardinality, request_id propagation, reason codes)
+└─ contracts/                                           # DTOs + validators (optionally generated from OpenAPI) ensuring request/response shapes match governed contracts
 ```
 
 ---
