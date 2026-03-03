@@ -6,7 +6,7 @@ version: v3
 status: draft
 owners: KFM Maintainers (resolve via CODEOWNERS)
 created: 2026-02-24
-updated: 2026-03-01
+updated: 2026-03-02
 policy_label: public
 related:
   - ../README.md
@@ -25,26 +25,25 @@ tags:
 notes:
   - Defines the directory contract for /examples with a default-deny posture.
   - Examples are small, policy-safe, and reproducible; they demonstrate trust surfaces and gates.
-  - Adds policy-as-code PDP/PEP language and controlled vocabulary anchors (policy_label, citation.kind).
-  - Aligns toy “promotion” gates with Promotion Contract naming and includes release/promotion manifest.
-  - Clarifies EvidenceRef → EvidenceBundle resolution and hard citation gates for Story + Focus Mode examples.
+  - Aligns example “promotion” gates with the Promotion Contract gate names (A–G).
+  - Clarifies EvidenceRef → EvidenceBundle resolution and hard citation gates for Story + Focus Mode.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# `examples/` — Governed, reproducible examples
+# `examples/` — Governed, reproducible end-to-end examples
 **Purpose:** minimal, reproducible, *policy-safe* examples that demonstrate end-to-end KFM workflows  
-**Status:** draft • **Owners:** resolve via CODEOWNERS • **Policy:** `public` (this README; individual examples may vary)
+**Status:** draft • **Owners:** resolve via CODEOWNERS • **Policy:** `public` (this README; each example declares its own)
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Policy](https://img.shields.io/badge/policy-public-blue)
 ![Reproducible](https://img.shields.io/badge/reproducible-required-brightgreen)
 ![Governance](https://img.shields.io/badge/governance-default--deny-critical)
-![Trust membrane](https://img.shields.io/badge/trust%20membrane-no%20bypass-critical)
+![Trust%20membrane](https://img.shields.io/badge/trust%20membrane-no%20bypass-critical)
 ![Evidence-first](https://img.shields.io/badge/evidence-first-required-6f42c1)
-![Promotion Contract](https://img.shields.io/badge/promotion%20contract-demonstrated-important)
 ![Citations](https://img.shields.io/badge/citations-EvidenceRef%20only-important)
 ![Policy-as-code](https://img.shields.io/badge/policy--as--code-PDP%2FPEP-important)
+![Promotion%20Contract](https://img.shields.io/badge/promotion%20contract-A--G%20gates-important)
 
 > [!IMPORTANT]
 > `examples/` is the **sandbox of truth** — small enough to run locally, strict enough to survive CI.
@@ -53,7 +52,7 @@ notes:
 > - Examples **MUST** be reproducible and emit evidence (receipts + checksums).
 > - Examples **MUST** be safe under policy (default-deny; no sensitive leakage).
 >
-> If an example can’t be made safe to publish, it does not belong here.
+> If an example cannot be made safe to publish, it does not belong here.
 
 ---
 
@@ -61,16 +60,15 @@ notes:
 
 - [Truth status legend](#truth-status-legend)
 - [Normative language](#normative-language)
+- [Contract at a glance](#contract-at-a-glance)
 - [What this directory is](#what-this-directory-is)
 - [Where it fits in the repo](#where-it-fits-in-the-repo)
 - [Directory contract](#directory-contract)
-- [Reality check](#reality-check)
 - [Maintainer verification checklist](#maintainer-verification-checklist)
 - [Quickstart](#quickstart)
 - [Example package standard](#example-package-standard)
 - [Evidence and provenance](#evidence-and-provenance)
 - [Citations are EvidenceRefs](#citations-are-evidencerefs)
-- [Data and safety rules](#data-and-safety-rules)
 - [Policy labels and obligations](#policy-labels-and-obligations)
 - [Controlled vocabularies](#controlled-vocabularies)
 - [Policy-as-code architecture](#policy-as-code-architecture)
@@ -87,13 +85,13 @@ notes:
 
 This README uses explicit truth tags so it stays evidence-first and fail-closed:
 
-- **CONFIRMED (docs):** invariants documented in KFM design/governance docs (truth path, trust membrane, cite-or-abstain)
-- **PROPOSED:** a recommended template/pattern for this repo
-- **UNKNOWN (repo):** not yet verified on this branch (includes minimum verification steps)
+- **CONFIRMED (docs):** invariant documented in KFM governance/architecture docs
+- **PROPOSED:** recommended repo template/pattern (adopt, or update to match your repo)
+- **UNKNOWN (repo):** not yet verified on this branch (include minimum verification steps)
 
 > [!NOTE]
-> Treat all “runner commands” and “expected paths” as **PROPOSED** until your repo’s tooling is confirmed and linked.
-> If you rename paths, update this README *and* the CI gates together.
+> Treat any runner commands, file paths, and CI job names as **PROPOSED** unless this repo has
+> already implemented them and they are linked from `related:` above.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -111,17 +109,35 @@ This README uses RFC-style keywords:
 
 ---
 
+## Contract at a glance
+
+| Contract surface | MUST (merge-safe) | SHOULD (high leverage) | MUST NOT |
+|---|---|---|---|
+| Reproducibility | `run.sh` + deterministic `verify.sh`; stable outputs or normalized diffs | container/devcontainer; pinned tool versions | “works on my machine” only |
+| Evidence | `evidence/run-receipt.json` + `evidence/checksums.json` | `evidence/notes.md`; provenance bundle (PROV JSON-LD) | receipts containing secrets/PII |
+| Policy posture | explicit `policy_label` in manifest; default-deny if unclear | obligations recorded + UI notice examples | leaking restricted existence/details via errors |
+| Citations | citations are resolvable **EvidenceRefs** (not pasted URLs) | mock evidence resolver in CI with allow/deny semantics | “citation = external link in prose” |
+| Data | synthetic or explicitly approved, tiny, license declared | “metadata-only reference” demonstrations | unlicensed media, sensitive coordinates, PII |
+| Trust membrane | example client calls **governed APIs** only | local mock API for offline runs | direct DB/object-store access from client |
+
+> [!WARNING]
+> Examples are where unsafe patterns spread fastest. Treat `examples/` like production teaching material.
+
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
 ## What this directory is
 
-This directory contains **minimal packages** that demonstrate one or more governed workflows:
+This directory contains **minimal packages** that demonstrate one governed workflow each:
 
 - **Data → pipeline → validation → receipts/checksums**
 - **Catalog/provenance concepts (DCAT/STAC/PROV) in miniature**
-- **Governed API usage** (no direct DB or object-store access from clients)
-- **UI trust surfaces** (EvidenceDrawer / ReceiptViewer behavior in sample form)
-- **Focus Mode** behavior (cite-or-abstain) *only* with policy-safe, synthetic, or explicitly approved inputs
+- **Governed API usage** (no direct DB/storage access from clients)
+- **UI trust surfaces** (Evidence Drawer / Receipt Viewer behavior, in sample form)
+- **Focus Mode** cite-or-abstain behavior *only* with policy-safe, synthetic, or explicitly approved inputs
 
-### How examples fit the system
+### Toy-scale reference flow
 
 > [!NOTE]
 > This is a **toy-scale reference flow**. Examples are not an alternate production pipeline.
@@ -131,8 +147,8 @@ flowchart LR
   U[Upstream or synthetic inputs] --> R[RAW or example inputs]
   R --> W[WORK or quarantine]
   W --> P[PROCESSED artifacts]
-  P --> C[CATALOG triplet]
-  C --> API[Governed API and evidence resolver]
+  P --> C[CATALOG triplet: DCAT+STAC+PROV]
+  C --> API[Governed API + Evidence resolver]
   API --> UI[UI trust surfaces]
   UI --> FM[Focus Mode cite-or-abstain]
 ```
@@ -141,7 +157,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  Client[Example client or UI] -->|only| PEP[Governed API PEP]
+  Client[Example client or UI] --> PEP[Governed API PEP]
   PEP --> PDP[Policy decision point]
   PEP --> Resolver[Evidence resolver]
   PEP --> Repos[Repositories]
@@ -151,8 +167,8 @@ flowchart LR
 ```
 
 > [!IMPORTANT]
-> Examples demonstrate the **behavior**; they MUST NOT create backdoors around policy or provenance.
-> Canonical dataset lifecycle lives under `data/` and is promoted via the Promotion Contract.
+> Examples demonstrate the **behavior**. They MUST NOT create backdoors around policy, provenance, or
+> governed APIs.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -164,11 +180,12 @@ Conceptually, `examples/` complements these repo surfaces:
 
 - `data/` — canonical truth-path zones and promoted datasets (raw/work/processed/catalog/published)
 - `contracts/` — canonical schemas and API contracts
-- `configs/` — governed config inputs (specs, policy labels, thresholds)
+- `configs/` — governed config inputs (policy labels, thresholds, controlled vocab)
 - `.github/` — CI gates and CODEOWNERS routing
 
 > [!NOTE]
-> The directories above are referenced via `related:` in the MetaBlock. Treat their exact presence and layout as **UNKNOWN (repo)** until verified.
+> The directories above are referenced via `related:` in the MetaBlock. Treat their exact presence and layout as
+> **UNKNOWN (repo)** until verified on your current branch.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -184,9 +201,9 @@ Conceptually, `examples/` complements these repo surfaces:
 
 ✅ Examples with:
 - a single-command run step
-- a deterministic verify step (or an explicit manual verification checklist)
+- a deterministic verify step (or explicit manual verification checklist + stable expected output shape)
 - evidence outputs (run receipt + checksums)
-- a clear policy posture (what is allowed, what is denied, what is generalized)
+- a clear policy posture (allowed/denied/generalized)
 
 ### What must not go here
 
@@ -197,26 +214,7 @@ Conceptually, `examples/` complements these repo surfaces:
 🚫 Large artifacts (raw dumps, large rasters, model weights); use governed pointers + reproducible fetch scripts **only if allowed**
 
 > [!WARNING]
-> “It’s just an example” is not an exception. Examples are where unsafe patterns spread fastest.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Reality check
-
-Before enforcing or depending on anything in this README, verify the repo’s actual state:
-
-```bash
-# Confirm the directory exists and see what's currently there
-ls -la examples || true
-find examples -maxdepth 2 -type f -name 'README.md' -print 2>/dev/null
-
-# If registry exists (PROPOSED), list it
-ls -la examples/registry 2>/dev/null || true
-```
-
-If your repo uses a different location for runnable examples, update this README and the CI gates accordingly.
+> “It’s just an example” is not an exception.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -225,15 +223,15 @@ If your repo uses a different location for runnable examples, update this README
 ## Maintainer verification checklist
 
 > [!IMPORTANT]
-> This is a **minimum** checklist for maintainers to keep `examples/` aligned with real repo + CI posture.
+> Minimum maintainer checklist to keep `examples/` aligned with repo + CI posture.
 > Treat failures as **fail-closed**: downgrade claims to PROPOSED/UNKNOWN until verified.
 
-- [ ] Capture current commit and root tree (attach to PR): `git rev-parse HEAD` and `tree -L 3`
-- [ ] Confirm required foundation exists (or is explicitly absent): `spec_hash`, policy pack/tests, validators/linkcheck, evidence resolver route, dataset registry schema
-- [ ] Extract the merge-blocking CI gate list from `.github/workflows` and document what is required
-- [ ] Choose 1 MVP dataset/example and ensure it can traverse gates with receipts + catalogs (toy-scale is acceptable)
+- [ ] Capture current commit + root tree (attach to PR): `git rev-parse HEAD` and `tree -L 3`
+- [ ] Confirm required foundation exists (or explicitly absent): `spec_hash`, policy pack/tests, validators/linkcheck, evidence resolver route, dataset registry schema
+- [ ] Extract merge-blocking CI gate list from `.github/workflows` and document what is required
+- [ ] Choose 1 MVP example and ensure it can traverse gates with receipts + catalogs (toy-scale OK)
 - [ ] Validate UI cannot bypass the PEP and EvidenceRefs resolve end-to-end in Map Explorer and Story publishing
-- [ ] Run Focus Mode evaluation harness and store golden outputs + diffs as build artifacts
+- [ ] Run Focus Mode evaluation harness (if present) and store golden outputs + diffs as build artifacts
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -242,29 +240,29 @@ If your repo uses a different location for runnable examples, update this README
 ## Quickstart
 
 > [!NOTE]
-> The commands below are **PROPOSED**. Replace them with repo-real targets once your tooling is confirmed.
+> Commands below are **PROPOSED**. Replace them with repo-real targets once your tooling is confirmed.
 
 1) List examples:
 ```bash
 ls -1 examples
 ```
 
-2) Read the example’s README:
+2) Read an example:
 ```bash
 cat examples/<example-id>/README.md
 ```
 
-3) Run the example:
+3) Run:
 ```bash
 ./examples/<example-id>/run.sh
 ```
 
-4) Verify deterministically:
+4) Verify:
 ```bash
 ./examples/<example-id>/verify.sh
 ```
 
-If an example can’t provide a `verify` script, it MUST clearly document:
+If an example cannot provide a `verify` script, it MUST clearly document:
 - expected outputs (paths + stable shapes),
 - validation criteria,
 - what constitutes failure.
@@ -301,7 +299,7 @@ Every `examples/<example-id>/` MUST include:
 - `README.md` — one-line purpose + steps + expected outputs + safety notes
 - `kfm.example.yaml` — machine-readable manifest (inputs/outputs/licenses/sensitivity)
 - `run.sh` — single-command runner (no secrets; safe defaults)
-- `verify.sh` — deterministic verification (or a documented substitute)
+- `verify.sh` — deterministic verification (or documented substitute)
 - `evidence/run-receipt.json` — run receipt (policy-safe)
 - `evidence/checksums.json` — input + output digests
 
@@ -310,7 +308,7 @@ Every `examples/<example-id>/` MUST include:
 - `src/` — minimal code / scripts
 - `data/` — tiny inputs (synthetic or approved), **never** sensitive
 - `outputs/` — expected normalized outputs (small, diff-friendly)
-- `evidence/notes.md` — explanations, thresholds, and “why we trust it”
+- `evidence/notes.md` — thresholds, “why we trust it”, and policy obligations applied
 - `contracts/` — local copies of *example-level* schemas (NOT canonical contracts)
 
 > [!TIP]
@@ -332,9 +330,9 @@ Each example MUST be able to answer:
 
 ### Determinism and hashing expectations
 
-- If you compute stable IDs from specs (e.g., `spec_hash`), you MUST use a canonicalization scheme and you MUST test for stability across OS/CI.
+- If you compute stable IDs (e.g., `spec_hash`), you MUST use a canonicalization scheme and test for stability across OS/CI.
 - Checksums MUST use deterministic ordering (no locale-dependent sorting).
-- “Freshness” for examples SHOULD be treated as “last verified,” not “last edited.”
+- Examples SHOULD treat “freshness” as “last verified,” not “last edited.”
 
 ### `kfm.example.yaml` template (v1)
 
@@ -358,8 +356,8 @@ tags:
   - "evidence"
   - "policy"
 
-# Optional: helps CI preflight without running the world
-citations_used:     # EvidenceRef schemes preferred; raw URLs discouraged
+citations_used:
+  # EvidenceRef schemes preferred; raw URLs discouraged
   - { ref: "dcat://...", kind: "dcat" }   # kind: dcat | stac | prov | doc | graph | url (discouraged)
 
 inputs:
@@ -368,7 +366,7 @@ inputs:
     media_type: "<optional>"
     license: "<SPDX identifier or reference>"
     attribution: "<optional>"
-    sensitivity: "public"   # public | restricted | ...
+    sensitivity: "public"   # must align with policy_label and any local rubric
     checksum: "sha256:<...>"
 
 outputs:
@@ -403,17 +401,18 @@ A policy-safe `evidence/run-receipt.json` SHOULD include:
 
 - `kfm_run_receipt_version`
 - `example_id`
-- `run_id` (local opaque id acceptable)
+- `run_id` (opaque id acceptable)
 - `git_commit` (if available)
 - `environment` (tool versions; container digest if used)
 - `inputs[]` (paths + digests)
 - `outputs[]` (paths + digests)
 - `checks[]` (pass/fail + thresholds)
-- `policy` (decision id, policy label, obligations applied)
+- `policy` (decision id, `policy_label`, obligations applied)
 - `created_at` (allowed; avoid injecting nondeterminism into golden outputs)
 
 > [!WARNING]
-> Receipts must not record secrets, user identifiers, internal-only endpoints, or restricted dataset existence (unless policy allows acknowledging it).
+> Receipts MUST NOT record secrets, user identifiers, internal-only endpoints, or restricted dataset existence
+> (unless policy allows acknowledging it).
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -421,11 +420,13 @@ A policy-safe `evidence/run-receipt.json` SHOULD include:
 
 ## Citations are EvidenceRefs
 
-In KFM, a “citation” is **not** a URL pasted into text. It is an **EvidenceRef** that must resolve—via the evidence resolver—into an **EvidenceBundle** that contains sufficient metadata, artifacts, and provenance to inspect the claim.
+In KFM, a “citation” is **not** a URL pasted into text. It is an **EvidenceRef** that must resolve—via the
+evidence resolver—into an **EvidenceBundle** containing sufficient metadata, artifacts, and provenance to
+inspect the claim.
 
 Requirements for `examples/`:
 - Examples that make user-facing claims MUST emit EvidenceRefs (or equivalent IDs) and demonstrate how they resolve.
-- “Verify” MUST fail if citations cannot be resolved or are policy-denied.
+- `verify.sh` MUST fail if citations cannot be resolved or are policy-denied.
 - When policy denies evidence, examples MUST fail closed (abstain, narrow scope, or show deny UX) without leaking restricted details.
 
 ### EvidenceRef kinds (starter)
@@ -439,42 +440,8 @@ Preferred `kind` values:
 - `url` — **discouraged** (use resolvable schemes when possible)
 
 > [!TIP]
-> If you can’t call a real evidence resolver in CI, use a policy-safe local mock that preserves the same *allow/deny + obligation* semantics.
-
-<p align="right"><a href="#top">Back to top ↑</a></p>
-
----
-
-## Data and safety rules
-
-Examples are **default-deny** when unclear:
-
-- **License unknown?** Don’t include it. Use synthetic or approved data with explicit terms.
-- **Sensitivity unknown?** Treat as restricted and exclude from public examples until reviewed.
-- **Vulnerable locations?** No precise coordinates. Use generalized geometry or coarse regions.
-
-### Allowed data patterns
-
-✅ Synthetic fixtures (recommended)  
-✅ Public-domain / permissive licensed samples with attribution  
-✅ Toy extracts that cannot be re-identified and have explicit approval
-
-### Disallowed data patterns
-
-🚫 PII / PHI / private records  
-🚫 Anything that enables targeting or harm  
-🚫 Scraped data with unclear permission  
-🚫 Precise coordinates for restricted-sensitive-location topics
-
-### Rights: “metadata-only reference” is allowed
-
-If rights do not allow mirroring, examples MAY demonstrate:
-- cataloging an item (metadata) without embedding the media
-- showing deny UX for downloads/exports
-- requiring steward review before publish
-
-> [!WARNING]
-> Online availability is not permission. Rights and license are policy inputs.
+> If CI cannot call a real evidence resolver yet, use a policy-safe local mock that preserves the same
+> allow/deny + obligation semantics.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -485,12 +452,16 @@ If rights do not allow mirroring, examples MAY demonstrate:
 Policy labeling is a **gate input**. Examples MUST declare `policy_label` and MUST treat unknown classification as restricted.
 
 Rules of thumb (fail closed):
-- Default-deny for `restricted` and `restricted_sensitive_location`.
-- If any public representation is allowed, produce a separate `public_generalized` output.
+- Default deny for `restricted` and `restricted_sensitive_location`.
+- If any public representation is allowed, produce a separate `public_generalized` output (and record the obligation).
 - Never leak restricted metadata in “not found” / “forbidden” UX or errors.
-- Treat redaction/generalization as a first-class transform (record it in receipts and provenance outputs where applicable).
+- Treat redaction/generalization as a first-class transform (record it in receipts and provenance).
 
-### Controlled vocabularies
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Controlled vocabularies
 
 Controlled vocabularies must be versioned and maintained (starter lists):
 
@@ -518,12 +489,16 @@ Controlled vocabularies must be versioned and maintained (starter lists):
 - `graph`
 - `url` (discouraged)
 
-### Policy-as-code architecture
+<p align="right"><a href="#top">Back to top ↑</a></p>
+
+---
+
+## Policy-as-code architecture
 
 KFM requires the same policy semantics in CI and runtime (or at minimum the same fixtures and outcomes).
 
 Recommended pattern:
-- **PDP (Policy Decision Point):** OPA (in-process or sidecar).
+- **PDP (Policy Decision Point):** OPA running in-process or as a sidecar.
 - **PEPs (Policy Enforcement Points):**
   - CI: schema validation + policy tests block merges.
   - Runtime API: policy checks before serving data.
@@ -536,25 +511,22 @@ Recommended pattern:
 
 ## Promotion gates for example outputs
 
-Some examples demonstrate the Promotion Contract. When they do, examples must show the **same gates**, at toy scale.
+Some examples demonstrate the Promotion Contract. When they do, they MUST use the **same gate names**
+and required artifacts at toy scale.
 
 > [!NOTE]
-> Gate *letters* vary across drafts; gate **names and required artifacts** are the stable part. This README uses names and provides an A–G ordering for convenience.
+> This table is intentionally aligned to the Promotion Contract gate naming (A–G). If your repo’s
+> implementation differs, keep the naming stable and document any deltas.
 
-### Minimum gates before calling something “publishable” (toy)
-
-| Gate | What must be present (toy) | Where in the example |
+| Gate | What must be present (toy-scale) | Where in the example |
 |---|---|---|
-| A — Identity & versioning | stable identity; deterministic hashes where used; content digests | `kfm.example.yaml` + receipt + checksums |
-| B — Licensing & rights metadata | license + attribution; optional upstream terms snapshot | `kfm.example.yaml` (+ `terms_snapshot.*` if used) |
-| C — Sensitivity & obligations | `policy_label` + recorded obligations (generalization/redaction) | manifest + receipt `policy` + `evidence/notes.md` |
-| D — Catalog triplet validation | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve | `outputs/catalog/` + validators |
-| E — QA & thresholds | explicit checks + thresholds + QA report | receipt `checks[]` (+ `evidence/qa_report.*`) |
-| F — Run receipt & audit record | run receipt ties outputs to inputs + policy decisions | `evidence/run-receipt.json` (+ `audit-ref.*` if used) |
-| G — Release/promotion manifest | release record references artifacts + digests + approvals | `outputs/**/promotion_manifest.json` (or equivalent) |
-
-> [!NOTE]
-> Examples may include “toy catalogs” (DCAT/STAC/PROV) for demonstration, but canonical catalog enforcement lives in `contracts/` + `data/`.
+| **Gate A — Identity and versioning** | stable dataset/example identity; immutable version derived from stable spec hash (if used) | `kfm.example.yaml` + receipt + checksums |
+| **Gate B — Licensing and rights metadata** | license explicit; rights holder/attribution captured; unclear license → fail closed | manifest + evidence notes |
+| **Gate C — Sensitivity classification and redaction plan** | `policy_label` assigned; redaction/generalization plan exists for restricted cases and is recorded | manifest + receipt `policy` + `evidence/notes.md` |
+| **Gate D — Catalog triplet validation** | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve without guessing | `outputs/catalog/` + validators + linkcheck |
+| **Gate E — Run receipt and checksums** | `run_receipt` exists; inputs/outputs enumerated with checksums; environment captured | `evidence/run-receipt.json` + `evidence/checksums.json` |
+| **Gate F — Policy tests and contract tests** | policy fixture tests pass; evidence resolver resolves at least one EvidenceRef in CI; API/contracts validate | CI job(s) + fixtures + mock/real resolver |
+| **Gate G — Optional but recommended** | SBOM/build provenance; performance/accessibility smoke checks (evidence drawer keyboard nav) | CI “posture” suite |
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
@@ -572,7 +544,7 @@ Example registry shape (illustrative):
 ```json
 {
   "kfm_example_registry_version": "v1",
-  "updated": "2026-03-01",
+  "updated": "2026-03-02",
   "examples": [
     {
       "example_id": "api-feature-query",
@@ -612,90 +584,29 @@ examples/                                         # End-to-end examples (small, 
 │
 ├─ registry/                                      # Machine-readable registries + schemas + fixtures (small)
 │  ├─ examples.v1.json                            # Canonical example registry (paths, owners, tags, run/verify)
-│  ├─ examples.v1.schema.json                     # Schema for the registry itself (optional but recommended)
+│  ├─ examples.v1.schema.json                     # Schema for the registry itself (recommended)
 │  │
 │  ├─ schemas/                                    # Schemas for example manifests + evidence artifacts
-│  │  ├─ kfm.example.manifest.v1.schema.json      # Schema for kfm.example.yaml (manifest)
+│  │  ├─ kfm.example.manifest.v1.schema.json      # Schema for kfm.example.yaml
 │  │  ├─ kfm.run_receipt.v1.schema.json           # Schema for evidence/run-receipt.json
 │  │  ├─ kfm.checksums.v1.schema.json             # Schema for evidence/checksums.json
-│  │  ├─ kfm.policy_summary.v1.schema.json        # (Optional) schema for evidence/policy-summary.json
-│  │  └─ README.md                                # How schema versioning works for examples
+│  │  └─ README.md                                # Schema versioning rules for examples
 │  │
 │  └─ fixtures/                                   # CI validation fixtures (valid/invalid)
-│     ├─ manifests/
-│     │  ├─ valid/
-│     │  │  ├─ minimal_public.yaml
-│     │  │  ├─ with_outputs_and_claims.yaml
-│     │  │  └─ with_dependencies.yaml
-│     │  └─ invalid/
-│     │     ├─ missing_license.yaml
-│     │     ├─ missing_sensitivity.yaml
-│     │     ├─ missing_verify.yaml
-│     │     └─ non_deterministic_timestamps.yaml
-│     ├─ receipts/
-│     │  ├─ valid/
-│     │  │  ├─ receipt_minimal.json
-│     │  │  └─ receipt_with_policy_obligations.json
-│     │  └─ invalid/
-│     │     ├─ receipt_missing_digests.json
-│     │     └─ receipt_contains_secret_like_value.json
-│     ├─ checksums/
-│     │  ├─ valid/
-│     │  │  └─ checksums_minimal.json
-│     │  └─ invalid/
-│     │     └─ checksums_path_escape.json
-│     └─ README.md                                # What fixtures prove + how CI uses them
+│     ├─ manifests/valid/                          # minimal_public.yaml, etc.
+│     ├─ manifests/invalid/                        # missing_license.yaml, etc.
+│     ├─ receipts/valid/
+│     ├─ receipts/invalid/
+│     └─ README.md                                 # What fixtures prove + how CI uses them
 │
-├─ _shared/                                       # Shared tiny fixtures and helpers (optional, but high leverage)
-│  ├─ README.md                                   # What shared assets exist + safety constraints
-│  │
-│  ├─ data/                                       # Tiny synthetic datasets (safe-by-default; NO sensitive coords)
-│  │  ├─ toy_events.csv                           # Example time+place table (synthetic)
-│  │  ├─ toy_points.geojson                       # Tiny GeoJSON points (synthetic; coarse extents)
-│  │  ├─ toy_polygons.geojson                     # Tiny polygons (synthetic; no vulnerable sites)
-│  │  ├─ toy_story/
-│  │  │  ├─ story_text.md                         # Small narrative text (no claims without citations)
-│  │  │  └─ citations.json                        # Example citations referencing toy evidence refs
-│  │  └─ README.md                                # Data provenance + why it’s safe to publish
-│  │
-│  └─ scripts/                                    # Shared helper scripts (portable, policy-safe)
-│     ├─ require_tools.sh                         # Checks required CLIs exist (jq, curl, etc.) (optional)
-│     ├─ hash_tree.sh                             # Computes sha256 digests for a folder (deterministic ordering)
-│     ├─ normalize_json.sh                        # Canonicalizes JSON for diffs (sort keys, strip volatile fields)
-│     ├─ normalize_geojson.sh                     # Normalizes GeoJSON (ordering, precision) for diffs
-│     ├─ redact_logs.sh                           # Scrubs obvious secrets/PII patterns from logs (best-effort)
-│     ├─ assert_no_secrets.sh                     # Fails if secrets-like patterns found in tracked files
-│     ├─ assert_no_sensitive_coords.sh            # Fails if restricted coord patterns appear in public examples
-│     └─ README.md                                # Script contracts + expected outputs
+├─ _shared/                                       # Shared tiny fixtures and helpers (optional, high leverage)
+│  ├─ README.md                                   # Safety constraints for shared assets
+│  ├─ data/                                       # Tiny synthetic datasets (NO sensitive coords)
+│  └─ scripts/                                    # Hashing/normalization/secret-scan helpers
 │
-├─ api-feature-query/                             # Example: use governed API + evidence resolver (NO bypass)
-│  ├─ README.md
-│  ├─ kfm.example.yaml
-│  ├─ run.sh
-│  ├─ verify.sh
-│  ├─ src/
-│  ├─ data/
-│  ├─ outputs/
-│  └─ evidence/
-│
-├─ pipe-validate-and-promote-toy/                 # Example: toy pipeline → QA → promotion artifacts (no prod publish)
-│  ├─ README.md
-│  ├─ kfm.example.yaml
-│  ├─ run.sh
-│  ├─ verify.sh
-│  ├─ src/
-│  ├─ data/
-│  ├─ outputs/
-│  └─ evidence/
-│
-└─ ui-story-node-minimal/                         # Example: minimal Story Node + view_state + citations
-   ├─ README.md
-   ├─ kfm.example.yaml
-   ├─ run.sh
-   ├─ verify.sh
-   ├─ src/
-   ├─ outputs/
-   └─ evidence/
+├─ api-feature-query/
+├─ pipe-validate-and-promote-toy/
+└─ ui-story-node-minimal/
 ```
 
 </details>
@@ -706,12 +617,12 @@ examples/                                         # End-to-end examples (small, 
 
 ## CI gates
 
-Examples are only valuable if they don’t rot. Treat example validation as merge gates.
+Examples only pay off if they don’t rot. Treat example validation as merge gates.
 
-Recommended CI checks (PROPOSED):
-- **Example manifest lint:** validate `kfm.example.yaml` shape + controlled vocab use
-- **Policy fixture tests:** validate allow/deny + obligations using the same policy semantics as runtime
-- **Secret scan:** block secrets in examples (scripts, docs, receipts)
+Recommended CI checks (**PROPOSED**, align with your workflows):
+- **Manifest lint:** validate `kfm.example.yaml` + controlled vocab
+- **Policy fixture tests:** allow/deny + obligations using same semantics as runtime
+- **Secret scan:** block secrets in scripts/docs/receipts
 - **Size limits:** block large files and accidental binaries
 - **License/sensitivity lint:** require license + sensitivity for all inputs
 - **Catalog validators + linkcheck:** validate DCAT/STAC/PROV + cross-links
@@ -722,7 +633,7 @@ Recommended CI checks (PROPOSED):
 
 > [!IMPORTANT]
 > Anti-skip rule: required gates must not be bypassable via path filters or `if:` conditions.
-> Prefer a “gate summary” check as the required status check.
+> Prefer a “gate summary” job as the required status check.
 
 <p align="right"><a href="#top">Back to top ↑</a></p>
 
