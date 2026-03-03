@@ -2,7 +2,7 @@
 doc_id: kfm://doc/7d0ae54f-92cf-4df0-ba76-42fbc811c788
 title: configs/ — Configuration templates
 type: standard
-version: v1
+version: v2
 status: draft
 owners: TBD
 created: 2026-03-03
@@ -15,201 +15,292 @@ related:
 tags: [kfm, configs]
 notes:
   - Directory README for configuration templates (.env templates, pipeline/UI configs, non-secret deploy configs).
-  - Evidence discipline: claims are tagged Confirmed / Proposed / Unknown.
+  - Evidence discipline: every meaningful claim is tagged CONFIRMED / PROPOSED / UNKNOWN.
 [/KFM_META_BLOCK_V2] -->
 
 <div align="center">
 
 # ⚙️ `configs/`
-Configuration templates for KFM (environment, pipelines, UI, and non-secret deployment config)
 
-**Status:** Draft • **Owners:** TBD
+Configuration templates for KFM (environment, pipelines, UI, and non-secret deployment config)
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
 ![Scope](https://img.shields.io/badge/scope-configs-blue)
 ![Governance](https://img.shields.io/badge/governance-fail--closed-black)
-![Trust membrane](https://img.shields.io/badge/access-governed%20API%20only-black)
+![Trust%20membrane](https://img.shields.io/badge/trust%20membrane-PEP%20required-black)
 ![CI](https://img.shields.io/badge/ci-TODO-lightgrey)
 
 </div>
 
-## Navigation
-- [Overview](#overview)
-- [Where this fits](#where-this-fits)
-- [What belongs here](#what-belongs-here)
-- [What must not go here](#what-must-not-go-here)
-- [Directory layout](#directory-layout)
-- [How configs flow](#how-configs-flow)
-- [Conventions](#conventions)
-- [Validation and CI hooks](#validation-and-ci-hooks)
-- [Examples](#examples)
-- [Unknowns and verification steps](#unknowns-and-verification-steps)
+> **IMPACT (read this first)**
+> - **Status:** draft (design contract; safe defaults)
+> - **Owners:** **TBD** (add CODEOWNERS entry for `configs/**`)
+> - **Policy posture:** **default-deny, fail-closed**
+> - **This directory contains:** **templates + defaults** (reviewable, non-secret)
+> - **This directory must never contain:** secrets / credentials / private keys
+> - **Non-negotiable invariant:** clients/UI **must not** use config to bypass governed APIs (trust membrane)
+
+**Quick links:** [Scope](#scope) · [Where it fits](#where-it-fits) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Validation matrix](#validation-matrix) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
-## Overview
+## Scope
 
-**Evidence tags used in this README**
+### Evidence tags used in this README
+- **CONFIRMED** — Supported by KFM’s documented architecture/governance (or existing repo artifacts explicitly referenced in KFM docs).
+- **PROPOSED** — Recommended convention (safe default) but not verified against the live repo.
+- **UNKNOWN** — Not verified here; includes minimal steps to confirm.
 
-- **[Confirmed]** Supported by KFM design/briefing documents.
-- **[Proposed]** A recommended convention (safe default) but not guaranteed to match current repo state.
-- **[Unknown]** Not verified here; includes minimal steps to confirm.
+### What `configs/` is
+- **CONFIRMED:** `configs/` is intended for **configuration templates** (environment, pipeline, UI) and **non-secret** deployment config such as ConfigMaps.  
+- **CONFIRMED:** Config belongs to the governed system boundary: it must not weaken policy enforcement or enable bypass paths.
 
-**What `configs/` is**
+> [!CAUTION]
+> **CONFIRMED (trust membrane):** clients and UI must never access storage/DB directly; all access must cross the governed API / policy enforcement point (PEP).  
+> Any config that enables direct-to-store behavior is invalid by definition.
 
-- **[Confirmed]** A home for configuration templates: environment, pipelines, and UI configs, including `.env` templates, pipeline configs, and Kubernetes ConfigMaps.  
-- **[Confirmed]** The repo uses JSON/YAML configs for behavior (example: `configs/ui/story/rendering.json` for UI story rendering/behavior).
-
-> [!NOTE]
-> **[Confirmed] Trust membrane rule:** configs must not enable “direct-to-store” access from clients/UI. Client access is expected to go through the governed API (policy enforcement point).  
-> If a config would bypass policy evaluation, it’s invalid by definition.
-
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
 
 ---
 
 ## Where this fits
 
-- **[Confirmed]** `configs/` is a top-level directory alongside `contracts/`, `policy/`, `data/`, `apps/`, `packages/`, `infra/`, etc.
-- **[Proposed]** `configs/` should remain **templates + defaults**; environment-specific *instances* should live in deployment tooling (e.g., CI secrets, K8s Secrets, Vault) or as local, uncommitted overrides.
+- **CONFIRMED:** `configs/` is a top-level area in the repo design alongside `contracts/`, `policy/`, `apps/`, `packages/`, `infra/`, etc.
+- **PROPOSED:** Treat `configs/` as **repo-tracked templates**. Environment-specific instances should be assembled outside git (CI variables, Secret managers, K8s Secrets, Vault) or via gitignored local overrides.
 
-[Back to top](#navigation)
+**Related areas (jump points)**
+- `../contracts/` — schemas/contracts referenced by configs (**PROPOSED** until verified)
+- `../policy/` — policy rules that must not be bypassed (**CONFIRMED** as an invariant)
+- `../docs/` — architecture + runbooks that explain expected behavior (**PROPOSED** paths; verify exact docs)
+
+[Back to top](#⚙️-configs)
 
 ---
 
-## What belongs here
+## Inputs
 
-Use `configs/` for **repo-tracked**, reviewable configuration that is safe to publish and safe to validate.
+Use `configs/` for **repo-tracked**, reviewable configuration that is safe to store and safe to validate.
 
-### Accepted inputs
-- **[Confirmed]** `.env` template files (examples / defaults).
-- **[Confirmed]** Pipeline configuration files (run specs, lane configs, or similar).
-- **[Confirmed]** Kubernetes ConfigMap-style configs (non-secret values).
-- **[Confirmed]** UI configuration files (JSON/YAML) that affect rendering, story behavior, feature display, etc.
+### Acceptable inputs
+- **CONFIRMED:** `.env` template files (examples / defaults).
+- **CONFIRMED:** pipeline configuration files (run specs, lane configs, schedules) — *templates, not secrets*.
+- **CONFIRMED:** Kubernetes ConfigMap-style configs (non-secret values).
+- **CONFIRMED:** UI configuration files (JSON/YAML) that affect rendering, story behavior, feature flags, etc.  
+  - **CONFIRMED:** an example UI config path referenced in KFM docs is `configs/ui/story/rendering.json`.
 
 ### Recommended inputs
-- **[Proposed]** JSON Schema and/or OpenAPI references for config validation (or pointers to `contracts/`).
-- **[Proposed]** Versioned config documents (include `schema_version` or `config_version`).
-- **[Proposed]** “Policy posture” flags where relevant (e.g., `default_deny: true`, or explicit “fail closed” toggles).
+- **PROPOSED:** versioned config documents (include `config_version` and `schema_ref`).
+- **PROPOSED:** explicit “policy posture” flags where relevant (e.g., `default_deny: true` for UI toggles that influence access).
+- **PROPOSED:** human ownership + review fields (e.g., `owner`, `last_reviewed`) for operational configs.
 
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
 
 ---
 
-## What must not go here
+## Exclusions
 
-- **[Proposed]** Secrets, API keys, private tokens, database passwords, private endpoints, or any credential material.  
-  - Use: secret manager, CI protected variables, K8s Secrets, or `.env.local` (gitignored).
-- **[Proposed]** Personal data (PII), restricted coordinates, or any sensitive payloads.
-- **[Proposed]** Generated artifacts (tiles, catalogs, run receipts, provenance bundles). Those belong in lifecycle zones (`data/` and/or release artifacts), not configuration.
+- **CONFIRMED (project security baseline):** No secrets in the repo.
+- **PROPOSED:** Do **not** store API keys, private tokens, DB passwords, client secrets, KMS material, or private endpoints that function as credentials.
+  - Use secret manager, CI protected variables, K8s Secrets, or `.env.local` (gitignored).
+- **PROPOSED:** No personal data (PII) or sensitive payloads.
+- **PROPOSED:** No generated artifacts (tiles, catalogs, run receipts, provenance bundles). Those belong in lifecycle zones (`data/**`) and/or release artifacts, not configuration.
 
 > [!WARNING]
-> **[Confirmed] Fail-closed mindset:** if a required config is missing, malformed, or violates policy assumptions, the correct behavior is to *block* the action (build/deploy/publish), not to guess defaults.
+> **CONFIRMED fail-closed:** if required config is missing, malformed, or violates invariants, the correct behavior is to **block** the action (build/deploy/publish), not to guess defaults.
 
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
 
 ---
 
-## Directory layout
+## Directory tree
 
-**[Unknown]** The exact sub-tree under `configs/` depends on the current repo state. Below is an **intended** layout that keeps templates organized.
+**UNKNOWN:** the exact `configs/` subtree must be verified against the live repo. The structure below is the **PROPOSED target layout**.
 
 ```text
 configs/
-  env/                       # [Proposed] .env templates and environment overlays
-    .env.example             # [Proposed] copy to .env.local (gitignored)
-  pipelines/                  # [Proposed] pipeline run specs and lane configs
-    spec.json                 # [Proposed] deterministic spec-hash input (if used)
-  ui/                         # [Proposed] UI runtime config (rendering, layers, stories)
+  env/                        # PROPOSED: .env templates and non-secret overlays
+    .env.example              # PROPOSED: copy to .env.local (gitignored)
+  pipelines/                  # PROPOSED: pipeline specs (deterministic inputs)
+    README.md                 # PROPOSED: what consumes these specs
+    spec.json                 # PROPOSED: canonical spec hashed for receipts
+  ui/                         # PROPOSED: UI runtime configs (rendering, layers, stories)
     story/
-      rendering.json          # [Confirmed] example UI behavior config path
-  k8s/                        # [Proposed] ConfigMap templates (non-secret)
-    app-configmap.yaml        # [Proposed]
+      rendering.json          # CONFIRMED (example path referenced in KFM docs)
+  k8s/                        # PROPOSED: ConfigMap templates (non-secret)
+    app-configmap.yaml        # PROPOSED
 ```
 
-**[Unknown] Minimum verification step:** run `tree configs/` and confirm what exists before moving files.
+**Minimum verification step (run locally):**
+```bash
+tree -L 4 configs/
+```
 
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
 
 ---
 
-## How configs flow
+## Quickstart
+
+> These commands are “safe defaults” and **do not assume** special repo tooling exists.
+
+1) **Create a local env instance from a template** (**PROPOSED paths**)
+```bash
+cp configs/env/.env.example .env.local
+```
+
+2) **Validate JSON configs for basic syntax** (**PROPOSED**)  
+```bash
+python -m json.tool < configs/ui/story/rendering.json > /dev/null
+```
+
+3) **(Optional) validate YAML configs if you have `yq` installed** (**PROPOSED**)  
+```bash
+yq '.' configs/k8s/app-configmap.yaml > /dev/null
+```
+
+4) **Wire your service to read templates + overrides** (**PROPOSED**)  
+- Defaults: `configs/**`
+- Overrides: `.env.local`, `configs/**.local`, or deployment-time injected config
+
+[Back to top](#⚙️-configs)
+
+---
+
+## Usage
+
+### Template vs instance
+- **PROPOSED:** The repo contains **templates/defaults** only.
+- **PROPOSED:** Local dev instances should be `.env.local` / `.env.dev.local` (gitignored).
+- **PROPOSED:** Production instances should be assembled by deployment tooling (CI + infra) and never committed.
+
+### Naming and intent
+- **PROPOSED:** Use names that encode scope and safety:
+  - `*.example` for copy-as-start templates
+  - `dev.*`, `staging.*`, `prod.*` overlays only if they are **non-secret**
+  - `*.schema.json` lives under `contracts/` (configs reference schemas, they don’t define them)
+
+### Version fields (recommended)
+- **PROPOSED:** Each major config file should include:
+  - `config_version`
+  - `schema_ref` (relative path into `contracts/`)
+  - `owner` (team/handle)
+  - `last_reviewed` (ISO date)
+
+### Configs must not pierce the trust membrane
+- **CONFIRMED:** UI config cannot enable direct DB/storage access.  
+- **PROPOSED enforcement:** add CI rules that reject configs containing raw DB URLs, direct object-store endpoints for clients, or “bypass policy” flags.
+
+[Back to top](#⚙️-configs)
+
+---
+
+## Diagram
 
 ```mermaid
 flowchart LR
   cfg[configs templates] --> build[build and runtime]
   build --> ui[Map and Story UI]
-  build --> pep[Governed API policy enforcement point]
-  ui --> pep
-  pep --> policy[Policy engine]
-  pep --> stores[Stores and indexes]
-  pep --> cats[Catalogs and evidence]
+  build --> api[Governed API PEP]
+  ui --> api
+  api --> pol[Policy engine]
+  api --> stores[Stores and indexes]
+  api --> cats[Catalogs and evidence]
 ```
 
-- **[Confirmed]** UI should call the governed API; it should not call storage or databases directly.  
-- **[Proposed]** Treat config changes like code changes: PR review, schema checks, policy checks, and reproducible defaults.
+- **CONFIRMED:** clients/UI call the governed API (PEP); they do not call stores directly.
+- **PROPOSED:** treat config changes like code: PR review + schema checks + policy checks + rollback plan.
 
-[Back to top](#navigation)
-
----
-
-## Conventions
-
-### 1) Template vs instance
-- **[Proposed]** Repo contains **templates** only (examples, defaults, non-secret deploy config).
-- **[Proposed]** Local dev instances should be `.env.local` / `.env.dev.local` (gitignored).
-- **[Proposed]** Production instances should be assembled by deployment tooling (CI + infra).
-
-### 2) Naming and intent
-- **[Proposed]** Prefer names that encode scope:
-  - `*.example` for copy-as-start templates
-  - `*.schema.json` only under `contracts/` (or referenced from `configs/`)
-  - `dev.*`, `staging.*`, `prod.*` overlays only if they are non-secret
-
-### 3) Version fields
-- **[Proposed]** Each major config file should include:
-  - `config_version`
-  - `schema_ref` (relative path into `contracts/`)
-  - `last_reviewed` (date)
-  - `owner` (team or handle)
-
-### 4) Evidence discipline in configs
-- **[Proposed]** If a config encodes domain claims (e.g., thresholds, allowlists), add a comment header:
-  - `confirmed_source:` (doc ID, ADR, ticket)
-  - `risk_if_wrong:` short statement
-  - `verification:` command(s) to validate
-
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
 
 ---
 
-## Validation and CI hooks
+## Validation matrix
 
-- **[Confirmed]** Governance and promotion checks are expected to be **fail closed** when gates/policy are missing.  
-- **[Proposed]** Add (or keep) a CI job that:
-  - Validates JSON/YAML syntax for `configs/**`
-  - Validates against JSON Schemas (when available)
-  - Runs Conftest/OPA rules for known invariants (e.g., “no direct store endpoints in UI configs”)
+| Config class | Examples | Who consumes it | Validation surface | Posture |
+|---|---|---|---|---|
+| Env templates | `configs/env/.env.example` | API/UI/pipelines | lint + “no secrets” scan (**PROPOSED**) | fail-closed |
+| Pipeline specs | `configs/pipelines/spec.json` | orchestrator/runner | schema + spec-hash determinism (**PROPOSED**) | fail-closed |
+| UI runtime config | `configs/ui/**.json` | UI at runtime | schema + “no bypass” policy (**PROPOSED**) | default-deny |
+| K8s ConfigMaps | `configs/k8s/*.yaml` | infra | YAML validity + policy rules (**PROPOSED**) | fail-closed |
 
-### Definition of Done for a new config file
-- [ ] **[Proposed]** File is non-secret and safe to publish.
-- [ ] **[Proposed]** File is validated (schema or typed loader + unit test).
-- [ ] **[Proposed]** Default behavior is safe (deny-by-default when relevant).
-- [ ] **[Proposed]** Consumer documented (which service reads it, and how).
-- [ ] **[Proposed]** Rollback story: “revert config commit” or “switch config version”.
+> **UNKNOWN:** actual validators and schemas must be confirmed in-repo.
 
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
 
 ---
 
-## Examples
+## Definition of done
 
-> These examples are **templates**. Adjust keys to match your actual loaders/schemas.
+### DoD for a new config file (minimum)
+- [ ] **PROPOSED:** Non-secret and safe to publish.
+- [ ] **PROPOSED:** Has a schema (or typed loader + unit test) and passes validation in CI.
+- [ ] **PROPOSED:** Default behavior is safe (deny-by-default when relevant).
+- [ ] **PROPOSED:** Consumer documented (which service reads it, and how).
+- [ ] **PROPOSED:** Rollback story is explicit (revert commit / pin previous config version).
+
+### DoD for config changes that affect access control
+- [ ] **CONFIRMED:** Does not weaken the trust membrane (no direct store paths; policy still enforced).
+- [ ] **PROPOSED:** Includes/updates a policy test or conftest rule that prevents regression.
+
+[Back to top](#⚙️-configs)
+
+---
+
+## FAQ
+
+**Where do secrets go?**  
+- **CONFIRMED:** not in git.  
+- **PROPOSED:** use CI secrets, K8s Secrets, Vault, or `.env.local` (gitignored).
+
+**Can UI config include endpoints?**  
+- **CONFIRMED:** only endpoints that route through governed APIs.  
+- **PROPOSED:** treat any “direct-to-store” endpoint as a policy violation and block in CI.
+
+**Why so strict about “fail closed”?**  
+- **CONFIRMED:** KFM’s governance model depends on deterministic behavior and policy enforcement; missing or invalid config must not silently change outcomes.
+
+[Back to top](#⚙️-configs)
+
+---
+
+## Appendix
+
+<details>
+<summary><strong>UNKNOWNs and minimal verification steps</strong></summary>
+
+1) **UNKNOWN: Actual `configs/` subdirectories and filenames**  
+   Verify:
+   ```bash
+   find configs -maxdepth 4 -type f -print
+   ```
+
+2) **UNKNOWN: Which config schemas exist (if any)**  
+   Verify:
+   ```bash
+   find contracts -maxdepth 6 -name "*.schema.json" -print
+   ```
+
+3) **UNKNOWN: Which services load which configs**  
+   Verify:
+   ```bash
+   rg -n "configs/" apps packages src
+   ```
+
+4) **UNKNOWN: Current CI validation coverage for `configs/**`**  
+   Verify:
+   ```bash
+   ls .github/workflows
+   rg -n "configs/" .github/workflows
+   ```
+
+</details>
+
+<details>
+<summary><strong>Example templates</strong></summary>
 
 ### `.env` template (example)
-
 ```dotenv
-# .env.example  (template only — do not commit secrets)
+# configs/env/.env.example  (template only — do not commit secrets)
 KFM_ENV=dev
 KFM_LOG_LEVEL=info
 
@@ -218,7 +309,6 @@ KFM_API_BASE_URL=http://localhost:8000
 ```
 
 ### UI story rendering config (skeleton)
-
 ```json
 {
   "config_version": "v1",
@@ -233,7 +323,6 @@ KFM_API_BASE_URL=http://localhost:8000
 ```
 
 ### Kubernetes ConfigMap template (non-secret)
-
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -244,27 +333,6 @@ data:
   KFM_LOG_LEVEL: "info"
 ```
 
-[Back to top](#navigation)
+</details>
 
----
-
-## Unknowns and verification steps
-
-These items are intentionally marked **Unknown** until verified against the live repo:
-
-1) **[Unknown] Actual `configs/` subdirectories and filenames**  
-   **Verify:** `find configs -maxdepth 3 -type f -print`
-
-2) **[Unknown] Which config schemas exist (if any)**  
-   **Verify:** `find contracts -maxdepth 4 -name "*config*.schema.json" -o -name "*schema*.json"`
-
-3) **[Unknown] Which services load which configs**  
-   **Verify:** search for `configs/` references: `rg "configs/" -n apps packages`
-
-4) **[Unknown] Current CI validation coverage for `configs/**`**  
-   **Verify:** inspect workflows: `ls .github/workflows` and look for schema/conftest steps.
-
-> [!TIP]
-> Keep changes small and reversible: add one config + one loader + one validator + one test per PR.
-
-[Back to top](#navigation)
+[Back to top](#⚙️-configs)
