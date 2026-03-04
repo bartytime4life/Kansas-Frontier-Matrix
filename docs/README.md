@@ -213,18 +213,33 @@ This README defines the **target, “encompass-all-things”** documentation lay
 
 ```text
 docs/
-  README.md                      # this file (docs hub)
+  README.md                      # docs hub (index + rules + "where docs fit")
 
-  MASTER_GUIDE_v13.md            # canonical overview + doc map
-  glossary.md                    # domain vocabulary
+  MASTER_GUIDE_v13.md            # canonical overview + doc map (MUST exist if referenced)
+  glossary.md                    # domain vocabulary (single source of truth)
 
-  architecture/                  # blueprints + diagrams + subsystem contracts
+  adr/                           # Architecture Decision Records (canonical home)
     README.md
-    diagrams/                    # architecture diagrams (Mermaid, SVG, PNG)
-    adr/                         # Architecture Decision Records (or use docs/adr/ if preferred)
-      README.md
+    ADR-0001-template.md
+    ADR-0002-<decision-slug>.md
 
-  standards/                     # standards/profiles + repo conventions
+  architecture/                  # blueprints + invariants + subsystem contracts (human-readable)
+    README.md
+    TRUST_MEMBRANE.md            # invariant: UI -> governed API only; no bypass
+    TRUTH_PATH_LIFECYCLE.md      # invariant: Upstream→RAW→WORK→PROCESSED→CATALOG→PUBLISHED
+    SYSTEM_CONTEXT.md            # “C4 L1” system context narrative
+    DEPLOYMENT_TOPOLOGY.md       # local-first + cloud scale topology
+    interfaces/                  # human-readable subsystem interfaces (PEP, repos, evidence)
+      README.md
+      API_LAYER_CONTRACT.md
+      EVIDENCE_RESOLVER_CONTRACT.md
+      REPOSITORY_LAYER_CONTRACT.md
+    diagrams/                    # architecture diagrams (Mermaid/SVG/PNG)
+      README.md
+    adr/                         # OPTIONAL: if you keep ADRs here, make it a stub pointing to docs/adr/
+      README.md                  # (avoid 2 ADR homes)
+
+  standards/                     # normative standards/profiles + repo conventions (CI-enforced where possible)
     README.md
     KFM_MARKDOWN_WORK_PROTOCOL.md
     KFM_REPO_STRUCTURE_STANDARD.md
@@ -232,26 +247,169 @@ docs/
     KFM_DCAT_PROFILE.md
     KFM_PROV_PROFILE.md
 
-  templates/                     # doc templates (universal doc, story node, contract extension)
+    # Strongly recommended additions (normative standards that need a canonical home):
+    identity/
+      README.md
+      IDENTIFIERS_AND_NAMING.md          # dataset_id, evidence_ref, story_slug, etc.
+      HASHING_AND_DIGESTS.md             # sha256, spec_hash, canonicalization rules
+    policy/
+      README.md
+      POLICY_PACK_STANDARD.md            # how OPA/Rego bundles are structured + tested
+      REGO_V1_MIGRATION.md               # how/when to migrate policies and tests
+    api/
+      README.md
+      API_VERSIONING_AND_ERRORS.md       # error model, pagination, stability guarantees
+    evidence/
+      README.md
+      EVIDENCE_REF_STANDARD.md           # syntax + resolver guarantees
+    catalog/
+      README.md
+      CATALOG_TRIPLET_STANDARD.md        # DCAT+STAC+PROV cross-linking expectations
+    ui/
+      README.md
+      UI_TRUST_SURFACES_STANDARD.md      # what UI may render; citation UX rules; safe defaults
+
+  templates/                     # authoring templates (make “good docs” the path of least resistance)
     README.md
     TEMPLATE__KFM_UNIVERSAL_DOC.md
     TEMPLATE__STORY_NODE_V3.md
     TEMPLATE__API_CONTRACT_EXTENSION.md
+    TEMPLATE__ADR.md
+    TEMPLATE__RUNBOOK.md
+    TEMPLATE__MODEL_CARD.md
+    TEMPLATE__DATASET_ENTRY.md
+    TEMPLATE__RUN_RECEIPT.md
+    TEMPLATE__POLICY_CHANGE.md
 
   governance/                    # governance charter, ethics, sovereignty, review gates
+    README.md
     ROOT_GOVERNANCE.md
     ETHICS.md
     SOVEREIGNTY.md
     REVIEW_GATES.md
+    DATA_CLASSIFICATION.md              # policy labels + handling rules
+    SENSITIVE_LOCATIONS_PLAYBOOK.md     # redaction/generalization rules
+    WAIVERS_AND_EXCEPTIONS.md           # explicit override process + audit requirements
 
-  reports/                       # curated reports; story nodes as published artifacts
-    story_nodes/
-      templates/                 # reusable story patterns, rubrics, checklists
-      draft/                     # WIP story nodes (not published)
-      published/
-        <story_slug>/
-          story.md               # published story node markdown (governed)
-          assets/                # images/data excerpts approved for that story
+  guides/                        # “how do I do X safely?” procedural docs (human-operated)
+    README.md
+    onboarding/
+      README.md
+      DEV_ENV_SETUP.md
+      FIRST_DATASET_WALKTHROUGH.md
+      FIRST_STORY_WALKTHROUGH.md
+    acquisition/
+      README.md
+      CONNECTOR_AUTHORING.md            # how to add a new upstream source connector
+      RAW_INGEST_PLAYBOOK.md
+    pipelines/
+      README.md
+      BUILD_A_PIPELINE_STEP.md
+      PROMOTION_FLOW.md                 # RAW→...→PUBLISHED, with gates and receipts
+    catalogs/
+      README.md
+      EMIT_STAC_DCAT_PROV.md
+      VALIDATE_CATALOGS.md
+    apis/
+      README.md
+      ADD_NEW_ENDPOINT.md               # contract + policy + tests
+      FOCUS_MODE_ENDPOINTS.md
+    policy/
+      README.md
+      WRITE_A_POLICY.md                 # rego patterns + tests
+      DEBUG_POLICY_DENIALS.md
+    observability/
+      README.md
+      TRACE_A_REQUEST.md
+      READ_RUN_RECEIPTS.md
+    ui/
+      README.md
+      RUN_UI_LOCALLY.md
+      STORY_NODE_AUTHORING.md
+    security/
+      README.md
+      SECRETS_AND_OIDC.md
+      THREAT_MODELING_HOWTO.md
+
+  runbooks/                      # “the system is on fire / needs operation” (ops-owned)
+    README.md
+    LOCAL_STACK.md
+    DEPLOY.md
+    BACKUP_RESTORE.md
+    INCIDENT_RESPONSE.md
+    DATA_PROMOTION_RUNBOOK.md
+    POLICY_CHANGE_RUNBOOK.md
+    DR_AND_ROLLBACK.md
+
+  quality/                       # gates, conformance, and test strategy (fail-closed defaults)
+    README.md
+    GATES_DEFINITION_OF_DONE.md         # promotion gates + CI mapping
+    CONTRACT_TESTS.md                   # schemas/contracts/OpenAPI checks
+    DETERMINISM_AND_REPRO.md            # reproducibility expectations + checks
+    PERFORMANCE_SLOS.md                 # API/pipeline SLOs (if applicable)
+    SECURITY_BASELINE.md                # SBOM/vuln scan expectations (doc-level)
+
+  data/                          # data-system documentation (NOT the datasets themselves)
+    README.md
+    DATA_LIFECYCLE.md                   # truth path narrative + “what belongs where”
+    DATASET_REGISTRY.md                 # how dataset entries are structured/validated
+    PROVENANCE_AND_RECEIPTS.md          # what receipts exist, what fields are required
+    LICENSING_AND_ATTRIBUTION.md        # SPDX usage + downstream obligations
+
+  domains/                       # domain-specific docs (hydrology, soils, air, etc.)
+    README.md
+    hydrology/
+      README.md
+      DATA_SOURCES.md
+      PIPELINES.md
+    soils/
+      README.md
+      DATA_SOURCES.md
+      PIPELINES.md
+    air/
+      README.md
+      DATA_SOURCES.md
+      PIPELINES.md
+    hazards/
+      README.md
+      DATA_SOURCES.md
+      PIPELINES.md
+
+  diagrams/                      # shared diagrams (cross-cutting; referenced by many docs)
+    README.md
+    architecture/
+    pipelines/
+    ui/
+    governance/
+    domains/
+
+  investigations/                # sandbox notes + experiments (explicitly not published outputs)
+    README.md
+    <topic>/
+      README.md
+      notes.md
+      artifacts/                 # small, non-sensitive, non-authoritative samples only
+
+  stories/                       # canonical Story Node home (governed narrative artifacts)
+    README.md
+    CODEOWNERS                   # optional: route reviews to approvers
+    _schemas/                    # story pack schemas for CI validation
+    _registry/                   # story index for UI discovery
+    _governance/                 # story-specific governance helpers (optional)
+    _lint/                       # story lint config
+    _shared/                     # shared story utilities
+    _templates/                  # story templates (reusable patterns)
+    draft/                       # WIP (not published)
+    review/                      # under governance review
+    published/                   # immutable published story packs
+      <story_slug>/
+        story.md
+        story.json               # map choreography/state (if used)
+        assets/                  # approved media/data excerpts for that story
+    withdrawn/                   # removed from publish surface (keep audit trail)
+
+  reports/                       # OPTIONAL: generated/curated reports (non-story), or a stub redirect
+    README.md                    # if you keep story nodes elsewhere, make this a redirect to docs/stories
 ```
 
 ### Directory responsibilities (human routing table)
