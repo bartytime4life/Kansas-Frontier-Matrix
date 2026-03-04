@@ -6,20 +6,22 @@ version: v1
 status: draft
 owners: TODO
 created: 2026-03-03
-updated: 2026-03-03
+updated: 2026-03-04
 policy_label: public
 related:
   - kfm://doc/TODO
 tags: [kfm]
 notes:
-  - [Proposed] Directory contract for KFM runnable apps (API/UI/CLI/workers).
+  - [CONFIRMED] Directory contract for KFM runnable apps (API/UI/CLI/workers) aligned to the truth path and trust membrane.
+  - [PROPOSED] CI gates to enforce “no storage bypass” and “cite-or-abstain” at the app boundary.
 [/KFM_META_BLOCK_V2] -->
 
 # apps/
-Runnable services for Kansas Frontier Matrix (KFM): **governed API**, **web UI**, and supporting **workers/CLIs**.
+Runnable services for Kansas Frontier Matrix (KFM): **governed API**, **Map/Story/Focus UI**, and supporting **workers/CLIs**.
 
-> **Status:** draft • **Owners:** `TODO` • **Policy label:** `public`  
-> **Scope:** deployable/runnable apps only — shared logic belongs in `packages/`.
+> **Status:** experimental (docs draft) • **Owners:** `TODO` • **Policy label:** `public`  
+> **Scope:** deployable/runnable apps only — shared logic belongs in `packages/`  
+> **Boundary:** clients (including the UI) do **not** access storage/DB directly; all access crosses the governed API boundary.
 
 ![CI](https://img.shields.io/badge/CI-TODO-lightgrey)
 ![Coverage](https://img.shields.io/badge/coverage-TODO-lightgrey)
@@ -27,21 +29,49 @@ Runnable services for Kansas Frontier Matrix (KFM): **governed API**, **web UI**
 ![SBOM](https://img.shields.io/badge/SBOM-TODO-lightgrey)
 ![Docs](https://img.shields.io/badge/docs-kfm-lightgrey)
 
-**Quick links:** [Scope](#scope) · [Where it fits](#where-it-fits-in-the-repo) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [App contract](#app-contract) · [Architecture invariants](#architecture-invariants) · [Verification gates](#verification-gates) · [Appendix](#appendix)
+**Quick links:** [Scope](#scope) · [Conventions](#conventions) · [Where it fits](#where-it-fits-in-the-repo) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [App contract](#app-contract) · [Architecture invariants](#architecture-invariants) · [Verification gates](#verification-gates) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
 ## Scope
 
-- **[Confirmed]** `apps/` contains **runnable services** (servers, UIs, CLIs, workers) — deployable binaries/servers, not shared libraries.
-- **[Confirmed]** KFM’s core enforcement model is the **trust membrane**: clients (including the UI) do **not** access storage directly; all access crosses the governed API boundary and is policy-evaluated.
-- **[Confirmed]** KFM’s lifecycle model is the **truth path** (Upstream → RAW → WORK/Quarantine → PROCESSED → CATALOG → PUBLISHED). Apps should only serve **PUBLISHED** surfaces.
+- **[CONFIRMED]** `apps/` contains **runnable services** (servers, UIs, CLIs, workers) — deployable binaries/servers, not shared libraries.
+- **[CONFIRMED]** KFM’s enforcement boundary is the **trust membrane**: clients never access storage/DB directly; policy is evaluated at the governed API boundary.
+- **[CONFIRMED]** KFM’s lifecycle is a **truth path** with zones and gates:  
+  `Upstream → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → projections → governed API → UI`  
+  Apps must not bypass promotion gates; runtime surfaces serve **promoted** dataset versions only.
+
+### Truth path and trust membrane reference
+
+```mermaid
+flowchart LR
+  Up[Upstream] --> Raw[RAW]
+  Raw --> Work[WORK and Quarantine]
+  Work --> Proc[PROCESSED]
+  Proc --> Trip[CATALOG Triplet]
+  Trip --> Proj[Projections]
+  Proj --> API[Governed API]
+  API --> UI[UI Surfaces]
+```
+
+> IMPORTANT: This README defines **contracts** and **gates**. It is not proof that every app exists or is implemented.
+
+[Back to top](#apps)
+
+---
+
+## Conventions
 
 ### Evidence tags used in this README
 
-- **[Confirmed]** A statement is supported by KFM design documents and is treated as a requirement.
-- **[Proposed]** A statement is a recommended repo convention or implementation detail.
-- **[Unknown]** A statement is intentionally not asserted as fact. It includes a minimal **Verify** step.
+- **[CONFIRMED]** Supported by KFM design/governance documents and treated as a requirement.
+- **[PROPOSED]** Recommended repo convention or implementation detail.
+- **[UNKNOWN]** Intentionally not asserted. Includes the smallest verification step(s).
+
+### Normative language
+
+- **MUST / MUST NOT** = merge-blocking requirement.
+- **SHOULD** = recommended default; deviation requires rationale in PR.
 
 [Back to top](#apps)
 
@@ -49,14 +79,18 @@ Runnable services for Kansas Frontier Matrix (KFM): **governed API**, **web UI**
 
 ## Where it fits in the repo
 
-- **[Confirmed]** `apps/` composes shared modules and contracts; it should stay thin.
-- **[Confirmed]** The KFM “layers” are intentionally separated so policy and provenance can be enforced consistently:
-  - `contracts/` — OpenAPI + JSON Schemas + controlled vocab
-  - `policy/` — OPA/Rego policies + fixtures + tests
-  - `packages/` — shared modules (catalog, evidence resolver, policy adapters, domain logic)
-  - `data/` — registry entries + zone artifacts + catalogs (triplet)
-  - `apps/` — runnable surfaces (API/UI/CLI/workers)
-  - `infra/` — deploy and ops
+- **[CONFIRMED]** `apps/` composes shared modules and contracts; it should stay thin.
+- **[CONFIRMED]** Core rule: domain logic must not talk directly to infrastructure; it talks through interfaces (repositories/adapters).
+
+### Related top-level directories
+
+- `contracts/` — OpenAPI + JSON Schemas + controlled vocabularies
+- `policy/` — OPA/Rego policies + fixtures + policy tests
+- `packages/` — shared modules (catalog, evidence resolver, policy adapters, domain logic)
+- `data/` — zone artifacts + registry entries + catalogs (DCAT/STAC/PROV + receipts)
+- `infra/` — deploy and ops (Kubernetes/Terraform/GitOps, dashboards)
+- `docs/` — architecture docs, runbooks, ADRs, templates
+- `tools/` — validators, link checkers, developer utilities
 
 ### Reference wiring
 
@@ -66,19 +100,13 @@ flowchart TD
   CLI[apps cli] --> API
   W[apps workers] --> API
 
-  API --> P[policy pack]
-  API --> E[evidence resolver]
-  API --> C[catalog triplet readers]
+  API --> POL[policy engine]
+  API --> EV[evidence resolver]
+  API --> CAT[catalog triplet readers]
 
-  API --> R[repositories adapters]
-  R --> S[stores and projections]
-
-  P --> API
-  E --> API
-  C --> API
+  API --> REP[repository interfaces]
+  REP --> STO[stores and projections]
 ```
-
-> IMPORTANT: This diagram is a **contract**, not proof of implementation.
 
 [Back to top](#apps)
 
@@ -86,18 +114,19 @@ flowchart TD
 
 ## Acceptable inputs
 
-- **[Confirmed]** App wiring and runtime concerns:
+- **[CONFIRMED]** App wiring and runtime concerns:
   - HTTP handlers, UI route shells, job runners, configuration loading
-  - authentication/authorization entrypoints (AuthN/AuthZ) at the API boundary
+  - authentication/authorization entrypoints at the API boundary
   - observability wiring (logs/metrics/traces), health checks, and runbooks
-- **[Proposed]** Per-app deploy artifacts (Dockerfile/Helm values) when repo conventions allow.
+- **[PROPOSED]** Per-app deploy artifacts (Dockerfile/Helm values) when repo conventions allow.
+- **[PROPOSED]** App-specific integration tests (contract + policy + “no bypass” checks).
 
 ## Exclusions
 
-- **[Confirmed]** Shared business logic → `packages/`
-- **[Confirmed]** API contracts + schemas → `contracts/`
-- **[Confirmed]** Policy packs + fixtures + policy tests → `policy/`
-- **[Confirmed]** Data artifacts + catalogs + registries → `data/` (and zoned storage)
+- **[CONFIRMED]** Shared business logic → `packages/`
+- **[CONFIRMED]** API contracts + schemas → `contracts/`
+- **[CONFIRMED]** Policy packs + fixtures + policy tests → `policy/`
+- **[CONFIRMED]** Data artifacts + catalogs + receipts → `data/` (and zoned storage)
 
 [Back to top](#apps)
 
@@ -105,18 +134,18 @@ flowchart TD
 
 ## Directory tree
 
-- **[Unknown]** The exact set of sub-apps under `apps/` depends on branch/release.
+- **[UNKNOWN]** The exact set of sub-apps under `apps/` depends on the repo branch/release.
   - **Verify:** `tree -L 2 apps` (or `ls -la apps`).
 
-Reference layout (target shape):
+Target shape (documented intent; verify existence):
 
 ```text
 apps/
-├─ api/        # [Unknown] Verify existence; [Confirmed] role is the governed API/PEP
-├─ ui/         # [Unknown] Verify existence; [Confirmed] role is Map/Story/Focus UI
-├─ cli/        # [Unknown] Verify existence; [Confirmed] role is operator/developer tooling
-├─ workers/    # [Unknown] Verify existence; [Proposed] background jobs and async processors
-└─ README.md   # This file
+├─ api/        # governed API boundary (Policy Enforcement Point)
+├─ ui/         # Map/Story/Focus UI
+├─ cli/        # operator/developer tooling
+├─ workers/    # background jobs and async processors
+└─ README.md   # this file
 ```
 
 [Back to top](#apps)
@@ -125,7 +154,7 @@ apps/
 
 ## Quickstart
 
-Because repo tooling can vary by release, treat the commands below as **discovery-first**.
+Because repo tooling can vary by release, treat these commands as **discovery-first**.
 
 ### 1) Discover how each app is run
 
@@ -133,19 +162,23 @@ Because repo tooling can vary by release, treat the commands below as **discover
 find apps -maxdepth 2 -name README.md -print
 ```
 
-### 2) Identify the app entrypoints
+### 2) Identify app entrypoints
 
-- **[Unknown]** Node/TS apps entrypoints
-  - **Verify:** `find apps -maxdepth 3 -name package.json -print`
-- **[Unknown]** Python apps entrypoints
-  - **Verify:** `find apps -maxdepth 3 -name pyproject.toml -o -name requirements.txt -print`
+```bash
+# Node/TS apps
+find apps -maxdepth 3 -name package.json -print
 
-### 3) Typical local run (pseudocode)
+# Python apps
+find apps -maxdepth 3 \( -name pyproject.toml -o -name requirements.txt \) -print
+```
+
+### 3) Typical local run
 
 > NOTE: Replace these with the commands documented in each app’s README.
 
 ```bash
-# PSEUDOCODE (verify in each app README)
+# PSEUDOCODE — verify in each app README
+
 # API
 cd apps/api && make dev   # or: uvicorn ... / pnpm dev / docker compose up api
 
@@ -165,22 +198,22 @@ cd apps/cli && ./kfm --help
 
 ## App contract
 
-This section is the **directory contract**: what every runnable app in `apps/` must do (or must not do).
+This is the directory contract: what every runnable app in `apps/` MUST do (or MUST NOT do).
 
 ### App types matrix
 
 | App type | Primary responsibility | MUST do | MUST NOT do |
 |---|---|---|---|
-| **API** (`apps/api`) | Policy Enforcement Point (PEP) + governed endpoints | Policy-evaluate all access; resolve evidence; return policy-safe errors | Bypass policy; return un-resolvable citations; leak restricted existence |
-| **UI** (`apps/ui`) | Map/Story/Focus surfaces | Call governed API only; make trust visible (version, license, policy badge); show evidence drawer | Embed secrets; access DB/object store directly; fetch restricted artifacts from the browser |
-| **Workers** (`apps/workers`) | Index builds, async QA, rebuild projections | Write receipts; respect kill-switch; run deterministic jobs | Mutate canonical truth without receipts; publish directly to UI surfaces |
-| **CLI** (`apps/cli`) | Operator/developer workflows | Enforce AuthZ + audit trail for mutations; produce machine-readable receipts | Provide “god mode” bypass of policy or provenance |
+| **API** (`apps/api`) | Policy enforcement + governed endpoints | Policy-evaluate all access; resolve evidence; serve promoted dataset versions only; emit receipts for governed operations | Bypass policy; return unresolvable citations; leak restricted existence |
+| **UI** (`apps/ui`) | Map/Story/Focus surfaces | Call governed API only; expose trust surfaces (version, license, policy label); show evidence drawer | Embed secrets; access DB/object store directly; fetch restricted artifacts from the browser |
+| **Workers** (`apps/workers`) | Build/rebuild projections; async QA; automation | Produce deterministic outputs; write receipts; respect kill-switches; treat DB/search/tiles as rebuildable | Mutate canonical truth without receipts; publish directly to UI surfaces |
+| **CLI** (`apps/cli`) | Operator/developer workflows | Enforce AuthZ for mutations; produce machine-readable receipts; support least-privilege tokens | Provide “god mode” bypass of policy or provenance |
 
-### Required runtime surfaces (minimum)
+### Required runtime surfaces
 
-- **[Confirmed]** **Health**: `/healthz` and `/readyz` (or equivalents) for services.
-- **[Confirmed]** **Observability**: structured logs; metrics; traces where applicable.
-- **[Confirmed]** **Receipts**: governed operations (Focus queries, publishing, promotions) emit run receipts / audit refs.
+- **[CONFIRMED]** **Health** endpoints for services: `/healthz` and `/readyz` (or equivalent).
+- **[CONFIRMED]** **Observability**: structured logs; metrics; traces where applicable.
+- **[CONFIRMED]** **Receipts**: governed operations (publishing, promotions, Focus queries) emit run receipts / audit refs.
 
 [Back to top](#apps)
 
@@ -188,35 +221,35 @@ This section is the **directory contract**: what every runnable app in `apps/` m
 
 ## Architecture invariants
 
-### 1) Trust membrane is non-negotiable
+### Trust membrane is non-negotiable
 
 > WARNING: Any direct client/UI → DB/object-store access is a policy bypass.
 
-- **[Confirmed]** **Clients and UI never access storage directly.**
-- **[Confirmed]** **Backend logic uses repository interfaces/adapters.**
-- **[Confirmed]** **All reads/writes cross the governed API boundary** where policy, redaction, and audit are enforced.
+- **[CONFIRMED]** Clients and UI never access storage/DB directly.
+- **[CONFIRMED]** Backend logic uses repository interfaces/adapters.
+- **[CONFIRMED]** All reads/writes cross the governed API boundary where policy, redaction obligations, and audit are enforced.
 
-### 2) Fail closed
+### Fail closed
 
-- **[Confirmed]** If policy, evidence resolution, or catalog lookups fail → **deny**, **abstain**, or **narrow scope**.
-- **[Confirmed]** Focus Mode and Story publish flows require **resolvable citations**; otherwise they abstain or fail.
+- **[CONFIRMED]** If policy, evidence resolution, or catalog lookups fail → deny, abstain, or narrow scope.
+- **[CONFIRMED]** Story publish and Focus Mode require resolvable citations; otherwise they abstain or fail.
 
-### 3) Truth path alignment
+### Canonical truth vs projections
 
-- **[Confirmed]** Apps should only serve **PUBLISHED** surfaces.
-- **[Confirmed]** Canonical truth is the object store + catalogs + provenance; DB/search/graph/tiles are **rebuildable projections**.
+- **[CONFIRMED]** Canonical truth = object storage + catalogs + provenance/receipts.
+- **[CONFIRMED]** PostGIS/search/graph/tiles are rebuildable projections and must not be treated as the source of truth.
 
-### Reference flow (runtime)
+### Runtime reference flow
 
 ```mermaid
 flowchart TD
   U[User] --> UI[Map Story Focus UI]
-  UI --> API[Governed API PEP]
-  API --> POL[Policy Engine OPA Rego]
+  UI --> API[Governed API]
+  API --> POL[Policy Engine]
   API --> EV[Evidence Resolver]
-  API --> CAT[Catalog triplet DCAT STAC PROV]
-  API --> REP[Repository interfaces]
-  REP --> STO[Stores and projections]
+  API --> CAT[Catalog Triplet]
+  API --> REP[Repository Interfaces]
+  REP --> STO[Stores and Projections]
   API --> UI
 ```
 
@@ -226,10 +259,14 @@ flowchart TD
 
 ## Boundaries and responsibilities
 
-### `apps/api/` — Governed API (PEP)
+### apps api
 
-- **[Confirmed]** The API layer is the **enforcement boundary**: policy decisions, redactions, evidence resolution, consistent error semantics.
-- **[Confirmed]** The blueprint endpoint set includes (illustrative; not proof of implementation):
+- **[CONFIRMED]** The API layer is the enforcement boundary: policy decisions, redactions, evidence resolution, consistent error semantics.
+- **[PROPOSED]** Contract-first implementation:
+  - OpenAPI + schemas live in `contracts/`
+  - CI validates request/response shapes
+  - Runtime validates schema + policy + evidence (fail closed)
+- **[PROPOSED]** Illustrative endpoint set (not proof of implementation):
   - `GET /api/v1/datasets`
   - `GET /api/v1/stac/collections`
   - `GET /api/v1/stac/items`
@@ -239,27 +276,23 @@ flowchart TD
   - `GET /api/v1/lineage/status`
   - `GET /api/v1/lineage/stream`
   - `GET /api/v1/tiles/{layer}/{z}/{x}/{y}.pbf` (optional)
-- **[Proposed]** Contract-first implementation:
-  - OpenAPI + schemas live in `contracts/`
-  - CI validates request/response shapes
-  - Runtime validates schema + policy + evidence (fail closed)
 
-### `apps/ui/` — Map / Story / Focus UI
+### apps ui
 
-- **[Confirmed]** UI trust surfaces are first-class:
+- **[CONFIRMED]** UI trust surfaces are first-class:
   - dataset version + license + policy label per layer/story/answer
   - evidence drawer (shared surface)
   - abstention UX that explains “why” in policy-safe terms
-- **[Proposed]** UI never fetches attestations directly from arbitrary origins; use an API proxy that verifies signatures and strips secrets.
+- **[PROPOSED]** UI must not fetch remote attestations directly from arbitrary origins; proxy through the API that verifies signatures and strips secrets.
 
-### `apps/workers/` — Jobs and rebuilds
+### apps workers
 
-- **[Confirmed]** Workers rebuild **projections** (indexes/tiles/search) from canonical truth.
-- **[Proposed]** Treat rebuild jobs as governed runs: emit receipts and write outputs deterministically.
+- **[CONFIRMED]** Workers rebuild projections (indexes/tiles/search) from canonical truth.
+- **[PROPOSED]** Treat rebuild jobs as governed runs: emit receipts and write outputs deterministically.
 
-### `apps/cli/` — Operator tooling
+### apps cli
 
-- **[Confirmed]** Any CLI that mutates state is governance-sensitive:
+- **[CONFIRMED]** Any CLI that mutates state is governance-sensitive:
   - AuthZ checks
   - policy evaluation
   - append-only audit trail (receipt)
@@ -270,8 +303,8 @@ flowchart TD
 
 ## Adding a new app
 
-- **[Confirmed]** Prefer *small, additive apps* that compose `packages/*` rather than duplicating logic.
-- **[Proposed]** Every new app should include:
+- **[CONFIRMED]** Prefer small, additive apps that compose `packages/*` rather than duplicating logic.
+- **[PROPOSED]** Every new app should include:
   - [ ] `README.md` (purpose, run, config, health)
   - [ ] Clear dependency boundaries (trust membrane enforced)
   - [ ] AuthN/AuthZ tests and policy tests (fail closed)
@@ -289,31 +322,38 @@ Use these checks to turn repo assumptions into verified facts and to prevent pol
 
 ### Minimal verification steps
 
-1) **[Unknown]** Confirm which apps exist.  
+1) **[UNKNOWN]** Confirm which apps exist.  
 **Verify:**
 ```bash
 ls -la apps
 ```
 
-2) **[Unknown]** Confirm each app’s entrypoint + run docs.  
+2) **[UNKNOWN]** Confirm each app’s entrypoint + run docs.  
 **Verify:**
 ```bash
 find apps -maxdepth 2 -name README.md -print
 ```
 
-3) **[Confirmed]** Confirm UI does not call storage directly.  
+3) **[CONFIRMED]** Confirm UI does not call storage directly.  
 **Verify:**
 ```bash
-rg -n "(s3://|gs://|blob\\.core\\.windows\\.net|postgresql://|postgis)" apps/ui || true
+rg -n "(s3://|gs://|blob\\.core\\.windows\\.net|postgres(ql)?://|postgis)" apps/ui || true
 ```
 
-4) **[Confirmed]** Confirm UI calls governed endpoints only.  
+4) **[CONFIRMED]** Confirm UI calls governed endpoints only.  
 **Verify:**
 ```bash
-rg -n "(/api/v1|evidence/resolve|focus/ask|tiles/|stac/)" apps/ui || true
+rg -n "(/api/v1|evidence/resolve|focus/ask|tiles/|stac/|lineage/)" apps/ui || true
 ```
 
-### Merge-blocking checklist (apps baseline)
+5) **[PROPOSED]** Confirm API does not reach storage directly outside repository layer.  
+**Verify:**
+```bash
+rg -n "(boto3|aws-sdk|google-cloud-storage|azure-storage|psycopg|asyncpg|neo4j)" apps/api \
+  | rg -v "packages/.*/repositories|packages/.*/adapters" || true
+```
+
+### Merge-blocking checklist
 
 - [ ] Formatting/lint/typecheck pass
 - [ ] Unit tests pass
@@ -321,7 +361,7 @@ rg -n "(/api/v1|evidence/resolve|focus/ask|tiles/|stac/)" apps/ui || true
 - [ ] Policy tests pass (default-deny; fail-closed)
 - [ ] No direct storage calls from UI (static analysis gate)
 - [ ] Determinism/repro checks (build outputs stable where applicable)
-- [ ] SBOM produced and stored for release artifacts
+- [ ] SBOM produced for release artifacts
 - [ ] AuthN/AuthZ tests cover governed endpoints
 - [ ] Runbook updated for ops-significant changes (with rollback path)
 
@@ -329,25 +369,59 @@ rg -n "(/api/v1|evidence/resolve|focus/ask|tiles/|stac/)" apps/ui || true
 
 ---
 
+## FAQ
+
+### Why can’t the UI call PostGIS or object storage directly?
+Because it bypasses policy, redaction, logging, and evidence resolution. The governed API is the enforcement boundary.
+
+### Can apps read from RAW or WORK zones?
+**[PROPOSED]** As a default: no. Apps should serve only promoted (PUBLISHED) surfaces and treat RAW/WORK as pipeline zones. If an operator workflow needs RAW/WORK, it should be a governed CLI/worker path with explicit receipts and policy.
+
+### Where should shared code go?
+In `packages/`. Apps should stay thin: I/O + composition.
+
+[Back to top](#apps)
+
+---
+
 ## Appendix
 
-### Minimal per-app README template
+<details>
+<summary><strong>Minimal per-app README template</strong></summary>
 
 ```markdown
 # <app-name>
 
-- **[Confirmed/Proposed/Unknown]** Purpose:
-- **[Confirmed/Proposed/Unknown]** Owners:
-- **[Confirmed/Proposed/Unknown]** Policy label:
+- **[CONFIRMED/PROPOSED/UNKNOWN]** Purpose:
+- **[CONFIRMED/PROPOSED/UNKNOWN]** Owners:
+- **[CONFIRMED/PROPOSED/UNKNOWN]** Policy label:
 
 ## Run (local)
 ## Config
-## Health & Observability
-## Security & Governance Notes
+## Health and Observability
+## Security and Governance Notes
 ```
 
-### “Thin app” rule
+</details>
 
-- **[Confirmed]** App code is wiring + I/O. Reusable logic lives in `packages/*`.
+<details>
+<summary><strong>Evidence basis for CONFIRMED invariants</strong></summary>
+
+The following internal KFM design artifacts define the invariants referenced as **[CONFIRMED]** here:
+
+- Truth path lifecycle with zones and gates
+- Trust membrane (no direct client access; API is enforcement boundary)
+- Catalog triplet (DCAT + STAC + PROV) as evidence surface
+- Canonical truth vs rebuildable projections
+- Cite-or-abstain behavior for Focus Mode and publishing flows
+
+</details>
+
+<details>
+<summary><strong>Thin app rule</strong></summary>
+
+- **[CONFIRMED]** App code is wiring + I/O. Reusable logic lives in `packages/*`.
+
+</details>
 
 [Back to top](#apps)
