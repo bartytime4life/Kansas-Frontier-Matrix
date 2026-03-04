@@ -94,19 +94,19 @@ notes:
 
 ```mermaid
 flowchart LR
-  subgraph CI[CI Lane]
-    V[validators + linkcheck] --> R[reports & receipts]
-    R --> P[policy tests (OPA/Conftest)]
+  subgraph CI_LANE["CI Lane"]
+    V["validators + linkcheck"] --> R["reports & receipts"]
+    R --> P["policy tests (OPA/Conftest)"]
   end
 
-  subgraph Runtime[Runtime Lane]
-    UI[UI clients] --> API[Governed API (PEP)]
-    API --> PDP[Policy Engine (OPA/Rego)]
-    API --> ER[Evidence Resolver]
+  subgraph RUNTIME_LANE["Runtime Lane"]
+    UI["UI clients"] --> API["Governed API (PEP)"]
+    API --> PDP["Policy Engine (OPA/Rego)"]
+    API --> ER["Evidence Resolver"]
   end
 
-  CI -->|blocks merge/promotion| Merge[Protected branches / releases]
-  Merge --> Runtime
+  P -->|blocks merge/promotion| Merge["Protected branches / releases"]
+  Merge -->|deploy| API
 ```
 
 [Back to top](#)
