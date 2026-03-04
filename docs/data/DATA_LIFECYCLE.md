@@ -175,38 +175,43 @@ flowchart LR
 > **PROPOSED:** These are “house paths.” If your repo uses different paths, the **semantics** (zones + required artifacts) must still be met.
 
 ```text
-data/
-  registry/
-    sources/                 # dataset onboarding specs (inputs, license, cadence, policy_label)
-  raw/
-    <dataset_id>/<dataset_version_id>/
-      manifest.json
-      artifacts/
-      checksums.txt
-      license_snapshot.txt
-  work/
-    <dataset_id>/<dataset_version_id>/
-      normalized/
-      qa/
-      redaction_candidates/
-    quarantine/
-      <dataset_id>/<dataset_version_id>/
-        failure_reports/
-        steward_notes/
-  processed/
-    <dataset_id>/<dataset_version_id>/
-      artifacts/
-      checksums.txt
-      derived_metadata.json
-  catalog/
-    dcat/<dataset_id>/<dataset_version_id>.jsonld
-    stac/<dataset_id>/collection.json
-    stac/<dataset_id>/<dataset_version_id>/items/
-    prov/<dataset_id>/<dataset_version_id>/prov.bundle.jsonld
-    receipts/<dataset_id>/<dataset_version_id>/run_receipt.json
-  published/
-    releases/
-      <release_id>/manifest.json
+data/                                                   # Data truth-path zones: immutable acquisitions → curated artifacts → catalogs → governed releases (all traceable by receipts/digests)
+├─ registry/
+│  └─ sources/                                          # Dataset onboarding specs (source, license, cadence, owners, default policy_label, required obligations)
+│
+├─ raw/                                                 # RAW zone: immutable source snapshots (as-acquired) + integrity signals
+│  └─ <dataset_id>/<dataset_version_id>/
+│     ├─ manifest.json                                  # Acquisition manifest (source URI(s), query params, timestamps, tool versions, spec_hash, dataset_version_id)
+│     ├─ artifacts/                                     # Raw artifacts (files exactly as obtained; no edits; naming must be deterministic)
+│     ├─ checksums.txt                                  # Checksums/digests for raw artifacts (sha256 list; tamper detection; reproducibility)
+│     └─ license_snapshot.txt                           # License snapshot at time of acquisition (terms/URL/date; supports rights audits)
+│
+├─ work/                                                # WORK zone: staging for normalization/QA/redaction discovery (not publishable)
+│  └─ <dataset_id>/<dataset_version_id>/
+│     ├─ normalized/                                    # Intermediate normalized outputs (schema-aligned staging; may be regenerated)
+│     ├─ qa/                                            # QA reports (schema validation, statistics, anomaly detection, thresholds, links to receipts)
+│     ├─ redaction_candidates/                           # Candidate findings for redaction/generalization (review required; no automatic publish)
+│     └─ quarantine/                                     # Quarantine sub-zone: failures awaiting remediation (fail-closed)
+│        └─ <dataset_id>/<dataset_version_id>/
+│           ├─ failure_reports/                          # Machine-readable failure outputs (why gates failed; reason codes; links to artifacts)
+│           └─ steward_notes/                            # Human remediation notes (decisions, follow-ups, links to waivers/PDRs if any)
+│
+├─ processed/                                           # PROCESSED zone: validated, curated artifacts eligible for cataloging/publishing
+│  └─ <dataset_id>/<dataset_version_id>/
+│     ├─ artifacts/                                     # Curated outputs (normalized/cleaned/generalized as required; deterministic from inputs+spec)
+│     ├─ checksums.txt                                  # Checksums/digests for processed artifacts (sha256 list; must match manifest/receipt references)
+│     └─ derived_metadata.json                           # Derived metadata summary (bounds, counts, time ranges, schema versions; policy-safe fields)
+│
+├─ catalog/                                             # CATALOG zone: discovery + traceability surfaces (DCAT + STAC + PROV + receipts)
+│  ├─ dcat/<dataset_id>/<dataset_version_id>.jsonld      # DCAT dataset/distribution metadata for this version (license/attribution/policy_label links)
+│  ├─ stac/<dataset_id>/collection.json                  # STAC Collection for dataset_id (version pointers, spatial/temporal extents, assets policy)
+│  ├─ stac/<dataset_id>/<dataset_version_id>/items/      # STAC Items for this version (per-asset metadata; links to artifacts/digests/obligations)
+│  ├─ prov/<dataset_id>/<dataset_version_id>/prov.bundle.jsonld  # PROV bundle for lineage (entities/activities/agents; links to raw/processed/receipts)
+│  └─ receipts/<dataset_id>/<dataset_version_id>/run_receipt.json # Run receipt proving how this version was built (inputs/outputs/spec_hash/digests/gates)
+│
+└─ published/                                           # PUBLISHED zone: governed release artifacts surfaced to apps/APIs (labels + obligations applied)
+   └─ releases/
+      └─ <release_id>/manifest.json                      # Release manifest: what shipped (dataset_version_ids, digests, gate results, approvals, obligations)
 ```
 
 ---
