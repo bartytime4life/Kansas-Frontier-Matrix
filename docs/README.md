@@ -248,305 +248,304 @@ This README defines the **target, “encompass-all-things”** documentation lay
 > **[CONFIRMED] Expectation:** Any missing path in this tree is a “docs debt” item (create stubs or adjust links after verification).
 
 ```text
-docs/
-  README.md                      # docs hub (index + rules + "where docs fit")
-
-  MASTER_GUIDE_v13.md            # canonical overview + doc map (MUST exist if referenced)
-  glossary.md                    # domain vocabulary (single source of truth)
-  CHANGELOG.md                   # (PROPOSED) docs-surface change log (optional but useful)
-
-  _registry/                     # (PROPOSED) machine-readable doc/story indices for retrieval
-    README.md
-    docs.index.yml               # doc_id → path/title/status/policy_label/tags
-    docs.index.schema.json       # schema for docs.index.yml (CI validation)
-
-  adr/                           # Architecture Decision Records (canonical home)
-    README.md
-    ADR-0001-template.md
-    ADR-0002-<decision-slug>.md
-
-  architecture/                  # blueprints + invariants + subsystem contracts (human-readable)
-    README.md
-    TRUST_MEMBRANE.md            # invariant: UI -> governed API only; no bypass
-    TRUTH_PATH_LIFECYCLE.md      # invariant: Upstream→RAW→WORK→PROCESSED→CATALOG→PUBLISHED
-    SYSTEM_CONTEXT.md            # “C4 L1” system context narrative
-    DEPLOYMENT_TOPOLOGY.md       # local-first + cloud scale topology
-    interfaces/                  # human-readable subsystem interfaces (PEP, repos, evidence, policy)
-      README.md
-      API_LAYER_CONTRACT.md
-      POLICY_ENGINE_CONTRACT.md
-      EVIDENCE_RESOLVER_CONTRACT.md
-      REPOSITORY_LAYER_CONTRACT.md
-      CATALOG_TRIPLET_CONTRACT.md
-    diagrams/                    # architecture diagrams (Mermaid/SVG/PNG)
-      README.md
-    adr/                         # OPTIONAL: if you keep ADRs here, make it a stub pointing to docs/adr/
-      README.md
-
-  standards/                     # normative standards/profiles + repo conventions (CI-enforced where possible)
-    README.md
-    KFM_MARKDOWN_WORK_PROTOCOL.md
-    KFM_REPO_STRUCTURE_STANDARD.md
-    KFM_STAC_PROFILE.md
-    KFM_DCAT_PROFILE.md
-    KFM_PROV_PROFILE.md
-
-    docs/                        # (PROPOSED) doc-level standards beyond the Markdown protocol
-      README.md
-      DOC_IDS_AND_METADATA.md
-      LINKING_AND_ANCHORS.md
-      DIAGRAMS_STYLE_GUIDE.md
-
-    identity/
-      README.md
-      IDENTIFIERS_AND_NAMING.md          # dataset_id, evidence_ref, story_slug, etc.
-      HASHING_AND_DIGESTS.md             # sha256, spec_hash, canonicalization rules
-
-    policy/
-      README.md
-      POLICY_PACK_STANDARD.md            # bundle structure + tests
-      REGO_V1_MIGRATION.md               # how/when to migrate policies and tests
-
-    api/
-      README.md
-      API_VERSIONING_AND_ERRORS.md       # error model, pagination, stability guarantees
-
-    evidence/
-      README.md
-      EVIDENCE_REF_STANDARD.md           # syntax + resolver guarantees
-
-    catalog/
-      README.md
-      CATALOG_TRIPLET_STANDARD.md        # DCAT+STAC+PROV cross-linking expectations
-
-    geo/                          # (PROPOSED) geospatial formats + CRS + tiling norms
-      README.md
-      CRS_AND_PROJECTIONS.md
-      RASTER_FORMATS_COG.md
-      VECTOR_FORMATS_GEOPARQUET.md
-      TILE_FORMATS_PMTILES.md
-
-    telemetry/                     # (PROPOSED) event naming + schemas + retention rules
-      README.md
-      TELEMETRY_EVENT_NAMING.md
-      PIPELINE_RUN_TELEMETRY.md
-      UI_TELEMETRY.md
-
-    oci/                           # (PROPOSED) publishing artifacts to OCI registries (mediaTypes, referrers, attestations)
-      README.md
-      OCI_GEOSPATIAL_ARTIFACTS.md
-      MEDIA_TYPES_REGISTRY.md
-      DELTA_REFERRERS_STANDARD.md
-
-    supply_chain/                  # (PROPOSED) SBOM, SLSA, signing/verification expectations
-      README.md
-      SBOM_STANDARD.md
-      SLSA_ATTESTATION_STANDARD.md
-      SIGNING_AND_VERIFICATION.md
-
-    ui/
-      README.md
-      UI_TRUST_SURFACES_STANDARD.md      # what UI may render; citation UX rules; safe defaults
-
-    ai/
-      README.md
-      MODEL_CARD_STANDARD.md
-      RAG_RETRIEVAL_STANDARD.md
-      AI_EVAL_AND_REDTEAM_STANDARD.md
-
-    ontology/
-      README.md
-      KFM_ONTOLOGY_PROFILE.md            # graph vocab, mapping rules, time/geo semantics
-
-  templates/                     # authoring templates (make “good docs” the path of least resistance)
-    README.md
-    TEMPLATE__KFM_UNIVERSAL_DOC.md
-    TEMPLATE__STORY_NODE_V3.md
-    TEMPLATE__API_CONTRACT_EXTENSION.md
-    TEMPLATE__ADR.md
-    TEMPLATE__RUNBOOK.md
-    TEMPLATE__MODEL_CARD.md
-    TEMPLATE__DATASET_ENTRY.md
-    TEMPLATE__RUN_RECEIPT.md
-    TEMPLATE__POLICY_CHANGE.md
-    TEMPLATE__COMPONENT_SPEC.md          # (PROPOSED) spec template for docs/specs/*
-
-  governance/                    # governance charter, ethics, sovereignty, review gates
-    README.md
-    ROOT_GOVERNANCE.md
-    ETHICS.md
-    SOVEREIGNTY.md
-    REVIEW_GATES.md
-    DATA_CLASSIFICATION.md              # policy labels + handling rules
-    SENSITIVE_LOCATIONS_PLAYBOOK.md     # redaction/generalization rules
-    WAIVERS_AND_EXCEPTIONS.md           # explicit override process + audit requirements
-    ROLES_AND_RACI.md                   # (PROPOSED) who approves what (explicit)
-
-  specs/                         # (PROPOSED) buildable component specs (versioned, reviewable)
-    README.md
-    agents/                      # watcher/planner/executor patterns; governed automation
-      README.md
-      WATCHER_CONTRACT.md
-      PLANNER_CONTRACT.md
-      EXECUTOR_CONTRACT.md
-    pipelines/                   # pipeline-specific specs (beyond guides)
-      README.md
-      ingestion/                 # connector/pipeline specs (domain or cross-cutting)
-      hydrology/
-      hazards/
-      climate/
-    ui/                          # UI component specs (map/story/focus)
-      README.md
-    storage/                     # storage/distribution specs (object store, OCI, deltas)
-      README.md
-    observability/
-      README.md
-
-  ai/                            # (PROPOSED) AI surfaces: Focus Mode, Ollama, evaluation, safety
-    README.md
-    FOCUS_MODE_OVERVIEW.md
-    OLLAMA_INTEGRATION.md
-    MODEL_CARDS_INDEX.md
-    EVALUATION_AND_BENCHMARKS.md
-
-  knowledge_graph/               # (PROPOSED) Neo4j + ontology + graph ingestion/query patterns
-    README.md
-    GRAPH_DATA_MODEL.md
-    ONTOLOGY_AND_VOCAB.md
-    GRAPH_RAG_PATTERNS.md
-    NEO4J_OPERATIONS.md
-
-  reference/                     # (PROPOSED) indices into machine surfaces (contracts/schemas/policy)
-    README.md
-    OPENAPI_INDEX.md             # maps OpenAPI files → endpoints → owners
-    SCHEMA_REGISTRY.md           # maps JSON schemas → purpose → validators
-    POLICY_BUNDLE_INDEX.md       # maps policy bundles → gates → owners
-    TOOLING_INDEX.md             # validators + linters + how to run
-
-  guides/                        # “how do I do X safely?” procedural docs (human-operated)
-    README.md
-    onboarding/
-      README.md
-      DEV_ENV_SETUP.md
-      FIRST_DATASET_WALKTHROUGH.md
-      FIRST_STORY_WALKTHROUGH.md
-    acquisition/
-      README.md
-      CONNECTOR_AUTHORING.md
-      RAW_INGEST_PLAYBOOK.md
-    geo/                         # (PROPOSED) GIS-centric how-tos (raster/vector/tiling/CRS)
-      README.md
-      VECTOR_ETL_PIPELINES.md
-      RASTER_ETL_PIPELINES.md
-      HYDROLOGY_WORKFLOWS.md
-    pipelines/
-      README.md
-      BUILD_A_PIPELINE_STEP.md
-      PROMOTION_FLOW.md
-    catalogs/
-      README.md
-      EMIT_STAC_DCAT_PROV.md
-      VALIDATE_CATALOGS.md
-    apis/
-      README.md
-      ADD_NEW_ENDPOINT.md
-      FOCUS_MODE_ENDPOINTS.md
-    policy/
-      README.md
-      WRITE_A_POLICY.md
-      DEBUG_POLICY_DENIALS.md
-    observability/
-      README.md
-      TRACE_A_REQUEST.md
-      READ_RUN_RECEIPTS.md
-    ui/
-      README.md
-      RUN_UI_LOCALLY.md
-      STORY_AUTHORING.md
-    security/
-      README.md
-      SECRETS_AND_OIDC.md
-      THREAT_MODELING_HOWTO.md
-
-  runbooks/                      # “the system is on fire / needs operation” (ops-owned)
-    README.md
-    LOCAL_STACK.md
-    DEPLOY.md
-    BACKUP_RESTORE.md
-    INCIDENT_RESPONSE.md
-    DATA_PROMOTION_RUNBOOK.md
-    POLICY_CHANGE_RUNBOOK.md
-    DR_AND_ROLLBACK.md
-
-  quality/                       # gates, conformance, and test strategy (fail-closed defaults)
-    README.md
-    GATES_DEFINITION_OF_DONE.md         # promotion gates + CI mapping
-    CONTRACT_TESTS.md                   # schemas/contracts/OpenAPI checks
-    DETERMINISM_AND_REPRO.md            # reproducibility expectations + checks
-    PERFORMANCE_SLOS.md                 # API/pipeline SLOs (if applicable)
-    SECURITY_BASELINE.md                # SBOM/vuln scan expectations (doc-level)
-
-  data/                          # data-system documentation (NOT the datasets themselves)
-    README.md
-    DATA_LIFECYCLE.md
-    DATASET_REGISTRY.md
-    PROVENANCE_AND_RECEIPTS.md
-    LICENSING_AND_ATTRIBUTION.md
-
-  domains/                       # domain-specific docs (hydrology, soils, air, etc.)
-    README.md
-    hydrology/
-      README.md
-      DATA_SOURCES.md
-      PIPELINES.md
-    soils/
-      README.md
-      DATA_SOURCES.md
-      PIPELINES.md
-    air/
-      README.md
-      DATA_SOURCES.md
-      PIPELINES.md
-    hazards/
-      README.md
-      DATA_SOURCES.md
-      PIPELINES.md
-
-  diagrams/                      # shared diagrams (cross-cutting; referenced by many docs)
-    README.md
-    architecture/
-    pipelines/
-    ui/
-    governance/
-    domains/
-
-  investigations/                # sandbox notes + experiments (explicitly not published outputs)
-    README.md
-    <topic>/
-      README.md
-      notes.md
-      artifacts/                 # small, non-sensitive, non-authoritative samples only
-
-  stories/                       # canonical Story Node home (governed narrative artifacts)
-    README.md
-    CODEOWNERS                   # optional: route reviews to approvers
-    _schemas/                    # story pack schemas for CI validation
-    _registry/                   # story index for UI discovery
-    _governance/                 # story-specific governance helpers (optional)
-    _lint/                       # story lint config
-    _shared/                     # shared story utilities
-    _templates/                  # story templates (reusable patterns)
-    draft/                       # WIP (not published)
-    review/                      # under governance review
-    published/                   # immutable published story packs
-      <story_slug>/
-        story.md
-        story.json               # map choreography/state (if used)
-        assets/                  # approved media/data excerpts for that story
-    withdrawn/                   # removed from publish surface (keep audit trail)
-
-  reports/                       # OPTIONAL: generated/curated reports (non-story), or a stub redirect
-    README.md                    # if you keep stories elsewhere, make this a redirect to docs/stories
+docs/                                                   # Documentation hub: canonical human-readable source for KFM governance, architecture, standards, and operations
+├─ README.md                                             # Docs hub index + rules (how docs fit, evidence discipline, linking, ownership, and where to start)
+├─ MASTER_GUIDE_v13.md                                   # Canonical overview + doc map (MUST exist if referenced; keep links current)
+├─ glossary.md                                           # Domain vocabulary (single source of truth; terms used across contracts/policy/stories)
+├─ CHANGELOG.md                                          # (PROPOSED) Docs-surface changelog (major doc restructures, renamed standards, governance shifts)
+│
+├─ _registry/                                            # (PROPOSED) Machine-readable doc indices for retrieval + CI validation (doc_id → path/title/status/labels)
+│  ├─ README.md                                          # Registry intent, update workflow, and how CI validates completeness/uniqueness
+│  ├─ docs.index.yml                                     # Doc index (doc_id → path/title/status/policy_label/tags/owners/related)
+│  └─ docs.index.schema.json                             # Schema for docs.index.yml (fail-closed validation: required keys, enums, formats)
+│
+├─ adr/                                                  # Architecture Decision Records (canonical home; stable IDs; decision history)
+│  ├─ README.md                                          # ADR process (when to write, numbering, templates, linking to code/policy/contracts)
+│  ├─ ADR-0001-template.md                               # ADR authoring template (problem, decision, alternatives, consequences, verification)
+│  └─ ADR-0002-<decision-slug>.md                        # Example/placeholder ADR (copy pattern; keep numbering sequential)
+│
+├─ architecture/                                         # Blueprints + invariants + subsystem contracts (human-readable system design)
+│  ├─ README.md                                          # Architecture entry map + how to navigate (context → invariants → interfaces → diagrams)
+│  ├─ TRUST_MEMBRANE.md                                  # Invariant: UI → governed API only (no bypass); PEP/PDP boundaries; default-deny posture
+│  ├─ TRUTH_PATH_LIFECYCLE.md                             # Invariant: Upstream → RAW → WORK → PROCESSED → CATALOG → PUBLISHED (+ AUDIT trail)
+│  ├─ SYSTEM_CONTEXT.md                                   # “C4 L1” narrative (actors, systems, boundaries, trust zones)
+│  ├─ DEPLOYMENT_TOPOLOGY.md                               # Local-first + cloud-scale topology (services, data stores, network boundaries)
+│  ├─ interfaces/                                         # Subsystem interface contracts (human-readable; complements machine contracts/)
+│  │  ├─ README.md                                        # Interface index + relationship to contracts/, policy/, and packages/
+│  │  ├─ API_LAYER_CONTRACT.md                            # API boundary rules (routing, authn/authz, obligations, error shaping, versioning)
+│  │  ├─ POLICY_ENGINE_CONTRACT.md                        # PDP/OPA contract (inputs/outputs, reason codes, obligations, caching, parity tests)
+│  │  ├─ EVIDENCE_RESOLVER_CONTRACT.md                    # Evidence resolution semantics (EvidenceRef/Bundles, resolvability, failure modes)
+│  │  ├─ REPOSITORY_LAYER_CONTRACT.md                     # Storage/repo contract (ports, adapters, determinism, idempotence, receipts)
+│  │  └─ CATALOG_TRIPLET_CONTRACT.md                      # DCAT+STAC+PROV cross-link expectations + integrity rules
+│  ├─ diagrams/                                           # Architecture diagrams (Mermaid sources + rendered exports as needed)
+│  │  └─ README.md                                        # Diagram conventions, export rules, and how diagrams are referenced from docs
+│  └─ adr/                                                # OPTIONAL: stub if ADRs are kept here (prefer redirect to docs/adr/)
+│     └─ README.md                                        # Redirect/stub pointing to canonical ADR home (docs/adr/)
+│
+├─ standards/                                            # Normative standards/profiles + repo conventions (CI-enforced where possible)
+│  ├─ README.md                                          # Standards index + how standards map to validators/tests and enforcement points
+│  ├─ KFM_MARKDOWN_WORK_PROTOCOL.md                      # Markdown authoring protocol (structure, headings, anchors, cite-or-abstain rules)
+│  ├─ KFM_REPO_STRUCTURE_STANDARD.md                     # Repo structure contract (what lives where; boundaries; naming; ownership)
+│  ├─ KFM_STAC_PROFILE.md                                # STAC profile guidance (KFM-specific constraints + required fields)
+│  ├─ KFM_DCAT_PROFILE.md                                # DCAT profile guidance (KFM-specific constraints + required fields)
+│  ├─ KFM_PROV_PROFILE.md                                # PROV profile guidance (KFM-specific lineage requirements)
+│  │
+│  ├─ docs/                                              # (PROPOSED) Doc-level standards beyond Markdown protocol (IDs, linking, diagram rules)
+│  │  ├─ README.md                                       # Doc standards index + enforcement strategy (lint/linkcheck/CI)
+│  │  ├─ DOC_IDS_AND_METADATA.md                         # doc_id scheme + metadata blocks (required fields, uniqueness, registry integration)
+│  │  ├─ LINKING_AND_ANCHORS.md                          # Stable linking/anchors rules (no link rot; relative links; section IDs)
+│  │  └─ DIAGRAMS_STYLE_GUIDE.md                         # Diagram conventions (Mermaid style, export naming, accessibility notes)
+│  │
+│  ├─ identity/
+│  │  ├─ README.md                                       # Identity standards index (IDs + naming + hashing)
+│  │  ├─ IDENTIFIERS_AND_NAMING.md                       # dataset_id, evidence_ref, story_slug, artifact IDs (formats + stability rules)
+│  │  └─ HASHING_AND_DIGESTS.md                          # sha256/spec_hash rules + canonicalization expectations (avoid hash drift)
+│  │
+│  ├─ policy/
+│  │  ├─ README.md                                       # Policy standards index (bundle structure + parity + migrations)
+│  │  ├─ POLICY_PACK_STANDARD.md                         # Policy bundle structure, entrypoints, testing requirements, versioning expectations
+│  │  └─ REGO_V1_MIGRATION.md                             # How/when to migrate policy modules/tests without breaking parity
+│  │
+│  ├─ api/
+│  │  ├─ README.md                                       # API standards index (versioning, envelopes, pagination)
+│  │  └─ API_VERSIONING_AND_ERRORS.md                    # Error model + pagination + stability guarantees + reason codes/obligations surfacing
+│  │
+│  ├─ evidence/
+│  │  ├─ README.md                                       # Evidence standards index (refs, bundles, resolver semantics)
+│  │  └─ EVIDENCE_REF_STANDARD.md                        # EvidenceRef syntax + resolver guarantees + policy/evidence coupling rules
+│  │
+│  ├─ catalog/
+│  │  ├─ README.md                                       # Catalog standards index (triplet, crosslinks, validation)
+│  │  └─ CATALOG_TRIPLET_STANDARD.md                     # DCAT+STAC+PROV cross-linking expectations + integrity checks
+│  │
+│  ├─ geo/                                               # (PROPOSED) Geospatial formats + CRS + tiling norms (interoperability + safety)
+│  │  ├─ README.md                                       # Geo standards index (CRS, raster/vector formats, tiling)
+│  │  ├─ CRS_AND_PROJECTIONS.md                          # CRS rules + reprojection norms + precision considerations
+│  │  ├─ RASTER_FORMATS_COG.md                           # Cloud-Optimized GeoTIFF norms (metadata, overviews, tiling, validation)
+│  │  ├─ VECTOR_FORMATS_GEOPARQUET.md                    # GeoParquet norms (schema, geometry encoding, partitioning, validation)
+│  │  └─ TILE_FORMATS_PMTILES.md                         # PMTiles norms (zoom bounds, attribution, caching, policy-aware tiling)
+│  │
+│  ├─ telemetry/                                         # (PROPOSED) Telemetry event naming + schemas + retention rules (policy-safe observability)
+│  │  ├─ README.md                                       # Telemetry standards index + data minimization stance
+│  │  ├─ TELEMETRY_EVENT_NAMING.md                       # Event naming rules (namespaces, versioning, cardinality constraints)
+│  │  ├─ PIPELINE_RUN_TELEMETRY.md                       # Pipeline run telemetry (fields, reason codes, linkage to receipts)
+│  │  └─ UI_TELEMETRY.md                                 # UI telemetry (trust-surface interactions; denial UX; no sensitive leakage)
+│  │
+│  ├─ oci/                                               # (PROPOSED) Publishing artifacts to OCI (mediaTypes, referrers, attestations)
+│  │  ├─ README.md                                       # OCI standards index + why OCI is used (distribution + integrity)
+│  │  ├─ OCI_GEOSPATIAL_ARTIFACTS.md                     # OCI packaging patterns for geospatial artifacts (tiles, catalogs, deltas)
+│  │  ├─ MEDIA_TYPES_REGISTRY.md                         # Media types registry (canonical names, versions, validation expectations)
+│  │  └─ DELTA_REFERRERS_STANDARD.md                     # Referrers/attestations/deltas model (linking, discovery, verification)
+│  │
+│  ├─ supply_chain/                                      # (PROPOSED) SBOM, SLSA, signing/verification expectations
+│  │  ├─ README.md                                       # Supply chain standards index + enforcement touchpoints in CI
+│  │  ├─ SBOM_STANDARD.md                                # SBOM expectations (formats, scope, generation, retention)
+│  │  ├─ SLSA_ATTESTATION_STANDARD.md                    # Attestation expectations (provenance, build steps, artifact binding)
+│  │  └─ SIGNING_AND_VERIFICATION.md                     # Signing/verifying artifacts (keys, trust roots, verification policy)
+│  │
+│  ├─ ui/
+│  │  ├─ README.md                                       # UI standards index (trust surfaces + safe defaults)
+│  │  └─ UI_TRUST_SURFACES_STANDARD.md                   # What UI may render; citation UX rules; policy badge/obligation rendering norms
+│  │
+│  ├─ ai/
+│  │  ├─ README.md                                       # AI standards index (model cards, retrieval, eval/redteam)
+│  │  ├─ MODEL_CARD_STANDARD.md                          # Model card requirements (data, risks, policy bounds, evaluation, limitations)
+│  │  ├─ RAG_RETRIEVAL_STANDARD.md                       # Retrieval standards (indexing, grounding, citation requirements, policy constraints)
+│  │  └─ AI_EVAL_AND_REDTEAM_STANDARD.md                 # Evaluation/redteam standards (datasets, safety tests, regression thresholds)
+│  │
+│  └─ ontology/
+│     ├─ README.md                                       # Ontology standards index (graph vocab + mapping rules)
+│     └─ KFM_ONTOLOGY_PROFILE.md                         # Graph vocab/mapping + time/geo semantics (alignment with catalogs and evidence)
+│
+├─ templates/                                            # Authoring templates (make “good docs” the path of least resistance)
+│  ├─ README.md                                          # Template index + how to copy/use + required metadata conventions
+│  ├─ TEMPLATE__KFM_UNIVERSAL_DOC.md                     # Universal doc template (MetaBlock, status tags, owners, citations, verification steps)
+│  ├─ TEMPLATE__STORY_NODE_V3.md                         # Story node template (claims→citations, map layers, policy labels/obligations, review checklist)
+│  ├─ TEMPLATE__API_CONTRACT_EXTENSION.md                # Template for extending/adding API contracts (OpenAPI + schema + tests + migration notes)
+│  ├─ TEMPLATE__ADR.md                                   # ADR template (decision record for architecture/governance choices)
+│  ├─ TEMPLATE__RUNBOOK.md                               # Runbook template (symptoms, actions, rollback, escalation, verification)
+│  ├─ TEMPLATE__MODEL_CARD.md                            # Model card template (training/eval/safety/policy bounds)
+│  ├─ TEMPLATE__DATASET_ENTRY.md                         # Dataset registry entry template (source, license, sensitivity, cadence, stewardship)
+│  ├─ TEMPLATE__RUN_RECEIPT.md                           # Run receipt template (inputs/outputs/digests/tools/versions/outcome)
+│  ├─ TEMPLATE__POLICY_CHANGE.md                         # Policy change template (what changed, why, fixtures updated, risk, rollout/rollback)
+│  └─ TEMPLATE__COMPONENT_SPEC.md                        # (PROPOSED) Component spec template for docs/specs/* (buildable, versioned, testable)
+│
+├─ governance/                                           # Governance charter, ethics, sovereignty, review gates, and override mechanisms
+│  ├─ README.md                                          # Governance entry map + how decisions/waivers/gates/roles interlock
+│  ├─ ROOT_GOVERNANCE.md                                 # Governance constitution (principles, decision rights wiring, escalation)
+│  ├─ ETHICS.md                                          # Ethics commitments (harm minimization, transparency, evidence discipline)
+│  ├─ SOVEREIGNTY.md                                     # Data sovereignty rules (jurisdiction, stewardship, access constraints)
+│  ├─ REVIEW_GATES.md                                    # Review gate definitions (who reviews what; required artifacts; pass/fail semantics)
+│  ├─ DATA_CLASSIFICATION.md                             # Policy labels + handling rules (classification taxonomy, obligations, review triggers)
+│  ├─ SENSITIVE_LOCATIONS_PLAYBOOK.md                    # Redaction/generalization rules for sensitive locations (methods + required obligations)
+│  ├─ WAIVERS_AND_EXCEPTIONS.md                          # Override process (time-bounded waivers, compensating controls, audit trail requirements)
+│  └─ ROLES_AND_RACI.md                                  # (PROPOSED) Explicit roles + RACI + approval matrix (aligns to CODEOWNERS/policy)
+│
+├─ specs/                                                # (PROPOSED) Buildable component specs (versioned, reviewable; closer to “executable docs”)
+│  ├─ README.md                                          # Spec doctrine (what is a spec, required sections, how specs map to code/tests)
+│  ├─ agents/                                            # Governed automation patterns (watcher/planner/executor) with clear contracts
+│  │  ├─ README.md                                       # Agent spec index + lifecycle (inputs/outputs, policy bounds, receipts)
+│  │  ├─ WATCHER_CONTRACT.md                             # Watcher contract (triggers, polling, dedupe, receipts)
+│  │  ├─ PLANNER_CONTRACT.md                             # Planner contract (plans, constraints, evidence requirements, approvals)
+│  │  └─ EXECUTOR_CONTRACT.md                            # Executor contract (actions, rollbacks, safety checks, audit linkage)
+│  ├─ pipelines/                                         # Pipeline specs (beyond guides; intended to be buildable/verified)
+│  │  ├─ README.md                                       # Pipeline spec index + how to structure per-domain specs
+│  │  ├─ ingestion/                                      # Connector/pipeline specs (cross-cutting)
+│  │  ├─ hydrology/                                      # Domain pipeline specs (hydrology)
+│  │  ├─ hazards/                                        # Domain pipeline specs (hazards)
+│  │  └─ climate/                                        # Domain pipeline specs (climate)
+│  ├─ ui/                                                # UI component specs (map/story/focus) for buildable trust surfaces
+│  │  └─ README.md                                       # UI specs index + how specs map to components/tests
+│  ├─ storage/                                           # Storage/distribution specs (object store, OCI, deltas)
+│  │  └─ README.md                                       # Storage specs index + integrity/retention expectations
+│  └─ observability/
+│     └─ README.md                                       # Observability specs index (events, SLOs, audit expectations)
+│
+├─ ai/                                                   # (PROPOSED) AI surfaces: Focus Mode, local models, evaluation, safety
+│  ├─ README.md                                          # AI docs index + policy boundaries for AI behavior
+│  ├─ FOCUS_MODE_OVERVIEW.md                             # Focus Mode goals + trust model (cite-or-abstain, policy enforcement, evaluation)
+│  ├─ OLLAMA_INTEGRATION.md                              # Local model integration notes (if used) + constraints + safety posture
+│  ├─ MODEL_CARDS_INDEX.md                               # Index of model cards (what models exist, where cards live, status)
+│  └─ EVALUATION_AND_BENCHMARKS.md                       # Evaluation design (golden queries, metrics, regression gates, redteam)
+│
+├─ knowledge_graph/                                      # (PROPOSED) Knowledge graph layer: Neo4j + ontology + graph ingestion/query patterns
+│  ├─ README.md                                          # KG docs index + how KG relates to catalogs/evidence/policy
+│  ├─ GRAPH_DATA_MODEL.md                                # Graph data model (nodes/edges, IDs, time/geo modeling, provenance)
+│  ├─ ONTOLOGY_AND_VOCAB.md                              # Ontology + vocab alignment (mapping to contract vocab + controlled lists)
+│  ├─ GRAPH_RAG_PATTERNS.md                              # Graph-RAG patterns (retrieval, grounding, citation linking)
+│  └─ NEO4J_OPERATIONS.md                                # Neo4j operations (backups, migrations, performance, policy-safe access)
+│
+├─ reference/                                            # (PROPOSED) Indices into machine surfaces (contracts/schemas/policy/tools) for quick navigation
+│  ├─ README.md                                          # Reference index + how indices are generated/maintained
+│  ├─ OPENAPI_INDEX.md                                   # Maps OpenAPI files → endpoints → owners (and compatibility notes)
+│  ├─ SCHEMA_REGISTRY.md                                 # Maps JSON schemas → purpose → validators/tests that enforce them
+│  ├─ POLICY_BUNDLE_INDEX.md                              # Maps policy bundles → gates → owners → fixtures/tests
+│  └─ TOOLING_INDEX.md                                   # Validator/linters index + how to run (local/CI), inputs/outputs, artifacts emitted
+│
+├─ guides/                                               # Procedural “how do I do X safely?” docs (human-operated workflows)
+│  ├─ README.md                                          # Guides index + common entrypoints
+│  ├─ onboarding/
+│  │  ├─ README.md                                       # Onboarding guide map + suggested path
+│  │  ├─ DEV_ENV_SETUP.md                                # Developer environment setup (local stack, tooling, prerequisites)
+│  │  ├─ FIRST_DATASET_WALKTHROUGH.md                    # First dataset end-to-end (registry → ingest → validate → catalog → publish)
+│  │  └─ FIRST_STORY_WALKTHROUGH.md                      # First story end-to-end (claims → citations → review → publish)
+│  ├─ acquisition/
+│  │  ├─ README.md                                       # Acquisition guides index
+│  │  ├─ CONNECTOR_AUTHORING.md                          # How to author a connector (inputs, snapshots, receipts, licensing checks)
+│  │  └─ RAW_INGEST_PLAYBOOK.md                          # RAW ingest playbook (snapshots, checksums, provenance, quarantine triggers)
+│  ├─ geo/                                               # (PROPOSED) GIS-centric how-tos (raster/vector/tiling/CRS)
+│  │  ├─ README.md                                       # Geo how-to index
+│  │  ├─ VECTOR_ETL_PIPELINES.md                         # Vector ETL how-to (validation, partitioning, indexing, policy labels)
+│  │  ├─ RASTER_ETL_PIPELINES.md                         # Raster ETL how-to (COG norms, overviews, tiling, performance checks)
+│  │  └─ HYDROLOGY_WORKFLOWS.md                          # Hydrology workflows (domain-specific how-to; cite data sources)
+│  ├─ pipelines/
+│  │  ├─ README.md                                       # Pipeline guides index
+│  │  ├─ BUILD_A_PIPELINE_STEP.md                        # Step-by-step pipeline build guide (configs, receipts, tests, promotion gates)
+│  │  └─ PROMOTION_FLOW.md                               # Promotion flow guide (A–F(+G) gates, artifacts, failure handling)
+│  ├─ catalogs/
+│  │  ├─ README.md                                       # Catalog guides index
+│  │  ├─ EMIT_STAC_DCAT_PROV.md                          # How to emit the catalog triplet + crosslinks + receipts
+│  │  └─ VALIDATE_CATALOGS.md                            # How to validate catalogs (schemas/profiles/linkcheck; common failures)
+│  ├─ apis/
+│  │  ├─ README.md                                       # API guides index
+│  │  ├─ ADD_NEW_ENDPOINT.md                             # Add endpoint guide (OpenAPI + DTOs + tests + policy wiring)
+│  │  └─ FOCUS_MODE_ENDPOINTS.md                         # Focus endpoints guide (policy constraints, cite-or-abstain, eval harness)
+│  ├─ policy/
+│  │  ├─ README.md                                       # Policy guides index
+│  │  ├─ WRITE_A_POLICY.md                               # How to write policy (rego patterns, fixtures, reason codes, obligations)
+│  │  └─ DEBUG_POLICY_DENIALS.md                         # Debug denials (reason codes, fixtures reproduction, policy-safe tracing)
+│  ├─ observability/
+│  │  ├─ README.md                                       # Observability guides index
+│  │  ├─ TRACE_A_REQUEST.md                              # Trace a request end-to-end (request_id, spans, audit linkage)
+│  │  └─ READ_RUN_RECEIPTS.md                            # Read receipts (what they mean, how to verify determinism, common anomalies)
+│  ├─ ui/
+│  │  ├─ README.md                                       # UI guides index
+│  │  ├─ RUN_UI_LOCALLY.md                               # Run UI locally (dev server, API wiring, auth stubs)
+│  │  └─ STORY_AUTHORING.md                              # Story authoring guide (claims→citations, review, obligation surfacing)
+│  └─ security/
+│     ├─ README.md                                       # Security guides index
+│     ├─ SECRETS_AND_OIDC.md                             # Secrets posture + OIDC flows (where secrets live; never in repo)
+│     └─ THREAT_MODELING_HOWTO.md                        # Threat modeling how-to (actors/assets/controls; policy-safe design)
+│
+├─ runbooks/                                             # Ops-owned “the system is on fire / needs operation” playbooks (actionable + rollback)
+│  ├─ README.md                                          # Runbooks index + escalation norms
+│  ├─ LOCAL_STACK.md                                     # Local stack operations (compose, seed/reset, debugging)
+│  ├─ DEPLOY.md                                          # Deployment runbook (environments, rollouts, canaries, verification)
+│  ├─ BACKUP_RESTORE.md                                  # Backup/restore procedures (what is backed up, how to verify restores)
+│  ├─ INCIDENT_RESPONSE.md                               # Incident response (triage, comms, containment, postmortem, audit references)
+│  ├─ DATA_PROMOTION_RUNBOOK.md                          # Data promotion operations (gate artifacts, retries, quarantine handling)
+│  ├─ POLICY_CHANGE_RUNBOOK.md                           # Policy change operations (fixture updates, rollout, parity checks, rollback)
+│  └─ DR_AND_ROLLBACK.md                                 # Disaster recovery + rollback (RTO/RPO goals, drill procedures)
+│
+├─ quality/                                              # Gates, conformance, and test strategy (fail-closed defaults)
+│  ├─ README.md                                          # Quality model index (what “done” means; how checks map to gates)
+│  ├─ GATES_DEFINITION_OF_DONE.md                        # Promotion gates + CI mapping (required artifacts, pass criteria)
+│  ├─ CONTRACT_TESTS.md                                  # Contract test strategy (OpenAPI/schemas/profiles/crosslinks)
+│  ├─ DETERMINISM_AND_REPRO.md                           # Reproducibility expectations (canonicalization, hashing, receipts, reruns)
+│  ├─ PERFORMANCE_SLOS.md                                # API/pipeline SLOs (if applicable) + measurement posture (policy-safe telemetry)
+│  └─ SECURITY_BASELINE.md                               # Doc-level security baseline (SBOM/vuln scan expectations; minimum controls)
+│
+├─ data/                                                 # Data-system documentation (NOT the datasets themselves)
+│  ├─ README.md                                          # Data docs index + links to truth-path zones and governance touchpoints
+│  ├─ DATA_LIFECYCLE.md                                  # Lifecycle narrative (acquire → validate → publish) + failure/quarantine rules
+│  ├─ DATASET_REGISTRY.md                                # How dataset registry works (fields, stewardship, licensing, sensitivity)
+│  ├─ PROVENANCE_AND_RECEIPTS.md                         # Provenance model + receipts/manifests (what must be recorded and why)
+│  └─ LICENSING_AND_ATTRIBUTION.md                       # Licensing/attribution guidance (rights checks, obligations, export constraints)
+│
+├─ domains/                                              # Domain-specific docs (hydrology, soils, air, hazards, etc.)
+│  ├─ README.md                                          # Domain docs index + how to add a domain package
+│  ├─ hydrology/
+│  │  ├─ README.md                                       # Hydrology domain overview (scope, datasets, stewards)
+│  │  ├─ DATA_SOURCES.md                                 # Hydrology data sources (links, licensing notes, provenance anchors)
+│  │  └─ PIPELINES.md                                    # Hydrology pipelines (specs, configs, receipts, validation expectations)
+│  ├─ soils/
+│  │  ├─ README.md                                       # Soils domain overview
+│  │  ├─ DATA_SOURCES.md                                 # Soils data sources
+│  │  └─ PIPELINES.md                                    # Soils pipelines
+│  ├─ air/
+│  │  ├─ README.md                                       # Air domain overview
+│  │  ├─ DATA_SOURCES.md                                 # Air data sources
+│  │  └─ PIPELINES.md                                    # Air pipelines
+│  └─ hazards/
+│     ├─ README.md                                       # Hazards domain overview
+│     ├─ DATA_SOURCES.md                                 # Hazards data sources
+│     └─ PIPELINES.md                                    # Hazards pipelines
+│
+├─ diagrams/                                             # Shared diagrams (cross-cutting; referenced by many docs)
+│  ├─ README.md                                          # Diagram index + conventions (sources vs exports; naming; accessibility)
+│  ├─ architecture/                                      # Cross-cutting architecture diagrams (system context, trust membrane, topology)
+│  ├─ pipelines/                                         # Pipeline diagrams (truth-path flows, promotion gates, receipts)
+│  ├─ ui/                                                # UI diagrams (trust surfaces, evidence drawer, denial UX, map/story/focus flows)
+│  ├─ governance/                                        # Governance diagrams (roles, decision rights, waivers, gate flows)
+│  └─ domains/                                           # Domain diagrams (hydrology/soils/air/hazards etc.)
+│
+├─ investigations/                                       # Sandbox notes + experiments (explicitly not authoritative/published outputs)
+│  ├─ README.md                                          # What belongs here, retention rules, and how to promote learnings into standards/specs
+│  └─ <topic>/                                           # One investigation topic (time-bounded; clearly labeled)
+│     ├─ README.md                                       # Investigation scope, hypotheses, and “what would make this confirmed”
+│     ├─ notes.md                                        # Working notes (cite sources; label assumptions)
+│     └─ artifacts/                                      # Small, non-sensitive samples only (no PII, no secrets, no authoritative releases)
+│
+├─ stories/                                              # Canonical Story Node home (governed narrative artifacts for docs-side story packs)
+│  ├─ README.md                                          # Story pack overview + how stories relate to /stories (repo root) if both exist
+│  ├─ CODEOWNERS                                         # Optional: route story reviews to approvers (stewards/editors/security as needed)
+│  ├─ _schemas/                                          # Story pack schemas for CI validation (story.md sidecars, story.json, assets manifests)
+│  ├─ _registry/                                         # Story index for UI discovery (story_slug → status/policy_label/tags/paths)
+│  ├─ _governance/                                       # Story-specific governance helpers (checklists, waivers links, publish rules)
+│  ├─ _lint/                                             # Story lint config (style, required sections, citation rules)
+│  ├─ _shared/                                           # Shared story utilities (partials, shared assets, reusable snippets)
+│  ├─ _templates/                                        # Story templates (reusable patterns for narrative + map choreography)
+│  ├─ draft/                                             # WIP stories (not published; clearly marked; safe fixtures only)
+│  ├─ review/                                            # Under governance review (checklists, required citations, obligations review)
+│  ├─ published/                                         # Immutable published story packs (versioned; citations locked; obligations enforced)
+│  │  └─ <story_slug>/
+│  │     ├─ story.md                                     # Story narrative (claims → citations; policy-safe language)
+│  │     ├─ story.json                                   # Optional map choreography/state (if used; schema-validated)
+│  │     └─ assets/                                      # Approved media/data excerpts for the story (small, licensed, policy-labeled)
+│  └─ withdrawn/                                         # Removed from publish surface (keep audit trail + reason codes + links to waiver/decision)
+│
+└─ reports/                                              # OPTIONAL: Generated/curated reports (non-story) OR a stub redirect
+   └─ README.md                                          # If stories/reports live elsewhere, make this a redirect to the canonical home
 ```
 
 ---
