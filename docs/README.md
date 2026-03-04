@@ -2,7 +2,7 @@
 doc_id: kfm://doc/1f731fb8-1614-4a01-a1a5-f8e5ed39c7e1
 title: docs/ — Documentation hub
 type: standard
-version: v1
+version: v2
 status: draft
 owners: TBD
 created: 2026-03-03
@@ -14,7 +14,8 @@ related:
 tags: [kfm, docs]
 notes:
   - Entry point for repository documentation.
-  - This README defines the REQUIRED docs/ layout for KFM vNext. If your checkout differs, update the tree and links after verifying the repo structure.
+  - This README defines the REQUIRED docs/ layout for KFM vNext.
+  - If your checkout differs, update the tree + links only after verifying the repo structure.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -22,7 +23,7 @@ notes:
 # docs/ — Documentation hub
 **Governed, human-readable documentation for the Kansas Frontier Matrix (KFM).**
 
-> **[CONFIRMED] Purpose:** `docs/` is the authoritative home for **governed documentation**: architecture blueprints, standards/profiles, governance policy, templates, and published narrative artifacts (“Story Nodes”).
+> **[CONFIRMED] Purpose:** `docs/` is the authoritative home for **governed documentation**: architecture blueprints, standards/profiles, governance policy, templates, specs, and published narrative artifacts (“Story Packs / Story Nodes”).
 
 ---
 
@@ -30,16 +31,17 @@ notes:
 - **Status:** draft
 - **Owners:** TBD (set via `CODEOWNERS`)
 - **Policy label:** public
-- **This hub enforces the KFM “non-negotiables” in writing:** truth path lifecycle, trust membrane, catalog triplet, cite-or-abstain.
-- **Hard exclusions:** secrets, raw datasets/binaries, and unreviewed sensitive details (especially precise vulnerable locations).
+- **[CONFIRMED] This hub exists to prevent “tribal-memory architecture.”**
+- **[CONFIRMED] Hard exclusions:** secrets, raw datasets/binaries, and unreviewed sensitive details (especially precise vulnerable locations).
 
 [![Docs](https://img.shields.io/badge/docs-entrypoint-blue)](./README.md)
 [![Status](https://img.shields.io/badge/status-draft-lightgrey)](#impact)
 [![MetaBlock](https://img.shields.io/badge/metablock-v2-required-red)](#metablock-v2-and-document-metadata)
 [![Fail-closed](https://img.shields.io/badge/gates-fail--closed-red)](#review-gates-and-definition-of-done)
+[![Docs Index](https://img.shields.io/badge/docs-index-PROPOSED-lightgrey)](#docs-registry-and-discovery)
 [![Linkcheck](https://img.shields.io/badge/linkcheck-TODO-lightgrey)](#local-preview--checks)
 
-**Quick links:** [Start here](#start-here) · [Project map](#kfm-project-map-what-is-in-scope) · [Docs layout](#required-docs-layout) · [MetaBlock v2](#metablock-v2-and-document-metadata) · [Gates](#review-gates-and-definition-of-done) · [Add a doc](#how-to-add-a-new-document) · [Unknowns](#unknowns-to-verify)
+**Quick links:** [Start here](#start-here) · [Project map](#kfm-project-map-what-is-in-scope) · [Docs layout](#required-docs-layout) · [Docs registry](#docs-registry-and-discovery) · [Specs](#specs-and-component-design-docs) · [MetaBlock v2](#metablock-v2-and-document-metadata) · [Gates](#review-gates-and-definition-of-done) · [Add a doc](#how-to-add-a-new-document) · [Unknowns](#unknowns-to-verify)
 
 ---
 
@@ -48,14 +50,20 @@ notes:
 - [Start here](#start-here)
 - [KFM project map](#kfm-project-map-what-is-in-scope)
 - [Where docs fit: truth path and trust membrane](#where-docs-fit-truth-path-and-trust-membrane)
+- [Docs authority levels](#docs-authority-levels)
 - [Acceptable inputs](#acceptable-inputs-for-docs)
 - [Exclusions](#exclusions-what-must-not-go-in-docs)
 - [Required docs layout](#required-docs-layout)
+- [Directory responsibilities](#directory-responsibilities-human-routing-table)
+- [Docs registry and discovery](#docs-registry-and-discovery)
 - [Docs taxonomy and routing](#docs-taxonomy-and-routing)
 - [MetaBlock v2 and document metadata](#metablock-v2-and-document-metadata)
 - [Standards and profiles](#standards-and-profiles)
-- [Templates](#templates)
-- [Reports and Story Nodes](#reports-and-story-nodes)
+- [Specs and component design docs](#specs-and-component-design-docs)
+- [AI and MCP docs](#ai-and-mcp-documentation)
+- [Knowledge graph docs](#knowledge-graph-and-ontology-documentation)
+- [Reference docs](#reference-contracts-schemas-and-apis)
+- [Stories](#stories-story-nodes-and-story-packs)
 - [Review gates and definition of done](#review-gates-and-definition-of-done)
 - [Local preview and checks](#local-preview--checks)
 - [Unknowns to verify](#unknowns-to-verify)
@@ -81,9 +89,11 @@ Read these in order (or use as your quick orientation map):
 
 1) **`docs/MASTER_GUIDE_v13.md`** — canonical overview + doc map (if present).  
 2) **`docs/governance/ROOT_GOVERNANCE.md`** — governance charter and “how changes are approved.”  
-3) **`docs/architecture/README.md`** — architecture boundaries, diagrams, and ADR index.  
+3) **`docs/architecture/README.md`** — architecture boundaries, invariants, diagrams, and ADR index.  
 4) **`docs/standards/README.md`** — standards/profiles that define “valid” in KFM.  
-5) **`docs/reports/story_nodes/`** — published narrative artifacts and their workflow.
+5) **`docs/specs/README.md`** — component-level design specs that become buildable work (if present).  
+6) **`docs/stories/README.md`** — Story authoring + publishing workflow (governed narrative artifacts).  
+7) **`docs/quality/README.md`** — gates, conformance checks, test strategy, determinism expectations.
 
 > **[UNKNOWN]** If any linked file/folder is missing in your checkout, treat it as **a required gap** and create a placeholder stub (or update this README to match the verified tree).
 
@@ -127,13 +137,21 @@ flowchart LR
 > **[UNKNOWN]** The exact repo tree in *this checkout* must be verified. (This README links to target locations; update after running `tree -L 3`.)
 
 **[PROPOSED]** Expected top-level repository slices (for orientation only):
-- `apps/` — runnable services (API, UI, workers).
-- `packages/` — core modules (domain logic, ingestion, catalog, evidence, policy adapters).
-- `contracts/` — schemas and API contracts (OpenAPI, JSON Schema, vocab).
-- `policy/` — OPA/Rego policy bundles and tests.
-- `data/` — lifecycle zones + dataset specs + catalogs (NOT in `docs/`).
-- `tools/` — validators, linkcheckers, spec hashers.
-- `tests/` — unit/integration/e2e tests.
+
+| Path | Role | Docs should link to |
+|---|---|---|
+| `apps/` | runnable services (API, UI, workers, CLI) | `docs/architecture/`, `docs/guides/`, `docs/runbooks/` |
+| `packages/` | core modules (ingest, catalog, evidence, policy, indexers) | `docs/specs/`, `docs/architecture/interfaces/` |
+| `contracts/` | machine contracts (OpenAPI, JSON Schema, vocab) | `docs/reference/OPENAPI_INDEX.md`, `docs/reference/SCHEMA_REGISTRY.md` |
+| `policy/` | OPA/Rego bundles + tests | `docs/standards/policy/`, `docs/guides/policy/` |
+| `data/` | lifecycle zones + dataset specs + catalogs | `docs/data/` (documentation only) |
+| `tools/` | validators, linters, spec hashers, linkcheckers | `docs/quality/`, `docs/reference/TOOLING_INDEX.md` |
+| `infra/` | deployment (K8s/Terraform/GitOps) | `docs/architecture/DEPLOYMENT_TOPOLOGY.md`, `docs/runbooks/DEPLOY.md` |
+| `configs/` | config templates (env, pipelines, UI) | `docs/guides/onboarding/DEV_ENV_SETUP.md` |
+| `migrations/` | DB schema migrations | `docs/runbooks/BACKUP_RESTORE.md` + DB runbooks |
+| `examples/` | sample datasets/stories/policies | `docs/reference/` and `docs/stories/_templates/` |
+| `tests/` | unit/integration/e2e | `docs/quality/` |
+| `mcp/` | AI artifacts (model cards, experiments, gates) | `docs/ai/` + `docs/templates/TEMPLATE__MODEL_CARD.md` |
 
 ---
 
@@ -181,6 +199,23 @@ flowchart LR
 
 ---
 
+## Docs authority levels
+This prevents “random docs” from becoming de-facto policy.
+
+- **[CONFIRMED] Authority classes (minimum):**
+  1) **Standards/Profiles** (`docs/standards/`) — normative. “MUST/SHALL” language allowed.
+  2) **Governance** (`docs/governance/`) — normative. Overrides everything except repo policy enforcement.
+  3) **Architecture** (`docs/architecture/`) — high authority; design boundaries + invariants + interfaces.
+  4) **Specs** (`docs/specs/`) — buildable design docs; must link to contracts/tests.
+  5) **Guides/Runbooks** (`docs/guides/`, `docs/runbooks/`) — operational; non-normative unless referenced by governance.
+  6) **Investigations** (`docs/investigations/`) — explicitly non-authoritative.
+
+- **[PROPOSED] Rule:** any doc intended to constrain behavior must be either:
+  - a **Standard**, or
+  - a **Spec** that is referenced by a Standard and guarded by CI/tests.
+
+---
+
 ## Acceptable inputs for docs/
 Docs are a production surface; keep them stable, reviewable, and retrieval-friendly.
 
@@ -188,8 +223,9 @@ Docs are a production surface; keep them stable, reviewable, and retrieval-frien
 - Architecture docs (diagrams, subsystem boundaries, contracts in human-readable form)
 - Standards/profiles (STAC/DCAT/PROV profiles; repo conventions; doc protocol)
 - Governance and review policy (non-secret)
+- Specs (component-level buildable design documents)
 - Templates (MetaBlock v2 docs, Story Nodes, contract extensions)
-- Curated reports and published story artifacts (under `docs/reports/`)
+- Published narrative artifacts (Story Packs)
 
 ---
 
@@ -200,7 +236,7 @@ Docs are a production surface; keep them stable, reviewable, and retrieval-frien
 - Unreviewed sensitive details (precise vulnerable locations, restricted archeological sites, etc.)
 
 **[PROPOSED] Avoid unless explicitly approved:**
-- Generated build outputs (site builds, compiled docs)
+- Generated build outputs (static site builds, compiled docs)
 - Vendor bundles that should be fetched via tooling instead
 
 ---
@@ -217,6 +253,12 @@ docs/
 
   MASTER_GUIDE_v13.md            # canonical overview + doc map (MUST exist if referenced)
   glossary.md                    # domain vocabulary (single source of truth)
+  CHANGELOG.md                   # (PROPOSED) docs-surface change log (optional but useful)
+
+  _registry/                     # (PROPOSED) machine-readable doc/story indices for retrieval
+    README.md
+    docs.index.yml               # doc_id → path/title/status/policy_label/tags
+    docs.index.schema.json       # schema for docs.index.yml (CI validation)
 
   adr/                           # Architecture Decision Records (canonical home)
     README.md
@@ -229,15 +271,17 @@ docs/
     TRUTH_PATH_LIFECYCLE.md      # invariant: Upstream→RAW→WORK→PROCESSED→CATALOG→PUBLISHED
     SYSTEM_CONTEXT.md            # “C4 L1” system context narrative
     DEPLOYMENT_TOPOLOGY.md       # local-first + cloud scale topology
-    interfaces/                  # human-readable subsystem interfaces (PEP, repos, evidence)
+    interfaces/                  # human-readable subsystem interfaces (PEP, repos, evidence, policy)
       README.md
       API_LAYER_CONTRACT.md
+      POLICY_ENGINE_CONTRACT.md
       EVIDENCE_RESOLVER_CONTRACT.md
       REPOSITORY_LAYER_CONTRACT.md
+      CATALOG_TRIPLET_CONTRACT.md
     diagrams/                    # architecture diagrams (Mermaid/SVG/PNG)
       README.md
     adr/                         # OPTIONAL: if you keep ADRs here, make it a stub pointing to docs/adr/
-      README.md                  # (avoid 2 ADR homes)
+      README.md
 
   standards/                     # normative standards/profiles + repo conventions (CI-enforced where possible)
     README.md
@@ -247,27 +291,72 @@ docs/
     KFM_DCAT_PROFILE.md
     KFM_PROV_PROFILE.md
 
-    # Strongly recommended additions (normative standards that need a canonical home):
+    docs/                        # (PROPOSED) doc-level standards beyond the Markdown protocol
+      README.md
+      DOC_IDS_AND_METADATA.md
+      LINKING_AND_ANCHORS.md
+      DIAGRAMS_STYLE_GUIDE.md
+
     identity/
       README.md
       IDENTIFIERS_AND_NAMING.md          # dataset_id, evidence_ref, story_slug, etc.
       HASHING_AND_DIGESTS.md             # sha256, spec_hash, canonicalization rules
+
     policy/
       README.md
-      POLICY_PACK_STANDARD.md            # how OPA/Rego bundles are structured + tested
+      POLICY_PACK_STANDARD.md            # bundle structure + tests
       REGO_V1_MIGRATION.md               # how/when to migrate policies and tests
+
     api/
       README.md
       API_VERSIONING_AND_ERRORS.md       # error model, pagination, stability guarantees
+
     evidence/
       README.md
       EVIDENCE_REF_STANDARD.md           # syntax + resolver guarantees
+
     catalog/
       README.md
       CATALOG_TRIPLET_STANDARD.md        # DCAT+STAC+PROV cross-linking expectations
+
+    geo/                          # (PROPOSED) geospatial formats + CRS + tiling norms
+      README.md
+      CRS_AND_PROJECTIONS.md
+      RASTER_FORMATS_COG.md
+      VECTOR_FORMATS_GEOPARQUET.md
+      TILE_FORMATS_PMTILES.md
+
+    telemetry/                     # (PROPOSED) event naming + schemas + retention rules
+      README.md
+      TELEMETRY_EVENT_NAMING.md
+      PIPELINE_RUN_TELEMETRY.md
+      UI_TELEMETRY.md
+
+    oci/                           # (PROPOSED) publishing artifacts to OCI registries (mediaTypes, referrers, attestations)
+      README.md
+      OCI_GEOSPATIAL_ARTIFACTS.md
+      MEDIA_TYPES_REGISTRY.md
+      DELTA_REFERRERS_STANDARD.md
+
+    supply_chain/                  # (PROPOSED) SBOM, SLSA, signing/verification expectations
+      README.md
+      SBOM_STANDARD.md
+      SLSA_ATTESTATION_STANDARD.md
+      SIGNING_AND_VERIFICATION.md
+
     ui/
       README.md
       UI_TRUST_SURFACES_STANDARD.md      # what UI may render; citation UX rules; safe defaults
+
+    ai/
+      README.md
+      MODEL_CARD_STANDARD.md
+      RAG_RETRIEVAL_STANDARD.md
+      AI_EVAL_AND_REDTEAM_STANDARD.md
+
+    ontology/
+      README.md
+      KFM_ONTOLOGY_PROFILE.md            # graph vocab, mapping rules, time/geo semantics
 
   templates/                     # authoring templates (make “good docs” the path of least resistance)
     README.md
@@ -280,6 +369,7 @@ docs/
     TEMPLATE__DATASET_ENTRY.md
     TEMPLATE__RUN_RECEIPT.md
     TEMPLATE__POLICY_CHANGE.md
+    TEMPLATE__COMPONENT_SPEC.md          # (PROPOSED) spec template for docs/specs/*
 
   governance/                    # governance charter, ethics, sovereignty, review gates
     README.md
@@ -290,6 +380,48 @@ docs/
     DATA_CLASSIFICATION.md              # policy labels + handling rules
     SENSITIVE_LOCATIONS_PLAYBOOK.md     # redaction/generalization rules
     WAIVERS_AND_EXCEPTIONS.md           # explicit override process + audit requirements
+    ROLES_AND_RACI.md                   # (PROPOSED) who approves what (explicit)
+
+  specs/                         # (PROPOSED) buildable component specs (versioned, reviewable)
+    README.md
+    agents/                      # watcher/planner/executor patterns; governed automation
+      README.md
+      WATCHER_CONTRACT.md
+      PLANNER_CONTRACT.md
+      EXECUTOR_CONTRACT.md
+    pipelines/                   # pipeline-specific specs (beyond guides)
+      README.md
+      ingestion/                 # connector/pipeline specs (domain or cross-cutting)
+      hydrology/
+      hazards/
+      climate/
+    ui/                          # UI component specs (map/story/focus)
+      README.md
+    storage/                     # storage/distribution specs (object store, OCI, deltas)
+      README.md
+    observability/
+      README.md
+
+  ai/                            # (PROPOSED) AI surfaces: Focus Mode, Ollama, evaluation, safety
+    README.md
+    FOCUS_MODE_OVERVIEW.md
+    OLLAMA_INTEGRATION.md
+    MODEL_CARDS_INDEX.md
+    EVALUATION_AND_BENCHMARKS.md
+
+  knowledge_graph/               # (PROPOSED) Neo4j + ontology + graph ingestion/query patterns
+    README.md
+    GRAPH_DATA_MODEL.md
+    ONTOLOGY_AND_VOCAB.md
+    GRAPH_RAG_PATTERNS.md
+    NEO4J_OPERATIONS.md
+
+  reference/                     # (PROPOSED) indices into machine surfaces (contracts/schemas/policy)
+    README.md
+    OPENAPI_INDEX.md             # maps OpenAPI files → endpoints → owners
+    SCHEMA_REGISTRY.md           # maps JSON schemas → purpose → validators
+    POLICY_BUNDLE_INDEX.md       # maps policy bundles → gates → owners
+    TOOLING_INDEX.md             # validators + linters + how to run
 
   guides/                        # “how do I do X safely?” procedural docs (human-operated)
     README.md
@@ -300,23 +432,28 @@ docs/
       FIRST_STORY_WALKTHROUGH.md
     acquisition/
       README.md
-      CONNECTOR_AUTHORING.md            # how to add a new upstream source connector
+      CONNECTOR_AUTHORING.md
       RAW_INGEST_PLAYBOOK.md
+    geo/                         # (PROPOSED) GIS-centric how-tos (raster/vector/tiling/CRS)
+      README.md
+      VECTOR_ETL_PIPELINES.md
+      RASTER_ETL_PIPELINES.md
+      HYDROLOGY_WORKFLOWS.md
     pipelines/
       README.md
       BUILD_A_PIPELINE_STEP.md
-      PROMOTION_FLOW.md                 # RAW→...→PUBLISHED, with gates and receipts
+      PROMOTION_FLOW.md
     catalogs/
       README.md
       EMIT_STAC_DCAT_PROV.md
       VALIDATE_CATALOGS.md
     apis/
       README.md
-      ADD_NEW_ENDPOINT.md               # contract + policy + tests
+      ADD_NEW_ENDPOINT.md
       FOCUS_MODE_ENDPOINTS.md
     policy/
       README.md
-      WRITE_A_POLICY.md                 # rego patterns + tests
+      WRITE_A_POLICY.md
       DEBUG_POLICY_DENIALS.md
     observability/
       README.md
@@ -325,7 +462,7 @@ docs/
     ui/
       README.md
       RUN_UI_LOCALLY.md
-      STORY_NODE_AUTHORING.md
+      STORY_AUTHORING.md
     security/
       README.md
       SECRETS_AND_OIDC.md
@@ -351,10 +488,10 @@ docs/
 
   data/                          # data-system documentation (NOT the datasets themselves)
     README.md
-    DATA_LIFECYCLE.md                   # truth path narrative + “what belongs where”
-    DATASET_REGISTRY.md                 # how dataset entries are structured/validated
-    PROVENANCE_AND_RECEIPTS.md          # what receipts exist, what fields are required
-    LICENSING_AND_ATTRIBUTION.md        # SPDX usage + downstream obligations
+    DATA_LIFECYCLE.md
+    DATASET_REGISTRY.md
+    PROVENANCE_AND_RECEIPTS.md
+    LICENSING_AND_ATTRIBUTION.md
 
   domains/                       # domain-specific docs (hydrology, soils, air, etc.)
     README.md
@@ -409,19 +546,48 @@ docs/
     withdrawn/                   # removed from publish surface (keep audit trail)
 
   reports/                       # OPTIONAL: generated/curated reports (non-story), or a stub redirect
-    README.md                    # if you keep story nodes elsewhere, make this a redirect to docs/stories
+    README.md                    # if you keep stories elsewhere, make this a redirect to docs/stories
 ```
 
-### Directory responsibilities (human routing table)
+---
+
+## Directory responsibilities: human routing table
 
 | Folder | Role | What good looks like | What must not happen |
 |---|---|---|---|
-| `docs/` | Hub + canonical entry points | MASTER_GUIDE and glossary stay current | Becomes a dumping ground |
-| `docs/architecture/` | Architecture boundaries + diagrams + ADR index | At least one “system overview” diagram and stable contracts | Architecture changes without ADR |
-| `docs/standards/` | Standards/profiles + repo conventions | Profiles align to validators/tests | Profiles drift without tests |
-| `docs/templates/` | Templates used to create governed artifacts | Templates are current, minimal, versioned | People copy old templates forever |
-| `docs/governance/` | Governance rules and review gates | Clear “who approves what” | Informal policy hidden in Slack |
-| `docs/reports/` | Curated reports + published story artifacts | Story nodes have citations + review state | Drafts treated as published |
+| `docs/` | Hub + canonical entry points | MASTER_GUIDE + glossary stay current | Becomes a dumping ground |
+| `docs/_registry/` | (PROPOSED) Machine indices | CI-valid index enables Focus Mode retrieval | Index drifts silently |
+| `docs/architecture/` | Boundaries + invariants + diagrams + interface contracts | Stable invariants + interface docs + diagrams | Architecture changes without ADR/spec |
+| `docs/adr/` | Decisions | Each “why” documented w/ rollback path | Decisions hidden in chat |
+| `docs/standards/` | Standards/profiles + repo conventions | MUST/SHALL mapped to validators/tests | Standards drift without gates |
+| `docs/specs/` | (PROPOSED) Buildable design specs | PR-ready specs that link to contracts + tests | “Specs” become wishlists |
+| `docs/governance/` | Governance rules and review gates | Clear “who approves what” + escalation | Informal policy in Slack |
+| `docs/guides/` | How-to docs | Steps are runnable; safe defaults | Confuses “how-to” with “must” |
+| `docs/runbooks/` | Ops runbooks | Triage + restore + rollback are clear | No incident plan |
+| `docs/quality/` | Gates + conformance | Fail-closed maps to CI checks | “Quality” undocumented |
+| `docs/data/` | Data-system docs | Registry + receipts + licensing are clear | Datasets stored here |
+| `docs/domains/` | Domain documentation | Each domain has sources + pipelines | Domain knowledge scattered |
+| `docs/ai/` | (PROPOSED) AI system docs | Focus Mode boundaries + eval + safety | Ungoverned prompts/evals |
+| `docs/knowledge_graph/` | (PROPOSED) graph modeling + ops | Ontology, graph patterns, GraphRAG | Ad-hoc labels/relations |
+| `docs/reference/` | (PROPOSED) pointers to machine contracts | Humans can find schemas/contracts fast | Duplicates machine sources |
+| `docs/stories/` | Story Packs | published is immutable + cited + governed | Drafts treated as published |
+| `docs/investigations/` | Sandbox notes | Explicitly non-authoritative | Research gets mistaken as policy |
+
+---
+
+## Docs registry and discovery
+**[PROPOSED]** Add a **docs index** so Focus Mode and humans can reliably discover “the right doc” without guessing.
+
+### Why
+- **[CONFIRMED]** KFM depends on evidence-first retrieval; discovery surfaces must be stable.
+- **[PROPOSED]** A machine-readable docs index reduces link rot, improves search relevance, and enables validation (e.g., “no published doc missing MetaBlock”).
+
+### Minimal structure (proposal)
+- `docs/_registry/docs.index.yml` with one entry per doc containing:
+  - `doc_id`, `path`, `title`, `type`, `status`, `owners`, `policy_label`, `tags`, `related`.
+- Validate in CI against `docs/_registry/docs.index.schema.json`.
+
+> **[UNKNOWN]** Whether the repo already has an index mechanism must be verified. If a different index exists, keep one canonical home and redirect.
 
 ---
 
@@ -433,23 +599,28 @@ Use this matrix when adding a new file:
 |---|---|---|---|
 | Canonical guide | `docs/` | MetaBlock v2, stable headings, links | Medium |
 | Architecture overview | `docs/architecture/` | diagrams + boundaries + invariants | High |
-| ADR | `docs/architecture/adr/` | decision, alternatives, consequences, rollback | High |
+| ADR | `docs/adr/` | decision, alternatives, consequences, rollback | High |
 | Standard/profile | `docs/standards/` | normative language, test hooks, versioning | High |
-| Template | `docs/templates/` | how-to-use section, example | Medium |
+| Spec (buildable) | `docs/specs/` | contract links + test hooks + rollout/rollback | High |
 | Governance policy | `docs/governance/` | roles, gates, enforcement intent | Highest |
-| Story Node | `docs/reports/story_nodes/` | citations, review state, policy label, assets | Highest |
+| Template | `docs/templates/` | how-to-use + example | Medium |
+| How-to guide | `docs/guides/` | runnable steps + safety notes | Medium |
+| Runbook | `docs/runbooks/` | triage + rollback + verify | Highest |
+| Model card | `mcp/model_cards/` (or `docs/ai/`) | version pinning + eval + governance | Highest |
+| Story Pack | `docs/stories/` | citations + review state + policy label | Highest |
+| Investigation note | `docs/investigations/` | marked non-authoritative | Low |
 
 ---
 
 ## MetaBlock v2 and document metadata
-**[CONFIRMED]** KFM uses **MetaBlock v2** (HTML comment) for docs, Story Nodes, and dataset specs.
+**[CONFIRMED]** KFM uses **MetaBlock v2** (HTML comment) for docs, Story Packs, and dataset specs.
 
 ### Minimal MetaBlock v2 template
 ```html
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/<uuid>
 title: <Title>
-type: <guide|standard|story|dataset_spec|adr|run_receipt>
+type: <guide|standard|story|dataset_spec|adr|run_receipt|spec|model_card>
 version: v1
 status: draft|review|published
 owners: <team or names>
@@ -468,7 +639,7 @@ notes: [<short notes>]
 - **[CONFIRMED]** `doc_id` is stable — do not regenerate on edits.
 - **[CONFIRMED]** bump `updated:` on meaningful edits.
 - **[CONFIRMED]** `policy_label` is an input to governance (especially if docs are served through governed APIs).
-- **[PROPOSED]** Use `related:` to link to datasets, story nodes, ADRs, contracts, and policies by stable IDs.
+- **[PROPOSED]** Use `related:` to link to datasets, Story Packs, ADRs, contracts, and policies by stable IDs.
 
 ---
 
@@ -495,39 +666,76 @@ Standards under `docs/standards/` define what is “valid” in KFM. Treat them 
 
 ---
 
-## Templates
-Templates make governed work fast and consistent.
+## Specs and component design docs
+**[PROPOSED]** `docs/specs/` is where you put “buildable” design docs that become work items and can be enforced by contracts/tests.
 
-### Required templates
-- `TEMPLATE__KFM_UNIVERSAL_DOC.md`
-  - **Use for:** any new guide/standard/runbook.
-  - **Includes:** MetaBlock v2 + scope + where it fits + inputs/exclusions + gates.
+### What belongs in specs
+- watcher/planner/executor automation patterns (auditable, PR-only mutation)
+- pipeline-specific run contracts (inputs/outputs/idempotency keys)
+- UI component specs that crosscut Map/Story/Focus
+- storage/distribution specs (OCI publishing, delta graphs, integrity proofs)
 
-- `TEMPLATE__STORY_NODE_V3.md`
-  - **Use for:** a story node draft/publish workflow.
-  - **Includes:** claims section, citations list, map state sidecar convention (if used), review state.
-
-- `TEMPLATE__API_CONTRACT_EXTENSION.md`
-  - **Use for:** adding a contract field, API endpoint, or schema extension.
-  - **Includes:** compatibility notes + versioning + tests + rollout/rollback.
+### What does not belong in specs
+- “maybe someday” ideas with no owners, no contracts, and no path to enforcement  
+  → put those in `docs/investigations/`.
 
 ---
 
-## Reports and Story Nodes
-`docs/reports/story_nodes/` is where narrative artifacts live when they become governed publications.
+## AI and MCP documentation
+**[PROPOSED]** AI system documentation needs a dedicated surface because it has unique governance risks.
 
-### Story Node lifecycle (docs-side)
-- `templates/` — patterns and rubrics
-- `draft/` — WIP stories (not published)
-- `published/<story_slug>/` — published story node package
+Minimum required AI docs (proposal):
+- **Focus Mode overview**: retrieval → evidence → synthesis → citation gate
+- **Model governance**: model cards, version pinning, allowed uses, prohibited uses
+- **Evaluation**: benchmarks, red-team scenarios, abstention rules, regression gates
+- **Runtime operations**: local LLM runtime runbook (e.g., Ollama), model install/update, rollback
 
-### Published Story Node package (required)
-A published story node is a directory:
+> **[CONFIRMED] Rule:** Focus Mode docs must never imply the UI calls models directly; model access is mediated by the governed API.
 
-- `story.md` — the narrative markdown (with citations and evidence references)
+---
+
+## Knowledge graph and ontology documentation
+**[PROPOSED]** If Neo4j/graph semantics are core, you need an explicit place to define:
+- the canonical ontology/vocabulary
+- node/relationship naming conventions
+- constraints/index patterns
+- ingestion mapping rules
+- graph-based retrieval patterns (GraphRAG)
+
+> **[CONFIRMED] Rule:** ontology changes that affect meaning should require an ADR and an update to policy/tests (fail-closed).
+
+---
+
+## Reference: contracts, schemas, and APIs
+**[PROPOSED]** Humans need a “map” to machine contracts without hunting through directories.
+
+Minimum reference indices (proposal):
+- **OpenAPI index**: where API specs live, ownership, versioning, endpoints
+- **Schema registry**: JSON schemas + what they validate + how to run validators
+- **Policy index**: bundles, gates, and ownership
+- **Tooling index**: validators/linters + invocation patterns
+
+> **[CONFIRMED]** Do not duplicate machine contracts in prose; instead, link to them and explain intent, compatibility, and enforcement points.
+
+---
+
+## Stories (Story Nodes and Story Packs)
+`docs/stories/` is the canonical home for governed narrative artifacts.
+
+### Lifecycle (docs-side)
+- `_templates/` — reusable story patterns and rubrics  
+- `draft/` — WIP stories (not published)  
+- `review/` — under governance review  
+- `published/<story_slug>/` — immutable published story pack  
+
+### Published Story Pack (required)
+A published story pack is a directory:
+
+- `story.md` — narrative markdown (with citations and evidence references)
+- `story.json` — optional map choreography/state
 - `assets/` — only approved media/data excerpts that are allowed to ship with the story
 
-> **[CONFIRMED] Publishing gate:** a Story Node cannot be published unless citations resolve and the review state is captured.
+> **[CONFIRMED] Publishing gate:** a story cannot be published unless citations resolve and the review state is captured.
 
 ---
 
@@ -539,12 +747,19 @@ KFM is fail-closed: missing evidence blocks promotion/publishing.
 - **[CONFIRMED] No secrets / no sensitive leakage.**
 - **[PROPOSED] Link integrity**: internal links resolve or are marked TODO with an issue reference.
 - **[PROPOSED] Ownership**: governance-impacting docs require `CODEOWNERS` approval.
+- **[PROPOSED] Docs index updated** (if `docs/_registry/` is adopted).
 
 ### Standards/profile gates (minimum)
 - **[CONFIRMED]** Changes to STAC/DCAT/PROV profiles must be paired with validator/test updates (or a documented manual gate).
 - **[PROPOSED]** Add a “profile change note” section to each profile describing how to migrate.
 
-### Story Node gates (minimum)
+### Specs gates (minimum)
+- **[PROPOSED]** Specs must name owners and link to:
+  - contracts they depend on
+  - tests/validators that enforce them
+  - rollout + rollback strategy
+
+### Story gates (minimum)
 - **[CONFIRMED]** citations are resolvable, policy-allowed, and stable.
 - **[CONFIRMED]** review state recorded (draft/review/published) with owners.
 - **[PROPOSED]** “narrative drift” checks: claims remain backed by promoted dataset versions.
@@ -554,20 +769,23 @@ KFM is fail-closed: missing evidence blocks promotion/publishing.
 - [ ] **[CONFIRMED]** No secrets, no sensitive location leakage
 - [ ] **[PROPOSED]** Links validated (or explicit TODO + issue)
 - [ ] **[PROPOSED]** If doc changes governance/standards, ADR created and owners approve
-- [ ] **[PROPOSED]** If Story Node, citations resolve and review state is captured
+- [ ] **[PROPOSED]** If story, citations resolve and review state is captured
+- [ ] **[PROPOSED]** If using docs registry, update `docs/_registry/docs.index.yml`
 
 ---
 
 ## How to add a new document
 1) **Choose the smallest correct home**  
-   - architecture vs standards vs governance vs templates vs reports
+   - architecture vs standards vs governance vs specs vs templates vs stories vs guides/runbooks
 2) **Create the file from a template**  
    - prefer `docs/templates/*`
 3) **Add MetaBlock v2** at top  
 4) **Update the nearest index README**  
    - and update `docs/MASTER_GUIDE_v13.md` if it is the canonical map
-5) **Run local checks** (or closest equivalent)  
-6) **Route review** via `CODEOWNERS` (and governance owners if policy changes)
+5) **Update registries** (if used)  
+   - `docs/_registry/docs.index.yml`, `docs/stories/_registry/`, etc.
+6) **Run local checks** (or closest equivalent)  
+7) **Route review** via `CODEOWNERS` (and governance owners if policy changes)
 
 ---
 
@@ -578,10 +796,10 @@ KFM is fail-closed: missing evidence blocks promotion/publishing.
 command -v tree >/dev/null && tree -L 4 docs || find docs -maxdepth 4 -type f | sort
 
 # confirm MetaBlock presence (at least once per doc)
-grep -R --line-number --fixed-string "[KFM_META_BLOCK_V2]" docs | head -n 100
+grep -R --line-number --fixed-string "[KFM_META_BLOCK_V2]" docs | head -n 200
 
 # quick internal link scan (cheap heuristic; not a real linkcheck)
-grep -R --line-number -E '\]\(\.\/|^\[.*\]: \.\/' docs | head -n 100
+grep -R --line-number -E '\]\(\.\/|^\[.*\]: \.\/' docs | head -n 200
 ```
 
 ### Repo-specific checks (pseudocode — rename to match your repo)
@@ -609,20 +827,29 @@ These are **[UNKNOWN] until verified in your checkout**:
 3) Who are the canonical docs owners?
    - Smallest step: check `.github/CODEOWNERS`; then set `owners:` in this README and directory READMEs.
 
-4) What is the authoritative docs set vs background/research?
-   - Smallest step: define a governance rule (in `docs/governance/ROOT_GOVERNANCE.md`) that lists doc classes and their authority level.
+4) Do you already have a discovery/index mechanism for docs (for Focus Mode retrieval)?
+   - Smallest step: search for `docs.index`, `registry`, or a docs manifest JSON/YAML and identify the canonical one.
+
+5) Which directory is canonical for Story Nodes today: `docs/stories/` or `docs/reports/story_nodes/`?
+   - Smallest step: run:
+     ```bash
+     ls -la docs/stories docs/reports/story_nodes 2>/dev/null
+     ```
 
 ---
 
 ## FAQ
 **Can I put PDFs, screenshots, or datasets in `docs/`?**  
-**[CONFIRMED]** Not as a substitute for governed lifecycle artifacts. Small illustrative images are fine; datasets belong under `data/` zones. Curated reports belong under `docs/reports/`.
+**[CONFIRMED]** Not as a substitute for governed lifecycle artifacts. Small illustrative images are fine; datasets belong under `data/` zones. If you keep PDFs as references, treat them as **non-authoritative** and link them from `docs/reference/` rather than embedding policy in PDFs.
 
 **What if I’m unsure whether something is sensitive?**  
 **[CONFIRMED]** Redact/generalize, mark “needs governance review,” and do not publish precise locations until policy explicitly allows.
 
 **Can I claim a folder exists if I haven’t verified it?**  
 **[CONFIRMED]** No. Mark it **[UNKNOWN]** and list the smallest verification step.
+
+**Where do machine contracts live?**  
+**[PROPOSED]** Keep machine contracts in `contracts/` and maintain human indices in `docs/reference/` so people can find them quickly.
 
 ---
 
@@ -633,10 +860,10 @@ These are **[UNKNOWN] until verified in your checkout**:
 
 If you need more separation, consider adding:
 
-- `docs/runbooks/` — operational runbooks (triage, restore, incident response)
-- `docs/quality/` — promotion gates, QA profiles, checklists, receipt examples
-- `docs/security/` — threat models, supply-chain policy, authn/z decisions
-- `docs/research/` — non-authoritative notes and literature summaries
+- `docs/releases/` — release notes, versioning strategy, deprecation policy
+- `docs/accessibility/` — map/story accessibility and WCAG guidance
+- `docs/compliance/` — FAIR+CARE operationalization, retention, privacy
+- `docs/training/` — contributor training modules and exercises (non-authoritative)
 
 If you add any of these, update:
 - `docs/MASTER_GUIDE_v13.md` (doc map)
