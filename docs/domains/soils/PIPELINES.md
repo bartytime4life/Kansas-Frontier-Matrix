@@ -107,40 +107,48 @@ Do **not** put these in soils pipelines (or promote them) without separate gover
 > This is the **target** shape; some paths may be PROPOSED depending on repo state.
 
 ~~~text
+docs/                                                  # Documentation hub (human-readable): domain guides + pipeline specs + governance links
+└─ domains/
+   └─ soils/
+      ├─ README.md                                     # (Optional) Soils domain overview (scope, stewards, policy_label defaults, links to modules/pipelines)
+      ├─ PIPELINES.md                                  # Soils pipeline map (what exists, schedules, inputs/outputs, gates/receipts, links to specs below)
+      ├─ DATASETS.md                                   # (Optional) Soils dataset registry (dataset_id, sources, licenses, sensitivity, cadence, owners)
+      └─ SCHEMAS.md                                    # (Optional) Soils schema index (artifact schemas/profiles used by soils pipelines + validators)
+
 docs/
-  domains/
-    soils/
-      README.md                # (optional) domain overview
-      PIPELINES.md             # this file
-      DATASETS.md              # (optional) dataset registry
-      SCHEMAS.md               # (optional) schema registry
-  data/
-    soils/
-      sda/
-        README.md              # Soils (SDA) domain module
-  pipelines/
-    soil/
-      sda-weekly/
-        README.md              # Weekly SDA + soilDB spec
-      differential-updates/
-        README.md              # Differential soil updates (SDA + gNATSGO)
-      ssurgo-ks-poc/
-        README.md              # Kansas SSURGO + gNATSGO POC (if adopted)
+└─ data/
+   └─ soils/
+      └─ sda/
+         └─ README.md                                  # Soils Data Access (SDA) module doc (endpoints/queries, licensing, ingest notes, evidence/prov anchors)
+
+docs/
+└─ pipelines/
+   └─ soil/                                            # Pipeline specs for soils (NOTE: consider aligning “soil/” vs “soils/” naming repo-wide)
+      ├─ sda-weekly/
+      │  └─ README.md                                  # Weekly SDA + soilDB spec (schedule, parameters, outputs, QA, promotion gates, receipts)
+      ├─ differential-updates/
+      │  └─ README.md                                  # Differential updates spec (SDA + gNATSGO) (change detection, idempotence, rollback, receipts)
+      └─ ssurgo-ks-poc/
+         └─ README.md                                  # KS SSURGO + gNATSGO POC spec (if adopted) (experiment boundaries, publish rules, success criteria)
+
 src/
-  pipelines/
-    soils/
-      ...                      # watchers, transforms, validators, publishers
-data/
-  raw/soils/...
-  work/soils/...
-  processed/soils/...
-  catalog/soils/...
-  prov/soils/...
+└─ pipelines/
+   └─ soils/                                           # Pipeline implementation (watchers/transforms/validators/publishers) producing receipts + governed outputs
+      └─ ...                                           # Code modules (runner wiring, deterministic transforms, schema/policy checks, catalog emitters)
+
+data/                                                  # Data truth-path zones (artifacts only; docs/specs live under docs/)
+├─ raw/soils/...                                       # RAW: immutable acquisitions/snapshots + checksums (inputs to transforms)
+├─ work/soils/...                                      # WORK: staging/intermediate outputs (not publishable; iterative QA)
+├─ processed/soils/...                                 # PROCESSED: validated, normalized outputs eligible for cataloging/publishing
+├─ catalog/soils/...                                   # CATALOG: DCAT/STAC/PROV triplets + crosslinks for discovery/traceability
+└─ prov/soils/...                                      # (PROPOSED) Explicit provenance artifacts (if not embedded in catalog/audit); keep schema-validated + linked
+
 policy/
-  rego/                        # promotion + dataset policies
+└─ rego/                                               # Policy-as-code (promotion + dataset access rules): labels/obligations/sensitivity gates for soils artifacts
+
 tests/
-  data/soils/...
-  policy/...
+├─ data/soils/...                                      # Data/pipeline tests for soils (schema/profile validation, QA thresholds, determinism checks)
+└─ policy/...                                          # Policy tests/fixtures (allow/deny/obligations) covering soils datasets and promotion scenarios
 ~~~
 
 ---
