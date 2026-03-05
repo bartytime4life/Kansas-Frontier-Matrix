@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: Standards WG (TBD)
 created: 2026-02-24
-updated: 2026-03-01
+updated: 2026-03-05
 policy_label: public
 related:
   - ../MASTER_GUIDE_v13.md
@@ -15,9 +15,9 @@ related:
 tags: [kfm, standards]
 notes:
   - Entry point for governed standards and profiles.
-  - Expanded directory layout to include identity, vocab, and conformance primitives.
-  - Upgrade pass: tighten normative language, lifecycle, and change control.
-  - Update owners/links when repo governance roles are finalized.
+  - This README defines the target layout and operating rules for standards; it must not imply that listed files already exist.
+  - Upgrade pass: tighten normative language, maturity model, and anti-hallucination guardrails.
+  - Update owners/links when repo governance roles are finalized and linkcheck passes.
 [/KFM_META_BLOCK_V2] -->
 
 # docs/standards
@@ -32,25 +32,32 @@ Governed standards, profiles, and protocols that constrain **how KFM artifacts a
 **Owners:** Standards WG (TBD)  
 **Applies to:** docs, templates, schemas, dataset specs, controlled vocabularies, run receipts, Story Nodes, governed APIs, UI trust surfaces
 
+> **Anti-hallucination guardrail:** This README defines a **target** structure and rules.  
+> It MUST NOT be read as evidence that any referenced paths/files already exist.  
+> CI linkcheck + tree validation MUST be the mechanism that upgrades `UNKNOWN` → `CONFIRMED`.
+
 ---
 
 ## Quick navigation
 - [Purpose](#purpose)
-- [Authority order](#authority-order)
-- [Normative language and status model](#normative-language-and-status-model)
-- [How this fits in the repo](#how-this-fits-in-the-repo)
-- [Standards registry](#standards-registry)
+- [Where this fits in the repo](#where-this-fits-in-the-repo)
+- [Authority and conflicts](#authority-and-conflicts)
+- [Normative language and maturity model](#normative-language-and-maturity-model)
+- [Acceptable inputs](#acceptable-inputs)
+- [Exclusions](#exclusions)
 - [Directory layout](#directory-layout)
+- [Standards registry](#standards-registry)
+- [Quickstart](#quickstart)
 - [How to use these standards](#how-to-use-these-standards)
 - [Change control](#change-control)
-- [Adding or updating a standard](#adding-or-updating-a-standard)
 - [Governance and review](#governance-and-review)
+- [FAQ](#faq)
 - [Appendix](#appendix)
 
 ---
 
 > [!WARNING]
-> Standards are **normative**. Changes here can break CI gates, schemas/contracts, and governed outputs.  
+> Standards are **normative**. Changes here can break schema/contracts, CI gates, and governed outputs.  
 > Follow the repo’s review gates before merging changes.
 
 ---
@@ -58,73 +65,27 @@ Governed standards, profiles, and protocols that constrain **how KFM artifacts a
 ## Purpose
 This directory exists to:
 
-- Define **canonical formats** and **profiles** used across KFM (e.g., STAC/DCAT/PROV).
+- Define **canonical formats** and **profiles** used across KFM (e.g., STAC/DCAT/PROV profiles and their KFM constraints).
 - Make governance **machine-checkable** (contracts, controlled vocabularies, conformance rules).
-- Reduce “repo drift” by giving every subsystem a single, governed source of truth.
-- Keep the system **fail-closed**: if a required invariant is unclear, the standard should default-deny until explicitly relaxed.
+- Reduce drift by giving every subsystem a single, governed source of truth.
+- Keep the system **fail-closed**: if a required invariant is unclear, standards and checks MUST default-deny until explicitly relaxed.
 
+System-wide posture this directory MUST encode:
 
-KFM’s governing posture is captured in three system-wide principles:
-
-- **Contract-first & deterministic**: prefer explicit schemas/contracts and reproducible pipelines.
-- **Evidence-first UI**: every user-facing claim is traceable to resolvable evidence.
-- **Cite-or-abstain**: if citations cannot be verified, narrow scope or abstain.
-
-> [!NOTE]
-> If a document in this directory conflicts with a template, ADR, or “how-to”, **the standard wins** (or the conflict must be resolved before promotion).
-
----
-
-## Authority order
-When two artifacts disagree, resolve the conflict in this order:
-
-1. **Published standards** in `docs/standards/`
-2. **Machine contracts** (`schemas/`, `contracts/`) that implement the standards
-3. **Templates** (`docs/templates/`) used to author compliant artifacts
-4. **Guides / how-tos** (`docs/…`) and one-off design docs (non-normative)
-
-> [!TIP]
-> If a contract/schema differs from a published standard, treat it as a **bug**: either update the contract to match the standard, or version/deprecate the standard and publish the successor.
-
----
-
-## Normative language and status model
-
-### Normative keywords
-Standards use the following keywords consistently:
-
-- **MUST** / **MUST NOT**: required for compliance; CI **SHOULD** enforce where feasible.
-- **SHOULD** / **SHOULD NOT**: strongly recommended; deviations require documented rationale.
-- **MAY**: optional behavior.
-
-> [!TIP]
-> If a requirement cannot be validated automatically yet, keep it **MUST**, but add:
-> 1) a `TODO(ci)` describing the intended automated check, and  
-> 2) a “manual verification” step.
-
-### Claim tagging for governed documents
-When a standard (or related doc) makes an implementation claim, tag it:
-
-- **CONFIRMED**: backed by artifacts in-repo (schemas, receipts, contracts, CI checks).
-- **PROPOSED**: a recommended future state (include rationale + tradeoffs).
-- **UNKNOWN**: cannot be verified yet (include minimum verification steps).
+- **Contract-first & deterministic:** prefer explicit schemas/contracts and reproducible pipelines.
+- **Evidence-first UI:** every user-facing claim MUST be traceable to resolvable evidence.
+- **Cite-or-abstain:** if citations cannot be verified, narrow scope or abstain.
 
 > [!NOTE]
-> This is not “extra process”: it prevents accidental overreach and makes review faster.
-
-### Document status meanings
-| Status | Meaning | Expectations |
-|---|---|---|
-| `draft` | Proposed, still changing | Not relied on for promotion unless explicitly required by gates |
-| `review` | Under formal review | High scrutiny; reviewers focus on blast radius + migration |
-| `published` | Stable, normative | No silent breaking edits; changes require versioning/deprecation |
-| `deprecated` | Still supported, discouraged | Replacement exists; deprecation window + migration guidance |
-| `superseded` | Replaced by a newer standard | Link to successor and migration guidance |
+> If any standard here conflicts with a template, guide, or implementation, the conflict MUST be resolved (not “worked around”) before promotion.
 
 ---
 
-## How this fits in the repo
-Standards are part of the **trust membrane**: they define what’s allowed/required; everything downstream implements + validates them.
+## Where this fits in the repo
+Standards are part of the **trust membrane**: they define what’s allowed/required; everything downstream implements and validates them.
+
+> [!IMPORTANT]
+> The diagram below is a **conceptual** wiring map. Node names are not proof that those directories already exist.
 
 ```mermaid
 flowchart LR
@@ -145,34 +106,95 @@ flowchart LR
   Governance --> Standards
 ```
 
-**Rule of thumb:**
+Rule of thumb:
 - Use **standards** to define **what is allowed/required** across the system.
 - Use **templates** to define **how to author** repeatable artifacts.
 - Use **schemas/contracts** when requirements must be **machine-validated** and consumed by code.
 
 ---
 
-## Standards registry
-> [!NOTE]
-> The machine-readable registry is the **authoritative inventory**. The README table is a convenience view and may be generated.
+## Authority and conflicts
+When two artifacts disagree, treat the conflict as a **blocking issue** for promotion and resolve it in this default order:
 
-| Standard | What it governs | Primary consumers | Status | CI enforcement |
-|---|---|---|---|---|
-| [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) | Markdown authoring conventions for governed docs | doc authors, reviewers, tooling | `draft` | markdownlint, linkcheck *(TBD)* |
-| [`KFM_REPO_STRUCTURE_STANDARD.md`](./KFM_REPO_STRUCTURE_STANDARD.md) | Canonical repo layout + invariants | all contributors, CI, tooling | `draft` | tree validation *(TBD)* |
-| [`KFM_STAC_PROFILE.md`](./KFM_STAC_PROFILE.md) | KFM metadata profile for STAC | catalog + pipelines + validators | `draft` | stac validator *(TBD)* |
-| [`KFM_DCAT_PROFILE.md`](./KFM_DCAT_PROFILE.md) | KFM metadata profile for DCAT | publishing layer + policy boundary | `draft` | dcat validator *(TBD)* |
-| [`KFM_PROV_PROFILE.md`](./KFM_PROV_PROFILE.md) | KFM provenance profile for PROV | pipelines, audit, evidence resolver | `draft` | prov validator *(TBD)* |
+1. **Repo governance** (charters, review gates, security and policy rules)
+2. **Published standards** in `docs/standards/`
+3. **Machine contracts** (`schemas/`, `contracts/`) that implement the standards
+4. **Templates** (`docs/templates/`) used to author compliant artifacts
+5. **ADRs and guides** (`docs/...`) and one-off design docs (non-normative unless promoted into a standard)
+
+Escalation rule:
+- If #2 and #3 disagree, treat it as a **bug**: either update the contract to match the standard, or version/deprecate the standard and publish the successor.
+- If #1 conflicts with #2, treat it as a **governance decision**: open an issue/ADR and resolve before merge.
+
+---
+
+## Normative language and maturity model
+
+### Normative keywords
+Standards use the following keywords consistently:
+
+- **MUST / MUST NOT:** required for compliance.
+- **SHOULD / SHOULD NOT:** strongly recommended; deviations require documented rationale.
+- **MAY:** optional behavior.
+
+Automation rule:
+- If a requirement is **MUST** and is machine-checkable, CI **MUST** enforce it.
+- If a requirement is **MUST** but not yet machine-checkable, the standard MUST include:
+  1) a `TODO(ci)` naming the intended automated check, and  
+  2) an explicit “manual verification” step.
+
+### Claim tagging to prevent hallucinations
+When this directory makes **implementation or repo-state claims**, tag them:
+
+- **CONFIRMED:** verifiable from in-repo artifacts and/or enforced checks.
+- **PROPOSED:** intended future state (include rationale + tradeoffs).
+- **UNKNOWN:** cannot be verified yet (include the smallest verification steps).
+
+> [!TIP]
+> Prefer writing requirements as requirements (MUST/SHOULD) instead of describing the current repo (“we have X”), unless you can mark it **CONFIRMED**.
+
+### Maturity model
+This README distinguishes two concepts:
+
+1) **Document maturity** (MetaBlock `status`):  
+   - `draft` → `review` → `published`
+
+2) **Lifecycle state** (tracked in the standards registry, not in MetaBlock):  
+   - `active` → `deprecated` → `superseded`
+
+> [!NOTE]
+> Keep MetaBlock `status` limited to `draft|review|published` unless/until `KFM_META_BLOCK_V2_STANDARD.md` explicitly expands it.
+
+---
+
+## Acceptable inputs
+This directory is the canonical home for:
+
+- **Profiles** (STAC/DCAT/PROV) and conformance rules
+- **Authoring protocols** (Markdown, MetaBlock, diagrams, linking)
+- **Repo structure standards**
+- **Controlled vocabularies** referenced across standards
+- **Change-control rules** for standards themselves (versioning/deprecation, migrations)
+
+---
+
+## Exclusions
+Do **not** put these here:
+
+- One-off design proposals (use ADRs / `docs/architecture/`)
+- Story content (use the Story Nodes area, e.g. `docs/reports/story_nodes/`)
+- Source code (use `src/`)
+- Schemas themselves (use `schemas/`), unless a standard explicitly *is* the schema (rare; prefer linking to schemas)
 
 ---
 
 ## Directory layout
 
-### Canonical layout
-The directory layout below is the **target standard layout** for `docs/standards/`.
+> [!NOTE]
+> This is the **target standard layout** for `docs/standards/` (PROPOSED until enforced by CI).
 
-- Items that don’t exist yet are allowed while this README is `draft`, but they MUST be tracked (issue/ADR) and created before publishing the relevant standards.
-- Every folder **MUST** contain a `README.md` describing its scope + exclusions.
+<details>
+<summary><strong>Show target directory tree</strong></summary>
 
 ```text
 docs/standards/                                         # Standards that constrain authoring, validation, and promotion
@@ -196,16 +218,16 @@ docs/standards/                                         # Standards that constra
 │     ├─ policy_label.yaml                              # public, public_generalized, restricted, etc.
 │     ├─ artifact.zone.yaml                             # raw, work, processed, catalog, published
 │     ├─ citation.kind.yaml                             # dcat, stac, prov, doc, graph, url (discouraged)
-│     └─ media_types.yaml                               # media type conventions used in catalogs/manifests (when standardized)
+│     └─ media_types.yaml                               # media type conventions used in catalogs/manifests
 │
 │  # Authoring standards beyond “Markdown protocol”
 ├─ authoring/
-│  ├─ README.md                                         # Scope + exclusions for authoring standards
-│  ├─ KFM_META_BLOCK_V2_STANDARD.md                     # MetaBlock v2 rules + required keys + examples
-│  ├─ KFM_NORMATIVE_LANGUAGE_STANDARD.md                # MUST/SHOULD/MAY + CONFIRMED/PROPOSED/UNKNOWN tagging rules
-│  ├─ KFM_CITATION_PROTOCOL.md                          # Evidence citation format + link hygiene + cite-or-abstain rules
-│  ├─ KFM_DIAGRAM_MERMAID_STANDARD.md                   # Mermaid constraints (naming, layout, allowed constructs)
-│  ├─ KFM_LINKING_STANDARD.md                           # Relative links, anchors, reference hygiene, no rot
+│  ├─ README.md
+│  ├─ KFM_META_BLOCK_V2_STANDARD.md
+│  ├─ KFM_NORMATIVE_LANGUAGE_STANDARD.md
+│  ├─ KFM_CITATION_PROTOCOL.md
+│  ├─ KFM_DIAGRAM_MERMAID_STANDARD.md
+│  ├─ KFM_LINKING_STANDARD.md
 │  └─ examples/
 │     ├─ good/                                          # Golden fixtures used by linters/tests
 │     └─ bad/                                           # Intentional violations (tests should fail)
@@ -213,115 +235,135 @@ docs/standards/                                         # Standards that constra
 │  # Identity + determinism (hashes, IDs, canonicalization)
 ├─ identity/
 │  ├─ README.md
-│  ├─ KFM_SPEC_HASH_STANDARD.md                         # spec_hash inputs + canonicalization rules
-│  ├─ KFM_IDENTIFIER_FAMILIES_STANDARD.md               # kfm:// identifiers and stability rules
-│  ├─ KFM_DATASET_VERSION_ID_STANDARD.md                # dataset_version_id structure and derivation constraints
+│  ├─ KFM_SPEC_HASH_STANDARD.md
+│  ├─ KFM_IDENTIFIER_FAMILIES_STANDARD.md
+│  ├─ KFM_DATASET_VERSION_ID_STANDARD.md
 │  └─ examples/
 │
 │  # Conformance: how standards become checks that fail closed
 ├─ conformance/
-│  ├─ README.md                                         # What “conformance” means in KFM
-│  ├─ KFM_CONFORMANCE_MATRIX.md                         # Standard ↔ check mapping; where enforced
-│  ├─ KFM_FIXTURE_CONVENTIONS.md                        # How golden fixtures are structured/named
+│  ├─ README.md
+│  ├─ KFM_CONFORMANCE_MATRIX.md
+│  ├─ KFM_FIXTURE_CONVENTIONS.md
 │  └─ fixtures/
-│     ├─ minimal/                                       # Smallest passing artifacts (fast CI)
-│     ├─ regression/                                    # Past bugs locked in as tests
-│     └─ adversarial/                                   # Policy bypass attempts; citation rot; malformed catalogs
+│     ├─ minimal/
+│     ├─ regression/
+│     └─ adversarial/
 │
-│  # Repo mechanics standards (layout is entrypoint; this holds “how we change the repo safely”)
+│  # Repo mechanics standards
 ├─ repo/
-│  ├─ README.md                                         # Scope + exclusions for repo standards
-│  ├─ KFM_BRANCHING_RELEASE_STANDARD.md                 # Branching, release tagging, doc promotion cadence
-│  ├─ KFM_VERSIONING_DEPRECATION_STANDARD.md            # Breaking change policy, deprecation windows, migrations
+│  ├─ README.md
+│  ├─ KFM_BRANCHING_RELEASE_STANDARD.md
+│  ├─ KFM_VERSIONING_DEPRECATION_STANDARD.md
 │  └─ examples/
-│     └─ repo_trees/                                    # Sample trees used by validation tooling/docs
+│     └─ repo_trees/
 │
-│  # Catalog + triplet standards (STAC/DCAT/PROV are entrypoints; this is the “system glue”)
+│  # Catalog + triplet standards
 ├─ catalog/
-│  ├─ README.md                                         # Relationship to schemas/ + validators
+│  ├─ README.md
 │  ├─ triplet/
-│  │  ├─ KFM_TRIPLET_LINKING_STANDARD.md                # DCAT↔STAC↔PROV cross-links + receipts linkage invariants
+│  │  ├─ KFM_TRIPLET_LINKING_STANDARD.md
 │  │  └─ examples/
-│  │     ├─ minimal_triplet/                            # Minimal passing set (good for tests)
-│  │     └─ complex_triplet/                            # Multi-collection / multi-distribution examples
+│  │     ├─ minimal_triplet/
+│  │     └─ complex_triplet/
 │  ├─ stac/
-│  │  ├─ README.md                                      # STAC addenda: mapping notes, local conventions
-│  │  ├─ CONFORMANCE.md                                 # What checks exist, what fail-closed means, where they run
+│  │  ├─ README.md
+│  │  ├─ CONFORMANCE.md
 │  │  └─ examples/
 │  ├─ dcat/
-│  │  ├─ README.md                                      # DCAT addenda: mapping notes, local conventions
+│  │  ├─ README.md
 │  │  ├─ CONFORMANCE.md
 │  │  └─ examples/
 │  └─ prov/
-│     ├─ README.md                                      # PROV addenda: receipts, lineage, transform tracing rules
+│     ├─ README.md
 │     ├─ CONFORMANCE.md
 │     └─ examples/
 │
-│  # Policy-facing standards that must remain stable across APIs/UI/Focus Mode
+│  # Policy-facing standards
 ├─ policy/
-│  ├─ README.md                                         # Policy labels + obligations interface (not Rego itself)
-│  ├─ KFM_POLICY_LABEL_STANDARD.md                      # policy_label taxonomy + propagation rules
-│  ├─ KFM_REDACTION_OBLIGATIONS_STANDARD.md             # obligation types + UI/API enforcement requirements
-│  ├─ KFM_POLICY_SAFE_ERRORS_STANDARD.md                # 403/404 behavior + “no existence leak” constraints
+│  ├─ README.md
+│  ├─ KFM_POLICY_LABEL_STANDARD.md
+│  ├─ KFM_REDACTION_OBLIGATIONS_STANDARD.md
+│  ├─ KFM_POLICY_SAFE_ERRORS_STANDARD.md
 │  └─ examples/
-│     ├─ public/                                        # public-safe examples
-│     └─ restricted/                                    # obligation examples (no sensitive specifics)
+│     ├─ public/
+│     └─ restricted/
 │
-│  # Evidence standards (ties provenance + citations + “show your work” UX)
+│  # Evidence standards
 ├─ evidence/
-│  ├─ README.md                                         # EvidenceRef/EvidenceBundle rules
-│  ├─ KFM_EVIDENCE_REF_STANDARD.md                      # EvidenceRef shape, required fields, resolvable targets
-│  ├─ KFM_EVIDENCE_BUNDLE_STANDARD.md                   # Bundle assembly, redaction rules, citation binding
-│  ├─ KFM_RUN_RECEIPT_STANDARD.md                       # Run receipt minimum fields + linkage to triplet/catalog
-│  ├─ KFM_PROMOTION_MANIFEST_STANDARD.md                # Promotion manifest minimum fields + approvals linkage
+│  ├─ README.md
+│  ├─ KFM_EVIDENCE_REF_STANDARD.md
+│  ├─ KFM_EVIDENCE_BUNDLE_STANDARD.md
+│  ├─ KFM_RUN_RECEIPT_STANDARD.md
+│  ├─ KFM_PROMOTION_MANIFEST_STANDARD.md
 │  └─ examples/
 │
-│  # Governed API contract conventions (how contracts express policy + evidence)
+│  # Governed API contract conventions
 ├─ api/
-│  ├─ README.md                                         # How to author API-facing standards (links to contracts/)
-│  ├─ KFM_API_CONTRACT_EXTENSION.md                     # Common fields: policy/evidence/timestamps/error envelope
-│  ├─ KFM_ERROR_MODEL_STANDARD.md                       # Error codes, policy-safe messaging, trace IDs
-│  ├─ KFM_PAGINATION_FILTERING_STANDARD.md              # Paging + filtering semantics (time-aware + map queries)
-│  ├─ KFM_EXPORT_DOWNLOAD_STANDARD.md                   # Export/download obligations: attribution, watermarking, deny rules
+│  ├─ README.md
+│  ├─ KFM_API_CONTRACT_EXTENSION.md
+│  ├─ KFM_ERROR_MODEL_STANDARD.md
+│  ├─ KFM_PAGINATION_FILTERING_STANDARD.md
+│  ├─ KFM_EXPORT_DOWNLOAD_STANDARD.md
 │  └─ examples/
 │
 │  # UI-facing standards (normative UX constraints; not design proposals)
 ├─ ui/
-│  ├─ README.md                                         # Evidence-first UX requirements + exclusions
-│  ├─ KFM_STORY_NODE_STANDARD.md                        # Story Node schema rules (where it lives + validation)
-│  ├─ KFM_EVIDENCE_FIRST_UX_STANDARD.md                 # UX requirements for traceability + “why” panes
-│  ├─ KFM_EVIDENCE_DRAWER_STANDARD.md                   # Evidence drawer requirements (license/version/a11y)
+│  ├─ README.md
+│  ├─ KFM_STORY_NODE_STANDARD.md
+│  ├─ KFM_EVIDENCE_FIRST_UX_STANDARD.md
+│  ├─ KFM_EVIDENCE_DRAWER_STANDARD.md
 │  ├─ accessibility/
-│  │  └─ KFM_A11Y_MINIMUM_STANDARD.md                   # Minimum a11y constraints for governed UI
+│  │  └─ KFM_A11Y_MINIMUM_STANDARD.md
 │  └─ examples/
 │
 │  # External interoperability notes (non-normative mappings to external standards)
 ├─ interop/
-│  ├─ README.md                                         # What belongs here (interop notes, not local requirements)
-│  ├─ EXTERNAL_STANDARDS_INDEX.md                       # STAC/DCAT/PROV/OGC/etc. reference index
+│  ├─ README.md
+│  ├─ EXTERNAL_STANDARDS_INDEX.md
 │  └─ examples/
 │
 └─ _archive/                                            # Deprecated/old versions (never referenced by CI)
-   ├─ README.md                                         # How/when to archive; linking rules
-   └─ 2026-02-xx/                                       # Date- or version-bucketed snapshots
+   ├─ README.md
+   └─ 2026-02-xx/
 ```
 
-### Acceptable inputs
-This directory is the canonical home for:
+</details>
 
-- **Profiles** (STAC/DCAT/PROV) and conformance rules
-- **Authoring protocols** (Markdown, MetaBlock, diagrams, linking)
-- **Repo structure standards**
-- **Controlled vocabularies** referenced across standards
-- **Change-control rules** for standards themselves (versioning/deprecation)
+---
 
-### Exclusions
-Do **not** put these here:
+## Standards registry
+> [!IMPORTANT]
+> The machine-readable registry SHOULD be the authoritative inventory.  
+> The README table below is a convenience view; it MUST NOT be treated as “proof of existence.”
 
-- One-off design proposals (use ADRs / `docs/architecture/`)
-- Story content (use `docs/reports/story_nodes/`)
-- Source code (use `src/`)
-- Schemas themselves (use `schemas/`), unless a standard explicitly *is* the schema
+If `registry/standards.registry.yaml` does not exist yet, it MUST be created before this directory can be promoted to `published`.
+
+### Convenience view (verify before marking CONFIRMED)
+| Standard | What it governs | Primary consumers | MetaBlock `status` | Reality |
+|---|---|---|---|---|
+| `README.md` | Entry point + operating rules for standards | all contributors | `draft` | **CONFIRMED** |
+| `KFM_MARKDOWN_WORK_PROTOCOL.md` | Markdown authoring conventions for governed docs | doc authors, reviewers, tooling | `draft` | **UNKNOWN** *(verify file exists + linkcheck)* |
+| `KFM_REPO_STRUCTURE_STANDARD.md` | Canonical repo layout + invariants | all contributors, CI, tooling | `draft` | **UNKNOWN** *(verify file exists + linkcheck)* |
+| `KFM_STAC_PROFILE.md` | KFM metadata profile for STAC | catalog, pipelines, validators | `draft` | **UNKNOWN** *(verify file exists + linkcheck)* |
+| `KFM_DCAT_PROFILE.md` | KFM metadata profile for DCAT | publishing layer + policy boundary | `draft` | **UNKNOWN** *(verify file exists + linkcheck)* |
+| `KFM_PROV_PROFILE.md` | KFM provenance profile for PROV | pipelines, audit, evidence resolver | `draft` | **UNKNOWN** *(verify file exists + linkcheck)* |
+
+---
+
+## Quickstart
+These commands are intentionally **pseudocode** until the repo defines exact tooling. Replace with repo-approved commands once available.
+
+```bash
+# PSEUDOCODE: validate links and headings in docs/standards
+make docs-standards-linkcheck
+
+# PSEUDOCODE: lint markdown standards and examples
+make docs-standards-lint
+
+# PSEUDOCODE: validate standards registry structure and required fields
+make docs-standards-registry-validate
+```
 
 ---
 
@@ -331,11 +373,11 @@ Do **not** put these here:
 2. **Use templates for authoring**
    - If there’s a template in `docs/templates/`, author via the template and validate against standards here.
 3. **Validate early**
-   - Prefer CI checks that fail closed over manual policing.
+   - Prefer checks that fail closed over manual policing.
 4. **Prefer additive change**
    - Add a new version or extension before breaking existing contracts.
 5. **When you must deviate**
-   - Capture rationale, scope, and expiration (when the deviation ends), and link it to governance.
+   - Capture rationale, scope, and an expiration date; link it to governance.
 
 ---
 
@@ -345,46 +387,23 @@ Standards changes are governed because they can alter what becomes publishable a
 ### Change types
 - **Clarification-only:** wording/formatting that does not change requirements.
 - **Additive:** new optional capability, new examples, new checks.
-- **Breaking:** changes to requirements, schemas, contracts, or promotion behavior.
+- **Breaking:** changes to requirements, schemas/contracts, or promotion behavior.
 
 > [!WARNING]
-> If you can’t confidently classify the change as “clarification-only” or “additive”, treat it as **breaking**.
+> If you can’t confidently classify a change as “clarification-only” or “additive”, treat it as **breaking**.
 
-### Lifecycle sketch
+### Lifecycle sketch (maturity)
 ```mermaid
 flowchart TD
   Idea[Issue or ADR] --> Draft[Draft standard]
   Draft --> Review[Review gate]
   Review --> Published[Published standard]
-  Published --> Deprecated[Deprecated]
-  Deprecated --> Superseded[Superseded]
 ```
 
 ### Versioning rules
-- **Published standards are stable:** avoid silent breaking edits.
+- Published standards are stable: avoid silent breaking edits.
 - For breaking changes, prefer **new versions** or **successor documents**, and include migration guidance.
-- Keep explicit **deprecation windows** when consumers exist (timeboxed when possible).
-
----
-
-## Adding or updating a standard
-
-### Minimum checklist
-- [ ] Document includes a MetaBlock v2 header (see appendix) with correct `policy_label`
-- [ ] Standard clearly states its **scope** and **non-goals**
-- [ ] Standard includes **requirements** using MUST/SHOULD/MAY
-- [ ] Standard includes **examples** (good + bad) where practical
-- [ ] Change includes **migration guidance** if it breaks consumers
-- [ ] CI/tooling hooks are updated (or a TODO is filed with an owner)
-- [ ] Registry updated: `registry/standards.registry.yaml` (+ `deprecations.yaml` if relevant)
-- [ ] Links updated: any affected templates/schemas/contracts
-
-### Suggested PR structure
-- **What changed:** short summary
-- **Why:** rationale + tradeoffs
-- **Blast radius:** what systems need to be retested
-- **Verification:** commands or steps to confirm compliance
-- **Governance:** policy implications, sensitivity/sovereignty impact (if any)
+- Track deprecation windows and replacements in `registry/deprecations.yaml` (or equivalent registry mechanism).
 
 ---
 
@@ -395,13 +414,30 @@ Standards should be reviewed with extra rigor because they:
 - affect how policy is enforced,
 - may change what becomes publishable.
 
-**When in doubt:** default-deny (tighten constraints), then explicitly loosen with rationale.
+Default posture:
+- **Fail-closed** (tighten constraints) by default.
+- Loosen explicitly with rationale, blast radius, and migration steps.
+
+---
+
+## FAQ
+
+**How do we prevent “README drift” vs the real standards inventory?**  
+Make the registry machine-readable and CI-validated. Treat README tables as a view, not the source of truth.
+
+**Can I add a standard without CI checks?**  
+Yes while `draft`, but you MUST include `TODO(ci)` plus manual verification steps, and you MUST add CI enforcement before publishing the standard.
+
+**What if implementation needs to violate a standard temporarily?**  
+Document the deviation with scope + expiration + rationale and route it through governance. Do not silently bypass standards.
 
 ---
 
 ## Appendix
 
-### MetaBlock v2 reminder
+<details>
+<summary><strong>MetaBlock v2 reminder</strong></summary>
+
 KFM docs use **MetaBlock v2** for structured metadata (instead of YAML frontmatter). Copy/paste and fill:
 
 ```text
@@ -428,6 +464,8 @@ Guidelines:
 - `doc_id` MUST be stable (do not regenerate on edits).
 - `updated` SHOULD change on meaningful edits.
 - `policy_label` MUST reflect the most restrictive content in the document.
+
+</details>
 
 ---
 
