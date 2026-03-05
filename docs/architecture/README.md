@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: KFM Maintainers
 created: 2026-02-24
-updated: 2026-03-01
+updated: 2026-03-05
 policy_label: restricted
 related:
   - TODO: docs/governance/README.md
@@ -16,15 +16,20 @@ related:
 tags: [kfm, architecture, trust-membrane, truth-path, promotion-contract]
 notes:
   - Defines the trust membrane, truth path lifecycle, and promotion contract expectations for architecture changes.
-  - Directory layouts include CONFIRMED-at-root items and PROPOSED target expansions; do not treat PROPOSED subtrees as repo fact without verification.
+  - This document is normative. Any statements about the current live repo or deployed runtime are UNKNOWN unless backed by a captured commit hash + tree dump.
+  - Directory layouts include PROPOSED target expansions; do not treat PROPOSED subtrees as repo fact without verification.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # Architecture
-Governed, end-to-end system architecture + **trust membrane** rules for Kansas-Matrix-System.
+Governed, end-to-end system architecture and **trust membrane** rules for **Kansas Frontier Matrix (KFM)**.
 
-**Map-first • Time-aware • Evidence-first • Governed • Cite-or-abstain**
+**Map-first · Time-aware · Evidence-first · Governed · Cite-or-abstain**
+
+> **Status:** draft · **Owners:** KFM Maintainers · **Policy:** restricted  
+> **Doc role:** This is a *normative contract* for boundaries, promotion gates, and claim traceability.  
+> **Repo facts:** Any repo-specific paths and “what exists today” statements are **UNKNOWN** unless linked to a commit hash + tree dump.
 
 ![Status](https://img.shields.io/badge/status-draft-yellow)
 ![Policy](https://img.shields.io/badge/policy-restricted-orange)
@@ -46,6 +51,7 @@ Governed, end-to-end system architecture + **trust membrane** rules for Kansas-M
 
 ## Quick navigation
 
+- [Status and intent](#status-and-intent)
 - [System at a glance](#system-at-a-glance)
 - [Truth discipline labels](#truth-discipline-labels)
 - [Layering model](#layering-model)
@@ -60,29 +66,48 @@ Governed, end-to-end system architecture + **trust membrane** rules for Kansas-M
 
 ---
 
+## Status and intent
+
+This document contains two kinds of statements:
+
+1) **Normative requirements** for KFM architecture  
+   These use RFC-style keywords like **MUST**, **MUST NOT**, **SHOULD**, **MAY**.  
+   They describe what the system is required to do, even if the current implementation is incomplete.
+
+2) **Descriptive claims** about the repo or runtime  
+   These must be labeled **[CONFIRMED]**, **[PROPOSED]**, or **[UNKNOWN]**.  
+   If a descriptive claim is **[UNKNOWN]**, the doc must include the smallest verification steps needed to make it **[CONFIRMED]**.
+
+> [!IMPORTANT]
+> Avoid “accidental invention.” If you cannot point to a specific commit tree, validator output, or governed run receipt, treat repo/runtime facts as **[UNKNOWN]**.
+
+[(back to top)](#top)
+
+---
+
 ## System at a glance
 
-Kansas-Matrix-System connects:
+KFM’s reference pipeline is:
 
-**upstream → connectors → RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → index builders → governed API (PEP) → Map/Story UI + Focus Mode**
+**upstream → connectors → RAW → WORK or QUARANTINE → PROCESSED → CATALOG TRIPLET → index builders → governed API and PEP → Map and Story UI + Focus Mode**
 
-Key architectural idea: **catalogs + provenance are contract surfaces**, not “nice metadata”.
+Key architectural idea: **catalogs and provenance are contract surfaces**, not “nice metadata.”
 
 ```mermaid
 flowchart LR
   UP[Upstream sources] --> CON[Connectors\nfetch or snapshot]
-  CON --> RAW[RAW\nimmutable artifacts + checksums]
-  RAW --> WRK[WORK or QUARANTINE\nnormalize + QA + redaction]
-  WRK --> PRC[PROCESSED\npublishable artifacts + checksums]
-  PRC --> CAT[CATALOG/TRIPLET\nDCAT + STAC + PROV + run receipts]
-  CAT --> IDX[Index builders\nDB + search + tiles + graph]
-  IDX --> PEP[Governed API or PEP\npolicy enforced]
-  PEP --> UI[Map + Story UI\nEvidence-first UX]
+  CON --> RAW[RAW\nimmutable artifacts plus checksums]
+  RAW --> WRK[WORK or QUARANTINE\nnormalize plus QA plus redaction]
+  WRK --> PRC[PROCESSED\npublishable artifacts plus checksums]
+  PRC --> CAT[CATALOG TRIPLET\nDCAT plus STAC plus PROV plus receipts]
+  CAT --> IDX[Index builders\nDB plus search plus tiles plus graph]
+  IDX --> PEP[Governed API and PEP\npolicy enforced]
+  PEP --> UI[Map and Story UI\nevidence-first UX]
   PEP --> FOCUS[Focus Mode\ncite or abstain]
 
   subgraph TM[Trust membrane]
-    POL[Policy evaluation\nallow or deny + obligations]
-    VAL[Validators\nschema + linkcheck]
+    POL[Policy decision\nallow or deny plus obligations]
+    VAL[Validators\nschema plus linkcheck]
     AUD[Audit ledger\nappend-only receipts]
   end
 
@@ -96,7 +121,7 @@ flowchart LR
 ```
 
 > [!NOTE]
-> “Published” is not just a folder. It is the **governed runtime**: API responses, tiles, story pages, and Focus Mode outputs—each backed by promoted artifacts + receipts.
+> “Published” is not just a folder. It is the **governed runtime surface**: API responses, tiles, story pages, and Focus Mode outputs—each backed by promoted artifacts and auditable receipts.
 
 [(back to top)](#top)
 
@@ -104,14 +129,14 @@ flowchart LR
 
 ## Truth discipline labels
 
-To keep docs actionable (and prevent accidental invention), we tag statements:
+To keep docs actionable and prevent accidental invention, we tag descriptive statements:
 
-- **[CONFIRMED]** backed by governed docs / validated artifacts.
-- **[PROPOSED]** an option or recommended design pattern.
-- **[UNKNOWN]** requires verification in the live repo (and must not be assumed true).
+- **[CONFIRMED]** backed by a commit hash + tree dump, validator outputs, or governed run receipts.
+- **[PROPOSED]** a recommended design or target state.
+- **[UNKNOWN]** requires verification and must not be treated as fact.
 
 > [!TIP]
-> When adding a new architectural claim: include (1) evidence, (2) policy decision path, (3) the CI/runtime enforcement point.
+> When adding a new architectural claim: include (1) evidence, (2) policy decision path, (3) the CI or runtime enforcement point.
 
 [(back to top)](#top)
 
@@ -119,7 +144,7 @@ To keep docs actionable (and prevent accidental invention), we tag statements:
 
 ## Layering model
 
-We enforce layering so governance is testable and bypass is hard.
+Layering is a requirement so governance is testable and bypass is hard.
 
 ```mermaid
 flowchart TB
@@ -161,8 +186,17 @@ flowchart TB
 
 - **Domain**: datasets, dataset versions, artifacts, catalogs, claims, evidence refs, policy decisions, receipts, story nodes.
 - **Use cases**: ingest, validate, promote, resolve evidence, query slices, publish story nodes, run focus queries.
-- **Interfaces**: API + evidence resolver + policy boundary (enforcement, not “helper lib”).
-- **Infrastructure**: artifact stores + catalog store + audit ledger + projection stores (indexes, tiles, DB).
+- **Interfaces**: API, evidence resolver, policy boundary enforcement.
+- **Infrastructure**: artifact stores, catalog store, audit ledger, projection stores such as indexes, tiles, search, DB, graph.
+
+### Key terms
+
+- **PEP**: Policy Enforcement Point. The component that enforces allow or deny decisions and obligations.
+- **PDP**: Policy Decision Point. The component that evaluates policy and returns decision plus obligations.  
+  The PDP may be packaged with the PEP, but the enforcement boundary must remain explicit.
+- **EvidenceRef**: Stable identifier for a citable object.
+- **EvidenceBundle**: Resolver output containing metadata, provenance, digests, and policy-applied views.
+- **Projection store**: A rebuildable index derived from promoted artifacts. It is not canonical truth.
 
 [(back to top)](#top)
 
@@ -170,28 +204,30 @@ flowchart TB
 
 ## Trust membrane invariants
 
-These are **non-negotiable**. Encode them as tests and enforce them in CI.
+These are **non-negotiable requirements**. Encode them as tests and enforce them in CI and runtime.
 
-### Hard rules (normative)
+### Hard rules
 
-- **Clients MUST NOT access DB/object storage directly.** UI/clients MUST use governed APIs only.
-- **Core logic MUST NOT bypass repositories.** Use cases talk to repos; repos talk to storage/indexes.
-- **All access MUST be policy-evaluated.** Policy evaluation returns **decision + obligations** (e.g., generalize geometry, remove fields).
+- **Clients MUST NOT access DB or object storage directly.** UI and external clients MUST use governed APIs only.
+- **Core logic MUST NOT bypass repositories.** Use cases talk to repos; repos talk to storage and projection stores.
+- **All access MUST be policy-evaluated.** Policy evaluation returns **decision plus obligations**.
 - **Gates MUST fail closed.** Missing license, missing policy label, missing catalogs, or missing receipts MUST block promotion and release.
-- **Citations MUST be EvidenceRefs, not URLs.** Every user-facing claim MUST cite resolvable evidence or abstain.
-- **Runtime MUST only serve promoted versions.** Runtime services read only promoted dataset versions with DCAT/STAC/PROV + receipts.
-- **Deterministic identity is mandatory.** `dataset_id` + `dataset_version_id` + `spec_hash` + content digests prevent silent drift.
+- **User-facing citations MUST be EvidenceRefs, not pasted URLs.** Every claim MUST cite resolvable evidence or abstain.
+- **Runtime MUST only serve promoted versions.** Runtime services read only promoted dataset versions with catalogs plus receipts.
+- **Deterministic identity is mandatory.** `dataset_id`, `dataset_version_id`, `spec_hash`, and content digests prevent silent drift.
 
-### Architectural smells (block on sight)
+### Architectural smells
 
-- New endpoint reads from DB/object store without policy evaluation.
-- Client code contains database credentials.
-- “Temporary bypass” around promotion gates for demos.
-- Broken evidence links or non-resolvable citations in Story/Focus outputs.
-- Index/data-store treated as canonical truth (it is a projection unless explicitly promoted as canonical).
+Block on sight:
+
+- New endpoint reads from DB or object storage without policy evaluation.
+- Client code contains database credentials or object storage credentials.
+- Temporary bypass around promotion gates for demos.
+- Broken evidence links or non-resolvable citations in Story or Focus outputs.
+- Projection store treated as canonical truth without explicit promotion and provenance.
 
 > [!TIP]
-> If you need performance: optimize **inside** the membrane (cache, precompute, better indexing), not by bypassing governance.
+> If you need performance: optimize **inside** the membrane with caching, precompute, better indexing, or better retrieval—not by bypassing governance.
 
 [(back to top)](#top)
 
@@ -203,24 +239,27 @@ Promotion is not a copy operation. It is a governed decision supported by artifa
 
 | Zone | Purpose | Typical contents | Mutability | Typical readers | Promotion out requires |
 |---|---|---|---|---|---|
-| Upstream | External source-of-record | Remote APIs, files, portals, feeds | Out of our control | Connectors | Capture terms snapshot + acquisition manifest |
-| RAW | Immutable acquisition | Raw artifacts + checksums + acquisition/terms snapshot + fetch logs | Append-only | Pipeline maintainers | Identity + digests + license snapshot |
-| WORK / QUARANTINE | Isolation + QA | Normalization outputs, reprojections, tiling jobs, QA reports, redaction candidates | Rewrite allowed | Data engineers, reviewers | Validation reports + policy label + redaction plan |
-| PROCESSED | Publishable artifacts | Standard formats (GeoParquet, COG, PMTiles, etc.), stable IDs, checksums | Immutable per version | API/index builders | Meets QA thresholds + stable digests |
-| CATALOG / TRIPLET | Contract surfaces | Cross-linked DCAT + STAC + PROV + run receipts + link maps | Immutable per version | Validators, resolvers | Validators pass + links resolve |
-| PUBLISHED | Governed runtime surfaces | Policy-filtered API responses, tiles, story pages, Focus outputs (with receipts) | Mutable at runtime, but backed by immutable versions | End users | Only serve promoted versions; audit every request/run |
+| Upstream | External source of record | Remote APIs, files, portals, feeds | Out of our control | Connectors | Capture terms snapshot plus acquisition manifest |
+| RAW | Immutable acquisition | Raw artifacts plus checksums plus acquisition and terms snapshot plus fetch logs | Append-only | Pipeline maintainers | Identity plus digests plus license snapshot |
+| WORK or QUARANTINE | Isolation and QA | Normalization outputs, reprojections, tiling jobs, QA reports, redaction candidates | Rewrite allowed | Data engineers, reviewers | Validation reports plus policy label plus redaction plan |
+| PROCESSED | Publishable artifacts | Standard formats, stable IDs, checksums | Immutable per version | API and index builders | Meets QA thresholds plus stable digests |
+| CATALOG TRIPLET | Contract surfaces | Cross-linked DCAT plus STAC plus PROV plus run receipts plus link maps | Immutable per version | Validators, resolvers | Validators pass plus links resolve |
+| PUBLISHED | Governed runtime surfaces | Policy-filtered API responses, tiles, story pages, Focus outputs with receipts | Mutable at runtime, backed by immutable versions | End users | Only serve promoted versions; audit every request or run |
 
-### Minimum metadata (fail closed)
+> [!NOTE]
+> “Standard formats” are examples, not a guarantee of current usage. Treat specific formats as **[PROPOSED]** unless your dataset specs require them.
 
-For any dataset version eligible for promotion, we require at least:
+### Minimum metadata
 
-- `dataset_id`, `dataset_version_id` (stable IDs)
-- `spec_ref` + `spec_hash` (deterministic definition of transforms + thresholds)
-- License/rights + upstream terms snapshot
-- Policy label + obligations/redaction plan (when needed)
-- Spatial + temporal extents
-- Checksums/digests for every artifact
-- Catalog triplet + resolvable EvidenceRefs
+For any dataset version eligible for promotion, the minimum contract includes:
+
+- `dataset_id`, `dataset_version_id` as stable identifiers
+- `spec_ref` plus `spec_hash` as deterministic transform definition
+- License and rights plus upstream terms snapshot
+- Policy label plus obligations or redaction plan when needed
+- Spatial and temporal extents
+- Checksums or digests for every artifact
+- Catalog triplet plus resolvable EvidenceRefs
 
 [(back to top)](#top)
 
@@ -228,21 +267,21 @@ For any dataset version eligible for promotion, we require at least:
 
 ## Promotion contract and audit
 
-Promotion to PUBLISHED is blocked unless **all** minimum gates pass (fail closed).
+Promotion to PUBLISHED MUST be blocked unless **all** minimum gates pass.
 
-### Promotion Contract v1 (minimum gates)
+### Promotion contract v1
 
 | Gate | What must be present | Example CI check |
 |---|---|---|
-| A — Identity & versioning | dataset_id + dataset_version_id; deterministic spec_hash; content digests | Spec/schema validation; spec_hash golden tests; digest verification |
-| B — Licensing & rights | License/rights fields + snapshot of upstream terms | Fail if license missing/unknown; terms snapshot exists |
-| C — Sensitivity & redaction plan | policy_label + obligations (generalize geometry, remove fields, etc.) | Policy tests default-deny; verify obligations applied |
-| D — Catalog triplet validation | DCAT/STAC/PROV validate and cross-link; EvidenceRefs resolve | Validators + linkcheck; fail on broken links |
-| E — QA & thresholds | Dataset-specific checks + thresholds documented and met | QA report exists; quarantine failures |
-| F — Run receipt & audit record | Receipt capturing inputs, tooling, hashes, policy decisions; audit ledger append-only | Receipt schema validation; attestation/signature checks (if enabled) |
-| G — Release manifest | Promotion recorded as a manifest referencing artifacts + digests | Manifest exists; references match objects |
+| A — Identity and versioning | `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, content digests | Spec and schema validation; digest verification |
+| B — Licensing and rights | License and rights fields plus upstream terms snapshot | Fail if license missing or unknown; terms snapshot exists |
+| C — Sensitivity and redaction plan | `policy_label` plus obligations | Default-deny policy tests; verify obligations applied |
+| D — Catalog triplet validation | DCAT, STAC, PROV validate and cross-link; EvidenceRefs resolve | Validators and linkcheck; fail on broken links |
+| E — QA and thresholds | Dataset-specific checks and thresholds documented and met | QA report exists; quarantine failures |
+| F — Run receipt and audit record | Receipt captures inputs, tooling, hashes, policy decisions; audit ledger append-only | Receipt schema validation; attestation verification if enabled |
+| G — Release manifest | Promotion recorded as a manifest referencing artifacts and digests | Manifest exists; references match objects |
 
-### Run receipt template (machine-verifiable)
+### Run receipt template
 
 ```yaml
 run_id: "kfm://run/YYYY-MM-DDTHH:MM:SSZ.<suffix>"
@@ -283,36 +322,37 @@ notes:
 
 ### Contract registry
 
-| Contract | Purpose | Location (recommended) |
+| Contract | Purpose | Recommended location |
 |---|---|---|
-| API contract | Endpoints, auth, error model, audit_ref in errors | `contracts/openapi/` (machine) + `docs/apis/` (human) |
-| Evidence resolver contract | EvidenceRef → EvidenceBundle; policy enforced | `contracts/schemas/` + `docs/apis/` |
-| Policy contract | policy_label, obligations, default-deny tests | `policy/` + `docs/governance/` |
-| Catalog triplet profiles | DCAT/STAC/PROV required fields + cross-link rules | `contracts/schemas/` + `docs/data/` |
-| Receipt + manifest schemas | run receipt schema + promotion manifest schema | `contracts/schemas/` |
+| API contract | Endpoints, auth, error model, audit reference in errors | `contracts/openapi/` plus `docs/apis/` |
+| Evidence resolver contract | EvidenceRef to EvidenceBundle, policy enforced | `contracts/schemas/` plus `docs/apis/` |
+| Policy contract | Policy labels, obligations, default-deny tests | `policy/` plus `docs/governance/` |
+| Catalog triplet profiles | DCAT, STAC, PROV required fields plus cross-link rules | `contracts/schemas/` plus `docs/data/` |
+| Receipt and manifest schemas | Run receipt schema plus promotion manifest schema | `contracts/schemas/` |
 | UI trust surfaces | Evidence drawer requirements, accessibility targets | `docs/ui/` |
 
 > [!IMPORTANT]
-> Keep contracts versioned and test them. The fastest way to break the trust membrane is to change behavior without updating the contract.
+> Keep contracts versioned and test them. The fastest way to break the trust membrane is to change behavior without updating the contract and its tests.
 
-### EvidenceRef schemes (minimum)
+### EvidenceRef schemes
 
 Prefer explicit schemes so resolution is deterministic:
 
-- `dcat://...` dataset/distribution metadata
-- `stac://...` collection/item/asset metadata
-- `prov://...` lineage + run receipts
-- `doc://...` governed docs + story citations
-- `graph://...` entity relations (if enabled)
+- `dcat://...` dataset or distribution metadata
+- `stac://...` collection, item, asset metadata
+- `prov://...` lineage and run receipts
+- `doc://...` governed docs and story citations
+- `graph://...` entity relations when enabled
 
-### Evidence resolver contract (why this replaces “LLM citations”)
+### Evidence resolver contract
 
-A “citation” is not a pasted URL. A citation is an **EvidenceRef** that resolves (via the resolver) into an **EvidenceBundle** containing inspectable metadata, provenance, digests, and policy results.
+A “citation” is not a pasted URL. A citation is an **EvidenceRef** that resolves into an **EvidenceBundle** containing inspectable metadata, provenance, digests, and policy-applied results.
 
-**Resolver requirements:**
+Resolver requirements:
+
 - MUST apply policy and obligations.
-- MUST return machine + human views.
-- SHOULD be usable by the UI in **≤ 2 calls**.
+- MUST return machine and human views.
+- SHOULD be usable by the UI in two calls or fewer.
 - MUST fail closed if unresolvable or unauthorized.
 
 [(back to top)](#top)
@@ -325,13 +365,13 @@ A “citation” is not a pasted URL. A citation is an **EvidenceRef** that reso
 
 If permission, sensitivity, or community constraints are unclear:
 
-- **redact or generalize**
+- redact or generalize
 - flag for governance review
 - do not promote or publish
 
 ### Vulnerable sites and sensitive locations
 
-- Do not store or expose exact coordinates for vulnerable/private/culturally restricted locations.
+- Do not store or expose exact coordinates for vulnerable, private, or culturally restricted locations.
 - Prefer coarse geography and controlled access.
 - Ensure obligations like geometry generalization are testable and enforced.
 
@@ -339,7 +379,7 @@ If permission, sensitivity, or community constraints are unclear:
 
 Focus Mode is a governed workflow:
 
-- policy pre-check → retrieval → evidence bundling → synthesis → hard citation verification → receipt  
+- policy pre-check → retrieval → evidence bundling → synthesis → hard citation verification → receipt
 - MUST cite resolvable evidence or abstain
 
 [(back to top)](#top)
@@ -352,31 +392,31 @@ Focus Mode is a governed workflow:
 
 | Change | Examples | Required updates |
 |---|---|---|
-| Interface change | new endpoint, auth change, error model change | API contract + tests + migration notes |
-| Governance change | new policy_label, new obligation type | Policy contract + fixtures + review sign-off |
-| Lifecycle change | new gate, new zone definition | Gate definitions + receipt/manifest schemas + CI checks |
-| Catalog change | new DCAT/STAC/PROV profile field | Validators + linkcheck updates + fixtures |
-| Storage/index change | new index type, partitioning | Repo adapters + rebuild/runbook + rollback plan |
+| Interface change | new endpoint, auth change, error model change | API contract, tests, migration notes |
+| Governance change | new policy label, new obligation type | Policy contract, fixtures, review sign-off |
+| Lifecycle change | new gate, new zone definition | Gate definitions, receipt and manifest schemas, CI checks |
+| Catalog change | new DCAT, STAC, PROV profile field | Validators, linkcheck updates, fixtures |
+| Storage or index change | new index type, partitioning | Repo adapters, rebuild runbook, rollback plan |
 
-### Definition of done (architecture changes)
+### Definition of done
 
-- [ ] Updated this README if trust membrane, truth path, or contract surfaces changed
-- [ ] ADR added/updated with decision + consequences + rollback
-- [ ] Tests added to enforce invariants (merge-blocking)
+- [ ] Updated this doc if trust membrane, truth path, or contract surfaces changed
+- [ ] ADR added or updated with decision, consequences, rollback
+- [ ] Tests added to enforce invariants and block merges
 - [ ] Migration plan exists and is reversible
-- [ ] Security/privacy review complete (especially for sensitive locations)
-- [ ] Evidence resolution still works end-to-end (Map/Story/Focus)
+- [ ] Security and privacy review complete, especially for sensitive locations
+- [ ] Evidence resolution still works end-to-end in Map, Story, Focus
 
-### Minimum verification steps (convert UNKNOWN → CONFIRMED)
+### Minimum verification steps
 
-Attach outputs of these checks to the next revision when architecture is changing:
+Use these to convert **[UNKNOWN]** to **[CONFIRMED]** during architecture work:
 
-- [ ] Capture repo commit hash + root tree (e.g., `git rev-parse HEAD`, `tree -L 3`)
+- [ ] Capture repo commit hash plus root tree, for example `git rev-parse HEAD` and `tree -L 3`
 - [ ] Enumerate CI gates from workflow config and document what blocks merges
-- [ ] Confirm presence of validators, policy pack/tests, evidence resolver route, and receipt schemas
-- [ ] Promote one MVP dataset end-to-end through all gates and store receipts + catalogs
-- [ ] Confirm UI cannot bypass PEP (static + network policy checks)
-- [ ] For Focus Mode: run evaluation harness and store golden outputs + diffs
+- [ ] Confirm presence of validators, policy tests, evidence resolver route, receipt schemas
+- [ ] Promote one MVP dataset end-to-end through all gates and store receipts plus catalogs
+- [ ] Confirm UI cannot bypass PEP with static checks plus network policy checks
+- [ ] For Focus Mode: run evaluation harness and store golden outputs plus diffs
 
 [(back to top)](#top)
 
@@ -386,16 +426,16 @@ Attach outputs of these checks to the next revision when architecture is changin
 
 ### Purpose
 
-`docs/architecture/` is the **system-level** documentation for:
+`docs/architecture/` is the system-level documentation for:
 
-- trust membrane + boundary rules
+- trust membrane and boundary rules
 - layering model
-- truth path lifecycle + promotion contract
+- truth path lifecycle and promotion contract
 - cross-cutting concerns: audit, policy, catalogs, evidence resolution, security
 
 ### Where it fits
 
-This directory is the top of the documentation tree for architecture. Detailed docs should live in their domain directories and be linked from here.
+This directory is the top of the documentation tree for architecture. Detailed docs should live in domain directories and be linked from here.
 
 ### Acceptable inputs
 
@@ -403,7 +443,7 @@ This directory is the top of the documentation tree for architecture. Detailed d
 - ADRs for architecture decisions
 - Contract pointers and versioning conventions
 - Threat models and risk assessments
-- Receipt/manifest schemas and examples
+- Receipt and manifest schemas and examples
 
 ### Exclusions
 
@@ -414,37 +454,18 @@ This directory is the top of the documentation tree for architecture. Detailed d
 
 ---
 
-## Directory layout (fully expanded)
+## Directory layout
 
-This section answers: “Where does everything go?” while staying honest about what is **repo fact** vs **target design**.
+This section answers “Where does everything go?” while staying honest about what is repo fact versus target design.
 
-### 1) Repo root layout
+### Repo root layout
 
-#### Repo root (CONFIRMED at repo root)
-The following top-level directories are treated as **present at repo root** in internal inventory notes; deeper contents must be verified before being treated as fact.
+- **[UNKNOWN]** Without a captured `git rev-parse HEAD` plus `tree`, this document cannot assert the exact root layout of the live repo.
+- **Verification step:** attach a root tree dump to convert this to **[CONFIRMED]**.
 
-```text
-.github/
-apps/
-packages/
-contracts/
-policy/
-data/
-infra/
-docs/
-tools/
-tests/
-configs/
-scripts/
-migrations/
-examples/
-```
+#### Target expansion
 
-> [!IMPORTANT]
-> Do not claim the presence of deeper modules (e.g., `apps/api` or `packages/ingest`) until verified with a commit hash + `tree`. Treat the deeper structure below as **PROPOSED target layout** unless you have repo evidence.
-
-#### Target expansion (PROPOSED)
-This is a buildable target layout that supports the trust membrane + truth path + contract surfaces:
+The following is a buildable target layout that supports the trust membrane, truth path, and contract surfaces:
 
 ```text
 repo-root/
@@ -458,66 +479,61 @@ repo-root/
 │  ├─ PULL_REQUEST_TEMPLATE.md
 │  └─ CODEOWNERS
 │
-├─ docs/                                      # Human-readable docs (governed)
-│  ├─ README.md                               # Docs index + link map (required)
-│  ├─ architecture/                           # This directory (trust membrane + truth path)
+├─ docs/                                      # Human-readable docs and governance
+│  ├─ README.md                               # Docs index plus link map
+│  ├─ architecture/                           # Trust membrane plus truth path
 │  ├─ governance/                             # Policy labels, review workflows, steward playbooks
 │  ├─ data/                                   # Data contracts, zone semantics, dataset specs, catalog profiles
 │  ├─ apis/                                   # Human API docs, auth model, error model, examples
-│  ├─ ui/                                     # Map/Story/Focus UX contracts + accessibility targets
-│  ├─ ops/                                    # Runtime posture, environments, observability (no secrets)
+│  ├─ ui/                                     # Map, Story, Focus UX contracts plus accessibility targets
+│  ├─ ops/                                    # Runtime posture, environments, observability
 │  ├─ runbooks/                               # Rebuild, incident response, promotion troubleshooting
 │  ├─ dev/                                    # Contributing, local dev, testing, release process
-│  └─ templates/                              # MetaBlock + ADR + contract doc templates
+│  └─ templates/                              # MetaBlock plus ADR plus contract templates
 │
 ├─ contracts/                                 # Canonical machine contracts
-│  ├─ openapi/                                # OpenAPI specs (versioned)
-│  ├─ schemas/                                # JSON Schemas (EvidenceRef, receipts, manifests, registry entries)
-│  ├─ vocab/                                  # Controlled vocabularies (policy labels, obligations, themes)
-│  ├─ examples/                               # Golden fixtures for CI (small + stable)
+│  ├─ openapi/                                # OpenAPI specs
+│  ├─ schemas/                                # JSON Schemas for receipts, manifests, EvidenceRef, registries
+│  ├─ vocab/                                  # Controlled vocabularies
+│  ├─ examples/                               # Golden fixtures for CI
 │  └─ README.md
 │
-├─ policy/                                    # Policy packs (OPA/Rego or equivalent) + tests
-│  ├─ rego/
+├─ policy/                                    # Policy packs plus tests
+│  ├─ rego/                                   # Or equivalent
 │  ├─ fixtures/
 │  ├─ tests/
 │  └─ README.md
 │
-├─ data/                                      # Data registry + governed zone manifests (not “random data dumps”)
+├─ data/                                      # Data registry plus zone manifests
 │  ├─ README.md
 │  ├─ registry/
-│  │  ├─ datasets/                            # Dataset entries (YAML) w/ license, cadence, extents, sensitivity
-│  │  ├─ sources/                             # Upstream source descriptors + terms snapshots pointers
-│  │  ├─ specs/                               # Transform + QA thresholds specs (spec_hash inputs)
-│  │  ├─ schemas/                             # Registry schemas (mirror/link to contracts/)
+│  │  ├─ datasets/                            # Dataset entries, YAML
+│  │  ├─ sources/                             # Upstream source descriptors plus terms pointers
+│  │  ├─ specs/                               # Transform plus QA threshold specs
+│  │  ├─ schemas/                             # Registry schemas
 │  │  └─ fixtures/
 │  │
-│  ├─ zones/                                  # Local/dev zone structure (paths are environment-specific)
-│  │  ├─ raw/                                 # Immutable acquisitions (append-only per version)
-│  │  ├─ work/                                # Quarantine + QA reports
-│  │  ├─ processed/                           # Publishable artifacts + digests
-│  │  ├─ catalog/                             # DCAT + STAC + PROV artifacts
-│  │  └─ published/                           # Release manifests + published pointers (not canonical truth)
-│  │
-│  ├─ catalogs/                               # Optional: checked-in examples or small static catalogs
-│  │  ├─ dcat/
-│  │  ├─ stac/
-│  │  └─ prov/
+│  ├─ zones/                                  # Local or dev zone structure
+│  │  ├─ raw/
+│  │  ├─ work/
+│  │  ├─ processed/
+│  │  ├─ catalog/
+│  │  └─ published/
 │  │
 │  └─ manifests/
-│     ├─ runs/                                # Run receipts (golden + examples; full receipts stored in ledger)
-│     └─ promotions/                          # Promotion manifests (golden + examples)
+│     ├─ runs/                                # Run receipts examples
+│     └─ promotions/                          # Promotion manifests examples
 │
-├─ apps/                                      # Runnable services (deployable units)
-│  ├─ api/                                    # Governed API service (PEP)
-│  ├─ ui/                                     # Map/Story/Focus web app
+├─ apps/                                      # Runnable services, deployable units
+│  ├─ api/                                    # Governed API service, includes PEP
+│  ├─ ui/                                     # Map, Story, Focus web app
 │  ├─ workers/                                # Pipeline runners, index builders, async jobs
-│  └─ cli/                                    # Steward/dev CLI tools (promotion, validation, rebuild)
+│  └─ cli/                                    # Steward and dev CLI tools
 │
-├─ packages/                                  # Shared libraries (domain + use cases + adapters)
-│  ├─ domain/                                 # Core types: Dataset, EvidenceRef, EvidenceBundle, Receipt, PolicyDecision
-│  ├─ usecases/                               # Orchestrations: ingest, validate, promote, resolve evidence, focus runs
-│  ├─ repositories/                           # Interfaces + infra adapters (object store, db, search, graph)
+├─ packages/                                  # Shared libraries
+│  ├─ domain/
+│  ├─ usecases/
+│  ├─ repositories/
 │  ├─ ingest/
 │  ├─ catalog/
 │  ├─ evidence/
@@ -525,40 +541,37 @@ repo-root/
 │  ├─ policy/
 │  └─ shared/
 │
-├─ infra/                                     # Deployment and ops (no secrets in repo)
+├─ infra/                                     # Deployment and ops, no secrets
 │  ├─ k8s/
 │  ├─ helm/
 │  ├─ terraform/
 │  ├─ gitops/
 │  └─ dashboards/
 │
-├─ tools/                                     # Validators + doc tooling used in CI and locally
-│  ├─ validators/                             # STAC/DCAT/PROV validators, schema validators
-│  ├─ linkcheck/                              # EvidenceRef and doc link verification
-│  ├─ spec-hash/                              # Deterministic spec hashing tooling
+├─ tools/                                     # Validators plus doc tooling
+│  ├─ validators/
+│  ├─ linkcheck/
+│  ├─ spec-hash/
 │  └─ README.md
 │
-├─ configs/                                   # Configuration templates (environment-specific values live outside repo)
-│  ├─ env/
-│  ├─ pipelines/
-│  ├─ api/
-│  └─ ui/
-│
-├─ scripts/                                   # Build/release scripts (thin wrappers; prefer tooling in /tools)
-├─ migrations/                                # DB migration scripts (PostGIS/Postgres)
-├─ examples/                                  # Example datasets/stories/policies (safe + small)
-└─ tests/                                     # Unit + integration + e2e + fixtures (merge-blocking)
+├─ configs/                                   # Configuration templates
+├─ scripts/
+├─ migrations/
+├─ examples/
+└─ tests/
 ```
 
 [(back to top)](#top)
 
 ---
 
-### 2) `docs/architecture/` layout (PROPOSED, expanded)
+### docs architecture layout
+
+This is a target layout for `docs/architecture/` to keep the architecture surface modular and retrievable:
 
 ```text
 docs/architecture/
-├─ README.md                                  # This file (normative invariants + index)
+├─ README.md                                  # This file
 │
 ├─ overview/
 │  ├─ README.md
@@ -640,9 +653,22 @@ docs/architecture/
    └─ residual-risk.md
 ```
 
+[(back to top)](#top)
+
 ---
 
 ## Appendix
+
+<details>
+<summary>Hallucination audit and fixes applied in this revision</summary>
+
+This revision removed or downgraded repo-specific claims that were not backed by a commit tree.
+
+- Fixed: “Repo root layout is CONFIRMED” → now **[UNKNOWN]** with explicit verification steps.
+- Clarified: Normative requirements are not descriptions of current enforcement.
+- Added: “Status and intent” section to prevent conflating desired architecture with implemented reality.
+
+</details>
 
 <details>
 <summary>ADR template</summary>
@@ -687,11 +713,11 @@ notes:
 <details>
 <summary>Architecture review checklist</summary>
 
-- Boundary: Is every data access behind policy (PEP + resolver)?
-- Traceability: Can a claim link to EvidenceRef → EvidenceBundle → receipts?
-- Reproducibility: Can we rebuild PUBLISHED projections from PROCESSED + catalogs?
-- Safety: Are sensitive locations protected (generalized/redacted) by obligations + tests?
-- Licensing: Are rights + terms snapshots captured and enforced?
+- Boundary: Is every data access behind policy enforcement and an evidence resolver?
+- Traceability: Can a claim link EvidenceRef → EvidenceBundle → receipts?
+- Reproducibility: Can we rebuild published projections from processed artifacts plus catalogs?
+- Safety: Are sensitive locations protected by obligations plus tests?
+- Licensing: Are rights and terms snapshots captured and enforced?
 - Reversibility: Is rollback cheap and documented?
 - CI: Do validators, linkcheck, policy tests, and schema checks block merges?
 
