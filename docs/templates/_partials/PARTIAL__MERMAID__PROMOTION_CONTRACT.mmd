@@ -1,50 +1,30 @@
-%% KFM Promotion Contract (Truth Path + Minimum Gates)
-%% File: docs/templates/_partials/PARTIAL__MERMAID__PROMOTION_CONTRACT.mmd
-%%
-%% Source (CONFIRMED):
-%%   Kansas Frontier Matrix (KFM) — Architecture, Governance, and Delivery Plan
-%%   Date: 2026-02-27 (internal briefing)
-%%
-%% Diagram layout and phrasing are PROPOSED; zone names + minimum gates are CONFIRMED in the source doc.
-
-flowchart LR
-  %% =========================
-  %% Truth path zones (CONFIRMED)
-  %% =========================
-  U[Upstream sources] --> RAW["RAW zone<br/>immutable acquisition<br/>artifacts + checksums<br/>license terms snapshot"]
-  RAW --> WORK["WORK zone<br/>normalize + QA<br/>redaction candidates"]
-  WORK --> PROC["PROCESSED zone<br/>publishable formats<br/>stable IDs + checksums"]
+graph LR
+  U[Upstream sources] --> RAW["RAW zone<br/>immutable acquisition<br/>artifacts and checksums<br/>license snapshot"]
+  RAW --> WORK["WORK zone<br/>normalize and QA<br/>redaction candidates"]
+  WORK --> PROC["PROCESSED zone<br/>publishable formats<br/>stable IDs and checksums"]
   PROC --> CAT["CATALOG triplet<br/>DCAT + STAC + PROV<br/>cross-linked IDs"]
 
-  %% =========================
-  %% Promotion decision (CONFIRMED intent: fail closed)
-  %% =========================
-  CAT --> DECIDE{Promotion Contract gates pass}
-  DECIDE -- yes --> PUB["PUBLISHED surfaces<br/>Governed API + UI<br/>policy enforced"]
-  DECIDE -- no --> QUAR["QUARANTINE<br/>blocked from promotion<br/>fix issues then rerun"]
-  QUAR -- remediate and re-run --> WORK
+  CAT --> DECIDE{Promotion Contract gates pass?}
+  DECIDE -->|yes| PUB["PUBLISHED surfaces<br/>Governed API and UI<br/>policy enforced"]
+  DECIDE -->|no| QUAR["QUARANTINE<br/>blocked from promotion<br/>fix issues then rerun"]
+  QUAR -->|remediate and re-run| WORK
 
-  %% =========================
-  %% Promotion Contract v1 (minimum gates) — CONFIRMED intent
-  %% =========================
   subgraph G["Promotion Contract v1: minimum gates"]
-    GA["Gate A<br/>Identity + versioning<br/>dataset_id, dataset_version_id, spec_hash, digests"]
-    GB["Gate B<br/>Licensing + rights metadata<br/>license fields + upstream terms snapshot"]
-    GC["Gate C<br/>Sensitivity + redaction plan<br/>policy_label + obligations"]
+    GA["Gate A<br/>Identity and versioning<br/>dataset_id, dataset_version_id, spec_hash, digests"]
+    GB["Gate B<br/>Licensing and rights metadata<br/>license fields and upstream terms snapshot"]
+    GC["Gate C<br/>Sensitivity and redaction plan<br/>policy_label and obligations"]
     GD["Gate D<br/>Catalog triplet validation<br/>DCAT, STAC, PROV validate<br/>EvidenceRefs resolve"]
-    GE["Gate E<br/>QA + thresholds<br/>dataset-specific checks documented"]
-    GF["Gate F<br/>Run receipt + audit record<br/>inputs, tooling, hashes, policy decisions<br/>signature checks when enabled"]
+    GE["Gate E<br/>QA and thresholds<br/>dataset-specific checks documented"]
+    GF["Gate F<br/>Run receipt and audit record<br/>inputs, tooling, hashes, policy decisions<br/>signature checks when enabled"]
     GG["Gate G<br/>Release manifest<br/>promotion recorded with artifact digests"]
   end
 
-  %% All gates must pass to promote to PUBLISHED (CONFIRMED intent)
-  GA -. required .-> DECIDE
-  GB -. required .-> DECIDE
-  GC -. required .-> DECIDE
-  GD -. required .-> DECIDE
-  GE -. required .-> DECIDE
-  GF -. required .-> DECIDE
-  GG -. required .-> DECIDE
+  GA -->|required| DECIDE
+  GB -->|required| DECIDE
+  GC -->|required| DECIDE
+  GD -->|required| DECIDE
+  GE -->|required| DECIDE
+  GF -->|required| DECIDE
+  GG -->|required| DECIDE
 
-  %% Enforcement surface (CONFIRMED intent)
-  ENF["Enforcement<br/>CI validators + linkcheck<br/>OPA default-deny<br/>steward sign-off"] -.-> DECIDE
+  ENF["Enforcement<br/>CI validators and linkcheck<br/>OPA default-deny<br/>steward sign-off"] --> DECIDE
