@@ -78,19 +78,19 @@ KFM treats **catalogs + provenance + receipts** as contract surfaces between pip
 
 ```mermaid
 flowchart LR
-  upstream[Upstream sources] --> raw[RAW zone]
-  raw --> work[WORK / QUARANTINE]
-  work --> processed[PROCESSED]
-  processed --> catalog[CATALOG / TRIPLET]
-  catalog --> published[PUBLISHED runtime]
-  published --> api[Governed API]
-  api --> ui[Map / Story / Focus]
+  upstream["Upstream sources"] --> raw["RAW zone"]
+  raw --> work["WORK / QUARANTINE"]
+  work --> processed["PROCESSED"]
+  processed --> catalog["CATALOG / TRIPLET"]
+  catalog --> published["PUBLISHED runtime"]
+  published --> api["Governed API"]
+  api --> ui["Map / Story / Focus"]
 
-  docs[docs/data\n(doc packages + receipts + schemas)] -.documents.-> raw
-  docs -.documents.-> work
-  docs -.documents.-> processed
-  docs -.documents.-> catalog
-  docs -.documents.-> published
+  docs["docs/data<br/>(doc packages + receipts + schemas)"] -. "documents" .-> raw
+  docs -. "documents" .-> work
+  docs -. "documents" .-> processed
+  docs -. "documents" .-> catalog
+  docs -. "documents" .-> published
 ```
 
 **Contract principle:** UI/clients must not access storage directly; all access crosses the governed API + policy boundary.
