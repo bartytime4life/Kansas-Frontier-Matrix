@@ -1,3 +1,14 @@
-# PARTIAL__KFM_META_BLOCK_V2.md
-
-Template placeholder.
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<uuid>
+title: <Title>
+type: standard
+version: v1
+status: draft|review|published
+owners: <team or names>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public|restricted|...
+related: [<paths or kfm:// ids>]
+tags: [kfm]
+notes: [<short notes>]
+[/KFM_META_BLOCK_V2] -->
