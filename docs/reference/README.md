@@ -48,6 +48,7 @@ Curated, version-pinned reference material used to build and operate KFM.
 - [Acceptable inputs](#acceptable-inputs)
 - [Exclusions](#exclusions)
 - [Directory tree](#directory-tree)
+- [Source material archive](#source-material-archive)
 - [Quickstart](#quickstart)
 - [Conventions](#conventions)
 - [Reference types matrix](#reference-types-matrix)
@@ -137,6 +138,11 @@ Do **not** put these here:
 - **PROPOSED:** Restricted location guidance or sensitive targeting content → requires governance review; store only redacted/generalized summaries if approved.
 
 ---
+
+## Source material archive
+
+- **CONFIRMED:** Imported seed documents and large reference artifacts are stored in `docs/reference/source-material/`.
+- **CONFIRMED:** This keeps `docs/` root focused on navigational entrypoints while preserving all source files.
 
 ## Directory tree
 

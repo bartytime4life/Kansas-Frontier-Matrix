@@ -95,6 +95,10 @@ This is the orientation path **if the referenced docs exist in your checkout**:
 6) `docs/stories/README.md` — story authoring + publishing workflow (**[PROPOSED]** surface).  
 7) `docs/quality/README.md` — gates, conformance checks, test strategy (**[PROPOSED]** surface).
 
+### Root layout note
+- **[CONFIRMED]** `docs/` root is reserved for high-signal entrypoints (hub docs + major indexes).
+- **[CONFIRMED]** Seed/imported materials that are useful reference inputs are grouped under `docs/reference/source-material/`.
+
 > **[CONFIRMED] Fail-closed behavior:** if a linked file/folder is missing, treat it as docs debt (create a stub) *or* update this README **only after verifying** the intended canonical location.
 
 ---
