@@ -1,47 +1,43 @@
 <!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/3b5a5d0c-7d8a-4b3f-b9a0-8d2c6d3e8f1a
-title: Kansas Frontier Matrix (KFM) — README
+title: Kansas Frontier Matrix — README
 type: standard
 version: v1
 status: draft
 owners: TBD
 created: 2026-03-03
-updated: 2026-03-03
+updated: 2026-03-05
 policy_label: public
 related:
   - kfm://doc/TBD-kfm-prime
   - kfm://doc/TBD-kfm-exec-summary
 tags: [kfm]
 notes:
-  - Root README for the vNext operating model; treat implementation details as UNKNOWN until verified on your branch.
+  - Root README for the vNext operating model. Treat implementation details as UNKNOWN until verified on your branch.
+  - This README is a derived summary of vNext design materials; do not treat it as proof that a given module/service exists in your checkout.
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
-# Kansas Frontier Matrix (KFM)
+# Kansas Frontier Matrix
 
 > **Map-first • Time-aware • Governed • Evidence-first • Cite-or-abstain**  
-> **Posture:** **default-deny** • **fail-closed** • reproducible by digest • policy enforced in CI + runtime
+> **Posture:** **default-deny** • **fail-closed** • reproducible by digest • policy enforced in CI and runtime
 
 ---
 
 ## Impact
 
-**CONFIRMED (spec):** KFM is a governed, evidence-first geospatial platform whose promise is: **every map layer, story claim, and Focus Mode answer is backed by resolvable EvidenceRefs, or the system abstains**.:contentReference[oaicite:1]{index=1}
+**Status:** draft (vNext spec summary)  
+**Owners:** TBD (required before hard governance enforcement)  
+**Policy label:** public  
+**Repo path:** `README.md` (repo root)
 
-**CONFIRMED (spec):** KFM’s distinguishing invariants are:
-- **Truth path** with lifecycle zones and promotion gates (Upstream → RAW → WORK/Quarantine → PROCESSED → CATALOG/TRIPLET → PUBLISHED).:contentReference[oaicite:2]{index=2}
-- **Trust membrane** where all client access flows through a policy enforcement point and evidence resolver (no direct DB/storage access).:contentReference[oaicite:3]{index=3}
+**CONFIRMED (design docs):** KFM is a governed, evidence-first geospatial platform. The user-facing contract is: **every map layer, story claim, and Focus answer must open into a policy-allowed evidence view — or the system abstains.**
 
-**PROPOSED:** Status and owners (must be set before hard-governance enforcement)
-- **Status:** vNext operating model (blueprint-driven build)
-- **Owners:** _TBD_ (required for CODEOWNERS + review routing)
-
-**PROPOSED:** Primary user experiences (by spec scope)
-- **Map Explorer** (layers + time controls + evidence drawer):contentReference[oaicite:4]{index=4}
-- **Stories / Story Nodes** (markdown narrative + sidecar map state + citation gates):contentReference[oaicite:5]{index=5}
-- **Focus Mode** (governed Q&A with receipts and hard citation verification):contentReference[oaicite:6]{index=6}
-- **Catalog** (dataset/version discovery backed by catalogs, policy-filtered):contentReference[oaicite:7]{index=7}
+**CONFIRMED (design docs):** Two non-negotiable invariants anchor everything:
+- **Truth path:** storage zones + promotion gates from upstream intake through publication.
+- **Trust membrane:** clients never talk to storage directly; all access flows through governed APIs that enforce policy, redaction, and logging.
 
 [![Status](https://img.shields.io/badge/status-vNext-blue)](#roadmap)
 [![Governance](https://img.shields.io/badge/governance-fail--closed-critical)](#governance)
@@ -51,81 +47,99 @@ notes:
 [![Docs](https://img.shields.io/badge/docs-metablock%20v2-informational)](#documentation-is-production)
 [![License](https://img.shields.io/badge/license-TBD-lightgrey)](#license)
 
+**Quick links:** [Reality check](#reality-check) · [System overview](#system-overview) · [Truth path](#truth-path-and-promotion-contract) · [Evidence](#evidence-and-citations) · [Governed API](#governed-api) · [Roadmap](#roadmap)
+
+[↑ Back to top](#top)
+
 ---
 
-## Hallucination guardrails
+## Scope
+
+**CONFIRMED (design docs):** This README is a **governance-first orientation**: invariants, contracts, and promotion gates. It is meant to prevent “accidental hallucination” and to help reviewers/operators enforce the trust posture.
+
+**UNKNOWN:** current implementation maturity, directory layout, and which work packages are already shipped on your branch.
+- Smallest verification steps: see [Reality check](#reality-check).
+
+[↑ Back to top](#top)
+
+---
+
+## Where it fits
+
+**CONFIRMED (design docs):**
+- This file is the **repo root README** that anchors the vNext operating model.
+- It connects the full flow: **data → pipelines → catalogs/provenance → projections → governed APIs → Map/Story UI → Focus Mode**.
+
+**UNKNOWN:** exact in-repo locations for the authoritative vNext specs (paths may differ by branch).
+- Smallest verification step: search `docs/` (or equivalent) for “Definitive Design & Governance Guide (vNext)” and “Ultimate Blueprint”.
+
+[↑ Back to top](#top)
+
+---
+
+## Acceptable inputs
+
+**PROPOSED (safe defaults):** Things that belong in this repo include:
+- **Contracts:** OpenAPI, JSON Schemas, controlled vocabularies.
+- **Policy-as-code:** OPA/Rego bundles + tests + fixtures.
+- **Pipelines/tooling:** validators, link-checkers, registry/catalog generators, reproducible runners.
+- **Docs as production surfaces:** runbooks, ADRs, governance specs, templates.
+- **Data specs/registries:** dataset specs, source registry entries, promotion manifests, receipts.
+
+[↑ Back to top](#top)
+
+---
+
+## Exclusions
+
+**CONFIRMED (design docs):** The following are disallowed or must be fail-closed:
+- **No direct client access** to databases or object storage (trust membrane).
+- **No publishing with unclear rights** (promotion/publish gates block).
+- **No “best-effort citations”** for Story publishing or Focus Mode (hard citation verification gates).
+
+**PROPOSED (baseline security hygiene):**
+- No secrets/tokens committed to the repo.
+- No raw sensitive location coordinates in public artifacts; only policy-allowed derivatives.
+
+[↑ Back to top](#top)
+
+---
+
+## Reality check
 
 This repo is governance-critical. This README is written to **fail closed** when reality is unknown.
 
 ### Status legend for claims
 
-- **CONFIRMED:** documented in authoritative KFM vNext design/governance materials **or** verified by in-repo artifacts on your branch.
-- **PROPOSED:** target defaults / recommendations (safe to discuss; not safe to enforce without ratification).
-- **UNKNOWN:** not verified; includes the minimum steps to confirm.
+- **CONFIRMED:** documented in authoritative vNext design/governance materials **or** verified by in-repo artifacts on your branch.
+- **PROPOSED:** safe defaults / target designs; discussable; not safe to enforce without ratification.
+- **UNKNOWN:** not verified; includes smallest steps to confirm.
 
 > [!IMPORTANT]
-> **Anti-hallucination rule:** Do not claim a module/path/service exists or is implemented unless verified on your branch.  
-> The project docs explicitly call out the need to avoid claiming sub-packages are present without verification.:contentReference[oaicite:8]{index=8}
+> **Anti-hallucination rule:** Do not claim a module/path/service exists or is implemented unless verified on your branch.
 
-[↑ Back to top](#top)
+### Minimum verification steps
 
----
+**UNKNOWN:** current repo tree, CI gates, and implementation maturity.
 
-## Start here
+Run:
 
-Pick the path that matches what you’re doing.
+```bash
+# Capture a branch snapshot (attach to PRs/issues when discussing “current state”)
+git rev-parse HEAD
 
-### I’m contributing code/docs/data
+# If `tree` is not installed, replace with: find . -maxdepth 3 -type d -print
+tree -L 3
 
-**UNKNOWN:** Whether these files exist on your branch.
-- Verification step: `ls CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md .github/README.md`  
-- If present: read them before submitting governance-critical changes.
+# Identify merge-blocking checks
+ls -la .github/workflows 2>/dev/null || true
 
-**CONFIRMED (spec):** Any change that affects promotion gates, policy semantics, contracts, or published surfaces must be reviewed like production configuration.:contentReference[oaicite:9]{index=9}
+# Search for governance-critical primitives
+# If ripgrep isn't installed, use grep -R.
+grep -RIn --line-number "spec_hash\|EvidenceRef\|EvidenceBundle\|policy_label\|opa\|rego" . || true
+```
 
-### I’m stewarding governance
-
-**CONFIRMED (spec):** If sensitivity/permissions are unclear → default-deny until reviewed (no “guess and publish” path).:contentReference[oaicite:10]{index=10}
-
-### I’m operating pipelines / runtime
-
-**CONFIRMED (spec):** Canonical truth is artifacts + catalogs + receipts + audit records; databases/search/tiles are rebuildable projections and must not become the source of truth.:contentReference[oaicite:11]{index=11}
-
-[↑ Back to top](#top)
-
----
-
-## Quick navigation
-
-- [Reality check first](#reality-check-first)
-- [System overview](#system-overview)
-- [Golden paths](#golden-paths)
-- [Core invariants](#core-invariants)
-- [Truth path and promotion contract](#truth-path-and-promotion-contract)
-- [Deterministic identity and versioning](#deterministic-identity-and-versioning)
-- [Catalog triplet and profiles](#catalog-triplet-and-profiles)
-- [Evidence and citations](#evidence-and-citations)
-- [Governed API](#governed-api)
-- [Focus Mode AI](#focus-mode-ai)
-- [Governance](#governance)
-- [Repository layout](#repository-layout)
-- [Roadmap](#roadmap)
-- [License](#license)
-
----
-
-## Reality check first
-
-**CONFIRMED (spec):** To avoid “accidental hallucination” in planning and enforcement, the project guidance requires a minimum verification checklist and encourages attaching outputs to the next revision.:contentReference[oaicite:12]{index=12}
-
-### Minimum verification steps (do these once per branch)
-
-**UNKNOWN:** Current repo tree, CI gates, and implementation maturity.
-- Verify: `git rev-parse HEAD` and `tree -L 3`:contentReference[oaicite:13]{index=13}
-- Verify: extract merge-blocking checks from `.github/workflows`:contentReference[oaicite:14]{index=14}
-- Verify: search for **spec_hash**, policy bundle/tests, catalog validators/link-checks, evidence resolver routes, dataset registry schema:contentReference[oaicite:15]{index=15}
-
-**PROPOSED:** Run an end-to-end vertical slice early (one dataset through all gates) to validate the governance membrane and performance envelope before scaling.:contentReference[oaicite:16]{index=16}
+**PROPOSED:** Pick **one MVP dataset** and run a vertical slice through all gates (RAW → WORK/Quarantine → PROCESSED → Triplet → PUBLISHED) before scaling.
 
 [↑ Back to top](#top)
 
@@ -133,7 +147,7 @@ Pick the path that matches what you’re doing.
 
 ## System overview
 
-**CONFIRMED (spec):** KFM connects **data → pipelines → catalogs/provenance → storage/indexing → governed APIs → Map/Story UI → Focus Mode AI**.:contentReference[oaicite:17]{index=17}
+**CONFIRMED (design docs):** KFM connects **data → pipelines → catalogs/provenance → projections → governed APIs → Map/Story UI → Focus Mode**.
 
 ### High-level flow
 
@@ -145,7 +159,7 @@ flowchart LR
   D --> E[PROCESSED zone]
   E --> F[Catalog triplet DCAT STAC PROV plus receipts]
   F --> G[Rebuildable projections]
-  F --> H[Governed API plus policy plus evidence resolver]
+  F --> H[Governed API and evidence resolver]
   G --> H
   H --> I[UI Map Explorer Stories Focus Mode]
   H --> J[Exports and reports]
@@ -154,9 +168,10 @@ flowchart LR
 
 ### Trust membrane
 
-**CONFIRMED (spec):**
-- Clients **MUST NOT** access object storage or databases directly; all access flows through the governed interface (PEP/API).:contentReference[oaicite:18]{index=18}
-- Focus Mode and Story publishing depend on the Evidence Resolver; citations are EvidenceRefs that must resolve into EvidenceBundles (no “paste a URL and hope”).:contentReference[oaicite:19]{index=19}
+**CONFIRMED (design docs):**
+- Frontend/external clients **never access databases or object storage directly**.
+- Core backend logic **never bypasses repository interfaces** to talk directly to storage.
+- All access flows through governed APIs that apply policy decisions, redactions, and logging consistently.
 
 [↑ Back to top](#top)
 
@@ -177,37 +192,37 @@ flowchart TB
   Q -->|fail| X[Quarantine with reason plus remediation]
   C --> G[Promotion manifest plus approvals]
   G --> U[Governed API exposure]
-  U --> M[Map layer plus Evidence Drawer]
+  U --> M[Map layer plus evidence drawer]
 ```
 
-**CONFIRMED (spec):** Promotion to PUBLISHED is blocked unless minimum gates are met (identity/versioning, licensing/rights metadata, sensitivity classification + obligations, triplet validation, QA thresholds, run receipt + audit record, release manifest).:contentReference[oaicite:20]{index=20}
+**CONFIRMED (design docs):** Promotion to PUBLISHED is blocked unless minimum gates are met (identity/versioning, licensing/rights metadata, sensitivity classification + obligations, triplet validation, QA thresholds, run receipt + audit record, release manifest).
 
 ### Golden path 2: Publish a Story Node
 
 ```mermaid
 flowchart LR
-  D[Draft story plus map_state] --> V[Validate citations via Evidence Resolver]
+  D[Draft story plus map state] --> V[Validate citations via evidence resolver]
   V -->|pass| R[Review gate]
   R -->|approve| P[Publish plus audit entry]
   V -->|fail| A[Reject publish and fix citations or rights]
 ```
 
-**CONFIRMED (spec):** Story Nodes bundle narrative markdown with a sidecar capturing map state and citations; publishing is governed and requires review state + resolvable citations.:contentReference[oaicite:21]{index=21}
+**CONFIRMED (design docs):** Story publishing is governed and requires review state plus resolvable citations. Publishing must fail closed if rights are unclear for included media.
 
 ### Golden path 3: Answer in Focus Mode
 
 ```mermaid
 flowchart LR
-  Q[User question plus view_state] --> P[Policy pre-check]
+  Q[User question plus view state] --> P[Policy pre-check]
   P --> R[Retrieve admissible evidence]
   R --> B[Resolve EvidenceBundles]
   B --> S[Synthesize grounded answer]
-  S --> V[Citation verification hard gate]
+  S --> V[Hard citation verification]
   V -->|pass| O[Return answer plus receipt plus audit ref]
   V -->|fail| A[Abstain or reduce scope]
 ```
 
-**CONFIRMED (spec):** If citations cannot be verified, Focus Mode must abstain or reduce scope; this is the primary anti-hallucination mechanism.:contentReference[oaicite:22]{index=22}
+**CONFIRMED (design docs):** If citations cannot be verified, Focus Mode must abstain or reduce scope.
 
 [↑ Back to top](#top)
 
@@ -217,15 +232,15 @@ flowchart LR
 
 Violating these breaks governance, not “just code.”
 
-**CONFIRMED (spec):** These invariants are intended to be **test-enforced** and **fail-closed**.:contentReference[oaicite:23]{index=23}
+**CONFIRMED (design docs):** Invariants are intended to be **test-enforced** and **fail-closed**.
 
 | Invariant | Meaning | Enforcement target |
 |---|---|---|
-| **Truth path** | Upstream → RAW → WORK/Quarantine → PROCESSED → CATALOG/TRIPLET → PUBLISHED | CI + pipeline promotion gates:contentReference[oaicite:24]{index=24} |
-| **Promotion Contract** | Cannot publish without identity, licensing, sensitivity, triplet validation, QA thresholds, receipts, manifest | CI must fail closed:contentReference[oaicite:25]{index=25} |
-| **Trust membrane** | No direct client-to-DB/storage; all access through PEP/API + Evidence Resolver | Network + code rules + tests:contentReference[oaicite:26]{index=26} |
-| **Catalog triplet as contract** | DCAT/STAC/PROV are contract surfaces; EvidenceRefs resolve deterministically | Validators + link-check in CI:contentReference[oaicite:27]{index=27} |
-| **Cite-or-abstain** | If EvidenceRefs don’t resolve for the user role, the system abstains | Focus/Story hard gate:contentReference[oaicite:28]{index=28} |
+| **Truth path** | Upstream → RAW → WORK/Quarantine → PROCESSED → Triplet → PUBLISHED | CI + promotion gates |
+| **Promotion contract** | Cannot publish without identity, licensing, sensitivity, triplet validation, QA thresholds, receipts, manifest | CI must fail closed |
+| **Trust membrane** | No direct client-to-DB/storage; all access via governed APIs + evidence resolution | Network + code rules + tests |
+| **Triplet as contract** | DCAT/STAC/PROV are contract surfaces; EvidenceRefs resolve deterministically | Validators + link-check in CI |
+| **Cite-or-abstain** | If EvidenceRefs don’t resolve for user role, system abstains | Story publish + Focus hard gate |
 
 [↑ Back to top](#top)
 
@@ -235,21 +250,21 @@ Violating these breaks governance, not “just code.”
 
 ### Lifecycle zones
 
-**CONFIRMED (spec):** Zones are defined as storage zones plus validation gates, not as a metaphor.:contentReference[oaicite:29]{index=29}
+**CONFIRMED (design docs):** Zones are **storage zones plus validation gates**, not a metaphor.
 
 | Zone | Definition | Typical contents |
 |---|---|---|
-| **RAW** | Immutable acquisition; append-only | Upstream payload snapshots + checksums + terms/license snapshot + fetch logs:contentReference[oaicite:30]{index=30} |
-| **WORK / Quarantine** | Intermediate transforms and QA; failures isolated; artifacts may be rewritten | Normalization outputs, reprojections, tiling jobs, QA reports, redaction/generalization transforms:contentReference[oaicite:31]{index=31} |
-| **PROCESSED** | Publishable artifacts in standardized formats with stable IDs and checksums | GeoParquet/COG/PMTiles, standardized schemas, derived layers, final QA results:contentReference[oaicite:32]{index=32} |
-| **CATALOG / Triplet** | Cross-linked DCAT + STAC + PROV describing metadata, assets, and lineage | Catalog JSON, PROV bundles, link maps:contentReference[oaicite:33]{index=33} |
-| **PUBLISHED** | Governed runtime surfaces served via PEP/API and UI; policy enforced | API responses, tiles endpoints, story pages, Focus answers (each with receipts):contentReference[oaicite:34]{index=34} |
+| **RAW** | Immutable acquisition; append-only | Upstream payload snapshots + checksums + terms snapshot + fetch logs |
+| **WORK / Quarantine** | Intermediate transforms and QA; failures isolated; artifacts may be rewritten | Normalization outputs, tiling jobs, QA reports, redaction/generalization transforms |
+| **PROCESSED** | Publishable artifacts with stable IDs + checksums | GeoParquet/COG/PMTiles, standardized schemas, final QA results |
+| **Triplet** | Cross-linked DCAT + STAC + PROV describing metadata, assets, lineage | Catalog JSON, PROV bundles, link maps |
+| **PUBLISHED** | Governed runtime surfaces served via PEP/API and UI | API responses, tiles endpoints, story pages, Focus answers with receipts |
 
 ### Promotion Contract v1
 
-**CONFIRMED (spec):** Promotion is blocked unless gates are met; automation in CI is expected (fail-closed).:contentReference[oaicite:35]{index=35}
+**CONFIRMED (design docs):** Promotion is blocked unless gates are met, framed to be automatable in CI and reviewable during steward sign-off.
 
-**PROPOSED:** Keep the “gate table” in `docs/governance/promotion_contract.md` (or equivalent) and enforce via CI + policy fixtures.
+**PROPOSED:** Keep the gate table in `docs/governance/promotion_contract.md` (or equivalent) and enforce via CI + policy fixtures.
 
 [↑ Back to top](#top)
 
@@ -257,14 +272,13 @@ Violating these breaks governance, not “just code.”
 
 ## Deterministic identity and versioning
 
-**CONFIRMED (spec):** Deterministic spec hashing (spec_hash) is a first-order work package and must be stable across OS; CI blocks drift.:contentReference[oaicite:36]{index=36}
+**CONFIRMED (design docs):** Reproducibility depends on stable dataset identity and stable version identity. Deterministic hashing (`spec_hash`) based on canonical JSON is a recommended pattern to prevent hash drift.
 
-**CONFIRMED (spec):** Recommended pattern:
-- `spec_hash = sha256( RFC8785 canonical_json(spec) )`:contentReference[oaicite:37]{index=37}
-- `dataset_version_id` is derived from the spec anchor plus release metadata (digest-addressed):contentReference[oaicite:38]{index=38}
+**PROPOSED:** Reference implementation for `spec_hash`
+- `spec_hash = sha256( RFC8785_JCS(spec_json) )`
 
-**UNKNOWN:** Exact on-disk path(s) for dataset specs and registry entries in this repo.
-- Verify: search for `spec_hash` usage and spec schema(s) in `contracts/` and tooling in `tools/`.:contentReference[oaicite:39]{index=39}
+**UNKNOWN:** Exact on-disk path for dataset specs and registry entries in this repo.
+- Smallest verification step: search for `spec_hash` usage and spec schema(s) in `contracts/` and tooling in `tools/`.
 
 [↑ Back to top](#top)
 
@@ -272,14 +286,12 @@ Violating these breaks governance, not “just code.”
 
 ## Catalog triplet and profiles
 
-**CONFIRMED (spec):** Catalogs and provenance are contract surfaces, not “nice metadata”; KFM uses a cross-linked triplet: **DCAT (dataset metadata), STAC (asset metadata), PROV (lineage)** so EvidenceRefs resolve deterministically.:contentReference[oaicite:40]{index=40}
+**CONFIRMED (design docs):** Catalogs and provenance are contract surfaces, not “nice metadata.” KFM uses a cross-linked triplet:
+- **DCAT:** dataset metadata
+- **STAC:** asset metadata
+- **PROV:** lineage
 
-**PROPOSED (minimum profile rules):**
-- DCAT must carry dataset identity (`kfm:dataset_id`, `kfm:dataset_version_id`), license, and distributions.
-- STAC must carry dataset version and link back to DCAT and PROV.
-- PROV must link outputs to generating activities and inputs.
-
-**CONFIRMED (spec):** CI should run validators and link-checking; broken links block merges/promotions.:contentReference[oaicite:41]{index=41}
+**CONFIRMED (design docs):** KFM should define profiles so validation is strict and predictable; CI should run validators and link-checking, and broken links block merges/promotions.
 
 [↑ Back to top](#top)
 
@@ -289,33 +301,34 @@ Violating these breaks governance, not “just code.”
 
 ### EvidenceRef schemes
 
-**CONFIRMED (spec):** KFM “citations” are EvidenceRefs resolved via the evidence resolver into EvidenceBundles (metadata + artifacts + provenance + policy), not raw URLs pasted into text.:contentReference[oaicite:42]{index=42}
+**CONFIRMED (design docs):** KFM “citations” are EvidenceRefs that resolve via an evidence resolver into EvidenceBundles (metadata + artifacts + provenance + policy), not raw URLs pasted into text.
 
-**CONFIRMED (spec):** Recommended identifier families and EvidenceRef schemes include `kfm://...` IDs and resolvable schemes like `dcat://`, `stac://`, `prov://`, `doc://` (and optionally `graph://`, `url://`).
+**CONFIRMED (design docs):** Minimum scheme families include:
+- `dcat://...` dataset/distribution metadata
+- `stac://...` collection/item/asset metadata
+- `prov://...` run lineage (activities/entities/agents)
+- `doc://...` governed documents and story citations
+- `graph://...` entity relations (if enabled)
+- `url://...` discouraged (only with explicit policy/constraints)
 
 Example patterns (illustrative):
 
 ```text
-kfm://dataset/<slug>
-kfm://dataset/<slug>@<dataset_version_id>
-kfm://artifact/sha256:<digest>
-kfm://run/<run_id>
-kfm://audit/entry/<entry_id>
-kfm://story/<story_id>@<story_version_id>
-
 dcat://dataset/<slug>@<dataset_version_id>
 stac://collection/<slug>@<dataset_version_id>#asset=<asset_key>
 prov://run/<run_id>
-doc://story/<story_id>@<story_version_id>
+doc://story/<story_id>@<story_version_id>#span=<anchor-or-page>
+
+kfm://audit/entry/<entry_id>            # ID space example
+kfm://policy_decision/<decision_id>     # ID space example
 ```
 
 ### Evidence resolver contract
 
-**CONFIRMED (spec):**
-- Evidence resolution must apply policy + obligations and return allow/deny with an EvidenceBundle when allowed.:contentReference[oaicite:44]{index=44}
-- Focus Mode and Story publishing have a hard gate: every citation must resolve and be policy-allowed; otherwise narrow scope or abstain.:contentReference[oaicite:45]{index=45}
-
-**PROPOSED:** Keep evidence resolution “≤ 2 calls” from UI as a performance target and test it in e2e.
+**CONFIRMED (design docs):**
+- Evidence resolution applies policy and returns allow/deny + obligations.
+- Evidence resolution returns an EvidenceBundle with human view + machine metadata + digests + audit references.
+- The resolver must be usable in **two or fewer calls** from the UI.
 
 [↑ Back to top](#top)
 
@@ -323,21 +336,24 @@ doc://story/<story_id>@<story_version_id>
 
 ## Governed API
 
-**CONFIRMED (spec):** Governed API surfaces are the only supported access path for clients; it is where policy and evidence resolution are enforced.:contentReference[oaicite:46]{index=46}
+**CONFIRMED (design docs):** Governed API surfaces are the only supported access path for clients; policy and evidence resolution are enforced here.
 
-### Illustrative endpoint surfaces (spec-aligned examples)
+### Design target endpoint surface
 
-**CONFIRMED (spec):**
-- `GET /api/v1/datasets` — discover datasets/versions; policy-filtered; includes `dataset_version_id`:contentReference[oaicite:47]{index=47}
-- `GET /api/v1/stac/collections` and `/items` — browse STAC; returns digests/checksums:contentReference[oaicite:48]{index=48}
-- `GET/POST /api/v1/story` — read/publish story nodes; publish requires resolvable citations + review state:contentReference[oaicite:49]{index=49}
-- `POST /api/v1/focus/ask` — Focus Mode governed run; receipt + hard citation verification; abstains if unsupported:contentReference[oaicite:50]{index=50}
+> [!NOTE]
+> **PROPOSED design targets:** The following endpoints are documented as a **minimal target surface** in vNext materials. Treat them as **UNKNOWN until verified** in your branch’s OpenAPI and code.
+
+- `POST /api/v1/evidence/resolve` — resolve EvidenceRefs into EvidenceBundles (fail closed if unresolvable/unauthorized)
+- `GET /api/v1/datasets` — discover datasets/versions (policy-filtered; includes `dataset_version_id`)
+- `GET /api/v1/stac/collections` and `/items` — browse/query STAC (includes checksums/digests)
+- `GET/POST /api/v1/story` — read/publish Story Nodes (publish requires resolvable citations + review state)
+- `POST /api/v1/focus/ask` — Focus Mode governed run (receipt + hard citation verification; abstains if unsupported)
 
 ### Policy-safe error model
 
-**CONFIRMED (spec):** Error responses must include an `audit_ref` and avoid leaking restricted metadata via distinguishable errors.
+**CONFIRMED (design docs):** Error responses must include an audit reference and avoid leaking restricted metadata via distinguishable errors.
 
-Minimum (illustrative) JSON:
+Minimum JSON shape (illustrative):
 
 ```json
 {
@@ -351,13 +367,16 @@ Minimum (illustrative) JSON:
 
 ---
 
-## Focus Mode AI
+## Focus Mode
 
-**CONFIRMED (spec):** Focus Mode is not a general chatbot. It is a governed workflow: policy pre-check → admissible retrieval → EvidenceBundle resolution → synthesis → hard citation verification → receipt/audit; abstain or reduce scope if unsupported.:contentReference[oaicite:52]{index=52}
+**CONFIRMED (design docs):** Focus Mode is not a general chatbot. It is a governed workflow:
+policy pre-check → admissible retrieval → EvidenceBundle resolution → synthesis → hard citation verification → receipt/audit.
 
-### Minimum evaluation harness (merge-blocking)
+**CONFIRMED (design docs):** If citations cannot be verified, Focus Mode must abstain or reduce scope.
 
-**CONFIRMED (spec):** Work package plan requires an evaluation harness with golden queries and merge-blocking regressions for Focus Mode changes.:contentReference[oaicite:53]{index=53}:contentReference[oaicite:54]{index=54}
+### Minimum evaluation harness
+
+**CONFIRMED (design docs):** A merge-blocking evaluation harness with golden queries is required for Focus Mode changes.
 
 **PROPOSED:** Minimum harness metrics
 - citation resolvability: 100% for allowed users
@@ -371,25 +390,38 @@ Minimum (illustrative) JSON:
 
 ## Governance
 
-**CONFIRMED (spec):** Governance is enforceable behavior: promotion gates, policy labels, obligations, access control, and audit logging.:contentReference[oaicite:55]{index=55}
+**CONFIRMED (design docs):** Governance is enforceable behavior: promotion gates, policy labels, obligations, access control, and audit logging.
 
-### Baseline roles (starter)
+**CONFIRMED (design docs):** Policy tests must run in CI and block merges.
 
-**PROPOSED:**
-- Public user
-- Contributor
-- Steward/Reviewer
-- Operator
-- Governance council (sensitive materials)
+### Starter vocabularies
+
+**CONFIRMED (design docs):** Controlled vocabularies must be versioned and maintained.
+
+**CONFIRMED (design docs):** `policy_label` starter values
+- public
+- public_generalized
+- restricted
+- restricted_sensitive_location
+- internal
+- embargoed
+- quarantine
+
+**CONFIRMED (design docs):** `artifact.zone` starter values
+- raw
+- work
+- processed
+- catalog
+- published
 
 ### Governance review triggers
 
-**CONFIRMED (spec):** Risk register highlights review triggers and mitigations for:
-- policy bypass (trust membrane):contentReference[oaicite:56]{index=56}
-- licensing violations (rights metadata + metadata-only mode):contentReference[oaicite:57]{index=57}
-- sensitive-location leakage (restricted precise + public generalized derivatives; redaction tests; default-deny):contentReference[oaicite:58]{index=58}
-- non-resolvable citations (evidence resolver contract; publish gate):contentReference[oaicite:59]{index=59}
-- Focus Mode hallucination/leakage (hard citation verifier; eval harness; policy pre-checks):contentReference[oaicite:60]{index=60}
+**CONFIRMED (design docs):** Risk and review triggers include:
+- policy bypass via direct DB/storage access
+- licensing violations and unclear rights
+- sensitive-location leakage (restricted precise + public generalized derivatives; redaction tests; default-deny)
+- non-resolvable citations (evidence resolver contract; story publish gate)
+- Focus Mode hallucination or restricted leakage (hard citation verifier; evaluation harness; policy pre-checks)
 
 [↑ Back to top](#top)
 
@@ -397,13 +429,11 @@ Minimum (illustrative) JSON:
 
 ## Repository layout
 
-> [!NOTE]
-> **UNKNOWN until verified:** the exact current repo structure on your branch.  
-> Do not treat this section as proof that any specific module exists.
+> [!IMPORTANT]
+> **UNKNOWN until verified:** the exact repo structure on your branch.  
+> Do not treat this section as proof that a specific module exists.
 
-**CONFIRMED (report/spec):** The plan assumes top-level directories like `apps/`, `packages/`, `contracts/`, `policy/`, `data/`, `infra/`, plus supporting `docs/`, `tools/`, `tests/`—but you must verify in the live repo/branch before enforcing module-specific checks.:contentReference[oaicite:61]{index=61}:contentReference[oaicite:62]{index=62}
-
-### Target layout (PROPOSED)
+**PROPOSED (design target):** A typical top-level structure to support the vNext operating model:
 
 ```text
 Kansas-Frontier-Matrix/
@@ -465,24 +495,24 @@ Kansas-Frontier-Matrix/
 
 ## Roadmap
 
-**CONFIRMED (spec):** The authoritative vNext implementation plan is expressed as work packages **WP-01…WP-08** with acceptance criteria (small, reviewable, reversible).:contentReference[oaicite:63]{index=63}
+**CONFIRMED (design docs):** The vNext implementation plan is expressed as work packages **WP-01…WP-08** with acceptance criteria.
 
-### Work packages (condensed)
+### Work packages
 
 | WP | Goal | Key deliverables | Acceptance criteria |
 |---|---|---|---|
-| WP-01 | Spec hashing + controlled vocab validation | `spec_hash` lib + CLI; schemas; golden tests | Hash stable across OS; CI blocks drift:contentReference[oaicite:64]{index=64} |
-| WP-02 | Catalog validators + link checker | DCAT/STAC/PROV validators; linkcheck | Validators run in CI; broken links block merge:contentReference[oaicite:65]{index=65} |
-| WP-03 | Policy pack + fixture tests | OPA/Rego bundle; fixtures | Default-deny enforced; CI blocks regressions:contentReference[oaicite:66]{index=66} |
-| WP-04 | Evidence resolver service | `/evidence/resolve`; EvidenceBundle schema; integration tests | Resolves refs; enforces policy; no restricted leakage:contentReference[oaicite:67]{index=67} |
-| WP-05 | Dataset registry + discovery endpoints | Catalog registry reader; `/datasets` + `/stac` routes | Policy-filtered; returns version IDs + digests; contract tests pass:contentReference[oaicite:68]{index=68} |
-| WP-06 | Map Explorer baseline UI | MapCanvas; LayerPanel; TimeControl; EvidenceDrawer; e2e tests | Evidence drawer shows license + version; keyboard nav works:contentReference[oaicite:69]{index=69} |
-| WP-07 | Story Node v3 publish workflow | Story schema/routes; UI renderer; publish gate | Review state + resolvable citations required; citations open evidence drawer:contentReference[oaicite:70]{index=70} |
-| WP-08 | Focus Mode MVP + evaluation harness | Focus orchestrator/route; eval harness tests | Cite-or-abstain; golden queries; merge blocked on regressions:contentReference[oaicite:71]{index=71} |
+| WP-01 | Spec hashing + controlled vocab validation | `spec_hash` lib + CLI; schemas; golden tests | Hash stable across OS; CI blocks drift |
+| WP-02 | Catalog validators + link checker | DCAT/STAC/PROV validators; link-check | Validators run in CI; broken links block merge |
+| WP-03 | Policy pack + fixture tests | OPA/Rego bundle; fixtures | Default-deny enforced; CI blocks regressions |
+| WP-04 | Evidence resolver service | Evidence resolve endpoint; EvidenceBundle schema; integration tests | Resolves refs; enforces policy; no restricted leakage |
+| WP-05 | Dataset registry + discovery endpoints | Registry reader; dataset + STAC routes | Policy-filtered; returns version IDs + digests; contract tests pass |
+| WP-06 | Map Explorer baseline UI | Map canvas; layer panel; time controls; evidence drawer; e2e tests | Evidence drawer shows license + version; keyboard navigation works |
+| WP-07 | Story Node publish workflow | Story schema/routes; UI renderer; publish gate | Review state + resolvable citations required; citations open evidence drawer |
+| WP-08 | Focus Mode MVP + evaluation harness | Focus route; eval harness | Cite-or-abstain; golden queries; merge blocked on regressions |
 
-### 90-day framing (PROPOSED)
+### Milestone framing
 
-**PROPOSED:** Weeks 1–4: WP-01…WP-04 (“trust foundation”), Weeks 5–8: WP-05…WP-06 (“discover & view”), Weeks 9–12: WP-07…WP-08 (“publish & explain”).:contentReference[oaicite:72]{index=72}
+**PROPOSED:** Weeks 1–4: WP-01…WP-04 (“trust foundation”), Weeks 5–8: WP-05…WP-06 (“discover & view”), Weeks 9–12: WP-07…WP-08 (“publish & explain”).
 
 [↑ Back to top](#top)
 
@@ -490,9 +520,9 @@ Kansas-Frontier-Matrix/
 
 ## Documentation is production
 
-**CONFIRMED (spec):** Docs should use MetaBlock v2 (no YAML frontmatter) and carry a `policy_label` when served through governed surfaces.
+**CONFIRMED (design docs):** Docs are production surfaces and should carry MetaBlock v2 (no YAML frontmatter) and a `policy_label` when served through governed surfaces.
 
-MetaBlock template (reference):
+MetaBlock template:
 
 ```html
 <!-- [KFM_META_BLOCK_V2]
@@ -519,19 +549,20 @@ notes:
 
 ## License
 
-**UNKNOWN:** Repository license status.
-- Verification step: check for `LICENSE` at repo root.
-- Recommendation (PROPOSED): choose SPDX-friendly licensing for code and capture source-specific licensing for data.
+**UNKNOWN:** repo license status.
+- Smallest verification step: check for `LICENSE` at repo root.
+- **PROPOSED:** choose SPDX-friendly licensing for code and capture source-specific licensing for data.
 
 [↑ Back to top](#top)
 
 ---
 
-## Appendix: Definition of Done checklists
+<details>
+<summary><strong>Appendix — Definition of Done checklists</strong></summary>
 
-### Dataset onboarding DoD (spec-aligned minimum)
+### Dataset onboarding definition of done
 
-**CONFIRMED (spec):** Promotion is blocked unless identity/versioning, licensing/rights, sensitivity, triplet validation, QA thresholds, receipts/audit, and manifest are present.:contentReference[oaicite:74]{index=74}
+**CONFIRMED (design docs):** Promotion is blocked unless identity/versioning, licensing/rights, sensitivity, triplet validation, QA thresholds, receipts/audit, and manifest are present.
 
 - [ ] source registry entry exists (license/terms snapshot + sensitivity + cadence)
 - [ ] dataset spec exists and `spec_hash` is stable (golden tests)
@@ -539,26 +570,28 @@ notes:
 - [ ] WORK transforms recorded; failures quarantined with reasons
 - [ ] PROCESSED artifacts produced with digests and stable IDs
 - [ ] DCAT/STAC/PROV generated and profile-valid; cross-links resolve
-- [ ] policy label assigned; obligations documented (if needed)
+- [ ] policy label assigned; obligations documented when needed
 - [ ] QA report present; thresholds met (or quarantined)
-- [ ] release/promotion manifest created; approvals captured
+- [ ] release or promotion manifest created; approvals captured
 - [ ] governed runtime can serve policy-safe metadata and allowed artifacts
 
-### Story publishing DoD (spec-aligned minimum)
+### Story publishing definition of done
 
-**CONFIRMED (spec):** Publishing requires review state + resolvable citations; citations must open/resolve via evidence resolver/evidence drawer flow.:contentReference[oaicite:75]{index=75}
+**CONFIRMED (design docs):** Publishing requires review state plus resolvable citations; citations must open/resolve via evidence resolver/evidence drawer flow.
 
-- [ ] story markdown + sidecar map state present
+- [ ] story markdown plus sidecar map state present
 - [ ] all citations are EvidenceRefs and resolve for intended audience
-- [ ] policy label + review state assigned
-- [ ] publish event emits audit reference + receipt
+- [ ] policy label plus review state assigned
+- [ ] publish event emits audit reference plus receipt
 
-### Focus Mode DoD (spec-aligned minimum)
+### Focus Mode definition of done
 
-**CONFIRMED (spec):** Hard citation verification gate; abstain or reduce scope if unsupported; evaluation harness with golden queries blocks regressions.:contentReference[oaicite:76]{index=76}:contentReference[oaicite:77]{index=77}
+**CONFIRMED (design docs):** Hard citation verification gate; abstain or reduce scope if unsupported; evaluation harness with golden queries blocks regressions.
 
 - [ ] policy pre-check blocks disallowed scopes/topics
 - [ ] retrieval returns only admissible EvidenceBundles
 - [ ] citation verifier is a hard gate (no “best-effort citations”)
 - [ ] receipt emitted (inputs, bundle digests, policy decision refs, output hash)
 - [ ] evaluation harness exists; golden query diffs are merge-blocking
+
+</details>
