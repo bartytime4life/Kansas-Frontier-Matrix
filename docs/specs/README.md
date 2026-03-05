@@ -6,40 +6,44 @@ version: v1
 status: draft
 owners: @kfm/core
 created: 2026-03-04
-updated: 2026-03-04
+updated: 2026-03-05
 policy_label: restricted
-related: [docs/specs/data/, docs/specs/qa/, docs/specs/security/, docs/specs/ci/, docs/specs/api/, docs/specs/telemetry/]
+related: [docs/specs/, docs/specs/agents/, docs/specs/observability/, docs/specs/pipelines/, docs/specs/storage/, docs/specs/ui/, schemas/, tools/, policy/, contracts/]
 tags: [kfm, specs, contracts, governance]
 notes: [Canonical index for governed KFM specifications. Keep links accurate; update owners/status as areas mature.]
 [/KFM_META_BLOCK_V2] -->
 
-# KFM Specifications
-Governed specifications (contracts) for KFM: schemas, policies, gates, and invariants that must be enforceable in CI.
+# KFM Specifications Index
+Governed, component-level specifications (contracts) for Kansas Frontier Matrix (KFM): what must be true, how it’s proven, and where enforcement lives.
 
 > **IMPACT**
 >
-> **Status:** draft (treat as enforceable once wired into CI)  
-> **Owners:** @kfm/core (TODO), @kfm/docs (TODO)  
-> **Policy label:** `restricted` by default (set to `public` only after governance review)  
+> **Status:** draft (spec surface is active; treat as enforceable only when wired into CI gates)  
+> **Owners:** @kfm/core (primary) · @kfm/docs (TODO: set via `CODEOWNERS`)  
+> **Policy label:** `restricted` by default (individual sub-specs may be `public` after governance review)  
 >
 > **Badges (placeholders):**
 > [![CI](https://img.shields.io/badge/CI-TODO-lightgrey)](#)
-> [![Spec%20Lint](https://img.shields.io/badge/spec%20lint-TODO-lightgrey)](#)
-> [![Schema%20Validate](https://img.shields.io/badge/schema%20validate-TODO-lightgrey)](#)
-> [![Link%20Check](https://img.shields.io/badge/link%20check-TODO-lightgrey)](#)
+> [![Validators](https://img.shields.io/badge/validators-TODO-lightgrey)](#)
+> [![Linkcheck](https://img.shields.io/badge/linkcheck-TODO-lightgrey)](#)
+> [![Policy%20Gate](https://img.shields.io/badge/policy%20gate-TODO-lightgrey)](#)
 >
-> **Quick nav:**  
-> [Architecture](./architecture/) · [Data](./data/) · [API](./api/) · [Provenance](./provenance/) · [QA](./qa/) · [Security](./security/) · [CI](./ci/) · [Telemetry](./telemetry/) · [Pipelines](./pipelines/)
+> **Quick nav (verified paths):**  
+> [Agents](./agents/) · [Observability](./observability/) · [Pipelines](./pipelines/) · [Storage](./storage/) · [UI](./ui/)  
+> **Related contract surfaces:** [Schemas](../../schemas/) · [Validators](../../tools/validators/) · [Linkcheck](../../tools/linkcheck/) · [Policy](../../policy/) · [Contracts](../../contracts/) · [Docs hub](../README.md)
+
+---
 
 ## Quick links
 - [Scope](#scope)
-- [Evidence tags](#evidence-tags)
+- [Evidence labels](#evidence-labels)
 - [Where it fits](#where-it-fits)
 - [Acceptable inputs](#acceptable-inputs)
 - [Exclusions](#exclusions)
 - [Directory tree](#directory-tree)
 - [Quickstart](#quickstart)
 - [Specification registry](#specification-registry)
+- [Naming and versioning conventions](#naming-and-versioning-conventions)
 - [Promotion gates](#promotion-gates)
 - [Contribution workflow](#contribution-workflow)
 - [Diagram](#diagram)
@@ -50,178 +54,228 @@ Governed specifications (contracts) for KFM: schemas, policies, gates, and invar
 
 ## Scope
 
-**CONFIRMED (policy):** Anything in `docs/specs/` is intended to become a *system contract* (human-readable and machine-enforceable). If a document is *just an idea*, it belongs somewhere else (see Exclusions).
+**CONFIRMED (principle):** Specs are the “human-readable contract surface” that must become machine-enforceable (validators, linkcheck, policy tests, CI gates) before anything can be promoted to governed runtime surfaces.
 
-In scope:
-- Contract documents that define **what must be true** (schemas, required fields, invariants, gate criteria).
-- Machine-readable artifacts: **JSON Schema**, **OpenAPI**, **vocabulary files**, **Rego policies**, example fixtures.
-- Validation gates/runbooks that are treated as production surfaces (kept current, referenced by CI, reviewed on a schedule).
+In scope for `docs/specs/`:
+- Component specs that define **what must be true** and **how it will be proven**.
+- Interfaces and invariants that protect the **trust membrane** (no privileged shortcuts, no bypasses).
+- Testable acceptance criteria and review checklists that make governance **visible and auditable**.
+- Pointers to the canonical machine artifacts in:
+  - `schemas/` (JSON Schemas and contract registries)
+  - `policy/` (OPA/Rego policy bundles + tests)
+  - `tools/` (validators, linkcheck, lint gates)
+  - `.github/workflows/` (merge/promotion gate wiring)
 
-Out of scope:
-- Exploratory research notes, brainstorming, and non-normative writeups.
-- Vendor- or environment-specific secrets, tokens, credentials, or anything requiring private infrastructure access.
-- Large binaries / datasets (those belong under `data/` and governed data zones).
+Out of scope for `docs/specs/`:
+- Exploratory notes → use `docs/investigations/` or `docs/reports/` (keep specs normative).
+- Implementation code → use `apps/` or `packages/`.
+- Raw/derived datasets and large binaries → use governed `data/` zones.
+- Secrets/credentials → never commit.
 
-[Back to top](#kfm-specifications)
+[Back to top](#kfm-specifications-index)
 
 ---
 
-## Evidence tags
+## Evidence labels
 
-This repo uses explicit evidence tags to avoid overclaiming.
+This directory uses explicit labels to avoid overclaiming.
 
-- **CONFIRMED:** backed by an enforced check (tests/policy/CI) *or* explicitly declared as platform policy.
-- **PROPOSED:** documented design intent; not yet proven by enforcement.
-- **UNKNOWN:** not verified; includes the smallest verification step(s) required to make it CONFIRMED.
+- **CONFIRMED:** a documented requirement/invariant.  
+  If it is *also enforced*, name the enforcement surface (example: `tools/validators`, `tools/linkcheck`, policy tests, CI job).
+- **PROPOSED:** design intent / recommended pattern; not yet ratified as required behavior.
+- **UNKNOWN:** not verified in this checkout; includes the smallest verification steps required to confirm.
 
-**UNKNOWN (verify now):** The exact current contents of `docs/specs/` in your working tree.  
-Verification steps:
-1. `git ls-tree -r HEAD docs/specs`
-2. Update the tables/trees below to match reality.
-3. Set each area’s status to CONFIRMED only after a CI gate references it.
+**Fail-closed rule (policy):** if you can’t ground it, mark it **UNKNOWN** and list the smallest verification step.
+
+**UNKNOWN (verify now):** The exact current contents of `docs/specs/` and which specs are actually wired into CI today.  
+Smallest verification steps:
+1. `tree -L 3 docs/specs`
+2. `ls -la .github/workflows`
+3. Identify which workflows call `tools/validators/*` and `tools/linkcheck/*`
+4. Update this index’s “Status” column accordingly.
 
 ---
 
 ## Where it fits
 
-**CONFIRMED (design):** KFM is organized into modular layers; `docs/` is the human-readable system documentation layer, while contracts/policy/tools/data/apps/packages form the governed build/run surfaces. `docs/specs/` sits at the boundary between “human intent” and “machine enforcement.”
+**CONFIRMED (system model):** KFM is a pipeline → catalogs → governed API → UI system. Specs sit between “design intent” and “enforcement,” and must never propose shortcuts that bypass policy, evidence resolution, or governed access boundaries.
 
 Upstream inputs to specs:
-- Governance + ethics requirements (policy constraints, default-deny publishing, sensitivity rules).
-- Domain authority requirements (data providers, standards like STAC/DCAT/PROV, internal contract conventions).
+- Governance posture and sensitivity constraints (`docs/governance/`)
+- Architecture invariants (`docs/architecture/`)
+- Standards/profiles (`docs/standards/`, plus contract registries in `schemas/`)
 
 Downstream consumers of specs:
-- `tools/validation/` checks (schema validation, policy conftest runs, link checks).
-- CI workflows that block promotion/merge on gate failure.
-- `contracts/` and `policy/` implementations (OpenAPI, Rego packs) and any API/UI expectations.
-- Pipeline promotion logic (RAW → WORK → PROCESSED → PUBLISHED lifecycle gates).
+- Machine contracts: `schemas/`, `contracts/`, `policy/`
+- Enforcement tooling: `tools/validators/`, `tools/linkcheck/` (and other tools under `tools/`)
+- CI wiring: `.github/workflows/`
+- Runtime implementations: `apps/`, `packages/`
+
+**CONFIRMED (trust membrane invariant):** clients (UI/external) do not access databases or storage directly; access must cross the governed API + policy boundary.
+
+[Back to top](#kfm-specifications-index)
 
 ---
 
 ## Acceptable inputs
 
-Put these here:
-- `*.md` contract docs with clear “must/shall” statements and examples.
-- `*.json` JSON Schemas (OpenAPI components, telemetry event schemas, STAC extensions, etc.).
-- `*.yaml` / `*.yml` where a governed config format is explicitly versioned and validated.
-- `*.rego` policies and `*_test.rego` conftest tests **only if** this directory is the canonical home for the contract (otherwise link to `policy/`).
+Put these in `docs/specs/**`:
+- `README.md` per area (purpose, where it fits, inputs, exclusions, directory tree, diagram, task list).
+- `*.md` normative specs and component contracts (MUST/SHOULD/MAY language encouraged).
+- Mermaid diagrams (` ```mermaid `) explaining boundaries + handoffs.
+- Small, sanitized examples (toy JSON/YAML) that are safe to publish and review.
 
-**PROPOSED:** Prefer “spec + schema + example” bundled per area (README explains intent, schemas are machine-readable, examples are real).
+Preferred: keep machine-readable contracts in their canonical homes and link to them:
+- JSON Schema → `schemas/**`
+- OpenAPI/HTTP contracts → `contracts/**` (or repo-standard equivalent)
+- Rego policy + tests → `policy/**`
+- Validators + linkcheck entrypoints → `tools/**`
 
 ---
 
 ## Exclusions
 
-Do **not** put these in `docs/specs/`:
-- Draft brainstorming or research spikes → put under `docs/research/` (or a dedicated design pack under `docs/design/`).
-- Implementation details (code) → put under `apps/` or `packages/`.
-- Raw/derived datasets → put under `data/` following lifecycle zones.
-- Secrets / credentials → never commit; use secret management.
+Do **not** put these in `docs/specs/**`:
+- Secrets/tokens/credentials (ever).
+- Raw restricted evidence, sensitive-location coordinates, or content enabling targeting.
+- Large binaries (screenshots, datasets, opaque exports) unless explicitly approved and kept diffable.
+- Canonical datasets/catlogs themselves (belong in governed `data/` zones and catalogs).
+- Implementation code (belongs in `apps/` / `packages/`).
 
 ---
 
 ## Directory tree
 
-**PROPOSED (scaffold):** Replace this with the actual tree once verified.
+**CONFIRMED (repo tree):** current `docs/specs/` layout.
 
 ```text
 docs/specs/
-├─ README.md                  # This index
-├─ architecture/              # System boundaries + invariants
-├─ api/                       # REST contracts + schema registries
-├─ ci/                        # Detect → validate → promote contract(s)
-├─ data/                      # STAC/DCAT profiles, dataset rules
-├─ pipelines/                 # Orchestration + lane contracts
-├─ provenance/                # PROV policies and mappings
-├─ qa/                        # Validation gates + runbooks
-├─ security/                  # Supply-chain + security policy surfaces
-└─ telemetry/                 # Event vocab + observability contracts
+├─ README.md
+├─ agents/
+│  ├─ README.md
+│  ├─ WATCHER_CONTRACT.md
+│  ├─ PLANNER_CONTRACT.md
+│  └─ EXECUTOR_CONTRACT.md
+├─ observability/
+│  └─ README.md
+├─ pipelines/
+│  └─ README.md
+├─ storage/
+│  └─ README.md
+└─ ui/
+   └─ README.md
 ```
+
+**PROPOSED:** each subdirectory may grow additional `*.md` specs over time; keep additions small and link-checkable.
+
+[Back to top](#kfm-specifications-index)
 
 ---
 
 ## Quickstart
 
-**UNKNOWN:** The canonical command names in *this* repo (verify Makefile/scripts).  
-Verification steps:
-1. `ls -la` at repo root for `Makefile` / `tools/validation/`.
-2. Grep CI workflows for invoked commands.
+**CONFIRMED (tools exist):** this repo contains fail-closed validators and linkcheck tooling that are intended to be used as promotion gates.  
+**UNKNOWN:** exact CI wiring and exact local prerequisites (Node versions, package manager, etc.).  
+Smallest verification step: read `tools/validators/README.md` and `tools/linkcheck/README.md`, then inspect `.github/workflows/`.
 
 ```bash
-# pseudocode — rename targets to match this repo
-make docs-lint
-make specs-validate
-make policy-test
+# From repo root: verify this index is aligned to the current tree
+tree -L 3 docs/specs
+
+# Run catalog triplet validators (fail-closed)
+node tools/validators/validate_dcat.js
+node tools/validators/validate_stac.js
+node tools/validators/validate_prov.js
+node tools/validators/validate_receipts.js
+
+# Validate contract versioning (if used by your CI gates)
+node tools/validators/validate_contract_versions.js
+
+# Linkcheck cross-references and evidence handles (fail-closed)
+node tools/linkcheck/catalog_linkcheck.js
 ```
 
 ---
 
 ## Specification registry
 
-**PROPOSED:** Treat this table as the “table of contents” for contract surfaces.  
-Update “Status” as each area gains enforcement.
+Keep this table current so contributors can quickly find contract surfaces and enforcement entrypoints.
 
-| Area | Path | Primary artifacts (examples) | What it governs | Status |
-|---|---|---|---|---|
-| Architecture | `docs/specs/architecture/` | `ARCH__SYSTEM_BOUNDARIES.md` | Trust membrane, boundary rules, non-bypass invariants | PROPOSED |
-| Data | `docs/specs/data/` | `DATA__STAC_PROFILE.md`, `DATA__DCAT_PROFILE.md` | Catalog shape, required metadata, dataset identity rules | PROPOSED |
-| API | `docs/specs/api/` | `API__REST_CONTRACT.md`, `schemas/…` | Governed endpoints + schema compatibility | PROPOSED |
-| Provenance | `docs/specs/provenance/` | `PROV__POLICY.md`, mappings | What evidence must be emitted and how it links | PROPOSED |
-| QA | `docs/specs/qa/` | `QA__VALIDATION_GATES.md`, `runbooks/…` | Validation lanes, thresholds, and failure semantics | PROPOSED |
-| Security | `docs/specs/security/` | supply-chain requirements, threat model pointers | SBOM/SLSA, signing, secrets policy | PROPOSED |
-| CI | `docs/specs/ci/` | `CI__DETECT_VALIDATE_PROMOTE.md` | Idempotent detect→validate→signed promote | PROPOSED |
-| Telemetry | `docs/specs/telemetry/` | `FOCUS__EVENTS.md`, event schemas | Events, fields, retention, redaction rules | PROPOSED |
-| Pipelines | `docs/specs/pipelines/` | `ASSETS__ORCHESTRATION.md` | Lane boundaries + orchestrator contracts | PROPOSED |
+| Area | Path | Key docs in this repo | Related machine artifacts (canonical homes) | Enforcement surfaces | Status |
+|---|---|---|---|---|---|
+| Agents (Watcher/Planner/Executor) | `docs/specs/agents/` | `README.md`, `WATCHER_CONTRACT.md`, `PLANNER_CONTRACT.md`, `EXECUTOR_CONTRACT.md` | `schemas/watcher.v1.schema.json` (and any agent telemetry schemas under `schemas/telemetry/`) | CI + branch protection (expected), plus tooling under `tools/` (verify) | PROPOSED (some parts may be enforced; verify CI) |
+| Observability | `docs/specs/observability/` | `README.md` | `schemas/telemetry/`, plus any audit log schemas | `tools/linkcheck/` for reference integrity (plus telemetry validators if added) | PROPOSED |
+| Pipelines | `docs/specs/pipelines/` | `README.md` | `schemas/run_receipt.v1.schema.json`, `schemas/run_manifest.v1.schema.json` | `tools/validators/` + policy tests + CI gates | PROPOSED (truth-path zones are CONFIRMED as design) |
+| Storage | `docs/specs/storage/` | `README.md` | Catalog schemas under `schemas/{dcat,stac,prov}/` + receipts/manifests | `tools/validators/`, `tools/linkcheck/` | PROPOSED |
+| UI | `docs/specs/ui/` | `README.md` | `schemas/ui/` + Story Node schemas under `schemas/storynodes/` | Linkcheck + UI tests (expected) | PROPOSED |
 
-### Naming conventions
+**UNKNOWN (link hygiene audit):** some sub-spec READMEs reference directories that are not present under `docs/specs/` in this repo snapshot.  
+Smallest fix: update those links to the repo’s actual canonical paths (often `docs/quality/`, `schemas/`, `tools/`, `policy/`).
 
-**PROPOSED:** Use filename prefixes to make contract intent obvious.
+[Back to top](#kfm-specifications-index)
 
-| Prefix | Meaning | Typical location |
-|---|---|---|
-| `ARCH__` | System boundaries and invariants | `docs/specs/architecture/` |
-| `DATA__` | Data profiles and catalog rules | `docs/specs/data/` |
-| `API__` | API contracts and compatibility | `docs/specs/api/` |
-| `QA__` | Validation gates and thresholds | `docs/specs/qa/` |
-| `PROV__` | Provenance policy and mappings | `docs/specs/provenance/` |
-| `SEC__` | Security and supply-chain contracts | `docs/specs/security/` |
-| `CI__` | CI semantics and promotion contracts | `docs/specs/ci/` |
-| `TELEMETRY__` | Observability/event contracts | `docs/specs/telemetry/` |
+---
 
-[Back to top](#kfm-specifications)
+## Naming and versioning conventions
+
+**CONFIRMED (repo patterns observed):**
+- Specs are Markdown (`docs/specs/**.md`).
+- Schemas are versioned JSON Schema files (examples: `*.v1.schema.json`) under `schemas/`.
+- Validators are runnable scripts under `tools/validators/` (examples: `validate_*.js`).
+- Linkcheck entrypoints are runnable scripts under `tools/linkcheck/` (examples: `*_linkcheck.js`).
+
+**PROPOSED (keep it boring and searchable):**
+- Spec files: `AREA__TOPIC.md` for broad topics, or `*_CONTRACT.md` for component interface documents.
+- Runbooks: `RUNBOOK__<incident_or_op>.md` (or keep runbooks under `docs/runbooks/` and link here).
+- If you introduce a new schema:
+  - Add it under `schemas/<area>/`
+  - Add a validator entry (or update an existing validator)
+  - Add a linkcheck rule if cross-references can break
 
 ---
 
 ## Promotion gates
 
-**CONFIRMED (policy):** Data promotion is gated and evidence-producing; do not “promote by convention.”
+**CONFIRMED (design posture):** promotion is fail-closed and evidence-producing; do not “promote by convention.”
 
-Lifecycle:
-- RAW → WORK → PROCESSED → PUBLISHED
+Truth path (zones):
+- RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED
 
 Minimum evidence required to promote (policy checklist):
 
-| Gate | Required evidence | Notes |
+| Gate | Required evidence (minimum) | Notes |
 |---|---|---|
-| RAW → WORK | Identity + schema + extents + license + sensitivity classification | WORK is quarantine/staging; nothing reaches production consumers yet |
-| WORK → PROCESSED | Validation outputs meeting thresholds + provenance bundle + integrity checksums | Fails closed on missing/invalid evidence |
-| PROCESSED → PUBLISHED | Auditable run record + policy decision record + stable catalogs | Publication must be explicitly allowed and reviewable |
+| RAW → WORK/QUARANTINE | dataset identity + versioning rules + license/rights + sensitivity classification | WORK/QUARANTINE is where QA happens; quarantine blocks promotion |
+| WORK/QUARANTINE → PROCESSED | validation outputs meeting thresholds + deterministic provenance + integrity checksums | Fail closed on missing/invalid evidence |
+| PROCESSED → CATALOG/TRIPLET | DCAT + STAC + PROV are present, valid, and cross-linked | Triplet validity is a promotion contract surface (validators + linkcheck) |
+| CATALOG/TRIPLET → PUBLISHED | auditable run record + policy decision record + stable catalogs | Publication must be explicitly allowed and reviewable |
 
-**PROPOSED:** Encode these as CI “promotion contract tests” (deny by default).
+**PROPOSED:** encode these as CI “promotion contract tests” and require a machine report artifact upload for each gate (validators + linkcheck + policy).
+
+[Back to top](#kfm-specifications-index)
 
 ---
 
 ## Contribution workflow
 
-**PROPOSED:** Keep changes small, reversible, and additive.
+Keep changes small, reversible, and additive.
 
-1. Add/update the spec doc(s) under the correct area.
-2. Add/update machine-readable schema(s) and example fixtures where applicable.
+1. Add or update the spec doc(s) under the correct area in `docs/specs/`.
+2. If a machine-readable contract changes, update its canonical home:
+   - Schema → `schemas/`
+   - Policy → `policy/`
+   - OpenAPI/contract → `contracts/`
 3. Wire or update enforcement:
-   - schema validation in `tools/validation/`
-   - policy checks in `policy/` + conftest tests
-   - CI workflow references
-4. Update this index table and set status tags appropriately.
+   - validators in `tools/validators/`
+   - link integrity checks in `tools/linkcheck/`
+   - policy tests in `policy/` (and CI wiring)
+4. Update this index:
+   - directory tree if structure changed
+   - spec registry table (add new docs, update status)
+5. If you add a new spec area:
+   - create the folder
+   - include a `README.md` in that folder (purpose + where it fits + inputs + exclusions + tree + diagram)
+   - add it to the registry table above
 
 ---
 
@@ -229,14 +283,15 @@ Minimum evidence required to promote (policy checklist):
 
 ```mermaid
 flowchart TD
-  A[Contributor edits contract] --> B[docs specs]
-  B --> C[CI lint schema policy]
-  C --> D[Merge allowed]
-  C --> E[Promotion blocked]
-  D --> F[Pipeline promotion]
-  F --> G[Catalogs STAC DCAT PROV]
-  G --> H[Governed APIs]
-  H --> I[UI Story Map Focus]
+  A[Spec author updates docs specs] --> B[docs specs]
+  B --> C[Machine contracts schemas policy contracts]
+  C --> D[Enforcement tools validators linkcheck]
+  D --> E[CI workflows and gates]
+  E --> F[Promotion allowed]
+  E --> G[Promotion blocked]
+  F --> H[PUBLISHED surfaces]
+  H --> I[Governed API]
+  I --> J[UI Map Story Focus]
 ```
 
 ---
@@ -246,20 +301,20 @@ flowchart TD
 Use this checklist for any PR that changes `docs/specs/**`.
 
 - [ ] MetaBlock v2 present and updated (`created` stays stable; `updated` changes).
-- [ ] Evidence tags used: CONFIRMED / PROPOSED / UNKNOWN (and UNKNOWN includes verification steps).
+- [ ] Evidence labels used: CONFIRMED / PROPOSED / UNKNOWN (and UNKNOWN includes minimal verification steps).
 - [ ] Links are relative where possible and pass link checking.
-- [ ] Any schema changes have:
-  - [ ] a validator in `tools/validation/` (or referenced equivalent),
-  - [ ] fixtures/examples,
-  - [ ] a compatibility note (backward compatibility or migration plan).
-- [ ] Any policy changes have:
-  - [ ] Rego tests,
-  - [ ] fail-closed defaults,
-  - [ ] clear rationale and rollback path.
-- [ ] CI updated to enforce the new/changed contract (or explicitly marked PROPOSED with a ticket link).
-- [ ] Directory README(s) updated (no stale indices).
+- [ ] Spec registry table updated (no stale indices).
+- [ ] If the change implies a machine contract:
+  - [ ] schema updated in `schemas/` (or contract updated in `contracts/`)
+  - [ ] validator updated/added in `tools/validators/` (or rationale documented)
+  - [ ] linkcheck updated if references can break (`tools/linkcheck/`)
+- [ ] If the change implies a policy constraint:
+  - [ ] policy change lives in `policy/` (not buried in docs)
+  - [ ] tests added and fail closed by default
+  - [ ] rationale + rollback path written in the PR description
+- [ ] CI workflow wiring updated (or explicitly marked **PROPOSED** until wired).
 
-[Back to top](#kfm-specifications)
+[Back to top](#kfm-specifications-index)
 
 ---
 
@@ -269,7 +324,7 @@ Use this checklist for any PR that changes `docs/specs/**`.
 **CONFIRMED (policy):** KFM treats documentation as a production surface; contracts must be readable *and* enforceable.
 
 **Where do I put exploratory work?**  
-Use `docs/research/` or a scoped design pack under `docs/design/`. Promote only matured, enforceable artifacts into `docs/specs/`.
+Use `docs/investigations/` or `docs/reports/`. Promote only matured, enforceable artifacts into `docs/specs/`.
 
 **What if I don’t know whether something is true?**  
 Mark it **UNKNOWN** and include the smallest verification steps needed to confirm it.
@@ -303,10 +358,17 @@ notes: [<short notes>]
 
 ```bash
 # Verify current spec inventory
-git ls-tree -r HEAD docs/specs
+tree -L 3 docs/specs
 
-# Optional: visualize folder structure
-tree docs/specs -L 3
+# Verify top-level contract surfaces
+ls -la schemas tools policy contracts
+
+# Find references to missing paths (quick hygiene pass)
+rg -n "docs/specs/(api|qa|data|security|ci|telemetry|provenance|catalog)/" docs/specs -S
+
+# Inspect CI wiring for gates (what actually blocks merges/promotions)
+ls -la .github/workflows
+rg -n "tools/validators|tools/linkcheck|conftest|opa|policy" .github/workflows -S
 ```
 
 </details>
