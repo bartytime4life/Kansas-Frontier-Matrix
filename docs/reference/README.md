@@ -2,11 +2,11 @@
 doc_id: kfm://doc/9df4f9b9-8e85-4d49-8a30-1e1704fa6f74
 title: docs/reference
 type: standard
-version: v0.1
+version: v0.2
 status: draft
 owners: [TBD]
 created: 2026-03-04
-updated: 2026-03-04
+updated: 2026-03-05
 policy_label: TBD
 related: [
   "docs/README.md",
@@ -21,18 +21,23 @@ notes: [
 ]
 [/KFM_META_BLOCK_V2] -->
 
-<div align="center">
-
 # Reference
-
 Curated, version-pinned reference material used to build and operate KFM.
 
-<img alt="Status badge" src="https://img.shields.io/badge/status-proposed-blue" />
-<img alt="Owners badge" src="https://img.shields.io/badge/owners-TBD-lightgrey" />
-<img alt="Policy badge" src="https://img.shields.io/badge/policy-TBD-lightgrey" />
-<img alt="Review cycle badge" src="https://img.shields.io/badge/review-cycle-TBD-lightgrey" />
+> **Status:** experimental (draft)  
+> **Owners:** TBD  
+> **Policy label:** TBD  
+> **Review cycle:** TBD  
+> **Jump to:** [Scope](#scope) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Definition of done](#definition-of-done)
 
-</div>
+![Status badge](https://img.shields.io/badge/status-experimental-blue)
+![Owners badge](https://img.shields.io/badge/owners-TBD-lightgrey)
+![Policy badge](https://img.shields.io/badge/policy-TBD-lightgrey)
+![Review cycle badge](https://img.shields.io/badge/review-cycle-TBD-lightgrey)
+
+> [!IMPORTANT]
+> `docs/reference/` is **supporting material**. It may inform design and implementation, but it **does not override**
+> authoritative requirements in `docs/specs/` and `docs/governance/`.
 
 ---
 
@@ -57,21 +62,37 @@ Curated, version-pinned reference material used to build and operate KFM.
 
 ### Evidence labels used in this README
 
-- **CONFIRMED** — Supported by an existing KFM source document or an in-repo artifact (link/citation required in the PR).
-- **PROPOSED** — A recommended default for this repo; safe to adopt but not yet verified against repo reality.
-- **UNKNOWN** — Requires verification (e.g., actual paths, owners, automation, CI rules).
+- **CONFIRMED** — Supported by an existing KFM source document *or* an in-repo artifact.
+  - A PR that changes a **CONFIRMED** statement must include a link/citation to the supporting evidence.
+- **PROPOSED** — Recommended default or convention; reasonable to adopt, but not yet verified against repo reality.
+- **UNKNOWN** — Requires verification (paths, owners, automation, CI rules, etc.). Include smallest steps to verify.
+
+> [!NOTE]
+> This README is designed to avoid “repo hallucinations.” Anything about **actual repo layout, commands, owners,**
+> or **automation** should be **UNKNOWN** unless verified.
 
 ### What this directory is
 
-- **CONFIRMED:** Upstream references evolve; KFM adaptations should pin versions and record what was adopted.  
-- **CONFIRMED:** KFM is governed and evidence-producing: license-first, determinism, provenance-by-default, and validation gates are expected patterns.  
-- **PROPOSED:** `docs/reference/` is a *non-normative* library of background material that supports (but does not override) KFM **specs**, **governance**, **pipelines**, **APIs**, and **UI**.
-- **UNKNOWN:** The repo’s canonical “docs index” file and doc build/lint commands (add links once confirmed).
+- **PROPOSED:** A *non‑normative* library of background material that supports KFM **specs**, **governance**, **pipelines**, **APIs**, and **UI**.
+- **PROPOSED:** A home for “how it works” explainers, standards primers, and cross-cutting technology notes.
+- **CONFIRMED (KFM posture):** KFM is built around governance, reproducibility, and evidence-led operation; reference docs should not weaken those expectations.
 
 ### What this directory is not
 
-- **PROPOSED:** Not a place for authoritative requirements (those should live in `docs/specs/` and `docs/governance/`).
+- **PROPOSED:** Not a place for authoritative requirements or policy (put those in `docs/specs/` and `docs/governance/`).
 - **PROPOSED:** Not a place for raw datasets, processed artifacts, credentials, or restricted content.
+- **PROPOSED:** Not a place to vendor third-party content unless redistribution is permitted and recorded.
+
+### KFM invariants that reference docs must not contradict
+
+These are included here because reference docs often describe pipelines/APIs and can accidentally recommend unsafe patterns.
+
+- **CONFIRMED:** Trust membrane — clients/UI do not access storage directly; access crosses the governed API + policy boundary.
+- **CONFIRMED:** Fail-closed policy — deny-by-default posture for governed requests.
+- **CONFIRMED:** Promotion gates — RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED; promotion requires checksums and catalogs.
+- **CONFIRMED:** Cite-or-abstain — when evidence cannot be verified/resolved, the system must abstain or narrow scope.
+
+(If you change any of the above, treat it as a governance/spec change and update the authoritative docs first.)
 
 ---
 
@@ -88,8 +109,8 @@ flowchart LR
   E --> F[Published APIs and UI]
 ```
 
-- **CONFIRMED:** Some reference-grade docs may live *outside* `docs/reference/` when they are domain-scoped (example: supply-chain “reference repos” under security).  
-- **PROPOSED:** Use `docs/reference/` for cross-cutting, reusable references (standards summaries, design primers, technology notes, glossary).
+- **PROPOSED:** Prefer placing domain-scoped references near their domain (e.g., security references near security docs), and place cross-cutting references here.
+- **UNKNOWN:** The repo’s canonical “docs index” file and doc build/lint/link-check commands (add links once verified).
 
 ---
 
@@ -98,10 +119,10 @@ flowchart LR
 Put these here:
 
 - **PROPOSED:** “How it works” explainers that support implementation, review, or operations.
-- **PROPOSED:** Summaries of external standards or specs, with **pinned version identifiers** and a **change log**.
+- **PROPOSED:** Summaries of external standards/specs with **pinned version identifiers** and **what we adopted**.
 - **PROPOSED:** Compatibility notes (e.g., “how KFM interprets DCAT terms”, “STAC extensions used”).
 - **PROPOSED:** Glossaries and canonical definitions used across the repo.
-- **PROPOSED:** Thin “decision summaries” that *point to* the authoritative ADR/design record (if you use ADRs elsewhere).
+- **PROPOSED:** Thin “decision summaries” that point to the authoritative ADR/design record (if ADRs are used).
 
 ---
 
@@ -109,17 +130,17 @@ Put these here:
 
 Do **not** put these here:
 
-- **PROPOSED:** Authoritative policy, invariants, or promotion gates → put in `docs/governance/` and/or `docs/specs/`.
-- **PROPOSED:** Runbooks tied to a specific subsystem → put near that subsystem (example: `docs/specs/qa/runbooks/`).
-- **PROPOSED:** Secrets, tokens, API keys, credentials → never commit; use the approved secret manager.
-- **PROPOSED:** Raw or processed data artifacts → keep under the governed data lifecycle paths (`data/...` or artifact storage), not in docs.
+- **PROPOSED:** Authoritative policy, invariants, or promotion gates → `docs/governance/` and/or `docs/specs/`.
+- **PROPOSED:** Runbooks tied to a specific subsystem → store near that subsystem (or in your designated runbooks directory).
+- **PROPOSED:** Secrets/tokens/credentials → never commit; use the approved secret system.
+- **PROPOSED:** Raw/processed data artifacts → store under governed data lifecycle paths (`data/...`) or artifact storage.
 - **PROPOSED:** Restricted location guidance or sensitive targeting content → requires governance review; store only redacted/generalized summaries if approved.
 
 ---
 
 ## Directory tree
 
-**UNKNOWN:** The actual subdirectories in `docs/reference/` (this README is being created now).
+**UNKNOWN:** The actual subdirectories in `docs/reference/` (verify with a repo tree snapshot).
 
 **PROPOSED starter layout** (edit after verifying actual repo structure):
 
@@ -144,11 +165,15 @@ docs/reference/
 │   │   └── README.md
 │   └── data-pipelines/
 │       └── README.md
-└── glossary/
-    └── README.md
+├── glossary/
+│   └── README.md
+└── vendor/
+    ├── README.md
+    └── LICENSES/
+        └── README.md
 ```
 
-**PROPOSED:** Keep one topic per folder, and use `README.md` as the topic index for LLM-ingestion and human scanning.
+**PROPOSED:** Keep one topic per folder, and use `README.md` as the topic index for LLM ingestion and human scanning.
 
 ---
 
@@ -158,7 +183,7 @@ docs/reference/
 
 ```bash
 # List reference entrypoints
-find docs/reference -maxdepth 3 -name "README.md" -print | sort
+find docs/reference -maxdepth 4 -name "README.md" -print | sort
 ```
 
 ### Create a new reference topic
@@ -175,8 +200,8 @@ type: standard
 version: v0.1
 status: draft
 owners: [TBD]
-created: 2026-03-04
-updated: 2026-03-04
+created: 2026-03-05
+updated: 2026-03-05
 policy_label: TBD
 related: []
 tags: [kfm, reference]
@@ -184,7 +209,6 @@ notes: ["Reference doc. Pin upstream versions. Non-normative."]
 [/KFM_META_BLOCK_V2] -->
 
 # <Topic title>
-
 One-line purpose.
 
 ## Scope
@@ -195,10 +219,9 @@ One-line purpose.
 
 ## Pinned upstream sources
 
-- Source: <name>
-- Version or date: <vX.Y or YYYY-MM-DD>
-- Identifier: <commit, tag, DOI, URL, etc.>
-- License: <license or UNKNOWN>
+| Source | Version or date | Identifier | License | Notes |
+|---|---|---|---|---|
+| <name> | <vX.Y or YYYY-MM-DD> | <sha, tag, DOI, URL> | <license or UNKNOWN> | <what we adopted> |
 
 ## Notes
 
@@ -206,15 +229,16 @@ One-line purpose.
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v0.1    | 2026-03-04 | Initial draft. |
+| v0.1    | 2026-03-05 | Initial draft. |
 EOF
 ```
 
 ### Update the root index (this file)
 
 ```bash
-# After adding topics, update the "Directory tree" and (optional) add a bullet link
-# to the new topic README in a "Topics" section (if you add one).
+# After adding topics:
+# - update "Directory tree" if needed
+# - (optional) add a "Topics" section with links once paths are verified
 git status
 ```
 
@@ -225,19 +249,19 @@ git status
 ### Reference doc requirements
 
 - **PROPOSED:** Every reference doc includes a `KFM_META_BLOCK_V2` header.
-- **PROPOSED:** Every doc has “Pinned upstream sources” (or explicitly states `UNKNOWN`).
-- **PROPOSED:** Avoid “latest/current” without an explicit date or version tag.
+- **PROPOSED:** Every reference doc includes “Pinned upstream sources” (or explicitly states `UNKNOWN` + next steps).
+- **PROPOSED:** Avoid “latest/current” without an explicit date, version, or tag.
 - **PROPOSED:** Prefer small, additive docs; link out to primary sources instead of copying large chunks.
+- **PROPOSED:** If you include examples/snippets, ensure they are runnable or clearly labeled as pseudocode.
 
 ### Pinning rules
 
-- **CONFIRMED:** KFM patterns expect version pinning and recording what was adopted when upstream references evolve.  
 - **PROPOSED:** Pin using one of:
   - **Commit SHA** (preferred for repos)
   - **Release tag**
   - **DOI**
   - **Document version + publication date**
-- **PROPOSED:** If you must link to a webpage that changes, add an “as-of” date and (if possible) a snapshot identifier.
+- **PROPOSED:** If you link to a mutable webpage, add an “as-of” date and (if possible) a snapshot identifier.
 
 ### Citation and traceability
 
@@ -246,6 +270,12 @@ git status
   - what part was adopted,
   - any KFM-specific interpretation notes,
   - and the decision owner/review path (if applicable).
+
+### Hallucination control
+
+- **PROPOSED:** Do not assert repo structure, CI rules, or commands are real unless verified.
+- **PROPOSED:** If you must speculate, label it `PROPOSED` and include the smallest verification steps.
+- **PROPOSED:** Prefer describing *interfaces/invariants* over naming concrete tools unless pinned by evidence.
 
 ---
 
@@ -258,14 +288,15 @@ git status
 | Glossary | Stabilize terms across the project | Definitions, synonyms, pointers to canonical specs | Debated policy decisions |
 | Runbook pointer | Route readers to operational docs | Links to the real runbook, scope boundary | The runbook itself (unless this is the runbook directory) |
 | Decision summary | Quick context for reviewers | Link to ADR/design record, decision date | Unreviewed policy changes |
+| Vendored material record | Track third‑party material stored in repo | Redistribution permission, license file, provenance | Unlicensed PDFs, “unknown license” binaries |
 
 ---
 
 ## Governance and sensitivity
 
-- **CONFIRMED:** Some KFM patterns treat governance checks as first-class gates and can require redaction/aggregation before publication.  
+- **CONFIRMED (KFM posture):** Governance checks are first-class gates; some content must be redacted/aggregated before publication.
 - **PROPOSED:** Default posture:
-  - Keep `docs/reference/` **public** unless a specific doc is explicitly classified otherwise.
+  - Treat `docs/reference/` as **public** unless a specific doc is explicitly classified otherwise.
   - If a reference doc touches sensitive topics, keep it generalized and route details to governed systems.
 
 ### Sensitivity handling matrix
@@ -284,11 +315,11 @@ When adding/updating a reference doc:
 
 - [ ] **PROPOSED:** `KFM_META_BLOCK_V2` present and filled (owners/status/policy_label not blank or explicitly `TBD`)
 - [ ] **PROPOSED:** “Pinned upstream sources” present (or `UNKNOWN` with explicit next steps)
-- [ ] **PROPOSED:** License stated for upstream source (or `UNKNOWN` with quarantine note)
-- [ ] **PROPOSED:** Changes are additive and reversible (no silent rewrites)
+- [ ] **PROPOSED:** Upstream license stated (or `UNKNOWN` and content *not* vendored)
 - [ ] **PROPOSED:** No restricted content included (or governance approval recorded)
 - [ ] **PROPOSED:** Version history updated
-- [ ] **PROPOSED:** Any referenced repo paths are verified or marked `UNKNOWN`
+- [ ] **PROPOSED:** Any referenced repo paths are verified or explicitly marked `UNKNOWN`
+- [ ] **PROPOSED:** Links do not silently break (run link-check if available, or record as `UNKNOWN` until verified)
 
 ---
 
@@ -296,16 +327,21 @@ When adding/updating a reference doc:
 
 ### Is `docs/reference/` authoritative?
 
-- **PROPOSED:** No. Treat it as supporting material. Authoritative requirements should live in governance/specs.
+- **PROPOSED:** No. Treat it as supporting material. Authoritative requirements belong in governance/specs.
 
 ### Can we vendor external PDFs here?
 
-- **PROPOSED:** Only if the license allows redistribution and governance approves. Prefer links + pinned identifiers.
+- **PROPOSED:** Only if redistribution is allowed by the license and governance approves.
+- **PROPOSED:** Prefer: links + pinned identifiers + “as-of” dates.
+- **PROPOSED:** If you vendor, record:
+  - license and redistribution permission,
+  - provenance (where it came from),
+  - and a checksum/digest (to detect drift).
 
 ### What if I don’t know the license?
 
-- **CONFIRMED (pattern expectation):** License unknown should block promotion of governed artifacts.  
-- **PROPOSED (docs posture):** Mark the license as `UNKNOWN`, do not redistribute the content, and open a tracking issue to resolve it.
+- **CONFIRMED (KFM posture):** Missing license/rights metadata is treated as a promotion risk in governed lanes.
+- **PROPOSED (docs posture):** Mark license as `UNKNOWN`, do not redistribute the content, and open a tracking issue to resolve it.
 
 ---
 
@@ -324,8 +360,8 @@ type: standard
 version: v0.1
 status: draft
 owners: [TBD]
-created: 2026-03-04
-updated: 2026-03-04
+created: 2026-03-05
+updated: 2026-03-05
 policy_label: TBD
 related: []
 tags: [kfm, reference]
@@ -333,7 +369,6 @@ notes: []
 [/KFM_META_BLOCK_V2] -->
 
 # <Topic title>
-
 One-line purpose.
 
 ## Scope
@@ -354,7 +389,7 @@ One-line purpose.
 
 | Version | Date       | Summary |
 |--------:|------------|---------|
-| v0.1    | 2026-03-04 | Initial draft. |
+| v0.1    | 2026-03-05 | Initial draft. |
 ```
 
 </details>
