@@ -2,29 +2,29 @@
 doc_id: kfm://doc/3cbf1956-c8bd-44a0-b624-82f3dfb22160
 title: KFM Glossary
 type: standard
-version: v1
+version: v1.1
 status: draft
 owners: KFM Maintainers
 created: 2026-03-04
-updated: 2026-03-04
+updated: 2026-03-05
 policy_label: public
 related: []
 tags: [kfm]
 notes: [Shared definitions for KFM docs and system surfaces. Each entry includes status: CONFIRMED/PROPOSED/UNKNOWN.]
 [/KFM_META_BLOCK_V2] -->
 
-# Glossary
+# KFM Glossary
 Shared definitions for terms used across Kansas Frontier Matrix (KFM) docs, pipelines, policy, APIs, and UI.
 
 > **Status:** active (draft)  
 > **Owners:** KFM Maintainers (TODO: add GitHub handles / team)  
 > **Policy label:** public  
 >
-> <img src="https://img.shields.io/badge/KFM-Glossary-blue" />
-> <img src="https://img.shields.io/badge/Status-Draft-yellow" />
-> <img src="https://img.shields.io/badge/Policy-Public-success" />
+> ![KFM Glossary badge](https://img.shields.io/badge/KFM-Glossary-blue)
+> ![Status badge](https://img.shields.io/badge/Status-Draft-yellow)
+> ![Policy badge](https://img.shields.io/badge/Policy-Public-success)
 >
-> **Quick links:** [How to use](#how-to-use-this-glossary) · [Conventions](#conventions) · [Abbreviations](#abbreviations) · [Glossary A–Z](#glossary-a-z) · [Contributing](#contributing)
+> **Quick links:** [How to use](#how-to-use-this-glossary) · [Conventions](#conventions) · [Abbreviations](#abbreviations) · [Glossary A–Z](#glossary-a-z) · [Contributing](#contributing) · [Sources](#sources)
 
 ---
 
@@ -41,9 +41,14 @@ Shared definitions for terms used across Kansas Frontier Matrix (KFM) docs, pipe
 
 ### Status meanings
 
-- **CONFIRMED** — The term/meaning is explicitly described in a KFM design/guide document or is already treated as a normative invariant in KFM docs.
-- **PROPOSED** — The term/meaning appears in drafts/idea packs and is a recommended direction, but not yet a ratified standard.
-- **UNKNOWN** — The term is used, but its KFM meaning is ambiguous; it needs governance review (or a link to the defining spec).
+- **CONFIRMED** — The meaning is explicitly described in KFM design/guide documents and treated as a stable semantic contract (even if not yet implemented everywhere).
+- **PROPOSED** — The meaning appears as a recommended direction (e.g., blueprints/idea packs) but should be treated as changeable until ratified.
+- **UNKNOWN** — The term is used but KFM meaning is ambiguous; it needs a defining spec link (or governance review).
+
+### “Glossary ≠ implementation” guardrail
+
+- This glossary defines **terms and intent**. It must not be used as proof that a module exists or is deployed.
+- If a definition would imply specific code/repo structure, prefer wording like “**target module**”, “**intended surface**”, or mark it **UNKNOWN** until repo verification.
 
 ### Cross-references
 
@@ -52,37 +57,42 @@ Shared definitions for terms used across Kansas Frontier Matrix (KFM) docs, pipe
 
 ## Where this fits
 
-- **Path:** `docs/glossary.md`
-- **Upstream:** governance and standards docs (policy labels, profiles), schema registries.
-- **Downstream:** Story Nodes, Focus Mode prompts/outputs, API contracts, pipeline specs, docs-lint rules.
+> **Note:** This section describes intended repository placement and doc relationships. If your repo differs, update accordingly.
+
+- **Recommended path:** `docs/glossary.md` (**UNKNOWN** until repo-verified)
+- **Upstream (conceptual):** governance/policy docs, schema registries/profiles, ADRs
+- **Downstream (conceptual):** Story Nodes, Focus Mode prompts/outputs, API contracts, pipeline specs, docs-lint rules
 
 ## Acceptable inputs
 
 - New glossary entries for:
-  - KFM-specific concepts (e.g., Promotion Contract, Trust Membrane)
-  - Standard acronyms used in KFM (e.g., SBOM, SLSA)
-  - Data lifecycle zone terminology (RAW/WORK/PROCESSED/CATALOG/PUBLISHED)
+  - KFM-specific concepts (e.g., Promotion Contract, Trust membrane)
+  - Standard acronyms used in KFM governance (e.g., SBOM, SLSA)
+  - Data lifecycle zone terminology (RAW/WORK/QUARANTINE/PROCESSED/CATALOG/PUBLISHED)
 
 ## Exclusions
 
 - **Do not** put policy decisions here (belongs in governance/policy docs).
-- **Do not** define schemas here (belongs in `schemas/`).
-- **Do not** claim a module exists/works unless verified in the repo or a governed release note.
+- **Do not** define schemas here (belongs in `schemas/` / profile docs).
+- **Do not** claim a module exists/works unless verified by:
+  - a governed release note, **or**
+  - a repo contract/test demonstrating it.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
   Upstream[Upstream sources] --> RAW[RAW zone]
-  RAW --> WORK[WORK or QUARANTINE]
+  RAW --> WORK[WORK zone]
+  WORK --> QUAR[QUARANTINE]
   WORK --> PROCESSED[PROCESSED zone]
   PROCESSED --> CATALOG[CATALOG triplet]
   CATALOG --> PUBLISHED[PUBLISHED surfaces]
 
   UI[UI clients] --> PEP[Governed API PEP]
-  PEP --> PDP[Policy engine]
-  PEP --> EV[Evidence resolver]
-  EV --> PEP
+  PEP --> PDP[Policy engine PDP]
+  PEP --> ER[Evidence resolver]
+  ER --> PEP
   PDP --> PEP
 ```
 
@@ -93,13 +103,14 @@ flowchart LR
 | Acronym | Expansion | Notes |
 |---|---|---|
 | CARE | Collective Benefit, Authority to Control, Responsibility, Ethics | Often paired with FAIR in KFM governance (“FAIR+CARE”). |
-| CI | Continuous Integration | KFM uses CI gates to enforce promotion/publishing rules. |
+| CI | Continuous Integration | Promotion/publishing rules are designed to be enforceable as CI gates. |
 | COG | Cloud Optimized GeoTIFF | Raster format optimized for HTTP range requests. |
 | DCAT | Data Catalog Vocabulary | Dataset-level metadata surface in the KFM “triplet.” |
 | JCS | JSON Canonicalization Scheme | Used for deterministic hashing (e.g., `spec_hash`). |
 | OPA | Open Policy Agent | Policy engine; Rego language. |
 | ORAS | OCI Registry As Storage | Used for pushing non-container artifacts to OCI registries. |
 | PEP | Policy Enforcement Point | The gateway where policy is enforced (e.g., governed API). |
+| PDP | Policy Decision Point | The component that produces allow/deny + obligations. |
 | PMTiles | Portable Map Tiles | Single-file tile archive for fast distribution. |
 | PROV | W3C Provenance model | Lineage surface in the KFM “triplet.” |
 | SBOM | Software Bill of Materials | SPDX/CycloneDX are common formats. |
@@ -114,22 +125,32 @@ flowchart LR
 
 #### Acquisition manifest
 - **Status:** CONFIRMED
-- **Definition:** A record describing what was fetched/snapshotted from an upstream source, when, and under what terms. In KFM, acquisition manifests are part of the RAW zone’s immutable evidence surface.
+- **Definition:** A record describing what was fetched/snapshotted from an upstream source, when, and under what terms. In KFM, acquisition manifests live with RAW artifacts as part of the auditable “truth path.”
 - **See also:** [RAW zone](#raw-zone), [License snapshot](#license-snapshot)
+
+#### Audit ref
+- **Status:** CONFIRMED
+- **Definition:** A stable reference to an audit-log/ledger entry associated with an action or output (e.g., a run receipt, a promotion manifest, or an EvidenceBundle). `audit_ref` exists so the UI/API can point to an auditable record without guessing.
+- **See also:** [EvidenceBundle](#evidencebundle), [Run receipt](#run-receipt), [Promotion manifest](#promotion-manifest)
 
 #### Allowlist
 - **Status:** PROPOSED
-- **Definition:** A set of explicitly permitted values (e.g., licenses, file types, domains) used by policy checks. Anything not allowlisted is denied by default.
+- **Definition:** A set of explicitly permitted values (e.g., licenses, file types, domains, tool calls) used by policy checks. Anything not allowlisted is denied by default.
 - **See also:** [Default-deny](#default-deny), [Fail-closed](#fail-closed)
 
 ---
 
 ### C
 
-#### Canonical store
+#### CARE
 - **Status:** CONFIRMED
-- **Definition:** A storage surface treated as “source of truth” that is preserved across re-indexing and migrations (e.g., object storage artifacts + catalogs + audit ledger). Rebuildable projections are derived from canonical stores.
-- **See also:** [Rebuildable projection](#rebuildable-projection), [Catalog triplet](#catalog-triplet)
+- **Definition:** CARE Principles for Indigenous Data Governance: **Collective Benefit, Authority to Control, Responsibility, Ethics**. In KFM, CARE appears as a governance lens alongside FAIR, especially when handling sensitive data and obligations.
+- **See also:** [FAIR](#fair), [FAIR+CARE](#faircare), [Sensitivity classification](#sensitivity-classification)
+
+#### Canonical layout
+- **Status:** PROPOSED
+- **Definition:** A documented object-storage path convention for storing RAW/WORK/PROCESSED/CATALOG artifacts so the “truth path” is navigable without depending on database state. The exact directory structure is a proposed contract and should be versioned if adopted.
+- **See also:** [Truth path](#truth-path), [Projection store](#projection-store), [RAW zone](#raw-zone), [PROCESSED zone](#processed-zone)
 
 #### Catalog triplet
 - **Status:** CONFIRMED
@@ -142,26 +163,31 @@ flowchart LR
 
 #### Citation handshake
 - **Status:** PROPOSED
-- **Definition:** A requirement that user-facing outputs (especially Focus Mode) include structured, resolvable citations to the underlying dataset versions and evidence artifacts (not just free-text references).
+- **Definition:** A requirement that user-facing outputs (especially Focus Mode and Story publishing) include structured, resolvable citations to dataset versions and evidence artifacts (not just free-text references).
 - **See also:** [Cite-or-abstain](#cite-or-abstain), [EvidenceRef](#evidenceref), [EvidenceBundle](#evidencebundle)
 
 #### Cite-or-abstain
 - **Status:** CONFIRMED
-- **Definition:** A behavior rule for Focus Mode: if the system cannot produce valid citations/evidence references for a factual claim, it must refuse or clearly mark the response as unknown rather than guessing.
-- **See also:** [Focus Mode](#focus-mode), [Evidence resolver](#evidence-resolver)
+- **Definition:** A behavior rule: if the system cannot produce valid citations/evidence references for a factual claim, it must refuse or clearly mark the response as unknown rather than guessing.
+- **See also:** [Focus Mode](#focus-mode), [Evidence resolver](#evidence-resolver), [Story Node](#story-node)
 
 #### Conftest
 - **Status:** PROPOSED
 - **Definition:** A tool commonly used to run OPA/Rego policies against structured inputs during CI to enforce “policy as code.”
-- **See also:** [OPA](#opa), [Policy engine](#policy-engine)
+- **See also:** [OPA](#opa), [Policy engine](#policy-engine), [Policy regression suite](#policy-regression-suite)
 
 ---
 
 ### D
 
+#### Data lifecycle zones
+- **Status:** CONFIRMED
+- **Definition:** KFM’s governed storage/promotion stages: **RAW → WORK/QUARANTINE → PROCESSED → CATALOG (triplet) → PUBLISHED**. These zones are treated as enforceable contract surfaces, not metaphor.
+- **See also:** [RAW zone](#raw-zone), [WORK zone](#work-zone), [QUARANTINE](#quarantine), [PROCESSED zone](#processed-zone), [Catalog triplet](#catalog-triplet), [PUBLISHED surfaces](#published-surfaces), [Promotion Contract](#promotion-contract)
+
 #### Dataset
 - **Status:** CONFIRMED
-- **Definition:** A named, versioned collection of artifacts + metadata representing a specific source/product in KFM (e.g., “land cover,” “storm events”). Datasets are promoted through lifecycle zones under the Promotion Contract.
+- **Definition:** A named, versioned collection of artifacts + metadata representing a specific source/product in KFM. Datasets are promoted through lifecycle zones under the Promotion Contract.
 - **See also:** [Dataset version](#dataset-version), [Promotion Contract](#promotion-contract)
 
 #### Dataset ID
@@ -172,16 +198,21 @@ flowchart LR
 #### Dataset version
 - **Status:** CONFIRMED
 - **Definition:** An immutable, publishable “release unit” of a dataset that includes processed artifacts, validated catalogs, and run receipts. UI surfaces should show dataset version and freshness.
-- **See also:** [PROCESSED zone](#processed-zone), [Run receipt](#run-receipt), [PUBLISHED surfaces](#published-surfaces)
+- **See also:** [PROCESSED zone](#processed-zone), [Run receipt](#run-receipt), [PUBLISHED surfaces](#published-surfaces), [Promotion manifest](#promotion-manifest)
+
+#### DCAT
+- **Status:** CONFIRMED
+- **Definition:** W3C Data Catalog Vocabulary. In KFM, DCAT is the **dataset-level** surface of the catalog triplet (title/description/publisher/license/distributions), cross-linked to STAC and PROV and extended with KFM identity/policy fields.
+- **See also:** [Catalog triplet](#catalog-triplet), [Policy label](#policy-label)
 
 #### Default-deny
 - **Status:** CONFIRMED
-- **Definition:** A policy posture where the default is to deny access or deny an action unless it is explicitly allowed. In practice, this means missing metadata, missing receipts, or ambiguous policy labels cause denial rather than accidental exposure.
+- **Definition:** A policy posture where the default is to deny access or deny an action unless explicitly allowed. Missing metadata, missing receipts, or ambiguous policy labels should cause denial rather than accidental exposure.
 - **See also:** [Fail-closed](#fail-closed), [Policy label](#policy-label)
 
 #### Digest
 - **Status:** PROPOSED
-- **Definition:** A cryptographic hash (commonly SHA-256) used as a content address for artifacts. In KFM, digests are used to verify integrity and to pin artifact references in catalogs/receipts.
+- **Definition:** A cryptographic hash (commonly SHA-256) used as a content address for artifacts. In KFM, digests are used to verify integrity and to pin artifact references in catalogs/receipts/manifests.
 - **See also:** [Digest-pinned distribution](#digest-pinned-distribution), [Integrity](#integrity)
 
 #### Digest-pinned distribution
@@ -200,22 +231,22 @@ flowchart LR
 
 #### EvidenceBundle
 - **Status:** CONFIRMED
-- **Definition:** A structured, policy-filtered response payload that includes (at minimum) the policy decision, license/attribution, provenance/run reference, artifact digests, and an audit reference. It is the unit the UI can display in an “evidence drawer.”
+- **Definition:** A structured, policy-filtered payload returned by the evidence resolver. It includes policy decision + obligations applied, license/attribution, provenance/run reference, artifact digests/links (policy-permitting), validation status, and an audit reference.
 - **See also:** [Evidence resolver](#evidence-resolver), [EvidenceRef](#evidenceref), [Audit ref](#audit-ref)
 
 #### Evidence drawer
-- **Status:** PROPOSED
-- **Definition:** A UI component shared across Map/Story/Focus that displays the EvidenceBundle for whatever the user is viewing (feature, tile, story paragraph, Focus answer).
-- **See also:** [Map Explorer](#map-explorer), [Story Mode](#story-mode), [Focus Mode](#focus-mode)
+- **Status:** CONFIRMED
+- **Definition:** A shared UI component (Map/Story/Focus) that displays the EvidenceBundle for whatever the user is viewing (feature, tile, story paragraph, Focus answer), including license/attribution, freshness, provenance links, and obligations/redactions applied.
+- **See also:** [Map Explorer](#map-explorer), [Story Mode](#story-mode), [Focus Mode](#focus-mode), [EvidenceBundle](#evidencebundle)
 
 #### EvidenceRef
 - **Status:** CONFIRMED
-- **Definition:** A structured reference that can be resolved into an EvidenceBundle. EvidenceRefs should resolve without guessing (broken refs should fail publishing).
-- **See also:** [Evidence resolver](#evidence-resolver)
+- **Definition:** A structured reference that can be resolved into an EvidenceBundle. EvidenceRefs must resolve without guessing; broken refs should fail promotion/publishing.
+- **See also:** [Evidence resolver](#evidence-resolver), [Catalog triplet](#catalog-triplet)
 
 #### Evidence resolver
 - **Status:** CONFIRMED
-- **Definition:** The service/endpoint responsible for turning an EvidenceRef into an EvidenceBundle by applying policy and redaction obligations, and returning a result usable by the UI in ≤ a few calls.
+- **Definition:** The service/endpoint that accepts an EvidenceRef, applies policy + redaction obligations, and returns an EvidenceBundle usable by the UI (target: resolvable in **≤ 2 calls**).
 - **See also:** [Trust membrane](#trust-membrane), [Policy engine](#policy-engine)
 
 #### Emergency deny
@@ -229,12 +260,12 @@ flowchart LR
 
 #### FAIR
 - **Status:** PROPOSED
-- **Definition:** A set of principles for making data Findable, Accessible, Interoperable, and Reusable. In KFM, FAIR is treated as a governance lens for metadata quality and reuse.
+- **Definition:** Principles for making data Findable, Accessible, Interoperable, and Reusable. In KFM, FAIR is used as a governance lens for metadata quality and reuse readiness.
 - **See also:** [FAIR+CARE](#faircare)
 
 #### FAIR+CARE
 - **Status:** PROPOSED
-- **Definition:** A governance framing that combines FAIR principles with CARE principles. In KFM, this appears as a classification/category in front-matter and governance references.
+- **Definition:** A governance framing that combines FAIR principles with CARE principles. In KFM, it is used when discussing metadata quality **and** ethical obligations around sensitive data.
 - **See also:** [CARE](#care)
 
 #### Fail-closed
@@ -258,7 +289,7 @@ flowchart LR
 
 #### GeoParquet
 - **Status:** CONFIRMED
-- **Definition:** A Parquet-based columnar format for geospatial features. In KFM, GeoParquet is an example of a PROCESSED-zone “publishable artifact” format.
+- **Definition:** A Parquet-based columnar format for geospatial features. In KFM, GeoParquet is an example of a PROCESSED-zone publishable artifact format.
 - **See also:** [PROCESSED zone](#processed-zone)
 
 ---
@@ -299,13 +330,13 @@ flowchart LR
 
 #### Map Explorer
 - **Status:** CONFIRMED
-- **Definition:** The primary UI surface for exploring layers, time windows, and feature inspection. KFM requires map surfaces to make trust visible (version, license, policy badges) and to link evidence.
+- **Definition:** The primary UI surface for exploring layers, time windows, and feature inspection. KFM’s UI trust surfaces include dataset version, freshness, license/attribution, policy badges, and an evidence drawer link.
 - **See also:** [Evidence drawer](#evidence-drawer), [Trust membrane](#trust-membrane)
 
 #### Materiality
 - **Status:** PROPOSED
 - **Definition:** A typed decision indicating whether a change is “publish candidate” material based on domain-appropriate diffs (to prevent noisy or meaningless promotions).
-- **See also:** [Promotion gates](#promotion-gates)
+- **See also:** [Promotion gates](#promotion-gates), [Promotion manifest](#promotion-manifest)
 
 ---
 
@@ -313,7 +344,7 @@ flowchart LR
 
 #### Obligation
 - **Status:** CONFIRMED
-- **Definition:** An action required by policy as a condition of allowing an output (e.g., applying redaction/generalization before PUBLISHED serving). Obligations are enforced by policy gates and applied by the evidence resolver and publishing pipelines.
+- **Definition:** An action required by policy as a condition of allowing an output (e.g., applying redaction/generalization before serving). Obligations are enforced by policy gates and applied by the evidence resolver and publishing pipelines.
 - **See also:** [Redaction](#redaction), [Policy engine](#policy-engine)
 
 #### OCI artifact
@@ -347,7 +378,7 @@ flowchart LR
 
 #### Policy engine
 - **Status:** CONFIRMED
-- **Definition:** The runtime and CI component that evaluates policy-as-code to produce allow/deny decisions and obligations (e.g., redaction required). Must be shared semantics between CI and runtime where possible.
+- **Definition:** The runtime and CI component that evaluates policy-as-code to produce allow/deny decisions and obligations (e.g., redaction required). Semantics should match between CI and runtime where possible.
 - **See also:** [Fail-closed](#fail-closed), [Obligation](#obligation)
 
 #### Policy label
@@ -355,15 +386,30 @@ flowchart LR
 - **Definition:** A classification tag attached to datasets, artifacts, and outputs that drives access and redaction rules (e.g., public vs restricted). Policy labels must be visible in UI trust surfaces.
 - **See also:** [Sensitivity classification](#sensitivity-classification)
 
+#### Policy regression suite
+- **Status:** PROPOSED
+- **Definition:** A CI test pack that runs representative requests/fixtures through the policy engine and evidence resolver to detect policy regressions (e.g., default-deny, obligation correctness, and policy-safe errors).
+- **See also:** [Fail-closed](#fail-closed), [Default-deny](#default-deny), [Evidence resolver](#evidence-resolver)
+
+#### Projection store
+- **Status:** CONFIRMED
+- **Definition:** A derived database/index/cache built from promoted processed artifacts + catalogs (e.g., PostGIS tables, search indexes, tile caches). Projection stores are rebuildable and must never be treated as canonical truth.
+- **See also:** [Canonical layout](#canonical-layout), [Rebuildable projection](#rebuildable-projection), [Truth path](#truth-path)
+
 #### Promotion Contract
 - **Status:** CONFIRMED
 - **Definition:** The mechanism that turns governance intent into enforceable behavior by defining lifecycle zones and gates. Promotion is the act of moving dataset versions through zones into PUBLISHED surfaces only when all required artifacts exist and validate.
-- **See also:** [Data lifecycle zones](#data-lifecycle-zones), [Promotion gates](#promotion-gates)
+- **See also:** [Data lifecycle zones](#data-lifecycle-zones), [Promotion gates](#promotion-gates), [Promotion manifest](#promotion-manifest)
 
 #### Promotion gates
 - **Status:** CONFIRMED
-- **Definition:** The minimum checks required for promotion/publishing (identity/versioning, licensing, sensitivity/redaction, catalog triplet validation, QA thresholds, run receipts/audit records, manifests).
-- **See also:** [Run receipt](#run-receipt), [Catalog triplet](#catalog-triplet)
+- **Definition:** The minimum checks required for promotion/publishing (identity/versioning, licensing, sensitivity/obligations, catalog triplet validation, QA thresholds, run receipts/audit records, manifests).
+- **See also:** [Run receipt](#run-receipt), [Catalog triplet](#catalog-triplet), [Promotion manifest](#promotion-manifest)
+
+#### Promotion manifest
+- **Status:** CONFIRMED
+- **Definition:** An immutable record emitted when a dataset version is promoted/released. It references the dataset version ID, spec hash, artifacts + digests, catalogs + digests, QA result, policy decision, and approvals (if required). It exists so promotion can be audited and reconstructed.
+- **See also:** [Run receipt](#run-receipt), [Catalog triplet](#catalog-triplet), [Audit ref](#audit-ref)
 
 #### PROCESSED zone
 - **Status:** CONFIRMED
@@ -392,7 +438,7 @@ flowchart LR
 #### QUARANTINE
 - **Status:** CONFIRMED
 - **Definition:** A holding state within WORK where artifacts fail validation, have unclear licensing, or have sensitivity concerns. Quarantined items are not promoted.
-- **See also:** [WORK zone](#work-zone)
+- **See also:** [WORK zone](#work-zone), [Fail-closed](#fail-closed)
 
 ---
 
@@ -405,8 +451,8 @@ flowchart LR
 
 #### Rebuildable projection
 - **Status:** CONFIRMED
-- **Definition:** A derived store that can be regenerated from canonical sources (e.g., PostGIS tables, search indexes, graph edges, tile bundles). Projections are not the canonical truth.
-- **See also:** [Canonical store](#canonical-store)
+- **Definition:** A derived store that can be regenerated from canonical processed artifacts + catalogs (e.g., PostGIS tables, search indexes, graph edges, tile bundles). Projections are not the canonical truth.
+- **See also:** [Projection store](#projection-store), [Canonical layout](#canonical-layout)
 
 #### Redaction
 - **Status:** CONFIRMED
@@ -421,7 +467,7 @@ flowchart LR
 #### Run receipt
 - **Status:** CONFIRMED
 - **Definition:** A structured audit record capturing inputs, tooling versions, hashes/digests, and policy decisions for a run. Receipts are immutable and used as evidence during promotion/publishing.
-- **See also:** [EvidenceBundle](#evidencebundle), [Promotion gates](#promotion-gates)
+- **See also:** [EvidenceBundle](#evidencebundle), [Promotion gates](#promotion-gates), [Audit ref](#audit-ref)
 
 ---
 
@@ -450,12 +496,12 @@ flowchart LR
 #### Story Mode
 - **Status:** CONFIRMED
 - **Definition:** A UI surface focused on narrative experiences (“stories”) that must retain provenance, evidence, and policy visibility.
-- **See also:** [Story Node](#story-node)
+- **See also:** [Story Node](#story-node), [Evidence drawer](#evidence-drawer)
 
 #### Story Node
-- **Status:** PROPOSED
-- **Definition:** A versioned narrative artifact that links map/timeline state to claims supported by resolvable citations/evidence references. Publishing a Story Node should be blocked if citations cannot be resolved.
-- **See also:** [EvidenceRef](#evidenceref), [PUBLISHED surfaces](#published-surfaces)
+- **Status:** CONFIRMED
+- **Definition:** A versioned narrative artifact that binds narrative text to map state and resolvable citations. A Story Node typically includes a human-readable markdown file plus machine-readable sidecar metadata (map state, citations, policy/review fields). Publishing should be blocked if citations cannot be resolved via evidence resolution.
+- **See also:** [EvidenceRef](#evidenceref), [Evidence resolver](#evidence-resolver), [PUBLISHED surfaces](#published-surfaces)
 
 #### STAC
 - **Status:** CONFIRMED
@@ -470,6 +516,11 @@ flowchart LR
 - **Status:** CONFIRMED
 - **Definition:** A non-bypassable boundary that prevents clients (UI/external) from directly accessing storage. All access must cross the governed API (PEP) where policy is evaluated and enforced.
 - **See also:** [PEP](#pep), [Policy engine](#policy-engine)
+
+#### Truth path
+- **Status:** CONFIRMED
+- **Definition:** The auditable chain linking RAW acquisition → WORK transforms → PROCESSED artifacts → catalog triplet → manifests/receipts → PUBLISHED serving. It is designed so audits and rebuilds can be performed without trusting a database as the source of truth.
+- **See also:** [Data lifecycle zones](#data-lifecycle-zones), [Canonical layout](#canonical-layout), [Promotion Contract](#promotion-contract), [Projection store](#projection-store)
 
 ---
 
@@ -501,14 +552,15 @@ flowchart LR
 
 ## Sources
 
-This glossary is aligned to KFM design/guide documents that describe:
-- The data lifecycle zones and Promotion Contract (RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED)
-- Trust membrane and policy enforcement boundaries (PEP/PDP)
-- Evidence resolution (EvidenceRef → EvidenceBundle) and UI trust surfaces
-- Fail-closed policy posture and promotion gate behavior
+This glossary aligns to the following KFM documents (titles/dates as captured in provided sources):
+
+- **Kansas Frontier Matrix (KFM) — Architecture, Governance, and Delivery Plan** (Date: February 27, 2026)
+- **Kansas Frontier Matrix (KFM) — Ultimate Blueprint (Draft)** (Generated 2026-02-20) and **Definitive Design & Governance Guide (vNext)** (included in the source snapshots bundle)
+- **Kansas Frontier Matrix (KFM) — Data Source Integration Blueprint** (Version 1.0 — 2026-02-12)
+- **New Ideas / idea packs** (used only for **PROPOSED** entries; do not treat as ratified standards)
 
 > **TODO (repo hygiene):** replace any references to PDF-only sources with stable, repo-local Markdown equivalents once those docs are promoted into governed `docs/standards/` locations.
 
 ---
 
-[Back to top](#glossary)
+[Back to top](#kfm-glossary)
