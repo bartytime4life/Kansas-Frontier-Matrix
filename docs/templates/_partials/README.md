@@ -13,16 +13,6 @@ tags: [kfm, docs, templates, partials]
 notes: ["Template-only directory. Keep non-sensitive. Update registry table as partials are added."]
 [/KFM_META_BLOCK_V2] -->
 
----
-title: "🧩 KFM — Doc Template Partials"
-path: "docs/templates/_partials/README.md"
-status: "draft"
-owners: "TBD"
-license: "TBD (repo-wide license)"
-review_cycle: "As-needed (template changes)"
-classification: "Public (template-only; no restricted content)"
----
-
 <div align="center">
 
 # 🧩 **KFM — Doc Template Partials**
