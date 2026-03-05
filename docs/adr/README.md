@@ -6,7 +6,7 @@ version: v1
 status: draft
 owners: TBD
 created: 2026-02-24
-updated: 2026-03-01
+updated: 2026-03-05
 policy_label: public
 related:
   - docs/README.md
@@ -18,8 +18,9 @@ notes:
 [/KFM_META_BLOCK_V2] -->
 
 # docs/adr — Architecture Decision Records
+A governed, auditable record of **why** KFM made key architecture + governance decisions.
 
-> **Purpose:** A governed, auditable record of **why** we made key architecture + governance decisions for KFM.
+> **Purpose:** ADRs are small, durable **decision records**. They do not replace design docs; they point to them.
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
 ![Docs](https://img.shields.io/badge/docs-ADR-blue)
@@ -29,239 +30,136 @@ notes:
 ![ADR Index](https://img.shields.io/badge/index-TODO-lightgrey) <!-- TODO: wire to generated index job -->
 ![ADR Lint](https://img.shields.io/badge/lint-TODO-lightgrey)   <!-- TODO: wire to CI gate -->
 
-**Owners:** `TBD` (set this to the team responsible for architecture/governance)  
-**Scope:** Data → pipelines → catalogs/provenance → storage/indexing → governed APIs → Map/Story UI → Focus Mode  
-**Location:** `docs/adr/`
+---
+
+## Impact
+- **Status:** `draft`
+- **Owners:** `TBD` (set the team responsible for architecture/governance)
+- **Applies to:** Data → pipelines → catalogs/provenance → storage/indexing → governed APIs → Map/Story UI → Focus Mode
+- **Location:** `docs/adr/`
+- **Non-negotiables (KFM posture):**
+  - **Trust membrane:** UI/clients do not access storage/DB directly; all access crosses governed APIs + policy boundary.
+  - **Fail-closed:** governance/policy gates default-deny when evidence is missing.
+  - **Promotion discipline:** RAW → WORK → PROCESSED → PUBLISHED gated by catalogs + validation + receipts.
+  - **Focus Mode:** cite-or-abstain with auditable evidence references.
+
+> **IMPORTANT**
+> This README is normative. It **does not assert** that optional tooling or placeholder files exist.
+> Anything marked **TODO** or **optional** is a **plan**, not a claim about current repo state.
 
 ---
 
 ## Quick navigation
-
 - [Why ADRs exist](#why-adrs-exist)
 - [Decision language and claim tagging](#decision-language-and-claim-tagging)
 - [When an ADR is required](#when-an-adr-is-required)
-- [Directory rules](#directory-rules)
-  - [Directory invariants](#directory-invariants)
-  - [Expanded directory layout](#expanded-directory-layout)
-  - [Placement rules](#placement-rules)
+- [Quickstart](#quickstart)
 - [ADR lifecycle](#adr-lifecycle)
-- [ADR to PR to gates](#adr-to-pr-to-gates)
-- [ADR file naming](#adr-file-naming)
+- [Directory conventions](#directory-conventions)
+  - [Directory invariants](#directory-invariants)
+  - [Recommended directory layout](#recommended-directory-layout)
+  - [Placement rules](#placement-rules)
 - [ADR format requirements](#adr-format-requirements)
 - [Index](#index)
+- [Definition of done](#definition-of-done)
 - [FAQ](#faq)
 - [Appendix](#appendix)
 
 ---
 
 ## Why ADRs exist
-
 ADRs are part of KFM’s **trust membrane** and **truth path** discipline. They make decisions:
 
 - **Auditable:** future maintainers can trace what changed and why.
-- **Testable:** every major decision states the *minimum checks* that prove it is safe and working.
+- **Testable:** decisions state the *minimum checks* that prove they are safe and working.
 - **Reversible:** decisions document rollout + rollback triggers and mechanics.
 - **Governed:** decisions document policy boundaries, sensitivity handling, and evidence obligations.
 
 > **NOTE**
-> ADRs are not long design docs. They are **decision records**: small, focused, and durable.
-> If you need 10+ pages, write a design doc and have the ADR *link to it*.
+> ADRs should be small and link-first.
+> If you need 10+ pages, write a design doc and have the ADR **link to it**.
 
 ### ADRs as “gap closure”
-
-KFM treats unresolved gaps as governed work: track the gap, decide via an ADR, then implement in a PR with validation and rollback. Use ADRs to turn “unknowns” into reviewable progress.
+KFM treats unresolved gaps as governed work: identify the gap → decide via ADR → implement in PR → attach evidence → enforce via gates.
 
 ---
 
 ## Decision language and claim tagging
 
 ### Normative keywords
-
 Use these words intentionally:
 
 - **MUST** = required to meet KFM governance posture.
 - **SHOULD** = recommended unless you have a documented reason not to.
 - **MAY** = optional.
 
-### Claim tags
+### Claim tags (inside ADRs)
+Within ADRs, label meaningful claims to preserve the trust membrane:
 
-Within ADRs, label statements to preserve the trust membrane:
-
-| Tag | Meaning | What you must include |
+| Tag | Meaning | Minimum requirement |
 |---|---|---|
-| **CONFIRMED** | Backed by repo artifacts (code, configs, receipts, validated catalogs, policy tests) | Links to evidence |
+| **CONFIRMED** | Backed by repo artifacts (code, configs, receipts, validated catalogs, policy tests) | Link to evidence |
 | **PROPOSED** | An option or plan being recommended | Rationale + tradeoffs + risks |
-| **UNKNOWN** | Not yet verified | The smallest verification steps to confirm |
+| **UNKNOWN** | Not yet verified | Smallest verification steps to confirm |
 
 > **TIP**
-> If you’re unsure, mark it **UNKNOWN** and write the minimum check that would make it **CONFIRMED**.
+> If you’re unsure, mark it **UNKNOWN** and write the smallest check that would make it **CONFIRMED**.
 
 ---
 
 ## When an ADR is required
-
 Write an ADR when a change affects **system shape**, **governance boundaries**, or **user-facing trust guarantees**.
 
 ### Common triggers
 
 | Change type | ADR required? | Examples |
 |---|---:|---|
-| Truth path / data lifecycle zones | ✅ | RAW/WORK/PROCESSED/CATALOG/PUBLISHED definitions or transitions |
-| Promotion Contract gates | ✅ | identity/versioning, licensing, sensitivity, triplet validation, receipts, policy tests |
-| Trust membrane boundary | ✅ | “clients never access storage directly”, PEP enforcement rules, evidence resolver role |
-| Catalog/provenance contract | ✅ | DCAT/STAC/PROV cross-link requirements; EvidenceRef scheme changes |
-| Governed API contracts | ✅ | OpenAPI changes, auth model, error model, audit logging |
-| Focus Mode / Story publish behavior | ✅ | citation verification gate, abstain rules, evaluation harness expectations |
-| Security / privacy / sensitivity posture | ✅ | redaction rules, access control, secrets handling, sensitive-location handling |
-| Cross-cutting dependencies | ✅ | new DB, queue, GIS engine, policy engine, CI gate, storage/indexing strategy |
-| Pure refactor / typo fix | ❌ | no externally observable behavior and no governance boundary change |
+| Data lifecycle zones | ✅ | RAW/WORK/PROCESSED/PUBLISHED definitions or transitions |
+| Promotion gates | ✅ | identity/versioning, licensing, sensitivity, catalog validation, receipts |
+| Trust membrane boundary | ✅ | “clients never access storage directly”, Policy Enforcement Point rules |
+| Catalog/provenance contract | ✅ | DCAT/STAC/PROV profiles; EvidenceRef/EvidenceBundle scheme |
+| Governed API contracts | ✅ | OpenAPI changes, authZ model, error model, audit logging |
+| Focus Mode behavior | ✅ | cite-or-abstain gate, evaluation harness expectations |
+| Security/privacy/sensitivity posture | ✅ | redaction rules, access control, secrets handling |
+| Cross-cutting dependencies | ✅ | new DB/queue/GIS engine/policy engine/CI gate strategy |
+| Pure refactor / typo fix | ❌ | no observable behavior change, no governance boundary change |
 
 > **WARNING**
-> If sensitivity/permissions are unclear, **default-deny**: generalize, redact, and flag “needs governance review.”
+> If sensitivity/permissions are unclear, **default-deny**: generalize/redact and flag “needs governance review”.
 
 ---
 
-## Directory rules
+## Quickstart
 
-### Where this fits in the repo
+### Create a new ADR (author workflow)
+1. Pick the next available ADR number `NNNN`.
+2. Create a slug: `short-slug` (lowercase, hyphenated).
+3. Create the file: `docs/adr/NNNN-short-slug.md`
+4. Fill the ADR template completely (see [Appendix](#appendix)).
+5. Add an entry to the [Index](#index).
+6. Open a PR referencing the ADR and (ideally) the smallest implementing change.
+7. After merge, update the ADR status and attach evidence links (PR, receipts, validation outputs).
 
-`docs/adr/` holds architecture decision records that justify **governed changes** across the end-to-end system.
+### Minimal shell snippet
+```bash
+# Pick NNNN manually (or via tooling if you add it later)
+NNNN=0001
+SLUG="governed-api-boundary"
+FILE="docs/adr/${NNNN}-${SLUG}.md"
 
-> **NOTE**
-> Some KFM layouts place ADRs under `docs/architecture/adr/`. This repo uses `docs/adr/` for shorter, stable links.
-> If you relocate ADRs, update `docs/README.md` and any indexer tooling accordingly.
+# Create from template if present; otherwise copy from Appendix
+cp docs/adr/TEMPLATE.md "$FILE"
 
-### Acceptable inputs
-
-- One Markdown file per decision: `NNNN-short-slug.md`
-- Mermaid diagrams (preferred) when a diagram adds clarity
-- Optional “dossier” folders for supporting material **linked** from the ADR (see layout below)
-
-### Exclusions
-
-- Implementation guides, runbooks, tutorials (put those elsewhere in `docs/`)
-- Meeting notes/transcripts (store where meeting notes belong)
-- Secrets, credentials, restricted operational details
-- Exact coordinates or targeting information for vulnerable/private/culturally restricted sites
-
----
-
-### Directory invariants
-
-These are **non-negotiable** rules for keeping ADRs usable as governed artifacts:
-
-1. **Stable identity**
-   - ADR numbers **MUST NOT** be reused.
-   - `doc_id` in the MetaBlock **MUST** be stable (do not regenerate on edits).
-
-2. **Small + link-first**
-   - ADRs are decision records; supporting detail belongs in linked docs, PRs, or run receipts.
-   - Do not embed large binaries or datasets here.
-
-3. **Generated stays generated**
-   - Anything under `_generated/` is **never** hand-edited.
-
-4. **No secrets**
-   - Never commit credentials, tokens, or restricted operational steps into `docs/adr/`.
-
-5. **Reversible by design**
-   - Every accepted ADR MUST have rollback triggers + mechanics, not just “we can revert”.
-
----
-
-### Expanded directory layout
-
-This is the **fully expanded** (but still lightweight) layout for `docs/adr/`.
-
-```text
-docs/adr/                                                     # Architecture Decision Records (governed, fail-closed)
-├─ README.md                                                  # This file (entrypoint + rules + lifecycle + index)
-├─ INDEX.md                                                   # Canonical index (human-maintained or generated; see _generated/)
-├─ TEMPLATE.md                                                # Single-source ADR template (copy/paste)
-├─ ADR-REVIEW-CHECKLIST.md                                    # Review checklist (evidence links, rollback, verification, policy label)
-├─ ADR-STYLE-GUIDE.md                                         # Writing conventions (tense, headings, decision statement format)
-├─ ADR-TAXONOMY.md                                            # Controlled tags: areas/components/zones/gates (to standardize indexing)
-├─ ADR-GOVERNANCE.md                                          # Policy label guidance, redaction rules, “default-deny” reminders
-│
-├─ _generated/                                                # Generated artifacts (NEVER hand-edit; CI regenerates)
-│  ├─ adr-index.json                                          # Machine-readable ADR registry (for UI/search)
-│  ├─ adr-index.md                                            # Generated Markdown index (if automated)
-│  ├─ adr-graph.csv                                           # Optional: dependency graph edges (ADR → ADR, ADR → contract)
-│  ├─ adr-matrix.csv                                          # Optional: matrix view (area × status × gates)
-│  └─ adr-stats.json                                          # Optional: counts by status/area/policy_label
-│
-├─ tools/                                                     # Optional: glue scripts to enforce ADR invariants
-│  ├─ README.md                                               # How to run adr tools locally + in CI
-│  ├─ adr-next-number.sh                                      # Print next available NNNN (fail if collision)
-│  ├─ adr-lint.js                                             # Lint ADRs (required sections, status valid, MetaBlock present)
-│  ├─ adr-indexer.js                                          # Regenerate INDEX.md and/or _generated/* from filesystem scan
-│  ├─ adr-linkcheck.js                                        # Verify internal links (PRs/issues/docs) are well-formed
-│  └─ adr-evidence-check.js                                   # Verify referenced EvidenceRefs are resolvable (optional gate)
-│
-├─ assets/                                                    # Optional: rare binaries (prefer Mermaid in ADRs)
-│  ├─ diagrams/                                               # Exported diagrams when Mermaid is insufficient
-│  ├─ screenshots/                                            # Use sparingly; ensure no sensitive info
-│  └─ exports/                                                # Optional: PDF exports for external review (if policy permits)
-│
-├─ dossiers/                                                  # Optional: supporting material per ADR (do NOT duplicate ADR content)
-│  ├─ README.md                                               # Rules for dossiers (what’s allowed, what’s prohibited)
-│  ├─ 0006-evidence-ref-and-bundle-resolution/                # Example dossier folder for ADR 0006
-│  │  ├─ README.md                                            # What’s in this dossier + how it maps to the ADR
-│  │  ├─ diagrams/                                            # Extra diagrams
-│  │  ├─ notes/                                               # Additional context notes
-│  │  └─ evidence/                                            # Pointers (links) to receipts/bundles elsewhere (no large data)
-│  └─ 0012-secrets-management-and-rotation/
-│     └─ ...
-│
-├─ maps/                                                      # Optional: curated “views” (link lists; no duplication)
-│  ├─ README.md                                               # How to maintain these views
-│  ├─ by-area.md                                              # Links grouped by domain area (data/catalog/policy/ui/infra/security)
-│  ├─ by-status.md                                            # Links grouped by status (proposed/accepted/etc.)
-│  ├─ by-promotion-gate.md                                    # Links grouped by impacted gate (A–G)
-│  ├─ by-zone.md                                              # Links grouped by impacted zone (RAW/WORK/PROCESSED/TRIPLET/PUBLISHED)
-│  └─ by-policy-label.md                                      # Links grouped by policy_label (public/restricted)
-│
-├─ archive/                                                   # Legacy/imported ADRs (kept for history)
-│  ├─ README.md                                               # Archive rules (no edits except notes/status pointers)
-│  └─ imported/
-│     └─ 20xx-legacy/                                         # Imported ADRs (keep original names; add notes instead of rewriting)
-│
-├─ 0001-example-decision.md                                   # Example ADR (placeholder)
-├─ 0002-another-decision.md                                   # Example ADR (placeholder)
-│
-├─ 0003-data-zones-and-promotion-contract.md                  # Planned: data zones + promotion contract
-├─ 0004-dataset-identity-versioning-and-hashing.md            # Planned: deterministic identity/versioning/hashing
-├─ 0005-catalog-triplet-dcat-stac-prov-strategy.md            # Planned: DCAT/STAC/PROV triplet strategy
-├─ 0006-evidence-ref-and-bundle-resolution.md                 # Planned: EvidenceRef + EvidenceBundle resolution
-├─ 0007-policy-labels-redaction-and-obligations.md            # Planned: policy labels + redaction + obligations
-├─ 0008-governed-api-boundary-and-pep-enforcement.md          # Planned: governed API boundary + PEP enforcement
-├─ 0009-search-index-tiles-and-rebuildability.md              # Planned: indexes/tiles + rebuildability
-├─ 0010-focus-mode-cite-or-abstain-guardrails.md              # Planned: Focus Mode cite-or-abstain guardrails
-├─ 0011-run-receipts-and-audit-ledger-minimums.md             # Planned: run receipts + audit ledger minimums
-└─ 0012-secrets-management-and-rotation.md                    # Planned: secrets management + rotation
+# (Optional) generate a UUID for doc_id
+python - <<'PY'
+import uuid
+print(uuid.uuid4())
+PY
 ```
 
----
-
-### Placement rules
-
-These rules prevent drift and keep indexing automation simple.
-
-#### Where ADR files live
-
-- ADR markdown files live at: `docs/adr/NNNN-short-slug.md`
-- Optional supporting material lives at: `docs/adr/dossiers/NNNN-short-slug/*`
-- Generated indexes and machine outputs live at: `docs/adr/_generated/*`
-
-#### What goes in a dossier vs the ADR
-
-Use a **dossier** when any of the following is true:
-
-- the decision needs more than one diagram
-- you need a longer rationale or analysis than fits in the ADR
-- you want to attach a threat model, benchmark plan, or migration plan
-
-**Dossiers MUST NOT** include secrets or large data. If you must reference restricted material, store it in the restricted system and link to it from the ADR at an abstraction-safe level.
+> **NOTE**
+> If your template file does not exist yet, copy the template from the Appendix into a new `docs/adr/TEMPLATE.md`
+> as a follow-up PR. Treat that as documentation plumbing, not a decision record.
 
 ---
 
@@ -272,17 +170,16 @@ flowchart TD
   A[Need a decision] --> B[Draft ADR]
   B --> C[Review in PR]
   C --> D{Decision}
-  D -->|accept| E[Status: Accepted]
+  D -->|accept| E[ADR status: Accepted]
   D -->|request changes| B
-  D -->|reject| F[Status: Rejected]
+  D -->|reject| F[ADR status: Rejected]
   E --> G[Implement + validate]
   G --> H[Attach evidence + update ADR]
   E --> I[Superseded or Deprecated]
 ```
 
-### Status definitions
-
-| Status | Meaning |
+### ADR status values
+| ADR status | Meaning |
 |---|---|
 | Proposed | Drafted and under review; not yet the project’s decision |
 | Accepted | Approved decision; implementation may be in progress |
@@ -290,58 +187,108 @@ flowchart TD
 | Deprecated | No longer recommended, but not replaced by a single ADR |
 | Superseded | Replaced by another ADR (must link to the replacing ADR) |
 
+> **IMPORTANT**
+> **ADR status** (Proposed/Accepted/…) is the decision state.
+> The MetaBlock **status** (draft/review/published) is the *document lifecycle* for indexing/workflow.
+
 ---
 
-## ADR to PR to gates
+## Directory conventions
 
-ADRs exist to keep decisions **enforceable**.
+### Where this fits in the repo
+`docs/adr/` holds architecture decision records that justify **governed changes** across the end-to-end KFM system.
 
-```mermaid
-flowchart LR
-  A[Decision needed] --> B[ADR Proposed]
-  B --> C[PR references ADR]
-  C --> D[CI gates + policy tests]
-  D -->|pass| E[Merge]
-  D -->|fail| C
-  E --> F[Evidence produced]
-  F --> G[Update ADR with outcomes]
+### Acceptable inputs
+- One Markdown file per decision: `NNNN-short-slug.md`
+- Mermaid diagrams (preferred) when a diagram adds clarity
+- Optional “dossier” folders for supporting material **linked** from the ADR
+
+### Exclusions
+- Implementation guides, runbooks, tutorials (put those elsewhere in `docs/`)
+- Meeting notes/transcripts (store where meeting notes belong)
+- Secrets, credentials, restricted operational details
+- Exact coordinates or targeting information for vulnerable/private/culturally restricted sites
+
+---
+
+### Directory invariants
+These are non-negotiable rules for keeping ADRs usable as governed artifacts:
+
+1. **Stable identity**
+   - ADR numbers **MUST NOT** be reused.
+   - `doc_id` in the MetaBlock **MUST** be stable (do not regenerate on edits).
+
+2. **Small + link-first**
+   - ADRs are decision records; supporting detail belongs in linked docs, PRs, or run receipts.
+   - Do not embed large binaries or datasets here.
+
+3. **Generated stays generated**
+   - If you add `_generated/`, treat it as **never** hand-edited (CI regenerates it).
+
+4. **No secrets**
+   - Never commit credentials, tokens, or restricted operational steps into `docs/adr/`.
+
+5. **Reversible by design**
+   - Every **Accepted** ADR MUST include rollback triggers + rollback mechanics (not just “we can revert”).
+
+---
+
+### Recommended directory layout
+This layout is **recommended**. Create the pieces you need; do not assume optional files exist.
+
+```text
+docs/adr/
+├─ README.md                          # This file (process + conventions)
+├─ INDEX.md                           # Recommended index (human or generated)
+├─ TEMPLATE.md                        # Recommended single-source ADR template
+│
+├─ _generated/                        # Optional: generated artifacts (never hand-edit)
+│  ├─ adr-index.json                  # Optional: machine index for UI/search
+│  └─ adr-index.md                    # Optional: generated Markdown index
+│
+├─ tools/                             # Optional: scripts to enforce ADR invariants
+│  ├─ README.md                       # Optional: how to run tools locally/CI
+│  ├─ adr-next-number.*               # Optional: print next available NNNN
+│  ├─ adr-lint.*                      # Optional: lint ADRs (required sections, MetaBlock present)
+│  └─ adr-indexer.*                   # Optional: regenerate index/_generated/*
+│
+├─ dossiers/                          # Optional: supporting material per ADR (link from ADR)
+│  ├─ README.md                       # Optional: dossier rules
+│  └─ 0006-example-decision/
+│     └─ ...
+│
+└─ NNNN-short-slug.md                 # ADRs live directly under docs/adr/
 ```
 
-### PR expectations when an ADR is in scope
-
-A PR that introduces or changes a governed decision SHOULD include:
-
-- the ADR file (or status update to an existing ADR)
-- the smallest code/config change that implements the decision (when feasible)
-- links to evidence artifacts produced by the change (receipts, reports, validation outputs)
-- tests proving the decision does not break the trust membrane / promotion gates
-
-> **NOTE**
-> If the implementation cannot be shipped in the same PR as the ADR, the ADR MUST still include a rollout plan, rollback plan, and verification steps.
+> **TIP**
+> Prefer Mermaid diagrams inside the ADR over storing exported diagrams in `assets/`.
+> If you must add screenshots/exports, ensure they contain no sensitive information and are policy-labeled appropriately.
 
 ---
 
-## ADR file naming
+### Placement rules
 
-**Preferred pattern:** `NNNN-short-slug.md`
+#### Where ADR files live
+- ADR Markdown files live at: `docs/adr/NNNN-short-slug.md`
+- Optional supporting material lives at: `docs/adr/dossiers/NNNN-short-slug/*`
+- Optional generated indexes live at: `docs/adr/_generated/*`
 
-- `NNNN` is a 4-digit sequence (e.g., `0007`)
-- `short-slug` is lowercase and hyphenated
+#### What goes in a dossier vs the ADR
+Use a dossier when any of the following is true:
 
-Examples:
+- the decision needs more than one diagram
+- you need a longer rationale or analysis than fits in the ADR
+- you want to attach a threat model, benchmark plan, or migration plan
 
-- `0001-governed-api-boundary.md`
-- `0002-data-zones-and-promotion-contract.md`
-- `0003-evidence-ref-scheme.md`
+Dossiers MUST NOT include secrets or large data. If you must reference restricted material, store it in the restricted system and link from the ADR at an abstraction-safe level.
 
 ---
 
 ## ADR format requirements
-
 Every ADR MUST include:
 
-- **KFM MetaBlock v2 header** (as an HTML comment)
-- **Status** + **Date**
+- **KFM MetaBlock v2 header** (HTML comment)
+- **ADR status** + **Date**
 - **Decision statement** (one clear sentence)
 - **Context** (problem, constraints, why now)
 - **Options considered** (with tradeoffs)
@@ -350,16 +297,15 @@ Every ADR MUST include:
 - **Governance & policy impacts** (policy_label, obligations, redaction)
 - **Verification** (minimum checks that prove it works)
 - **Rollout and rollback plan**
-- **Evidence links** (PRs, issues, benchmarks, run receipts, validation reports)
+- **Evidence links** (PRs, issues, receipts, validation reports)
 
 ### Evidence discipline
-
 Evidence links should point to artifacts that make the decision defensible:
 
 - validation reports and QA summaries
 - run receipts and checksums
 - policy tests and contract tests
-- catalog triplet validation outputs (DCAT/STAC/PROV cross-linking)
+- catalog validation outputs (DCAT/STAC/PROV cross-linking)
 - threat model notes and mitigations
 
 > **RULE OF THUMB**
@@ -368,12 +314,39 @@ Evidence links should point to artifacts that make the decision defensible:
 ---
 
 ## Index
+Keep this table current. Add an entry when an ADR is created, and update status when it changes.
 
-> Keep this table current. Add an entry when an ADR is created, and update status when it changes.
+> **NOTE**
+> If you later automate indexing, treat this table as either:
+> - the canonical human-maintained index, or
+> - a generated artifact (in which case move it to `_generated/` and document the generator).
 
-| ADR | Title | Status | Date | Owners | Replaces | Notes |
+| ADR | Title | ADR status | Date | Owners | Supersedes | Notes |
 |---:|---|---|---|---|---|---|
 | _TBD_ | _Add your first ADR_ | _Proposed_ | _YYYY-MM-DD_ | _TBD_ | _N/A_ | _Add link once file exists_ |
+
+---
+
+## Definition of done
+Use this checklist as the “gate” for ADR quality.
+
+### DoD for a Proposed ADR (ready for review)
+- [ ] File name matches `NNNN-short-slug.md`
+- [ ] MetaBlock present with **stable** `doc_id`
+- [ ] ADR status is **Proposed**
+- [ ] Decision statement is one sentence (“We will …”)
+- [ ] At least 2 options considered (or explicit justification why not)
+- [ ] Governance & policy impacts section completed
+- [ ] Verification section includes concrete checks (not “test it”)
+- [ ] Rollout + rollback plans are specific and actionable
+- [ ] Links included for any referenced PRs/issues/docs (or marked TODO)
+
+### DoD for an Accepted ADR (ready to rely on)
+- [ ] ADR status updated to **Accepted**
+- [ ] PR(s) implementing the decision are linked
+- [ ] Evidence links added (receipts, validation outputs, policy tests)
+- [ ] Rollback triggers + mechanics included and realistic
+- [ ] Any contract changes reflected in schemas/tests (or explicitly tracked as follow-up)
 
 ---
 
@@ -397,7 +370,7 @@ If an ADR must reference restricted information:
 - do **not** commit secrets or sensitive operational details into the repo
 
 ### Do ADRs need a MetaBlock?
-Yes. Use KFM MetaBlock v2 for ADRs so they can be indexed, filtered by policy_label, and served through governed doc surfaces if needed.
+Yes. Use KFM MetaBlock v2 for ADRs so they can be indexed, filtered by `policy_label`, and served through governed doc surfaces if needed.
 
 ---
 
@@ -426,7 +399,7 @@ notes:
 
 # ADR NNNN: <short decision title>
 
-- **Status:** Proposed | Accepted | Rejected | Deprecated | Superseded
+- **ADR status:** Proposed | Accepted | Rejected | Deprecated | Superseded
 - **Date:** YYYY-MM-DD
 - **Owners:** <team or names>
 - **Deciders:** <role(s) or group>
@@ -434,11 +407,9 @@ notes:
 - **Related:** <issue/PR/doc links>
 
 ## Decision statement
-
 One sentence: **We will ...**
 
 ## Context
-
 What problem are we solving? Why now?
 
 - Constraints:
@@ -446,7 +417,6 @@ What problem are we solving? Why now?
 - Non-goals:
 
 ## Decision drivers
-
 List the forces that matter (correctness, safety, licensing, latency, cost, reversibility, team skills, etc.).
 
 ## Options considered
@@ -464,7 +434,6 @@ List the forces that matter (correctness, safety, licensing, latency, cost, reve
 - Operational impact:
 
 ## Decision
-
 Explain the decision clearly and precisely.
 
 ## Consequences
@@ -479,7 +448,6 @@ Explain the decision clearly and precisely.
 - ...
 
 ## Governance & policy impacts
-
 - Data sensitivity / classification:
 - Redaction/generalization obligations:
 - Access control changes:
@@ -487,26 +455,22 @@ Explain the decision clearly and precisely.
 - Any CARE/FAIR or community constraints:
 
 ## Promotion Contract impacts
-
 If this decision changes promotion gates, catalogs, identity, or runtime rules, enumerate what changes:
 
 - Gate A (identity/versioning):
 - Gate B (licensing/rights):
 - Gate C (sensitivity/redaction plan):
-- Gate D (catalog triplet validation):
+- Gate D (catalog validation):
 - Gate E (run receipts/checksums):
 - Gate F (policy + contract tests):
 
 ## Rollout plan
-
 Step-by-step, including promotion gates and validation.
 
 ## Rollback plan
-
 How we undo this safely. Include triggers for rollback.
 
 ## Verification
-
 Smallest set of checks needed to prove this decision works:
 
 - [ ] Unit/integration tests:
@@ -517,18 +481,15 @@ Smallest set of checks needed to prove this decision works:
 - [ ] Security checks:
 
 ## Evidence
-
 Links to artifacts:
 - ...
 - ...
 
 ## Follow-ups
-
 - [ ] ...
 - [ ] ...
 
 ## Supersedes / Superseded by
-
 - Supersedes: <ADR link or N/A>
 - Superseded by: <ADR link or N/A>
 ```
