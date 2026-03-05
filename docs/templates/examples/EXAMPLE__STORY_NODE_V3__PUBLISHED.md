@@ -1,3 +1,26 @@
+[KFM_META_BLOCK_V2]
+doc_id: kfm://story/6f2b2b4e-28b5-4a73-8c1c-2d405ce9e1f0@v1
+title: "EXAMPLE (Published) — Kansas Storm Events Overview (1950–2024)"
+type: story
+version: v3
+status: published
+owners:
+  - KFM Story Team
+created: 2026-02-20
+updated: 2026-03-05
+policy_label: public
+related:
+  - kfm://dataset/noaa_ncei_storm_events@2026-02.abcd1234
+  - kfm://run/2026-02-20T12:34:56Z.noaa_ncei_storm_events.abcd1234
+tags:
+  - kfm
+  - example
+  - story_node
+  - published
+notes:
+  - "Template example only. IDs are illustrative."
+[/KFM_META_BLOCK_V2]
+
 # EXAMPLE (Published) — Kansas Storm Events Overview (1950–2024)
 
 ## Summary
