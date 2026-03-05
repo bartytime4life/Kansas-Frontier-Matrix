@@ -1,4 +1,4 @@
-\<!-- [KFM_META_BLOCK_V2]
+<!-- [KFM_META_BLOCK_V2]
 doc_id: kfm://doc/4ae7758c-c919-4849-a406-390a0e5ad66c
 title: Documentation Template Examples
 type: standard
