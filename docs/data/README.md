@@ -2,21 +2,27 @@
 doc_id: kfm://doc/8c0d7f7d-9cda-4a9a-9f40-6dd77b7f2e6b
 title: docs/data
 type: standard
-version: v1
+version: v2
 status: draft
 owners: kfm-core (TODO: set real owners)
 created: 2026-02-24
-updated: 2026-02-24
+updated: 2026-03-05
 policy_label: public
 related:
   - kfm://doc/TODO
 tags: [kfm, data, governance, catalog, provenance]
 notes:
-  - Directory-level contract for governed dataset documentation (not for storing production datasets).
+  - Directory-level contract for governed dataset documentation packages (NOT for storing production datasets).
 [/KFM_META_BLOCK_V2] -->
 
-# docs/data
-Governed **dataset documentation** for the KFM system: metadata, schemas, QA results, provenance, and publication receipts (not bulk data).
+# `docs/data`
+Governed **dataset documentation packages** for the Kansas Frontier Matrix (KFM): metadata, schemas, QA results, provenance, catalog artifacts, and promotion/publish receipts — **not bulk data**.
+
+> **Impact**
+> - **Status:** draft
+> - **Owners:** kfm-core (TODO)
+> - **Policy:** `public` (this folder must remain safe to publish)
+> - **Purpose:** define a fail-closed documentation contract that enables governance + reproducibility
 
 ![Status](https://img.shields.io/badge/status-draft-orange)
 ![Scope](https://img.shields.io/badge/scope-docs%2Fdata-blue)
@@ -26,32 +32,68 @@ Governed **dataset documentation** for the KFM system: metadata, schemas, QA res
 ---
 
 ## Quick navigation
-- [What this folder is](#what-this-folder-is)
+- [Scope](#scope)
+- [Where it fits](#where-it-fits)
 - [Directory contract](#directory-contract)
-- [Recommended layout](#recommended-layout)
-- [Data zones and promotion model](#data-zones-and-promotion-model)
+- [Naming and identity](#naming-and-identity)
+- [Lifecycle, zones, and promotion](#lifecycle-zones-and-promotion)
 - [Dataset documentation package](#dataset-documentation-package)
-- [Promotion gates](#promotion-gates)
+- [Quickstart](#quickstart)
 - [Templates](#templates)
+- [CI expectations](#ci-expectations)
 - [Safety and sensitivity rules](#safety-and-sensitivity-rules)
 - [Definition of done](#definition-of-done)
-- [References](#references)
+- [FAQ](#faq)
+- [Appendix: target layout](#appendix-target-layout)
 
 ---
 
-## What this folder is
-This directory holds **documentation and governance artifacts about data** used by the Kansas-Matrix/KFM system.
+## Scope
 
-It is designed so every user-facing claim can be traced to:
-- **What the dataset is** (identity + purpose)
-- **Where it came from** (sources + lineage)
-- **What it looks like** (schema + examples)
-- **Whether it is trustworthy** (QA checks + results)
-- **Whether it is permitted** (license + sensitivity + policy decisions)
-- **How it got published** (promotion receipts + checksums + run metadata)
+### What this folder is
+This folder is the **governed documentation surface** for datasets used by KFM:
+- identity + ownership
+- licensing + rights notes
+- sensitivity / policy label + handling rules
+- schemas + dictionaries
+- QA rules + QA reports
+- provenance + lineage
+- catalog artifacts (DCAT/STAC/PROV, when applicable)
+- promotion/publish receipts (checksums + audit info)
 
-> NOTE  
-> If you need to store actual datasets, store them in the project’s governed storage zones (Raw/Work/Processed/Published). This folder stores **docs + small, safe samples only**.
+### What this folder is not
+- It is **not** a data lake and must **not** contain bulk or production datasets.
+- It is **not** a secrets store (no API keys, tokens, connection strings, private URLs).
+- It is **not** a “shadow registry” that bypasses the governed API.
+
+> IMPORTANT  
+> This README is a **directory contract** (normative). It does **not** claim the repo currently matches the target layout shown below.
+
+[Back to top](#docsdata)
+
+---
+
+## Where it fits
+KFM treats **catalogs + provenance + receipts** as contract surfaces between pipeline outputs and runtime behavior. In practice, `docs/data/` is the place to keep **human-readable** and **CI-validatable** documentation and evidence pointers that support that contract.
+
+```mermaid
+flowchart LR
+  upstream[Upstream sources] --> raw[RAW zone]
+  raw --> work[WORK / QUARANTINE]
+  work --> processed[PROCESSED]
+  processed --> catalog[CATALOG / TRIPLET]
+  catalog --> published[PUBLISHED runtime]
+  published --> api[Governed API]
+  api --> ui[Map / Story / Focus]
+
+  docs[docs/data\n(doc packages + receipts + schemas)] -.documents.-> raw
+  docs -.documents.-> work
+  docs -.documents.-> processed
+  docs -.documents.-> catalog
+  docs -.documents.-> published
+```
+
+**Contract principle:** UI/clients must not access storage directly; all access crosses the governed API + policy boundary.
 
 [Back to top](#docsdata)
 
@@ -60,227 +102,132 @@ It is designed so every user-facing claim can be traced to:
 ## Directory contract
 
 ### ✅ Acceptable inputs
-- Dataset manifests (YAML/JSON) describing: id, license, sensitivity, extents, owners, provenance
-- Schemas: JSON Schema, Arrow/Parquet schema JSON, SQL DDL, CSV dictionaries, etc.
-- QA configs + QA reports (machine-readable) and human summaries
-- Checksums and integrity records for published artifacts
-- Publication receipts / run logs / audit records (sanitized, no secrets)
-- Small, **non-sensitive**, representative samples (if policy allows): tiny CSV/GeoJSON snippets, synthetic data, screenshots
+- **Dataset documentation packages** (one folder per dataset, see below)
+- Manifests (`yaml`/`json`) describing identity, owners, license, policy label, extents, and provenance pointers
+- Schemas: JSON Schema, SQL DDL, GeoParquet/Arrow schema JSON, CSV dictionaries, etc.
+- QA configs + QA reports (machine-readable) + a short human summary
+- Checksums / digests for published artifacts (or for referenced artifacts)
+- Receipts / audit records (sanitized; no secrets; no restricted leakage)
+- Tiny samples for docs/tests **only if policy allows**:
+  - redacted, generalized, or synthetic
+  - explicitly documented redactions
+  - size-limited (keep small enough for code review)
 
 ### ❌ Exclusions
-- Bulk / production data exports (Parquet/CSV dumps, rasters, etc.)
-- Secrets (API keys, tokens, connection strings, private URLs)
+- Bulk / production datasets (Parquet/CSV dumps, rasters, raw OCR corpora, etc.)
+- Secrets (keys, tokens, cookies, private endpoints)
 - Unredacted PII/PHI or other restricted personal data
-- Exact coordinates for vulnerable/private/culturally restricted sites (see [Safety and sensitivity rules](#safety-and-sensitivity-rules))
-- “Mystery data” without license/sensitivity/ownership metadata
+- Precise coordinates or geometries for sensitive locations unless policy explicitly allows
+- “Mystery data” (missing license, owner, provenance, or policy label)
 
 [Back to top](#docsdata)
 
 ---
 
-## Recommended layout
-This README does **not** assume your current tree matches this layout. Treat this as a *target contract* and adjust to your repo realities.
+## Naming and identity
 
-```text
-docs/data/                                         # Data documentation (manifests, schemas, QA, provenance, promotion evidence)
-├─ README.md                                       # How data docs map to registry + promotion gates + where “truth” lives
-├─ CONTRIBUTING.md                                 # How to add/update a dataset_id folder (PR checklist, naming rules)
-├─ GLOSSARY.md                                     # Shared terms: dataset_id, dataset_version, run_id, extents, etc.
-│
-├─ _templates/                                     # Copy/paste starters (kept in sync with _schemas)
-│  ├─ manifest.yaml                                # Template: identity/license/sensitivity/extents/owners
-│  ├─ sources.yaml                                 # Template: upstream acquisition metadata + checksums
-│  ├─ checks.yaml                                  # Template: QA rules + thresholds
-│  ├─ publish_receipt.json                         # Template: audit record + checksums + policy decisions
-│  ├─ data_dictionary.md                            # Template: human-friendly dictionary starter
-│  └─ lineage.mmd                                  # Template: Mermaid lineage diagram starter
-│
-├─ _schemas/                                       # Machine-validation for docs in this folder (CI uses these)
-│  ├─ manifest.schema.json                         # JSON Schema for datasets/*/manifest.yaml
-│  ├─ sources.schema.json                          # JSON Schema for datasets/*/provenance/sources.yaml
-│  ├─ checks.schema.json                           # JSON Schema for datasets/*/qa/checks.yaml
-│  ├─ receipt.schema.json                          # JSON Schema for datasets/*/receipts/*.json
-│  └─ naming.schema.md                             # Human rules: dataset_id format, dates, run_id format, etc.
-│
-├─ governance/                                     # Human-readable policy guidance (not dataset-specific)
-│  ├─ licenses.md                                  # How to interpret license fields + compatibility notes
-│  ├─ sensitivity.md                               # Labels + handling requirements + “no exact coords” rules if applicable
-│  ├─ redaction.md                                 # Redaction/obligation patterns and examples
-│  ├─ retention.md                                 # Retention expectations by zone (docs-only; actual enforcement elsewhere)
-│  └─ access.md                                    # How to request access / escalation path for restricted datasets
-│
-├─ promotion/                                      # Promotion Contract helpers (what must exist to move zones)
-│  ├─ gates.md                                     # Gate overview (Identity → Schema → QA → Provenance → Receipt)
-│  ├─ checklists/
-│  │  ├─ gate-a-identity.md                        # “Minimum artifacts” and review checklist
-│  │  ├─ gate-b-schema.md
-│  │  ├─ gate-c-qa.md
-│  │  ├─ gate-d-provenance.md
-│  │  └─ gate-e-publish-receipt.md
-│  └─ examples/
-│     ├─ example_dataset/                          # A tiny “golden path” dataset folder showing best practice
-│     └─ example_receipts/
-│        └─ publish_YYYY-MM-DD.json
-│
-├─ registries/                                     # Optional global reference indices (human-readable)
-│  ├─ datasets.csv                                 # Master index (or link to canonical registry elsewhere)
-│  ├─ sources.csv                                  # Optional upstream sources index (APIs, agencies, partners)
-│  ├─ owners.yaml                                  # Optional: owner/team directory for routing reviews
-│  ├─ tags.yaml                                    # Optional: controlled tags vocabulary
-│  └─ vocabulary/                                  # Optional: shared controlled vocabularies
-│     ├─ geometry_types.md
-│     ├─ measurement_units.md
-│     └─ place_names.md
-│
-├─ datasets/                                       # Recommended: one folder per dataset_id (human-facing docs + evidence pointers)
-│  └─ <dataset_id>/
-│     ├─ README.md                                 # Dataset overview (purpose, intended use, caveats, how to cite)
-│     ├─ manifest.yaml                             # REQUIRED: identity, license, sensitivity, extents, owners
-│     ├─ CHANGELOG.md                              # Human changelog for schema/meaning changes
-│     ├─ access.md                                 # OPTIONAL: dataset-specific access notes (if restricted/sensitive)
-│     │
-│     ├─ extents/                                  # OPTIONAL but recommended: explicit extents artifacts
-│     │  ├─ bbox.json                              # Machine-friendly bounding box / CRS note
-│     │  └─ footprint.geojson                      # Coarse footprint if sensitive (avoid precise geometry if needed)
-│     │
-│     ├─ schema/                                   # REQUIRED: schema artifacts (what the data looks like)
-│     │  ├─ schema.json                            # JSON Schema / Arrow schema / etc. (repo convention)
-│     │  ├─ ddl.sql                                # Optional: PostGIS/Postgres DDL if relevant
-│     │  ├─ dictionary.md                          # Optional: human-friendly data dictionary
-│     │  └─ mappings/                              # Optional: mappings from upstream → canonical
-│     │     ├─ source_to_canonical.csv             # Field mapping table
-│     │     └─ codebooks/                          # Value mappings for coded domains
-│     │        └─ <field>.md
-│     │
-│     ├─ pipeline/                                 # OPTIONAL but strongly recommended: “how it is produced”
-│     │  ├─ ingest.yaml                            # Inputs, fetch method, cadence, auth notes (no secrets)
-│     │  ├─ transform.yaml                         # Transform steps, tool versions, parameters (high level)
-│     │  ├─ publish.yaml                           # Publishing rules: tiling/indexing/catalog actions
-│     │  └─ runbook.md                             # Human steps for incident response / refresh / backfill
-│     │
-│     ├─ qa/                                       # REQUIRED before promotion beyond Work
-│     │  ├─ checks.yaml                            # Validation rules + thresholds (what “good” means)
-│     │  ├─ expectations.md                        # Optional: narrative explanation of checks + rationale
-│     │  ├─ baselines/                             # Optional: “known good” metric baselines for drift detection
-│     │  │  └─ 2026-02-01.json
-│     │  └─ reports/
-│     │     └─ 2026-02-24/                         # Prefer folder-per-run for multi-file reports
-│     │        ├─ report.json                       # Machine QA report (metrics, pass/fail, inputs/outputs)
-│     │        ├─ report.md                         # Optional: human QA summary (high-signal findings)
-│     │        └─ artifacts/                        # Optional: plots, small extracts, histograms (policy-compliant)
-│     │
-│     ├─ provenance/                               # REQUIRED: lineage + sources (traceability)
-│     │  ├─ sources.yaml                           # Acquisition details (where/how, checksums, timestamps)
-│     │  ├─ retrieval/                             # Optional: per-run retrieval metadata (HTTP headers, etags, etc.)
-│     │  │  └─ 2026-02-24.json
-│     │  ├─ lineage.mmd                            # Lineage diagram (Mermaid)
-│     │  └─ citations.bib                          # Optional: scholarly citations if used in narratives
-│     │
-│     ├─ receipts/                                 # REQUIRED for Published: “what shipped and why”
-│     │  ├─ ingest_2026-02-24.json                  # Audit record for acquisition → RAW
-│     │  ├─ promote_work_2026-02-24.json            # Optional: RAW → WORK promotion receipt
-│     │  ├─ promote_processed_2026-02-24.json       # Optional: WORK → PROCESSED receipt
-│     │  └─ publish_2026-02-24.json                 # REQUIRED: checksums + policy decisions + artifact list
-│     │
-│     ├─ versions/                                 # OPTIONAL: dataset_version history (schema/meaning evolution)
-│     │  └─ <dataset_version>/                      # e.g. v2026-02-24 or semver-like v1.3.0
-│     │     ├─ manifest.lock.json                   # Resolved/locked manifest snapshot used by the run
-│     │     ├─ schema.lock.json                     # Locked schema snapshot (what was validated)
-│     │     ├─ qa/                                  # Pointers or copies of QA reports for that version
-│     │     ├─ provenance/                          # Pointers or copies of provenance artifacts for that version
-│     │     └─ receipts/                            # Receipts that produced/published this version
-│     │
-│     └─ examples/                                 # OPTIONAL: how to consume it safely
-│        ├─ queries.sql                             # Example PostGIS queries (no sensitive filters)
-│        ├─ api.http                                # Example API calls (HTTP file for VSCode/Insomnia-style)
-│        ├─ notebook.md                             # “Safe notebook” instructions (no data exfil)
-│        └─ viz.md                                  # Cartography notes / symbology defaults
-│
-└─ samples/                                        # Tiny, policy-compliant samples for docs/tests (never sensitive)
-   ├─ README.md                                    # Sample rules (size cap, redaction/generalization requirements)
-   ├─ _generated/                                  # Optional: CI-generated samples (kept tiny, scrubbed)
-   └─ <dataset_id>/
-      ├─ sample.csv
-      ├─ sample.geojson                            # Only if permitted by sensitivity/licensing
-      └─ sample.md                                 # What was redacted/generalized and why
-```
+### Filesystem folder vs dataset ID
+To avoid invalid folder names:
+
+- **`dataset_slug`**: filesystem-safe folder name (recommended: `kebab-case`)
+- **`dataset_id`**: stable identifier stored in `manifest.yaml` (recommended: a URI-like string)
+
+Example:
+- folder: `docs/data/datasets/noaa_storm_events/`
+- manifest: `dataset_id: kfm://dataset/noaa_storm_events`
+
+### Controlled vocabulary: `policy_label`
+`policy_label` is a controlled vocabulary. Keep values **consistent** and **versioned**.
+
+Starter list (may evolve; do not invent new labels casually):
+- `public`
+- `public_generalized`
+- `restricted`
+- `restricted_sensitive_location`
+- `internal`
+- `embargoed`
+- `quarantine`
+
+> NOTE  
+> If you need a new label, add it to the controlled vocabulary (with rationale) and add policy tests. Don’t “just use a new string”.
 
 [Back to top](#docsdata)
 
 ---
 
-## Data zones and promotion model
-The KFM data lifecycle is modeled as:
+## Lifecycle, zones, and promotion
+KFM organizes data movement via zones. The zone names below are **logical contract labels**; the physical storage layout is implemented elsewhere.
 
 ```mermaid
 flowchart LR
-  raw[Raw]
-  work[Work]
-  quarantine[Quarantine]
-  processed[Processed]
-  published[Published]
+  raw[raw] --> work[work]
+  work --> processed[processed]
+  processed --> catalog[catalog]
+  catalog --> published[published]
 
-  raw --> work
-  work --> processed
-  processed --> published
-  work --> quarantine
+  work --> quarantine[quarantine]
   quarantine --> work
 ```
 
-**Intent:**
-- **Raw**: acquired as-is; minimal transformation; highest provenance fidelity.
-- **Work**: exploratory + cleaning; validation work happens here.
-- **Quarantine**: fails checks, unclear license, unclear sensitivity, or policy-review required.
-- **Processed**: validated + standardized outputs ready for repeatable use.
-- **Published**: governed outputs accessible through governed APIs and used in UI/Story claims.
+### Promotion gates
+Promotion is **fail-closed**: if required evidence is missing, promotion stops.
+
+Below is a compact “what must exist” view. Customize thresholds per dataset.
+
+| Gate | From → To | Must have (docs/evidence) |
+|---|---|---|
+| A | RAW → WORK | identity, owners, license, policy label, source provenance pointer, checksums/digests (when applicable) |
+| B | WORK → PROCESSED | schema + dictionary, QA checks + report, provenance/lineage updated, limitations documented |
+| C | PROCESSED → CATALOG | DCAT record; STAC/PROV as applicable; cross-links validated; link-check clean |
+| D | CATALOG → PUBLISHED | publish receipt (audit + digests + policy decision record); access posture confirmed |
 
 [Back to top](#docsdata)
 
 ---
 
 ## Dataset documentation package
-Every dataset should have a **documentation package** that is complete enough to support:
-- repeatable processing,
-- governance review,
-- publication/promotion,
-- traceable story/UI claims.
+Each dataset should have a documentation package complete enough to support:
+- governance review
+- reproducible processing
+- promotion/publishing
+- evidence-backed UI/Story/Focus claims
 
 ### Minimum recommended files per dataset
-| Artifact | Required for | Purpose |
+
+| Artifact | Required by | Purpose |
 |---|---:|---|
-| `manifest.yaml` | Raw → Work | identity, ownership, license, sensitivity, extents |
-| `schema/*` | Work → Processed | formal schema + dictionary |
-| `qa/checks.yaml` + `qa/reports/*` | Work → Processed | thresholds + proof of validation |
-| `provenance/sources.yaml` + lineage graph | Any promotion | traceability + reproducibility |
-| `receipts/publish_*.json` | Processed → Published | audit record + checksums + policy decisions |
+| `manifest.yaml` | Gate A | identity, owners, license, policy label, extents, provenance pointers |
+| `schema/*` | Gate B | formal schema + human dictionary |
+| `qa/checks.yaml` + `qa/reports/*` | Gate B | thresholds + validation proof |
+| `provenance/*` | Gate B | sources + lineage graph |
+| `catalog/*` | Gate C | DCAT + STAC + PROV (as applicable) |
+| `receipts/*` | Gate D | audit record + checksums + policy decisions |
 
 [Back to top](#docsdata)
 
 ---
 
-## Promotion gates
-Promotion gates are intended to be **fail-closed**: if required evidence is missing, promotion stops.
+## Quickstart
+This is a minimal, reviewable workflow for adding a new dataset doc package.
 
-### Gate: Raw → Work
-- [ ] Dataset identity established (dataset_id + name + purpose)
-- [ ] Source recorded (where it came from, when, how)
-- [ ] License recorded (or moved to Quarantine with reason)
-- [ ] Sensitivity classification recorded (or moved to Quarantine with reason)
-- [ ] Checksums recorded for acquired artifacts (where applicable)
+1) Create a dataset folder:
+```bash
+mkdir -p docs/data/datasets/<dataset_slug>/{schema,qa/reports,provenance,receipts,catalog}
+```
 
-### Gate: Work → Processed
-- [ ] Schema finalized (machine-readable + dictionary where needed)
-- [ ] QA checks defined (rules + thresholds)
-- [ ] QA reports recorded (pass/fail + metrics + exceptions)
-- [ ] Provenance graph updated (inputs → transforms → outputs)
-- [ ] Known limitations documented (biases, gaps, known issues)
+2) Copy templates (if present):
+```bash
+# EXAMPLE: adjust paths to match your repo layout
+cp docs/data/_templates/manifest.yaml docs/data/datasets/<dataset_slug>/manifest.yaml
+cp docs/data/_templates/checks.yaml   docs/data/datasets/<dataset_slug>/qa/checks.yaml
+cp docs/data/_templates/lineage.mmd   docs/data/datasets/<dataset_slug>/provenance/lineage.mmd
+```
 
-### Gate: Processed → Published
-- [ ] Publication receipts present (audit record)
-- [ ] Checksums for published artifacts present
-- [ ] License + sensitivity confirmed for publication scope
-- [ ] Access model confirmed (public/restricted) and any redactions applied
-- [ ] “User-facing claim” linkage present (where this dataset is used)
+3) Fill in the manifest (owners, license, policy label) and add schema + QA rules.
+
+4) Add at least one QA report (even if it’s an initial baseline) and record known caveats.
+
+5) Add a receipt when promoting/publishing (digests + policy decision + references to QA + catalogs).
 
 [Back to top](#docsdata)
 
@@ -290,67 +237,72 @@ Promotion gates are intended to be **fail-closed**: if required evidence is miss
 
 ### Template: `manifest.yaml`
 ```yaml
-# docs/data/datasets/<dataset_id>/manifest.yaml
+# docs/data/datasets/<dataset_slug>/manifest.yaml
+# NOTE: This is a documentation manifest (not the dataset itself).
 
-dataset_id: kfm://dataset/TODO
+schema_version: "1.0"
+
+dataset_slug: "TODO_dataset_slug"        # filesystem-safe name
+dataset_id: "kfm://dataset/TODO"         # stable ID stored in docs, used across systems
+
 name: "TODO human readable name"
 description: >
-  TODO: one-paragraph description of what the dataset is and why it exists.
+  TODO: one paragraph describing what the dataset represents and why it exists.
 
 owners:
   - name: "TODO owner/team"
     contact: "TODO email or handle"
-    role: "data_owner"   # e.g., data_owner, steward, producer
+    role: "data_owner"   # data_owner|steward|producer|reviewer
 
 license:
-  spdx: "TODO"           # prefer SPDX id
+  spdx: "TODO"           # prefer SPDX identifier
   url: null              # optional
-  notes: "TODO any constraints / attribution requirements"
+  notes: "TODO constraints / attribution / redistribution rules"
 
-sensitivity:
-  classification: "public"  # public|restricted|confidential (project policy)
+policy:
+  policy_label: "public" # controlled vocab: public|public_generalized|restricted|...
   handling: >
-    TODO: redaction rules, aggregation requirements, access constraints.
+    TODO: redaction/generalization rules, access constraints, export rules.
 
 provenance:
   sources:
     - name: "TODO source system / provider"
-      acquired_at: "2026-02-24T00:00:00Z"
-      method: "TODO api|download|scrape|manual|partner_delivery"
-      uri: "TODO (avoid secrets)"
-      checksum_sha256: "TODO"
+      acquired_at: "2026-03-05T00:00:00Z"
+      method: "api"      # api|download|scrape|manual|partner_delivery
+      uri: "TODO (no secrets)"
+      checksum_sha256: "TODO if file-based"
       license_confirmed: false
 
 spatial:
   has_geometry: false
   crs: null
   extent:
-    # IMPORTANT: if sensitive, use coarse geography and never exact coords.
+    # IMPORTANT: if sensitive, record coarse extents only.
     bbox: null
 
 temporal:
   start: null
   end: null
-  update_cadence: "TODO"
+  update_cadence: "TODO (e.g., daily|monthly|static)"
 
 schema:
   primary: "./schema/schema.json"
-  format: "TODO csv|parquet|geojson|sql|other"
+  format: "TODO csv|parquet|geoparquet|geojson|sql|other"
 
 qa:
   checks: "./qa/checks.yaml"
-  latest_report: null
+  latest_report: null   # e.g., "./qa/reports/2026-03-05/report.json"
 
 promotion:
-  current_zone: "work"
+  current_zone: "work"  # raw|work|processed|catalog|published|quarantine
   last_promoted_at: null
 ```
 
 ### Template: `qa/checks.yaml`
 ```yaml
-# docs/data/datasets/<dataset_id>/qa/checks.yaml
+# docs/data/datasets/<dataset_slug>/qa/checks.yaml
 
-version: 1
+schema_version: "1.0"
 checks:
   - id: row_count_nonzero
     description: "Dataset must contain at least 1 row."
@@ -369,32 +321,45 @@ checks:
 ### Template: `receipts/publish_YYYY-MM-DD.json`
 ```json
 {
+  "schema_version": "1.0",
   "receipt_id": "kfm://receipt/TODO",
+  "run_id": "kfm://run/TODO",
   "dataset_id": "kfm://dataset/TODO",
-  "published_at": "2026-02-24T00:00:00Z",
+  "dataset_version_id": "TODO",
+  "published_at": "2026-03-05T00:00:00Z",
   "published_by": "TODO",
+
   "inputs": [
     { "uri": "TODO", "sha256": "TODO" }
   ],
   "outputs": [
-    { "uri": "TODO", "sha256": "TODO" }
+    { "uri": "TODO", "sha256": "TODO", "zone": "published" }
   ],
-  "tooling": {
-    "pipeline": "TODO",
-    "version": "TODO",
-    "runtime": "TODO"
+
+  "catalog": {
+    "dcat_ref": "catalog/dcat.json",
+    "stac_ref": "catalog/stac.json",
+    "prov_ref": "catalog/prov.json"
   },
-  "policy": {
-    "license": "TODO",
-    "sensitivity": "public",
-    "decisions": [
-      "TODO policy decisions, redactions, aggregation, coordinate coarsening"
-    ]
-  },
+
   "qa": {
-    "report_ref": "../qa/reports/2026-02-24.json",
+    "report_ref": "../qa/reports/2026-03-05/report.json",
     "result": "pass"
   },
+
+  "policy": {
+    "policy_label": "public",
+    "decisions": [
+      "TODO: summarize policy decisions (e.g., generalization applied, rights constraints enforced)"
+    ]
+  },
+
+  "tooling": {
+    "pipeline": "TODO",
+    "git_sha": "TODO",
+    "runtime": "TODO (container digest/version if available)"
+  },
+
   "notes": "TODO"
 }
 ```
@@ -403,32 +368,140 @@ checks:
 
 ---
 
+## CI expectations
+`docs/data/` should be CI-validated to prevent “quiet drift” and to keep promotion fail-closed.
+
+Recommended minimum CI checks:
+- JSON/YAML schema validation for manifests, receipts, and catalog artifacts
+- Link-check for cross-links (catalog ↔ provenance ↔ receipts ↔ schema ↔ QA)
+- Policy tests that enforce default-deny and prevent restricted leakage
+- Digest/checksum presence checks for promoted artifacts
+- (Optional) “golden” tests for deterministic IDs/hashes
+
+> NOTE  
+> This section defines **expectations**, not the current state of CI in your repo.
+
+[Back to top](#docsdata)
+
+---
+
 ## Safety and sensitivity rules
 When in doubt: **default-deny** and route through governance review.
 
-- Do not publish exact locations for vulnerable/private/culturally restricted sites.
-  - Use aggregation, rounding, bounding regions, or tile-based generalization.
-- Do not include secrets in manifests or receipts.
-- If license or consent is unclear, place the dataset in **Quarantine** and document why.
+- Do not publish exact locations for sensitive, vulnerable, or culturally restricted sites unless policy explicitly allows.
+  - Use aggregation, rounding, bounding regions, or generalized geometry.
+- Do not include secrets in manifests, receipts, or samples.
+- If license or consent is unclear, move the dataset to `quarantine` and record why.
 - Any dataset with personal data requires explicit handling rules and a redacted sample policy.
+- Avoid “ghost metadata” that reveals restricted existence via errors or inconsistent fields.
 
 [Back to top](#docsdata)
 
 ---
 
 ## Definition of done
-A dataset doc package is “Done” when:
+A dataset documentation package is “Done” when:
 
-- [ ] `manifest.yaml` is complete (license + sensitivity not unknown)
-- [ ] Schema is present and matches the processed output
-- [ ] QA checks + latest report are present and reproducible
-- [ ] Provenance is sufficient to re-run the pipeline
-- [ ] If published: publish receipt + checksums exist
-- [ ] No restricted data is exposed in documentation or samples
+- [ ] `manifest.yaml` complete (owners + license + policy label not unknown)
+- [ ] schema present and matches processed outputs
+- [ ] QA checks + latest report present and reproducible
+- [ ] provenance sufficient to re-run the pipeline (or to justify why it can’t be)
+- [ ] if published: publish receipt + digests + catalog refs exist
+- [ ] no restricted data is exposed in docs or samples
 
 [Back to top](#docsdata)
 
 ---
 
-## References
-- Project reference library: **KFM Project Library Index** (PDF) — use it to locate deeper readings for GIS/cartography, data science, DevOps, etc. (Add a repo-relative link if/when you vend it in-repo.)
+## FAQ
+
+### Can this folder include restricted dataset documentation?
+This folder’s policy label is `public`, so **only public-safe documentation** should live here.
+
+Allowed:
+- sanitized manifests (no secrets)
+- policy labels and handling rules
+- coarse extents
+- redacted/generalized sample artifacts (if permitted)
+
+Not allowed:
+- restricted raw data
+- unredacted PII/PHI
+- precise sensitive-location geometry
+
+If you need to store restricted documentation or detailed access notes, keep them in a restricted repo/location and link to them via a governance-safe pointer (do not leak existence through public docs).
+
+### Do we need DCAT/STAC/PROV for every dataset?
+DCAT is typically the “always” catalog surface; STAC/PROV are “as applicable” depending on asset types and pipeline complexity. The key requirement is that whatever you emit is **valid**, **cross-linked**, and **policy-safe**.
+
+[Back to top](#docsdata)
+
+---
+
+## Appendix: target layout
+<details>
+<summary>Expand: recommended directory layout (target contract)</summary>
+
+```text
+docs/data/
+├─ README.md
+├─ CONTRIBUTING.md
+├─ GLOSSARY.md
+│
+├─ _templates/
+│  ├─ manifest.yaml
+│  ├─ sources.yaml
+│  ├─ checks.yaml
+│  ├─ publish_receipt.json
+│  ├─ data_dictionary.md
+│  └─ lineage.mmd
+│
+├─ _schemas/
+│  ├─ manifest.schema.json
+│  ├─ sources.schema.json
+│  ├─ checks.schema.json
+│  ├─ receipt.schema.json
+│  └─ naming.schema.md
+│
+├─ governance/
+│  ├─ licenses.md
+│  ├─ sensitivity.md
+│  ├─ redaction.md
+│  ├─ retention.md
+│  └─ access.md
+│
+├─ promotion/
+│  ├─ gates.md
+│  ├─ checklists/
+│  └─ examples/
+│
+├─ registries/
+│  ├─ datasets.csv
+│  ├─ sources.csv
+│  ├─ owners.yaml
+│  ├─ tags.yaml
+│  └─ vocabulary/
+│
+├─ datasets/
+│  └─ <dataset_slug>/
+│     ├─ README.md
+│     ├─ manifest.yaml
+│     ├─ CHANGELOG.md
+│     ├─ schema/
+│     ├─ qa/
+│     ├─ provenance/
+│     ├─ catalog/
+│     ├─ receipts/
+│     └─ examples/
+│
+└─ samples/
+   ├─ README.md
+   └─ <dataset_slug>/
+      ├─ sample.csv
+      ├─ sample.geojson
+      └─ sample.md
+```
+
+</details>
+
+[Back to top](#docsdata)
