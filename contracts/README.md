@@ -1,0 +1,3 @@
+# Placeholder
+
+This directory is intentionally kept in version control.
