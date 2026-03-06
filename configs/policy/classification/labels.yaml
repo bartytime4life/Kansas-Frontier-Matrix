@@ -1,5 +1,0 @@
-labels:
-  - id: public
-    allow_publish: true
-  - id: restricted
-    allow_publish: false

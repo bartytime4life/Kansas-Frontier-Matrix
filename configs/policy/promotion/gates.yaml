@@ -1,2 +1,0 @@
-required_gates: [A, B, C, D, E, F]
-optional_gates: [G]

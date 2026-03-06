@@ -1,5 +1,0 @@
-permissions:
-  - role: viewer
-    allow: ["catalog.read"]
-  - role: steward
-    allow: ["catalog.read", "promotion.approve"]

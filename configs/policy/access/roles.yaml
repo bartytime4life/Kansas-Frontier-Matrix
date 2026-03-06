@@ -1,5 +1,0 @@
-roles:
-  - id: viewer
-    description: Read public datasets
-  - id: steward
-    description: Review restricted promotions

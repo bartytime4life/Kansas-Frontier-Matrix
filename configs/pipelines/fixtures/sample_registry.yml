@@ -1,3 +1,0 @@
-pipelines:
-  - id: ingest_storm_events
-    enabled: true

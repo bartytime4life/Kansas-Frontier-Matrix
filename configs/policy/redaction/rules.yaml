@@ -1,4 +1,0 @@
-rules:
-  - field: coordinates
-    action: generalize
-    precision_decimals: 2

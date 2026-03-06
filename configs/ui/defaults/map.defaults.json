@@ -1,9 +1,0 @@
-{
-  "$schema": "../schemas/map-defaults.v1.schema.json",
-  "initialView": {
-    "zoom": 4,
-    "center": [-98.5795, 39.8283]
-  },
-  "zoomBounds": {"min": 3, "max": 16},
-  "timeWindowDays": 30
-}
