@@ -4,64 +4,85 @@ title: Kansas Frontier Matrix (KFM) README
 type: standard
 version: v1
 status: draft
-owners: KFM Platform Engineering; TBD verify in CODEOWNERS
+owners: KFM Platform Engineering; exact ownership path verify in .github/CODEOWNERS on target branch
 created: 2026-03-06
 updated: 2026-03-06
 policy_label: public
-related: [docs/, contracts/, data/, apps/, packages/, policy/, infra/]
+related: [docs/, contracts/, data/, apps/, packages/, policy/, infra/, .github/]
 tags: [kfm, readme, governance, evidence, maps]
-notes: [Generated from uploaded KFM manuals and a live public repo snapshot; deeper repo state remains partially unverified.]
+notes: [Aligned to March 2026 KFM compendium/manual sources and the current public repo tree on main; deeper branch-specific implementation facts remain intentionally bounded as UNKNOWN until verified.]
 [/KFM_META_BLOCK_V2] -->
 
+<a id="top"></a>
+
 # Kansas Frontier Matrix (KFM)
-Evidence-first, map-first, time-aware infrastructure for turning governed Kansas data into traceable maps, timelines, Story Nodes, and Focus Mode answers.
+Evidence-first, map-first, time-aware infrastructure for turning governed frontier-era Kansas data into traceable maps, timelines, Story Nodes, and cite-or-abstain Focus Mode answers.
 
 <div align="center">
 
-[![status](https://img.shields.io/badge/status-draft-orange)](#impact)
-[![posture](https://img.shields.io/badge/posture-evidence--first-blue)](#evidence--governance)
-[![policy](https://img.shields.io/badge/policy-default--deny-red)](#evidence--governance)
-[![focus](https://img.shields.io/badge/focus-cite_or_abstain-purple)](#product-surfaces)
-[![docs](https://img.shields.io/badge/docs-production_surface-brightgreen)](#repository-guide)
+[![Status](https://img.shields.io/badge/status-draft-orange)](#impact)
+[![Posture](https://img.shields.io/badge/posture-evidence--first-blue)](#evidence--governance)
+[![Policy](https://img.shields.io/badge/policy-default--deny-red)](#evidence--governance)
+[![Focus](https://img.shields.io/badge/focus-cite_or_abstain-purple)](#product-surfaces)
+[![Docs](https://img.shields.io/badge/docs-production_surface-brightgreen)](#repository-guide)
 
 </div>
+
+## Quick jump
+
+- [Impact](#impact)
+- [Scope](#scope)
+- [Repo fit](#repo-fit)
+- [Accepted inputs](#accepted-inputs)
+- [Exclusions](#exclusions)
+- [Repository guide](#repository-guide)
+- [Quickstart](#quickstart)
+- [Architecture](#architecture)
+- [Evidence & governance](#evidence--governance)
+- [Product surfaces](#product-surfaces)
+- [Minimum honest MVP](#minimum-honest-mvp)
+- [Definition of done](#definition-of-done)
+- [FAQ](#faq)
+- [Appendix](#appendix)
 
 ## Impact
 
 | Field | Value |
 |---|---|
 | Status | draft |
-| Owners | KFM Platform Engineering; verify exact ownership in `CODEOWNERS` |
+| Owners | KFM Platform Engineering; verify exact ownership in `.github/CODEOWNERS` |
 | Policy label | public |
 | Repo path | `/README.md` |
-| Quick links | [Scope](#scope) · [Where it fits](#where-it-fits) · [Repository guide](#repository-guide) · [Quickstart](#quickstart) · [Architecture](#architecture) · [Minimum honest MVP](#minimum-honest-mvp) · [Definition of done](#definition-of-done) · [FAQ](#faq) |
+| Quick links | [Scope](#scope) · [Repo fit](#repo-fit) · [Repository guide](#repository-guide) · [Quickstart](#quickstart) · [Architecture](#architecture) · [Minimum honest MVP](#minimum-honest-mvp) · [Definition of done](#definition-of-done) · [FAQ](#faq) |
 
 ## Scope
 
 | Status | Statement |
 |---|---|
-| CONFIRMED | KFM is a governed measurement and narrative platform whose public promise is traceable evidence. |
-| CONFIRMED | KFM is map-first and time-aware, but it is not just a map viewer; it is also a narrative system, an evidence system, and a policy-enforced publication system. |
+| CONFIRMED | KFM is a governed measurement, narrative, and publication platform whose public promise is traceable evidence. |
+| CONFIRMED | KFM is map-first and time-aware, but it is not just a map viewer; it is also an evidence system, a narrative system, and a policy-enforced publication system. |
 | CONFIRMED | Public-facing AI in KFM is a downstream consumer of governed evidence, not an upstream source of truth. |
+| CONFIRMED | The default operational scope for v1 is frontier-era Kansas, with a practical default temporal window of **1854–1900**. |
+| PROPOSED | The safest default analytical grain for early delivery is **county-year**, with finer spatial or temporal grains introduced only when source fidelity requires them. |
 | PROPOSED | This root README should be the first-stop onboarding surface for contributors, reviewers, and operators. |
-| UNKNOWN | Branch-specific implementation coverage below the top-level tree must be verified before it is documented here as fact. |
+| UNKNOWN | Exact branch-specific implementation coverage below the verified top-level tree and `.github/` control plane must be checked before being documented here as current fact. |
 
-## Where it fits
+## Repo fit
 
 - **Path:** `/README.md`
 - **Upstream:** project governance and architecture manuals, issue and planning workflows, and repo metadata.
 - **Downstream:** directory READMEs and implementation docs under `.github/`, `apps/`, `contracts/`, `data/`, `docs/`, `packages/`, `policy/`, `infra/`, `tests/`, and `tools/`.
-- **Use this file for:** orientation, trust posture, repo navigation, and the smallest honest delivery target.
+- **Use this file for:** orientation, trust posture, default scope, repo navigation, and the smallest honest delivery target.
 - **Do not use this file for:** authoritative API schemas, dataset manifests, policy bundles, runbooks, or generated receipts.
 
-## Acceptable inputs
+## Accepted inputs
 
 This file may contain:
 
 - high-level purpose and project posture
 - repo-wide navigation and directory responsibilities
-- MVP framing and release gates
-- contributor routing and verification steps
+- scope and MVP framing
+- release gates and contributor routing
 - links to deeper docs and contracts
 
 ## Exclusions
@@ -106,22 +127,43 @@ repo/
 └── SECURITY.md
 ```
 
+### Current `.github/` control plane snapshot
+
+**CONFIRMED on the public `main` branch at time of drafting:**
+
+```text
+.github/
+├── DISCUSSION_TEMPLATE/
+├── ISSUE_TEMPLATE/
+├── PULL_REQUEST_TEMPLATE/
+├── actions/
+├── workflows/
+├── CODEOWNERS
+├── CODE_OF_CONDUCT.md
+├── PULL_REQUEST_TEMPLATE.md
+├── README.md
+├── SUPPORT.md
+├── dependabot.yml
+├── labeler.yml
+└── required-checks.v1.json
+```
+
 ### Directory responsibilities
 
 | Path | Status | Intended contents |
 |---|---|---|
-| `.github/` | CONFIRMED path / PROPOSED role | GitHub-side automation, contribution controls, workflow entrypoints, and merge gates. |
-| `apps/` | CONFIRMED path / PROPOSED role | Runnable services such as API, UI, workers, and CLI entrypoints. |
+| `.github/` | CONFIRMED path / PARTIALLY CONFIRMED contents | GitHub-side automation, templates, ownership routing, required-check manifests, and workflow entrypoints. Exact branch protections and rulesets still require out-of-repo verification. |
+| `apps/` | CONFIRMED path / PROPOSED role | Runnable services such as governed API, UI, workers, and CLI entrypoints. |
 | `configs/` | CONFIRMED path / PROPOSED role | Configuration templates for environments, pipelines, deployments, and UI settings. |
 | `contracts/` | CONFIRMED path / PROPOSED role | Public contracts: OpenAPI definitions, schemas, vocabularies, and interface-level guarantees. |
-| `data/` | CONFIRMED path / CONFIRMED role | Zone-oriented data surfaces for raw, work, processed, catalog, and registry material. |
+| `data/` | CONFIRMED path / CONFIRMED role | Zone-oriented data surfaces for raw, work, processed, catalog, registry, and receipt material. |
 | `docs/` | CONFIRMED path / PROPOSED role | Governance docs, architecture notes, ADRs, runbooks, and user guidance. |
 | `examples/` | CONFIRMED path / PROPOSED role | Sample datasets, stories, policies, and tutorial fixtures. |
 | `infra/` | CONFIRMED path / PROPOSED role | Deployment infrastructure such as Terraform, Kubernetes, GitOps, and monitoring. |
 | `migrations/` | CONFIRMED path / PROPOSED role | Schema and storage migration scripts. |
 | `packages/` | CONFIRMED path / PROPOSED role | Shared internal libraries such as ingest, catalog, evidence, tiles, and policy helpers. |
 | `policy/` | CONFIRMED path / CONFIRMED role | Policy-as-code and fixtures used to enforce the trust membrane. |
-| `schemas/` | CONFIRMED path / UNKNOWN role | Exists on the live repo, but its relationship to `contracts/schemas/` should be verified before documentation is tightened. |
+| `schemas/` | CONFIRMED path / UNKNOWN role | Exists on the public repo, but its exact relationship to `contracts/` and other schema surfaces should be verified before this README narrows it further. |
 | `scripts/` | CONFIRMED path / PROPOSED role | Build, release, promotion, and maintenance scripts. |
 | `tests/` | CONFIRMED path / PROPOSED role | Unit, integration, e2e, policy, and data-pipeline verification suites. |
 | `tools/` | CONFIRMED path / PROPOSED role | Validators, linters, hashers, catalog helpers, and other support utilities. |
@@ -130,6 +172,7 @@ repo/
 
 | Topic | Best home | Why |
 |---|---|---|
+| GitHub-side contribution control | `.github/` | Keeps ownership, templates, required checks, and workflow wiring separate from runtime code. |
 | API shape | `contracts/` | Keeps public contracts stable and inspectable. |
 | Runtime services | `apps/` | Keeps deployment entrypoints separate from shared logic. |
 | Shared domain logic | `packages/` | Prevents UI or API code from owning business rules directly. |
@@ -138,7 +181,7 @@ repo/
 | Policy enforcement | `policy/` | Makes authorization and redaction explicit, testable, and reviewable. |
 | Deployment definitions | `infra/` | Isolates runtime infrastructure from application code. |
 
-[Back to top](#kansas-frontier-matrix-kfm)
+[Back to top](#top)
 
 ## Quickstart
 
@@ -160,45 +203,53 @@ find contracts -maxdepth 3 -type f | sort || true
 find policy -maxdepth 3 -type f | sort || true
 find data -maxdepth 3 -type d | sort || true
 find tests -maxdepth 3 -type f | sort || true
+grep -RIn "^name:" .github/workflows || true
+grep -RIn "^[[:space:]]*permissions:" .github/workflows || true
+grep -RIn "concurrency:|timeout-minutes:|workflow_call:" .github/workflows || true
 ```
 
 ### Three questions to answer before calling anything “done”
 
 1. Which checks are actually merge-blocking on the target branch?
 2. Which dataset can complete the full truth path end to end?
-3. Which API route resolves evidence for Map Explorer, Story publishing, and Focus Mode?
+3. Which evidence path resolves in Map Explorer, Story publication, and Focus Mode on the target branch?
 
 ### Minimal contributor path
 
 ```bash
-# pseudocode: adapt to the actual toolchain after repo verification
-# 1) install dependencies
-# 2) run validators and tests
-# 3) run API and UI locally
-# 4) verify evidence resolution before claiming success
-
-# examples only
-make validate
+# illustrative only; adapt after branch verification
+make bootstrap
+make validate-schemas
 make test
-make dev
+make dev-up
+make sample-ingest SOURCE=example_fixture
+make catalog-validate
 ```
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    A[Upstream sources\narchives · geospatial baselayers · sensors · regulations · imagery · text] --> B[RAW]
+    A[Upstream sources<br/>archives · geospatial baselayers · sensors · regulations · imagery · text] --> B[RAW]
     B --> C[WORK / QUARANTINE]
     C --> D[PROCESSED]
-    D --> E[Catalog boundary\nDCAT · STAC · PROV]
-    E --> F[Governed API / PEP\npolicy-as-code · evidence resolver · audit]
+    D --> E[Catalog boundary<br/>DCAT · STAC · PROV]
+    E --> F[Governed API / PEP<br/>policy-as-code · evidence resolver · audit]
     F --> G[Map Explorer]
-    F --> H[Story Nodes]
+    F --> H[Story Nodes / Story Editor]
     F --> I[Focus Mode]
     G --> J[Evidence Drawer]
     H --> J
     I --> J
 ```
+
+### Default operating scope
+
+| Status | Scope statement |
+|---|---|
+| CONFIRMED | Default operational window: **1854–1900**. |
+| PROPOSED | Primary analysis grain: **county-year**. |
+| PROPOSED | Higher-resolution geometry, shorter time slices, and non-frontier temporal expansions should be introduced only when sources, licensing, and validation support them. |
 
 ### System posture
 
@@ -208,7 +259,8 @@ flowchart LR
 | CONFIRMED | The public must never talk directly to raw or operational stores; the trust membrane is architecture, not a suggestion. |
 | CONFIRMED | Map Explorer answers **where**, timeline controls answer **when**, Story surfaces explain **why**, and the Evidence Drawer answers **what a claim rests on**. |
 | CONFIRMED | Focus Mode must synthesize from admissible evidence and either return a cited answer with an audit reference or abstain. |
-| PROPOSED | The cleanest implementation split is domain → use cases → interfaces → infrastructure, with policy and provenance enforced at the governed API boundary. |
+| PROPOSED | A practical baseline stack is object storage for RAW/PROCESSED/receipts, PostgreSQL + PostGIS for canonical facts and joins, a governed API layer such as FastAPI, a TypeScript/React web client with MapLibre, and orchestration with Airflow or Prefect. |
+| PROPOSED | The cleanest implementation split remains domain → use cases → interfaces → infrastructure, with policy and provenance enforced at the governed API boundary. |
 
 ## Evidence & governance
 
@@ -232,27 +284,30 @@ flowchart LR
 
 ### Governed API expectations
 
-| Endpoint family | Status | Minimum expectation |
-|---|---|---|
-| `/api/v1/evidence/resolve` | CONFIRMED concept | Resolve `EvidenceRef` to `EvidenceBundle` with policy and redaction obligations applied. |
-| `/api/v1/datasets` | CONFIRMED concept | Discover datasets and versions with policy filtering. |
-| `/api/v1/stac/*` | CONFIRMED concept | Browse imagery/assets through STAC surfaces linked to DCAT and PROV. |
-| `/api/v1/story` | CONFIRMED concept | Read/publish Story Nodes only when citations resolve and review state is captured. |
-| `/api/v1/focus/ask` | CONFIRMED concept | Return a cited answer plus `audit_ref`, or abstain. |
+> **IMPORTANT:** The concepts below are source-backed; exact current route names on the target branch should be verified before they are documented here as branch fact.
 
-[Back to top](#kansas-frontier-matrix-kfm)
+| Contract family | Status | Minimum expectation |
+|---|---|---|
+| Evidence resolution | CONFIRMED concept / UNKNOWN exact current route | Resolve `EvidenceRef` to `EvidenceBundle` with policy and redaction obligations applied. |
+| Dataset and catalog discovery | CONFIRMED concept / UNKNOWN exact current route | Discover datasets and versions with policy filtering across DCAT/STAC/PROV surfaces. |
+| Observations / canonical facts | CONFIRMED concept / UNKNOWN exact current route | Return queryable facts filtered by metric, place, and time, while preserving evidence references. |
+| Map delivery | CONFIRMED concept / UNKNOWN exact current route | Serve map rendering assets without bypassing policy-labeled publication controls. |
+| Story draft / publish | CONFIRMED concept / UNKNOWN exact current route | Read and publish Story Nodes only when citations resolve and review state is captured. |
+| Focus ask | CONFIRMED concept / SNAPSHOT-VERIFIED example path | Return `answer + citations + audit_ref`, or abstain. |
+
+[Back to top](#top)
 
 ## Product surfaces
 
 | Surface | Status | What it must do |
 |---|---|---|
-| Map Explorer | CONFIRMED concept | Layer toggles, legends, time filters, feature inspection, and evidence launch points. |
-| Timeline | CONFIRMED concept | Chronology control and change-over-time navigation. |
-| Evidence Drawer | CONFIRMED model / PROPOSED packaging | Show source basis, dataset version, rights posture, lineage, checksums, policy label, and safe previews. |
-| Story Editor / Reader | CONFIRMED concept / PROPOSED productization | Narrative authoring with citations, map embeds, review states, and publication gating. |
+| Map Explorer | CONFIRMED concept / PROPOSED packaging | Layer toggles, legends, time filters, feature inspection, and evidence launch points. |
+| Timeline / time controls | CONFIRMED concept / PROPOSED packaging | Chronology control and change-over-time navigation. |
+| Evidence Drawer | CONFIRMED concept / PROPOSED packaging | Show source basis, dataset version, rights posture, lineage, checksums, validation status, redactions, and safe previews. |
+| Story Editor / Story Nodes | CONFIRMED concept / PROPOSED packaging | Narrative authoring and reading with citations, map embeds, review states, and publication gating. |
 | Focus Mode | CONFIRMED concept / PROPOSED serving stack | Cited-or-abstaining answers with uncertainty framing, evidence links, and `audit_ref`. |
-| Review Console | PROPOSED | Promotion approval, policy assignment, QA inspection, and correction workflow. |
-| 3D Story Node | PROPOSED optional extension | Temporary 2D→3D narrative shift without creating an uncontrolled second trust surface. |
+| Review Console | PROPOSED but necessary | Promotion approval, policy assignment, QA inspection, and correction workflow. |
+| 3D Story Node | Advanced PROPOSED extension | Temporary 2D→3D narrative shift without creating an uncontrolled second trust surface. |
 
 ### Accessibility
 
@@ -279,7 +334,7 @@ If the repo cannot do those five things, it is not ready to claim the architectu
 |---|---|---|
 | Trust foundation | PROPOSED | Lock schemas, spec-hash rules, receipts, promotion gates, one or two anchor domains, and minimal STAC/DCAT/PROV generation. |
 | Discover & view | PROPOSED | Stand up catalog discovery, Map Explorer, layer delivery, and evidence inspection. |
-| Publish & explain | PROPOSED | Ship story publishing, Focus Mode MVP, and the evaluation harness that enforces cite-or-abstain. |
+| Publish & explain | PROPOSED | Ship Story publishing, Focus Mode MVP, and the evaluation harness that enforces cite-or-abstain. |
 
 ## Definition of done
 
@@ -294,14 +349,14 @@ Use this as the minimum repo-wide gate for claiming an evidence-native release.
 - [ ] Core UX flows pass accessibility review and automated tests.
 - [ ] Runbooks exist for source failure, failed promotion, rollback, and backup restore.
 
-## Repository change rules
+## Task list
 
-1. Keep gates fail-closed.
-2. Keep permissions narrow.
-3. Update docs when behavior changes.
-4. Preserve separation of duty.
-5. Prefer small, reversible edits.
-6. Never bypass policy, provenance, or evidence resolution for convenience.
+- [ ] Verify `CODEOWNERS` and replace placeholder owner language with exact repo truth.
+- [ ] Verify live workflow names and required checks from `.github/workflows/` and rulesets.
+- [ ] Verify exact route names before documenting API paths as CONFIRMED branch fact.
+- [ ] Verify whether `schemas/` complements or overlaps `contracts/`.
+- [ ] Verify one end-to-end dataset through the full truth path.
+- [ ] Verify one Focus Mode evidence-backed request path.
 
 ## FAQ
 
@@ -309,13 +364,21 @@ Use this as the minimum repo-wide gate for claiming an evidence-native release.
 
 No. **CONFIRMED:** it is a governed measurement, narrative, evidence, and publication system with map-first and time-aware interaction.
 
+### What is KFM’s default temporal scope?
+
+**CONFIRMED:** the default operational window for v1 is **1854–1900**, with explicit alternative scopes used only when stated in dataset or story metadata.
+
 ### Can Focus Mode answer from its own model knowledge?
 
 No. **CONFIRMED:** Focus Mode is a downstream consumer of governed evidence and must cite or abstain.
 
+### Are the exact API routes and workflow gates in this README guaranteed to match the target branch?
+
+No. **CONFIRMED:** the concepts are stable. **UNKNOWN:** exact branch-specific route names, required checks, rulesets, and environment protections still need direct verification before they should be documented as live implementation fact.
+
 ### Are all directory roles in this README verified on the live branch?
 
-No. **CONFIRMED:** the top-level paths are verified on the public `main` branch. **UNKNOWN:** deeper branch-specific contents and some directory responsibilities still need repo inspection before they should be documented as fact.
+No. **CONFIRMED:** the top-level tree and the `.github/` control-plane snapshot are verified on the public `main` branch. **UNKNOWN:** deeper branch-specific contents and some directory responsibilities still need repo inspection before they should be documented as fact.
 
 ### Why is the Evidence Drawer treated as a first-class product feature?
 
@@ -330,23 +393,22 @@ Because **CONFIRMED** KFM turns provenance into an inspectable interface rather 
 
 This README is grounded in:
 
-- the March 2026 KFM compendium and build manuals for posture, invariants, surfaces, and release boundaries
+- the March 2026 KFM compendium and build manuals for posture, invariants, scope, surfaces, and release boundaries
 - the February 2026 data integration blueprint for clean-layer architecture, trust membrane mechanics, and promotion gates
-- the current public GitHub repository view for the top-level directory tree on `main`
+- the March 2026 public GitHub repository tree on `main`, including the current `.github/` control-plane snapshot
 
 ### Unknowns to verify before tightening this README
 
-- exact branch-specific contents of each top-level directory
-- workflow names and required checks under `.github/`
-- whether `schemas/` duplicates or complements `contracts/schemas/`
-- which API routes are already implemented versus still planned
+- exact branch-specific contents of `apps/`, `packages/`, `contracts/`, `data/`, and `tests/`
+- workflow names and which checks under `.github/workflows/` are actually merge-blocking
+- whether `schemas/` duplicates, complements, or supersedes specific `contracts/` schema surfaces on the target branch
+- exact API route names already implemented versus still proposed
 - which datasets already complete the full truth path end to end
-- which tests are merge-blocking versus informational
+- whether the current repo README strategy is root-level, directory-level, or both on the target branch
 
 ### Suggested next verification commands
 
 ```bash
-# verification commands
 find . -maxdepth 2 -type d | sort
 find .github -maxdepth 3 -type f | sort
 find apps -maxdepth 3 -type f | sort | head -n 100
@@ -357,3 +419,5 @@ find tests -maxdepth 4 | sort | head -n 200
 ```
 
 </details>
+
+[Back to top](#top)
