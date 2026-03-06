@@ -1,6 +1,0 @@
-{
-  "decision_id": "pd-2026-02-20-publish",
-  "result": "allow",
-  "policy_label": "public",
-  "obligations": ["attach_provenance", "record_checksums"]
-}
