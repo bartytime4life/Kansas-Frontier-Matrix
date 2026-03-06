@@ -1,3 +1,0 @@
-# Routine Health Checks
-
-TBD.

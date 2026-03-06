@@ -1,3 +1,0 @@
-# External Standards Index
-
-TODO

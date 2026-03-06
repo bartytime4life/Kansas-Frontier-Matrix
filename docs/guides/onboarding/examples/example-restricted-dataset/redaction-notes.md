@@ -1,3 +1,0 @@
-# Redaction Notes
-
-TBD.

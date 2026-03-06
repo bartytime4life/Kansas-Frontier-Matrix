@@ -1,3 +1,0 @@
-# Citation Integrity Checklist
-
-TBD.

@@ -1,3 +1,0 @@
-# KFM Fixture Conventions
-
-TODO

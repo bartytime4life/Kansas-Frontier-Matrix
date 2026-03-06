@@ -1,3 +1,0 @@
-# Raster Pipeline
-
-TBD.

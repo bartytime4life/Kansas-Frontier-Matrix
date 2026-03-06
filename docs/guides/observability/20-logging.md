@@ -1,3 +1,0 @@
-# 20 Logging
-
-TBD.

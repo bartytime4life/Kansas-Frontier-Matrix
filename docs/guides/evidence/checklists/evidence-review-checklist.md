@@ -1,3 +1,0 @@
-# Evidence Review Checklist
-
-TBD.

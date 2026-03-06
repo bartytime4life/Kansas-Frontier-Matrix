@@ -1,3 +1,0 @@
-# Severity Levels
-
-TBD.

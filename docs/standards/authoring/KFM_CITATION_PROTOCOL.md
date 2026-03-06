@@ -1,3 +1,0 @@
-# KFM Citation Protocol
-
-TODO

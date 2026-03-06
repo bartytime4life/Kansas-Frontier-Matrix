@@ -1,3 +1,0 @@
-# Policy Decision Record
-
-TBD.

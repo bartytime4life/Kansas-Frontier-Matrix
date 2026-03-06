@@ -1,3 +1,0 @@
-# Checklist Template
-
-TBD.

@@ -1,3 +1,0 @@
-# Api Authz Failures
-
-TBD.

@@ -1,3 +1,0 @@
-# Stac Profile
-
-TBD.

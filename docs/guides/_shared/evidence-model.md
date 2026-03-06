@@ -1,3 +1,0 @@
-# Evidence Model
-
-TBD.

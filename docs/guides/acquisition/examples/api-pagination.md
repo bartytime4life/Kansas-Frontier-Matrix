@@ -1,3 +1,0 @@
-# Api Pagination
-
-TBD.

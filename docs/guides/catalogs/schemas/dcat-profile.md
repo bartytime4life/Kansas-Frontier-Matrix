@@ -1,3 +1,0 @@
-# Dcat Profile
-
-TBD.

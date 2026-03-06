@@ -1,3 +1,0 @@
-# Upstream Terms Snapshot
-
-TBD.

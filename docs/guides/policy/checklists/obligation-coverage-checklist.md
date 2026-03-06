@@ -1,3 +1,0 @@
-# Obligation Coverage Checklist
-
-TBD.

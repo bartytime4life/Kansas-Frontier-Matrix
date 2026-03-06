@@ -1,3 +1,0 @@
-# Corrupted Index Response
-
-TBD.

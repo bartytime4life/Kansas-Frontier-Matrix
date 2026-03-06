@@ -1,3 +1,0 @@
-# STAC Conformance
-
-TODO

@@ -1,3 +1,0 @@
-# Vector Pipeline
-
-TBD.

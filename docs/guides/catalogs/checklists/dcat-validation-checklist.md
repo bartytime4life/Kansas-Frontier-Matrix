@@ -1,3 +1,0 @@
-# Dcat Validation Checklist
-
-TBD.

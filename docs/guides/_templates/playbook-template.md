@@ -1,3 +1,0 @@
-# Playbook Template
-
-TBD.

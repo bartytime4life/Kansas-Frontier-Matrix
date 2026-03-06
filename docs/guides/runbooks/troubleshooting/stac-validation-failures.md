@@ -1,3 +1,0 @@
-# Stac Validation Failures
-
-TBD.

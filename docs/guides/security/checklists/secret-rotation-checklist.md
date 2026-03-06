@@ -1,3 +1,0 @@
-# Secret Rotation Checklist
-
-TBD.

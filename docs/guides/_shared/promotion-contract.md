@@ -1,3 +1,0 @@
-# Promotion Contract
-
-TBD.

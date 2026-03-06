@@ -1,3 +1,0 @@
-# Cypher Snippets
-
-TBD.

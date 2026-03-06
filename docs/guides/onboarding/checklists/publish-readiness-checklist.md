@@ -1,3 +1,0 @@
-# Publish Readiness Checklist
-
-TBD.

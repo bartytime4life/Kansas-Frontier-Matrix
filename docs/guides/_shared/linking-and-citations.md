@@ -1,3 +1,0 @@
-# Linking And Citations
-
-TBD.

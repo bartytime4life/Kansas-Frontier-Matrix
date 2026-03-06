@@ -1,3 +1,0 @@
-# Stac Apis
-
-TBD.

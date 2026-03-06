@@ -1,3 +1,0 @@
-# Degraded Performance
-
-TBD.

@@ -1,3 +1,0 @@
-# Migration Note Template
-
-TBD.

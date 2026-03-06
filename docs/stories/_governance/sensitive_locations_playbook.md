@@ -1,1 +1,0 @@
-# Sensitive Locations Playbook

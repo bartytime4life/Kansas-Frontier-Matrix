@@ -1,3 +1,0 @@
-# Dataset Release Checklist
-
-TBD.

@@ -1,3 +1,0 @@
-# Release Approval Checklist
-
-TBD.

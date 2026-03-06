@@ -1,5 +1,0 @@
-@startuml
-component Client
-component API
-Client --> API
-@enduml

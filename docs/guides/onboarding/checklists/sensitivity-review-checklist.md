@@ -1,3 +1,0 @@
-# Sensitivity Review Checklist
-
-TBD.

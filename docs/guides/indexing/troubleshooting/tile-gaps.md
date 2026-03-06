@@ -1,3 +1,0 @@
-# Tile Gaps
-
-TBD.

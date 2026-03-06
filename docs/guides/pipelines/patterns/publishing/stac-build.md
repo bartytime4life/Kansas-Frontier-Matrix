@@ -1,3 +1,0 @@
-# Stac Build
-
-TBD.

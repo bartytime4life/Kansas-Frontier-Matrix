@@ -1,1 +1,0 @@
-# src/architecture/data-architecture

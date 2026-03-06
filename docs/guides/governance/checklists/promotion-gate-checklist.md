@@ -1,3 +1,0 @@
-# Promotion Gate Checklist
-
-TBD.

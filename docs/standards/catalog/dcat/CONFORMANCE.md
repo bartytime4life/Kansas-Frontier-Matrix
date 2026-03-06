@@ -1,3 +1,0 @@
-# DCAT Conformance
-
-TODO

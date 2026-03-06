@@ -1,3 +1,0 @@
-# Corrupted Index
-
-TBD.

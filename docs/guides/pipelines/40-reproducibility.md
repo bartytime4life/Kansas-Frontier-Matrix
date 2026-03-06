@@ -1,3 +1,0 @@
-# 40 Reproducibility
-
-TBD.

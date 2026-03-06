@@ -1,3 +1,0 @@
-# Receipt.Fields
-
-TBD.

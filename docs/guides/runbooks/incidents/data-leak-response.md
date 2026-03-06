@@ -1,3 +1,0 @@
-# Data Leak Response
-
-TBD.

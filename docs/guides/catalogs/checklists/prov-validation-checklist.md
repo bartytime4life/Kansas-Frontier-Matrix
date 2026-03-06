@@ -1,3 +1,0 @@
-# Prov Validation Checklist
-
-TBD.

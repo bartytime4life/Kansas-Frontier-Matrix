@@ -1,3 +1,0 @@
-# Dataset Intake Checklist
-
-TBD.

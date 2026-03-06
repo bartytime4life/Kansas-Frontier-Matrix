@@ -1,3 +1,0 @@
-# KFM Linking Standard
-
-TODO

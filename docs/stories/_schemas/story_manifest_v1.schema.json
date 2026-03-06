@@ -1,6 +1,0 @@
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "story_manifest_v1.schema.json",
-  "description": "Placeholder schema scaffold.",
-  "type": "object"
-}
