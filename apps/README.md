@@ -9,14 +9,14 @@ created: 2026-03-06
 updated: 2026-03-07
 policy_label: public
 related: [../README.md, ./api/README.md, ./ui/README.md, ./workers/README.md, ../packages/, ../contracts/, ../schemas/, ../policy/, ../data/, ../docs/]
-tags: [kfm, apps, runtime, api, ui, workers, evidence, governance]
-notes: [Top-level runtime-app contract aligned to the KFM manuals and attached product-surface design material. Current-branch implementation claims remain UNKNOWN unless proven by supplied artifacts or branch-local verification.]
+tags: [kfm, apps, runtime, api, ui, workers, evidence, governance, timeline, scenario, education]
+notes: [Top-level runtime-app contract aligned to the KFM manuals, system specification, educational product-surface design, temporal-window design material, and retained domain-vertical planning patterns. Active-branch implementation claims remain UNKNOWN unless proven by supplied artifacts or branch-local verification.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
 
 # apps/ — Runtime apps and user-facing services
-Governed runtime surfaces for KFM: deployable API, UI, and worker apps that deliver map, story, focus, evidence, and domain workflows without bypassing policy, provenance, or promotion gates.
+Governed runtime surfaces for KFM: deployable API, UI, and worker apps that deliver map, story, focus, evidence, time-window, and domain workflows without bypassing policy, provenance, or promotion gates.
 
 **Status:** `draft`  
 **Owners:** `TBD (verify ../.github/CODEOWNERS)`  
@@ -28,7 +28,7 @@ Governed runtime surfaces for KFM: deployable API, UI, and worker apps that deli
 ![Docs](https://img.shields.io/badge/docs-production--surface-purple)
 ![CI](https://img.shields.io/badge/ci-verify-lightgrey)
 
-**Quick links:** [Purpose and scope](#purpose-and-scope) · [Repo fit](#repo-fit) · [Truth status legend](#truth-status-legend) · [Runtime portfolio model](#runtime-portfolio-model) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Current app surfaces](#current-app-surfaces) · [Cross-app operating model](#cross-app-operating-model) · [Runtime invariants](#runtime-invariants) · [Suggested app metadata contract](#suggested-app-metadata-contract-proposed) · [Growth lanes](#runtime-growth-lanes-proposed) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix-open-verification-steps)
+**Quick links:** [Purpose and scope](#purpose-and-scope) · [Repo fit](#repo-fit) · [Truth status legend](#truth-status-legend) · [Runtime portfolio model](#runtime-portfolio-model) · [Documented target stack](#documented-target-stack-vs-active-branch-reality) · [Temporal windows](#temporal-windows-and-time-navigation) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Current app surfaces](#current-app-surfaces) · [Cross-app operating model](#cross-app-operating-model) · [Runtime operating expectations](#runtime-operating-expectations) · [Runtime invariants](#runtime-invariants) · [Suggested app metadata contract](#suggested-app-metadata-contract-proposed) · [Growth lanes](#runtime-growth-lanes-proposed) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix-open-verification-steps)
 
 ---
 
@@ -40,7 +40,7 @@ This README exists to define:
 
 - what belongs in `apps/`
 - what does **not** belong in `apps/`
-- which runtime surfaces are grounded in the KFM manuals
+- which runtime surfaces are grounded in the supplied KFM design corpus
 - which directory paths are present in the supplied snapshot
 - which implementation details remain `UNKNOWN`
 - what every app under this directory must preserve as part of the KFM trust model
@@ -55,13 +55,25 @@ KFM’s runtime should feel like **one governed product**, not a pile of adjacen
   - [`./api/README.md`](./api/README.md)
   - [`./ui/README.md`](./ui/README.md)
   - [`./workers/README.md`](./workers/README.md)
-- The uploaded KFM manuals describe a public-facing runtime made of a **Map Explorer**, **Story Editor / Story Nodes**, **Focus Mode**, and an **Evidence Drawer** that keeps evidence inspectable and first-class.
+- The supplied KFM design corpus describes a public-facing runtime centered on:
+  - a map + timeline experience
+  - story / narrative authoring and retrieval
+  - an Evidence Drawer / evidence-resolution surface
+  - a governed Focus Mode assistant
+- The supplied educational design extends that runtime vocabulary with four learning workspaces:
+  - Explore
+  - Explain / Story Studio
+  - Speculate / Scenario Lab
+  - Teach / Assess / Classroom Hub
+- The supplied temporal-window designs add two time-aware runtime patterns:
+  - a **deep-history to 1854** “fixed window / changing layers” approach
+  - a **1901–future** observed + scenario timeline with explicit uncertainty separation
 
 ### PROPOSED
 
 - This top-level README should be the **directory contract** for all runtime apps, so child READMEs can go deeper without repeating repo-level rules.
-- Domain verticals such as **Cities & Infrastructure** should be added as governed modules within existing runtime surfaces, not as side-door dashboards or parallel stacks.
-- Worker runtimes should be explicit about export generation, provenance snapshots, refresh jobs, and hybrid ingestion without becoming shadow publication paths.
+- Domain verticals such as **Cities & Infrastructure**, educational surfaces, and scenario/compare workflows should be added as governed modules within existing runtime surfaces, not as side-door dashboards or parallel stacks.
+- Worker runtimes should be explicit about export generation, provenance snapshots, refresh jobs, lesson-bundle packaging, scenario runs, and hybrid ingestion without becoming shadow publication paths.
 
 ### UNKNOWN
 
@@ -105,6 +117,8 @@ Runtime convenience must never outrun:
 - the evidence contract
 - policy-safe failure behavior
 - promotion discipline
+- observed vs projected separation
+- privacy and accessibility expectations when educational surfaces are involved
 
 [Back to top](#top)
 
@@ -116,14 +130,19 @@ This README uses explicit truth labels.
 
 | Label | Meaning in this file |
 |---|---|
-| **CONFIRMED** | Supported by the supplied artifact or uploaded KFM/source documents. |
+| **CONFIRMED** | Supported by the supplied artifact or attached KFM/source documents. |
 | **PROPOSED** | Recommended structure or rule that fits KFM’s documented architecture. |
 | **UNKNOWN** | Not yet verified on the active branch; do not treat as branch fact. |
 
 ### Operating rule
 
-Visible uncertainty is better than false certainty.  
-If a runtime detail is not verified, leave it `UNKNOWN` and add the smallest verification step.
+Visible uncertainty is better than false certainty.
+
+A detail can be:
+- **CONFIRMED as documented design posture**
+- while still remaining **UNKNOWN as active-branch implementation**
+
+If a runtime detail is not verified on the active branch, leave it `UNKNOWN` and add the smallest verification step.
 
 [Back to top](#top)
 
@@ -133,24 +152,26 @@ If a runtime detail is not verified, leave it `UNKNOWN` and add the smallest ver
 
 KFM’s runtime portfolio should be understood as a **coordinated product surface**, not merely as three sibling folders.
 
-### Baseline product surfaces from the KFM manuals
+### Baseline product surfaces from the supplied KFM design corpus
 
-| Runtime surface | Product posture | Likely host apps | Branch reality in this README |
+| Runtime surface | Design status | Likely host apps | Branch reality in this README |
 |---|---|---|---|
-| **Map Explorer** | **CONFIRMED** in KFM docs | `ui` + `api` | Exact implementation remains `UNKNOWN` until verified locally. |
-| **Story Editor / Story Nodes** | **CONFIRMED** in KFM docs | `ui` + `api` | Exact implementation remains `UNKNOWN` until verified locally. |
-| **Evidence Drawer** | **CONFIRMED** in KFM docs | `ui` + `api` | Exact implementation remains `UNKNOWN` until verified locally. |
-| **Focus Mode** | **CONFIRMED** in KFM docs | `ui` + `api` (+ async worker support if needed) | Exact implementation remains `UNKNOWN` until verified locally. |
+| **Map Explorer / map + timeline** | **CONFIRMED** in supplied KFM docs | `ui` + `api` | Exact implementation remains `UNKNOWN` until verified locally. |
+| **Story Editor / Story Nodes** | **CONFIRMED** in supplied KFM docs | `ui` + `api` | Exact implementation remains `UNKNOWN` until verified locally. |
+| **Evidence Drawer / evidence inspection** | **CONFIRMED** in supplied KFM docs | `ui` + `api` | Exact implementation remains `UNKNOWN` until verified locally. |
+| **Focus Mode** | **CONFIRMED** in supplied KFM docs | `ui` + `api` (+ async worker support if needed) | Exact implementation remains `UNKNOWN` until verified locally. |
 
-### Proposed runtime growth inside the same boundary
+### Runtime extensions that fit the same governed boundary
 
-| Runtime capability | Status | Likely host apps | Why it belongs here |
+| Runtime capability | Design status | Likely host apps | Why it belongs here |
 |---|---|---|---|
 | **Cities & Infrastructure** domain vertical | **PROPOSED** | `ui` + `api` + `workers` | It is a KFM domain vertical, not a separate bypass product. |
-| Exportable briefs and provenance snapshots | **PROPOSED** | `api` + `workers` | Shareable outputs still need audit refs and policy enforcement. |
+| **Educational Explore / Explain / Speculate / Teach** | **PROPOSED** runtime lane, grounded in supplied design material | `ui` + `api` + `workers` | It extends existing map, story, evidence, and scenario patterns. |
+| Exportable briefs, run receipts, and provenance snapshots | **PROPOSED** | `api` + `workers` | Shareable outputs still need audit refs and policy enforcement. |
 | Policy-gated restricted layers | **PROPOSED** | `api` + `ui` + `workers` | Sensitive data handling belongs inside the same governed runtime. |
-| Focus-domain assistants (for example, city briefings) | **PROPOSED** | `api` + `ui` | Constrained retrieval and cite-or-abstain behavior stay inside the trust membrane. |
-| Scenario / comparison workflows | **PROPOSED** | `api` + `workers` + `ui` | Later modeling should still stay evidence-linked and policy-aware. |
+| Focus-domain assistants (for example, city or curriculum briefings) | **PROPOSED** | `api` + `ui` | Constrained retrieval and cite-or-abstain behavior stay inside the trust membrane. |
+| Scenario / compare workflows | **PROPOSED** | `api` + `workers` + `ui` | Modeling should remain evidence-linked and policy-aware. |
+| Deep-history and future temporal windows | **PROPOSED** runtime lanes, grounded in supplied design material | `ui` + `api` + `workers` | Time handling is a core runtime concern, not a side file format concern. |
 
 ### Runtime composition rule
 
@@ -169,6 +190,73 @@ They should **not** normally appear as:
 
 ---
 
+## Documented target stack vs active-branch reality
+
+The supplied design corpus is specific about KFM’s intended runtime shape. That design posture is useful for this README, but it does **not** automatically prove the current branch implements every detail below.
+
+| Surface | Documented target design | Active-branch reality in this README |
+|---|---|---|
+| **UI** | React + TypeScript, interactive map/timeline, Evidence Drawer, Focus chat, MapLibre for 2D maps, optional Cesium for 3D | **UNKNOWN** until the branch proves framework, routes, and actual components. |
+| **API** | FastAPI-based governed API with REST and optional GraphQL, authentication, authorization, rate limiting, request validation, evidence resolution, story and Focus endpoints | **UNKNOWN** until the branch proves framework, endpoint set, and deployment shape. |
+| **Workers / analytics** | ETL, NLP, model-training, export, indexing, refresh, and other scheduled/on-demand services that emit run receipts | **UNKNOWN** until the branch proves runtime and orchestration details. |
+| **Local development profile** | Docker Compose or Kubernetes; Postgres/PostGIS, optional Neo4j, local object store, React frontend, FastAPI backend, local policy engine, local model server | **UNKNOWN** until local manifests and docs confirm it. |
+| **Runtime data pattern** | Object storage + PostGIS + graph/search/catalog layers, with STAC/DCAT/PROV metadata and EvidenceRefs / EvidenceBundles | **UNKNOWN** as branch implementation detail unless verified locally. |
+
+### Interpretation rule
+
+Use the documented target stack to:
+- align app responsibilities
+- avoid contradictory README language
+- guide verification
+
+Do **not** use it to upgrade active-branch implementation facts from `UNKNOWN` to `CONFIRMED` without branch proof.
+
+[Back to top](#top)
+
+---
+
+## Temporal windows and time navigation
+
+The supplied design corpus makes time a runtime concern, not a decorative filter.
+
+### Window design inputs vs runtime status
+
+| Window | Design status | Runtime status in this README | What it implies for apps |
+|---|---|---|---|
+| **Earliest evidence → 1854** | **CONFIRMED** design input | **PROPOSED** runtime lane | Use a fixed Kansas analytical mask with changing cultural, political, legal, and ecological layers; encode confidence and alternative hypotheses. |
+| **1854–1900 frontier era** | **CONFIRMED** design input | **PROPOSED** runtime baseline unless branch proves more | Treat this as the default historical frontier window in educational/historical experiences. |
+| **1901–2100 observed + scenario frame** | **CONFIRMED** design input | **PROPOSED** runtime lane | Use a single timeline with explicit `Observed` vs `Scenario` mode separation, scenario selection, and uncertainty cues. |
+
+### Time-navigation rules for runtime apps
+
+1. **Do not mix observed and projected values in the same unlabeled channel.**
+2. **Every time-aware layer should declare its temporal extent and grain.**
+3. **Event nodes should be citation-bearing and provenance-addressable.**
+4. **Deep-history layers should encode confidence, competing hypotheses, or uncertainty where boundaries are intrinsically fuzzy.**
+5. **Scenario outputs should always remain visibly modeled rather than historical fact.**
+
+### Suggested time-resolution posture
+
+| Era / mode | Suggested grain | Why |
+|---|---|---|
+| Deep-history / pre-1854 layers | event boundaries + period slices | Legal regimes, sovereignty overlays, and archaeological periods do not behave like annual tables. |
+| 1854–1900 frontier-era learning/research | year, decade, and event markers | Supports frontier-era exploration with story and evidence workflows. |
+| 1901–1950 historical baseline | decade / quinquennial / event-based | Many authoritative series are lower-frequency but high-authority in this period. |
+| Post-1950 observed layers | annual or finer where source cadence supports it | Modern climate, infrastructure, and socioeconomic feeds are often more frequent. |
+| Scenario / projected layers | explicit scenario horizon (`2050`, `2100`, etc.) + uncertainty | Prevents category errors and preserves auditability. |
+
+### Runtime implications by app class
+
+| App class | Temporal responsibility |
+|---|---|
+| **UI** | Expose timeline controls, mode switches, compare views, and visible fact/speculation boundaries. |
+| **API** | Return time-native layer metadata, scenario identifiers, evidence refs, and policy-safe uncertainty labels. |
+| **Workers** | Build time-binned materializations, scenario runs, compare outputs, and run receipts. |
+
+[Back to top](#top)
+
+---
+
 ## Accepted inputs
 
 The following belong in `apps/`:
@@ -179,10 +267,12 @@ The following belong in `apps/`:
 | App entrypoints and routing | HTTP routes, UI route shells, job registries | They define runtime behavior. |
 | App-local manifests and metadata | `kfm.app.json`, `package.json`, `pyproject.toml`, container descriptors, env templates | They describe how the app is built or run. |
 | App-local test suites | integration tests, route tests, UI tests, job tests | Runtime behavior must be verifiable. |
-| App-local assets | UI assets, templates, static files, export templates | These are part of the runtime surface. |
-| Health/readiness/observability wiring | health endpoints, logging setup, metrics hooks | Runtime apps need operational signals. |
+| App-local assets | UI assets, templates, static files, export templates, offline package shells | These are part of the runtime surface. |
+| Health/readiness/observability wiring | health endpoints, logging setup, metrics hooks, traces | Runtime apps need operational signals. |
 | Thin composition code | wiring shared packages, contracts, and policy-aware behavior into a runnable surface | Composition belongs here; shared logic does not. |
 | App-local docs | child `README.md` files and app operation notes | Each app needs its own bounded contract. |
+| Time-aware runtime assets | timeline config, time-window registries, compare-view templates | Runtime surfaces need explicit temporal behavior. |
+| Scenario / export surfaces | run-render templates, brief exporters, receipt views, report shells | Shareable outputs are runtime concerns when they are user-facing. |
 
 ### Typical examples
 
@@ -212,6 +302,8 @@ The following do **not** belong in `apps/`:
 | Secrets, tokens, credentials | Must never live in repo app code. | secret manager / environment configuration |
 | Direct client-to-store access patterns | Breaks the trust membrane. | governed APIs and approved adapters |
 | Parallel “special dashboards” that bypass KFM contracts | They fracture the runtime into separate truths. | compose through `ui`, `api`, and `workers` |
+| Unlabeled projected outputs mixed into observed/history channels | Creates category errors and undermines provenance. | separate observed/scenario runtime paths |
+| Offline bundles that lose evidence traceability | Creates “floating facts.” | evidence-linked offline packages or sync-backed flows |
 | Documentation that implies unverified live behavior | Breaks trust through overclaiming. | mark `UNKNOWN`, verify, then update docs |
 
 [Back to top](#top)
@@ -257,12 +349,12 @@ Do not invent run commands that the branch has not proven.
 
 ```bash
 # inspect runtime app surfaces
-find apps -maxdepth 4 -mindepth 1 | sort
+find apps -maxdepth 5 -mindepth 1 | sort
 
 # read the current child app contracts
-sed -n '1,220p' apps/api/README.md
-sed -n '1,220p' apps/ui/README.md
-sed -n '1,220p' apps/workers/README.md
+sed -n '1,240p' apps/api/README.md
+sed -n '1,240p' apps/ui/README.md
+sed -n '1,240p' apps/workers/README.md
 
 # inspect manifests and likely app descriptors
 find apps -maxdepth 5 \( \
@@ -285,14 +377,24 @@ find apps -maxdepth 5 \( \
 # inspect likely runtime stack hints
 grep -RIn "fastapi\|openapi\|/docs\|/redoc\|maplibre\|cesium\|leaflet\|react\|vite" apps || true
 
-# inspect evidence / policy touchpoints
-grep -RIn "EvidenceRef\|EvidenceBundle\|cite\|abstain\|policy_label\|rego\|opa" apps || true
+# inspect evidence / policy / audit touchpoints
+grep -RIn "EvidenceRef\|EvidenceBundle\|cite\|abstain\|policy_label\|rego\|opa\|audit_ref\|quarantine" apps || true
+
+# inspect story, focus, and time-aware behavior
+grep -RIn "focus\|story\|timeline\|scenario\|observed\|projected\|speculative\|run receipt" apps || true
 
 # inspect health / readiness / observability clues
 grep -RIn "health\|ready\|readiness\|liveness\|metrics\|trace\|audit" apps || true
 
-# inspect worker / queue clues
-grep -RIn "queue\|worker\|celery\|rq\|dramatiq\|cron\|schedule\|job" apps || true
+# inspect worker / queue / export clues
+grep -RIn "queue\|worker\|celery\|rq\|dramatiq\|cron\|schedule\|job\|export\|render" apps || true
+
+# inspect for offline/PWA support if educational surfaces are claimed
+find apps -maxdepth 6 \( \
+  -name 'service-worker*' -o \
+  -name 'manifest.webmanifest' -o \
+  -name 'sw.*' \
+\) | sort
 
 # inspect for direct-store anti-patterns
 grep -RIn "postgres://\|s3://\|minio\|neo4j\|postgis\|object store\|bucket" apps || true
@@ -309,6 +411,8 @@ Until verified on the active branch, this README treats the following as `UNKNOW
 - container entrypoints
 - health/readiness endpoint paths
 - exact framework stack per app
+- whether offline/PWA support exists
+- whether scenario runners or compare views exist
 
 [Back to top](#top)
 
@@ -346,8 +450,9 @@ A new directory should **not** go under `apps/` when it is primarily:
 3. Keep shared logic in shared packages unless app-local composition is required.
 4. Add or update app-local tests.
 5. Verify policy, evidence, and promotion-boundary behavior for at least one representative flow.
-6. Update related docs and runbooks in the same change.
-7. Record rollback notes for any public-facing or policy-sensitive runtime behavior.
+6. If the surface is time-aware, state which time windows or modes it supports.
+7. Update related docs and runbooks in the same change.
+8. Record rollback notes for any public-facing or policy-sensitive runtime behavior.
 
 [Back to top](#top)
 
@@ -366,9 +471,11 @@ A new directory should **not** go under `apps/` when it is primarily:
 | Topic | Status | Interpretation |
 |---|---|---|
 | `apps/` is a runtime area | **CONFIRMED** | Top-level deployable app surfaces live here. |
-| Baseline runtime product model includes map, story, focus, and evidence surfaces | **CONFIRMED** | KFM docs describe these as the public-facing core. |
+| Baseline runtime product model includes map, story, focus, and evidence surfaces | **CONFIRMED** in supplied design docs | KFM is designed around these user-facing surfaces. |
+| Educational workspaces are part of the supplied product-surface design language | **CONFIRMED** as design input | Treat as runtime extension patterns, not branch fact. |
+| Deep-history and 1901–future temporal windows are part of the supplied time-design language | **CONFIRMED** as design input | Treat as runtime design inputs, not branch fact. |
 | Exact run commands for child apps | **UNKNOWN** | Must be verified from manifests and app docs. |
-| Exact framework stack per app | **UNKNOWN** | Do not infer from preference or design language alone. |
+| Exact framework stack per app | **UNKNOWN** as branch fact | Do not infer from design preference or system spec alone. |
 | Cities & Infrastructure as a runtime domain vertical | **PROPOSED** | Fits `ui` + `api` + `workers`, but is not treated as shipped branch fact here. |
 | Owners by team / handle | **UNKNOWN** | Verify from `CODEOWNERS` or app stewardship docs. |
 
@@ -381,12 +488,12 @@ A new directory should **not** go under `apps/` when it is primarily:
 ```mermaid
 flowchart LR
   subgraph UserFacing["User-facing runtime surfaces"]
-    UI["apps/ui<br/>Map · Story · Focus · Evidence launch points"]
+    UI["apps/ui<br/>Map · Story · Focus · Evidence"]
     API["apps/api<br/>Governed API boundary"]
   end
 
   subgraph AsyncBatch["Async / batch runtime"]
-    W["apps/workers<br/>Ingest · compute · export · refresh"]
+    W["apps/workers<br/>Ingest · index · export · scenario runs · refresh"]
   end
 
   subgraph SharedCore["Shared governed core"]
@@ -398,6 +505,7 @@ flowchart LR
   subgraph GovernedData["Governed data and catalogs"]
     CAT["../data/<br/>catalogs · manifests · receipts"]
     PUB["promoted dataset versions"]
+    EVD["EvidenceRefs / EvidenceBundles"]
   end
 
   UI --> API
@@ -407,20 +515,34 @@ flowchart LR
   API --> POL
   API --> CAT
   API --> PUB
+  API --> EVD
 
   W --> PKG
   W --> CTR
   W --> POL
   W --> CAT
   W --> PUB
+  W --> EVD
 ```
 
 ### Interpretation
 
 - `apps/ui` should behave like a governed client surface, not a parallel data plane.
 - `apps/api` is the primary runtime trust boundary for user-visible behavior.
-- `apps/workers` may ingest, compute, refresh, export, and materialize artifacts, but must not become a shadow publication path.
+- `apps/workers` may ingest, compute, refresh, export, package, and materialize artifacts, but must not become a shadow publication path.
 - Shared contracts, schemas, policy, and reusable domain logic should feed the apps; the apps should not fork those rules into separate truths.
+
+### Temporal / scenario branch model
+
+```mermaid
+flowchart LR
+  O["Observed dataset versions"] --> API["Governed API"]
+  P["Scenario parameters / assumptions"] --> W["Workers / scenario service"]
+  W --> R["Run receipts + compare outputs"]
+  API --> UI["UI compare / timeline surfaces"]
+  R --> API
+  UI --> M["Observed vs Scenario mode switch"]
+```
 
 ### Hard boundary
 
@@ -437,9 +559,9 @@ Any user-visible runtime behavior must cross a governed boundary.
 
 | App class | Primary responsibility | Must never do | Typical evidence/policy responsibility |
 |---|---|---|---|
-| **UI** | Map-first user experience, story authoring, focus entry, evidence launch points | Directly query canonical stores or hide evidence behind unreachable UX | Surface provenance, quality, status, and rights cues clearly |
-| **API** | Governed routes for discovery, evidence resolution, narrative publication, Focus Mode, exports | Leak restricted existence through unsafe errors or bypass policy | Enforce policy, resolve evidence, validate citations, narrow or abstain when unsupported |
-| **Workers** | Async jobs for refresh, indexing, export, compute, ingestion, snapshots | Create shadow release/publication paths | Carry policy and provenance discipline into batch outputs and receipts |
+| **UI** | Map-first user experience, story authoring, focus entry, evidence launch points, compare views | Directly query canonical stores or hide evidence behind unreachable UX | Surface provenance, quality, time-state, and rights cues clearly |
+| **API** | Governed routes for discovery, evidence resolution, narrative publication, Focus Mode, time-aware layers, exports | Leak restricted existence through unsafe errors or bypass policy | Enforce policy, resolve evidence, validate citations, narrow or abstain when unsupported |
+| **Workers** | Async jobs for refresh, indexing, export, compute, ingestion, snapshots, scenario runs | Create shadow release/publication paths | Carry policy and provenance discipline into batch outputs and receipts |
 
 ### API expectations
 
@@ -451,6 +573,8 @@ Every governed API app under `apps/` should preserve the following posture:
 - treat Focus-like synthesized responses as higher-risk than ordinary reads
 - make provenance inspectable rather than decorative
 - keep contract and policy hooks explicit
+- distinguish observed, projected, and speculative outputs where those modes exist
+- keep story, focus, upload, and export flows inside the same governed boundary
 
 Where the app supports evidence resolution directly, a useful response envelope will usually need fields such as:
 
@@ -462,17 +586,26 @@ Where the app supports evidence resolution directly, a useful response envelope 
 - source artifact pointers where allowed
 - lineage summary
 - redaction / restriction notices
+- audit reference where synthesis or export is involved
 
 ### UI expectations
 
 Every user-facing client under `apps/` should preserve the following posture:
 
-- feel like one governed product across map, story, focus, and evidence
+- feel like one governed product across map, story, focus, evidence, and any future domain verticals
 - keep evidence launch points obvious and reachable
-- show layer/state cues such as public, restricted, derived, or experimental where relevant
-- expose freshness / data quality signals where they materially affect interpretation
+- show layer/state cues such as public, restricted, derived, projected, speculative, or experimental where relevant
+- expose freshness / data quality / uncertainty signals where they materially affect interpretation
+- keep observed and scenario channels visibly distinct
 - remain keyboard-operable and responsive
 - never create a second uncontrolled interpretation surface that drifts away from the evidence flow
+
+If educational or museum-style surfaces exist, the UI should also preserve:
+
+- privacy-minimizing defaults
+- offline bundles that remain evidence-linked
+- clear fact/speculation boundaries
+- accessibility as a release-relevant concern, not optional polish
 
 ### Worker expectations
 
@@ -480,10 +613,24 @@ Every worker surface under `apps/` should preserve the following posture:
 
 - handle long-running, scheduled, or async work without bypassing promotion discipline
 - support retries, idempotence, and safe re-entry where practical
-- keep export generation, render jobs, and snapshot creation tied to audit references
+- keep export generation, render jobs, snapshot creation, and scenario runs tied to audit references
 - use the same contracts, schemas, and policy checks as synchronous surfaces
 - make scheduled credentialed ingestion explicit and reviewable when gated sources are involved
+- support quarantine and run-receipt behavior where applicable
 - never both generate and self-approve policy-significant public outputs
+
+### Temporal and scenario operating expectations
+
+If an app claims time-aware or scenario-aware behavior, it should preserve the following:
+
+| Concern | Minimum expectation |
+|---|---|
+| Observed vs projected separation | Explicit mode switch or visibly separate channels |
+| Temporal extent | Each layer or surface declares its supported time range |
+| Deep-history uncertainty | Confidence, alternative hypotheses, or ambiguity cues where appropriate |
+| Scenario outputs | Baseline vs scenario comparison, difference view, assumptions, uncertainty, and run receipt |
+| Shareable outputs | Audit/provenance references in exports, briefs, Story Cards, or receipts |
+| Offline learning bundles | Checksums, citations, or later-verifiable sync paths so facts do not float free of evidence |
 
 [Back to top](#top)
 
@@ -495,13 +642,17 @@ The following rules apply to every app under `apps/`.
 
 | Invariant | What it means inside `apps/` |
 |---|---|
-| **One governed product** | Map, story, focus, and evidence should feel cohesive across apps rather than like disconnected products. |
+| **One governed product** | Map, story, focus, evidence, and future verticals should feel cohesive across apps rather than like disconnected products. |
 | **Trust membrane** | UI and external callers do not bypass the governed API or approved internal service boundary. |
 | **Evidence as interface** | Evidence, provenance, rights, and restrictions must stay operational and inspectable. |
 | **Cite-or-abstain** | Claim-bearing surfaces either resolve evidence or narrow / abstain. |
+| **Observed vs projected separation** | Historical/observed outputs and modeled/projected outputs must not blur together. |
+| **Temporal window discipline** | Time-aware surfaces must carry explicit temporal extent, mode, and provenance cues. |
 | **Promotion discipline** | Runtime should expose only governed, promoted dataset versions and policy-safe exports. |
 | **Policy-safe failure** | Denials and errors must not leak restricted existence or sensitive details. |
+| **Offline evidence integrity** | Offline packages must remain traceable to evidence rather than becoming floating facts. |
 | **Accessibility is release-relevant** | Core navigation, evidence surfaces, and user-facing controls must be reachable and interpretable. |
+| **Privacy minimization for learning surfaces** | Educational experiences should default to minimal collection and local/export-first artifacts where possible. |
 | **Docs as production surface** | Behavior changes must update docs, tests, and operational notes together. |
 | **Separation of duty** | No app or automation path should both generate and self-approve a policy-significant public release. |
 | **Mandatory engineering** | Contract tests, data-quality checks, observability, and audit signals are part of the runtime surface, not optional polish. |
@@ -514,6 +665,8 @@ The following rules apply to every app under `apps/`.
 - story publication without citation validation
 - worker publication that skips receipts, policy, or catalog checks
 - export features that omit audit references where they are required
+- projected layers blended into observed/history channels without clear mode separation
+- offline packages that strip evidence or provenance
 - runtime behavior that changes while docs stay stale
 - domain verticals that appear as one-off dashboards with their own truth rules
 
@@ -553,6 +706,9 @@ If `kfm.app.json` or a similar app descriptor is used, a stable minimal shape wo
 | `data_touchpoints` | Which governed datasets, catalogs, or indexes it reads/writes through approved paths. |
 | `public_surface` | Whether the app is public-facing, steward-facing, or internal. |
 | `release_class` | What kind of approval/release posture it needs. |
+| `time_windows_supported` | Which temporal windows or modes the app can render or compute. |
+| `offline_support` | Whether the app supports offline bundles or local-first artifacts. |
+| `export_types` | Which briefs, receipts, story packages, or reports it can generate. |
 | `rollback_owner` | Who owns rollback when the runtime misbehaves. |
 
 This is **PROPOSED** structure, not confirmed current-branch schema.
@@ -568,11 +724,14 @@ The attached design work suggests several future runtime lanes that fit naturall
 | Growth lane | Likely host apps | Why it fits the runtime boundary |
 |---|---|---|
 | Cities & Infrastructure catalog + dossier + explorer | `ui` + `api` + `workers` | It is a first-class KFM domain vertical built from catalog + API + UI contracts. |
-| Provenance panels for layers and dossiers | `ui` + `api` | Makes “map behind the map” inspectable at runtime. |
-| Exportable readiness / briefing outputs | `api` + `workers` | Shareable outputs still need audit refs and policy-safe generation. |
-| Policy-gated restricted layers with redacted public views | `api` + `ui` + `workers` | Sensitive infrastructure handling belongs inside the governed runtime. |
+| Educational Explore / Story Studio / Scenario Lab / Classroom Hub | `ui` + `api` + `workers` | It extends map, story, evidence, scenario, privacy, and accessibility patterns already in KFM design work. |
+| Earliest-evidence → 1854 time window | `ui` + `api` + `workers` | It requires time-sliced layers, uncertainty cues, and evidence-bearing event nodes. |
+| 1901–future observed/scenario temporal window | `ui` + `api` + `workers` | It requires explicit observed-vs-scenario runtime separation and time-native layer delivery. |
+| Provenance panels for layers, dossiers, and scenario outputs | `ui` + `api` | Makes “the map behind the map” inspectable at runtime. |
+| Exportable readiness / briefing outputs / Story Cards / run receipts | `api` + `workers` | Shareable outputs still need audit refs and policy-safe generation. |
+| Offline lesson bundles / kiosk mode | `ui` + `api` + `workers` | Offline packaging is a runtime concern when it serves real users and must preserve evidence traceability. |
+| Policy-gated restricted layers with redacted public views | `api` + `ui` + `workers` | Sensitive infrastructure and restricted evidence handling belong inside the governed runtime. |
 | Focus-domain briefing assistants | `api` + `ui` | Retrieval-constrained, cite-or-abstain flows belong inside the same trust membrane. |
-| Later scenario / comparison workflows | `api` + `workers` + `ui` | Advanced modeling should still remain evidence-linked and explicitly bounded. |
 
 ### Design rule for new verticals
 
@@ -599,11 +758,16 @@ For any non-trivial change under `apps/`, the change is not done until all relev
 - [ ] App README states repo fit, accepted inputs, and exclusions.
 - [ ] Shared logic is not duplicated unnecessarily in app code.
 - [ ] No direct-store bypass exists for user-visible or publishable behavior.
+- [ ] Documented design posture and active-branch reality are not conflated.
 - [ ] Evidence and policy behavior are verified for at least one representative flow.
 - [ ] Policy-safe denial behavior is checked where relevant.
 - [ ] App-local tests are updated.
 - [ ] User-facing accessibility impact is addressed for UI changes.
+- [ ] Time-aware surfaces declare temporal extent and mode where relevant.
+- [ ] Observed, projected, and speculative outputs are not blurred together.
+- [ ] Scenario outputs, if present, include assumptions, uncertainty, and run receipts.
 - [ ] Exports or shareable outputs include audit / provenance references where applicable.
+- [ ] Offline bundles, if present, remain evidence-linked or later-verifiable.
 - [ ] Worker jobs remain retry-safe and do not create a shadow publication path.
 - [ ] Related docs and runbooks are updated when behavior changes.
 - [ ] Owners and rollback path are recorded for public or restricted release surfaces.
@@ -628,9 +792,17 @@ Not for anything user-visible or publishable. Workers may use approved internal 
 
 Usually no. Prefer adding routes/modules/jobs within `ui`, `api`, and `workers` so policy, contracts, evidence, and promotion rules stay unified.
 
-### Are framework choices like FastAPI, OpenAPI docs, MapLibre, or specific queue tools authoritative here?
+### Are framework choices like FastAPI, OpenAPI docs, React, MapLibre, or specific queue tools authoritative branch facts here?
 
-No. They may be good fits or appear in design material, but the active branch must prove exact stack choices before this README treats them as implementation fact.
+No. They are **documented design targets** in the supplied KFM corpus, not automatic proof of current-branch implementation.
+
+### Can projected layers appear on the same timeline as observed historical layers?
+
+Only if the UI keeps them explicitly separated with mode/state cues. Do not mix projected values into observed channels without clear labeling.
+
+### Can offline mode omit evidence links for convenience?
+
+No. Offline mode may cache policy-safe evidence snippets or deferred-sync artifacts, but it must not create floating facts.
 
 ### What should happen when an app change affects runtime behavior?
 
@@ -638,7 +810,7 @@ Update the app docs, tests, and any relevant runbooks in the same change.
 
 ### What should `kfm.app.json` do?
 
-At most, describe the app. It should not replace contracts, policy, or approval gates.
+At most, describe the app. It should not replace contracts, policy, approval gates, or runtime tests.
 
 [Back to top](#top)
 
@@ -679,9 +851,16 @@ Verify whether `apps/api/ui/` is:
 
 Do not infer more than the branch proves.
 
-### 5. CI gates
+### 5. API surface verification
 
-Verify which workflows and checks block merges for app changes.
+Confirm whether the active branch actually exposes any of the documented target patterns, such as:
+
+- observations endpoints
+- evidence resolution endpoints
+- story submission/update routes
+- Focus Mode routes
+- upload/quarantine routes
+- provenance or export routes
 
 ### 6. Runtime manifests and health signals
 
@@ -701,8 +880,28 @@ Confirm whether current child apps actually use:
 - React / MapLibre or other UI stack choices
 - a specific queue/runtime for workers
 - containerized local development
+- OPA or another policy runtime
 
-### 8. Cross-app operating model
+### 8. Temporal and scenario verification
+
+Confirm whether current child apps actually support:
+- a timeline control
+- observed vs scenario mode separation
+- scenario compare views
+- run receipts
+- uncertainty labels
+- any deep-history or future-window surfaces
+
+### 9. Educational / offline verification
+
+Confirm whether any current app supports:
+- PWA or service worker packaging
+- offline evidence bundles
+- classroom artifacts
+- privacy-minimizing learning flows
+- accessibility-specific map affordances
+
+### 10. Cross-app operating model
 
 Confirm whether all child apps already share:
 
@@ -711,6 +910,7 @@ Confirm whether all child apps already share:
 - common observability conventions
 - common evidence / audit response envelopes
 - common denial / redaction behavior for policy-sensitive flows
+- common export and receipt conventions
 
 </details>
 
