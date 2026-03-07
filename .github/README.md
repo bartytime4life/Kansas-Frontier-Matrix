@@ -2,7 +2,7 @@
 doc_id: kfm://doc/github-readme-v1
 title: .github
 type: standard
-version: v1
+version: v2
 status: draft
 owners: verify via /.github/CODEOWNERS
 created: 2026-03-07
@@ -16,20 +16,22 @@ notes: [Directory README for GitHub-side automation, templates, ownership routin
 <a id="top"></a>
 
 # `.github`
-GitHub-native control plane for workflows, templates, ownership routing, and merge discipline.
+GitHub-native control plane for workflows, templates, ownership routing, required-check synchronization, and merge discipline.
 
 > **Status:** draft  
 > **Owners:** verify in [`./CODEOWNERS`](./CODEOWNERS)  
 > ![status](https://img.shields.io/badge/status-draft-orange) ![surface](https://img.shields.io/badge/surface-github--control--plane-blue) ![posture](https://img.shields.io/badge/posture-evidence--first-success) ![trust](https://img.shields.io/badge/trust-governed-lightgrey) ![docs](https://img.shields.io/badge/docs-production--surface-purple)  
-> **Quick jump:** [Purpose](#purpose) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Scope](#scope) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current snapshot](#current-control-plane-snapshot) · [Control-plane model](#control-plane-model) · [Quickstart](#quickstart) · [Change discipline](#change-discipline) · [Definition of done](#definition-of-done) · [FAQ](#faq)
+> **Quick jump:** [Purpose](#purpose) · [Evidence posture](#evidence-posture) · [Repo fit](#repo-fit) · [Scope](#scope) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Verification boundary](#verification-boundary) · [Current snapshot](#current-control-plane-snapshot) · [Control-plane contract](#control-plane-contract) · [CI baseline](#ci-baseline) · [Automation safety](#automation-safety) · [Quickstart](#quickstart) · [Change discipline](#change-discipline) · [Definition of done](#definition-of-done) · [FAQ](#faq)
 
 ## Purpose
 
 This directory is KFM’s **GitHub-side automation and collaboration surface**.
 
-It should hold the files that shape how work enters the repo, how reviewers are routed, how required checks are expressed, and how contributor-facing templates stay aligned with KFM’s evidence-first posture.
+It holds the files that shape how work enters the repo, how reviewers are routed, how required checks are expressed, and how contributor-facing templates stay aligned with KFM’s evidence-first posture.
 
-`.github/` should make governance **more visible**, not hide it. Workflows can trigger validation, docs checks, policy tests, schema checks, and release automation, but they are **not** the source of truth for runtime policy, business logic, or publishable evidence.
+`.github/` should make governance **more visible**, not hide it. Workflows may trigger validation, docs checks, policy tests, schema checks, release preparation, and collaboration ergonomics, but they are **not** the source of truth for runtime policy, evidence resolution, publishable artifacts, or business logic.
+
+Because KFM treats docs as a production surface, this README is part of the control plane. When GitHub-side behavior changes, the doc should usually change in the same PR.
 
 ## Evidence posture
 
@@ -37,37 +39,36 @@ It should hold the files that shape how work enters the repo, how reviewers are 
 
 | Label | Meaning |
 |---|---|
-| **CONFIRMED** | Visible in the supplied repo snapshot or directly supported by governing KFM documentation. |
-| **PROPOSED** | Recommended structure or operating discipline for this directory. |
-| **UNKNOWN** | Not verified on the current branch or may live outside the repo in GitHub settings. |
+| **CONFIRMED** | Directly established by the supplied KFM source corpus or visible in the supplied directory draft. |
+| **PROPOSED** | Recommended structure, workflow, or operating rule aligned to KFM but not verified as current live branch behavior. |
+| **UNKNOWN** | Not established by the supplied evidence and requiring verification before being treated as branch truth. |
 
 ### Directory posture
 
 | Status | Statement |
 |---|---|
 | **CONFIRMED** | `.github/` is the repo’s GitHub-facing control plane for workflows, templates, support files, and ownership routing. |
-| **CONFIRMED** | This directory is for collaboration and automation surfaces, not runtime business logic. |
-| **PROPOSED** | `.github/README.md` should be the directory-level contract for what belongs here, how changes are reviewed, and how required checks stay legible. |
-| **UNKNOWN** | Exact branch protections, rulesets, environment approvals, and which checks currently block merge on the target branch. |
+| **CONFIRMED** | Documentation is a governed surface; behavior changes here should usually update docs in the same change set. |
+| **CONFIRMED** | KFM expects fail-closed checks, explicit review boundaries, and no hidden bypasses of policy, provenance, or evidence guarantees. |
+| **PROPOSED** | `required-checks.v1.json` should be treated as a versioned contract surface and kept synchronized with workflow/job names and any out-of-repo rulesets. |
+| **UNKNOWN** | Exact GitHub rulesets, branch protections, environment approvals, merge queue settings, and which checks currently block merge on the target branch. |
 
 ## Repo fit
 
 **Path:** `/.github/README.md`
 
-**Repo role:** directory guide for GitHub-native collaboration, routing, and CI/CD ergonomics.
+**Repo role:** directory guide for GitHub-native collaboration, routing, CI/CD ergonomics, and merge discipline.
 
-**Upstream**
-- repo-root posture in [`../README.md`](../README.md)
-- repo contribution and security expectations
-- KFM trust-membrane and promotion-gate architecture
-- GitHub rulesets / branch protections that may live outside the repo
-
-**Downstream**
-- workflow entrypoints in [`./workflows/`](./workflows/)
-- reusable local actions in [`./actions/`](./actions/)
-- issue, discussion, and PR templates
-- ownership routing via [`./CODEOWNERS`](./CODEOWNERS)
-- support and collaboration files such as [`./SUPPORT.md`](./SUPPORT.md)
+| Direction | Surface | Why it matters |
+|---|---|---|
+| Upstream | [`../README.md`](../README.md) | Repo-root posture and public-facing project framing. |
+| Upstream | `CONTRIBUTING.md`, `policy/`, `docs/`, `tests/` | Contribution expectations, runtime governance, operational docs, and test surfaces. |
+| Upstream | GitHub rulesets / branch protections / environments | Some merge and release behavior lives outside the repo and must be verified separately. |
+| Downstream | [`./workflows/`](./workflows/) | Workflow entrypoints and reusable workflow calls. |
+| Downstream | [`./actions/`](./actions/) | Local composite actions and shared GitHub-side helpers. |
+| Downstream | [`./ISSUE_TEMPLATE/`](./ISSUE_TEMPLATE/), [`./DISCUSSION_TEMPLATE/`](./DISCUSSION_TEMPLATE/), [`./PULL_REQUEST_TEMPLATE/`](./PULL_REQUEST_TEMPLATE/), [`./PULL_REQUEST_TEMPLATE.md`](./PULL_REQUEST_TEMPLATE.md) | Structured intake and review ergonomics. |
+| Downstream | [`./CODEOWNERS`](./CODEOWNERS) | Ownership routing and review responsibility. |
+| Downstream | [`./SUPPORT.md`](./SUPPORT.md), [`./CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md), `dependabot.yml`, `labeler.yml`, `required-checks.v1.json` | GitHub-facing support, automation, and versioned control-plane metadata. |
 
 ## Scope
 
@@ -77,9 +78,10 @@ Use this README for:
 |---|---|
 | Directory purpose and boundary | Keeps `.github/` from becoming a junk drawer. |
 | Control-plane inventory | Makes workflows, actions, templates, and routing files visible. |
-| Verification-first guidance | Prevents undocumented assumptions about rulesets and required checks. |
-| Change discipline | Keeps workflow names, manifests, docs, and review expectations in sync. |
-| Collaboration ergonomics | Improves intake quality without pretending templates enforce runtime policy. |
+| Merge/publication distinction | Prevents people from treating a green PR as equivalent to governed publication. |
+| Required-check synchronization | Keeps workflow/job names, manifests, and GitHub settings legible together. |
+| Contributor expectations | Makes review artifacts and rollback expectations obvious for GitHub-side changes. |
+| Verification notes | Keeps out-of-repo settings explicit instead of implied. |
 
 Do **not** use this README for:
 
@@ -87,11 +89,11 @@ Do **not** use this README for:
 |---|---|
 | Runtime business logic | `apps/` or `packages/` |
 | Policy source of truth | `policy/` plus governed backend enforcement |
-| API contracts or schema definitions | `contracts/` or `schemas/` |
-| Dataset catalogs, manifests, provenance records | `data/` |
-| Long-form architecture and runbooks | `docs/` |
-| Generated evidence bundles, receipts, or release artifacts | governed data / artifact paths |
-| Secrets, credentials, machine-local configuration | GitHub secrets / secret manager / local env |
+| API contracts and schema definitions | `contracts/` or `schemas/` |
+| Dataset catalogs, manifests, provenance records, and run receipts | `data/` truth-path surfaces |
+| Long-form runbooks and ADRs | `docs/` (for example `docs/runbooks/`, `docs/adr/` when present) |
+| Secrets, credentials, machine-local configuration | GitHub secrets, a secret manager, or local environment files |
+| Generated evidence bundles or promoted release artifacts | Governed artifact paths and published surfaces |
 
 ## Accepted inputs
 
@@ -99,13 +101,13 @@ The following belong in `.github/` when they are GitHub-facing and repo-governan
 
 | Input | Examples | Why it belongs here |
 |---|---|---|
-| Workflow entrypoints | CI, docs lint, policy-gate, validation, release, packaging workflows | They define GitHub-triggered automation. |
-| Reusable local actions | composite actions, setup wrappers, shared validation helpers | They keep repeated workflow logic centralized and reviewable. |
-| Contribution templates | issue forms, discussion prompts, PR templates | They shape structured intake and review. |
-| Ownership and routing metadata | `CODEOWNERS`, review-routing helpers | They make responsibility visible. |
-| Repo-side governance manifests | required-check manifests, label configs, update configs | They keep GitHub-side behavior inspectable in-repo. |
-| Community support files | code of conduct, support guidance | They govern collaboration surfaces. |
-| Docs-lint and contribution guardrails | markdown enforcement wiring, README checks | KFM treats docs as an operational surface. |
+| Workflow entrypoints | CI, docs lint, policy-gate, validation, package, release-prep workflows | They define GitHub-triggered automation. |
+| Reusable local actions | Composite actions, setup wrappers, shared validation helpers | They keep repeated workflow logic centralized and reviewable. |
+| Contribution templates | Issue forms, discussion prompts, PR templates | They shape better intake and better reviews. |
+| Ownership and routing metadata | `CODEOWNERS`, reviewer routing helpers | They make accountability visible. |
+| Repo-side governance manifests | `required-checks.v1.json`, label config, update automation config | They keep GitHub-side behavior inspectable in-repo. |
+| Community support files | Support, conduct, contact, escalation guidance | They govern collaboration surfaces. |
+| Docs-lint and contribution guardrails | README checks, markdown enforcement wiring | KFM treats docs as operational surfaces. |
 
 ## Exclusions
 
@@ -113,14 +115,27 @@ The following do **not** belong here:
 
 | Exclusion | Why it stays out | Where it belongs instead |
 |---|---|---|
-| App/runtime business logic | `.github/` is not an application module. | `apps/` or `packages/` |
-| Policy source of truth | Templates can request evidence, but policy must be enforced by governed layers and tests. | `policy/` and backend enforcement paths |
-| API and schema definitions | Public contracts should not be buried in workflow files. | `contracts/` or `schemas/` |
-| Dataset specs, catalogs, provenance records | Data lifecycle artifacts must stay on the truth path. | `data/` |
-| Runbooks and long-form architecture docs | Keep durable operational guidance in the docs plane. | `docs/` |
-| Secrets, credentials, tokens | Never commit secrets to the repo. | secret manager / CI secret store |
-| Generated build outputs or evidence bundles | Promotion artifacts are not configuration. | governed output paths or release surfaces |
-| Restricted infrastructure data or policy-bearing exports | GitHub automation can gate them, but should not become their publication home. | governed data and release paths |
+| Runtime policy logic | `.github/` is not the policy engine. | `policy/` and governed runtime layers |
+| App/service business logic | `.github/` is not an application module. | `apps/` or `packages/` |
+| Dataset promotion state | Mergeability is not publication state. | Truth-path storage and governed APIs |
+| Evidence bundles, receipts, catalogs | These are operational trust artifacts, not GitHub config. | `data/` truth-path surfaces |
+| Public artifact URLs for restricted data | GitHub automation must not become a side door. | Governed delivery layers |
+| Secrets, credentials, signing keys | Never commit secrets to the repo. | Secret manager / CI secret store |
+| One-off operator notes | Durable guidance belongs in docs, not hidden in YAML comments. | `docs/` |
+
+## Verification boundary
+
+The supplied corpus is strong on blueprint and governance, but it does **not** prove every live GitHub setting or current branch detail. Verify these before documenting them as fact.
+
+| Open verification item | Why it matters | Smallest acceptable proof |
+|---|---|---|
+| Current repo tree and commit hash | Separates supplied draft from live-branch truth. | `git rev-parse HEAD` plus a fresh `.github/` file inventory. |
+| Exact merge-blocking checks | Required-check names are often exact-string sensitive. | GitHub ruleset / branch-protection view or equivalent API output. |
+| `required-checks.v1.json` consumer | The file may be authoritative, advisory, or currently unused. | A verified caller, workflow, script, or ruleset reference. |
+| CODEOWNERS team/user mapping | Review routing depends on real org/team membership. | GitHub org/team resolution for each CODEOWNERS target. |
+| Environment approvals and protected environments | Release or deploy lanes may be gated outside the repo. | Environment configuration in GitHub. |
+| Merge queue / auto-merge behavior | Affects how required checks are evaluated in practice. | Verified branch settings or merge queue configuration. |
+| Which publish/deploy lanes exist today | Merge CI and publish CI are not interchangeable. | Workflow inventory plus a verified branch/ruleset/deployment view. |
 
 ## Current control-plane snapshot
 
@@ -151,86 +166,122 @@ Treat the tree below as the **working snapshot supplied for this draft**. Verify
 |---|---|---|
 | `DISCUSSION_TEMPLATE/` | Structured discussion intake and guided conversation prompts | Verify current file set locally. |
 | `ISSUE_TEMPLATE/` | Structured bug, feature, governance, or task intake | Verify current file set locally. |
-| `PULL_REQUEST_TEMPLATE/` | Specialized PR scaffolds where one default template is not enough | Verify current file set locally. |
+| `PULL_REQUEST_TEMPLATE/` | Specialized PR scaffolds when one default template is not enough | Verify current file set locally. |
 | `actions/` | Reusable local GitHub actions that keep workflows smaller and more consistent | Verify action interfaces and callers locally. |
-| `workflows/` | Workflow entrypoints for checks, validation, automation, and release | Verify active workflow names and triggers locally. |
-| `CODEOWNERS` | Ownership routing and review boundaries | Verify with actual GitHub team/user mapping. |
-| `CODE_OF_CONDUCT.md` | Community behavior expectations for repo collaboration surfaces | Verify alignment with repo-root docs. |
-| `PULL_REQUEST_TEMPLATE.md` | Default pull request template | Verify whether specialized templates override it. |
+| `workflows/` | Workflow entrypoints for checks, validation, automation, and release-prep | Verify active workflow names and triggers locally. |
+| `CODEOWNERS` | Ownership routing and review boundaries | Verify actual GitHub team/user mapping. |
+| `CODE_OF_CONDUCT.md` | Community behavior expectations | Verify alignment with repo-root docs. |
+| `PULL_REQUEST_TEMPLATE.md` | Default PR template | Verify whether specialized templates supplement or override it. |
 | `README.md` | Directory guide for the GitHub control plane | This file. |
 | `SUPPORT.md` | Help and support routing guidance | Verify support channels are current. |
 | `dependabot.yml` | Dependency/update automation config | Verify package ecosystem coverage and schedules. |
 | `labeler.yml` | Label automation or label-routing config | Verify label names still exist. |
-| `required-checks.v1.json` | Repo-local manifest of required or expected checks | Exact schema / consumer remains `UNKNOWN` until verified. |
-
-### What belongs where
-
-| Topic | Best home | Why |
-|---|---|---|
-| GitHub event wiring | `.github/workflows/` | Keeps automation explicit and reviewable. |
-| Shared workflow building blocks | `.github/actions/` | Avoids copy-paste workflow logic. |
-| Contributor intake forms | `.github/ISSUE_TEMPLATE/`, `.github/DISCUSSION_TEMPLATE/`, PR templates | Shapes better requests and reviews. |
-| Ownership routing | `.github/CODEOWNERS` | Makes review responsibility visible. |
-| Required-check naming / manifests | `.github/required-checks.v1.json` | Keeps check names versioned near workflow changes. |
-| Support and conduct | `.github/` top-level docs | Keeps GitHub-facing collaboration materials together. |
-| Runtime policy logic | `policy/` | Policy must remain testable and separate from forms. |
-| Contracts and schemas | `contracts/`, `schemas/` | Public interface guarantees need their own governed home. |
+| `required-checks.v1.json` | Versioned manifest of required or expected check names | Exact schema and consumer remain `UNKNOWN` until verified. |
 
 [Back to top](#top)
 
-## Control-plane model
+## Control-plane contract
 
-`.github/` is one plane inside a larger governed system. It should coordinate with policy, contracts, schemas, tests, and runtime services without replacing them.
+`.github/` is one plane inside a larger governed system. It coordinates with policy, contracts, schemas, tests, truth-path artifacts, and runtime services without replacing any of them.
 
-### Control-plane principles
+### Authoritative boundaries
 
-| Principle | Status | What it means here |
+| Topic | Authoritative home | Why |
 |---|---|---|
-| Trust-membrane alignment | **CONFIRMED** | GitHub automation may validate and route work, but it must not create a side door around governed API/policy boundaries. |
-| Fail-closed gate posture | **CONFIRMED** | Missing or broken required checks should block merge/release instead of degrading quietly. |
-| Stable, inspectable gates | **PROPOSED** | Workflow names, check names, and repo-side manifests should stay synchronized. |
-| Least-privilege automation | **PROPOSED** | Use explicit permissions, minimal scopes, and small reusable actions. |
-| Human approval boundary | **PROPOSED** | Automation can prepare policy-significant outputs, but approval should remain human or separately controlled. |
-| Evidence-aware intake | **PROPOSED** | Templates should ask for changed paths, validation, policy impact, and rollback notes. |
-| Docs stay aligned with behavior | **PROPOSED** | README, templates, manifests, and contribution docs should update together when control-plane behavior changes. |
+| GitHub event wiring | `./workflows/` | Keeps automation explicit and reviewable. |
+| Shared GitHub automation helpers | `./actions/` | Avoids duplicated workflow logic. |
+| Contributor intake and review prompts | `.github` templates | Improves request quality and review quality. |
+| Ownership routing | `./CODEOWNERS` | Keeps responsibility legible. |
+| Required-check naming | `required-checks.v1.json` **plus** verified GitHub rulesets | In-repo manifests and out-of-repo enforcement must agree. |
+| Runtime policy and evidence enforcement | `policy/` and governed backend layers | UI text and YAML cannot enforce publication rules alone. |
+| Dataset publication, catalogs, receipts, provenance | Truth-path storage and governed APIs | Mergeable code is not publishable evidence. |
+| Long-form runbooks and ADRs | `docs/` | Durable operational guidance should not be buried inside `.github`. |
 
-### Workflow classes
+### Merge gate versus publication gate
 
-| Workflow class | Typical triggers | What it should do | What it should not do |
-|---|---|---|---|
-| Intake / triage | issue, discussion, PR opened/edited | apply labels, scaffold requests, direct routing | pretend a template alone enforces policy |
-| Hygiene gates | `pull_request`, `push` | docs lint, YAML lint, link checks, formatting checks | publish or approve policy-significant outputs |
-| Governance gates | `pull_request`, `workflow_call` | run policy tests, schema/catalog validators, evidence/link checks | bypass review because automation passed |
-| Build / release / attestation | tags, manual dispatch, release events | package, attest, prepare release materials, verify artifact naming | self-approve sensitive releases |
-| Maintenance automation | schedules, manual dispatch | dependency refresh, stale triage, label hygiene | silently mutate protected state without review |
+A green pull request is necessary for repo health, but it is **not** the same thing as KFM publication.
 
-### Out-of-repo settings to verify
-
-Some GitHub behavior may not live in the repo at all.
-
-| Surface | Why it matters | Status here |
+| Surface | Question it answers | It does **not** prove |
 |---|---|---|
-| Branch protections / rulesets | Determine required checks, merge conditions, and actor permissions | **UNKNOWN** |
-| Environment approvals | Can gate deploy/release jobs or restricted operations | **UNKNOWN** |
-| Secret and variable scopes | Affect workflow behavior and blast radius | **UNKNOWN** |
-| Team/user mapping behind `CODEOWNERS` | Determines real reviewer routing | **UNKNOWN** |
-| Merge queue / auto-merge settings | Can change how required checks are evaluated in practice | **UNKNOWN** |
+| PR checks and GitHub rulesets | “May this repo change merge?” | That a dataset, story, or public surface is publishable |
+| Truth-path promotion gates | “May this version become user-visible?” | That the GitHub-side change was reviewed well |
+| Governed API behavior | “May this caller see this result?” | That the underlying code merged safely |
+
+Keep this distinction visible in workflows, templates, and docs. `.github/` may enforce code-review and validation posture; publication still belongs to the truth path.
+
+### Required-check synchronization contract
+
+When a workflow name, job name, or manifest changes, update the dependent surfaces together.
+
+| Change | Update together | Verify before merge |
+|---|---|---|
+| Workflow or job rename | Workflow file, `required-checks.v1.json`, this README, and out-of-repo rulesets | Exact check names currently enforced |
+| Local action interface change | Action metadata, callers, smoke validation, this README | Caller compatibility and fallback behavior |
+| Label name change | `labeler.yml`, templates, contribution docs | Label still exists in GitHub |
+| CODEOWNERS route change | `CODEOWNERS`, reviewer path notes, this README | Team/user resolution in GitHub |
+| Release-lane change | Workflow, runbook links, rollback notes, required-check mapping | Environment approvals and protected-branch behavior |
 
 ### Diagram
 
 ```mermaid
 flowchart LR
-    A[Contributor opens issue / discussion / PR] --> B[Templates in .github/]
-    B --> C[CODEOWNERS + labels + routing]
-    C --> D[Workflow entrypoints in .github/workflows]
-    D --> E[Reusable actions in .github/actions]
-    E --> F[Checks run: docs, lint, schemas, policy, tests]
-    F --> G{All required checks pass?}
-    G -- No --> H[Fail closed with actionable feedback]
-    G -- Yes --> I[GitHub rulesets / branch protections<br/>outside repo; verify separately]
-    I --> J[Human review / approval boundary]
-    J --> K[Merge or release handoff]
+    A[Contributor opens issue / discussion / PR] --> B[Templates + CODEOWNERS]
+    B --> C[Workflow entrypoints in .github/workflows]
+    C --> D[Reusable actions in .github/actions]
+    D --> E[Checks run: docs, lint, schema, policy, tests]
+    E --> F{Rulesets / required checks pass?}
+    F -- No --> G[Fail closed with actionable feedback]
+    F -- Yes --> H[Human review / approval boundary]
+    H --> I[Merge]
+    I --> J[Governed publish lanes elsewhere]
+    J --> K[Published surfaces via API]
 ```
+
+## CI baseline
+
+The sensible default order for GitHub-side gates is:
+
+1. docs lint and link check
+2. code formatting, lint, and type checks
+3. unit tests
+4. schema and catalog validation
+5. policy tests
+6. integration tests
+7. reproducibility checks for generated artifacts
+8. security scans and SBOM generation for release lanes
+
+The **exact** active set on the target branch remains `UNKNOWN` until current workflows and GitHub rulesets are verified.
+
+### What good GitHub-side checks look like
+
+| Check class | Should prove | Anti-pattern to avoid |
+|---|---|---|
+| Docs checks | README, links, and contributor surfaces remain coherent | Treating docs drift as “non-blocking” when behavior changed |
+| Schema/catalog checks | Machine-readable metadata still validates | Warning-only drift on broken links or missing required fields |
+| Policy checks | Missing rights, missing receipts, denied cases, and role boundaries fail closed | Quiet fallback or permissive “best effort” behavior |
+| API contract checks | Stable envelopes, auth behavior, evidence resolution, safe denials | Unreviewed response-shape drift |
+| UI checks | Evidence reachability, keyboard access, citation visibility on critical flows | Visual-only success with broken trust affordances |
+| Reproducibility checks | Deterministic outputs stay deterministic where expected | Regenerating artifacts without drift detection |
+| Release-lane checks | Smoke, rollback, and security proofs are attached | Publishing without an auditable rollback path |
+
+## Automation safety
+
+Automation should strengthen review discipline, not create a side door around it.
+
+| Rule | Why it matters |
+|---|---|
+| Use explicit `permissions:` blocks | Reduces blast radius when a job is compromised or misconfigured. |
+| Prefer PR-based mutation over direct writes to protected branches | Keeps review and audit artifacts in one place. |
+| Keep automation deterministic and bounded where possible | Makes behavior testable and replayable. |
+| Add `timeout-minutes` and `concurrency` where jobs can hang or pile up | Prevents hidden queue growth and confusing duplicate runs. |
+| Keep external action references intentional and reviewable | Helps supply-chain review and update discipline. |
+| Separate low-trust validation lanes from protected release or deploy lanes | Preserves approval boundaries. |
+| Require human approval for sensitive, novel, or policy-significant publication-adjacent changes | Maintains separation of duty. |
+| Keep a kill-switch path for harmful automation | Safe shutdown is part of safe automation. |
+
+### Optional advanced automation pattern
+
+Watcher / Planner / Executor-style automation may be useful later, but it should remain **optional**, **PR-based**, **deterministic where practical**, and **unable to merge directly to protected branches**. Do not document it here as live behavior unless that has been verified on the target branch.
 
 ## Quickstart
 
@@ -240,7 +291,7 @@ Use this to re-ground `.github/` in the current branch before making claims abou
 # identify the exact revision
 git rev-parse HEAD
 
-# inspect the GitHub control plane surface
+# inspect the GitHub control-plane surface
 find .github -maxdepth 3 -type f | sort
 find .github -maxdepth 3 -type d | sort
 
@@ -259,33 +310,34 @@ find .github/ISSUE_TEMPLATE .github/DISCUSSION_TEMPLATE .github/PULL_REQUEST_TEM
 cat .github/required-checks.v1.json 2>/dev/null || true
 
 # inspect related governance surfaces outside .github
-find policy -maxdepth 3 -type f 2>/dev/null | sort
-find contracts schemas tests -maxdepth 3 -type f 2>/dev/null | sort
+find policy contracts schemas tests docs -maxdepth 3 -type f 2>/dev/null | sort
 ```
 
 ### Verify these before documenting branch behavior as fact
 
-1. Which workflow names are actually active on the target branch?
+1. Which workflow names and job names are actually active on the target branch?
 2. Which checks are required by GitHub rulesets or branch protections?
-3. Which reusable actions are production-critical versus helper wrappers?
-4. Which templates are default versus specialized?
-5. Which automation paths can create or publish outputs, and where is human approval enforced?
+3. Does `required-checks.v1.json` drive enforcement directly, or is it advisory only?
+4. Which reusable actions are production-critical versus helper wrappers?
+5. Which environments require approval, and which events may reach them?
 6. Which settings live only in GitHub and therefore cannot be confirmed from files alone?
+
+[Back to top](#top)
 
 ## Change discipline
 
-### 1) Workflow changes
+### Workflow and required-check changes
 
 When you add or modify a workflow:
 
-1. keep workflow names stable if they are referenced by required checks
+1. keep workflow and job names stable if rulesets depend on exact check names
 2. use explicit, least-privilege permissions
 3. add `timeout-minutes` and `concurrency` where jobs can hang or pile up
 4. prefer reusable actions or reusable workflows over repeated YAML
 5. make failures visible, actionable, and fail-closed
-6. update this README when the control-plane shape or expectations change
+6. update `required-checks.v1.json`, this README, and verification notes in the **same change** when check names change
 
-### 2) Reusable action changes
+### Reusable action changes
 
 When you change a local action in [`./actions/`](./actions/):
 
@@ -295,106 +347,84 @@ When you change a local action in [`./actions/`](./actions/):
 4. avoid smuggling repo business logic into GitHub wrappers
 5. update callers and docs together
 
-### 3) Template changes
+### Template and docs changes
 
 When you update issue, discussion, or PR templates:
 
 1. ask for the minimum information needed to review well
-2. request affected paths, validation, policy impact, and rollback notes
-3. do not ask contributors to paste secrets, credentials, or private tokens
+2. request changed paths, validation, policy impact, docs impact, and rollback notes
+3. do **not** ask contributors to paste secrets, credentials, or private tokens
 4. keep templates aligned with repo-root posture and contribution docs
-5. do not pretend that a template itself enforces runtime policy
+5. remember that templates can request evidence, but they do not enforce runtime policy
 
-### 4) Ownership and required-check changes
+### Ownership and routing changes
 
-When you change `CODEOWNERS`, check names, or required-check manifests:
+When you change `CODEOWNERS`, check names, or review routing:
 
 1. preserve clear accountability
 2. avoid collapsing submitter and approver for policy-significant changes
 3. keep governance-heavy areas explicitly owned
-4. update workflow names, manifest entries, and docs in the **same change**
-5. verify whether GitHub rulesets read from the manifest directly or whether it is advisory only
+4. verify that GitHub org/team mappings still resolve as intended
+5. document any reviewer-path change that affects merge behavior
 
-### 5) Change bundles
+### Change bundles
 
-A good `.github/` change usually updates the related surfaces together.
+A good `.github/` change usually updates related surfaces together.
 
 | Change type | Update together |
 |---|---|
-| Workflow name / check name change | workflow file, `required-checks.v1.json`, README, and ruleset-verification notes |
-| Local action interface change | action metadata, callers, README, and smoke validation |
-| Template prompt change | template file, README, and contributor-facing docs |
-| Ownership routing change | `CODEOWNERS`, README, and reviewer/approval notes |
-| Release-flow change | workflow, approval assumptions, artifact naming, and rollback notes |
+| Workflow name / check name change | Workflow file, `required-checks.v1.json`, this README, and ruleset-verification notes |
+| Local action interface change | Action metadata, callers, smoke validation, and docs |
+| Template prompt change | Template file, this README, and contributor-facing docs |
+| Ownership routing change | `CODEOWNERS`, this README, and any review-path notes |
+| Release-lane change | Workflow, environment/approval notes, rollback path, and runbook references |
 
-### 6) Permissions, secrets, and supply-chain posture
+### Failure modes to prevent
 
-| Rule | Why it matters |
+| Failure mode | Why it is dangerous |
 |---|---|
-| Use explicit `permissions:` blocks | Reduces blast radius when a job is compromised or misconfigured. |
-| Keep external action references intentional | Reduces drift and makes supply-chain review easier. |
-| Set timeouts and concurrency where appropriate | Prevents hung jobs and duplicate noisy runs. |
-| Keep artifact naming and retention intentional | Improves auditability and rollback clarity. |
-| Never print or solicit secrets in templates or logs | Reduces accidental leakage. |
-| Separate PR validation from protected release jobs | Preserves approval boundaries. |
-
-### 7) Governance-sensitive change cues
-
-Some changes need stronger prompts in templates and stronger review expectations.
-
-| Change area | Prompt reviewers to ask | Expected gates |
-|---|---|---|
-| `.github/workflows/`, `.github/actions/`, `required-checks.v1.json` | Did check names change? Did permissions widen? What is the rollback path? | CI smoke run, README update, ruleset verification |
-| `policy/`, `contracts/`, `schemas/` | What contract or policy changed? Is the change backward-compatible? | policy tests, schema/contract validation |
-| `data/` catalog or provenance surfaces | Which catalogs, links, or evidence paths changed? | STAC/DCAT/PROV validation, link checks |
-| Restricted city / infrastructure exposure | Does this affect public vs restricted data handling, export, or redaction? | policy checks, denial-path tests, audit/log review |
-| Story / AI / Focus Mode changes | How are citations, abstention, and policy checks affected? | evaluation harness, policy tests, docs update |
-| Educational / scenario surfaces | Is the fact/speculation boundary still explicit? What changed for privacy/accessibility? | docs update, scenario/role tests, reviewer confirmation |
-
-### 8) Docs are a governed surface
-
-Because KFM treats docs as operational, `.github/` changes should also consider:
-
-- template clarity
-- README accuracy
-- review ergonomics
-- support discoverability
-- merge-gate transparency
+| Workflow/job rename without ruleset update | Creates invisible merge drift. |
+| `required-checks.v1.json` exists but nobody knows who consumes it | Produces false confidence. |
+| Widened workflow permissions with no rationale | Expands blast radius silently. |
+| Templates that request secrets or hide policy impact | Damages trust and review quality. |
+| Treating merge success as publication success | Collapses code review and governed promotion into one false step. |
+| Behavior change without README update | Breaks KFM’s docs-as-production-surface rule. |
 
 ## Definition of done
 
 A `.github/` change is in good shape when all of the following are true:
 
 - [ ] The change fits the directory boundary and does not smuggle runtime logic into GitHub config.
-- [ ] Workflow names, check names, and manifests remain aligned.
+- [ ] Workflow names, job names, and `required-checks.v1.json` remain aligned.
+- [ ] Required-check and ruleset assumptions are verified or explicitly kept `UNKNOWN`.
 - [ ] Permissions are explicit and least-privilege for the job’s purpose.
 - [ ] Templates ask for useful evidence and do not solicit secrets.
 - [ ] `CODEOWNERS` and reviewer routing remain intentional.
-- [ ] Required-check and ruleset assumptions are verified or explicitly kept `UNKNOWN`.
-- [ ] README and contribution-facing docs were updated when behavior changed.
-- [ ] The change is additive, reversible, and reviewable.
-- [ ] Policy enforcement remains in governed backend/tested layers, not just in form text.
-- [ ] There is a clear rollback path if the automation misbehaves.
+- [ ] The merge/publication distinction is still clear.
+- [ ] Docs were updated when contributor or control-plane behavior changed.
+- [ ] There is a clear rollback path if automation misbehaves.
+- [ ] Policy enforcement still lives in governed backend/tested layers, not just in form text.
+- [ ] Sensitive or high-impact automation still preserves human review boundaries.
 
 ## FAQ
 
 ### Why keep some facts marked `UNKNOWN`?
-Because branch protections, rulesets, environment approvals, and secret scopes can exist outside the repo. KFM should not claim hidden GitHub settings as if they were proven by files alone.
+Because branch protections, rulesets, environment approvals, secret scopes, and merge-queue behavior can live outside the repo. KFM should not claim hidden GitHub settings as if they were proven by files alone.
 
-### Why not put policy logic in PR templates?
-Templates help contributors provide context, but runtime policy must be enforced by governed code, tests, and merge gates.
+### Is `required-checks.v1.json` automatically authoritative?
+Not by default. Treat it as a versioned control-plane surface, but verify its actual consumer and the out-of-repo rulesets before claiming enforcement behavior.
 
-### Why do stable check names matter?
-Because required checks often depend on exact workflow/job names. Renaming a check without updating manifests and GitHub rulesets creates invisible drift.
+### Why distinguish merge from publication?
+Because KFM publication is governed by truth-path promotion gates, rights, sensitivity, catalog validation, receipts, and policy tests. A green PR does not by itself make a dataset, story, or Focus behavior publishable.
 
 ### Why keep `.github/` separate from runtime code?
 To preserve clean boundaries between collaboration/automation surfaces and application/business logic.
 
-### Should restricted infrastructure or export review cues appear in `.github/`?
-Yes, as review prompts and gate expectations. No, as the runtime policy source of truth.
+### Should restricted infrastructure, sensitivity, or rights review cues appear here?
+Yes, as reviewer prompts and gate expectations. No, as the runtime policy source of truth.
 
-### Should evidence bundles or release artifacts live under `.github/`?
-No. `.github/` can trigger checks around evidence and release packaging, but governed artifacts belong on the truth path or designated release surfaces.
+### Should advanced automation agents live here?
+Only if they remain review-first, bounded, and unable to bypass protected-branch discipline. Otherwise they belong nowhere near a governed repo.
 
 ## Appendix
 
@@ -403,6 +433,7 @@ No. `.github/` can trigger checks around evidence and release packaging, but gov
 
 A strong KFM pull request template usually asks for:
 
+- purpose and scope
 - what changed
 - why it changed
 - affected paths
@@ -410,6 +441,7 @@ A strong KFM pull request template usually asks for:
 - policy / sensitivity impact
 - docs updated?
 - rollback plan
+- operational impact notes
 
 For governance-heavy changes, also ask:
 
@@ -417,20 +449,22 @@ For governance-heavy changes, also ask:
 - did permissions widen?
 - does this affect public vs restricted exposure?
 - does this affect citation, abstention, or evidence resolution behavior?
+- does this require a runbook or ADR update?
 
 </details>
 
 <details>
 <summary><strong>Minimal maintenance checklist</strong></summary>
 
-1. Review `.github/README.md`
-2. Review `CODEOWNERS`
-3. Review workflow inventory
-4. Review action inventory
-5. Review template inventory
-6. Review required-check mapping
-7. Verify out-of-repo branch protections / rulesets
-8. Update docs and rollback notes together
+1. review `.github/README.md`
+2. review `CODEOWNERS`
+3. review workflow inventory
+4. review action inventory
+5. review template inventory
+6. review required-check mapping
+7. verify out-of-repo rulesets / branch protections
+8. confirm environment approvals and protected lanes
+9. update docs and rollback notes together
 
 </details>
 
