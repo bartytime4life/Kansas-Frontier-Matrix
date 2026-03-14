@@ -1,0 +1,62 @@
+# Kansas Frontier Matrix CODEOWNERS
+#
+# Conservative starter file.
+# Current-session evidence confirms the repo uses path families such as
+# .github, docs, contracts, policy, data, apps, packages, infra, tools,
+# scripts, configs, migrations, examples, and tests, but it does not verify
+# live GitHub team handles in the mounted workspace. This file therefore uses
+# the repository owner as the safe default owner everywhere.
+#
+# TODO: replace or extend these entries with real org/team handles once they
+# exist in GitHub.
+
+# Default owner for the whole repository
+* @bartytime4life
+
+# Governance, release, and repo-control surfaces
+.github/                    @bartytime4life
+.github/workflows/          @bartytime4life
+contracts/                  @bartytime4life
+policy/                     @bartytime4life
+infra/                      @bartytime4life
+migrations/                 @bartytime4life
+
+# Evidence, data, and publication surfaces
+# Keep registry, catalog, and receipt-bearing paths under explicit review.
+data/registry/              @bartytime4life
+data/catalog/               @bartytime4life
+data/receipts/              @bartytime4life
+data/raw/                   @bartytime4life
+data/work/                  @bartytime4life
+data/processed/             @bartytime4life
+
+# Core application and package lanes
+apps/                       @bartytime4life
+apps/api/                   @bartytime4life
+apps/ui/                    @bartytime4life
+apps/workers/               @bartytime4life
+apps/cli/                   @bartytime4life
+packages/                   @bartytime4life
+packages/domain/            @bartytime4life
+packages/ingest/            @bartytime4life
+packages/catalog/           @bartytime4life
+packages/evidence/          @bartytime4life
+packages/policy/            @bartytime4life
+packages/indexers/          @bartytime4life
+
+# Documentation is a governed production surface
+# The docs/diagrams rule is included explicitly because the corpus recommends
+# gating diagram changes through CODEOWNERS.
+docs/                       @bartytime4life
+docs/architecture/          @bartytime4life
+docs/governance/            @bartytime4life
+docs/runbooks/              @bartytime4life
+docs/adr/                   @bartytime4life
+docs/diagrams/**            @bartytime4life
+
+# Tooling, scripts, config, examples, and tests
+tools/                      @bartytime4life
+scripts/                    @bartytime4life
+configs/                    @bartytime4life
+examples/                   @bartytime4life
+tests/                      @bartytime4life
