@@ -1,226 +1,231 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/TODO-uuid
-title: Data Directory
+doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
+title: data/
 type: standard
 version: v1
 status: draft
-owners: TODO(team-or-names)
-created: TODO(YYYY-MM-DD)
-updated: TODO(YYYY-MM-DD)
-policy_label: TODO(policy-label)
-related: [TODO(../contracts/), TODO(../policy/), TODO(../docs/), TODO(../apps/api/), TODO(../tests/)]
-tags: [kfm, data, truth-path, catalog, evidence, provenance]
-notes: [Aligned to mounted KFM doctrine; live repo tree beyond data/README.md was not directly verified in the current session.]
+owners: NEEDS VERIFICATION
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: NEEDS VERIFICATION
+related: [../README.md, ./registry/README.md, ./specs/README.md, ./catalog/README.md, ./catalog/stac/README.md]
+tags: [kfm, data, truth-path, catalog, provenance]
+notes: [Owners, dates, policy label, and doc_id were not directly verified from mounted repo metadata in the current session.]
 [/KFM_META_BLOCK_V2] -->
 
 # `data/`
+
 Governed storage and artifact zone for KFM source onboarding, lifecycle transitions, catalog closure, and proof-bearing release artifacts.
 
+> **Status:** draft  
+> **Owners:** NEEDS VERIFICATION  
+> **Path:** `data/README.md`  
+> ![status](https://img.shields.io/badge/status-draft-orange)
+> ![area](https://img.shields.io/badge/area-data%20surface-blue)
+> ![truth%20path](https://img.shields.io/badge/truth_path-governed-0a7d5a)
+> ![posture](https://img.shields.io/badge/posture-fail--closed-critical)
+> ![repo%20state](https://img.shields.io/badge/repo_state-evidence--bounded-lightgrey)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+
 > [!IMPORTANT]
-> This README is aligned to the mounted KFM corpus, but the live repository tree was **not** directly verified in the current session. Paths below beyond `data/README.md` are the **expected KFM layout** and should be confirmed against the repo before merge.
-
-| Status | Owners | Badges | Quick jump |
-| --- | --- | --- | --- |
-| Draft | TODO(team-or-names) | ![status: draft](https://img.shields.io/badge/status-draft-orange) ![truth%20path-governed](https://img.shields.io/badge/truth%20path-governed-blue) ![repo%20state-needs%20verification](https://img.shields.io/badge/repo%20state-needs%20verification-lightgrey) | [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Zone matrix](#zone-matrix) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) |
-
----
+> Treat `data/` as part of the KFM truth path, not as a general-purpose dump. This README distinguishes between **CONFIRMED** repo-visible surfaces and **PROPOSED / NEEDS VERIFICATION** contract surfaces so branch-local expectations do not get silently promoted into repo fact.
 
 ## Scope
 
-`data/` exists to hold KFM’s governed data-path materials, not just “files that happen to be data.”
+`data/` is the governed artifact space where KFM turns source intake into releaseable truth-path artifacts.
 
-In KFM terms, this directory is where source onboarding, immutable capture, transform staging, canonical publishable artifacts, catalog closure, and emitted receipts become inspectable and reviewable. It is part of the truth path and therefore part of the trust model.
+It is the directory family that anchors:
 
-This README treats `data/` as the home for:
+- source registration and onboarding intent
+- deterministic raw capture
+- transform and quarantine handling
+- canonical processed outputs
+- catalog closure across **DCAT + STAC + PROV**
+- receipts, manifests, and proof-bearing release evidence
 
-- source registry entries and intake metadata
-- immutable raw captures and their manifests
-- work and quarantine artifacts used during governed transforms
-- canonical processed artifacts ready for catalog closure
-- catalog triplet outputs and related metadata products
-- receipts, checksums, and related proof-bearing artifacts
+In KFM terms, this directory lives inside the canonical flow:
 
-> [!NOTE]
-> `PUBLISHED` is a **governed release state**, not necessarily a sibling directory. This README therefore documents the storage and artifact zones under `data/`, while treating publication as an exposure state reached through governed APIs and policy gates.
+`Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED`
+
+`PUBLISHED` is a **governed release state**, not necessarily a sibling folder in `data/`.
 
 [Back to top](#data)
 
 ## Repo fit
 
-**Path:** `data/README.md`
+`data/` sits between repo-level doctrine and governed runtime exposure.
 
-`data/` sits between source onboarding and governed exposure. It should receive source-native captures and emit canonical artifacts, catalog surfaces, and release evidence. It should **not** become a direct public contract surface.
+| Direction | Surface | Why it matters |
+|---|---|---|
+| Upstream | [`../README.md`](../README.md) | Repo-wide invariants, trust posture, and cross-directory fit. |
+| Upstream | [`../contracts/`](../contracts/) | Schemas, envelopes, vocabularies, and machine-checkable contract surfaces. |
+| Upstream | [`../policy/`](../policy/) | Rights, sensitivity, redaction, and fail-closed policy logic. |
+| Upstream | [`../docs/`](../docs/) | Runbooks, ADRs, architecture notes, and steward-facing guidance. |
+| Lateral | [`./registry/README.md`](./registry/README.md) | Registry-first intake contract for datasets and governed entries. |
+| Lateral | [`./specs/README.md`](./specs/README.md) | Canonical onboarding specs and `spec_hash` inputs. |
+| Lateral | [`./catalog/README.md`](./catalog/README.md) | Catalog triplet boundary for governed metadata closure. |
+| Lateral | [`./catalog/stac/README.md`](./catalog/stac/README.md) | STAC-specific asset packaging and delivery-facing geospatial metadata. |
+| Downstream | [`../apps/`](../apps/) | Governed runtime surfaces consume promoted scope only. |
+| Downstream | [`../tests/`](../tests/) | Fixtures, validators, and gate checks should prove lifecycle behavior. |
+| Downstream | [`../infra/`](../infra/) | Retention, restore, promotion, reconciliation, and release operations. |
 
-| Relationship | Expected repo neighbor | Why it matters here |
-| --- | --- | --- |
-| Upstream | [`../contracts/`](../contracts/) *(expected)* | Holds schemas, profiles, and machine-validated shapes that govern what may be stored or promoted under `data/`. |
-| Upstream | [`../policy/`](../policy/) *(expected)* | Carries rights, sensitivity, and fail-closed rules that determine whether material stays in quarantine, promotes, or remains withheld. |
-| Upstream | [`../docs/`](../docs/) *(expected)* | Provides architecture, runbooks, ADRs, and stewardship guidance that explain why `data/` is shaped the way it is. |
-| Downstream | [`../apps/api/`](../apps/api/) *(expected)* | Governed read/exposure path for promoted outputs, evidence resolution, and policy-safe retrieval. |
-| Downstream | [`../apps/ui/`](../apps/ui/) *(expected)* | Public and steward-facing surfaces should consume promoted scope only; they should never read `data/` directly. |
-| Downstream | [`../tests/`](../tests/) *(expected)* | Validation, contract, policy, and reproducibility checks should treat `data/` artifacts as first-class test fixtures. |
-| Downstream | [`../infra/`](../infra/) *(expected)* | Backup, retention, restore, and release discipline depend on knowing which `data/` materials are canonical versus rebuildable. |
+### Path posture
 
-> [!IMPORTANT]
-> The repo-fit map above is **expected KFM structure**, not a claim that every neighbor path is mounted and verified in this session.
+| Path class | Status here | Reading rule |
+|---|---|---|
+| `data/`, `data/registry/`, `data/specs/`, `data/catalog/` | **CONFIRMED** repo-visible documentation surfaces | Safe to reference directly. |
+| `data/raw/`, `data/work/`, `data/processed/`, `data/receipts/` | **PROPOSED / NEEDS VERIFICATION** as branch-local directory reality | Treat as contract surfaces unless directly confirmed on the target branch. |
+| `../apps/api/`, `../apps/ui/` | **PROPOSED / NEEDS VERIFICATION** as concrete subpaths | Use `../apps/` as the safe confirmed repo fit unless subpaths are verified. |
 
 [Back to top](#data)
 
 ## Accepted inputs
 
-The following belong here when they are under governed control and have clear lifecycle meaning:
+The following belong in or immediately around `data/`:
 
-- source registry entries and source-descriptor-adjacent metadata
-- immutable raw payloads, request details, rights snapshots, and checksums
-- work artifacts used for normalization, QA, geometry repair, redaction, or controlled joins
-- quarantine materials whose rights, sensitivity, or validation status remain unresolved
-- canonical processed artifacts such as GeoParquet, COG, PMTiles, and derivative tables
-- DCAT / STAC / PROV outputs and related closure artifacts
-- run receipts, validation reports, and release-adjacent evidence artifacts
+- source registry entries and onboarding metadata
+- dataset specs that stabilize `spec_hash` and version intent
+- immutable raw captures plus integrity evidence
+- transform-stage artifacts and validation outputs
+- quarantine materials for unresolved rights, sensitivity, or schema issues
+- canonical processed artifacts such as GeoParquet, COG, PMTiles, normalized tables, and governed JSON
+- catalog triplet artifacts: **DCAT**, **STAC**, **PROV**
+- receipts, manifests, validation reports, and correction-supporting evidence objects
 
 ## Exclusions
 
-The following do **not** belong here, or do so only under an explicitly documented exception:
+The following do **not** belong here as sovereign truth surfaces:
 
-- direct client-facing app assets or UI bundles
-- ad hoc notebook outputs treated as authoritative truth
-- uncataloged “final” files
-- direct public-access URLs that bypass policy or evidence resolution
-- secrets, credentials, tokens, or local machine state
-- undocumented caches, indexes, or one-off exports
-- derived search, vector, tile, or graph material that is not clearly labeled as rebuildable and non-authoritative
+- direct UI or public-client reads from `data/`
+  - use governed runtime surfaces under `../apps/` instead
+- policy logic or reason-code registries
+  - keep those under [`../policy/`](../policy/)
+- canonical API envelopes and shared machine contracts
+  - keep those under [`../contracts/`](../contracts/)
+- ad hoc notebooks or analyst-only transient exports presented as publishable truth
+  - route them through the governed lifecycle instead
+- search, vector, graph, tile, cache, or scene layers treated as authoritative
+  - those are downstream derived delivery surfaces
+- secrets, credentials, or runtime-only operational state
+  - keep those out of repo-tracked data surfaces
 
-> [!CAUTION]
-> If a file cannot explain its source, lifecycle zone, rights posture, and promotion status, it does not belong in `data/`.
+> [!NOTE]
+> `data/` may hold artifacts that later drive public behavior, but public behavior still crosses the governed API and policy boundary. Storage is not the trust membrane.
 
 [Back to top](#data)
 
 ## Directory tree
 
-The tree below reflects the **expected** KFM `data/` layout implied by the mounted manuals.
+The tree below is a **repo-fit + contract** view. It intentionally separates what is repo-visible now from what remains branch-sensitive.
 
 ```text
 data/
 ├── README.md
-├── registry/
-├── raw/
-├── work/
-│   └── quarantine/
-├── processed/
-├── catalog/
-│   ├── dcat/
-│   ├── stac/
-│   └── prov/
-└── receipts/
+├── registry/                  # CONFIRMED repo-visible contract surface
+│   └── README.md
+├── specs/                     # CONFIRMED repo-visible spec surface
+│   └── README.md
+├── raw/                       # PROPOSED / NEEDS VERIFICATION as current branch path
+├── work/                      # PROPOSED / NEEDS VERIFICATION
+│   └── quarantine/            # PROPOSED / NEEDS VERIFICATION
+├── processed/                 # PROPOSED / NEEDS VERIFICATION
+├── catalog/                   # CONFIRMED repo-visible metadata boundary
+│   ├── README.md
+│   ├── dcat/                  # PROPOSED / NEEDS VERIFICATION as current branch path
+│   ├── stac/                  # CONFIRMED repo-visible README surface
+│   │   └── README.md
+│   └── prov/                  # PROPOSED / NEEDS VERIFICATION as current branch path
+└── receipts/                  # PROPOSED / NEEDS VERIFICATION proof surface
 ```
 
-### Directory intent
+### Directory intent at a glance
 
-| Path | Role | Keep here | Do not treat as |
-| --- | --- | --- | --- |
-| `data/registry/` | Source and dataset registration surface | registry entries, source descriptors, intake metadata | public runtime API output |
-| `data/raw/` | Immutable acquisition zone | source-native captures, request details, rights snapshots, checksums | mutable working area |
-| `data/work/` | Controlled transform and QA zone | normalization outputs, repair steps, intermediate reports | publishable truth |
-| `data/work/quarantine/` | Held or blocked subzone | rights-unclear, sensitivity-unclear, failed-validation, review-blocked materials | warning-only pseudo-production |
-| `data/processed/` | Canonical publishable artifact zone | immutable, content-addressable outputs ready for catalog closure | public release by folder copy |
-| `data/catalog/` | Metadata and lineage boundary | DCAT / STAC / PROV materials and related closure outputs | a substitute for raw provenance |
-| `data/receipts/` | Proof-bearing run artifacts | run receipts, digests, validation outputs, release-adjacent evidence | optional logging noise |
-
-> [!TIP]
-> If the live repo chooses a slightly different physical split—especially around `work/` and `quarantine/`—preserve the doctrine first: **mutable transform space must remain distinct from blocked-review space and from canonical processed outputs**.
+| Surface | Role | Must be true before it matters |
+|---|---|---|
+| `registry/` | Declares what sources and datasets KFM intends to govern | Stable IDs, ownership/stewardship, policy label, and pipeline intent are explicit. |
+| `specs/` | Freezes dataset onboarding semantics into reviewable spec inputs | Canonical fields, defaults, fixtures, and `spec_hash` inputs are machine-checkable. |
+| `raw/` | Immutable acquisition capture | Original bytes, request context, rights snapshot, and checksums survive untouched. |
+| `work/` | Deterministic transform and QA lane | Transforms are reproducible and still blockable. |
+| `work/quarantine/` | Governance hold lane | Ambiguous rights, sensitivity, schema drift, or failed validation stop promotion here. |
+| `processed/` | Canonical publishable derivatives | Stable artifact IDs, explicit time/CRS semantics, and quality checks exist. |
+| `catalog/` | Discoverability + lineage closure | DCAT, STAC, and PROV resolve together without guessing. |
+| `receipts/` | Proof-bearing run and release evidence | Inputs, outputs, policy results, and integrity cues can be reconstructed later. |
 
 [Back to top](#data)
 
 ## Quickstart
 
-The fastest safe way to inspect whether `data/` matches KFM doctrine is to verify the zone boundaries before touching any files.
+Use these commands to inspect the data surface without assuming every contract path already exists on the current branch.
 
 ```bash
-# Inspect the top-level layout
+# 1) Confirm the top-level data surface
 tree -L 2 data
 
-# Review what is registered as onboarded or expected sources
-find data/registry -maxdepth 2 -type f | sort
+# 2) Read the currently repo-visible contract docs
+test -f data/README.md && sed -n '1,160p' data/README.md
+test -f data/registry/README.md && sed -n '1,160p' data/registry/README.md
+test -f data/specs/README.md && sed -n '1,160p' data/specs/README.md
+test -f data/catalog/README.md && sed -n '1,200p' data/catalog/README.md
+test -f data/catalog/stac/README.md && sed -n '1,160p' data/catalog/stac/README.md
 
-# Inspect one raw acquisition batch
-find data/raw -maxdepth 4 -type f | sed -n '1,40p'
+# 3) Check which lifecycle paths actually exist on the current branch
+find data -maxdepth 2 -type d | sort
 
-# Confirm catalog materials exist
-find data/catalog -maxdepth 3 -type f | sort
+# 4) Inspect catalog-facing files if present
+find data/catalog -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,80p'
 
-# Review receipts or validation artifacts
-find data/receipts -maxdepth 3 -type f | sort
+# 5) Inspect receipts or manifests if present
+find data -maxdepth 3 \( -iname '*receipt*' -o -iname '*manifest*' \) 2>/dev/null | sort
 ```
 
-### Minimal inspection checklist
+### Minimal review sequence
 
-1. Confirm a source or dataset is represented in `data/registry/`.
-2. Confirm raw acquisition is immutable and accompanied by manifest/checksum material.
-3. Confirm work artifacts are separated from canonical processed outputs.
-4. Confirm no processed artifact is treated as done until catalog closure exists.
-5. Confirm public/runtime paths consume promoted scope through governed services, not directly from `data/`.
+```bash
+# Inspect current contract surfaces
+tree -L 2 data/registry data/specs data/catalog 2>/dev/null
+
+# Verify that raw/work/processed paths are not being treated as public delivery surfaces
+find data -maxdepth 2 -type d | grep -E '/(raw|work|processed|receipts)$' || true
+```
 
 [Back to top](#data)
 
 ## Usage
 
-### 1. Register first, fetch second
+### 1. Register first
 
-Before a source enters `data/raw/`, it should have an identifiable home in `data/registry/`. Source intake is a contract, not a download.
+A source or dataset should be registered before it is fetched, transformed, or exposed. If KFM cannot say what a source is, why it is admissible, what cadence it carries, and what rights or sensitivity posture applies, intake is not ready.
 
-### 2. Preserve raw exactly once
+### 2. Spec before version
 
-`data/raw/` is for source-native capture plus the metadata required to reconstruct acquisition. Overwrite-in-place breaks lineage and weakens auditability.
+A dataset spec stabilizes intent. A dataset version records what actually happened. Keep those distinct so `spec_hash`, validation, and release evidence stay meaningful.
 
-### 3. Transform in `work/`, not in `processed/`
+### 3. Preserve raw exactly once
 
-Normalization, QA, geometry repair, redaction, OCR cleanup, temporary joins, and similar activities belong in `data/work/`. If rights or sensitivity remain unresolved, the material belongs in quarantine, not in processed output.
+`raw/` is for immutable capture, not convenient cleanup. Do not overwrite upstream payloads in place. Keep request context, rights snapshots, and checksums with the acquisition record.
 
-### 4. Promote only immutable, catalogable artifacts
+### 4. Transform only in `work/`
 
-`data/processed/` should contain canonical publishable artifacts that can regenerate a valid catalog triplet. If a processed artifact cannot support DCAT/STAC/PROV closure, it is not ready.
+Normalization, OCR, geometry repair, crosswalks, redaction transforms, and quality checks belong in `work/`. If risk is unresolved, move to `quarantine/`, not to `processed/`.
 
-### 5. Treat publication as a gated state transition
+### 5. Promote only immutable processed artifacts
 
-Files under `data/` are not public merely because they exist. KFM publication happens only after identity, rights, sensitivity, catalog, receipt, policy, and operational checks close successfully.
+`processed/` should hold canonical, publishable derivatives with stable IDs, explicit time/spatial semantics, and deterministic linkage back to intake and transform evidence.
 
-### 6. Keep authoritative and derived layers distinct
+### 6. Close the catalog triplet before exposure
 
-If rebuildable projections such as tiles, search indexes, graph expansions, or vector stores are materialized from canonical artifacts, they must not silently become authoritative truth.
+No dataset version is complete until the corresponding catalog boundary is valid and cross-linked. In KFM, that means the **DCAT + STAC + PROV** relationship is working, not implied.
 
-#### Illustrative raw-batch skeleton
+### 7. Treat publication as a state transition
 
-```text
-data/raw/<source_id>/<acquisition_date>/<batch_or_object>/
-├── manifest.json
-├── checksums.sha256
-├── rights_snapshot/
-└── payload/
-```
+`published` is not “copy files somewhere and hope.” Promotion binds identity, rights, sensitivity, catalog validity, receipts, policy checks, and operational readiness into one governed release decision.
 
-#### Illustrative receipt-adjacent manifest
+### 8. Keep derived layers derived
 
-```json
-{
-  "source_id": "example_source",
-  "acquired_at": "YYYY-MM-DDThh:mm:ssZ",
-  "batch_id": "example-batch",
-  "request": {
-    "method": "GET",
-    "params": {}
-  },
-  "rights_snapshot": "TODO",
-  "artifacts": [
-    {
-      "path": "payload/example.ext",
-      "sha256": "TODO"
-    }
-  ]
-}
-```
+Search, vector, graph, tile, cache, and scene layers may accelerate delivery, but they do not become sovereign truth. They remain downstream of approved release scope.
 
-> [!NOTE]
-> The JSON example above is illustrative only. Use the authoritative contract shape from the live repo once `../contracts/` is verified.
+> [!WARNING]
+> No public or analyst-facing governed behavior should bypass release scope, policy, or evidence resolution by reading raw, processed, or catalog storage directly.
 
 [Back to top](#data)
 
@@ -228,129 +233,166 @@ data/raw/<source_id>/<acquisition_date>/<batch_or_object>/
 
 ```mermaid
 flowchart LR
-    SE[Source edge] --> REG[data/registry]
-    REG --> RAW[data/raw]
+    SRC[Source edge] --> REG[data/registry]
+    REG --> SPEC[data/specs]
+    SPEC --> HASH[Canonicalize spec inputs<br/>compute spec_hash]
+    SRC --> RAW[data/raw]
     RAW --> WORK[data/work]
     WORK --> QUAR[data/work/quarantine]
     WORK --> PROC[data/processed]
-    QUAR -->|review / fix / deny| WORK
-    PROC --> CAT[data/catalog]
+    HASH --> DV[dataset_version_id]
+    DV --> PROC
+    PROC --> CAT[data/catalog<br/>DCAT + STAC + PROV]
     PROC --> REC[data/receipts]
-    CAT --> PUB[Published scope]
+    CAT --> PUB[Published state]
     REC --> PUB
-    PUB --> API[apps/api]
-    API --> UI[apps/ui]
-    API --> FOCUS[Focus / bounded AI]
+    PUB --> API[Governed API under ../apps/]
+    API --> UI[Trust-visible product surfaces]
+    API --> FOCUS[Focus Mode / evidence-bounded responses]
 
-    UI -. no direct reads .-> RAW
-    UI -. no direct reads .-> PROC
-    FOCUS -. no direct reads .-> RAW
+    UI -. no direct public reads .-> RAW
+    UI -. no direct public reads .-> PROC
+    UI -. no direct public reads .-> CAT
 ```
 
-### Read this diagram as policy, not just plumbing
+[Back to top](#data)
 
-- `data/` is part of the truth path.
-- Catalog and receipts are not decorative metadata; they are what make promotion inspectable.
-- Public/runtime surfaces consume **published scope**, not arbitrary filesystem state.
-- No client, map surface, or Focus surface should read `data/` directly.
+## Tables
+
+### Zone contract matrix
+
+| Zone / state | Core question | What belongs here | What must never happen here |
+|---|---|---|---|
+| `registry/` | *What do we intend to govern?* | Dataset and source registration contracts | Ad hoc intake with no declared identity or steward |
+| `specs/` | *What is the machine-reviewable intended shape?* | Dataset specs, fixtures, spec inputs, canonical defaults | Hidden spec drift living only in notebooks or verbal convention |
+| `raw/` | *What exactly arrived?* | Original payloads, request metadata, checksums, rights snapshots | In-place mutation or public exposure |
+| `work/` | *What deterministic repair or enrichment is occurring?* | OCR, normalization, geometry repair, crosswalks, QA outputs | Quiet promotion of unresolved artifacts |
+| `quarantine/` | *What remains unsafe or unresolved?* | Rights ambiguity, schema drift, failed validation, sensitive-location holds | Warning-only pseudo-production |
+| `processed/` | *What is now publishable in canonical form?* | GeoParquet, COG, PMTiles, normalized tables, governed JSON | Artifacts that cannot regenerate valid catalog closure |
+| `catalog/` | *Can discoverability, lineage, and evidence resolution work?* | DCAT, STAC, PROV and their cross-links | Marking a version complete when triplet closure is broken |
+| `receipts/` | *Can the run or release be reconstructed later?* | Receipts, manifests, validation reports, release evidence | Shipping a consequential release with no proof-bearing audit object |
+| `published` | *May this scope be exposed through governed runtime?* | Approved runtime-visible release scope | Treating publication as a folder copy instead of a gated transition |
+
+### Promotion gates
+
+| Gate | What must be true | Typical evidence surface |
+|---|---|---|
+| A — Identity & versioning | Stable `dataset_id`, `dataset_version_id`, deterministic `spec_hash`, artifact digests, non-ambiguous lineage | spec, manifest, digest set |
+| B — Licensing & rights | Rights posture and source terms are captured and reviewable | rights snapshot, source terms artifact |
+| C — Sensitivity & redaction | Restricted fields, locations, or generalized views are explicitly handled | policy label, obligations, redaction outputs |
+| D — Catalog triplet validation | DCAT, STAC, and PROV are valid and cross-linked | catalog validators, link-check reports |
+| E — QA & thresholds | Dataset-specific quality rules are explicit and passed | validation report, threshold output |
+| F — Run receipt & audit record | Inputs, tool versions, outputs, checksums, and policy decisions are reconstructable | run receipt, audit object |
+| G — Release readiness | Ownership, rollback/correction path, and operational posture exist | release manifest, owner/steward evidence |
 
 [Back to top](#data)
 
-## Zone matrix
+## Task list
 
-| Zone or state | Primary question it answers | Typical contents | Must never happen here |
-| --- | --- | --- | --- |
-| `raw/` | *What exactly did we receive?* | source-native payloads, request metadata, terms snapshots, checksums | in-place mutation or public exposure |
-| `work/` | *What are we transforming, checking, or repairing?* | normalization outputs, QA reports, repair steps, temporary joins | pretending intermediate outputs are canonical |
-| `work/quarantine/` | *What is blocked pending rights, sensitivity, or validation closure?* | failed validation, unresolved policy, withheld materials, review packets | warning-only pseudo-production |
-| `processed/` | *What is canonical and publishable if catalog closure succeeds?* | immutable artifacts, canonical tables, publishable rasters or vectors | outputs with no reproducible lineage |
-| `catalog/` | *Can a version be discovered, understood, and traced?* | DCAT, STAC, PROV, closure outputs | marking a version complete with broken or missing triplet members |
-| `receipts/` | *Can we reconstruct what ran and what promoted?* | run receipts, checksums, validation outputs, release-adjacent evidence | treating proof as optional |
-| `published` *(state)* | *May governed services expose this version?* | policy-safe exposure state | confusing a state transition with a folder copy |
+### Definition of done for a governed dataset lane
 
-[Back to top](#data)
+- [ ] Source or dataset registry entry exists and is reviewable.
+- [ ] Dataset spec exists where the lane requires spec-driven identity or `spec_hash`.
+- [ ] Raw acquisition preserves payload, request context, rights snapshot, and checksums.
+- [ ] Transform logic is reproducible and isolated from release state.
+- [ ] Quarantine path exists for unresolved rights, sensitivity, schema, or quality risk.
+- [ ] Processed artifacts are immutable, named deterministically, and link back to source/run evidence.
+- [ ] Catalog closure is valid across **DCAT + STAC + PROV**.
+- [ ] Receipts or manifests can explain what happened without tribal memory.
+- [ ] Governed API surfaces can expose promoted scope without direct storage access.
+- [ ] Derived delivery layers, if any, prove release linkage and stay rebuildable.
+- [ ] Correction or supersession can be represented without erasing prior evidence.
 
-## Task list / definition of done
+### Review checks before merge
 
-A dataset path touching `data/` is not done because a transform finished. It is done when the governed release path closes.
-
-- [ ] Source or dataset registry entry exists and validates.
-- [ ] Raw acquisition is captured immutably with manifest, request details, rights snapshot, and checksums.
-- [ ] Work outputs are reproducible from raw capture.
-- [ ] Rights, sensitivity, and redaction/generalization obligations are explicit.
-- [ ] Quarantine is used for ambiguity, not bypassed for convenience.
-- [ ] Processed artifacts are immutable and content-addressable.
-- [ ] Catalog closure exists and validates across DCAT / STAC / PROV.
-- [ ] Representative evidence references resolve cleanly.
-- [ ] Run receipts and validation artifacts exist.
-- [ ] Public/runtime exposure is gated through governed services only.
-- [ ] Owner, rollback note, and monitoring posture exist for any new release-significant surface.
-
-### Review gates that should block promotion
-
-- missing or unstable identity
-- missing rights or unresolved redistribution posture
-- unresolved sensitivity or absent redaction plan
-- broken triplet validation
-- missing receipt or checksum mismatch
-- failing policy or contract tests
-- no rollback path for a newly exposed release surface
+- [ ] No README prose quietly upgrades a target-state path into confirmed repo fact.
+- [ ] Public-safe vs restricted handling is visible where domain data needs it.
+- [ ] Example commands do not assume paths that the branch may not contain.
+- [ ] Relative links resolve or are clearly marked as contract/expected.
+- [ ] Terminology matches KFM doctrine: truth path, trust membrane, catalog triplet, evidence, promotion, correction.
 
 [Back to top](#data)
 
 ## FAQ
 
-### Why is `published` not shown as a directory?
-Because KFM treats publication as a governed **state transition** reached through policy and evidence closure, not as a guarantee of a filesystem folder.
+### Is `published/` a directory?
 
-### Can the UI, notebooks, or ad hoc scripts read from `data/` directly?
-Not as a public or governed behavior. KFM’s trust membrane requires external and UI access to cross governed APIs and policy boundaries.
+No. In KFM, **published** is first a governed release state. A branch may choose to materialize supporting artifacts for that state, but the concept itself is a transition with gates, not just a folder.
 
-### What should happen when rights or sensitivity are unclear?
-Keep the material in quarantine, preserve the ambiguity explicitly, and route it through steward review. Do not “temporarily” publish and fix later.
+### Why not read `data/` directly from the UI?
 
-### Are tiles, search indexes, vector stores, or graph expansions authoritative?
-Not by default. They are derived and rebuildable unless explicitly promoted under the same governance discipline as canonical artifacts.
+Because storage is not the trust membrane. Public and role-limited behavior is supposed to cross release scope, policy, and evidence resolution through governed runtime surfaces.
 
-### Why keep receipts inside the `data/` story at all?
-Because KFM treats evidence, promotion, and correction as operational facts. Receipts are part of the proof that a publishable object is reconstructible.
+### Why separate `registry/` and `specs/`?
+
+Because source or dataset intent is not the same thing as a frozen machine-reviewable onboarding contract. Keeping them separate helps preserve clear identity, versioning, and review boundaries.
+
+### Are search, graph, vector, and tiles part of `data/` truth?
+
+Not as sovereign truth. They may depend on `data/` artifacts and be built from approved release scope, but they remain derived delivery surfaces.
+
+### When should something enter `quarantine/`?
+
+At minimum when rights are ambiguous, sensitivity is unresolved, validation fails, schema drift is unsafe, or public-safe scope cannot yet be justified.
 
 [Back to top](#data)
 
 ## Appendix
 
 <details>
-<summary><strong>Glossary and starter reference</strong></summary>
+<summary>Glossary</summary>
 
-### Glossary
+| Term | Meaning in this README |
+|---|---|
+| Truth path | The governed movement from source edge through RAW, WORK / QUARANTINE, PROCESSED, CATALOG / TRIPLET, and into PUBLISHED state. |
+| Trust membrane | The rule that clients do not bypass governed API, policy, and evidence resolution to reach storage directly. |
+| Catalog triplet | The linked metadata boundary formed by **DCAT + STAC + PROV**. |
+| `spec_hash` | Deterministic identity input derived from canonicalized spec content where spec-driven versioning applies. |
+| Dataset version | A controlled processed subject set at explicit grain, time basis, and evidence state. |
+| EvidenceRef / EvidenceBundle | The route from a claim-bearing surface into inspectable policy-safe support. |
+| Authoritative | Truth-path artifacts or state KFM treats as system-of-record at their declared grain. |
+| Derived | Rebuildable layers such as search, vector, graph, tiles, summaries, and scenes. |
+</details>
 
-| Term | Meaning |
-| --- | --- |
-| **Truth path** | The governed movement from source acquisition through lifecycle zones into public-safe exposure. |
-| **Trust membrane** | The rule that public and UI access cross governed APIs and policy checks instead of reading stores directly. |
-| **Catalog triplet** | The linked DCAT / STAC / PROV boundary required for discoverable, traceable publication. |
-| **EvidenceRef / EvidenceBundle** | Stable evidence token and its governed, policy-safe resolved support package. |
-| **Public-safe** | Release posture that has already passed rights, sensitivity, precision, and visibility checks for the intended surface. |
-| **Authoritative** | Canonical truth-path artifact or record. |
-| **Derived** | Rebuildable projection, cache, tile, summary, graph, search, or vector layer that must remain subordinate to canonical truth. |
+<details>
+<summary>Starter conventions</summary>
 
-### Starter conventions
+A practical starter rule set for `data/`:
 
-- Keep raw immutable.
-- Keep quarantine explicit.
-- Keep processed content-addressable.
-- Keep catalog closure machine-validatable.
-- Keep receipts attached to meaningful transitions.
-- Keep public release downstream of governed APIs only.
+1. Name source and dataset identifiers deterministically.
+2. Keep raw acquisition append-only.
+3. Canonicalize spec inputs before computing `spec_hash`.
+4. Emit receipts whenever a lane crosses a promotion boundary.
+5. Keep catalog validation machine-checkable.
+6. Prefer explicit policy labels over implied handling.
+7. Record correction and supersession as evidence-bearing transitions, not silent overwrites.
+</details>
 
-### Anti-pattern summary
+<details>
+<summary>Anti-patterns</summary>
 
-- Treating `work/` outputs as “close enough” publishables.
-- Exposing raw files because they are easier to serve.
-- Collapsing rights review into UI-side hide/show logic.
-- Treating a tile, cache, or search result as sovereign truth.
-- Using `data/` as a miscellaneous dump for one-off exports.
+Avoid these patterns in or around `data/`:
 
+- treating `data/` as a catch-all scratchpad
+- publishing from analyst notebooks or transient transforms
+- inferring rights posture from convenience or silence
+- hiding catalog incompleteness behind UI polish
+- letting derived layers write back as authority
+- storing only polished outputs and discarding raw capture context
+- assuming that a missing evidence route can be patched later in the UI
+</details>
+
+<details>
+<summary>Related entrypoints</summary>
+
+- [`../README.md`](../README.md)
+- [`./registry/README.md`](./registry/README.md)
+- [`./specs/README.md`](./specs/README.md)
+- [`./catalog/README.md`](./catalog/README.md)
+- [`./catalog/stac/README.md`](./catalog/stac/README.md)
+- [`../contracts/`](../contracts/)
+- [`../policy/`](../policy/)
+- [`../docs/`](../docs/)
 </details>
 
 [Back to top](#data)
