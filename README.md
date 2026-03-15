@@ -1,93 +1,119 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/TBD-VERIFY-root-readme-uuid
+title: Kansas Frontier Matrix
+type: standard
+version: v1
+status: draft
+owners: TBD (verify ./.github/CODEOWNERS)
+created: YYYY-MM-DD (verify first commit date)
+updated: 2026-03-14
+policy_label: public
+related: [./CONTRIBUTING.md, ./.github/README.md, ./SECURITY.md, ./docs/, ./contracts/, ./policy/, ./data/, ./tests/]
+tags: [kfm, root-doc, governance, evidence-first, map-first, trust-system]
+notes: [Root README revision candidate; doc_id, owners, and created date require verification against repo metadata and CODEOWNERS.]
+[/KFM_META_BLOCK_V2] -->
+
 # Kansas Frontier Matrix
 
-Evidence-first, map-first, time-aware infrastructure for exploring Kansas through place, time, narrative, inspectable evidence, and policy-safe decision support.
+Governed, evidence-first, map-first, time-aware monorepo for Kansas spatial evidence, publication, and trust-visible product surfaces.
 
-> Status: draft  
-> Owners: verify [`.github/CODEOWNERS`](./.github/CODEOWNERS)  
-> ![status: draft](https://img.shields.io/badge/status-draft-lightgrey) ![policy: evidence-first](https://img.shields.io/badge/policy-evidence--first-1f6feb) ![posture: map-first](https://img.shields.io/badge/posture-map--first-2563eb) ![trust: fail--closed](https://img.shields.io/badge/trust-fail--closed-b91c1c) ![docs: governed](https://img.shields.io/badge/docs-governed-0f766e)  
-> Quick jump: [Purpose](#purpose) · [Truth labels](#truth-labels) · [Repo fit](#repo-fit) · [Read next](#read-next) · [Verified repo snapshot](#verified-repo-snapshot) · [Non-negotiables](#non-negotiables) · [First governed release slice](#first-governed-release-slice) · [Reference architecture](#reference-architecture) · [Canonical model](#canonical-model-and-three-clocks) · [Governed API](#governed-api-and-focus-mode) · [Product surfaces](#product-surfaces) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Quickstart](#quickstart) · [Definition of done](#definition-of-done--promotion-checklist)
-
-## Purpose
-
-Kansas Frontier Matrix (KFM) is a governed, evidence-linked, map-first, time-aware platform for Kansas history, environment, infrastructure, and public knowledge.
-
-It is not merely a map portal, a loose story editor, a dashboard bundle, or a free-form AI surface. Its public promise is that a user can move from a visible claim to inspectable evidence without crossing an invisible boundary into unverified convenience.
-
-The stable KFM operating promise is:
-
-- **Map Explorer** answers where.
-- **Time controls** answer when.
-- **Story / Story Studio** answer why the evidence matters.
-- **Evidence Drawer** answers what a visible claim rests on.
-- **Focus Mode** provides natural-language access without bypassing evidence or policy.
-
-This README is the repo-root operating contract for contributors. It is intentionally conservative. It upgrades claims to **CONFIRMED** only when they are supported by governing KFM doctrine or by repository evidence that is currently visible.
-
-## Truth labels
-
-| Label | Meaning here |
-|---|---|
-| **CONFIRMED** | Directly established by governing KFM documentation or by currently visible repository evidence. |
-| **PROPOSED** | A buildable implementation choice or product extension that fits KFM doctrine, but is not yet proven as live behavior. |
-| **UNKNOWN** | Not established by the supplied evidence and requiring branch, environment, or deployment verification before operational treatment. |
+> **Status:** draft  
+> **Owners:** verify in [`./.github/CODEOWNERS`](./.github/CODEOWNERS)  
+> ![status](https://img.shields.io/badge/status-draft-orange) ![repo](https://img.shields.io/badge/repo-public-blue) ![posture](https://img.shields.io/badge/posture-evidence--first-success) ![trust](https://img.shields.io/badge/trust-governed-lightgrey) ![docs](https://img.shields.io/badge/docs-production--surface-purple)  
+> **Quick jump:** [Evidence posture](#evidence-posture) · [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix--source--verification-notes)
 
 > [!IMPORTANT]
-> Visible repository structure is **CONFIRMED**. Runtime completeness is not. Treat deeper behavior as **UNKNOWN** until it is verified by code, workflows, manifests, tests, or logs on the branch you are actually reviewing.
+> This file is the repo-root operating index. Upgrade `PROPOSED` or `UNKNOWN` to `CONFIRMED` only when the active branch, contracts, tests, or release artifacts prove the claim.
 
-This README prefers auditable incompleteness over plausible fiction.
+## Evidence posture
+
+KFM is a trust system as much as a software system. This README stays conservative on purpose.
+
+| Label | Meaning in this file |
+|---|---|
+| **CONFIRMED** | Directly supported by current repo-visible evidence or the governing KFM corpus. |
+| **PROPOSED** | A buildable structure or operating rule that fits KFM doctrine but is not yet proven as live branch behavior. |
+| **UNKNOWN** | Not verified strongly enough to present as current implementation fact. |
+
+### Verification boundary
+
+This file may describe the repo’s governing posture, visible top-level shape, and current documentation contract, but it must not imply that every policy gate, workflow, route, or runtime proof already exists on the active branch.
+
+> [!NOTE]
+> Public repo visibility is confirmed. Exact merge-blocking checks, GitHub rulesets, environment approvals, deployed service coverage, and runtime enforcement depth still require branch-local or settings-level verification.
+
+## Scope
+
+Use this README for:
+
+- root-level project identity and operating posture
+- the top-level repo contract
+- the non-negotiable architectural laws
+- the current verified repo snapshot
+- verification-first contributor orientation
+- the minimum path from clone to trustworthy local inspection
+
+Do not use this README for:
+
+- the authoritative copy of schemas, API contracts, or policy bundles
+- exhaustive source-family inventories
+- generated receipts, manifests, or evidence bundles
+- branch-specific implementation claims that have not been re-verified
+- long-form runbooks that belong under [`./docs/`](./docs/)
 
 ## Repo fit
 
 **Path:** `/README.md`  
-**Repo role:** root orientation document for the monorepo.
+**Repo role:** root orientation document for the KFM monorepo.
 
-**Upstream**
-
-- source systems and acquisition connectors
-- normalization and transformation jobs
-- catalog builders and provenance emitters
-- policy decisions and review workflows
-- domain briefs, documentation standards, and source registries
-
-**Downstream**
-
-- Map Explorer
-- Evidence Drawer
-- Story / Story Studio
-- Focus Mode
-- Review & Stewardship surfaces
-- educational workspaces
-- science / modeling surfaces
-- future city / infrastructure extensions
-
-KFM should be read as a **truth path → catalog → governed API → user surface** system. The repo root is where contributors should learn the platform contract before descending into service-specific code or directory docs.
-
-## Read next
-
-Start here, then move outward:
-
-- [`./CONTRIBUTING.md`](./CONTRIBUTING.md) — contributor expectations and workflow
-- [`./SECURITY.md`](./SECURITY.md) — security reporting and security posture
-- [`./.github/README.md`](./.github/README.md) — GitHub-side control plane, workflow, and template discipline
-- [`./docs/`](./docs/) — long-form architecture, governance, standards, and runbooks
-- [`./contracts/`](./contracts/) and [`./schemas/`](./schemas/) — machine-readable contract and validation surfaces
-- [`./policy/`](./policy/) — policy logic and rule packs
-
-## Verified repo snapshot
-
-The repo now exposes enough live surface to replace the old “working root layout assumption” with a verified top-level snapshot.
-
-| Item | Status | Notes |
+| Direction | Surface | Why it matters |
 |---|---|---|
-| Repository visibility | **CONFIRMED** | Public GitHub repository on `main`. |
-| Top-level directories | **CONFIRMED** | `.github/`, `apps/`, `configs/`, `contracts/`, `data/`, `docs/`, `examples/`, `infra/`, `migrations/`, `packages/`, `policy/`, `schemas/`, `scripts/`, `tests/`, `tools/`. |
-| Top-level files | **CONFIRMED** | `CHANGELOG.md`, `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md`, `LICENSE`, `README.md`, `SECURITY.md`. |
-| GitHub-side control plane docs | **CONFIRMED** | `/.github/README.md` exists and already models a high-discipline directory documentation pattern. |
-| Exact merge-blocking rules, required checks, and environment approvals | **UNKNOWN** | Verify in GitHub rulesets, branch protection, and actual workflow outcomes. |
-| Exact implementation depth of apps, policies, contracts, and services | **UNKNOWN** | Visible top-level structure does not prove runtime completeness. |
+| Upstream | [`./CONTRIBUTING.md`](./CONTRIBUTING.md) | Root-level contribution contract and review discipline. |
+| Upstream | [`./.github/README.md`](./.github/README.md) | Current style benchmark for directory-level README quality. |
+| Upstream | [`./docs/`](./docs/) | Long-form architecture, governance, standards, ADRs, and runbooks. |
+| Upstream | [`./contracts/`](./contracts/), [`./schemas/`](./schemas/), [`./policy/`](./policy/) | Machine-enforced contract and policy surfaces. |
+| Downstream | [`./apps/`](./apps/) | User-facing apps and governed runtime entrypoints. |
+| Downstream | [`./packages/`](./packages/) | Shared internal modules and reusable core logic. |
+| Downstream | [`./data/`](./data/) | Registry, truth-path artifacts, and governed data-facing structures. |
+| Downstream | [`./infra/`](./infra/) | Bring-up, deployment, runtime, and operations surfaces. |
+| Downstream | [`./tests/`](./tests/), [`./tools/`](./tools/) | Verification, validation, reproducibility, and support tooling. |
 
-<details>
-<summary><strong>Confirmed top-level tree</strong></summary>
+KFM should be read as a **truth path → catalog → governed API → trust-visible surface** system. The repo root is where contributors learn that contract before descending into service- or directory-specific detail.
+
+## Accepted inputs
+
+This repo should accept only inputs that can participate in the evidence model and governed publication path.
+
+| Input type | Examples | Typical landing zone | Why it belongs |
+|---|---|---|---|
+| Historical tabular data | census extracts, registries, land records, archival tables | `RAW/` → `WORK/` | Supports long-form observations and time-aware joins. |
+| Vector geodata | boundaries, parcels, routes, service areas, sites | `RAW/` → `PROCESSED/` | Carries spatial identity into governed publication. |
+| Raster geodata | DEMs, land cover, climate grids, scenes, hazard rasters | `RAW/` → `PROCESSED/` | Supports map-first delivery and evidence-linked derivatives. |
+| Narrative evidence | archival documents, newspapers, oral histories, story drafts | evidence extraction flow | Enables stories and evidence bundles when rights are clear. |
+| Metadata and lineage | DCAT, STAC, PROV, manifests, sidecars | `CATALOG/` | Makes discovery, lineage, and evidence resolution operational. |
+| Derived outputs | analytics, model products, anomaly layers, reports | governed processed or runtime lanes | Allowed only when they stay linked to inputs, method, and receipts. |
+| Validation artifacts | QA reports, fixtures, review notes, drift checks | `WORK/`, `docs/`, `tests/` | Governance artifacts are part of the system, not disposable byproducts. |
+| Policy-safe civic / infrastructure assets | readiness tiers, service summaries, generalized facility layers | governed domain lanes | Must remain policy-labeled, auditable, and role-aware. |
+| Policy-safe learning / lab assets | lesson modules, guided tours, scenario presets, compare packs | `docs/`, `contracts/`, governed app assets | Must preserve provenance, privacy, accessibility, and fact/speculation boundaries. |
+
+## Exclusions
+
+The following do **not** belong in the governed publication path.
+
+| Exclusion | Why it stays out | Where it goes instead |
+|---|---|---|
+| Secrets, tokens, credentials | Never commit secrets to the repo. | Secret manager / environment configuration |
+| Direct client-to-store access patterns | Breaks the trust membrane and bypasses policy. | Governed API routes and policy-aware services |
+| Publishable artifacts without checksums, receipts, and catalogs | Cannot be audited, reproduced, or corrected safely. | Keep in `WORK/QUARANTINE` until complete |
+| Uncited story claims or unverified Focus answers | Violates cite-or-abstain. | Draft outputs, failed runs, or withheld publication states |
+| Rights-unclear or unresolved restricted public data | Ambiguity must fail closed. | Quarantine, metadata-only record, or redacted derivative |
+| Fine-grained restricted civic / infrastructure layers | Can create unauthorized precision or policy leakage. | Restricted lanes, generalized geometry, or aggregate views |
+| Docs that imply live behavior without proof | Overclaiming weakens trust. | Mark `UNKNOWN`, add verification steps, then update |
+| Classroom or scenario outputs that blur fact and speculation | Teaches the wrong evidence model. | Clearly labeled instructional or modeled lanes only |
+
+## Current verified snapshot
+
+### Confirmed top-level tree
 
 ```text
 Kansas-Frontier-Matrix/
@@ -114,71 +140,157 @@ Kansas-Frontier-Matrix/
 └── SECURITY.md
 ```
 
+### Top-level directory map
+
+| Path | Role in the repo |
+|---|---|
+| [`./.github/`](./.github/) | GitHub-side control plane for workflows, templates, review routing, and merge discipline |
+| [`./apps/`](./apps/) | Runnable services and user-facing applications |
+| [`./configs/`](./configs/) | Shared configuration that should not hard-code secrets |
+| [`./contracts/`](./contracts/) | API contracts, vocabularies, and interface surfaces |
+| [`./data/`](./data/) | Data specs, registries, examples, manifests, and governed data artifacts |
+| [`./docs/`](./docs/) | Architecture docs, ADRs, standards, runbooks, and long-form guidance |
+| [`./examples/`](./examples/) | Safe example material and demo assets |
+| [`./infra/`](./infra/) | Deployment, platform, and operational definitions |
+| [`./migrations/`](./migrations/) | Database or structure migration surfaces |
+| [`./packages/`](./packages/) | Shared libraries and internal core modules |
+| [`./policy/`](./policy/) | Policy-as-code, fixtures, and policy tests |
+| [`./schemas/`](./schemas/) | Validation schemas for ingestion, contracts, and publishing |
+| [`./scripts/`](./scripts/) | Automation and helper scripts |
+| [`./tests/`](./tests/) | Unit, integration, policy, and end-to-end tests |
+| [`./tools/`](./tools/) | Validators, CLIs, link checkers, and support tooling |
+
+### What is still `UNKNOWN`
+
+- exact current merge-blocking checks
+- exact GitHub rulesets and protected-environment behavior
+- exact branch-local implementation depth of every service, contract, and policy pack
+- exact runtime enforcement depth for evidence resolution, proof packs, and release gates
+- exact current deployment overlays and production telemetry posture
+
+## Quickstart
+
+The safest root-level quickstart is **verification-first**, not assumption-first.
+
+```bash
+# identify the exact revision
+git rev-parse HEAD
+
+# inspect the top-level and near-top-level shape
+find . -maxdepth 2 -type d | sort
+
+# inspect the GitHub control plane
+find .github -maxdepth 3 -type f | sort
+ls -la .github/workflows 2>/dev/null || true
+
+# inspect likely contract, schema, and policy surfaces
+find contracts policy schemas tests -maxdepth 3 -type f 2>/dev/null | sort
+
+# inspect likely truth-path and evidence primitives
+grep -RIn "spec_hash\|EvidenceRef\|EvidenceBundle\|policy_label\|opa\|rego" . || true
+grep -RIn "DCAT\|STAC\|PROV\|run_receipt\|promotion receipt\|quarantine" . || true
+
+# inspect optional surface lanes if present
+grep -RIn "Story Studio\|Focus Mode\|lesson_module\|student_artifact\|scenario_run" . || true
+grep -RIn "city dossier\|frontier_tier\|service_area\|infrastructure_asset\|readiness" . || true
+```
+
+<details>
+<summary>Illustrative local-first contributor flow (only use if analogous targets actually exist)</summary>
+
+```bash
+make bootstrap
+make validate-schemas
+make test
+make dev-up
+make sample-ingest SOURCE=example_fixture
+make catalog-validate
+```
+
 </details>
 
-### What this means
+### Before documenting branch behavior as fact
 
-The project has already crossed the threshold from a purely speculative monorepo shape into a real, structured repository. That changes the job of the root README: it should be a **verified operating index for the real tree** while still refusing to overclaim implementation depth.
+1. What exists on this branch?
+2. Which checks actually block merges?
+3. Which contracts, policies, and validations are enforced today?
+4. Is there one real end-to-end governed slice from acquisition to evidence-bearing publication?
+5. Are science, educational, or civic/infrastructure surfaces implemented, partially implemented, or still design posture only?
+6. Are fact/speculation, privacy, accessibility, and restricted-layer constraints enforced in runtime, or only described in docs?
 
-[Back to top](#kansas-frontier-matrix)
+## Usage
 
-## What KFM is
+### What KFM is
 
 KFM is:
 
-- a governed geospatial knowledge platform
-- a provenance-preserving data and publication system
+- a governed spatial evidence system
+- a provenance-preserving publication program
 - a catalog and evidence-resolution substrate
 - a family of coordinated user surfaces over one policy and evidence boundary
-- a foundation for Kansas historical, environmental, civic, and scientific work
-- a possible educational and public-learning surface when evidence, privacy, accessibility, and fact/speculation controls remain intact
-- a possible city/infrastructure decision surface when restricted layers remain policy-gated, auditable, and provenance-bearing
+- a Kansas-first operating environment for history, environment, infrastructure, and public knowledge
+- a platform that can grow into learning, science, and civic lanes without weakening the evidence contract
+
+### What KFM is not
 
 KFM is **not**:
 
 - a free-form chatbot
-- a generic upload-and-forget portal
+- a dashboard-only layer catalog
 - a direct browser-to-database GIS stack
-- a publication path that can skip rights, validation, or provenance checks
-- a repo where docs drift away from behavior without consequence
-- a classroom sandbox that treats speculative outputs as settled fact
-- a city dashboard that bypasses catalog, graph, policy, or evidence contracts
+- a graph-first authority engine
+- a publication path that can skip rights, validation, or provenance
+- a classroom or scenario sandbox that collapses fact, simulation, and synthesis into one tone
 
-## Non-negotiables
-
-The following are architectural laws, not stylistic preferences.
+### Non-negotiable invariants
 
 | Invariant | Status | What it means in practice | What must never happen |
 |---|---|---|---|
-| Truth path | **CONFIRMED** | Data moves through `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`. | Ad hoc publication from notebooks, temp files, or analyst-only transforms. |
-| Trust membrane | **CONFIRMED** | Public and role-limited access crosses governed APIs, policy, and evidence resolution. | UI or external clients bypassing policy via direct store access. |
-| Cite-or-abstain | **CONFIRMED** | Visible claims, stories, and Focus answers resolve to evidence or abstain. | Plausible uncited output presented as fact. |
-| Default-deny / fail-closed | **CONFIRMED** | Unclear rights, unresolved sensitivity, or broken evidence blocks release. | “Best effort” publication under ambiguity. |
-| Deterministic identity | **CONFIRMED** | Comparable inputs and the same spec produce the same logical identity and `spec_hash`. | Unstable IDs or ambiguous lineage. |
-| Evidence as interface | **CONFIRMED** | `EvidenceRef` resolves to an inspectable `EvidenceBundle`. | Provenance trapped in prose, PDFs, or disconnected notes. |
-| Separation of duty | **CONFIRMED** | Submission and policy-significant approval cross review boundaries. | Self-approval of sensitive or policy-significant releases. |
-| Docs as production surface | **CONFIRMED** | Behavior changes update docs, templates, tests, and runbooks together. | Silent drift between behavior and procedure. |
-| Fact / speculation boundary | **PROPOSED** | Educational and modeled outputs visibly distinguish baseline fact from projection. | Scenario output presented as observed reality or confirmed history. |
-| Governance-by-default for civic / infrastructure data | **PROPOSED** | Sensitive city / infrastructure layers stay policy-gated, auditable, and redactable. | Fine-grained restricted layers exposed publicly for UX convenience. |
-| Minimal learner-data posture | **PROPOSED** | Classroom workflows minimize collection, prefer pseudonymous identifiers, and avoid unnecessary permanent profiles. | Educational convenience driving silent telemetry growth or unnecessary identity capture. |
+| Truth path | **CONFIRMED** | Data moves through `RAW → WORK/QUARANTINE → PROCESSED → CATALOG/TRIPLET → PUBLISHED`. | Ad hoc publication from notebooks, temp files, or analyst-only transforms |
+| Trust membrane | **CONFIRMED** | Public and role-limited access crosses governed APIs, policy, and evidence resolution. | UI or external clients bypassing policy via direct store access |
+| Cite-or-abstain | **CONFIRMED** | Stories, visible claims, and Focus answers resolve to evidence or abstain. | Plausible uncited output presented as fact |
+| Default-deny / fail-closed | **CONFIRMED** | Unclear rights, unresolved sensitivity, or broken evidence blocks release. | “Best effort” publication under ambiguity |
+| Deterministic identity | **CONFIRMED** | Comparable inputs and the same spec produce the same logical identity and `spec_hash`. | Unstable IDs or ambiguous lineage |
+| Evidence as interface | **CONFIRMED** | Evidence must be resolvable and operational, not decorative. | Provenance trapped in disconnected notes |
+| Docs as production surface | **CONFIRMED** | Behavior changes update docs, templates, tests, and runbooks together. | Silent drift between behavior and written procedure |
+| Fact / speculation boundary | **PROPOSED** | Educational, modeled, and AI-synthesized outputs stay visibly distinct from direct observation. | Scenario or synthesized output presented as settled fact |
 
-## First governed release slice
+### Product surfaces and operating promise
 
-The first release should remain intentionally narrow. KFM’s strongest launch path is still **one fully governed vertical slice**, not a wide but weak feature spread.
+| Surface | Status | What it should answer |
+|---|---|---|
+| Map Explorer | **CONFIRMED concept** | **Where** |
+| Timeline / time controls | **CONFIRMED concept** | **When** |
+| Story / Story Studio | **CONFIRMED concept** | **Why the evidence matters** |
+| Evidence Drawer | **CONFIRMED concept** | **What a visible claim rests on** |
+| Focus Mode | **CONFIRMED concept** | Natural-language access **without bypassing evidence or policy** |
+| Review & Stewardship | **PROPOSED packaging** | Review, approval, correction, and release safety without leaving the governed shell |
 
-1. One time-aware boundary system.
-2. One promoted dataset family through the full truth path.
-3. One map layer that opens directly into evidence.
-4. One public story that resolves every claim.
-5. One Focus Mode path that either cites correctly or abstains.
+### Kansas operating lanes at a glance
 
-### Why this matters
+| Lane | Typical grain | Why it matters early |
+|---|---|---|
+| Historical / demographic | county-version, county-year, event-time | Establishes time-aware joins and a stable frontier-era baseline |
+| Hydrology / water | station-time, watershed, raster | Strong candidate for the first governed thin slice |
+| Hazards / disasters | event-time, county, polygon | High-value public context with visible governance needs |
+| Land / parcel / cadastral | parcel, legal description, PLSS section | Supports settlement, land-tenure, and archival interpretation |
+| Narrative / heritage | document, place, event-time | Critical for story publication and evidence depth |
+| Civic / infrastructure | service area, corridor, place | Useful, but must remain policy-labeled and precision-aware |
+| Science / modeling | run, parameter set, scenario output | Valuable only when assumptions and evidence remain visible |
 
-A narrow release slice proves that the project actually honors its promotion gates, evidence contracts, and policy boundary. Many half-governed surfaces only prove that governance was bypassed.
+### First governed slice
 
-## Reference architecture
+Prefer **one fully governed vertical slice** over many half-governed features.
 
-KFM should be reasoned about as a layered system whose boundaries matter more than any one tool choice.
+A credible opening slice is:
+
+1. one time-aware boundary system
+2. one promoted dataset family
+3. one map layer that opens into evidence
+4. one public story that resolves every claim
+5. one Focus flow that cites correctly or abstains
+
+## Diagram
 
 ```mermaid
 flowchart LR
@@ -191,308 +303,120 @@ flowchart LR
     F --> H[Story / Story Studio]
     F --> I[Focus Mode]
     F --> J[Evidence Drawer]
-    F --> K[Review & Stewardship]
-    F --> L[Future governed extensions]
+    F --> K[Review / Stewardship]
+
+    classDef canon fill:#eef6ff,stroke:#4a78c2,color:#183b6b;
+    classDef surface fill:#f8f6ff,stroke:#7c52c7,color:#3e246d;
+    class B,C,D,E,F canon;
+    class G,H,I,J,K surface;
 ```
 
-| Layer | Representative components | Canonical or rebuildable | Operational note |
-|---|---|---|---|
-| Source edge | Federal/state repositories, archives, APIs, downloads, sensor feeds, research distributions | Outside KFM | Capture request metadata, terms snapshots, and checksums at ingress. |
-| RAW | Immutable payloads, manifests, fetch metadata, digests, rights snapshots | Canonical | Highest replay value; never directly user-visible. |
-| WORK / QUARANTINE | Repairs, validations, transformations, redaction staging, failed-ingest holding area | Controlled intermediate | Normal workflow zone, not a shame folder. |
-| PROCESSED | GeoParquet, COG, PMTiles, JSON, reports, derivative tables, run outputs | Canonical for versioned outputs | Only meaningful when cataloged and receipted. |
-| CATALOG | DCAT dataset/service records, STAC collections/items/assets, PROV lineage records | Canonical metadata boundary | Discovery, lineage, and inspectability surface. |
-| Operational stores | PostgreSQL/PostGIS, optional graph store, search index, vector index, tile caches | Mostly rebuildable | Operationally critical, but not sovereign over truth. |
-| Governed API | REST/GraphQL endpoints, policy engine, evidence resolver, Focus runtime, run queue | Policy-mediated boundary | The trust membrane in executable form. |
-| Surfaces | Map Explorer, Story, Focus, Review, future governed extensions | Downstream | Must never access stores directly. |
+## Operating tables
 
-### Canonical vs rebuildable rule
-
-- **Canonical:** RAW, PROCESSED, catalog triplet members, run receipts, signed manifests, policy decisions.
-- **Rebuildable unless explicitly promoted:** search indexes, vector indexes, tiles, caches, denormalized summary tables, graph projections.
-
-## Truth path and promotion contract
+### Truth path and promotion contract
 
 Promotion is not a file copy. It is a governed state transition.
 
 | Gate | Minimum proof | Fail-closed behavior |
 |---|---|---|
-| Identity and versioning | `dataset_id`, `dataset_version`, `spec_hash`, stable logical key, deterministic naming | Fail if identity is missing, duplicated, or unstable. |
-| Schema and QA | Schema validity, CRS sanity, geometry/topology checks, interval sanity, row-count invariants | Route to `QUARANTINE` on blocking validation failure. |
-| Rights and license | License basis, source terms snapshot, attribution obligations, redistribution rules | Fail if rights are unclear or incompatible. |
-| Sensitivity and redaction | Policy label, redaction parameters, generalization method, obligations | Fail or route to restricted tier if unresolved. |
-| Catalog triplet | Valid DCAT, STAC, and PROV with working links and expected fields | Fail if any triplet member is missing or inconsistent. |
-| Receipt and attestation | Run receipt, checksums, and lane-required signing / attestation state | Fail when the active lane requires proofs and they are absent. |
-| Publish and ledger | Promotion receipt, audit append, registry/object write, API registration update | Fail if the final publish leaves the surface inconsistent. |
+| Identity and versioning | `dataset_id`, `dataset_version`, `spec_hash`, stable logical key, deterministic naming | Block on missing, duplicated, or unstable identity |
+| Schema and QA | schema validity, CRS sanity, geometry checks, interval sanity, row-count invariants | Route to `QUARANTINE` on blocking validation failure |
+| Rights and license | license basis, terms snapshot, redistribution rules, attribution obligations | Block if rights are unclear or incompatible |
+| Sensitivity and redaction | policy label, redaction parameters, generalization method, obligations | Block or restrict if sensitivity is unresolved |
+| Catalog triplet | valid DCAT, STAC, and PROV with working links | Block if any triplet member is missing or inconsistent |
+| Receipt and attestation | run receipt, checksums, artifact digests, lane-required signing or attestation | Block when required proofs are absent |
+| Publish and ledger | promotion receipt, audit append, release reference, rollback pointer | Block if final publication leaves the surface inconsistent |
 
-## Canonical model and three clocks
+### Canonical vs rebuildable rule
 
-The canonical KFM fact is a long-form observation, not a pre-baked dashboard cell. Each publishable observation should bind metric, spatial unit, time interval, value, uncertainty, dataset version, evidence reference, rights posture, and policy label.
-
-| Concept | Why it exists |
+| Class | Examples |
 |---|---|
-| `dataset` | Stable logical source family or curated product line |
-| `dataset_version` | Immutable promoted release tied to a spec hash and receipts |
-| `observation` | Canonical fact binding metric, place, time, value, uncertainty, provenance, rights, and policy |
-| `EvidenceRef` | Stable citation token suitable for UI, API, stories, and Focus |
-| `EvidenceBundle` | Resolved package of metadata, rights, provenance, freshness, checksums, and policy outcome |
-| `Story Node` / `Story Card` | Versioned narrative unit linking text, maps, charts, and governed evidence |
-| `run_receipt` | Machine-readable record of what ran, what it consumed, and what it emitted |
-| `audit_ref` | Stable identifier linking a user-visible action or answer to the path that produced it |
+| **Canonical** | `RAW`, `PROCESSED`, catalog triplet members, run receipts, signed manifests, policy decisions |
+| **Rebuildable unless explicitly promoted** | search indexes, vector indexes, tiles, caches, denormalized summary tables, graph projections |
 
-### Three clocks
+### Reference implementation profile
 
-| Clock | Meaning |
-|---|---|
-| Valid time | When a fact was true in the modeled world |
-| Event time | When an event occurred or a source document was published |
-| Transaction time | When KFM ingested, corrected, or rematerialized the record |
-
-## Governed API and Focus Mode
-
-The governed API is the trust membrane in executable form. It does not merely expose data; it enforces authentication, authorization, publication state, policy evaluation, and evidence resolution. If a dataset version or evidence view is not promotable, the API must not expose it.
-
-Focus Mode is a governed synthesis layer, not a truth source. It parses the question, retrieves admissible evidence, resolves `EvidenceBundles`, assembles a bounded answer context, verifies citations, and either returns a cited answer with an `audit_ref` or abstains.
-
-### Illustrative governed route families
-
-The following route families are **illustrative**. Treat them as a contract sketch until they are verified against code and live branch state.
-
-```text
-GET  /api/v1/catalog/datasets
-GET  /api/v1/stac/collections
-POST /api/v1/stac/search
-
-GET  /api/v1/observations
-GET  /api/v1/story-nodes
-GET  /api/v1/evidence/{evidence_ref}
-GET  /api/v1/audit/{audit_ref}
-
-POST /api/v1/policy/check
-POST /api/v1/focus/query
-POST /api/v1/runs
-POST /api/v1/briefs/export
-```
-
-## Product surfaces
-
-### Core surfaces
-
-| Surface | Status | Purpose |
+| Profile | Recommended shape | Why it fits |
 |---|---|---|
-| Map Explorer | **CONFIRMED** | Layered geographic exploration with time controls and evidence access. |
-| Evidence Drawer | **CONFIRMED** | Open metadata, rights, provenance, freshness, and versioning behind a visible claim. |
-| Story / Story Studio | **CONFIRMED concept** / **PROPOSED authoring shape** | Narrative publishing and evidence-linked story authoring under review state. |
-| Focus Mode | **CONFIRMED** | Governed Q&A with citation verification, audit refs, and abstention behavior. |
-| Review & Stewardship | **CONFIRMED concept** | Promotion approval, rights review, QA, corrections, and policy-aware publication controls. |
+| Local-first development | filesystem- or emulator-backed object storage, PostgreSQL + PostGIS, optional search/graph, governed API, policy engine, MapLibre, local model serving behind the API | Keeps the full trust membrane visible while staying easy to run locally |
+| Cloud-ready production | versioned object storage, PostgreSQL + PostGIS, optional search/graph, OAuth2/OIDC, container orchestration, centralized logs/metrics/traces, signing/attestation infrastructure | Preserves the same boundaries while scaling throughput, reliability, and auditability |
 
-### Future governed extensions
-
-| Surface | Status | Purpose |
-|---|---|---|
-| Educational Surface | **PROPOSED** | Evidence-first learning workspaces for Explore / Explain / Speculate / Teach. |
-| Science & Physics Surface | **PROPOSED** | Governed scientific layers, model runs, and provenance-bearing analytical outputs. |
-| Cities & Infrastructure | **PROPOSED** | City dossiers, infrastructure browsing, readiness/risk drilldowns, and exportable briefs inside the same evidence plane. |
-
-### Trust-visible UX rules
-
-- Every inspectable value should open into evidence.
-- Rights, freshness, and uncertainty must be visible at the point of use.
-- Derived and modeled outputs must be labeled as such.
-- Restricted layers must deny cleanly and audibly rather than leaking through convenience paths.
-
-## Kansas domain foundation
-
-KFM should treat Kansas not simply as background geography but as the substantive domain the platform exists to explain.
-
-| Domain | Why it matters | Immediate implication for KFM |
-|---|---|---|
-| Migration and settlement history | Kansas is defined by repeated waves of movement and displacement. | County-year demographic layers, movement corridors, and narrative evidence need first-class support. |
-| Geology | Geology shapes soils, groundwater, hazards, and land use. | Stratigraphy, surficial history, and geologic layers should inform long-run place explanation. |
-| Hydrology | Rivers, reservoirs, aquifers, drought, and floods are statewide organizing forces. | Hydrology is a first-wave data lane for maps, alerts, and modeling. |
-| Hazards | Kansas faces drought, flood, severe weather, wildfire, and related cascading risks. | Hazard overlays and time-aware risk context belong in early public surfaces. |
-| Agriculture | Farming and agricultural economies shape land, labor, migration, and infrastructure. | Agricultural indicators and land-cover / agri layers deserve first-class support. |
-| Wildlife and habitat | Species movement and habitat sensitivity create rights and sensitivity constraints. | Some ecological data must remain generalized, redacted, or restricted. |
-
-## Accepted inputs
-
-This repo should accept only inputs that can participate in the evidence model and truth path.
-
-| Input type | Examples | Typical landing zone | Notes |
-|---|---|---|---|
-| Historical tabular data | census extracts, land patents, registries, tabular archives | `RAW/` then `WORK/` | Preserve source metadata and acquisition receipts. |
-| Vector geodata | county boundaries, PLSS, routes, parcels, sites, event polygons | `RAW/` then `PROCESSED/` | Standardize schemas and IDs before promotion. |
-| Raster geodata | DEMs, land cover, climate grids, scenes, hazard rasters | `RAW/` then `PROCESSED/` | Prefer cloud-friendly formats and immutable checksums. |
-| Narrative evidence | archival documents, newspapers, oral histories, story drafts | `RAW/` then evidence extraction flow | Rights and sensitivity review may be required. |
-| Metadata and lineage records | DCAT, STAC, PROV, manifests, sidecars | `CATALOG/` | Cross-link IDs so `EvidenceRefs` resolve. |
-| Derived outputs | analytics, statistics, anomaly layers, model products | `PROCESSED/` or governed runtime artifacts | Must remain linked to inputs, method, and receipts. |
-| Validation artifacts | QA reports, accuracy tables, review notes, fixtures | `WORK/`, `docs/`, `tests/` | Governance artifacts are not disposable byproducts. |
-| Policy-safe civic / infrastructure assets | city boundaries, service areas, readiness tiers, critical-facility summaries, briefs | governed data lanes | Public vs restricted exposure must be policy-resolved. |
-| Policy-safe educational assets | lesson modules, rubrics, guided tours, scenario presets, Story Card templates | `docs/`, `contracts/`, governed app assets | Must not bypass provenance, role controls, or fact/speculation boundaries. |
-| Scenario receipts | parameter sets, seeds, model versions, compare summaries | governed runtime artifacts | Must remain clearly separate from observational facts. |
-
-## Exclusions
-
-The following do **not** belong in KFM’s governed publication path.
-
-| Exclusion | Why it stays out | Where it goes instead |
-|---|---|---|
-| Secrets, tokens, credentials | Never commit secrets to the repo. | Secret managers / environment configuration |
-| Direct client-to-store access patterns | Breaks the trust membrane and bypasses policy. | Governed API routes and policy-aware services |
-| Publishable artifacts without checksums, receipts, and catalogs | Cannot be audited or reproduced. | Keep in `WORK/QUARANTINE` until complete |
-| Uncited story claims or unverified Focus answers | Violates cite-or-abstain. | Draft or failed run outputs; not publishable |
-| Ambiguous-rights or unresolved restricted public data | Rights and sensitivity ambiguity must fail closed. | Quarantine, redacted derivative, or metadata-only record |
-| Fine-grained restricted civic / infrastructure layers | Can expose sensitive assets or imply unauthorized precision. | Restricted lanes, generalized geometry, or aggregate views |
-| Documentation that implies live implementation without verification | Breaks trust through overclaiming. | Mark `UNKNOWN`, add verification steps, then update |
-| Classroom outputs that blur fact and speculation | Damages trust and teaches the wrong model. | Keep as draft instructional material until labeled and evidenced correctly |
-| Permanent student dossiers or unnecessary learner telemetry | Violates minimal-data posture and increases governance burden. | Prefer pseudonymous, export-first, or local-first handling |
-
-## Current repo posture
-
-This section is intentionally conservative.
-
-### CONFIRMED now
-
-- The repository is public and currently exposes the verified top-level tree shown above.
-- `/.github/README.md` already demonstrates a stronger directory-doc pattern than the old root README: explicit purpose, repo fit, accepted inputs, exclusions, current snapshot, quickstart, operating rules, definition of done, and FAQ.
-- The repo has a visible GitHub Actions surface and an established commit history.
-
-### UNKNOWN still
-
-- Which checks actually block merges.
-- Which services are fully implemented versus merely designed.
-- Which contracts, policies, and validations are enforced today.
-- The extent of live science / modeling, educational, or city / infrastructure implementation.
-- Whether current deployment environments actually enforce the intended promotion contract.
-
-## Quickstart
-
-The safest root-level quickstart remains **verification-first**.
-
-```bash
-# clone if needed
-git clone https://github.com/bartytime4life/Kansas-Frontier-Matrix.git
-cd Kansas-Frontier-Matrix
-
-# identify the exact revision
-git rev-parse HEAD
-
-# inspect the top-level and near-top-level shape
-find . -maxdepth 2 -type d | sort
-
-# inspect workflow inventory, if present
-find .github -maxdepth 3 -type f | sort
-ls -la .github/workflows 2>/dev/null || true
-
-# look for core governance primitives
-grep -RIn "spec_hash\|EvidenceRef\|EvidenceBundle\|policy_label\|opa\|rego" . || true
-
-# inspect likely contract and policy surfaces
-find contracts policy schemas tests -maxdepth 3 -type f 2>/dev/null | sort
-
-# inspect likely catalog / truth-path artifacts
-grep -RIn "DCAT\|STAC\|PROV\|run_receipt\|promotion receipt\|quarantine" . || true
-
-# inspect science / scenario / educational traces, if any
-grep -RIn "scenario_run\|lesson_module\|student_artifact\|Story Studio\|Focus Mode" . || true
-
-# inspect civic / infrastructure traces, if any
-grep -RIn "city dossier\|frontier_tier\|service_area\|infrastructure_asset\|readiness" . || true
-```
-
-### Illustrative local-first contributor flow
-
-Only use the following if the repo actually implements analogous scripts or targets:
-
-```bash
-make bootstrap
-make validate-schemas
-make test
-make dev-up
-make sample-ingest SOURCE=example_fixture
-make catalog-validate
-```
-
-### Verify before claiming the branch is real
-
-1. What exists on this branch?
-2. Which checks actually block merges?
-3. Which contracts, policies, and validations are enforced today?
-4. Is there one real end-to-end governed slice from acquisition to evidence-bearing publication?
-5. Are science, educational, or civic / infrastructure surfaces represented as code, contracts, or only design posture?
-6. Are fact/speculation, privacy, accessibility, and restricted-layer constraints represented in runtime or only in docs?
-
-## Documentation and contributor discipline
-
-Docs are part of the governed surface, not commentary on the side.
-
-Every top-level directory README should, at minimum:
-
-- explain its purpose
-- state where it fits in the repo
-- define accepted inputs
-- define exclusions
-
-Behavior changes should update:
-
-- contracts
-- docs
-- tests
-- runbooks
-- fixtures or examples when relevant
-
-### Directory README rule
-
-Treat `/.github/README.md` as the current style benchmark for directory-level documentation. Other top-level directories should meet or exceed that standard.
-
-## Definition of done / promotion checklist
+## Task list / Definition of done
 
 Use this as the minimum repo-root gate list for serious work.
 
-- Spec hashing is stable across environments for comparable inputs.
-- Controlled vocabularies and schemas validate in CI.
-- DCAT / STAC / PROV links resolve and broken links block merges.
-- Policy tests default-deny and cover known restricted scenarios.
-- `EvidenceRefs` resolve to policy-safe `EvidenceBundles` end to end.
-- Map Explorer shows evidence, version, and rights information from the UI.
-- Story publication requires review state and resolvable citations.
-- Focus Mode either cites correctly with receipts or abstains.
-- Rights and sensitivity labels are present for publishable data.
-- Observational, derived, and speculative outputs are clearly separated.
-- Cities & Infrastructure outputs, if present, expose tier rationale, freshness, and provenance.
-- Restricted civic / infrastructure layers, if present, are auditable, role-aware, and deny cleanly.
-- Scenario outputs, if present, are labeled speculative, reproducible, and assumption-bearing.
-- Accessibility and privacy requirements are defined for any public-learning or classroom-facing surface.
-- Runbooks and docs are updated alongside behavior changes.
-
-## Highest-impact next steps
-
-1. Keep the root README as a **verified operating index**, not a speculative design essay.
-2. Keep deep source-library and annex material in `docs/`, not in the repo root.
-3. Use the first governed slice as the organizing principle for backlog and demos.
-4. Bring `apps/`, `contracts/`, `data/`, `docs/`, `infra/`, `packages/`, `policy/`, `schemas/`, `tests/`, and `tools/` up to the same explicit directory-README standard already visible in `/.github/README.md`.
-5. Make verification state machine-readable with versioned manifests for required checks, docs coverage, and promotion-gate evidence.
+- [ ] `spec_hash` behavior is stable across comparable inputs
+- [ ] controlled vocabularies and schemas validate in CI
+- [ ] DCAT/STAC/PROV links resolve and broken links block merges
+- [ ] policy tests default-deny and cover known restricted scenarios
+- [ ] `EvidenceRef` values resolve to policy-safe `EvidenceBundle` payloads end to end
+- [ ] Map Explorer exposes evidence, version, and rights information from the UI
+- [ ] story publication requires review state and resolvable citations
+- [ ] Focus Mode either cites correctly with receipts or abstains
+- [ ] rights and sensitivity labels are present for publishable data
+- [ ] observational, derived, modeled, and synthesized outputs are clearly separated
+- [ ] accessibility and privacy expectations are explicit for any public-learning or classroom-facing surface
+- [ ] runbooks and docs are updated alongside behavior changes
 
 ## FAQ
 
 ### Why is KFM stricter than a normal map portal?
 
-Because KFM is intended to be a trust system, not just a presentation layer. It treats provenance, policy, and evidence as runtime requirements.
+Because KFM is intended to be a **trust system**, not just a presentation layer. Provenance, policy, and evidence are runtime requirements, not post-publication decoration.
 
-### Why keep saying `UNKNOWN` when the repo is already large?
+### Why keep saying `UNKNOWN` when the repo is already substantial?
 
-Because repo size and workflow activity do not prove runtime governance. Visible code can confirm structure; it cannot by itself confirm policy enforcement, release proofs, or production behavior.
+Because repo size does not prove runtime governance. Visible code can confirm structure; it cannot, by itself, confirm policy enforcement, release proofs, or production behavior.
+
+### Why are catalogs and evidence objects treated as first-class?
+
+Because discovery, reproducibility, review, and public trust depend on resolvable metadata and lineage, not just on attractive maps.
+
+### Why keep observational data distinct from modeled or AI-derived outputs?
+
+Because KFM must preserve the difference between what was observed, what was inferred, what was simulated, and what was synthesized.
 
 ### Why is the first release intentionally narrow?
 
 Because one fully governed slice proves the architecture honestly. Many half-governed slices only prove that governance was bypassed.
 
-### Why support science / modeling and education at all?
+### Why does the root README avoid turning every design idea into a repo fact?
 
-Because both surfaces can widen KFM’s value without weakening the evidence contract — but only if they preserve provenance, labeling, privacy, accessibility, and policy gates.
+Because KFM’s own doctrine rejects persuasive overclaiming. The root doc should stay sharp, operational, and branch-honest.
+
+## Appendix — source & verification notes
+
+<details>
+<summary>Open the root-doc verification appendix</summary>
+
+### Governing rule
+
+The KFM manuals define project posture. In-repo files and branch evidence define current repo truth. This README should never blur those two layers.
+
+### Next in-repo surfaces to inspect
+
+- [`./.github/README.md`](./.github/README.md)
+- [`./CONTRIBUTING.md`](./CONTRIBUTING.md)
+- [`./docs/`](./docs/)
+- [`./contracts/`](./contracts/)
+- [`./policy/`](./policy/)
+- [`./schemas/`](./schemas/)
+- [`./tests/`](./tests/)
+- [`./infra/`](./infra/)
+
+### Root README maintenance rule
+
+Keep this file focused on:
+
+- repo identity
+- top-level boundaries
+- non-negotiable invariants
+- verified snapshot + verification boundary
+- the minimum governed quickstart
+- the definition of done for serious work
+
+Push deep source-library mappings, long domain inventories, and extended implementation notes into `docs/` once those pages are ready.
 
 [Back to top](#kansas-frontier-matrix)
 
-[contributing]: ./CONTRIBUTING.md
-[security]: ./SECURITY.md
-[github-readme]: ./.github/README.md
+</details>
