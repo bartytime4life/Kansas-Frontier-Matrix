@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "review_record",
+  "type": "object",
+  "additionalProperties": true
+}
