@@ -1,4 +1,45 @@
 # Kansas Frontier Matrix — CODEOWNERS
+# Current-tree-aligned baseline for the public repo.
+# Keep ownership broad and truthful to the visible tree.
+# Split into narrower path owners only after those paths exist in-repo
+# and the owners are verified with write access.
+
+# Global fallback
+* @bartytime4life
+
+# Governance boundary and self-protection
+/.github/ @bartytime4life
+/.github/CODEOWNERS @bartytime4life
+
+# Root governance / community files
+/README.md @bartytime4life
+/CHANGELOG.md @bartytime4life
+/CONTRIBUTING.md @bartytime4life
+/CODE_OF_CONDUCT.md @bartytime4life
+/SECURITY.md @bartytime4life
+/LICENSE* @bartytime4life
+
+# Observed top-level repo surfaces
+/apps/ @bartytime4life
+/configs/ @bartytime4life
+/contracts/ @bartytime4life
+/data/ @bartytime4life
+/docs/ @bartytime4life
+/examples/ @bartytime4life
+/infra/ @bartytime4life
+/migrations/ @bartytime4life
+/packages/ @bartytime4life
+/policy/ @bartytime4life
+/schemas/ @bartytime4life
+/scripts/ @bartytime4life
+/tests/ @bartytime4life
+/tools/ @bartytime4life
+
+# Confirmed docs subtrees already present and governance-sensitive
+/docs/governance/ @bartytime4life
+/docs/runbooks/ @bartytime4life
+/docs/standards/ @bartytime4life
+/docs/templates/ @bartytime4life# Kansas Frontier Matrix — CODEOWNERS
 # Conservative evidence-bounded starter.
 # Uses the confirmed repo owner as the valid fallback owner until
 # verified GitHub team slugs and branch-protection boundaries are inspected live.
