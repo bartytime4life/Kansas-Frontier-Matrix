@@ -1,14 +1,29 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: NEEDS-VERIFICATION
+title: migrations
+type: standard
+version: v1
+status: draft
+owners: NEEDS VERIFICATION
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public
+related: [../README.md, ../contracts/, ../schemas/, ../configs/, ../infra/, ../scripts/]
+tags: [kfm, migrations, storage-evolution]
+notes: [doc_id, owners, and dates require repo-side confirmation; related links verified at repo surface]
+[/KFM_META_BLOCK_V2] -->
+
 # `migrations`
 
 Deterministic schema and storage evolution for KFM persistent systems.
 
 > **Status:** draft  
 > **Owners:** **NEEDS VERIFICATION**  
-> ![status](https://img.shields.io/badge/status-draft-orange) ![surface](https://img.shields.io/badge/surface-migrations-blue) ![posture](https://img.shields.io/badge/posture-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey) ![db](https://img.shields.io/badge/db-PostgreSQL%20%2F%20PostGIS-informational) ![docs](https://img.shields.io/badge/docs-directory--contract-purple)  
+> ![status](https://img.shields.io/badge/status-draft-orange) ![surface](https://img.shields.io/badge/surface-migrations-blue) ![posture](https://img.shields.io/badge/posture-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-lightgrey) ![db](https://img.shields.io/badge/db-PostgreSQL%20%2F%20PostGIS-informational) ![repo_state](https://img.shields.io/badge/repo%20state-scaffolded-lightgrey) ![docs](https://img.shields.io/badge/docs-directory--contract-purple)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current snapshot](#current-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Migration posture](#migration-posture) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix--verification-notes)
 >
 > [!IMPORTANT]
-> This README is **evidence-bounded**. The public repo confirms that `migrations/` exists and is currently minimal, but it does **not** yet prove the active migration runner, engine coverage beyond the documented PostgreSQL/PostGIS bias, or whether migrations are applied automatically in any environment.
+> This README is **evidence-bounded**. The public repo confirms that `migrations/` exists and now includes scaffolded `notes/`, `postgres/`, and `postgis/` subdirectories, but it does **not** yet prove the active migration runner, whether those lanes are wired into CI/CD or deployment, or whether migrations are applied automatically in any environment.
 >
 > [!WARNING]
 > `migrations/` is a **storage-evolution surface**, not a publication shortcut. It must never bypass KFM’s truth path, trust membrane, policy checks, or release discipline.
@@ -34,7 +49,8 @@ In practical terms, this directory should carry schema and storage changes in a 
 |---|---|
 | **CONFIRMED** | `migrations/` is a top-level repository path. |
 | **CONFIRMED** | The root repo contract treats `migrations/` as a storage-evolution surface. |
-| **CONFIRMED** | The current public snapshot is minimal and should be documented honestly. |
+| **CONFIRMED** | The current public snapshot is **scaffolded rather than README-only**: `README.md`, `notes/README.md`, `postgres/README.md`, and `postgis/README.md` are present. |
+| **CONFIRMED** | Engine-scoped and note-scoped subdirectories now exist, but the current public tree does **not** yet confirm live SQL migration files on `main`. |
 | **PROPOSED** | This directory should hold deterministic, reviewable migrations, with the strongest documented bias toward PostgreSQL/PostGIS SQL. |
 | **PROPOSED** | Changes here should link to related contracts, schemas, tests, and docs when behavior changes. |
 | **UNKNOWN** | The active migration runner on `main` and the exact execution path in CI/CD or deployment. |
@@ -56,7 +72,9 @@ In practical terms, this directory should carry schema and storage changes in a 
 
 ### Downstream / adjacent consumers
 
-- files under [`./`](./) that actually perform schema or storage evolution
+- [`./postgres/`](./postgres/) for PostgreSQL-scoped migration material
+- [`./postgis/`](./postgis/) for spatial-extension and geometry-focused migration material
+- [`./notes/`](./notes/) for migration-local rationale, recovery notes, or review context
 - [`../tests/`](../tests/) for migration, regression, contract, and smoke-test coverage
 - [`../apps/`](../apps/) and [`../packages/`](../packages/) for code that depends on migrated structures
 - [`../docs/`](../docs/) for operator runbooks, release notes, and recovery procedures when those surfaces exist
@@ -84,12 +102,12 @@ The following belong in `migrations/` when they are part of durable, reviewable 
 
 | Input class | Examples | Why it belongs here |
 |---|---|---|
-| Schema migrations | `CREATE TABLE`, `ALTER TABLE`, constraint updates, index creation/drop | These evolve persistent structure directly. |
-| Spatial structure migrations | geometry/geography columns, SRID corrections, spatial indexes, extension enablement | KFM’s strongest documented storage bias is PostgreSQL/PostGIS. |
+| PostgreSQL schema migrations | `postgres/0001_*.sql`, `CREATE TABLE`, `ALTER TABLE`, constraint updates, index creation/drop | These evolve persistent structure directly. |
+| Spatial structure migrations | `postgis/0001_enable_extensions.sql`, geometry/geography columns, SRID corrections, spatial indexes | KFM’s strongest documented storage bias is PostgreSQL/PostGIS. |
 | Bounded storage-side transforms | replayable backfill inseparable from a schema change | Sometimes structure and transform must ship together. |
 | Compatibility notes | engine/version assumptions, extension requirements, ordering constraints | Reviewers need to understand storage prerequisites explicitly. |
 | Rollback / restore guidance | reversal SQL, restore notes, downgrade caveats | KFM should prefer visible recovery posture over assumed reversibility. |
-| Migration-local documentation | concise notes on purpose, order, preconditions, and verification | Migration history should stay auditable. |
+| Migration-local documentation | `notes/<migration-id>.md`, concise purpose/order/precondition notes | Migration history should stay auditable. |
 
 ### Minimum bar for anything added here
 
@@ -117,7 +135,16 @@ The following do **not** belong in `migrations/`.
 
 ## Current snapshot
 
-The public `migrations/` directory is intentionally sparse right now. That is not a problem by itself; it simply means this README must serve as a directory contract first, not as a retrospective description of tooling that has not been proven on the branch.
+The public `migrations/` directory is no longer README-only. It is still **documentation-first and lightly scaffolded**: engine-scoped and note-scoped subdirectories exist, but the current public tree does not yet prove live SQL migration files, an active runner, or automatic application semantics on `main`.
+
+### Current verified scaffold
+
+| Path | Current state | What that means |
+|---|---|---|
+| `migrations/README.md` | substantive directory README | The contract for this surface is already written and review-facing. |
+| `migrations/notes/README.md` | scaffold only | Notes lane exists, but no migration-local note files are publicly confirmed yet. |
+| `migrations/postgres/README.md` | scaffold only | PostgreSQL lane exists, but no concrete PostgreSQL migration files are publicly confirmed yet. |
+| `migrations/postgis/README.md` | scaffold only | PostGIS lane exists, but no concrete PostGIS migration files are publicly confirmed yet. |
 
 [Back to top](#migrations)
 
@@ -127,28 +154,37 @@ The public `migrations/` directory is intentionally sparse right now. That is no
 
 ```text
 migrations/
-└── README.md
+├── README.md
+├── notes/
+│   └── README.md
+├── postgis/
+│   └── README.md
+└── postgres/
+    └── README.md
 ```
 
 <details>
-<summary>Conservative future shape (PROPOSED, not current repo fact)</summary>
+<summary>Likely growth inside the current scaffold (PROPOSED, not current repo fact)</summary>
 
 ```text
 migrations/
 ├── README.md
+├── notes/
+│   ├── README.md
+│   └── <migration-id>.md
 ├── postgres/
+│   ├── README.md
 │   ├── 0001_*.sql
 │   ├── 0002_*.sql
 │   └── ...
-├── postgis/
-│   ├── 0001_enable_extensions.sql
-│   ├── 0002_spatial_indexes.sql
-│   └── ...
-└── notes/
-    └── *.md
+└── postgis/
+    ├── README.md
+    ├── 0001_enable_extensions.sql
+    ├── 0002_spatial_indexes.sql
+    └── ...
 ```
 
-Use a shape like this only if it matches the actual runner and review pattern chosen by the repo. Do **not** add a speculative tree just because it looks tidy.
+Use a shape like this only if it matches the actual runner and review pattern chosen by the repo. Do **not** add speculative file families just because the scaffold makes them look inevitable.
 </details>
 
 ## Quickstart
@@ -204,6 +240,17 @@ psql -v ON_ERROR_STOP=1 -c "SELECT PostGIS_Full_Version();"
 | Link adjacent contract work | If storage shape changes behavior, update related contracts, schemas, tests, and docs. | KFM treats docs and validation as part of the system. |
 | Separate schema evolution from publication | A migration may prepare storage, but it must not silently publish data or bypass policy. | Storage change is not governed publication. |
 | Keep recovery honest | Document rollback or restore posture even when the safe answer is “restore, not reverse.” | Hidden irreversibility is worse than visible irreversibility. |
+
+### Subdirectory intent (PROPOSED, aligns with the current scaffold)
+
+| Path | Intended role | Notes |
+|---|---|---|
+| `postgres/` | PostgreSQL-scoped structural change lane | Good fit for core DDL, constraints, indexes, and non-spatial storage evolution. |
+| `postgis/` | PostGIS and spatial-extension lane | Good fit for extension enablement, SRID/geometry changes, spatial indexes, and geometry repair steps that must remain reviewable. |
+| `notes/` | migration-local documentation lane | Good fit for restore notes, blast-radius summaries, operator caveats, and review context that should stay near the storage change. |
+
+> [!NOTE]
+> The table above reflects the current public scaffold and a repo-native interpretation of it. It is **not** a confirmed enforcement rule or runner contract on `main`.
 
 ### Practical authoring expectations
 
@@ -292,9 +339,13 @@ A migration change should not be called complete until the following are true.
 
 ## FAQ
 
-### Why keep `migrations/` even when it is almost empty?
+### Why keep `migrations/` even when it is still mostly scaffolded?
 
-Because the directory establishes a durable place for storage evolution before the repo accumulates one-off patterns that are harder to govern later.
+Because the directory establishes a durable place for storage evolution before the repo accumulates one-off patterns that are harder to govern later. A scaffolded lane is easier to tighten than an ad hoc history spread across unrelated folders.
+
+### Why are `postgres/` and `postgis/` present before public SQL files are confirmed?
+
+Because the current branch has already chosen an engine-scoped scaffold. What it has **not** yet proven publicly is the runner, file naming rule, or application pathway that turns that scaffold into executed migration history.
 
 ### Why not keep all SQL here?
 
