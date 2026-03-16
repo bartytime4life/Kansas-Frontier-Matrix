@@ -1,21 +1,36 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<TODO-tests-readme-uuid>
+title: tests
+type: standard
+version: v1
+status: published
+owners: @bartytime4life
+created: <TODO: verify YYYY-MM-DD>
+updated: 2026-03-16
+policy_label: public
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../contracts/README.md, ../docs/README.md]
+tags: [kfm, tests, verification, readme]
+notes: [owner confirmed from .github/CODEOWNERS; doc_id and original created date still need verification]
+[/KFM_META_BLOCK_V2] -->
+
 # tests
 
-Governed verification surface for KFM unit, integration, contract, policy, reproducibility, and end-to-end confidence work.
+Governed verification surface for KFM unit, integration, contract, policy, reproducibility, accessibility, and end-to-end confidence work.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/README.md`  
-> **Repo evidence:** current visible branch confirms `tests/` exists and currently contains `README.md`; broader test substructure remains target-state until added  
-> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Repo evidence:** current visible branch confirms `tests/` plus `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`; directory presence is branch-visible, but executable suite depth still requires direct checkout verification  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
 ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
 ![scope: governed verification](https://img.shields.io/badge/scope-governed%20verification-0a7ea4)
-![repo state: minimal](https://img.shields.io/badge/repo%20state-minimal%20current%20tree-f59e0b)
-![truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
+![repo state: visible families](https://img.shields.io/badge/repo%20state-visible%20test%20families-f59e0b)
+![truth posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN%20%7C%20NEEDS%20VERIFICATION-2ea043)
 
 > [!IMPORTANT]
-> `tests/` is not just a generic QA bucket. In KFM, verification is part of the governed publication system. Test assets here should prove that contracts validate, policies fail closed, evidence resolves, runtime outcomes stay inspectable, and correction paths remain safer than persuasive overclaiming.
+> `tests/` is not a generic QA bucket. In KFM, verification is part of governed publication, runtime trust, and correction discipline. Assets here should prove that contracts validate, policy fails closed, evidence resolves, runtime outcomes stay inspectable, and correction paths remain safer than persuasive overclaiming.
 
 ---
 
@@ -23,69 +38,66 @@ Governed verification surface for KFM unit, integration, contract, policy, repro
 
 `tests/` is the repository’s governed verification surface.
 
-In KFM terms, this directory should be where branch-visible test assets gather around the repo’s real confidence obligations: unit behavior, integration slices, contract and schema validation, policy checks, reproducibility checks, accessibility-critical flows, and end-to-end proof of release, runtime, and correction behavior.
+In KFM terms, this directory is where branch-visible confidence work gathers around the repo’s real obligations: deterministic local behavior, integration across governed boundaries, contract and schema validation, policy checks, accessibility-critical trust surfaces, reproducibility, and thin-slice end-to-end proof of release, runtime, and correction behavior.
 
-This directory is intentionally worth keeping even when small. A minimal `tests/` is better than an implied one, because KFM treats verification as a first-class operating boundary rather than an afterthought.
+This directory is worth keeping even when uneven. A thin but explicit verification surface is better than an implied one, because KFM treats verification as a first-class operating boundary rather than an afterthought.
 
 [Back to top](#tests)
 
 ## Repo fit
 
 **Path:** `tests/README.md`  
-**Directory role:** directory-level guide for governed verification and test-family boundaries
+**Role in repo:** directory-level guide for governed verification and test-family boundaries
 
 ### Upstream anchors
 
-- `../README.md`
-- `../CONTRIBUTING.md`
-- `../.github/README.md`
-- `../contracts/README.md`
-- `../docs/README.md`
-- `../.github/CODEOWNERS`
+| Direction | Surface | Why it matters |
+|---|---|---|
+| Upstream | [`../README.md`](../README.md) | Root project contract and top-level repo posture |
+| Upstream | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Contributor, review, and truth-discipline rules |
+| Upstream | [`../.github/README.md`](../.github/README.md) | Repo governance, collaboration, and CI/CD entrypoint |
+| Upstream | [`../contracts/README.md`](../contracts/README.md) | Authoritative contract families and machine-readable object layer |
+| Upstream | [`../docs/README.md`](../docs/README.md) | Canonical governed documentation index |
+| Upstream | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | Ownership and review boundary for `/tests/` |
 
-### Confirmed downstream contents
+### Confirmed downstream surfaces
 
-- `./README.md`
-
-### Expected downstream anchors (`PROPOSED` / `NEEDS VERIFICATION`)
-
-- `./unit/`
-- `./integration/`
-- `./contracts/`
-- `./policy/`
-- `./e2e/release_assembly/`
-- `./e2e/runtime_proof/`
-- `./e2e/correction/`
-- `./accessibility/`
-- `./reproducibility/`
+| Direction | Surface | Current meaning |
+|---|---|---|
+| Downstream | [`./accessibility/`](./accessibility/) | Accessibility-focused verification family |
+| Downstream | [`./contracts/`](./contracts/) | Contract-facing test family |
+| Downstream | [`./e2e/`](./e2e/) | End-to-end verification family |
+| Downstream | [`./integration/`](./integration/) | Integration-slice verification family |
+| Downstream | [`./policy/`](./policy/) | Policy and governance behavior family |
+| Downstream | [`./reproducibility/`](./reproducibility/) | Reproducibility and regression family |
+| Downstream | [`./unit/`](./unit/) | Deterministic local-behavior family |
 
 ### Adjacent responsibility zones
 
-- `../contracts/` and `../schemas/` hold authoritative contract and schema sources
-- `../policy/` holds rule bundles, reason codes, obligation logic, and policy fixtures
-- `../apps/`, `../packages/`, and `../infra/` hold runtime code and operational implementations
-- `../docs/` holds runbooks, standards, ADRs, and explanatory doctrine
-- `../tools/` holds validators, CLIs, link checkers, and support tooling
+- `../contracts/` and `../schemas/` hold authoritative contract and schema sources.
+- `../policy/` holds rule bundles, reason codes, obligation logic, and policy fixtures.
+- `../apps/`, `../packages/`, and `../infra/` hold runtime code and operational implementation.
+- `../docs/` holds runbooks, standards, ADRs, and explanatory doctrine.
+- `../tools/` holds validators, CLIs, support scripts, and verification-adjacent tooling.
 
 > [!NOTE]
-> The strongest KFM pattern is: **authoritative source of truth stays in its home; `tests/` proves the home behaves correctly.**  
-> This README therefore distinguishes between **what is verified on the branch today** and **what is the right target shape as test coverage grows**.
+> The strongest KFM pattern is: **authoritative source of truth stays in its home; `tests/` proves the home behaves correctly.**
 
 ## Accepted inputs
 
 Content that belongs in `tests/` includes:
 
 - unit tests for deterministic local behavior
-- integration tests for small governed slices across real boundaries
-- contract-validation tests for request/response envelopes and example payloads
+- integration tests for governed slices across real boundaries
+- contract-validation tests for envelopes, examples, and schema drift
 - policy tests for allow / deny / abstain / hold behavior
 - negative-path tests for evidence failure, citation failure, rights failure, and stale-state handling
 - end-to-end release-assembly tests
-- runtime-proof suites for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR` behavior
+- runtime-proof suites for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
 - correction and supersession drills
-- accessibility-critical flow tests for trust-visible surfaces
-- reproducibility and regression checks where artifacts, digests, or stable metrics matter
-- thin test fixtures that are execution-oriented rather than canonical source examples
+- accessibility-critical trust-surface checks
+- reproducibility and bounded-regression checks where digests, counts, or stable metrics matter
+- thin fixtures that are execution-oriented rather than canonical source examples
 
 ## Exclusions
 
@@ -109,12 +121,24 @@ The following do **not** belong here as authoritative source of truth:
 - large raw datasets or branch-local scratch dumps  
   → keep them out of `tests/`; use governed data zones or local ignored paths instead
 
+## Current verified snapshot
+
+The visible branch currently proves the following:
+
+- `tests/` exists as a real top-level repo surface.
+- The directory currently contains `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, `unit/`, and `README.md`.
+- `tests/e2e/` currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
+- Several family directories currently expose scaffold README placeholders rather than visible executable suites.
+
+> [!CAUTION]
+> Directory presence is **CONFIRMED**. Active suite depth, fixture density, merge-blocking enforcement, and runtime coverage are still **UNKNOWN** or **NEEDS VERIFICATION** until a checked-out branch proves them.
+
 ## Status markers used in this README
 
 | Marker | Meaning here |
 |---|---|
 | **CONFIRMED** | Visible on the current branch or directly grounded in stable KFM doctrine |
-| **PROPOSED** | Buildable test structure or rule that fits KFM doctrine but is not yet present as branch-visible reality |
+| **PROPOSED** | Buildable structure or practice that fits KFM doctrine but is not proven here as active repo reality |
 | **UNKNOWN** | Not verified strongly enough to state as current repo fact |
 | **NEEDS VERIFICATION** | A path, command, workflow, or implementation detail that should be checked against the checked-out branch before merge |
 
@@ -124,30 +148,33 @@ The following do **not** belong here as authoritative source of truth:
 
 ```text
 tests/
-└── README.md
-```
-
-### Target growth shape (`PROPOSED`)
-
-```text
-tests/
 ├── README.md
-├── unit/                       # deterministic local behavior
-├── integration/                # small governed slices across boundaries
-├── contracts/                  # envelope / schema / example validation wrappers
-├── policy/                     # allow / deny / abstain / hold test suites
-├── accessibility/              # trust-visible and keyboard-critical flows
-├── reproducibility/            # stable digest / bounded-regression checks
-└── e2e/
-    ├── release_assembly/       # promotion and publish-path proof
-    ├── runtime_proof/          # ANSWER / ABSTAIN / DENY / ERROR suites
-    └── correction/             # supersede / withdraw / stale / rollback drills
+├── accessibility/
+│   └── README.md
+├── contracts/
+│   └── README.md
+├── e2e/
+│   ├── README.md
+│   ├── correction/
+│   ├── release_assembly/
+│   └── runtime_proof/
+├── integration/
+│   └── README.md
+├── policy/
+│   └── README.md
+├── reproducibility/
+│   └── README.md
+└── unit/
+    └── README.md
 ```
 
-### Interpretation rule
+### Reading rule
 
-Use the confirmed snapshot when documenting current branch truth.  
-Use the target shape when planning or reviewing new governed verification work.
+Use the tree above for current branch truth. Do **not** silently convert directory presence into claims of mature, merge-blocking, or end-to-end verified coverage.
+
+### What deeper maturity would look like (`PROPOSED` / `NEEDS VERIFICATION`)
+
+As this surface matures, expect family directories to accumulate executable cases, fixtures, golden examples, invalid samples, and runner-specific config that map directly to repo contracts, policy bundles, runtime boundaries, and correction paths.
 
 [Back to top](#tests)
 
@@ -158,35 +185,27 @@ Use the target shape when planning or reviewing new governed verification work.
 These commands are branch-safe because they inspect what is present without assuming more than the checkout proves.
 
 ```bash
-# inspect the current tests surface
+# inspect the visible tests surface
 find tests -maxdepth 4 -type f | sort
 
-# inspect adjacent contract, schema, and policy surfaces
-find contracts policy schemas -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,200p'
+# inspect adjacent contract, schema, policy, and workflow-facing surfaces
+find .github contracts docs policy schemas tests -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
 
-# inspect likely KFM verification vocabulary
-grep -RIn "EvidenceRef\|EvidenceBundle\|runtime_response_envelope\|policy_label\|spec_hash" \
+# inspect likely KFM verification vocabulary without assuming a runner
+grep -RIn "EvidenceBundle\|runtime_response_envelope\|audit_ref\|policy_label\|spec_hash" \
   tests contracts policy schemas 2>/dev/null || true
 ```
 
-### Illustrative validation block
+### Local review sequence
 
-Use this only if the checked-out branch actually exposes analogous commands.
+1. Verify which test families actually contain executable cases rather than scaffold README placeholders.
+2. Verify which checks really block merges on the active branch.
+3. Verify whether contracts, policies, docs, and tests move together in the same change stream.
+4. Verify whether negative paths exist, not only happy-path confirmation.
+5. Verify whether runtime evidence, abstention, denial, and correction behavior are exercised end to end.
 
-```bash
-# illustrative only — verify the command surface first
-make test
-make validate-schemas
-make catalog-validate
-```
-
-### Before you document new behavior as `CONFIRMED`
-
-1. Verify which test families actually exist on the active branch.
-2. Verify which checks really block merges.
-3. Verify whether contracts, policies, and docs are enforced together or only described together.
-4. Verify whether negative paths are covered, not only happy-path behavior.
-5. Verify whether runtime evidence, abstention, and correction behavior are exercised end to end.
+> [!TIP]
+> Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands. Inspection-first is safer than guessing a test toolchain.
 
 ## Usage
 
@@ -196,7 +215,7 @@ make catalog-validate
 
 - the repo-facing proof surface for governed behavior
 - the place where branch-level confidence work becomes explicit instead of implied
-- the home for test suites that protect KFM’s trust membrane, truth path, and fail-closed posture
+- the home for suites that protect KFM’s trust membrane, truth path, and fail-closed posture
 - the directory that should make negative outcomes as inspectable as happy-path success
 
 ### What `tests/` is not
@@ -206,69 +225,76 @@ make catalog-validate
 - a substitute for authoritative schemas or policy bundles
 - a place to hide implementation drift behind broad “coverage” language
 - a scratch area for one-off local experiments
-- a generic badge-generator for CI theater
+- a badge generator for CI theater
 - a dumping ground for artifacts better owned by `contracts/`, `policy/`, `docs/`, or governed data/release paths
 
 ### Where a new test should live
 
-Use the smallest fitting family:
+Use the smallest fitting existing family before inventing a new top-level folder:
 
-- choose `unit/` when the behavior is local, deterministic, and cheap to isolate
-- choose `integration/` when a real boundary matters: ingest, resolver, store, API, or projection
-- choose `contracts/` when the main risk is schema or envelope drift
-- choose `policy/` when the change affects allow/deny logic, reason codes, rights, or sensitivity behavior
-- choose `e2e/release_assembly/` when promotion or publication state is the question
-- choose `e2e/runtime_proof/` when request-time evidence, citations, or answer outcomes are the question
-- choose `e2e/correction/` when supersession, rollback, stale visibility, or withdrawal must be exercised
+- choose [`./unit/`](./unit/) when the behavior is local, deterministic, and cheap to isolate
+- choose [`./integration/`](./integration/) when a real boundary matters: ingest, resolver, store, API, or projection
+- choose [`./contracts/`](./contracts/) when the main risk is schema or envelope drift
+- choose [`./policy/`](./policy/) when the change affects allow/deny logic, reason codes, rights, or sensitivity behavior
+- choose [`./accessibility/`](./accessibility/) when trust-visible interaction, keyboard flow, or error recovery is the main risk
+- choose [`./reproducibility/`](./reproducibility/) when stable digests, counts, or bounded metrics matter
+- choose [`./e2e/release_assembly/`](./e2e/release_assembly/) when promotion or publication state is the question
+- choose [`./e2e/runtime_proof/`](./e2e/runtime_proof/) when request-time evidence, citations, or answer outcomes are the question
+- choose [`./e2e/correction/`](./e2e/correction/) when supersession, rollback, stale visibility, or withdrawal must be exercised
+
+### Working rule for scaffolded families
+
+A present directory is not the same thing as an active suite. If a family currently contains only a placeholder README, treat it as a documented contract boundary waiting for executable proof, not as coverage already earned.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    C["contracts/ + schemas/"] --> T["tests/"]
+    C["contracts/ + schemas/"] --> T["tests/ families"]
     P["policy/"] --> T
-    D["data/examples + governed fixtures"] --> T
-    DOC["docs/runbooks + standards"] --> T
+    R["apps/ + packages/ + infra/"] --> T
+    D["docs/ + runbooks"] --> T
 
-    T --> CI["CI / validation gates"]
-    CI --> G{"pass?"}
+    T --> G["governed checks"]
+    G --> Q{"trust-preserving?"}
 
-    G -->|no| Q["revise / quarantine / fail closed"]
-    G -->|yes| R["promotion / release evidence"]
+    Q -->|no| F["hold / deny / quarantine / fix"]
+    Q -->|yes| E["promotion / release evidence"]
 
-    R --> S["governed runtime surfaces"]
-    S -. correction, stale-state, and abstention drills .-> T
+    E --> S["runtime trust surfaces"]
+    S -. correction, abstention, and stale-state drills .-> T
 ```
 
 ## Operating tables
 
-### Recommended family map
+### Family map
 
-| Test family | Primary question | Typical adjacent inputs | Current posture |
+| Family | Branch-visible today | Current content signal | Intended burden |
 |---|---|---|---|
-| `unit/` | Does a local rule or transform behave deterministically? | packages, helpers, adapters, validation utilities | **PROPOSED** |
-| `integration/` | Does one small governed slice behave consistently across boundaries? | connectors, API slices, evidence resolution paths, thin fixtures | **PROPOSED** |
-| `contracts/` | Do envelopes and examples validate, stay stable, and fail loudly on drift? | `contracts/`, `schemas/`, valid/invalid examples | **PROPOSED** |
-| `policy/` | Do allow/deny/abstain/hold rules default closed and explain themselves? | `policy/`, reason codes, obligation logic, reviewer roles | **PROPOSED** |
-| `accessibility/` | Are trust-visible surfaces keyboard-safe, navigable, and calm under failure? | UI flows, evidence drawer, story and Focus surfaces | **PROPOSED** |
-| `reproducibility/` | Do stable inputs produce expected hashes, counts, or bounded metrics? | transform specs, receipts, fixture slices | **PROPOSED** |
-| `e2e/release_assembly/` | Can promotion assemble a publishable, reviewable release lane? | manifests, validation outputs, policy state, docs/runbooks | **PROPOSED** |
-| `e2e/runtime_proof/` | Can runtime show inspectable `ANSWER / ABSTAIN / DENY / ERROR` behavior? | evidence bundle resolution, citations, audit refs, policy outcomes | **PROPOSED** |
-| `e2e/correction/` | Can the system supersede, withdraw, generalize, or warn without narrative confusion? | correction notices, release lineage, stale-state cues | **PROPOSED** |
+| `unit/` | Yes | README scaffold confirmed | Deterministic local behavior |
+| `integration/` | Yes | README scaffold confirmed | Governed slices across real boundaries |
+| `contracts/` | Yes | README scaffold confirmed | Envelope, schema, and example validation |
+| `policy/` | Yes | README scaffold confirmed | Allow / deny / abstain / hold behavior |
+| `accessibility/` | Yes | README scaffold confirmed | Trust-visible accessibility and keyboard-critical flows |
+| `reproducibility/` | Yes | README scaffold confirmed | Stable digests, counts, and bounded regression |
+| `e2e/` | Yes | Directory plus README confirmed | End-to-end proof surface |
+| `e2e/release_assembly/` | Yes | Leaf directory confirmed; leaf contents need verification | Promotion and publish-path proof |
+| `e2e/runtime_proof/` | Yes | Leaf directory confirmed; leaf contents need verification | `ANSWER / ABSTAIN / DENY / ERROR` proof |
+| `e2e/correction/` | Yes | Leaf directory confirmed; leaf contents need verification | Supersession, stale-state, and rollback drills |
 
 ### Change-trigger matrix
 
 | If a PR changes… | Minimum verification expectation |
 |---|---|
-| contracts / schemas | valid examples, invalid fixtures, version note, no silent envelope drift |
-| policy / governance | allow + deny cases, negative fixtures, rationale alignment, default-deny still intact |
-| dataset onboarding | deterministic manifest/checksum behavior, QA checks, contract validation, representative integration slice |
-| evidence behavior | `EvidenceRef` / bundle resolution path, negative tests, policy-safe denials |
-| Story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, audit-path confidence |
-| docs describing behavior | linked updates, no contradiction with tests/contracts/policy, no overclaiming branch reality |
-| release / promotion / correction | end-to-end release assembly, rollback or supersession drill, stale-state handling |
+| contracts / schemas | valid examples, invalid fixtures, version note, and no silent envelope drift |
+| policy / governance | allow + deny cases, negative fixtures, rationale alignment, and default-deny still intact |
+| dataset onboarding | deterministic manifest/checksum behavior, contract validation, and at least one representative integration slice |
+| evidence behavior | `EvidenceRef` / bundle resolution path, negative tests, and policy-safe denials |
+| Story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
+| docs describing behavior | linked updates, no contradiction with tests/contracts/policy, and no overclaiming branch reality |
+| release / promotion / correction | end-to-end release assembly, rollback or supersession drill, and stale-state handling |
 
-### KFM-specific negative paths that matter early
+### Negative paths worth proving early
 
 | Negative path | Why it matters |
 |---|---|
@@ -281,65 +307,65 @@ flowchart LR
 
 ## Task list / Definition of done
 
-Treat this README as complete only when the directory contract is both readable and governable.
+Treat this README as healthy only when the directory contract stays both readable and truthful.
 
-- [ ] Keep current branch-visible structure separate from target-state layout
+- [ ] Keep branch-visible structure separate from assumptions about suite depth
 - [ ] Keep owners aligned with `../.github/CODEOWNERS`
-- [ ] Update this README whenever a new test family is added, renamed, or removed
-- [ ] Do not describe a suite as active unless the branch actually contains it
-- [ ] Prefer negative-path coverage for trust-sensitive changes, not just happy-path confirmation
-- [ ] Keep `contracts/`, `schemas/`, `policy/`, and `tests/` coherent in the same PR when behavior changes
-- [ ] Add or update runbooks when tests imply operational drills such as rollback, stale-state, or correction handling
-- [ ] Keep quickstart commands branch-safe; label illustrative commands as illustrative
-- [ ] Preserve calm failure: avoid language that implies exhaustive coverage when only thin-slice proof exists
+- [ ] Update this README whenever a test family is added, renamed, removed, or materially repurposed
+- [ ] Do not describe a family as active coverage unless the branch actually contains executable cases
+- [ ] Prefer negative-path proof for trust-sensitive changes, not just happy-path confirmation
+- [ ] Keep `contracts/`, `schemas/`, `policy/`, `docs/`, and `tests/` coherent in the same PR when behavior changes
+- [ ] Keep quickstart commands branch-safe; avoid inventing runner commands without checkout proof
+- [ ] Preserve calm failure: visible incompleteness is better than theatrical confidence
 
 ## FAQ
 
-### Why is `tests/` still so small?
+### Why does `tests/` talk about governed verification instead of generic QA?
 
-Because the visible branch currently confirms the directory exists but does not yet expose a larger test tree here. KFM’s doctrine still benefits from keeping the boundary explicit instead of pretending the surface is absent.
+Because KFM treats verification as part of publication, runtime trust, and correction discipline. A suite here is valuable only if it helps prove that the system behaves safely, inspectably, and reversibly under both success and failure.
+
+### Why does this README distinguish directory presence from active suites?
+
+Because the visible branch confirms family directories, but several of those directories currently expose scaffold README placeholders. That is enough to document the boundary, but not enough to claim mature executable coverage.
 
 ### Should contract examples live in `tests/`?
 
-Usually no. Canonical valid/invalid contract examples belong with the contract layer. `tests/` should consume or wrap them, not quietly replace them.
+Usually no. Canonical contract sources belong with the contract layer. `tests/` should consume, wrap, or validate them; it should not quietly replace the authoritative source.
 
-### Do policy tests belong only under `policy/`?
+### Do policy checks belong only under `policy/`?
 
-No. The policy source of truth belongs under `policy/`, but executable verification that exercises governed allow/deny/abstain behavior can and should live under `tests/policy/` or end-to-end suites as coverage grows.
+No. Canonical rule bodies belong under `policy/`, but executable proof of governed outcomes can and should live under `tests/policy/` and the end-to-end families as coverage grows.
 
-### Why emphasize negative paths so much?
+### Can I add a one-off script here?
 
-Because KFM treats hold, quarantine, deny, abstain, stale-visible, generalized, superseded, and withdrawn outcomes as first-class governed states. A convincing happy path without credible failure behavior is not enough.
-
-### Can I add a local one-off test script here?
-
-Prefer not. Add repeatable, reviewable tests that map to a stable family. Keep branch-local scratch work outside the governed test surface.
+Prefer not. Add repeatable, reviewable verification assets that map to an existing family. Keep local scratch work outside the governed test surface.
 
 [Back to top](#tests)
 
 ## Appendix
 
 <details>
-<summary><strong>Branch-visible inputs and doctrinal overlays used to shape this README</strong></summary>
+<summary><strong>Branch-visible evidence and doctrinal overlays used to shape this README</strong></summary>
 
 ### Branch-visible repo inputs
 
 - `../README.md`
 - `../CONTRIBUTING.md`
 - `../.github/README.md`
+- `../.github/CODEOWNERS`
 - `../contracts/README.md`
 - `../docs/README.md`
-- `../.github/CODEOWNERS`
-- current `tests/` directory snapshot (`README.md` only)
+- current `tests/` tree
+- confirmed `tests/e2e/` child directories
+- scaffold README placeholders confirmed under several child families
 
-### Doctrinal overlays carried into the target shape
+### Doctrinal overlays carried into this directory contract
 
 - verification is cross-cutting, not a late QA appendix
-- contracts, examples, policy bundles, proof objects, and runtime envelopes should stay typed and reviewable
+- fail-closed behavior matters as much as happy-path success
+- authoritative sources stay in their home directories
 - negative outcomes are first-class governed states
 - thin-slice end-to-end proof is more valuable than broad speculative coverage
-- release, runtime, stale-state, and correction drills matter early for a fail-closed system
+- docs, contracts, policy, tests, and release evidence should move together when behavior changes
 
-</details># tests
-
-This directory is intentionally kept in the repository, even when empty.
+</details>
