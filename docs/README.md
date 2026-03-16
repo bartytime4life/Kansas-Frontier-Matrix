@@ -8,281 +8,294 @@ owners: NEEDS VERIFICATION
 created: NEEDS VERIFICATION
 updated: NEEDS VERIFICATION
 policy_label: NEEDS VERIFICATION
-related: [../README.md, ./governance/README.md, ./runbooks/README.md, ./standards/README.md, ./templates/README.md]
-tags: [kfm, docs, governance, runbooks, standards, templates]
-notes: [Converted from minimal directory placeholder, resolve doc_id/owners/dates before commit, keep unverified paths visibly marked]
+related: [../README.md, ./governance/, ./runbooks/, ./standards/, ./templates/]
+tags: [kfm, docs, documentation, governance, runbooks, standards, templates]
+notes: [Revised against attached KFM doctrine and source-reported repo inventories, current session exposed PDF corpus only rather than a mounted repo checkout, exact subtree paths/owners/dates still require direct verification before commit]
 [/KFM_META_BLOCK_V2] -->
 
 # docs
 
-Canonical governed documentation index for Kansas Frontier Matrix (KFM).
+Governed documentation index for Kansas Frontier Matrix (KFM): architecture, standards, governance, runbooks, templates, and adjacent doc-native operating surfaces.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION — check [`../.github/CODEOWNERS`](../.github/CODEOWNERS)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![scope](https://img.shields.io/badge/scope-docs--index-blue) ![posture](https://img.shields.io/badge/posture-evidence--bounded-lightgrey) ![trust](https://img.shields.io/badge/trust-docs%20as%20production%20surface-blueviolet) ![repo-state](https://img.shields.io/badge/repo_state-current_docs_subtree_partially_verified-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** NEEDS VERIFICATION — review `../.github/CODEOWNERS` before commit  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-docs--index-2f81f7) ![evidence](https://img.shields.io/badge/evidence-pdf--corpus--first-lightgrey) ![trust](https://img.shields.io/badge/posture-docs--as--production-blueviolet) ![repo-checkout](https://img.shields.io/badge/repo--checkout-NEEDS_VERIFICATION-lightgrey)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Evidence boundary](#current-evidence-boundary) · [Directory tree](#source-reported-docs-footprint) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> `docs/` is part of KFM’s trust model, not a dumping ground for miscellaneous notes. Behavior-significant changes should update documentation, examples, and operational instructions in the same governed change stream as code, contracts, policy, and tests.
+> `docs/` is part of KFM’s governed delivery surface. It should explain the system without weakening the trust membrane, and behavior-significant changes should update docs, examples, and runbooks in the same change stream as contracts, policy, code, and tests.
 
 ## Scope
 
-`docs/` is the home of canonical governed documentation for KFM: long-form architecture guidance, standards, governance rules, runbooks, templates, and other reference material that helps humans operate the same evidence-first system enforced elsewhere in the repo.
+`docs/` is the human-readable operating layer for KFM.
 
-This directory should make KFM legible without becoming a second truth path. It exists to explain boundaries, operating rules, review procedures, and decision context — not to replace machine-enforced contracts, policy bundles, or runtime evidence.
+Its job is to make doctrine, architecture, review rules, standards, procedures, and authoring conventions legible to maintainers without pretending that prose is the same thing as enforcement. In KFM terms, `docs/` should clarify the governed system, not become a second truth path or a backdoor around contracts, policy, and runtime controls.
 
 ## Repo fit
 
-| Item | Value |
-| --- | --- |
-| Path | `/docs/README.md` |
-| Directory role | Human-facing operating index for KFM documentation surfaces |
-| Upstream anchors | [`../README.md`](../README.md), [`../CONTRIBUTING.md`](../CONTRIBUTING.md), [`../.github/README.md`](../.github/README.md), [`../contracts/`](../contracts/), [`../schemas/`](../schemas/), [`../policy/`](../policy/) |
-| Confirmed downstream anchors | [`./governance/README.md`](./governance/README.md), [`./runbooks/README.md`](./runbooks/README.md), [`./standards/README.md`](./standards/README.md), [`./templates/README.md`](./templates/README.md) |
-| Expected downstream anchors | `./architecture/`, `./adr/`, `./guides/`, `./reports/` — **NEEDS VERIFICATION** |
-| Why this directory matters | It keeps doctrine, process, and operational instructions aligned with KFM’s truth path, trust membrane, and fail-closed release posture |
+**Path:** `docs/README.md`
+
+**Upstream anchors:** [repo root](../README.md) · [contracts](../contracts/) · [policy](../policy/) · [data](../data/) · [.github](../.github/)
+
+**Core downstream hubs:** [governance](./governance/) · [standards](./standards/) · [templates](./templates/) · [runbooks](./runbooks/)
+
+**Broader docs surfaces referenced in source-reported repo inventories:** [architecture](./architecture/) · [reports](./reports/) · [research](./research/) · [search](./search/) · [analyses](./analyses/) · [security](./security/) · [pipelines](./pipelines/)
+
+**Why this directory matters:** it keeps doctrine, process, and reviewable operating knowledge close to the same evidence-first system that the rest of KFM is trying to enforce.
 
 ## Accepted inputs
 
 Content that belongs in `docs/` includes:
 
-- directory indexes and governed README files
-- architecture notes and ADRs
-- standards and profile docs
-- governance, review, and stewardship guidance
-- runbooks, rollback procedures, and operator checklists
-- template sources and authoring conventions
-- evidence-aware examples, diagrams, and explanatory reference material
-- long-form guidance that clarifies behavior already enforced or intended elsewhere in the repo
+- directory indexes and README files
+- architecture notes, blueprints, and ADRs
+- standards, profiles, and documentation protocol material
+- governance, ethics, sovereignty, and review guidance
+- runbooks, rollback instructions, and operator procedures
+- reusable documentation templates
+- story/report scaffolding and trust-visible explanatory material
+- diagrams, examples, and reference notes that clarify governed behavior already enforced or intended elsewhere in the repo
 
 ## Exclusions
 
-The following do **not** belong here as authoritative source of truth:
+The following do **not** belong here as the authoritative source of truth:
 
-- runtime service code, ingestion logic, UI components, or model-serving code  
-  → keep in repo code surfaces such as `../apps/`, `../packages/`, or equivalent
-- machine-enforced schemas, OpenAPI definitions, policy bundles, and validation vocabularies  
-  → keep in `../contracts/`, `../schemas/`, and `../policy/`
-- generated receipts, manifests, evidence bundles, or promotion artifacts  
-  → keep on the truth path or in release/evidence surfaces
-- secrets, tokens, internal-only URLs, or sensitive coordinates  
-  → keep in secured systems of record, never in public docs
-- prose that implies live behavior without proof  
-  → keep it `UNKNOWN` or `NEEDS VERIFICATION` until the branch proves it
+- machine-enforced schemas, API contracts, and vocabularies  
+  → keep in `../contracts/` and `../schemas/`
+- policy bundles, policy tests, and deny-by-default enforcement logic  
+  → keep in `../policy/`
+- canonical data artifacts, source descriptors, receipts, manifests, and release outputs  
+  → keep on the truth path under `../data/`, release surfaces, or other owning artifact homes
+- runtime code, UI implementation, workers, or internal service logic  
+  → keep in `../apps/`, `../packages/`, `../web/`, or the owning code surface
+- secrets, credentials, signed URLs, or sensitive coordinates  
+  → never store those in docs
+- prose that quietly upgrades `UNKNOWN` implementation state into “already running” fact  
+  → keep it explicit, staged, and reviewable
 
-## Status markers used in this README
+## Evidence labels used in this index
 
-| Marker | Meaning here |
+| Label | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Grounded in current repo-visible documentation or stable KFM doctrine |
-| **PROPOSED** | Repo-native direction that fits KFM doctrine but is not proven as current branch behavior |
-| **UNKNOWN** | Not established strongly enough to present as current implementation fact |
-| **NEEDS VERIFICATION** | Placeholder path, owner, label, or repo detail that should be checked before commit |
+| **CONFIRMED** | Supported by attached KFM doctrine or current-session workspace inspection |
+| **INFERRED** | Source-reported by repo inventories, structure guides, or subordinate doc examples, but not directly re-opened in a mounted checkout |
+| **PROPOSED** | Added here as a repo-native organizational improvement or safer wording |
+| **UNKNOWN** | Not supported strongly enough to present as current repo reality |
+| **NEEDS VERIFICATION** | Exact path, owner, date, README presence, or current implementation detail should be checked before merge |
 
-## Current verified snapshot
+## Current evidence boundary
 
-The current repo-visible documentation surface confirms these `docs/` homes:
+This README is intentionally explicit about what the current session **did** and **did not** prove.
 
-| Surface | Status | Verified role |
+| Observation | Status | Why it changes this README |
 | --- | --- | --- |
-| [`./governance/README.md`](./governance/README.md) | **CONFIRMED** | Policy, gates, sovereignty, and review semantics |
-| [`./runbooks/README.md`](./runbooks/README.md) | **CONFIRMED** | Operational playbooks, rollback posture, and escalation flow |
-| [`./standards/README.md`](./standards/README.md) | **CONFIRMED** | Normative “what must be true” documentation and standards profiles |
-| [`./templates/README.md`](./templates/README.md) | **CONFIRMED** | Template-source home for governed docs and MetaBlock-driven authoring |
-| `./architecture/`, `./adr/`, `./guides/`, `./reports/` | **NEEDS VERIFICATION** | Referenced by neighboring docs as likely homes, but not directly verified here |
+| Current-session workspace inspection exposed attached PDFs, not a directly mounted KFM repo checkout | **CONFIRMED** | Exact subtree contents, owners, README files, and workflow wiring stay visible as `NEEDS VERIFICATION` |
+| `docs/` is source-reported as a top-level repo surface for human-readable docs, ADRs, runbooks, and related guidance | **INFERRED** | This index can describe role and boundaries without claiming direct tree verification |
+| KFM doctrine treats documentation as a production surface tied to contracts, examples, runbooks, and release discipline | **CONFIRMED** | This README should frame docs as operational, not decorative |
+| Governance, standards, templates, runbooks, reports/story nodes, research, and architecture surfaces are repeatedly referenced in repo-shape and template materials | **INFERRED** | The tree below uses a source-reported footprint rather than a falsely “verified” live tree |
+| Exact files like `docs/governance/README.md`, `docs/runbooks/README.md`, `docs/standards/README.md`, and `docs/templates/README.md` were not directly inspected in this session | **NEEDS VERIFICATION** | Directory links are safer than overconfident file-level links in the index body |
 
-> [!NOTE]
-> Neighboring docs already treat `docs/` as the home of canonical governed documentation. Keep that role sharp: docs explain and guide the system, while contracts, schemas, policy, and code make it executable.
+> [!CAUTION]
+> Treat the tree below as a **source-reported docs footprint**, not as a substitute for `find docs/` in a mounted checkout.
 
-## Directory tree
-
-The tree below separates what is currently confirmed from what is expected but not yet verified.
+## Source-reported docs footprint
 
 ```text
 docs/
-├── README.md                         # This index
-├── governance/                       # CONFIRMED
-│   └── README.md
-├── runbooks/                         # CONFIRMED
-│   └── README.md
-├── standards/                        # CONFIRMED
-│   └── README.md
-├── templates/                        # CONFIRMED
-│   └── README.md
-├── architecture/                     # NEEDS VERIFICATION — referenced as a target home
-├── adr/                              # NEEDS VERIFICATION — referenced by repo docs
-├── guides/                           # NEEDS VERIFICATION — referenced by runbook docs
-└── reports/                          # NEEDS VERIFICATION — referenced by template docs
+├── README.md                                  # This index (target of the present revision)
+├── architecture/                              # INFERRED
+│   ├── ... architecture guides / blueprints
+│   └── adr/                                   # INFERRED in some structure guides
+├── governance/                                # INFERRED
+│   ├── ROOT_GOVERNANCE.md
+│   ├── ETHICS.md
+│   ├── SOVEREIGNTY.md
+│   └── REVIEW_GATES.md
+├── standards/                                 # INFERRED
+│   ├── ... STAC / DCAT / PROV / protocol profiles
+│   └── ... repo/documentation standards
+├── templates/                                 # INFERRED
+│   ├── TEMPLATE__KFM_UNIVERSAL_DOC.md
+│   ├── TEMPLATE__STORY_NODE_V3.md
+│   └── TEMPLATE__API_CONTRACT_EXTENSION.md
+├── runbooks/                                  # INFERRED
+│   └── reliability/
+│       └── trigger-mechanisms/README.md       # source-reported example
+├── reports/                                   # INFERRED
+│   └── story_nodes/
+├── research/                                  # INFERRED
+├── search/                                    # INFERRED
+├── analyses/                                  # INFERRED
+├── security/                                  # INFERRED
+└── pipelines/                                 # INFERRED
 ```
 
 ## Quickstart
 
 Use a verification-first sequence before editing or expanding `docs/`.
 
-```bash
-# Inspect the current documentation surface
-find docs -maxdepth 2 -type f | sort
-
-# Read the verified directory guides first
-sed -n '1,120p' docs/README.md
-sed -n '1,120p' docs/standards/README.md
-sed -n '1,120p' docs/governance/README.md
-sed -n '1,120p' docs/runbooks/README.md
-sed -n '1,120p' docs/templates/README.md
-
-# Check adjacent contract and policy surfaces before writing behavior claims
-find contracts schemas policy -maxdepth 2 -type f 2>/dev/null | sort | sed -n '1,120p'
-
-# Look for evidence- and governance-significant vocabulary
-grep -RIn "CONFIRMED\|PROPOSED\|UNKNOWN\|NEEDS VERIFICATION" docs || true
-grep -RIn "EvidenceRef\|EvidenceBundle\|policy_label\|STAC\|DCAT\|PROV" docs contracts schemas policy 2>/dev/null || true
-```
-
 > [!WARNING]
-> Do not promote a doc claim from `PROPOSED` or `UNKNOWN` to `CONFIRMED` just because a neighboring README suggests the path should exist. Verify the actual checkout first.
+> The commands below are **repo-local verification examples**. They are the right next checks once a live checkout is mounted, but they are not proof that those paths already existed in the current PDF-only workspace.
+
+```bash
+# Inspect the docs subtree
+find docs -maxdepth 3 -type f | sort
+
+# Open the directory index and the most likely core hubs
+sed -n '1,200p' docs/README.md
+find docs/governance docs/standards docs/templates docs/runbooks -maxdepth 2 -type f 2>/dev/null | sort
+
+# Re-check the machine-enforced neighbors before documenting behavior as fact
+find contracts schemas policy -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,200p'
+
+# Check release-facing ownership and repo-level expectations
+sed -n '1,200p' .github/CODEOWNERS 2>/dev/null
+sed -n '1,200p' .github/README.md 2>/dev/null
+sed -n '1,200p' README.md 2>/dev/null
+
+# Search for trust and publication vocabulary that should stay terminologically stable
+grep -RIn "trust membrane\|EvidenceBundle\|promotion\|cite-or-abstain\|fail-closed" docs contracts policy schemas 2>/dev/null
+```
 
 ## Usage
 
 ### Read `docs/` in this order
 
-1. Start here for the directory contract and current verification boundary.
-2. Read [`./standards/README.md`](./standards/README.md) when the question is “what must be true?”
-3. Read [`./governance/README.md`](./governance/README.md) when the change affects policy, rights, sensitivity, review, or promotion.
-4. Read [`./runbooks/README.md`](./runbooks/README.md) when the question is “how do we execute, recover, or contain this safely?”
-5. Read [`./templates/README.md`](./templates/README.md) before creating new governed docs or expanding README structure.
+1. Start here to understand the docs boundary, evidence posture, and current verification limits.
+2. Read [`./governance/`](./governance/) when the change affects review, rights, ethics, sovereignty, withholding, escalation, or release conditions.
+3. Read [`./standards/`](./standards/) when the question is “what must be true?”
+4. Read [`./templates/`](./templates/) before creating new governed docs or changing document structure.
+5. Read [`./runbooks/`](./runbooks/) when the question is “how do we operate, recover, or contain this safely?”
+6. Read source-reported neighboring homes such as [`./architecture/`](./architecture/), [`./reports/`](./reports/), or [`./research/`](./research/) only after the owning boundary is clear.
 
-### What `docs/` is
+### Change rule
 
-`docs/` is:
+When a change is behavior-significant, `docs/` should not move alone. The expected companion surfaces are:
 
-- the human-readable operating layer for KFM doctrine
-- the place where architecture, governance, standards, and runbook guidance stay coherent
-- the bridge between repo-wide posture and directory- or system-specific detail
-- a production surface that should change in step with behavior-significant code, contracts, policy, and release practice
-
-### What `docs/` is not
-
-`docs/` is not:
-
-- the authoritative home of runtime code or enforcement logic
-- a replacement for `contracts/`, `schemas/`, or `policy/`
-- a safe place to hide unverified implementation claims
-- a narrative layer allowed to drift away from the governed system it describes
-
-### When to add or move a document
-
-Use `docs/` when the artifact is explanatory, procedural, or governance-bearing. Move or author elsewhere when the artifact is machine-enforced, generated, or runtime-owned.
+| If you changed... | Re-check alongside docs |
+| --- | --- |
+| behavior or public meaning | contracts, schemas, policy, tests, release evidence |
+| review or publication gates | governance docs, runbooks, policy bundles, approval paths |
+| authoring patterns or README structure | templates, standards, neighboring directory indexes |
+| trust-visible UX or evidence flows | UI doctrine, runtime envelopes, example payloads, screenshots/diagrams if owned here |
+| failure, rollback, or correction posture | runbooks, release/correction artifacts, observability join points |
 
 ## Diagram
 
 ```mermaid
 flowchart TD
-    ROOT["../README.md<br/>repo operating index"] --> DOCS["docs/README.md<br/>documentation index"]
-    DOCS --> STD["docs/standards/<br/>normative rules"]
-    DOCS --> GOV["docs/governance/<br/>policy + review"]
-    DOCS --> RUN["docs/runbooks/<br/>operational procedures"]
-    DOCS --> TMP["docs/templates/<br/>authoring sources"]
+    ROOT["repo root"] --> DOCS["docs/<br/>governed documentation index"]
+    ROOT --> CONTRACTS["contracts/ + schemas/<br/>machine-enforced truth surfaces"]
+    ROOT --> POLICY["policy/<br/>policy-as-code and tests"]
+    ROOT --> DATA["data/<br/>truth-path artifacts"]
 
-    STD --> CONTRACTS["../contracts/ + ../schemas/"]
-    GOV --> POLICY["../policy/"]
-    RUN --> APPS["../apps/"]
-    RUN --> INFRA["../infra/"]
+    DOCS --> GOV["governance/"]
+    DOCS --> STD["standards/"]
+    DOCS --> TMP["templates/"]
+    DOCS --> RUN["runbooks/"]
 
-    DOCS -. expected .-> ARCH["docs/architecture/<br/>NEEDS VERIFICATION"]
-    DOCS -. expected .-> ADR["docs/adr/<br/>NEEDS VERIFICATION"]
+    DOCS -. source-reported .-> ARCH["architecture/"]
+    DOCS -. source-reported .-> RPT["reports/"]
+    DOCS -. source-reported .-> RES["research/"]
+    DOCS -. source-reported .-> SRCH["search/"]
+
+    GOV --> POLICY
+    STD --> CONTRACTS
+    RUN --> DATA
+    TMP --> DOCS
+
+    CONTRACTS --> API["apps/api or other governed boundaries"]
+    POLICY --> API
+    DATA --> API
 ```
 
 ## Tables
 
 ### Documentation placement matrix
 
-| Content type | Primary home | Why |
+| Artifact or change | Primary home | Why |
 | --- | --- | --- |
-| Normative rules and profile docs | [`./standards/`](./standards/) | These define what must be true |
-| Review, rights, sovereignty, and policy guidance | [`./governance/`](./governance/) | These explain what can be promoted, withheld, generalized, or escalated |
-| Step-by-step operating procedures | [`./runbooks/`](./runbooks/) | These keep operations reproducible, auditable, and fail-closed |
-| Template sources and reusable authoring scaffolds | [`./templates/`](./templates/) | These standardize KFM doc structure and metadata capture |
-| Runtime-enforced contracts and schemas | [`../contracts/`](../contracts/), [`../schemas/`](../schemas/) | These are executable, versioned contract surfaces |
-| Policy-as-code, fixtures, and policy tests | [`../policy/`](../policy/) | These are enforcement surfaces, not narrative docs |
+| Normative profiles, repo/document standards, metadata guidance | [`./standards/`](./standards/) | These define expected truth and structure |
+| Governance, ethics, sovereignty, review, and rights handling | [`./governance/`](./governance/) | These decide what may be promoted, withheld, generalized, or denied |
+| Operator procedures, rollback steps, stale-state handling, correction flow | [`./runbooks/`](./runbooks/) | These make failure and recovery reproducible |
+| Reusable documentation scaffolds | [`./templates/`](./templates/) | These keep authoring consistent and reviewable |
+| Story/report narrative artifacts | [`./reports/`](./reports/) | These are presentation surfaces, not policy or schema homes |
+| Architecture notes and ADRs | [`./architecture/`](./architecture/) | These explain structure and decisions without replacing contracts |
+| API contracts, schemas, controlled vocabularies | [`../contracts/`](../contracts/), [`../schemas/`](../schemas/) | These are machine-enforced interfaces |
+| Policy bundles and policy tests | [`../policy/`](../policy/) | These are executable enforcement surfaces |
+| Raw/work/processed/catalog/release artifacts | [`../data/`](../data/) or owning artifact homes | These belong on the truth path, not in docs prose |
 
 ### Trust obligations by docs surface
 
-| Surface | Primary question | Minimum trust obligation |
+| Surface | Primary question | Minimum obligation |
 | --- | --- | --- |
-| `docs/README.md` | Where do I start and what is verified? | Keep the directory contract and verification boundary explicit |
-| `docs/standards/` | What must be true? | Stay normative, version-aware, and link to enforcement where possible |
-| `docs/governance/` | What is allowed, reviewed, or blocked? | Match CI/runtime semantics and fail-closed posture |
-| `docs/runbooks/` | How do we execute or recover safely? | Include prerequisites, validation, rollback, and audit outputs |
-| `docs/templates/` | How should we author governed docs? | Keep MetaBlock, evidence slots, and review posture consistent |
+| `docs/README.md` | Where do I start, and what is verified versus inferred? | Keep the evidence boundary visible |
+| `docs/governance/` | What is allowed, reviewed, withheld, or escalated? | Match policy posture and fail-closed doctrine |
+| `docs/standards/` | What must be true? | Stay stable, version-aware, and cross-linked to enforcement |
+| `docs/templates/` | How should we author governed docs? | Keep metadata, review posture, and promotion paths explicit |
+| `docs/runbooks/` | How do we operate and recover safely? | Include prerequisites, validation, rollback, and output artifacts |
+| Source-reported wider docs areas | What context do supporting surfaces add? | Avoid outranking doctrine or implying unverified runtime reality |
 
 ## Task list / Definition of done
 
-Use this checklist before treating `docs/README.md` as finished.
+Use this checklist before treating `docs/README.md` as ready for commit.
 
-- [ ] Resolve `doc_id`, owners, dates, and policy label in the MetaBlock or intentionally leave them as reviewed placeholders
-- [ ] Verify every linked child path against the actual repo tree
-- [ ] Keep confirmed paths and expected-but-unverified paths visibly distinct
-- [ ] Ensure the directory tree matches the checkout
-- [ ] Ensure relative links render correctly on GitHub
-- [ ] Keep behavior-significant documentation changes in the same PR or change stream as code, contracts, policy, or tests
-- [ ] Avoid claiming runtime, CI, or release behavior that the active branch does not prove
-- [ ] Confirm the Mermaid diagram renders on GitHub
-- [ ] Re-check adjacent surfaces (`contracts/`, `schemas/`, `policy/`, `apps/`, `infra/`) before documenting cross-directory behavior as fact
+- [ ] Resolve `doc_id`, owners, created date, updated date, and `policy_label`
+- [ ] Verify the live `docs/` subtree from a mounted repo checkout
+- [ ] Confirm whether `./governance/README.md`, `./runbooks/README.md`, `./standards/README.md`, and `./templates/README.md` exist, or keep directory-level links instead
+- [ ] Reconcile the source-reported wider docs footprint with the real tree
+- [ ] Confirm ownership in `../.github/CODEOWNERS`
+- [ ] Confirm relative links render correctly on GitHub
+- [ ] Keep docs/examples/runbooks synchronized with any behavior-significant change in contracts, policy, code, or tests
+- [ ] Confirm the Mermaid diagram still matches the mounted tree
+- [ ] Re-check whether any additional top-level docs hubs belong in the index
+- [ ] Remove or keep `NEEDS VERIFICATION` markers deliberately — not by accident
 
 ## FAQ
 
-### Why is this index so explicit about `CONFIRMED`, `PROPOSED`, and `UNKNOWN`?
+### Why does this index use so many verification markers?
 
-Because KFM treats documentation as part of the trust model. A polished README that overclaims repo behavior weakens the same trust membrane the code is supposed to protect.
+Because the current session exposed doctrine-rich PDFs, not a directly mounted repo checkout. KFM’s own truth posture prefers visible incompleteness over polished overclaiming.
 
-### Why are some downstream docs paths marked `NEEDS VERIFICATION`?
+### Why are there directory links instead of exact `README.md` links in several places?
 
-Because neighboring docs reference likely homes such as `docs/architecture/`, `docs/adr/`, `docs/guides/`, and `docs/reports/`, but this index should not promote those paths to current repo fact until the checkout confirms them.
+Because the directory role is well supported by source-reported repo inventories, but several exact child README files were not directly opened in this session.
 
-### Why are contracts, schemas, and policy linked here but not documented as living under `docs/`?
+### Why keep `docs/` distinct from `contracts/`, `schemas/`, and `policy/`?
 
-Because they are machine-enforced surfaces. `docs/` explains and governs them; it does not replace them.
-
-### Why keep templates under `docs/`?
-
-Because KFM’s template layer is part of the documentation system itself. It standardizes metadata capture, evidence slots, and review posture before a new document becomes “live.”
+Because KFM separates explanation from enforcement. `docs/` explains and guides; contracts and policy enforce.
 
 ### When should a docs change block release?
 
-Whenever the change is behavior-significant and leaving docs stale would create drift between how KFM actually behaves and how operators, reviewers, or contributors are told it behaves.
+Whenever behavior changed materially enough that stale docs, examples, or runbooks would cause operators, reviewers, or contributors to misunderstand what the system now does.
 
 ## Appendix
 
 <details>
-<summary>Verified inputs and remaining checks</summary>
+<summary>Source-reported wider docs examples</summary>
 
-### Verified inputs used for this index
+The examples below are useful because they show how broad the `docs/` plane already is in attached repo inventories and doc-structure materials, even though the current session did not directly mount that tree.
 
-- [`../README.md`](../README.md) — root operating index and top-level repo contract
-- [`../.github/README.md`](../.github/README.md) — directory README benchmark for evidence-bounded repo docs
-- [`./governance/README.md`](./governance/README.md) — governance surface and policy-review home
-- [`./runbooks/README.md`](./runbooks/README.md) — operational procedures index
-- [`./standards/README.md`](./standards/README.md) — normative standards index
-- [`./templates/README.md`](./templates/README.md) — template-source home and MetaBlock-oriented authoring guidance
+| Source-reported area | Example path(s) |
+| --- | --- |
+| Governance | `docs/governance/ROOT_GOVERNANCE.md`, `docs/governance/ETHICS.md`, `docs/governance/SOVEREIGNTY.md`, `docs/governance/REVIEW_GATES.md` |
+| Templates | `docs/templates/TEMPLATE__KFM_UNIVERSAL_DOC.md`, `docs/templates/TEMPLATE__STORY_NODE_V3.md`, `docs/templates/TEMPLATE__API_CONTRACT_EXTENSION.md` |
+| Runbooks | `docs/runbooks/reliability/trigger-mechanisms/README.md`, `docs/runbooks/reliability/trigger-retry-matrix.md` |
+| Research | `docs/research/README.md`, `docs/research/drafts/README.md`, `docs/research/source_summaries/...` |
+| Search | `docs/search/README.md`, `docs/search/drift/...` |
+| Analyses | `docs/analyses/.../README.md` |
+| Reports | `docs/reports/story_nodes/...` |
+| Pipelines | `docs/pipelines/...` |
+| Architecture | `docs/architecture/...`, sometimes with `adr/` or `diagrams/` underneath in structure guides |
 
-### Remaining checks before calling the subtree fully verified
+</details>
 
-- confirm whether `docs/architecture/`, `docs/adr/`, `docs/guides/`, and `docs/reports/` currently exist
-- confirm owners from `../.github/CODEOWNERS`
-- confirm whether the repository carries a stable docs policy label convention for directory indexes
-- confirm whether any additional docs homes should be linked from this index
+<details>
+<summary>Current-session limits that still matter before merge</summary>
 
-### Maintenance rule
-
-Keep this file focused on:
-
-- the `docs/` directory contract
-- verified child surfaces
-- documentation boundaries
-- verification-first navigation
-- the minimum definition of done for governed docs
-
-Push detailed subsystem behavior into the owning child README or long-form doc once that home exists and is verified.
+- The mounted filesystem visible in this session exposed PDFs only.
+- No live repo subtree, README files, CODEOWNERS contents, workflows, schemas, tests, manifests, or runtime logs were directly inspected.
+- This README therefore aims to be **review-ready**, not falsely “fully verified.”
 
 </details>
 
