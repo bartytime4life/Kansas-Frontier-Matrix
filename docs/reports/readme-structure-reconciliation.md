@@ -1,0 +1,144 @@
+# README Structure Reconciliation Report
+
+This report captures repository structure entries declared in `README.md` tree blocks and the missing paths scaffolded to align the working tree with those declarations.
+
+## Method
+
+- Scanned every `README.md` for code-fenced tree lines containing `──` entries.
+- Resolved each entry relative to the README directory.
+- Ignored wildcard/alternation placeholders (for example `*`, `(...)`, `|`) and self-root aliases.
+- Created missing directories and files for concrete paths.
+- Added `.gitkeep` files to otherwise-empty newly created directories so they are tracked by git.
+
+## Paths Scaffolded
+
+- `.github/ISSUE_TEMPLATE/config.yml`
+- `.github/actions/action.yml`
+- `.github/actions/metadata-validate`
+- `.github/actions/metadata-validate-v2`
+- `.github/actions/opa-gate`
+- `.github/actions/provenance-guard`
+- `.github/actions/sbom-produce-and-sign`
+- `.github/actions/src`
+- `.github/apps`
+- `.github/contracts`
+- `.github/data`
+- `.github/docs`
+- `.github/infra`
+- `.github/packages`
+- `.github/policy`
+- `.github/scripts`
+- `.github/tests`
+- `.github/tools`
+- `.github/workflows/promote-and-reconcile.yml`
+- `.github/workflows/release-evidence.yml`
+- `.github/workflows/verify-contracts-and-policy.yml`
+- `.github/workflows/verify-docs.yml`
+- `.github/workflows/verify-runtime.yml`
+- `.github/workflows/verify-tests-and-reproducibility.yml`
+- `brand/LICENSES`
+- `brand/assets`
+- `brand/icons`
+- `brand/logos`
+- `brand/source`
+- `brand/templates`
+- `brand/tokens`
+- `brand/usage`
+- `configs/systemd`
+- `data/dcat`
+- `data/prov`
+- `data/quarantine`
+- `data/stac`
+- `examples/catalog_closure.json`
+- `examples/dataset_version.json`
+- `examples/evidence_bundle.json`
+- `examples/hydrology`
+- `examples/ingest_receipt.json`
+- `examples/invalid`
+- `examples/release_manifest.json`
+- `examples/source_descriptor.json`
+- `examples/thin_slice`
+- `examples/valid`
+- `infra/apps`
+- `infra/compose`
+- `infra/contracts`
+- `infra/docs`
+- `infra/gitops`
+- `infra/kubernetes`
+- `infra/monitoring`
+- `infra/policy`
+- `infra/runbooks`
+- `infra/systemd`
+- `infra/terraform`
+- `infra/tests`
+- `migrations/0001_enable_extensions.sql`
+- `migrations/0002_spatial_indexes.sql`
+- `policy/access.rego`
+- `policy/bundles`
+- `policy/citations.rego`
+- `policy/completeness.rego`
+- `policy/evidence.rego`
+- `policy/exceptions`
+- `policy/fixtures`
+- `policy/generalization.rego`
+- `policy/invalid`
+- `policy/local-check.md`
+- `policy/obligation_codes.json`
+- `policy/pack.rego`
+- `policy/provenance`
+- `policy/publication`
+- `policy/reason_codes.json`
+- `policy/release.rego`
+- `policy/review-checklist.md`
+- `policy/review.rego`
+- `policy/reviewer_roles.json`
+- `policy/runbooks`
+- `policy/runtime`
+- `policy/sensitivity`
+- `policy/valid`
+- `policy/withholding.rego`
+- `schemas/apis`
+- `schemas/contracts`
+- `schemas/deployment`
+- `schemas/docs`
+- `schemas/events`
+- `schemas/examples`
+- `schemas/invalid`
+- `schemas/observability`
+- `schemas/policy`
+- `schemas/profiles`
+- `schemas/tests`
+- `schemas/valid`
+- `scripts/attach_evidence.sh`
+- `scripts/crosslink_consistency.py`
+- `scripts/domain_freshness.sh`
+- `scripts/emit_error_json.sh`
+- `scripts/example_record_valid.sh`
+- `scripts/focus_mode_gate.sh`
+- `scripts/has_metadata.sh`
+- `scripts/md_required_sections.sh`
+- `scripts/release`
+- `scripts/run_receipt_valid.sh`
+- `scripts/spdx_ok.sh`
+- `scripts/spec_hash_valid.sh`
+- `scripts/stac_valid.sh`
+- `scripts/validate_jsonld.sh`
+- `scripts/validate_prov.py`
+- `scripts/validate_stac.py`
+- `scripts/validators`
+- `scripts/verify_checksums.sh`
+- `scripts/verify_fingerprint.py`
+- `scripts/write_index_entry.sh`
+- `tests/correction`
+- `tests/release_assembly`
+- `tests/runtime_proof`
+- `tools/attest`
+- `tools/bash`
+- `tools/catalog`
+- `tools/catalog_qa`
+- `tools/ci`
+- `tools/config.yml`
+- `tools/partition`
+- `tools/run_catalog_qa.py`
+- `tools/sql`
+- `tools/validate`
