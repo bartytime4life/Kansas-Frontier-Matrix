@@ -1,27 +1,3 @@
----
-title: "Kansas Frontier Matrix — Governance"
-path: "docs/governance/README.md"
-version: "v0.1.0"
-last_updated: "TODO-REPO-DATE"
-status: "draft"
-doc_kind: "README"
-license: "CC-BY-4.0"
-
-governance_ref: "docs/governance/ROOT_GOVERNANCE.md"
-ethics_ref: "docs/governance/ETHICS.md"
-sovereignty_policy: "docs/governance/SOVEREIGNTY.md"
-
-fair_category: "FAIR+CARE"
-care_label: "Public / Governance"
-sensitivity: "public"
-classification: "open"
-jurisdiction: "US-KS"
-
-doc_uuid: "TODO-ASSIGN"
-commit_sha: "<latest-commit-hash>"
-doc_integrity_checksum: "sha256:<calculate-and-fill>"
----
-
 # Kansas Frontier Matrix — Governance
 
 Directory index for the policy, review, sensitivity, and publication rules that keep KFM evidence-governed.
