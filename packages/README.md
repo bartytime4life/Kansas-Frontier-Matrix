@@ -2,20 +2,25 @@
 
 Shared internal packages for KFM’s governed truth path, evidence resolution, policy enforcement, catalog validation, domain modeling, and rebuildable runtime projections.
 
+| Field | Value |
+|---|---|
+| Status | `active` |
+| Owners | `@bartytime4life` — current fallback owner in [`../.github/CODEOWNERS`](../.github/CODEOWNERS) |
+| Path | [`packages/README.md`](./README.md) |
+| Current repo evidence | `packages/` is present on `main` with `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, and `policy/` |
+| Repo fit | Directory index for shared internal modules under [`./`](./) |
+| Badges | ![scope](https://img.shields.io/badge/scope-shared%20internal%20modules-4c1) ![truth](https://img.shields.io/badge/truth%20path-governed-blue) ![membrane](https://img.shields.io/badge/trust%20membrane-preserved-6a5acd) ![status](https://img.shields.io/badge/docs-active-brightgreen) |
+
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq)
+
+---
+
 > [!IMPORTANT]
 > `packages/` is **not** a general dumping ground and **not** a deployable surface.  
 > Deployable entrypoints belong in [`../apps/`](../apps/). Authoritative contracts, schemas, policy bundles, and governed data artifacts belong in [`../contracts/`](../contracts/), [`../schemas/`](../schemas/), [`../policy/`](../policy/), and [`../data/`](../data/). Packages may support those surfaces, but must not quietly replace them.
 
-| Field | Value |
-|---|---|
-| Status | `active` |
-| Owners | `NEEDS VERIFICATION` — check [`../.github/CODEOWNERS`](../.github/CODEOWNERS) |
-| Repo fit | Directory index for shared internal modules under [`./`](./) |
-| Badges | ![scope](https://img.shields.io/badge/scope-shared%20internal%20modules-4c1) ![truth](https://img.shields.io/badge/truth%20path-governed-blue) ![membrane](https://img.shields.io/badge/trust%20membrane-preserved-6a5acd) ![status](https://img.shields.io/badge/docs-active-brightgreen) |
-
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq)
-
----
+> [!NOTE]
+> The `packages/` directories are repo-visible on `main`, but the child package surfaces are still README-first. Treat this file as the **root directory contract and review map** for shared modules, not as blanket proof that every package already contains mature implementation behind its README.
 
 ## Scope
 
@@ -46,12 +51,12 @@ This directory may be sparse at times. It is still structurally important.
 
 **Downstream / adjacent package surfaces**
 
-- [`./ingest/`](./ingest/)
 - [`./catalog/`](./catalog/)
-- [`./evidence/`](./evidence/)
-- [`./policy/`](./policy/)
 - [`./domain/`](./domain/)
+- [`./evidence/`](./evidence/)
 - [`./indexers/`](./indexers/)
+- [`./ingest/`](./ingest/)
+- [`./policy/`](./policy/)
 
 **How this directory fits the repo**
 
@@ -64,9 +69,9 @@ Content belongs in `packages/` when it is a **shared internal module** such as:
 - pure domain models, invariants, and type-safe vocabulary
 - reusable ingestion helpers, normalizers, validators, or connector logic
 - catalog/triplet validation and cross-link logic
-- EvidenceRef / EvidenceBundle resolution helpers
+- `EvidenceRef` / `EvidenceBundle` resolution helpers
 - shared policy adapters, fixture helpers, or obligation enforcement utilities
-- projection/index build logic for rebuildable runtime layers
+- projection or index build logic for rebuildable runtime layers
 - package-local tests, fixtures, and examples that support the package’s contract
 
 ## Exclusions
@@ -89,7 +94,7 @@ The following do **not** belong here:
 
 ## Directory tree
 
-Currently verified README-bearing package surfaces on `main`:
+Currently visible package surfaces on `main`:
 
 ```text
 packages/
@@ -109,7 +114,7 @@ packages/
 ```
 
 > [!NOTE]
-> This tree is intentionally conservative. It reflects package README surfaces verified during documentation review, not an exhaustive claim about every nested file or implementation detail.
+> This tree is intentionally conservative. It reflects the package directories and README surfaces currently visible on `main`, not a blanket claim about deeper implementation depth inside each package.
 
 ## Quickstart
 
@@ -118,17 +123,18 @@ packages/
 ```bash
 find packages -maxdepth 2 -type d | sort
 find packages -maxdepth 2 -name README.md | sort
+find packages -maxdepth 3 -type f | sort
 ```
 
-### 2) Read the package contracts before editing
+### 2) Read the root contract, then the child package surfaces
 
 ```bash
-sed -n '1,120p' packages/domain/README.md
-sed -n '1,160p' packages/ingest/README.md
-sed -n '1,160p' packages/evidence/README.md
-sed -n '1,160p' packages/catalog/README.md
-sed -n '1,160p' packages/policy/README.md
-sed -n '1,160p' packages/indexers/README.md
+sed -n '1,240p' packages/README.md
+
+for d in catalog domain evidence indexers ingest policy; do
+  echo "---- $d ----"
+  sed -n '1,120p' "packages/$d/README.md"
+done
 ```
 
 ### 3) Sanity-check boundary language
@@ -149,16 +155,38 @@ Would more than one app or worker depend on it?
 
 If the answer is mostly “no,” it probably should not be a new package.
 
+## Usage
+
+### Treat this README as the root directory contract
+
+Use `packages/README.md` to decide **whether logic belongs in `packages/` at all**. Then confirm the relevant child package README and live files before documenting narrower ownership.
+
+### Prefer package-local clarity over “shared utils” sprawl
+
+If something belongs here, it should have a clear home. Avoid catch-all buckets that erase architectural boundaries.
+
+### Keep imports directional
+
+A package should depend inward toward stable semantics, not outward toward volatile runtime surfaces.
+
+### Keep deployable concerns out
+
+Package code can support deployable apps, but it should not become a stealth app by accumulating startup behavior, routing, auth entrypoints, or environment ownership.
+
+### Update both layers when boundaries change
+
+If a package is added, renamed, or repurposed, update the child package README **and** this root `packages/README.md` in the same change so the directory contract stays truthful.
+
 ## Package map
 
-| Package | Primary role | KFM posture | Must never do |
+| Package | Documented role | KFM posture | Must never do |
 |---|---|---|---|
 | [`./domain/`](./domain/) | Pure domain vocabulary, invariants, and stable model semantics | canonical semantic core | Import outer-layer IO or perform runtime side effects |
 | [`./ingest/`](./ingest/) | Ingestion runners, connectors, normalization, validation, receipts | truth-path critical | Serve clients directly or bypass lifecycle gates |
 | [`./catalog/`](./catalog/) | DCAT/STAC/PROV build and validation logic | catalog/triplet critical | Become an ad hoc runtime API surface |
-| [`./evidence/`](./evidence/) | Resolve `EvidenceRef` → `EvidenceBundle`, apply redaction/policy-safe presentation | trust-surface critical | Return evidence without policy or restrictions handling |
+| [`./evidence/`](./evidence/) | Resolve `EvidenceRef` → `EvidenceBundle`, apply redaction and policy-safe presentation | trust-surface critical | Return evidence without policy or restrictions handling |
 | [`./policy/`](./policy/) | Shared policy integration helpers and package-local logic | policy-supporting | Drift away from authoritative repo policy surfaces |
-| [`./indexers/`](./indexers/) | Build rebuildable projections such as search/map indexes from promoted artifacts | derived/rebuildable | Become authoritative truth or source-of-record |
+| [`./indexers/`](./indexers/) | Build rebuildable projections such as search or map indexes from promoted artifacts | derived/rebuildable | Become authoritative truth or source-of-record |
 
 ## Diagram
 
@@ -196,6 +224,7 @@ flowchart LR
     P1 --> P3
     P1 --> P4
     P1 --> P6
+
     P2 --> A3
     P3 --> A1
     P4 --> A1
@@ -247,25 +276,11 @@ If a change alters the repo’s governing policy behavior, it should not live on
 
 | Create a new package when… | Prefer an existing package or another location when… |
 |---|---|
-| The logic is reused across multiple apps/workers | It serves only one deployable app |
+| The logic is reused across multiple apps or workers | It serves only one deployable app |
 | The boundary can be named clearly in one sentence | The module name would be vague (`common`, `misc`, `utils`) |
 | It owns a coherent contract, helper family, or semantic layer | It is mainly environment wiring, startup code, or route glue |
 | It can have its own README, tests, and failure rules | It would just forward imports or hide coupling |
-| It preserves authoritative vs. derived boundaries | It starts acting like a second source of truth |
-
-## Usage notes
-
-### Prefer package-local clarity over “shared utils” sprawl
-
-If something belongs here, it should have a clear home. Avoid catch-all buckets that erase architectural boundaries.
-
-### Keep imports directional
-
-A package should depend inward toward stable semantics, not outward toward volatile runtime surfaces.
-
-### Keep deployable concerns out
-
-Package code can support deployable apps, but it should not become a stealth app by accumulating startup behavior, routing, auth entrypoints, or environment ownership.
+| It preserves authoritative-versus-derived boundaries | It starts acting like a second source of truth |
 
 ## Task list
 
@@ -275,14 +290,14 @@ Package code can support deployable apps, but it should not become a stealth app
 - [ ] No new deployable entrypoint was added under `packages/`
 - [ ] No package-local contract silently replaced a top-level authoritative surface
 - [ ] Links to adjacent docs still resolve
-- [ ] Tests or fixtures were added/updated when behavior changed
+- [ ] Tests or fixtures were added or updated when behavior changed
 - [ ] Boundary language stays explicit: canonical vs derived, governed vs rebuildable, internal vs public
 - [ ] The root `packages/README.md` is updated if a package is added, removed, renamed, or repurposed
 
 ### Review gates worth applying
 
 - [ ] Can a reviewer tell whether the package is canonical, supporting, or rebuildable?
-- [ ] Can a new contributor find the right upstream/downstream docs in under a minute?
+- [ ] Can a new contributor find the right upstream and downstream docs in under a minute?
 - [ ] Would removing this package break more than one surface for a good reason?
 - [ ] Does the change preserve the trust membrane?
 
@@ -302,7 +317,11 @@ Because `packages/` is a boundary surface. In KFM, weak boundary docs quickly be
 
 ### Why is the README conservative about the tree?
 
-Because the project’s truth posture matters. This file indexes what was directly verified during review and avoids implying deeper implementation state than the evidence supports.
+Because the project’s truth posture matters. This file indexes what is currently visible at the package surface and avoids implying deeper implementation state than the evidence supports.
+
+### Why are several child package READMEs still thin?
+
+Because the current repo view is still README-first at the child-package layer. Until those directories harden with more package-local files and tests, this root README carries most of the shared boundary contract.
 
 ## Appendix
 
@@ -337,7 +356,7 @@ Because the project’s truth posture matters. This file indexes what was direct
 | `domain` | Stable semantic center |
 | `ingest` | Truth-path intake and normalization |
 | `catalog` | Catalog-triplet construction and validation |
-| `evidence` | Citation/evidence resolution under policy |
+| `evidence` | Citation and evidence resolution under policy |
 | `policy` | Shared policy-support logic |
 | `indexers` | Rebuildable runtime projections |
 
