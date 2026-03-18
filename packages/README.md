@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/TODO-packages-readme-uuid
+title: packages/
+type: standard
+version: v1
+status: review
+owners: @bartytime4life
+created: YYYY-MM-DD
+updated: 2026-03-18
+policy_label: public
+related: [../README.md, ../.github/README.md, ../contracts/, ../schemas/, ../policy/, ../data/, ./catalog/, ./domain/, ./evidence/, ./indexers/, ./ingest/, ./policy/]
+tags: [kfm, packages, readme]
+notes: [doc_id and created date need repo-side verification; owner is confirmed from ../.github/CODEOWNERS on main]
+[/KFM_META_BLOCK_V2] -->
+
 # `packages/`
 
 Shared internal packages for KFM’s governed truth path, evidence resolution, policy enforcement, catalog validation, domain modeling, and rebuildable runtime projections.
@@ -7,11 +22,11 @@ Shared internal packages for KFM’s governed truth path, evidence resolution, p
 | Status | `active` |
 | Owners | `@bartytime4life` — current fallback owner in [`../.github/CODEOWNERS`](../.github/CODEOWNERS) |
 | Path | [`packages/README.md`](./README.md) |
+| Truth posture | `CONFIRMED` current `packages/` surface on `main` · `UNKNOWN` deeper implementation beneath the current child package scaffolds |
 | Current repo evidence | `packages/` is present on `main` with `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, and `policy/` |
 | Repo fit | Directory index for shared internal modules under [`./`](./) |
 | Badges | ![scope](https://img.shields.io/badge/scope-shared%20internal%20modules-4c1) ![truth](https://img.shields.io/badge/truth%20path-governed-blue) ![membrane](https://img.shields.io/badge/trust%20membrane-preserved-6a5acd) ![status](https://img.shields.io/badge/docs-active-brightgreen) |
-
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq)
+| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq) |
 
 ---
 
@@ -20,7 +35,7 @@ Shared internal packages for KFM’s governed truth path, evidence resolution, p
 > Deployable entrypoints belong in [`../apps/`](../apps/). Authoritative contracts, schemas, policy bundles, and governed data artifacts belong in [`../contracts/`](../contracts/), [`../schemas/`](../schemas/), [`../policy/`](../policy/), and [`../data/`](../data/). Packages may support those surfaces, but must not quietly replace them.
 
 > [!NOTE]
-> The `packages/` directories are repo-visible on `main`, but the child package surfaces are still README-first. Treat this file as the **root directory contract and review map** for shared modules, not as blanket proof that every package already contains mature implementation behind its README.
+> The `packages/` directories are repo-visible on `main`, but each child package currently exposes a minimal README scaffold rather than a deeper repo-visible module inventory. Treat this file as the **root directory contract and review map** for shared modules, not as blanket proof that every package already contains mature implementation behind its README.
 
 ## Scope
 
@@ -126,7 +141,7 @@ find packages -maxdepth 2 -name README.md | sort
 find packages -maxdepth 3 -type f | sort
 ```
 
-### 2) Read the root contract, then the child package surfaces
+### 2) Read the root contract, then check which child packages are still scaffold-only
 
 ```bash
 sed -n '1,240p' packages/README.md
@@ -177,16 +192,9 @@ Package code can support deployable apps, but it should not become a stealth app
 
 If a package is added, renamed, or repurposed, update the child package README **and** this root `packages/README.md` in the same change so the directory contract stays truthful.
 
-## Package map
+### Treat scaffolded child READMEs as placeholders, not proof
 
-| Package | Documented role | KFM posture | Must never do |
-|---|---|---|---|
-| [`./domain/`](./domain/) | Pure domain vocabulary, invariants, and stable model semantics | canonical semantic core | Import outer-layer IO or perform runtime side effects |
-| [`./ingest/`](./ingest/) | Ingestion runners, connectors, normalization, validation, receipts | truth-path critical | Serve clients directly or bypass lifecycle gates |
-| [`./catalog/`](./catalog/) | DCAT/STAC/PROV build and validation logic | catalog/triplet critical | Become an ad hoc runtime API surface |
-| [`./evidence/`](./evidence/) | Resolve `EvidenceRef` → `EvidenceBundle`, apply redaction and policy-safe presentation | trust-surface critical | Return evidence without policy or restrictions handling |
-| [`./policy/`](./policy/) | Shared policy integration helpers and package-local logic | policy-supporting | Drift away from authoritative repo policy surfaces |
-| [`./indexers/`](./indexers/) | Build rebuildable projections such as search or map indexes from promoted artifacts | derived/rebuildable | Become authoritative truth or source-of-record |
+Where a child package still exposes only a minimal scaffold README, use the package map and boundary rules in this file as the currently documented contract until that child README hardens.
 
 ## Diagram
 
@@ -231,15 +239,18 @@ flowchart LR
     P5 --> A1
     P6 --> A1
     A1 --> A2
-
-    classDef canon fill:#eef,stroke:#557;
-    classDef pkg fill:#efe,stroke:#484;
-    classDef app fill:#fee,stroke:#844;
-
-    class C1,C2,C3,C4 canon;
-    class P1,P2,P3,P4,P5,P6 pkg;
-    class A1,A2,A3 app;
 ```
+
+## Package map
+
+| Package | Documented role | KFM posture | Must never do |
+|---|---|---|---|
+| [`./domain/`](./domain/) | Pure domain vocabulary, invariants, and stable model semantics | canonical semantic core | Import outer-layer IO or perform runtime side effects |
+| [`./ingest/`](./ingest/) | Ingestion runners, connectors, normalization, validation, receipts | truth-path critical | Serve clients directly or bypass lifecycle gates |
+| [`./catalog/`](./catalog/) | DCAT/STAC/PROV build and validation logic | catalog/triplet critical | Become an ad hoc runtime API surface |
+| [`./evidence/`](./evidence/) | Resolve `EvidenceRef` → `EvidenceBundle`, apply redaction and policy-safe presentation | trust-surface critical | Return evidence without policy or restrictions handling |
+| [`./policy/`](./policy/) | Shared policy integration helpers and package-local logic | policy-supporting | Drift away from authoritative repo policy surfaces |
+| [`./indexers/`](./indexers/) | Build rebuildable projections such as search or map indexes from promoted artifacts | derived/rebuildable | Become authoritative truth or source-of-record |
 
 ## Boundary rules
 
@@ -321,7 +332,7 @@ Because the project’s truth posture matters. This file indexes what is current
 
 ### Why are several child package READMEs still thin?
 
-Because the current repo view is still README-first at the child-package layer. Until those directories harden with more package-local files and tests, this root README carries most of the shared boundary contract.
+Because the current repo view still shows child package READMEs as scaffolds. Until those directories harden with more package-local files and tests, this root README carries most of the shared boundary contract.
 
 ## Appendix
 
