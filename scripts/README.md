@@ -6,43 +6,43 @@ version: v1
 status: draft
 owners: TODO(verify maintainers / release owners)
 created: TODO(verify-created-date)
-updated: 2026-03-18
+updated: 2026-03-19
 policy_label: TODO(verify-policy-label)
-related: [../README.md, ../docs/, ../tools/, ../tests/, ../policy/, ../contracts/]
-tags: [kfm, scripts, automation, validation, promotion]
-notes: [mounted corpus PDFs only; live repo tree, owners, doc_id, created date, policy label, and related-path presence need verification]
+related: [TODO(verify: ../README.md), TODO(verify: ../docs/), TODO(verify: ../tools/), TODO(verify: ../tests/), TODO(verify: ../policy/), TODO(verify: ../contracts/)]
+tags: [kfm, scripts, automation, validation, promotion, evidence]
+notes: [PDF-only evidence in current session; live repo tree, owners, doc_id, created date, policy label, and related-path presence need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # scripts/
 
-Repo-local entrypoints for repeatable KFM validation, promotion, evidence assembly, rollback, and operator-safe automation.
+Repo-local entrypoints for repeatable, reviewable, fail-closed KFM validation, evidence assembly, promotion support, rollback, and operator-safe automation.
 
 **Status:** experimental  
 **Owners:** TODO(verify maintainers / release owners)  
-![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-TODO-lightgrey) ![path](https://img.shields.io/badge/path-scripts%2FREADME.md-blue) ![repo_state](https://img.shields.io/badge/repo_state-PDF--only-yellow) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Truth labels](#truth-labels-used-here) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Operating rules](#operating-rules) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-TODO-lightgrey) ![path](https://img.shields.io/badge/path-scripts%2FREADME.md-blue) ![evidence](https://img.shields.io/badge/evidence-PDF--only-yellow) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
+**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Truth labels](#truth-labels-used-here) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README is **evidence-bounded**.
 >
-> The mounted March 2026 KFM corpus clearly documents the role, control burden, and target-state shape of the `scripts/` surface. The current session did **not** expose a live repository checkout, so family-level doctrine is stronger than file-level repo proof. Treat exact paths, filenames, and neighbor directories here as **PROPOSED** or **NEEDS VERIFICATION** unless the checked-out repo confirms them.
+> The mounted March 2026 KFM corpus is strong on `scripts/` doctrine, family structure, orchestration posture, and proof-bearing expectations. The current revision did **not** have a live repository checkout, mounted workflow inventory, or runtime logs. Treat exact paths, filenames, owners, and neighbor-directory presence here as **PROPOSED** or **NEEDS VERIFICATION** unless the checked-out repo confirms them.
 
 ## Scope
 
-`scripts/` is the repo-local home for **thin entrypoints** that make KFM transitions repeatable, inspectable, and fail-closed.
+`scripts/` is the repo-local home for **governed transition machinery**: thin entrypoints that make KFM movement across the canonical path repeatable, inspectable, and fail-closed.
 
-That includes helpers for source watches, validation, catalog closure, provenance checks, release evidence, rollback or correction drills, runtime smoke checks, documentation gates, and local proof runs.
+In practice, that means helpers for source watches, deterministic materialization, validation, catalog closure, evidence assembly, release checks, rollback or correction drills, runtime smoke checks, and documentation gates.
 
-It does **not** exist to become a hidden application layer.
+It does **not** exist to become a shadow application layer.
 
 > [!TIP]
-> Scripts are acceptable when they are **entrypoints**.
+> Scripts are the right tool when they are **entrypoints**.
 >
-> Scripts are the wrong home when they become **sovereign logic**.
+> Scripts are the wrong tool when they start carrying **sovereign logic** that belongs in contracts, policy, packages, apps, or governed APIs.
 
-Two working rules follow from that:
+Two working rules follow:
 
-1. Keep durable meaning in stronger surfaces such as contracts, policy bundles, packages, apps, and governed APIs.
+1. Keep durable meaning in stronger surfaces such as `contracts/`, `policy/`, `packages/`, `apps/`, and governed APIs.
 2. Use `scripts/` to expose reviewed transitions, not to smuggle system law into shell glue.
 
 [Back to top](#scripts)
@@ -53,28 +53,29 @@ Two working rules follow from that:
 | --- | --- |
 | Target file | `scripts/README.md` |
 | Directory role | Thin, reviewable entrypoints for governed validation, evidence assembly, promotion support, rollback or correction support, and operator-safe automation |
-| Upstream context | [`../README.md`](../README.md) · [`../docs/`](../docs/) · [`../policy/`](../policy/) · [`../contracts/`](../contracts/) *(documented target neighbors; live presence needs verification)* |
-| Downstream callers or dependents | [`../.github/`](../.github/) · [`../tests/`](../tests/) · [`../tools/`](../tools/) · [`../data/`](../data/) *(documented target neighbors; live presence needs verification)* |
-| Stronger promotion homes | [`../packages/`](../packages/) · [`../apps/`](../apps/) · [`../contracts/`](../contracts/) · [`../policy/`](../policy/) *(documented target neighbors; live presence needs verification)* |
+| Upstream context | [`../README.md`](../README.md) · [`../docs/`](../docs/) · [`../policy/`](../policy/) · [`../contracts/`](../contracts/) *(documented target neighbors; verify in checkout)* |
+| Downstream callers or dependents | [`../.github/`](../.github/) · [`../tests/`](../tests/) · [`../tools/`](../tools/) · [`../data/`](../data/) *(documented target neighbors; verify in checkout)* |
+| Stronger promotion homes | [`../packages/`](../packages/) · [`../apps/`](../apps/) · [`../contracts/`](../contracts/) · [`../policy/`](../policy/) *(documented target neighbors; verify in checkout)* |
 | Trust rule | `scripts/` may orchestrate, validate, verify, lint, assemble evidence, or reconcile state; it must not become the canonical owner of contract law, policy law, or public truth |
-| Current-session repo evidence | PDF corpus only; no directly visible repo tree, task runner, workflow YAML, schema registry, manifests, or runtime logs |
+| Current verification boundary | PDF corpus only; no directly visible repo tree, task runner, workflow YAML, schema registry, manifests, tests, dashboards, or runtime logs |
 
 ## Accepted inputs
 
 The following belong in `scripts/` **when they remain thin entrypoints**.
 
-| Family | Typical contents | Belongs here when |
+| Family | Typical contents | Keep it here when |
 | --- | --- | --- |
-| Bootstrap and local proof helpers | `bootstrap_ci.sh`, local bring-up wrappers, environment sanity checks | The script prepares a safe execution surface without owning long-lived runtime behavior |
-| Source onboarding, watcher, and ingest helpers | conditional fetchers, watcher wrappers, checkpoint or replay helpers | The script detects or acquires source changes and emits receipts rather than silently publishing |
-| Transformation and packaging entrypoints | small wrappers around deterministic materializers, packagers, or build steps | The heavy logic lives elsewhere and the script exists to make the lane repeatable and auditable |
-| Validation, QA, and policy gates | schema checks, STAC/DCAT/PROV validation, provenance checks, policy wrappers | The script turns gates into explicit, fail-closed entrypoints |
-| Catalog, provenance, and evidence assembly | cross-link checks, digest verification, closure builders, evidence-pack helpers | The script assembles or verifies trust-bearing proof objects rather than redefining them |
-| Projection, refresh, and export helpers | rebuild wrappers for tiles, graph/search/vector refresh, export packaging | The output is explicitly derived, freshness-linked, and rebuildable |
-| CI/CD, GitOps, and PR control helpers | merge-gate wrappers, attestation or verification steps, post-deploy checks | The helper proves or gates promotion rather than hiding review |
-| Promotion, rollback, and correction helpers | release-evidence assembly, rollback drills, correction or tombstone helpers | The script participates in governed state change and emits visible proof |
-| Runtime, audit, and model-boundary helpers | smoke tests, canary checks, audit emitters, local-only model wrappers | The governed API remains the only trust-visible entrypoint |
-| Documentation, report, and export helpers | docs-quality gates, README checks, receipt/report generators, evidence-viewer templates | The helper changes release trust or reviewability and therefore belongs in the governed machinery |
+| Bootstrap / environment / local bring-up | `bootstrap_ci.sh`, environment sanity checks, bounded local proof helpers | The script establishes a safe execution surface without owning long-lived runtime behavior |
+| Source onboarding / connector / watcher / ingest | pollers, descriptor-aware fetchers, watermark or spec-hash helpers, ingest wrappers | The script detects or acquires source change and emits receipts instead of silently publishing |
+| Transformation / normalization / packaging | deterministic build wrappers, materializers, export packagers | The heavy logic lives elsewhere and the script exists to make a governed lane repeatable |
+| Validation / QA / policy / verification | schema checks, STAC/DCAT/PROV validation, compatibility checks, policy wrappers | The script turns gates into explicit, deny-by-default entrypoints |
+| Catalog / provenance / evidence / proof assembly | cross-link checks, digest verification, closure builders, release-support emitters | The script assembles or verifies trust-bearing proof objects rather than redefining them |
+| Projection / search / vector / graph / export refresh | rebuild wrappers for tiles, search, graph, vectors, export sidecars | Outputs are explicitly derived, freshness-linked, and rebuildable |
+| Release / promotion / rollback / correction | release-evidence assembly, signed promotion helpers, rollback drills, correction/tombstone helpers | The script participates in governed trust-state change and preserves lineage |
+| Runtime ops / health / audit / reconciliation | smoke tests, canary checks, audit emitters, reconciliation helpers | The governed API remains the only trust-visible public entrypoint |
+| CI/CD / GitOps / PR / release control | merge-gate wrappers, attest/verify steps, post-deploy checks | The helper proves or gates promotion rather than hiding review |
+| Local model/runtime and Focus helpers | local-only model wrappers, contract-bound inference helpers, runtime boundary checks | Execution stays private-first and subordinate to evidence, policy, and governed APIs |
+| Docs / build / report / export helpers | docs gates, README checks, report builders, evidence-viewer helpers | The helper changes release trust or reviewability and therefore belongs in governed machinery |
 
 ### Minimum bar for anything added here
 
@@ -109,17 +110,18 @@ The following do **not** belong in `scripts/`.
 
 | Marker | Meaning in this README |
 | --- | --- |
-| **CONFIRMED** | Grounded in the mounted March 2026 corpus or direct current-session workspace evidence |
-| **PROPOSED** | Documented target-state realization or recommended shape that fits KFM doctrine but was not verified as mounted repo reality |
+| **CONFIRMED** | Directly supported by the mounted March 2026 KFM corpus or direct current-session evidence |
+| **INFERRED** | A conservative synthesis from multiple mounted documents, still kept below direct proof |
+| **PROPOSED** | A doctrine-consistent realization, placement, or implementation pattern not verified as mounted repo reality |
 | **UNKNOWN** | Not established strongly enough in the current session to present as settled fact |
-| **NEEDS VERIFICATION** | A path, filename, owner, or repo-local detail that should be checked in the actual checkout before merge |
+| **NEEDS VERIFICATION** | A path, filename, owner, workflow, or repo-local detail that should be checked in the actual checkout before merge |
 
 ## Directory tree
 
 ### Current verification boundary
 
 > [!NOTE]
-> No live repo tree was directly visible in this session. The inventory below is a **documented target shape**, not a mounted listing.
+> No live repo tree was directly visible in this revision. The inventory below is a **documented target shape**, not a mounted listing.
 
 ### Documented target shape
 
@@ -128,8 +130,8 @@ scripts/
 ├── README.md
 ├── bootstrap_ci.sh
 ├── catalog/
-│   ├── validate_jsonld.sh
-│   └── validate_stac.py
+│   ├── validate_stac.py
+│   └── validate_jsonld.sh
 ├── evidence/
 │   ├── crosslink_consistency.py
 │   └── verify_checksums.sh
@@ -140,23 +142,23 @@ scripts/
 ├── provenance/
 │   ├── validate_prov.py
 │   └── verify_fingerprint.py
-├── release/
-├── runtime/
-└── rollback/
+├── release/      # family CONFIRMED; filenames NEEDS VERIFICATION
+├── rollback/     # family CONFIRMED; filenames NEEDS VERIFICATION
+└── runtime/      # family CONFIRMED; filenames NEEDS VERIFICATION
 ```
 
 ### How to read this tree
 
-The explicit filenames above are **doc-grounded examples** named in the mounted corpus. The `release/`, `runtime/`, and `rollback/` families are also strongly implied, but their exact mounted filenames were not directly visible here.
+The explicit filenames above are **document-grounded examples** already named in the mounted corpus. They are useful because they show what the project expects this surface to do.
 
 A practical reading is:
 
-- `catalog/`, `evidence/`, `provenance/`, and `policy/` hold fail-closed gate entrypoints
+- `catalog/`, `evidence/`, `policy/`, and `provenance/` hold fail-closed gate entrypoints
 - `bootstrap_ci.sh` establishes a reproducible CI or local proof baseline
 - `lint/` keeps docs and README surfaces from drifting away from behavior
-- `release/`, `runtime/`, and `rollback/` exist to preserve governed promotion, post-deploy verification, and correction lineage
+- `release/`, `rollback/`, and `runtime/` remain family-level destinations whose exact filenames still need checkout verification
 
-Additional documented placements outside `scripts/` also appear in the corpus — including `.github/workflows/*`, `src/pipelines/<domain>/**`, `policy/*.rego`, `data/{stac,dcat,prov}/**`, and `tools/*` — but those remain neighbor surfaces, not proof that the live repo currently contains them.
+Additional documented placements outside `scripts/` also appear in the corpus — including `.github/workflows/*`, `policy/*.rego`, `data/{stac,dcat,prov}/**`, `tools/*`, and app/runtime surfaces — but those remain neighboring signals, not proof that the live repo currently contains them.
 
 [Back to top](#scripts)
 
@@ -175,7 +177,7 @@ Use this sequence before adding, renaming, or deleting a helper.
 test -d scripts && find scripts -maxdepth 3 -type f | sort || echo "scripts/ not present in this checkout"
 
 # 2) Find likely callers without assuming every neighbor exists.
-for d in .github docs tests tools policy contracts data; do
+for d in .github docs tests tools policy contracts data apps packages; do
   [ -d "$d" ] && grep -R --line-number "scripts/" "$d" || true
 done
 
@@ -185,7 +187,7 @@ find scripts -type f -name "*.py" -print0 2>/dev/null | xargs -0 -r -n1 python -
 
 # 4) Review entrypoints before changing behavior.
 find scripts -maxdepth 2 -type f \( -name "*.sh" -o -name "*.py" \) \
-  -exec sh -c 'echo "---- $1"; sed -n "1,30p" "$1"' _ {} \;
+  -exec sh -c 'echo "---- $1"; sed -n "1,40p" "$1"' _ {} \;
 ```
 
 Illustrative shell header for a thin entrypoint:
@@ -200,33 +202,74 @@ set -euo pipefail
 # Side effects: state changes must be documented below.
 ```
 
-## Operating rules
+## Usage
 
-### 1) Keep scripts thin
+### Documented target gate lane
+
+The mounted corpus already names a compact verification lane for a dataset or release candidate. Treat the sequence below as a **documented target flow** whose exact mounted paths still need checkout verification.
+
+```bash
+scripts/bootstrap_ci.sh
+
+scripts/evidence/verify_checksums.sh \
+  data/processed/<theme>/<dataset>/<version> \
+  SHA256SUMS.txt
+
+scripts/catalog/validate_stac.py \
+  data/catalog/stac/items/<dataset>__<version>.json
+
+scripts/catalog/validate_jsonld.sh \
+  data/catalog/dcat/datasets/<dataset>__<version>.jsonld
+
+scripts/provenance/validate_prov.py \
+  data/catalog/prov/<dataset>__<version>.prov.json
+
+scripts/evidence/crosslink_consistency.py \
+  --stac data/catalog/stac/items/<dataset>__<version>.json \
+  --dcat data/catalog/dcat/datasets/<dataset>__<version>.jsonld \
+  --prov data/catalog/prov/<dataset>__<version>.prov.json \
+  --manifest data/processed/<theme>/<dataset>/<version>/manifest.json
+
+scripts/policy/focus_mode_gate.sh \
+  data/catalog/{stac,dcat}/**/* \
+  <dataset>__<version>
+```
+
+### Operating rules
+
+#### 1) Keep scripts thin
 
 A good script parses explicit inputs, delegates durable logic outward, normalizes a repeated invocation pattern, and returns a clear exit status. It should not become the hidden place where the real product rules live.
 
-### 2) Make destructive work unmistakable
+#### 2) Make destructive work unmistakable
 
 If a helper can mutate, publish, overwrite, promote, withdraw, or rebuild anything consequential, require explicit target identifiers, document side effects, and prefer a dry-run mode when feasible.
 
-### 3) Prefer parameterization over machine folklore
+#### 3) Prefer parameterization over workstation folklore
 
-Do not bury workstation-only paths, hostnames, tokens, unpublished dataset IDs, or one-person conventions in helper code. Use flags, environment variables, checked-in examples, or documented defaults instead.
+Do not bury workstation-only paths, hostnames, unpublished dataset IDs, or one-person conventions in helper code. Use flags, environment variables, checked-in examples, or documented defaults instead.
 
-### 4) Emit evidence-friendly outputs
+#### 4) Emit evidence-friendly outputs
 
 When a helper crosses a trust boundary, it should produce stable IDs, run manifests or receipts where relevant, validation reports, and enough linkage to reconstruct what happened later.
 
-### 5) Keep derived work visibly derived
+#### 5) Keep derived work visibly derived
 
 Projection refresh, export packaging, and index rebuild scripts should prove freshness and release linkage. They must not quietly become authoritative truth by convenience.
 
-### 6) Graduate on complexity
+#### 6) Separate watcher / planner / executor responsibilities when trust is affected
+
+Change detection, plan generation, and effectful execution are easier to review when they are not collapsed into one opaque automation surface.
+
+#### 7) Graduate on complexity
 
 Move work out of `scripts/` when it starts to need shared internal modules, durable workflow state, schema law, policy semantics, or a lifecycle that deserves real versioned ownership.
 
-### 7) Keep docs, tests, and callers aligned
+#### 8) Prefer build-once, promote-many release identity
+
+Anything that changes trust state should carry digest-first, reviewable, reversible identity rather than being rebuilt under pressure from drifting source state.
+
+#### 9) Keep docs, tests, and callers aligned
 
 A helper change is not complete until the relevant docs, examples, workflows, and verification surfaces are updated in the same change stream.
 
@@ -234,37 +277,54 @@ A helper change is not complete until the relevant docs, examples, workflows, an
 
 ```mermaid
 flowchart LR
-    A[Maintainer / CI / steward] --> B[scripts/ thin entrypoints]
-    B --> C[Watchers and ingest helpers]
-    B --> D[Validators and policy gates]
-    B --> E[Catalog / provenance / evidence builders]
-    B --> F[Promotion / runtime / correction helpers]
+    A[Maintainer / CI / operator] --> B[scripts/ thin entrypoints]
+
+    B --> C[watch / intake]
+    B --> D[materialize / validate]
+    B --> E[catalog / provenance / proof]
+    B --> F[promote / correct / rollback]
 
     C --> G[RAW or WORK / QUARANTINE]
-    D --> H[PROCESSED candidate]
-    E --> I[CATALOG closure]
-    F --> J[PUBLISHED scope or corrected state]
+    D --> H[PROCESSED / DatasetVersion]
+    E --> I[CatalogClosure / ReleaseManifest / EvidenceBundle]
+    F --> J[PUBLISHED or correction-visible state]
 
-    K[Public app surfaces] -. governed APIs only .-> J
-    B -. must not become .-> L[Canonical owner of policy, contracts, or truth]
+    J -. governed APIs only .-> K[apps / ui / runtime surfaces]
+    B -. must not become .-> L[canonical owner of policy, contracts, or truth]
 ```
 
 ## Reference tables
 
-### Confirmed family taxonomy
+### Script family model
 
-| Family | Primary purpose | Typical outputs | Typical control burden |
-| --- | --- | --- | --- |
-| Bootstrap / local bring-up | Establish the smallest safe runtime or proof surface | local proof logs, temporary receipts, reproducible environment state | localhost or private bind, pinned versions, minimal secrets |
-| Watcher / ingest | Detect source change and acquire admissible inputs | checkpoints, update records, `ingest_receipt` | rights posture, cadence, conditional fetch, quarantine routing |
-| Transform / packaging | Convert staged inputs into deterministic processed artifacts | `dataset_version`, digests, `run_manifest`, `run_receipt` | schema, CRS, unit, geometry, nullability, deterministic identity |
-| Validation / policy / verification | Deny by default before promotion or publication | `validation_report`, gate reports, policy decisions | JSON Schema, OPA/Rego, fixtures, compatibility checks |
-| Catalog / provenance / evidence | Assemble releasable closure and support objects | `catalog_closure`, STAC/DCAT/PROV updates, release candidates | cross-link integrity, provenance completeness, review readiness |
-| Projection / refresh / export | Rebuild derived delivery layers | `projection_build_receipt`, export manifests, freshness reports | release linkage, rebuildability, stale handling |
-| CI/CD / PR control | Gate merge and promotion with inspectable evidence | check runs, attestation outputs, policy results | merge-blocking checks, approvals, post-deploy verification |
-| Promotion / rollback / correction | Change or reverse trust state under control | `release_manifest`, correction or tombstone evidence | signatures, lineage, rollback discipline, preserved history |
-| Runtime / audit / model boundary | Keep visible trust behavior honest and model execution subordinate | `runtime_response_envelope`, `audit_ref`, smoke reports | cite-or-abstain, no direct client path, local-only/private model bind |
-| Docs / report / export helpers | Preserve release trust and reviewability around docs | docs-gate reports, generated receipts, evidence-viewer templates | same trust burden as code when behavior or publication trust changes |
+| Family | Primary purpose | Typical proof pressure |
+| --- | --- | --- |
+| Bootstrap / environment / local bring-up | Small safe runtime and proof surfaces | version pins, local/private binds, no accidental authoritative writes |
+| Source onboarding / connector / watcher / ingest | Detect admissible change and acquire inputs | descriptors, validators, quarantine routing, ingest receipts |
+| Transformation / normalization / packaging | Produce deterministic processed artifacts and versioned bundles | schema/CRS/unit/nullability discipline, digests, deterministic identity |
+| Validation / QA / policy / verification | Deny by default before promotion | schema/catalog/runtime checks, compatibility reports |
+| Catalog / provenance / evidence / proof assembly | Build the evidence-bearing release surface | `CatalogClosure`, manifests, provenance, attestations, `EvidenceBundle` |
+| Projection / search / vector / graph / export refresh | Rebuild derived delivery layers | release linkage, freshness visibility, explicit stale handling |
+| Release / promotion / rollback / correction | Move or reverse trust state safely | approvals, signatures/attestations, correction or tombstone evidence |
+| Runtime ops / health / audit / reconciliation | Keep governed runtime correct and observable | smoke/canary, audit joins, emergency deny paths |
+| CI/CD / GitOps / PR / release control | Treat delivery as evidence-bearing promotion | merge-blocking checks, digest pinning, environment approvals |
+| Local model/runtime and Focus helpers | Keep model execution subordinate to evidence and policy | private-first binds, provider-neutral adapter, no direct client path |
+| Docs / build / report / export helpers | Produce machine-readable support artifacts | same evidence discipline as data/code lanes when trust-bearing |
+
+### Execution contexts
+
+| Context | Role in KFM | Posture in this revision |
+| --- | --- | --- |
+| Local CLI | Deterministic local proof runs, dry runs, replay helpers, spec-hash utilities | **CONFIRMED** family; concrete commands remain **PROPOSED** |
+| GitHub Actions / CI runner | Merge-blocking checks, attest/verify, policy gates, post-deploy verify | **CONFIRMED** family; exact workflow files remain **PROPOSED** |
+| GitHub App / `repository_dispatch` / webhook relay | PR-first review-plane automation and auditable relays | **CONFIRMED** pattern; mounted app/relay inventory remains **UNKNOWN** |
+| Dagster | Default center of gravity for governed asset orchestration: sensors, checks, partitions, freshness, materialization boundaries | **CONFIRMED** preference; mounted code remains **PROPOSED** |
+| Prefect | Lighter complement for simpler typed flows and hybrid automation | **CONFIRMED** role; mounted usage remains **PROPOSED** |
+| Temporal | Durable long-running or approval-heavy workflows with replay/timers/compensation | **CONFIRMED** role; mounted usage remains **PROPOSED** |
+| Metaflow | Exploratory-to-governed transition lane for research-adjacent evaluation | **CONFIRMED** role; mounted usage remains **UNKNOWN** |
+| Scheduled jobs / timers | Reconciliation, freshness rechecks, periodic proof runs | **CONFIRMED** pattern; specific jobs remain **PROPOSED** |
+| `systemd` / Compose / Kubernetes manifests | Phase-one or future host/runtime control surfaces | Execution-surface concept is valid; actual manifests remain **UNKNOWN** |
+| API middleware / internal service calls | Policy mediation, `EvidenceBundle` resolution, `RuntimeResponseEnvelope` emission, audit writing | **CONFIRMED** boundary; concrete code remains **PROPOSED** |
 
 ### Graduation rules
 
@@ -276,6 +336,8 @@ flowchart LR
 | the helper behaves like a service or durable workflow engine | [`../apps/`](../apps/) or orchestrator-owned code | runtime ownership deserves a stronger lifecycle |
 | the helper only exists to support tests | [`../tests/`](../tests/) or [`../tools/`](../tools/) | test scaffolding should live near the assertions it supports |
 
+[Back to top](#scripts)
+
 ## Task list
 
 **Definition of done for a change under `scripts/`:**
@@ -286,9 +348,10 @@ flowchart LR
 - [ ] Destructive behavior is explicit, not implied
 - [ ] The helper emits or preserves the proof objects its lane requires
 - [ ] Secrets are not committed and not required from tracked files
-- [ ] Caller surfaces in CI, docs, tests, or runtime were checked against the actual checkout
+- [ ] Caller surfaces in CI, docs, tests, runtime, or release gates were checked against the actual checkout
 - [ ] Docs, examples, or workflows were updated when invocation changed
 - [ ] Negative outcomes remain first-class: hold, quarantine, deny, abstain, stale-visible, superseded, withdrawn, or error
+- [ ] At least one correction or rollback implication was considered where trust state can change
 - [ ] Any path, owner, or filename placeholders were verified before stabilization
 
 ## FAQ
@@ -311,14 +374,14 @@ When the logic becomes reusable, shared, stateful, policy-bearing, contract-bear
 
 ### Why are so many paths marked PROPOSED or NEEDS VERIFICATION?
 
-Because the mounted March 2026 corpus is strong on script doctrine and target-state shape, but this session did not expose a live repo checkout. The README should preserve that honesty instead of polishing it away.
+Because the mounted March 2026 corpus is strong on script doctrine and target-state shape, but this revision did not have a live repo checkout. The README should preserve that honesty instead of polishing it away.
 
 ## Appendix
 
 <details>
-<summary><strong>Doc-grounded example filenames already named in the mounted corpus</strong></summary>
+<summary><strong>Document-grounded example entrypoints already named in the mounted corpus</strong></summary>
 
-These names are useful because they show the kinds of helper entrypoints the corpus already expects. They are **doc-grounded examples**, not proof that every file already exists in the live checkout.
+These names are useful because they show the kinds of helper entrypoints the corpus already expects. They are **document-grounded examples**, not proof that every file already exists in the live checkout.
 
 ```text
 scripts/bootstrap_ci.sh
@@ -332,21 +395,22 @@ scripts/provenance/validate_prov.py
 scripts/provenance/verify_fingerprint.py
 ```
 
-The same corpus also documents adjacent target-state placements outside `scripts/`, including `.github/workflows/*`, `src/pipelines/<domain>/**`, `policy/*.rego`, `data/{stac,dcat,prov}/**`, and `tools/rollback.py`. Those are valuable neighboring signals, but they are not mounted repo facts in this session.
+The same corpus also documents adjacent target-state placements outside `scripts/`, including `.github/workflows/*`, `policy/*.rego`, `data/{stac,dcat,prov}/**`, and runtime or tooling surfaces that consume the proof objects emitted here. Those are valuable neighboring signals, but they are not mounted repo facts in this revision.
 
 </details>
 
 <details>
-<summary><strong>Verification backlog before this README is stabilized</strong></summary>
+<summary><strong>Direct verification backlog before this README is stabilized</strong></summary>
 
 Check these in the actual checkout before removing placeholders:
 
 - confirm that `scripts/` exists and capture its real tree
-- verify caller surfaces under `.github/`, `docs/`, `tests/`, `tools/`, `policy/`, and `contracts/`
+- verify caller surfaces under `.github/`, `docs/`, `tests/`, `tools/`, `policy/`, `contracts/`, `data/`, `apps/`, and `packages/`
 - confirm which helper families are mounted today and which remain target-state only
-- surface actual workflow files, task runners, manifests, and schema or fixture locations
-- publish or point to one real thin-slice proof set: descriptor, receipt, validation report, catalog closure, release evidence, runtime outcome, and correction or rollback drill
-- verify owners, `doc_id`, dates, policy label, and related-path metadata in the KFM meta block
+- surface actual workflow files, task runners, manifests, schemas, fixtures, and registry locations
+- verify the emitted proof-object chain for at least one governed slice: descriptor, receipt, validation report, dataset version, catalog closure, release manifest, evidence path, runtime envelope, and correction/rollback evidence
+- confirm which execution contexts are actually mounted today: CLI, CI, Dagster, Prefect, Temporal, scheduled jobs, runtime middleware, or other bounded surfaces
+- verify owners, `doc_id`, created date, policy label, and related-path metadata in the KFM meta block
 
 </details>
 
