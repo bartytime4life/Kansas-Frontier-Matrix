@@ -1,30 +1,48 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<pending-uuid>
+title: .github/actions/
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: <NEEDS VERIFICATION>
+updated: 2026-03-19
+policy_label: <NEEDS VERIFICATION>
+related: [../README.md, ../workflows/, ../CODEOWNERS, ../../policy/, ../../contracts/, ../../schemas/]
+tags: [kfm, github-actions, ci-cd, governance]
+notes: [doc_id placeholder pending registry allocation, created and policy_label require repo verification, related links assume standard .github adjacency and should be branch-verified]
+[/KFM_META_BLOCK_V2] -->
+
 <a id="top"></a>
 
 # `.github/actions/`
+
 Reusable GitHub Actions contract and bootstrap surface for KFM’s repo-level workflow building blocks.
 
 ![Status](https://img.shields.io/badge/status-experimental-orange)
 ![Owners](https://img.shields.io/badge/owners-%40bartytime4life-blue)
-![Current%20Tree](https://img.shields.io/badge/current%20tree-README--only-lightgrey)
+![Tree](https://img.shields.io/badge/tree-baseline%20supplied%20%2F%20unverified-lightgrey)
 ![Delivery](https://img.shields.io/badge/delivery-PR--first%20%2F%20fail--closed-0a7d5a)
-![Evidence](https://img.shields.io/badge/evidence-public%20tree%20verified-1f6feb)
+![Evidence](https://img.shields.io/badge/evidence-PDF--only%20workspace%20verified-yellow)
 
 | Field | Value |
 |---|---|
 | Status | experimental |
 | Owners | `@bartytime4life` |
 | Path | `.github/actions/README.md` |
-| Current public tree | `README.md` only |
-| Truth posture | **CONFIRMED** current tree + governing KFM doctrine · **PROPOSED** first reusable local-action catalog · **UNKNOWN** exact live workflow coverage, required checks, and branch-protection settings outside the visible tree |
+| Working baseline | `README.md` only in the supplied draft for this directory · **NEEDS VERIFICATION** against the mounted repo tree |
+| Truth posture | **CONFIRMED** KFM doctrine for PR-first, fail-closed, evidence-bearing CI/CD and GitHub Actions as a guardrail layer · **PROPOSED** local-action catalog, folder contract, and bootstrap examples in this directory · **UNKNOWN / NEEDS VERIFICATION** exact mounted `.github/actions/` contents, live workflow callers, CODEOWNERS rules, required checks, and branch-protection settings |
 | Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list / Definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
 
 > [!IMPORTANT]
-> The current public tree shows `.github/actions/README.md` and no action subdirectories.
->  
-> Read this file as the **directory contract and bootstrap plan** for reusable local actions. It does **not** claim that a populated local-action catalog already exists on `main`.
+> Current-session evidence for this draft was PDF-only, not a mounted repository checkout.
+>
+> Read this file as the **directory contract and bootstrap plan** for reusable repo-local actions. It does **not** claim that the live branch already contains a populated local-action catalog.
 
 > [!NOTE]
-> In KFM, local actions are not a second source of truth for policy, schemas, release manifests, or runtime behavior. They are thin, reviewable wrappers around repeated workflow steps that help keep CI/CD **PR-first**, **fail-closed**, and evidence-aware.
+> In March 2026 KFM doctrine, GitHub Actions acts as a **universal guardrail and promotion/gating layer**, not the scheduler of record for long-running governed orchestration.
+>
+> That means local actions in this directory should stay **thin**, **step-scoped**, **reviewable**, and **replaceable**.
 
 ---
 
@@ -35,9 +53,9 @@ Use `.github/actions/` for **reusable repo-local GitHub Actions** that centraliz
 Good fits include:
 
 - policy-gate wrappers
-- metadata-validation wrappers
-- provenance / receipt checks
-- SBOM / attestation helpers
+- attestation and receipt helpers
+- pinned setup/bootstrap helpers for repeatable CI tools
+- provenance / Rekor / release-proof summary steps
 - standard setup steps with KFM-safe defaults
 - check-summary formatting for repeatable review signals
 
@@ -56,27 +74,28 @@ Do **not** use this directory as:
 ## Repo fit
 
 **Path:** `.github/actions/README.md`  
-**Role in repo:** directory README for reusable local GitHub Actions that support KFM’s repository-side control plane.
+**Role in repo:** directory README for reusable local actions that support KFM’s repository-side control plane.
 
-### Upstream anchors
+### Expected upstream and downstream surfaces
 
-- [`../README.md`](../README.md) — `.github/` gatehouse and repo-governance entrypoint
-- [`../../README.md`](../../README.md) — repo-root operating posture and truth boundary
-- [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) — contributor workflow and review burden
-- [`../CODEOWNERS`](../CODEOWNERS) — ownership and review boundary
+This README is designed to sit beside the following repo surfaces:
+
+- [`../README.md`](../README.md) — `.github/` gatehouse / governance entrypoint
+- [`../workflows/`](../workflows/) — workflow orchestration layer and primary caller of local actions
+- [`../CODEOWNERS`](../CODEOWNERS) — review boundary for `.github/**` and related governance surfaces
 - [`../../policy/`](../../policy/) — canonical policy bodies and fixtures
-- [`../../schemas/`](../../schemas/) — canonical validation schemas
+- [`../../schemas/`](../../schemas/) — canonical schemas
 - [`../../contracts/`](../../contracts/) — canonical contract surfaces
+- [`../../tools/`](../../tools/) / [`../../scripts/`](../../scripts/) / [`../../packages/`](../../packages/) — heavier reusable logic that local actions should wrap rather than duplicate
 
-### Downstream consumers
-
-- [`../workflows/`](../workflows/) — workflow orchestration layer that calls local actions
-- `./<action-name>/action.yml` — per-action composite entrypoint when local actions land
-- `./<action-name>/README.md` — per-action contract, usage, and troubleshooting notes
+> [!CAUTION]
+> The links above reflect the **intended local topology** for this README.
+>
+> Their exact presence and current contents still require branch verification because the mounted repo tree was not directly visible in this session.
 
 ### KFM boundary rule
 
-A local action may **invoke** policy, schemas, tools, and validation logic, but it should not quietly become the only place where that logic survives.
+A local action may **invoke** policy, contracts, schemas, scripts, and verification logic, but it should not quietly become the only place where that logic survives.
 
 [Back to top](#top)
 
@@ -86,12 +105,14 @@ A local action may **invoke** policy, schemas, tools, and validation logic, but 
 
 | Input type | What belongs here | Typical examples |
 |---|---|---|
-| Directory-level guidance | The contract for how local actions should be created and reviewed | this README |
-| Composite action definitions | Thin reusable step wrappers | `action.yml` files inside future action folders |
+| Directory-level guidance | The contract for how repo-local actions should be created, named, and reviewed | this README |
+| Composite action definitions | Thin reusable step wrappers | `action.yml` inside future action folders |
 | Action-scoped docs | Inputs, outputs, permissions, failure modes, usage | `./<action-name>/README.md` |
 | Small action-local helpers | Short scripts tightly coupled to one action | `src/check.sh`, `src/verify.py` |
-| Action-local test fixtures | Small examples for self-test or lint coverage | `tests/fixtures/` under an action |
-| Review-facing defaults | Logging, shell-safety, and permission conventions | shared bootstrap patterns used by multiple actions |
+| Action-local fixtures | Tiny self-test or lint fixtures | `tests/fixtures/` under an action |
+| Review-facing defaults | Logging, shell-safety, permission, or summary conventions | helper actions such as `setup-conftest/` |
+
+[Back to top](#top)
 
 ---
 
@@ -102,8 +123,8 @@ A local action may **invoke** policy, schemas, tools, and validation logic, but 
 | Canonical policy rules | Actions should wrap enforcement, not own policy truth | [`../../policy/`](../../policy/) |
 | Canonical schemas and API contracts | Actions consume these; they do not define them | [`../../schemas/`](../../schemas/), [`../../contracts/`](../../contracts/) |
 | Reusable workflow orchestration | Job- and pipeline-level orchestration belongs at workflow level | [`../workflows/`](../workflows/) |
-| Heavy shared runtime logic | Large reusable logic should live in repo tooling or packages | [`../../tools/`](../../tools/), [`../../scripts/`](../../scripts/), `../../packages/` |
-| Secrets or environment credentials | Local actions must not become secret stores | GitHub settings / environments / external secret manager |
+| Heavy shared runtime logic | Large reusable logic should live in repo tooling or packages | [`../../tools/`](../../tools/), [`../../scripts/`](../../scripts/), [`../../packages/`](../../packages/) |
+| Secrets or environment credentials | Local actions must not become secret stores | GitHub environments / secret managers / repo settings |
 | Release manifests, receipts, or proof packs as authoritative data | Those are governed evidence artifacts, not action docs | governed data / release lanes elsewhere in the repo |
 
 [Back to top](#top)
@@ -112,40 +133,39 @@ A local action may **invoke** policy, schemas, tools, and validation logic, but 
 
 ## Directory tree
 
-### Current public tree (**CONFIRMED**)
+### Working baseline (**supplied for this draft · NEEDS VERIFICATION**)
 
 ```text
 .github/actions/
 └── README.md
 ```
 
-### Mature target shape (**PROPOSED**)
+### Evidence-aligned target shape (**PROPOSED**)
 
 ```text
 .github/actions/
 ├── README.md
-├── metadata-validate/
+├── setup-conftest/
 │   ├── action.yml
-│   ├── README.md
-│   └── src/
+│   └── README.md
 ├── opa-gate/
 │   ├── action.yml
 │   ├── README.md
 │   └── src/
-├── provenance-guard/
+├── sigstore-attest/
 │   ├── action.yml
 │   ├── README.md
 │   └── src/
-└── sbom-produce-and-sign/
+└── rekor-evidence/
     ├── action.yml
     ├── README.md
     └── src/
 ```
 
-> [!CAUTION]
-> The mature tree above is a **target shape**, not a claim about the current checkout.
->  
-> Keep current-state and target-state language separate. KFM’s documentation rules explicitly reject attractive overstatement.
+> [!NOTE]
+> The target shape above is a **bootstrap map**, not a claim about the current branch.
+>
+> The names are aligned to documented KFM examples and support material, but remain **PROPOSED** until the live repo tree is surfaced and reviewed.
 
 [Back to top](#top)
 
@@ -160,17 +180,22 @@ find .github/actions -maxdepth 2 -type f | sort
 ```
 
 ```bash
-find .github -maxdepth 2 -type f | sort
+grep -R "uses: ./.github/actions/" -n .github/workflows 2>/dev/null || true
 ```
 
 ```bash
-sed -n '1,120p' .github/CODEOWNERS
+test -f .github/CODEOWNERS \
+  && sed -n '1,120p' .github/CODEOWNERS \
+  || echo ".github/CODEOWNERS not found"
 ```
 
 ### 2) Bootstrap the first local action (**PROPOSED**)
 
+This example starts with a thin `opa-gate/` composite action. It assumes `conftest` is already available in the job environment or provided by a separate helper action such as a future `setup-conftest/`.
+
 ```bash
 mkdir -p .github/actions/opa-gate/src
+
 cat > .github/actions/opa-gate/action.yml <<'YAML'
 name: opa-gate
 description: Run repo-default Conftest / OPA checks against a target path.
@@ -178,6 +203,10 @@ inputs:
   target:
     description: File or directory to validate.
     required: true
+  policy-path:
+    description: Policy directory to use.
+    required: false
+    default: policy/
 runs:
   using: composite
   steps:
@@ -185,7 +214,7 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        conftest test "${{ inputs.target }}" --policy policy/
+        conftest test "${{ inputs.target }}" --policy "${{ inputs.policy-path }}"
 YAML
 
 cat > .github/actions/opa-gate/README.md <<'MD'
@@ -195,9 +224,10 @@ Thin wrapper for repo-local Conftest / OPA execution.
 
 ## Inputs
 
-| Name | Required | Description |
-|---|---:|---|
-| `target` | yes | File or directory to validate |
+| Name | Required | Default | Description |
+|---|---:|---|---|
+| `target` | yes | — | File or directory to validate |
+| `policy-path` | no | `policy/` | Policy directory to use |
 
 ## Usage
 
@@ -211,7 +241,8 @@ Thin wrapper for repo-local Conftest / OPA execution.
 ## Security notes
 
 - no secrets required
-- action fails closed on policy denial
+- fails closed on policy denial
+- intended to wrap repo policy, not replace it
 MD
 ```
 
@@ -225,6 +256,13 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Conftest
+        run: |
+          curl -L https://github.com/open-policy-agent/conftest/releases/download/v0.56.0/conftest_Linux_x86_64.tar.gz \
+            | tar xz
+          sudo mv conftest /usr/local/bin/
+
       - name: Policy gate
         uses: ./.github/actions/opa-gate
         with:
@@ -291,6 +329,9 @@ Every action folder should include:
 5. **Prefer machine-readable evidence to log-only success**  
    If an action participates in a governed gate, it should preserve or emit evidence that workflows can pass forward, not just print “done”.
 
+6. **Be explicit about trusted refs**  
+   If a gate uses `pull_request_target`, keep it read-only and avoid executing untrusted fork code under elevated permissions.
+
 ### Versioning and compatibility
 
 Because local actions are path-referenced, changes land immediately for their callers.
@@ -307,8 +348,8 @@ A practical pattern:
 
 ```text
 .github/actions/
-├── metadata-validate/
-└── metadata-validate-v2/
+├── opa-gate/
+└── opa-gate-v2/
 ```
 
 [Back to top](#top)
@@ -321,14 +362,16 @@ A practical pattern:
 flowchart LR
     A[Contributor or automation change] --> B[.github/workflows/]
     B --> C{Repeated, reviewable step?}
+
     C -->|No| D[Keep step inline]
     C -->|Yes| E[.github/actions/<action>/action.yml]
-    E --> F[Wrap repo truth surfaces<br/>policy • schemas • contracts • tools]
-    F --> G[Emit or preserve evidence<br/>manifests • receipts • SBOM • attestations]
-    G --> H[Required checks + CODEOWNERS]
-    H --> I[Promote / deploy only after verified merge]
 
-    X[Current public tree:<br/>README.md only] -. bootstrap path .-> E
+    E --> F[Wrap repo truth surfaces<br/>policy • contracts • schemas • tools]
+    F --> G[Emit or preserve evidence<br/>receipts • summaries • attestations • proof links]
+    G --> H[Required checks + CODEOWNERS + approvals]
+    H --> I[Merge / promote only after verified success]
+
+    X[Working baseline for this draft:<br/>README.md only] -. bootstrap path .-> E
 ```
 
 [Back to top](#top)
@@ -341,25 +384,25 @@ flowchart LR
 
 | Surface | Role | Status in this README |
 |---|---|---|
-| [`../workflows/`](../workflows/) | Workflow orchestration layer and main consumer of local actions | **CONFIRMED** directory exists; exact current workflow inventory remains outside this file |
-| [`../CODEOWNERS`](../CODEOWNERS) | Review boundary for `.github/**` and related governance surfaces | **CONFIRMED** |
-| [`../../policy/`](../../policy/) | Canonical OPA / Rego policy bodies and fixtures | **CONFIRMED** directory exists |
-| [`../../schemas/`](../../schemas/) | Canonical validation schemas | **CONFIRMED** directory exists |
-| [`../../contracts/`](../../contracts/) | Canonical contract surfaces | **CONFIRMED** directory exists |
-| [`../../tools/`](../../tools/), [`../../scripts/`](../../scripts/) | Heavier reusable logic that actions should call instead of duplicating | **CONFIRMED** directories exist |
+| [`../workflows/`](../workflows/) | Workflow orchestration layer and main consumer of local actions | **CONFIRMED** as a KFM control-plane responsibility · exact mounted path and inventory **NEEDS VERIFICATION** |
+| [`../CODEOWNERS`](../CODEOWNERS) | Review boundary for `.github/**` and related governance surfaces | **CONFIRMED** as a review-control concept · exact mounted file and rules **NEEDS VERIFICATION** |
+| [`../../policy/`](../../policy/) | Canonical policy bodies and fixtures | **CONFIRMED** doctrinal surface · exact mounted path **NEEDS VERIFICATION** |
+| [`../../schemas/`](../../schemas/) | Canonical validation schemas | **CONFIRMED** doctrinal surface · exact mounted path **NEEDS VERIFICATION** |
+| [`../../contracts/`](../../contracts/) | Canonical contract surfaces | **CONFIRMED** doctrinal surface · exact mounted path **NEEDS VERIFICATION** |
+| [`../../tools/`](../../tools/), [`../../scripts/`](../../scripts/), [`../../packages/`](../../packages/) | Heavier reusable logic that actions should call instead of duplicating | **CONFIRMED** doctrinal surfaces · exact mounted paths **NEEDS VERIFICATION** |
 | Branch protection / required checks / environments | Repo settings outside the visible tree | **UNKNOWN / NEEDS VERIFICATION** |
 
-### Proposed first action families
+### Evidence-aligned first action families
 
-> These are **illustrative**, not current inventory.
+> These are **PROPOSED** bootstrap candidates, not a current inventory claim.
 
 | Proposed action | Job it would do | Typical consumer |
 |---|---|---|
-| `metadata-validate/` | Validate STAC / DCAT / PROV metadata against schema + policy | catalog / metadata gate |
-| `opa-gate/` | Run repo-default Conftest / OPA checks with consistent logging | PR policy gate |
-| `provenance-guard/` | Require run manifests, PROV links, and no orphan outputs | release / publish gate |
-| `sbom-produce-and-sign/` | Generate SBOM and produce signing / attestation evidence | release / artifact integrity lane |
-| `sigstore-attest/` | Wrap keyless attestation with repo-standard metadata | attestation / release evidence lane |
+| `setup-conftest/` | Install a pinned Conftest toolchain with repo-safe defaults | policy workflows |
+| `opa-gate/` | Run repo-default OPA / Conftest checks with consistent logging and exit behavior | PR policy gate |
+| `sigstore-attest/` | Wrap keyless attestation with repo-standard metadata and permissions guidance | release / attestation lane |
+| `rekor-evidence/` | Extract and surface Rekor evidence in summaries or artifacts | promotion / review lane |
+| `run-manifest/` | Validate or materialize receipt/provenance helper steps around `run_manifest`-style artifacts | governed release lane |
 
 [Back to top](#top)
 
@@ -376,9 +419,10 @@ A new local action is ready for merge when:
 - [ ] its outputs are explicit when reused downstream
 - [ ] its shell steps fail loudly and safely
 - [ ] it does not echo secrets
+- [ ] it does not silently widen workflow permissions
 - [ ] it does not duplicate canonical policy or schema truth
 - [ ] it includes one workflow usage example
-- [ ] it has at least one reviewable test path, smoke path, or exercising workflow
+- [ ] it has at least one reviewable smoke path, fixture path, or exercising workflow
 - [ ] it preserves KFM’s PR-first, fail-closed posture
 - [ ] any implementation claim stronger than `PROPOSED` has been branch-verified
 
@@ -390,7 +434,7 @@ A new local action is ready for merge when:
 
 ### Why document this directory before it is populated?
 
-Because empty directories grow fast and inconsistently once copy-paste pressure starts. KFM benefits from setting the contract before action sprawl begins.
+Because empty directories grow quickly and inconsistently once copy-paste pressure starts. KFM benefits from setting the contract before action sprawl begins.
 
 ### Local action or reusable workflow?
 
@@ -406,9 +450,9 @@ A local action may invoke policy evaluation, but it should not become the only p
 
 Not as an uncontrolled shortcut. If it participates in publish or deploy lanes, it should remain inside governed workflows, emit or preserve evidence, and respect merge-blocking / promotion gates.
 
-### Should future action names be KFM-prefixed?
+### How strict should future action names be?
 
-Prefer **verb-first kebab-case**. Add a `kfm-` prefix only when the wrapper is explicitly KFM-specific and likely to coexist with a more generic equivalent.
+Prefer **verb-first kebab-case**. Use KFM-specific naming only when the wrapper is genuinely KFM-specific and likely to coexist with a more generic equivalent.
 
 [Back to top](#top)
 
