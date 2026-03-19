@@ -6,16 +6,16 @@ version: v1
 status: draft
 owners: NEEDS-VERIFICATION
 created: YYYY-MM-DD
-updated: YYYY-MM-DD
+updated: 2026-03-19
 policy_label: NEEDS-VERIFICATION
 related: [NEEDS-VERIFICATION]
 tags: [kfm, schemas, contracts, json-schema]
-notes: [Current-session workspace exposed PDFs only; target path is schemas/README.md; March 2026 realization overlays more often place the same surface under contracts/schemas/.]
+notes: [Task-local target path is schemas/README.md; current-session evidence was PDF-only; corpus path signals for this surface diverge and require mounted-repo verification before publication.]
 [/KFM_META_BLOCK_V2] -->
 
 # Schemas
 
-Machine-readable KFM contract schemas for intake, verification, release, runtime trust, and correction.
+Machine-readable KFM contract schemas for intake, validation, release, runtime trust, and correction.
 
 > **Status:** experimental  
 > **Owners:** NEEDS-VERIFICATION  
@@ -23,29 +23,27 @@ Machine-readable KFM contract schemas for intake, verification, release, runtime
 > ![Status](https://img.shields.io/badge/status-experimental-orange)
 > ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%7C%20PROPOSED%20realization%20%7C%20UNKNOWN%20inventory-blue)
 > ![Workspace](https://img.shields.io/badge/workspace-PDF%20corpus%20only-lightgrey)
-> ![Recommended profile](https://img.shields.io/badge/recommended-JSON%20Schema%202020--12-brightgreen)
-> ![Catalog profile](https://img.shields.io/badge/catalog-DCAT%203%20%7C%20STAC%20%7C%20PROV-blueviolet)
-> ![Owners](https://img.shields.io/badge/owners-NEEDS%20VERIFICATION-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Directory tree](#directory-tree) · [Contract families](#contract-families) · [Common envelope expectations](#common-envelope-expectations) · [Standards profile](#standards-profile) · [Validation and gates](#validation-and-gates) · [Task list](#task-list--definition-of-done) · [FAQ](#faq)
+> ![Schema](https://img.shields.io/badge/schema-JSON%20Schema%202020--12-brightgreen)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is written for the task-local path `schemas/README.md`. The strongest March 2026 realization overlays more often describe the same machine-readable surface as `contracts/schemas/`. Treat that mismatch as a path-reconciliation item until mounted repo truth is visible.
+> This README is source-bounded. In this session, the directly visible workspace exposed a KFM PDF corpus under `/mnt/data`, not a mounted repository checkout. Keep repo-local filenames, schema inventory, CI lanes, manifests, route names, and runtime emitters explicitly **NEEDS VERIFICATION** until the live tree is surfaced.
 
 > [!NOTE]
-> Current-session workspace evidence exposed PDFs only. No mounted KFM repo tree, schema registry, tests, workflow files, deployment manifests, or runtime logs were directly verified in this session.
+> Path signals are not yet reconciled. The task target is `schemas/README.md`. The March 2026 schema reference also shows an illustrative `schemas/contracts/` starter layout, while older repository-inventory material described top-level `contracts/` as the contract/schema surface. This README keeps that mismatch visible instead of silently deciding it.
 
 ## Scope
 
-This directory is the machine-readable contract layer for KFM object families. Its job is to make source onboarding, catalog closure, policy decisions, release proof, runtime outcomes, and correction artifacts validateable, diffable, and reviewable rather than leaving them implicit in prose or service code.
+This directory, wherever the mounted repo ultimately places it, is the machine-readable edge of KFM’s governed truth path. It is where intake, validation, release, runtime explanation, and correction stop being only prose and become typed, diffable, reviewable, and gateable artifacts.
 
-The surface should stay narrow, typed, and boring in the good way:
+The goal here is not to accumulate every possible object family on day one. The goal is to publish the smallest schema surface that can prove one governed slice end to end without hiding uncertainty, bypassing policy, or letting derived/runtime convenience masquerade as canonical truth.
 
-- one schema per contract family
-- shared envelope grammar across receipts, manifests, decisions, and runtime envelopes
-- fixtures and gates that prove fail-closed behavior
-- explicit links to standards-profile, policy-registry, and proof-object surfaces
+This surface should stay disciplined:
 
-If the repo is still pre-artifact, keep this README visible rather than letting the contract surface disappear into future-tense architecture prose.
+- one contract family per schema file unless shared fragments materially reduce drift
+- explicit alignment with registries, policy bundles, fixtures, and verification gates
+- fail-closed behavior proven with valid and invalid examples
+- visible separation between **CONFIRMED doctrine**, **PROPOSED realization**, and **UNKNOWN mounted implementation**
 
 [Back to top](#schemas)
 
@@ -54,31 +52,33 @@ If the repo is still pre-artifact, keep this README visible rather than letting 
 | Item | Value |
 |---|---|
 | Path | `schemas/README.md` |
-| Role in the repo | Directory README for machine-readable KFM object schemas |
-| Corpus-aligned equivalent | `contracts/schemas/` |
-| Upstream links | NEEDS-VERIFICATION — likely contract root, standards profile, and policy registry surfaces |
-| Downstream links | NEEDS-VERIFICATION — likely tests, governed APIs, UI trust surfaces, and runbooks |
-| Doctrinal basis | D1/D2 doctrine, sharpened by March 2026 contract, verification, testing, configuration, and package overlays |
-| Current treatment | Task-local README now; broader contract surface still needs mounted-repo reconciliation |
+| Document class | Directory README + standard doc |
+| Role | Directory-level guide for KFM machine-readable contract schemas |
+| Task-local target | `schemas/` |
+| Additional corpus path signals | `schemas/contracts/` *(illustrative starter layout)* · `contracts/` *(older repo inventory surface)* |
+| Likely upstream surfaces | [`../policy/`](../policy/), [`../registries/`](../registries/), [`../docs/standards/`](../docs/standards/), [`../docs/adr/`](../docs/adr/) *(all illustrative; NEEDS VERIFICATION against mounted repo)* |
+| Likely downstream surfaces | [`../fixtures/valid/`](../fixtures/valid/), [`../fixtures/invalid/`](../fixtures/invalid/), [`../docs/runbooks/`](../docs/runbooks/), [`../examples/thin-slice/hydrology/`](../examples/thin-slice/hydrology/) *(all illustrative; NEEDS VERIFICATION against mounted repo)* |
+| Doctrinal baseline | March 18–19 2026 KFM master, contract, schema/contract, testing, policy, data, tooling, and primary-documentation references |
+| Current constraint | No mounted repo tree, schema registry, workflow inventory, manifests, tests, dashboards, or runtime logs were directly visible in this session |
 
-If the repo later normalizes under `contracts/schemas/`, move this README with the surface or leave a thin forwarding stub. Do not duplicate contract truth in two places.
+This README therefore documents the intended schema surface and its explicit unknowns. It does **not** claim that the live repo already exposes the exact file inventory shown below.
 
-## Accepted inputs
+## Inputs
 
 Accepted here:
 
 - versioned JSON Schema files for KFM contract families
-- shared `$defs` / `$ref` fragments when colocating them keeps validation and review simpler
-- one standards-profile pin file or ADR-style profile document for this surface, if the repo keeps it beside the schemas
-- concise directory-local notes about naming, versioning, and drift control
+- shared fragments / reusable `$defs` referenced by those schemas
+- schema-surface notes that pin dialect, compatibility rules, or deprecation posture
+- this README and any brief colocated maintenance notes the repo deliberately keeps with the schema surface
 
-Recommended naming pattern:
+Preferred filename pattern:
 
 ```text
-<contract_family>.schema.json
+<family>.schema.json
 ```
 
-Starter examples:
+Explicit first-wave filenames named in the freshest schema reference:
 
 ```text
 source_descriptor.schema.json
@@ -87,33 +87,37 @@ validation_report.schema.json
 dataset_version.schema.json
 catalog_closure.schema.json
 decision_envelope.schema.json
-review_record.schema.json
 release_manifest.schema.json
-projection_build_receipt.schema.json
-evidence_bundle.schema.json
 runtime_response_envelope.schema.json
 correction_notice.schema.json
+evidence_bundle.schema.json
 ```
 
-If the repo splits `release_manifest` and `release_proof_pack`, document that explicitly rather than hiding it behind one filename.
+Adjacent follow-on or paired families that still belong to the wider starter lattice:
+
+```text
+review_record.schema.json
+projection_build_receipt.schema.json
+release_proof_pack.schema.json
+```
+
+> [!TIP]
+> The corpus distinguishes between the **full starter lattice** and the **literal first schema wave**. Keep that distinction explicit. The first wave should be small enough to validate and ship; the wider lattice should remain visible so release, runtime, and correction work do not drift into prose-only governance.
 
 ## Exclusions
 
 Do **not** place these here unless mounted repo truth explicitly says otherwise:
 
-- public or internal OpenAPI descriptions; keep them in `apis/` or the repo’s verified API contract surface instead
-- event or lifecycle-transition schemas if the repo keeps them under `events/`
-- valid or invalid examples; keep them in `contracts/examples/`, `fixtures/`, or the repo’s verified example surface
-- policy bundles and registries such as reason codes, obligation codes, rights classes, or reviewer-role maps; keep them in `policy/`
-- emitted proof objects such as run manifests, run receipts, SBOMs, attestations, or release proof bundles
-- runbooks, ADRs, and broader governance prose; keep them under `docs/`, `docs/runbooks/`, or equivalent
-- outward catalog artifacts such as STAC/DCAT/PROV packages generated from released scope
-
-[Back to top](#schemas)
+- valid and invalid fixtures; keep them in [`../fixtures/valid/`](../fixtures/valid/) and [`../fixtures/invalid/`](../fixtures/invalid/) or the repo’s verified equivalent
+- policy bundles, reason/obligation registries, rights classes, and sensitivity classes; keep them in [`../policy/`](../policy/) and/or [`../registries/`](../registries/)
+- emitted release proofs, manifests, receipts, SBOMs, attestations, or correction artifacts; keep them in the repo’s artifact or output surface, not the schema source surface
+- outward HTTP API descriptions; keep them in the repo’s API-contract surface rather than in the object-schema directory
+- runbooks, ADRs, and broader governance prose; keep them in [`../docs/runbooks/`](../docs/runbooks/), [`../docs/adr/`](../docs/adr/), or verified neighboring docs
+- generated STAC/DCAT/PROV outputs; keep them in catalog/release output surfaces
 
 ## Directory tree
 
-**PROPOSED starter inventory for this path (repo-unverified):**
+**PROPOSED starter tree for this path (not a mounted inventory claim):**
 
 ```text
 schemas/
@@ -124,274 +128,262 @@ schemas/
 ├── dataset_version.schema.json
 ├── catalog_closure.schema.json
 ├── decision_envelope.schema.json
-├── review_record.schema.json
 ├── release_manifest.schema.json
-├── projection_build_receipt.schema.json
-├── evidence_bundle.schema.json
 ├── runtime_response_envelope.schema.json
-└── correction_notice.schema.json
+├── correction_notice.schema.json
+└── evidence_bundle.schema.json
 ```
 
+If the mounted repo splits `release_manifest` from `release_proof_pack`, or materializes `review_record` and `projection_build_receipt` immediately, document that explicitly rather than leaving the split implicit.
+
 <details>
-<summary><strong>Corpus-aligned broader contract layout (PROPOSED, repo-unverified)</strong></summary>
+<summary><strong>Corpus-aligned surrounding layout (illustrative; repo-unverified)</strong></summary>
 
 ```text
 repo-root/
-├── contracts/
-│   ├── schemas/
-│   ├── examples/
-│   │   ├── valid/
-│   │   └── invalid/
-│   └── profiles/
+├── schemas/                  # task-local target
+│   └── README.md
+├── fixtures/
+│   ├── valid/
+│   └── invalid/
+├── registries/
 ├── policy/
-│   ├── bundles/
-│   ├── reason_codes.json
-│   ├── obligation_codes.json
-│   └── reviewer_roles.json
-├── apis/
-├── tests/
-│   ├── contracts/
-│   ├── policy/
-│   └── e2e/
-├── docs/runbooks/
-└── observability/
+├── docs/
+│   ├── adr/
+│   ├── standards/
+│   └── runbooks/
+├── examples/
+│   └── thin-slice/
+│       └── hydrology/
+└── .github/
+    └── workflows/
 ```
 
 </details>
 
-> [!TIP]
-> Start flatter than you think. The March 2026 overlays repeatedly favor a small first wave plus one governed thin slice over a deep schema forest.
-
 ## Quickstart
 
-1. Publish the first schema wave before broader platform expansion.
-2. Pair every schema with at least one valid and one invalid example in the repo’s example surface.
-3. Pin the standards profile in version control instead of leaving JSON Schema, OpenAPI, catalog vocabulary, and telemetry assumptions implicit.
-4. Wire schema, example, policy, runtime negative-path, and correction tests into automated gates.
-5. Treat undocumented breaking contract changes as merge blockers.
+1. Publish the smallest first-wave schema pack.
+2. Pair every high-value family with at least one valid and one invalid fixture in the adjacent fixture surface.
+3. Publish starter registries and a deny-by-default policy bundle alongside the schema work.
+4. Wire schema, policy, runtime-negative, surface-state, correction, and docs/accessibility gates.
+5. Prove one hydrology-first governed slice end to end before broadening the object set.
 
 ```bash
-# illustrative pseudocode — bind these steps to the repo's actual validator runner
-validate_schemas contracts/schemas/*.schema.json
-validate_examples contracts/examples/valid
-assert_invalid_examples_fail contracts/examples/invalid
-run_contract_tests tests/contracts
-run_policy_tests tests/policy
-run_runtime_negative_tests tests/e2e/runtime_proof
-run_correction_drills tests/e2e/correction
+# illustrative pseudocode — bind these checks to the repo's actual runner and CI lane
+validate schemas/*.schema.json
+validate fixtures/valid
+assert_invalid fixtures/invalid
+
+run gate:source-replay
+run gate:catalog-closure
+run gate:policy-bundle
+run gate:evidence-resolution
+run gate:runtime-citation-negative
+run gate:surface-state
+run gate:correction-drill
+run gate:docs-accessibility
 ```
 
 ## Usage
 
 ### Working rules
 
-- Prefer one schema file per contract family.
-- Keep filenames snake_case and object families semantically stable.
-- Carry explicit type and version fields in consequential envelopes.
-- Keep policy registries and standards pins outside individual schema files; schemas should reference them, not reinvent them.
-- Update schemas, fixtures, tests, and docs in the same review stream.
+- Treat schema changes, fixture changes, registry changes, and gate changes as one review stream.
+- Prefer additive evolution over silent breaking changes.
+- Keep exact dialect/profile pins explicit in a standards artifact or ADR, not implied by README prose.
+- Never let schema commentary sound like verified implementation when the mounted tree has not been surfaced.
+- Keep generated proof objects and runtime outputs downstream of these schemas, not mixed into them.
 
-### Naming and versioning
+### What this directory is optimizing for
 
-Promotion, runtime proof, rollback, and correction are typed transitions in KFM. Contract drift therefore needs to be deliberate, reviewable, and test-backed.
+This surface is optimizing for four things at once: machine validation, reviewable governance, fail-closed runtime behavior, and visible correction lineage.
 
-A useful default rule is simple: change grammar on purpose, version it visibly, and never let examples or runbooks lag behind the schema that governs them.
+Across the March 2026 materials, the shared envelope pressure is stable even when exact field names remain repo work rather than README truth. Consequential objects repeatedly need:
 
-### Common envelope expectations
+- stable type/version identity
+- subject or release lineage
+- policy/result context
+- evidence and audit linkage
+- actor/time context
+- enough structure to support abstain, deny, stale-visible, correction, and rollback behavior without hand-waving
 
-The corpus repeatedly pushes toward a shared header grammar across receipts, manifests, decisions, and runtime envelopes.
-
-| Field family | Typical members | Why keep it consistent |
-|---|---|---|
-| Type + version | `kind`, `contract_version` | Keeps contract families diffable and machine-readable |
-| Subject + release lineage | `subject_ref`, `dataset_version_id`, `release_id`, `spec_hash` | Ties every consequential object to immutable scope |
-| Policy state | `policy_label`, `reason_codes[]`, `obligation_codes[]` | Keeps allow/deny/narrowing behavior executable |
-| Evidence + audit | `evidence_refs[]`, `audit_ref`, `trace_ref` | Preserves drill-through and causal reconstruction |
-| Actor + time | `actor_id`, `evaluated_at` | Keeps review, runtime, and correction history legible |
-
-Treat the table above as a recommended shared grammar, not as a substitute for per-family required fields.
+Keep the README at that level unless the mounted schema files themselves are visible.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    SD[source_descriptor] --> IR[ingest_receipt]
-    IR --> VR[validation_report]
-    VR --> DV[dataset_version]
-    DV --> CC[catalog_closure]
-    CC --> DE[decision_envelope]
-    DE --> RR[review_record]
-    RR --> RM[release_manifest / proof pack]
-    RM --> PBR[projection_build_receipt]
-    RM --> EB[evidence_bundle]
-    EB --> RRE[runtime_response_envelope]
-    RM --> CN[correction_notice]
+    subgraph A["Source and intake"]
+        SD[SourceDescriptor]
+        IR[IngestReceipt]
+        VR[ValidationReport]
+    end
 
-    EX[valid / invalid examples] --> T[contract + policy + runtime tests]
-    REG[reason / obligation / reviewer registries] --> T
-    PROF[standards profile] --> T
-    T --> RM
+    subgraph B["Canonical truth"]
+        DV[DatasetVersion]
+    end
+
+    subgraph C["Catalog / policy / review"]
+        CC[CatalogClosure]
+        DE[DecisionEnvelope]
+        RR[ReviewRecord]
+    end
+
+    subgraph D["Release and derived delivery"]
+        RM[ReleaseManifest / ReleaseProofPack]
+        PBR[ProjectionBuildReceipt]
+    end
+
+    subgraph E["Runtime and correction"]
+        EB[EvidenceBundle]
+        RRE[RuntimeResponseEnvelope]
+        CN[CorrectionNotice]
+    end
+
+    SD --> IR --> VR --> DV --> CC --> DE --> RR --> RM
+    RM --> PBR
+    RM --> EB --> RRE
+    RM --> CN
+
+    F[Valid + invalid fixtures] --> G[Verification gates]
+    P[Policy bundle + registries] --> G
+    G --> RM
 ```
 
-The schema surface mirrors a governed object graph. It is not just a folder of JSON shapes.
+This is the important architectural point: the schema surface is not a bag of JSON files. It is the typed object graph through which intake, release, runtime trust, and correction stay connected.
 
 ## Tables
 
-### Contract families
+### A. Starter contract lattice and first-wave status
 
-| Family / starter schema | Minimum purpose | Must include at least |
+| Family | Minimum purpose | First-wave status | Notes |
+|---|---|---|---|
+| `SourceDescriptor` | Declare admissible source identity, rights posture, cadence, support, validation plan, and publication intent. | **Explicitly first wave** | Also carries the minimum intake burden for identity, access, ownership, spatial/temporal basis, rights/sensitivity, format/schema, storage policy, normalization, and publication intent. |
+| `IngestReceipt` | Prove what was fetched, when, and with what integrity result. | **Explicitly first wave** | Replay and quarantine posture depend on it. |
+| `ValidationReport` | Record structural, spatial, temporal, unit, and domain QC outcomes. | **Explicitly first wave** | Fail-closed path back to hold/quarantine depends on it. |
+| `DatasetVersion` | Carry immutable authoritative processed truth with stable identity and time semantics. | **Explicitly first wave** | Canonical write safety depends on it. |
+| `CatalogClosure` | Prove outward metadata, provenance, and discovery obligations are complete enough for review/release. | **Explicitly first wave** | STAC/DCAT/PROV coherence belongs here. |
+| `DecisionEnvelope` | Express machine-readable policy result, reasons, obligations, and effectivity. | **Explicitly first wave** | Core policy artifact. |
+| `ReviewRecord` | Capture human approval, denial, escalation, or note. | **Starter lattice; first-wave file status NEEDS VERIFICATION** | Explicitly present in the wider starter lattice and thin-slice bundle even when not always named in the literal first file list. |
+| `ReleaseManifest` / `ReleaseProofPack` | Define the publishable trust unit for promotion, deployment handoff, published scope, and rollback posture. | **`release_manifest.schema.json` is explicit first wave** | Proof-pack may be paired with or split from manifest work. |
+| `ProjectionBuildReceipt` | Prove a derived map/export stayed downstream of an approved release and freshness basis. | **Starter lattice; likely immediate follow-on** | Required when a derived delivery surface is exposed. |
+| `EvidenceBundle` | Resolve a visible claim or runtime output to inspectable, policy-safe support. | **Explicitly first wave** | Freshest schema reference allows either a schema or a resolver contract. |
+| `RuntimeResponseEnvelope` | Make runtime outcome accountable at request time. | **Explicitly first wave** | Central to answer / abstain / deny / error behavior. |
+| `CorrectionNotice` | Preserve visible lineage under supersession, withdrawal, rollback, or correction. | **Explicitly first wave** | No silent overwrite. |
+
+> [!NOTE]
+> The corpus is consistent on the **full starter lattice**, but not every document describes the literal **first schema wave** at the same granularity. This README follows the freshest schema-specific file list while keeping the wider lattice visible.
+
+### B. Standards profile
+
+| Concern | Corpus-aligned baseline | Why it matters here |
 |---|---|---|
-| `source_descriptor` | Declare the intake contract for a source or endpoint. | Identity, owner/steward, access mode, rights posture, support, cadence, validation plan, publication intent |
-| `ingest_receipt` | Prove that a fetch and landing event occurred. | Source reference, fetch time, integrity checks, result, output pointers |
-| `validation_report` | Record what checks passed, failed, or quarantined. | Check list, severity, reason codes, subject refs |
-| `dataset_version` | Carry an authoritative candidate or promoted subject set. | Stable ID, version ID, support, time semantics, provenance links |
-| `catalog_closure` | Publish outward metadata closure and lineage linkage. | STAC/DCAT/PROV refs, identifiers, release linkage, outward profile refs |
-| `decision_envelope` | Express a policy result machine-readably. | Subject, action, lane, result, reason codes, obligation codes, policy basis, `audit_ref`, effective window |
-| `review_record` | Capture human approval, denial, escalation, or note. | Reviewer role, decision, timestamp, refs, comments |
-| `release_manifest` / `release_proof_pack` | Assemble a public-safe release and its proof. | Version refs, catalog refs, decision refs, docs/accessibility gate, rollback/correction posture, profile versions, bundle plan |
-| `projection_build_receipt` | Prove a derived layer was built from a known release scope. | Release ref, projection type, surface class, build time, freshness basis, stale-after policy |
-| `evidence_bundle` | Package support for a claim, feature, story, export preview, or answer. | Bundle ID, source basis, dataset refs, lineage summary, preview policy, transform receipts, rights/sensitivity state, `audit_ref` |
-| `runtime_response_envelope` | Make runtime outcome accountable. | Schema version, object type, `audit_ref`, `request_id`, `evaluated_at`, surface class, surface state, result, citations check, decision ref |
-| `correction_notice` | Preserve visible lineage under change. | Affected releases, replacement releases, affected surface classes, rebuild refs, cause, public note |
+| Machine-readable contract files | **JSON Schema Draft 2020-12** | Best-fit baseline for schema files, fixtures, and structural gates. |
+| Governed HTTP API contracts | **OpenAPI 3.2.0** | Important to adjacent route-contract surfaces; not stored here by default. |
+| Catalog and provenance closure | **DCAT 3 + PROV-O + STAC** | Needed for releasable scope, outward discoverability, and lineage. |
+| Outward spatial route families | **OGC API – Features / Maps / Tiles / Records** | Relevant when governed outward discovery, feature, or portrayal routes are exposed. |
+| Accessibility baseline | **WCAG 2.2** | Docs/accessibility gate is part of release trust, not optional polish. |
+| Policy execution | **OPA / Rego bundles** | Schemas alone are not enough; deny-by-default policy must become executable. |
+| Release integrity | **OCI 1.1.x / Sigstore-Cosign** | Relevant to release manifests, attestations, and proof-bearing publication. |
+| Telemetry naming | **OpenTelemetry semantic conventions** | Stable joins across traces, audit refs, releases, and runtime envelopes. Exact local pin still needs explicit publication. |
 
-> [!TIP]
-> The highest-leverage first wave is still small: `source_descriptor`, `dataset_version`, `decision_envelope`, `release_manifest`, `evidence_bundle`, `runtime_response_envelope`, and `correction_notice`. Broaden from there in lockstep with fixtures, tests, and one real governed slice.
+### C. Validation & gates
 
-### Standards profile
-
-| Concern | Recommended profile | Notes for this surface |
+| Gate | What it proves | Typical proof/report |
 |---|---|---|
-| Object schemas | JSON Schema Draft 2020-12 | Best-fit baseline for KFM object schemas, examples, and invalid fixtures |
-| HTTP API descriptions | OpenAPI 3.2.0 | Keep outside this directory unless repo truth says otherwise |
-| Dataset / release discovery | DCAT 3 | Use for outward release discovery metadata |
-| Provenance vocabulary | PROV | Retain as part of catalog closure and correction linkage |
-| Spatiotemporal asset description | STAC | Strongest fit for collection / item / asset description; exact project pin should be explicit |
-| Catalog search | OGC API – Records Part 1: Core 1.0 | Additive option for discovery routes |
-| Authoritative feature reads | OGC API – Features | Preferred external shape where released authoritative reads are exposed |
-| Map / tile portrayal | OGC API – Maps / Tiles | Preferred external shape for governed portrayal where exposed |
-| Accessibility baseline | WCAG 2.2 | Treat accessibility as release evidence, not UI polish |
-| Telemetry naming | OpenTelemetry semantic conventions | Exact adopted version remains a pin file / ADR question |
-
-> [!IMPORTANT]
-> Standards fit is not the same as a mounted repo pin. Keep exact profile versions in a dedicated standards-profile artifact and mark unresolved pins clearly until the repo is directly inspectable.
-
-## Validation and gates
-
-| Gate or test family | What it proves |
-|---|---|
-| Schema gate | Published schemas plus valid/invalid examples agree; structural acceptance is machine-checkable |
-| Source replay gate | `source_descriptor` and `ingest_receipt` are sufficient to re-fetch and verify source inputs |
-| Catalog closure gate | STAC/DCAT/PROV linkage and identifiers resolve coherently for dataset or release scope |
-| Policy bundle gate | Reason codes, obligation codes, policy labels, and deny-by-default rules are complete enough to fail closed |
-| Release assembly gate | Release unit is complete, signed/attested as required, and tied to catalog/provenance artifacts |
-| Evidence-resolution gate | Every consequential visible claim or runtime response resolves to inspectable support |
-| Runtime citation-negative test | The system refuses unsupported answers when citations fail, scope is empty, or evidence is unavailable |
-| Surface-state gate | UI surfaces honestly display generalized, stale, withheld, superseded, or withdrawn states |
-| Correction drill | Supersession, withdrawal, rollback, and correction behavior are real, visible, and auditable |
-| Documentation / accessibility gate | Contracts, examples, diagrams, runbooks, and trust-visible outputs remain current and usable |
-
-> [!WARNING]
-> A schema without fixtures, gates, and a visible correction path is still useful, but it is not yet a trustworthy contract surface.
+| Source replay gate | `SourceDescriptor` + `IngestReceipt` are enough to re-fetch and verify source inputs. | replay receipt or replay section in `validation_report` |
+| Catalog closure gate | STAC/DCAT/PROV identifiers and closure remain coherent for dataset/release scope. | `catalog_closure` |
+| Policy bundle gate | Reason codes, obligation codes, labels, and deny-by-default rules are complete enough to fail closed. | `decision_envelope` plus policy test report |
+| Release assembly gate | Release unit is complete, signed/attested as required, and tied to catalog/provenance artifacts. | `release_manifest` or `release_proof_pack` |
+| Evidence-resolution gate | Every consequential visible claim or runtime output resolves to inspectable support. | resolver proof or runtime evidence check |
+| Runtime citation-negative test | Unsupported answers are refused when citations fail, scope is empty, or evidence is unavailable. | negative-test report / golden fixtures |
+| Surface-state gate | UI surfaces honestly display stale, generalized, withheld, superseded, or withdrawn states. | surface-state check report |
+| Correction drill | Supersession, withdrawal, rollback, and correction behavior are real, visible, and auditable. | `correction_notice` plus drill report |
+| Documentation/accessibility gate | Contracts, examples, diagrams, runbooks, and trust-visible outputs stay current and usable. | doc/accessibility gate report |
 
 [Back to top](#schemas)
 
 ## Task list / Definition of done
 
-- [ ] Reconcile the task-local `schemas/README.md` path with any mounted `contracts/schemas/` or equivalent contract surface.
-- [ ] Publish the first-wave schemas and validate them against real fixtures.
-- [ ] Provide at least one valid and one invalid example per high-value family.
-- [ ] Pin the standards profile explicitly.
-- [ ] Publish starter registries for reason codes, obligation codes, reviewer roles, rights classes, sensitivity classes, surface states, and runtime outcomes.
-- [ ] Add deny-by-default policy bundles plus tests.
-- [ ] Add contract, policy, release-assembly, runtime-negative, stale-projection, and correction-drill tests.
-- [ ] Publish onboarding, replay, promotion assembly, stale-state, abstain/deny, correction, and rollback runbooks.
-- [ ] Keep join keys stable enough for audit reconstruction (`release_id`, `dataset_version_id`, `decision_id`, `review_id`, `bundle_id`, `projection_id`, `audit_ref`, correction IDs).
-- [ ] Fill owners, dates, policy label, and real upstream/downstream references before publication.
+- [ ] Reconcile the mounted path for this surface (`schemas/`, `schemas/contracts/`, `contracts/`, or another verified location).
+- [ ] Publish the explicit first-wave schema pack.
+- [ ] Publish at least one valid and one invalid fixture per high-value family.
+- [ ] Publish starter registries for reasons, obligations, rights classes, sensitivity classes, and runtime outcomes.
+- [ ] Publish a deny-by-default policy bundle and make it gateable.
+- [ ] Implement or at least publish the EvidenceBundle resolver contract and RuntimeResponseEnvelope path.
+- [ ] Add source replay, catalog closure, policy bundle, release assembly, evidence-resolution, runtime citation-negative, surface-state, correction, and docs/accessibility gates.
+- [ ] Prove one hydrology-first governed slice end to end.
+- [ ] Surface the live repo tree, schema inventory, workflow inventory, manifests, route inventory, and telemetry joins so UNKNOWNs can be retired with evidence.
+- [ ] Fill owners, created date, policy label, and related links before publication.
 
 ## FAQ
 
-### Why does this README mention `contracts/schemas/` if the task path is `schemas/README.md`?
+### Why is this README still path-cautious?
 
-Because the strongest March 2026 realization overlays more often describe the broader machine-readable contract surface under `contracts/`, with `contracts/schemas/` as the schema home. This README stays faithful to the task-local path while keeping that broader corpus pattern visible until repo truth settles the final location.
+Because current-session evidence did not include a mounted repo checkout. The attached March 2026 documents are strong on doctrine and recommended structure, but they explicitly keep path-level claims **UNKNOWN** until the live tree is surfaced.
+
+### Why are `ReviewRecord` and `ProjectionBuildReceipt` documented even though they are not always in the literal first file list?
+
+Because they remain part of the wider starter lattice and the thin-slice proof bundle. The safest interpretation is: keep them doctrinally visible now, then let mounted repo truth decide whether they ship in the literal first schema wave or immediately after it.
 
 ### Do OpenAPI files belong here?
 
-Not by default. The corpus consistently treats governed HTTP route contracts as a sibling surface to object-envelope schemas, not as the same directory.
+Not by default. The corpus treats outward HTTP route contracts as a neighboring surface, not the same directory as the object-envelope schemas.
 
-### Do valid and invalid examples belong here?
+### Do fixtures belong here?
 
-Not usually. The corpus points to sibling example or fixture surfaces so schemas remain focused and tests can consume examples directly.
+Usually no. Keep valid and invalid examples in their own fixture surface so CI can consume them directly and the schema directory stays focused.
 
-### Are all contract families required on day one?
+### Why does hydrology keep appearing in a schema README?
 
-No. The corpus repeatedly argues for a small first wave plus one governed thin slice over a large but untested schema forest.
+Because hydrology is the strongest first governed slice in the current corpus: public-safe more often than stewardship-heavy lanes, place/time rich, and structurally good for proving intake, release, runtime trust, and correction without immediately forcing the hardest heritage or identity burdens.
 
-### Why does this README keep saying “PROPOSED” so often?
+### What remains unknown before this README can be published as repo truth?
 
-Because the accessible workspace in this session did not verify a mounted repo tree, schema registry, workflows, manifests, tests, or runtime traces. The README is therefore allowed to stabilize doctrine and recommended structure, but not to promote repo-shape guesses into fact.
-
-### Why is hydrology mentioned in a schemas README?
-
-Because multiple March 2026 KFM overlays use a hydrology-first thin slice as the clearest proof lane for converting contract doctrine into one end-to-end governed path with release and correction evidence. The schema surface is part of that proof, not separate from it.
+The mounted repo tree, the actual schema inventory, CI/workflow lanes, deployment manifests, resolver implementation, proof-pack samples, standards pins, and the actual chosen first slice.
 
 ## Appendix
 
 <details>
-<summary><strong>Need to verify before publishing this README</strong></summary>
+<summary><strong>Direct verification backlog</strong></summary>
 
-| Item | Why it matters |
-|---|---|
-| Actual repo tree | Prevents path assumptions from hardening into pseudo-fact |
-| Current schema inventory | Avoids documenting files that already differ in name, split, or versioning pattern |
-| Example / fixture locations | Needed for accurate quickstart and downstream references |
-| Standards-profile file location | Needed so this README links to the real pin file |
-| Contract-test runner and CI entrypoints | Needed for runnable snippets and truthful gate language |
-| Owners / dates / policy label / related links | Required for an honest KFM meta block |
-| Sample proof objects | Needed so schema docs stay tied to emitted reality |
-| Sample runtime traces | Needed to confirm audit-link and surface-state assumptions |
-
-</details>
-
-<details>
-<summary><strong>Corpus-aligned broader contract layout (PROPOSED, repo-unverified)</strong></summary>
-
-```text
-repo-root/
-├── contracts/
-│   ├── schemas/
-│   ├── examples/
-│   │   ├── valid/
-│   │   └── invalid/
-│   └── profiles/
-├── policy/
-│   ├── bundles/
-│   ├── reason_codes.json
-│   ├── obligation_codes.json
-│   └── reviewer_roles.json
-├── apis/
-├── tests/
-│   ├── contracts/
-│   ├── policy/
-│   └── e2e/
-├── docs/runbooks/
-└── observability/
-```
-
-Use this only as a reconciliation aid. It is a strong March 2026 corpus pattern, not a verified mounted repo tree.
+| Unknown area | Why it matters | What would verify it |
+|---|---|---|
+| Exact repo topology | Prevents this README from hardening a guessed path into fact. | Surface the live repo tree. |
+| Literal schema inventory | Distinguishes doctrine from mounted files. | Inventory mounted schema files and compare them to the required family list. |
+| Workflow / CI lanes | Gate claims remain aspirational until lane definitions are visible. | Surface workflow files or equivalent CI/task-runner definitions. |
+| Deployment manifests / overlays | Release/runtime boundary claims remain unverified without them. | Surface Compose, systemd, Helm, Kubernetes, or GitOps manifests. |
+| EvidenceBundle resolver implementation | Central to evidence drill-through and runtime trust. | Publish resolver contract, sample bundle output, and negative tests. |
+| RuntimeResponseEnvelope path | Central to answer/abstain/deny/error behavior. | Publish sample governed responses and runtime traces. |
+| Proof-pack implementation status | Release evidence is still prose until real samples exist. | Surface real proof-pack samples. |
+| Exact local standards pins | Public-profile fit is not the same thing as a project pin. | Publish a standards-profile ADR or registry. |
+| First actual thin slice | Hydrology is strongly recommended, not directly verified as the already-shipped first slice. | Name the real slice and tie it to fixtures, manifests, and proof objects. |
 
 </details>
 
 <details>
-<summary><strong>Starter sibling surfaces to keep aligned with schemas</strong></summary>
+<summary><strong>Path signals observed in the current corpus</strong></summary>
 
-| Surface | Why it must travel with schema changes |
+- **Task target:** `schemas/README.md`
+- **Fresh schema reference starter layout:** `schemas/contracts/` *(illustrative; not a mounted repo claim)*
+- **Older repo-inventory signal:** top-level `contracts/` described as the API contract/schema surface
+
+Do not merge these into faux certainty. Reconcile them against the live repository before publication.
+
+</details>
+
+<details>
+<summary><strong>Surfaces that must stay aligned with schema changes</strong></summary>
+
+| Surface | Why it must travel with schema work |
 |---|---|
-| Valid / invalid examples | They prove acceptance and fail-closed behavior |
-| Standards profile | It pins dialects and outward contract vocabulary |
-| Policy registries | They keep reason/obligation grammar executable |
-| Release and runtime proof objects | They keep schemas tied to real trust behavior |
-| Runbooks | They keep operators from rediscovering policy under stress |
-| Observability join-key docs | They keep audit reconstruction possible |
+| Valid / invalid fixtures | They prove both acceptance and fail-closed behavior. |
+| Registries | Reasons, obligations, rights classes, sensitivity classes, and runtime outcomes need stable machine vocabularies. |
+| Policy bundles | A deny-by-default stance must stay executable, not merely documented. |
+| Release proof samples | Schemas should stay tied to emitted reality. |
+| Runbooks | Operators need replay, promotion, stale-state, correction, and rollback guidance that matches the contract surface. |
+| Docs/accessibility gate | Behavior-significant changes should not outrun documentation and trust-visible usability. |
 
 </details>
 
