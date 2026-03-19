@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: NEEDS-VERIFICATION
 updated: NEEDS-VERIFICATION
 policy_label: NEEDS-VERIFICATION
-related: [../README.md, ../CODEOWNERS, ../actions/, ../../README.md, ../../CONTRIBUTING.md, ../../docs/, ../../contracts/, ../../policy/, ../../tests/]
+related: [../README.md, ../CODEOWNERS, ../actions/, ../SECURITY.md, ../../README.md, ../../CONTRIBUTING.md, ../../docs/, ../../contracts/, ../../schemas/, ../../policy/, ../../tests/, ../../apps/, ../../packages/]
 tags: [kfm, github, workflows, ci-cd, docops]
-notes: [Current repo-visible inventory shows README.md only in this directory; doc_id, dates, and policy_label need repo confirmation.]
+notes: [Public main currently shows README.md only in this directory; .github/CODEOWNERS maps /.github/workflows/ to @bartytime4life; doc_id, dates, and policy_label still need repo confirmation.]
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -26,13 +26,13 @@ Governed GitHub Actions surface for validation, promotion, and release control i
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Workflow model](#workflow-model) · [Workflow families](#workflow-families) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current repo-visible snapshot on `main`: `.github/workflows/` currently shows `README.md` only. No checked-in workflow YAML files were visible when this README was drafted.
+> Current public `main` snapshot: `.github/workflows/` shows `README.md` only. No checked-in workflow YAML files were visible in the public tree when this README was revised.
 
 ---
 
 ## Scope
 
-`.github/workflows/` is the repo-local control surface where KFM should express CI, delivery, promotion, reconciliation, and correction gates as reviewable automation.
+`.github/workflows/` is the repo-local control surface where KFM should express CI, delivery, promotion, reconciliation, correction, and post-deploy verification as reviewable automation.
 
 In KFM, workflow files are not a detached DevOps appendix. They are part of the trust membrane: the place where documentation checks, contract checks, policy checks, release-evidence checks, and post-deploy verification become executable rather than aspirational.
 
@@ -44,9 +44,10 @@ This directory therefore exists to answer a narrow but consequential question:
 
 | Marker | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Grounded in current repo-visible state or established KFM doctrine |
+| **CONFIRMED** | Grounded in the public repo tree visible on `main` or in established KFM doctrine |
+| **INFERRED** | Conservative interpretation used to connect adjacent repo or doctrine evidence without claiming mounted implementation detail |
 | **PROPOSED** | A repo-native workflow pattern that fits KFM doctrine but is not yet proven as checked-in workflow behavior |
-| **UNKNOWN** | Not verified strongly enough to present as current branch reality |
+| **UNKNOWN** | Not verified strongly enough to present as current branch or settings reality |
 | **NEEDS VERIFICATION** | Placeholder detail that should be confirmed against the active branch or GitHub settings before commit |
 
 <p align="right"><a href="#top">Back to top ⤴</a></p>
@@ -62,19 +63,22 @@ Role in repo: directory README for GitHub Actions workflows, workflow inventory,
 | Relation | Path | Why it matters |
 | --- | --- | --- |
 | Parent governance surface | [`../README.md`](../README.md) | Explains `.github/` as the repository-side governance and collaboration boundary |
-| Root operating index | [`../../README.md`](../../README.md) | Defines the monorepo posture, evidence model, and top-level directory contract |
-| Review ownership | [`../CODEOWNERS`](../CODEOWNERS) | Makes `.github/workflows/**` ownership executable |
-| Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor obligations should stay aligned with workflow gates |
+| Review ownership | [`../CODEOWNERS`](../CODEOWNERS) | Makes workflow review ownership executable |
+| GitHub security surface | [`../SECURITY.md`](../SECURITY.md) | Keeps workflow and repository security guidance close to the same governance boundary |
 | Reusable repo automation | [`../actions/`](../actions/) | Composite actions belong there, not in this directory |
+| Root operating index | [`../../README.md`](../../README.md) | Defines the monorepo posture, evidence model, and top-level directory contract |
+| Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | Contributor obligations should stay aligned with workflow gates |
 | Canonical verification surfaces | [`../../contracts/`](../../contracts/), [`../../schemas/`](../../schemas/), [`../../policy/`](../../policy/), [`../../tests/`](../../tests/) | Workflows may verify these surfaces, but they do not replace them |
+| Runtime and package surfaces | [`../../apps/`](../../apps/), [`../../packages/`](../../packages/) | App and package changes often need the same governed checks without moving canonical ownership into workflow YAML |
 | Long-form doctrine and runbooks | [`../../docs/`](../../docs/) | Behavior-significant workflow changes should keep docs aligned |
 
-### Current repo-visible inventory
+### Current public `main` inventory
 
 | Item | Current visible state | Posture |
 | --- | --- | --- |
 | `./README.md` | Present | **CONFIRMED** |
-| `./*.yml` / `./*.yaml` workflow files | Not visible in the current directory listing | **CONFIRMED** current snapshot |
+| `./*.yml` / `./*.yaml` workflow files | Not visible in the current public `main` directory listing | **CONFIRMED** current snapshot |
+| `../CODEOWNERS` ownership for `/.github/workflows/` | Assigned to `@bartytime4life` | **CONFIRMED** |
 | Exact required checks / rulesets / environment approvals | Not derivable from directory contents alone | **UNKNOWN** |
 
 <p align="right"><a href="#top">Back to top ⤴</a></p>
@@ -155,7 +159,7 @@ sed -n '1,200p' .github/CODEOWNERS
 find .github/workflows -maxdepth 1 -type f \( -name '*.yml' -o -name '*.yaml' \) | sort
 
 # 5) Cross-check adjacent repo surfaces workflows are expected to verify
-ls -la contracts schemas policy tests docs 2>/dev/null || true
+ls -la contracts schemas policy tests docs apps packages 2>/dev/null || true
 
 # 6) Search for release-, policy-, or evidence-facing terms in workflows
 grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom" .github/workflows 2>/dev/null || true
@@ -166,7 +170,7 @@ grep -R "policy\|catalog\|schema\|docs\|release\|evidence\|attest\|sbom" .github
 1. Read this file, then read [`../README.md`](../README.md), then read [`../../README.md`](../../README.md).
 2. Confirm the real workflow inventory before documenting or tightening gates.
 3. Verify ownership and merge-blocking assumptions against [`../CODEOWNERS`](../CODEOWNERS) and repo settings.
-4. Check that contracts, policy, docs, and tests stay in the same governed stream as workflow edits.
+4. Check that contracts, policy, docs, tests, apps, and packages stay in the same governed stream as workflow edits.
 5. Change the smallest possible workflow surface.
 6. Re-check rollback, correction, and contributor ergonomics after adding or tightening gates.
 
@@ -287,7 +291,7 @@ Definition of done for changes in `.github/workflows/`:
 - [ ] Every blocking workflow states what it proves.
 - [ ] Permissions are explicit and minimal.
 - [ ] Required checks and review boundaries are verified against the active repo settings.
-- [ ] Docs, examples, and templates changed in the same governed stream as workflow behavior.
+- [ ] Docs, examples, and templates change in the same governed stream as workflow behavior.
 - [ ] New automation begins in draft, shadow, dry-run, or PR-only mode unless a narrower approval lane is explicitly documented.
 - [ ] Promotion paths consume already-approved artifacts or reviewed desired state rather than rebuilding silently later.
 - [ ] Release-evidence requirements are explicit where the lane is promotion-significant.
@@ -304,7 +308,7 @@ Because KFM treats release, review, verification, and correction as one governed
 
 ### Does this README claim workflow files already exist?
 
-No. It explicitly records the current repo-visible snapshot as README-only and marks future workflow families as **PROPOSED**.
+No. It explicitly records the current public `main` snapshot as README-only and marks future workflow families as **PROPOSED**.
 
 ### Can workflow automation self-approve policy-significant or public-truth changes?
 
@@ -316,7 +320,7 @@ No. Workflows may verify them, but canonical ownership remains outside this dire
 
 ### What becomes CONFIRMED here?
 
-Only what the active repo tree, checked-in files, or current repo settings visibly prove. Everything else stays **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
+Only what the active repo tree, checked-in files, or current repo settings visibly prove. Everything else stays **INFERRED**, **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 ---
 
