@@ -10,64 +10,71 @@ updated: 2026-03-18
 policy_label: public
 related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../contracts/README.md, ../docs/README.md]
 tags: [kfm, tests, verification, readme]
-notes: [doc_id and created date still need verification; owner carried forward from the supplied baseline and should be rechecked against .github/CODEOWNERS]
+notes: [doc_id and created date still need verification; owner and related paths were carried forward from the supplied baseline and should be rechecked in the live repo, especially ../.github/CODEOWNERS]
 [/KFM_META_BLOCK_V2] -->
 
 # tests
 
 Governed verification surface for KFM proofs, gates, negative paths, and trust-preserving delivery.
 
+> [!NOTE]
+> In this README, the meta-block value `status: published` is preserved from the supplied baseline as the document record, while the impact block below describes the current maturity of the `tests/` surface itself.
+
 > **Status:** experimental  
 > **Owners:** `@bartytime4life` *(carried forward from the supplied baseline; recheck against `../.github/CODEOWNERS` before merge)*  
 > **Path:** `tests/README.md`  
+> **Repo fit:** directory index for governed verification families across contracts, policy, release, runtime trust, and correction  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
 ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
 ![scope: governed verification](https://img.shields.io/badge/scope-governed%20verification-0a7ea4)
-![workspace: PDF-only](https://img.shields.io/badge/workspace-PDF--only-f59e0b)
-![truth: C/I/P/U](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
+![workspace: PDF only](https://img.shields.io/badge/workspace-PDF--only-f59e0b)
+![truth: confirmed/inferred/proposed/unknown](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
 
 > [!IMPORTANT]
-> `tests/` is not a generic QA bucket. In KFM, verification is part of governed publication, runtime trust, rollback, and correction discipline. The job of this directory is to make trust-preserving behavior explicit, inspectable, and hard to bluff.
+> `tests/` is not a generic QA bucket. In KFM, verification is part of governed publication, runtime trust, rollback, and correction discipline. This directory exists to make trust-preserving behavior explicit, inspectable, and hard to bluff.
 
 ---
 
 ## Scope
 
-`tests/` is the repo-facing verification surface for KFM.
+`tests/` is the repo-facing verification surface for Kansas Frontier Matrix.
 
-In KFM terms, this directory should gather the suites, fixtures, and proof-oriented checks that make the canonical path, trust membrane, policy posture, release evidence, and runtime answer behavior real enough to review. That means more than “does the code run?” It means “can the system prove why a value was admitted, promoted, shown, withheld, corrected, or denied?”
+In KFM terms, verification attaches to transitions across the governed path — `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` — and then returns at runtime trust surfaces, rollback paths, supersession, and correction. This directory should therefore gather the suites, fixtures, and proof-oriented checks that make those transitions reviewable instead of merely implied.
 
-A thin but explicit verification surface is better than implied confidence. KFM’s doctrine repeatedly prefers visible incompleteness over persuasive overclaiming, and this README follows that rule.
+That is a wider burden than “does the code run?” The stronger question is: can the system prove why a source was admitted, why a dataset was promoted, why a runtime answer resolved to `ANSWER / ABSTAIN / DENY / ERROR`, and how a stale, withdrawn, generalized, or corrected state propagates visibly?
 
 > [!CAUTION]
-> This revision is grounded in the mounted March 2026 KFM manuals **plus the supplied `tests/README.md` baseline**. The current session did **not** expose a live repo checkout, test tree, workflow YAML, manifests, or runtime logs. Exact on-disk directory presence, sibling README files, and merge-blocking enforcement therefore still need direct repo verification before merge.
+> This README is grounded in the mounted March 2026 KFM corpus **plus the supplied `tests/README.md` baseline**. The current session did **not** expose a live repo checkout, test tree, workflow YAML, manifests, or runtime logs. Exact on-disk paths, sibling READMEs, and merge-blocking enforcement therefore still need direct repo verification before merge.
 
 ### Status markers used here
 
 | Marker | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Grounded in the mounted March 2026 KFM corpus or the supplied target-file baseline text |
+| **CONFIRMED** | Grounded in the mounted March 2026 KFM corpus or the supplied baseline text |
 | **INFERRED** | Strongly implied by the supplied baseline plus current KFM doctrine, but not directly rechecked in a mounted repo tree |
 | **PROPOSED** | Recommended structure, rule, or workflow that fits KFM doctrine but is not proven as mounted implementation |
 | **UNKNOWN** | Not established strongly enough in the current session to present as settled repo reality |
-| **NEEDS VERIFICATION** | Recheck directly in the working tree, workflow inventory, or runtime evidence before merge |
+| **NEEDS VERIFICATION** | Recheck directly in the working tree, workflow inventory, or emitted proof objects before merge |
 
 ## Repo fit
 
 **Path:** `tests/README.md`  
-**Role:** directory-level guide for governed verification families, proof burdens, and maintenance rules
+**Role:** directory-level guide for governed verification families, proof burdens, and maintenance rules.
+
+> [!NOTE]
+> Relative links below are preserved from the supplied baseline because they match the intended repo fit, but their live-tree presence still needs direct verification before merge.
 
 ### Upstream anchors
 
 | Surface | Why it matters |
 |---|---|
-| [`../README.md`](../README.md) | Root project contract, repo posture, and top-level navigation |
-| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Contribution and review discipline for behavior-significant change |
-| [`../.github/README.md`](../.github/README.md) | Collaboration and CI/CD context for merge-blocking verification |
+| [`../README.md`](../README.md) | Root project contract, top-level navigation, and repo-wide posture |
+| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Change discipline, review expectations, and contribution flow |
+| [`../.github/README.md`](../.github/README.md) | CI/CD and collaboration context for merge-blocking verification |
 | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | Ownership and review boundary for `/tests/` |
-| [`../contracts/README.md`](../contracts/README.md) | Authoritative contract and schema-adjacent source layer |
+| [`../contracts/README.md`](../contracts/README.md) | Contract and schema-adjacent source layer that tests must not silently drift away from |
 | [`../docs/README.md`](../docs/README.md) | Canonical documentation index and runbook surface |
 
 ### Downstream surfaces
@@ -80,10 +87,10 @@ A thin but explicit verification surface is better than implied confidence. KFM�
 | [`./policy/`](./policy/) | Policy bundle, reason/obligation, and role-boundary tests | **INFERRED** from supplied baseline; doctrine-backed |
 | [`./accessibility/`](./accessibility/) | Trust-visible accessibility and reduced-motion checks | **INFERRED** from supplied baseline; doctrine-backed |
 | [`./reproducibility/`](./reproducibility/) | Deterministic rebuilds, bounded replay, and spec/digest stability | **INFERRED** from supplied baseline; doctrine-backed |
-| [`./e2e/`](./e2e/) | End-to-end release, runtime, and correction proof | **INFERRED** from supplied baseline |
-| [`./e2e/release_assembly/`](./e2e/release_assembly/) | Promotion, manifest, and proof-pack completeness | **INFERRED** from supplied baseline; explicitly aligned with later KFM target-state docs |
-| [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | Citation-negative, EvidenceBundle, and runtime outcome proof | **INFERRED** from supplied baseline; explicitly aligned with later KFM target-state docs |
-| [`./e2e/correction/`](./e2e/correction/) | Supersession, withdrawal, rollback, and stale-state propagation | **INFERRED** from supplied baseline; explicitly aligned with later KFM target-state docs |
+| [`./e2e/`](./e2e/) | End-to-end governed proof across release, runtime, and correction | **INFERRED** from supplied baseline |
+| [`./e2e/release_assembly/`](./e2e/release_assembly/) | Promotion, manifest, and proof-pack completeness | **INFERRED** from March 2026 artifact plans; **NEEDS VERIFICATION** in live tree |
+| [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | Evidence drill-through, citation-negative behavior, and runtime outcome proof | **INFERRED** from March 2026 artifact plans; **NEEDS VERIFICATION** in live tree |
+| [`./e2e/correction/`](./e2e/correction/) | Supersession, withdrawal, rollback, and stale-visible propagation | **INFERRED** from March 2026 artifact plans; **NEEDS VERIFICATION** in live tree |
 
 ## Accepted inputs
 
@@ -91,14 +98,14 @@ Content that belongs in `tests/` includes:
 
 - unit tests for deterministic local behavior
 - integration tests for governed slices across real boundaries
-- contract-validation tests for envelopes, examples, invalid fixtures, and drift
+- contract-validation tests for envelopes, examples, and invalid fixtures
 - policy tests for allow, deny, abstain, hold, generalize, and role-boundary behavior
 - accessibility-critical trust-surface checks
-- reproducibility and bounded-regression checks where spec hashes, digests, or counts matter
+- reproducibility and bounded-regression checks where spec hashes, digests, counts, or release linkages matter
 - end-to-end proof suites for release assembly, runtime trust, and correction behavior
 - thin fixtures that exist to execute or fail a gate
-- smoke, canary, stale-state, and rollback drills tied to trust-bearing behavior
-- test-side schemas, harness notes, and golden outputs that make governed expectations executable
+- smoke, canary, stale-state, rollback, and correction drills tied to trust-bearing behavior
+- test-side notes, golden outputs, and harness artifacts that make governed expectations executable
 
 ## Exclusions
 
@@ -111,21 +118,21 @@ The following do **not** belong here as authoritative source-of-truth content:
   → keep those under `../policy/`
 
 - runtime application code, workers, resolvers, connectors, or UI components  
-  → keep those under app/package/runtime surfaces
+  → keep those under app, package, runtime, or surface-specific directories
 
-- release artifacts, proof packs, manifests, SBOMs, and attestation bundles as primary published records  
-  → emit them from their governed lanes and reference them from tests instead of treating `tests/` as the artifact vault
+- release artifacts, proof packs, manifests, SBOMs, and attestation bundles as the *primary* record  
+  → emit them from their governed lanes and let tests consume or verify them
 
 - long-form architecture rationale, ADRs, or operator runbooks  
   → keep those under `../docs/`
 
-- scratch files, one-off local experiments, or unreviewed data dumps  
+- scratch files, one-off experiments, or unreviewed data dumps  
   → keep them out of the governed verification surface
 
 ## Directory tree
 
 > [!NOTE]
-> The tree below is the working snapshot carried forward from the supplied baseline. It is useful as a repo-ready contract for the directory, but it still needs direct working-tree confirmation before merge.
+> The tree below is the working contract carried forward from the supplied baseline and aligned to the March 2026 proof-family model. It is useful as repo-ready structure, but it still needs direct working-tree confirmation before merge.
 
 ```text
 tests/
@@ -149,7 +156,7 @@ tests/
     └── README.md
 ```
 
-This split is not decorative. It separates proof burdens: local logic, boundary slices, contract drift, policy failure, accessibility-critical trust cues, reproducibility, and end-to-end release/runtime/correction proof should not all collapse into one undifferentiated test bucket.
+This split is not decorative. It separates proof burdens that KFM treats differently: local semantics, boundary slices, contract drift, policy failure, trust-visible accessibility, reproducibility, release assembly, runtime proof, and correction behavior should not collapse into one undifferentiated test bucket.
 
 [Back to top](#tests)
 
@@ -166,13 +173,17 @@ find tests -maxdepth 4 \( -type f -o -type d \) | sort
 # inspect adjacent governed surfaces that usually co-change with tests
 find tests contracts policy docs .github -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
 
-# locate the core proof-object vocabulary across likely verification surfaces
-grep -RIn "source_descriptor\|ingest_receipt\|validation_report\|dataset_version\|catalog_closure\|EvidenceBundle\|runtime_response_envelope" \
+# recheck declared ownership and workflow surfaces
+sed -n '1,220p' .github/CODEOWNERS 2>/dev/null
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
+
+# locate core proof-object vocabulary across likely verification surfaces
+grep -RIn "source_descriptor\|ingest_receipt\|validation_report\|dataset_version\|catalog_closure\|decision_envelope\|review_record\|release_manifest\|EvidenceBundle\|runtime_response_envelope\|correction_notice" \
   tests contracts policy docs .github 2>/dev/null || true
 
-# locate negative-state vocabulary that should stay visible in trust-bearing paths
-grep -RIn "ABSTAIN\|DENY\|stale-visible\|withdrawn\|superseded\|correction_notice" \
-  tests policy docs 2>/dev/null || true
+# locate trust-visible negative states and runtime outcomes
+grep -RIn "ABSTAIN\|DENY\|ERROR\|stale-visible\|withdrawn\|superseded\|generalized\|review-required" \
+  tests policy docs ui 2>/dev/null || true
 ```
 
 ### First verification pass
@@ -182,6 +193,7 @@ grep -RIn "ABSTAIN\|DENY\|stale-visible\|withdrawn\|superseded\|correction_notic
 3. Confirm which families contain executable cases versus placeholder README contracts.
 4. Confirm whether contracts, policy bundles, examples, and tests move together in the same governed stream.
 5. Confirm whether at least one thin slice exercises release, runtime, and correction behavior end to end.
+6. Confirm whether the live repo already prefers another naming shape such as `tests/ui/`, shared fixture roots, or another layout that should replace inferred folder names here.
 
 > [!TIP]
 > Prefer repo-native evidence over README prose. In KFM, a documented gate that has no mounted fixture, workflow, or proof object should still be treated as **PROPOSED** until the repo proves otherwise.
@@ -194,8 +206,9 @@ grep -RIn "ABSTAIN\|DENY\|stale-visible\|withdrawn\|superseded\|correction_notic
 
 - the repo-facing proof surface for governed behavior
 - the place where negative outcomes become first-class and testable
-- the directory that helps keep derived convenience layers subordinate to authoritative truth
 - the seam where contracts, policy, release evidence, runtime trust, and correction expectations become executable
+- one of the places where KFM prevents derived convenience layers from silently outranking authoritative truth
+- part of the same trust system that includes release manifests, Evidence Bundles, runtime envelopes, correction notices, and documentation gates
 
 ### What `tests/` is not
 
@@ -203,8 +216,8 @@ grep -RIn "ABSTAIN\|DENY\|stale-visible\|withdrawn\|superseded\|correction_notic
 
 - a substitute for authoritative schemas or policy bundles
 - a place to hide implementation uncertainty behind broad “coverage” language
+- a detached QA corner whose results do not affect promotion, publication, rollback, or correction
 - a dumping ground for artifacts better owned elsewhere
-- a detached QA corner whose results do not affect promotion, publication, or rollback
 - a place where public-safe behavior may be implied without proof objects
 
 ### Where a new test should land
@@ -214,12 +227,15 @@ Choose the smallest truthful family before inventing a new top-level folder:
 - use [`./unit/`](./unit/) for local, deterministic behavior and pure helper logic
 - use [`./integration/`](./integration/) when a real boundary matters: connector, store, resolver, API, or projection build
 - use [`./contracts/`](./contracts/) when the core risk is envelope, schema, example, or invalid-fixture drift
-- use [`./policy/`](./policy/) when the change affects rights, sensitivity, roles, denial logic, or reason/obligation grammar
-- use [`./accessibility/`](./accessibility/) when trust-visible interaction, keyboard flow, or reduced-motion behavior is the main risk
-- use [`./reproducibility/`](./reproducibility/) when the burden is stable spec hashes, digests, counts, or bounded replay
-- use [`./e2e/release_assembly/`](./e2e/release_assembly/) when the question is promotion, manifest, or proof-pack completeness
-- use [`./e2e/runtime_proof/`](./e2e/runtime_proof/) when the question is EvidenceBundle resolution, citation-negative behavior, or `ANSWER / ABSTAIN / DENY / ERROR`
+- use [`./policy/`](./policy/) when the change affects rights, sensitivity, roles, denials, or reason/obligation grammar
+- use [`./accessibility/`](./accessibility/) when evidence reachability, keyboard flow, reduced-motion safety, or trust-visible state signaling is the main burden
+- use [`./reproducibility/`](./reproducibility/) when the burden is stable spec hashes, digests, counts, bounded replay, or rebuildability
+- use [`./e2e/release_assembly/`](./e2e/release_assembly/) when the question is promotion, manifest completeness, or proof-pack completeness
+- use [`./e2e/runtime_proof/`](./e2e/runtime_proof/) when the question is Evidence Bundle resolution, citation-negative behavior, or `ANSWER / ABSTAIN / DENY / ERROR`
 - use [`./e2e/correction/`](./e2e/correction/) when supersession, withdrawal, rollback, or stale-visible propagation must be exercised
+
+> [!TIP]
+> If the live repo already uses `tests/ui/`, shared `fixtures/`, or another established naming scheme, keep the repo’s proven structure and update this README to match it. Preserve the **proof burden**, not a guessed folder name.
 
 ### Working rule for scaffolded families
 
@@ -228,47 +244,61 @@ A present directory or placeholder README is not the same thing as active covera
 ## Diagram
 
 ```mermaid
-flowchart LR
-    A["Source & intake"] --> B["Canonical truth"]
-    B --> C["Catalog / policy / review"]
-    C --> D["Derived delivery"]
-    D --> E["Runtime trust surfaces"]
+flowchart TB
+    SE["Source edge"] --> RAW["RAW"]
+    RAW --> WQ["WORK / QUARANTINE"]
+    WQ --> PROC["PROCESSED"]
+    PROC --> CAT["CATALOG"]
+    CAT --> PUB["PUBLISHED"]
+    PUB --> RT["Runtime & trust surfaces"]
 
     subgraph T["tests/"]
       U["unit/"]
       I["integration/"]
-      CT["contracts/"]
+      C["contracts/"]
       P["policy/"]
       AX["accessibility/"]
       R["reproducibility/"]
-      E2["e2e/\nrelease_assembly\nruntime_proof\ncorrection"]
+      RA["e2e/release_assembly/"]
+      RP["e2e/runtime_proof/"]
+      CR["e2e/correction/"]
     end
 
-    U -. local deterministic logic .-> B
-    I -. boundary slices .-> B
-    I -. boundary slices .-> D
-    CT -. schema + invalid-fixture checks .-> C
-    P -. deny/allow/obligation checks .-> C
-    AX -. trust-visible UX checks .-> E
-    R -. replay + digest stability .-> D
-    E2 -. release, runtime, and correction proof .-> E
+    U -. local semantics .-> PROC
+    I -. boundary slices .-> PROC
+    C -. schema + invalid-fixture gates .-> CAT
+    P -. allow/deny/obligation checks .-> CAT
+    AX -. trust-visible evidence reachability .-> RT
+    R -. digest/spec-hash stability .-> PUB
+    RA -. manifest + proof-pack completeness .-> PUB
+    RP -. EvidenceBundle + runtime outcome proof .-> RT
+    CR -. rollback + correction propagation .-> RT
 ```
 
 ## Operating tables
 
 ### Family map
 
-| Family | Primary burden | Why it exists in KFM | Current posture in this rewrite |
+| Family | Primary burden | First-class proof burden | Current posture in this rewrite |
 |---|---|---|---|
-| `unit/` | Deterministic local behavior | Keeps helper logic, transforms, and local semantics honest | **INFERRED** from supplied baseline |
-| `integration/` | Governed boundary slices | Proves connector, API, resolver, and store behavior across real seams | **INFERRED** from supplied baseline |
-| `contracts/` | Schema, example, and invalid-fixture drift | KFM repeatedly treats schema gates and valid/invalid fixtures as merge-blocking proof | **INFERRED** path, doctrine-backed |
-| `policy/` | Deny-by-default and decision grammar | KFM requires policy bundles, reason codes, obligation codes, and role-sensitive fail-closed tests | **INFERRED** path, doctrine-backed |
-| `accessibility/` | Keyboard, reduced-motion, and trust-visible cues | Evidence Drawer reachability and trust-visible UI cues are part of the product contract | **INFERRED** path, doctrine-backed |
-| `reproducibility/` | Spec/digest stability and bounded replay | KFM repeatedly requires reproducibility checks for generated artifacts and released derivatives | **INFERRED** path, doctrine-backed |
-| `e2e/release_assembly/` | Release evidence and promotion readiness | Later KFM manuals explicitly propose this path for release proof | **INFERRED** path, doctrine-backed |
-| `e2e/runtime_proof/` | Evidence resolution and runtime outcome proof | Later KFM manuals explicitly propose this path for runtime proof | **INFERRED** path, doctrine-backed |
-| `e2e/correction/` | Supersession, withdrawal, rollback, stale-visible propagation | Later KFM manuals explicitly propose this path for correction proof | **INFERRED** path, doctrine-backed |
+| `unit/` | Deterministic local behavior | Local semantics, helper correctness, pure transforms | **INFERRED** from supplied baseline |
+| `integration/` | Governed boundary slices | Connector, resolver, API, storage, and projection seams | **INFERRED** from supplied baseline |
+| `contracts/` | Schema, example, and invalid-fixture drift | `source_descriptor`, `ingest_receipt`, `validation_report`, envelope validity | **INFERRED** path, doctrine-backed |
+| `policy/` | Deny-by-default and decision grammar | reason codes, obligation codes, allow/deny/generalize/review-required outcomes | **INFERRED** path, doctrine-backed |
+| `accessibility/` | Trust-visible UX obligations | evidence reachability, non-color-only cues, keyboard flow, reduced motion | **INFERRED** path, doctrine-backed |
+| `reproducibility/` | Stable rebuilds and bounded replay | spec hash, digest stability, bounded rerun behavior | **INFERRED** path, doctrine-backed |
+| `e2e/release_assembly/` | Release evidence and promotion readiness | `run_manifest`, `run_receipt`, `release_manifest`, proof-pack completeness | **INFERRED** path, March 2026 artifact-plan backed |
+| `e2e/runtime_proof/` | Runtime answer accountability | `EvidenceBundle`, `runtime_response_envelope`, citation-negative handling | **INFERRED** path, March 2026 artifact-plan backed |
+| `e2e/correction/` | Correction, supersession, rollback | `correction_notice`, stale-visible propagation, rollback evidence | **INFERRED** path, March 2026 artifact-plan backed |
+
+### Proof-object pressure by family
+
+| Proof object or behavior | First place to exercise it | Why it matters |
+|---|---|---|
+| `source_descriptor`, `ingest_receipt`, `validation_report` | `contracts/`, `integration/`, `e2e/release_assembly/` | Intake must prove admissibility, replayability, and quarantine behavior before publication is even possible |
+| `dataset_version`, `catalog_closure`, `decision_envelope`, `review_record` | `contracts/`, `policy/`, `e2e/release_assembly/` | Promotion depends on deterministic identity, metadata closure, policy posture, and review evidence |
+| `EvidenceBundle`, `runtime_response_envelope` | `e2e/runtime_proof/`, `accessibility/` | KFM’s public trust boundary depends on evidence drill-through and accountable runtime outcomes |
+| `correction_notice`, rollback evidence, stale-visible propagation | `e2e/correction/`, `e2e/release_assembly/` | A system that proves only happy-path release is not yet trust-preserving |
 
 ### Change-trigger matrix
 
@@ -278,7 +308,7 @@ flowchart LR
 | policy bundles or registries | allow and deny cases, reason/obligation grammar checks, role-boundary cases, and fail-closed defaults |
 | source onboarding or connector logic | unit + integration coverage, replay checks, deterministic manifests/checksums, and representative policy labeling |
 | release or promotion logic | release assembly proof, documentation/runbook alignment, and correction/rollback readiness |
-| runtime answering, Focus, or Evidence Drawer behavior | runtime-proof coverage, citation-negative tests, EvidenceBundle drill-through, and visible negative-state handling |
+| runtime answering, Focus, or Evidence Drawer behavior | runtime-proof coverage, citation-negative tests, Evidence Bundle drill-through, and visible negative-state handling |
 | trust-visible UI behavior | accessibility gate, keyboard path coverage, reduced-motion-safe trust cues, and no hidden bypass around evidence or policy |
 | docs that change governed behavior | documentation gate plus agreement across contracts, examples, runbooks, and test expectations |
 
@@ -316,9 +346,13 @@ Because KFM treats verification as part of publication, runtime trust, and corre
 
 Because the current session exposed PDFs only. The March 2026 manuals strongly confirm the doctrine, but they do not by themselves prove the current mounted repo tree, workflow inventory, or runtime coverage.
 
-### Why keep `contracts/`, `policy/`, `accessibility/`, and `reproducibility/` as named verification families?
+### Why keep `release_assembly`, `runtime_proof`, and `correction` separate?
 
-Because later KFM manuals make those burdens explicit: schemas need valid and invalid fixtures, policy must fail closed, trust-visible surfaces must remain keyboard-usable and reduced-motion safe, and generated artifacts must be reproducible enough to review.
+Because they carry different burdens. Release assembly proves why a candidate was promotable, runtime proof proves why a response or surface state resolved the way it did, and correction proves that rollback, supersession, stale-visible behavior, and public-facing repair are real rather than rhetorical.
+
+### Why do docs and accessibility appear in a tests README?
+
+Because KFM explicitly treats documentation and accessibility as production verification surfaces whenever behavior-significant change affects trust-visible flows, Evidence Drawer reachability, or release/correction expectations.
 
 ### Should canonical examples live in `tests/`?
 
@@ -326,7 +360,11 @@ Usually not. Canonical schema and policy sources should live with their own auth
 
 ### Why is hydrology the preferred first thin slice?
 
-Because the mounted KFM manuals repeatedly treat hydrology as a public-safe, place/time-rich lane that can prove one governed path without forcing immediate escalation into higher-burden sensitive domains.
+Because the mounted KFM manuals repeatedly treat hydrology as a public-safe, place/time-rich lane that can prove evidence drill-through, runtime accountability, and correction behavior without immediately front-loading the hardest stewardship and location-exposure burdens.
+
+### What if the live repo already uses different names than this README?
+
+Prefer mounted repo truth. Replace inferred path names with the real layout, keep the proof burdens intact, and preserve the KFM distinction between doctrine, realization, and directly verified implementation.
 
 [Back to top](#tests)
 
@@ -335,16 +373,17 @@ Because the mounted KFM manuals repeatedly treat hydrology as a public-safe, pla
 <details>
 <summary><strong>Appendix A — Evidence basis used for this README</strong></summary>
 
-This README was shaped primarily by the March 2026 KFM testing, verification, delivery, contract, app-surface, and canonical-manual layers. The strongest project-specific pressure came from:
+This README was shaped primarily by the March 2026 KFM testing, verification, governed-delivery, master-manual, tooling, security, schema/contract, app-surface, and configuration layers.
 
-- the testing and verification reference
-- the governed delivery and CI/CD doctrine
-- the canonical/reference-manual family
-- the contract/schema/policy overlays
-- the app-surface and UI/UX doctrine
-- the prioritization memo that keeps the first slice small and public-safe
+The strongest pressure came from the materials that do all of the following at once:
 
-The supplied `tests/README.md` baseline was preserved where it was already strong, then tightened to keep repo reality separate from doctrine-backed recommendation.
+- treat verification as a cross-plane governance system rather than a narrow test suite
+- keep negative outcomes first-class
+- insist on evidence drill-through, runtime accountability, and visible correction lineage
+- prefer one public-safe hydrology slice over premature breadth
+- keep repo reality separate from doctrinal ambition when direct implementation evidence is absent
+
+Older continuity material was used only as corroboration for proposed path shapes and artifact plans, not as stronger authority than the March 16–19 mounted reference layer.
 
 </details>
 
@@ -359,6 +398,20 @@ Before treating this README as fully settled repo documentation, verify:
 - actual workflow YAML and required checks that block merge or promotion
 - contract and fixture inventory for valid and invalid examples
 - sample proof objects, if any, for release, runtime, and correction lanes
+- whether accessibility tests live in `tests/accessibility/`, `tests/ui/`, or another mounted location
 - whether the hydrology-first thin slice already exists in part or at all
+
+</details>
+
+<details>
+<summary><strong>Appendix C — How to revise this README if the mounted repo differs</strong></summary>
+
+If direct repo inspection later shows a different file layout:
+
+1. Keep the doctrinal distinctions: release assembly, runtime proof, correction, policy, accessibility, and reproducibility remain different proof burdens even if the directories are renamed.
+2. Downgrade any conflicting file-level proposal from **INFERRED** or **PROPOSED** to **UNKNOWN** until the live tree proves otherwise.
+3. Update relative links, tree examples, and family names to the mounted repo rather than forcing code to mimic placeholder documentation.
+
+The goal is not to preserve guessed paths. The goal is to preserve truthful governance language.
 
 </details>
