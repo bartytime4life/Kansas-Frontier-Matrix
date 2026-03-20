@@ -6,16 +6,16 @@ version: v1
 status: draft
 owners: NEEDS_VERIFICATION
 created: NEEDS_VERIFICATION
-updated: 2026-03-18
+updated: 2026-03-20
 policy_label: NEEDS_VERIFICATION
-related: [NEEDS_VERIFICATION: ../README.md, NEEDS_VERIFICATION: ../docs/, NEEDS_VERIFICATION: ../contracts/, NEEDS_VERIFICATION: ../policy/, NEEDS_VERIFICATION: ../tests/, NEEDS_VERIFICATION: ../apps/api/README.md or ../apps/api/src/api/README.md]
+related: [NEEDS_VERIFICATION: ../README.md, NEEDS_VERIFICATION: ../docs/, NEEDS_VERIFICATION: ../contracts/, NEEDS_VERIFICATION: ../policy/, NEEDS_VERIFICATION: ../tests/, NEEDS_VERIFICATION: ../apps/api/README.md, NEEDS_VERIFICATION: ../apps/api/src/api/README.md]
 tags: [kfm, infra, deployment, runtime, operations]
-notes: [Drafted from the March 2026 KFM corpus plus direct current-session workspace inspection; no mounted repo checkout or live infra subtree was directly verified in this session.]
+notes: [Grounded in the March 2026 KFM corpus and direct current-session workspace inspection; no mounted repo checkout or live infra subtree was directly verified in this session.]
 [/KFM_META_BLOCK_V2] -->
 
 # infra
 
-Bring-up, deployment, runtime control, observability, and rollback surface for Kansas Frontier Matrix.
+Bring-up, deployment, runtime control, exposure management, observability, restore, and rollback surface for Kansas Frontier Matrix.
 
 > **Status:** experimental  
 > **Owners:** NEEDS VERIFICATION  
@@ -23,15 +23,16 @@ Bring-up, deployment, runtime control, observability, and rollback surface for K
 > ![owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey)
 > ![evidence](https://img.shields.io/badge/evidence-March_2026_corpus-blue)
 > ![posture](https://img.shields.io/badge/posture-fail--closed-0a7d5a)  
+> **Repo fit:** `infra/README.md` is the directory guide for runtime-facing infrastructure material that must preserve KFM’s truth path, trust membrane, and governed API boundary.  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is **evidence-bounded**. The March 2026 KFM corpus is strong on the doctrinal role of `infra/`, deployment progression, trust boundaries, observability, and rollback requirements. The current session did **not** expose a mounted repository checkout, live `infra/` subtree, workflow directory, deployment manifests, or runtime logs. Treat exact subpaths, owners, manifests, and current deployment choices as **NEEDS VERIFICATION** until confirmed in the actual checkout.
+> This README is **evidence-bounded**. The freshest direct authority used here is the March 16–19 KFM layer around the March 18 master reissue, the Ubuntu runtime guide, and the March 19 refined testing/configuration/contract/tooling references. The current session exposed a PDF corpus under `/mnt/data`, but **did not expose a mounted repository checkout, a live `infra/` subtree, workflow YAML, deployment manifests, dashboards, or runtime logs**. Treat exact subpaths, owners, manifests, and present deployment choices as **NEEDS VERIFICATION** until confirmed in the actual checkout.
 
 > [!NOTE]
 > The corpus supports two compatible infra emphases that should be read together, not as a contradiction:
 >
-> 1. `infra/` as the umbrella deployment-and-operations surface for Kubernetes, Terraform, GitOps, dashboards, backups, and rollout controls.
+> 1. `infra/` as the umbrella deployment-and-operations surface for **Kubernetes, Terraform, GitOps, dashboards, and related rollout controls**.
 > 2. A **systemd-first, single-host Ubuntu** phase-one runtime as the thinnest credible first governed slice.
 >
 > This README keeps both: **phase one first, broader hosted/orchestrated lanes after that**.
@@ -42,9 +43,9 @@ Bring-up, deployment, runtime control, observability, and rollback surface for K
 
 `infra/` is the repository surface for **bring-up, deployment, runtime control, exposure management, observability, restore, rollback, and operational correction**.
 
-In KFM, that makes `infra/` more than a generic “ops” folder. Infrastructure choices can either preserve or weaken the trust membrane. A public client path that bypasses the governed API, a model server exposed for convenience, a restore plan that was never rehearsed, or a release with no retained rollback lineage are all infrastructure failures in the KFM sense.
+In KFM, that makes `infra/` more than a generic “ops” folder. Infrastructure choices can either preserve or weaken the trust membrane. A public client path that bypasses the governed API, a model server exposed for convenience, a restore plan that was never rehearsed, or a release with no visible rollback lineage are all infrastructure failures in the KFM sense.
 
-**Repo-fit rule:** `infra/` should version **how KFM runs**. It should not become the canonical home of policy law, API contracts, source data, or domain logic.
+**Repo-fit rule:** `infra/` should version **how KFM runs**. It should not become the canonical home of policy law, API contracts, source truth, or domain behavior.
 
 [Back to top](#infra)
 
@@ -55,19 +56,17 @@ In KFM, that makes `infra/` more than a generic “ops” folder. Infrastructure
 
 | Direction | Surface | Why it matters |
 |---|---|---|
-| Upstream | [`../README.md`](../README.md) | Root doctrine, repo orientation, and trust posture *(path not re-verified in this session)* |
-| Upstream | [`../docs/`](../docs/) | Architecture docs, ADRs, runbooks, and long-form reference material |
+| Upstream | [`../README.md`](../README.md) | Root doctrine, repo orientation, and overall trust posture *(path still needs checkout verification)* |
+| Upstream | [`../docs/`](../docs/) | Architecture docs, ADRs, long-form runbooks, and reference material |
 | Adjacent | [`../contracts/`](../contracts/), [`../policy/`](../policy/), [`../tests/`](../tests/) | Machine-checkable boundaries that infra must preserve rather than redefine |
-| Adjacent | `../apps/api/README.md` **or** `../apps/api/src/api/README.md` | Governed API boundary docs named across the corpus *(exact path needs checkout verification)* |
+| Adjacent | `../apps/api/README.md` or `../apps/api/src/api/README.md` | Governed API boundary docs named across the corpus *(exact path needs checkout verification)* |
 | Downstream | `infra/` lanes for local runtime, orchestration, reconciliation, backups, and operational verification | The deployment/control-plane surfaces that turn doctrine into a running system |
 
 ### Repo fit notes
 
 - The March 2026 corpus repeatedly treats `infra/` as a top-level peer of major repo surfaces.
-- An older March 2026 compendium also documents `infra/` as the deployment-and-operations surface for **Kubernetes, Terraform, GitOps, and dashboards**, but that repo inventory was **not re-verified in the mounted checkout** during this session.
-- Some March passes separate `observability/` from `infra/`; this README therefore treats telemetry assets as either:
-  - kept inside `infra/` by local convention, or
-  - intentionally placed in a neighboring `observability/` surface.
+- Documentary repo inventories describe `infra/` as the deployment-and-operations surface for **Kubernetes, Terraform, GitOps, and dashboards**, but this session did **not** re-verify a mounted `infra/` tree.
+- Some March passes keep observability assets inside `infra/`; others separate them into a neighboring `observability/` surface. Follow the local checkout convention once it is visible.
 
 ## Accepted inputs
 
@@ -75,13 +74,13 @@ Content that belongs here includes:
 
 | Category | Typical contents | Why it belongs here |
 |---|---|---|
-| Local runtime bring-up | `systemd` units, timers, overrides, host bootstrap notes, bind rules, loopback-only profiles | Phase-one KFM runtime is explicitly systemd-first and single-host friendly |
+| Local runtime bring-up | `systemd` units, timers, overrides, bind rules, host bootstrap notes, loopback-only profiles | The freshest KFM runtime doctrine is explicitly systemd-first and single-host friendly |
 | Infrastructure as code | Terraform modules, host/network/storage provisioning, edge and ingress descriptors | Infra changes should be reviewable, reproducible, and diffable |
 | Orchestration and reconciliation | Kubernetes manifests, Helm/Kustomize overlays, GitOps declarations, rollout profiles | Later hosted/orchestrated lanes still have to preserve KFM doctrine |
 | Exposure and security control | Reverse-proxy rules, VPN/private-remote notes, firewall posture, service-account boundaries | Public and operator access must not bypass the trust membrane |
 | Observability and operational evidence | Dashboard provisioning, alert rules, telemetry joins, canary wiring, release-context joins | KFM treats logs, traces, metrics, and audit objects as one evidence system |
 | Backup / restore / rollback | Backup descriptors, restore procedures, rollback bundles, stale-projection handling | Restore rehearsal and correction lineage are required operational behaviors |
-| Runtime-impacting ops prose | Deployment notes, environment profiles, incident/runbook references, maintenance steps | Runtime-affecting changes should travel with their operating instructions |
+| Runtime-impacting ops prose | Deployment notes, maintenance steps, environment profiles, incident/runbook references | Runtime-affecting changes should travel with their operating instructions |
 
 ## Exclusions
 
@@ -92,7 +91,7 @@ The following do **not** belong here as the authoritative source of truth:
 | Service code, UI code, worker business logic | `../apps/`, `../packages/` |
 | Canonical API contracts and schemas | `../contracts/` |
 | Policy rule bodies and policy-test truth | `../policy/` |
-| Dataset descriptors, catalog objects, EvidenceBundles, release content themselves | the project’s data / catalog / evidence / release surfaces |
+| Dataset descriptors, catalog objects, EvidenceBundles, or release content themselves | the project’s data / catalog / evidence / release surfaces |
 | Ad hoc committed secrets, private keys, or ambient credentials | the project’s secret-management path, not repo plaintext |
 | Detached long-form doctrine or general runbooks that already live under docs | `../docs/` and `../docs/runbooks/` where that repo pattern already exists |
 | Silent promotion logic disguised as “just deployment” | release / policy / review surfaces with proof objects and verification gates |
@@ -126,7 +125,7 @@ The corpus repeatedly treats `infra/` as a top-level repo surface:
 ```text
 infra/
 ├── README.md
-├── systemd/        # phase-one host units, timers, overrides
+├── systemd/        # phase-one host units, timers, overrides, env drop-ins
 ├── compose/        # local multi-service manifests, if used
 ├── terraform/      # IaC for hosts, network, storage, edge
 ├── kubernetes/     # manifests, overlays, charts, admission-facing config
@@ -160,24 +159,24 @@ Start with **verification before editing**.
 git rev-parse --show-toplevel
 
 # 2) Inspect the actual infra tree before changing docs or manifests
-find infra -maxdepth 3 -print | sort
+test -d infra && find infra -maxdepth 3 -print | sort || echo "infra/ not present in this checkout"
 
 # 3) Re-read the adjacent trust surfaces this directory must preserve
-sed -n '1,220p' README.md
-sed -n '1,220p' docs/README.md 2>/dev/null || true
-sed -n '1,220p' apps/api/README.md 2>/dev/null || \
-  sed -n '1,220p' apps/api/src/api/README.md 2>/dev/null || true
+[ -f README.md ] && sed -n '1,220p' README.md
+[ -f docs/README.md ] && sed -n '1,220p' docs/README.md
+[ -f apps/api/README.md ] && sed -n '1,220p' apps/api/README.md
+[ -f apps/api/src/api/README.md ] && sed -n '1,220p' apps/api/src/api/README.md
 
 # 4) Surface nearby contracts, policy, tests, and workflows
 find contracts policy tests .github/workflows -maxdepth 3 -type f 2>/dev/null | sort
 
 # 5) Check for existing infra assets before inventing new paths
-find infra -maxdepth 4 -type f 2>/dev/null | sort
+find infra -maxdepth 4 -type f 2>/dev/null | sort || true
 
 # 6) Inventory deployment-shaped files if they already exist
 find infra -type f \
   \( -name '*.tf' -o -name '*.yaml' -o -name '*.yml' -o -name '*.service' -o -name 'compose*.yml' \) \
-  2>/dev/null | sort
+  2>/dev/null | sort || true
 ```
 
 ### Minimal review order
@@ -279,6 +278,15 @@ The point of `infra/` is to make runtime reality preserve KFM law: **governed AP
 | `monitoring/` or adjacent `observability/` | dashboards, alerting, telemetry joins | as soon as runtime evidence needs durable operator surfaces | documented family; exact placement **NEEDS VERIFICATION** |
 | `backup/` / restore assets | backup descriptors, restore scripts, recovery notes | whenever the system begins to matter | strongly implied; exact placement **NEEDS VERIFICATION** |
 
+### Exposure ladder
+
+| Profile | Public reachability | Primary controls | Why it exists |
+|---|---|---|---|
+| Local-only | none | loopback binds, host firewall, systemd isolation | proves the governed path with minimum moving parts |
+| Private-remote | VPN / overlay only | WireGuard or equivalent, private addresses, narrow operator access | introduces reviewer/operator access before public edge pressure |
+| Hosted split-edge | public proxy and governed API only | TLS, reverse proxy, audit IDs, private backend binds | supports public-safe surfaces without exposing canonical or model layers |
+| More separated production | public edge plus private control/data planes | identity, policy decision point, centralized telemetry, backups, controlled rollouts | earns its cost when scale, blast radius, and governance depth require it |
+
 ### Non-negotiable infra rules
 
 | Rule | Infra consequence |
@@ -329,6 +337,10 @@ No. Those are documented lanes, but the freshest runtime guidance also recommend
 
 No. This README distinguishes **documented role** from **mounted-checkout fact**.
 
+### Why does this README keep so many `NEEDS VERIFICATION` markers?
+
+Because the current session did **not** expose a mounted repo checkout or a live infra inventory. The March 2026 manuals are strong on doctrine and target-state structure, but they explicitly warn against polishing unverified repo/runtime prose into implementation certainty.
+
 ### Should monitoring always live inside `infra/`?
 
 Not necessarily. Some March 2026 passes imply dashboards under `infra/`; others separate `observability/`. Follow the local repo convention once the checkout is verified.
@@ -347,6 +359,13 @@ Not here as the authoritative source of truth.
 A hardened Ubuntu host with loopback-only governed API, PostgreSQL/PostGIS, artifact tree, one-shot jobs, and local-only model runtime behind an adapter—**with no public edge**.
 
 ## Appendix
+
+<details>
+<summary><strong>Observed session constraint</strong></summary>
+
+Direct current-session workspace inspection exposed a PDF corpus under `/mnt/data`, but **did not expose a mounted KFM repository checkout, a visible `infra/` subtree, workflow YAML, deployment manifests, dashboards, or runtime logs**. This README is therefore a repo-ready draft anchored to doctrine and documentary repo cues, not a claim of live file presence.
+
+</details>
 
 <details>
 <summary><strong>Verification backlog before commit</strong></summary>
