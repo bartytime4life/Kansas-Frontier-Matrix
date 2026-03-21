@@ -6,31 +6,34 @@ version: v1
 status: review
 owners: @bartytime4life
 created: YYYY-MM-DD
-updated: 2026-03-20
+updated: 2026-03-21
 policy_label: public
-related: [../README.md, ../.github/README.md, ../contracts/, ../schemas/, ../policy/, ../data/, ./catalog/, ./domain/, ./evidence/, ./indexers/, ./ingest/, ./policy/]
+related: [../README.md, ../.github/README.md, ../apps/, ../contracts/, ../schemas/, ../policy/, ../data/, ../infra/, ../docs/, ./catalog/, ./domain/, ./evidence/, ./indexers/, ./ingest/, ./policy/]
 tags: [kfm, packages, readme]
-notes: [doc_id and created date need repo-side verification; owner carried forward from existing task context and should be rechecked against ../.github/CODEOWNERS when the repo is mounted; live repo tree was not directly visible in this session]
+notes: [doc_id and created date still need repo-side verification; owner verified against ../.github/CODEOWNERS on main; live GitHub tree confirms packages/ plus catalog/, domain/, evidence/, indexers/, ingest/, policy/, and child README surfaces; deeper mounted-checkout implementation evidence still needs direct repo verification]
 [/KFM_META_BLOCK_V2] -->
 
 # `packages/`
 
-Shared internal KFM packages for governed truth-path logic, evidence handling, policy support, catalog work, domain modeling, and rebuildable projections—without becoming deployable truth surfaces.
+Shared internal packages for KFM’s governed truth path, evidence resolution, policy support, catalog work, domain modeling, and rebuildable runtime projections.
 
 ![status](https://img.shields.io/badge/status-active-brightgreen)
-![scope](https://img.shields.io/badge/scope-shared%20internal%20modules-4c1)
-![truth](https://img.shields.io/badge/truth-doctrine%20confirmed-blue)
-![repo%20tree](https://img.shields.io/badge/repo%20tree-needs%20verification-orange)
+![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue)
+![repo](https://img.shields.io/badge/repo-bartytime4life%2FKansas--Frontier--Matrix-24292f)
+![branch](https://img.shields.io/badge/branch-main-2ea44f)
+![truth](https://img.shields.io/badge/truth-evidence--bounded-blue)
 ![membrane](https://img.shields.io/badge/trust%20membrane-preserved-6a5acd)
 
 | Field | Value |
 |---|---|
 | Status | `active` |
-| Owners | `@bartytime4life` *(carried forward; recheck against [`../.github/CODEOWNERS`](../.github/CODEOWNERS) when mounted)* |
+| Owners | `@bartytime4life` *(verified in [`../.github/CODEOWNERS`](../.github/CODEOWNERS))* |
 | Path | [`packages/README.md`](./README.md) |
+| Audited repo | `bartytime4life/Kansas-Frontier-Matrix` |
+| Default branch | `main` |
 | Repo fit | Shared internal module boundary between top-level authority surfaces and deployable [`../apps/`](../apps/) |
-| Documented package surfaces | [`./catalog/`](./catalog/) · [`./domain/`](./domain/) · [`./evidence/`](./evidence/) · [`./indexers/`](./indexers/) · [`./ingest/`](./ingest/) · [`./policy/`](./policy/) |
-| Truth posture | `CONFIRMED` package doctrine from current March 2026 package manuals · `PROPOSED` documented package layout from continuity materials · `NEEDS VERIFICATION` live repo tree, manifests, and child-package depth in this session |
+| Current repo evidence | `packages/` is present on `main` with `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, `policy/`, and child `README.md` surfaces |
+| Truth posture | `CONFIRMED` live GitHub tree for directory shape and owner fallback · `CONFIRMED` March 2026 KFM doctrine for package-boundary law · `UNKNOWN` deeper mounted-checkout implementation depth beyond repo-visible README surfaces |
 | Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq) |
 
 ---
@@ -44,13 +47,13 @@ Shared internal KFM packages for governed truth-path logic, evidence handling, p
 > No package should create a hidden client-to-store path, a second policy path, or a shadow truth source.
 
 > [!NOTE]
-> This README is intentionally evidence-cautious. The current session exposed a PDF corpus, not a mounted repo tree. The package doctrine is strong and current; literal file topology and child-package depth still require direct repo verification.
+> This revision is grounded in two evidence layers: the live public GitHub tree on `main` for the current directory shape and owner fallback, and the March 2026 KFM manuals for package-boundary doctrine. It does **not** claim a mounted local checkout, a complete manifest inventory, or mature implementation depth inside every child package.
 
 ## Scope
 
-`packages/` holds **shared internal libraries and core modules** used by KFM services, workers, and governed runtime surfaces.
+`packages/` holds shared internal libraries and core modules used by KFM services, workers, and governed runtime surfaces.
 
-Its job is to keep reusable logic **bounded, inspectable, and reviewable** without smearing domain rules across deployable apps or silently relocating authority away from top-level contracts, schemas, policy bundles, and governed data artifacts.
+Its job is to keep reusable logic bounded, inspectable, and reviewable without smearing domain rules across deployable apps or silently relocating authority away from top-level contracts, schemas, policy bundles, and governed data artifacts.
 
 In KFM terms, packages should help preserve:
 
@@ -87,15 +90,15 @@ This directory can be sparse and still be important. In KFM, boundary quality ma
 
 ### How this directory fits the repo
 
-`packages/` sits between KFM’s **authority-bearing top-level surfaces** and its **deployable apps**. It is the place for reusable internal modules when the logic is:
+`packages/` sits between KFM’s authority-bearing top-level surfaces and its deployable apps. It is the place for reusable internal modules when the logic is:
 
-1. shared across more than one deployable surface,
-2. non-deployable on its own, and
-3. better expressed as a stable internal boundary than as app-local glue.
+1. shared across more than one deployable surface
+2. non-deployable on its own
+3. better expressed as a stable internal boundary than as app-local glue
 
 ## Accepted inputs
 
-Content belongs in `packages/` when it is a **shared internal module** such as:
+Content belongs in `packages/` when it is a shared internal module such as:
 
 - pure domain models, invariants, and type-safe vocabulary
 - reusable ingestion helpers, connector logic, normalizers, and validators
@@ -121,26 +124,31 @@ The following do **not** belong here:
 
 ## Directory tree
 
-**Documented package-family tree**
+**Current repo-visible package surfaces on `main`**
 
 ```text
 packages/
 ├── README.md
 ├── catalog/
+│   └── README.md
 ├── domain/
+│   └── README.md
 ├── evidence/
+│   └── README.md
 ├── indexers/
+│   └── README.md
 ├── ingest/
+│   └── README.md
 └── policy/
+    └── README.md
 ```
 
 > [!NOTE]
-> This tree is documentation-grounded, not shell-verified in the current session.  
-> `catalog`, `domain`, `evidence`, `ingest`, and `policy` recur across the March 2026 package/continuity materials. `indexers` is also carried forward from earlier documented component inventories and should be rechecked against the live repo tree when mounted.
+> This tree is **confirmed repo-visible** on `main`. It proves directory presence and child `README.md` surfaces, not deeper implementation maturity inside each package.
 
 ## Quickstart
 
-### 1) Inspect the directory when working in a checked-out repo
+### 1) Inspect the current package surface
 
 ```bash
 find packages -maxdepth 2 -type d | sort
@@ -148,15 +156,19 @@ find packages -maxdepth 2 -name README.md | sort
 find packages -maxdepth 3 -type f | sort
 ```
 
-### 2) Read the root boundary contract first
+### 2) Recheck ownership and adjacent authority surfaces
+
+```bash
+sed -n '1,160p' .github/CODEOWNERS
+sed -n '1,220p' README.md
+sed -n '1,220p' .github/README.md
+```
+
+### 3) Read the root contract, then the child package surfaces
 
 ```bash
 sed -n '1,240p' packages/README.md
-```
 
-### 3) Then inspect child package READMEs and manifests
-
-```bash
 for d in catalog domain evidence indexers ingest policy; do
   echo "---- $d ----"
   test -f "packages/$d/README.md" && sed -n '1,160p' "packages/$d/README.md"
@@ -187,7 +199,11 @@ If the answer is mostly “no,” it probably should not become a new package.
 
 ### Treat this README as the root directory contract
 
-Use `packages/README.md` to decide **whether logic belongs in `packages/` at all**. Then confirm the relevant child package README and live files before documenting narrower ownership.
+Use `packages/README.md` to decide whether logic belongs in `packages/` at all. Then confirm the relevant child package README and live files before documenting narrower ownership.
+
+### Treat README-first child packages honestly
+
+Some child package surfaces on `main` are currently README-first. That is useful and legitimate, but it is not evidence of mature implementation depth by itself. Keep boundary docs truthful to the live files.
 
 ### Prefer clear package homes over “shared utils” sprawl
 
@@ -355,9 +371,9 @@ No. Governed artifacts, receipts, registries, catalogs, and release-bearing outw
 
 Because `packages/` is a boundary surface. In KFM, weak boundary docs quickly become weak trust behavior.
 
-### Why is this README conservative about repo state?
+### Why is this README still conservative about implementation depth?
 
-Because the current-session evidence for this rewrite was PDF-only. This file preserves package doctrine confidently, but leaves live repo topology and package depth explicit where direct verification is still needed.
+Because the public GitHub tree is enough to confirm directory shape and owner fallback, but not enough to prove mounted-checkout manifests, test depth, or implementation maturity inside each child package.
 
 ### Why distinguish package-local logic from contract/schema/data surfaces so strongly?
 
