@@ -14,10 +14,15 @@ Helpful references:
 - .github/CODEOWNERS
 -->
 
+> Fill every applicable section.
+> Use `N/A` rather than deleting sections.
+> Keep truth labels honest and attach validation evidence, CI links, proof-pack links, or reviewer notes where they exist.
+
 ## Summary
 - What changed:
 - Why:
 - Linked issue / ADR / discussion:
+- Evidence / proof-pack / run links:
 
 ---
 
@@ -68,11 +73,15 @@ Helpful references:
 - [ ] Cite-or-abstain preserved where relevant
 - [ ] Fail-closed behavior preserved where relevant
 - [ ] Docs / tests / templates / runbooks updated in the same change set where behavior changed
-- [ ] No new direct client → store or client → model-runtime bypass
+- [ ] No new direct client -> store or client -> model-runtime bypass
 
 ### Public claim surface
 - [ ] No public claim surface affected
 - [ ] Public claim surface affected (described below)
+
+### Authoritative vs derived boundary
+- [ ] No authoritative / derived boundary affected
+- [ ] Authoritative / derived boundary affected (described below)
 
 ### Truth posture summary
 Fill only the labels that apply to this PR.
@@ -88,18 +97,19 @@ Fill only the labels that apply to this PR.
 ## What changed
 
 ### Behavior
--
+- N/A
 
 ### Files / paths / contracts
--
+- N/A
 
 ### User-visible or operator-visible impact
--
+- N/A
 
 ### Evidence / publication impact
+- Authoritative / derived boundary impact:
 - Evidence / citation path:
 - Policy / review / release state impact:
--
+- Correction / supersession implications:
 
 ---
 
@@ -118,11 +128,13 @@ Fill only the labels that apply to this PR.
 - [ ] Not applicable (explained below)
 
 ### Evidence
+- CI / workflow / report links:
+- Proof pack / manifest / attestation links:
 - Commands / jobs / reports:
 - Sample inputs / fixtures:
 - Screenshots / visual diffs / recordings:
 - Negative-path coverage (deny / abstain / stale / generalized / rollback / correction):
--
+- Not applicable / gaps still open:
 
 ---
 
@@ -134,7 +146,7 @@ Fill only the labels that apply to this PR.
 - [ ] No docs / contract / policy change required (explained below)
 
 Explanation:
--
+- N/A
 
 ---
 
@@ -144,7 +156,7 @@ Explanation:
 - Rollback plan:
 - Correction / supersession / quarantine implications:
 - Operational impact:
--
+- Public / trust-surface implications:
 
 ---
 
@@ -159,6 +171,16 @@ Explanation:
 ---
 
 ## Optional change-specific checklists
+
+<details>
+<summary>Documentation / guidance</summary>
+
+- [ ] Claims distinguish CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION where needed
+- [ ] Paths / links / commands checked
+- [ ] Screenshots / diagrams / examples updated if described behavior changed
+- [ ] No wording silently overclaims mounted implementation, enforcement, or automation
+
+</details>
 
 <details>
 <summary>API / contract / schema</summary>
@@ -226,6 +248,6 @@ Explanation:
 - [ ] Truth posture stated honestly
 - [ ] Tests / validation evidence attached or linked
 - [ ] Docs updated or explicitly justified
-- [ ] No silent contract or policy drift
+- [ ] No silent contract, policy, or trust-boundary drift
 - [ ] Review burden identified
 - [ ] Ready for governed merge
