@@ -198,24 +198,24 @@ If a release artifact, projection build, or bounded synthesis path materially de
 
 ```mermaid
 flowchart TD
-    A[configs/] --> B[env.schema.json + env examples]
-    A --> C[deployment values]
-    A --> D[orchestration bindings]
-    A --> E[ui / renderer defaults]
-    A --> F[observability defaults]
-    A --> G[security thresholds / waivers]
+    A["configs/"] --> B["env.schema.json + env examples"]
+    A --> C["deployment values"]
+    A --> D["orchestration bindings"]
+    A --> E["ui / renderer defaults"]
+    A --> F["observability defaults"]
+    A --> G["security thresholds / waivers"]
 
-    B --> H[API + workers + local runtime]
-    C --> I[infra / deploy surfaces]
-    D --> J[jobs, schedulers, rebuild flows]
-    E --> K[governed shell behavior]
-    F --> L[logs, traces, collector joins]
-    G --> M[audit / scan tooling]
+    B --> H["API + workers + local runtime"]
+    C --> I["infra / deploy surfaces"]
+    D --> J["jobs, schedulers, rebuild flows"]
+    E --> K["governed shell behavior"]
+    F --> L["logs, traces, collector joins"]
+    G --> M["audit / scan tooling"]
 
-    N[contracts/] -. machine law .-> A
-    O[policy/] -. executable governance .-> A
-    P[/etc/kfm/*.env] -. secrets / host-local only .-> A
-    Q[RAW → WORK/Quarantine → PROCESSED → CATALOG → PUBLISHED] -. referenced, not replaced .-> A
+    N["contracts/"] -. "machine law" .-> A
+    O["policy/"] -. "executable governance" .-> A
+    P["/etc/kfm/*.env"] -. "secrets / host-local only" .-> A
+    Q["RAW → WORK/Quarantine → PROCESSED → CATALOG → PUBLISHED"] -. "referenced, not replaced" .-> A
 ```
 
 ## Reference tables
