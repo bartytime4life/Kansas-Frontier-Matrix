@@ -6,34 +6,34 @@ version: v1
 status: published
 owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
-updated: 2026-03-18
+updated: 2026-03-21
 policy_label: public
 related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../contracts/README.md, ../docs/README.md]
 tags: [kfm, tests, verification, readme]
-notes: [doc_id and created date still need verification; owner and related paths were carried forward from the supplied baseline and should be rechecked in the live repo, especially ../.github/CODEOWNERS]
+notes: [doc_id, created date, owner, and related paths still need live-repo verification; the March 20–21 2026 PDF corpus confirms doctrine and proposed test families, but not the mounted tests tree]
 [/KFM_META_BLOCK_V2] -->
 
 # tests
 
-Governed verification surface for KFM proofs, gates, negative paths, and trust-preserving delivery.
+Governed verification surface for KFM proof objects, trust cues, negative paths, and release/correction drills.
 
 > [!NOTE]
-> In this README, the meta-block value `status: published` is preserved from the supplied baseline as the document record, while the impact block below describes the current maturity of the `tests/` surface itself.
+> The meta-block value `status: published` is preserved from the supplied baseline as the document record. The impact block below describes the current maturity of the `tests/` surface itself.
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life` *(carried forward from the supplied baseline; recheck against `../.github/CODEOWNERS` before merge)*  
 > **Path:** `tests/README.md`  
-> **Repo fit:** directory index for governed verification families across contracts, policy, release, runtime trust, and correction  
+> **Repo fit:** directory index for trust-bearing verification families, fixtures, regression views, and drill expectations  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-6f42c1)
 ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
 ![scope: governed verification](https://img.shields.io/badge/scope-governed%20verification-0a7ea4)
-![workspace: PDF only](https://img.shields.io/badge/workspace-PDF--only-f59e0b)
-![truth: confirmed/inferred/proposed/unknown](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
+![evidence: PDF corpus only](https://img.shields.io/badge/evidence-PDF%20corpus%20only-f59e0b)
+![truth: confirmed/proposed/unknown](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
 
 > [!IMPORTANT]
-> `tests/` is not a generic QA bucket. In KFM, verification is part of governed publication, runtime trust, rollback, and correction discipline. This directory exists to make trust-preserving behavior explicit, inspectable, and hard to bluff.
+> `tests/` is not a generic QA bucket. In KFM, verification is part of the governed truth path, the trust membrane, release law, runtime accountability, and visible correction. A green build that cannot prove why a release is trustworthy is still incomplete.
 
 ---
 
@@ -41,22 +41,27 @@ Governed verification surface for KFM proofs, gates, negative paths, and trust-p
 
 `tests/` is the repo-facing verification surface for Kansas Frontier Matrix.
 
-In KFM terms, verification attaches to transitions across the governed path — `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` — and then returns at runtime trust surfaces, rollback paths, supersession, and correction. This directory should therefore gather the suites, fixtures, and proof-oriented checks that make those transitions reviewable instead of merely implied.
+In KFM terms, verification attaches to transitions across the governed path — `Source edge -> RAW -> WORK / QUARANTINE -> PROCESSED -> CATALOG -> PUBLISHED` — and then returns at runtime trust surfaces, rollback paths, and correction propagation. This directory exists to make those proof burdens reviewable instead of merely implied.
 
-That is a wider burden than “does the code run?” The stronger question is: can the system prove why a source was admitted, why a dataset was promoted, why a runtime answer resolved to `ANSWER / ABSTAIN / DENY / ERROR`, and how a stale, withdrawn, generalized, or corrected state propagates visibly?
+That makes the scope broader than “does the code run?” The stronger questions are:
+
+- can intake prove admissibility, replayability, and quarantine behavior?
+- can publication prove why a release was promotable?
+- can runtime prove why a response resolved to `ANSWER`, `ABSTAIN`, `DENY`, or `ERROR`?
+- can correction and rollback stay visible after something changes?
 
 > [!CAUTION]
-> This README is grounded in the mounted March 2026 KFM corpus **plus the supplied `tests/README.md` baseline**. The current session did **not** expose a live repo checkout, test tree, workflow YAML, manifests, or runtime logs. Exact on-disk paths, sibling READMEs, and merge-blocking enforcement therefore still need direct repo verification before merge.
+> This README is grounded in the March 2026 KFM PDF corpus **plus the supplied `tests/README.md` baseline**. No mounted repo tree, workflow YAML, deployment manifests, dashboards, or runtime logs were directly visible in this session. Folder names, merge-blocking jobs, and fixture locations below therefore distinguish **confirmed proof burdens** from **proposed physical layout**.
 
 ### Status markers used here
 
 | Marker | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Grounded in the mounted March 2026 KFM corpus or the supplied baseline text |
-| **INFERRED** | Strongly implied by the supplied baseline plus current KFM doctrine, but not directly rechecked in a mounted repo tree |
-| **PROPOSED** | Recommended structure, rule, or workflow that fits KFM doctrine but is not proven as mounted implementation |
-| **UNKNOWN** | Not established strongly enough in the current session to present as settled repo reality |
-| **NEEDS VERIFICATION** | Recheck directly in the working tree, workflow inventory, or emitted proof objects before merge |
+| **CONFIRMED** | Directly supported by the attached March 2026 KFM corpus or the supplied baseline text |
+| **INFERRED** | Strongly implied by repeated doctrine, but not directly rechecked in a mounted repo tree |
+| **PROPOSED** | Recommended path, layout, or starter pattern that fits KFM doctrine |
+| **UNKNOWN** | Not established strongly enough in this session to present as settled repo reality |
+| **NEEDS VERIFICATION** | Recheck directly in the working tree, CI inventory, or emitted proof objects before merge |
 
 ## Repo fit
 
@@ -64,139 +69,135 @@ That is a wider burden than “does the code run?” The stronger question is: c
 **Role:** directory-level guide for governed verification families, proof burdens, and maintenance rules.
 
 > [!NOTE]
-> Relative links below are preserved from the supplied baseline because they match the intended repo fit, but their live-tree presence still needs direct verification before merge.
+> Relative links are preserved where the supplied baseline already used them. Their presence in the live tree still needs direct verification before merge.
 
 ### Upstream anchors
 
-| Surface | Why it matters |
-|---|---|
-| [`../README.md`](../README.md) | Root project contract, top-level navigation, and repo-wide posture |
-| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Change discipline, review expectations, and contribution flow |
-| [`../.github/README.md`](../.github/README.md) | CI/CD and collaboration context for merge-blocking verification |
-| [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | Ownership and review boundary for `/tests/` |
-| [`../contracts/README.md`](../contracts/README.md) | Contract and schema-adjacent source layer that tests must not silently drift away from |
-| [`../docs/README.md`](../docs/README.md) | Canonical documentation index and runbook surface |
-
-### Downstream surfaces
-
-| Surface | Intended responsibility | Status in this rewrite |
+| Surface | Why it matters | Status in this README |
 |---|---|---|
-| [`./unit/`](./unit/) | Deterministic local behavior and helper semantics | **INFERRED** from supplied baseline |
-| [`./integration/`](./integration/) | Cross-boundary verification slices | **INFERRED** from supplied baseline |
-| [`./contracts/`](./contracts/) | Contract schemas, examples, and invalid-fixture checks | **INFERRED** from supplied baseline; doctrine-backed |
-| [`./policy/`](./policy/) | Policy bundle, reason/obligation, and role-boundary tests | **INFERRED** from supplied baseline; doctrine-backed |
-| [`./accessibility/`](./accessibility/) | Trust-visible accessibility and reduced-motion checks | **INFERRED** from supplied baseline; doctrine-backed |
-| [`./reproducibility/`](./reproducibility/) | Deterministic rebuilds, bounded replay, and spec/digest stability | **INFERRED** from supplied baseline; doctrine-backed |
-| [`./e2e/`](./e2e/) | End-to-end governed proof across release, runtime, and correction | **INFERRED** from supplied baseline |
-| [`./e2e/release_assembly/`](./e2e/release_assembly/) | Promotion, manifest, and proof-pack completeness | **INFERRED** from March 2026 artifact plans; **NEEDS VERIFICATION** in live tree |
-| [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | Evidence drill-through, citation-negative behavior, and runtime outcome proof | **INFERRED** from March 2026 artifact plans; **NEEDS VERIFICATION** in live tree |
-| [`./e2e/correction/`](./e2e/correction/) | Supersession, withdrawal, rollback, and stale-visible propagation | **INFERRED** from March 2026 artifact plans; **NEEDS VERIFICATION** in live tree |
+| [`../README.md`](../README.md) | Root project contract and top-level navigation | **NEEDS VERIFICATION** in live tree |
+| [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | Change discipline, review flow, and contribution gates | **NEEDS VERIFICATION** in live tree |
+| [`../.github/README.md`](../.github/README.md) | Collaboration / workflow context for merge-blocking checks | **NEEDS VERIFICATION** in live tree |
+| [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | Review and ownership boundary for `/tests/` | **NEEDS VERIFICATION** in live tree |
+| [`../contracts/README.md`](../contracts/README.md) | Canonical contract layer that tests must not silently outrun | **NEEDS VERIFICATION** in live tree |
+| [`../docs/README.md`](../docs/README.md) | Documentation index and runbook surface | **NEEDS VERIFICATION** in live tree |
+
+### Adjacent and downstream surfaces
+
+| Surface | Intended relationship | Current status |
+|---|---|---|
+| [`./unit/`](./unit/) | Deterministic local semantics and helper behavior | **PROPOSED** starter family |
+| [`./contract/`](./contract/) | Schema, envelope, valid/invalid fixtures, and route contract checks | **PROPOSED** starter family |
+| [`./policy/`](./policy/) | Allow / deny / generalize / review-required behavior and rule fixtures | **PROPOSED** starter family |
+| [`./e2e/`](./e2e/) | End-to-end governed proof across release, runtime, and correction | **PROPOSED** starter family |
+| [`./regression/`](./regression/) | Screenshot/view/style/asset/tile/trust-state regression | **PROPOSED** starter family |
+| [`../fixtures/hydrology/`](../fixtures/hydrology/) | Public-safe first-slice fixtures used by multiple verification families | **PROPOSED** adjacent surface |
+| [`../docs/verification/`](../docs/verification/) | Verification matrices, doctrine notes, and checklists | **PROPOSED** adjacent surface |
+| [`../runbooks/restore-drill.md`](../runbooks/restore-drill.md) | Restore drill runbook referenced by e2e or release verification | **PROPOSED** adjacent surface |
 
 ## Accepted inputs
 
-Content that belongs in `tests/` includes:
+Content that belongs in or directly around `tests/` includes:
 
-- unit tests for deterministic local behavior
-- integration tests for governed slices across real boundaries
-- contract-validation tests for envelopes, examples, and invalid fixtures
-- policy tests for allow, deny, abstain, hold, generalize, and role-boundary behavior
-- accessibility-critical trust-surface checks
-- reproducibility and bounded-regression checks where spec hashes, digests, counts, or release linkages matter
-- end-to-end proof suites for release assembly, runtime trust, and correction behavior
-- thin fixtures that exist to execute or fail a gate
-- smoke, canary, stale-state, rollback, and correction drills tied to trust-bearing behavior
-- test-side notes, golden outputs, and harness artifacts that make governed expectations executable
+- unit suites for deterministic local behavior
+- schema and contract fixtures, including valid and invalid examples
+- policy outcome tests for `allow`, `deny`, `generalize`, and `review-required`
+- end-to-end flows for release assembly, runtime evidence resolution, and correction behavior
+- screenshot and saved-view baselines for trust cues, stale states, and cartographic regression
+- keyboard, reduced-motion, and trust-visible accessibility checks
+- public-safe hydrology fixtures or query packs used to exercise the first thin slice
+- thin helper code that exists to execute or fail a governed test or drill
 
 ## Exclusions
 
 The following do **not** belong here as authoritative source-of-truth content:
 
-- canonical contract or schema definitions  
+- canonical contracts, schemas, and vocabularies  
   → keep those under `../contracts/` and related schema surfaces
 
-- primary policy bundle sources, reason registries, reviewer-role maps, or governance registries  
+- primary policy bundles, reason registries, and stewardship rule sets  
   → keep those under `../policy/`
 
-- runtime application code, workers, resolvers, connectors, or UI components  
-  → keep those under app, package, runtime, or surface-specific directories
+- runtime application code, map components, API handlers, workers, or connectors  
+  → keep those in app / package / service directories
 
-- release artifacts, proof packs, manifests, SBOMs, and attestation bundles as the *primary* record  
+- release manifests, proof packs, correction notices, and audit records as the **primary** record  
   → emit them from their governed lanes and let tests consume or verify them
 
-- long-form architecture rationale, ADRs, or operator runbooks  
-  → keep those under `../docs/`
+- raw, work, quarantine, processed, catalog, or published data as storage truth  
+  → keep those in their truth-path zones
 
-- scratch files, one-off experiments, or unreviewed data dumps  
-  → keep them out of the governed verification surface
+- long-form runbooks or architecture rationale  
+  → keep those under `../docs/` or `../runbooks/`
 
 ## Directory tree
 
 > [!NOTE]
-> The tree below is the working contract carried forward from the supplied baseline and aligned to the March 2026 proof-family model. It is useful as repo-ready structure, but it still needs direct working-tree confirmation before merge.
+> The tree below is the **strongest currently visible proposed shape** from the March 20–21 manuals. It is more defensible than asserting older path names as if mounted, but it still needs direct repo inspection before merge.
 
 ```text
 tests/
 ├── README.md
-├── accessibility/
-│   └── README.md
-├── contracts/
-│   └── README.md
-├── e2e/
-│   ├── README.md
-│   ├── correction/
-│   ├── release_assembly/
-│   └── runtime_proof/
-├── integration/
-│   └── README.md
+├── unit/
+├── contract/
 ├── policy/
-│   └── README.md
-├── reproducibility/
-│   └── README.md
-└── unit/
-    └── README.md
+├── e2e/
+│   ├── release_assembly/
+│   ├── runtime_proof/
+│   └── correction/
+└── regression/
 ```
 
-This split is not decorative. It separates proof burdens that KFM treats differently: local semantics, boundary slices, contract drift, policy failure, trust-visible accessibility, reproducibility, release assembly, runtime proof, and correction behavior should not collapse into one undifferentiated test bucket.
+The `e2e/` subgroup names above are **PROPOSED scenario groupings**, not confirmed on-disk folders. A mounted repo may express them as subdirectories, tags, suites, or named drill packs.
+
+### Path variants to verify before merge
+
+| Carried-forward name from older baseline | Current evidence status | Recommended disposition |
+|---|---|---|
+| `tests/contracts/` | **NEEDS VERIFICATION** | Prefer `tests/contract/` unless the live tree proves plural naming |
+| `tests/integration/` | **NEEDS VERIFICATION** | Keep only if the live repo has a distinct boundary-slice family; otherwise absorb into `e2e/` or service-local suites |
+| `tests/accessibility/` | **NEEDS VERIFICATION** | Accessibility is a **CONFIRMED proof burden**, but current March 20 docs do not prove a dedicated top-level folder |
+| `tests/reproducibility/` | **NEEDS VERIFICATION** | Reproducibility and release-linkage are **CONFIRMED burdens**, but current March 20 docs do not prove a dedicated top-level folder |
 
 [Back to top](#tests)
 
 ## Quickstart
 
-### Safe inventory commands
+### Inspection-first inventory
 
-Use inspection-first commands that reveal what is present without assuming a specific test runner:
+Use read-only commands first. They reveal what exists without assuming a specific runner or CI shape.
 
 ```bash
 # inventory the visible tests surface
-find tests -maxdepth 4 \( -type f -o -type d \) | sort
+find tests -maxdepth 3 \( -type d -o -type f \) | sort
 
-# inspect adjacent governed surfaces that usually co-change with tests
-find tests contracts policy docs .github -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
+# inspect adjacent governed surfaces that often co-change with tests
+find fixtures/hydrology docs/verification runbooks .github/workflows -maxdepth 3 -type f 2>/dev/null | sort
 
-# recheck declared ownership and workflow surfaces
+# recheck ownership and workflow boundaries
 sed -n '1,220p' .github/CODEOWNERS 2>/dev/null
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 
-# locate core proof-object vocabulary across likely verification surfaces
-grep -RIn "source_descriptor\|ingest_receipt\|validation_report\|dataset_version\|catalog_closure\|decision_envelope\|review_record\|release_manifest\|EvidenceBundle\|runtime_response_envelope\|correction_notice" \
-  tests contracts policy docs .github 2>/dev/null || true
+# locate trust-bearing object vocabulary across likely verification surfaces
+grep -RIn "SourceDescriptor\|IngestReceipt\|ValidationReport\|DatasetVersion\|CatalogClosure\|DecisionEnvelope\|ReviewRecord\|ReleaseManifest\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice" \
+  tests fixtures docs runbooks 2>/dev/null || true
 
-# locate trust-visible negative states and runtime outcomes
-grep -RIn "ABSTAIN\|DENY\|ERROR\|stale-visible\|withdrawn\|superseded\|generalized\|review-required" \
-  tests policy docs ui 2>/dev/null || true
+# locate negative-state language and runtime outcomes
+grep -RIn "ABSTAIN\|DENY\|ERROR\|stale-visible\|withdrawn\|superseded\|correction-pending\|generalize\|review-required" \
+  tests docs apps 2>/dev/null || true
 ```
 
 ### First verification pass
 
-1. Confirm the actual `tests/` tree and sibling READMEs in the checked-out repo.
-2. Confirm which verification jobs are really merge-blocking.
-3. Confirm which families contain executable cases versus placeholder README contracts.
-4. Confirm whether contracts, policy bundles, examples, and tests move together in the same governed stream.
-5. Confirm whether at least one thin slice exercises release, runtime, and correction behavior end to end.
-6. Confirm whether the live repo already prefers another naming shape such as `tests/ui/`, shared fixture roots, or another layout that should replace inferred folder names here.
+1. Confirm the actual `tests/` tree and whether it matches the proposed `unit / contract / policy / e2e / regression` skeleton.
+2. Confirm whether `release_assembly`, `runtime_proof`, and `correction` exist as folders, scenario tags, or named drill packs.
+3. Confirm where screenshot baselines, public-safe hydrology fixtures, and restore/correction runbooks actually live.
+4. Confirm which checks are merge-blocking versus advisory only.
+5. Confirm whether accessibility, cartographic regression, and reduced-motion checks live under `tests/regression/`, `tests/ui/`, or another mounted location.
+6. Confirm whether any restore or correction drills have ever been exercised and archived.
 
 > [!TIP]
-> Prefer repo-native evidence over README prose. In KFM, a documented gate that has no mounted fixture, workflow, or proof object should still be treated as **PROPOSED** until the repo proves otherwise.
+> In KFM, repo-native evidence outranks README prose. If the mounted tree disagrees with this file, keep the proof burdens and update the paths.
 
 ## Usage
 
@@ -205,166 +206,146 @@ grep -RIn "ABSTAIN\|DENY\|ERROR\|stale-visible\|withdrawn\|superseded\|generaliz
 `tests/` is:
 
 - the repo-facing proof surface for governed behavior
-- the place where negative outcomes become first-class and testable
-- the seam where contracts, policy, release evidence, runtime trust, and correction expectations become executable
-- one of the places where KFM prevents derived convenience layers from silently outranking authoritative truth
-- part of the same trust system that includes release manifests, Evidence Bundles, runtime envelopes, correction notices, and documentation gates
+- one of the places where KFM turns doctrine into executable evidence
+- the seam where contracts, policy, cartography, runtime outcomes, and correction behavior become reviewable
+- a place where negative outcomes are first-class and testable instead of embarrassing edge cases
 
 ### What `tests/` is not
 
 `tests/` is **not**:
 
 - a substitute for authoritative schemas or policy bundles
-- a place to hide implementation uncertainty behind broad “coverage” language
-- a detached QA corner whose results do not affect promotion, publication, rollback, or correction
-- a dumping ground for artifacts better owned elsewhere
-- a place where public-safe behavior may be implied without proof objects
+- a generic “quality” folder detached from publication and correction law
+- a place to hide uncertain implementation state behind broad coverage language
+- a dump site for artifacts that should be owned by truth-path, release, or documentation surfaces
 
-### Where a new test should land
+### Place new work by burden, not habit
 
-Choose the smallest truthful family before inventing a new top-level folder:
-
-- use [`./unit/`](./unit/) for local, deterministic behavior and pure helper logic
-- use [`./integration/`](./integration/) when a real boundary matters: connector, store, resolver, API, or projection build
-- use [`./contracts/`](./contracts/) when the core risk is envelope, schema, example, or invalid-fixture drift
-- use [`./policy/`](./policy/) when the change affects rights, sensitivity, roles, denials, or reason/obligation grammar
-- use [`./accessibility/`](./accessibility/) when evidence reachability, keyboard flow, reduced-motion safety, or trust-visible state signaling is the main burden
-- use [`./reproducibility/`](./reproducibility/) when the burden is stable spec hashes, digests, counts, bounded replay, or rebuildability
-- use [`./e2e/release_assembly/`](./e2e/release_assembly/) when the question is promotion, manifest completeness, or proof-pack completeness
-- use [`./e2e/runtime_proof/`](./e2e/runtime_proof/) when the question is Evidence Bundle resolution, citation-negative behavior, or `ANSWER / ABSTAIN / DENY / ERROR`
-- use [`./e2e/correction/`](./e2e/correction/) when supersession, withdrawal, rollback, or stale-visible propagation must be exercised
+| Proof burden | Likely home | What it must prove |
+|---|---|---|
+| Deterministic local semantics | [`./unit/`](./unit/) | Pure transforms, helpers, selection logic, small adapters |
+| Schema / envelope / invalid-fixture gates | [`./contract/`](./contract/) | Object shape, valid vs invalid examples, contract drift, reason/obligation expectations |
+| Policy outcomes | [`./policy/`](./policy/) | `allow`, `deny`, `generalize`, `review-required`, role and sensitivity boundaries |
+| Release assembly | `./e2e/release_assembly/` or tagged `./e2e/` scenarios | Release manifest completeness, proof-pack linkage, post-deploy verify before trust |
+| Runtime proof | `./e2e/runtime_proof/` or tagged `./e2e/` scenarios | EvidenceBundle drill-through, citation-negative behavior, finite runtime outcomes |
+| Correction / rollback | `./e2e/correction/` or drill harnesses tied to `../runbooks/` | Visible stale / superseded / withdrawn / correction-pending propagation and recovery |
+| Trust-state, cartographic, and accessibility regression | [`./regression/`](./regression/) | Screenshots, saved views, style/assets, keyboard paths, reduced-motion behavior, trust cues |
 
 > [!TIP]
-> If the live repo already uses `tests/ui/`, shared `fixtures/`, or another established naming scheme, keep the repo’s proven structure and update this README to match it. Preserve the **proof burden**, not a guessed folder name.
+> If the live repo already has a dedicated `tests/integration/` family, keep it. The rule is not “force one tree”; the rule is “make each proof burden explicit and reviewable.”
+
+### Fixtures, baselines, and drill artifacts
+
+Keep fixtures realistic enough to catch the failures KFM actually cares about:
+
+- public-safe hydrology examples are preferred for first-slice regression and runtime packs
+- screenshot baselines should capture trust cues and failure states, not only attractive map views
+- invalid fixtures should be named by *why* they fail, not only by format
+- drill artifacts should preserve release context, decision IDs, and correction lineage rather than only pass/fail output
 
 ### Working rule for scaffolded families
 
-A present directory or placeholder README is not the same thing as active coverage. Treat scaffolded families as documented contract boundaries waiting for executable proof, not as coverage already earned.
+A present directory is not the same thing as earned coverage. Treat scaffolded folders, placeholder READMEs, and draft harnesses as contracts waiting for proof, not as maturity already achieved.
 
 ## Diagram
 
 ```mermaid
-flowchart TB
+flowchart LR
     SE["Source edge"] --> RAW["RAW"]
     RAW --> WQ["WORK / QUARANTINE"]
     WQ --> PROC["PROCESSED"]
     PROC --> CAT["CATALOG"]
     CAT --> PUB["PUBLISHED"]
-    PUB --> RT["Runtime & trust surfaces"]
+    PUB --> RT["Runtime / trust surfaces"]
 
     subgraph T["tests/"]
       U["unit/"]
-      I["integration/"]
-      C["contracts/"]
+      C["contract/"]
       P["policy/"]
-      AX["accessibility/"]
-      R["reproducibility/"]
-      RA["e2e/release_assembly/"]
-      RP["e2e/runtime_proof/"]
-      CR["e2e/correction/"]
+      E["e2e/"]
+      R["regression/"]
     end
 
     U -. local semantics .-> PROC
-    I -. boundary slices .-> PROC
-    C -. schema + invalid-fixture gates .-> CAT
-    P -. allow/deny/obligation checks .-> CAT
-    AX -. trust-visible evidence reachability .-> RT
-    R -. digest/spec-hash stability .-> PUB
-    RA -. manifest + proof-pack completeness .-> PUB
-    RP -. EvidenceBundle + runtime outcome proof .-> RT
-    CR -. rollback + correction propagation .-> RT
+    C -. schema + fixture + envelope gates .-> CAT
+    P -. allow / deny / generalize / review-required .-> CAT
+    E -. release assembly / runtime proof / correction .-> PUB
+    E -. evidence resolution + finite outcomes .-> RT
+    R -. screenshots / styles / accessibility / stale states .-> RT
 ```
 
 ## Operating tables
 
-### Family map
+### Verification family matrix
 
-| Family | Primary burden | First-class proof burden | Current posture in this rewrite |
-|---|---|---|---|
-| `unit/` | Deterministic local behavior | Local semantics, helper correctness, pure transforms | **INFERRED** from supplied baseline |
-| `integration/` | Governed boundary slices | Connector, resolver, API, storage, and projection seams | **INFERRED** from supplied baseline |
-| `contracts/` | Schema, example, and invalid-fixture drift | `source_descriptor`, `ingest_receipt`, `validation_report`, envelope validity | **INFERRED** path, doctrine-backed |
-| `policy/` | Deny-by-default and decision grammar | reason codes, obligation codes, allow/deny/generalize/review-required outcomes | **INFERRED** path, doctrine-backed |
-| `accessibility/` | Trust-visible UX obligations | evidence reachability, non-color-only cues, keyboard flow, reduced motion | **INFERRED** path, doctrine-backed |
-| `reproducibility/` | Stable rebuilds and bounded replay | spec hash, digest stability, bounded rerun behavior | **INFERRED** path, doctrine-backed |
-| `e2e/release_assembly/` | Release evidence and promotion readiness | `run_manifest`, `run_receipt`, `release_manifest`, proof-pack completeness | **INFERRED** path, March 2026 artifact-plan backed |
-| `e2e/runtime_proof/` | Runtime answer accountability | `EvidenceBundle`, `runtime_response_envelope`, citation-negative handling | **INFERRED** path, March 2026 artifact-plan backed |
-| `e2e/correction/` | Correction, supersession, rollback | `correction_notice`, stale-visible propagation, rollback evidence | **INFERRED** path, March 2026 artifact-plan backed |
-
-### Proof-object pressure by family
-
-| Proof object or behavior | First place to exercise it | Why it matters |
+| Family or lens | Minimum proof burden | Typical artifacts or fixtures |
 |---|---|---|
-| `source_descriptor`, `ingest_receipt`, `validation_report` | `contracts/`, `integration/`, `e2e/release_assembly/` | Intake must prove admissibility, replayability, and quarantine behavior before publication is even possible |
-| `dataset_version`, `catalog_closure`, `decision_envelope`, `review_record` | `contracts/`, `policy/`, `e2e/release_assembly/` | Promotion depends on deterministic identity, metadata closure, policy posture, and review evidence |
-| `EvidenceBundle`, `runtime_response_envelope` | `e2e/runtime_proof/`, `accessibility/` | KFM’s public trust boundary depends on evidence drill-through and accountable runtime outcomes |
-| `correction_notice`, rollback evidence, stale-visible propagation | `e2e/correction/`, `e2e/release_assembly/` | A system that proves only happy-path release is not yet trust-preserving |
+| `unit/` | Deterministic local behavior | focused fixtures, helper assertions, edge-case inputs |
+| `contract/` | Schema validity and route semantics | schemas, valid fixtures, invalid fixtures, payload traces |
+| `policy/` | Fail-closed outcome grammar | reason codes, obligation codes, allow/deny/generalize fixtures |
+| `e2e/` | Governed end-to-end trust loop | release manifest refs, evidence traces, correction notices, rollback records |
+| `regression/` | Trust-visible continuity under change | screenshots, saved views, style packs, reduced-motion and keyboard runs |
 
 ### Change-trigger matrix
 
-| If a PR changes… | Minimum verification expectation |
+| If a change touches… | Minimum verification expectation |
 |---|---|
-| contracts or schemas | schema gate, valid and invalid fixtures, representative contract tests, and no silent envelope drift |
-| policy bundles or registries | allow and deny cases, reason/obligation grammar checks, role-boundary cases, and fail-closed defaults |
-| source onboarding or connector logic | unit + integration coverage, replay checks, deterministic manifests/checksums, and representative policy labeling |
-| release or promotion logic | release assembly proof, documentation/runbook alignment, and correction/rollback readiness |
-| runtime answering, Focus, or Evidence Drawer behavior | runtime-proof coverage, citation-negative tests, Evidence Bundle drill-through, and visible negative-state handling |
-| trust-visible UI behavior | accessibility gate, keyboard path coverage, reduced-motion-safe trust cues, and no hidden bypass around evidence or policy |
-| docs that change governed behavior | documentation gate plus agreement across contracts, examples, runbooks, and test expectations |
+| contracts or schemas | schema validation, valid/invalid fixtures, route contract tests, no silent envelope drift |
+| policy bundles or review rules | allow/deny/generalize/review-required cases, role-boundary checks, fail-closed defaults |
+| map style or delivery assets | screenshot/view regression, asset reachability, legend/trust-cue continuity, stale/generalized states |
+| runtime synthesis or Evidence Drawer behavior | citation-negative tests, EvidenceBundle drill-through, visible finite outcomes |
+| release / promotion logic | proof-pack completeness, post-deploy verify, rollback and correction readiness |
+| docs that change trust-bearing behavior | docs gate plus agreement across contracts, examples, and verification expectations |
 
-### Negative-path proofs worth protecting early
+### Negative-path checks worth protecting early
 
 | Negative path | Why it matters |
 |---|---|
-| broken evidence resolution | prevents plausible but unsupported public claims |
-| citation-negative runtime response | ensures the system abstains, denies, or errors instead of bluffing support |
-| policy denial for restricted or sensitive material | proves fail-closed behavior under ambiguity |
-| stale projection visibility | prevents derived layers from silently outranking release truth |
-| correction / supersession drill | keeps rollback and correction visible instead of silently overwritten |
-| inaccessible trust cue | prevents “verified” behavior that users cannot actually inspect |
+| broken EvidenceBundle resolution | prevents plausible but unsupported public claims |
+| citation-negative runtime response | ensures the system abstains, denies, or errors instead of bluffing |
+| policy denial or generalization | proves fail-closed behavior under rights or sensitivity pressure |
+| stale / superseded / withdrawn state | keeps derived surfaces from silently outranking release truth |
+| correction drill | proves that historical integrity remains visible after change |
+| style / asset failure | avoids a blank or misleading map that hides trust context |
 
 ## Task list / Definition of done
 
 A healthy `tests/README.md` should make the directory more truthful, not more theatrical.
 
-- [ ] Recheck the live `tests/` tree, sibling README files, and owner metadata in the working repo before merge
-- [ ] Keep directory structure claims separate from unverified implementation maturity
-- [ ] Do not describe a family as active coverage unless executable cases exist in-tree
-- [ ] Keep contracts, policy bundles, fixtures, docs, and tests aligned for behavior-significant change
-- [ ] Prefer negative-path proof for trust-sensitive changes, not just happy-path confirmation
-- [ ] Preserve trust-visible accessibility under keyboard and reduced-motion paths
-- [ ] Maintain at least one correction or rollback drill for any trust-bearing thin slice
-- [ ] Update this README when a family is added, renamed, removed, or materially repurposed
+- [ ] Recheck the live `tests/` tree, sibling README files, and owner metadata before merge
+- [ ] Confirm whether `contract/`, `policy/`, `e2e/`, and `regression/` are the mounted names or only proposed names
+- [ ] Keep proof burdens explicit even if the live tree uses different folder names
+- [ ] Keep contracts, policy, fixtures, docs, and tests aligned for behavior-significant change
+- [ ] Prefer negative-path proof for trust-bearing work, not only happy-path confirmation
+- [ ] Keep screenshot baselines focused on trust cues and failure states
+- [ ] Maintain at least one rollback drill and one correction drill for any public-safe thin slice
+- [ ] Update this README whenever a verification family is added, renamed, removed, or materially repurposed
 
 ## FAQ
 
 ### Why does `tests/` talk about governed verification instead of generic QA?
 
-Because KFM treats verification as part of publication, runtime trust, and correction discipline. A suite here matters only if it helps prove that the system behaves safely, inspectably, and reversibly under both success and failure.
+Because KFM treats verification as part of truth-state transition, publication, runtime trust, rollback, and correction. A passing build that cannot prove those behaviors is still incomplete.
 
-### Why are some statements marked **INFERRED** or **NEEDS VERIFICATION**?
+### Why are some folder names marked **PROPOSED** or **NEEDS VERIFICATION**?
 
-Because the current session exposed PDFs only. The March 2026 manuals strongly confirm the doctrine, but they do not by themselves prove the current mounted repo tree, workflow inventory, or runtime coverage.
+Because the current session exposed PDFs only. The March 20–21 manuals strongly confirm the *burdens* that must be tested, but they do not directly prove the mounted repo tree.
 
-### Why keep `release_assembly`, `runtime_proof`, and `correction` separate?
+### Where do accessibility and reduced-motion checks live?
 
-Because they carry different burdens. Release assembly proves why a candidate was promotable, runtime proof proves why a response or surface state resolved the way it did, and correction proves that rollback, supersession, stale-visible behavior, and public-facing repair are real rather than rhetorical.
+They are a **CONFIRMED** proof burden. The strongest visible March 20 docs do not prove a dedicated top-level `tests/accessibility/` folder, so this README routes them through `regression/` unless the mounted repo proves another location.
 
-### Why do docs and accessibility appear in a tests README?
+### Why is hydrology still the preferred first thin slice?
 
-Because KFM explicitly treats documentation and accessibility as production verification surfaces whenever behavior-significant change affects trust-visible flows, Evidence Drawer reachability, or release/correction expectations.
+Because it is comparatively public-safe while still exercising source descriptors, validation, release evidence, Evidence Drawer drill-through, runtime outcomes, and correction/rollback behavior.
 
-### Should canonical examples live in `tests/`?
+### Do rollback and correction drills really belong in a tests README?
 
-Usually not. Canonical schema and policy sources should live with their own authoritative layers. `tests/` should consume them, execute them, or fail them.
-
-### Why is hydrology the preferred first thin slice?
-
-Because the mounted KFM manuals repeatedly treat hydrology as a public-safe, place/time-rich lane that can prove evidence drill-through, runtime accountability, and correction behavior without immediately front-loading the hardest stewardship and location-exposure burdens.
+Yes. In KFM they are not only ops runbooks; they are executable proof that the system can recover or correct without losing lineage or hiding state from users.
 
 ### What if the live repo already uses different names than this README?
 
-Prefer mounted repo truth. Replace inferred path names with the real layout, keep the proof burdens intact, and preserve the KFM distinction between doctrine, realization, and directly verified implementation.
+Prefer mounted repo truth. Keep the proof burdens intact, update the tree and links, and downgrade any stale path claim that the live repo does not support.
 
 [Back to top](#tests)
 
@@ -373,17 +354,15 @@ Prefer mounted repo truth. Replace inferred path names with the real layout, kee
 <details>
 <summary><strong>Appendix A — Evidence basis used for this README</strong></summary>
 
-This README was shaped primarily by the March 2026 KFM testing, verification, governed-delivery, master-manual, tooling, security, schema/contract, app-surface, and configuration layers.
+This README was revised against the strongest currently visible March 20–21, 2026 KFM layer:
 
-The strongest pressure came from the materials that do all of the following at once:
+- the replacement-grade master design manual for proposed repo skeleton, release law, verification model, and thin-slice sequencing
+- the expanded working manual for truth posture, proof-object gates, correction/rollback drills, and hydrology-first rationale
+- the unified geospatial architecture manual for map-specific verification, regression expectations, visible negative states, and the hydrology thin-slice blueprint
+- the MapLibre UI architecture report for trust-visible shell behavior, Evidence Drawer centrality, and accessibility/reduced-motion obligations
+- the Pass 5 atlas for project-wide doctrine, artifactization pressure, and the importance of keeping correction and negative states visible
 
-- treat verification as a cross-plane governance system rather than a narrow test suite
-- keep negative outcomes first-class
-- insist on evidence drill-through, runtime accountability, and visible correction lineage
-- prefer one public-safe hydrology slice over premature breadth
-- keep repo reality separate from doctrinal ambition when direct implementation evidence is absent
-
-Older continuity material was used only as corroboration for proposed path shapes and artifact plans, not as stronger authority than the March 16–19 mounted reference layer.
+The supplied baseline `tests/README.md` was preserved as the redesign starting point, but unsupported older folder claims were downgraded where stronger March 20 evidence pointed to a different proposed tree.
 
 </details>
 
@@ -392,26 +371,25 @@ Older continuity material was used only as corroboration for proposed path shape
 
 Before treating this README as fully settled repo documentation, verify:
 
-- the live `tests/` tree and sibling README files
-- `../.github/CODEOWNERS` ownership for `/tests/`
-- which families contain executable suites versus placeholder docs
-- actual workflow YAML and required checks that block merge or promotion
-- contract and fixture inventory for valid and invalid examples
-- sample proof objects, if any, for release, runtime, and correction lanes
-- whether accessibility tests live in `tests/accessibility/`, `tests/ui/`, or another mounted location
-- whether the hydrology-first thin slice already exists in part or at all
+- the mounted `tests/` directory tree and any sibling READMEs
+- whether `.github/README.md` and `.github/CODEOWNERS` exist at the preserved relative paths
+- which checks are actually merge-blocking
+- where screenshot baselines, hydrology fixtures, and drill runbooks live
+- whether accessibility, cartographic regression, and reduced-motion checks have a dedicated path
+- whether any rollback or correction drill has already been exercised and archived
 
 </details>
 
 <details>
-<summary><strong>Appendix C — How to revise this README if the mounted repo differs</strong></summary>
+<summary><strong>Appendix C — Reconciliation rule if the mounted repo differs</strong></summary>
 
-If direct repo inspection later shows a different file layout:
+If live repo inspection later proves a different layout:
 
-1. Keep the doctrinal distinctions: release assembly, runtime proof, correction, policy, accessibility, and reproducibility remain different proof burdens even if the directories are renamed.
-2. Downgrade any conflicting file-level proposal from **INFERRED** or **PROPOSED** to **UNKNOWN** until the live tree proves otherwise.
-3. Update relative links, tree examples, and family names to the mounted repo rather than forcing code to mimic placeholder documentation.
+1. keep the doctrinal distinctions between contract, policy, end-to-end governed proof, regression, and correction
+2. replace guessed paths with mounted paths immediately
+3. preserve the burden-first language even if folder names change
+4. downgrade any unsupported maturity claim to **UNKNOWN** until the repo proves otherwise
 
-The goal is not to preserve guessed paths. The goal is to preserve truthful governance language.
+The goal is not to preserve a guessed tree. The goal is to preserve truthful verification law.
 
 </details>
