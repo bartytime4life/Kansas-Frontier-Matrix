@@ -1,8 +1,8 @@
 # Kansas Frontier Matrix — CODEOWNERS
 # Current-tree-aligned baseline for the public repo.
-# Keep ownership broad and truthful to the visible tree.
-# Split into narrower path owners only after those paths exist in-repo
-# and the owners are verified with write access.
+# Kept broad and evidence-safe on purpose.
+# Split into narrower path owners only after the live tree is re-verified
+# and any additional owners are confirmed with write access.
 
 # Global fallback
 * @bartytime4life
@@ -10,95 +10,23 @@
 # Governance boundary and self-protection
 /.github/ @bartytime4life
 /.github/CODEOWNERS @bartytime4life
-/.github/actions/ @bartytime4life
-/.github/ISSUE_TEMPLATE/ @bartytime4life
-/.github/workflows/ @bartytime4life
 
-# Root governance / community files
+# Root governance / contributor surfaces
 /README.md @bartytime4life
 /CHANGELOG.md @bartytime4life
 /CONTRIBUTING.md @bartytime4life
-/CODE_OF_CONDUCT.md @bartytime4life
-/SECURITY.md @bartytime4life
-/LICENSE* @bartytime4life
 
-# Observed top-level repo surfaces
+# Confirmed repo-root surfaces
 /apps/ @bartytime4life
-/brand/ @bartytime4life
-/configs/ @bartytime4life
-/contracts/ @bartytime4life
-/data/ @bartytime4life
-/docs/ @bartytime4life
-/examples/ @bartytime4life
-/infra/ @bartytime4life
-/migrations/ @bartytime4life
 /packages/ @bartytime4life
+/contracts/ @bartytime4life
 /policy/ @bartytime4life
-/schemas/ @bartytime4life
-/scripts/ @bartytime4life
-/tests/ @bartytime4life
+/data/ @bartytime4life
+/infra/ @bartytime4life
+/docs/ @bartytime4life
 /tools/ @bartytime4life
-
-# Confirmed runtime and user-facing app surfaces
-/apps/api/ @bartytime4life
-/apps/ui/ @bartytime4life
-/apps/workers/ @bartytime4life
-
-# Confirmed contract surfaces
-/contracts/examples/ @bartytime4life
-/contracts/profiles/ @bartytime4life
-/contracts/schemas/ @bartytime4life
-
-# Confirmed data lifecycle and catalog surfaces
-/data/catalog/ @bartytime4life
-/data/dcat/ @bartytime4life
-/data/processed/ @bartytime4life
-/data/prov/ @bartytime4life
-/data/quarantine/ @bartytime4life
-/data/raw/ @bartytime4life
-/data/receipts/ @bartytime4life
-/data/registry/ @bartytime4life
-/data/specs/ @bartytime4life
-/data/stac/ @bartytime4life
-/data/work/ @bartytime4life
-
-# Confirmed docs subtrees already present and governance-sensitive
-/docs/architecture/ @bartytime4life
-/docs/governance/ @bartytime4life
-/docs/reports/ @bartytime4life
-/docs/runbooks/ @bartytime4life
-/docs/standards/ @bartytime4life
-/docs/templates/ @bartytime4life
-
-# Confirmed core domain and pipeline packages
-/packages/catalog/ @bartytime4life
-/packages/domain/ @bartytime4life
-/packages/evidence/ @bartytime4life
-/packages/indexers/ @bartytime4life
-/packages/ingest/ @bartytime4life
-/packages/policy/ @bartytime4life
-
-# Confirmed policy surfaces
-/policy/bundles/ @bartytime4life
-/policy/exceptions/ @bartytime4life
-/policy/fixtures/ @bartytime4life
-/policy/invalid/ @bartytime4life
-/policy/provenance/ @bartytime4life
-/policy/publication/ @bartytime4life
-/policy/runbooks/ @bartytime4life
-/policy/runtime/ @bartytime4life
-/policy/sensitivity/ @bartytime4life
-/policy/valid/ @bartytime4life
-
-# Confirmed schema surfaces
-/schemas/apis/ @bartytime4life
-/schemas/contracts/ @bartytime4life
-/schemas/deployment/ @bartytime4life
-/schemas/events/ @bartytime4life
-/schemas/examples/ @bartytime4life
-/schemas/invalid/ @bartytime4life
-/schemas/observability/ @bartytime4life
-/schemas/policy/ @bartytime4life
-/schemas/profiles/ @bartytime4life
-/schemas/tests/ @bartytime4life
-/schemas/valid/ @bartytime4life
+/tests/ @bartytime4life
+/configs/ @bartytime4life
+/scripts/ @bartytime4life
+/migrations/ @bartytime4life
+/examples/ @bartytime4life
