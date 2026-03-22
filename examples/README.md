@@ -4,123 +4,94 @@ title: examples
 type: standard
 version: v1
 status: draft
-owners: NEEDS VERIFICATION
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-policy_label: NEEDS VERIFICATION
-related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md]
+policy_label: public
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../contracts/, ../schemas/, ../policy/, ../tests/, ../docs/, ../data/, ../apps/]
 tags: [kfm, examples, fixtures, readme]
-notes: [mounted checkout not directly visible in this session; March 2026 doctrine and one March 2026 repo-inventory document confirm a documented examples lane, but owners, dates, policy label, adjacent link targets, and final path/placement details still require branch verification]
+notes: [Revised against the public GitHub main branch plus March 2026 KFM doctrine; /examples/ currently contains README.md only; created/updated dates and stable doc_id still need commit-history verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # examples
 
-Public-safe, non-authoritative sample datasets, example payloads, thin-slice illustrations, and demo assets for Kansas Frontier Matrix.
+Public-safe, non-authoritative examples and demo assets for Kansas Frontier Matrix.
 
-| Field | Value |
-|---|---|
-| Status | experimental |
-| Owners | **NEEDS VERIFICATION** |
-| Path | `examples/README.md` |
-| Repo fit | **CONFIRMED in March 2026 repo-inventory documentation; mounted checkout still NEEDS VERIFICATION** |
-| Upstream | [`../README.md`](../README.md) · [`../CONTRIBUTING.md`](../CONTRIBUTING.md) · [`../.github/README.md`](../.github/README.md) **(link targets NEED VERIFICATION)** |
-| Downstream | `examples/` subfolders and example packs that remain public-safe, non-authoritative, and easy to relocate once stronger owners are verified |
-| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix) |
-
-![status](https://img.shields.io/badge/status-experimental-orange)
-![owners](https://img.shields.io/badge/owners-NEEDS_VERIFICATION-lightgrey)
-![role](https://img.shields.io/badge/role-public--safe_examples-blue)
-![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey)
-![checkout](https://img.shields.io/badge/checkout-not__mounted__in__session-lightgrey)
-![evidence](https://img.shields.io/badge/evidence-March_2026_docs-green)
+> Status: Experimental  
+> Owners: `@bartytime4life`  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-examples%2FREADME.md-2d6cdf) ![authority](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![branch](https://img.shields.io/badge/branch-main-black) ![repo](https://img.shields.io/badge/repo-public-brightgreen)  
+> Quick jumps: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> Repo fit: `examples/README.md` · upstream [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md)
 
 > [!IMPORTANT]
-> This README is intentionally **evidence-bounded**.
+> This README is **repo-aware** and **evidence-bounded**.
 >
-> In this session, March 2026 KFM doctrine and design manuals were directly visible, and one March 2026 repo-inventory document also described a top-level `examples/` lane. The **active mounted checkout itself was not directly inspectable**, so file-path, owner, and adjacency claims below are split as:
+> The live public `main` branch confirms that `examples/` exists and currently contains `README.md` only. March 2026 KFM doctrine adds the governing rules that make this lane useful: examples must stay public-safe, non-authoritative, easy to inspect, and easy to relocate once a stronger owner surface exists.
 >
-> - **CONFIRMED** when they are directly supported by the visible March 2026 project documents
-> - **INFERRED** when they reconcile multiple source documents into a repo-native rule
-> - **PROPOSED** when they are recommended placement or workflow patterns, not mounted implementation fact
-> - **UNKNOWN** when current repo state or implementation depth is not established here
-> - **NEEDS VERIFICATION** when a path, owner, date, label, or link target must be checked against the active branch
+> Read statements here as:
 >
-> Nothing in `examples/` should masquerade as canonical truth, promoted data, policy truth, release proof, or rights-unclear source material.
+> - **CONFIRMED** — proven by the current visible repo or stable KFM doctrine
+> - **INFERRED** — strongly suggested by repo/doctrine alignment, but not directly re-run or re-emitted here
+> - **PROPOSED** — recommended next shape or usage pattern
+> - **UNKNOWN** — not established strongly enough from current evidence
+> - **NEEDS VERIFICATION** — placeholder or branch-local detail that should be checked before merge
 
 > [!NOTE]
-> The directly inspectable March 2026 corpus clearly confirms a proposed hydrology thin-slice pack at `examples/thin_slice/hydrology/`.
->
-> An alternative `thin-slice` spelling appeared in earlier draft material but was **not** re-verified in the directly inspected source set during this pass, so this README leaves that variant as **NEEDS VERIFICATION** instead of silently standardizing it.
+> Nothing in `examples/` should masquerade as canonical truth, release evidence, policy truth, or rights-unclear source material.
 
 ---
 
 ## Scope
 
-`examples/` is KFM’s **human-facing example lane**.
+`examples/` is KFM’s **public-safe example lane**.
 
-Its job is to make real system behavior easier to understand **without** turning examples into authority. In KFM terms, the directory should support the **governed truth path**, the **trust membrane**, and the **trust-visible product shell**—not weaken them.
+Its job is not to become a shadow data lake, a hidden fixture dump, or a second authority layer. Its job is to help contributors, reviewers, and maintainers understand how KFM artifacts and trust-visible surfaces are supposed to look **without** confusing sample material with promoted releases, authoritative contracts, or runtime truth.
 
 That keeps the scope intentionally narrow:
 
-- keep **small, inspectable, public-safe** example artifacts here
-- keep **authoritative, merge-blocking, or release-bearing** artifacts with their owning surface
-- keep **sensitive, rights-unclear, or canonical** material out
-- keep example packs aligned with the contracts, fixtures, policy rules, and trust-visible surfaces they illustrate
+- keep **small, inspectable, instructional** material here
+- keep **authoritative or executable** material with its owning surface
+- keep **sensitive, rights-unclear, or release-bearing** material out
+- keep example packs obviously **illustrative**, not canonical
 
-A good example in this directory should do three things well:
-
-1. explain something real
-2. stay visibly illustrative
-3. remain easy to move once a stronger owner surface is confirmed
-
-> [!TIP]
-> Treat `examples/` as part of repository truth, but **not** as the truth source.
+A healthy `examples/` lane improves contributor understanding while staying easy to delete, rename, or move later.
 
 [Back to top](#examples)
 
 ## Repo fit
 
-**Path:** `examples/README.md`
+`examples/README.md` is the directory README for KFM’s example lane.
 
-**Role in repo:** directory README for public-safe example material, demo assets, and thin-slice illustrations that help contributors understand KFM behavior.
+| Field | Value |
+| --- | --- |
+| Path | `examples/README.md` |
+| Branch | `main` |
+| Visibility | public |
+| Current contents | `README.md` only |
+| Role | cross-surface example lane for public-safe demos, walkthrough payloads, and instructional assets |
+| Upstream anchors | [../README.md](../README.md) · [../CONTRIBUTING.md](../CONTRIBUTING.md) · [../.github/README.md](../.github/README.md) |
+| Adjacent owner surfaces | [../contracts/](../contracts/) · [../schemas/](../schemas/) · [../policy/](../policy/) · [../tests/](../tests/) · [../docs/](../docs/) · [../data/](../data/) · [../apps/](../apps/) |
 
-### Why this directory exists
+### Why this lane exists
 
-The March 2026 KFM corpus repeatedly pushes toward **artifactization**: starter schemas, valid/invalid fixtures, example bundles, release proof objects, Evidence Drawer payloads, runtime envelopes, and one hydrology-first governed slice. This README gives those pressures a **clear explanatory landing zone** without stealing authority from contracts, tests, policy bundles, release artifacts, or canonical data movement.
-
-### Documented neighboring lanes
-
-The visible March 2026 project corpus describes a repo shape in which `examples/` sits beside stronger owner surfaces such as `docs/`, `contracts/`, `policy/`, and `tests/`. This README follows that documented directory logic while still treating the mounted checkout as unverified.
-
-| Neighbor lane | Documented role | Relationship to `examples/` |
-|---|---|---|
-| `contracts/` | API contracts and schemas | Move normative schema examples and spec-coupled payloads here |
-| `policy/` | authorization and policy code/fixtures | Move executable policy cases and merge-blocking policy fixtures here |
-| `docs/` | ADRs, runbooks, standards, human-readable guidance | Move long-form procedures and authoritative explanations here |
-| `tests/` | unit, integration, and e2e suites | Move CI-facing valid/invalid proof packs here |
-| `examples/` | sample datasets, stories, and policies in explanatory form | Keep only public-safe, non-authoritative examples here |
+KFM’s documentation and contract doctrine repeatedly push toward **named, typed, inspectable artifacts**: envelopes, manifests, bundles, proof objects, example payloads, and trust-visible UI states. `examples/` provides a small, repo-native place to show those things **as examples** without moving their authority away from contracts, tests, docs, policy, or governed data lanes.
 
 ### Stronger owner surfaces
 
-| Stronger owner surface | What belongs there | Why it should not default to `examples/` |
-|---|---|---|
-| `contracts/` | machine-readable contracts, schemas, outward profiles, contract examples tightly coupled to a spec | contract truth should stay versioned, diffable, and mechanically checked |
-| `tests/` and fixture-owning lanes | valid/invalid fixtures, negative-path packs, replay samples, merge-blocking examples | CI-facing proof belongs with the harness that enforces it |
-| `policy/` | reason codes, obligation codes, rights classes, sensitivity classes, policy fixtures, decision tests | executable governance should not hide inside a demo lane |
-| canonical truth-path lanes | `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, and `PUBLISHED` artifacts | canonical material is not example material |
-| governed app and API surfaces | live payloads, route-specific examples, trust-state examples tightly coupled to runtime behavior | runtime truth should stay with its owner |
-| `docs/` and runbooks | ADRs, operator procedures, publication/correction guides, explanatory standards | narrative authority belongs in docs, not in a sample lane |
+Use `examples/` only after checking whether one of the owner lanes below is the better home:
 
-### Working interpretation for this README
+| Stronger owner | What belongs there | Why it should not default to `examples/` |
+| --- | --- | --- |
+| `../contracts/` | stable API examples, shared object definitions, outward payload examples coupled to a contract | contract truth should stay versioned and reviewable where the contract lives |
+| `../schemas/` | schema files, schema-owned valid/invalid examples, compatibility rules | schema drift is harder to detect when examples are split away from the schema owner |
+| `../policy/` | executable policy bundles, reason/obligation registries, policy tests, decision grammar | governance should not hide in a demo lane |
+| `../tests/` | merge-blocking fixtures, negative-path packs, screenshot baselines, runtime verification packs | executable proof belongs with the harness that enforces it |
+| `../docs/` | walkthroughs, runbooks, ADRs, long-form explanation, screenshots with narrative context | narrative authority belongs in docs |
+| `../data/` | governed manifests, dataset-linked example artifacts, release-linked sample outputs, receipts | examples must not replace the truth path |
+| `../apps/` | runtime-owned UI/API behavior, surface-state examples tied tightly to implementation | app truth should stay near the app that renders or emits it |
 
-**INFERRED:** `examples/` is the repo’s **public-safe explanatory lane**.
-
-That means:
-
-- example packs may live here
-- machine-checkable truth should live closer to the surface that owns it
-- story or policy illustrations may live here **only** when they are clearly labeled as non-authoritative
-- exact file placement still needs mounted-checkout verification before any path is treated as settled implementation fact
+> [!TIP]
+> `examples/` is the cross-surface **demo lane**, not the universal home for every sample, fixture, or payload.
 
 [Back to top](#examples)
 
@@ -128,17 +99,20 @@ That means:
 
 Content that belongs here includes:
 
-- small, public-safe sample datasets or subsets used for walkthroughs
-- redacted example payloads for map, dossier, story, Evidence Drawer, or Focus surfaces
-- illustrative `EvidenceBundle`, `RuntimeResponseEnvelope`, `ProjectionBuildReceipt`, or `CorrectionNotice` samples when they are clearly labeled as examples
-- tiny sample objects that explain KFM contract families without pretending to be canonical records
-- public-safe example stories or thin-slice narratives that help contributors inspect trust-visible behavior
-- hydrology-first illustration packs when the goal is explanation rather than merge-blocking execution
-- screenshot, tutorial, or onboarding assets that help readers understand governed behavior
-- sidecar metadata that clarifies purpose, redaction state, stronger owner, and limits
-- **illustrative** policy or reason-code examples only when they are explanatory and not the executable policy fixture of record
+- small, public-safe request/response examples that explain a contract, route, or user flow
+- redacted example payloads for **Explorer**, **Timeline**, **Story**, **Dossier**, **Evidence Drawer**, **Focus**, **Compare**, **Export**, or **Review** surfaces
+- tiny walkthrough assets that help a contributor inspect KFM behavior without needing real source captures
+- demo manifests or sidecars that explain expected fields while staying clearly illustrative
+- instructional packs used in onboarding docs, screenshots, tutorials, or diagrams
+- public-safe thin-slice illustrations when they are explicitly marked as **illustrative** and not executable truth
+- temporary cross-surface examples that do not yet have a stronger owner surface, provided they are easy to move later
 
-A useful heuristic is simple: examples here should be **labeled**, **reviewable in one diff**, and **obviously illustrative**.
+A useful heuristic:
+
+- **illustrative**
+- **redacted or public-safe**
+- **small enough to review quickly**
+- **easy to relocate once a stronger owner exists**
 
 [Back to top](#examples)
 
@@ -146,128 +120,95 @@ A useful heuristic is simple: examples here should be **labeled**, **reviewable 
 
 The following do **not** belong here:
 
-- canonical `RAW`, `WORK`, `QUARANTINE`, `PROCESSED`, `CATALOG`, or `PUBLISHED` artifacts
-- release manifests, proof packs, attestation bundles, or correction records presented as operational truth
-- authoritative contract schemas or merge-blocking valid/invalid fixtures
-- executable policy fixtures, access rules, or review-decision logic
-- secrets, tokens, local environment files, or machine-specific configuration
-- rights-unclear, restricted, or precise sensitive-location material
-- large binaries, dumps, archives, or model files that add weight without review value
-- example payloads that imply verified route names, DTOs, manifests, or mounted schemas the checkout has not proved
-- narrative claims presented as authoritative fact without provenance and release context
-
-### Put these elsewhere instead
-
-| If the artifact is… | Prefer… |
-|---|---|
-| canonical truth-path material | the relevant canonical data or release surface |
-| machine-checkable contract material | `contracts/` or the contract-owning lane |
-| valid/invalid fixture coverage | `tests/` or the fixture-owning lane |
-| executable policy logic or policy fixtures | `policy/` |
-| long-form explanation or operational procedure | `docs/`, ADRs, or runbooks |
-| restricted, rights-unclear, or unresolved material | quarantine, review, or no Git placement yet |
+| Do not store here | Why | Put it instead in… |
+| --- | --- | --- |
+| canonical dataset versions, raw captures, or published catalog artifacts | examples must not replace the governed truth path | `../data/` and its governed sublanes |
+| authoritative schemas, policy bundles, or stable API contracts | these are authority-bearing, not illustrative | `../schemas/`, `../policy/`, `../contracts/` |
+| release manifests, proof packs, receipts, or correction notices presented as operational truth | these are evidence-bearing release objects | release, runtime, runbook, or governed data lanes |
+| merge-blocking valid/invalid fixtures | executable proof should stay with the enforcing harness | `../tests/`, `../schemas/`, or `../contracts/` |
+| secrets, tokens, environment files, or machine-local configuration | never commit secrets into example material | secret managers / environment provisioning |
+| rights-unclear, restricted, or precise sensitive-location material | KFM should fail closed under ambiguity | intake, review, quarantine, redaction, or no-Git placement |
+| large binaries, model weights, or convenience dumps | high weight, low review value | owner-specific artifact or storage surface |
+| narrative claims presented as fact without evidence, limits, or provenance context | violates KFM’s cite-or-abstain posture | docs or review drafts until evidence is attached |
 
 > [!WARNING]
-> If a file is needed to make CI fail, promotion pass, policy decide, or runtime truth resolve, it probably has a stronger owner than `examples/`.
+> If a file is needed to make CI fail, policy decide, promotion pass, or runtime truth resolve, it probably has a stronger owner than `examples/`.
 
 [Back to top](#examples)
 
 ## Directory tree
 
-### Conservative current view
+### Current verified shape
 
 ```text
 examples/
-└── README.md   # target of this revision; mounted contents still need verification
+└── README.md
 ```
 
-This README is designed to remain useful even if the lane is sparse.
+The current directory is intentionally minimal.
 
 <details>
-<summary><strong>Documented and PROPOSED growth shapes</strong></summary>
+<summary><strong>PROPOSED growth shapes</strong></summary>
 
-The visible March 2026 corpus documents a top-level `examples/` lane and also proposes a hydrology-first example pack. It separately emphasizes `contracts/`, `policy/`, `docs/`, and `tests/` as stronger owner surfaces.
+Use a larger shape only when the branch actually accumulates enough example material to justify it.
 
 ```text
-# Documented repo-context lanes from March 2026 inventory
-contracts/
-docs/
+# General cross-surface growth shape — illustrative only
 examples/
-policy/
-tests/
+├── api/
+├── story/
+├── ui/
+├── thin_slice/
+└── README.md
 ```
 
 ```text
-# March 14 proposed hydrology-first artifact pack
+# Doctrine-aligned hydrology illustration pack — PROPOSED, not current repo fact
 examples/
 └── thin_slice/
     └── hydrology/
-        ├── source_descriptor.json
-        ├── ingest_receipt.json
-        ├── dataset_version.json
-        ├── catalog_closure.json
-        ├── release_manifest.json
-        └── evidence_bundle.json
+        └── README.md
 ```
 
-```text
-# March 20 doctrine repeatedly pairs contracts with fixtures and runbooks
-contracts/
-tests/
-docs/
-└── runbooks/
-```
-
-Working rule for this README:
-
-- keep **public-safe explanatory packs** in `examples/`
-- keep **machine-checkable proof** with `tests/` or another owner surface
-- keep **normative contracts** with `contracts/`
-- keep **operational procedures** with `docs/` / runbooks
-- verify any exact mounted path before treating it as settled repo fact
+If a hydrology-first pack ever lands here, keep it **instructional only**. Executable hydrology fixtures, gates, and proof objects still belong with their owner surfaces—most often `../tests/`, `../contracts/`, `../schemas/`, `../data/`, or `../docs/runbooks/`.
 </details>
 
 [Back to top](#examples)
 
 ## Quickstart
 
-Verify the checkout first. Do **not** let this README settle path details that the active branch has not proved.
+Inspect the lane first. Do not assume it contains more than the checked-out branch proves.
 
 ```bash
-# See whether a repo checkout is actually mounted
-pwd
-git rev-parse --show-toplevel 2>/dev/null || echo "No mounted git checkout detected"
-
-# Inspect nearby top-level lanes if a checkout is present
-find . -maxdepth 2 -type d | sort
+# Inspect the current lane
+ls -la examples
+find examples -maxdepth 3 -type f | sort
 ```
 
-Inspect the example lane and the most likely stronger owner surfaces:
+Inspect stronger owner surfaces before adding new example material:
 
 ```bash
-# Example lane itself
-find examples -maxdepth 4 -print 2>/dev/null | sort || true
-
-# Likely stronger owner surfaces
-find contracts policy docs tests -maxdepth 3 -print 2>/dev/null | sort | sed -n '1,200p'
+# Check likely owner lanes first
+ls -la contracts schemas policy tests docs data apps
+find contracts schemas policy tests docs data apps -maxdepth 2 -type f | sort | sed -n '1,200p'
 ```
 
-Check what the active checkout actually uses before adding a thin-slice pack or example fixture:
+Use a verification-first local flow before documenting behavior as fact:
 
 ```bash
-git ls-files 'examples/**' 'contracts/**' 'policy/**' 'docs/**' 'tests/**' 2>/dev/null || true
+# Illustrative only — run only if analogous targets exist in your checkout
+make validate-schemas
+make test
+make sample-ingest SOURCE=example_fixture
 ```
 
 Before adding a new artifact, answer these questions:
 
 1. Is it public-safe and rights-clear?
-2. Is it obviously illustrative rather than authoritative?
-3. Would `contracts/`, `policy/`, `tests/`, `docs/`, or a canonical truth-path surface own it more naturally?
-4. If it demonstrates governed behavior, where is the owner surface that proves that behavior?
-5. Can it be moved or deleted later without breaking the repo’s source of truth?
-
-> [!NOTE]
-> The directly inspectable corpus confirms a proposed `examples/thin_slice/hydrology/` pack. Any alternative spelling should be verified in the mounted checkout before adoption.
+2. Is it obviously non-authoritative?
+3. Does it belong more naturally with `contracts/`, `schemas/`, `policy/`, `tests/`, `docs/`, `data/`, or `apps/`?
+4. If it demonstrates governed behavior, where is the owner surface that proves it?
+5. Can it be deleted or moved later without breaking the repo’s source of truth?
 
 [Back to top](#examples)
 
@@ -275,53 +216,55 @@ Before adding a new artifact, answer these questions:
 
 ### 1. Choose the owning surface first
 
-Start by deciding where the **source of truth** lives.
+Decide where the **source of truth** lives before you decide where the example should live.
 
-- If the material defines a contract or outward payload, its stronger owner is probably `contracts/`.
-- If it proves positive or negative behavior, its stronger owner is probably `tests/` or a fixture-owning lane.
-- If it carries policy logic or review-role semantics, its stronger owner is probably `policy/`.
-- If it is part of the governed lifecycle, it likely belongs with the canonical truth-path owner.
-- If it explains a user flow, runbook, or standards decision, `docs/` is usually better.
+- Contract- or schema-defining material usually belongs with `../contracts/` or `../schemas/`.
+- Policy-bearing examples usually belong with `../policy/`.
+- Executable positive/negative proof usually belongs with `../tests/`.
+- Governed data examples and manifest-linked objects usually belong with `../data/`.
+- UI walkthroughs and long-form explanation usually belong with `../docs/`.
+- Runtime-owned behavior examples often belong with `../apps/`.
 
-Put material in `examples/` only when the value is **instructional, public-safe, and cross-surface**.
+Put something in `examples/` only when its value is **instructional**, **cross-surface**, and **public-safe**.
 
-### 2. Keep examples small, labeled, and reversible
+### 2. Keep examples small and explicit
 
 A good example in this directory should be:
 
-- small enough to review quickly
-- labeled as `example`, `demo`, `illustrative`, `redacted`, or equivalent
-- explicit about what it proves and what it does **not** prove
-- easy to relocate once a stronger owner surface becomes available
+- tiny enough to inspect in one screenful or one diff
+- labeled as `illustrative`, `sample`, `redacted`, or `demo`
+- obvious about what it proves and what it does **not** prove
+- easy to replace, delete, or move later
 
-### 3. Keep examples aligned with the surfaces they illustrate
+### 3. Prefer paired examples for behavior-heavy changes
 
-KFM treats examples as part of the working system, not as disposable decoration.
+If the example exists to demonstrate validation, policy, or runtime behavior, prefer a pair:
 
-That means:
+- one happy-path example
+- one negative-path or constrained example
 
-- behavior-significant changes should update examples along with contracts, diagrams, runbooks, or trust-state guidance
-- published examples should still agree with the schemas or contracts they illustrate
-- version-sensitive facts should be visibly marked when they are not mount-verified
-- correction and stale/superseded behavior should stay visible rather than silently overwritten
+That keeps the examples lane aligned with KFM’s fail-closed posture instead of documenting only the polished path.
 
-### 4. Pair behavior-heavy examples with stronger proof
+### 4. Cross-link, do not duplicate authority
 
-If the example demonstrates validation, policy, publication, correction, or runtime behavior, do not leave it alone.
+A strong example should point back to:
 
-Link it back to:
+- the owning contract or schema
+- the relevant test lane
+- the governing doc or runbook
+- the relevant policy or review rule, when one exists
 
-- the owning contract
-- the relevant test or fixture lane
-- the governing runbook
-- the policy rule or review condition that makes the behavior valid
-- the release or correction context that keeps the example inspectable
+`examples/` should make the repo easier to navigate, not create a second unofficial authority layer.
 
-### 5. Prefer cross-links over duplicate authority
+### 5. Move examples out when they harden
 
-`examples/` should make the repo easier to navigate, not create a second authority layer.
+Move material out of `examples/` once it becomes:
 
-A strong example pack should point back to the owner surface, not replace it.
+- merge-blocking
+- schema-governing
+- release-bearing
+- tightly owned by one app, lane, or contract family
+- the only place where an important behavior is described
 
 [Back to top](#examples)
 
@@ -329,15 +272,19 @@ A strong example pack should point back to the owner surface, not replace it.
 
 ```mermaid
 flowchart TD
-    A[Candidate artifact] --> B{Public-safe and rights-clear?}
-    B -- No --> X[Do not place in examples/<br/>Route to quarantine, review, or no-Git placement]
-    B -- Yes --> C{Authoritative, merge-blocking,<br/>or executable truth?}
-    C -- Yes --> D[Move to stronger owner surface<br/>contracts · policy · tests · docs · canonical truth-path lane]
-    C -- No --> E{Cross-surface instructional value?}
-    E -- No --> F[Prefer owner README or docs/]
-    E -- Yes --> G[Store in examples/<br/>label as illustrative / demo / redacted]
-    G --> H[Link back to contract, test,<br/>runbook, policy, or release context]
-    H --> I[Keep examples aligned<br/>with trust-visible behavior]
+    A[Candidate example asset] --> B{Public-safe and rights-clear?}
+    B -- No --> X[Do not store in examples/<br/>Route through intake, review, quarantine, or no-Git placement]
+    B -- Yes --> C{Authoritative,<br/>merge-blocking,<br/>or release-bearing?}
+    C -- Yes --> Y[Store with stronger owner surface<br/>contracts · schemas · policy · tests · docs · data · apps]
+    C -- No --> D{Cross-surface instructional value?}
+    D -- No --> E[Prefer owner README or docs/]
+    D -- Yes --> F[Label as sample / illustrative / redacted / demo]
+    F --> G{Behavior-heavy?}
+    G -- Yes --> H[Pair with linked happy-path and negative-path examples]
+    G -- No --> I[Keep asset small and explicit]
+    H --> J[Cross-link to owner surfaces]
+    I --> J
+    J --> K[Store in examples/]
 ```
 
 [Back to top](#examples)
@@ -347,44 +294,26 @@ flowchart TD
 ### Placement matrix
 
 | Artifact class | Keep in `examples/`? | Stronger owner when authoritative | Why |
-|---|---|---|---|
-| Tiny redacted request/response sample | Yes | `contracts/` or runtime-owning lane | Good for walkthroughs; weak as source of truth |
-| Story or dossier demo payload | Yes, if public-safe | app/test/docs owner | Helpful for onboarding and review |
-| `EvidenceBundle` illustration | Yes, if clearly labeled | evidence/runtime/test lanes | Useful for UI review, unsafe as lone authority |
-| `RuntimeResponseEnvelope` illustration | Yes, if clearly labeled | contract + API + test lanes | Good for trust-state explanation |
-| Valid schema/contract fixture | Usually no | `tests/` or contract-owning lane | Should stay mechanically checked |
-| Invalid schema/contract fixture | Usually no | `tests/` or policy/contract lane | Negative behavior should stay executable |
-| Explanatory policy example | Sometimes | `policy/` | Only belongs here when clearly non-authoritative |
-| Hydrology thin-slice illustration pack | Sometimes | test, contract, or release-owning lane | Good here only when explanatory and public-safe |
-| Canonical dataset snapshot | No | governed truth-path owner | Examples must not replace the truth path |
-| Release manifest / proof pack / correction notice | No, unless explicitly illustrative and marked non-authoritative | release, delivery, or ops evidence surface | These are trust-bearing operational objects |
-| Sensitive coordinates / rights-unclear material | No | nowhere in Git until resolved | Violates KFM trust posture |
-| Screenshot or UI walkthrough asset | Yes, if public-safe | `docs/` or app owner | Useful when it supports, not replaces, real behavior |
+| --- | --- | --- | --- |
+| Tiny redacted API example | Yes | `../contracts/` or `../apps/` | Great for walkthroughs; weak as source of truth |
+| Demo Explorer / Focus / Evidence Drawer payload | Yes, if public-safe | `../apps/` plus `../tests/` and `../docs/` | Helpful for onboarding and review |
+| Valid schema example | Sometimes | `../schemas/` or `../tests/` | Canonical validation ownership should stay near the schema or harness |
+| Invalid fixture / failure case | Sometimes | `../tests/` or `../contracts/` | Negative behavior should stay executable somewhere reviewable |
+| Example `EvidenceBundle` / envelope sketch | Yes, if clearly illustrative | `../contracts/`, `../data/`, or runtime docs | Useful for explanation; risky if treated as live truth |
+| Hydrology thin-slice walkthrough asset | Sometimes | `../tests/`, `../data/`, or `../docs/runbooks/` once it hardens | Good for explanation; poor home for executable proof |
+| Canonical dataset snapshot | No | `../data/` | Examples must not replace governed truth |
+| Release manifest / proof pack / correction artifact | No | release, runtime, or governed data surface | These are operational trust objects |
+| Secret-bearing or rights-unclear material | No | nowhere in Git until resolved | Violates KFM trust posture |
 
-### Path-shape status matrix
-
-| Path family | Status in this README | How to treat it here |
-|---|---|---|
-| `examples/` | **CONFIRMED in March 2026 repo-inventory documentation; mounted checkout still NEEDS VERIFICATION** | Use as documented repo context, not as branch-proven mount state |
-| `examples/README.md` | **Task target / branch placement still NEEDS VERIFICATION** | Suitable README target for this lane |
-| `examples/thin_slice/hydrology/` | **PROPOSED** | Directly supported as a proposed hydrology-first artifact pack |
-| `examples/thin-slice/hydrology/` | **NEEDS VERIFICATION** | Do not standardize this spelling from the current evidence set |
-| `contracts/` | **CONFIRMED in March 2026 repo-inventory documentation** | Strong owner for normative contracts and schemas |
-| `policy/` | **CONFIRMED in March 2026 repo-inventory documentation** | Strong owner for executable policy rules and fixtures |
-| `tests/` | **CONFIRMED in March 2026 repo-inventory documentation** | Strong owner for valid/invalid and runtime proof packs |
-| `docs/runbooks/` | **INFERRED / PROPOSED** | Consistent home for operational guidance; verify exact mount path |
-| `schemas/*.schema.json` and `fixtures/valid|invalid/*` | **PROPOSED starter family in March 2026 doctrine** | Treat as companion-path pressure, not mounted fact |
-| repo-path standardization itself | **DEFERRED until checkout verification** | Do not let README prose settle unresolved branch reality |
-
-### Status language used here
+### Status guide for this directory
 
 | Label | Use here when… |
-|---|---|
-| **CONFIRMED** | the visible March 2026 project documents directly support the statement |
-| **INFERRED** | multiple visible project documents converge on the rule, but the mounted checkout is still absent |
-| **PROPOSED** | the shape is a recommended artifact or placement pattern, not proven implementation reality |
-| **UNKNOWN** | current repo state, owner placement, or implementation depth is not established here |
-| **NEEDS VERIFICATION** | a placeholder field, link target, owner, or exact path must be checked before commit |
+| --- | --- |
+| **CONFIRMED** | the current repo or stable KFM doctrine directly proves the statement |
+| **INFERRED** | repo shape plus doctrine strongly suggest the statement, but the exact branch-local behavior is not re-run here |
+| **PROPOSED** | the shape is a sensible next step, not present branch fact |
+| **UNKNOWN** | ownership, implementation depth, or content presence is not verified strongly enough |
+| **NEEDS VERIFICATION** | a placeholder value, date, path detail, or branch-local fact should be checked before merge |
 
 [Back to top](#examples)
 
@@ -393,41 +322,43 @@ flowchart TD
 A contribution to `examples/` is ready when all relevant checks below are true:
 
 - [ ] It is public-safe, rights-clear, and small enough to review quickly.
-- [ ] It is labeled as **example**, **demo**, **illustrative**, **redacted**, or equivalent.
+- [ ] It is labeled as `example`, `demo`, `redacted`, `illustrative`, or equivalent.
 - [ ] It does not pretend to be canonical truth, a promoted dataset, or release evidence.
-- [ ] The stronger owner surface is identified and linked when one exists.
-- [ ] If it demonstrates behavior, the related contract, test, policy, runbook, or release context is linked.
-- [ ] Published examples still agree with the schemas or contracts they illustrate.
-- [ ] If it is a thin-slice illustration pack, a reviewer can move from example read -> evidence -> release or correction context without a trust gap.
-- [ ] If a negative path matters, the failing example exists in a stronger owner surface.
+- [ ] The stronger owner surface was checked first.
+- [ ] The owning surface is identified and linked when one exists.
+- [ ] If it demonstrates behavior, the related schema, contract, test, policy, or runbook is linked.
+- [ ] If a negative case matters, a failing or constrained example exists somewhere reviewable.
 - [ ] No secrets, tokens, local machine paths, or restricted precise coordinates are embedded.
-- [ ] If trust-visible surface behavior changes, the documentation/accessibility implications are updated too.
 - [ ] The example improves contributor understanding more than it increases maintenance cost.
-- [ ] Relocation or deletion is easy once the stronger owner surface is confirmed.
+- [ ] Deletion or relocation will be easy once the stronger owner surface becomes clearer.
 
 [Back to top](#examples)
 
 ## FAQ
 
-### Why can this directory stay small?
+### Why can this directory stay almost empty?
 
-Because a narrow, honest example lane is still useful. The directory can clarify what belongs here and what must stay with stronger owner surfaces even before it holds many files.
-
-### Where should valid and invalid fixtures live?
-
-Prefer the strongest owner surface. March 2026 KFM doctrine repeatedly treats valid/invalid fixtures as machine-checkable proof, not as loose sample clutter.
+Because the lane still has value even when it contains only its README. It tells contributors where safe example material belongs, and just as importantly, where it does **not** belong.
 
 ### Why not store real dataset snapshots here?
 
-Because KFM separates examples from authoritative truth. Governed data belongs in the truth path and its owning release/data surfaces, not in a convenience lane.
+Because KFM separates examples from authoritative truth. Governed data belongs in the truth path and its owner surfaces, not in a convenience folder.
 
-### Why hydrology first?
+### Where should executable fixtures live?
 
-Because the visible March 2026 corpus repeatedly treats hydrology as the strongest public-safe thin slice: it is specific enough to build, broad enough to prove the governed path, and rich enough to exercise Evidence Drawer, release proof, correction, and rollback behavior.
+With the owner that enforces them. In practice that usually means `../tests/`, `../schemas/`, `../contracts/`, or `../policy/`.
+
+### Can screenshots or demo assets live here?
+
+Yes, when they are public-safe, small, clearly labeled, and not the only place where important behavior is described.
+
+### Why mention hydrology here at all?
+
+Because KFM’s March 2026 doctrine repeatedly treats hydrology as the strongest first thin slice. This README reflects that pressure, but keeps hydrology-in-`examples/` strictly **PROPOSED** and **illustrative** unless the branch proves otherwise.
 
 ### When should something move out of `examples/`?
 
-Move it once it becomes authoritative, merge-blocking, schema-governing, release-bearing, or tightly owned by one surface.
+Move it once it becomes authoritative, merge-blocking, schema-governing, release-bearing, or tightly bound to one owner surface.
 
 [Back to top](#examples)
 
@@ -443,18 +374,18 @@ example_id: NEEDS-VERIFICATION
 title: Example title
 purpose: Short sentence explaining what this demonstrates
 authority_status: illustrative
-owner_surface: contracts/ | policy/ | tests/ | docs/ | app-runtime-owner | canonical-truth-path-owner
+owner_surface: ../contracts/ | ../schemas/ | ../policy/ | ../tests/ | ../docs/ | ../data/ | ../apps/
 redaction_status: public_safe
-related_contracts: []
-related_tests: []
-related_policies: []
-related_runbooks: []
-related_release_artifacts: []
-source_state: documented_or_proposed
+source_links:
+  - ../README.md
+  - ../CONTRIBUTING.md
+validation_links:
+  - ../schemas/
+  - ../tests/
 notes:
   - Replace placeholders before commit
   - Link the stronger owner surface when known
-  - Re-check exact path and branch placement before standardizing filenames
+  - Re-check branch-local path assumptions before standardizing filenames
 ```
 
 A sidecar should reduce ambiguity, not add ceremony.
@@ -470,7 +401,6 @@ Prefer names that tell a reviewer what the asset is doing:
 - `story-citation-example.md`
 - `catalog-closure-example.json`
 - `redacted-feature-example.geojson`
-- `hydrology-evidence-bundle-example.json`
 
 Avoid names that imply authority or production state:
 
@@ -482,18 +412,19 @@ Avoid names that imply authority or production state:
 </details>
 
 <details>
-<summary><strong>Evidence caution for path standardization</strong></summary>
+<summary><strong>Doctrine-driven note on hydrology-first examples</strong></summary>
 
-The current source set supports **documented repo context** plus **proposed artifact pressure**.
+KFM doctrine repeatedly treats hydrology as the best first thin slice because it is public-safe often enough to prove the governed path without immediately forcing the hardest rights burdens.
 
-Directly inspectable evidence in this pass supports at least these points:
+That does **not** mean `examples/` should automatically become the hydrology lane.
 
-- a documented top-level `examples/` lane in March 2026 repo-inventory material
-- a proposed hydrology-first pack at `examples/thin_slice/hydrology/`
-- documented stronger owner surfaces such as `contracts/`, `policy/`, and `tests/`
-- proposed doctrine pressure for `schemas/*.schema.json`, `fixtures/valid/*`, `fixtures/invalid/*`, and `docs/runbooks/*`
+Working rule:
 
-Do not let this README silently settle any unresolved branch-level path debate. Surface the active checkout first, then align the file to the mounted repo without weakening contract ownership, fixture ownership, policy ownership, or truth-path discipline.
+- instructional hydrology walk-through assets may live here
+- executable hydrology fixtures should stay with `../tests/` or another owner surface
+- authoritative hydrology releases, manifests, bundles, and correction artifacts should stay with governed data, contract, runtime, or runbook owners
+
+Keep the examples lane explanatory. Keep proof-bearing hydrology artifacts with their enforcing owners.
 </details>
 
 [Back to top](#examples)
