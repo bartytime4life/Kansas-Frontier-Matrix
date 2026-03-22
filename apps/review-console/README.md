@@ -1,0 +1,3 @@
+# review console
+
+Scaffold directory defined from repository README guidance.
