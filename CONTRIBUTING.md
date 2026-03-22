@@ -8,50 +8,50 @@ owners: <NEEDS-VERIFICATION>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: <NEEDS-VERIFICATION>
-related: [README.md, <NEEDS-VERIFICATION:apps/api/>, <NEEDS-VERIFICATION:docs/>, <NEEDS-VERIFICATION:contracts/>, <NEEDS-VERIFICATION:policy/>, <NEEDS-VERIFICATION:tests/>, <NEEDS-VERIFICATION:infra/>, <NEEDS-VERIFICATION:.github/>]
+related: [README.md, .github/README.md, CODE_OF_CONDUCT.md, SECURITY.md, .github/CODEOWNERS, .github/PULL_REQUEST_TEMPLATE.md, .github/workflows/, apps/, brand/, configs/, contracts/, data/, docs/, examples/, infra/, migrations/, packages/, policy/, schemas/, scripts/, tests/, tools/]
 tags: [kfm, contributing, governance, evidence-first, docs]
-notes: [Mounted workspace evidence in the current session exposed PDF doctrine only; repo tree, owners, exact dates, branch protections, local commands, and downstream paths still need verification.]
+notes: [Current-session evidence confirmed the public GitHub root and .github inventory plus the attached KFM doctrine corpus; owners, dates, policy label, exact required checks, branch protections, nested manifests, and local command surface still need direct verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # Contributing to Kansas Frontier Matrix
 
-Build KFM upward without breaking the truth path, the trust membrane, or the evidence contract.
+Build KFM upward without weakening the governed truth path, trust membrane, or evidence contract.
 
 > [!IMPORTANT]
-> This guide is written to be commit-ready **without pretending repo state that was not directly verified in the current session**. In this session, the mounted workspace exposed KFM PDF doctrine and supporting reference material, but **not** a directly inspectable repo checkout, schema tree, workflow directory, or runtime logs. Treat path references beyond this file as **PROPOSED** until the mounted repo confirms them.
+> This guide is repo-grounded and evidence-bounded. In this session, the public GitHub repository was inspected for root-level structure and `.github/` control surfaces, and the attached March 2026 KFM doctrine corpus was reviewed. Exact workflow YAML contents, required checks, branch protection, nested package/app inventories, local commands, and runtime behavior still need direct checkout verification.
 
 ## Impact block
 
-**Status:** experimental  
+**Status:** active  
 **Owners:** `NEEDS VERIFICATION`  
 **Path:** `./CONTRIBUTING.md`
 
-![Status](https://img.shields.io/badge/status-experimental-lightgrey)
+![Status](https://img.shields.io/badge/status-active-success)
 ![Evidence](https://img.shields.io/badge/evidence-first-blue)
-![Governance](https://img.shields.io/badge/governance-steward_review-orange)
-![Truth%20Posture](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
-![Workspace](https://img.shields.io/badge/workspace-PDF%20corpus%20only-red)
+![Governance](https://img.shields.io/badge/governance-review--bounded-orange)
+![Truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-6f42c1)
+![Branch](https://img.shields.io/badge/branch-main-black)
 ![Docs](https://img.shields.io/badge/docs-production%20surface-purple)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 ---
 
 ## Scope
 
-This guide sets the contribution rules for code, contracts, datasets, stories, UI work, policy changes, and runtime-facing changes in Kansas Frontier Matrix.
+This guide sets the contribution rules for code, contracts, datasets, stories, UI work, policy changes, docs, workflows, and runtime-facing changes in Kansas Frontier Matrix.
 
-It is written for contributors, reviewers, stewards, and operators who need one practical rulebook for making changes **without weakening evidence, review, or publication discipline**.
+It is written for contributors, reviewers, stewards, and operators who need one practical rulebook for making changes without weakening evidence, review, publication discipline, or correction lineage.
 
 ### Truth posture used in this guide
 
 | Label | Use it when |
 |---|---|
-| **CONFIRMED** | Directly supported by mounted project evidence or authoritative KFM doctrine visible in the current session. |
-| **INFERRED** | Strongly implied by repeated doctrine or contributor-facing KFM materials, but not directly verified in the mounted repo tree. |
+| **CONFIRMED** | Directly supported by current repo evidence inspected in this session or by attached KFM doctrine. |
+| **INFERRED** | Strongly suggested by repeated project doctrine or current repo documentation, but not directly rechecked from a full local checkout. |
 | **PROPOSED** | Recommended design or implementation direction consistent with KFM doctrine, but not verified as current mounted implementation. |
 | **UNKNOWN** | Not verified strongly enough in the current session to present as fact. |
-| **NEEDS VERIFICATION** | A specific owner, path, command, branch rule, or runtime fact must be checked before merge or release. |
+| **NEEDS VERIFICATION** | A specific owner, path, command, check, protection rule, or runtime detail must be checked before merge or release. |
 
 ### Non-negotiable KFM rules
 
@@ -59,10 +59,10 @@ It is written for contributors, reviewers, stewards, and operators who need one 
 - **Preserve the trust membrane.** UI and external clients do not bypass governed APIs, policy checks, or evidence resolution.
 - **Cite or abstain.** Story claims, public surfaces, and Focus responses must resolve to policy-safe evidence or fail closed.
 - **Fail closed.** Rights ambiguity, unresolved sensitivity, broken provenance, or failed validation block promotion.
-- **Treat docs as production surface.** Behavior-significant changes update documentation in the same change set, or the PR explains why not.
+- **Treat docs as a production surface.** Behavior-significant changes update documentation in the same change set, or the PR explains why not.
 
 > [!CAUTION]
-> Convenience is not a justification for uncited AI output, silent contract drift, direct store access, publish-first cleanup, or unreviewed policy-significant release behavior.
+> Convenience is not a justification for uncited AI output, silent contract drift, direct store access, publish-first cleanup, hidden review bypasses, or unreviewed policy-significant release behavior.
 
 [Back to top](#contributing-to-kansas-frontier-matrix)
 
@@ -70,26 +70,52 @@ It is written for contributors, reviewers, stewards, and operators who need one 
 
 ## Repo fit
 
-**Path:** `./CONTRIBUTING.md`  
-**Role in repo:** root-level contributor and review guide  
-**Upstream:** [README.md](README.md)  
-**Expected adjacent surfaces (PROPOSED until repo mount confirms them):** [apps/api/](apps/api/) · [docs/](docs/) · [contracts/](contracts/) · [policy/](policy/) · [tests/](tests/) · [infra/](infra/) · [.github/](.github/)
+| Item | Value |
+|---|---|
+| **Path** | `./CONTRIBUTING.md` |
+| **Role in repo** | Root-level contributor and review guide |
+| **Upstream** | [README.md](README.md) |
+| **Adjacent governance surfaces** | [.github/README.md](.github/README.md) · [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) · [SECURITY.md](SECURITY.md) · [.github/CODEOWNERS](.github/CODEOWNERS) · [.github/PULL_REQUEST_TEMPLATE.md](.github/PULL_REQUEST_TEMPLATE.md) |
+| **Adjacent control-plane directories** | [.github/workflows/](.github/workflows/) · [.github/ISSUE_TEMPLATE/](.github/ISSUE_TEMPLATE/) · [.github/actions/](.github/actions/) |
+| **Confirmed root directories** | [apps/](apps/) · [brand/](brand/) · [configs/](configs/) · [contracts/](contracts/) · [data/](data/) · [docs/](docs/) · [examples/](examples/) · [infra/](infra/) · [migrations/](migrations/) · [packages/](packages/) · [policy/](policy/) · [schemas/](schemas/) · [scripts/](scripts/) · [tests/](tests/) · [tools/](tools/) |
+
+### Current evidence boundary for this file
+
+| Evidence layer | Status | What this guide treats as settled |
+|---|---|---|
+| Public GitHub root inventory | **CONFIRMED** | Root-level directories and governance files listed in this document |
+| Public `.github/` inventory | **CONFIRMED** | Presence of `ISSUE_TEMPLATE/`, `actions/`, `workflows/`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, `README.md`, `SECURITY.md`, and `dependabot.yml` |
+| Attached KFM doctrine corpus | **CONFIRMED** | Truth path, trust membrane, cite-or-abstain, fail-closed posture, docs-as-production-surface |
+| Exact workflow YAML set and required checks | **UNKNOWN / NEEDS VERIFICATION** | Do not name required checks, merge gates, or deployment approvals as facts until re-read from the checkout or GitHub settings |
+| Nested app/package/contract/data structure | **INFERRED / PROPOSED** | Treat deeper inventories as working expectations, not settled repo fact |
 
 > [!NOTE]
-> The mounted repo tree was **not** directly visible in the current session. The relative links above reflect the strongest contributor-oriented KFM shape found in the corpus and should be adjusted if the checked-out repository differs.
+> This revision corrects the biggest repo-fit weakness in the prior draft: the current public repository confirms a richer root layout than the old “PROPOSED until mounted” tree implied. Nested inventories still need direct verification before they are promoted to **CONFIRMED**.
+
+[Back to top](#contributing-to-kansas-frontier-matrix)
 
 ---
 
-## Inputs
+## Accepted inputs
 
-This file accepts contribution guidance for:
+This file accepts contributor guidance for:
 
 - architecture-significant code changes
 - governed data and source onboarding work
 - policy, verification, and release-gate changes
 - UI, map, story, Evidence Drawer, dossier, and Focus Mode work
 - documentation, ADR, runbook, and workflow updates
-- infrastructure, delivery, and observability changes
+- infrastructure, delivery, security, and observability changes
+
+### What belongs here
+
+| Contribution family | Typical examples |
+|---|---|
+| **Contracts and policies** | schema updates, route-boundary changes, policy bundles, fixtures, reason/obligation vocabularies |
+| **Runtime surfaces** | API changes, UI shell changes, Focus behavior, Evidence Drawer payloads |
+| **Governed data work** | source descriptors, ingest rules, validation logic, release-bearing derived artifacts |
+| **Docs and governance memory** | ADRs, runbooks, architecture docs, contributor guidance, correction procedures |
+| **Delivery and operations** | CI/CD, rollback mechanics, observability joins, release proof-pack updates |
 
 ---
 
@@ -102,72 +128,139 @@ This file must **not** become:
 - a secrets or environment-credential guide
 - a changelog or release note substitute
 - a pile of local machine trivia that belongs in runbooks or environment docs
-- a place to hide uncertainty about repo state, workflow names, or implementation depth
+- a place to hide uncertainty about repo state, workflow names, implementation depth, or platform settings
+
+### Where those things go instead
+
+| If you need to document… | Put it in… |
+|---|---|
+| exact API or schema content | `contracts/`, `schemas/`, and their owning docs |
+| policy rule bodies or fixtures | `policy/` and policy-focused docs |
+| environment or deployment wiring | `infra/`, `configs/`, runbooks, or security docs |
+| release notes or historical changes | `CHANGELOG.md` |
+| conduct expectations | `CODE_OF_CONDUCT.md` |
+| disclosure and security reporting | `SECURITY.md` |
+
+[Back to top](#contributing-to-kansas-frontier-matrix)
 
 ---
 
 ## Directory tree
 
-Below is the strongest **contributor-oriented repo shape** surfaced by the corpus. Treat it as **PROPOSED** until the mounted repo confirms it.
+Below is the **current confirmed root shape** plus the **confirmed `.github/` surface** visible from the public repository.
 
 ```text
 .
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   ├── actions/
+│   ├── workflows/
+│   ├── CODEOWNERS
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── README.md
+│   ├── SECURITY.md
+│   └── dependabot.yml
 ├── apps/
-│   ├── api/
-│   ├── ui/
-│   └── workers/
+├── brand/
+├── configs/
 ├── contracts/
-│   ├── openapi/
-│   ├── schemas/
-│   └── catalog-profiles/
 ├── data/
-│   ├── registry/
-│   ├── raw/
-│   ├── work/
-│   ├── processed/
-│   ├── catalog/
-│   └── receipts/
 ├── docs/
-│   ├── architecture/
-│   ├── governance/
-│   ├── domains/
-│   ├── runbooks/
-│   └── adr/
+├── examples/
 ├── infra/
+├── migrations/
 ├── packages/
-│   ├── ingest/
-│   ├── catalog/
-│   ├── evidence/
-│   ├── policy/
-│   └── domain/
 ├── policy/
+├── schemas/
+├── scripts/
 ├── tests/
-└── .github/
+├── tools/
+├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+└── SECURITY.md
 ```
+
+### Doctrine-shaped nested areas that still need direct checkout verification
+
+| Area | Common KFM-shaped expectation | Status |
+|---|---|---|
+| `apps/` | API, explorer/UI, review/operator surfaces, workers, CLI | **NEEDS VERIFICATION** |
+| `packages/` | intake, validation, evidence, policy, catalog, delivery, domain, observability | **NEEDS VERIFICATION** |
+| `contracts/` | JSON Schema, OpenAPI, vocab, fixtures | **NEEDS VERIFICATION** |
+| `data/` | RAW, WORK, QUARANTINE, PROCESSED, CATALOG, PUBLISHED, receipts, proofs | **NEEDS VERIFICATION** |
+| `docs/` | architecture, governance, domains, runbooks, ADRs, verification | **NEEDS VERIFICATION** |
+| `infra/` | local, hosted, dashboards, delivery wiring | **NEEDS VERIFICATION** |
+
+> [!NOTE]
+> Keep the split visible: the tree above is the confirmed repo surface; the table below it is the strongest doctrine-shaped expectation. Do not silently merge the two.
 
 ---
 
 ## Quickstart
 
-1. Read the governing docs first: `README.md`, architecture/governance docs, active ADRs, and the relevant contract or policy material for your change.
-2. Choose the **smallest governed slice** that proves something real.
-3. Run the repo’s documented validators and smoke tests locally.
-4. Make the change **additive, reversible, and explicit** about its trust impact.
-5. Update docs, tests, contracts, and runbooks in the same change set when behavior changes.
-6. Open a PR that states what is **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, and **NEEDS VERIFICATION**.
+### 1) Verify the surface you are changing
+
+Use the repo’s own verification-first inspection loop before promoting assumptions to facts.
 
 ```bash
-# Pseudocode — replace with the mounted repo's actual command surface
-<install-dependencies>
-<run-docs-lint>
-<run-schema-and-catalog-validation>
-<run-policy-tests>
-<run-unit-and-integration-tests>
-<run-ui-or-surface-tests-if-affected>
+# identify the exact revision you are reviewing
+git rev-parse HEAD 2>/dev/null || echo "Not inside a Git checkout"
+
+# inspect the repo root and near-root shape
+find . -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,160p'
+
+# inspect GitHub control-plane files if present
+find .github -maxdepth 3 -type f 2>/dev/null | sort
+ls -la .github/workflows 2>/dev/null || true
+
+# inspect likely contract, policy, data, and test surfaces
+find contracts policy data tests tools -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,220p'
+
+# inspect documentation, apps, packages, and infra
+find docs apps packages infra -maxdepth 3 -type f 2>/dev/null | sort | sed -n '1,260p'
+
+# pressure-test trust and evidence vocabulary
+grep -RIn "EvidenceBundle\|EvidenceRef\|RuntimeResponseEnvelope\|truth membrane\|cite-or-abstain" docs contracts policy apps packages tests 2>/dev/null || true
+grep -RIn "Map Explorer\|Evidence Drawer\|Focus Mode\|Story\|Dossier\|Review" docs apps packages 2>/dev/null || true
 ```
 
-> [!NOTE]
-> The corpus repeatedly expects contributors to run validators and smoke tests locally, but the current session did not expose the repo’s exact command surface. Keep the placeholders until the mounted repo confirms the real commands.
+### 2) Read the governing docs first
+
+Start with:
+
+1. [README.md](README.md)
+2. [CONTRIBUTING.md](CONTRIBUTING.md)
+3. [.github/README.md](.github/README.md)
+4. [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+5. [SECURITY.md](SECURITY.md)
+6. the owning docs nearest your change in `docs/`, `contracts/`, `policy/`, `schemas/`, `apps/`, or `packages/`
+
+### 3) Run repo-local validators and smoke tests
+
+```bash
+# NEEDS VERIFICATION — replace with the checked-out repo's actual command surface
+<install-dependencies>
+<run-docs-lint>
+<run-schema-and-contract-validation>
+<run-policy-tests>
+<run-app-or-package-tests>
+<run-e2e-or-surface-tests-if-affected>
+```
+
+### 4) Keep the change reviewable
+
+1. Choose the smallest governed slice that proves something real.
+2. Make the change additive, reversible, and explicit about trust impact.
+3. Update docs, tests, fixtures, and contracts in the same change set when behavior changes.
+4. Open a PR that states what is **CONFIRMED**, **INFERRED**, **PROPOSED**, **UNKNOWN**, and **NEEDS VERIFICATION**.
+
+> [!TIP]
+> KFM’s contributor rhythm is **verification first, scope second, implementation third, merge last**.
+
+[Back to top](#contributing-to-kansas-frontier-matrix)
 
 ---
 
@@ -177,13 +270,13 @@ Below is the strongest **contributor-oriented repo shape** surfaced by the corpu
 
 Prefer one concrete, reviewable path over broad speculative rewrites.
 
-Examples of good scope:
+Good starter scopes include:
 
-- one dataset version with full catalog closure
-- one evidence-bearing story fix
-- one API contract correction with tests
-- one Evidence Drawer behavior improvement
-- one policy rule plus its passing and failing fixtures
+- one contract family plus valid/invalid fixtures
+- one source admission packet and one deterministic receipt path
+- one Evidence Drawer payload improvement
+- one policy rule with passing and failing fixtures
+- one contributor-facing documentation repair tied to real repo evidence
 
 ### Keep companion artifacts in the same PR
 
@@ -191,7 +284,7 @@ A KFM contribution is rarely “just code.”
 
 If your change touches behavior-significant architecture, policy, data lifecycle, evidence handling, runtime outcomes, public surfaces, or contributor workflow, update the corresponding docs, tests, contracts, fixtures, and runbooks in the **same** PR unless you explicitly justify why not.
 
-### Contribution lane notes
+### Contribution lanes
 
 #### Dataset and source onboarding
 
@@ -202,7 +295,7 @@ A dataset-oriented change should usually carry:
 - rights and sensitivity handling
 - QA and validation logic
 - processed-output definition
-- triplet or catalog closure expectations
+- catalog closure expectations
 - example evidence resolution path
 - docs updates
 
@@ -220,7 +313,7 @@ For Evidence Drawer work:
 
 - preserve the route from claim → evidence
 - keep license/rights, version, lineage, and restriction cues visible
-- do not replace provenance with a polished summary
+- do not replace provenance with polished summary alone
 
 For Focus Mode work:
 
@@ -263,7 +356,7 @@ Do **not** introduce:
 
 #### Infra, runtime, and delivery
 
-Delivery is part of KFM governance, not a detached DevOps lane.
+Delivery is part of KFM governance, not a detached ops lane.
 
 Infra or runtime changes should usually include:
 
@@ -271,7 +364,7 @@ Infra or runtime changes should usually include:
 - release or operational impact note
 - observability impact
 - policy or review implications
-- docs/runbook updates
+- docs or runbook updates
 - no-shortcut confirmation for trust membrane and evidence path
 
 Model runtimes remain **internal** and replaceable. They are not the public trust boundary.
@@ -282,10 +375,11 @@ Policy-significant publication, promotion, denial, correction, or runtime-capabi
 
 That means:
 
-- contributors submit changes
-- reviewers or stewards review meaning, policy, and publication consequences
-- automation may assist, validate, and prepare
-- protected-branch or policy-significant approval remains review-bounded
+- contributors propose and implement bounded changes
+- reviewers check correctness, clarity, and change risk
+- stewards review rights, sensitivity, evidence posture, and public consequence
+- automation may lint, test, validate, package, and prepare
+- policy-significant approval remains review-bounded
 
 [Back to top](#contributing-to-kansas-frontier-matrix)
 
@@ -295,77 +389,67 @@ That means:
 
 ```mermaid
 flowchart LR
-    A[Issue / idea / correction] --> B[Small scoped branch or draft PR]
-    B --> C{Change type}
+    A[Issue / correction / improvement] --> B[Verify repo surface and evidence]
+    B --> C{Change touches}
 
-    C -->|Docs / code / UI| D[Implement + update docs + tests]
-    C -->|Dataset / source| E[Descriptor + raw snapshot plan + QA + policy review]
-    C -->|Story / evidence / Focus| F[Citations + evidence resolution + review]
-    C -->|Policy / release| G[Rules + fixtures + steward rationale + rollback note]
+    C -->|contracts or policy| D[Update contracts or policy + fixtures + docs]
+    C -->|apps or packages| E[Update code + docs + tests]
+    C -->|data onboarding| F[Source packet + receipts + validation plan]
+    C -->|infra or delivery| G[Rollback note + observability + docs]
 
-    D --> H[Local validation]
+    D --> H[Run local validation]
     E --> H
     F --> H
     G --> H
 
-    H --> I[PR with truth posture + rollback path + review burden]
-    I --> J[CI / policy / schema / integration gates]
-    J --> K{Passes?}
+    H --> I[Open PR with truth posture + rollback path]
+    I --> J[CODEOWNERS + CI + steward or reviewer checks]
+    J --> K{Passes and approved?}
 
-    K -->|No| L[Revise or quarantine]
-    K -->|Yes| M{Needs steward / independent approval?}
-
-    M -->|Yes| N[Review boundary]
-    M -->|No| O[Merge-ready]
-
-    N --> P{Approved?}
-    P -->|No| L
-    P -->|Yes| O
-
-    O --> Q[Governed merge / promotion]
-    Q --> R[Published behavior or internal completion]
+    K -->|No| L[Revise, narrow scope, or quarantine]
+    K -->|Yes| M[Governed merge / promotion]
+    M --> N[Visible release, correction lineage, or internal completion]
 ```
 
 ---
 
 ## Tables
 
-### Change types and required companions
+### Current repo-grounded signals
+
+| Signal | Status | Why it matters here |
+|---|---|---|
+| Public repository on default branch `main` | **CONFIRMED** | PR-based contribution flow is the normal operating assumption |
+| Root-level `CONTRIBUTING.md`, `README.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md` exist | **CONFIRMED** | contributor guidance and governance docs are first-class repo surfaces |
+| `.github/README.md`, `CODEOWNERS`, `PULL_REQUEST_TEMPLATE.md`, and `workflows/` exist | **CONFIRMED** | review-routing and CI/CD are not hypothetical |
+| Exact workflow YAML names and required merge checks | **UNKNOWN / NEEDS VERIFICATION** | do not claim required checks without direct reinspection |
+| Exact nested app/package/schema inventories | **UNKNOWN / NEEDS VERIFICATION** | contributor docs should not overstate implementation depth |
+
+### Change types and minimum companion artifacts
 
 | Change type | Minimum companions |
 |---|---|
-| **New dataset source** | registry entry, intake spec, connector or workflow, QA rules, docs |
-| **New metric** | metric definition, unit, source basis, validation notes, docs |
-| **New policy rule** | rule body or policy artifact, tests, steward rationale, docs |
+| **New dataset source** | registry or source packet, intake spec, QA rules, docs |
+| **New contract or schema** | examples, invalid fixtures, versioning note, docs |
+| **New policy rule** | rule body or bundle, passing and failing fixtures, steward rationale, docs |
 | **UI feature** | design notes, accessibility considerations, tests, docs |
-| **Story publication** | citations, review notes, publication approval |
-| **Infra change** | IaC diff or runtime change note, rollback plan, monitoring updates, docs |
+| **Story publication path** | citations, review notes, publish gate expectations |
+| **Infra or delivery change** | rollback plan, monitoring or observability note, docs |
 
-### Roles and review boundaries
-
-| Role | Primary responsibility | Must not do |
-|---|---|---|
-| **Contributor** | Propose and implement bounded changes | Self-approve policy-significant publication paths |
-| **Reviewer** | Review correctness, clarity, and change risk | Treat green CI as sufficient evidence on its own |
-| **Steward** | Review rights, sensitivity, evidence posture, and public consequence | Bypass review by informal approval or hidden override |
-| **Operator** | Run infra, deployments, rollback, restore, and runtime diagnostics | Quietly change policy or release scope outside governed workflow |
-| **Automation** | Lint, test, validate, package, and open PRs | Merge protected-branch or policy-significant changes by itself |
-
-### Validation and review gates
+### Validation and review matrix
 
 | If your PR changes… | Expect to provide… |
 |---|---|
-| **Docs** | link checks, terminology consistency, adjacent docs updates |
-| **Contracts / schemas** | valid examples, invalid fixtures, versioning note |
-| **Dataset onboarding** | descriptor, raw snapshot plan, QA checks, promotion logic, evidence path |
-| **Evidence behavior** | representative EvidenceRef or bundle resolution, negative tests |
-| **Story content** | citations, review state, public-safe wording |
-| **Focus Mode** | citation verification tests, abstention cases, audit behavior |
-| **Policy** | passing and failing fixtures, steward rationale |
+| **Docs** | terminology consistency, adjacent doc updates, link sanity |
+| **Contracts / schemas** | valid examples, invalid fixtures, compatibility note |
+| **Policy** | passing and failing fixtures, stable reason/obligation vocabulary |
+| **Dataset onboarding** | descriptor, raw snapshot plan, validation logic, publication intent |
+| **Evidence behavior** | representative EvidenceRef / EvidenceBundle path and negative tests |
+| **Story / Focus** | resolvable citations, review state, abstention cases, public-safe wording |
 | **Runtime / delivery** | rollback path, observability note, runbook updates |
 
 > [!IMPORTANT]
-> A green build is necessary, not sufficient. Rights, sensitivity, evidence resolution, and review obligations still apply.
+> A green build is necessary, not sufficient. Rights, sensitivity, evidence resolution, review boundaries, and correction posture still apply.
 
 [Back to top](#contributing-to-kansas-frontier-matrix)
 
@@ -376,10 +460,10 @@ flowchart LR
 ### Author checklist
 
 - [ ] Scope is small enough to review honestly
-- [ ] Truth posture is explicit: CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION
+- [ ] Truth posture is explicit: **CONFIRMED / INFERRED / PROPOSED / UNKNOWN / NEEDS VERIFICATION**
 - [ ] No shortcut breaks the truth path
 - [ ] No shortcut breaks the trust membrane
-- [ ] Docs, tests, and contracts were updated together where behavior changed
+- [ ] Docs, tests, fixtures, and contracts were updated together where behavior changed
 - [ ] Rollback or correction path is stated
 - [ ] Review burden is explicit
 - [ ] Rights, policy, and sensitivity implications are called out
@@ -394,6 +478,16 @@ flowchart LR
 - [ ] Contract drift is intentional and documented
 - [ ] Runtime or delivery changes include rollback and observability notes
 - [ ] Behavior-significant changes did not leave docs or runbooks behind
+
+### Definition of done
+
+A contribution is complete when another contributor can verify:
+
+1. what changed
+2. why it changed
+3. what evidence or doctrine authorizes it
+4. how it was tested
+5. how to roll it back or correct it if it misbehaves
 
 ---
 
@@ -428,29 +522,36 @@ Not on its own. PR-based automation is useful; self-approving policy-significant
 </details>
 
 <details>
-<summary><strong>What if the checked-out repo uses different paths than this guide?</strong></summary>
+<summary><strong>Why does this file still contain <code>NEEDS VERIFICATION</code> placeholders?</strong></summary>
 
-Update the relative links, repo-fit section, and directory tree so they match the mounted repository. This file intentionally keeps unverified paths visible rather than pretending they were confirmed.
+Because contributor guidance should not pretend platform settings, workflow names, owners, or local commands that were not directly rechecked in the current session.
 
 </details>
+
+<details>
+<summary><strong>What if the checked-out repo differs from this guide?</strong></summary>
+
+Update the relative links, repo-fit section, and any path references so they match the checked-out repository. Keep the truth posture visible while you do it.
+
+</details>
+
+[Back to top](#contributing-to-kansas-frontier-matrix)
 
 ---
 
 ## Appendix
 
 <details>
-<summary><strong>Illustrative local validation block (pseudocode only)</strong></summary>
+<summary><strong>Illustrative local-first contributor flow</strong></summary>
 
 ```bash
-# Pseudocode only — replace with mounted repo commands
-<run-docs-lint-and-link-check>
-<run-format-lint-typecheck>
-<run-unit-tests>
-<run-schema-and-catalog-validation>
-<run-policy-tests>
-<run-integration-tests>
-<run-ui-surface-tests-if-affected>
-<run-reproducibility-checks-for-generated-artifacts>
+# Illustrative only — use only where analogous targets actually exist in the checkout
+make bootstrap
+make validate-schemas
+make test
+make dev-up
+make sample-ingest SOURCE=example_fixture
+make catalog-validate
 ```
 
 </details>
@@ -462,18 +563,33 @@ Update the relative links, repo-fit section, and directory tree so they match th
 - owners and stewardship group
 - created / updated dates
 - policy label for this file
-- actual repo tree and whether linked paths exist verbatim
-- exact local command surface
-- actual CI gates in <code>.github/</code>
-- branch protection and approval rules
-- whether the repo uses the proposed <code>apps/</code>, <code>contracts/</code>, <code>policy/</code>, <code>docs/</code>, <code>tests/</code>, and <code>infra/</code> layout exactly
+- exact workflow YAML inventory in `.github/workflows/`
+- exact required GitHub checks and branch protection rules
+- exact `CODEOWNERS` handles and review routing
+- exact local install / lint / validate / test commands
+- actual nested structure of `apps/`, `packages/`, `contracts/`, `schemas/`, `data/`, and `infra/`
+- whether environment approvals, OIDC, signing, or deploy gates are already configured
+
+</details>
+
+<details>
+<summary><strong>When to open an ADR</strong></summary>
+
+Open one when the decision changes trust-bearing structure, including:
+
+- API boundary changes
+- storage format or canonical data-model changes
+- policy engine boundary changes
+- model runtime boundary changes
+- rollout sequencing that changes governance or migration safety
+- renderer or evidence-surface decisions that affect public trust behavior
 
 </details>
 
 <details>
 <summary><strong>One-sentence maintainer rule</strong></summary>
 
-A contribution is complete when another person can verify where it came from, what it means, how it is allowed to be used, and how it behaves inside the governed KFM system.
+A contribution is good when another person can verify where it came from, what it means, what governs it, how it was tested, and how it can be corrected without losing lineage.
 
 </details>
 
