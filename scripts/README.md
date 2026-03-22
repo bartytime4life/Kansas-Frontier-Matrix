@@ -4,54 +4,56 @@ title: scripts/
 type: standard
 version: v1
 status: draft
-owners: TODO(verify maintainers / release owners)
+owners: TODO(verify from .github/CODEOWNERS)
 created: TODO(verify-created-date)
-updated: 2026-03-21
+updated: 2026-03-22
 policy_label: TODO(verify-policy-label)
-related: [TODO(verify: ../README.md), TODO(verify: ../docs/), TODO(verify: ../tools/), TODO(verify: ../tests/), TODO(verify: ../policy/), TODO(verify: ../contracts/)]
+related: [../README.md, ../tools/README.md, ../policy/README.md, ../contracts/README.md, ../schemas/README.md, ../tests/README.md, ../.github/workflows/README.md]
 tags: [kfm, scripts, automation, validation, promotion, evidence]
-notes: [Current-session verification found only PDF corpus and no mounted repo tree; exact owners, doc_id, created date, policy label, related links, and live paths need checkout verification]
+notes: [Fresh repo-grounded evidence confirms scripts/README.md exists as a documentary surface; exact scripts subtree inventory and live executable coverage still need direct checkout verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # scripts/
 
-Repo-local entrypoints for repeatable, reviewable, fail-closed KFM validation, evidence assembly, promotion support, rollback support, and operator-safe automation.
+Repo-local entrypoints for repeatable, reviewable KFM validation, evidence assembly, promotion support, and operator-safe automation.
 
 **Status:** experimental  
-**Owners:** TODO(verify maintainers / release owners)  
-![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-TODO-lightgrey) ![path](https://img.shields.io/badge/path-scripts%2FREADME.md-blue) ![evidence](https://img.shields.io/badge/evidence-PDF--only-yellow) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
+**Owners:** TODO(verify from `.github/CODEOWNERS`)  
+![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-TODO-lightgrey) ![path](https://img.shields.io/badge/path-scripts%2FREADME.md-blue) ![evidence](https://img.shields.io/badge/evidence-repo--grounded%20%2B%20pdf--bounded-yellow) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
 **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Truth labels](#truth-labels-used-here) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > This README is **evidence-bounded**.
 >
-> The March 2026 KFM corpus is strong on `scripts/` doctrine, target responsibilities, governance posture, and proof-bearing expectations. This revision did **not** have a mounted repository checkout, workflow inventory, or runtime logs. Treat exact paths, owners, filenames, and neighbor-directory presence here as **PROPOSED** or **NEEDS VERIFICATION** unless the checked-out repo confirms them.
+> Fresh repo-grounded project evidence confirms that `scripts/README.md` exists in the repository, but the same evidence also says the `scripts/` lane is still primarily **documentary** today: intended validator and entrypoint patterns are described, while active merge-gate workflow YAML and a verified mounted script inventory were **not** evidenced in the inspected repo snapshot.
+>
+> In this file, exact subdirectories and filenames are treated as **CONFIRMED** only where stated explicitly. Everything else remains **PROPOSED**, **UNKNOWN**, or **NEEDS VERIFICATION**.
 
 ## Scope
 
-`scripts/` is where KFM turns governed intent into **repeatable entrypoints**.
+`scripts/` is the repo surface where KFM turns governed intent into **repeatable entrypoints**.
 
-This directory is the repo-local home for thin helpers that make validation, evidence assembly, catalog closure, release checks, correction drills, smoke checks, and documentation gates easier to run the same way every time. It is useful precisely because it is **not** the place where durable system law should quietly accumulate.
+This is the home for thin helpers that make validation, evidence assembly, cross-link checks, catalog closure, promotion support, correction drills, smoke checks, and documentation gates easier to run the same way every time. It is useful precisely because it is **not** where durable business meaning should quietly accumulate.
 
-In practical terms, `scripts/` is a good home for:
-
-- deterministic wrappers around already-owned logic
-- fail-closed checks
-- reviewable operator workflows
-- CI-friendly transition helpers
-- thin automation that emits proof objects, receipts, or machine-checkable failures
-
-It is the wrong home for policy semantics, canonical contract law, or hidden business meaning.
+A strong rule of thumb:
 
 > [!TIP]
-> A strong rule of thumb is simple:
->
-> `scripts/` should expose a governed lane, not become the lane's sovereign owner.
+> `scripts/` should expose a governed lane, not become the lane’s sovereign owner.
 
-Two operating principles follow from that:
+That means two things stay true at the same time:
 
-1. Keep durable meaning in stronger surfaces such as `contracts/`, `policy/`, `packages/`, `apps/`, and governed APIs.
-2. Use `scripts/` to expose reviewed transitions and checks, not to smuggle system law into shell glue.
+1. durable meaning belongs in stronger surfaces such as contracts, policy, packages, apps, and governed APIs
+2. `scripts/` exists to make reviewed transitions and checks repeatable, visible, and fail-closed
+
+### Current state snapshot
+
+| Status | What current evidence supports |
+| --- | --- |
+| **CONFIRMED** | `scripts/README.md` exists as a repo surface |
+| **CONFIRMED** | the broader `scripts/` lane is currently described more as **documented helper intent** than as a directly verified mounted script inventory |
+| **CONFIRMED** | adjacent repo documentation surfaces such as `tools/README.md`, `policy/README.md`, `contracts/README.md`, `schemas/README.md`, `tests/README.md`, and `.github/workflows/README.md` are part of the current repo evidence |
+| **UNKNOWN** | exact live contents of `scripts/` beyond this README |
+| **UNKNOWN** | whether the named helpers below are already mounted executable files, historical targets, or partial stubs in the current checkout |
 
 [Back to top](#scripts)
 
@@ -60,13 +62,19 @@ Two operating principles follow from that:
 | Field | Value |
 | --- | --- |
 | Target file | `scripts/README.md` |
-| Directory role | Thin, reviewable entrypoints for governed validation, evidence assembly, promotion support, rollback or correction support, and operator-safe automation |
-| Repo position | Top-level helper/orchestration surface in the **documented target skeleton** |
-| Upstream context | [`../README.md`](../README.md) · [`../docs/`](../docs/) · [`../policy/`](../policy/) · [`../contracts/`](../contracts/) *(documented target neighbors; verify in checkout)* |
-| Downstream callers or dependents | [`../.github/`](../.github/) · [`../tests/`](../tests/) · [`../tools/`](../tools/) · [`../data/`](../data/) *(documented target neighbors; verify in checkout)* |
-| Stronger homes for durable logic | [`../packages/`](../packages/) · [`../apps/`](../apps/) · [`../contracts/`](../contracts/) · [`../policy/`](../policy/) *(documented target neighbors; verify in checkout)* |
-| Governing trust rule | `scripts/` may orchestrate, validate, verify, lint, assemble evidence, or reconcile state; it must not become the canonical owner of contract law, policy law, or public truth |
-| Current verification boundary | PDF corpus plus direct current-session filesystem inspection; no mounted KFM repo tree, workflow YAML, manifests, tests, dashboards, or runtime logs were directly visible |
+| Directory role | Thin, reviewable entrypoints for validation, evidence checks, linting, release support, correction drills, and other operator-safe automation |
+| Current repo fit | **CONFIRMED:** a documentary lane describing intended script responsibilities and patterns |
+| Upstream context | [`../README.md`](../README.md) · [`../policy/README.md`](../policy/README.md) · [`../contracts/README.md`](../contracts/README.md) · [`../schemas/README.md`](../schemas/README.md) · [`../.github/workflows/README.md`](../.github/workflows/README.md) |
+| Neighboring surfaces | [`../tools/README.md`](../tools/README.md) · [`../tests/README.md`](../tests/README.md) |
+| Stronger homes for durable logic | governed APIs, contract surfaces, policy bundles, reusable packages, and long-lived app/runtime code |
+| Governing trust rule | `scripts/` may orchestrate, validate, lint, verify, and emit receipts; it must not silently become the canonical owner of contract law, policy law, or public truth |
+| Current verification boundary | repo-grounded documentary evidence plus March 2026 KFM manuals; live checkout contents beyond documented surfaces were not directly mounted in this session |
+
+### Why this directory matters in KFM
+
+KFM’s doctrine is unusually clear about **artifactization**: receipts, manifests, proof packs, policy results, release records, and correction objects are not fluff around the system — they are part of the system’s trust model.
+
+`scripts/` is where many of those checks and transitions become operational, provided the logic remains thin, explicit, and reviewable.
 
 ## Accepted inputs
 
@@ -74,44 +82,38 @@ The following belong in `scripts/` **when they remain thin entrypoints**.
 
 | Family | Typical contents | Keep it here when |
 | --- | --- | --- |
-| Bootstrap / environment / local bring-up | `bootstrap_ci.sh`, environment sanity checks, bounded local proof helpers | The script establishes a safe execution surface without owning long-lived runtime behavior |
-| Source onboarding / watcher / intake wrappers | descriptor-aware fetchers, watermark/spec-hash helpers, bounded ingest wrappers | The script detects or acquires change and emits receipts instead of silently publishing |
-| Transformation / normalization / packaging | deterministic build wrappers, materializers, export packagers | The heavy logic lives elsewhere and the script exists to make a governed lane repeatable |
-| Validation / QA / policy / verification | schema checks, catalog checks, compatibility checks, policy wrappers | The script turns gates into explicit, deny-by-default entrypoints |
-| Catalog / provenance / evidence assembly | cross-link checks, digest verification, closure builders, release-support emitters | The script assembles or verifies trust-bearing proof objects rather than redefining them |
-| Projection / search / vector / graph / export refresh | rebuild wrappers for tiles, search, graph, vectors, export sidecars | Outputs are explicitly derived, freshness-linked, and rebuildable |
-| Release / promotion / rollback / correction | release-evidence assembly, signed promotion helpers, rollback drills, correction/tombstone helpers | The script participates in governed trust-state change and preserves lineage |
-| Runtime ops / health / audit / reconciliation | smoke tests, canary checks, audit emitters, reconciliation helpers | The governed API remains the only trust-visible public entrypoint |
-| CI/CD / PR / release control | merge-gate wrappers, attest/verify steps, post-deploy checks | The helper proves or gates promotion rather than hiding review |
-| Local model/runtime and Focus helpers | local-only model wrappers, contract-bound inference helpers, runtime boundary checks | Execution stays private-first and subordinate to evidence, policy, and governed APIs |
-| Docs / build / report / export helpers | docs gates, README checks, report builders, evidence-viewer helpers | The helper changes release trust or reviewability and therefore belongs in governed machinery |
+| Bootstrap / environment | CI bootstrap, environment sanity checks, bounded local proof helpers | the script establishes a safe execution surface without owning long-lived runtime behavior |
+| Catalog checks | STAC/DCAT/PROV validation wrappers, cross-link consistency checks | the script enforces or verifies a gate rather than redefining metadata law |
+| Evidence verification | checksum verification, manifest integrity, receipt linkage checks | the script emits or verifies trust-bearing proof objects |
+| Policy gates | deny-by-default wrappers, Focus readiness checks, policy smoke tests | policy semantics live elsewhere and the script makes the policy executable in a repeatable lane |
+| Provenance checks | fingerprint verification, provenance validation, release linkage checks | the script validates lineage instead of inventing it |
+| Documentation gates | README linting, required-section checks, render smoke tests | the helper protects reviewability and consistency |
+| Release support | additive helpers for packaging, signing, attestation, rollback drills, post-deploy checks | the helper supports promotion or correction without becoming the release system itself |
+| Operator utilities | bounded helpers for replay, diffing, auditing, or corrective action | the helper makes a governed action inspectable and repeatable |
 
 ### Minimum bar for anything added here
 
 A new helper should usually satisfy all of the following:
 
 - it has one clear purpose
-- it runs non-interactively unless interaction is truly required
+- it runs non-interactively unless interaction is genuinely necessary
 - it exits non-zero on failure
 - it documents inputs, outputs, and side effects
+- it makes destructive work unmistakable
 - it emits machine-readable evidence when it changes trust state
-- it keeps destructive work explicit
 - it does not require committed secrets
+- it does not smuggle policy or schema law into shell glue
 
 ## Exclusions
 
-> [!NOTE]
-> Better-home paths below reflect **documented target homes** from the attached corpus, not a directly mounted checkout. Verify them before merge or refactor.
-
 | Do not keep here | Better home | Why |
 | --- | --- | --- |
-| Long-lived service code, workers, route handlers, UI logic | [`../apps/`](../apps/) or [`../packages/`](../packages/) | Runtime ownership belongs with deployable or reusable code, not with ad hoc entrypoints |
-| Canonical contracts, JSON Schemas, OpenAPI, registry definitions | [`../contracts/`](../contracts/) | Contract law should stay first-class and machine-checkable |
-| Policy bundles, reason codes, obligation codes, review-class rules | [`../policy/`](../policy/) | Governance should remain explicit, reviewable, and independently testable |
-| Reusable validator libraries or mature CLIs | [`../tools/`](../tools/) or [`../packages/`](../packages/) | Shared implementation should graduate out of shell glue |
-| Database migrations and stateful schema evolution | [`../migrations/`](../migrations/) | Migration discipline needs its own review and rollback surface |
-| Secrets, tokens, workstation overrides, bind-time credentials | secret manager or untracked local secret surfaces | Never commit trust-bearing secrets into helper directories |
-| Published proof packs, final manifests, or authoritative evidence stores | designated release or evidence paths | Convenience automation must not masquerade as canonical release truth |
+| Canonical contracts, JSON Schemas, API object law, registry definitions | the **single authoritative schema/contract home** declared by repo governance (`contracts/` is the stronger current candidate; `schemas/` also exists today and authority still needs explicit resolution) | machine-readable law should not hide in helper scripts |
+| Policy bundles, reason codes, obligation codes, review logic | [`../policy/README.md`](../policy/README.md) and its governed descendants | policy must remain explicit, testable, and reviewable |
+| Long-lived service code, workers, handlers, UI logic | app or package surfaces | runtime ownership deserves a stronger lifecycle than ad hoc entrypoints |
+| Reusable validator libraries or mature CLIs | `tools/` or reusable package surfaces | shared implementation should graduate out of shell glue |
+| Secrets, tokens, workstation overrides, bind-time credentials | secret manager or untracked local secret surfaces | helper directories must never become secret stores |
+| Published proof packs, canonical manifests, authoritative evidence stores | release or catalog surfaces | convenience automation must not masquerade as canonical release truth |
 
 > [!WARNING]
 > If deleting a script would erase institutional knowledge about what is publishable, how policy decided, or how release evidence is reconstructed, the script is carrying too much meaning and should graduate.
@@ -120,24 +122,28 @@ A new helper should usually satisfy all of the following:
 
 | Marker | Meaning in this README |
 | --- | --- |
-| **CONFIRMED** | Directly supported by the mounted March 2026 KFM corpus or direct current-session evidence |
-| **INFERRED** | A conservative synthesis from multiple mounted documents, still kept below direct proof |
-| **PROPOSED** | A doctrine-consistent realization, placement, or implementation pattern not verified as mounted repo reality |
-| **UNKNOWN** | Not established strongly enough in the current session to present as settled fact |
-| **NEEDS VERIFICATION** | A path, filename, owner, workflow, or repo-local detail that should be checked in the actual checkout before merge |
+| **CONFIRMED** | directly supported by fresh repo-grounded evidence or directly inspectable current-session evidence |
+| **INFERRED** | conservative synthesis from multiple project documents |
+| **PROPOSED** | doctrine-consistent realization or structure not yet verified as mounted repo reality |
+| **UNKNOWN** | not established strongly enough in the current session to present as settled fact |
+| **NEEDS VERIFICATION** | a path, filename, owner, or implementation detail that should be checked in the actual checkout before merge |
 
 ## Directory tree
 
-### Current verification boundary
-
-> [!NOTE]
-> No live repository tree was directly visible in this revision. The inventory below is a **documented target shape**, not a mounted listing.
-
-### Documented target shape
+### Confirmed in current evidence
 
 ```text
 scripts/
-├── README.md
+└── README.md
+```
+
+### Document-grounded target entrypoints and examples
+
+> [!NOTE]
+> The inventory below is **not** a mounted repo listing. These are document-grounded helper names and folder patterns already used in KFM design notes and gate examples.
+
+```text
+scripts/
 ├── bootstrap_ci.sh
 ├── catalog/
 │   ├── validate_stac.py
@@ -149,45 +155,39 @@ scripts/
 │   └── md_required_sections.sh
 ├── policy/
 │   └── focus_mode_gate.sh
-├── provenance/
-│   ├── validate_prov.py
-│   └── verify_fingerprint.py
-├── release/      # PROPOSED family; exact presence NEEDS VERIFICATION
-├── rollback/     # PROPOSED family; exact presence NEEDS VERIFICATION
-└── runtime/      # PROPOSED family; exact presence NEEDS VERIFICATION
+└── provenance/
+    ├── validate_prov.py
+    └── verify_fingerprint.py
 ```
 
 ### How to read this tree
 
-The explicit filenames above are **document-grounded examples already named in the mounted corpus**. They are useful because they show what the project expects this surface to do.
+Use the split above intentionally:
 
-A practical reading is:
+- the first tree is the **confirmed** minimum current-state surface
+- the second tree is the **document-grounded target/example lane** already named in project materials
+- anything beyond that remains **UNKNOWN** until the actual checkout is inspected
 
-- `catalog/`, `evidence/`, `policy/`, and `provenance/` hold fail-closed gate entrypoints
-- `bootstrap_ci.sh` establishes a reproducible CI or local proof baseline
-- `lint/` keeps docs and README surfaces from drifting away from behavior
-- `release/`, `rollback/`, and `runtime/` are kept visible here only as **plausible family destinations**; their actual mounted presence still needs checkout verification
-
-Additional placements outside `scripts/` also appear in the corpus — including `.github/workflows/*`, `policy/*`, `data/**`, and app/runtime surfaces — but those remain neighboring signals, not proof that the live repo currently contains them.
+That distinction matters. KFM is explicit about visible boundedness and visible uncertainty; this README should preserve that posture rather than polishing it away.
 
 [Back to top](#scripts)
 
 ## Quickstart
 
-Use this sequence before adding, renaming, or deleting a helper.
+Use this sequence before adding, renaming, or deleting anything under `scripts/`.
 
-1. Verify that `scripts/` exists in the checkout you are actually changing.
-2. Find every caller before moving or renaming an entrypoint.
+1. Verify what is actually mounted in the checkout.
+2. Find every caller before renaming an entrypoint.
 3. Decide whether the work belongs in `scripts/` at all.
-4. Syntax-check the helper types you touched.
-5. Re-run the relevant validation, promotion, or runtime checks before merge.
+4. Syntax-check only what actually exists.
+5. Re-run the relevant gates before merge.
 
 ```bash
-# 1) Confirm the directory exists before assuming any shape.
+# 1) Inspect the lane you are about to change.
 test -d scripts && find scripts -maxdepth 3 -type f | sort || echo "scripts/ not present in this checkout"
 
-# 2) Find likely callers without assuming every neighbor exists.
-for d in .github docs tests tools policy contracts data apps packages; do
+# 2) Find likely callers and references.
+for d in .github docs tests tools policy contracts schemas data apps packages; do
   [ -d "$d" ] && grep -R --line-number "scripts/" "$d" || true
 done
 
@@ -195,7 +195,7 @@ done
 find scripts -type f -name "*.sh" -print0 2>/dev/null | xargs -0 -r -n1 bash -n
 find scripts -type f -name "*.py" -print0 2>/dev/null | xargs -0 -r -n1 python -m py_compile
 
-# 4) Review entrypoints before changing behavior.
+# 4) Review helper headers before changing behavior.
 find scripts -maxdepth 2 -type f \( -name "*.sh" -o -name "*.py" \) \
   -exec sh -c 'echo "---- $1"; sed -n "1,40p" "$1"' _ {} \;
 ```
@@ -214,9 +214,20 @@ set -euo pipefail
 
 ## Usage
 
-### Documented target gate lane
+### Current rule
 
-The mounted corpus already names a compact verification lane for a dataset or release candidate. Treat the sequence below as a **documented target flow** whose exact mounted paths still need checkout verification.
+A good script in KFM should do one or more of these well:
+
+- normalize a repeated invocation pattern
+- enforce a validation or policy gate
+- emit machine-checkable evidence
+- make an operator workflow safer, clearer, or more repeatable
+
+It should not become the place where the real product or governance law secretly lives.
+
+### Document-grounded validation lane
+
+The following sequence is **document-grounded** and useful as a target pattern for dataset or release checks. Treat it as a verified design/example lane, not as proof that every file already exists in the current checkout.
 
 ```bash
 scripts/bootstrap_ci.sh
@@ -245,61 +256,49 @@ scripts/policy/focus_mode_gate.sh \
   <dataset>__<version>
 ```
 
-### Operating rules
+### Working rules
 
-#### 1) Keep scripts thin
+#### Keep scripts thin
 
-A good script parses explicit inputs, delegates durable logic outward, normalizes a repeated invocation pattern, and returns a clear exit status. It should not become the hidden place where the real product rules live.
+Parse explicit inputs, delegate durable logic outward, normalize repeated invocations, and return a clear exit status.
 
-#### 2) Make destructive work unmistakable
+#### Make destructive work unmistakable
 
-If a helper can mutate, publish, overwrite, promote, withdraw, or rebuild anything consequential, require explicit target identifiers, document side effects, and prefer a dry-run mode when feasible.
+If a helper can mutate, publish, overwrite, promote, withdraw, or rebuild anything consequential, require explicit target identifiers and document side effects clearly.
 
-#### 3) Prefer parameterization over workstation folklore
+#### Prefer parameterization over workstation folklore
 
-Do not bury workstation-only paths, hostnames, unpublished dataset IDs, or one-person conventions in helper code. Use flags, environment variables, checked-in examples, or documented defaults instead.
+Do not bury host-specific paths, unpublished dataset IDs, or one-person conventions in helper code.
 
-#### 4) Emit evidence-friendly outputs
+#### Emit evidence-friendly outputs
 
-When a helper crosses a trust boundary, it should produce stable IDs, run manifests or receipts where relevant, validation reports, and enough linkage to reconstruct what happened later.
+When a helper crosses a trust boundary, it should produce stable IDs, receipts, validation reports, or other reconstructable proof objects.
 
-#### 5) Keep derived work visibly derived
+#### Graduate on complexity
 
-Projection refresh, export packaging, and index rebuild scripts should prove freshness and release linkage. They must not quietly become authoritative truth by convenience.
-
-#### 6) Separate watcher, planner, and executor responsibilities when trust is affected
-
-Change detection, plan generation, and effectful execution are easier to review when they are not collapsed into one opaque automation surface.
-
-#### 7) Graduate on complexity
-
-Move work out of `scripts/` when it starts to need shared internal modules, durable workflow state, schema law, policy semantics, or a lifecycle that deserves real versioned ownership.
-
-#### 8) Prefer build-once, promote-many release identity
-
-Anything that changes trust state should carry digest-first, reviewable, reversible identity rather than being rebuilt under pressure from drifting source state.
-
-#### 9) Keep docs, tests, and callers aligned
-
-A helper change is not complete until the relevant docs, examples, workflows, and verification surfaces are updated in the same change stream.
+Move work out of `scripts/` when it starts to need shared internal modules, schema law, policy semantics, durable state, or a lifecycle that deserves stronger ownership.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[Maintainer / CI / operator] --> B[scripts/ thin entrypoints]
+    A[Maintainer / CI / steward] --> B[scripts/ thin entrypoints]
 
-    B --> C[watch / intake]
-    B --> D[materialize / validate]
-    B --> E[catalog / provenance / proof]
-    B --> F[promote / correct / rollback]
+    B --> C[validation]
+    B --> D[evidence checks]
+    B --> E[policy gates]
+    B --> F[release or correction support]
 
-    C --> G[RAW or WORK / QUARANTINE]
-    D --> H[PROCESSED / DatasetVersion]
-    E --> I[CatalogClosure / ReleaseManifest / EvidenceBundle]
-    F --> J[PUBLISHED or correction-visible state]
+    C --> G[contracts / catalogs / provenance]
+    D --> H[receipts / manifests / checksums]
+    E --> I[deny-by-default decision]
+    F --> J[promotion, rollback, or correction drill]
 
-    J -. governed APIs only .-> K[apps / UI / runtime surfaces]
+    G --> K[governed APIs and published artifacts]
+    H --> K
+    I --> K
+    J --> K
+
     B -. must not become .-> L[canonical owner of policy, contracts, or truth]
 ```
 
@@ -309,85 +308,80 @@ flowchart LR
 
 | Family | Primary purpose | Typical proof pressure |
 | --- | --- | --- |
-| Bootstrap / environment / local bring-up | Small safe runtime and proof surfaces | version pins, local/private binds, no accidental authoritative writes |
-| Source onboarding / watcher / intake | Detect admissible change and acquire inputs | descriptors, validators, quarantine routing, ingest receipts |
-| Transformation / normalization / packaging | Produce deterministic processed artifacts and versioned bundles | schema/CRS/unit/nullability discipline, digests, deterministic identity |
-| Validation / QA / policy / verification | Deny by default before promotion | schema/catalog/runtime checks, compatibility reports |
-| Catalog / provenance / evidence assembly | Build the evidence-bearing release surface | catalog closure, manifests, provenance, attestations, evidence linkage |
-| Projection / search / vector / graph / export refresh | Rebuild derived delivery layers | release linkage, freshness visibility, explicit stale handling |
-| Release / promotion / rollback / correction | Move or reverse trust state safely | approvals, signatures/attestations, correction or tombstone evidence |
-| Runtime ops / health / audit / reconciliation | Keep governed runtime correct and observable | smoke/canary, audit joins, emergency deny paths |
-| CI/CD / PR / release control | Treat delivery as evidence-bearing promotion | merge-blocking checks, digest pinning, environment approvals |
-| Local model/runtime and Focus helpers | Keep model execution subordinate to evidence and policy | private-first binds, provider-neutral adapter, no direct client path |
-| Docs / build / report / export helpers | Produce machine-readable support artifacts | same evidence discipline as data/code lanes when trust-bearing |
+| Bootstrap / environment | create a repeatable local or CI execution surface | pinned tools, bounded side effects, no accidental authoritative writes |
+| Catalog validation | verify STAC/DCAT/PROV shape and closure | schema checks, cross-link checks, failure on broken metadata |
+| Evidence verification | verify manifests, checksums, receipts, and consistency | digests, linkage, replayability |
+| Policy gating | apply deny-by-default and cite-or-abstain checks | explicit allow/deny, reason codes, negative-path tests |
+| Provenance checks | validate fingerprints and lineage | reproducibility, container/tool/version stamps, drift detection |
+| Documentation gates | stop README or report drift from silently degrading trust | required sections, consistency, renderability |
+| Release / correction support | support governed state transitions and drills | proof packs, review context, rollback visibility |
 
-### Execution contexts
+### Current-state vs target-state reading
 
-| Context | Role in KFM | Posture in this revision |
-| --- | --- | --- |
-| Local CLI | Deterministic local proof runs, dry runs, replay helpers, spec-hash utilities | **CONFIRMED** family; concrete commands remain **PROPOSED** |
-| CI runner | Merge-blocking checks, attest/verify steps, policy gates, post-deploy verification | **CONFIRMED** family; exact workflow files remain **PROPOSED** |
-| Governed API / internal services | Policy mediation, evidence resolution, bounded synthesis calls, audit writing | **CONFIRMED** boundary; exact mounted code remains **PROPOSED** |
-| Scheduled jobs / timers | Reconciliation, freshness rechecks, periodic proof runs | **INFERRED** pattern; specific jobs remain **PROPOSED** |
-| Private model/runtime helpers | Local/private bounded inference support behind governed APIs | **CONFIRMED** family; exact runtime wiring remains **UNKNOWN** |
-| Host orchestration surfaces | Single-host or hosted runtime control surfaces | concept is valid; actual manifests or units remain **UNKNOWN** |
+| Layer | Current reading |
+| --- | --- |
+| `scripts/README.md` | **CONFIRMED** repo documentary surface |
+| concrete helper inventory | **UNKNOWN** until direct checkout verification |
+| named validation helpers in KFM notebooks | **PROPOSED / document-grounded target entrypoints** |
+| active merge-gate workflow YAML | **not evidenced in-tree** in the freshest repo-grounded source |
+| policy/contract doctrine behind the lane | **CONFIRMED** at the documentation/doctrine level |
 
 ### Graduation rules
 
 | Smell | Better home | Why |
 | --- | --- | --- |
-| multiple entrypoints need the same internal logic | [`../tools/`](../tools/) or [`../packages/`](../packages/) | shared implementation should be reusable and testable |
-| the helper defines canonical contract shape | [`../contracts/`](../contracts/) | contract law should not hide in shell code |
-| the helper decides allow/deny or obligation semantics | [`../policy/`](../policy/) | policy must stay explicit and independently reviewable |
-| the helper behaves like a service or durable workflow engine | [`../apps/`](../apps/) or worker-owned code | runtime ownership deserves a stronger lifecycle |
-| the helper only exists to support tests | [`../tests/`](../tests/) or [`../tools/`](../tools/) | test scaffolding should live near the assertions it supports |
+| multiple helpers need shared implementation | reusable tool or package surface | shared logic deserves tests and versioned ownership |
+| helper defines canonical object law | schema/contract surface | contract law must be machine-checkable and singular |
+| helper decides allow/deny semantics | policy surface | policy must stay explicit and independently reviewable |
+| helper behaves like a service | app/runtime surface | services deserve stronger deployment and operations discipline |
+| helper only supports tests | tests or dedicated tooling surface | scaffolding should live near the assertions it serves |
 
 [Back to top](#scripts)
 
 ## Task list
 
-**Definition of done for a change under `scripts/`:**
+**Definition of done for a `scripts/` change:**
 
-- [ ] The helper is entrypoint-sized rather than subsystem-sized
-- [ ] Inputs, outputs, and side effects are documented
-- [ ] Failure returns a non-zero exit code
-- [ ] Destructive behavior is explicit, not implied
-- [ ] The helper emits or preserves the proof objects its lane requires
-- [ ] Secrets are not committed and not required from tracked files
-- [ ] Caller surfaces in CI, docs, tests, runtime, or release gates were checked against the actual checkout
-- [ ] Docs, examples, or workflows were updated when invocation changed
-- [ ] Negative outcomes remain first-class: hold, quarantine, deny, abstain, stale-visible, superseded, withdrawn, or error
-- [ ] At least one correction or rollback implication was considered where trust state can change
-- [ ] Any path, owner, or filename placeholders were verified before stabilization
+- [ ] the helper is entrypoint-sized rather than subsystem-sized
+- [ ] inputs, outputs, and side effects are documented
+- [ ] failure returns a non-zero exit code
+- [ ] destructive behavior is explicit, not implied
+- [ ] trust-bearing outputs are emitted or preserved where required
+- [ ] no committed secrets or workstation-only assumptions were introduced
+- [ ] callers in docs, CI, tests, or neighboring surfaces were checked against the actual checkout
+- [ ] any invocation changes were reflected in docs, examples, or workflows
+- [ ] negative outcomes remain first-class: deny, abstain, stale-visible, quarantined, superseded, withdrawn, or error
+- [ ] correction or rollback implications were considered where trust state can change
+- [ ] placeholders in the meta block were verified before stabilization
 
 ## FAQ
 
 ### Why keep `scripts/` at all?
 
-Because a small, visible entrypoint layer is better than governance-critical commands being scattered across CI YAML, local notes, or one-off operator habits.
+Because a small visible entrypoint layer is better than governance-critical commands being scattered across CI YAML, local notes, or one-off operator habits.
 
-### Can a script write canonical truth?
+### Why is the confirmed tree so small?
 
-Only a narrow, controlled subset should participate in canonical write, catalog closure, promotion, correction, or runtime trust outcomes — and those lanes need stronger proof and permission boundaries than ordinary helper scripts.
+Because the freshest repo-grounded evidence confirms this README surface, but it does **not** prove the full mounted helper inventory. Showing a speculative full tree as if it were checked out would weaken KFM’s truth posture.
 
-### Should public UI or client code call scripts directly?
+### Why keep document-grounded filenames at all?
 
-No. Client-visible surfaces should consume governed APIs and approved outputs, not shell helpers or direct control scripts.
+Because they are already useful design evidence. They show the intended shape of validation and evidence lanes without pretending those files are all mounted today.
 
-### When should something move to `tools/` or `packages/`?
+### Should client or public UI code ever call scripts directly?
 
-When the logic becomes reusable, shared, stateful, policy-bearing, contract-bearing, or important enough to deserve its own tests and lifecycle.
+No. KFM’s trust membrane requires public and normal client surfaces to consume governed APIs and published artifacts, not helper scripts.
 
-### Why are so many paths marked PROPOSED or NEEDS VERIFICATION?
+### Why mention both `contracts/` and `schemas/`?
 
-Because the mounted March 2026 corpus is strong on script doctrine and target-state shape, but this revision did not have a live repo checkout. The README should preserve that honesty instead of polishing it away.
+Because fresh repo-grounded evidence says both exist today as top-level documentation surfaces, and that duality is itself a design issue that must be resolved before a safe machine gate can become canonical.
 
 ## Appendix
 
 <details>
-<summary><strong>Document-grounded example entrypoints already named in the mounted corpus</strong></summary>
+<summary><strong>Document-grounded helper names already used in KFM examples</strong></summary>
 
-These names are useful because they show the kinds of helper entrypoints the corpus already expects. They are **document-grounded examples**, not proof that every file already exists in the live checkout.
+These names are useful because they recur in KFM design notes as part of a one-shot dataset or release gate. They are **document-grounded examples**, not proof that every file already exists in the mounted checkout.
 
 ```text
 scripts/bootstrap_ci.sh
@@ -401,22 +395,20 @@ scripts/provenance/validate_prov.py
 scripts/provenance/verify_fingerprint.py
 ```
 
-The same corpus also documents adjacent target-state placements outside `scripts/`, including `.github/workflows/*`, `policy/*`, `data/**`, and runtime or tooling surfaces that consume the proof objects emitted here. Those are valuable neighboring signals, but they are not mounted repo facts in this revision.
-
 </details>
 
 <details>
-<summary><strong>Direct verification backlog before this README is stabilized</strong></summary>
+<summary><strong>Verification backlog before this README is stabilized</strong></summary>
 
-Check these in the actual checkout before removing placeholders:
+Check these in the actual checkout before removing placeholders or promoting this README from draft:
 
-- confirm that `scripts/` exists and capture its real tree
-- verify caller surfaces under `.github/`, `docs/`, `tests/`, `tools/`, `policy/`, `contracts/`, `data/`, `apps/`, and `packages/`
-- confirm which helper families are mounted today and which remain target-state only
-- surface actual workflow files, task runners, manifests, schemas, fixtures, and registry locations
-- verify the emitted proof-object chain for at least one governed slice: receipt, validation report, dataset version, catalog closure, release manifest, evidence path, runtime envelope, and correction/rollback evidence
-- confirm which execution contexts are actually mounted today: CLI, CI, scheduled jobs, internal runtime helpers, or other bounded surfaces
-- verify owners, `doc_id`, created date, policy label, and related-path metadata in the KFM meta block
+- capture the real `scripts/` tree
+- verify whether the named helpers above are mounted files, stubs, or still target-state only
+- confirm caller surfaces under `.github/`, `tests/`, `tools/`, `policy/`, `contracts/`, `schemas/`, and any data/catalog lanes
+- confirm whether `.github/workflows/README.md` is still placeholder-only or now accompanied by active workflow YAML
+- resolve the authoritative machine-schema home if `contracts/` and `schemas/` still coexist as parallel documentation surfaces
+- verify owners from `.github/CODEOWNERS`
+- verify doc UUID, created date, and policy label for the meta block
 
 </details>
 
