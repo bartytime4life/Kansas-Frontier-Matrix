@@ -19,19 +19,22 @@ Verification, validation, diff, probe, and support tooling surface for Kansas Fr
 
 > **Status:** experimental  
 > **Owners:** NEEDS VERIFICATION — see [../.github/CODEOWNERS](../.github/CODEOWNERS)  
-> **Repo fit:** intended path `tools/README.md` · upstream [../README.md](../README.md) · governance [../.github/README.md](../.github/README.md) · adjacent [../scripts/](../scripts/) · downstream [../.github/workflows/](../.github/workflows/)  
-> **Evidence posture:** corpus-grounded · live mounted repo-tree verification remains **NEEDS VERIFICATION**  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![scope](https://img.shields.io/badge/scope-tools-blue) ![evidence](https://img.shields.io/badge/evidence-pdf--bounded-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-0a7d5a) ![style](https://img.shields.io/badge/style-reviewable%20helpers-blueviolet)  
+> **Repo fit:** documented repo-root lane `tools/` · intended file `tools/README.md` · upstream [../README.md](../README.md) · governance [../.github/README.md](../.github/README.md) · adjacent [../scripts/](../scripts/) · downstream [../.github/workflows/](../.github/workflows/)  
+> **Evidence posture:** source-bounded · documentary repo inventory available · live mounted repo-tree verification remains **NEEDS VERIFICATION**  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![role](https://img.shields.io/badge/role-validation%20helpers-blue) ![evidence](https://img.shields.io/badge/evidence-source--bounded-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-0a7d5a) ![repo](https://img.shields.io/badge/repo-live%20tree%20NEEDS%20VERIFICATION-yellow)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Tool behavior contract](#tool-behavior-contract) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `tools/` is not a miscellaneous scripts bin. In KFM it is the reusable, reviewable helper surface that strengthens governed execution without quietly becoming product runtime, policy source-of-truth, or hidden business logic.
 
+> [!NOTE]
+> In the March 2026 documentary repo inventory available in this session, `tools/` is described as the lane for **validators, link checkers, and CLI utilities**. This README preserves that role, expands it cautiously, and keeps all live-tree claims reviewable.
+
 ## Scope
 
-`tools/` is the KFM lane for small, explicit utilities whose primary job is to **inspect, validate, compare, summarize, lint, probe, or emit support evidence**. In practice, that means validators, link checkers, diff/probe helpers, spec-hash helpers, catalog-support utilities, attestation helpers, and CI-facing CLIs that help the governed truth path stay auditable.
+`tools/` is the KFM lane for small, explicit utilities whose main job is to **inspect, validate, compare, summarize, lint, probe, or emit support evidence**. In practice, that means validators, link checkers, diff/probe helpers, metadata cross-checkers, spec-hash helpers, attestation helpers, and CI-facing CLIs that help the governed truth path stay auditable.
 
-This README follows the March 2026 KFM doctrine and the documentary repo inventories that describe `tools/` as a validator/link-check/CLI lane. Because the accessible workspace in this session exposed PDFs only, file-level and path-level statements remain intentionally qualified.
+This README follows the March 2026 KFM doctrine and documentary repo inventories that describe `tools/` as a validator / link-check / CLI surface. Because the directly accessible workspace in this session exposed PDFs rather than a mounted live checkout, file-level and path-level statements remain intentionally qualified.
 
 What belongs here:
 
@@ -46,7 +49,7 @@ What this README does:
 - defines the operating contract for `tools/`
 - separates `tools/` from adjacent lanes such as `scripts/`, `tests/`, `contracts/`, and `policy/`
 - keeps documentary repo evidence separate from target-shape guidance
-- preserves KFM’s truth posture by marking what is confirmed, inferred, and still unverified
+- preserves KFM’s truth posture by marking what is confirmed, inferred, proposed, or still unverified
 
 ### Evidence markers used in this README
 
@@ -99,7 +102,7 @@ The following belong in or under `tools/`:
 | `scripts/` | the artifact coordinates staged work, transitions, or operator workflows and may call into `tools/` | it is really a reusable validator, diff helper, or review CLI |
 | `contracts/` | the artifact defines schema, OpenAPI, registry, or vocabulary shape | it is executable validation logic or a CLI entrypoint |
 | `policy/` | the artifact is the policy source-of-truth: bundles, fixtures, or decision rules | it is generic wrapper code around policy evaluation |
-| `docs/` / `.github/linters/` | the artifact is the normative documentation rule, schema, template, or lint config | it is executable helper code that enforces those rules |
+| `docs/` | the artifact is the normative documentation rule, schema, template, or style standard | it is executable helper code that enforces those rules |
 | `tests/` | the artifact asserts behavior, carries fixtures, or proves negative paths | it is the primary operational CLI or reviewer-facing helper |
 | `packages/` | the logic is shared library code imported across the repo | it only exists as a thin command-line wrapper or support executable |
 
@@ -110,7 +113,7 @@ The following belong in or under `tools/`:
 | Long-running public runtime code | a deployable app or package lane | `tools/` supports governed execution; it is not the product runtime |
 | Canonical policy bundles or rule ownership | [../policy/](../policy/) | Tooling may evaluate policy, but policy source-of-truth stays separate |
 | Authoritative contracts and schemas | [../contracts/](../contracts/) | Tools consume contracts; they should not hide or replace them |
-| Normative documentation rules, front-matter schemas, or style policy | [../docs/](../docs/) or repo governance lanes | Tooling may validate them, but the standards themselves are not owned here |
+| Normative documentation rules, front-matter schemas, or style policy | [../docs/](../docs/) or adjacent governance lanes | Tooling may validate them, but the standards themselves are not owned here |
 | One-off operator experiments without durable value | local scratch space or a dedicated script | `tools/` is for repeatable, reviewable utilities |
 | Sensitive fixture payloads or unrestricted coordinate dumps | secured data lanes | Public tooling must remain safe to clone, run, and review |
 | Hidden promotion shortcuts | nowhere | KFM promotion is governed, inspectable, and fail-closed |
@@ -121,11 +124,10 @@ The following belong in or under `tools/`:
 | Evidence item | Status | How this README uses it |
 | --- | --- | --- |
 | Documentary repo inventory material describes `tools/` as **validators, link checkers, CLI utilities** and places it beside `docs/`, `tests/`, `configs/`, `scripts/`, `migrations/`, and `examples/` | **CONFIRMED in project documentation / NEEDS VERIFICATION in live tree** | Grounds the directory role and adjacency model |
-| The KFM truth path and trust membrane remain load-bearing: RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED, with governed APIs between clients and stores | **CONFIRMED** | Keeps helper tools subordinate to policy, evidence resolution, and release gating |
+| The KFM truth path and trust membrane remain load-bearing: source edge -> RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED, with governed interfaces between clients and stores | **CONFIRMED** | Keeps helper tools subordinate to policy, evidence resolution, and release gating |
 | Promotion is expected to fail closed on missing metadata, broken links, invalid catalogs, policy failures, and missing receipts/manifests | **CONFIRMED** | Grounds validator, link-check, and structured-report expectations |
-| Work-package planning treats catalog validators and a link checker as part of the early “trust foundation” build | **CONFIRMED in project documentation** | Supports a validator-first interpretation of `tools/` |
-| Expanded March 2026 KFM manuals strengthen artifactization, route-family clarity, deny-by-default policy mechanics, trust-visible shell contracts, and verification runbooks | **CONFIRMED** | Keeps this README focused on proof-bearing helper utilities rather than ad hoc scripts |
-| The current accessible workspace in this session exposed PDFs only under `/mnt/data`; no mounted repo tree, workflow YAML, CODEOWNERS file, manifests, or runtime logs were directly visible | **CONFIRMED current-session constraint** | Keeps owner/path/workflow claims qualified and reviewable |
+| March 2026 KFM design manuals treat docs, ADRs, and runbooks as production surfaces and warn against hiding authoritative logic in scripts or deployment wiring | **CONFIRMED** | Keeps `tools/` reviewable and prevents drift into hidden business law |
+| The current accessible workspace in this session exposed PDFs only under `/mnt/data`; no mounted repo tree, workflow YAML, manifests, or runtime logs were directly visible | **CONFIRMED current-session constraint** | Keeps owner/path/workflow claims qualified and reviewable |
 
 ## Directory tree
 
@@ -142,28 +144,11 @@ repo/
 └── examples/
 ```
 
-### Document-backed example paths
-
-```text
-tools/probes/gtfsrt_probe.py
-tools/validate/gtfsrt_schema.py
-tools/diff/stable_diff.py
-tools/partition/write_snapshot.py
-tools/validators/http_validators.sh
-tools/validators/spec_hash.py
-tools/docs/validate_front_matter.py
-tools/docs/validate_mermaid.mjs
-tools/docs/audit_tables_and_fences.mjs
-```
-
-> [!NOTE]
-> The example paths above are **document-backed path examples**, not proof that every path exists on the current branch.
-
-### Stable family shape to prefer when adding new tooling
+### PROPOSED stable family shape to prefer if the subtree is regularized
 
 ```text
 tools/
-├── validators/  # schema, catalog, provenance, determinism, docs, and policy-adjacent checks
+├── validators/  # schema, catalog, provenance, docs, and policy-adjacent checks
 ├── probes/      # bounded inspection and freshness/status helpers
 ├── diff/        # deterministic comparison and review helpers
 ├── docs/        # executable doc-quality checks, not normative standards ownership
@@ -175,8 +160,23 @@ tools/
 > [!WARNING]
 > The documentary corpus shows naming drift between `tools/validators/`, `tools/validate/`, and generic `validation` terminology. Prefer **plural noun directory families** (`validators/`, `probes/`, `diff/`, `docs/`, `catalog/`, `attest/`, `ci/`) and reserve verbs for entrypoint filenames.
 
+### Design-note example paths (PROPOSED, not live-tree proof)
+
+```text
+tools/validators/spec_hash.py
+tools/validators/http_validators.sh
+tools/docs/validate_front_matter.py
+tools/docs/validate_mermaid.mjs
+tools/docs/audit_tables_and_fences.mjs
+tools/docs/validate_badges_footer.mjs
+tools/probes/gtfsrt_probe.py
+tools/validate/gtfsrt_schema.py
+tools/diff/stable_diff.py
+tools/partition/write_snapshot.py
+```
+
 > [!NOTE]
-> If the job is primarily orchestration, state movement, scheduling, or lifecycle coordination, place it in `scripts/` and call into `tools/` for the reusable helper logic.
+> The example paths above are **document-backed design-note examples**, not proof that every path exists on the current branch. Treat them as naming and role cues until the live subtree is inspected.
 
 [Back to top](#tools)
 
@@ -187,34 +187,32 @@ The commands below are verification-first. Run them before adding or moving anyt
 1. Inspect what actually exists in your checkout.
 
 ```bash
-find tools -maxdepth 4 \( -type f -o -type d \) | sort
+find tools -maxdepth 4 \( -type f -o -type d \) 2>/dev/null | sort
 ```
 
-2. Check governance and adjacent lanes nearby.
+2. Check governance and adjacent lanes nearby, if present.
 
 ```bash
-sed -n '1,160p' .github/README.md
-sed -n '1,200p' .github/CODEOWNERS
-find .github/workflows -maxdepth 2 -type f | sort
+[ -f .github/README.md ] && sed -n '1,160p' .github/README.md
+[ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
 3. Check naming drift and existing callers before adding a new family.
 
 ```bash
-rg -n "tools/(validators|validate|probes|diff|docs|catalog|attest|ci)" -S .
-rg -n "tools/" .github/workflows docs scripts tests -S .
+rg -n "tools/" .github docs scripts tests policy contracts -S 2>/dev/null
+rg -n "tools/(validators|validate|probes|diff|docs|catalog|attest|ci)" . -S 2>/dev/null
 ```
 
-4. Run a documented example flow if the referenced paths exist.
+4. Inspect candidate helper entrypoints instead of assuming they exist.
 
 ```bash
-python tools/probes/gtfsrt_probe.py --out probe.json
-python tools/validate/gtfsrt_schema.py probe.json --out validate.json
-python tools/diff/stable_diff.py --path data/work/realtime/ > diff.txt
+find tools -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.mjs" \) 2>/dev/null | sort
 ```
 
 > [!NOTE]
-> The example commands above come from project documentation and expansion notes. Treat them as **verification targets**, not as proof that the active checkout already contains those exact files.
+> The goal of quickstart here is **inventory first, movement second**. In this session, mounted repo reality was not directly visible, so every structural change should begin with local confirmation.
 
 ## Usage
 
@@ -237,13 +235,13 @@ A helper belongs in `tools/` when it:
 - does not silently promote, publish, or mutate authoritative truth
 - is useful both to humans and to CI
 
-### Call tools from scripts or CI
+### Wire tools into scripts or CI
 
 Keep orchestration and helper logic distinct:
 
 1. let `scripts/` own staged movement, scheduling, or operator choreography
 2. let `tools/` own reusable inspection, validation, comparison, or support evidence
-3. keep workflow YAML small by calling stable tool entrypoints instead of embedding large shells
+3. keep workflow YAML small by calling stable tool entrypoints instead of embedding large shell blobs
 4. make the same helper runnable locally and in CI
 5. document the caller and the helper together when either one becomes merge-blocking
 
@@ -259,6 +257,7 @@ Keep orchestration and helper logic distinct:
 | Safety | No secret scraping, unrestricted sensitive fixtures, or logs that leak policy-restricted material |
 | Boundary discipline | No direct bypass of policy, review, release evidence, or the trust membrane |
 | Reviewability | Helpers should be callable by humans, CI, and scripts without changing semantics |
+| Local/CI parity | A merge-blocking helper should be runnable locally with the same core behavior as in CI |
 
 Illustrative output shape for a blocking validator:
 
@@ -317,7 +316,7 @@ flowchart LR
     R --> RV[reviewers]
     R --> G[promote or block]
 
-    G -. never bypass .-> API[governed APIs]
+    G -. never bypass .-> API[governed interfaces]
     API -. no direct client shortcut .-> STORE[(canonical stores)]
 ```
 
@@ -328,12 +327,12 @@ flowchart LR
 | Family | Primary job | Typical inputs | Expected outputs | Typical caller | Status in this README |
 | --- | --- | --- | --- | --- | --- |
 | `validators/` | schema, catalog, provenance, determinism, docs, or policy-adjacent checks | schemas, manifests, catalogs, receipts, fixtures, markdown | pass/fail report, structured errors | CI, local review, scripts | **Strongest documentary fit** |
-| `probes/` | bounded source, freshness, or status inspection | endpoints, feeds, configs, snapshots | probe report, freshness/status summary | scheduled checks, PR validation | **Document-backed examples exist** |
-| `diff/` | deterministic comparison for review or correction | manifests, snapshots, geometry baselines, catalogs | stable diff report, counts, optional artifacts | reviewers, CI | **Document-backed examples exist** |
-| `docs/` | executable checks for front matter, mermaid, tables, fences, badges, or links | markdown, schemas, lint configs | audit JSON, summaries, link logs | docs CI, maintainers | **PROPOSED family from documentary notes** |
-| `catalog/` | catalog closure or metadata-assembly support | processed artifacts, IDs, metadata, cross-link targets | closure report, catalog updates, link summaries | release prep, local verification | **PROPOSED family shape** |
-| `attest/` | attestation and release-evidence support | digests, SBOM refs, manifests, proof objects | attestations, verification results, support bundles | release lanes, CI | **PROPOSED family shape** |
-| `ci/` | reviewer-facing summaries and merge-gate support | reports, receipts, artifacts, test output | PR summaries, annotations, compact gate output | CI workflows | **PROPOSED family shape** |
+| `probes/` | bounded source, freshness, or status inspection | endpoints, feeds, configs, snapshots | probe report, freshness/status summary | scheduled checks, PR validation | **PROPOSED family** |
+| `diff/` | deterministic comparison for review or correction | manifests, snapshots, geometry baselines, catalogs | stable diff report, counts, optional artifacts | reviewers, CI | **PROPOSED family** |
+| `docs/` | executable checks for front matter, mermaid, tables, fences, badges, or links | markdown, schemas, lint configs | audit JSON, summaries, link logs | docs CI, maintainers | **PROPOSED family** |
+| `catalog/` | catalog closure or metadata-assembly support | processed artifacts, IDs, metadata, cross-link targets | closure report, catalog updates, link summaries | release prep, local verification | **PROPOSED family** |
+| `attest/` | attestation and release-evidence support | digests, manifests, proof objects | attestations, verification results, support bundles | release lanes, CI | **PROPOSED family** |
+| `ci/` | reviewer-facing summaries and merge-gate support | reports, receipts, artifacts, test output | PR summaries, annotations, compact gate output | CI workflows | **PROPOSED family** |
 
 ### Naming and placement rules
 
@@ -358,7 +357,7 @@ flowchart LR
 - [ ] If a script or workflow calls the tool, that caller is documented near the helper.
 - [ ] Naming follows the plural-noun family rule for directories and descriptive entrypoint rule for executables.
 - [ ] This README and any local tool README were updated together.
-- [ ] Path-level claims, owners, and workflow references were verified against the live checkout before merge.
+- [ ] Owners, merge gates, and caller paths were verified against the live checkout before merge.
 
 ## FAQ
 
@@ -372,7 +371,7 @@ When the logic is no longer primarily a CLI/helper surface and becomes shared li
 
 ### Where should documentation rules live?
 
-The **normative** rule, schema, or style policy should live in `docs/` or governance lanes such as `.github/linters/`. A helper that validates those rules may live under `tools/`, but it must not become the source-of-truth for the rule it checks.
+The **normative** rule, schema, or style policy should live in `docs/` or governance lanes. A helper that validates those rules may live under `tools/`, but it must not become the source-of-truth for the rule it checks.
 
 ### Why keep `CONFIRMED`, `PROPOSED`, and `UNKNOWN` markers inside a README?
 
@@ -385,19 +384,19 @@ Because the documentary corpus already shows naming drift. Standardizing on noun
 ## Appendix
 
 <details>
-<summary>Document-backed example paths mentioned in accessible project materials</summary>
+<summary>Design-note example paths mentioned in accessible project materials</summary>
 
 ```text
-tools/probes/gtfsrt_probe.py
-tools/validate/gtfsrt_schema.py
-tools/diff/stable_diff.py
-tools/partition/write_snapshot.py
-tools/validators/http_validators.sh
 tools/validators/spec_hash.py
+tools/validators/http_validators.sh
 tools/docs/validate_front_matter.py
 tools/docs/validate_mermaid.mjs
 tools/docs/audit_tables_and_fences.mjs
 tools/docs/validate_badges_footer.mjs
+tools/probes/gtfsrt_probe.py
+tools/validate/gtfsrt_schema.py
+tools/diff/stable_diff.py
+tools/partition/write_snapshot.py
 ```
 
 Use this list as a review aid, not as proof that every path exists on the active branch.
@@ -409,21 +408,21 @@ Use this list as a review aid, not as proof that every path exists on the active
 
 ```bash
 # What is actually present?
-find tools -maxdepth 4 \( -type f -o -type d \) | sort
+find tools -maxdepth 4 \( -type f -o -type d \) 2>/dev/null | sort
 
 # Which nearby governed surfaces exist?
-find .github -maxdepth 2 -type f | sort
-find tests -maxdepth 3 \( -type f -o -type d \) | sort
+find .github -maxdepth 2 -type f 2>/dev/null | sort
+find tests -maxdepth 3 \( -type f -o -type d \) 2>/dev/null | sort
 
 # Where does tooling wire into CI, scripts, docs, and policy?
-rg -n "tools/" .github/workflows docs scripts policy tests -S
+rg -n "tools/" .github docs scripts policy tests contracts -S 2>/dev/null
 
 # Is there still validators/validate drift?
-rg -n "tools/(validators|validate)/" -S .
+rg -n "tools/(validators|validate)/" . -S 2>/dev/null
 
 # Which owners and merge gates are active?
-sed -n '1,200p' .github/CODEOWNERS
-find .github/workflows -maxdepth 2 -type f | sort
+[ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 ```
 
 </details>
@@ -437,8 +436,8 @@ This README does **not** claim that the current mounted repo already contains:
 - a confirmed owner map for `tools/`
 - a confirmed workflow inventory or merge-blocking gate list
 - a confirmed schema/fixture inventory for tooling
-- a confirmed deployment, rollback, or attestation implementation
 - a confirmed docs-tooling lane on disk
+- a confirmed proof-pack or attestation implementation
 - a confirmed EvidenceBundle resolver or RuntimeResponseEnvelope implementation on disk
 
 Those remain direct verification tasks for a live checkout.
