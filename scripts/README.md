@@ -25,7 +25,7 @@ Repo-local entrypoints for repeatable, reviewable, fail-closed KFM validation, e
 > [!IMPORTANT]
 > This README is **evidence-bounded**.
 >
-> The March 2026 KFM corpus is strong on `scripts/` doctrine, target responsibilities, governance posture, and proof-bearing expectations. The current revision did **not** have a mounted repository checkout, workflow inventory, or runtime logs. Treat exact paths, owners, filenames, and neighbor-directory presence here as **PROPOSED** or **NEEDS VERIFICATION** unless the checked-out repo confirms them.
+> The March 2026 KFM corpus is strong on `scripts/` doctrine, target responsibilities, governance posture, and proof-bearing expectations. This revision did **not** have a mounted repository checkout, workflow inventory, or runtime logs. Treat exact paths, owners, filenames, and neighbor-directory presence here as **PROPOSED** or **NEEDS VERIFICATION** unless the checked-out repo confirms them.
 
 ## Scope
 
@@ -100,7 +100,8 @@ A new helper should usually satisfy all of the following:
 
 ## Exclusions
 
-The following do **not** belong in `scripts/`.
+> [!NOTE]
+> Better-home paths below reflect **documented target homes** from the attached corpus, not a directly mounted checkout. Verify them before merge or refactor.
 
 | Do not keep here | Better home | Why |
 | --- | --- | --- |
