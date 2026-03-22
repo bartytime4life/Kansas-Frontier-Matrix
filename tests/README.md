@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <TODO: verify YYYY-MM-DD>
 updated: 2026-03-22
 policy_label: public
-related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../contracts/README.md, ../docs/README.md]
+related: [../README.md, ../CONTRIBUTING.md, ../.github/README.md, ../.github/CODEOWNERS, ../.github/workflows/README.md, ../contracts/README.md, ../policy/README.md, ../schemas/README.md, ../docs/README.md]
 tags: [kfm, tests, verification, readme]
-notes: [doc_id and created date still need live-repo verification; owner is confirmed by current CODEOWNERS for /tests/; this revision aligns the README to the current public main-branch tests tree while keeping deeper suite depth and CI gating explicitly bounded]
+notes: [doc_id and created date still need live-repo verification; owner is confirmed by current CODEOWNERS for /tests/; this revision aligns the README to the current public main-branch tests tree and adds current workflow-lane visibility while keeping deeper suite depth and platform-level gating explicitly bounded]
 [/KFM_META_BLOCK_V2] -->
 
 # tests
@@ -58,10 +58,11 @@ That is broader than “do the tests pass?” The stronger questions are:
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | The public `main` branch exposes `tests/` as a real top-level directory, confirms branch-visible test families, confirms `tests/e2e/` leaf directories, confirms adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `docs/README.md`, and confirms `/tests/` ownership in `.github/CODEOWNERS` |
-| **CONFIRMED — March 2026 KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, and hydrology-first thin-slice proof are all part of the KFM verification model |
-| **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different branch-visible names |
-| **NEEDS VERIFICATION** | Exact executable suite depth, actual runner/toolchain, merge-blocking workflow set, screenshot baseline inventory, fixture density, and whether rollback/correction drills have been exercised on the checked-out branch |
+| **CONFIRMED — current public repo** | The public `main` branch exposes `tests/` as a real top-level directory, confirms branch-visible test families, confirms `tests/e2e/` leaf directories, confirms adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `policy/README.md`, `schemas/README.md`, and `docs/README.md`, and confirms `/tests/` ownership in `.github/CODEOWNERS`. |
+| **CONFIRMED — current public workflow lane** | The public `main` branch also exposes `.github/workflows/README.md`, and the visible `.github/workflows/` tree currently shows `README.md` only. No checked-in workflow YAML files are visible there on public `main`. |
+| **CONFIRMED — March 2026 KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, and hydrology-first thin-slice proof are all part of the KFM verification model. |
+| **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different branch-visible names. |
+| **NEEDS VERIFICATION** | Exact executable suite depth, actual runner/toolchain, required checks, branch protection/rulesets, screenshot baseline inventory, fixture density, and whether rollback/correction drills have been exercised on the checked-out branch. |
 
 > [!CAUTION]
 > Directory presence is **not** the same thing as mature coverage.
@@ -90,7 +91,10 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | contributor workflow, review discipline, and documentation expectations | **CONFIRMED** |
 | [`../.github/README.md`](../.github/README.md) | repo gatehouse for CI/CD, review boundaries, and governance automation | **CONFIRMED** |
 | [`../.github/CODEOWNERS`](../.github/CODEOWNERS) | ownership and review boundary for `/tests/` | **CONFIRMED** |
+| [`../.github/workflows/README.md`](../.github/workflows/README.md) | public workflow-lane surface and current checked-in automation visibility | **CONFIRMED** |
 | [`../contracts/README.md`](../contracts/README.md) | authoritative contract-source layer that tests should consume, not replace | **CONFIRMED** |
+| [`../policy/README.md`](../policy/README.md) | policy and governance posture that tests should exercise rather than restate | **CONFIRMED** |
+| [`../schemas/README.md`](../schemas/README.md) | schema-home ambiguity and contract-shape boundaries that verification should pressure-test | **CONFIRMED** |
 | [`../docs/README.md`](../docs/README.md) | governed documentation index and runbook surface | **CONFIRMED** |
 
 ### Confirmed downstream surfaces
@@ -107,6 +111,11 @@ That is broader than “do the tests pass?” The stronger questions are:
 | [`./e2e/correction/`](./e2e/correction/) | correction and supersession drill family |
 | [`./e2e/release_assembly/`](./e2e/release_assembly/) | release / promotion / publish-path proof family |
 | [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time runtime and outcome-proof family |
+
+> [!NOTE]
+> The current public `.github/workflows/` lane matters to `tests/` even though it sits outside this directory.
+> Public `main` currently shows `.github/workflows/README.md` and no checked-in workflow YAML files there.
+> That sharpens the README’s stance: **test families are visible, but merge-blocking automation still needs platform-level or branch-local verification**.
 
 ### Path reconciliation note
 
@@ -173,10 +182,11 @@ The current public `main` branch proves the following:
 - The branch-visible family set includes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
 - `tests/e2e/` exposes `README.md`, `correction/`, `release_assembly/`, and `runtime_proof/`.
 - `/tests/` is assigned to `@bartytime4life` in `.github/CODEOWNERS`.
+- `.github/workflows/` currently exposes `README.md` only on public `main`; no checked-in workflow YAML files are visible there.
 
 > [!WARNING]
 > What is still **not** proven here:
-> exact test runner(s), actual executable case depth inside each family, merge-blocking workflow inventory, screenshot baseline coverage, fixture density, and whether restore / rollback / correction drills have been exercised on a checked-out branch.
+> exact test runner(s), actual executable case depth inside each family, required checks and branch-protection settings, screenshot baseline coverage, fixture density, and whether restore / rollback / correction drills have been exercised on a checked-out branch.
 
 ## Directory tree
 
@@ -227,10 +237,14 @@ find .github contracts docs policy schemas tests -maxdepth 4 -type f 2>/dev/null
 # inspect ownership and governance boundaries
 sed -n '1,200p' .github/CODEOWNERS 2>/dev/null || true
 sed -n '1,220p' .github/README.md 2>/dev/null || true
+sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
 sed -n '1,220p' CONTRIBUTING.md 2>/dev/null || true
 
 # inspect end-to-end family placement
 find tests/e2e -maxdepth 2 -type d 2>/dev/null | sort
+
+# inspect workflow lane contents directly
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 
 # inspect likely KFM verification vocabulary without assuming a runner
 grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|ABSTAIN\|DENY\|ERROR" \
@@ -240,10 +254,11 @@ grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotic
 ### First local review pass
 
 1. Verify which family directories contain executable suites rather than scaffold README placeholders.
-2. Verify which checks actually block merges on the active branch.
-3. Verify whether contract, policy, docs, and tests move together in the same change stream.
-4. Verify whether negative paths exist, not only happy-path confirmation.
-5. Verify whether runtime evidence, abstention, denial, stale visibility, and correction behavior are exercised end to end.
+2. Verify whether the checked-out branch still matches the current public tree for `tests/` and `.github/workflows/`.
+3. Verify which checks actually block merges on the active branch.
+4. Verify whether contract, policy, docs, and tests move together in the same change stream.
+5. Verify whether negative paths exist, not only happy-path confirmation.
+6. Verify whether runtime evidence, abstention, denial, stale visibility, and correction behavior are exercised end to end.
 
 > [!TIP]
 > Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands.
@@ -300,6 +315,7 @@ flowchart LR
     P["policy/"] --> T
     A["apps/ + packages/ + infra/"] --> T
     D["docs/ + runbooks"] --> T
+    W[".github/workflows/"] --> G["gated automation"]
 
     subgraph F["current family map"]
       U["unit/"]
@@ -314,7 +330,7 @@ flowchart LR
     end
 
     T --> F
-    F --> G["governed checks"]
+    F --> G
     G --> Q{"trust-preserving?"}
 
     Q -->|no| H["hold / deny / quarantine / fix"]
@@ -322,6 +338,7 @@ flowchart LR
     PR --> RT["runtime trust surfaces"]
 
     RT -. stale-state, rollback, and correction drills .-> CO
+    W -. current public main: README only .-> G
 ```
 
 ## Operating tables
@@ -341,6 +358,13 @@ flowchart LR
 | `e2e/correction/` | Yes | supersession, stale-state, rollback, and correction drills | strongly aligned with correction lineage doctrine |
 | `regression/` | No current branch evidence | doctrinal shorthand for some UI / map / rebuild burdens | keep this as doctrine, not current path claim |
 
+### Public-main workflow adjacency
+
+| Surface | Current public-main evidence | Why it matters to `tests/` |
+|---|---|---|
+| `.github/workflows/` | `README.md` only; no checked-in workflow YAML files are visible there | checked-in test families exist, but branch-level enforcement still needs platform or branch-local verification |
+| `.github/workflows/README.md` | present | the repo documents workflow intent even though the visible automation lane is still thin |
+
 ### Change-trigger matrix
 
 | If a PR changes… | Minimum verification expectation |
@@ -352,6 +376,7 @@ flowchart LR
 | Story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
 | docs describing behavior | linked updates, no contradiction with tests / contracts / policy, and no overclaiming branch reality |
 | release / promotion / correction | end-to-end release assembly, rollback or supersession drill, and stale-state handling |
+| workflow / required-check posture | confirm checked-in automation, platform rules, and whether public-tree signals still match effective merge gates |
 
 ### Negative paths worth proving early
 
@@ -371,6 +396,7 @@ Treat this README as healthy only when the directory contract stays both readabl
 - [ ] Keep branch-visible structure separate from assumptions about suite depth
 - [ ] Keep owners aligned with `../.github/CODEOWNERS`
 - [ ] Update this README whenever a test family is added, renamed, removed, or materially repurposed
+- [ ] Update this README whenever current public workflow-lane evidence changes in a way that affects test-gate expectations
 - [ ] Do not describe a family as active coverage unless the branch actually contains executable cases
 - [ ] Prefer negative-path proof for trust-sensitive changes, not just happy-path confirmation
 - [ ] Keep `contracts/`, `schemas/`, `policy/`, `docs/`, and `tests/` coherent in the same PR when behavior changes
@@ -389,7 +415,7 @@ Because repo-native truth outranks cleaner theory. The manuals are valuable for 
 
 ### Does the current branch prove merge-blocking coverage?
 
-No. The public tree proves directory presence and ownership boundaries. It does **not** by itself prove runner choice, suite depth, required checks, workflow gating, or exercised rollback / correction history.
+No. The public tree proves directory presence, family placement, ownership boundaries, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
 
 ### Where should accessibility and reproducibility work live right now?
 
@@ -406,15 +432,26 @@ Because KFM’s March 2026 manuals repeatedly treat hydrology as comparatively p
 <details>
 <summary><strong>Appendix A — Evidence basis used for this README</strong></summary>
 
-This revision is grounded in two evidence layers:
+This revision is grounded in three evidence layers:
 
 1. **Current public repo evidence** on `bartytime4life/Kansas-Frontier-Matrix` `main`, including:
    - top-level repo presence of `tests/`, `contracts/`, `docs/`, `.github/`, and contributor-facing root docs
    - the current `tests/` family tree
    - the current `tests/e2e/` leaf family tree
    - current ownership mapping from `.github/CODEOWNERS`
+   - the current public `.github/workflows/` tree, which shows `README.md` only
 
-2. **March 20–21, 2026 KFM doctrinal manuals**, especially the layers that sharpen:
+2. **Current adjacent repo documentation**, including:
+   - `README.md`
+   - `CONTRIBUTING.md`
+   - `.github/README.md`
+   - `.github/workflows/README.md`
+   - `contracts/README.md`
+   - `policy/README.md`
+   - `schemas/README.md`
+   - `docs/README.md`
+
+3. **March 20–22, 2026 KFM doctrinal manuals**, especially the layers that sharpen:
    - verification as trust-bearing governance
    - negative-path and fail-closed behavior
    - release proof, rollback, and correction discipline
@@ -429,8 +466,9 @@ This revision is grounded in two evidence layers:
 Before treating this README as fully settled local-checkout documentation, verify:
 
 - the exact contents of each current family directory
+- whether the checked-out branch still matches the public `main` tree summarized here
 - the test runner(s), config files, and invocation surface
-- the actual GitHub workflow set and required checks
+- the actual required checks and GitHub rulesets/branch protection
 - screenshot baseline presence, if any
 - fixture placement and density
 - whether rollback, restore, or correction drills have archived evidence
