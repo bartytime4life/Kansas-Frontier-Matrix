@@ -6,82 +6,86 @@ version: v2
 status: draft
 owners: NEEDS_VERIFICATION
 created: 2026-03-15
-updated: 2026-03-19
+updated: 2026-03-22
 policy_label: NEEDS_VERIFICATION
 related: [../README.md, ../CONTRIBUTING.md, ../docs/governance/, ../docs/architecture/, ../docs/domains/, ../docs/runbooks/, ../docs/adr/, ../contracts/, ../policy/, ../data/registry/, ../apps/, ../packages/, ../infra/, ../tools/, ../scripts/, ../tests/, ./workflows/, ./CODEOWNERS, ./PULL_REQUEST_TEMPLATE.md, ./SECURITY.md]
-tags: [kfm, github, governance, ci-cd, gitops, verification, review, release-evidence, delivery]
-notes: [This revision is grounded in March 2026 KFM doctrine plus documentary repo-audit/support material. `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `../CONTRIBUTING.md` are documentary-confirmed; repo-audit support also confirms public-repo metadata and GitHub Actions / code-scanning activity. The live `.github/workflows/` inventory, exact template filenames, exact `CODEOWNERS` contents, branch-protection settings, required checks, and environment approvals were not directly re-inspected from a mounted checkout in this session.]
+tags: [kfm, github, governance, ci-cd, verification, review, release-evidence, delivery]
+notes: [Documentary GitHub evidence confirms README.md, .github/README.md, .github/CODEOWNERS, .github/SECURITY.md, CONTRIBUTING.md, public repo metadata, and Actions/code-scanning activity; live workflow inventory, exact CODEOWNERS handles, template filenames, branch protection, required checks, and environment approvals remain unverified in this session.]
 [/KFM_META_BLOCK_V2] -->
 
 <div align="center">
   <strong>Kansas Frontier Matrix</strong><br />
-  <sub>Repo gatehouse for review, verification, and governed delivery</sub>
+  <sub>Repository gatehouse for governance, review, CI/CD, and delivery evidence</sub>
 </div>
 
 # `.github`
 
 Repository-wide governance, collaboration, verification, and governed delivery entrypoint for Kansas Frontier Matrix.
 
-![status](https://img.shields.io/badge/status-experimental-blue)
+![status](https://img.shields.io/badge/status-active-0a7d5a)
+![doc](https://img.shields.io/badge/doc-draft-8250df)
 ![owners](https://img.shields.io/badge/owners-NEEDS__VERIFICATION-lightgrey)
 ![repo](https://img.shields.io/badge/repo-public-1f6feb)
 ![branch](https://img.shields.io/badge/default%20branch-main-0a7d5a)
-![truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%7C%20bounded%20repo--audit-8250df)
+![truth](https://img.shields.io/badge/truth-documentary%20repo%20evidence%20%7C%20KFM%20doctrine-6f42c1)
 ![delivery](https://img.shields.io/badge/delivery-governed%20gatehouse-0a7d5a)
 
 | Field | Value |
 |---|---|
-| Status | experimental |
+| Status | **active** directory · **draft** README revision |
 | Owners | **NEEDS_VERIFICATION** |
 | Path | `.github/README.md` |
-| Audited repo | `bartytime4life/Kansas-Frontier-Matrix` |
+| Audited repository | `bartytime4life/Kansas-Frontier-Matrix` |
 | Default branch | `main` |
 | Visibility | public |
-| Repo role | Gatehouse for contributor intake, review boundaries, workflow lanes, release evidence, and rollback / correction discipline |
-| Truth posture | **CONFIRMED doctrine · CONFIRMED documentary repo evidence for `README.md`, `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, `CONTRIBUTING.md`, public-repo metadata, and GitHub Actions / code-scanning activity · UNKNOWN live checkout details and platform settings** |
-| Current evidence in this revision | Mounted March 2026 KFM PDFs plus repo-audit/support material; **no direct mounted checkout** of `.github/workflows/`, exact template filenames, branch protection, environment approvals, or exact workflow YAML contents |
+| Audience | maintainers, reviewers, contributors, release stewards |
+| Repo role | gatehouse for contributor intake, review boundaries, CI/CD lanes, release evidence, and rollback/correction discipline |
+| Truth posture | **CONFIRMED** KFM doctrine · **CONFIRMED** documentary repo evidence for key repo-health files and activity · **UNKNOWN** live checkout and GitHub platform settings not re-inspected here |
+| Current evidence used here | March 2026 KFM doctrine plus documentary GitHub fetch/audit material; **no mounted live repo checkout** and **no direct reinspection** of `.github/workflows/` or GitHub settings in this session |
 
 **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Control surfaces](#control-surfaces) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is **evidence-bounded**.
+> This README is **documentary-grounded** and **live-checkout-bounded**.
 >
-> It is grounded in March 2026 KFM doctrine plus documentary repo-audit/support material, but it does **not** claim a direct current-session reinspection of the live `.github/` tree, exact workflow YAML filenames, exact required checks, exact branch-protection settings, exact environment approvals, or exact `CODEOWNERS` entries.
+> It is written from March 2026 KFM doctrine plus documentary GitHub evidence, but it does **not** claim a direct current-session reinspection of the live `.github/` tree, exact workflow YAML filenames, exact `CODEOWNERS` handles, exact template filenames, exact required checks, exact branch-protection settings, or exact environment approvals.
 >
 > Use these labels throughout this file:
-> - **CONFIRMED** — directly supported by mounted KFM doctrine or documentary repo-audit material visible in this session
-> - **INFERRED** — supported by attached repo inventory / audit material, but not rechecked from a live checkout here
-> - **PROPOSED** — realization guidance consistent with KFM doctrine
+> - **CONFIRMED** — directly supported by attached KFM doctrine or documentary repo evidence visible in this session
+> - **INFERRED** — strongly suggested by the attached evidence, but not rechecked from a live checkout here
+> - **PROPOSED** — doctrine-consistent realization guidance
 > - **UNKNOWN** — not established strongly enough in this session
-> - **NEEDS VERIFICATION** — placeholder or claim that should be checked against the live repository before merge
+> - **NEEDS VERIFICATION** — placeholder or repo/platform detail that should be checked before merge
 
 ## Scope
 
 `.github/` is KFM’s repository-level **gatehouse**.
 
-This directory is where contributor intake, review boundaries, CI/CD, release evidence, and correction discipline stop being informal intentions and become executable controls. In KFM terms, that makes `.github/` one of the clearest repository expressions of the **trust membrane**: changes pass through review, verification, policy, and promotion controls before they widen into public-facing or release-bearing state.
+This is where contributor intake, review boundaries, CI/CD, and delivery evidence stop being informal intentions and become executable controls. In KFM terms, `.github/` is one of the most visible repository expressions of the **trust membrane**: changes should cross review, verification, and release-bearing gates before they widen into public-facing or release-bearing state.
 
-A strong `.github/` tree does not merely “run CI.” It helps preserve the repository-truth rule, keeps failure structural instead of ornamental, and makes rollback, correction, and approval boundaries visible.
+A strong `.github/` tree does not merely “run CI.” It makes responsibility visible. It helps keep the repository-truth rule enforceable. It gives rollback and correction a home. And it keeps repo-health surfaces close to the same governance posture as the code, contracts, schemas, and policies they protect.
 
 ### Evidence boundary used here
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED** | KFM’s PR-first, fail-closed, evidence-bearing delivery doctrine; documentary confirmation that `README.md`, `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `CONTRIBUTING.md` exist; audited repo metadata showing `main` as the default branch on a public GitHub repository |
-| **CONFIRMED activity / NEEDS VERIFICATION inventory** | GitHub Actions and code-scanning activity are present in the repo-audit evidence, but exact workflow filenames and full workflow inventory were not re-read from a live checkout here |
-| **UNKNOWN** | Direct live checkout details: exact workflow YAML set, exact issue and PR template filenames, exact current `CODEOWNERS` entries, exact required checks, exact branch protections, and exact environment approvals |
+| **CONFIRMED doctrine** | KFM’s truth path, trust membrane, authoritative-vs-derived split, cite-or-abstain posture, default-deny/fail-closed behavior, and docs/contracts/schemas as production surfaces |
+| **CONFIRMED documentary repo evidence** | `README.md`, `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `CONTRIBUTING.md` were fetched in the supporting repo audit; the repository is public and uses `main` as default branch |
+| **CONFIRMED activity / NEEDS VERIFICATION inventory** | GitHub Actions activity and code-scanning activity are present, but the exact workflow YAML set and exact template filenames were not re-read from a live checkout here |
+| **UNKNOWN / NEEDS VERIFICATION** | exact `.github/workflows/` inventory, exact issue/PR template paths, exact current `CODEOWNERS` entries, required checks, protected branch rules, environment approvals, and GitHub App / OIDC / deployment settings |
 
 ### Documentary repo signals
 
-| Documentary repo signal | What it supports | Status |
+| Documentary signal | What it supports | Status |
 |---|---|---|
-| Repo audit identifies `bartytime4life/Kansas-Frontier-Matrix` as public with default branch `main` | This README can treat GitHub-hosted collaboration as the normal repo-facing control plane | CONFIRMED |
-| `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `CONTRIBUTING.md` were fetched in the repo-audit material | These files are safe direct adjacencies for this README | CONFIRMED |
-| Dependency-bump pull requests touched GitHub Actions dependencies such as checkout, setup-python, and upload-artifact | `.github/workflows/` is not hypothetical, even though the exact YAML set still needs reinspection | CONFIRMED activity / NEEDS VERIFICATION inventory |
-| Autofix pull requests for code scanning and a `CODEOWNERS` parsing fix are recorded in the audit support | Ownership and security automation are operating concerns in this repo, not decorative health files | CONFIRMED activity / NEEDS VERIFICATION configuration detail |
+| Public repo metadata with default branch `main` | GitHub-hosted collaboration is the normal repo-facing control plane | CONFIRMED |
+| `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `CONTRIBUTING.md` fetched in repo-support material | these are safe, direct adjacencies for this README | CONFIRMED |
+| Actions dependency-bump PRs and code-scanning/autofix activity | `.github/workflows/` is not hypothetical, even though the exact YAML set still needs live reinspection | CONFIRMED activity / NEEDS VERIFICATION inventory |
+| `CODEOWNERS` coverage patterns for `docs/`, `data/`, `src/`, `tools/`, `tests/`, `policy/`, `contracts/`, plus key governance files | ownership and review boundaries are substantive repo controls, not decorative paperwork | CONFIRMED |
+| Supporting audit notes explicitly call out the lack of recursive live repo extraction in that session | this README must keep live inventory claims bounded instead of implying a full checkout audit | CONFIRMED |
 
 > [!NOTE]
-> Platform state is **not** the same thing as repo state. Branch protection, required checks, environment reviewers, GitHub App permissions, and deployment approvals must be verified in GitHub settings or exported governance evidence, not assumed from repository files alone.
+> Platform state is **not** the same thing as repo state. Branch protection, required checks, environment reviewers, deployment approvals, GitHub App permissions, and OIDC trust relationships must be verified in GitHub settings or equivalent exported governance evidence. They should not be assumed from repository files alone.
 
 [Back to top](#github)
 
@@ -91,23 +95,23 @@ A strong `.github/` tree does not merely “run CI.” It helps preserve the rep
 
 **Role in repo:** directory README for repository-wide governance, review boundaries, CI/CD surfaces, release evidence, and correction posture.
 
-**Repo-native obligation:** explain how repo-wide controls preserve KFM’s truth path without pretending `.github/` is the canonical home of contracts, policy bodies, datasets, or runtime code.
+**Why it exists:** explain how repository-wide controls preserve KFM’s truth path without pretending `.github/` is the canonical home of schemas, policy bodies, runtime code, or domain artifacts.
 
 ### Upstream and downstream anchors
 
 | Direction | Path | Why it matters | Status in this README |
 |---|---|---|---|
-| Upstream | [`../README.md`](../README.md) | repo-wide entrypoint and project framing | CONFIRMED documentary evidence |
+| Upstream | [`../README.md`](../README.md) | project framing, repo identity, and top-level positioning | CONFIRMED documentary evidence |
 | Upstream | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | contributor workflow and contribution expectations | CONFIRMED documentary evidence |
 | Upstream | [`../docs/`](../docs/) | doctrine, architecture, ADRs, and runbooks that `.github/` should gate rather than replace | INFERRED / NEEDS VERIFICATION |
 | Upstream | [`../contracts/`](../contracts/) | canonical machine-readable contract surfaces | INFERRED / NEEDS VERIFICATION |
 | Upstream | [`../policy/`](../policy/) | policy bundles, fixtures, and policy tests | INFERRED / NEEDS VERIFICATION |
-| Upstream | [`../data/registry/`](../data/registry/) | source descriptors and registry-driven intake | INFERRED / NEEDS VERIFICATION |
+| Upstream | [`../data/registry/`](../data/registry/) | source descriptors, registry material, and lifecycle-driven intake | INFERRED / NEEDS VERIFICATION |
 | Downstream | [`./CODEOWNERS`](./CODEOWNERS) | executable review-boundary map | CONFIRMED documentary evidence |
-| Downstream | [`./SECURITY.md`](./SECURITY.md) | security reporting and disclosure entrypoint | CONFIRMED documentary evidence |
-| Downstream | [`./workflows/`](./workflows/) | CI, verification, release, and correction lanes | CONFIRMED activity / NEEDS VERIFICATION inventory |
-| Downstream | PR template surface | contributor PR contract | NEEDS VERIFICATION |
-| Downstream | issue template surface | structured issue intake | NEEDS VERIFICATION |
+| Downstream | [`./SECURITY.md`](./SECURITY.md) | vulnerability reporting and disclosure entrypoint | CONFIRMED documentary evidence |
+| Downstream | [`./workflows/`](./workflows/) | CI, validation, promotion, rollback, and correction lanes | CONFIRMED activity / NEEDS VERIFICATION inventory |
+| Downstream | issue-template surface | structured issue intake | NEEDS VERIFICATION |
+| Downstream | PR-template surface | structured pull-request intake | NEEDS VERIFICATION |
 
 <details>
 <summary><strong>Broader repo context</strong> — documentary inventory plus doctrine-led structure</summary>
@@ -115,16 +119,16 @@ A strong `.github/` tree does not merely “run CI.” It helps preserve the rep
 ```text
 repo/
 ├── .github/              # repo-wide governance and CI/CD gatehouse
-├── docs/                 # human-readable doctrine, runbooks, ADRs, schemas
-├── contracts/            # API contracts and schemas
-├── policy/               # policy code and fixtures
-├── data/                 # registry, lifecycle zones, and catalogs
-├── apps/                 # runnable services and UIs
-├── packages/             # reusable domain/use-case modules
-├── infra/                # deployment infrastructure
-├── tools/                # validators and utility tooling
-├── scripts/              # build / release / promotion helpers
-└── tests/                # unit, integration, policy, and e2e verification
+├── docs/                 # doctrine, architecture, ADRs, runbooks, standards
+├── contracts/            # machine-readable contracts and schemas
+├── policy/               # policy code, fixtures, and tests
+├── data/                 # lifecycle zones, registries, and published artifacts
+├── apps/                 # user-facing and steward-facing applications
+├── packages/             # reusable shared modules
+├── infra/                # deployment and platform infrastructure
+├── tools/                # validators, generators, and support utilities
+├── scripts/              # workflow helpers and operational scripts
+└── tests/                # unit, integration, policy, and end-to-end verification
 ```
 
 </details>
@@ -133,13 +137,13 @@ repo/
 
 ## Accepted inputs
 
-The following content belongs in `.github/` when it applies across the whole repository rather than one package or app.
+The following content belongs in `.github/` when it applies across the repository rather than to one package or app.
 
 | Input class | What belongs here | Why it belongs here |
 |---|---|---|
 | Workflow definitions | CI, verification, docs, promotion, rollback, correction, and release lanes | repo-wide control and merge behavior live here |
-| Review-boundary files | `CODEOWNERS`, approval-boundary notes, protected-branch guidance | review is part of KFM’s trust system |
-| Structured contributor intake | issue templates, PR templates, review checklists | intake should be shaped before change widens |
+| Review-boundary files | `CODEOWNERS`, review-routing notes, protected-branch guidance | review is part of KFM’s trust system |
+| Structured contributor intake | issue templates, PR templates, review checklists, community-health guidance | intake should be shaped before change widens |
 | Reusable governance automation | composite actions, setup helpers, policy/install helpers, docs preflight automation | reduces drift without hiding behavior |
 | Security/community health entrypoints | `SECURITY.md`, disclosure guidance, automation identity notes | makes trust surfaces discoverable at repo level |
 
@@ -151,29 +155,29 @@ The following content belongs in `.github/` when it applies across the whole rep
 |---|---|
 | machine-readable schemas, OpenAPI specs, vocabularies, envelopes | [`../contracts/`](../contracts/) |
 | policy bodies, reason-code registries, fixtures, policy tests | [`../policy/`](../policy/) |
-| source descriptors, raw/work/processed/catalog truth | [`../data/`](../data/) and [`../data/registry/`](../data/registry/) |
-| runtime services, UI logic, ingestion logic, evidence resolvers | [`../apps/`](../apps/) and [`../packages/`](../packages/) |
-| release artifacts, proof packs, manifests, immutable bundle inventory | designated release / evidence paths, not ad hoc `.github/` storage |
-| architecture manuals, domain doctrine, ADRs, runbooks | [`../docs/`](../docs/) |
+| source descriptors, lifecycle truth zones, registries, and published datasets | [`../data/`](../data/) and [`../data/registry/`](../data/registry/) |
+| runtime services, UI logic, ingestion code, evidence resolvers | [`../apps/`](../apps/) and [`../packages/`](../packages/) |
+| release artifacts, manifests, proof packs, immutable bundle inventory | designated release/evidence paths, not ad hoc `.github/` storage |
+| architecture manuals, domain doctrine, ADRs, and runbooks | [`../docs/`](../docs/) |
 
 [Back to top](#github)
 
 ## Directory tree
 
-The exact live `.github/` tree was **not** directly mounted in this session. The map below distinguishes documentary-confirmed files from workflow activity that is confirmed in principle but still needs live reinspection.
+The exact live `.github/` tree was **not** directly mounted in this session. The map below distinguishes documentary-confirmed files from workflow/template surfaces that remain subject to live reinspection.
 
 ```text
 .github/
-├── README.md                   # CONFIRMED via repo-audit / GitHub connector
-├── CODEOWNERS                  # CONFIRMED via repo-audit / GitHub connector
-├── SECURITY.md                 # CONFIRMED via repo-audit / GitHub connector
-├── workflows/                  # CONFIRMED GitHub Actions activity; exact YAML set NEEDS VERIFICATION
-├── ISSUE_TEMPLATE/             # NEEDS VERIFICATION
-└── PULL_REQUEST_TEMPLATE.md    # NEEDS VERIFICATION
+├── README.md                              # CONFIRMED via documentary GitHub evidence
+├── CODEOWNERS                             # CONFIRMED via documentary GitHub evidence
+├── SECURITY.md                            # CONFIRMED via documentary GitHub evidence
+├── workflows/                             # CONFIRMED Actions activity; exact YAML set NEEDS VERIFICATION
+├── ISSUE_TEMPLATE/ or equivalent          # templates implied; exact filenames NEEDS VERIFICATION
+└── PULL_REQUEST_TEMPLATE.md or equivalent # exact filename/path NEEDS VERIFICATION
 ```
 
 > [!TIP]
-> Treat the tree above as a **review map**, not a guarantee that every listed child has been re-read from the current repository checkout. For live accuracy, re-run the quickstart commands below in the mounted repo and update this README in the same PR.
+> Treat the tree above as a **review map**, not a promise that every child has been re-read from the live repository. Before editing `.github/`, re-run the quickstart inventory commands below against the mounted checkout and update this README in the same PR.
 
 ## Quickstart
 
@@ -186,7 +190,7 @@ git rev-parse --show-toplevel 2>/dev/null || pwd
 # 1) Inventory the gatehouse
 find .github -maxdepth 2 -type f | sort
 
-# 2) Inspect confirmed boundary files
+# 2) Inspect documentary-confirmed boundary files
 sed -n '1,220p' .github/README.md 2>/dev/null || true
 sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
 sed -n '1,220p' .github/SECURITY.md 2>/dev/null || true
@@ -195,17 +199,17 @@ sed -n '1,220p' CONTRIBUTING.md 2>/dev/null || true
 # 3) Inspect workflow inventory before changing gates
 find .github/workflows -maxdepth 1 -type f 2>/dev/null | sort
 grep -R '^name:' .github/workflows 2>/dev/null || true
-grep -R 'uses: .*actions/' .github/workflows 2>/dev/null | sed -n '1,80p'
+grep -R 'uses: .*actions/' .github/workflows 2>/dev/null | sed -n '1,120p'
 
-# 4) Check for issue / PR intake surfaces
+# 4) Check issue / PR intake surfaces
 find .github -maxdepth 2 -type f \
   \( -name '*PULL*' -o -path '.github/ISSUE_TEMPLATE/*' \) \
   2>/dev/null | sort
 
 # 5) Confirm adjacent authority surfaces
-find docs -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,80p'
-find contracts -maxdepth 2 -type f 2>/dev/null | sort | sed -n '1,80p'
-find policy -maxdepth 2 -type f 2>/dev/null | sort | sed -n '1,80p'
+find docs -maxdepth 2 -type d 2>/dev/null | sort | sed -n '1,120p'
+find contracts -maxdepth 2 -type f 2>/dev/null | sort | sed -n '1,120p'
+find policy -maxdepth 2 -type f 2>/dev/null | sort | sed -n '1,120p'
 
 # 6) Platform-state checks are outside the repo tree:
 #    - protected branches
@@ -219,16 +223,16 @@ find policy -maxdepth 2 -type f 2>/dev/null | sort | sed -n '1,80p'
 
 Use this README as the responsibility map for repo-wide change.
 
-1. **Inspect before editing.** Confirm the live `.github/` tree, actual required checks, and actual review boundaries before changing filenames, section claims, or responsibility language.
+1. **Inspect before editing.** Confirm the live `.github/` tree, actual required checks, and actual review boundaries before changing filenames, responsibilities, or status language.
 2. **Map the change to trust impact.** Ask whether the edit changes contributor intake, merge-blocking logic, release evidence, correction posture, or trust-visible behavior.
 3. **Keep trust-impacting automation review-bearing.** KFM doctrine prefers reviewable deltas with attached evidence, policy results, and rollback posture where trust impact is real.
-4. **Update adjacent documentation in the same governed stream.** If a workflow, template, or approval boundary changes how trust is earned, released, rolled back, or corrected, the docs must travel with the change.
+4. **Update adjacent documentation in the same governed stream.** If a workflow, template, or approval boundary changes how trust is earned, released, rolled back, or corrected, the docs should travel with the change.
 
 ### Build, deploy, and promote are different moves
 
 | Move | What changes | Why `.github/` cares |
 |---|---|---|
-| **Build** | a versioned artifact exists with identity, digest, and validation output | workflows, attestations, and proof-pack assembly live here or begin here |
+| **Build** | a versioned artifact exists with identity, digest, and validation output | workflows, attestations, and proof-pack assembly often begin here |
 | **Deploy** | runtime placement changes | environment approval, rollback readiness, and post-deploy checks may be triggered here |
 | **Promote** | trust state changes from candidate to governable / publishable release | policy checks, docs/accessibility gates, review records, and release evidence become mandatory |
 
@@ -253,7 +257,7 @@ flowchart LR
       G1["README.md<br/>responsibility map"]
       G2["CODEOWNERS<br/>review boundary"]
       G3["Workflow lanes<br/>verify / build / deploy / promote"]
-      G4["Structured intake<br/>templates or checklists"]
+      G4["Templates / checklists<br/>structured intake"]
       G5["SECURITY.md<br/>reporting path"]
     end
 
@@ -265,13 +269,13 @@ flowchart LR
 
     G2 --> H[Required review]
     G3 --> I[Merge-blocking checks]
-    I --> J[Artifact + proof pack]
+    I --> J[Artifact + proof objects]
     J --> K[Deploy]
     H --> L{Promote?}
     K --> L
     G4 --> L
 
-    L -->|yes| M[Governed release / published trust state]
+    L -->|yes| M[Governed release / publishable state]
     L -->|no| N[Hold / deny / revise]
 
     M --> O[Post-release verification]
@@ -285,32 +289,32 @@ flowchart LR
 |---|---|---|---|
 | [`./README.md`](./README.md) | CONFIRMED documentary evidence | responsibility map for repo-wide governance and review posture | if it drifts, reviewers lose the boundary map |
 | [`./CODEOWNERS`](./CODEOWNERS) | CONFIRMED documentary evidence | executable review ownership | changes approval scope and separation of duty |
-| `./CODEOWNERS` coverage patterns | CONFIRMED documentary evidence | maps ownership over `docs/`, `data/`, `src/`, `tools/`, `tests/`, `policy/`, `contracts/`, plus key governance files | broad area ownership can change who must review trust-bearing work |
-| [`./SECURITY.md`](./SECURITY.md) | CONFIRMED documentary evidence | security reporting / disclosure path | affects incident intake and trust posture |
-| [`./workflows/`](./workflows/) | CONFIRMED activity / NEEDS VERIFICATION inventory | CI, validation, release, and correction lanes | directly affects merge, promotion, or rollback behavior |
-| Code-scanning / autofix activity | CONFIRMED activity / NEEDS VERIFICATION configuration detail | security and dependency hygiene signals | a quiet drift here weakens repo trust posture |
+| `./CODEOWNERS` coverage patterns | CONFIRMED documentary evidence | maps ownership over `docs/`, `data/`, `src/`, `tools/`, `tests/`, `policy/`, `contracts/`, plus key governance files | broad area ownership changes who must review trust-bearing work |
+| [`./SECURITY.md`](./SECURITY.md) | CONFIRMED documentary evidence | security reporting and disclosure path | affects incident intake and trust posture |
+| [`./workflows/`](./workflows/) | CONFIRMED activity / NEEDS VERIFICATION inventory | CI, validation, promotion, rollback, and correction lanes | directly affects merge, release evidence, and recovery behavior |
+| Code-scanning / autofix activity | CONFIRMED activity / NEEDS VERIFICATION configuration detail | security and dependency-hygiene signals | quiet drift here weakens repo trust posture |
 | GitHub platform settings | UNKNOWN in this session | branch protection, required checks, environment approvals, app permissions | repo truth can still fail if platform gates drift |
 
 ### Review-sensitive changes
 
-| Change class | Typical KFM review class | Minimum review expectation | Why it matters |
+| Change class | Likely review posture | Minimum review expectation | Why it matters |
 |---|---|---|---|
-| non-behavioral README copy cleanup | Class 1 | normal peer review | safe unless instructions or trust posture change |
-| `CODEOWNERS` edits | Class 2–5 depending on scope | owner / steward review distinct from author when boundaries change materially | changes who can approve protected work |
-| workflow logic, required checks, or release lanes | Class 3 | technical owner review plus environment / operations reviewer as needed | changes merge, promotion, or rollback behavior |
-| security reporting or automation-identity changes | Class 3–5 | security / platform review | affects disclosure path, secrets, or automation trust |
-| policy-significant public-truth release controls | Class 5 | separation of duty required | public confidence must not depend on self-approval |
-| emergency rollback / correction mechanics | Class 6 | emergency authority path plus after-action evidence | correction must stay visible and auditable |
+| non-behavioral README cleanup | normal doc review | peer review | safe unless instructions or trust posture change materially |
+| `CODEOWNERS` edits | ownership-boundary review | owner/steward review distinct from the author when boundaries change materially | changes who must review protected work |
+| workflow logic, required checks, or release lanes | behavior-significant governance review | technical owner review plus platform/operations review as needed | changes merge, promotion, or rollback behavior |
+| security reporting or automation-identity changes | security-sensitive review | security/platform review | affects disclosure paths, secrets, or automation trust |
+| public-truth release controls | separation-of-duty review | distinct reviewer(s) for approval and implementation where significance warrants it | public confidence should not depend on self-approval |
+| rollback / correction mechanics | audited correction-path review | documented change with follow-on evidence | correction must stay visible, recoverable, and reviewable |
 
 [Back to top](#github)
 
 ## Task list / definition of done
 
 - [ ] The live `.github/` tree was re-inspected from the mounted repository before merge.
-- [ ] `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `CONTRIBUTING.md` were checked line-by-line against the current repo.
+- [ ] `.github/README.md`, `.github/CODEOWNERS`, `.github/SECURITY.md`, and `CONTRIBUTING.md` were checked against the current repo.
 - [ ] The actual workflow inventory under `.github/workflows/` was compared with this README.
-- [ ] Workflow/security signals in the audit material were matched to current files (for example: Actions dependencies, code-scanning workflows, and any autofix lanes).
-- [ ] `CODEOWNERS` coverage was reviewed against `docs/`, `data/`, `src/`, `tools/`, `tests/`, `policy/`, `contracts/`, and key governance files.
+- [ ] Actions/code-scanning signals in the documentary audit were matched to current files and current settings.
+- [ ] `CODEOWNERS` coverage was reviewed against `docs/`, `data/`, `src/`, `tools/`, `tests/`, `policy/`, `contracts/`, and governance-critical files.
 - [ ] Required status checks and protected-branch rules were verified in GitHub settings, not assumed from repo files alone.
 - [ ] Environment approvals, deployment reviewers, and automation identities were rechecked where relevant.
 - [ ] Repo-wide automation still preserves fail-closed behavior and keeps build, deploy, and promote meaningfully distinct.
@@ -323,9 +327,9 @@ flowchart LR
 
 ### Does this README claim the live workflow set is fully verified?
 
-No. It separates **documentary repo evidence** from **confirmed activity** and **UNKNOWN live checkout details**.
+No. It separates **documentary repo evidence** from **confirmed activity** and from **UNKNOWN live checkout/platform details**.
 
-### Does build success mean the repo is ready to publish?
+### Does a passing build mean the repo is ready to publish?
 
 No. KFM doctrine separates build, deploy, and promote. A successful build proves an artifact exists; it does not by itself prove that the release is governable or publishable.
 
@@ -339,7 +343,7 @@ No. `.github/` should gate and reference those surfaces, not replace them as the
 
 ### What must be rechecked outside the repo tree?
 
-Branch protection, required checks, environment approvals, GitHub App permissions, OIDC trust relationships, and other platform-state controls.
+Branch protection, required checks, environment approvals, deployment reviewers, GitHub App permissions, OIDC trust relationships, and other platform-state controls.
 
 ## Appendix
 
@@ -348,19 +352,19 @@ Branch protection, required checks, environment approvals, GitHub App permission
 
 ### What is strongest in this revision
 
-- KFM doctrine on fail-closed collaboration, required checks, release evidence, rollback/correction, and the repository-truth rule
-- documentary repo-audit evidence confirming:
+- KFM doctrine on truth path, trust membrane, cite-or-abstain, fail-closed behavior, authoritative-versus-derived separation, review-bearing release, and correction discipline
+- documentary evidence confirming:
   - `README.md`
   - `.github/README.md`
   - `.github/CODEOWNERS`
   - `.github/SECURITY.md`
   - `CONTRIBUTING.md`
-- repo-audit evidence confirming:
+- documentary evidence confirming:
   - public repository visibility
   - default branch `main`
   - GitHub Actions activity
   - security / code-scanning activity
-- repo-audit evidence describing `CODEOWNERS` coverage patterns across the main trust-bearing repo areas
+  - `CODEOWNERS` coverage patterns across core repo areas
 
 ### What remains open until a live checkout is mounted
 
@@ -373,7 +377,7 @@ Branch protection, required checks, environment approvals, GitHub App permission
 
 ### Maintainer guidance
 
-- Preserve KFM terms: **truth path**, **trust membrane**, **authoritative vs derived**, **EvidenceBundle**, **PR-first**, **fail-closed**, **promotion**, **rollback**, **correction**.
+- Preserve KFM terms: **truth path**, **trust membrane**, **authoritative vs derived**, **EvidenceBundle**, **cite-or-abstain**, **fail-closed**, **promotion**, **rollback**, **correction**.
 - Prefer explicit placeholders over invented owners, reviewers, or platform settings.
 - Keep this file a **responsibility map** rather than a duplicate home for policy bodies, schemas, or runtime code.
 - Treat workflow edits as behavior edits when they affect review, validation, release evidence, or correction posture.
@@ -383,11 +387,11 @@ Branch protection, required checks, environment approvals, GitHub App permission
 <details>
 <summary><strong>Verification backlog</strong></summary>
 
-1. Reinspect the live `.github/` tree and replace documentary / activity placeholders with exact file reality.
-2. Verify whether `.github/ISSUE_TEMPLATE/` and the PR template surface exist in the current checkout exactly as named.
-3. Inventory actual workflow YAMLs and map each to docs, policy, provenance, promotion, rollback, and correction duties.
+1. Reinspect the live `.github/` tree and replace documentary/activity placeholders with exact file reality.
+2. Verify whether issue and PR template surfaces exist in the current checkout exactly as named.
+3. Inventory actual workflow YAMLs and map each to validation, release evidence, promotion, rollback, and correction duties.
 4. Export or inspect protected-branch settings and required status checks.
-5. Recheck `CODEOWNERS` coverage against governance-critical planes and named maintainers.
+5. Recheck `CODEOWNERS` coverage against governance-critical paths and named maintainers.
 6. Confirm whether reusable actions, code-scanning lanes, artifact attestations, and environment-approval flows are mounted and active.
 7. Retire UNKNOWN items only when direct repo or platform evidence is attached to the same PR.
 
