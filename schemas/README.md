@@ -4,56 +4,48 @@ title: Schemas
 type: standard
 version: v1
 status: draft
-owners: NEEDS-VERIFICATION
+owners: @bartytime4life
 created: YYYY-MM-DD
 updated: 2026-03-22
-policy_label: NEEDS-VERIFICATION
-related: [NEEDS-VERIFICATION: canonical working manual path, master design manual path, pass-5 dossier path, geospatial architecture manual path]
+policy_label: public
+related: [../contracts/README.md, ../docs/standards/README.md, ../policy/README.md, ../tests/README.md, ../.github/workflows/README.md]
 tags: [kfm, schemas, contracts, json-schema]
-notes: [Task-local target path is schemas/README.md; strongest current repo-shape signal points to contracts/jsonschema/ and a broader schemas/artifacts + schemas/openapi split; mounted repo topology and ownership metadata were not directly visible in this session.]
+notes: [Current public main shows schemas/ containing README.md only; docs/standards routes machine contracts to ../contracts/; authoritative schema home is still unresolved and should be made explicit before merge-blocking validation lands.]
 [/KFM_META_BLOCK_V2] -->
 
 # Schemas
 
-Machine-readable KFM contract schemas for intake, validation, release, runtime trust, and correction.
+Boundary and authority guide for the `schemas/` lane while KFM retires schema-home ambiguity and keeps machine contracts singular.
 
 > **Status:** experimental  
-> **Owners:** NEEDS-VERIFICATION  
-> ![Status](https://img.shields.io/badge/status-experimental-orange)
-> ![Evidence](https://img.shields.io/badge/evidence-PDF--only-lightgrey)
-> ![Mounted%20tree](https://img.shields.io/badge/mounted_tree-unavailable-lightgrey)
-> ![Schema](https://img.shields.io/badge/schema-JSON%20Schema-brightgreen)
-> ![Truth](https://img.shields.io/badge/truth-CONFIRMED%20doctrine%20%7C%20PROPOSED%20realization%20%7C%20UNKNOWN%20inventory-blue)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life`  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![Repo](https://img.shields.io/badge/repo-public%20main-brightgreen) ![Authority](https://img.shields.io/badge/schema_home-pending-red) ![Inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)  
+> **Repo fit:** path `schemas/README.md` · upstream [`../README.md`](../README.md) · current contract lane [`../contracts/README.md`](../contracts/README.md) · standards routing [`../docs/standards/README.md`](../docs/standards/README.md) · workflow guardrails [`../.github/workflows/README.md`](../.github/workflows/README.md)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is source-bounded. In this session, the directly inspectable workspace exposed a KFM PDF corpus under `/mnt/data`, not a mounted repository checkout. Exact repo topology, schema inventory, CI lanes, manifests, DTOs, emitters, and owners remain **UNKNOWN** until the live tree is surfaced.
+> Current public `main` shows `schemas/` containing `README.md` only. Treat this directory as a documented boundary surface, not as an already-materialized schema registry.
+
+> [!WARNING]
+> The repo currently exposes both `schemas/` and `contracts/`. Until one authoritative schema home is made explicit, adding the same trust-bearing object family to both is drift, not redundancy.
 
 > [!NOTE]
-> This document follows the strongest available March 2026 KFM doctrine, but it keeps path uncertainty explicit. Three signals are currently in play:
->
-> - **CONFIRMED task target:** `schemas/README.md`
-> - **PROPOSED umbrella shape:** `schemas/artifacts/` and `schemas/openapi/`
-> - **PROPOSED contract-package shape:** `contracts/jsonschema/` with adjacent fixtures and a shared header profile
-
-> [!CAUTION]
-> Once the mounted tree is visible, choose **one** authoritative home for trust-bearing schema files. Do **not** let `schemas/` and `contracts/jsonschema/` drift into parallel, inconsistent contract universes.
+> `docs/standards/README.md` currently routes “API endpoint schemas and machine contracts” to [`../contracts/`](../contracts/), while [`../contracts/README.md`](../contracts/README.md) still records schema-home authority as unresolved. This README exists to keep that ambiguity visible rather than quietly hardening the wrong home.
 
 ## Scope
 
-This directory is the machine-readable edge of KFM governance.
+`schemas/` is a small but important lane.
 
-It exists so that KFM’s trust posture does not stay trapped in prose. Source admission, validation, canonical truth, policy decisions, release state, runtime outcomes, and correction lineage all need typed, diffable, testable objects. A schema surface is where that shift happens.
+Its current job is not to pretend that a full schema registry already lives here. Its job is to keep the path visible, prevent a second authoritative contract universe from growing by accident, and point contributors toward the current machine-contract lane until the repo resolves authority explicitly.
 
-That surface should stay disciplined:
+That means this README should do four things well:
 
-- shared contract families, not ad hoc payload sprawl
-- one visible header grammar across trust-bearing objects
-- additive evolution by default
-- valid and invalid fixtures beside every consequential family
-- explicit separation between **CONFIRMED doctrine**, **PROPOSED realization**, and **UNKNOWN mounted implementation**
+- record the current public repo state without overclaiming
+- preserve KFM’s contract-first doctrine
+- prevent silent duplication across `schemas/` and `contracts/`
+- stay light enough that it can become a stable pointer if `contracts/` is made canonical
 
-A good schema directory in KFM is not a dumping ground for every JSON payload in the system. It is the narrowest possible contract surface that still lets policy, delivery, runtime trust, and correction stay joined.
+KFM’s doctrine is still the same: machine-readable contracts are part of the trust membrane. But singular authority matters just as much as good schema design. A validator cannot safely govern two competing homes for the same trust-bearing objects.
 
 [Back to top](#schemas)
 
@@ -62,447 +54,348 @@ A good schema directory in KFM is not a dumping ground for every JSON payload in
 | Item | Value |
 |---|---|
 | Path | `schemas/README.md` |
-| Role | Directory README for KFM machine-readable contract schemas |
-| Document class | Standard doc + directory README |
-| Strongest doctrinal baseline | March 2026 KFM replacement-grade manuals, with the contract/artifact model and shared contract lattice carrying the most weight |
-| Mounted repo truth | **UNKNOWN** — no repo checkout was directly visible in this session |
-| Strongest repo-shape signal | `contracts/jsonschema/*.schema.json` + adjacent fixtures and `header-profile.schema.json` |
-| Additional repo-shape signal | `schemas/artifacts/` + `schemas/openapi/` under a broader repo skeleton |
-| Operational neighbors | policy bundles, fixtures, release proof objects, runtime emitters, and documentation/runbooks |
+| Role | Directory README for the `schemas/` lane and guardrail against parallel schema authority |
+| Current public `main` snapshot | `schemas/` contains `README.md` only |
+| Strongest current machine-contract lane | [`../contracts/README.md`](../contracts/README.md) |
+| Standards routing signal | [`../docs/standards/README.md`](../docs/standards/README.md) routes API endpoint schemas and machine contracts to `../contracts/` |
+| Workflow signal | [`../.github/workflows/README.md`](../.github/workflows/README.md) is README-only today and treats `contracts/`, `schemas/`, `policy/`, and `tests/` as canonical verification surfaces |
+| Ownership signal | `@bartytime4life` via CODEOWNERS global fallback |
+| Current authority posture | **UNKNOWN / NEEDS VERIFICATION** — the repo has not yet made one schema home singular in a way this README can treat as settled |
+| Why this file still matters | The repo already publishes a top-level `schemas/` lane, so it needs an explicit boundary contract even if authoritative schema files ultimately land elsewhere |
 
-**Upstream / downstream placeholders to verify before publication:**  
-`[TODO verify ../docs/contract-lattice.md](../docs/contract-lattice.md)` · `[TODO verify ../contracts/](../contracts/)` · `[TODO verify ../fixtures/](../fixtures/)` · `[TODO verify ../policy/](../policy/)`
+### Upstream and downstream links
 
-### Path resolution rule
-
-1. Keep this file at `schemas/README.md` because that is the explicit task-local target.
-2. If the mounted repo already standardizes on `contracts/jsonschema/`, treat `schemas/README.md` as the entry-point README for the broader schema surface and point readers inward.
-3. If the mounted repo already uses `schemas/artifacts/` and `schemas/openapi/`, keep this README as the umbrella index for those subtrees.
-4. Do not duplicate object families across multiple authoritative homes.
-
-### Interpretation guide
-
-| Signal | Meaning | Trust level |
+| Direction | Path | Why it matters |
 |---|---|---|
-| `schemas/README.md` | Required output path for this task | **CONFIRMED** |
-| `schemas/artifacts/` + `schemas/openapi/` | A broader March 2026 repo-skeleton signal | **PROPOSED** |
-| `contracts/jsonschema/*.schema.json` | The strongest explicit file-pattern signal in the master design material | **PROPOSED** |
-| Mounted repo tree | What the repository actually uses today | **UNKNOWN** |
+| Upstream | [`../README.md`](../README.md) | Root system identity and top-level repository framing |
+| Lateral | [`../contracts/README.md`](../contracts/README.md) | Current strongest contract publication and starter target shape |
+| Lateral | [`../docs/standards/README.md`](../docs/standards/README.md) | Shared rules, profile placement, and standards-to-contract boundary |
+| Lateral | [`../policy/README.md`](../policy/README.md) | Policy bundles, reasons, obligations, and deny-by-default runtime consequences |
+| Lateral | [`../tests/README.md`](../tests/README.md) | Fixture and verification expectations |
+| Downstream | [`../.github/workflows/README.md`](../.github/workflows/README.md) | Future merge-blocking validation, proof, and correction gates |
+
+### Working interpretation
+
+Use this file as the documentary boundary for `schemas/`, not as permission to grow a second registry.
+
+At the moment, the strongest safe reading is:
+
+1. keep `schemas/README.md` in place because the lane exists publicly
+2. treat `../contracts/` as the stronger working signal for machine contracts
+3. do not land competing authoritative object families in both places
+4. resolve schema-home authority explicitly before wiring merge-blocking validators
+
+[Back to top](#schemas)
 
 ## Inputs
 
 Accepted here:
 
-- JSON Schema files for trust-bearing KFM object families
-- shared header-profile or fragment schemas used across those families
-- narrow compatibility notes or migration notes tied directly to schema evolution
-- this README and other short maintenance notes that belong with the schema surface
+| Belongs here | Why it belongs here |
+|---|---|
+| This README | The lane already exists and needs an explicit boundary contract |
+| Authority-resolution notes | This is the right place to explain how `schemas/` relates to `contracts/` |
+| Pointer-style transition guidance | Contributors need a clear “put it there, not here” rule |
+| Non-authoritative generated outputs **only if explicitly designated** | Acceptable only when the repo clearly marks them as compiled or mirrored artifacts, not source-of-truth contracts |
+| Short maintenance notes tied to the lane itself | Useful when they prevent drift or clarify ownership |
 
-Preferred schema naming:
+### Minimum bar for anything added here
 
-```text
-<family>.schema.json
-```
-
-Recommended shared fragment naming:
-
-```text
-header-profile.schema.json
-```
-
-### Highest-leverage initial wave
-
-The corpus argues for a **small first schema wave**, not a giant one.
-
-```text
-header-profile.schema.json
-source_descriptor.schema.json
-dataset_version.schema.json
-decision_envelope.schema.json
-release_manifest.schema.json
-evidence_bundle.schema.json
-runtime_response_envelope.schema.json
-correction_notice.schema.json
-```
-
-### Immediate follow-on wave
-
-These remain part of the doctrinal lattice, but they can follow once the initial wave is emitted and tested consistently.
-
-```text
-ingest_receipt.schema.json
-validation_report.schema.json
-catalog_closure.schema.json
-review_record.schema.json
-release_proof_pack.schema.json
-projection_build_receipt.schema.json
-```
-
-> [!TIP]
-> Start with the families that unlock the most downstream trust behavior: source declaration, canonical release identity, policy result, release statement, evidence packaging, runtime envelope, and correction lineage.
+- it is clearly marked authoritative or non-authoritative
+- it does not duplicate an authoritative contract family already owned elsewhere
+- it keeps relative links to `contracts/`, `policy/`, `tests/`, and workflow guidance current
+- it does not make schema-home authority more ambiguous than it already is
 
 ## Exclusions
 
-Do **not** place these here unless the mounted repo proves that it intentionally does so:
+The following do **not** belong here as canonical source-of-truth assets unless the repo explicitly changes direction:
 
-- generated release manifests, proof packs, receipts, or correction artifacts
-- policy bundles, reason registries, obligation registries, rights classes, or sensitivity classes
-- runtime-only DTOs that belong to an app-local boundary rather than the shared trust lattice
-- outward API runbooks, ADRs, broader governance prose, or operator playbooks
-- valid and invalid fixtures if the repo keeps them in a dedicated fixture surface
-- emitted STAC, DCAT, or PROV documents
-- rebuildable delivery artifacts such as tiles, search indexes, embeddings, or scene layers
+| Does not belong here | Put it here instead | Why |
+|---|---|---|
+| New authoritative `*.schema.json` contract families | [`../contracts/`](../contracts/) | Current repo signals point machine contracts there more strongly |
+| Policy bundles, reason codes, obligation codes, reviewer-role registries | [`../policy/README.md`](../policy/README.md) or the confirmed shared vocab lane | Policy should stay executable and reviewable, not forked through schema docs |
+| Valid / invalid fixture packs | [`../tests/README.md`](../tests/README.md) or the confirmed fixture home | Fixtures should stay tied to verification, not drift into parallel doc surfaces |
+| Workflow YAML and merge-gate wiring | [`../.github/workflows/README.md`](../.github/workflows/README.md) | CI enforces the contract layer; it is not the contract layer |
+| Standards profiles and interoperability rules | [`../docs/standards/README.md`](../docs/standards/README.md) | Standards explain shared rules across domains |
+| Runtime emitters, resolvers, or service code | app / package implementation surfaces | Consumers and emitters should reference contracts, not live inside this README lane |
 
-A useful rule of thumb: if the file is an **authoritative contract**, it probably belongs here; if it is an **emitted consequence** of a contract, it probably belongs elsewhere.
+> [!CAUTION]
+> “Convenience copies” are especially risky here. Once two surfaces both look official, reviewers and validators can follow different trees without noticing.
 
 ## Directory tree
 
-**Candidate layout A — umbrella schema surface under `schemas/` (PROPOSED):**
+### Current public snapshot
 
 ```text
 schemas/
-├── README.md
-├── artifacts/
-│   ├── header-profile.schema.json
-│   ├── source_descriptor.schema.json
-│   ├── dataset_version.schema.json
-│   ├── decision_envelope.schema.json
-│   ├── release_manifest.schema.json
-│   ├── evidence_bundle.schema.json
-│   ├── runtime_response_envelope.schema.json
-│   ├── correction_notice.schema.json
-│   ├── ingest_receipt.schema.json
-│   ├── validation_report.schema.json
-│   ├── catalog_closure.schema.json
-│   ├── review_record.schema.json
-│   ├── release_proof_pack.schema.json
-│   └── projection_build_receipt.schema.json
-└── openapi/
-    └── README.md
+└── README.md
 ```
 
-<details>
-<summary><strong>Candidate layout B — contract-package surface under <code>contracts/jsonschema/</code> (PROPOSED)</strong></summary>
+### Current neighboring surfaces relevant to this lane
 
 ```text
 contracts/
-├── README.md
-├── header-profile.schema.json
-├── jsonschema/
-│   ├── source_descriptor.schema.json
-│   ├── dataset_version.schema.json
-│   ├── decision_envelope.schema.json
-│   ├── release_manifest.schema.json
-│   ├── evidence_bundle.schema.json
-│   ├── runtime_response_envelope.schema.json
-│   ├── correction_notice.schema.json
-│   ├── ingest_receipt.schema.json
-│   ├── validation_report.schema.json
-│   ├── catalog_closure.schema.json
-│   ├── review_record.schema.json
-│   ├── release_proof_pack.schema.json
-│   └── projection_build_receipt.schema.json
-└── fixtures/
-    ├── valid/
-    └── invalid/
+└── README.md
+
+docs/
+└── standards/
+    └── README.md
+
+.github/
+└── workflows/
+    └── README.md
 ```
 
-</details>
-
-<details>
-<summary><strong>Candidate layout C — hybrid repo shape seen across the March 2026 corpus (PROPOSED)</strong></summary>
+### Recommended convergence shape after authority is resolved
 
 ```text
-repo/
-├── schemas/
+repo-root/
+├── contracts/
 │   ├── README.md
-│   ├── artifacts/
-│   └── openapi/
-├── packages/
-│   └── contracts/
-├── fixtures/
-│   ├── valid/
-│   └── invalid/
-├── policy/
-├── docs/
-└── workflows/ or .github/workflows/
+│   ├── v1/
+│   │   ├── common/
+│   │   │   └── header_profile.schema.json
+│   │   ├── policy/
+│   │   │   └── decision_envelope.schema.json
+│   │   ├── evidence/
+│   │   │   └── evidence_bundle.schema.json
+│   │   ├── runtime/
+│   │   │   └── runtime_response_envelope.schema.json
+│   │   ├── correction/
+│   │   │   └── correction_notice.schema.json
+│   │   ├── release/
+│   │   │   └── release_manifest.schema.json
+│   │   ├── source/
+│   │   │   └── source_descriptor.schema.json
+│   │   └── data/
+│   │       └── dataset_version.schema.json
+│   └── vocab/
+│       ├── reason_codes.json
+│       ├── obligation_codes.json
+│       └── reviewer_roles.json
+├── tests/
+│   └── fixtures/
+│       └── contracts/
+│           └── v1/
+│               ├── valid/
+│               └── invalid/
+└── schemas/
+    └── README.md
 ```
 
-This hybrid is attractive when the repo wants:
-- a public, easy-to-find schema index at `schemas/`
-- reusable helpers, emitters, and migration logic in `packages/contracts/`
-- dedicated fixture packs outside the schema tree
+That target shape is **PROPOSED**. It is useful because it keeps this lane visible while placing actual machine contracts, vocab, and fixtures in one canonical stream.
 
-</details>
+[Back to top](#schemas)
 
 ## Quickstart
 
-1. Confirm the authoritative schema home in the mounted tree.
-2. Publish the shared header-profile schema first.
-3. Publish the smallest high-value schema wave.
-4. Add one valid and one invalid fixture for each emitted family.
-5. Wire schema linting and fixture checks into CI before broadening the lattice.
-6. Prove one hydrology-first thin slice end to end before scaling out to more burdensome lanes.
+1. Read [`../contracts/README.md`](../contracts/README.md) first.
+2. Read [`../docs/standards/README.md`](../docs/standards/README.md) next.
+3. Before adding any contract family, confirm whether the repo has resolved authoritative schema home.
+4. If authority is still unresolved, do **not** add the same object family to both `schemas/` and `contracts/`.
+5. When validator paths or authority language change, update this file, `../contracts/README.md`, and `../.github/workflows/README.md` in the same reviewed change.
 
 ```bash
-# illustrative pseudocode — bind to the mounted repo's real runner and paths
-validate 'schemas/artifacts/**/*.schema.json' 'contracts/jsonschema/**/*.schema.json'
-validate 'fixtures/valid/**/*.json'
-assert_invalid 'fixtures/invalid/**/*.json'
+# Review the current authority-bearing neighbors
+sed -n '1,220p' schemas/README.md
+sed -n '1,260p' contracts/README.md
+sed -n '1,220p' docs/standards/README.md
+sed -n '1,220p' .github/workflows/README.md
 
-run gate:source-admission
-run gate:validation
-run gate:catalog-closure
-run gate:policy-bundle
-run gate:release-proof
-run gate:evidence-resolution
-run gate:runtime-citation-negative
-run gate:surface-state
-run gate:correction-drill
-run gate:docs-accessibility
+# Search for schema-home language before adding files
+git grep -nE 'authoritative schema home|parallel schema|machine contracts|schema home' -- \
+  schemas contracts docs .github
 ```
 
-### Definition of a good first merge
+### Safe first move
 
-A strong first merge here would include:
+A safe first move is not “add a schema here.”
 
-- one shared header profile
-- one high-value schema family
-- positive and negative fixtures
-- CI validation
-- one emitter or consumer proving the contract is not dead documentation
+A safe first move is:
+
+- retire authority ambiguity
+- make one canonical root explicit
+- wire fixtures and validation against that single root
+- keep this README as the visible boundary contract for the sibling lane
 
 ## Usage
 
-### Working rules
+### For maintainers
 
-- Treat schema changes, fixture changes, and gate changes as one review stream.
-- Prefer additive evolution over silent breaking change.
-- Keep human review history and machine-effective policy distinct.
-- Keep emitted truth-bearing objects downstream of the schemas that define them.
-- Require migration notes when outward semantics, required fields, or enums change.
-- Preserve **fail-closed** meaning in the contract itself, not only in comments or runbooks.
+Use this file to keep `schemas/` honest.
 
-### Common header grammar
+If `contracts/` becomes canonical, this README should stay lean and documentary. It should point inward, describe the boundary, and make duplicate authority harder to introduce. If the repo later chooses another arrangement, update sibling docs and validator paths together rather than letting one README drift ahead of the others.
 
-Every trust-bearing object family should share enough structure to stay joinable across policy, release, runtime, and correction.
+### For contributors
 
-| Field family | Why it matters |
-|---|---|
-| `kind` + `schema_version` | Makes identity and evolution explicit |
-| Stable IDs / release refs | Keeps joins across catalogs, logs, proof packs, and corrections possible |
-| Time fields | Prevents observed time, acquisition time, processing time, publication time, and correction time from collapsing into one vague timestamp |
-| Rights / sensitivity class | Keeps publication and runtime behavior policy-aware |
-| Evidence / policy / review refs | Makes governance operational |
-| Digest / audit refs | Supports rebuild, comparison, and audit |
-| Supersession / withdrawal pointers | Prevents silent overwrite |
+Treat this lane as documentation-first until the repo says more.
 
-### What this directory optimizes for
+That means:
 
-This surface is optimizing for:
+- put new trust-bearing schema work in the canonical surface
+- do not assume `schemas/` is canonical just because the directory exists
+- do not add generated or mirrored outputs here unless they are labeled non-authoritative
+- when in doubt, stop and resolve authority before adding files
 
-- contract clarity
-- verification leverage
-- runtime honesty
-- correction lineage
+### For reviewers
 
-That means a schema here is successful only if it helps another surface do one of the following reliably:
+Reject changes that do any of the following:
 
-- validate an object
-- reject an unsafe or incomplete object
-- explain a visible runtime outcome
-- preserve continuity through rollback, withdrawal, or supersession
+- introduce the same trust-bearing family in both `schemas/` and `contracts/`
+- move validator paths without updating sibling docs
+- add new canonical schema files here without an explicit authority decision
+- blur the line between standards, contracts, policy, fixtures, and runtime code
+
+### For future authority migration
+
+If the repo later decides that `schemas/` should become canonical after all, do not “just start using it.”
+
+Do the full move:
+
+1. write the decision down
+2. update `contracts/README.md`
+3. update this README
+4. update `docs/standards/README.md`
+5. update workflow paths
+6. update fixture paths
+7. update any consumer docs or emitters that point to the old root
+
+[Back to top](#schemas)
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    A[SourceDescriptor] --> B[IngestReceipt]
-    B --> C[ValidationReport]
-    C --> D[DatasetVersion]
-    D --> E[CatalogClosure]
-    E --> F[DecisionEnvelope]
-    F --> G[ReviewRecord]
-    G --> H[ReleaseManifest]
-    H --> I[ReleaseProofPack]
-    H --> J[ProjectionBuildReceipt]
-    H --> K[EvidenceBundle]
-    K --> L[RuntimeResponseEnvelope]
-    H --> M[CorrectionNotice]
-
-    N[Shared header profile] --> A
-    N --> D
-    N --> F
-    N --> H
-    N --> K
-    N --> L
-    N --> M
-
-    O[Valid + invalid fixtures] --> P[CI / verification gates]
-    Q[Policy bundles + registries] --> P
-    P --> H
-    P --> L
-    P --> M
+    A[docs/standards/README.md] -->|routes machine contracts| B[contracts/README.md]
+    B -->|starter target shape| C[contracts/v1/...]
+    D[schemas/README.md] -.documents boundary / prevents drift.-> B
+    E[.github/workflows/README.md] -.future gates should verify.-> C
+    F[tests/fixtures/contracts/v1] -.companion fixtures.-> C
+    G[policy/README.md] -.decision grammar + deny-by-default consequences.-> C
 ```
 
-The architectural point is simple: KFM’s schema surface is not a passive reference shelf. It is the typed object graph through which governance becomes executable.
+Reading rule: this lane should reduce ambiguity, not add a second source of machine-truth.
 
 ## Tables
 
-### A. Highest-leverage initial wave
+### A. Current public repo signals
 
-| Family | Minimum purpose | Why it starts early |
+| Signal | Current visible state | What it means here |
 |---|---|---|
-| `SourceDescriptor` | Declare governed source-admission contract | It anchors intake, replayability, and source-role discipline |
-| `DatasetVersion` | Declare authoritative candidate or promoted truth | It is the canonical join object for release-backed meaning |
-| `DecisionEnvelope` | Express machine-readable policy result | It makes default-deny and obligation handling executable |
-| `ReleaseManifest` | Declare release scope and inventory | It makes promotion legible and rollback-aware |
-| `EvidenceBundle` | Package inspectable support for a claim | It is central to drawer, dossier, export, and Focus trust behavior |
-| `RuntimeResponseEnvelope` | Make answer/abstain/deny/error explicit | It prevents fluent but uncited runtime leakage |
-| `CorrectionNotice` | Preserve visible lineage when meaning changes | It prevents silent overwrite |
+| `schemas/` | `README.md` only | No live schema registry is evidenced here today |
+| `contracts/` | `README.md` only | Current machine-contract lane is still documentary, but carries stronger authority guidance |
+| `docs/standards/README.md` | Present | Standards and machine contracts are intentionally separated |
+| `.github/workflows/` | `README.md` only | No checked-in public workflow YAML is visible yet |
+| `CODEOWNERS` | global fallback `@bartytime4life`; explicit `/.github/` and `/contracts/` rules | Ownership exists, but `/schemas/` does not currently have its own narrower rule |
 
-### B. Doctrinal lattice beyond the first wave
+### B. First contract wave after authority resolution
 
-| Family | Lifecycle seam | Typical consequence if missing |
+| Wave | Proposed landing path | Why it lands early |
 |---|---|---|
-| `IngestReceipt` | Source edge -> RAW / WORK | Fetches cannot be replayed or audited cleanly |
-| `ValidationReport` | WORK / QUARANTINE -> PROCESSED | Canonical write loses explicit pass/fail reasoning |
-| `CatalogClosure` | Canonical truth -> outward discovery | Release loses metadata/lineage closure |
-| `ReviewRecord` | Policy / human review | Approval history collapses into implied state |
-| `ReleaseProofPack` | Promotion / publication | Publishable trust state remains under-proven |
-| `ProjectionBuildReceipt` | Derived delivery | Tiles, exports, search, or scenes lose release linkage |
+| Wave 01 | `contracts/v1/common/header_profile.schema.json` | Shared minimum grammar keeps later families coherent |
+| Wave 01 | `contracts/v1/policy/decision_envelope.schema.json` | Makes deny-by-default policy machine-readable |
+| Wave 01 | `contracts/v1/evidence/evidence_bundle.schema.json` | Preserves evidence drill-through and reusable support bundles |
+| Wave 01 | `contracts/v1/runtime/runtime_response_envelope.schema.json` | Enforces finite runtime outcomes and cite-or-abstain |
+| Wave 01 | `contracts/v1/correction/correction_notice.schema.json` | Prevents silent overwrite and preserves correction lineage |
+| Wave 01 | `contracts/v1/release/release_manifest.schema.json` | Keeps publication as a governed state transition |
+| Wave 01.5 | `contracts/v1/source/source_descriptor.schema.json` | Starts turning source admission into a typed contract |
+| Wave 01.5 | `contracts/v1/data/dataset_version.schema.json` | Begins anchoring canonical truth and version identity |
+| Companion | `tests/fixtures/contracts/v1/valid/*` | Proves happy-path structure intentionally |
+| Companion | `tests/fixtures/contracts/v1/invalid/*` | Proves fail-closed rejection intentionally |
 
 ### C. Placement decision matrix
 
-| Question | Safe answer today |
-|---|---|
-| Is `schemas/README.md` the required target file? | **Yes** |
-| Is `schemas/` definitely the live repo home of the schema pack? | **No — UNKNOWN** |
-| Is `contracts/jsonschema/` the strongest explicit file-pattern signal in the current corpus? | **Yes** |
-| Does the corpus also support a broader `schemas/artifacts/` + `schemas/openapi/` split? | **Yes** |
-| Can this README claim the mounted repo already contains those directories? | **No** |
-| Should the doc hide that path split? | **No** |
-
-### D. Validation and gate expectations
-
-| Gate | What it should prove | Typical proof object |
-|---|---|---|
-| Source admission gate | Source declaration is typed, rights-aware, and reviewable | `SourceDescriptor` |
-| Intake receipt gate | Fetch and landing are replayable | `IngestReceipt` |
-| Validation gate | Structural, spatial, temporal, and domain checks are explicit | `ValidationReport` |
-| Canonical write gate | Only validated truth reaches canonical state | `DatasetVersion` |
-| Catalog closure gate | Discoverability, lineage, and rights are coherent enough for outward use | `CatalogClosure` |
-| Policy bundle gate | Deny-by-default and obligation grammar are executable | `DecisionEnvelope` + policy tests |
-| Release assembly gate | Release is inventory-complete and rollback-aware | `ReleaseManifest` / `ReleaseProofPack` |
-| Evidence-resolution gate | Visible claims resolve to inspectable support | `EvidenceBundle` |
-| Runtime citation-negative test | Uncited or empty-scope answers fail closed | `RuntimeResponseEnvelope` |
-| Correction drill | Supersession and withdrawal remain visible | `CorrectionNotice` |
-
-### E. Standards and interoperability profile
-
-| Concern | Baseline posture | Mounted conformance |
-|---|---|---|
-| Shared object contracts | **JSON Schema** is a confirmed fit | **UNKNOWN** exact local pin |
-| Governed route contracts | **OpenAPI** is a confirmed fit | **UNKNOWN** exact local pin |
-| Discoverability + lineage closure | **DCAT + STAC + PROV** are confirmed fits | **UNKNOWN** exact emitted profile |
-| Geospatial outward APIs | **OGC API families** are a strong fit where exposed | **UNKNOWN** local adoption depth |
-| Accessibility | **WCAG 2.2** is a confirmed fit | **UNKNOWN** current harness coverage |
-| Policy execution | **OPA / Rego or equivalent** is a strong fit | **UNKNOWN** mounted bundle shape |
-| Release integrity | **OCI + signatures/attestations where adopted** | **UNKNOWN** mounted implementation |
-| Observability joins | **OpenTelemetry-compatible naming** | **UNKNOWN** mounted convention |
+| Candidate change | Belongs in `schemas/` right now? | Better home | Reason |
+|---|---|---|---|
+| New authoritative runtime envelope schema | No | `../contracts/` | Stronger current contract signal |
+| New correction notice schema | No | `../contracts/` | Correction lineage is a trust-bearing contract family |
+| Reason / obligation registries | No | `../policy/README.md` or confirmed shared vocab lane | Avoid free-text drift and duplicated policy authority |
+| Valid / invalid fixture packs | No | `../tests/README.md` or confirmed fixture lane | Fixtures belong with verification |
+| README guidance for schema-home authority | Yes | `schemas/README.md` | This lane already exists and needs a boundary contract |
+| Generated compiled schema bundle | Maybe, but only if marked non-authoritative | Depends on explicit repo decision | Generated outputs are acceptable only when authority is unambiguous |
 
 [Back to top](#schemas)
 
 ## Task list / Definition of done
 
-- [ ] Verify the authoritative schema home in the mounted repo.
-- [ ] Publish `header-profile.schema.json` or equivalent shared fragment.
-- [ ] Publish the highest-leverage initial schema wave.
-- [ ] Add at least one valid and one invalid fixture per initial family.
-- [ ] Publish compatibility and migration notes for outward contract changes.
-- [ ] Add schema validation to CI.
-- [ ] Add runtime-emitter checks for response envelopes.
-- [ ] Add policy bundle tests that exercise deny-by-default behavior.
-- [ ] Prove one hydrology-first thin slice with evidence drill-through and correction visibility.
-- [ ] Surface mounted schema inventory, route inventory, workflow inventory, and ownership metadata.
-- [ ] Replace meta-block placeholders before publication.
+- [x] `schemas/` exists as a top-level repo lane.
+- [x] `contracts/` exists as a top-level repo lane.
+- [x] Current public `schemas/` snapshot is README-only.
+- [x] Current public `contracts/` snapshot is README-only.
+- [x] Standards guidance currently routes machine contracts to `../contracts/`.
+- [ ] ADR or equivalent repo decision resolves authoritative schema home explicitly.
+- [ ] Canonical schema root is singular in docs, fixtures, validators, and contributor guidance.
+- [ ] First-wave schema files exist in the canonical home.
+- [ ] Valid and invalid fixtures exist in their confirmed fixture home.
+- [ ] Merge-blocking validation is checked in.
+- [ ] `schemas/README.md` and `../contracts/README.md` no longer imply competing authority.
+- [ ] Placeholder metadata that still needs verification is retired deliberately rather than silently.
 
 ## FAQ
 
-### Why is this README path-cautious?
+### Why keep `schemas/README.md` if machine contracts probably land in `contracts/`?
 
-Because the current session exposed only the PDF corpus, not the live repo tree. The doctrine is strong; the mounted file layout is not yet proven.
+Because the repo already exposes a top-level `schemas/` lane. Ignoring it would hide ambiguity instead of governing it. This file keeps the path visible while making duplicate authority harder to introduce.
 
-### Why mention both `schemas/` and `contracts/jsonschema/`?
+### Does this README declare `schemas/` deprecated?
 
-Because the task target is `schemas/README.md`, while the strongest explicit March 2026 path signal for concrete schema files is `contracts/jsonschema/*.schema.json`. A second repo-skeleton signal also shows `schemas/artifacts/` and `schemas/openapi/`. The honest move is to keep that split visible.
+No.
 
-### Does this README claim the schema pack already exists?
+It declares the current public state, records the stronger adjacent signal toward `contracts/`, and leaves the final authority decision explicit instead of implied.
 
-No. It describes the **CONFIRMED doctrinal lattice** and the **PROPOSED repo shapes** that best fit the current corpus.
+### Can generated or compiled schema outputs live here?
 
-### Why start with fewer schema families than the full lattice names?
+Only when the repo explicitly marks them as non-authoritative and keeps the canonical source elsewhere. Without that labeling, generated output becomes a second truth surface.
 
-Because the March 2026 design material explicitly prefers a small first schema wave with fixtures over an enormous fragile schema universe.
+### Why is duplicate schema placement dangerous here?
 
-### Why does hydrology keep appearing in a schema README?
+Because CI, docs, code review, and runtime consumers can each follow a different tree. That is how “validated” systems still drift into contradictory trust behavior.
 
-Because hydrology is the strongest first thin slice in the current corpus. It is rich enough to exercise stage transitions, release proof, EvidenceBundle behavior, runtime envelopes, and correction, while usually staying safer than the most stewardship-heavy lanes.
+### What should happen once schema-home authority is resolved?
 
-### Do API contracts belong here too?
+This README should get simpler, not more complex. It should either become a narrow pointer to the canonical lane or describe a clearly non-authoritative generated-output role.
 
-Only partly. Shared route-contract schemas can be adjacent to this surface, but the broader outward API description should stay in a governed OpenAPI surface rather than dissolving into artifact schemas.
+[Back to top](#schemas)
 
 ## Appendix
 
 <details>
-<summary><strong>Direct verification backlog</strong></summary>
+<summary><strong>Historical March 2026 shape signals still worth remembering</strong></summary>
 
-| Unknown area | Why it matters | What would verify it |
+The March 2026 doctrine used more than one schema-shape signal:
+
+- an umbrella signal centered on `schemas/artifacts/` plus `schemas/openapi/`
+- a contract-package signal centered on `contracts/jsonschema/` plus fixtures
+
+The current public repo state is simpler and more constrained:
+
+- `schemas/` exists publicly
+- `contracts/` exists publicly
+- both lanes currently present README-first surfaces
+
+That is exactly why authority needs to be singular before the first merge-blocking validator lands.
+
+</details>
+
+<details>
+<summary><strong>Boundary reminders for future edits</strong></summary>
+
+| Surface | What it owns | What it should not quietly absorb |
 |---|---|---|
-| Mounted repo topology | Prevents this README from hardening a guessed path into fact | Direct repo tree export |
-| Live schema inventory | Distinguishes doctrine from mounted files | Schema index from the real tree |
-| Fixture inventory | Determines whether CI claims are real | Valid/invalid fixture packs |
-| Workflow inventory | Turns gate claims into evidence | Workflow YAML or equivalent runner configs |
-| Runtime emitters | Shows whether services actually emit the documented contracts | Sample payloads + tests |
-| EvidenceBundle resolver | Critical for drawer and Focus trust behavior | Resolver contract + sample resolution trace |
-| Correction tooling | Needed for visible lineage claims | Correction artifact + drill record |
-| Ownership metadata | Needed for publication-readiness | CODEOWNERS or equivalent ownership map |
+| `schemas/` | boundary guidance, transition notes, non-authoritative pointer behavior | competing canonical schema families |
+| `contracts/` | machine-readable trust objects and schema publication | workflow wiring, runtime code, policy engines |
+| `policy/` | executable deny-by-default logic, fixtures, decision grammar consequences | duplicated schema definitions |
+| `tests/` | fixtures, negative-path proofs, validation harnesses | canonical contract ownership |
+| `.github/workflows/` | CI and promotion wiring | shadow copies of contracts or policy |
 
 </details>
 
 <details>
-<summary><strong>Fail-closed consequences by family</strong></summary>
+<summary><strong>Maintainer shorthand</strong></summary>
 
-| Family | Fail-closed consequence |
-|---|---|
-| `SourceDescriptor` | No governed admission; reject, hold, or quarantine |
-| `IngestReceipt` | Hold or quarantine because replay and provenance are incomplete |
-| `ValidationReport` | Block canonical write |
-| `DatasetVersion` | No authoritative state transition |
-| `CatalogClosure` | No outward discoverability package |
-| `DecisionEnvelope` | Deny, hold, generalize, or require review |
-| `ReviewRecord` | Hold or escalate when human approval is required |
-| `ReleaseManifest` | No trustworthy promotion |
-| `ReleaseProofPack` | Candidate remains unpublishable |
-| `ProjectionBuildReceipt` | Mark derived artifact stale, rebuild, or withdraw |
-| `EvidenceBundle` | Runtime must abstain, deny, or error rather than bluff |
-| `RuntimeResponseEnvelope` | No uncited answer and no hidden fifth outcome |
-| `CorrectionNotice` | No silent overwrite of published meaning |
+If you only remember one rule from this README, make it this one:
 
-</details>
-
-<details>
-<summary><strong>Surfaces that must stay aligned with schema changes</strong></summary>
-
-| Surface | Why it must travel with schema work |
-|---|---|
-| Valid / invalid fixtures | They prove acceptance and rejection behavior |
-| Policy bundles | Contract and policy must agree on fields, states, and reasons |
-| Runtime services | Envelopes only matter if real services emit them |
-| Release proof objects | Contracts should stay tied to emitted reality |
-| Runbooks | Operators need matching replay, rollback, and correction guidance |
-| Documentation / accessibility gates | Trust-visible behavior must stay documented and reviewable |
+**one authoritative schema home, one fixture home, one validator path, one clearly documented sibling pointer.**
 
 </details>
 
