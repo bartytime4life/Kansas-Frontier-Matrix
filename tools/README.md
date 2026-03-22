@@ -3,14 +3,14 @@ doc_id: kfm://doc/<uuid-NEEDS-VERIFICATION>
 title: tools
 type: standard
 version: v1
-status: draft
-owners: <see ../.github/CODEOWNERS — NEEDS VERIFICATION>
+status: review
+owners: @bartytime4life
 created: <YYYY-MM-DD-NEEDS-VERIFICATION>
-updated: 2026-03-19
+updated: 2026-03-22
 policy_label: <NEEDS-VERIFICATION>
-related: [../README.md, ../.github/README.md, ../.github/CODEOWNERS, ../contracts/, ../policy/, ../data/, ../infra/, ../scripts/, ../tests/]
+related: [../README.md, ../.github/README.md, ../.github/CODEOWNERS, ../contracts/, ../schemas/, ../policy/, ../data/, ../infra/, ../scripts/, ../tests/, ../.github/workflows/README.md]
 tags: [kfm, tools, validation, reproducibility, ci]
-notes: [Directory role is source-grounded from March 2026 KFM documentation, but current-session workspace evidence was PDF-only; live repo tree, CODEOWNERS, workflows, and exact tool paths remain NEEDS VERIFICATION.]
+notes: [Current public main inspection confirms /tools/ exists, currently shows README.md only, and /tools/ is owned by @bartytime4life in ../.github/CODEOWNERS; created date, policy label, and deeper executable tool inventory remain NEEDS VERIFICATION.]
 [/KFM_META_BLOCK_V2] -->
 
 # tools
@@ -18,23 +18,29 @@ notes: [Directory role is source-grounded from March 2026 KFM documentation, but
 Verification, validation, diff, probe, and support tooling surface for Kansas Frontier Matrix.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION — see [../.github/CODEOWNERS](../.github/CODEOWNERS)  
-> **Repo fit:** documented repo-root lane `tools/` · intended file `tools/README.md` · upstream [../README.md](../README.md) · governance [../.github/README.md](../.github/README.md) · adjacent [../scripts/](../scripts/) · downstream [../.github/workflows/](../.github/workflows/)  
-> **Evidence posture:** source-bounded · documentary repo inventory available · live mounted repo-tree verification remains **NEEDS VERIFICATION**  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![role](https://img.shields.io/badge/role-validation%20helpers-blue) ![evidence](https://img.shields.io/badge/evidence-source--bounded-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-0a7d5a) ![repo](https://img.shields.io/badge/repo-live%20tree%20NEEDS%20VERIFICATION-yellow)  
+> **Owners:** `@bartytime4life`  
+> **Repo fit:** repo-root lane `tools/` · target file `tools/README.md` · upstream [../README.md](../README.md) · governance [../.github/README.md](../.github/README.md) · adjacent [../scripts/](../scripts/) · downstream [../.github/workflows/README.md](../.github/workflows/README.md)  
+> **Evidence posture:** doctrine-grounded · repo-grounded for current public `main` · deeper local checkout and platform settings remain bounded  
+> **Current public snapshot:** `tools/` currently renders as `README.md` only on public `main`; the family subdirectories below are target shape, not current subtree fact  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![role](https://img.shields.io/badge/role-validation%20helpers-4051b5) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/tools%20tree-README--only-lightgrey)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Tool behavior contract](#tool-behavior-contract) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `tools/` is not a miscellaneous scripts bin. In KFM it is the reusable, reviewable helper surface that strengthens governed execution without quietly becoming product runtime, policy source-of-truth, or hidden business logic.
 
 > [!NOTE]
-> In the March 2026 documentary repo inventory available in this session, `tools/` is described as the lane for **validators, link checkers, and CLI utilities**. This README preserves that role, expands it cautiously, and keeps all live-tree claims reviewable.
+> March 2026 doctrine and documentary repo inventories describe `tools/` as the lane for **validators, link checkers, and CLI utilities**. Current public `main` inspection confirms that the lane exists, but today the subtree is still **README-first** in public view. This README therefore separates **present state** from **target shape** on purpose.
 
 ## Scope
 
-`tools/` is the KFM lane for small, explicit utilities whose main job is to **inspect, validate, compare, summarize, lint, probe, or emit support evidence**. In practice, that means validators, link checkers, diff/probe helpers, metadata cross-checkers, spec-hash helpers, attestation helpers, and CI-facing CLIs that help the governed truth path stay auditable.
+`tools/` is the KFM lane for small, explicit utilities whose main job is to **inspect, validate, compare, summarize, lint, probe, or emit support evidence**.
 
-This README follows the March 2026 KFM doctrine and documentary repo inventories that describe `tools/` as a validator / link-check / CLI surface. Because the directly accessible workspace in this session exposed PDFs rather than a mounted live checkout, file-level and path-level statements remain intentionally qualified.
+That means validators, link checkers, diff/probe helpers, metadata cross-checkers, spec-hash helpers, attestation helpers, and CI-facing CLIs that help the governed truth path stay auditable.
+
+Today, the public tree shows this lane as documentary-first rather than as a populated helper family. That does not weaken the directory’s role. It simply means the README must do two jobs at once:
+
+1. describe the **current public state** honestly
+2. define the **governed target shape** for the first executable helpers
 
 What belongs here:
 
@@ -47,19 +53,19 @@ What belongs here:
 What this README does:
 
 - defines the operating contract for `tools/`
-- separates `tools/` from adjacent lanes such as `scripts/`, `tests/`, `contracts/`, and `policy/`
-- keeps documentary repo evidence separate from target-shape guidance
-- preserves KFM’s truth posture by marking what is confirmed, inferred, proposed, or still unverified
+- separates `tools/` from adjacent lanes such as `scripts/`, `tests/`, `contracts/`, `schemas/`, and `policy/`
+- distinguishes current public-tree fact from proposed family regularization
+- preserves KFM’s truth posture by marking what is confirmed, inferred, proposed, unknown, or still needs verification
 
 ### Evidence markers used in this README
 
 | Marker | Meaning here |
 | --- | --- |
-| **CONFIRMED** | Supported by attached March 2026 KFM documentation or direct current-session evidence |
-| **INFERRED** | Strongly suggested by project documentation, but not re-verified from a mounted live repo tree |
-| **PROPOSED** | Doctrine-consistent target shape or placement guidance, not verified as live-tree reality |
-| **UNKNOWN** | Not verified strongly enough to present as settled current reality |
-| **NEEDS VERIFICATION** | Placeholder value, owner, path, or implementation detail that should be checked in a live checkout before merge |
+| **CONFIRMED** | Supported by March 2026 KFM doctrine, current public repo files, or repo-grounded audit material |
+| **INFERRED** | Strongly suggested by doctrine and adjacent repo docs, but not proven as current subtree reality |
+| **PROPOSED** | Target shape, placement rule, or future helper guidance consistent with doctrine |
+| **UNKNOWN** | Not established strongly enough from visible repo or documentary evidence |
+| **NEEDS VERIFICATION** | Placeholder value or platform detail that should be checked before merge |
 
 [Back to top](#tools)
 
@@ -68,21 +74,19 @@ What this README does:
 **Path:** `tools/README.md`  
 **Role in repo:** directory README for validators, probes, diff helpers, catalog/evidence support tooling, and other reviewable helper CLIs.
 
-> [!NOTE]
-> The links below follow the documented KFM repo layout and surrounding doctrinal references. Their **current mounted presence** beyond the PDF corpus remains **NEEDS VERIFICATION** in this session.
-
 | Direction | Surface | Why it matters |
 | --- | --- | --- |
 | Upstream | [../README.md](../README.md) | Root repository framing and system identity |
-| Governance | [../.github/README.md](../.github/README.md) | Maintainer workflow guidance and repo-level operating notes |
-| Governance | [../.github/CODEOWNERS](../.github/CODEOWNERS) | Intended owner map for `tools/` and adjacent governed surfaces |
-| Adjacent | [../scripts/](../scripts/) | Orchestration and lifecycle-transition scripts may call tools, but reusable helpers should not be buried there |
+| Governance | [../.github/README.md](../.github/README.md) | Repository gatehouse and maintainer workflow guidance |
+| Governance | [../.github/CODEOWNERS](../.github/CODEOWNERS) | Current owner map for `tools/` and adjacent governed surfaces |
+| Adjacent | [../scripts/](../scripts/) | Orchestration and lifecycle-transition entrypoints may call tools, but reusable helpers should not be buried there |
 | Adjacent | [../contracts/](../contracts/) | Tools validate or consume contracts; they do not replace them |
+| Adjacent | [../schemas/](../schemas/) | Current repo also exposes a schema surface; `tools/` must not silently decide schema authority |
 | Adjacent | [../policy/](../policy/) | Policy bundles live there; tools may lint, evaluate, or summarize them |
 | Adjacent | [../tests/](../tests/) | Fixtures and assertions should exercise tool behavior explicitly |
 | Adjacent | [../data/](../data/) | Catalogs, manifests, datasets, and example slices are common tool inputs |
 | Adjacent | [../infra/](../infra/) | Infra may call tools, but deployment definitions do not belong here |
-| Downstream | [../.github/workflows/](../.github/workflows/) | CI invokes tools, but workflow YAML should not become the only place tool behavior is documented |
+| Downstream | [../.github/workflows/README.md](../.github/workflows/README.md) | CI invokes tools, but workflow YAML should not become the only place tool behavior is documented |
 
 ## Accepted inputs
 
@@ -101,6 +105,7 @@ The following belong in or under `tools/`:
 | `tools/` | the artifact is a reusable helper whose main job is check / report / fail / summarize | it is a long-running service, a public runtime, or a lifecycle orchestrator |
 | `scripts/` | the artifact coordinates staged work, transitions, or operator workflows and may call into `tools/` | it is really a reusable validator, diff helper, or review CLI |
 | `contracts/` | the artifact defines schema, OpenAPI, registry, or vocabulary shape | it is executable validation logic or a CLI entrypoint |
+| `schemas/` | the artifact is the repo’s currently exposed schema surface | it is helper code that quietly chooses schema authority instead of following an explicit repo rule |
 | `policy/` | the artifact is the policy source-of-truth: bundles, fixtures, or decision rules | it is generic wrapper code around policy evaluation |
 | `docs/` | the artifact is the normative documentation rule, schema, template, or style standard | it is executable helper code that enforces those rules |
 | `tests/` | the artifact asserts behavior, carries fixtures, or proves negative paths | it is the primary operational CLI or reviewer-facing helper |
@@ -110,41 +115,57 @@ The following belong in or under `tools/`:
 
 | Does **not** belong here | Put it in | Why |
 | --- | --- | --- |
-| Long-running public runtime code | a deployable app or package lane | `tools/` supports governed execution; it is not the product runtime |
+| Long-running public runtime code | an app or package lane | `tools/` supports governed execution; it is not the product runtime |
 | Canonical policy bundles or rule ownership | [../policy/](../policy/) | Tooling may evaluate policy, but policy source-of-truth stays separate |
-| Authoritative contracts and schemas | [../contracts/](../contracts/) | Tools consume contracts; they should not hide or replace them |
-| Normative documentation rules, front-matter schemas, or style policy | [../docs/](../docs/) or adjacent governance lanes | Tooling may validate them, but the standards themselves are not owned here |
+| Authoritative contracts and schemas | [../contracts/](../contracts/) or [../schemas/](../schemas/) per repo authority rule | Tools consume contract surfaces; they should not hide or replace them |
+| Schema-authority arbitration between `contracts/` and `schemas/` | ADR + contract governance lanes | `tools/` may validate a declared source-of-truth, but must not silently define one |
+| Normative documentation rules, front-matter schemas, or style policy | [../docs/](../docs/) or governance lanes | Tooling may validate them, but the standards themselves are not owned here |
 | One-off operator experiments without durable value | local scratch space or a dedicated script | `tools/` is for repeatable, reviewable utilities |
 | Sensitive fixture payloads or unrestricted coordinate dumps | secured data lanes | Public tooling must remain safe to clone, run, and review |
 | Hidden promotion shortcuts | nowhere | KFM promotion is governed, inspectable, and fail-closed |
-| Inline workflow shell blobs that become the only implementation | tool entrypoints plus documented workflows | Reviewers should be able to locate logic outside workflow YAML |
+| Inline workflow shell blobs that become the only implementation | stable tool entrypoints plus documented workflows | Reviewers should be able to locate logic outside workflow YAML |
 
 ## Current evidence snapshot
 
 | Evidence item | Status | How this README uses it |
 | --- | --- | --- |
-| Documentary repo inventory material describes `tools/` as **validators, link checkers, CLI utilities** and places it beside `docs/`, `tests/`, `configs/`, `scripts/`, `migrations/`, and `examples/` | **CONFIRMED in project documentation / NEEDS VERIFICATION in live tree** | Grounds the directory role and adjacency model |
-| The KFM truth path and trust membrane remain load-bearing: source edge -> RAW -> WORK/QUARANTINE -> PROCESSED -> CATALOG/TRIPLET -> PUBLISHED, with governed interfaces between clients and stores | **CONFIRMED** | Keeps helper tools subordinate to policy, evidence resolution, and release gating |
-| Promotion is expected to fail closed on missing metadata, broken links, invalid catalogs, policy failures, and missing receipts/manifests | **CONFIRMED** | Grounds validator, link-check, and structured-report expectations |
-| March 2026 KFM design manuals treat docs, ADRs, and runbooks as production surfaces and warn against hiding authoritative logic in scripts or deployment wiring | **CONFIRMED** | Keeps `tools/` reviewable and prevents drift into hidden business law |
-| The current accessible workspace in this session exposed PDFs only under `/mnt/data`; no mounted repo tree, workflow YAML, manifests, or runtime logs were directly visible | **CONFIRMED current-session constraint** | Keeps owner/path/workflow claims qualified and reviewable |
+| Public `main` lists `.github`, `apps`, `configs`, `contracts`, `data`, `docs`, `examples`, `infra`, `migrations`, `packages`, `policy`, `schemas`, `scripts`, `tests`, and `tools` at repo root | **CONFIRMED** | Grounds relative links, repo fit, and adjacent-lane language |
+| Public `tools/` currently lists `README.md` only | **CONFIRMED** | Prevents overclaiming executable helper inventory |
+| `.github/CODEOWNERS` assigns `/tools/` to `@bartytime4life` | **CONFIRMED** | Grounds the owners line and merge-review expectation |
+| `.github/workflows/README.md` says `.github/workflows/` currently contains `README.md` only and that no checked-in workflow YAML files were visible during that revision | **CONFIRMED** | Grounds downstream CI wording and keeps merge-gate claims bounded |
+| Documentary repo inventory describes `tools/` as **validators, link checkers, and CLI utilities** | **CONFIRMED** | Grounds the directory’s intended role |
+| Repo-grounded audit material treats `tools/README.md` and `scripts/README.md` as documentary surfaces and does not present active helper inventory or workflow gates as settled executable reality | **CONFIRMED** | Keeps present-state claims conservative |
+| KFM doctrine keeps governed truth path, trust membrane, authoritative-versus-derived separation, cite-or-abstain, and machine-checkable artifacts as load-bearing | **CONFIRMED** | Grounds the tool behavior contract and fail-closed posture |
 
 ## Directory tree
 
-### Documentary repo-adjacent excerpt
+### Current public `main` snapshot
+
+```text
+tools/
+└── README.md
+```
+
+### Confirmed repo-root neighborhood
 
 ```text
 repo/
+├── .github/
+├── contracts/
+├── data/
 ├── docs/
-├── tools/        # validators, link checkers, CLI utilities
-├── tests/
-├── configs/
+├── infra/
+├── policy/
+├── schemas/
 ├── scripts/
-├── migrations/
-└── examples/
+├── tests/
+└── tools/
 ```
 
-### PROPOSED stable family shape to prefer if the subtree is regularized
+> [!WARNING]
+> The family layout below is a **regularization target**, not a statement about what the current public subtree already contains.
+
+### PROPOSED stable family shape to prefer when executable helper inventory lands
 
 ```text
 tools/
@@ -157,10 +178,7 @@ tools/
 └── ci/          # reviewer-facing summaries and merge-gate support utilities
 ```
 
-> [!WARNING]
-> The documentary corpus shows naming drift between `tools/validators/`, `tools/validate/`, and generic `validation` terminology. Prefer **plural noun directory families** (`validators/`, `probes/`, `diff/`, `docs/`, `catalog/`, `attest/`, `ci/`) and reserve verbs for entrypoint filenames.
-
-### Design-note example paths (PROPOSED, not live-tree proof)
+### Design-note example paths (PROPOSED, not current public-tree proof)
 
 ```text
 tools/validators/spec_hash.py
@@ -170,49 +188,48 @@ tools/docs/validate_mermaid.mjs
 tools/docs/audit_tables_and_fences.mjs
 tools/docs/validate_badges_footer.mjs
 tools/probes/gtfsrt_probe.py
-tools/validate/gtfsrt_schema.py
 tools/diff/stable_diff.py
-tools/partition/write_snapshot.py
 ```
-
-> [!NOTE]
-> The example paths above are **document-backed design-note examples**, not proof that every path exists on the current branch. Treat them as naming and role cues until the live subtree is inspected.
 
 [Back to top](#tools)
 
 ## Quickstart
 
-The commands below are verification-first. Run them before adding or moving anything under `tools/`.
+The commands below are inventory-first. Run them before adding or moving anything under `tools/`.
 
-1. Inspect what actually exists in your checkout.
+1. Confirm what actually exists in your checkout.
 
 ```bash
-find tools -maxdepth 4 \( -type f -o -type d \) 2>/dev/null | sort
+tree -a -L 2 tools 2>/dev/null || find tools -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
 ```
 
-2. Check governance and adjacent lanes nearby, if present.
+2. Recheck owner and workflow neighbors.
 
 ```bash
-[ -f .github/README.md ] && sed -n '1,160p' .github/README.md
-[ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS
-find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
+sed -n '1,160p' .github/CODEOWNERS 2>/dev/null
+sed -n '1,200p' .github/workflows/README.md 2>/dev/null
 ```
 
-3. Check naming drift and existing callers before adding a new family.
+3. Check nearby contract and schema surfaces before introducing a validator.
 
 ```bash
-rg -n "tools/" .github docs scripts tests policy contracts -S 2>/dev/null
-rg -n "tools/(validators|validate|probes|diff|docs|catalog|attest|ci)" . -S 2>/dev/null
+find contracts schemas -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
 ```
 
-4. Inspect candidate helper entrypoints instead of assuming they exist.
+4. Search for existing callers before inventing a new helper name or family.
 
 ```bash
-find tools -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.mjs" \) 2>/dev/null | sort
+rg -n "tools/" README.md .github docs scripts tests policy contracts schemas -S 2>/dev/null
+```
+
+5. Inspect candidate executable entrypoints instead of assuming they already exist.
+
+```bash
+find tools -maxdepth 4 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.mjs" -o -name "*.ts" \) 2>/dev/null | sort
 ```
 
 > [!NOTE]
-> The goal of quickstart here is **inventory first, movement second**. In this session, mounted repo reality was not directly visible, so every structural change should begin with local confirmation.
+> If the local tree still matches the public `README.md`-only snapshot, treat this README as a lane contract and landing plan for the first executable helper rather than as evidence that the family tree is already populated.
 
 ## Usage
 
@@ -224,6 +241,16 @@ find tools -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "*.mjs" 
 4. Emit machine-readable output if CI, review surfaces, or audits will parse it.
 5. Add at least one representative pass path and one failing path for non-trivial behavior.
 6. Document blocking vs non-blocking conditions in the nearest README.
+
+### Add the first executable helper into a README-first lane
+
+When `tools/` still contains documentation only, land the first helper with its caller and proof burden in the same change.
+
+1. identify the caller surface first: local operator flow, CI lane, release review, or policy check
+2. create the helper under the narrowest family name that matches its job
+3. add fixtures or negative-path tests in [../tests/](../tests/) at the same time
+4. document the caller path in both this README and the nearest adjacent README
+5. keep the change small enough that reviewers can verify purpose, inputs, outputs, and failure mode in one pass
 
 ### Add a probe, diff, or catalog helper
 
@@ -239,7 +266,7 @@ A helper belongs in `tools/` when it:
 
 Keep orchestration and helper logic distinct:
 
-1. let `scripts/` own staged movement, scheduling, or operator choreography
+1. let [../scripts/](../scripts/) own staged movement, scheduling, or operator choreography
 2. let `tools/` own reusable inspection, validation, comparison, or support evidence
 3. keep workflow YAML small by calling stable tool entrypoints instead of embedding large shell blobs
 4. make the same helper runnable locally and in CI
@@ -288,23 +315,22 @@ Illustrative output shape for a blocking validator:
 
 ```mermaid
 flowchart LR
+    subgraph Current[Current public state]
+      T0[tools/README.md]
+    end
+
     subgraph Inputs[Adjacent governed inputs]
       D[data/]
       C[contracts/]
+      S[schemas/]
       P[policy/]
-      T[tests/fixtures]
+      TS[tests/fixtures]
       DS[docs/standards]
+      SC[scripts/]
+      WF[.github/workflows/]
     end
 
-    S[scripts/] -->|calls reusable helpers| TF
-    W[.github/workflows] -->|invokes| TF
-    D --> TF
-    C --> TF
-    P --> TF
-    DS -->|normative rules live here| TF
-    T -->|exercises| TF
-
-    subgraph TF[tools/ families]
+    subgraph Target[tools/ target helper families]
       V[validators]
       PR[probes / diff]
       DO[docs checks]
@@ -312,10 +338,20 @@ flowchart LR
       CI[ci helpers]
     end
 
-    TF --> R[reports / digests / exit codes / proof refs]
+    SC -->|calls stable helpers| Target
+    WF -->|invokes| Target
+    D --> Target
+    C --> Target
+    S --> Target
+    P --> Target
+    TS -->|exercises| Target
+    DS -->|normative rules live here| Target
+
+    Target --> R[reports / digests / exit codes / proof refs]
     R --> RV[reviewers]
     R --> G[promote or block]
 
+    T0 -. lane contract today .-> Target
     G -. never bypass .-> API[governed interfaces]
     API -. no direct client shortcut .-> STORE[(canonical stores)]
 ```
@@ -324,9 +360,12 @@ flowchart LR
 
 ### Tool family matrix
 
+> [!NOTE]
+> Current public `main` shows `README.md` only. Every family below is therefore a **proposed normalization target** until a live checkout proves otherwise.
+
 | Family | Primary job | Typical inputs | Expected outputs | Typical caller | Status in this README |
 | --- | --- | --- | --- | --- | --- |
-| `validators/` | schema, catalog, provenance, determinism, docs, or policy-adjacent checks | schemas, manifests, catalogs, receipts, fixtures, markdown | pass/fail report, structured errors | CI, local review, scripts | **Strongest documentary fit** |
+| `validators/` | schema, catalog, provenance, determinism, docs, or policy-adjacent checks | schemas, manifests, catalogs, receipts, fixtures, markdown | pass/fail report, structured errors | CI, local review, scripts | **Strongest doctrinal fit** |
 | `probes/` | bounded source, freshness, or status inspection | endpoints, feeds, configs, snapshots | probe report, freshness/status summary | scheduled checks, PR validation | **PROPOSED family** |
 | `diff/` | deterministic comparison for review or correction | manifests, snapshots, geometry baselines, catalogs | stable diff report, counts, optional artifacts | reviewers, CI | **PROPOSED family** |
 | `docs/` | executable checks for front matter, mermaid, tables, fences, badges, or links | markdown, schemas, lint configs | audit JSON, summaries, link logs | docs CI, maintainers | **PROPOSED family** |
@@ -344,22 +383,28 @@ flowchart LR
 | `tools/diff/stable_diff.py` | comparison logic buried in CI shell | review logic should stay directly inspectable |
 | `tools/attest/` | scattered signing helpers in random folders | release evidence should be discoverable |
 | `scripts/` for orchestration | transition logic buried in `tools/` | reusable helpers and lifecycle choreography are different concerns |
+| explicit authority selection | helper code silently picking `contracts/` vs `schemas/` | repo-wide schema law should be declared, not inferred from whichever file a script happened to read first |
 
 ## Task list / Definition of done
 
-- [ ] The tool has one narrow, documented purpose.
+- [ ] The helper has one narrow, documented purpose.
 - [ ] Directory placement matches the helper’s real job.
 - [ ] Exit codes are explicit and tested.
 - [ ] At least one representative success path and one failure path exist.
 - [ ] Machine-readable output exists where CI, review, or audits need stable parsing.
 - [ ] No secret, restricted, or rights-unclear material was committed as a fixture.
-- [ ] The tool does not bypass policy, review, release evidence, or the trust membrane.
-- [ ] If a script or workflow calls the tool, that caller is documented near the helper.
-- [ ] Naming follows the plural-noun family rule for directories and descriptive entrypoint rule for executables.
-- [ ] This README and any local tool README were updated together.
-- [ ] Owners, merge gates, and caller paths were verified against the live checkout before merge.
+- [ ] The helper does not bypass policy, review, release evidence, or the trust membrane.
+- [ ] If a script or workflow calls the helper, that caller is documented near the helper.
+- [ ] Naming follows the plural-noun family rule for directories and descriptive-entrypoint rule for executables.
+- [ ] If `tools/` still contains only documentation, the first helper lands with tests, fixtures, and caller documentation in the same PR.
+- [ ] This README and any local helper README were updated together.
+- [ ] Owners, caller paths, and merge-gate links were rechecked against current repo evidence before merge.
 
 ## FAQ
+
+### Why does this README discuss family structure when public `main` shows `README.md` only?
+
+Because the file has to do two honest jobs at once: describe the lane that exists today and give maintainers a governed landing shape for the first executable helpers. KFM loses trust when it blurs present state and target shape together.
 
 ### Why not put everything in `scripts/`?
 
@@ -377,14 +422,27 @@ The **normative** rule, schema, or style policy should live in `docs/` or govern
 
 Because this directory sits close to validation, CI, promotion readiness, and review evidence. Overclaiming here would weaken the same trust posture the tools are supposed to protect.
 
-### Why prefer `validators/` over `validate/`?
+### Why call out `contracts/` and `schemas/` separately?
 
-Because the documentary corpus already shows naming drift. Standardizing on noun-based directory families keeps the tree readable and leaves verbs to entrypoint names.
+Because the public repo currently exposes both surfaces. Until the repo declares one authoritative contract/schema home, `tools/` should validate declared inputs and avoid quietly turning a convenience choice into project law.
 
 ## Appendix
 
 <details>
-<summary>Design-note example paths mentioned in accessible project materials</summary>
+<summary>Current public-main facts this README is built to respect</summary>
+
+```text
+1. tools/ exists on public main.
+2. tools/ currently shows README.md only.
+3. /tools/ is owned by @bartytime4life in .github/CODEOWNERS.
+4. .github/workflows/ currently exposes README.md only in public view.
+5. The broader doctrinal role of tools/ is validators + link checkers + CLI utilities.
+```
+
+</details>
+
+<details>
+<summary>Design-note example paths mentioned in documentary materials</summary>
 
 ```text
 tools/validators/spec_hash.py
@@ -394,9 +452,7 @@ tools/docs/validate_mermaid.mjs
 tools/docs/audit_tables_and_fences.mjs
 tools/docs/validate_badges_footer.mjs
 tools/probes/gtfsrt_probe.py
-tools/validate/gtfsrt_schema.py
 tools/diff/stable_diff.py
-tools/partition/write_snapshot.py
 ```
 
 Use this list as a review aid, not as proof that every path exists on the active branch.
@@ -408,21 +464,21 @@ Use this list as a review aid, not as proof that every path exists on the active
 
 ```bash
 # What is actually present?
-find tools -maxdepth 4 \( -type f -o -type d \) 2>/dev/null | sort
+tree -a -L 2 tools 2>/dev/null || find tools -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
 
 # Which nearby governed surfaces exist?
-find .github -maxdepth 2 -type f 2>/dev/null | sort
+find .github -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
 find tests -maxdepth 3 \( -type f -o -type d \) 2>/dev/null | sort
 
-# Where does tooling wire into CI, scripts, docs, and policy?
-rg -n "tools/" .github docs scripts policy tests contracts -S 2>/dev/null
+# Where does tooling wire into CI, scripts, docs, policy, contracts, and schemas?
+rg -n "tools/" .github docs scripts policy tests contracts schemas -S 2>/dev/null
 
-# Is there still validators/validate drift?
+# Is there still validators / validate drift?
 rg -n "tools/(validators|validate)/" . -S 2>/dev/null
 
-# Which owners and merge gates are active?
-[ -f .github/CODEOWNERS ] && sed -n '1,220p' .github/CODEOWNERS
-find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
+# Which owners and merge-gate docs are active?
+sed -n '1,220p' .github/CODEOWNERS 2>/dev/null
+sed -n '1,220p' .github/workflows/README.md 2>/dev/null
 ```
 
 </details>
@@ -430,17 +486,16 @@ find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 <details>
 <summary>What this README intentionally does not claim</summary>
 
-This README does **not** claim that the current mounted repo already contains:
+This README does **not** claim that the current repo already contains:
 
-- a verified live `tools/` subtree matching the family shape above
-- a confirmed owner map for `tools/`
-- a confirmed workflow inventory or merge-blocking gate list
-- a confirmed schema/fixture inventory for tooling
-- a confirmed docs-tooling lane on disk
-- a confirmed proof-pack or attestation implementation
-- a confirmed EvidenceBundle resolver or RuntimeResponseEnvelope implementation on disk
+- a populated executable helper family under `tools/`
+- a verified live subtree matching the proposed family regularization
+- active checked-in workflow YAML files in `.github/workflows/`
+- a resolved single schema authority between `contracts/` and `schemas/`
+- a confirmed proof-pack or attestation implementation under `tools/`
+- a confirmed EvidenceBundle resolver or RuntimeResponseEnvelope emitter in the public tree
 
-Those remain direct verification tasks for a live checkout.
+Those remain direct verification tasks for a live checkout and platform settings review.
 
 </details>
 
