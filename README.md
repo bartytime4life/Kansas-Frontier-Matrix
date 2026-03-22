@@ -6,7 +6,7 @@ version: v1
 status: review
 owners: TBD-VERIFY-.github-CODEOWNERS
 created: TBD-VERIFY-first-commit-date
-updated: 2026-03-21
+updated: 2026-03-22
 policy_label: TBD-VERIFY-public-or-restricted
 related: [./docs/, ./contracts/, ./policy/, ./data/, ./apps/, ./packages/, ./tests/, ./infra/, ./tools/, TBD-VERIFY-./CONTRIBUTING.md, TBD-VERIFY-./SECURITY.md, TBD-VERIFY-./.github/CODEOWNERS]
 tags: [kfm, root-doc, governance, evidence-first, map-first, trust-system]
@@ -21,17 +21,17 @@ Governed, evidence-first, map-first, time-aware repository for Kansas spatial ev
 > **Owners:** TBD-VERIFY — `.github/CODEOWNERS` was not directly inspected in this session  
 > ![Status: Experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: TBD](https://img.shields.io/badge/owners-TBD-lightgrey) ![Surface: Root README](https://img.shields.io/badge/surface-root%20README-6f42c1) ![Posture: Evidence-first](https://img.shields.io/badge/posture-evidence--first-success) ![Trust: Governed](https://img.shields.io/badge/trust-governed-blue) ![Evidence: Source-bounded](https://img.shields.io/badge/evidence-source--bounded-yellow)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list-and-definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> **Repo fit:** `/README.md` *(documented root role; active-branch verification still required)*
+> **Repo fit:** `/README.md` *(root orientation surface; active-branch verification still required)*
 
 > [!IMPORTANT]
-> This README is intentionally **verification-first**. It is grounded in the attached March 2026 KFM doctrine, architecture, delivery, UI, and atlas manuals, plus source-mediated repository inventories preserved inside those manuals. The current session did **not** expose a mounted branch checkout, workflow YAML, runtime manifests, CODEOWNERS, or live test results. Treat path-level and implementation-shaped statements here as bounded until the active branch is inspected directly.
+> This README is intentionally **verification-first**. It is grounded in the attached March 2026 KFM doctrine, architecture, UI, atlas, and synthesis manuals, plus source-mediated repository inventories preserved inside those materials. The current session did **not** expose a mounted branch checkout, workflow YAML, runtime manifests, CODEOWNERS, or live test results. Treat path-level and implementation-shaped statements here as bounded until the active branch is inspected directly.
 
 | At a glance | Working rule |
 |---|---|
 | System identity | Governed spatial evidence system |
-| Value unit | The inspectable claim, not the layer, dashboard, or fluent answer |
+| Value unit | The inspectable claim, not merely the layer, dashboard, or fluent answer |
 | Truth path | `Source edge → RAW → WORK / QUARANTINE → PROCESSED → CATALOG / TRIPLET → PUBLISHED` |
-| Trust boundary | Governed APIs and evidence resolution, not direct client access to stores |
+| Trust boundary | Governed APIs plus evidence resolution, not direct client access to stores |
 | Runtime answer rule | Cite or abstain |
 | Publication rule | Promotion changes trust state; deployment should apply already approved intent |
 | Surface rule | One map-first, time-aware shell with trust-visible evidence and negative states |
@@ -59,41 +59,41 @@ Do not use it for:
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Supported by the attached March 2026 KFM corpus or by directly visible session evidence. |
+| **CONFIRMED** | Supported by the attached March 2026 KFM corpus or by directly visible current-session evidence. |
 | **INFERRED** | Strongly implied by repeated corpus patterns or source-mediated repo inventories, but not directly branch-inspected in this session. |
 | **PROPOSED** | A recommended realization or repo pattern that fits doctrine but is not proven as current implementation reality. |
 | **NEEDS VERIFICATION** | A likely repo-local fact, path, or control point that should be checked on the active branch before being treated as current reality. |
 | **UNKNOWN** | Not supported strongly enough in this session to state as a live repo or runtime fact. |
 
 > [!NOTE]
-> The most authoritative attached KFM manuals repeatedly preserve this boundary on purpose: doctrine can be stated confidently, but live repo topology, CI gates, route inventories, manifests, and implementation depth should remain visible as **UNKNOWN** until directly inspected.
+> The strongest attached KFM manuals are explicit about this boundary on purpose: doctrine can be stated confidently, but live repo topology, CI gates, route inventories, manifests, and implementation depth should remain visible as **UNKNOWN** until directly inspected.
 
 [Back to top](#kansas-frontier-matrix)
 
 ## Repo fit
 
-**Path:** `/README.md` *(documented root role; active branch NEEDS VERIFICATION)*  
+**Path:** `/README.md`  
 **Role:** Root orientation document and verification-first operating index for Kansas Frontier Matrix.
 
-The attached corpus documents a root-level repository shape and a public repository name, but this session did **not** include a mounted checkout. The links below therefore follow the **documented root inventory** while keeping branch-local certainty visibly bounded.
+The attached corpus documents a root-level repository shape and repeatedly proposes a monorepo-like layout, but this session did **not** include a mounted checkout. The links below therefore follow the **documented root inventory** while keeping branch-local certainty visibly bounded.
 
 | Direction | Documented path | Status | Why it matters |
 |---|---|---|---|
-| Root | `./README.md` | **INFERRED** | Root identity, navigation, and doctrine summary surface. |
+| Root | [`./README.md`](./README.md) | **INFERRED** | Root identity, navigation, and doctrine summary surface. |
 | Upstream | [`./docs/`](./docs/) | **INFERRED** | Architecture, governance, ADRs, runbooks, and domain depth. |
 | Upstream | [`./contracts/`](./contracts/) | **INFERRED** | OpenAPI, schemas, vocabularies, and shared contract surfaces. |
-| Upstream | [`./policy/`](./policy/) | **INFERRED** | Policy bundles, fixtures, and policy tests. |
-| Upstream | [`./data/`](./data/) | **INFERRED** | Registry, lifecycle zones, catalog artifacts, and receipts. |
+| Upstream | [`./policy/`](./policy/) | **INFERRED** | Policy bundles, fixtures, deny-by-default rules, and policy tests. |
+| Upstream | [`./data/`](./data/) | **INFERRED** | Registry entries, lifecycle zones, catalog artifacts, and receipts. |
 | Downstream | [`./apps/`](./apps/) | **INFERRED** | Deployable runtime surfaces such as API, UI, workers, and related apps. |
 | Downstream | [`./packages/`](./packages/) | **INFERRED** | Shared reusable law: ingest, evidence, catalog, policy, delivery, and domain logic. |
 | Downstream | [`./tests/`](./tests/) | **INFERRED** | Unit, contract, policy, integration, and end-to-end verification. |
-| Downstream | [`./infra/`](./infra/) | **INFERRED** | Deployment, environment wiring, observability, and delivery mechanics. |
+| Downstream | [`./infra/`](./infra/) | **INFERRED** | Deployment, environment wiring, observability, and release mechanics. |
 | Downstream | [`./tools/`](./tools/) | **INFERRED** | Validators, link checkers, and supporting CLI utilities. |
-| Adjacent | [`./.github/`](./.github/) | **INFERRED** | CI/CD, templates, CODEOWNERS, and review-routing signals. |
-| Adjacent | `./CONTRIBUTING.md` | **NEEDS VERIFICATION** | Contributor contract and workflow expectations were not directly inspected. |
-| Adjacent | `./SECURITY.md` | **NEEDS VERIFICATION** | Security policy presence and exact path were not directly inspected. |
+| Adjacent | [`./.github/`](./.github/) | **NEEDS VERIFICATION** | CI/CD, templates, CODEOWNERS, and review-routing signals. |
+| Adjacent | `./CONTRIBUTING.md` | **NEEDS VERIFICATION** | Contributor contract and workflow expectations were not directly inspected here. |
+| Adjacent | `./SECURITY.md` | **NEEDS VERIFICATION** | Security policy presence and exact path were not directly inspected here. |
 
-KFM is easiest to understand as a **truth path → catalog / evidence → governed API → trust-visible surface** system. The root README exists to keep that order clear before contributors descend into domain-, app-, or contract-specific depth.
+KFM is easiest to understand as a **truth path → catalog / evidence → governed API → trust-visible surface** system. The root README exists to keep that order visible before contributors descend into domain-, app-, or contract-specific detail.
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -121,11 +121,11 @@ These do **not** belong in the governed publication path, and this root README s
 | Secrets, tokens, credentials | Never commit secrets into the repo or artifact path. | Secret manager / environment provisioning |
 | Direct client-to-store or client-to-model paths | Breaks the trust membrane. | Governed APIs and protected adapters |
 | Publishable artifacts without receipts, digests, or catalog closure | Cannot be audited, reproduced, or corrected safely. | `WORK/QUARANTINE` until complete |
-| Rights-unclear or sensitivity-unresolved material | Ambiguity must fail closed. | Quarantine, metadata-only handling, redaction, or generalized public-safe derivatives |
+| Rights-unclear or sensitivity-unresolved material | Ambiguity must fail closed. | Quarantine, metadata-only handling, redaction, generalized public-safe derivatives, or delayed publication |
 | Uncited Story or Focus claims | Violates cite-or-abstain. | Draft or internal review states only |
 | Fine-grained restricted location exposure | Risks policy leakage and unsafe precision. | Restricted lanes or generalized public-safe outputs |
 | Docs that imply live behavior without proof | Weakens trust through overclaiming. | Keep the statement `INFERRED`, `PROPOSED`, `UNKNOWN`, or `NEEDS VERIFICATION` |
-| Detached reviewer/admin tools that sever geography, time, or evidence context | Breaks the governed shell model. | Review and stewardship as shell variation, not separate truth systems |
+| Detached reviewer/admin tools that sever geography, time, or evidence context | Breaks the governed shell model. | Review and stewardship as shell variation, not a separate truth system |
 
 [Back to top](#kansas-frontier-matrix)
 
@@ -153,7 +153,7 @@ These do **not** belong in the governed publication path, and this root README s
 
 | Path target | Status | Expected repo role |
 |---|---|---|
-| `./.github/` | **INFERRED** | Workflow, templates, review routing, and merge discipline |
+| `./.github/` | **NEEDS VERIFICATION** | Workflow, templates, review routing, and merge discipline |
 | `./docs/` | **INFERRED** | Architecture, governance, domain, ADR, diagram, and runbook documentation |
 | `./contracts/` | **INFERRED** | API contracts, schemas, vocabularies, and shared object definitions |
 | `./policy/` | **INFERRED** | Policy bundles, fixtures, deny-by-default rules, and policy tests |
@@ -163,7 +163,7 @@ These do **not** belong in the governed publication path, and this root README s
 | `./tests/` | **INFERRED** | Unit, contract, policy, integration, and end-to-end verification |
 | `./infra/` | **INFERRED** | Environment wiring, deployment, dashboards, and release mechanics |
 | `./tools/` | **INFERRED** | Validators, link checkers, and supporting CLI/tooling |
-| `./scripts/`, `./configs/`, `./migrations/`, `./examples/` | **NEEDS VERIFICATION** | Mentioned in some source-mediated inventories, but not directly confirmed in this session |
+| `./configs/`, `./scripts/`, `./migrations/`, `./examples/` | **NEEDS VERIFICATION** | Mentioned in source-mediated inventories, but not directly confirmed in this session |
 
 ### What remains `UNKNOWN` or `NEEDS VERIFICATION`
 
@@ -432,7 +432,7 @@ Because the current session exposed doctrine and source-mediated repo inventorie
 
 ### Working basis for this README candidate
 
-This README is aligned to the attached March 2026 KFM authority layer, with the strongest weighting given to the replacement-grade KFM manuals, the unified geospatial architecture manual, the MapLibre UI architecture report, the components/pass dossiers, the master design manual, the evidence-first delivery compendium, and the domains/source atlas.
+This README is aligned to the attached March 2026 KFM authority layer, with the strongest weighting given to the replacement-grade KFM manuals, the unified geospatial architecture manual, the MapLibre UI architecture report, the components/pass dossiers, the master design manual, the documentation compendium, the expanded working manual, and the domains/source atlas.
 
 ### Why placeholders remain in the meta block
 
