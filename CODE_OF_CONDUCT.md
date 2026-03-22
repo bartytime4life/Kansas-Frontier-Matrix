@@ -1,37 +1,70 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/REVIEW-REQUIRED-UUID
+title: Code of Conduct
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life (CODEOWNERS global fallback owner); dedicated conduct/steward contacts NEEDS VERIFICATION
+created: REVIEW-REQUIRED
+updated: 2026-03-22
+policy_label: public
+related: [README.md, CONTRIBUTING.md, SECURITY.md, .github/README.md, .github/SECURITY.md, docs/README.md, docs/governance/README.md, docs/runbooks/README.md, docs/standards/README.md]
+tags: [kfm, governance, conduct, moderation, stewardship]
+notes: [doc_id and created date require confirmation; private conduct/steward/security inboxes are not yet published as confirmed repo contacts]
+[/KFM_META_BLOCK_V2] -->
+
 # Code of Conduct
 
-*A project-wide standard for collaboration, contribution integrity, moderation, and stewardship in Kansas Frontier Matrix (KFM).*
+*Project-wide standard for collaboration, contribution integrity, moderation, and stewardship in Kansas Frontier Matrix (KFM).*
+
+![Status: Draft](https://img.shields.io/badge/status-draft-orange) ![Repo: Public](https://img.shields.io/badge/repo-public-1f6feb) ![Surface: Root governance](https://img.shields.io/badge/surface-root%20governance-8250df) ![Trust: Governed](https://img.shields.io/badge/trust-governed-blue) ![Reporting: Private-first](https://img.shields.io/badge/reporting-private--first-0a7d5a)
 
 > [!IMPORTANT]
-> This file is evidence-bounded and repo-aligned. It matches the current public repo structure and KFM doctrine, but dedicated non-public conduct, stewardship, and security inboxes are not yet published as confirmed repository contacts. Until they are, use the interim fallback below and keep sensitive reports out of public issues and pull requests.
+> This file is evidence-bounded and repo-aligned. It matches the current public repository structure and KFM doctrine, but dedicated non-public conduct, stewardship, and security inboxes are not yet published as confirmed repository contacts.
+>
+> Until they are, use the interim fallback below and keep sensitive reports out of public issues, pull requests, and discussion threads.
 
 | Field | Value |
 | --- | --- |
 | Status | Draft |
-| Owners | [`@bartytime4life`](https://github.com/bartytime4life) *(current `.github/CODEOWNERS` fallback owner; dedicated governance stewards not yet published)* |
+| Owners | [`@bartytime4life`](https://github.com/bartytime4life) *(confirmed `.github/CODEOWNERS` global fallback owner; dedicated conduct or stewardship owner group still needs publication)* |
 | Applies to | Contributors, reviewers, maintainers, stewards, educators, researchers, and community participants |
-| Repo fit | Root governance document at `/CODE_OF_CONDUCT.md` |
-| Related docs | [`/README.md`](README.md) · [`/CONTRIBUTING.md`](CONTRIBUTING.md) · [`/SECURITY.md`](SECURITY.md) · [`/.github/README.md`](.github/README.md) · [`/docs/README.md`](docs/README.md) · [`/docs/governance/README.md`](docs/governance/README.md) |
+| Repo fit | Root collaboration and moderation standard at `CODE_OF_CONDUCT.md` |
+| Related docs | [`README.md`](README.md) · [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`SECURITY.md`](SECURITY.md) · [`.github/README.md`](.github/README.md) · [`.github/SECURITY.md`](.github/SECURITY.md) · [`docs/README.md`](docs/README.md) · [`docs/governance/README.md`](docs/governance/README.md) · [`docs/runbooks/README.md`](docs/runbooks/README.md) · [`docs/standards/README.md`](docs/standards/README.md) |
 | Primary role | Protect people, preserve evidence, and keep contribution workflows aligned with KFM doctrine |
-| Does **not** replace | Security policy, privacy policy, rights/sensitivity policy, or release/publication controls |
+| Sensitive reporting posture | Private-first. Keep conduct, stewardship, and exposure reports out of public issues, pull requests, and discussion threads unless the matter is already public and safely redactable. |
+| Does **not** replace | Security policy, privacy policy, rights/sensitivity policy, machine-readable policy bundles, or release/publication controls |
 
 **Quick jump**  
-[Repo fit and adjacent docs](#repo-fit-and-adjacent-docs) · [Scope](#scope) · [KFM collaboration principles](#kfm-collaboration-principles) · [Expected behavior](#expected-behavior) · [Unacceptable behavior](#unacceptable-behavior) · [Evidence and contribution integrity](#evidence-and-contribution-integrity) · [Sensitive data, rights, and stewardship](#sensitive-data-rights-and-stewardship) · [AI-assisted contributions](#ai-assisted-contributions) · [Reporting and response](#reporting-and-response) · [Enforcement](#enforcement) · [Maintainer and steward obligations](#maintainer-and-steward-obligations)
+[Repo fit and adjacent docs](#repo-fit-and-adjacent-docs) · [Conduct in the KFM governance stack](#conduct-in-the-kfm-governance-stack) · [Scope](#scope) · [Truth posture used in this file](#truth-posture-used-in-this-file) · [KFM collaboration principles](#kfm-collaboration-principles) · [Expected behavior](#expected-behavior) · [Unacceptable behavior](#unacceptable-behavior) · [Evidence and contribution integrity](#evidence-and-contribution-integrity) · [Sensitive data, rights, and stewardship](#sensitive-data-rights-and-stewardship) · [AI-assisted contributions](#ai-assisted-contributions) · [Reporting and response](#reporting-and-response) · [Enforcement](#enforcement) · [Maintainer and steward obligations](#maintainer-and-steward-obligations)
 
 ## Repo fit and adjacent docs
 
-This file governs collaboration conduct and contribution integrity at the repository root.
+This file governs **how people collaborate** in KFM spaces. It sits at the repository root because collaboration conduct, moderation posture, and contribution integrity apply across code, data, docs, policy, review, and publication surfaces.
 
 Use adjacent governance surfaces for their specific jobs:
 
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) for normal contribution flow, review burden, validation, and definition-of-done
-- [`SECURITY.md`](SECURITY.md) for confidential vulnerability and exposure handling
-- [`.github/README.md`](.github/README.md) for repo-wide workflow, ownership, and merge-control expectations
-- [`docs/governance/README.md`](docs/governance/README.md) for governance lanes, review gates, rights, sensitivity, and policy semantics
-- [`docs/runbooks/README.md`](docs/runbooks/README.md) for operational containment, escalation, and rollback playbooks
-- [`docs/standards/README.md`](docs/standards/README.md) for normative standards and contract-profile expectations
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) for normal contribution flow, validation burden, and definition-of-done expectations
+- [`.github/README.md`](.github/README.md) for repo-wide review routing, CI/CD gatehouse responsibilities, and merge-control expectations
+- [`.github/SECURITY.md`](.github/SECURITY.md) and [`SECURITY.md`](SECURITY.md) for private vulnerability and exposure handling
+- [`docs/README.md`](docs/README.md) for the docs plane and documentation-as-production-surface rules
+- [`docs/governance/README.md`](docs/governance/README.md) for review triggers, publication constraints, rights, sensitivity, and correction posture
+- [`docs/runbooks/README.md`](docs/runbooks/README.md) for containment, rollback, restore, and correction playbooks
+- [`docs/standards/README.md`](docs/standards/README.md) for cross-cutting standards, profiles, and governed documentation rules
 
-This document governs **how people collaborate** across those surfaces. It should stay aligned with them, not replace them.
+This document stays intentionally narrow: it governs people, collaboration, moderation, and contribution integrity **across** those surfaces. It should stay aligned with them, not replace them.
+
+## Conduct in the KFM governance stack
+
+```mermaid
+flowchart LR
+  COC["CODE_OF_CONDUCT.md<br/>people, moderation, contribution integrity"] --> CONTRIB["CONTRIBUTING.md<br/>normal contribution flow"]
+  COC --> GITHUB[".github/README.md<br/>review routing and gatehouse controls"]
+  COC --> SEC[".github/SECURITY.md / SECURITY.md<br/>private vulnerability and exposure handling"]
+  COC --> GOV["docs/governance/README.md<br/>rights, sensitivity, review and publication rules"]
+  COC --> RUN["docs/runbooks/README.md<br/>containment, rollback, restore, correction"]
+  COC --> STD["docs/standards/README.md<br/>cross-cutting standards and profiles"]
+```
 
 ## Scope
 
@@ -44,6 +77,20 @@ This Code of Conduct applies to all KFM project spaces and project-adjacent coll
 - demos, workshops, events, and any external communication that explicitly represents KFM
 
 This document does not weaken or override KFM’s existing evidence, rights, verification, release, or sensitivity obligations.
+
+## Truth posture used in this file
+
+Use these labels whenever precision matters:
+
+| Label | Meaning here |
+| --- | --- |
+| **CONFIRMED** | Directly supported by current public repo documentation or stable KFM doctrine visible in this session |
+| **INFERRED** | Strongly suggested by adjacent repo docs, but not verified in GitHub settings, private reporting lanes, or non-public steward workflows |
+| **PROPOSED** | Recommended conduct or workflow improvement that fits KFM doctrine but is not yet published as current repo fact |
+| **UNKNOWN** | Not supported strongly enough in the current session to present as settled reality |
+| **NEEDS VERIFICATION** | A specific owner, contact lane, approval group, or operational detail should be checked before treating it as current |
+
+The largest remaining conduct-side unknowns are practical rather than doctrinal: dedicated non-public conduct contacts, a published stewardship reviewer group, and any finalized private reporting SLAs.
 
 ## KFM collaboration principles
 
@@ -86,7 +133,7 @@ The following behaviors are not acceptable in KFM spaces:
 - knowingly posting fabricated citations, forged provenance, plagiarized content, falsified implementation claims, or misleading summaries
 - presenting draft, derived, cached, AI-generated, or review-pending material as authoritative truth
 - bypassing review, policy, release, or sensitivity controls to force publication
-- uploading, revealing, or inferring restricted or sensitive material without approval, including exact locations or identifying details where withholding/generalization is required
+- uploading, revealing, or inferring restricted or sensitive material without approval, including exact locations or identifying details where withholding or generalization is required
 - flooding discussions with low-value noise, spam, bad-faith repetition, or AI-generated content that has not been verified by the submitter
 - using contribution systems, badges, titles, or activity surfaces as social pressure mechanisms detached from real project value
 
@@ -191,15 +238,16 @@ Human submitters remain fully accountable for the result.
 
 If you experience or witness conduct that violates this Code of Conduct, report it through the project’s maintainers or governance stewards.
 
-### Reporting channels
+### Reporting lanes
 
-| Channel | Use for | Contact |
+| Lane | Use for | Contact |
 | --- | --- | --- |
-| Conduct report | Harassment, discrimination, retaliation, abuse, intimidation | Interim fallback: [`@bartytime4life`](https://github.com/bartytime4life) |
-| Stewardship / rights report | Sensitivity, cultural protocol, location exposure, rights ambiguity | Interim fallback: [`@bartytime4life`](https://github.com/bartytime4life); route review through [`docs/governance/README.md`](docs/governance/README.md) |
-| Security / exposure report | Sensitive operational disclosure, credential exposure, unsafe publication | Follow [`SECURITY.md`](SECURITY.md); if no dedicated private channel is yet published there, use interim fallback [`@bartytime4life`](https://github.com/bartytime4life) and do **not** disclose publicly |
+| Conduct report | Harassment, discrimination, retaliation, abuse, intimidation, or sustained hostile behavior | Interim fallback: [`@bartytime4life`](https://github.com/bartytime4life) |
+| Stewardship / rights report | Sensitivity, cultural protocol, location exposure, rights ambiguity, or unsafe public handling | Interim fallback: [`@bartytime4life`](https://github.com/bartytime4life); route review through [`docs/governance/README.md`](docs/governance/README.md) |
+| Security / exposure report | Sensitive operational disclosure, credential exposure, trust-boundary bypass, unsafe publication, or release-integrity risk | Follow [`.github/SECURITY.md`](.github/SECURITY.md) and keep [`SECURITY.md`](SECURITY.md) aligned if both remain in tree; if no dedicated private lane is yet published there, use interim fallback [`@bartytime4life`](https://github.com/bartytime4life) and do **not** disclose publicly |
+| Normal contribution question | Non-sensitive contribution flow, review expectations, or routine project change | Use [`CONTRIBUTING.md`](CONTRIBUTING.md) and normal issue / pull request lanes |
 
-Sensitive conduct, stewardship, and security reports should **not** be opened as public issues, pull requests, or discussion threads unless the matter is already public and safely redactable.
+Sensitive conduct, stewardship, and security matters should **not** be opened as public issues, pull requests, or discussion threads unless the matter is already public and safely redactable.
 
 ### Include when possible
 
@@ -260,7 +308,7 @@ Maintainers and stewards have additional responsibilities:
 - protect reporters from retaliation
 - avoid forcing public disclosure of sensitive personal or community context
 - preserve a clear distinction between doctrinal policy, target-state realization, and unverified implementation detail
-- keep this file synchronized with [`README.md`](README.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`.github/CODEOWNERS`](.github/CODEOWNERS), and adjacent governance docs as those surfaces evolve
+- keep this file synchronized with [`README.md`](README.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), [`SECURITY.md`](SECURITY.md), [`.github/README.md`](.github/README.md), [`.github/CODEOWNERS`](.github/CODEOWNERS), and adjacent governance docs as those surfaces evolve
 
 ## Restoration and appeals
 
@@ -283,5 +331,8 @@ Successful restoration usually requires:
 
 - publish dedicated non-public conduct, stewardship, and security channels
 - confirm whether a separate stewardship or sovereignty reviewer group exists beyond the current CODEOWNERS fallback owner
-- add repo-native issue / pull-request intake surfaces for governance-sensitive reports when the repository is ready
-- mirror the AI-disclosure prompt in any future pull-request template so conduct and review expectations stay aligned
+- align root [`SECURITY.md`](SECURITY.md) and [`.github/SECURITY.md`](.github/SECURITY.md) to one clearly canonical disclosure path
+- add repo-native intake surfaces for governance-sensitive reports when the repository is ready
+- add an explicit AI-assistance disclosure field to the existing pull-request template so conduct and review expectations stay aligned
+
+[Back to top](#code-of-conduct)
