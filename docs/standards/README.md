@@ -4,31 +4,37 @@ title: Standards
 type: standard
 version: v1
 status: draft
-owners: <TODO: standards owners>
+owners: @bartytime4life
 created: <TODO: YYYY-MM-DD>
-updated: <TODO: YYYY-MM-DD>
+updated: 2026-03-23
 policy_label: public
 related: [../README.md, ../../README.md, ./KFM_STAC_PROFILE.md, ./KFM_DCAT_PROFILE.md, ./KFM_PROV_PROFILE.md, ./KFM_MARKDOWN_WORK_PROTOCOL.md, ./governance/ROOT_GOVERNANCE.md, ./faircare/FAIRCARE-GUIDE.md, ./sovereignty/INDIGENOUS-DATA-PROTECTION.md]
 tags: [kfm, standards, metadata, provenance, governance]
-notes: [Source-bounded draft; exact owners, dates, UUID, and full repo inventory need verification against the live repository.]
+notes: [Public main raw tree inspected for this directory; created date and UUID still need verification; current sibling standards files are scaffold-only.]
 [/KFM_META_BLOCK_V2] -->
 
 # Standards
 
 _Governed standards, profiles, and cross-cutting rules for KFM metadata, provenance, publication, documentation, and review._
 
-**Status:** `draft`  
-**Owners:** `NEEDS VERIFICATION`  
-![Status](https://img.shields.io/badge/status-draft-orange)
+**Status:** `experimental`  
+**Doc status:** `draft`  
+**Owners:** `@bartytime4life` *(current `/docs/` CODEOWNERS owner; no narrower standards owner was directly verified)*  
+![Status](https://img.shields.io/badge/status-experimental-orange)
+![Doc](https://img.shields.io/badge/doc-draft-orange)
 ![KFM](https://img.shields.io/badge/KFM-standards-blue)
-![Evidence](https://img.shields.io/badge/evidence-source--bounded-lightgrey)
-![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-required-gold)
+![Evidence](https://img.shields.io/badge/evidence-public--main%20%2B%20corpus-lightgrey)
+![FAIR%2BCARE](https://img.shields.io/badge/FAIR%2BCARE-routed-gold)
 
-**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Standards map](#standards-map) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
+**Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Current verified snapshot](#current-verified-snapshot) · [Accepted inputs](#accepted-inputs) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Standards map](#standards-map) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This index is intentionally **source-bounded**. It is aligned to the mounted KFM corpus and corpus-referenced paths, but the current session did **not** expose a directly browsable repository checkout for line-by-line verification of every file under `docs/standards/`.  
-> Treat entries marked **NEEDS VERIFICATION** as merge-time checks against the live repo tree.
+> This index is grounded in two evidence layers: the March 2026 KFM doctrine corpus and direct inspection of the public `main` tree for `docs/standards/README.md`, its sibling standards files, `.github/CODEOWNERS`, and adjacent contract / policy / workflow README surfaces.
+>
+> The current session still did **not** inspect a mounted checkout, GitHub settings, or workflow execution, so enforcement depth, branch-local drift, and any un-opened descendants remain **NEEDS VERIFICATION**.
+
+> [!NOTE]
+> On the public `main` tree opened for this revision, the sibling profile, protocol, governance, FAIR+CARE, sovereignty, and STAC-note files directly inspected under `docs/standards/` are all **scaffold-only**. This README is currently the most substantive standards surface in that directory.
 
 ## Scope
 
@@ -40,15 +46,35 @@ This directory exists to keep shared rules in one place: metadata profiles, prov
 
 | Item | Value |
 |---|---|
-| Path | `docs/standards/README.md` |
-| Role | Human-readable index for governed standards and profile surfaces |
-| Upstream | `../README.md` · `../../README.md` *(NEEDS VERIFICATION: exact docs-index placement in live repo)* |
-| Downstream | `./KFM_STAC_PROFILE.md` · `./KFM_DCAT_PROFILE.md` · `./KFM_PROV_PROFILE.md` · `./KFM_MARKDOWN_WORK_PROTOCOL.md` · `./governance/ROOT_GOVERNANCE.md` · `./faircare/FAIRCARE-GUIDE.md` · `./sovereignty/INDIGENOUS-DATA-PROTECTION.md` |
-| Adjacent governed areas | `../../contracts/` · `../../policy/` · `../data/` · `../research/` |
+| Path | [`docs/standards/README.md`](./README.md) |
+| Path status | **CONFIRMED** on public `main`; mounted-checkout parity still **NEEDS VERIFICATION** |
+| Role | Human-readable index for governed standards, profiles, and cross-cutting rule surfaces |
+| Upstream | [docs index](../README.md) · [repo root](../../README.md) |
+| Downstream | [KFM_STAC_PROFILE.md](./KFM_STAC_PROFILE.md) · [KFM_DCAT_PROFILE.md](./KFM_DCAT_PROFILE.md) · [KFM_PROV_PROFILE.md](./KFM_PROV_PROFILE.md) · [KFM_MARKDOWN_WORK_PROTOCOL.md](./KFM_MARKDOWN_WORK_PROTOCOL.md) · [governance/ROOT_GOVERNANCE.md](./governance/ROOT_GOVERNANCE.md) · [faircare/FAIRCARE-GUIDE.md](./faircare/FAIRCARE-GUIDE.md) · [sovereignty/INDIGENOUS-DATA-PROTECTION.md](./sovereignty/INDIGENOUS-DATA-PROTECTION.md) |
+| Adjacent governed areas | [../../contracts/README.md](../../contracts/README.md) · [../../schemas/README.md](../../schemas/README.md) · [../../policy/README.md](../../policy/README.md) · [../../tests/README.md](../../tests/README.md) · [../../.github/workflows/README.md](../../.github/workflows/README.md) |
+
+### Current verified snapshot
+
+| Surface | Current public `main` state | Why it matters |
+|---|---|---|
+| [`README.md`](./README.md) | Present, substantive | This index already exists and should be revised in place, not replaced with a parallel doc. |
+| [`KFM_STAC_PROFILE.md`](./KFM_STAC_PROFILE.md) | Present, scaffold-only | The STAC profile name is real in the repo, but the profile content still needs substantive build-out. |
+| [`KFM_DCAT_PROFILE.md`](./KFM_DCAT_PROFILE.md) | Present, scaffold-only | The DCAT profile surface exists, but it is not yet a full standard. |
+| [`KFM_PROV_PROFILE.md`](./KFM_PROV_PROFILE.md) | Present, scaffold-only | Provenance is routed here, but the actual profile content still needs authoring. |
+| [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) | Present, scaffold-only | The Markdown protocol lane exists, but the working rules are not yet captured here on public `main`. |
+| [`governance/ROOT_GOVERNANCE.md`](./governance/ROOT_GOVERNANCE.md) | Present, scaffold-only | Governance routing is real, but the downstream file still needs content. |
+| [`faircare/FAIRCARE-GUIDE.md`](./faircare/FAIRCARE-GUIDE.md) | Present, scaffold-only | FAIR+CARE is part of the standards surface, but not yet substantive here. |
+| [`sovereignty/INDIGENOUS-DATA-PROTECTION.md`](./sovereignty/INDIGENOUS-DATA-PROTECTION.md) | Present, scaffold-only | Sovereignty routing exists and should remain explicit, even while the file is still minimal. |
+| [`stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md`](./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md) | Present, scaffold-only | The standards sub-lane for STAC implementation notes exists, but content maturity is still pending. |
+| [`../../schemas/README.md`](../../schemas/README.md) | Present | `schemas/README.md` explicitly routes standards readers back here while keeping schema-home authority unresolved. |
+| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Present | `/docs/` currently routes to `@bartytime4life`, which is the strongest owner signal directly verified in this revision. |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Present, README-only | Public `main` did not expose checked-in workflow YAML during this revision, so standards-enforcement claims stay cautious. |
 
 ### Why this directory matters
 
-KFM’s documented pipeline is dependency-ordered: evidence and catalogs come before graph use, API serving, UI display, Story Nodes, and Focus Mode. Standards live here because they are part of that dependency spine, not post-hoc commentary.
+KFM’s documented pipeline is dependency-ordered: evidence and catalogs come before graph use, API serving, UI display, Story Nodes, and Focus Mode.
+
+Standards live here because they are part of that dependency spine, not post-hoc commentary.
 
 [Back to top](#standards)
 
@@ -73,7 +99,7 @@ This directory should not become a catch-all.
 |---|---|
 | Domain ETL instructions or source-specific runbooks | `../data/<domain>/` or domain-specific docs |
 | Exploratory notes, spikes, literature summaries | `../research/` |
-| API endpoint schemas and machine contracts | `../../contracts/` |
+| API endpoint schemas and machine contracts | `../../contracts/` and the eventual authoritative schema home |
 | Enforceable policy code | `../../policy/` |
 | Story Nodes, narrative content, or Focus outputs | governed story/report areas |
 | Operational deployment runbooks | architecture / platform / infra docs |
@@ -83,25 +109,27 @@ This directory should not become a catch-all.
 
 ## Directory tree
 
-The following tree reflects **corpus-referenced** standards surfaces. Exact file presence and casing in the live repo still need direct verification.
+The tree below reflects the files directly verified in this revision plus the standards substructure this README already routes to.
 
 ```text
 docs/standards/
 ├── README.md
-├── KFM_STAC_PROFILE.md                  # referenced profile
-├── KFM_DCAT_PROFILE.md                  # referenced profile
-├── KFM_PROV_PROFILE.md                  # referenced profile
-├── KFM_MARKDOWN_WORK_PROTOCOL.md        # referenced authoring / validation protocol
+├── KFM_STAC_PROFILE.md
+├── KFM_DCAT_PROFILE.md
+├── KFM_PROV_PROFILE.md
+├── KFM_MARKDOWN_WORK_PROTOCOL.md
 ├── governance/
-│   └── ROOT_GOVERNANCE.md               # referenced governance charter
+│   └── ROOT_GOVERNANCE.md
 ├── faircare/
-│   └── FAIRCARE-GUIDE.md                # referenced FAIR+CARE guide
+│   └── FAIRCARE-GUIDE.md
 ├── sovereignty/
-│   └── INDIGENOUS-DATA-PROTECTION.md    # referenced sovereignty / protection guidance
+│   └── INDIGENOUS-DATA-PROTECTION.md
 └── stac/
     └── OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md
-                                           # referenced STAC implementation guidance
 ```
+
+> [!CAUTION]
+> In the public `main` files directly opened for this revision, every downstream file above except `README.md` is currently a **scaffold**. Additional descendants, if any, still need checkout-level verification.
 
 ## Quickstart
 
@@ -113,12 +141,28 @@ docs/standards/
    - metadata profile refs, when applicable;
    - governance / FAIR+CARE / sovereignty refs, when applicable;
    - related contracts or schemas, when applicable.
-4. Add this index entry and update any adjacent README that should point to it.
-5. Verify lint, links, and any profile/schema checks before merge.
+4. If the right downstream file already exists as a scaffold, **expand that scaffold in place** instead of creating a parallel file with overlapping authority.
+5. Add this index entry and update any adjacent README that should point to it.
+6. Verify lint, links, and any profile/schema checks before merge.
 
 ### Minimal authoring skeleton
 
 ```md
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<uuid>
+title: <Standard title>
+type: standard
+version: v1
+status: draft
+owners: <team or names>
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: public|restricted|...
+related: [<relative paths or kfm:// ids>]
+tags: [kfm, standards]
+notes: [<reviewable notes>]
+[/KFM_META_BLOCK_V2] -->
+
 # <Standard title>
 
 _One-line purpose._
@@ -148,7 +192,7 @@ _One-line purpose._
 
 ### For maintainers
 
-Use this directory to keep shared rules centralized and reviewable. A standard should be linkable from multiple domains without being rewritten in each one.
+Use this directory to keep shared rules centralized and reviewable. A standard should be linkable from multiple domains without being rewritten in each one, and this index should distinguish **substantive standards** from **scaffold placeholders** rather than flattening them together.
 
 ### For domain stewards
 
@@ -171,30 +215,34 @@ flowchart LR
     B --> C[STAC records]
     B --> D[DCAT entries]
     B --> E[PROV lineage]
-    C --> F[Graph references catalogs]
+    C --> F[Catalog / graph references]
     D --> F
     E --> F
     F --> G[Governed API]
     G --> H[UI / Story / Focus surfaces]
-    I[docs/standards/] -.defines shared rules for.-> C
-    I -.defines shared rules for.-> D
-    I -.defines shared rules for.-> E
-    I -.defines shared rules for.-> G
-    I -.defines shared rules for.-> H
+
+    I[docs/standards/README.md] -.routes shared rules for.-> C
+    I -.routes shared rules for.-> D
+    I -.routes shared rules for.-> E
+
+    J[contracts/ + schemas/ + policy/] -.machine-checks and gates.-> G
+    J -.release and runtime guardrails.-> H
 ```
 
 ## Standards map
 
-| Standard surface | Primary role | Typical downstreams | Evidence posture |
-|---|---|---|---|
-| `KFM_STAC_PROFILE.md` | Asset- and item-level geospatial metadata profile | catalogs, ingest, remote sensing, map layers | **Referenced** |
-| `KFM_DCAT_PROFILE.md` | Dataset/distribution discovery profile | dataset catalog, outward discovery, APIs | **Referenced** |
-| `KFM_PROV_PROFILE.md` | Provenance / lineage expectations | ingest, processing, AI/evidence artifacts, audit trails | **Referenced** |
-| `KFM_MARKDOWN_WORK_PROTOCOL.md` | Governed Markdown authoring / validation rules | docs, standards, Story Nodes, narrative artifacts | **Referenced** |
-| `governance/ROOT_GOVERNANCE.md` | Cross-cutting review and governance baseline | all public or policy-significant artifacts | **Referenced** |
-| `faircare/FAIRCARE-GUIDE.md` | FAIR+CARE framing and review obligations | data onboarding, publication, sensitive outputs | **Referenced** |
-| `sovereignty/INDIGENOUS-DATA-PROTECTION.md` | Sovereignty and protected-knowledge handling | archaeology, cultural data, redaction paths, public APIs | **Referenced** |
-| `stac/*.md` and similar standards notes | Implementation-facing guidance layered below profiles | standards maintainers, catalog implementers, integrators | **Referenced / NEEDS VERIFICATION** |
+This table separates **intended role** from **current public-branch reality** so the README does not overstate what downstream files already contain.
+
+| Standard surface | Intended role | Current public `main` state |
+|---|---|---|
+| [`KFM_STAC_PROFILE.md`](./KFM_STAC_PROFILE.md) | STAC-aligned asset/item metadata profile | Present; scaffold-only |
+| [`KFM_DCAT_PROFILE.md`](./KFM_DCAT_PROFILE.md) | Dataset/distribution discovery profile | Present; scaffold-only |
+| [`KFM_PROV_PROFILE.md`](./KFM_PROV_PROFILE.md) | Provenance / lineage expectations | Present; scaffold-only |
+| [`KFM_MARKDOWN_WORK_PROTOCOL.md`](./KFM_MARKDOWN_WORK_PROTOCOL.md) | Governed Markdown authoring / validation rules | Present; scaffold-only |
+| [`governance/ROOT_GOVERNANCE.md`](./governance/ROOT_GOVERNANCE.md) | Cross-cutting review and governance baseline | Present; scaffold-only |
+| [`faircare/FAIRCARE-GUIDE.md`](./faircare/FAIRCARE-GUIDE.md) | FAIR+CARE framing and review obligations | Present; scaffold-only |
+| [`sovereignty/INDIGENOUS-DATA-PROTECTION.md`](./sovereignty/INDIGENOUS-DATA-PROTECTION.md) | Sovereignty and protected-knowledge handling | Present; scaffold-only |
+| [`stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md`](./stac/OGC_STAC_COMMUNITY_STANDARD_AND_CDSE_DEPLOYMENTS.md) | Implementation-facing STAC alignment note | Present; scaffold-only |
 
 ## Put-it-here test
 
@@ -220,13 +268,15 @@ A standards doc is ready to merge when all of the following are true:
 - [ ] The doc does not silently override a stronger governing standard.
 - [ ] Any draft or provisional status is visible.
 - [ ] If the standard affects sensitive or public outputs, review triggers are explicit.
+- [ ] If the README names a downstream file that is still scaffold-only, that state is called out instead of implied away.
 - [ ] This index is updated if the new doc changes the standards surface.
 
 ## Review checklist for this index
 
-- [ ] Every referenced file in the tree exists in the live repo.
-- [ ] File casing matches the repo exactly.
-- [ ] Owners are confirmed from repo evidence or CODEOWNERS.
+- [ ] Every referenced file in this README is still present on the target branch.
+- [ ] Owners reflect `.github/CODEOWNERS` or a more specific verified override.
+- [ ] The `Current verified snapshot` table still matches the real branch.
+- [ ] Downstream files are accurately labeled as substantive, scaffold-only, or **NEEDS VERIFICATION**.
 - [ ] This README reflects the current standards surface rather than an aspirational one.
 - [ ] Placeholder metadata in the KFM meta block has been replaced or intentionally retained.
 
@@ -244,6 +294,10 @@ No. Standards explain the rule set. Contracts and schemas are the machine-facing
 
 Only when the local rule is truly domain-specific or when it is an explicit extension. Local convenience copies of cross-cutting rules are a drift risk and should be avoided.
 
+### What if a linked standards file exists but is still a scaffold?
+
+Keep this README accurate about that state. Expand the scaffold in place if it is the right home, or track the gap explicitly before adding parallel docs. The goal is to reduce drift, not hide it.
+
 ### What should happen if a proposed standard conflicts with a stronger KFM doctrine doc?
 
 The stronger governing doctrine wins. Update the proposal, or document the conflict and route it for review instead of letting drift land quietly.
@@ -257,19 +311,20 @@ The stronger governing doctrine wins. Update the proposal, or document the confl
 
 ### Repo-state items still needing direct verification
 
-- Exact current contents of `docs/standards/`
-- Exact owners / CODEOWNERS coverage for the standards area
-- Whether `docs/standards/README.md` already exists and, if so, what should be preserved verbatim
-- Exact docs-index path (`../README.md`) and whether the standards README is linked there today
-- Exact profile filenames and casing in the live repository
-- Exact CI workflows or commands that enforce standards-related validation
+- Exact creation date and final UUID for this document
+- Whether `docs/standards/` has additional descendants beyond the files directly opened for this revision
+- Whether a narrower standards-specific CODEOWNERS rule should replace the current `/docs/` fallback owner
+- Whether public `main` is the branch this document should track for merge-time reality
+- Exact CI workflows or commands that enforce standards-related validation once checked-in workflow YAML exists
+- Whether governance / FAIR+CARE / sovereignty surfaces remain nested under `docs/standards/` only or are also normalized elsewhere in `docs/`
 
 ### Authoring notes for future maintainers
 
 - Keep this file as an **index and routing surface**, not a second copy of every standard.
 - Prefer short descriptions with strong links over long duplicate summaries.
+- Keep the distinction between **present** and **substantive** visible; a scaffold is real repo state, but it is not finished doctrine.
+- If a standard graduates from scaffold or draft to enforced substance, update both its local file and this index together.
 - When in doubt, add a verification note instead of overstating repo reality.
-- If a standard graduates from draft to enforced, update both its local status and this index.
 
 </details>
 
