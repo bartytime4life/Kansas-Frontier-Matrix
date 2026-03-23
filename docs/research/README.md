@@ -10,7 +10,7 @@ updated: 2025-12-20
 policy_label: public
 related: [docs/research/drafts/README.md, docs/research/evaluations/README.md, docs/research/source_summaries/README.md, docs/governance/ROOT_GOVERNANCE.md]
 tags: [kfm, research, governance, docs]
-notes: [source draft metadata was recoverable from the mounted corpus; exact owners, created date, and current repo state still need verification]
+notes: [updated date confirmed from repo support inventory preserved in the mounted corpus; current branch-visible root research README verified; created date and owners still need direct repo confirmation; child-lane depth varies in the current branch]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM Research — README
@@ -19,15 +19,14 @@ Research workspace for exploratory notes, source summaries, evaluations, and de-
 
 > **Status:** experimental  
 > **Owners:** NEEDS VERIFICATION  
-> **Source posture:** root research guide reconstructed from mounted KFM documentation evidence  
-> **Repo role:** root README for the `docs/research/` subtree
+> **Source posture:** repo-grounded root research guide aligned to the current branch-visible research README and March 2026 KFM doctrine  
+> **Repo role:** root README for the `docs/research/` subtree  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Promotion rules](#promotion-rules) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 ![Status: Experimental](https://img.shields.io/badge/status-experimental-7a3cff)
 ![Doc: Research Guide](https://img.shields.io/badge/doc-research%20guide-0a7ea4)
 ![FAIR+CARE](https://img.shields.io/badge/FAIR%2BCARE-aware-ff8c00)
 ![Scope: Non-normative](https://img.shields.io/badge/scope-non--normative-6c757d)
-
-**Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Promotion rules](#promotion-rules) · [Definition of done](#definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > Content in `docs/research/` is **non-normative until promoted**. Research may inform KFM contracts, schemas, pipelines, Story Nodes, UI behavior, and Focus Mode, but it does **not** define them here.
@@ -37,6 +36,7 @@ Research workspace for exploratory notes, source summaries, evaluations, and de-
 `docs/research/` is the working surface for exploratory, evidence-led documentation that helps KFM contributors reduce uncertainty before promoting work into governed artifacts.
 
 Use this area for:
+
 - literature notes
 - trade studies
 - prototype writeups
@@ -45,6 +45,7 @@ Use this area for:
 - design spikes that still need review, narrowing, or promotion
 
 Do **not** treat this directory as the home for:
+
 - authoritative governance policy
 - API contracts
 - schema definitions
@@ -64,6 +65,11 @@ This file is the root contract for the research subtree. Its job is to route con
 | Downstream | [`./drafts/README.md`](./drafts/README.md) · [`./evaluations/README.md`](./evaluations/README.md) · [`./source_summaries/README.md`](./source_summaries/README.md) |
 | Supporting lanes | [`./drafts/literature/README.md`](./drafts/literature/README.md) · [`./source_summaries/by_type/README.md`](./source_summaries/by_type/README.md) · [`./source_summaries/by_domain/README.md`](./source_summaries/by_domain/README.md) · [`./source_summaries/_attachments/README.md`](./source_summaries/_attachments/README.md) |
 | Promotion destinations | Governed docs, templates, schemas, subsystem docs, Story Node pathways, and implementation work after review |
+| Current branch signal | This root README is live in the current branch. Verify child-lane depth before assuming every linked README has reached the same maturity. |
+
+> [!NOTE]
+> **Current branch signal (CONFIRMED):** this root README is live in the current branch.  
+> **Current subtree maturity (NEEDS VERIFICATION):** linked lanes are part of the documented research structure, but child READMEs do not all yet appear to have equal depth. Use this file as the subtree contract, then inspect the target lane before assuming parity.
 
 ## Accepted inputs
 
@@ -175,18 +181,18 @@ flowchart TD
     C --> E
     D --> E
 
-    E -- No --> B
-    E -- Yes --> F[Governed docs / standards]
-    E -- Yes --> G[Schemas / contracts]
-    E -- Yes --> H[Subsystem docs / implementation]
-    E -- Yes --> I[Story Node candidate]
+    E -- No --> F[Remain exploratory / non-normative]
+    E -- Yes --> G[Governed docs / standards]
+    E -- Yes --> H[Schemas / contracts]
+    E -- Yes --> I[Subsystem docs / implementation]
+    E -- Yes --> J[Story Node candidate]
 
-    F --> J[Approved public or internal surfaces]
-    G --> J
-    H --> J
-    I --> J
+    G --> K[Approved internal or public surfaces]
+    H --> K
+    I --> K
+    J --> K
 
-    J --> K[Map / dossier / story / Focus Mode only after governed promotion]
+    K --> L[Map / dossier / story / Focus Mode only after governed promotion]
 ~~~
 
 ## Promotion rules
@@ -284,19 +290,14 @@ Research can inform the canonical KFM pipeline, but it does not bypass it.
 <details>
 <summary><strong>Known verification gaps for this README</strong></summary>
 
-This README is grounded in mounted KFM documentation evidence, but several details still need direct repo confirmation:
+This README is grounded in current branch-visible repo evidence plus mounted KFM supporting materials, but several details still need direct verification:
 
-- exact owners or CODEOWNERS for `docs/research/`
+- exact owners or CODEOWNERS coverage for `docs/research/`
 - exact creation date for this file
-- exact current parent docs index and sibling-link resolution
-- whether every referenced child path is still present unchanged in the live repo
-- whether additional research lanes exist beyond the confirmed README-bearing structure
+- whether every linked child path is still populated beyond scaffold level in the active branch
+- whether additional research lanes now exist beyond the representative structure shown here
+- whether adjacent governance docs at linked paths have expanded beyond the minimal surfaces directly inspected for this revision
 
 </details>
 
-[Back to top](#kfm-research--readme)# Research
-
-This directory stores research-related documentation for Kansas Frontier Matrix.
-
-- Add documents here as work is produced.
-- Keep filenames descriptive and scoped to a single topic.
+[Back to top](#kfm-research--readme)
