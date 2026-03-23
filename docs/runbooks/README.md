@@ -10,63 +10,63 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [../README.md, ../../README.md, ../../.github/README.md, ../../infra/README.md, ../governance/, ../standards/, ../templates/, ../../contracts/, ../../schemas/, ../../policy/, ../../tests/]
 tags: [kfm, runbooks, operations, rollback, correction]
-notes: [README-like directory doc; placeholders retained where live ownership, history, and policy label were not directly verified from the current checkout.]
+notes: [README-like directory doc; repo-grounded wording used where current repo audit/support inventory exists; placeholders retained where live ownership, dates, and policy label were not directly verified from the current checkout.]
 [/KFM_META_BLOCK_V2] -->
 
 # runbooks
 
-Governed operator procedures for Kansas Frontier Matrix: publication, rollback, correction, stale-state handling, restore, and incident response.
+Governed operator procedures for Kansas Frontier Matrix: recovery, correction, rollback, restore, incident handling, and reliability-trigger response.
 
 > **Status:** experimental  
-> **Owners:** NEEDS VERIFICATION — confirm in repo ownership controls before merge  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-runbooks--index-2f81f7) ![evidence](https://img.shields.io/badge/evidence-main--tree%20%2B%20march_2026_corpus-lightgrey) ![posture](https://img.shields.io/badge/posture-rollback--first-0a7d5a) ![trust](https://img.shields.io/badge/trust-evidence--bounded-blueviolet)  
+> **Owners:** NEEDS VERIFICATION — confirm from live repo ownership controls before merge  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![surface](https://img.shields.io/badge/surface-runbooks--index-2f81f7) ![evidence](https://img.shields.io/badge/evidence-repo--grounded-lightgrey) ![posture](https://img.shields.io/badge/posture-rollback--first-0a7d5a) ![trust](https://img.shields.io/badge/trust-evidence--bounded-blueviolet)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> This README is **evidence-bounded**. The current main-branch tree clearly exposes `docs/runbooks/README.md`, but deeper runbook lanes remain a mix of **INFERRED**, **PROPOSED**, and **NEEDS VERIFICATION** until rechecked in a live checkout.
+> This README is **repo-grounded and evidence-bounded**. Current project evidence supports `docs/runbooks/README.md` as a real documentation surface and also supports a `docs/runbooks/reliability/` subtree with at least two runbook files. Broader runbook lanes such as publication, correction, rollback, and restore remain a mix of **PROPOSED**, **INFERRED**, and **NEEDS VERIFICATION** until confirmed in a live checkout.
 
 ---
 
 ## Scope
 
-`docs/runbooks/` is the documentation surface for the question:
+`docs/runbooks/` is the documentation surface for one practical KFM question:
 
-**How does KFM operate, recover, or contain this safely without weakening the trust membrane?**
+**How does the system operate, recover, narrow, correct, or contain change without weakening the trust membrane?**
 
-This directory should hold operator-facing procedures for moments when doctrine becomes action:
+This directory should hold operator-facing procedures for the moments when doctrine becomes action:
 
-- visible publication
-- stale or drifting derived layers
-- correction and supersession
+- publication and post-promotion checks
 - rollback and restore
-- incident containment
-- reliability-trigger response
+- correction, supersession, and withdrawal
+- stale or mismatched derived-state handling
+- incident containment and recovery
+- reliability trigger and retry decisions
 - proof-oriented validation before and after change
 
-A KFM runbook is not just “steps.” It is a governed procedure that should make the following explicit:
+A KFM runbook is not just a list of steps. It should make the governed procedure inspectable by naming at least:
 
-1. **trigger**
-2. **preconditions**
-3. **inputs / owning truth surfaces**
-4. **safety gates**
-5. **procedure**
-6. **validation**
-7. **negative outcomes**
-8. **output artifacts**
-9. **rollback or forward-fix path**
-10. **follow-up updates**
+1. trigger
+2. prerequisites
+3. authoritative inputs
+4. safety gates
+5. ordered procedure
+6. validation
+7. negative outcomes
+8. output artifacts
+9. rollback or forward-fix path
+10. follow-up updates
 
-A stale or incomplete runbook is not harmless in KFM. If behavior changed and the runbook did not, the docs surface is now misaligned with the governed system.
+A stale or incomplete runbook is part of the system’s trust risk. If behavior changes and the procedure surface does not, the repo has drifted out of band with the governed product.
 
 ### Evidence labels used in this README
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the current main-branch GitHub tree or stable KFM doctrine |
-| **INFERRED** | Source-reported by adjacent repo docs or corpus overlays, but not directly re-opened as current tree truth here |
-| **PROPOSED** | Repo-native structure added to make the directory useful and reviewable |
+| **CONFIRMED** | Directly supported by repo-grounded evidence or repeated March 2026 KFM doctrine |
+| **INFERRED** | Strongly suggested by adjacent doctrine or repo inventory, but not re-opened here as live file truth |
+| **PROPOSED** | Repo-native addition recommended to make the directory operationally complete |
 | **UNKNOWN** | Not supported strongly enough to present as current repo reality |
-| **NEEDS VERIFICATION** | Exact owner, path, file presence, or current implementation detail should be checked before merge |
+| **NEEDS VERIFICATION** | Exact owner, date, policy label, or mounted file/detail should be checked before merge |
 
 [Back to top](#runbooks)
 
@@ -79,18 +79,19 @@ A stale or incomplete runbook is not harmless in KFM. If behavior changed and th
 
 | Direction | Surface | Why it matters | Status here |
 |---|---|---|---|
-| Upstream | [`../README.md`][docs-index] | `docs/` boundary, evidence posture, and docs-wide placement rules | **CONFIRMED** |
-| Upstream | [`../../README.md`][repo-root] | Root doctrine, top-level repo contract, and non-negotiable invariants | **CONFIRMED** |
-| Upstream | [`../../.github/README.md`][github-gatehouse] | Repo-wide gates, PR-first review, release evidence, and correction discipline | **CONFIRMED** |
-| Adjacent | [`../governance/`][governance] | Review, rights, withholding, escalation, and fail-closed rules | **CONFIRMED** |
-| Adjacent | [`../standards/`][standards] | Normative profiles and “what must be true” surfaces | **CONFIRMED** |
-| Adjacent | [`../templates/`][templates] | Authoring patterns for governed documents and future runbooks | **CONFIRMED** |
-| Adjacent | [`../../infra/README.md`][infra-readme] | Runtime, deployment, observability, restore, and rollback surfaces that procedures must coordinate with | **CONFIRMED** |
-| Adjacent | [`../../contracts/`][contracts], [`../../schemas/`][schemas], [`../../policy/`][policy], [`../../tests/`][tests] | Machine-enforced neighbors that runbooks must not contradict | **CONFIRMED** |
-| Downstream | `docs/runbooks/publication.md`, `correction.md`, `stale_projection.md`, `rollback.md` | Highest-value first runbook set repeatedly proposed in March 2026 overlays | **PROPOSED** |
-| Downstream | `docs/runbooks/reliability/trigger-mechanisms/README.md`, `docs/runbooks/reliability/trigger-retry-matrix.md` | Source-reported example lanes from the docs index | **INFERRED** |
+| Upstream | [`../README.md`][docs-index] | `docs/` boundary, local documentation conventions, and placement rules | **NEEDS VERIFICATION** |
+| Upstream | [`../../README.md`][repo-root] | Root doctrine, repo identity, and top-level trust posture | **CONFIRMED** |
+| Upstream | [`../../.github/README.md`][github-gatehouse] | Review, PR hygiene, and workflow-facing governance context | **NEEDS VERIFICATION** |
+| Adjacent | [`../governance/`][governance] | Review, rights, withholding, escalation, and fail-closed interpretation | **NEEDS VERIFICATION** |
+| Adjacent | [`../standards/`][standards] | Normative profiles, terminology stability, and documented obligations | **NEEDS VERIFICATION** |
+| Adjacent | [`../templates/`][templates] | Authoring patterns for future runbooks and other governed docs | **NEEDS VERIFICATION** |
+| Adjacent | [`../../infra/README.md`][infra-readme] | Runtime, deployment, restore, rollback, and observability surfaces that procedures must coordinate with | **NEEDS VERIFICATION** |
+| Adjacent | [`../../contracts/`][contracts], [`../../schemas/`][schemas], [`../../policy/`][policy], [`../../tests/`][tests] | Machine-enforced neighbors and test surfaces that runbooks must not contradict | **CONFIRMED** |
+| Downstream | `docs/runbooks/reliability/trigger-mechanisms/README.md` | Current trigger-selection guidance lane | **CONFIRMED** |
+| Downstream | `docs/runbooks/reliability/trigger-retry-matrix.md` | Current retry/default-decision lane | **CONFIRMED** |
+| Candidate downstream | `docs/runbooks/publication.md`, `correction.md`, `rollback.md`, `restore-drill.md`, `stale_projection.md` | Highest-value next operating lanes repeatedly recommended in doctrine | **PROPOSED** |
 
-**Repo-fit rule:** `docs/runbooks/` should version **how KFM is safely operated and recovered**. It should not quietly become the canonical home of policy bodies, schema truth, runtime code, or generated release artifacts.
+**Repo-fit rule:** `docs/runbooks/` versions **how KFM is safely operated and recovered**. It should not quietly become the canonical home of policy bodies, contract law, runtime code, or generated release artifacts.
 
 [Back to top](#runbooks)
 
@@ -98,21 +99,22 @@ A stale or incomplete runbook is not harmless in KFM. If behavior changed and th
 
 Content that belongs in `docs/runbooks/` includes:
 
-- human-readable procedures for publication, correction, rollback, restore, stale-visible handling, and incident containment
-- prerequisites and safety conditions for governed operations
+- human-readable procedures for rollback, restore, correction, supersession, stale-visible handling, and incident response
+- publication and post-promotion checklists where operational action matters
+- reliability-trigger guidance when cron, webhook, upstream-event, or retry decisions change operator posture
+- prerequisites, safety conditions, and hold conditions for governed actions
 - validation steps and negative-path checks
-- operator-facing output artifact expectations such as release manifests, correction notices, proof packs, or audit joins
-- reliability-trigger guidance when thresholds, freshness windows, or retries materially change operator posture
+- operator-facing output artifact expectations such as manifests, notices, proof packs, logs, screenshots, and audit joins
 - smoke-test and drill procedures that must stay aligned with runtime behavior
-- runbook-specific diagrams, tables, and examples that clarify governed action without replacing contracts or policy
+- diagrams, matrices, and compact examples that clarify governed action without replacing contracts or policy
 
 ### Good runbook characteristics in KFM
 
 A good runbook here is:
 
 - **specific enough to execute**
-- **explicit about what is authoritative**
-- **clear about what can fail closed**
+- **clear about what is authoritative**
+- **explicit about what can fail closed**
 - **paired with validation and rollback**
 - **honest about what is still `UNKNOWN`**
 - **aligned with contracts, policy, tests, and release evidence**
@@ -123,46 +125,59 @@ The following do **not** belong here as the authoritative source of truth:
 
 | Exclusion | Why it stays out | Keep it here instead |
 |---|---|---|
-| Policy rule bodies, obligation registries, deny logic | Runbooks explain procedure; policy enforces decisions | [`../../policy/`][policy] |
-| Schemas, OpenAPI, controlled vocabularies, runtime envelopes | Machine-checkable contracts should not be replaced by prose | [`../../contracts/`][contracts], [`../../schemas/`][schemas] |
-| Runtime service code, workers, UI logic, model adapters | Runbooks must not become shadow implementation | repo code surfaces |
-| Canonical data artifacts, source descriptors, receipts, release outputs | These are evidence objects, not prose procedures | truth-path / release-owning surfaces |
-| Secrets, credentials, private endpoints, sensitive coordinates | Unsafe to publish in docs | secret-management or restricted operator channels |
-| Generic architecture essays with no procedure | Belong elsewhere in `docs/` | architecture / governance / standards surfaces |
-| Prose that upgrades `UNKNOWN` implementation state into “already running” fact | Breaks KFM truth posture | keep the uncertainty visible |
+| Policy rule bodies, deny logic, obligation registries | Runbooks explain procedure; policy enforces decisions | [`../../policy/`][policy] |
+| Schemas, OpenAPI, shared vocabularies, runtime envelopes | Machine-checkable contracts should not be replaced by prose | [`../../contracts/`][contracts], [`../../schemas/`][schemas] |
+| Runtime service code, workers, UI implementation, resolver logic | Runbooks must not become shadow implementation | code-owning surfaces |
+| Canonical data artifacts, receipts, release outputs, proof packs | These are trust objects, not prose procedures | truth-path / release-owning surfaces |
+| Secrets, credentials, sensitive coordinates, private endpoints | Unsafe to publish in general repo docs | secret-management or restricted operator channels |
+| Generic architecture essays with no operational action | Belong elsewhere in `docs/` | architecture / governance / standards |
+| Prose that upgrades `UNKNOWN` implementation into “already running” fact | Breaks KFM truth posture | keep uncertainty explicit |
 
 [Back to top](#runbooks)
 
 ## Directory tree
 
-### Verified current main-branch surface
+### Repo-evidenced current surface
 
-The current GitHub tree directly shows only the README inside `docs/runbooks/`.
-
-```text
-docs/runbooks/
-└── README.md
-```
-
-### Source-reported / proposed growth lanes
-
-The corpus and adjacent docs point to a fuller runbooks surface, but that fuller surface was **not** directly verified here as current tree truth.
+The current repo evidence supports this minimum subtree:
 
 ```text
 docs/runbooks/
 ├── README.md
-├── publication.md                  # PROPOSED
-├── correction.md                   # PROPOSED
-├── stale_projection.md             # PROPOSED
-├── rollback.md                     # PROPOSED
-└── reliability/                    # INFERRED
+└── reliability/
     ├── trigger-mechanisms/
     │   └── README.md
     └── trigger-retry-matrix.md
 ```
 
+### Candidate additions with highest practical return
+
+These are strongly aligned with KFM doctrine, but should stay labeled until the live checkout proves they exist:
+
+```text
+docs/runbooks/
+├── publication.md       # PROPOSED
+├── correction.md        # PROPOSED
+├── rollback.md          # PROPOSED
+├── restore-drill.md     # PROPOSED
+└── stale_projection.md  # PROPOSED
+```
+
 > [!WARNING]
-> Treat the second tree as the cleanest repo-native contract for this directory, **not** as a claim that every file already exists on the active branch.
+> Do not treat the candidate set as current tree fact. It is the cleanest next operating expansion shape supported by the doctrine, not a claim that every file already exists on `main`.
+
+### Current subtree notes
+
+| Path | Role | Status |
+|---|---|---|
+| `docs/runbooks/README.md` | Directory contract for governed operator procedures | **CONFIRMED** |
+| `docs/runbooks/reliability/trigger-mechanisms/README.md` | Trigger-selection guidance | **CONFIRMED** |
+| `docs/runbooks/reliability/trigger-retry-matrix.md` | Retry/default-decision matrix | **CONFIRMED** |
+| `docs/runbooks/publication.md` | Promotion and publication procedure | **PROPOSED** |
+| `docs/runbooks/correction.md` | Published-error correction and supersession | **PROPOSED** |
+| `docs/runbooks/rollback.md` | Return to known-good promoted state | **PROPOSED** |
+| `docs/runbooks/restore-drill.md` | Restore rehearsal and evidence capture | **PROPOSED** |
+| `docs/runbooks/stale_projection.md` | Derived-layer lag and stale-visible handling | **PROPOSED** |
 
 [Back to top](#runbooks)
 
@@ -171,34 +186,40 @@ docs/runbooks/
 Use a **verification-first** sequence before editing or expanding `docs/runbooks/`.
 
 ```bash
-# 1) Confirm you are in the real checkout
+# 1) Confirm the repo root
 git rev-parse --show-toplevel
 
-# 2) Inspect the runbooks subtree before adding any new claims
-find docs/runbooks -maxdepth 3 -type f | sort
-find docs/runbooks -maxdepth 3 -type d | sort
+# 2) Inspect the real runbooks subtree
+find docs/runbooks -maxdepth 4 -type f | sort
+find docs/runbooks -maxdepth 4 -type d | sort
 
-# 3) Re-read the adjacent boundaries this directory must preserve
-sed -n '1,220p' docs/README.md
-sed -n '1,220p' docs/runbooks/README.md
-sed -n '1,220p' infra/README.md 2>/dev/null || true
-sed -n '1,220p' .github/README.md 2>/dev/null || true
+# 3) Re-read the local docs boundary and this README
+sed -n '1,220p' docs/README.md 2>/dev/null || true
+sed -n '1,260p' docs/runbooks/README.md
 
-# 4) Surface machine-enforced neighbors before documenting behavior as fact
-find contracts schemas policy tests -maxdepth 3 -type f 2>/dev/null | sort
+# 4) Re-open reliability runbooks that are currently repo-evidenced
+sed -n '1,240p' docs/runbooks/reliability/trigger-mechanisms/README.md 2>/dev/null || true
+sed -n '1,260p' docs/runbooks/reliability/trigger-retry-matrix.md 2>/dev/null || true
 
-# 5) Search for existing procedure-shaped material before inventing new files
-grep -RIn "publication\|rollback\|restore\|correction\|stale\|incident\|runbook" \
-  docs infra .github tests 2>/dev/null || true
+# 5) Surface machine-enforced neighbors before documenting behavior as fact
+find contracts schemas policy tests -maxdepth 4 -type f 2>/dev/null | sort
+
+# 6) Check workflow reality before writing about gates or drills
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
+sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
+
+# 7) Search for existing procedure-shaped material before adding new runbooks
+grep -RIn "runbook\|rollback\|restore\|correction\|incident\|retry\|trigger\|stale" \
+  docs .github infra tests policy scripts tools 2>/dev/null || true
 ```
 
 ### Minimal review order
 
 1. Confirm the actual `docs/runbooks/` subtree in the live checkout.
-2. Confirm the specific operating moment: publication, stale projection, correction, rollback, restore, or incident containment.
+2. Confirm which operating moment you are documenting: reliability trigger, publication, correction, rollback, restore, stale projection, or incident response.
 3. Re-check the neighboring contracts, schemas, policy, and tests the runbook must not contradict.
-4. Confirm whether the runtime or deployment side already owns part of the procedure under `infra/`.
-5. Update docs in the same change stream as behavior-significant changes.
+4. Confirm whether `infra/` or another lane already owns a narrower procedure.
+5. Update the runbook in the same change stream as behavior-significant changes.
 
 [Back to top](#runbooks)
 
@@ -206,32 +227,33 @@ grep -RIn "publication\|rollback\|restore\|correction\|stale\|incident\|runbook"
 
 ### Read `docs/runbooks/` by operating moment
 
-1. Start here to understand the runbooks boundary and current verification limits.
-2. Use **publication** runbooks when the question is: *what must be true before visible change occurs?*
-3. Use **stale-projection** runbooks when the question is: *what should the operator do when derived layers lag release truth?*
+1. Start here to understand the directory boundary and current verification status.
+2. Use the **reliability** subtree when the question is: *what should trigger this job, and how should it retry or escalate?*
+3. Use **publication** runbooks when the question is: *what must be true before visible change occurs?*
 4. Use **correction** runbooks when the question is: *how does an already-visible error become a governed correction or supersession?*
 5. Use **rollback / restore** runbooks when the question is: *how do we return to a known-good state and prove it?*
-6. Use **reliability trigger** runbooks when thresholds, retries, freshness breaches, or repeated failures force an operator decision.
+6. Use **stale-projection** runbooks when the question is: *what should the operator do when derived layers lag release truth?*
+7. Use **incident** runbooks when the question is: *how do we contain the fault, preserve evidence, and recover without weakening trust?*
 
 ### Every KFM runbook should answer these questions
 
 | Section | Minimum expectation | Why it matters |
 |---|---|---|
-| Trigger | What event, failure, or gate activates this procedure? | Prevents “run it because it feels right” behavior |
+| Trigger | What event, gate failure, alert, or policy condition activates the procedure? | Prevents “run it because it feels right” behavior |
 | Preconditions | What must already exist or be true? | Stops partial or unsafe execution |
-| Inputs / owning truth surfaces | Which contracts, policies, releases, IDs, or dashboards are authoritative here? | Keeps prose downstream of evidence |
+| Inputs / owning truth surfaces | Which contracts, policies, releases, IDs, logs, dashboards, or notices are authoritative? | Keeps prose downstream of evidence |
 | Safety gates | What must block execution? | Preserves fail-closed behavior |
 | Procedure | Ordered steps with role-aware clarity | Makes execution repeatable |
 | Validation | What proves success or safe failure? | Prevents “completed” without evidence |
-| Negative outcomes | Answer / abstain / deny / error / hold / quarantine / stale-visible as applicable | KFM treats negative outcomes as valid operational states |
-| Output artifacts | What receipts, notices, manifests, or logs should exist after the run? | Keeps operations auditable |
+| Negative outcomes | Hold / abstain / deny / generalized / stale-visible / withdrawn / correction-pending as applicable | KFM treats negative outcomes as valid operational states |
+| Output artifacts | What manifests, notices, screenshots, proof refs, or logs should exist after the run? | Keeps operations auditable |
 | Rollback / forward-fix | How do we recover if the procedure fails or only partially succeeds? | Prevents dead-end procedures |
-| Follow-up updates | Which docs, tests, dashboards, or release notes must be updated? | Keeps docs in band with behavior |
+| Follow-up updates | Which docs, tests, dashboards, or review artifacts must change next? | Keeps docs in band with behavior |
 
 ### Boundary rule: `docs/runbooks/` versus `infra/`
 
-Use `docs/runbooks/` for **human-readable procedure**.  
-Use `infra/` for **runtime/deployment assets** such as unit files, Compose, Terraform, Kubernetes, monitoring configs, and operational wiring.
+Use `docs/runbooks/` for **human-readable governed procedure**.  
+Use `infra/` for **runtime and delivery assets** such as Compose, systemd, Terraform, Kubernetes, dashboards, and deployment wiring.
 
 A runbook may reference `infra/` surfaces, but it should not duplicate them as canonical truth.
 
@@ -241,38 +263,49 @@ A runbook may reference `infra/` surfaces, but it should not duplicate them as c
 
 ```mermaid
 flowchart LR
-    ROOT["../../README.md<br/>repo doctrine + invariants"]
+    ROOT["../../README.md<br/>repo identity + trust posture"]
     DOCS["../README.md<br/>docs boundary"]
-    RUN["docs/runbooks/<br/>operate · recover · contain"]
+    RUN["docs/runbooks/<br/>operate · recover · correct"]
+    REL["docs/runbooks/reliability/<br/>CONFIRMED subtree"]
+    TM["trigger-mechanisms/README.md<br/>CONFIRMED"]
+    TR["trigger-retry-matrix.md<br/>CONFIRMED"]
+
     GOV["../governance/<br/>review + withholding"]
     STD["../standards/<br/>what must be true"]
-    TMP["../templates/<br/>authoring discipline"]
-    INFRA["../../infra/README.md<br/>runtime + restore + rollback"]
-    CONTRACTS["../../contracts/ + ../../schemas/<br/>machine-enforced surfaces"]
-    POLICY["../../policy/<br/>fail-closed rules"]
-    TESTS["../../tests/<br/>proof + drill checks"]
+    POL["../../policy/<br/>deny-by-default"]
+    CONTRACTS["../../contracts/ + ../../schemas/<br/>machine-checkable law"]
+    TESTS["../../tests/<br/>fixtures + drills"]
+    INFRA["../../infra/<br/>runtime wiring"]
 
-    RUN --> PUB["publication.md<br/>PROPOSED"]
-    RUN --> CORR["correction.md<br/>PROPOSED"]
-    RUN --> STALE["stale_projection.md<br/>PROPOSED"]
-    RUN --> RB["rollback.md<br/>PROPOSED"]
-    RUN -. source-reported .-> REL["reliability/<br/>trigger-mechanisms"]
+    PUB["publication.md<br/>PROPOSED"]
+    CORR["correction.md<br/>PROPOSED"]
+    RB["rollback.md<br/>PROPOSED"]
+    REST["restore-drill.md<br/>PROPOSED"]
+    STALE["stale_projection.md<br/>PROPOSED"]
 
     ROOT --> DOCS --> RUN
-    DOCS --> GOV
-    DOCS --> STD
-    DOCS --> TMP
+    RUN --> REL
+    REL --> TM
+    REL --> TR
 
+    GOV --> RUN
+    STD --> RUN
+    POL --> RUN
     CONTRACTS --> RUN
-    POLICY --> RUN
     TESTS --> RUN
     INFRA --> RUN
 
-    RUN --> SURFACES["published surfaces<br/>map · dossier · story · Focus"]
-    SURFACES --> EVIDENCE["release manifests · proof packs · correction notices"]
+    RUN -. near-term additions .-> PUB
+    RUN -. near-term additions .-> CORR
+    RUN -. near-term additions .-> RB
+    RUN -. near-term additions .-> REST
+    RUN -. near-term additions .-> STALE
+
+    RUN --> SURFACES["published surfaces<br/>Explorer · Story · Focus · Review"]
+    SURFACES --> EVIDENCE["proof packs · manifests · notices · drill records"]
 ```
 
-The diagram is intentionally boundary-heavy. `docs/runbooks/` exists to make governed action reproducible without pretending prose is the enforcement layer.
+The diagram is intentionally boundary-heavy. In KFM, prose procedure is downstream of evidence, policy, and release state—not a substitute for them.
 
 [Back to top](#runbooks)
 
@@ -282,86 +315,102 @@ The diagram is intentionally boundary-heavy. `docs/runbooks/` exists to make gov
 
 | Runbook family | Primary question | Typical companion surfaces | Status here |
 |---|---|---|---|
+| `reliability/trigger-mechanisms/README.md` | Which trigger style should activate this lane? | schedules, webhooks, upstream events, idempotency rules | **CONFIRMED** |
+| `reliability/trigger-retry-matrix.md` | Which failures retry, escalate, hold, or fail closed? | retry budgets, error classes, provenance, workflow posture | **CONFIRMED** |
 | `publication.md` | What must be true before visible change? | contracts, policy, tests, release evidence | **PROPOSED** |
-| `correction.md` | How does a published error become a governed correction or supersession? | correction notices, observability, review records, public surfaces | **PROPOSED** |
+| `correction.md` | How does a published error become a governed correction or supersession? | correction notices, review records, runtime states, public surfaces | **PROPOSED** |
+| `rollback.md` | How do we return to the most recent good promoted state? | release manifests, infra, known-good digests, rollback drills | **PROPOSED** |
+| `restore-drill.md` | How do we rehearse and evidence recovery? | backups, restore verification, screenshots, audit joins | **PROPOSED** |
 | `stale_projection.md` | What do we do when derived layers lag release truth? | projections, freshness checks, trust-visible UI states | **PROPOSED** |
-| `rollback.md` | How do we return to the most recent good promoted state? | infra, release manifests, restore drills, proof objects | **PROPOSED** |
-| `reliability/trigger-mechanisms/README.md` | Which trigger conditions force operator action or retry policy changes? | SLOs, monitoring, retry logic, incident notes | **INFERRED** |
-| `reliability/trigger-retry-matrix.md` | Which failures retry, escalate, hold, or fail closed? | monitoring, policy posture, runtime safety | **INFERRED** |
 
 ### Minimum content contract for every runbook
 
 | Must include | Why it is mandatory in KFM | Typical examples |
 |---|---|---|
-| Prerequisites | Prevents out-of-order or authority-free execution | required release ID, required review state, expected policy bundle |
-| Validation steps | Converts “we ran it” into inspectable evidence | schema pass, evidence resolution check, smoke query, correction propagation check |
-| Rollback or forward-fix path | Prevents procedures from ending at failure | revert to previous release, hold publication, re-run projection build |
-| Output artifacts | Keeps operations auditable | release manifest, correction notice, restore log, proof-pack reference |
-| Trust posture | Prevents prose from quietly overstating reality | `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` markers where needed |
-| Cross-links | Keeps docs tied to owning truth surfaces | contracts, policy, infra, tests, observability, release evidence |
+| Prerequisites | Prevents authority-free execution | release ID, review state, rights check, policy bundle |
+| Validation steps | Converts “we ran it” into inspectable evidence | schema pass, evidence resolution check, screenshot baseline, post-restore query |
+| Rollback or forward-fix path | Prevents procedures from ending at failure | revert to prior release, hold publication, reissue projection build |
+| Output artifacts | Keeps operations auditable | release manifest, correction notice, restore log, drill record, proof-pack ref |
+| Trust posture | Prevents prose from quietly overstating reality | `CONFIRMED`, `INFERRED`, `PROPOSED`, `UNKNOWN`, `NEEDS VERIFICATION` markers |
+| Cross-links | Keeps runbooks tied to owning truth surfaces | contracts, policy, tests, infra, observability, release evidence |
+
+### Public-trust behavior matrix
+
+| Situation | Preferred runbook behavior |
+|---|---|
+| A release is deployed but proof objects are incomplete | hold promotion; do not treat deployment as publication |
+| A derived layer is stale relative to a promoted release | stale-visible state or hold; do not silently imply freshness |
+| A public interpretation changed after correction | issue visible correction/supersession artifacts |
+| A failure path is not yet rehearsed | keep the gap visible and schedule a drill before expanding claims |
+| A reliability trigger changes retry posture | update the trigger and retry runbooks, not just the workflow |
 
 [Back to top](#runbooks)
 
 ## Task list / Definition of done
 
-Use this checklist before treating `docs/runbooks/README.md` or any new subordinate runbook as ready for commit.
+Use this checklist before treating this README or any subordinate runbook as ready for commit.
 
 - [ ] The actual `docs/runbooks/` subtree was inspected in the live checkout.
 - [ ] Owners were resolved from repo ownership controls or left explicitly `NEEDS VERIFICATION`.
-- [ ] Any proposed subordinate runbook files remain clearly labeled until they exist.
+- [ ] Any proposed subordinate files remain clearly labeled until they exist.
+- [ ] The reliability subtree still matches the current mounted tree.
 - [ ] Every runbook includes trigger, prerequisites, validation, rollback/forward-fix, and output artifacts.
 - [ ] Every behavior-significant procedure is cross-checked against contracts, schemas, policy, tests, and release evidence.
-- [ ] The doc does not imply direct client bypass of governed APIs, canonical stores, or model runtimes.
-- [ ] The doc does not hide sensitive coordinates, secrets, or unapproved operational shortcuts.
+- [ ] Any stale “PDF-only session” wording in live repo docs was removed or rewritten into repo-grounded truth labels.
 - [ ] Relative links render correctly on GitHub.
 - [ ] The Mermaid diagram still matches the mounted tree and directory contract.
-- [ ] `UNKNOWN` / `NEEDS VERIFICATION` markers were removed only when the checkout really proved the claim.
+- [ ] `UNKNOWN` / `NEEDS VERIFICATION` markers were removed only when the checkout actually proved the claim.
+- [ ] Incident or migration changes that altered operator behavior also updated the relevant runbook.
 
 [Back to top](#runbooks)
 
 ## FAQ
 
-### Why does this README keep so many verification markers visible?
+### Why keep so many verification markers visible?
 
-Because the current repo state proves the directory exists, but the deeper runbook surface is still only partially visible from directly opened files. KFM’s own truth posture prefers explicit incompleteness to persuasive overclaiming.
+Because this directory sits at the boundary between doctrine and operator action. KFM’s trust posture prefers explicit incompleteness to persuasive overclaiming.
+
+### Why treat the reliability subtree as current repo surface?
+
+Because current repo-grounded inventory evidence supports both `docs/runbooks/reliability/trigger-mechanisms/README.md` and `docs/runbooks/reliability/trigger-retry-matrix.md` as real project files, not just conceptual examples.
+
+### Why are publication, correction, rollback, and restore still marked `PROPOSED`?
+
+Because the doctrine strongly recommends them, but the current evidence in hand does not prove those exact files currently exist in the mounted repo.
 
 ### Why separate `docs/runbooks/` from `infra/`?
 
-Because the two surfaces do different jobs. `infra/` owns runtime and deployment assets. `docs/runbooks/` owns the human-readable operating procedures that explain when and how those assets are used, validated, rolled back, or corrected.
-
-### Why not treat the reliability subtree as current fact?
-
-Because the docs index source-reports reliability examples, but the directly opened `docs/runbooks/` tree currently showed only `README.md`. The deeper subtree should stay **INFERRED** until the checkout proves it.
+Because the two surfaces do different jobs. `infra/` owns runtime wiring. `docs/runbooks/` owns human-readable governed procedures explaining when and how those assets are used, validated, rolled back, corrected, or restored.
 
 ### When should a runbook change block release?
 
-When stale procedure would mislead publication, correction, rollback, restore, stale-visible handling, or incident response. In KFM, docs are part of release evidence when behavior changes materially.
+When stale procedure would mislead publication, correction, rollback, restore, stale-visible handling, trigger selection, retry behavior, or incident containment. In KFM, docs are part of trust evidence when operator behavior changes materially.
 
 ### Can a runbook live somewhere else?
 
-Yes, if another directory clearly owns it. For example, runtime-specific bring-up detail may live beside a local runtime profile or infra surface. This index should then link outward rather than duplicate the authoritative procedure.
+Yes, if another directory clearly owns it. This index should then link outward instead of duplicating the authoritative procedure.
 
 [Back to top](#runbooks)
 
 ## Appendix
 
 <details>
-<summary><strong>Evidence map and starter runbook skeleton</strong></summary>
+<summary><strong>Evidence map, starter skeleton, and next runbook set</strong></summary>
 
 ### Why this directory exists
 
-This README is shaped by four recurring signals across the repo-adjacent docs and March 2026 corpus:
+This README is shaped by four recurring signals across repo-grounded and doctrinal sources:
 
 | Source lane | What it contributes to `docs/runbooks/` |
 |---|---|
-| `docs/README.md` | Defines runbooks as the place to answer how KFM is operated, recovered, or contained safely; makes prerequisites, validation, rollback, and output artifacts the minimum obligation |
-| `infra/README.md` | Places runbooks beside restore, rollback, correction, incident, and observability concerns without collapsing docs into infra assets |
-| March 2026 delivery / verification overlays | Repeatedly elevate publication, correction, stale-visible behavior, rollback, restore drills, and documentation definition-of-done |
-| Phase-one runtime note | Adds the concrete expectation for a human-readable bring-up / smoke-test runbook and validation checklist for a first governed slice |
+| Repo-grounded audit/sprint material | Confirms the repo currently contains a runbooks surface and warns against docs outrunning implementation |
+| Support inventory | Confirms the reliability subtree already exists as part of the docs structure |
+| KFM master design / expanded manuals | Repeatedly call for rollback, correction, and restore drills plus runbook-backed release discipline |
+| KFM geospatial architecture | Makes incident follow-up and runbook updates part of documentation law |
 
 ### Starter runbook skeleton
 
-Use this as the minimum shape for new runbooks in this directory.
+Use this as the minimum shape for new runbooks under `docs/runbooks/`.
 
 ```md
 # <runbook-name>
@@ -371,7 +420,7 @@ One-line purpose.
 > **Status:** experimental|active|stable|deprecated
 > **Owners:** NEEDS VERIFICATION
 > **Trigger:** <what activates this procedure>
-> **Quick jumps:** [Prerequisites](#prerequisites) · [Procedure](#procedure) · [Validation](#validation) · [Rollback](#rollback) · [Outputs](#output-artifacts)
+> **Quick jumps:** [Preconditions](#preconditions) · [Procedure](#procedure) · [Validation](#validation) · [Rollback](#rollback) · [Outputs](#output-artifacts)
 
 ## Scope
 What this runbook covers, and what it does not.
@@ -392,7 +441,7 @@ What proves success, safe hold, or safe failure.
 Hold / quarantine / stale-visible / deny / error / escalate — whichever apply.
 
 ## Output artifacts
-Receipts, notices, manifests, proof-pack references, incident notes, or audit joins.
+Receipts, notices, manifests, proof-pack references, incident notes, screenshots, or audit joins.
 
 ## Rollback / forward-fix
 How to recover if the procedure fails or only partially succeeds.
@@ -401,15 +450,23 @@ How to recover if the procedure fails or only partially succeeds.
 Which docs, tests, dashboards, release notes, or trust-visible surfaces must change next.
 ```
 
-### Candidate first runbooks for this directory
+### Suggested next runbooks after the reliability subtree
 
 | Candidate | Why it belongs here | Status |
 |---|---|---|
 | `publication.md` | Visible change must be governed, validated, and evidence-bearing | **PROPOSED** |
 | `correction.md` | Wrong public state must be corrected without narrative drift | **PROPOSED** |
-| `stale_projection.md` | Derived layers must not silently outrank release truth | **PROPOSED** |
 | `rollback.md` | Recovery to last good promoted state must be explicit and rehearsable | **PROPOSED** |
-| `reliability/trigger-mechanisms/README.md` | Reliability and retry posture should become operational, not tribal | **INFERRED** |
+| `restore-drill.md` | Recovery claims are only credible once rehearsed | **PROPOSED** |
+| `stale_projection.md` | Derived layers must not silently outrank release truth | **PROPOSED** |
+
+### Review prompts before creating a new runbook
+
+- What exact trust-bearing seam does this runbook protect?
+- Which artifacts prove the procedure completed honestly?
+- What must become visibly stale, narrowed, denied, or corrected if the procedure fails?
+- Which contracts, policy vocabularies, tests, or drills must change with the doc?
+- Does another directory already own the narrower truth surface?
 
 </details>
 
@@ -425,6 +482,4 @@ Which docs, tests, dashboards, release notes, or trust-visible surfaces must cha
 [contracts]: ../../contracts/
 [schemas]: ../../schemas/
 [policy]: ../../policy/
-[tests]: ../../tests/# runbooks
-
-Scaffolded from repository README guidance to establish the documented directory contract.
+[tests]: ../../tests/
