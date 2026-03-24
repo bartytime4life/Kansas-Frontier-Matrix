@@ -1,189 +1,198 @@
-<!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/<NEEDS_VERIFICATION_UUID>
-title: e2e
-type: standard
-version: v1
-status: review
-owners: @bartytime4life
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
-policy_label: public
-related: [tests/README.md, .github/workflows/README.md, contracts/README.md, policy/README.md, tests/e2e/runtime_proof/README.md, tests/e2e/correction/README.md, tests/e2e/release_assembly/README.md]
-tags: [kfm, tests, e2e, verification]
-notes: [Current public main shows this file and its child lanes as scaffold surfaces; exact doc_id and calendar metadata need verification before merge]
-[/KFM_META_BLOCK_V2] -->
-
 # e2e
+End-to-end proof surface for KFM runtime outcomes, release assembly, and correction lineage.
 
-End-to-end governed verification for runtime proof, correction propagation, and release-assembly integrity in KFM.
-
-> Status: experimental  
-> Owners: `@bartytime4life`  
-> Path: `tests/e2e/README.md`  
-> Repo fit: end-to-end verification lane for release-backed runtime behavior, correction lineage, and publish-path proof  
-> Quick jump: [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
-
-![status: experimental](https://img.shields.io/badge/status-experimental-orange)
-![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-blue)
-![branch: main](https://img.shields.io/badge/branch-main-black)
-![scope: e2e proof](https://img.shields.io/badge/scope-e2e_proof-0a7ea4)
-![repo tree: GitHub visible](https://img.shields.io/badge/repo_tree-GitHub--visible-brightgreen)
-![workflows: README only visible](https://img.shields.io/badge/workflows-README_only_visible-lightgrey)
-![truth: bounded](https://img.shields.io/badge/truth-bounded-lightgrey)
+> **Status:** experimental  
+> **Owners:** `@bartytime4life`  
+> **Path:** `tests/e2e/README.md`  
+> **Repo fit:** downstream of [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../docs/README.md`](../../docs/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md), and [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md); upstream of the visible leaf families [`./runtime_proof/`](./runtime_proof/), [`./release_assembly/`](./release_assembly/), and [`./correction/`](./correction/)  
+> **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-end--to--end%20proof-0a7ea4) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![current public inventory](https://img.shields.io/badge/current%20public%20inventory-three%20leaf%20families-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
 
 > [!IMPORTANT]
-> Current public `main` proves that `tests/e2e/` exists and that it currently exposes `correction/`, `release_assembly/`, `runtime_proof/`, and this `README.md`. That does **not** by itself prove executable depth, merge-blocking automation, fixture richness, or runner wiring. Treat directory presence as a governed boundary, not as earned coverage.
+> Current public `main` proves that `tests/e2e/` exists and currently exposes `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
+
+> [!WARNING]
+> This does **not** yet prove executable suite depth, a mounted runner/toolchain, merge-blocking automation, or exercised release/correction drills. Treat directory presence as a family boundary, not already-earned proof.
 
 ---
 
 ## Scope
 
-`tests/e2e/` is the narrowest repo-facing verification surface that should prove KFM behavior across real trust-bearing seams rather than isolated units.
+`tests/e2e/` is where KFM should prove **whole-path trust-bearing behavior**.
 
-That means this directory is not about “did the page load?” or “did one API route return 200?” in the abstract. It exists for the harder questions:
+This directory is not the place for generic smoke tests, oversized demos, or coverage theater. It exists for the narrower and more consequential question: **does the governed system still hold together when a real runtime outcome, release-bearing assembly, or correction path is exercised end to end?**
 
-- can a request resolve evidence and end in a finite, explainable outcome?
-- can release, correction, rollback, and stale visibility remain inspectable under pressure?
-- can publish-path proof stay attached to the thing being shown?
-- can negative outcomes stay governed instead of being polished away?
+That burden is broader than `tests/integration/`, and stricter than “the UI loaded.” Good end-to-end cases are **thin but whole**: one accountable scenario, one visible result, and the proof objects needed to explain why that result is trustworthy.
+
+### Status markers used here
+
+| Marker | Meaning in this README |
+|---|---|
+| **CONFIRMED** | Visible on the current public branch or directly grounded in stable adjacent repo documentation |
+| **INFERRED** | Strongly supported by repo doctrine and neighboring docs, but not re-proven from executable branch evidence in this revision |
+| **PROPOSED** | Buildable guidance that fits KFM doctrine without claiming current implementation |
+| **UNKNOWN** | Not verified strongly enough to describe as current repo reality |
+| **NEEDS VERIFICATION** | A path, command, workflow, or implementation detail that should be checked against the checked-out branch before merge |
 
 ### Evidence boundary used here
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | `tests/e2e/` exists as a real branch-visible directory, with `README.md`, `correction/`, `release_assembly/`, and `runtime_proof/` present on public `main`. |
-| **CONFIRMED — current public repo governance** | `/tests/` is owned by `@bartytime4life` in `CODEOWNERS`. |
-| **CONFIRMED — current public workflow lane** | `.github/workflows/` is visible, but the public branch currently shows `README.md` only there. |
-| **CONFIRMED — March 2026 KFM doctrine** | End-to-end verification must prove trust, not only code paths; finite runtime outcomes, correction lineage, release proof, citation-negative behavior, and visible failure states are all load-bearing. |
-| **UNKNOWN / NEEDS VERIFICATION** | Exact runner/toolchain, actual executable suite depth, required checks, branch-protection settings, fixture density, screenshot baseline inventory, and whether drills have been exercised beyond scaffold level. |
-
-[Back to top](#e2e)
+| **CONFIRMED — current public repo** | `tests/e2e/` exists and the public directory listing currently shows `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`. |
+| **CONFIRMED — parent tests contract** | [`../README.md`](../README.md) defines `e2e/` as the end-to-end verification family and assigns the three visible leaf burdens. |
+| **CONFIRMED — ownership** | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) assigns `/tests/` to `@bartytime4life`. |
+| **CONFIRMED — workflow adjacency** | Public `main` currently shows [`../../.github/workflows/README.md`](../../.github/workflows/README.md) but no checked-in workflow YAML files in `.github/workflows/`, so merge-blocking automation is not proven from visible repo files alone. |
+| **NEEDS VERIFICATION** | Actual runner/toolchain, executable case depth, required checks, screenshot baseline inventory, proof-pack emitters, and whether runtime/release/correction drills are exercised on the checked-out branch. |
 
 ## Repo fit
 
-This README should complement `tests/README.md`, not compete with it.
+**Path:** `tests/e2e/README.md`  
+**Role:** directory README for whole-path proof and leaf placement under `tests/e2e/`.
 
-| Direction | Path | Role |
+### Upstream anchors
+
+| Relation | Path | Why it matters | Status |
+|---|---|---|---|
+| Parent family map | [`../README.md`](../README.md) | defines the test-family lattice and names `e2e/` as the end-to-end family | **CONFIRMED** |
+| Repo root posture | [`../../README.md`](../../README.md) | keeps this directory aligned with the repo’s governed, evidence-first posture | **CONFIRMED** |
+| Contribution contract | [`../../CONTRIBUTING.md`](../../CONTRIBUTING.md) | keeps claims, commands, and workflow references evidence-bounded | **CONFIRMED** |
+| Workflow adjacency | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | shows current public automation visibility and its limits | **CONFIRMED** |
+| Ownership boundary | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | establishes review ownership for `/tests/` | **CONFIRMED** |
+| Contract source | [`../../contracts/README.md`](../../contracts/README.md) | end-to-end cases should consume authoritative contracts, not invent them | **CONFIRMED** |
+| Policy source | [`../../policy/README.md`](../../policy/README.md) | allow / deny / abstain posture belongs there when policy is the main question | **CONFIRMED** |
+| Schema source | [`../../schemas/README.md`](../../schemas/README.md) | schema authority should stay out of e2e drift | **CONFIRMED** |
+| Runbooks and doctrine-adjacent docs | [`../../docs/README.md`](../../docs/README.md) | release, rollback, correction, and operator guidance should stay synchronized | **CONFIRMED** |
+| Smaller governed boundary slices | [`../integration/README.md`](../integration/README.md) | use integration when the proof is real-boundary but not full end to end | **CONFIRMED** |
+| Deterministic rerun proof | [`../reproducibility/README.md`](../reproducibility/README.md) | keep replay stability separate from broader whole-path proof | **CONFIRMED** |
+
+### Confirmed local leaf families
+
+| Leaf | Meaning | Current visible state |
 |---|---|---|
-| Upstream | [`tests/README.md`](../README.md) | taxonomy owner for the broader verification lane |
-| Upstream | [`../../contracts/README.md`](../../contracts/README.md) | contract-law boundary; e2e should consume, not redefine |
-| Upstream | [`../../policy/README.md`](../../policy/README.md) | deny-by-default, reasons/obligations, finite outcomes |
-| Upstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | CI / gate lane; currently visible as documentary control surface |
-| Downstream | [`runtime_proof/README.md`](./runtime_proof/README.md) | request-time evidence, citations, and finite runtime outcomes |
-| Downstream | [`correction/README.md`](./correction/README.md) | supersession, withdrawal, rollback, stale visibility, correction propagation |
-| Downstream | [`release_assembly/README.md`](./release_assembly/README.md) | promotion, release evidence, manifest/proof-pack, publish-path integrity |
+| [`./runtime_proof/`](./runtime_proof/) | request-time runtime and outcome proof | visible on public `main` |
+| [`./release_assembly/`](./release_assembly/) | release / promotion / publish-path proof | visible on public `main` |
+| [`./correction/`](./correction/) | correction, supersession, replacement, and stale-visible proof | visible on public `main` |
 
-### Boundary rule
-
-This directory is for **execution-facing proof**, not for creating a third source of contract or policy authority.
-
-If `contracts/` and `schemas/` still require an authority decision elsewhere in the repo, do not silently resolve that split here by inventing e2e-local schema law. End-to-end cases should consume the authoritative contract source declared by the repo, not create parallel governance.
-
-[Back to top](#e2e)
+> [!NOTE]
+> Keep `tests/e2e/` burden-led. If a case can be proved more honestly in `unit/`, `integration/`, `contracts/`, `policy/`, `accessibility/`, or `reproducibility/`, move it there.
 
 ## Accepted inputs
 
-Content that belongs in `tests/e2e/` includes:
+Accepted inputs for this directory are the **smallest artifacts needed to prove a whole path honestly**.
 
-- executable request-time proof cases for `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`
-- end-to-end evidence resolution checks where `EvidenceRef` must resolve to an inspectable support object
-- correction, supersession, withdrawal, rollback, and stale-visibility drills
-- release / promotion / publish-path proof checks that follow manifests, review decisions, and correction posture
-- thin, public-safe fixtures that exercise real trust seams without becoming canonical data stores
-- expectations about visible trust cues when a case reaches Focus, export, dossier, or other trust-visible surfaces
-- query packs, golden examples, or archived drill outputs where repeatability matters
-- inspection-first notes that help reviewers verify what is actually wired on the checked-out branch
+| Accepted input | What belongs here | Status posture |
+|---|---|---|
+| Whole-path scenario definitions | one narrow but complete scenario that crosses real runtime, release, or correction boundaries | **CONFIRMED** as burden / local file layout **NEEDS VERIFICATION** |
+| Reused authoritative fixtures | contract examples, policy examples, and representative inputs reused from their owning homes | **CONFIRMED** as direction |
+| Runtime outcome traces | cases for `ANSWER`, `ABSTAIN`, `DENY`, `ERROR`, citation-negative, or evidence-resolution-negative behavior | **CONFIRMED** as burden / mounted inventory **NEEDS VERIFICATION** |
+| Release proof objects | manifests, proof packs, promotion refs, rollback notes, and publish-path evidence | **INFERRED / PROPOSED** local inventory |
+| Correction drills | supersession, withdrawal, replacement, and stale-visible behavior | **CONFIRMED** as burden / mounted inventory **NEEDS VERIFICATION** |
+| Surface-state evidence | screenshots, snapshots, or equivalent outward cues when a trust state must remain visible | **PROPOSED / NEEDS VERIFICATION** |
+| Comparison and audit output | reports that explain pass, fail-closed behavior, or lineage changes | **INFERRED / PROPOSED** |
 
 ## Exclusions
 
-The following do **not** belong here as authoritative source of truth:
+What does **not** belong here, and where it should go instead:
 
-- unit, integration, contract-only, policy-only, or accessibility-only work that does not need end-to-end scope  
-  → keep it in the smallest fitting existing test family
-- canonical schema files, OpenAPI descriptions, vocabularies, or standards profiles  
-  → keep them in `../../contracts/` or the authoritative schema surface
-- executable policy bundles, reviewer-role maps, or obligation registries  
-  → keep them in `../../policy/`
-- runtime/service implementation code, ingestion workers, API handlers, or shell components  
-  → keep them in apps/packages/infra surfaces
-- promoted release artifacts as the primary record  
-  → verify them here, but do not relocate their source of truth here
-- branch-local scratch captures, local dumps, or oversized fixture payloads  
-  → keep them out of `tests/e2e/`
+| Exclusion | Keep it out of `tests/e2e/` | Put it here instead |
+|---|---|---|
+| Pure local logic | no real whole-path burden | [`../unit/README.md`](../unit/README.md) |
+| Real-boundary slices that are still smaller than full end to end | not every seam needs full-system proof | [`../integration/README.md`](../integration/README.md) |
+| Schema-shape-only validation | contract structure without runtime/release/correction burden | [`../contracts/README.md`](../contracts/README.md) |
+| Policy grammar or reason/obligation logic by itself | decision grammar with no broader whole-path slice | [`../policy/README.md`](../policy/README.md) |
+| Accessibility-only behavior | keyboard, motion, contrast, or inspectability checks without broader end-to-end burden | [`../accessibility/README.md`](../accessibility/README.md) |
+| Reproducibility-only checks | stable digests, counts, or rerun sameness without broader whole-path behavior | [`../reproducibility/README.md`](../reproducibility/README.md) |
+| Runbooks, release notes, or operator prose | documentation is not executable proof | [`../../docs/README.md`](../../docs/README.md) |
+| Canonical schemas, policy bundles, or heavyweight release artifacts | this directory proves behavior; it should not replace authority or artifact storage | owning contract/policy/release surfaces |
 
 ## Current verified snapshot
 
-The current public branch proves this much without overclaiming:
+The current public `main` branch proves the following:
 
-- `tests/e2e/README.md` exists.
-- `tests/e2e/correction/` exists.
-- `tests/e2e/release_assembly/` exists.
-- `tests/e2e/runtime_proof/` exists.
-- each visible child lane currently presents as scaffold-first rather than richly described executable documentation.
-- `.github/workflows/` is visible on public `main`, but no checked-in workflow YAML files are claimed here.
-- `/tests/` ownership is assigned to `@bartytime4life`.
+- `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
+- `tests/e2e/README.md` is currently a one-line scaffold on public `main`.
+- [`./correction/README.md`](./correction/README.md), [`./release_assembly/README.md`](./release_assembly/README.md), and [`./runtime_proof/README.md`](./runtime_proof/README.md) currently resolve to scaffold pages.
+- The parent [`../README.md`](../README.md) already assigns those three visible leaf families clear meanings.
+- Public `.github/workflows/` currently exposes `README.md` only; no checked-in workflow YAML files are visible there from the public tree.
+- `/tests/` ownership currently resolves to `@bartytime4life`.
 
 > [!CAUTION]
-> A visible directory tree is valuable, but it is not the same thing as runner coverage, fixture maturity, or merge-blocking proof. Keep the distinction explicit.
-
-[Back to top](#e2e)
+> What is still **not** proven here: the actual runner, suite depth, required checks, screenshot baseline inventory, proof-pack emitters, correction drill history, or whether any of these end-to-end families are exercised automatically.
 
 ## Directory tree
 
 ### Current confirmed snapshot
 
 ```text
-tests/e2e/
-├── README.md
-├── correction/
-│   └── README.md
-├── release_assembly/
-│   └── README.md
-└── runtime_proof/
+tests/
+└── e2e/
+    ├── correction/
+    │   └── README.md
+    ├── release_assembly/
+    │   └── README.md
+    ├── runtime_proof/
+    │   └── README.md
     └── README.md
 ```
 
-### Working rule
+### Design rule
 
-Keep the current three-lane split unless the checked-out branch proves a stronger, simpler, or already-executable pattern.
+Keep `tests/e2e/` **leaf-led**.
 
-Do not add top-level siblings here for aesthetic reasons. Add a new lane only when existing folders cannot truthfully own the burden.
+When real executable cases arrive, prefer adding them inside the existing visible families before inventing a second taxonomy at the same level.
 
 ## Quickstart
 
 ### Safe inspection commands
 
-These commands are inspection-first and do not assume a particular runner.
+These commands are safe because they inspect the current branch shape without assuming Playwright, Cypress, pytest, Vitest, Jest, or any other unverified runner.
 
 ```bash
-# inspect the visible e2e surface
-find tests/e2e -maxdepth 3 -type d | sort
-find tests/e2e -maxdepth 3 -type f | sort
+# inspect the current local e2e inventory
+find tests/e2e -maxdepth 4 -type d 2>/dev/null | sort
+find tests/e2e -maxdepth 4 -type f 2>/dev/null | sort
 
-# inspect adjacent governance and trust-boundary surfaces
-sed -n '1,220p' tests/README.md 2>/dev/null || true
+# re-read the family map before moving or adding tests
+sed -n '1,260p' tests/README.md 2>/dev/null || true
+sed -n '1,220p' tests/integration/README.md 2>/dev/null || true
+sed -n '1,220p' tests/reproducibility/README.md 2>/dev/null || true
+sed -n '1,220p' tests/unit/README.md 2>/dev/null || true
+
+# inspect visible e2e leaf docs
+sed -n '1,220p' tests/e2e/runtime_proof/README.md 2>/dev/null || true
+sed -n '1,220p' tests/e2e/release_assembly/README.md 2>/dev/null || true
+sed -n '1,220p' tests/e2e/correction/README.md 2>/dev/null || true
+
+# inspect ownership and workflow adjacency
+sed -n '1,220p' .github/CODEOWNERS 2>/dev/null || true
+find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
-sed -n '1,220p' contracts/README.md 2>/dev/null || true
-sed -n '1,220p' policy/README.md 2>/dev/null || true
 
-# inspect likely trust-bearing vocabulary without assuming a runner
-grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotice\|ABSTAIN\|DENY\|ERROR" \
-  tests/e2e contracts policy schemas docs 2>/dev/null || true
+# search for KFM runtime/release/correction vocabulary before inventing new names
+grep -RIn \
+  -e 'EvidenceBundle' \
+  -e 'RuntimeResponseEnvelope' \
+  -e 'ReleaseManifest' \
+  -e 'ReleaseProofPack' \
+  -e 'CorrectionNotice' \
+  -e 'ABSTAIN' \
+  -e 'DENY' \
+  -e 'ERROR' \
+  -e 'stale' \
+  tests contracts policy schemas docs .github 2>/dev/null || true
 ```
 
 ### First local review pass
 
-1. Verify which child lanes contain executable suites rather than placeholder README files.
-2. Verify whether the checked-out branch still matches the current public `main` tree.
-3. Verify which checks actually block merges on the active branch.
-4. Verify whether contract, policy, docs, and e2e changes move together in the same change stream.
-5. Verify whether negative paths exist, not only happy-path confirmation.
-6. Verify whether release, runtime, and correction proof are exercised end to end.
+1. Confirm whether the checked-out branch still matches the current public `tests/e2e/` shape.
+2. Confirm which visible leaf families contain executable cases versus README-only scaffolding.
+3. Confirm the actual runner/toolchain before documenting any command.
+4. Confirm whether the case is honestly whole-path proof or belongs in `integration/`, `contracts/`, `policy/`, `accessibility/`, or `reproducibility/`.
+5. Confirm whether fail-closed behavior is asserted, not just happy-path success.
+6. Confirm whether release and correction cases preserve lineage and outward trust state.
 
 > [!TIP]
-> Prefer repo-native commands discovered from the checked-out branch over README-invented runner commands. Inspection-first is safer than guessing a toolchain.
-
-[Back to top](#e2e)
+> Inspection-first is safer than guessing a toolchain. Do not document `npm test`, `pytest`, `cargo test`, browser harness commands, or GitHub required checks here until the checked-out branch proves them.
 
 ## Usage
 
@@ -191,177 +200,176 @@ grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotic
 
 `tests/e2e/` is:
 
-- the proof surface for request-time governed behavior
-- the lane where release-backed trust claims are exercised across real boundaries
-- the place where correction lineage must remain visible under change
-- the home for suites that prove finite outcomes instead of polished ambiguity
+- the whole-path proof surface for trust-bearing KFM behavior
+- the family where request-time runtime outcomes, release assembly, and correction lineage should remain inspectable
+- the place where fail-closed behavior must stay visible instead of being polished away
+- the outer verification boundary before a case becomes release evidence or operator-facing doctrine
 
 ### What `tests/e2e/` is not
 
-`tests/e2e/` is not:
+`tests/e2e/` is **not**:
 
-- a generic smoke-test bucket
-- a substitute for authoritative contracts or policy bundles
-- a place to hide uncertainty behind broad “coverage” language
-- a badge generator for CI theater
-- a reason to bypass smaller, more precise test families when they are enough
+- a generic browser smoke folder
+- a substitute home for contract law, policy bundles, or canonical schemas
+- proof that merge-blocking automation exists
+- a catch-all for any test that “feels important”
+- a place to hide broad uncertainty behind a single green status
 
-### Where a new e2e case should live
+### Where a new case belongs
 
-| Lane | Put work here when… | Example burden |
+| If the main question is… | Best home | Why |
 |---|---|---|
-| `runtime_proof/` | request-time evidence resolution, citations, or finite answer outcomes are the question | prove `ANSWER / ABSTAIN / DENY / ERROR` behavior with visible support or visible refusal |
-| `correction/` | supersession, rollback, stale visibility, withdrawal, or correction propagation must be exercised | prove that released material changes visibly without erasing lineage |
-| `release_assembly/` | promotion, release evidence, or publish-path integrity is the question | prove that manifest, review/policy context, and downstream trust cues stay attached |
+| “Does request-time evidence resolution still produce the right outward outcome?” | [`./runtime_proof/`](./runtime_proof/) | runtime outcome is the primary burden |
+| “Does promotion / release assembly still produce complete, reviewable proof?” | [`./release_assembly/`](./release_assembly/) | release-bearing completeness is the primary burden |
+| “Does correction / supersession / withdrawal still preserve lineage and visible state?” | [`./correction/`](./correction/) | correction is the primary burden |
+| “Does a real seam hold, but without full runtime/release/correction sweep?” | [`../integration/README.md`](../integration/README.md) | smaller honest proof beats inflated e2e scope |
+| “Is the main risk contract or schema drift?” | [`../contracts/README.md`](../contracts/README.md) | structure validation should stay explicit |
+| “Is the main risk allow / deny / abstain logic?” | [`../policy/README.md`](../policy/README.md) | policy should remain reviewable as policy |
+| “Is the main risk accessibility of the trust surface?” | [`../accessibility/README.md`](../accessibility/README.md) | accessibility is a first-class family |
+| “Is the main risk rerun sameness or bounded rebuild drift?” | [`../reproducibility/README.md`](../reproducibility/README.md) | reproducibility is its own proof burden |
 
-### Working rule for scaffolded lanes
+### Naming guidance
 
-A present directory is not the same thing as an active suite.
+Prefer **burden-led** names over tool-led names.
 
-If a child lane currently contains only a placeholder README or thin scaffold, treat it as a documented proof boundary waiting for executable cases, not as maturity already earned.
+```text
+runtime_proof.citation_negative.abstain.test.*
+runtime_proof.evidence_missing.error.test.*
+release_assembly.proof_pack.complete.test.*
+release_assembly.publish_path.rollback_ready.test.*
+correction.supersession.stale_visible.test.*
+correction.withdrawal.public_notice.test.*
+```
+
+### De-escalation rule
+
+A case does **not** become better just because it sits under `e2e/`.
+
+If the smallest honest proof is a local helper, a contract example, a policy fixture, or a real-boundary slice that stops short of full runtime/release/correction proof, move it outward to the family that owns that burden.
 
 ## Diagram
 
 ```mermaid
 flowchart LR
-    C["contracts / schemas"] --> E["tests/e2e/"]
-    P["policy/"] --> E
-    W[".github/workflows/"] --> G["gated automation"]
+  C["contracts / schemas"] --> E["tests/e2e/ whole-path proof"]
+  P["policy"] --> E
+  D["docs / runbooks"] --> E
+  W[".github/workflows/"] --> E
+  I["owning implementation / adapters"] --> E
 
-    subgraph L["e2e lanes"]
-      RP["runtime_proof/"]
-      CO["correction/"]
-      RA["release_assembly/"]
-    end
+  E --> RP["runtime_proof/"]
+  E --> RA["release_assembly/"]
+  E --> CO["correction/"]
 
-    E --> L
-    RP --> RR["RuntimeResponseEnvelope<br/>EvidenceRef -> EvidenceBundle<br/>finite outcomes"]
-    CO --> CN["CorrectionNotice<br/>supersession / withdrawal<br/>stale-visible behavior"]
-    RA --> RM["ReleaseManifest / proof-pack<br/>publish-path integrity"]
+  RP --> OUT["ANSWER / ABSTAIN / DENY / ERROR"]
+  RA --> REL["manifest / proof pack / rollback note"]
+  CO --> CORR["supersession / withdrawal / stale-visible"]
 
-    RR --> G
-    CN --> G
-    RM --> G
-
-    G --> Q{"trust-preserving?"}
-    Q -->|no| H["hold / deny / fix / re-run"]
-    Q -->|yes| S["runtime trust surfaces"]
+  E -. smaller seam only .-> INT["tests/integration/"]
+  E -. structure only .-> CON["tests/contracts/"]
+  E -. policy only .-> POL["tests/policy/"]
+  E -. rerun stability only .-> REP["tests/reproducibility/"]
 ```
-
-[Back to top](#e2e)
 
 ## Tables
 
-### Lane map
+### Visible leaf burden matrix
 
-| Lane | Primary proof burden | Core artifacts / signals | Current branch visibility |
+| Leaf family | Primary burden | Typical KFM objects / cues | Status note |
 |---|---|---|---|
-| `runtime_proof/` | request-time evidence and finite outcomes | `EvidenceBundle`, `RuntimeResponseEnvelope`, citations check, governed negative outcomes | visible |
-| `correction/` | change lineage under release pressure | `CorrectionNotice`, supersession, withdrawal, stale-visible state, rollback notes | visible |
-| `release_assembly/` | promotion and publish-path integrity | `ReleaseManifest`, proof-pack, decision/review linkage, audit join expectations | visible |
+| `runtime_proof/` | request-time runtime and outward outcome proof | `EvidenceBundle`, `RuntimeResponseEnvelope`, citation checks, `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` | visible family **CONFIRMED**; executable depth **NEEDS VERIFICATION** |
+| `release_assembly/` | release / promotion / publish-path proof | `ReleaseManifest`, `ReleaseProofPack`, docs/accessibility gate refs, rollback note, review linkage | visible family **CONFIRMED**; proof-pack emitter and automation **NEEDS VERIFICATION** |
+| `correction/` | supersession, withdrawal, replacement, and stale-visible proof | `CorrectionNotice`, affected release refs, public note, visible state change, lineage continuity | visible family **CONFIRMED**; drill history and fixtures **NEEDS VERIFICATION** |
 
-### Outcome expectations
+### Placement matrix
 
-| Situation under pressure | Expected visible outcome | Why it matters |
+| If you need to prove… | Best home | Why |
 |---|---|---|
-| evidence cannot be resolved | governed negative outcome, not confident prose | cite-or-abstain / fail-closed posture |
-| policy or rights block the action | `DENY` or equivalent governed refusal | deny-by-default is load-bearing |
-| runtime support is partial or stale | visible narrowed / stale / partial state | trust requires visible incompleteness |
-| published material is corrected | superseded / withdrawn / replaced state remains visible | correction is part of release discipline |
-| publish-path proof is incomplete | hold, fail, or non-promoted state | publication law is stronger than deployment success |
+| pure local deterministic logic | `tests/unit/` | smallest honest proof wins |
+| schema validity or example drift | `tests/contracts/` | contract law is the primary burden |
+| policy grammar, reason codes, obligation codes, or allow / deny rules | `tests/policy/` | policy should stay explicit |
+| a governed slice across real boundaries | `tests/integration/` | cross-boundary does not automatically mean end to end |
+| full runtime / release / correction proof | `tests/e2e/` | whole-path trust-bearing proof belongs here |
+| accessibility-only trust-surface behavior | `tests/accessibility/` | keep accessibility first-class |
+| rerun sameness, stable digests, or bounded rebuild drift | `tests/reproducibility/` | repeatability is its own burden |
 
-## Task list
+### Candidate first proofs
 
-- [ ] Confirm the checked-out branch still matches the visible public `main` tree for `tests/e2e/`.
-- [ ] Confirm whether each child lane contains executable suites or README-only scaffolds.
-- [ ] Add at least one executable `runtime_proof` case for each finite outcome used by the runtime.
-- [ ] Add at least one executable `correction` drill covering visible lineage change.
-- [ ] Add at least one executable `release_assembly` proof covering manifest/publish-path integrity.
-- [ ] Keep fixtures public-safe, thin, and execution-oriented.
-- [ ] Link every e2e addition back to the contract/policy/docs surfaces it depends on.
-- [ ] Replace any guessed runner language with repo-native invocation once verified.
-- [ ] Refuse merge-ready language if the lane is still scaffold-only.
-
-### Definition of done
-
-This directory is in a healthier state when all of the following are true:
-
-1. the three child lanes still reflect the smallest meaningful end-to-end split,
-2. at least one executable case exists in each lane,
-3. finite runtime outcomes are proven rather than merely described,
-4. correction behavior is visible and lineage-preserving,
-5. release-assembly proof does not outrun actual governed release evidence,
-6. this README documents what the branch can truly prove right now.
+| Candidate slice | Why it matters | Status |
+|---|---|---|
+| runtime citation-negative abstention case | proves fail-closed outward behavior instead of fluent bluffing | **PROPOSED** |
+| release-assembly completeness case | proves publish-path proof is more than deploy success | **PROPOSED** |
+| correction stale-visible supersession case | proves lineage remains visible after change | **PROPOSED** |
+| one public-safe thin slice spanning all three leaves | establishes a narrow but durable first anchor | **PROPOSED / NEEDS VERIFICATION** |
 
 [Back to top](#e2e)
 
+## Task list / definition of done
+
+- [ ] The checked-out branch was re-inspected before documenting files, commands, or runner details.
+- [ ] One real case exists before broad subtree growth is added under a leaf family.
+- [ ] Each case names its owning burden: runtime proof, release assembly, or correction.
+- [ ] Cases reuse authoritative contract and policy surfaces instead of cloning them locally.
+- [ ] Negative paths are explicit where a case can abstain, deny, error, go stale-visible, supersede, or withdraw.
+- [ ] Runtime-proof cases assert outward result class, not just internal helper behavior.
+- [ ] Release-assembly cases prove proof completeness and rollback posture, not merely successful publication.
+- [ ] Correction cases preserve lineage and visible state changes.
+- [ ] Any screenshot or outward cue is paired with explicit state assertions where relevant.
+- [ ] No claim of merge-blocking automation, required checks, or mature suite depth is made without direct evidence.
+- [ ] Adjacent docs are updated when case placement or family boundaries change.
+
 ## FAQ
 
-### Why is this separate from `tests/contracts/` and `tests/policy/`?
+### Is `tests/e2e/` the same thing as browser automation?
 
-Because end-to-end proof is where isolated truths meet each other. A contract can validate, and a policy can evaluate, while the full request path still fails to stay inspectable, finite, or correction-aware. This directory exists for that seam.
+No.
 
-### Why are there no runner commands here?
+Browser playback can be one implementation technique, but KFM end-to-end proof is broader: request-time outcomes, release assembly, and correction lineage all belong here when the proof burden is whole-path and trust-bearing.
 
-Because the current branch-visible evidence proves the directory structure more strongly than it proves a particular runner or merge gate. This README should stay inspection-first until the checked-out branch confirms the actual invocation path.
+### Does the current public repo prove runnable end-to-end suites?
 
-### Why public-safe fixtures first?
+No.
 
-Because KFM doctrine repeatedly favors small, governable, public-safe thin slices before broad expansion. End-to-end proof is more trustworthy when the fixture burden is realistic but safe to execute and review.
+The current public tree proves the directory and its visible leaf families, not a mounted runner, executable suite depth, or checked-in workflow YAML.
 
-### Why keep three child lanes instead of one large e2e bucket?
+### Can `ABSTAIN`, `DENY`, or `ERROR` be passing outcomes?
 
-Because the failure modes are different. Runtime proof, correction propagation, and release assembly each answer a different trust question. Keeping them separate helps reviewers see what is proven, what is missing, and where a regression belongs.
+Yes.
+
+In KFM, fail-closed behavior is part of the trust contract. If a case is expected to abstain, deny, or error visibly and correctly, reproducing that result is a pass.
+
+### Should this directory own canonical schemas or policy bundles?
+
+No.
+
+This directory should prove how the governed system behaves **using** those authoritative surfaces, not replace them.
+
+### What is the safest first real addition here?
+
+One narrow, public-safe scenario per visible leaf family is safer than a sprawling “platform proof.” If the repo adopts a single thin slice as its first serious lane, keep that slice small enough that runtime, release, and correction evidence all stay reviewable.
 
 ## Appendix
 
 <details>
-<summary id="appendix">Verification backlog and merge-time checks</summary>
+<summary>Appendix — maintainer notes and term reminders</summary>
 
-### Merge-time checks
+### Terms to keep stable
 
-Before treating this lane as mature, verify:
+- **EvidenceBundle** — inspectable supporting evidence object
+- **RuntimeResponseEnvelope** — outward runtime outcome object
+- **ReleaseManifest / ReleaseProofPack** — release-bearing proof objects
+- **CorrectionNotice** — correction-lineage object
+- **ANSWER / ABSTAIN / DENY / ERROR** — finite runtime outcome family
 
-- the checked-out branch contains real executable suites where expected
-- e2e cases are linked to real contracts and policy sources rather than free-floating examples
-- negative outcomes are asserted explicitly
-- correction drills preserve lineage instead of silently rewriting history
-- any publish-path proof matches actual release evidence, not only README claims
-- workflow automation, if added, is reviewable and not a detached CI theater layer
+### Writing rule
 
-### Placeholders still requiring verification
+- Keep **current branch truth** separate from **doctrinal burden**.
+- Prefer one narrow end-to-end proof over many decorative pseudo-e2e cases.
+- When a case shrinks honestly into `integration/`, `contracts/`, `policy/`, or `reproducibility/`, move it.
 
-The following remain intentionally unresolved here:
+### Sync rule
 
-- exact `doc_id`
-- created / updated calendar metadata
-- exact runner / toolchain
-- exact required checks on the active branch
-- exact suite density inside each child lane
-- exact screenshot / golden-baseline inventory
-- exact branch-protection or ruleset behavior
-
-### Illustrative starter specimen names (`PROPOSED`)
-
-```text
-tests/e2e/runtime_proof/
-  answer_public_safe.*
-  abstain_missing_evidence.*
-  deny_policy_block.*
-  error_internal_guarded.*
-
-tests/e2e/correction/
-  supersede_visible_lineage.*
-  withdraw_visible_state.*
-  stale_projection_propagates.*
-
-tests/e2e/release_assembly/
-  publish_path_manifest_complete.*
-  proof_pack_incomplete_holds.*
-  review_and_policy_refs_attached.*
-```
-
-These names are illustrative only. Keep the current branch’s naming if executable suites already exist there.
+If a future refactor renames or expands the visible e2e leaf families, update [`../README.md`](../README.md) and this file in the same change so parent and child placement rules do not drift.
 
 </details>
 
