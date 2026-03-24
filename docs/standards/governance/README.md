@@ -201,17 +201,17 @@ The governance lane should keep these KFM-wide expectations visible even when th
 
 ```mermaid
 flowchart LR
-    A[March 2026 doctrine] --> B[docs/standards/README.md]
-    B --> C[governance/README.md<br/>(directory index)]
-    C -.routes normative baseline.-> D[governance/ROOT_GOVERNANCE.md]
-    C -.routes executable enforcement.-> E[policy/]
-    C -.routes machine object shapes.-> F[contracts/]
-    C -.routes schema-home boundary.-> G[schemas/]
-    C -.routes proof and drills.-> H[tests/]
-    E -.verified and gated by.-> I[.github/workflows/]
-    F -.validated by.-> I
-    H -.reported by.-> I
-    I -.protects.-> J[Governed API + UI / Story / Focus / Export]
+    A["March 2026 doctrine"] --> B["docs/standards/README.md"]
+    B --> C["governance/README.md<br>(directory index)"]
+    C -. "routes normative baseline" .-> D["governance/ROOT_GOVERNANCE.md"]
+    C -. "routes executable enforcement" .-> E["policy/"]
+    C -. "routes machine object shapes" .-> F["contracts/"]
+    C -. "routes schema-home boundary" .-> G["schemas/"]
+    C -. "routes proof and drills" .-> H["tests/"]
+    E -. "verified and gated by" .-> I[".github/workflows/"]
+    F -. "validated by" .-> I
+    H -. "reported by" .-> I
+    I -. "protects" .-> J["Governed API + UI / Story / Focus / Export"]
 ```
 
 ## Governance map
