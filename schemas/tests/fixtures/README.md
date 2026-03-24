@@ -1,3 +1,244 @@
 # fixtures
 
-Scaffold directory defined from repository README guidance.
+Schema-adjacent fixture scaffold for the currently visible `schemas/tests/fixtures/` subtree.
+
+> **Status:** experimental  
+> **Owners:** `@bartytime4life` _(global fallback owner; path-specific ownership needs verification)_  
+> **Path:** `schemas/tests/fixtures/README.md`  
+> **Badges:** ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![authority](https://img.shields.io/badge/authority-unresolved-lightgrey) ![role](https://img.shields.io/badge/role-boundary--first-important)  
+> **Quick links:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating matrix](#operating-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+
+> [!IMPORTANT]
+> Treat this directory as a **boundary surface and local scaffold** unless the repo explicitly declares it the authoritative fixture home. The stronger current signals point to [`../../../contracts/README.md`](../../../contracts/README.md) for machine-contract law and [`../../../tests/README.md`](../../../tests/README.md) for governed verification work.
+
+## Scope
+
+This directory should explain the currently visible `schemas/tests/fixtures/` subtree without silently promoting it into a second authoritative contract or test universe.
+
+In practice, that means this README should help contributors answer three questions quickly:
+
+1. What is here right now?
+2. What kinds of changes are safe here?
+3. Which neighboring surfaces own canonical schema, policy, and verification law?
+
+[Back to top](#fixtures)
+
+## Repo fit
+
+| Relationship | Path | Role in this area |
+|---|---|---|
+| Current directory | `schemas/tests/fixtures/` | Local scaffold documented here |
+| Parent schema-test surface | [`../README.md`](../README.md) | Immediate parent context |
+| Schema boundary / authority warning | [`../../README.md`](../../README.md) | Explains why `schemas/` should not silently become a second contract authority |
+| Machine-contract lane | [`../../../contracts/README.md`](../../../contracts/README.md) | Stronger current home for machine-readable contracts |
+| Verification lane | [`../../../tests/README.md`](../../../tests/README.md) | Stronger current home for governed verification work |
+| Policy lane | [`../../../policy/README.md`](../../../policy/README.md) | Deny-by-default and decision-grammar context |
+| Standards routing | [`../../../docs/standards/README.md`](../../../docs/standards/README.md) | Cross-links standards surfaces to contract ownership |
+| Workflow lane | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | CI/CD surface to inspect before claiming any gate behavior |
+
+### Repo-fit interpretation
+
+This README should complement adjacent docs, not compete with them.
+
+The safest current interpretation is:
+
+- `schemas/tests/fixtures/` is a **visible local subtree**
+- `contracts/` is the **stronger machine-contract surface**
+- `tests/` is the **stronger governed verification surface**
+- any future authority decision should be made **explicitly**, not by quiet accretion
+
+## Accepted inputs
+
+The following belong here today.
+
+| Accept here | Why it belongs |
+|---|---|
+| Path-local `README.md` files | They explain what the local subtree contains and does not contain |
+| Human-readable inventory notes | They make the visible tree inspectable without overstating implementation |
+| Migration notes for this subtree | They help contributors understand how this path relates to stronger neighboring surfaces |
+| Cross-links to canonical contract / test / policy docs | They reduce drift and make authority visible |
+| Tiny schema-adjacent examples that are **explicitly marked non-authoritative** | They can clarify local structure without creating new contract law |
+
+> [!NOTE]
+> “Accept here” does **not** mean “make canonical here.” This directory is safest when it documents current structure, boundaries, and migration posture clearly.
+
+## Exclusions
+
+The following do **not** belong here by default.
+
+| Do not place here | Put it here instead | Why |
+|---|---|---|
+| Canonical `*.schema.json`, OpenAPI, or shared vocab files | [`../../../contracts/README.md`](../../../contracts/README.md) | Machine-contract law should not fork across multiple roots |
+| Executable regression suites, drill harnesses, or broad verification packs | [`../../../tests/README.md`](../../../tests/README.md) | Verification should stay attached to the wider governed test surface |
+| Policy bundles, reason codes, obligation codes, or decision rules | [`../../../policy/README.md`](../../../policy/README.md) | Policy grammar should remain executable and centralized |
+| Workflow gates or CI runner definitions | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Gates belong with workflow configuration, not fixture scaffolding |
+| Duplicate copies of object families already defined elsewhere | The already-owning surface | Duplicate authority is worse than visible incompleteness |
+
+[Back to top](#fixtures)
+
+## Current verified snapshot
+
+This table documents the subtree that is currently visible and safe to describe here.
+
+| Item | What is visible now | Posture |
+|---|---|---|
+| `./README.md` | Local directory README exists | **CONFIRMED** |
+| `./contracts/README.md` | Local contracts sub-area README exists | **CONFIRMED** |
+| `./contracts/v1/README.md` | Versioned local subtree README exists | **CONFIRMED** |
+| `./contracts/v1/valid/` | Versioned valid-lane directory exists | **CONFIRMED** |
+| `./contracts/v1/invalid/` | Versioned invalid-lane directory exists | **CONFIRMED** |
+| Mounted validator entrypoints targeting this subtree | Not established by this directory alone | **UNKNOWN** |
+| This path is the single authoritative fixture home | Not established | **NEEDS VERIFICATION** |
+| Future long-term role of this subtree | Boundary doc, migration surface, pointer lane, or retirement candidate | **INFERRED** |
+
+## Directory tree
+
+### Currently visible tree
+
+```text
+schemas/
+└── tests/
+    ├── README.md
+    └── fixtures/
+        ├── README.md
+        └── contracts/
+            ├── README.md
+            └── v1/
+                ├── README.md
+                ├── invalid/
+                └── valid/
+```
+
+### Working interpretation
+
+The current tree is useful because it is **real**. It is not yet sufficient to prove that this subtree is the long-term canonical fixture root.
+
+## Quickstart
+
+Use this directory in an inspection-first way.
+
+```bash
+# 1) Inspect the local subtree exactly as checked out
+find schemas/tests/fixtures -maxdepth 4 \( -type d -o -type f \) | sort
+
+# 2) Read the three adjacent authority docs before changing anything here
+sed -n '1,220p' schemas/README.md
+sed -n '1,260p' contracts/README.md
+sed -n '1,260p' tests/README.md
+
+# 3) Compare current authority language and fixture-home language
+git grep -nE 'parallel schema|authoritative schema|tests/fixtures|schemas/tests/fixtures' -- \
+  schemas contracts tests docs .github
+```
+
+> [!TIP]
+> Before adding anything here, read in this order:
+> 1. [`../../README.md`](../../README.md)
+> 2. [`../../../contracts/README.md`](../../../contracts/README.md)
+> 3. [`../../../tests/README.md`](../../../tests/README.md)
+
+> [!WARNING]
+> Do not invent validator commands or claim merge-gate behavior from this README alone. Use checked-in repo-native entrypoints once they exist and are verified.
+
+[Back to top](#fixtures)
+
+## Usage
+
+### Decision rule
+
+When a contributor wants to add or change something, the safest current routing is:
+
+| Change you want to make | Best current home | Posture |
+|---|---|---|
+| Document the local subtree that already exists | `schemas/tests/fixtures/` | **CONFIRMED safe** |
+| Add canonical JSON Schema or OpenAPI | `../../../contracts/` | **CONFIRMED stronger fit** |
+| Add executable contract fixtures intended to prove behavior | `../../../tests/` or the explicitly declared canonical fixture lane | **INFERRED / NEEDS VERIFICATION** |
+| Add policy rules or shared decision vocab | `../../../policy/` | **CONFIRMED stronger fit** |
+| Add merge gates or workflow checks | `../../../.github/workflows/` | **CONFIRMED stronger fit** |
+| Retire duplicate local material after an authority decision | This directory **plus** sibling docs in the same PR | **PROPOSED** |
+
+### Working rule for local additions
+
+If you must add material here before the authoritative-home decision is explicit:
+
+- keep it **small**
+- mark it **non-authoritative**
+- link it to the owning contract / policy / test surface
+- avoid copying the same object family into both `schemas/` and `contracts/`
+- update neighboring docs in the same PR when boundary meaning changes
+
+## Diagram
+
+```mermaid
+flowchart TD
+  Q["Need to add or change something?"] --> D{"What kind of artifact is it?"}
+
+  D -->|Schema / OpenAPI / shared vocab| C["Use ../../../contracts/"]
+  D -->|Executable tests / drills / baselines| T["Use ../../../tests/"]
+  D -->|Policy rules / bundles / decision grammar| P["Use ../../../policy/"]
+  D -->|Local boundary note about the visible subtree| F["Keep it in schemas/tests/fixtures/"]
+
+  F --> F1["Document only what is actually present"]
+  F --> F2["Cross-link stronger authority surfaces"]
+  F --> F3["Do not create a second authoritative fixture universe"]
+```
+
+## Operating matrix
+
+| Question | Safest current answer | Posture |
+|---|---|---|
+| Does this directory exist as a real subtree? | Yes | **CONFIRMED** |
+| Is it the canonical fixture home? | Not yet proven | **NEEDS VERIFICATION** |
+| Should new machine-contract law be added here by default? | No; start with `../../../contracts/` | **CONFIRMED** |
+| Should broad executable verification packs be anchored here by default? | Prefer `../../../tests/` | **INFERRED** |
+| Should a PR touching this directory review sibling authority docs too? | Yes | **PROPOSED** |
+| Is it safe to leave authority ambiguous after a boundary change? | No | **CONFIRMED working rule** |
+
+## Task list
+
+### Definition of done for edits in this directory
+
+- [ ] The directory tree shown here matches the checked-out branch
+- [ ] No sentence quietly upgrades this path into the canonical fixture home without an explicit repo decision
+- [ ] Any new local example is marked **non-authoritative**
+- [ ] No object family is duplicated across `schemas/` and `contracts/`
+- [ ] Links to sibling authority docs still resolve
+- [ ] Commands remain inspection-first and non-destructive
+- [ ] Any authority change is accompanied by sibling README updates and, where needed, an ADR
+
+[Back to top](#fixtures)
+
+## FAQ
+
+### Why document this path instead of deleting it?
+
+Because it already exists in the visible tree. Undocumented ambiguity is worse than explicit ambiguity.
+
+### Can I add canonical `*.schema.json` files here?
+
+Not by default. Put canonical machine contracts under [`../../../contracts/`](../../../contracts/) unless the repo has explicitly moved schema authority here.
+
+### Can I store golden screenshots or wide regression packs here?
+
+Usually no. Those belong with the broader verification surface under [`../../../tests/`](../../../tests/).
+
+### What should happen after the authoritative-home decision lands?
+
+Update this README, the parent/sibling docs, and the local subtree contents in the **same PR** so contributors do not see two competing answers.
+
+## Appendix
+
+<details>
+<summary>Illustrative local file patterns (safe, narrow, and mostly non-authoritative)</summary>
+
+These patterns are useful only when they document the visible subtree without creating new contract law.
+
+| File or pattern | Intended use | Posture |
+|---|---|---|
+| `README.md` | Local scope and boundary explanation | **CONFIRMED** |
+| `inventory.md` | Human-readable listing of what the subtree currently contains | **PROPOSED** |
+| `migration-notes.md` | Mapping from this subtree to stronger authority surfaces | **PROPOSED** |
+| `contracts/v1/README.md` | Version-local explanation of the visible subtree | **CONFIRMED** |
+| `*.example.valid.json` / `*.example.invalid.json` | Only when explicitly linked to an external canonical schema and clearly marked non-authoritative | **PROPOSED** |
+
+</details>
