@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS_VERIFICATION__assign_uuid
+title: Policy Bundles
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: NEEDS_VERIFICATION__file_history_shows_recreate_cycles
+updated: 2026-03-24
+policy_label: public
+related: [../README.md, ../fixtures/README.md, ../tests/README.md, ../policy-runtime/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../.github/workflows/README.md]
+tags: [kfm, policy, bundles]
+notes: [doc_id placeholder pending UUID assignment, created date needs branch-level verification because this path was deleted and recreated in commit history, meta status maps the current experimental README posture to draft and should be reviewed if the repo uses a stricter doc-lifecycle convention]
+[/KFM_META_BLOCK_V2] -->
+
 # Policy Bundles
 
 Executable bundle lane for KFM deny-by-default policy, finite outcome grammar, and reviewable trust seams.
