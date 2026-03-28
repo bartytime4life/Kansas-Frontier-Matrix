@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/NEEDS-VERIFICATION
+title: probes
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: NEEDS-VERIFICATION
+updated: 2026-03-28
+policy_label: public
+related: [../README.md, ../../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../validators/README.md, ../diff/README.md, ../../scripts/README.md, ../../tests/README.md, ../../policy/README.md, ../../contracts/README.md, ../../schemas/README.md]
+tags: [kfm, tools, probes]
+notes: [doc_id and created date remain placeholders pending direct repo/document record verification, owner is inherited from current /tools/ CODEOWNERS coverage]
+[/KFM_META_BLOCK_V2] -->
+
 # probes
 
 Bounded inspection, freshness, status, and read-only evidence helpers for Kansas Frontier Matrix.
@@ -5,7 +20,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 > **Status:** experimental  
 > **Owners:** `@bartytime4life` *(current `/tools/` owner inherited; narrower probe-specific ownership is not separately declared in the visible public tree)*  
 > **Path:** `tools/probes/README.md`  
-> **Repo fit:** child lane under [`../README.md`](../README.md) · upstream [`../../README.md`](../../README.md) · governance [`../../.github/README.md`](../../.github/README.md) · owner map [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · adjacent [`../validators/`](../validators/) · [`../diff/`](../diff/) · [`../../scripts/README.md`](../../scripts/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md)  
+> **Repo fit:** child lane under [`../README.md`](../README.md) · upstream [`../../README.md`](../../README.md) · governance [`../../.github/README.md`](../../.github/README.md) · owner map [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · adjacent [`../validators/README.md`](../validators/README.md) · [`../diff/README.md`](../diff/README.md) · [`../../scripts/README.md`](../../scripts/README.md) · [`../../tests/README.md`](../../tests/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md)  
 > **Evidence posture:** doctrine-grounded · repo-grounded for current public `main` subtree fact · deeper local checkout, workflow settings, and mounted runtime remain bounded  
 > **Current public snapshot:** `tools/probes/` currently contains `README.md` only on public `main`  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![role](https://img.shields.io/badge/role-bounded%20probes-4051b5) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/probes%20tree-README--only-lightgrey)  
@@ -15,7 +30,7 @@ Bounded inspection, freshness, status, and read-only evidence helpers for Kansas
 > `tools/probes/` is for bounded readers and reporters. It is **not** a hidden publish lane, a policy source-of-truth, or a place to bury runtime business logic.
 
 > [!NOTE]
-> The parent [`tools/README.md`](../README.md) already treats `probes/` as a stable helper family in target shape. This file narrows that family contract to the probe lane while keeping current public-tree reality explicit.
+> The parent [`tools/README.md`](../README.md) remains the family contract for the wider helper lane. This file narrows that contract to `probes/` while keeping current public-tree reality explicit. Exact sibling-family presence below is grounded in the live public `tools/` listing, not in documentary prose alone.
 
 ---
 
@@ -68,12 +83,17 @@ Today, the public subtree is still README-first. That does **not** weaken the la
 | Governance | [`../../.github/README.md`](../../.github/README.md) | Gatehouse framing for repo-local governance and documentary boundaries |
 | Governance | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current visible ownership coverage for `/tools/` |
 | Downstream | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflow callers may invoke probes, but probe logic should remain inspectable outside YAML |
-| Adjacent | [`../validators/`](../validators/) | Validators prove explicit rules and shapes; probes inspect and report |
-| Adjacent | [`../diff/`](../diff/) | Diff helpers compare stable states; probes discover or measure them |
+| Adjacent | [`../validators/README.md`](../validators/README.md) | Validators prove explicit rules and shapes; probes inspect and report |
+| Adjacent | [`../diff/README.md`](../diff/README.md) | Diff helpers compare stable states; probes discover or measure them |
 | Adjacent | [`../../scripts/README.md`](../../scripts/README.md) | Scripts may orchestrate probes, but reusable probe logic should not be buried there |
 | Adjacent | [`../../tests/README.md`](../../tests/README.md) | Probe behavior, pass/fail paths, and fixtures should be proven explicitly |
 | Adjacent | [`../../policy/README.md`](../../policy/README.md) | Policy source-of-truth stays separate; probes may inform policy review but do not own policy |
 | Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | Contracts define shapes; probes may inspect or summarize them but do not replace them |
+| Adjacent | [`../../schemas/README.md`](../../schemas/README.md) | Schema-home authority is still a governed boundary elsewhere; probes may inspect shape, but they do not settle schema authority |
+
+### Working interpretation
+
+Use this lane when the main job is **observe, summarize, and report**. Move out of this lane when the main job becomes **decide, mutate, publish, or own** the canonical rule.
 
 ## Accepted inputs
 
@@ -103,7 +123,8 @@ A probe is a good fit when the main question sounds like one of these:
 | Long-running public runtime code | app or package lanes | Probes are support helpers, not product runtime |
 | Promotion, publication, or trust-state mutation logic | `scripts/`, governed API, or workflow/review lanes | A probe may inform a decision; it should not silently make it |
 | Policy bundles or policy source-of-truth | [`../../policy/README.md`](../../policy/README.md) | Probes may summarize policy-relevant facts, but policy ownership stays separate |
-| Contract/schema ownership | [`../../contracts/README.md`](../../contracts/README.md) and repo schema lanes | Probes inspect declared shapes; they do not define them |
+| Contract ownership | [`../../contracts/README.md`](../../contracts/README.md) | Probes inspect declared shapes; they do not define them |
+| Canonical schema-home decisions | [`../../schemas/README.md`](../../schemas/README.md) | Probes may inspect schema surfaces, but they do not arbitrate schema authority |
 | Hidden one-off shell blobs embedded only in workflow YAML | stable tool entrypoints plus documented workflow callers | Reviewers should be able to inspect logic outside CI YAML |
 | Unsafe coordinate dumps, private samples, or sensitive fixtures | secure data lanes or tightly-scoped test fixtures | Public tooling should remain safe to clone and review |
 | Broad operator orchestration | [`../../scripts/README.md`](../../scripts/README.md) | A script may call several helpers; a probe should stay narrow |
@@ -115,10 +136,11 @@ A probe is a good fit when the main question sounds like one of these:
 | --- | --- | --- |
 | `tools/probes/README.md` exists | **CONFIRMED** | This file is a real lane surface, not a hypothetical path |
 | No additional public files are currently visible under `tools/probes/` | **CONFIRMED** | Prevents overclaiming executable probe inventory |
-| The live `tools/` tree currently shows sibling directories such as `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | **CONFIRMED** | Grounds relative links and family context |
-| `/tools/` ownership is covered by current visible CODEOWNERS | **CONFIRMED** | Grounds the owners line for this README |
+| The live public `tools/` directory listing confirms sibling families `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | **CONFIRMED** | Grounds relative links and family context from the current tree itself |
+| `/tools/` ownership is covered by current visible `CODEOWNERS` | **CONFIRMED** | Grounds the owners line for this README |
 | Public `.github/workflows/` remains README-first in visible `main` | **CONFIRMED** | Keeps CI caller claims bounded |
-| Parent `tools/README.md` frames probes as helpers that emit bounded reports rather than silent mutation | **CONFIRMED** | Grounds the lane contract defined here |
+| Parent `tools/README.md` still frames probes as helpers that emit bounded reports rather than silent mutation | **CONFIRMED** | Grounds the lane contract defined here even where other documentary snapshots need rechecking |
+| Exact workflow callers, platform rulesets, and any non-public runtime use of probes | **UNKNOWN** | These are not derivable from public tree inspection alone |
 
 ## Directory tree
 
@@ -172,16 +194,19 @@ tree -a -L 2 tools/probes 2>/dev/null || find tools/probes -maxdepth 2 \( -type 
 2. Recheck parent-lane doctrine and current owner coverage.
 
 ```bash
-sed -n '1,240p' tools/README.md 2>/dev/null
-sed -n '1,160p' .github/CODEOWNERS 2>/dev/null
+sed -n '1,260p' tools/README.md 2>/dev/null
+sed -n '1,180p' .github/CODEOWNERS 2>/dev/null
 ```
 
-3. Recheck current workflow and script neighbors.
+3. Recheck current workflow and adjacent boundary surfaces.
 
 ```bash
-sed -n '1,220p' .github/workflows/README.md 2>/dev/null
-sed -n '1,220p' scripts/README.md 2>/dev/null
-sed -n '1,220p' tests/README.md 2>/dev/null
+sed -n '1,260p' .github/workflows/README.md 2>/dev/null
+sed -n '1,240p' scripts/README.md 2>/dev/null
+sed -n '1,240p' tests/README.md 2>/dev/null
+sed -n '1,240p' policy/README.md 2>/dev/null
+sed -n '1,240p' contracts/README.md 2>/dev/null
+sed -n '1,240p' schemas/README.md 2>/dev/null
 ```
 
 4. Search for existing callers and naming patterns before inventing a new probe.
@@ -216,6 +241,7 @@ find tools/probes -maxdepth 3 -type f \( -name "*.py" -o -name "*.sh" -o -name "
 - Stamp the check time and, when relevant, the observed source timestamp or freshness basis.
 - Keep secrets minimal and externally injected.
 - Avoid silent retries that erase the evidence of degradation.
+- Keep any schema- or contract-specific logic subordinate to the canonical surfaces that own those rules.
 
 ### Illustrative invocation only
 
@@ -254,6 +280,7 @@ flowchart LR
 
     B -. no direct publish or promote .-> H[Canonical truth / published artifacts]
     B -. no hidden runtime ownership .-> I[Public runtime surfaces]
+    B -. no schema-home or policy ownership .-> J[contracts/ · schemas/ · policy/]
 ```
 
 ## Tables
@@ -265,9 +292,11 @@ flowchart LR
 | `tools/probes/` | Inspect and report bounded operational facts | Keep the question narrow and the output reviewable |
 | `tools/validators/` | Assert declared rule or shape conformance | Use when the main task is pass/fail validation, not observation |
 | `tools/diff/` | Compare stable states or artifacts | Use when the main task is change description, not probing |
+| `tools/catalog/` | Inspect catalog closure quality | Use when the main task is STAC/DCAT/PROV closure checking rather than freshness/status probing |
 | `scripts/` | Orchestrate repeatable multi-step work | A script may call a probe; the probe should stay reusable on its own |
 | `policy/` | Own decision rules and policy bundles | A probe may supply evidence; policy still decides |
-| `contracts/` / schema lanes | Own machine-readable shapes | A probe may inspect or summarize them; it does not define authority |
+| `contracts/` | Own machine-readable trust objects | A probe may inspect or summarize them; it does not define authority |
+| `schemas/` | Hold schema-home boundary documentation while authority remains explicit | A probe may inspect schema surfaces, but should not silently choose the schema home |
 | `tests/` | Prove behavior with fixtures and assertions | Every material probe should be exercised here |
 | `.github/workflows/` | Run automation in CI/CD | Call probes from workflows; do not let YAML become the only implementation surface |
 
@@ -283,6 +312,7 @@ flowchart LR
 | Callers | Stay runnable locally, from scripts, and from workflows | Avoids YAML-only logic |
 | Tests | Add representative positive and negative-path fixtures | KFM verification includes negative outcomes |
 | Docs | Update this README when lane behavior changes materially | Keeps documentary surfaces honest |
+| Authority | Never become the canonical owner of policy, contracts, or schema-home decisions | Prevents helper-code drift into sovereign truth |
 
 [Back to top](#probes)
 
@@ -295,6 +325,7 @@ flowchart LR
 - [ ] Caller surfaces are documented
 - [ ] Representative test coverage lands with the probe
 - [ ] Output format and exit behavior are stable enough for local and CI use
+- [ ] Adjacent boundary docs remain in sync if schema-, contract-, or policy-facing assumptions change
 - [ ] Unknowns remain visible instead of being smoothed into implementation claims
 
 ## FAQ
@@ -318,6 +349,10 @@ Prefer [`../../tests/`](../../tests/) for representative fixtures and assertions
 ### Should workflow YAML contain the only copy of probe logic?
 
 No. Workflows may call probes, but the executable behavior should remain inspectable as a stable entrypoint under `tools/probes/`.
+
+### Do probes decide schema or policy authority?
+
+No. Probes may inspect those surfaces, but canonical ownership remains with the explicitly governed lanes that already document those responsibilities.
 
 ## Appendix
 
@@ -353,10 +388,11 @@ No. Workflows may call probes, but the executable behavior should remain inspect
    - no hidden promotion logic
    - no policy ownership
    - no silent canonical writes
+   - no schema-home arbitration by convenience
 
 ### Design-note reminder
 
-The parent `tools/README.md` already uses `tools/probes/gtfsrt_probe.py` as a **PROPOSED** design-note example. Treat that as a naming illustration, not as current public-tree proof.
+The parent `tools/README.md` and sibling helper lane documents already establish the family pattern: thin helper lanes stay readable, reusable, and subordinate to stronger contract, policy, test, and workflow surfaces. Treat any future `tools/probes/*.py` example as a naming illustration until the live tree proves it exists.
 
 </details>
 
