@@ -4,35 +4,38 @@ title: Contract Fixtures — Schema-Side Boundary Guide
 type: standard
 version: v1
 status: draft
-owners: <TODO: verify owners / CODEOWNERS>
-created: <TODO: YYYY-MM-DD>
-updated: <TODO: YYYY-MM-DD>
+owners: @bartytime4life
+created: 2026-03-22
+updated: 2026-03-24
 policy_label: <TODO: verify policy label>
 related: [../../../../README.md, ../../../README.md, ../../../../contracts/README.md, ../../../../tests/README.md, ../../../../policy/README.md, ../../../../.github/workflows/README.md]
 tags: [kfm, schemas, tests, fixtures, contracts]
-notes: [PROPOSED new README path; keep this surface non-authoritative unless a repo-backed ADR explicitly changes schema-home and fixture-home rules]
+notes: [Current public main now materializes this README path; doc_id and policy_label still need repo-backed values; keep this surface non-authoritative and synchronized with sibling schema-lane docs.]
 [/KFM_META_BLOCK_V2] -->
 
 # Contract Fixtures — Schema-Side Boundary Guide
 
-Non-authoritative pointer surface for any schema-side contract-fixture notes, while KFM keeps canonical machine contracts in `/contracts` and canonical verification fixtures in `/tests`.
+Non-authoritative boundary README for schema-side contract-fixture notes, while KFM keeps canonical machine contracts in `/contracts` and canonical verification fixtures in `/tests`.
 
 > **Status:** experimental  
-> **Owners:** `<TODO: verify owners / CODEOWNERS>`  
+> **Owners:** `@bartytime4life`  
 > **Path:** `schemas/tests/fixtures/contracts/README.md`  
-> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Authority: non--authoritative](https://img.shields.io/badge/authority-non--authoritative-lightgrey) ![Contracts: canonical in /contracts](https://img.shields.io/badge/contracts-canonical%20in%20%2Fcontracts-blue) ![Fixtures: canonical in /tests](https://img.shields.io/badge/fixtures-canonical%20in%20%2Ftests-brightgreen)  
+> ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Authority: pointer--only](https://img.shields.io/badge/authority-pointer--only-lightgrey) ![Contracts: canonical in /contracts](https://img.shields.io/badge/contracts-canonical%20in%20%2Fcontracts-blue) ![Fixtures: canonical in /tests](https://img.shields.io/badge/fixtures-canonical%20in%20%2Ftests-brightgreen) ![Path: live on main](https://img.shields.io/badge/path-live%20on%20main-success)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Authority matrix](#authority-matrix) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public repo evidence does **not** prove that `schemas/tests/fixtures/contracts/` exists today.
-> If this path is introduced, it should stay a **boundary/pointer README**, not a second authoritative
-> schema home and not a second fixture home.
+> Current public `main` already includes `schemas/tests/fixtures/contracts/README.md`.
+> That does **not** change the authority rule: this surface should remain a **pointer/boundary README**, not a second authoritative schema home and not a second canonical fixture home.
+
+> [!NOTE]
+> This file should stay synchronized with `../../../README.md`.
+> If sibling docs still describe the `schemas/` lane as effectively README-only, update that wording in the same PR so the repo stops mixing older snapshot language with the live boundary path.
 
 ## Scope
 
 This README is intentionally narrow.
 
-It exists to keep one boundary clear: **schema-side documentation is not the same thing as canonical machine contracts, and it is not the same thing as canonical fixture ownership**. If this path is added, its job is to point contributors toward the right homes, record transition rules, and prevent drift between sibling surfaces.
+Its job is to hold one line clearly: **schema-side documentation is not the same thing as canonical machine contracts, and it is not the same thing as canonical fixture ownership**. In current public `main`, this file already exists as a boundary note. Its continued role should be to point contributors toward the right homes, record transition rules, and prevent drift between sibling surfaces.
 
 In practice, this README should help with four things:
 
@@ -55,12 +58,12 @@ In practice, this README should help with four things:
 
 | Surface | Role in repo | Status for this doc |
 |---|---|---|
-| `../../../README.md` | Schema-side boundary guidance | Upstream sibling |
+| `../../../README.md` | Schema-lane boundary guidance | Upstream sibling |
 | `../../../../contracts/README.md` | Strongest working signal for machine-readable contract ownership | Canonical reference |
 | `../../../../tests/README.md` | Verification, negative-path proof, drill burden, and fixture-facing test organization | Canonical reference |
 | `../../../../policy/README.md` | Deny-by-default policy posture, reasons/obligations, finite outcomes | Canonical reference |
 | `../../../../.github/workflows/README.md` | Workflow gate lane and CI documentation boundary | Downstream gate lane |
-| `schemas/tests/fixtures/contracts/README.md` | Pointer / transition note only | **This file** |
+| `schemas/tests/fixtures/contracts/README.md` | Live boundary/pointer README on current public `main` | **This file** |
 
 ### Reading rule
 
@@ -100,7 +103,7 @@ This path is **not** the place for authoritative assets.
 | Does **not** belong here | Put it here instead |
 |---|---|
 | Authoritative `*.schema.json` contract families | `../../../../contracts/` |
-| Valid / invalid contract fixture packs | `../../../../tests/` |
+| Canonical valid / invalid contract fixture packs | `../../../../tests/` |
 | Policy bundles, policy fixtures, policy tests | `../../../../policy/` |
 | Workflow YAML or merge-gate wiring | `../../../../.github/workflows/` |
 | Validator commands and runtime tooling | `../../../../tools/` or `../../../../scripts/` |
@@ -115,12 +118,16 @@ This path is **not** the place for authoritative assets.
 
 ## Directory tree
 
-### Current confirmed neighboring surfaces
+### Current confirmed neighboring surfaces on public `main`
 
 ```text
 repo-root/
 ├── schemas/
-│   └── README.md
+│   ├── README.md
+│   └── tests/
+│       └── fixtures/
+│           └── contracts/
+│               └── README.md
 ├── contracts/
 │   └── README.md
 ├── tests/
@@ -143,14 +150,14 @@ repo-root/
         └── README.md
 ```
 
-### If this path is introduced (`PROPOSED`)
+### Current live role of this path (`CONFIRMED`)
 
 ```text
 schemas/
 └── tests/
     └── fixtures/
         └── contracts/
-            └── README.md   # pointer / boundary note only
+            └── README.md   # boundary / pointer note only
 ```
 
 ### Recommended canonical fixture shape (`PROPOSED`, not yet asserted as mounted reality)
@@ -164,19 +171,28 @@ tests/
             └── invalid/
 ```
 
-### Recommended canonical schema shape (`PROPOSED`, not yet asserted as mounted reality)
+### Recommended canonical schema shape (`PROPOSED`, aligned to sibling docs)
 
 ```text
 contracts/
+├── README.md
 ├── v1/
 │   ├── common/
+│   │   └── header_profile.schema.json
 │   ├── policy/
+│   │   └── decision_envelope.schema.json
 │   ├── evidence/
+│   │   └── evidence_bundle.schema.json
 │   ├── runtime/
+│   │   └── runtime_response_envelope.schema.json
 │   ├── correction/
+│   │   └── correction_notice.schema.json
 │   ├── release/
+│   │   └── release_manifest.schema.json
 │   ├── source/
+│   │   └── source_descriptor.schema.json
 │   └── data/
+│       └── dataset_version.schema.json
 └── vocab/
 ```
 
@@ -188,7 +204,7 @@ Use this path only after you answer the boundary question first.
 # 1) Inspect the neighboring authority surfaces
 find schemas contracts tests policy .github/workflows -maxdepth 4 -type f 2>/dev/null | sort
 
-# 2) Check whether this local path exists on the checked-out branch
+# 2) Inspect the live boundary path on the checked-out branch
 find schemas/tests/fixtures/contracts -maxdepth 2 -type f 2>/dev/null | sort
 
 # 3) Inspect current contract-facing test families
@@ -199,7 +215,7 @@ find tests/contracts tests/e2e tests/policy -maxdepth 3 -type d 2>/dev/null | so
 
 1. Confirm whether an ADR or equivalent repo decision has already settled the **authoritative schema home**.
 2. Confirm whether the branch in hand already materializes a fixture home under `tests/`.
-3. If this path is being added only for documentation clarity, add **README-only** content first.
+3. If edits here are only for documentation clarity, keep them **README-only**.
 4. Update sibling docs in the same PR so contributors never see competing authority.
 5. Do not describe workflow gates here as live unless the checked-in workflow files prove they exist.
 
@@ -272,17 +288,19 @@ flowchart LR
 | Statement | Posture |
 |---|---|
 | `schemas/` is a visible repo lane | CONFIRMED |
+| `schemas/tests/fixtures/contracts/README.md` exists on current public `main` | CONFIRMED |
 | `contracts/` is the stronger working signal for machine-readable contract authority | CONFIRMED / INFERRED from sibling docs |
 | `tests/` is the verification surface and carries negative-path burden | CONFIRMED |
 | Exact mounted fixture pack under `tests/fixtures/contracts/` exists today | NEEDS VERIFICATION |
-| This target path exists today in public `main` | NEEDS VERIFICATION |
-| This target path should remain non-authoritative if added | PROPOSED |
+| Active merge-blocking workflow YAMLs are checked in under `.github/workflows/` | NEEDS VERIFICATION |
+| This path should remain non-authoritative | PROPOSED |
 
 ## Task list
 
-- [ ] Retire placeholders in the KFM meta block with repo-backed values.
+- [ ] Retire placeholder `doc_id` and `policy_label` values in the KFM meta block.
 - [ ] Keep this file README-only unless an ADR explicitly expands its role.
 - [ ] Verify sibling links after any tree move.
+- [ ] Synchronize `../../../README.md` if it still carries older README-only schema-lane wording.
 - [ ] Keep `contracts/`, `schemas/`, `tests/`, `policy/`, and workflow docs coherent in the same PR.
 - [ ] Do **not** add `*.schema.json` files here.
 - [ ] Do **not** add canonical valid / invalid fixture packs here.
@@ -303,9 +321,9 @@ This README is done when:
 
 ## FAQ
 
-### Why create a README under `schemas/...` at all?
+### Why keep a README under `schemas/...` at all?
 
-Only to preserve navigational clarity during a transition or boundary-cleanup phase. This is useful when a visible public lane exists, but machine-readable authority should live elsewhere.
+To preserve navigational clarity during a transition or boundary-cleanup phase. This is useful when a visible public lane exists, but machine-readable authority should live elsewhere.
 
 ### Does this make `schemas/` the canonical home for trust-bearing contract files?
 
@@ -330,9 +348,9 @@ Update the ADR and the sibling README surfaces together. Do not let this file dr
 
 ### Current working interpretation
 
-This draft assumes the following until repo-backed evidence says otherwise:
+This revision assumes the following until repo-backed evidence says otherwise:
 
-- `schemas/` may remain a visible boundary lane
+- current public `main` already materializes this pointer README under `schemas/tests/fixtures/contracts/`
 - `contracts/` is the stronger working signal for machine-readable contract publication
 - `tests/` is the stronger working signal for fixture burden and negative-path proof
 - `policy/` owns executable policy behavior, not just prose
@@ -341,9 +359,6 @@ This draft assumes the following until repo-backed evidence says otherwise:
 ### Placeholder fields to retire before merge
 
 - `doc_id`
-- `owners`
-- `created`
-- `updated`
 - `policy_label`
 
 ### Review prompts
