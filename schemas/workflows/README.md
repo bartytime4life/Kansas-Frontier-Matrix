@@ -7,19 +7,19 @@ status: draft
 owners: @bartytime4life
 created: <NEEDS_VERIFICATION_YYYY-MM-DD>
 updated: <NEEDS_VERIFICATION_YYYY-MM-DD>
-policy_label: <NEEDS_VERIFICATION>
+policy_label: <NEEDS_VERIFICATION_POLICY_LABEL>
 related: [schemas/README.md, contracts/README.md, .github/workflows/README.md, tests/README.md, docs/standards/README.md, policy/README.md]
 tags: [kfm, schemas, workflows, contracts, ci-cd]
-notes: [current subtree is scaffold-only on public main, doc_id and dates need repo-history verification, owner comes from CODEOWNERS global fallback]
+notes: [current public subtree is scaffold-only for this lane, owner is confirmed from current public .github/CODEOWNERS global fallback, doc_id/dates/policy_label still need repo-history or governance verification]
 [/KFM_META_BLOCK_V2] -->
 
 # Workflow Schemas
 
 Boundary guide for the `schemas/workflows/` scaffold while KFM keeps workflow automation, machine contracts, policy, and verification in distinct governed lanes.
 
-> **Status:** experimental  
-> **Owners:** `@bartytime4life` *(global CODEOWNERS fallback; no narrower `/schemas/` rule was directly verified)*  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-schemas%2Fworkflows-6f42c1) ![inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
+> **Status:** experimental · **Doc status:** draft  
+> **Owners:** `@bartytime4life` *(current public `.github/CODEOWNERS` global fallback; no narrower `/schemas/` or `/schemas/workflows/` rule is visible on public `main`)*  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![doc status](https://img.shields.io/badge/doc%20status-draft-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![surface](https://img.shields.io/badge/surface-schemas%2Fworkflows-6f42c1) ![inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Repo fit:** path `schemas/workflows/README.md` · parent [`../README.md`](../README.md) · current machine-contract lane [`../../contracts/README.md`](../../contracts/README.md) · executable workflow lane [`../../.github/workflows/README.md`](../../.github/workflows/README.md) · fixtures and drills [`../../tests/README.md`](../../tests/README.md) · policy surface [`../../policy/README.md`](../../policy/README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -32,7 +32,13 @@ Boundary guide for the `schemas/workflows/` scaffold while KFM keeps workflow au
 > Checked-in automation belongs in [`../../.github/workflows/`](../../.github/workflows/), while machine-readable contract authority remains aligned more strongly with [`../../contracts/`](../../contracts/) until the repo resolves schema-home law explicitly.
 
 > [!NOTE]
-> The parent [`../README.md`](../README.md) still carries older inventory language that describes `schemas/` as `README.md`-only. The live public tree now shows scaffold subdirectories under `schemas/`, including `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows`. Use live tree inspection before repeating the older snapshot wording.
+> [`../../.github/workflows/README.md`](../../.github/workflows/README.md) records historical workflow activity and deleted workflow filenames as **historical signal only**.
+> That is useful context, but it is **not** proof that those YAML files are currently checked in on public `main`.
+
+> [!NOTE]
+> The parent [`../README.md`](../README.md) still carries older inventory language that describes `schemas/` as `README.md`-only.
+> The live public subtree now visibly includes `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows`, with `schemas/tests/` already exposing a nested `fixtures/` scaffold.
+> Use live tree inspection before repeating the older parent snapshot wording.
 
 ---
 
@@ -79,7 +85,7 @@ In other words, this README should help maintainers distinguish four different t
 | Verification surface | [`../../tests/README.md`](../../tests/README.md) |
 | Policy surface | [`../../policy/README.md`](../../policy/README.md) |
 | Standards routing signal | [`../../docs/standards/README.md`](../../docs/standards/README.md) routes API endpoint schemas and machine contracts away from standards and toward `../../contracts/` |
-| Owner signal | `@bartytime4life` via CODEOWNERS global fallback |
+| Owner signal | `@bartytime4life` via current public `.github/CODEOWNERS` global fallback |
 | Current authority posture | **UNKNOWN / NEEDS VERIFICATION** — no explicit repo decision was directly verified that makes `schemas/workflows/` canonical for workflow-adjacent trust objects |
 
 ### Upstream, adjacent, and downstream links
@@ -140,12 +146,16 @@ In other words, this README should help maintainers distinguish four different t
 
 | Surface | Current public `main` state | What that means here |
 | --- | --- | --- |
-| `schemas/` | Real top-level directory with visible scaffold subdirectories | The schema lane is no longer literally README-only at tree level, even though some older doc text still says so |
+| `schemas/` | Real top-level directory with visible scaffold subdirectories | The schema lane is no longer literally README-only at tree level, even though some older parent doc text still says so |
 | `schemas/workflows/` | `README.md` only | This subtree is still documentary scaffolding today |
-| `.github/workflows/` | `README.md` only on public `main` during this review | No checked-in workflow YAML was directly evidenced on public `main` |
+| `schemas/contracts/` | `README.md` visible | A contract-adjacent schema sublane exists, but that does **not** settle canonical contract authority |
+| `schemas/standards/` | `README.md` visible | A standards-adjacent schema sublane exists, but it is boundary-only today |
+| `schemas/tests/` | `README.md` plus `fixtures/` scaffold visible | Maturity already varies across nested schema sublanes; `workflows/` should remain explicitly boundary-first unless authority changes |
+| `.github/workflows/` | `README.md` only on public `main`; historical workflow names are documented as historical signal only | No checked-in workflow YAML was directly evidenced on public `main` in this review |
 | `contracts/` | Real top-level lane with substantive README | Current strongest narrative signal for machine-contract publication |
 | `tests/` | Real top-level lane with substantive README and visible verification subdirectories | The repo has a stronger verified verification surface than the `schemas/workflows/` scaffold |
-| CODEOWNERS | Global fallback `* @bartytime4life`; no narrower `/schemas/` rule directly verified | Owner attribution for this file is grounded through fallback, not a schema-specific rule |
+| `docs/standards/` | README is substantive; adjacent standards descendants remain scaffold-only today | Standards remain a routing and profile lane, not the current machine-contract home |
+| `.github/CODEOWNERS` | Global fallback `* @bartytime4life`; no narrower `/schemas/` or `/schemas/workflows/` rule is visible | Owner attribution for this file is grounded through fallback, not a workflow-schema-specific rule |
 
 ## Directory tree
 
@@ -155,9 +165,14 @@ In other words, this README should help maintainers distinguish four different t
 schemas/
 ├── README.md
 ├── contracts/
+│   └── README.md
 ├── schemas/
+│   └── README.md
 ├── standards/
+│   └── README.md
 ├── tests/
+│   ├── README.md
+│   └── fixtures/...
 └── workflows/
     └── README.md
 ```
@@ -198,13 +213,18 @@ Start by verifying the subtree and its neighbors before moving any workflow-adja
 # 1) Inspect the subtree itself
 find schemas/workflows -maxdepth 2 \( -type f -o -type d \) 2>/dev/null | sort
 
-# 2) Read the parent and the stronger current machine-contract lane
+# 2) Read the parent and the sibling schema sub-lanes that already exist
 sed -n '1,220p' schemas/README.md
-sed -n '1,260p' contracts/README.md
+sed -n '1,220p' schemas/contracts/README.md
+sed -n '1,220p' schemas/standards/README.md
+sed -n '1,260p' schemas/tests/README.md
 
-# 3) Check the executable workflow lane and the verification lane
+# 3) Read the stronger current machine-contract lane and its execution / proof neighbors
+sed -n '1,260p' contracts/README.md
 sed -n '1,240p' .github/workflows/README.md
 sed -n '1,260p' tests/README.md
+sed -n '1,220p' policy/README.md
+sed -n '1,220p' docs/standards/README.md
 
 # 4) Search for authority language before adding files
 rg -n "schema home|parallel schema|workflow|proof pack|run receipt" \
@@ -226,7 +246,8 @@ rg -n "schema home|parallel schema|workflow|proof pack|run receipt" \
 1. Prefer corrections to inventory, path meaning, and boundary language over ambitious future-tree design.
 2. Keep every claim tied to either current tree evidence or clearly labeled future intent.
 3. When the live tree changes, reconcile this file with `../README.md` so the parent directory stops drifting.
-4. If workflow YAML becomes real under `.github/workflows/`, update this file to preserve the separation between execution and schema/topic organization.
+4. If sibling `schemas/*/README.md` surfaces gain or lose scope, refresh the live-tree snapshot here in the same change.
+5. If workflow YAML becomes real under `.github/workflows/`, update this file to preserve the separation between execution and schema/topic organization.
 
 ### Adding the first real artifact here
 
@@ -256,6 +277,7 @@ flowchart LR
     E[tests/README.md\nfixtures + drills + proof] -.validates.-> C
     F[policy/README.md\nreasons, obligations, deny-by-default] -.shapes outcomes for.-> C
     G[schemas/README.md\nparent boundary + anti-drift rules] -.constrains.-> A
+    H[schemas/tests/README.md\nnested fixture scaffold] -.shows uneven sibling maturity,\nnot authority.-> A
 ```
 
 ## Operating tables
@@ -278,6 +300,7 @@ flowchart LR
 | Workflow execution | Separate README-only lane under `.github/workflows/` | Add executable YAML there, not here |
 | Machine-contract publication | More strongly signaled through `contracts/` | Keep singular authority until an explicit move is documented |
 | Verification | Root `tests/` lane is more real than this subtree today | Preserve fixture and drill ownership there unless repo law changes |
+| Sibling schema sublanes | Mixed scaffold maturity under `schemas/` | Keep boundary lanes explicit and synchronized instead of letting them imply settled authority |
 
 ## Task list / definition of done
 
@@ -285,6 +308,7 @@ flowchart LR
 - [ ] The distinction between workflow execution and workflow-adjacent schema/topic placement is explicit.
 - [ ] No new file in this subtree silently competes with `contracts/` as contract authority.
 - [ ] Neighboring docs are updated in the same PR when authority language changes.
+- [ ] Any live-tree note here stays synchronized with `schemas/README.md` and relevant sibling `schemas/*/README.md` surfaces.
 - [ ] Any future artifact added here has a confirmed validator path and fixture strategy.
 - [ ] Reviewers can tell whether this subtree is documentary, authoritative, or transitional without opening multiple unrelated files first.
 
