@@ -1,20 +1,43 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/REVIEW-NEEDED-UUID
+title: release assembly
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+policy_label: REVIEW-NEEDED
+related: [../README.md, ../../README.md, ../../../README.md, ../../../.github/README.md, ../../../.github/workflows/README.md, ../../../.github/CODEOWNERS, ../../../contracts/README.md, ../../../policy/README.md, ../../../docs/README.md, ../runtime_proof/README.md, ../correction/README.md]
+tags: [kfm, tests, e2e, release-assembly]
+notes: [doc_id placeholder pending document-record verification, created/updated placeholders pending git-history verification, policy_label placeholder pending governance classification verification]
+[/KFM_META_BLOCK_V2] -->
+
+> [!NOTE]
+> The meta block above keeps reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` until git history and document-record metadata are reverified from a checked-out branch or governance record.
+
 # release assembly
 
-Governed end-to-end proof surface for promotion, release evidence, publish-path integrity, and post-promotion lineage in Kansas Frontier Matrix.
+_Governed end-to-end proof surface for promotion, release evidence, publish-path integrity, and post-promotion lineage in Kansas Frontier Matrix._
 
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/release_assembly/README.md`  
-> **Repo fit:** release/promotion/publish-path proof family under `tests/e2e/`, aligned to KFM’s verification-first and fail-closed posture.  
+> **Repo fit:** leaf release / promotion / publish-path proof family under [`../README.md`](../README.md); downstream of [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../.github/README.md`](../../../.github/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), and [`../../../docs/README.md`](../../../docs/README.md); adjacent to [`../runtime_proof/README.md`](../runtime_proof/README.md) and [`../correction/README.md`](../correction/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 >
 > ![status](https://img.shields.io/badge/status-experimental-orange)
 > ![owner](https://img.shields.io/badge/owner-%40bartytime4life-blue)
 > ![scope](https://img.shields.io/badge/scope-release__assembly-6f42c1)
+> ![branch](https://img.shields.io/badge/branch-main-0a7d5a)
 > ![public main](https://img.shields.io/badge/public__main-README--only-lightgrey)
 >
 > [!IMPORTANT]
-> Current public `main` proves this directory exists, but it does **not** prove executable suite depth, checked-in workflow gates, proof-pack emitters, or branch protection details. Keep runner, workflow, and artifact-emission claims explicitly bounded until the checked-out branch is inspected.
+> Current public `main` proves this directory exists, but it does **not** prove executable suite depth, checked-in workflow gates, proof-pack emitters, or branch protection details.
+
+Keep runner, workflow, and artifact-emission claims explicitly bounded until the checked-out branch is inspected.
+
+---
 
 ## Scope
 
@@ -45,7 +68,8 @@ In KFM terms, this family should protect the seam where **deployment success is 
 |---|---|
 | Directory existence | **CONFIRMED** |
 | Directory contents beyond `README.md` on public `main` | **UNKNOWN** |
-| Sibling `e2e` family structure | **CONFIRMED** |
+| Parent `tests/e2e/` family placement | **CONFIRMED** |
+| Sibling `e2e` leaf family structure | **CONFIRMED** |
 | Checked-in workflow YAML for merge-blocking release gates on public `main` | **NEEDS VERIFICATION** |
 | Exact test runner, fixture layout, and harness depth | **NEEDS VERIFICATION** |
 | Release-proof, correction, and fail-closed burden language | **CONFIRMED** in supplied March 2026 KFM manuals |
@@ -68,8 +92,10 @@ Within the broader repo, that family sits inside the `tests/e2e/` verification l
 
 | Upstream file | Why it matters here |
 |---|---|
-| [`../../README.md`](../../README.md) | Defines the `tests/` tree and names `e2e/release_assembly/` as the release / promotion / publish-path proof family |
+| [`../README.md`](../README.md) | Defines `e2e/` as the whole-path proof umbrella and places `release_assembly/` beside `runtime_proof/` and `correction/` |
+| [`../../README.md`](../../README.md) | Defines the broader `tests/` tree and names `e2e/release_assembly/` as the release / promotion / publish-path proof family |
 | [`../../../README.md`](../../../README.md) | Establishes repo-wide verification-first posture |
+| [`../../../.github/README.md`](../../../.github/README.md) | Frames `.github/` as the repository gatehouse for governance, review, CI/CD, and delivery evidence |
 | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) | Documents current workflow-lane reality and keeps CI claims bounded |
 | [`../../../.github/CODEOWNERS`](../../../.github/CODEOWNERS) | Current ownership signal for `/tests/` |
 | [`../../../contracts/README.md`](../../../contracts/README.md) | Keeps contract/testing language aligned with machine-readable backbone expectations |
@@ -82,6 +108,10 @@ Within the broader repo, that family sits inside the `tests/e2e/` verification l
 |---|---|
 | [`../runtime_proof/README.md`](../runtime_proof/README.md) | Request-time runtime outcomes, citation checks, and bounded answer behavior |
 | [`../correction/README.md`](../correction/README.md) | Post-release correction, rollback, supersession, withdrawal, and visible lineage changes |
+
+### Downstream expectations
+
+Future executable cases, proof objects, archived drill evidence, and runner-local helpers that are specific to release proof belong under this directory **only when** the checked-out branch proves they exist.
 
 ### Current local footprint
 
@@ -111,6 +141,9 @@ Typical accepted inputs include:
 - negative cases where release should hold, deny, or remain candidate rather than promote
 - runner-local notes or helpers **only when** they are specific to release assembly and not generic test infrastructure
 
+> [!NOTE]
+> March 2026 doctrine names release-bearing object families such as `ReleaseManifest`, `ReleaseProofPack`, `DecisionEnvelope`, `ReviewRecord`, `ProjectionBuildReceipt`, and `CorrectionNotice`. Treat those as doctrinal vocabulary, not as a claim that this directory already contains those exact checked-in files on public `main`.
+
 ## Exclusions
 
 Do **not** use this directory for everything that merely touches release-like language.
@@ -135,7 +168,7 @@ The following is safe to say from current public repo evidence:
 - `tests/e2e/release_assembly/` exists.
 - The public branch currently shows this directory as README-only.
 - `tests/e2e/` also contains `runtime_proof/` and `correction/`.
-- `tests/README.md` already assigns `release_assembly/` the release / promotion / publish-path proof role.
+- `tests/e2e/README.md` and `tests/README.md` both assign `release_assembly/` the release / promotion / publish-path proof role.
 - `/.github/workflows/` is documented, but current public `main` does not show checked-in workflow YAML there.
 - `/tests/` ownership is currently assigned to `@bartytime4life`.
 
@@ -150,7 +183,11 @@ The following are **not** yet proven from current public evidence:
 - archived release receipts or drill evidence
 
 > [!WARNING]
-> A placeholder directory can still carry a very real architectural burden. Do not mistake “thin tree” for “low importance.”
+> A placeholder directory can still carry a very real architectural burden.
+
+Do not mistake “thin tree” for “low importance.”
+
+[Back to top](#release-assembly)
 
 ## Directory tree
 
@@ -160,10 +197,13 @@ The following are **not** yet proven from current public evidence:
 tests/
 ├── README.md
 └── e2e/
+    ├── README.md
     ├── correction/
+    │   └── README.md
     ├── release_assembly/
     │   └── README.md
     └── runtime_proof/
+        └── README.md
 ```
 
 ### Growth rule for this directory
@@ -190,18 +230,37 @@ These commands assume nothing about the eventual test runner and are safe as a f
 
 ```bash
 find tests/e2e/release_assembly -maxdepth 4 -type f | sort
-sed -n '1,240p' tests/README.md
+
+sed -n '1,260p' tests/README.md
+sed -n '1,240p' tests/e2e/README.md
+sed -n '1,240p' tests/e2e/release_assembly/README.md
+
+sed -n '1,220p' .github/README.md
 sed -n '1,240p' .github/workflows/README.md
 sed -n '1,200p' .github/CODEOWNERS
+
 find .github/workflows -maxdepth 2 -type f | sort
-grep -RIn "ReleaseManifest\|ReleaseProofPack\|RuntimeResponseEnvelope\|EvidenceBundle\|CorrectionNotice\|audit_ref\|docs_gate\|projection.stale" tests contracts policy docs schemas . 2>/dev/null || true
+
+grep -RIn \
+  -e 'ReleaseManifest' \
+  -e 'ReleaseProofPack' \
+  -e 'DecisionEnvelope' \
+  -e 'ReviewRecord' \
+  -e 'ProjectionBuildReceipt' \
+  -e 'RuntimeResponseEnvelope' \
+  -e 'EvidenceBundle' \
+  -e 'CorrectionNotice' \
+  -e 'audit_ref' \
+  -e 'docs_gate' \
+  -e 'projection.stale' \
+  tests contracts policy docs schemas .github . 2>/dev/null || true
 ```
 
 ### First local review pass
 
 1. Confirm the directory still matches the public snapshot or explicitly record the branch delta.
-2. Read [`../../README.md`](../../README.md) first so family boundaries stay stable.
-3. Inspect [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) before claiming any CI or promotion gate behavior.
+2. Read [`../README.md`](../README.md) and [`../../README.md`](../../README.md) first so family boundaries stay stable.
+3. Inspect [`../../../.github/README.md`](../../../.github/README.md) and [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) before claiming any CI or promotion gate behavior.
 4. Check whether this branch introduces actual release fixtures, proof objects, or archived negative-path examples.
 5. Refuse to call a case “release assembly” unless it proves something about promotion, publishability, release evidence, or post-promotion lineage.
 
@@ -210,7 +269,7 @@ grep -RIn "ReleaseManifest\|ReleaseProofPack\|RuntimeResponseEnvelope\|EvidenceB
 If this family is still scaffold-only, the safest first real addition is:
 
 - one **candidate remains blocked** case
-- one **candidate becomes publishable** case
+- one **candidate becomes publishable** case with inspectable release evidence and policy/review linkage
 - one **post-promotion stale or correction-linked** case
 
 That gives you positive proof, negative proof, and lineage pressure without assuming a large harness.
@@ -259,7 +318,9 @@ Release assembly should be the place where the repo proves this distinction clea
 | **Publish-path proof** | Demonstration that outward use remains explainable after promotion |
 
 > [!NOTE]
-> In KFM, “the build passed” is never enough. This family exists so that “safe to show” must be proven separately.
+> In KFM, “the build passed” is never enough.
+
+This family exists so that “safe to show” must be proven separately.
 
 [Back to top](#release-assembly)
 
@@ -268,10 +329,10 @@ Release assembly should be the place where the repo proves this distinction clea
 ```mermaid
 flowchart LR
     A[Candidate change] --> B[Contract / policy / docs / accessibility / e2e gates]
-    B -->|pass| C[ReleaseManifest assembled]
-    C --> D[ReleaseProofPack or equivalent release evidence]
-    D --> E{Promote?}
+    B -->|pass| C[DecisionEnvelope + ReviewRecord]
+    C --> D[ReleaseManifest / ReleaseProofPack]
     B -->|fail| X[Hold / deny / revise]
+    D --> E{Promote?}
     E -->|no| X
     E -->|yes| F[Publishable release state]
     F --> G[Derived rebuild / freshness / stale-visible checks]
@@ -312,7 +373,8 @@ flowchart LR
 | Topic | Current public proof | Posture |
 |---|---|---|
 | Directory exists | Yes | **CONFIRMED** |
-| Family role named in `tests/README.md` | Yes | **CONFIRMED** |
+| Parent `e2e` family names this burden | Yes | **CONFIRMED** |
+| `tests/README.md` names this burden | Yes | **CONFIRMED** |
 | Checked-in executable release-assembly suite | Not shown on public `main` | **UNKNOWN** |
 | Checked-in workflow YAML for release gating | Not shown on public `main` | **NEEDS VERIFICATION** |
 | Proof-pack examples committed in this directory | Not shown on public `main` | **UNKNOWN** |
@@ -372,7 +434,7 @@ Because this directory’s risk is overclaiming. A release-assembly lane that so
 
 ### Evidence basis used for this README revision
 
-This README was rewritten against two evidence layers:
+This README was revised against two evidence layers:
 
 1. the current public repo shape and adjacent README conventions, and
 2. the supplied March 2026 KFM doctrinal manuals that give this directory its release-proof, fail-closed, and correction-aware burden.
