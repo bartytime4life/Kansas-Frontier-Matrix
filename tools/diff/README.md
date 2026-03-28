@@ -8,7 +8,7 @@ Deterministic comparison helpers for manifests, snapshots, release artifacts, ge
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diff behavior contract](#diff-behavior-contract) · [Diagram](#diagram) · [Reference tables](#reference-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > **Repo fit:** target file `tools/diff/README.md` · parent [`../README.md`](../README.md) · root [`../../README.md`](../../README.md) · governance [`../../.github/README.md`](../../.github/README.md) · adjacent [`../../scripts/README.md`](../../scripts/README.md) · [`../../contracts/README.md`](../../contracts/README.md) · [`../../schemas/README.md`](../../schemas/README.md) · [`../../policy/README.md`](../../policy/README.md) · [`../../tests/README.md`](../../tests/README.md) · downstream [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
 > **Evidence posture:** doctrine-grounded · repo-grounded for current public `main` · deeper local checkout, workflow callers, and executable helper inventory remain bounded  
-> **Current public snapshot:** `tools/diff/` currently renders as `README.md` only. This README therefore documents the lane’s role and preferred growth shape without pretending executable diff helpers are already present.  
+> **Current public snapshot:** `tools/diff/` currently renders as `README.md` only. The parent `tools/` lane now visibly includes sibling families — `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` — so this README documents a real lane inside an active helper family while keeping executable diff inventory bounded.  
 > **Accepted inputs:** deterministic comparison helpers, explicit canonicalization-before-diff utilities, reviewer-facing summaries, machine-readable comparison output, and tiny non-sensitive support assets.  
 > **Exclusions:** orchestration, promotion logic, policy decisions, canonical schema ownership, long-running runtime code, and hidden mutation shortcuts.
 
@@ -16,7 +16,7 @@ Deterministic comparison helpers for manifests, snapshots, release artifacts, ge
 > `tools/diff/` is not a convenience bin for ad hoc one-liners. In KFM it is the reviewable comparison surface that helps humans, scripts, and CI see **what changed** without quietly deciding **what should be published**.
 
 > [!NOTE]
-> The parent `tools/` README already treats `diff/` as a named helper family. This child README narrows that doctrine to one lane: comparison helpers must stay deterministic, explicit, and subordinate to contracts, policy, review, and release evidence.
+> The parent `tools/` README already treats `diff/` as a named helper family. Current public tree inspection goes one step further: `tools/` now exposes sibling family directories around this lane, while `tools/diff/` itself remains README-first.
 
 ## Scope
 
@@ -24,8 +24,8 @@ Deterministic comparison helpers for manifests, snapshots, release artifacts, ge
 
 Typical use cases include:
 
-- comparing release manifests, receipts, catalog closures, or proof-pack members
-- comparing normalized JSON- or GeoJSON-like snapshots
+- comparing release manifests, run receipts, runtime envelopes, correction notices, catalog closures, or proof-pack members
+- comparing normalized JSON-, GeoJSON-, or manifest-like snapshots
 - summarizing geometry or support changes for review
 - emitting machine-readable diff results for CI, scripts, or steward workflows
 - producing human-readable summaries for PRs, release review, correction review, or rollback drills
@@ -62,6 +62,7 @@ What this README does:
 | Upstream | [`../../README.md`](../../README.md) | Root repo identity and verification-first posture |
 | Governance | [`../../.github/README.md`](../../.github/README.md) | Repository gatehouse and review-routing guidance |
 | Governance | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current owner map for `/tools/` and adjacent governed surfaces |
+| Related family lanes | [`../attest/README.md`](../attest/README.md), [`../catalog/README.md`](../catalog/README.md), [`../ci/README.md`](../ci/README.md), [`../docs/README.md`](../docs/README.md), [`../probes/README.md`](../probes/README.md), [`../validators/README.md`](../validators/README.md) | sibling helper lanes with adjacent concerns that should stay coherent with diff behavior |
 | Adjacent | [`../../scripts/README.md`](../../scripts/README.md) | `scripts/` may call diff helpers, but reusable comparison logic should not be buried there |
 | Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | Diff helpers compare typed objects; they do not define their canonical shape |
 | Adjacent | [`../../schemas/README.md`](../../schemas/README.md) | Repo currently exposes a schema surface; `tools/diff/` must not silently arbitrate schema authority |
@@ -87,7 +88,7 @@ KFM’s governing docs repeatedly treat receipts, manifests, evidence bundles, p
 
 The following belong in or under `tools/diff/` when they remain comparison-oriented and review-friendly:
 
-- deterministic comparison helpers for manifests, receipts, catalog closures, snapshots, proof artifacts, or geometry summaries
+- deterministic comparison helpers for manifests, receipts, catalog closures, snapshots, proof artifacts, runtime envelopes, or geometry summaries
 - explicit canonicalization helpers used **before** diffing, where normalization rules are documented and reviewable
 - machine-readable comparison output intended for CI, scripts, or audit joins
 - reviewer/operator helpers that summarize additions, removals, identifier drift, field-level change, or geometry materiality
@@ -125,29 +126,38 @@ The following belong in or under `tools/diff/` when they remain comparison-orien
 
 | Evidence item | Status | How this README uses it |
 | --- | --- | --- |
+| Public `tools/` root now exposes `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` alongside `README.md` | **CONFIRMED** | grounds that `diff/` is a live child lane in the checked-in helper family |
 | Public `tools/diff/` page lists `README.md` only | **CONFIRMED** | prevents overclaiming executable helper inventory |
+| Visible sibling helper lanes each currently expose a `README.md` on public `main` | **CONFIRMED** | supports README-first lane navigation and a shared family pattern |
 | Parent `tools/README.md` names `diff/` as a helper family | **CONFIRMED** | grounds the lane role and directory naming |
 | Parent `tools/README.md` includes `tools/diff/stable_diff.py` as a design-note example path | **CONFIRMED documentary evidence** / **PROPOSED implementation** | used here only as an illustrative starter path, never as current-tree proof |
 | `.github/CODEOWNERS` assigns `/tools/` to `@bartytime4life` | **CONFIRMED** | grounds the owners line and review expectation |
 | Adjacent `scripts/`, `contracts/`, `schemas/`, `policy/`, `tests/`, and `.github/workflows/` README surfaces exist on public `main` | **CONFIRMED** | grounds relative links and boundary language |
-| Exact local checkout inventory, executable diff helpers, fixture catalog, and workflow callers | **UNKNOWN** | kept visibly bounded until a mounted checkout is inspected |
+| Exact local checkout inventory, executable diff helpers, fixture catalog, and workflow callers | **UNKNOWN** | kept visibly bounded until the active checkout is inspected directly |
 
 [Back to top](#diff)
 
 ## Directory tree
 
-### Confirmed parent-lane neighborhood on public `main`
+### Current public `tools/` family snapshot
 
 ```text
 tools/
+├── README.md
 ├── attest/
+│   └── README.md
 ├── catalog/
+│   └── README.md
 ├── ci/
+│   └── README.md
 ├── diff/
+│   └── README.md
 ├── docs/
+│   └── README.md
 ├── probes/
-├── validators/
-└── README.md
+│   └── README.md
+└── validators/
+    └── README.md
 ```
 
 ### Current public `tools/diff/` snapshot
@@ -190,11 +200,12 @@ The commands below are inventory-first. Run them before adding, renaming, or del
 test -d tools/diff && find tools/diff -maxdepth 3 \( -type f -o -type d \) | sort
 ```
 
-2. Recheck parent helper doctrine and owner/workflow neighbors.
+2. Recheck parent helper doctrine, ownership, and sibling family neighbors.
 
 ```bash
 sed -n '1,240p' tools/README.md 2>/dev/null
 sed -n '1,120p' .github/CODEOWNERS 2>/dev/null
+find tools -maxdepth 2 -type f | sort 2>/dev/null
 sed -n '1,220p' .github/workflows/README.md 2>/dev/null
 ```
 
@@ -349,9 +360,10 @@ flowchart LR
 | Comparison class | Typical question | Good output | Final decision lives in |
 | --- | --- | --- | --- |
 | Release manifest vs release manifest | What changed between candidate and baseline? | added / removed / changed fields, digest drift, missing refs | review + release lanes |
+| Run receipt / AI receipt vs same class | Did evidence refs, digests, runtime metadata, or obligations change? | field diff, checksum drift, missing-link summary, machine-readable comparison output | review + policy lanes |
 | Catalog closure vs catalog closure | Did outward identifiers or links drift? | missing-link summary, identifier diff, outward-profile delta | catalog validation + review |
 | Evidence bundle vs evidence bundle | Did support members, transforms, or citations change? | bundle member diff, transform summary, missing refs | evidence + review lanes |
-| Proof pack vs proof pack | Did receipts, attestations, or release evidence change? | digest diff, receipt coverage summary | release review |
+| Correction notice vs correction notice | Did the correction narrow, supersede, withdraw, or replace cleanly? | affected-release summary, replacement refs, scope delta | correction + review lanes |
 | Snapshot vs snapshot | Did the normalized object materially change? | stable field diff, counts, optional machine-readable summary | caller-specific |
 | Geometry support artifact vs geometry support artifact | Is the spatial change small, large, or obviously malformed? | extent / area / count / vertex summaries | stewardship + policy lanes |
 
@@ -439,8 +451,9 @@ Minimal design expectations for a first helper:
 
 1. `tools/diff/` exists on public `main`.
 2. `tools/diff/` currently shows `README.md` only.
-3. The parent `tools/` lane exists and explicitly names `diff/` as a helper family.
-4. `/tools/` is currently owned by `@bartytime4life`.
-5. Adjacent `scripts/`, `contracts/`, `schemas/`, `policy/`, `tests/`, and workflow README surfaces are present and should remain linked together.
+3. The public `tools/` root now shows sibling helper lanes: `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/`.
+4. Each visible sibling helper lane currently exposes a `README.md`.
+5. `/tools/` is currently owned by `@bartytime4life`.
+6. Adjacent `scripts/`, `contracts/`, `schemas/`, `policy/`, `tests/`, and workflow README surfaces are present and should remain linked together.
 
 </details>
