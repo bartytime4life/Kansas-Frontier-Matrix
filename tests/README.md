@@ -31,7 +31,7 @@ Governed verification surface for KFM proof objects, trust cues, negative paths,
 ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
 ![branch: main](https://img.shields.io/badge/branch-main-0a7d5a)
 ![scope: governed verification](https://img.shields.io/badge/scope-governed%20verification-0a7ea4)
-![repo tree: GitHub-visible](https://img.shields.io/badge/repo%20tree-GitHub%20main%20visible-f59e0b)
+![repo tree: public main](https://img.shields.io/badge/repo%20tree-public%20main-f59e0b)
 ![truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)
 
 > [!IMPORTANT]
@@ -50,7 +50,7 @@ In KFM terms, this directory gathers the proof burdens that sit closest to day-t
 That is broader than “do the tests pass?” The stronger questions are:
 
 - can the repo prove that contracts fail loudly instead of drifting silently?
-- can policy prove `allow`, `deny`, `abstain`, or other guarded outcomes under realistic pressure?
+- can policy prove `allow`, `deny`, `abstain`, `hold`, or other guarded outcomes under realistic pressure?
 - can runtime behavior stay inspectable when evidence fails, citations fail, or trust state changes?
 - can rollback and correction remain visible instead of being polished away?
 
@@ -58,8 +58,8 @@ That is broader than “do the tests pass?” The stronger questions are:
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | The public `main` branch exposes `tests/` as a real top-level directory, confirms branch-visible test families, confirms `tests/e2e/` leaf directories, confirms adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `policy/README.md`, `schemas/README.md`, and `docs/README.md`, and confirms `/tests/` ownership in `.github/CODEOWNERS`. |
-| **CONFIRMED — current public workflow lane** | The public `main` branch also exposes `.github/workflows/README.md`, and the visible `.github/workflows/` tree currently shows `README.md` only. No checked-in workflow YAML files are visible there on public `main`. |
+| **CONFIRMED — current public repo** | The public `main` branch exposes `tests/` as a real top-level directory, confirms the current family layout, confirms `tests/e2e/` leaf directories, confirms adjacent docs such as `README.md`, `CONTRIBUTING.md`, `.github/README.md`, `contracts/README.md`, `policy/README.md`, `schemas/README.md`, and `docs/README.md`, and confirms `/tests/` ownership in `.github/CODEOWNERS`. |
+| **CONFIRMED — current public workflow lane** | The public `main` branch exposes `.github/workflows/README.md`, and the visible `.github/workflows/` tree currently shows `README.md` only. No checked-in workflow YAML files are asserted here as public-main truth. |
 | **CONFIRMED — March 2026 KFM doctrine** | Verification is trust-bearing, not ornamental; negative tests matter; release proof, rollback, correction, stale visibility, evidence drill-through, and hydrology-first thin-slice proof are all part of the KFM verification model. |
 | **INFERRED / PROPOSED overlay** | Some manuals use shorthand starter families such as `tests/contract/` or `tests/regression/`; the current repo realizes those burdens with different branch-visible names. |
 | **NEEDS VERIFICATION** | Exact executable suite depth, actual runner/toolchain, required checks, branch protection/rulesets, screenshot baseline inventory, fixture density, and whether rollback/correction drills have been exercised on the checked-out branch. |
@@ -180,9 +180,11 @@ The current public `main` branch proves the following:
 - `tests/` exists as a real top-level repo surface.
 - `tests/README.md` exists.
 - The branch-visible family set includes `accessibility/`, `contracts/`, `e2e/`, `integration/`, `policy/`, `reproducibility/`, and `unit/`.
+- The currently visible public-main pages for `tests/accessibility/`, `tests/contracts/`, `tests/integration/`, `tests/policy/`, `tests/reproducibility/`, and `tests/unit/` each expose `README.md`.
 - `tests/e2e/` exposes `README.md`, `correction/`, `release_assembly/`, and `runtime_proof/`.
+- The currently visible public-main pages for `tests/e2e/correction/`, `tests/e2e/release_assembly/`, and `tests/e2e/runtime_proof/` each expose `README.md`.
 - `/tests/` is assigned to `@bartytime4life` in `.github/CODEOWNERS`.
-- `.github/workflows/` currently exposes `README.md` only on public `main`; no checked-in workflow YAML files are visible there.
+- `.github/workflows/` currently exposes `README.md` only on public `main`; no checked-in workflow YAML files are asserted here as public-main truth.
 
 > [!WARNING]
 > What is still **not** proven here:
@@ -190,29 +192,38 @@ The current public `main` branch proves the following:
 
 ## Directory tree
 
-### Current confirmed snapshot
+### Current confirmed public-main snapshot
 
 ```text
 tests/
 ├── README.md
 ├── accessibility/
+│   └── README.md
 ├── contracts/
+│   └── README.md
 ├── e2e/
 │   ├── README.md
 │   ├── correction/
+│   │   └── README.md
 │   ├── release_assembly/
+│   │   └── README.md
 │   └── runtime_proof/
+│       └── README.md
 ├── integration/
+│   └── README.md
 ├── policy/
+│   └── README.md
 ├── reproducibility/
+│   └── README.md
 └── unit/
+    └── README.md
 ```
 
 ### Reading rule
 
-Use the tree above for **current branch truth**.
+Use the tree above for **current public-main truth**.
 
-Do **not** silently convert visible directory presence into claims of mature, merge-blocking, or end-to-end verified coverage.
+Do **not** silently convert visible README-bearing family presence into claims of mature, merge-blocking, or end-to-end verified coverage.
 
 ### What deeper maturity would look like (`PROPOSED` / `NEEDS VERIFICATION`)
 
@@ -241,7 +252,7 @@ sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
 sed -n '1,220p' CONTRIBUTING.md 2>/dev/null || true
 
 # inspect end-to-end family placement
-find tests/e2e -maxdepth 2 -type d 2>/dev/null | sort
+find tests/e2e -maxdepth 3 -type f 2>/dev/null | sort
 
 # inspect workflow lane contents directly
 find .github/workflows -maxdepth 2 -type f 2>/dev/null | sort
@@ -289,17 +300,17 @@ grep -RIn "EvidenceRef\|EvidenceBundle\|RuntimeResponseEnvelope\|CorrectionNotic
 
 Use the smallest fitting existing family before inventing a new top-level folder.
 
-| Family | Place work here when… |
-|---|---|
-| [`./unit/`](./unit/) | behavior is local, deterministic, and cheap to isolate |
-| [`./integration/`](./integration/) | a real boundary matters: ingest, resolver, store, API, or projection |
-| [`./contracts/`](./contracts/) | the main risk is schema, envelope, or example drift |
-| [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior |
-| [`./accessibility/`](./accessibility/) | trust-visible interaction, keyboard flow, reduced-friction inspection, or calm failure is the main risk |
-| [`./reproducibility/`](./reproducibility/) | stable digests, counts, or bounded metrics matter most |
-| [`./e2e/release_assembly/`](./e2e/release_assembly/) | promotion, release evidence, or publish-path integrity is the question |
-| [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time evidence, citations, or finite answer outcomes are the question |
-| [`./e2e/correction/`](./e2e/correction/) | supersession, rollback, stale visibility, withdrawal, or correction propagation must be exercised |
+| Family | Place work here when… | Current public-main signal |
+|---|---|---|
+| [`./unit/`](./unit/) | behavior is local, deterministic, and cheap to isolate | visible as a README-bearing family |
+| [`./integration/`](./integration/) | a real boundary matters: ingest, resolver, store, API, or projection | visible as a README-bearing family |
+| [`./contracts/`](./contracts/) | the main risk is schema, envelope, or example drift | visible as a README-bearing family |
+| [`./policy/`](./policy/) | the change affects allow/deny logic, reason codes, rights, or sensitivity behavior | visible as a README-bearing family |
+| [`./accessibility/`](./accessibility/) | trust-visible interaction, keyboard flow, reduced-friction inspection, or calm failure is the main risk | visible as a README-bearing family |
+| [`./reproducibility/`](./reproducibility/) | stable digests, counts, or bounded metrics matter most | visible as a README-bearing family |
+| [`./e2e/release_assembly/`](./e2e/release_assembly/) | promotion, release evidence, or publish-path integrity is the question | visible as a README-bearing leaf family |
+| [`./e2e/runtime_proof/`](./e2e/runtime_proof/) | request-time evidence, citations, or finite answer outcomes are the question | visible as a README-bearing leaf family |
+| [`./e2e/correction/`](./e2e/correction/) | supersession, rollback, stale visibility, withdrawal, or correction propagation must be exercised | visible as a README-bearing leaf family |
 
 ### Working rule for scaffolded families
 
@@ -317,16 +328,17 @@ flowchart LR
     D["docs/ + runbooks"] --> T
     W[".github/workflows/"] --> G["gated automation"]
 
-    subgraph F["current family map"]
-      U["unit/"]
-      I["integration/"]
-      K["contracts/"]
-      PO["policy/"]
+    subgraph F["current public-main family map"]
       AX["accessibility/"]
+      K["contracts/"]
+      E["e2e/"]
+      I["integration/"]
+      PO["policy/"]
       R["reproducibility/"]
-      E["e2e/release_assembly/"]
-      RP["e2e/runtime_proof/"]
-      CO["e2e/correction/"]
+      U["unit/"]
+      EC["e2e/correction/"]
+      ER["e2e/release_assembly/"]
+      EP["e2e/runtime_proof/"]
     end
 
     T --> F
@@ -337,7 +349,7 @@ flowchart LR
     Q -->|yes| PR["promotion / release evidence"]
     PR --> RT["runtime trust surfaces"]
 
-    RT -. stale-state, rollback, and correction drills .-> CO
+    RT -. stale-state, rollback, and correction drills .-> EC
     W -. current public main: README only .-> G
 ```
 
@@ -345,24 +357,25 @@ flowchart LR
 
 ### Family map
 
-| Family | Branch-visible now | Primary burden | Doctrinal note |
-|---|---|---|---|
-| `unit/` | Yes | deterministic local behavior | directly matches manual doctrine |
-| `integration/` | Yes | governed slices across real boundaries | current repo keeps this family explicit |
-| `contracts/` | Yes | envelope, schema, and example validation | current repo uses plural path; some manuals use singular shorthand |
-| `policy/` | Yes | allow / deny / abstain / hold behavior | directly aligns with policy-gate doctrine |
-| `accessibility/` | Yes | trust-visible accessibility and keyboard-critical flows | repo keeps this burden explicit instead of hiding it under generic regression language |
-| `reproducibility/` | Yes | stable digests, counts, and bounded regression | overlaps with what some manuals describe as regression / rebuild burden |
-| `e2e/release_assembly/` | Yes | promotion and publish-path proof | strongly aligned with release-proof doctrine |
-| `e2e/runtime_proof/` | Yes | `ANSWER / ABSTAIN / DENY / ERROR` proof | strongly aligned with runtime outcome doctrine |
-| `e2e/correction/` | Yes | supersession, stale-state, rollback, and correction drills | strongly aligned with correction lineage doctrine |
-| `regression/` | No current branch evidence | doctrinal shorthand for some UI / map / rebuild burdens | keep this as doctrine, not current path claim |
+| Family | Branch-visible now | Current visible contents | Primary burden | Doctrinal note |
+|---|---|---|---|---|
+| `accessibility/` | Yes | `README.md` | trust-visible accessibility and keyboard-critical flows | repo keeps this burden explicit instead of hiding it under generic regression language |
+| `contracts/` | Yes | `README.md` | envelope, schema, and example validation | current repo uses plural path; some manuals use singular shorthand |
+| `e2e/` | Yes | `README.md` plus three leaf families | end-to-end verification umbrella | current repo and doctrine are closely aligned here |
+| `integration/` | Yes | `README.md` | governed slices across real boundaries | current repo keeps this family explicit |
+| `policy/` | Yes | `README.md` | allow / deny / abstain / hold behavior | directly aligns with policy-gate doctrine |
+| `reproducibility/` | Yes | `README.md` | stable digests, counts, and bounded regression | overlaps with what some manuals describe as regression / rebuild burden |
+| `unit/` | Yes | `README.md` | deterministic local behavior | directly matches manual doctrine |
+| `e2e/correction/` | Yes | `README.md` | supersession, stale-state, rollback, and correction drills | strongly aligned with correction lineage doctrine |
+| `e2e/release_assembly/` | Yes | `README.md` | promotion and publish-path proof | strongly aligned with release-proof doctrine |
+| `e2e/runtime_proof/` | Yes | `README.md` | `ANSWER / ABSTAIN / DENY / ERROR` proof | strongly aligned with runtime outcome doctrine |
+| `regression/` | No current branch evidence | — | doctrinal shorthand for some UI / map / rebuild burdens | keep this as doctrine, not current path claim |
 
 ### Public-main workflow adjacency
 
 | Surface | Current public-main evidence | Why it matters to `tests/` |
 |---|---|---|
-| `.github/workflows/` | `README.md` only; no checked-in workflow YAML files are visible there | checked-in test families exist, but branch-level enforcement still needs platform or branch-local verification |
+| `.github/workflows/` | `README.md` only; no checked-in workflow YAML files are asserted here as public-main truth | checked-in test families exist, but branch-level enforcement still needs platform or branch-local verification |
 | `.github/workflows/README.md` | present | the repo documents workflow intent even though the visible automation lane is still thin |
 
 ### Change-trigger matrix
@@ -373,7 +386,7 @@ flowchart LR
 | policy / governance | allow + deny cases, negative fixtures, rationale alignment, and default-deny still intact |
 | source onboarding or transforms | deterministic manifest/checksum behavior, validation checks, and at least one representative integration slice |
 | evidence behavior | `EvidenceRef` / bundle resolution path, negative tests, and policy-safe denials |
-| Story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
+| story / Focus / evidence surfaces | citation visibility, abstention-safe behavior, and audit-path confidence |
 | docs describing behavior | linked updates, no contradiction with tests / contracts / policy, and no overclaiming branch reality |
 | release / promotion / correction | end-to-end release assembly, rollback or supersession drill, and stale-state handling |
 | workflow / required-check posture | confirm checked-in automation, platform rules, and whether public-tree signals still match effective merge gates |
@@ -393,7 +406,7 @@ flowchart LR
 
 Treat this README as healthy only when the directory contract stays both readable and truthful.
 
-- [ ] Keep branch-visible structure separate from assumptions about suite depth
+- [ ] Keep current public-main structure separate from assumptions about suite depth
 - [ ] Keep owners aligned with `../.github/CODEOWNERS`
 - [ ] Update this README whenever a test family is added, renamed, removed, or materially repurposed
 - [ ] Update this README whenever current public workflow-lane evidence changes in a way that affects test-gate expectations
@@ -415,7 +428,7 @@ Because repo-native truth outranks cleaner theory. The manuals are valuable for 
 
 ### Does the current branch prove merge-blocking coverage?
 
-No. The public tree proves directory presence, family placement, ownership boundaries, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
+No. The public tree proves directory presence, README-bearing family placement, ownership boundaries, and a currently visible `.github/workflows/` lane that contains `README.md` only. It does **not** by itself prove required checks, protected-branch rules, external CI integrations, runner choice, suite depth, or exercised rollback / correction history.
 
 ### Where should accessibility and reproducibility work live right now?
 
@@ -451,7 +464,7 @@ This revision is grounded in three evidence layers:
    - `schemas/README.md`
    - `docs/README.md`
 
-3. **March 20–22, 2026 KFM doctrinal manuals**, especially the layers that sharpen:
+3. **March 2026 KFM doctrinal manuals**, especially the layers that sharpen:
    - verification as trust-bearing governance
    - negative-path and fail-closed behavior
    - release proof, rollback, and correction discipline
@@ -486,7 +499,7 @@ If the checked-out branch later differs from the public tree used here:
 3. preserve the distinction between **current repo truth** and **manual shorthand**
 4. downgrade anything unsupported by the checked-out branch to **UNKNOWN** or **NEEDS VERIFICATION**
 
-The goal is not to preserve a guessed tree.
+The goal is not to preserve a guessed tree.  
 The goal is to preserve truthful verification law.
 
 </details>
