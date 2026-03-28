@@ -4,27 +4,32 @@ Proof-pack, digest, and attestation helper surface for governed KFM release evid
 
 > [!IMPORTANT]
 > **Status:** experimental  
-> **Owners:** `@bartytime4life` *(inherited from `/tools/` CODEOWNERS coverage; narrower path-specific ownership is not separately evidenced on current public `main`)*  
-> **Repo fit:** `tools/attest/README.md`  
-> **Current public snapshot:** `tools/attest/` exists and currently contains `README.md` only.  
-> **Role:** reusable helper lane for **verification, summarization, and support** around release evidence and attestation-related artifacts.  
-> **Not this lane:** canonical policy storage, schema authority, secret custody, or hidden publish logic.
+> **Owners:** `@bartytime4life` *(current `/tools/` owner inherited from visible `CODEOWNERS`; narrower lane-specific ownership is not separately declared in the public tree)*  
+> **Path:** `tools/attest/README.md`  
+> **Repo fit:** child lane of [`../README.md`](../README.md) · upstream [`../../README.md`](../../README.md) · governance [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) · downstream callers [`../../.github/workflows/README.md`](../../.github/workflows/README.md) and [`../../scripts/README.md`](../../scripts/README.md) · authority neighbors [`../../contracts/README.md`](../../contracts/README.md), [`../../policy/README.md`](../../policy/README.md), and [`../../tests/README.md`](../../tests/README.md)  
+> **Evidence posture:** doctrine-grounded · repo-grounded for current public `main` subtree fact · deeper local checkout, workflow settings, and mounted helper inventory remain bounded  
+> **Current public snapshot:** `tools/attest/` is **README-only** on the current public tree; this README is already substantive and should be revised in place rather than reset to scaffold text  
+> **Role:** reusable helper lane for verification, summarization, proof-pack inspection, and attestation-adjacent release-evidence support  
+> **Not this lane:** canonical policy storage, schema authority, secret custody, or hidden publish logic
 >
 > ![status](https://img.shields.io/badge/status-experimental-orange)
-> ![surface](https://img.shields.io/badge/surface-release--evidence%20helpers-blue)
 > ![owner](https://img.shields.io/badge/owner-%40bartytime4life-6f42c1)
-> ![branch](https://img.shields.io/badge/public%20branch-main-informational)
-> ![tree](https://img.shields.io/badge/current%20tree-scaffold--only-lightgrey)
+> ![lane](https://img.shields.io/badge/lane-tools%2Fattest-4051b5)
+> ![subtree](https://img.shields.io/badge/public%20subtree-README--only-lightgrey)
+> ![posture](https://img.shields.io/badge/posture-read--only%20by%20default-red)
 >
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current evidence snapshot](#current-evidence-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Attest helper behavior contract](#attest-helper-behavior-contract) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+
+> [!NOTE]
+> The parent [`tools/README.md`](../README.md) remains the family contract for the wider helper surface. This file narrows that contract to `attest/` while grounding sibling-family context in the live public `tools/` listing.
 
 ---
 
 ## Scope
 
-`tools/attest/` is the **narrow helper lane** for reusable commands that inspect, verify, summarize, or package **release-evidence support artifacts** without silently becoming the release system itself.
+`tools/attest/` is the narrow KFM helper lane for reusable commands that inspect, verify, summarize, or package **release-evidence support artifacts** without quietly becoming the release system itself.
 
-In KFM terms, this lane should stay downstream of doctrine and adjacent to — not above — the contract, policy, workflow, and runtime surfaces.
+In KFM terms, this lane belongs **downstream of doctrine** and **adjacent to** — not above — the contract, policy, workflow, script, and runtime trust surfaces.
 
 ### What belongs here
 
@@ -34,11 +39,11 @@ Helpers in this directory should generally do one or more of the following:
 - summarize release evidence for reviewers or CI logs
 - assemble small support bundles for review or release checks
 - check that declared proof objects are present, shaped correctly, and internally consistent
-- emit **machine-readable** pass/fail results that higher-level callers can use
+- emit machine-readable pass/fail results that higher-level callers can consume
 
 ### What this lane must protect
 
-- **fail-closed behavior** over “best effort” ambiguity
+- **fail-closed behavior** over best-effort ambiguity
 - **read-only verification by default**
 - **discoverability** of release-evidence support logic
 - **clear caller boundaries** between tools, scripts, tests, and workflows
@@ -49,11 +54,11 @@ Helpers in this directory should generally do one or more of the following:
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Visible in current public repo evidence or clearly stated by adjacent repo docs |
+| **CONFIRMED** | Directly supported by the current public repo tree or by adjacent repo/doctrine material already visible |
 | **INFERRED** | Strongly implied by repo structure and KFM doctrine, but not directly implemented here yet |
 | **PROPOSED** | Recommended starter pattern for this lane |
-| **UNKNOWN** | Not proven from current public repo evidence |
-| **NEEDS VERIFICATION** | Important enough to call out before merge or rollout |
+| **UNKNOWN** | Not proven strongly enough from current public repo evidence |
+| **NEEDS VERIFICATION** | Important enough to surface before merge or rollout |
 
 [Back to top](#attest)
 
@@ -63,17 +68,22 @@ Helpers in this directory should generally do one or more of the following:
 
 `tools/attest/` should feel native inside the existing repo lattice, not like an isolated scripts bin.
 
-| Direction | Surface | Relationship |
+| Direction | Surface | Why it matters |
 |---|---|---|
-| Upstream | [`../README.md`](../README.md) | Parent tools-family contract and naming guidance |
-| Upstream | [`../../README.md`](../../README.md) | Repo identity, doctrine posture, and top-level documentation rhythm |
-| Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | Contract backbone for manifests, envelopes, proof objects, and related schemas |
-| Adjacent | [`../../policy/README.md`](../../policy/README.md) | Deny-by-default rule surface, reason/obligation logic, and policy execution boundary |
-| Adjacent | [`../../tests/README.md`](../../tests/README.md) | Negative-path expectations, fixtures, and verification burdens |
-| Adjacent | [`../../scripts/README.md`](../../scripts/README.md) | Orchestration and operator entrypoints; may call helpers here, but should not replace them |
-| Downstream caller | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | CI/CD lane that may invoke helpers here once real workflow YAML exists |
-| Governance | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Ownership coverage for `/tools/` |
-| Related family lanes | [`../validators/README.md`](../validators/README.md), [`../ci/README.md`](../ci/README.md), [`../diff/README.md`](../diff/README.md), [`../catalog/README.md`](../catalog/README.md) | Neighboring helper surfaces with adjacent concerns |
+| Parent | [`../README.md`](../README.md) | Defines the overall `tools/` family contract and helper-lane boundaries |
+| Upstream | [`../../README.md`](../../README.md) | Root repo posture: governed, evidence-first, map-first, time-aware |
+| Governance | [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Current visible ownership coverage for `/tools/` |
+| Downstream caller | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Workflow YAML may call helpers here, but should not become the only place their logic exists |
+| Downstream caller | [`../../scripts/README.md`](../../scripts/README.md) | Scripts may orchestrate helper use, but reusable attestation logic should remain inspectable here |
+| Adjacent authority | [`../../contracts/README.md`](../../contracts/README.md) | Contracts define proof-object shape; `tools/attest/` may verify them, not replace them |
+| Adjacent authority | [`../../policy/README.md`](../../policy/README.md) | Policy owns allow/deny logic, reasons, and obligations |
+| Adjacent proof | [`../../tests/README.md`](../../tests/README.md) | Fixtures and negative-path coverage belong here |
+| Neighbor lane | [`../validators/README.md`](../validators/README.md) | General deterministic validation helpers |
+| Neighbor lane | [`../ci/README.md`](../ci/README.md) | Reviewer-facing CI summaries over already-governed artifacts |
+| Neighbor lane | [`../diff/README.md`](../diff/README.md) | Deterministic comparison helpers for manifests, receipts, and snapshots |
+| Neighbor lane | [`../catalog/README.md`](../catalog/README.md) | Metadata and catalog QA helpers |
+| Neighbor lane | [`../probes/README.md`](../probes/README.md) | Read-mostly inspection and freshness helpers |
+| Neighbor lane | [`../docs/README.md`](../docs/README.md) | Documentation-tooling lane for README/report maintenance and structure checks |
 
 ### Working interpretation
 
@@ -98,12 +108,12 @@ The parent `tools/` guidance and adjacent repo surfaces imply that this lane sho
 
 | Input class | Examples | Status |
 |---|---|---|
-| Digests and checksum material | sha256 digests, spec-hash outputs, manifest-linked file hashes | **CONFIRMED / INFERRED** |
-| Release proof metadata | release manifests, candidate proof-pack metadata, build receipts, correction refs | **INFERRED** |
-| Contract-backed trust objects | EvidenceBundle-like refs, RuntimeResponseEnvelope-like refs, DecisionEnvelope-like refs | **INFERRED** |
+| Digests and checksum material | `sha256` digests, spec-hash outputs, checksum manifests, manifest-linked file hashes | **CONFIRMED / INFERRED** |
+| Release proof metadata | `ReleaseManifest`, `ReleaseProofPack`, run receipts, rollback refs, correction refs | **INFERRED** |
+| Runtime and review trust objects | `DecisionEnvelope`, `EvidenceBundle`, `RuntimeResponseEnvelope`, `CorrectionNotice` | **INFERRED** |
 | Review-safe fixtures | valid/invalid sample objects for local checks and tests | **INFERRED** |
 | CI/local invocation parameters | input paths, output report paths, strict/fail flags, format selectors | **PROPOSED** |
-| Optional provenance artifacts | SBOMs, attestation statements, provenance JSON, support bundles | **PROPOSED** |
+| Optional provenance attachments | SBOMs, attestation statements, provenance JSON, transparency-log refs, support bundles | **PROPOSED** |
 
 ### Preferred input posture
 
@@ -126,6 +136,7 @@ This directory should stay sharp. The following do **not** belong here as primar
 | Policy bundles, reason codes, obligation registries | `../../policy/` |
 | Long-lived review artifacts or release objects as storage | canonical release / data / evidence surfaces |
 | Secret keys, signing identities, private trust roots | infra / secret manager / environment-specific secure storage |
+| Key-management policy or workload-identity ownership | security / infra / runtime boundary |
 | Workflow orchestration logic | `../../.github/workflows/` or `../../scripts/` |
 | Runtime publish/promote logic | governed runtime / release lane |
 | Ad hoc “misc signing helpers” scattered across repo | centralize in `tools/attest/` once real helpers exist |
@@ -138,31 +149,21 @@ This directory should stay sharp. The following do **not** belong here as primar
 
 ---
 
-## Current evidence snapshot
+## Current verified snapshot
 
-### CONFIRMED now
-
-- `tools/attest/` exists on the current public branch.
-- The directory currently contains `README.md` only.
-- The current file is a one-line scaffold.
-- `tools/README.md` already reserves `attest/` as a family lane for attestation / release-evidence support.
-- `/tools/` is covered by `@bartytime4life` in `CODEOWNERS`.
-- The public `.github/workflows/` directory currently exposes `README.md` only, so checked-in workflow wiring is **not** evidenced here.
-
-### INFERRED from adjacent repo guidance
-
-- First helpers here should likely be **verifiers** or **summarizers** before any governance-heavy signing flow.
-- Callers will most likely come from scripts, CI, tests, or release review surfaces.
-- Output should be stable enough for merge gates and reviewer handoff.
-
-### UNKNOWN / NEEDS VERIFICATION
-
-- any checked-in executable helper files under `tools/attest/`
-- any active workflow YAML invoking attestation helpers
-- any mounted SBOM generation or signature verification pipeline
-- any repo-ratified Cosign / in-toto / OCI artifact pattern
-- any existing contract schema inventory specifically for attestation-related objects
-- any live release proof-pack examples on current branch
+| Evidence item | Status | Why it matters |
+|---|---|---|
+| `tools/attest/README.md` exists on current public `main` | **CONFIRMED** | This is a real lane surface, not a hypothetical path |
+| No additional public files are currently visible under `tools/attest/` | **CONFIRMED** | Keeps executable helper claims bounded |
+| This README is already substantive on public `main` | **CONFIRMED** | Future edits should revise in place rather than revert to scaffold text |
+| The live public `tools/` listing confirms sibling families `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, and `validators/` | **CONFIRMED** | Grounds relative links and current family context from the tree itself |
+| The parent `tools/README.md` still reserves attestation helpers as a named lane | **CONFIRMED** | Keeps this README anchored to the broader family contract even where older snapshot prose has drifted |
+| `/tools/` ownership is covered by current visible `CODEOWNERS` | **CONFIRMED** | Grounds the owners line for this file |
+| Public `.github/workflows/` remains README-only on visible `main` | **CONFIRMED** | Prevents overclaiming checked-in workflow callers |
+| Public Actions history, as documented in the workflows README, includes deleted filenames such as `release-evidence.yml` | **CONFIRMED historical signal** | Useful naming/context clue, but not proof that current public `main` contains those YAML files |
+| Exact executable helper inventory, workflow callers, trust-root handling, and any live attestation pipeline | **UNKNOWN / NEEDS VERIFICATION** | These are not derivable from current public tree inspection alone |
+| Any repo-ratified Cosign / in-toto / OCI attestation profile | **UNKNOWN / NEEDS VERIFICATION** | Doctrine and idea packets discuss them, but the checked-in public lane does not yet prove adoption here |
+| Any live release proof-pack examples on current public `main` | **UNKNOWN / NEEDS VERIFICATION** | Promotion, rollback, and publication proof remain conceptual until a real example is surfaced |
 
 [Back to top](#attest)
 
@@ -170,28 +171,28 @@ This directory should stay sharp. The following do **not** belong here as primar
 
 ## Directory tree
 
-### Current public tree
+### Current public subtree
+
+```text
+tools/attest/
+└── README.md
+```
+
+### Confirmed parent family context
 
 ```text
 tools/
-├── README.md
 ├── attest/
-│   └── README.md
 ├── catalog/
-│   └── README.md
 ├── ci/
-│   └── README.md
 ├── diff/
-│   └── README.md
 ├── docs/
-│   └── README.md
 ├── probes/
-│   └── README.md
-└── validators/
-    └── README.md
+├── validators/
+└── README.md
 ```
 
-### Illustrative landing shape for the first real helper set
+### PROPOSED landing shape for the first real helper set
 
 > [!NOTE]
 > The shape below is **PROPOSED**, not a claim about the mounted tree.
@@ -224,26 +225,27 @@ Start by verifying the current repo state before you add executable content.
 ### 1) Inspect the surrounding surfaces
 
 ```bash
-sed -n '1,220p' tools/README.md
-sed -n '1,220p' .github/CODEOWNERS
-sed -n '1,220p' .github/workflows/README.md
-sed -n '1,220p' contracts/README.md
-sed -n '1,220p' policy/README.md
-sed -n '1,220p' tests/README.md
-sed -n '1,220p' scripts/README.md
+sed -n '1,260p' tools/README.md
+sed -n '1,180p' .github/CODEOWNERS
+sed -n '1,260p' .github/workflows/README.md
+sed -n '1,240p' contracts/README.md
+sed -n '1,240p' policy/README.md
+sed -n '1,240p' tests/README.md
+sed -n '1,240p' scripts/README.md
 ```
 
-### 2) Confirm the current helper inventory
+### 2) Confirm the current subtree and live sibling-family context
 
 ```bash
-find tools -maxdepth 2 -type f | sort
+find tools/attest -maxdepth 2 \( -type f -o -type d \) | sort
+find tools -maxdepth 2 -type d | sort
 ```
 
-### 3) Search for existing evidence-related terminology
+### 3) Search for existing release-evidence terminology before inventing anything new
 
 ```bash
-grep -RIn "attest\|proof pack\|proof-pack\|release manifest\|EvidenceBundle\|RuntimeResponseEnvelope\|SBOM\|cosign\|provenance" \
-  tools contracts policy tests scripts .github docs 2>/dev/null
+rg -n "attest|attestation|proof[- ]pack|release manifest|ReleaseManifest|EvidenceBundle|RuntimeResponseEnvelope|CorrectionNotice|SBOM|cosign|in-toto|provenance" \
+  tools contracts policy tests scripts .github docs -S 2>/dev/null
 ```
 
 ### 4) Verify whether workflow callers actually exist
@@ -331,6 +333,39 @@ That order keeps the lane useful without overclaiming secret custody, key manage
 
 ---
 
+## Attest helper behavior contract
+
+A helper in this lane should keep its behavior small, explicit, and safe to reason about in Git review.
+
+| Rule | Expected posture |
+|---|---|
+| Subject selection | The thing being checked should be explicit: manifest path, bundle path, receipt path, or equivalent ref |
+| Determinism | Same inputs should produce the same result shape, exit status, and blocking posture |
+| Read-only default | A helper may write only a caller-chosen report path; it should not mutate canonical truth or promotion state |
+| Machine-readable first | Primary output should be stable JSON or equivalent structured output suitable for CI, tests, or scripts |
+| Reviewer-readable second | Optional human summary should be concise, safe to print, and easy to link from PR or release review |
+| Profile visibility | Declared profile/schema/version assumptions should be echoed rather than buried |
+| Secret posture | Helpers must not become owners of signing keys, trust roots, or private identity material |
+| Unsupported state | Unknown formats or unsupported profiles should fail clearly rather than bluff verification |
+| Log safety | CI-facing summaries should avoid leaking unpublished evidence, private bundle contents, or secret-bearing internals |
+
+### Minimal result classes worth preserving
+
+| Condition | Expected helper behavior |
+|---|---|
+| Required artifact missing | fail clearly; blocking when caller says the artifact is mandatory |
+| Digest mismatch or broken linkage | fail clearly; include the failed check id and subject |
+| Optional artifact absent | emit an explicit non-pass state only if the caller marked it optional |
+| Unsupported profile/version | return a clear unsupported result instead of pretending to verify |
+| Signing or trust-root ownership required to continue | stop and hand control back to the proper security/runtime lane |
+
+> [!WARNING]
+> An attestation helper may eventually wrap external verifiers. It must still remain a reusable helper boundary, not the sovereign owner of release trust.
+
+[Back to top](#attest)
+
+---
+
 ## Diagram
 
 ```mermaid
@@ -340,7 +375,7 @@ flowchart LR
   T[tests/fixtures]
   S[scripts/]
   W[.github/workflows/]
-  D[digests / manifests / receipts]
+  D[manifests / receipts / proof-pack members]
   A[tools/attest/]
 
   R[machine-readable result]
@@ -401,7 +436,9 @@ flowchart LR
 | Object family | Likely contact with `tools/attest/` |
 |---|---|
 | `ReleaseManifest` / `ReleaseProofPack` | Primary verification target |
+| `ReviewRecord` | Optional approval-chain continuity checks |
 | `DecisionEnvelope` | Policy-result linkage checks |
+| `ProjectionBuildReceipt` | Derived-surface linkage checks when promoted scope is packaged downstream |
 | `EvidenceBundle` | Support-path or completeness checks where relevant |
 | `RuntimeResponseEnvelope` | Optional downstream linkage checks |
 | `CorrectionNotice` | Continuity / supersession verification after release changes |
@@ -441,11 +478,11 @@ flowchart LR
 
 ### Why a dedicated `tools/attest/` instead of scattered helper scripts?
 
-Because the parent tools guidance already gives this family a stable purpose. Centralizing this helper class makes release-evidence support easier to discover, test, and govern.
+Because the parent `tools/` guidance already gives this family a stable purpose. Centralizing this helper class makes release-evidence support easier to discover, test, and govern.
 
 ### Does this README claim active attestation automation already exists?
 
-No. The current public tree evidences a scaffold directory and parent-family intent, not a checked-in executable helper inventory or workflow wiring.
+No. The current public tree evidences a README-only subtree and a substantive lane contract, not a checked-in executable helper inventory or current public workflow wiring.
 
 ### Should this directory own signing keys or trust roots?
 
@@ -453,7 +490,7 @@ No. That would collapse helper logic and sensitive operational authority into on
 
 ### What is the safest first helper to add?
 
-Usually a **verification** or **summary** helper around manifests, digests, or proof-support completeness.
+Usually a **verification** or **summary** helper around manifests, digests, receipts, or proof-support completeness.
 
 ### Can this lane emit blocking CI results?
 
@@ -483,7 +520,22 @@ Do **not** treat it as proof that executable attestation tooling, CI wiring, sig
 </details>
 
 <details>
-<summary><strong>Appendix B — Optional advanced patterns (explicitly PROPOSED)</strong></summary>
+<summary><strong>Appendix B — Historical workflow signal is not current inventory</strong></summary>
+
+The public workflows README documents prior GitHub Actions history and deleted filenames such as `release-evidence.yml`.
+
+Use that as:
+
+- a naming and scope clue
+- a hint that release-evidence automation has been thought about before
+- a reason to keep future helper naming legible
+
+Do **not** use it as proof that the current public `main` branch still ships those YAML files.
+
+</details>
+
+<details>
+<summary><strong>Appendix C — Optional advanced patterns (explicitly PROPOSED)</strong></summary>
 
 These patterns may eventually become relevant here, but none should be implied as current repo fact without direct evidence:
 
@@ -496,14 +548,14 @@ These patterns may eventually become relevant here, but none should be implied a
 Use them only when:
 
 - the repo has chosen the pattern explicitly
-- adjacent contracts/policy/tests exist
+- adjacent contracts, policy, and tests exist
 - the caller lane is documented
 - secret handling and trust-root ownership are resolved elsewhere
 
 </details>
 
 <details>
-<summary><strong>Appendix C — Recommended writing style for future helper docs</strong></summary>
+<summary><strong>Appendix D — Recommended writing style for future helper docs</strong></summary>
 
 When new helpers are added under this lane, prefer:
 
