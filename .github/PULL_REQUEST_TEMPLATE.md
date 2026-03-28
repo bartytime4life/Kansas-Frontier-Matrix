@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/REVIEW-REQUIRED
+title: Pull Request Template
+type: standard
+version: v1
+status: published
+owners: @bartytime4life
+created: REVIEW-REQUIRED
+updated: REVIEW-REQUIRED
+policy_label: public
+related: [README.md, CONTRIBUTING.md, .github/README.md, SECURITY.md, .github/CODEOWNERS]
+tags: [kfm, github, pull-request, governance]
+notes: [doc_id and created/updated remain REVIEW-REQUIRED until canonical doc registry and target-branch git history are verified.]
+[/KFM_META_BLOCK_V2] -->
+
 <!--
 Kansas Frontier Matrix pull request contract.
 
@@ -14,9 +29,12 @@ Helpful references:
 - .github/CODEOWNERS
 -->
 
-> Fill every applicable section.
-> Use `N/A` rather than deleting sections.
-> Keep truth labels honest and attach validation evidence, CI links, proof-pack links, or reviewer notes where they exist.
+<!-- Keep this template synchronized with README.md, CONTRIBUTING.md, .github/README.md, SECURITY.md, and .github/CODEOWNERS on the same branch. -->
+
+> Fill every applicable section.  
+> Use `N/A` rather than deleting sections.  
+> Keep truth labels honest and keep `UNKNOWN` / `NEEDS VERIFICATION` visible until closed.  
+> Link validation evidence, CI runs, proof packs, screenshots, reviewer notes, or follow-up issues where they exist.
 
 ## Summary
 - What changed:
@@ -83,6 +101,10 @@ Helpful references:
 - [ ] No authoritative / derived boundary affected
 - [ ] Authoritative / derived boundary affected (described below)
 
+### Runtime outcome surface
+- [ ] No runtime answer / abstain / deny / error behavior affected
+- [ ] Runtime answer / abstain / deny / error behavior affected (described below)
+
 ### Truth posture summary
 Fill only the labels that apply to this PR.
 
@@ -108,6 +130,7 @@ Fill only the labels that apply to this PR.
 ### Evidence / publication impact
 - Authoritative / derived boundary impact:
 - Evidence / citation path:
+- Runtime answer / abstain / deny / error impact:
 - Policy / review / release state impact:
 - Correction / supersession implications:
 
