@@ -10,31 +10,30 @@ updated: YYYY-MM-DD
 policy_label: TBD-VERIFY
 related: [../README.md, ../../docs/standards/README.md, ../../contracts/README.md, ../../policy/README.md, ../../tests/README.md, ../../.github/workflows/README.md]
 tags: [kfm, schemas, standards, profiles, validation]
-notes: [owners derived from current CODEOWNERS global fallback; doc_id/created/updated/policy_label still need live-repo verification]
+notes: [owners confirmed from current public CODEOWNERS global fallback; doc_id/created/updated/policy_label still need live-repo verification]
 [/KFM_META_BLOCK_V2] -->
 
 # standards
 
-Schema-lane boundary for any machine-facing companions to KFM cross-cutting standards and profiles — currently scaffold-only, documentary, and intentionally non-canonical.
+_Schema-lane boundary for any machine-facing companions to KFM cross-cutting standards and profiles — currently scaffold-only, documentary, and intentionally non-canonical._
 
 > **Status:** `experimental`  
 > **Doc status:** `draft`  
-> **Owners:** `@bartytime4life` *(current `.github/CODEOWNERS` global fallback; no narrower `/schemas/` or `/schemas/standards/` rule was directly verified)*  
+> **Owners:** `@bartytime4life` *(current `.github/CODEOWNERS` global fallback is directly visible on public `main`; no narrower `/schemas/` or `/schemas/standards/` rule is visible in the opened file)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![doc](https://img.shields.io/badge/doc-draft-orange) ![surface](https://img.shields.io/badge/surface-schemas%2Fstandards-6f42c1) ![inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey) ![authority](https://img.shields.io/badge/authority-unresolved-red) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > **Repo fit:** path `schemas/standards/README.md` · parent [`../README.md`](../README.md) · human-readable standards [`../../docs/standards/README.md`](../../docs/standards/README.md) · stronger machine-contract lane [`../../contracts/README.md`](../../contracts/README.md) · policy [`../../policy/README.md`](../../policy/README.md) · verification [`../../tests/README.md`](../../tests/README.md) · workflow gates [`../../.github/workflows/README.md`](../../.github/workflows/README.md)
 
 > [!IMPORTANT]
-> Current public `main` shows `schemas/standards/` containing `README.md` only.
-> Treat this directory as a **boundary and placement guide** today, not as proof that a standards-schema registry already exists.
+> Current public `main` still presents `schemas/standards/` as a **README-only** lane.
+> Treat it as a **boundary and placement guide** today, not as proof that a standards-schema registry already exists.
 
 > [!WARNING]
 > The parent [`../README.md`](../README.md) still carries older inventory language that describes `schemas/` as `README.md`-only.
-> The live public tree now shows visible scaffold subdirectories under `schemas/`, so parent and child READMEs need to stay synchronized.
+> The public tree now also exposes this child lane and other `schemas/` scaffold lanes, so parent and child boundary docs need to stay synchronized.
 
 > [!NOTE]
-> [`../../docs/standards/README.md`](../../docs/standards/README.md) is already the human-readable standards index, and it currently routes “API endpoint schemas and machine contracts” toward [`../../contracts/`](../../contracts/).
-> This lane should grow only in ways that preserve that split and keep contract authority singular.
+> [`../../docs/standards/README.md`](../../docs/standards/README.md) remains the human-readable standards index, [`../../contracts/README.md`](../../contracts/README.md) remains the stronger current machine-contract lane, and the current PR template already expects evidence / proof-pack links plus an affected-surface declaration when `schemas/` changes.
 
 ## Scope
 
@@ -72,22 +71,34 @@ This README therefore does three jobs:
 | Verification neighbor | [`../../tests/README.md`](../../tests/README.md) |
 | Workflow neighbor | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
 | Parent boundary | [`../README.md`](../README.md) |
-| Owner signal | `@bartytime4life` via current global `CODEOWNERS` fallback |
+| Owner signal | `@bartytime4life` via current public `CODEOWNERS` global fallback |
 | Current authority posture | **UNKNOWN / NEEDS VERIFICATION** — no directly verified repo decision makes this lane canonical for machine-facing standards artifacts |
 | Why this file matters | The path is public and should not remain semantically undefined |
+
+### Baseline used for this revision
+
+| Role | Current evidence anchor | Consequence for this file |
+|---|---|---|
+| Repo-state anchor | public `main` raw-file inspection of this lane, its parent, sibling README surfaces, `CODEOWNERS`, and the PR template | prefer current repo-visible placement and ownership signals over older generalized assumptions |
+| Doctrine anchor | March 2026 KFM contract / trust / standards doctrine | keep contract authority singular, keep policy and fixtures separate, and avoid inventing mounted implementation depth |
+| Review-flow anchor | current PR template | placement or authority changes here should travel with evidence / proof-pack links and an explicit `schemas/` surface declaration |
 
 ### Current verified snapshot
 
 | Surface | Current public `main` state | Why it matters |
 |---|---|---|
 | [`./README.md`](./README.md) | Present; only file in the sublane | The lane is real, but subtree inventory is still minimal |
-| [`../README.md`](../README.md) | Present; boundary guide | Parent lane exists, but its inventory text understates the live subtree |
-| `schemas/` tree | Visible child lanes: `contracts/`, `schemas/`, `standards/`, `tests/`, `workflows` | The schema subtree is no longer literally README-only at tree level |
+| [`../README.md`](../README.md) | Present; boundary guide that still says `schemas/` is `README.md`-only | Parent language needs reconciliation with the live subtree |
+| `schemas/` tree | Visible child lanes: `contracts/`, `schemas/`, `standards/`, `tests/`, `workflows` | The schema subtree is no longer literally single-file at tree level |
 | `schemas/standards/` tree | `README.md` only | This sublane is still documentary scaffolding today |
-| `schemas/tests/` tree | `README.md` plus `fixtures/` | Nested schema sublanes already differ in maturity and should not be flattened together |
-| [`../../docs/standards/README.md`](../../docs/standards/README.md) | Present; substantive index | Human-readable standards already have a real routing surface |
+| `schemas/tests/` tree | `README.md` plus `fixtures/` | Sibling schema sublanes already differ in maturity and should not be flattened together |
+| [`../../docs/standards/README.md`](../../docs/standards/README.md) | Present; most substantive standards index in its directory | Human-readable standards already have a real routing surface |
 | [`../../contracts/README.md`](../../contracts/README.md) | Present; substantive boundary README | Current repo guidance for machine contracts is stronger there than here |
-| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Present; README-only | No checked-in workflow YAML was directly visible on public `main` during this review |
+| [`../../policy/README.md`](../../policy/README.md) | Present; executable-policy boundary README | Policy grammar belongs elsewhere |
+| [`../../tests/README.md`](../../tests/README.md) | Present; governed verification index | Fixtures and negative-path proofs belong there |
+| [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Present; README documents the workflow lane as README-only | Validation consequences belong in workflow docs, not in this schema-placement lane |
+| [`../../.github/CODEOWNERS`](../../.github/CODEOWNERS) | Present; global fallback `* @bartytime4life`, with no narrower `/schemas/` or `/schemas/standards/` rule visible | Owner fallback is directly supported on public `main` |
+| [`../../.github/PULL_REQUEST_TEMPLATE.md`](../../.github/PULL_REQUEST_TEMPLATE.md) | Present; asks for evidence / proof-pack links and includes `schemas/` in affected surfaces | Changes here should travel with explicit evidence and doctrine checklists |
 
 ### Working interpretation
 
@@ -121,6 +132,7 @@ Place material here only when it is clearly about **machine-facing companions to
 - it states whether it is authoritative, derived, mirrored, or purely documentary,
 - it links back to the human-readable rule in [`../../docs/standards/`](../../docs/standards/),
 - it does not duplicate a trust-bearing family already owned elsewhere,
+- it carries evidence / proof-pack links when the change materially affects placement or authority,
 - and it does not make schema-home authority harder to understand.
 
 ## Exclusions
@@ -203,9 +215,11 @@ sed -n '1,260p' contracts/README.md
 sed -n '1,240p' policy/README.md
 sed -n '1,260p' tests/README.md
 sed -n '1,240p' .github/workflows/README.md
+sed -n '1,220p' .github/CODEOWNERS
+sed -n '1,220p' .github/PULL_REQUEST_TEMPLATE.md
 
-# search for placement and authority language before adding files
-git grep -nE 'STAC|DCAT|PROV|Markdown Work Protocol|schema home|parallel schema|machine contracts' -- \
+# search for placement, authority, and proof language before adding files
+git grep -nE 'STAC|DCAT|PROV|proof-pack|affected repo surfaces|schema home|parallel schema|machine contracts' -- \
   docs schemas contracts policy tests .github
 ```
 
@@ -219,7 +233,8 @@ A safer first move is:
 2. confirm whether the human-readable rule already lives in [`../../docs/standards/`](../../docs/standards/),
 3. confirm whether the machine-facing artifact should actually live in [`../../contracts/`](../../contracts/),
 4. decide whether this lane would be authoritative, derived, or purely documentary,
-5. and update sibling README surfaces in the same reviewed change if placement rules change.
+5. confirm whether the PR carries evidence / proof-pack links,
+6. and update sibling README surfaces in the same reviewed change if placement rules change.
 
 ## Usage
 
@@ -227,7 +242,7 @@ A safer first move is:
 
 Use this file to keep `schemas/standards/` narrow, reviewable, and hard to misread.
 
-If top-level `contracts/` remains the stronger canonical machine-contract lane, this README should stay pointer-like and boundary-oriented. If the repo later elevates `schemas/standards/`, do it explicitly and update adjacent docs, fixtures, and validators together.
+If top-level `contracts/` remains the stronger canonical machine-contract lane, this README should stay pointer-like and boundary-oriented. If the repo later elevates `schemas/standards/`, do it explicitly and update adjacent docs, fixtures, validators, and PR guidance together.
 
 ### For contributors
 
@@ -246,6 +261,7 @@ Reject changes that do any of the following:
 - duplicate a trust-bearing family across `schemas/standards/` and `../../contracts/`,
 - copy policy vocabularies or reasons/obligations here,
 - move validation consequences without updating sibling docs,
+- omit evidence / proof-pack links when the change materially alters this lane’s purpose or authority,
 - or imply that this lane is already authoritative when the visible tree, fixtures, or workflow gates do not prove that yet.
 
 ### If authority changes later
@@ -258,7 +274,8 @@ Do the whole move, not a silent drift:
 4. update [`../../contracts/README.md`](../../contracts/README.md) if responsibilities shift,
 5. update fixture paths,
 6. update workflow validation paths,
-7. and update any consumer docs that point to the old lane.
+7. update PR template guidance if reviewer expectations change,
+8. and update any consumer docs that point to the old lane.
 
 ## Diagram
 
@@ -268,6 +285,7 @@ flowchart LR
     G["schemas/README.md<br/>parent anti-drift boundary"] -. constrains .-> B
     E["contracts/<br/>current stronger machine-contract signal"] -. do not duplicate .-> B
     F["policy/<br/>reasons, obligations, deny-by-default"] -. keep distinct .-> B
+    P[".github/PULL_REQUEST_TEMPLATE.md<br/>evidence / proof-pack expectation"] -. governs review .-> B
     B --> C["tests/<br/>fixtures + negative paths"]
     B --> D[".github/workflows/<br/>validation gates"]
 ```
@@ -285,7 +303,10 @@ Reading rule: `schemas/standards/` should reduce ambiguity, not create a second 
 | `schemas/README.md` | Present, but still says `schemas/` contains `README.md` only | Parent doc needs reconciliation with the live tree |
 | `docs/standards/README.md` | Present; substantive index | Human-readable standards already have a primary home |
 | `contracts/README.md` | Present; stronger machine-contract narrative | Machine-facing contract authority is signaled more strongly there than here |
-| `.github/workflows/README.md` | Present; README-only | No checked-in workflow YAML was directly evidenced on public `main` |
+| `policy/README.md` | Present; executable-policy narrative | Policy grammar and decision vocabularies belong elsewhere |
+| `.github/workflows/README.md` | Present; README-only workflow lane | Validation consequences should be documented separately from schema placement |
+| `.github/CODEOWNERS` | Global fallback `* @bartytime4life`; no narrower `/schemas/` or `/schemas/standards/` rule visible | Owner fallback is directly evidenced, but lane-specific ownership is unresolved |
+| `.github/PULL_REQUEST_TEMPLATE.md` | Evidence / proof-pack links required; `schemas/` is an affected-surface checkbox | Changes here should travel with explicit review evidence |
 
 ### B. Put-it-here test
 
@@ -315,6 +336,8 @@ Reading rule: `schemas/standards/` should reduce ambiguity, not create a second 
 - [x] Current public `schemas/standards/` snapshot is `README.md` only.
 - [x] Parent `schemas/` tree visibly contains scaffold child lanes.
 - [x] Human-readable standards already have a substantive index in `docs/standards/README.md`.
+- [x] Current public `CODEOWNERS` directly supports `@bartytime4life` as the fallback owner signal for this lane.
+- [x] Current public PR template includes both evidence / proof-pack links and a `schemas/` affected-surface checkbox.
 - [ ] `schemas/README.md` is reconciled with the live subtree inventory.
 - [ ] An ADR or equivalent repo decision states whether `schemas/standards/` is authoritative, documentary, or generated-output-only.
 - [ ] Any machine-facing standards companion added here links to its human-readable standard, canonical source, fixture strategy, and validator path in the same PR.
@@ -366,6 +389,7 @@ Reconcile [`../README.md`](../README.md) with the live `schemas/` tree and resol
 - Whether any hidden descendants exist on the merge target beyond the public `main` snapshot inspected here.
 - Whether nested `schemas/tests/` fixture scaffolds are canonical, mirrored, or purely local documentation aids.
 - Which validator, if any, will eventually read this lane directly.
+- Whether reviewer guidance for evidence / proof-pack links needs a lane-specific addition beyond the current repo-wide PR template.
 
 ### Maintainer reminders
 
