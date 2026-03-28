@@ -10,7 +10,7 @@ updated: <TODO_VERIFY_YYYY-MM-DD>
 policy_label: <TODO_VERIFY_POLICY_LABEL>
 related: [tests/README.md, policy/README.md, contracts/README.md, schemas/README.md, .github/workflows/README.md]
 tags: [kfm]
-notes: [owners grounded from current CODEOWNERS; doc_id/created/updated/policy_label need repo-backed verification; current public main shows tests/policy/README.md only]
+notes: [owners confirmed from current public CODEOWNERS; doc_id/created/updated/policy_label need repo-backed verification; current public main still shows tests/policy/ containing README.md only; this README is substantive and should not describe itself as scaffold-only]
 [/KFM_META_BLOCK_V2] -->
 
 # tests/policy
@@ -27,12 +27,13 @@ Focused policy-behavior verification lane for KFM deny-by-default decisions, run
 ![owners: @bartytime4life](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb)
 ![surface: policy verification](https://img.shields.io/badge/surface-policy%20verification-0a7ea4)
 ![repo evidence: README only](https://img.shields.io/badge/repo%20evidence-README%20only-f59e0b)
-![truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
+![truth: bounded](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED%20%7C%20UNKNOWN-2ea043)
 
 > [!IMPORTANT]
-> Keep **current public-branch evidence** separate from **doctrine-aligned target shape**.
-> The strongest current repo-grounded claim is that `tests/policy/` exists and public `main` shows `README.md` only.
-> This file should document the lane honestly without implying runnable suites, checked-in workflow YAML, or mounted policy bundles that the current branch does not prove.
+> Keep **current public-tree evidence** separate from **doctrine-aligned target shape**.
+
+> [!NOTE]
+> Current public `main` exposes this README, the parent `tests/README.md`, `.github/CODEOWNERS`, `.github/README.md`, and `.github/workflows/README.md` directly. That is stronger repo evidence than a PDF-only inventory snapshot, but it still does **not** prove executable suites, checked-in workflow YAMLs, or mounted policy bundles.
 
 ---
 
@@ -81,6 +82,7 @@ If a change proves policy behavior against fixtures, routes, envelopes, or surfa
 | Lateral | [`../../policy/README.md`](../../policy/README.md) | Owns executable policy bundles, policy fixtures, result grammar, and policy-lane doctrine |
 | Lateral | [`../../contracts/README.md`](../../contracts/README.md) | Owns trust-bearing contract families such as `DecisionEnvelope`, `RuntimeResponseEnvelope`, and `CorrectionNotice` |
 | Lateral | [`../../schemas/README.md`](../../schemas/README.md) | Keeps schema-home ambiguity visible and warns against growing a second authoritative registry |
+| Gatehouse | [`../../.github/README.md`](../../.github/README.md) | Documents the wider repository gatehouse, including local action scaffolding and current public `.github/` inventory |
 | Downstream | [`../e2e/runtime_proof/`](../e2e/runtime_proof/) | End-to-end proof lane for request-time outcomes and evidence/runtime behavior |
 | Downstream | [`../e2e/correction/`](../e2e/correction/) | End-to-end correction, supersession, rollback, and stale-visible drills |
 | Gate-adjacent | [`../../.github/workflows/README.md`](../../.github/workflows/README.md) | Documents current workflow-lane visibility and future merge-gate expectations |
@@ -129,17 +131,18 @@ The following do **not** belong here as authoritative source-of-truth material:
 
 ## Current verified snapshot
 
-The strongest safe current-branch claim is still intentionally small:
+The strongest safe current-branch claim is still intentionally bounded:
 
 - `tests/policy/` exists as a real directory.
-- the public directory listing shows `README.md` only
-- the current file content is still scaffold-level
-- the parent `tests/README.md` already treats `./policy/` as the policy and governance behavior family
-- exact runnable suite depth, runner/toolchain, and merge-blocking enforcement remain **UNKNOWN** from current public-tree evidence alone
+- current public-repo documentation still indicates that this lane exposes `README.md` only.
+- the parent `tests/README.md` treats `./policy/` as the policy and governance behavior family.
+- `.github/workflows/README.md` remains the visible public workflow-lane artifact; checked-in workflow YAMLs are not proven from the current public tree.
+- `.github/README.md` confirms a wider `.github/` gatehouse with local action scaffolding, but that does **not** by itself prove merge-blocking policy automation.
+- exact runnable suite depth, runner/toolchain, and merge-blocking enforcement remain **UNKNOWN** from current public-tree evidence alone.
 
 > [!NOTE]
-> This README is meant to close the gap between a visible directory boundary and a usable directory contract.
-> It should not close that gap by pretending executable depth already exists.
+> This README now functions as a substantive directory contract.
+> The directory inventory it describes is still intentionally small.
 
 ## Directory tree
 
@@ -308,7 +311,8 @@ flowchart LR
   PB["../../policy/<br/>bundles + fixtures + vocab"] --> TP["tests/policy/<br/>fixtures + suites"]
   C["../../contracts/<br/>DecisionEnvelope / RuntimeResponseEnvelope / CorrectionNotice"] --> TP
   S["../../schemas/<br/>authority boundary only"] -. do not fork .-> TP
-  TP --> W["../../.github/workflows/<br/>gate lane"]
+  GH["../../.github/<br/>gatehouse + local actions"] --> W["../../.github/workflows/<br/>gate lane"]
+  TP --> W
   TP --> RT["../e2e/runtime_proof/"]
   TP --> CO["../e2e/correction/"]
   W --> D{"trust-preserving?"}
@@ -361,10 +365,10 @@ It should never become a second policy tree or a shadow schema registry.
 
 | Concern | Current repo-grounded evidence | Target direction |
 |---|---|---|
-| Directory presence | `tests/policy/` exists | keep it as the focused policy verification lane |
-| README maturity | current file is scaffold-only | replace with a usable directory contract |
+| Directory presence | `tests/policy/` exists and is a distinct lane | keep it as the focused policy verification lane |
+| README maturity | the current file is a substantive directory contract | keep it synchronized with the real lane inventory and avoid outrunning executable depth |
 | Executable suites | not proven from current public-tree evidence | add fixtures + suites only after inventory confirms real files |
-| Workflow enforcement | public `.github/workflows/` shows `README.md` only | wire merge-blocking policy checks after current branch proves them |
+| Workflow enforcement | public `.github/workflows/` shows `README.md` only; `.github/README.md` confirms broader gatehouse scaffolding but not checked-in workflow YAMLs | wire merge-blocking policy checks after the active branch proves them |
 | Schema ownership | unresolved between `contracts/` and `schemas/` | keep authoritative machine contracts singular |
 | Bundle ownership | executable policy remains owned by `../../policy/` | keep tests here behavior-facing, not bundle-authoring |
 
@@ -379,6 +383,7 @@ Treat this README as healthy only when it stays both readable and truthful.
 - [ ] Owner routing was checked against the active `CODEOWNERS`, not only public `main`.
 - [ ] This README does not imply runnable suites, `.rego` bundles, or workflow YAML that the branch does not prove.
 - [ ] The relationship among `tests/policy/`, `../../policy/`, `../../contracts/`, and `../../schemas/` is still accurate.
+- [ ] The current public `.github/README.md` and `.github/workflows/README.md` signals were reconciled against the checked-out branch before claiming automation depth.
 - [ ] At least one negative-path example is documented for each seam the directory actually covers.
 - [ ] If runtime parity is claimed, `ANSWER / ABSTAIN / DENY / ERROR` behavior is exercised somewhere verifiable.
 - [ ] If correction behavior is claimed, `withdrawn` / `superseded` handling is exercised somewhere verifiable.
@@ -391,7 +396,7 @@ Treat this README as healthy only when it stays both readable and truthful.
 
 ### Does this README prove that runnable policy suites already exist?
 
-No. The strongest current public-branch evidence proves the directory and its placeholder README, not executable depth.
+No. The strongest current public-branch evidence proves the lane boundary, the current directory contract, and the adjacent governance surfaces — not executable depth.
 
 ### Should `.rego` bundles live here?
 
