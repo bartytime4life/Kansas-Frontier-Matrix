@@ -4,13 +4,13 @@ title: Reproducibility Tests
 type: standard
 version: v1
 status: draft
-owners: <owners-review-needed>
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+owners: @bartytime4life
+created: 2026-03-22
+updated: 2026-03-24
 policy_label: <policy-label-review-needed>
 related: [../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../.github/workflows/README.md]
 tags: [kfm, tests, reproducibility]
-notes: [Mounted repo metadata was not directly visible in this session; placeholders remain where ownership, dates, or policy label could not be verified. Directory contents below distinguish CONFIRMED, INFERRED, PROPOSED, and NEEDS VERIFICATION.]
+notes: [Created/updated dates reflect current public path history on main; owner verified from /.github/CODEOWNERS; current public directory contents show README.md only.]
 [/KFM_META_BLOCK_V2] -->
 
 # Reproducibility Tests
@@ -18,12 +18,13 @@ notes: [Mounted repo metadata was not directly visible in this session; placehol
 Determinism, rerun consistency, and receipt-backed rebuild checks for trust-bearing KFM artifacts.
 
 > **Status:** experimental  
-> **Owners:** `<owners-review-needed>`  
-> **Badges:** ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Owners: review needed](https://img.shields.io/badge/owners-review_needed-lightgrey) ![Truth posture: mixed](https://img.shields.io/badge/truth%20posture-confirmed%20%7C%20inferred%20%7C%20proposed-blue) ![CI: needs verification](https://img.shields.io/badge/CI-needs_verification-lightgrey)  
-> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
+> **Owners:** `@bartytime4life`  
+> **Path:** `tests/reproducibility/README.md`  
+> **Badges:** ![Status: experimental](https://img.shields.io/badge/status-experimental-orange) ![Owner: bartytime4life](https://img.shields.io/badge/owner-bartytime4life-lightgrey) ![Current snapshot: README only](https://img.shields.io/badge/current%20snapshot-README--only-lightgrey) ![Truth posture: mixed](https://img.shields.io/badge/truth%20posture-confirmed%20%7C%20inferred%20%7C%20proposed-blue) ![CI: needs verification](https://img.shields.io/badge/CI-needs_verification-lightgrey)  
+> **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!WARNING]
-> Current repo-grounded evidence confirms the broader `tests/README.md` intent surface, but does **not** yet prove a mounted reproducibility harness, runnable suites, or merge-blocking workflow wiring. Treat file-level layout and command examples below as starter guidance until the live repo tree, test runner, and CI inventory are re-checked.
+> Current public `main` branch proves that `tests/reproducibility/` exists and currently lists `README.md` only. The broader `tests/README.md` establishes reproducibility as an explicit verification family, but the public branch does **not** yet prove checked-in reproducibility cases, fixtures, reports, scripts, required checks, or merge-blocking workflow YAML. Treat deeper layout and runner examples below as starter guidance until a live checkout and effective platform settings are re-verified.
 
 ---
 
@@ -37,11 +38,11 @@ That question is narrower than “do the tests pass?” and stricter than “did
 
 ### Status vocabulary used in this README
 
-- **CONFIRMED** — supported by current repo-grounded or doctrinal evidence.
-- **INFERRED** — strongly implied by KFM doctrine and the role of this directory, but not directly verified as mounted repo shape.
+- **CONFIRMED** — supported by current public-branch evidence or doctrinal material in hand.
+- **INFERRED** — strongly implied by KFM doctrine and the role of this directory, but not directly verified as checked-in executable coverage.
 - **PROPOSED** — recommended starter layout or practice for this directory.
 - **UNKNOWN** — not directly proven in the current session.
-- **NEEDS VERIFICATION** — specifically requires mounted repo inspection before being treated as implementation fact.
+- **NEEDS VERIFICATION** — specifically requires direct checkout, effective CI/platform inspection, or runner confirmation before being treated as implementation fact.
 
 > [!IMPORTANT]
 > Negative outcomes still count as reproducible outcomes. A rerun that correctly returns `ABSTAIN`, `DENY`, `ERROR`, or a visible stale/generalized state can be a passing case when that fail-closed behavior is the expected result.
@@ -50,10 +51,12 @@ That question is narrower than “do the tests pass?” and stricter than “did
 
 | Field | Value |
 |---|---|
-| **Path** | `tests/reproducibility/` |
-| **Role in repo** | README for rerun consistency, digest stability, spec-hash stability, receipt comparison, and bounded drift checks. |
+| **Path** | `tests/reproducibility/README.md` |
+| **Directory** | `tests/reproducibility/` |
+| **Role in repo** | README for rerun consistency, digest stability, `spec_hash` stability, receipt comparison, and bounded-drift checks. |
+| **Current public `main` snapshot** | The directory currently exposes `README.md` only. Broader family placement is defined by [`../README.md`](../README.md). |
 | **Upstream links** | [`../README.md`](../README.md), [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), [`../../policy/README.md`](../../policy/README.md), [`../../.github/workflows/README.md`](../../.github/workflows/README.md) |
-| **Downstream links** | Local reproducibility cases, baseline receipts, diff reports, and any workflow or release gate that consumes them. Exact mounted filenames **NEEDS VERIFICATION**. |
+| **Downstream links** | Future reproducibility cases, baseline receipts, diff reports, and any workflow or release gate that consumes them. No checked-in downstream artifacts are currently visible in this directory on public `main`. |
 | **Why this fits KFM** | KFM doctrine expects deterministic identity checks, stale-projection checks, invalid fixtures, policy grammar validation, runtime citation-negative behavior, and auditable run receipts. Reproducibility is where those expectations become repeat-run evidence instead of one-off confidence. |
 
 ## Inputs
@@ -64,8 +67,8 @@ Accepted inputs for this directory are the **smallest artifacts needed to rerun 
 |---|---|---|
 | Pinned case manifests | A declared case with release scope, source scope, policy/profile refs, environment pins, and pass criteria. | **INFERRED / PROPOSED** |
 | Baseline receipts | Prior run receipts used as the comparison anchor. | **INFERRED / PROPOSED** |
-| Baseline digests | Expected artifact digests, spec hashes, or bounded tolerances. | **INFERRED / PROPOSED** |
-| Stable fixtures | Valid/invalid fixture packs reused by rerun cases. | **CONFIRMED as doctrinal need; mounted inventory UNKNOWN** |
+| Baseline digests | Expected artifact digests, `spec_hash` values, or bounded tolerances. | **INFERRED / PROPOSED** |
+| Stable fixtures | Valid/invalid fixture packs reused by rerun cases. | **CONFIRMED as a tests-level input class; local inventory UNKNOWN** |
 | Rerun reports | Machine-readable and human-readable comparison output explaining pass, bounded drift, or failure. | **INFERRED / PROPOSED** |
 | Environment pins | Seed values, version refs, runner flags, or other settings required to make a rerun meaningful. | **INFERRED / PROPOSED** |
 | Thin-slice evidence | Early lane proofs, especially the first hydrology-oriented thin slice if this directory becomes the home for rerun proofs on that path. | **PROPOSED** |
@@ -77,30 +80,58 @@ This directory should stay narrow. It is **not** the catch-all home for every te
 | Does **not** belong here | Put it here instead | Notes |
 |---|---|---|
 | General test strategy for the whole repo | [`../README.md`](../README.md) | That file is the broader tests entry point. |
-| Pure contract/schema shape checks | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md) | A dedicated `tests/contract/` surface is a plausible future split, but is not verified here. |
+| Pure contract/schema shape checks | [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md) | Keep shape authority and contract-home rules close to the contract lane. |
 | Policy rulepack-only checks | [`../../policy/README.md`](../../policy/README.md) | Keep decision-grammar and rulepack ownership close to policy sources. |
-| Full browser/API journey tests | Future e2e surface if the mounted repo defines one | Do not let reproducibility cases become a second home for generic end-to-end flows. |
-| One-off debugging notes | Runbooks or issue-specific notes | Reproducibility cases should be stable, reviewable, and rerunnable — not scratchpads. |
+| Full browser/API journey tests | `../e2e/` or another explicit end-to-end surface once the branch defines it | Do not let reproducibility cases become a second home for generic journey tests. |
+| One-off debugging notes | Runbooks or issue-specific notes under `../../docs/` | Reproducibility cases should be stable, reviewable, and rerunnable — not scratchpads. |
 | Exploratory notebooks that cannot run headlessly | Notebook or research workspace **NEEDS VERIFICATION** | Promote into this directory only after the rerun path is explicit. |
 | Large release artifacts themselves | Release-bearing storage surface, with links back via receipts | Store references, digests, and proofs here; do not turn this directory into a binary dump. |
 | Raw performance/load benchmarks | Dedicated performance surface **UNKNOWN** | Reproducibility asks “same declared input, same governed result?”, not “fastest possible run?”. |
 
+## Current verified snapshot
+
+The current public `main` branch proves the following:
+
+- `tests/reproducibility/` exists as a real test-family directory.
+- `tests/reproducibility/README.md` exists and is the only branch-visible file currently listed in this directory.
+- The broader tests index includes `reproducibility/` as an explicit family under `tests/`.
+- `/tests/` is assigned to `@bartytime4life` in `/.github/CODEOWNERS`.
+- Public `.github/workflows/` currently shows `README.md` only, so checked-in workflow YAML merge gates are not proven from the public tree alone.
+
+> [!NOTE]
+> What is still not proven here: exact runner/toolchain, actual executable case depth, fixture density, required checks, protected-branch settings, and whether rollback/correction drills have been exercised on a checked-out branch.
+
 ## Directory tree
 
-The mounted inventory for this directory was **not** directly visible in the current session. The tree below is therefore a **starter shape**, not a claim about current files on disk.
+### Current confirmed snapshot
 
 ```text
 tests/reproducibility/
-├── README.md                     # this file
-├── cases/                        # [PROPOSED] pinned rerun case definitions
-├── fixtures/                     # [PROPOSED] baseline inputs / valid / invalid packs
+└── README.md
+```
+
+### Proposed starter expansion shape (`PROPOSED` / `NEEDS VERIFICATION`)
+
+```text
+tests/reproducibility/
+├── README.md
+├── cases/                        # pinned rerun case definitions
+├── fixtures/                     # baseline inputs / valid / invalid packs
 │   ├── baseline/
 │   ├── valid/
 │   └── invalid/
-├── receipts/                     # [PROPOSED] saved reference receipts for comparison
-├── reports/                      # [PROPOSED] human-readable drift summaries
-└── scripts/                      # [PROPOSED] comparison helpers if not promoted elsewhere
+├── receipts/                     # saved reference receipts for comparison
+├── reports/                      # human-readable drift summaries
+└── scripts/                      # comparison helpers if not promoted elsewhere
 ```
+
+### Reading rule
+
+Use the **current confirmed snapshot** for public-branch truth.
+
+Use the **proposed starter expansion shape** only as a commit-planning scaffold.
+
+Do not silently convert a proposed layout into claims of checked-in maturity, merge-blocking coverage, or exercised reproducibility proof.
 
 ### Directory design rule
 
@@ -116,10 +147,30 @@ A good layout makes it obvious:
 
 ## Quickstart
 
+### Safe inspection commands
+
+These commands are branch-safe because they inspect what is present without assuming a particular runner.
+
+```bash
+# inspect the visible reproducibility surface
+find tests/reproducibility -maxdepth 4 -type d 2>/dev/null | sort
+find tests/reproducibility -maxdepth 4 -type f 2>/dev/null | sort
+
+# inspect adjacent contract, schema, policy, and workflow-facing surfaces
+find .github contracts policy schemas tests -maxdepth 4 -type f 2>/dev/null | sort | sed -n '1,240p'
+
+# inspect ownership and public workflow-lane clues
+sed -n '1,200p' .github/CODEOWNERS 2>/dev/null || true
+sed -n '1,220p' tests/README.md 2>/dev/null || true
+sed -n '1,220p' .github/workflows/README.md 2>/dev/null || true
+```
+
+### Starter rerun flow (`PSEUDOCODE`)
+
 The real task runner, case filenames, and workflow hooks remain **NEEDS VERIFICATION**, so the snippet below is intentionally labeled as pseudocode.
 
 ```bash
-# PSEUDOCODE — replace placeholders after direct repo inspection
+# PSEUDOCODE — replace placeholders after direct checkout inspection
 
 # 1) choose a pinned reproducibility case
 CASE="tests/reproducibility/cases/<case>.yaml"
@@ -160,7 +211,7 @@ That usually includes some combination of:
 
 - input scope,
 - release reference,
-- transform or spec hash,
+- transform or `spec_hash`,
 - environment class,
 - seed values,
 - policy/profile refs,
@@ -239,7 +290,7 @@ flowchart LR
 | Canonical identity rerun | Stable IDs, version semantics, and schema-valid emitted objects | `DatasetVersion`, validation outputs, baseline fixture refs | Exact match unless the case declares additive, reviewable drift | **CONFIRMED doctrine / PROPOSED local case** |
 | Policy decision rerun | Same decision result, reasons, obligations, and audit linkage for the same policy basis | `DecisionEnvelope`, policy/profile refs | Exact match for fixed inputs and fixed policy version | **CONFIRMED doctrine / PROPOSED local case** |
 | Projection rebuild rerun | Same release linkage and digest, or declared bounded rebuild rule | `ProjectionBuildReceipt`, artifact digests, stale-after policy | Exact digest match by default; bounded rule only if explicitly declared | **CONFIRMED doctrine / PROPOSED local case** |
-| Runtime envelope rerun | Same governed outcome class and visible trust state | `RuntimeResponseEnvelope`, citations check, surface state, decision ref | Same `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` class and same required linkage | **CONFIRMED doctrine / PROPOSED local case** |
+| Runtime envelope rerun | Same governed outcome class and visible trust state | `RuntimeResponseEnvelope`, citation checks, surface state, decision ref | Same `ANSWER` / `ABSTAIN` / `DENY` / `ERROR` class and same required linkage | **CONFIRMED doctrine / PROPOSED local case** |
 | Release proof rerun | Same public-safe release assembly | `ReleaseManifest` / `ReleaseProofPack`, docs/accessibility gate refs, rollback note | Reconstructed proof matches declared scope and digest expectations | **INFERRED / PROPOSED** |
 
 ### Result classes for reproducibility cases
@@ -256,14 +307,15 @@ flowchart LR
 ### Minimum credible definition of done
 
 - [ ] One reproducibility case is checked in with a pinned scope, pinned comparison basis, and explicit pass criteria.
+- [ ] The directory contains the minimum case assets needed to rerun and compare that case.
 - [ ] The case can be run twice without changing its declared inputs.
 - [ ] Both runs emit receipts that can be compared automatically.
 - [ ] The comparison checks at least `spec_hash`, artifact digests, release refs, and outcome class.
 - [ ] The comparison output identifies the first divergent field when the case fails.
 - [ ] The case includes at least one expected negative-path or fail-closed example where relevant.
 - [ ] Any tolerated drift is written as a bounded rule in the case definition, not accepted informally.
-- [ ] The broader tests index links to this directory once the mounted repo confirms the path.
-- [ ] Workflow documentation is updated if this case becomes part of a merge or release gate.
+- [ ] `tests/README.md` and this README stay synchronized when the family meaning or visible inventory changes.
+- [ ] Workflow documentation is updated if reproducibility checks become part of a merge or release gate.
 
 ### Review gates for maintainers
 
@@ -271,6 +323,7 @@ flowchart LR
 - [ ] Could another maintainer reconstruct the case without tribal knowledge?
 - [ ] Are large artifacts referenced by receipt and digest rather than copied here casually?
 - [ ] Does the case preserve KFM’s fail-closed posture when evidence, policy, or scope is incomplete?
+- [ ] Does the README keep current branch truth separate from proposed future inventory?
 
 ## FAQ
 
@@ -290,16 +343,20 @@ Yes. In KFM, fail-closed behavior is part of the trust contract. If the case exp
 
 Usually no. Prefer manifests, receipts, digest baselines, and comparison reports here. Keep heavyweight release artifacts in their release-bearing storage surface and link them through receipts.
 
+### Does the current public branch prove runnable reproducibility coverage?
+
+No. It proves directory presence and README content, not checked-in case assets, runner selection, required checks, external CI configuration, or exercised rollback/correction history.
+
 ### What should be the first case?
 
-A single thin slice with explicit receipts, fixed scope, and strong place/time semantics is better than a broad multi-surface case. If the repo adopts the hydrology-first sequencing already favored in doctrine, that lane is a sensible first candidate.
+A single thin slice with explicit receipts, fixed scope, and strong place/time semantics is better than a broad multi-surface case. If the repo keeps the hydrology-first sequencing already favored in doctrine, that lane is a sensible first candidate.
 
 ## Appendix
 
 <details>
 <summary><strong>Illustrative reproducibility case template</strong> (PROPOSED)</summary>
 
-The example below is a template, not a claim about mounted filenames or runner syntax.
+The example below is a template, not a claim about checked-in filenames or runner syntax.
 
 ```yaml
 case_id: repro.<lane>.<artifact-family>.v1
@@ -333,7 +390,7 @@ expected:
   fail_closed_allowed: true
 
 notes:
-  - Replace placeholders after mounted repo inspection.
+  - Replace placeholders after direct checkout inspection.
   - If bounded drift is allowed, declare the rule explicitly here.
 ```
 
