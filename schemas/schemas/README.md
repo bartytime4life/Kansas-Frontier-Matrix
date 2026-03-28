@@ -1,3 +1,18 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/<TODO-VERIFY-UUID>
+title: schemas/schemas
+type: standard
+version: v1
+status: draft
+owners: @bartytime4life
+created: <TODO-VERIFY-CREATED-DATE>
+updated: <TODO-SET-ON-MERGE>
+policy_label: <TODO-VERIFY-POLICY-LABEL>
+related: [schemas/README.md, schemas/contracts/README.md, schemas/standards/README.md, schemas/tests/README.md, schemas/workflows/README.md, contracts/README.md, docs/standards/README.md, tests/README.md, .github/workflows/README.md, policy/README.md]
+tags: [kfm, schemas, boundary-readme, scaffold, non-canonical]
+notes: [doc_id placeholder not yet verified from repo evidence, created/updated dates need repo-side confirmation, policy label not directly evidenced in inspected public sources]
+[/KFM_META_BLOCK_V2] -->
+
 <a id="top"></a>
 
 # schemas/schemas
@@ -18,7 +33,7 @@ _Boundary README for the `schemas/schemas/` scaffold so this nested lane stays d
 > **NEEDS VERIFICATION:** nothing in this path currently proves a mounted schema registry, merge gate, or canonical schema-home decision. Do **not** quietly treat `schemas/schemas/` as the authoritative place for trust-bearing contract families.
 
 > [!NOTE]
-> The parent [`../README.md`](../README.md) still carries older inventory wording from before the visible nested `schemas/` scaffold exposed sibling lanes such as `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows`. Keep parent and child inventory language synchronized when tree-shape prose changes.
+> The parent [`../README.md`](../README.md) still carries older inventory wording that describes `schemas/` as `README.md`-only. The live public tree now shows visible scaffold siblings `contracts/`, `schemas/`, `standards/`, `tests/`, and `workflows`; keep parent and child inventory language synchronized when tree-shape prose changes.
 
 ## Scope
 
@@ -148,7 +163,7 @@ schemas/
     └── README.md
 ```
 
-### Current local target
+### Current public target lane
 
 ```text
 schemas/schemas/
