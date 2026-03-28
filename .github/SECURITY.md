@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <NEEDS-VERIFICATION-DATE>
 updated: <NEEDS-VERIFICATION-DATE>
 policy_label: public
-related: [../README.md, ../CONTRIBUTING.md, ./README.md, ./CODEOWNERS, <NEEDS-VERIFICATION: ../SECURITY.md>]
+related: [../README.md, ../CONTRIBUTING.md, ./README.md, ./CODEOWNERS, ../SECURITY.md]
 tags: [kfm, security, github, disclosure]
-notes: [UUID and dates need verification, verify live owner mapping against ./CODEOWNERS, keep one canonical disclosure-policy path across this file and any root SECURITY.md if present, live repo tree and GitHub security settings were not directly verified in this drafting pass]
+notes: [UUID and dates need verification, root ../SECURITY.md currently exists and should delegate or remain text-aligned with this file, GitHub private vulnerability reporting is visible in the current public Security tab, fallback inbox/SLA/platform settings still need verification]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM GitHub Security Policy
@@ -20,17 +20,17 @@ Private-first vulnerability reporting, safe handling, and coordinated disclosure
 | Field | Value |
 |---|---|
 | Status | `experimental` *(document status: `draft`)* |
-| Owners | `@bartytime4life` *(verify live mapping against [`./CODEOWNERS`](./CODEOWNERS) before merge)* |
+| Owners | `@bartytime4life` *(confirmed by [`./CODEOWNERS`](./CODEOWNERS); broad single-owner baseline at current repo scope)* |
 | Badges | ![Status badge][badge-status] ![Owners badge][badge-owners] ![Path badge][badge-path] ![Reporting badge][badge-reporting] ![Posture badge][badge-posture] ![Trust badge][badge-trust] |
-| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) |
+| Quick jumps | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Supported releases and scope](#supported-releases-and-scope) · [Report a vulnerability](#report-a-vulnerability) · [Good-faith research and safe-harbor](#good-faith-research-and-safe-harbor) · [Disclosure flow](#disclosure-flow) · [Checklist](#security-affecting-change-checklist) · [FAQ](#faq) |
 | Intended path | `.github/SECURITY.md` |
-| Canonical disclosure path | `.github/SECURITY.md` *(if `../SECURITY.md` exists, reduce it to a pointer or keep it text-aligned after live verification)* |
+| Canonical disclosure path | `.github/SECURITY.md` *(root [`../SECURITY.md`](../SECURITY.md) also exists today; keep it delegating or text-aligned to avoid drift)* |
 
 > [!IMPORTANT]
-> Keep one canonical disclosure-policy path. If the repository also carries a root `../SECURITY.md`, either reduce that file to a short pointer or keep it text-aligned with this file after live repo verification.
+> The current public GitHub Security tab exposes **Report a vulnerability**. Use that lane first. Keep `.github/SECURITY.md` as the canonical public policy, and keep the root [`../SECURITY.md`](../SECURITY.md) delegating or text-aligned so disclosure guidance does not drift.
 
 > [!NOTE]
-> This draft is intentionally strict about uncertainty. Live GitHub private-reporting settings, monitored inboxes, acknowledgement windows, rulesets, CODEOWNERS coverage, required checks, and root-level file layout were not directly verified in this drafting pass.
+> This draft is intentionally strict about uncertainty. GitHub private vulnerability reporting is visible in the current repo UI, but monitored fallback inboxes, acknowledgement windows, rulesets, required checks, branch-protection settings, and any alternate confidential escalation path still need verification before this document is treated as fully publication-ready.
 
 ## Scope
 
@@ -47,21 +47,23 @@ KFM treats security as part of the governed publication system, not as a detache
 
 ### Upstream context
 
-- [`../README.md`](../README.md) — repository identity and project framing *(verify live file)*
-- [`../CONTRIBUTING.md`](../CONTRIBUTING.md) — normal contribution flow for non-security changes *(verify live file)*
-- [`./README.md`](./README.md) — `.github/` operating context *(verify live file)*
-- [`./CODEOWNERS`](./CODEOWNERS) — review ownership boundary *(verify live file and mapping)*
+- [`../README.md`](../README.md) — repository identity and project framing
+- [`../CONTRIBUTING.md`](../CONTRIBUTING.md) — normal contribution flow for non-security changes
+- [`./README.md`](./README.md) — `.github/` operating context
+- [`./CODEOWNERS`](./CODEOWNERS) — review ownership boundary
+- [`../SECURITY.md`](../SECURITY.md) — current secondary public security-policy path that should delegate here or remain text-aligned
 
 ### Downstream effect
 
-- private vulnerability intake
+- GitHub private vulnerability intake through the Security tab
+- public issue intake that should redirect sensitive disclosures away from [`./ISSUE_TEMPLATE/README.md`](./ISSUE_TEMPLATE/README.md)
 - maintainer triage and containment
 - governed remediation, mitigation, rollback, or correction
 - release / correction evidence updates
 - coordinated disclosure once users are not needlessly exposed
 
 > [!WARNING]
-> Treat any unverified root-level `SECURITY.md`, private-reporting setting, workflow name, escalation alias, or reviewer mapping as a merge-time verification item, not as a settled repo fact.
+> Treat any unpublished fallback inbox, escalation alias, ruleset assumption, required-check claim, or branch-protection expectation as a merge-time verification item, not as a settled repo fact.
 
 ## Accepted inputs
 
@@ -92,12 +94,12 @@ Use this policy for **private** reports involving the following security-affecti
 
 ## Supported releases and scope
 
-Exact supported versions, release inventory, default branch name, and live GitHub security settings were not directly verified for this draft. Until the live repository surfaces those details, use the matrix below.
+Repository release support still needs explicit maintainer definition, but several repo-surface facts are already visible.
 
 | Scope | Current posture |
 |---|---|
-| Default branch / active maintenance line | `NEEDS VERIFICATION` |
-| Tagged releases / published release channels | `NEEDS VERIFICATION` |
+| Default branch / active maintenance line | `main` |
+| GitHub Releases view | `No releases currently visible` |
 | Exact supported-version matrix | `NEEDS VERIFICATION` |
 | Repository surfaces that affect governed publication, policy, verification, runtime trust, or release integrity | In scope |
 | GitHub workflow, ruleset, CODEOWNERS, secret, attestation, or branch-protection paths that can weaken trust or release integrity | In scope |
@@ -108,7 +110,7 @@ Exact supported versions, release inventory, default branch name, and live GitHu
 | Third-party infrastructure not controlled by KFM | Out of scope unless the issue is created by KFM-controlled configuration, exposure, or handling |
 
 > [!NOTE]
-> Before publication, replace the release placeholders above with the actual maintained branches, tags, or release windows used by this repository.
+> The absence of published GitHub Releases does not by itself define the supported-version policy. Maintainers should publish an explicit support window here if support is narrower than “current `main` branch plus unreleased repository state.”
 
 ## Report a vulnerability
 
@@ -118,15 +120,15 @@ Report security issues **privately first**.
 
 | Lane | When to use | Status |
 |---|---|---|
-| GitHub **Security → Report a vulnerability** | Preferred if GitHub private vulnerability reporting is enabled for this public repository | `NEEDS VERIFICATION` |
-| Private security inbox | Fallback if GitHub private reporting is unavailable or unsuitable for the report | `NEEDS VERIFICATION` |
-| Confidential maintainer fallback | Use if the primary lane is unavailable | `NEEDS VERIFICATION` |
+| GitHub **Security → Report a vulnerability** | Preferred GitHub-native lane for this public repository | `CONFIRMED available` |
+| Private security inbox | Fallback if maintainers publish a monitored non-GitHub confidential lane | `NEEDS VERIFICATION` |
+| Confidential maintainer fallback | Use only if the primary lane is unavailable and maintainers explicitly publish a confidential fallback | `NEEDS VERIFICATION` |
 | Public issue / discussion / pull request | Never for undisclosed security findings | Do **not** use |
 
 | Field | Value |
 |---|---|
-| Primary private channel | `NEEDS VERIFICATION — add monitored security inbox or confirmed GitHub private-reporting path` |
-| Secondary / fallback | `NEEDS VERIFICATION — add confidential maintainer fallback` |
+| Primary private channel | `GitHub Security tab → Report a vulnerability` |
+| Secondary / fallback | `NEEDS VERIFICATION — publish a monitored inbox or explicit confidential maintainer fallback if one exists` |
 | Encryption / public key | `OPTIONAL / NEEDS VERIFICATION` |
 | Acknowledgement target | `NEEDS VERIFICATION` |
 | Status update cadence | `NEEDS VERIFICATION` |
@@ -134,10 +136,10 @@ Report security issues **privately first**.
 | Bounty / reward program | `No program is confirmed in visible project evidence; verify before publication` |
 
 > [!WARNING]
-> Replace the reporting placeholders above before publishing this file as the live public entrypoint.
+> Do not publish a fallback inbox, public key, or disclosure SLA here unless the channel is actually monitored and the response expectations are real.
 
 > [!NOTE]
-> GitHub private vulnerability reporting and `SECURITY.md` are related but distinct. If private reporting is enabled, use the GitHub Security tab. If it is not enabled, this file remains the canonical public instruction surface for how to initiate private disclosure.
+> GitHub private vulnerability reporting and `SECURITY.md` are related but distinct. In this repository the GitHub advisory intake button is currently visible, so that is the preferred lane. This file remains the canonical public policy and fallback instruction surface.
 
 ### What to send
 
@@ -252,9 +254,9 @@ No public disclosure should outrun containment, fix verification, or a clearly d
 
 ```mermaid
 flowchart LR
-    A[Researcher or reporter] --> B{GitHub private reporting enabled?}
+    A[Researcher or reporter] --> B{GitHub private reporting available?}
     B -- Yes --> C[Security tab private report]
-    B -- No --> D[Private contact lane from this policy]
+    B -- No --> D[Published fallback private contact]
     C --> E[Triage and scope check]
     D --> E
     E --> F[Safe reproduction]
@@ -276,9 +278,10 @@ Use this list for any change that can affect trust, exposure, release integrity,
 - [ ] Threat-model impact reviewed
 - [ ] Trust membrane preserved; no new direct client/store or client/model bypass
 - [ ] Least-privilege impact reviewed for users, services, jobs, secrets, and automation tokens
+- [ ] GitHub Security tab private reporting remains enabled, or an alternate confidential lane is published in the same change
 - [ ] Workflow permissions minimized and short-lived identity preferred where adopted
-- [ ] CODEOWNERS, required reviews, and ruleset/branch-protection impact reviewed *(verify live repo settings)*
-- [ ] Required checks, docs gates, policy gates, and attestation/signing gates still match intended trust posture *(verify live repo settings)*
+- [ ] CODEOWNERS, required reviews, and ruleset/branch-protection impact reviewed
+- [ ] Required checks, docs gates, policy gates, and attestation/signing gates still match intended trust posture
 - [ ] Policy and evidence resolution still occur in the request or publication path
 - [ ] Required proof objects still exist where the lane depends on them
 - [ ] Negative paths tested where relevant: deny, abstain, citation-negative, stale-state, correction, rollback
@@ -290,7 +293,11 @@ Use this list for any change that can affect trust, exposure, release integrity,
 
 ### Can I open a public issue?
 
-Not for undisclosed security findings. Use a private reporting path.
+Not for undisclosed security findings. Use a private reporting path instead. The current public issue-intake guidance already treats security disclosures as out-of-band from normal issue flow.
+
+### Is GitHub private vulnerability reporting currently available here?
+
+Yes. The repository’s public Security tab currently exposes **Report a vulnerability**. Use that lane first.
 
 ### What if I am not sure the issue is security-related?
 
@@ -306,7 +313,7 @@ Yes, when they weaken disclosure safety, contributor review gates, trust cues, p
 
 ### Does GitHub private vulnerability reporting replace this file?
 
-No. If enabled, it is the preferred GitHub-native intake lane. This file remains the canonical public policy and fallback instruction surface.
+No. In this repository it is currently the preferred GitHub-native intake lane. This file remains the canonical public policy and fallback instruction surface.
 
 ### What if I accidentally accessed data?
 
@@ -329,14 +336,14 @@ Yes. KFM is fail-closed. A safe negative outcome is better than a polished but u
 
 Before merging this file, verify and complete the following:
 
-- [ ] Confirm whether GitHub private vulnerability reporting is enabled for the repository.
-- [ ] Confirm the private reporting inbox or maintainers’ fallback contact.
-- [ ] Confirm whether a root `../SECURITY.md` exists and decide whether it should point here or mirror this file exactly.
-- [ ] Verify live owner mapping against [`./CODEOWNERS`](./CODEOWNERS).
-- [ ] Replace acknowledgement, status-update, and coordinated-disclosure placeholders.
+- [ ] Reconfirm that GitHub private vulnerability reporting remains enabled and visible in the public Security tab.
+- [ ] Confirm the private reporting inbox or maintainers’ fallback contact, if any exists beyond the GitHub advisory lane.
+- [ ] Decide whether the root [`../SECURITY.md`](../SECURITY.md) should become a short pointer to this file or remain text-aligned with it.
+- [ ] Replace acknowledgement, status-update, and coordinated-disclosure placeholders with real maintained values.
 - [ ] Confirm whether the repo offers encryption guidance, a reward program, or neither.
 - [ ] Recheck live rulesets, branch protection, required status checks, signed-commit settings, and CODEOWNERS enforcement expectations referenced by this policy.
-- [ ] Decide whether to publish a public issue template or issue-form guidance directing undisclosed security findings away from public issues.
+- [ ] Recheck the live `.github/workflows/` inventory and any platform-side required checks before linking security expectations to specific workflow gates elsewhere.
+- [ ] Ensure public issue-intake guidance continues to route undisclosed security findings away from public issues.
 - [ ] Set the final KFM metadata UUID and commit-time dates in the meta block.
 - [ ] Recheck all relative links against the live checkout before commit.
 
