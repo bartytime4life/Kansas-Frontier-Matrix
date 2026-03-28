@@ -10,25 +10,32 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [tests/README.md, tests/e2e/README.md, contracts/README.md, policy/README.md, schemas/README.md, .github/workflows/README.md]
 tags: [kfm, tests, e2e, runtime-proof]
-notes: [doc_id, created, updated, and policy_label need verification; owner is derived from the current /tests/ CODEOWNERS mapping]
+notes: [doc_id, created, updated, and policy_label need verification; owner is derived from the current public-main /tests/ CODEOWNERS mapping]
 [/KFM_META_BLOCK_V2] -->
 
 # runtime_proof
 
 _End-to-end runtime proof surface for KFM request-time evidence resolution, citations, finite answer outcomes, and fail-closed trust behavior._
 
+> [!NOTE]
+> The meta block remains `status: draft` and keeps reviewable placeholders for `doc_id`, `created`, `updated`, and `policy_label` until document-record metadata is reverified from repo history or governance records.
+> The impact block below describes the current maturity of the `runtime_proof/` surface itself.
+
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tests/e2e/runtime_proof/README.md`  
 > **Repo fit:** leaf end-to-end proof family under [`../README.md`](../README.md) for request-time governed outcomes; downstream of [`../../README.md`](../../README.md), [`../../../README.md`](../../../README.md), [`../../../contracts/README.md`](../../../contracts/README.md), [`../../../policy/README.md`](../../../policy/README.md), [`../../../schemas/README.md`](../../../schemas/README.md), [`../../../docs/README.md`](../../../docs/README.md), [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md), and [`../../../CONTRIBUTING.md`](../../../CONTRIBUTING.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-runtime%20proof-8250df) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![public inventory](https://img.shields.io/badge/current%20public%20inventory-directory%20visible-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-runtime%20proof-8250df) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![public inventory](https://img.shields.io/badge/current%20public%20inventory-directory%20visible-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
 >
 > [!IMPORTANT]
 > Use this family when the main question is **what the governed system emits at request time** — especially evidence resolution, citation behavior, scope echo, and the finite outcomes `ANSWER`, `ABSTAIN`, `DENY`, and `ERROR`.
 >
 > [!WARNING]
-> Current public repo evidence confirms the directory and its place in the test-family lattice, but it does **not** yet prove executable suite depth, a mounted runner, checked-in workflow YAML, or exercised runtime traces. Keep commands and case inventories evidence-bounded until the checked-out branch is verified.
+> Current public repo evidence confirms the directory and its place in the test-family lattice, but it does **not** yet prove executable suite depth, a mounted runner, checked-in workflow YAML, or exercised runtime traces.
+> Keep commands and case inventories evidence-bounded until the checked-out branch is verified.
+
+---
 
 ## Scope
 
@@ -127,6 +134,7 @@ The current public-branch evidence used for this revision supports the following
 - `tests/e2e/README.md` places `runtime_proof/` beside `release_assembly/` and `correction/` as one of the three current end-to-end proof leaves.
 - `/tests/` ownership currently resolves to `@bartytime4life`.
 - Public `.github/workflows/` currently exposes `README.md` only; checked-in workflow YAML and merge-blocking automation are **not** proven from the visible public tree alone.
+- `.github/workflows/README.md` also records prior workflow activity and deleted workflow filenames as historical reconstruction clues, but that history is **signal**, not proof of current checked-in YAML.
 - Exact runner/toolchain, executable suite depth, fixture density, emitted proof objects, screenshot baseline inventory, and required checks remain **NEEDS VERIFICATION**.
 
 > [!NOTE]
