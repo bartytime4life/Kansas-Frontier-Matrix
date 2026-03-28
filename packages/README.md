@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 policy_label: public
-related: [../README.md, ../.github/README.md, ../apps/, ../contracts/, ../schemas/, ../policy/, ../data/, ../docs/, ../infra/, ../tests/, ../tools/, ../scripts/, ./catalog/, ./domain/, ./evidence/, ./indexers/, ./ingest/, ./policy/]
+related: [../README.md, ../.github/README.md, ../.github/workflows/README.md, ../apps/, ../contracts/, ../schemas/, ../policy/, ../data/, ../data/registry/README.md, ../docs/, ../infra/, ../tests/, ../tools/, ../scripts/, ./catalog/, ./domain/, ./evidence/, ./indexers/, ./ingest/, ./policy/]
 tags: [kfm, packages, readme]
-notes: [doc_id and repo-side dates need verification; owner verified against ../.github/CODEOWNERS on main; live GitHub fetch confirms packages/ plus catalog/, domain/, evidence/, indexers/, ingest/, and policy/ child README surfaces; current child package READMEs are scaffold-only]
+notes: [doc_id and repo-side dates need verification, owner verified against ../.github/CODEOWNERS on public main, public main confirms packages/ plus catalog/, domain/, evidence/, indexers/, ingest/, and policy/ child README surfaces, child package directories remain README-only in public view even though several child READMEs now carry boundary-contract prose]
 [/KFM_META_BLOCK_V2] -->
 
 # `packages/`
@@ -24,18 +24,18 @@ Shared internal packages and reusable module boundaries for KFM’s governed tru
 ![branch](https://img.shields.io/badge/branch-main-2ea44f)
 ![truth](https://img.shields.io/badge/truth-evidence--bounded-blue)
 ![membrane](https://img.shields.io/badge/trust%20membrane-preserved-6a5acd)
-![children](https://img.shields.io/badge/child%20state-scaffold--first-lightgrey)
+![children](https://img.shields.io/badge/child%20state-README--first-lightgrey)
 
 | Field | Value |
 |---|---|
 | Status | `active` directory · `review` README revision |
 | Owners | `@bartytime4life` *(verified in [`../.github/CODEOWNERS`](../.github/CODEOWNERS))* |
 | Path | [`packages/README.md`](./README.md) |
-| Audited repo | `bartytime4life/Kansas-Frontier-Matrix` |
+| Audited public tree | `bartytime4life/Kansas-Frontier-Matrix@main` |
 | Default branch | `main` |
 | Repo fit | Shared internal module boundary between top-level authority surfaces and deployable [`../apps/`](../apps/) |
-| Current repo evidence | `packages/` exists on `main`; `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, and `policy/` each resolve and currently expose a scaffold README |
-| Truth posture | `CONFIRMED` live GitHub repo/root shape and owner fallback · `CONFIRMED` neighboring repo docs for package-boundary language · `UNKNOWN` deeper mounted-checkout implementation depth inside each child package |
+| Current repo evidence | `packages/` exists on public `main`; `catalog/`, `domain/`, `evidence/`, `indexers/`, `ingest/`, and `policy/` each resolve and currently present README-only package surfaces |
+| Truth posture | `CONFIRMED` current public path and fallback owner · `CONFIRMED` neighboring repo docs and child package README surfaces · `NEEDS VERIFICATION` deeper package-local code, manifests, tests, fixtures, and imports |
 | Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current package surface](#current-package-surface) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Package map](#package-map) · [Boundary rules](#boundary-rules) · [Task list](#task-list) · [FAQ](#faq) |
 
 ---
@@ -49,13 +49,15 @@ Shared internal packages and reusable module boundaries for KFM’s governed tru
 > No package should create a hidden client-to-store path, a second policy path, or a shadow truth source.
 
 > [!NOTE]
-> The current live repo proves the **directory surface** and the fallback owner. It does **not** prove mature package-local code, manifests, tests, or runtime wiring beneath every child directory. This README therefore separates **current visible state** from **doctrine-led intended role**.
+> Current public `main` proves the **directory surface** and the child README surfaces.
+> It does **not** prove package-local code, manifests, tests, fixtures, or runtime wiring beneath those directories.
+> Several child READMEs now carry directory-contract prose, but the package family is still **README-first** in public view.
 
 ## Scope
 
 `packages/` holds shared internal libraries and core modules used by KFM services, workers, and other governed runtime surfaces.
 
-Its job is to keep reusable logic bounded, inspectable, and reviewable without smearing domain rules across deployable apps or quietly relocating authority away from top-level contracts, schemas, policy bundles, and governed data artifacts.
+Its job is to keep reusable logic bounded, inspectable, and reviewable without smearing domain rules across deployable apps or quietly relocating authority away from top-level contracts, schemas, policy bundles, governed data artifacts, and trust-visible runtime seams.
 
 In KFM terms, packages should help preserve:
 
@@ -70,10 +72,10 @@ In KFM terms, packages should help preserve:
 
 | Label | Meaning here |
 |---|---|
-| **CONFIRMED** | Directly supported by the live repo files inspected for this revision |
+| **CONFIRMED** | Directly supported by the current public repo files inspected for this revision |
 | **INFERRED** | Strongly suggested by neighboring repo docs and current directory contracts, but not re-proven from deeper mounted code in this task |
 | **PROPOSED** | Recommended package-boundary guidance consistent with KFM doctrine |
-| **UNKNOWN / NEEDS VERIFICATION** | Not established strongly enough from the inspected repo files to present as current implementation reality |
+| **UNKNOWN / NEEDS VERIFICATION** | Not established strongly enough from the inspected public tree to present as current implementation reality |
 
 ## Repo fit
 
@@ -91,6 +93,8 @@ In KFM terms, packages should help preserve:
 
 ### Adjacent engineering surfaces
 
+- [`../.github/workflows/README.md`](../.github/workflows/README.md) — current public workflow lane doc and merge-gate context
+- [`../data/registry/README.md`](../data/registry/README.md) — governed source-registration handoff relevant to shared intake helpers
 - [`../tests/README.md`](../tests/README.md) — verification and fixture posture
 - [`../tools/README.md`](../tools/README.md) — validators and utility tooling
 - [`../scripts/README.md`](../scripts/README.md) — supporting automation and non-authoritative helper entrypoints
@@ -144,15 +148,16 @@ The following do **not** belong in `packages/`:
 
 | Path | Present on `main` | Current visible state | Reading rule |
 |---|---|---|---|
-| [`./catalog/`](./catalog/) | Yes | `README.md` scaffold only | Treat intended ownership as root-contract guidance until deeper files exist |
-| [`./domain/`](./domain/) | Yes | `README.md` scaffold only | Same |
-| [`./evidence/`](./evidence/) | Yes | `README.md` scaffold only | Same |
-| [`./indexers/`](./indexers/) | Yes | `README.md` scaffold only | Same |
-| [`./ingest/`](./ingest/) | Yes | `README.md` scaffold only | Same |
-| [`./policy/`](./policy/) | Yes | `README.md` scaffold only | Same |
+| [`./catalog/`](./catalog/) | Yes | README-only public surface; child boundary README present | Use the child README plus this parent contract until deeper files exist |
+| [`./domain/`](./domain/) | Yes | README-only public surface; child boundary README present | Same |
+| [`./evidence/`](./evidence/) | Yes | README-only public surface; child boundary README present | Same |
+| [`./indexers/`](./indexers/) | Yes | README-only public surface; child boundary README present | Same |
+| [`./ingest/`](./ingest/) | Yes | README-only public surface; child boundary README present | Same |
+| [`./policy/`](./policy/) | Yes | README-only public surface; child boundary README present | Same |
 
 > [!TIP]
-> Right now, the **root** `packages/README.md` carries most of the directory contract. As child packages harden, their local READMEs should graduate from scaffold text to package-specific ownership, inputs, exclusions, and tests.
+> Right now, the **root** `packages/README.md` still carries the family-level contract.
+> Child READMEs already carry package-local boundary prose, but the public tree still does not prove package-local code, manifests, tests, or fixtures beneath those directories.
 
 ## Directory tree
 
@@ -162,21 +167,22 @@ The following do **not** belong in `packages/`:
 packages/
 ├── README.md
 ├── catalog/
-│   └── README.md        # scaffold-only currently
+│   └── README.md        # README-only in public view
 ├── domain/
-│   └── README.md        # scaffold-only currently
+│   └── README.md        # README-only in public view
 ├── evidence/
-│   └── README.md        # scaffold-only currently
+│   └── README.md        # README-only in public view
 ├── indexers/
-│   └── README.md        # scaffold-only currently
+│   └── README.md        # README-only in public view
 ├── ingest/
-│   └── README.md        # scaffold-only currently
+│   └── README.md        # README-only in public view
 └── policy/
-    └── README.md        # scaffold-only currently
+    └── README.md        # README-only in public view
 ```
 
 > [!NOTE]
-> This tree is intentionally conservative. It proves directory presence and README surfaces on `main`; it does **not** prove package manifests, `src/` trees, tests, or runtime adoption inside each child package.
+> This tree is intentionally conservative.
+> It proves directory presence and README surfaces on public `main`; it does **not** prove package manifests, `src/` trees, tests, or runtime adoption inside each child package.
 
 ## Quickstart
 
@@ -191,12 +197,16 @@ find packages -maxdepth 4 -type f | sort
 ### 2) Recheck adjacent authority surfaces
 
 ```bash
-sed -n '1,200p' packages/README.md
+sed -n '1,220p' packages/README.md
 sed -n '1,160p' .github/CODEOWNERS
 sed -n '1,220p' README.md
-sed -n '1,220p' .github/README.md
+sed -n '1,240p' .github/README.md
+sed -n '1,220p' .github/workflows/README.md
 sed -n '1,220p' contracts/README.md
+sed -n '1,220p' schemas/README.md
 sed -n '1,220p' policy/README.md
+sed -n '1,240p' data/README.md
+sed -n '1,220p' data/registry/README.md
 ```
 
 ### 3) Read the child package docs before claiming local ownership
@@ -204,7 +214,7 @@ sed -n '1,220p' policy/README.md
 ```bash
 for d in catalog domain evidence indexers ingest policy; do
   echo "---- $d ----"
-  test -f "packages/$d/README.md" && sed -n '1,120p' "packages/$d/README.md"
+  test -f "packages/$d/README.md" && sed -n '1,160p' "packages/$d/README.md"
 done
 ```
 
@@ -242,9 +252,9 @@ If the answer is mostly “no,” it probably should not become a new package.
 
 Use `packages/README.md` to decide **whether logic belongs in `packages/` at all**. Then confirm the relevant child package README and live files before documenting narrower ownership.
 
-### Treat child READMEs as placeholders until they harden
+### Treat child READMEs as boundary docs, not implementation proof
 
-The current repo proves that each child package has a README surface. It does **not** yet prove deep package-local doc maturity. Avoid writing package-local prose that outruns the visible files.
+The current public tree proves that each child package has a README surface, and several now carry package-specific directory-contract language. It still does **not** prove deeper package-local code maturity. Avoid package-local prose that outruns visible files.
 
 ### Prefer named package homes over `common/` or `utils/` sprawl
 
@@ -264,7 +274,7 @@ If a package is added, renamed, split, or materially repurposed, update the chil
 
 ### Re-run the inventory when package depth changes
 
-Once a child package grows beyond a scaffold README, refresh the current-state table and tree so the directory contract stays truthful.
+Once a child package grows beyond a README-only public surface, refresh the current-state table and tree so the directory contract stays truthful.
 
 ## Diagram
 
@@ -324,12 +334,12 @@ flowchart LR
 
 | Package | Root-contract reading | Current visible state | Must never do |
 |---|---|---|---|
-| [`./catalog/`](./catalog/) | catalog / triplet construction and validation logic | scaffold README only | become an ad hoc runtime API surface |
-| [`./domain/`](./domain/) | stable domain vocabulary, invariants, and semantic core | scaffold README only | own deployable side effects or outer-layer IO |
-| [`./evidence/`](./evidence/) | `EvidenceRef` → `EvidenceBundle` resolution and policy-safe presentation helpers | scaffold README only | emit uncited or policy-unchecked evidence surfaces |
-| [`./indexers/`](./indexers/) | rebuildable search / map / runtime projection builders | scaffold README only | become authoritative truth or source-of-record |
-| [`./ingest/`](./ingest/) | source intake, normalization, validation, and receipt helpers | scaffold README only | serve clients directly or bypass lifecycle gates |
-| [`./policy/`](./policy/) | shared internal policy-support logic and adapters | scaffold README only | replace repo-authoritative [`../policy/`](../policy/) |
+| [`./catalog/`](./catalog/) | catalog / triplet construction and validation logic | README-only public surface | become an ad hoc runtime API surface |
+| [`./domain/`](./domain/) | stable domain vocabulary, invariants, and semantic core | README-only public surface | own deployable side effects or outer-layer IO |
+| [`./evidence/`](./evidence/) | `EvidenceRef` → `EvidenceBundle` resolution and policy-safe presentation helpers | README-only public surface | emit uncited or policy-unchecked evidence surfaces |
+| [`./indexers/`](./indexers/) | rebuildable search / map / runtime projection builders | README-only public surface | become authoritative truth or source-of-record |
+| [`./ingest/`](./ingest/) | source intake, normalization, validation, and receipt helpers | README-only public surface | serve clients directly or bypass lifecycle gates |
+| [`./policy/`](./policy/) | shared internal policy-support logic and adapters | README-only public surface | replace repo-authoritative [`../policy/`](../policy/) |
 
 ### Package-adjacent governed objects
 
@@ -377,9 +387,9 @@ Treat them differently:
 
 If a change alters governing policy behavior, it should not live **only** inside `packages/policy/`.
 
-### Scaffold-first rule
+### README-first rule
 
-When a child package is still README-first, upgrade the child README and local file structure **before** writing documentation that implies mature code ownership, manifests, tests, or runtime use.
+When a child package is still README-first in public view, upgrade the child README and local file structure **before** writing documentation that implies mature code ownership, manifests, tests, or runtime use.
 
 ### Package creation decision table
 
@@ -401,7 +411,7 @@ When a child package is still README-first, upgrade the child README and local f
 - [ ] Links to adjacent docs still resolve
 - [ ] Tests or fixtures were added or updated when behavior changed
 - [ ] Current-state tables and the directory tree were refreshed if package directories changed
-- [ ] Child package docs were promoted beyond scaffold text once they began to own real code or tests
+- [ ] Child package docs were promoted beyond README-first boundary prose once they began to own real code or tests
 
 ### Review gates worth applying
 
@@ -421,13 +431,13 @@ Put it in `packages/` when it is reusable internal logic with no standalone depl
 
 No. Packages may support, validate, or consume them, but the stronger authority should remain in top-level contract, schema, policy, and data surfaces.
 
-### Why are the child package READMEs still thin?
+### Why does this root README still carry so much of the package-family contract?
 
-Because the current live repo surface proves the directories and README files, but those local READMEs are still scaffold text. That is exactly why this root README carries most of the boundary contract today.
+Because the current public tree is still README-first. Child package READMEs now do more than placeholder pointing, but public `main` still does not prove package-local code, manifests, tests, or runtime adoption beneath those directories.
 
 ### Why is this README intentionally conservative about implementation depth?
 
-Because KFM’s trust posture is harmed by persuasive overclaiming. This file documents what the current repo visibly proves and keeps deeper package-local implementation clearly bounded until reinspection.
+Because KFM’s trust posture is harmed by persuasive overclaiming. This file documents what the current public repo visibly proves and keeps deeper package-local implementation clearly bounded until reinspection.
 
 ### Why is there both top-level and package-local policy?
 
@@ -463,12 +473,12 @@ Because KFM separates **authoritative policy assets** from **shared internal pol
 
 | Path | Current README footprint |
 |---|---|
-| `packages/catalog/README.md` | scaffold sentence only |
-| `packages/domain/README.md` | scaffold sentence only |
-| `packages/evidence/README.md` | scaffold sentence only |
-| `packages/indexers/README.md` | scaffold sentence only |
-| `packages/ingest/README.md` | scaffold sentence only |
-| `packages/policy/README.md` | scaffold sentence only |
+| `packages/catalog/README.md` | README-only public surface; child README frames STAC/DCAT/PROV catalog-closure role |
+| `packages/domain/README.md` | README-only public surface; child README frames semantic-core role |
+| `packages/evidence/README.md` | README-only public surface; child README frames `EvidenceRef` → `EvidenceBundle` role |
+| `packages/indexers/README.md` | README-only public surface; child README frames rebuildable derived-projection role |
+| `packages/ingest/README.md` | README-only public surface; child README frames source-intake / receipt role |
+| `packages/policy/README.md` | README-only public surface; child README frames internal policy-support role |
 
 </details>
 
