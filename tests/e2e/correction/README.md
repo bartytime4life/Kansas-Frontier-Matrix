@@ -10,7 +10,7 @@ updated: YYYY-MM-DD
 policy_label: public
 related: [tests/README.md, tests/e2e/README.md, .github/workflows/README.md, contracts/README.md, policy/README.md, schemas/README.md, docs/README.md]
 tags: [kfm, tests, e2e, correction, verification]
-notes: [doc_id and dates need verification; owner is grounded in current /tests CODEOWNERS coverage on public main]
+notes: [doc_id and dates need verification; status is preserved from the supplied baseline until document-record metadata is reverified; owner is grounded in current public-main CODEOWNERS coverage for /tests/]
 [/KFM_META_BLOCK_V2] -->
 
 # correction
@@ -24,8 +24,11 @@ End-to-end correction proof surface for KFM correction lineage, visible superses
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-1f6feb) ![family](https://img.shields.io/badge/family-correction%20proof-bd561d) ![branch](https://img.shields.io/badge/branch-main-0a7d5a) ![inventory](https://img.shields.io/badge/current%20public%20inventory-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-6f42c1)
 >
+> [!NOTE]
+> The meta block above keeps `doc_id`, `created`, and `updated` as reviewable placeholders until document-record metadata is reverified from repo history or governance records. The impact block below describes the current maturity of the `correction/` leaf itself.
+>
 > [!IMPORTANT]
-> Current public `main` proves that `tests/e2e/correction/` exists, but it currently exposes `README.md` only and the checked-in page is still a scaffold. Treat runner/toolchain, executable suite depth, proof-pack emitters, screenshot baselines, and exercised correction drills as **NEEDS VERIFICATION** until the checked-out branch is inspected directly.
+> Current public `main` inspection confirms that `tests/e2e/correction/` exists and currently exposes `README.md` only. That proves the leaf boundary and its documented burden, but it does **not** prove checked-in executable correction cases, runner/toolchain, proof-pack emitters, screenshot baselines, or automatically exercised correction drills.
 
 | At a glance | Working rule |
 |---|---|
@@ -57,7 +60,7 @@ This is not a generic regression bucket. If a case is really about release assem
 
 | Evidence layer | What this README treats as settled |
 |---|---|
-| **CONFIRMED — current public repo** | `tests/e2e/correction/` exists; the current public tree shows `README.md` only in this leaf; the checked-in page is still scaffold-level |
+| **CONFIRMED — current public repo** | `tests/e2e/correction/` exists; the current public tree shows `README.md` only in this leaf; no checked-in executable correction cases are visible from the public tree alone |
 | **CONFIRMED — parent e2e family contract** | [`../README.md`](../README.md) defines `correction/` as the leaf for correction, supersession, replacement, and stale-visible proof |
 | **CONFIRMED — tests family contract** | [`../../README.md`](../../README.md) treats verification as a governed trust surface, not a generic QA bucket |
 | **CONFIRMED — workflow adjacency** | [`../../../.github/workflows/README.md`](../../../.github/workflows/README.md) exists, and current public `main` shows `.github/workflows/` as `README.md` only |
@@ -129,7 +132,7 @@ The current public `main` branch proves the following:
 - `tests/e2e/` exists and currently contains `correction/`, `release_assembly/`, `runtime_proof/`, and `README.md`.
 - The parent [`../README.md`](../README.md) already assigns this leaf the burden of correction, supersession, replacement, and stale-visible proof.
 - `tests/e2e/correction/` currently contains `README.md` only.
-- The checked-in correction leaf page is still scaffold-level.
+- The checked-in leaf currently publishes boundary, placement, and inspection guidance, but the public tree does not prove executable correction cases under this leaf.
 - Public `.github/workflows/` currently exposes `README.md` only; checked-in workflow YAML is not proven from visible repo files alone.
 - `/tests/` currently resolves to `@bartytime4life` in repo ownership.
 
@@ -363,7 +366,7 @@ Because correction is not just a release concern. It is a lineage and visibility
 
 ### Does the current public repo prove executable correction drills?
 
-No. The public branch currently proves the leaf exists and that the checked-in page is scaffold-level. It does not prove a runner, case depth, required checks, or exercised drills.
+No. The public branch currently proves the leaf exists, is README-only, and documents its correction burden. It does not prove a runner, case depth, required checks, or exercised drills.
 
 ### Can this leaf own the authoritative `CorrectionNotice` schema?
 
