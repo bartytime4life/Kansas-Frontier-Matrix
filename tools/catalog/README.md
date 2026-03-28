@@ -135,7 +135,7 @@ The following do **not** belong here:
 | Authoritative DCAT/STAC/PROV records | [../../data/catalog/README.md](../../data/catalog/README.md) | helper code must not become metadata truth |
 | Raw or processed payloads | `../../data/raw/`, `../../data/work/`, `../../data/processed/` | payload storage and transformation live upstream |
 | Policy bundles, reason codes, obligation registries | [../../policy/README.md](../../policy/README.md) | policy law must remain explicit and reviewable |
-| Canonical contract/schema authority decisions | [../../contracts/README.md](../../contracts/README.md) and repo governance ADRs | helpers may validate the chosen authority, not choose it silently |
+| Canonical contract/schema authority decisions | [../../contracts/README.md](../../contracts/README.md) and [../../schemas/README.md](../../schemas/README.md) | helpers may validate the chosen authority, not choose it silently |
 | One-shot shell orchestration | [../../scripts/README.md](../../scripts/README.md) | wrappers may call helpers, but helper logic should stay reusable |
 | Runtime API handlers or response envelopes | app/package surfaces | public behavior deserves stronger lifecycle ownership |
 | Secret-bearing fixtures or unrestricted sensitive location dumps | governed secure lanes | public tooling must stay safe to clone and review |
@@ -302,7 +302,7 @@ flowchart LR
     CAT[data/catalog/\nDCAT + STAC + PROV]
     LAW[contracts/ + schemas/ + policy/]
     TC[tools/catalog/\nqa • crosslink • report]
-    SC[scripts/catalog/\nwrappers / entrypoints]
+    SC[scripts/\nwrappers / entrypoints]
     WF[.github/workflows/]
     TS[tests/fixtures]
     RV[reviewers / governed APIs]
@@ -382,7 +382,7 @@ No. It may validate the declared authority. It must not silently choose one.
 <details>
 <summary>Illustrative adjacent wrapper pattern (`PROPOSED`, document-grounded, not current subtree proof)</summary>
 
-The project’s adjacent script documentation already points to a thin wrapper style like this:
+The broader KFM documentation corpus already uses thin-wrapper examples like this:
 
 ```text
 scripts/catalog/validate_stac.py
