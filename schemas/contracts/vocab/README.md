@@ -8,9 +8,9 @@ owners: @bartytime4life
 created: <NEEDS_VERIFICATION>
 updated: <NEEDS_VERIFICATION>
 policy_label: <NEEDS_VERIFICATION>
-related: ["../README.md", "../../README.md", "../../../contracts/vocab/README.md", "../../../docs/standards/README.md", "../../../policy/README.md", "../../../tests/README.md"]
+related: ["../README.md", "../../README.md", "../../../contracts/vocab/README.md", "../../../docs/standards/README.md", "../../../policy/README.md", "../../../tests/README.md", "../../../tests/contracts/README.md", "./reason_codes.json", "./obligation_codes.json", "./reviewer_roles.json"]
 tags: [kfm, contracts, vocab, schemas, policy]
-notes: ["Current public main shows this directory with README.md plus reason_codes.json, obligation_codes.json, and reviewer_roles.json.", "Schema-home authority between schemas/ and contracts/ is still unresolved in current public docs; keep this visible until formally decided."]
+notes: ["Public main currently materializes this directory with README.md plus reason_codes.json, obligation_codes.json, and reviewer_roles.json.", "Current public main also splits doctrinal vocabulary guidance under contracts/vocab/README.md from machine-file scaffolding under schemas/contracts/vocab/.", "Parent schemas/README.md still carries earlier README-only snapshot language for schemas/, so parent and local tree descriptions should be updated together when this lane changes.", "doc_id, created, updated, and policy_label remain placeholders pending direct file-history and policy-label verification."]
 [/KFM_META_BLOCK_V2] -->
 
 # schemas/contracts/vocab
@@ -24,15 +24,17 @@ Current branch-visible JSON vocabulary lane for shared KFM contract registries.
 <div align="left">
 
 **Status:** `experimental`  
+**Doc status:** `draft`  
 **Owners:** `@bartytime4life`  
 **Path:** `schemas/contracts/vocab/README.md`  
 **Upstream:** [`../README.md`](../README.md) · [`../../README.md`](../../README.md)  
-**Adjacent:** [`../../../contracts/vocab/README.md`](../../../contracts/vocab/README.md) · [`../../../docs/standards/README.md`](../../../docs/standards/README.md) · [`../../../policy/README.md`](../../../policy/README.md) · [`../../../tests/README.md`](../../../tests/README.md)  
-**Downstream:** [`../v1/`](../v1/) contract schemas, policy fixtures, runtime envelopes, and trust-visible UI states
+**Adjacent:** [`../../../contracts/vocab/README.md`](../../../contracts/vocab/README.md) · [`../../../docs/standards/README.md`](../../../docs/standards/README.md) · [`../../../policy/README.md`](../../../policy/README.md) · [`../../../tests/README.md`](../../../tests/README.md) · [`../../../tests/contracts/README.md`](../../../tests/contracts/README.md)  
+**Downstream:** [`../v1/`](../v1/) contract-family lanes under `common/`, `correction/`, `data/`, `evidence/`, `policy/`, `release/`, `runtime/`, and `source/`
 
 ![Status](https://img.shields.io/badge/status-experimental-blue)
+![Doc](https://img.shields.io/badge/doc-draft-orange)
 ![KFM](https://img.shields.io/badge/kfm-evidence--first-0a7f62)
-![Layer](https://img.shields.io/badge/layer-contracts%20vocab-6f42c1)
+![Layer](https://img.shields.io/badge/layer-schemas%2Fcontracts%2Fvocab-6f42c1)
 ![Authority](https://img.shields.io/badge/authority-needs%20verification-orange)
 
 **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Registry files](#registry-files) · [Definition of done](#definition-of-done) · [FAQ](#faq)
@@ -47,12 +49,12 @@ This directory exists for **machine-readable controlled vocabularies** that cros
 
 That means this lane is for values whose stability matters to:
 
-- contract validation,
-- policy reconstruction,
-- reviewer workflow,
-- runtime explanation,
-- correction lineage,
-- and trust-visible UI states.
+- contract validation
+- policy reconstruction
+- reviewer workflow
+- runtime explanation
+- correction lineage
+- trust-visible UI states
 
 In current public `main`, the visible starter set is intentionally small:
 
@@ -70,31 +72,44 @@ This is the right size for now. The point is not to create a giant taxonomy. The
 | Current public contents | `README.md`, `reason_codes.json`, `obligation_codes.json`, `reviewer_roles.json` |
 | Upstream context | [`../README.md`](../README.md), [`../../README.md`](../../README.md) |
 | Adjacent doctrinal reference | [`../../../contracts/vocab/README.md`](../../../contracts/vocab/README.md) |
-| Operational neighbors | [`../../../policy/`](../../../policy/), [`../../../tests/`](../../../tests/), [`../v1/`](../v1/) |
+| Operational neighbors | [`../../../policy/`](../../../policy/), [`../../../tests/`](../../../tests/), [`../../../tests/contracts/`](../../../tests/contracts/), [`../v1/`](../v1/) |
 | Current authority posture | **NEEDS VERIFICATION** |
 | Reading rule | Treat current file placement as **CONFIRMED branch reality** and long-term singular authority as **PROPOSED until formally resolved** |
 
+### Current split signals
+
+| Surface | Current public state | How to read it |
+|---|---|---|
+| `schemas/contracts/vocab/` | `README.md` plus three JSON starter registries | This is the current branch-visible machine-file scaffold |
+| `../../../contracts/vocab/` | `README.md` only | The doctrinal vocabulary lane exists, but equivalent machine files are not materialized there on public `main` |
+| `../../README.md` | Still frames `schemas/` as a boundary lane and carries earlier README-only snapshot language | Parent and local tree descriptions should stay synchronized |
+| `../../../docs/standards/README.md` | Routes API endpoint schemas and machine contracts toward `../../../contracts/` | The strongest cross-cutting standards signal still favors `contracts/` |
+| `../../../policy/README.md` | Requires reasons and obligations to stay stable and explicit | Vocab edits here have policy/runtime consequences even if the registries are still scaffold-state |
+
 ### Relationship to surrounding docs
 
-- [`../../README.md`](../../README.md) describes `schemas/` as a boundary/authority guide and explicitly warns against parallel schema universes.
+- [`../../README.md`](../../README.md) describes `schemas/` as a boundary and authority guide, warns against parallel schema universes, and should be kept in sync if this lane changes.
 - [`../../../docs/standards/README.md`](../../../docs/standards/README.md) routes API endpoint schemas and machine contracts toward `../../../contracts/`.
-- [`../../../contracts/vocab/README.md`](../../../contracts/vocab/README.md) already documents the intended role of shared contract vocabularies at a more doctrinal level.
-- This README therefore documents the **current branch-visible lane** without pretending the repo has already settled the canonical-home question.
+- [`../../../contracts/vocab/README.md`](../../../contracts/vocab/README.md) already documents shared contract vocabularies at a doctrinal level, but currently remains README-only on public `main`.
+- [`../../../policy/README.md`](../../../policy/README.md) treats reasons and obligations as stable shared semantics rather than disposable prose.
+- [`../../../tests/contracts/README.md`](../../../tests/contracts/README.md) keeps valid/invalid example packs and contract-facing verification in the test lane, not here.
+
+This README therefore documents the **current branch-visible machine-file lane** without pretending the repo has already settled the canonical-home question.
 
 ## Accepted inputs
 
 This folder accepts:
 
-- machine-readable shared vocab registries;
-- finite code lists used by more than one contract-facing surface;
-- additive updates that preserve or visibly deprecate earlier meanings;
-- small explanatory notes that help contributors avoid drift.
+- machine-readable shared vocab registries
+- finite code lists used by more than one contract-facing surface
+- additive updates that preserve or visibly deprecate earlier meanings
+- small explanatory notes that help contributors avoid drift
 
 Typical fit for this directory:
 
-- reasons for `ABSTAIN`, `DENY`, restriction, narrowing, hold, or correction;
-- obligations attached to decisions or outputs;
-- reviewer/steward role tokens used in approval flows.
+- reasons for `ABSTAIN`, `DENY`, restriction, narrowing, hold, or correction
+- obligations attached to decisions or outputs
+- reviewer or steward role tokens used in approval flows
 
 ## Exclusions
 
@@ -104,6 +119,7 @@ This folder does **not** hold:
 |---|---|
 | Full policy logic, rule bundles, or executable policy | [`../../../policy/`](../../../policy/) |
 | Runtime object schemas or API payload schemas | [`../v1/`](../v1/) or the eventual canonical contract home |
+| Valid / invalid fixture packs | [`../../../tests/contracts/`](../../../tests/contracts/) or shared fixture lanes under `tests/` |
 | UI-only wording, labels, or presentation copy | The consuming UI surface |
 | Domain-specific taxonomies that do not cross contract/policy/runtime boundaries | The relevant domain package or dataset area |
 | Duplicate “canonical” copies of the same vocabulary | One decided authoritative home only |
@@ -117,7 +133,7 @@ If a value matters to only one local implementation detail, it probably does not
 | **CONFIRMED** | This directory exists on public `main` and currently contains the three starter JSON files listed above. |
 | **INFERRED** | These registries are intended to feed contract schemas, policy outcomes, tests, runtime envelopes, and trust-visible UI cues. |
 | **PROPOSED** | Richer registry shapes, validator wiring, additive-only evolution rules, and canonical-home convergence. |
-| **NEEDS VERIFICATION** | Whether `schemas/contracts/vocab/` remains authoritative or becomes a pointer to `contracts/vocab/`. |
+| **NEEDS VERIFICATION** | Whether `schemas/contracts/vocab/` remains authoritative, becomes a pointer, or hands off to `contracts/vocab/`. |
 
 ## Directory tree
 
@@ -128,6 +144,7 @@ schemas/
 └── contracts/
     ├── README.md
     ├── v1/
+    │   ├── README.md
     │   ├── common/
     │   ├── correction/
     │   ├── data/
@@ -154,7 +171,8 @@ schemas/contracts/vocab/
 ```
 
 > [!NOTE]
-> Keep the tree intentionally shallow until schema-home authority is formally settled. A small, explicit lane is safer than a speculative mini-platform.
+> Keep the tree intentionally shallow until schema-home authority is formally settled.  
+> A small, explicit lane is safer than a speculative mini-platform.
 
 ## Quickstart
 
@@ -170,10 +188,13 @@ cat schemas/contracts/vocab/reviewer_roles.json
 2. Compare surrounding authority docs.
 
 ```bash
-sed -n '1,220p' schemas/README.md
-sed -n '1,220p' contracts/README.md
+sed -n '1,240p' schemas/README.md
+sed -n '1,240p' schemas/contracts/README.md
+sed -n '1,240p' contracts/README.md
 sed -n '1,220p' contracts/vocab/README.md
 sed -n '1,220p' docs/standards/README.md
+sed -n '1,220p' policy/README.md
+sed -n '1,220p' tests/contracts/README.md
 ```
 
 3. Search for downstream references before changing any token.
@@ -200,11 +221,11 @@ Avoid silent rename-in-place changes.
 
 Preferred pattern:
 
-1. keep the existing value;
-2. add a replacement value;
-3. mark the old value as deprecated once registry shape supports that;
-4. migrate consumers in a reviewable sequence;
-5. remove only after governance and compatibility review.
+1. keep the existing value
+2. add a replacement value
+3. mark the old value as deprecated once registry shape supports that
+4. migrate consumers in a reviewable sequence
+5. remove only after governance and compatibility review
 
 ### Delete a value
 
@@ -214,16 +235,16 @@ Deletion is the highest-risk edit in this folder. Do it only after downstream sc
 
 ```mermaid
 flowchart LR
-    A[schemas/contracts/vocab/*.json] --> B[Contract schemas]
-    A --> C[Policy bundles / decisions]
-    A --> D[Test fixtures / validators]
+    A[schemas/contracts/vocab/*.json] --> B[schemas/contracts/v1/...]
+    A --> C[policy bundles / decisions]
+    A --> D[tests/contracts / shared fixtures]
     B --> E[Runtime envelopes]
     C --> E
     D --> E
     E --> F[UI trust cues / review surfaces]
 
-    G[schemas/README.md\nboundary warning] -. unresolved authority .- A
-    H[contracts/vocab/README.md\ndoctrinal target] -. possible future convergence .- A
+    G[schemas/README.md\nboundary warning] -. parent-lane sync .- A
+    H[contracts/vocab/README.md\ndoctrinal vocab lane] -. current split / possible convergence .- A
 ```
 
 ## Registry files
@@ -238,9 +259,9 @@ flowchart LR
 
 These are the smallest useful registries for preventing free-text drift in the places where KFM most strongly cares about reconstruction:
 
-- **why** something was denied, narrowed, or withheld;
-- **what** must happen next;
-- **who** is allowed to review or approve it.
+- **why** something was denied, narrowed, or withheld
+- **what** must happen next
+- **who** is allowed to review or approve it
 
 ## Suggested file shape
 
@@ -284,12 +305,15 @@ A richer additive shape is also reasonable once validators exist:
 | Avoid free-text drift | Preserves machine-checkable explanation and reviewability |
 | Keep one meaning per code | Prevents one token from silently changing contract meaning |
 | Review as contract work | These files influence runtime and policy behavior, not just docs |
+| Keep parent and sibling docs synchronized | Local path truth should not drift away from `schemas/README.md` or `schemas/contracts/README.md` |
 | Do not fork parallel copies | Duplicate vocab homes create conflicting governance semantics |
 
 ## Definition of done
 
 - [ ] README reflects the actual current tree and does not invent implementation that is not visible.
 - [ ] Authority posture is explicit: current placement is documented, long-term singular authority is not falsely claimed.
+- [ ] The current split between doctrinal `contracts/vocab/README.md` guidance and machine-file scaffolding here is made clearer, not murkier.
+- [ ] Parent `schemas/README.md` and sibling `schemas/contracts/README.md` stay synchronized with this lane’s visible tree truth.
 - [ ] Each JSON file has a documented role and a stable naming rule.
 - [ ] Any new value is additive, reviewable, and explained.
 - [ ] Downstream contract, policy, and test references are updated together.
@@ -306,16 +330,21 @@ Before merge, reviewers should ask:
 - Are negative outcomes still finite, explicit, and reconstructable?
 - Will a user-facing denial, abstention, restriction, or correction remain explainable after this change?
 - Has the authority split with `contracts/vocab/` been made clearer, not murkier?
+- If this lane changed, did parent and sibling schema-lane READMEs stay truthful too?
 
 ## FAQ
 
 ### Is this the authoritative home for KFM vocabularies?
 
-**Not conclusively yet.** It is the **current public branch-visible machine-file lane** for the three starter JSON registries, but adjacent repo docs still treat schema-home authority as unresolved and warn against silent parallel authority between `schemas/` and `contracts/`.
+**Not conclusively yet.** It is the **current public branch-visible machine-file lane** for the three starter JSON registries, but adjacent repo docs still treat schema-home authority as unresolved.
 
 ### Why keep this README if the folder only has three tiny JSON files?
 
-Because tiny files with shared semantics are easy to misuse. This README makes path role, exclusions, and migration risk explicit.
+Because tiny files with shared semantics are easy to misuse. This README makes path role, exclusions, migration risk, and cross-lane obligations explicit.
+
+### Why does `contracts/vocab/README.md` exist separately today?
+
+Because current public `main` currently splits **doctrinal vocabulary guidance** and **machine-file scaffolding** across two lanes. `contracts/vocab/README.md` explains the intended shared-vocabulary role, while this directory holds the three starter JSON files. Until authority is resolved, that split should be treated as governed ambiguity, not as permission to let semantics diverge.
 
 ### Should UI text live here?
 
@@ -329,8 +358,8 @@ Yes. That is the intended split: **finite shared tokens** here, **decision logic
 
 This README should be updated into one of two states:
 
-1. a thin pointer marking this directory non-authoritative; or
-2. a generated-output README explaining how files here are produced.
+1. a thin pointer marking this directory non-authoritative
+2. a generated-output README explaining how files here are produced
 
 Either outcome is better than leaving two silently competing homes.
 
@@ -341,26 +370,26 @@ Either outcome is better than leaving two silently competing homes.
 
 ### Naming
 
-- use lowercase snake_case filenames;
-- use constrained machine codes inside registries only if adopted consistently;
-- keep plural filenames for collections, not single values.
+- use lowercase snake_case filenames
+- use constrained machine codes inside registries only if adopted consistently
+- keep plural filenames for collections, not single values
 
 ### Good candidates for later expansion
 
 Only after current authority is settled:
 
-- deprecation metadata;
-- human-readable labels;
-- compatibility notes;
-- last-reviewed metadata;
-- generated docs derived from the JSON source.
+- deprecation metadata
+- human-readable labels
+- compatibility notes
+- last-reviewed metadata
+- generated docs derived from the JSON source
 
 ### Anti-patterns
 
-- using prose paragraphs instead of finite codes;
-- storing the same code set in both `schemas/` and `contracts/`;
-- changing meaning without version or migration notes;
-- letting UI-only naming decide contract vocabulary.
+- using prose paragraphs instead of finite codes
+- storing the same code set in both `schemas/` and `contracts/`
+- changing meaning without version or migration notes
+- letting UI-only naming decide contract vocabulary
 
 </details>
 
