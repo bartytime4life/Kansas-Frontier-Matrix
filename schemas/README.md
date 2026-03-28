@@ -5,21 +5,21 @@ type: standard
 version: v1
 status: draft
 owners: @bartytime4life
-created: YYYY-MM-DD
-updated: 2026-03-22
+created: 2026-03-15
+updated: 2026-03-28
 policy_label: public
-related: [../contracts/README.md, ../docs/standards/README.md, ../policy/README.md, ../tests/README.md, ../.github/workflows/README.md]
+related: [../README.md, ../contracts/README.md, ../docs/standards/README.md, ../policy/README.md, ../tests/README.md, ../.github/workflows/README.md, ../.github/CODEOWNERS]
 tags: [kfm, schemas, contracts, json-schema]
-notes: [Current public main shows schemas/ containing README.md only; docs/standards routes machine contracts to ../contracts/; authoritative schema home is still unresolved and should be made explicit before merge-blocking validation lands.]
+notes: [doc_id unresolved, created date inferred from public GitHub file history, updated date reflects this proposed revision, /schemas/ ownership currently resolves via CODEOWNERS global fallback, authoritative schema home remains unresolved]
 [/KFM_META_BLOCK_V2] -->
 
 # Schemas
 
 Boundary and authority guide for the `schemas/` lane while KFM retires schema-home ambiguity and keeps machine contracts singular.
 
-> **Status:** experimental  
-> **Owners:** `@bartytime4life`  
-> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![Repo](https://img.shields.io/badge/repo-public%20main-brightgreen) ![Authority](https://img.shields.io/badge/schema_home-pending-red) ![Inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)  
+> **Status:** experimental · **Doc status:** draft  
+> **Owners:** `@bartytime4life` *(via global fallback in [`../.github/CODEOWNERS`](../.github/CODEOWNERS); no narrower `/schemas/` rule was verified on public `main`)*  
+> ![Status](https://img.shields.io/badge/status-experimental-orange) ![Doc](https://img.shields.io/badge/doc-draft-lightgrey) ![Owner](https://img.shields.io/badge/owner-%40bartytime4life-blue) ![Repo](https://img.shields.io/badge/repo-public%20main-brightgreen) ![Authority](https://img.shields.io/badge/schema_home-pending-red) ![Inventory](https://img.shields.io/badge/current_public_inventory-README--only-lightgrey)  
 > **Repo fit:** path `schemas/README.md` · upstream [`../README.md`](../README.md) · current contract lane [`../contracts/README.md`](../contracts/README.md) · standards routing [`../docs/standards/README.md`](../docs/standards/README.md) · workflow guardrails [`../.github/workflows/README.md`](../.github/workflows/README.md)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Inputs](#inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
@@ -47,6 +47,14 @@ That means this README should do four things well:
 
 KFM’s doctrine is still the same: machine-readable contracts are part of the trust membrane. But singular authority matters just as much as good schema design. A validator cannot safely govern two competing homes for the same trust-bearing objects.
 
+### Truth posture used here
+
+| Marker | Meaning in this README |
+|---|---|
+| **CONFIRMED** | Visible on current public `main` or directly grounded in the March 2026 KFM corpus |
+| **PROPOSED** | Doctrine-consistent starter shape or convergence layout not yet proven as live repo implementation |
+| **UNKNOWN / NEEDS VERIFICATION** | An authority, inventory, or validation detail that should not be treated as settled until branch-inspected |
+
 [Back to top](#schemas)
 
 ## Repo fit
@@ -59,7 +67,7 @@ KFM’s doctrine is still the same: machine-readable contracts are part of the t
 | Strongest current machine-contract lane | [`../contracts/README.md`](../contracts/README.md) |
 | Standards routing signal | [`../docs/standards/README.md`](../docs/standards/README.md) routes API endpoint schemas and machine contracts to `../contracts/` |
 | Workflow signal | [`../.github/workflows/README.md`](../.github/workflows/README.md) is README-only today and treats `contracts/`, `schemas/`, `policy/`, and `tests/` as canonical verification surfaces |
-| Ownership signal | `@bartytime4life` via CODEOWNERS global fallback |
+| Ownership signal | `@bartytime4life` via `.github/CODEOWNERS` global fallback; no narrower `/schemas/` rule is visible on current public `main` |
 | Current authority posture | **UNKNOWN / NEEDS VERIFICATION** — the repo has not yet made one schema home singular in a way this README can treat as settled |
 | Why this file still matters | The repo already publishes a top-level `schemas/` lane, so it needs an explicit boundary contract even if authoritative schema files ultimately land elsewhere |
 
@@ -202,6 +210,9 @@ sed -n '1,260p' contracts/README.md
 sed -n '1,220p' docs/standards/README.md
 sed -n '1,220p' .github/workflows/README.md
 
+# Confirm current ownership fallback before narrowing it
+sed -n '300,340p' .github/CODEOWNERS
+
 # Search for schema-home language before adding files
 git grep -nE 'authoritative schema home|parallel schema|machine contracts|schema home' -- \
   schemas contracts docs .github
@@ -286,7 +297,7 @@ Reading rule: this lane should reduce ambiguity, not add a second source of mach
 | `contracts/` | `README.md` only | Current machine-contract lane is still documentary, but carries stronger authority guidance |
 | `docs/standards/README.md` | Present | Standards and machine contracts are intentionally separated |
 | `.github/workflows/` | `README.md` only | No checked-in public workflow YAML is visible yet |
-| `CODEOWNERS` | global fallback `@bartytime4life`; explicit `/.github/` and `/contracts/` rules | Ownership exists, but `/schemas/` does not currently have its own narrower rule |
+| `CODEOWNERS` | global fallback `* @bartytime4life`; explicit `/.github/` and `/contracts/` rules; no narrower `/schemas/` rule visible | Ownership exists, but `/schemas/` does not currently have its own narrower rule |
 
 ### B. First contract wave after authority resolution
 
