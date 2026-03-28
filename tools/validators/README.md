@@ -10,7 +10,7 @@ updated: <TODO: set on merge>
 policy_label: <TODO: verify public|restricted|...>
 related: [../../README.md, ../README.md, ../../.github/README.md, ../../.github/CODEOWNERS, ../../.github/workflows/README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../tests/README.md, ../../scripts/README.md]
 tags: [kfm, tools, validators, verification, contracts]
-notes: [owners are grounded from the current /tools/ CODEOWNERS mapping; current public main shows tools/validators/ as README-only; doc_id and dates still need verification before merge]
+notes: [owners are grounded from current public /.github/CODEOWNERS coverage for /tools/; current public main shows tools/validators/ as README-only at the subtree level; this file is already substantive on public main and should be revised in place rather than reset to scaffold text; doc_id, dates, and policy_label still need verification before merge]
 [/KFM_META_BLOCK_V2] -->
 
 # validators
@@ -20,16 +20,17 @@ Lane contract and landing surface for deterministic, fail-closed validation help
 > **Status:** experimental  
 > **Owners:** `@bartytime4life`  
 > **Path:** `tools/validators/README.md`  
-> **Repo fit:** validator-family lane under [`../README.md`](../README.md) · root orientation in [`../../README.md`](../../README.md) · authority neighbors [`../../contracts/README.md`](../../contracts/README.md) and [`../../schemas/README.md`](../../schemas/README.md) · policy [`../../policy/README.md`](../../policy/README.md) · tests [`../../tests/README.md`](../../tests/README.md) · scripts [`../../scripts/README.md`](../../scripts/README.md) · workflow callers [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
-> **Current public snapshot:** `tools/validators/` exists and currently exposes `README.md` only on public `main`  
-> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-tools%2Fvalidators%2FREADME.md-4051b5) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/public%20snapshot-README--only-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
+> **Repo fit:** validator-family lane under [`../README.md`](../README.md) · root orientation in [`../../README.md`](../../README.md) · authority neighbors [`../../contracts/README.md`](../../contracts/README.md), [`../../schemas/README.md`](../../schemas/README.md), and [`../../docs/standards/README.md`](../../docs/standards/README.md) · policy [`../../policy/README.md`](../../policy/README.md) · tests [`../../tests/README.md`](../../tests/README.md) · scripts [`../../scripts/README.md`](../../scripts/README.md) · workflow callers [`../../.github/workflows/README.md`](../../.github/workflows/README.md)  
+> **Current public subtree:** `tools/validators/` exists and currently exposes `README.md` only on public `main`  
+> **Current public file state:** this README is already substantive on public `main`; future edits should revise it in place rather than reset it to scaffold text  
+> ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-tools%2Fvalidators%2FREADME.md-4051b5) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/public%20subtree-README--only-lightgrey) ![posture](https://img.shields.io/badge/posture-fail--closed-red)  
 > **Quick jumps:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Current verified snapshot](#current-verified-snapshot) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Validator behavior contract](#validator-behavior-contract) · [Diagram](#diagram) · [Operating tables](#operating-tables) · [Task list](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
 > `validators/` is the narrow `tools/` family for helpers whose main job is **check / report / fail** against trust-bearing artifacts. It is **not** the canonical home of schemas, policy bundles, runtime code, or workflow orchestration.
 
 > [!NOTE]
-> This README intentionally separates **current public-tree fact** from **PROPOSED landing shape**. The `validators/` family is visible in the repo tree, but this subtree itself is still README-only on public `main`.
+> This README intentionally separates **current public-tree fact** from **PROPOSED landing shape**. The `validators/` subtree is still README-only on public `main`, but the README itself is already a real family contract and should be improved upward rather than replaced with generic scaffold prose.
 
 ## Scope
 
@@ -79,6 +80,7 @@ This file exists to do four jobs at once:
 | Governance | [`../../.github/README.md`](../../.github/README.md) | Repo-wide review and gatehouse posture |
 | Adjacent | [`../../contracts/README.md`](../../contracts/README.md) | Validators consume declared contract surfaces; they do not replace them |
 | Adjacent | [`../../schemas/README.md`](../../schemas/README.md) | Current repo still exposes a schema lane; validators must not silently choose authority |
+| Adjacent | [`../../docs/standards/README.md`](../../docs/standards/README.md) | Current standards routing already points machine contracts toward `contracts/`, which matters when validators need an explicit contract-home rule |
 | Adjacent | [`../../policy/README.md`](../../policy/README.md) | Policy bundles, fixtures, and vocabularies remain policy-owned |
 | Adjacent | [`../../tests/README.md`](../../tests/README.md) | Authoritative fixture and proof families belong here |
 | Adjacent | [`../../scripts/README.md`](../../scripts/README.md) | Scripts orchestrate staged work and may call validators |
@@ -147,15 +149,16 @@ The following belong in or under `tools/validators/`:
 | `tools/` is a real top-level repo lane | **CONFIRMED** | validator family has a stable repo home |
 | Current public `tools/` directory lists `attest/`, `catalog/`, `ci/`, `diff/`, `docs/`, `probes/`, `validators/`, and `README.md` | **CONFIRMED** | validator family is already named in the live tree |
 | `tools/validators/` currently lists `README.md` only | **CONFIRMED** | this subtree is still documentary, not executable |
-| The current file content is a one-line scaffold | **CONFIRMED** | replacing it with a real family README is appropriate |
+| The current public `tools/validators/README.md` is already a substantive family README, not the earlier one-line scaffold | **CONFIRMED** | future revisions should preserve and improve this lane contract rather than restart it |
 | Current CODEOWNERS coverage maps `/tools/` to `@bartytime4life`; no narrower validator-specific owner is directly confirmed here | **CONFIRMED** | owner line should stay conservative |
 | `contracts/` and `schemas/` both exist, and schema-home authority is still explicitly unresolved | **CONFIRMED unresolved** | validators must not silently decide schema authority |
+| `docs/standards/README.md` routes “API endpoint schemas and machine contracts” to `contracts/` while `schemas/README.md` still keeps authority unresolved | **CONFIRMED tension** | validators should prefer explicit contract-home input or declared repo authority over implicit directory guessing |
 | `contracts/README.md` requires machine-validatable surfaces with at least one valid and one invalid example | **CONFIRMED** | first validator should support positive and negative fixture flow |
-| `tests/README.md` already exposes `contracts/`, `policy/`, `e2e/correction/`, `e2e/release_assembly/`, and `e2e/runtime_proof/` families | **CONFIRMED** | validators should plug into existing proof surfaces instead of inventing private ones |
+| `tests/` already exposes `contracts/`, `policy/`, `e2e/correction/`, `e2e/release_assembly/`, and `e2e/runtime_proof/` alongside broader verification families | **CONFIRMED** | validators should plug into existing proof surfaces instead of inventing private ones |
 | `.github/workflows/` public `main` still exposes `README.md` only | **CONFIRMED** | do not imply a checked-in merge-blocking validator workflow already exists |
 
 > [!WARNING]
-> The current live tree and adjacent docs are slightly out of sync. The parent `tools/README.md` still contains earlier prose that treated the parent lane as README-only, but the current public directory listing now shows named family directories under `tools/`. For tree claims, treat the live directory listing as stronger current evidence and reconcile the parent README separately instead of copying stale wording into this subtree.
+> The live tree and adjacent docs are still slightly out of sync. The parent `tools/README.md` continues to describe `tools/` as README-only even though the live directory listing shows named family directories, and older scaffold-era wording about this subtree has now been overtaken by the current public file state. For tree and file-state claims, prefer the live directory listing plus the checked-in file body.
 
 [Back to top](#validators)
 
@@ -216,7 +219,8 @@ tree -a -L 2 tools 2>/dev/null \
 
 ```bash
 sed -n '1,240p' tools/README.md 2>/dev/null
-sed -n '1,240p' contracts/README.md 2>/dev/null
+sed -n '1,260p' docs/standards/README.md 2>/dev/null
+sed -n '1,260p' contracts/README.md 2>/dev/null
 sed -n '1,240p' schemas/README.md 2>/dev/null
 sed -n '1,240p' policy/README.md 2>/dev/null
 sed -n '1,260p' tests/README.md 2>/dev/null
@@ -256,10 +260,10 @@ Use this family for the smallest reversible slice that can:
 
 ### Keep authority explicit
 
-A validator in this lane should do **one** of the following when schema-home ambiguity still exists:
+The current public repo already leans toward `contracts/`: `docs/standards/README.md` routes API endpoint schemas and machine contracts there, while `schemas/README.md` frames `schemas/` as a boundary surface and guardrail against parallel authority. Even so, until the repo makes schema-home singular in a way this lane can treat as settled, a validator here should do **one** of the following:
 
 - accept an explicit `--contract-home` or equivalent input
-- read a declared repo authority file
+- read a declared repo authority file or ADR
 - fail loudly and tell the operator that schema authority must be resolved first
 
 It should **not** silently infer authority from whichever directory happened to be present first.
@@ -323,6 +327,7 @@ flowchart LR
     subgraph Inputs["Governed inputs"]
         C["contracts/"]
         S["schemas/"]
+        DS["docs/standards/"]
         P["policy/"]
         TF["tests/fixtures + e2e"]
         SC["scripts/"]
@@ -334,7 +339,8 @@ flowchart LR
     end
 
     C --> V
-    S --> V
+    S -->|"boundary + authority caution"| V
+    DS -->|"standards routing signal"| V
     P -->|"only as input, not source-of-truth"| V
     TF -->|"positive + negative proof"| V
     SC -->|"calls stable entrypoints"| V
@@ -355,6 +361,7 @@ flowchart LR
 | Signal | Why it matters for `validators/` |
 | --- | --- |
 | Parent `tools/` docs already frame validators as the strongest doctrinal fit among tool families | this subtree should lead with validation, not a generic utility bucket |
+| `docs/standards/README.md` routes API endpoint schemas and machine contracts to `contracts/` | validator design should recognize a current routing signal without pretending schema-home authority is fully resolved |
 | `contracts/README.md` sets a minimum bar of machine-validatable surfaces plus valid and invalid examples | first validator should support both positive and negative examples from day one |
 | `schemas/README.md` explicitly warns against growing a second authoritative schema registry | validators must not drift into schema-law ownership |
 | `scripts/README.md` says reusable validator libraries should graduate out of shell glue | validator logic belongs here, not buried in scripts |
@@ -405,7 +412,7 @@ Before merging work into this lane, confirm all applicable items below.
 
 ### Why does `validators/` need its own README if the family is still README-only?
 
-Because the subtree already exists in the live repo tree, and the family needs a boundary contract before executable helpers land. KFM loses trust when code arrives before placement and responsibility are explained.
+Because the subtree already exists in the live repo tree, and the family needs a boundary contract before executable helpers land. KFM loses trust when code arrives before placement and responsibility are explained. The subtree is README-only in file inventory today, but the README itself is already part of the lane’s checked-in contract.
 
 ### Why not just keep validator logic inside `scripts/`?
 
