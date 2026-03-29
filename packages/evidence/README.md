@@ -10,7 +10,7 @@ updated: YYYY-MM-DD
 policy_label: NEEDS_VERIFICATION
 related: [../../README.md, ../README.md, ../../contracts/README.md, ../../schemas/README.md, ../../policy/README.md, ../../apps/api/src/api/README.md, ../../tests/README.md]
 tags: [kfm, evidence, evidence-ref, evidence-bundle, packages]
-notes: [Current public main shows packages/evidence as README-only, doc_id/created/updated/policy_label need direct repo verification before merge]
+notes: [Current public main confirms packages/evidence/README.md and broad /packages/ ownership; doc_id/created/updated/policy_label still need direct repo record verification before merge]
 [/KFM_META_BLOCK_V2] -->
 
 # evidence
@@ -18,13 +18,13 @@ notes: [Current public main shows packages/evidence as README-only, doc_id/creat
 _Governed `EvidenceRef` → `EvidenceBundle` resolution and policy-safe evidence presentation surface for Kansas Frontier Matrix._
 
 > **Status:** experimental  
-> **Owners:** `@bartytime4life` *(broad `/packages/` owner confirmed on public `main`; narrower child ownership still needs verification)*  
+> **Owners:** `@bartytime4life` *(broad `/packages/` coverage is confirmed in `.github/CODEOWNERS`; no narrower `/packages/evidence/` rule was verified on public `main`)*  
 > ![status](https://img.shields.io/badge/status-experimental-orange) ![owners](https://img.shields.io/badge/owners-%40bartytime4life-blue) ![path](https://img.shields.io/badge/path-packages%2Fevidence%2FREADME.md-1f6feb) ![role](https://img.shields.io/badge/role-evidence%20resolver-6f42c1) ![branch](https://img.shields.io/badge/branch-main-111111) ![tree](https://img.shields.io/badge/current%20tree-README--only-lightgrey) ![truth](https://img.shields.io/badge/truth-CONFIRMED%20%7C%20INFERRED%20%7C%20PROPOSED-2ea043)  
 > **Repo fit:** `packages/evidence/README.md` · child of [`../README.md`](../README.md) · repo root [`../../README.md`](../../README.md) · contract neighbor [`../../contracts/README.md`](../../contracts/README.md) · schema boundary [`../../schemas/README.md`](../../schemas/README.md) · policy neighbor [`../../policy/README.md`](../../policy/README.md) · downstream API seam [`../../apps/api/src/api/README.md`](../../apps/api/src/api/README.md) · verification neighbor [`../../tests/README.md`](../../tests/README.md)  
 > **Quick jump:** [Scope](#scope) · [Repo fit](#repo-fit) · [Accepted inputs](#accepted-inputs) · [Exclusions](#exclusions) · [Directory tree](#directory-tree) · [Quickstart](#quickstart) · [Usage](#usage) · [Diagram](#diagram) · [Tables](#tables) · [Task list / definition of done](#task-list--definition-of-done) · [FAQ](#faq) · [Appendix](#appendix)
 
 > [!IMPORTANT]
-> Current public `main` proves `packages/evidence/` exists and currently exposes a scaffold README only.
+> Current public `main` proves `packages/evidence/` exists and the checked-in subtree currently exposes `README.md` only.
 >
 > This file therefore does two jobs at once:
 > 1. records the **current repo-visible state** honestly
@@ -44,16 +44,16 @@ This package is **not** the sovereign home of policy, contracts, canonical artif
 
 | Label | Meaning in this README |
 |---|---|
-| **CONFIRMED** | Directly supported by current public repo files or stable March 2026 KFM doctrine |
+| **CONFIRMED** | Directly supported by current public repo files inspected for this revision or by March 2026 KFM doctrine surfaced in the attached corpus |
 | **INFERRED** | Strongly suggested by adjacent repo docs, but not re-proven from deeper package-local implementation |
 | **PROPOSED** | Commit-ready boundary guidance consistent with repo doctrine and neighboring docs |
 | **UNKNOWN** | Not established strongly enough from the visible branch to present as current implementation reality |
 | **NEEDS VERIFICATION** | Placeholder or repo/platform detail that should be checked before merge |
 
 > [!NOTE]
-> The public repo currently names this child package `packages/evidence/`.
+> March 2026 KFM materials speak clearly about a governed evidence-resolver seam, but the live public repo path is currently `packages/evidence/`.
 >
-> Some March 2026 design material sketches a more specific seam such as `packages/evidence-resolver/`. This README follows the **current repo path** and treats any future split or rename as **PROPOSED** until the live repo changes.
+> This README follows the **current repo path** and treats any later split or rename as **PROPOSED** until the branch changes.
 
 [Back to top](#evidence)
 
@@ -75,9 +75,9 @@ KFM’s shell, API, story flow, and Focus flow all depend on evidence being reac
 | Concern | Current public `main` signal | Status |
 |---|---|---|
 | `packages/evidence/` directory exists | visible on branch | **CONFIRMED** |
-| `packages/evidence/README.md` exists | current child file is scaffold text only | **CONFIRMED** |
+| `packages/evidence/README.md` exists | checked-in subtree currently shows `README.md` only | **CONFIRMED** |
 | Parent package contract already describes this child’s role | `packages/README.md` assigns `EvidenceRef` → `EvidenceBundle` resolution and policy-safe presentation helpers to this package | **CONFIRMED** |
-| Downstream API seam expects evidence resolution | `apps/api/src/api/README.md` describes evidence resolution orchestration and `/api/v1/evidence/resolve` semantics | **CONFIRMED** |
+| Downstream API seam expects evidence resolution | `apps/api/src/api/README.md` defines a governed API boundary, includes `/api/v1/evidence/resolve`, and describes `EvidenceRef` → `EvidenceBundle` behavior | **CONFIRMED** |
 | Package-local code, manifests, tests, fixtures, and import graph | not proven by the visible package subtree | **UNKNOWN** |
 | Narrower child owner than broad `/packages/` owner | not separately evidenced | **UNKNOWN / NEEDS VERIFICATION** |
 
@@ -196,7 +196,7 @@ find packages/evidence -maxdepth 4 -type d | sort
 
 # 2) Re-read the current boundary docs
 sed -n '1,220p' packages/README.md
-sed -n '1,220p' packages/evidence/README.md
+sed -n '1,260p' packages/evidence/README.md
 sed -n '1,260p' contracts/README.md
 sed -n '1,240p' schemas/README.md
 sed -n '1,260p' policy/README.md
@@ -253,7 +253,7 @@ Bad signs include:
 - policy law copied into package code
 - authoritative schemas copied here “for convenience”
 - evidence outputs that skip policy-safe restriction handling
-- package code becoming the only place where story or Focus citations are validated
+- package code becoming the only place where Story or Focus citations are validated
 
 ### Keep imports directional
 
@@ -267,6 +267,8 @@ The intended dependency direction is:
 ### Keep negative outcomes explicit
 
 If evidence cannot be resolved, cannot be shown safely, or cannot be traced back to permitted released artifacts, the package should support a **bounded negative outcome** rather than a polished best-effort success.
+
+Where this package participates in request-time resolution, unresolved or disallowed cases should stay structured enough for governed runtimes to emit `ABSTAIN`, `DENY`, or `ERROR` honestly rather than polishing uncertainty into success.
 
 > [!IMPORTANT]
 > “Some evidence appeared” is not enough for KFM.
@@ -395,7 +397,7 @@ No. It supports evidence presentation semantics, but visible UI components belon
 
 No. This package should consume authoritative contract surfaces instead of creating a second contract universe.
 
-### What if the repo later adopts `packages/evidence-resolver/`?
+### What if the repo later splits or renames this seam?
 
 Use the live repo path. If the seam splits or renames, update this README, [`../README.md`](../README.md), and all downstream links in the same PR so the package map stays truthful.
 
