@@ -10,100 +10,56 @@ updated: TODO-NEEDS-VERIFICATION
 policy_label: TODO-NEEDS-VERIFICATION
 related: [TODO-NEEDS-VERIFICATION]
 tags: [kfm, stac, standards, catalog, interoperability]
-notes: [Mounted workspace evidence for this drafting session was PDF-only; repo links, owners, dates, and mounted schema/route inventory require direct verification.]
+notes: [Mounted workspace evidence for this drafting session was PDF-only; repo links, owners, dates, mounted schema inventory, endpoint names, and CI enforcement require direct verification.]
 [/KFM_META_BLOCK_V2] -->
 
 # KFM STAC Profile
 
-KFM’s outward STAC profile for **published** spatiotemporal discovery metadata, release-linked assets, and governed catalog closure.
+KFM’s outward STAC profile for **published spatiotemporal discovery metadata**, release-linked assets, and governed catalog closure.
 
 > [!IMPORTANT]
-> This document is doctrine-aligned and implementation-bounded. In this drafting session, mounted workspace evidence was PDF-only. Exact repo wiring, schema registry paths, endpoint names, CI jobs, and linked adjacent docs remain **UNKNOWN** until directly reverified.
+> This draft is **doctrine-grounded** and **implementation-bounded**. In the current drafting session, visible workspace evidence was PDF-only. Exact repo paths, schema files, endpoint names, fixtures, validators, CI jobs, and neighboring Markdown links remain **UNKNOWN** until directly reverified from the mounted repository.
 
-[![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)](#status-and-scope)
-[![Type: standard](https://img.shields.io/badge/type-standard-2f6fdb)](#status-and-scope)
+[![Status: draft](https://img.shields.io/badge/status-draft-lightgrey)](#status-and-verification-boundary)
+[![Type: standard](https://img.shields.io/badge/type-standard-2f6fdb)](#status-and-verification-boundary)
 [![STAC: 1.1.0](https://img.shields.io/badge/STAC-1.1.0-0b7285)](#baseline-profile-line)
 [![Closure: STAC%2FDCAT%2FPROV](https://img.shields.io/badge/closure-STAC%2FDCAT%2FPROV-6f42c1)](#kfm-positioning)
-[![Truth: PDF-only review](https://img.shields.io/badge/verification-PDF--only_review-f0ad4e)](#verification-boundary)
+[![Verification: PDF-only](https://img.shields.io/badge/verification-PDF--only_review-f0ad4e)](#status-and-verification-boundary)
 
-**Quick jump:** [Scope](#scope) · [Inputs](#accepted-inputs) · [Exclusions](#exclusions) · [KFM positioning](#kfm-positioning) · [Profile rules](#profile-rules) · [KFM extensions](#kfm-fields-and-extensions) · [Validation](#validation-and-gates) · [Examples](#illustrative-examples) · [Open questions](#open-questions)
+**Quick jump:** [Role](#role-in-kfm) · [Scope](#scope) · [Positioning](#kfm-positioning) · [Rules](#profile-rules) · [Requirements](#minimum-profile-requirements) · [Control-plane prerequisites](#control-plane-prerequisites) · [Proposed KFM fields](#proposed-kfm-fields) · [Validation](#validation-and-gates) · [Examples](#illustrative-examples) · [Verification backlog](#verification-backlog)
 
-## Status and scope
+## Status and verification boundary
 
 | Field | Value |
 | --- | --- |
 | Status | `draft` |
-| Posture | `CONFIRMED doctrine` / `PROPOSED starter realization` / `UNKNOWN mounted implementation` |
-| Intended role | Outward STAC profile for **catalog and discovery** surfaces |
+| Posture | `CONFIRMED doctrine` / `PROPOSED profile realization` / `UNKNOWN mounted implementation` |
+| Intended role | Standard for **published discovery metadata**, not canonical storage |
 | Baseline profile line | `STAC 1.1.0` |
-| Repo fit | Path: `docs/standards/KFM_STAC_PROFILE.md` |
-| Upstream links | `TODO-NEEDS-VERIFICATION` |
-| Downstream links | `TODO-NEEDS-VERIFICATION` |
-| Verification boundary | Mounted repo tree, schemas, fixtures, workflows, route inventory, and neighboring docs were **not** directly verified in this session |
+| Discovery closure | `STAC + DCAT + PROV` |
+| Current evidence boundary | PDF corpus only |
+| Not directly verified in this session | repo tree, file paths, schemas, tests, workflows, manifests, live routes, runtime outputs |
 
-## Scope
+## Role in KFM
 
-This standard defines how KFM should use STAC at the **published discovery boundary**.
+KFM treats STAC as a **release-facing catalog and discovery carrier**.
 
-It governs:
+That means this standard is about:
 
-- STAC catalogs, collections, items, and release-safe asset links emitted from governed catalog closure
-- release-linked discovery metadata for public-safe or otherwise policy-permitted published assets
-- outward interoperability at the discovery layer, alongside DCAT and PROV closure
+- outward discoverability of released spatiotemporal assets
+- stable item/collection/catalog semantics for public-safe or otherwise policy-permitted release scope
+- linkage from discovery metadata into release, provenance, rights, sensitivity, and correction state
 
-It does **not** redefine KFM’s canonical truth model. STAC is a **discovery and exchange profile**, not KFM’s sovereign internal record.
-
-## Repo fit
-
-| Topic | Value |
-| --- | --- |
-| Target path | `docs/standards/KFM_STAC_PROFILE.md` |
-| Likely audience | Data architecture, geospatial delivery, catalog tooling, API, review, and publication teams |
-| Likely neighboring docs | `TODO-NEEDS-VERIFICATION` |
-| Likely upstream sources | KFM canonical doctrine, catalog closure rules, release manifests, policy/review outputs |
-| Likely downstream consumers | discovery APIs, catalog compilers, release tooling, map/data portals, validation gates |
-
-## Accepted inputs
-
-Only the following belong at this profile boundary:
-
-| Accepted input | Why it belongs here |
-| --- | --- |
-| Published or publication-ready `DatasetVersion` | STAC must describe governed release scope, not informal working state |
-| `CatalogClosure` outputs | KFM doctrine places STAC inside outward catalog closure |
-| `ReleaseManifest` / release-safe public references | Discovery metadata must remain tied to release state |
-| `DecisionEnvelope` outcomes permitting publication | Rights, sensitivity, and publication posture must already be resolved |
-| `ProjectionBuildReceipt` or equivalent derivative lineage refs | Derived assets must still show release linkage and freshness basis |
-| Public-safe asset distributions | STAC should point to assets that are allowed to be discovered and retrieved |
-
-## Exclusions
-
-This file does **not** govern the following, and they should live elsewhere:
-
-| Excluded material | Where it belongs instead |
-| --- | --- |
-| `RAW`, `WORK`, `QUARANTINE`, unpublished candidate artifacts | Canonical ingest, validation, and review lanes |
-| Internal review, moderation, or stewardship actions | Internal governed APIs and review records |
-| `EvidenceBundle` payload structure | Evidence-resolution contracts and governed evidence APIs |
-| `RuntimeResponseEnvelope` structure | Runtime / Focus / governed-assistance contracts |
-| Portrayal-specific map styling internals | Portrayal, tile, and renderer standards |
-| Hidden internal audit fields not safe for publication | Internal ops, audit, and control-plane artifacts |
-| Canonical entity storage model | Canonical data architecture and internal schemas |
+It is **not** a replacement for KFM’s canonical truth plane, policy plane, review plane, or runtime evidence-resolution contracts.
 
 ## KFM positioning
 
-KFM treats STAC as an **outward metadata layer** inside governed catalog closure, not as an internal truth store.
+KFM is strongest when STAC, DCAT, and PROV are linked as one outward closure instead of treated as competing metadata worlds:
 
-Three doctrinal consequences shape this profile:
-
-1. **STAC is downstream of release governance.**  
-   No STAC document should imply publication authority by itself.
-
-2. **STAC must preserve linkage.**  
-   Discovery metadata must remain tied to dataset version, release state, rights/sensitivity posture, provenance, and correction lineage.
-
-3. **STAC must not bypass the trust membrane.**  
-   Public discovery can read only published scope and must not expose unpublished or policy-restricted internals.
+- **STAC** carries spatiotemporal item and asset discovery
+- **DCAT** carries outward dataset and distribution discovery
+- **PROV** carries lineage, agents, and activities
+- **KFM-specific policy and review artifacts** remain first-class beside them
 
 ```mermaid
 flowchart LR
@@ -115,15 +71,44 @@ flowchart LR
     F --> G[STAC]
     F --> H[DCAT]
     F --> I[PROV]
-    G --> J[Catalog & discovery routes]
-    H --> J
-    I --> J
-    J --> K[Public-safe discovery surface]
+    F --> J[DecisionEnvelope / ReviewRecord]
+    F --> K[ReleaseManifest]
+    K --> L[ProjectionBuildReceipt]
+    G --> M[Catalog & discovery]
+    H --> M
+    I --> M
+    M --> N[Public-safe discovery surface]
 
     style E fill:#eef7ff,stroke:#2f6fdb
     style F fill:#f5f0ff,stroke:#6f42c1
     style G fill:#eaf7f7,stroke:#0b7285
+    style K fill:#fff6e8,stroke:#b26b00
 ```
+
+## Scope
+
+This profile governs STAC emitted at the **published discovery boundary**.
+
+It covers:
+
+- STAC catalogs, collections, items, and release-safe asset links
+- outward metadata emitted from governed catalog closure
+- discovery metadata for released data products, portrayals, and derivative packages that remain tied to release scope
+- visibility of rights, sensitivity, freshness, and correction state where those change meaning
+
+## Out of scope
+
+This standard does **not** govern the following:
+
+| Out of scope | Where it belongs instead |
+| --- | --- |
+| `RAW`, `WORK`, `QUARANTINE`, and unpublished candidate artifacts | intake, validation, and review lanes |
+| canonical entity storage and internal truth modeling | canonical data architecture and internal schemas |
+| `EvidenceBundle` payload shape | evidence-resolution contracts |
+| `RuntimeResponseEnvelope` shape | runtime and Focus contracts |
+| internal moderation, approval, rollback, or rights-handling workflows | policy/review plane |
+| portrayal-specific renderer internals | portrayal, style, and renderer standards |
+| direct feature-edit semantics | governed feature APIs and authoring contracts |
 
 ## Baseline profile line
 
@@ -131,196 +116,241 @@ flowchart LR
 
 | Concern | Rule | Status |
 | --- | --- | --- |
-| STAC line | Use `STAC 1.1.0` as the baseline outward profile line until reverified | `CONFIRMED` |
-| Catalog boundary | Treat STAC as part of the outward `STAC / DCAT / PROV` closure | `CONFIRMED` |
-| Discovery stack | Align discovery surfaces with STAC, DCAT 3, and OGC API Records where applicable | `CONFIRMED doctrine` |
-| Feature/tile relation | Keep feature-read and portrayal/tile obligations distinct from STAC discovery metadata | `CONFIRMED doctrine` |
-| Mounted conformance claim | Do **not** claim live conformance until schemas, fixtures, and routes are directly verified | `UNKNOWN` |
+| STAC core/profile line | Use `STAC 1.1.0` as the baseline outward profile line | `CONFIRMED` |
+| Closure model | Treat STAC as part of a linked `STAC / DCAT / PROV` outward closure | `CONFIRMED doctrine` |
+| Discovery boundary | Align discovery with catalog/discovery route families rather than canonical storage | `CONFIRMED doctrine` |
+| Mounted conformance claim | Do **not** claim live conformance until actual schemas, fixtures, validators, and emitted examples are reverified | `UNKNOWN` |
 
 > [!NOTE]
-> “Profile fit” and “mounted conformance” are not the same thing. This file defines what KFM should require at the standard boundary. It does **not** claim that the currently mounted repo already emits this profile.
+> This document defines the **required shape of the standard boundary**. It does not claim that the currently mounted project already emits this profile.
 
 ## Profile rules
 
-### Rule 1 — public scope only
+### Rule 1 — published scope only
 
-STAC emission is allowed only for release-bearing, policy-cleared scope. No catalog, collection, item, or asset link should point into unpublished `RAW`, `WORK`, `QUARANTINE`, or candidate-only material.
+STAC is emitted only for **published** or otherwise explicitly release-safe scope. No public STAC document should point into `RAW`, `WORK`, `QUARANTINE`, or unpublished candidate material.
 
-### Rule 2 — release linkage is mandatory
+### Rule 2 — STAC is downstream of release governance
 
-Every published STAC object must remain traceable to release scope, not just to a storage path or convenience export.
+STAC is not a publication act by itself. A valid STAC object without release linkage, policy state, or review closure is still insufficient KFM output.
 
-### Rule 3 — rights and sensitivity are first-class
+### Rule 3 — release linkage is mandatory
 
-Discovery metadata must not hide unresolved rights, redistribution limits, redaction, generalization, or sensitivity posture.
+Every emitted STAC object must remain tied to release-bearing scope, not merely to a storage location or convenience export.
 
-### Rule 4 — correction lineage stays visible
+### Rule 4 — rights and sensitivity are first-class
 
-Superseded, narrowed, withdrawn, generalized, or replaced material must remain visibly linked rather than silently overwritten.
+Public discovery metadata must not hide unresolved rights, redistribution limits, precision controls, geoprivacy limits, or cultural/sensitivity posture.
 
-### Rule 5 — discovery and portrayal stay separated
+### Rule 5 — discovery and authority remain separate
 
-STAC should describe **what exists and how it may be discovered**. It should not absorb all renderer- or portrayal-specific contracts.
+STAC is a discovery layer, not KFM’s sovereign internal truth layer.
 
-## Required field posture
+### Rule 6 — correction lineage stays visible
 
-| Element | KFM posture | Notes |
+Superseded, narrowed, generalized, withdrawn, or replaced material must preserve visible lineage rather than silently disappearing.
+
+### Rule 7 — derived delivery stays downstream
+
+Tiles, portrayals, search views, graph projections, scene packages, and other discovery-adjacent derivatives must inherit release linkage, freshness basis, and correction state from promoted scope.
+
+### Rule 8 — fail closed
+
+Where release, evidence, rights, sensitivity, schema validity, or correction integrity fail, publication must fail closed.
+
+## Minimum profile requirements
+
+### Minimum profile requirements
+
+| Element | Expectation | KFM posture |
 | --- | --- | --- |
-| `stac_version` | **REQUIRED** | Pin to the approved baseline line |
-| `id` | **REQUIRED** | Must be stable and release-safe; do not recycle IDs across materially different released objects |
-| `type` | **REQUIRED** | Standard STAC object typing |
-| `geometry` / `bbox` | **REQUIRED** unless the standard allows null shape | If geometry is generalized, redacted, or intentionally coarsened, that state must be visible |
-| Temporal metadata | **REQUIRED** | Enough to preserve KFM time semantics for discovery and filtering |
-| `links` | **REQUIRED** | Must support resolvable navigation and outward closure |
-| `assets` | **REQUIRED** when the object describes retrievable data | Assets must point only to public-safe, release-linked distributions |
-| Media types / roles | **REQUIRED** on assets | Avoid opaque links |
-| Provenance linkage | **REQUIRED** | Via linked PROV closure or equivalent release-linked lineage pointer |
-| Rights / license posture | **REQUIRED** | Must be visible, not assumed |
-| Correction / supersession visibility | **REQUIRED when applicable** | Discovery must not erase lineage |
+| `stac_version` | Required and pinned to the approved baseline line | `REQUIRED` |
+| Stable `id` | Release-safe, stable, and non-recycled across materially distinct released objects | `REQUIRED` |
+| `type` | Standard STAC object typing | `REQUIRED` |
+| `geometry` / `bbox` | Present when the object carries spatial scope; generalized shape must be visibly treated as such | `REQUIRED when spatially meaningful` |
+| Temporal metadata | Enough to support discovery, filtering, and support-time interpretation | `REQUIRED` |
+| `links` | Resolvable navigation and closure linkage | `REQUIRED` |
+| `assets` | Release-safe outward distributions only | `REQUIRED when retrievable data exists` |
+| Asset `type` / media type | Explicit content typing | `REQUIRED` |
+| Asset `roles` | Stable, predictable discovery semantics | `REQUIRED` |
+| Rights / license posture | Visible and machine-carried where possible | `REQUIRED` |
+| Provenance linkage | Linked PROV closure or equivalent outward lineage pointer | `REQUIRED` |
+| Release linkage | Direct or resolvable linkage to release-bearing scope | `REQUIRED` |
+| Freshness basis | Declared where staleness changes meaning | `REQUIRED when applicable` |
+| Correction / supersession visibility | Successor, withdrawal, narrowing, or replacement state must stay visible | `REQUIRED when applicable` |
+| Content digests / checksums | Strong practical closure requirement for promotion-ready assets | `PROPOSED KFM closure requirement` |
 
-## Strong recommendations
+### Strong recommendations
 
 | Recommendation | Why it matters |
 | --- | --- |
-| Include explicit release linkage on every emitted object or through resolvable links | Keeps discovery aligned to governed publication |
-| Keep stable subject identity distinct from derivative build identity | Prevents discovery drift across re-projections or repackaging |
-| Distinguish authoritative subject assets from derived convenience assets | Protects authoritative-vs-derived separation |
-| Carry enough metadata to explain freshness and stale-after expectations | KFM requires trust-visible freshness |
-| Keep asset URLs, IDs, and identifiers deterministic where practical | Simplifies validation, correction, and auditability |
-| Expose redaction/generalization explicitly | Prevents false precision |
+| Keep collection and item identifiers deterministic where practical | simplifies correction, audit, and rebuild |
+| Make geometry generalization explicit | prevents false precision |
+| Distinguish observed, modeled, assimilated, and source-dependent outputs | prevents interpretive flattening |
+| Keep authoritative subject identity separate from projection/build identity | avoids derivative drift |
+| Use predictable asset keys and roles | reduces client special-casing |
+| Make collections useful without opening assets | improves triage and federation behavior |
 
-## Forbidden or fail-closed conditions
+## Control-plane prerequisites
 
-| Condition | Required behavior |
-| --- | --- |
-| Unresolved rights or redistribution posture | Do not publish STAC; fail closed |
-| Sensitive exact location with no safe generalized representation | Do not publish exact geometry; either generalize visibly or deny publication |
-| Missing release linkage | Do not emit outward STAC |
-| Broken STAC/DCAT/PROV closure | Do not treat the closure as publishable |
-| Non-resolvable outward links | Fail validation |
-| Hidden correction or stale state | Fail validation or withhold publication |
-| Unpublished candidate scope linked from public catalog | Fail validation |
+A STAC object may be outwardly visible only after the relevant control-plane prerequisites exist.
 
-<details>
-<summary><strong>Anti-patterns this profile rejects</strong></summary>
-
-- Treating STAC as KFM’s canonical truth store
-- Publishing STAC directly from ingest or candidate lanes
-- Using STAC to hide unresolved rights or sensitivity
-- Mixing discovery metadata and portrayal contracts into one opaque surface
-- Dropping correction lineage when assets are superseded
-- Treating derivative tiles, caches, or summaries as automatically authoritative
-
-</details>
-
-## KFM fields and extensions
-
-> [!NOTE]
-> The `kfm:*` fields below are a **PROPOSED starter profile**, not a verified mounted namespace. Use them as a reviewable draft until the repo’s actual schema registry and extension URIs are directly confirmed.
-
-### Proposed starter fields
-
-| Field | Purpose | Status |
+| KFM object | Why it matters for STAC publication | Status |
 | --- | --- | --- |
-| `kfm:dataset_version_id` | Link STAC output back to the authoritative dataset version | `PROPOSED` |
-| `kfm:release_id` | Tie emitted discovery metadata to release scope | `PROPOSED` |
-| `kfm:decision_ref` | Link to the publication decision or decision envelope | `PROPOSED` |
-| `kfm:evidence_state` | Surface source-stated / extracted / inferred / reviewed / generalized style state | `PROPOSED` |
-| `kfm:rights_class` | Surface rights posture in a machine-readable way | `PROPOSED` |
-| `kfm:sensitivity_class` | Surface sensitivity class without leaking protected detail | `PROPOSED` |
-| `kfm:correction_state` | Make superseded / withdrawn / narrowed / replaced status visible | `PROPOSED` |
-| `kfm:profile_version` | Pin the KFM STAC profile revision used to emit the object | `PROPOSED` |
-| `kfm:generalization_note` | Explain why geometry or timing has been coarsened | `PROPOSED` |
+| `SourceDescriptor` | Declares source identity, support, cadence, rights posture, validation plan, and publication intent | `CONFIRMED doctrine` |
+| `IngestReceipt` | Proves fetch/landing and integrity context occurred | `CONFIRMED doctrine` |
+| `ValidationReport` | Proves checks passed, failed, or quarantined | `CONFIRMED doctrine` |
+| `DatasetVersion` | Provides authoritative candidate or promoted subject set with support/time semantics and provenance | `CONFIRMED doctrine` |
+| `CatalogClosure` | Publishes outward metadata closure and STAC/DCAT/PROV linkage | `CONFIRMED doctrine` |
+| `DecisionEnvelope` | Records machine-readable policy result and obligations | `CONFIRMED doctrine` |
+| `ReviewRecord` | Captures required human approval/denial/escalation where review is needed | `CONFIRMED doctrine` |
+| `ReleaseManifest` / `ReleaseProofPack` | Assembles public-safe release and proof | `CONFIRMED doctrine` |
+| `ProjectionBuildReceipt` | Proves a derived layer was built from a known release scope | `CONFIRMED doctrine` |
+| `CorrectionNotice` | Preserves visible lineage when published meaning changes | `CONFIRMED doctrine` |
 
-### Public-safe caution
+> [!CAUTION]
+> In KFM, **discoverability is a governed outcome**. If control-plane proof is missing, STAC should not be treated as releasable.
 
-Internal-only values such as deep audit internals, raw enforcement traces, or hidden stewardship state should **not** be copied into public STAC unless policy explicitly permits it.
+## Required control-plane consequences
 
-## KFM object mapping
-
-| KFM object family | STAC role | Profile expectation |
-| --- | --- | --- |
-| `CatalogClosure` | Governs emitted catalog / collection / item link set | STAC should be downstream of closure, not parallel to it |
-| `DatasetVersion` | Governs authoritative version identity and support/time semantics | STAC must not invent its own competing version truth |
-| `ReleaseManifest` | Governs release-safe publication linkage | STAC should link to release context or inherit it through closure |
-| `ProjectionBuildReceipt` | Governs lineage for derived assets | Derived STAC assets should keep build/ref linkage visible |
-| `CorrectionNotice` | Governs visible supersession / withdrawal / replacement | STAC should preserve successor or replacement discoverability |
-| `EvidenceBundle` | Related trust object, but not itself a STAC object | Link out through governed evidence routes when appropriate |
-| `DecisionEnvelope` / `ReviewRecord` | Control-plane publication proof | Usually linked indirectly via release closure, not exposed wholesale |
+1. A `CatalogClosure` must exist before outward discoverability is considered valid.
+2. A `DecisionEnvelope` must capture the rights/sensitivity/release result machine-readably.
+3. A `ReviewRecord` is required when the publication burden for the lane or artifact class demands review.
+4. A `ReleaseManifest` or equivalent release proof must anchor what the catalog is allowed to expose.
+5. Any derived portrayal or tile-facing STAC asset should carry or resolve to a `ProjectionBuildReceipt`.
+6. Any post-release narrowing, replacement, or withdrawal must emit a `CorrectionNotice`.
 
 ## Route fit
 
-KFM’s discovery and trust doctrine suggests the following split.
+| Route family | Fit with this profile | Notes |
+| --- | --- | --- |
+| Catalog and discovery | **Primary fit** | STAC belongs here most directly |
+| Feature or subject read | Adjacent | subject-read contracts remain distinct |
+| Map / tile / portrayal | Related | should inherit release linkage, freshness, and correction state |
+| Evidence resolution | Related but separate | STAC may point toward evidence, but it is not the evidence contract |
+| Story / dossier / compare | Consumer of STAC, not defined by it | shell surfaces must still drill through to evidence |
+| Export and report | Related | exports may expose STAC-linked assets but remain governed separately |
+| Focus / governed assistance | Consumer of STAC-linked released scope | runtime contracts remain separate |
 
-| Surface family | Fit with this STAC profile |
-| --- | --- |
-| Catalog and discovery routes | **Primary fit** |
-| Feature or subject read routes | Adjacent, but not the same profile |
-| Map / tile / portrayal routes | Related, but governed separately |
-| Evidence-resolution routes | Related trust surface, not STAC itself |
-| Story / dossier / compare routes | May consume STAC links but are not governed by STAC alone |
-| Focus / governed assistance | May reference STAC-discovered assets, but runtime contracts remain separate |
-
-## Rights, sensitivity, and correction
-
-> [!WARNING]
-> In KFM, STAC publication is not a convenience export. It is a governed outward-facing act.
+## Rights, sensitivity, freshness, and correction
 
 ### Rights and redistribution
 
-Public STAC must not imply broader reuse than KFM has actually cleared. If redistribution posture is unresolved, publication should fail closed.
+A STAC document must not imply broader reuse than KFM has actually cleared. Unresolved or ambiguous rights posture is a fail-closed condition.
 
 ### Sensitive location handling
 
-If exact geometry is too sensitive for the requested audience, this profile expects one of three outcomes:
+If exact location is not safe for the intended audience, the profile expects one of the following:
 
-1. withhold publication entirely
-2. publish a visibly generalized representation
-3. publish metadata-only discovery without exact coordinates
+1. do not publish
+2. publish a visibly generalized spatial representation
+3. publish metadata-only discovery without precise coordinates
 
-### Correction and supersession
+### Source-dependent and modeled material
 
-Correction must remain visible across discovery surfaces. A replaced or withdrawn item should not simply disappear without a successor, replacement, or withdrawal trace where policy allows.
+Where a published asset is source-dependent, modeled, generalized, assimilated, or otherwise interpretively burdened, that state should be visible rather than implied away.
+
+### Freshness and stale-visible behavior
+
+If a derived portrayal, projection, or linked asset becomes stale beyond its declared tolerance, the surface should move into a visible stale state rather than silently presenting itself as current.
+
+### Correction propagation
+
+Correction must remain visible across discovery, map, story, export, and Focus-adjacent surfaces. A replacement should not erase the fact that replacement occurred.
+
+## Proposed KFM fields
+
+> [!NOTE]
+> The following `kfm:*` fields are **PROPOSED starter fields**. They are not asserted as mounted schemas, extension URIs, or already-deployed property names.
+
+| Field | Purpose | Status |
+| --- | --- | --- |
+| `kfm:dataset_version_id` | Tie STAC output back to the authoritative dataset version | `PROPOSED` |
+| `kfm:release_id` | Tie STAC output to release scope | `PROPOSED` |
+| `kfm:decision_ref` | Point to the publication decision or decision envelope | `PROPOSED` |
+| `kfm:review_ref` | Point to a review record when one governs publication | `PROPOSED` |
+| `kfm:evidence_state` | Surface source-stated / extracted / inferred / reviewed / generalized style state | `PROPOSED` |
+| `kfm:rights_class` | Surface rights posture in a machine-readable way | `PROPOSED` |
+| `kfm:sensitivity_class` | Surface sensitivity class without leaking protected detail | `PROPOSED` |
+| `kfm:source_mode` | Distinguish observed / modeled / assimilated / source-dependent material | `PROPOSED` |
+| `kfm:correction_state` | Make superseded / withdrawn / narrowed / replaced status visible | `PROPOSED` |
+| `kfm:profile_version` | Pin the KFM STAC profile revision used to emit the object | `PROPOSED` |
+| `kfm:generalization_note` | Explain why geometry or timing has been coarsened | `PROPOSED` |
+| `kfm:checksum_ref` | Point to asset digest or closure-integrity material | `PROPOSED` |
+
+## KFM object mapping
+
+| KFM family | STAC role | KFM expectation |
+| --- | --- | --- |
+| `DatasetVersion` | Authoritative version anchor | STAC must not invent competing version truth |
+| `CatalogClosure` | Governs emitted catalog / collection / item set | STAC is downstream of closure |
+| `ReleaseManifest` | Governs public-safe release linkage | STAC inherits release scope from here |
+| `ProjectionBuildReceipt` | Governs lineage for derived assets | tile/scene/portrayal derivatives must stay linked |
+| `EvidenceBundle` | Related support object, not a STAC object | link out through governed evidence routes when appropriate |
+| `DecisionEnvelope` | Policy proof | usually linked indirectly or through resolvable review/release context |
+| `CorrectionNotice` | Correction lineage | successor / withdrawal / replacement state should remain discoverable |
 
 ## Validation and gates
 
 ### Minimum validation stack
 
-| Gate | What it checks | Status |
+| Gate | What it proves | Status |
 | --- | --- | --- |
-| STAC schema validation | Object shape and STAC baseline validity | `CONFIRMED requirement` |
-| KFM profile validation | KFM-specific release, rights, provenance, and correction rules | `PROPOSED starter gate` |
-| Catalog-closure validation | STAC / DCAT / PROV resolution and outward-link integrity | `CONFIRMED requirement` |
-| Identifier consistency | Stable IDs across closure, release, and assets | `CONFIRMED requirement` |
-| Rights/sensitivity gate | Public-safe posture and redaction/generalization behavior | `CONFIRMED requirement` |
-| Correction propagation checks | Supersession / withdrawal / replacement visibility | `CONFIRMED requirement` |
-| Link integrity checks | No dead or unresolved outward links | `CONFIRMED requirement` |
+| STAC schema validation | Core object shape and baseline validity | `CONFIRMED requirement` |
+| Closure integrity checks | STAC / DCAT / PROV resolve cleanly together | `CONFIRMED requirement` |
+| Identifier consistency checks | IDs resolve consistently across closure and release | `CONFIRMED requirement` |
+| Rights / sensitivity gate | publication is public-safe for the intended audience | `CONFIRMED requirement` |
+| Freshness / stale-projection checks | derived discovery layers do not silently impersonate current truth | `CONFIRMED requirement` |
+| Correction propagation checks | supersession / narrowing / withdrawal stay visible | `CONFIRMED requirement` |
+| Link integrity checks | outward links and relations resolve | `CONFIRMED requirement` |
+| KFM profile validation | KFM-specific rules beyond STAC core | `PROPOSED starter gate` |
+| Digest / integrity checks | content digests are present and coherent for promotion-ready assets | `PROPOSED starter gate` |
 
-### Validation rule of thumb
+### Release gate reminder
 
-A STAC document that is syntactically valid but missing release linkage, policy posture, or correction visibility is **not** acceptable KFM output.
+A publishable STAC surface should not be treated as complete without:
+
+- dataset version reference
+- catalog closure
+- policy result
+- review record where required
+- release receipt or proof pack
+- evidence-resolution pass or equivalent support proof
+- rollback / correction posture
+- updated docs or runbooks where behavior changed
+
+> [!WARNING]
+> A syntactically valid STAC object is **not** automatically acceptable KFM output.
+
+## Forbidden or fail-closed conditions
+
+| Condition | Required behavior |
+| --- | --- |
+| Missing reconstructible evidence path for an outward claim | fail closed |
+| Unknown rights or redistribution posture | fail closed |
+| Exact-location risk not covered by a safe representation | withhold or generalize visibly |
+| Schema / identity / unit / support failure | fail validation |
+| Missing catalog closure or required review artifact | no releasable discoverability |
+| Runtime citation failure on a trust-bearing outward surface | no confident outward answer path |
+| Stale derived projection beyond declared tolerance | stale-visible, rebuilt, or withheld |
+| Unlinked or orphaned derived assets | do not publish as current |
 
 <details>
-<summary><strong>PROPOSED starter file set</strong></summary>
+<summary><strong>Anti-patterns this profile rejects</strong></summary>
 
-```text
-schemas/stac/kfm-catalog.schema.json
-schemas/stac/kfm-collection.schema.json
-schemas/stac/kfm-item.schema.json
-schemas/stac/extensions/kfm-profile.schema.json
-tests/fixtures/stac/valid/
-tests/fixtures/stac/invalid/
-tests/fixtures/stac/closure/
-```
-
-These paths are reviewable starter patterns only. They are **not** asserted mounted repo facts.
+- treating STAC as KFM’s canonical truth store
+- publishing directly from ingest or candidate lanes
+- allowing tiles, caches, graphs, or summaries to quietly become authoritative
+- shipping discovery metadata with no visible rights or provenance posture
+- dropping correction lineage when assets are replaced
+- claiming mounted validators or endpoints that have not been directly reverified
 
 </details>
 
 ## Illustrative examples
 
 > [!NOTE]
-> The examples below are illustrative profile sketches. They are intentionally generic and should not be treated as confirmed mounted payloads.
+> The examples below are illustrative only. They show profile intent, not confirmed mounted payloads.
 
 ### Illustrative STAC Item
 
@@ -336,11 +366,13 @@ These paths are reviewable starter patterns only. They are **not** asserted moun
   "bbox": [0, 0, 1, 1],
   "properties": {
     "datetime": "2026-03-01T00:00:00Z",
+    "license": "TODO-ILLUSTRATIVE",
     "kfm:dataset_version_id": "TODO-ILLUSTRATIVE",
     "kfm:release_id": "TODO-ILLUSTRATIVE",
     "kfm:evidence_state": "reviewed",
     "kfm:rights_class": "public",
     "kfm:sensitivity_class": "generalized",
+    "kfm:source_mode": "observed",
     "kfm:profile_version": "v1"
   },
   "assets": {
@@ -351,26 +383,11 @@ These paths are reviewable starter patterns only. They are **not** asserted moun
     }
   },
   "links": [
-    {
-      "rel": "root",
-      "href": "TODO-ILLUSTRATIVE"
-    },
-    {
-      "rel": "collection",
-      "href": "TODO-ILLUSTRATIVE"
-    },
-    {
-      "rel": "describedby",
-      "href": "TODO-ILLUSTRATIVE"
-    },
-    {
-      "rel": "via",
-      "href": "TODO-ILLUSTRATIVE"
-    },
-    {
-      "rel": "related",
-      "href": "TODO-ILLUSTRATIVE"
-    }
+    { "rel": "root", "href": "TODO-ILLUSTRATIVE" },
+    { "rel": "collection", "href": "TODO-ILLUSTRATIVE" },
+    { "rel": "describedby", "href": "TODO-ILLUSTRATIVE" },
+    { "rel": "via", "href": "TODO-ILLUSTRATIVE" },
+    { "rel": "related", "href": "TODO-ILLUSTRATIVE" }
   ]
 }
 ```
@@ -378,61 +395,56 @@ These paths are reviewable starter patterns only. They are **not** asserted moun
 <details>
 <summary><strong>Illustrative link expectations</strong></summary>
 
-A review-ready emitted object should usually make room for:
+A review-ready STAC object will usually make room for:
 
 - root / parent / collection navigation
-- schema or profile description
-- release-manifest linkage
+- profile or schema description
+- release-manifest or release-context linkage
 - provenance linkage
-- correction or successor linkage when applicable
+- correction or successor linkage where applicable
 
 </details>
 
-## Task list and definition of done
+## Verification backlog
 
-### Review gates
-
-- [ ] Verify whether `docs/standards/KFM_STAC_PROFILE.md` already exists and merge with any stronger neighboring material
-- [ ] Replace all `TODO-NEEDS-VERIFICATION` placeholders with mounted repo values
-- [ ] Confirm the mounted schema registry path and extension namespace
-- [ ] Add valid and invalid fixtures for at least one catalog, collection, and item
-- [ ] Verify catalog-closure checks for STAC / DCAT / PROV integrity
-- [ ] Verify public-safe redaction/generalization on one real dataset
-- [ ] Verify correction visibility on one supersession or withdrawal example
-- [ ] Add relative links to the actual adjacent standards, route, and runbook docs
-- [ ] Confirm whether public discovery uses STAC alone, STAC + OGC API Records, or another mounted boundary shape
-- [ ] Confirm owners, created date, updated date, and policy label
-
-### Done means
-
-A reviewer should be able to answer **yes** to all of the following:
-
-- Does this profile keep STAC clearly downstream of KFM governance?
-- Does it distinguish `CONFIRMED`, `PROPOSED`, and `UNKNOWN` material?
-- Can a catalog compiler, release tool, or validator implement this without guessing the doctrine?
-- Does it fail closed on rights, sensitivity, release, and correction problems?
-- Does it avoid turning discovery metadata into sovereign truth?
-
-## Open questions
-
-| Question | Current state |
+| Unknown | Why it matters |
 | --- | --- |
-| Does the target file already exist in the mounted repo? | `UNKNOWN` |
-| What neighboring standards docs should this link to? | `UNKNOWN` |
-| What exact owners, dates, and policy label belong in the meta block? | `UNKNOWN` |
-| What is the mounted STAC schema registry path? | `UNKNOWN` |
-| What exact extension namespace and schema URI should be used? | `UNKNOWN` |
-| What exact public route names or API paths currently serve discovery? | `UNKNOWN` |
-| Is correction represented through successor links, explicit flags, or both in mounted implementation? | `UNKNOWN` |
-| Which asset classes are already emitted as STAC in the mounted workspace? | `UNKNOWN` |
+| Actual target repo path for this file | keeps links and adjacent docs correct |
+| Mounted schema registry path | required before claiming extension or validator wiring |
+| Mounted STAC fixtures and examples | needed for conformance claims |
+| Mounted CI/workflow coverage | needed before claiming enforced release gates |
+| Mounted endpoint names and route trees | needed before naming real public discovery surfaces |
+| Mounted owners, dates, and policy label | required to finalize the meta block |
+| Mounted KFM extension namespace / schema URI | required before hardening `kfm:*` properties beyond draft |
+| Actual checksum / integrity requirements in code | needed before turning closure-digest expectations into confirmed enforcement |
+
+## Definition of done for this standard
+
+- [ ] Reverify whether this file already exists in the repo and merge with any stronger neighboring material
+- [ ] Replace all `TODO-NEEDS-VERIFICATION` placeholders in the meta block
+- [ ] Confirm the mounted schema home, fixture layout, and validator entrypoints
+- [ ] Confirm the mounted STAC version line and any extension allowlist
+- [ ] Add relative links to adjacent standards, route, runbook, and API docs
+- [ ] Verify one positive and one negative closure example for `STAC / DCAT / PROV`
+- [ ] Verify one release-linked item with visible rights/sensitivity posture
+- [ ] Verify one correction example with successor or withdrawal behavior
+- [ ] Verify one stale-projection or freshness-control example
+- [ ] Confirm whether checksums/digests are already enforced or remain starter doctrine
 
 <details>
-<summary><strong>Appendix — compact drafting posture</strong></summary>
+<summary><strong>Appendix — drafting posture</strong></summary>
 
-This file is intentionally written as a standards-layer bridge between KFM doctrine and later mounted implementation verification:
+This draft intentionally keeps three things separate:
 
-- doctrine is kept explicit
-- starter profile rules are concrete enough to validate
-- unverified repo details stay visible instead of being guessed away
+1. **CONFIRMED doctrine**  
+   What the attached KFM manuals establish clearly.
+
+2. **PROPOSED starter realization**  
+   A usable first profile shape for later schema, fixture, and validator work.
+
+3. **UNKNOWN mounted implementation**  
+   Anything that would require direct repo, schema, workflow, or runtime inspection.
+
+That separation is part of the standard, not a temporary embarrassment.
 
 </details>
