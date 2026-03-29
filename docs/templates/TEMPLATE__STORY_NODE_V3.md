@@ -5,20 +5,41 @@ type: standard
 version: v1
 status: draft
 owners: <owners-needs-verification>
-created: YYYY-MM-DD
-updated: YYYY-MM-DD
+created: <YYYY-MM-DD-needs-verification>
+updated: <YYYY-MM-DD-needs-verification>
 policy_label: <policy-label-needs-verification>
 related: [<related-paths-or-kfm-ids-needs-verification>]
 tags: [kfm, story-node, template, publication]
-notes: [Source-bounded starter template. Identifiers, owners, dates, policy label, related links, and repo-local schema/route names require direct repo verification before commit.]
+notes: [Source-bounded starter template. Identifiers, owners, dates, policy label, related links, repo-local schema names, and mounted route names require direct repo verification before commit.]
 [/KFM_META_BLOCK_V2] -->
 
 # TEMPLATE — Story Node v3
 
 Repo-ready starter for governed Story Node authoring in Kansas Frontier Matrix.
 
+![Status: draft](https://img.shields.io/badge/status-draft-orange)
+![Owners: needs verification](https://img.shields.io/badge/owners-needs--verification-lightgrey)
+![Policy: needs verification](https://img.shields.io/badge/policy-needs--verification-lightgrey)
+![Evidence: source bounded](https://img.shields.io/badge/evidence-source--bounded-blue)
+![Shell fit: governed](https://img.shields.io/badge/shell-governed-2b6cb0)
+
+| Field | Value |
+|---|---|
+| Status | `draft` |
+| Owners | `<owners-needs-verification>` |
+| Repo fit | `docs/templates/TEMPLATE__STORY_NODE_V3.md` |
+| Role | `standard template / copy-adapt authoring seed` |
+| Policy label | `<policy-label-needs-verification>` |
+| Quick jump | [Scope](#scope) · [Repo fit](#repo-fit) · [Quickstart](#quickstart) · [Authoring rules](#authoring-rules) · [Copy-adapt template](#copy-adapt-story-node-template) · [Sidecar](#proposed-companion-sidecar-starter) · [Publication gate](#publication-gate-checklist) · [FAQ](#faq) |
+
 > [!IMPORTANT]
-> A Story Node is not free-form narrative. It is a governed publication unit. Claims, dates, map state, perspective, evidence linkage, review state, and correction state must remain inspectable at the point of use.
+> A Story Node is not free-form narrative. It is a governed publication unit. Claims, dates, map state, perspective, evidence linkage, review state, and correction lineage must remain inspectable at the point of use.
+
+> [!NOTE]
+> **Document posture for this template**
+> - **CONFIRMED doctrine:** Story surfaces stay inside the governed shell; Story Node v3 pairs narrative markdown with map state and citations; publishing requires review state and resolvable citations.
+> - **PROPOSED starter shape:** the field names, enums, and sidecar layout below.
+> - **UNKNOWN:** mounted repo-local schema names, route names, loaders, renderer hooks, owners, policy labels, and related paths.
 
 ---
 
@@ -26,52 +47,75 @@ Repo-ready starter for governed Story Node authoring in Kansas Frontier Matrix.
 
 Use this file as the baseline template for a single **Story Node v3** in KFM.
 
-This template is designed to support a story surface that stays inside the same governed shell as the map, timeline, dossier, Evidence Drawer, and Focus Mode. It is written to preserve KFM’s evidence-first posture while remaining practical for authors, reviewers, and implementers.
+This template is designed for a story surface that remains inside the same governed shell as the map, timeline, dossier, Evidence Drawer, and Focus Mode. It preserves KFM’s evidence-first posture while staying practical for authors, reviewers, and implementers.
 
 ## Repo fit
 
 **Target path:** `docs/templates/TEMPLATE__STORY_NODE_V3.md`
 
-**Document role:** standard template / copy-and-adapt authoring seed
+**Document role:** standard template / copy-adapt authoring seed
 
-**Upstream dependencies:** story-surface doctrine, Story Node publish workflow, evidence-resolution rules, review state, correction lineage, sensitivity/redaction rules
+| Direction | What connects here |
+|---|---|
+| Upstream doctrine | Story surface doctrine; `EvidenceBundle` resolution; `ReviewRecord`, `DecisionEnvelope`, `ReleaseManifest`, and `CorrectionNotice` families; sensitivity/redaction handling; map-state conventions |
+| Downstream consumers | Story read/publish flow, renderer, map-state sidecar loader, Evidence Drawer drill-through, review tooling, export logic |
 
-**Downstream consumers:** `NEEDS VERIFICATION` — local story schema, publish gate, renderer, routes, sidecar loader, Evidence Drawer integration, review tooling
+**Documented interface example:** `GET/POST /api/v1/story` is described in project documentation, but the exact mounted route tree remains **NEEDS VERIFICATION**.
 
 ## Status matrix
 
 | Area | Status | Notes |
 |---|---|---|
-| Story Node as governed narrative publication unit | **CONFIRMED** | Preserve evidence-linked publication posture. |
-| Markdown body plus companion map/citation structure | **CONFIRMED** | Use a separate companion object if repo implementation requires it. |
-| Review state + resolvable citations before publish | **CONFIRMED** | Publishing must fail closed when those conditions are missing. |
-| Citations opening or resolving into Evidence Drawer behavior | **CONFIRMED** | Story claims must drill into inspectable evidence. |
-| Exact field names in the sidecar starter below | **PROPOSED** | Adapt to mounted schema/contracts once verified. |
-| Exact route names, schema filenames, and local loaders | **UNKNOWN** | Do not treat placeholders below as settled repo facts. |
+| Story surface as a governed shell surface | **CONFIRMED** | Human-authored narrative stays inside the same trust-visible shell as map, timeline, dossier, Evidence Drawer, and Focus Mode. |
+| Narrative markdown plus companion map/citation structure | **CONFIRMED** | Story Node v3 is documented as narrative markdown with a sidecar capturing map state and citations. |
+| Review state + resolvable citations before publish | **CONFIRMED** | Story publishing must fail closed if those conditions are missing. |
+| Evidence drill-through for consequential claims | **CONFIRMED** | Citations must resolve to inspectable support rather than decorative references. |
+| Exact field names in the template and sidecar below | **PROPOSED** | Adapt to mounted contracts once the schema inventory is directly verified. |
+| Exact repo-local paths, routes, schema filenames, renderer hooks, and owners | **UNKNOWN** | Do not treat placeholders below as settled repo facts. |
 
 ## Accepted inputs
 
-This template belongs here when the node includes one or more of the following:
+Use this template when the node includes one or more of the following:
 
-- human-authored narrative text intended for the KFM story surface
+- human-authored narrative intended for the KFM story surface
 - explicit time scope, event scope, or as-of framing
-- map state, selection state, or layer state relevant to the story
-- evidence-linked excerpts, claim references, or EvidenceBundle references
+- map state, selection state, layer state, or compare state relevant to the story
+- evidence-linked excerpts, claim references, `EvidenceRef`s, or `EvidenceBundle` references
 - review, policy, correction, or public-safe publication notes
 
 ## Exclusions
 
-This template is not for:
+This template is **not** for:
 
 - raw source documents or ingest-stage notes
-- unpublished research scratchpads with unresolved evidence
+- unpublished scratchpads with unresolved evidence
+- hidden reviewer commentary that belongs in review artifacts
 - sovereign analysis that bypasses evidence resolution
-- hidden reviewer commentary that should live in review artifacts instead
-- precise sensitive directions or exact location disclosure that violates public-safe handling
+- exact sensitive directions or location disclosure that violate public-safe handling
 - implementation claims about repo files, endpoints, or workflows that are not directly verified
 
 > [!WARNING]
 > Do not let the story surface become a substitute truth system. A Story Node may explain, frame, compare, or guide, but it must not silently replace authoritative records, release state, or evidence paths.
+
+## Quickstart
+
+1. Duplicate this template into a working story draft.
+2. Replace every angle-bracket placeholder before review.
+3. Fill **time scope**, **freshness basis**, **support**, **perspective**, and **map state** before polishing prose.
+4. Break narrative into claim-sized blocks and attach `EvidenceRef`s before final editing.
+5. Run the review/publish gate. If citations do not resolve, hold, narrow, abstain, or deny rather than publishing around the gap.
+
+## What must stay visible
+
+| Must stay visible | Why it matters |
+|---|---|
+| Time scope | Prevents snapshot confusion and unsupported historical drift. |
+| Freshness basis | Makes stale-visible or as-of logic legible to the reader. |
+| Support | Keeps claims matched to the grain that makes them meaningful. |
+| Evidence linkage | Preserves reconstructability to inspectable support. |
+| Perspective | Prevents interpretive writing from posing as neutral omniscience. |
+| Correction lineage | Keeps supersession, narrowing, and withdrawal visible in-place. |
+| Map state | Keeps story transitions inside the governed shell rather than detaching into article pages. |
 
 ---
 
@@ -93,7 +137,6 @@ Name the unit of support that makes the node meaningful:
 
 - place
 - corridor
-- service area
 - parcel
 - county-year table
 - raster cell
@@ -101,13 +144,13 @@ Name the unit of support that makes the node meaningful:
 - event interval
 - other clearly bounded support
 
-### 3) Keep evidence drill-through intact
+### 3) Keep evidence one hop away
 
-Every consequential claim should point to inspectable support. A node may summarize, but it must still allow the reader to reach the supporting evidence path.
+Every consequential claim should point to inspectable support. A node may summarize, but it must still allow the reader to reach the supporting evidence path through an `EvidenceRef` or `EvidenceBundle`.
 
 ### 4) Keep perspective visible
 
-If the node is interpretive, educational, editorial, or steward-authored, say so. Do not imply neutral omniscience when the node is clearly framed from a perspective.
+If the node is interpretive, educational, editorial, steward-authored, or source-dependent, say so. Do not imply neutral omniscience when the node is clearly framed from a perspective.
 
 ### 5) Keep correction visible
 
@@ -124,12 +167,17 @@ Do not publish the node if any of the following remain unresolved:
 - evidence linkage is broken
 - correction lineage is required but absent
 
+### 7) Keep map state explicit
+
+Record the extent, selected feature, active layers, time anchor, and any compare or playback anchor that the node assumes. A Story Node belongs in the shell, not as a detached article page.
+
 ---
 
-## Copy/paste node template
+## Copy-adapt Story Node template
 
 <!-- Copy from here for a working Story Node. Replace every angle-bracket placeholder before review. -->
 
+```yaml
 ---
 title: "<story-node-title>"
 story_node_id: "<story-node-id-needs-verification>"
@@ -137,16 +185,18 @@ story_id: "<parent-story-id-needs-verification>"
 doc_kind: "story_node"
 status: "draft"
 review_state: "<draft|review|approved|published|withdrawn-needs-verification>"
-surface_state: "<promoted|generalized|partial|source-dependent|conflicted|withdrawn|denied|abstained-needs-verification>"
-perspective_label: "<editorial|steward|educational|interpretive|other>"
-time_scope: "<as-of / interval / event / comparative>"
-support: "<place / corridor / parcel / raster-cell / scene / event-interval / other>"
+surface_state: "<promoted|generalized|partial|stale-visible|abstained|denied|withdrawn-needs-verification>"
+perspective_label: "<steward|editorial|educational|interpretive|documentary|other-needs-verification>"
+time_scope: "<as_of|interval|event|comparative>"
+support: "<place|corridor|parcel|county_year|raster_cell|scene|event_interval|other>"
 map_state_ref: "<map-state-ref-or-sidecar-ref>"
-decision_ref: "<decision-envelope-ref-if-any>"
-audit_ref: "<audit-ref-if-any>"
-correction_ref: "<correction-notice-ref-if-any>"
-release_ref: "<release-ref-if-any>"
+review_record_ref: "<review-record-ref-or-null>"
+decision_envelope_ref: "<decision-envelope-ref-or-null>"
+release_manifest_ref: "<release-manifest-ref-or-null>"
+correction_notice_ref: "<correction-notice-ref-or-null>"
+audit_ref: "<audit-ref-or-null>"
 ---
+```
 
 ## Standfirst
 
@@ -154,11 +204,12 @@ release_ref: "<release-ref-if-any>"
 
 ## Why this node exists
 
-<State the narrative job of this node in plain language. Examples: explain a turning point, frame a comparison, summarize a place condition, connect evidence to a user-facing question.>
+<State the narrative job of this node in plain language. Good examples: explain a turning point, frame a comparison, summarize a place condition, connect evidence to a user-facing question.>
 
 ## Time and place
 
 - **Time scope:** <be explicit>
+- **Freshness basis:** <as-of date / release window / observation interval / derived-on date>
 - **Geographic support:** <be explicit>
 - **Perspective:** <state who is speaking or what editorial lens is active>
 - **Map state anchor:** <extent / selected feature / active layers / playback position>
@@ -174,11 +225,13 @@ release_ref: "<release-ref-if-any>"
 
 - `<evidence_ref_1>` — <what this supports>
 - `<evidence_ref_2>` — <what this supports>
+- `<evidence_bundle_ref_or_dataset_version_ref_optional>` — <optional stronger bundle/version linkage>
 
 **Reader-visible notes**
 
 - **Uncertainty:** <none / low / medium / high / mixed>
-- **Mode:** <observed / documentary / modeled / interpreted / source-dependent>
+- **Mode:** <observed / documentary / modeled / interpreted>
+- **Evidence state:** <source-stated / extracted / inferred / reviewed / source-dependent / generalized / unspecified>
 - **Rights / reuse note:** <if relevant>
 - **Sensitivity / redaction note:** <if relevant>
 
@@ -190,11 +243,13 @@ release_ref: "<release-ref-if-any>"
 
 - `<evidence_ref_1>` — <what this supports>
 - `<evidence_ref_2>` — <what this supports>
+- `<evidence_bundle_ref_or_dataset_version_ref_optional>` — <optional stronger bundle/version linkage>
 
 **Reader-visible notes**
 
 - **Uncertainty:** <...>
 - **Mode:** <...>
+- **Evidence state:** <...>
 - **Rights / reuse note:** <...>
 - **Sensitivity / redaction note:** <...>
 
@@ -205,6 +260,15 @@ release_ref: "<release-ref-if-any>"
 **Evidence linkage**
 
 - `<evidence_ref_1>` — <what this supports>
+- `<evidence_bundle_ref_or_dataset_version_ref_optional>` — <optional stronger bundle/version linkage>
+
+**Reader-visible notes**
+
+- **Uncertainty:** <...>
+- **Mode:** <...>
+- **Evidence state:** <...>
+- **Rights / reuse note:** <...>
+- **Sensitivity / redaction note:** <...>
 
 ## Evidence-linked excerpt(s)
 
@@ -225,7 +289,9 @@ release_ref: "<release-ref-if-any>"
 | Time anchor | `<time anchor placeholder>` |
 | Selection anchor | `<selected feature or object ref>` |
 | Compare anchor | `<if applicable>` |
+| Transition behavior | `<fly-to / dissolve / split / none>` |
 | Evidence Drawer trigger | `<what should open when user drills through>` |
+| Freshness cue | `<as-of chip / stale-visible rule / release date cue>` |
 | Export-safe state | `<yes/no + note>` |
 
 ## Reader-visible caveats
@@ -239,10 +305,10 @@ release_ref: "<release-ref-if-any>"
 |---|---|
 | Review state | `<draft / under review / approved / published / withdrawn>` |
 | Reviewer lane | `<role or lane>` |
-| Review record ref | `<review-record-ref>` |
-| Decision envelope ref | `<decision-envelope-ref>` |
+| ReviewRecord ref | `<review-record-ref>` |
+| DecisionEnvelope ref | `<decision-envelope-ref>` |
 | Correction status | `<none / superseded / narrowed / generalized / withdrawn / corrected>` |
-| Correction notice ref | `<correction-notice-ref-if-any>` |
+| CorrectionNotice ref | `<correction-notice-ref-if-any>` |
 | Prior node ref | `<older-node-ref-if-any>` |
 | Replacement node ref | `<newer-node-ref-if-any>` |
 
@@ -257,10 +323,11 @@ release_ref: "<release-ref-if-any>"
 
 - [ ] Title is stable and not misleading
 - [ ] Time scope is explicit
+- [ ] Freshness basis is explicit where relevant
 - [ ] Support is explicit
 - [ ] Perspective label is explicit
 - [ ] Every consequential claim has resolvable evidence linkage
-- [ ] Evidence Drawer drill-through is defined
+- [ ] Citation taps or claim chips open the expected Evidence Drawer target
 - [ ] Review state is present
 - [ ] Correction state is present where required
 - [ ] Sensitivity / redaction handling is complete
@@ -274,7 +341,7 @@ release_ref: "<release-ref-if-any>"
 ## PROPOSED companion sidecar starter
 
 > [!IMPORTANT]
-> This block is a **starter shape**, not a confirmed repo schema. Adapt it to mounted contracts once the repo tree and schema inventory are directly verified.
+> This block is a **starter shape**, not a confirmed mounted schema. Adapt it to real contracts once the repo tree and schema inventory are directly verified.
 
 ```yaml
 doc_kind: story_node
@@ -285,7 +352,7 @@ title: "<title>"
 summary: "<summary>"
 
 support:
-  type: "<place|corridor|parcel|raster_cell|scene|event_interval|other>"
+  type: "<place|corridor|parcel|county_year|raster_cell|scene|event_interval|other>"
   value: "<support-identifier-or-label>"
 
 time_scope:
@@ -300,6 +367,7 @@ map_state:
   extent: "<extent-ref-or-inline-placeholder>"
   active_layers: []
   selected_feature_ref: "<feature-ref-or-null>"
+  playback_anchor_ref: "<playback-ref-or-null>"
   compare_anchor_ref: "<compare-ref-or-null>"
 
 claims:
@@ -309,9 +377,10 @@ claims:
       - "<evidence-ref>"
     evidence_bundle_refs:
       - "<evidence-bundle-ref>"
-    dataset_refs:
+    dataset_version_refs:
       - "<dataset-version-ref>"
-    mode: "<observed|documentary|modeled|interpreted|source-dependent>"
+    mode: "<observed|documentary|modeled|interpreted>"
+    evidence_state: "<source-stated|extracted|inferred|reviewed|source-dependent|generalized|unspecified>"
     uncertainty: "<none|low|medium|high|mixed>"
 
 excerpts:
@@ -324,24 +393,24 @@ excerpts:
 review:
   state: "<draft|review|approved|published|withdrawn>"
   review_record_ref: "<review-record-ref>"
-  decision_ref: "<decision-envelope-ref>"
+  decision_envelope_ref: "<decision-envelope-ref>"
 
 publication:
-  surface_state: "<promoted|generalized|partial|source-dependent|conflicted|withdrawn|denied|abstained>"
-  release_ref: "<release-ref>"
-  correction_ref: "<correction-ref-or-null>"
+  surface_state: "<promoted|generalized|partial|stale-visible|abstained|denied|withdrawn>"
+  release_manifest_ref: "<release-manifest-ref>"
+  correction_notice_ref: "<correction-notice-ref-or-null>"
 
 policy:
   sensitivity: "<public|restricted|needs-verification>"
   redaction_profile: "<profile-or-null>"
   obligation_codes: []
-  reason_codes: []
+  public_safe: "<true|false|needs-verification>"
 
 audit:
   audit_ref: "<audit-ref>"
 ```
 
-## Optional spatial-analysis hooks (PROPOSED)
+## Optional geometry / compare hooks (PROPOSED)
 
 Use only when the mounted implementation actually supports them.
 
@@ -351,6 +420,7 @@ spacetime:
   place_labels:
     - "<regional label>"
   route_ref: "<route-ref-or-null>"
+  compare_geometry_ref: "<compare-geometry-ref-or-null>"
 ```
 
 > [!CAUTION]
@@ -362,14 +432,14 @@ spacetime:
 
 ```mermaid
 flowchart LR
-  A[Author draft] --> B[Map state + claim assembly]
-  B --> C[Evidence resolution]
+  A[Author draft] --> B[Narrative markdown + map sidecar]
+  B --> C[EvidenceRef resolution]
   C --> D{Resolvable citations?}
-  D -- No --> E[Fail closed: hold / abstain / deny]
+  D -- No --> E[Fail closed: hold / narrow / abstain / deny]
   D -- Yes --> F[ReviewRecord + DecisionEnvelope]
   F --> G{Review state sufficient?}
   G -- No --> E
-  G -- Yes --> H[Publish gate]
+  G -- Yes --> H[ReleaseManifest + publish gate]
   H --> I[Story surface in governed shell]
   I --> J[Evidence Drawer drill-through]
   I --> K[CorrectionNotice if needed]
@@ -381,10 +451,21 @@ flowchart LR
 - Does the node say **what support** makes those claims meaningful?
 - Can each claim be reconstructed from inspectable evidence?
 - If the node is interpretive, does it say so?
-- If the node is partial, modeled, generalized, or corrected, is that visible in-place?
+- If the node is partial, modeled, generalized, stale-visible, or corrected, is that visible in-place?
 - If a citation breaks, does the workflow fail closed instead of publishing theater?
 
-## Author notes
+## FAQ
+
+**Can a Story Node publish without citations?**  
+No. Publishing is gated by resolvable citations and review state.
+
+**Is the companion sidecar optional?**  
+The documented Story Node v3 pattern pairs narrative markdown with map state and citations. Treat the exact sidecar schema as adaptable only after mounted verification.
+
+**Can a Story Node replace a dataset or dossier?**  
+No. It is a governed publication surface downstream of evidence and policy, not a sovereign truth object.
+
+## Appendix — author notes
 
 <details>
 <summary>Optional drafting notes (remove or empty before publish)</summary>
@@ -402,7 +483,7 @@ flowchart LR
 1. Write the narrative in plain language.
 2. Split large assertions into claim-sized units.
 3. Attach evidence refs before polishing prose.
-4. Make time and support visible.
+4. Make time, freshness, and support visible.
 5. Add caveats before review, not after pushback.
 6. Confirm correction state before publish.
 
